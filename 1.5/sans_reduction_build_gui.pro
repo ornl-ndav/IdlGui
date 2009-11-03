@@ -477,7 +477,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     ucams EQ 'j35') THEN BEGIN
     ;nexus_path           = '~/SVN/IdlGui/branches/SANSreduction/1.0'
     ;nexus_path           = '~/EQSANS/2009_2_6_SCI/1/39/NeXus/'
-    nexus_path           = '~/EQSANS/2009_2_6_SCI/1/42/NeXus/'
+    nexus_path           = '~/EQSANS/2009_2_6_SCI/1/40/NeXus/'
     (*global).nexus_path = nexus_path
     (*global).selection_path = '~/results/'
     (*global).wave_dep_back_sub_path = $
@@ -510,7 +510,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     
     ;show tab #2 'REDUCE
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 0
     ;show tab of the REDUCE tab
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
     WIDGET_CONTROL, id1, SET_TAB_CURRENT = 0

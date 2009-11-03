@@ -482,8 +482,9 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
   ENDIF ELSE BEGIN
   
     bsBase = WIDGET_BASE(wTab1Base,$
-      XOFFSET = sDraw.size[0]+sDraw.size[2]+10,$
-      YOFFSET = sDraw.size[1]+40,$
+      XOFFSET = 585,$
+      YOFFSET = sDraw.size[1]+5,$
+      SCR_XSIZE = 105,$
       /EXCLUSIVE, $
       /COLUMN,$
       FRAME = 1)
@@ -507,8 +508,9 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     
     ;linear/log scale
     wGroupBase = WIDGET_BASE(wTab1Base,$
-      XOFFSET = 590,$
-      YOFFSET = 150,$
+      XOFFSET = 585,$
+      YOFFSET = 100,$
+      SCR_XSIZE = 105,$
       /ALIGN_CENTER,$
       FRAME = 1,$
       UNAME = sScaleTypeBase.uname,$
@@ -526,6 +528,101 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       
   ENDELSE
   
+  IF ((*global).FACILITY EQ 'SNS') THEN BEGIN
+  
+    ;- X/Y base -------------------------------------------------------------------
+    wXYbase = WIDGET_BASE(wTab1Base,$
+      XOFFSET   = 585,$
+      YOFFSET   = 200,$
+      UNAME     = XYbase.uname,$
+      /COLUMN,$
+      FRAME     = XYbase.frame)
+      
+    label = WIDGET_LABEL(wXYbase,$
+      VALUE = 'GLOBAL')
+      
+    ;bank number
+    rowa = WIDGET_BASE(wXYbase,$
+      /ROW)
+    label = WIDGET_LABEL(rowa,$
+      /ALIGN_LEFT,$
+      VALUE = 'Bank #:')
+    value = WIDGET_LABEL(rowa,$
+      VALUE = 'N/A',$
+      /ALIGN_LEFT,$
+      UNAME = 'bank_number_value')
+      
+    ;row1 (Tube# or x#)
+    row1 = WIDGET_BASE(wXYbase,$
+      /ROW)
+    wXlabel = WIDGET_LABEL(row1,$
+      VALUE   = 'Tube #:',$
+      /ALIGN_LEFT)
+    wXvalue = WIDGET_LABEL(row1,$
+      VALUE   = 'N/A',$
+      /ALIGN_LEFT,$
+      UNAME   = xValue.uname)
+
+    label = WIDGET_LABEL(wXYbase,$
+    VALUE = 'LOCAL')
+
+    ;tube local
+    rowb = WIDGET_BASE(wXYbase,$
+      /ROW)
+    label = WIDGET_LABEL(rowb,$
+      VALUE = 'Tube  #:',$
+      /ALIGN_LEFT)
+    value = WIDGET_LABEL(rowb,$
+      VALUE = 'N/A',$
+      /ALIGN_LEFT,$
+      UNAME = 'tube_local_number_value')
+      
+      
+    ;row2 (Pixel# or y#)
+    row2 = WIDGET_BASE(wXYbase,$
+      /ROW)
+    wYlabel = WIDGET_LABEL(row2,$
+      VALUE   = 'Pixel #:',$
+      /ALIGN_LEFT)
+    wYvalue = WIDGET_LABEL(row2,$
+      VALUE   = 'N/A',$
+      /ALIGN_LEFT,$
+      UNAME   = yValue.uname)
+      
+    ;row3 (Counts)
+    wCountslabel = WIDGET_LABEL(wXYbase,$
+      VALUE   = 'COUNTS') 
+    wCountsvalue = WIDGET_LABEL(wXYbase,$
+      VALUE   = 'N/A',$
+      SCR_XSIZE = 100,$
+      UNAME   = countsValue.uname)
+      
+    ;Auto. Exclude Dead Tubes ;-----------------------------------
+    auto_base = WIDGET_BASE(wTab1Base,$
+      XOFFSET = 585,$
+      YOFFSET = 397,$
+      SCR_XSIZE = 105,$
+      /COLUMN,$
+      ;/BASE_ALIGN_CENTER, $
+      /ALIGN_CENTER,$
+      FRAME = 1)
+      
+      title = WIDGET_LABEL(auto_base,$
+      VALUE = 'Automatically')
+      title = WIDGET_LABEL(auto_base,$
+      VALUE = 'exclude dead')
+      title = WIDGET_LABEL(auto_base,$
+      VALUE = 'tubes:')
+      
+    group = CW_BGROUP(auto_base,$
+      ['Yes','No'],$
+      /EXCLUSIVE,$
+      /NO_RELEASE,$
+      SET_VALUE = 0,$
+      UNAME = 'exclude_dead_tube_auto')
+      
+  ENDIF
+
   ;- Selection tool -------------------------------------------------------------
   wSelection = WIDGET_BUTTON(wTab1Base,$
     XOFFSET   = sSelection.size[0],$
@@ -947,38 +1044,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     UNAME     = sRefreshplot.uname,$
     SENSITIVE = sRefreshplot.sensitive)
     
-  IF ((*global).FACILITY EQ 'SNS') THEN BEGIN
-  
-    ;- X/Y base -------------------------------------------------------------------
-    wXYbase = WIDGET_BASE(wTab1Base,$
-      XOFFSET   = 590,$
-      YOFFSET   = 587,$
-      ;    SCR_XSIZE = 80,$
-      UNAME     = XYbase.uname,$
-      /COLUMN,$
-      FRAME     = XYbase.frame)
-      
-    ;bank number
-    rowa = WIDGET_BASE(wXYbase,$
-      /ROW)
-    label = WIDGET_LABEL(rowa,$
-      VALUE = 'Bank #:')
-    value = WIDGET_LABEL(rowa,$
-      VALUE = 'N/A',$
-      /ALIGN_LEFT,$
-      UNAME = 'bank_number_value')
-      
-    ;tube local
-    rowb = WIDGET_BASE(wXYbase,$
-      /ROW)
-    label = WIDGET_LABEL(rowb,$
-      VALUE = 'Tube #:')
-    value = WIDGET_LABEL(rowb,$
-      VALUE = 'N/A',$
-      /ALIGN_LEFT,$
-      UNAME = 'tube_local_number_value')
-      
-  ENDIF ELSE BEGIN
+  IF ((*global).FACILITY EQ 'LENS') THEN BEGIN
   
     ;- X/Y base -------------------------------------------------------------------
     wXYbase = WIDGET_BASE(wTab1Base,$
@@ -989,38 +1055,39 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       /COLUMN,$
       FRAME     = XYbase.frame)
       
-  ENDELSE
+    ;row1 (Tube# or x#)
+    row1 = WIDGET_BASE(wXYbase,$
+      /ROW)
+    wXlabel = WIDGET_LABEL(row1,$
+      VALUE   = 'Tube (global):')
+    wXvalue = WIDGET_LABEL(row1,$
+      VALUE   = 'N/A',$
+      /ALIGN_LEFT,$
+      UNAME   = xValue.uname)
+      
+    ;row2 (Pixel# or y#)
+    row2 = WIDGET_BASE(wXYbase,$
+      /ROW)
+    wYlabel = WIDGET_LABEL(row2,$
+      VALUE   = 'Pixel #:')
+    wYvalue = WIDGET_LABEL(row2,$
+      VALUE   = 'N/A',$
+      /ALIGN_LEFT,$
+      UNAME   = yValue.uname)
+      
+    ;row3 (Counts)
+    row3 = WIDGET_BASE(wXYbase,$
+      /ROW)
+    wCountslabel = WIDGET_LABEL(row3,$
+      VALUE   = 'Counts: ')
+    wCountsvalue = WIDGET_LABEL(row3,$
+      VALUE   = 'N/A          ',$
+      UNAME   = countsValue.uname,$
+      /ALIGN_LEFT)
+      
+  ENDIF
   
-  ;row1 (Tube# or x#)
-  row1 = WIDGET_BASE(wXYbase,$
-    /ROW)
-  wXlabel = WIDGET_LABEL(row1,$
-    VALUE   = 'Tube (global):')
-  wXvalue = WIDGET_LABEL(row1,$
-    VALUE   = 'N/A',$
-    /ALIGN_LEFT,$
-    UNAME   = xValue.uname)
-    
-  ;row2 (Pixel# or y#)
-  row2 = WIDGET_BASE(wXYbase,$
-    /ROW)
-  wYlabel = WIDGET_LABEL(row2,$
-    VALUE   = 'Pixel #:')
-  wYvalue = WIDGET_LABEL(row2,$
-    VALUE   = 'N/A',$
-    /ALIGN_LEFT,$
-    UNAME   = yValue.uname)
-    
-  ;row3 (Counts)
-  row3 = WIDGET_BASE(wXYbase,$
-    /ROW)
-  wCountslabel = WIDGET_LABEL(row3,$
-    VALUE   = 'Counts: ')
-  wCountsvalue = WIDGET_LABEL(row3,$
-    VALUE   = 'N/A          ',$
-    UNAME   = countsValue.uname,$
-    /ALIGN_LEFT)
-    
+  
   ;Transmission and beam center calculation buttons
   IF ((*global).facility EQ 'SNS') THEN BEGIN
   
@@ -1090,24 +1157,5 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
   ;    SCR_XSIZE = sSelectionColor.size[2]+58,$
   ;    UNAME     = sSelectionColor.uname,$
   ;    VALUE     = sSelectionColor.value)
-  
-  IF ((*global).facility EQ 'SNS') THEN BEGIN
-  
-    ;Auto. Exclude Dead Tubes
-    auto_base = WIDGET_BASE(wTab1Base,$
-      XOFFSET = sColorBase.size[0]-58,$
-      YOFFSET = sColorBase.size[1] + 47,$
-      /COLUMN,$
-      FRAME = 1)
-      
-    group = CW_BGROUP(auto_base,$
-      ['Yes','No'],$
-      /EXCLUSIVE,$
-      /NO_RELEASE,$
-      SET_VALUE = 0,$
-      UNAME = 'exclude_dead_tube_auto',$
-      LABEL_TOP = 'Automatically Exclude Dead Tubes:    ')
-      
-  ENDIF
-  
+    
 END

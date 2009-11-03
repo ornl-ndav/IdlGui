@@ -46,24 +46,43 @@ PRO beam_center_calculation, EVENT=Event, BASE=base
     ;CATCH, error
     IF (error NE 0) THEN BEGIN
       CATCH, /CANCEL
-      title = 'Calculate Beam Center ERROR !'
-      text = 'Please select a different Calculation Range!'
+      title = 'Calculation of Beam Center ERROR !'
+      text = [' Error in calculation of Pixel Beam Center.', $
+              '',$
+              'Please select a different Calculation Range',$
+              '                  or', $
+              'manually input the tube beam center value!']
       parent_id = WIDGET_INFO(Event.top, $
         FIND_BY_UNAME='beam_center_calculation_base')
       result = DIALOG_MESSAGE(text, $
         title = title, $
         /ERROR, $
         DIALOG_PARENT = parent_id)
-      IF (N_ELEMENTS(event) NE 0) THEN BEGIN
-        putTextFieldValue, Event, 'beam_center_pixel_center_value', 'N/A'
-      ENDIF ELSE BEGIN
-        putTextFieldValueMainBase, base, $
-          uname='beam_center_pixel_center_value', $
-          'N/A'
-      ENDELSE
+      putTextFieldValue, Event, 'beam_center_pixel_center_value', 'N/A'
     ENDIF ELSE BEGIN
       ;calculate beam center pixel
       beam_center_pixel_calculation, event=Event, DATA=data
+      CATCH, /CANCEL
+    ENDELSE
+    
+    error = 0
+    CATCH, error
+    IF (error NE 0) THEN BEGIN
+      CATCH, /CANCEL
+      title = 'Calculate of Beam Center ERROR !'
+      text = [' Error in calculation of Tube Beam Center.', $
+              '',$
+              'Please select a different Calculation Range!', $
+              '                  or', $
+              'manually input the pixel beam center value!']
+      parent_id = WIDGET_INFO(Event.top, $
+        FIND_BY_UNAME='beam_center_calculation_base')
+      result = DIALOG_MESSAGE(text, $
+        title = title, $
+        /ERROR, $
+        DIALOG_PARENT = parent_id)
+      putTextFieldValue, Event, 'beam_center_tube_center_value', 'N/A'
+    ENDIF ELSE BEGIN
       ;calculate beam center tube
       beam_center_tube_calculation, event=Event, DATA=data
       CATCH, /CANCEL
