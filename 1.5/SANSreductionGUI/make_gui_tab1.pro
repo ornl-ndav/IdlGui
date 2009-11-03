@@ -1088,16 +1088,15 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       
   ENDIF
   
-  
-  ;Transmission and beam center calculation buttons
+    ;Transmission and beam center calculation buttons
   IF ((*global).facility EQ 'SNS') THEN BEGIN
   
     ;counts vs tof preview plot
     IvsTOF = WIDGET_DRAW(wTab1Base,$
     XOFFSET = 585,$
-    YOFFSET = 550,$
-    SCR_XSIZE = 500,$
-    SCR_YSIZE = 300,$
+    YOFFSET = 535,$
+    SCR_XSIZE = 420,$
+    SCR_YSIZE = 190,$
     UNAME = 'counts_vs_tof_preview_plot')
   
   
@@ -1133,10 +1132,6 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       /TRACKING_EVENTS,$
       UNAME = 'beam_center_calculation_button')
       
-  ENDIF
-  
-  IF ((*global).facility EQ 'LENS') THEN BEGIN
-  
     ;linear/log scale
     wGroupBase = WIDGET_BASE(wTab1Base,$
       XOFFSET = 890,$
