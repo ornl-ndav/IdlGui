@@ -35,109 +35,110 @@
 ;==============================================================================
 ;this function is trigerred each time the user changes tab (main tabs)
 PRO tab_event, Event
-;get global structure
-widget_control,Event.top,get_uvalue=global
-
-tab_id = widget_info(Event.top,find_by_uname='main_tab')
-CurrTabSelect = widget_info(tab_id,/tab_current)
-PrevTabSelect = (*global).PrevTabSelect
-
-IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
+  ;get global structure
+  widget_control,Event.top,get_uvalue=global
+  
+  tab_id = widget_info(Event.top,find_by_uname='main_tab')
+  CurrTabSelect = widget_info(tab_id,/tab_current)
+  PrevTabSelect = (*global).PrevTabSelect
+  
+  IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
     CASE (CurrTabSelect) OF
-        0: BEGIN
-           tab_id = widget_info(Event.top, $
-                                find_by_uname='data_normalization_tab')
-           CurrDNECtabSelect = widget_info(tab_id,/tab_current)
-           PrevDNECtabSelect = (*global).PrevDNECtabSelect
-           IF(CurrDNECtabSelect NE PrevDNECtabSelect) THEN BEGIN
-              IF (isBaseMap(Event, $
-                            'empty_cell_scaling_' + $
-                            'factor_calculation_base')) THEN BEGIN
-                 ;refresh the equation plot
-                 RefreshEquationDraw, Event ;_empty_cell
-              ENDIF
-           ENDIF
-           END
-        1: BEGIN                ;if REDUCE tab is now selected
-            REFreduction_CommandLineGenerator, Event
-        END
-        2: BEGIN                ;if PLOTS tab is now selected
-            IF ((*global).DataReductionStatus EQ 'OK') THEN BEGIN 
-;data reduction was successful
-                RefReduction_PlotMainDataReductionFileFirstTime, Event
-            ENDIF
-        END
-        3: BEGIN                ;if BATCH tab is now selected
-;retrieve info for batch mode
-            IF ((*global).debugger) THEN BEGIN
-                UpdateBatchTable, Event ;in ref_reduction_BatchTab.pro
-            ENDIF
-        END
-        ELSE:
+      0: BEGIN
+        tab_id = widget_info(Event.top, $
+          find_by_uname='data_normalization_tab')
+        CurrDNECtabSelect = widget_info(tab_id,/tab_current)
+        PrevDNECtabSelect = (*global).PrevDNECtabSelect
+        IF(CurrDNECtabSelect NE PrevDNECtabSelect) THEN BEGIN
+          IF (isBaseMap(Event, $
+            'empty_cell_scaling_' + $
+            'factor_calculation_base')) THEN BEGIN
+            ;refresh the equation plot
+            RefreshEquationDraw, Event ;_empty_cell
+          ENDIF
+        ENDIF
+      END
+      1: BEGIN                ;if REDUCE tab is now selected
+        REFreduction_CommandLineGenerator, Event
+      END
+      2: BEGIN                ;if PLOTS tab is now selected
+        IF ((*global).DataReductionStatus EQ 'OK' OR $
+          (*global).ascii_file_load_status) THEN BEGIN
+          ;data reduction was successful
+          rePlotAsciiData, Event
+        ENDIF
+      END
+      3: BEGIN                ;if BATCH tab is now selected
+        ;retrieve info for batch mode
+        IF ((*global).debugger) THEN BEGIN
+          UpdateBatchTable, Event ;in ref_reduction_BatchTab.pro
+        ENDIF
+      END
+      ELSE:
     ENDCASE
     (*global).PrevTabSelect = CurrTabSelect
-ENDIF
+  ENDIF
 END
 ;==============================================================================
 
 ;This function is trigerred each time the user changes the NXsummary
 ;and zoom tab of the data tab
 PRO REFreduction_DataNxsummaryZoomTab, Event
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-tab_id = widget_info(Event.top,find_by_uname='data_nxsummary_zoom_tab')
-CurrTabSelect = widget_info(tab_id,/tab_current)
-PrevTabSelect = (*global).PrevDataZoomTabSelect
-
-if (PrevTabSelect NE CurrTabSelect) then begin
+  ;get global structure
+  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  widget_control,id,get_uvalue=global
+  
+  tab_id = widget_info(Event.top,find_by_uname='data_nxsummary_zoom_tab')
+  CurrTabSelect = widget_info(tab_id,/tab_current)
+  PrevTabSelect = (*global).PrevDataZoomTabSelect
+  
+  if (PrevTabSelect NE CurrTabSelect) then begin
     CASE (CurrTabSelect) OF
-    1: begin ;if Zoom tab selected
+      1: begin ;if Zoom tab selected
         putTextFieldValue,$
           Event,$
           'data_zoom_scale_cwfield',$
           (*global).DataZoomFactor,$
           0 ;do not append
-        
+          
         REFreduction_ZoomRescaleData, Event
-
-    END
-    else:
+        
+      END
+      else:
     ENDCASE
     (*global).PrevDataZoomTabSelect = CurrTabSelect
-endif
+  endif
 END
 
 ;==============================================================================
 ;This function is trigerred each time the user changes the NXsummary
 ;and zoom tab of the normalization tab
 PRO REFreduction_NormNxsummaryZoomTab, Event
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-tab_id = widget_info(Event.top, $
-                     find_by_uname='normalization_nxsummary_zoom_tab')
-CurrTabSelect = widget_info(tab_id,/tab_current)
-PrevTabSelect = (*global).PrevNormZoomTabSelect
-
-if (PrevTabSelect NE CurrTabSelect) then begin
+  ;get global structure
+  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  widget_control,id,get_uvalue=global
+  
+  tab_id = widget_info(Event.top, $
+    find_by_uname='normalization_nxsummary_zoom_tab')
+  CurrTabSelect = widget_info(tab_id,/tab_current)
+  PrevTabSelect = (*global).PrevNormZoomTabSelect
+  
+  if (PrevTabSelect NE CurrTabSelect) then begin
     CASE (CurrTabSelect) OF
-    1: begin ;if Zoom tab selected
+      1: begin ;if Zoom tab selected
         putTextFieldValue,$
           Event,$
           'normalization_zoom_scale_cwfield',$
           (*global).NormalizationZoomFactor,$
           0 ;do not append
-
+          
         REFreduction_ZoomRescaleNormalization, Event
-
-    END
-    else:
+        
+      END
+      else:
     ENDCASE
     (*global).PrevNormZoomTabSelect = CurrTabSelect
-endif
+  endif
 END
 
 ;==============================================================================
@@ -146,96 +147,96 @@ END
 ;This procedure is reached each time the user changed a tab of the
 ;plot in the data tab
 PRO data_plots_tab_event, Event
-;get global structure
-WIDGET_CONTROL,Event.top,GET_UVALUE=global
-
-info_base_status = 0
-
-IF ((*global).DataNexusFound) THEN BEGIN
-
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  info_base_status = 0
+  
+  IF ((*global).DataNexusFound) THEN BEGIN
+  
     tab_id = widget_info(Event.top,find_by_uname='load_data_d_dd_tab')
     CurrTabSelect = widget_info(tab_id,/tab_current)
     PrevTabSelect = (*global).PrevDataTabSelect
     
     CASE (CurrTabSelect) OF
-        0: info_base_status = 1
-        ELSE:
+      0: info_base_status = 1
+      ELSE:
     ENDCASE
-
+    
     IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
-        CASE (CurrTabSelect) OF
-            2: BEGIN            ;Y vs X (2D)
-                IF ((*global).data_loadct_contrast_changed) THEN BEGIN
-                    refreshPlot2DDataFile, Event
-                    (*global).data_loadct_contrast_changed = 0
-                ENDIF
-            END
-            ELSE:
-        ENDCASE
-        (*global).PrevDataTabSelect = CurrTabSelect
+      CASE (CurrTabSelect) OF
+        2: BEGIN            ;Y vs X (2D)
+          IF ((*global).data_loadct_contrast_changed) THEN BEGIN
+            refreshPlot2DDataFile, Event
+            (*global).data_loadct_contrast_changed = 0
+          ENDIF
+        END
+        ELSE:
+      ENDCASE
+      (*global).PrevDataTabSelect = CurrTabSelect
     ENDIF
-
-ENDIF
-
-MapBase, Event, 'info_data_base', info_base_status
-
+    
+  ENDIF
+  
+  MapBase, Event, 'info_data_base', info_base_status
+  
 END
 
 ;------------------------------------------------------------------------------
 ;This procedure is reached each time the user changed a tab of the
 ;plot in the normalization tab
 PRO norm_plots_tab_event, Event
-;get global structure
-WIDGET_CONTROL,Event.top,GET_UVALUE=global
-
-info_base_status = 0
-
-IF ((*global).NormNexusFound EQ 1) THEN BEGIN
-    
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  info_base_status = 0
+  
+  IF ((*global).NormNexusFound EQ 1) THEN BEGIN
+  
     tab_id = widget_info(Event.top,find_by_uname='load_normalization_d_dd_tab')
     CurrTabSelect = widget_info(tab_id,/tab_current)
     PrevTabSelect = (*global).PrevNormTabSelect
     
     CASE (CurrTabSelect) OF
-        0: info_base_status = 1
-        ELSE:
+      0: info_base_status = 1
+      ELSE:
     ENDCASE
-
+    
     IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
-        CASE (CurrTabSelect) OF
-            2: BEGIN            ;Y vs X (2D)
-                IF ((*global).norm_loadct_contrast_changed) THEN BEGIN
-                    refresh_Plot2DNormalizationFile, Event
-                    (*global).norm_loadct_contrast_changed = 0
-                ENDIF
-            END
-            ELSE:
-        ENDCASE
-        (*global).PrevNormTabSelect = CurrTabSelect
+      CASE (CurrTabSelect) OF
+        2: BEGIN            ;Y vs X (2D)
+          IF ((*global).norm_loadct_contrast_changed) THEN BEGIN
+            refresh_Plot2DNormalizationFile, Event
+            (*global).norm_loadct_contrast_changed = 0
+          ENDIF
+        END
+        ELSE:
+      ENDCASE
+      (*global).PrevNormTabSelect = CurrTabSelect
     ENDIF
-
-ENDIF
-
-MapBase, Event, 'info_norm_base', info_base_status
-
+    
+  ENDIF
+  
+  MapBase, Event, 'info_norm_base', info_base_status
+  
 END
 
 ;------------------------------------------------------------------------------
 PRO data_norma_empty_cell_tab_event, Event
-;get global structure
-WIDGET_CONTROL,Event.top,GET_UVALUE=global
-
-tab_id = widget_info(Event.top, $
-                     find_by_uname='data_normalization_tab')
-CurrDNECtabSelect = widget_info(tab_id,/tab_current)
-PrevDNECtabSelect = (*global).PrevDNECtabSelect
-IF(CurrDNECtabSelect NE PrevDNECtabSelect) THEN BEGIN
-   IF (isBaseMap(Event, $
-                 'empty_cell_scaling_' + $
-                 'factor_calculation_base')) THEN BEGIN
-                                ;refresh the equation plot
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  tab_id = widget_info(Event.top, $
+    find_by_uname='data_normalization_tab')
+  CurrDNECtabSelect = widget_info(tab_id,/tab_current)
+  PrevDNECtabSelect = (*global).PrevDNECtabSelect
+  IF(CurrDNECtabSelect NE PrevDNECtabSelect) THEN BEGIN
+    IF (isBaseMap(Event, $
+      'empty_cell_scaling_' + $
+      'factor_calculation_base')) THEN BEGIN
+      ;refresh the equation plot
       RefreshEquationDraw, Event ;_empty_cell
-   ENDIF
-ENDIF
-
+    ENDIF
+  ENDIF
+  
 END
