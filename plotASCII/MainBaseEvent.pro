@@ -39,8 +39,6 @@ PRO MAIN_BASE_event, Event
   
   wWidget =  Event.top            ;widget id
   
-  help, event, /structure
-  
   CASE Event.id OF
   
     WIDGET_INFO(wWidget, FIND_BY_UNAME='MAIN_BASE'): BEGIN
@@ -50,14 +48,14 @@ PRO MAIN_BASE_event, Event
       geometry = WIDGET_INFO(id1, /GEOMETRY)
       new_xsize = geometry.scr_xsize
       new_ysize = geometry.scr_ysize
-      
+      WIDGET_CONTROL, id1, XSIZE= new_xsize
+      WIDGET_CONTROL, id1, YSIZE= new_ysize
+        
       id = WIDGET_INFO(Event.top, FIND_BY_UNAME='main_draw')
       WIDGET_CONTROL, id, DRAW_XSIZE= new_xsize
       WIDGET_CONTROL, id, DRAW_YSIZE= new_ysize
-      plot_ascii_file, EVENT=event
       
-      WIDGET_CONTROL, id1, XSIZE= new_xsize
-      WIDGET_CONTROL, id1, YSIZE= new_ysize
+      plot_ascii_file, EVENT=event
       
       
     END

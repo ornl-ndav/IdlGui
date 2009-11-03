@@ -116,7 +116,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     TITLE        = MainBaseTitle,$
     /COLUMN, $
     /TLB_MOVE_EVENTS, $
-    /TRACKING_EVENTS, $
+    ;/TRACKING_EVENTS, $
     /TLB_SIZE_EVENTS)
     
   plot = WIDGET_DRAW(MAIN_BASE,$
