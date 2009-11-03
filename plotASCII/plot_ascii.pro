@@ -115,6 +115,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     YOFFSET      = MainBaseSize[1],$
     TITLE        = MainBaseTitle,$
     /COLUMN, $
+    /TLB_MOVE_EVENTS, $
+    /TRACKING_EVENTS, $
     /TLB_SIZE_EVENTS)
     
   plot = WIDGET_DRAW(MAIN_BASE,$
@@ -149,7 +151,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;send message to log current run of application
   logger, APPLICATION=application, VERSION=version, UCAMS=ucams
   
-  plot_ascii_file, MAIN_BASE, global
+  plot_ascii_file, MAIN_BASE=MAIN_BASE
   
 END
 
