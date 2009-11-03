@@ -763,8 +763,9 @@ PRO launch_transmission_auto_mode_base, main_event
     GROUP_LEADER = ourGroup, /NO_BLOCK, CLEANUP='transmission_auto_Cleanup'
     
   ;get TOF array
-  tof_array = getTOFarray(Event, (*global).data_nexus_file_name)
-  (*(*global_auto).tof_array) = tof_array
+ ; tof_array = getTOFarray(Event, (*global).data_nexus_file_name)
+ ; (*(*global_auto).tof_array) = tof_array = (*(*global).tof_array)
+   (*(*global_auto).tof_array) = (*(*global).tof_array)
   
   plot_auto_data_around_beam_stop, main_base=wBase, global, global_auto
   

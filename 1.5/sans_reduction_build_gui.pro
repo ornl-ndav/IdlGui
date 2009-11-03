@@ -156,6 +156,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     mouse_moved: 0,$
     dead_tube_coeff_ratio: 100., $ ;coeff used to determine if a tube is dead or not
     
+    tof_array: PTR_NEW(0L), $
     selection_type: 'inside', $ ;'inside' or 'outside'
     
     x0_device: 0L,$
