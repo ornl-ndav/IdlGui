@@ -159,6 +159,12 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     tof_array: PTR_NEW(0L), $
     selection_type: 'inside', $ ;'inside' or 'outside'
     
+    ;counts vs tof plot
+    tof_counts: PTR_NEW(0L), $
+    tof_tof: PTR_NEW(0L), $
+    tof_range: { min: 0.,$ ;min and max value of tof selected in counts vs tof
+    max: 0.}, $
+    
     x0_device: 0L,$
     y0_device: 0L,$
     x1_device: 0L,$
