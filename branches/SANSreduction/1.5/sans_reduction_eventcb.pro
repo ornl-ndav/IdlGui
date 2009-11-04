@@ -368,7 +368,7 @@ PRO tab_event, Event
             display_images, EVENT=event
             display_selection_images, EVENT=event, $
               SELECTION=(*global).selection_type
-              replot_counts_vs_tof, Event
+            replot_counts_vs_tof, Event
           ENDIF
         ENDELSE
       END
@@ -482,9 +482,13 @@ PRO get_and_plot_tof_array, Event
   counts = TOTAL(DataArray,2)
   Counts = TOTAL(counts,2)
   
+  (*(*global).tof_counts) = counts
+  
   sz = N_ELEMENTS(tof_array)-1
   
   tof = tof_array[0:sz-1]
+  
+  (*(*global).tof_tof) = tof
   
   PLOT, tof, $
     counts, $
@@ -500,6 +504,11 @@ PRO get_and_plot_tof_array, Event
     xtitle='Bins #',$
     /NOERASE
     
+  DEVICE, DECOMPOSED=1
+  
+  ;plot line at beginning and at end (to show full range of tof selected)
+  plot_range_of_tof_displayed, Event, FIRST_TIME=1b
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -545,11 +554,45 @@ PRO replot_counts_vs_tof, Event
     xtitle='Bins #',$
     /NOERASE
     
+  plot_range_of_tof_displayed, Event
+  
 END
 
+;------------------------------------------------------------------------------
+PRO plot_range_of_tof_displayed, Event, FIRST_TIME=first_time
 
-;==============================================================================
-PRO sans_reduction_eventcb, event
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  counts = (*(*global).tof_counts)
+  max_counts = MAX(counts,MIN=min_counts)
+  
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'counts_vs_tof_preview_plot')
+  WIDGET_CONTROL, id, GET_VALUE = id_value
+  WSET, id_value
+  
+  IF (N_ELEMENTS(first_time) NE 0) THEN BEGIN
+    tof = (*(*global).tof_tof)
+    sz = N_ELEMENTS(tof)
+    xmin = tof[0]
+    xmax = tof[sz-1]
+    (*global).tof_range.min = tof[0]
+    (*global).tof_range.max = tof[sz-1]
+  ENDIF ELSE BEGIN
+    tof_range = (*global).tof_range
+    xmin = tof_range.min
+    xmax = tof_range.max
+  ENDELSE
+  
+  PLOTS, xmin, min_counts, /DATA
+  PLOTS, xmin, max_counts, /DATA, /CONTINUE, COLOR=FSC_COLOR('red'), $
+    THICK= 2
+    
+  PLOTS, xmax, min_counts, /DATA
+  PLOTS, xmax, max_counts, /DATA, /CONTINUE, COLOR=FSC_COLOR('red'), $
+    THICK= 2
+    
+    
+  DEVICE, DECOMPOSED=0
+  
 END
 
-;==============================================================================

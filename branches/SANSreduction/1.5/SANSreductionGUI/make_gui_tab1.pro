@@ -1097,6 +1097,8 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     YOFFSET = 535,$
     SCR_XSIZE = 420,$
     SCR_YSIZE = 190,$
+;    /TRACKING_EVENTS, $
+    /MOTION_EVENTS, $
     UNAME = 'counts_vs_tof_preview_plot')
   
     Tran_BC_base = WIDGET_BASE(wTab1Base,$
