@@ -481,16 +481,23 @@ PRO get_and_plot_tof_array, Event
   counts = TOTAL(DataArray,2)
   Counts = TOTAL(counts,2)
   
-  tof = tof_array[0:N_ELEMENTS(tof_array)-2]
+  sz = N_ELEMENTS(tof_array)-1
+  
+  tof = tof_array[0:sz-1]
   
   PLOT, tof, $
     counts, $
     XTITLE='TOF (micro seconds)', $
     YTITLE = 'Counts',$
     YSTYLE = 1, $
-    XSTYLE = 1
+    XSTYLE = 1, $
+    POSITION = [0.15, 0.17, 0.95, 0.85]
     
-    
+    bin_array = DBLARR(sz)
+    AXIS, XRANGE=[0,sz-1],$
+    xaxis=1, $
+    xtitle='Bins #',$
+    /NOERASE
     
 END
 

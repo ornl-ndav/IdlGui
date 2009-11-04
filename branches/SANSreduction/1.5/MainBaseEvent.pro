@@ -399,7 +399,7 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='browse_nexus_button'): BEGIN
       browse_nexus, Event ;_eventcb
       error = 0
-      CATCH, error
+     ; CATCH, error
       IF (error NE 0) THEN BEGIN
         CATCH,/CANCEL
         widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
