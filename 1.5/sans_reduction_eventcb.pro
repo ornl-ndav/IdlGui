@@ -368,6 +368,7 @@ PRO tab_event, Event
             display_images, EVENT=event
             display_selection_images, EVENT=event, $
               SELECTION=(*global).selection_type
+              replot_counts_vs_tof, Event
           ENDIF
         ENDELSE
       END
@@ -493,13 +494,59 @@ PRO get_and_plot_tof_array, Event
     XSTYLE = 1, $
     POSITION = [0.15, 0.17, 0.95, 0.85]
     
-    bin_array = DBLARR(sz)
-    AXIS, XRANGE=[0,sz-1],$
+  bin_array = DBLARR(sz)
+  AXIS, XRANGE=[0,sz-1],$
     xaxis=1, $
     xtitle='Bins #',$
     /NOERASE
     
 END
+
+;------------------------------------------------------------------------------
+PRO replot_counts_vs_tof, Event
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  tof_array = (*(*global).tof_array)
+  
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'counts_vs_tof_preview_plot')
+  WIDGET_CONTROL, id, GET_VALUE = id_value
+  WSET, id_value
+  
+  CASE (is_front_back_or_both_plot(Event)) OF
+    'front': BEGIN
+      DataArray = (*(*global).front_bank)
+    END
+    'back' : BEGIN
+      DataArray = (*(*global).back_bank)
+    END
+    'both': BEGIN
+      DataArray = (*(*global).both_banks)
+    END
+  ENDCASE
+  
+  counts = TOTAL(DataArray,2)
+  Counts = TOTAL(counts,2)
+  
+  sz = N_ELEMENTS(tof_array)-1
+  
+  tof = tof_array[0:sz-1]
+  
+  PLOT, tof, $
+    counts, $
+    XTITLE='TOF (micro seconds)', $
+    YTITLE = 'Counts',$
+    YSTYLE = 1, $
+    XSTYLE = 1, $
+    POSITION = [0.15, 0.17, 0.95, 0.85]
+    
+  bin_array = DBLARR(sz)
+  AXIS, XRANGE=[0,sz-1],$
+    xaxis=1, $
+    xtitle='Bins #',$
+    /NOERASE
+    
+END
+
 
 ;==============================================================================
 PRO sans_reduction_eventcb, event
