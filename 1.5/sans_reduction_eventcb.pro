@@ -483,8 +483,15 @@ PRO get_and_plot_tof_array, Event
   
   tof = tof_array[0:N_ELEMENTS(tof_array)-2]
   
-  PLOT, tof, counts  
-  
+  PLOT, tof, $
+    counts, $
+    XTITLE='TOF (micro seconds)', $
+    YTITLE = 'Counts',$
+    YSTYLE = 1, $
+    XSTYLE = 1
+    
+    
+    
 END
 
 ;==============================================================================
