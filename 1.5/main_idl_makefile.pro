@@ -110,6 +110,7 @@ cd, CurrentFolder
 
 ;tof tools
 .run sans_reduction_tof_tools.pro
+.run sans_reduction_tof_tools_eventcb.pro
 
 ;main functions
 .run MainBaseEvent.pro

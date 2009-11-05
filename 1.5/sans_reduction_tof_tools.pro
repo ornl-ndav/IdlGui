@@ -43,12 +43,26 @@ PRO tof_tools_base_event, Event
     WIDGET_INFO(Event.top, FIND_BY_UNAME='tof_mode_play_tof'): BEGIN
       map_base, Event, 'display_tof_range_base', 0
       map_base, Event, 'play_tof_range_base', 1
+      xmin = getTextFieldValue(Event,'mode1_from_tof_micros')
+      xmax = getTextFieldValue(Event,'mode1_to_tof_micros')
+      tof_range.min = xmin
+      tof_range.max = xmax
+      (*global).tof_range = tof_range
+      main_event = (*global).main_event
+      replot_counts_vs_tof, main_event
     END
     
     ;play TOFs
     WIDGET_INFO(Event.top, FIND_BY_UNAME='tof_mode_predefined_range'): BEGIN
       map_base, Event, 'display_tof_range_base', 1
       map_base, Event, 'play_tof_range_base', 0
+      xmin = getTextFieldValue(Event,'mode2_from_tof_micros')
+      xmax = getTextFieldValue(Event,'mode2_to_tof_micros')
+      tof_range.min = xmin
+      tof_range.max = xmax
+      (*global).tof_range = tof_range
+      main_event = (*global).main_event
+      replot_counts_vs_tof, main_event
     END
     
     ;CLOSE button
@@ -362,50 +376,3 @@ PRO tof_tools_base, main_base=main_base, Event
     
 END
 
-;------------------------------------------------------------------------------
-PRO populate_tof_tools_base, Event
-
-WIDGET_CONTROL, Event.top, GET_UVALUE=global
-
-tof_counts = (*(*global).tof_counts)
-tof_tof = (*(*global).array_of_tof_bins)
-
-sz = N_ELEMENTS(tof_tof)
-
-
-tof_base = (*global).tof_tools_base
-
-;populate 'display a predefined tof range' 
-;select everything by default
-default_from_tof = tof_tof[0]
-default_from_bin = 0
-default_to_tof = tof_tof[sz-1]
-default_to_bin = sz-2
-
-id = WIDGET_INFO(tof_base, FIND_BY_UNAME='mode1_from_tof_micros')
-WIDGET_CONTROL, id, SET_VALUE= default_from_tof
-id = WIDGET_INFO(tof_base, FIND_BY_UNAME='mode1_to_tof_micros')
-WIDGET_CONTROL, id, SET_VALUE= default_to_tof
-id = WIDGET_INFO(tof_base, FIND_BY_UNAME='mode1_from_tof_bin')
-WIDGET_CONTROL, id, SET_VALUE= default_from_bin
-id = WIDGET_INFO(tof_base, FIND_BY_UNAME='mode1_to_tof_bin')
-WIDGET_CONTROL, id, SET_VALUE= default_to_bin
-
-;populate 'play tofs'
-;select first 10 bins by default
-default_from_tof = tof_tof[0]
-default_from_bin = 0
-default_to_tof = tof_tof[9]
-default_to_bin = 9
-
-id = WIDGET_INFO(tof_base, FIND_BY_UNAME='mode2_from_tof_micros')
-WIDGET_CONTROL, id, SET_VALUE= default_from_tof
-id = WIDGET_INFO(tof_base, FIND_BY_UNAME='mode2_to_tof_micros')
-WIDGET_CONTROL, id, SET_VALUE= default_to_tof
-id = WIDGET_INFO(tof_base, FIND_BY_UNAME='mode2_from_tof_bin')
-WIDGET_CONTROL, id, SET_VALUE= default_from_bin
-id = WIDGET_INFO(tof_base, FIND_BY_UNAME='mode2_to_tof_bin')
-WIDGET_CONTROL, id, SET_VALUE= default_to_bin
-
-
-END
