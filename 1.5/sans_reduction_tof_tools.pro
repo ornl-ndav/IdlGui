@@ -111,7 +111,7 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
     YOFFSET = 65,$
     UNAME = 'display_tof_range_base',$
     MAP = 1,$
-    FRAME = 1)
+    FRAME = 0)
     
   ;from label
   from = WIDGET_LABEL(mode11,$
@@ -144,7 +144,7 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
     VALUE = '0.',$
     /FLOAT,$
     XSIZE = 7,$
-    UNAME = 'from_tof_micros')
+    UNAME = 'mode1_from_tof_micros')
   label = WIDGET_LABEL(row11,$
     VALUE = 'microS')
   label = WIDGET_LABEL(from_base,$
@@ -156,9 +156,9 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
   text = CW_FIELD(row12,$
     TITLE= '',$
     VALUE = '0.',$
-    /FLOAT,$
+    /INTEGER,$
     XSIZE = 7,$
-    UNAME = 'from_tof_bin')
+    UNAME = 'mode1_from_tof_bin')
     
   ;TO
   row1 = WIDGET_BASE(mode1,$
@@ -177,7 +177,7 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
     VALUE = '0.',$
     /FLOAT,$
     XSIZE = 7,$
-    UNAME = 'from_tof_micros')
+    UNAME = 'mode1_to_tof_micros')
   label = WIDGET_LABEL(row11,$
     VALUE = 'microS')
   label = WIDGET_LABEL(from_base,$
@@ -189,9 +189,9 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
   text = CW_FIELD(row12,$
     TITLE= '',$
     VALUE = '0.',$
-    /FLOAT,$
+    /INTEGER,$
     XSIZE = 7,$
-    UNAME = 'from_tof_bin')
+    UNAME = 'mode1_to_tof_bin')
     
   ;mode2 base (play tof) ;-----------------------------------------------------
   mode22 = WIDGET_BASE(wBase,$
@@ -199,7 +199,7 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
     YOFFSET = 65,$
     UNAME = 'play_tof_range_base',$
     MAP = 0,$
-    FRAME = 1)
+    FRAME = 0)
     
   ;from label
   from = WIDGET_LABEL(mode22,$
@@ -232,7 +232,7 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
     VALUE = '0.',$
     /FLOAT,$
     XSIZE = 7,$
-    UNAME = 'from_tof_micros')
+    UNAME = 'mode2_from_tof_micros')
   label = WIDGET_LABEL(row11,$
     VALUE = 'microS')
   label = WIDGET_LABEL(from_base,$
@@ -244,9 +244,9 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
   text = CW_FIELD(row12,$
     TITLE= '',$
     VALUE = '0.',$
-    /FLOAT,$
+    /INTEGER,$
     XSIZE = 7,$
-    UNAME = 'from_tof_bin')
+    UNAME = 'mode2_from_tof_bin')
     
   ;TO
   row1 = WIDGET_BASE(mode2,$
@@ -265,7 +265,7 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
     VALUE = '0.',$
     /FLOAT,$
     XSIZE = 7,$
-    UNAME = 'from_tof_micros')
+    UNAME = 'mode2_to_tof_micros')
   label = WIDGET_LABEL(row11,$
     VALUE = 'microS')
   label = WIDGET_LABEL(from_base,$
@@ -277,9 +277,9 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
   text = CW_FIELD(row12,$
     TITLE= '',$
     VALUE = '0.',$
-    /FLOAT,$
+    /INTEGER,$
     XSIZE = 7,$
-    UNAME = 'from_tof_bin')
+    UNAME = 'mode2_to_tof_bin')
     
   ;bins display size
   field = CW_FIELD(mode2,$
@@ -329,7 +329,6 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
 END
 
 ;------------------------------------------------------------------------------
-
 PRO tof_tools_base, main_base=main_base, Event
 
   IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
@@ -346,7 +345,7 @@ PRO tof_tools_base, main_base=main_base, Event
   wBase1 = ''
   tof_tools_launcher_base_gui, wBase1, $
     main_base_geometry
-  (*global).transmission_launcher_base_id = wBase1
+  (*global).tof_tools_base = wBase1
   
   WIDGET_CONTROL, wBase1, /REALIZE
   
@@ -363,4 +362,50 @@ PRO tof_tools_base, main_base=main_base, Event
     
 END
 
+;------------------------------------------------------------------------------
+PRO populate_tof_tools_base, Event
 
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+tof_counts = (*(*global).tof_counts)
+tof_tof = (*(*global).array_of_tof_bins)
+
+sz = N_ELEMENTS(tof_tof)
+
+
+tof_base = (*global).tof_tools_base
+
+;populate 'display a predefined tof range' 
+;select everything by default
+default_from_tof = tof_tof[0]
+default_from_bin = 0
+default_to_tof = tof_tof[sz-1]
+default_to_bin = sz-2
+
+id = WIDGET_INFO(tof_base, FIND_BY_UNAME='mode1_from_tof_micros')
+WIDGET_CONTROL, id, SET_VALUE= default_from_tof
+id = WIDGET_INFO(tof_base, FIND_BY_UNAME='mode1_to_tof_micros')
+WIDGET_CONTROL, id, SET_VALUE= default_to_tof
+id = WIDGET_INFO(tof_base, FIND_BY_UNAME='mode1_from_tof_bin')
+WIDGET_CONTROL, id, SET_VALUE= default_from_bin
+id = WIDGET_INFO(tof_base, FIND_BY_UNAME='mode1_to_tof_bin')
+WIDGET_CONTROL, id, SET_VALUE= default_to_bin
+
+;populate 'play tofs'
+;select first 10 bins by default
+default_from_tof = tof_tof[0]
+default_from_bin = 0
+default_to_tof = tof_tof[9]
+default_to_bin = 9
+
+id = WIDGET_INFO(tof_base, FIND_BY_UNAME='mode2_from_tof_micros')
+WIDGET_CONTROL, id, SET_VALUE= default_from_tof
+id = WIDGET_INFO(tof_base, FIND_BY_UNAME='mode2_to_tof_micros')
+WIDGET_CONTROL, id, SET_VALUE= default_to_tof
+id = WIDGET_INFO(tof_base, FIND_BY_UNAME='mode2_from_tof_bin')
+WIDGET_CONTROL, id, SET_VALUE= default_from_bin
+id = WIDGET_INFO(tof_base, FIND_BY_UNAME='mode2_to_tof_bin')
+WIDGET_CONTROL, id, SET_VALUE= default_to_bin
+
+
+END

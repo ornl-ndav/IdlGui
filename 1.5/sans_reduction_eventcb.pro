@@ -493,10 +493,10 @@ PRO get_and_plot_tof_array, Event
   (*(*global).tof_counts) = counts
   
   sz = N_ELEMENTS(tof_array)-1
-  
   tof = tof_array[0:sz-1]
   
   (*(*global).tof_tof) = tof
+  (*(*global).array_of_tof_bins) = tof_array[0:sz]
   
   PLOT, tof, $
     counts, $

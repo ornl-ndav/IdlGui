@@ -161,9 +161,11 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     
     ;counts vs tof plot
     tof_counts: PTR_NEW(0L), $
+    array_of_tof_bins: PTR_NEW(0L), $
     tof_tof: PTR_NEW(0L), $
     tof_range: { min: 0.,$ ;min and max value of tof selected in counts vs tof
     max: 0.}, $
+    tof_tools_base: 0, $
     
     x0_device: 0L,$
     y0_device: 0L,$
@@ -570,10 +572,6 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
   
   ;send message to log current run of application
   logger, APPLICATION=application, VERSION=version, UCAMS=ucams
-  
-  ;REMOVE_ME
-  tof_tools_base, main_base=MAIN_BASE, Event
-  
   
 END
 

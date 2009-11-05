@@ -58,6 +58,7 @@ PRO MAIN_BASE_event, Event
     ;TOF tools button (that launches the TOF tools base
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tof_tools'): BEGIN
       tof_tools_base, Event
+      populate_tof_tools_base, Event
     END
     
     ;facility Selection
