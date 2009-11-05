@@ -517,7 +517,7 @@ PRO get_and_plot_tof_array, Event
   ;plot line at beginning and at end (to show full range of tof selected)
   plot_range_of_tof_displayed, Event, FIRST_TIME=1b
   
-  
+  activate_widget, Event, 'tof_tools', 1
   
 END
 
