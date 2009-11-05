@@ -55,10 +55,11 @@ PRO MAIN_BASE_event, Event
   
   CASE Event.id OF
   
-    ;counts vs tof plot
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='counts_vs_tof_preview_plot'): BEGIN
+    ;TOF tools button (that launches the TOF tools base
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tof_tools'): BEGIN
+      tof_tools_base, Event
     END
-  
+    
     ;facility Selection
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='facility_selection_validate_button'): begin
@@ -403,7 +404,7 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='browse_nexus_button'): BEGIN
       browse_nexus, Event ;_eventcb
       error = 0
-    CATCH, error
+      CATCH, error
       IF (error NE 0) THEN BEGIN
         CATCH,/CANCEL
         widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')

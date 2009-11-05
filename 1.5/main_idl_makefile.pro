@@ -108,6 +108,9 @@ cd, CurrentFolder
 .run sans_reduction_plot_tab_widgets.pro
 .run sans_reduction_plot_tab_fitting.pro
 
+;tof tools
+.run sans_reduction_tof_tools.pro
+
 ;main functions
 .run MainBaseEvent.pro
 .run sans_reduction_make_facility_selection.pro
