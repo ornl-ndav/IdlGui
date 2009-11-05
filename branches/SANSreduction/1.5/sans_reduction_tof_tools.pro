@@ -39,14 +39,23 @@ PRO tof_tools_base_event, Event
   
   CASE Event.id OF
   
+    ;display a predefined TOF range
     WIDGET_INFO(Event.top, FIND_BY_UNAME='tof_mode_play_tof'): BEGIN
       map_base, Event, 'display_tof_range_base', 0
       map_base, Event, 'play_tof_range_base', 1
     END
     
+    ;play TOFs
     WIDGET_INFO(Event.top, FIND_BY_UNAME='tof_mode_predefined_range'): BEGIN
       map_base, Event, 'display_tof_range_base', 1
       map_base, Event, 'play_tof_range_base', 0
+    END
+    
+    ;CLOSE button
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='tof_base_close_button'): BEGIN
+      id = WIDGET_INFO(Event.top, $
+        FIND_BY_UNAME='tof_tools_widget_base')
+      WIDGET_CONTROL, id, /DESTROY
     END
     
     ELSE:
@@ -77,10 +86,10 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
     MAP          = 1,$
     /BASE_ALIGN_CENTER,$
     GROUP_LEADER = ourGroup)
-        
+    
   wBase1 = WIDGET_BASE(wBase,$
     SCR_YSIZE = 55,$
-    /COLUMN) 
+    /COLUMN)
     
   ;tof mode
   tof_mode = WIDGET_BASE(wBase1,$
@@ -103,7 +112,7 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
     UNAME = 'display_tof_range_base',$
     MAP = 1,$
     FRAME = 1)
-
+    
   ;from label
   from = WIDGET_LABEL(mode11,$
     VALUE = 'FROM',$
@@ -115,7 +124,7 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
     VALUE = 'TO',$
     XOFFSET = 12,$
     YOFFSET = 185)
-
+    
   mode1 = WIDGET_BASE(mode11,$
     /COLUMN)
   ;from
@@ -191,7 +200,7 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
     UNAME = 'play_tof_range_base',$
     MAP = 0,$
     FRAME = 1)
-
+    
   ;from label
   from = WIDGET_LABEL(mode22,$
     VALUE = 'FROM',$
@@ -203,7 +212,7 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
     VALUE = 'TO',$
     XOFFSET = 12,$
     YOFFSET = 185)
-
+    
   mode2 = WIDGET_BASE(mode22,$
     /COLUMN)
   ;from
@@ -282,35 +291,35 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
     
   ;time frame
   row = WIDGET_BASE(mode2,$
-  /ROW)
+    /ROW)
   field = CW_FIELD(row,$
     VALUE = '1',$
     /FLOAT,$
     UNAME = 'tof_bin_time',$
     XSIZE = 3,$
     TITLE = 'Displaying time of each frame: ')
-    label = WIDGET_LABEL(row,$
+  label = WIDGET_LABEL(row,$
     VALUE = 'seconds')
     
-    ;new row for play, pause and stop buttons
-    row = WIDGET_BASE(mode2,$
+  ;new row for play, pause and stop buttons
+  row = WIDGET_BASE(mode2,$
     /ROW)
-    xsize = 92
-    play = WIDGET_BUTTON(row,$
+  xsize = 92
+  play = WIDGET_BUTTON(row,$
     VALUE = 'PLAY',$
     SCR_XSIZE = xsize,$
     UNAME = 'play_tof_button')
-    pause = WIDGET_BUTTON(row,$
+  pause = WIDGET_BUTTON(row,$
     VALUE = 'PAUSE',$
     SCR_XSIZE = xsize,$
     UNAME = 'pause_tof_button')
-    stop = WIDGET_BUTTON(row,$
+  stop = WIDGET_BUTTON(row,$
     VALUE = 'STOP',$
     SCR_XSIZE = xsize,$
     UNAME = 'stop_tof_button')
     
-    ;close button
-    close = WIDGET_BUTTON(wBase,$
+  ;close button
+  close = WIDGET_BUTTON(wBase,$
     VALUE = ' CLOSE ',$
     SCR_XSIZE = 200,$
     UNAME = 'tof_base_close_button',$
