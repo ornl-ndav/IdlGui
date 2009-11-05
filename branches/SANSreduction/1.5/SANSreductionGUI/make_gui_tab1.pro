@@ -510,7 +510,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     ;linear/log scale
     wGroupBase = WIDGET_BASE(wTab1Base,$
       XOFFSET = 585,$
-      YOFFSET = 100,$
+      YOFFSET = 103,$
       SCR_XSIZE = 105,$
       /ALIGN_CENTER,$
       FRAME = 1,$
@@ -534,7 +534,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     ;- X/Y base -------------------------------------------------------------------
     wXYbase = WIDGET_BASE(wTab1Base,$
       XOFFSET   = 585,$
-      YOFFSET   = 200,$
+      YOFFSET   = 205,$
       UNAME     = XYbase.uname,$
       /COLUMN,$
       FRAME     = XYbase.frame)
@@ -578,7 +578,6 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       /ALIGN_LEFT,$
       UNAME = 'tube_local_number_value')
       
-      
     ;row2 (Pixel# or y#)
     row2 = WIDGET_BASE(wXYbase,$
       /ROW)
@@ -601,7 +600,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     ;Auto. Exclude Dead Tubes ;-----------------------------------
     auto_base = WIDGET_BASE(wTab1Base,$
       XOFFSET = 585,$
-      YOFFSET = 399,$
+      YOFFSET = 403,$
       SCR_XSIZE = 105,$
       /COLUMN,$
       ;/BASE_ALIGN_CENTER, $
@@ -619,10 +618,20 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       ['Yes','No'],$
       /EXCLUSIVE,$
       /NO_RELEASE,$
+      /ROW, $
       SET_VALUE = 0,$
       UNAME = 'exclude_dead_tube_auto')
       
   ENDIF
+
+  ;TOF tools
+  tof_tool = WIDGET_BUTTON(wTab1Base,$
+  XOFFSET = 583,$
+  YOFFSET = 505,$
+  SCR_XSIZE = 117,$
+  VALUE = 'TOF tools',$
+  SENSITIVE = 0, $
+  UNAME = 'tof_tools')
 
   ;- Selection tool -------------------------------------------------------------
   wSelection = WIDGET_BUTTON(wTab1Base,$
