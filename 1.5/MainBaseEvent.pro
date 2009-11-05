@@ -57,12 +57,6 @@ PRO MAIN_BASE_event, Event
   
     ;counts vs tof plot
     WIDGET_INFO(wWidget, FIND_BY_UNAME='counts_vs_tof_preview_plot'): BEGIN
-    
-
-    
-    
-    
-    
     END
   
     ;facility Selection
