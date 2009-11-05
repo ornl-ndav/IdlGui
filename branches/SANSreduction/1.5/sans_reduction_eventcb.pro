@@ -460,6 +460,14 @@ END
 PRO get_and_plot_tof_array, Event
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  error = 0
+  CATCH, error
+  IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN
+  ENDIF
+  
   tof_array = getTOFarray(Event, (*global).data_nexus_file_name)
   (*(*global).tof_array) = tof_array
   
@@ -496,7 +504,7 @@ PRO get_and_plot_tof_array, Event
     YTITLE = 'Counts',$
     YSTYLE = 1, $
     XSTYLE = 1, $
-    POSITION = [0.15, 0.17, 0.95, 0.85]
+    POSITION = [0.15, 0.17, 0.95, 0.85] 
     
   bin_array = DBLARR(sz)
   AXIS, XRANGE=[0,sz-1],$
@@ -508,6 +516,8 @@ PRO get_and_plot_tof_array, Event
   
   ;plot line at beginning and at end (to show full range of tof selected)
   plot_range_of_tof_displayed, Event, FIRST_TIME=1b
+  
+  
   
 END
 
@@ -590,7 +600,6 @@ PRO plot_range_of_tof_displayed, Event, FIRST_TIME=first_time
   PLOTS, xmax, min_counts, /DATA
   PLOTS, xmax, max_counts, /DATA, /CONTINUE, COLOR=FSC_COLOR('red'), $
     THICK= 2
-    
     
   DEVICE, DECOMPOSED=0
   
