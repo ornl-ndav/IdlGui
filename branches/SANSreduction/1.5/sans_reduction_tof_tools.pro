@@ -41,26 +41,11 @@ PRO tof_tools_base_event, Event
   CASE Event.id OF
   
     ;display a predefined TOF range
-    WIDGET_INFO(Event.top, FIND_BY_UNAME='tof_mode_play_tof'): BEGIN
-      map_base, Event, 'display_tof_range_base', 0
-      map_base, Event, 'play_tof_range_base', 1
-      xmin = getTextFieldValue(Event,'mode1_from_tof_micros')
-      xmax = getTextFieldValue(Event,'mode1_to_tof_micros')
-      
-      tof_range = (*global).tof_range
-      tof_range.min = xmin
-      tof_range.max = xmax
-      (*global).tof_range = tof_range
-      main_event = (*global_tof).main_event
-      replot_counts_vs_tof, main_event
-    END
-    
-    ;play TOFs
     WIDGET_INFO(Event.top, FIND_BY_UNAME='tof_mode_predefined_range'): BEGIN
       map_base, Event, 'display_tof_range_base', 1
       map_base, Event, 'play_tof_range_base', 0
-      xmin = getTextFieldValue(Event,'mode2_from_tof_micros')
-      xmax = getTextFieldValue(Event,'mode2_to_tof_micros')
+      xmin = getTextFieldValue(Event,'mode1_from_tof_micros')
+      xmax = getTextFieldValue(Event,'mode1_to_tof_micros')
       tof_range = (*global).tof_range
       tof_range.min = xmin
       tof_range.max = xmax
@@ -68,7 +53,23 @@ PRO tof_tools_base_event, Event
       main_event = (*global_tof).main_event
       replot_counts_vs_tof, main_event
     END
-    
+
+    ;play TOFs
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='tof_mode_play_tof'): BEGIN
+      map_base, Event, 'display_tof_range_base', 0
+      map_base, Event, 'play_tof_range_base', 1
+      xmin = getTextFieldValue(Event,'mode2_from_tof_micros')
+      xwidth = getTextFieldValue(Event,'tof_bin_size')
+      tof_tof = (*(*global).array_of_tof_bins)
+      xmax = tof_tof[xmin+xwidth]
+      tof_range = (*global).tof_range
+      tof_range.min = xmin
+      tof_range.max = xmax
+      (*global).tof_range = tof_range
+      main_event = (*global_tof).main_event
+      replot_counts_vs_tof, main_event
+    END
+        
     ;CLOSE button
     WIDGET_INFO(Event.top, FIND_BY_UNAME='tof_base_close_button'): BEGIN
       id = WIDGET_INFO(Event.top, $
