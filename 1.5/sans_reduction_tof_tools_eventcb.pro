@@ -148,15 +148,19 @@ PRO update_other_tof_field, Event, $
     MODE=mode, $  ;1 or 2
     AXIS=axis,$ ;'micros' or 'bin'
     TYPE=type ;'from' or 'to'
-
+    
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global_tof
   global = (*global_tof).global
-    
+  
+  success = 0
+  
   CASE (MODE) OF
     1: mode_base = 'mode1_'
     2: mode_base = 'mode2_'
   ENDCASE
+  
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='tof_tools_widget_base')
   
   CASE (TYPE) OF
     'from': BEGIN ;from
@@ -164,22 +168,33 @@ PRO update_other_tof_field, Event, $
         'micros': BEGIN ;micros
           micros = getTextFieldValue(Event,mode_base+'from_tof_micros')
           bin = convert_micros_to_bin(Event,micros)
+          result = is_from_lower_than_to(Event, MODE=mode)
           IF (bin EQ -1) THEN BEGIN ;outside of range
             micro_min = getTextFieldValue(Event,mode_base+'from_tof_micros_help')
             micro_max = getTextFieldValue(Event,mode_base+'to_tof_micros_help')
             text = ['INPUT ERROR',$
               STRCOMPRESS(micros,/REMOVE_ALL) + ' is outside of range',$
               micro_min + ' - ' + micro_max]
-            id = WIDGET_INFO(Event.top, FIND_BY_UNAME='tof_tools_widget_base')
             result = DIALOG_MESSAGE(text, $
               /CENTER, $
               DIALOG_PARENT=id,$
               /ERROR)
           ENDIF ELSE BEGIN
-            sbin = STRCOMPRESS(bin,/REMOVE_ALL)
-            putTextFieldValue, Event,mode_base+'from_tof_bin', sbin
-            xmin = getTextFieldValue(Event,mode_base+'from_tof_micros')
-            xmax = getTextFieldValue(Event,mode_base+'to_tof_micros')
+            result = is_from_lower_than_to(Event, MODE=mode) ;make sure from<to
+            IF (result EQ 0b) THEN BEGIN
+              text = ['INPUT ERROR',$
+                'FROM value is greater or equal to TO value !']
+              result = DIALOG_MESSAGE(text, $
+                /CENTER, $
+                DIALOG_PARENT=id,$
+                /ERROR)
+            ENDIF ELSE BEGIN
+              sbin = STRCOMPRESS(bin,/REMOVE_ALL)
+              putTextFieldValue, Event,mode_base+'from_tof_bin', sbin
+              xmin = getTextFieldValue(Event,mode_base+'from_tof_micros')
+              xmax = getTextFieldValue(Event,mode_base+'to_tof_micros')
+              success = 1
+            ENDELSE
           ENDELSE
         END
         'bin': BEGIN ;bin
@@ -191,16 +206,26 @@ PRO update_other_tof_field, Event, $
             text = ['INPUT ERROR',$
               STRCOMPRESS(bin,/REMOVE_ALL) + ' is outside of range',$
               bin_min + ' - ' + bin_max]
-            id = WIDGET_INFO(Event.top, FIND_BY_UNAME='tof_tools_widget_base')
             result = DIALOG_MESSAGE(text, $
               /CENTER,$
               DIALOG_PARENT=id,$
               /ERROR)
           ENDIF ELSE BEGIN
-            smicros = STRCOMPRESS(micros,/REMOVE_ALL)
-            putTextFieldValue, Event,mode_base+'from_tof_micros', smicros
-            xmin = getTextFieldValue(Event,mode_base+'from_tof_micros')
-            xmax = getTextFieldValue(Event,mode_base+'to_tof_micros')
+            result = is_from_lower_than_to(Event, MODE=mode) ;make sure from<to
+            IF (result EQ 0b) THEN BEGIN
+              text = ['INPUT ERROR',$
+                'FROM value is greater or equal to TO value !']
+              result = DIALOG_MESSAGE(text, $
+                /CENTER, $
+                DIALOG_PARENT=id,$
+                /ERROR)
+            ENDIF ELSE BEGIN
+              smicros = STRCOMPRESS(micros,/REMOVE_ALL)
+              putTextFieldValue, Event,mode_base+'from_tof_micros', smicros
+              xmin = getTextFieldValue(Event,mode_base+'from_tof_micros')
+              xmax = getTextFieldValue(Event,mode_base+'to_tof_micros')
+              success = 1
+            ENDELSE
           ENDELSE
         END
       ENDCASE
@@ -216,16 +241,26 @@ PRO update_other_tof_field, Event, $
             text = ['INPUT ERROR',$
               STRCOMPRESS(micros,/REMOVE_ALL) + ' is outside of range',$
               micro_min + ' - ' + micro_max]
-            id = WIDGET_INFO(Event.top, FIND_BY_UNAME='tof_tools_widget_base')
             result = DIALOG_MESSAGE(text, $
               /CENTER, $
               DIALOG_PARENT=id,$
               /ERROR)
           ENDIF ELSE BEGIN
-            sbin = STRCOMPRESS(bin,/REMOVE_ALL)
-            putTextFieldValue, Event,mode_base+'to_tof_bin', sbin
-            xmin = getTextFieldValue(Event,mode_base+'from_tof_micros')
-            xmax = getTextFieldValue(Event,mode_base+'to_tof_micros')
+            result = is_from_lower_than_to(Event, MODE=mode) ;make sure from<to
+            IF (result EQ 0b) THEN BEGIN
+              text = ['INPUT ERROR',$
+                'FROM value is greater or equal to TO value !']
+              result = DIALOG_MESSAGE(text, $
+                /CENTER, $
+                DIALOG_PARENT=id,$
+                /ERROR)
+            ENDIF ELSE BEGIN
+              sbin = STRCOMPRESS(bin,/REMOVE_ALL)
+              putTextFieldValue, Event,mode_base+'to_tof_bin', sbin
+              xmin = getTextFieldValue(Event,mode_base+'from_tof_micros')
+              xmax = getTextFieldValue(Event,mode_base+'to_tof_micros')
+              success = 1
+            ENDELSE
           ENDELSE
         END
         'bin': BEGIN
@@ -237,28 +272,40 @@ PRO update_other_tof_field, Event, $
             text = ['INPUT ERROR',$
               STRCOMPRESS(bin,/REMOVE_ALL) + ' is outside of range',$
               bin_min + ' - ' + bin_max]
-            id = WIDGET_INFO(Event.top, FIND_BY_UNAME='tof_tools_widget_base')
             result = DIALOG_MESSAGE(text, $
               /CENTER,$
               DIALOG_PARENT=id,$
               /ERROR)
           ENDIF ELSE BEGIN
-            smicros = STRCOMPRESS(micros,/REMOVE_ALL)
-            putTextFieldValue, Event,mode_base+'to_tof_micros', smicros
-            xmin = getTextFieldValue(Event,mode_base+'from_tof_micros')
-            xmax = getTextFieldValue(Event,mode_base+'to_tof_micros')
+            result = is_from_lower_than_to(Event, MODE=mode) ;make sure from<to
+            IF (result EQ 0b) THEN BEGIN
+              text = ['INPUT ERROR',$
+                'FROM value is greater or equal to TO value !']
+              result = DIALOG_MESSAGE(text, $
+                /CENTER, $
+                DIALOG_PARENT=id,$
+                /ERROR)
+            ENDIF ELSE BEGIN
+              smicros = STRCOMPRESS(micros,/REMOVE_ALL)
+              putTextFieldValue, Event,mode_base+'to_tof_micros', smicros
+              xmin = getTextFieldValue(Event,mode_base+'from_tof_micros')
+              xmax = getTextFieldValue(Event,mode_base+'to_tof_micros')
+              success = 1
+            ENDELSE
           ENDELSE
         END
       ENDCASE
     END
   ENDCASE
   
-  tof_range = (*global).tof_range
-  tof_range.min = xmin
-  tof_range.max = xmax
-  (*global).tof_range = tof_range
-  main_event = (*global_tof).main_event
-  replot_counts_vs_tof, main_event
+  IF (success) THEN BEGIN
+    tof_range = (*global).tof_range
+    tof_range.min = xmin
+    tof_range.max = xmax
+    (*global).tof_range = tof_range
+    main_event = (*global_tof).main_event
+    replot_counts_vs_tof, main_event
+  ENDIF
   
 END
 

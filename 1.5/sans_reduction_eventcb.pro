@@ -92,16 +92,13 @@ PRO retrieveNexus, Event, FullNexusName
       progressBar = OBJ_NEW("SHOWPROGRESS", $
         XOFFSET = 100, $
         YOFFSET = 50, $
-        COLOR = FSC_COLOR('green'),$
         XSIZE   = 200,$
         TITLE   = 'Plotting Data',$
         /CANCELBUTTON)
-      progressBar->SetColor, 250
-      title = 'Plotting Data ... '
-      ;progressBar->SetLabel, title
+      progressBar->SetColor, FSC_COLOR('red')
       progressBar->Start
       
-      IF (UpdateProgressBar(progressBar,50)) THEN BEGIN
+      IF (UpdateProgressBar(progressBar,100)) THEN BEGIN
         progressBarCancel = 1
         progressBar->Destroy
         OBJ_DESTROY, progressBar
