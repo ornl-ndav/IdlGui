@@ -58,6 +58,8 @@ PRO retrieveNexus, Event, FullNexusName
   ;indicate initialization with hourglass icon
   WIDGET_CONTROL,/HOURGLASS
   
+  DEVICE, DECOMPOSED=1
+  
   ;retrieve infos
   PROCESSING = (*global).processing
   OK         = (*global).ok
@@ -90,6 +92,7 @@ PRO retrieveNexus, Event, FullNexusName
       progressBar = OBJ_NEW("SHOWPROGRESS", $
         XOFFSET = 100, $
         YOFFSET = 50, $
+        COLOR = FSC_COLOR('green'),$
         XSIZE   = 200,$
         TITLE   = 'Plotting Data',$
         /CANCELBUTTON)
@@ -144,6 +147,8 @@ PRO retrieveNexus, Event, FullNexusName
     OBJ_DESTROY, progressBar
     
   ENDELSE
+  
+  DEVICE, DECOMPOSED=0
   
   ;turn off hourglass
   widget_control,hourglass=0
@@ -504,7 +509,7 @@ PRO get_and_plot_tof_array, Event
     YTITLE = 'Counts',$
     YSTYLE = 1, $
     XSTYLE = 1, $
-    POSITION = [0.15, 0.17, 0.95, 0.85] 
+    POSITION = [0.15, 0.17, 0.95, 0.85]
     
   bin_array = DBLARR(sz)
   AXIS, XRANGE=[0,sz-1],$
