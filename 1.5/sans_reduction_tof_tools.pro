@@ -42,30 +42,16 @@ PRO tof_tools_base_event, Event
   
     ;display a predefined TOF range
     WIDGET_INFO(Event.top, FIND_BY_UNAME='tof_mode_predefined_range'): BEGIN
-      map_base, Event, 'display_tof_range_base', 1
-      map_base, Event, 'play_tof_range_base', 0
-      xmin = getTextFieldValue(Event,'mode1_from_tof_micros')
-      xmax = getTextFieldValue(Event,'mode1_to_tof_micros')
-      tof_range = (*global).tof_range
-      tof_range.min = xmin
-      tof_range.max = xmax
-      (*global).tof_range = tof_range
+      turn_on_tof_mode, Event, MODE=1 ;activate mode1
+      save_tof_min_max, Event, MODE=1 ;save tof min and max for I vs tof plot
       main_event = (*global_tof).main_event
       replot_counts_vs_tof, main_event
     END
     
     ;play TOFs
     WIDGET_INFO(Event.top, FIND_BY_UNAME='tof_mode_play_tof'): BEGIN
-      map_base, Event, 'display_tof_range_base', 0
-      map_base, Event, 'play_tof_range_base', 1
-      xmin = getTextFieldValue(Event,'mode2_from_tof_micros')
-      xwidth = getTextFieldValue(Event,'tof_bin_size')
-      tof_tof = (*(*global).array_of_tof_bins)
-      xmax = tof_tof[xmin+xwidth]
-      tof_range = (*global).tof_range
-      tof_range.min = xmin
-      tof_range.max = xmax
-      (*global).tof_range = tof_range
+      turn_on_tof_mode, Event, MODE=2 ;activate mode2
+      save_tof_min_max, Event, MODE=2 ;save tof min and max for I vs tof plot
       main_event = (*global_tof).main_event
       replot_counts_vs_tof, main_event
     END
