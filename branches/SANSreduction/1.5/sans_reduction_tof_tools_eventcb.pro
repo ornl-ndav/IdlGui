@@ -106,3 +106,36 @@ PRO populate_tof_tools_base, Event
   WIDGET_CONTROL, id, SET_VALUE=tof_max_value
   
 END
+
+;------------------------------------------------------------------------------
+PRO turn_on_tof_mode, Event, MODE=mode
+  IF (MODE EQ 1) THEN BEGIN ;mode1
+    base1_status=1
+    base2_status=0
+  ENDIF ELSE BEGIN ;mode2
+    base1_status=0
+    base2_status=1
+  ENDELSE
+  map_base, Event, 'display_tof_range_base', base1_status
+  map_base, Event, 'play_tof_range_base', base2_status
+END
+
+;------------------------------------------------------------------------------
+PRO save_tof_min_max, Event, MODE=mode
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global_tof
+  global = (*global_tof).global
+  IF (MODE EQ 1) THEN BEGIN ;mode1
+    xmin = getTextFieldValue(Event,'mode1_from_tof_micros')
+    xmax = getTextFieldValue(Event,'mode1_to_tof_micros')
+  ENDIF ELSE BEGIN
+    xmin = getTextFieldValue(Event,'mode2_from_tof_micros')
+    xwidth = getTextFieldValue(Event,'tof_bin_size')
+    tof_tof = (*(*global).array_of_tof_bins)
+    xmax = tof_tof[xmin+xwidth]
+  ENDELSE
+  tof_range = (*global).tof_range
+  tof_range.min = xmin
+  tof_range.max = xmax
+  (*global).tof_range = tof_range
+END
