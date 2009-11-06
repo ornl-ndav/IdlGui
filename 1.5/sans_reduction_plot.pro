@@ -33,7 +33,7 @@
 ;==============================================================================
 
 FUNCTION retrieveData, Event, FullNexusName, DataArrayResult
-  
+
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
@@ -42,6 +42,8 @@ FUNCTION retrieveData, Event, FullNexusName, DataArrayResult
   OK         = (*global).ok
   FAILED     = (*global).failed
   
+  color = 50
+  
   retrieve_error = 0
   CATCH, retrieve_error
   IF (retrieve_error NE 0) THEN BEGIN
@@ -49,9 +51,9 @@ FUNCTION retrieveData, Event, FullNexusName, DataArrayResult
     progressBar->Destroy
     widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
     result = DIALOG_MESSAGE("Loading new NeXus file failed!",$
-    /ERROR, TITLE='Loading Error!', $
-    /CENTER, $
-    DIALOG_PARENT=widget_id)
+      /ERROR, TITLE='Loading Error!', $
+      /CENTER, $
+      DIALOG_PARENT=widget_id)
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
     RETURN, 0
   ENDIF ELSE BEGIN
@@ -78,7 +80,7 @@ FUNCTION retrieveData, Event, FullNexusName, DataArrayResult
         XSIZE   = 200,$
         TITLE   = 'Loading Data',$
         /CANCELBUTTON)
-      progressBar->SetColor, 250
+      progressBar->SetColor, color
       title = 'Retrieving Data ... '
       progressBar->SetLabel, title + '(bank 1/48)'
       progressBar->Start
@@ -193,6 +195,9 @@ FUNCTION retrieveData, Event, FullNexusName, DataArrayResult
         
         rack_index_front++
         tube_index++
+        
+        color += 250/Nstep
+        progressBar->SetColor, color
         
       ENDWHILE
       
@@ -421,7 +426,7 @@ PRO refresh_plot, Event ;_plot
       Y         = (*global).Y
     ENDIF
     result = plotData(Event, DataArray, X, Y)
-
+    
   ENDIF ELSE BEGIN ;SNS
   
     DataArray = (*(*global).DataArray)
