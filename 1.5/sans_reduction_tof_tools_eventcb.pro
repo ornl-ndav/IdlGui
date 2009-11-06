@@ -41,7 +41,6 @@ PRO populate_tof_tools_base, Event
   
   sz = N_ELEMENTS(tof_tof)
   
-  
   tof_base = (*global).tof_tools_base
   
   ;populate 'display a predefined tof range'
@@ -64,8 +63,8 @@ PRO populate_tof_tools_base, Event
   ;select first 10 bins by default
   default_from_tof = tof_tof[0]
   default_from_bin = 0
-  default_to_tof = tof_tof[9]
-  default_to_bin = 9
+  default_to_tof = tof_tof[sz-1]
+  default_to_bin = sz-2
   
   id = WIDGET_INFO(tof_base, FIND_BY_UNAME='mode2_from_tof_micros')
   WIDGET_CONTROL, id, SET_VALUE= default_from_tof
