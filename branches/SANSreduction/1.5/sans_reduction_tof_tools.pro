@@ -70,6 +70,170 @@ PRO tof_tools_base_event, Event
       replot_counts_vs_tof, main_event
     END
     
+    ;mode1: Display a predefined TOF range
+    ;from tof
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='mode1_from_tof_micros'): BEGIN
+      micros = getTextFieldValue(Event,'mode1_from_tof_micros')
+      bin = convert_micros_to_bin(Event,micros)
+      IF (bin EQ -1) THEN BEGIN ;outside of range
+        micro_min = getTextFieldValue(Event,'mode1_from_tof_micros_help')
+        micro_max = getTextFieldValue(Event,'mode1_to_tof_micros_help')
+        text = ['INPUT ERROR',$
+          STRCOMPRESS(micros,/REMOVE_ALL) + ' is outside of range',$
+          micro_min + ' - ' + micro_max]
+        id = WIDGET_INFO(Event.top, FIND_BY_UNAME='tof_tools_widget_base')
+        result = DIALOG_MESSAGE(text, $
+          /CENTER, $
+          DIALOG_PARENT=id,$
+          /ERROR)
+      ENDIF ELSE BEGIN
+        sbin = STRCOMPRESS(bin,/REMOVE_ALL)
+        putTextFieldValue, Event,'mode1_from_tof_bin', sbin
+      ENDELSE
+    END
+    ;to tof
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='mode1_to_tof_micros'): BEGIN
+      micros = getTextFieldValue(Event,'mode1_to_tof_micros')
+      bin = convert_micros_to_bin(Event,micros)
+      IF (bin EQ -1) THEN BEGIN ;outside of range
+        micro_min = getTextFieldValue(Event,'mode1_from_tof_micros_help')
+        micro_max = getTextFieldValue(Event,'mode1_to_tof_micros_help')
+        text = ['INPUT ERROR',$
+          STRCOMPRESS(micros,/REMOVE_ALL) + ' is outside of range',$
+          micro_min + ' - ' + micro_max]
+        id = WIDGET_INFO(Event.top, FIND_BY_UNAME='tof_tools_widget_base')
+        result = DIALOG_MESSAGE(text, $
+          /CENTER, $
+          DIALOG_PARENT=id,$
+          /ERROR)
+      ENDIF ELSE BEGIN
+        sbin = STRCOMPRESS(bin,/REMOVE_ALL)
+        putTextFieldValue, Event,'mode1_to_tof_bin', sbin
+      ENDELSE
+    END
+    ;from bin
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='mode1_from_tof_bin'): BEGIN
+      bin = getTextFieldValue(Event,'mode1_from_tof_bin')
+      micros = convert_bin_to_micros(Event,bin)
+      IF (micros EQ -1) THEN BEGIN ;outside of range
+        bin_min = getTextFieldValue(Event,'mode1_from_tof_bin_help')
+        bin_max = getTextFieldValue(Event,'mode1_to_tof_bin_help')
+        text = ['INPUT ERROR',$
+          STRCOMPRESS(bin,/REMOVE_ALL) + ' is outside of range',$
+          bin_min + ' - ' + bin_max]
+        id = WIDGET_INFO(Event.top, FIND_BY_UNAME='tof_tools_widget_base')
+        result = DIALOG_MESSAGE(text, $
+          /CENTER,$
+          DIALOG_PARENT=id,$
+          /ERROR)
+      ENDIF ELSE BEGIN
+        smicros = STRCOMPRESS(micros,/REMOVE_ALL)
+        putTextFieldValue, Event,'mode1_from_tof_micros', smicros
+      ENDELSE
+    END
+    ;to bin
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='mode1_to_tof_bin'): BEGIN
+      bin = getTextFieldValue(Event,'mode1_to_tof_bin')
+      micros = convert_bin_to_micros(Event,bin)
+      IF (micros EQ -1) THEN BEGIN ;outside of range
+        bin_min = getTextFieldValue(Event,'mode1_from_tof_bin_help')
+        bin_max = getTextFieldValue(Event,'mode1_to_tof_bin_help')
+        text = ['INPUT ERROR',$
+          STRCOMPRESS(bin,/REMOVE_ALL) + ' is outside of range',$
+          bin_min + ' - ' + bin_max]
+        id = WIDGET_INFO(Event.top, FIND_BY_UNAME='tof_tools_widget_base')
+        result = DIALOG_MESSAGE(text, $
+          /CENTER,$
+          DIALOG_PARENT=id,$
+          /ERROR)
+      ENDIF ELSE BEGIN
+        smicros = STRCOMPRESS(micros,/REMOVE_ALL)
+        putTextFieldValue, Event,'mode1_to_tof_micros', smicros
+      ENDELSE
+    END
+    
+    ;mode2: play tofs
+    ;from tof
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='mode2_from_tof_micros'): BEGIN
+      micros = getTextFieldValue(Event,'mode2_from_tof_micros')
+      bin = convert_micros_to_bin(Event,micros)
+      IF (bin EQ -1) THEN BEGIN ;outside of range
+        micro_min = getTextFieldValue(Event,'mode2_from_tof_micros_help')
+        micro_max = getTextFieldValue(Event,'mode2_to_tof_micros_help')
+        text = ['INPUT ERROR',$
+          STRCOMPRESS(micros,/REMOVE_ALL) + ' is outside of range',$
+          micro_min + ' - ' + micro_max]
+        id = WIDGET_INFO(Event.top, FIND_BY_UNAME='tof_tools_widget_base')
+        result = DIALOG_MESSAGE(text, $
+          /CENTER,$
+          DIALOG_PARENT=id,$
+          /ERROR)
+      ENDIF ELSE BEGIN
+        sbin = STRCOMPRESS(bin,/REMOVE_ALL)
+        putTextFieldValue, Event,'mode2_from_tof_bin', sbin
+      ENDELSE
+    END
+    ;to tof
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='mode2_to_tof_micros'): BEGIN
+      micros = getTextFieldValue(Event,'mode2_to_tof_micros')
+      bin = convert_micros_to_bin(Event,micros)
+      IF (bin EQ -1) THEN BEGIN ;outside of range
+        micro_min = getTextFieldValue(Event,'mode2_from_tof_micros_help')
+        micro_max = getTextFieldValue(Event,'mode2_to_tof_micros_help')
+        text = ['INPUT ERROR',$
+          STRCOMPRESS(micros,/REMOVE_ALL) + ' is outside of range',$
+          micro_min + ' - ' + micro_max]
+        id = WIDGET_INFO(Event.top, FIND_BY_UNAME='tof_tools_widget_base')
+        result = DIALOG_MESSAGE(text, $
+          /CENTER,$
+          DIALOG_PARENT=id,$
+          /ERROR)
+      ENDIF ELSE BEGIN
+        sbin = STRCOMPRESS(bin,/REMOVE_ALL)
+        putTextFieldValue, Event,'mode2_to_tof_bin', sbin
+      ENDELSE
+    END
+    ;from bin
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='mode2_from_tof_bin'): BEGIN
+      bin = getTextFieldValue(Event,'mode2_from_tof_bin')
+      micros = convert_bin_to_micros(Event,bin)
+      IF (micros EQ -1) THEN BEGIN ;outside of range
+        bin_min = getTextFieldValue(Event,'mode2_from_tof_bin_help')
+        bin_max = getTextFieldValue(Event,'mode2_to_tof_bin_help')
+        text = ['INPUT ERROR',$
+          STRCOMPRESS(bin,/REMOVE_ALL) + ' is outside of range',$
+          bin_min + ' - ' + bin_max]
+        id = WIDGET_INFO(Event.top, FIND_BY_UNAME='tof_tools_widget_base')
+        result = DIALOG_MESSAGE(text, $
+          /CENTER,$
+          DIALOG_PARENT=id,$
+          /ERROR)
+      ENDIF ELSE BEGIN
+        smicros = STRCOMPRESS(micros,/REMOVE_ALL)
+        putTextFieldValue, Event,'mode2_from_tof_micros', smicros
+      ENDELSE
+    END
+    ;to bin
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='mode2_to_tof_bin'): BEGIN
+      bin = getTextFieldValue(Event,'mode2_to_tof_bin')
+      micros = convert_bin_to_micros(Event,bin)
+      IF (micros EQ -1) THEN BEGIN ;outside of range
+        bin_min = getTextFieldValue(Event,'mode2_from_tof_bin_help')
+        bin_max = getTextFieldValue(Event,'mode2_to_tof_bin_help')
+        text = ['INPUT ERROR',$
+          STRCOMPRESS(bin,/REMOVE_ALL) + ' is outside of range',$
+          bin_min + ' - ' + bin_max]
+        id = WIDGET_INFO(Event.top, FIND_BY_UNAME='tof_tools_widget_base')
+        result = DIALOG_MESSAGE(text, $
+          /CENTER,$
+          DIALOG_PARENT=id,$
+          /ERROR)
+      ENDIF ELSE BEGIN
+        smicros = STRCOMPRESS(micros,/REMOVE_ALL)
+        putTextFieldValue, Event,'mode2_to_tof_micros', smicros
+      ENDELSE
+    END
+    
     ;CLOSE button
     WIDGET_INFO(Event.top, FIND_BY_UNAME='tof_base_close_button'): BEGIN
       id = WIDGET_INFO(Event.top, $
@@ -160,6 +324,7 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
     VALUE = '  TOF')
   text = CW_FIELD(row11,$
     TITLE= '',$
+    /RETURN_EVENTS, $
     VALUE = '0.',$
     /FLOAT,$
     XSIZE = 7,$
@@ -180,6 +345,7 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
     VALUE = 'Bin #')
   text = CW_FIELD(row12,$
     TITLE= '',$
+    /RETURN_EVENTS, $
     VALUE = '0.',$
     /INTEGER,$
     XSIZE = 7,$
@@ -203,6 +369,7 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
     VALUE = '  TOF')
   text = CW_FIELD(row11,$
     TITLE= '',$
+    /RETURN_EVENTS, $
     VALUE = '0.',$
     /FLOAT,$
     XSIZE = 7,$
@@ -223,6 +390,7 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
     VALUE = 'Bin #')
   text = CW_FIELD(row12,$
     TITLE= '',$
+    /RETURN_EVENTS, $
     VALUE = '0.',$
     /INTEGER,$
     XSIZE = 7,$
@@ -240,7 +408,7 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
     MAP = 0,$
     FRAME = 0)
     
-      ;from label
+  ;from label
   from = WIDGET_LABEL(mode22,$
     VALUE = 'FROM          OR',$
     XOFFSET = 5,$
@@ -251,8 +419,6 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
     VALUE = 'TO           OR',$
     XOFFSET = 12,$
     YOFFSET = 185)
-    
-    
     
   mode2 = WIDGET_BASE(mode22,$
     /COLUMN)
@@ -270,6 +436,7 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
     VALUE = '  TOF')
   text = CW_FIELD(row11,$
     TITLE= '',$
+    /RETURN_EVENTS, $
     VALUE = '0.',$
     /FLOAT,$
     XSIZE = 7,$
@@ -290,6 +457,7 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
     VALUE = 'Bin #')
   text = CW_FIELD(row12,$
     TITLE= '',$
+    /RETURN_EVENTS, $
     VALUE = '0.',$
     /INTEGER,$
     XSIZE = 7,$
@@ -314,6 +482,7 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
   text = CW_FIELD(row11,$
     TITLE= '',$
     VALUE = '0.',$
+    /RETURN_EVENTS, $
     /FLOAT,$
     XSIZE = 7,$
     UNAME = 'mode2_to_tof_micros')
@@ -332,6 +501,7 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
   label = WIDGET_LABEL(row12,$
     VALUE = 'Bin #')
   text = CW_FIELD(row12,$
+    /RETURN_EVENTS, $
     TITLE= '',$
     VALUE = '0.',$
     /INTEGER,$
@@ -346,6 +516,7 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
   field = CW_FIELD(mode2,$
     VALUE = '10',$
     /INTEGER,$
+    /RETURN_EVENTS, $
     UNAME = 'tof_bin_size',$
     XSIZE = 5,$
     TITLE = 'Nbr. of bins per frame:')
@@ -356,6 +527,7 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
   field = CW_FIELD(row,$
     VALUE = '1',$
     /FLOAT,$
+    /RETURN_EVENTS, $
     UNAME = 'tof_bin_time',$
     XSIZE = 3,$
     TITLE = 'Displaying time of each frame: ')

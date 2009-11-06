@@ -112,3 +112,26 @@ FUNCTION m_to_angstroms, r
   RETURN, r * 1e10
 END
 
+;------------------------------------------------------------------------------
+FUNCTION convert_micros_to_bin, Event, micros
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global_tof
+  global = (*global_tof).global
+  tof_tof = (*(*global).array_of_tof_bins)
+  index = WHERE(tof_tof LE microS, count)
+  IF (count GT 0) THEN BEGIN
+    RETURN, index[count-1]
+  ENDIF
+  RETURN, -1
+END
+
+;------------------------------------------------------------------------------
+FUNCTION convert_bin_to_micros, Event, bin
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global_tof
+  global = (*global_tof).global
+  tof_tof = (*(*global).array_of_tof_bins)
+  IF (bin GE N_ELEMENTS(tof_tof)) THEN RETURN, -1
+  RETURN, tof_tof[bin]
+END
+
