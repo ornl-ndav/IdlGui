@@ -89,8 +89,18 @@ PRO tof_tools_base_event, Event
       ENDIF ELSE BEGIN
         sbin = STRCOMPRESS(bin,/REMOVE_ALL)
         putTextFieldValue, Event,'mode1_from_tof_bin', sbin
+        xmin = getTextFieldValue(Event,'mode1_from_tof_micros')
+        xmax = getTextFieldValue(Event,'mode1_to_tof_micros')
+        tof_range = (*global).tof_range
+        tof_range.min = xmin
+        tof_range.max = xmax
+        (*global).tof_range = tof_range
+        main_event = (*global_tof).main_event
+        replot_counts_vs_tof, main_event
+        
       ENDELSE
     END
+    
     ;to tof
     WIDGET_INFO(Event.top, FIND_BY_UNAME='mode1_to_tof_micros'): BEGIN
       micros = getTextFieldValue(Event,'mode1_to_tof_micros')
@@ -109,8 +119,17 @@ PRO tof_tools_base_event, Event
       ENDIF ELSE BEGIN
         sbin = STRCOMPRESS(bin,/REMOVE_ALL)
         putTextFieldValue, Event,'mode1_to_tof_bin', sbin
+        xmin = getTextFieldValue(Event,'mode1_from_tof_micros')
+        xmax = getTextFieldValue(Event,'mode1_to_tof_micros')
+        tof_range = (*global).tof_range
+        tof_range.min = xmin
+        tof_range.max = xmax
+        (*global).tof_range = tof_range
+        main_event = (*global_tof).main_event
+        replot_counts_vs_tof, main_event
       ENDELSE
     END
+    
     ;from bin
     WIDGET_INFO(Event.top, FIND_BY_UNAME='mode1_from_tof_bin'): BEGIN
       bin = getTextFieldValue(Event,'mode1_from_tof_bin')
@@ -129,8 +148,17 @@ PRO tof_tools_base_event, Event
       ENDIF ELSE BEGIN
         smicros = STRCOMPRESS(micros,/REMOVE_ALL)
         putTextFieldValue, Event,'mode1_from_tof_micros', smicros
+        xmin = getTextFieldValue(Event,'mode1_from_tof_micros')
+        xmax = getTextFieldValue(Event,'mode1_to_tof_micros')
+        tof_range = (*global).tof_range
+        tof_range.min = xmin
+        tof_range.max = xmax
+        (*global).tof_range = tof_range
+        main_event = (*global_tof).main_event
+        replot_counts_vs_tof, main_event
       ENDELSE
     END
+    
     ;to bin
     WIDGET_INFO(Event.top, FIND_BY_UNAME='mode1_to_tof_bin'): BEGIN
       bin = getTextFieldValue(Event,'mode1_to_tof_bin')
@@ -149,6 +177,14 @@ PRO tof_tools_base_event, Event
       ENDIF ELSE BEGIN
         smicros = STRCOMPRESS(micros,/REMOVE_ALL)
         putTextFieldValue, Event,'mode1_to_tof_micros', smicros
+        xmin = getTextFieldValue(Event,'mode1_from_tof_micros')
+        xmax = getTextFieldValue(Event,'mode1_to_tof_micros')
+        tof_range = (*global).tof_range
+        tof_range.min = xmin
+        tof_range.max = xmax
+        (*global).tof_range = tof_range
+        main_event = (*global_tof).main_event
+        replot_counts_vs_tof, main_event
       ENDELSE
     END
     
@@ -171,8 +207,19 @@ PRO tof_tools_base_event, Event
       ENDIF ELSE BEGIN
         sbin = STRCOMPRESS(bin,/REMOVE_ALL)
         putTextFieldValue, Event,'mode2_from_tof_bin', sbin
+        xmin = getTextFieldValue(Event,'mode2_from_tof_micros')
+        xwidth = getTextFieldValue(Event,'tof_bin_size')
+        tof_tof = (*(*global).array_of_tof_bins)
+        xmax = tof_tof[xmin+xwidth]
+        tof_range = (*global).tof_range
+        tof_range.min = xmin
+        tof_range.max = xmax
+        (*global).tof_range = tof_range
+        main_event = (*global_tof).main_event
+        replot_counts_vs_tof, main_event
       ENDELSE
     END
+    
     ;to tof
     WIDGET_INFO(Event.top, FIND_BY_UNAME='mode2_to_tof_micros'): BEGIN
       micros = getTextFieldValue(Event,'mode2_to_tof_micros')
@@ -191,8 +238,19 @@ PRO tof_tools_base_event, Event
       ENDIF ELSE BEGIN
         sbin = STRCOMPRESS(bin,/REMOVE_ALL)
         putTextFieldValue, Event,'mode2_to_tof_bin', sbin
+        xmin = getTextFieldValue(Event,'mode2_from_tof_micros')
+        xwidth = getTextFieldValue(Event,'tof_bin_size')
+        tof_tof = (*(*global).array_of_tof_bins)
+        xmax = tof_tof[xmin+xwidth]
+        tof_range = (*global).tof_range
+        tof_range.min = xmin
+        tof_range.max = xmax
+        (*global).tof_range = tof_range
+        main_event = (*global_tof).main_event
+        replot_counts_vs_tof, main_event
       ENDELSE
     END
+    
     ;from bin
     WIDGET_INFO(Event.top, FIND_BY_UNAME='mode2_from_tof_bin'): BEGIN
       bin = getTextFieldValue(Event,'mode2_from_tof_bin')
@@ -211,8 +269,19 @@ PRO tof_tools_base_event, Event
       ENDIF ELSE BEGIN
         smicros = STRCOMPRESS(micros,/REMOVE_ALL)
         putTextFieldValue, Event,'mode2_from_tof_micros', smicros
+        xmin = getTextFieldValue(Event,'mode2_from_tof_micros')
+        xwidth = getTextFieldValue(Event,'tof_bin_size')
+        tof_tof = (*(*global).array_of_tof_bins)
+        xmax = tof_tof[xmin+xwidth]
+        tof_range = (*global).tof_range
+        tof_range.min = xmin
+        tof_range.max = xmax
+        (*global).tof_range = tof_range
+        main_event = (*global_tof).main_event
+        replot_counts_vs_tof, main_event
       ENDELSE
     END
+    
     ;to bin
     WIDGET_INFO(Event.top, FIND_BY_UNAME='mode2_to_tof_bin'): BEGIN
       bin = getTextFieldValue(Event,'mode2_to_tof_bin')
@@ -231,6 +300,16 @@ PRO tof_tools_base_event, Event
       ENDIF ELSE BEGIN
         smicros = STRCOMPRESS(micros,/REMOVE_ALL)
         putTextFieldValue, Event,'mode2_to_tof_micros', smicros
+        xmin = getTextFieldValue(Event,'mode2_from_tof_micros')
+        xwidth = getTextFieldValue(Event,'tof_bin_size')
+        tof_tof = (*(*global).array_of_tof_bins)
+        xmax = tof_tof[xmin+xwidth]
+        tof_range = (*global).tof_range
+        tof_range.min = xmin
+        tof_range.max = xmax
+        (*global).tof_range = tof_range
+        main_event = (*global_tof).main_event
+        replot_counts_vs_tof, main_event
       ENDELSE
     END
     
