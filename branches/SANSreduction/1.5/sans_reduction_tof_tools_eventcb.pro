@@ -147,9 +147,10 @@ PRO save_tof_min_max, Event, MODE=mode
     xmax = getTextFieldValue(Event,'mode1_to_tof_micros')
   ENDIF ELSE BEGIN
     xmin = getTextFieldValue(Event,'mode2_from_tof_micros')
-    xwidth = getTextFieldValue(Event,'tof_bin_size')
-    tof_tof = (*(*global).array_of_tof_bins)
-    xmax = tof_tof[xmin+xwidth]
+    xmax = getTextFieldValue(Event,'mode2_to_tof_micros')
+    ;xwidth = getTextFieldValue(Event,'tof_bin_size')
+    ;tof_tof = (*(*global).array_of_tof_bins)
+    ;xmax = tof_tof[xmin+xwidth]
   ENDELSE
   tof_range = (*global).tof_range
   tof_range.min = xmin
@@ -338,6 +339,8 @@ PRO update_other_tof_field, Event, $
           ENDELSE
         END
       ENDCASE
+    END
+    'width': BEGIN
     END
   ENDCASE
   
