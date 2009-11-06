@@ -48,7 +48,7 @@ PRO populate_tof_tools_base, Event
   default_from_tof = tof_tof[0]
   default_from_bin = 0
   default_to_tof = tof_tof[sz-1]
-  default_to_bin = sz-2
+  default_to_bin = sz-1
   
   id = WIDGET_INFO(tof_base, FIND_BY_UNAME='mode1_from_tof_micros')
   WIDGET_CONTROL, id, SET_VALUE= default_from_tof
@@ -64,7 +64,7 @@ PRO populate_tof_tools_base, Event
   default_from_tof = tof_tof[0]
   default_from_bin = 0
   default_to_tof = tof_tof[sz-1]
-  default_to_bin = sz-2
+  default_to_bin = sz-1
   
   id = WIDGET_INFO(tof_base, FIND_BY_UNAME='mode2_from_tof_micros')
   WIDGET_CONTROL, id, SET_VALUE= default_from_tof
@@ -83,7 +83,8 @@ PRO populate_tof_tools_base, Event
   
   tof_min_value = minstring + STRCOMPRESS(default_from_tof,/REMOVE_ALL) + ')'
   tof_max_value = maxstring + STRCOMPRESS(default_to_tof,/REMOVE_ALL) + ')'
-  bin_min_value = minstring + STRCOMPRESS(FIX(default_from_bin),/REMOVE_ALL) + ')'
+  bin_min_value = minstring + $
+    STRCOMPRESS(FIX(default_from_bin),/REMOVE_ALL) + ')'
   bin_max_value = maxstring + STRCOMPRESS(FIX(default_to_bin),/REMOVE_ALL) + ')'
   
   id = WIDGET_INFO(tof_base, FIND_BY_UNAME='mode1_from_tof_micros_help')
@@ -94,7 +95,7 @@ PRO populate_tof_tools_base, Event
   WIDGET_CONTROL, id, SET_VALUE=tof_min_value
   id = WIDGET_INFO(tof_base, FIND_BY_UNAME='mode2_to_tof_micros_help')
   WIDGET_CONTROL, id, SET_VALUE=tof_max_value
-
+  
   id = WIDGET_INFO(tof_base, FIND_BY_UNAME='mode1_from_tof_bin_help')
   WIDGET_CONTROL, id, SET_VALUE=tof_min_value
   id = WIDGET_INFO(tof_base, FIND_BY_UNAME='mode1_to_tof_bin_help')
