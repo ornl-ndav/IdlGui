@@ -63,35 +63,6 @@ PRO tof_tools_base_event, Event
         MODE=1, $
         AXIS='micros',$
         TYPE='from'
-        
-        
-        
-    ;      micros = getTextFieldValue(Event,'mode1_from_tof_micros')
-    ;      bin = convert_micros_to_bin(Event,micros)
-    ;      IF (bin EQ -1) THEN BEGIN ;outside of range
-    ;        micro_min = getTextFieldValue(Event,'mode1_from_tof_micros_help')
-    ;        micro_max = getTextFieldValue(Event,'mode1_to_tof_micros_help')
-    ;        text = ['INPUT ERROR',$
-    ;          STRCOMPRESS(micros,/REMOVE_ALL) + ' is outside of range',$
-    ;          micro_min + ' - ' + micro_max]
-    ;        id = WIDGET_INFO(Event.top, FIND_BY_UNAME='tof_tools_widget_base')
-    ;        result = DIALOG_MESSAGE(text, $
-    ;          /CENTER, $
-    ;          DIALOG_PARENT=id,$
-    ;          /ERROR)
-    ;      ENDIF ELSE BEGIN
-    ;        sbin = STRCOMPRESS(bin,/REMOVE_ALL)
-    ;        putTextFieldValue, Event,'mode1_from_tof_bin', sbin
-    ;        xmin = getTextFieldValue(Event,'mode1_from_tof_micros')
-    ;        xmax = getTextFieldValue(Event,'mode1_to_tof_micros')
-    ;        tof_range = (*global).tof_range
-    ;        tof_range.min = xmin
-    ;        tof_range.max = xmax
-    ;        (*global).tof_range = tof_range
-    ;        main_event = (*global_tof).main_event
-    ;        replot_counts_vs_tof, main_event
-    ;
-    ;      ENDELSE
     END
     
     ;to tof
@@ -158,6 +129,11 @@ PRO tof_tools_base_event, Event
       WIDGET_CONTROL, id, /DESTROY
     END
     
+    ;PLAY button
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='play_tof_button'): BEGIN
+      play_tof, Event
+    END
+    
     ELSE:
     
   ENDCASE
@@ -173,7 +149,7 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
   main_base_ysize = main_base_geometry.ysize
   
   xoffset = main_base_xoffset + main_base_xsize
-  yoffset = main_base_yoffset + 440
+  yoffset = main_base_yoffset + 360
   
   ourGroup = WIDGET_BASE()
   
@@ -181,7 +157,7 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
     UNAME        = 'tof_tools_widget_base',$
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
-    SCR_YSIZE = 491,$
+    SCR_YSIZE = 570,$
     SCR_XSIZE = 320,$
     MAP          = 1,$
     /BASE_ALIGN_CENTER,$
@@ -224,7 +200,7 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
     VALUE = 'TO           OR',$
     XOFFSET = 12,$
     YOFFSET = 185)
-    
+   
   mode1 = WIDGET_BASE(mode11,$
     /COLUMN)
   ;from
@@ -336,6 +312,12 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
     VALUE = 'TO           OR',$
     XOFFSET = 12,$
     YOFFSET = 185)
+    
+   ;Range currently displayed 
+  title = WIDGET_LABEL(mode22,$
+    VALUE = 'Range Currently Displayed',$
+    XOFFSET = 70,$
+    YOFFSET = 378)
     
   mode2 = WIDGET_BASE(mode22,$
     /COLUMN)
@@ -468,13 +450,39 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
     SCR_XSIZE = xsize,$
     UNAME = 'stop_tof_button')
     
+    ;space
+    space = WIDGET_LABEL(mode2,$
+    VALUE = '')
+    
+  ;data displayed
+  displayed = widget_base(mode2,$
+    /COLUMN,$
+    FRAME = 1)
+  ;title
+  space = WIDGET_LABEL(displayed,$
+    VALUE = '')
+  displayed_1 = WIDGET_BASE(displayed,$
+    /ROW)
+  label = WIDGET_LABEL(displayed_1,$
+    VALUE = 'TOF (microS):')
+  label = WIDGET_LABEL(displayed_1,$
+    VALUE = 'N/A - N/A',$
+    UNAME = 'tof_range_displayed')
+  displayed_2 = WIDGET_BASE(displayed,$
+    /ROW)
+  label = WIDGET_LABEL(displayed_2,$
+    VALUE = '        Bin :')
+  label = WIDGET_LABEL(displayed_2,$
+    VALUE = 'N/A - N/A',$
+    UNAME = 'bin_range_displayed')
+    
   ;close button
   close = WIDGET_BUTTON(wBase,$
     VALUE = ' CLOSE ',$
     SCR_XSIZE = 200,$
     UNAME = 'tof_base_close_button',$
     XOFFSET = 65,$
-    YOFFSET = 455)
+    YOFFSET = 535)
     
 END
 
