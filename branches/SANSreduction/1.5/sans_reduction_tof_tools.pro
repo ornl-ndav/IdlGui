@@ -54,6 +54,7 @@ PRO tof_tools_base_event, Event
       save_tof_min_max, Event, MODE=2 ;save tof min and max for I vs tof plot
       main_event = (*global_tof).main_event
       replot_counts_vs_tof, main_event
+      populate_range_currently_displayed, Event
     END
     
     ;mode1: Display a predefined TOF range
@@ -200,7 +201,7 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
     VALUE = 'TO           OR',$
     XOFFSET = 12,$
     YOFFSET = 185)
-   
+    
   mode1 = WIDGET_BASE(mode11,$
     /COLUMN)
   ;from
@@ -313,7 +314,7 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
     XOFFSET = 12,$
     YOFFSET = 185)
     
-   ;Range currently displayed 
+  ;Range currently displayed
   title = WIDGET_LABEL(mode22,$
     VALUE = 'Range Currently Displayed',$
     XOFFSET = 70,$
@@ -450,8 +451,8 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
     SCR_XSIZE = xsize,$
     UNAME = 'stop_tof_button')
     
-    ;space
-    space = WIDGET_LABEL(mode2,$
+  ;space
+  space = WIDGET_LABEL(mode2,$
     VALUE = '')
     
   ;data displayed
@@ -466,14 +467,18 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
   label = WIDGET_LABEL(displayed_1,$
     VALUE = 'TOF (microS):')
   label = WIDGET_LABEL(displayed_1,$
-    VALUE = 'N/A - N/A',$
+    VALUE = ' ',$
+    SCR_XSIZE = 300,$
+    /ALIGN_LEFT, $
     UNAME = 'tof_range_displayed')
   displayed_2 = WIDGET_BASE(displayed,$
     /ROW)
   label = WIDGET_LABEL(displayed_2,$
-    VALUE = '        Bin :')
+    VALUE = '       Bins :')
   label = WIDGET_LABEL(displayed_2,$
-    VALUE = 'N/A - N/A',$
+    VALUE = ' ',$
+    /ALIGN_LEFT, $
+    SCR_XSIZE = 300,$
     UNAME = 'bin_range_displayed')
     
   ;close button

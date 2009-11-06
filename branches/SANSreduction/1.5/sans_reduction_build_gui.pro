@@ -581,7 +581,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
   ;send message to log current run of application
   logger, APPLICATION=application, VERSION=version, UCAMS=ucams
   
-tof_tools_base, main_base=MAIN_BASE
+;tof_tools_base, main_base=MAIN_BASE
   
 END
 
