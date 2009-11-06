@@ -106,18 +106,43 @@ FUNCTION is_eq_and_fit_matched, equation, last_fitting
   xaxis = last_fitting.xaxis_type
   yaxis = last_fitting.yaxis_type
   CASE (equation) OF
-  'rg': BEGIN
-  IF (xaxis EQ 'Q2' AND yaxis EQ 'log') THEN RETURN, 1
-  RETURN, 0
-  END
-  'rc': BEGIN
-  IF (xaxis EQ 'Q2' AND yaxis EQ 'log_Q_IQ') THEN RETURN, 1
-  RETURN, 0
-  END
-  'rt': BEGIN
-  IF (xaxis EQ 'Q2' AND yaxis EQ 'log_Q2_IQ') THEN RETURN, 1
-  RETURN, 0
-  END
-  ELSE: RETURN, 0
+    'rg': BEGIN
+      IF (xaxis EQ 'Q2' AND yaxis EQ 'log') THEN RETURN, 1
+      RETURN, 0
+    END
+    'rc': BEGIN
+      IF (xaxis EQ 'Q2' AND yaxis EQ 'log_Q_IQ') THEN RETURN, 1
+      RETURN, 0
+    END
+    'rt': BEGIN
+      IF (xaxis EQ 'Q2' AND yaxis EQ 'log_Q2_IQ') THEN RETURN, 1
+      RETURN, 0
+    END
+    ELSE: RETURN, 0
   ENDCASE
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getTextFieldValue, Event, uname
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, id, GET_VALUE=value
+  RETURN, value[0]
+END
+
+FUNCTION is_from_lower_than_to, Event, MODE=mode
+
+  CASE (MODE) OF
+    1: mode_base = 'mode1_'
+    2: mode_base = 'mode2_'
+  ENDCASE
+  
+  from_bin_Uname = mode_base + 'from_tof_bin'
+  to_bin_uname   = mode_base + 'to_tof_bin'
+  
+  from = getTextFieldValue(Event,from_bin_uname)
+  to   = getTextFieldValue(Event,to_bin_uname)
+  
+  IF (from GE to) THEN RETURN, 0b
+  
+  RETURN, 1b
 END
