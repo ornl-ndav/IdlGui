@@ -41,7 +41,9 @@ PRO populate_tof_tools_base, Event
   
   sz = N_ELEMENTS(tof_tof)
   
-  tof_base = (*global).tof_tools_base
+  tof_base   = (*global).tof_tools_base
+  tof_fields_mode1 = (*global).tof_fields_mode1
+  tof_fields_mode2 = (*global).tof_fields_mode2
   
   ;populate 'display a predefined tof range'
   ;select everything by default
@@ -59,6 +61,12 @@ PRO populate_tof_tools_base, Event
   id = WIDGET_INFO(tof_base, FIND_BY_UNAME='mode1_to_tof_bin')
   WIDGET_CONTROL, id, SET_VALUE= default_to_bin
   
+  ;save default value
+  tof_fields_mode1.from.tof = default_from_tof
+  tof_fields_mode1.to.tof   = default_to_tof
+  tof_fields_mode1.from.bin = default_from_bin
+  tof_fields_mode1.to.bin   = default_to_bin
+  
   ;populate 'play tofs'
   ;select first 10 bins by default
   default_from_tof = tof_tof[0]
@@ -74,6 +82,12 @@ PRO populate_tof_tools_base, Event
   WIDGET_CONTROL, id, SET_VALUE= default_from_bin
   id = WIDGET_INFO(tof_base, FIND_BY_UNAME='mode2_to_tof_bin')
   WIDGET_CONTROL, id, SET_VALUE= default_to_bin
+  
+  ;save default value
+  tof_fields_mode2.from.tof = default_from_tof
+  tof_fields_mode2.to.tof   = default_to_tof
+  tof_fields_mode2.from.bin = default_from_bin
+  tof_fields_mode2.to.bin   = default_to_bin
   
   ;populate min and max values the user can input
   ;Display a predefined TOF range and play tofs
@@ -104,6 +118,9 @@ PRO populate_tof_tools_base, Event
   WIDGET_CONTROL, id, SET_VALUE=bin_min_value
   id = WIDGET_INFO(tof_base, FIND_BY_UNAME='mode2_to_tof_bin_help')
   WIDGET_CONTROL, id, SET_VALUE=bin_max_value
+  
+  (*global).tof_fields_mode1 = tof_fields_mode1
+  (*global).tof_fields_mode2 = tof_fields_mode2
   
 END
 
@@ -156,8 +173,14 @@ PRO update_other_tof_field, Event, $
   success = 0
   
   CASE (MODE) OF
-    1: mode_base = 'mode1_'
-    2: mode_base = 'mode2_'
+    1: BEGIN
+      mode_base = 'mode1_'
+      tof_fields = (*global).tof_fields_mode1
+    END
+    2: BEGIN
+      mode_base = 'mode2_'
+      tof_fields = (*global).tof_fields_mode2
+    END
   ENDCASE
   
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME='tof_tools_widget_base')
@@ -179,6 +202,8 @@ PRO update_other_tof_field, Event, $
               /CENTER, $
               DIALOG_PARENT=id,$
               /ERROR)
+            value = tof_fields.from.tof
+            putTextFieldValue, Event, mode_base+'from_tof_micros', value
           ENDIF ELSE BEGIN
             result = is_from_lower_than_to(Event, MODE=mode) ;make sure from<to
             IF (result EQ 0b) THEN BEGIN
@@ -188,11 +213,14 @@ PRO update_other_tof_field, Event, $
                 /CENTER, $
                 DIALOG_PARENT=id,$
                 /ERROR)
+              value = tof_fields.from.tof
+              putTextFieldValue, Event, mode_base+'from_tof_micros', value
             ENDIF ELSE BEGIN
               sbin = STRCOMPRESS(bin,/REMOVE_ALL)
               putTextFieldValue, Event,mode_base+'from_tof_bin', sbin
               xmin = getTextFieldValue(Event,mode_base+'from_tof_micros')
               xmax = getTextFieldValue(Event,mode_base+'to_tof_micros')
+              tof_fields.from.tof = micros
               success = 1
             ENDELSE
           ENDELSE
@@ -210,6 +238,8 @@ PRO update_other_tof_field, Event, $
               /CENTER,$
               DIALOG_PARENT=id,$
               /ERROR)
+            value = tof_fields.from.bin
+            putTextFieldValue, Event, mode_base+'from_tof_bin', value
           ENDIF ELSE BEGIN
             result = is_from_lower_than_to(Event, MODE=mode) ;make sure from<to
             IF (result EQ 0b) THEN BEGIN
@@ -219,11 +249,14 @@ PRO update_other_tof_field, Event, $
                 /CENTER, $
                 DIALOG_PARENT=id,$
                 /ERROR)
+              value = tof_fields.from.bin
+              putTextFieldValue, Event, mode_base+'from_tof_bin', value
             ENDIF ELSE BEGIN
               smicros = STRCOMPRESS(micros,/REMOVE_ALL)
               putTextFieldValue, Event,mode_base+'from_tof_micros', smicros
               xmin = getTextFieldValue(Event,mode_base+'from_tof_micros')
               xmax = getTextFieldValue(Event,mode_base+'to_tof_micros')
+              tof_fields.from.bin = bin
               success = 1
             ENDELSE
           ENDELSE
@@ -245,6 +278,8 @@ PRO update_other_tof_field, Event, $
               /CENTER, $
               DIALOG_PARENT=id,$
               /ERROR)
+            value = tof_fields.to.tof
+            putTextFieldValue, Event, mode_base+'to_tof_micros', value
           ENDIF ELSE BEGIN
             result = is_from_lower_than_to(Event, MODE=mode) ;make sure from<to
             IF (result EQ 0b) THEN BEGIN
@@ -254,11 +289,14 @@ PRO update_other_tof_field, Event, $
                 /CENTER, $
                 DIALOG_PARENT=id,$
                 /ERROR)
+              value = tof_fields.to.tof
+              putTextFieldValue, Event, mode_base+'to_tof_micros', value
             ENDIF ELSE BEGIN
               sbin = STRCOMPRESS(bin,/REMOVE_ALL)
               putTextFieldValue, Event,mode_base+'to_tof_bin', sbin
               xmin = getTextFieldValue(Event,mode_base+'from_tof_micros')
               xmax = getTextFieldValue(Event,mode_base+'to_tof_micros')
+              tof_fields.to.tof = micros
               success = 1
             ENDELSE
           ENDELSE
@@ -276,6 +314,8 @@ PRO update_other_tof_field, Event, $
               /CENTER,$
               DIALOG_PARENT=id,$
               /ERROR)
+            value = tof_fields.to.bin
+            putTextFieldValue, Event, mode_base+'to_tof_bin', value
           ENDIF ELSE BEGIN
             result = is_from_lower_than_to(Event, MODE=mode) ;make sure from<to
             IF (result EQ 0b) THEN BEGIN
@@ -285,11 +325,14 @@ PRO update_other_tof_field, Event, $
                 /CENTER, $
                 DIALOG_PARENT=id,$
                 /ERROR)
+              value = tof_fields.to.bin
+              putTextFieldValue, Event, mode_base+'to_tof_bin', value
             ENDIF ELSE BEGIN
               smicros = STRCOMPRESS(micros,/REMOVE_ALL)
               putTextFieldValue, Event,mode_base+'to_tof_micros', smicros
               xmin = getTextFieldValue(Event,mode_base+'from_tof_micros')
               xmax = getTextFieldValue(Event,mode_base+'to_tof_micros')
+              tof_fields.to.bin = bin
               success = 1
             ENDELSE
           ENDELSE
@@ -305,6 +348,18 @@ PRO update_other_tof_field, Event, $
     (*global).tof_range = tof_range
     main_event = (*global_tof).main_event
     replot_counts_vs_tof, main_event
+    
+    CASE (MODE) OF
+      1: BEGIN
+        mode_base = 'mode1_'
+        (*global).tof_fields_mode1 = tof_fields
+      END
+      2: BEGIN
+        mode_base = 'mode2_'
+        (*global).tof_fields_mode2 = tof_fields
+      END
+    ENDCASE
+    
   ENDIF
   
 END

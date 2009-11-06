@@ -166,6 +166,14 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     tof_range: { min: 0.,$ ;min and max value of tof selected in counts vs tof
     max: 0.}, $
     tof_tools_base: 0, $
+    tof_fields_mode1: {from: { bin: 0,$
+    tof: 0.}, $
+    to: { bin: 0,$
+    tof: 0.}}, $
+    tof_fields_mode2: {from: { bin: 0,$
+    tof: 0.}, $
+    to: { bin: 0,$
+    tof: 0.}}, $
     
     x0_device: 0L,$
     y0_device: 0L,$
@@ -573,8 +581,8 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
   ;send message to log current run of application
   logger, APPLICATION=application, VERSION=version, UCAMS=ucams
   
-  ;tof_tools_base, main_base=MAIN_BASE
-
+;tof_tools_base, main_base=MAIN_BASE
+  
 END
 
 
