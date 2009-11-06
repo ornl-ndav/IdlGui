@@ -101,10 +101,10 @@ PRO tof_tools_base_event, Event
     
     ;to tof
     WIDGET_INFO(Event.top, FIND_BY_UNAME='mode2_to_tof_micros'): BEGIN
-      update_other_tof_field, Event, $
-        MODE=2, $
-        AXIS='micros',$
-        TYPE='to'
+;      update_other_tof_field, Event, $
+;        MODE=2, $
+;        AXIS='micros',$
+;        TYPE='to'
     END
     
     ;from bin
@@ -117,12 +117,14 @@ PRO tof_tools_base_event, Event
     
     ;to bin
     WIDGET_INFO(Event.top, FIND_BY_UNAME='mode2_to_tof_bin'): BEGIN
-      update_other_tof_field, Event, $
-        MODE=2, $
-        AXIS='bin',$
-        TYPE='to'
+;      update_other_tof_field, Event, $
+;        MODE=2, $
+;        AXIS='bin',$
+;        TYPE='to'
     END
     
+ 
+ 
     ;CLOSE button
     WIDGET_INFO(Event.top, FIND_BY_UNAME='tof_base_close_button'): BEGIN
       id = WIDGET_INFO(Event.top, $
