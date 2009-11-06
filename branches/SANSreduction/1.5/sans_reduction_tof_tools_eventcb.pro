@@ -75,4 +75,33 @@ PRO populate_tof_tools_base, Event
   id = WIDGET_INFO(tof_base, FIND_BY_UNAME='mode2_to_tof_bin')
   WIDGET_CONTROL, id, SET_VALUE= default_to_bin
   
+  ;populate min and max values the user can input
+  ;Display a predefined TOF range and play tofs
+  
+  minstring = '(min: '
+  maxstring = '(max: '
+  
+  tof_min_value = minstring + STRCOMPRESS(default_from_tof,/REMOVE_ALL) + ')'
+  tof_max_value = maxstring + STRCOMPRESS(default_to_tof,/REMOVE_ALL) + ')'
+  bin_min_value = minstring + STRCOMPRESS(FIX(default_from_bin),/REMOVE_ALL) + ')'
+  bin_max_value = maxstring + STRCOMPRESS(FIX(default_to_bin),/REMOVE_ALL) + ')'
+  
+  id = WIDGET_INFO(tof_base, FIND_BY_UNAME='mode1_from_tof_micros_help')
+  WIDGET_CONTROL, id, SET_VALUE=tof_min_value
+  id = WIDGET_INFO(tof_base, FIND_BY_UNAME='mode1_to_tof_micros_help')
+  WIDGET_CONTROL, id, SET_VALUE=tof_max_value
+  id = WIDGET_INFO(tof_base, FIND_BY_UNAME='mode2_from_tof_micros_help')
+  WIDGET_CONTROL, id, SET_VALUE=tof_min_value
+  id = WIDGET_INFO(tof_base, FIND_BY_UNAME='mode2_to_tof_micros_help')
+  WIDGET_CONTROL, id, SET_VALUE=tof_max_value
+
+  id = WIDGET_INFO(tof_base, FIND_BY_UNAME='mode1_from_tof_bin_help')
+  WIDGET_CONTROL, id, SET_VALUE=tof_min_value
+  id = WIDGET_INFO(tof_base, FIND_BY_UNAME='mode1_to_tof_bin_help')
+  WIDGET_CONTROL, id, SET_VALUE=tof_max_value
+  id = WIDGET_INFO(tof_base, FIND_BY_UNAME='mode2_from_tof_bin_help')
+  WIDGET_CONTROL, id, SET_VALUE=tof_min_value
+  id = WIDGET_INFO(tof_base, FIND_BY_UNAME='mode2_to_tof_bin_help')
+  WIDGET_CONTROL, id, SET_VALUE=tof_max_value
+  
 END

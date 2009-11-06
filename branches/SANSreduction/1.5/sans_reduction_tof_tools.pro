@@ -53,7 +53,7 @@ PRO tof_tools_base_event, Event
       main_event = (*global_tof).main_event
       replot_counts_vs_tof, main_event
     END
-
+    
     ;play TOFs
     WIDGET_INFO(Event.top, FIND_BY_UNAME='tof_mode_play_tof'): BEGIN
       map_base, Event, 'display_tof_range_base', 0
@@ -69,7 +69,7 @@ PRO tof_tools_base_event, Event
       main_event = (*global_tof).main_event
       replot_counts_vs_tof, main_event
     END
-        
+    
     ;CLOSE button
     WIDGET_INFO(Event.top, FIND_BY_UNAME='tof_base_close_button'): BEGIN
       id = WIDGET_INFO(Event.top, $
@@ -134,13 +134,13 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
     
   ;from label
   from = WIDGET_LABEL(mode11,$
-    VALUE = 'FROM',$
+    VALUE = 'FROM          OR',$
     XOFFSET = 5,$
-    YOFFSET = 58)
+    YOFFSET = 55)
     
   ;to label
   from = WIDGET_LABEL(mode11,$
-    VALUE = 'TO',$
+    VALUE = 'TO           OR',$
     XOFFSET = 12,$
     YOFFSET = 185)
     
@@ -166,8 +166,14 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
     UNAME = 'mode1_from_tof_micros')
   label = WIDGET_LABEL(row11,$
     VALUE = 'microS')
-  label = WIDGET_LABEL(from_base,$
-    VALUE = 'OR')
+  minhelp = WIDGET_LABEL(row11,$ ;give minimum value to use
+    VALUE = 'N/A',$
+    SCR_XSIZE =110,$
+    UNAME = 'mode1_from_tof_micros_help')
+    
+  space = WIDGET_LABEL(from_base,$
+    VALUE = ' ')
+    
   row12 = WIDGET_BASE(from_base,$
     /ROW)
   label = WIDGET_LABEL(row12,$
@@ -178,16 +184,20 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
     /INTEGER,$
     XSIZE = 7,$
     UNAME = 'mode1_from_tof_bin')
+  minhelp = WIDGET_LABEL(row12,$ ;give minimum value to use
+    VALUE = 'N/A',$
+    SCR_XSIZE = 110,$
+    UNAME = 'mode1_from_tof_bin_help')
     
   ;TO
   row1 = WIDGET_BASE(mode1,$
     /ROW)
   space = WIDGET_LABEL(row1,$
     VALUE = ' ')
-  from_base = WIDGET_BASE(row1,$
+  to_base = WIDGET_BASE(row1,$
     FRAME = 1,$
     /COLUMN)
-  row11 = WIDGET_BASE(from_base,$
+  row11 = WIDGET_BASE(to_base,$
     /ROW)
   label = WIDGET_LABEL(row11,$
     VALUE = '  TOF')
@@ -199,9 +209,15 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
     UNAME = 'mode1_to_tof_micros')
   label = WIDGET_LABEL(row11,$
     VALUE = 'microS')
-  label = WIDGET_LABEL(from_base,$
-    VALUE = 'OR')
-  row12 = WIDGET_BASE(from_base,$
+  minhelp = WIDGET_LABEL(row11,$ ;give minimum value to use
+    VALUE = 'N/A',$
+    SCR_XSIZE = 110,$
+    UNAME = 'mode1_to_tof_micros_help')
+    
+  space = WIDGET_LABEL(to_base,$
+    VALUE = ' ')
+    
+  row12 = WIDGET_BASE(to_base,$
     /ROW)
   label = WIDGET_LABEL(row12,$
     VALUE = 'Bin #')
@@ -211,6 +227,10 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
     /INTEGER,$
     XSIZE = 7,$
     UNAME = 'mode1_to_tof_bin')
+  minhelp = WIDGET_LABEL(row12,$ ;give minimum value to use
+    VALUE = 'N/A',$
+    SCR_XSIZE = 110,$
+    UNAME = 'mode1_to_tof_bin_help')
     
   ;mode2 base (play tof) ;-----------------------------------------------------
   mode22 = WIDGET_BASE(wBase,$
@@ -220,17 +240,19 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
     MAP = 0,$
     FRAME = 0)
     
-  ;from label
+      ;from label
   from = WIDGET_LABEL(mode22,$
-    VALUE = 'FROM',$
+    VALUE = 'FROM          OR',$
     XOFFSET = 5,$
-    YOFFSET = 58)
+    YOFFSET = 55)
     
   ;to label
   from = WIDGET_LABEL(mode22,$
-    VALUE = 'TO',$
+    VALUE = 'TO           OR',$
     XOFFSET = 12,$
     YOFFSET = 185)
+    
+    
     
   mode2 = WIDGET_BASE(mode22,$
     /COLUMN)
@@ -254,8 +276,14 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
     UNAME = 'mode2_from_tof_micros')
   label = WIDGET_LABEL(row11,$
     VALUE = 'microS')
-  label = WIDGET_LABEL(from_base,$
-    VALUE = 'OR')
+  minhelp = WIDGET_LABEL(row11,$ ;give minimum value to use
+    VALUE = 'N/A',$
+    SCR_XSIZE = 110,$
+    UNAME = 'mode2_from_tof_micros_help')
+    
+  space = WIDGET_LABEL(from_base,$
+    VALUE = ' ')
+    
   row12 = WIDGET_BASE(from_base,$
     /ROW)
   label = WIDGET_LABEL(row12,$
@@ -266,16 +294,20 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
     /INTEGER,$
     XSIZE = 7,$
     UNAME = 'mode2_from_tof_bin')
+  minhelp = WIDGET_LABEL(row12,$ ;give minimum value to use
+    VALUE = 'N/A',$
+    SCR_XSIZE = 110,$
+    UNAME = 'mode2_from_tof_bin_help')
     
   ;TO
   row1 = WIDGET_BASE(mode2,$
     /ROW)
   space = WIDGET_LABEL(row1,$
     VALUE = ' ')
-  from_base = WIDGET_BASE(row1,$
+  to_base = WIDGET_BASE(row1,$
     FRAME = 1,$
     /COLUMN)
-  row11 = WIDGET_BASE(from_base,$
+  row11 = WIDGET_BASE(to_base,$
     /ROW)
   label = WIDGET_LABEL(row11,$
     VALUE = '  TOF')
@@ -287,9 +319,15 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
     UNAME = 'mode2_to_tof_micros')
   label = WIDGET_LABEL(row11,$
     VALUE = 'microS')
-  label = WIDGET_LABEL(from_base,$
-    VALUE = 'OR')
-  row12 = WIDGET_BASE(from_base,$
+  minhelp = WIDGET_LABEL(row11,$ ;give minimum value to use
+    VALUE = 'N/A',$
+    SCR_XSIZE = 110,$
+    UNAME = 'mode2_to_tof_micros_help')
+    
+  space = WIDGET_LABEL(to_base,$
+    VALUE = ' ')
+    
+  row12 = WIDGET_BASE(to_base,$
     /ROW)
   label = WIDGET_LABEL(row12,$
     VALUE = 'Bin #')
@@ -299,6 +337,10 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
     /INTEGER,$
     XSIZE = 7,$
     UNAME = 'mode2_to_tof_bin')
+  minhelp = WIDGET_LABEL(row12,$ ;give minimum value to use
+    VALUE = 'N/A',$
+    SCR_XSIZE = 110,$
+    UNAME = 'mode2_to_tof_bin_help')
     
   ;bins display size
   field = CW_FIELD(mode2,$
