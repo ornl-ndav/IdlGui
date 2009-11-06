@@ -35,7 +35,8 @@
 PRO tof_tools_base_event, Event
 
   ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global_tof
+  global = (*global_tof).global
   
   CASE Event.id OF
   
@@ -45,10 +46,12 @@ PRO tof_tools_base_event, Event
       map_base, Event, 'play_tof_range_base', 1
       xmin = getTextFieldValue(Event,'mode1_from_tof_micros')
       xmax = getTextFieldValue(Event,'mode1_to_tof_micros')
+      
+      tof_range = (*global).tof_range
       tof_range.min = xmin
       tof_range.max = xmax
       (*global).tof_range = tof_range
-      main_event = (*global).main_event
+      main_event = (*global_tof).main_event
       replot_counts_vs_tof, main_event
     END
     
@@ -58,10 +61,11 @@ PRO tof_tools_base_event, Event
       map_base, Event, 'play_tof_range_base', 0
       xmin = getTextFieldValue(Event,'mode2_from_tof_micros')
       xmax = getTextFieldValue(Event,'mode2_to_tof_micros')
+      tof_range = (*global).tof_range
       tof_range.min = xmin
       tof_range.max = xmax
       (*global).tof_range = tof_range
-      main_event = (*global).main_event
+      main_event = (*global_tof).main_event
       replot_counts_vs_tof, main_event
     END
     
