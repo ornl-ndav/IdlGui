@@ -365,9 +365,80 @@ PRO update_other_tof_field, Event, $
 END
 
 ;------------------------------------------------------------------------------
+PRO populate_range_currently_displayed, Event
+
+  from_tof  = getTextFieldValue(Event,'mode2_from_tof_micros')
+  from_bin  = getTextFieldValue(Event,'mode2_from_tof_bin')
+  to_tof    = getTextFieldValue(Event,'mode2_to_tof_micros')
+  bin_width = getTextFieldValue(Event,'tof_bin_size')
+  to_bin = from_bin + bin_width
+  
+  s_from_tof = STRCOMPRESS(from_tof,/REMOVE_ALL)
+  s_from_bin = STRCOMPRESS(from_bin,/REMOVE_ALL)
+  s_to_tof   = STRCOMPRESS(to_tof,/REMOVE_ALL)
+  s_to_bin   = STRCOMPRESS(to_bin,/REMOVE_ALL)
+  
+  tof_text = s_from_tof + ' - ' + s_to_tof
+  bin_text = s_from_bin + ' - ' + s_to_bin
+  
+  putTextFieldValue, Event, 'tof_range_displayed', tof_text
+  putTextFieldValue, Event, 'bin_range_displayed', bin_text
+  
+END
+
+;------------------------------------------------------------------------------
 PRO play_tof, Event
 
-
-
-
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global_tof
+  global = (*global_tof).global
+  tof_tof = (*(*global).array_of_tof_bins)
+  
+  ;get nbr of bins per frame
+  bin_width = getTextFieldValue(Event,'tof_bin_size')
+  ;get time to stay on each frame
+  frame_time = getTextFieldValue(Event,'tof_bin_time')
+  
+  ;starting bin
+  starting_bin  = getTextFieldValue(Event,'mode2_from_tof_bin')
+  ending_bin    = getTextFieldValue(Event,'mode2_to_tof_bin')
+  
+  from_bin = starting_bin
+  to_bin   = starting_bin + bin_width
+  
+  WHILE (to_bin LT ending_bin) DO BEGIN
+  
+    tof_range = (*global).tof_range
+    tof_range.min = tof_tof[from_bin]
+    tof_range.max = tof_tof[to_bin]
+    (*global).tof_range = tof_range
+    main_event = (*global_tof).main_event
+    replot_counts_vs_tof, main_event
+    
+    s_from_bin = STRCOMPRESS(from_bin,/REMOVE_ALL)
+    s_to_bin   = STRCOMPRESS(to_bin,/REMOVE_ALL)
+    
+    s_from_tof = STRCOMPRESS(tof_tof[from_bin],/REMOVE_ALL)
+    s_to_tof   = STRCOMPRESS(tof_tof[to_bin],/REMOVE_ALL)
+    
+    tof_text = s_from_tof + ' - ' + s_to_tof
+    bin_text = s_from_bin + ' - ' + s_to_bin
+    
+    putTextFieldValue, Event, 'tof_range_displayed', tof_text
+    putTextFieldValue, Event, 'bin_range_displayed', bin_text
+    
+    WAIT, frame_time
+    
+    from_bin = to_bin
+    to_bin += bin_width
+    
+  ENDWHILE
+  
 END
+
+
+
+
+
+
+

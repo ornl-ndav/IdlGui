@@ -196,7 +196,7 @@ FUNCTION retrieveData, Event, FullNexusName, DataArrayResult
         rack_index_front++
         tube_index++
         
-        color += 250/Nstep
+        color += 256/26
         progressBar->SetColor, color
         
       ENDWHILE
