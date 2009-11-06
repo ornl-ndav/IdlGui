@@ -41,12 +41,18 @@ pro load_parameters, widgetBase, Filename=filename
     filename = DIALOG_PICKFILE(PATH=info.workingDir, Filter='*.par', GET_PATH=path)
   ENDIF
   
+  ; Check that we haven't pressed cancel
+  IF filename EQ '' THEN BEGIN
+      ; Put info back
+      WIDGET_CONTROL, widgetBase, SET_UVALUE=info, /NO_COPY
+      RETURN
+  ENDIF
+  
   print, 'Loading ALL parameters from ' + filename
   
   ; Set the current working directory to wherever we have loaded this file from.
   IF STRLEN(path) GT 1 THEN info.workingDir = path
   print, 'Saving Working Directory to be ' + info.workingDir
-
   
   RESTORE, FILENAME=filename, /RELAXED_STRUCTURE_ASSIGNMENT
   

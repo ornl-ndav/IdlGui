@@ -46,6 +46,13 @@ pro save_parameters, event, Filename=filename
     filename = DIALOG_PICKFILE(PATH=info.workingDir, Filter='*.par')
   ENDIF
   
+  ; Check that we haven't pressed cancel
+  IF filename EQ '' THEN BEGIN
+    ; Put info back
+    WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
+    RETURN
+  ENDIF
+  
   SAVE, dgsr_cmd, dgsn_cmd, FILENAME=filename
   
   print, 'Saving ALL parameters to ... ' + filename
