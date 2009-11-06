@@ -97,13 +97,13 @@ PRO populate_tof_tools_base, Event
   WIDGET_CONTROL, id, SET_VALUE=tof_max_value
   
   id = WIDGET_INFO(tof_base, FIND_BY_UNAME='mode1_from_tof_bin_help')
-  WIDGET_CONTROL, id, SET_VALUE=tof_min_value
+  WIDGET_CONTROL, id, SET_VALUE=bin_min_value
   id = WIDGET_INFO(tof_base, FIND_BY_UNAME='mode1_to_tof_bin_help')
-  WIDGET_CONTROL, id, SET_VALUE=tof_max_value
+  WIDGET_CONTROL, id, SET_VALUE=bin_max_value
   id = WIDGET_INFO(tof_base, FIND_BY_UNAME='mode2_from_tof_bin_help')
-  WIDGET_CONTROL, id, SET_VALUE=tof_min_value
+  WIDGET_CONTROL, id, SET_VALUE=bin_min_value
   id = WIDGET_INFO(tof_base, FIND_BY_UNAME='mode2_to_tof_bin_help')
-  WIDGET_CONTROL, id, SET_VALUE=tof_max_value
+  WIDGET_CONTROL, id, SET_VALUE=bin_max_value
   
 END
 
