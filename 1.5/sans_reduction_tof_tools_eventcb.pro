@@ -370,12 +370,17 @@ END
 ;------------------------------------------------------------------------------
 PRO populate_range_currently_displayed, Event
 
-  from_tof  = getTextFieldValue(Event,'mode2_from_tof_micros')
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global_tof
+  global = (*global_tof).global
+  tof_tof = (*(*global).tof_tof)
+
   from_bin  = getTextFieldValue(Event,'mode2_from_tof_bin')
-  to_tof    = getTextFieldValue(Event,'mode2_to_tof_micros')
   bin_width = getTextFieldValue(Event,'tof_bin_size')
   to_bin = from_bin + bin_width
   
+  from_tof = tof_tof[from_bin]
+  to_tof   = tof_tof[to_bin]
+
   s_from_tof = STRCOMPRESS(from_tof,/REMOVE_ALL)
   s_from_bin = STRCOMPRESS(from_bin,/REMOVE_ALL)
   s_to_tof   = STRCOMPRESS(to_tof,/REMOVE_ALL)
@@ -386,6 +391,40 @@ PRO populate_range_currently_displayed, Event
   
   putTextFieldValue, Event, 'tof_range_displayed', tof_text
   putTextFieldValue, Event, 'bin_range_displayed', bin_text
+  
+END
+
+;------------------------------------------------------------------------------
+PRO plot_range_currently_displayed, Event
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global_tof
+  global = (*global_tof).global
+  main_event = (*global_tof).main_event
+  
+  counts = (*(*global).tof_counts)
+  max_counts = MAX(counts,MIN=min_counts)
+  
+  id = WIDGET_INFO(main_event.top, FIND_BY_UNAME = 'counts_vs_tof_preview_plot')
+  WIDGET_CONTROL, id, GET_VALUE = id_value
+  WSET, id_value
+  
+  tof_range = getTextFieldValue(Event,'tof_range_displayed')
+  tof_array = STRSPLIT(tof_range,' - ', /EXTRACT)
+  tof_min = tof_array[0]
+  tof_max = tof_array[1]
+
+  xmin = tof_min
+  xmax = tof_max
+
+  PLOTS, xmin, min_counts, /DATA
+  PLOTS, xmin, max_counts, /DATA, /CONTINUE, COLOR=FSC_COLOR('blue'), $
+    THICK= 2
+    
+  PLOTS, xmax, min_counts, /DATA
+  PLOTS, xmax, max_counts, /DATA, /CONTINUE, COLOR=FSC_COLOR('blue'), $
+    THICK= 2
+    
+  DEVICE, DECOMPOSED=0
   
 END
 
@@ -411,10 +450,10 @@ PRO play_tof, Event
   
   WHILE (to_bin LT ending_bin) DO BEGIN
   
-    tof_range = (*global).tof_range
-    tof_range.min = tof_tof[from_bin]
-    tof_range.max = tof_tof[to_bin]
-    (*global).tof_range = tof_range
+    ;tof_range = (*global).tof_range
+    ;tof_range.min = tof_tof[from_bin]
+    ;tof_range.max = tof_tof[to_bin]
+    ;(*global).tof_range = tof_range
     main_event = (*global_tof).main_event
     replot_counts_vs_tof, main_event
     
@@ -429,6 +468,8 @@ PRO play_tof, Event
     
     putTextFieldValue, Event, 'tof_range_displayed', tof_text
     putTextFieldValue, Event, 'bin_range_displayed', bin_text
+    
+    plot_range_currently_displayed, Event
     
     WAIT, frame_time
     

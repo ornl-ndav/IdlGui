@@ -50,11 +50,13 @@ PRO tof_tools_base_event, Event
     
     ;play TOFs
     WIDGET_INFO(Event.top, FIND_BY_UNAME='tof_mode_play_tof'): BEGIN
+    print, 'here'
       turn_on_tof_mode, Event, MODE=2 ;activate mode2
       save_tof_min_max, Event, MODE=2 ;save tof min and max for I vs tof plot
       main_event = (*global_tof).main_event
       replot_counts_vs_tof, main_event
       populate_range_currently_displayed, Event
+      plot_range_currently_displayed, Event
     END
     
     ;mode1: Display a predefined TOF range
