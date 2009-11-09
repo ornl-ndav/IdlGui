@@ -40,15 +40,16 @@ PRO tof_tools_base_event, Event
   
   CASE Event.id OF
   
-    ;display a predefined TOF range
+    ;display a predefined TOF range mode
     WIDGET_INFO(Event.top, FIND_BY_UNAME='tof_mode_predefined_range'): BEGIN
       turn_on_tof_mode, Event, MODE=1 ;activate mode1
       save_tof_min_max, Event, MODE=1 ;save tof min and max for I vs tof plot
       main_event = (*global_tof).main_event
       replot_counts_vs_tof, main_event
+      refresh_main_plot_using_tof_input_mode1, Event
     END
     
-    ;play TOFs
+    ;play TOFs mode
     WIDGET_INFO(Event.top, FIND_BY_UNAME='tof_mode_play_tof'): BEGIN
       turn_on_tof_mode, Event, MODE=2 ;activate mode2
       display_play_pause_stop_buttons, EVENT=Event, activate='none'
@@ -56,6 +57,7 @@ PRO tof_tools_base_event, Event
       main_event = (*global_tof).main_event
       replot_counts_vs_tof, main_event
       populate_range_currently_displayed, Event
+      refresh_plot, main_event
       plot_range_currently_displayed, Event
     END
     
