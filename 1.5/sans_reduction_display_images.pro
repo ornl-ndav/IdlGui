@@ -240,7 +240,7 @@ PRO display_auto_base_launcher_images, main_base=main_base, $
 END
 
 ;------------------------------------------------------------------------------
-PRO  display_trans_manual_step2_3Dview_button, Event, MODE=mode
+PRO display_trans_manual_step2_3Dview_button, Event, MODE=mode
 
   CASE (mode) OF
     'on': image = 'SANSreduction_images/3dview_on.png'
@@ -254,5 +254,72 @@ PRO  display_trans_manual_step2_3Dview_button, Event, MODE=mode
   WIDGET_CONTROL, mode_id, GET_VALUE=id
   WSET, id
   TV, threeD_view_png, 0, 0, /true
+  
+END
+
+;------------------------------------------------------------------------------
+PRO display_play_pause_stop_buttons, MAIN_BASE=main_base, EVENT=event, $
+    activate=activate
+    
+  ;activate is 'none', 'play', 'pause' or 'stop'
+    
+  CASE (activate) OF
+    'none': BEGIN
+      play_image = READ_PNG('SANSreduction_images/play_off.png')
+      pause_image = READ_PNG('SANSreduction_images/pause_off.png')
+      stop_image = READ_PNG('SANSreduction_images/stop_off.png')
+    END
+    'play': BEGIN
+      play_image = READ_PNG('SANSreduction_images/play_on.png')
+      pause_image = READ_PNG('SANSreduction_images/pause_off.png')
+      stop_image = READ_PNG('SANSreduction_images/stop_off.png')
+    END
+    'pause': BEGIN
+      play_image = READ_PNG('SANSreduction_images/play_off.png')
+      pause_image = READ_PNG('SANSreduction_images/pause_on.png')
+      stop_image = READ_PNG('SANSreduction_images/stop_off.png')
+    END
+    'stop': BEGIN
+      play_image = READ_PNG('SANSreduction_images/play_off.png')
+      pause_image = READ_PNG('SANSreduction_images/pause_off.png')
+      stop_image = READ_PNG('SANSreduction_images/stop_on.png')
+    END
+  ENDCASE
+  
+  uname = 'play_tof_button'
+  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
+    mode_id = WIDGET_INFO(main_base, $
+      FIND_BY_UNAME=uname)
+  ENDIF ELSE BEGIN
+    mode_id = WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME=uname)
+  ENDELSE
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, play_image, 0, 0,/true
+
+  uname = 'pause_tof_button'
+  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
+    mode_id = WIDGET_INFO(main_base, $
+      FIND_BY_UNAME=uname)
+  ENDIF ELSE BEGIN
+    mode_id = WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME=uname)
+  ENDELSE
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, pause_image, 0, 0,/true
+
+  uname = 'stop_tof_button'
+  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
+    mode_id = WIDGET_INFO(main_base, $
+      FIND_BY_UNAME=uname)
+  ENDIF ELSE BEGIN
+    mode_id = WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME=uname)
+  ENDELSE
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, stop_image, 0, 0,/true
   
 END

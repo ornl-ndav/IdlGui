@@ -51,6 +51,7 @@ PRO tof_tools_base_event, Event
     ;play TOFs
     WIDGET_INFO(Event.top, FIND_BY_UNAME='tof_mode_play_tof'): BEGIN
       turn_on_tof_mode, Event, MODE=2 ;activate mode2
+      display_play_pause_stop_buttons, EVENT=Event, activate='none'
       save_tof_min_max, Event, MODE=2 ;save tof min and max for I vs tof plot
       main_event = (*global_tof).main_event
       replot_counts_vs_tof, main_event
@@ -465,18 +466,34 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
   row = WIDGET_BASE(mode2,$
     /ROW)
   xsize = 92
-  play = WIDGET_BUTTON(row,$
-    VALUE = 'PLAY',$
-    SCR_XSIZE = xsize,$
-    UNAME = 'play_tof_button')
-  pause = WIDGET_BUTTON(row,$
-    VALUE = 'PAUSE',$
-    SCR_XSIZE = xsize,$
-    UNAME = 'pause_tof_button')
-  stop = WIDGET_BUTTON(row,$
-    VALUE = 'STOP',$
-    SCR_XSIZE = xsize,$
-    UNAME = 'stop_tof_button')
+  play = WIDGET_DRAW(row,$
+  SCR_XSIZE = 94,$
+  SCR_YSIZE = 25,$
+  UNAME = 'play_tof_button',$
+  /BUTTON_EVENTS)
+  pause = WIDGET_DRAW(row,$
+  SCR_XSIZE = 94,$
+  SCR_YSIZE = 25,$
+  UNAME = 'pause_tof_button',$
+  /BUTTON_EVENTS)
+  stop = WIDGET_DRAW(row,$
+  SCR_XSIZE = 94,$
+  SCR_YSIZE = 25,$
+  UNAME = 'stop_tof_button',$
+  /BUTTON_EVENTS)
+  
+;  play = WIDGET_BUTTON(row,$
+;    VALUE = 'PLAY',$
+;    SCR_XSIZE = xsize,$
+;    UNAME = 'play_tof_button')
+;  pause = WIDGET_BUTTON(row,$
+;    VALUE = 'PAUSE',$
+;    SCR_XSIZE = xsize,$
+;    UNAME = 'pause_tof_button')
+;  stop = WIDGET_BUTTON(row,$
+;    VALUE = 'STOP',$
+;    SCR_XSIZE = xsize,$
+;    UNAME = 'stop_tof_button')
     
   ;space
   space = WIDGET_LABEL(mode2,$
@@ -495,7 +512,8 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
     VALUE = 'TOF (microS):')
   label = WIDGET_LABEL(displayed_1,$
     VALUE = ' ',$
-    SCR_XSIZE = 300,$
+    FRAME = 1,$
+    SCR_XSIZE = 190,$   
     /ALIGN_LEFT, $
     UNAME = 'tof_range_displayed')
   displayed_2 = WIDGET_BASE(displayed,$
@@ -505,7 +523,8 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
   label = WIDGET_LABEL(displayed_2,$
     VALUE = ' ',$
     /ALIGN_LEFT, $
-    SCR_XSIZE = 300,$
+    FRAME = 1,$
+    SCR_XSIZE = 190,$
     UNAME = 'bin_range_displayed')
     
   ;close button
