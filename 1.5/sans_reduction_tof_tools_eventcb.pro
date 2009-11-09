@@ -566,9 +566,6 @@ PRO refresh_main_plot_using_tof_input_mode1, Event
   ;get to bin
   to_bin = getTextFieldValue(Event,'mode1_to_tof_bin') - 1
   
-  DataArray = DataArray[from_bin:to_bin,*,*]
-  DataXY = TOTAL(DataArray,1)
-  
   plotStatus = 1 ;by default, plot does work
   plot_error = 0
   CATCH, plot_error
@@ -577,6 +574,9 @@ PRO refresh_main_plot_using_tof_input_mode1, Event
     RETURN
   ENDIF ELSE BEGIN
   
+    DataArray = DataArray[from_bin:to_bin,*,*]
+    DataXY = TOTAL(DataArray,1)
+    
     tDataXY  = TRANSPOSE(dataXY)
     (*(*global).img) = tDataXY
     ;Check if rebin is necessary or not
@@ -612,7 +612,7 @@ PRO refresh_main_plot_using_tof_input_mode2, Event, from_bin, to_bin
   main_event = (*global_tof).main_event
   
   DataArray = (*(*global).DataArray)
-    
+  
   plotStatus = 1 ;by default, plot does work
   plot_error = 0
   CATCH, plot_error
@@ -623,7 +623,7 @@ PRO refresh_main_plot_using_tof_input_mode2, Event, from_bin, to_bin
   
     DataArray = DataArray[from_bin:to_bin,*,*]
     DataXY = TOTAL(DataArray,1)
-  
+    
     tDataXY  = TRANSPOSE(dataXY)
     (*(*global).img) = tDataXY
     ;Check if rebin is necessary or not
@@ -647,5 +647,5 @@ PRO refresh_main_plot_using_tof_input_mode2, Event, from_bin, to_bin
     lin_or_log_plot, main_event
     
   ENDELSE
-
+  
 END

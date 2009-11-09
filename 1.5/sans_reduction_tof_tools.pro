@@ -527,7 +527,7 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
   row = WIDGET_BASE(mode2,$
     /ROW)
   field = CW_FIELD(row,$
-    VALUE = '1',$
+    VALUE = '0.1',$
     /FLOAT,$
     /RETURN_EVENTS, $
     UNAME = 'tof_bin_time',$
