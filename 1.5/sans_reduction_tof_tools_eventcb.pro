@@ -416,13 +416,15 @@ PRO plot_range_currently_displayed, Event
   xmin = tof_min
   xmax = tof_max
 
+  linestyle = 2
+
   PLOTS, xmin, min_counts, /DATA
   PLOTS, xmin, max_counts, /DATA, /CONTINUE, COLOR=FSC_COLOR('blue'), $
-    THICK= 2
+    THICK= 2, LINESTYLE=linestyle
     
   PLOTS, xmax, min_counts, /DATA
   PLOTS, xmax, max_counts, /DATA, /CONTINUE, COLOR=FSC_COLOR('blue'), $
-    THICK= 2
+    THICK= 2, LINESTYLE=linestyle
     
   DEVICE, DECOMPOSED=0
   
