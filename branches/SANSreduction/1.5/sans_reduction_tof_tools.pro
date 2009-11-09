@@ -537,7 +537,7 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
     /FLOAT,$
     /RETURN_EVENTS, $
     UNAME = 'tof_bin_time',$
-    XSIZE = 3,$
+    XSIZE = 4,$
     TITLE = 'Displaying time of each frame: ')
   label = WIDGET_LABEL(row,$
     VALUE = 'seconds')

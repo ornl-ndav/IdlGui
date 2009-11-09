@@ -59,6 +59,14 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tof_tools'): BEGIN
       tof_tools_base, Event
       populate_tof_tools_base, Event
+      wBase = (*global).tof_tools_base
+      xmin = getTextFieldValue_from_base(wBase, 'mode1_from_tof_micros')
+      xmax = getTextFieldValue_from_base(wBase, 'mode1_to_tof_micros')
+      tof_range = (*global).tof_range
+      tof_range.min = xmin
+      tof_range.max = xmax
+      (*global).tof_range = tof_range
+      replot_counts_vs_tof, Event
     END
     
     ;facility Selection
