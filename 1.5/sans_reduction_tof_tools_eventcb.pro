@@ -148,9 +148,9 @@ PRO save_tof_min_max, Event, MODE=mode
   ENDIF ELSE BEGIN
     xmin = getTextFieldValue(Event,'mode2_from_tof_micros')
     xmax = getTextFieldValue(Event,'mode2_to_tof_micros')
-    ;xwidth = getTextFieldValue(Event,'tof_bin_size')
-    ;tof_tof = (*(*global).array_of_tof_bins)
-    ;xmax = tof_tof[xmin+xwidth]
+  ;xwidth = getTextFieldValue(Event,'tof_bin_size')
+  ;tof_tof = (*(*global).array_of_tof_bins)
+  ;xmax = tof_tof[xmin+xwidth]
   ENDELSE
   tof_range = (*global).tof_range
   tof_range.min = xmin
@@ -373,14 +373,14 @@ PRO populate_range_currently_displayed, Event
   WIDGET_CONTROL,Event.top,GET_UVALUE=global_tof
   global = (*global_tof).global
   tof_tof = (*(*global).tof_tof)
-
+  
   from_bin  = getTextFieldValue(Event,'mode2_from_tof_bin')
   bin_width = getTextFieldValue(Event,'tof_bin_size')
   to_bin = from_bin + bin_width
   
   from_tof = tof_tof[from_bin]
   to_tof   = tof_tof[to_bin]
-
+  
   s_from_tof = STRCOMPRESS(from_tof,/REMOVE_ALL)
   s_from_bin = STRCOMPRESS(from_bin,/REMOVE_ALL)
   s_to_tof   = STRCOMPRESS(to_tof,/REMOVE_ALL)
@@ -412,12 +412,12 @@ PRO plot_range_currently_displayed, Event
   tof_array = STRSPLIT(tof_range,' - ', /EXTRACT)
   tof_min = tof_array[0]
   tof_max = tof_array[1]
-
+  
   xmin = tof_min
   xmax = tof_max
-
+  
   linestyle = 2
-
+  
   PLOTS, xmin, min_counts, /DATA
   PLOTS, xmin, max_counts, /DATA, /CONTINUE, COLOR=FSC_COLOR('blue'), $
     THICK= 2, LINESTYLE=linestyle
@@ -431,6 +431,52 @@ PRO plot_range_currently_displayed, Event
 END
 
 ;------------------------------------------------------------------------------
+FUNCTION checkPauseStop, Event
+
+  ;get global structure
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global_tof
+  
+  ;check pause status
+  id_pause = WIDGET_INFO(event.top,find_by_uname='pause_tof_button')
+  pause_status = 0b; continue by default to play tof
+  IF WIDGET_INFO(id_pause,/valid_id) then begin
+    error = 0
+    CATCH, error
+    IF (error NE 0) THEN BEGIN
+      CATCH,/CANCEL
+    ENDIF ELSE BEGIN
+      ;IF ((*global_tof).pause_button_clicked) THEN BEGIN
+        event_id = WIDGET_EVENT(id_pause,/nowait)
+        help, event, /structure
+at3        ;(*global_tof).pause_button_clicked = 1b
+        ;      IF (event_id.press EQ 1) THEN BEGIN
+        ;pause_status = 1b ;stop play process
+      ;ENDIF
+    ENDELSE
+  ENDIF
+  
+  ;  id_stop = WIDGET_INFO(event.top,find_by_uname='stop_button')
+  ;  stop_status = 0
+  ;  IF WIDGET_INFO(id_stop,/valid_id) then begin
+  ;    CATCH, error
+  ;    IF (error NE 0) THEN BEGIN
+  ;      CATCH,/CANCEL
+  ;    ENDIF ELSE BEGIN
+  ;      event_id = WIDGET_EVENT(id_stop,/nowait)
+  ;      IF (event_id.press EQ 1) THEN BEGIN
+  ;        display_buttons, EVENT=EVENT, ACTIVATE=3, global
+  ;        stop_status = 1
+  ;      ENDIF
+  ;    ENDELSE
+  ;  ENDIF
+  
+  ;  RETURN, [pause_status,stop_status]
+  
+  RETURN, pause_status
+  
+END
+
+;------------------------------------------------------------------------------
 PRO play_tof, Event
 
   ;get global structure
@@ -438,12 +484,11 @@ PRO play_tof, Event
   global = (*global_tof).global
   tof_tof = (*(*global).array_of_tof_bins)
   
-  help, tof_tof
-  
   ;get nbr of bins per frame
   bin_width = getTextFieldValue(Event,'tof_bin_size')
   ;get time to stay on each frame
   frame_time = getTextFieldValue(Event,'tof_bin_time')
+  time_per_frame = FLOAT(frame_time) / 3.
   
   ;starting bin
   starting_bin  = getTextFieldValue(Event,'mode2_from_tof_bin')
@@ -475,7 +520,27 @@ PRO play_tof, Event
     
     plot_range_currently_displayed, Event
     
-    WAIT, frame_time
+    
+    time_index = 0
+    while (time_index LT 3) DO BEGIN
+      ;check if user click pause or stop
+      pause_stop_status = checkPauseStop(event)
+      print, pause_stop_status
+      pause_status = pause_stop_status[0]
+      ;stop_status  = pause_stop_status[1]
+      IF (pause_status EQ 1) THEN BEGIN
+        RETURN
+      ENDIF
+      
+      ;    IF (stop_status) EQ 1 THEN BEGIN
+      ;      stop_play, Event
+      ;      RETURN
+      ;    ENDIF
+      
+      WAIT, time_per_frame
+      time_index++
+      
+    ENDWHILE
     
     from_bin = to_bin
     to_bin += bin_width
@@ -485,10 +550,5 @@ PRO play_tof, Event
   ENDWHILE
   
 END
-
-
-
-
-
 
 

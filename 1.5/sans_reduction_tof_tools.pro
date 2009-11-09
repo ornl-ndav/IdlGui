@@ -153,7 +153,13 @@ PRO tof_tools_base_event, Event
     
     ;PLAY button
     WIDGET_INFO(Event.top, FIND_BY_UNAME='play_tof_button'): BEGIN
+      (*global_tof).pause_button_clicked = 0b
       play_tof, Event
+    END
+    
+    ;PAUSE button
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='pause_tof_button'): BEGIN
+;      (*global_tof).pause_button_clicked = 1b
     END
     
     ELSE:
@@ -534,7 +540,8 @@ PRO tof_tools_base, main_base=main_base, Event
   WIDGET_CONTROL, wBase1, /REALIZE
   
   global_tof = PTR_NEW({ wbase: wbase1,$
-    global: global,$
+    global: global, $
+    pause_button_clicked: 0b, $
     main_event: Event})
     
   WIDGET_CONTROL, wBase1, SET_UVALUE = global_tof
