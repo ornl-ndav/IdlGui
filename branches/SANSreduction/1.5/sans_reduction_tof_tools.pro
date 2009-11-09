@@ -161,6 +161,7 @@ PRO tof_tools_base_event, Event
         IF (event.press EQ 1) THEN BEGIN
           display_play_pause_stop_buttons, EVENT=Event, activate='play'
           play_tof, Event
+          display_play_pause_stop_buttons, EVENT=Event, activate='none'
         ENDIF
       ENDIF ELSE BEGIN
         id = WIDGET_INFO(Event.top,$
