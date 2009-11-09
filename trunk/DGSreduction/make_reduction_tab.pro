@@ -65,7 +65,8 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   dataSourceRow = WIDGET_BASE(dataSourcePrettyBase, /ROW)
   datarunID= CW_FIELD(dataSourceRow, xsize=29, ysize=1, TITLE="", UVALUE="DGSR_DATARUN", UNAME='DGSR_DATARUN', $
     /ALL_EVENTS)
-  checkfileButton = WIDGET_BUTTON(dataSourceRow, VALUE="Check File", UVALUE="DGSR_FINDNEXUS", SENSITIVE=0)
+  livefileButton = WIDGET_BUTTON(dataSourceRow, VALUE="Live NeXus", UVALUE="DGSR_LIVENEXUS", UNAME="DGSR_LIVENEXUS")
+  ;checkfileButton = WIDGET_BUTTON(dataSourceRow, VALUE="Check File", UVALUE="DGSR_FINDNEXUS", SENSITIVE=0)
   
   detectorBankBase = WIDGET_BASE(RunDetectorRow)
   detectorBankLabel = WIDGET_LABEL(detectorBankBase, VALUE=' Detector Banks ', XOFFSET=5)
@@ -373,7 +374,7 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
     XSIZE=7, UVALUE="DGSR_LAMBDA_MAX", UNAME="DGSR_LAMBDA_MAX", /ALL_EVENTS)
   stepWavelengthID = CW_FIELD(formatOptionsPrettyBaseWavelengthRow, TITLE="Step:", $
     XSIZE=7, UVALUE="DGSR_LAMBDA_STEP", UNAME="DGSR_LAMBDA_STEP", /ALL_EVENTS)
-
+    
   ; Debye Waller Factor Pretty Frame
   debyeWallerBase = WIDGET_BASE(outputBaseCol3)
   debyeWallerLabel = WIDGET_LABEL(debyeWallerBase, VALUE=' Debye-Waller Factor ', XOFFSET=5)
@@ -437,11 +438,11 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
     
     
   ButtonRow = WIDGET_BASE(baseWidget, /ROW, /ALIGN_RIGHT)
-;  
-;  GatherButton = WIDGET_BUTTON(ButtonRow, VALUE='GATHER (Only Run when SLURM Jobs Completed)', $
-;    EVENT_PRO='DGSreduction_LaunchCollector', UNAME='DGSR_LAUNCH_COLLECTOR_BUTTON')
-;  ; As by default we have 1 job - we should disable the collector button
-;  WIDGET_CONTROL, GatherButton, SENSITIVE=0
+  ;
+  ;  GatherButton = WIDGET_BUTTON(ButtonRow, VALUE='GATHER (Only Run when SLURM Jobs Completed)', $
+  ;    EVENT_PRO='DGSreduction_LaunchCollector', UNAME='DGSR_LAUNCH_COLLECTOR_BUTTON')
+  ;  ; As by default we have 1 job - we should disable the collector button
+  ;  WIDGET_CONTROL, GatherButton, SENSITIVE=0
   
   ; Define a Run button
   executeID = WIDGET_BUTTON(ButtonRow, Value=' EXECUTE >>> ', $
