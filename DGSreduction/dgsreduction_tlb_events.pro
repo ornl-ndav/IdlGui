@@ -104,13 +104,6 @@ PRO DGSreduction_TLB_Events, event
       ;ENDIF
     END
 
-    
-    'DGSR_FINDNEXUS': BEGIN
-      dgsr_cmd->GetProperty, Instrument=instrument
-      dgsr_cmd->GetProperty, DataRun=run_number
-      ; TODO: Sort out findnexus
-      ;nxsfile = findnexus(RUN_NUMBER=run_number, INSTRUMENT=instrument)
-    END
     'DGS_REDUCTION_JOBS': BEGIN
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
       if (myValue NE "") AND (myValue GT 0) AND (myValue LT info.max_jobs) then begin

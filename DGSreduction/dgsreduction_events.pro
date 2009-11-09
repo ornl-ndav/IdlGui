@@ -43,6 +43,19 @@ PRO dgsreduction_events, event, dgsr_cmd
   CASE (myUVALUE) OF
     'NOTHING': BEGIN
     END
+    'DGSR_LIVENEXUS': BEGIN
+      ; First get the instrument name
+      dgsr_cmd->GetProperty, Instrument=instrument
+      ; Only proceed if the instrument is already set!
+      IF STRLEN(Instrument) GT 0 THEN BEGIN
+        cmd = '/SNS/software/sbin/findlivenexus -i ' + instrument
+        spawn, cmd, liveNexusFilename
+        ;liveNexusFilename = 'Using Live NeXus file'
+        datarun_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_DATARUN')
+        WIDGET_CONTROL, datarun_ID, SET_VALUE=liveNexusFilename
+        dgsr_cmd->SetProperty, DataRun=liveNexusFilename
+      ENDIF
+    END
     'DGSR_DATARUN': BEGIN
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
       dgsr_cmd->SetProperty, DataRun=myValue
