@@ -160,6 +160,8 @@ PRO tof_tools_base_event, Event
       id = WIDGET_INFO(Event.top, $
         FIND_BY_UNAME='tof_tools_widget_base')
       WIDGET_CONTROL, id, /DESTROY
+      main_event = (*global_tof).main_event
+      replot_counts_vs_tof, main_event, RESET=1b
     END
     
     ;PLAY button
@@ -608,6 +610,15 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
 END
 
 ;------------------------------------------------------------------------------
+PRO tof_tools_base_cleanup, tof_base
+
+WIDGET_CONTROL, tof_base, GET_UVALUE=global_tof
+event = (*global_tof).main_event
+replot_counts_vs_tof, Event, RESET=1b
+
+END
+
+;------------------------------------------------------------------------------
 PRO tof_tools_base, main_base=main_base, Event
 
   IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
@@ -638,7 +649,7 @@ PRO tof_tools_base, main_base=main_base, Event
   ;display_auto_base_launcher_images, main_base=wBase1, mode='off'
   
   XMANAGER, "tof_tools_base", wBase1, $
-    GROUP_LEADER = ourGroup, /NO_BLOCK
+    GROUP_LEADER = ourGroup, /NO_BLOCK, CLEANUP='tof_tools_base_cleanup'
     
 END
 

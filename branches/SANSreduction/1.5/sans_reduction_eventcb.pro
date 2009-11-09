@@ -524,7 +524,7 @@ PRO get_and_plot_tof_array, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO replot_counts_vs_tof, Event
+PRO replot_counts_vs_tof, Event, RESET=reset
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   tof_array = (*(*global).tof_array)
@@ -566,14 +566,19 @@ PRO replot_counts_vs_tof, Event
     xtitle='Bins #',$
     /NOERASE
     
-  plot_range_of_tof_displayed, Event
+  plot_range_of_tof_displayed, Event, RESET=reset
   
 END
 
 ;------------------------------------------------------------------------------
-PRO plot_range_of_tof_displayed, Event, FIRST_TIME=first_time
+PRO plot_range_of_tof_displayed, Event, FIRST_TIME=first_time, RESET=reset
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  IF (N_ELEMENTS(reset)) THEN RETURN
+  
+  id = (*global).tof_tools_base
+  IF (WIDGET_INFO(id, /VALID_ID) EQ 0) THEN RETURN
   
   counts = (*(*global).tof_counts)
   max_counts = MAX(counts,MIN=min_counts)
