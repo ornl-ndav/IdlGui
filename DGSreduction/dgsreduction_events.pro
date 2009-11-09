@@ -50,9 +50,9 @@ PRO dgsreduction_events, event, dgsr_cmd
       IF STRLEN(Instrument) GT 0 THEN BEGIN
         cmd = '/SNS/software/sbin/findlivenexus -i ' + instrument
         spawn, cmd, liveNexusFilename
-        ;liveNexusFilename = 'Using Live NeXus file'
         datarun_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_DATARUN')
         WIDGET_CONTROL, datarun_ID, SET_VALUE=liveNexusFilename
+        IF liveNexusFilename EQ 'No NeXus files found' THEN liveNexusFilename = ''
         dgsr_cmd->SetProperty, DataRun=liveNexusFilename
       ENDIF
     END
