@@ -57,7 +57,7 @@ PRO tof_tools_base_event, Event
       main_event = (*global_tof).main_event
       replot_counts_vs_tof, main_event
       populate_range_currently_displayed, Event
-      refresh_plot, main_event
+      refresh_main_plot_using_tof_input_mode2, Event
       plot_range_currently_displayed, Event
     END
     
@@ -107,6 +107,7 @@ PRO tof_tools_base_event, Event
         TYPE='from'
       populate_range_currently_displayed, Event
       plot_range_currently_displayed, Event
+      refresh_main_plot_using_tof_input_mode2, Event
     END
     
     ;to tof
@@ -117,6 +118,7 @@ PRO tof_tools_base_event, Event
         TYPE='to'
       populate_range_currently_displayed, Event
       plot_range_currently_displayed, Event
+      refresh_main_plot_using_tof_input_mode2, Event
     END
     
     ;from bin
@@ -127,6 +129,7 @@ PRO tof_tools_base_event, Event
         TYPE='from'
       populate_range_currently_displayed, Event
       plot_range_currently_displayed, Event
+      refresh_main_plot_using_tof_input_mode2, Event
     END
     
     ;to bin
@@ -137,6 +140,7 @@ PRO tof_tools_base_event, Event
         TYPE='to'
       populate_range_currently_displayed, Event
       plot_range_currently_displayed, Event
+      refresh_main_plot_using_tof_input_mode2, Event
     END
     
     ;nbr of bins per frame
