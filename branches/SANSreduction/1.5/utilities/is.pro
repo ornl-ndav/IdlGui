@@ -129,18 +129,23 @@ FUNCTION getTextFieldValue, Event, uname
   RETURN, value[0]
 END
 
-FUNCTION is_from_lower_than_to, Event, MODE=mode
+FUNCTION is_from_lower_than_to, Event, MODE=mode, TEST=test
 
   CASE (MODE) OF
     1: mode_base = 'mode1_'
     2: mode_base = 'mode2_'
   ENDCASE
   
-  from_bin_Uname = mode_base + 'from_tof_bin'
-  to_bin_uname   = mode_base + 'to_tof_bin'
+  IF (TEST EQ 'bin') THEN BEGIN
+    from_uname = mode_base + 'from_tof_bin'
+    to_uname   = mode_base + 'to_tof_bin'
+  ENDIF ELSE BEGIN
+    from_uname = mode_base + 'from_tof_micros'
+    to_uname   = mode_base + 'to_tof_micros'
+  ENDELSE
   
-  from = getTextFieldValue(Event,from_bin_uname)
-  to   = getTextFieldValue(Event,to_bin_uname)
+  from = getTextFieldValue(Event,from_uname)
+  to   = getTextFieldValue(Event,to_uname)
   
   IF (from GE to) THEN RETURN, 0b
   

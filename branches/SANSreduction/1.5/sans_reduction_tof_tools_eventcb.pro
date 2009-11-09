@@ -192,7 +192,7 @@ PRO update_other_tof_field, Event, $
         'micros': BEGIN ;micros
           micros = getTextFieldValue(Event,mode_base+'from_tof_micros')
           bin = convert_micros_to_bin(Event,micros)
-          result = is_from_lower_than_to(Event, MODE=mode)
+          result = is_from_lower_than_to(Event, MODE=mode, TEST='micros')
           IF (bin EQ -1) THEN BEGIN ;outside of range
             micro_min = getTextFieldValue(Event,mode_base+'from_tof_micros_help')
             micro_max = getTextFieldValue(Event,mode_base+'to_tof_micros_help')
@@ -206,7 +206,8 @@ PRO update_other_tof_field, Event, $
             value = tof_fields.from.tof
             putTextFieldValue, Event, mode_base+'from_tof_micros', value
           ENDIF ELSE BEGIN
-            result = is_from_lower_than_to(Event, MODE=mode) ;make sure from<to
+            result = is_from_lower_than_to(Event, MODE=mode, $
+            TEST='micros') ;make sure from<to
             IF (result EQ 0b) THEN BEGIN
               text = ['INPUT ERROR',$
                 'FROM value is greater or equal to TO value !']
@@ -242,7 +243,7 @@ PRO update_other_tof_field, Event, $
             value = tof_fields.from.bin
             putTextFieldValue, Event, mode_base+'from_tof_bin', value
           ENDIF ELSE BEGIN
-            result = is_from_lower_than_to(Event, MODE=mode) ;make sure from<to
+            result = is_from_lower_than_to(Event, MODE=mode, TEST='bin') ;make sure from<to
             IF (result EQ 0b) THEN BEGIN
               text = ['INPUT ERROR',$
                 'FROM value is greater or equal to TO value !']
@@ -282,7 +283,8 @@ PRO update_other_tof_field, Event, $
             value = tof_fields.to.tof
             putTextFieldValue, Event, mode_base+'to_tof_micros', value
           ENDIF ELSE BEGIN
-            result = is_from_lower_than_to(Event, MODE=mode) ;make sure from<to
+            result = is_from_lower_than_to(Event, MODE=mode,$
+            TEST='micros') ;make sure from<to
             IF (result EQ 0b) THEN BEGIN
               text = ['INPUT ERROR',$
                 'FROM value is greater or equal to TO value !']
@@ -318,7 +320,8 @@ PRO update_other_tof_field, Event, $
             value = tof_fields.to.bin
             putTextFieldValue, Event, mode_base+'to_tof_bin', value
           ENDIF ELSE BEGIN
-            result = is_from_lower_than_to(Event, MODE=mode) ;make sure from<to
+            result = is_from_lower_than_to(Event, MODE=mode, $
+            TEST='bin') ;make sure from<to
             IF (result EQ 0b) THEN BEGIN
               text = ['INPUT ERROR',$
                 'FROM value is greater or equal to TO value !']
