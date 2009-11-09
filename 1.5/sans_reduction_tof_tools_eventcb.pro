@@ -440,18 +440,15 @@ FUNCTION checkPauseStop, Event
   id_pause = WIDGET_INFO(event.top,find_by_uname='pause_tof_button')
   pause_status = 0b; continue by default to play tof
   IF WIDGET_INFO(id_pause,/valid_id) then begin
-    error = 0
     CATCH, error
     IF (error NE 0) THEN BEGIN
       CATCH,/CANCEL
     ENDIF ELSE BEGIN
-      ;IF ((*global_tof).pause_button_clicked) THEN BEGIN
-        event_id = WIDGET_EVENT(id_pause,/nowait)
-        help, event, /structure
-at3        ;(*global_tof).pause_button_clicked = 1b
-        ;      IF (event_id.press EQ 1) THEN BEGIN
-        ;pause_status = 1b ;stop play process
-      ;ENDIF
+      event_id = WIDGET_EVENT(id_pause,/nowait)
+      IF (event_id.press EQ 1) THEN BEGIN
+        display_play_pause_stop_buttons, EVENT=Event, activate='pause'
+        pause_status = 1b
+      ENDIF
     ENDELSE
   ENDIF
   
@@ -520,12 +517,10 @@ PRO play_tof, Event
     
     plot_range_currently_displayed, Event
     
-    
     time_index = 0
     while (time_index LT 3) DO BEGIN
       ;check if user click pause or stop
       pause_stop_status = checkPauseStop(event)
-      print, pause_stop_status
       pause_status = pause_stop_status[0]
       ;stop_status  = pause_stop_status[1]
       IF (pause_status EQ 1) THEN BEGIN
