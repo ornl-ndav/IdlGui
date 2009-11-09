@@ -30,11 +30,11 @@
 ;   permission.
 ;
 ; :Description:
-; 
+;
 ;    Returns the first run number from the RunNumbers variable.
-;    This is used for naming files/directories/jobs when more than 
+;    This is used for naming files/directories/jobs when more than
 ;    one file is specified.
-;    
+;
 ;    e.g. RunNumbers="1234-1250" would return "1234"
 ;         RunNumbers="1234,1235" would return "1234"
 ;         RunNumbers="1250,1243-1249" would return "1250"
@@ -42,23 +42,63 @@
 ; :Params:
 ;    RunNumbers - A string containing the run numbers.
 ;
-; :Author: scu
+; :Author: scu (campbellsi@ornl.gov)
 ;-
-FUNCTION GetFirstNumber, RunNumbers
-
+FUNCTION GetFirstNumber, RunNumberString
+  
   largeNumber = 9999999
+  runNumber = '-1'
+  fileGiven = 0
+  runNumber_location = '/entry/entry_identifier'
+  
+    Catch, theError
+  IF theError NE 0 THEN BEGIN
+    CATCH, /CANCEL
+    IF !ERROR_STATE.CODE EQ -1008 THEN runNumber_location = '/entry/run_number'
+  ENDIF
   
   ; The runs should be delimited by either a - or ,
   
   ; Lets find see if there are any commas
-  commaPosition = STRPOS(RunNumbers, ',')
+  commaPosition = STRPOS(RunNumberString, ',')
   IF commaPosition EQ -1 THEN commaPosition = largeNumber
   
-  hyphenPosition = STRPOS(RunNumbers, '-')
+  hyphenPosition = STRPOS(RunNumberString, '-')
   IF hyphenPosition EQ -1 THEN hyphenPosition = largeNumber
   
   firstDelimiter = MIN([commaPosition, hyphenPosition])
   
-  RETURN, STRMID(RunNumbers, 0, firstDelimiter)
+  ; Let's get the string upto the first ',' or '-'
+  firstString = STRMID(RunNumberString, 0, firstDelimiter)
+  
+  ; Now let's check to see if we have been given a set of numbers or filenames.
+  ; for this I am going to check if the string contains either a '/' or a '.'
+  slashPosition = STRPOS(firstString, '/')
+  dotPosition = STRPOS(firstString, '.')
+  IF (dotPosition NE -1) OR (slashPosition NE -1) THEN fileGiven = 1
+  
+  ;print, slashPosition, dotPosition, fileGiven
+  
+  ; Now lets get the run number for a filename.
+  IF (fileGiven EQ 1) THEN BEGIN
+  
+    ; Let's check to see if the file exists.
+    fileThere = FILE_TEST(firstString, /READ, /REGULAR)
+    
+    IF (fileThere) THEN BEGIN
+      ; First lets open the file
+      fileID = h5f_open(firstString)
+      ; Now lets get the run number
+      ;print, 'Getting run number from ', runNumber_location, ' in NeXus file.'
+      fieldID = H5D_OPEN(FILEID, runNumber_location)
+      runNumber = H5D_READ(FIELDID)
+    ENDIF
+
+  ENDIF ELSE BEGIN
+    ; If it's not a file, then we must already have the run number.
+    runNumber = firstString
+  ENDELSE
+  
+  RETURN, runNumber
   
 END

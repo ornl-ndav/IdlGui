@@ -63,7 +63,8 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
     YOFFSET=dataSourceLabelGeometryYSize/2, YPAD=10, XPAD=10)
     
   dataSourceRow = WIDGET_BASE(dataSourcePrettyBase, /ROW)
-  datarunID= CW_FIELD(dataSourceRow, xsize=29, ysize=1, TITLE="", UVALUE="DGSR_DATARUN", UNAME='DGSR_DATARUN', /ALL_EVENTS)
+  datarunID= CW_FIELD(dataSourceRow, xsize=29, ysize=1, TITLE="", UVALUE="DGSR_DATARUN", UNAME='DGSR_DATARUN', $
+    /ALL_EVENTS)
   checkfileButton = WIDGET_BUTTON(dataSourceRow, VALUE="Check File", UVALUE="DGSR_FINDNEXUS", SENSITIVE=0)
   
   detectorBankBase = WIDGET_BASE(RunDetectorRow)
