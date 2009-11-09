@@ -66,6 +66,7 @@ PRO tof_tools_base_event, Event
         MODE=1, $
         AXIS='micros',$
         TYPE='from'
+        refresh_main_plot_using_tof_input, Event
     END
     
     ;to tof
@@ -74,6 +75,7 @@ PRO tof_tools_base_event, Event
         MODE=1, $
         AXIS='micros',$
         TYPE='to'
+        refresh_main_plot_using_tof_input, Event
     END
     
     ;from bin
@@ -82,6 +84,7 @@ PRO tof_tools_base_event, Event
         MODE=1, $
         AXIS='bin',$
         TYPE='from'
+        refresh_main_plot_using_tof_input, Event
     END
     
     ;to bin
@@ -90,6 +93,7 @@ PRO tof_tools_base_event, Event
         MODE=1, $
         AXIS='bin',$
         TYPE='to'
+        refresh_main_plot_using_tof_input, Event
     END
     
     ;mode2: play tofs

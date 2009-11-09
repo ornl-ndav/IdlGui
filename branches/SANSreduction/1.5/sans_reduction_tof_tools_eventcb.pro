@@ -549,3 +549,55 @@ PRO play_tof, Event
   ENDWHILE
   
 END
+
+;------------------------------------------------------------------------------
+PRO refresh_main_plot_using_tof_input, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global_tof
+  global = (*global_tof).global
+  main_event = (*global_tof).main_event
+  
+  DataArray = (*(*global).DataArray)
+  
+  ;get from bin
+  from_bin = getTextFieldValue(Event,'mode1_from_tof_bin')
+  ;get to bin
+  to_bin = getTextFieldValue(Event,'mode1_to_tof_bin') - 1
+  
+  DataArray = DataArray[from_bin:to_bin,*,*]
+  DataXY = TOTAL(DataArray,1)
+  
+  plotStatus = 1 ;by default, plot does work
+  plot_error = 0
+  CATCH, plot_error
+  IF (plot_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN
+  ENDIF ELSE BEGIN
+  
+    tDataXY  = TRANSPOSE(dataXY)
+    (*(*global).img) = tDataXY
+    ;Check if rebin is necessary or not
+    
+    x = (size(tDataXY))(1)
+    y = (size(tDataXY))(2)
+    
+    draw_x = (*global).draw_x
+    draw_y = (*global).draw_y
+    
+    rtDataXY = CONGRID(tDataXY, draw_x, draw_y)
+    
+    congrid_x_coeff = FLOAT(draw_x) / FLOAT(x)
+    congrid_y_coeff = FLOAT(draw_y) / FLOAT(y)
+    congrid_coeff = MIN([congrid_x_coeff,congrid_y_coeff])
+    
+    (*global).congrid_x_coeff = congrid_coeff
+    (*global).congrid_y_coeff = congrid_coeff
+    
+    (*(*global).rtDataXY) = rtDataXY ;array plotted
+    lin_or_log_plot, main_event
+    
+  ENDELSE
+  
+END
