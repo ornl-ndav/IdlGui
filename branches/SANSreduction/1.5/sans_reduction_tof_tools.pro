@@ -154,13 +154,77 @@ PRO tof_tools_base_event, Event
     
     ;PLAY button
     WIDGET_INFO(Event.top, FIND_BY_UNAME='play_tof_button'): BEGIN
-      (*global_tof).pause_button_clicked = 0b
-      play_tof, Event
+      error = 0
+      CATCH, error
+      IF (error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        IF (event.press EQ 1) THEN BEGIN
+          display_play_pause_stop_buttons, EVENT=Event, activate='play'
+          play_tof, Event
+        ENDIF
+      ENDIF ELSE BEGIN
+        id = WIDGET_INFO(Event.top,$
+          find_by_uname='play_tof_button')
+        WIDGET_CONTROL, id, GET_VALUE=id_value
+        WSET, id_value
+        IF (Event.enter EQ 1) THEN BEGIN
+          standard = 58
+        ENDIF
+        IF (event.enter EQ 0) THEN BEGIN
+          standard = 68
+        ENDIF
+        DEVICE, CURSOR_STANDARD=standard
+      ENDELSE
     END
     
     ;PAUSE button
     WIDGET_INFO(Event.top, FIND_BY_UNAME='pause_tof_button'): BEGIN
-;      (*global_tof).pause_button_clicked = 1b
+      error = 0
+      CATCH, error
+      IF (error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        IF (event.press EQ 1) THEN BEGIN
+          display_play_pause_stop_buttons, EVENT=Event, activate='pause'
+        ENDIF
+      ENDIF ELSE BEGIN
+        id = WIDGET_INFO(Event.top,$
+          find_by_uname='pause_tof_button')
+        WIDGET_CONTROL, id, GET_VALUE=id_value
+        WSET, id_value
+        IF (Event.enter EQ 1) THEN BEGIN
+          standard = 58
+        ENDIF
+        IF (event.enter EQ 0) THEN BEGIN
+          standard = 68
+        ENDIF
+        DEVICE, CURSOR_STANDARD=standard
+      ENDELSE
+    END
+    
+    ;STOP button
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='stop_tof_button'): BEGIN
+      error = 0
+      CATCH, error
+      IF (error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        IF (event.press EQ 1) THEN BEGIN
+          display_play_pause_stop_buttons, EVENT=Event, activate='stop'
+          wait, 0.5
+          display_play_pause_stop_buttons, EVENT=Event, activate='none'
+        ENDIF
+      ENDIF ELSE BEGIN
+        id = WIDGET_INFO(Event.top,$
+          find_by_uname='stop_tof_button')
+        WIDGET_CONTROL, id, GET_VALUE=id_value
+        WSET, id_value
+        IF (Event.enter EQ 1) THEN BEGIN
+          standard = 58
+        ENDIF
+        IF (event.enter EQ 0) THEN BEGIN
+          standard = 68
+        ENDIF
+        DEVICE, CURSOR_STANDARD=standard
+      ENDELSE
     END
     
     ELSE:
@@ -467,33 +531,23 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
     /ROW)
   xsize = 92
   play = WIDGET_DRAW(row,$
-  SCR_XSIZE = 94,$
-  SCR_YSIZE = 25,$
-  UNAME = 'play_tof_button',$
-  /BUTTON_EVENTS)
+    SCR_XSIZE = 94,$
+    SCR_YSIZE = 25,$
+    UNAME = 'play_tof_button',$
+    /TRACKING_EVENTS,$
+    /BUTTON_EVENTS)
   pause = WIDGET_DRAW(row,$
-  SCR_XSIZE = 94,$
-  SCR_YSIZE = 25,$
-  UNAME = 'pause_tof_button',$
-  /BUTTON_EVENTS)
+    SCR_XSIZE = 94,$
+    SCR_YSIZE = 25,$
+    UNAME = 'pause_tof_button',$
+    /TRACKING_EVENTS,$
+    /BUTTON_EVENTS)
   stop = WIDGET_DRAW(row,$
-  SCR_XSIZE = 94,$
-  SCR_YSIZE = 25,$
-  UNAME = 'stop_tof_button',$
-  /BUTTON_EVENTS)
-  
-;  play = WIDGET_BUTTON(row,$
-;    VALUE = 'PLAY',$
-;    SCR_XSIZE = xsize,$
-;    UNAME = 'play_tof_button')
-;  pause = WIDGET_BUTTON(row,$
-;    VALUE = 'PAUSE',$
-;    SCR_XSIZE = xsize,$
-;    UNAME = 'pause_tof_button')
-;  stop = WIDGET_BUTTON(row,$
-;    VALUE = 'STOP',$
-;    SCR_XSIZE = xsize,$
-;    UNAME = 'stop_tof_button')
+    SCR_XSIZE = 94,$
+    SCR_YSIZE = 25,$
+    UNAME = 'stop_tof_button',$
+    /TRACKING_EVENTS,$
+    /BUTTON_EVENTS)
     
   ;space
   space = WIDGET_LABEL(mode2,$
@@ -513,7 +567,7 @@ PRO tof_tools_launcher_base_gui, wBase, main_base_geometry
   label = WIDGET_LABEL(displayed_1,$
     VALUE = ' ',$
     FRAME = 1,$
-    SCR_XSIZE = 190,$   
+    SCR_XSIZE = 190,$
     /ALIGN_LEFT, $
     UNAME = 'tof_range_displayed')
   displayed_2 = WIDGET_BASE(displayed,$
