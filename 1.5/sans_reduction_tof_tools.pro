@@ -66,7 +66,7 @@ PRO tof_tools_base_event, Event
         MODE=1, $
         AXIS='micros',$
         TYPE='from'
-        refresh_main_plot_using_tof_input_mode1, Event
+      refresh_main_plot_using_tof_input_mode1, Event
     END
     
     ;to tof
@@ -75,7 +75,7 @@ PRO tof_tools_base_event, Event
         MODE=1, $
         AXIS='micros',$
         TYPE='to'
-        refresh_main_plot_using_tof_input_mode1, Event
+      refresh_main_plot_using_tof_input_mode1, Event
     END
     
     ;from bin
@@ -84,7 +84,7 @@ PRO tof_tools_base_event, Event
         MODE=1, $
         AXIS='bin',$
         TYPE='from'
-        refresh_main_plot_using_tof_input_mode1, Event
+      refresh_main_plot_using_tof_input_mode1, Event
     END
     
     ;to bin
@@ -93,7 +93,7 @@ PRO tof_tools_base_event, Event
         MODE=1, $
         AXIS='bin',$
         TYPE='to'
-        refresh_main_plot_using_tof_input_mode1, Event
+      refresh_main_plot_using_tof_input_mode1, Event
     END
     
     ;mode2: play tofs
@@ -216,6 +216,7 @@ PRO tof_tools_base_event, Event
           display_play_pause_stop_buttons, EVENT=Event, activate='stop'
           main_event = (*global_tof).main_event
           replot_counts_vs_tof, main_event
+          refresh_plot, main_event
           populate_range_currently_displayed, Event
           plot_range_currently_displayed, Event
           wait, 0.4
