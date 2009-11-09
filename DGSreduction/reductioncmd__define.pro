@@ -329,7 +329,7 @@ PRO ReductionCmd::SetProperty, $
   
   IF N_ELEMENTS(normalisation) NE 0 THEN BEGIN
     ; If -ve then ignore
-    IF Normalisation LE 0.0 THEN Normalisation = ""
+    IF Normalisation LE 0 THEN Normalisation = ""
     self.normalisation = STRCOMPRESS(STRING(Normalisation), /REMOVE_ALL)
   ENDIF
   
@@ -423,20 +423,7 @@ END
 ;-
 FUNCTION ReductionCmd::GetRunNumber
 
-  largeNumber = 9999999
-  
-  ; The runs should be delimited by either a - or ,
-  
-  ; Lets find see if there are any commas
-  commaPosition = STRPOS(self.datarun, ',')
-  IF commaPosition EQ -1 THEN commaPosition = largeNumber
-  
-  hyphenPosition = STRPOS(self.datarun, '-')
-  IF hyphenPosition EQ -1 THEN hyphenPosition = largeNumber
-  
-  firstDelimiter = MIN([commaPosition, hyphenPosition])
-  
-  RETURN, STRMID(self.datarun, 0, firstDelimiter)
+  RETURN, getFirstNumber(self.datarun)
   
 END
 
@@ -460,7 +447,6 @@ function ReductionCmd::Check
   datapaths_bad = 0
   msg = ['Everything looks good.']
   
-  
   IF (STRLEN(self.instrument) LT 2) THEN BEGIN
     ok = 0
     msg = [msg,['There is no Instrument selected.']]
@@ -469,6 +455,14 @@ function ReductionCmd::Check
   IF (STRLEN(self.datarun) LT 1) THEN BEGIN
     ok = 0
     msg = [msg,["There doesn't seem to be a RUN NUMBER defined."]]
+  ENDIF
+  
+  ;Check that the run numbers entered in the "Run Number" box are sensible
+  IF (STRLEN(self.datarun) GE 1) THEN BEGIN
+    IF (getFirstNumber(self.datarun) EQ '-1') THEN BEGIN
+      ok = 0
+      msg = [msg, ['Run Number is incorrectly specified or the file does not exist.']]
+    ENDIF
   ENDIF
   
   ; Just construct the DataPaths for the first job.
