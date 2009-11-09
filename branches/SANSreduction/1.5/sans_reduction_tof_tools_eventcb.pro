@@ -438,6 +438,8 @@ PRO play_tof, Event
   global = (*global_tof).global
   tof_tof = (*(*global).array_of_tof_bins)
   
+  help, tof_tof
+  
   ;get nbr of bins per frame
   bin_width = getTextFieldValue(Event,'tof_bin_size')
   ;get time to stay on each frame
@@ -450,7 +452,7 @@ PRO play_tof, Event
   from_bin = starting_bin
   to_bin   = starting_bin + bin_width
   
-  WHILE (to_bin LT ending_bin) DO BEGIN
+  WHILE (from_bin LT ending_bin) DO BEGIN
   
     ;tof_range = (*global).tof_range
     ;tof_range.min = tof_tof[from_bin]
@@ -477,6 +479,8 @@ PRO play_tof, Event
     
     from_bin = to_bin
     to_bin += bin_width
+    
+    IF (to_bin GE ending_bin) THEN to_bin = ending_bin
     
   ENDWHILE
   
