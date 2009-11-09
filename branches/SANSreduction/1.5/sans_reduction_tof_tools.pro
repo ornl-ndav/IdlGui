@@ -50,7 +50,6 @@ PRO tof_tools_base_event, Event
     
     ;play TOFs
     WIDGET_INFO(Event.top, FIND_BY_UNAME='tof_mode_play_tof'): BEGIN
-    print, 'here'
       turn_on_tof_mode, Event, MODE=2 ;activate mode2
       save_tof_min_max, Event, MODE=2 ;save tof min and max for I vs tof plot
       main_event = (*global_tof).main_event
@@ -99,14 +98,18 @@ PRO tof_tools_base_event, Event
         MODE=2, $
         AXIS='micros',$
         TYPE='from'
+      populate_range_currently_displayed, Event
+      plot_range_currently_displayed, Event
     END
     
     ;to tof
     WIDGET_INFO(Event.top, FIND_BY_UNAME='mode2_to_tof_micros'): BEGIN
-          update_other_tof_field, Event, $
-            MODE=2, $
-            AXIS='micros',$
-            TYPE='to'
+      update_other_tof_field, Event, $
+        MODE=2, $
+        AXIS='micros',$
+        TYPE='to'
+      populate_range_currently_displayed, Event
+      plot_range_currently_displayed, Event
     END
     
     ;from bin
@@ -115,14 +118,18 @@ PRO tof_tools_base_event, Event
         MODE=2, $
         AXIS='bin',$
         TYPE='from'
+      populate_range_currently_displayed, Event
+      plot_range_currently_displayed, Event
     END
     
     ;to bin
     WIDGET_INFO(Event.top, FIND_BY_UNAME='mode2_to_tof_bin'): BEGIN
-          update_other_tof_field, Event, $
-            MODE=2, $
-            AXIS='bin',$
-            TYPE='to'
+      update_other_tof_field, Event, $
+        MODE=2, $
+        AXIS='bin',$
+        TYPE='to'
+      populate_range_currently_displayed, Event
+      plot_range_currently_displayed, Event
     END
     
     ;nbr of bins per frame
@@ -131,7 +138,10 @@ PRO tof_tools_base_event, Event
         MODE=2, $
         AXIS='bin',$
         TYPE='width'
+      main_event = (*global_tof).main_event
+      replot_counts_vs_tof, main_event
       populate_range_currently_displayed, Event
+      plot_range_currently_displayed, Event
     END
     
     ;CLOSE button
