@@ -209,7 +209,11 @@ PRO tof_tools_base_event, Event
         CATCH,/CANCEL
         IF (event.press EQ 1) THEN BEGIN
           display_play_pause_stop_buttons, EVENT=Event, activate='stop'
-          wait, 0.5
+          main_event = (*global_tof).main_event
+          replot_counts_vs_tof, main_event
+          populate_range_currently_displayed, Event
+          plot_range_currently_displayed, Event
+          wait, 0.4
           display_play_pause_stop_buttons, EVENT=Event, activate='none'
         ENDIF
       ENDIF ELSE BEGIN
