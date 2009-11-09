@@ -45,13 +45,13 @@
 ; :Author: scu (campbellsi@ornl.gov)
 ;-
 FUNCTION GetFirstNumber, RunNumberString
-  
+
   largeNumber = 9999999
   runNumber = '-1'
   fileGiven = 0
   runNumber_location = '/entry/entry_identifier'
   
-    Catch, theError
+  Catch, theError
   IF theError NE 0 THEN BEGIN
     CATCH, /CANCEL
     IF !ERROR_STATE.CODE EQ -1008 THEN runNumber_location = '/entry/run_number'
@@ -86,14 +86,23 @@ FUNCTION GetFirstNumber, RunNumberString
     fileThere = FILE_TEST(firstString, /READ, /REGULAR)
     
     IF (fileThere) THEN BEGIN
-      ; First lets open the file
-      fileID = h5f_open(firstString)
-      ; Now lets get the run number
-      ;print, 'Getting run number from ', runNumber_location, ' in NeXus file.'
-      fieldID = H5D_OPEN(FILEID, runNumber_location)
-      runNumber = H5D_READ(FIELDID)
+    
+      ; Let's first check to see if we are using a 'Live' NeXus file.
+      ; Assuming that if the filename contains the path to a shared/live directory
+      ; it is a live file!
+      liveString = STRPOS(firstString, '/shared/live')
+      IF liveString NE -1 THEN BEGIN
+        runNumber = 'live'
+      ENDIF ELSE BEGIN
+        ; First lets open the file
+        fileID = h5f_open(firstString)
+        ; Now lets get the run number
+        ;print, 'Getting run number from ', runNumber_location, ' in NeXus file.'
+        fieldID = H5D_OPEN(FILEID, runNumber_location)
+        runNumber = H5D_READ(FIELDID)
+      ENDELSE
     ENDIF
-
+    
   ENDIF ELSE BEGIN
     ; If it's not a file, then we must already have the run number.
     runNumber = firstString
