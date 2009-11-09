@@ -612,10 +612,10 @@ END
 ;------------------------------------------------------------------------------
 PRO tof_tools_base_cleanup, tof_base
 
-WIDGET_CONTROL, tof_base, GET_UVALUE=global_tof
-event = (*global_tof).main_event
-replot_counts_vs_tof, Event, RESET=1b
-
+  WIDGET_CONTROL, tof_base, GET_UVALUE=global_tof
+  event = (*global_tof).main_event
+  replot_counts_vs_tof, Event, RESET=1b
+  
 END
 
 ;------------------------------------------------------------------------------
