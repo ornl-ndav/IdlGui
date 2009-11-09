@@ -452,24 +452,22 @@ FUNCTION checkPauseStop, Event
     ENDELSE
   ENDIF
   
-  ;  id_stop = WIDGET_INFO(event.top,find_by_uname='stop_button')
-  ;  stop_status = 0
-  ;  IF WIDGET_INFO(id_stop,/valid_id) then begin
-  ;    CATCH, error
-  ;    IF (error NE 0) THEN BEGIN
-  ;      CATCH,/CANCEL
-  ;    ENDIF ELSE BEGIN
-  ;      event_id = WIDGET_EVENT(id_stop,/nowait)
-  ;      IF (event_id.press EQ 1) THEN BEGIN
-  ;        display_buttons, EVENT=EVENT, ACTIVATE=3, global
-  ;        stop_status = 1
-  ;      ENDIF
-  ;    ENDELSE
-  ;  ENDIF
+  id_pause = WIDGET_INFO(event.top,find_by_uname='stop_tof_button')
+  stop_status = 0b
+  IF WIDGET_INFO(id_pause,/valid_id) then begin
+    CATCH, error
+    IF (error NE 0) THEN BEGIN
+      CATCH,/CANCEL
+    ENDIF ELSE BEGIN
+      event_id = WIDGET_EVENT(id_pause,/nowait)
+      IF (event_id.press EQ 1) THEN BEGIN
+        display_play_pause_stop_buttons, EVENT=Event, activate='stop'
+        stop_status = 1b
+      ENDIF
+    ENDELSE
+  ENDIF
   
-  ;  RETURN, [pause_status,stop_status]
-  
-  RETURN, pause_status
+  RETURN, [pause_status,stop_status]
   
 END
 
@@ -522,15 +520,21 @@ PRO play_tof, Event
       ;check if user click pause or stop
       pause_stop_status = checkPauseStop(event)
       pause_status = pause_stop_status[0]
-      ;stop_status  = pause_stop_status[1]
+      stop_status  = pause_stop_status[1]
       IF (pause_status EQ 1) THEN BEGIN
         RETURN
       ENDIF
       
-      ;    IF (stop_status) EQ 1 THEN BEGIN
-      ;      stop_play, Event
-      ;      RETURN
-      ;    ENDIF
+      IF (stop_status) EQ 1 THEN BEGIN
+        display_play_pause_stop_buttons, EVENT=Event, activate='stop'
+        main_event = (*global_tof).main_event
+        replot_counts_vs_tof, main_event
+        populate_range_currently_displayed, Event
+        plot_range_currently_displayed, Event
+        wait, 0.4
+        display_play_pause_stop_buttons, EVENT=Event, activate='none'
+        RETURN
+      ENDIF
       
       WAIT, time_per_frame
       time_index++
