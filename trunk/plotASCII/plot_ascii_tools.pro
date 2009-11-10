@@ -32,14 +32,14 @@
 ;
 ;==============================================================================
 
-PRO tof_tools_base_event, Event
+PRO plot_ascii_tools_base_event, Event
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global_tools
   global = (*global_tools).global
   
   CASE Event.id OF
-      
+  
     ELSE:
     
   ENDCASE
@@ -68,7 +68,29 @@ PRO plot_ascii_tools_base_gui, wBase, main_base_geometry
     MAP          = 1,$
     /BASE_ALIGN_CENTER,$
     GROUP_LEADER = ourGroup)
-        
+    
+  main_base = WIDGET_BASE(wBase,$
+    /COLUMN)
+    
+  ;lin and log buttons
+  row1 = WIDGET_BASE(main_base,$
+    /ROW)
+  label = WIDGET_LABEL(row1,$
+    VALUE = 'Y axis:')
+  base = WIDGET_BASE(row1,$
+    XOFFSET=0,$
+    YOFFSET=0,$
+    /ROW,$
+    /EXCLUSIVE)
+  button1 = WIDGET_BUTTON(base,$
+    VALUE='Lin',$
+    UNAME = 'y_axis_lin')
+  button2 = WIDGET_BUTTON(base,$
+    VALUE='Log',$
+    UNAME = 'y_axis_log')
+    
+  WIDGET_CONTROL, button1, /SET_BUTTON
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -88,8 +110,8 @@ PRO plot_ascii_tools_base, main_base=main_base, Event
   wBase1 = ''
   plot_ascii_tools_base_gui, wBase1, $
     main_base_geometry
-;  (*global).tof_tools_base = wBase1
-  
+  ;  (*global).tof_tools_base = wBase1
+    
   WIDGET_CONTROL, wBase1, /REALIZE
   
   global_tools = PTR_NEW({ wbase: wbase1,$
