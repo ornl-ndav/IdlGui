@@ -116,17 +116,20 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     TITLE        = MainBaseTitle,$
     /COLUMN, $
     /TLB_MOVE_EVENTS, $
-    ;/TRACKING_EVENTS, $
     /TLB_SIZE_EVENTS)
     
+  tools = WIDGET_BUTTON(MAIN_BASE,$
+  VALUE = 'TOOLS',$
+  SCR_YSIZE = 25,$
+  UNAME = 'tools_button_uname')
+ 
   plot = WIDGET_DRAW(MAIN_BASE,$
     UNAME = 'main_draw',$
     SCR_XSIZE    = MainBaseSize[2],$
-    SCR_YSIZE    = MainBaseSize[3])
+    SCR_YSIZE    = MainBaseSize[3]-25)
     
   ;attach global structure with widget ID of widget main base widget ID
   WIDGET_CONTROL, MAIN_BASE, SET_UVALUE=global
-  
   
   WIDGET_CONTROL, /REALIZE, MAIN_BASE
   XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK

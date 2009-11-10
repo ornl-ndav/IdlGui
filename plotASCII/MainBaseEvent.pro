@@ -53,7 +53,7 @@ PRO MAIN_BASE_event, Event
         
       id = WIDGET_INFO(Event.top, FIND_BY_UNAME='main_draw')
       WIDGET_CONTROL, id, DRAW_XSIZE= new_xsize-6
-      WIDGET_CONTROL, id, DRAW_YSIZE= new_ysize-6
+      WIDGET_CONTROL, id, DRAW_YSIZE= new_ysize-6-25
       
       plot_ascii_file, EVENT=event
       
