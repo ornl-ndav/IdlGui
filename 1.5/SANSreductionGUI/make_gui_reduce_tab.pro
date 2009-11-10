@@ -34,146 +34,158 @@
 
 PRO make_gui_reduce_tab, MAIN_TAB, MainTabSize, TabTitles
 
-;- base -----------------------------------------------------------------------
-sReduceBase = { size:  MainTabSize,$
-                title: TabTitles.reduce,$
-                uname: 'base_reduce'}
-
-;- Tab titles -----------------------------------------------------------------
-sReduceTab = { size:   [sReduceBase.size[0:2],$
-                        sReduceBase.size[3]-160],$
-               uname:  'reduce_tab',$
-               title:  {tab1: ' LOAD FILES ',$
-                        tab2: ' PARAMETERS ',$
-                        tab3: ' INTERMEDIATE FILES'}}
-
-;- data reduction status ------------------------------------------------------
-XYoff = [160,3]
-sDRstatus = { size:  [XYoff[0],$
-                      sReduceTab.size[1]+sReduceTab.size[3]+XYoff[1],$
-                      270,22],$
-              uname: 'data_reduction_status_frame',$
-              value: 'DR status:',$
-              frame: 2}
-
-;- GO DATA REDUCTION button ---------------------------------------------------
-XYoff = [450,0]
-sGobutton = { size:      [XYoff[0],$
-                          sReduceTab.size[1]+sReduceTab.size[3]+XYoff[1],$
-                          310,30],$
-              uname:     'go_data_reduction_button',$
-              value:     '> >> >>> RUN DATA REDUCTION <<< << <',$
-              sensitive: 0}
-
-;- Command Line status --------------------------------------------------------
-XYoff = [2,30]
-sCommandLine = { size:  [sReduceBase.size[0]+XYoff[0],$
-                         sReduceTab.size[1]+sReduceTab.size[3]+XYoff[1],$
-                         750,$
-                         100],$
-                 uname: 'comamnd_line_preview'}
-XYoff = [5,-18]
-sCommandLineLabel = { size:  [sCommandLine.size[0]+XYoff[0],$
-                              sCommandLine.size[1]+XYoff[1]],$
-                      value: 'Command Line Status' }
-
-;- DR gui status --------------------------------------------------------------
-XYoff = [5,0]
-sDRguiStatus = { size:  [sCommandLine.size[0]+sCommandLine.size[2]+XYoff[0],$
-                         sCommandLine.size[1]+XYoff[1],$
-                         240,$
-                         sCommandLine.size[3]-XYoff[1]],$
-                 uname: 'data_reduction_missing_arguments'}
-sDRguiLabel  = { size:  [sDRguiStatus.size[0]+50,$
-                         sDRguiStatus.size[1]-23],$
-                 uname: 'missing_arguments_label',$
-                 value: '   Missing Arguments   '}
-                 
-;==============================================================================
-;= BUILD GUI ==================================================================
-;==============================================================================
-
-;- base -----------------------------------------------------------------------
-wReduceBase = WIDGET_BASE(MAIN_TAB,$
-                          UNAME     = sReduceBase.uname,$
-                          XOFFSET   = sReduceBase.size[0],$
-                          YOFFSET   = sReduceBase.size[1],$
-                          SCR_XSIZE = sReduceBase.size[2],$
-                          SCR_YSIZE = sReduceBase.size[3],$
-                          TITLE     = sReduceBase.title)
-
-;- Reduce Tabs ----------------------------------------------------------------
-REDUCE_TAB = WIDGET_TAB(wReduceBase,$
-                        UNAME     = sReduceTab.uname,$
-                        LOCATION  = 0,$
-                        XOFFSET   = sReduceTab.size[0],$
-                        YOFFSET   = sReduceTab.size[1],$
-                        SCR_XSIZE = sReduceTab.size[2],$
-                        SCR_YSIZE = sReduceTab.size[3],$
-                        SENSITIVE = 1,$
-                        /TRACKING_EVENTS)
-
-;- Build LOAD FILES tab (tab #1) ----------------------------------------------
-make_gui_reduce_tab1, REDUCE_TAB, sReduceTab.size, sReduceTab.title.tab1
-
-;- Build PARAMETERS tab (tab #4) ----------------------------------------------
-make_gui_reduce_tab2, REDUCE_TAB, sReduceTab.size, sReduceTab.title.tab2
-
-;- Build INTERMEDIATE FILES tab (tab #4) --------------------------------------
-make_gui_reduce_tab3, REDUCE_TAB, sReduceTab.size, sReduceTab.title.tab3
-
-
-;- data reduction status ------------------------------------------------------
-wDRstatus = WIDGET_LABEL(wReduceBase,$
-                         UNAME     = sDRstatus.uname,$
-                         XOFFSET   = sDRstatus.size[0],$
-                         YOFFSET   = sDRstatus.size[1],$
-                         SCR_XSIZE = sDRstatus.size[2],$
-                         SCR_YSIZE = sDRstatus.size[3],$
-                         VALUE     = sDRstatus.value,$
-                         FRAME     = sDRstatus.frame,$
-                         /ALIGN_LEFT)
-
-;- GO data reduction button ---------------------------------------------------
-wGoButton = WIDGET_BUTTON(wReduceBase,$
-                          XOFFSET   = sGoButton.size[0],$
-                          YOFFSET   = sGoButton.size[1],$
-                          SCR_XSIZE = sGoButton.size[2],$
-                          SCR_YSIZE = sGoButton.size[3],$
-                          UNAME     = sGoButton.uname,$
-                          VALUE     = sGoButton.value,$
-                          SENSITIVE = sGoButton.sensitive)
-
-;- Command Line status --------------------------------------------------------
-wCommandLine = WIDGET_TEXT(wReduceBase,$
-                           XOFFSET   = sCommandLine.size[0],$
-                           YOFFSET   = sCommandLine.size[1],$
-                           SCR_XSIZE = sCommandLine.size[2],$
-                           SCR_YSIZE = sCommandLine.size[3],$
-                           UNAME     = sCommandLine.uname,$
-                           /WRAP,$
-                           /SCROLL)
-
-wCommandLineLabel = WIDGET_LABEL(wReduceBase,$
-                                 XOFFSET = sCommandLineLabel.size[0],$
-                                 YOFFSET = sCommandLineLabel.size[1],$
-                                 VALUE   = sCommandLineLabel.value)
-
-;- DR gui status --------------------------------------------------------------
-wDRguilabel = WIDGET_LABEL(wReduceBase,$
-                           XOFFSET = sDRguiLabel.size[0],$
-                           YOFFSET = sDRguiLabel.size[1],$
-                           VALUE   = sDRguiLabel.value,$
-                           UNAME   = sDRguiLabel.uname)
-
-wDRguiStatus = WIDGET_TEXT(wReduceBase,$
-                           UNAME     = sDRguiStatus.uname,$
-                           XOFFSET   = sDRguiStatus.size[0],$
-                           YOFFSET   = sDRguiStatus.size[1],$
-                           SCR_XSIZE = sDRguiStatus.size[2],$
-                           SCR_YSIZE = sDRguiStatus.size[3],$
-                           /SCROLL,$
-                           /WRAP)
-
-
+  ;- base ----------------------------------------------------------------------
+  sReduceBase = { size:  MainTabSize,$
+    title: TabTitles.reduce,$
+    uname: 'base_reduce'}
+    
+  sBigBase = { size: [sReduceBase.size[0],$
+    sReduceBase.size[1]+60,$
+    sReduceBase.size[2],$
+    sReducebase.size[3]-220]}
+    
+  ;- Tab titles -----------------------------------------------------------------
+  sReduceTab = { size:   [sReduceBase.size[0:2],$
+    sReduceBase.size[3]-220],$ ;-160
+    uname:  'reduce_tab',$
+    title:  {tab1: ' LOAD FILES ',$
+    tab2: ' PARAMETERS ',$
+    tab3: ' INTERMEDIATE FILES'}}
+    
+  ;- data reduction status ------------------------------------------------------
+  XYoff = [160,3]
+  sDRstatus = { size:  [XYoff[0],$
+    sBigBase.size[1]+sBigBase.size[3]+XYoff[1],$
+    270,22],$
+    uname: 'data_reduction_status_frame',$
+    value: 'DR status:',$
+    frame: 2}
+    
+  ;- GO DATA REDUCTION button ---------------------------------------------------
+  XYoff = [450,0]
+  sGobutton = { size:      [XYoff[0],$
+    sBigBase.size[1]+sBigBase.size[3]+XYoff[1],$
+    310,30],$
+    uname:     'go_data_reduction_button',$
+    value:     '> >> >>> RUN DATA REDUCTION <<< << <',$
+    sensitive: 0}
+    
+  ;- Command Line status --------------------------------------------------------
+  XYoff = [2,30]
+  sCommandLine = { size:  [sBigBase.size[0]+XYoff[0],$
+    sBigBase.size[1]+sBigBase.size[3]+XYoff[1],$
+    750,$
+    100],$
+    uname: 'comamnd_line_preview'}
+  XYoff = [5,-18]
+  sCommandLineLabel = { size:  [sCommandLine.size[0]+XYoff[0],$
+    sCommandLine.size[1]+XYoff[1]],$
+    value: 'Command Line Status' }
+    
+  ;- DR gui status --------------------------------------------------------------
+  XYoff = [5,0]
+  sDRguiStatus = { size:  [sCommandLine.size[0]+sCommandLine.size[2]+XYoff[0],$
+    sCommandLine.size[1]+XYoff[1],$
+    240,$
+    sCommandLine.size[3]-XYoff[1]],$
+    uname: 'data_reduction_missing_arguments'}
+  sDRguiLabel  = { size:  [sDRguiStatus.size[0]+50,$
+    sDRguiStatus.size[1]-23],$
+    uname: 'missing_arguments_label',$
+    value: '   Missing Arguments   '}
+    
+  ;==============================================================================
+  ;= BUILD GUI ==================================================================
+  ;==============================================================================
+    
+  ;- base -----------------------------------------------------------------------
+  wReduceBase = WIDGET_BASE(MAIN_TAB,$
+    UNAME     = sReduceBase.uname,$
+    XOFFSET   = sReduceBase.size[0],$
+    YOFFSET   = sReduceBase.size[1],$
+    SCR_XSIZE = sReduceBase.size[2],$
+    SCR_YSIZE = sReduceBase.size[3],$
+    TITLE     = sReduceBase.title)
+    
+  ;big base (SNS reduction)
+  big_base = WIDGET_BASE(wReduceBase,$
+    XOFFSET = sBigBase.size[0],$
+    YOFFSET = sBigBase.size[1],$
+    SCR_XSIZE = sBigBase.size[2],$
+    SCR_YSIZE = sBigBase.size[3])
+    
+  ;- Reduce Tabs ----------------------------------------------------------------
+  REDUCE_TAB = WIDGET_TAB(big_base,$
+    UNAME     = sReduceTab.uname,$
+    LOCATION  = 0,$
+    XOFFSET   = sReduceTab.size[0],$
+    YOFFSET   = sReduceTab.size[1],$
+    SCR_XSIZE = sReduceTab.size[2],$
+    SCR_YSIZE = sReduceTab.size[3],$
+    SENSITIVE = 1,$
+    /TRACKING_EVENTS)
+    
+  sReduceTab.size[1] = sReduceTab.size[1]-25
+  
+  ;- Build LOAD FILES tab (tab #1) ----------------------------------------------
+  make_gui_reduce_tab1, REDUCE_TAB, sReduceTab.size, sReduceTab.title.tab1
+  
+  ;- Build PARAMETERS tab (tab #4) ----------------------------------------------
+  make_gui_reduce_tab2, REDUCE_TAB, sReduceTab.size, sReduceTab.title.tab2
+  
+  ;- Build INTERMEDIATE FILES tab (tab #4) --------------------------------------
+  make_gui_reduce_tab3, REDUCE_TAB, sReduceTab.size, sReduceTab.title.tab3
+  
+  ;- data reduction status ------------------------------------------------------
+  wDRstatus = WIDGET_LABEL(wReduceBase,$
+    UNAME     = sDRstatus.uname,$
+    XOFFSET   = sDRstatus.size[0],$
+    YOFFSET   = sDRstatus.size[1],$
+    SCR_XSIZE = sDRstatus.size[2],$
+    SCR_YSIZE = sDRstatus.size[3],$
+    VALUE     = sDRstatus.value,$
+    FRAME     = sDRstatus.frame,$
+    /ALIGN_LEFT)
+    
+  ;- GO data reduction button ---------------------------------------------------
+  wGoButton = WIDGET_BUTTON(wReduceBase,$
+    XOFFSET   = sGoButton.size[0],$
+    YOFFSET   = sGoButton.size[1],$
+    SCR_XSIZE = sGoButton.size[2],$
+    SCR_YSIZE = sGoButton.size[3],$
+    UNAME     = sGoButton.uname,$
+    VALUE     = sGoButton.value,$
+    SENSITIVE = sGoButton.sensitive)
+    
+  ;- Command Line status --------------------------------------------------------
+  wCommandLine = WIDGET_TEXT(wReduceBase,$
+    XOFFSET   = sCommandLine.size[0],$
+    YOFFSET   = sCommandLine.size[1],$
+    SCR_XSIZE = sCommandLine.size[2],$
+    SCR_YSIZE = sCommandLine.size[3],$
+    UNAME     = sCommandLine.uname,$
+    /WRAP,$
+    /SCROLL)
+    
+  wCommandLineLabel = WIDGET_LABEL(wReduceBase,$
+    XOFFSET = sCommandLineLabel.size[0],$
+    YOFFSET = sCommandLineLabel.size[1],$
+    VALUE   = sCommandLineLabel.value)
+    
+  ;- DR gui status --------------------------------------------------------------
+  wDRguilabel = WIDGET_LABEL(wReduceBase,$
+    XOFFSET = sDRguiLabel.size[0],$
+    YOFFSET = sDRguiLabel.size[1],$
+    VALUE   = sDRguiLabel.value,$
+    UNAME   = sDRguiLabel.uname)
+    
+  wDRguiStatus = WIDGET_TEXT(wReduceBase,$
+    UNAME     = sDRguiStatus.uname,$
+    XOFFSET   = sDRguiStatus.size[0],$
+    YOFFSET   = sDRguiStatus.size[1],$
+    SCR_XSIZE = sDRguiStatus.size[2],$
+    SCR_YSIZE = sDRguiStatus.size[3],$
+    /SCROLL,$
+    /WRAP)
+    
 END
