@@ -32,40 +32,74 @@
 ;
 ;==============================================================================
 
-PRO MAIN_BASE_event, Event
+PRO tof_tools_base_event, Event
 
   ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
-  
-  wWidget =  Event.top            ;widget id
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global_tools
+  global = (*global_tools).global
   
   CASE Event.id OF
-  
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='MAIN_BASE'): BEGIN
-    
-      id1 = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
-      WIDGET_CONTROL, id1, /REALIZE
-      geometry = WIDGET_INFO(id1, /GEOMETRY)
-      new_xsize = geometry.scr_xsize
-      new_ysize = geometry.scr_ysize
-      WIDGET_CONTROL, id1, XSIZE= new_xsize-6
-      WIDGET_CONTROL, id1, YSIZE= new_ysize-6
       
-      id = WIDGET_INFO(Event.top, FIND_BY_UNAME='main_draw')
-      WIDGET_CONTROL, id, DRAW_XSIZE= new_xsize-6
-      WIDGET_CONTROL, id, DRAW_YSIZE= new_ysize-6-25
-      
-      plot_ascii_file, EVENT=event
-      
-    END
-    
-    ;tools button
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='tools_button_uname'): BEGIN
-      plot_ascii_tools_base, Event
-    END
-    
     ELSE:
     
   ENDCASE
   
 END
+
+;------------------------------------------------------------------------------
+PRO plot_ascii_tools_base_gui, wBase, main_base_geometry
+
+  main_base_xoffset = main_base_geometry.xoffset
+  main_base_yoffset = main_base_geometry.yoffset
+  main_base_xsize = main_base_geometry.xsize
+  main_base_ysize = main_base_geometry.ysize
+  
+  xoffset = main_base_xoffset + main_base_xsize
+  yoffset = main_base_yoffset
+  
+  ourGroup = WIDGET_BASE()
+  
+  wBase = WIDGET_BASE(TITLE = 'T O O L S',$
+    UNAME        = 'plot_ascii_tools_base_uname',$
+    XOFFSET      = xoffset,$
+    YOFFSET      = yoffset,$
+    SCR_YSIZE = 350,$
+    SCR_XSIZE = 150,$
+    MAP          = 1,$
+    /BASE_ALIGN_CENTER,$
+    GROUP_LEADER = ourGroup)
+        
+END
+
+;------------------------------------------------------------------------------
+PRO plot_ascii_tools_base, main_base=main_base, Event
+
+  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
+    id = WIDGET_INFO(main_base, FIND_BY_UNAME='MAIN_BASE')
+    WIDGET_CONTROL,main_base,GET_UVALUE=global
+    event = 0
+  ENDIF ELSE BEGIN
+    id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+    WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  ENDELSE
+  main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
+  
+  ;build gui
+  wBase1 = ''
+  plot_ascii_tools_base_gui, wBase1, $
+    main_base_geometry
+;  (*global).tof_tools_base = wBase1
+  
+  WIDGET_CONTROL, wBase1, /REALIZE
+  
+  global_tools = PTR_NEW({ wbase: wbase1,$
+    global: global, $
+    main_event: Event})
+    
+  WIDGET_CONTROL, wBase1, SET_UVALUE = global_tools
+  
+  XMANAGER, "plot_ascii_tools_base", wBase1, $
+    GROUP_LEADER = ourGroup, /NO_BLOCK
+    
+END
+

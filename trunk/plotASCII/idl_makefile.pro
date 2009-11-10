@@ -25,6 +25,9 @@ cd, IdlUtilitiesPath
 ;Build all procedures
 cd, CurrentFolder
 
+;tools base
+.run plot_ascii_tools.pro
+
 ;procedures
 
 ;main functions
