@@ -527,7 +527,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     
     ;show tab #2 'REDUCE
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 0
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
     ;show tab of the REDUCE tab
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
     WIDGET_CONTROL, id1, SET_TAB_CURRENT = 0

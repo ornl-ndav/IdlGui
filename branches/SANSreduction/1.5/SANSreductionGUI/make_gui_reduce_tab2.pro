@@ -40,7 +40,7 @@ PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
     title: tab_title}
     
   ;- Time Zero offset (microS) --------------------------------------------------
-  XYoff = [10,20] ;title
+  XYoff = [10,5] ;title
   sTZObase = { size: [XYoff[0],$
     XYoff[1],$
     tab_size[2]-30, $
@@ -678,8 +678,7 @@ PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
     SCR_YSIZE = sQbase.size[3],$
     FRAME     = sQbase.frame,$
     UNAME     = sQbase.uname)
-    
-    
+      
   ;Qmin
   wQminLabel = WIDGET_LABEL(Base,$
     XOFFSET = sQminLabel.size[0],$
@@ -804,7 +803,6 @@ PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
     /EDITABLE,$
     /ALL_EVENTS,$
     /ALIGN_LEFT)
-    
     
   ;- Wavelength dependent background subtraction --------------------------------
   wWaveTitle = WIDGET_LABEL(Basetab,$
