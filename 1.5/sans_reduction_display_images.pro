@@ -297,7 +297,7 @@ PRO display_play_pause_stop_buttons, MAIN_BASE=main_base, EVENT=event, $
   WIDGET_CONTROL, mode_id, GET_VALUE=id
   WSET, id
   TV, play_image, 0, 0,/true
-
+  
   uname = 'pause_tof_button'
   IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
     mode_id = WIDGET_INFO(main_base, $
@@ -309,7 +309,7 @@ PRO display_play_pause_stop_buttons, MAIN_BASE=main_base, EVENT=event, $
   WIDGET_CONTROL, mode_id, GET_VALUE=id
   WSET, id
   TV, pause_image, 0, 0,/true
-
+  
   uname = 'stop_tof_button'
   IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
     mode_id = WIDGET_INFO(main_base, $
@@ -323,3 +323,29 @@ PRO display_play_pause_stop_buttons, MAIN_BASE=main_base, EVENT=event, $
   TV, stop_image, 0, 0,/true
   
 END
+
+;------------------------------------------------------------------------------
+PRO display_reduction_interruptor, MAIN_BASE=main_base, $
+    Event=event, $
+    mode=mode
+    
+  IF (mode EQ 'sns') THEN BEGIN
+    image = READ_PNG('SANSreduction_images/reduction_switch_sns_on.png')
+  ENDIF ELSE BEGIN
+    image = READ_PNG('SANSreduction_iamges/reduction_switch_jk_on.png')
+  ENDELSE
+  
+  uname = 'reduction_interruptor'
+  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
+    mode_id = WIDGET_INFO(main_base, $
+      FIND_BY_UNAME=uname)
+  ENDIF ELSE BEGIN
+    mode_id = WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME=uname)
+  ENDELSE
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, image, 0, 0,/true
+  
+END
+
