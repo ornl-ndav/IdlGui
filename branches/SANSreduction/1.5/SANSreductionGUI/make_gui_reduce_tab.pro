@@ -107,12 +107,23 @@ PRO make_gui_reduce_tab, MAIN_TAB, MainTabSize, TabTitles
     SCR_YSIZE = sReduceBase.size[3],$
     TITLE     = sReduceBase.title)
     
+  ;interruptor (SNS <-> JK's)
+  button = WIDGET_DRAW(wReduceBase,$
+    XOFFSET = 400,$
+    YOFFSET = 5,$
+    SCR_XSIZE = 200,$
+    SCR_YSIZE = 50,$
+    UNAME = 'reduction_interruptor',$
+    /TRACKING_EVENTS,$
+    /BUTTON_EVENTS)
+    
   ;big base (SNS reduction)
   big_base = WIDGET_BASE(wReduceBase,$
     XOFFSET = sBigBase.size[0],$
     YOFFSET = sBigBase.size[1],$
     SCR_XSIZE = sBigBase.size[2],$
-    SCR_YSIZE = sBigBase.size[3])
+    SCR_YSIZE = sBigBase.size[3],$
+    UNAME = 'sns_reduction_base')
     
   ;- Reduce Tabs ----------------------------------------------------------------
   REDUCE_TAB = WIDGET_TAB(big_base,$

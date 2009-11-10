@@ -562,6 +562,8 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     display_images, MAIN_BASE=main_base
   END
   
+  display_reduction_interruptor, MAIN_BASE=main_base, mode='sns'
+  
   ;============================================================================
   ; Date and Checking Packages routines =======================================
   ;============================================================================
