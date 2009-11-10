@@ -332,7 +332,7 @@ PRO display_reduction_interruptor, MAIN_BASE=main_base, $
   IF (mode EQ 'sns') THEN BEGIN
     image = READ_PNG('SANSreduction_images/reduction_switch_sns_on.png')
   ENDIF ELSE BEGIN
-    image = READ_PNG('SANSreduction_iamges/reduction_switch_jk_on.png')
+    image = READ_PNG('SANSreduction_images/reduction_switch_jk_on.png')
   ENDELSE
   
   uname = 'reduction_interruptor'

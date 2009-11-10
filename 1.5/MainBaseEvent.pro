@@ -72,6 +72,36 @@ PRO MAIN_BASE_event, Event
       ENDIF
     END
     
+    ;reduction button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='reduction_interruptor'): BEGIN
+      CATCH, error
+      IF (error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        
+        IF (Event.press EQ 1) THEN BEGIN
+          IF (Event.x GE 100) THEN BEGIN
+            display_reduction_interruptor, EVENT=event, mode='sns'
+          ENDIF
+          IF (Event.x LE 90) THEN BEGIN
+            display_reduction_interruptor, EVENT=event, mode='jk'
+          ENDIF
+        ENDIF
+        
+      ENDIF ELSE BEGIN
+        id = WIDGET_INFO(Event.top,$
+          find_by_uname='reduction_interruptor')
+        WIDGET_CONTROL, id, GET_VALUE=id_value
+        WSET, id_value
+        IF (Event.enter EQ 1) THEN BEGIN
+          standard = 58
+        ENDIF
+        IF (event.enter EQ 0) THEN BEGIN
+          standard = 68
+        ENDIF
+        DEVICE, CURSOR_STANDARD=standard
+      ENDELSE
+    END
+    
     ;facility Selection
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='facility_selection_validate_button'): begin
