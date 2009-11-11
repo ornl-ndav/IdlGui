@@ -227,7 +227,7 @@ PRO displayTextRemoved, Event
   ENDELSE
   value = value
   display_part_of_file_selected_in_label, Event, value
-;activate_widget, Event, 'input_text_field', status
+  activate_corresponding_to_replace_widget, Event
 END
 
 ;------------------------------------------------------------------------------

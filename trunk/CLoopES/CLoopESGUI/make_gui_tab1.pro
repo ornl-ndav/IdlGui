@@ -87,11 +87,14 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, title
     FRAME=1,$
     UNAME = 'selection_1_to_replaced')
   label = WIDGET_LABEL(row4,$
+    SENSITIVE = 0,$
+    UNAME = 'selection_1_replaced_by_label',$
     VALUE = 'will be replaced by')
   text  = WIDGET_TEXT(row4,$
     VALUE = '',$
     XSIZE = 40,$
     /EDITABLE,$
+    SENSITIVE = 0,$
     UNAME = 'selection_1_replaced_by')
     
   row5 = WIDGET_BASE(tab1,$
@@ -107,11 +110,14 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, title
     FRAME=1,$
     UNAME = 'selection_2_to_replaced')
   label = WIDGET_LABEL(row5,$
+    SENSITIVE = 0,$
+    UNAME = 'selection_2_replaced_by_label',$
     VALUE = 'will be replaced by')
   text  = WIDGET_TEXT(row5,$
     VALUE = '',$
     XSIZE = 40,$
     /EDITABLE,$
+    SENSITIVE = 0,$
     UNAME = 'selection_2_replaced_by')
     
   row6 = WIDGET_BASE(tab1,$
@@ -127,13 +133,16 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, title
     FRAME=1,$
     UNAME = 'selection_3_to_replaced')
   label = WIDGET_LABEL(row6,$
+    SENSITIVE = 0,$
+    UNAME = 'selection_3_replaced_by_label',$
     VALUE = 'will be replaced by')
   text  = WIDGET_TEXT(row6,$
     VALUE = '',$
     XSIZE = 40,$
     /EDITABLE,$
+    SENSITIVE = 0,$
     UNAME = 'selection_3_replaced_by')
-        
+    
   recap_label = WIDGET_LABEL(tab1,$
     /ALIGN_LEFT,$
     VALUE = '                  R E C A P   T A B L E ')
@@ -154,21 +163,21 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, title
     /RESIZEABLE_COLUMNS,$
     UNAME = 'runs_table')
     
-    row7 = WIDGET_BASE(tab1,$
+  row7 = WIDGET_BASE(tab1,$
     /ROW)
     
-    button1 = WIDGET_BUTTON(row7,$
+  button1 = WIDGET_BUTTON(row7,$
     VALUE = 'Check Status of Jobs Submitted ...',$
     UNAME = 'check_status_button',$
     SCR_XSIZE = 250)
-
-    button2 = WIDGET_BUTTON(row7,$
+    
+  button2 = WIDGET_BUTTON(row7,$
     VALUE = 'Preview/Save as  Jobs ...',$
     UNAME = 'preview_jobs_button',$
     SENSITIVE = 0,$
     SCR_XSIZE = 200)
-
-    button3 = WIDGET_BUTTON(row7,$
+    
+  button3 = WIDGET_BUTTON(row7,$
     VALUE = 'L A U N C H    J O B S    I N    B A C K G R O U N D',$
     UNAME = 'run_jobs_button',$
     SENSITIVE = 0,$
