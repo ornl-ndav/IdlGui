@@ -49,7 +49,11 @@ PRO preview_jobs, Event
     runs_array = STRSPLIT(column_sequence[index],',',/EXTRACT,count=nbr)
     ;    runs = STRJOIN(runs_array,'_')
     runs = STRCOMPRESS(runs_array[0],/REMOVE_ALL)
-    runs += '_' + STRCOMPRESS(nbr,/REMOVE_ALL) + 'runs'
+    IF (nbr EQ 1) THEN BEGIN
+      runs += '_' + STRCOMPRESS(nbr,/REMOVE_ALL) + 'run'
+    ENDIF ELSE BEGIN
+      runs += '_' + STRCOMPRESS(nbr,/REMOVE_ALL) + 'runs'
+    ENDELSE
     column_cl[index]+= runs + (*global).output_prefix
     index++
   ENDWHILE

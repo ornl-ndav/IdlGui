@@ -46,6 +46,10 @@ cd, CurrentFolder
 .run cloopes_job_manager_splash_base.pro
 .run cloopes_tab2.pro
 .run cloopes_run_job_tab2.pro
+.run cloopes_save_command_line.pro
+.run cloopes_load_save_temperature.pro
+.run cloopes_save_temperature_base.pro
+.run cloopes_load_temperature_base.pro
 
 ;main functions
 .run MainBaseEvent.pro

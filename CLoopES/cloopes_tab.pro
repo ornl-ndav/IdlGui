@@ -51,6 +51,7 @@ PRO cloopes_tab, Event
         ENDIF ELSE BEGIN
           parse_input_field_tab2, Event
         ENDELSE
+        check_load_save_temperature_widgets, Event
       END
       2: BEGIN ;LOG BOOK
       END
