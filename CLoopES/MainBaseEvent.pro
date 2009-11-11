@@ -48,6 +48,17 @@ PRO MAIN_BASE_event, Event
       cloopes_tab, Event
     END
     
+    ;selection buttons
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_1'): BEGIN
+      tab1_selection_button, Event, button=1
+    END
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_2'): BEGIN
+      tab1_selection_button, Event, button=2
+    END
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_3'): BEGIN
+      tab1_selection_button, Event, button=3
+    END
+    
     ;Load Command Line File Button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='load_cl_file_button'): BEGIN
       browse_cl_file, Event ;_browse
