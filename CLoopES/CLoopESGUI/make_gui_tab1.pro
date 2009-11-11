@@ -66,11 +66,10 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, title
     
   row2 = WIDGET_LABEL(tab1,$
     VALUE = 'Preview of CL file loaded')
-    
   row3 = WIDGET_TEXT(tab1,$ ;Preview of CL file text box
     SCR_XSIZE = 785,$
     SCR_YSIZE = 90,$
-    UNAME     = preview_cl_file_text_field,$
+    UNAME     = 'preview_cl_file_text_field',$
     /SCROLL,$
     /ALL_EVENTS,$
     /WRAP)

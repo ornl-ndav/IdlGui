@@ -60,3 +60,18 @@ PRO tab1_selection_button, Event, button=button
   putButtonValue, Event, 'selection_3', value3
   
 END
+
+;------------------------------------------------------------------------------
+PRO display_part_of_file_selected_in_label, Event, value
+
+  selection_button_activated = getSelectionButtonValue(Event)
+  IF (selection_button_activated EQ -1) THEN RETURN
+  print, selection_button_activated
+  CASE (selection_button_activated) OF
+    1: uname = 'selection_1_to_replaced'
+    2: uname = 'selection_2_to_replaced'
+    3: uname = 'selection_3_to_replaced'
+  ENDCASE
+  putValue, Event, uname, value
+  
+END

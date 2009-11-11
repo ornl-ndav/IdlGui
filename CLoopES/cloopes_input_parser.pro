@@ -194,7 +194,11 @@ PRO create_cl_array, Event
     
   ENDIF ELSE BEGIN ;srun was not found
   
-    srun_queue = getSrunQueue()
+    IF ((*global).debugging NE 'yes') THEN BEGIN
+      srun_queue = getSrunQueue()
+    ENDIF ELSE BEGIN
+      srun_queue = 'bac'
+    ENDELSE
     added_word = ' -p ' + srun_queue
     new_cmd = sbatch + added_word + ' ' + cl_array[0]
     cl_array[0] = new_cmd
@@ -207,13 +211,12 @@ END
 
 ;------------------------------------------------------------------------------
 PRO displayTextRemoved, Event
-
   cl_text = getTextFieldValue(Event,'preview_cl_file_text_field')
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME='preview_cl_file_text_field')
   text_selected_index = WIDGET_INFO(id, /TEXT_SELECT)
-  title = 'Text Removed: '
+;  title = 'Text Removed: '
   IF (text_selected_index[1] EQ 0) THEN BEGIN
-    value = 'N/A'
+    value = 'SELECTION IN PROGRESS  . . .'
     status = 0
   ENDIF ELSE BEGIN
     start  = text_selected_index[0]
@@ -222,9 +225,9 @@ PRO displayTextRemoved, Event
     value = text_removed[0]
     status = 1
   ENDELSE
-  value = title + value
-  putValue, Event, 'info_line1_label', value
-  activate_widget, Event, 'input_text_field', status
+  value = value
+  display_part_of_file_selected_in_label, Event, value
+;activate_widget, Event, 'input_text_field', status
 END
 
 ;------------------------------------------------------------------------------
@@ -482,7 +485,7 @@ PRO remove_output_file_name, Event
     
     part2 = CL_text_array[1]
     part2_parsed = split_string(part2, PATTERN='--output=')
-
+    
     ;keep path
     IF (N_ELEMENTS(part2_parsed) GT 1) THEN BEGIN ;there is the tag --output
     
@@ -505,15 +508,15 @@ PRO remove_output_file_name, Event
           ;CL_text_array[1] = part2_parsed[0] + ' ' + new_part
           end_string  = string_to_keep[0] + ' ' + new_part
         ENDIF ELSE BEGIN
-         end_string = '' 
+          end_string = ''
         ENDELSE
-          cl_text_array[1] = part2_parsed[0] + ' ' + end_string + $
+        cl_text_array[1] = part2_parsed[0] + ' ' + end_string + $
           ' --output=' + path + (*global).output_suffix
-        
+          
       ENDIF ELSE BEGIN ;output path was last
       
         cl_text_array[1] = part2_parsed[0] + ' --output=' + path + (*global).output_suffix
-      
+        
       ENDELSE
       
       (*global).cl_array = CL_text_array
