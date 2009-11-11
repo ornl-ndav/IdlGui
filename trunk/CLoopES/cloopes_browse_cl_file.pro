@@ -63,8 +63,6 @@ PRO browse_cl_file, Event
     putValue, Event, 'cl_file_name_label', file_name
     ;display contain of file loaded
     displayCLfile, Event, file_name
-    ;activate widgets
-    activate_widget, Event, 'help_button', 1
     
     ;reset tab2_table
     (*(*global).tab2_table) = PTR_NEW(0L)

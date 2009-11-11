@@ -73,3 +73,14 @@ FUNCTION getTab2_cl_array, Event
   cl_text_array[1] = '.' + suffix
   RETURN, cl_text_array
 END
+
+;------------------------------------------------------------------------------
+FUNCTION getSelectionButtonValue, Event
+  uname_list = ['selection_1','selection_2','selection_3']
+  sz = 3
+  FOR i=0,(sz-1) DO BEGIN
+    value = getTextFieldValue(Event,uname_list[i])
+    IF (value NE '') THEN RETURN, i+1
+  ENDFOR
+  return, -1
+END
