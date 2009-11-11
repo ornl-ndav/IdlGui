@@ -94,11 +94,14 @@ PRO activate_corresponding_to_replace_widget, Event
   ENDELSE
   
   CASE (selection_button_activated) OF
-    1: uname = 'selection_1_replaced_by'
-    2: uname = 'selection_2_replaced_by'
-    3: uname = 'selection_3_replaced_by'
+    1: uname2 = 'selection_1_replaced'
+    2: uname2 = 'selection_2_replaced'
+    3: uname2 = 'selection_3_replaced'
   ENDCASE
-  activate_widget, Event, uname, status 
-  activate_widget, Event, uname+'_label', status
+  
+  activate_widget, Event, uname2+'_by', status
+  activate_widget, Event, uname2+'_by_label', status
+  activate_widget, Event, uname2+'_by_clear', status
+  activate_widget, Event, uname+'_clear', status
   
 END

@@ -83,19 +83,27 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, title
     UNAME = 'selection_1')
   text  = WIDGET_LABEL(row4,$
     VALUE = ' ',$
-    SCR_XSIZE = 330,$
+    SCR_XSIZE = 310,$
     FRAME=1,$
     UNAME = 'selection_1_to_replaced')
+  button = WIDGET_BUTTON(row4,$
+    VALUE= 'X',$
+    UNAME = 'selection_1_to_replaced_clear',$
+    SENSITIVE=0)
   label = WIDGET_LABEL(row4,$
     SENSITIVE = 0,$
     UNAME = 'selection_1_replaced_by_label',$
     VALUE = 'will be replaced by')
   text  = WIDGET_TEXT(row4,$
     VALUE = '',$
-    XSIZE = 40,$
+    XSIZE = 37,$
     /EDITABLE,$
     SENSITIVE = 0,$
     UNAME = 'selection_1_replaced_by')
+  button = WIDGET_BUTTON(row4,$
+    VALUE = 'X',$
+    UNAME = 'selection_1_replaced_by_clear',$
+    SENSITIVE=0)
     
   row5 = WIDGET_BASE(tab1,$
     /ROW)
@@ -106,19 +114,27 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, title
     UNAME = 'selection_2')
   text  = WIDGET_LABEL(row5,$
     VALUE = ' ',$
-    SCR_XSIZE = 330,$
+    SCR_XSIZE = 310,$
     FRAME=1,$
     UNAME = 'selection_2_to_replaced')
+  button = WIDGET_BUTTON(row5,$
+    VALUE= 'X',$
+    UNAME = 'selection_2_to_replaced_clear',$
+    SENSITIVE=0)
   label = WIDGET_LABEL(row5,$
     SENSITIVE = 0,$
     UNAME = 'selection_2_replaced_by_label',$
     VALUE = 'will be replaced by')
   text  = WIDGET_TEXT(row5,$
     VALUE = '',$
-    XSIZE = 40,$
+    XSIZE = 37,$
     /EDITABLE,$
     SENSITIVE = 0,$
     UNAME = 'selection_2_replaced_by')
+  button = WIDGET_BUTTON(row5,$
+    VALUE = 'X',$
+    UNAME = 'selection_2_replaced_by_clear',$
+    SENSITIVE=0)
     
   row6 = WIDGET_BASE(tab1,$
     /ROW)
@@ -129,19 +145,27 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, title
     UNAME = 'selection_3')
   text  = WIDGET_LABEL(row6,$
     VALUE = ' ',$
-    SCR_XSIZE = 330,$
+    SCR_XSIZE = 310,$
     FRAME=1,$
     UNAME = 'selection_3_to_replaced')
+  button = WIDGET_BUTTON(row6,$
+    VALUE= 'X',$
+    UNAME = 'selection_3_to_replaced_clear',$
+    SENSITIVE=0)
   label = WIDGET_LABEL(row6,$
     SENSITIVE = 0,$
     UNAME = 'selection_3_replaced_by_label',$
     VALUE = 'will be replaced by')
   text  = WIDGET_TEXT(row6,$
     VALUE = '',$
-    XSIZE = 40,$
+    XSIZE = 37,$
     /EDITABLE,$
     SENSITIVE = 0,$
     UNAME = 'selection_3_replaced_by')
+  button = WIDGET_BUTTON(row6,$
+    VALUE = 'X',$
+    UNAME = 'selection_3_replaced_by_clear',$
+    SENSITIVE=0)
     
   recap_label = WIDGET_LABEL(tab1,$
     /ALIGN_LEFT,$
