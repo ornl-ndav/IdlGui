@@ -66,12 +66,39 @@ PRO display_part_of_file_selected_in_label, Event, value
 
   selection_button_activated = getSelectionButtonValue(Event)
   IF (selection_button_activated EQ -1) THEN RETURN
-  print, selection_button_activated
   CASE (selection_button_activated) OF
     1: uname = 'selection_1_to_replaced'
     2: uname = 'selection_2_to_replaced'
     3: uname = 'selection_3_to_replaced'
   ENDCASE
   putValue, Event, uname, value
+  
+END
+
+;------------------------------------------------------------------------------
+PRO activate_corresponding_to_replace_widget, Event
+
+  selection_button_activated = getSelectionButtonValue(Event)
+  IF (selection_button_activated EQ -1) THEN RETURN
+  CASE (selection_button_activated) OF
+    1: uname = 'selection_1_to_replaced'
+    2: uname = 'selection_2_to_replaced'
+    3: uname = 'selection_3_to_replaced'
+  ENDCASE
+  
+  text = STRCOMPRESS(getTextFieldValue(Event,uname),/REMOVE_ALL)
+  IF (text NE '') THEN BEGIN
+    status = 1
+  ENDIF ELSE BEGIN
+    status = 0
+  ENDELSE
+  
+  CASE (selection_button_activated) OF
+    1: uname = 'selection_1_replaced_by'
+    2: uname = 'selection_2_replaced_by'
+    3: uname = 'selection_3_replaced_by'
+  ENDCASE
+  activate_widget, Event, uname, status 
+  activate_widget, Event, uname+'_label', status
   
 END
