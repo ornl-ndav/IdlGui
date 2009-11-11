@@ -134,7 +134,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, title
     column_labels: ['Runs','Command Line Preview'],$
     column_widths: [200,750]}
     
-   ;Check slurm processes
+  ;Check slurm processes
   XYoff = [5,5]
   sBrowseButton = { size: [XYoff[0],$
     sTable.size[1]+$
@@ -162,7 +162,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, title
     value: 'L A U N C H    J O B S    I N    B A C K G R O U N D',$
     uname: 'run_jobs_button',$
     sensitive: 0}
-     
+    
   ;==============================================================================
     
   Base = WIDGET_BASE(MAIN_TAB,$
@@ -172,154 +172,244 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, title
     SCR_XSIZE = MainTabSize[2],$
     SCR_YSIZE = MainTabSize[3],$
     TITLE     = title,$
-    map = 0)
+    MAP       = 1)
     
-  ;Load Button
-  wLoad = WIDGET_BUTTON(Base,$
-    XOFFSET   = sBrowse.size[0],$
-    YOFFSET   = sBrowse.size[1],$
-    SCR_XSIZE = sBrowse.size[2],$
-    UNAME     = sBrowse.uname,$
-    VALUE     = sBrowse.value)
+  ;input example
+  ex = WIDGET_LABEL(Base,$
+    XOFFSET = 550,$
+    YOFFSET = 265,$
+    VALUE   = '(Ex: 3741-3749,[3750,3760-3763],3800)')
     
-  ;File Name Labels
-  wLabel1 = WIDGET_LABEL(Base,$
-    XOFFSET = sLabel1.size[0],$
-    YOFFSET = sLabel1.size[1],$
-    VALUE   = sLabel1.value)
-    
-  wLabel2 = WIDGET_LABEL(Base,$
-    XOFFSET   = sLabel2.size[0],$
-    YOFFSET   = sLabel2.size[1],$
-    SCR_XSIZE = sLabel2.size[2],$
-    VALUE     = sLabel2.value,$
-    UNAME     = sLabel2.uname,$
+  tab1 = WIDGET_BASE(Base,/COLUMN)
+  
+  row1 = WIDGET_BASE(tab1,/ROW)
+  wLoad = WIDGET_BUTTON(row1,$ ;load button
+    SCR_XSIZE = 150,$
+    UNAME     = 'load_cl_file_button',$
+    VALUE     = 'BROWSE CL FILE ...')
+  wLabel1 = WIDGET_LABEL(row1,$ ;File Name Labels
+    VALUE = 'CL File Loaded:')
+  wLabel2 = WIDGET_LABEL(row1,$
+    SCR_XSIZE = 530,$
+    VALUE     = 'N/A',$
+    UNAME     = 'cl_file_name_label',$
     /ALIGN_LEFT)
     
-  ;Preview of CL file text box
-  wPreview = WIDGET_TEXT(Base,$
-    XOFFSET   = sPreview.size[0],$
-    YOFFSET   = sPreview.size[1],$
-    SCR_XSIZE = sPreview.size[2],$
-    SCR_YSIZE = sPreview.size[3],$
-    UNAME     = sPreview.uname,$
+  row2 = WIDGET_LABEL(tab1,$
+    VALUE = 'Preview of CL file loaded')
+    
+  row3 = WIDGET_TEXT(tab1,$ ;Preview of CL file text box
+    SCR_XSIZE = 785,$
+    SCR_YSIZE = 90,$
+    UNAME     = preview_cl_file_text_field,$
     /SCROLL,$
     /ALL_EVENTS,$
     /WRAP)
     
-  wPreviewLabel = WIDGET_LABEL(Base,$
-    XOFFSET = sPreviewLabel.size[0],$
-    YOFFSET = sPreviewLabel.size[1],$
-    VALUE   = sPreviewLabel.value)
-    
-  ;Instruction
-  wInstruction = WIDGET_LABEL(Base,$
-    XOFFSET = sInstruction.size[0],$
-    YOFFSET = sInstruction.size[1],$
-    VALUE   = sInstruction.value)
-    
-  ;Input text field
-  wInput = WIDGET_TEXT(Base,$
-    XOFFSET   = sInput.size[0],$
-    YOFFSET   = sInput.size[1],$
-    SCR_XSIZE = sInput.size[2],$
-    YSIZE     = sInput.size[3],$
-    UNAME     = sInput.uname,$
-    SENSITIVE = sInput.sensitive,$
-    /SCROLL,$
+  row4 = WIDGET_BASE(tab1,$
+    /ROW)
+  row4_col2_row1 = WIDGET_BASE(row4,$
+    /ROW)
+  button1 = WIDGET_BUTTON(row4,$
+    VALUE = '>>>>>>>>',$
+    UNAME = 'selection_1')
+  text  = WIDGET_LABEL(row4,$
+    VALUE = ' ',$
+    SCR_XSIZE = 330,$
+    FRAME=1,$
+    UNAME = 'selection_1_to_replaced')
+  label = WIDGET_LABEL(row4,$
+    VALUE = 'will be replaced by')
+  text  = WIDGET_TEXT(row4,$
+    VALUE = '',$
+    XSIZE = 40,$
     /EDITABLE,$
-    /WRAP,$
-    /ALL_EVENTS)
+    UNAME = 'selection_1_replaced_by')
     
-  ;Help button
-  wHelp = WIDGET_BUTTON(Base,$
-    XOFFSET   = sHelp.size[0],$
-    YOFFSET   = sHelp.size[1],$
-    SCR_XSIZE = sHelp.size[2],$
-    UNAME     = sHelp.uname,$
-    VALUE     = sHelp.value,$
-    SENSITIVE = sHelp.sensitive,$
-    /PUSHBUTTON_EVENTS)
+  row5 = WIDGET_BASE(tab1,$
+    /ROW)
+  row5_col2_row1 = WIDGET_BASE(row5,$
+    /ROW)
+  button1 = WIDGET_BUTTON(row5,$
+    VALUE = '        ',$
+    UNAME = 'selection_2')
+  text  = WIDGET_LABEL(row5,$
+    VALUE = ' ',$
+    SCR_XSIZE = 330,$
+    FRAME=1,$
+    UNAME = 'selection_2_to_replaced')
+  label = WIDGET_LABEL(row5,$
+    VALUE = 'will be replaced by')
+  text  = WIDGET_TEXT(row5,$
+    VALUE = '',$
+    XSIZE = 40,$
+    /EDITABLE,$
+    UNAME = 'selection_2_replaced_by')
+    
+  row6 = WIDGET_BASE(tab1,$
+    /ROW)
+  row6_col2_row1 = WIDGET_BASE(row6,$
+    /ROW)
+  button1 = WIDGET_BUTTON(row6,$
+    VALUE = '        ',$
+    UNAME = 'selection_3')
+  text  = WIDGET_LABEL(row6,$
+    VALUE = ' ',$
+    SCR_XSIZE = 330,$
+    FRAME=1,$
+    UNAME = 'selection_3_to_replaced')
+  label = WIDGET_LABEL(row6,$
+    VALUE = 'will be replaced by')
+  text  = WIDGET_TEXT(row6,$
+    VALUE = '',$
+    XSIZE = 40,$
+    /EDITABLE,$
+    UNAME = 'selection_3_replaced_by')
     
     
-  wInfoTitle = WIDGET_LABEL(Base,$
-    XOFFSET   = sInfoTitle.size[0],$
-    YOFFSET   = sInfoTitle.size[1],$
-    VALUE     = sInfoTitle.value,$
-    UNAME     = sInfoTitle.uname,$
-    SENSITIVE = sInfoTitle.sensitive)
-    
-  ;Info messages
-  wInfo1 = WIDGET_LABEL(Base,$
-    XOFFSET   = sInfo1.size[0],$
-    YOFFSET   = sInfo1.size[1],$
-    SCR_XSIZE = sInfo1.size[2],$
-    SCR_YSIZE = sInfo1.size[3],$
-    VALUE     = sInfo1.value,$
-    SENSITIVE = sInfo1.sensitive,$
-    UNAME     = sInfo1.uname,$
-    /ALIGN_LEFT)
-    
-  wInfo2 = WIDGET_LABEL(Base,$
-    XOFFSET   = sInfo2.size[0],$
-    YOFFSET   = sInfo2.size[1],$
-    SCR_XSIZE = sInfo2.size[2],$
-    SCR_YSIZE = sInfo2.size[3],$
-    VALUE     = sInfo2.value,$
-    UNAME     = sInfo2.uname,$
-    SENSITIVE = sInfo2.sensitive,$
-    /ALIGN_LEFT)
-    
-  ;Info frame
-  wInfo = WIDGET_LABEL(Base,$
-    XOFFSET   = sInfoFrame.size[0],$
-    YOFFSET   = sInfoFrame.size[1],$
-    SCR_XSIZE = sInfoFrame.size[2],$
-    SCR_YSIZE = sInfoFrame.size[3],$
-    VALUE     = '',$
-    FRAME     = sInfoFrame.frame)
+  recap_label = WIDGET_LABEL(tab1,$
+    /ALIGN_LEFT,$
+    VALUE = '                  R E C A P   T A B L E ')
     
   ;Table
-  wTable = WIDGET_TABLE(Base,$
-    XOFFSET   = sTable.size[0],$
-    YOFFSET   = sTable.size[1],$
-    SCR_XSIZE = sTable.size[2],$
-    SCR_YSIZE = sTable.size[3],$
-    XSIZE     = sTable.size[4],$
-    YSIZE     = sTable.size[5],$
-    COLUMN_WIDTHS = sTable.column_widths,$
+  wTable = WIDGET_TABLE(tab1,$
+    SCR_XSIZE = 780,$
+    SCR_YSIZE = 410,$
+    XSIZE     = 4,$
+    YSIZE     = 1,$
+    COLUMN_WIDTHS = [100,100,100,1500],$
     /NO_ROW_HEADERS,$
-    COLUMN_LABELS = sTable.column_labels,$
+    COLUMN_LABELS = ['Selection 1','Selection 2','Selection 3',$
+    'Command Line Preview                                               '+$
+    '                                                                   '+$
+    '                                            '],$
     /SCROLL,$
     /RESIZEABLE_COLUMNS,$
-    UNAME = sTable.uname)
+    UNAME = 'runs_table')
     
-  ;firefox button
-  wFirefox = WIDGET_BUTTON(Base,$
-    XOFFSET   = sBrowseButton.size[0],$
-    YOFFSET   = sBrowseButton.size[1],$
-    SCR_XSIZE = sBrowseButton.size[2],$
-    VALUE     = sBrowseButton.value,$
-    UNAME     = sBrowseButton.uname)
+    row7 = WIDGET_BASE(tab1,$
+    /ROW)
     
-      ;preview jobs button
-  wRun = WIDGET_BUTTON(Base,$
-    XOFFSET = sPreviewButton.size[0],$
-    YOFFSET = sPreviewButton.size[1],$
-    SCR_XSIZE = sPreviewButton.size[2],$
-    VALUE = sPreviewButton.value,$
-    UNAME = sPreviewButton.uname,$
-    SENSITIVE = sPreviewButton.sensitive)
+    button1 = WIDGET_BUTTON(row7,$
+    VALUE = 'Check Status of Jobs Submitted ...',$
+    UNAME = 'check_status_button',$
+    SCR_XSIZE = 250)
+
+    button2 = WIDGET_BUTTON(row7,$
+    VALUE = 'Preview/Save as  Jobs ...',$
+    UNAME = 'preview_jobs_button',$
+    SENSITIVE = 0,$
+    SCR_XSIZE = 200)
+
+    button3 = WIDGET_BUTTON(row7,$
+    VALUE = 'L A U N C H    J O B S    I N    B A C K G R O U N D',$
+    UNAME = 'run_jobs_button',$
+    SENSITIVE = 0,$
+    SCR_XSIZE = 325)
+
+  
+    
+    ;  ;firefox button
+;  wFirefox = WIDGET_BUTTON(Base,$
+;    XOFFSET   = sBrowseButton.size[0],$
+;    YOFFSET   = sBrowseButton.size[1],$
+;    SCR_XSIZE = sBrowseButton.size[2],$
+;    VALUE     = sBrowseButton.value,$
+;    UNAME     = sBrowseButton.uname)
+;
+;      ;preview jobs button
+;  wRun = WIDGET_BUTTON(Base,$
+;    XOFFSET = sPreviewButton.size[0],$
+;    YOFFSET = sPreviewButton.size[1],$
+;    SCR_XSIZE = sPreviewButton.size[2],$
+;    VALUE = sPreviewButton.value,$
+;    UNAME = sPreviewButton.uname,$
+;    SENSITIVE = sPreviewButton.sensitive)
+;
+;
+;  ;run jobs button
+;  wRun = WIDGET_BUTTON(Base,$
+;    XOFFSET = sRunButton.size[0],$
+;    YOFFSET = sRunButton.size[1],$
+;    SCR_XSIZE = sRunButton.size[2],$
+;    VALUE = sRunButton.value,$
+;    UNAME = sRunButton.uname,$
+;    SENSITIVE = sRunButton.sensitive)
     
     
-  ;run jobs button
-  wRun = WIDGET_BUTTON(Base,$
-    XOFFSET = sRunButton.size[0],$
-    YOFFSET = sRunButton.size[1],$
-    SCR_XSIZE = sRunButton.size[2],$
-    VALUE = sRunButton.value,$
-    UNAME = sRunButton.uname,$
-    SENSITIVE = sRunButton.sensitive)
+;  wPreviewLabel = WIDGET_LABEL(Base,$
+;    XOFFSET = sPreviewLabel.size[0],$
+;    YOFFSET = sPreviewLabel.size[1],$
+;    VALUE   = sPreviewLabel.value)
+;
+;  ;Instruction
+;  wInstruction = WIDGET_LABEL(Base,$
+;    XOFFSET = sInstruction.size[0],$
+;    YOFFSET = sInstruction.size[1],$
+;    VALUE   = sInstruction.value)
+;
+;  ;Input text field
+;  wInput = WIDGET_TEXT(Base,$
+;    XOFFSET   = sInput.size[0],$
+;    YOFFSET   = sInput.size[1],$
+;    SCR_XSIZE = sInput.size[2],$
+;    YSIZE     = sInput.size[3],$
+;    UNAME     = sInput.uname,$
+;    SENSITIVE = sInput.sensitive,$
+;    /SCROLL,$
+;    /EDITABLE,$
+;    /WRAP,$
+;    /ALL_EVENTS)
+;
+;  ;Help button
+;  wHelp = WIDGET_BUTTON(Base,$
+;    XOFFSET   = sHelp.size[0],$
+;    YOFFSET   = sHelp.size[1],$
+;    SCR_XSIZE = sHelp.size[2],$
+;    UNAME     = sHelp.uname,$
+;    VALUE     = sHelp.value,$
+;    SENSITIVE = sHelp.sensitive,$
+;    /PUSHBUTTON_EVENTS)
+;
+;
+;  wInfoTitle = WIDGET_LABEL(Base,$
+;    XOFFSET   = sInfoTitle.size[0],$
+;    YOFFSET   = sInfoTitle.size[1],$
+;    VALUE     = sInfoTitle.value,$
+;    UNAME     = sInfoTitle.uname,$
+;    SENSITIVE = sInfoTitle.sensitive)
+;
+;  ;Info messages
+;  wInfo1 = WIDGET_LABEL(Base,$
+;    XOFFSET   = sInfo1.size[0],$
+;    YOFFSET   = sInfo1.size[1],$
+;    SCR_XSIZE = sInfo1.size[2],$
+;    SCR_YSIZE = sInfo1.size[3],$
+;    VALUE     = sInfo1.value,$
+;    SENSITIVE = sInfo1.sensitive,$
+;    UNAME     = sInfo1.uname,$
+;    /ALIGN_LEFT)
+;
+;  wInfo2 = WIDGET_LABEL(Base,$
+;    XOFFSET   = sInfo2.size[0],$
+;    YOFFSET   = sInfo2.size[1],$
+;    SCR_XSIZE = sInfo2.size[2],$
+;    SCR_YSIZE = sInfo2.size[3],$
+;    VALUE     = sInfo2.value,$
+;    UNAME     = sInfo2.uname,$
+;    SENSITIVE = sInfo2.sensitive,$
+;    /ALIGN_LEFT)
+;
+;  ;Info frame
+;  wInfo = WIDGET_LABEL(Base,$
+;    XOFFSET   = sInfoFrame.size[0],$
+;    YOFFSET   = sInfoFrame.size[1],$
+;    SCR_XSIZE = sInfoFrame.size[2],$
+;    SCR_YSIZE = sInfoFrame.size[3],$
+;    VALUE     = '',$
+;    FRAME     = sInfoFrame.frame)
+;
+;
     
 END
 

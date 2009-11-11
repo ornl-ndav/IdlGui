@@ -32,6 +32,26 @@
 ;
 ;==============================================================================
 
+;------------------------------------------------------------------------------
+FUNCTION getSequence, left, right
+
+  no_error = 0
+  CATCH, no_error
+  IF (no_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN, ['']
+  ENDIF ELSE BEGIN
+    ON_IOERROR, done
+    iLeft  = FIX(left)
+    iRight = FIX(right)
+    sequence = INDGEN(iRight-iLeft+1)+iLeft
+    RETURN, STRING(sequence)
+    done:
+    RETURN, [STRCOMPRESS(left,/REMOVE_ALL)]
+  ENDELSE
+END
+
+;------------------------------------------------------------------------------
 PRO define_input_folder_tab2, Event
 
   ;get global structure
