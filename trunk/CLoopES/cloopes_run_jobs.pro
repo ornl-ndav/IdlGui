@@ -50,14 +50,21 @@ PRO launch_jobs, Event
     runs_array = STRSPLIT(column_sequence[index],',',/EXTRACT,count=nbr)
     ;    runs = STRJOIN(runs_array,'_')
     runs = STRCOMPRESS(runs_array[0],/REMOVE_ALL)
-    runs += '_' + STRCOMPRESS(nbr,/REMOVE_ALL) + 'runs'
+    IF (nbr EQ 1) THEN BEGIN
+      runs += '_' + STRCOMPRESS(nbr,/REMOVE_ALL) + 'run'
+    ENDIF ELSE BEGIN
+      runs += '_' + STRCOMPRESS(nbr,/REMOVE_ALL) + 'runs'
+    ENDELSE
     column_cl[index]+= runs + (*global).output_prefix
     index++
   ENDWHILE
   
   ;tab2 table ['output file','status','temperature']
   tab2_table = STRARR(3,sz+1)
-  
+    
+  ;output folder
+  CD, (*global).step1_output_path, CURRENT=old_path
+
   index = 0
   WHILE (index LT sz) DO BEGIN
   
@@ -65,7 +72,7 @@ PRO launch_jobs, Event
     cmd_text = '-> Job #' + STRCOMPRESS(index,/REMOVE_ALL)
     cmd_text += ': ' + cmd
     IDLsendLogBook_addLogBookText, Event, ALT=alt, cmd_text
-    ;SPAWN, cmd ;remove_me
+    SPAWN, cmd
     
     ;get output file
     parse_array = split_string(column_cl[index], PATTERN='--output=')
@@ -79,7 +86,8 @@ PRO launch_jobs, Event
     
     index++
   ENDWHILE
-  
+
+  CD, old_path
   (*(*global).tab2_table) = tab2_table
   
 END

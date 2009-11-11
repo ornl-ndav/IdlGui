@@ -91,19 +91,56 @@ PRO MAIN_BASE_event, Event
     
     ;tab22222222222222222222222222222222222222222222222222222222222222222222222
     
+    ;user and CLoopES convention tab
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='tab2_convention_tab'): BEGIN
+      parse_input_field_tab2, Event
+      check_tab2_run_jobs_button, Event
+      check_load_save_temperature_widgets, Event
+    END
+    
+    ;suffix and prefix of user and CLoopES convention
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_manual_input_suffix_name'): BEGIN
+      parse_input_field_tab2, Event
+      check_tab2_run_jobs_button, Event
+      check_load_save_temperature_widgets, Event
+    END
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_manual_input_prefix_name'): BEGIN
+      parse_input_field_tab2, Event
+      check_tab2_run_jobs_button, Event
+      check_load_save_temperature_widgets, Event
+    END
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='tab2_user_manual_input_suffix_name'): BEGIN
+      parse_input_field_tab2, Event
+      check_tab2_run_jobs_button, Event
+      check_load_save_temperature_widgets, Event
+    END
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='tab2_user_manual_input_prefix_name'): BEGIN
+      parse_input_field_tab2, Event
+      check_tab2_run_jobs_button, Event
+      check_load_save_temperature_widgets, Event
+    END
+    
     ;Input File path button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_manual_input_folder'): BEGIN
       define_input_folder_tab2, Event
+      parse_input_field_tab2, Event
+      check_tab2_run_jobs_button, Event
+      check_load_save_temperature_widgets, Event
     END
     
     ;<User_defined>
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_manual_input_sequence'): BEGIN
       parse_input_field_tab2, Event
       check_tab2_run_jobs_button, Event
+      check_load_save_temperature_widgets, Event
     END
     
     ;help button of manual input
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_manual_input_sequence_help'): BEGIN
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='tab2_manual_input_sequence_help'): BEGIN
       help_button_tab2, Event ;_help
     END
     
@@ -123,6 +160,8 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_use_looper_input'): BEGIN
       IF (isLooperInputSelected(Event)) THEN BEGIN ;looper selected
         populate_tab2, Event
+        check_load_save_temperature_widgets, Event
+        check_tab2_run_jobs_button, Event
       ENDIF
     END
     
@@ -130,17 +169,39 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_use_manual_input'): BEGIN
       IF (~isLooperInputSelected(Event)) THEN BEGIN ;looper selected
         parse_input_field_tab2, Event
+        check_load_save_temperature_widgets, Event
+        check_tab2_run_jobs_button, Event
       ENDIF
+    END
+    
+    ;load temperature button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='load_temperature'): BEGIN
+      load_temperature, Event
+      check_tab2_run_jobs_button, Event
     END
     
     ;update table
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_table_uname'): BEGIN
       update_temperature, Event
+      check_load_save_temperature_widgets, Event
+      check_tab2_run_jobs_button, Event
     END
     
     ;Refresh table
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_refresh_table_uname'): BEGIN
       refresh_tab2_table, Event
+      check_tab2_run_jobs_button, Event
+    END
+    
+    ;save command line
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_save_command_line'): BEGIN
+      cmd = create_cmd(Event)
+      save_command_line, Event, cmd=cmd
+    END
+    
+    ;save temperature button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='save_temperature'): BEGIN
+      save_temperature, Event
     END
     
     ;output folder button

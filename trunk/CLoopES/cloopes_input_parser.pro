@@ -49,11 +49,11 @@ FUNCTION getCLtextArray, Event
     
     start  = 0
     length = text_selected_index[0]
-    cl_array[0] = STRMID(cl_text, start, length)
+    cl_array[0] = STRMID(cl_text[0], start, length)
     
     start  = text_selected_index[0] + text_selected_index[1]
-    length = STRLEN(cl_text) - start
-    cL_array[1] = STRMID(cl_text, start, length)
+    length = STRLEN(cl_text[0]) - start
+    cL_array[1] = STRMID(cl_text[0], start, length)
     
     return, cl_array
   ENDELSE
@@ -130,6 +130,7 @@ PRO create_cl_array, Event
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   cl_array = getCLtextArray(Event)
+  (*global).cl_array = cl_array
   
   ;check if sbatch has been found
   sbatch = (*global).sbatch_driver
@@ -183,7 +184,7 @@ PRO create_cl_array, Event
       ;remove -b
       cmd1 = split_string(new_cmd, PATTERN='--b')
       cl_array[0] = cmd1[0] + ' ' + cmd1[1]
-      (*global).cl_array = cl_array 
+      (*global).cl_array = cl_array
       RETURN
     ENDIF
     
@@ -431,6 +432,7 @@ PRO parse_input_field, Event
   column_sequence = (*(*global).column_sequence)
   column_cl = (*(*global).column_cl)
   sz = N_ELEMENTS(column_sequence)
+  
   Table = STRARR(2,sz)
   Table[0,*] = column_sequence[*]
   Table[1,*] = column_cl[*]
@@ -448,7 +450,7 @@ PRO parse_input_field, Event
   ENDELSE
   activate_widget, Event, 'run_jobs_button', status
   activate_widget, Event, 'preview_jobs_button', status
-    
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -468,7 +470,7 @@ END
 PRO remove_output_file_name, Event
 
   error = 0
-  CATCH, error
+  ;CATCH, error
   IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
   ENDIF ELSE BEGIN
@@ -480,14 +482,49 @@ PRO remove_output_file_name, Event
     
     part2 = CL_text_array[1]
     part2_parsed = split_string(part2, PATTERN='--output=')
-    
+
     ;keep path
-    path = FILE_DIRNAME(part2_parsed[1])
-    path += '/'
+    IF (N_ELEMENTS(part2_parsed) GT 1) THEN BEGIN ;there is the tag --output
     
-    CL_text_array[1] = part2_parsed[0] + ' --output=' + path
-    cl_text_array[1] += (*global).output_suffix
-    (*global).cl_array = CL_text_array
+      ;keep text between '--output=' and next space
+      string_to_keep = split_string(part2_parsed[1],PATTERN=' ')
+      
+      ;path = FILE_DIRNAME(part2_parsed[1])
+      path = FILE_DIRNAME(string_to_keep[0])
+      path += '/'
+      (*global).step1_output_path = path
+      
+      IF (N_ELEMENTS(string_to_keep) GT 1) THEN BEGIN ;output path was not last
+      
+        ;part2_2_parsed = split_string(part2_parsed[1], PATTERN=' ')
+        part2_2_parsed = split_string(string_to_keep[1], PATTERN=' ')
+        sz = N_ELEMENTS(part2_2_parsed)
+        IF (sz GT 1) THEN BEGIN ;join all the other part after 'output=....'
+          ;new_part = STRJOIN(part2_2_parsed[1:sz-1],' ')
+          new_part = STRJOIN(string_to_keep[1:sz-1],' ')
+          ;CL_text_array[1] = part2_parsed[0] + ' ' + new_part
+          end_string  = string_to_keep[0] + ' ' + new_part
+        ENDIF ELSE BEGIN
+         end_string = '' 
+        ENDELSE
+          cl_text_array[1] = part2_parsed[0] + ' ' + end_string + $
+          ' --output=' + path + (*global).output_suffix
+        
+      ENDIF ELSE BEGIN ;output path was last
+      
+        cl_text_array[1] = part2_parsed[0] + ' --output=' + path + (*global).output_suffix
+      
+      ENDELSE
+      
+      (*global).cl_array = CL_text_array
+      
+    ENDIF ELSE BEGIN
+    
+      (*global).cl_array = cl_text_array + ' --output=~/results/' +  $
+        (*global).output_suffix
+      (*global).step1_output_path = '~/results/'
+      
+    ENDELSE
     
   ENDELSE
 END

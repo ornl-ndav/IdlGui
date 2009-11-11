@@ -38,7 +38,7 @@ FUNCTION getSrunQueue
 hostname = getHostname()
 
 ;retrieve flag for this hostname
-fileID = OBJ_NEW('IDLxmlParser','./slurm.xml')
+fileID = OBJ_NEW('IDLxmlParser','/SNS/software/idltools/sav/slurm.xml')
 queue_flag = fileID->getValue(tag=['srun',hostname])
 
 ;in case the hostname can not be recognized

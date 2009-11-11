@@ -65,8 +65,9 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   ;DEBUGGING
   sDEBUGGING = { tab: {main_tab: 0},$  ;0:step1, 1:logBook
-    path: '~/SVN/IdlGui/trunk/CLoopES/',$ ;path to CL file
-    input_text: '4056-4126'}
+;    path: '~/results/',$ ;path to CL file
+    path: '~/IDLWorkspace/CLoopES 1.1/',$
+    input_text: '639-641'}
   ; input_text: '1-2,4,[10,12-14,16],20,21,24-28,[30-35]'}
   ;******************************************************************************
   ;******************************************************************************
@@ -83,7 +84,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   global = PTR_NEW ({ $
     PrevReduceTabSelect: 0,$
     
-    path: '~/',$
+    path: '~/results/',$
     old_input_text: PTR_NEW(0L),$
     old_help_text1: '',$
     old_help_text2: '',$
@@ -94,6 +95,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     'CLoopES_images/job_manager_is_coming.png',$
     ascii_path: '~/results/',$
     ascii_input_path: '~/results/',$
+    step1_output_path: '',$
     
     firefox: '/usr/bin/firefox',$
     srun_web_page: 'https://neutronsr.us/applications/jobmonitor/'+$
@@ -111,6 +113,9 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     column_file_name_tab2: PTR_NEW(0L),$
     column_sequence_tab2: PTR_NEW(0L),$
     
+    temperature_path: '~/results/',$
+    temperature_array: PTR_NEW(0L),$
+    
     package_required_base: PTR_NEW(0L),$
     debugging:    debugging,$ ;yes or no
     debugging_structure: sDebugging,$
@@ -120,7 +125,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ok:           'OK',$
     failed:       'FAILED',$
     version:      VERSION,$
-    MainBaseSize: [30,25,800,750]})
+    MainBaseSize: [30,25,800,770]})
     
   MainBaseSize   = (*global).MainBaseSize
   MainBaseTitle  = 'Command Line Looper for Elastic Scan (CLoopES)'

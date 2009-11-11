@@ -95,7 +95,9 @@ PRO populate_tab2, Event
     putValue, Event, 'tab2_table_uname', STRARR(1,3)
   ENDIF ELSE BEGIN
     ;get table
-    tab2_table = (*(*global).tab2_table)
+    temperature_array = (*(*global).temperature_array)
+    sz_temp = N_ELEMENTS(temperature_array)
+    
     sz = (SIZE(tab2_table))(2)
     index = 0
     WHILE (index LT sz AND $
@@ -106,6 +108,7 @@ PRO populate_tab2, Event
         message = 'NOT READY'
       ENDELSE
       tab2_table[1,index] = message
+      IF (index LT sz_temp) THEN tab2_table[2,index] = temperature_array[index]
       index++
     ENDWHILE
     putValue, Event, 'tab2_table_uname', tab2_table
@@ -129,7 +132,6 @@ PRO update_temperature, Event
   
     ;get table value
     table = getTableValue(Event,'tab2_table_uname')
-    ;    PRINT, SIZE(table)
     nbr_row = (SIZE(table))(2)
     
     ;get row and column edited
@@ -141,7 +143,19 @@ PRO update_temperature, Event
     IF (column EQ 2) THEN BEGIN
     
       CASE (row) OF
-        0: TABLE[2,0] = STRCOMPRESS(FLOAT(table[2,0]))
+        0: BEGIN
+          TABLE[2,0] = STRCOMPRESS(FLOAT(table[2,0]))
+          IF (TABLE[2,1] NE '') THEN BEGIN
+            increment = FLOAT(table[2,1]) - FLOAT(table[2,0])
+            index = 1
+            WHILE (index LT nbr_row) DO BEGIN
+              IF (STRCOMPRESS(table[0,index],/REMOVE_ALL) NE '') THEN BEGIN
+                table[2,index] = STRCOMPRESS(table[2,index-1] + increment)
+              ENDIF
+              index++
+            ENDWHILE
+          ENDIF
+        END
         ELSE: BEGIN
           table[2,row] = STRCOMPRESS(FLOAT(table[2,row]))
           IF (row LT (nbr_row - 1)) THEN BEGIN
@@ -162,6 +176,9 @@ PRO update_temperature, Event
     ENDIF
     
   ENDELSE
+  
+  temp_array = table[2,*]
+  (*(*global).temperature_array) = temp_array
   
 END
 
@@ -341,11 +358,19 @@ PRO parse_input_field_tab2, Event
   
   ;get path, prefix and suffix for output files
   path   = getButtonValue(Event,'tab2_manual_input_folder')
-  prefix = getTextFieldValue(Event,'tab2_manual_input_suffix_name')
-  suffix = getTextFieldValue(Event,'tab2_manual_input_prefix_name')
+  IF (isCLoopESconvention(Event)) THEN BEGIN
+    prefix = getTextFieldValue(Event,'tab2_manual_input_suffix_name')
+    suffix = getTextFieldValue(Event,'tab2_manual_input_prefix_name')
+  ENDIF ELSE BEGIN
+    prefix = getTextFieldValue(Event,'tab2_user_manual_input_suffix_name')
+    suffix = getTextFieldValue(Event,'tab2_user_manual_input_prefix_name')
+  ENDELSE
   
   nbr_files = N_ELEMENTS(column_seq_number)
   table = STRARR(3,nbr_files)
+  temperature_array = (*(*global).temperature_array)
+  sz_temp = N_ELEMENTS(temperature_array)
+  
   index = 0
   table_index = 0
   WHILE (index LT nbr_files) DO BEGIN
@@ -353,11 +378,23 @@ PRO parse_input_field_tab2, Event
       ;check if there are several runs
       seq_array = STRSPLIT(column_seq_number[index],',',/EXTRACT)
       nbr = N_ELEMENTS(seq_array)
-      CASE (nbr) OF
-        1: add_string = column_seq_number[index] + '_1run'
-        ELSE: add_string = seq_array[0] + '_' + STRCOMPRESS(nbr,/REMOVE_ALL) + $
-          'runs'
-      ENDCASE
+      
+      IF (isCLoopESconvention(Event)) THEN BEGIN
+      
+        CASE (nbr) OF
+          1: add_string = column_seq_number[index] + '_1run'
+          ELSE: add_string = seq_array[0] + '_' + STRCOMPRESS(nbr,/REMOVE_ALL) + $
+            'runs'
+        ENDCASE
+      
+      ENDIF ELSE BEGIN
+      
+        CASE (nbr) OF
+          1: add_string = column_seq_number[index]
+          ELSE: add_string = seq_array[0]
+        ENDCASE
+        
+      ENDELSE
       
       ;update big table
       file_name = path + prefix + '_' + add_string + '.' + suffix
@@ -368,6 +405,7 @@ PRO parse_input_field_tab2, Event
         message = 'NOT READY'
       ENDELSE
       table[1,table_index] = message
+      IF (index LT sz_temp) THEN table[2,table_index] = temperature_array[index]
       table_index++
       
     ENDIF
@@ -447,22 +485,35 @@ PRO check_tab2_run_jobs_button, Event
 
   ;get table value
   table = getTableValue(Event, 'tab2_table_uname')
-  sz = (SIZE(table))(2)
   
-  ;check that all the files exist and temperature defined
-  index = 0
-;  WHILE (index LT sz AND $
-;    STRCOMPRESS(table[0,index],/REMOVE_ALL) NE '') DO BEGIN
-;    IF (~FILE_TEST(table[0,index])) THEN BEGIN
-;      activate_widget, Event, 'tab2_run_jobs_uname', 0
-;      RETURN
-;    ENDIF
-;    IF (STRCOMPRESS(table[2,index],/REMOVE_ALL) EQ '') THEN BEGIN
-;      activate_widget, Event, 'tab2_run_jobs_uname', 0
-;      RETURN
-;    ENDIF
-;    index++
-;  ENDWHILE
+  dim_table = (size(table))(0) ;1 for 1 file, 2 for 2 or more files
+  IF (dim_table EQ 2) THEN BEGIN
+    sz = (SIZE(table))(2)
+    ;check that all the files exist and temperature defined
+    index = 0
+    WHILE (index LT sz) DO BEGIN
+      IF (table[0,index] NE '') THEN BEGIN
+        IF (~FILE_TEST(table[0,index])) THEN BEGIN
+          activate_widget, Event, 'tab2_run_jobs_uname', 0
+          RETURN
+        ENDIF
+        IF (STRCOMPRESS(table[2,index],/REMOVE_ALL) EQ '') THEN BEGIN
+          activate_widget, Event, 'tab2_run_jobs_uname', 0
+          RETURN
+        ENDIF
+      ENDIF
+      index++
+    ENDWHILE
+  ENDIF ELSE BEGIN ;just 1 file
+    IF (~FILE_TEST(table[0])) THEN BEGIN
+      activate_widget, Event, 'tab2_run_jobs_uname', 0
+      RETURN
+    ENDIF
+    IF (STRCOMPRESS(table[2],/REMOVE_ALL) EQ '') THEN BEGIN
+      activate_widget, Event, 'tab2_run_jobs_uname', 0
+      RETURN
+    ENDIF
+  ENDELSE
   
   ;check that there is an output file name
   output_file_name = getTextFieldValue(Event,$
@@ -485,6 +536,7 @@ PRO check_tab2_run_jobs_button, Event
   ENDIF
   
   activate_widget, Event, 'tab2_run_jobs_uname', 1
+  activate_widget, Event, 'tab2_save_command_line', 1
   
 END
 
@@ -495,17 +547,25 @@ PRO refresh_tab2_table, Event
   table = getTableValue(Event, 'tab2_table_uname')
   sz = (SIZE(table))(2)
   
-  ;check that all the files exist and temperature defined
-  index = 0
-  WHILE (index LT sz AND $
-    STRCOMPRESS(table[0,index],/REMOVE_ALL) NE '') DO BEGIN
-    IF (FILE_TEST(table[0,index])) THEN BEGIN
-      table[1,index] = 'READY'
-    ENDIF ELSE BEGIN
-      table[1,index] = 'NOT READY'
-    ENDELSE
-    index++
-  ENDWHILE
+  CATCH, error
+  IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+  ENDIF ELSE BEGIN
+  
+    ;check that all the files exist and temperature defined
+    index = 0
+    WHILE (index LT sz) DO BEGIN
+      IF (STRCOMPRESS(table[0,index],/REMOVE_ALL) NE '') THEN BEGIN
+        IF (FILE_TEST(table[0,index])) THEN BEGIN
+          table[1,index] = 'READY'
+        ENDIF ELSE BEGIN
+          table[1,index] = 'NOT READY'
+        ENDELSE
+      ENDIF
+      index++
+    ENDWHILE
+    
+  ENDELSE
   
   putValue, Event, 'tab2_table_uname', table
   
