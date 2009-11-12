@@ -105,3 +105,43 @@ PRO activate_corresponding_to_replace_widget, Event
   activate_widget, Event, uname+'_clear', status
   
 END
+
+;------------------------------------------------------------------------------
+;IF the user click just 1 character and leave the widget_text 'preview of
+;CL file loaded', the 'selection in progress ... ' is removed
+PRO cleanup_selection_not_finalized, Event
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  selection_number = getSelectionButtonValue(Event)
+  uname = ['selection_1_to_replaced',$
+    'selection_2_to_replaced',$
+    'selection_3_to_replaced']
+    
+  uname_clear1 = ['selection_1_to_replaced_clear',$
+    'selection_2_to_replaced_clear',$
+    'selection_3_to_replaced_clear']
+    
+  uname_label = ['selection_1_replaced_by_label',$
+    'selection_2_replaced_by_label',$
+    'selection_3_replaced_by_label']
+    
+  uname_to_replaced = ['selection_1_replaced_by',$
+    'selection_2_replaced_by',$
+    'selection_3_replaced_by']
+    
+  uname_clear2 = ['selection_1_replaced_by_clear',$
+    'selection_2_replaced_by_clear',$
+    'selection_3_replaced_by_clear']
+    
+  text = getTextFieldValue(Event,uname[selection_number-1])
+  IF (text EQ (*global).selection_in_progress ) THEN BEGIN
+    text = ''
+    putValue, Event, uname[selection_number-1], text
+    activate_widget, Event, uname_clear1[selection_number-1], 0
+    activate_widget, Event, uname_label[selection_number-1],0
+    activate_widget, Event, uname_to_replaced[selection_number-1],0
+    activate_widget, Event, uname_clear2[selection_number-1],0
+  ENDIF
+  
+END

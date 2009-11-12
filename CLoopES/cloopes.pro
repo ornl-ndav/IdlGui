@@ -89,6 +89,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     old_help_text1: '',$
     old_help_text2: '',$
     
+    selection_in_progress: 'SELECTION IN PROGRESS  . . .',$
+    
     es_driver: my_package[0].driver,$
     
     job_manager_splash_draw: $
