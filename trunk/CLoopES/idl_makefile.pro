@@ -36,13 +36,13 @@ cd, CurrentFolder + '/CLoopESGUI/'
 cd, CurrentFolder
 
 ;procedures
+.run cloopes_srun.pro
 .run cloopes_tab.pro
 .run cloopes_tab1.pro
+.run cloopes_input_parser.pro
 .run cloopes_multi_selection.pro
-.run cloopes_srun.pro
 .run cloopes_browse_cl_file.pro
 .run cloopes_help.pro
-.run cloopes_input_parser.pro
 .run cloopes_run_jobs.pro
 .run cloopes_job_manager_splash_base.pro
 .run cloopes_tab2.pro

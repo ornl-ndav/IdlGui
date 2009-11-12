@@ -32,6 +32,154 @@
 ;
 ;==============================================================================
 
+FUNCTION getListFromSelection, Event,SELECTION=selection
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  ;check that there is something to parse
+  ;(by checking if to_replace is empty or not)
+  uname = ['selection_1_to_replaced',$
+    'selection_2_to_replaced',$
+    'selection_3_to_replaced']
+  text = STRCOMPRESS(getTextFieldValue(Event,uname[selection-1]),/REMOVE_ALL)
+  IF (text EQ '') THEN RETURN, [''] ;nothing to parse for this selection row
+  
+  
+  
+  
+  
+  ;reinitialize column_sequence and column_cl
+  (*global).column_sequence_tab2 = PTR_NEW(0L)
+  (*global).column_file_name_tab2 = PTR_NEW(0L)
+  
+  input_text = getTextFieldValue(Event,'tab2_manual_input_sequence')
+  
+  ;remove ',,' if any
+  input_text = replaceString(input_text, FIND= ",," ,REPLACE=",")
+  
+  ;remove [cr]
+  input_text = STRCOMPRESS(input_text,/REMOVE_ALL)
+  
+  ;create column_sequence_tab2
+  ;ex:  10,20-22,[30,35,37]
+  ;column_sequence_tab2 = ['10',
+  ;                        '20',
+  ;                        '21',
+  ;                        '22',
+  ;                        '30,35,37']
+  
+  cursor_0 = STRMID(input_text, 0, 1) ;retrieve first character of line
+  IF (cursor_0 EQ '[') THEN BEGIN
+    same_run = 1b
+    left     = ''
+  ENDIF ELSE BEGIN
+    same_run = 0b
+    left     = cursor_0
+  ENDELSE
+  right   = ''
+  cur_ope = '' ;'-' or ''
+  tmp_seq_number = ['']   ;when working with same_run
+  column_seq_number = ['']  ;1 element per run (not same_run)
+  last_cursor_is_number = 1b
+  
+  length = STRLEN(input_text)
+  index = 1
+  WHILE (index LT length) DO BEGIN
+  
+    ;current cursor value
+    cursor = STRMID(input_text, index, 1)
+    
+    CASE (cursor) OF
+      '0': addNumber, left, right, cursor, cur_ope, last_cursor_is_number
+      '1': addNumber, left, right, cursor, cur_ope, last_cursor_is_number
+      '2': addNumber, left, right, cursor, cur_ope, last_cursor_is_number
+      '3': addNumber, left, right, cursor, cur_ope, last_cursor_is_number
+      '4': addNumber, left, right, cursor, cur_ope, last_cursor_is_number
+      '5': addNumber, left, right, cursor, cur_ope, last_cursor_is_number
+      '6': addNumber, left, right, cursor, cur_ope, last_cursor_is_number
+      '7': addNumber, left, right, cursor, cur_ope, last_cursor_is_number
+      '8': addNumber, left, right, cursor, cur_ope, last_cursor_is_number
+      '9': addNumber, left, right, cursor, cur_ope, last_cursor_is_number
+      '-': BEGIN
+        cur_ope = '-'
+        last_cursor_is_number = 0b
+      END
+      ',': BEGIN
+        IF (cur_ope EQ '-') THEN BEGIN ;sequence of numbers
+          seq_number = getSequence(left, right)
+        ENDIF ELSE BEGIN
+          seq_number = left
+        ENDELSE
+        IF (same_run) THEN BEGIN
+          add_seq_number_to_same_seq_number, tmp_seq_number, seq_number
+        ENDIF ELSE BEGIN
+          add_seq_number_to_global_seq_number, column_seq_number,seq_number
+        ENDELSE
+        right    = ''     ;reinitialize right number
+        left     = ''
+        cur_ope  = ''     ;reinitialize operation in progress
+        cur_numb = 'left' ;we will now work on the left number again
+        full_reset, left, right, cur_ope
+        last_cursor_is_number = 0b
+      END
+      '[': BEGIN
+        full_reset, left, right, cur_ope
+        tmp_seq_number = ['']
+        same_run = 1b
+        last_cursor_is_number = 0b
+      END
+      ']': BEGIN
+        IF (cur_ope EQ '-') THEN BEGIN ;sequence of numbers
+          seq_number = getSequence(left, right)
+        ENDIF ELSE BEGIN
+          seq_number = left
+        ENDELSE
+        add_seq_number_to_same_seq_number, tmp_seq_number, seq_number
+        add_seq_number_to_global_seq_number, column_seq_number, tmp_seq_number
+        full_reset, left, right, cur_ope
+        same_run = 0b
+        last_cursor_is_number = 0b
+        tmp_seq_number = ''
+      END
+      ELSE: ;[ENTER]
+    ENDCASE
+    
+    index++
+  ENDWHILE
+  
+  IF (last_cursor_is_number EQ 1b) THEN BEGIN
+    IF (cur_ope EQ '-') THEN BEGIN ;sequence of numbers
+      seq_number = getSequence(left, right)
+    ENDIF ELSE BEGIN
+      seq_number = left
+    ENDELSE
+    add_seq_number_to_global_seq_number, tmp_seq_number, seq_number
+    add_seq_number_to_global_seq_number, column_seq_number, tmp_seq_number
+  ENDIF
+  
+  
+  
+  
+  
+  
+END
+
+;------------------------------------------------------------------------------
+PRO determine_replaced_by_sequence, Event
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  list_selection1 = getListFromSelection(Event,SELECTION=1)
+  list_selection2 = getListFromSelection(Event,SELECTION=2)
+  list_selection3 = getListFromSelection(Event,SELECTION=3)
+  
+  
+  
+  
+END
+
+;------------------------------------------------------------------------------
 PRO tab1_selection_button, Event, button=button
 
   value_selected     = '>>>>>>>>'
