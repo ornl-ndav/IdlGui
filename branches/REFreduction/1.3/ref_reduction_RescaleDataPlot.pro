@@ -46,7 +46,7 @@ if ((*global).DataNexusFound) then begin
     
     tvimg = (*(*global).tvimg_data_ptr)
     sz=size(tvimg)
-    
+
 ;####X-axis
     xmin = getTextFieldValue(Event,'data_rescale_xmin_cwfield')
     xmax = getTextfieldValue(Event,'data_rescale_xmax_cwfield')
