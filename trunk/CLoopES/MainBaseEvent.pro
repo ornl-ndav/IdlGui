@@ -59,6 +59,43 @@ PRO MAIN_BASE_event, Event
       tab1_selection_button, Event, button=3
     END
     
+    ;clear to_replace text field buttons
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_1_to_replaced_clear'): BEGIN
+      putValue, Event, 'selection_1_to_replaced', ''
+    END
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_2_to_replaced_clear'): BEGIN
+      putValue, Event, 'selection_2_to_replaced', ''
+    END
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_2_to_replaced_clear'): BEGIN
+      putValue, Event, 'selection_3_to_replaced', ''
+    END
+    
+    ;clear replace_by text field buttons
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_1_replaced_by_clear'): BEGIN
+      putValue, Event, 'selection_1_replaced_by', ''
+    END
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_2_replaced_by_clear'): BEGIN
+      putValue, Event, 'selection_2_replaced_by', ''
+    END
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_3_replaced_by_clear'): BEGIN
+      putValue, Event, 'selection_3_replaced_by', ''
+    END
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     ;Load Command Line File Button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='load_cl_file_button'): BEGIN
       browse_cl_file, Event ;_browse
