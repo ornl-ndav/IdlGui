@@ -45,7 +45,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, title
     
   ;input example
   ex = WIDGET_LABEL(Base,$
-    XOFFSET = 550,$
+    XOFFSET = 540,$
     YOFFSET = 265,$
     VALUE   = '(Ex: 3741-3749,[3750,3760-3763],3800)')
     
@@ -72,7 +72,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, title
     UNAME     = 'preview_cl_file_text_field',$
     /SCROLL,$
     /ALL_EVENTS,$
-    /TRACKING_EVENTS,$
+    ;/TRACKING_EVENTS,$
     /WRAP)
     
   row4 = WIDGET_BASE(tab1,$

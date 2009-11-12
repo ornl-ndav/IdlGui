@@ -84,12 +84,20 @@ PRO MAIN_BASE_event, Event
       putValue, Event, 'selection_3_replaced_by', ''
     END
     
+    ;selection to replace #1
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_1_replaced_by'): BEGIN
+    determine_replaced_by_sequence, Event
+    END
+    ;selection to replace #2
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_2_replaced_by'): BEGIN
+    determine_replaced_by_sequence, Event
+    END
+    ;selection to replace #3
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_3_replaced_by'): BEGIN
+    determine_replaced_by_sequence, Event
+    END
     
-    
-    
-    
-    
-    
+
     
     
     
@@ -106,17 +114,18 @@ PRO MAIN_BASE_event, Event
     
     ;preview of CL
     WIDGET_INFO(wWidget, FIND_BY_UNAME='preview_cl_file_text_field'): BEGIN
-      CATCH, error
-      IF (error NE 0) THEN BEGIN
-        CATCH,/CANCEL
+      ;CATCH, error
+      ;IF (error NE 0) THEN BEGIN
+      ;  CATCH,/CANCEL
         displayTextRemoved, Event
-        create_cl_array, Event
-        remove_output_file_name, Event
-      ENDIF ELSE BEGIN
-        IF (event.enter EQ 0) THEN BEGIN ;leaving region
-          cleanup_selection_not_finalized, Event
-        ENDIF
-      ENDELSE
+        determine_cl_text_to_keep_array, Event
+        ;create_cl_array, Event
+        ;remove_output_file_name, Event
+      ;ENDIF ELSE BEGIN
+      ;  IF (event.enter EQ 0) THEN BEGIN ;leaving region
+      ;    cleanup_selection_not_finalized, Event
+      ;  ENDIF
+      ;ENDELSE
     END
     
     ;input text field
