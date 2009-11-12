@@ -492,11 +492,15 @@ FUNCTION IDLupdateGui::init, structure
     ClearDataRoiFields, Event
   ENDIF ELSE BEGIN
     UpdateDataRoiFileName, Event, structure.DataRoiFileName
+    print, '#1'
     AppendReplaceLogBookMessage, Event, OK, PROCESSING
+    print, '#2'
   ENDELSE
   
+  print, '#3'
   ;Activate LOAD DATA ROI file
   ActivateWidget, Event, 'data_roi_load_button', 1
+  print, '#4'
   
   ;check if user wanted peak exclusion or background file
   text = '--> Check status of PEAK or BACKGROUND ?'
