@@ -62,12 +62,15 @@ PRO MAIN_BASE_event, Event
     ;clear to_replace text field buttons
     WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_1_to_replaced_clear'): BEGIN
       putValue, Event, 'selection_1_to_replaced', ''
+      disable_second_part_of_selection, Event, 1
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_2_to_replaced_clear'): BEGIN
       putValue, Event, 'selection_2_to_replaced', ''
+      disable_second_part_of_selection, Event, 2
     END
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_2_to_replaced_clear'): BEGIN
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_3_to_replaced_clear'): BEGIN
       putValue, Event, 'selection_3_to_replaced', ''
+      disable_second_part_of_selection, Event, 3
     END
     
     ;clear replace_by text field buttons
@@ -103,17 +106,16 @@ PRO MAIN_BASE_event, Event
     
     ;preview of CL
     WIDGET_INFO(wWidget, FIND_BY_UNAME='preview_cl_file_text_field'): BEGIN
-      help, event, /structure
       CATCH, error
       IF (error NE 0) THEN BEGIN
-      CATCH,/CANCEL
-      displayTextRemoved, Event
-      create_cl_array, Event
-      remove_output_file_name, Event
+        CATCH,/CANCEL
+        displayTextRemoved, Event
+        create_cl_array, Event
+        remove_output_file_name, Event
       ENDIF ELSE BEGIN
-      IF (event.enter EQ 0) THEN BEGIN ;leaving region
-      cleanup_selection_not_finalized, Event
-      ENDIF
+        IF (event.enter EQ 0) THEN BEGIN ;leaving region
+          cleanup_selection_not_finalized, Event
+        ENDIF
       ENDELSE
     END
     
