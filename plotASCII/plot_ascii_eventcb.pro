@@ -159,13 +159,35 @@ PRO plotAsciiData, MAIN_BASE=MAIN_BASE, EVENT=event
   xLabel = xaxis + ' (' + xaxis_units + ')'
   yLabel = yaxis + ' (' + yaxis_units + ')'
   
-  plot, Xarray, $
-    Yarray, $
-    color=FSC_COLOR('white'), $
-    PSYM=2, $
-    XTITLE=xLabel, $
-    YTITLE=yLabel
-    
+  
+  
+  IF (N_ELEMENTS(EVENT) NE 0) THEN BEGIN
+    IF (isYaxisLin(Event)) THEN BEGIN
+      yaxis = 'lin'
+    ENDIF ELSE BEGIN
+      yaxis = 'log'
+    ENDELSE
+  ENDIF ELSE BEGIN
+    yaxis = 'lin'
+  ENDELSE
+  
+  IF (yaxis EQ 'lin') THEN BEGIN
+    plot, Xarray, $
+      Yarray, $
+      color=FSC_COLOR('white'), $
+      PSYM=2, $
+      XTITLE=xLabel, $
+      YTITLE=yLabel
+  ENDIF ELSE BEGIN
+    plot, Xarray, $
+      Yarray, $
+      color=FSC_COLOR('white'), $
+      PSYM=2, $
+      /YLOG, $
+      XTITLE=xLabel, $
+      YTITLE=yLabel
+  ENDELSE
+
   errplot, Xarray,Yarray-SigmaYarray,Yarray+SigmaYarray,$
     color=FSC_COLOR('yellow')
     
