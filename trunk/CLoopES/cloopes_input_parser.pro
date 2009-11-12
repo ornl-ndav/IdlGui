@@ -214,9 +214,11 @@ PRO displayTextRemoved, Event
   cl_text = getTextFieldValue(Event,'preview_cl_file_text_field')
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME='preview_cl_file_text_field')
   text_selected_index = WIDGET_INFO(id, /TEXT_SELECT)
-;  title = 'Text Removed: '
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
   IF (text_selected_index[1] EQ 0) THEN BEGIN
-    value = 'SELECTION IN PROGRESS  . . .'
+    value = (*global).selection_in_progress
     status = 0
   ENDIF ELSE BEGIN
     start  = text_selected_index[0]

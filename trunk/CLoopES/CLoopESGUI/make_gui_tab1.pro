@@ -72,6 +72,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, title
     UNAME     = 'preview_cl_file_text_field',$
     /SCROLL,$
     /ALL_EVENTS,$
+    /TRACKING_EVENTS,$
     /WRAP)
     
   row4 = WIDGET_BASE(tab1,$
