@@ -273,18 +273,25 @@ PRO REFreduction_OpenPlotDataNexus, Event, DataRunNumber, currFullDataNexusName
   ENDIF
   
   ;tell the user that the load and plot process is done
+  print, '#1'
   InitialStrarr = getDataLogBookText(Event)
+  print, '#2'
   putTextAtEndOfDataLogBookLastLine, $
     Event, $
     InitialStrarr, $
     ' Done', $
     (*global).processing_message
+    print, '#3'
   ;display full path to NeXus in Norm log book
   full_nexus_name = (*global).data_full_nexus_name
+  print ,'#4'
   text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
+  print, '#5'
   putDataLogBookMessage, Event, text, Append=1
+  print, '#6'
   ;to see the last line of the data log book
   showLastDataLogBookLine, Event
+  print, '#7'
 END
 
 ;------------------------------------------------------------------------------
