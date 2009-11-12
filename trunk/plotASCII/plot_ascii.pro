@@ -80,6 +80,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;define global variables
   global = PTR_NEW ({ $
   
+    tools_base: 0L, $
+  
     input_ascii_file: './REF_L_ascii_file.txt',$
     xaxis: '',$
     xaxis_units: '',$
