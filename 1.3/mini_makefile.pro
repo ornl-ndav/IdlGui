@@ -13,6 +13,7 @@ resolve_routine, "ZOOM",/either
 resolve_routine, "CW_FIELD",/either
 resolve_routine, "XDISPLAYFILE", /either
 resolve_routine, "TVREAD", /either
+resolve_routine, "CONGRID", /either
 
 save,/routines,filename = 'mini_ref_reduction.sav'
 exit
