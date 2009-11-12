@@ -145,3 +145,29 @@ PRO cleanup_selection_not_finalized, Event
   ENDIF
   
 END
+
+;------------------------------------------------------------------------------
+PRO disable_second_part_of_selection, Event, nbr
+
+  uname_clear1 = ['selection_1_to_replaced_clear',$
+    'selection_2_to_replaced_clear',$
+    'selection_3_to_replaced_clear']
+    
+  uname_label = ['selection_1_replaced_by_label',$
+    'selection_2_replaced_by_label',$
+    'selection_3_replaced_by_label']
+    
+  uname_to_replaced = ['selection_1_replaced_by',$
+    'selection_2_replaced_by',$
+    'selection_3_replaced_by']
+    
+  uname_clear2 = ['selection_1_replaced_by_clear',$
+    'selection_2_replaced_by_clear',$
+    'selection_3_replaced_by_clear']
+    
+  activate_widget, Event, uname_clear1[nbr-1], 0
+  activate_widget, Event, uname_label[nbr-1], 0
+  activate_widget, Event, uname_to_replaced[nbr-1], 0
+  activate_widget, Event, uname_clear2[nbr-1], 0
+  
+END
