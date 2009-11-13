@@ -32,7 +32,26 @@
 ;
 ;==============================================================================
 
-FUNCTION getListFromSelection, Event,SELECTION=selection
+PRO Create_step1_big_table, Event
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  cl_with_fields= (*global).cl_with_fields
+  sequence_field1 = (*(*global).sequence_field1)
+  sequence_field2 = (*(*global).sequence_field2)
+  sequence_field3 = (*(*global).sequence_field3)
+  
+  sz1 = (size(sequence_field1))(1)
+  sz2 = (size(sequence_field2))(2)
+  sz3 = (size(sequence_field3))(3)
+  
+  
+  
+  
+END
+
+;------------------------------------------------------------------------------
+PRO getListFromSelection, Event,SELECTION=selection
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
@@ -43,8 +62,15 @@ FUNCTION getListFromSelection, Event,SELECTION=selection
     'selection_2_replaced_by',$
     'selection_3_replaced_by']
   input_text = $
-  STRCOMPRESS(getTextFieldValue(Event,uname[selection-1]),/REMOVE_ALL)
-  IF (input_text EQ '') THEN RETURN, [''] ;nothing to parse for this selection row
+    STRCOMPRESS(getTextFieldValue(Event,uname[selection-1]),/REMOVE_ALL)
+  ;nothing to parse for this selection row
+  IF (input_text EQ '') THEN BEGIN
+    CASE (selection) OF
+      1: (*(*global).sequence_field1) = PTR_NEW(0L)
+      2: (*(*global).sequence_field2) = PTR_NEW(0L)
+      3: (*(*global).sequence_field3) = PTR_NEW(0L)
+    ENDCASE
+  ENDIF
   
   ;create column_sequence_tab2
   ;ex:  10,20-22,[30,35,37]
@@ -53,10 +79,7 @@ FUNCTION getListFromSelection, Event,SELECTION=selection
   ;                        '21',
   ;                        '22',
   ;                        '30,35,37']
-
-  print, input_text
-
-
+  
   cursor_0 = STRMID(input_text, 0, 1) ;retrieve first character of line
   IF (cursor_0 EQ '[') THEN BEGIN
     same_run = 1b
@@ -139,11 +162,6 @@ FUNCTION getListFromSelection, Event,SELECTION=selection
   IF (last_cursor_is_number EQ 1b) THEN BEGIN
     IF (cur_ope EQ '-') THEN BEGIN ;sequence of numbers
       seq_number = getSequence(left, right)
-      print, 'here'
-      print, 'seq_number'
-      help, seq_number
-      print, seq_number
-      print, '---------'
     ENDIF ELSE BEGIN
       seq_number = left
     ENDELSE
@@ -151,12 +169,11 @@ FUNCTION getListFromSelection, Event,SELECTION=selection
     add_seq_number_to_global_seq_number, column_seq_number, tmp_seq_number
   ENDIF
   
-  
-  print, 'selection #' + string(selection)
-  print, column_seq_number
-  
-  
-  
+  CASE (selection) OF
+    1: (*(*global).sequence_field1) = column_seq_number
+    2: (*(*global).sequence_field2) = column_seq_number
+    3: (*(*global).sequence_field3) = column_seq_number
+  ENDCASE
   
 END
 
@@ -165,12 +182,12 @@ PRO determine_replaced_by_sequence, Event
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
-  list_selection1 = getListFromSelection(Event,SELECTION=1)
-  list_selection2 = getListFromSelection(Event,SELECTION=2)
-  list_selection3 = getListFromSelection(Event,SELECTION=3)
+  getListFromSelection, Event,SELECTION=1
+  getListFromSelection, Event,SELECTION=2
+  getListFromSelection, Event,SELECTION=3
   
   cl_with_fields = get_cl_with_fields(Event)
-  
+  (*global).cl_with_fields = cl_with_fields
   
 END
 

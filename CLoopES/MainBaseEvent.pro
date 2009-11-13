@@ -76,28 +76,35 @@ PRO MAIN_BASE_event, Event
     ;clear replace_by text field buttons
     WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_1_replaced_by_clear'): BEGIN
       putValue, Event, 'selection_1_replaced_by', ''
+      (*(*global).sequence_field1) = PTR_NEW(0L)
+      ENDCA
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_2_replaced_by_clear'): BEGIN
       putValue, Event, 'selection_2_replaced_by', ''
+      (*(*global).sequence_field2) = PTR_NEW(0L)
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_3_replaced_by_clear'): BEGIN
       putValue, Event, 'selection_3_replaced_by', ''
+      (*(*global).sequence_field3) = PTR_NEW(0L)
     END
     
     ;selection to replace #1
     WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_1_replaced_by'): BEGIN
-    determine_replaced_by_sequence, Event
+      determine_replaced_by_sequence, Event
+      Create_step1_big_table, Event
     END
     ;selection to replace #2
     WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_2_replaced_by'): BEGIN
-    determine_replaced_by_sequence, Event
+      determine_replaced_by_sequence, Event
+      Create_step1_big_table, Event
     END
     ;selection to replace #3
     WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_3_replaced_by'): BEGIN
-    determine_replaced_by_sequence, Event
+      determine_replaced_by_sequence, Event
+      Create_step1_big_table, Event
     END
     
-
+    
     
     
     
@@ -117,15 +124,15 @@ PRO MAIN_BASE_event, Event
       ;CATCH, error
       ;IF (error NE 0) THEN BEGIN
       ;  CATCH,/CANCEL
-        displayTextRemoved, Event
-        ;determine_cl_text_to_keep_array, Event
-        ;create_cl_array, Event
-        ;remove_output_file_name, Event
-      ;ENDIF ELSE BEGIN
-      ;  IF (event.enter EQ 0) THEN BEGIN ;leaving region
-      ;    cleanup_selection_not_finalized, Event
-      ;  ENDIF
-      ;ENDELSE
+      displayTextRemoved, Event
+    ;determine_cl_text_to_keep_array, Event
+    ;create_cl_array, Event
+    ;remove_output_file_name, Event
+    ;ENDIF ELSE BEGIN
+    ;  IF (event.enter EQ 0) THEN BEGIN ;leaving region
+    ;    cleanup_selection_not_finalized, Event
+    ;  ENDIF
+    ;ENDELSE
     END
     
     ;input text field
