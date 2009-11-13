@@ -32,6 +32,66 @@
 ;
 ;==============================================================================
 
+FUNCTION MoveToEndOutputFlag, Event, cl_text
+
+  error = 0
+  ;CATCH, error
+  IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+  ENDIF ELSE BEGIN
+    ;get global structure
+    WIDGET_CONTROL,Event.top,GET_UVALUE=global
+    
+    part2_parsed = split_string(cl_text, PATTERN='--output=')
+    
+    ;keep path
+    IF (N_ELEMENTS(part2_parsed) GT 1) THEN BEGIN ;there is the tag --output
+    
+      ;keep text between '--output=' and next space
+      string_to_keep = split_string(part2_parsed[1],PATTERN=' ')
+      
+      ;path = FILE_DIRNAME(part2_parsed[1])
+      path = FILE_DIRNAME(string_to_keep[0])
+      path += '/'
+      (*global).step1_output_path = path
+      
+      IF (N_ELEMENTS(string_to_keep) GT 1) THEN BEGIN ;output path was not last
+      
+        ;part2_2_parsed = split_string(part2_parsed[1], PATTERN=' ')
+        part2_2_parsed = split_string(string_to_keep[1], PATTERN=' ')
+        sz = N_ELEMENTS(part2_2_parsed)
+        IF (sz GT 1) THEN BEGIN ;join all the other part after 'output=....'
+          ;new_part = STRJOIN(part2_2_parsed[1:sz-1],' ')
+          new_part = STRJOIN(string_to_keep[1:sz-1],' ')
+          ;CL_text_array[1] = part2_parsed[0] + ' ' + new_part
+          end_string  = string_to_keep[0] + ' ' + new_part
+        ENDIF ELSE BEGIN
+          end_string = ''
+        ENDELSE
+        cl_text = part2_parsed[0] + ' ' + end_string + $
+          ' --output=' + path + (*global).output_suffix
+          
+      ENDIF ELSE BEGIN ;output path was last
+      
+        cl_text = part2_parsed[0] + ' --output=' + path + (*global).output_suffix
+        
+      ENDELSE
+      
+    ENDIF ELSE BEGIN
+    
+      cl_text = cl_text + ' --output=~/results/' +  $
+        (*global).output_suffix
+      (*global).step1_output_path = '~/results/'
+      
+    ENDELSE
+    
+  ENDELSE
+  
+  RETURN, cl_text
+  
+END
+
+;------------------------------------------------------------------------------
 PRO Create_step1_big_table, Event
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
@@ -39,7 +99,9 @@ PRO Create_step1_big_table, Event
   error_status = 0 ;by default, everything is fine
   (*global).tab1_activate_run_widgets = 0b
   
-  cl_with_fields= (*global).cl_with_fields
+  cl_with_fields = (*global).cl_with_fields
+  
+  cl_with_fields = MoveToEndOutputFlag(Event, cl_with_fields)
   
   sequence_field1 = (*(*global).sequence_field1)
   sequence_field2 = (*(*global).sequence_field2)
