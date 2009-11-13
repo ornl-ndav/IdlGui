@@ -122,3 +122,22 @@ FUNCTION get_cl_with_fields, Event
   RETURN, cl
   
 END
+
+;------------------------------------------------------------------------------
+FUNCTION getSequence, left, right
+  no_error = 0
+  CATCH, no_error
+  IF (no_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN, ['']
+  ENDIF ELSE BEGIN
+    ON_IOERROR, done
+    iLeft  = FIX(left[0])
+    iRight = FIX(right[0])
+    sequence = INDGEN(iRight-iLeft+1)+iLeft
+    RETURN, STRING(sequence)
+    done:
+    RETURN, [STRCOMPRESS(left,/REMOVE_ALL)]
+  ENDELSE
+END
+
