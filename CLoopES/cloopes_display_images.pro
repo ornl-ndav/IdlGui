@@ -32,11 +32,12 @@
 ;
 ;==============================================================================
 
-PRO display_tab1_error, MAIN_BASE=main_base, Event=event
+PRO display_tab1_error, MAIN_BASE=main_base, Event=event, STATUS=status
 
   ;first, map the base
   uname = 'tab1_error_base'
-  MapBase, EVENT=Event, BASE=main_base, UNAME=uname, STATUS=1
+  MapBase, EVENT=Event, BASE=main_base, UNAME=uname, STATUS=status
+  IF (status EQ 0) THEN RETURN
   
   image = READ_PNG('CLoopes_images/format_error.png')
   uname = 'error_draw'
