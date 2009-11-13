@@ -40,26 +40,10 @@ PRO launch_jobs, Event
   text = '> Launching jobs:'
   IDLsendLogBook_addLogBookText, Event, ALT=alt, text
   
-  ;get second column of table
-  column_cl = (*(*global).column_cl)
-  column_sequence = (*(*global).column_sequence)
+  table = getTableValue(Event,'runs_table')
+  cl_array = table[3,*]
+  sz = N_ELEMENTS(cl_array)
   
-  sz = N_ELEMENTS(column_cl)
-  index = 0
-  WHILE (index LT sz) DO BEGIN
-    runs_array = STRSPLIT(column_sequence[index],',',/EXTRACT,count=nbr)
-    ;    runs = STRJOIN(runs_array,'_')
-    runs = STRCOMPRESS(runs_array[0],/REMOVE_ALL)
-    IF (nbr EQ 1) THEN BEGIN
-      runs += '_' + STRCOMPRESS(nbr,/REMOVE_ALL) + 'run'
-    ENDIF ELSE BEGIN
-      runs += '_' + STRCOMPRESS(nbr,/REMOVE_ALL) + 'runs'
-    ENDELSE
-    column_cl[index]+= runs + (*global).output_prefix
-    index++
-  ENDWHILE
-  
-  ;tab2 table ['output file','status','temperature']
   tab2_table = STRARR(3,sz+1)
     
   ;output folder
@@ -68,14 +52,14 @@ PRO launch_jobs, Event
   index = 0
   WHILE (index LT sz) DO BEGIN
   
-    cmd = column_cl[index]
+    cmd = cl_array[index]
     cmd_text = '-> Job #' + STRCOMPRESS(index,/REMOVE_ALL)
     cmd_text += ': ' + cmd
     IDLsendLogBook_addLogBookText, Event, ALT=alt, cmd_text
     SPAWN, cmd
     
     ;get output file
-    parse_array = split_string(column_cl[index], PATTERN='--output=')
+    parse_array = split_string(cl_array[index], PATTERN='--output=')
     IF (N_ELEMENTS(parse_array) NE 2) THEN BEGIN
       output_file = 'N/A'
     ENDIF ELSE BEGIN
