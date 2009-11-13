@@ -38,6 +38,16 @@ PRO activate_widget, Event, uname, status
 END
 
 ;------------------------------------------------------------------------------
+PRO ActivateWidget, EVENT=event, BASE=base, UNAME=uname, STATUS=status
+  IF (N_ELEMENTS(event) NE 0) THEN BEGIN
+    id = WIDGET_INFO(event.top, FIND_BY_UNAME=uname)
+  ENDIF ELSE BEGIN
+    id = WIDGET_INFO(base,FIND_BY_UNAME=uname)
+  ENDELSE
+  WIDGET_CONTROL, id, SENSITIVE=status
+END
+
+;------------------------------------------------------------------------------
 PRO MapBase, EVENT=Event, BASE=base, UNAME=uname, STATUS=status
   IF (N_ELEMENTS(event) NE 0) THEN BEGIN
     id = WIDGET_INFO(event.top, FIND_BY_UNAME=uname)

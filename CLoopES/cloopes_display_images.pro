@@ -37,6 +37,14 @@ PRO display_tab1_error, MAIN_BASE=main_base, Event=event, STATUS=status
   ;first, map the base
   uname = 'tab1_error_base'
   MapBase, EVENT=Event, BASE=main_base, UNAME=uname, STATUS=status
+  
+  table_status = 0
+  IF (status EQ 0) THEN table_status = 1
+  uname = 'runs_table'
+  ActivateWidget, EVENT=event, BASE=main_base, UNAME=uname, STATUS=table_status
+  ActivateWidget, EVENT=event, BASE=main_base, UNAME='runs_table_label',$
+  STATUS=table_status
+  
   IF (status EQ 0) THEN RETURN
   
   image = READ_PNG('CLoopes_images/format_error.png')
