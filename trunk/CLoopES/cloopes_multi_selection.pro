@@ -39,27 +39,12 @@ FUNCTION getListFromSelection, Event,SELECTION=selection
   
   ;check that there is something to parse
   ;(by checking if to_replace is empty or not)
-  uname = ['selection_1_to_replaced',$
-    'selection_2_to_replaced',$
-    'selection_3_to_replaced']
-  text = STRCOMPRESS(getTextFieldValue(Event,uname[selection-1]),/REMOVE_ALL)
-  IF (text EQ '') THEN RETURN, [''] ;nothing to parse for this selection row
-  
-  
-  
-  
-  
-  ;reinitialize column_sequence and column_cl
-  (*global).column_sequence_tab2 = PTR_NEW(0L)
-  (*global).column_file_name_tab2 = PTR_NEW(0L)
-  
-  input_text = getTextFieldValue(Event,'tab2_manual_input_sequence')
-  
-  ;remove ',,' if any
-  input_text = replaceString(input_text, FIND= ",," ,REPLACE=",")
-  
-  ;remove [cr]
-  input_text = STRCOMPRESS(input_text,/REMOVE_ALL)
+  uname = ['selection_1_replaced_by',$
+    'selection_2_replaced_by',$
+    'selection_3_replaced_by']
+  input_text = $
+  STRCOMPRESS(getTextFieldValue(Event,uname[selection-1]),/REMOVE_ALL)
+  IF (input_text EQ '') THEN RETURN, [''] ;nothing to parse for this selection row
   
   ;create column_sequence_tab2
   ;ex:  10,20-22,[30,35,37]
@@ -68,7 +53,10 @@ FUNCTION getListFromSelection, Event,SELECTION=selection
   ;                        '21',
   ;                        '22',
   ;                        '30,35,37']
-  
+
+  print, input_text
+
+
   cursor_0 = STRMID(input_text, 0, 1) ;retrieve first character of line
   IF (cursor_0 EQ '[') THEN BEGIN
     same_run = 1b
@@ -151,6 +139,11 @@ FUNCTION getListFromSelection, Event,SELECTION=selection
   IF (last_cursor_is_number EQ 1b) THEN BEGIN
     IF (cur_ope EQ '-') THEN BEGIN ;sequence of numbers
       seq_number = getSequence(left, right)
+      print, 'here'
+      print, 'seq_number'
+      help, seq_number
+      print, seq_number
+      print, '---------'
     ENDIF ELSE BEGIN
       seq_number = left
     ENDELSE
@@ -159,6 +152,8 @@ FUNCTION getListFromSelection, Event,SELECTION=selection
   ENDIF
   
   
+  print, 'selection #' + string(selection)
+  print, column_seq_number
   
   
   

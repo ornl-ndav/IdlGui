@@ -118,7 +118,7 @@ PRO MAIN_BASE_event, Event
       ;IF (error NE 0) THEN BEGIN
       ;  CATCH,/CANCEL
         displayTextRemoved, Event
-        determine_cl_text_to_keep_array, Event
+        ;determine_cl_text_to_keep_array, Event
         ;create_cl_array, Event
         ;remove_output_file_name, Event
       ;ENDIF ELSE BEGIN
