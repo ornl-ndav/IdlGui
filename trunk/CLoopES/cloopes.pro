@@ -88,8 +88,12 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     old_input_text: PTR_NEW(0L),$
     old_help_text1: '',$
     old_help_text2: '',$
+    cl_with_fields: '', $
     
     selection_in_progress: 'SELECTION IN PROGRESS  . . .',$
+    sequence_field1: PTR_NEW(0L), $
+    sequence_field2: PTR_NEW(0L), $
+    sequence_field3: PTR_NEW(0L), $
     
     es_driver: my_package[0].driver,$
     
