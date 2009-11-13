@@ -189,6 +189,26 @@ PRO MAIN_BASE_event, Event
       check_load_save_temperature_widgets, Event
     END
     
+    ;DAD's convention
+    WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='tab3_manual_input_suffix_name'): BEGIN
+      parse_input_field_tab2, Event
+      check_tab2_run_jobs_button, Event
+      check_load_save_temperature_widgets, Event
+    END
+    WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='tab3_manual_input_part2'): BEGIN
+      parse_input_field_tab2, Event
+      check_tab2_run_jobs_button, Event
+      check_load_save_temperature_widgets, Event
+    END
+    WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='tab3_manual_input_prefix_name'): BEGIN
+      parse_input_field_tab2, Event
+      check_tab2_run_jobs_button, Event
+      check_load_save_temperature_widgets, Event
+    END
+    
     ;Input File path button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_manual_input_folder'): BEGIN
       define_input_folder_tab2, Event

@@ -357,14 +357,22 @@ PRO parse_input_field_tab2, Event
   ENDIF
   
   ;get path, prefix and suffix for output files
-  path   = getButtonValue(Event,'tab2_manual_input_folder')
-  IF (isCLoopESconvention(Event)) THEN BEGIN
-    prefix = getTextFieldValue(Event,'tab2_manual_input_suffix_name')
-    suffix = getTextFieldValue(Event,'tab2_manual_input_prefix_name')
-  ENDIF ELSE BEGIN
-    prefix = getTextFieldValue(Event,'tab2_user_manual_input_suffix_name')
-    suffix = getTextFieldValue(Event,'tab2_user_manual_input_prefix_name')
-  ENDELSE
+  path = getButtonValue(Event,'tab2_manual_input_folder')
+  CASE (getOutputconvention(Event)) OF
+    0: BEGIN ;CLoopES convention
+      prefix = getTextFieldValue(Event,'tab2_manual_input_suffix_name')
+      suffix = getTextFieldValue(Event,'tab2_manual_input_prefix_name')
+    END
+    1: BEGIN ;user convention
+      prefix = getTextFieldValue(Event,'tab2_user_manual_input_suffix_name')
+      suffix = getTextFieldValue(Event,'tab2_user_manual_input_prefix_name')
+    END
+    2: BEGIN ;DAD's convention
+      prefix  = getTextFieldValue(Event,'tab3_manual_input_suffix_name')
+      part2   = getTextFieldValue(Event,'tab3_manual_input_part2')
+      suffix  = getTextFieldValue(Event,'tab3_manual_input_prefix_name')
+    END
+  ENDCASE
   
   nbr_files = N_ELEMENTS(column_seq_number)
   table = STRARR(3,nbr_files)
@@ -379,25 +387,44 @@ PRO parse_input_field_tab2, Event
       seq_array = STRSPLIT(column_seq_number[index],',',/EXTRACT)
       nbr = N_ELEMENTS(seq_array)
       
-      IF (isCLoopESconvention(Event)) THEN BEGIN
-      
-        CASE (nbr) OF
-          1: add_string = column_seq_number[index] + '_1run'
-          ELSE: add_string = seq_array[0] + '_' + STRCOMPRESS(nbr,/REMOVE_ALL) + $
-            'runs'
-        ENDCASE
-      
-      ENDIF ELSE BEGIN
-      
-        CASE (nbr) OF
-          1: add_string = column_seq_number[index]
-          ELSE: add_string = seq_array[0]
-        ENDCASE
+      CASE (getOutputconvention(Event)) OF
+        0: BEGIN ;CLoopES convention
         
-      ENDELSE
+          CASE (nbr) OF
+            1: add_string = column_seq_number[index] + '_1run'
+            ELSE: add_string = seq_array[0] + '_' + STRCOMPRESS(nbr,/REMOVE_ALL) + $
+              'runs'
+          ENDCASE
+          file_name = path + prefix + '_' + add_string + '.' + suffix
+          
+        END
+        1: BEGIN ;user convention
+        
+          CASE (nbr) OF
+            1: add_string = column_seq_number[index]
+            ELSE: add_string = seq_array[0]
+          ENDCASE
+          file_name = path + prefix + '_' + add_string + '.' + suffix
+          
+        END
+        2: BEGIN ;dad's convention
+        
+          CASE (nbr) OF
+            1: BEGIN
+              add_string = column_seq_number[index] + '_' + part2
+              add_string += '_1run'
+            END
+            ELSE: BEGIN
+              add_string = seq_array[0] + '_' + part2 + '_'
+              add_string+= STRCOMPRESS(nbr,/REMOVE_ALL) + 'runs'
+            END
+          ENDCASE
+          file_name = path + prefix + '_' + add_string + '.' + suffix
+          
+        END
+      ENDCASE
       
       ;update big table
-      file_name = path + prefix + '_' + add_string + '.' + suffix
       table[0,table_index]= file_name
       IF (FILE_TEST(file_name)) THEN BEGIN
         message = 'READY'
