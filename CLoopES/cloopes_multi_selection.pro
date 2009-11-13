@@ -37,6 +37,7 @@ PRO Create_step1_big_table, Event
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
   error_status = 0 ;by default, everything is fine
+  (*global).tab1_activate_run_widgets = 0b
   
   cl_with_fields= (*global).cl_with_fields
   
@@ -166,6 +167,26 @@ PRO Create_step1_big_table, Event
   id = WIDGET_INFO(Event.top,FIND_BY_UNAME='runs_table')
   WIDGET_CONTROL, id, TABLE_YSIZE = dim2
   putValue, Event, 'runs_table', big_table
+  
+  ;we can validated the bottom widgets
+  (*global).tab1_activate_run_widgets = 1b
+  
+END
+
+;------------------------------------------------------------------------------
+PRO check_status_of_step1, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  status = (*global).tab1_activate_run_widgets
+  
+  uname_array = ['preview_jobs_button',$
+    'run_jobs_button']
+  sz = N_ELEMENTS(uname_array)
+  FOR i=0,sz-1 DO BEGIN
+    activate_widget, Event, uname_array[i], status
+  ENDFOR
   
 END
 
