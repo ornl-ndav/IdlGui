@@ -37,28 +37,25 @@ PRO preview_jobs, Event
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
-  ;get second column of table
-  column_cl = (*(*global).column_cl)
-  column_sequence = (*(*global).column_sequence)
+  ;keep only 4th column
+  big_table = getTableValue(Event,'runs_table')
+  preview_array = big_table[3,*]
   
-  sz = N_ELEMENTS(column_cl)
-  preview_array = STRARR(sz)
+;  index = 0
+;;  WHILE (index LT sz) DO BEGIN
+;    runs_array = STRSPLIT(column_sequence[index],',',/EXTRACT,count=nbr)
+;    ;    runs = STRJOIN(runs_array,'_')
+;    runs = STRCOMPRESS(runs_array[0],/REMOVE_ALL)
+;    IF (nbr EQ 1) THEN BEGIN
+;      runs += '_' + STRCOMPRESS(nbr,/REMOVE_ALL) + 'run'
+;    ENDIF ELSE BEGIN
+;      runs += '_' + STRCOMPRESS(nbr,/REMOVE_ALL) + 'runs'
+;    ENDELSE
+;    column_cl[index]+= runs + (*global).output_prefix
+;    index++
+;  ENDWHILE
   
-  index = 0
-  WHILE (index LT sz) DO BEGIN
-    runs_array = STRSPLIT(column_sequence[index],',',/EXTRACT,count=nbr)
-    ;    runs = STRJOIN(runs_array,'_')
-    runs = STRCOMPRESS(runs_array[0],/REMOVE_ALL)
-    IF (nbr EQ 1) THEN BEGIN
-      runs += '_' + STRCOMPRESS(nbr,/REMOVE_ALL) + 'run'
-    ENDIF ELSE BEGIN
-      runs += '_' + STRCOMPRESS(nbr,/REMOVE_ALL) + 'runs'
-    ENDELSE
-    column_cl[index]+= runs + (*global).output_prefix
-    index++
-  ENDWHILE
-  
-  xdisplayfile, TEXT=column_cl, $
+  xdisplayfile, TEXT= preview_array,$
     title='Preview of Job(s) to submit',$
     /BLOCK,$
     /EDITABLE
