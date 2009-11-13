@@ -32,17 +32,23 @@
 ;
 ;==============================================================================
 
-PRO activate_widget, Event, uname, status
-  id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
-  WIDGET_CONTROL, id, SENSITIVE=status
-END
+PRO display_tab1_error, MAIN_BASE=main_base, Event=event
 
-;------------------------------------------------------------------------------
-PRO MapBase, EVENT=Event, BASE=base, UNAME=uname, STATUS=status
-  IF (N_ELEMENTS(event) NE 0) THEN BEGIN
-    id = WIDGET_INFO(event.top, FIND_BY_UNAME=uname)
+  ;first, map the base
+  uname = 'tab1_error_base'
+  MapBase, EVENT=Event, BASE=main_base, UNAME=uname, STATUS=1
+  
+  image = READ_PNG('CLoopes_images/format_error.png')
+  uname = 'error_draw'
+  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
+    mode_id = WIDGET_INFO(main_base, $
+      FIND_BY_UNAME=uname)
   ENDIF ELSE BEGIN
-    id = WIDGET_INFO(base,FIND_BY_UNAME=uname)
+    mode_id = WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME=uname)
   ENDELSE
-  WIDGET_CONTROL, id, MAP=status
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, image, 0, 0,/true
+  
 END
