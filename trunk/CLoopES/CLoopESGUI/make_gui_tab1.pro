@@ -88,7 +88,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, title
     UNAME     = 'preview_cl_file_text_field',$
     /SCROLL,$
     /ALL_EVENTS,$
-    ;/TRACKING_EVENTS,$
+    /TRACKING_EVENTS,$
     /WRAP)
     
   row4 = WIDGET_BASE(tab1,$
@@ -197,12 +197,12 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, title
     XSIZE     = 4,$
     YSIZE     = 1,$
     SENSITIVE = 0,$
-    COLUMN_WIDTHS = [100,100,100,1500],$
+    COLUMN_WIDTHS = [80,80,80,1500],$
     /NO_ROW_HEADERS,$
     COLUMN_LABELS = ['Selection 1','Selection 2','Selection 3',$
     'Command Line Preview                                               '+$
     '                                                                   '+$
-    '                                            '],$
+    '                                                                   '],$
     /SCROLL,$
     /RESIZEABLE_COLUMNS,$
     UNAME = 'runs_table')

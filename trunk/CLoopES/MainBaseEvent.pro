@@ -120,18 +120,17 @@ PRO MAIN_BASE_event, Event
     
     ;preview of CL
     WIDGET_INFO(wWidget, FIND_BY_UNAME='preview_cl_file_text_field'): BEGIN
-      ;CATCH, error
-      ;IF (error NE 0) THEN BEGIN
-      ;  CATCH,/CANCEL
-      displayTextRemoved, Event
-    ;determine_cl_text_to_keep_array, Event
-    ;create_cl_array, Event
-    ;remove_output_file_name, Event
-    ;ENDIF ELSE BEGIN
-    ;  IF (event.enter EQ 0) THEN BEGIN ;leaving region
-    ;    cleanup_selection_not_finalized, Event
-    ;  ENDIF
-    ;ENDELSE
+      CATCH, error
+      IF (error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        displayTextRemoved, Event
+        create_cl_array, Event
+        remove_output_file_name, Event
+      ENDIF ELSE BEGIN
+        IF (event.enter EQ 0) THEN BEGIN ;leaving region
+          cleanup_selection_not_finalized, Event
+        ENDIF
+      ENDELSE
     END
     
     ;input text field
