@@ -77,7 +77,6 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_1_replaced_by_clear'): BEGIN
       putValue, Event, 'selection_1_replaced_by', ''
       (*(*global).sequence_field1) = PTR_NEW(0L)
-      ENDCA
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_2_replaced_by_clear'): BEGIN
       putValue, Event, 'selection_2_replaced_by', ''

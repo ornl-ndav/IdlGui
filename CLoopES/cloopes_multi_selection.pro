@@ -94,9 +94,20 @@ PRO Create_step1_big_table, Event
     display_tab1_error, MAIN_BASE=main_base, Event=event, STATUS=error_status
     IF (error_status) THEN RETURN
     
+    cl_array = STRARR(sum/total_fields) ;array of cl strings
+    
+    IF (field1_status) THEN BEGIN ;work on field1
+    
+    ;divide cl at <field1>
+    cl_field1_array = STRSPLIT(cl_with_fields,/  
+    
+    
     
     
   ENDIF ELSE BEGIN ;just 1 field to take into account
+  
+  
+  
   
   ENDELSE
   
