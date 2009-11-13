@@ -33,14 +33,29 @@
 ;==============================================================================
 
 FUNCTION isLooperInputSelected, Event
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME='tab2_use_looper_input')
-RETURN, WIDGET_INFO(id,/BUTTON_SET)
-END 
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='tab2_use_looper_input')
+  RETURN, WIDGET_INFO(id,/BUTTON_SET)
+END
 
 ;------------------------------------------------------------------------------
-FUNCTION isCLoopESconvention, Event 
-id = WIDGET_INFO(Event.top, FIND_BY_UNAME='tab2_convention_tab')
-tab_current = WIDGET_INFO(id, /TAB_CURRENT)
-IF (tab_current EQ 0) THEN RETURN, 1
-RETURN, 0
+FUNCTION isCLoopESconvention, Event
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='tab2_convention_tab')
+  tab_current = WIDGET_INFO(id, /TAB_CURRENT)
+  IF (tab_current EQ 0) THEN RETURN, 1
+  RETURN, 0
 END
+
+;------------------------------------------------------------------------------
+FUNCTION isSelectionButtonActive, Event, BUTTON=button
+
+  uname = ['selection_1_to_replaced',$
+    'selection_2_to_replaced',$
+    'selection_3_to_replaced']
+    
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname[button-1])
+  WIDGET_CONTROL, id, get_value=value
+  
+  IF (STRCOMPRESS(value,/REMOVE_ALL) NE '') THEN RETURN, 1
+  RETURN, 0
+END
+

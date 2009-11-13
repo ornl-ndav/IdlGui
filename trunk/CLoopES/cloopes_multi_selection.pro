@@ -36,17 +36,52 @@ PRO Create_step1_big_table, Event
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
+  error_status = 0 ;by default, everything is fine
+  
   cl_with_fields= (*global).cl_with_fields
   sequence_field1 = (*(*global).sequence_field1)
   sequence_field2 = (*(*global).sequence_field2)
   sequence_field3 = (*(*global).sequence_field3)
   
   sz1 = (size(sequence_field1))(1)
-  sz2 = (size(sequence_field2))(2)
-  sz3 = (size(sequence_field3))(3)
+  sz2 = (size(sequence_field2))(1)
+  sz3 = (size(sequence_field3))(1)
   
+  print, 'sz1: ' + string(sz1)
+  print, 'sz2: ' + string(sz2)
+  print, 'sz3: ' + string(sz3)
   
+  ;check which selection fields have been validated (1:yes, 0:no)
+  field1_status = isSelectionButtonActive(Event, BUTTON=1)
+  field2_status = isSelectionButtonActive(Event, BUTTON=2)
+  field3_status = isSelectionButtonActive(Event, BUTTON=3)
   
+  ;if sum NE 1 then we need to be sure they have the same size
+  total_fields = field1_status+field2_status+field3_status
+  IF (total_fields NE 1) THEN BEGIN
+    sum = 0
+    IF (field1_status) THEN sum += sz1
+    IF (field2_status) THEN sum += sz2
+    IF (field3_status) THEN sum += sz3
+    
+    IF (field1_status) THEN BEGIN
+      IF (sz1 NE sum/total_fields) THEN error_status = 1
+    ENDIF
+    IF (field2_status) THEN BEGIN
+      IF (sz2 NE sum/total_fields) THEN error_status = 1
+    ENDIF
+    IF (field3_status) THEN BEGIN
+      IF (sz3 NE sum/total_fields) THEN error_status = 1
+    ENDIF
+    
+    display_tab1_error, MAIN_BASE=main_base, Event=event, STATUS=error_status
+    IF (error_status) THEN RETURN
+    
+    
+    
+  ENDIF ELSE BEGIN ;just 1 field to take into account
+  
+  ENDELSE
   
 END
 
