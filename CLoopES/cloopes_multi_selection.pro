@@ -39,6 +39,7 @@ PRO Create_step1_big_table, Event
   error_status = 0 ;by default, everything is fine
   
   cl_with_fields= (*global).cl_with_fields
+  
   sequence_field1 = (*(*global).sequence_field1)
   sequence_field2 = (*(*global).sequence_field2)
   sequence_field3 = (*(*global).sequence_field3)
@@ -54,62 +55,117 @@ PRO Create_step1_big_table, Event
   
   ;if sum NE 1 then we need to be sure they have the same size
   total_fields = field1_status+field2_status+field3_status
-  IF (total_fields NE 1) THEN BEGIN
-    sum = 0
-    ;make sure that if the replaced_by is empty (sz=1) we are not adding sum
+  
+  sum = 0
+  ;make sure that if the replaced_by is empty (sz=1) we are not adding sum
+  IF (field1_status) THEN BEGIN
+    IF (sz1 EQ 1) THEN BEGIN
+      IF (sequence_field1[0]NE '') THEN sum += sz1
+    ENDIF ELSE BEGIN
+      sum += sz1
+    ENDELSE
+  ENDIF
+  
+  IF (field2_status) THEN BEGIN
+    IF (sz2 EQ 1) THEN BEGIN
+      IF (sequence_field2[0]NE '') THEN sum += sz2
+    ENDIF ELSE BEGIN
+      sum += sz2
+    ENDELSE
+  ENDIF
+  
+  IF (field3_status) THEN BEGIN
+    IF (sz3 EQ 1) THEN BEGIN
+      IF (sequence_field3[0]NE '') THEN sum += sz3
+    ENDIF ELSE BEGIN
+      sum += sz3
+    ENDELSE
+  ENDIF
+  
+  IF (field1_status) THEN BEGIN
+    IF (sz1 NE sum/total_fields) THEN error_status = 1
+  ENDIF
+  IF (field2_status) THEN BEGIN
+    IF (sz2 NE sum/total_fields) THEN error_status = 1
+  ENDIF
+  IF (field3_status) THEN BEGIN
+    IF (sz3 NE sum/total_fields) THEN error_status = 1
+  ENDIF
+  
+  display_tab1_error, MAIN_BASE=main_base, Event=event, STATUS=error_status
+  IF (error_status) THEN RETURN
+  
+  cl_array = STRARR(sum/total_fields) + cl_with_fields ;array of cl strings
+  IF (field1_status) THEN BEGIN ;work on field1
+    sz = sz1
+    index_sz = 0
+    WHILE (index_sz LT sz) DO BEGIN
+      ;divide cl at <field1>
+      cl_field1_array = STRSPLIT(cl_array[index_sz],'<FIELD#1>',/EXTRACT,/REGEX)
+      new_cl = cl_field1_array[0]
+      new_cl += STRCOMPRESS(sequence_field1[index_sz],/REMOVE_ALL)
+      new_cl += cl_field1_array[1]
+      cl_array[index_sz] = new_cl
+      index_sz++
+    ENDWHILE
+  ENDIF
+  
+  IF (field2_status) THEN BEGIN ;work on field2
+    sz = sz2
+    index_sz = 0
+    WHILE (index_sz LT sz) DO BEGIN
+      ;divide cl at <field1>
+      cl_field2_array = STRSPLIT(cl_array[index_sz],'<FIELD#2>',/EXTRACT,/REGEX)
+      new_cl = cl_field2_array[0]
+      new_cl += STRCOMPRESS(sequence_field2[index_sz],/REMOVE_ALL)
+      new_cl += cl_field2_array[1]
+      cl_array[index_sz] = new_cl
+      index_sz++
+    ENDWHILE
+  ENDIF
+  
+  IF (field3_status) THEN BEGIN ;work on field3
+    sz = sz3
+    index_sz = 0
+    WHILE (index_sz LT sz) DO BEGIN
+      ;divide cl at <field1>
+      cl_field3_array = STRSPLIT(cl_array[index_sz],'<FIELD#3>',/EXTRACT,/REGEX)
+      new_cl = cl_field3_array[0]
+      new_cl += STRCOMPRESS(sequence_field3[index_sz],/REMOVE_ALL)
+      new_cl += cl_field3_array[1]
+      cl_array[index_sz] = new_cl
+      index_sz++
+    ENDWHILE
+  ENDIF
+  
+  ;Create Big table
+  dim1 = 4
+  dim2 = sum/total_fields
+  big_table = STRARR(dim1,dim2)
+  index = 0
+  WHILE (index LE dim2-1) DO BEGIN
     IF (field1_status) THEN BEGIN
-      IF (sz1 EQ 1) THEN BEGIN
-        IF (sequence_field1[0]NE '') THEN sum += sz1
-      ENDIF ELSE BEGIN
-        sum += sz1
-      ENDELSE
-    ENDIF
-    
+      big_table[0,index] = sequence_field1[index]
+    ENDIF ELSE BEGIN
+      big_table[0,index] = ''
+    ENDELSE
     IF (field2_status) THEN BEGIN
-      IF (sz2 EQ 1) THEN BEGIN
-        IF (sequence_field2[0]NE '') THEN sum += sz2
-      ENDIF ELSE BEGIN
-        sum += sz2
-      ENDELSE
-    ENDIF
-    
+      big_table[1,index] = sequence_field2[index]
+    ENDIF ELSE BEGIN
+      big_table[1,index] = ''
+    ENDELSE
     IF (field3_status) THEN BEGIN
-      IF (sz3 EQ 1) THEN BEGIN
-        IF (sequence_field3[0]NE '') THEN sum += sz3
-      ENDIF ELSE BEGIN
-        sum += sz3
-      ENDELSE
-    ENDIF
-    
-    IF (field1_status) THEN BEGIN
-      IF (sz1 NE sum/total_fields) THEN error_status = 1
-    ENDIF
-    IF (field2_status) THEN BEGIN
-      IF (sz2 NE sum/total_fields) THEN error_status = 1
-    ENDIF
-    IF (field3_status) THEN BEGIN
-      IF (sz3 NE sum/total_fields) THEN error_status = 1
-    ENDIF
-    
-    display_tab1_error, MAIN_BASE=main_base, Event=event, STATUS=error_status
-    IF (error_status) THEN RETURN
-    
-    cl_array = STRARR(sum/total_fields) ;array of cl strings
-    
-    IF (field1_status) THEN BEGIN ;work on field1
-    
-    ;divide cl at <field1>
-    cl_field1_array = STRSPLIT(cl_with_fields,/  
-    
-    
-    
-    
-  ENDIF ELSE BEGIN ;just 1 field to take into account
+      big_table[2,index] = sequence_field3[index]
+    ENDIF ELSE BEGIN
+      big_table[2,index] = ''
+    ENDELSE
+    big_table[3,index] = cL_array[index]
+    index++
+  ENDWHILE
   
-  
-  
-  
-  ENDELSE
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='runs_table')
+  WIDGET_CONTROL, id, TABLE_YSIZE = dim2
+  putValue, Event, 'runs_table', big_table
   
 END
 
