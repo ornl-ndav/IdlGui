@@ -91,27 +91,20 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_1_replaced_by'): BEGIN
       determine_replaced_by_sequence, Event
       Create_step1_big_table, Event
+      check_status_of_step1, Event
     END
     ;selection to replace #2
     WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_2_replaced_by'): BEGIN
       determine_replaced_by_sequence, Event
       Create_step1_big_table, Event
+      check_status_of_step1, Event
     END
     ;selection to replace #3
     WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_3_replaced_by'): BEGIN
       determine_replaced_by_sequence, Event
       Create_step1_big_table, Event
+      check_status_of_step1, Event
     END
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     ;Load Command Line File Button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='load_cl_file_button'): BEGIN
