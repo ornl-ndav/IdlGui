@@ -85,3 +85,40 @@ FUNCTION getSelectionButtonValue, Event
   return, -1
 END
 
+;------------------------------------------------------------------------------
+FUNCTION get_cl_with_fields, Event
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  ;string to removed from CL file
+  uname = ['selection_1_to_replaced',$
+    'selection_2_to_replaced',$
+    'selection_3_to_replaced']
+    
+  text_to_remove = STRARR(3)
+  nbr_text_part_to_keep = 1 ;array of part of cl to keep
+  FOR i=0,2 DO BEGIN
+    text_to_remove[i] = getTextFieldValue(Event,uname[i])
+    IF (text_to_remove[i] NE '') THEN nbr_text_part_to_keep++
+  ENDFOR
+  
+  ;get array of position where the string to remove was found first
+  cl = getTextFieldValue(Event,'preview_cl_file_text_field')
+  index_start = INTARR(3)
+  FOR i=0,2 DO BEGIN
+    IF (STRCOMPRESS(text_to_remove[i],/REMOVE_ALL) NE '' AND $
+      text_to_remove[i] NE (*global).selection_in_progress) THEN BEGIN
+      index_start[i] = STRPOS(cl,text_to_remove[i])
+      sz_text_to_remove = STRLEN(text_to_remove[i])
+      start_pos = STRPOS(cl, text_to_remove[i])
+      part1 = STRMID(cl, 0, start_pos)
+      part2 = STRMID(cl, start_pos + sz_text_to_remove, STRLEN(cl))
+      new_cl = part1[0] + '<FIELD#' + STRCOMPRESS(i+1,/REMOVE_ALL)
+      new_cl += '>' + part2[0]
+      cl = new_cl
+    ENDIF
+  ENDFOR
+  
+  RETURN, cl
+  
+END
