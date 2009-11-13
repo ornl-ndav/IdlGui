@@ -186,6 +186,8 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, title
     
   recap_label = WIDGET_LABEL(tab1,$
     /ALIGN_LEFT,$
+    UNAME = 'runs_table_label',$
+    SENSITIVE = 0,$
     VALUE = '                  R E C A P   T A B L E ')
     
   ;Table
@@ -194,6 +196,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, title
     SCR_YSIZE = 410,$
     XSIZE     = 4,$
     YSIZE     = 1,$
+    SENSITIVE = 0,$
     COLUMN_WIDTHS = [100,100,100,1500],$
     /NO_ROW_HEADERS,$
     COLUMN_LABELS = ['Selection 1','Selection 2','Selection 3',$

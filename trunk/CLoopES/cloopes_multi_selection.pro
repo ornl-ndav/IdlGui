@@ -47,10 +47,6 @@ PRO Create_step1_big_table, Event
   sz2 = (size(sequence_field2))(1)
   sz3 = (size(sequence_field3))(1)
   
-  print, 'sz1: ' + string(sz1)
-  print, 'sz2: ' + string(sz2)
-  print, 'sz3: ' + string(sz3)
-  
   ;check which selection fields have been validated (1:yes, 0:no)
   field1_status = isSelectionButtonActive(Event, BUTTON=1)
   field2_status = isSelectionButtonActive(Event, BUTTON=2)
