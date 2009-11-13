@@ -57,13 +57,10 @@ FUNCTION MoveToEndOutputFlag, Event, cl_text
       
       IF (N_ELEMENTS(string_to_keep) GT 1) THEN BEGIN ;output path was not last
       
-        ;part2_2_parsed = split_string(part2_parsed[1], PATTERN=' ')
         part2_2_parsed = split_string(string_to_keep[1], PATTERN=' ')
         sz = N_ELEMENTS(part2_2_parsed)
         IF (sz GT 1) THEN BEGIN ;join all the other part after 'output=....'
-          ;new_part = STRJOIN(part2_2_parsed[1:sz-1],' ')
           new_part = STRJOIN(string_to_keep[1:sz-1],' ')
-          ;CL_text_array[1] = part2_parsed[0] + ' ' + new_part
           end_string  = string_to_keep[0] + ' ' + new_part
         ENDIF ELSE BEGIN
           end_string = ''
@@ -204,6 +201,31 @@ PRO Create_step1_big_table, Event
   ;Create Big table
   dim1 = 4
   dim2 = sum/total_fields
+  
+  ;get the first sequence not empty
+  IF (field1_status) THEN BEGIN
+    sequence = sequence_field1
+  ENDIF ELSE BEGIN
+    IF (field2_status) THEN BEGIN
+      sequence = sequence_field2
+    ENDIF ELSE BEGIN
+      sequence = sequence_field3
+    ENDELSE
+  ENDELSE
+  
+  index = 0
+  WHILE (index LT dim2) DO BEGIN
+    runs_array = STRSPLIT(sequence[index],',',/EXTRACT,count=nbr)
+    runs = STRCOMPRESS(runs_array[0],/REMOVE_ALL)
+    IF (nbr EQ 1) THEN BEGIN
+      runs += '_' + STRCOMPRESS(nbr,/REMOVE_ALL) + 'run'
+    ENDIF ELSE BEGIN
+      runs += '_' + STRCOMPRESS(nbr,/REMOVE_ALL) + 'runs'
+    ENDELSE
+    cl_array[index]+= runs + (*global).output_prefix
+    index++
+  ENDWHILE
+  
   big_table = STRARR(dim1,dim2)
   index = 0
   WHILE (index LE dim2-1) DO BEGIN
