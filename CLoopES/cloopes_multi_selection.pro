@@ -174,7 +174,7 @@ PRO determine_replaced_by_sequence, Event
   list_selection2 = getListFromSelection(Event,SELECTION=2)
   list_selection3 = getListFromSelection(Event,SELECTION=3)
   
-  
+  cl_with_fields = get_cl_with_fields(Event)
   
   
 END
