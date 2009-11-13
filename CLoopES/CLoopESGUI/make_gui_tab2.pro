@@ -70,10 +70,10 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
   label = WIDGET_LABEL(row_a_1,$
     VALUE = 'File Name:')
     
-  tab = WIDGET_TAB(row_a_1,$ ;.....................................  
-  UNAME = 'tab2_convention_tab')
-  
-  ;internal_base
+  tab = WIDGET_TAB(row_a_1,$ ;TABLE, TABLE, TABLE, TABLE, TABLE, TABLE, TABLE
+    UNAME = 'tab2_convention_tab')
+    
+  ;internal_base ;base1 -------------------------------------------------------
   inter_base = WIDGET_BASE(tab,$
     /ROW,$
     TITLE = 'CLoopES convention',$
@@ -87,13 +87,6 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     
   label = WIDGET_LABEL(inter_base,$
     VALUE = '_<User_Defined>_run[s].')
-  ;
-  ;  text = WIDGET_TEXT(inter_base, $
-  ;    VALUE = 'run',$
-  ;    /EDITABLE)
-  ;
-  ;    label = WIDGET_LABEL(inter_base,$
-  ;    VALUE = '.')
     
   text = WIDGET_TEXT(inter_base,$
     VALUE = 'dat',$
@@ -101,7 +94,7 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     /EDITABLE,$
     XSIZE = 10)
     
-  ;internal_base
+  ;internal_base;base2 -------------------------------------------------------
   inter_base = WIDGET_BASE(tab,$
     /ROW,$
     TITLE = 'User convention',$
@@ -115,19 +108,42 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     
   label = WIDGET_LABEL(inter_base,$
     VALUE = '_<User_Defined>.')
-  ;
-  ;  text = WIDGET_TEXT(inter_base, $
-  ;    VALUE = 'run',$
-  ;    /EDITABLE)
-  ;
-  ;    label = WIDGET_LABEL(inter_base,$
-  ;    VALUE = '.')
     
   text = WIDGET_TEXT(inter_base,$
     VALUE = 'dat',$
     UNAME = 'tab2_user_manual_input_prefix_name',$
     /EDITABLE,$
     XSIZE = 10)
+    
+  ;internal_base;base3 -------------------------------------------------------
+  inter_base = WIDGET_BASE(tab,$
+    /ROW,$
+    TITLE = "DAD's convention",$
+    FRAME = 1)
+    
+  text = WIDGET_TEXT(inter_base,$
+    VALUE = 'BASIS',$
+    UNAME = 'tab3_manual_input_suffix_name',$
+    /EDITABLE,$
+    XSIZE = 7)
+    
+  label = WIDGET_LABEL(inter_base,$
+    VALUE = '_<User_Defined>_')
+    
+  text = WIDGET_TEXT(inter_base,$
+    VALUE = 'DIVIDED',$
+    UNAME = 'tab3_manual_input_part2',$
+    /EDITABLE,$
+    XSIZE = 8)
+    
+  label = WIDGET_LABEL(inter_base,$
+    VALUE = '_run[s].')
+    
+  text = WIDGET_TEXT(inter_base,$
+    VALUE = 'dat',$
+    UNAME = 'tab2_manual_input_prefix_name',$
+    /EDITABLE,$
+    XSIZE = 3)
     
   ;-----------------------------------------------------
     
