@@ -66,9 +66,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;DEBUGGING
   sDEBUGGING = { tab: {main_tab: 0},$  ;0:step1, 1:logBook
 ;    path: '~/results/',$ ;path to CL file
-    path: '~/IDLWorkspace/CLoopES/',$
+    path: '~/IDLWorkspace/CLoopES 1.2/',$
     input_text: '639-641'}
-  ; input_text: '1-2,4,[10,12-14,16],20,21,24-28,[30-35]'}
   ;******************************************************************************
   ;******************************************************************************
     
@@ -180,6 +179,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   ;send message to log current run of application
   logger, APPLICATION=application, VERSION=version, UCAMS=ucams
+  
+  ;display_tab1_error, MAIN_BASE=main_base
   
 END
 

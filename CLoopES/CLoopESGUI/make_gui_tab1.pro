@@ -49,6 +49,22 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, title
     YOFFSET = 265,$
     VALUE   = '(Ex: 3741-3749,[3750,3760-3763],3800)')
     
+  error_base = WIDGET_BASE(Base,$
+  XOFFSET = 160,$
+  YOFFSET = 300,$
+  FRAME = 5,$
+  /COLUMN,$
+  MAP = 0,$
+  UNAME = 'tab1_error_base')
+  
+  error = WIDGET_DRAW(error_base,$
+  SCR_XSIZE = 419,$
+  SCR_YSIZE = 316,$
+  UNAME = 'error_draw')
+  label = WIDGET_LABEL(error_base,$
+  FRAME = 1,$
+  VALUE = '>  > >> Make sure the new list of runs have the same size! << <  <')
+
   tab1 = WIDGET_BASE(Base,/COLUMN)
   
   row1 = WIDGET_BASE(tab1,/ROW)

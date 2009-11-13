@@ -51,6 +51,7 @@ cd, CurrentFolder
 .run cloopes_load_save_temperature.pro
 .run cloopes_save_temperature_base.pro
 .run cloopes_load_temperature_base.pro
+.run cloopes_display_images.pro
 
 ;main functions
 .run MainBaseEvent.pro
