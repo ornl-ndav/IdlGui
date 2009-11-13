@@ -141,3 +141,11 @@ FUNCTION getSequence, left, right
   ENDELSE
 END
 
+;------------------------------------------------------------------------------
+;0 for EScloop, 1 for user, 2 for DAD's convention
+FUNCTION getOutputconvention, Event
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='tab2_convention_tab')
+  tab_current = WIDGET_INFO(id, /TAB_CURRENT)
+  RETURN, tab_current
+END
+

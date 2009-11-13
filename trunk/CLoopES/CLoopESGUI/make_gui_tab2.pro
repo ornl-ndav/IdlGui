@@ -141,7 +141,7 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     
   text = WIDGET_TEXT(inter_base,$
     VALUE = 'dat',$
-    UNAME = 'tab2_manual_input_prefix_name',$
+    UNAME = 'tab3_manual_input_prefix_name',$
     /EDITABLE,$
     XSIZE = 3)
     
