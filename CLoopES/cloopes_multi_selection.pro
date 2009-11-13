@@ -56,9 +56,30 @@ PRO Create_step1_big_table, Event
   total_fields = field1_status+field2_status+field3_status
   IF (total_fields NE 1) THEN BEGIN
     sum = 0
-    IF (field1_status) THEN sum += sz1
-    IF (field2_status) THEN sum += sz2
-    IF (field3_status) THEN sum += sz3
+    ;make sure that if the replaced_by is empty (sz=1) we are not adding sum
+    IF (field1_status) THEN BEGIN
+      IF (sz1 EQ 1) THEN BEGIN
+        IF (sequence_field1[0]NE '') THEN sum += sz1
+      ENDIF ELSE BEGIN
+        sum += sz1
+      ENDELSE
+    ENDIF
+    
+    IF (field2_status) THEN BEGIN
+      IF (sz2 EQ 1) THEN BEGIN
+        IF (sequence_field2[0]NE '') THEN sum += sz2
+      ENDIF ELSE BEGIN
+        sum += sz2
+      ENDELSE
+    ENDIF
+    
+    IF (field3_status) THEN BEGIN
+      IF (sz3 EQ 1) THEN BEGIN
+        IF (sequence_field3[0]NE '') THEN sum += sz3
+      ENDIF ELSE BEGIN
+        sum += sz3
+      ENDELSE
+    ENDIF
     
     IF (field1_status) THEN BEGIN
       IF (sz1 NE sum/total_fields) THEN error_status = 1
