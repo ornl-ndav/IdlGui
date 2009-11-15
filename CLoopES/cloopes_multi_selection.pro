@@ -49,21 +49,21 @@ FUNCTION MoveToEndOutputFlag, Event, cl_text
     
       ;keep text between '--output=' and next space
       string_to_keep = split_string(part2_parsed[1],PATTERN=' ')
-      
+
       ;path = FILE_DIRNAME(part2_parsed[1])
       path = FILE_DIRNAME(string_to_keep[0])
       path += '/'
       (*global).step1_output_path = path
       
-      IF (N_ELEMENTS(string_to_keep) GT 1) THEN BEGIN ;output path was not last
+      sz = N_ELEMENTS(string_to_keep)
       
-        part2_2_parsed = split_string(string_to_keep[1], PATTERN=' ')
-        sz = N_ELEMENTS(part2_2_parsed)
-        IF (sz GT 1) THEN BEGIN ;join all the other part after 'output=....'
-          new_part = STRJOIN(string_to_keep[1:sz-1],' ')
+      IF (sz GE 2) THEN BEGIN ;output path was not last
+      
+        IF (sz GT 2) THEN BEGIN ;join all the other part after 'output=....'
+          new_part = STRJOIN(string_to_keep[2:sz-1],' ')
           end_string  = string_to_keep[0] + ' ' + new_part
         ENDIF ELSE BEGIN
-          end_string = ''
+          end_string = string_to_keep[1]
         ENDELSE
         cl_text = part2_parsed[0] + ' ' + end_string + $
           ' --output=' + path + (*global).output_suffix
@@ -114,7 +114,7 @@ PRO Create_step1_big_table, Event
   field3_status = isSelectionButtonActive(Event, BUTTON=3)
   
   ;if sum NE 1 then we need to be sure they have the same size
-  total_fields = field1_status+field2_status+field3_status
+  total_fields = field1_status + field2_status + field3_status
   
   sum = 0
   ;make sure that if the replaced_by is empty (sz=1) we are not adding sum
@@ -164,7 +164,9 @@ PRO Create_step1_big_table, Event
       cl_field1_array = STRSPLIT(cl_array[index_sz],'<FIELD#1>',/EXTRACT,/REGEX)
       new_cl = cl_field1_array[0]
       new_cl += STRCOMPRESS(sequence_field1[index_sz],/REMOVE_ALL)
-      new_cl += cl_field1_array[1]
+      ;IF (N_ELEMENTS(cl_fiedl1_array) GT 1) THEN BEGIN
+        new_cl += cl_field1_array[1]
+      ;ENDIF
       cl_array[index_sz] = new_cl
       index_sz++
     ENDWHILE
@@ -178,7 +180,9 @@ PRO Create_step1_big_table, Event
       cl_field2_array = STRSPLIT(cl_array[index_sz],'<FIELD#2>',/EXTRACT,/REGEX)
       new_cl = cl_field2_array[0]
       new_cl += STRCOMPRESS(sequence_field2[index_sz],/REMOVE_ALL)
-      new_cl += cl_field2_array[1]
+      ;IF (N_ELEMENTS(cl_fiedl2_array) GT 1) THEN BEGIN
+        new_cl += cl_field2_array[1]
+      ;ENDIF
       cl_array[index_sz] = new_cl
       index_sz++
     ENDWHILE
@@ -192,7 +196,9 @@ PRO Create_step1_big_table, Event
       cl_field3_array = STRSPLIT(cl_array[index_sz],'<FIELD#3>',/EXTRACT,/REGEX)
       new_cl = cl_field3_array[0]
       new_cl += STRCOMPRESS(sequence_field3[index_sz],/REMOVE_ALL)
-      new_cl += cl_field3_array[1]
+     ; IF (N_ELEMENTS(cl_fiedl3_array) GT 1) THEN BEGIN
+        new_cl += cl_field3_array[1]
+     ; ENDIF
       cl_array[index_sz] = new_cl
       index_sz++
     ENDWHILE
