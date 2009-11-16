@@ -806,7 +806,7 @@ function ReductionCmd::Generate
     IF (self.DOS EQ 1) THEN BEGIN
       IF (STRLEN(self.DebyeWaller) GE 1) THEN $
         cmd[i] += " --pdos-Q --debye-waller=" + self.DebyeWaller + "," + $
-        self.Error_DebyeWaller
+        (self.Error_DebyeWaller ? self.Error_DebyeWaller : '0.0')
     ENDIF
     
     IF (self.qvector EQ 1) THEN cmd[i] += " --qmesh"
