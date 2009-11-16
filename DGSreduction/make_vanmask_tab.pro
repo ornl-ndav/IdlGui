@@ -173,6 +173,8 @@ PRO make_VanMask_Tab, baseWidget, dgsn_cmd
   pc_button = WIDGET_BUTTON(normOptionsBase, VALUE='Proton Charge Normalisation', $
         UVALUE='DGSN_PC-NORM', UNAME='DGSN_PC-NORM')
 
+  normButton = Widget_Button(normOptionsBase, Value='White Beam Normalisation', UVALUE='DGSN_WHITE_NORM', $
+    UNAME='DGSN_WHITE_NORM')
   
   ; We also set the default value to be 1, which is the same as in reductioncmd::init
   monitorNumberID = CW_FIELD(normOptionsBaseColumn1, TITLE="Monitor Number:", UVALUE="DGSN_USMON", $
@@ -305,8 +307,7 @@ PRO make_VanMask_Tab, baseWidget, dgsn_cmd
   ; Column #2
   tofButton = Widget_Button(outputBaseCol2, Value='Combined Time-of-Flight', UVALUE='DGSN_MAKE_COMBINED_TOF', $
     UNAME='DGSN_MAKE_COMBINED_TOF')
-  normButton = Widget_Button(outputBaseCol2, Value='White Beam Normalisation', UVALUE='DGSN_WHITE_NORM', $
-    UNAME='DGSN_WHITE_NORM')
+
   waveButton = Widget_Button(outputBaseCol2, Value='Combined Wavelength', UVALUE='DGSN_MAKE_COMBINED_WAVE', $
     UNAME='DGSN_MAKE_COMBINED_WAVE')
   tibButton = WIDGET_BUTTON(outputBaseCol2, VALUE='TIB constant per pixels', UVALUE='DGSN_DUMP_TIB', $
