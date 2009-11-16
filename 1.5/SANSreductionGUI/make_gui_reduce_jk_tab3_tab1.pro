@@ -43,9 +43,153 @@ PRO make_gui_reduce_jk_tab3_tab1, advanced_base, tab_size, tab_title
     SCR_YSIZE = tab_size[3],$
     TITLE     = tab_title)
     
-print, tab_size[2]
-  
-  
+  base = WIDGET_BASE(BaseTab,$
+    /COLUMN)
+    
+  row1 = WIDGET_BASE(base,$
+    /ROW)
+  yesno = WIDGET_BASE(row1,$
+    /ROW,$
+    /EXCLUSIVE)
+  yes = WIDGET_BUTTON(yesno,$
+    VALUE = 'Yes')
+  no = WIDGET_BUTTON(yesno,$
+    VALUE = 'no')
+  WIDGET_CONTROL, yes, /SET_BUTTON
+  label = WIDGET_LABEL(row1,$
+    VALUE = 'Normalize data (divide I(Q) by total monitor counts)')
+    
+  space = WIDGET_LABEL(base,$
+    VALUE = ' ')
+    
+  ;distances
+  frame1 = WIDGET_BASE(base,$
+    /COLUMN,$
+    FRAME = 1)
+  space_value = '        '
+  row1 = WIDGET_BASE(frame1,$
+    /ROW)
+  space = WIDGET_LABEL(row1,$
+    VALUE = space_value)
+  label = WIDGET_LABEL(row1,$
+    VALUE = 'Sample - Detector  ')
+  value = WIDGET_TEXT(row1,$
+    VALUE = '',$
+    XSIZE = 5)
+  label = WIDGET_LABEL(row1,$
+    VALUE = 'm')
+  row2 = WIDGET_BASE(frame1,$
+    /ROW)
+  space = WIDGET_LABEL(row2,$
+    VALUE = space_value)
+  label = WIDGET_LABEL(row2,$
+    VALUE = 'Sample - Source    ')
+  value = WIDGET_TEXT(row2,$
+    VALUE = '14.0',$
+    XSIZE = 5)
+  label = WIDGET_LABEL(row2,$
+    VALUE = 'm')
+  row3 = WIDGET_BASE(frame1,$
+    /ROW)
+  space = WIDGET_LABEL(row3,$
+    VALUE = space_value)
+  label = WIDGET_LABEL(row3,$
+    VALUE = 'Monitor - Detector ')
+  value = WIDGET_TEXT(row3,$
+    VALUE = '10.001',$
+    XSIZE = 5)
+  label = WIDGET_LABEL(row3,$
+    VALUE = 'm')
     
     
+  space = WIDGET_LABEL(base,$
+    VALUE = ' ')
+    
+  ;Pixels
+  frame1 = WIDGET_BASE(base,$
+    /COLUMN,$
+    FRAME = 1)
+  space_value = '        '
+  row1 = WIDGET_BASE(frame1,$
+    /ROW)
+  space = WIDGET_LABEL(row1,$
+    VALUE = space_value)
+  label = WIDGET_LABEL(row1,$
+    VALUE = 'Number of pixels in X direction ')
+  value = WIDGET_TEXT(row1,$
+    VALUE = '192',$
+    XSIZE = 3)
+  row2 = WIDGET_BASE(frame1,$
+    /ROW)
+  space = WIDGET_LABEL(row2,$
+    VALUE = space_value)
+  label = WIDGET_LABEL(row2,$
+    VALUE = 'Number of pixels in Y direction ')
+  value = WIDGET_TEXT(row2,$
+    VALUE = '256',$
+    XSIZE = 3)
+  row3 = WIDGET_BASE(frame1,$
+    /ROW)
+  space = WIDGET_LABEL(row3,$
+    VALUE = space_value)
+  label = WIDGET_LABEL(row3,$
+    VALUE = 'Detector pixel size in X direction ')
+  value = WIDGET_TEXT(row3,$
+    VALUE = '5.5',$
+    XSIZE = 7)
+  label = WIDGET_LABEL(row3,$
+    VALUE = 'mm')
+  row4 = WIDGET_BASE(frame1,$
+    /ROW)
+  space = WIDGET_LABEL(row4,$
+    VALUE = space_value)
+  label = WIDGET_LABEL(row4,$
+    VALUE = 'Detector pixel size in Y direction ')
+  value = WIDGET_TEXT(row4,$
+    VALUE = '4.0467',$
+    XSIZE = 7)
+  label = WIDGET_LABEL(row4,$
+    VALUE = 'mm')
+    
+  ;Spectrum center
+  frame3 = WIDGET_BASE(base,$
+  FRAME = 1,$
+  /COLUMN)
+  row1 = WIDGET_BASE(frame3,$
+    /ROW)
+  yesno = WIDGET_BASE(row1,$
+    /ROW,$
+    /EXCLUSIVE)
+  yes = WIDGET_BUTTON(yesno,$
+    VALUE = 'Yes')
+  no = WIDGET_BUTTON(yesno,$
+    VALUE = 'no')
+  WIDGET_CONTROL, yes, /SET_BUTTON
+  label = WIDGET_LABEL(row1,$
+    VALUE = 'Auto find Spectrum center')
+  space_value = '        '
+  row1 = WIDGET_BASE(frame3,$
+    /ROW)
+  space = WIDGET_LABEL(row1,$
+    VALUE = space_value)
+  label = WIDGET_LABEL(row1,$
+    VALUE = 'Spectrum X center ')
+  value = WIDGET_TEXT(row1,$
+    VALUE = '',$
+    XSIZE = 5)
+  label = WIDGET_LABEL(row1,$
+    VALUE = 'pixels')
+  row2 = WIDGET_BASE(frame3,$
+    /ROW)
+  space = WIDGET_LABEL(row2,$
+    VALUE = space_value)
+  label = WIDGET_LABEL(row2,$
+    VALUE = 'Spectrum Y center ')
+  value = WIDGET_TEXT(row2,$
+    VALUE = '',$
+    XSIZE = 5)
+  label = WIDGET_LABEL(row2,$
+    VALUE = 'pixels')
+  
+  
 END
