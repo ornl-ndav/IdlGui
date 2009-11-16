@@ -32,34 +32,20 @@
 ;
 ;==============================================================================
 
-PRO make_gui_reduce_jk_tab3, REDUCE_TAB, tab_size, tab_title
+PRO make_gui_reduce_jk_tab3_tab2, advanced_base, tab_size, tab_title
 
   ;= Build Widgets ==============================================================
-  BaseTab = WIDGET_BASE(REDUCE_TAB,$
-    UNAME     = 'reduce_jk_tab3_base_uname',$
+  BaseTab = WIDGET_BASE(advanced_base,$
+    UNAME     = 'reduce_jk_tab3_tab1_base_uname',$
     XOFFSET   = tab_size[0],$
     YOFFSET   = tab_size[1],$
     SCR_XSIZE = tab_size[2],$
     SCR_YSIZE = tab_size[3],$
     TITLE     = tab_title)
     
-  base = WIDGET_BASE(BaseTab,$
-    /BASE_ALIGN_CENTER,$
-    SCR_XSIZE = tab_size[2],$
-    /COLUMN)
-    
-  advanced_tab = WIDGET_TAB(base,$
-    LOCATION  = 0,$
-    XOFFSET   = 0,$
-    YOFFSET   = 0,$
-    SCR_XSIZE = tab_size[2]-50,$
-    SCR_YSIZE = tab_size[3]-30,$
-    SENSITIVE = 1)
-    
-  ;design of Part1
-  make_gui_reduce_jk_tab3_tab1, advanced_tab, tab_size, ' PART 1 '
+
   
-  ;design of Part2
-  make_gui_reduce_jk_tab3_tab2, advanced_tab, tab_size, ' PART 2 '
   
+    
+    
 END
