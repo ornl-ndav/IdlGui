@@ -32,6 +32,9 @@ cd, CurrentFolder + '/SANSreductionGUI/'
 .run make_gui_reduce_tab1.pro
 .run make_gui_reduce_tab2.pro
 .run make_gui_reduce_tab3.pro
+.run make_gui_reduce_jk_tab1.pro
+.run make_gui_reduce_jk_tab2.pro
+.run make_gui_reduce_jk_tab3.pro
 .run make_gui_plot.pro
 .run make_gui_plot_tab_fitting.pro
 .run make_gui_log_book.pro
