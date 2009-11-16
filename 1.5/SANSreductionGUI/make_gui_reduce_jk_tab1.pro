@@ -34,13 +34,84 @@
 
 PRO make_gui_reduce_jk_tab1, REDUCE_TAB, tab_size, tab_title
 
-;= Build Widgets ==============================================================
-BaseTab = WIDGET_BASE(REDUCE_TAB,$
-                      UNAME     = 'reduce_jk_tab1_base_uname',$
-                      XOFFSET   = tab_size[0],$
-                      YOFFSET   = tab_size[1],$
-                      SCR_XSIZE = tab_size[2],$
-                      SCR_YSIZE = tab_size[3],$
-                      TITLE     = tab_title)
+  ;= Build Widgets ==============================================================
+  BaseTab = WIDGET_BASE(REDUCE_TAB,$
+    UNAME     = 'reduce_jk_tab1_base_uname',$
+    XOFFSET   = tab_size[0],$
+    YOFFSET   = tab_size[1],$
+    SCR_XSIZE = tab_size[2],$
+    SCR_YSIZE = tab_size[3],$
+    TITLE     = tab_title)
+    
+  base = WIDGET_BASE(BaseTab,$
+  /BASE_ALIGN_CENTER,$
+  SCR_XSIZE = tab_size[2],$
+    /COLUMN)
 
+  ;row1
+  row1 = WIDGET_BASE(base,$
+  /ROW,$
+  /EXCLUSIVE)
+  button1 = WIDGET_BUTTON(row1,$
+  VALUE = 'SAMPLE',$
+  UNAME = 'reduce_jk_tab1_sample_button')
+  button2 = WIDGET_BUTTON(row1,$
+  VALUE = 'BUFFER',$
+  UNAME = 'reduce_jk_tab1_buffer_button')
+  button3 = WIDGET_BUTTON(row1,$
+  VALUE = 'BACKGROUND',$
+  UNAME = 'reduce_jk_tab1_background_button')
+  WIDGET_CONTROL, button1, /SET_BUTTON
+    
+  space = WIDGET_LABEL(base,$
+  VALUE = ' ')
+
+  row2 = WIDGET_BASE(base,$
+  /ROW,$
+  /BASE_ALIGN_CENTER)
+  label = WIDGET_LABEL(row2,$
+  VALUE = 'Run number:')
+  value = WIDGET_TEXT(row2,$
+  VALUE = '',$
+  XSIZE = 5,$
+  YSIZE = 1,$
+  /EDITABLE,$
+  UNAME = 'reduce_jk_tab1_run_number')
+    
+  label = WIDGET_LABEL(row2,$
+  VALUE = '     OR     ')
+  
+  row2_col2 = WIDGET_BASE(row2,$
+  /COLUMN)
+  row2_col2_row1 = WIDGET_BASE(row2_col2,$
+  /COLUMN,$
+  FRAME=1)
+  row2_col2_row1_row1 = WIDGET_LABEL(row2_col2_row1,$
+  VALUE='')
+  row2_col2_row1_row2 = WIDGET_BASE(row2_col2_row1,$
+  /ROW)
+  button = WIDGET_BUTTON(row2_col2_row1_row2,$
+  VALUE = 'BROWSE ...')
+  text = WIDGET_TEXT(row2_col2_row1_row2,$
+  VALUE = '',$
+  XSIZE = 50)
+  
+  space = WIDGET_LABEL(row2_col2,$
+  VALUE = ' ')
+  
+  row2_col2_row2 = WIDGET_BASE(row2_col2,$
+  /COLUMN,$
+  FRAME=1)
+  row2_col2_row2_row1 = WIDGET_LABEL(row2_col2_row2,$
+  VALUE='')
+  row2_col2_row2_row2 = WIDGET_BASE(row2_col2_row2,$
+  /ROW)
+  button = WIDGET_BUTTON(row2_col2_row2_row2,$
+  VALUE = 'BROWSE ...')
+  text = WIDGET_TEXT(row2_col2_row2_row2,$
+  VALUE = '',$
+  XSIZE = 50)
+    
+    
+    
 END
