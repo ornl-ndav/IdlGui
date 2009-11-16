@@ -43,4 +43,52 @@ PRO make_gui_reduce_jk_tab2, REDUCE_TAB, tab_size, tab_title
     SCR_YSIZE = tab_size[3],$
     TITLE     = tab_title)
        
+  base = WIDGET_BASE(BaseTab,$
+  /BASE_ALIGN_CENTER,$
+  SCR_XSIZE = tab_size[2],$
+    /COLUMN)
+       
+ row1 = WIDGET_BASE(base,$
+ /ROW)
+ label = WIDGET_LABEL(row1,$
+ VALUE = 'Root name of output file: ')
+ value = WIDGET_TEXT(row1,$
+ VALUE = ' ',$
+ XSIZE = 40,$
+ /EDITABLE)
+ label = WIDGET_LABEL(row1,$
+ VALUE = '(no extension)')
+ 
+ ;space
+ space = WIDGET_LABEL(base,$
+ VALUE = ' ')
+ 
+ row2 = WIDGET_BASE(base,$
+ /NONEXCLUSIVE)
+ output1 = WIDGET_BUTTON(row2,$
+ VALUE = 'Iq: I(Q)')
+ output2 = WIDGET_BUTTON(row2,$
+ VALUE = 'IvQxQy: 2D I(Qx,Qy)')
+ output3 = WIDGET_BUTTON(row2,$
+ VALUE = 'IvXY: 2D Counts(x,y) integrated over TOF')
+ output4 = WIDGET_BUTTON(row2,$
+ VALUE = 'tof2D: 2D counts(x,y) for each TOF slice')
+ output5 = WIDGET_BUTTON(row2,$
+ VALUE = 'tofIq: I(Q) for each time bin')
+ output6 = WIDGET_BUTTON(row2,$
+ VALUE = 'IvTof: Counts vs TOF')
+ output7 = WIDGET_BUTTON(row2,$
+ VALUE = 'IvWl: Counts vs Wavelength')
+ output9 = WIDGET_BUTTON(row2,$
+ VALUE = 'TvsTof: Transmission vs TOF')
+ output10 = WIDGET_BUTTON(row2,$
+ VALUE = 'TvsWl: Transmsission vs Wavelength')
+ output11 = WIDGET_BUTTON(row2,$
+ VALUE = 'MvsTof: Monitor vs TOF')
+ output12 = WIDGET_BUTTON(row2,$
+ VALUE = 'MvsWl: Monitor vs Wavelength')
+ WIDGET_CONTROL, output1, /SET_BUTTON
+       
+       
+       
 END
