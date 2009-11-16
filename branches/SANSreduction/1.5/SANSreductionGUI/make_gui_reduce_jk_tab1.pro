@@ -43,6 +43,20 @@ PRO make_gui_reduce_jk_tab1, REDUCE_TAB, tab_size, tab_title
     SCR_YSIZE = tab_size[3],$
     TITLE     = tab_title)
     
+   xoff1 = 425
+   yoff1 = 55
+   event_label = WIDGET_LABEL(BaseTab,$
+   XOFFSET = xoff1,$
+   YOFFSET = yoff1,$
+   VALUE = 'Event File') 
+
+  yoff2 = yoff1 + 77
+   monitor_label = WIDGET_LABEL(BaseTab,$
+   XOFFSET = xoff1,$
+   YOFFSET = yoff2,$
+   VALUE = 'Monitor File') 
+    
+    
   base = WIDGET_BASE(BaseTab,$
   /BASE_ALIGN_CENTER,$
   SCR_XSIZE = tab_size[2],$
