@@ -47,7 +47,7 @@ PRO display_tab1_error, MAIN_BASE=main_base, Event=event, STATUS=status
   
   IF (status EQ 0) THEN RETURN
   
-  image = READ_PNG('CLoopes_images/format_error.png')
+  image = READ_PNG('CLoopES_images/format_error.png')
   uname = 'error_draw'
   IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
     mode_id = WIDGET_INFO(main_base, $
