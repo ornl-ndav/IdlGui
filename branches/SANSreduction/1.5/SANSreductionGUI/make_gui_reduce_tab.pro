@@ -218,12 +218,12 @@ PRO make_gui_reduce_tab, MAIN_TAB, MainTabSize, TabTitles
     /TRACKING_EVENTS)
 
   ;- Build input tab
-  make_gui_reduce_jk_tab1, jk_tab, sReduceTab
+  make_gui_reduce_jk_tab1, jk_tab, sReduceTab.size, sReduceTab.title.tab1
   
   ;- build output tab
-  make_gui_reduce_jk_tab2, jk_tab, sReduceTab
+  make_gui_reduce_jk_tab2, jk_tab, sReduceTab.size, sReduceTab.title.tab1
   
   ;- build advanced tab
-  make_gui_reduce_jk_tab3, jk_tab, sReduceTab
+  make_gui_reduce_jk_tab3, jk_tab, sReduceTab.size, sReduceTab.title.tab1
   
 END
