@@ -198,5 +198,32 @@ PRO make_gui_reduce_tab, MAIN_TAB, MainTabSize, TabTitles
     SCR_YSIZE = sDRguiStatus.size[3],$
     /SCROLL,$
     /WRAP)
+
+  ;second big base (JK's reduction)
+  jk_base = WIDGET_BASE(wReduceBase,$
+    XOFFSET = sBigBase.size[0],$
+    YOFFSET = sBigBase.size[1],$
+    SCR_XSIZE = sBigBase.size[2],$
+    SCR_YSIZE = sBigBase.size[3],$
+    UNAME = 'jk_reduction_base')
     
+  jk_tab = WIDGET_TAB(jk_base,$
+    UNAME     = sReduceTab.uname,$
+    LOCATION  = 0,$
+    XOFFSET   = sReduceTab.size[0],$
+    YOFFSET   = sReduceTab.size[1],$
+    SCR_XSIZE = sReduceTab.size[2],$
+    SCR_YSIZE = sReduceTab.size[3],$
+    SENSITIVE = 1,$
+    /TRACKING_EVENTS)
+
+  ;- Build input tab
+  make_gui_reduce_jk_tab1, jk_tab, sReduceTab
+  
+  ;- build output tab
+  make_gui_reduce_jk_tab2, jk_tab, sReduceTab
+  
+  ;- build advanced tab
+  make_gui_reduce_jk_tab3, jk_tab, sReduceTab
+  
 END
