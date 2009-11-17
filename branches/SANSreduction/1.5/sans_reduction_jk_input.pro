@@ -59,6 +59,15 @@ PRO jk_get_run_information, Event
     'reduce_jk_tab1_run_number'),/REMOVE_ALL)
   
   cmd = 'eqsans_reduce  -r ' + run_number + ' -ri'
-
+  WIDGET_CONTROL, /HOURGLASS
+  spawn, cmd, listening, err_listening
+  WIDGET_CONTROL, HOURGLASS=0
   
+  ;add title to message
+  message = STRARR(2)
+  message[0] = '****** Run Information about run number ' + run_number + $
+  ' ******'
+  putTextFieldValue, Event, 'reduce_jk_tab1_run_information_text', $
+  [message, listening]
+
 END
