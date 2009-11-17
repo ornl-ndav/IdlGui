@@ -79,11 +79,13 @@ PRO MAIN_BASE_event, Event
         CATCH,/CANCEL
         
         IF (Event.press EQ 1) THEN BEGIN
-          IF (Event.x GE 100) THEN BEGIN ;SNS reduction
+          IF (Event.x GT 108 AND $
+            Event.x LT 247) THEN BEGIN ;SNS reduction
             display_reduction_interruptor, EVENT=event, mode='sns'
             map_base, Event, 'sns_reduction_base', 1
           ENDIF
-          IF (Event.x LE 90) THEN BEGIN ;JK reduction
+          IF (Event.x GT 247 AND $
+            Event.x LT 405) THEN BEGIN ;JK reduction
             display_reduction_interruptor, EVENT=event, mode='jk'
             map_base, Event, 'sns_reduction_base', 0
           ENDIF
