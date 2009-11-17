@@ -152,6 +152,7 @@ PRO make_gui_reduce_jk_tab3_tab2, advanced_base, tab_size, tab_title
     VALUE = 'Source frequency:')
   value = WIDGET_TEXT(row3,$
     VALUE = '60',$
+    UNAME = 'reduce_jk_tab3_tab2_source_frequency',$
     XSIZE = 5,$
     /EDITABLE)
   label = WIDGET_LABEL(row3,$

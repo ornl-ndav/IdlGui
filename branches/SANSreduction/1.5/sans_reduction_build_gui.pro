@@ -150,6 +150,15 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     build_command_line: 1,$
     testing_on_mac: testing_on_mac, $
     
+    jk_default_value: {sample_detector: '',$
+    monitor_detector: '10.0',$
+    source_frequency: '60',$
+    sample_source: '14.0',$
+    number_of_pixels: {x : '192',$
+    y: '256'},$
+    pixels_size: {x: 5.5,$
+    y: 4.0467}},$
+    
     draw_x: 3*192L,$
     draw_y: 3*256L,$
     left_button_clicked: 0,$
@@ -508,14 +517,14 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='data_file_name_text_field')
     WIDGET_CONTROL, id, $
       SET_VALUE='/LENS/SANS/2008_01_COM/1/45/NeXus/SANS_45.nxs'
-    
+      
     ;run number of jk's reduce tab
     id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_jk_tab1_run_number')
     WIDGET_CONTROL, id, SET_VALUE='71'
     ;enable get run info
     id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_jk_tab1_get_run_information')
     WIDGET_CONTROL, id, SENSITIVE=1
-      
+    
     IF (facility EQ 'LENS') THEN BEGIN
       ;exclusion tool
       id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='x_center_value')
@@ -535,10 +544,10 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     ;show tab #2 'REDUCE
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
     WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
-
-  MapBase_from_base, BASE=main_base, uname='sns_reduction_base', 0
-  display_reduction_interruptor, MAIN_BASE=main_base, mode='jk'
-
+    
+    MapBase_from_base, BASE=main_base, uname='sns_reduction_base', 0
+    display_reduction_interruptor, MAIN_BASE=main_base, mode='jk'
+    
   ENDIF
   
   IF (facility EQ 'LENS') THEN BEGIN
@@ -589,7 +598,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
   ;send message to log current run of application
   logger, APPLICATION=application, VERSION=version, UCAMS=ucams
   
-  ;tof_tools_base, main_base=MAIN_BASE
+;tof_tools_base, main_base=MAIN_BASE
   
 END
 
