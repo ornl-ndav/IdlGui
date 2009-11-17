@@ -153,22 +153,28 @@ PRO make_gui_reduce_jk_tab3_tab1, advanced_base, tab_size, tab_title
     
   ;Spectrum center
   frame3 = WIDGET_BASE(base,$
-  FRAME = 1,$
-  /COLUMN)
+    FRAME = 1,$
+    /COLUMN)
   row1 = WIDGET_BASE(frame3,$
     /ROW)
   yesno = WIDGET_BASE(row1,$
     /ROW,$
     /EXCLUSIVE)
   yes = WIDGET_BUTTON(yesno,$
+    UNAME = 'reduce_jk_tab3_tab1_auto_center_yes',$
+    /NO_RELEASE,$
     VALUE = 'Yes')
   no = WIDGET_BUTTON(yesno,$
-    VALUE = 'no')
-  WIDGET_CONTROL, yes, /SET_BUTTON
+    UNAME = 'reduce_jk_tab3_tab1_auto_center_no',$
+    /NO_RELEASE,$
+    VALUE = 'No')
+  WIDGET_CONTROL, no, /SET_BUTTON
   label = WIDGET_LABEL(row1,$
     VALUE = 'Auto find Spectrum center')
   space_value = '        '
   row1 = WIDGET_BASE(frame3,$
+    SENSITIVE = 1,$
+    UNAME = 'reduce_jk_tab3_tab1_auto_center_x_base',$
     /ROW)
   space = WIDGET_LABEL(row1,$
     VALUE = space_value)
@@ -180,6 +186,8 @@ PRO make_gui_reduce_jk_tab3_tab1, advanced_base, tab_size, tab_title
   label = WIDGET_LABEL(row1,$
     VALUE = 'pixels')
   row2 = WIDGET_BASE(frame3,$
+    UNAME = 'reduce_jk_tab3_tab1_auto_center_y_base',$
+    SENSITIVE = 1,$
     /ROW)
   space = WIDGET_LABEL(row2,$
     VALUE = space_value)
@@ -190,6 +198,6 @@ PRO make_gui_reduce_jk_tab3_tab1, advanced_base, tab_size, tab_title
     XSIZE = 5)
   label = WIDGET_LABEL(row2,$
     VALUE = 'pixels')
-  
-  
+    
+    
 END
