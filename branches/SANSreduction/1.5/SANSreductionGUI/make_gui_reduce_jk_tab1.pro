@@ -96,12 +96,15 @@ PRO make_gui_reduce_jk_tab1, REDUCE_TAB, tab_size, tab_title
     XSIZE = 5,$
     YSIZE = 1,$
     /EDITABLE,$
+    /ALL_EVENTS,$
     UNAME = 'reduce_jk_tab1_run_number')
     
   space = WIDGET_LABEL(col1,$
   VALUE = ' ')  
     
   button = WIDGET_BUTTON(col1,$
+    UNAME = 'reduce_jk_tab1_get_run_information',$
+    SENSITIVE = 0,$
     VALUE = 'GET RUN INFORMATION')
     
   label = WIDGET_LABEL(rowa,$
@@ -146,8 +149,5 @@ PRO make_gui_reduce_jk_tab1, REDUCE_TAB, tab_size, tab_title
     VALUE = '',$
     XSIZE = 140,$
     YSIZE = 32)
-    
-    
-    
     
 END
