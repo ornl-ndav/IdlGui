@@ -42,22 +42,22 @@ PRO make_gui_reduce_jk_tab3_tab1, advanced_base, tab_size, tab_title
     SCR_XSIZE = tab_size[2],$
     SCR_YSIZE = tab_size[3],$
     TITLE     = tab_title)
-
+    
   ;Distances title
   xoff = 20
   label = WIDGET_LABEL(BaseTab,$
-  VALUE = 'Distances',$
-  XOFFSET = xoff,$
-  YOFFSET = 55)
+    VALUE = 'Distances',$
+    XOFFSET = xoff,$
+    YOFFSET = 55)
   label = WIDGET_LABEL(BaseTab,$
-  VALUE = 'Pixels',$
-  XOFFSET = xoff,$
-  YOFFSET = 205)
+    VALUE = 'Pixels',$
+    XOFFSET = xoff,$
+    YOFFSET = 205)
   label = WIDGET_LABEL(BaseTab,$
-  VALUE = 'Spectrum Center',$
-  XOFFSET = xoff,$
-  YOFFSET = 395)
-
+    VALUE = 'Spectrum Center',$
+    XOFFSET = xoff,$
+    YOFFSET = 395)
+    
   base = WIDGET_BASE(BaseTab,$
     /COLUMN)
     
@@ -90,7 +90,8 @@ PRO make_gui_reduce_jk_tab3_tab1, advanced_base, tab_size, tab_title
     VALUE = 'Sample - Detector  ')
   value = WIDGET_TEXT(row1,$
     VALUE = '',$
-    XSIZE = 5)
+    UNAME = 'reduce_jk_tab3_tab1_sample_detector_distance',$
+    XSIZE = 6)
   label = WIDGET_LABEL(row1,$
     VALUE = 'm')
   row2 = WIDGET_BASE(frame1,$
@@ -101,7 +102,8 @@ PRO make_gui_reduce_jk_tab3_tab1, advanced_base, tab_size, tab_title
     VALUE = 'Sample - Source    ')
   value = WIDGET_TEXT(row2,$
     VALUE = '14.0',$
-    XSIZE = 5)
+    UNAME = 'reduce_jk_tab3_tab1_sample_source_distance',$
+    XSIZE = 6)
   label = WIDGET_LABEL(row2,$
     VALUE = 'm')
   row3 = WIDGET_BASE(frame1,$
@@ -112,7 +114,7 @@ PRO make_gui_reduce_jk_tab3_tab1, advanced_base, tab_size, tab_title
     VALUE = 'Monitor - Detector ')
   value = WIDGET_TEXT(row3,$
     VALUE = '10.001',$
-    XSIZE = 5)
+    XSIZE = 6)
   label = WIDGET_LABEL(row3,$
     VALUE = 'm')
     
@@ -132,6 +134,7 @@ PRO make_gui_reduce_jk_tab3_tab1, advanced_base, tab_size, tab_title
     VALUE = 'Number of pixels in X direction ')
   value = WIDGET_TEXT(row1,$
     VALUE = '192',$
+    UNAME = 'reduce_jk_tab3_tab1_number_of_x_pixels',$
     XSIZE = 3)
   row2 = WIDGET_BASE(frame1,$
     /ROW)
@@ -141,6 +144,7 @@ PRO make_gui_reduce_jk_tab3_tab1, advanced_base, tab_size, tab_title
     VALUE = 'Number of pixels in Y direction ')
   value = WIDGET_TEXT(row2,$
     VALUE = '256',$
+    UNAME = 'reduce_jk_tab3_tab1_number_of_y_pixels',$
     XSIZE = 3)
   row3 = WIDGET_BASE(frame1,$
     /ROW)
@@ -150,6 +154,7 @@ PRO make_gui_reduce_jk_tab3_tab1, advanced_base, tab_size, tab_title
     VALUE = 'Detector pixel size in X direction ')
   value = WIDGET_TEXT(row3,$
     VALUE = '5.5',$
+    UNAME = 'reduce_jk_tab3_tab1_x_size',$
     XSIZE = 7)
   label = WIDGET_LABEL(row3,$
     VALUE = 'mm')
@@ -161,13 +166,14 @@ PRO make_gui_reduce_jk_tab3_tab1, advanced_base, tab_size, tab_title
     VALUE = 'Detector pixel size in Y direction ')
   value = WIDGET_TEXT(row4,$
     VALUE = '4.0467',$
+    UNAME = 'reduce_jk_tab3_tab1_y_size',$
     XSIZE = 7)
   label = WIDGET_LABEL(row4,$
     VALUE = 'mm')
     
   space = WIDGET_LABEL(base,$
     VALUE = ' ')
-
+    
   ;Spectrum center
   frame3 = WIDGET_BASE(base,$
     FRAME = 1,$

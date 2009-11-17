@@ -83,6 +83,7 @@ cd, CurrentFolder
 .run sans_reduction_display_images.pro
 
 ;jk reduction
+.run sans_reduction_jk_tab1_functions.pro
 .run sans_reduction_jk_input.pro
 
 ;transmission

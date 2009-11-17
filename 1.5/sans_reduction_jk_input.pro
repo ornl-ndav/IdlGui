@@ -57,17 +57,102 @@ PRO jk_get_run_information, Event
   ;get run number
   run_number = STRCOMPRESS(getTextFieldValue(Event,$
     'reduce_jk_tab1_run_number'),/REMOVE_ALL)
-  
+    
   cmd = 'eqsans_reduce  -r ' + run_number + ' -ri'
   WIDGET_CONTROL, /HOURGLASS
-  spawn, cmd, listening, err_listening
+  spawn, cmd, listening
   WIDGET_CONTROL, HOURGLASS=0
   
-  ;add title to message
-  message = STRARR(2)
-  message[0] = '****** Run Information about run number ' + run_number + $
-  ' ******'
-  putTextFieldValue, Event, 'reduce_jk_tab1_run_information_text', $
-  [message, listening]
+  sz = N_ELEMENTS(listening)
+  IF (sz GT 1) THEN BEGIN
+  
+    ;add title to message
+    message = STRARR(2)
+    message[0] = '****** Run Information about run number ' + run_number + $
+      ' ******'
+    putTextFieldValue, Event, 'reduce_jk_tab1_run_information_text', $
+      [message, listening]
+      
+    use_run_information_in_jk_gui, Event, INFO=listening
+    
+  ENDIF ELSE BEGIN
+  
+    putTextFieldValue, Event, 'reduce_jk_tab1_run_information_text', listening
+    
+  ENDELSE
+  
+END
 
+;------------------------------------------------------------------------------
+PRO use_run_information_in_jk_gui, Event, INFO=info
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  jk_default_value = (*global).jk_default_value
+  
+  ;retrieve Source rep rate
+  source_rate = STRCOMPRESS(retrive_source_rate(info),/REMOVE_ALL)
+  IF (source_rate NE '') THEN BEGIN
+    putTextFieldValue, Event, 'reduce_jk_tab3_tab2_source_frequency', $
+      source_rate
+  ENDIF ELSE BEGIN
+    putTextFieldValue, Event, 'reduce_jk_tab3_tab2_source_frequency', $
+      jk_default_value.source_rate
+  ENDELSE
+  
+  ;retrieve sample detector
+  sample_detector = STRCOMPRESS(retrieve_sample_detector_distance(info),$
+    /REMOVE_ALL)
+  IF (sample_detector NE '') THEN BEGIN
+    putTextFieldValue, Event, 'reduce_jk_tab3_tab1_sample_detector_distance', $
+      sample_detector
+  ENDIF ELSE BEGIN
+    putTextFieldValue, Event, 'reduce_jk_tab3_tab1_sample_detector_distance', $
+      jk_default_value.sample_detector
+  ENDELSE
+  
+  ;retrieve sample source
+  sample_source = STRCOMPRESS(retrieve_sample_source_distance(info),$
+    /REMOVE_ALL)
+  IF (sample_source NE '') THEN BEGIN
+    putTextFieldValue, Event, 'reduce_jk_tab3_tab1_sample_source_distance', $
+      sample_source
+  ENDIF ELSE BEGIN
+    putTextFieldValue, Event, 'reduce_jk_tab3_tab1_sample_source_distance', $
+      jk_default_value.sample_source
+  ENDELSE
+  
+  ;retrieve number of pixels in X and Y directions
+  x_y = retrieve_number_of_pixels(info)
+  IF (x_y[0] NE '') THEN BEGIN
+    X = STRCOMPRESS(x_y[0],/REMOVE_ALL)
+    Y = STRCOMPRESS(x_y[1],/REMOVE_ALL)
+    putTextFieldValue, Event, 'reduce_jk_tab3_tab1_number_of_x_pixels', X
+    putTextFieldValue, Event, 'reduce_jk_tab3_tab1_number_of_y_pixels', Y
+  ENDIF ELSE BEGIN
+    putTextFieldValue, Event, 'reduce_jk_tab3_tab1_number_of_x_pixels', $
+      jk_default_value.number_of_pixels.x
+    putTextFieldValue, Event, 'reduce_jk_tab3_tab1_number_of_y_pixels', $
+      jk_default_value.number_of_pixels.y
+  ENDELSE
+  
+;retrieve pixel size in X and Y directions
+  x_y = retrieve_pixels_size(info)
+  IF (x_y[0] NE '') THEN BEGIN
+    X = STRCOMPRESS(x_y[0],/REMOVE_ALL)
+    Y = STRCOMPRESS(x_y[1],/REMOVE_ALL)
+    putTextFieldValue, Event, 'reduce_jk_tab3_tab1_x_size', X
+    putTextFieldValue, Event, 'reduce_jk_tab3_tab1_y_size', Y
+  ENDIF ELSE BEGIN
+    putTextFieldValue, Event, 'reduce_jk_tab3_tab1_x_size', $
+      jk_default_value.pixels_size.x
+    putTextFieldValue, Event, 'reduce_jk_tab3_tab1_y_size', $
+      jk_default_value.pixels_size.y
+  ENDELSE
+  
+ ;retrieve Monitor-detector distance
+  
+  
+  
+  
+  
 END
