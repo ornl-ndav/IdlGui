@@ -982,6 +982,26 @@ PRO MAIN_BASE_event, Event
       (*global).scaling_value = ''
     END
     
+    ;= JK's REDUCTION =========================================================
+    
+    ;-Advanced part1 ----------------------------------------------------------
+    
+    ;Yes, auto find spectrum center
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_jk_tab3_tab1_auto_center_yes'): BEGIN
+      activate_widget, Event, 'reduce_jk_tab3_tab1_auto_center_x_base', 0
+      activate_widget, Event, 'reduce_jk_tab3_tab1_auto_center_y_base', 0
+    END
+    
+    ;No, auto find spectrum center
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_jk_tab3_tab1_auto_center_no'): BEGIN
+      activate_widget, Event, 'reduce_jk_tab3_tab1_auto_center_x_base', 1
+      activate_widget, Event, 'reduce_jk_tab3_tab1_auto_center_y_base', 1
+    END
+    
+    
+    
     ;= TAB3 (PLOT) ============================================================
     
     ;---- Refresh plot --------------------------------------------------------
