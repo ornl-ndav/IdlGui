@@ -42,7 +42,22 @@ PRO make_gui_reduce_jk_tab3_tab1, advanced_base, tab_size, tab_title
     SCR_XSIZE = tab_size[2],$
     SCR_YSIZE = tab_size[3],$
     TITLE     = tab_title)
-    
+
+  ;Distances title
+  xoff = 20
+  label = WIDGET_LABEL(BaseTab,$
+  VALUE = 'Distances',$
+  XOFFSET = xoff,$
+  YOFFSET = 55)
+  label = WIDGET_LABEL(BaseTab,$
+  VALUE = 'Pixels',$
+  XOFFSET = xoff,$
+  YOFFSET = 205)
+  label = WIDGET_LABEL(BaseTab,$
+  VALUE = 'Spectrum Center',$
+  XOFFSET = xoff,$
+  YOFFSET = 395)
+
   base = WIDGET_BASE(BaseTab,$
     /COLUMN)
     
@@ -54,7 +69,7 @@ PRO make_gui_reduce_jk_tab3_tab1, advanced_base, tab_size, tab_title
   yes = WIDGET_BUTTON(yesno,$
     VALUE = 'Yes')
   no = WIDGET_BUTTON(yesno,$
-    VALUE = 'no')
+    VALUE = 'No')
   WIDGET_CONTROL, yes, /SET_BUTTON
   label = WIDGET_LABEL(row1,$
     VALUE = 'Normalize data (divide I(Q) by total monitor counts)')
@@ -100,7 +115,6 @@ PRO make_gui_reduce_jk_tab3_tab1, advanced_base, tab_size, tab_title
     XSIZE = 5)
   label = WIDGET_LABEL(row3,$
     VALUE = 'm')
-    
     
   space = WIDGET_LABEL(base,$
     VALUE = ' ')
@@ -151,6 +165,9 @@ PRO make_gui_reduce_jk_tab3_tab1, advanced_base, tab_size, tab_title
   label = WIDGET_LABEL(row4,$
     VALUE = 'mm')
     
+  space = WIDGET_LABEL(base,$
+    VALUE = ' ')
+
   ;Spectrum center
   frame3 = WIDGET_BASE(base,$
     FRAME = 1,$
