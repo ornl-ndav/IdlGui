@@ -109,9 +109,9 @@ PRO make_gui_reduce_tab, MAIN_TAB, MainTabSize, TabTitles
     
   ;interruptor (SNS <-> JK's)
   button = WIDGET_DRAW(wReduceBase,$
-    XOFFSET = 400,$
+    XOFFSET = 260,$
     YOFFSET = 5,$
-    SCR_XSIZE = 200,$
+    SCR_XSIZE = 500,$
     SCR_YSIZE = 50,$
     UNAME = 'reduction_interruptor',$
     /TRACKING_EVENTS,$
