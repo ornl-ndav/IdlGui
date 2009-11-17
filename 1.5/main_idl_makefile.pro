@@ -82,6 +82,9 @@ cd, CurrentFolder
 .run sans_reduction_display_selection_box.pro
 .run sans_reduction_display_images.pro
 
+;jk reduction
+.run sans_reduction_jk_input.pro
+
 ;transmission
 .run sans_reduction_transmission_manual_eventcb.pro
 .run sans_reduction_transmission_launcher_base.pro

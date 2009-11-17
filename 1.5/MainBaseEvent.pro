@@ -984,6 +984,18 @@ PRO MAIN_BASE_event, Event
     
     ;= JK's REDUCTION =========================================================
     
+    ;run number
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_jk_tab1_run_number'): BEGIN
+      validate_or_not_get_run_information, Event
+    END
+    
+    ;INPUT tab
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME = 'reduce_jk_tab1_get_run_information'): BEGIN
+      jk_get_run_information, Event
+    END
+    
     ;-Advanced part1 ----------------------------------------------------------
     
     ;Yes, auto find spectrum center
