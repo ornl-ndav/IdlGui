@@ -152,6 +152,8 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     
     jk_default_value: {sample_detector: '',$
     monitor_detector: '10.0',$
+    monitor_source: '',$
+    detector_source: '',$
     source_frequency: '60',$
     sample_source: '14.0',$
     number_of_pixels: {x : '192',$

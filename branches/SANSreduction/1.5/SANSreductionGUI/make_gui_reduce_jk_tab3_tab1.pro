@@ -114,6 +114,7 @@ PRO make_gui_reduce_jk_tab3_tab1, advanced_base, tab_size, tab_title
     VALUE = 'Monitor - Detector ')
   value = WIDGET_TEXT(row3,$
     VALUE = '10.001',$
+    UNAME = 'reduce_jk_tab3_tab1_monitor_detector_distance',$
     XSIZE = 6)
   label = WIDGET_LABEL(row3,$
     VALUE = 'm')

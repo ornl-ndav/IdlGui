@@ -102,25 +102,21 @@ PRO use_run_information_in_jk_gui, Event, INFO=info
   ;retrieve sample detector
   sample_detector = STRCOMPRESS(retrieve_sample_detector_distance(info),$
     /REMOVE_ALL)
-  IF (sample_detector NE '') THEN BEGIN
-    putTextFieldValue, Event, 'reduce_jk_tab3_tab1_sample_detector_distance', $
-      sample_detector
-  ENDIF ELSE BEGIN
-    putTextFieldValue, Event, 'reduce_jk_tab3_tab1_sample_detector_distance', $
-      jk_default_value.sample_detector
-  ENDELSE
-  
+  IF (sample_detector EQ '') THEN BEGIN
+    sample_detector = jk_default_value.sample_detector
+  ENDIF
+  putTextFieldValue, Event, 'reduce_jk_tab3_tab1_sample_detector_distance', $
+    sample_detector
+    
   ;retrieve sample source
   sample_source = STRCOMPRESS(retrieve_sample_source_distance(info),$
     /REMOVE_ALL)
-  IF (sample_source NE '') THEN BEGIN
-    putTextFieldValue, Event, 'reduce_jk_tab3_tab1_sample_source_distance', $
-      sample_source
-  ENDIF ELSE BEGIN
-    putTextFieldValue, Event, 'reduce_jk_tab3_tab1_sample_source_distance', $
-      jk_default_value.sample_source
-  ENDELSE
-  
+  IF (sample_source EQ '') THEN BEGIN
+    sample_source = jk_default_value.sample_source
+  ENDIF
+  putTextFieldValue, Event, 'reduce_jk_tab3_tab1_sample_source_distance', $
+    sample_source
+    
   ;retrieve number of pixels in X and Y directions
   x_y = retrieve_number_of_pixels(info)
   IF (x_y[0] NE '') THEN BEGIN
@@ -135,7 +131,7 @@ PRO use_run_information_in_jk_gui, Event, INFO=info
       jk_default_value.number_of_pixels.y
   ENDELSE
   
-;retrieve pixel size in X and Y directions
+  ;retrieve pixel size in X and Y directions
   x_y = retrieve_pixels_size(info)
   IF (x_y[0] NE '') THEN BEGIN
     X = STRCOMPRESS(x_y[0],/REMOVE_ALL)
@@ -149,10 +145,27 @@ PRO use_run_information_in_jk_gui, Event, INFO=info
       jk_default_value.pixels_size.y
   ENDELSE
   
- ;retrieve Monitor-detector distance
-  
-  
-  
-  
-  
+  ;get Monitor-detector distance
+  ;retrieve monitor to source
+  monitor_source = STRCOMPRESS(retrieve_monitor_source_distance(info),$
+    /REMOVE_ALL)
+  IF (monitor_source EQ '') THEN BEGIN
+    monitor_source = jk_default_value.monitor_source
+  ENDIF
+  ;retrieve detector_source
+  detector_source = STRCOMPRESS(retrieve_detector_source_distance(info),$
+    /REMOVE_ALL)
+  IF (detector_source EQ '') THEN BEGIN
+    detector_source = jk_default_value.detector_source
+  ENDIF
+  IF (monitor_source NE '' AND detector_source NE '') THEN BEGIN
+    dMS = FLOAT(monitor_source)
+    dDS = FLOAT(detector_source)
+    monitor_detector = STRCOMPRESS(dDS - dMS,/REMOVE_ALL)
+  ENDIF ELSE BEGIN
+    monitor_detector = jk_default_value.monitor_detector
+  ENDELSE
+  putTextFieldValue, Event, 'reduce_jk_tab3_tab1_monitor_detector_distance', $
+    monitor_detector
+    
 END
