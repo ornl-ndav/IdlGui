@@ -91,6 +91,7 @@ PRO make_gui_reduce_jk_tab1, REDUCE_TAB, tab_size, tab_title
     /BASE_ALIGN_CENTER)
   label = WIDGET_LABEL(row2,$
     VALUE = 'Run number:')
+  
   value = WIDGET_TEXT(row2,$
     VALUE = '',$
     XSIZE = 5,$
@@ -147,6 +148,7 @@ PRO make_gui_reduce_jk_tab1, REDUCE_TAB, tab_size, tab_title
     ;text box that will display run information
     text = WIDGET_TEXT(base,$
     VALUE = '',$
+    UNAME = 'reduce_jk_tab1_run_information_text',$
     XSIZE = 140,$
     YSIZE = 32)
     

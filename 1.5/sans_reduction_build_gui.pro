@@ -508,6 +508,13 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='data_file_name_text_field')
     WIDGET_CONTROL, id, $
       SET_VALUE='/LENS/SANS/2008_01_COM/1/45/NeXus/SANS_45.nxs'
+    
+    ;run number of jk's reduce tab
+    id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_jk_tab1_run_number')
+    WIDGET_CONTROL, id, SET_VALUE='71'
+    ;enable get run info
+    id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_jk_tab1_get_run_information')
+    WIDGET_CONTROL, id, SENSITIVE=1
       
     IF (facility EQ 'LENS') THEN BEGIN
       ;exclusion tool
@@ -528,10 +535,10 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     ;show tab #2 'REDUCE
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
     WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
-    ;show tab of the REDUCE tab
-    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 0
-    
+
+  MapBase_from_base, BASE=main_base, uname='sns_reduction_base', 0
+  display_reduction_interruptor, MAIN_BASE=main_base, mode='jk'
+
   ENDIF
   
   IF (facility EQ 'LENS') THEN BEGIN
@@ -562,7 +569,6 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     display_images, MAIN_BASE=main_base
   END
   
-  display_reduction_interruptor, MAIN_BASE=main_base, mode='sns'
   
   ;============================================================================
   ; Date and Checking Packages routines =======================================
