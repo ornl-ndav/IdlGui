@@ -83,8 +83,9 @@ PRO make_gui_reduce_jk_tab1, REDUCE_TAB, tab_size, tab_title
   label = WIDGET_LABEL(rowa,$
     VALUE = '         Run Title:')
   value = WIDGET_LABEL(rowa,$
-    VALUE = 'N/A',$
+    VALUE = ' N/A',$
     /ALIGN_LEFT,$
+    UNAME = 'reduce_jk_tab1_run_information_run_title',$
     FRAME = 1,$
     SCR_XSIZE = 850)
     
@@ -93,9 +94,10 @@ PRO make_gui_reduce_jk_tab1, REDUCE_TAB, tab_size, tab_title
   label = WIDGET_LABEL(rowb,$
     VALUE = '         Run Notes:')
   value = WIDGET_LABEL(rowb,$
-    VALUE = 'N/A',$
+    VALUE = ' N/A',$
     FRAME = 1,$
     /ALIGN_LEFT,$
+    UNAME = 'reduce_jk_tab1_run_information_run_notes',$
     SCR_XSIZE = 850)
     
   rowc = WIDGET_BASE(info_base,$
@@ -103,15 +105,17 @@ PRO make_gui_reduce_jk_tab1, REDUCE_TAB, tab_size, tab_title
   label = WIDGET_LABEL(rowc,$
     VALUE = '   Start Date/Time:')
   value = WIDGET_LABEL(rowc,$
-    VALUE = 'N/A',$
+    VALUE = ' N/A',$
     FRAME = 1,$
     /ALIGN_LEFT,$
+    UNAME = 'reduce_jk_tab1_run_information_start_time',$
     SCR_XSIZE = 200)
   label = WIDGET_LABEL(rowc,$
     VALUE = 'Total Run Time:')
   value = WIDGET_LABEL(rowc,$
-    VALUE = 'N/A',$
+    VALUE = ' N/A',$
     /ALIGN_LEFT,$
+    UNAME = 'reduce_jk_tab1_run_information_total_time',$
     FRAME = 1,$
     SCR_XSIZE = 200)
     
@@ -120,23 +124,26 @@ PRO make_gui_reduce_jk_tab1, REDUCE_TAB, tab_size, tab_title
   label = WIDGET_LABEL(rowd,$
     VALUE = 'Total Acc. Current:')
   value = WIDGET_LABEL(rowd,$
-    VALUE = 'N/A',$
+    VALUE = ' N/A',$
     FRAME = 1,$
     /ALIGN_LEFT,$
+    UNAME = 'reduce_jk_tab1_run_information_total_current',$
     SCR_XSIZE = 200)
   label = WIDGET_LABEL(rowd,$
     VALUE = 'Total Detector Counts:')
   value = WIDGET_LABEL(rowd,$
-    VALUE = 'N/A',$
+    VALUE = ' N/A',$
     FRAME = 1,$
     /ALIGN_LEFT,$
+    UNAME = 'reduce_jk_tab1_run_information_total_detector_counts', $
     SCR_XSIZE = 200)
   label = WIDGET_LABEL(rowd,$
     VALUE = 'Total Monitor Counts:')
   value = WIDGET_LABEL(rowd,$
-    VALUE = 'N/A',$
+    VALUE = ' N/A',$
     /ALIGN_LEFT,$
     FRAME = 1,$
+    UNAME = 'reduce_jk_tab1_run_information_total_monitor_counts', $
     SCR_XSIZE = 165)
     
   rowe = WIDGET_BASE(info_base,$
@@ -144,17 +151,17 @@ PRO make_gui_reduce_jk_tab1, REDUCE_TAB, tab_size, tab_title
   label = WIDGET_LABEL(rowe,$
     VALUE = 'Wavelength Range (band with pulse width of 20/A):')
   value1 = WIDGET_LABEL(rowe,$
-    VALUE = 'N/A',$
+    VALUE = ' N/A',$
     FRAME = 1,$
     SCR_XSIZE = 100)
   label = WIDGET_LABEL(rowe,$
     VALUE = '->')
   value = WIDGET_LABEL(rowe,$
-    VALUE = 'N/A',$
+    VALUE = ' N/A',$
     FRAME = 1,$
     SCR_XSIZE = 100)
   units = WIDGET_LABEL(rowe,$
-    VALUE = 'N/A',$
+    VALUE = ' N/A',$
     FRAME = 1,$
     SCR_XSIZE = 100)
     
@@ -163,8 +170,9 @@ PRO make_gui_reduce_jk_tab1, REDUCE_TAB, tab_size, tab_title
   label = WIDGET_LABEL(rowf,$
     VALUE = 'Distance Sample-Detector:')
   value = WIDGET_LABEL(rowf,$
-    VALUE = 'N/A',$
+    VALUE = ' N/A',$
     FRAME = 1,$
+    UNAME = 'reduce_jk_tab1_run_information_sample_detector',$
     SCR_XSIZE = 150,$
     /ALIGN_LEFT)
   space = WIDGET_LABEL(rowf,$

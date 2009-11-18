@@ -96,14 +96,59 @@ PRO use_run_information_in_jk_gui, Event, INFO=info
       jk_default_value.source_rate
   ENDELSE
   
+  ;retrieve run title
+  run_title = retrieve_run_title(info)
+  putTextFieldValue, Event, 'reduce_jk_tab1_run_information_run_title', $
+    run_title
+    
+  ;retrieve run notes
+  run_notes = retrieve_run_notes(info)
+  putTextFieldValue, Event, 'reduce_jk_tab1_run_information_run_notes', $
+    run_notes
+    
+  ;retrieve start time
+  start_time = retrieve_start_time(info)
+  putTextFieldValue, Event, 'reduce_jk_tab1_run_information_start_time',$
+    start_time
+    
+  ;retrieve total_time
+  total_time = retrieve_total_time(info)
+  putTextFieldValue, Event, 'reduce_jk_tab1_run_information_total_time',$
+    total_time
+    
+  ;retrieve total acc. current
+  total_current = retrieve_total_acc_current(info)
+  putTextFieldValue, Event, 'reduce_jk_tab1_run_information_total_current',$
+    total_current
+    
+  ;retrieve total detector counts
+  total_counts = retrieve_total_detector_counts(info)
+  putTextFieldValue, Event, $
+    'reduce_jk_tab1_run_information_total_detector_counts', $
+    total_counts
+    
+  ;retrieve total monitor counts
+  total_counts = retrieve_total_monitor_counts(info)
+  putTextFieldValue, Event, $
+    'reduce_jk_tab1_run_information_total_monitor_counts', $
+    total_counts
+    
+    
+    
+    
   ;retrieve sample detector
-  sample_detector = STRCOMPRESS(retrieve_sample_detector_distance(info),$
-    /REMOVE_ALL)
+  sample_detector_array = retrieve_sample_detector_distance(info)
+  sample_detector = STRCOMPRESS(sample_detector_array[0],/REMOVE_ALL)
+  sample_detector_with_units = STRCOMPRESS(sample_detector_array[1])
   IF (sample_detector EQ '') THEN BEGIN
     sample_detector = jk_default_value.sample_detector
+    sample_detector_with_units = jk_default_value.sample_detector_with_units
   ENDIF
   putTextFieldValue, Event, 'reduce_jk_tab3_tab1_sample_detector_distance', $
     sample_detector
+  ;put value in top box
+  putTextFieldValue, Event, 'reduce_jk_tab1_run_information_sample_detector', $
+    sample_detector_with_units
     
   ;retrieve sample source
   sample_source = STRCOMPRESS(retrieve_sample_source_distance(info),$

@@ -32,6 +32,27 @@
 ;
 ;==============================================================================
 
+FUNCTION retrieve_text, source=source, search_string=search_string
+  sz = N_ELEMENTS(source)
+  FOR i=0,(sz-1) DO BEGIN
+    result = STREGEX(source[i],search_string,/BOOLEAN,/FOLD_CASE)
+    print, 'search_string: ' + search_string
+    print, result
+    print
+    IF (result NE 0b) THEN BEGIN
+      result_array = STRSPLIT(source[i],'=',/REGEX,/EXTRACT)
+      IF (N_ELEMENTS(result_array) GT 2) THEN BEGIN
+        result_array_1 = STRJOIN(result_array[1:N_ELEMENTS(result_array)-1],'=')
+      ENDIF ELSE BEGIN
+        result_array_1 = result_array[1]
+      ENDELSE
+      RETURN, STRTRIM(result_array_1)
+    ENDIF
+  ENDFOR
+  RETURN, 'N/A'
+END
+
+;------------------------------------------------------------------------------
 FUNCTION retrive_source_rate, info
   search_string = 'Source rep rate'
   sz = N_ELEMENTS(info)
@@ -56,11 +77,11 @@ FUNCTION retrieve_sample_detector_distance, info
       distance_array = STRSPLIT(info[i],'=',/REGEX,/EXTRACT)
       distance_array_2 = STRSPLIT(distance_array[1],'\[',/REGEX,/EXTRACT)
       distance_in_m = FLOAT(distance_array_2[0])/1000.
-      RETURN, distance_in_m
+      RETURN, [STRING(distance_in_m), distance_array[1]]
     ENDIF
   ENDFOR
   error:
-  RETURN, ''
+  RETURN, ['','']
 END
 
 ;------------------------------------------------------------------------------
@@ -101,7 +122,7 @@ END
 
 ;------------------------------------------------------------------------------
 FUNCTION retrieve_detector_source_distance, info
-ON_IOERROR, error
+  ON_IOERROR, error
   search_string = 'detector to source'
   sz = N_ELEMENTS(info)
   FOR i=0,(sz-1) DO BEGIN
@@ -153,3 +174,50 @@ FUNCTION retrieve_pixels_size, info
   ENDFOR
   RETURN, ['','']
 END
+
+;------------------------------------------------------------------------------
+FUNCTION retrieve_run_title, info
+  search_string = 'Run title'
+  run_title = retrieve_text(source=info, search_string=search_string)
+  RETURN, run_title
+END
+
+FUNCTION retrieve_run_notes, info
+  search_string = 'Run Notes'
+  result = retrieve_text(source=info, search_string=search_string)
+  RETURN, result
+END
+
+FUNCTION retrieve_start_time, info
+  search_string = 'Run between'
+  result = retrieve_text(source=info, search_string=search_string)
+  result_2 = STRSPLIT(result,'->',/REGEX,/EXTRAC)
+  RETURN, result_2[0]
+END
+
+FUNCTION retrieve_total_time, info
+  search_string = 'Total runtime'
+  result = retrieve_text(source=info, search_string=search_string)
+  RETURN, result
+END
+
+FUNCTION retrieve_total_acc_current, info
+  search_string = 'Total accel. current'
+  result = retrieve_text(source=info, search_string=search_string)
+  RETURN, result
+END
+
+FUNCTION retrieve_total_detector_counts, info
+  search_string = 'Total detector counts'
+  result = retrieve_text(source=info, search_string=search_string)
+  RETURN, result
+END
+
+FUNCTION retrieve_total_monitor_counts, info
+  search_string = 'Total monitor counts'
+  result = retrieve_text(source=info, search_string=search_string)
+  RETURN, result
+END
+
+
+
