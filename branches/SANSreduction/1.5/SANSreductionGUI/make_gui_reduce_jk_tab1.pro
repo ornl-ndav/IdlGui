@@ -153,16 +153,19 @@ PRO make_gui_reduce_jk_tab1, REDUCE_TAB, tab_size, tab_title
   value1 = WIDGET_LABEL(rowe,$
     VALUE = ' N/A',$
     FRAME = 1,$
+    UNAME = 'reduce_jk_tab1_run_information_wave_range_min',$
     SCR_XSIZE = 100)
   label = WIDGET_LABEL(rowe,$
     VALUE = '->')
   value = WIDGET_LABEL(rowe,$
     VALUE = ' N/A',$
     FRAME = 1,$
+    UNAME = 'reduce_jk_tab1_run_information_wave_range_max',$
     SCR_XSIZE = 100)
   units = WIDGET_LABEL(rowe,$
     VALUE = ' N/A',$
     FRAME = 1,$
+    UNAME = 'reduce_jk_tab1_run_information_wave_range_units',$
     SCR_XSIZE = 100)
     
   rowf = WIDGET_BASE(info_base,$
