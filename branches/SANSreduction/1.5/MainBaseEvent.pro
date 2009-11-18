@@ -71,7 +71,7 @@ PRO MAIN_BASE_event, Event
         replot_counts_vs_tof, Event
       ENDIF
     END
-        
+    
     ;facility Selection
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='facility_selection_validate_button'): begin
@@ -677,7 +677,7 @@ PRO MAIN_BASE_event, Event
     
     ;= TAB2 (REDUCE) ==========================================================
     
-        ;reduction button
+    ;reduction button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='reduction_interruptor'): BEGIN
       CATCH, error
       IF (error NE 0) THEN BEGIN
@@ -994,6 +994,21 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME = 'reduce_jk_tab1_get_run_information'): BEGIN
       jk_get_run_information, Event
+    END
+    
+    ;MORE INFOS
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_jk_tab1_run_more_infos'): BEGIN
+      button_value = getButtonValue(Event,'reduce_jk_tab1_run_more_infos')
+      IF (button_value EQ 'MORE INFOS ...') THEN BEGIN
+        new_value = '... LESS INFOS'
+        putNewButtonValue, Event, 'reduce_jk_tab1_run_more_infos', new_value
+        MapBase, Event, uname='reduce_jk_tab1_run_information_base', 1
+      ENDIF ELSE BEGIN
+        new_value = 'MORE INFOS ...'
+        putNewButtonValue, Event, 'reduce_jk_tab1_run_more_infos', new_value
+        MapBase, Event, uname='reduce_jk_tab1_run_information_base', 0
+      ENDELSE
     END
     
     ;-Advanced part1 ----------------------------------------------------------

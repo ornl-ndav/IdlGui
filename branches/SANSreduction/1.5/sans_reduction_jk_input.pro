@@ -69,10 +69,12 @@ PRO jk_get_run_information, Event
     putTextFieldValue, Event, 'reduce_jk_tab1_run_information_text', $
       listening
     use_run_information_in_jk_gui, Event, INFO=listening
+    activate_widget, Event, 'reduce_jk_tab1_run_more_infos', 1
     
   ENDIF ELSE BEGIN
   
     putTextFieldValue, Event, 'reduce_jk_tab1_run_information_text', listening
+    activate_widget, Event, 'reduce_jk_tab1_run_more_infos', 0
     
   ENDELSE
   

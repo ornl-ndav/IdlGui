@@ -170,12 +170,15 @@ PRO make_gui_reduce_jk_tab1, REDUCE_TAB, tab_size, tab_title
   space = WIDGET_LABEL(rowf,$
     VALUE = '                                        ')
   more = WIDGET_BUTTON(rowf,$
-    VALUE = ' MORE INFOS ... ',$
+    VALUE = 'MORE INFOS ...',$
+    SENSITIVE = 0,$
+    UNAME = 'reduce_jk_tab1_run_more_infos',$
     SCR_XSIZE = 150)
     
   ;text box that will display run information
   text_base = WIDGET_BASE(base,$
     MAP=0,$
+    UNAME = 'reduce_jk_tab1_run_information_base',$
     /COLUMN)
   text = WIDGET_TEXT(text_base,$
     VALUE = '',$
