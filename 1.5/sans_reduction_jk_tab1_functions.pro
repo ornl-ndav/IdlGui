@@ -189,6 +189,11 @@ FUNCTION retrieve_run_notes, info
 END
 
 FUNCTION retrieve_start_time, info
+  CATCH, error
+  IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN, 'N/A'
+  ENDIF
   search_string = 'Run between'
   result = retrieve_text(source=info, search_string=search_string)
   result_2 = STRSPLIT(result,'->',/REGEX,/EXTRAC)
@@ -218,6 +223,23 @@ FUNCTION retrieve_total_monitor_counts, info
   result = retrieve_text(source=info, search_string=search_string)
   RETURN, result
 END
+
+FUNCTION retrieve_wavelength_range, info
+  CATCH, error
+  IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN, ['N/A','N/A','N/A']
+  ENDIF
+  search_string = 'Band with pulse width of'
+  result = retrieve_text(source=info, search_string=search_string)
+  result_2 = STRSPLIT(result,'->',/REGEX,/EXTRAC)
+  min_value = result_2[0]
+  result_3 = STRSPLIT(result_2[1],' ',/REGEX,/EXTRACT)
+  max_value = result_3[0]
+  units_value = result_3[1]
+  RETURN, [min_value, max_value, units_value]
+END
+
 
 
 

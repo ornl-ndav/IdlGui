@@ -133,8 +133,17 @@ PRO use_run_information_in_jk_gui, Event, INFO=info
     'reduce_jk_tab1_run_information_total_monitor_counts', $
     total_counts
     
-    
-    
+  ;retrieve wavelength_range
+  wave_range_and_units = retrieve_wavelength_range(info)
+  putTextFieldValue, Event, $
+  'reduce_jk_tab1_run_information_wave_range_min',$
+  wave_range_and_units[0]
+  putTextFieldValue, Event, $
+  'reduce_jk_tab1_run_information_wave_range_max',$
+  wave_range_and_units[1]
+  putTextFieldValue, Event, $
+  'reduce_jk_tab1_run_information_wave_range_units',$
+  wave_range_and_units[2]
     
   ;retrieve sample detector
   sample_detector_array = retrieve_sample_detector_distance(info)
