@@ -41,8 +41,8 @@ PRO test_RunCommandLine, Event
   ;check first if the output file already exists and if it does, ask the user
   ;if he wants to continue the process.
   
-    output_path = getButtonValue(Event,'output_folder')
-    output_file = getTextfieldValue(Event, 'output_file_name')
+  output_path = getButtonValue(Event,'output_folder')
+  output_file = getTextfieldValue(Event, 'output_file_name')
   output_file_name = output_path + output_file
   
   IF (FILE_TEST(output_file_name)) THEN BEGIN ;yes

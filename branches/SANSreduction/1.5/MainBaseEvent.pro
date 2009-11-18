@@ -715,7 +715,11 @@ PRO MAIN_BASE_event, Event
     
     ;---- GO DATA REDUCTION button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='go_data_reduction_button'): BEGIN
-      test_RunCommandLine, Event ;_run_commandline
+      IF ((*global).sns_jk_switch EQ 'sns') THEN BEGIN
+        test_RunCommandLine, Event ;_run_commandline
+      ENDIF ELSE BEGIN
+        run_jk_command_line, Event
+      ENDELSE
     END
     
     ;==== tab1 (LOAD FILES (1)) ===============================================
@@ -1258,7 +1262,11 @@ PRO MAIN_BASE_event, Event
   ENDCASE
   
   IF ((*global).build_command_line) THEN BEGIN
-    CheckCommandLine, Event         ;_command_line
+    IF ((*global).sns_jk_switch EQ 'sns') THEN BEGIN
+      CheckCommandLine, Event         ;_command_line
+    ENDIF ELSE BEGIN
+      CheckCommandline_for_jk, Event
+    ENDELSE
   ENDIF
   
 END
