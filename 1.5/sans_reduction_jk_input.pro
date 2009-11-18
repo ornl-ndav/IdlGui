@@ -66,13 +66,8 @@ PRO jk_get_run_information, Event
   sz = N_ELEMENTS(listening)
   IF (sz GT 1) THEN BEGIN
   
-    ;add title to message
-    message = STRARR(2)
-    message[0] = '****** Run Information about run number ' + run_number + $
-      ' ******'
     putTextFieldValue, Event, 'reduce_jk_tab1_run_information_text', $
-      [message, listening]
-      
+      listening
     use_run_information_in_jk_gui, Event, INFO=listening
     
   ENDIF ELSE BEGIN

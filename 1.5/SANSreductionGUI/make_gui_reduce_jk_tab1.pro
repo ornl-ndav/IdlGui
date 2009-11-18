@@ -43,113 +43,144 @@ PRO make_gui_reduce_jk_tab1, REDUCE_TAB, tab_size, tab_title
     SCR_YSIZE = tab_size[3],$
     TITLE     = tab_title)
     
-  xoff1 = 425
-  yoff1 = 55
-  event_label = WIDGET_LABEL(BaseTab,$
-    XOFFSET = xoff1,$
-    YOFFSET = yoff1,$
-    VALUE = 'Event File')
-    
-  yoff2 = yoff1 + 77
-  monitor_label = WIDGET_LABEL(BaseTab,$
-    XOFFSET = xoff1,$
-    YOFFSET = yoff2,$
-    VALUE = 'Monitor File')
-    
   base = WIDGET_BASE(BaseTab,$
     /BASE_ALIGN_CENTER,$
     SCR_XSIZE = tab_size[2],$
     /COLUMN)
     
-  ;row1
-  row1 = WIDGET_BASE(base,$
-    /ROW,$
-    /EXCLUSIVE)
-  button1 = WIDGET_BUTTON(row1,$
-    VALUE = 'SAMPLE',$
-    UNAME = 'reduce_jk_tab1_sample_button')
-  button2 = WIDGET_BUTTON(row1,$
-    VALUE = 'BUFFER',$
-    UNAME = 'reduce_jk_tab1_buffer_button')
-  button3 = WIDGET_BUTTON(row1,$
-    VALUE = 'BACKGROUND',$
-    UNAME = 'reduce_jk_tab1_background_button')
-  WIDGET_CONTROL, button1, /SET_BUTTON
-  
   space = WIDGET_LABEL(base,$
     VALUE = ' ')
     
-  rowa = WIDGET_BASE(base,$
-  /ROW)
-  
-  col1 = WIDGET_BASE(rowa, $
-  /ALIGN_CENTER,$
-      /COLUMN)
-    
-  row2 = WIDGET_BASE(col1,$
+  row1 = WIDGET_BASE(base,$
     /ROW,$
     /BASE_ALIGN_CENTER)
-  label = WIDGET_LABEL(row2,$
+  label = WIDGET_LABEL(row1,$
     VALUE = 'Run number:')
-  
-  value = WIDGET_TEXT(row2,$
+  value = WIDGET_TEXT(row1,$
     VALUE = '',$
     XSIZE = 5,$
     YSIZE = 1,$
     /EDITABLE,$
     /ALL_EVENTS,$
     UNAME = 'reduce_jk_tab1_run_number')
-    
-  space = WIDGET_LABEL(col1,$
-  VALUE = ' ')  
-    
-  button = WIDGET_BUTTON(col1,$
+  space = WIDGET_LABEL(row1,$
+    VALUE = ' ')
+  button = WIDGET_BUTTON(row1,$
     UNAME = 'reduce_jk_tab1_get_run_information',$
     SENSITIVE = 0,$
     VALUE = 'GET RUN INFORMATION')
     
-  label = WIDGET_LABEL(rowa,$
-    VALUE = '     OR     ')
-    
-  row2_col2 = WIDGET_BASE(rowa,$
-    /COLUMN)
-  row2_col2_row1 = WIDGET_BASE(row2_col2,$
-    /COLUMN,$
-    FRAME=1)
-  row2_col2_row1_row1 = WIDGET_LABEL(row2_col2_row1,$
-    VALUE='')
-  row2_col2_row1_row2 = WIDGET_BASE(row2_col2_row1,$
-    /ROW)
-  button = WIDGET_BUTTON(row2_col2_row1_row2,$
-    VALUE = 'BROWSE ...')
-  text = WIDGET_TEXT(row2_col2_row1_row2,$
-    VALUE = '',$
-    XSIZE = 50)
-    
-  space = WIDGET_LABEL(row2_col2,$
+  space = WIDGET_LABEL(base,$
     VALUE = ' ')
     
-  row2_col2_row2 = WIDGET_BASE(row2_col2,$
+  info_base = WIDGET_BASE(base,$
     /COLUMN,$
-    FRAME=1)
-  row2_col2_row2_row1 = WIDGET_LABEL(row2_col2_row2,$
-    VALUE='')
-  row2_col2_row2_row2 = WIDGET_BASE(row2_col2_row2,$
-    /ROW)
-  button = WIDGET_BUTTON(row2_col2_row2_row2,$
-    VALUE = 'BROWSE ...')
-  text = WIDGET_TEXT(row2_col2_row2_row2,$
-    VALUE = '',$
-    XSIZE = 50)
+    FRAME = 1,$
+    MAP = 1)
     
-  space = WIDGET_LABEL(base,$
-  VALUE = ' ')  
-
-    ;text box that will display run information
-    text = WIDGET_TEXT(base,$
+  rowa = WIDGET_BASE(info_base,$
+    /ROW)
+  label = WIDGET_LABEL(rowa,$
+    VALUE = '         Run Title:')
+  value = WIDGET_LABEL(rowa,$
+    VALUE = 'N/A',$
+    /ALIGN_LEFT,$
+    FRAME = 1,$
+    SCR_XSIZE = 850)
+    
+  rowb = WIDGET_BASE(info_base,$
+    /ROW)
+  label = WIDGET_LABEL(rowb,$
+    VALUE = '         Run Notes:')
+  value = WIDGET_LABEL(rowb,$
+    VALUE = 'N/A',$
+    FRAME = 1,$
+    /ALIGN_LEFT,$
+    SCR_XSIZE = 850)
+    
+  rowc = WIDGET_BASE(info_base,$
+    /ROW)
+  label = WIDGET_LABEL(rowc,$
+    VALUE = '   Start Date/Time:')
+  value = WIDGET_LABEL(rowc,$
+    VALUE = 'N/A',$
+    FRAME = 1,$
+    /ALIGN_LEFT,$
+    SCR_XSIZE = 200)
+  label = WIDGET_LABEL(rowc,$
+    VALUE = 'Total Run Time:')
+  value = WIDGET_LABEL(rowc,$
+    VALUE = 'N/A',$
+    /ALIGN_LEFT,$
+    FRAME = 1,$
+    SCR_XSIZE = 200)
+    
+  rowd = WIDGET_BASE(info_base,$
+    /ROW)
+  label = WIDGET_LABEL(rowd,$
+    VALUE = 'Total Acc. Current:')
+  value = WIDGET_LABEL(rowd,$
+    VALUE = 'N/A',$
+    FRAME = 1,$
+    /ALIGN_LEFT,$
+    SCR_XSIZE = 200)
+  label = WIDGET_LABEL(rowd,$
+    VALUE = 'Total Detector Counts:')
+  value = WIDGET_LABEL(rowd,$
+    VALUE = 'N/A',$
+    FRAME = 1,$
+    /ALIGN_LEFT,$
+    SCR_XSIZE = 200)
+  label = WIDGET_LABEL(rowd,$
+    VALUE = 'Total Monitor Counts:')
+  value = WIDGET_LABEL(rowd,$
+    VALUE = 'N/A',$
+    /ALIGN_LEFT,$
+    FRAME = 1,$
+    SCR_XSIZE = 165)
+    
+  rowe = WIDGET_BASE(info_base,$
+    /ROW)
+  label = WIDGET_LABEL(rowe,$
+    VALUE = 'Wavelength Range (band with pulse width of 20/A):')
+  value1 = WIDGET_LABEL(rowe,$
+    VALUE = 'N/A',$
+    FRAME = 1,$
+    SCR_XSIZE = 100)
+  label = WIDGET_LABEL(rowe,$
+    VALUE = '->')
+  value = WIDGET_LABEL(rowe,$
+    VALUE = 'N/A',$
+    FRAME = 1,$
+    SCR_XSIZE = 100)
+  units = WIDGET_LABEL(rowe,$
+    VALUE = 'N/A',$
+    FRAME = 1,$
+    SCR_XSIZE = 100)
+    
+  rowf = WIDGET_BASE(info_base,$
+    /ROW)
+  label = WIDGET_LABEL(rowf,$
+    VALUE = 'Distance Sample-Detector:')
+  value = WIDGET_LABEL(rowf,$
+    VALUE = 'N/A',$
+    FRAME = 1,$
+    SCR_XSIZE = 150,$
+    /ALIGN_LEFT)
+  space = WIDGET_LABEL(rowf,$
+    VALUE = '                                        ')
+  more = WIDGET_BUTTON(rowf,$
+    VALUE = ' MORE INFOS ... ',$
+    SCR_XSIZE = 150)
+    
+  ;text box that will display run information
+  text_base = WIDGET_BASE(base,$
+    MAP=0,$
+    /COLUMN)
+  text = WIDGET_TEXT(text_base,$
     VALUE = '',$
     UNAME = 'reduce_jk_tab1_run_information_text',$
     XSIZE = 140,$
-    YSIZE = 32)
+    YSIZE = 29)
     
 END
