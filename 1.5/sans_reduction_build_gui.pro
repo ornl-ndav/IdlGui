@@ -150,7 +150,8 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     build_command_line: 1,$
     testing_on_mac: testing_on_mac, $
     
-    jk_default_value: {sample_detector: '',$
+    jk_default_value: {sample_detector: 'N/A',$
+    sample_detector_with_units: 'N/A',$
     monitor_detector: '10.0',$
     monitor_source: '',$
     detector_source: '',$
