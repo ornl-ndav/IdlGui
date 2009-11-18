@@ -36,9 +36,6 @@ FUNCTION retrieve_text, source=source, search_string=search_string
   sz = N_ELEMENTS(source)
   FOR i=0,(sz-1) DO BEGIN
     result = STREGEX(source[i],search_string,/BOOLEAN,/FOLD_CASE)
-    print, 'search_string: ' + search_string
-    print, result
-    print
     IF (result NE 0b) THEN BEGIN
       result_array = STRSPLIT(source[i],'=',/REGEX,/EXTRACT)
       IF (N_ELEMENTS(result_array) GT 2) THEN BEGIN

@@ -178,8 +178,10 @@ PRO make_gui_reduce_jk_tab1, REDUCE_TAB, tab_size, tab_title
     UNAME = 'reduce_jk_tab1_run_information_sample_detector',$
     SCR_XSIZE = 150,$
     /ALIGN_LEFT)
+    label = WIDGET_LABEL(rowf,$
+    VALUE = '<- (Go to ADVANCED/PART 1 to change this value)')
   space = WIDGET_LABEL(rowf,$
-    VALUE = '                                        ')
+    VALUE = '                                   ')
   more = WIDGET_BUTTON(rowf,$
     VALUE = 'MORE INFOS ...',$
     SENSITIVE = 0,$
