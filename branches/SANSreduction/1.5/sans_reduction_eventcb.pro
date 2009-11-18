@@ -375,6 +375,8 @@ PRO tab_event, Event
         ENDELSE
       END
       1: BEGIN                    ;reduce tab
+        display_reduction_interruptor, EVENT=event, $
+          mode=(*global).sns_jk_switch
       END
       2: BEGIN                    ;plot tab
         rePlotAsciiData, Event

@@ -687,10 +687,12 @@ PRO MAIN_BASE_event, Event
           IF (Event.x GT 108 AND $
             Event.x LT 247) THEN BEGIN ;SNS reduction
             display_reduction_interruptor, EVENT=event, mode='sns'
+            (*global).sns_jk_switch = 'sns'
             map_base, Event, 'sns_reduction_base', 1
           ENDIF
           IF (Event.x GT 247 AND $
             Event.x LT 405) THEN BEGIN ;JK reduction
+            (*global).sns_jk_switch = 'jk'
             display_reduction_interruptor, EVENT=event, mode='jk'
             map_base, Event, 'sns_reduction_base', 0
           ENDIF
@@ -1027,7 +1029,19 @@ PRO MAIN_BASE_event, Event
       activate_widget, Event, 'reduce_jk_tab3_tab1_auto_center_y_base', 1
     END
     
+    ;-Advanced part2 ----------------------------------------------------------
     
+    ;yes and no of auto find transmission
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_jk_tab3_tab2_auto_find_transmission_yes'): BEGIN
+      activate_widget, Event, $
+        'reduce_jk_tab3_tab2_auto_find_transmission_base', 0
+    END
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_jk_tab3_tab2_auto_find_transmission_no'): BEGIN
+      activate_widget, Event, $
+        'reduce_jk_tab3_tab2_auto_find_transmission_base', 1
+    END
     
     ;= TAB3 (PLOT) ============================================================
     

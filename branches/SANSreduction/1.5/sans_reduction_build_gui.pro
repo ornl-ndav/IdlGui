@@ -150,6 +150,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     build_command_line: 1,$
     testing_on_mac: testing_on_mac, $
     
+    sns_jk_switch: 'sns',$
     jk_default_value: {sample_detector: 'N/A',$
     sample_detector_with_units: 'N/A',$
     monitor_detector: '10.0',$
@@ -550,6 +551,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     
     MapBase_from_base, BASE=main_base, uname='sns_reduction_base', 0
     display_reduction_interruptor, MAIN_BASE=main_base, mode='jk'
+    (*global).sns_jk_switch = 'jk'
     
   ENDIF
   
