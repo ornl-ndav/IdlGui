@@ -102,8 +102,7 @@ PRO make_gui_reduce_jk_tab3_tab2, advanced_base, tab_size, tab_title
     VALUE = 'No')
   WIDGET_CONTROL, no, /SET_BUTTON
   label = WIDGET_LABEL(row1,$
-    VALUE = 'Auto find Transmission')
-    
+    VALUE = '    Auto find Transmission')
     
   row2 = WIDGET_BASE(frame1,$
     SENSITIVE = 1,$
