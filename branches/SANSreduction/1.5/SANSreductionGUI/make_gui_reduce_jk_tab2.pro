@@ -53,8 +53,10 @@ PRO make_gui_reduce_jk_tab2, REDUCE_TAB, tab_size, tab_title
   label = WIDGET_LABEL(row1,$
     VALUE = 'Root name of output file: ')
   value = WIDGET_TEXT(row1,$
-    VALUE = ' ',$
+    VALUE = '',$
     XSIZE = 40,$
+    /ALL_EVENTS,$
+    UNAME = 'reduce_jk_tab2_root_name_extension',$
     /EDITABLE)
   label = WIDGET_LABEL(row1,$
     VALUE = '(no extension)')
