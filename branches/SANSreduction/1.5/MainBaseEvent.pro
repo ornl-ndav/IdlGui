@@ -1050,6 +1050,48 @@ PRO MAIN_BASE_event, Event
       
     ;-Advanced part1 ----------------------------------------------------------
       
+    ;normalization yes and no buttons
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_jk_tab3_tab1_normalize_data_yes'): BEGIN
+      CheckCommandline_for_jk, Event
+    END
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_jk_tab3_tab1_normalize_data_no'): BEGIN
+      CheckCommandline_for_jk, Event
+    END
+    
+    ;various distances
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_jk_tab3_tab1_sample_detector_distance'): BEGIN
+      CheckCommandLine_for_jk, Event
+    END
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_jk_tab3_tab1_sample_source_distance'): BEGIN
+      CheckCommandLine_for_jk, Event
+    END
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_jk_tab3_tab1_monitor_detector_distance'): BEGIN
+      CheckCommandLine_for_jk, Event
+    END
+    
+    ;various pixels infos
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_jk_tab3_tab1_number_of_x_pixels'): BEGIN
+      CheckCommandLine_for_jk, Event
+    END
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_jk_tab3_tab1_number_of_y_pixels'): BEGIN
+      CheckCommandLine_for_jk, Event
+    END
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_jk_tab3_tab1_x_size'): BEGIN
+      CheckCommandLine_for_jk, Event
+    END
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_jk_tab3_tab1_y_size'): BEGIN
+      CheckCommandLine_for_jk, Event
+    END
+    
     ;Yes, auto find spectrum center
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='reduce_jk_tab3_tab1_auto_center_yes'): BEGIN
@@ -1064,6 +1106,15 @@ PRO MAIN_BASE_event, Event
       activate_widget, Event, 'reduce_jk_tab3_tab1_auto_center_x_base', 1
       activate_widget, Event, 'reduce_jk_tab3_tab1_auto_center_y_base', 1
       CheckCommandline_for_jk, Event
+    END
+    
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_jk_tab3_tab1_spectrum_x_center'): BEGIN
+      CheckCommandLine_for_jk, Event
+    END
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_jk_tab3_tab1_spectrum_y_center'): BEGIN
+      CheckCommandLine_for_jk, Event
     END
     
     ;-Advanced part2 ----------------------------------------------------------
