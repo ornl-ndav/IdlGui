@@ -67,103 +67,59 @@ PRO CheckCommandline_for_jk, Event
   ENDIF
   
   Iq = is_this_button_selected(Event,value='Iq')
-  flag = 'Iq'
-  IF (Iq EQ 1) THEN BEGIN
-    cmd += ' -save '
-  ENDIF ELSE BEGIN
-    cmd += ' -nosave '
+  IF (Iq EQ 0) THEN BEGIN
+    cmd += ' -nosave Iq'
   ENDELSE
-  cmd += flag
   
   IvQxQy = is_this_button_selected(Event,value='IvQxQy')
-  flag = 'IvQxy'
   IF (IvQxQy EQ 1) THEN BEGIN
-    cmd += ' -save '
-  ENDIF ELSE BEGIN
-    cmd += ' -nosave '
-  ENDELSE
-  cmd+= flag
+    cmd += ' -save IvQxy'
+  ENDIF
   
   IvXY = is_this_button_selected(Event,value='IvXY')
-  flag = 'IvXY'
   IF (IvXY EQ 1) THEN BEGIN
-    cmd += ' -save '
-  ENDIF ELSE BEGIN
-    cmd += ' -nosave '
-  ENDELSE
-  cmd+= flag
+    cmd += ' -save IvXY'
+  ENDIF
   
   tof2D = is_this_button_selected(Event,value='tof2D')
-  flag = 'tof2D'
   IF (tof2D EQ 1) THEN BEGIN
-    cmd += ' -save '
-  ENDIF ELSE BEGIN
-    cmd += ' -nosave '
-  ENDELSE
-  cmd+= flag
+    cmd += ' -save tof2D'
+  ENDIF
   
   tofIq = is_this_button_selected(Event,value='tofIq')
-  flag = 'tofIq'
   IF (tofIq EQ 1) THEN BEGIN
-    cmd += ' -save '
-  ENDIF ELSE BEGIN
-    cmd += ' -nosave '
-  ENDELSE
-  cmd+= flag
+    cmd += ' -save tofIq'
+  ENDIF
   
   IvTof = is_this_button_selected(Event,value='IvTof')
-  flag = 'IvTof'
   IF (IvTof EQ 1) THEN BEGIN
-    cmd += ' -save '
-  ENDIF ELSE BEGIN
-    cmd += ' -nosave '
-  ENDELSE
-  cmd+= flag
+    cmd += ' -save IvTof'
+  ENDIF
   
   IvWl = is_this_button_selected(Event,value='IvWl')
-  flag = 'IvWl'
   IF (IvWl EQ 1) THEN BEGIN
-    cmd += ' -save '
-  ENDIF ELSE BEGIN
-    cmd += ' -nosave '
-  ENDELSE
-  cmd+= flag
+    cmd += ' -save IvWl'
+  ENDIF
   
   TvTof = is_this_button_selected(Event,value='TvTof')
-  flag = 'TvTof'
   IF (TvTof EQ 1) THEN BEGIN
-    cmd += ' -save '
-  ENDIF ELSE BEGIN
-    cmd += ' -nosave '
-  ENDELSE
-  cmd+= flag
+    cmd += ' -save TvTof'
+  ENDIF
   
   TvWl = is_this_button_selected(Event,value='TvWl')
-  flag = 'TvWl'
   IF (TvWl EQ 1) THEN BEGIN
-    cmd += ' -save '
-  ENDIF ELSE BEGIN
-    cmd += ' -nosave '
-  ENDELSE
-  cmd+= flag
+    cmd += ' -save TvWl'
+  ENDIF
   
   MvTof = is_this_button_selected(Event,value='MvTof')
-  flag = 'MvTof'
   IF (MvTof EQ 1) THEN BEGIN
-    cmd += ' -save '
-  ENDIF ELSE BEGIN
-    cmd += ' -nosave '
-  ENDELSE
-  cmd+= flag
+    cmd += ' -save MvTof'
+  ENDIF
   
   MvWl = is_this_button_selected(Event,value='MvWl')
-  flag = 'MvWl'
   IF (MvWl EQ 1) THEN BEGIN
-    cmd += ' -save '
-  ENDIF ELSE BEGIN
-    cmd += ' -nosave '
-  ENDELSE
-  cmd+= flag
+    cmd += ' -save MvWl'
+  ENDIF
   
   ;advanced part1 ============================================================
   
@@ -295,6 +251,12 @@ PRO CheckCommandline_for_jk, Event
     ENDIF
     cmd += ' -yc ' + spec_y
   ENDELSE
+  
+  ;advanced part2 ============================================================
+  
+  
+  
+  
   
   ;- Put cmd in the text box -
   putCommandLine, Event, cmd
