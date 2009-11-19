@@ -58,6 +58,14 @@ PRO CheckCommandline_for_jk, Event
   END
   
   ;OUTPUT tab
+  
+  ;Root name of output file
+  root_value = STRCOMPRESS(getTextFieldValue(Event,$
+    'reduce_jk_tab2_root_name_extension'),/REMOVE_ALL)
+  IF (root_value NE '') THEN BEGIN
+    cmd += ' -o ' + root_value
+  ENDIF
+  
   Iq = is_this_button_selected(Event,value='Iq')
   flag = 'Iq'
   IF (Iq EQ 1) THEN BEGIN

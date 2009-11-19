@@ -1022,6 +1022,10 @@ PRO MAIN_BASE_event, Event
     
     ;-OUTPUT tab --------------------------------------------------------------
     WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_jk_tab2_root_name_extension'): BEGIN
+      CheckCommandline_for_jk, Event
+    END
+    WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='iq_output'): CheckCommandline_for_jk, Event
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='ivqxqy_output'): CheckCommandline_for_jk, Event
