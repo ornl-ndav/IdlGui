@@ -237,6 +237,26 @@ FUNCTION retrieve_wavelength_range, info
   RETURN, [min_value, max_value, units_value]
 END
 
+;------------------------------------------------------------------------------
+FUNCTION is_this_button_selected, Event, value=value
 
+  CASE (value) OF
+    'Iq':     UNAME = 'iq_output'
+    'IvQxQy': UNAME = 'ivqxqy_output'
+    'IvXY':   UNAME = 'ivxy_output'
+    'tof2D':  UNAME = 'tof2d_output'
+    'tofIq':  UNAME = 'tofiq_output'
+    'IvTof':  UNAME = 'ivtof_output'
+    'IvWl':   UNAME = 'ivwl_output'
+    'TvTof':  UNAME = 'tvtof_output'
+    'TvWl':   UNAME = 'tvwl_output'
+    'MvTof':  UNAME = 'mvtof_output'
+    'MvWl':   UNAME = 'mvwl_output'
+  ENDCASE
+  
+  value = isButtonSelected(Event,uname)
+  RETURN, value
+  
+END
 
 

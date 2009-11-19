@@ -66,27 +66,38 @@ PRO make_gui_reduce_jk_tab2, REDUCE_TAB, tab_size, tab_title
   row2 = WIDGET_BASE(base,$
     /NONEXCLUSIVE)
   output1 = WIDGET_BUTTON(row2,$
+    UNAME = 'iq_output',$
     VALUE = 'Iq: I(Q)')
   output2 = WIDGET_BUTTON(row2,$
+    UNAME = 'ivqxqy_output',$
     VALUE = 'IvQxQy: 2D I(Qx,Qy)')
   output3 = WIDGET_BUTTON(row2,$
+    UNAME = 'ivxy_output',$
     VALUE = 'IvXY: 2D Counts(x,y) integrated over TOF')
   output4 = WIDGET_BUTTON(row2,$
+    UNAME = 'tof2d_output',$
     VALUE = 'tof2D: 2D counts(x,y) for each TOF slice')
   output5 = WIDGET_BUTTON(row2,$
+    UNAME = 'tofiq_output',$
     VALUE = 'tofIq: I(Q) for each time bin')
   output6 = WIDGET_BUTTON(row2,$
+    UNAME = 'ivtof_output',$
     VALUE = 'IvTof: Counts vs TOF')
   output7 = WIDGET_BUTTON(row2,$
+    UNAME = 'ivwl_output',$
     VALUE = 'IvWl: Counts vs Wavelength')
   output9 = WIDGET_BUTTON(row2,$
-    VALUE = 'TvsTof: Transmission vs TOF')
+    UNAME = 'tvtof_output',$
+    VALUE = 'TvTof: Transmission vs TOF')
   output10 = WIDGET_BUTTON(row2,$
-    VALUE = 'TvsWl: Transmsission vs Wavelength')
+    UNAME = 'tvwl_output',$
+    VALUE = 'TvWl: Transmsission vs Wavelength')
   output11 = WIDGET_BUTTON(row2,$
-    VALUE = 'MvsTof: Monitor vs TOF')
+    UNAME = 'mvtof_output',$
+    VALUE = 'MvTof: Monitor vs TOF')
   output12 = WIDGET_BUTTON(row2,$
-    VALUE = 'MvsWl: Monitor vs Wavelength')
+    UNAME = 'mvwl_output',$
+    VALUE = 'MvWl: Monitor vs Wavelength')
   WIDGET_CONTROL, output1, /SET_BUTTON
   
   
