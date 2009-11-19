@@ -59,7 +59,6 @@ PRO CheckCommandline_for_jk, Event
   
   ;OUTPUT tab
   Iq = is_this_button_selected(Event,value='Iq')
-  print, Iq
   flag = 'Iq'
   IF (Iq EQ 1) THEN BEGIN
     cmd += ' -save '
@@ -79,7 +78,7 @@ PRO CheckCommandline_for_jk, Event
   
   IvXY = is_this_button_selected(Event,value='IvXY')
   flag = 'IvXY'
-  IF (IvQxQy EQ 1) THEN BEGIN
+  IF (IvXY EQ 1) THEN BEGIN
     cmd += ' -save '
   ENDIF ELSE BEGIN
     cmd += ' -nosave '
@@ -88,7 +87,7 @@ PRO CheckCommandline_for_jk, Event
   
   tof2D = is_this_button_selected(Event,value='tof2D')
   flag = 'tof2D'
-  IF (IvQxQy EQ 1) THEN BEGIN
+  IF (tof2D EQ 1) THEN BEGIN
     cmd += ' -save '
   ENDIF ELSE BEGIN
     cmd += ' -nosave '
@@ -97,7 +96,7 @@ PRO CheckCommandline_for_jk, Event
   
   tofIq = is_this_button_selected(Event,value='tofIq')
   flag = 'tofIq'
-  IF (IvQxQy EQ 1) THEN BEGIN
+  IF (tofIq EQ 1) THEN BEGIN
     cmd += ' -save '
   ENDIF ELSE BEGIN
     cmd += ' -nosave '
@@ -106,7 +105,7 @@ PRO CheckCommandline_for_jk, Event
   
   IvTof = is_this_button_selected(Event,value='IvTof')
   flag = 'IvTof'
-  IF (IvQxQy EQ 1) THEN BEGIN
+  IF (IvTof EQ 1) THEN BEGIN
     cmd += ' -save '
   ENDIF ELSE BEGIN
     cmd += ' -nosave '
@@ -115,7 +114,7 @@ PRO CheckCommandline_for_jk, Event
   
   IvWl = is_this_button_selected(Event,value='IvWl')
   flag = 'IvWl'
-  IF (IvQxQy EQ 1) THEN BEGIN
+  IF (IvWl EQ 1) THEN BEGIN
     cmd += ' -save '
   ENDIF ELSE BEGIN
     cmd += ' -nosave '
@@ -124,7 +123,7 @@ PRO CheckCommandline_for_jk, Event
   
   TvTof = is_this_button_selected(Event,value='TvTof')
   flag = 'TvTof'
-  IF (IvQxQy EQ 1) THEN BEGIN
+  IF (TvTof EQ 1) THEN BEGIN
     cmd += ' -save '
   ENDIF ELSE BEGIN
     cmd += ' -nosave '
@@ -133,7 +132,7 @@ PRO CheckCommandline_for_jk, Event
   
   TvWl = is_this_button_selected(Event,value='TvWl')
   flag = 'TvWl'
-  IF (IvQxQy EQ 1) THEN BEGIN
+  IF (TvWl EQ 1) THEN BEGIN
     cmd += ' -save '
   ENDIF ELSE BEGIN
     cmd += ' -nosave '
@@ -142,7 +141,7 @@ PRO CheckCommandline_for_jk, Event
   
   MvTof = is_this_button_selected(Event,value='MvTof')
   flag = 'MvTof'
-  IF (IvQxQy EQ 1) THEN BEGIN
+  IF (MvTof EQ 1) THEN BEGIN
     cmd += ' -save '
   ENDIF ELSE BEGIN
     cmd += ' -nosave '
@@ -151,7 +150,7 @@ PRO CheckCommandline_for_jk, Event
   
   MvWl = is_this_button_selected(Event,value='MvWl')
   flag = 'MvWl'
-  IF (IvQxQy EQ 1) THEN BEGIN
+  IF (MvWl EQ 1) THEN BEGIN
     cmd += ' -save '
   ENDIF ELSE BEGIN
     cmd += ' -nosave '
