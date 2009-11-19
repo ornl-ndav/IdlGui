@@ -695,6 +695,7 @@ PRO MAIN_BASE_event, Event
             (*global).sns_jk_switch = 'jk'
             display_reduction_interruptor, EVENT=event, mode='jk'
             map_base, Event, 'sns_reduction_base', 0
+            CheckCommandline_for_jk, Event
           ENDIF
         ENDIF
         
@@ -994,12 +995,14 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='reduce_jk_tab1_run_number'): BEGIN
       validate_or_not_get_run_information, Event
+      CheckCommandline_for_jk, Event
     END
     
     ;INPUT tab
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME = 'reduce_jk_tab1_get_run_information'): BEGIN
       jk_get_run_information, Event
+      CheckCommandline_for_jk, Event
     END
     
     ;MORE INFOS
@@ -1017,13 +1020,38 @@ PRO MAIN_BASE_event, Event
       ENDELSE
     END
     
+    ;-OUTPUT tab --------------------------------------------------------------
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='iq_output'): CheckCommandline_for_jk, Event
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='ivqxqy_output'): CheckCommandline_for_jk, Event
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='ivxy_output'): CheckCommandline_for_jk, Event
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='tof2d_output'): CheckCommandline_for_jk, Event
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='tofiq_output'): CheckCommandline_for_jk, Event
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='ivtof_output'): CheckCommandline_for_jk, Event
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='ivwl_output'): CheckCommandline_for_jk, Event
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='tvtof_output'): CheckCommandline_for_jk, Event
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='tvwl_output'): CheckCommandline_for_jk, Event
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='mvtof_output'): CheckCommandline_for_jk, Event
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='mvwl_output'): CheckCommandline_for_jk, Event
+      
     ;-Advanced part1 ----------------------------------------------------------
-    
+      
     ;Yes, auto find spectrum center
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='reduce_jk_tab3_tab1_auto_center_yes'): BEGIN
       activate_widget, Event, 'reduce_jk_tab3_tab1_auto_center_x_base', 0
       activate_widget, Event, 'reduce_jk_tab3_tab1_auto_center_y_base', 0
+      CheckCommandline_for_jk, Event
     END
     
     ;No, auto find spectrum center
@@ -1031,6 +1059,7 @@ PRO MAIN_BASE_event, Event
       FIND_BY_UNAME='reduce_jk_tab3_tab1_auto_center_no'): BEGIN
       activate_widget, Event, 'reduce_jk_tab3_tab1_auto_center_x_base', 1
       activate_widget, Event, 'reduce_jk_tab3_tab1_auto_center_y_base', 1
+      CheckCommandline_for_jk, Event
     END
     
     ;-Advanced part2 ----------------------------------------------------------
@@ -1040,11 +1069,13 @@ PRO MAIN_BASE_event, Event
       FIND_BY_UNAME='reduce_jk_tab3_tab2_auto_find_transmission_yes'): BEGIN
       activate_widget, Event, $
         'reduce_jk_tab3_tab2_auto_find_transmission_base', 0
+      CheckCommandline_for_jk, Event
     END
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='reduce_jk_tab3_tab2_auto_find_transmission_no'): BEGIN
       activate_widget, Event, $
         'reduce_jk_tab3_tab2_auto_find_transmission_base', 1
+      CheckCommandline_for_jk, Event
     END
     
     ;= TAB3 (PLOT) ============================================================
@@ -1264,9 +1295,7 @@ PRO MAIN_BASE_event, Event
   IF ((*global).build_command_line) THEN BEGIN
     IF ((*global).sns_jk_switch EQ 'sns') THEN BEGIN
       CheckCommandLine, Event         ;_command_line
-    ENDIF ELSE BEGIN
-      CheckCommandline_for_jk, Event
-    ENDELSE
+    ENDIF
   ENDIF
   
 END
