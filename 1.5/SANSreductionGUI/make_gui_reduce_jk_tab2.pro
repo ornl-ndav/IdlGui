@@ -102,6 +102,4 @@ PRO make_gui_reduce_jk_tab2, REDUCE_TAB, tab_size, tab_title
     VALUE = 'MvWl: Monitor vs Wavelength')
   WIDGET_CONTROL, output1, /SET_BUTTON
   
-  
-  
 END

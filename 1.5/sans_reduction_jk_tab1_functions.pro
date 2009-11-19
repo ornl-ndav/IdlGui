@@ -259,4 +259,16 @@ FUNCTION is_this_button_selected, Event, value=value
   
 END
 
+;------------------------------------------------------------------------------
+FUNCTION get_JK_advanced_part1_normalization_flag, Event
+  value = isButtonSelected(Event,'reduce_jk_tab3_tab1_normalize_data_yes')
+  RETURN, value
+END
+
+;------------------------------------------------------------------------------
+FUNCTION get_JK_advanced_part1_spectrum_center_flag, Event
+  value = isButtonSelected(Event,'reduce_jk_tab3_tab1_auto_center_yes')
+  RETURN, value
+END
+
 

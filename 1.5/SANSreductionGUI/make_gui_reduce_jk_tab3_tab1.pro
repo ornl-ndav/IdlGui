@@ -67,8 +67,10 @@ PRO make_gui_reduce_jk_tab3_tab1, advanced_base, tab_size, tab_title
     /ROW,$
     /EXCLUSIVE)
   yes = WIDGET_BUTTON(yesno,$
+    UNAME = 'reduce_jk_tab3_tab1_normalize_data_yes',$
     VALUE = 'Yes')
   no = WIDGET_BUTTON(yesno,$
+    UNAME = 'reduce_jk_tab3_tab1_normalize_data_no',$
     VALUE = 'No')
   WIDGET_CONTROL, yes, /SET_BUTTON
   label = WIDGET_LABEL(row1,$
@@ -90,8 +92,10 @@ PRO make_gui_reduce_jk_tab3_tab1, advanced_base, tab_size, tab_title
     VALUE = 'Sample - Detector  ')
   value = WIDGET_TEXT(row1,$
     VALUE = '',$
+    /ALL_EVENTS,$
+    /EDITABLE,$
     UNAME = 'reduce_jk_tab3_tab1_sample_detector_distance',$
-    XSIZE = 6)
+    XSIZE = 8)
   label = WIDGET_LABEL(row1,$
     VALUE = 'm')
   row2 = WIDGET_BASE(frame1,$
@@ -102,8 +106,10 @@ PRO make_gui_reduce_jk_tab3_tab1, advanced_base, tab_size, tab_title
     VALUE = 'Sample - Source    ')
   value = WIDGET_TEXT(row2,$
     VALUE = '14.0',$
+    /ALL_EVENTS,$
+    /EDITABLE,$
     UNAME = 'reduce_jk_tab3_tab1_sample_source_distance',$
-    XSIZE = 6)
+    XSIZE = 8)
   label = WIDGET_LABEL(row2,$
     VALUE = 'm')
   row3 = WIDGET_BASE(frame1,$
@@ -114,8 +120,10 @@ PRO make_gui_reduce_jk_tab3_tab1, advanced_base, tab_size, tab_title
     VALUE = 'Monitor - Detector ')
   value = WIDGET_TEXT(row3,$
     VALUE = '10.001',$
+    /ALL_EVENTS,$
+    /EDITABLE,$
     UNAME = 'reduce_jk_tab3_tab1_monitor_detector_distance',$
-    XSIZE = 6)
+    XSIZE = 8)
   label = WIDGET_LABEL(row3,$
     VALUE = 'm')
     
@@ -135,6 +143,8 @@ PRO make_gui_reduce_jk_tab3_tab1, advanced_base, tab_size, tab_title
     VALUE = 'Number of pixels in X direction ')
   value = WIDGET_TEXT(row1,$
     VALUE = '192',$
+    /ALL_EVENTS,$
+    /EDITABLE,$
     UNAME = 'reduce_jk_tab3_tab1_number_of_x_pixels',$
     XSIZE = 3)
   row2 = WIDGET_BASE(frame1,$
@@ -145,6 +155,8 @@ PRO make_gui_reduce_jk_tab3_tab1, advanced_base, tab_size, tab_title
     VALUE = 'Number of pixels in Y direction ')
   value = WIDGET_TEXT(row2,$
     VALUE = '256',$
+    /ALL_EVENTS,$
+    /EDITABLE,$
     UNAME = 'reduce_jk_tab3_tab1_number_of_y_pixels',$
     XSIZE = 3)
   row3 = WIDGET_BASE(frame1,$
@@ -155,6 +167,8 @@ PRO make_gui_reduce_jk_tab3_tab1, advanced_base, tab_size, tab_title
     VALUE = 'Detector pixel size in X direction ')
   value = WIDGET_TEXT(row3,$
     VALUE = '5.5',$
+    /ALL_EVENTS,$
+    /EDITABLE,$
     UNAME = 'reduce_jk_tab3_tab1_x_size',$
     XSIZE = 7)
   label = WIDGET_LABEL(row3,$
@@ -167,6 +181,8 @@ PRO make_gui_reduce_jk_tab3_tab1, advanced_base, tab_size, tab_title
     VALUE = 'Detector pixel size in Y direction ')
   value = WIDGET_TEXT(row4,$
     VALUE = '4.0467',$
+    /ALL_EVENTS,$
+    /EDITABLE,$
     UNAME = 'reduce_jk_tab3_tab1_y_size',$
     XSIZE = 7)
   label = WIDGET_LABEL(row4,$
@@ -206,6 +222,9 @@ PRO make_gui_reduce_jk_tab3_tab1, advanced_base, tab_size, tab_title
     VALUE = 'Spectrum X center ')
   value = WIDGET_TEXT(row1,$
     VALUE = '',$
+    /ALL_EVENTS,$
+    /EDITABLE,$
+    UNAME = 'reduce_jk_tab3_tab1_spectrum_x_center',$
     XSIZE = 5)
   label = WIDGET_LABEL(row1,$
     VALUE = 'pixels')
@@ -219,9 +238,11 @@ PRO make_gui_reduce_jk_tab3_tab1, advanced_base, tab_size, tab_title
     VALUE = 'Spectrum Y center ')
   value = WIDGET_TEXT(row2,$
     VALUE = '',$
+    /ALL_EVENTS,$
+    /EDITABLE,$
+    UNAME = 'reduce_jk_tab3_tab1_spectrum_y_center',$
     XSIZE = 5)
   label = WIDGET_LABEL(row2,$
     VALUE = 'pixels')
-    
     
 END
