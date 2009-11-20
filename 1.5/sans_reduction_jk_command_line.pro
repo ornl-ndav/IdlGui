@@ -46,13 +46,12 @@ PRO CheckCommandline_for_jk, Event
   cmd = 'eqsans_reduce'
   
   ;run number
-  run_number = STRCOMPRESS(getTextFieldValue(Event,$
-    'reduce_jk_tab1_run_number'),/REMOVE_ALL)
+  run_number = STRCOMPRESS((*global).run_number,/REMOVE_ALL)
   IF (run_number NE '') THEN BEGIN
     cmd += ' -r ' + run_number
   ENDIF ELSE BEGIN
     cmd += ' -r ?'
-    missing_arguments_text = ['- Run Number [INPUT]']
+    missing_arguments_text = ['- Run Number [LOAD DATA']
     cmd_status = 0
     ++missing_argument_counter
   END

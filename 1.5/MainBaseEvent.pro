@@ -384,7 +384,7 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='run_number_cw_field'): BEGIN
       load_run_number, Event     ;_eventcb
       error = 0
-      CATCH, error
+     ; CATCH, error
       IF (error NE 0) THEN BEGIN
         CATCH,/CANCEL
         widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -403,12 +403,19 @@ PRO MAIN_BASE_event, Event
             display_images, EVENT=event
             display_selection_images, Event=event
             get_and_plot_tof_array, Event
+            run_number = STRCOMPRESS(getTextFieldValue(Event,$
+              'run_number_cw_field'),/REMOVE_ALL)
+            (*global).run_number = run_number
+            jk_get_run_information, Event
+            putTextFieldValue, Event, $
+              'reduce_jk_tab1_run_information_run_number',$
+              run_number
           ENDIF
         ENDIF ELSE BEGIN
           MapBase, Event, uname='transmission_launcher_base', 0
           display_selection_images, EVENT=event, OFF=1
+          clear_jk_information_base, Event
         ENDELSE
-        
       ENDELSE
     END
     
@@ -416,7 +423,7 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='browse_nexus_button'): BEGIN
       browse_nexus, Event ;_eventcb
       error = 0
-      CATCH, error
+     ; CATCH, error
       IF (error NE 0) THEN BEGIN
         CATCH,/CANCEL
         widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -435,6 +442,10 @@ PRO MAIN_BASE_event, Event
             display_images, EVENT=event
             display_selection_images, Event=event
             get_and_plot_tof_array, Event
+            run_number = get_data_run_number((*global).data_nexus_file_name)
+            (*global).run_number = run_number
+            print, '(*global).run_number: ' + string((*global).run_number)
+            jk_get_run_information, Event
           ENDIF
         ENDIF
       ENDELSE
@@ -998,12 +1009,12 @@ PRO MAIN_BASE_event, Event
       CheckCommandline_for_jk, Event
     END
     
-    ;INPUT tab
-    WIDGET_INFO(wWidget, $
-      FIND_BY_UNAME = 'reduce_jk_tab1_get_run_information'): BEGIN
-      jk_get_run_information, Event
-      CheckCommandline_for_jk, Event
-    END
+    ;    ;INPUT tab
+    ;    WIDGET_INFO(wWidget, $
+    ;      FIND_BY_UNAME = 'reduce_jk_tab1_get_run_information'): BEGIN
+    ;      jk_get_run_information, Event
+    ;      CheckCommandline_for_jk, Event
+    ;    END
     
     ;MORE INFOS
     WIDGET_INFO(wWidget, $

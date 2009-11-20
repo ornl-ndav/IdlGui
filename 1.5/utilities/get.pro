@@ -584,46 +584,56 @@ FUNCTION isButtonSelected, Event, uname
 END
 
 FUNCTION getPlotTabYaxisScale, Event
-;linear
-uname = 'plot_tab_y_axis_lin'
-IF (isButtonSelected(Event,uname)) THEN RETURN, 'lin'
-;log
-uname = 'plot_tab_y_axis_log'
-IF (isButtonSelected(Event,uname)) THEN RETURN, 'log'
-;log(Q.I(Q))
-uname = 'plot_tab_y_axis_log_Q_IQ'
-IF (isButtonSelected(Event,uname)) THEN RETURN, 'log_Q_IQ'
-;log(Q^2.I(Q))
-uname = 'plot_tab_y_axis_log_Q2_IQ'
-IF (isButtonSelected(Event,uname)) THEN RETURN, 'log_Q2_IQ'
-RETURN, ''
+  ;linear
+  uname = 'plot_tab_y_axis_lin'
+  IF (isButtonSelected(Event,uname)) THEN RETURN, 'lin'
+  ;log
+  uname = 'plot_tab_y_axis_log'
+  IF (isButtonSelected(Event,uname)) THEN RETURN, 'log'
+  ;log(Q.I(Q))
+  uname = 'plot_tab_y_axis_log_Q_IQ'
+  IF (isButtonSelected(Event,uname)) THEN RETURN, 'log_Q_IQ'
+  ;log(Q^2.I(Q))
+  uname = 'plot_tab_y_axis_log_Q2_IQ'
+  IF (isButtonSelected(Event,uname)) THEN RETURN, 'log_Q2_IQ'
+  RETURN, ''
 END
 
 FUNCTION getPlotTabXaxisScale, Event
-;linear
-uname = 'plot_tab_x_axis_lin'
-IF (isButtonSelected(Event,uname)) THEN RETURN, 'lin'
-;log
-uname = 'plot_tab_x_axis_log'
-IF (isButtonSelected(Event,uname)) THEN RETURN, 'log'
-;log(Q.I(Q))
-uname = 'plot_tab_x_axis_Q2'
-IF (isButtonSelected(Event,uname)) THEN RETURN, 'Q2'
-RETURN, ''
+  ;linear
+  uname = 'plot_tab_x_axis_lin'
+  IF (isButtonSelected(Event,uname)) THEN RETURN, 'lin'
+  ;log
+  uname = 'plot_tab_x_axis_log'
+  IF (isButtonSelected(Event,uname)) THEN RETURN, 'log'
+  ;log(Q.I(Q))
+  uname = 'plot_tab_x_axis_Q2'
+  IF (isButtonSelected(Event,uname)) THEN RETURN, 'Q2'
+  RETURN, ''
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION getFittingEquationToShow, Event
 
-xaxis = getPlotTabXaxisScale(Event)
-yaxis = getPlotTabYaxisScale(Event)
-
-IF( xaxis NE 'Q2') THEN RETURN, 'no'
-
-IF (yaxis EQ 'log') THEN RETURN, 'rg'
-IF (yaxis EQ 'log_Q_IQ') THEN RETURN, 'rc'
-IF (yaxis EQ 'log_Q2_IQ') THEN RETURN, 'rt'
-
-RETURN, 'no'
-
+  xaxis = getPlotTabXaxisScale(Event)
+  yaxis = getPlotTabYaxisScale(Event)
+  
+  IF( xaxis NE 'Q2') THEN RETURN, 'no'
+  
+  IF (yaxis EQ 'log') THEN RETURN, 'rg'
+  IF (yaxis EQ 'log_Q_IQ') THEN RETURN, 'rc'
+  IF (yaxis EQ 'log_Q2_IQ') THEN RETURN, 'rt'
+  
+  RETURN, 'no'
+  
 END
+
+;------------------------------------------------------------------------------
+FUNCTION get_data_run_number, nexus_file_name
+
+  iNexus = OBJ_NEW('IDLgetNexusRunNumber',nexus_file_name[0])
+  run_number = iNexus->getIDLnexusRunNumber()  
+  RETURN, run_number
+  
+END
+

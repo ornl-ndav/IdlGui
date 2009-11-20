@@ -55,11 +55,12 @@ cd, CurrentFolder
 .run error_message.pro
 .run pickcolorname.pro
 .run fsc_color.pro
+.run IDLgetNexusMetadata__define.pro
 .run IDLgetMetadata__define.pro
 .run sans_reduction_put.pro
 .run IDLsendToGeek__define.pro
 .run IDLsendLogBook__define.pro
-.run IDLgetNexusData__define.pro
+.run IDLgetNexusRunNumber__define.pro
 .run sans_reduction_plot.pro
 .run sans_reduction_gui.pro
 .run sans_reduction_xroi.pro
