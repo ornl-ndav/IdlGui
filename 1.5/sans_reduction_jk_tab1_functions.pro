@@ -271,4 +271,30 @@ FUNCTION get_JK_advanced_part1_spectrum_center_flag, Event
   RETURN, value
 END
 
+;------------------------------------------------------------------------------
+FUNCTION is_correction_for_source_spectrum, Event
+  value = isButtonSelected(Event,$
+    'reduce_jk_tab3_tab1_correction_for_source_yes')
+  RETURN, value
+END
 
+;------------------------------------------------------------------------------
+FUNCTION is_correction_for_Q_coverage, Event
+  value = isButtonSelected(Event, $
+    'reduce_jk_tab3_tab1_correction_for_Q_coverage_yes')
+  RETURN, value
+END
+
+;------------------------------------------------------------------------------
+FUNCTION is_auto_find_transmission, Event
+  value = isButtonSelected(Event, $
+    'reduce_jk_tab3_tab2_auto_find_transmission_yes')
+  RETURN, value
+END
+
+;------------------------------------------------------------------------------
+FUNCTION is_discard_value_in_us_selected, Event
+  value = isButtonSelected(Event, $
+    'reduce_jk_tab3_tab2_discard_data_us')
+  RETURN, VALUE
+END

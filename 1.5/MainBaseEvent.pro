@@ -1119,6 +1119,26 @@ PRO MAIN_BASE_event, Event
     
     ;-Advanced part2 ----------------------------------------------------------
     
+    ;Correction for source spectrum
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_jk_tab3_tab1_correction_for_source_yes'): BEGIN
+      CheckCommandline_for_jk, Event
+    END
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_jk_tab3_tab1_correction_for_source_no'): BEGIN
+      CheckCommandline_for_jk, Event
+    END
+    
+    ;Correction for Q-coverage
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_jk_tab3_tab1_correction_for_Q_coverage_yes'): BEGIN
+      CheckCommandline_for_jk, Event
+    END
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_jk_tab3_tab1_correction_for_Q_coverage_no'): BEGIN
+      CheckCommandline_for_jk, Event
+    END
+    
     ;yes and no of auto find transmission
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='reduce_jk_tab3_tab2_auto_find_transmission_yes'): BEGIN
@@ -1131,6 +1151,62 @@ PRO MAIN_BASE_event, Event
       activate_widget, Event, $
         'reduce_jk_tab3_tab2_auto_find_transmission_base', 1
       CheckCommandline_for_jk, Event
+    END
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_jk_tab3_tab1_transmission_x_axis'): BEGIN
+      CheckCommandline_for_jk, Event
+    END
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_jk_tab3_tab1_transmission_y_axis'): BEGIN
+      CheckCommandline_for_jk, Event
+    END
+    
+    ;number of time channel
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_jk_tab3_tab1_number_time_channel'): BEGIN
+      CheckCommandLine_for_jk, Event
+    END
+    
+    ;source frequency
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_jk_tab3_tab2_source_frequency'): BEGIN
+      CheckCommandLine_for_jk, Event
+    END
+    
+    ;TOF offset
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_jk_tab3_tab2_tof_offset'): BEGIN
+      CheckCommandLine_for_jk, Event
+    END
+    
+    ;Half Width of the Proton Pulse
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_jk_tab3_tab2_width'): BEGIN
+      CheckCommandLine_for_jk, Event
+    END
+    
+    ;Discard data at the beginning and end
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_jk_tab3_tab2_discard_data_beginning'): BEGIN
+      CheckCommandLine_for_jk, Event
+    END
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_jk_tab3_tab2_discard_data_end'): BEGIN
+      CheckCommandLine_for_jk, Event
+    END
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_jk_tab3_tab2_discard_data_us'): BEGIN
+      CheckCommandLine_for_jk, Event
+    END
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_jk_tab3_tab2_discard_data_angstroms'): BEGIN
+      CheckCommandLine_for_jk, Event
+    END
+    
+    ;frame wavelength
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_jk_tab3_tab2_frame_wavelength'): BEGIN
+      CheckCommandLine_for_jk, Event
     END
     
     ;= TAB3 (PLOT) ============================================================
