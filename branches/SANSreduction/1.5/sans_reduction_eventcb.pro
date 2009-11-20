@@ -179,7 +179,7 @@ PRO browse_nexus, Event
     path)
     
   IF (FullNexusName NE '') THEN BEGIN
-    ;change default path
+      ;change default path
     (*global).nexus_path = new_path
     retrieveNexus, Event, FullNexusName
     ;put full path of nexus in reduce tab1
@@ -252,6 +252,7 @@ PRO load_run_number, Event
   RunNumber  = getRunNumber(Event)
   
   IF (RunNumber NE 0) THEN BEGIN
+
     IDLsendToGeek_addLogBookText, Event, '> Looking for Run Number ' + $
       STRCOMPRESS(RunNumber,/REMOVE_ALL) + ' :'
       
@@ -354,6 +355,8 @@ PRO tab_event, Event
   CurrTabSelect = widget_info(tab_id,/TAB_CURRENT)
   PrevTabSelect = (*global).PrevTabSelect
   
+  WIDGET_CONTROL, /HOURGLASS
+  
   IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
     CASE (CurrTabSelect) OF
       0: BEGIN ;first tab
@@ -377,6 +380,12 @@ PRO tab_event, Event
       1: BEGIN                    ;reduce tab
         display_reduction_interruptor, EVENT=event, $
           mode=(*global).sns_jk_switch
+        IF ((*global).sns_jk_switch EQ 'sns') THEN BEGIN
+          CheckCommandLine, Event         ;_command_line
+        ENDIF ELSE BEGIN
+;          jk_get_run_information, Event
+          CheckCommandline_for_jk, Event
+        ENDELSE
       END
       2: BEGIN                    ;plot tab
         rePlotAsciiData, Event
@@ -387,6 +396,9 @@ PRO tab_event, Event
     ENDCASE
     (*global).PrevTabSelect = CurrTabSelect
   ENDIF
+  
+  WIDGET_CONTROL, HOURGLASS=0
+  
 END
 
 ;------------------------------------------------------------------------------

@@ -116,7 +116,7 @@ PRO RunJKCommandLine, Event
     ;in status dr frame
     status_text = 'Data Reduction ... DONE WITH SUCCESS!'
     putTextFieldValue, Event, 'data_reduction_status_frame', status_text
-
+    
   ;    ;make sure the output file exist and put its full name in the fitting
   ;    ;tab
   ;    short_output_file_name = (*global).short_data_nexus_file_name
@@ -150,8 +150,11 @@ PRO RunJKCommandLine, Event
   ;        /ERROR,$
   ;        DIALOG_PARENT = id)
   ;    ENDELSE
+  
   ENDELSE
+  
   ;turn off hourglass
   WIDGET_CONTROL,hourglass=0
+
 END
 

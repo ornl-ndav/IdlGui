@@ -150,13 +150,15 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     build_command_line: 1,$
     testing_on_mac: testing_on_mac, $
     
+    run_number: '',$
+    
     sns_jk_switch: 'sns',$
     jk_default_value: {sample_detector: 'N/A',$
     sample_detector_with_units: 'N/A',$
     monitor_detector: '10.0',$
     monitor_source: '',$
     detector_source: '',$
-    source_frequency: '60',$
+    source_rate: '60',$
     sample_source: '14.0',$
     number_of_pixels: {x : '192',$
     y: '256'},$
@@ -507,7 +509,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     ucams EQ 'j35') THEN BEGIN
     ;nexus_path           = '~/SVN/IdlGui/branches/SANSreduction/1.0'
     ;nexus_path           = '~/EQSANS/2009_2_6_SCI/1/39/NeXus/'
-    nexus_path           = '~/EQSANS/2009_2_6_SCI/1/40/NeXus/'
+    nexus_path           = '/SNS/EQSANS/2009_2_6_SCI/1/71/NeXus/'
     (*global).nexus_path = nexus_path
     (*global).selection_path = '~/results/'
     (*global).wave_dep_back_sub_path = $
@@ -522,13 +524,6 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     WIDGET_CONTROL, id, $
       SET_VALUE='/LENS/SANS/2008_01_COM/1/45/NeXus/SANS_45.nxs'
       
-    ;run number of jk's reduce tab
-    id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_jk_tab1_run_number')
-    WIDGET_CONTROL, id, SET_VALUE='71'
-    ;enable get run info
-    id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_jk_tab1_get_run_information')
-    WIDGET_CONTROL, id, SENSITIVE=1
-    
     IF (facility EQ 'LENS') THEN BEGIN
       ;exclusion tool
       id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='x_center_value')
@@ -547,7 +542,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     
     ;show tab #2 'REDUCE
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 0
     
     MapBase_from_base, BASE=main_base, uname='sns_reduction_base', 0
     display_reduction_interruptor, MAIN_BASE=main_base, mode='jk'

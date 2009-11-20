@@ -54,10 +54,11 @@ END
 ;------------------------------------------------------------------------------
 PRO jk_get_run_information, Event
 
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
   ;get run number
-  run_number = STRCOMPRESS(getTextFieldValue(Event,$
-    'reduce_jk_tab1_run_number'),/REMOVE_ALL)
-    
+  run_number = (*global).run_number
+  
   cmd = 'eqsans_reduce  -r ' + run_number + ' -ri'
   WIDGET_CONTROL, /HOURGLASS
   spawn, cmd, listening
@@ -243,4 +244,49 @@ PRO jk_tab2_output_button, Event
     CheckCommandline_for_jk, Event
   ENDIF
   
+END
+
+;------------------------------------------------------------------------------
+PRO clear_jk_information_base, Event
+
+  text = 'N/A'
+  
+  putTextFieldValue, Event, 'reduce_jk_tab1_run_information_run_title', $
+    text
+  putTextFieldValue, Event, 'reduce_jk_tab1_run_information_run_notes', $
+    text
+  putTextFieldValue, Event, 'reduce_jk_tab1_run_information_start_time',$
+    text
+  putTextFieldValue, Event, 'reduce_jk_tab1_run_information_total_time',$
+    text
+  putTextFieldValue, Event, 'reduce_jk_tab1_run_information_total_current',$
+    text
+  putTextFieldValue, Event, $
+    'reduce_jk_tab1_run_information_total_detector_counts', $
+    text
+  putTextFieldValue, Event, $
+    'reduce_jk_tab1_run_information_total_monitor_counts', $
+    text
+  putTextFieldValue, Event, $
+    'reduce_jk_tab1_run_information_wave_range_min',$
+    text
+  putTextFieldValue, Event, $
+    'reduce_jk_tab1_run_information_wave_range_max',$
+    text
+  putTextFieldValue, Event, $
+    'reduce_jk_tab1_run_information_wave_range_units',$
+    text
+  putTextFieldValue, Event, 'reduce_jk_tab3_tab1_sample_detector_distance', $
+    text
+  putTextFieldValue, Event, 'reduce_jk_tab1_run_information_sample_detector', $
+    text
+  putTextFieldValue, Event, 'reduce_jk_tab3_tab1_sample_source_distance', $
+    text
+  putTextFieldValue, Event, 'reduce_jk_tab3_tab1_number_of_x_pixels', text
+  putTextFieldValue, Event, 'reduce_jk_tab3_tab1_number_of_y_pixels', text
+  putTextFieldValue, Event, 'reduce_jk_tab3_tab1_x_size', text
+  putTextFieldValue, Event, 'reduce_jk_tab3_tab1_y_size', text
+  putTextFieldValue, Event, 'reduce_jk_tab3_tab1_monitor_detector_distance', $
+    text
+    
 END

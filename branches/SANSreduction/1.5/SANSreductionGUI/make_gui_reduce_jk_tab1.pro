@@ -51,32 +51,42 @@ PRO make_gui_reduce_jk_tab1, REDUCE_TAB, tab_size, tab_title
   space = WIDGET_LABEL(base,$
     VALUE = ' ')
     
-  row1 = WIDGET_BASE(base,$
-    /ROW,$
-    /BASE_ALIGN_CENTER)
-  label = WIDGET_LABEL(row1,$
-    VALUE = 'Run number:')
-  value = WIDGET_TEXT(row1,$
-    VALUE = '',$
-    XSIZE = 5,$
-    YSIZE = 1,$
-    /EDITABLE,$
-    /ALL_EVENTS,$
-    UNAME = 'reduce_jk_tab1_run_number')
-  space = WIDGET_LABEL(row1,$
-    VALUE = ' ')
-  button = WIDGET_BUTTON(row1,$
-    UNAME = 'reduce_jk_tab1_get_run_information',$
-    SENSITIVE = 0,$
-    VALUE = 'GET RUN INFORMATION')
-    
-  space = WIDGET_LABEL(base,$
-    VALUE = ' ')
+  ;  row1 = WIDGET_BASE(base,$
+  ;    /ROW,$
+  ;    /BASE_ALIGN_CENTER)
+  ;  label = WIDGET_LABEL(row1,$
+  ;    VALUE = 'Run number:')
+  ;  value = WIDGET_TEXT(row1,$
+  ;    VALUE = '',$
+  ;    XSIZE = 5,$
+  ;    YSIZE = 1,$
+  ;    /EDITABLE,$
+  ;    /ALL_EVENTS,$
+  ;    UNAME = 'reduce_jk_tab1_run_number')
+  ;  space = WIDGET_LABEL(row1,$
+  ;    VALUE = ' ')
+  ;  button = WIDGET_BUTTON(row1,$
+  ;    UNAME = 'reduce_jk_tab1_get_run_information',$
+  ;    SENSITIVE = 0,$
+  ;    VALUE = 'GET RUN INFORMATION')
+  ;  space = WIDGET_LABEL(base,$
+  ;    VALUE = ' ')
     
   info_base = WIDGET_BASE(base,$
     /COLUMN,$
     FRAME = 1,$
     MAP = 1)
+    
+  row0 = WIDGET_BASE(info_base,$
+    /ROW)
+  label = WIDGET_LABEL(row0,$
+    VALUE = '        Run Number:')
+  value = WIDGET_LABEL(row0,$
+    VALUE = 'N/A',$
+    /ALIGN_LEFT,$
+    UNAME = 'reduce_jk_tab1_run_information_run_number',$
+    FRAME = 1,$
+    SCR_XSIZE = 50)
     
   rowa = WIDGET_BASE(info_base,$
     /ROW)
@@ -178,7 +188,7 @@ PRO make_gui_reduce_jk_tab1, REDUCE_TAB, tab_size, tab_title
     UNAME = 'reduce_jk_tab1_run_information_sample_detector',$
     SCR_XSIZE = 150,$
     /ALIGN_LEFT)
-    label = WIDGET_LABEL(rowf,$
+  label = WIDGET_LABEL(rowf,$
     VALUE = '<- (Go to ADVANCED/PART 1 to change this value)')
   space = WIDGET_LABEL(rowf,$
     VALUE = '                                   ')
