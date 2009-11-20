@@ -51,7 +51,11 @@ PRO make_gui_reduce_jk_tab2, REDUCE_TAB, tab_size, tab_title
   row1 = WIDGET_BASE(base,$
     /ROW)
   label = WIDGET_LABEL(row1,$
-    VALUE = 'Root name of output file: ')
+    VALUE = 'Output File Name: ')
+  button = WIDGET_BUTTON(row1,$
+  VALUE = '~/results/',$
+  UNAME = 'reduce_jk_tab2_output_folder_button',$
+  SCR_XSIZE = 300)
   value = WIDGET_TEXT(row1,$
     VALUE = '',$
     XSIZE = 40,$
@@ -59,7 +63,7 @@ PRO make_gui_reduce_jk_tab2, REDUCE_TAB, tab_size, tab_title
     UNAME = 'reduce_jk_tab2_root_name_extension',$
     /EDITABLE)
   label = WIDGET_LABEL(row1,$
-    VALUE = '(no extension)')
+    VALUE = '.<extension>')
     
   ;space
   space = WIDGET_LABEL(base,$
@@ -69,37 +73,37 @@ PRO make_gui_reduce_jk_tab2, REDUCE_TAB, tab_size, tab_title
     /NONEXCLUSIVE)
   output1 = WIDGET_BUTTON(row2,$
     UNAME = 'iq_output',$
-    VALUE = 'Iq: I(Q)')
+    VALUE = 'Iq: I(Q) -> <output>.iq')
   output2 = WIDGET_BUTTON(row2,$
     UNAME = 'ivqxqy_output',$
-    VALUE = 'IvQxQy: 2D I(Qx,Qy)')
+    VALUE = 'IvQxQy: 2D I(Qx,Qy) -> <output>.qxy')
   output3 = WIDGET_BUTTON(row2,$
     UNAME = 'ivxy_output',$
-    VALUE = 'IvXY: 2D Counts(x,y) integrated over TOF')
+    VALUE = 'IvXY: 2D Counts(x,y) integrated over TOF -> <output>.2d')
   output4 = WIDGET_BUTTON(row2,$
     UNAME = 'tof2d_output',$
-    VALUE = 'tof2D: 2D counts(x,y) for each TOF slice')
+    VALUE = 'tof2D: 2D counts(x,y) for each TOF slice -> <output>_???.iq')
   output5 = WIDGET_BUTTON(row2,$
     UNAME = 'tofiq_output',$
-    VALUE = 'tofIq: I(Q) for each time bin')
+    VALUE = 'tofIq: I(Q) for each time bin -> <output>_???.2d')
   output6 = WIDGET_BUTTON(row2,$
     UNAME = 'ivtof_output',$
-    VALUE = 'IvTof: Counts vs TOF')
+    VALUE = 'IvTof: Counts vs TOF -> <output>.tof')
   output7 = WIDGET_BUTTON(row2,$
     UNAME = 'ivwl_output',$
-    VALUE = 'IvWl: Counts vs Wavelength')
+    VALUE = 'IvWl: Counts vs Wavelength -> <output>.wl')
   output9 = WIDGET_BUTTON(row2,$
     UNAME = 'tvtof_output',$
-    VALUE = 'TvTof: Transmission vs TOF')
+    VALUE = 'TvTof: Transmission vs TOF -> <output>.trans.tof')
   output10 = WIDGET_BUTTON(row2,$
     UNAME = 'tvwl_output',$
-    VALUE = 'TvWl: Transmsission vs Wavelength')
+    VALUE = 'TvWl: Transmsission vs Wavelength -> <output>.trans.wl')
   output11 = WIDGET_BUTTON(row2,$
     UNAME = 'mvtof_output',$
-    VALUE = 'MvTof: Monitor vs TOF')
+    VALUE = 'MvTof: Monitor vs TOF -> <output>.monitor.tof')
   output12 = WIDGET_BUTTON(row2,$
     UNAME = 'mvwl_output',$
-    VALUE = 'MvWl: Monitor vs Wavelength')
+    VALUE = 'MvWl: Monitor vs Wavelength -> <output>.monitor.wl')
   WIDGET_CONTROL, output1, /SET_BUTTON
   
 END

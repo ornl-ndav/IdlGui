@@ -1022,6 +1022,10 @@ PRO MAIN_BASE_event, Event
     
     ;-OUTPUT tab --------------------------------------------------------------
     WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_jk_tab2_output_folder_button'): BEGIN
+      jk_tab2_output_button, Event
+    END
+    WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='reduce_jk_tab2_root_name_extension'): BEGIN
       CheckCommandline_for_jk, Event
     END

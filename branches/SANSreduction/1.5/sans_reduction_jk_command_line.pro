@@ -62,9 +62,16 @@ PRO CheckCommandline_for_jk, Event
   ;Root name of output file
   root_value = STRCOMPRESS(getTextFieldValue(Event,$
     'reduce_jk_tab2_root_name_extension'),/REMOVE_ALL)
+  output_path = STRCOMPRESS(getButtonValue(Event,$
+    'reduce_jk_tab2_output_folder_button'),/REMOVE_ALL)
   IF (root_value NE '') THEN BEGIN
-    cmd += ' -o ' + root_value
-  ENDIF
+    cmd += ' -o ' + output_path + root_value
+  ENDIF ELSE BEGIN
+    missing_arguments_text = ['- Output File Name [OUTPUT]']
+    cmd_status = 0
+    ++missing_argument_counter
+    cmd += ' -o ' + output_path + '?'
+  ENDELSE
   
   Iq = is_this_button_selected(Event,value='Iq')
   IF (Iq EQ 0) THEN BEGIN

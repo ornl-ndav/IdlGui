@@ -136,14 +136,14 @@ PRO use_run_information_in_jk_gui, Event, INFO=info
   ;retrieve wavelength_range
   wave_range_and_units = retrieve_wavelength_range(info)
   putTextFieldValue, Event, $
-  'reduce_jk_tab1_run_information_wave_range_min',$
-  wave_range_and_units[0]
+    'reduce_jk_tab1_run_information_wave_range_min',$
+    wave_range_and_units[0]
   putTextFieldValue, Event, $
-  'reduce_jk_tab1_run_information_wave_range_max',$
-  wave_range_and_units[1]
+    'reduce_jk_tab1_run_information_wave_range_max',$
+    wave_range_and_units[1]
   putTextFieldValue, Event, $
-  'reduce_jk_tab1_run_information_wave_range_units',$
-  wave_range_and_units[2]
+    'reduce_jk_tab1_run_information_wave_range_units',$
+    wave_range_and_units[2]
     
   ;retrieve sample detector
   sample_detector_array = retrieve_sample_detector_distance(info)
@@ -219,4 +219,28 @@ PRO use_run_information_in_jk_gui, Event, INFO=info
   putTextFieldValue, Event, 'reduce_jk_tab3_tab1_monitor_detector_distance', $
     monitor_detector
     
+END
+
+;------------------------------------------------------------------------------
+;Output path
+PRO jk_tab2_output_button, Event
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  output_path = (*global).output_path
+  title = 'Select where you want to write the output file(s):'
+  widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  
+  result = DIALOG_PICKFILE(DIALOG_PARENT=widget_id,$
+    /DIRECTORY,$
+    /MUST_EXIST,$
+    PATH=output_path,$
+    TITLE = title)
+    
+  IF (result NE '') THEN BEGIN
+    (*global).output_path = result
+    putNewButtonValue, Event, 'reduce_jk_tab2_output_folder_button', result
+    CheckCommandline_for_jk, Event
+  ENDIF
+  
 END
