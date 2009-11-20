@@ -32,6 +32,26 @@
 ;
 ;==============================================================================
 
+FUNCTION populate_jk_reduction_with_beam_center, Event
+
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  ;retrieve beam center tube and pixel calculated
+  bc_tube  = FLOAT(getTextFieldValue(Event,'beam_center_tube_center_value'))
+  bc_pixel = FLOAT(getTextFieldValue(Event,'beam_center_pixel_center_value'))
+  
+  main_event = (*global).main_event
+  
+  bc_tube = STRCOMPRESS(bc_tube,/REMOVE_ALL)
+  putTextfieldValue, main_event, 'reduce_jk_tab3_tab1_spectrum_x_center', bc_tube
+  bc_pixel = STRCOMPRESS(bc_pixel,/REMOVE_ALL)
+  putTextFieldValue, main_event, 'reduce_jk_tab3_tab1_spectrum_y_center', bc_pixel
+  
+  RETURN, 1
+  
+END
+
+;------------------------------------------------------------------------------
 ;This procedure will create the temporary geometry file using the
 ;beam center pixel and tube offset calculated by the program
 FUNCTION create_tmp_geometry, Event
@@ -53,7 +73,7 @@ FUNCTION create_tmp_geometry, Event
   bc_tube_offset = bc_tube - default_bc_tube ;tube offset (tube)
   tube_front_size = 0.0079 ;front tube size (m)
   tube_back_size  = 0.0031 ;back tube size (m)
-
+  
   bc_tube_offset_distance_m = 0
   type = ''
   IF (bc_tube_offset LT 0) THEN BEGIN ;tube center is on the left of default
