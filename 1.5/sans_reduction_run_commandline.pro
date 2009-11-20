@@ -50,7 +50,7 @@ PRO test_RunCommandLine, Event
       '','Do You want to replace it ?'],$
       /QUESTION,$
       /DEFAULT_NO,$
-      TITLE='Output File Name is not uniq !',$
+      TITLE='Output File Name is not unique !',$
       DIALOG_PARENT=id)
       
     IF (result EQ 'Yes') THEN BEGIN

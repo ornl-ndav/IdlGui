@@ -34,4 +34,124 @@
 
 PRO run_jk_command_line, Event
 
+  ;get global structure
+  WIDGET_CONTROL,Event.top,get_uvalue=global
+  
+  ;check first if the output file already exists and if it does, ask the user
+  ;if he wants to continue the process.
+  
+  root_value = STRCOMPRESS(getTextFieldValue(Event,$
+    'reduce_jk_tab2_root_name_extension'),/REMOVE_ALL)
+  output_path = STRCOMPRESS(getButtonValue(Event,$
+    'reduce_jk_tab2_output_folder_button'),/REMOVE_ALL)
+  output_file_name = output_path + root_value
+  
+  IF (FILE_TEST(output_file_name)) THEN BEGIN ;yes
+    result = DIALOG_MESSAGE(['Output File Name exists already !',$
+      '','Do You want to replace it ?'],$
+      /QUESTION,$
+      /DEFAULT_NO,$
+      TITLE='Output File Name is not unique !',$
+      DIALOG_PARENT=id)
+      
+    IF (result EQ 'Yes') THEN BEGIN
+      RunJKCommandLine, Event
+    ENDIF ELSE BEGIN
+      RETURN
+    ENDELSE
+    
+  ENDIF ELSE BEGIN
+    RunJKCommandLine, Event
+  ENDELSE
+  
 END
+
+;------------------------------------------------------------------------------
+PRO RunJKCommandLine, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  ;retrieve infos
+  PROCESSING = (*global).processing
+  OK         = (*global).ok
+  FAILED     = (*global).failed
+  
+  status_text = "JK's Data Reduction ... " + PROCESSING
+  putTextFieldValue, Event, 'data_reduction_status_frame', status_text
+  
+  ;get command line to generate
+  cmd = getTextFieldValue(Event,'comamnd_line_preview')
+  
+  ;display command line in log-book
+  cmd_text = '> Command Line:'
+  IDLsendToGeek_addLogBookText, Event, cmd_text
+  cmd_text = '-> ' + cmd
+  IDLsendToGeek_addLogBookText, Event, cmd_text
+  cmd_text = '-> Running Command Line ... ' + PROCESSING
+  IDLsendToGeek_addLogBookText, Event, cmd_text
+  
+  ;indicate initialization with hourglass icon
+  WIDGET_CONTROL,/hourglass
+  ;running command
+  
+  start_time = SYSTIME(1,/SECONDS)
+  SPAWN, cmd, listening, err_listening
+  end_time = SYSTIME(1,/SECONDS)
+  
+  IF (err_listening[0] NE '') THEN BEGIN
+    ;in log book
+    IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
+    logbook_text = 'Information from Verbose Mode:'
+    IDLsendToGeek_addLogBookText, Event, listening
+    IDLsendToGeek_addLogBookText, Event, err_listening
+    ;in status dr frame
+    status_text = 'Data Reduction ... FAILED (check log book)!'
+    putTextFieldValue, Event, 'data_reduction_status_frame', status_text
+  ENDIF ELSE BEGIN
+    ;in log book
+    IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
+    timing = '-> Reduction ran in ' + $
+      STRCOMPRESS(end_time - start_time,/REMOVE_ALL) + ' s'
+    IDLsendToGeek_AddLogBookText, Event, timing
+    ;in status dr frame
+    status_text = 'Data Reduction ... DONE WITH SUCCESS!'
+    putTextFieldValue, Event, 'data_reduction_status_frame', status_text
+
+  ;    ;make sure the output file exist and put its full name in the fitting
+  ;    ;tab
+  ;    short_output_file_name = (*global).short_data_nexus_file_name
+  ;    IF (short_output_file_name NE '') THEN BEGIN
+  ;      full_output_file_name = (*global).current_output_file_name
+  ;    ENDIF ELSE BEGIN
+  ;      DataFiles = getTextFieldValue(Event,'data_file_name_text_field')
+  ;      DataFilesArray = STRSPLIT(DataFiles,' ',/EXTRACT)
+  ;      DataFile1 = DataFilesArray[0]
+  ;      iObject = OBJ_NEW('IDLgetMetadata',DataFile1)
+  ;      RunNumber = iObject->getRunNumber()
+  ;      full_output_file_name = (*global).path_data_nexus_file
+  ;      full_output_file_name += 'SANS_' + STRCOMPRESS(RunNumber,/REMOVE_ALL)
+  ;      full_output_file_name += '.txt'
+  ;    ENDELSE
+  ;    IF (FILE_TEST(full_output_file_name,/READ)) THEN BEGIN
+  ;      ;move to plot tab
+  ;      id = WIDGET_INFO(Event.top,FIND_BY_UNAME='main_tab')
+  ;      WIDGET_CONTROL, id, SET_TAB_CURRENT=2
+  ;      putTextFieldValue, Event, $
+  ;        'plot_input_file_text_field', $
+  ;        full_output_file_name
+  ;      ;load ascii file and plot it
+  ;      LoadAsciiFile, Event
+  ;      ;check if file exist and if it does, activate buttons
+  ;      check_IF_file_exist, Event
+  ;    ENDIF ELSE BEGIN
+  ;      message = ['OUTPUT FILE NAME DOES NOT EXIST !',$
+  ;        'FILE NAME : ' + full_output_file_name]
+  ;      status = DIALOG_MESSAGE(message, $
+  ;        /ERROR,$
+  ;        DIALOG_PARENT = id)
+  ;    ENDELSE
+  ENDELSE
+  ;turn off hourglass
+  WIDGET_CONTROL,hourglass=0
+END
+
