@@ -59,8 +59,10 @@ PRO make_gui_reduce_jk_tab3_tab2, advanced_base, tab_size, tab_title
     /ROW,$
     /EXCLUSIVE)
   yes = WIDGET_BUTTON(yesno,$
+    UNAME = 'reduce_jk_tab3_tab1_correction_for_source_yes',$
     VALUE = 'Yes')
   no = WIDGET_BUTTON(yesno,$
+    UNAME = 'reduce_jk_tab3_tab1_correction_for_source_no',$
     VALUE = 'No')
   WIDGET_CONTROL, yes, /SET_BUTTON
   label = WIDGET_LABEL(row1,$
@@ -72,8 +74,10 @@ PRO make_gui_reduce_jk_tab3_tab2, advanced_base, tab_size, tab_title
     /ROW,$
     /EXCLUSIVE)
   yes = WIDGET_BUTTON(yesno,$
+    UNAME = 'reduce_jk_tab3_tab1_correction_for_Q_coverage_yes',$
     VALUE = 'Yes')
   no = WIDGET_BUTTON(yesno,$
+    UNAME = 'reduce_jk_tab3_tab1_correction_for_Q_coverage_no',$
     VALUE = 'No')
   WIDGET_CONTROL, yes, /SET_BUTTON
   label = WIDGET_LABEL(row2,$
@@ -119,14 +123,20 @@ PRO make_gui_reduce_jk_tab3_tab2, advanced_base, tab_size, tab_title
   label = WIDGET_LABEL(row2,$
     VALUE = 'x-axis:')
   value = WIDGET_TEXT(row2,$
+    UNAME = 'reduce_jk_tab3_tab1_transmission_x_axis',$
     VALUE = '2',$
+    /EDITABLE,$
+    /ALL_EVENTS,$
     XSIZE = 2)
   label = WIDGET_LABEL(row2,$
     VALUE = space)
   label = WIDGET_LABEL(row2,$
     VALUE = 'y-axis:')
   value = WIDGET_TEXT(row2,$
+    UNAME = 'reduce_jk_tab3_tab1_transmission_y_axis',$
     VALUE = '2',$
+    /EDITABLE,$
+    /ALL_EVENTS,$
     XSIZE = 2)
     
   space = WIDGET_LABEL(base,$
@@ -139,6 +149,8 @@ PRO make_gui_reduce_jk_tab3_tab2, advanced_base, tab_size, tab_title
     VALUE = 'Number of time channel slices:')
   value = WIDGET_TEXT(row2,$
     VALUE = '400',$
+    UNAME = 'reduce_jk_tab3_tab1_number_time_channel',$
+    /ALL_EVENTS,$
     XSIZE = 5,$
     /EDITABLE)
   label = WIDGET_LABEL(row2,$
@@ -153,6 +165,7 @@ PRO make_gui_reduce_jk_tab3_tab2, advanced_base, tab_size, tab_title
     VALUE = '60',$
     UNAME = 'reduce_jk_tab3_tab2_source_frequency',$
     XSIZE = 5,$
+    /ALL_EVENTS,$
     /EDITABLE)
   label = WIDGET_LABEL(row3,$
     VALUE = 'Hz')
@@ -165,6 +178,8 @@ PRO make_gui_reduce_jk_tab3_tab2, advanced_base, tab_size, tab_title
   value = WIDGET_TEXT(row3,$
     VALUE = '0',$
     XSIZE = 5,$
+    UNAME = 'reduce_jk_tab3_tab2_tof_offset',$
+    /ALL_EVENTS,$
     /EDITABLE)
   label = WIDGET_LABEL(row3,$
     VALUE = 'us')
@@ -177,6 +192,8 @@ PRO make_gui_reduce_jk_tab3_tab2, advanced_base, tab_size, tab_title
   value = WIDGET_TEXT(row3,$
     VALUE = '0',$
     XSIZE = 5,$
+    /ALL_EVENTS,$
+    UNAME = 'reduce_jk_tab3_tab2_width',$
     /EDITABLE)
   label = WIDGET_LABEL(row3,$
     VALUE = 'us')
@@ -188,13 +205,17 @@ PRO make_gui_reduce_jk_tab3_tab2, advanced_base, tab_size, tab_title
     VALUE = 'Discard data at the beginning ')
   value = WIDGET_TEXT(row3,$
     VALUE = '0',$
+    UNAME = 'reduce_jk_tab3_tab2_discard_data_beginning',$
     XSIZE = 5,$
+    /ALL_EVENTS,$
     /EDITABLE)
   label = WIDGET_LABEL(row3,$
     VALUE = ' and end ')
   value = WIDGET_TEXT(row3,$
     VALUE = '0',$
+    UNAME = 'reduce_jk_tab3_tab2_discard_data_end',$
     XSIZE = 5,$
+    /ALL_EVENTS,$
     /EDITABLE)
   label = WIDGET_LABEL(row3,$
     VALUE = ' of a frame   ')
@@ -203,27 +224,31 @@ PRO make_gui_reduce_jk_tab3_tab2, advanced_base, tab_size, tab_title
     /EXCLUSIVE, $
     /ROW)
   button1 = WIDGET_BUTTON(ma_base,$
+  UNAME = 'reduce_jk_tab3_tab2_discard_data_us',$
     VALUE = 'us')
   button2 = WIDGET_BUTTON(ma_base,$
+  UNAME = 'reduce_jk_tab3_tab2_discard_data_angstroms',$
     VALUE = 'Angstroms')
   WIDGET_CONTROL, button1, /SET_BUTTON
   
-;frame wavelength offset
+  ;frame wavelength offset
   row3 = WIDGET_BASE(base,$
-  /ROW)
+    /ROW)
   label = WIDGET_LABEL(row3,$
-  VALUE = 'Frame wavelength offset')
+    VALUE = 'Frame wavelength offset')
   value = WIDGET_TEXT(row3,$
-  VALUE = '0',$
-  XSIZE = 3,$
-  /EDITABLE)
+    VALUE = '0',$
+    XSIZE = 3,$
+    UNAME = 'reduce_jk_tab3_tab2_frame_wavelength',$
+    /ALL_EVENTS, $
+    /EDITABLE)
   label = WIDGET_LABEL(row3,$
-  VALUE = 'Angstroms')
-  
-  
-  
-  
-  
-  
-  
+    VALUE = 'Angstroms')
+    
+    
+    
+    
+    
+    
+    
 END

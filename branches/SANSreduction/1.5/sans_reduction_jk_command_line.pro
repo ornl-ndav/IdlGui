@@ -69,7 +69,7 @@ PRO CheckCommandline_for_jk, Event
   Iq = is_this_button_selected(Event,value='Iq')
   IF (Iq EQ 0) THEN BEGIN
     cmd += ' -nosave Iq'
-  ENDELSE
+  ENDIF
   
   IvQxQy = is_this_button_selected(Event,value='IvQxQy')
   IF (IvQxQy EQ 1) THEN BEGIN
@@ -254,9 +254,140 @@ PRO CheckCommandline_for_jk, Event
   
   ;advanced part2 ============================================================
   
+  ;correction for source spectrum using transmission at the center
+  IF (~is_correction_for_source_spectrum(Event)) THEN BEGIN
+    cmd += ' -ssc 0'
+  ENDIF
   
+  ;correction for Q-coverage difference for different wavelength neutrons
+  IF (~is_correction_for_Q_coverage(Event)) THEN BEGIN
+    cmd += ' -qcc 0'
+  ENDIF
   
+  ;Transmission
+  IF (is_auto_find_transmission(Event)) THEN BEGIN
+    cmd += ' -at'
+  ENDIF ELSE BEGIN
+    x_axis = STRCOMPRESS(getTextFieldValue(Event,$
+      'reduce_jk_tab3_tab1_transmission_x_axis'),/REMOVE_ALL)
+    IF (x_axis EQ '') THEN BEGIN
+      x_axis = '?'
+      missing_arguments_text = [missing_arguments_text, $
+        '- x-axis value of Transmission [ADVANCED/PART2]']
+      cmd_status = 0
+      ++missing_argument_counter
+    ENDIF
+    cmd += ' -nxt ' + x_axis
+    
+    y_axis = STRCOMPRESS(getTextFieldValue(Event,$
+      'reduce_jk_tab3_tab1_transmission_y_axis'),/REMOVE_ALL)
+    IF (y_axis EQ '') THEN BEGIN
+      y_axis = '?'
+      missing_arguments_text = [missing_arguments_text, $
+        '- y-axis value of Transmission [ADVANCED/PART2]']
+      cmd_status = 0
+      ++missing_argument_counter
+    ENDIF
+    cmd += ' -nyt ' + y_axis
+  ENDELSE
   
+  ;Number of time channel slices
+  nbr_time_channel = STRCOMPRESS(getTextFieldValue(Event,$
+    'reduce_jk_tab3_tab1_number_time_channel'),/REMOVE_ALL)
+  IF (nbr_time_channel NE '400') THEN BEGIN
+    IF (nbr_time_channel EQ '') THEN BEGIN
+      nbr_time_channel = '?'
+      missing_arguments_text = [missing_arguments_text, $
+        '- Number of Time Channel [ADVANCED/PART2]']
+      cmd_status = 0
+      ++missing_argument_counter
+    ENDIF
+    cmd += ' -ntof ' + nbr_time_channel
+  ENDIF
+  
+  ;source frequency
+  src_freq = STRCOMPRESS(getTextFieldValue(Event, $
+    'reduce_jk_tab3_tab2_source_frequency'),/REMOVE_ALL)
+  IF (src_freq NE '60') THEN BEGIN
+    IF (src_freq EQ '') THEN BEGIN
+      src_freq = '?'
+      missing_arguments_text = [missing_arguments_text, $
+        '- Source Frequency [ADVANCED/PART2]']
+      cmd_status = 0
+      ++missing_argument_counter
+    ENDIF
+    cmd += ' -rep ' + src_freq
+  ENDIF
+  
+  ;frame tof offset
+  tof_offset = STRCOMPRESS(getTextFieldValue(Event, $
+    'reduce_jk_tab3_tab2_tof_offset'),/REMOVE_ALL)
+  IF (tof_offset NE '0') THEN BEGIN
+    IF (tof_offset EQ '') THEN BEGIN
+      tof_offset = '?'
+      missing_arguments_text = [missing_arguments_text, $
+        '- Frame TOF offset [ADVANCED/PART2]']
+      cmd_status = 0
+      ++missing_argument_counter
+    ENDIF
+    cmd += ' -tof0 ' + tof_offset
+  ENDIF
+  
+  ;Half width of the proton pulse to be excluded
+  width = STRCOMPRESS(getTextFieldValue(Event, $
+    'reduce_jk_tab3_tab2_width'),/REMOVE_ALL)
+  IF (width NE '0') THEN BEGIN
+    IF (width EQ '') THEN BEGIN
+      width = '?'
+      missing_arguments_text = [missing_arguments_text, $
+        '- Half Width of Proton Pulse [ADVANCED/PART2]']
+      cmd_status = 0
+      ++missing_argument_counter
+    ENDIF
+    cmd += ' -pphw ' + width
+  ENDIF
+  
+  ;Discard data at the beginning and end of a frame
+  discard_beg = STRCOMPRESS(getTextFieldValue(Event, $
+    'reduce_jk_tab3_tab2_discard_data_beginning'),/REMOVE_ALL)
+  discard_end = STRCOMPRESS(getTextFieldValue(Event, $
+    'reduce_jk_tab3_tab2_discard_data_end'),/REMOVE_ALL)
+  IF (discard_beg NE '0' OR discard_end NE '0') THEN BEGIN
+    IF (discard_beg EQ '') THEN BEGIN
+      discard_beg = '?'
+      missing_arguments_text = [missing_arguments_text, $
+        '- Discard data at the beginning of a frame [ADVANCED/PART2]']
+      cmd_status = 0
+      ++missing_argument_counter
+    ENDIF
+    IF (discard_end EQ '') THEN BEGIN
+      discard_end = '?'
+      missing_arguments_text = [missing_arguments_text, $
+        '- Discard data at the end of a frame [ADVANCED/PART2]']
+      cmd_status = 0
+      ++missing_argument_counter
+    ENDIF
+    us_flag = is_discard_value_in_us_selected(Event)
+    IF (us_flag) THEN BEGIN
+      cmd += ' -tofcut ' + discard_beg + ' ' + discard_end
+    ENDIF ELSE BEGIN
+      cmd += ' -wlcut ' + discard_beg + ' ' + discard_end
+    ENDELSE
+  ENDIF
+  
+  ;Frame wavelength
+  frame_value = STRCOMPRESS(getTextFieldValue(Event,$
+    'reduce_jk_tab3_tab2_frame_wavelength'),/REMOVE_ALL)
+  IF (frame_value NE '0') THEN BEGIN
+    IF (frame_value EQ '') THEN BEGIN
+      frame_value = '?'
+      missing_arguments_text = [missing_arguments_text, $
+        '- Frame Wavelength offset [ADVANCED/PART2]']
+      cmd_status = 0
+      ++missing_argument_counter
+    ENDIF
+    cmd += ' -wl0 ' + frame_value
+  ENDIF
   
   ;- Put cmd in the text box -
   putCommandLine, Event, cmd
