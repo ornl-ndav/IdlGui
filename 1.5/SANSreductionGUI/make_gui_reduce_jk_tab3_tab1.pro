@@ -225,7 +225,7 @@ PRO make_gui_reduce_jk_tab3_tab1, advanced_base, tab_size, tab_title
     /ALL_EVENTS,$
     /EDITABLE,$
     UNAME = 'reduce_jk_tab3_tab1_spectrum_x_center',$
-    XSIZE = 5)
+    XSIZE = 9)
   label = WIDGET_LABEL(row1,$
     VALUE = 'pixels')
   row2 = WIDGET_BASE(frame3,$
@@ -241,7 +241,7 @@ PRO make_gui_reduce_jk_tab3_tab1, advanced_base, tab_size, tab_title
     /ALL_EVENTS,$
     /EDITABLE,$
     UNAME = 'reduce_jk_tab3_tab1_spectrum_y_center',$
-    XSIZE = 5)
+    XSIZE = 9)
   label = WIDGET_LABEL(row2,$
     VALUE = 'pixels')
     

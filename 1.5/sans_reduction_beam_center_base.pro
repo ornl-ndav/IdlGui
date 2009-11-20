@@ -835,14 +835,17 @@ PRO launch_beam_center_base_event, Event
     ;OK button
     WIDGET_INFO(Event.top, FIND_BY_UNAME='beam_stop_ok_button'): BEGIN
       WIDGET_CONTROL, /HOURGLASS
-      result = create_tmp_geometry(Event)
+      result1 = create_tmp_geometry(Event)
+      result2 = populate_jk_reduction_with_beam_center(Event)
       WIDGET_CONTROL, HOURGLASS=0
       ;get the beam center main base id
       parent_id = WIDGET_INFO(Event.top, $
         FIND_BY_UNAME='beam_center_calculation_base')
-      IF (result EQ 1) THEN BEGIN ;worked
-        message_text = ['Temporary geometry file has been created with success',$
-          'and will be used by default in the data reduction process']
+      IF (result1+result2 EQ 2) THEN BEGIN ;worked
+        message_text = ['-> Temporary geometry file has been created with success',$
+          'and will be used by default in the data reduction process',$
+          '',$
+          "-> JK's reduction fields have been populated with success"]
         title = 'Geometry File created with SUCCESS !'
         result = DIALOG_MESSAGE(message_text,$
           /INFORMATION, $
@@ -852,7 +855,8 @@ PRO launch_beam_center_base_event, Event
         id = WIDGET_INFO(Event.top, $
           FIND_BY_UNAME='beam_center_calculation_base')
         WIDGET_CONTROL, id, /DESTROY
-      ENDIF ELSE BEGIN
+      ENDIF
+      IF (result1 EQ 0) THEN BEGIN
         message_text = ['ERROR when creating the temporary geometry file']
         title = 'ERROR!'
         result = DIALOG_MESSAGE(message_text,$
@@ -860,7 +864,16 @@ PRO launch_beam_center_base_event, Event
           TITLE = title, $
           /CENTER, $
           DIALOG_PARENT=parent_id)
-      ENDELSE
+      ENDIF
+      IF (result2 EQ 0) THEN BEGIN
+        message_text = ["ERROR when populating JK's reduction"]
+        title = 'ERROR!'
+        result = DIALOG_MESSAGE(message_text,$
+          /ERROR, $
+          TITLE = title, $
+          /CENTER, $
+          DIALOG_PARENT=parent_id)
+      ENDIF
     END
     
     ELSE:
@@ -962,8 +975,8 @@ PRO launch_beam_center_base, main_event
   wBase1 = ''
   beam_center_base_gui, wBase1, $
     main_base_geometry
-    (*global).beam_center_base_id = wBase1
-    
+  (*global).beam_center_base_id = wBase1
+  
   WIDGET_CONTROL, wBase1, /REALIZE
   
   global_bc = PTR_NEW({ wbase: wbase1,$
