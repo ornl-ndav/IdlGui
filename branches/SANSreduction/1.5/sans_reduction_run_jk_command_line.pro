@@ -117,44 +117,32 @@ PRO RunJKCommandLine, Event
     status_text = 'Data Reduction ... DONE WITH SUCCESS!'
     putTextFieldValue, Event, 'data_reduction_status_frame', status_text
     
-  ;    ;make sure the output file exist and put its full name in the fitting
-  ;    ;tab
-  ;    short_output_file_name = (*global).short_data_nexus_file_name
-  ;    IF (short_output_file_name NE '') THEN BEGIN
-  ;      full_output_file_name = (*global).current_output_file_name
-  ;    ENDIF ELSE BEGIN
-  ;      DataFiles = getTextFieldValue(Event,'data_file_name_text_field')
-  ;      DataFilesArray = STRSPLIT(DataFiles,' ',/EXTRACT)
-  ;      DataFile1 = DataFilesArray[0]
-  ;      iObject = OBJ_NEW('IDLgetMetadata',DataFile1)
-  ;      RunNumber = iObject->getRunNumber()
-  ;      full_output_file_name = (*global).path_data_nexus_file
-  ;      full_output_file_name += 'SANS_' + STRCOMPRESS(RunNumber,/REMOVE_ALL)
-  ;      full_output_file_name += '.txt'
-  ;    ENDELSE
-  ;    IF (FILE_TEST(full_output_file_name,/READ)) THEN BEGIN
-  ;      ;move to plot tab
-  ;      id = WIDGET_INFO(Event.top,FIND_BY_UNAME='main_tab')
-  ;      WIDGET_CONTROL, id, SET_TAB_CURRENT=2
-  ;      putTextFieldValue, Event, $
-  ;        'plot_input_file_text_field', $
-  ;        full_output_file_name
-  ;      ;load ascii file and plot it
-  ;      LoadAsciiFile, Event
-  ;      ;check if file exist and if it does, activate buttons
-  ;      check_IF_file_exist, Event
-  ;    ENDIF ELSE BEGIN
-  ;      message = ['OUTPUT FILE NAME DOES NOT EXIST !',$
-  ;        'FILE NAME : ' + full_output_file_name]
-  ;      status = DIALOG_MESSAGE(message, $
-  ;        /ERROR,$
-  ;        DIALOG_PARENT = id)
-  ;    ENDELSE
-  
+    root_value = STRCOMPRESS(getTextFieldValue(Event,$
+      'reduce_jk_tab2_root_name_extension'),/REMOVE_ALL)
+    output_path = STRCOMPRESS(getButtonValue(Event,$
+      'reduce_jk_tab2_output_folder_button'),/REMOVE_ALL)
+    output_file_name = output_path + root_value
+    
+    ;plot Iq if flag is on
+    Iq = is_this_button_selected(Event,value='Iq')
+    IF (Iq EQ 1) THEN BEGIN
+      iq_output = output_file_name + '.iq'
+      ;launch plot
+      spawn, 'jzg -2 ' + iq_output + ' &'
+    ENDIF
+    
+    ;plot IvQxQy if flag is on
+    IvQxQy = is_this_button_selected(Event,value='IvQxQy')
+    IF (IvQxQy EQ 1) THEN BEGIN
+      ivQxQy_output = output_file_name + '.qxy'
+      ;launch plot
+      spawn, 'jzg -3i ' + ivQxQy_output + ' &'
+    ENDIF
+    
   ENDELSE
   
   ;turn off hourglass
   WIDGET_CONTROL,hourglass=0
-
+  
 END
 
