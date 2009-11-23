@@ -128,16 +128,16 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     XSIZE = 7)
     
   label = WIDGET_LABEL(inter_base,$
-    VALUE = '_<User_Defined>_')
+    VALUE = '_<User_Defined>_run[s]_')
     
   text = WIDGET_TEXT(inter_base,$
-    VALUE = 'DIVIDED',$
+    VALUE = 'divided',$
     UNAME = 'tab3_manual_input_part2',$
     /EDITABLE,$
     XSIZE = 8)
     
   label = WIDGET_LABEL(inter_base,$
-    VALUE = '_run[s].')
+  VALUE = '.')  
     
   text = WIDGET_TEXT(inter_base,$
     VALUE = 'dat',$

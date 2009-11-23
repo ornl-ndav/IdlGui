@@ -411,15 +411,15 @@ PRO parse_input_field_tab2, Event
         
           CASE (nbr) OF
             1: BEGIN
-              add_string = column_seq_number[index] + '_' + part2
+              add_string = column_seq_number[index]
               add_string += '_1run'
             END
             ELSE: BEGIN
-              add_string = seq_array[0] + '_' + part2 + '_'
+              add_string = seq_array[0] + '_'
               add_string+= STRCOMPRESS(nbr,/REMOVE_ALL) + 'runs'
             END
           ENDCASE
-          file_name = path + prefix + '_' + add_string + '.' + suffix
+          file_name = path + prefix + '_' + add_string + '_' + part2 + '.' + suffix
           
         END
       ENDCASE
