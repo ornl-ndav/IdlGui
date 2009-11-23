@@ -39,8 +39,8 @@ END
 
 ;------------------------------------------------------------------------------
 PRO activate_widget_from_base, base, uname, status
-id = WIDGET_INFO(base, FIND_BY_UNAME=uname)
-WIDGET_CONTROL, id, SENSITIVE=status
+  id = WIDGET_INFO(base, FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, id, SENSITIVE=status
 END
 
 ;------------------------------------------------------------------------------
@@ -65,8 +65,8 @@ PRO MapBase, Event, uname=uname, map_status
 END
 
 PRO MapBase_from_base, BASE=base, uname=uname, status
-id = WIDGET_INFO(base, FIND_BY_UNAME=uname)
-WIDGET_CONTROL, id, MAP=status
+  id = WIDGET_INFO(base, FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, id, MAP=status
 END
 
 ;------------------------------------------------------------------------------
@@ -114,12 +114,16 @@ END
 ;------------------------------------------------------------------------------
 PRO ActivateTabNbr, Event=event, base=base, uname, tab_nbr
   IF (N_ELEMENTS(event) NE 0) THEN BEGIN
-  id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
+    id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
   ENDIF ELSE BEGIN
-  id = WIDGET_INFO(BASE, FIND_BY_UNAME=uname)
+    id = WIDGET_INFO(BASE, FIND_BY_UNAME=uname)
   ENDELSE
   WIDGET_CONTROL, id, SET_TAB_CURRENT=tab_nbr
 END
 
+;------------------------------------------------------------------------------
+PRO activate_min_max_counts_widgets, Event, status
+  activate_widget, Event, 'min_max_counts_displayed', status
+END
 
 

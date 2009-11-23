@@ -55,6 +55,85 @@ PRO MAIN_BASE_event, Event
   
   CASE Event.id OF
   
+    ;- Run Number cw_field ----------------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='run_number_cw_field'): BEGIN
+      load_run_number, Event     ;_eventcb
+      error = 0
+      CATCH, error
+      IF (error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+        result = DIALOG_MESSAGE('Wrong input file', $
+          /ERROR, $
+          /CENTER, $
+          TITLE='LOADING ERROR!', $
+          DIALOG_PARENT=widget_id)
+        activate_min_max_counts_widgets, Event, 0
+        populate_min_max_counts_widgets, Event, STATUS='no'
+      ENDIF ELSE BEGIN
+        IF ((*global).data_nexus_file_name NE '') THEN BEGIN
+          auto_exclude_dead_tubes, Event
+          save_background,  Event, GLOBAL=global
+          makeExclusionArray_SNS, Event
+          IF ((*global).facility EQ 'SNS') THEN BEGIN
+            MapBase, Event, uname='transmission_launcher_base', 1
+            display_images, EVENT=event
+            display_selection_images, Event=event
+            get_and_plot_tof_array, Event
+            run_number = STRCOMPRESS(getTextFieldValue(Event,$
+              'run_number_cw_field'),/REMOVE_ALL)
+            (*global).run_number = run_number
+            jk_get_run_information, Event
+            putTextFieldValue, Event, $
+              'reduce_jk_tab1_run_information_run_number',$
+              run_number
+            activate_min_max_counts_widgets, Event, 1
+            populate_min_max_counts_widgets, Event, STATUS='yes'
+          ENDIF
+        ENDIF ELSE BEGIN
+          MapBase, Event, uname='transmission_launcher_base', 0
+          display_selection_images, EVENT=event, OFF=1
+          clear_jk_information_base, Event
+          activate_min_max_counts_widgets, Event, 0
+          populate_min_max_counts_widgets, Event, STATUS='no'
+        ENDELSE
+      ENDELSE
+    END
+    
+    ;- Browse Button ----------------------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='browse_nexus_button'): BEGIN
+      browse_nexus, Event ;_eventcb
+      error = 0
+      CATCH, error
+      IF (error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+        result = DIALOG_MESSAGE('Wrong input file', $
+          /ERROR, $
+          /CENTER, $
+          TITLE='LOADING ERROR!', $
+          DIALOG_PARENT=widget_id)
+        activate_min_max_counts_widgets, Event, 0
+      ENDIF ELSE BEGIN
+        IF ((*global).data_nexus_file_name NE '') THEN BEGIN
+          auto_exclude_dead_tubes, Event
+          save_background,  Event, GLOBAL=global
+          makeExclusionArray_SNS, Event
+          IF ((*global).facility EQ 'SNS') THEN BEGIN
+            MapBase, Event, uname='transmission_launcher_base', 1
+            display_images, EVENT=event
+            display_selection_images, Event=event
+            get_and_plot_tof_array, Event
+            run_number = get_data_run_number((*global).data_nexus_file_name)
+            (*global).run_number = run_number
+            jk_get_run_information, Event
+            activate_min_max_counts_widgets, Event, 1
+            populate_min_max_counts_widgets, Event, STATUS='yes'
+          ENDIF
+        ENDIF
+      ENDELSE
+    END
+    
     ;TOF tools button (that launches the TOF tools base
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tof_tools'): BEGIN
       id = (*global).tof_tools_base
@@ -378,76 +457,6 @@ PRO MAIN_BASE_event, Event
       ENDELSE
     ;      lin_or_log_plot, Event
     ;      RefreshRoiExclusionPlot, Event   ;_plot
-    END
-    
-    ;- Run Number cw_field ----------------------------------------------------
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='run_number_cw_field'): BEGIN
-      load_run_number, Event     ;_eventcb
-      error = 0
-     CATCH, error
-      IF (error NE 0) THEN BEGIN
-        CATCH,/CANCEL
-        widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
-        result = DIALOG_MESSAGE('Wrong input file', $
-          /ERROR, $
-          /CENTER, $
-          TITLE='LOADING ERROR!', $
-          DIALOG_PARENT=widget_id)
-      ENDIF ELSE BEGIN
-        IF ((*global).data_nexus_file_name NE '') THEN BEGIN
-          auto_exclude_dead_tubes, Event
-          save_background,  Event, GLOBAL=global
-          makeExclusionArray_SNS, Event
-          IF ((*global).facility EQ 'SNS') THEN BEGIN
-            MapBase, Event, uname='transmission_launcher_base', 1
-            display_images, EVENT=event
-            display_selection_images, Event=event
-            get_and_plot_tof_array, Event
-            run_number = STRCOMPRESS(getTextFieldValue(Event,$
-              'run_number_cw_field'),/REMOVE_ALL)
-            (*global).run_number = run_number
-            jk_get_run_information, Event
-            putTextFieldValue, Event, $
-              'reduce_jk_tab1_run_information_run_number',$
-              run_number
-          ENDIF
-        ENDIF ELSE BEGIN
-          MapBase, Event, uname='transmission_launcher_base', 0
-          display_selection_images, EVENT=event, OFF=1
-          clear_jk_information_base, Event
-        ENDELSE
-      ENDELSE
-    END
-    
-    ;- Browse Button ----------------------------------------------------------
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='browse_nexus_button'): BEGIN
-      browse_nexus, Event ;_eventcb
-      error = 0
-     CATCH, error
-      IF (error NE 0) THEN BEGIN
-        CATCH,/CANCEL
-        widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
-        result = DIALOG_MESSAGE('Wrong input file', $
-          /ERROR, $
-          /CENTER, $
-          TITLE='LOADING ERROR!', $
-          DIALOG_PARENT=widget_id)
-      ENDIF ELSE BEGIN
-        IF ((*global).data_nexus_file_name NE '') THEN BEGIN
-          auto_exclude_dead_tubes, Event
-          save_background,  Event, GLOBAL=global
-          makeExclusionArray_SNS, Event
-          IF ((*global).facility EQ 'SNS') THEN BEGIN
-            MapBase, Event, uname='transmission_launcher_base', 1
-            display_images, EVENT=event
-            display_selection_images, Event=event
-            get_and_plot_tof_array, Event
-            run_number = get_data_run_number((*global).data_nexus_file_name)
-            (*global).run_number = run_number
-            jk_get_run_information, Event
-          ENDIF
-        ENDIF
-      ENDELSE
     END
     
     ;- Selection Button -------------------------------------------------------
