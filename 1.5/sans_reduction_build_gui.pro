@@ -162,8 +162,8 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     sample_source: '14.0',$
     number_of_pixels: {x : '192',$
     y: '256'},$
-    pixels_size: {x: 5.5,$
-    y: 4.0467}},$
+    pixels_size: {x: '5.5',$
+    y: '4.0467'}},$
     
     draw_x: 3*192L,$
     draw_y: 3*256L,$
