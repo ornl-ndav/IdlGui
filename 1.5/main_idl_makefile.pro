@@ -83,6 +83,9 @@ cd, CurrentFolder
 .run sans_reduction_display_selection_box.pro
 .run sans_reduction_display_images.pro
 
+;min and max counts of main tab
+.run sans_reduction_min_max_counts.pro
+
 ;jk reduction
 .run sans_reduction_jk_tab1_functions.pro
 .run sans_reduction_jk_input.pro

@@ -34,16 +34,16 @@
 
 PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
 
-  ;- base -----------------------------------------------------------------------
+  ;- base ---------------------------------------------------------------------
   sTab1Base = { size  : MainTabSize,$
     title : TabTitles.tab1,$
     uname : 'base_tab1'}
     
-  ;- label draw -----------------------------------------------------------------
+  ;- label draw ---------------------------------------------------------------
   sLabelDraw = { size: [0,0,700,700],$
     uname: 'label_draw_uname'}
     
-  ;- draw -----------------------------------------------------------------------
+  ;- draw ---------------------------------------------------------------------
   IF ((*global).facility EQ 'LENS') THEN BEGIN
     XYoff = [30,20]
     xsize = 640L
@@ -56,7 +56,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
   sDraw = { size  : [XYoff[0], XYoff[1], xsize, ysize],$
     uname : 'draw_uname'}
     
-  ;- nexus input ----------------------------------------------------------------
+  ;- nexus input --------------------------------------------------------------
   IF ((*global).facility EQ 'SNS') THEN BEGIN
     XYoff = [0,15]
   ENDIF ELSE BEGIN
@@ -65,7 +65,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
   sNexus = { size : [10,$
     sDraw.size[1]+sDraw.size[3]+XYOff[1]]}
     
-  ;- selection ------------------------------------------------------------------
+  ;- selection ----------------------------------------------------------------
   XYoff = [0,15]
   sSelection = { size: [sLabelDraw.size[0]+sLabelDraw.size[2]+XYoff[0],$
     XYoff[1],$
@@ -75,7 +75,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     uname: 'selection_tool_button',$
     sensitive: 0}
     
-  ;- Load Selection -------------------------------------------------------------
+  ;- Load Selection -----------------------------------------------------------
   XYoff = [0,15] ;frame
   sSelectionFrame = { size:  [sSelection.size[0]+XYoff[0],$
     sSelection.size[1]+sSelection.size[3]+XYoff[1],$
@@ -117,7 +117,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     sensitive: 0 }
     
     
-  ;Exclusion Region Selection tool ----------------------------------------------
+  ;Exclusion Region Selection tool --------------------------------------------
   XYoff = [0,20]
   sExclusionBase = { size: [sLabelDraw.size[0]+$
     sLabelDraw.size[2]+XYoff[0],$
@@ -191,7 +191,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     value: '',$
     uname: 'y_center_value'}
     
-  ;Radii label ------------------------------------------------------------------
+  ;Radii label ----------------------------------------------------------------
   XYoff = [0,35]
   sRadiiLabel = { size: [sCenterPixelTitle.size[0]+XYoff[0],$
     sCenterPixelTitle.size[1]+XYoff[1]],$
@@ -240,7 +240,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     uname: 'radii_r2_group',$
     value: 0.0}
     
-  ;- Type of selection button ---------------------------------------------------
+  ;- Type of selection button -------------------------------------------------
   XYoff = [115,45]
   sExclusionTypeBase = { size: [sRadiiLabel.size[0]+XYoff[0],$
     sRadiiR2Value.size[1]+XYoff[1],$
@@ -332,7 +332,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     uname: 'preview_roi_exclusion_file',$
     sensitive: 0}
     
-  ;- Clear Selection ------------------------------------------------------------
+  ;- Clear Selection ----------------------------------------------------------
   XYoff = [0,5]
   sClearSelection = { size: [sSelection.size[0]+XYoff[0],$
     sExclusionBase.size[1]+sExclusionBase.size[3]+ $
@@ -342,7 +342,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     uname: 'clear_selection_button',$
     sensitive: 0}
     
-  ;- REFRESH Plot ---------------------------------------------------------------
+  ;- REFRESH Plot -------------------------------------------------------------
   XYoff = [0,0]
   sRefreshPlot = { size: [sClearSelection.size[0]+XYoff[0]+$
     sClearSelection.size[2],$
@@ -352,7 +352,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     uname: 'refresh_plot_button',$
     sensitive: 0}
     
-  ;- X and Y position of cursor -------------------------------------------------
+  ;- X and Y position of cursor -----------------------------------------------
   XYoff = [0,35]
   XYbase = { size: [sLabelDraw.size[0]+$
     sLabelDraw.size[2]+XYoff[0],$
@@ -413,7 +413,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     list: ['linear','log'],$
     uname: 'z_axis_scale'}
     
-  ;Selection and Plot color base ------------------------------------------------
+  ;Selection and Plot color base ----------------------------------------------
   XYoff = [5,-2]
   sColorBase = { size: [XYbase.size[0]+XYbase.size[2]+XYoff[0],$
     XYbase.size[1]+XYoff[1],$
@@ -437,11 +437,11 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     uname: 'plot_color_button',$
     sensitive: 0}
     
-  ;==============================================================================
-  ;= BUILD GUI ==================================================================
-  ;==============================================================================
+  ;============================================================================
+  ;= BUILD GUI ================================================================
+  ;============================================================================
     
-  ;- base -----------------------------------------------------------------------
+  ;- base ---------------------------------------------------------------------
   wTab1Base = WIDGET_BASE(MAIN_TAB,$
     UNAME     = sTab1Base.uname,$
     XOFFSET   = sTab1Base.size[0],$
@@ -450,16 +450,16 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     SCR_YSIZE = sTab1Base.size[3],$
     TITLE     = sTab1Base.title)
     
-  ;------------------------------------------------------------------------------
-  ;- nexus input ----------------------------------------------------------------
+  ;----------------------------------------------------------------------------
+  ;- nexus input --------------------------------------------------------------
   sNexus = {MainBase:    wTab1Base,$
     xoffset:     sNexus.size[0],$
     yoffset:     sNexus.size[1],$
     instrument:  (*global).instrument,$
     facility:    (*global).facility}
   nexus_instance = OBJ_NEW('IDLloadNexus', sNexus)
-  
-  ;- draw -----------------------------------------------------------------------
+ 
+  ;- draw ---------------------------------------------------------------------
   wDraw = WIDGET_DRAW(wTab1Base,$
     UNAME     = sDraw.uname,$
     XOFFSET   = sDraw.size[0],$
@@ -472,7 +472,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     
   IF ((*global).facility EQ 'LENS') THEN BEGIN
   
-    ;- Label draw -----------------------------------------------------------------
+    ;- Label draw -------------------------------------------------------------
     wLabelDraw = WIDGET_DRAW(wTab1Base,$
       UNAME     = sLabelDraw.uname,$
       XOFFSET   = sLabelDraw.size[0],$
@@ -531,7 +531,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
   
   IF ((*global).FACILITY EQ 'SNS') THEN BEGIN
   
-    ;- X/Y base -------------------------------------------------------------------
+    ;- X/Y base ---------------------------------------------------------------
     wXYbase = WIDGET_BASE(wTab1Base,$
       XOFFSET   = 585,$
       YOFFSET   = 205,$
@@ -633,7 +633,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     SENSITIVE = 0, $
     UNAME = 'tof_tools')
     
-  ;  ;- Selection tool -------------------------------------------------------------
+  ;  ;- Selection tool --------------------------------------------------------
   ;  wSelection = WIDGET_BUTTON(wTab1Base,$
   ;    XOFFSET   = sSelection.size[0],$
   ;    YOFFSET   = sSelection.size[1],$
@@ -672,7 +672,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     /EDITABLE, $
     UNAME = 'max_counts_displayed')
     
-  ;- Load Selection -------------------------------------------------------------
+  ;- Load Selection -----------------------------------------------------------
   ;Title
   wSelectionLabel = WIDGET_LABEL(wTab1Base,$
     XOFFSET   = sSelectionLabel.size[0],$
@@ -727,13 +727,13 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     FRAME     = sSelectionFrame.frame,$
     VALUE     = '')
     
-  ;Exclusion Region Label -------------------------------------------------------
+  ;Exclusion Region Label -----------------------------------------------------
   wExclusionTitle = WIDGET_LABEL(wTab1Base,$
     XOFFSET = sExclusionTitle.size[0],$
     YOFFSET = sExclusionTitle.size[1],$
     VALUE   = sExclusionTitle.value)
     
-  ;Exclusion Region Base --------------------------------------------------------
+  ;Exclusion Region Base ------------------------------------------------------
   wExclusionBase = WIDGET_BASE(wTab1Base,$
     XOFFSET = sExclusionBase.size[0],$
     YOFFSET = sExclusionBase.size[1],$
@@ -882,7 +882,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       /NO_RELEASE,$
       /EXCLUSIVE)
       
-    ;Type of selection base and buttons -------------------------------------------
+    ;Type of selection base and buttons ---------------------------------------
     wSelectionTypeBase = WIDGET_BASE(wExclusionBase,$
       SPACE     = 20,$
       UNAME     = sExclusionTypeBase.uname,$
@@ -1065,7 +1065,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     UNAME     = spreviewroibutton.uname,$
     SENSITIVE = spreviewroibutton.sensitive)
     
-  ;- Clear Selection ------------------------------------------------------------
+  ;- Clear Selection ----------------------------------------------------------
   wClearSelection = WIDGET_BUTTON(wTab1Base,$
     XOFFSET   = sClearSelection.size[0],$
     YOFFSET   = sClearSelection.size[1],$
@@ -1074,7 +1074,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     UNAME     = sClearSelection.uname,$
     SENSITIVE = sClearSelection.sensitive)
     
-  ;- Refresh Plot ---------------------------------------------------------------
+  ;- Refresh Plot -------------------------------------------------------------
   wRefreshplot = WIDGET_BUTTON(wTab1Base,$
     XOFFSET   = sRefreshplot.size[0],$
     YOFFSET   = sRefreshplot.size[1],$
@@ -1085,7 +1085,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     
   IF ((*global).FACILITY EQ 'LENS') THEN BEGIN
   
-    ;- X/Y base -------------------------------------------------------------------
+    ;- X/Y base ---------------------------------------------------------------
     wXYbase = WIDGET_BASE(wTab1Base,$
       XOFFSET   = 710,$
       YOFFSET   = 587,$
