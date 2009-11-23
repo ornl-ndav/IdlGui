@@ -57,9 +57,13 @@ PRO jk_get_run_information, Event
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
   ;get run number
-  run_number = (*global).run_number
+  run_number = STRCOMPRESS((*global).run_number,/REMOVE_ALL)
   putTextFieldValue, Event, 'reduce_jk_tab1_run_information_run_number', $
-    STRCOMPRESS(run_number,/REMOVE_ALL)
+    run_number
+    
+  ;create default output file name
+  output_file = 'EQSANS_' + run_number
+  putTextFieldValue, Event, 'reduce_jk_tab2_root_name_extension', output_file   
     
   cmd = 'eqsans_reduce  -r ' + run_number + ' -ri'
   WIDGET_CONTROL, /HOURGLASS
