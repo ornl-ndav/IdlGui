@@ -345,7 +345,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
   ;- REFRESH Plot ---------------------------------------------------------------
   XYoff = [0,0]
   sRefreshPlot = { size: [sClearSelection.size[0]+XYoff[0]+$
-  sClearSelection.size[2],$
+    sClearSelection.size[2],$
     sClearSelection.size[1]+XYoff[1],$
     sClearSelection.size[2]],$
     value: 'REFRESH APPLICATION',$
@@ -563,10 +563,10 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       VALUE   = 'N/A',$
       /ALIGN_LEFT,$
       UNAME   = xValue.uname)
-
+      
     label = WIDGET_LABEL(wXYbase,$
-    VALUE = 'LOCAL')
-
+      VALUE = 'LOCAL')
+      
     ;tube local
     rowb = WIDGET_BASE(wXYbase,$
       /ROW)
@@ -591,7 +591,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       
     ;row3 (Counts)
     wCountslabel = WIDGET_LABEL(wXYbase,$
-      VALUE   = 'COUNTS') 
+      VALUE   = 'COUNTS')
     wCountsvalue = WIDGET_LABEL(wXYbase,$
       VALUE   = 'N/A',$
       SCR_XSIZE = 100,$
@@ -607,11 +607,11 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       /ALIGN_CENTER,$
       FRAME = 1)
       
-      title = WIDGET_LABEL(auto_base,$
+    title = WIDGET_LABEL(auto_base,$
       VALUE = 'Automatically')
-      title = WIDGET_LABEL(auto_base,$
+    title = WIDGET_LABEL(auto_base,$
       VALUE = 'exclude dead')
-      title = WIDGET_LABEL(auto_base,$
+    title = WIDGET_LABEL(auto_base,$
       VALUE = 'tubes:')
       
     group = CW_BGROUP(auto_base,$
@@ -623,25 +623,54 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       UNAME = 'exclude_dead_tube_auto')
       
   ENDIF
-
+  
   ;TOF tools
   tof_tool = WIDGET_BUTTON(wTab1Base,$
-  XOFFSET = 583,$
-  YOFFSET = 505,$
-  SCR_XSIZE = 117,$
-  VALUE = 'TOF tools',$
-  SENSITIVE = 0, $
-  UNAME = 'tof_tools')
-
-  ;- Selection tool -------------------------------------------------------------
-  wSelection = WIDGET_BUTTON(wTab1Base,$
-    XOFFSET   = sSelection.size[0],$
-    YOFFSET   = sSelection.size[1],$
-    SCR_XSIZE = sSelection.size[2],$
-    SCR_YSIZE = sSelection.size[3],$
-    VALUE     = sSelection.value,$
-    UNAME     = sSelection.uname,$
-    SENSITIVE = sSelection.sensitive)
+    XOFFSET = 583,$
+    YOFFSET = 505,$
+    SCR_XSIZE = 117,$
+    VALUE = 'TOF tools',$
+    SENSITIVE = 0, $
+    UNAME = 'tof_tools')
+    
+  ;  ;- Selection tool -------------------------------------------------------------
+  ;  wSelection = WIDGET_BUTTON(wTab1Base,$
+  ;    XOFFSET   = sSelection.size[0],$
+  ;    YOFFSET   = sSelection.size[1],$
+  ;    SCR_XSIZE = sSelection.size[2],$
+  ;    SCR_YSIZE = sSelection.size[3],$
+  ;    VALUE     = sSelection.value,$
+  ;    UNAME     = sSelection.uname,$
+  ;    SENSITIVE = sSelection.sensitive)
+    
+  ;min and max value of main plot
+  min_max_base = WIDGET_BASE(wTab1Base,$
+    XOFFSET = sSelection.size[0],$
+    YOFFSET = sSelection.size[1]-10,$
+    SCR_XSIZE = 305,$
+    SCR_YSIZE = 45,$
+    /ROW,$
+    UNAME = 'min_max_counts_displayed',$
+    SENSITIVE = 0,$
+    /BASE_ALIGN_CENTER,$
+    FRAME = 1)
+    
+  label = WIDGET_LABEL(min_max_base,$
+    VALUE = 'Counts:')
+  min = WIDGET_LABEL(min_max_base,$
+    VALUE = '  Min:')
+  min_value = WIDGET_TEXT(min_max_base,$
+    VALUE = 'N/A',$
+    XSIZE = 10,$
+    /EDITABLE, $
+    UNAME = 'min_counts_displayed')
+  max = WIDGET_LABEL(min_max_base,$
+    VALUE = '  Max:')
+  max_value = WIDGET_TEXT(min_max_base,$
+    VALUE = 'N/A',$
+    XSIZE = 10,$
+    /EDITABLE, $
+    UNAME = 'max_counts_displayed')
     
   ;- Load Selection -------------------------------------------------------------
   ;Title
@@ -1097,19 +1126,19 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       
   ENDIF
   
-    ;Transmission and beam center calculation buttons
+  ;Transmission and beam center calculation buttons
   IF ((*global).facility EQ 'SNS') THEN BEGIN
   
     ;counts vs tof preview plot
     IvsTOF = WIDGET_DRAW(wTab1Base,$
-    XOFFSET = 585,$
-    YOFFSET = 535,$
-    SCR_XSIZE = 420,$
-    SCR_YSIZE = 190,$
-;    /TRACKING_EVENTS, $
-    /MOTION_EVENTS, $
-    UNAME = 'counts_vs_tof_preview_plot')
-  
+      XOFFSET = 585,$
+      YOFFSET = 535,$
+      SCR_XSIZE = 420,$
+      SCR_YSIZE = 190,$
+      ;    /TRACKING_EVENTS, $
+      /MOTION_EVENTS, $
+      UNAME = 'counts_vs_tof_preview_plot')
+      
     Tran_BC_base = WIDGET_BASE(wTab1Base,$
       XOFFSET = 585,$
       YOFFSET = 730,$
@@ -1159,18 +1188,18 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       
   ENDIF
   
-  ;  ;Selection Color Tool
-  ;  wColorBase = WIDGET_BASE(wTab1Base,$
-  ;    XOFFSET   = sColorBase.size[0]-63,$
-  ;    YOFFSET   = sColorBase.size[1],$
-  ;    FRAME     = sColorBase.frame,$
-  ;    SENSITIVE = sColorBase.sensitive,$
-  ;    UNAME     = sColorBase.uname,$
-  ;    /COLUMN)
-  ;
-  ;  wSelectionColor = WIDGET_BUTTON(wcolorBase,$
-  ;    SCR_XSIZE = sSelectionColor.size[2]+58,$
-  ;    UNAME     = sSelectionColor.uname,$
-  ;    VALUE     = sSelectionColor.value)
-    
+;  ;Selection Color Tool
+;  wColorBase = WIDGET_BASE(wTab1Base,$
+;    XOFFSET   = sColorBase.size[0]-63,$
+;    YOFFSET   = sColorBase.size[1],$
+;    FRAME     = sColorBase.frame,$
+;    SENSITIVE = sColorBase.sensitive,$
+;    UNAME     = sColorBase.uname,$
+;    /COLUMN)
+;
+;  wSelectionColor = WIDGET_BUTTON(wcolorBase,$
+;    SCR_XSIZE = sSelectionColor.size[2]+58,$
+;    UNAME     = sSelectionColor.uname,$
+;    VALUE     = sSelectionColor.value)
+  
 END
