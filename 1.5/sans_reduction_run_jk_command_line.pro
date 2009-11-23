@@ -136,7 +136,7 @@ PRO RunJKCommandLine, Event
     IF (IvQxQy EQ 1) THEN BEGIN
       ivQxQy_output = output_file_name + '.qxy'
       ;launch plot
-      spawn, 'jzg -3i ' + ivQxQy_output + ' &'
+      spawn, 'jzg -3m ' + ivQxQy_output + ' &'
     ENDIF
     
   ENDELSE
