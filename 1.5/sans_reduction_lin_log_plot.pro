@@ -33,8 +33,8 @@
 ;==============================================================================
 
 FUNCTION LinOrLog, Event
-value = getCWBgroupValue(Event,'z_axis_scale')
-RETURN, value
+  value = getCWBgroupValue(Event,'z_axis_scale')
+  RETURN, value
 END
 
 PRO lin_or_log_plot, Event
@@ -66,9 +66,21 @@ PRO lin_or_log_plot, Event
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'draw_uname')
   WIDGET_CONTROL, id, GET_VALUE = id_value
   WSET, id_value
+  
+  xmin = getTextFieldValue(Event,'min_counts_displayed')
+  xmax = getTextFieldValue(Event,'max_counts_displayed')
+  IF (xmin NE 'N/A') THEN BEGIN
+    xmin = FIX(xmin)
+    min_array = WHERE(DataXY LT xmin)
+    DataXY[min_array] = 0
+    xmax = FIX(xmax)
+    max_array = WHERE(DAtaXY GT xmax)
+    DataXY[max_array] = 0
+  ENDIF
+  
   TVSCL, DataXY, /DEVICE
   
-  ;refresh_scale, Event         ;_plot
+;refresh_scale, Event         ;_plot
   
 END
 
@@ -90,7 +102,7 @@ PRO save_background,  Event, MAIN_BASE=main_base, GLOBAL=global
   geometry = WIDGET_INFO(id,/GEOMETRY)
   xsize   = geometry.xsize
   ysize   = geometry.ysize
-
+  
   DEVICE, copy =[0, 0, xsize, ysize, 0, 0, id_value]
   (*(*global).background) = background
   
