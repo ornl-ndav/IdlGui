@@ -632,7 +632,7 @@ END
 FUNCTION get_data_run_number, nexus_file_name
 
   iNexus = OBJ_NEW('IDLgetNexusRunNumber',nexus_file_name[0])
-  run_number = iNexus->getIDLnexusRunNumber()  
+  run_number = iNexus->getIDLnexusRunNumber()
   RETURN, run_number
   
 END

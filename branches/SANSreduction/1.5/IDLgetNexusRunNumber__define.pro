@@ -64,9 +64,7 @@ FUNCTION IDLgetNexusRunNumber::init, nexus_full_path
   ENDIF ELSE BEGIN
     fileID = h5f_open(nexus_full_path)
   ENDELSE
-  
-  self.nexus_full_path = nexus_full_path
-  
+  self.fileID = fileID
   RETURN, 1
 END
 

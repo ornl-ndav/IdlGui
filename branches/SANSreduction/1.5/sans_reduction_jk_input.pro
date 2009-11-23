@@ -58,7 +58,9 @@ PRO jk_get_run_information, Event
   
   ;get run number
   run_number = (*global).run_number
-  
+  putTextFieldValue, Event, 'reduce_jk_tab1_run_information_run_number', $
+    STRCOMPRESS(run_number,/REMOVE_ALL)
+    
   cmd = 'eqsans_reduce  -r ' + run_number + ' -ri'
   WIDGET_CONTROL, /HOURGLASS
   spawn, cmd, listening

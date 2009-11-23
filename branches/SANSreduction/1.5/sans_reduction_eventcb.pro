@@ -84,9 +84,7 @@ PRO retrieveNexus, Event, FullNexusName
     X        = (sz_array)(3)
     
     IF ((*global).facility EQ 'LENS') THEN BEGIN ;LENS
-    
       (*(*global).DataArray) = DataArray
-      
     ENDIF ELSE BEGIN ;SNS
     
       progressBar = OBJ_NEW("SHOWPROGRESS", $
@@ -221,7 +219,6 @@ PRO browse_nexus, Event
       uname_list = [uname_list,$
         'selection_tool_button']
     ENDIF
-    
     (*global).data_nexus_file_name = FullNexusName
     activate_widget_list, Event, uname_list, 1
   ENDIF ELSE BEGIN
