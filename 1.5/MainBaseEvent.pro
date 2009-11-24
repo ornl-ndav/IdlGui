@@ -134,6 +134,14 @@ PRO MAIN_BASE_event, Event
       ENDELSE
     END
     
+    ;min and max counts
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='min_counts_displayed'): BEGIN
+    lin_or_log_plot, Event
+    END
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='max_counts_displayed'): BEGIN
+    lin_or_log_plot, Event
+    END
+    
     ;TOF tools button (that launches the TOF tools base
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tof_tools'): BEGIN
       id = (*global).tof_tools_base
