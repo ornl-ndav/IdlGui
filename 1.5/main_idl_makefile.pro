@@ -17,6 +17,7 @@ cd, IdlUtilitiesPath
 .run colorbar.pro
 .run fsc_color.pro
 .run xdisplayfile.pro
+.run sans_reduction_functions.pro
 
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.

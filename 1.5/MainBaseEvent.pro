@@ -199,24 +199,36 @@ PRO MAIN_BASE_event, Event
     
     ;manual input of x0, y0, width and Height
     WIDGET_INFO(wWidget, FIND_BY_UNAMe='corner_pixel_x0'): BEGIN
-      makeExclusionArray_SNS, Event, add=1
-      load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
-      save_background,  Event, GLOBAL=global
+      result = ask_to_validate_exclusion_input(Event)
+      IF (result EQ 'Yes') THEN BEGIN
+        makeExclusionArray_SNS, Event, add=1
+        load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
+        save_background,  Event, GLOBAL=global
+      ENDIF
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAMe='corner_pixel_y0'): BEGIN
-      makeExclusionArray_SNS, Event, add=1
-      load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
-      save_background,  Event, GLOBAL=global
+      result = ask_to_validate_exclusion_input(Event)
+      IF (result EQ 'Yes') THEN BEGIN
+        makeExclusionArray_SNS, Event, add=1
+        load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
+        save_background,  Event, GLOBAL=global
+      ENDIF
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAMe='corner_pixel_width'): BEGIN
-      makeExclusionArray_SNS, Event, add=1
-      load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
-      save_background,  Event, GLOBAL=global
+      result = ask_to_validate_exclusion_input(Event)
+      IF (result EQ 'Yes') THEN BEGIN
+        makeExclusionArray_SNS, Event, add=1
+        load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
+        save_background,  Event, GLOBAL=global
+      ENDIF
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAMe='corner_pixel_height'): BEGIN
-      makeExclusionArray_SNS, Event, add=1
-      load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
-      save_background,  Event, GLOBAL=global
+      result = ask_to_validate_exclusion_input(Event)
+      IF (result EQ 'Yes') THEN BEGIN
+        makeExclusionArray_SNS, Event, add=1
+        load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
+        save_background,  Event, GLOBAL=global
+      ENDIF
     END
     
     ;Selection inside button
@@ -574,10 +586,11 @@ PRO MAIN_BASE_event, Event
     
     ;-END of Exclusion Region Selection Tool ----------------------------------
     
-    ;- Clear Selection Button -------------------------------------------------
+    ;RESET SELECTION
     WIDGET_INFO(wWidget, FIND_BY_UNAME='clear_selection_button'): BEGIN
       IF ((*global).data_nexus_file_name NE '') THEN BEGIN
         clear_selection_tool, Event ;_selection
+        (*(*global).jk_selection_xoyox1y1) = PTR_NEW(0L)
         IF (isAutoExcludeDeadTubeSelected(Event)) THEN BEGIN
           plot_exclusion_of_dead_tubes, Event
         ENDIF
