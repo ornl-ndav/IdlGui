@@ -44,6 +44,12 @@ PRO  getBankTubePixelROI, Event, $
     TubeArray, $
     PixelArray
     
+  CATCH, error
+  IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN
+  ENDIF
+  
   NbrRow = N_ELEMENTS(StringArray)
   index = 0L
   WHILE (index LT NbrRow) DO BEGIN
@@ -64,7 +70,9 @@ END
 ;------------------------------------------------------------------------------
 PRO load_exclusion_roi_for_sns, Event, FileStringArray
 
-  NbrElements = N_ELEMENTS(FileStringArray)
+  nbr_jk = 0 ;number of lines that starts with '#jk :'
+  NbrElements = get_nbr_elements_except_jk_line(FileStringArray, nbr_jk)
+  ;N_ELEMENTS(FileStringArray)
   IF (FileStringArray[0] EQ '') THEN RETURN
   
   ;get global structure
@@ -90,20 +98,9 @@ PRO load_exclusion_roi_for_sns, Event, FileStringArray
   (*(*global).TubeArray)  = TubeArray
   (*(*global).PixelArray) = PixelArray
   
-  ;size_excluded = 4L * 256L * 48L - LONG(N_ELEMENTS(BankArray)) + 1
-  ;excluded_BankArray  = INTARR(size_excluded)
-  ;excluded_TubeArray  = INTARR(size_excluded)
-  ;excluded_PixelArray = INTARR(size_excluded)
-  
-  ;getInverseSelection, BankArray, TubeArray, PixelArray, $
-  ;  excluded_BankArray, Excluded_TubeArray, Excluded_PixelArray
+  save_jk_selection_array, Event, FileStringArray, nbr_jk
   
   IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
-  ;plotting ROI
-  
-  ;(*(*global).BankArray)  = excluded_BankArray
-  ;(*(*global).TubeArray)  = excluded_TubeArray
-  ;(*(*global).PixelArray) = excluded_PixelArray
   
   plot_exclusion_roi_for_sns, Event
   
@@ -112,7 +109,8 @@ END
 ;------------------------------------------------------------------------------
 PRO load_inclusion_roi_for_sns, Event, FileStringArray
 
-  NbrElements = N_ELEMENTS(FileStringArray)
+  nbr_jk = 0 ;number of lines that starts with '#jk :'
+  NbrElements = get_nbr_elements_except_jk_line(FileStringArray, nbr_jk)
   IF (FileStringArray[0] EQ '') THEN RETURN
   
   ;get global structure
@@ -152,6 +150,8 @@ PRO load_inclusion_roi_for_sns, Event, FileStringArray
     FileStringArray[index] = line
     index++
   ENDWHILE
+  
+    save_jk_selection_array, Event, FileStringArray, nbr_jk
   
   (*(*global).global_exclusion_array) = FileStringArray
   
@@ -194,5 +194,27 @@ PRO getInverseSelection, BankArray, TubeArray, PixelArray, $
       ENDFOR
     ENDFOR
   ENDFOR
+  
+END
+
+;------------------------------------------------------------------------------
+PRO save_jk_selection_array, Event, FileStringArray, nbr_jk
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  nbr_lines = N_ELEMENTS(FileStringArray)
+  jk_selection = STRARR(nbr_jk * 4)
+  
+  index = 0
+  WHILE (index LE nbr_jk) DO BEGIN
+    line = FileStringArray[nbr_lines - index - 1]
+    print, 'line[' + strcompress(index,/remove_all) + '] = ' + line
+    parse1 = STRSPLIT(line,' ',/REGEX,/EXTRACT)
+    parse2 = STRSPLIT(parse1[1],',',/REGEX,/EXTRACT)
+    help, parse2
+    index++
+  ENDWHILE
+  
+  (*(*global).jk_selection_x0y0x1y1) = jk_selection
   
 END
