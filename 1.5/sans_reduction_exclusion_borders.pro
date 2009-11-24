@@ -97,13 +97,13 @@ PRO saveExclusionBorders, Event, ADD=add
     xmax = geo_tube_max
     ymin = pixel_min
     ymax = geo_pixel_max
-    region[*,1] = [xmin,ymin,xmax,ymax]
+    region[*,2] = [xmin,ymin,xmax,ymax]
     ;region 4
     xmin = geo_tube_min
     xmax = tube_max
     ymin = pixel_max
     ymax = geo_pixel_max
-    region[*,1] = [xmin,ymin,xmax,ymax]
+    region[*,3] = [xmin,ymin,xmax,ymax]
     
     IF ((size(jk_selection_x0y0x1y1))(0) EQ 0) THEN BEGIN
       jk_selection_x0y0x1y1 = region[*,0]
