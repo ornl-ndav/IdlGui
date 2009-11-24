@@ -45,3 +45,13 @@ FUNCTION ask_to_validate_exclusion_input, Event
   RETURN, result
   
 END
+
+;-------------------------------------------------------------------------------
+FUNCTION get_nbr_elements_except_jk_line, FileStringArray, nbr_jk
+
+  nbr_lines = N_ELEMENTS(FileStringArray)
+  jk_array = STRPOS(FileStringArray,'#jk: ')
+  jk = WHERE(jk_array NE -1, nbr_jk)
+  RETURN, nbr_lines - nbr_jk
+  
+END
