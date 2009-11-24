@@ -139,11 +139,13 @@ PRO MAIN_BASE_event, Event
       refresh_plot, Event ;_plot
       load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
       plot_exclusion_of_dead_tubes, Event
+      save_background,  Event, GLOBAL=global
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAME='max_counts_displayed'): BEGIN
       refresh_plot, Event ;_plot
       load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
       plot_exclusion_of_dead_tubes, Event
+      save_background,  Event, GLOBAL=global
     END
     ;reset button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='min_max_counts_reset_button'): BEGIN
@@ -151,6 +153,7 @@ PRO MAIN_BASE_event, Event
       refresh_plot, Event ;_plot
       load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
       plot_exclusion_of_dead_tubes, Event
+      save_background,  Event, GLOBAL=global
     END
     
     ;TOF tools button (that launches the TOF tools base
