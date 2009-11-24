@@ -86,6 +86,9 @@ cd, CurrentFolder
 ;min and max counts of main tab
 .run sans_reduction_min_max_counts.pro
 
+;save selection borders
+.run sans_reduction_exclusion_borders.pro
+
 ;jk reduction
 .run sans_reduction_jk_tab1_functions.pro
 .run sans_reduction_jk_input.pro

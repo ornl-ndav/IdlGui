@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 
-PRO makeExclusionArray_SNS, Event, ADD=add
+PRO saveExclusionBorders, Event, ADD=add
 
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
@@ -45,15 +45,41 @@ PRO makeExclusionArray_SNS, Event, ADD=add
   
   ;get tubes and pixels width
   tube_width_data   = FIX(getTextFieldValue(Event,'corner_pixel_width'))
-  nbr_tubes = tube_width_data
   pixel_height_data = FIX(getTextFieldValue(Event,'corner_pixel_height'))
   
-  tube_sign = 1
-  IF (tube_width_data LT 0) THEN tube_sign = -1
+  ;get tube and pixel of other side
+  tube1_data = tube0_data + tube_width_data - 1
+  pixel1_data = pixel0_data + pixel_height_data - 1
   
-  pixel_sign = 1
-  ;IF (pixel_height_data LT 0) THEN pixel_sign = -1
+  IF ((*global).selection_type EQ 'inside') THEN BEGIN ;inside selection
   
+    jk_selection_xoyox1y1 = (*(*global).jk_selection_xoyox1y1)
+    IF ((size(jk_selection_xoyox1y1))(0) EQ 0) THEN BEGIN
+      jk_selection_xoyox1y1 = INTARR(4)
+      jk_selection_xoyox1y1[0] = tube0_data
+      jk_selection_xoyox1y1[1] = pixel0_data
+      jk_selection_xoyox1y1[2] = tube1_data
+      jk_selection_xoyox1y1[3] = pixel1_data
+    ENDIF ELSE BEGIN
+      new_array = INTARR(4)
+      new_array[0] = tube0_data
+      new_array[1] = pixel0_data
+      new_array[2] = tube1_data
+      new_array[3] = pixel1_data
+      jk_selection_xoyox1y1 = [jk_selection_xoyox1y1,new_array]
+    ENDELSE
+    
+  ENDIF ELSE BEGIN ;outside selection
+  
+  ENDELSE
+  
+  (*(*global).jk_selection_xoyox1y1) = jk_selection_xoyox1y1
+  
+END
+
+;==============================================================================
+PRO tmp
+
   ;go 2 by 2 for front and back panels only
   ;start at 1 if back panel
   panel_selected = getPanelSelected(Event)
@@ -199,102 +225,5 @@ PRO makeExclusionArray_SNS, Event, ADD=add
   IF (N_ELEMENTS(add) NE 0) THEN BEGIN
     add_to_global_exclusion_array, event, pixel_array
   ENDIF
-  
-END
-
-;------------------------------------------------------------------------------
-PRO add_to_global_exclusion_array, event, pixel_array
-
-  ;get global structure
-  WIDGET_CONTROL, Event.top, GET_UVALUE=global
-  
-  global_exclusion_array = (*(*global).global_exclusion_array)
-  IF (global_exclusion_array[0] EQ '') THEN BEGIN ;first time adding pixels
-    global_exclusion_array = pixel_array
-  ENDIF ELSE BEGIN
-    global_exclusion_array = [global_exclusion_array, pixel_array]
-  ENDELSE
-  (*(*global).global_exclusion_array) = global_exclusion_array
-  
-END
-
-;------------------------------------------------------------------------------
-PRO SaveExclusionFile_SNS, Event
-
-  ;indicate initialization with hourglass icon
-  WIDGET_CONTROL,/HOURGLASS
-  
-  ;get global structure
-  WIDGET_CONTROL, Event.top, GET_UVALUE=global
-  
-  pixel_array = (*(*global).global_exclusion_array)
-  PixelArray_of_DeadTubes = (*(*global).PixelArray_of_DeadTubes)
-  
-  PROCESSING = (*global).processing
-  OK         = (*global).ok
-  FAILED     = (*global).failed
-  
-  folder         = (*global).selection_path
-  file_name      = getTextfieldValue(Event,'save_roi_text_field')
-  full_file_name = folder + file_name
-  
-  text = '> Saving Exclusion Region:'
-  IDLsendToGeek_addLogBookText, Event, text
-  text = '-> ROI file name: ' + full_file_name
-  IDLsendToGeek_addLogBookText, Event, text
-  
-  ;create file
-  text = '-> Writing file ... ' + PROCESSING
-  IDLsendToGeek_addLogBookText, Event, text
-  error = 0
-  ;CATCH, error
-  IF (error NE 0) then begin
-    CATCH, /CANCEL
-    IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
-  ENDIF ELSE BEGIN
-    ;open output file
-    OPENW, 1, full_file_name
-    
-    inclusion_pixel_array = INTARR(48,4,256) + 1
-    IF (pixel_array[0] NE '') THEN BEGIN
-      inclusion_pixel_array = InverseROI(pixel_array)
-    ENDIF
-    
-    DeadTubes = INTARR(48,4,256) + 1
-    IF (PixelArray_of_Deadtubes[0] NE '') THEN BEGIN
-      DeadTubes = InverseROI(PixelArray_of_DeadTubes)
-    ENDIF
-    
-    ;copy the excluded pixels
-    FOR bank=0,47 DO BEGIN
-      FOR tube=0,3 DO BEGIN
-        FOR pixel=0,255 DO BEGIN
-          IF (inclusion_pixel_array[bank,tube,pixel] EQ 1 AND $
-            DeadTubes[bank,tube,pixel] EQ 1) THEN BEGIN
-            line = 'bank' + STRCOMPRESS(bank+1,/REMOVE_ALL) + '_' + $
-              STRCOMPRESS(tube,/REMOVE_ALL) + '_' + $
-              STRCOMPRESS(pixel,/REMOVE_ALL)
-            PRINTF, 1, line
-          ENDIF
-        ENDFOR
-      ENDFOR
-    ENDFOR
-    
-    CLOSE, 1
-    FREE_LUN, 1
-    IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
-  ENDELSE
-  
-  putTextFieldValue, Event, 'roi_file_name_text_field', full_file_name
-  ;enable PREVIEW button if file exist
-  IF (FILE_TEST(full_file_name)) THEN BEGIN
-    activate_widget = 1
-  ENDIF ELSE BEGIN
-    activate_widget = 0
-  ENDELSE
-  activate_widget, Event, 'preview_roi_exclusion_file', activate_widget
-  
-  ;turn off hourglass
-  WIDGET_CONTROL,HOURGLASS=0
   
 END

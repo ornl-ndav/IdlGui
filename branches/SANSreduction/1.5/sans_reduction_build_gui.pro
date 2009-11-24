@@ -151,6 +151,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     testing_on_mac: testing_on_mac, $
     
     run_number: '',$
+    jk_selection_xoyox1y1: PTR_NEW(0L), $
     
     sns_jk_switch: 'sns',$
     jk_default_value: {sample_detector: 'N/A',$
