@@ -395,6 +395,22 @@ PRO CheckCommandline_for_jk, Event
     cmd += ' -wl0 ' + frame_value
   ENDIF
   
+  ;add ROI
+  jk_selection = (*(*global).jk_selection_x0y0x1y1)
+  nbr = N_ELEMENTS(jk_selection)
+  IF (nbr GT 1) THEN BEGIN
+    nbr_iteration = nbr/4
+    index = 0
+    WHILE (index LT nbr_iteration) DO BEGIN
+      x0 = STRCOMPRESS(jk_selection[index*4],/REMOVE_ALL)
+      y0 = STRCOMPRESS(jk_selection[index*4+1],/REMOVE_ALL)
+      x1 = STRCOMPRESS(jk_selection[index*4+2],/REMOVE_ALL)
+      y1 = STRCOMPRESS(jk_selection[index*4+3],/REMOVE_ALL)
+      cmd += ' -rmask ' + x0 + ' ' + y0 + ' ' + x1 + ' ' + y1
+      index++
+    ENDWHILE
+  ENDIF
+  
   ;- Put cmd in the text box -
   putCommandLine, Event, cmd
   
