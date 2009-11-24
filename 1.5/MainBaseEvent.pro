@@ -70,8 +70,10 @@ PRO MAIN_BASE_event, Event
           DIALOG_PARENT=widget_id)
         activate_min_max_counts_widgets, Event, 0
         populate_min_max_counts_widgets, Event, STATUS='no'
+        (*(*global).jk_selection_x0y0x1y1) = PTR_NEW(0L)
       ENDIF ELSE BEGIN
         IF ((*global).data_nexus_file_name NE '') THEN BEGIN
+          (*(*global).jk_selection_x0y0x1y1) = PTR_NEW(0L)
           auto_exclude_dead_tubes, Event
           save_background,  Event, GLOBAL=global
           makeExclusionArray_SNS, Event
@@ -114,8 +116,10 @@ PRO MAIN_BASE_event, Event
           TITLE='LOADING ERROR!', $
           DIALOG_PARENT=widget_id)
         activate_min_max_counts_widgets, Event, 0
+        (*(*global).jk_selection_x0y0x1y1) = PTR_NEW(0L)
       ENDIF ELSE BEGIN
         IF ((*global).data_nexus_file_name NE '') THEN BEGIN
+          (*(*global).jk_selection_x0y0x1y1) = PTR_NEW(0L)
           auto_exclude_dead_tubes, Event
           save_background,  Event, GLOBAL=global
           makeExclusionArray_SNS, Event
