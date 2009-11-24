@@ -53,27 +53,70 @@ PRO saveExclusionBorders, Event, ADD=add
   
   IF ((*global).selection_type EQ 'inside') THEN BEGIN ;inside selection
   
-    jk_selection_xoyox1y1 = (*(*global).jk_selection_xoyox1y1)
-    IF ((size(jk_selection_xoyox1y1))(0) EQ 0) THEN BEGIN
-      jk_selection_xoyox1y1 = INTARR(4)
-      jk_selection_xoyox1y1[0] = tube0_data
-      jk_selection_xoyox1y1[1] = pixel0_data
-      jk_selection_xoyox1y1[2] = tube1_data
-      jk_selection_xoyox1y1[3] = pixel1_data
+    jk_selection_x0y0x1y1 = (*(*global).jk_selection_x0y0x1y1)
+    IF ((size(jk_selection_x0y0x1y1))(0) EQ 0) THEN BEGIN
+      jk_selection_x0y0x1y1 = INTARR(4)
+      jk_selection_x0y0x1y1[0] = tube0_data
+      jk_selection_x0y0x1y1[1] = pixel0_data
+      jk_selection_x0y0x1y1[2] = tube1_data
+      jk_selection_x0y0x1y1[3] = pixel1_data
     ENDIF ELSE BEGIN
       new_array = INTARR(4)
       new_array[0] = tube0_data
       new_array[1] = pixel0_data
       new_array[2] = tube1_data
       new_array[3] = pixel1_data
-      jk_selection_xoyox1y1 = [jk_selection_xoyox1y1,new_array]
+      jk_selection_x0y0x1y1 = [jk_selection_x0y0x1y1,new_array]
     ENDELSE
     
   ENDIF ELSE BEGIN ;outside selection
   
+    tube_min = MIN([tube0_data,tube1_data], MAX=tube_max)
+    pixel_min = MIN([pixel0_data,pixel1_data], MAX=pixel_max)
+    
+    geo_tube_max = 192
+    geo_tube_min = 0
+    geo_pixel_max = 256
+    geo_pixel_min = 0
+    
+    region = INTARR(4,4)
+    ;region1
+    xmin = geo_tube_min
+    xmax = tube_min
+    ymin = geo_pixel_min
+    ymax = pixel_max
+    region[*,0] = [xmin,ymin,xmax,ymax]
+    ;region 2
+    xmin = tube_min
+    xmax = geo_tube_max
+    ymin = geo_pixel_min
+    ymax = pixel_min
+    region[*,1] = [xmin,ymin,xmax,ymax]
+    ;region 3
+    xmin = tube_max
+    xmax = geo_tube_max
+    ymin = pixel_min
+    ymax = geo_pixel_max
+    region[*,1] = [xmin,ymin,xmax,ymax]
+    ;region 4
+    xmin = geo_tube_min
+    xmax = tube_max
+    ymin = pixel_max
+    ymax = geo_pixel_max
+    region[*,1] = [xmin,ymin,xmax,ymax]
+    
+    IF ((size(jk_selection_x0y0x1y1))(0) EQ 0) THEN BEGIN
+      jk_selection_x0y0x1y1 = region[*,0]
+    ENDIF ELSE BEGIN
+      jk_selection_x0y0x1y1 = [jk_selection_x0y0x1y1,region[*,0]]
+    ENDELSE
+    jk_selection_x0y0x1y1 = [jk_selection_x0y0x1y1,region[*,1]]
+    jk_selection_x0y0x1y1 = [jk_selection_x0y0x1y1,region[*,2]]
+    jk_selection_x0y0x1y1 = [jk_selection_x0y0x1y1,region[*,3]]
+    
   ENDELSE
   
-  (*(*global).jk_selection_xoyox1y1) = jk_selection_xoyox1y1
+  (*(*global).jk_selection_x0y0x1y1) = jk_selection_x0y0x1y1
   
 END
 

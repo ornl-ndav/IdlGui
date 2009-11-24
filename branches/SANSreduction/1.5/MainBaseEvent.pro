@@ -202,6 +202,7 @@ PRO MAIN_BASE_event, Event
       result = ask_to_validate_exclusion_input(Event)
       IF (result EQ 'Yes') THEN BEGIN
         makeExclusionArray_SNS, Event, add=1
+        saveExclusionBorders, Event, ADD=1
         load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
         save_background,  Event, GLOBAL=global
       ENDIF
@@ -210,6 +211,7 @@ PRO MAIN_BASE_event, Event
       result = ask_to_validate_exclusion_input(Event)
       IF (result EQ 'Yes') THEN BEGIN
         makeExclusionArray_SNS, Event, add=1
+        saveExclusionBorders, Event, ADD=1
         load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
         save_background,  Event, GLOBAL=global
       ENDIF
@@ -218,6 +220,7 @@ PRO MAIN_BASE_event, Event
       result = ask_to_validate_exclusion_input(Event)
       IF (result EQ 'Yes') THEN BEGIN
         makeExclusionArray_SNS, Event, add=1
+        saveExclusionBorders, Event, ADD=1
         load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
         save_background,  Event, GLOBAL=global
       ENDIF
@@ -226,6 +229,7 @@ PRO MAIN_BASE_event, Event
       result = ask_to_validate_exclusion_input(Event)
       IF (result EQ 'Yes') THEN BEGIN
         makeExclusionArray_SNS, Event, add=1
+        saveExclusionBorders, Event, ADD=1
         load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
         save_background,  Event, GLOBAL=global
       ENDIF
@@ -590,7 +594,7 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='clear_selection_button'): BEGIN
       IF ((*global).data_nexus_file_name NE '') THEN BEGIN
         clear_selection_tool, Event ;_selection
-        (*(*global).jk_selection_xoyox1y1) = PTR_NEW(0L)
+        (*(*global).jk_selection_x0y0x1y1) = PTR_NEW(0L)
         IF (isAutoExcludeDeadTubeSelected(Event)) THEN BEGIN
           plot_exclusion_of_dead_tubes, Event
         ENDIF
