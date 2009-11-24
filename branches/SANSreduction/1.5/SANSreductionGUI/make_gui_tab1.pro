@@ -658,19 +658,22 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
   label = WIDGET_LABEL(min_max_base,$
     VALUE = 'Counts:')
   min = WIDGET_LABEL(min_max_base,$
-    VALUE = '  Min:')
+    VALUE = ' Min:')
   min_value = WIDGET_TEXT(min_max_base,$
     VALUE = 'N/A',$
-    XSIZE = 10,$
+    XSIZE = 7,$
     /EDITABLE, $
     UNAME = 'min_counts_displayed')
   max = WIDGET_LABEL(min_max_base,$
     VALUE = '  Max:')
   max_value = WIDGET_TEXT(min_max_base,$
     VALUE = 'N/A',$
-    XSIZE = 10,$
+    XSIZE = 7,$
     /EDITABLE, $
     UNAME = 'max_counts_displayed')
+    reset = WIDGET_BUTTON(min_max_base,$
+    VALUE = 'RESET',$
+    UNAME = 'min_max_counts_reset_button')
     
   ;- Load Selection -----------------------------------------------------------
   ;Title

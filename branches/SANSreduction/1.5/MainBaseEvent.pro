@@ -136,10 +136,21 @@ PRO MAIN_BASE_event, Event
     
     ;min and max counts
     WIDGET_INFO(wWidget, FIND_BY_UNAME='min_counts_displayed'): BEGIN
-    lin_or_log_plot, Event
+      ;lin_or_log_plot, Event
+                refresh_plot, Event ;_plot
+          RefreshRoiExclusionPlot, Event   ;_plot
+      
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAME='max_counts_displayed'): BEGIN
-    lin_or_log_plot, Event
+      ;lin_or_log_plot, Event
+                refresh_plot, Event ;_plot
+          RefreshRoiExclusionPlot, Event   ;_plot
+      
+    END
+    ;reset button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='min_max_counts_reset_button'): BEGIN
+      populate_min_max_counts_widgets, Event, STATUS='yes'
+      lin_or_log_plot, Event
     END
     
     ;TOF tools button (that launches the TOF tools base
