@@ -144,8 +144,6 @@ PRO load_inclusion_roi_for_sns, Event, FileStringArray
     
   index=0L
   FileStringArray = STRARR(N_ELEMENTS(excluded_BankArray))
-  help, excluded_BankArray
-  print, size(excluded_BankArray)
   WHILE (index LT N_ELEMENTS(excluded_BankArray)) DO BEGIN
     line = 'bank' + STRCOMPRESS(excluded_BankArray[index],/REMOVE_ALL)
     line += '_' + STRCOMPRESS(excluded_TubeArray[index],/REMOVE_ALL)
@@ -202,7 +200,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO save_jk_selection_array, Event, FileStringArray, nbr_jk
-
+     
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
   nbr_lines = N_ELEMENTS(FileStringArray)
@@ -212,7 +210,6 @@ PRO save_jk_selection_array, Event, FileStringArray, nbr_jk
   col_offset = 4
   WHILE (index LT nbr_jk) DO BEGIN
     line = FileStringArray[nbr_lines - index - 1]
-    print, 'line: ' + line
     parse1 = STRSPLIT(line,' ',/REGEX,/EXTRACT)
     parse2 = STRSPLIT(parse1[1],',',/REGEX,/EXTRACT)
     jk_selection[index * col_offset] = parse2[0]
