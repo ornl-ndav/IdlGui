@@ -51,7 +51,7 @@ PRO saveExclusionBorders, Event, ADD=add
   tube1_data = tube0_data + tube_width_data - 1
   pixel1_data = pixel0_data + pixel_height_data - 1
 
-    jk_selection_x0y0x1y1 = (*(*global).jk_selection_x0y0x1y1)
+  jk_selection_x0y0x1y1 = (*(*global).jk_selection_x0y0x1y1)
   
   IF ((*global).selection_type EQ 'inside') THEN BEGIN ;inside selection
   
@@ -106,7 +106,6 @@ PRO saveExclusionBorders, Event, ADD=add
     ymax = geo_pixel_max
     region[*,3] = [xmin,ymin,xmax,ymax]
     
-    help, jk_selection_x0y0x1y1
     IF ((size(jk_selection_x0y0x1y1))(0) EQ 0) THEN BEGIN
       jk_selection_x0y0x1y1 = region[*,0]
     ENDIF ELSE BEGIN
