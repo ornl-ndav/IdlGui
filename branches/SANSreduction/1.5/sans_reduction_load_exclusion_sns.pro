@@ -142,8 +142,10 @@ PRO load_inclusion_roi_for_sns, Event, FileStringArray
   getInverseSelection, BankArray, TubeArray, PixelArray, $
     excluded_BankArray, Excluded_TubeArray, Excluded_PixelArray
     
-  index=0
+  index=0L
   FileStringArray = STRARR(N_ELEMENTS(excluded_BankArray))
+  help, excluded_BankArray
+  print, size(excluded_BankArray)
   WHILE (index LT N_ELEMENTS(excluded_BankArray)) DO BEGIN
     line = 'bank' + STRCOMPRESS(excluded_BankArray[index],/REMOVE_ALL)
     line += '_' + STRCOMPRESS(excluded_TubeArray[index],/REMOVE_ALL)
@@ -207,16 +209,16 @@ PRO save_jk_selection_array, Event, FileStringArray, nbr_jk
   jk_selection = STRARR(nbr_jk * 4)
   
   index = 0
-  col_offset = 0
+  col_offset = 4
   WHILE (index LT nbr_jk) DO BEGIN
     line = FileStringArray[nbr_lines - index - 1]
+    print, 'line: ' + line
     parse1 = STRSPLIT(line,' ',/REGEX,/EXTRACT)
     parse2 = STRSPLIT(parse1[1],',',/REGEX,/EXTRACT)
     jk_selection[index * col_offset] = parse2[0]
     jk_selection[index * col_offset + 1] = parse2[1]
     jk_selection[index * col_offset + 2] = parse2[2]
     jk_selection[index * col_offset + 3] = parse2[3]
-    col_offset += 1
     index++
   ENDWHILE
   
