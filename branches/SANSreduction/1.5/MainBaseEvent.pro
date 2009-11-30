@@ -391,7 +391,7 @@ PRO MAIN_BASE_event, Event
                   temp_x_device=temp_x_device, $
                   temp_y_device=temp_y_device
                 makeExclusionArray_SNS, Event, ADD=1
-                saveExclusionBorders, Event, ADD=1
+                saveExclusionBorders, Event, ADD=1;for JK's reduction
                 save_background,  Event, GLOBAL=global
               ENDIF ELSE BEGIN
                 TV, (*(*global).background), true=3
