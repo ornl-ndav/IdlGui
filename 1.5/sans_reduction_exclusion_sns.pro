@@ -297,10 +297,6 @@ PRO SaveExclusionFile_SNS, Event
       ENDWHILE
     ENDIF
     
-    
-    
-    
-    
     CLOSE, 1
     FREE_LUN, 1
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK

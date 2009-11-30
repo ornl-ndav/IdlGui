@@ -111,6 +111,7 @@ PRO load_inclusion_roi_for_sns, Event, FileStringArray
 
   nbr_jk = 0 ;number of lines that starts with '#jk :'
   NbrElements = get_nbr_elements_except_jk_line(FileStringArray, nbr_jk)
+  FileStringArray_untouched = FileStringArray
   IF (FileStringArray[0] EQ '') THEN RETURN
   
   ;get global structure
@@ -151,7 +152,7 @@ PRO load_inclusion_roi_for_sns, Event, FileStringArray
     index++
   ENDWHILE
   
-    save_jk_selection_array, Event, FileStringArray, nbr_jk
+  save_jk_selection_array, Event, FileStringArray_untouched, nbr_jk
   
   (*(*global).global_exclusion_array) = FileStringArray
   
@@ -206,12 +207,16 @@ PRO save_jk_selection_array, Event, FileStringArray, nbr_jk
   jk_selection = STRARR(nbr_jk * 4)
   
   index = 0
-  WHILE (index LE nbr_jk) DO BEGIN
+  col_offset = 0
+  WHILE (index LT nbr_jk) DO BEGIN
     line = FileStringArray[nbr_lines - index - 1]
-    print, 'line[' + strcompress(index,/remove_all) + '] = ' + line
     parse1 = STRSPLIT(line,' ',/REGEX,/EXTRACT)
     parse2 = STRSPLIT(parse1[1],',',/REGEX,/EXTRACT)
-    help, parse2
+    jk_selection[index * col_offset] = parse2[0]
+    jk_selection[index * col_offset + 1] = parse2[1]
+    jk_selection[index * col_offset + 2] = parse2[2]
+    jk_selection[index * col_offset + 3] = parse2[3]
+    col_offset += 1
     index++
   ENDWHILE
   
