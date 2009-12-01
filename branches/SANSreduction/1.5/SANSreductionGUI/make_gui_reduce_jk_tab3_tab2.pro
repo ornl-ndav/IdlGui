@@ -291,6 +291,8 @@ PRO make_gui_reduce_jk_tab3_tab2, advanced_base, tab_size, tab_title
     VALUE = '  t1:')
   t1_value = WIDGET_TEXT(input_base,$
     VALUE = '0',$
+    /ALL_EVENTS,$
+    UNAME = 'reduce_jk_tab3_tab2_slice_value1',$
     XSIZE = 5,$
     /EDITABLE)
   unit = WIDGET_LABEL(input_base,$
@@ -301,6 +303,8 @@ PRO make_gui_reduce_jk_tab3_tab2, advanced_base, tab_size, tab_title
     VALUE = '       t2:')
   t2_value = WIDGET_TEXT(input_base,$
     VALUE = '0',$
+    /ALL_EVENTS,$
+    UNAME = 'reduce_jk_tab3_tab2_slice_value2',$
     XSIZE = 7,$
     /EDITABLE)
   unit = WIDGET_LABEL(input_base,$
@@ -311,6 +315,8 @@ PRO make_gui_reduce_jk_tab3_tab2, advanced_base, tab_size, tab_title
     VALUE = '       dt:')
   dt_value = WIDGET_TEXT(input_base,$
     VALUE = '100',$
+    /ALL_EVENTS,$
+    UNAME = 'reduce_jk_tab3_tab2_slice_value3',$
     XSIZE = 7,$
     /EDITABLE)
   units = WIDGET_LABEL(input_base,$
