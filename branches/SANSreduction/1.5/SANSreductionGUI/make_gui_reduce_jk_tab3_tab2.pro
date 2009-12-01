@@ -252,22 +252,25 @@ PRO make_gui_reduce_jk_tab3_tab2, advanced_base, tab_size, tab_title
     /ROW,$
     /EXCLUSIVE)
   yes = WIDGET_BUTTON(button_base,$
+    UNAME = 'reduce_jk_tab3_tab2_slice_yes_button',$
     VALUE = 'Yes')
   no = WIDGET_BUTTON(button_base,$
+    UNAME = 'reduce_jk_tab3_tab2_slice_no_button',$
     VALUE = 'No')
   WIDGET_CONTROL, no, /SET_BUTTON
   label = WIDGET_LABEL(slice_base,$
-    VALUE = 'Slice data')
+    VALUE = '  Slice data?')
     
   ;timebin/pulsebin base
   tp_base = WIDGET_BASE(base,$
-    SENSITIVE = 1,$ ;FIXME (put back 0)
+    SENSITIVE = 0,$
+    UNAME = 'reduce_jk_tab3_tab2_slice_time_pulse_base',$
     /COLUMN,$
     FRAME = 1)
   ;time or pulse
   time_or_pulse_base = WIDGET_BASE(tp_base,$
     /ROW)
-    time_or_pulse_base1 = WIDGET_BASE(time_or_pulse_base,$
+  time_or_pulse_base1 = WIDGET_BASE(time_or_pulse_base,$
     /ROW,$
     /EXCLUSIVE)
   time = WIDGET_BUTTON(time_or_pulse_base1,$
@@ -278,8 +281,8 @@ PRO make_gui_reduce_jk_tab3_tab2, advanced_base, tab_size, tab_title
     VALUE = 'Pulse')
   WIDGET_CONTROL, time, /SET_BUTTON
   help_label = WIDGET_LABEL(time_or_pulse_base,$
-  VALUE = '  (If no limit on t2 is needed, give t2=0)',$
-  UNAME = 'reduce_jk_tab3_tab2_time_pulse_help')
+    VALUE = '  (If no limit on t2 is needed, give t2=0)',$
+    UNAME = 'reduce_jk_tab3_tab2_time_pulse_help')
   ;input base
   input_base = WIDGET_BASE(tp_base,$
     /ROW)

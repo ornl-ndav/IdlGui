@@ -1276,6 +1276,30 @@ PRO MAIN_BASE_event, Event
       CheckCommandLine_for_jk, Event
     END
     
+    ;Slice data - time or pulse
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME = 'reduce_jk_tab3_tab2_slice_yes_button'): BEGIN
+      activate_widget, Event, 'reduce_jk_tab3_tab2_slice_time_pulse_base', 1
+    END
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME = 'reduce_jk_tab3_tab2_slice_no_button'): BEGIN
+      activate_widget, Event, 'reduce_jk_tab3_tab2_slice_time_pulse_base', 0
+    END
+    
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_jk_tab3_tab2_time_slice'): BEGIN
+      reduce_jk_tab3_tab2_time_label, Event, TYPE='time'
+      CheckCommandLine_for_jk, Event
+    END
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_jk_tab3_tab2_pulse_slice'): BEGIN
+      reduce_jk_tab3_tab2_time_label, Event, TYPE='pulse'
+      CheckCommandLine_for_jk, Event
+    END
+    
+    
+    
+    
     ;= TAB3 (PLOT) ============================================================
     
     ;---- Refresh plot --------------------------------------------------------
