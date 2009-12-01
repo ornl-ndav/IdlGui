@@ -208,7 +208,7 @@ PRO make_gui_reduce_tab, MAIN_TAB, MainTabSize, TabTitles
     UNAME = 'jk_reduction_base')
     
   jk_tab = WIDGET_TAB(jk_base,$
-    UNAME     = sReduceTab.uname,$
+    UNAME     = 'jk_reduction_tab',$
     LOCATION  = 0,$
     XOFFSET   = sReduceTab.size[0],$
     YOFFSET   = sReduceTab.size[1],$
