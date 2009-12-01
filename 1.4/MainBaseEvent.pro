@@ -499,6 +499,9 @@ PRO MAIN_BASE_event, Event
     MapBase, Event, 'reduce_step1_sangle_base', 0
     MapBase, Event, 'reduce_step1_sangle_base_label', 0
     MapBase, Event, 'reduce_step1_sangle_base_equation', 0
+    display_reduce_step1_buttons, EVENT=EVENT,$
+      ACTIVATE=(*global).reduce_step1_spin_state_mode, $
+      global
   END
   
   ;----------------------------------------------------------------------------
