@@ -550,10 +550,10 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     (*global).sns_jk_switch = 'jk'
     ;advanced base of JK's reduction
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='jk_reduction_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2
-    ;part 2
-    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_jk_advanced_tab')
     WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
+    ;part 2
+;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_jk_advanced_tab')
+;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
     
   ENDIF
   
