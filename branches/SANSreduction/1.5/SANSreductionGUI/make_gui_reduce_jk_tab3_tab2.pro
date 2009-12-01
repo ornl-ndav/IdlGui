@@ -247,8 +247,10 @@ PRO make_gui_reduce_jk_tab3_tab2, advanced_base, tab_size, tab_title
     
   ;Slice data base
   slice_base = WIDGET_BASE(base,$
+  /BASE_ALIGN_CENTER,$
     /ROW)
   button_base = WIDGET_BASE(slice_base,$
+  /BASE_ALIGN_CENTER,$
     /ROW,$
     /EXCLUSIVE)
   yes = WIDGET_BUTTON(button_base,$
@@ -259,10 +261,10 @@ PRO make_gui_reduce_jk_tab3_tab2, advanced_base, tab_size, tab_title
     VALUE = 'No')
   WIDGET_CONTROL, no, /SET_BUTTON
   label = WIDGET_LABEL(slice_base,$
-    VALUE = '  Slice data?')
+    VALUE = '  Slice data?    ')
     
   ;timebin/pulsebin base
-  tp_base = WIDGET_BASE(base,$
+  tp_base = WIDGET_BASE(slice_base,$
     SENSITIVE = 0,$
     UNAME = 'reduce_jk_tab3_tab2_slice_time_pulse_base',$
     /COLUMN,$
