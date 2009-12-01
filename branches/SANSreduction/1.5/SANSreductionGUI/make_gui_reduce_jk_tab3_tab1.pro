@@ -45,21 +45,48 @@ PRO make_gui_reduce_jk_tab3_tab1, advanced_base, tab_size, tab_title
     
   ;Distances title
   xoff = 20
+  yoff = 80
   label = WIDGET_LABEL(BaseTab,$
     VALUE = 'Distances',$
     XOFFSET = xoff,$
-    YOFFSET = 55)
+    YOFFSET = 55+yoff)
   label = WIDGET_LABEL(BaseTab,$
     VALUE = 'Pixels',$
     XOFFSET = xoff,$
-    YOFFSET = 205)
+    YOFFSET = 205+yoff)
   label = WIDGET_LABEL(BaseTab,$
     VALUE = 'Spectrum Center',$
     XOFFSET = xoff,$
-    YOFFSET = 395)
+    YOFFSET = 395+yoff)
     
   base = WIDGET_BASE(BaseTab,$
     /COLUMN)
+    
+  rowa = WIDGET_BASE(base,$
+    /ROW)
+  label = WIDGET_LABEL(rowa,$
+    VALUE = 'Dark Current/Blocked beam run number ')
+  value = WIDGET_TEXT(rowa,$
+    UNAME = 'reduce_jk_tab3_tab1_dark_current',$
+    VALUE = '',$
+    XSIZE = 6,$
+    /EDITABLE,$
+    /ALL_EVENTS)
+  label = WIDGET_LABEL(rowa,$
+    VALUE = '(Subtracted from the data before any other normalization)')
+    
+  rowb = WIDGET_BASE(base,$
+    /ROW)
+  label = WIDGET_LABEL(rowb,$
+    VALUE = 'Vanadium/Water run number')
+  value = WIDGET_TEXT(rowb,$
+    VALUE = '',$
+    UNAME = 'reduce_jk_tab3_tab1_vanadium',$
+    XSIZE = 6,$
+    /EDITABLE,$
+    /ALL_EVENTS)
+  label = WIDGET_LABEL(rowb,$
+    VALUE = '(Normalize data by Vanadium/Water)')
     
   row1 = WIDGET_BASE(base,$
     /ROW)

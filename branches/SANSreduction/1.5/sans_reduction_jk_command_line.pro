@@ -140,6 +140,20 @@ PRO CheckCommandline_for_jk, Event
   
   ;advanced part1 ============================================================
   
+  ;Dark current/Blocked
+  dark_current = STRCOMPRESS(getTextFieldValue(Event, $
+    'reduce_jk_tab3_tab1_dark_current'),/REMOVE_ALL)
+  IF (dark_current NE '') THEN BEGIN
+    cmd += ' -dc ' + dark_current
+  ENDIF
+  
+  ;Vanadium
+  vanadium = STRCOMPRESS(getTextFieldValue(Event, $
+    'reduce_jk_tab3_tab1_vanadium'),/REMOVE_ALL)
+  IF (vanadium NE '') THEN BEGIN
+    cmd += ' -van ' + vanadium
+  ENDIF
+  
   ;Normalize data
   flag = get_JK_advanced_part1_normalization_flag(Event)
   IF (flag EQ 1) THEN BEGIN

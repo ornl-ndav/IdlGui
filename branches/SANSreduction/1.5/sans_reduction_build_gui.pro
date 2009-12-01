@@ -552,8 +552,8 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='jk_reduction_tab')
     WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2
     ;part 2
-    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_jk_advanced_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
+    ;id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_jk_advanced_tab')
+    ;WIDGET_CONTROL, id1, SET_TAB_CURRENT = 0
     
   ENDIF
   
