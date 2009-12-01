@@ -52,6 +52,7 @@ PRO make_gui_reduce_jk_tab3, REDUCE_TAB, tab_size, tab_title
     LOCATION  = 0,$
     XOFFSET   = 0,$
     YOFFSET   = 0,$
+    UNAME = 'reduce_jk_advanced_tab',$
     SCR_XSIZE = tab_size[2]-50,$
     SCR_YSIZE = tab_size[3]-30,$
     SENSITIVE = 1)

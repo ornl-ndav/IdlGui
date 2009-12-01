@@ -224,10 +224,10 @@ PRO make_gui_reduce_jk_tab3_tab2, advanced_base, tab_size, tab_title
     /EXCLUSIVE, $
     /ROW)
   button1 = WIDGET_BUTTON(ma_base,$
-  UNAME = 'reduce_jk_tab3_tab2_discard_data_us',$
+    UNAME = 'reduce_jk_tab3_tab2_discard_data_us',$
     VALUE = 'us')
   button2 = WIDGET_BUTTON(ma_base,$
-  UNAME = 'reduce_jk_tab3_tab2_discard_data_angstroms',$
+    UNAME = 'reduce_jk_tab3_tab2_discard_data_angstroms',$
     VALUE = 'Angstroms')
   WIDGET_CONTROL, button1, /SET_BUTTON
   
@@ -245,10 +245,73 @@ PRO make_gui_reduce_jk_tab3_tab2, advanced_base, tab_size, tab_title
   label = WIDGET_LABEL(row3,$
     VALUE = 'Angstroms')
     
+  ;Slice data base
+  slice_base = WIDGET_BASE(base,$
+    /ROW)
+  button_base = WIDGET_BASE(slice_base,$
+    /ROW,$
+    /EXCLUSIVE)
+  yes = WIDGET_BUTTON(button_base,$
+    VALUE = 'Yes')
+  no = WIDGET_BUTTON(button_base,$
+    VALUE = 'No')
+  WIDGET_CONTROL, no, /SET_BUTTON
+  label = WIDGET_LABEL(slice_base,$
+    VALUE = 'Slice data')
     
-    
-    
-    
-    
+  ;timebin/pulsebin base
+  tp_base = WIDGET_BASE(base,$
+    SENSITIVE = 1,$ ;FIXME (put back 0)
+    /COLUMN,$
+    FRAME = 1)
+  ;time or pulse
+  time_or_pulse_base = WIDGET_BASE(tp_base,$
+    /ROW)
+    time_or_pulse_base1 = WIDGET_BASE(time_or_pulse_base,$
+    /ROW,$
+    /EXCLUSIVE)
+  time = WIDGET_BUTTON(time_or_pulse_base1,$
+    UNAME = 'reduce_jk_tab3_tab2_time_slice',$
+    VALUE = 'Time')
+  pulse = WIDGET_BUTTON(time_or_pulse_base1,$
+    UNAME = 'reduce_jk_tab3_tab2_pulse_slice',$
+    VALUE = 'Pulse')
+  WIDGET_CONTROL, time, /SET_BUTTON
+  help_label = WIDGET_LABEL(time_or_pulse_base,$
+  VALUE = '  (If no limit on t2 is needed, give t2=0)',$
+  UNAME = 'reduce_jk_tab3_tab2_time_pulse_help')
+  ;input base
+  input_base = WIDGET_BASE(tp_base,$
+    /ROW)
+  t1 = WIDGET_LABEL(input_base,$
+    UNAME = 'reduce_jk_tab3_tab2_label1',$
+    VALUE = '  t1:')
+  t1_value = WIDGET_TEXT(input_base,$
+    VALUE = '0',$
+    XSIZE = 5,$
+    /EDITABLE)
+  unit = WIDGET_LABEL(input_base,$
+    VALUE = 's',$
+    UNAME = 'reduce_jk_tab3_tab2_label1_unit')
+  t2 = WIDGET_LABEL(input_base,$
+    UNAME = 'reduce_jk_tab3_tab2_label2',$
+    VALUE = '       t2:')
+  t2_value = WIDGET_TEXT(input_base,$
+    VALUE = '0',$
+    XSIZE = 7,$
+    /EDITABLE)
+  unit = WIDGET_LABEL(input_base,$
+    VALUE = 's',$
+    UNAME = 'reduce_jk_tab3_tab2_label2_unit')
+  dt = WIDGET_LABEL(input_base,$
+    UNAME = 'reduce_jk_tab3_tab2_label3',$
+    VALUE = '       dt:')
+  dt_value = WIDGET_TEXT(input_base,$
+    VALUE = '100',$
+    XSIZE = 7,$
+    /EDITABLE)
+  units = WIDGET_LABEL(input_base,$
+    UNAME = 'reduce_jk_tab3_tab2_label3_unit',$
+    VALUE = 's')
     
 END
