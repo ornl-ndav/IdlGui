@@ -95,6 +95,7 @@ cd, CurrentFolder
 .run sans_reduction_jk_input.pro
 .run sans_reduction_jk_command_line.pro
 .run sans_reduction_run_jk_command_line.pro
+.run sans_reduction_jk_advanced.pro
 
 ;transmission
 .run sans_reduction_transmission_manual_eventcb.pro
