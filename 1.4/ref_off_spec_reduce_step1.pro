@@ -622,6 +622,26 @@ FUNCTION remove_row_selected_from_array, Event, TABLE=table, ROW=row
   
 END
 
+;----------------------------------------------------------------------------
+FUNCTION remove_row_selected_from_array_general, Event, TABLE=table, ROW=row
+
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  sz = size(table)
+  nbr_row = sz[2]
+  nbr_column = sz[1]
+  
+  new_table = STRARR(nbr_column, nbr_row)
+  index = 0
+  for i=0,(nbr_row-1) do begin
+    if (i NE (row)) THEN BEGIN
+      new_table[*,index] = table[*,i]
+      index++
+    ENDIF
+  ENDFOR
+  RETURN, new_table
+  
+END
+
 ;--------------------------------------------------------------------------
 PRO remove_selected_run, Event
 
@@ -634,6 +654,12 @@ PRO remove_selected_run, Event
   new_table = remove_row_selected_from_array(Event, $
     TABLE=reduce_tab1_table, $
     ROW=row_selected)
+  
+  run_sangle_table = (*(*global).reduce_run_sangle_table)
+  new_run_sangle_table = remove_row_selected_from_array_general(Event, $
+  TABLE=run_sangle_table, $
+  ROW=row_selected)
+  (*(*global).reduce_run_sangle_table) = new_run_sangle_table  
     
   IF (new_table[0,0] EQ '') THEN BEGIN
     (*global).reduce_tab1_working_pola_state = ''
