@@ -1121,6 +1121,18 @@ PRO MAIN_BASE_event, Event
       
     ;-Advanced part1 ----------------------------------------------------------
       
+    ;dark current
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME = 'reduce_jk_tab3_tab1_dark_current'): BEGIN
+      CheckCommandLine_for_jk, Event
+    END
+    
+    ;Vanadium
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME = 'reduce_jk_tab3_tab1_vanadium'): BEGIN
+      CheckCommandLine_for_jk, Event
+    END
+    
     ;normalization yes and no buttons
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='reduce_jk_tab3_tab1_normalize_data_yes'): BEGIN
