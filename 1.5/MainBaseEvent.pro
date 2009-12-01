@@ -1280,10 +1280,12 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME = 'reduce_jk_tab3_tab2_slice_yes_button'): BEGIN
       activate_widget, Event, 'reduce_jk_tab3_tab2_slice_time_pulse_base', 1
+      CheckCommandLine_for_jk, Event
     END
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME = 'reduce_jk_tab3_tab2_slice_no_button'): BEGIN
       activate_widget, Event, 'reduce_jk_tab3_tab2_slice_time_pulse_base', 0
+      CheckCommandLine_for_jk, Event
     END
     
     WIDGET_INFO(wWidget, $

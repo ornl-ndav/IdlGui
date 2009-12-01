@@ -395,6 +395,51 @@ PRO CheckCommandline_for_jk, Event
     cmd += ' -wl0 ' + frame_value
   ENDIF
   
+  ;slice data  
+  IF (isJkSliceDataSelected(Event)) THEN BEGIN
+    value1 = STRCOMPRESS(getTextFieldValue(Event,$
+      'reduce_jk_tab3_tab2_slice_value1'),/REMOVE_ALL)
+    value2 = STRCOMPRESS(getTextFieldValue(Event,$
+      'reduce_jk_tab3_tab2_slice_value2'),/REMOVE_ALL)
+    value3 = STRCOMPRESS(getTextFieldValue(Event,$
+      'reduce_jk_tab3_tab2_slice_value3'),/REMOVE_ALL)
+    IF (isJkSliceTimeSelected(Event)) THEN BEGIN ;time
+      type = 't'
+      cmd += ' -timebin'
+    ENDIF ELSE BEGIN ;pulse
+      type = 'p'
+      cmd += ' -pulsebin'
+    ENDELSE
+    
+    IF (value1 EQ '') THEN BEGIN
+      value1 = '?'
+      missing_arguments_text = [missing_arguments_text, $
+        '- Missing ' + type + '1 value in Slice Data [ADVANCED/PART2]']
+      cmd_status = 0
+      ++missing_argument_counter
+    ENDIF
+    cmd += ' ' + value1
+    
+    IF (value2 EQ '') THEN BEGIN
+      value2 = '?'
+      missing_arguments_text = [missing_arguments_text, $
+        '- Missing ' + type + '2 value in Slice Data [ADVANCED/PART2]']
+      cmd_status = 0
+      ++missing_argument_counter
+    ENDIF
+    cmd += ' ' + value2
+    
+    IF (value3 EQ '') THEN BEGIN
+      value3 = '?'
+      missing_arguments_text = [missing_arguments_text, $
+        '- Missing ' + type + ' step in Slice Data [ADVANCED/PART2]']
+      cmd_status = 0
+      ++missing_argument_counter
+    ENDIF
+    cmd += ' ' + value3
+    
+  ENDIF
+  
   ;add ROI
   jk_selection = (*(*global).jk_selection_x0y0x1y1)
   nbr = N_ELEMENTS(jk_selection)

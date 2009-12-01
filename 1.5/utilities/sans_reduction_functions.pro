@@ -55,3 +55,17 @@ FUNCTION get_nbr_elements_except_jk_line, FileStringArray, nbr_jk
   RETURN, nbr_lines - nbr_jk
   
 END
+
+;------------------------------------------------------------------------------
+FUNCTION isJkSliceDataSelected, Event
+  uname = 'reduce_jk_tab3_tab2_slice_yes_button'
+  value = isButtonSelected(Event, uname)
+  RETURN, value
+END
+
+;------------------------------------------------------------------------------
+FUNCTION isJkSliceTimeSelected, Event
+  uname = 'reduce_jk_tab3_tab2_time_slice'
+  value = isButtonSelected(Event, uname)
+  RETURN, value
+END
