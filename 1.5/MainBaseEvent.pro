@@ -1103,6 +1103,10 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='tofiq_output'): CheckCommandline_for_jk, Event
     WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='tbIq_output'): CheckCommandline_for_jk, Event
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='tb2D_output'): CheckCommandline_for_jk, Event
+    WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='ivtof_output'): CheckCommandline_for_jk, Event
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='ivwl_output'): CheckCommandline_for_jk, Event
@@ -1280,11 +1284,15 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME = 'reduce_jk_tab3_tab2_slice_yes_button'): BEGIN
       activate_widget, Event, 'reduce_jk_tab3_tab2_slice_time_pulse_base', 1
+      activate_widget, Event, 'tbIq_output', 1
+      activate_widget, Event, 'tb2D_output', 1
       CheckCommandLine_for_jk, Event
     END
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME = 'reduce_jk_tab3_tab2_slice_no_button'): BEGIN
       activate_widget, Event, 'reduce_jk_tab3_tab2_slice_time_pulse_base', 0
+      activate_widget, Event, 'tbIq_output', 0
+      activate_widget, Event, 'tb2D_output', 0
       CheckCommandLine_for_jk, Event
     END
     

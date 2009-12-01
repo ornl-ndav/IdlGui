@@ -89,11 +89,11 @@ PRO make_gui_reduce_jk_tab2, REDUCE_TAB, tab_size, tab_title
   output13 = WIDGET_BUTTON(row2,$
     UNAME = 'tbIq_output',$
     SENSITIVE = 0,$
-    VALUE = 'tbIq: I(Q) vs time/pulse -> <output>_[time/pulse]???.iq')
+    VALUE = 'tbIq: I(Q) vs time/pulse -> <output>_time???.iq')
   output14 = WIDGET_BUTTON(row2,$
     UNAME = 'tb2D_output',$
     SENSITIVE = 0,$
-    VALUE = 'tb2D: 2D I(x,y) vs time/pulse -> <output>_[time/pulse]???.2d')
+    VALUE = 'tb2D: 2D I(x,y) vs time/pulse -> <output>_time???.2d')
   output6 = WIDGET_BUTTON(row2,$
     UNAME = 'ivtof_output',$
     VALUE = 'IvTof: Counts vs TOF -> <output>.tof')

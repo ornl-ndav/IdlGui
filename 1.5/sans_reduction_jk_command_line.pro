@@ -97,6 +97,17 @@ PRO CheckCommandline_for_jk, Event
     cmd += ' -save tofIq'
   ENDIF
   
+  IF (isJkSliceDataSelected(Event)) THEN BEGIN ;check tbIq and tb2D flags
+    tbIq = is_this_button_selected(Event,value='tbIq')
+    IF (tbIq EQ 1) THEN BEGIN
+      cmd += ' -save tbIq'
+    ENDIF
+    tb2D = is_this_button_selected(Event,value='tb2D')
+    IF (tb2D EQ 1) THEN BEGIN
+      cmd += ' -save tb2D'
+    ENDIF
+  ENDIF
+  
   IvTof = is_this_button_selected(Event,value='IvTof')
   IF (IvTof EQ 1) THEN BEGIN
     cmd += ' -save IvTof'
@@ -395,7 +406,7 @@ PRO CheckCommandline_for_jk, Event
     cmd += ' -wl0 ' + frame_value
   ENDIF
   
-  ;slice data  
+  ;slice data
   IF (isJkSliceDataSelected(Event)) THEN BEGIN
     value1 = STRCOMPRESS(getTextFieldValue(Event,$
       'reduce_jk_tab3_tab2_slice_value1'),/REMOVE_ALL)
