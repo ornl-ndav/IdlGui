@@ -94,7 +94,6 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     Yarray: PTR_NEW(0L), $
     SigmaYarray: PTR_NEW(0L), $
     
-    
     path: '~/',$
     debugging:    debugging,$ ;yes or no
     debugging_structure: sDebugging,$
@@ -121,10 +120,22 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     /TLB_MOVE_EVENTS, $
     /TLB_SIZE_EVENTS)
     
-  tools = WIDGET_BUTTON(MAIN_BASE,$
-    VALUE = 'TOOLS',$
+;  button_base = WIDGET_BASE(MAIN_BASE,$
+;    /ROW,$
+;    /ALIGN_CENTER)
+;    
+  load = WIDGET_BUTTON(main_base,$
+    VALUE = 'Load',$
     SCR_YSIZE = 25,$
-    UNAME = 'tools_button_uname')
+    UNAME = 'load_ascii_button_uname')
+;    
+;  space = WIDGET_LABEL(button_base,$
+;  VALUE = '   ')  
+;    
+;  tools = WIDGET_BUTTON(button_base,$
+;    VALUE = 'tools',$
+;    SCR_YSIZE = 25,$
+;    UNAME = 'tools_button_uname')
     
   plot = WIDGET_DRAW(MAIN_BASE,$
     UNAME = 'main_draw',$
