@@ -92,13 +92,13 @@ file = OBJ_NEW('idlxmlparser', '.REFscale.cfg')
     replot_me: 1,$ ;to replot main plot will be 0 just after being replot
     replotQnew: 0,$
     force_activation_step2: 0,$
-    flt0_ptr: PTRARR(20,/allocate_heap),$ ;arrays of all the x-axis
-    flt1_ptr: PTRARR(20,/allocate_heap),$ ;arrays of all the y-axis
-    flt2_ptr: PTRARR(20,/allocate_heap),$ ;arrays of all the y-error-axis
-    flt0_rescale_ptr: PTRARR(20,/allocate_heap),$ ;arrays of all the x-axis after rescaling
-    flt1_rescale_ptr: PTRARR(20,/allocate_heap),$ ;arrays of all the y-axis after rescaling
-    flt2_rescale_ptr: PTRARR(20,/allocate_heap),$ ;arrays of all the y-error-axis after rescaling
-    fit_cooef_ptr: PTRARR(20,/allocate_heap),$
+    flt0_ptr: PTRARR(50,/allocate_heap),$ ;arrays of all the x-axis
+    flt1_ptr: PTRARR(50,/allocate_heap),$ ;arrays of all the y-axis
+    flt2_ptr: PTRARR(50,/allocate_heap),$ ;arrays of all the y-error-axis
+    flt0_rescale_ptr: PTRARR(50,/allocate_heap),$ ;arrays of all the x-axis after rescaling
+    flt1_rescale_ptr: PTRARR(50,/allocate_heap),$ ;arrays of all the y-axis after rescaling
+    flt2_rescale_ptr: PTRARR(50,/allocate_heap),$ ;arrays of all the y-error-axis after rescaling
+    fit_cooef_ptr: PTRARR(50,/allocate_heap),$
     flt0_range: PTRARR(2,/allocate_heap) ,$ ;flt0 between Q1 and Q2 for lowQ and hihgQ files
     rescaling_ymax: 1.2,$ ;ymax when rescalling data
     rescaling_ymin: 0,$ ;ymin when rescalling data
@@ -133,6 +133,7 @@ file = OBJ_NEW('idlxmlparser', '.REFscale.cfg')
     Qmax_array: PTR_NEW(0L),$ ;list of Qmax
     ColorSliderDefaultValue: 25,$ ;default index value of color slider
     PreviousColorIndex: 25,$ ;color index of previous run
+    color_index_step: 7, $ ;step between colors
     ListOfLongFileName: PTR_NEW(0L),$ ;list of path of file loaded
     show_CE_fit: 0,$ ;0 means the step2 has not been performed
     show_other_fit: 0$ ;0 means that the step3 has not been done yet
@@ -166,7 +167,7 @@ file = OBJ_NEW('idlxmlparser', '.REFscale.cfg')
   (*(*global).ListOfLongFileName) = ListOfLongFileName
   (*(*global).metadata_CE_file)   = metadata_CE_file
   (*global).ucams                 = ucams
-  (*(*global).BatchTable)         = STRARR(10,20)
+  (*(*global).BatchTable)         = STRARR(10,50)
   
   IF (!VERSION.os EQ 'darwin') THEN BEGIN
     (*global).input_path = '~/tmp/'
