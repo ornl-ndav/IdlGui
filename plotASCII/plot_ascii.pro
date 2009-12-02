@@ -120,22 +120,20 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     /TLB_MOVE_EVENTS, $
     /TLB_SIZE_EVENTS)
     
-;  button_base = WIDGET_BASE(MAIN_BASE,$
-;    /ROW,$
-;    /ALIGN_CENTER)
-;    
-  load = WIDGET_BUTTON(main_base,$
-    VALUE = 'Load',$
-    SCR_YSIZE = 25,$
+  button_base = WIDGET_BASE(MAIN_BASE,$
+    /ROW)
+    
+ value = FILEPATH('open.bmp',SUBDIRECTORY=['resource','bitmaps'])
+  load = WIDGET_BUTTON(button_base,$
+    VALUE = value,$
+    /BITMAP,$
     UNAME = 'load_ascii_button_uname')
-;    
-;  space = WIDGET_LABEL(button_base,$
-;  VALUE = '   ')  
-;    
-;  tools = WIDGET_BUTTON(button_base,$
-;    VALUE = 'tools',$
-;    SCR_YSIZE = 25,$
-;    UNAME = 'tools_button_uname')
+
+  value = FILEPATH('plot.bmp',SUBDIRECTORY=['resource','bitmaps'])  
+  tools = WIDGET_BUTTON(button_base,$
+    VALUE = value,$
+    /BITMAP,$
+    UNAME = 'tools_button_uname')
     
   plot = WIDGET_DRAW(MAIN_BASE,$
     UNAME = 'main_draw',$
