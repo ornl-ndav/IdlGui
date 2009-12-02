@@ -33,15 +33,24 @@
 ;==============================================================================
 
 FUNCTION isLooperInputSelected, Event
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME='tab2_use_looper_input')
-RETURN, WIDGET_INFO(id,/BUTTON_SET)
-END 
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='tab2_use_looper_input')
+  RETURN, WIDGET_INFO(id,/BUTTON_SET)
+END
 
 ;------------------------------------------------------------------------------
 FUNCTION isYaxisLin, Event
-
-WIDGET_CONTROL, Event.top, GET_UVALUE=global
-tools_base = (*global).tools_base
-id = WIDGET_INFO(tools_base, FIND_BY_UNAME='y_axis_lin')
-RETURN, WIDGET_INFO(id,/BUTTON_SET)
+  CATCH, error
+  IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN, '-1'
+  ENDIF
+  
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  tools_base = (*global).tools_base
+  id = WIDGET_INFO(tools_base, FIND_BY_UNAME='y_axis_lin')
+  
+  value = WIDGET_INFO(id,/BUTTON_SET)
+  IF (value EQ 1) THEN RETURN, 'lin'
+  RETURN, 'log'
+   
 END

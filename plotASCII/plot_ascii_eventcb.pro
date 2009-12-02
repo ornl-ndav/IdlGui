@@ -159,14 +159,12 @@ PRO plotAsciiData, MAIN_BASE=MAIN_BASE, EVENT=event
   xLabel = xaxis + ' (' + xaxis_units + ')'
   yLabel = yaxis + ' (' + yaxis_units + ')'
   
-  
-  
   IF (N_ELEMENTS(EVENT) NE 0) THEN BEGIN
-    IF (isYaxisLin(Event)) THEN BEGIN
-      yaxis = 'lin'
-    ENDIF ELSE BEGIN
-      yaxis = 'log'
-    ENDELSE
+    CASE (isYaxisLin(Event)) OF
+      'lin': yaxis = 'lin'
+      'log': yaxis = 'log'
+      ELSE: yaxis = (*global).lin_log_yaxis
+    ENDCASE
   ENDIF ELSE BEGIN
     yaxis = 'lin'
   ENDELSE
@@ -187,7 +185,7 @@ PRO plotAsciiData, MAIN_BASE=MAIN_BASE, EVENT=event
       XTITLE=xLabel, $
       YTITLE=yLabel
   ENDELSE
-
+  
   errplot, Xarray,Yarray-SigmaYarray,Yarray+SigmaYarray,$
     color=FSC_COLOR('yellow')
     

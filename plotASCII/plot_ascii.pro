@@ -81,7 +81,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   global = PTR_NEW ({ $
   
     tools_base: 0L, $
-  
+    lin_log_yaxis: 'lin',$
+    
     input_ascii_file: './REF_L_ascii_file.txt',$
     xaxis: '',$
     xaxis_units: '',$
@@ -121,10 +122,10 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     /TLB_SIZE_EVENTS)
     
   tools = WIDGET_BUTTON(MAIN_BASE,$
-  VALUE = 'TOOLS',$
-  SCR_YSIZE = 25,$
-  UNAME = 'tools_button_uname')
- 
+    VALUE = 'TOOLS',$
+    SCR_YSIZE = 25,$
+    UNAME = 'tools_button_uname')
+    
   plot = WIDGET_DRAW(MAIN_BASE,$
     UNAME = 'main_draw',$
     SCR_XSIZE    = MainBaseSize[2],$
