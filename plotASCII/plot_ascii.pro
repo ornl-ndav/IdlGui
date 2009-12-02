@@ -80,8 +80,12 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;define global variables
   global = PTR_NEW ({ $
   
+    ;tools base
     tools_base: 0L, $
     lin_log_yaxis: 'lin',$
+    
+    ;load base
+    load_base: 0L, $
     
     input_ascii_file: './REF_L_ascii_file.txt',$
     xaxis: '',$
@@ -123,13 +127,13 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   button_base = WIDGET_BASE(MAIN_BASE,$
     /ROW)
     
- value = FILEPATH('open.bmp',SUBDIRECTORY=['resource','bitmaps'])
+  value = FILEPATH('open.bmp',SUBDIRECTORY=['resource','bitmaps'])
   load = WIDGET_BUTTON(button_base,$
     VALUE = value,$
     /BITMAP,$
-    UNAME = 'load_ascii_button_uname')
-
-  value = FILEPATH('plot.bmp',SUBDIRECTORY=['resource','bitmaps'])  
+    UNAME = 'load_button_uname')
+    
+  value = FILEPATH('plot.bmp',SUBDIRECTORY=['resource','bitmaps'])
   tools = WIDGET_BUTTON(button_base,$
     VALUE = value,$
     /BITMAP,$

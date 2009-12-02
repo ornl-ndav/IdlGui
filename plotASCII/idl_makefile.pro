@@ -28,6 +28,9 @@ cd, CurrentFolder
 ;tools base
 .run plot_ascii_tools.pro
 
+;load base
+.run plot_ascii_load.pro
+
 ;procedures
 
 ;main functions

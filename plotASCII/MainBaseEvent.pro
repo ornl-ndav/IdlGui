@@ -48,10 +48,8 @@ PRO MAIN_BASE_event, Event
       geometry = WIDGET_INFO(id1, /GEOMETRY)
       new_xsize = geometry.scr_xsize
       new_ysize = geometry.scr_ysize
-;      WIDGET_CONTROL, id1, XSIZE= new_xsize-6
-;      WIDGET_CONTROL, id1, YSIZE= new_ysize-6
-       WIDGET_CONTROL, id1, XSIZE= new_xsize-6
-       WIDGET_CONTROL, id1, YSIZE= new_ysize+5
+      WIDGET_CONTROL, id1, XSIZE= new_xsize-6
+      WIDGET_CONTROL, id1, YSIZE= new_ysize+5
       
       id = WIDGET_INFO(Event.top, FIND_BY_UNAME='main_draw')
       WIDGET_CONTROL, id, DRAW_XSIZE= new_xsize-6
@@ -59,6 +57,11 @@ PRO MAIN_BASE_event, Event
       
       plot_ascii_file, EVENT=event
       
+    END
+    
+    ;load button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='load_button_uname'): BEGIN
+      plot_ascii_load_base, Event
     END
     
     ;tools button
