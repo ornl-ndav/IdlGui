@@ -82,7 +82,6 @@ END
 
 ;------------------------------------------------------------------------------
 FUNCTION get_first_empty_table_index, load_table
-
   sz = (size(load_table))(2)
   index = 0
   WHILE (index LT sz) DO BEGIN
@@ -90,17 +89,15 @@ FUNCTION get_first_empty_table_index, load_table
     index++
   ENDWHILE
   RETURN, -1
-  
 END
 
 ;..............................................................................
 PRO populate_load_table, Event
-
   WIDGET_CONTROL, Event.top, GET_UVALUE=global_load
+  
   global = (*global_load).global
   ascii_file_list = (*global).ascii_file_list
   dim_y = N_ELEMENTS(ascii_file_list) ;50 for now
-  
   load_table = (*global).load_table
   
   index = 0
@@ -114,13 +111,21 @@ PRO populate_load_table, Event
     index++
     index_table++
   ENDWHILE
-  
   (*global).load_table = load_table
-  
   putValueInTable, Event, 'plot_ascii_load_base_table', load_table
-  
 END
 
+;------------------------------------------------------------------------------
+PRO select_full_row, Event
 
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='plot_ascii_load_base_table')
+  selection = WIDGET_INFO(id, /TABLE_SELECT)
+  row_selected = selection[1]
+  left_top_view = WIDGET_INFO(id, /TABLE_VIEW)
+  
+  WIDGET_CONTROL, id, SET_TABLE_SELECT=[0,row_selected, 1, row_selected]
+  WIDGET_CONTROL, id, SET_TABLE_VIEW=left_top_view
+  
+END
 
 
