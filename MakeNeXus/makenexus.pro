@@ -38,7 +38,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;CD, CURRENT=current_folder
 
 APPLICATION = 'MakeNeXus'
-VERSION     = '1.1.0'
+VERSION     = '1.2.0'
 
 ;define initial global values - these could be input via external file or
 ;other means
@@ -57,11 +57,11 @@ ArchivedUser = 0
 SWITCH (ucams) OF
     '2zr':
     'pf9':
-    'scu':
     'j35':
     'mid':
     'vl2':
     'ha9':
+    'scu':
     '1qg': ArchivedUser = 1
     ELSE:
 ENDSWITCH
@@ -77,15 +77,18 @@ CASE (hostname) OF
     'arcs1'       : instrumentIndex = 4
     'arcs2'       : instrumentIndex = 4
     'cncs'        : instrumentIndex = 5
+    'cncs2'       : instrumentIndex = 5
     'snap'        : instrumentIndex = 6
-    'sequoia'     : instrumentIndex = 7
-    'sequoia2'    : instrumentIndex = 7
+    'powgen'      : instrumentIndex = 7
+    'eqsans'      : instrumentIndex = 8
+    'sequoia'     : instrumentIndex = 9
+    'sequoia2'    : instrumentIndex = 9
     else          : instrumentIndex = 0
 ENDCASE 
 
 ;define global variables
 global = ptr_new ({ my_help_linux_path: '/SNS/users/',$
-                    tsmerge_link: '/SNS/software/bin/TS_merge_preNeXus.sh ',$
+                    tsmerge_link: 'TS_merge_preNeXus.sh ',$
                     my_help_mac_path:   '/Users/',$
                     EnteringProposal:       1,$
                     program_name:           'MakeNeXus',$
@@ -115,7 +118,12 @@ global = ptr_new ({ my_help_linux_path: '/SNS/users/',$
                     LogBookPath:          '/SNS/users/LogBook/',$
                     hostname:             hostname,$
                     ucams:                ucams,$
-                    geek:                 ['j35','pf9','2zr','mid','ha9','scu'],$
+                    geek:                 ['j35', $
+                                           'pf9', $
+                                           '2zr', $
+                                           'mid', $
+                                           'ha9', $
+                                           'scu'],$
                     prenexus_path:        '',$
                     prenexus_path_array:  ptr_new(0L),$
                     RunNumber_array:      ptr_new(0L),$
@@ -141,6 +149,8 @@ InstrumentList = ['Instrument ?',$
                   'ARCS',$
                   'CNCS',$
                   'SNAP',$
+                  'POWGEN',$
+                  'EQSANS',$
                   'SEQUOIA']
 
 instrumentShortList = ['',$
@@ -150,7 +160,9 @@ instrumentShortList = ['',$
                        'ARCS',$
                        'CNCS',$
                        'SNAP',$
-		       'SEQ']
+                       'PG3',$
+                       'EQSANS',$
+                       'SEQ']
 (*(*global).instrumentShortList) = instrumentShortList
 
 IF (WHERE(ucams EQ (*global).geek) EQ -1) THEN BEGIN ;normal user

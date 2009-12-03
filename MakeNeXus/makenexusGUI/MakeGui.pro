@@ -170,7 +170,7 @@ IF (ArchivedUser) THEN BEGIN
                                     go_button.size[1]+XYoff[1],$
                                     135,30],$
                         uname:     'archived_button',$
-                        value:     'ARCHIVED NEXUS',$
+                        value:     'ARCHIVE NEXUS',$
                         sensitive: 0}
 ENDIF
 
