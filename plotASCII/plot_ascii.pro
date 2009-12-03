@@ -86,6 +86,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
     ;load base
     load_base: 0L, $
+    ascii_file_list: STRARR(50),$
+    load_table: STRARR(2,50), $
     
     input_ascii_file: './REF_L_ascii_file.txt',$
     xaxis: '',$

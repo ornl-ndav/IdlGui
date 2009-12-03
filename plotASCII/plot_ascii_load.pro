@@ -103,7 +103,7 @@ PRO plot_ascii_load_base_gui, wBase, main_base_geometry
     ;    /RESIZEABLE_COLUMNS,$
     ALIGNMENT = 0,$
     XSIZE = 2,$
-    YSIZE = 20,$
+    YSIZE = 50,$
     SCR_XSIZE = 545,$
     SCR_YSIZE = 380,$
     COLUMN_WIDTHS = [50,522],$
