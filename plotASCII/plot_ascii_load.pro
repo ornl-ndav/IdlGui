@@ -41,6 +41,13 @@ PRO plot_ascii_load_base_event, Event
   
   CASE Event.id OF
   
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='plot_ascii_load_base_close_button'): BEGIN
+      id = WIDGET_INFO(Event.top, $
+        FIND_BY_UNAME = 'plot_ascii_load_base_uname')
+      WIDGET_CONTROL, id, /DESTROY
+    END
+    
     ELSE:
     
   ENDCASE
@@ -72,14 +79,14 @@ PRO plot_ascii_load_base_gui, wBase, main_base_geometry
     
   main_base = WIDGET_BASE(wBase,$
     /COLUMN)
-
+    
   ;row1
   row1 = WIDGET_BASE(main_base,$
-  /ROW)
+    /ROW)
   browse = WIDGET_BUTTON(row1,$
-  VALUE = 'BROWSE ...',$
-  UNAME = 'plot_ascii_load_base_browse_button')
-  
+    VALUE = 'BROWSE ...',$
+    UNAME = 'plot_ascii_load_base_browse_button')
+    
   ;table
   table = WIDGET_TABLE(main_base,$
     COLUMN_LABELS = ['Status',$
@@ -99,22 +106,21 @@ PRO plot_ascii_load_base_gui, wBase, main_base_geometry
   
   ;row2
   row2 = WIDGET_BASE(main_base,$
-  /ROW)
+    /ROW)
   remove = WIDGET_BUTTON(row2,$
-  VALUE = 'DELETE',$
-  UNAME = 'plot_ascii_load_base_delete_button')
-
+    VALUE = 'DELETE',$
+    UNAME = 'plot_ascii_load_base_delete_button')
+    
   ;row3
   row3 = WIDGET_BASE(main_base,$
-  /ROW)
+    /ROW)
   space = WIDGET_LABEL(row3,$
-  VALUE = '                                                             ')
+    VALUE = '                                                             ')
   close_button = WIDGET_BUTTON(row3,$
-  VALUE = 'CLOSE',$
-  SCR_XSIZE = 150,$
-  UNAME = 'plot_ascii_load_base_close_button')
-
-
+    VALUE = 'CLOSE',$
+    SCR_XSIZE = 150,$
+    UNAME = 'plot_ascii_load_base_close_button')
+    
 END
 
 ;------------------------------------------------------------------------------
