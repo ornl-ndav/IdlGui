@@ -337,7 +337,10 @@ END
 FUNCTION getListOfProposal, instrument, MAIN_BASE
 prefix = '/' + instrument + '-DAS-FS/'
 cmd_ls = 'ls -dt ' + prefix + '/*/'
+print, cmd_ls
 spawn, cmd_ls, listening, err_listening
+print, listening
+print, err_listening
 IF (err_listening[0] EQ '') THEN BEGIN ;at least one folder found
     sz = (size(listening))(1)
     AppendMyLogBook_MainBase, MAIN_BASE, $
