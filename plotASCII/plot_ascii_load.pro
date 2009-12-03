@@ -61,39 +61,60 @@ PRO plot_ascii_load_base_gui, wBase, main_base_geometry
   ourGroup = WIDGET_BASE()
   
   wBase = WIDGET_BASE(TITLE = 'T O O L S',$
-    UNAME        = 'plot_ascii_tools_base_uname',$
+    UNAME        = 'plot_ascii_load_base_uname',$
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
-    SCR_YSIZE = 350,$
-    SCR_XSIZE = 150,$
+    SCR_YSIZE    = 485,$
+    SCR_XSIZE    = 550,$
     MAP          = 1,$
     /BASE_ALIGN_CENTER,$
     GROUP_LEADER = ourGroup)
     
   main_base = WIDGET_BASE(wBase,$
     /COLUMN)
-    
-  ;lin and log buttons
+
+  ;row1
   row1 = WIDGET_BASE(main_base,$
-    /ROW)
-  label = WIDGET_LABEL(row1,$
-    VALUE = 'Y axis:')
-  base = WIDGET_BASE(row1,$
-    XOFFSET=0,$
-    YOFFSET=0,$
-    /ROW,$
-    /EXCLUSIVE)
-  button1 = WIDGET_BUTTON(base,$
-    VALUE='Lin',$
-    /NO_RELEASE,$
-    UNAME = 'y_axis_lin')
-  button2 = WIDGET_BUTTON(base,$
-    VALUE='Log',$
-    /NO_RELEASE,$
-    UNAME = 'y_axis_log')
-    
-  WIDGET_CONTROL, button1, /SET_BUTTON
+  /ROW)
+  browse = WIDGET_BUTTON(row1,$
+  VALUE = 'BROWSE ...',$
+  UNAME = 'plot_ascii_load_base_browse_button')
   
+  ;table
+  table = WIDGET_TABLE(main_base,$
+    COLUMN_LABELS = ['Status',$
+    'ASCII File Name'],$
+    UNAME = 'plot_ascii_load_base_table',$
+    /NO_ROW_HEADERS,$
+    ;    /RESIZEABLE_COLUMNS,$
+    ALIGNMENT = 0,$
+    XSIZE = 2,$
+    YSIZE = 20,$
+    SCR_XSIZE = 545,$
+    SCR_YSIZE = 380,$
+    COLUMN_WIDTHS = [50,522],$
+    ;/SCROLL,$
+    /ALL_EVENTS)
+  WIDGET_CONTROL, table, SET_TABLE_SELECT=[0,0,1,0]
+  
+  ;row2
+  row2 = WIDGET_BASE(main_base,$
+  /ROW)
+  remove = WIDGET_BUTTON(row2,$
+  VALUE = 'DELETE',$
+  UNAME = 'plot_ascii_load_base_delete_button')
+
+  ;row3
+  row3 = WIDGET_BASE(main_base,$
+  /ROW)
+  space = WIDGET_LABEL(row3,$
+  VALUE = '                                                             ')
+  close_button = WIDGET_BUTTON(row3,$
+  VALUE = 'CLOSE',$
+  SCR_XSIZE = 150,$
+  UNAME = 'plot_ascii_load_base_close_button')
+
+
 END
 
 ;------------------------------------------------------------------------------
