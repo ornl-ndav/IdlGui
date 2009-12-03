@@ -57,6 +57,7 @@ ArchivedUser = 0
 SWITCH (ucams) OF
     '2zr':
     'pf9':
+    'scu':
     'j35':
     'mid':
     'vl2':
@@ -77,12 +78,14 @@ CASE (hostname) OF
     'arcs2'       : instrumentIndex = 4
     'cncs'        : instrumentIndex = 5
     'snap'        : instrumentIndex = 6
+    'sequoia'     : instrumentIndex = 7
+    'sequoia2'    : instrumentIndex = 7
     else          : instrumentIndex = 0
 ENDCASE 
 
 ;define global variables
 global = ptr_new ({ my_help_linux_path: '/SNS/users/',$
-                    tsmerge_link: '/SNS/users/pf9/temp/translation-service-cli-1.13-SNAPSHOT/bin/TS_merge_preNeXus.sh ',$
+                    tsmerge_link: '/SNS/software/bin/TS_merge_preNeXus.sh ',$
                     my_help_mac_path:   '/Users/',$
                     EnteringProposal:       1,$
                     program_name:           'MakeNeXus',$
@@ -112,7 +115,7 @@ global = ptr_new ({ my_help_linux_path: '/SNS/users/',$
                     LogBookPath:          '/SNS/users/LogBook/',$
                     hostname:             hostname,$
                     ucams:                ucams,$
-                    geek:                 ['j35','pf9','2zr','mid','ha9'],$
+                    geek:                 ['j35','pf9','2zr','mid','ha9','scu'],$
                     prenexus_path:        '',$
                     prenexus_path_array:  ptr_new(0L),$
                     RunNumber_array:      ptr_new(0L),$
@@ -137,7 +140,8 @@ InstrumentList = ['Instrument ?',$
                   'REF_M',$
                   'ARCS',$
                   'CNCS',$
-                  'SNAP']
+                  'SNAP',$
+                  'SEQUOIA']
 
 instrumentShortList = ['',$
                        'BSS',$
@@ -145,7 +149,8 @@ instrumentShortList = ['',$
                        'REF_M',$
                        'ARCS',$
                        'CNCS',$
-                       'SNAP']
+                       'SNAP',$
+		       'SEQ']
 (*(*global).instrumentShortList) = instrumentShortList
 
 IF (WHERE(ucams EQ (*global).geek) EQ -1) THEN BEGIN ;normal user
