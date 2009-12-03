@@ -35,12 +35,19 @@
 PRO plot_ascii_load_base_event, Event
 
   ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global_tools
-  global = (*global_tools).global
-  main_event = (*global_tools).main_event
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global_load
+  global = (*global_load).global
+  main_event = (*global_load).main_event
   
   CASE Event.id OF
   
+    ;Browse
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='plot_ascii_load_base_browse_button'): BEGIN
+      browse_button, Event
+    END
+    
+    ;CLOSE button
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='plot_ascii_load_base_close_button'): BEGIN
       id = WIDGET_INFO(Event.top, $
@@ -67,7 +74,7 @@ PRO plot_ascii_load_base_gui, wBase, main_base_geometry
   
   ourGroup = WIDGET_BASE()
   
-  wBase = WIDGET_BASE(TITLE = 'T O O L S',$
+  wBase = WIDGET_BASE(TITLE = 'L O A D    A S C I I',$
     UNAME        = 'plot_ascii_load_base_uname',$
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
@@ -144,11 +151,11 @@ PRO plot_ascii_load_base, main_base=main_base, Event
   
   WIDGET_CONTROL, wBase1, /REALIZE
   
-  global_tools = PTR_NEW({ wbase: wbase1,$
+  global_load = PTR_NEW({ wbase: wbase1,$
     global: global, $
     main_event: Event})
     
-  WIDGET_CONTROL, wBase1, SET_UVALUE = global_tools
+  WIDGET_CONTROL, wBase1, SET_UVALUE = global_load
   
   XMANAGER, "plot_ascii_load_base", wBase1, $
     GROUP_LEADER = ourGroup, /NO_BLOCK
