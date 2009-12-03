@@ -57,8 +57,6 @@ PRO browse_button, Event
     add_file_list_to_full_list, Event, file_list
     populate_load_table, Event
     
-    
-    
   ENDIF
   
 END
@@ -76,12 +74,26 @@ PRO add_file_list_to_full_list, Event, file_list
   WHILE (index LT nbr_new_file) DO BEGIN
     ascii_file_list[index] = file_list[index]
     index++
+    
   ENDWHILE
   (*global).ascii_file_list = ascii_file_list
   
 END
 
 ;------------------------------------------------------------------------------
+FUNCTION get_first_empty_table_index, load_table
+
+  sz = (size(load_table))(2)
+  index = 0
+  WHILE (index LT sz) DO BEGIN
+    IF (STRCOMPRESS(load_table[0,index],/REMOVE_ALL) EQ '') THEN RETURN, index
+    index++
+  ENDWHILE
+  RETURN, -1
+  
+END
+
+;..............................................................................
 PRO populate_load_table, Event
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global_load
@@ -92,16 +104,19 @@ PRO populate_load_table, Event
   load_table = (*global).load_table
   
   index = 0
+  index_table = get_first_empty_table_index(load_table)
+  IF (index_table EQ -1) THEN RETURN
   WHILE(index LT dim_y) DO BEGIN
     file = ascii_file_list[index]
     IF (STRCOMPRESS(file,/REMOVE_ALL) EQ '') THEN BREAK
-    load_table[0,index] = 'X'
-    load_table[1,index] = file
+    load_table[0,index_table] = 'X'
+    load_table[1,index_table] = file
     index++
+    index_table++
   ENDWHILE
   
   (*global).load_table = load_table
-
+  
   putValueInTable, Event, 'plot_ascii_load_base_table', load_table
   
 END
