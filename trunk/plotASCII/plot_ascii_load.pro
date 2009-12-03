@@ -47,6 +47,12 @@ PRO plot_ascii_load_base_event, Event
       browse_button, Event
     END
     
+    ;ASCII table
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='plot_ascii_load_base_table'): BEGIN
+      select_full_row, Event
+    END
+    
     ;CLOSE button
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='plot_ascii_load_base_close_button'): BEGIN
@@ -107,6 +113,7 @@ PRO plot_ascii_load_base_gui, wBase, main_base_geometry
     SCR_XSIZE = 545,$
     SCR_YSIZE = 380,$
     COLUMN_WIDTHS = [50,522],$
+    
     ;/SCROLL,$
     /ALL_EVENTS)
   WIDGET_CONTROL, table, SET_TABLE_SELECT=[0,0,1,0]
