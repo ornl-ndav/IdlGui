@@ -42,3 +42,10 @@ PRO putButtonValue, Event, uname, value
   id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
   WIDGET_CONTROL, id, SET_VALUE=value
 END
+
+;------------------------------------------------------------------------------
+PRO putValueInTable, Event, uname, TableArray
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, id, SET_VALUE=TableArray
+END
+

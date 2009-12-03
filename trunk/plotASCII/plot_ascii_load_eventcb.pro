@@ -51,8 +51,61 @@ PRO browse_button, Event
     /MUST_EXIST, $
     TITLE = title)
     
-    IF (file_list[0] NE '') THEN BEGIN
+  IF (file_list[0] NE '') THEN BEGIN
     (*global).path = new_path
-    ENDIF
     
+    add_file_list_to_full_list, Event, file_list
+    populate_load_table, Event
+    
+    
+    
+  ENDIF
+  
 END
+
+;------------------------------------------------------------------------------
+PRO add_file_list_to_full_list, Event, file_list
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global_load
+  global = (*global_load).global
+  
+  ascii_file_list = (*global).ascii_file_list
+  
+  nbr_new_file = N_ELEMENTS(file_list)
+  index = 0
+  WHILE (index LT nbr_new_file) DO BEGIN
+    ascii_file_list[index] = file_list[index]
+    index++
+  ENDWHILE
+  (*global).ascii_file_list = ascii_file_list
+  
+END
+
+;------------------------------------------------------------------------------
+PRO populate_load_table, Event
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global_load
+  global = (*global_load).global
+  ascii_file_list = (*global).ascii_file_list
+  dim_y = N_ELEMENTS(ascii_file_list) ;50 for now
+  
+  load_table = (*global).load_table
+  
+  index = 0
+  WHILE(index LT dim_y) DO BEGIN
+    file = ascii_file_list[index]
+    IF (STRCOMPRESS(file,/REMOVE_ALL) EQ '') THEN BREAK
+    load_table[0,index] = 'X'
+    load_table[1,index] = file
+    index++
+  ENDWHILE
+  
+  (*global).load_table = load_table
+
+  putValueInTable, Event, 'plot_ascii_load_base_table', load_table
+  
+END
+
+
+
+
