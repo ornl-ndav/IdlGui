@@ -61,12 +61,18 @@ PRO MAIN_BASE_event, Event
     
     ;load button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='load_button_uname'): BEGIN
-      plot_ascii_load_base, Event
+      id = (*global).load_base
+      IF (WIDGET_INFO(id, /VALID_ID) EQ 0) THEN BEGIN
+        plot_ascii_load_base, Event
+      ENDIF
     END
     
     ;tools button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tools_button_uname'): BEGIN
-      plot_ascii_tools_base, Event
+      id = (*global).tools_base
+      IF (WIDGET_INFO(id, /VALID_ID) EQ 0) THEN BEGIN
+        plot_ascii_tools_base, Event
+      ENDIF
     END
     
     ELSE:
