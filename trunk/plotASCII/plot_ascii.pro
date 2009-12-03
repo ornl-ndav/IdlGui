@@ -98,7 +98,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     Yarray: PTR_NEW(0L), $
     SigmaYarray: PTR_NEW(0L), $
     
-    path: '~/',$
+    path: '~/results/',$
     debugging:    debugging,$ ;yes or no
     debugging_structure: sDebugging,$
     ucams:        ucams,$
