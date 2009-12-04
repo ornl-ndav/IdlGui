@@ -100,7 +100,6 @@ PRO load_ascii_file, event_load=event_load, main_event=main_event
   
   file_name = (*global).input_ascii_file
   
-  print, file_name
   
   iAsciiFile = OBJ_NEW('IDL3columnsASCIIparser', file_name[0])
   IF (OBJ_VALID(iAsciiFile)) THEN BEGIN
@@ -137,6 +136,47 @@ PRO load_ascii_file, event_load=event_load, main_event=main_event
   ;turn off hourglass
   WIDGET_CONTROL,HOURGLASS=0
 END
+
+;??????????????????????????????????????????????????????????????????????????????
+PRO readAsciiData, Event
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  ;get list of files
+  list_OF_files = (*(*global).list_OF_ascii_files)
+  i = 0
+  nbr = N_ELEMENTS(list_OF_files)
+  final_new_pData         = PTRARR(nbr,/ALLOCATE_HEAP)
+  final_new_pData_y_error = PTRARR(nbr,/ALLOCATE_HEAP)
+  final_new_pData_x       = PTRARR(nbr,/ALLOCATE_HEAP)
+  WHILE (i LT nbr) DO BEGIN
+    iClass = OBJ_NEW('IDL3columnsASCIIparser',list_OF_files[i])
+    pData = iClass->getDataQuickly()
+    OBJ_DESTROY, iClass
+    ;keep only the second column
+    new_pData_x       = STRARR((SIZE(*pData[0]))(2))
+    new_pData_x[*]    = (*pData[i])[0,*] ;retrieve x-array
+    new_pData         = STRARR(N_ELEMENTS(pData),(SIZE(*pData[0]))(2))
+    new_pData_y_error = FLTARR(N_ELEMENTS(pData),(SIZE(*pData[0]))(2))
+    
+    FOR j=0,(N_ELEMENTS(pData)-1) DO BEGIN ;retrieve y_array and error_y_array
+      new_pData[j,*]         = (*pData[j])[1,*]
+      new_pData_y_error[j,*] = (*pData[j])[2,*]
+    ENDFOR
+
+    *final_new_pData[i]         = new_pData
+    *final_new_pData_y_error[i] = new_pData_y_error
+    *final_new_pData_x[i]       = new_pData_x
+    ++i
+  ENDWHILE
+  (*(*global).pData_y)         = final_new_pData
+  (*(*global).pData_y_error)   = final_new_pData_y_error
+  (*(*global).pData_x)         = final_new_pData_x
+  (*global).plot_realign_data = 0
+  
+END
+
+;????????????????????????????????????????????????????????????????????????????
+
+
 
 ;==============================================================================
 ;Plot Data in widget_draw
