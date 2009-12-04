@@ -120,8 +120,7 @@ PRO plot_ascii_load_base_gui, wBase, main_base_geometry, nbr_ascii_files
     YSIZE = 50,$
     SCR_XSIZE = 545,$
     SCR_YSIZE = 380,$
-    COLUMN_WIDTHS = [50,522],$
-    
+    COLUMN_WIDTHS = [50,470],$
     ;/SCROLL,$
     /ALL_EVENTS)
   WIDGET_CONTROL, table, SET_TABLE_SELECT=[0,0,1,0]

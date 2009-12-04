@@ -32,10 +32,10 @@
 ;
 ;==============================================================================
 
-PRO plot_ascii_file, MAIN_BASE=MAIN_BASE, EVENT=event
+PRO plot_ascii_file, event_load=event_load, main_event=main_event
 
-  load_ascii_file, MAIN_BASE=MAIN_BASE, EVENT=event
-  PlotAsciiData, MAIN_BASE=MAIN_BASE, EVENT=event
+  load_ascii_file, event_load=event_load, main_event=main_event
+  PlotAsciiData, event_load=event_load, main_event=main_event
   
 END
 
@@ -82,18 +82,25 @@ END
 
 ;------------------------------------------------------------------------------
 ;Load data
-PRO load_ascii_file, MAIN_BASE=MAIN_BASE, EVENT=event
+PRO load_ascii_file, event_load=event_load, main_event=main_event
 
   ;indicate initialization with hourglass icon
   widget_control,/hourglass
   
-  IF (N_ELEMENTS(EVENT) NE 0) THEN BEGIN
-    WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  IF (N_ELEMENTS(event_load) NE 0) THEN BEGIN
+    event = event_load
   ENDIF ELSE BEGIN
-    WIDGET_CONTROL, MAIN_BASE, GET_UVALUE=global
+    event = main_event
   ENDELSE
+  WIDGET_CONTROL, event.top, GET_UVALUE=global
+  
+  IF (N_ELEMENTS(event_load) NE 0) THEN BEGIN
+    global = (*global).global
+  ENDIF
   
   file_name = (*global).input_ascii_file
+  
+  print, file_name
   
   iAsciiFile = OBJ_NEW('IDL3columnsASCIIparser', file_name[0])
   IF (OBJ_VALID(iAsciiFile)) THEN BEGIN
@@ -133,15 +140,22 @@ END
 
 ;==============================================================================
 ;Plot Data in widget_draw
-PRO plotAsciiData, MAIN_BASE=MAIN_BASE, EVENT=event
+PRO plotAsciiData, event_load=event_load, main_event=main_event
 
-  IF (N_ELEMENTS(MAIN_BASE) NE 0) THEN BEGIN
-    draw_id = widget_info(MAIN_BASE, find_by_uname='main_draw')
-    WIDGET_CONTROL, MAIN_BASE, GET_UVALUE=global
+  IF (N_ELEMENTS(event_load) NE 0) THEN BEGIN
+    event = event_load
   ENDIF ELSE BEGIN
-    draw_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='main_draw')
-    WIDGET_CONTROL, Event.top , GET_UVALUE=global
+    event = main_event
   ENDELSE
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  IF (N_ELEMENTS(event_load) NE 0) THEN BEGIN
+    global = (*global).global
+  ENDIF
+  
+  main_base_id = (*global).main_base
+  
+  draw_id = WIDGET_INFO(main_base_id, FIND_BY_UNAME='main_draw')
   WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
   WSET,view_plot_id
   
@@ -159,15 +173,11 @@ PRO plotAsciiData, MAIN_BASE=MAIN_BASE, EVENT=event
   xLabel = xaxis + ' (' + xaxis_units + ')'
   yLabel = yaxis + ' (' + yaxis_units + ')'
   
-  IF (N_ELEMENTS(EVENT) NE 0) THEN BEGIN
-    CASE (isYaxisLin(Event)) OF
-      'lin': yaxis = 'lin'
-      'log': yaxis = 'log'
-      ELSE: yaxis = (*global).lin_log_yaxis
-    ENDCASE
-  ENDIF ELSE BEGIN
-    yaxis = 'lin'
-  ENDELSE
+  CASE (isYaxisLin(Event)) OF
+    'lin': yaxis = 'lin'
+    'log': yaxis = 'log'
+    ELSE: yaxis = (*global).lin_log_yaxis
+  ENDCASE
   
   IF (yaxis EQ 'lin') THEN BEGIN
     plot, Xarray, $
