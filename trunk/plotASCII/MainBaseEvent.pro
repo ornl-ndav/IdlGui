@@ -55,7 +55,7 @@ PRO MAIN_BASE_event, Event
       WIDGET_CONTROL, id, DRAW_XSIZE= new_xsize-6
       WIDGET_CONTROL, id, DRAW_YSIZE= new_ysize-6-25
       
-      plot_ascii_file, EVENT=event
+      plot_ascii_file, main_event=event
       
     END
     
