@@ -51,6 +51,8 @@ PRO plot_ascii_load_base_event, Event
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='plot_ascii_load_base_table'): BEGIN
       select_full_row, Event
+      ;trigger status column if click in first column
+      trigger_status_column, Event
     END
     
     ;CLOSE button
@@ -68,7 +70,7 @@ PRO plot_ascii_load_base_event, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO plot_ascii_load_base_gui, wBase, main_base_geometry
+PRO plot_ascii_load_base_gui, wBase, main_base_geometry, nbr_ascii_files
 
   main_base_xoffset = main_base_geometry.xoffset
   main_base_yoffset = main_base_geometry.yoffset
@@ -101,13 +103,15 @@ PRO plot_ascii_load_base_gui, wBase, main_base_geometry
     UNAME = 'plot_ascii_load_base_browse_button')
     
   ;table
+  alignement = INTARR(2,nbr_ascii_files)
+  alignement[0,*] = 1
   table = WIDGET_TABLE(main_base,$
     COLUMN_LABELS = ['Status',$
     'ASCII File Name'],$
     UNAME = 'plot_ascii_load_base_table',$
     /NO_ROW_HEADERS,$
     ;    /RESIZEABLE_COLUMNS,$
-    ALIGNMENT = 0,$
+    ALIGNMENT = alignement,$
     XSIZE = 2,$
     YSIZE = 50,$
     SCR_XSIZE = 545,$
@@ -153,7 +157,8 @@ PRO plot_ascii_load_base, main_base=main_base, Event
   ;build gui
   wBase1 = ''
   plot_ascii_load_base_gui, wBase1, $
-    main_base_geometry
+    main_base_geometry, $
+    (*global).nbr_ascii_files
   (*global).load_base = wBase1
   
   WIDGET_CONTROL, wBase1, /REALIZE

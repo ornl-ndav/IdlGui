@@ -128,4 +128,26 @@ PRO select_full_row, Event
   
 END
 
+;------------------------------------------------------------------------------
+PRO trigger_status_column, Event
 
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global_load
+  global = (*global_load).global
+  load_table = (*global).load_table
+  
+  top_sel = Event.sel_top
+  bottom_sel = Event.sel_bottom
+  IF (top_sel EQ -1) THEN RETURN ;if click (not release), return
+  IF (top_sel NE bottom_sel) THEN RETURN ;if user selected a region, return
+  IF (load_table[1,top_sel] EQ '') THEN RETURN ;if no file at this line, return
+  
+  status_of_row = load_table[0,top_sel]
+  IF (status_of_row EQ 'X') THEN BEGIN
+    load_table[0,top_sel] = ''
+  ENDIF ELSE BEGIN
+    load_table[0,top_sel] = 'X'
+  ENDELSE
+  putValueInTable, Event, 'plot_ascii_load_base_table', load_table
+  (*global).load_table = load_table
+  
+END

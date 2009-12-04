@@ -86,6 +86,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
     ;load base
     load_base: 0L, $
+    nbr_ascii_files: 50L,$
     ascii_file_list: STRARR(50),$
     load_table: STRARR(2,50), $
     
@@ -144,7 +145,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   plot = WIDGET_DRAW(MAIN_BASE,$
     UNAME = 'main_draw',$
     SCR_XSIZE    = MainBaseSize[2],$
-    SCR_YSIZE    = MainBaseSize[3]-25)
+    SCR_YSIZE    = MainBaseSize[3]-35)
     
   ;attach global structure with widget ID of widget main base widget ID
   WIDGET_CONTROL, MAIN_BASE, SET_UVALUE=global
