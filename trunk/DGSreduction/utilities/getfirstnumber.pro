@@ -65,6 +65,10 @@ FUNCTION GetFirstNumber, RunNumberString
   
   hyphenPosition = STRPOS(RunNumberString, '-')
   IF hyphenPosition EQ -1 THEN hyphenPosition = largeNumber
+  ; If we find a '-', we need to check that it is not part of the string IPTS-XXXX!
+  ;print, STRMID(RunNumberString, hyphenPosition-4, 4)
+  IF STRMID(RunNumberString, hyphenPosition-4, 4) EQ 'IPTS' THEN $
+    hyphenPosition = largeNumber
   
   firstDelimiter = MIN([commaPosition, hyphenPosition])
   
