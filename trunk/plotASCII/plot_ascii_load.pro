@@ -101,6 +101,10 @@ PRO plot_ascii_load_base_gui, wBase, main_base_geometry, nbr_ascii_files
   browse = WIDGET_BUTTON(row1,$
     VALUE = 'BROWSE ...',$
     UNAME = 'plot_ascii_load_base_browse_button')
+  space = WIDGET_LABEL(row1,$
+  VALUE = '              ')
+  help = WIDGET_LABEL(row1,$
+  VALUE = 'Click in STATUS column to enable/disable plot of ascii file.')  
     
   ;table
   alignement = INTARR(2,nbr_ascii_files)
