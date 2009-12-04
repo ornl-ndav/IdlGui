@@ -99,6 +99,10 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     yaxis: '',$
     yaxis_units: '',$
     
+    pXarray: PTR_NEW(0L),$
+    pYarray: PTR_NEW(0L), $
+    pSigmaYarray: PTR_NEW(0L), $
+    
     Xarray: PTR_NEW(0L), $
     Xarray_untouched: PTR_NEW(0L), $
     Yarray: PTR_NEW(0L), $
@@ -114,6 +118,9 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     failed:       'FAILED',$
     version:      VERSION,$
     MainBaseSize: [30,25,400,400]})
+    
+    nbr_ascii_files = (*global).nbr_ascii_files
+    pXarray = PTRARR(nbr_ascii_files,/ALOCATE_HEAP)
     
   MainBaseSize   = (*global).MainBaseSize
   MainBaseTitle  = 'plot ASCII'
