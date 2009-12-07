@@ -38,7 +38,7 @@ PRO plot_ascii_load_base_event, Event
   WIDGET_CONTROL,Event.top,GET_UVALUE=global_load
   global = (*global_load).global
   main_event = (*global_load).main_event
-  load_ascii_file
+  
   CASE Event.id OF
   
     ;Browse
@@ -58,7 +58,7 @@ PRO plot_ascii_load_base_event, Event
     ;CLOSE button
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='plot_ascii_load_base_close_button'): BEGIN
-      id = WIDGET_INFO(Event.top, $load_ascii_file
+      id = WIDGET_INFO(Event.top, $
         FIND_BY_UNAME = 'plot_ascii_load_base_uname')
       WIDGET_CONTROL, id, /DESTROY
     END
@@ -121,6 +121,7 @@ PRO plot_ascii_load_base_gui, wBase, main_base_geometry, nbr_ascii_files
     SCR_XSIZE = 545,$
     SCR_YSIZE = 380,$
     COLUMN_WIDTHS = [50,470],$
+
     ;/SCROLL,$
     /ALL_EVENTS)
   WIDGET_CONTROL, table, SET_TABLE_SELECT=[0,0,1,0]
