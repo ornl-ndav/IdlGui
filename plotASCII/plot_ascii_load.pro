@@ -53,6 +53,7 @@ PRO plot_ascii_load_base_event, Event
       select_full_row, Event
       ;trigger status column if click in first column
       trigger_status_column, Event
+      plotAsciiData, event_load=event
     END
     
     ;CLOSE button

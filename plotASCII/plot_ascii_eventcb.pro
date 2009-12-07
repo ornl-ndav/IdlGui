@@ -277,74 +277,76 @@ PRO plotAsciiData, event_load=event_load, main_event=main_event
   
   ascii_color = (*global).ascii_color
   
+  load_table = (*global).load_table
+  activate_file_column = load_table[0,*]
+  
   index = 0
+  first_file_plotted_index  = 0  ;plot xaxis, yaxis for first plot only
   WHILE (index LT nbr_ascii) DO BEGIN
   
-    Xarray = *pXarray[index]
-    Yarray = *pYarray[index]
-    sigmaYarray = *pSigmaYarray[index]
+    print, 'index: ' + string(index) + ': ' + activate_file_column[index]
     
-    IF (index EQ 0) THEN BEGIN
+    IF (activate_file_column[index] EQ 'X') THEN BEGIN
     
-      xAxis = *pXaxis[index]
-      xAxis_units = *pXaxis_units[index]
-      yAxis = *pYaxis[index]
-      yAxis_units = *pYaxis_units[index]
-      xLabel = xaxis + ' (' + xaxis_units + ')'
-      yLabel = yaxis + ' (' + yaxis_units + ')'
+      Xarray = *pXarray[index]
+      Yarray = *pYarray[index]
+      sigmaYarray = *pSigmaYarray[index]
       
-    ENDIF
-    
-    CASE (isYaxisLin(Event)) OF
-      'lin': yaxis = 'lin'
-      'log': yaxis = 'log'
-      ELSE: yaxis = (*global).lin_log_yaxis
-    ENDCASE
-    
-    color = ascii_color[index]
-    
-    IF (index EQ 0) THEN BEGIN
-      IF (yaxis EQ 'lin') THEN BEGIN
-        plot, Xarray, $
-          Yarray, $
-          color=FSC_COLOR(color), $
-          PSYM=2, $
-          XTITLE=xLabel, $
-          YTITLE=yLabel
-      ENDIF ELSE BEGIN
-        plot, Xarray, $
-          Yarray, $
-          color=FSC_COLOR(color), $
-          PSYM=2, $
-          /YLOG, $
-          XTITLE=xLabel, $
-          YTITLE=yLabel
-      ENDELSE
-    ENDIF ELSE BEGIN
-      IF (yaxis EQ 'lin') THEN BEGIN
-        plot, Xarray, $
-          Yarray, $
-          /NOERASE,$
-          XSTYLE = 4,$
-          YSTYLE = 4,$
-          /DATA,$
-          color=FSC_COLOR(color), $
-          PSYM=2
-      ENDIF ELSE BEGIN
-        plot, Xarray, $
-          Yarray, $
-          color=FSC_COLOR(color), $
-          PSYM=2, $
-          XSTYLE = 4,$
-          YSTYLE = 4,$
-          /YLOG, $
-          /DATA,$
-          /NOERASE
-      ENDELSE
-    ENDELSE
-    errplot, Xarray,Yarray-SigmaYarray,Yarray+SigmaYarray,$
-      color=FSC_COLOR(color)
+      IF (first_file_plotted_index EQ 0) THEN BEGIN
       
+        xAxis = *pXaxis[index]
+        xAxis_units = *pXaxis_units[index]
+        yAxis = *pYaxis[index]
+        yAxis_units = *pYaxis_units[index]
+        xLabel = xaxis + ' (' + xaxis_units + ')'
+        yLabel = yaxis + ' (' + yaxis_units + ')'
+        
+      ENDIF
+      
+      CASE (isYaxisLin(Event)) OF
+        'lin': yaxis = 'lin'
+        'log': yaxis = 'log'
+        ELSE: yaxis = (*global).lin_log_yaxis
+      ENDCASE
+      
+      color = ascii_color[index]
+      
+      IF (first_file_plotted_index EQ 0) THEN BEGIN
+        IF (yaxis EQ 'lin') THEN BEGIN
+          plot, Xarray, $
+            Yarray, $
+            color=FSC_COLOR(color), $
+            PSYM=2, $
+            XTITLE=xLabel, $
+            YTITLE=yLabel
+        ENDIF ELSE BEGIN
+          plot, Xarray, $
+            Yarray, $
+            color=FSC_COLOR(color), $
+            PSYM=2, $
+            /YLOG, $
+            XTITLE=xLabel, $
+            YTITLE=yLabel
+        ENDELSE
+        first_file_plotted_index++
+      ENDIF ELSE BEGIN
+        IF (yaxis EQ 'lin') THEN BEGIN
+          OPLOT, Xarray, $
+            Yarray, $
+            color=FSC_COLOR(color), $
+            PSYM=2
+        ENDIF ELSE BEGIN
+          plot, Xarray, $
+            Yarray, $
+            color=FSC_COLOR(color), $
+            PSYM=2 
+;            /YLOG, $
+        ENDELSE
+      ENDELSE
+      errplot, Xarray,Yarray-SigmaYarray,Yarray+SigmaYarray,$
+        color=FSC_COLOR(color)
+        
+    ENDIF ;end of if plot activated
     index++
   ENDWHILE
   
