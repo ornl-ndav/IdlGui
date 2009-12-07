@@ -754,7 +754,7 @@ function ReductionCmd::Generate
       
     IF (self.dumptof EQ 1) THEN cmd[i] += " --dump-ctof-comb"
     IF (self.dumpwave EQ 1) THEN cmd[i] += " --dump-wave-comb"
-    IF (self.dumpnorm EQ 1) THEN cmd[i] += " --dump-norm"
+    ;IF (self.dumpnorm EQ 1) THEN cmd[i] += " --dump-norm"
     IF (self.dumpet EQ 1) THEN cmd[i] += " --dump-et-comb"
     
     IF (self.dumptib EQ 1) THEN cmd[i] += " --dump-tib"
