@@ -275,6 +275,8 @@ PRO plotAsciiData, event_load=event_load, main_event=main_event
     main_event=main_event)
   nbr_ascii = N_ELEMENTS(list_ascii_files)
   
+  ascii_color = (*global).ascii_color
+  
   index = 0
   WHILE (index LT nbr_ascii) DO BEGIN
   
@@ -299,18 +301,20 @@ PRO plotAsciiData, event_load=event_load, main_event=main_event
       ELSE: yaxis = (*global).lin_log_yaxis
     ENDCASE
     
+    color = ascii_color[index]
+    
     IF (index EQ 0) THEN BEGIN
       IF (yaxis EQ 'lin') THEN BEGIN
         plot, Xarray, $
           Yarray, $
-          color=FSC_COLOR('white'), $
+          color=FSC_COLOR(color), $
           PSYM=2, $
           XTITLE=xLabel, $
           YTITLE=yLabel
       ENDIF ELSE BEGIN
         plot, Xarray, $
           Yarray, $
-          color=FSC_COLOR('white'), $
+          color=FSC_COLOR(color), $
           PSYM=2, $
           /YLOG, $
           XTITLE=xLabel, $
@@ -324,12 +328,12 @@ PRO plotAsciiData, event_load=event_load, main_event=main_event
           XSTYLE = 4,$
           YSTYLE = 4,$
           /DATA,$
-          color=FSC_COLOR('blue'), $
+          color=FSC_COLOR(color), $
           PSYM=2
       ENDIF ELSE BEGIN
         plot, Xarray, $
           Yarray, $
-          color=FSC_COLOR('blue'), $
+          color=FSC_COLOR(color), $
           PSYM=2, $
           XSTYLE = 4,$
           YSTYLE = 4,$
@@ -339,7 +343,7 @@ PRO plotAsciiData, event_load=event_load, main_event=main_event
       ENDELSE
     ENDELSE
     errplot, Xarray,Yarray-SigmaYarray,Yarray+SigmaYarray,$
-      color=FSC_COLOR('yellow')
+      color=FSC_COLOR(color)
       
     index++
   ENDWHILE
