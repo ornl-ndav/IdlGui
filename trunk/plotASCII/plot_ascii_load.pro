@@ -38,7 +38,7 @@ PRO plot_ascii_load_base_event, Event
   WIDGET_CONTROL,Event.top,GET_UVALUE=global_load
   global = (*global_load).global
   main_event = (*global_load).main_event
-  
+  load_ascii_file
   CASE Event.id OF
   
     ;Browse
@@ -58,7 +58,7 @@ PRO plot_ascii_load_base_event, Event
     ;CLOSE button
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='plot_ascii_load_base_close_button'): BEGIN
-      id = WIDGET_INFO(Event.top, $
+      id = WIDGET_INFO(Event.top, $load_ascii_file
         FIND_BY_UNAME = 'plot_ascii_load_base_uname')
       WIDGET_CONTROL, id, /DESTROY
     END
