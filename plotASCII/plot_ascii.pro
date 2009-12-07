@@ -82,7 +82,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
     ;id of main_base
     main_base: 0L,$
-  
+    
     ;tools base
     tools_base: 0L, $
     lin_log_yaxis: 'lin',$
@@ -103,6 +103,11 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     pYarray: PTR_NEW(0L), $
     pSigmaYarray: PTR_NEW(0L), $
     
+    pXaxis: PTR_NEW(0L), $
+    pXaxis_units: PTR_NEW(0L), $
+    pYaxis: PTR_NEW(0L), $
+    pYaxis_units: PTR_NEW(0L), $
+    
     Xarray: PTR_NEW(0L), $
     Xarray_untouched: PTR_NEW(0L), $
     Yarray: PTR_NEW(0L), $
@@ -119,9 +124,23 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     version:      VERSION,$
     MainBaseSize: [30,25,400,400]})
     
-    nbr_ascii_files = (*global).nbr_ascii_files
-    pXarray = PTRARR(nbr_ascii_files,/ALOCATE_HEAP)
-    
+  nbr_ascii_files = (*global).nbr_ascii_files
+  pXarray = PTRARR(nbr_ascii_files,/AlLOCATE_HEAP)
+  pYarray = PTRARR(nbr_ascii_files,/AlLOCATE_HEAP)
+  pSigmaYarray = PTRARR(nbr_ascii_files,/AlLOCATE_HEAP)
+  (*(*global).pXarray) = pXarray
+  (*(*global).pYarray) = pYarray
+  (*(*global).pSigmaYarray) = pSigmaYarray
+  
+  pXaxis = PTRARR(nbr_ascii_files,/AlLOCATE_HEAP)
+  pXaxis_units = PTRARR(nbr_ascii_files,/AlLOCATE_HEAP)
+  pYaxis = PTRARR(nbr_ascii_files,/AlLOCATE_HEAP)
+  pYaxis_units = PTRARR(nbr_ascii_files,/AlLOCATE_HEAP)
+  (*(*global).pXaxis) = pXaxis
+  (*(*global).pXaxis_units) = pXaxis_units
+  (*(*global).pYaxis) = pYaxis
+  (*(*global).pYaxis_units) = pYaxis_units
+  
   MainBaseSize   = (*global).MainBaseSize
   MainBaseTitle  = 'plot ASCII'
   MainBaseTitle += ' - ' + VERSION
@@ -179,6 +198,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;??????????????????????????????????????????????????????????????????????????????
   IF (DEBUGGING EQ 'yes' ) THEN BEGIN
     (*global).path = '~/IDLWorkspace/plotASCII'
+    ;(*global).path = '~/results/'
   ENDIF
   ;??????????????????????????????????????????????????????????????????????????????
   

@@ -58,7 +58,6 @@ PRO browse_button, Event
     populate_load_table, Event
     
     load_table = (*global).load_table
-    (*global).input_ascii_file = load_table[1,0]
     
     plot_ascii_file, event_load=event
     

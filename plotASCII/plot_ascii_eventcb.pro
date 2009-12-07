@@ -81,6 +81,39 @@ PRO CleanUpData, Xarray, Yarray, SigmaYarray
 END
 
 ;------------------------------------------------------------------------------
+FUNCTION get_list_of_input_file, Event, event_load=event_load, $
+    main_event=main_event
+    
+  IF (N_ELEMENTS(event_load) NE 0) THEN BEGIN
+    event = event_load
+  ENDIF ELSE BEGIN
+    event = main_event
+  ENDELSE
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  IF (N_ELEMENTS(event_load) NE 0) THEN BEGIN
+    global = (*global).global
+  ENDIF
+  
+  load_table = (*global).load_table
+  nbr_row = (size(load_table))(2)
+  
+  index = 0
+  ascii_file = STRCOMPRESS(load_table[1,index],/REMOVE_ALL)
+  list_ascii_file = [ascii_file]
+  index++
+  ascii_file = STRCOMPRESS(load_table[1,index],/REMOVE_ALL)
+  WHILE (ascii_file NE '') DO BEGIN
+    list_ascii_file = [list_ascii_file,ascii_file]
+    index++
+    ascii_file = STRCOMPRESS(load_table[1,index],/REMOVE_ALL)
+  ENDWHILE
+  
+  RETURN, list_ascii_file
+  
+END
+
+;------------------------------------------------------------------------------
 ;Load data
 PRO load_ascii_file, event_load=event_load, main_event=main_event
 
@@ -98,85 +131,112 @@ PRO load_ascii_file, event_load=event_load, main_event=main_event
     global = (*global).global
   ENDIF
   
-  file_name = (*global).input_ascii_file
+  list_ascii_files = get_list_of_input_file(Event, event_load=event_load, $
+    main_event=main_event)
+  nbr_ascii = N_ELEMENTS(list_ascii_files)
   
+  pXarray = (*(*global).pXarray)
+  pYarray = (*(*global).pYarray)
+  pSigmaYArray = (*(*global).pSigmaYArray)
   
-  iAsciiFile = OBJ_NEW('IDL3columnsASCIIparser', file_name[0])
-  IF (OBJ_VALID(iAsciiFile)) THEN BEGIN
-    sAscii = iAsciiFile->getData()
-    (*global).xaxis       = sAscii.xaxis
-    (*global).xaxis_units = sAscii.xaxis_units
-    (*global).yaxis       = sAscii.yaxis
-    (*global).yaxis_units = sAscii.yaxis_units
-    
-    DataStringArray = *(*sAscii.data)[0].data
-    ;this method will creates a 3 columns array (x,y,sigma_y)
-    Nbr = N_ELEMENTS(DataStringArray)
-    IF (Nbr GT 1) THEN BEGIN
-      Xarray      = STRARR(1)
-      Yarray      = STRARR(1)
-      SigmaYarray = STRARR(1)
-      ParseDataStringArray, global, $
-        DataStringArray,$
-        Xarray,$
-        Yarray,$
-        SigmaYarray
-      ;Remove all rows with NaN, -inf, +inf ...
-      CleanUpData, Xarray, Yarray, SigmaYarray
-      ;Change format of array (string -> float)
-      Xarray      = FLOAT(Xarray)
-      Yarray      = FLOAT(Yarray)
-      SigmaYarray = FLOAT(SigmaYarray)
-      ;Store the data in the global structure
-      (*(*global).Xarray)      = Xarray
-      (*(*global).Yarray)      = Yarray
-      (*(*global).SigmaYarray) = SigmaYarray
+  pXaxis = (*(*global).pXaxis)
+  pXaxis_units = (*(*global).pXaxis_units)
+  pYaxis = (*(*global).pYaxis)
+  pYaxis_units = (*(*global).pYaxis_units)
+  
+  index = 0
+  WHILE (index LT nbr_ascii) DO BEGIN
+  
+    iAsciiFile = OBJ_NEW('IDL3columnsASCIIparser', list_ascii_files[index])
+    IF (OBJ_VALID(iAsciiFile)) THEN BEGIN
+      sAscii = iAsciiFile->getData()
+      local_pXaxis = sAscii.xaxis
+      local_pXaxis_units = sAscii.xaxis_units
+      local_pYaxis = sAscii.yaxis
+      local_pYaxis_units = sAscii.yaxis_units
+      
+      DataStringArray = *(*sAscii.data)[0].data
+      ;this method will creates a 3 columns array (x,y,sigma_y)
+      Nbr = N_ELEMENTS(DataStringArray)
+      IF (Nbr GT 1) THEN BEGIN
+        Xarray      = STRARR(1)
+        Yarray      = STRARR(1)
+        SigmaYarray = STRARR(1)
+        ParseDataStringArray, global, $
+          DataStringArray,$
+          Xarray,$
+          Yarray,$
+          SigmaYarray
+        ;Remove all rows with NaN, -inf, +inf ...
+        CleanUpData, Xarray, Yarray, SigmaYarray
+        ;Change format of array (string -> float)
+        Xarray      = FLOAT(Xarray)
+        Yarray      = FLOAT(Yarray)
+        SigmaYarray = FLOAT(SigmaYarray)
+        
+        *pXarray[index] = Xarray
+        *pYarray[index] = Yarray
+        *pSigmaYarray[index] = SigmaYarray
+        
+      ENDIF
+      
+      *pXaxis[index] = local_pXaxis
+      *pXaxis_units[index] = local_pXaxis_units
+      *pYaxis[index] = local_pYaxis
+      *pYaxis_units[index] = local_pYaxis_units
+      
     ENDIF
-  ENDIF
+    
+    OBJ_DESTROY, iAsciiFile
+    
+    index++
+  ENDWHILE
+  
+  (*(*global).pXarray) = pXarray
+  (*(*global).pYarray) = pYarray
+  (*(*global).pSigmaYArray) = pSigmaYArray
+  
+  (*(*global).pXaxis) = pXaxis
+  (*(*global).pXaxis_units) = pXaxis_units
+  (*(*global).pYaxis) = pYaxis
+  (*(*global).pYaxis_units) = pYaxis_units
+  
+  ;  iAsciiFile = OBJ_NEW('IDL3columnsASCIIparser', file_name[0])
+  ;  IF (OBJ_VALID(iAsciiFile)) THEN BEGIN
+  ;    sAscii = iAsciiFile->getData()
+  ;    (*global).xaxis       = sAscii.xaxis
+  ;    (*global).xaxis_units = sAscii.xaxis_units
+  ;    (*global).yaxis       = sAscii.yaxis
+  ;    (*global).yaxis_units = sAscii.yaxis_units
+  ;
+  ;    DataStringArray = *(*sAscii.data)[0].data
+  ;    ;this method will creates a 3 columns array (x,y,sigma_y)
+  ;    Nbr = N_ELEMENTS(DataStringArray)
+  ;    IF (Nbr GT 1) THEN BEGIN
+  ;      Xarray      = STRARR(1)
+  ;      Yarray      = STRARR(1)
+  ;      SigmaYarray = STRARR(1)
+  ;      ParseDataStringArray, global, $
+  ;        DataStringArray,$
+  ;        Xarray,$
+  ;        Yarray,$
+  ;        SigmaYarray
+  ;      ;Remove all rows with NaN, -inf, +inf ...
+  ;      CleanUpData, Xarray, Yarray, SigmaYarray
+  ;      ;Change format of array (string -> float)
+  ;      Xarray      = FLOAT(Xarray)
+  ;      Yarray      = FLOAT(Yarray)
+  ;      SigmaYarray = FLOAT(SigmaYarray)
+  ;      ;Store the data in the global structure
+  ;      (*(*global).Xarray)      = Xarray
+  ;      (*(*global).Yarray)      = Yarray
+  ;      (*(*global).SigmaYarray) = SigmaYarray
+  ;    ENDIF
+  ;  ENDIF
+  
   ;turn off hourglass
   WIDGET_CONTROL,HOURGLASS=0
 END
-
-;??????????????????????????????????????????????????????????????????????????????
-PRO readAsciiData, Event
-  WIDGET_CONTROL, Event.top, GET_UVALUE=global
-  ;get list of files
-  list_OF_files = (*(*global).list_OF_ascii_files)
-  i = 0
-  nbr = N_ELEMENTS(list_OF_files)
-  final_new_pData         = PTRARR(nbr,/ALLOCATE_HEAP)
-  final_new_pData_y_error = PTRARR(nbr,/ALLOCATE_HEAP)
-  final_new_pData_x       = PTRARR(nbr,/ALLOCATE_HEAP)
-  WHILE (i LT nbr) DO BEGIN
-    iClass = OBJ_NEW('IDL3columnsASCIIparser',list_OF_files[i])
-    pData = iClass->getDataQuickly()
-    OBJ_DESTROY, iClass
-    ;keep only the second column
-    new_pData_x       = STRARR((SIZE(*pData[0]))(2))
-    new_pData_x[*]    = (*pData[i])[0,*] ;retrieve x-array
-    new_pData         = STRARR(N_ELEMENTS(pData),(SIZE(*pData[0]))(2))
-    new_pData_y_error = FLTARR(N_ELEMENTS(pData),(SIZE(*pData[0]))(2))
-    
-    FOR j=0,(N_ELEMENTS(pData)-1) DO BEGIN ;retrieve y_array and error_y_array
-      new_pData[j,*]         = (*pData[j])[1,*]
-      new_pData_y_error[j,*] = (*pData[j])[2,*]
-    ENDFOR
-
-    *final_new_pData[i]         = new_pData
-    *final_new_pData_y_error[i] = new_pData_y_error
-    *final_new_pData_x[i]       = new_pData_x
-    ++i
-  ENDWHILE
-  (*(*global).pData_y)         = final_new_pData
-  (*(*global).pData_y_error)   = final_new_pData_y_error
-  (*(*global).pData_x)         = final_new_pData_x
-  (*global).plot_realign_data = 0
-  
-END
-
-;????????????????????????????????????????????????????????????????????????????
-
-
 
 ;==============================================================================
 ;Plot Data in widget_draw
@@ -202,43 +262,89 @@ PRO plotAsciiData, event_load=event_load, main_event=main_event
   DEVICE, DECOMPOSED = 1
   loadct,5,/SILENT
   
-  Xarray      = (*(*global).Xarray)
-  Yarray      = (*(*global).Yarray)
-  SigmaYarray = (*(*global).SigmaYarray)
+  pXarray      = (*(*global).pXarray)
+  pYarray      = (*(*global).pYarray)
+  pSigmaYarray = (*(*global).pSigmaYarray)
   
-  xaxis = (*global).xaxis
-  yaxis = (*global).yaxis
-  xaxis_units = (*global).xaxis_units
-  yaxis_units = (*global).yaxis_units
-  xLabel = xaxis + ' (' + xaxis_units + ')'
-  yLabel = yaxis + ' (' + yaxis_units + ')'
+  pXaxis = (*(*global).pXaxis)
+  pXaxis_units = (*(*global).pXaxis_units)
+  pYaxis = (*(*global).pYaxis)
+  pYaxis_units = (*(*global).pYaxis_units)
   
-  CASE (isYaxisLin(Event)) OF
-    'lin': yaxis = 'lin'
-    'log': yaxis = 'log'
-    ELSE: yaxis = (*global).lin_log_yaxis
-  ENDCASE
+  list_ascii_files = get_list_of_input_file(Event, event_load=event_load, $
+    main_event=main_event)
+  nbr_ascii = N_ELEMENTS(list_ascii_files)
   
-  IF (yaxis EQ 'lin') THEN BEGIN
-    plot, Xarray, $
-      Yarray, $
-      color=FSC_COLOR('white'), $
-      PSYM=2, $
-      XTITLE=xLabel, $
-      YTITLE=yLabel
-  ENDIF ELSE BEGIN
-    plot, Xarray, $
-      Yarray, $
-      color=FSC_COLOR('white'), $
-      PSYM=2, $
-      /YLOG, $
-      XTITLE=xLabel, $
-      YTITLE=yLabel
-  ENDELSE
+  index = 0
+  WHILE (index LT nbr_ascii) DO BEGIN
   
-  errplot, Xarray,Yarray-SigmaYarray,Yarray+SigmaYarray,$
-    color=FSC_COLOR('yellow')
+    Xarray = *pXarray[index]
+    Yarray = *pYarray[index]
+    sigmaYarray = *pSigmaYarray[index]
     
+    IF (index EQ 0) THEN BEGIN
+    
+      xAxis = *pXaxis[index]
+      xAxis_units = *pXaxis_units[index]
+      yAxis = *pYaxis[index]
+      yAxis_units = *pYaxis_units[index]
+      xLabel = xaxis + ' (' + xaxis_units + ')'
+      yLabel = yaxis + ' (' + yaxis_units + ')'
+      
+    ENDIF
+    
+    CASE (isYaxisLin(Event)) OF
+      'lin': yaxis = 'lin'
+      'log': yaxis = 'log'
+      ELSE: yaxis = (*global).lin_log_yaxis
+    ENDCASE
+    
+    IF (index EQ 0) THEN BEGIN
+      IF (yaxis EQ 'lin') THEN BEGIN
+        plot, Xarray, $
+          Yarray, $
+          color=FSC_COLOR('white'), $
+          PSYM=2, $
+          XTITLE=xLabel, $
+          YTITLE=yLabel
+      ENDIF ELSE BEGIN
+        plot, Xarray, $
+          Yarray, $
+          color=FSC_COLOR('white'), $
+          PSYM=2, $
+          /YLOG, $
+          XTITLE=xLabel, $
+          YTITLE=yLabel
+      ENDELSE
+    ENDIF ELSE BEGIN
+      IF (yaxis EQ 'lin') THEN BEGIN
+        plot, Xarray, $
+          Yarray, $
+          /NOERASE,$
+          XSTYLE = 4,$
+          YSTYLE = 4,$
+          /DATA,$
+          color=FSC_COLOR('blue'), $
+          PSYM=2
+      ENDIF ELSE BEGIN
+        plot, Xarray, $
+          Yarray, $
+          color=FSC_COLOR('blue'), $
+          PSYM=2, $
+          XSTYLE = 4,$
+          YSTYLE = 4,$
+          /YLOG, $
+          /DATA,$
+          /NOERASE
+      ENDELSE
+    ENDELSE
+    errplot, Xarray,Yarray-SigmaYarray,Yarray+SigmaYarray,$
+      color=FSC_COLOR('yellow')
+      
+    index++
+  ENDWHILE
+  
+  
   DEVICE, DECOMPOSED = 0
   
 END
