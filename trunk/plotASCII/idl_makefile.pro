@@ -18,6 +18,7 @@ cd, IdlUtilitiesPath
 .run IDLxmlParser__define.pro
 .run checking_packages.pro
 .run IDL3columnsASCIIparser__define.pro
+.run plot_ascii_functions.pro
 
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.
