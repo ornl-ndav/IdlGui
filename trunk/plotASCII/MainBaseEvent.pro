@@ -59,6 +59,36 @@ PRO MAIN_BASE_event, Event
       
     END
     
+    ;main plot
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='main_draw'): BEGIN
+    
+      IF (Event.press EQ 1) THEN BEGIN ;left click
+        (*global).left_click = 1b
+        CURSOR, x, y, /NOWAIT
+        x0y0x1y1 = FLTARR(4)
+        x0y0x1y1[0] = x
+        x0y0x1y1[1] = y
+        (*global).x0y0x1y1 = x0y0x1y1
+      ENDIF
+      
+      IF (Event.press EQ 0) THEN BEGIN ;move mouse with left click
+        IF ((*global).left_click) THEN BEGIN
+          CURSOR, x, y, /NOWAIT
+          x0y0x1y1 = (*global).x0y0x1y1
+          x0y0x1y1[2] = x
+          x0y0x1y1[3] = y
+          (*global).x0y0x1y1 = x0y0x1y1
+          PlotAsciiData, main_event = Event
+          plot_zoom_selection, Event
+        ENDIF
+      ENDIF
+      
+      IF (Event.release EQ 1) THEN BEGIN ;release left click
+        (*global).left_click = 0b
+      ENDIF
+      
+    END
+    
     ;load button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='load_button_uname'): BEGIN
       id = (*global).load_base

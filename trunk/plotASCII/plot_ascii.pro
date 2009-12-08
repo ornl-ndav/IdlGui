@@ -86,12 +86,14 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ;tools base
     tools_base: 0L, $
     lin_log_yaxis: 'lin',$
+    left_click: 0b, $
     
     ;load base
     load_base: 0L, $
     nbr_ascii_files: 50L,$
     ascii_file_list: STRARR(50),$
     load_table: STRARR(2,50), $
+    x0y0x1y1: FLTARR(4),$
     
     input_ascii_file: './REF_L_ascii_file.txt',$
     xaxis: '',$
@@ -182,6 +184,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
   plot = WIDGET_DRAW(MAIN_BASE,$
     UNAME = 'main_draw',$
+    /BUTTON_EVENTS, $
+    /MOTION_EVENTS, $
     SCR_XSIZE    = MainBaseSize[2],$
     SCR_YSIZE    = MainBaseSize[3]-35)
     

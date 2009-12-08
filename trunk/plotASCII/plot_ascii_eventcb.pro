@@ -353,3 +353,32 @@ PRO plotAsciiData, event_load=event_load, main_event=main_event
   DEVICE, DECOMPOSED = 0
   
 END
+
+;------------------------------------------------------------------------------
+PRO plot_zoom_selection, Event
+
+  draw_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='main_draw')
+  WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
+  WSET,view_plot_id
+  
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  DEVICE, DECOMPOSED = 1
+  loadct,5,/SILENT
+  
+  x0y0x1y1 = (*global).x0y0x1y1
+
+  x0 = x0y0x1y1[0]
+  y0 = x0y0x1y1[1]
+  x1 = x0y0x1y1[2]
+  y1 = x0y0x1y1[3]
+
+  PLOTS, x0, y0, /DATA
+  PLOTS, x0, y1, /DATA, /CONTINUE, COLOR=FSC_COLOR('purple'), LINESTYLE=2
+  PLOTS, x1, y1, /DATA, /CONTINUE, COLOR=FSC_COLOR('blue'), LINESTYLE=2
+  PLOTS, x1, y0, /DATA, /CONTINUE, COLOR=FSC_COLOR('red'), LINESTYLE=2
+  PLOTS, x0, y0, /DATA, /CONTINUE, COLOR=FSC_COLOR('green'), LINESTYLE=2
+
+  DEVICE, DECOMPOSED=0
+
+END
