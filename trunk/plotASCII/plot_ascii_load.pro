@@ -72,8 +72,8 @@ PRO plot_ascii_load_base_event, Event
     ;delete button
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='plot_ascii_load_base_delete_button'): BEGIN
-        xymax = FLTARR(2)
-        (*global).xymax = xymax
+        xyminmax = FLTARR(4)
+        (*global).xyminmax = xyminmax
       delete_plot_ascii_load_selected_row, Event
       plotAsciiData, event_load=event
     END

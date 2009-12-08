@@ -41,7 +41,7 @@ PRO plot_ascii_file, event_load=event_load, main_event=main_event
     widget_control, main_event.top, get_uvalue=global
   ENDELSE
   load_ascii_file, event_load=event_load, main_event=main_event
-  xymax = (*global).xymax
+  ;xymax = (*global).xymax
   PlotAsciiData, event_load=event_load, main_event=main_event
   
 END
@@ -152,9 +152,9 @@ PRO load_ascii_file, event_load=event_load, main_event=main_event
   pYaxis = (*(*global).pYaxis)
   pYaxis_units = (*(*global).pYaxis_units)
   
-  xymax = (*global).xymax
-  global_xmax = xymax[0]
-  global_ymax = xymax[1]
+  xyminmax = (*global).xyminmax
+  global_xmax = xyminmax[2]
+  global_ymax = xyminmax[3]
   
   index = 0
   WHILE (index LT nbr_ascii) DO BEGIN
@@ -210,10 +210,10 @@ PRO load_ascii_file, event_load=event_load, main_event=main_event
     index++
   ENDWHILE
   
-  xymax = FLTARR(2)
-  xymax[0] = global_xmax
-  xymax[1] = global_ymax
-  (*global).xymax = xymax
+  xymax = FLTARR(4)
+  xymax[2] = global_xmax
+  xymax[3] = global_ymax
+  (*global).xyminmax = xymax
   
   (*(*global).pXarray) = pXarray
   (*(*global).pYarray) = pYarray
@@ -301,15 +301,17 @@ PRO plotAsciiData, event_load=event_load, main_event=main_event
       
       IF (first_file_plotted_index EQ 0) THEN BEGIN
       
-        xymax = (*global).xymax
-        xmax = xymax[0]
-        ymax = xymax[1]
+        xyminmax = (*global).xyminmax
+        xmin = xyminmax[0]
+        ymin = xyminmax[1]
+        xmax = xyminmax[2]
+        ymax = xyminmax[3]
         
         IF (yaxis EQ 'lin') THEN BEGIN
           plot, Xarray, $
             Yarray, $
-            XRANGE = [0,xmax],$
-            YRANGE = [0,ymax],$
+            XRANGE = [xmin,xmax],$
+            YRANGE = [ymin,ymax],$
             color=FSC_COLOR(color), $
             PSYM=2, $
             XTITLE=xLabel, $
@@ -317,8 +319,8 @@ PRO plotAsciiData, event_load=event_load, main_event=main_event
         ENDIF ELSE BEGIN
           plot, Xarray, $
             Yarray, $
-            XRANGE = [0,xmax],$
-            YRANGE = [0,ymax],$
+            XRANGE = [xmin,xmax],$
+            YRANGE = [ymin,ymax],$
             color=FSC_COLOR(color), $
             PSYM=2, $
             /YLOG, $
@@ -367,18 +369,38 @@ PRO plot_zoom_selection, Event
   loadct,5,/SILENT
   
   x0y0x1y1 = (*global).x0y0x1y1
-
+  
   x0 = x0y0x1y1[0]
   y0 = x0y0x1y1[1]
   x1 = x0y0x1y1[2]
   y1 = x0y0x1y1[3]
-
+  
   PLOTS, x0, y0, /DATA
   PLOTS, x0, y1, /DATA, /CONTINUE, COLOR=FSC_COLOR('purple'), LINESTYLE=2
   PLOTS, x1, y1, /DATA, /CONTINUE, COLOR=FSC_COLOR('blue'), LINESTYLE=2
   PLOTS, x1, y0, /DATA, /CONTINUE, COLOR=FSC_COLOR('red'), LINESTYLE=2
   PLOTS, x0, y0, /DATA, /CONTINUE, COLOR=FSC_COLOR('green'), LINESTYLE=2
-
+  
   DEVICE, DECOMPOSED=0
+  
+END
 
+;------------------------------------------------------------------------------
+PRO sort_x0y0x1y1, Event
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  x0y0x1y1 = (*global).x0y0x1y1
+  
+  x0 = x0y0x1y1[0]
+  y0 = x0y0x1y1[1]
+  x1 = x0y0x1y1[2]
+  y1 = x0y0x1y1[3]
+  
+  xmin = MIN([x0,x1],MAX=xmax)
+  ymin = MIN([y0,y1],MAX=ymax)
+  
+  x0y0x1y1 = [xmin, ymin, xmax, ymax]
+  (*global).x0y0x1y1 = x0y0x1y1
+  
 END
