@@ -182,6 +182,9 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     /BITMAP,$
     UNAME = 'tools_button_uname')
     
+  zoom_help = WIDGET_LABEL(button_base,$
+  VALUE = '             Double click to reset zoom')  
+    
   plot = WIDGET_DRAW(MAIN_BASE,$
     UNAME = 'main_draw',$
     /BUTTON_EVENTS, $
