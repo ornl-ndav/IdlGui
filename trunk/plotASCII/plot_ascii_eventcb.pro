@@ -315,6 +315,9 @@ PRO plotAsciiData, event_load=event_load, main_event=main_event
     index++
   ENDWHILE
   
+  IF (first_file_plotted_index EQ 0) THEN BEGIN
+  ERASE
+  ENDIF
   
   DEVICE, DECOMPOSED = 0
   
