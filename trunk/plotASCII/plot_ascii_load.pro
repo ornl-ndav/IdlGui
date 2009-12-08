@@ -50,10 +50,23 @@ PRO plot_ascii_load_base_event, Event
     ;ASCII table
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='plot_ascii_load_base_table'): BEGIN
+      IF ((*global_load).table_click_status EQ 'click') THEN BEGIN
+        id = WIDGET_INFO(Event.top, FIND_BY_UNAME='plot_ascii_load_base_table')
+        selection = WIDGET_INFO(id, /TABLE_SELECT)
+        column_selected = selection[0]
+        (*global_load).column_selected = column_selected
+      ENDIF
       select_full_row, Event
-      ;trigger status column if click in first column
-      trigger_status_column, Event
-      plotAsciiData, event_load=event
+      ;trigger status column if click in first column, and first column only
+      IF ((*global_load).column_selected EQ 0) THEN BEGIN
+        trigger_status_column, Event
+        plotAsciiData, event_load=event
+      ENDIF
+      IF ((*global_load).table_click_status EQ 'click') THEN BEGIN
+        (*global_load).table_click_status = 'release'
+      ENDIF ELSE BEGIN
+        (*global_load).table_click_status = 'click'
+      ENDELSE
     END
     
     ;delete button
@@ -110,9 +123,9 @@ PRO plot_ascii_load_base_gui, wBase, main_base_geometry, nbr_ascii_files
     VALUE = 'BROWSE ...',$
     UNAME = 'plot_ascii_load_base_browse_button')
   space = WIDGET_LABEL(row1,$
-    VALUE = '              ')
+    VALUE = '  ')
   help = WIDGET_LABEL(row1,$
-    VALUE = 'Click in STATUS column to enable/disable plot of ascii file.')
+    VALUE = 'Single click in STATUS column to enable/disable plot of ascii file.')
     
   ;table
   alignement = INTARR(2,nbr_ascii_files)
@@ -129,7 +142,6 @@ PRO plot_ascii_load_base_gui, wBase, main_base_geometry, nbr_ascii_files
     SCR_XSIZE = 545,$
     SCR_YSIZE = 380,$
     COLUMN_WIDTHS = [50,470],$
-    
     ;/SCROLL,$
     /ALL_EVENTS)
   WIDGET_CONTROL, table, SET_TABLE_SELECT=[0,0,1,0]
@@ -177,6 +189,8 @@ PRO plot_ascii_load_base, main_base=main_base, Event
   
   global_load = PTR_NEW({ wbase: wbase1,$
     global: global, $
+    column_selected: 0,$
+    table_click_status: 'click',$
     main_event: Event})
     
   WIDGET_CONTROL, wBase1, SET_UVALUE = global_load
