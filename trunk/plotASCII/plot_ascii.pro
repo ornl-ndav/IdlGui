@@ -98,6 +98,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     xaxis_units: '',$
     yaxis: '',$
     yaxis_units: '',$
+    xymax: FLTARR(2), $
     
     ascii_color: STRARR(50), $ ;list of plot colors
     
