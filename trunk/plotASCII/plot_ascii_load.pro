@@ -56,6 +56,13 @@ PRO plot_ascii_load_base_event, Event
       plotAsciiData, event_load=event
     END
     
+    ;delete button
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='plot_ascii_load_base_delete_button'): BEGIN
+      delete_plot_ascii_load_selected_row, Event
+      plotAsciiData, event_load=event
+    END
+    
     ;CLOSE button
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='plot_ascii_load_base_close_button'): BEGIN
@@ -103,9 +110,9 @@ PRO plot_ascii_load_base_gui, wBase, main_base_geometry, nbr_ascii_files
     VALUE = 'BROWSE ...',$
     UNAME = 'plot_ascii_load_base_browse_button')
   space = WIDGET_LABEL(row1,$
-  VALUE = '              ')
+    VALUE = '              ')
   help = WIDGET_LABEL(row1,$
-  VALUE = 'Click in STATUS column to enable/disable plot of ascii file.')  
+    VALUE = 'Click in STATUS column to enable/disable plot of ascii file.')
     
   ;table
   alignement = INTARR(2,nbr_ascii_files)
@@ -122,7 +129,7 @@ PRO plot_ascii_load_base_gui, wBase, main_base_geometry, nbr_ascii_files
     SCR_XSIZE = 545,$
     SCR_YSIZE = 380,$
     COLUMN_WIDTHS = [50,470],$
-
+    
     ;/SCROLL,$
     /ALL_EVENTS)
   WIDGET_CONTROL, table, SET_TABLE_SELECT=[0,0,1,0]

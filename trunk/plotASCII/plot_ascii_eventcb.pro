@@ -201,39 +201,6 @@ PRO load_ascii_file, event_load=event_load, main_event=main_event
   (*(*global).pYaxis) = pYaxis
   (*(*global).pYaxis_units) = pYaxis_units
   
-  ;  iAsciiFile = OBJ_NEW('IDL3columnsASCIIparser', file_name[0])
-  ;  IF (OBJ_VALID(iAsciiFile)) THEN BEGIN
-  ;    sAscii = iAsciiFile->getData()
-  ;    (*global).xaxis       = sAscii.xaxis
-  ;    (*global).xaxis_units = sAscii.xaxis_units
-  ;    (*global).yaxis       = sAscii.yaxis
-  ;    (*global).yaxis_units = sAscii.yaxis_units
-  ;
-  ;    DataStringArray = *(*sAscii.data)[0].data
-  ;    ;this method will creates a 3 columns array (x,y,sigma_y)
-  ;    Nbr = N_ELEMENTS(DataStringArray)
-  ;    IF (Nbr GT 1) THEN BEGIN
-  ;      Xarray      = STRARR(1)
-  ;      Yarray      = STRARR(1)
-  ;      SigmaYarray = STRARR(1)
-  ;      ParseDataStringArray, global, $
-  ;        DataStringArray,$
-  ;        Xarray,$
-  ;        Yarray,$
-  ;        SigmaYarray
-  ;      ;Remove all rows with NaN, -inf, +inf ...
-  ;      CleanUpData, Xarray, Yarray, SigmaYarray
-  ;      ;Change format of array (string -> float)
-  ;      Xarray      = FLOAT(Xarray)
-  ;      Yarray      = FLOAT(Yarray)
-  ;      SigmaYarray = FLOAT(SigmaYarray)
-  ;      ;Store the data in the global structure
-  ;      (*(*global).Xarray)      = Xarray
-  ;      (*(*global).Yarray)      = Yarray
-  ;      (*(*global).SigmaYarray) = SigmaYarray
-  ;    ENDIF
-  ;  ENDIF
-  
   ;turn off hourglass
   WIDGET_CONTROL,HOURGLASS=0
 END
@@ -352,4 +319,3 @@ PRO plotAsciiData, event_load=event_load, main_event=main_event
   DEVICE, DECOMPOSED = 0
   
 END
-
