@@ -44,9 +44,11 @@ PRO plot_ascii_tools_base_event, Event
     ;lin/log
     WIDGET_INFO(Event.top, FIND_BY_UNAME='y_axis_lin'): BEGIN
       plot_ascii_file, main_event=main_event
+      (*global).lin_log_yaxis = 'lin'
     END
     WIDGET_INFO(Event.top, FIND_BY_UNAME='y_axis_log'): BEGIN
-      plot_ascii_file, main_event=main_event 
+      plot_ascii_file, main_event=main_event
+      (*global).lin_log_yaxis = 'log'
     END
     
     ELSE:
@@ -56,7 +58,7 @@ PRO plot_ascii_tools_base_event, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO plot_ascii_tools_base_gui, wBase, main_base_geometry
+PRO plot_ascii_tools_base_gui, wBase, main_base_geometry, lin_log_yaxis
 
   main_base_xoffset = main_base_geometry.xoffset
   main_base_yoffset = main_base_geometry.yoffset
@@ -100,7 +102,11 @@ PRO plot_ascii_tools_base_gui, wBase, main_base_geometry
     /NO_RELEASE,$
     UNAME = 'y_axis_log')
     
-  WIDGET_CONTROL, button1, /SET_BUTTON
+  IF (lin_log_yaxis EQ 'lin') THEN BEGIN
+    WIDGET_CONTROL, button1, /SET_BUTTON
+  ENDIF ELSE BEGIN
+    WIDGET_CONTROL, button2, /SET_BUTTON
+  ENDELSE
   
 END
 
@@ -117,10 +123,13 @@ PRO plot_ascii_tools_base, main_base=main_base, Event
   ENDELSE
   main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
   
+  lin_log_yaxis = (*global).lin_log_yaxis ;'lin' or 'log'
+  
   ;build gui
   wBase1 = ''
   plot_ascii_tools_base_gui, wBase1, $
-    main_base_geometry
+    main_base_geometry, $
+    lin_log_yaxis
   (*global).tools_base = wBase1
   
   WIDGET_CONTROL, wBase1, /REALIZE
