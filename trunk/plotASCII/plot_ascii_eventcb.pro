@@ -284,8 +284,6 @@ PRO plotAsciiData, event_load=event_load, main_event=main_event
   first_file_plotted_index  = 0  ;plot xaxis, yaxis for first plot only
   WHILE (index LT nbr_ascii) DO BEGIN
   
-    print, 'index: ' + string(index) + ': ' + activate_file_column[index]
-    
     IF (activate_file_column[index] EQ 'X') THEN BEGIN
     
       Xarray = *pXarray[index]
