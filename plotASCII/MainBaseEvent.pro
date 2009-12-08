@@ -69,6 +69,7 @@ PRO MAIN_BASE_event, Event
         x0y0x1y1[0] = x
         x0y0x1y1[1] = y
         (*global).x0y0x1y1 = x0y0x1y1
+        populate_tools_zoom, Event, x1=x, y1=y
       ENDIF
       
       IF (Event.press EQ 0) THEN BEGIN ;move mouse with left click
@@ -78,6 +79,7 @@ PRO MAIN_BASE_event, Event
           x0y0x1y1[2] = x
           x0y0x1y1[3] = y
           (*global).x0y0x1y1 = x0y0x1y1
+          populate_tools_zoom, Event, x2=x, y2=y
           PlotAsciiData, main_event = Event
           plot_zoom_selection, Event
         ENDIF
@@ -92,6 +94,12 @@ PRO MAIN_BASE_event, Event
           (*global).xyminmax = (*global).x0y0x1y1
           PlotAsciiData, main_event = Event
         ENDELSE
+        xyminmax = (*global).xyminmax
+        xmin = xyminmax[0]
+        ymin = xyminmax[1]
+        xmax = xyminmax[2]
+        ymax = xyminmax[3]
+        populate_tools_zoom, Event, x1=xmin, y1=ymin, x2=xmax, y2=ymax
       ENDIF
       
     END

@@ -37,6 +37,11 @@ PRO putValue, Event, Uname, value
   WIDGET_CONTROL, id, SET_VALUE=value
 END
 
+PRO putValue_from_base, base, uname, value
+  id = WIDGET_INFO(base, FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, id, SET_VALUE=value
+END
+
 ;------------------------------------------------------------------------------
 PRO putButtonValue, Event, uname, value
   id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
