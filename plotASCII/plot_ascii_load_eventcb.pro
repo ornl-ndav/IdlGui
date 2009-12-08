@@ -155,3 +155,30 @@ PRO trigger_status_column, Event
   (*global).load_table = load_table
   
 END
+
+;------------------------------------------------------------------------------
+PRO delete_plot_ascii_load_selected_row, Event
+
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='plot_ascii_load_base_table')
+  selection = WIDGET_INFO(id, /TABLE_SELECT)
+  row_selected = selection[1]
+  
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global_load
+  global = (*global_load).global
+  load_table = (*global).load_table
+  
+  nbr_row = (size(load_table))(2)
+  new_load_table = STRARR(2,nbr_row)
+  new_i = 0
+  FOR i=0,(nbr_row-1) DO BEGIN
+    IF (i NE row_selected) THEN BEGIN
+      new_load_table[0,new_i] = load_table[0,i]
+      new_load_table[1,new_i] = load_table[1,i]
+      new_i++
+    ENDIF
+  ENDFOR
+  
+  (*global).load_table = new_load_table
+  putValueInTable, Event, 'plot_ascii_load_base_table', new_load_table
+  
+END
