@@ -54,33 +54,11 @@ PRO browse_button, Event
   IF (file_list[0] NE '') THEN BEGIN
     (*global).path = new_path
     
-    add_file_list_to_full_list, Event, file_list
-    populate_load_table, Event
-    
+    populate_load_table, Event, file_list
     load_table = (*global).load_table
-    
     plot_ascii_file, event_load=event
     
   ENDIF
-  
-END
-
-;------------------------------------------------------------------------------
-PRO add_file_list_to_full_list, Event, file_list
-
-  WIDGET_CONTROL, Event.top, GET_UVALUE=global_load
-  global = (*global_load).global
-  
-  ascii_file_list = (*global).ascii_file_list
-  
-  nbr_new_file = N_ELEMENTS(file_list)
-  index = 0
-  WHILE (index LT nbr_new_file) DO BEGIN
-    ascii_file_list[index] = file_list[index]
-    index++
-    
-  ENDWHILE
-  (*global).ascii_file_list = ascii_file_list
   
 END
 
@@ -89,26 +67,27 @@ FUNCTION get_first_empty_table_index, load_table
   sz = (size(load_table))(2)
   index = 0
   WHILE (index LT sz) DO BEGIN
-    IF (STRCOMPRESS(load_table[0,index],/REMOVE_ALL) EQ '') THEN RETURN, index
+    IF (STRCOMPRESS(load_table[1,index],/REMOVE_ALL) EQ '') THEN RETURN, index
     index++
   ENDWHILE
   RETURN, -1
 END
 
 ;..............................................................................
-PRO populate_load_table, Event
+PRO populate_load_table, Event, new_file_list
   WIDGET_CONTROL, Event.top, GET_UVALUE=global_load
   
   global = (*global_load).global
-  ascii_file_list = (*global).ascii_file_list
-  dim_y = N_ELEMENTS(ascii_file_list) ;50 for now
+  ;ascii_file_list = (*global).ascii_file_list
+  ;dim_y = N_ELEMENTS(ascii_file_list) ;50 for now
   load_table = (*global).load_table
+  nbr_new_files = N_ELEMENTS(new_file_list)
   
   index = 0
   index_table = get_first_empty_table_index(load_table)
   IF (index_table EQ -1) THEN RETURN
-  WHILE(index LT dim_y) DO BEGIN
-    file = ascii_file_list[index]
+  WHILE(index LT nbr_new_files) DO BEGIN
+    file = new_file_list[index]
     IF (STRCOMPRESS(file,/REMOVE_ALL) EQ '') THEN BREAK
     load_table[0,index_table] = 'X'
     load_table[1,index_table] = file
