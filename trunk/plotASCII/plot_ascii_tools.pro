@@ -75,7 +75,7 @@ PRO plot_ascii_tools_base_gui, wBase, main_base_geometry, lin_log_yaxis
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
     SCR_YSIZE = 350,$
-    SCR_XSIZE = 150,$
+    SCR_XSIZE = 250,$
     MAP          = 1,$
     /BASE_ALIGN_CENTER,$
     GROUP_LEADER = ourGroup)
@@ -87,7 +87,7 @@ PRO plot_ascii_tools_base_gui, wBase, main_base_geometry, lin_log_yaxis
   row1 = WIDGET_BASE(main_base,$
     /ROW)
   label = WIDGET_LABEL(row1,$
-    VALUE = 'Y axis:')
+    VALUE = '   Y axis:')
   base = WIDGET_BASE(row1,$
     XOFFSET=0,$
     YOFFSET=0,$
@@ -108,6 +108,45 @@ PRO plot_ascii_tools_base_gui, wBase, main_base_geometry, lin_log_yaxis
     WIDGET_CONTROL, button2, /SET_BUTTON
   ENDELSE
   
+  ;zoom_base
+  zoom_base = WIDGET_BASE(main_base,$
+    /COLUMN,$
+    FRAME=1)
+    
+  row1 = WIDGET_BASE(zoom_base,$
+    /ROW)
+  x1 = CW_FIELD(row1,$
+    VALUE = '',$
+    XSIZE = 6,$
+    /FLOAT,$
+    TITLE = 'X1:',$
+    UNAME = 'plot_ascii_tools_x1',$
+    /ROW)
+  x2 = CW_FIELD(row1,$
+    VALUE = '',$
+    XSIZE = 6,$
+    /FLOAT,$
+    UNAME = 'plot_ascii_tools_x2',$
+    TITLE = '    X2:',$
+    /ROW)
+    
+  row2 = WIDGET_BASE(zoom_base,$
+    /ROW)
+  y1 = CW_FIELD(row2,$
+    VALUE = '',$
+    XSIZE = 6,$
+    /FLOAT,$
+    TITLE = 'Y1:',$
+    UNAME = 'plot_ascii_tools_y1',$
+    /ROW)
+  y2 = CW_FIELD(row2,$
+    VALUE = '',$
+    XSIZE = 6,$
+    /FLOAT,$
+    UNAME = 'plot_ascii_tools_y2',$
+    TITLE = '    Y2:',$
+    /ROW)
+    
 END
 
 ;------------------------------------------------------------------------------
