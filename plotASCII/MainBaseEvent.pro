@@ -55,7 +55,6 @@ PRO MAIN_BASE_event, Event
       WIDGET_CONTROL, id, DRAW_XSIZE= new_xsize-6
       WIDGET_CONTROL, id, DRAW_YSIZE= new_ysize-6-25
       
-      ;plot_ascii_file, main_event=event
       PlotAsciiData, main_event = Event
       
     END
@@ -87,8 +86,12 @@ PRO MAIN_BASE_event, Event
       IF (Event.release EQ 1) THEN BEGIN ;release left click
         sort_x0y0x1y1, Event
         (*global).left_click = 0b
-        (*global).xyminmax = (*global).x0y0x1y1
-        PlotAsciiData, main_event = Event
+        IF (isZoomReset(Event)) THEN BEGIN
+          plot_ascii_file, main_event=event
+        ENDIF ELSE BEGIN
+          (*global).xyminmax = (*global).x0y0x1y1
+          PlotAsciiData, main_event = Event
+        ENDELSE
       ENDIF
       
     END
