@@ -69,21 +69,23 @@ ENDSWITCH
 ;get hostname
 spawn, 'hostname', hostname
 CASE (hostname) OF
-    'heater'      : instrumentIndex = 0
-    'lrac'        : instrumentIndex = 2
-    'mrac'        : instrumentIndex = 3
-    'bac.sns.gov' : instrumentIndex = 1
-    'bac2'        : instrumentIndex = 1
-    'arcs1'       : instrumentIndex = 4
-    'arcs2'       : instrumentIndex = 4
-    'cncs'        : instrumentIndex = 5
-    'cncs2'       : instrumentIndex = 5
-    'snap'        : instrumentIndex = 6
-    'powgen'      : instrumentIndex = 7
-    'eqsans'      : instrumentIndex = 8
-    'sequoia'     : instrumentIndex = 9
-    'sequoia2'    : instrumentIndex = 9
-    else          : instrumentIndex = 0
+    'heater'        : instrumentIndex = 0
+    'lrac'          : instrumentIndex = 2
+    'mrac'          : instrumentIndex = 3
+    'bac.sns.gov'   : instrumentIndex = 1
+    'bac2'          : instrumentIndex = 1
+    'arcs1'         : instrumentIndex = 4
+    'arcs2'         : instrumentIndex = 4
+    'cncs'          : instrumentIndex = 5
+    'cncs2'         : instrumentIndex = 5
+    'snap'          : instrumentIndex = 6
+    'powgen'        : instrumentIndex = 7
+    'eqsans'        : instrumentIndex = 8
+    'sequoia'       : instrumentIndex = 9
+    'sequoia2'      : instrumentIndex = 9
+    'vulcan2'       : instrumentIndex = 10
+    'topaz.sns.gov' : instrumentIndex = 11
+    else            : instrumentIndex = 0
 ENDCASE 
 
 ;define global variables
@@ -151,7 +153,9 @@ InstrumentList = ['Instrument ?',$
                   'SNAP',$
                   'POWGEN',$
                   'EQSANS',$
-                  'SEQUOIA']
+                  'SEQUOIA',$
+                  'VULCAN',$
+                  'TOPAZ']
 
 instrumentShortList = ['',$
                        'BSS',$
@@ -162,7 +166,9 @@ instrumentShortList = ['',$
                        'SNAP',$
                        'PG3',$
                        'EQSANS',$
-                       'SEQ']
+                       'SEQ',$
+                       'VULCAN',$
+                       'TOPAZ']
 (*(*global).instrumentShortList) = instrumentShortList
 
 IF (WHERE(ucams EQ (*global).geek) EQ -1) THEN BEGIN ;normal user
