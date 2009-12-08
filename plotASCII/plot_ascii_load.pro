@@ -125,7 +125,8 @@ PRO plot_ascii_load_base_gui, wBase, main_base_geometry, nbr_ascii_files
   space = WIDGET_LABEL(row1,$
     VALUE = '  ')
   help = WIDGET_LABEL(row1,$
-    VALUE = 'Single click in STATUS column to enable/disable plot of ascii file.')
+    VALUE = 'Single click in STATUS column to enable/disable plot ' + $
+    'of ascii file.')
     
   ;table
   alignement = INTARR(2,nbr_ascii_files)
@@ -198,5 +199,8 @@ PRO plot_ascii_load_base, main_base=main_base, Event
   XMANAGER, "plot_ascii_load_base", wBase1, $
     GROUP_LEADER = ourGroup, /NO_BLOCK
     
+   load_table = (*global).load_table
+  putValueInTable_from_base, wBase1, 'plot_ascii_load_base_table', load_table
+       
 END
 
