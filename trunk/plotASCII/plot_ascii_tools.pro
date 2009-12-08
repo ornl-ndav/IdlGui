@@ -43,10 +43,10 @@ PRO plot_ascii_tools_base_event, Event
   
     ;lin/log
     WIDGET_INFO(Event.top, FIND_BY_UNAME='y_axis_lin'): BEGIN
-      plot_ascii_file, EVENT=main_event
+      plot_ascii_file, main_event=main_event
     END
     WIDGET_INFO(Event.top, FIND_BY_UNAME='y_axis_log'): BEGIN
-      plot_ascii_file, EVENT=main_event
+      plot_ascii_file, main_event=main_event 
     END
     
     ELSE:

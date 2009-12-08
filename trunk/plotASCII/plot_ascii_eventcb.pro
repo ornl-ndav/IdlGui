@@ -34,16 +34,14 @@
 
 PRO plot_ascii_file, event_load=event_load, main_event=main_event
 
-  widget_control, event_load.top, get_uvalue=global
-
-
-
+  IF (N_ELEMENTS(event_load) NE 0) THEN BEGIN
+    widget_control, event_load.top, get_uvalue=global
+    global = (*global).global
+  ENDIF ELSE BEGIN
+    widget_control, main_event.top, get_uvalue=global
+  ENDELSE
   load_ascii_file, event_load=event_load, main_event=main_event
-  global = (*global).global
   xymax = (*global).xymax
-  print, 'in plot_ascii_file'
-  print, xymax
-  print
   PlotAsciiData, event_load=event_load, main_event=main_event
   
 END
@@ -144,6 +142,7 @@ PRO load_ascii_file, event_load=event_load, main_event=main_event
     main_event=main_event)
   nbr_ascii = N_ELEMENTS(list_ascii_files)
   
+  
   pXarray = (*(*global).pXarray)
   pYarray = (*(*global).pYarray)
   pSigmaYArray = (*(*global).pSigmaYArray)
@@ -210,7 +209,7 @@ PRO load_ascii_file, event_load=event_load, main_event=main_event
     
     index++
   ENDWHILE
-
+  
   xymax = FLTARR(2)
   xymax[0] = global_xmax
   xymax[1] = global_ymax
@@ -305,7 +304,7 @@ PRO plotAsciiData, event_load=event_load, main_event=main_event
         xymax = (*global).xymax
         xmax = xymax[0]
         ymax = xymax[1]
-
+        
         IF (yaxis EQ 'lin') THEN BEGIN
           plot, Xarray, $
             Yarray, $
@@ -334,11 +333,10 @@ PRO plotAsciiData, event_load=event_load, main_event=main_event
             color=FSC_COLOR(color), $
             PSYM=2
         ENDIF ELSE BEGIN
-          plot, Xarray, $
+          oplot, Xarray, $
             Yarray, $
             color=FSC_COLOR(color), $
             PSYM=2
-        ;            /YLOG, $
         ENDELSE
       ENDELSE
       errplot, Xarray,Yarray-SigmaYarray,Yarray+SigmaYarray,$
