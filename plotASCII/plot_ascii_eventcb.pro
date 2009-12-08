@@ -34,7 +34,16 @@
 
 PRO plot_ascii_file, event_load=event_load, main_event=main_event
 
+  widget_control, event_load.top, get_uvalue=global
+
+
+
   load_ascii_file, event_load=event_load, main_event=main_event
+  global = (*global).global
+  xymax = (*global).xymax
+  print, 'in plot_ascii_file'
+  print, xymax
+  print
   PlotAsciiData, event_load=event_load, main_event=main_event
   
 END
@@ -144,6 +153,10 @@ PRO load_ascii_file, event_load=event_load, main_event=main_event
   pYaxis = (*(*global).pYaxis)
   pYaxis_units = (*(*global).pYaxis_units)
   
+  xymax = (*global).xymax
+  global_xmax = xymax[0]
+  global_ymax = xymax[1]
+  
   index = 0
   WHILE (index LT nbr_ascii) DO BEGIN
   
@@ -174,6 +187,12 @@ PRO load_ascii_file, event_load=event_load, main_event=main_event
         Yarray      = FLOAT(Yarray)
         SigmaYarray = FLOAT(SigmaYarray)
         
+        local_xmax = MAX(Xarray)
+        local_ymax = MAX(Yarray)
+        
+        IF (local_xmax GT global_xmax) THEN global_xmax = local_xmax
+        IF (local_ymax GT global_ymax) THEN global_ymax = local_ymax
+        
         *pXarray[index] = Xarray
         *pYarray[index] = Yarray
         *pSigmaYarray[index] = SigmaYarray
@@ -191,6 +210,11 @@ PRO load_ascii_file, event_load=event_load, main_event=main_event
     
     index++
   ENDWHILE
+
+  xymax = FLTARR(2)
+  xymax[0] = global_xmax
+  xymax[1] = global_ymax
+  (*global).xymax = xymax
   
   (*(*global).pXarray) = pXarray
   (*(*global).pYarray) = pYarray
@@ -277,9 +301,16 @@ PRO plotAsciiData, event_load=event_load, main_event=main_event
       color = ascii_color[index]
       
       IF (first_file_plotted_index EQ 0) THEN BEGIN
+      
+        xymax = (*global).xymax
+        xmax = xymax[0]
+        ymax = xymax[1]
+
         IF (yaxis EQ 'lin') THEN BEGIN
           plot, Xarray, $
             Yarray, $
+            XRANGE = [0,xmax],$
+            YRANGE = [0,ymax],$
             color=FSC_COLOR(color), $
             PSYM=2, $
             XTITLE=xLabel, $
@@ -287,6 +318,8 @@ PRO plotAsciiData, event_load=event_load, main_event=main_event
         ENDIF ELSE BEGIN
           plot, Xarray, $
             Yarray, $
+            XRANGE = [0,xmax],$
+            YRANGE = [0,ymax],$
             color=FSC_COLOR(color), $
             PSYM=2, $
             /YLOG, $
@@ -304,8 +337,8 @@ PRO plotAsciiData, event_load=event_load, main_event=main_event
           plot, Xarray, $
             Yarray, $
             color=FSC_COLOR(color), $
-            PSYM=2 
-;            /YLOG, $
+            PSYM=2
+        ;            /YLOG, $
         ENDELSE
       ENDELSE
       errplot, Xarray,Yarray-SigmaYarray,Yarray+SigmaYarray,$
@@ -316,7 +349,7 @@ PRO plotAsciiData, event_load=event_load, main_event=main_event
   ENDWHILE
   
   IF (first_file_plotted_index EQ 0) THEN BEGIN
-  ERASE
+    ERASE
   ENDIF
   
   DEVICE, DECOMPOSED = 0
