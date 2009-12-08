@@ -49,3 +49,7 @@ PRO putValueInTable, Event, uname, TableArray
   WIDGET_CONTROL, id, SET_VALUE=TableArray
 END
 
+PRO putValueInTable_from_base, base, uname, TableArray
+  id = WIDGET_INFO(base,FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, id, SET_VALUE=TableArray
+END
