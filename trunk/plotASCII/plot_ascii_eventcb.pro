@@ -404,3 +404,22 @@ PRO sort_x0y0x1y1, Event
   (*global).x0y0x1y1 = x0y0x1y1
   
 END
+
+;------------------------------------------------------------------------------
+;This procedure populates the x1, x2, y1 and y2 zoom widgets
+PRO populate_tools_zoom, Event, x1=x1, y1=y1, x2=x2, y2=y2
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  id = (*global).tools_base
+  IF (WIDGET_INFO(id, /VALID_ID) EQ 0) THEN RETURN
+  
+  IF (N_ELEMENTS(x1) NE 0) THEN putValue_from_base, id, $
+    'plot_ascii_tools_x1', x1
+  IF (N_ELEMENTS(x2) NE 0) THEN putValue_from_base, id, $
+    'plot_ascii_tools_x2', x2
+  IF (N_ELEMENTS(y1) NE 0) THEN putValue_from_base, id, $
+    'plot_ascii_tools_y1', y1
+  IF (N_ELEMENTS(y2) NE 0) THEN putValue_from_base, id, $
+    'plot_ascii_tools_y2', y2
+    
+END
