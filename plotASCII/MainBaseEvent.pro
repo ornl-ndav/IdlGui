@@ -84,7 +84,10 @@ PRO MAIN_BASE_event, Event
       ENDIF
       
       IF (Event.release EQ 1) THEN BEGIN ;release left click
+        sort_x0y0x1y1, Event
         (*global).left_click = 0b
+        (*global).xyminmax = (*global).x0y0x1y1
+        PlotAsciiData, main_event = Event
       ENDIF
       
     END
