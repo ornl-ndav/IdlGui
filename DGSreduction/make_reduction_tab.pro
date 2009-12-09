@@ -68,6 +68,14 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   livefileButton = WIDGET_BUTTON(dataSourceRow, VALUE="Live NeXus", UVALUE="DGSR_LIVENEXUS", UNAME="DGSR_LIVENEXUS")
   ;checkfileButton = WIDGET_BUTTON(dataSourceRow, VALUE="Check File", UVALUE="DGSR_FINDNEXUS", SENSITIVE=0)
   
+  dataSourceHint1 = '1,4-6 will add run 1,4,5,6 together.'
+  dataSourceHint2 = '1:3 will process runs 1,2,3 separately.'
+  
+;  dataSourceStatusCol = WIDGET_BASE(dataSourcePrettyBase, /COLUMN)
+;  dataSourceStatus1 = WIDGET_LABEL(dataSourcePrettyBase, VALUE=dataSourceHint1 ,ALIGN_LEFT=1)
+;  dataSourceStatus2 = WIDGET_LABEL(dataSourcePrettyBase, VALUE=dataSourceHint2, ALIGN_LEFT=1)
+  
+  
   detectorBankBase = WIDGET_BASE(RunDetectorRow)
   detectorBankLabel = WIDGET_LABEL(detectorBankBase, VALUE=' Detector Banks ', XOFFSET=5)
   detectorBankLabelGeometry = WIDGET_INFO(detectorBankLabel, /GEOMETRY)
@@ -83,8 +91,6 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   ubankID = CW_FIELD(detectorBankRow, XSIZE=detectorBank_TextBoxSize, /ALL_EVENTS, TITLE=" --> ", $
     UVALUE="DGSR_DATAPATHS_UPPER", $
     UNAME="DGSR_DATAPATHS_UPPER", /INTEGER)
-    
-    
     
     
   ; == Ei / T0 ==
@@ -103,6 +109,9 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   eiID = CW_FIELD(eiRow, TITLE="", UVALUE="DGSR_EI", UNAME='DGSR_EI', /ALL_EVENTS, $
     XSIZE=EiTzero_TextBoxSize)
     
+  eiGuessButtonID = WIDGET_BUTTON(eiPrettyBase, VALUE='Estimate Ei', $
+    UVALUE='DGSR_EI_GUESS', UNAME='DGSR_EI_GUESS')
+    
   tzeroBase = WIDGET_BASE(EiTzeroBase)
   tzeroLabel = WIDGET_LABEL(tzeroBase, Value=' T0 (usec) ', XOFFSET=5)
   tzeroLabelGeomtry = WIDGET_INFO(tzeroLabel, /GEOMETRY)
@@ -113,7 +122,9 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   tzeroID = CW_FIELD(tzeroRow, TITLE="", UVALUE="DGSR_TZERO", UNAME='DGSR_TZERO', /ALL_EVENTS, $
     XSIZE=EiTzero_TextBoxSize)
     
-    
+  tzeroGuessButtonID = WIDGET_BUTTON(tzeroPrettyBase, VALUE='Estimate T0', $
+    UVALUE='DGSR_TZERO_GUESS', UNAME='DGSR_TZERO_GUESS')
+ 
     
     
   ; == ENERGY TRANSFER RANGE ==
@@ -169,6 +180,28 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   tofcutminID = CW_FIELD(tofcutRow, TITLE="Min:", UVALUE="DGSR_TOF-CUT-MIN", UNAME="DGSR_TOF-CUT-MIN", /ALL_EVENTS, XSIZE=17)
   tofcutmaxID = CW_FIELD(tofcutRow, TITLE="Max:", UVALUE="DGSR_TOF-CUT-MAX", UNAME="DGSR_TOF-CUT-MAX", /ALL_EVENTS, XSIZE=18)
   
+  ; == SAMPLE ORIENTATION ==
+  angleRow = WIDGET_BASE(reductionTabCol1Row1Col1, /ROW)
+  
+  angleBase = WIDGET_BASE(angleRow)
+  angleLabel = WIDGET_LABEL(angleBase, VALUE=' Sample Orientation ', XOFFSET=5)
+  angleLabelGeometry = WIDGET_INFO(angleLabel, /GEOMETRY)
+  angleLabelGeometryYSize = angleLabelGeometry.ysize
+  anglePrettyBase = WIDGET_BASE(angleBase, /FRAME, /COLUMN, $
+    YOFFSET=angleLabelGeometryYSize/2, XPAD=10, YPAD=10, $
+    SCR_XSIZE=550)
+    
+  angleinputsRow = WIDGET_BASE(anglePrettyBase, /ROW)
+  seblockID = CW_FIELD(angleinputsRow, TITLE="SE Block Name:", $
+    UVALUE="DGSR_SEBLOCK", UNAME="DGSR_SEBLOCK", /ALL_EVENTS, XSIZE=30)
+  angleoffsetID = CW_FIELD(angleinputsRow, TITLE="Offset (degrees):", $
+    UVALUE="DGSR_ANGLE_OFFSET", UNAME="DGSR_ANGLE_OFFSET", /ALL_EVENTS, XSIZE=13)
+    
+  angleStatusRow = WIDGET_BASE(anglePrettyBase)
+  angleStatusID = WIDGET_LABEL(angleStatusRow, VALUE= "The value for psi = -(180-ANGLE-OFFSET) / 2", UNAME="DGSR_ANGLE_STATUS")
+  
+  ; For now - let's disable the angle input
+  WIDGET_CONTROL, angleRow, SENSITIVE=0
   
   ; == NORMALISATION OPTIONS ==
   
@@ -200,6 +233,9 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
     UNAME="DGSR_USMON", VALUE=1, /INTEGER, /ALL_EVENTS, XSIZE=5)
   ; Also set the default monitor in the ReductionCmd Class
   dgsr_cmd->SetProperty, USmonPath=1
+  
+  cwpButton = WIDGET_BUTTON(normOptionsBase, VALUE='Chopper Wandering Phase', $
+    UVALUE='DGSR_CWP', UNAME='DGSR_CWP')
   
   ; Normalisation Files
   normFilesBase = WIDGET_BASE(normOptionsBaseColumn2, /COLUMN, /ALIGN_RIGHT)
@@ -253,9 +289,7 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   normMaxID = CW_FIELD(normRangePrettyBase, /ALL_EVENTS, TITLE="Max:", UVALUE="DGSR_NORM-INT-MAX", $
     UNAME="DGSR_NORM-INT-MAX", XSIZE=10)
     
-    
-    
-    
+
   ; == ROI and MASKS ==
     
   ; Mask File
