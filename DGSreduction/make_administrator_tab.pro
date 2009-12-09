@@ -63,7 +63,8 @@ PRO make_administrator_tab, baseWidget, myCommandObj
   customSLURMQueueSelectionButtonID = WIDGET_BUTTON(customQueueButtons, VALUE='Custom', $
     UNAME='DGS_CUSTOM_SLURM', UVALUE='DGS_CUSTOM_SLURM')
 
-  queueNameID = CW_FIELD(customQueueRow, YSIZE=1, XSIZE=30, TITLE="  SLURM Queue:", UNAME="DGS_SLURM_QUEUE", UVALUE="DGS_SLURM_QUEUE", /ALL_EVENTS)
+  queueNameID = CW_FIELD(customQueueRow, YSIZE=1, XSIZE=30, TITLE="  SLURM Queue:", $
+    UNAME="DGS_SLURM_QUEUE", UVALUE="DGS_SLURM_QUEUE", /ALL_EVENTS)
 
   ; Make 'Automatic' the default 
   WIDGET_CONTROL, autoSLURMQueueSelectionButtonID, SET_BUTTON=1
