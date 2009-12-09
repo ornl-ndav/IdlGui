@@ -341,7 +341,7 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
   executeNormMenuID = WIDGET_BUTTON(actionMenuID, VALUE='Execute Vanadium Mask Generation', $
     EVENT_PRO='DGSnorm_Execute', /SEPARATOR)
   gatherNormMenuID = WIDGET_BUTTON(actionMenuID, VALUE='Gather Vanadium Mask Generation', $
-    EVENT_PRO='DGSnorm_LaunchCollector', /SEPARATOR)
+    EVENT_PRO='DGSnorm_LaunchCollector')
     
     
   ; Monitoring Menu
@@ -467,6 +467,7 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
     adminMode:0L, $ ; Flag to toggle Superuser mode.
     queue:"", $ ; Place holder for a custom queue name
     workingDir:"~", $ ; The current working directory
+    outputDir:"~/results", $ The default output base directory
     extra:ptr_new(extra) $
     }
     
