@@ -60,6 +60,12 @@ PRO DGSreduction_LaunchCollector, event, WaitForJobs=waitforjobs
   runnumber = dgsr_cmd->GetRunNumber()
   ; Number of Jobs
   dgsr_cmd->GetProperty, Jobs=jobs
+  ; Get the Ei
+  dgsr_cmd->GetProperty, Ei=ei
+  ; Get the sample rotation angle
+  dgsr_cmd->GetProperty, RotationAngle=rotationangle
+  ; Get the SE Block name of the rotation motor
+  dgsr_cmd->GetProperty, SEBlock=seblock
   
   ;Construct the jobname
   jobname = instrument + "_" + runnumber + "_collector"
@@ -114,8 +120,32 @@ PRO DGSreduction_LaunchCollector, event, WaitForJobs=waitforjobs
     spe_cmd += " add_spefiles.py --force " + instrument + " -d " + outdir + $
       " -o " + outdir + "/" + instrument + "_" + runnumber + ".spe"
       
-    spawn, spe_cmd
+    spawn, spe_cmd, dummy, job_string
     spawn, "echo " + spe_cmd + " > /tmp/" + info.username + "_spe_commands"
+          
+    job_string_array = STRSPLIT(job_string, ' ', /EXTRACT)
+    jobID = job_string_array[N_ELEMENTS(job_string_array)-1]
+    
+    ; Now let's kick off the SPE -> NXSPE converter
+    nxspe_cmd = "sbatch -p " + queue + $
+      " --output=" + logDir + "/" + instrument + "_" + runnumber + "_NXSPE_converter.log" + $
+      " --job-name=" + instrument + "_" + runnumber + "_NXSPE_converter " + $
+      " --dependency=afterok:" + jobID
+      
+    nxspe_cmd += " nxs2nxspe.py --force -i " + instrument + " -r " + runnumber + $
+      " --spe=" + outdir + "/" + instrument + "_" + runnumber + ".spe" + $
+      " --phx=" + outdir + "/" + instrument + "_" + runnumber + ".phx" + $
+      " -o " + outdir + "/" + instrument + "_" + runnumber + ".nxspe" + $
+      " -e " + ei 
+      
+      IF STRLEN(rotationangle) GE 1 THEN BEGIN
+        nxspe_cmd += " -a " + calcMslicePsi(rotationangle, seblock)
+      ENDIF
+    
+      spawn, nxspe_cmd
+      spawn, "echo " + nxspe_cmd + " > /tmp/" + info.username + "_nxspe_commands"
+    
+    
   ENDIF
   
   
