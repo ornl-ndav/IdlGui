@@ -104,6 +104,9 @@ PRO ReductionCmd::GetProperty, $
     DOS=dos, $                           ; Flag to indicate production of Phonon DOS for S(Q,w)
     DebyeWaller=debyewaller, $           ; Debye-Waller factor
     Error_DebyeWaller=error_debyewaller, $ ; Error in Debye-Waller factor
+    SEblock=seblock, $                   ; Sample Environment Block name for the sample rotation
+    RotationAngle=rotationangle, $       ; Value of the sample rotation
+    CWP=cwp, $                           ; Chopper Wandering Phase on/off
     OutputPrefix=outputprefix, $         ; Prefix for where to write the output
     Timing=timing, $                     ; Timing of code
     Jobs=jobs, $                         ; Number of Jobs to run
@@ -186,6 +189,9 @@ PRO ReductionCmd::GetProperty, $
   IF ARG_PRESENT(DOS) NE 0 THEN DOS = self.DOS
   IF ARG_PRESENT(DebyeWaller) NE 0 THEN DebyeWaller = self.DebyeWaller
   IF ARG_PRESENT(Error_DebyeWaller) NE 0 THEN Error_DebyeWaller = self.Error_DebyeWaller
+  IF ARG_PRESENT(SEblock) NE 0 THEN SEblock = self.seblock
+  IF ARG_PRESENT(RotationAngle) NE 0 THEN RotationAngle = self.rotationangle
+  IF ARG_PRESENT(CWP) NE 0 THEN CWP = self.cwp
   IF ARG_PRESENT(OutputPrefix) NE 0 THEN OutputPrefix = self.outputprefix
   IF ARG_PRESENT(Timing) NE 0 THEN Timing = self.timing
   IF ARG_PRESENT(Jobs) NE 0 THEN Jobs = self.jobs
@@ -260,6 +266,9 @@ PRO ReductionCmd::SetProperty, $
     DOS=dos, $                           ; Flag to indicate production of Phonon DOS for S(Q,w)
     DebyeWaller=debyewaller, $           ; Debye-Waller factor
     Error_DebyeWaller=error_debyewaller, $ ; Error in Debye-Waller factor
+    SEblock=seblock, $                   ; Sample Environment Block name for the sample rotation
+    RotationAngle=rotationangle, $       ; Value of the sample rotation
+    CWP=cwp, $                           ; Chopper Wandering Phase on/off
     OutputPrefix=outputprefix, $         ; Prefix for where to write the output
     Timing=timing, $                     ; Timing of code
     Jobs=jobs, $                         ; Number of Jobs to run
@@ -397,6 +406,11 @@ PRO ReductionCmd::SetProperty, $
   IF N_ELEMENTS(DOS) NE 0 THEN self.DOS = DOS
   IF N_ELEMENTS(DebyeWaller) NE 0 THEN self.DebyeWaller = DebyeWaller
   IF N_ELEMENTS(Error_DebyeWaller) NE 0 THEN self.Error_DebyeWaller = Error_DebyeWaller
+  
+  IF N_ELEMENTS(SEblock) NE 0 THEN self.seblock = SEblock
+  IF N_ELEMENTS(RotationAngle) NE 0 THEN self.rotationangle = RotationAngle
+
+  IF N_ELEMENTS(CWP) NE 0 THEN self.CWP = cwp
   
   IF N_ELEMENTS(OutputPrefix) NE 0 THEN self.outputprefix = OutputPrefix
   
@@ -754,7 +768,7 @@ function ReductionCmd::Generate
       
     IF (self.dumptof EQ 1) THEN cmd[i] += " --dump-ctof-comb"
     IF (self.dumpwave EQ 1) THEN cmd[i] += " --dump-wave-comb"
-    IF (self.dumpnorm EQ 1) THEN cmd[i] += " --dump-norm"
+    ;IF (self.dumpnorm EQ 1) THEN cmd[i] += " --dump-norm"
     IF (self.dumpet EQ 1) THEN cmd[i] += " --dump-et-comb"
     
     IF (self.dumptib EQ 1) THEN cmd[i] += " --dump-tib"
@@ -807,6 +821,11 @@ function ReductionCmd::Generate
       IF (STRLEN(self.DebyeWaller) GE 1) THEN $
         cmd[i] += " --pdos-Q --debye-waller=" + self.DebyeWaller + "," + $
         (self.Error_DebyeWaller ? self.Error_DebyeWaller : '0.0')
+    ENDIF
+    
+    ; Chopper Wandering Phase
+    IF (self.CWP EQ 1) THEN BEGIN
+      ; TODO: Implement it.
     ENDIF
     
     IF (self.qvector EQ 1) THEN cmd[i] += " --qmesh"
@@ -887,6 +906,9 @@ function ReductionCmd::Init, $
     DOS=dos, $                           ; Flag to indicate production of Phonon DOS for S(Q,w)
     DebyeWaller=debyewaller, $           ; Debye-Waller factor
     Error_DebyeWaller=error_debyewaller, $ ; Error in Debye-Waller factor
+    SEblock=seblock, $                   ; Sample Environment Block name for the sample rotation
+    RotationAngle=rotationangle, $       ; Value of the sample rotation
+    CWP=cwp, $                           ; Chopper Wandering Phase on/off
     OutputPrefix=outputprefix, $         ; Prefix for where to write the output
     Timing=timing, $                     ; Timing of code
     Jobs=jobs, $                         ; Number of Jobs
@@ -967,6 +989,9 @@ function ReductionCmd::Init, $
   IF N_ELEMENTS(DOS) EQ 0 THEN dos = 0
   IF N_ELEMENTS(DebyeWaller) EQ 0 THEN debyewaller = '0.0'
   IF N_ELEMENTS(Error_DebyeWaller) EQ 0 THEN error_debyewaller = '0.0'
+  IF N_ELEMENTS(SEblock) EQ 0 THEN seblock = ""
+  IF N_ELEMENTS(RotationAngle) EQ 0 THEN rotationangle = ""
+  IF N_ELEMENTS(CWP) EQ 0 THEN cwp = 0
   IF N_ELEMENTS(OutputPrefix) EQ 0 THEN OutputPrefix = "~/results"
   IF N_ELEMENTS(timing) EQ 0 THEN timing = 0
   IF N_ELEMENTS(jobs) EQ 0 THEN jobs = 1
@@ -1038,6 +1063,9 @@ function ReductionCmd::Init, $
   self.dos = dos
   self.debyewaller = debyewaller
   self.error_debyewaller = error_debyewaller
+  self.seblock = seblock
+  self.rotationangle = rotationangle
+  self.cwp = cwp
   self.outputprefix = OutputPrefix
   self.timing = timing
   self.jobs = jobs
@@ -1066,7 +1094,7 @@ pro ReductionCmd__Define
     facility: "", $          ; Facility name
     proposal: "", $          ; Proposal ID
     spe: 0L, $               : SPE file creation
-  configfile: "", $        ; Config (.rmd) filename
+    configfile: "", $        ; Config (.rmd) filename
     instgeometry: "", $      ; Instrument Geometry filename
     cornergeometry: "", $    ; Corner Geometry filename
     lowerbank: 0L, $         ; Lower Detector Bank
@@ -1122,7 +1150,10 @@ pro ReductionCmd__Define
     DOS: 0L, $               ; Flag to indicate production of Phonon DOS for S(Q,w)
     DebyeWaller: "", $       ; Debye-Waller factor
     Error_DebyeWaller: "", $ ; Error in Debye-Waller factor
+    seblock: "", $           ; Sample Environment Block name for the sample rotation
+    RotationAngle:"", $      ; Value of the sample rotation
     OutputPrefix: "", $      ; Prefix for where to write the output (normally ~/results/)
+    CWP: 0L, $               ; Chopper Wandering Phase on/off
     timing: 0L, $            ; Timing of code
     jobs : 0L, $             ; Number of Jobs to Run
     extra: PTR_NEW() }       ; Extra keywords
