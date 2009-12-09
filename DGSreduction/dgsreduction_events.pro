@@ -267,6 +267,35 @@ PRO dgsreduction_events, event, dgsr_cmd
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
       dgsr_cmd->SetProperty, Error_DebyeWaller=myValue
     END
+    'DGSR_EI_GUESS': BEGIN
+      ; First get the instrument name
+      dgsr_cmd->GetProperty, Instrument=instrument
+      ; And the run number string
+      dgsr_cmd->GetProperty, datarun=runnumber
+      print, runnumber
+      Ei = GetEi(instrument, GetFirstNumber(runnumber))
+      Ei_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_EI')
+      WIDGET_CONTROL, Ei_ID, SET_VALUE=Ei
+      dgsr_cmd->SetProperty, Ei=Ei
+    END
+    'DGSR_TZERO_GUESS': BEGIN
+      ; First get the instrument name
+      dgsr_cmd->GetProperty, Instrument=instrument
+      ; Get the Ei field
+      dgsr_cmd->GetProperty, Ei=Ei
+      ; And the run number string
+      dgsr_cmd->GetProperty, datarun=runnumber
+      IF (Ei EQ 0.0) OR (STRLEN(Ei) EQ 0) THEN BEGIN
+        Ei = GetEi(instrument, GetFirstNumber(runnumber))
+        Ei_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_EI')
+        WIDGET_CONTROL, Ei_ID, SET_VALUE=Ei
+        dgsr_cmd->SetProperty, Ei=Ei
+      ENDIF
+      tzero = getTzero(instrument, GetFirstNumber(runnumber), Ei)
+      Tzero_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_TZERO')
+      WIDGET_CONTROL, tzero_ID, SET_VALUE=tzero
+      dgsr_cmd->SetProperty, tzero=tzero
+    END
     ELSE: begin
       ; Do nowt
       print, '*** UVALUE: ' + myUVALUE + ' not handled! ***'
