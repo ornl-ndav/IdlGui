@@ -298,7 +298,6 @@ PRO launch_transmission_manual_mode_base, main_event
   
   ;get TOF array
   ;tof_array = getTOFarray(Event, (*global).data_nexus_file_name)
-  ;(*(*global_step1).tof_array) = tof_array
-  (*(*global_auto).tof_array) = (*(*global).tof_array)
+  (*(*global_step1).tof_array) = (*(*global).tof_array)
   
 END
