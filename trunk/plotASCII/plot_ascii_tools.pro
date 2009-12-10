@@ -54,35 +54,43 @@ PRO plot_ascii_tools_base_event, Event
     ;x1, x2, y1 and y2
     WIDGET_INFO(Event.top, FIND_BY_UNAME='plot_ascii_tools_x1'): BEGIN
       x1 = getTextFieldValue(event, 'plot_ascii_tools_x1')
-      x0y0x1y1 = (*global).x0y0x1y1
-      x0y0x1y1[0] = x1
-      (*global).x0y0x1y1 = x0y0x1y1
+      y1 = getTextFieldValue(event, 'plot_ascii_tools_y1')
+      x2 = getTextFieldValue(event, 'plot_ascii_tools_x2')
+      y2 = getTextFieldValue(event, 'plot_ascii_tools_y2')
+      (*global).x0y0x1y1 = [x1,y1,x2,y2]
       sort_x0y0x1y1, main_Event
       repopulate_plot_ascii_tools_x0y0x1y1, Event
+      plotAsciiData, main_event=main_event
     END
     WIDGET_INFO(Event.top, FIND_BY_UNAME='plot_ascii_tools_x2'): BEGIN
-      x2 = getTextFieldValue(event, 'plot_ascii_tools_x1')
-      x0y0x1y1 = (*global).x0y0x1y1
-      x0y0x1y1[2] = x2
-      (*global).x0y0x1y1 = x0y0x1y1
+      x1 = getTextFieldValue(event, 'plot_ascii_tools_x1')
+      y1 = getTextFieldValue(event, 'plot_ascii_tools_y1')
+      x2 = getTextFieldValue(event, 'plot_ascii_tools_x2')
+      y2 = getTextFieldValue(event, 'plot_ascii_tools_y2')
+      (*global).x0y0x1y1 = [x1,y1,x2,y2]
       sort_x0y0x1y1, main_Event
       repopulate_plot_ascii_tools_x0y0x1y1, Event
+      plotAsciiData, main_event=main_event
     END
     WIDGET_INFO(Event.top, FIND_BY_UNAME='plot_ascii_tools_y1'): BEGIN
-      y1 = getTextFieldValue(event, 'plot_ascii_tools_x1')
-      x0y0x1y1 = (*global).x0y0x1y1
-      x0y0x1y1[1] = y1
-      (*global).x0y0x1y1 = x0y0x1y1
+      x1 = getTextFieldValue(event, 'plot_ascii_tools_x1')
+      y1 = getTextFieldValue(event, 'plot_ascii_tools_y1')
+      x2 = getTextFieldValue(event, 'plot_ascii_tools_x2')
+      y2 = getTextFieldValue(event, 'plot_ascii_tools_y2')
+      (*global).x0y0x1y1 = [x1,y1,x2,y2]
       sort_x0y0x1y1, main_Event
       repopulate_plot_ascii_tools_x0y0x1y1, Event
+      plotAsciiData, main_event=main_event
     END
     WIDGET_INFO(Event.top, FIND_BY_UNAME='plot_ascii_tools_y2'): BEGIN
-      y2 = getTextFieldValue(event, 'plot_ascii_tools_x1')
-      x0y0x1y1 = (*global).x0y0x1y1
-      x0y0x1y1[3] = y2
-      (*global).x0y0x1y1 = x0y0x1y1
+      x1 = getTextFieldValue(event, 'plot_ascii_tools_x1')
+      y1 = getTextFieldValue(event, 'plot_ascii_tools_y1')
+      x2 = getTextFieldValue(event, 'plot_ascii_tools_x2')
+      y2 = getTextFieldValue(event, 'plot_ascii_tools_y2')
+      (*global).x0y0x1y1 = [x1,y1,x2,y2]
       sort_x0y0x1y1, main_Event
       repopulate_plot_ascii_tools_x0y0x1y1, Event
+      plotAsciiData, main_event=main_event
     END
     
     
@@ -154,6 +162,7 @@ PRO plot_ascii_tools_base_gui, wBase, main_base_geometry, lin_log_yaxis
     VALUE = '',$
     XSIZE = 8,$
     /FLOAT,$
+    /RETURN_EVENTS, $
     TITLE = 'Xmin:',$
     UNAME = 'plot_ascii_tools_x1',$
     /ROW)
@@ -161,6 +170,7 @@ PRO plot_ascii_tools_base_gui, wBase, main_base_geometry, lin_log_yaxis
     VALUE = '',$
     XSIZE = 8,$
     /FLOAT,$
+    /RETURN_EVENTS, $
     UNAME = 'plot_ascii_tools_x2',$
     TITLE = '    Xmax:',$
     /ROW)
@@ -171,6 +181,7 @@ PRO plot_ascii_tools_base_gui, wBase, main_base_geometry, lin_log_yaxis
     VALUE = '',$
     XSIZE = 8,$
     /FLOAT,$
+    /RETURN_EVENTS, $
     TITLE = 'Ymin:',$
     UNAME = 'plot_ascii_tools_y1',$
     /ROW)
@@ -178,6 +189,7 @@ PRO plot_ascii_tools_base_gui, wBase, main_base_geometry, lin_log_yaxis
     VALUE = '',$
     XSIZE = 8,$
     /FLOAT,$
+    /RETURN_EVENTS, $
     UNAME = 'plot_ascii_tools_y2',$
     TITLE = '    Ymax:',$
     /ROW)

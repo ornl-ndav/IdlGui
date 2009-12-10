@@ -469,8 +469,8 @@ PRO sort_x0y0x1y1, Event
   xmin = MIN([x0,x1],MAX=xmax)
   ymin = MIN([y0,y1],MAX=ymax)
   
-  x0y0x1y1 = [xmin, ymin, xmax, ymax]
-  (*global).x0y0x1y1 = x0y0x1y1
+  xyminmax = [xmin, ymin, xmax, ymax]
+  (*global).xyminmax = xyminmax
   
 END
 
