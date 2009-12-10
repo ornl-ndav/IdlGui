@@ -94,6 +94,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ascii_file_list: STRARR(50),$
     load_table: STRARR(2,50), $
     x0y0x1y1: FLTARR(4),$
+    xyminmax_initial_plot: FLTARR(4), $
     
     input_ascii_file: './REF_L_ascii_file.txt',$
     xaxis: '',$

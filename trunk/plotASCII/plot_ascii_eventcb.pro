@@ -41,6 +41,8 @@ PRO plot_ascii_file, event_load=event_load, main_event=main_event
     widget_control, main_event.top, get_uvalue=global
   ENDELSE
   load_ascii_file, event_load=event_load, main_event=main_event
+  ;to get initial xmin, xmax, ymin and ymax
+  get_initial_plot_range, event_load=event_load, main_event=main_event
   ;xymax = (*global).xymax
   PlotAsciiData, event_load=event_load, main_event=main_event
   
@@ -142,7 +144,6 @@ PRO load_ascii_file, event_load=event_load, main_event=main_event
     main_event=main_event)
   nbr_ascii = N_ELEMENTS(list_ascii_files)
   
-  
   pXarray = (*(*global).pXarray)
   pYarray = (*(*global).pYarray)
   pSigmaYArray = (*(*global).pSigmaYArray)
@@ -152,9 +153,9 @@ PRO load_ascii_file, event_load=event_load, main_event=main_event
   pYaxis = (*(*global).pYaxis)
   pYaxis_units = (*(*global).pYaxis_units)
   
-  xyminmax = (*global).xyminmax
-  global_xmax = xyminmax[2]
-  global_ymax = xyminmax[3]
+;  xyminmax = (*global).xyminmax
+;  global_xmax = xyminmax[2]
+;  global_ymax = xyminmax[3]
   
   index = 0
   WHILE (index LT nbr_ascii) DO BEGIN
@@ -186,11 +187,10 @@ PRO load_ascii_file, event_load=event_load, main_event=main_event
         Yarray      = FLOAT(Yarray)
         SigmaYarray = FLOAT(SigmaYarray)
         
-        local_xmax = MAX(Xarray)
-        local_ymax = MAX(Yarray)
-        
-        IF (local_xmax GT global_xmax) THEN global_xmax = local_xmax
-        IF (local_ymax GT global_ymax) THEN global_ymax = local_ymax
+;        local_xmax = MAX(Xarray)
+;        local_ymax = MAX(Yarray)
+;        IF (local_xmax GT global_xmax) THEN global_xmax = local_xmax
+;        IF (local_ymax GT global_ymax) THEN global_ymax = local_ymax
         
         *pXarray[index] = Xarray
         *pYarray[index] = Yarray
@@ -210,10 +210,10 @@ PRO load_ascii_file, event_load=event_load, main_event=main_event
     index++
   ENDWHILE
   
-  xymax = FLTARR(4)
-  xymax[2] = global_xmax
-  xymax[3] = global_ymax
-  (*global).xyminmax = xymax
+;  xymax = FLTARR(4)
+;  xymax[2] = global_xmax
+;  xymax[3] = global_ymax
+;  (*global).xyminmax = xymax
   
   (*(*global).pXarray) = pXarray
   (*(*global).pYarray) = pYarray
@@ -226,6 +226,62 @@ PRO load_ascii_file, event_load=event_load, main_event=main_event
   
   ;turn off hourglass
   WIDGET_CONTROL,HOURGLASS=0
+  
+END
+
+;==============================================================================
+;to get initial xmin, xmax, ymin and ymax
+PRO get_initial_plot_range, event_load=event_load, main_event=main_event
+
+  ;indicate initialization with hourglass icon
+  widget_control,/hourglass
+  
+  IF (N_ELEMENTS(event_load) NE 0) THEN BEGIN
+    event = event_load
+  ENDIF ELSE BEGIN
+    event = main_event
+  ENDELSE
+  WIDGET_CONTROL, event.top, GET_UVALUE=global
+  
+  IF (N_ELEMENTS(event_load) NE 0) THEN BEGIN
+    global = (*global).global
+  ENDIF
+  
+  pXarray = (*(*global).pXarray)
+  pYarray = (*(*global).pYarray)
+  pSigmaYarray = (*(*global).pSigmaYArray)
+  
+  global_xmin = 0
+  global_xmax = 0
+  global_ymin = 0
+  global_ymax = 0
+  
+  list_ascii_files = get_list_of_input_file(Event, event_load=event_load, $
+    main_event=main_event)
+  nbr_ascii = N_ELEMENTS(list_ascii_files)
+  
+  index = 0
+  WHILE (index LT nbr_ascii) DO BEGIN
+  
+    ;work on xarray
+    local_xmin = MIN(*pXarray[index], MAX=local_xmax)
+    global_xmin = (local_xmin LT global_xmin) ? local_xmin : global_xmin
+    global_xmax = (local_xmax GT global_xmax) ? local_xmax : global_xmax
+    
+    ;work on yarray
+    Yarray = *pYarray[index]
+    sigmaYarray = *pSigmaYarray[index]
+    Yarray_plus_sigma = Yarray + sigmaYarray
+    local_ymin = MIN(Yarray_plus_sigma, MAX=local_ymax)
+    global_ymin = (local_ymin LT global_ymin) ? local_ymin : global_ymin
+    global_ymax = (local_ymax GT global_ymax) ? local_ymax : global_ymax
+    
+    index++
+  ENDWHILE
+  
+  (*global).xyminmax_initial_plot = [global_xmin, global_ymin, $
+    global_xmax, global_ymax]
+    
 END
 
 ;==============================================================================
@@ -301,7 +357,8 @@ PRO plotAsciiData, event_load=event_load, main_event=main_event
       
       IF (first_file_plotted_index EQ 0) THEN BEGIN
       
-        xyminmax = (*global).xyminmax
+        ;xyminmax = (*global).xyminmax
+        xyminmax = (*global).xyminmax_initial_plot
         xmin = xyminmax[0]
         ymin = xyminmax[1]
         xmax = xyminmax[2]
@@ -314,6 +371,8 @@ PRO plotAsciiData, event_load=event_load, main_event=main_event
             YRANGE = [ymin,ymax],$
             color=FSC_COLOR(color), $
             PSYM=2, $
+            XSTYLE = 1,$
+            YSTYLE = 1,$
             XTITLE=xLabel, $
             YTITLE=yLabel
         ENDIF ELSE BEGIN
@@ -321,6 +380,8 @@ PRO plotAsciiData, event_load=event_load, main_event=main_event
             Yarray, $
             XRANGE = [xmin,xmax],$
             YRANGE = [ymin,ymax],$
+            XSTYLE = 1,$
+            YSTYLE = 1,$
             color=FSC_COLOR(color), $
             PSYM=2, $
             /YLOG, $
