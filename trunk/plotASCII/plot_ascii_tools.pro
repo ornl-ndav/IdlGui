@@ -110,7 +110,7 @@ PRO plot_ascii_tools_base_gui, wBase, main_base_geometry, lin_log_yaxis
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
     SCR_YSIZE = 350,$
-    SCR_XSIZE = 250,$
+    SCR_XSIZE = 300,$
     MAP          = 1,$
     /BASE_ALIGN_CENTER,$
     GROUP_LEADER = ourGroup)
@@ -152,14 +152,14 @@ PRO plot_ascii_tools_base_gui, wBase, main_base_geometry, lin_log_yaxis
     /ROW)
   x1 = CW_FIELD(row1,$
     VALUE = '',$
-    XSIZE = 6,$
+    XSIZE = 8,$
     /FLOAT,$
     TITLE = 'Xmin:',$
     UNAME = 'plot_ascii_tools_x1',$
     /ROW)
   x2 = CW_FIELD(row1,$
     VALUE = '',$
-    XSIZE = 6,$
+    XSIZE = 8,$
     /FLOAT,$
     UNAME = 'plot_ascii_tools_x2',$
     TITLE = '    Xmax:',$
@@ -169,14 +169,14 @@ PRO plot_ascii_tools_base_gui, wBase, main_base_geometry, lin_log_yaxis
     /ROW)
   y1 = CW_FIELD(row2,$
     VALUE = '',$
-    XSIZE = 6,$
+    XSIZE = 8,$
     /FLOAT,$
     TITLE = 'Ymin:',$
     UNAME = 'plot_ascii_tools_y1',$
     /ROW)
   y2 = CW_FIELD(row2,$
     VALUE = '',$
-    XSIZE = 6,$
+    XSIZE = 8,$
     /FLOAT,$
     UNAME = 'plot_ascii_tools_y2',$
     TITLE = '    Ymax:',$
@@ -217,5 +217,11 @@ PRO plot_ascii_tools_base, main_base=main_base, Event
   XMANAGER, "plot_ascii_tools_base", wBase1, $
     GROUP_LEADER = ourGroup, /NO_BLOCK
     
+  xyminmax = (*global).xyminmax
+  putValue_from_base, wBase1, 'plot_ascii_tools_x1' , xyminmax[0]
+  putValue_from_base, wBase1, 'plot_ascii_tools_y1' , xyminmax[1]
+  putValue_from_base, wBase1, 'plot_ascii_tools_x2' , xyminmax[2]
+  putValue_from_base, wBase1, 'plot_ascii_tools_y2' , xyminmax[3]
+  
 END
 
