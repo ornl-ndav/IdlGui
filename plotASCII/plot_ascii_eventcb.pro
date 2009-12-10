@@ -153,9 +153,9 @@ PRO load_ascii_file, event_load=event_load, main_event=main_event
   pYaxis = (*(*global).pYaxis)
   pYaxis_units = (*(*global).pYaxis_units)
   
-;  xyminmax = (*global).xyminmax
-;  global_xmax = xyminmax[2]
-;  global_ymax = xyminmax[3]
+  ;  xyminmax = (*global).xyminmax
+  ;  global_xmax = xyminmax[2]
+  ;  global_ymax = xyminmax[3]
   
   index = 0
   WHILE (index LT nbr_ascii) DO BEGIN
@@ -187,10 +187,10 @@ PRO load_ascii_file, event_load=event_load, main_event=main_event
         Yarray      = FLOAT(Yarray)
         SigmaYarray = FLOAT(SigmaYarray)
         
-;        local_xmax = MAX(Xarray)
-;        local_ymax = MAX(Yarray)
-;        IF (local_xmax GT global_xmax) THEN global_xmax = local_xmax
-;        IF (local_ymax GT global_ymax) THEN global_ymax = local_ymax
+        ;        local_xmax = MAX(Xarray)
+        ;        local_ymax = MAX(Yarray)
+        ;        IF (local_xmax GT global_xmax) THEN global_xmax = local_xmax
+        ;        IF (local_ymax GT global_ymax) THEN global_ymax = local_ymax
         
         *pXarray[index] = Xarray
         *pYarray[index] = Yarray
@@ -210,10 +210,10 @@ PRO load_ascii_file, event_load=event_load, main_event=main_event
     index++
   ENDWHILE
   
-;  xymax = FLTARR(4)
-;  xymax[2] = global_xmax
-;  xymax[3] = global_ymax
-;  (*global).xyminmax = xymax
+  ;  xymax = FLTARR(4)
+  ;  xymax[2] = global_xmax
+  ;  xymax[3] = global_ymax
+  ;  (*global).xyminmax = xymax
   
   (*(*global).pXarray) = pXarray
   (*(*global).pYarray) = pYarray
@@ -279,9 +279,18 @@ PRO get_initial_plot_range, event_load=event_load, main_event=main_event
     index++
   ENDWHILE
   
-  (*global).xyminmax_initial_plot = [global_xmin, global_ymin, $
+  (*global).xyminmax = [global_xmin, global_ymin, $
     global_xmax, global_ymax]
     
+  id = (*global).tools_base
+  IF (WIDGET_INFO(id, /VALID_ID) NE 0) THEN BEGIN
+    wBase1 = (*global).tools_base
+    putValue_from_base, wBase1, 'plot_ascii_tools_x1' , global_xmin
+    putValue_from_base, wBase1, 'plot_ascii_tools_y1' , global_ymin
+    putValue_from_base, wBase1, 'plot_ascii_tools_x2' , global_xmax
+    putValue_from_base, wBase1, 'plot_ascii_tools_y2' , global_ymax
+  ENDIF
+  
 END
 
 ;==============================================================================
@@ -357,8 +366,7 @@ PRO plotAsciiData, event_load=event_load, main_event=main_event
       
       IF (first_file_plotted_index EQ 0) THEN BEGIN
       
-        ;xyminmax = (*global).xyminmax
-        xyminmax = (*global).xyminmax_initial_plot
+        xyminmax = (*global).xyminmax
         xmin = xyminmax[0]
         ymin = xyminmax[1]
         xmax = xyminmax[2]
