@@ -4,7 +4,8 @@
 # Copy the VM programs in their final location
 
 all:
-	idl ./makefile.pro;
+	cp plotASCII.cfg .plotASCII.cfg
+	idl ./makefile.pro
 install:
 	cp plot_ascii.sav /SNS/software/idltools/sav/
 	cp plotASCII /SNS/software/idltools/
