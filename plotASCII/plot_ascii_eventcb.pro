@@ -475,11 +475,24 @@ END
 
 ;------------------------------------------------------------------------------
 ;This procedure populates the x1, x2, y1 and y2 zoom widgets
-PRO populate_tools_zoom, Event, x1=x1, y1=y1, x2=x2, y2=y2
+PRO populate_tools_zoom, Event, x1=x1, y1=y1, x2=x2, y2=y2, ALL=all
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   id = (*global).tools_base
   IF (WIDGET_INFO(id, /VALID_ID) EQ 0) THEN RETURN
+  
+  IF (N_ELEMENTS(all) NE 0) THEN BEGIN
+    xyminmax = (*global).xyminmax
+    x1 = xyminmax[0]
+    y1 = xyminmax[1]
+    x2 = xyminmax[2]
+    y2 = xyminmax[3]
+    putValue_from_base, id, 'plot_ascii_tools_x1', x1
+    putValue_from_base, id, 'plot_ascii_tools_x2', x2
+    putValue_from_base, id, 'plot_ascii_tools_y1', y1
+    putValue_from_base, id, 'plot_ascii_tools_y2', y2
+    RETURN
+  ENDIF
   
   IF (N_ELEMENTS(x1) NE 0) THEN putValue_from_base, id, $
     'plot_ascii_tools_x1', x1
@@ -489,5 +502,7 @@ PRO populate_tools_zoom, Event, x1=x1, y1=y1, x2=x2, y2=y2
     'plot_ascii_tools_y1', y1
   IF (N_ELEMENTS(y2) NE 0) THEN putValue_from_base, id, $
     'plot_ascii_tools_y2', y2
+    
+    
     
 END

@@ -86,20 +86,22 @@ PRO MAIN_BASE_event, Event
       ENDIF
       
       IF (Event.release EQ 1) THEN BEGIN ;release left click
+        print, 'here'
         sort_x0y0x1y1, Event
+        populate_tools_zoom, Event, ALL=1
         (*global).left_click = 0b
         IF (isZoomReset(Event)) THEN BEGIN
           plot_ascii_file, main_event=event
         ENDIF ELSE BEGIN
-          (*global).xyminmax = (*global).x0y0x1y1
+          (*global).xyminmax = (*global).xyminmax
           PlotAsciiData, main_event = Event
         ENDELSE
-        xyminmax = (*global).xyminmax
-        xmin = xyminmax[0]
-        ymin = xyminmax[1]
-        xmax = xyminmax[2]
-        ymax = xyminmax[3]
-        populate_tools_zoom, Event, x1=xmin, y1=ymin, x2=xmax, y2=ymax
+;        xyminmax = (*global).xyminmax
+;        xmin = xyminmax[0]
+;        ymin = xyminmax[1]
+;        xmax = xyminmax[2]
+;        ymax = xyminmax[3]
+;        populate_tools_zoom, Event, x1=xmin, y1=ymin, x2=xmax, y2=ymax
       ENDIF
       
     END
