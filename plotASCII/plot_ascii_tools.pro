@@ -93,6 +93,12 @@ PRO plot_ascii_tools_base_event, Event
       plotAsciiData, main_event=main_event
     END
     
+    ;reset button
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='plot_ascii_tools_full_zoom_reset'): BEGIN
+      get_initial_plot_range, main_event=main_event
+      PlotAsciiData, main_event=main_event
+    END
     
     ELSE:
     
@@ -118,7 +124,7 @@ PRO plot_ascii_tools_base_gui, wBase, main_base_geometry, lin_log_yaxis
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
     SCR_YSIZE = 350,$
-    SCR_XSIZE = 300,$
+    SCR_XSIZE = 325,$
     MAP          = 1,$
     /BASE_ALIGN_CENTER,$
     GROUP_LEADER = ourGroup)
@@ -152,7 +158,10 @@ PRO plot_ascii_tools_base_gui, wBase, main_base_geometry, lin_log_yaxis
   ENDELSE
   
   ;zoom_base
-  zoom_base = WIDGET_BASE(main_base,$
+  zoom_row = WIDGET_BASE(main_base,$
+    /ROW)
+    
+  zoom_base = WIDGET_BASE(zoom_row,$
     /COLUMN,$
     FRAME=1)
     
@@ -193,6 +202,13 @@ PRO plot_ascii_tools_base_gui, wBase, main_base_geometry, lin_log_yaxis
     UNAME = 'plot_ascii_tools_y2',$
     TITLE = '    Ymax:',$
     /ROW)
+    
+  ;reset button
+  reset_button = WIDGET_BUTTON(zoom_row,$
+    VALUE = 'RESET',$
+    SCR_XSIZE = 50,$
+    UNAME = 'plot_ascii_tools_full_zoom_reset')
+    
     
 END
 
