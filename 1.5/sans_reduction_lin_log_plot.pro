@@ -70,12 +70,12 @@ PRO lin_or_log_plot, Event
   xmin = getTextFieldValue(Event,'min_counts_displayed')
   xmax = getTextFieldValue(Event,'max_counts_displayed')
   IF (xmin NE 'N/A') THEN BEGIN
-    xmin = FIX(xmin)
+    xmin = LONG(xmin)
     min_array = WHERE(DataXY LT xmin, nbr_min)
     if (nbr_min GT 0) THEN BEGIN
       DataXY[min_array] = 0
     ENDIF
-    xmax = FIX(xmax)
+    xmax = LONG(xmax)
     max_array = WHERE(DAtaXY GT xmax, nbr_max)
     IF (nbr_max GT 0) THEN BEGIN
       DataXY[max_array] = 0

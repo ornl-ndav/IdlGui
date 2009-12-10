@@ -509,21 +509,21 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
   IF (DEBUGGING EQ 'yes' AND $
     ucams EQ 'j35') THEN BEGIN
     ;nexus_path           = '~/SVN/IdlGui/branches/SANSreduction/1.0'
-    nexus_path           = '~/EQSANS/2009_2_6_SCI/1/39/NeXus/'
+    nexus_path           = '~/EQSANS/2009_2_6_SCI/1/118/NeXus/'
     ;nexus_path           = '/SNS/EQSANS/2009_2_6_SCI/1/71/NeXus/'
     (*global).nexus_path = nexus_path
     (*global).selection_path = '~/results/'
     (*global).wave_dep_back_sub_path = $
       '~/SVN/IdlGui/branches/SANScalibration/1.0/'
     ;put run 45 in the Run Number Data (first tab)
-    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='run_number_cw_field')
-    WIDGET_CONTROL, id, $
-      SET_VALUE='45'
+    ;id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='run_number_cw_field')
+    ;WIDGET_CONTROL, id, $
+    ;  SET_VALUE=''
     ;populate the REDUCE tab to be able to run right away
     ;Data File text field (Load Files)
-    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='data_file_name_text_field')
-    WIDGET_CONTROL, id, $
-      SET_VALUE='/LENS/SANS/2008_01_COM/1/45/NeXus/SANS_45.nxs'
+    ;id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='data_file_name_text_field')
+    ;WIDGET_CONTROL, id, $
+    ;  SET_VALUE='/LENS/SANS/2008_01_COM/1/45/NeXus/SANS_45.nxs'
       
     IF (facility EQ 'LENS') THEN BEGIN
       ;exclusion tool
