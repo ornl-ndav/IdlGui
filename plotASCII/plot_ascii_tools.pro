@@ -51,6 +51,41 @@ PRO plot_ascii_tools_base_event, Event
       (*global).lin_log_yaxis = 'log'
     END
     
+    ;x1, x2, y1 and y2
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='plot_ascii_tools_x1'): BEGIN
+      x1 = getTextFieldValue(event, 'plot_ascii_tools_x1')
+      x0y0x1y1 = (*global).x0y0x1y1
+      x0y0x1y1[0] = x1
+      (*global).x0y0x1y1 = x0y0x1y1
+      sort_x0y0x1y1, main_Event
+      repopulate_plot_ascii_tools_x0y0x1y1, Event
+    END
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='plot_ascii_tools_x2'): BEGIN
+      x2 = getTextFieldValue(event, 'plot_ascii_tools_x1')
+      x0y0x1y1 = (*global).x0y0x1y1
+      x0y0x1y1[2] = x2
+      (*global).x0y0x1y1 = x0y0x1y1
+      sort_x0y0x1y1, main_Event
+      repopulate_plot_ascii_tools_x0y0x1y1, Event
+    END
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='plot_ascii_tools_y1'): BEGIN
+      y1 = getTextFieldValue(event, 'plot_ascii_tools_x1')
+      x0y0x1y1 = (*global).x0y0x1y1
+      x0y0x1y1[1] = y1
+      (*global).x0y0x1y1 = x0y0x1y1
+      sort_x0y0x1y1, main_Event
+      repopulate_plot_ascii_tools_x0y0x1y1, Event
+    END
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='plot_ascii_tools_y2'): BEGIN
+      y2 = getTextFieldValue(event, 'plot_ascii_tools_x1')
+      x0y0x1y1 = (*global).x0y0x1y1
+      x0y0x1y1[3] = y2
+      (*global).x0y0x1y1 = x0y0x1y1
+      sort_x0y0x1y1, main_Event
+      repopulate_plot_ascii_tools_x0y0x1y1, Event
+    END
+    
+    
     ELSE:
     
   ENDCASE
@@ -119,7 +154,7 @@ PRO plot_ascii_tools_base_gui, wBase, main_base_geometry, lin_log_yaxis
     VALUE = '',$
     XSIZE = 6,$
     /FLOAT,$
-    TITLE = 'X1:',$
+    TITLE = 'Xmin:',$
     UNAME = 'plot_ascii_tools_x1',$
     /ROW)
   x2 = CW_FIELD(row1,$
@@ -127,7 +162,7 @@ PRO plot_ascii_tools_base_gui, wBase, main_base_geometry, lin_log_yaxis
     XSIZE = 6,$
     /FLOAT,$
     UNAME = 'plot_ascii_tools_x2',$
-    TITLE = '    X2:',$
+    TITLE = '    Xmax:',$
     /ROW)
     
   row2 = WIDGET_BASE(zoom_base,$
@@ -136,7 +171,7 @@ PRO plot_ascii_tools_base_gui, wBase, main_base_geometry, lin_log_yaxis
     VALUE = '',$
     XSIZE = 6,$
     /FLOAT,$
-    TITLE = 'Y1:',$
+    TITLE = 'Ymin:',$
     UNAME = 'plot_ascii_tools_y1',$
     /ROW)
   y2 = CW_FIELD(row2,$
@@ -144,7 +179,7 @@ PRO plot_ascii_tools_base_gui, wBase, main_base_geometry, lin_log_yaxis
     XSIZE = 6,$
     /FLOAT,$
     UNAME = 'plot_ascii_tools_y2',$
-    TITLE = '    Y2:',$
+    TITLE = '    Ymax:',$
     /ROW)
     
 END
