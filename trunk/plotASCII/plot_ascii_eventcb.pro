@@ -43,7 +43,6 @@ PRO plot_ascii_file, event_load=event_load, main_event=main_event
   load_ascii_file, event_load=event_load, main_event=main_event
   ;to get initial xmin, xmax, ymin and ymax
   get_initial_plot_range, event_load=event_load, main_event=main_event
-  ;xymax = (*global).xymax
   PlotAsciiData, event_load=event_load, main_event=main_event
   
 END
