@@ -48,8 +48,6 @@ PRO MAIN_BASE_event, Event
       geometry = WIDGET_INFO(id1, /GEOMETRY)
       new_xsize = geometry.scr_xsize
       new_ysize = geometry.scr_ysize
-      ;WIDGET_CONTROL, id1, XSIZE= new_xsize-6
-      ;WIDGET_CONTROL, id1, YSIZE= new_ysize+5
       WIDGET_CONTROL, id1, XSIZE= new_xsize-6
       WIDGET_CONTROL, id1, YSIZE= new_ysize-6
       
