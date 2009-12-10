@@ -190,7 +190,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     /BUTTON_EVENTS, $
     /MOTION_EVENTS, $
     SCR_XSIZE    = MainBaseSize[2],$
-    SCR_YSIZE    = MainBaseSize[3]-35)
+    SCR_YSIZE    = MainBaseSize[3]-36)
     
   ;attach global structure with widget ID of widget main base widget ID
   WIDGET_CONTROL, MAIN_BASE, SET_UVALUE=global
