@@ -58,12 +58,6 @@ PRO launch_beam_center_base_event, Event
             pixel_data = getBeamCenterPixelData_from_device(Event.y, global)
             putTextFieldValue, Event, 'beam_center_2d_plot_pixel', $
               STRCOMPRESS(pixel_data,/REMOVE_ALL)
-          ;            plot_beam_center_background, Event
-          ;            replot_beam_center_beam_stop, Event
-          ;            replot_calculation_range_cursor, Event
-          ;            plot_calculation_range_selection, EVENT=Event
-          ;            display_counts_vs_pixel_and_tube_live, Event
-          ;            beam_center_plot, Event=event
           END
           2: BEGIN ;cursor info
             tube_data  = FIX(getBeamCenterTubeData_from_device(Event.x, $
@@ -96,7 +90,6 @@ PRO launch_beam_center_base_event, Event
               plot_beam_center_background, Event
               replot_beam_center_beam_stop, Event
               record_calculation_range_value, Event, MODE='click'
-              ;              plot_calculation_range_selection, EVENT=Event
               replot_calculation_range_cursor, Event
             END
             2: BEGIN ;cursor information
@@ -153,7 +146,6 @@ PRO launch_beam_center_base_event, Event
         ;MOVING MOUSE - MOVING MOUSE - MOVING MOUSE - MOVING MOUSE - MOVING MOUSE
         IF (event.press EQ 0 AND $ ;moving mouse with button pressed
           (*global).left_button_pressed EQ 1) THEN BEGIN
-          ;          curr_tab_selected = getCurrentTabSelect(Event,'beam_center_tab')
           CASE (curr_tab_selected) OF
             1: BEGIN ;Calculation Range
               plot_beam_center_background, Event
@@ -186,17 +178,6 @@ PRO launch_beam_center_base_event, Event
           curr_cursor = (*global).current_cursor_status
           IF (curr_cursor EQ (*global).cursor_selection) THEN BEGIN ;selection
             CASE (curr_tab_selected) OF
-              ;              2: BEGIN ;Data Range Displayed
-              ;                plot_beam_center_background, Event
-              ;                tube_data  = getBeamCenterTubeData_from_device(Event.x, global)
-              ;                putTextFieldValue, Event, 'beam_center_calculation_tube_right', $
-              ;                  STRCOMPRESS(tube_data,/REMOVE_ALL)
-              ;                pixel_data = getBeamCenterPixelData_from_device(Event.y, global)
-              ;                putTextFieldValue, Event, 'beam_center_calculation_pixel_right', $
-              ;                  STRCOMPRESS(pixel_data,/REMOVE_ALL)
-              ;                replot_beam_center_calibration_range, Event
-              ;                replot_beam_center_beam_stop, Event
-              ;              END
               0: BEGIN ;Beam Stop Region
                 plot_beam_center_background, Event
                 tube_data  = getBeamCenterTubeData_from_device(Event.x, global)
@@ -205,99 +186,16 @@ PRO launch_beam_center_base_event, Event
                 pixel_data = getBeamCenterPixelData_from_device(Event.y, global)
                 putTextFieldValue, Event, 'beam_center_beam_stop_pixel_right', $
                   STRCOMPRESS(pixel_data,/REMOVE_ALL)
-                ;                replot_beam_center_calibration_range, Event
                 replot_beam_center_beam_stop, Event
                 plot_calculation_range_selection, EVENT=Event, MODE_DISABLE=1
               END
               1: BEGIN ;Calculation Range
-              ;                plot_beam_center_background, Event
-              ;                replot_beam_center_beam_stop, Event
-              ;                record_calculation_range_value, Event
-              ;                plot_calculation_range_selection, EVENT=Event
-              ;                replot_calculation_range_cursor, Event
               END
               2:
               ELSE:
             ENDCASE
           ENDIF ELSE BEGIN ;moving selection
             CASE (curr_tab_selected) OF
-              ;              2: BEGIN ;Data Range Displayed
-              ;                plot_beam_center_background, Event
-              ;                IF (validate_or_not_calibration_range_moving(Event)) THEN BEGIN
-              ;
-              ;                  X = Event.x
-              ;                  Y = Event.y
-              ;                  tube_data  = getBeamCenterTubeData_from_device(X, global)
-              ;                  pixel_data = getBeamCenterPixelData_from_device(Y, global)
-              ;                  offset_tube = tube_data - $
-              ;                    (*global).calibration_range_moving_tube_start
-              ;                  offset_pixel = pixel_data - $
-              ;                    (*global).calibration_range_moving_pixel_start
-              ;
-              ;                  tube_min_data = FIX(getTextFieldValue(Event,$
-              ;                    'beam_center_calculation_tube_left'))
-              ;                  tube_max_data = FIX(getTextFieldValue(Event,$
-              ;                    'beam_center_calculation_tube_right'))
-              ;                  pixel_min_data = FIX(getTextFieldValue(Event,$
-              ;                    'beam_center_calculation_pixel_left'))
-              ;                  pixel_max_data = FIX(getTextFieldValue(Event,$
-              ;                    'beam_center_calculation_pixel_right'))
-              ;
-              ;                  tube_min = MIN([tube_min_data,tube_max_data],MAX=tube_max)
-              ;                  pixel_min = MIN([pixel_min_data,pixel_max_data],MAX=pixel_max)
-              ;
-              ;                  new_tube_min = tube_min_data + offset_tube
-              ;                  new_tube_max = tube_max_data + offset_tube
-              ;
-              ;                  IF (new_tube_min LT (*global).min_tube_plotted) THEN BEGIN
-              ;                    new_tube_min = (*global).min_tube_plotted
-              ;                    new_tube_max = tube_max_data
-              ;                    tube_data = (*global).calibration_range_moving_tube_start
-              ;                  ENDIF
-              ;                  IF (new_tube_max GT (*global).max_tube_plotted) THEN BEGIN
-              ;                    new_tube_max = (*global).max_tube_plotted
-              ;                    new_tube_min = tube_min_data
-              ;                    tube_data = (*global).calibration_range_moving_tube_start
-              ;                  ENDIF
-              ;
-              ;                  putTextFieldValue, Event, $
-              ;                    'beam_center_calculation_tube_left', $
-              ;                    STRCOMPRESS(new_tube_min,/REMOVE_ALL)
-              ;                  putTextFieldValue, Event, $
-              ;                    'beam_center_calculation_tube_right', $
-              ;                    STRCOMPRESS(new_tube_max,/REMOVE_ALL)
-              ;
-              ;                  (*global).calibration_range_moving_tube_start = tube_data
-              ;
-              ;                  new_pixel_min = pixel_min_data + offset_pixel
-              ;                  new_pixel_max = pixel_max_data + offset_pixel
-              ;
-              ;                  IF (new_pixel_min LT (*global).min_pixel_plotted) THEN BEGIN
-              ;                    new_pixel_min = (*global).min_pixel_plotted
-              ;                    new_pixel_max = pixel_max_data
-              ;                    pixel_data = (*global).calibration_range_moving_pixel_start
-              ;                  ENDIF
-              ;                  IF (new_pixel_max GT (*global).max_pixel_plotted) THEN BEGIN
-              ;                    new_pixel_max = (*global).max_pixel_plotted
-              ;                    new_pixel_min = pixel_min_data
-              ;                    pixel_data = (*global).calibration_range_moving_pixel_start
-              ;                  ENDIF
-              ;
-              ;                  putTextFieldValue, Event, $
-              ;                    'beam_center_calculation_pixel_left', $
-              ;                    STRCOMPRESS(new_pixel_min,/REMOVE_ALL)
-              ;                  putTextFieldValue, Event, $
-              ;                    'beam_center_calculation_pixel_right', $
-              ;                    STRCOMPRESS(new_pixel_max,/REMOVE_ALL)
-              ;
-              ;                  (*global).calibration_range_moving_pixel_start = pixel_data
-              ;
-              ;
-              ;                ENDIF
-              ;                replot_beam_center_calibration_range, Event
-              ;                replot_beam_center_beam_stop, Event
-              ;              ;                replot_calculation_range_cursor, Event
-              ;              END
               0: BEGIN ;beam stop region
                 plot_beam_center_background, Event
                 IF (validate_or_not_beam_stop_range_moving(Event)) THEN BEGIN
@@ -368,14 +266,11 @@ PRO launch_beam_center_base_event, Event
                     STRCOMPRESS(new_pixel_max,/REMOVE_ALL)
                     
                   (*global).beam_stop_range_moving_pixel_start = pixel_data
-                  
-                  
                 ENDIF
                 replot_beam_center_beam_stop, Event
                 plot_calculation_range_selection, EVENT=Event, MODE_DISABLE=1
               END
               1: BEGIN ;Calculation Range
-                print, 'in #2'
                 plot_beam_center_background, Event
                 replot_beam_center_beam_stop, Event
                 record_calculation_range_value, Event
@@ -389,45 +284,21 @@ PRO launch_beam_center_base_event, Event
           
         ENDIF
         
-        IF (event.release EQ 1 AND $ ;releasing left button
+        ;Releasing left button
+        IF (event.release EQ 1 AND $
           (*global).left_button_pressed EQ 1) THEN BEGIN
           (*global).left_button_pressed = 0
-          
-          ;    curr_tab_selected = getCurrentTabSelect(Event,'beam_center_tab')
           CASE (curr_tab_selected) OF
-            ;            2: BEGIN ;Data Range Displayed
-            ;
-            ;              tube_min = getTextFieldValue(Event,$
-            ;                'beam_center_calculation_tube_left')
-            ;              tube_max = getTextFieldValue(Event,$
-            ;                'beam_center_calculation_tube_right')
-            ;              pixel_min = getTextFieldValue(Event,$
-            ;                'beam_center_calculation_pixel_left')
-            ;              pixel_max = getTextFieldValue(Event,$
-            ;                'beam_center_calculation_pixel_right')
-            ;
-            ;              Tmin = MIN([tube_min,tube_max],MAX=tmax)
-            ;              Pmin = MIN([pixel_min,pixel_max],MAX=pmax)
-            ;
-            ;              sTmin = STRCOMPRESS(Tmin,/REMOVE_ALL)
-            ;              sTmax = STRCOMPRESS(Tmax,/REMOVE_ALL)
-            ;              sPmin = STRCOMPRESS(Pmin,/REMOVE_ALL)
-            ;              sPmax = STRCOMPRESS(Pmax,/REMOVE_ALL)
-            ;
-            ;              (*global).calculation_tubeLR_pixelLR_backup = $
-            ;                [sTmin, sTmax, sPmin, sPmax]
-            ;
-            ;            END
             0: BEGIN ;Beam Stop Region
             
-              tube_min = getTextFieldValue(Event,$
-                'beam_center_beam_stop_tube_left')
-              tube_max = getTextFieldValue(Event,$
-                'beam_center_beam_stop_tube_right')
-              pixel_min = getTextFieldValue(Event,$
-                'beam_center_beam_stop_pixel_left')
-              pixel_max = getTextFieldValue(Event,$
-                'beam_center_beam_stop_pixel_right')
+              tube_min = FIX(getTextFieldValue(Event,$
+                'beam_center_beam_stop_tube_left'))
+              tube_max = FIX(getTextFieldValue(Event,$
+                'beam_center_beam_stop_tube_right'))
+              pixel_min = FIX(getTextFieldValue(Event,$
+                'beam_center_beam_stop_pixel_left'))
+              pixel_max = FIX(getTextFieldValue(Event,$
+                'beam_center_beam_stop_pixel_right'))
                 
               Tmin = MIN([tube_min,tube_max],MAX=tmax)
               Pmin = MIN([pixel_min,pixel_max],MAX=pmax)
@@ -440,9 +311,18 @@ PRO launch_beam_center_base_event, Event
               (*global).beam_stop_tubeLR_pixelLR_backup = $
                 [sTmin, sTmax, sPmin, sPmax]
                 
+              putTextFieldValue, Event, 'beam_center_beam_stop_tube_left', $
+              sTmin
+              putTextFieldValue, Event, 'beam_center_beam_stop_tube_right', $
+              sTmax
+              putTextFieldValue, Event, 'beam_center_beam_stop_pixel_left', $
+              sPmax
+              putTextFieldValue, Event, 'beam_center_beam_stop_pixel_right', $
+              sPmin 
+                
             END
             1: BEGIN ;Calculation Range
-              tube_data = getTextFieldValue(event,'beam_center_2d_plot_tube')
+              tube_data  = getTextFieldValue(event,'beam_center_2d_plot_tube')
               pixel_data = getTextFieldValue(Event,'beam_center_2d_plot_pixel')
               sT = STRCOMPRESS(tube_data,/REMOVE_ALL)
               sP = STRCOMPRESS(pixel_data,/REMOVE_ALL)
@@ -458,7 +338,6 @@ PRO launch_beam_center_base_event, Event
           switch_cursor_shape, Event
           CASE (curr_tab_selected) OF
             1: BEGIN ;Calculation Range
-            ;         switch_calculation_range_button, Event, WAY='backward'
             END
             ELSE:
           ENDCASE
@@ -473,12 +352,10 @@ PRO launch_beam_center_base_event, Event
         
         IF (event.enter EQ 1) THEN BEGIN ;enter main plot
           ;check activated button
-          ;       curr_tab_selected = getCurrentTabSelect(Event,'beam_center_tab')
           CASE (curr_tab_selected) OF
             0: standard = (*global).current_cursor_status
             1: standard = (*global).cursor_selection
             2: BEGIN
-            ;standard = (*global).current_cursor_status
             END
             ELSE:
           ENDCASE

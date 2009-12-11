@@ -128,11 +128,11 @@ PRO populate_defaults_wigets_values, wBase, global
     
   putTextFieldValueMainBase, wBase, $
     UNAME='beam_center_beam_stop_pixel_left', $
-    STRCOMPRESS(pixel_min,/REMOVE_ALL)
+    STRCOMPRESS(pixel_max,/REMOVE_ALL)
     
   putTextFieldValueMainBase, wBase, $
     UNAME='beam_center_beam_stop_pixel_right', $
-    STRCOMPRESS(pixel_max,/REMOVE_ALL)
+    STRCOMPRESS(pixel_min,/REMOVE_ALL)
     
 ;  ;Calculation range
 ;  tube  = (*global).calculation_range_default.tube
@@ -164,10 +164,10 @@ PRO populate_defaults_wigets_values, wBase, global
     UNAME='beam_center_calculation_range_tube_right', stube_max
     
   putTextFieldValueMainBase, wBase, $
-    UNAME='beam_center_calculation_range_pixel_left', spixel_min
+    UNAME='beam_center_calculation_range_pixel_left', spixel_max
     
   putTextFieldValueMainBase, wBase, $
-    UNAME='beam_center_calculation_range_pixel_right', spixel_max
+    UNAME='beam_center_calculation_range_pixel_right', spixel_min
     
         
 END
