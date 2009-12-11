@@ -704,44 +704,68 @@ PRO launch_beam_center_base_event, Event
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='tube_algo_method_1'): BEGIN
       beam_center_calculation, Event=event
-      ;activate OK button if valid beam and pixel center have been found
-      validate_or_not_beam_center_ok_button, EVENT=event
+      plot_beam_center_background, Event
+      replot_beam_center_beam_stop, Event
+      plot_live_cursor, Event
+      plot_saved_live_cursor, Event ;display bottom counts vs tof plots
+      plot_calculation_range_selection, EVENT=Event, MODE_DISABLE=1
       beam_center_plot, Event=event
+      validate_or_not_beam_center_ok_button, EVENT=event
     END
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='tube_algo_method_2'): BEGIN
       beam_center_calculation, Event=event
-      ;activate OK button if valid beam and pixel center have been found
-      validate_or_not_beam_center_ok_button, EVENT=event
+      plot_beam_center_background, Event
+      replot_beam_center_beam_stop, Event
+      plot_live_cursor, Event
+      plot_saved_live_cursor, Event ;display bottom counts vs tof plots
+      plot_calculation_range_selection, EVENT=Event, MODE_DISABLE=1
       beam_center_plot, Event=event
+      validate_or_not_beam_center_ok_button, EVENT=event
     END
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='tube_algo_method_1_and_2'): BEGIN
       beam_center_calculation, Event=event
-      ;activate OK button if valid beam and pixel center have been found
-      validate_or_not_beam_center_ok_button, EVENT=event
+      plot_beam_center_background, Event
+      replot_beam_center_beam_stop, Event
+      plot_live_cursor, Event
+      plot_saved_live_cursor, Event ;display bottom counts vs tof plots
+      plot_calculation_range_selection, EVENT=Event, MODE_DISABLE=1
       beam_center_plot, Event=event
+      validate_or_not_beam_center_ok_button, EVENT=event
     END
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='pixel_algo_method_1'): BEGIN
       beam_center_calculation, Event=event
-      ;activate OK button if valid beam and pixel center have been found
-      validate_or_not_beam_center_ok_button, EVENT=event
+      plot_beam_center_background, Event
+      replot_beam_center_beam_stop, Event
+      plot_live_cursor, Event
+      plot_saved_live_cursor, Event ;display bottom counts vs tof plots
+      plot_calculation_range_selection, EVENT=Event, MODE_DISABLE=1
       beam_center_plot, Event=event
+      validate_or_not_beam_center_ok_button, EVENT=event
     END
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='pixel_algo_method_2'): BEGIN
       beam_center_calculation, Event=event
-      ;activate OK button if valid beam and pixel center have been found
-      validate_or_not_beam_center_ok_button, EVENT=event
+      plot_beam_center_background, Event
+      replot_beam_center_beam_stop, Event
+      plot_live_cursor, Event
+      plot_saved_live_cursor, Event ;display bottom counts vs tof plots
+      plot_calculation_range_selection, EVENT=Event, MODE_DISABLE=1
       beam_center_plot, Event=event
+      validate_or_not_beam_center_ok_button, EVENT=event
     END
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='pixel_algo_method_1_and_2'): BEGIN
       beam_center_calculation, Event=event
-      ;activate OK button if valid beam and pixel center have been found
-      validate_or_not_beam_center_ok_button, EVENT=event
+      plot_beam_center_background, Event
+      replot_beam_center_beam_stop, Event
+      plot_live_cursor, Event
+      plot_saved_live_cursor, Event ;display bottom counts vs tof plots
+      plot_calculation_range_selection, EVENT=Event, MODE_DISABLE=1
       beam_center_plot, Event=event
+      validate_or_not_beam_center_ok_button, EVENT=event
     END
     
     ;--------------------------------------------------------------------------
@@ -749,9 +773,13 @@ PRO launch_beam_center_base_event, Event
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='beam_center_run_calculation_button'): BEGIN
       beam_center_calculation, Event=event
-      ;activate OK button if valid beam and pixel center have been found
-      validate_or_not_beam_center_ok_button, EVENT=event
+      plot_beam_center_background, Event
+      replot_beam_center_beam_stop, Event
+      plot_live_cursor, Event
+      plot_saved_live_cursor, Event ;display bottom counts vs tof plots
+      plot_calculation_range_selection, EVENT=Event, MODE_DISABLE=1
       beam_center_plot, Event=event
+      validate_or_not_beam_center_ok_button, EVENT=event
     END
     
     ;Tube beam center ---------------------------------------------------------
