@@ -171,7 +171,7 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     UNAME = 'beam_center_beam_stop_tube_left',$
     /EDITABLE)
   space = WIDGET_LABEL(tab1_row1,$
-    VALUE = '     ')
+    VALUE = '       ')
   tube_right = WIDGET_LABEL(tab1_row1,$
     VALUE='Tube right: ')
   value     = WIDGET_TEXT(tab1_row1,$
@@ -183,7 +183,7 @@ PRO beam_center_base_gui, wBase, main_base_geometry
   tab1_row2 = WIDGET_BASE(tab1,$
     /ROW)
   pixel_left = WIDGET_LABEL(tab1_row2,$
-    VALUE=space_value+'Pixel left:')
+    VALUE=space_value+'Pixel top: ')
   value     = WIDGET_TEXT(tab1_row2,$
     VALUE='N/A',$
     XSIZE = 3,$
@@ -192,7 +192,7 @@ PRO beam_center_base_gui, wBase, main_base_geometry
   space = WIDGET_LABEL(tab1_row2,$
     VALUE = '     ')
   pixel_right = WIDGET_LABEL(tab1_row2,$
-    VALUE='Pixel right:')
+    VALUE='Pixel bottom: ')
   value     = WIDGET_TEXT(tab1_row2,$
     VALUE='N/A',$
     XSIZE = 3,$
@@ -259,7 +259,7 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     UNAME = 'beam_center_calculation_range_tube_left',$
     /EDITABLE)
   space = WIDGET_LABEL(tab2_row1,$
-    VALUE = '     ')
+    VALUE = '       ')
   tube_right = WIDGET_LABEL(tab2_row1,$
     VALUE='Tube right: ')
   value     = WIDGET_TEXT(tab2_row1,$
@@ -271,7 +271,7 @@ PRO beam_center_base_gui, wBase, main_base_geometry
   tab2_row2 = WIDGET_BASE(tab2,$
     /ROW)
   pixel_left = WIDGET_LABEL(tab2_row2,$
-    VALUE=space_value+'Pixel left:')
+    VALUE=space_value+'Pixel top: ')
   value     = WIDGET_TEXT(tab2_row2,$
     VALUE='N/A',$
     XSIZE = 3,$
@@ -280,7 +280,7 @@ PRO beam_center_base_gui, wBase, main_base_geometry
   space = WIDGET_LABEL(tab2_row2,$
     VALUE = '     ')
   pixel_right = WIDGET_LABEL(tab2_row2,$
-    VALUE='Pixel right:')
+    VALUE='Pixel bottom: ')
   value     = WIDGET_TEXT(tab2_row2,$
     VALUE='N/A',$
     XSIZE = 3,$
