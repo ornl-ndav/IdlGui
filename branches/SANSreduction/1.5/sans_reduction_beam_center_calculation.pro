@@ -48,10 +48,10 @@ PRO beam_center_calculation, EVENT=Event, BASE=base
       CATCH, /CANCEL
       title = 'Calculation of Beam Center ERROR !'
       text = [' Error in calculation of Pixel Beam Center.', $
-              '',$
-              'Please select a different Calculation Range',$
-              '                  or', $
-              'manually input the tube beam center value!']
+        '',$
+        'Please select a different Calculation Range',$
+        '                  or', $
+        'manually input the tube beam center value!']
       parent_id = WIDGET_INFO(Event.top, $
         FIND_BY_UNAME='beam_center_calculation_base')
       result = DIALOG_MESSAGE(text, $
@@ -71,10 +71,10 @@ PRO beam_center_calculation, EVENT=Event, BASE=base
       CATCH, /CANCEL
       title = 'Calculate of Beam Center ERROR !'
       text = [' Error in calculation of Tube Beam Center.', $
-              '',$
-              'Please select a different Calculation Range!', $
-              '                  or', $
-              'manually input the pixel beam center value!']
+        '',$
+        'Please select a different Calculation Range!', $
+        '                  or', $
+        'manually input the pixel beam center value!']
       parent_id = WIDGET_INFO(Event.top, $
         FIND_BY_UNAME='beam_center_calculation_base')
       result = DIALOG_MESSAGE(text, $
@@ -117,7 +117,7 @@ PRO beam_center_calculation, EVENT=Event, BASE=base
       ENDELSE
     ENDIF ELSE BEGIN
       ;calculate beam center pixel
-     beam_center_pixel_calculation, base=base, DATA=data
+      beam_center_pixel_calculation, base=base, DATA=data
       ;calculate beam center tube
       beam_center_tube_calculation, base=base, DATA=data
       CATCH, /CANCEL
@@ -224,26 +224,30 @@ PRO beam_center_pixel_calculation, Event=event, base=base, DATA=data
     WIDGET_CONTROL,Event.top,GET_UVALUE=global
     
     ;calculate beam center pixel starting at the bottom (pixel_min)
-    bc_up_pixel = beam_center_pixel_calculation_function(Event=event, MODE='up', $
-      DATA=data)
+    bc_up_pixel = beam_center_pixel_calculation_function(Event=event, $
+      MODE='up', DATA=data)
       
-    ;  ;calculate beam center pixel starting at the top (pixel_max)
-    bc_down_pixel = beam_center_pixel_calculation_function(Event=event, MODE='down', $
-      DATA=data)
+    ;calculate beam center pixel starting at the top (pixel_max)
+    bc_down_pixel = beam_center_pixel_calculation_function(Event=event, $
+      MODE='down', DATA=data)
       
+    algo_selected = getAlgoSelected(Event=event) ;1, 10 or 100
+    
   ENDIF ELSE BEGIN
   
     ;get global structure
     WIDGET_CONTROL,base,GET_UVALUE=global
     
     ;calculate beam center pixel starting at the bottom (pixel_min)
-    bc_up_pixel = beam_center_pixel_calculation_function(base=base, MODE='up', $
-      DATA=data)
+    bc_up_pixel = beam_center_pixel_calculation_function(base=base, $
+      MODE='up', DATA=data)
       
-    ;  ;calculate beam center pixel starting at the top (pixel_max)
-    bc_down_pixel = beam_center_pixel_calculation_function(base=base, MODE='down', $
-      DATA=data)
+    ;calculate beam center pixel starting at the top (pixel_max)
+    bc_down_pixel = beam_center_pixel_calculation_function(base=base, $
+      MODE='down', DATA=data)
       
+    algo_selected = getAlgoSelected(base=base) ;1, 10 or 100
+    
   ENDELSE
   
   ;remove -1 value from up and down arrays
@@ -251,7 +255,14 @@ PRO beam_center_pixel_calculation, Event=event, base=base, DATA=data
   bc_down_pixel_array = cleanup_bc_array(bc_down_pixel)
   
   ;calculate average value of both arrays
-  big_bc_array = [bc_up_pixel_array,bc_down_pixel_array]
+  CASE (algo_selected) OF
+    1: big_bc_array = bc_up_pixel_array
+    10: big_bc_array = bc_down_pixel_array
+    100: big_bc_array = [bc_up_pixel_array, bc_down_pixel_array]
+  ENDCASE
+  
+  ;  big_bc_array = [bc_up_pixel_array,bc_down_pixel_array]
+  ;big_bc_array = bc_down_pixel_array
   bc_pixel = MEAN(big_bc_array) + (*global).calculation_range_offset.pixel
   
   ;put value in its box

@@ -385,8 +385,7 @@ FUNCTION beam_center_pixel_calculation_function, Event=event, $
       
   ENDELSE
   
-  array_of_pixels = FLTARR(nbr_cal, nbr_tubes)
-  
+  array_of_pixels = FLTARR(nbr_cal, nbr_tubes)  
   pixel_offset = (*global).calculation_range_offset.pixel
   
   index = 0

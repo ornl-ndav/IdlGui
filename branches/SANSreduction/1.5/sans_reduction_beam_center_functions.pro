@@ -344,8 +344,49 @@ FUNCTION pixel_is_in_expected_range, BASE=base, EVENT=event, pixel
   
 END
 
+;------------------------------------------------------------------------------
+;output:
+;1 -> up only
+;10 -> down only
+;100 -> up and down
+FUNCTION getAlgoSelected, base=base, event=event
 
-
+  result = INTARR(3)
+  
+  IF (N_ELEMENTS(base) NE 0) THEN BEGIN
+  
+    id = WIDGET_INFO(base, FIND_BY_UNAME='algo_method_1')
+    algo1 = WIDGET_INFO(id, /BUTTON_SET)
+    result[0] = algo1
+    
+    id = WIDGET_INFO(base, FIND_BY_UNAME='algo_method_2')
+    algo2 = WIDGET_INFO(id, /BUTTON_SET)
+    result[1] = algo2
+    
+    id = WIDGET_INFO(base, FIND_BY_UNAME='algo_method_1_and_2')
+    algo12 = WIDGET_INFO(id, /BUTTON_SET)
+    result[2] = algo12
+    
+  ENDIF ELSE BEGIN
+  
+    id = WIDGET_INFO(Event.top, FIND_BY_UNAME='algo_method_1')
+    algo1 = WIDGET_INFO(id, /BUTTON_SET)
+    result[0] = algo1
+    
+    id = WIDGET_INFO(Event.top, FIND_BY_UNAME='algo_method_2')
+    algo2 = WIDGET_INFO(id, /BUTTON_SET)
+    result[1] = algo2
+    
+    id = WIDGET_INFO(Event.top, FIND_BY_UNAME='algo_method_1_and_2')
+    algo12 = WIDGET_INFO(id, /BUTTON_SET)
+    result[2] = algo12
+    
+  ENDELSE
+  
+  full_result = result[0] + result[1]*10 + result[2]*100
+  RETURN, full_result
+  
+END
 
 
 
