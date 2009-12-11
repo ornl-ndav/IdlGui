@@ -257,8 +257,6 @@ PRO miniMakeGuiReduceDataBase, Event, REDUCE_BASE, IndividualBaseWidth
   tof_cut = WIDGET_BASE(data_base,$
     XOFFSET = 230,$
     YOFFSET = 107,$
-    ;    SCR_XSIZE = 350,$
-    ;    FRAME = 1,$
     /ROW)
     
   label = WIDGET_LABEL(tof_cut,$
@@ -268,6 +266,7 @@ PRO miniMakeGuiReduceDataBase, Event, REDUCE_BASE, IndividualBaseWidth
   value = WIDGET_TEXT(tof_cut,$
     VALUE = '',$
     XSIZE = 6,$
+    /ALL_EVENTS,$
     UNAME = 'tof_cutting_min',$
     /EDITABLE)
   label = WIDGET_LABEL(tof_cut,$
@@ -275,6 +274,7 @@ PRO miniMakeGuiReduceDataBase, Event, REDUCE_BASE, IndividualBaseWidth
   value = WIDGET_TEXT(tof_cut,$
     VALUE = '',$
     XSIZE = 6,$
+    /ALL_EVENTS,$
     UNAME = 'tof_cutting_max',$
     /EDITABLE)
     
