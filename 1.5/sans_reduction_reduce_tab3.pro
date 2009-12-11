@@ -187,9 +187,12 @@ PRO BrowseLoadWaveFile, Event ;_reduce_tab3
   extension = 'bkg'
   filter    = '*.bkg'
   path      = (*global).wave_dep_back_sub_path
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  
   poly_file = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
     FILTER            = filter,$
     GET_PATH          = new_path,$
+    DIALOG_PARENT     = id, $
     PATH              = path,$
     TITLE             = title,$
     /MUST_EXIST)

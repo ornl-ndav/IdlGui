@@ -33,26 +33,32 @@
 ;==============================================================================
 
 PRO BrowseOutputFolder, Event
-path  = getButtonValue(Event, 'output_folder')
-title = 'Select an output folder'
-new_path = DIALOG_PICKFILE(/DIRECTORY,PATH=path,TITLE=title,/MUST_EXIST)
-IF (new_path NE '') THEN BEGIN
+  path  = getButtonValue(Event, 'output_folder')
+  title = 'Select an output folder'
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  new_path = DIALOG_PICKFILE(/DIRECTORY,$
+    PATH=path,$
+    TITLE=title,$
+    /MUST_EXIST,$
+    DIALOG_PARENT = id)
+    
+  IF (new_path NE '') THEN BEGIN
     new_path_string = STRJOIN(new_path,'/')
     putNewButtonValue, Event, 'output_folder', new_path_string
-ENDIF
+  ENDIF
 END
 
 ;------------------------------------------------------------------------------
 PRO clearOutputFileName, Event
-putTextFieldValue, Event, 'output_file_name', ''
+  putTextFieldValue, Event, 'output_file_name', ''
 END
 
 ;------------------------------------------------------------------------------
 PRO ResetOutputFileName, Event
-;get global structure
-id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
-WIDGET_CONTROL, id, GET_UVALUE=global
-FullFileName = (*global).data_nexus_file_name
-FileName = getDefaultReduceFileName(Event, FullFileName)
-putTextFieldValue, Event, 'output_file_name', FileName
+  ;get global structure
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  WIDGET_CONTROL, id, GET_UVALUE=global
+  FullFileName = (*global).data_nexus_file_name
+  FileName = getDefaultReduceFileName(Event, FullFileName)
+  putTextFieldValue, Event, 'output_file_name', FileName
 END
