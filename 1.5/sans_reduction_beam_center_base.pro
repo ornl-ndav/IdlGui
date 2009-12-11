@@ -327,6 +327,38 @@ PRO launch_beam_center_base_event, Event
               sT = STRCOMPRESS(tube_data,/REMOVE_ALL)
               sP = STRCOMPRESS(pixel_data,/REMOVE_ALL)
               (*global).twoD_plots_tubeLR_pixelLR_backup = [sT, sP]
+              
+              tube_left = getTextFieldValue(Event, $
+              'beam_center_calculation_range_tube_left')
+              tube_right = getTextFieldValue(Event, $
+              'beam_center_calculation_range_tube_right')
+              pixel_left = getTextFieldValue(Event, $
+              'beam_center_calculation_range_pixel_left')
+              pixel_right = getTextFieldValue(Event, $
+              'beam_center_calculation_range_pixel_right')
+              
+              iTubeLeft = FIX(tube_left)
+              iTubeRight = FIX(tube_right)
+              iPixelLeft = FIX(pixel_left)
+              iPixelRight = FIX(pixel_right)
+              
+              tube_min = MIN([iTubeLeft, iTubeRight], MAX=tube_max)
+              pixel_min = MIN([iPixelLeft, iPixelRight], MAX=pixel_max)
+              
+              s_tube_min = STRCOMPRESS(tube_min,/REMOVE_ALL)
+              s_tube_max = STRCOMPRESS(tube_max,/REMOVE_ALL)
+              s_pixel_min = STRCOMPRESS(pixel_min,/REMOVE_ALL)
+              s_pixel_max = STRCOMPRESS(pixel_max,/REMOVE_ALL)
+              
+              putTextFieldValue, Event, $
+              'beam_center_calculation_range_tube_left', s_tube_min
+              putTextFieldValue, Event, $
+              'beam_center_calculation_range_tube_right', s_tube_max
+              putTextFieldValue, Event, $
+              'beam_center_calculation_range_pixel_left', s_pixel_max
+              putTextFieldValue, Event, $
+              'beam_center_calculation_range_pixel_right', s_pixel_min
+               
             END
             2:
             ELSE:
