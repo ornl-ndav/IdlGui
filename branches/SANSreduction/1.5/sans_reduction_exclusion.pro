@@ -591,8 +591,11 @@ PRO SaveAsExclusionRoi, Event
   title      = (*global).selection_title
   path       = (*global).selection_path
   
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  
   RoiFileName = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
     FILTER            = filter,$
+    DIALOG_PARENT     = id, $
     GET_PATH          = new_path,$
     PATH              = path,$
     TITLE             = title,$
@@ -624,7 +627,10 @@ PRO SaveExclusionRoiFolderButton, Event
   ;retrieve infos
   path  = (*global).selection_path
   title = 'Select a Folder'
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  
   folder = DIALOG_PICKFILE(GET_PATH          = new_path,$
+    DIALOG_PARENT     = id, $
     PATH              = path,$
     TITLE             = title,$
     /DIRECTORY,$

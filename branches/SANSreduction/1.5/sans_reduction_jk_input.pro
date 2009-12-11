@@ -63,8 +63,8 @@ PRO jk_get_run_information, Event
     
   ;create default output file name
   output_file = 'EQSANS_' + run_number
-  putTextFieldValue, Event, 'reduce_jk_tab2_root_name_extension', output_file   
-    
+  putTextFieldValue, Event, 'reduce_jk_tab2_root_name_extension', output_file
+  
   cmd = 'eqsans_reduce  -r ' + run_number + ' -ri'
   WIDGET_CONTROL, /HOURGLASS
   spawn, cmd, listening
@@ -237,11 +237,12 @@ PRO jk_tab2_output_button, Event
   output_path = (*global).output_path
   title = 'Select where you want to write the output file(s):'
   widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
-  
+    
   result = DIALOG_PICKFILE(DIALOG_PARENT=widget_id,$
     /DIRECTORY,$
     /MUST_EXIST,$
     PATH=output_path,$
+    
     TITLE = title)
     
   IF (result NE '') THEN BEGIN

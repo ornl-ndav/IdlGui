@@ -822,8 +822,11 @@ PRO BrowseInputAsciiFile, Event
   text = 'Browsing for an ASCII file ... ' + PROCESSING
   IDLsendToGeek_addLogBookText, Event, text
   
+    id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  
   ascii_file_name = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
     FILTER            = filter,$
+    DIALOG_PARENT     = id, $
     GET_PATH          = new_path,$
     PATH              = path,$
     TITLE             = title,$

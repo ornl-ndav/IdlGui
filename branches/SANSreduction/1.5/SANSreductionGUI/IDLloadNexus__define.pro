@@ -60,8 +60,10 @@ FUNCTION BrowseRunNumber, Event, $
                           GET_PATH = new_path,$
                           path
 
+id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
 full_file_name = DIALOG_PICKFILE(DEFAULT_EXTENSION = default_extension,$
                                  FILTER            = filter,$
+                                 DIALOG_PARENT     = id,$
                                  TITLE             = title,$
                                  PATH              = path,$
                                  GET_PATH          = new_path,$

@@ -122,11 +122,13 @@ PRO browse_selection_file, Event
   filter     = (*global).selection_filter
   title      = (*global).selection_title
   path       = (*global).selection_path
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
   
   IDLsendToGeek_addLogBookText, Event, '> Browsing a ROI file:'
   
   RoiFileName = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
     FILTER            = filter,$
+    DIALOG_PARENT     = id, $
     GET_PATH          = new_path,$
     PATH              = path,$
     TITLE             = title,$
