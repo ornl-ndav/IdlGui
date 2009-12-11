@@ -205,6 +205,13 @@ PRO UpdateQ, Event, Qmin, Qmax, Qwidth, Qtype
   SetCWBgroup, Event, 'q_scale_b_group', group_value
 END
 
+;WORK on TOF cutting ----------------------------------------------------------
+PRO UpdateTOFcutting, Event, TOFmin, TOFmax
+putTextFieldValue, Event, ??????????????????
+end
+
+
+
 ;WORK ON EMPTY CELL FILE ======================================================
 FUNCTION UpdateEmptyCellRunNumber, Event, RunNumber
   no_error = 0
@@ -540,6 +547,20 @@ FUNCTION IDLupdateGui::init, structure
   ENDELSE
   ;replot Data (main and selections)
   REFreduction_DataBackgroundPeakSelection, Event, ''
+  
+  ;TOF cutting
+  text = '--> Load TOF cutting min and max ............................... ' $
+    + PROCESSING
+  putLogBookMessage, Event, text, APPEND=1
+  UpdateTOFcutting, Event, $
+    structure.TOFcuttingMin, $
+    structure.TOFcuttingMax
+  AppendReplaceLogBookMessage, Event, OK, PROCESSING
+  
+  
+  
+  
+  
   
   ;Work on Normalization data files
   IF (structure.MainNormRunNumber NE '') THEN BEGIN
