@@ -312,13 +312,13 @@ PRO launch_beam_center_base_event, Event
                 [sTmin, sTmax, sPmin, sPmax]
                 
               putTextFieldValue, Event, 'beam_center_beam_stop_tube_left', $
-              sTmin
+                sTmin
               putTextFieldValue, Event, 'beam_center_beam_stop_tube_right', $
-              sTmax
+                sTmax
               putTextFieldValue, Event, 'beam_center_beam_stop_pixel_left', $
-              sPmax
+                sPmax
               putTextFieldValue, Event, 'beam_center_beam_stop_pixel_right', $
-              sPmin 
+                sPmin
                 
             END
             1: BEGIN ;Calculation Range
@@ -329,14 +329,14 @@ PRO launch_beam_center_base_event, Event
               (*global).twoD_plots_tubeLR_pixelLR_backup = [sT, sP]
               
               tube_left = getTextFieldValue(Event, $
-              'beam_center_calculation_range_tube_left')
+                'beam_center_calculation_range_tube_left')
               tube_right = getTextFieldValue(Event, $
-              'beam_center_calculation_range_tube_right')
+                'beam_center_calculation_range_tube_right')
               pixel_left = getTextFieldValue(Event, $
-              'beam_center_calculation_range_pixel_left')
+                'beam_center_calculation_range_pixel_left')
               pixel_right = getTextFieldValue(Event, $
-              'beam_center_calculation_range_pixel_right')
-              
+                'beam_center_calculation_range_pixel_right')
+                
               iTubeLeft = FIX(tube_left)
               iTubeRight = FIX(tube_right)
               iPixelLeft = FIX(pixel_left)
@@ -351,14 +351,14 @@ PRO launch_beam_center_base_event, Event
               s_pixel_max = STRCOMPRESS(pixel_max,/REMOVE_ALL)
               
               putTextFieldValue, Event, $
-              'beam_center_calculation_range_tube_left', s_tube_min
+                'beam_center_calculation_range_tube_left', s_tube_min
               putTextFieldValue, Event, $
-              'beam_center_calculation_range_tube_right', s_tube_max
+                'beam_center_calculation_range_tube_right', s_tube_max
               putTextFieldValue, Event, $
-              'beam_center_calculation_range_pixel_left', s_pixel_max
+                'beam_center_calculation_range_pixel_left', s_pixel_max
               putTextFieldValue, Event, $
-              'beam_center_calculation_range_pixel_right', s_pixel_min
-               
+                'beam_center_calculation_range_pixel_right', s_pixel_min
+                
             END
             2:
             ELSE:
@@ -697,6 +697,51 @@ PRO launch_beam_center_base_event, Event
       ;          display_beam_center_tab2_buttons, Event
       ;        ENDIF
       ENDIF
+    END
+    
+    ;'?' tab ==================================================================
+    ;algorithm buttons
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='tube_algo_method_1'): BEGIN
+      beam_center_calculation, Event=event
+      ;activate OK button if valid beam and pixel center have been found
+      validate_or_not_beam_center_ok_button, EVENT=event
+      beam_center_plot, Event=event
+    END
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='tube_algo_method_2'): BEGIN
+      beam_center_calculation, Event=event
+      ;activate OK button if valid beam and pixel center have been found
+      validate_or_not_beam_center_ok_button, EVENT=event
+      beam_center_plot, Event=event
+    END
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='tube_algo_method_1_and_2'): BEGIN
+      beam_center_calculation, Event=event
+      ;activate OK button if valid beam and pixel center have been found
+      validate_or_not_beam_center_ok_button, EVENT=event
+      beam_center_plot, Event=event
+    END
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='pixel_algo_method_1'): BEGIN
+      beam_center_calculation, Event=event
+      ;activate OK button if valid beam and pixel center have been found
+      validate_or_not_beam_center_ok_button, EVENT=event
+      beam_center_plot, Event=event
+    END
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='pixel_algo_method_2'): BEGIN
+      beam_center_calculation, Event=event
+      ;activate OK button if valid beam and pixel center have been found
+      validate_or_not_beam_center_ok_button, EVENT=event
+      beam_center_plot, Event=event
+    END
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='pixel_algo_method_1_and_2'): BEGIN
+      beam_center_calculation, Event=event
+      ;activate OK button if valid beam and pixel center have been found
+      validate_or_not_beam_center_ok_button, EVENT=event
+      beam_center_plot, Event=event
     END
     
     ;--------------------------------------------------------------------------
