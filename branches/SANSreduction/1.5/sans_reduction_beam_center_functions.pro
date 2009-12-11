@@ -349,35 +349,43 @@ END
 ;1 -> up only
 ;10 -> down only
 ;100 -> up and down
-FUNCTION getAlgoSelected, base=base, event=event
+FUNCTION getAlgoSelected, base=base, event=event, type=type
+
+  uname_list = ['algo_method_1','algo_method_2','algo_method_1_and_2']
+
+  IF (type EQ 'tube') THEN BEGIN
+  uname_list = 'tube_' + uname_list
+  ENDIF ELSE BEGIN
+  uname_list = 'pixel_' + uname_list
+  ENDELSE
 
   result = INTARR(3)
   
   IF (N_ELEMENTS(base) NE 0) THEN BEGIN
   
-    id = WIDGET_INFO(base, FIND_BY_UNAME='algo_method_1')
+    id = WIDGET_INFO(base, FIND_BY_UNAME=uname_list[0])
     algo1 = WIDGET_INFO(id, /BUTTON_SET)
     result[0] = algo1
     
-    id = WIDGET_INFO(base, FIND_BY_UNAME='algo_method_2')
+    id = WIDGET_INFO(base, FIND_BY_UNAME=uname_list[1])
     algo2 = WIDGET_INFO(id, /BUTTON_SET)
     result[1] = algo2
     
-    id = WIDGET_INFO(base, FIND_BY_UNAME='algo_method_1_and_2')
+    id = WIDGET_INFO(base, FIND_BY_UNAME=uname_list[2])
     algo12 = WIDGET_INFO(id, /BUTTON_SET)
     result[2] = algo12
     
   ENDIF ELSE BEGIN
   
-    id = WIDGET_INFO(Event.top, FIND_BY_UNAME='algo_method_1')
+    id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname_list[0])
     algo1 = WIDGET_INFO(id, /BUTTON_SET)
     result[0] = algo1
     
-    id = WIDGET_INFO(Event.top, FIND_BY_UNAME='algo_method_2')
+    id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname_list[1])
     algo2 = WIDGET_INFO(id, /BUTTON_SET)
     result[1] = algo2
     
-    id = WIDGET_INFO(Event.top, FIND_BY_UNAME='algo_method_1_and_2')
+    id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname_list[2])
     algo12 = WIDGET_INFO(id, /BUTTON_SET)
     result[2] = algo12
     

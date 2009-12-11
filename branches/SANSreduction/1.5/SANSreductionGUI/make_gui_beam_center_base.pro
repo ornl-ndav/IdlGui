@@ -492,33 +492,56 @@ PRO beam_center_base_gui, wBase, main_base_geometry
   algo_row1 = WIDGET_BASE(algo_base,$
   /ROW)
   label = WIDGET_LABEL(algo_row1,$
-  VALUE = 'Beam Center Algorithm;')
-  row = WIDGET_BASE(algo_row1,$
+  VALUE = 'BC Algorithm:')
+  
+  col = WIDGET_BASE(algo_row1,$
+  /COLUMN)
+  row1 = WIDGET_BASE(col,$
+  /ROW)
+  label = WIDGET_LABEL(row1,$
+  VALUE = 'Tube: ')
+  row = WIDGET_BASE(row1,$
   /ROW,$
   /EXCLUSIVE)
   algo1 = WIDGET_BUTTON(row,$
   VALUE = '#1',$
-  UNAME = 'algo_method_1')
+  UNAME = 'tube_algo_method_1')
   algo2 = WIDGET_BUTTON(row,$
   VALUE = '#2',$
-  UNAME = 'algo_method_2')
+  UNAME = 'tube_algo_method_2')
   algo12 = WIDGET_BUTTON(row,$
   VALUE = '#1 and #2',$
-  UNAME = 'algo_method_1_and_2')
+  UNAME = 'tube_algo_method_1_and_2')
+  WIDGET_CONTROL,algo12, /SET_BUTTON 
+
+  row2 = WIDGET_BASE(col,$
+  /ROW)
+  label = WIDGET_LABEL(row2,$
+  VALUE = 'Pixel:')
+  row = WIDGET_BASE(row2,$
+  /ROW,$
+  /EXCLUSIVE)
+  algo1 = WIDGET_BUTTON(row,$
+  VALUE = '#1',$
+  UNAME = 'pixel_algo_method_1')
+  algo2 = WIDGET_BUTTON(row,$
+  VALUE = '#2',$
+  UNAME = 'pixel_algo_method_2')
+  algo12 = WIDGET_BUTTON(row,$
+  VALUE = '#1 and #2',$
+  UNAME = 'pixel_algo_method_1_and_2')
   WIDGET_CONTROL,algo2, /SET_BUTTON 
+
   
   help = WIDGET_LABEL(algo_base,$
   /ALIGN_LEFT,$
-  VALUE = '#1: Calculate Beam Center using left side of beam stop')
+  VALUE = '#1: Calculate BC using left side of beam stop.')
   help = WIDGET_LABEL(algo_base,$
   /ALIGN_LEFT,$
-  VALUE = '#2: Calculate Beam Center using right side of beam stop')
+  VALUE = '#2: Calculate BC using right side of beam stop.')
   help = WIDGET_LABEL(algo_base,$
   /ALIGN_LEFT,$
-  VALUE = "#1 & #2: Calculate Beam Center using left and right side")
-  help = WIDGET_LABEL(algo_base,$
-  /ALIGN_LEFT,$
-  VALUE = "         of beam stop")
+  VALUE = "#1 & #2: Calculate BC using both sides of beam stop.      ")
 
   ;row2 ......................................................
   row2 = WIDGET_BASE(big_base,$
