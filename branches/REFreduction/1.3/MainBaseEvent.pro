@@ -1894,6 +1894,8 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='detector_error_text_field'):
     WIDGET_INFO(wWidget, FIND_BY_UNAME='detector_units_b_group'):
     WIDGET_INFO(wWidget, FIND_BY_UNAME='q_min_text_field'):
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tof_cutting_min'): 
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tof_cutting_max'):
     WIDGET_INFO(wWidget, FIND_BY_UNAME='q_max_text_field'):
     WIDGET_INFO(wWidget, FIND_BY_UNAME='q_width_text_field'):
     WIDGET_INFO(wWidget, FIND_BY_UNAME='q_scale_b_group'):

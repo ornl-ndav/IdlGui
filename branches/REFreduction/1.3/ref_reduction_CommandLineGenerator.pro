@@ -231,6 +231,16 @@ ENDIF ELSE BEGIN
   MapBase, Event, 'reduce_plot2_base', 1
 END
 
+;tof cutting
+tof_min = STRCOMPRESS(getTextFieldValue(Event,'tof_cutting_min'),/REMOVE_ALL)
+IF (tof_min NE '') THEN BEGIN
+  cmd += ' --tof-cut-min=' + tof_min
+ENDIF
+tof_max = STRCOMPRESS(getTextFieldValue(Event,'tof_cutting_max'),/REMOVE_ALL)
+IF (tof_max NE '') THEN BEGIN
+  cmd += ' --tof-cut-max=' + tof_max
+ENDIF
+
 ;*****NORMALIZATION************************************************************
 ;check if user wants to use normalization or not
 if (isReductionWithNormalization(Event)) then begin
