@@ -431,6 +431,7 @@ PRO launch_beam_center_base_event, Event
         CATCH,/CANCEL
         IF (event.press EQ 1) THEN BEGIN ;pressed button
           display_beam_stop_images, Event=event, mode='button1_on'
+          (*global).selection_tool_button = 'button1_on'
           show_beam_stop_tab, Event, tab='button1'
         ENDIF
       ENDIF ELSE BEGIN ;endif of catch statement
@@ -474,6 +475,7 @@ PRO launch_beam_center_base_event, Event
         CATCH,/CANCEL
         IF (event.press EQ 1) THEN BEGIN ;pressed button
           display_beam_stop_images, Event=event, mode='button2_on'
+          (*global).selection_tool_button = 'button2_on'
           show_beam_stop_tab, Event, tab='button2'
         ENDIF
       ENDIF ELSE BEGIN ;endif of catch statement
@@ -616,6 +618,7 @@ PRO launch_beam_center_base_event, Event
         CATCH,/CANCEL
         IF (event.press EQ 1) THEN BEGIN ;pressed button
           display_beam_stop_images, Event=event, mode='button3_on'
+          (*global).selection_tool_button = 'button3_on'
           show_beam_stop_tab, Event, tab='button3'
         ENDIF
       ENDIF ELSE BEGIN ;endif of catch statement
@@ -804,6 +807,7 @@ PRO launch_beam_center_base_event, Event
       plot_calculation_range_selection, EVENT=Event, MODE_DISABLE=1
       beam_center_plot, Event=event
       validate_or_not_beam_center_ok_button, EVENT=event
+      display_beam_stop_images, mode=mode, Event=event
     END
     
     ;CANCEL button ------------------------------------------------------------
@@ -856,6 +860,18 @@ PRO launch_beam_center_base_event, Event
           /CENTER, $
           DIALOG_PARENT=parent_id)
       ENDIF
+    END
+    
+    ;REFRESH button
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='beam_stop_refresh_base'): BEGIN
+      CASE ((*global).selection_tool_button) OF
+        'button1_on': button='button1'
+        'button2_on': button='button2'
+        'button3_on': button='button3'
+      ENDCASE
+      show_beam_stop_tab, Event, tab=button
+      display_beam_stop_images, event=event, $
+        mode=(*global).selection_tool_button
     END
     
     ELSE:
@@ -973,6 +989,8 @@ PRO launch_beam_center_base, main_event
     cursor_moving: 52, $
     left_button_pressed: 0,$
     
+    selection_tool_button: 'button3_on', $
+    
     moving_pixel_range: 5,$ ;user has to click within that range to move it
     moving_tube_range: 2, $
     
@@ -1043,8 +1061,9 @@ PRO launch_beam_center_base, main_event
     
   WIDGET_CONTROL, wBase1, SET_UVALUE = global_bc
   
-  display_beam_stop_images, main_base=wBase1, mode='button3_on'
-  
+  display_beam_stop_images, main_base=wBase1, $
+    mode=(*global_bc).selection_tool_button
+    
   plot_data_for_beam_center_base, $
     BASE=wBase1, $
     MAIN_GLOBAL=global, $

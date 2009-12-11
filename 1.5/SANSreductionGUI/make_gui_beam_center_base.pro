@@ -632,9 +632,16 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     UNAME = 'beam_stop_cancel_button',$
     VALUE = 'CANCEL')
     
-  space = WIDGET_LABEL(row4,$
-    VALUE = '                                                        ' + $
-    '                       ')
+  space_value = '                      '
+  space = WIDGET_LABEL(row4, VALUE = space_value)
+  
+  refresh = WIDGET_BUTTON(row4,$
+    SCR_XSIZE = 200,$
+    SCR_YSIZE = 30,$
+    VALUE = 'REFRESH DISPLAY',$
+    UNAME = 'beam_stop_refresh_base')
+    
+  space = WIDGET_LABEL(row4, VALUE = space_value)
     
   ok = WIDGET_BUTTON(row4,$
     SCR_XSIZE = 200,$
