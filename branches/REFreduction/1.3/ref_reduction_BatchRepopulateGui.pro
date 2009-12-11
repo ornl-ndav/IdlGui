@@ -176,6 +176,16 @@ PRO RepopulateGui, Event
     '..... ' + DataBackgroundFlag
   putLogBookMessage, Event, text, APPEND=1
   
+  TOFcuttingMin = ClassInstance->getTofCuttingMin()
+  text = '--> TOF cutting min ..............................................' + $
+    '..... ' + TOFcuttingMin
+  putLogBookMessage, Event, text, APPEND=1
+  
+  TOFcuttingMax = ClassInstance->getTofCuttingMax()
+  text = '--> TOF cutting max ..............................................' + $
+    '..... ' + TOFcuttingMax
+  putLogBookMessage, Event, text, APPEND=1
+  
   NormBackgroundFlag = ClassInstance->getNormBackgroundFlag()
   text = '--> With Normalization Background (NormBackgroundFlag) ? .........' + $
     '..... ' + NormBackgroundFlag
@@ -308,6 +318,8 @@ PRO RepopulateGui, Event
     EmptyCellC                : EmptyCellC,$
     EmptyCellD                : EmptyCellD,$
     EmptyCellFlag             : EmptyCellFlag,$
+    TOFcuttingMin             : TOFcuttingMin,$
+    TOFcuttingMax             : TOFcuttingMax,$
     DataBackgroundFlag        : DataBackgroundFlag,$
     NormBackgroundFlag        : NormBackgroundFlag,$
     Qmin                      : Qmin,$

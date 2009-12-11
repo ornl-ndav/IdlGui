@@ -146,6 +146,20 @@ FUNCTION getDataBackFileName, cmd
 END
 
 ;------------------------------------------------------------------------------
+FUNCTION getTOFcuttingMin, cmd
+ result = ValueBetweenArg1Arg2(cmd, '--tof-cut-min=', 1, ' ', 0)
+  IF (result EQ '') THEN RETURN, ''
+  RETURN, STRCOMPRESS(result,/REMOVE_ALL)
+END
+ 
+;------------------------------------------------------------------------------
+FUNCTION getTOFcuttingMax, cmd
+ result = ValueBetweenArg1Arg2(cmd, '--tof-cut-max=', 1, ' ', 0)
+  IF (result EQ '') THEN RETURN, ''
+  RETURN, STRCOMPRESS(result,/REMOVE_ALL)
+END
+
+;------------------------------------------------------------------------------
 FUNCTION getMainNormNexusFileName, cmd
   result  = ValueBetweenArg1Arg2(cmd, '--norm=', 1, ' ', 0)
   IF (result EQ '') THEN RETURN, ''
@@ -464,6 +478,16 @@ FUNCTION IDLparseCommandLine::getDataBackFileName
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+FUNCTION IDLparseCommandLine::getTOFcuttingMin
+  RETURN, self.TOFcuttingMin
+END
+
+;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+FUNCTION IDLparseCommandLine::getTOFcuttingMax
+  RETURN, self.TOFcuttingMax
+END
+
+;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 FUNCTION IDLparseCommandLine::getMainNormNexusFileName
   RETURN, self.MainNormNexusFileName
 END
@@ -659,6 +683,8 @@ FUNCTION IDLparseCommandLine::init, cmd
     self.DataRoiFileName        = getDataRoiFileName(cmd)
     self.DataPeakExclYArray     = getDataPeakExclYArray(cmd)
     self.DataBackFileName       = getDataBackFileName(cmd)
+    self.TOFcuttingMin          = getTOFcuttingMin(cmd)
+    self.TOFcuttingMax          = getTOFcuttingMax(cmd)
     
     ;Work on Normalization
     self.MainNormNexusFileName = getMainNormNexusFileName(cmd)
@@ -735,6 +761,9 @@ PRO IDLparseCommandLine__define
     DataRoiFileName           : '',$
     DataPeakExclYArray        : ['',''],$
     DataBackFileName          : '',$
+    
+    TOFcuttingMin             : '',$
+    TOFcuttignMax             : '',$
     
     MainNormNexusFileName     : '',$
     MainNormRunNumber         : '',$
