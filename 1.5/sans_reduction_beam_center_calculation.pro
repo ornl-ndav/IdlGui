@@ -156,15 +156,28 @@ PRO beam_center_tube_calculation, Event=event, base=base, DATA=data
     bc_down_tube_back = beam_center_tube_calculation_function (Event=event, $
       MODE='down', BANK='back', DATA=data)
       
-    ;  ;remove -1 value from up and down arrays
+    ;remove -1 value from up and down arrays
     bc_up_tube_front_array = cleanup_bc_array(bc_up_tube_front)
     bc_up_tube_back_array  = cleanup_bc_array(bc_up_tube_back)
     bc_down_tube_front_array = cleanup_bc_array(bc_down_tube_front)
     bc_down_tube_back_array  = cleanup_bc_array(bc_down_tube_back)
     
-    ;  ;calculate average value for front and back tubes
-    big_front_array = [bc_up_tube_front_array, bc_down_tube_front_array]
-    big_back_array  = [bc_up_tube_back_array, bc_down_tube_back_array]
+    algo_selected = getAlgoSelected(Event=event, type='tube') ;1, 10 or 100
+    ;calculate average value of both arrays
+    CASE (algo_selected) OF
+      1: BEGIN
+        big_front_array = bc_up_tube_front_array
+        big_back_array = bc_up_tube_back_array
+      END
+      10: BEGIN
+        big_front_array = bc_down_tube_front_array
+        big_back_array = bc_down_tube_back_array
+      END
+      100: BEGIN
+        big_front_array = [bc_up_tube_front_array, bc_down_tube_front_array]
+        big_back_array  = [bc_up_tube_back_array, bc_down_tube_back_array]
+      END
+    ENDCASE
     
     bc_tube_front = MEAN(big_front_array) + (*global).calculation_range_offset.tube
     bc_tube_back = MEAN(big_back_array) + (*global).calculation_range_offset.tube
@@ -197,10 +210,23 @@ PRO beam_center_tube_calculation, Event=event, base=base, DATA=data
     bc_down_tube_front_array = cleanup_bc_array(bc_down_tube_front)
     bc_down_tube_back_array  = cleanup_bc_array(bc_down_tube_back)
     
-    ;  ;calculate average value for front and back tubes
-    big_front_array = [bc_up_tube_front_array, bc_down_tube_front_array]
-    big_back_array  = [bc_up_tube_back_array, bc_down_tube_back_array]
-    
+    algo_selected = getAlgoSelected(base=base, type='tube') ;1, 10 or 100
+    ;calculate average value of both arrays
+    CASE (algo_selected) OF
+      1: BEGIN
+        big_front_array = bc_up_tube_front_array
+        big_back_array = bc_up_tube_back_array
+      END
+      10: BEGIN
+        big_front_array = bc_down_tube_front_array
+        big_back_array = bc_down_tube_back_array
+      END
+      100: BEGIN
+        big_front_array = [bc_up_tube_front_array, bc_down_tube_front_array]
+        big_back_array  = [bc_up_tube_back_array, bc_down_tube_back_array]
+      END
+    ENDCASE
+
     bc_tube_front = MEAN(big_front_array) + (*global).calculation_range_offset.tube
     bc_tube_back = MEAN(big_back_array) + (*global).calculation_range_offset.tube
     
@@ -231,7 +257,7 @@ PRO beam_center_pixel_calculation, Event=event, base=base, DATA=data
     bc_down_pixel = beam_center_pixel_calculation_function(Event=event, $
       MODE='down', DATA=data)
       
-    algo_selected = getAlgoSelected(Event=event) ;1, 10 or 100
+    algo_selected = getAlgoSelected(Event=event, type='pixel') ;1, 10 or 100
     
   ENDIF ELSE BEGIN
   
@@ -246,7 +272,7 @@ PRO beam_center_pixel_calculation, Event=event, base=base, DATA=data
     bc_down_pixel = beam_center_pixel_calculation_function(base=base, $
       MODE='down', DATA=data)
       
-    algo_selected = getAlgoSelected(base=base) ;1, 10 or 100
+    algo_selected = getAlgoSelected(base=base, type='pixel') ;1, 10 or 100
     
   ENDELSE
   
