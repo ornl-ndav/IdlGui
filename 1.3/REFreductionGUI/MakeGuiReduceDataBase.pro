@@ -253,6 +253,31 @@ BackgroundBGroup = CW_BGROUP(data_base,$
                              /NO_RELEASE,$
                              /EXCLUSIVE)
 
+  ;tof cut  base
+  tof_cut = WIDGET_BASE(data_base,$
+    XOFFSET = 350,$
+    YOFFSET = 120,$
+    ;    SCR_XSIZE = 350,$
+    ;    FRAME = 1,$
+    /ROW)
+    
+  label = WIDGET_LABEL(tof_cut,$
+    VALUE = 'TOF cutting (microS):')
+  label = WIDGET_LABEL(tof_cut,$
+    VALUE = ' min:')
+  value = WIDGET_TEXT(tof_cut,$
+    VALUE = '',$
+    XSIZE = 6,$
+    UNAME = 'tof_cutting_min',$
+    /EDITABLE)
+  label = WIDGET_LABEL(tof_cut,$
+    VALUE = ' max:')
+  value = WIDGET_TEXT(tof_cut,$
+    VALUE = '',$
+    XSIZE = 6,$
+    UNAME = 'tof_cutting_max',$
+    /EDITABLE)
+    
 ;------------------------------------------------------------------------------
 
 ;frame
