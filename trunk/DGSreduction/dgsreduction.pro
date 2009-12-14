@@ -85,6 +85,22 @@ PRO DGSreduction_Execute, event
     ; Set the run number in the object
     dgsr_cmd->SetProperty, DataRun=RunNumbers[i]
     
+    ; Check to see if the Chopper Wandering Phase Correction is turned on
+    dgsr_cmd->GetProperty, CWP=cwp
+    IF (cwp EQ 1) THEN BEGIN
+      ; Need to calculate the offsets for each data file.
+      
+      ; Data Runs
+      
+      
+      ; Normalisation
+      
+      ; Empty Cans
+      
+      ; Black Cans
+      
+    ENDIF 
+    
     ; Generate the array of commands to run
     commands = dgsr_cmd->generate()
     
