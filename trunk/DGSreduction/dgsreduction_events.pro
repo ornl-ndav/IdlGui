@@ -296,6 +296,10 @@ PRO dgsreduction_events, event, dgsr_cmd
       WIDGET_CONTROL, tzero_ID, SET_VALUE=tzero
       dgsr_cmd->SetProperty, tzero=tzero
     END
+    'DGSR_CWP': BEGIN
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      dgsr_cmd->SetProperty, CWP=myValue
+    END
     ELSE: begin
       ; Do nowt
       print, '*** UVALUE: ' + myUVALUE + ' not handled! ***'
