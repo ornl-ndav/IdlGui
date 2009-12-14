@@ -36,6 +36,7 @@ PRO launch_transmission_auto_mode_event, Event
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  main_global = (*global).global
   
   CASE Event.id OF
   
@@ -45,6 +46,27 @@ PRO launch_transmission_auto_mode_event, Event
       WIDGET_CONTROL, id, /DESTROY
     END
     
+    ;refresh button
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='trans_auto_refresh_button'): BEGIN
+      plot_auto_data_around_beam_stop, EVENT=event, main_global, global
+      plot_trans_auto_central_selection, Event=event
+      display_selection_info_values, Event=event, global
+      plot_trans_auto_counts_vs_x_and_y, Event=event, global
+      trans_auto_calculate_background, Event=event
+      calculate_trans_auto_transmission_intensity, Event=event
+      display_beam_center_pixel, Event=event
+      display_beam_center_pixel, Event=event
+      output_trans_file_from_base, Event=event
+      plot_transmission_file, Event=event
+    END
+    
+    ;switch to manual mode
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='trans_auto_go_to_manual_button'): BEGIN
+      switch_to_manual_mode, Event
+    END
+    
+    ;OK button
     WIDGET_INFO(Event.top, FIND_BY_UNAME='trans_auto_ok_button'): BEGIN
       id = WIDGET_INFO(Event.top, $
         FIND_BY_UNAME='transmission_auto_mode_base')
@@ -53,11 +75,6 @@ PRO launch_transmission_auto_mode_event, Event
       output_file_name = (*global).output_file_name
       putTextFieldValue, main_event, $
         'sample_data_transmission_file_name_text_field', output_file_name
-    END
-    
-    WIDGET_INFO(Event.top, $
-      FIND_BY_UNAME='trans_auto_go_to_manual_button'): BEGIN
-      switch_to_manual_mode, Event
     END
     
     ELSE:
@@ -82,10 +99,15 @@ PRO switch_to_manual_mode, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO plot_trans_auto_central_selection, wBase
+PRO plot_trans_auto_central_selection, wbase=wBase, Event=event
 
-  ;get global structure
-  WIDGET_CONTROL,wBase,GET_UVALUE=global
+  IF (N_ELEMENTS(wBase) NE 0) THEN BEGIN
+    WIDGET_CONTROL,wBase,GET_UVALUE=global
+    id = WIDGET_INFO(wBase,FIND_BY_UNAME='auto_transmission_draw')
+  ENDIF ELSE BEGIN
+    WIDGET_CONTROL, Event.top, GET_UVALUE=global
+    id = WIDGET_INFO(Event.top,FIND_BY_UNAME='auto_transmission_draw')
+  ENDELSE
   
   x0y0x1y1 = (*global).x0y0x1y1
   
@@ -95,8 +117,6 @@ PRO plot_trans_auto_central_selection, wBase
   y1 = x0y0x1y1[3]
   
   color = 175
-  
-  id = WIDGET_INFO(wBase,FIND_BY_UNAME='auto_transmission_draw')
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
   
@@ -123,7 +143,11 @@ PRO plot_auto_data_around_beam_stop, EVENT=event, $
   rtt_zoom_data = CONGRID(tt_zoom_data, 350, 300)
   (*(*global_step1).rtt_zoom_data) = rtt_zoom_data
   
-  id = WIDGET_INFO(wBase,FIND_BY_UNAME='auto_transmission_draw')
+  IF (N_ELEMENTS(wBase) NE 0) THEN BEGIN
+    id = WIDGET_INFO(wBase,FIND_BY_UNAME='auto_transmission_draw')
+  ENDIF ELSE BEGIN
+    id = WIDGET_INFO(Event.top,FIND_BY_UNAME='auto_transmission_draw')
+  ENDELSE
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
   
@@ -167,7 +191,7 @@ PRO transmission_auto_mode_gui, wBase, main_base_geometry, sys_color_window_bk
 END
 
 ;-----------------------------------------------------------------------------
-PRO display_selection_info_values, wBase, global_auto
+PRO display_selection_info_values, wBase=wBase, Event=event, global_auto
 
   tube_pixel_edges = (*global_auto).tube_pixel_edges
   
@@ -176,16 +200,23 @@ PRO display_selection_info_values, wBase, global_auto
   pixel1 = STRCOMPRESS(tube_pixel_edges[1],/REMOVE_ALL)
   pixel2 = STRCOMPRESS(tube_pixel_edges[3],/REMOVE_ALL)
   
-  putTextFieldValueMainBase, wBase, uname='trans_auto_x0', tube1
-  putTextFieldValueMainBase, wBase, uname='trans_auto_y0', pixel1
-  putTextFieldValueMainBase, wBase, uname='trans_auto_x1', tube2
-  putTextFieldValueMainBase, wBase, uname='trans_auto_y1', pixel2
+  IF (N_ELEMENTS(wBase) NE 0) THEN BEGIN
+    putTextFieldValueMainBase, wBase, uname='trans_auto_x0', tube1
+    putTextFieldValueMainBase, wBase, uname='trans_auto_y0', pixel1
+    putTextFieldValueMainBase, wBase, uname='trans_auto_x1', tube2
+    putTextFieldValueMainBase, wBase, uname='trans_auto_y1', pixel2
+  ENDIF ELSE BEGIN
+    putTextFieldValue, Event, 'trans_auto_x0', tube1
+    putTextFieldValue, event, 'trans_auto_y0', pixel1
+    putTextFieldValue, event, 'trans_auto_x1', tube2
+    putTextFieldValue, event, 'trans_auto_y1', pixel2
+  ENDELSE
   
 END
 
 ;------------------------------------------------------------------------------
 ;------------------------------------------------------------------------------
-PRO plot_trans_auto_counts_vs_x_and_y, wBase, global
+PRO plot_trans_auto_counts_vs_x_and_y, wBase=wbase, Event=event, global
 
   error = 0
   CATCH, error
@@ -224,7 +255,11 @@ PRO plot_trans_auto_counts_vs_x_and_y, wBase, global
   ;Counts vs tube (integrated over y)
   x_axis = INDGEN(N_ELEMENTS(counts_vs_x)) + tube_min + xoffset
   (*(*global).tube_x_axis) = x_axis
-  id = WIDGET_INFO(wBase,FIND_BY_UNAME='trans_auto_step1_counts_vs_x')
+  IF (N_ELEMENTS(wBase) NE 0) THEN BEGIN
+    id = WIDGET_INFO(wBase,FIND_BY_UNAME='trans_auto_step1_counts_vs_x')
+  ENDIF ELSE BEGIN
+    id = WIDGET_INFO(Event.top,FIND_BY_UNAME='trans_auto_step1_counts_vs_x')
+  ENDELSE
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
   plot, x_axis, counts_vs_x, XSTYLE=1, XTITLE='Tube #', YTITLE='Counts', $
@@ -235,7 +270,11 @@ PRO plot_trans_auto_counts_vs_x_and_y, wBase, global
   ;Counts vs tube (integrated over x)
   x_axis = INDGEN(N_ELEMENTS(counts_vs_y)) + pixel_min + yoffset
   (*(*global).pixel_x_axis) = x_axis
-  id = WIDGET_INFO(wBase,FIND_BY_UNAME='trans_auto_step1_counts_vs_y')
+  IF (N_ELEMENTS(wBase) NE 0) THEN BEGIN
+    id = WIDGET_INFO(wBase,FIND_BY_UNAME='trans_auto_step1_counts_vs_y')
+  ENDIF ELSE BEGIN
+    id = WIDGET_INFO(Event.top,FIND_BY_UNAME='trans_auto_step1_counts_vs_y')
+  ENDELSE
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
   plot, x_axis, counts_vs_y, XSTYLE=1, XTITLE='Pixel #', YTITLE='Counts', $
@@ -246,10 +285,13 @@ PRO plot_trans_auto_counts_vs_x_and_y, wBase, global
 END
 
 ;------------------------------------------------------------------------------
-PRO trans_auto_calculate_background, wBase
+PRO trans_auto_calculate_background, wBase=wBase, Event=event
 
-  ;get global structure
-  WIDGET_CONTROL,wBase,GET_UVALUE=global
+  IF (N_ELEMENTS(wBase) NE 0) THEN BEGIN
+    WIDGET_CONTROL,wBase,GET_UVALUE=global
+  ENDIF ELSE BEGIN
+    WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  ENDELSE
   
   counts_vs_xy = (*(*global).counts_vs_xy)  ;DBLARR(tube,pixel)
   
@@ -306,16 +348,23 @@ PRO trans_auto_calculate_background, wBase
   background = FIX(average_value)
   s_background = STRCOMPRESS(background,/REMOVE_ALL)
   
-  putTextFieldValueMainBase, wBase, UNAME='trans_auto_back_value', s_background
+  IF (N_ELEMENTS(wBase) NE 0) THEN BEGIN
+    putTextFieldValueMainBase, wBase, UNAME='trans_auto_back_value', s_background
+  ENDIF ELSE BEGIN
+    putTextFieldValue, Event, 'trans_auto_back_value', s_background
+  ENDELSE
   (*global).trans_auto_background = background
   
 END
 
 ;------------------------------------------------------------------------------
-PRO calculate_trans_auto_transmission_intensity, wBase
+PRO calculate_trans_auto_transmission_intensity, wBase=wBase, Event=event
 
-  ;get global structure
-  WIDGET_CONTROL,wBase,GET_UVALUE=global
+  IF (N_ELEMENTS(wBase) NE 0) THEN BEGIN
+    WIDGET_CONTROL,wBase,GET_UVALUE=global
+  ENDIF ELSE BEGIN
+    WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  ENDELSE
   
   background_value = (*global).trans_auto_background
   counts_vs_xy     = (*(*global).counts_vs_xy)
@@ -332,7 +381,7 @@ PRO calculate_trans_auto_transmission_intensity, wBase
   
   array = counts_vs_xy
   
-  get_transmission_auto_peak_tube_pixel_value, wBase, $
+  get_transmission_auto_peak_tube_pixel_value, wBase=wBase, $
     array, $
     background_value, $
     tube_min, $
@@ -342,20 +391,29 @@ PRO calculate_trans_auto_transmission_intensity, wBase
   array_peak = array[array_list]
   transmission_intensity = TOTAL(array_peak)
   (*global).trans_auto_transmission_intensity = transmission_intensity
-  putTextFieldValueMainBase, wBase, uname='trans_auto_trans_value', $
-    STRCOMPRESS(transmission_intensity,/REMOVE_ALL)
-    
+  IF (N_ELEMENTS(wBase) NE 0) THEN BEGIN
+    putTextFieldValueMainBase, wBase, uname='trans_auto_trans_value', $
+      STRCOMPRESS(transmission_intensity,/REMOVE_ALL)
+  ENDIF ELSE BEGIN
+    putTextFieldValue, Event.top, 'trans_auto_trans_value', $
+      STRCOMPRESS(transmission_intensity,/REMOVE_ALL)
+  ENDELSE
+  
 END
 
 ;------------------------------------------------------------------------------
-PRO get_transmission_auto_peak_tube_pixel_value, wBase, $
+PRO get_transmission_auto_peak_tube_pixel_value, wBase=wBase, $
+    Event=event, $
     array, $
     background_value, $
     tube_min_offset, $
     pixel_min_offset
     
-  ;get global structure
-  WIDGET_CONTROL,wBase,GET_UVALUE=global
+  IF (N_ELEMENTS(wBase) NE 0) THEN BEGIN
+    WIDGET_CONTROL,wBase,GET_UVALUE=global
+  ENDIF ELSE BEGIN
+    WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  ENDELSE
   
   nbr_tube = (size(array))(1)
   nbr_pixel = (size(array))(2)
@@ -382,11 +440,13 @@ PRO get_transmission_auto_peak_tube_pixel_value, wBase, $
 END
 
 ;------------------------------------------------------------------------------
-PRO create_auto_trans_array, wBase
+PRO create_auto_trans_array, wBase=wBase, Event=event
 
-  ;get global structure
-  WIDGET_CONTROL,wBase,GET_UVALUE=global
-  
+  IF (N_ELEMENTS(wBase) NE 0) THEN BEGIN
+    WIDGET_CONTROL,wBase,GET_UVALUE=global
+  ENDIF ELSE BEGIN
+    WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  ENDELSE
   main_global = (*global).global
   
   bank_tube_pixel = (*global).beam_center_bank_tube_pixel
@@ -444,10 +504,13 @@ PRO create_auto_trans_array, wBase
 END
 
 ;------------------------------------------------------------------------------
-PRO display_beam_center_pixel, wBase
+PRO display_beam_center_pixel, wBase=wBase, Event=event
 
-  ;get global structure
-  WIDGET_CONTROL,wBase, GET_UVALUE=global
+  IF (N_ELEMENTS(wBase) NE 0) THEN BEGIN
+    WIDGET_CONTROL,wBase, GET_UVALUE=global
+  ENDIF ELSE BEGIN
+    WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  ENDELSE
   
   tube = (*global).tube_beam_center
   pixel = (*global).pixel_beam_center
@@ -455,33 +518,49 @@ PRO display_beam_center_pixel, wBase
   (*global).beam_center_bank_tube_pixel = [bank, tube, pixel]
   counts = getTransAutoCounts(wBase, tube, pixel)
   
-  putTextFieldValueMainBase, wBase, UNAME='trans_auto_beam_center_tube', $
-    STRCOMPRESS(tube,/REMOVE_ALL)
-  putTextFieldValueMainBase, wBase, UNAME='trans_auto_beam_center_pixel', $
-    STRCOMPRESS(pixel,/REMOVE_ALL)
-  putTextFieldValueMainBase, wBase, UNAME='trans_auto_beam_center_counts', $
-    STRCOMPRESS(counts,/REMOVE_ALL)
-    
-  plot_pixel_auto_selected_below_cursor, wBase, tube, pixel
+  IF (N_ELEMENTS(wBase) NE 0) THEN BEGIN
+    putTextFieldValueMainBase, wBase, UNAME='trans_auto_beam_center_tube', $
+      STRCOMPRESS(tube,/REMOVE_ALL)
+    putTextFieldValueMainBase, wBase, UNAME='trans_auto_beam_center_pixel', $
+      STRCOMPRESS(pixel,/REMOVE_ALL)
+    putTextFieldValueMainBase, wBase, UNAME='trans_auto_beam_center_counts', $
+      STRCOMPRESS(counts,/REMOVE_ALL)
+  ENDIF ELSE BEGIN
+    putTextFieldValue, Event.top, 'trans_auto_beam_center_tube', $
+      STRCOMPRESS(tube,/REMOVE_ALL)
+    putTextFieldValue, Event.top, 'trans_auto_beam_center_pixel', $
+      STRCOMPRESS(pixel,/REMOVE_ALL)
+    putTextFieldValue, Event.top, 'trans_auto_beam_center_counts', $
+      STRCOMPRESS(counts,/REMOVE_ALL)
+  ENDELSE
+  
+  plot_pixel_auto_selected_below_cursor, wBase=wBase, tube, pixel
   
 END
 
 ;------------------------------------------------------------------------------
-PRO plot_pixel_auto_selected_below_cursor, wBase, tube, pixel
-
-  ;get global structure
-  WIDGET_CONTROL,wBase,GET_UVALUE=global
-  
+PRO plot_pixel_auto_selected_below_cursor, wBase=wBase, Event=event, $
+    tube, $
+    pixel
+    
   uname = 'auto_transmission_draw'
-  ;select plot area
-  id = WIDGET_INFO(wBase,find_by_uname=uname)
+  IF (N_ELEMENTS(wBase) NE 0) THEN BEGIN
+    WIDGET_CONTROL,wBase,GET_UVALUE=global
+    ;select plot area
+    id = WIDGET_INFO(wBase,find_by_uname=uname)
+  ENDIF ELSE BEGIN
+    WIDGET_CONTROL, Event.top, GET_UVALUE=global
+    ;select plot area
+    id = WIDGET_INFO(Event.top,find_by_uname=uname)
+  ENDELSE
+  
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
   
-  xmin_device = getAutoTubeDeviceFromData(wBase, tube)
-  xmax_device = getAutoTubeDeviceFromData(wBase, tube+1)
-  ymin_device = getAutoPixelDeviceFromData(wBase, pixel)
-  ymax_device = getAutoPixelDeviceFromData(wBase, pixel+1)
+  xmin_device = getAutoTubeDeviceFromData(wBase=wBase, tube)
+  xmax_device = getAutoTubeDeviceFromData(wBase=wBase, tube+1)
+  ymin_device = getAutoPixelDeviceFromData(wBase=wBase, pixel)
+  ymax_device = getAutoPixelDeviceFromData(wBase=wBase, pixel+1)
   
   color = 250
   
@@ -502,10 +581,15 @@ PRO plot_pixel_auto_selected_below_cursor, wBase, tube, pixel
 END
 
 ;------------------------------------------------------------------------------
-PRO output_trans_file_from_base, wBase
+PRO output_trans_file_from_base, wBase=wBase, Event=event
 
-  ;get global structure
-  WIDGET_CONTROL, wBase, GET_UVALUE=global
+  IF (N_ELEMENTS(wBase) NE 0) THEN BEGIN
+    WIDGET_CONTROL, wBase, GET_UVALUE=global
+    id = WIDGET_INFO(wBase, FIND_BY_UNAME='transmission_auto_mode_base')
+  ENDIF ELSE BEGIN
+    WIDGET_CONTROL, Event.top, GET_UVALUE=global
+    id = WIDGET_INFO(Event.top, FIND_BY_UNAME='transmission_auto_mode_base')
+  ENDELSE
   
   ;retrieve info about pixel selected and file name
   main_global = (*global).global
@@ -533,8 +617,6 @@ PRO output_trans_file_from_base, wBase
     ", " + pixel + "))"
   first_part[3] = '#N 3'
   first_part[4] = '#L  wavelength(Angstroms)   Ratio()   Sigma()'
-  
-  id = WIDGET_INFO(wBase, FIND_BY_UNAME='transmission_auto_mode_base')
   
   error = 0
   CATCH, error
@@ -579,10 +661,16 @@ PRO output_trans_file_from_base, wBase
 END
 
 ;------------------------------------------------------------------------------
-PRO plot_transmission_file, wBase
+PRO plot_transmission_file, wBase=wBase, Event=event
 
-  ;get global structure
-  WIDGET_CONTROL, wBase, GET_UVALUE=global
+  uname = 'trans_auto_trans_plot'
+  IF (N_ELEMENTS(wBase) NE 0) THEN BEGIN
+    WIDGET_CONTROL, wBase, GET_UVALUE=global
+    id = WIDGET_INFO(wBase,find_by_uname=uname)
+  ENDIF ELSE BEGIN
+    WIDGET_CONTROL, Event.top, GET_UVALUE=global
+    id = WIDGET_INFO(Event.top,find_by_uname=uname)
+  ENDELSE
   
   output_file_name = (*global).output_file_name
   
@@ -594,8 +682,6 @@ PRO plot_transmission_file, wBase
   ytitle = "Counts"
   title = "Preview of Transmission file " + output_file_name
   
-  uname = 'trans_auto_trans_plot'
-  id = WIDGET_INFO(wBase,find_by_uname=uname)
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
   
@@ -638,7 +724,7 @@ PRO transmission_auto_Cleanup, tlb
   PTR_FREE, (*global_auto).transmission_peak_value
   PTR_FREE, (*global_auto).transmission_peak_error_value
   PTR_FREE, (*global_auto).transmission_lambda_axis
-
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -657,8 +743,8 @@ PRO launch_transmission_auto_mode_base, main_event
   transmission_auto_mode_gui, wBase, $
     main_base_geometry, sys_color_window_bk
     
-  (*global).transmission_auto_mode_id = wBase  
-    
+  (*global).transmission_auto_mode_id = wBase
+  
   global_auto = PTR_NEW({ wbase: wbase,$
     global: global,$
     rtt_zoom_data: PTR_NEW(0L), $
@@ -763,29 +849,29 @@ PRO launch_transmission_auto_mode_base, main_event
     GROUP_LEADER = ourGroup, /NO_BLOCK, CLEANUP='transmission_auto_Cleanup'
     
   ;get TOF array
- ; tof_array = getTOFarray(Event, (*global).data_nexus_file_name)
- ; (*(*global_auto).tof_array) = tof_array = (*(*global).tof_array)
-   (*(*global_auto).tof_array) = (*(*global).tof_array)
+  ; tof_array = getTOFarray(Event, (*global).data_nexus_file_name)
+  ; (*(*global_auto).tof_array) = tof_array = (*(*global).tof_array)
+  (*(*global_auto).tof_array) = (*(*global).tof_array)
   
   plot_auto_data_around_beam_stop, main_base=wBase, global, global_auto
   
-  plot_trans_auto_central_selection, wBase
+  plot_trans_auto_central_selection, wBase=wbase
   
-  display_selection_info_values, wBase, global_auto
+  display_selection_info_values, wBase=wbase, global_auto
   
-  plot_trans_auto_counts_vs_x_and_y, wBase, global_auto
+  plot_trans_auto_counts_vs_x_and_y, wBase=wbase, global_auto
   
-  trans_auto_calculate_background, wBase
+  trans_auto_calculate_background, wBase=wBase
   
-  calculate_trans_auto_transmission_intensity, wBase
+  calculate_trans_auto_transmission_intensity, wBase=wBase
   
-  display_beam_center_pixel, wBase
+  display_beam_center_pixel, wBase=wBase
   
-  create_auto_trans_array, wBase
+  create_auto_trans_array, wBase=wBase
   
-  output_trans_file_from_base, wBase
+  output_trans_file_from_base, wBase=wBase
   
-  plot_transmission_file, wBase
+  plot_transmission_file, wBase=wBase
   
 END
 

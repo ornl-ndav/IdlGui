@@ -245,13 +245,22 @@ FUNCTION design_transmission_auto_mode, wBase
   
   cancel = WIDGET_BUTTON(button_row,$
   VALUE = 'CANCEL',$
-  UNAMe = 'trans_auto_cancel_button',$
+  UNAME = 'trans_auto_cancel_button',$
   SCR_XSIZE = 150, $
   SCR_YSIZE = 35)
   
   space = WIDGET_LABEL(button_row,$
   VALUE = '    ')
 
+  refresh = WIDGET_BUTTON(button_row,$
+  VALUE = 'REFRESH',$
+  UNAME = 'trans_auto_refresh_button',$
+  SCR_XSIZE = 150,$
+  SCR_YSIZE = 35) 
+
+  space = WIDGET_LABEL(button_row,$
+  VALUE = '    ')
+ 
   go_manual = WIDGET_BUTTON(button_row,$
   VALUE = 'Switch to Manual Mode',$
   UNAME = 'trans_auto_go_to_manual_button',$

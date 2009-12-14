@@ -433,10 +433,13 @@ FUNCTION getTransAutoCounts, wBase, tube, pixel
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getAutoTubeDeviceFromData, wBase, tube_data
+FUNCTION getAutoTubeDeviceFromData, wBase=wBase, Event=event, tube_data
 
-  ;get global structure
-  WIDGET_CONTROL,wBase,GET_UVALUE=global
+  IF (N_ELEMENTS(wBase) NE 0) THEN BEGIN
+    WIDGET_CONTROL,wBase,GET_UVALUE=global
+  ENDIF ELSE BEGIN
+    WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  ENDELSE
   
   tube_min = (*global).tube_min
   tube_max = (*global).tube_max + 1
@@ -452,10 +455,13 @@ FUNCTION getAutoTubeDeviceFromData, wBase, tube_data
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getAutoPixelDeviceFromData, wBase, pixel_data
+FUNCTION getAutoPixelDeviceFromData, wBase=wBase, Event=event, pixel_data
 
-  ;get global structure
-  WIDGET_CONTROL,wBase,GET_UVALUE=global
+  IF (N_ELEMENTS(wBase) NE 0) THEN BEGIN
+    WIDGET_CONTROL,wBase,GET_UVALUE=global
+  ENDIF ELSE BEGIN
+    WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  ENDELSE
   
   pixel_max = (*global).pixel_max + 1
   pixel_min = (*global).pixel_min
