@@ -160,6 +160,8 @@ PRO launch_transmission_manual_mode_event, Event
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='move_to_trans_manual_step2'): BEGIN
       
+      WIDGET_CONTROL, /HOURGLASS
+      
       map_base, Event, 'manual_transmission_step1', 0
       ;change title
       title = 'Transmission Calculation -> STEP 2/3: Calculate Background'
@@ -211,6 +213,8 @@ PRO launch_transmission_manual_mode_event, Event
         plot_counts_vs_pixel_step2_pixel_selection_manual_input, Event
         
       ENDELSE
+      
+      WIDGET_CONTROL, HOURGLASS=0
       
     END
     
