@@ -456,7 +456,7 @@ PRO beam_center_base_gui, wBase, main_base_geometry
   label = WIDGET_LABEL(tab4_row1,$
     VALUE = '        Number of points to use in calculation:')
   text = WIDGET_TEXT(tab4_row1,$
-    VALUE = '2',$
+    VALUE = '5',$
     XSIZE = 2,$
     UNAME = 'beam_center_nbr_points_to_use',$
     /EDITABLE,$
