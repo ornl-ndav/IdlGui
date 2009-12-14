@@ -4,19 +4,18 @@ function getTzero, instrument, runnumber, ei
   case (STRUPCASE(instrument)) of
     "ARCS": begin
       ; Calculate the Ei
-      Ei = calcTzero(ei, instrument, runnumber)
-      tzero = 0.0
+      tzero = calcTzero(ei, instrument, runnumber)
     end
     "CNCS": begin
       tzero = 0.1982*(1+Ei)^(-0.84098)
     end
     "SEQUOIA": begin
       ; Calculate the Ei
-      Ei = calcei(requested_ei, instrument, runnumber)
+      tzero = calcTzero(ei, instrument, runnumber)
     end
     else: begin
       ; If we don't know the beamline then just assumed that the requested Ei is good enough!
-      ei = requested_ei
+      tzero = ''
     end
   endcase
   
