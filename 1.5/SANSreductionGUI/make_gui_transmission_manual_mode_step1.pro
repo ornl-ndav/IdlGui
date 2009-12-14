@@ -230,6 +230,14 @@ FUNCTION design_transmission_manual_mode_step1, wBase, base
     UNAME = 'trans_manual_step1_counts_vs_y')
     
   ;third row of gui ==================================
+  ;cancel button
+  cancel = WIDGET_BUTTON(base,$
+  XOFFSET = 15,$
+  XSIZE = 100,$
+  YOFFSET = ysize_main+2*yoffset+ysize+9,$
+  VALUE = 'CANCEL',$
+  UNAME = 'cancel_trans_manual_step1')
+  
   button = WIDGET_BUTTON(base,$
     XOFFSET = 580,$
     YOFFSET = ysize_main+2*yoffset + ysize + 9,$

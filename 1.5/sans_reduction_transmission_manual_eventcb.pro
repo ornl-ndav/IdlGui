@@ -218,6 +218,13 @@ PRO launch_transmission_manual_mode_event, Event
       
     END
     
+    ;CANCEL BUTTON
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='cancel_trans_manual_step1'): BEGIN
+      id = WIDGET_INFO(Event.top, FIND_BY_UNAME='transmission_manual_mode_base')
+      WIDGET_CONTROL, id, /DESTROY
+    END
+    
     ;STEP2 - STEP2 - STEP2 - STEP2 - STEP2 - STEP2 - STEP2 - STEP2 - STEP2 -
     
     ;Counts vs tube integratd over pixel plot
@@ -511,6 +518,13 @@ PRO launch_transmission_manual_mode_event, Event
       
     END
     
+    ;cancel button
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='trans_manual_step2_cancel_button'): BEGIN
+      id = WIDGET_INFO(Event.top, FIND_BY_UNAME='transmission_manual_mode_base')
+      WIDGET_CONTROL, id, /DESTROY
+    END
+    
     ;STEP3 - STEP3 - STEP3 - STEP3 - STEP3 - STEP3 - STEP3 - STEP3 - STEP3 -
     
     WIDGET_INFO(Event.top, $
@@ -648,6 +662,13 @@ PRO launch_transmission_manual_mode_event, Event
         DEVICE, CURSOR_STANDARD=standard
       ENDELSE ;enf of catch statement
       
+    END
+    
+    ;cancel button
+    WIDGET_INFO(Event.top, $
+    FIND_BY_UNAME='trans_manual_step3_cancel_button'): BEGIN
+      id = WIDGET_INFO(Event.top, FIND_BY_UNAME='transmission_manual_mode_base')
+      WIDGET_CONTROL, id, /DESTROY
     END
     
     ELSE:
