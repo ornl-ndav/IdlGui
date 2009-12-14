@@ -368,7 +368,7 @@ PRO output_trans_file, Event, filename
   s_file_name = STRCOMPRESS(file_name,/REMOVE_ALL)
   path = getButtonValue(Event,'trans_file_name_base_path_button')
   output_file_name = path + s_file_name
-    
+  
   putTextFieldValue, main_event, $
     'sample_data_transmission_file_name_text_field', output_file_name
     
@@ -432,6 +432,12 @@ PRO output_trans_file, Event, filename
   id = WIDGET_INFO(Event.top, $
     FIND_BY_UNAME='transmission_file_name_base')
   WIDGET_CONTROL, id, /DESTROY
+  
+  IF (error EQ 0) THEN BEGIN
+    id = WIDGET_INFO((*main_global).transmission_manual_mode_id, $
+      FIND_BY_UNAME='transmission_manual_mode_base')
+    WIDGET_CONTROL, id, /DESTROY
+  ENDIF
   
 END
 
