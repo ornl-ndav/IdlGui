@@ -763,7 +763,7 @@ PRO IDLparseCommandLine__define
     DataBackFileName          : '',$
     
     TOFcuttingMin             : '',$
-    TOFcuttignMax             : '',$
+    TOFcuttingMax             : '',$
     
     MainNormNexusFileName     : '',$
     MainNormRunNumber         : '',$
