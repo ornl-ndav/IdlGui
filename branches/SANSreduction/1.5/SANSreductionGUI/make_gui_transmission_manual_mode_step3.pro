@@ -195,8 +195,8 @@ FUNCTION design_transmission_manual_mode_step3, wBase
     /TRACKING_EVENTS, $
     /MOTION_EVENTS)
     
-    ;Bottom Base ----------------------------------------------------------------
-    bottom_base = WIDGET_BASE(base,$
+  ;Bottom Base ----------------------------------------------------------------
+  bottom_base = WIDGET_BASE(base,$
     YOFFSET = ysize_main + 2*yoffset - 5,$
     /COLUMN)
     
@@ -224,10 +224,24 @@ FUNCTION design_transmission_manual_mode_step3, wBase
     
   counts_vs_tof = WIDGET_DRAW(rowb,$
     SCR_XSIZE = 690,$
-    SCR_YSIZE = 200,$
+    SCR_YSIZE = 190,$
     UNAME = 'trans_manual_step3_counts_vs_tof_plot')
     
-  previous = WIDGET_BUTTON(bottom_base,$
+  ;last row
+  last_row = WIDGET_BASE(bottom_base,$
+    /ROW)
+    
+  cancel = WIDGET_BUTTON(last_row,$
+    VALUE = 'CANCEL',$
+;    SCR_YSIZE = 35,$
+    UNAME = 'trans_manual_step3_cancel_button',$
+    SCR_XSIZE = 150)
+
+  space = WIDGET_LABEL(last_row,$
+  VALUE = '                                                             ')
+    
+  previous = WIDGET_BUTTON(last_row,$
+    SCR_XSIZE = 150,$
     VALUE = ' << Previous Step',$
     UNAME = 'trans_manual_step3_previous_button')
     

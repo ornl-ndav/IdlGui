@@ -228,14 +228,17 @@ FUNCTION design_transmission_manual_mode_step2, wBase
     VALUE = 'Algorithm Description',$
     UNAME = 'trans_manual_step2_algorithm_description')
     
-  FOR i=0,13 DO BEGIN
+  FOR i=0,10 DO BEGIN
     space = WIDGET_LABEL(col2,$
       VALUE = ' ')
   ENDFOR
   
+  xsize = 150
+  
   calculate = WIDGET_BUTTON(col2,$
     VALUE = 'Calculate Background',$
     SENSITIVE = 1,$
+    SCR_XSIZE = xsize, $
     SCR_YSIZE = 30,$
     UNAME = 'trans_manual_step2_calculate')
     
@@ -243,12 +246,22 @@ FUNCTION design_transmission_manual_mode_step2, wBase
     VALUE = ' ')
     
   button = WIDGET_BUTTON(col2,$
+    SCR_XSIZE = xsize, $
     VALUE = ' << Previous Step ',$
     UNAME= 'trans_manual_step2_go_to_previous_step')
   button = WIDGET_BUTTON(col2,$
     VALUE = '   Next Step >>   ',$
+    SCR_XSIZE = xsize, $
     SENSITIVE = 0,$
     UNAME = 'trans_manual_step2_go_to_next_step')
+    
+  space = WIDGET_LABEL(col2,$
+  VALUE = ' ')
+  
+  cancel = WIDGET_BUTTON(col2,$
+  VALUE = 'CANCEL',$
+  SCR_XSIZE = xsize,$
+  UNAME = 'trans_manual_step2_cancel_button')
     
   RETURN, base
   
