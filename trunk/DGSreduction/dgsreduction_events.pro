@@ -272,7 +272,7 @@ PRO dgsreduction_events, event, dgsr_cmd
       dgsr_cmd->GetProperty, Instrument=instrument
       ; And the run number string
       dgsr_cmd->GetProperty, datarun=runnumber
-      print, runnumber
+      ;print, runnumber
       Ei = GetEi(instrument, GetFirstNumber(runnumber))
       Ei_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_EI')
       WIDGET_CONTROL, Ei_ID, SET_VALUE=Ei
