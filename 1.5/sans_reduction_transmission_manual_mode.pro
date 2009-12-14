@@ -195,7 +195,7 @@ PRO launch_transmission_manual_mode_base, main_event
   transmission_manual_mode_gui, wBase, $
     main_base_geometry, sys_color_window_bk
     
-    (*global).transmission_manual_mode_id = wBase
+  (*global).transmission_manual_mode_id = wBase
     
   global_step1 = PTR_NEW({ wbase: wbase,$
     global: global,$
