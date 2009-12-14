@@ -37,7 +37,7 @@
 FUNCTION extrapolate_exact_element, left_element_intensity, data, element_right
 
   IF ((element_right + 1) GE N_ELEMENTS(data)) THEN element_right--
-
+  
   Num1 = FLOAT(data[element_right + 1] - data[element_right])
   Num2 = FLOAT(left_element_intensity - data[element_right])
   
@@ -385,7 +385,7 @@ FUNCTION beam_center_pixel_calculation_function, Event=event, $
       
   ENDELSE
   
-  array_of_pixels = FLTARR(nbr_cal, nbr_tubes)  
+  array_of_pixels = FLTARR(nbr_cal, nbr_tubes)
   pixel_offset = (*global).calculation_range_offset.pixel
   
   index = 0
@@ -403,7 +403,7 @@ FUNCTION beam_center_pixel_calculation_function, Event=event, $
         up_last_pixel_to_used_offset = $
           getLastElementOfIncreasingCounts(data_IvsPixel, MODE='pixel')
         IF (up_last_pixel_to_used_offset NE -1) THEN BEGIN
-          FOR i=0,(nbr_cal-1) DO BEGIN
+          FOR i=0,(nbr_cal-1) DO BEGIN ;loop for nbr_cal previous pixels
             pixel_to_use = up_last_pixel_to_used_offset - first_offset - i
             IF (pixel_to_use GT 0) THEN BEGIN
               IF (N_ELEMENTS(event) NE 0) THEN BEGIN
@@ -415,7 +415,11 @@ FUNCTION beam_center_pixel_calculation_function, Event=event, $
                   find_equivalent_right_element_from_element_on_left_side(base=base, $
                   data_IvsPixel, pixel_to_use, MODE='pixel')
               ENDELSE
-              beam_center = (FLOAT(pixel_to_use) + FLOAT(right_pixel)) / 2
+              IF (right_pixel NE -1) THEN BEGIN
+                beam_center = (FLOAT(pixel_to_use) + FLOAT(right_pixel)) / 2
+              ENDIF ELSE BEGIN
+                beam_center = -1
+              ENDELSE
               array_of_pixels[i,index] = beam_center
             ENDIF ELSE BEGIN
               array_of_pixels[*,index] = -1
@@ -442,7 +446,11 @@ FUNCTION beam_center_pixel_calculation_function, Event=event, $
                   find_equivalent_left_element_from_element_on_right_side(base=base, $
                   data_IvsPixel, pixel_to_use, MODE='pixel')
               ENDELSE
-              beam_center = (FLOAT(pixel_to_use) + FLOAT(left_pixel)) / 2
+              IF (left_pixel NE -1) THEN BEGIN
+                beam_center = (FLOAT(pixel_to_use) + FLOAT(left_pixel)) / 2
+              ENDIF ELSE BEGIN
+                beam_center = -1
+              ENDELSE
               array_of_pixels[i,index] = beam_center
             ENDIF ELSE BEGIN
               array_of_pixels[*,index] = -1
@@ -616,7 +624,6 @@ FUNCTION beam_center_tube_calculation_function, Event=event, $
       'down': BEGIN
         down_last_tube_to_used_offset = $
           getLastElementOfDecreasingCounts(data_IvsTube, MODE='tube')
-        ;          print, 'down_last_tube_to_used_offset: ' + string(down_last_tube_to_used_offset)
         IF (down_last_tube_to_used_offset NE -1) THEN BEGIN
           FOR i=0,(nbr_cal-1) DO BEGIN
             tube_to_use = down_last_tube_to_used_offset + first_offset + i
