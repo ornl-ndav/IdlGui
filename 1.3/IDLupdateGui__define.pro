@@ -548,18 +548,13 @@ FUNCTION IDLupdateGui::init, structure
   REFreduction_DataBackgroundPeakSelection, Event, ''
   
   ;TOF cutting
-  text = '--> Load TOF cutting min and max ............................... ' $
+  text = '--> Load TOF cutting min and max ............................. ' $
     + PROCESSING
   putLogBookMessage, Event, text, APPEND=1
   UpdateTOFcutting, Event, $
     structure.TOFcuttingMin, $
     structure.TOFcuttingMax
   AppendReplaceLogBookMessage, Event, OK, PROCESSING
-  
-  
-  
-  
-  
   
   ;Work on Normalization data files
   IF (structure.MainNormRunNumber NE '') THEN BEGIN
