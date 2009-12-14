@@ -218,6 +218,14 @@ PRO launch_transmission_manual_mode_event, Event
       
     END
     
+    ;refresh button
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='refresh_trans_manual_step1'): BEGIN
+      plot_trans_manual_step1_background, Event
+      refresh_plot_selection_trans_manual_step1, Event
+      plot_transmission_step1_scale_from_event, Event
+    END
+    
     ;CANCEL BUTTON
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='cancel_trans_manual_step1'): BEGIN
@@ -518,6 +526,17 @@ PRO launch_transmission_manual_mode_event, Event
       
     END
     
+    ;refresh button
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='trans_manual_step2_refresh_button'): BEGIN
+      WIDGET_CONTROL, /HOURGLASS
+      display_trans_manual_step2_3Dview_button, Event, $
+        MODE= (*global).trans_manual_3dview_status
+      plot_counts_vs_tube_step2_tube_selection_manual_input, Event
+      plot_counts_vs_pixel_step2_pixel_selection_manual_input, Event
+      WIDGET_CONTROL, HOURGLASS=0
+    END
+    
     ;cancel button
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='trans_manual_step2_cancel_button'): BEGIN
@@ -566,11 +585,12 @@ PRO launch_transmission_manual_mode_event, Event
           plot_counts_vs_tof_step3_beam_center, Event
           display_step3_create_trans_button, Event, mode='off'
           
-        ENDIF ELSE BEGIN
+        ENDIF ;ELSE BEGIN
         
-          plot_pixel_below_cursor, Event, tube, pixel
+         plot_pixel_below_cursor, Event, tube, pixel
+         replot_pixel_selected_below_cursor, event
           
-        ENDELSE
+        ;ENDELSE
         
         
       ENDIF ELSE BEGIN ;endif of catch statement
@@ -608,7 +628,6 @@ PRO launch_transmission_manual_mode_event, Event
     END
     
     ;go back to step2 button
-    ;move on to step3 button
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='trans_manual_step3_previous_button'): BEGIN
       map_base, Event, 'manual_transmission_step2', 1
@@ -664,9 +683,41 @@ PRO launch_transmission_manual_mode_event, Event
       
     END
     
+    ;refresh button
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='trans_manual_step3_refresh_button'): BEGIN
+      plot_transmission_step3_scale, Event
+      plot_transmission_step3_main_plot, Event
+      plot_transmission_step3_bottom_plots, Event
+      save_transmission_manual_step3_background,  EVENT=event
+      
+      IF ((*global).trans_manual_step3_refresh EQ 1) THEN BEGIN
+      
+        (*global).trans_manual_step3_refresh = 0
+        putTextFieldValue, Event, $
+          'trans_manual_step3_beam_center_tube_value', 'N/A'
+        putTextFieldValue, Event, $
+          'trans_manual_step3_beam_center_pixel_value', 'N/A'
+        putTextFieldValue, Event, $
+          'trans_manual_step3_beam_center_counts_value', 'N/A'
+        display_step3_create_trans_button, Event, mode='disable'
+        
+      ENDIF ELSE BEGIN
+      
+        IF (getTextFieldValue(Event,'trans_manual_step3_beam_center_tube_value') NE 'N/A') THEN BEGIN
+          display_step3_create_trans_button, Event, mode='off'
+        ENDIF ELSE BEGIN
+          display_step3_create_trans_button, Event, mode='disable'
+        ENDELSE
+        plot_counts_vs_tof_step3_beam_center, Event
+        replot_pixel_selected_below_cursor, event
+        (*global).trans_manual_step3_refresh = 0
+      ENDELSE
+    END
+    
     ;cancel button
     WIDGET_INFO(Event.top, $
-    FIND_BY_UNAME='trans_manual_step3_cancel_button'): BEGIN
+      FIND_BY_UNAME='trans_manual_step3_cancel_button'): BEGIN
       id = WIDGET_INFO(Event.top, FIND_BY_UNAME='transmission_manual_mode_base')
       WIDGET_CONTROL, id, /DESTROY
     END

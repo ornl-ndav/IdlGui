@@ -228,7 +228,7 @@ FUNCTION design_transmission_manual_mode_step2, wBase
     VALUE = 'Algorithm Description',$
     UNAME = 'trans_manual_step2_algorithm_description')
     
-  FOR i=0,10 DO BEGIN
+  FOR i=0,9 DO BEGIN
     space = WIDGET_LABEL(col2,$
       VALUE = ' ')
   ENDFOR
@@ -257,6 +257,11 @@ FUNCTION design_transmission_manual_mode_step2, wBase
     
   space = WIDGET_LABEL(col2,$
   VALUE = ' ')
+  
+  refresh = WIDGET_BUTTON(col2,$
+  VALUE = 'REFRESH',$
+  SCR_XSIZE = xsize,$
+  UNAME = 'trans_manual_step2_refresh_button')
   
   cancel = WIDGET_BUTTON(col2,$
   VALUE = 'CANCEL',$

@@ -237,8 +237,17 @@ FUNCTION design_transmission_manual_mode_step3, wBase
     UNAME = 'trans_manual_step3_cancel_button',$
     SCR_XSIZE = 150)
 
+  space_value = '                 '
   space = WIDGET_LABEL(last_row,$
-  VALUE = '                                                             ')
+  VALUE = space_value)
+
+  refresh = WIDGET_BUTTON(last_row,$
+  VALUE = 'REFRESH',$
+  XSIZE = 150,$
+  UNAME = 'trans_manual_step3_refresh_button')
+
+  space = WIDGET_LABEL(last_row,$
+  VALUE = space_value)
     
   previous = WIDGET_BUTTON(last_row,$
     SCR_XSIZE = 150,$

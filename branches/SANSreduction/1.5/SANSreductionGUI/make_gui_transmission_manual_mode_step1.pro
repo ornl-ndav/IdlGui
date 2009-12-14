@@ -238,6 +238,14 @@ FUNCTION design_transmission_manual_mode_step1, wBase, base
   VALUE = 'CANCEL',$
   UNAME = 'cancel_trans_manual_step1')
   
+  ;refresh button
+  refresh = WIDGET_BUTTON(base,$
+  VALUE = 'REFRESH',$
+  UNAME = 'refresh_trans_manual_step1',$
+  XOFFSET = 295,$
+  YOFFSET = ysize_main+2*yoffset+ysize+9,$
+  XSIZE = 100)
+  
   button = WIDGET_BUTTON(base,$
     XOFFSET = 580,$
     YOFFSET = ysize_main+2*yoffset + ysize + 9,$
