@@ -40,7 +40,8 @@ FUNCTION getLastElementOfIncreasingCounts, data, MODE=mode
   counts = 0
   
   IF (mode EQ 'pixel') THEN BEGIN
-    big_step = 15
+    ;big_step = 15
+    big_step = 5
   ENDIF ELSE BEGIN
     big_step = 10
   ENDELSE
@@ -94,11 +95,9 @@ FUNCTION getLastElementOfDecreasingCounts, data, MODE=mode
   index = nbr_data_values-1
   WHILE (index GT (big_step+1)) DO BEGIN
     counts = data[index-big_step]
-    ;    print, '(index:' + string(index) + '), counts: ' + string(counts) + ', counts_previous: ' + string(counts_previous)
     IF (counts LT counts_previous) THEN BEGIN ;we started to move down
       sub_array = data[index-big_step:index]
       max = MAX(sub_array, max_index)
-      ;      print, ' --> return value: ' + string(index-big_step+max_index)
       RETURN, index - big_step + max_index
     ENDIF ELSE BEGIN
       counts_previous = counts

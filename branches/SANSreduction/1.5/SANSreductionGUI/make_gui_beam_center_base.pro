@@ -478,7 +478,7 @@ PRO beam_center_base_gui, wBase, main_base_geometry
   label = WIDGET_LABEL(tab4_row3,$
     VALUE = 'Smooth coeff to use in Counts vs T/P functions:')
   text = WIDGET_TEXT(tab4_row3,$
-    VALUE = '6',$
+    VALUE = '2',$
     XSIZE = 2,$
     UNAME = 'beam_center_smooth_parameter',$
     /EDITABLE,$
