@@ -382,6 +382,7 @@ PRO calculate_trans_auto_transmission_intensity, wBase=wBase, Event=event
   array = counts_vs_xy
   
   get_transmission_auto_peak_tube_pixel_value, wBase=wBase, $
+    Event=event, $
     array, $
     background_value, $
     tube_min, $
@@ -395,7 +396,7 @@ PRO calculate_trans_auto_transmission_intensity, wBase=wBase, Event=event
     putTextFieldValueMainBase, wBase, uname='trans_auto_trans_value', $
       STRCOMPRESS(transmission_intensity,/REMOVE_ALL)
   ENDIF ELSE BEGIN
-    putTextFieldValue, Event.top, 'trans_auto_trans_value', $
+    putTextFieldValue, Event, 'trans_auto_trans_value', $
       STRCOMPRESS(transmission_intensity,/REMOVE_ALL)
   ENDELSE
   
@@ -516,9 +517,9 @@ PRO display_beam_center_pixel, wBase=wBase, Event=event
   pixel = (*global).pixel_beam_center
   bank = getBankNumber(tube+1)
   (*global).beam_center_bank_tube_pixel = [bank, tube, pixel]
-  counts = getTransAutoCounts(wBase, tube, pixel)
   
   IF (N_ELEMENTS(wBase) NE 0) THEN BEGIN
+  counts = getTransAutoCounts(wbase=wbase, tube, pixel)
     putTextFieldValueMainBase, wBase, UNAME='trans_auto_beam_center_tube', $
       STRCOMPRESS(tube,/REMOVE_ALL)
     putTextFieldValueMainBase, wBase, UNAME='trans_auto_beam_center_pixel', $
@@ -526,15 +527,16 @@ PRO display_beam_center_pixel, wBase=wBase, Event=event
     putTextFieldValueMainBase, wBase, UNAME='trans_auto_beam_center_counts', $
       STRCOMPRESS(counts,/REMOVE_ALL)
   ENDIF ELSE BEGIN
-    putTextFieldValue, Event.top, 'trans_auto_beam_center_tube', $
+  counts = getTransAutoCounts(event=event, tube, pixel)
+    putTextFieldValue, Event, 'trans_auto_beam_center_tube', $
       STRCOMPRESS(tube,/REMOVE_ALL)
-    putTextFieldValue, Event.top, 'trans_auto_beam_center_pixel', $
+    putTextFieldValue, Event, 'trans_auto_beam_center_pixel', $
       STRCOMPRESS(pixel,/REMOVE_ALL)
-    putTextFieldValue, Event.top, 'trans_auto_beam_center_counts', $
+    putTextFieldValue, Event, 'trans_auto_beam_center_counts', $
       STRCOMPRESS(counts,/REMOVE_ALL)
   ENDELSE
   
-  plot_pixel_auto_selected_below_cursor, wBase=wBase, tube, pixel
+  plot_pixel_auto_selected_below_cursor, wBase=wBase, Event=event, tube, pixel
   
 END
 
@@ -557,10 +559,10 @@ PRO plot_pixel_auto_selected_below_cursor, wBase=wBase, Event=event, $
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
   
-  xmin_device = getAutoTubeDeviceFromData(wBase=wBase, tube)
-  xmax_device = getAutoTubeDeviceFromData(wBase=wBase, tube+1)
-  ymin_device = getAutoPixelDeviceFromData(wBase=wBase, pixel)
-  ymax_device = getAutoPixelDeviceFromData(wBase=wBase, pixel+1)
+  xmin_device = getAutoTubeDeviceFromData(wBase=wBase, Event=event, tube)
+  xmax_device = getAutoTubeDeviceFromData(wBase=wBase, Event=event, tube+1)
+  ymin_device = getAutoPixelDeviceFromData(wBase=wBase, Event=event, pixel)
+  ymax_device = getAutoPixelDeviceFromData(wBase=wBase, Event=event, pixel+1)
   
   color = 250
   

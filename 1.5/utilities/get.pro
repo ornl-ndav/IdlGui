@@ -413,10 +413,13 @@ FUNCTION getNexusRunNumber, nexus_file_name
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getTransAutoCounts, wBase, tube, pixel
+FUNCTION getTransAutoCounts, wBase=wBase, Event=event, tube, pixel
 
-  ;get global structure
-  WIDGET_CONTROL,wBase,GET_UVALUE=global
+  IF (N_ELEMENTS(wBase) NE 0) THEN BEGIN
+    WIDGET_CONTROL,wBase,GET_UVALUE=global
+  ENDIF ELSE BEGIN
+    WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  ENDELSE
   
   error = 0
   CATCH, error
