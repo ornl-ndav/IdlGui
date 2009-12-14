@@ -175,7 +175,7 @@ PRO launch_transmission_manual_mode_event, Event
       IF ((*global).need_to_reset_trans_step2 EQ 1) THEN BEGIN
       
         refresh_trans_manual_step2_plots_counts_vs_x_and_y, Event
-        
+
         ;;same thing for this
         x_min_data = (*global).trans_manual_step2_top_plot_xmin_data
         putTextFieldValue, Event, 'trans_manual_step2_tube_min', $
@@ -200,10 +200,16 @@ PRO launch_transmission_manual_mode_event, Event
         display_trans_manual_step2_3Dview_button, Event, $
           MODE= (*global).trans_manual_3dview_status
           
+          print, '#5'
+          
         save_transmission_manual_step2_top_plot_background,  EVENT=Event, $
           working_with_tube='neither'
+          
+          print, '#6'
         save_transmission_manual_step2_bottom_plot_background,  EVENT=Event, $
           working_with_pixel='neither'
+          
+          print, '#7'
           
         (*global).need_to_reset_trans_step2 = 0
         
@@ -587,10 +593,10 @@ PRO launch_transmission_manual_mode_event, Event
           
         ENDIF ;ELSE BEGIN
         
-         plot_pixel_below_cursor, Event, tube, pixel
-         replot_pixel_selected_below_cursor, event
-          
-        ;ENDELSE
+        plot_pixel_below_cursor, Event, tube, pixel
+        replot_pixel_selected_below_cursor, event
+        
+      ;ENDELSE
         
         
       ENDIF ELSE BEGIN ;endif of catch statement

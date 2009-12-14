@@ -314,7 +314,7 @@ PRO get_transmission_peak_tube_pixel_value, Event, array, background_value, $
   (*(*global).trans_peak_tube) = trans_peak_tube + tube_min_offset
   (*(*global).trans_peak_pixel) = trans_peak_pixel + pixel_min_offset
   
-;; For verification only  
+;; For verification only
 ;  trans_peak_tube = (*(*global).trans_peak_tube)
 ;  trans_peak_pixel = (*(*global).trans_peak_pixel)
 ;  nbr = N_ELEMENTS(trans_peak_tube)
@@ -322,7 +322,7 @@ PRO get_transmission_peak_tube_pixel_value, Event, array, background_value, $
 ;    print, 'tube/pixel: ' + strcompress(trans_peak_tube[i],/remove_all) + $
 ;      ',' + strcompress(trans_peak_pixel[i],/remove_all)
 ;  ENDFOR
-    
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -407,18 +407,26 @@ PRO save_transmission_manual_step2_top_plot_background,  $
   background = TVRD(TRUE=3)
   DEVICE, copy=[41,60,522,390,41,60,id_value]
   
+  print, 'x_min: ' + string(x_min)
+  print, 'X: ' + string((*global).step2_tube_left)
+  print
+  
   CASE (working_with_tube) OF
     'right': BEGIN
       X= (*global).step2_tube_left
-      POLYFILL, [x_min, X, X, x_min], $
-        [y_min, y_min, y_max, y_max], $
-        color=FSC_COLOR('deep pink'), /data
+      IF (X NE 0.) THEN BEGIN
+        POLYFILL, [x_min, X, X, x_min], $
+          [y_min, y_min, y_max, y_max], $
+          color=FSC_COLOR('deep pink'), /data
+      ENDIF
     END
     'left': BEGIN
       X = (*global).step2_tube_right
-      POLYFILL, [X, x_max, x_max, X], $
-        [y_min, y_min, y_max, y_max], $
-        color=FSC_COLOR('deep pink'), /data
+      IF (X NE 0.) THEN BEGIN
+        POLYFILL, [X, x_max, x_max, X], $
+          [y_min, y_min, y_max, y_max], $
+          color=FSC_COLOR('deep pink'), /data
+      ENDIF
     END
     'neither': BEGIN
     END
@@ -460,17 +468,19 @@ PRO save_transmission_manual_step2_top_plot_background,  $
   CASE (working_with_tube) OF
     'left': BEGIN
       X= (*global).step2_tube_left
-      IF (X EQ 0.) THEN RETURN
-      POLYFILL, [x_min, X, X, x_min], $
-        [y_min, y_min, y_max, y_max], $
-        color=FSC_COLOR('red'), /data
+      IF (X NE 0.) THEN BEGIN
+        POLYFILL, [x_min, X, X, x_min], $
+          [y_min, y_min, y_max, y_max], $
+          color=FSC_COLOR('red'), /data
+      ENDIF
     END
     'right': BEGIN
       X = (*global).step2_tube_right
-      IF (X EQ 0.) THEN RETURN
-      POLYFILL, [X, x_max, x_max, X], $
-        [y_min, y_min, y_max, y_max], $
-        color=FSC_COLOR('red'), /data
+      IF (X NE 0.) THEN BEGIN
+        POLYFILL, [X, x_max, x_max, X], $
+          [y_min, y_min, y_max, y_max], $
+          color=FSC_COLOR('red'), /data
+      ENDIF
     END
     'neither': BEGIN
     END
