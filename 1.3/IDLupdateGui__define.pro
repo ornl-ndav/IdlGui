@@ -207,10 +207,9 @@ END
 
 ;WORK on TOF cutting ----------------------------------------------------------
 PRO UpdateTOFcutting, Event, TOFmin, TOFmax
-putTextFieldValue, Event, ??????????????????
-end
-
-
+  putTextFieldValue, Event, 'tof_cutting_min', STRCOMPRESS(TOFmin,/REMOVE_ALL)
+  putTextFieldValue, Event, 'tof_cutting_max', STRCOMPRESS(TOFmax,/REMOVE_ALL)
+END
 
 ;WORK ON EMPTY CELL FILE ======================================================
 FUNCTION UpdateEmptyCellRunNumber, Event, RunNumber
@@ -250,7 +249,7 @@ PRO UpdateEmptyCellCoefficient, Event, A, B, C, D
     
   ;refresh the plot
   update_substrate_equation, Event ;_empty_cell
-         
+  
 END
 
 ;WORK ON AngleValue and AngleError ============================================
