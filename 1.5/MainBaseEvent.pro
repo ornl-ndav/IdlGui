@@ -85,7 +85,7 @@ PRO MAIN_BASE_event, Event
             run_number = STRCOMPRESS(getTextFieldValue(Event,$
               'run_number_cw_field'),/REMOVE_ALL)
             (*global).run_number = run_number
-           ; jk_get_run_information, Event
+           jk_get_run_information, Event
             putTextFieldValue, Event, $
               'reduce_jk_tab1_run_information_run_number',$
               run_number
@@ -130,7 +130,7 @@ PRO MAIN_BASE_event, Event
             get_and_plot_tof_array, Event
             run_number = get_data_run_number((*global).data_nexus_file_name)
             (*global).run_number = run_number
-            ;jk_get_run_information, Event
+            jk_get_run_information, Event
             activate_min_max_counts_widgets, Event, 1
             populate_min_max_counts_widgets, Event, STATUS='yes'
           ENDIF

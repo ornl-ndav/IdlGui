@@ -99,6 +99,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
   TESTING_ON_MAC = file->getValue(tag=['configuration','testing_on_mac'])
   SCROLLING = scroll
   CHECKING_PACKAGES = file->getValue(tag=['configuration','checking_packages'])
+  EQSANS_REDUCE = file->getValue(tag=['configuration','eqsans_reduce'])
   ;****************************************************************************
   ;============================================================================
   
@@ -152,6 +153,8 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     
     run_number: '',$
     jk_selection_x0y0x1y1: PTR_NEW(0L), $
+    
+    eqsans_reduce: EQSANS_REDUCE,$
     
     sns_jk_switch: 'sns',$
     jk_default_value: {sample_detector: 'N/A',$
