@@ -199,17 +199,12 @@ PRO launch_transmission_manual_mode_event, Event
         (*global).trans_manual_3dview_status = 'disable'
         display_trans_manual_step2_3Dview_button, Event, $
           MODE= (*global).trans_manual_3dview_status
-          
-          print, '#5'
-          
+
         save_transmission_manual_step2_top_plot_background,  EVENT=Event, $
           working_with_tube='neither'
-          
-          print, '#6'
+
         save_transmission_manual_step2_bottom_plot_background,  EVENT=Event, $
           working_with_pixel='neither'
-          
-          print, '#7'
           
         (*global).need_to_reset_trans_step2 = 0
         

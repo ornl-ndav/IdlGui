@@ -407,10 +407,6 @@ PRO save_transmission_manual_step2_top_plot_background,  $
   background = TVRD(TRUE=3)
   DEVICE, copy=[41,60,522,390,41,60,id_value]
   
-  print, 'x_min: ' + string(x_min)
-  print, 'X: ' + string((*global).step2_tube_left)
-  print
-  
   CASE (working_with_tube) OF
     'right': BEGIN
       X= (*global).step2_tube_left
@@ -464,7 +460,6 @@ PRO save_transmission_manual_step2_top_plot_background,  $
   ;replot other selection if any
   background = TVRD(TRUE=3)
   DEVICE, copy=[41,60,522,390,41,60,id_value]
-  
   CASE (working_with_tube) OF
     'left': BEGIN
       X= (*global).step2_tube_left
@@ -490,7 +485,7 @@ PRO save_transmission_manual_step2_top_plot_background,  $
   foreground = TVRD(TRUE=3)
   alpha= 0.25
   TV, (foreground*alpha)+(1-alpha)*background, true=3
-  
+
 END
 
 ;------------------------------------------------------------------------------
