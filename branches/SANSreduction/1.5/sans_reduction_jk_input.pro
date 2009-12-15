@@ -65,7 +65,7 @@ PRO jk_get_run_information, Event
   output_file = 'EQSANS_' + run_number
   putTextFieldValue, Event, 'reduce_jk_tab2_root_name_extension', output_file
   
-  cmd = 'eqsans_reduce  -r ' + run_number + ' -ri'
+  cmd = (*global).eqsans_reduce + ' -r ' + run_number + ' -ri'
   WIDGET_CONTROL, /HOURGLASS
   spawn, cmd, listening
   WIDGET_CONTROL, HOURGLASS=0
