@@ -1,0 +1,15 @@
+.run gettok.pro
+.run is_ieee_big.pro
+.run fxparpos.pro
+.run fitsreader.pro
+.run fxaddpar.pro
+.run fxmove.pro
+.run fxpar.pro
+.run fxposit.pro
+.run ieee_to_host.pro
+.run mrd_skip.pro
+.run mrd_struct.pro
+.run valid_num.pro
+.run mrd_hread.pro
+.run match.pro
+.run mrdfits.pro
