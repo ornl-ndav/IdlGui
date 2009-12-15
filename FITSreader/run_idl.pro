@@ -1,0 +1,3 @@
+@idl_makefile
+FITSreader
+
