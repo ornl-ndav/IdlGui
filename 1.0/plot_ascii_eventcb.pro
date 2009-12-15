@@ -159,6 +159,7 @@ PRO load_ascii_file, event_load=event_load, main_event=main_event
   index = 0
   WHILE (index LT nbr_ascii) DO BEGIN
   
+    ;simple ascii file
     iAsciiFile = OBJ_NEW('IDL3columnsASCIIparser', list_ascii_files[index])
     IF (OBJ_VALID(iAsciiFile)) THEN BEGIN
       sAscii = iAsciiFile->getData()
@@ -203,7 +204,6 @@ PRO load_ascii_file, event_load=event_load, main_event=main_event
       *pYaxis_units[index] = local_pYaxis_units
       
     ENDIF
-    
     OBJ_DESTROY, iAsciiFile
     
     index++

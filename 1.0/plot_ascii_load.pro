@@ -110,7 +110,7 @@ PRO plot_ascii_load_base_gui, wBase, main_base_geometry, nbr_ascii_files
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
     SCR_YSIZE    = 485,$
-    SCR_XSIZE    = 550,$
+    SCR_XSIZE    = 750,$
     MAP          = 1,$
     /BASE_ALIGN_CENTER,$
     GROUP_LEADER = ourGroup)
@@ -125,7 +125,7 @@ PRO plot_ascii_load_base_gui, wBase, main_base_geometry, nbr_ascii_files
     VALUE = 'BROWSE ...',$
     UNAME = 'plot_ascii_load_base_browse_button')
   space = WIDGET_LABEL(row1,$
-    VALUE = '  ')
+    VALUE = '                ')
   help = WIDGET_LABEL(row1,$
     VALUE = 'Single click in STATUS column to enable/disable plot ' + $
     'of ascii file.')
@@ -142,9 +142,9 @@ PRO plot_ascii_load_base_gui, wBase, main_base_geometry, nbr_ascii_files
     ALIGNMENT = alignement,$
     XSIZE = 2,$
     YSIZE = 50,$
-    SCR_XSIZE = 545,$
+    SCR_XSIZE = 745,$
     SCR_YSIZE = 380,$
-    COLUMN_WIDTHS = [50,470],$
+    COLUMN_WIDTHS = [50,670],$
     ;/SCROLL,$
     /ALL_EVENTS)
   WIDGET_CONTROL, table, SET_TABLE_SELECT=[0,0,1,0]
@@ -153,14 +153,15 @@ PRO plot_ascii_load_base_gui, wBase, main_base_geometry, nbr_ascii_files
   row2 = WIDGET_BASE(main_base,$
     /ROW)
   remove = WIDGET_BUTTON(row2,$
-    VALUE = 'DELETE',$
+    VALUE = 'DELETE SELECTED ROW',$
     UNAME = 'plot_ascii_load_base_delete_button')
     
   ;row3
   row3 = WIDGET_BASE(main_base,$
     /ROW)
   space = WIDGET_LABEL(row3,$
-    VALUE = '                                                             ')
+    VALUE = '                                                           ' + $
+    '                                    ')
   close_button = WIDGET_BUTTON(row3,$
     VALUE = 'CLOSE',$
     SCR_XSIZE = 150,$

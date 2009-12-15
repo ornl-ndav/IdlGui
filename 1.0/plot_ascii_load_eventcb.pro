@@ -55,8 +55,7 @@ PRO browse_button, Event
     (*global).path = new_path
     
     populate_load_table, Event, file_list
-    load_table = (*global).load_table
-    plot_ascii_file, event_load=event
+;;    plot_ascii_file, event_load=event
     
   ENDIF
   
