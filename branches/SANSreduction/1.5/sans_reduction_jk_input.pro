@@ -70,6 +70,8 @@ PRO jk_get_run_information, Event
   spawn, cmd, listening
   WIDGET_CONTROL, HOURGLASS=0
   
+  print, cmd
+  
   sz = N_ELEMENTS(listening)
   IF (sz GT 1) THEN BEGIN
   

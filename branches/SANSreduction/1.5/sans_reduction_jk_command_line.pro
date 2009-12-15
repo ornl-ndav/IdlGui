@@ -43,7 +43,7 @@ PRO CheckCommandline_for_jk, Event
   list_OF_files_to_send    = STRARR(1)
   
   ;Check first tab
-  cmd = 'eqsans_reduce'
+  cmd = (*global).eqsans_reduce_mpi
   
   ;run number
   run_number = STRCOMPRESS((*global).run_number,/REMOVE_ALL)
