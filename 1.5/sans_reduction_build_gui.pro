@@ -100,6 +100,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
   SCROLLING = scroll
   CHECKING_PACKAGES = file->getValue(tag=['configuration','checking_packages'])
   EQSANS_REDUCE = file->getValue(tag=['configuration','eqsans_reduce'])
+  EQSANS_REDUCE_MPI = file->getValue(tag=['configuration','eqsans_reduce_mpi'])
   ;****************************************************************************
   ;============================================================================
   
@@ -154,7 +155,8 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     run_number: '',$
     jk_selection_x0y0x1y1: PTR_NEW(0L), $
     
-    eqsans_reduce: EQSANS_REDUCE,$
+    eqsans_reduce: EQSANS_REDUCE, $
+    eqsans_reduce_mpi: EQSANS_REDUCE_MPI, $
     
     sns_jk_switch: 'sns',$
     jk_default_value: {sample_detector: 'N/A',$
