@@ -65,7 +65,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   ;DEBUGGING
   sDEBUGGING = { tab: {main_tab: 0},$  ;0:step1, 1:logBook
-    path: '~/SVN/IdlGui/trunk/plotASCII/'}
+    path: '~/SVN/IdlGui/trunk/plotASCII\ 1.0/'}
   ;******************************************************************************
   ;******************************************************************************
     
