@@ -92,9 +92,6 @@ PRO DGSreduction_Execute, event
       
       ; Data Runs
       
-      
-      ; Normalisation
-      
       ; Empty Cans
       
       ; Black Cans
