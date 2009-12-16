@@ -635,9 +635,6 @@ function ReductionCmd::Generate
   
   cmd = STRARR(self.jobs)
   
-  ; If the outputPrefix is blank then use the default
-  IF STRLEN(self.OutputPrefix) EQ 0 THEN self.OutputPrefix = "~/results"
-  
   for i = 0L, self.jobs-1 do begin
   
     cmd[i] = ""
@@ -659,7 +656,7 @@ function ReductionCmd::Generate
     ;IF STRLEN(self.output) GT 1 THEN cmd[i] += " --output="+ self.output
     
     IF (STRLEN(self.instrument) GT 1) AND (STRLEN(self.datarun) GE 1) THEN $
-      cmd[i] += " --output=" + self.OutputPrefix + "/" + self.instrument + "/" + self->GetRunNumber() + $
+      cmd[i] += " --output=" + get_output_directory(self.instrument, self->GetRunNumber(), /HOME, /CREATE, OVERRIDE=self.OutputPrefix) + $
       "/" + self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
       i+1, self.jobs, /PAD) + ".txt"
       
@@ -692,10 +689,10 @@ function ReductionCmd::Generate
     IF (STRLEN(self.normalisation) GE 1) AND (self.normalisation NE 0) $
       AND (STRLEN(self.instrument) GT 1) THEN BEGIN
       
-      cmd[i] += " --norm=~/results/" + self.instrument + "/"+ $
-        getFirstNumber(self.normalisation) + "/" + $
+      cmd[i] += " --norm=" + get_output_directory(self.instrument, getFirstNumber(self.normalisation), /HOME) + "/" + $
         self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
         i+1, self.jobs, /PAD) + ".norm"
+        
         
     ;cmd[i] += " --norm="+self.normalisation
     ENDIF
@@ -796,8 +793,7 @@ function ReductionCmd::Generate
       
       IF (self.mask EQ 1) AND (STRLEN(self.normalisation) GE 1) $
         AND (STRLEN(self.instrument) GT 1) THEN BEGIN
-        cmd[i] += self.OutputPrefix + "/" + self.instrument + "/"+ $
-          getFirstNumber(self.normalisation) + "/" + $
+        cmd[i] += get_output_directory(self.instrument, self->GetRunNumber(), /HOME, /CREATE, OVERRIDE=self.OutputPrefix) + "/" + $
           self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
           i+1, self.jobs, /PAD) + "_mask.dat"
           

@@ -160,12 +160,12 @@ PRO DGSreduction_TLB_Events, event
       dgsr_cmd->SetProperty, OutputPrefix=myValue
     END
     'DGS_AUTO_OUTPUT_PREFIX': BEGIN
-      ; For auto prefix - just use ~/results
+      ; For auto prefix - just use relay on whatever is returned by get_output_directory()
       IF (event.select EQ 1) THEN BEGIN
-        dgsr_cmd->SetProperty, OutputPrefix='~/results'
+        dgsr_cmd->SetProperty, OutputPrefix=''
         ; Update the GUI
         outputPrefixID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGS_OUTPUT_PREFIX')
-        WIDGET_CONTROL, outputPrefixID, SET_VALUE='~/results'
+        WIDGET_CONTROL, outputPrefixID, SET_VALUE=''
       ENDIF
     END
     'DGS_CUSTOM_OUTPUT_PREFIX': BEGIN

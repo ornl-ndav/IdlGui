@@ -71,15 +71,19 @@ PRO DGSreduction_LaunchCollector, event, WaitForJobs=waitforjobs
   jobname = instrument + "_" + runnumber + "_collector"
   
   ; Output Directory
-  outDir = '/SNS/users/' + info.username + '/results/' + instrument + '/' + runnumber
+  outDir = info.outputDir
+  ;outDir = '/SNS/users/' + info.username + '/results/' + instrument + '/' + runnumber
   ; Make sure that the output directory exists
-  spawn, 'mkdir -p ' + outDir
+  IF FILE_TEST(outDir, /DIRECTORY) EQ 0 THEN BEGIN
+    spawn, 'mkdir -p ' + outDir
+  ENDIF
   
-    ; log Directory
-  logDir = '/SNS/users/' + info.username + '/results/' + $
-    instrument + '/' + runnumber + '/logs'
+  ; log Directory
+  logDir = outDir + '/logs'
   ;Make sure the that logfile directory exists.
-  spawn, 'mkdir -p ' + logDir
+  IF FILE_TEST(logDir, /DIRECTORY) EQ 0 THEN BEGIN
+    spawn, 'mkdir -p ' + logDir
+  ENDIF
   
   ; launch agg_files
   agg_cmd = "sbatch -p " + queue + $
@@ -98,7 +102,7 @@ PRO DGSreduction_LaunchCollector, event, WaitForJobs=waitforjobs
   
   
   spawn, agg_cmd
-  spawn, "echo " + agg_cmd + " > /tmp/" + info.username + "_agg_commands"
+  spawn, "echo " + agg_cmd + " > " + logDir + "/agg_commands"
   
   
   ; Have we created SPE files ?
@@ -121,8 +125,8 @@ PRO DGSreduction_LaunchCollector, event, WaitForJobs=waitforjobs
       " -o " + outdir + "/" + instrument + "_" + runnumber + ".spe"
       
     spawn, spe_cmd, dummy, job_string
-    spawn, "echo " + spe_cmd + " > /tmp/" + info.username + "_spe_commands"
-          
+    spawn, "echo " + spe_cmd + " > " + logDir + "/spe_commands"
+    
     job_string_array = STRSPLIT(job_string, ' ', /EXTRACT)
     jobID = job_string_array[N_ELEMENTS(job_string_array)-1]
     
@@ -136,14 +140,14 @@ PRO DGSreduction_LaunchCollector, event, WaitForJobs=waitforjobs
       " --spe=" + outdir + "/" + instrument + "_" + runnumber + ".spe" + $
       " --phx=" + outdir + "/" + instrument + "_" + runnumber + ".phx" + $
       " -o " + outdir + "/" + instrument + "_" + runnumber + ".nxspe" + $
-      " -e " + ei 
+      " -e " + ei
       
-      IF STRLEN(rotationangle) GE 1 THEN BEGIN
-        nxspe_cmd += " -a " + calcMslicePsi(rotationangle, seblock)
-      ENDIF
+    IF STRLEN(rotationangle) GE 1 THEN BEGIN
+      nxspe_cmd += " -a " + calcMslicePsi(rotationangle, seblock)
+    ENDIF
     
-      spawn, nxspe_cmd
-      spawn, "echo " + nxspe_cmd + " > /tmp/" + info.username + "_nxspe_commands"
+    spawn, nxspe_cmd
+    spawn, "echo " + nxspe_cmd + " > " + logDir + "/nxspe_commands"
     
     
   ENDIF
@@ -178,9 +182,9 @@ PRO DGSreduction_LaunchCollector, event, WaitForJobs=waitforjobs
         
         
       if (index EQ 0) then begin
-        spawn, "echo " + qvec_cmd + " > /tmp/" + info.username + "_qvector_commands"
+        spawn, "echo " + qvec_cmd + " > " + logDir + "/qvector_commands"
       endif else begin
-        spawn, "echo " + qvec_cmd + " >> /tmp/" + info.username + "_qvector_commands"
+        spawn, "echo " + qvec_cmd + " >> " + logDir + "/qvector_commands"
       endelse
       
       ; Launch the jobs

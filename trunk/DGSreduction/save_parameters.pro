@@ -39,6 +39,7 @@ pro save_parameters, event, Filename=filename
   ; extract the command object into a separate
   dgsr_cmd = info.dgsr_cmd    ; ReductionCMD object
   dgsn_cmd = info.dgsn_cmd    ; NormCMD object
+  version =  info.version     ; DGSreduction version 
   
   print, "Using Working Directory of " + info.WorkingDir
   
@@ -53,7 +54,7 @@ pro save_parameters, event, Filename=filename
     RETURN
   ENDIF
   
-  SAVE, dgsr_cmd, dgsn_cmd, FILENAME=filename
+  SAVE, dgsr_cmd, dgsn_cmd, version, FILENAME=filename
   
   print, 'Saving ALL parameters to ... ' + filename
   

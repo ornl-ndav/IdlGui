@@ -135,10 +135,18 @@ PRO DGSreduction_Execute, event
     
     jobcmd = "sbatch -p " + queue + " "
     
+    ; output Directory
+    ; TODO: in order to switch to a shared directory - remove the /HOME from the following command
+    outputDir = get_output_directory(Instrument, runnumber, /HOME, /CREATE)
+    
+    ; store the outputDir in the info structure
+    info.outputDir = outputDir
+    
     ; Log Directory
     cd, CURRENT=thisDir
-    logDir = '/SNS/users/' + info.username + '/results/' + $
-      instrument + '/' + runnumber + '/logs'
+    ;    logDir = '/SNS/users/' + info.username + '/results/' + $
+    ;      instrument + '/' + runnumber + '/logs'
+    logDir = outputDir + '/logs'
     ; Make the directory
     spawn, 'mkdir -p ' + logDir
     
@@ -146,8 +154,8 @@ PRO DGSreduction_Execute, event
     ;jobIDs = STRARR(N_ELEMENTS(commands))
     
     ; Make sure that the output directory exists
-    outputDir = '~/results/' + instrument + '/' + runnumber
-    spawn, 'mkdir -p ' + outputDir
+    ;outputDir = '~/results/' + instrument + '/' + runnumber
+    ;spawn, 'mkdir -p ' + outputDir
     
     
     ;TODO Check for existance of SPE file and ask if the user wants to override it.
@@ -172,9 +180,9 @@ PRO DGSreduction_Execute, event
         " " + commands[index]
         
       if (index EQ 0) then begin
-        spawn, "echo " + cmd + " > /tmp/" + info.username + "_commands"
+        spawn, 'echo ' + cmd + ' > ' + logDir + '/reduction_commands'
       endif else begin
-        spawn, "echo " + cmd + " >> /tmp/" + info.username + "_commands"
+        spawn, 'echo ' + cmd + ' >> ' + logDir + '/reduction_commands'
       endelse
       
       ; Actually Launch the jobs
@@ -253,20 +261,19 @@ PRO DGSnorm_Execute, event
   ; Number of Jobs
   dgsn_cmd->GetProperty, Jobs=jobs
   
-  
   jobcmd = "sbatch -p " + queue + " "
+  
+  ; Make sure that the output directory exists
+  outputDir = get_output_directory(instrument, runnumber, /HOME, /CREATE)
   
   ; Log Directory
   cd, CURRENT=thisDir
-  logDir = '/SNS/users/' + info.username + '/results/' + $
-    instrument + '/' + runnumber + '/logs'
-    
-  ; Make the directory
-  spawn, 'mkdir -p ' + logDir
+  logDir = outputDir + '/logs'
   
-  ; Make sure that the output directory exists
-  outputDir = '~/results/' + instrument + '/' + runnumber
-  spawn, 'mkdir -p ' + outputDir
+  ; Make the directory if it doesn't exists
+  IF FILE_TEST(logDir, /DIRECTORY) EQ 0 THEN BEGIN
+    spawn, 'mkdir -p ' + logDir
+  ENDIF
   
   ; Create an array to hold the SLURM jobID numbers
   jobID = STRARR(N_ELEMENTS(commands))
@@ -286,9 +293,9 @@ PRO DGSnorm_Execute, event
       " " + commands[index]
       
     if (index EQ 0) then begin
-      spawn, "echo " + cmd + " > /tmp/" + info.username + "_norm_commands"
+      spawn, "echo " + cmd + " > " + logDir + "/norm_commands"
     endif else begin
-      spawn, "echo " + cmd + " >> /tmp/" + info.username + "_norm_commands"
+      spawn, "echo " + cmd + " >> " + logDir + "/norm_commands"
     endelse
     
     ; Actually Launch the jobs
@@ -484,7 +491,10 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
     
   ;TODO: Load in the default Value
     
-    
+  ; Define some default directories...
+  workingDir = '/SNS/users/' + get_ucams()
+  outputDir = get_output_directory()
+  
   ; Realise the widget hierarchy
   WIDGET_CONTROL, tlb, /REALIZE
   
@@ -499,8 +509,8 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
     ;    runs:runs, $ ; the list of run numbers to use for reduction (this will largely be the same as that in the dgsr_cmd object - except for the case of separate jobs ":")
     adminMode:0L, $ ; Flag to toggle Superuser mode.
     queue:"", $ ; Place holder for a custom queue name
-    workingDir:"~", $ ; The current working directory
-    outputDir:"~/results", $ The default output base directory
+    workingDir:workingDir, $ ; The current working directory
+    outputDir:outputDir, $ The default output base directory
   extra:ptr_new(extra) $
     }
     
