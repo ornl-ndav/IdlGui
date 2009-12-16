@@ -24,24 +24,55 @@ function GetCWPspectrum, instrument, runnumber
   cmd_str += ' -i ' + event_file + ' -O ' + tmin + ' -M ' + tmax + ' -l ' + tstep
   cmd_str += ' -o ' + outputfilename
   
+  print, tmin
+  print, tmax
+  print, tstep
+  
   ; Does the intended output file already exist?
   fileThere = FILE_TEST(outputFilename, /READ, /REGULAR)
- 
-  ; If the files not there then run the job 
+  
+  ; If the files not there then run the job
   IF (fileThere EQ 0) THEN BEGIN
-    ; make sure the spool/temp directory exists
+    ; make sure the cache directory exists
     spawn, 'mkdir -p ' + cache_dir
     spawn, cmd_str
   ENDIF
   
+  ranges = getcwpdetectorrange(instrument)
+  
   ; Now we need to read in this file and add up the spectra
+  file_id = h5f_open(outputFilename)
+  
+  cwp_data = fltarr(3334)
+  
+  for index = ranges.lower_bank, ranges.upper_bank do begin
   
   
-  jobID = -1
+    dataset_id = H5D_OPEN(file_id, '/entry/bank'+STRCOMPRESS(string(index),/REMOVE_ALL)+'/data_y_time_of_flight')
+    dataspace_id = H5D_GET_SPACE(dataset_id)
+    
+    start = [0, ranges.lower_row]
+    count = [3334, 10]
+    H5S_SELECT_HYPERSLAB, DATASPACE_ID, start, count, /RESET
+    memory_space_id = H5S_CREATE_SIMPLE(count)
+    
+    ; Read the data
+    data = H5D_READ(dataset_id, FILE_SPACE=dataspace_id, MEMORY_SPACE=memory_space_id)
+    
+    H5S_CLOSE, memory_space_id
+    H5S_CLOSE, dataspace_id
+    H5D_CLOSE, dataset_id
+    
+    sum = total(data,2)
+    cwp_data = data + TEMPORARY(sum)
+    
+  endfor
+  
   x = fltarr(1000)
-  y = fltarr(1000)
+  
+  ; Close the NeXus file
+  H5F_CLOSE, file_id
   
   return, { x:x, $
-    y:y, $
-    jobID:jobID }
+    y:cwp_data }
 end
