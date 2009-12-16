@@ -841,8 +841,7 @@ function ReductionCmd::Generate
     
     ; Chopper Wandering Phase
     IF (self.CWP EQ 1) THEN BEGIN
-      IF (STRLEN(self.data_cwp) GE 1)  THEN $
-        cmd[i] += " --cwp-data=" + self.data_cwp
+    
     ENDIF
     
     ; For now let people specify these offsets without turning on the CWP!
@@ -850,6 +849,8 @@ function ReductionCmd::Generate
       cmd[i] += " --cwp-bcan=" + self.bcan_cwp
     IF (STRLEN(self.ecan_cwp) GE 1)  THEN $
       cmd[i] += " --cwp-ecan=" + self.ecan_cwp
+    IF (STRLEN(self.data_cwp) GE 1)  THEN $
+      cmd[i] += " --cwp-data=" + self.data_cwp
       
       
       
