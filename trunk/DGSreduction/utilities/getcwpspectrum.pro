@@ -44,7 +44,7 @@ function GetCWPspectrum, instrument, runnumber
   ; Now we need to read in this file and add up the spectra
   file_id = h5f_open(outputFilename)
   
-  nelements = (tmax - tmin) / tstep 
+  nelements = (long(tmax) - long(tmin)) / long(tstep) 
   tof = (findgen(nelements+1) * tstep) + tmin
   
   cwp_data = fltarr(nelements)
