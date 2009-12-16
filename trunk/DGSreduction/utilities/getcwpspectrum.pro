@@ -46,7 +46,9 @@ function GetCWPspectrum, instrument, runnumber
   
   nelements = (long(tmax) - long(tmin)) / long(tstep) 
   tof = (findgen(nelements+1) * tstep) + tmin
-  
+ 
+  print, nelements
+ 
   cwp_data = fltarr(nelements)
   
   for index = ranges.lower_bank, ranges.upper_bank do begin
@@ -54,12 +56,9 @@ function GetCWPspectrum, instrument, runnumber
   
     dataset_id = H5D_OPEN(file_id, '/entry/bank'+STRCOMPRESS(string(index),/REMOVE_ALL)+'/data_y_time_of_flight')
     dataspace_id = H5D_GET_SPACE(dataset_id)
-    
-    data2 = H5D_READ(dataset_id, FILE_SPACE=dataspace_id)
-    help,/str,data2
-    
+
     start = [0, ranges.lower_row]
-    count = [nelements+1, 10]
+    count = [nelements, 10]
     H5S_SELECT_HYPERSLAB, DATASPACE_ID, start, count, /RESET
     memory_space_id = H5S_CREATE_SIMPLE(count)
     
