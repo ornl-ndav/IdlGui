@@ -8,6 +8,8 @@ function getTzero, instrument, runnumber, ei
     end
     "CNCS": begin
       tzero = 0.1982*(1+Ei)^(-0.84098)
+      ; Convert to usec
+      tzero = tzero * 1000.0
     end
     "SEQUOIA": begin
       ; Calculate the Ei
