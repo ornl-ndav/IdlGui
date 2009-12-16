@@ -274,6 +274,8 @@ PRO dgsreduction_events, event, dgsr_cmd
       dgsr_cmd->GetProperty, datarun=runnumber
       ;print, runnumber
       Ei = GetEi(instrument, GetFirstNumber(runnumber))
+      ; Convert it to a string
+      Ei = strcompress(string(Ei), /REMOVE_ALL)
       Ei_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_EI')
       WIDGET_CONTROL, Ei_ID, SET_VALUE=Ei
       dgsr_cmd->SetProperty, Ei=Ei
@@ -292,13 +294,22 @@ PRO dgsreduction_events, event, dgsr_cmd
         dgsr_cmd->SetProperty, Ei=Ei
       ENDIF
       tzero = getTzero(instrument, GetFirstNumber(runnumber), Ei)
+      ; Convert it to a string
+      tzero = strcompress(string(tzero), /REMOVE_ALL)
       Tzero_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_TZERO')
       WIDGET_CONTROL, tzero_ID, SET_VALUE=tzero
       dgsr_cmd->SetProperty, tzero=tzero
     END
     'DGSR_CWP': BEGIN
+      dgsr_cmd->SetProperty, CWP=event.SELECT
+    END
+    'DGSR_EMPTYCAN_CWP': BEGIN
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
-      dgsr_cmd->SetProperty, CWP=myValue
+      dgsr_cmd->SetProperty, Ecan_CWP=myValue
+    END
+    'DGSR_BLACKCAN_CWP': BEGIN
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      dgsr_cmd->SetProperty, Bcan_CWP=myValue
     END
     ELSE: begin
       ; Do nowt
