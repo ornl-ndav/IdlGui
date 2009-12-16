@@ -71,9 +71,9 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   dataSourceHint1 = '1,4-6 will add run 1,4,5,6 together.'
   dataSourceHint2 = '1:3 will process runs 1,2,3 separately.'
   
-;  dataSourceStatusCol = WIDGET_BASE(dataSourcePrettyBase, /COLUMN)
-;  dataSourceStatus1 = WIDGET_LABEL(dataSourcePrettyBase, VALUE=dataSourceHint1 ,ALIGN_LEFT=1)
-;  dataSourceStatus2 = WIDGET_LABEL(dataSourcePrettyBase, VALUE=dataSourceHint2, ALIGN_LEFT=1)
+  ;  dataSourceStatusCol = WIDGET_BASE(dataSourcePrettyBase, /COLUMN)
+  ;  dataSourceStatus1 = WIDGET_LABEL(dataSourcePrettyBase, VALUE=dataSourceHint1 ,ALIGN_LEFT=1)
+  ;  dataSourceStatus2 = WIDGET_LABEL(dataSourcePrettyBase, VALUE=dataSourceHint2, ALIGN_LEFT=1)
   
   
   detectorBankBase = WIDGET_BASE(RunDetectorRow)
@@ -124,7 +124,7 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
     
   tzeroGuessButtonID = WIDGET_BUTTON(tzeroPrettyBase, VALUE='Estimate T0', $
     UVALUE='DGSR_TZERO_GUESS', UNAME='DGSR_TZERO_GUESS')
- 
+    
     
     
   ; == ENERGY TRANSFER RANGE ==
@@ -236,15 +236,23 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   
   cwpButton = WIDGET_BUTTON(normOptionsBase, VALUE='Chopper Wandering Phase', $
     UVALUE='DGSR_CWP', UNAME='DGSR_CWP')
-  
+    
   ; Normalisation Files
   normFilesBase = WIDGET_BASE(normOptionsBaseColumn2, /COLUMN, /ALIGN_RIGHT)
   normFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS,     TITLE="Normalisation: ", UVALUE="DGSR_NORMRUN", $
     UNAME="DGSR_NORMRUN")
-  emptycanFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS, TITLE="    Empty Can: ", UVALUE="DGSR_EMPTYCAN", $
+  emptycanbase = WIDGET_BASE(normFilesBase,/row)
+  emptycanFileID = CW_FIELD(emptycanbase, XSIZE=20, /ALL_EVENTS, TITLE="    Empty Can: ", UVALUE="DGSR_EMPTYCAN", $
     UNAME="DGSR_EMPTYCAN")
-  blackcanFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS, TITLE="    Black Can: ", UVALUE="DGSR_BLACKCAN", $
+  emptycanTzeroID = CW_FIELD(emptycanbase, XSIZE=5, /ALL_EVENTS, TITLE='', UVALUE="DGSR_EMPTYCAN_CWP", $
+    UNAME="DGSR_EMPTYCAN_CWP")
+    
+  blackcanbase = WIDGET_BASE(normFilesBase, /ROW)
+  blackcanFileID = CW_FIELD(blackcanbase, XSIZE=20, /ALL_EVENTS, TITLE="    Black Can: ", UVALUE="DGSR_BLACKCAN", $
     UNAME="DGSR_BLACKCAN")
+  blackcanTzeroID = CW_FIELD(blackcanbase, XSIZE=5, /ALL_EVENTS, TITLE='', UVALUE="DGSR_BLACKCAN_CWP", $
+    UNAME="DGSR_BLACKCAN_CWP")
+    
   darkFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS,     TITLE=" Dark Current: ", UVALUE="DGSR_DARK", $
     UNAME="DGSR_DARK")
     
@@ -289,7 +297,7 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   normMaxID = CW_FIELD(normRangePrettyBase, /ALL_EVENTS, TITLE="Max:", UVALUE="DGSR_NORM-INT-MAX", $
     UNAME="DGSR_NORM-INT-MAX", XSIZE=10)
     
-
+    
   ; == ROI and MASKS ==
     
   ; Mask File
