@@ -85,7 +85,7 @@ PRO retrieve_data_of_new_file, event_load=event_load, $
   ENDIF
   
   pXarray_new      = (*(*global).pXarray_new)
-  pYarray_new      = (* (*global).pYarray_new)
+  pYarray_new      = (*(*global).pYarray_new)
   pSigmaYArray_new = (*(*global).pSigmaYArray_new)
   
   pXaxis_new       = (*(*global).pXaxis_new)
@@ -98,7 +98,7 @@ PRO retrieve_data_of_new_file, event_load=event_load, $
   iAsciiFile = OBJ_NEW('IDL3columnsASCIIparser', new_file)
   IF (OBJ_VALID(iAsciiFile)) THEN BEGIN
     error = 0
-    data = iAsciiFile->getData(error)
+    sdata = iAsciiFile->getData(error)
     IF (error NE 0) THEN BEGIN
       type = ''
     ENDIF ELSE BEGIN
@@ -122,12 +122,14 @@ PRO retrieve_data_of_new_file, event_load=event_load, $
       ;    pyaxis        float     array[nbr_file]
       ;    pSigmaYaxis   float     array[nbr_file]
       ;//
+      
       OBJ_DESTROY, iAsciiFile
       
     ENDIF
   ENDIF
   
   print, 'type: ' + string(type)
+  help, sData, /structure
   
 END
 

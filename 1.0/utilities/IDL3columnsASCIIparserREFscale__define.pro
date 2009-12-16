@@ -91,9 +91,13 @@ FUNCTION IDL3columnsASCIIparserREFscale::getDataQuickly
     *pSigmaYaxis[i] = FLOAT(local_SigmaYaxis)
   ENDFOR
   
-  
-  
   big_structure = { ArrayTitle: ArrayTitle,$
+    xaxis: 'scalar wavevector transfer',$
+    xaxis_units: '1/Angstroms',$
+    yaxis: 'Intensity',$
+    yaxis_units: 'counts',$
+    sigma_yaxis: 'sigma',$
+    sigma_yaxis_units: '',$
     pXaxis: pXaxis,$
     pYaxis: pYaxis, $
     pSigmaYaxis: pSigmaYaxis}
