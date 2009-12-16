@@ -62,6 +62,7 @@ pro load_parameters, widgetBase, Filename=filename
   info.dgsr_cmd = dgsr_cmd
   info.dgsn_cmd = dgsn_cmd
   
+  
   ; Find the output window (DGS)
   dgsr_cmd_outputID = WIDGET_INFO(widgetBase,FIND_BY_UNAME='DGSR_CMD_TEXT')
   ; Update the output command window
