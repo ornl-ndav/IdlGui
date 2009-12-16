@@ -23,6 +23,8 @@ function GetCWPspectrum, instrument, runnumber
   cmd_str = event2histo_nxl_exe + ' `findcalib -i ' + instrument + ' -m -b -T`'
   cmd_str += ' -i ' + event_file + ' -O ' + tmin + ' -M ' + tmax + ' -l ' + tstep
   cmd_str += ' -o ' + outputfilename
+  ; optional debug output
+  cmd_str += ' > ' + outputfilename + '.log'
   
   print, tmin
   print, tmax
