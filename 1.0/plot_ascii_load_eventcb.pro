@@ -54,10 +54,162 @@ PRO browse_button, Event
   IF (file_list[0] NE '') THEN BEGIN
     (*global).path = new_path
     
-    populate_load_table, Event, file_list
-;;    plot_ascii_file, event_load=event
+    ;indicate initialization with hourglass icon
+    WIDGET_CONTROL,/HOURGLASS
+    
+    nbr_file_loaded = N_ELEMENTS(file_list)
+    FOR i=0,(nbr_file_loaded-1) DO BEGIN
+      retrieve_data_of_new_file, Event_load=event, file_list[i]
+    ENDFOR
+    
+    WIDGET_CONTROL, HOURGLASS=0
     
   ENDIF
+  
+END
+
+;------------------------------------------------------------------------------
+PRO retrieve_data_of_new_file, event_load=event_load, $
+    main_event=main_event,  $
+    new_file
+    
+  IF (N_ELEMENTS(event_load) NE 0) THEN BEGIN
+    event = event_load
+  ENDIF ELSE BEGIN
+    event = main_event
+  ENDELSE
+  WIDGET_CONTROL, event.top, GET_UVALUE=global
+  
+  IF (N_ELEMENTS(event_load) NE 0) THEN BEGIN
+    global = (*global).global
+  ENDIF
+  
+  pXarray_new      = (*(*global).pXarray_new)
+  pYarray_new      = (* (*global).pYarray_new)
+  pSigmaYArray_new = (*(*global).pSigmaYArray_new)
+  
+  pXaxis_new       = (*(*global).pXaxis_new)
+  pXaxis_units_new = (*(*global).pXaxis_units_new)
+  pYaxis_new       = (*(*global).pYaxis_new)
+  pYaxis_units_new = (*(*global).pYaxis_units_new)
+  
+  type = '' ;'single_ascii' or ' multi_ascii'
+  ;try to create instance of single ascii file
+  iAsciiFile = OBJ_NEW('IDL3columnsASCIIparser', new_file)
+  IF (OBJ_VALID(iAsciiFile)) THEN BEGIN
+    error = 0
+    data = iAsciiFile->getData(error)
+    IF (error NE 0) THEN BEGIN
+      type = ''
+    ENDIF ELSE BEGIN
+      type = 'single_ascii'
+    ENDELSE
+    OBJ_DESTROY, iAsciiFile
+  ENDIF
+  
+  ;try multi ascii file if single ascii file failed
+  IF (type EQ '') THEN BEGIN
+    iAsciiFile = OBJ_NEW('IDL3columnsASCIIparserREFscale', new_file)
+    IF (OBJ_VALID(iAsciiFile)) THEN BEGIN
+      type = 'multi_ascii'
+      sData = iAsciiFile->getDataQuickly()
+      
+      ; help, sData, /structure
+      ; help, *sData.pxaxis[0]
+      ;// sData is a structure
+      ;    ArrayTitle    string    Array[2,nbr_file]
+      ;    pxaxis        float     array[nbr_file]
+      ;    pyaxis        float     array[nbr_file]
+      ;    pSigmaYaxis   float     array[nbr_file]
+      ;//
+      OBJ_DESTROY, iAsciiFile
+      
+    ENDIF
+  ENDIF
+  
+  print, 'type: ' + string(type)
+  
+END
+
+pro tmp
+
+  index = 0
+  WHILE (index LT nbr_ascii) DO BEGIN
+  
+    ;simple ascii file
+    iAsciiFile = OBJ_NEW('IDL3columnsASCIIparser', list_ascii_files[index])
+    IF (OBJ_VALID(iAsciiFile)) THEN BEGIN
+      sAscii = iAsciiFile->getData()
+      local_pXaxis = sAscii.xaxis
+      local_pXaxis_units = sAscii.xaxis_units
+      local_pYaxis = sAscii.yaxis
+      local_pYaxis_units = sAscii.yaxis_units
+      
+      DataStringArray = *(*sAscii.data)[0].data
+      ;this method will creates a 3 columns array (x,y,sigma_y)
+      Nbr = N_ELEMENTS(DataStringArray)
+      IF (Nbr GT 1) THEN BEGIN
+        Xarray      = STRARR(1)
+        Yarray      = STRARR(1)
+        SigmaYarray = STRARR(1)
+        ParseDataStringArray, global, $
+          DataStringArray,$
+          Xarray,$
+          Yarray,$
+          SigmaYarray
+        ;Remove all rows with NaN, -inf, +inf ...
+        CleanUpData, Xarray, Yarray, SigmaYarray
+        ;Change format of array (string -> float)
+        Xarray      = FLOAT(Xarray)
+        Yarray      = FLOAT(Yarray)
+        SigmaYarray = FLOAT(SigmaYarray)
+        
+        ;        local_xmax = MAX(Xarray)
+        ;        local_ymax = MAX(Yarray)
+        ;        IF (local_xmax GT global_xmax) THEN global_xmax = local_xmax
+        ;        IF (local_ymax GT global_ymax) THEN global_ymax = local_ymax
+        
+        *pXarray[index] = Xarray
+        *pYarray[index] = Yarray
+        *pSigmaYarray[index] = SigmaYarray
+        
+      ENDIF
+      
+      *pXaxis[index] = local_pXaxis
+      *pXaxis_units[index] = local_pXaxis_units
+      *pYaxis[index] = local_pYaxis
+      *pYaxis_units[index] = local_pYaxis_units
+      
+    ENDIF
+    OBJ_DESTROY, iAsciiFile
+    
+    index++
+  ENDWHILE
+  
+  ;  xymax = FLTARR(4)
+  ;  xymax[2] = global_xmax
+  ;  xymax[3] = global_ymax
+  ;  (*global).xyminmax = xymax
+  
+  (*(*global).pXarray) = pXarray
+  (*(*global).pYarray) = pYarray
+  (*(*global).pSigmaYArray) = pSigmaYArray
+  
+  (*(*global).pXaxis) = pXaxis
+  (*(*global).pXaxis_units) = pXaxis_units
+  (*(*global).pYaxis) = pYaxis
+  (*(*global).pYaxis_units) = pYaxis_units
+  
+  ;turn off hourglass
+  WIDGET_CONTROL,HOURGLASS=0
+  
+  
+  
+  
+  
+  
+  
+  
   
 END
 
