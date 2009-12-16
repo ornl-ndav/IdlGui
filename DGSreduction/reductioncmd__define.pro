@@ -107,6 +107,9 @@ PRO ReductionCmd::GetProperty, $
     SEblock=seblock, $                   ; Sample Environment Block name for the sample rotation
     RotationAngle=rotationangle, $       ; Value of the sample rotation
     CWP=cwp, $                           ; Chopper Wandering Phase on/off
+    Bcan_CWP=bcan_cwp, $                 ; chopper phase corrections for black can data. (usecs)
+    Ecan_CWP=ecan_cwp, $                 ; chopper phase corrections for empty can data. (usecs)
+    Data_CWP=data_cwp, $                 ; chopper phase corrections for sample data. (usecs)
     OutputPrefix=outputprefix, $         ; Prefix for where to write the output
     Timing=timing, $                     ; Timing of code
     Jobs=jobs, $                         ; Number of Jobs to run
@@ -192,6 +195,9 @@ PRO ReductionCmd::GetProperty, $
   IF ARG_PRESENT(SEblock) NE 0 THEN SEblock = self.seblock
   IF ARG_PRESENT(RotationAngle) NE 0 THEN RotationAngle = self.rotationangle
   IF ARG_PRESENT(CWP) NE 0 THEN CWP = self.cwp
+  IF ARG_PRESENT(Ecan_CWP) NE 0 THEN Ecan_CWP = self.ecan_cwp
+  IF ARG_PRESENT(Bcan_CWP) NE 0 THEN Bcan_CWP = self.bcan_cwp
+  IF ARG_PRESENT(Data_CWP) NE 0 THEN Data_CWP = self.data_cwp
   IF ARG_PRESENT(OutputPrefix) NE 0 THEN OutputPrefix = self.outputprefix
   IF ARG_PRESENT(Timing) NE 0 THEN Timing = self.timing
   IF ARG_PRESENT(Jobs) NE 0 THEN Jobs = self.jobs
@@ -269,6 +275,9 @@ PRO ReductionCmd::SetProperty, $
     SEblock=seblock, $                   ; Sample Environment Block name for the sample rotation
     RotationAngle=rotationangle, $       ; Value of the sample rotation
     CWP=cwp, $                           ; Chopper Wandering Phase on/off
+    Bcan_CWP=bcan_cwp, $                 ; chopper phase corrections for black can data. (usecs)
+    Ecan_CWP=ecan_cwp, $                 ; chopper phase corrections for empty can data. (usecs)
+    Data_CWP=data_cwp, $                 ; chopper phase corrections for sample data. (usecs)
     OutputPrefix=outputprefix, $         ; Prefix for where to write the output
     Timing=timing, $                     ; Timing of code
     Jobs=jobs, $                         ; Number of Jobs to run
@@ -409,9 +418,16 @@ PRO ReductionCmd::SetProperty, $
   
   IF N_ELEMENTS(SEblock) NE 0 THEN self.seblock = SEblock
   IF N_ELEMENTS(RotationAngle) NE 0 THEN self.rotationangle = RotationAngle
-
-  IF N_ELEMENTS(CWP) NE 0 THEN self.CWP = cwp
   
+  IF N_ELEMENTS(CWP) NE 0 THEN self.CWP = cwp
+  IF N_ELEMENTS(Ecan_CWP) NE 0 THEN $
+    self.ecan_cwp = STRCOMPRESS(STRING(Ecan_CWP), /REMOVE_ALL)
+  IF N_ELEMENTS(Bcan_CWP) NE 0 THEN $
+    self.bcan_cwp = STRCOMPRESS(STRING(Bcan_CWP), /REMOVE_ALL)
+  IF N_ELEMENTS(Data_CWP) NE 0 THEN $
+    self.data_cwp = STRCOMPRESS(STRING(Data_CWP), /REMOVE_ALL)
+    
+    
   IF N_ELEMENTS(OutputPrefix) NE 0 THEN self.outputprefix = OutputPrefix
   
   IF N_ELEMENTS(timing) NE 0 THEN self.timing = Timing
@@ -728,10 +744,10 @@ function ReductionCmd::Generate
     
     ; Ei
     IF STRLEN(self.ei) GE 1 THEN $
-      cmd[i] += " --initial-energy="+self.ei+","+self.error_ei
+      cmd[i] += " --initial-energy="+strcompress(self.ei,/remove_all)+","+self.error_ei
     ; T0
     IF STRLEN(self.tzero) GE 1 THEN $
-      cmd[i] += " --time-zero-offset="+self.tzero+","+self.error_tzero
+      cmd[i] += " --time-zero-offset="+strcompress(self.tzero,/remove_all)+","+self.error_tzero
     ; Flag for turning off monitor normalization
     IF (self.nomonitornorm EQ 1) THEN cmd[i] += " --no-mon-norm"
     ; proton charge normalization
@@ -825,9 +841,18 @@ function ReductionCmd::Generate
     
     ; Chopper Wandering Phase
     IF (self.CWP EQ 1) THEN BEGIN
-      ; TODO: Implement it.
+      IF (STRLEN(self.data_cwp) GE 1)  THEN $
+        cmd[i] += " --cwp-data=" + self.data_cwp
     ENDIF
     
+    ; For now let people specify these offsets without turning on the CWP!
+    IF (STRLEN(self.bcan_cwp) GE 1)  THEN $
+      cmd[i] += " --cwp-bcan=" + self.bcan_cwp
+    IF (STRLEN(self.ecan_cwp) GE 1)  THEN $
+      cmd[i] += " --cwp-ecan=" + self.ecan_cwp
+      
+      
+      
     IF (self.qvector EQ 1) THEN cmd[i] += " --qmesh"
     IF (self.fixed EQ 1) AND (self.qvector EQ 1) THEN cmd[i] += " --fixed"
     IF (self.split EQ 1) THEN cmd[i] += " --split"
@@ -909,6 +934,9 @@ function ReductionCmd::Init, $
     SEblock=seblock, $                   ; Sample Environment Block name for the sample rotation
     RotationAngle=rotationangle, $       ; Value of the sample rotation
     CWP=cwp, $                           ; Chopper Wandering Phase on/off
+    Bcan_CWP=bcan_cwp, $                 ; chopper phase corrections for black can data. (usecs)
+    Ecan_CWP=ecan_cwp, $                 ; chopper phase corrections for empty can data. (usecs)
+    Data_CWP=data_cwp, $                 ; chopper phase corrections for sample data. (usecs)
     OutputPrefix=outputprefix, $         ; Prefix for where to write the output
     Timing=timing, $                     ; Timing of code
     Jobs=jobs, $                         ; Number of Jobs
@@ -992,6 +1020,9 @@ function ReductionCmd::Init, $
   IF N_ELEMENTS(SEblock) EQ 0 THEN seblock = ""
   IF N_ELEMENTS(RotationAngle) EQ 0 THEN rotationangle = ""
   IF N_ELEMENTS(CWP) EQ 0 THEN cwp = 0
+  IF N_ELEMENTS(Bcan_CWP) EQ 0 THEN bcan_cwp = ""
+  IF N_ELEMENTS(Ecan_CWP) EQ 0 THEN ecan_cwp = ""
+  IF N_ELEMENTS(Data_CWP) EQ 0 THEN data_cwp = ""
   IF N_ELEMENTS(OutputPrefix) EQ 0 THEN OutputPrefix = "~/results"
   IF N_ELEMENTS(timing) EQ 0 THEN timing = 0
   IF N_ELEMENTS(jobs) EQ 0 THEN jobs = 1
@@ -1066,6 +1097,9 @@ function ReductionCmd::Init, $
   self.seblock = seblock
   self.rotationangle = rotationangle
   self.cwp = cwp
+  self.ecan_cwp = ecan_cwp
+  self.bcan_cwp = bcan_cwp
+  self.data_cwp = data_cwp
   self.outputprefix = OutputPrefix
   self.timing = timing
   self.jobs = jobs
@@ -1094,7 +1128,7 @@ pro ReductionCmd__Define
     facility: "", $          ; Facility name
     proposal: "", $          ; Proposal ID
     spe: 0L, $               : SPE file creation
-    configfile: "", $        ; Config (.rmd) filename
+  configfile: "", $        ; Config (.rmd) filename
     instgeometry: "", $      ; Instrument Geometry filename
     cornergeometry: "", $    ; Corner Geometry filename
     lowerbank: 0L, $         ; Lower Detector Bank
@@ -1154,6 +1188,9 @@ pro ReductionCmd__Define
     RotationAngle:"", $      ; Value of the sample rotation
     OutputPrefix: "", $      ; Prefix for where to write the output (normally ~/results/)
     CWP: 0L, $               ; Chopper Wandering Phase on/off
+    bcan_cwp: "", $          ; chopper phase corrections for black can data. (usecs)
+    ecan_cwp: "", $          ; chopper phase corrections for empty can data. (usecs)
+    data_cwp: "", $          ; chopper phase corrections for sample data. (usecs)
     timing: 0L, $            ; Timing of code
     jobs : 0L, $             ; Number of Jobs to Run
     extra: PTR_NEW() }       ; Extra keywords
