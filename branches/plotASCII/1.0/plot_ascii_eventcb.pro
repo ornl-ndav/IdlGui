@@ -144,7 +144,7 @@ PRO load_ascii_file, event_load=event_load, main_event=main_event
   nbr_ascii = N_ELEMENTS(list_ascii_files)
   
   pXarray = (*(*global).pXarray)
-  pYarray = (*(*global).pYarray)
+  pYarray = (* (*global).pYarray)
   pSigmaYArray = (*(*global).pSigmaYArray)
   
   pXaxis = (*(*global).pXaxis)

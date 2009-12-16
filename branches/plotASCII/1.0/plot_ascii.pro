@@ -65,7 +65,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   ;DEBUGGING
   sDEBUGGING = { tab: {main_tab: 0},$  ;0:step1, 1:logBook
-    path: '~/SVN/IdlGui/trunk/plotASCII\ 1.0/'}
+    path: '~/IDLWorkspace/plotASCII 1.0/'}
   ;******************************************************************************
   ;******************************************************************************
     
@@ -113,6 +113,15 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     pYaxis: PTR_NEW(0L), $
     pYaxis_units: PTR_NEW(0L), $
     
+    pXarray_new: PTR_NEW(0L),$
+    pYarray_new: PTR_NEW(0L), $
+    pSigmaYarray_new: PTR_NEW(0L), $
+    
+    pXaxis_new: PTR_NEW(0L), $
+    pXaxis_units_new: PTR_NEW(0L), $
+    pYaxis_new: PTR_NEW(0L), $
+    pYaxis_units_new: PTR_NEW(0L), $
+    
     Xarray: PTR_NEW(0L), $
     Xarray_untouched: PTR_NEW(0L), $
     Yarray: PTR_NEW(0L), $
@@ -131,7 +140,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
   plot_color = ['white','yellow','red','blue','green','purple','pink',$
     'orange', 'brown','olive']
-    ascii_color = [plot_color,plot_color,plot_color,plot_color,plot_color]
+  ascii_color = [plot_color,plot_color,plot_color,plot_color,plot_color]
   (*global).ascii_color = ascii_color
   
   nbr_ascii_files = (*global).nbr_ascii_files
@@ -150,6 +159,22 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   (*(*global).pXaxis_units) = pXaxis_units
   (*(*global).pYaxis) = pYaxis
   (*(*global).pYaxis_units) = pYaxis_units
+  
+  pXarray_new = PTRARR(nbr_ascii_files,/AlLOCATE_HEAP)
+  pYarray_new = PTRARR(nbr_ascii_files,/AlLOCATE_HEAP)
+  pSigmaYarray_new = PTRARR(nbr_ascii_files,/AlLOCATE_HEAP)
+  (*(*global).pXarray_new) = pXarray_new
+  (*(*global).pYarray_new) = pYarray_new
+  (*(*global).pSigmaYarray_new) = pSigmaYarray_new
+  
+  pXaxis_new = PTRARR(nbr_ascii_files,/AlLOCATE_HEAP)
+  pXaxis_units_new = PTRARR(nbr_ascii_files,/AlLOCATE_HEAP)
+  pYaxis_new = PTRARR(nbr_ascii_files,/AlLOCATE_HEAP)
+  pYaxis_units_new = PTRARR(nbr_ascii_files,/AlLOCATE_HEAP)
+  (*(*global).pXaxis_new) = pXaxis_new
+  (*(*global).pXaxis_units_new) = pXaxis_units_new
+  (*(*global).pYaxis_new) = pYaxis_new
+  (*(*global).pYaxis_units_new) = pYaxis_units_new
   
   MainBaseSize   = (*global).MainBaseSize
   MainBaseTitle  = 'plot ASCII'
@@ -183,7 +208,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     UNAME = 'tools_button_uname')
     
   zoom_help = WIDGET_LABEL(button_base,$
-  VALUE = '             Double click to reset zoom')  
+    VALUE = '             Double click to reset zoom')
     
   plot = WIDGET_DRAW(MAIN_BASE,$
     UNAME = 'main_draw',$
@@ -212,8 +237,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   ;??????????????????????????????????????????????????????????????????????????????
   IF (DEBUGGING EQ 'yes' ) THEN BEGIN
-    (*global).path = '~/IDLWorkspace/plotASCII'
-  ;(*global).path = '~/results/'
+    (*global).path = sDEBUGGING.path
   ENDIF
   ;??????????????????????????????????????????????????????????????????????????????
   
