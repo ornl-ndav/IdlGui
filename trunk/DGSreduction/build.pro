@@ -50,9 +50,27 @@ newPath = EXPAND_PATH('+./') + PATH_SEP(/SEARCH_PATH) + !PATH
 .compile formatbanknumber
 .compile construct_datapaths
 .compile getdetectorbankrange
+.compile getcwpdetectorrange
 .compile getdefaultslurmqueue
 .compile getfirstnumber
 .compile expandrunnumbers
+.compile gettzero
+.compile calcei
+.compile getei
+.compile getmintimefromprenexus
+.compile getmaxtimefromprenexus
+.compile getsteptimefromprenexus
+.compile getproposalfromprenexus
+.compile getentryidentifier
+.compile get_runinfo_filename
+.compile get_prenexus_directory
+.compile get_output_directory
+.compile get_event_filename
+.compile get_cwpcache_directory
+.compile get_cvinfo_filename
+.compile get_beamtimeinfo_filename
+.compile calcmslicepsi
+.compile getcwpspectrum
 
 .compile monitorjob_events
 .compile monitorjob

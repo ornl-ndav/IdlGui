@@ -119,12 +119,14 @@ PRO DGSR_UpdateGUI, tlb, dgsr_cmd
   ; Empty Can Run
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_EMPTYCAN')
   dgsr_cmd->GetProperty, EmptyCan=myValue
+  print, 'Setting DGSR_EMPTYCAN = ', myValue
   ; Don't Load the default value
   WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
   
   ; Black Can Run
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_BLACKCAN')
   dgsr_cmd->GetProperty, BlackCan=myValue
+  print, 'Setting DGSR_BLACKCAN = ', myValue
   ; Don't Load the default value
   WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
   
