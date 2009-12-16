@@ -71,7 +71,7 @@ PRO DGSreduction_LaunchCollector, event, WaitForJobs=waitforjobs
   jobname = instrument + "_" + runnumber + "_collector"
   
   ; Output Directory
-  outDir = "~/results/" + instrument + "/" + runnumber
+  outDir = '/SNS/users/' + info.username + '/results/' + instrument + '/' + runnumber
   ; Make sure that the output directory exists
   spawn, 'mkdir -p ' + outDir
   
@@ -132,7 +132,7 @@ PRO DGSreduction_LaunchCollector, event, WaitForJobs=waitforjobs
       " --job-name=" + instrument + "_" + runnumber + "_NXSPE_converter " + $
       " --dependency=afterok:" + jobID
       
-    nxspe_cmd += " nxs2nxspe.py --force -i " + instrument + " -r " + runnumber + $
+    nxspe_cmd += " spe2nxspe.py --force -i " + instrument + " -r " + runnumber + $
       " --spe=" + outdir + "/" + instrument + "_" + runnumber + ".spe" + $
       " --phx=" + outdir + "/" + instrument + "_" + runnumber + ".phx" + $
       " -o " + outdir + "/" + instrument + "_" + runnumber + ".nxspe" + $
