@@ -82,29 +82,49 @@ PRO DGSreduction_Execute, event
     WIDGET_CONTROL, event.top, GET_UVALUE=info, /NO_COPY
     dgsr_cmd = info.dgsr_cmd
     
-    ; Set the run number in the object
-    dgsr_cmd->SetProperty, DataRun=RunNumbers[i]
-    
-    ; Check to see if the Chopper Wandering Phase Correction is turned on
-    dgsr_cmd->GetProperty, CWP=cwp
-    IF (cwp EQ 1) THEN BEGIN
-      ; Need to calculate the offsets for each data file.
-      
-      ; Data Runs
-      
-      ; Empty Cans
-      
-      ; Black Cans
-      
-    ENDIF 
-    
-    ; Generate the array of commands to run
-    commands = dgsr_cmd->generate()
-    
     ; Get the queue name
     dgsr_cmd->GetProperty, Queue=queue
     ; Get the instrument name
     dgsr_cmd->GetProperty, Instrument=instrument
+    
+    ; Set the run number in the object
+    dgsr_cmd->SetProperty, DataRun=RunNumbers[i]
+    
+    Print, 'Run Numbers = ', runnumbers[i]
+    
+    ; Get the Ei
+    dgsr_cmd->GetProperty, Ei=Ei
+    ; Get the Tzero
+    dgsr_cmd->GetProperty, Tzero=Tzero
+    
+    ; Check to see if the Chopper Wandering Phase Correction is turned on
+    dgsr_cmd->GetProperty, CWP=cwp
+    IF (cwp EQ 1) THEN BEGIN
+      ; First we need to check if we need to expand the run numbers
+      dataruns = ExpandIndividualRunNumbers(RunNumbers[i])
+      FOR j = 0L, N_ELEMENTS(dataruns)-1 DO BEGIN
+        ; Need to calculate the offsets for each data file.
+      
+        ; Data Runs
+        data = GetCWPspectrum(instrument, dataruns[j])
+        tof = get_ideal_elastic_tof(instrument, ei, tzero)
+        
+        print, 'Calculated TOF for Run #' + dataruns[j] + ' is ' + tof
+        
+      ENDFOR
+      
+      
+      
+    ; Empty Cans
+      
+      
+    ; Black Cans
+      
+    ENDIF
+    
+    ; Generate the array of commands to run
+    commands = dgsr_cmd->generate()
+    
     ; Get the detector bank limits
     dgsr_cmd->GetProperty, LowerBank=lowerbank
     dgsr_cmd->GetProperty, UpperBank=upperbank
@@ -481,7 +501,7 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
     queue:"", $ ; Place holder for a custom queue name
     workingDir:"~", $ ; The current working directory
     outputDir:"~/results", $ The default output base directory
-    extra:ptr_new(extra) $
+  extra:ptr_new(extra) $
     }
     
   ; Store the info structure in the user value of the TLB.  Turn keyboard focus events on.
