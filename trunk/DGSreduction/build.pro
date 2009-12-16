@@ -55,6 +55,7 @@ newPath = EXPAND_PATH('+./') + PATH_SEP(/SEARCH_PATH) + !PATH
 .compile getdefaultslurmqueue
 .compile getfirstnumber
 .compile expandrunnumbers
+.compile expandindividualrunnumbers
 .compile gettzero
 .compile calcei
 .compile getei
