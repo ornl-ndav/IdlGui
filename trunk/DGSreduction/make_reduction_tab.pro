@@ -65,6 +65,9 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   dataSourceRow = WIDGET_BASE(dataSourcePrettyBase, /ROW)
   datarunID= CW_FIELD(dataSourceRow, xsize=29, ysize=1, TITLE="", UVALUE="DGSR_DATARUN", UNAME='DGSR_DATARUN', $
     /ALL_EVENTS)
+  datarun_cwp_id = CW_FIELD(dataSourceRow, xsize=5, ysize=1, TITLE="", UVALUE="DGSR_DATA_CWP", UNAME='DGSR_DATA_CWP', $
+    /ALL_EVENTS)
+    
   livefileButton = WIDGET_BUTTON(dataSourceRow, VALUE="Live NeXus", UVALUE="DGSR_LIVENEXUS", UNAME="DGSR_LIVENEXUS")
   ;checkfileButton = WIDGET_BUTTON(dataSourceRow, VALUE="Check File", UVALUE="DGSR_FINDNEXUS", SENSITIVE=0)
   

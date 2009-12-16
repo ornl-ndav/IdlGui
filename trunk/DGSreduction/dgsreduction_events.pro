@@ -311,6 +311,10 @@ PRO dgsreduction_events, event, dgsr_cmd
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
       dgsr_cmd->SetProperty, Bcan_CWP=myValue
     END
+    'DGSR_DATA_CWP': BEGIN
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      dgsr_cmd->SetProperty, Data_CWP=myValue
+    END
     ELSE: begin
       ; Do nowt
       print, '*** UVALUE: ' + myUVALUE + ' not handled! ***'
