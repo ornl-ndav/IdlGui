@@ -8,6 +8,7 @@
 # make backup  : deploys the program as backup
 
 all:
+	cp REFreduction.cfg .REFreduction.cfg
 	idl ./makefile.pro;
 	idl ./mini_makefile.pro;
 
