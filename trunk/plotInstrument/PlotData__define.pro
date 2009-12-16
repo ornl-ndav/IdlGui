@@ -8,9 +8,17 @@
 ; =============================================================================
 
 
+; TO DO:
+;   dPath should be set either by user or from xml
+
+
+
+
+
 ;---------------------------------------------------------------------------
 PRO PlotData::cleanup
-;free the pointer
+;free the pointers
+PTR_FREE, self.data, self.colData
 
 END
 
@@ -23,21 +31,21 @@ PRO PlotData::startElement, URI, local, strName, attr, value
   CASE strName OF
   
     'instrument': BEGIN
-      self.currCol = 0
-      self.currRow = 0
+      ;      self.currCol = 0
+      ;      self.currRow = 0
       IF N_ELEMENTS(attr) NE 0 THEN BEGIN
         IF value EQ self.instrument THEN self.flag = 1
       ENDIF
     END
     
     'col': BEGIN
-      self.currCol++
-      
+    ;self.currCol++
+    
     END
     
     'row': BEGIN
-      self.currRow++
-      
+    ;self.currRow++
+    
     END
     
     
@@ -60,37 +68,34 @@ PRO PlotData::endElement, URI, local, strName
     ENDIF ELSE BEGIN
     
       CASE strName OF
-      
-        'banks': BEGIN
-        ; banks = FIX(self.buffer)
-        ; self.banksData =  ptr_new(getData(self.pathNexus, dPath, banks, self.rebinBy))
-        END
-        
-        'size': BEGIN
-        ;   self.Size = FIX(STRSPLIT(self.buffer,'[,]', /EXTRACT))
-        END
-        
+              
         'col': BEGIN
         
+          IF PTR_VALID(SELF.data) THEN BEGIN
+            *self.data = [*self.data, *self.colData]
+          ENDIF ELSE BEGIN
+            self.data = ptr_new(*self.colData)
+          ENDELSE
+          PTR_FREE, self.colData
+          
         END
         
         'row': BEGIN
-          bank = self.buffer
-          ; IF bank NE '' THEN $
+        
+          bank = self.buffer     
           dPath = '/entry/instrument/bank#/data'
-          data = getData(self.pathNexus, dPath, bank, self.rebinBy)
-          self.bankDim = SIZE(data, /DIMENSIONS)
-          print, self.bankDim
-          self.windowDim = self.bankDim * [self.currRow, self.currCol]
-          offset = self.bankDim * [self.currRow -1, self.currCol -1]
-          WINDOW, 0, XSIZE = self.bankDim[0], YSIZE = self.bankDim[1], $
-            TITLE = self.path
-          LOADCT, 5
-          print, self.currRow, self.currCol
-          TVSCL, data
+          data = getData(self.pathNexus, dPath, bank, self.rebinBy)  
+           
+          IF PTR_VALID(self.colData) THEN BEGIN
+            *self.colData = [[*self.colData], [data]]
+          ENDIF ELSE BEGIN
+            self.colData = ptr_new(data)
+          ENDELSE
+
         END
         
         ELSE:
+        
       ENDCASE
       
     ENDELSE
@@ -109,32 +114,6 @@ END
 
 
 ;---------------------------------------------------------------------------
-PRO graph, data, x, y
-
-  ;
-  ;
-  ;  ;data = TOTAL(*(*global).data, 1)
-  ;  data = TOTAL(data, 1)
-  ;  help, data
-  ;
-  ;  print, n_elements(DATA)
-  ;
-  ;  T_2d_data = REBIN(TRANSPOSE(data), rY, rX)
-  ;  help, t_2d_data
-  ;  print, 'graphing'
-  ;  LOADCT, 5
-  ;  IF ((*global).graphed NE 0) THEN BEGIN
-  ;    TVSCL, T_2d_data, 0, ((*global).graphed * rY) + 10
-  ;  ENDIF ELSE BEGIN
-  ;    print, n
-  ;    WINDOW, 0, XSIZE = rY, YSIZE = (rX + 10) * n, TITLE = (*global).path
-  ;    TVSCL, T_2d_data
-  ;    (*global).graphed++
-  ;  ENDELSE
-
-  TVSCL, data
-  
-END
 
 FUNCTION recalculate, data, rebinBy
   print, "recalculating"
@@ -186,54 +165,20 @@ FUNCTION getData, path, dPath_template, bank, rebinBy
   RETURN, data
 END
 
-;;---------------------------------------------------------------------------
-;FUNCTION getData, path, dPath_template, banks, rebinBy
-;
-;  print, "GETDATA"
-;
-;  not_hdf5_format = 0
-;  CATCH, not_hdf5_format
-;  IF (not_hdf5_format NE 0) THEN BEGIN
-;    CATCH,/CANCEL
-;    ;display message about invalid file format
-;    print, "ERROR **********"
-;    print, not_hdf5_format
-;  ENDIF ELSE BEGIN
-;    print, 'opening file...'
-;    print, path
-;    fileID    = H5F_OPEN(path)
-;    print, 'fileID'
-;    print, fileID
-;
-;    print, 'opening data path...'
-;
-;    banksData = ptrarr(banks)
-;
-;    FOR i = 1, banks DO BEGIN
-;      dPath = STRJOIN(STRSPLIT(dPath_template, '#', /EXTRACT), $
-;        STRCOMPRESS(STRING(i), /REMOVE_ALL))
-;      print, dpath
-;      fieldID = H5D_OPEN(fileID,dPath)
-;      print, 'fieldID'
-;      print, fieldID
-;      data = H5D_READ(fieldID)
-;      print, 'copied data...'
-;      H5D_CLOSE, fieldID
-;      banksData[i-1] = ptr_new(data)
-;    ENDFOR
-;
-;    print, "closing hdf5 file"
-;    H5F_CLOSE, fileID
-;  ENDELSE
-;
-;
-;  RETURN, banksData
-;END
-
 ;---------------------------------------------------------------------------
 PRO PlotData::startDocument
   self.flag = 0
   self.buffer = ''
+  PTR_FREE, self.data
+END
+
+;---------------------------------------------------------------------------
+PRO PlotData::endDocument
+  dim = SIZE(*self.data, /DIMENSIONS)
+  
+  WINDOW, 0, XSIZE = dim[0], YSIZE = dim[1], TITLE = self.path
+  LOADCT, 5
+  TVSCL, *self.data
 END
 
 ;---------------------------------------------------------------------------
@@ -241,18 +186,14 @@ PRO PlotData::characters, char
   IF STRTRIM(char, 2) NE '' THEN BEGIN
     self.buffer = self.buffer + STRTRIM(char, 2)
   ENDIF
-; print, 'buffer: ' + self.buffer
 END
 
 ;---------------------------------------------------------------------------
 FUNCTION PlotData::Graph, pathNexus, instrument, rebinBy
-  IF instrument NE '' THEN BEGIN
+  IF (instrument NE '') && (pathNexus NE '') THEN BEGIN
     self.instrument = instrument
     self.pathNexus = pathNexus
     self.rebinBy = rebinBy
-    
-    LOADCT, 5
-    ;WINDOW, 0, TITLE = self.path
     
     
     self -> IDLffxmlsax::ParseFile, self.path
@@ -285,12 +226,13 @@ PRO PlotData__define
     banks: 0, $
     Size: [0,0], $
     bankDim: [0,0], $
-    banksData: ptr_new(), $
+    colData: ptr_new(), $
+    data: ptr_new(), $
     
     windowDim: [0,0], $
     
-    currCol: 0, $
-    currRow: 0, $
+    ;    currCol: 0, $
+    ;    currRow: 0, $
     path: '', $
     mode: 0, $
     flag: 0, $
