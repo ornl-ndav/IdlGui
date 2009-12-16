@@ -59,7 +59,14 @@ PRO browse_button, Event
     
     nbr_file_loaded = N_ELEMENTS(file_list)
     FOR i=0,(nbr_file_loaded-1) DO BEGIN
-      retrieve_data_of_new_file, Event_load=event, file_list[i]
+      retrieve_data_of_new_file, file_list[i], $
+        Event_load=event, $
+        sData=sData, $
+        type=type
+      add_new_data_to_big_array, event_load=event, $
+        sData=sData, $
+        type=type
+        
     ENDFOR
     
     WIDGET_CONTROL, HOURGLASS=0
@@ -68,10 +75,40 @@ PRO browse_button, Event
   
 END
 
+
+
+
+
 ;------------------------------------------------------------------------------
-PRO retrieve_data_of_new_file, event_load=event_load, $
+PRO add_new_data_to_big_array, event_load=event_load, $
+    sData=sData, $
+    type=type
+    
+  WIDGET_CONTROL, event_load.top, GET_UVALUE=global_load
+  global = (*global_load).global
+  
+  pXarray      = (*(*global).pXarray)
+  pYarray      = (*(*global).pYarray)
+  pSigmaYArray = (*(*global).pSigmaYArray)
+  
+  pXaxis       = (*(*global).pXaxis)
+  pXaxis_units = (*(*global).pXaxis_units)
+  pYaxis       = (*(*global).pYaxis)
+  pYaxis_units = (*(*global).pYaxis_units)
+  
+  first_empty_index = getFirstEmptyXarrayIndex(event_load=event_load)
+  
+  ;IF (type EQ 'single_ascii') THEN BEGIN
+  
+  
+  
+END
+
+;------------------------------------------------------------------------------
+PRO retrieve_data_of_new_file, new_file, event_load=event_load, $
     main_event=main_event,  $
-    new_file
+    sdata=sdata, $
+    type=type ;either single_ascii or REFscale
     
   IF (N_ELEMENTS(event_load) NE 0) THEN BEGIN
     event = event_load
@@ -93,12 +130,29 @@ PRO retrieve_data_of_new_file, event_load=event_load, $
   pYaxis_new       = (*(*global).pYaxis_new)
   pYaxis_units_new = (*(*global).pYaxis_units_new)
   
-  type = '' ;'single_ascii' or ' multi_ascii'
+  type = '' ;'single_ascii' or 'REFscale'
   ;try to create instance of single ascii file
   iAsciiFile = OBJ_NEW('IDL3columnsASCIIparser', new_file)
   IF (OBJ_VALID(iAsciiFile)) THEN BEGIN
     error = 0
-    sdata = iAsciiFile->getData(error)
+    sData = iAsciiFile->getData(error)
+    
+    ;help, sData, /structure
+    ;// sData is a structure
+    ;    xaxis               string     ''
+    ;    xaxis_units         string     ''
+    ;    yaxis               string     ''
+    ;    yaxis_units         string     ''
+    ;    sigma_yaxis         string     ''
+    ;    sigma_yaxis_units   string     ''
+    ;    data                pointer
+    ;help, *sData.data, /structure
+    ;//   bank     string    ''
+    ;     x        string    ''
+    ;     y        string    ''
+    ;     data     pointer   
+    ;
+    
     IF (error NE 0) THEN BEGIN
       type = ''
     ENDIF ELSE BEGIN
@@ -111,7 +165,7 @@ PRO retrieve_data_of_new_file, event_load=event_load, $
   IF (type EQ '') THEN BEGIN
     iAsciiFile = OBJ_NEW('IDL3columnsASCIIparserREFscale', new_file)
     IF (OBJ_VALID(iAsciiFile)) THEN BEGIN
-      type = 'multi_ascii'
+      type = 'REFscale'
       sData = iAsciiFile->getDataQuickly()
       
       ; help, sData, /structure
@@ -128,8 +182,8 @@ PRO retrieve_data_of_new_file, event_load=event_load, $
     ENDIF
   ENDIF
   
-  print, 'type: ' + string(type)
-  help, sData, /structure
+;  print, 'type: ' + string(type)
+;  help, sData, /structure
   
 END
 
@@ -213,17 +267,6 @@ pro tmp
   
   
   
-END
-
-;------------------------------------------------------------------------------
-FUNCTION get_first_empty_table_index, load_table
-  sz = (size(load_table))(2)
-  index = 0
-  WHILE (index LT sz) DO BEGIN
-    IF (STRCOMPRESS(load_table[1,index],/REMOVE_ALL) EQ '') THEN RETURN, index
-    index++
-  ENDWHILE
-  RETURN, -1
 END
 
 ;..............................................................................
