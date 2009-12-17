@@ -39,8 +39,14 @@ FUNCTION getTextFieldValue, Event, uname
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getTableValue, Event, uname
-  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+FUNCTION getTableValue, event_load=event_load, main_event=main_event, uname
+  IF (N_ELEMENTS(event_load) NE 0) THEN BEGIN
+    id = WIDGET_INFO(Event_load.top,FIND_BY_UNAME=uname)
+  ENDIF ELSE BEGIN
+    WIDGET_CONTROL, main_event.top, GET_UVALUE=global
+    load_base = (*global).load_base
+    id = WIDGET_INFO(load_base, FIND_BY_UNAME='plot_ascii_load_base_table')
+  ENDELSE
   WIDGET_CONTROL, id, GET_VALUE=value
   RETURN, value
 END
@@ -114,7 +120,7 @@ FUNCTION get_list_of_input_file, Event, event_load=event_load, $
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION get_number_of_files_loaded, Event, event_load=event_load, $
+FUNCTION get_number_of_files_loaded, event_load=event_load, $
     main_event=main_event
     
   IF (N_ELEMENTS(event_load) NE 0) THEN BEGIN
@@ -128,14 +134,15 @@ FUNCTION get_number_of_files_loaded, Event, event_load=event_load, $
     global = (*global).global
   ENDIF
   
-  table = getTableValue(event_load, 'plot_ascii_load_base_table')
+  table = getTableValue(event_load=event_load, main_event=main_event, $
+    'plot_ascii_load_base_table')
   nbr_row = (size(table))(2)
   
   index = 0
   ascii_file = STRCOMPRESS(table[1,index],/REMOVE_ALL)
   WHILE (ascii_file NE '') DO BEGIN
-      ascii_file = STRCOMPRESS(table[1,index],/REMOVE_ALL)
-      index++
+    ascii_file = STRCOMPRESS(table[1,index],/REMOVE_ALL)
+    index++
   ENDWHILE
   
   RETURN, index-1

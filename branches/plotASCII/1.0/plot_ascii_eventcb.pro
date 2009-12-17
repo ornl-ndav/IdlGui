@@ -222,7 +222,7 @@ PRO get_initial_plot_range, event_load=event_load, main_event=main_event
   global_ymin = 0
   global_ymax = 0
   
-  nbr_ascii = get_number_of_files_loaded(Event, event_load=event_load, $
+  nbr_ascii = get_number_of_files_loaded(event_load=event_load, $
     main_event=main_event)
     
   index = 0
@@ -295,12 +295,13 @@ PRO plotAsciiData, event_load=event_load, main_event=main_event
   pYaxis = (*(*global).pYaxis)
   pYaxis_units = (*(*global).pYaxis_units)
   
-  nbr_ascii = get_number_of_files_loaded(Event, event_load=event_load, $
+  nbr_ascii = get_number_of_files_loaded(event_load=event_load, $
     main_event=main_event)
     
   ascii_color = (*global).ascii_color
   
-  load_table = getTableValue(event_load, 'plot_ascii_load_base_table')
+  load_table = getTableValue(event_load=event_load, main_event=main_event, $
+  'plot_ascii_load_base_table')
   activate_file_column = load_table[0,*]
   
   index = 0

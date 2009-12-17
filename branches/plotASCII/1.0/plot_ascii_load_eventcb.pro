@@ -95,8 +95,9 @@ PRO add_new_data_to_big_array, event_load=event_load, $
   
   first_empty_index = getFirstEmptyXarrayIndex(event_load=event_load)
   
-  load_table = getTableValue(Event_load, 'plot_ascii_load_base_table')
-  
+  load_table = getTableValue(event_load=event_load, $
+    'plot_ascii_load_base_table')
+    
   local_pXaxis       = sData.xaxis
   local_pXaxis_units = sData.xaxis_units
   local_pYaxis       = sData.yaxis
