@@ -196,6 +196,10 @@ PRO DGSreduction_Execute, event
     ; Put info back
     WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
     
+    ; Now let's save a copy of the parameters
+    parfile = logDir + '/dgsreduction.par'
+    save_parameters, event, FILENAME=parfile
+    
     ; Launch the collectors - waiting for the reduction jobs to finish first
     DGSreduction_LaunchCollector, event, WAITFORJOBS=jobID
     
@@ -209,6 +213,7 @@ PRO DGSreduction_Execute, event
   dgsr_cmd->SetProperty, DataRun=DataRun
   ; Put info back
   WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
+  
   
 END
 
@@ -308,6 +313,11 @@ PRO DGSnorm_Execute, event
   
   ; Put info back
   WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
+  
+  ; Now let's save a copy of the parameters
+  parfile = logDir + '/dgsreduction.par'
+  save_parameters, event, FILENAME=parfile
+    
   
   ; Launch the collectors - waiting for the reduction jobs to finish first
   DGSnorm_LaunchCollector, event, WAITFORJOBS=jobID

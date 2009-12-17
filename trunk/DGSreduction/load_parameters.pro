@@ -57,7 +57,7 @@ pro load_parameters, widgetBase, Filename=filename
   RESTORE, FILENAME=filename, /RELAXED_STRUCTURE_ASSIGNMENT
   
   ; Set the mask to be always on.
-  dgsr_cmd->SetProperty, Mask=1
+  dgsr_cmd->SetProperty, Mask=1 
 
   info.dgsr_cmd = dgsr_cmd
   info.dgsn_cmd = dgsn_cmd
