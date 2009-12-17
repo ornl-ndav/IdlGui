@@ -76,6 +76,69 @@ END
 
 ;------------------------------------------------------------------------------
 FUNCTION get_local_filename, file_name
-file_array = STRSPLIT(file_name,'##',/EXTRACT)
-RETURN, STRTRIM(file_array[0])
+  file_array = STRSPLIT(file_name,'##',/EXTRACT)
+  RETURN, STRTRIM(file_array[0])
+END
+
+;------------------------------------------------------------------------------
+FUNCTION get_list_of_input_file, Event, event_load=event_load, $
+    main_event=main_event
+    
+  IF (N_ELEMENTS(event_load) NE 0) THEN BEGIN
+    event = event_load
+  ENDIF ELSE BEGIN
+    event = main_event
+  ENDELSE
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  IF (N_ELEMENTS(event_load) NE 0) THEN BEGIN
+    global = (*global).global
+  ENDIF
+  
+  load_table = (*global).load_table
+  nbr_row = (size(load_table))(2)
+  
+  index = 0
+  ascii_file = STRCOMPRESS(load_table[1,index],/REMOVE_ALL)
+  list_ascii_file = [ascii_file]
+  index++
+  ascii_file = STRCOMPRESS(load_table[1,index],/REMOVE_ALL)
+  WHILE (ascii_file NE '') DO BEGIN
+    list_ascii_file = [list_ascii_file,ascii_file]
+    index++
+    ascii_file = STRCOMPRESS(load_table[1,index],/REMOVE_ALL)
+  ENDWHILE
+  
+  RETURN, list_ascii_file
+  
+END
+
+;------------------------------------------------------------------------------
+FUNCTION get_number_of_files_loaded, Event, event_load=event_load, $
+    main_event=main_event
+    
+  IF (N_ELEMENTS(event_load) NE 0) THEN BEGIN
+    event = event_load
+  ENDIF ELSE BEGIN
+    event = main_event
+  ENDELSE
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  IF (N_ELEMENTS(event_load) NE 0) THEN BEGIN
+    global = (*global).global
+  ENDIF
+  
+  table = getTableValue(event_load, 'plot_ascii_load_base_table')
+  nbr_row = (size(table))(2)
+  
+  index = 0
+  ascii_file = STRCOMPRESS(table[1,index],/REMOVE_ALL)
+  WHILE (ascii_file NE '') DO BEGIN
+      ascii_file = STRCOMPRESS(table[1,index],/REMOVE_ALL)
+      index++
+  ENDWHILE
+  
+  RETURN, index-1
+  
+  
 END
