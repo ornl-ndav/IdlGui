@@ -89,39 +89,6 @@ PRO CleanUpData, Xarray, Yarray, SigmaYarray
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION get_list_of_input_file, Event, event_load=event_load, $
-    main_event=main_event
-    
-  IF (N_ELEMENTS(event_load) NE 0) THEN BEGIN
-    event = event_load
-  ENDIF ELSE BEGIN
-    event = main_event
-  ENDELSE
-  WIDGET_CONTROL, Event.top, GET_UVALUE=global
-  
-  IF (N_ELEMENTS(event_load) NE 0) THEN BEGIN
-    global = (*global).global
-  ENDIF
-  
-  load_table = (*global).load_table
-  nbr_row = (size(load_table))(2)
-  
-  index = 0
-  ascii_file = STRCOMPRESS(load_table[1,index],/REMOVE_ALL)
-  list_ascii_file = [ascii_file]
-  index++
-  ascii_file = STRCOMPRESS(load_table[1,index],/REMOVE_ALL)
-  WHILE (ascii_file NE '') DO BEGIN
-    list_ascii_file = [list_ascii_file,ascii_file]
-    index++
-    ascii_file = STRCOMPRESS(load_table[1,index],/REMOVE_ALL)
-  ENDWHILE
-  
-  RETURN, list_ascii_file
-  
-END
-
-;------------------------------------------------------------------------------
 ;Load data
 PRO load_ascii_file, event_load=event_load, main_event=main_event
 
@@ -255,12 +222,13 @@ PRO get_initial_plot_range, event_load=event_load, main_event=main_event
   global_ymin = 0
   global_ymax = 0
   
-  list_ascii_files = get_list_of_input_file(Event, event_load=event_load, $
+  nbr_ascii = get_number_of_files_loaded(Event, event_load=event_load, $
     main_event=main_event)
-  nbr_ascii = N_ELEMENTS(list_ascii_files)
-  
+    
   index = 0
   WHILE (index LT nbr_ascii) DO BEGIN
+
+
   
     ;work on xarray
     local_xmin = MIN(*pXarray[index], MAX=local_xmax)
@@ -289,6 +257,8 @@ PRO get_initial_plot_range, event_load=event_load, main_event=main_event
     putValue_from_base, wBase1, 'plot_ascii_tools_x2' , global_xmax
     putValue_from_base, wBase1, 'plot_ascii_tools_y2' , global_ymax
   ENDIF
+  
+  print, (*global).xyminmax
   
 END
 
@@ -325,13 +295,12 @@ PRO plotAsciiData, event_load=event_load, main_event=main_event
   pYaxis = (*(*global).pYaxis)
   pYaxis_units = (*(*global).pYaxis_units)
   
-  list_ascii_files = get_list_of_input_file(Event, event_load=event_load, $
+  nbr_ascii = get_number_of_files_loaded(Event, event_load=event_load, $
     main_event=main_event)
-  nbr_ascii = N_ELEMENTS(list_ascii_files)
-  
+    
   ascii_color = (*global).ascii_color
   
-  load_table = (*global).load_table
+  load_table = getTableValue(event_load, 'plot_ascii_load_base_table')
   activate_file_column = load_table[0,*]
   
   index = 0

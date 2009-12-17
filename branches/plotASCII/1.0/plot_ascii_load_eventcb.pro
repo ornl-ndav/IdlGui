@@ -66,7 +66,8 @@ PRO browse_button, Event
       add_new_data_to_big_array, event_load=event, $
         sData=sData, $
         type=type
-        
+      get_initial_plot_range, event_load=event
+      plotAsciiData, event_load=event
     ENDFOR
     
     WIDGET_CONTROL, HOURGLASS=0
@@ -74,10 +75,6 @@ PRO browse_button, Event
   ENDIF
   
 END
-
-
-
-
 
 ;------------------------------------------------------------------------------
 PRO add_new_data_to_big_array, event_load=event_load, $
@@ -182,7 +179,7 @@ PRO add_new_data_to_big_array, event_load=event_load, $
   
   (*(*global).pXarray) = pXarray
   (*(*global).pYarray) = pYarray
-  (*(*global).pSigmaYArray) = pSigmaYArray
+  (*(*global).pSigmaYArray) = pSigmaYarray
   
   putValueInTable, event_load, 'plot_ascii_load_base_table', load_table
   
@@ -271,101 +268,6 @@ PRO retrieve_data_of_new_file, new_file, event_load=event_load, $
       
     ENDIF
   ENDIF
-  
-END
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-pro tmp
-
-  index = 0
-  WHILE (index LT nbr_ascii) DO BEGIN
-  
-    ;simple ascii file
-    iAsciiFile = OBJ_NEW('IDL3columnsASCIIparser', list_ascii_files[index])
-    IF (OBJ_VALID(iAsciiFile)) THEN BEGIN
-      sAscii = iAsciiFile->getData()
-      local_pXaxis = sAscii.xaxis
-      local_pXaxis_units = sAscii.xaxis_units
-      local_pYaxis = sAscii.yaxis
-      local_pYaxis_units = sAscii.yaxis_units
-      
-      DataStringArray = *(*sAscii.data)[0].data
-      ;this method will creates a 3 columns array (x,y,sigma_y)
-      Nbr = N_ELEMENTS(DataStringArray)
-      IF (Nbr GT 1) THEN BEGIN
-        Xarray      = STRARR(1)
-        Yarray      = STRARR(1)
-        SigmaYarray = STRARR(1)
-        ParseDataStringArray, global, $
-          DataStringArray,$
-          Xarray,$
-          Yarray,$
-          SigmaYarray
-        ;Remove all rows with NaN, -inf, +inf ...
-        CleanUpData, Xarray, Yarray, SigmaYarray
-        ;Change format of array (string -> float)
-        Xarray      = FLOAT(Xarray)
-        Yarray      = FLOAT(Yarray)
-        SigmaYarray = FLOAT(SigmaYarray)
-        
-        ;        local_xmax = MAX(Xarray)
-        ;        local_ymax = MAX(Yarray)
-        ;        IF (local_xmax GT global_xmax) THEN global_xmax = local_xmax
-        ;        IF (local_ymax GT global_ymax) THEN global_ymax = local_ymax
-        
-        *pXarray[index] = Xarray
-        *pYarray[index] = Yarray
-        *pSigmaYarray[index] = SigmaYarray
-        
-      ENDIF
-      
-      *pXaxis[index] = local_pXaxis
-      *pXaxis_units[index] = local_pXaxis_units
-      *pYaxis[index] = local_pYaxis
-      *pYaxis_units[index] = local_pYaxis_units
-      
-    ENDIF
-    OBJ_DESTROY, iAsciiFile
-    
-    index++
-  ENDWHILE
-  
-  ;  xymax = FLTARR(4)
-  ;  xymax[2] = global_xmax
-  ;  xymax[3] = global_ymax
-  ;  (*global).xyminmax = xymax
-  
-  (*(*global).pXarray) = pXarray
-  (*(*global).pYarray) = pYarray
-  (*(*global).pSigmaYArray) = pSigmaYArray
-  
-  (*(*global).pXaxis) = pXaxis
-  (*(*global).pXaxis_units) = pXaxis_units
-  (*(*global).pYaxis) = pYaxis
-  (*(*global).pYaxis_units) = pYaxis_units
-  
-  ;turn off hourglass
-  WIDGET_CONTROL,HOURGLASS=0
-  
-  
-  
-  
-  
-  
-  
-  
   
 END
 
