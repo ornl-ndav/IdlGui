@@ -98,9 +98,74 @@ PRO add_new_data_to_big_array, event_load=event_load, $
   
   first_empty_index = getFirstEmptyXarrayIndex(event_load=event_load)
   
-  ;IF (type EQ 'single_ascii') THEN BEGIN
+  local_pXaxis       = sData.xaxis
+  local_pXaxis_units = sData.xaxis_units
+  local_pYaxis       = sData.yaxis
+  local_pYaxis_units = sData.yaxis_units
   
+  IF (type EQ 'single_ascii') THEN BEGIN
   
+    DataStringArray = *(*sData.data)[0].data
+    ;this method will creates a 3 columns array (x,y,sigma_y)
+    Nbr = N_ELEMENTS(DataStringArray)
+    IF (Nbr GT 1) THEN BEGIN
+    
+      Xarray      = STRARR(1)
+      Yarray      = STRARR(1)
+      SigmaYarray = STRARR(1)
+      ParseDataStringArray, global, $
+        DataStringArray,$
+        Xarray,$
+        Yarray,$
+        SigmaYarray
+      ;Remove all rows with NaN, -inf, +inf ...
+      CleanUpData, Xarray, Yarray, SigmaYarray
+      ;Change format of array (string -> float)
+      Xarray      = FLOAT(Xarray)
+      Yarray      = FLOAT(Yarray)
+      SigmaYarray = FLOAT(SigmaYarray)
+      
+      *pXarray[first_empty_index]      = Xarray
+      *pYarray[first_empty_index]      = Yarray
+      *pSigmaYarray[first_empty_index] = SigmaYarray
+      
+    ENDIF
+    
+  ENDIF ELSE BEGIN ;REFscale ascii file format
+  
+    ;how many set of data we need to save
+    ArrayTitle = sData.ArrayTitle
+    nbr_files = (size(ArrayTitle))(2)
+    index = first_empty_index
+    WHILE (index LT (nbr_files+first_empty_index)) DO BEGIN
+      
+      Xarray = *sData.pxaxis[index]
+      Yarray = *sData.pyaxis[index]
+      SigmaYarray = *sData.pSigmaYaxis[index]
+      
+      *pXarray[index] = Xarray
+      *pYarray[index] = Yarray
+      *pSigmaYarray[index] = SigmaYarray
+      
+      index++
+    
+    ENDWHILE
+    
+  ENDELSE
+  
+  *pXaxis[first_empty_index]       = local_pXaxis
+  *pXaxis_units[first_empty_index] = local_pXaxis_units
+  *pYaxis[first_empty_index]       = local_pYaxis
+  *pYaxis_units[first_empty_index] = local_pYaxis_units
+  
+  (*(*global).pXaxis) = pXaxis
+  (*(*global).pXaxis_units) = pXaxis_units
+  (*(*global).pYaxis) = pYaxis
+  (*(*global).pYaxis_units) = pYaxis_units
+
+  (*(*global).pXarray) = pXarray
+  (*(*global).pYarray) = pYarray
+  (*(*global).pSigmaYArray) = pSigmaYArray
   
 END
 
@@ -150,8 +215,7 @@ PRO retrieve_data_of_new_file, new_file, event_load=event_load, $
     ;//   bank     string    ''
     ;     x        string    ''
     ;     y        string    ''
-    ;     data     pointer   
-    ;
+    ;     data     pointer
     
     IF (error NE 0) THEN BEGIN
       type = ''
@@ -169,13 +233,19 @@ PRO retrieve_data_of_new_file, new_file, event_load=event_load, $
       sData = iAsciiFile->getDataQuickly()
       
       ; help, sData, /structure
-      ; help, *sData.pxaxis[0]
       ;// sData is a structure
-      ;    ArrayTitle    string    Array[2,nbr_file]
-      ;    pxaxis        float     array[nbr_file]
-      ;    pyaxis        float     array[nbr_file]
-      ;    pSigmaYaxis   float     array[nbr_file]
+      ;    ArrayTitle         string    Array[2,nbr_file]
+      ;    xaxis              string    'scalar wavevector transfer'
+      ;    xaxis_units        string    '1/Angstroms'
+      ;    yaxis              string    'Intensity'
+      ;    yaxis_units        string    'counts'
+      ;    sigma_yaxis        string    'sigma'
+      ;    sigma_yaxis_units  string    ''
+      ;    pxaxis             pointer   array[nbr_file]
+      ;    pyaxis             pointer   array[nbr_file]
+      ;    pSigmaYaxis        pointer   array[nbr_file]
       ;//
+      ; help, *sData.pxaxis[0]  ->   float    = Array[52]
       
       OBJ_DESTROY, iAsciiFile
       
@@ -186,6 +256,19 @@ PRO retrieve_data_of_new_file, new_file, event_load=event_load, $
 ;  help, sData, /structure
   
 END
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 pro tmp
 
