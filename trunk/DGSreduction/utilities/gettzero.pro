@@ -7,7 +7,7 @@ function getTzero, instrument, runnumber, ei
       tzero = calcTzero(ei, instrument, runnumber)
     end
     "CNCS": begin
-      tzero = 0.1982*(1+Ei)^(-0.84098)
+      tzero = double(0.1982*(1+Ei)^(-0.84098))
       ; Convert to usec
       tzero = tzero * 1000.0
     end
