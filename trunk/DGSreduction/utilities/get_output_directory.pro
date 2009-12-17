@@ -2,13 +2,22 @@ function get_output_directory, instrument, runnumber, HOME=HOME, CREATE=CREATE, 
 
   IF KEYWORD_SET(OVERRIDE) THEN BEGIN
     ; only return the override if it contains something!
-    IF STRLEN(OVERRIDE) GE 1 THEN return, OVERRIDE
+    IF STRLEN(OVERRIDE) GE 1 THEN BEGIN
+      ; Let's check to see if the directory exists
+      directoryThere = FILE_TEST(OVERRIDE, /DIRECTORY)
+      ; Make it if it doesn't exists (and we have asked for it to be created)
+      IF (directoryThere EQ 0) AND KEYWORD_SET(CREATE) THEN BEGIN
+        print, 'Creating directory ',OVERRIDE
+        spawn, 'mkdir -p ' + OVERRIDE
+      ENDIF
+      return, OVERRIDE
+    ENDIF
   ENDIF
-
+  
   IF N_ELEMENTS(instrument) EQ 0 THEN UNKNOWN=1
   IF N_ELEMENTS(runnumber) EQ 0 THEN UNKNOWN=1
   
-  ; If we don't know what the instrument or run number is then just write to 
+  ; If we don't know what the instrument or run number is then just write to
   ; the ~/results directory!
   IF (UNKNOWN EQ 1) THEN BEGIN
     output_directory  = '/SNS/users/' + get_ucams() + '/results/'
