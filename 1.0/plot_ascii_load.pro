@@ -110,7 +110,7 @@ PRO plot_ascii_load_base_gui, wBase, main_base_geometry, nbr_ascii_files
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
     SCR_YSIZE    = 485,$
-    SCR_XSIZE    = 750,$
+    SCR_XSIZE    = 850,$
     MAP          = 1,$
     /BASE_ALIGN_CENTER,$
     GROUP_LEADER = ourGroup)
@@ -142,9 +142,9 @@ PRO plot_ascii_load_base_gui, wBase, main_base_geometry, nbr_ascii_files
     ALIGNMENT = alignement,$
     XSIZE = 2,$
     YSIZE = 50,$
-    SCR_XSIZE = 745,$
+    SCR_XSIZE = 845,$
     SCR_YSIZE = 380,$
-    COLUMN_WIDTHS = [50,670],$
+    COLUMN_WIDTHS = [50,770],$
     ;/SCROLL,$
     /ALL_EVENTS)
   WIDGET_CONTROL, table, SET_TABLE_SELECT=[0,0,1,0]

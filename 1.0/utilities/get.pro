@@ -73,3 +73,9 @@ FUNCTION getTab2_cl_array, Event
   cl_text_array[1] = '.' + suffix
   RETURN, cl_text_array
 END
+
+;------------------------------------------------------------------------------
+FUNCTION get_local_filename, file_name
+file_array = STRSPLIT(file_name,'##',/EXTRACT)
+RETURN, STRTRIM(file_array[0])
+END

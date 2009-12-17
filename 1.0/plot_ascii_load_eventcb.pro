@@ -98,6 +98,8 @@ PRO add_new_data_to_big_array, event_load=event_load, $
   
   first_empty_index = getFirstEmptyXarrayIndex(event_load=event_load)
   
+  load_table = getTableValue(Event_load, 'plot_ascii_load_base_table')
+  
   local_pXaxis       = sData.xaxis
   local_pXaxis_units = sData.xaxis_units
   local_pYaxis       = sData.yaxis
@@ -129,6 +131,10 @@ PRO add_new_data_to_big_array, event_load=event_load, $
       *pYarray[first_empty_index]      = Yarray
       *pSigmaYarray[first_empty_index] = SigmaYarray
       
+      load_table[0,first_empty_index] = 'X'
+      filename = FILE_BASENAME(sData.filename)
+      load_table[1,first_empty_index] =  filename
+      
     ENDIF
     
   ENDIF ELSE BEGIN ;REFscale ascii file format
@@ -137,18 +143,29 @@ PRO add_new_data_to_big_array, event_load=event_load, $
     ArrayTitle = sData.ArrayTitle
     nbr_files = (size(ArrayTitle))(2)
     index = first_empty_index
+    local_index = 0
     WHILE (index LT (nbr_files+first_empty_index)) DO BEGIN
-      
-      Xarray = *sData.pxaxis[index]
-      Yarray = *sData.pyaxis[index]
-      SigmaYarray = *sData.pSigmaYaxis[index]
+    
+      Xarray = *sData.pxaxis[local_index]
+      Yarray = *sData.pyaxis[local_index]
+      SigmaYarray = *sData.pSigmaYaxis[local_index]
       
       *pXarray[index] = Xarray
       *pYarray[index] = Yarray
       *pSigmaYarray[index] = SigmaYarray
       
+      load_table[0,index] = 'X'
+      local_file_name = sData.ArrayTitle[0,local_index]
+      local_angle     = sData.ArrayTitle[1,local_index]
+      filename = FILE_BASENAME(sData.filename)
+      local_filename = get_local_filename(local_file_name)
+      value = filename + ' (' + local_filename + ' -> ' + $
+        local_angle + ' )'
+      load_table[1,index] = value
+      
       index++
-    
+      local_index++
+      
     ENDWHILE
     
   ENDELSE
@@ -162,10 +179,12 @@ PRO add_new_data_to_big_array, event_load=event_load, $
   (*(*global).pXaxis_units) = pXaxis_units
   (*(*global).pYaxis) = pYaxis
   (*(*global).pYaxis_units) = pYaxis_units
-
+  
   (*(*global).pXarray) = pXarray
   (*(*global).pYarray) = pYarray
   (*(*global).pSigmaYArray) = pSigmaYArray
+  
+  putValueInTable, event_load, 'plot_ascii_load_base_table', load_table
   
 END
 
@@ -186,14 +205,14 @@ PRO retrieve_data_of_new_file, new_file, event_load=event_load, $
     global = (*global).global
   ENDIF
   
-  pXarray_new      = (*(*global).pXarray_new)
-  pYarray_new      = (*(*global).pYarray_new)
-  pSigmaYArray_new = (*(*global).pSigmaYArray_new)
+  ;pXarray_new      = (*(*global).pXarray_new)
+  ;pYarray_new      = (*(*global).pYarray_new)
+  ;pSigmaYArray_new = (*(*global).pSigmaYArray_new)
   
-  pXaxis_new       = (*(*global).pXaxis_new)
-  pXaxis_units_new = (*(*global).pXaxis_units_new)
-  pYaxis_new       = (*(*global).pYaxis_new)
-  pYaxis_units_new = (*(*global).pYaxis_units_new)
+  ;pXaxis_new       = (*(*global).pXaxis_new)
+  ;pXaxis_units_new = (*(*global).pXaxis_units_new)
+  ;pYaxis_new       = (*(*global).pYaxis_new)
+  ;pYaxis_units_new = (*(*global).pYaxis_units_new)
   
   type = '' ;'single_ascii' or 'REFscale'
   ;try to create instance of single ascii file
@@ -204,6 +223,7 @@ PRO retrieve_data_of_new_file, new_file, event_load=event_load, $
     
     ;help, sData, /structure
     ;// sData is a structure
+    ;    FileName            string     ''
     ;    xaxis               string     ''
     ;    xaxis_units         string     ''
     ;    yaxis               string     ''
@@ -251,9 +271,6 @@ PRO retrieve_data_of_new_file, new_file, event_load=event_load, $
       
     ENDIF
   ENDIF
-  
-;  print, 'type: ' + string(type)
-;  help, sData, /structure
   
 END
 

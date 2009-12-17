@@ -92,6 +92,7 @@ FUNCTION IDL3columnsASCIIparserREFscale::getDataQuickly
   ENDFOR
   
   big_structure = { ArrayTitle: ArrayTitle,$
+    filename: self.path, $
     xaxis: 'scalar wavevector transfer',$
     xaxis_units: '1/Angstroms',$
     yaxis: 'Intensity',$
