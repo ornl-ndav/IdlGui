@@ -1,5 +1,7 @@
 function get_output_directory, instrument, runnumber, HOME=HOME, CREATE=CREATE, OVERRIDE=OVERRIDE
 
+  UNKNOWN = 0
+
   IF KEYWORD_SET(OVERRIDE) THEN BEGIN
     ; only return the override if it contains something!
     IF STRLEN(OVERRIDE) GE 1 THEN BEGIN
