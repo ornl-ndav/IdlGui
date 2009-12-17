@@ -45,7 +45,7 @@ END
 
 ;------------------------------------------------------------------------------
 FUNCTION getFirstEmptyXarrayIndex, event_load=event_load
-table = getTableValue(event_load, 'plot_ascii_load_base_table')
+table = getTableValue(event_load=event_load, 'plot_ascii_load_base_table')
 index = get_first_empty_table_index(table)
 return, index
 END
