@@ -88,7 +88,7 @@ PRO make_administrator_tab, baseWidget, myCommandObj
     UNAME='DGS_AUTO_OUTPUT_PREFIX', UVALUE='DGS_AUTO_OUTPUT_PREFIX')
   customOutputPrefixButtonID = WIDGET_BUTTON(outputPrefixButtons, VALUE='Custom', $
     UNAME='DGS_CUSTOM_OUTPUT_PREFIX', UVALUE='DGS_CUSTOM_OUTPUT_PREFIX')
-  outputPrefixID = CW_FIELD(outputPrefixRow, YSIZE=1, XSIZE=30, TITLE='Output Prefix:', $
+  outputPrefixID = CW_FIELD(outputPrefixRow, YSIZE=1, XSIZE=30, TITLE='Directory:', $
     UNAME='DGS_OUTPUT_PREFIX', UVALUE='DGS_OUTPUT_PREFIX', /ALL_EVENTS)
   
   ; Make 'Automatic' the default 
