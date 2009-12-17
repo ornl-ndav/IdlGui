@@ -326,7 +326,6 @@ pro populate_structure, all_data, MyStruct
   MyStruct.sigma_yaxis_units = sigma_all[1]
   *MyStruct.data = data_structure
   
-  
 END
 
 
@@ -335,6 +334,7 @@ FUNCTION IDL3columnsASCIIparser::getData, error
 
   ;Define the Structure
   MyStruct = { NbrArray:          0L,$
+    filename:          '', $
     xaxis:             '', $
     xaxis_units:       '',$
     yaxis:             '', $
@@ -354,6 +354,8 @@ FUNCTION IDL3columnsASCIIparser::getData, error
   
   ;Populate structure with general information (NbrArray, xaxis....etc)
   populate_structure, all_data, MyStruct
+  
+  MyStruct.filename = self.path
   
   RETURN, MyStruct
 END
