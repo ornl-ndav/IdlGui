@@ -110,7 +110,7 @@ PRO ReductionCmd::GetProperty, $
     Bcan_CWP=bcan_cwp, $                 ; chopper phase corrections for black can data. (usecs)
     Ecan_CWP=ecan_cwp, $                 ; chopper phase corrections for empty can data. (usecs)
     Data_CWP=data_cwp, $                 ; chopper phase corrections for sample data. (usecs)
-    OutputPrefix=outputprefix, $         ; Prefix for where to write the output
+    OutputOverride=OutputOverride, $         ; Prefix for where to write the output
     Timing=timing, $                     ; Timing of code
     Jobs=jobs, $                         ; Number of Jobs to run
     _Extra=extra
@@ -198,7 +198,7 @@ PRO ReductionCmd::GetProperty, $
   IF ARG_PRESENT(Ecan_CWP) NE 0 THEN Ecan_CWP = self.ecan_cwp
   IF ARG_PRESENT(Bcan_CWP) NE 0 THEN Bcan_CWP = self.bcan_cwp
   IF ARG_PRESENT(Data_CWP) NE 0 THEN Data_CWP = self.data_cwp
-  IF ARG_PRESENT(OutputPrefix) NE 0 THEN OutputPrefix = self.outputprefix
+  IF ARG_PRESENT(OutputOverride) NE 0 THEN OutputOverride = self.OutputOverride
   IF ARG_PRESENT(Timing) NE 0 THEN Timing = self.timing
   IF ARG_PRESENT(Jobs) NE 0 THEN Jobs = self.jobs
   
@@ -278,7 +278,7 @@ PRO ReductionCmd::SetProperty, $
     Bcan_CWP=bcan_cwp, $                 ; chopper phase corrections for black can data. (usecs)
     Ecan_CWP=ecan_cwp, $                 ; chopper phase corrections for empty can data. (usecs)
     Data_CWP=data_cwp, $                 ; chopper phase corrections for sample data. (usecs)
-    OutputPrefix=outputprefix, $         ; Prefix for where to write the output
+    OutputOverride=OutputOverride, $         ; Prefix for where to write the output
     Timing=timing, $                     ; Timing of code
     Jobs=jobs, $                         ; Number of Jobs to run
     _Extra=extra
@@ -428,7 +428,7 @@ PRO ReductionCmd::SetProperty, $
     self.data_cwp = STRCOMPRESS(STRING(Data_CWP), /REMOVE_ALL)
     
     
-  IF N_ELEMENTS(OutputPrefix) NE 0 THEN self.outputprefix = OutputPrefix
+  IF N_ELEMENTS(OutputOverride) NE 0 THEN self.OutputOverride = OutputOverride
   
   IF N_ELEMENTS(timing) NE 0 THEN self.timing = Timing
   IF N_ELEMENTS(jobs) NE 0 THEN self.jobs = jobs
@@ -656,7 +656,7 @@ function ReductionCmd::Generate
     ;IF STRLEN(self.output) GT 1 THEN cmd[i] += " --output="+ self.output
     
     IF (STRLEN(self.instrument) GT 1) AND (STRLEN(self.datarun) GE 1) THEN $
-      cmd[i] += " --output=" + get_output_directory(self.instrument, self->GetRunNumber(), /HOME, /CREATE, OVERRIDE=self.OutputPrefix) + $
+      cmd[i] += " --output=" + get_output_directory(self.instrument, self->GetRunNumber(), /HOME, OVERRIDE=self.OutputOverride) + $
       "/" + self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
       i+1, self.jobs, /PAD) + ".txt"
       
@@ -793,7 +793,7 @@ function ReductionCmd::Generate
       
       IF (self.mask EQ 1) AND (STRLEN(self.normalisation) GE 1) $
         AND (STRLEN(self.instrument) GT 1) THEN BEGIN
-        cmd[i] += get_output_directory(self.instrument, self->GetRunNumber(), /HOME, /CREATE, OVERRIDE=self.OutputPrefix) + "/" + $
+        cmd[i] += get_output_directory(self.instrument, self->GetRunNumber(), /HOME, OVERRIDE=self.OutputOverride) + "/" + $
           self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
           i+1, self.jobs, /PAD) + "_mask.dat"
           
@@ -934,7 +934,7 @@ function ReductionCmd::Init, $
     Bcan_CWP=bcan_cwp, $                 ; chopper phase corrections for black can data. (usecs)
     Ecan_CWP=ecan_cwp, $                 ; chopper phase corrections for empty can data. (usecs)
     Data_CWP=data_cwp, $                 ; chopper phase corrections for sample data. (usecs)
-    OutputPrefix=outputprefix, $         ; Prefix for where to write the output
+    OutputOverride=OutputOverride, $     ; Prefix for where to write the output
     Timing=timing, $                     ; Timing of code
     Jobs=jobs, $                         ; Number of Jobs
     _Extra=extra
@@ -1020,7 +1020,7 @@ function ReductionCmd::Init, $
   IF N_ELEMENTS(Bcan_CWP) EQ 0 THEN bcan_cwp = ""
   IF N_ELEMENTS(Ecan_CWP) EQ 0 THEN ecan_cwp = ""
   IF N_ELEMENTS(Data_CWP) EQ 0 THEN data_cwp = ""
-  IF N_ELEMENTS(OutputPrefix) EQ 0 THEN OutputPrefix = "~/results"
+  IF N_ELEMENTS(OutputOverride) EQ 0 THEN OutputOverride = ""
   IF N_ELEMENTS(timing) EQ 0 THEN timing = 0
   IF N_ELEMENTS(jobs) EQ 0 THEN jobs = 1
   
@@ -1097,7 +1097,7 @@ function ReductionCmd::Init, $
   self.ecan_cwp = ecan_cwp
   self.bcan_cwp = bcan_cwp
   self.data_cwp = data_cwp
-  self.outputprefix = OutputPrefix
+  self.OutputOverride = OutputOverride
   self.timing = timing
   self.jobs = jobs
   self.extra = PTR_NEW(extra)
@@ -1183,7 +1183,7 @@ pro ReductionCmd__Define
     Error_DebyeWaller: "", $ ; Error in Debye-Waller factor
     seblock: "", $           ; Sample Environment Block name for the sample rotation
     RotationAngle:"", $      ; Value of the sample rotation
-    OutputPrefix: "", $      ; Prefix for where to write the output (normally ~/results/)
+    OutputOverride: "", $      ; Prefix for where to write the output (normally ~/results/)
     CWP: 0L, $               ; Chopper Wandering Phase on/off
     bcan_cwp: "", $          ; chopper phase corrections for black can data. (usecs)
     ecan_cwp: "", $          ; chopper phase corrections for empty can data. (usecs)
