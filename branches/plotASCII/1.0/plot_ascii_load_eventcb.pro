@@ -345,21 +345,38 @@ PRO delete_plot_ascii_load_selected_row, Event
   row_selected = selection[1]
   
   WIDGET_CONTROL, Event.top, GET_UVALUE=global_load
-  global = (*global_load).global
+  global     = (*global_load).global
   load_table = (*global).load_table
+
+  pXarray      = (*(*global).pXarray)
+  pYarray      = (*(*global).pYarray)
+  pSigmaYarray = (*(*global).pSigmaYArray)
   
   nbr_row = (size(load_table))(2)
+  pXarray_new      = PTRARR(nbr_row,/AlLOCATE_HEAP)
+  pYarray_new      = PTRARR(nbr_row,/AlLOCATE_HEAP)
+  pSigmaYarray_new = PTRARR(nbr_row,/AlLOCATE_HEAP)
+  
   new_load_table = STRARR(2,nbr_row)
   new_i = 0
   FOR i=0,(nbr_row-1) DO BEGIN
     IF (i NE row_selected) THEN BEGIN
       new_load_table[0,new_i] = load_table[0,i]
       new_load_table[1,new_i] = load_table[1,i]
+      IF (load_table[1,i] EQ '') THEN BREAK
+      value = *pXarray[i]
+      *pXarray_new[new_i] = value
+      *pYarray_new[new_i] = *pYarray[i]
+      *pSigmaYarray_new[new_i] = *pSigmaYarray[i]
       new_i++
     ENDIF
   ENDFOR
   
   (*global).load_table = new_load_table
   putValueInTable, Event, 'plot_ascii_load_base_table', new_load_table
+
+  (*(*global).pXarray)      = pXarray_new
+  (*(*global).pYarray)      = pYarray_new
+  (*(*global).pSigmaYArray) = pSigmaYarray_new
   
 END

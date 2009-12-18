@@ -146,5 +146,22 @@ FUNCTION get_number_of_files_loaded, event_load=event_load, $
   
   RETURN, index-1
   
-  
+END
+
+;------------------------------------------------------------------------------
+FUNCTION get_first_empty_table_index, load_table
+  sz = (size(load_table))(2)
+  index = 0
+  WHILE (index LT sz) DO BEGIN
+    IF (STRCOMPRESS(load_table[1,index],/REMOVE_ALL) EQ '') THEN RETURN, index
+    index++
+  ENDWHILE
+  RETURN, -1
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getFirstEmptyXarrayIndex, event_load=event_load
+table = getTableValue(event_load=event_load, 'plot_ascii_load_base_table')
+index = get_first_empty_table_index(table)
+return, index
 END
