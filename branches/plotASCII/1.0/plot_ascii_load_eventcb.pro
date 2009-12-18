@@ -31,7 +31,6 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
-
 PRO browse_button, Event
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global_load
