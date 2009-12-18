@@ -1,0 +1,12 @@
+spawn, 'cp plotASCII.cfg .plotASCII.cfg'
+@idl_makefile.pro
+plot_ascii
+
+
+
+
+
+
+
+
+
