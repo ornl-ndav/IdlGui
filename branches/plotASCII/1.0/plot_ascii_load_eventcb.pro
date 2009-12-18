@@ -315,8 +315,10 @@ PRO trigger_status_column, Event
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global_load
   global = (*global_load).global
-  load_table = (*global).load_table
   
+  load_table = getTableValue(event_load=event, $
+    'plot_ascii_load_base_table')
+    
   top_sel = Event.sel_top
   bottom_sel = Event.sel_bottom
   IF (top_sel EQ -1) THEN RETURN ;if click (not release), return
