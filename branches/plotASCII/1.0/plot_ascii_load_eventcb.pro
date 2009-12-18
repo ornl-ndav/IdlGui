@@ -183,6 +183,7 @@ PRO add_new_data_to_big_array, event_load=event_load, $
   (*(*global).pSigmaYArray) = pSigmaYarray
   
   putValueInTable, event_load, 'plot_ascii_load_base_table', load_table
+  (*global).load_table = load_table
   
 END
 
@@ -333,7 +334,7 @@ PRO trigger_status_column, Event
   ENDELSE
   putValueInTable, Event, 'plot_ascii_load_base_table', load_table
   (*global).load_table = load_table
-  
+    
 END
 
 ;------------------------------------------------------------------------------

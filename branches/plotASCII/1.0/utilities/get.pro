@@ -42,12 +42,11 @@ END
 FUNCTION getTableValue, event_load=event_load, main_event=main_event, uname
   IF (N_ELEMENTS(event_load) NE 0) THEN BEGIN
     id = WIDGET_INFO(Event_load.top,FIND_BY_UNAME=uname)
+    WIDGET_CONTROL, id, GET_VALUE=value
   ENDIF ELSE BEGIN
     WIDGET_CONTROL, main_event.top, GET_UVALUE=global
-    load_base = (*global).load_base
-    id = WIDGET_INFO(load_base, FIND_BY_UNAME='plot_ascii_load_base_table')
+    value = (*global).load_table
   ENDELSE
-  WIDGET_CONTROL, id, GET_VALUE=value
   RETURN, value
 END
 
