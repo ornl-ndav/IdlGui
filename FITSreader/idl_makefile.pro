@@ -24,3 +24,6 @@
 .run textclose.pro
 .run fits_info.pro
 .run fits_help.pro
+
+.run sxaddpar.pro
+.run fits_write.pro
