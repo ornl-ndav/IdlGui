@@ -165,6 +165,7 @@ PRO load_ascii_file, event_load=event_load, main_event=main_event
         
       ENDIF
       
+      print, 'index is : ' + string(index)
       *pXaxis[index] = local_pXaxis
       *pXaxis_units[index] = local_pXaxis_units
       *pYaxis[index] = local_pYaxis
@@ -227,8 +228,8 @@ PRO get_initial_plot_range, event_load=event_load, main_event=main_event
     
   index = 0
   WHILE (index LT nbr_ascii) DO BEGIN
-
-
+  
+  
   
     ;work on xarray
     local_xmin = MIN(*pXarray[index], MAX=local_xmax)
@@ -295,13 +296,15 @@ PRO plotAsciiData, event_load=event_load, main_event=main_event
   pYaxis = (*(*global).pYaxis)
   pYaxis_units = (*(*global).pYaxis_units)
   
+  print, *pXaxis[0]
+  
   nbr_ascii = get_number_of_files_loaded(event_load=event_load, $
     main_event=main_event)
     
   ascii_color = (*global).ascii_color
   
   load_table = getTableValue(event_load=event_load, main_event=main_event, $
-  'plot_ascii_load_base_table')
+    'plot_ascii_load_base_table')
   activate_file_column = load_table[0,*]
   
   index = 0
@@ -314,16 +317,12 @@ PRO plotAsciiData, event_load=event_load, main_event=main_event
       Yarray = *pYarray[index]
       sigmaYarray = *pSigmaYarray[index]
       
-      IF (first_file_plotted_index EQ 0) THEN BEGIN
-      
-        xAxis = *pXaxis[index]
-        xAxis_units = *pXaxis_units[index]
-        yAxis = *pYaxis[index]
-        yAxis_units = *pYaxis_units[index]
-        xLabel = xaxis + ' (' + xaxis_units + ')'
-        yLabel = yaxis + ' (' + yaxis_units + ')'
-        
-      ENDIF
+      xAxis = *pXaxis[0]
+      xAxis_units = *pXaxis_units[0]
+      yAxis = *pYaxis[0]
+      yAxis_units = *pYaxis_units[0]
+      xLabel = xaxis + ' (' + xaxis_units + ')'
+      yLabel = yaxis + ' (' + yaxis_units + ')'
       
       CASE (isYaxisLin(Event)) OF
         'lin': yaxis = 'lin'
