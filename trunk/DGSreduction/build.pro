@@ -43,6 +43,7 @@ newPath = EXPAND_PATH('+./') + PATH_SEP(/SEARCH_PATH) + !PATH
 !PATH = newPath
 
 ; Now we can just compile!
+.compile get_build_time
 
 .compile logger
 .compile error_message

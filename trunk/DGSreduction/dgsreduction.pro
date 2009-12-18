@@ -48,6 +48,11 @@ PRO DGSreduction_Execute, event
   WIDGET_CONTROL, event.top, GET_UVALUE=info, /NO_COPY
   dgsr_cmd = info.dgsr_cmd
   
+  ; Ok first I want to check if we are running a development version
+  IF STRPOS(info.version, 'BETA') NE -1 THEN BEGIN
+    ; get the time in sec (since 1970) that the 
+  ENDIF
+  
   ; First lets check that an instrument has been selected!
   dgsr_cmd->GetProperty, Instrument=instrument
   IF (STRLEN(instrument) LT 2) THEN BEGIN
@@ -317,7 +322,7 @@ PRO DGSnorm_Execute, event
   ; Now let's save a copy of the parameters
   parfile = logDir + '/dgsreduction.par'
   save_parameters, event, FILENAME=parfile
-    
+  
   
   ; Launch the collectors - waiting for the reduction jobs to finish first
   DGSnorm_LaunchCollector, event, WAITFORJOBS=jobID
