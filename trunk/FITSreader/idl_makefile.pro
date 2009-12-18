@@ -13,3 +13,14 @@
 .run mrd_hread.pro
 .run match.pro
 .run mrdfits.pro
+
+.run sxdelpar.pro
+.run hprint.pro
+.run fits_open.pro
+.run fits_close.pro
+.run strn.pro
+.run sxpar.pro
+.run textopen.pro
+.run textclose.pro
+.run fits_info.pro
+.run fits_help.pro
