@@ -50,8 +50,37 @@ PRO DGSreduction_Execute, event
   
   ; Ok first I want to check if we are running a development version
   IF STRPOS(info.version, 'BETA') NE -1 THEN BEGIN
-    ; get the time in sec (since 1970) that the 
+    ; get the time in sec (since 1970) that THIS program was built
+    build_time = get_build_time()
+    ; Now load the latest time of the development build
+    ;DevRoot = '/SNS/software/idltools/sav/DGSreduction/dev'
+    DevRoot = '/SNS/users/scu/IDLWorkspace71/DGSreduction/'
+    current_build_filename = DevRoot + '/build_seconds'
+    ; Does the file exist?
+    IF (FILE_TEST(CURRENT_BUILD_FILENAME, /READ, /REGULAR) EQ 1) THEN BEGIN
+      now = READ_ASCII(current_build_filename)
+      latest_build_time = long(now.field1[0])
+    ENDIF ELSE BEGIN
+      ; If we can't find the latest build time file then just set it to 
+      ; be the build time for this version and carry on...
+      latest_build_time = build_time
+    ENDELSE
+    
+    print, build_time
+    help, /str, build_time
+    
+    
+    
+    print, latest_build_time
+    
+    IF (long(now.field1[0]) GT long(build_time)) THEN BEGIN
+      print, ' There is a newer version available!'
+    ENDIF
+    
   ENDIF
+  
+  ;WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
+  ;return
   
   ; First lets check that an instrument has been selected!
   dgsr_cmd->GetProperty, Instrument=instrument
@@ -107,14 +136,15 @@ PRO DGSreduction_Execute, event
     IF (cwp EQ 1) THEN BEGIN
       ; First we need to check if we need to expand the run numbers
       dataruns = ExpandIndividualRunNumbers(RunNumbers[i])
+      data_cwp = ''
       FOR j = 0L, N_ELEMENTS(dataruns)-1 DO BEGIN
         ; Need to calculate the offsets for each data file.
       
         ; Data Runs
-        data = GetCWPspectrum(instrument, dataruns[j])
+        data = GetCWPspectrum_nxl(instrument, dataruns[j])
         tof = get_ideal_elastic_tof(instrument, ei, tzero)
         
-        print, 'Calculated TOF for Run #' + dataruns[j] + ' is ' + tof
+        ;print, 'Calculated TOF for Run #', dataruns[j], ' is ', tof
         
       ENDFOR
       
