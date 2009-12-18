@@ -43,7 +43,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
   ;get the current folder
   CD, CURRENT = current_folder
-  Print, "test"
+ 
   file = OBJ_NEW('idlxmlparser', '.REFoffSpec.cfg')
   ;============================================================================
   ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
