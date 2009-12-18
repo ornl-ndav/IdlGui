@@ -165,7 +165,6 @@ PRO load_ascii_file, event_load=event_load, main_event=main_event
         
       ENDIF
       
-      print, 'index is : ' + string(index)
       *pXaxis[index] = local_pXaxis
       *pXaxis_units[index] = local_pXaxis_units
       *pYaxis[index] = local_pYaxis
@@ -259,8 +258,6 @@ PRO get_initial_plot_range, event_load=event_load, main_event=main_event
     putValue_from_base, wBase1, 'plot_ascii_tools_y2' , global_ymax
   ENDIF
   
-  print, (*global).xyminmax
-  
 END
 
 ;==============================================================================
@@ -295,8 +292,6 @@ PRO plotAsciiData, event_load=event_load, main_event=main_event
   pXaxis_units = (*(*global).pXaxis_units)
   pYaxis = (*(*global).pYaxis)
   pYaxis_units = (*(*global).pYaxis_units)
-  
-  print, *pXaxis[0]
   
   nbr_ascii = get_number_of_files_loaded(event_load=event_load, $
     main_event=main_event)
@@ -471,7 +466,5 @@ PRO populate_tools_zoom, Event, x1=x1, y1=y1, x2=x2, y2=y2, ALL=all
     'plot_ascii_tools_y1', y1
   IF (N_ELEMENTS(y2) NE 0) THEN putValue_from_base, id, $
     'plot_ascii_tools_y2', y2
-    
-    
     
 END

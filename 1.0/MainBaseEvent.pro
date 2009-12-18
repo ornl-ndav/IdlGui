@@ -86,7 +86,6 @@ PRO MAIN_BASE_event, Event
       ENDIF
       
       IF (Event.release EQ 1) THEN BEGIN ;release left click
-        print, 'here'
         sort_x0y0x1y1, Event
         populate_tools_zoom, Event, ALL=1
         (*global).left_click = 0b
