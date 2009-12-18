@@ -110,7 +110,7 @@ PRO ReductionCmd::GetProperty, $
     Bcan_CWP=bcan_cwp, $                 ; chopper phase corrections for black can data. (usecs)
     Ecan_CWP=ecan_cwp, $                 ; chopper phase corrections for empty can data. (usecs)
     Data_CWP=data_cwp, $                 ; chopper phase corrections for sample data. (usecs)
-    OutputOverride=OutputOverride, $         ; Prefix for where to write the output
+    OutputOverride=OutputOverride, $     ; Prefix for where to write the output
     Timing=timing, $                     ; Timing of code
     Jobs=jobs, $                         ; Number of Jobs to run
     _Extra=extra
