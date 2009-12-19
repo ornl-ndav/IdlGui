@@ -13,8 +13,12 @@ function get_cwpfactor, instrument, runnumber
   tzero = gettzero(instrument, runnumber, ei)
   
   ideal_elastic_tof = get_ideal_elastic_tof(instrument, ei, tzero)
-  
+
   cwp = ideal_elastic_tof - real_elastic_tof
   
+  IF KEYWORD_SET(plot) THEN BEGIN
+    plot, data.tof, data.cwp_data
+  ENDIF
+
   return, cwp
 end
