@@ -63,7 +63,7 @@ PRO DGSreduction_Execute, event
       readf, unit, latest_build_time
       FREE_LUN, unit
     ENDIF ELSE BEGIN
-      ; If we can't find the latest build time file then just set it to 
+      ; If we can't find the latest build time file then just set it to
       ; be the build time for this version and carry on...
       latest_build_time = build_time
     ENDELSE
@@ -71,7 +71,7 @@ PRO DGSreduction_Execute, event
     IF (long(latest_build_time) GT long(build_time)) THEN BEGIN
       message_txt = STRARR(2)
       message_txt[0] = 'You are running a development version - there is a newer version available.'
-      message_txt[1] = 'Please RESTART the application at the soonest convenient opportunity.' 
+      message_txt[1] = 'Please RESTART the application at the soonest convenient opportunity.'
       status = DIALOG_MESSAGE(message_txt, TITLE='BETA version out of date', /CENTER)
     ENDIF
     
@@ -116,54 +116,25 @@ PRO DGSreduction_Execute, event
     ; Get the instrument name
     dgsr_cmd->GetProperty, Instrument=instrument
     
+    ; Get the detector bank limits
+    dgsr_cmd->GetProperty, LowerBank=lowerbank
+    dgsr_cmd->GetProperty, UpperBank=upperbank
+    
+    
     ; Set the run number in the object
     dgsr_cmd->SetProperty, DataRun=RunNumbers[i]
     
-    Print, 'Run Numbers = ', runnumbers[i]
+    ;Print, 'Run Numbers = ', runnumbers[i]
     
     ; Get the Ei
     dgsr_cmd->GetProperty, Ei=Ei
     ; Get the Tzero
     dgsr_cmd->GetProperty, Tzero=Tzero
     
-    ; Check to see if the Chopper Wandering Phase Correction is turned on
-    dgsr_cmd->GetProperty, CWP=cwp
-    IF (cwp EQ 1) THEN BEGIN
-      ; First we need to check if we need to expand the run numbers
-      dataruns = ExpandIndividualRunNumbers(RunNumbers[i])
-      data_cwp = ''
-      FOR j = 0L, N_ELEMENTS(dataruns)-1 DO BEGIN
-        ; Need to calculate the offsets for each data file.
-      
-        ; Data Runs
-        data = GetCWPspectrum_nxl(instrument, dataruns[j])
-        tof = get_ideal_elastic_tof(instrument, ei, tzero)
-        
-        ;print, 'Calculated TOF for Run #', dataruns[j], ' is ', tof
-        
-      ENDFOR
-      
-      
-      
-    ; Empty Cans
-      
-      
-    ; Black Cans
-      
-    ENDIF
-    
-    ; Generate the array of commands to run
-    commands = dgsr_cmd->generate()
-    
-    ; Get the detector bank limits
-    dgsr_cmd->GetProperty, LowerBank=lowerbank
-    dgsr_cmd->GetProperty, UpperBank=upperbank
     ; Get the Run Number (the first integer in the datarun)
     runnumber = dgsr_cmd->GetRunNumber()
     ; Number of Jobs
     dgsr_cmd->GetProperty, Jobs=jobs
-    
-    jobcmd = "sbatch -p " + queue + " "
     
     ; output Directory
     ; TODO: in order to switch to a shared directory - remove the /HOME from the following command
@@ -179,6 +150,90 @@ PRO DGSreduction_Execute, event
     logDir = outputDir + '/logs'
     ; Make the directory
     spawn, 'mkdir -p ' + logDir
+    
+    ; Check to see if the Chopper Wandering Phase Correction is turned on
+    dgsr_cmd->GetProperty, CWP=cwp
+    IF (cwp EQ 1) THEN BEGIN
+      ; First we need to check if we need to expand the run numbers
+      dataruns = ExpandIndividualRunNumbers(RunNumbers[i])
+      data_cwp = ''
+      ; Write the CWP value for the data to a file...
+      spawn, 'echo # SAMPLE RUNS > ' + logDir + '/wandering_factors'
+      
+      FOR j = 0L, N_ELEMENTS(dataruns)-1 DO BEGIN
+        ; Need to calculate the offsets for each data file.
+      
+        ; Data Runs
+        cwp = get_cwpfactor(instrument, dataruns[j])
+        
+        spawn, 'echo ' + STRCOMPRESS(STRING(dataruns[j]), /REMOVE_ALL) $
+          + ' --> ' + cwp + ' >> ' $
+          + logDir + '/wandering_factors'
+          
+        IF (j EQ 0) THEN BEGIN
+          data_cwp = STRCOMPRESS(STRING(cwp), /REMOVE_ALL)
+        ENDIF ELSE BEGIN
+          data_cwp += ',' + STRCOMPRESS(STRING(cwp), /REMOVE_ALL)
+        ENDELSE
+      ENDFOR
+      
+      ; Set the values in the command object object
+      dgsr_cmd->SetProperty, data_cwp=data_cwp
+      
+      ; Empty Cans
+      dgsr_cmd->GetProperty, EmptyCan=EmptyCan
+      ; First we need to check if we need to expand the run numbers
+      ecanruns = ExpandIndividualRunNumbers(EmptyCan)
+      ecan_cwp = ''
+      ; Write the CWP value for the data to a file...
+      spawn, 'echo # EMPTY CAN RUNS >> ' + logDir + '/wandering_factors'
+      FOR j = 0L, N_ELEMENTS(ecanruns)-1 DO BEGIN
+        ; Need to calculate the offsets for each empty can file.
+        cwp = get_cwpfactor(instrument, ecanruns[j])
+        
+        spawn, 'echo ' + STRCOMPRESS(STRING(ecanruns[j]), /REMOVE_ALL) $
+          + ' --> ' + cwp + ' >> ' $
+          + logDir + '/wandering_factors'
+          
+        IF (j EQ 0) THEN BEGIN
+          ecan_cwp = STRCOMPRESS(STRING(cwp), /REMOVE_ALL)
+        ENDIF ELSE BEGIN
+          ecan_cwp += ',' + STRCOMPRESS(STRING(cwp), /REMOVE_ALL)
+        ENDELSE
+      ENDFOR
+      ; Set the values in the command object object
+      dgsr_cmd->SetProperty, ecan_cwp=ecan_cwp
+      
+      
+      ; Black Cans
+      dgsr_cmd->GetProperty, BlackCan=BlackCan
+      ; First we need to check if we need to expand the run numbers
+      bcanruns = ExpandIndividualRunNumbers(BlackCan)
+      bcan_cwp = ''
+      spawn, 'echo # BLACK CAN RUNS >> ' + logDir + '/wandering_factors'
+      FOR j = 0L, N_ELEMENTS(bcanruns)-1 DO BEGIN
+        ; Need to calculate the offsets for each empty can file.
+        cwp = get_cwpfactor(instrument, bcanruns[j])
+        
+        spawn, 'echo ' + STRCOMPRESS(STRING(bcanruns[j]), /REMOVE_ALL) $
+          + ' --> ' + cwp + ' >> ' $
+          + logDir + '/wandering_factors'
+          
+        IF (j EQ 0) THEN BEGIN
+          bcan_cwp = STRCOMPRESS(STRING(cwp), /REMOVE_ALL)
+        ENDIF ELSE BEGIN
+          bcan_cwp += ',' + STRCOMPRESS(STRING(cwp), /REMOVE_ALL)
+        ENDELSE
+      ENDFOR
+      ; Set the values in the command object object
+      dgsr_cmd->SetProperty, bcan_cwp=bcan_cwp
+      
+    ENDIF
+    
+    ; Generate the array of commands to run
+    commands = dgsr_cmd->generate()
+    
+    jobcmd = "sbatch -p " + queue + " "
     
     ; Array for job numbers
     ;jobIDs = STRARR(N_ELEMENTS(commands))
