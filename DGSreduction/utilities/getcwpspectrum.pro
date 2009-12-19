@@ -1,83 +1,52 @@
 function GetCWPspectrum, instrument, runnumber
 
   ; Let's first find the NeXus filename
+  findnexus_cmd = 'findnexus -i ' + instrument + ' ' + strcompress(string(runnumber), /REMOVE_ALL)
+  spawn, findnexus_cmd, listening
+  nexusfile = listening[0]
   
+  print, 'Reading ', nexusfile
+  
+  file_id = h5f_open(nexusfile)
+  
+  ; Let's get the tof array
+  data_tof_id = H5D_OPEN(file_id, '/entry/bank1/time_of_flight')
+  dataspace_tof_id = H5D_GET_SPACE(data_tof_id)
+  tof = H5D_READ(data_tof_id, FILE_SPACE=dataspace_tof_id)
+  
+  ranges = getcwpdetectorrange(instrument)
+  nchannels = N_ELEMENTS(tof) - 1
+  nrows = ranges.upper_row - ranges.lower_row
+  
+  FOR index = ranges.lower_bank, ranges.upper_bank DO BEGIN
+    dataset_id = H5D_OPEN(file_id, '/entry/bank'+STRCOMPRESS(string(index),/REMOVE_ALL)+'/data')
+    dataspace_id = H5D_GET_SPACE(dataset_id)
+    
+    start = [0, ranges.lower_row, 0]
+    count = [nchannels, nrows, 8]
+    H5S_SELECT_HYPERSLAB, DATASPACE_ID, start, count, /RESET
+    
+    memory_space_id = H5S_CREATE_SIMPLE(count)
+    
+    data = H5D_READ(dataset_id, FILE_SPACE=dataspace_id, MEMORY_SPACE=memory_space_id)
+    
+    data_tmp1 = temporary(total(data, 3))
+    data_tmp2 = temporary(total(data_tmp1, 2))
+    
+    if (n_elements(cwp_data) EQ 0) then begin
+        cwp_data =   temporary(data_tmp2)
+    endif else begin
+        cwp_data = cwp_data + temporary(data_tmp2)
+    endelse
 
-    event2histo_nxl_exe = '/SNS/software/TESTING/bin/event2histo_nxl'
-    
-    runinfo_filename = get_runinfo_filename(instrument, runnumber)
-    tmin = getMinTimefromPreNeXus(runinfo_filename)
-    tmax = getMaxTimefromPreNeXus(runinfo_filename)
-    tstep = getStepTimefromPreNeXus(runinfo_filename)
-    event_file = get_event_filename(instrument, runnumber)
-    
-    ; Construct the output filename
-    cache_dir = get_cwpcache_directory(INSTRUMENT, RUNNUMBER)
-    outputfilename = cache_dir + '/' + STRCOMPRESS(string(runnumber),/REMOVE_ALL)
-    outputfilename += '_cwp_histo.nxs'
-    
-    cmd_str = event2histo_nxl_exe + ' `findcalib -i ' + instrument + ' -m -b -T`'
-    cmd_str += ' -i ' + event_file + ' -O ' + tmin + ' -M ' + tmax + ' -l ' + tstep
-    cmd_str += ' -o ' + outputfilename
-    ; optional debug output
-    cmd_str += ' > ' + outputfilename + '.log'
-    ; and copy the command to a file as well?
-    spawn, "echo " + cmd_str + " > " + outputfilename + ".cmd"
-    
-;    print, tmin
-;    print, tmax
-;    print, tstep
-    
-    ; Does the intended output file already exist?
-    fileThere = FILE_TEST(outputFilename, /READ, /REGULAR)
-    
-    ; If the files not there then run the job
-    IF (fileThere EQ 0) THEN BEGIN
-      ; make sure the cache directory exists
-      spawn, 'mkdir -p ' + cache_dir
-      print, cmd_str
-      spawn, cmd_str
-    ENDIF
-    
-    ranges = getcwpdetectorrange(instrument)
-    
-    ; Now we need to read in this file and add up the spectra
-    file_id = h5f_open(outputFilename)
-    
-    nelements = (long(tmax) - long(tmin)) / long(tstep)
-    tof = (findgen(nelements+1) * tstep) + tmin
-    
-    print, nelements
-    
-    cwp_data = fltarr(nelements)
-    
-    for index = ranges.lower_bank, ranges.upper_bank do begin
-    
-    
-      dataset_id = H5D_OPEN(file_id, '/entry/bank'+STRCOMPRESS(string(index),/REMOVE_ALL)+'/data_y_time_of_flight')
-      dataspace_id = H5D_GET_SPACE(dataset_id)
-      
-      start = [0, ranges.lower_row]
-      count = [nelements, 10]
-      H5S_SELECT_HYPERSLAB, DATASPACE_ID, start, count, /RESET
-      memory_space_id = H5S_CREATE_SIMPLE(count)
-      
-      ; Read the data
-      data = H5D_READ(dataset_id, FILE_SPACE=dataspace_id, MEMORY_SPACE=memory_space_id)
-      
-      H5S_CLOSE, memory_space_id
-      H5S_CLOSE, dataspace_id
-      H5D_CLOSE, dataset_id
-      
-      sum = total(data,2)
-      cwp_data = data + TEMPORARY(sum)
-      
-    endfor
-    
-    ; Close the NeXus file
-    H5F_CLOSE, file_id
-    
-    return, { tof:tof, $
-      cwp_data:cwp_data }
 
+  ENDFOR
+  
+  
+  ; Close the NeXus file
+  H5F_CLOSE, file_id
+  
+  return, { tof:tof, $
+    cwp_data:cwp_data }
+    
 end
