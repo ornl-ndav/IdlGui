@@ -53,34 +53,29 @@ PRO DGSreduction_Execute, event
     ; get the time in sec (since 1970) that THIS program was built
     build_time = get_build_time()
     ; Now load the latest time of the development build
-    ;DevRoot = '/SNS/software/idltools/sav/DGSreduction/dev'
-    DevRoot = '/SNS/users/scu/IDLWorkspace71/DGSreduction/'
+    DevRoot = '/SNS/software/idltools/sav/DGSreduction/dev'
+    ;DevRoot = '/SNS/users/scu/IDLWorkspace71/DGSreduction'
     current_build_filename = DevRoot + '/build_seconds'
+    latest_build_time = 0L
     ; Does the file exist?
     IF (FILE_TEST(CURRENT_BUILD_FILENAME, /READ, /REGULAR) EQ 1) THEN BEGIN
-      now = READ_ASCII(current_build_filename)
-      latest_build_time = long(now.field1[0])
+      openr, unit, CURRENT_BUILD_FILENAME, /GET_LUN
+      readf, unit, latest_build_time
+      FREE_LUN, unit
     ENDIF ELSE BEGIN
       ; If we can't find the latest build time file then just set it to 
       ; be the build time for this version and carry on...
       latest_build_time = build_time
     ENDELSE
     
-    print, build_time
-    help, /str, build_time
-    
-    
-    
-    print, latest_build_time
-    
-    IF (long(now.field1[0]) GT long(build_time)) THEN BEGIN
-      print, ' There is a newer version available!'
+    IF (long(latest_build_time) GT long(build_time)) THEN BEGIN
+      message_txt = STRARR(2)
+      message_txt[0] = 'You are running a development version - there is a newer version available.'
+      message_txt[1] = 'Please RESTART the application at the soonest convenient opportunity.' 
+      status = DIALOG_MESSAGE(message_txt, TITLE='BETA version out of date', /CENTER)
     ENDIF
     
   ENDIF
-  
-  ;WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
-  ;return
   
   ; First lets check that an instrument has been selected!
   dgsr_cmd->GetProperty, Instrument=instrument
