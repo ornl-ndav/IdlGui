@@ -9,6 +9,9 @@ function get_cwpfactor, instrument, runnumber
   ; Lookup the time for the max value.
   real_elastic_tof = tof_array[max_position]
   
+  ei = getei(instrument, runnumber)
+  tzero = gettzero(instrument, runnumber, ei)
+  
   ideal_elastic_tof = get_ideal_elastic_tof(instrument, ei, tzero)
   
   cwp = ideal_elastic_tof - real_elastic_tof
