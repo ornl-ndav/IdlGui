@@ -40,6 +40,8 @@ PRO DGSreduction_Execute, event
   catch, theError
   IF theError NE 0 THEN BEGIN
     catch, /cancel
+    ; Now put the info structure back for consistency
+    WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
     ok = ERROR_MESSAGE(!ERROR_STATE.MSG + ' Returning...', TRACEBACK=1, /error)
     return
   ENDIF
@@ -154,11 +156,16 @@ PRO DGSreduction_Execute, event
     ; Check to see if the Chopper Wandering Phase Correction is turned on
     dgsr_cmd->GetProperty, CWP=cwp
     IF (cwp EQ 1) THEN BEGIN
+    
       ; First we need to check if we need to expand the run numbers
       dataruns = ExpandIndividualRunNumbers(RunNumbers[i])
       data_cwp = ''
-      ; Write the CWP value for the data to a file...
-      spawn, 'echo # SAMPLE RUNS > ' + logDir + '/wandering_factors'
+      
+      ; Write the CWP value for the data to a log file...
+      cwp_log_filename = logDir + '/wandering_factors'
+      openw, unit, cwp_log_filename, /GET_LUN
+      ; Write the title to the log file
+      printf,unit, '== Sample Data =='
       
       FOR j = 0L, N_ELEMENTS(dataruns)-1 DO BEGIN
         ; Need to calculate the offsets for each data file.
@@ -166,10 +173,8 @@ PRO DGSreduction_Execute, event
         ; Data Runs
         cwp = get_cwpfactor(instrument, dataruns[j])
         
-        spawn, 'echo ' + STRCOMPRESS(STRING(dataruns[j]), /REMOVE_ALL) $
-          + ' --> ' + cwp + ' >> ' $
-          + logDir + '/wandering_factors'
-          
+        PRINTF, unit, dataruns[j], cwp
+        
         IF (j EQ 0) THEN BEGIN
           data_cwp = STRCOMPRESS(STRING(cwp), /REMOVE_ALL)
         ENDIF ELSE BEGIN
@@ -182,51 +187,60 @@ PRO DGSreduction_Execute, event
       
       ; Empty Cans
       dgsr_cmd->GetProperty, EmptyCan=EmptyCan
-      ; First we need to check if we need to expand the run numbers
-      ecanruns = ExpandIndividualRunNumbers(EmptyCan)
-      ecan_cwp = ''
-      ; Write the CWP value for the data to a file...
-      spawn, 'echo # EMPTY CAN RUNS >> ' + logDir + '/wandering_factors'
-      FOR j = 0L, N_ELEMENTS(ecanruns)-1 DO BEGIN
-        ; Need to calculate the offsets for each empty can file.
-        cwp = get_cwpfactor(instrument, ecanruns[j])
+      IF STRLEN(EmptyCan) GE 1 THEN BEGIN
+        ; Write the title to the log file
+        printf,unit, '== Empty Cans =='
         
-        spawn, 'echo ' + STRCOMPRESS(STRING(ecanruns[j]), /REMOVE_ALL) $
-          + ' --> ' + cwp + ' >> ' $
-          + logDir + '/wandering_factors'
+        ; First we need to check if we need to expand the run numbers
+        ecanruns = ExpandIndividualRunNumbers(EmptyCan)
+        ecan_cwp = ''
+        ; Write the CWP value for the data to a file...
+        spawn, 'echo # EMPTY CAN RUNS >> ' + logDir + '/wandering_factors'
+        FOR j = 0L, N_ELEMENTS(ecanruns)-1 DO BEGIN
+          ; Need to calculate the offsets for each empty can file.
+          cwp = get_cwpfactor(instrument, ecanruns[j])
           
-        IF (j EQ 0) THEN BEGIN
-          ecan_cwp = STRCOMPRESS(STRING(cwp), /REMOVE_ALL)
-        ENDIF ELSE BEGIN
-          ecan_cwp += ',' + STRCOMPRESS(STRING(cwp), /REMOVE_ALL)
-        ENDELSE
-      ENDFOR
-      ; Set the values in the command object object
-      dgsr_cmd->SetProperty, ecan_cwp=ecan_cwp
-      
+          ; Write values to the log file
+          PRINTF, unit, ecanruns[j], cwp
+          
+          IF (j EQ 0) THEN BEGIN
+            ecan_cwp = STRCOMPRESS(STRING(cwp), /REMOVE_ALL)
+          ENDIF ELSE BEGIN
+            ecan_cwp += ',' + STRCOMPRESS(STRING(cwp), /REMOVE_ALL)
+          ENDELSE
+        ENDFOR
+        ; Set the values in the command object object
+        dgsr_cmd->SetProperty, ecan_cwp=ecan_cwp
+      ENDIF
       
       ; Black Cans
       dgsr_cmd->GetProperty, BlackCan=BlackCan
-      ; First we need to check if we need to expand the run numbers
-      bcanruns = ExpandIndividualRunNumbers(BlackCan)
-      bcan_cwp = ''
-      spawn, 'echo # BLACK CAN RUNS >> ' + logDir + '/wandering_factors'
-      FOR j = 0L, N_ELEMENTS(bcanruns)-1 DO BEGIN
-        ; Need to calculate the offsets for each empty can file.
-        cwp = get_cwpfactor(instrument, bcanruns[j])
+      IF STRLEN(BlackCan) GE 1 THEN BEGIN
+        ; Write the title to the log file
+        printf,unit, '== Black Cans =='
         
-        spawn, 'echo ' + STRCOMPRESS(STRING(bcanruns[j]), /REMOVE_ALL) $
-          + ' --> ' + cwp + ' >> ' $
-          + logDir + '/wandering_factors'
+        ; First we need to check if we need to expand the run numbers
+        bcanruns = ExpandIndividualRunNumbers(BlackCan)
+        bcan_cwp = ''
+        spawn, 'echo # BLACK CAN RUNS >> ' + logDir + '/wandering_factors'
+        FOR j = 0L, N_ELEMENTS(bcanruns)-1 DO BEGIN
+          ; Need to calculate the offsets for each empty can file.
+          cwp = get_cwpfactor(instrument, bcanruns[j])
           
-        IF (j EQ 0) THEN BEGIN
-          bcan_cwp = STRCOMPRESS(STRING(cwp), /REMOVE_ALL)
-        ENDIF ELSE BEGIN
-          bcan_cwp += ',' + STRCOMPRESS(STRING(cwp), /REMOVE_ALL)
-        ENDELSE
-      ENDFOR
-      ; Set the values in the command object object
-      dgsr_cmd->SetProperty, bcan_cwp=bcan_cwp
+          ; Write values to the log file
+          PRINTF, unit, bcanruns[j], cwp
+          
+          IF (j EQ 0) THEN BEGIN
+            bcan_cwp = STRCOMPRESS(STRING(cwp), /REMOVE_ALL)
+          ENDIF ELSE BEGIN
+            bcan_cwp += ',' + STRCOMPRESS(STRING(cwp), /REMOVE_ALL)
+          ENDELSE
+        ENDFOR
+        ; Set the values in the command object object
+        dgsr_cmd->SetProperty, bcan_cwp=bcan_cwp
+      ENDIF
+      
+      FREE_LUN, unit
       
     ENDIF
     
