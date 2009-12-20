@@ -15,7 +15,7 @@ function get_cwpfactor, instrument, runnumber, PLOT=PLOT
   ideal_elastic_tof = get_ideal_elastic_tof(instrument, ei, tzero)
 
   ; Is this the correct way round ?
-  cwp = ideal_elastic_tof - real_elastic_tof
+  cwp = real_elastic_tof - ideal_elastic_tof 
   
   IF KEYWORD_SET(plot) THEN BEGIN
     xmin = ideal_elastic_tof*0.995
