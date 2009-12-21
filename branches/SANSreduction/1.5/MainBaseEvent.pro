@@ -64,6 +64,7 @@ PRO MAIN_BASE_event, Event
         IF (event.press EQ 1) THEN BEGIN ;pressed button
           MapBase, Event, uname='tab1_circle_selection_base', 0
           display_circle_rectangle_buttons, EVENT=event, TYPE='rectangle'
+          (*global).selection_shape_type = 'rectangle'
         ENDIF
       ENDIF ELSE BEGIN ;endif of catch statement
         IF (event.enter EQ 1) THEN BEGIN
@@ -87,6 +88,7 @@ PRO MAIN_BASE_event, Event
         IF (event.press EQ 1) THEN BEGIN ;pressed button
           MapBase, Event, uname='tab1_circle_selection_base', 1
           display_circle_rectangle_buttons, EVENT=event, TYPE='circle'
+          (*global).selection_shape_type = 'circle'
         ENDIF
       ENDIF ELSE BEGIN ;endif of catch statement
         IF (event.enter EQ 1) THEN BEGIN
@@ -348,12 +350,14 @@ PRO MAIN_BASE_event, Event
         IF ((*global).data_nexus_file_name NE '') THEN BEGIN
           getXYposition, Event ;_get
           IF ((*global).facility EQ 'LENS') THEN BEGIN
+          
             IF ((*global).Xpixel  EQ 80L) THEN BEGIN
               putCountsValue, Event, Event.x/8., Event.y/8. ;_put
             ENDIF ELSE BEGIN
               putCountsValue, Event, Event.x/2., Event.y/2. ;_put
             ENDELSE
-          ENDIF ELSE BEGIN
+            
+          ENDIF ELSE BEGIN ;sns
             error = 0
             CATCH, error
             IF (error NE 0) THEN BEGIN
@@ -369,8 +373,11 @@ PRO MAIN_BASE_event, Event
               Event.x/(coeff * (*global).congrid_x_coeff),$
               Event.y/(*global).congrid_y_coeff
           ENDELSE
-          IF (Event.press EQ 1) THEN BEGIN
+          
+          IF (Event.press EQ 1) THEN BEGIN ;button pressed
+          
             IF ((*global).facility EQ 'LENS') THEN BEGIN
+            
               IF ((*global).Xpixel  EQ 80L) THEN BEGIN
                 X = Event.x/8.
                 Y = Event.y/8.
@@ -386,128 +393,152 @@ PRO MAIN_BASE_event, Event
                 
             ENDIF ELSE BEGIN ;'SNS'
             
-              (*global).left_button_clicked = 1
-              (*global).mouse_moved = 0
-              x0_device = Event.x
-              y0_device = Event.y
+              IF ((*global).selection_shape_type EQ 'rectangle') THEN BEGIN
               
-              x0_data = convert_xdevice_into_data(Event, x0_device)
-              y0_data = convert_ydevice_into_data(Event, y0_device)
-              
-              X = x0_data
-              Y = y0_data
-              
-              x0_device = convert_xdata_into_device(Event, x0_data)
-              y0_device = convert_ydata_into_device(Event, y0_data)
-              
-              (*global).x0_device = x0_device
-              (*global).y0_device = y0_device
-              
-              putTextFieldValue, Event, $
-                'corner_pixel_x0', $
-                STRCOMPRESS(X+1)
-              putTextFieldValue, Event, $
-                'corner_pixel_y0', $
-                STRCOMPRESS(Y)
+                (*global).left_button_clicked = 1
+                (*global).mouse_moved = 0
+                x0_device = Event.x
+                y0_device = Event.y
                 
+                x0_data = convert_xdevice_into_data(Event, x0_device)
+                y0_data = convert_ydevice_into_data(Event, y0_device)
+                
+                X = x0_data
+                Y = y0_data
+                
+                x0_device = convert_xdata_into_device(Event, x0_data)
+                y0_device = convert_ydata_into_device(Event, y0_data)
+                
+                (*global).x0_device = x0_device
+                (*global).y0_device = y0_device
+                
+                putTextFieldValue, Event, $
+                  'corner_pixel_x0', $
+                  STRCOMPRESS(X+1)
+                putTextFieldValue, Event, $
+                  'corner_pixel_y0', $
+                  STRCOMPRESS(Y)
+                  
+              ENDIF ELSE BEGIN ;circle selection
+              
+              ENDELSE
+              
             ENDELSE
-          ENDIF
+            
+          ENDIF ;end of event.press
           
           IF ((*global).facility EQ 'SNS') THEN BEGIN ;for SNS only
           
             ;display width and height
             IF (event.release EQ 1) THEN BEGIN ;left button release
-              (*global).left_button_clicked = 0
-              IF ((*global).mouse_moved EQ 0) THEN RETURN
-              temp_x_device = Event.x
-              temp_y_device = Event.y
+            
+              IF ((*global).selection_shape_type EQ 'rectangle') THEN BEGIN
               
-              ;ask user if he wants to validate his selection or not
-              message = 'Do you want to validate your selection?'
-              title = 'Validate Selection?'
-              id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
-              result = DIALOG_MESSAGE(message,$
-                DIALOG_PARENT = id,$
-                /CENTER,$
-                /QUESTION,$
-                title=title)
-              IF (result EQ 'Yes') THEN BEGIN
-                CATCH, /CANCEL
-                TV, (*(*global).background), true=3
-                display_excluded_pixels, Event, $
-                  temp_x_device=temp_x_device, $
-                  temp_y_device=temp_y_device
-                makeExclusionArray_SNS, Event, ADD=1
-                saveExclusionBorders, Event, ADD=1;for JK's reduction
-                save_background,  Event, GLOBAL=global
-              ENDIF ELSE BEGIN
-                TV, (*(*global).background), true=3
+                (*global).left_button_clicked = 0
+                IF ((*global).mouse_moved EQ 0) THEN RETURN
+                
+                temp_x_device = Event.x
+                temp_y_device = Event.y
+                
+                ;ask user if he wants to validate his selection or not
+                message = 'Do you want to validate your selection?'
+                title = 'Validate Selection?'
+                id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+                result = DIALOG_MESSAGE(message,$
+                  DIALOG_PARENT = id,$
+                  /CENTER,$
+                  /QUESTION,$
+                  title=title)
+                  
+                IF (result EQ 'Yes') THEN BEGIN
+                  CATCH, /CANCEL
+                  TV, (*(*global).background), true=3
+                  display_excluded_pixels, Event, $
+                    temp_x_device=temp_x_device, $
+                    temp_y_device=temp_y_device
+                  makeExclusionArray_SNS, Event, ADD=1
+                  saveExclusionBorders, Event, ADD=1;for JK's reduction
+                  save_background,  Event, GLOBAL=global
+                ENDIF ELSE BEGIN
+                  TV, (*(*global).background), true=3
+                ENDELSE
+                
+              ENDIF ELSE BEGIN ;circle selection
+              
               ENDELSE
-            ENDIF
+              
+            ENDIF ;end of event.release
             
             IF (event.press EQ 0 AND $ ;moving mouse with left button clicked
               (*global).left_button_clicked EQ 1) THEN BEGIN
               
-              (*global).mouse_moved = 1
+              IF ((*global).selection_shape_type EQ 'rectangle') THEN BEGIN
               
-              x0_data = getTextFieldValue(Event,'corner_pixel_x0')
-              y0_data = getTextFieldValue(Event,'corner_pixel_y0')
-              
-              x1_device = Event.x
-              y1_device = Event.y
-              
-              x1_data = convert_xdevice_into_data(Event, x1_device)
-              y1_data = convert_ydevice_into_data(Event, y1_device)
-              
-              x1_data++
-              
-              width  = x1_data - x0_data
-              ;go 2 by 2 for front and back panels only
-              ;start at 1 if back panel
-              panel_selected = getPanelSelected(Event)
-              CASE (panel_selected) OF
-                'front': BEGIN ;front
-                  width /= 2
-                END
-                'back': BEGIN ;back
-                  width /= 2
-                END
-                ELSE:
-              ENDCASE
-              
-              IF (width EQ 0) THEN BEGIN
-                width = 1
-              ENDIF ELSE BEGIN
-                IF (width LE 0) THEN BEGIN
-                  width -= 1
+                (*global).mouse_moved = 1
+                
+                x0_data = getTextFieldValue(Event,'corner_pixel_x0')
+                y0_data = getTextFieldValue(Event,'corner_pixel_y0')
+                
+                x1_device = Event.x
+                y1_device = Event.y
+                
+                x1_data = convert_xdevice_into_data(Event, x1_device)
+                y1_data = convert_ydevice_into_data(Event, y1_device)
+                
+                x1_data++
+                
+                width  = x1_data - x0_data
+                ;go 2 by 2 for front and back panels only
+                ;start at 1 if back panel
+                panel_selected = getPanelSelected(Event)
+                CASE (panel_selected) OF
+                  'front': BEGIN ;front
+                    width /= 2
+                  END
+                  'back': BEGIN ;back
+                    width /= 2
+                  END
+                  ELSE:
+                ENDCASE
+                
+                IF (width EQ 0) THEN BEGIN
+                  width = 1
                 ENDIF ELSE BEGIN
-                  width += 1
+                  IF (width LE 0) THEN BEGIN
+                    width -= 1
+                  ENDIF ELSE BEGIN
+                    width += 1
+                  ENDELSE
                 ENDELSE
-              ENDELSE
-              
-              height = y1_data - y0_data
-              IF (height EQ 0) THEN BEGIN
-                height = 1
-              ENDIF ELSE BEGIN
-                IF (height LT 0) THEN BEGIN
-                  height -= 1
+                
+                height = y1_data - y0_data
+                IF (height EQ 0) THEN BEGIN
+                  height = 1
                 ENDIF ELSE BEGIN
-                  height += 1
+                  IF (height LT 0) THEN BEGIN
+                    height -= 1
+                  ENDIF ELSE BEGIN
+                    height += 1
+                  ENDELSE
                 ENDELSE
+                
+                x1_device = convert_xdata_into_device(Event, x1_data)
+                y1_device = convert_ydata_into_device(Event, y1_data)
+                
+                (*global).x1_device = x1_device
+                (*global).y1_device = y1_device
+                
+                putTextFieldValue, Event, 'corner_pixel_width', width
+                putTextFieldValue, Event, 'corner_pixel_height', height
+                
+                TV, (*(*global).background), true=3
+                ;lin_or_log_plot, Event ;refresh of main plot
+                display_selection_manually, Event
+                
+              ENDIF ELSE BEGIN ;circle selection with moving mouse/button clicked
+              
+              
               ENDELSE
-              
-              x1_device = convert_xdata_into_device(Event, x1_data)
-              y1_device = convert_ydata_into_device(Event, y1_data)
-              
-              (*global).x1_device = x1_device
-              (*global).y1_device = y1_device
-              
-              putTextFieldValue, Event, 'corner_pixel_width', width
-              putTextFieldValue, Event, 'corner_pixel_height', height
-              
-              TV, (*(*global).background), true=3
-              ;lin_or_log_plot, Event ;refresh of main plot
-              display_selection_manually, Event
               
             ENDIF
             
@@ -547,6 +578,7 @@ PRO MAIN_BASE_event, Event
       ENDELSE
     ;      lin_or_log_plot, Event
     ;      RefreshRoiExclusionPlot, Event   ;_plot
+      
     END
     
     ;- Selection Button -------------------------------------------------------
