@@ -1,7 +1,7 @@
 ;define path to dependencies and current folder
 CD , CURRENT=CurrentFolder
 
-IdlUtilitiesPath = CurrentFolder + '/utilities'
+IdlUtilitiesPath = CurrentFolder + '/reader_writer_routines/'
 cd, IdlUtilitiesPath
 .run gettok.pro
 .run is_ieee_big.pro
