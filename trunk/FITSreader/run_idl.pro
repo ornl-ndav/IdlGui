@@ -1,3 +1,3 @@
 @idl_makefile
-FITSreader
+fits_reader
 
