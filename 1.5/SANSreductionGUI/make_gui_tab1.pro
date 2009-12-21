@@ -452,9 +452,11 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
   IF ((*global).facility EQ 'SNS') THEN BEGIN
   
     circle_rectangle = WIDGET_BASE(wTab1Base,$
+      UNAME = 'circle_rectangle_selection_shape_base',$
       XOFFSET = 895,$
       YOFFSET = 174,$
       FRAME = 0,$
+      MAP = 0,$
       /ROW)
       
     label = WIDGET_LABEL(circle_rectangle,$
