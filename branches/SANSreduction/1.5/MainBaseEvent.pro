@@ -55,6 +55,10 @@ PRO MAIN_BASE_event, Event
   
   CASE Event.id OF
   
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='main_tab'): BEGIN
+      tab_event, Event ;_eventcb
+    END
+    
     ;circle and rectangle selection types
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab1_rectangle_selection'): BEGIN
       error = 0
@@ -65,6 +69,8 @@ PRO MAIN_BASE_event, Event
           MapBase, Event, uname='tab1_circle_selection_base', 0
           display_circle_rectangle_buttons, EVENT=event, TYPE='rectangle'
           (*global).selection_shape_type = 'rectangle'
+          display_selection_images, EVENT=event, $
+            SELECTION=(*global).selection_type
         ENDIF
       ENDIF ELSE BEGIN ;endif of catch statement
         IF (event.enter EQ 1) THEN BEGIN
@@ -238,10 +244,6 @@ PRO MAIN_BASE_event, Event
     END
     
     WIDGET_INFO(wWidget, FIND_BY_UNAME='MAIN_BASE'): BEGIN
-    END
-    
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='main_tab'): BEGIN
-      tab_event, Event ;_eventcb
     END
     
     WIDGET_INFO(wWidget, FIND_BY_UNAME='help_button'): BEGIN
