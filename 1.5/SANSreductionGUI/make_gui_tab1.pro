@@ -476,8 +476,8 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       UNAME = 'tab1_circle_selection_base',$
       XOFFSET = 705,$
       YOFFSET = 209,$
-      SCR_XSIZE = 270,$
-      SCR_YSIZE = 170,$
+      SCR_XSIZE = 290,$
+      SCR_YSIZE = 175,$
       MAP = 1,$
       /COLUMN)
       
