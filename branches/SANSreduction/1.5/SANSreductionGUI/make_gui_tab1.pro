@@ -116,7 +116,6 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     value: 'L O A D  /  P L O T',$
     sensitive: 0 }
     
-    
   ;Exclusion Region Selection tool --------------------------------------------
   XYoff = [0,20]
   sExclusionBase = { size: [sLabelDraw.size[0]+$
@@ -131,7 +130,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
   XYoff = [10,-8]
   sExclusionTitle = { size: [sExclusionBase.size[0]+XYoff[0],$
     sExclusionBase.size[1]+XYoff[1]],$
-    value: 'Exclusion Region Selection Tool'}
+    value: 'Exclusion Region Tool'}
     
   XYoff = [8,10]                  ;PREVIEW button
   sPreviewExclusion = { size: [XYoff[0],$
@@ -450,6 +449,27 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     SCR_YSIZE = sTab1Base.size[3],$
     TITLE     = sTab1Base.title)
     
+  IF ((*global).facility EQ 'SNS') THEN BEGIN
+  
+    circle_rectangle = WIDGET_BASE(wTab1Base,$
+      XOFFSET = 895,$
+      YOFFSET = 174,$
+      FRAME = 0,$
+      /ROW)
+      
+    label = WIDGET_LABEL(circle_rectangle,$
+    VALUE = 'Type:')  
+    rec = WIDGET_DRAW(circle_rectangle,$
+    SCR_XSIZE = 30,$
+    SCR_YSIZE = 30,$
+    UNAME = 'tab1_rectangle_selection')
+    cir = WIDGET_DRAW(circle_rectangle,$
+    SCR_XSIZE = 30,$
+    SCR_YSIZE = 30,$
+    UNAME = 'tab1_circle_selection')
+      
+  ENDIF
+  
   ;----------------------------------------------------------------------------
   ;- nexus input --------------------------------------------------------------
   sNexus = {MainBase:    wTab1Base,$
@@ -458,7 +478,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     instrument:  (*global).instrument,$
     facility:    (*global).facility}
   nexus_instance = OBJ_NEW('IDLloadNexus', sNexus)
- 
+  
   ;- draw ---------------------------------------------------------------------
   wDraw = WIDGET_DRAW(wTab1Base,$
     UNAME     = sDraw.uname,$
@@ -671,7 +691,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     XSIZE = 7,$
     /EDITABLE, $
     UNAME = 'max_counts_displayed')
-    reset = WIDGET_BUTTON(min_max_base,$
+  reset = WIDGET_BUTTON(min_max_base,$
     VALUE = 'RESET',$
     UNAME = 'min_max_counts_reset_button')
     
