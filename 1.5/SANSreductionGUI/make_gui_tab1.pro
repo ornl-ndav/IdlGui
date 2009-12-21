@@ -472,6 +472,53 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       /TRACKING_EVENTS,$
       UNAME = 'tab1_circle_selection')
       
+    circle_base = WIDGET_BASE(wTab1Base,$
+      UNAME = 'tab1_circle_selection_base',$
+      XOFFSET = 705,$
+      YOFFSET = 209,$
+      SCR_XSIZE = 270,$
+      SCR_YSIZE = 170,$
+      MAP = 1,$
+      /COLUMN)
+      
+      row1 = WIDGET_BASE(circle_base,$
+      /ROW)
+      label = WIDGET_LABEL(row1,$
+      VALUE  = '      Center')
+      tube = WIDGET_LABEL(row1,$
+      VALUE = '     Tube:')
+      value = WIDGET_TEXT(row1,$
+      VALUE = '',$
+      XSIZE = 3,$
+      /EDITABLE,$
+      UNAME = 'circle_tube_center')
+      space = WIDGET_LABEL(circle_base,$
+      VALUE =  ' ')
+      row2 = WIDGET_BASE(circle_base,$
+      /ROW)
+      label = WIDGET_LABEL(row2,$
+      VALUE  = '           ')
+      tube = WIDGET_LABEL(row2,$
+      VALUE = '     Pixel:')
+      value = WIDGET_TEXT(row2,$
+      VALUE = '',$
+      XSIZE = 3,$
+      /EDITABLE,$
+      UNAME = 'circle_pixel_center')
+      space = WIDGET_LABEL(circle_base,$
+      VALUE =  ' ')
+      row3 = WIDGET_BASE(circle_base,$
+      /ROW)
+      label = WIDGET_LABEL(row3,$
+      VALUE  = '      Radius    ')
+      value = WIDGET_TEXT(row3,$
+      VALUE = '',$
+      XSIZE = 10,$
+      /EDITABLE,$
+      UNAME = 'circle_radius_value')
+      units = WIDGET_LABEL(row3,$
+      VALUE = 'mm')
+      
   ENDIF
   
   ;----------------------------------------------------------------------------
