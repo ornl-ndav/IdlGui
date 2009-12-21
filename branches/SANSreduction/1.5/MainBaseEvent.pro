@@ -134,6 +134,9 @@ PRO MAIN_BASE_event, Event
           makeExclusionArray_SNS, Event
           IF ((*global).facility EQ 'SNS') THEN BEGIN
             MapBase, Event, uname='transmission_launcher_base', 1
+            MapBase, Event, uname='circle_rectangle_selection_shape_base', 1
+            display_circle_rectangle_buttons, EVENT=event, $
+              TYPE=(*global).selection_shape_type
             display_images, EVENT=event
             display_selection_images, Event=event
             get_and_plot_tof_array, Event
@@ -149,6 +152,7 @@ PRO MAIN_BASE_event, Event
           ENDIF
         ENDIF ELSE BEGIN
           MapBase, Event, uname='transmission_launcher_base', 0
+          MapBase, Event, uname='circle_rectangle_selection_shape_base', 0
           display_selection_images, EVENT=event, OFF=1
           clear_jk_information_base, Event
           activate_min_max_counts_widgets, Event, 0
@@ -180,6 +184,9 @@ PRO MAIN_BASE_event, Event
           makeExclusionArray_SNS, Event
           IF ((*global).facility EQ 'SNS') THEN BEGIN
             MapBase, Event, uname='transmission_launcher_base', 1
+            MapBase, Event, uname='circle_rectangle_selection_shape_base', 1
+            display_circle_rectangle_buttons, EVENT=event, $
+              TYPE=(*global).selection_shape_type
             display_images, EVENT=event
             display_selection_images, Event=event
             get_and_plot_tof_array, Event
