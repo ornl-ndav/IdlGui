@@ -3,6 +3,11 @@ CD , CURRENT=CurrentFolder
 
 IdlUtilitiesPath = CurrentFolder + '/utilities'
 cd, IdlUtilitiesPath
+.run logger.pro
+.run IDLxmlParser__define.pro
+
+;routines used to read and write FITS files
+cd, CurrentFolder + '/reader_writer_routines'
 .run gettok.pro
 .run is_ieee_big.pro
 .run fxparpos.pro
@@ -32,5 +37,7 @@ cd, IdlUtilitiesPath
 .run sxaddpar.pro
 .run fits_write.pro
 
+;main folder
 cd, CurrentFolder
+.run MainBaseEvent.pro
 .run fits_reader.pro
