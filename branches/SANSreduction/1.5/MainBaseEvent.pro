@@ -62,6 +62,7 @@ PRO MAIN_BASE_event, Event
       IF (error NE 0) THEN BEGIN ;press button or othe events
         CATCH,/CANCEL
         IF (event.press EQ 1) THEN BEGIN ;pressed button
+          MapBase, Event, uname='tab1_circle_selection_base', 0
           display_circle_rectangle_buttons, EVENT=event, TYPE='rectangle'
         ENDIF
       ENDIF ELSE BEGIN ;endif of catch statement
@@ -84,6 +85,7 @@ PRO MAIN_BASE_event, Event
       IF (error NE 0) THEN BEGIN ;press button or othe events
         CATCH,/CANCEL
         IF (event.press EQ 1) THEN BEGIN ;pressed button
+          MapBase, Event, uname='tab1_circle_selection_base', 1
           display_circle_rectangle_buttons, EVENT=event, TYPE='circle'
         ENDIF
       ENDIF ELSE BEGIN ;endif of catch statement
