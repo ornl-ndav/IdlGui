@@ -142,6 +142,21 @@ PRO use_run_information_in_jk_gui, Event, INFO=info
     
   ;retrieve wavelength_range
   wave_range_and_units = retrieve_wavelength_range(info)
+  sz = N_ELEMENTS(wave_range_and_units)
+  IF (sz EQ 3) THEN BEGIN
+    MapBase, Event, uname='reduce_jk_tab1_run_information_wave_range2_base', 0
+  ENDIF ELSE BEGIN
+    MapBase, Event, uname='reduce_jk_tab1_run_information_wave_range2_base', 1
+    putTextFieldValue, Event, $
+      'reduce_jk_tab1_run_information_wave_range2_min',$
+      wave_range_and_units[3]
+    putTextFieldValue, Event, $
+      'reduce_jk_tab1_run_information_wave_range2_max',$
+      wave_range_and_units[4]
+    putTextFieldValue, Event, $
+      'reduce_jk_tab1_run_information_wave_range2_units',$
+      wave_range_and_units[5]
+  ENDELSE
   putTextFieldValue, Event, $
     'reduce_jk_tab1_run_information_wave_range_min',$
     wave_range_and_units[0]
@@ -237,7 +252,7 @@ PRO jk_tab2_output_button, Event
   output_path = (*global).output_path
   title = 'Select where you want to write the output file(s):'
   widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
-    
+  
   result = DIALOG_PICKFILE(DIALOG_PARENT=widget_id,$
     /DIRECTORY,$
     /MUST_EXIST,$
