@@ -432,14 +432,14 @@ PRO MAIN_BASE_event, Event
               
                 tube = FIX(x+1)
                 pixel = FIX(y)
-              
+                
                 putTextFieldValue, Event, $
                   'circle_tube_center', $
                   STRCOMPRESS(tube)
                 putTextFieldValue, Event, $
                   'circle_pixel_center', $
                   STRCOMPRESS(pixel)
-              
+                  
               ENDELSE
               
             ENDELSE
@@ -704,7 +704,7 @@ PRO MAIN_BASE_event, Event
       ENDIF
     END
     
-    ;- Refresh Plot -----------------------------------------------------------
+    ;- Refresh Application ----------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='refresh_plot_button'): BEGIN
       IF ((*global).data_nexus_file_name NE '') THEN BEGIN
         IF ((*global).facility EQ 'LENS') THEN BEGIN
@@ -716,7 +716,13 @@ PRO MAIN_BASE_event, Event
           WSET, id_value
           TV, (*(*global).background), true=3
           display_images, EVENT=event
-          display_selection_images, Event=event
+          selection_shape_type = (*global).selection_shape_type
+          display_circle_rectangle_buttons, EVENT=event, $
+            TYPE=selection_shape_type
+          IF (selection_shape_type EQ 'rectangle') THEN BEGIN
+            display_selection_images, EVENT=event, $
+              SELECTION=(*global).selection_type
+          ENDIF
         ENDELSE
       ENDIF
     END
