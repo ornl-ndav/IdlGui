@@ -179,6 +179,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     
     tof_array: PTR_NEW(0L), $
     selection_type: 'inside', $ ;'inside' or 'outside'
+    selection_shape_type: 'rectangle',$
     
     ;counts vs tof plot
     tof_counts: PTR_NEW(0L), $
