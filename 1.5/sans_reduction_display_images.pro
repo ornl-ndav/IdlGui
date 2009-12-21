@@ -349,3 +349,47 @@ PRO display_reduction_interruptor, MAIN_BASE=main_base, $
   
 END
 
+;------------------------------------------------------------------------------
+PRO display_circle_rectangle_buttons, MAIN_BASE=main_base, EVENT=event, $
+    TYPE=type
+    
+  IF (N_ELEMENTS(type) EQ 0) THEN type = 'rectangle'  
+    
+  CASE (type) OF
+    'circle': BEGIN
+      circle_image    = READ_PNG('SANSreduction_images/circle_selection_on.png')
+      rectangle_image = $
+        READ_PNG('SANSreduction_images/rectangle_selection_off.png')
+    END
+    'rectangle': BEGIN
+      circle_image    = READ_PNG('SANSreduction_images/circle_selection_off.png')
+      rectangle_image = $
+        READ_PNG('SANSreduction_images/rectangle_selection_on.png')
+    END
+  ENDCASE
+  
+  uname = 'tab1_rectangle_selection'
+  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
+    mode_id = WIDGET_INFO(main_base, $
+      FIND_BY_UNAME=uname)
+  ENDIF ELSE BEGIN
+    mode_id = WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME=uname)
+  ENDELSE
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, rectangle_image, 0, 0,/true
+  
+  uname = 'tab1_circle_selection'
+  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
+    mode_id = WIDGET_INFO(main_base, $
+      FIND_BY_UNAME=uname)
+  ENDIF ELSE BEGIN
+    mode_id = WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME=uname)
+  ENDELSE
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, circle_image, 0, 0,/true
+  
+END
