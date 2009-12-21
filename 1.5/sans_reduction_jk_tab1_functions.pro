@@ -227,9 +227,16 @@ FUNCTION retrieve_wavelength_range, info
     CATCH,/CANCEL
     RETURN, ['N/A','N/A','N/A']
   ENDIF
-  search_string = 'Band with pulse width of'
+  ;search_string = 'Band with pulse width of'
+  search_string = '20us/A'
   result = retrieve_text(source=info, search_string=search_string)
+  help, result
+  print, result
+  print
   result_2 = STRSPLIT(result,'->',/REGEX,/EXTRAC)
+  help, result_2
+  print, result_2
+  print
   min_value = result_2[0]
   result_3 = STRSPLIT(result_2[1],' ',/REGEX,/EXTRACT)
   max_value = result_3[0]
