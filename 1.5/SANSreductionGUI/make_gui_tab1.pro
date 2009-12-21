@@ -458,15 +458,19 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       /ROW)
       
     label = WIDGET_LABEL(circle_rectangle,$
-    VALUE = 'Type:')  
+      VALUE = 'Type:')
     rec = WIDGET_DRAW(circle_rectangle,$
-    SCR_XSIZE = 30,$
-    SCR_YSIZE = 30,$
-    UNAME = 'tab1_rectangle_selection')
+      SCR_XSIZE = 30,$
+      SCR_YSIZE = 30,$
+      /BUTTON_EVENTS,$
+      /TRACKING_EVENTS,$
+      UNAME = 'tab1_rectangle_selection')
     cir = WIDGET_DRAW(circle_rectangle,$
-    SCR_XSIZE = 30,$
-    SCR_YSIZE = 30,$
-    UNAME = 'tab1_circle_selection')
+      SCR_XSIZE = 30,$
+      SCR_YSIZE = 30,$
+      /BUTTON_EVENTS,$
+      /TRACKING_EVENTS,$
+      UNAME = 'tab1_circle_selection')
       
   ENDIF
   
