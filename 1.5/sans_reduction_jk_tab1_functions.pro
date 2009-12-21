@@ -222,26 +222,40 @@ FUNCTION retrieve_total_monitor_counts, info
 END
 
 FUNCTION retrieve_wavelength_range, info
-  CATCH, error
+  ;CATCH, error
+  error = 0
+  error_array_1frame  = ['N/A','N/A','N/A']
+  error_array_2frames = ['N/A','N/A','N/A','N/A','N/A','N/A']
+  frame_nbr = 1
   IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
-    RETURN, ['N/A','N/A','N/A']
+    IF (frame_nbr EQ 1) THEN RETURN, error_array_1frame
+    RETURN, error_array_2frames
   ENDIF
-  ;search_string = 'Band with pulse width of'
-  search_string = '20us/A'
+  
+  search_string = 'Band w/ pulse FWHM'
   result = retrieve_text(source=info, search_string=search_string)
-  help, result
-  print, result
-  print
-  result_2 = STRSPLIT(result,'->',/REGEX,/EXTRAC)
-  help, result_2
-  print, result_2
-  print
+  result1 = STRSPLIT(result,'=',/REGEX,/EXTRAC)
+  
+  ;check if there are two frames or not
+  result_frame = STRSPLIT(result1[1],'+',/EXTRAC)
+  IF (N_ELEMENTS(result_frame) EQ 2) THEN frame_nbr = 2
+  result_2 = STRSPLIT(result_frame[0],'->',/REGEX,/EXTRAC)
   min_value = result_2[0]
   result_3 = STRSPLIT(result_2[1],' ',/REGEX,/EXTRACT)
   max_value = result_3[0]
-  units_value = result_3[1]
-  RETURN, [min_value, max_value, units_value]
+  IF (frame_nbr EQ 1) THEN BEGIN ;only 1 frame
+    units_value = result_3[1]
+    RETURN, [min_value, max_value, units_value]
+  ENDIF ELSE BEGIN
+    result2_2 = STRSPLIT(result_frame[1],'->',/REGEX,/EXTRAC)
+    min_value2 = result2_2[0]
+    result2_3 = STRSPLIT(result2_2[1],' ',/REGEX,/EXTRACT)
+    max_value2 = result_3[0]
+    units_value = result2_3[1]
+    RETURN, [min_value, max_value, units_value, $
+      min_value2, max_value, units_value]
+  ENDELSE
 END
 
 ;------------------------------------------------------------------------------

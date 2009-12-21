@@ -51,27 +51,6 @@ PRO make_gui_reduce_jk_tab1, REDUCE_TAB, tab_size, tab_title
   space = WIDGET_LABEL(base,$
     VALUE = ' ')
     
-  ;  row1 = WIDGET_BASE(base,$
-  ;    /ROW,$
-  ;    /BASE_ALIGN_CENTER)
-  ;  label = WIDGET_LABEL(row1,$
-  ;    VALUE = 'Run number:')
-  ;  value = WIDGET_TEXT(row1,$
-  ;    VALUE = '',$
-  ;    XSIZE = 5,$
-  ;    YSIZE = 1,$
-  ;    /EDITABLE,$
-  ;    /ALL_EVENTS,$
-  ;    UNAME = 'reduce_jk_tab1_run_number')
-  ;  space = WIDGET_LABEL(row1,$
-  ;    VALUE = ' ')
-  ;  button = WIDGET_BUTTON(row1,$
-  ;    UNAME = 'reduce_jk_tab1_get_run_information',$
-  ;    SENSITIVE = 0,$
-  ;    VALUE = 'GET RUN INFORMATION')
-  ;  space = WIDGET_LABEL(base,$
-  ;    VALUE = ' ')
-    
   info_base = WIDGET_BASE(base,$
     /COLUMN,$
     FRAME = 1,$
@@ -154,7 +133,7 @@ PRO make_gui_reduce_jk_tab1, REDUCE_TAB, tab_size, tab_title
     /ALIGN_LEFT,$
     FRAME = 1,$
     UNAME = 'reduce_jk_tab1_run_information_total_monitor_counts', $
-    SCR_XSIZE = 165)
+    SCR_XSIZE = 164)
     
   rowe = WIDGET_BASE(info_base,$
     /ROW)
@@ -176,7 +155,31 @@ PRO make_gui_reduce_jk_tab1, REDUCE_TAB, tab_size, tab_title
     VALUE = ' N/A',$
     FRAME = 1,$
     UNAME = 'reduce_jk_tab1_run_information_wave_range_units',$
+    SCR_XSIZE = 50)
+        
+  rowe2 = WIDGET_BASE(rowe,$
+    /ROW,$
+    UNAME = 'reduce_jk_tab1_run_information_wave_range2_base',$
+    MAP = 0)
+  label = WIDGET_LABEL(rowe2,$
+    VALUE = ' + ')
+  value1 = WIDGET_LABEL(rowe2,$
+    VALUE = ' N/A',$
+    FRAME = 1,$
+    UNAME = 'reduce_jk_tab1_run_information_wave_range2_min',$
     SCR_XSIZE = 100)
+  label = WIDGET_LABEL(rowe2,$
+    VALUE = '->')
+  value = WIDGET_LABEL(rowe2,$
+    VALUE = ' N/A',$
+    FRAME = 1,$
+    UNAME = 'reduce_jk_tab1_run_information_wave_range2_max',$
+    SCR_XSIZE = 100)
+  units = WIDGET_LABEL(rowe2,$
+    VALUE = ' N/A',$
+    FRAME = 1,$
+    UNAME = 'reduce_jk_tab1_run_information_wave_range2_units',$
+    SCR_XSIZE = 50)
     
   rowf = WIDGET_BASE(info_base,$
     /ROW)
