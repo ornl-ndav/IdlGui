@@ -71,6 +71,8 @@ PRO MAIN_BASE_event, Event
           (*global).selection_shape_type = 'rectangle'
           display_selection_images, EVENT=event, $
             SELECTION=(*global).selection_type
+          putTextFieldValue, Event, 'exclusion_region_tool_title', $
+            'Exclusion Region (rectangle)'
         ENDIF
       ENDIF ELSE BEGIN ;endif of catch statement
         IF (event.enter EQ 1) THEN BEGIN
@@ -95,6 +97,8 @@ PRO MAIN_BASE_event, Event
           MapBase, Event, uname='tab1_circle_selection_base', 1
           display_circle_rectangle_buttons, EVENT=event, TYPE='circle'
           (*global).selection_shape_type = 'circle'
+          putTextFieldValue, Event, 'exclusion_region_tool_title', $
+            'Exclusion Region (circle)'
         ENDIF
       ENDIF ELSE BEGIN ;endif of catch statement
         IF (event.enter EQ 1) THEN BEGIN
