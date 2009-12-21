@@ -130,7 +130,8 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
   XYoff = [10,-8]
   sExclusionTitle = { size: [sExclusionBase.size[0]+XYoff[0],$
     sExclusionBase.size[1]+XYoff[1]],$
-    value: 'Exclusion Region Tool'}
+    uname: 'exclusion_region_tool_title',$
+    value: 'Exclusion Region (rectangle)'}
     
   XYoff = [8,10]                  ;PREVIEW button
   sPreviewExclusion = { size: [XYoff[0],$
@@ -816,6 +817,8 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
   wExclusionTitle = WIDGET_LABEL(wTab1Base,$
     XOFFSET = sExclusionTitle.size[0],$
     YOFFSET = sExclusionTitle.size[1],$
+    /ALIGN_LEFT,$
+    UNAME   = sExclusionTitle.uname,$
     VALUE   = sExclusionTitle.value)
     
   ;Exclusion Region Base ------------------------------------------------------
