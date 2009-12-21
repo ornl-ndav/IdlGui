@@ -177,7 +177,7 @@ PRO browse_nexus, Event
     path)
     
   IF (FullNexusName NE '') THEN BEGIN
-      ;change default path
+    ;change default path
     (*global).nexus_path = new_path
     retrieveNexus, Event, FullNexusName
     ;put full path of nexus in reduce tab1
@@ -249,7 +249,7 @@ PRO load_run_number, Event
   RunNumber  = getRunNumber(Event)
   
   IF (RunNumber NE 0) THEN BEGIN
-
+  
     IDLsendToGeek_addLogBookText, Event, '> Looking for Run Number ' + $
       STRCOMPRESS(RunNumber,/REMOVE_ALL) + ' :'
       
@@ -368,8 +368,13 @@ PRO tab_event, Event
             WSET, id_value
             TV, (*(*global).background), true=3
             display_images, EVENT=event
-            display_selection_images, EVENT=event, $
-              SELECTION=(*global).selection_type
+            selection_shape_type = (*global).selection_shape_type
+            display_circle_rectangle_buttons, EVENT=event, $
+              TYPE=selection_shape_type
+            IF (selection_shape_type EQ 'rectangle') THEN BEGIN
+              display_selection_images, EVENT=event, $
+                SELECTION=(*global).selection_type
+            ENDIF
             replot_counts_vs_tof, Event
           ENDIF
         ENDELSE
@@ -380,7 +385,7 @@ PRO tab_event, Event
         IF ((*global).sns_jk_switch EQ 'sns') THEN BEGIN
           CheckCommandLine, Event         ;_command_line
         ENDIF ELSE BEGIN
-;          jk_get_run_information, Event
+          ;          jk_get_run_information, Event
           CheckCommandline_for_jk, Event
         ENDELSE
       END
