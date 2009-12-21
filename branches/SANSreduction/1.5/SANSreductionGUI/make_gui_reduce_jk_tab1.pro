@@ -159,7 +159,7 @@ PRO make_gui_reduce_jk_tab1, REDUCE_TAB, tab_size, tab_title
   rowe = WIDGET_BASE(info_base,$
     /ROW)
   label = WIDGET_LABEL(rowe,$
-    VALUE = 'Wavelength Range (band with pulse width of 20/A):')
+    VALUE = 'Wavelength Range (band with pulse width of 20us/A):')
   value1 = WIDGET_LABEL(rowe,$
     VALUE = ' N/A',$
     FRAME = 1,$
