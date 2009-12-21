@@ -402,25 +402,25 @@ PRO MAIN_BASE_event, Event
                 
             ENDIF ELSE BEGIN ;'SNS'
             
+              (*global).left_button_clicked = 1
+              (*global).mouse_moved = 0
+              x0_device = Event.x
+              y0_device = Event.y
+              
+              x0_data = convert_xdevice_into_data(Event, x0_device)
+              y0_data = convert_ydevice_into_data(Event, y0_device)
+              
+              X = x0_data
+              Y = y0_data
+              
+              x0_device = convert_xdata_into_device(Event, x0_data)
+              y0_device = convert_ydata_into_device(Event, y0_data)
+              
+              (*global).x0_device = x0_device
+              (*global).y0_device = y0_device
+              
               IF ((*global).selection_shape_type EQ 'rectangle') THEN BEGIN
               
-                (*global).left_button_clicked = 1
-                (*global).mouse_moved = 0
-                x0_device = Event.x
-                y0_device = Event.y
-                
-                x0_data = convert_xdevice_into_data(Event, x0_device)
-                y0_data = convert_ydevice_into_data(Event, y0_device)
-                
-                X = x0_data
-                Y = y0_data
-                
-                x0_device = convert_xdata_into_device(Event, x0_data)
-                y0_device = convert_ydata_into_device(Event, y0_data)
-                
-                (*global).x0_device = x0_device
-                (*global).y0_device = y0_device
-                
                 putTextFieldValue, Event, $
                   'corner_pixel_x0', $
                   STRCOMPRESS(X+1)
@@ -429,6 +429,16 @@ PRO MAIN_BASE_event, Event
                   STRCOMPRESS(Y)
                   
               ENDIF ELSE BEGIN ;circle selection
+              
+                tube = FIX(x+1)
+                pixel = FIX(y)
+              
+                putTextFieldValue, Event, $
+                  'circle_tube_center', $
+                  STRCOMPRESS(tube)
+                putTextFieldValue, Event, $
+                  'circle_pixel_center', $
+                  STRCOMPRESS(pixel)
               
               ENDELSE
               
