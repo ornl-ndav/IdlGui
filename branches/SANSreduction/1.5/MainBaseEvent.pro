@@ -55,6 +55,51 @@ PRO MAIN_BASE_event, Event
   
   CASE Event.id OF
   
+    ;circle and rectangle selection types
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab1_rectangle_selection'): BEGIN
+      error = 0
+      CATCH, error
+      IF (error NE 0) THEN BEGIN ;press button or othe events
+        CATCH,/CANCEL
+        IF (event.press EQ 1) THEN BEGIN ;pressed button
+          display_circle_rectangle_buttons, EVENT=event, TYPE='rectangle'
+        ENDIF
+      ENDIF ELSE BEGIN ;endif of catch statement
+        IF (event.enter EQ 1) THEN BEGIN
+          standard = 58
+        ENDIF ELSE BEGIN
+          standard = 31
+        ENDELSE
+        id = WIDGET_INFO(Event.top,$
+          find_by_uname='tab1_rectangle_selection')
+        WIDGET_CONTROL, id, GET_VALUE=id_value
+        WSET, id_value
+        DEVICE, CURSOR_STANDARD=standard
+      ENDELSE ;enf of catch statement
+    END
+    
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab1_circle_selection'): BEGIN
+      error = 0
+      CATCH, error
+      IF (error NE 0) THEN BEGIN ;press button or othe events
+        CATCH,/CANCEL
+        IF (event.press EQ 1) THEN BEGIN ;pressed button
+          display_circle_rectangle_buttons, EVENT=event, TYPE='circle'
+        ENDIF
+      ENDIF ELSE BEGIN ;endif of catch statement
+        IF (event.enter EQ 1) THEN BEGIN
+          standard = 58
+        ENDIF ELSE BEGIN
+          standard = 31
+        ENDELSE
+        id = WIDGET_INFO(Event.top,$
+          find_by_uname='tab1_rectangle_selection')
+        WIDGET_CONTROL, id, GET_VALUE=id_value
+        WSET, id_value
+        DEVICE, CURSOR_STANDARD=standard
+      ENDELSE ;enf of catch statement
+    END
+    
     ;- Run Number cw_field ----------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='run_number_cw_field'): BEGIN
       load_run_number, Event     ;_eventcb
@@ -85,7 +130,7 @@ PRO MAIN_BASE_event, Event
             run_number = STRCOMPRESS(getTextFieldValue(Event,$
               'run_number_cw_field'),/REMOVE_ALL)
             (*global).run_number = run_number
-           jk_get_run_information, Event
+            jk_get_run_information, Event
             putTextFieldValue, Event, $
               'reduce_jk_tab1_run_information_run_number',$
               run_number
@@ -106,7 +151,7 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='browse_nexus_button'): BEGIN
       browse_nexus, Event ;_eventcb
       error = 0
-     ; CATCH, error
+      ; CATCH, error
       IF (error NE 0) THEN BEGIN
         CATCH,/CANCEL
         widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
