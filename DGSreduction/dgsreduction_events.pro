@@ -294,7 +294,7 @@ PRO dgsreduction_events, event, dgsr_cmd
         dgsr_cmd->SetProperty, Ei=Ei
       ENDIF
       tzero = getTzero(instrument, GetFirstNumber(runnumber), Ei)
-      ; Convert it to a string
+	; Convert it to a string
       tzero = strcompress(string(tzero), /REMOVE_ALL)
       Tzero_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_TZERO')
       WIDGET_CONTROL, tzero_ID, SET_VALUE=tzero
