@@ -1,5 +1,8 @@
 function getTzero, instrument, runnumber, ei
 
+	; Make sure that Ei is a number
+	ei = double(ei)
+
   ; What we do depends on the instrument
   case (STRUPCASE(instrument)) of
     "ARCS": begin
@@ -7,7 +10,7 @@ function getTzero, instrument, runnumber, ei
       tzero = calcTzero(ei, instrument, runnumber)
     end
     "CNCS": begin
-      tzero = double(0.1982*(1+Ei)^(-0.84098))
+        tzero=double(0.1982*(1+Ei)^(-0.84098))      
       ; Convert to usec
       tzero = tzero * 1000.0
     end
