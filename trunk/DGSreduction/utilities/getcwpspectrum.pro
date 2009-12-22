@@ -1,4 +1,4 @@
-function GetCWPspectrum, instrument, runnumber
+function GetCWPspectrum, instrument, runnumber, ROWS=ROWS
 
   ; Let's first find the NeXus filename
   findnexus_cmd = 'findnexus -i ' + instrument + ' ' + strcompress(string(runnumber), /REMOVE_ALL)
@@ -14,7 +14,7 @@ function GetCWPspectrum, instrument, runnumber
   dataspace_tof_id = H5D_GET_SPACE(data_tof_id)
   tof = H5D_READ(data_tof_id, FILE_SPACE=dataspace_tof_id)
   
-  ranges = getcwpdetectorrange(instrument)
+  ranges = getcwpdetectorrange(instrument, ROWS=ROWS)
   nchannels = N_ELEMENTS(tof) - 1
   nrows = ranges.upper_row - ranges.lower_row
   
@@ -47,6 +47,7 @@ function GetCWPspectrum, instrument, runnumber
   H5F_CLOSE, file_id
   
   return, { tof:tof, $
-    cwp_data:cwp_data }
+    cwp_data:cwp_data, $
+    nrows:nrows}
     
 end

@@ -10,11 +10,15 @@
 ;
 ; :Author: scu
 ;-
-FUNCTION getCWPDetectorRange, instrument
+FUNCTION getCWPDetectorRange, instrument, ROWS=ROWS
 
   IF N_ELEMENTS(instrument) EQ 0 THEN INSTRUMENT = ""
   
-  rows_to_sum = 10
+  IF KEYWORD_SET(ROWS) THEN BEGIN
+    rows_to_sum = ROWS
+  ENDIF ELSE BEGIN
+    rows_to_sum = 10
+  ENDELSE
   
   lower_bank = 0
   upper_bank = 0
