@@ -3,9 +3,7 @@ PRO fits_reader
   ;FLAGS
   read_flag  = 1b
   write_flag = 1b
-  
-  
-  
+    
   file2 = '~/results/121009_2.fits'
   file3 = '~/results/121009_3.fits'
   file4 = '~/results/121009_4.fits'
