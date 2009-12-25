@@ -37,6 +37,13 @@ cd, CurrentFolder + '/reader_writer_routines'
 .run sxaddpar.pro
 .run fits_write.pro
 
+;build application
+cd, CurrentFolder + '/FITStoolsGUI'
+.run build_main_gui.pro
+.run make_gui_tab1.pro
+.run make_gui_tab2.pro
+.run make_gui_tab3.pro
+
 ;main folder
 cd, CurrentFolder
 .run MainBaseEvent.pro
