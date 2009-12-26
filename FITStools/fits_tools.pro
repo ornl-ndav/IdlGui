@@ -74,7 +74,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;define global variables
   global = PTR_NEW ()
   
-  MainBaseSize   = [0,0,500,300]
+  MainBaseSize   = [0,0,500,350]
   MainBaseTitle  = 'FITS tools application'
   MainBaseTitle += ' - ' + VERSION
   ;Build Main Base
