@@ -32,25 +32,16 @@
 ;
 ;==============================================================================
 
-PRO MAIN_BASE_event, Event
-
-  ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
-  
-  wWidget =  Event.top            ;widget id
-  
-  CASE Event.id OF
-  
-    ;TAB1, TAB1, TAB1, TAB1, TAB1, TAB1, TAB1, TAB1, TAB1, TAB1, TAB1, TAB1
-  
-    ;browse button
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab1_browse_fits_file_button'): BEGIN
-      browse_fits_files, Event
-    END
+FUNCTION retrieve_data_of_new_file, Event=event, $
+    file_name=file_name, $
+    sData=sData
+    
+    CATCH, error
+    IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN, 0b
+    ENDIF
     
     
-    ELSE:
-    
-  ENDCASE
-  
+  RETURN, 1b
 END

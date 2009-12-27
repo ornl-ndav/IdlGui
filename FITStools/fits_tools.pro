@@ -65,15 +65,18 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   ;DEBUGGING
   sDEBUGGING = { tab: {main_tab: 0},$  ;0:step1, 1:logBook
-    path: '~/SVN/IdlGui/trunk/FITStools/'}
+    fits_path: '~/IDLWorkspace_home/FITStools/'}
   ;******************************************************************************
   ;******************************************************************************
     
   ;ucams = GET_UCAMS()
     
   ;define global variables
-  global = PTR_NEW ()
-  
+  global = PTR_NEW ({fits_path: '~/results/',$
+    max_nbr_fits_files: 20,$    ;maximum number of fits files we can work on
+    list_fits_file: PTR_NEW(0L),$ ;list of full fits files names
+    list_fist_error_file: PTR_NEW(0L) }) ;list of file that can not be loaded
+    
   MainBaseSize   = [0,0,500,350]
   MainBaseTitle  = 'FITS tools application'
   MainBaseTitle += ' - ' + VERSION
@@ -90,7 +93,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     /TLB_SIZE_EVENTS)
     
   build_main_gui, MAIN_BASE, global
- 
+  
   ;attach global structure with widget ID of widget main base widget ID
   WIDGET_CONTROL, MAIN_BASE, SET_UVALUE=global
   
@@ -111,8 +114,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   ;??????????????????????????????????????????????????????????????????????????????
   IF (DEBUGGING EQ 'yes' ) THEN BEGIN
-    (*global).path = '~/IDLWorkspace/FITStools'
-  ;(*global).path = '~/results/'
+    (*global).fits_path = sDebugging.fits_path
   ENDIF
   ;??????????????????????????????????????????????????????????????????????????????
   

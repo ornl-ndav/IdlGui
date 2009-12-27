@@ -49,7 +49,7 @@ PRO make_gui_tab1, MAIN_TAB, global
   ;title to detector infos (x and y)
   det_title = WIDGET_LABEL(wTab1Base,$
   XOFFSET = 15,$
-  YOFFSET = 248,$
+  YOFFSET = 252,$
   VALUE   = 'Detector Infos')
 
   tab1_base = WIDGET_BASE(wTab1Base,$
@@ -66,7 +66,7 @@ PRO make_gui_tab1, MAIN_TAB, global
     SCR_XSIZE = xsize-15,$
     SCR_YSIZE = 200,$
     XSIZE     = 3,$
-    YSIZE     = 20,$
+    YSIZE     = (*global).max_nbr_fits_files,$
     SENSITIVE = 1,$
     COLUMN_WIDTHS = [170,100,360],$
     /NO_ROW_HEADERS,$
