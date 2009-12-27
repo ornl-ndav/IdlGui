@@ -46,5 +46,10 @@ cd, CurrentFolder + '/FITStoolsGUI'
 
 ;main folder
 cd, CurrentFolder
+
+;tab1
+.run fits_tools_tab1_functions.pro
+.run fits_tools_tab1_browse.pro
+
 .run MainBaseEvent.pro
-.run fits_reader.pro
+.run fits_tools.pro
