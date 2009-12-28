@@ -5,6 +5,8 @@ IdlUtilitiesPath = CurrentFolder + '/utilities'
 cd, IdlUtilitiesPath
 .run logger.pro
 .run IDLxmlParser__define.pro
+.run get.pro
+.run put.pro
 
 ;routines used to read and write FITS files
 cd, CurrentFolder + '/reader_writer_routines'
