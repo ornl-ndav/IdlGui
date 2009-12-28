@@ -36,6 +36,10 @@ PRO browse_fits_files, Event
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
+  ;reset list_of_fits_error_files
+  fits_error_files = STRARR((*global).max_nbr_fits_files)
+  (*(*global).list_fits_error_file) = fits_error_files
+  
   path = (*global).fits_path
   filter = ['*']
   widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -68,10 +72,10 @@ PRO browse_fits_files, Event
     
     FOR i=0,(nbr_file_loaded-1) DO BEGIN
     
-      status = retrieve_data_of_new_file(Event=event, $
+      status_retrieve = retrieve_data_of_new_file(Event=event, $
         file_name=file_list[i], sData=sData)
         
-      IF (status EQ 1b) THEN BEGIN
+      IF (status_retrieve EQ 1b) THEN BEGIN
         add_file_to_list_of_files, Event=event, file_name=file_list[i], $
           status=status
         IF (status EQ 0b) THEN BEGIN
@@ -85,7 +89,7 @@ PRO browse_fits_files, Event
       ;      get_initial_plot_range, event_load=event
       ;      plotAsciiData, event_load=event
         
-      ENDIF ELSE BEGIN
+      ENDIF ELSE BEGIN ;status_retrieve EQ 0b
       
         add_file_to_list_of_error_files, Event=event, file_name=file_list[i]
         
@@ -96,14 +100,47 @@ PRO browse_fits_files, Event
     
   ENDIF
   
+  ;if there was at least one file not loaded, inform the user
+  list_fits_error_files = (*(*global).list_fits_error_file)
+  index = get_first_empty_table_index(list_fits_error_files)
+  IF (index EQ -1 OR index NE 0) THEN BEGIN
+    display_loading_fits_file_error_message, Event
+  ENDIF
+  
+  ;update big table
+  update_tab1_big_table, Event
+  
 END
 
 ;------------------------------------------------------------------------------
-PRO add_file_to_list_of_files, Event=event, file_name=file_name
+PRO add_file_to_list_of_files, Event=event, file_name=file_name, status=status
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  status = 1b
+  list_fits_file = (*(*global).list_fits_file)
+  index = get_first_empty_table_index(list_fits_file)
+  IF (index NE -1) THEN BEGIN
+    list_fits_file[index] = file_name
+  ENDIF ELSE BEGIN ;we reach the max number of fits files
+    status = 0b
+  ENDELSE
+  (*(*global).list_fits_file) = list_fits_file
+  
 END
 
 ;------------------------------------------------------------------------------
 PRO add_file_to_list_of_error_files, Event=event, file_name=file_name
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  list_fits_error_files = (*(*global).list_fits_error_file)
+  index = get_first_empty_table_index(list_fits_error_files)
+  IF (index NE -1) THEN BEGIN
+    list_fits_error_files[index] = file_name
+  ENDIF
+  (*(*global).list_fits_error_file) = list_fits_error_files
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -119,5 +156,55 @@ PRO display_limited_fits_file_error_message, Event
     /CENTER, $
     DIALOG_PARENT = widget_id, $
     TITLE = 'Loading error!')
+END
+
+;------------------------------------------------------------------------------
+PRO display_loading_fits_file_error_message, Event
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  text = ['Error loading the following file(s):', '']
+  
+  list_fits_error_file= (*(*global).list_fits_error_file)
+  sz = N_ELEMENTS(list_fits_error_file)
+  index = 1
+  error_file = list_fits_error_file[0]
+  WHILE (index LT sz) DO BEGIN
+    IF (error_file EQ '') THEN BREAK
+    text = [text, '   -> ' + error_file]
+    error_file = list_fits_error_file[index]
+    index++
+  ENDWHILE
+  widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  result = DIALOG_MESSAGE(text, /ERROR, $
+    /CENTER, $
+    DIALOG_PARENT = widget_id, $
+    TITLE = 'Loading error!')
     
+END
+
+;------------------------------------------------------------------------------
+PRO update_tab1_big_table, Event
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  list_fits_file = (*(*global).list_fits_file)
+  big_table = STRARR(3,(*global).max_nbr_fits_files)
+  
+  index = 0
+  WHILE (index LT (*global).max_nbr_fits_files) DO BEGIN
+  
+    file_name = list_fits_file[index]
+    IF (file_name EQ '') THEN BREAK
+    
+    base = FILE_BASENAME(file_name)
+    path = FILE_DIRNAME(file_name)
+    big_table[0,index] = base
+    big_table[1,index] = 'N/A' ;for now FIXME
+    big_table[2,index] = path
+    
+    index++
+  ENDWHILE
+  
+  putValueInTable, Event, 'tab1_fits_table', big_table
+  
 END

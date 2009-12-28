@@ -32,17 +32,29 @@
 ;
 ;==============================================================================
 
-FUNCTION retrieve_data_of_new_file, Event=event, $
-    file_name=file_name, $
-    sData=sData
-    
-    CATCH, error
-    IF (error NE 0) THEN BEGIN
-    CATCH,/CANCEL
-    RETURN, 0b
-    ENDIF
-    
-    
-  RETURN, 1b
+PRO putValue, Event, Uname, value
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, id, SET_VALUE=value
+END
 
+PRO putValue_from_base, base, uname, value
+  id = WIDGET_INFO(base, FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, id, SET_VALUE=value
+END
+
+;------------------------------------------------------------------------------
+PRO putButtonValue, Event, uname, value
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, id, SET_VALUE=value
+END
+
+;------------------------------------------------------------------------------
+PRO putValueInTable, Event, uname, TableArray
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, id, SET_VALUE=TableArray
+END
+
+PRO putValueInTable_from_base, base, uname, TableArray
+  id = WIDGET_INFO(base,FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, id, SET_VALUE=TableArray
 END
