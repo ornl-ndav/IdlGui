@@ -48,6 +48,18 @@ PRO MAIN_BASE_event, Event
       browse_fits_files, Event
     END
     
+    ;big table
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab1_fits_table'): BEGIN
+      ;if right click
+      IF (TAG_NAMES(event, /STRUCTURE_NAME) EQ 'WIDGET_CONTEXT') THEN BEGIN
+        help, event, /structure
+        id = WIDGET_info(eVENT.TOP, FIND_BY_UNAME='context_base')
+        WIDGET_DISPLAYCONTEXTMENU, event.ID, event.X, $
+          event.Y, id
+      ENDIF ElSE BEGIN ;left click
+      print, 'left click'
+      ENDELSE
+    END
     
     ELSE:
     
