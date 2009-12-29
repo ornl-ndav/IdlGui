@@ -45,23 +45,23 @@ PRO make_gui_tab1, MAIN_TAB, global
     SCR_XSIZE = xsize, $
     SCR_YSIZE = ysize, $
     TITLE     = '  LOAD FITS FILE(S)  ')
-
+    
   ;title to detector infos (x and y)
   det_title = WIDGET_LABEL(wTab1Base,$
-  XOFFSET = 15,$
-  YOFFSET = 252,$
-  VALUE   = 'Detector Infos')
-
+    XOFFSET = 15,$
+    YOFFSET = 252,$
+    VALUE   = 'Detector Infos')
+    
   tab1_base = WIDGET_BASE(wTab1Base,$
-  SCR_XSIZE = xsize-10,$
-  /COLUMN)
-  
+    SCR_XSIZE = xsize-10,$
+    /COLUMN)
+    
   row1 = WIDGET_BUTTON(tab1_base,$
-  VALUE = 'Browse for FITS file(s) ...',$
-  UNAME = 'tab1_browse_fits_file_button')
-  
+    VALUE = 'Browse for FITS file(s) ...',$
+    UNAME = 'tab1_browse_fits_file_button')
+    
   table_base_base = WIDGET_BASE(tab1_base,$
-  /ROW)
+    /ROW)
   table = WIDGET_TABLE(table_base_base,$
     SCR_XSIZE = xsize-15,$
     SCR_YSIZE = 200,$
@@ -74,44 +74,54 @@ PRO make_gui_tab1, MAIN_TAB, global
     '            '], $
     /SCROLL,$
     /RESIZEABLE_COLUMNS,$
+    /CONTEXT_EVENTS,$
+    /ALL_EVENTS,$
     UNAME = 'tab1_fits_table')
   space = WIDGET_LABEL(table_base_base,$
-  VALUE = ' ')
+    VALUE = ' ')
+    
+  ;context menu
+  contextBase = WIDGET_BASE(table,/CONTEXT_MENU,$
+    UNAME = 'context_base')
+  button1 = WIDGET_BUTTON(contextBase, VALUE='First button')
+  button2 = WIDGET_BUTTON(contextBase, VALUE='Second button')
+  
+  
   
   space = WIDGET_LABEL(tab1_base,$
-  VALUE  = ' ')
-  
+    VALUE  = ' ')
+    
   ;detector infos
   base_base = WIDGET_BASE(tab1_base,$
-  /ROW)
-  
+    /ROW)
+    
   det_base = WIDGET_BASE(base_base,$
-  FRAME = 1,$
-  SCR_XSIZE = xsize-20,$
-  /ROW)
+    FRAME = 1,$
+    SCR_XSIZE = xsize-20,$
+    /ROW)
   space_value = '      '
   label = WIDGET_LABEL(det_base,$
-  VALUE = space_value + '        Number of X pixels ')
+    VALUE = space_value + '        Number of X pixels ')
   value = WIDGET_TEXT(det_base,$
-  VALUE = '4000',$
-  XSIZE = 4,$
-  /EDITABLE,$
-  UNAME = 'tab1_x_pixels')
+    VALUE = '4000',$
+    XSIZE = 4,$
+    /EDITABLE,$
+    UNAME = 'tab1_x_pixels')
   label = WIDGET_LABEL(det_base,$
-  VALUE = space_value + 'Number of Y pixels ')
+    VALUE = space_value + 'Number of Y pixels ')
   value = WIDGET_TEXT(det_base,$
-  VALUE = '4000',$
-  XSIZE = 4,$
-  /EDITABLE,$
-  UNAME = 'tab1_y_pixels')
-
-space = WIDGET_LABEL(base_base,$
-VALUE = ' ')  
-  
-  
-  
-
-
-
-
+    VALUE = '4000',$
+    XSIZE = 4,$
+    /EDITABLE,$
+    UNAME = 'tab1_y_pixels')
+    
+  space = WIDGET_LABEL(base_base,$
+    VALUE = ' ')
+    
+    
+    
+    
+    
+    
+    
 END
