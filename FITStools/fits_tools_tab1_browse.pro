@@ -188,23 +188,17 @@ PRO update_tab1_big_table, Event
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
   list_fits_file = (*(*global).list_fits_file)
-  big_table = STRARR(3,(*global).max_nbr_fits_files)
+  big_table = STRARR((*global).max_nbr_fits_files)
   
   index = 0
   WHILE (index LT (*global).max_nbr_fits_files) DO BEGIN
   
     file_name = list_fits_file[index]
     IF (file_name EQ '') THEN BREAK
-    
-    base = FILE_BASENAME(file_name)
-    path = FILE_DIRNAME(file_name)
-    big_table[0,index] = base
-    big_table[1,index] = 'N/A' ;for now FIXME
-    big_table[2,index] = path
-    
+    big_table[index] = file_name + ' (N/A events)'
     index++
   ENDWHILE
   
-  putValueInTable, Event, 'tab1_fits_table', big_table
+  putValueInTable, Event, 'tab1_fits_table', TRANSPOSE(big_table)
   
 END
