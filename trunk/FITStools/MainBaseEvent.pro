@@ -52,13 +52,16 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab1_fits_table'): BEGIN
       ;if right click
       IF (TAG_NAMES(event, /STRUCTURE_NAME) EQ 'WIDGET_CONTEXT') THEN BEGIN
-        id = WIDGET_info(eVENT.TOP, FIND_BY_UNAME='context_base')
-        WIDGET_DISPLAYCONTEXTMENU, event.ID, event.X, $
-          event.Y, id
+        IF (tab1_table_not_empty(Event) EQ 1b AND $
+        at_last_one_not_empty_selected_cell(Event) EQ 1b) THEN BEGIN
+          id = WIDGET_info(eVENT.TOP, FIND_BY_UNAME='context_base')
+          WIDGET_DISPLAYCONTEXTMENU, event.ID, event.X, $
+            event.Y, id
+        ENDIF
       ENDIF ElSE BEGIN ;left click
-      top_sel    = Event.sel_top
-      bottom_sel = Event.sel_bottom
-      (*global).tab1_selection = [top_sel, bottom_sel]
+        top_sel    = Event.sel_top
+        bottom_sel = Event.sel_bottom
+        (*global).tab1_selection = [top_sel, bottom_sel]
       ENDELSE
     END
     

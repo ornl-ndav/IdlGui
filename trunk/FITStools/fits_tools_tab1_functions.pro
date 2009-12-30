@@ -36,13 +36,50 @@ FUNCTION retrieve_data_of_new_file, Event=event, $
     file_name=file_name, $
     sData=sData
     
-    CATCH, error
-    IF (error NE 0) THEN BEGIN
+  CATCH, error
+  IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
     RETURN, 0b
-    ENDIF
-    
-    
+  ENDIF
+  
   RETURN, 1b
-
+  
 END
+
+;------------------------------------------------------------------------------
+FUNCTION tab1_table_not_empty, Event
+
+  tab1_table = TRANSPOSE(getTableValue(event=Event, 'tab1_fits_table'))
+  cell1 = STRCOMPRESS(tab1_table[0],/REMOVE_ALL)
+  
+  IF (cell1 NE '') THEN RETURN, 1b
+  RETURN, 0b
+  
+END
+
+;------------------------------------------------------------------------------
+FUNCTION at_last_one_not_empty_selected_cell, Event
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  tab1_selection = (*global).tab1_selection
+  top_sel = tab1_selection[0]
+  bottom_sel = tab1_selection[1]
+  
+  tab1_table = TRANSPOSE(getTableValue(event=Event, 'tab1_fits_table'))
+  index = top_sel
+  WHILE (index LE bottom_sel) DO BEGIN
+    cell1 = STRCOMPRESS(tab1_table[index],/REMOVE_ALL)
+    IF (cell1 NE '') THEN RETURN, 1b
+    index++
+  ENDWHILE
+  RETURN, 0b
+  
+END
+
+
+
+
+
+
+
