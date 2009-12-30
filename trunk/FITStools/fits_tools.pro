@@ -80,7 +80,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     (*(*global).list_fits_file)  = STRARR((*global).max_nbr_fits_files)
     (*(*global).list_fits_error_file) = STRARR((*global).max_nbr_fits_files)
     
-  MainBaseSize   = [0,0,500,350]
+  MainBaseSize   = [0,0,700,350]
   MainBaseTitle  = 'FITS tools application'
   MainBaseTitle += ' - ' + VERSION
   ;Build Main Base

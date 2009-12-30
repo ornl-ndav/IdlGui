@@ -65,15 +65,13 @@ PRO make_gui_tab1, MAIN_TAB, global
   table = WIDGET_TABLE(table_base_base,$
     SCR_XSIZE = xsize-15,$
     SCR_YSIZE = 200,$
-    XSIZE     = 3,$
+    XSIZE     = 1,$
     YSIZE     = (*global).max_nbr_fits_files,$
     SENSITIVE = 1,$
-    COLUMN_WIDTHS = [170,100,360],$
+    COLUMN_WIDTHS = [660],$
     /NO_ROW_HEADERS,$
-    COLUMN_LABELS = ['File Name','Nbr of events','File location         ' + $
-    '            '], $
+    COLUMN_LABELS = ['Full file name (nbr of events)'],$
     /SCROLL,$
-    /RESIZEABLE_COLUMNS,$
     /CONTEXT_EVENTS,$
     /ALL_EVENTS,$
     UNAME = 'tab1_fits_table')
@@ -86,8 +84,6 @@ PRO make_gui_tab1, MAIN_TAB, global
   button1 = WIDGET_BUTTON(contextBase, VALUE='First button')
   button2 = WIDGET_BUTTON(contextBase, VALUE='Second button')
   
-  
-  
   space = WIDGET_LABEL(tab1_base,$
     VALUE  = ' ')
     
@@ -99,7 +95,7 @@ PRO make_gui_tab1, MAIN_TAB, global
     FRAME = 1,$
     SCR_XSIZE = xsize-20,$
     /ROW)
-  space_value = '      '
+  space_value = '           '
   label = WIDGET_LABEL(det_base,$
     VALUE = space_value + '        Number of X pixels ')
   value = WIDGET_TEXT(det_base,$
@@ -108,7 +104,7 @@ PRO make_gui_tab1, MAIN_TAB, global
     /EDITABLE,$
     UNAME = 'tab1_x_pixels')
   label = WIDGET_LABEL(det_base,$
-    VALUE = space_value + 'Number of Y pixels ')
+    VALUE = space_value + '       Number of Y pixels ')
   value = WIDGET_TEXT(det_base,$
     VALUE = '4000',$
     XSIZE = 4,$
