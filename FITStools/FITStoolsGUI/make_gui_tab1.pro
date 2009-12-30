@@ -81,9 +81,10 @@ PRO make_gui_tab1, MAIN_TAB, global
   ;context menu
   contextBase = WIDGET_BASE(table,/CONTEXT_MENU,$
     UNAME = 'context_base')
-  button1 = WIDGET_BUTTON(contextBase, VALUE='First button')
-  button2 = WIDGET_BUTTON(contextBase, VALUE='Second button')
-  
+  delete = WIDGET_BUTTON(contextBase, $
+    VALUE='Delete selected file(s)',$
+    UNAME = 'tab1_right_click_delete')
+    
   space = WIDGET_LABEL(tab1_base,$
     VALUE  = ' ')
     
