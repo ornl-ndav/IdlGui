@@ -52,6 +52,7 @@ cd, CurrentFolder
 ;tab1
 .run fits_tools_tab1_functions.pro
 .run fits_tools_tab1_browse.pro
+.run fits_tools_tab1.pro
 
 .run MainBaseEvent.pro
 .run fits_tools.pro

@@ -73,13 +73,16 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
   ;define global variables
   global = PTR_NEW ({fits_path: '~/results/',$
+  
+    tab1_selection: INTARR(2), $ ;top and bottom row selected
+    
     max_nbr_fits_files: 20,$    ;maximum number of fits files we can work on
     list_fits_file: PTR_NEW(0L),$ ;list of full fits files names
     list_fits_error_file: PTR_NEW(0L) }) ;list of file that can not be loaded
     
-    (*(*global).list_fits_file)  = STRARR((*global).max_nbr_fits_files)
-    (*(*global).list_fits_error_file) = STRARR((*global).max_nbr_fits_files)
-    
+  (*(*global).list_fits_file)  = STRARR((*global).max_nbr_fits_files)
+  (*(*global).list_fits_error_file) = STRARR((*global).max_nbr_fits_files)
+  
   MainBaseSize   = [0,0,700,350]
   MainBaseTitle  = 'FITS tools application'
   MainBaseTitle += ' - ' + VERSION

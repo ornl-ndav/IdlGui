@@ -32,45 +32,30 @@
 ;
 ;==============================================================================
 
-PRO MAIN_BASE_event, Event
+PRO remove_selected_tab1_fits_files, Event
 
-  ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
-  wWidget =  Event.top            ;widget id
+  max_nbr_fits_files = (*global).max_nbr_fits_files
+  tab1_selection = (*global).tab1_selection
+  top_sel = tab1_selection[0]
+  bottom_sel = tab1_selection[1]
   
-  CASE Event.id OF
+  tab1_table = getTableValue(event=Event, 'tab1_fits_table')
+  tab1_table = TRANSPOSE(tab1_table)
+  new_tab1_table = STRARR(max_nbr_fits_files)
   
-    ;TAB1, TAB1, TAB1, TAB1, TAB1, TAB1, TAB1, TAB1, TAB1, TAB1, TAB1, TAB1
+  index = 0
+  new_index = 0
+  WHILE (index LT max_nbr_fits_files) DO BEGIN
+    IF (index LT top_sel OR $
+      index GT bottom_sel) THEN BEGIN
+      new_tab1_table[new_index] = tab1_table[index]
+      new_index++
+    ENDIF
+    index++
+  ENDWHILE
   
-    ;browse button
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab1_browse_fits_file_button'): BEGIN
-      browse_fits_files, Event
-    END
-    
-    ;big table
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab1_fits_table'): BEGIN
-      ;if right click
-      IF (TAG_NAMES(event, /STRUCTURE_NAME) EQ 'WIDGET_CONTEXT') THEN BEGIN
-        id = WIDGET_info(eVENT.TOP, FIND_BY_UNAME='context_base')
-        WIDGET_DISPLAYCONTEXTMENU, event.ID, event.X, $
-          event.Y, id
-      ENDIF ElSE BEGIN ;left click
-      top_sel    = Event.sel_top
-      bottom_sel = Event.sel_bottom
-      (*global).tab1_selection = [top_sel, bottom_sel]
-      ENDELSE
-    END
-    
-    ;delete button (right click)
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab1_right_click_delete'): BEGIN
-      remove_selected_tab1_fits_files, Event
-    ;    help, event,/structure
-    END
-    
-    
-    ELSE:
-    
-  ENDCASE
+  putValueInTable, Event, 'tab1_fits_table', TRANSPOSE(new_tab1_table)
   
 END

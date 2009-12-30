@@ -44,6 +44,21 @@ END
 
 ;==============================================================================
 
+FUNCTION getTableValue, event=event, main_event=main_event, uname
+  IF (N_ELEMENTS(event) NE 0) THEN BEGIN
+    id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+    WIDGET_CONTROL, id, GET_VALUE=value
+  ENDIF ELSE BEGIN
+    WIDGET_CONTROL, main_event.top, GET_UVALUE=global
+    value = (*global).load_table
+  ENDELSE
+  RETURN, value
+END
+
+
+
+
+
 
 
 
@@ -55,16 +70,6 @@ FUNCTION getTextFieldValue, Event, uname
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getTableValue, event_load=event_load, main_event=main_event, uname
-  IF (N_ELEMENTS(event_load) NE 0) THEN BEGIN
-    id = WIDGET_INFO(Event_load.top,FIND_BY_UNAME=uname)
-    WIDGET_CONTROL, id, GET_VALUE=value
-  ENDIF ELSE BEGIN
-    WIDGET_CONTROL, main_event.top, GET_UVALUE=global
-    value = (*global).load_table
-  ENDELSE
-  RETURN, value
-END
 
 ;------------------------------------------------------------------------------
 ;this function returns the first row and column of the selection
