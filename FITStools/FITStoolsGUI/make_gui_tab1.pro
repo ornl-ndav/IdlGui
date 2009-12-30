@@ -81,8 +81,15 @@ PRO make_gui_tab1, MAIN_TAB, global
   ;context menu
   contextBase = WIDGET_BASE(table,/CONTEXT_MENU,$
     UNAME = 'context_base')
+    plot1 = WIDGET_BUTTON(contextBase,$
+    VALUE = 'Plot Y vs X ...',$
+    UNAME = 'tab1_right_click_plot_y_vs_x')
+    plot2 = WIDGET_BUTTON(contextBase,$
+    VALUE = 'Plot P vs C ...',$
+    UNAME = 'tab1_right_click_plot_p_vs_c')
   delete = WIDGET_BUTTON(contextBase, $
-    VALUE='Delete selected file(s)',$
+    /SEPARATOR, $
+    VALUE='Delete file(s)',$
     UNAME = 'tab1_right_click_delete')
     
   space = WIDGET_LABEL(tab1_base,$
