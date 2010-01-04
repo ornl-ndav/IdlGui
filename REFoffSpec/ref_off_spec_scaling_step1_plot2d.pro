@@ -56,7 +56,7 @@ PRO step4_step1_plot2d, Event, GROUP_LEADER=group
   ysize = 500
   
   ;Built base
-  title = 'Counts vs Pixels of Selection'
+  title = 'Counts vs Pixels for Selection'
   wBase = WIDGET_BASE(TITLE        = title,$
     XOFFSET      = 900,$
     YOFFSET      = 500,$
@@ -177,11 +177,13 @@ PRO display_step4_step1_plot2d, Event
       ymin_ymax = [ymin_value, ymax_value]
       (*global).scaling_step2_ymin_ymax = ymin_ymax
       
+   ; Code change RCW (Dec 31, 2009): Change 2d plot background color to white    
       plot, xrange, $
         t_data_to_plot, $
         XTITLE = xtitle, $
         YTITLE = ytitle,$
         COLOR  = color,$
+        BACKGROUND = convert_rgb([255,255,255]),$
         YRANGE = [ymin_value,ymax_value],$
         PSYM   = psym,$
         /YLOG,$

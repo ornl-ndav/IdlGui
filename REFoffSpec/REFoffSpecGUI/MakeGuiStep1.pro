@@ -53,16 +53,20 @@ PRO make_gui_step1, REDUCE_TAB, tab_size, TabTitles, global
     sensitive: 1 }
     
   ;Tab titles
-  IF ((*global).instrument EQ 'REF_L') THEN BEGIN
-    ReduceTabTitles = { step1: ' Step 1:  DATA  ',$
-      step2: ' Step 2:  NORMALIZATION  ',$
-      step3: ' Step 3:  RECAPITULATION  '}
-  ENDIF ELSE BEGIN
-    ReduceTabTitles = { step1: ' Step 1:  DATA  ',$
-      step2: ' Step 2: SANGLE  ',$
-      step3: ' Step 3:  NORMALIZATION  ',$
-      step4: ' Step 4:  RECAPITULATION  '}
-  ENDELSE
+  ; Code change RCW (Dec 30, 2009): get ReduceTabNames from XML config file (via ref_off_spec)
+  ; and populate ReduceTabTitles
+
+ ReduceTabNames = (*global).ReduceTabNames
+ IF ((*global).instrument EQ 'REF_L') THEN BEGIN
+      ReduceTabTitles = { step1: ReduceTabNames[0],$
+                          step2: ReduceTabNames[2],$
+                          step3: ReduceTabNames[3]}
+ ENDIF ELSE BEGIN
+      ReduceTabTitles = { step1: ReduceTabNames[0],$
+                          step2: ReduceTabNames[1],$
+                          step3: ReduceTabNames[2],$
+                          step4: ReduceTabNames[3]} 
+ ENDELSE
   
   ;******************************************************************************
   ;            BUILD GUI

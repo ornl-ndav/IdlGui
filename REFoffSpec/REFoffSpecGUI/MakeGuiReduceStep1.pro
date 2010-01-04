@@ -465,7 +465,9 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
   ENDIF ELSE BEGIN
     value = ''
   ENDELSE
-  
+  ; For debugging, set the value to desired run numbers (RCW, Dec 31, 2009)
+    value = '5387-5389'
+    
   tRun = CW_FIELD(Row1,$
     XSIZE = 40,$
     UNAME = 'reduce_tab1_run_cw_field',$
@@ -626,7 +628,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     VALUE = '                                               ')
     
   ;match button
-  tooltip = 'Spin States of the Data and Normalization files are identical'
+  tooltip = 'Spin States of the Data and Normalization files are identical.'
   match = WIDGET_DRAW(Row5_row2,$
     SCR_XSIZE = 200,$
     SCR_YSIZE = 109,$
@@ -639,9 +641,9 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
   space_value = '   '
   space = WIDGET_LABEL(Row5_row2,$
     VALUE = space_value)
-    
+   ; Code change RCW (Dec 31, 2009): fix typos below   
   ;do not match and fixed
-  tooltip = 'Spin State of Normalization files if fixed (Off_Off), no ' + $
+  tooltip = 'Spin State of Normalization files is fixed (Off_Off), no ' + $
     'matter the spin state of the Data file.'
   not_match = WIDGET_DRAW(Row5_row2,$
     SCR_XSIZE = 200,$
@@ -657,7 +659,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     
   ;do not match and user defined
   tooltip = 'Spin States of Data and Normalization files do not match and ' + $
-    'can will be manually defined by the user'
+    'must be manually defined by the user.'
   match = WIDGET_DRAW(Row5_row2,$
     SCR_XSIZE = 200,$
     SCR_YSIZE = 109,$

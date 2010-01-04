@@ -38,7 +38,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
   ;            DEFINE STRUCTURE
   ;****************************************************************************
 
-  IF ((*global).instrument EQ 'REF_L') THEN BEGIN
+  IF ((*global).instrument  EQ 'REF_L') THEN BEGIN
     tab_title = TabTitles.step2
   ENDIF ELSE BEGIN
     tab_title = TabTitles.step3
@@ -221,9 +221,9 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     value = '    ')
     
   info = WIDGET_LABEL(row3_row2_base,$
-    VALUE = ' HELP: Left click on the plot to select first Y, Right ' + $
-    'click to switch to next Y. or manually input Y1 and Y2 ' + $
-    'or Use Up or Down arrows to move selection.')
+    VALUE = ' HELP: Left click on the plot to select first Y, right ' + $
+    'click to switch to next Y, or manually input Y1 and Y2 ' + $
+    'or use up and down arrows to move selection.')
     
   ;third row (save button)
   save_roi = WIDGET_BUTTON(row3_base,$
@@ -335,10 +335,13 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     VALUE = 'Run(s) #:')
     
   text = WIDGET_TEXT(row2,$
-    VALUE = '',$
+;    VALUE = '',$
+; For debugging, set the value to desired run numbers (RCW, Dec 31, 2009)
+     VALUE = '5392-5394',$
     UNAME = 'reduce_step2_normalization_text_field',$
     /EDITABLE,$
     XSIZE = 40)
+ 
     
   value = WIDGET_LABEL(row2,$
     VALUE = '(ex: 1245,1345-1347,1349)')

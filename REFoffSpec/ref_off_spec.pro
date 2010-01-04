@@ -55,6 +55,25 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   SCROLLING = file->getValue(tag=['configuration','scrolling'])
   FAKING_DATA = file->getValue(tag=['configuration','faking','data'])
   AM = file->getValue(tag=['configuration','am'])
+  BROWSER = file->getValue(tag=['configuration','browser'])
+  MainBaseTitle = file->getValue(tag=['configuration','MainBaseTitle'])
+  STEP1_TITLE = file->getValue(tag=['configuration','MainTabTitles','step1'])
+  STEP2_TITLE = file->getValue(tag=['configuration','MainTabTitles','step2'])
+  STEP3_TITLE = file->getValue(tag=['configuration','MainTabTitles','step3'])
+  STEP4_TITLE = file->getValue(tag=['configuration','MainTabTitles','step4'])
+  STEP5_TITLE = file->getValue(tag=['configuration','MainTabTitles','step5'])
+  STEP6_TITLE = file->getValue(tag=['configuration','MainTabTitles','step6'])
+  STEP7_TITLE = file->getValue(tag=['configuration','MainTabTitles','step7'])
+  STEP8_TITLE = file->getValue(tag=['configuration','MainTabTitles','step8'])
+  RSTEP1_NAME = file->getValue(tag=['configuration','ReduceTabNames','name1'])
+  RSTEP2_NAME = file->getValue(tag=['configuration','ReduceTabNames','name2'])
+  RSTEP3_NAME = file->getValue(tag=['configuration','ReduceTabNames','name3'])
+  RSTEP4_NAME = file->getValue(tag=['configuration','ReduceTabNames','name4'])
+  SSTEP1_NAME = file->getValue(tag=['configuration','ScalingTabNames','sname1'])
+  SSTEP2_NAME = file->getValue(tag=['configuration','ScalingTabNames','sname2'])
+  SL3STEP1_NAME = file->getValue(tag=['configuration','ScalingLevel3TabNames','sl3name1'])
+  SL3STEP2_NAME = file->getValue(tag=['configuration','ScalingLevel3TabNames','sl3name2'])
+  SL3STEP3_NAME = file->getValue(tag=['configuration','ScalingLevel3TabNames','sl3name3'])
   SUPER_USERS = ['j35']
   ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
   ;============================================================================
@@ -91,7 +110,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ENDIF ELSE BEGIN
     ucams = GET_UCAMS()
   ENDELSE
-  
+    
   ;define global variables
   global = ptr_new ({ ucams: ucams,$
     instrument: instrument,$
@@ -101,8 +120,32 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
     left_right_cursor: 96, $
     standard: 31, $
+   ; Code change RCW (Dec 28, 2009): firefox replaced by browser obtained from XML config file entry BROWSER   
+    browser: BROWSER,$
+   
+    ;Tab titles
+   ; Code change RCW (Dec 29, 2009): get TabTitles from XML config file  
+   TabTitles: {  step1:     STEP1_TITLE,$
+                 step2:     STEP2_TITLE,$
+                 step3:     STEP3_TITLE,$
+                 step4:     STEP4_TITLE,$
+                 step5:     STEP5_TITLE,$
+                 step6:     STEP6_TITLE,$
+                 options:   STEP7_TITLE,$
+                 log_book:  STEP8_TITLE},$
+    ; Code change RCW (Dec 30, 2009): get ReduceTabNames and ScalingTabNames from XML config file (NOT USING THESE RIGHT NOW)                
+    ReduceTabNames: [RSTEP1_NAME,$
+                     RSTEP2_NAME,$
+                     RSTEP3_NAME,$
+                     RSTEP4_NAME],$
+                     
+    ScalingTabNames: [SSTEP1_NAME,$
+                     SSTEP2_NAME],$
     
-    firefox: '/usr/bin/firefox',$
+    ScalingLevel3TabNames: [SL3STEP1_NAME,$
+                            SL3STEP2_NAME,$
+                            SL3STEP3_NAME],$
+                            
     srun_web_page: 'https://neutronsr.us/applications/jobmonitor/squeue.php?view=all',$
     
     reduce_structure: {driver: 'refred_lp',$
@@ -404,20 +447,20 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   (*(*global).list_OF_ascii_files) = STRARR(1)
   (*(*global).reduce_tab1_table) = STRARR(2,1)
   (*(*global).reduce_run_sangle_table) = STRARR(2,1)
-  
+; Build Application Title ====================================================== 
   MainBaseSize   = (*global).MainBaseSize
-  MainBaseTitle  = 'Reflectometer Off Specular Application'
+;  MainBaseTitle  = 'Reflectometer Off Specular Application'
   IF (instrument EQ 'REF_L') THEN BEGIN
-    MainBaseTitle += ' for REF_L'
+    MainBaseTitle += '_for_REF_L'
   ENDIF ELSE BEGIN
-    MainBaseTitle += ' for REF_M'
+    MainBaseTitle += '_for_REF_M'
   ENDELSE
   
-  MainBaseTitle += ' - ' + VERSION
+  MainBaseTitle += ' Version: ' + VERSION
   IF (DEBUGGING EQ 'yes') THEN BEGIN
     MainBaseTitle += ' (DEBUGGING MODE)'
   ENDIF
-  
+ ;===============================================================================
   ;Build Main Base
   MAIN_BASE = WIDGET_BASE( GROUP_LEADER = wGroup,$
     UNAME        = 'MAIN_BASE',$
@@ -526,7 +569,13 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;  display_reduce_step1_sangle_buttons, MAIN_BASE=main_base, global
 ;  display_reduce_step1_sangle_scale, MAIN_BASE=main_base, global
   
-  ;=============================================================================
+  ;============================================================================= 
+    message = '> Browser: ' + BROWSER
+    IDLsendToGeek_addLogBookText_fromMainBase, MAIN_BASE, 'log_book_text', $
+       message
+    message = '> Instrument: ' + instrument
+    IDLsendToGeek_addLogBookText_fromMainBase, MAIN_BASE, 'log_book_text', $
+       message
   ;=============================================================================
   ;send message to log current run of application
   logger, APPLICATION=application, VERSION=version, UCAMS=ucams
@@ -536,14 +585,16 @@ END
 ; Empty stub procedure used for autoloading.
 PRO ref_off_spec, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-  ;check instrument here
+; Check hostname (lrac or mrac) to determine instrument =========================
   SPAWN, 'hostname',listening
   CASE (listening) OF
     'lrac': instrument = 'REF_L'
     'mrac': instrument = 'REF_M'
     ELSE: instrument = 'UNDEFINED'
   ENDCASE
-  
+; for debugging, force BuildInstrumentGui to run so instrument must be selected - RCW 30 Dec 2009
+;     instrument = 'UNDEFINED'
+; If instrument is UNDEFINED call BuildInstrumentGui, else call BuildGui =========================  
   IF (instrument EQ 'UNDEFINED') THEN BEGIN
     BuildInstrumentGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ENDIF ELSE BEGIN
