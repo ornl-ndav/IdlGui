@@ -64,7 +64,8 @@ PRO checking_spin_base_event, event
   
     ;check job manager
     WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab3_check_jobs'): BEGIN
-      reduce_step3_job_mamager, main_event
+      ; Code change RCW (Dec 28, 2009): Typo corrected (mamager replaced by manager in called routine name)
+      reduce_step3_job_manager, main_event
       ;show base that inform the user that the job manager is going to show up
       job_base = job_manager_info_base(main_event)
       WAIT, 4

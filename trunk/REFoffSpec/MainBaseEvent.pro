@@ -1562,7 +1562,7 @@ PRO MAIN_BASE_event, Event
   
   ;check job manager
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab3_check_jobs'): BEGIN
-    reduce_step3_job_mamager, Event
+    reduce_step3_job_manager, Event
     ;show base that inform the user that the job manager is going to show up
     job_base = job_manager_info_base(Event)
     WAIT, 4
