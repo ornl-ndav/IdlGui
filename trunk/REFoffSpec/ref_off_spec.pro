@@ -68,7 +68,6 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   RSTEP1_NAME = file->getValue(tag=['configuration','ReduceTabNames','name1'])
   RSTEP2_NAME = file->getValue(tag=['configuration','ReduceTabNames','name2'])
   RSTEP3_NAME = file->getValue(tag=['configuration','ReduceTabNames','name3'])
-  RSTEP4_NAME = file->getValue(tag=['configuration','ReduceTabNames','name4'])
   SSTEP1_NAME = file->getValue(tag=['configuration','ScalingTabNames','sname1'])
   SSTEP2_NAME = file->getValue(tag=['configuration','ScalingTabNames','sname2'])
   SL3STEP1_NAME = file->getValue(tag=['configuration','ScalingLevel3TabNames','sl3name1'])
@@ -136,8 +135,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ; Code change RCW (Dec 30, 2009): get ReduceTabNames and ScalingTabNames from XML config file (NOT USING THESE RIGHT NOW)                
     ReduceTabNames: [RSTEP1_NAME,$
                      RSTEP2_NAME,$
-                     RSTEP3_NAME,$
-                     RSTEP4_NAME],$
+                     RSTEP3_NAME],$
                      
     ScalingTabNames: [SSTEP1_NAME,$
                      SSTEP2_NAME],$
@@ -592,7 +590,7 @@ PRO ref_off_spec, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     'mrac': instrument = 'REF_M'
     ELSE: instrument = 'UNDEFINED'
   ENDCASE
-; for debugging, force BuildInstrumentGui to run so instrument must be selected - RCW 30 Dec 2009
+; For debugging, force BuildInstrumentGui to run so instrument must be selected - RCW 30 Dec 2009
 ;     instrument = 'UNDEFINED'
 ; If instrument is UNDEFINED call BuildInstrumentGui, else call BuildGui =========================  
   IF (instrument EQ 'UNDEFINED') THEN BEGIN
