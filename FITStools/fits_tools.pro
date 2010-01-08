@@ -65,7 +65,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   ;DEBUGGING
   sDEBUGGING = { tab: {main_tab: 0},$  ;0:step1, 1:logBook
-    fits_path: '~/IDLWorkspace_home/FITStools/'}
+    fits_path: '~/FITSfiles'}
   ;******************************************************************************
   ;******************************************************************************
     
@@ -76,10 +76,26 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
     tab1_selection: INTARR(2), $ ;top and bottom row selected
     
+    ;pointers that will contain the values x, y, p and c of the various files
+    pXArray: PTR_NEW(0L), $     ;x array in the original file
+    pYArray: PTR_NEW(0L), $     ;y array in the original file
+    pPArray: PTR_NEW(0L), $     ;p in the original file
+    pTimeArray: PTR_NEW(0L), $  ;c array in the original file
+    
     max_nbr_fits_files: 20,$    ;maximum number of fits files we can work on
     list_fits_file: PTR_NEW(0L),$ ;list of full fits files names
     list_fits_error_file: PTR_NEW(0L) }) ;list of file that can not be loaded
     
+  max_nbr_fits_files = (*global).max_nbr_fits_files
+  x_array    = PTRARR(max_nbr_fits_files,/ALLOCATE_HEAP)
+  y_array    = PTRARR(max_nbr_fits_files,/ALLOCATE_HEAP)
+  p_array    = PTRARR(max_nbr_fits_files,/ALLOCATE_HEAP)
+  time_array = PTRARR(max_nbr_fits_files,/ALLOCATE_HEAP)
+  (*(*global).pXArray) = x_array
+  (*(*global).pYArray) = y_array
+  (*(*global).pPArray) = p_array
+  (*(*global).pTimeArray) = time_array
+  
   (*(*global).list_fits_file)  = STRARR((*global).max_nbr_fits_files)
   (*(*global).list_fits_error_file) = STRARR((*global).max_nbr_fits_files)
   
@@ -106,9 +122,9 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   WIDGET_CONTROL, /REALIZE, MAIN_BASE
   XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
   
-  ;==============================================================================
+  ;============================================================================
   ; Date Information
-  ;==============================================================================
+  ;============================================================================
   ;Put date/time when user started application in first line of log book
   ;time_stamp = GenerateReadableIsoTimeStamp()
   ;message = '>>>>>>  Application started date/time: ' + time_stamp + '  <<<<<<'
@@ -118,11 +134,11 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     checking_packages_routine, MAIN_BASE, my_package, global
   ENDIF
   
-  ;??????????????????????????????????????????????????????????????????????????????
+  ;????????????????????????????????????????????????????????????????????????????
   IF (DEBUGGING EQ 'yes' ) THEN BEGIN
     (*global).fits_path = sDebugging.fits_path
   ENDIF
-  ;??????????????????????????????????????????????????????????????????????????????
+  ;????????????????????????????????????????????????????????????????????????????
   
   ;send message to log current run of application
   logger, APPLICATION=application, VERSION=version, UCAMS=ucams
