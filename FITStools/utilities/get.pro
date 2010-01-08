@@ -36,6 +36,7 @@ FUNCTION get_first_empty_table_index, load_table
   sz = (size(load_table))(1)
   index = 0
   WHILE (index LT sz) DO BEGIN
+    print, '*' + load_table[index] + '*'
     IF (STRCOMPRESS(load_table[index],/REMOVE_ALL) EQ '') THEN RETURN, index
     index++
   ENDWHILE
@@ -58,7 +59,7 @@ END
 ;------------------------------------------------------------------------------
 FUNCTION getFirstEmptyXarrayIndex, event=event
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
-   list_fits_file = (*(*global).list_fits_file)
+  list_fits_file = (*(*global).list_fits_file)
   index = get_first_empty_table_index(list_fits_file)
   return, index
 END

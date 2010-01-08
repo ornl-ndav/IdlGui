@@ -68,7 +68,6 @@ PRO MAIN_BASE_event, Event
     ;delete button (right click)
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab1_right_click_delete'): BEGIN
       remove_selected_tab1_fits_files, Event
-    ;    help, event,/structure
     END
     
     
