@@ -77,6 +77,7 @@ PRO browse_fits_files, Event
       putValue, Event, 'tab1_loaded_info_file', short_file_name
       status_retrieve = retrieve_data_of_new_file(Event=event, $
         file_name=file_list[i], sData=sData)
+        print, 'status: ' + string(status_retrieve) 
         
       IF (status_retrieve EQ 1b) THEN BEGIN
         add_file_to_list_of_files, Event=event, file_name=file_list[i], $
@@ -194,12 +195,17 @@ PRO update_tab1_big_table, Event
   list_fits_file = (*(*global).list_fits_file)
   big_table = STRARR((*global).max_nbr_fits_files)
   
+  x_array = (*(*global).pXArray)
+
   index = 0
   WHILE (index LT (*global).max_nbr_fits_files) DO BEGIN
   
     file_name = list_fits_file[index]
     IF (file_name EQ '') THEN BREAK
-    big_table[index] = file_name + ' (N/A events)'
+      x_current_array = *x_array[index]
+      nbr_events = N_ELEMENTS(x_current_array)
+    big_table[index] = file_name + ' (' + $
+    STRCOMPRESS(nbr_events,/REMOVE_ALL) + ' events)'
     index++
   ENDWHILE
   

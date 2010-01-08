@@ -36,6 +36,8 @@ FUNCTION retrieve_data_of_new_file, Event=event, $
     file_name=file_name, $
     sData=sData
     
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
   CATCH, error
   IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
@@ -43,9 +45,8 @@ FUNCTION retrieve_data_of_new_file, Event=event, $
   ENDIF
   
   ;reading file
-  data = mrdfits(file_name, 1, header, status=status)
+  sData = mrdfits(file_name, 1, header, status=status)
   
-  nbr_lines = (size(data))(1)
   time = sData.count
   x = sData.x
   y = sData.y

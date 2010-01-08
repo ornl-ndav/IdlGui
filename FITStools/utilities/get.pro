@@ -57,9 +57,10 @@ END
 
 ;------------------------------------------------------------------------------
 FUNCTION getFirstEmptyXarrayIndex, event=event
-table = getTableValue(event=event, 'tab1_fits_table')
-index = get_first_empty_table_index(table)
-return, index
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+   list_fits_file = (*(*global).list_fits_file)
+  index = get_first_empty_table_index(list_fits_file)
+  return, index
 END
 
 
