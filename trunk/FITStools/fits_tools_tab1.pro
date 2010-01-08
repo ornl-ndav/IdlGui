@@ -41,6 +41,9 @@ PRO remove_selected_tab1_fits_files, Event
   top_sel = tab1_selection[0]
   bottom_sel = tab1_selection[1]
   
+  new_list_fits_file = STRARR(max_nbr_fits_files)
+  list_fits_file = (*(*global).list_fits_file)
+  
   tab1_table = getTableValue(event=Event, 'tab1_fits_table')
   tab1_table = TRANSPOSE(tab1_table)
   new_tab1_table = STRARR(max_nbr_fits_files)
@@ -50,6 +53,7 @@ PRO remove_selected_tab1_fits_files, Event
   WHILE (index LT max_nbr_fits_files) DO BEGIN
     IF (index LT top_sel OR $
       index GT bottom_sel) THEN BEGIN
+      new_list_fits_file[new_index] = list_fits_file[index]
       new_tab1_table[new_index] = tab1_table[index]
       new_index++
     ENDIF
@@ -57,5 +61,43 @@ PRO remove_selected_tab1_fits_files, Event
   ENDWHILE
   
   putValueInTable, Event, 'tab1_fits_table', TRANSPOSE(new_tab1_table)
+  
+  x_array = (*(*global).pXArray)
+  y_array = (*(*global).pYArray)
+  p_array = (*(*global).pPArray)
+  time_array = (*(*global).pTimeArray)
+  (*(*global).list_fits_file) = new_list_fits_file
+  
+  max_nbr_fits_files = (*global).max_nbr_fits_files
+  new_x_array    = PTRARR(max_nbr_fits_files,/ALLOCATE_HEAP)
+  new_y_array    = PTRARR(max_nbr_fits_files,/ALLOCATE_HEAP)
+  new_p_array    = PTRARR(max_nbr_fits_files,/ALLOCATE_HEAP)
+  new_time_array = PTRARR(max_nbr_fits_files,/ALLOCATE_HEAP)
+  
+  last_index = getFirstEmptyXarrayIndex(event=event)
+  print, 'last_index is : ' + string(last_index)
+  index = 0
+  new_index = 0
+  IF (last_index GT 1) THEN BEGIN
+    WHILE (index LT last_index) DO BEGIN
+      IF (index LT top_sel OR $
+        index GT bottom_sel) THEN BEGIN
+        print, 'index is: ' + string(index)
+        help, *x_array[index]
+        temp_array = *x_array[index]
+        *new_x_array[new_index] = temp_array
+        ;      *new_y_array[new_index] = *y_array[index]
+        ;      *new_p_array[new_index] = *p_array[index]
+        ;      *new_time_array[new_index] = *time_array[index]
+        new_index++
+      ENDIF
+      index++
+    ENDWHILE
+  ENDIF
+  
+  (*(*global).pXArray)    = new_x_array
+  (*(*global).pYArray)    = new_y_array
+  (*(*global).pPArray)    = new_p_array
+  (*(*global).pTimeArray) = new_time_array
   
 END
