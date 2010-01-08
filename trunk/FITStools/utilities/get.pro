@@ -55,6 +55,12 @@ FUNCTION getTableValue, event=event, main_event=main_event, uname
   RETURN, value
 END
 
+;------------------------------------------------------------------------------
+FUNCTION getFirstEmptyXarrayIndex, event_load=event_load
+table = getTableValue(event_load=event_load, '')
+index = get_first_empty_table_index(table)
+return, index
+END
 
 
 
@@ -169,9 +175,4 @@ FUNCTION get_number_of_files_loaded, event_load=event_load, $
   
 END
 
-;------------------------------------------------------------------------------
-FUNCTION getFirstEmptyXarrayIndex, event_load=event_load
-table = getTableValue(event_load=event_load, 'plot_ascii_load_base_table')
-index = get_first_empty_table_index(table)
-return, index
-END
+
