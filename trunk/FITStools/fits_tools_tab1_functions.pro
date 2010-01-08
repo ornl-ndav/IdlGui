@@ -42,6 +42,18 @@ FUNCTION retrieve_data_of_new_file, Event=event, $
     RETURN, 0b
   ENDIF
   
+  ;reading file
+  data = mrdfits(file_name, 1, header, status=status)
+  help, data,/structure
+  print, size(data)
+  
+  
+  
+  
+  
+  
+  
+  
   RETURN, 1b
   
 END
