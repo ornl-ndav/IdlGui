@@ -7,6 +7,7 @@ cd, IdlUtilitiesPath
 .run IDLxmlParser__define.pro
 .run get.pro
 .run put.pro
+.run gui.pro
 
 ;routines used to read and write FITS files
 cd, CurrentFolder + '/reader_writer_routines'

@@ -46,6 +46,38 @@ PRO make_gui_tab1, MAIN_TAB, global
     SCR_YSIZE = ysize, $
     TITLE     = '  LOAD FITS FILE(S)  ')
     
+  ;Base that will inform the user of the current file loaded
+  loaded_xsize = 400
+  loaded_ysize = 50
+  loaded_xoffset = (xsize - loaded_xsize) / 2
+  loaded_yoffset = (ysize - loaded_ysize) / 2
+
+  loaded_base = WIDGET_BASE(wTab1Base,$
+  XOFFSET = loaded_xoffset,$
+  YOFFSET = loaded_yoffset, $
+  SCR_XSIZE = loaded_xsize, $
+  SCR_YSIZE = loaded_ysize, $
+  UNAME = 'tab1_loaded_base_info',$
+  MAP = 0, $
+  /COLUMN, $
+  FRAME = 5)  
+    
+  value = WIDGET_LABEL(loaded_base,$
+  VALUE = 'LOADING ...',$
+  SCR_XSIZE = loaded_xsize-25,$
+  FRAME = 1)
+
+  rowb = WIDGET_BASE(loaded_base,$
+  /ALIGN_LEFT,$
+  /ROW)
+  title = WIDGET_LABEL(rowb,$
+  VALUE = 'Working on file: ')
+  value = WIDGET_LABEL(rowb,$
+  VALUE = 'N/A',$
+  /ALIGN_LEFT,$
+  SCR_XSIZE = 350,$
+  UNAME = 'tab1_loaded_info_file')
+  
   ;title to detector infos (x and y)
   det_title = WIDGET_LABEL(wTab1Base,$
     XOFFSET = 15,$

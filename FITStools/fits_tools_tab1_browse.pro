@@ -70,8 +70,11 @@ PRO browse_fits_files, Event
       RETURN
     ENDIF
     
+    MapBase, Event, uname='tab1_loaded_base_info', 1
     FOR i=0,(nbr_file_loaded-1) DO BEGIN
     
+      short_file_name = FILE_BASENAME(file_list[i])
+      putValue, Event, 'tab1_loaded_info_file', short_file_name
       status_retrieve = retrieve_data_of_new_file(Event=event, $
         file_name=file_list[i], sData=sData)
         
@@ -95,6 +98,7 @@ PRO browse_fits_files, Event
         
       ENDELSE
     ENDFOR
+    MapBase, Event, uname='tab1_loaded_base_info', 0
     
     WIDGET_CONTROL, HOURGLASS=0
     
