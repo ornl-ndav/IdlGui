@@ -44,32 +44,29 @@ FUNCTION retrieve_data_of_new_file, Event=event, $
   
   ;reading file
   data = mrdfits(file_name, 1, header, status=status)
-
+  
   nbr_lines = (size(data))(1)
   time = sData.count
   x = sData.x
   y = sData.y
   pulse = sData.p
   
-  index = get_first_empty_spot_in_list_of_files(Event)
+  index = getFirstEmptyXarrayIndex(event=event)
   
+  x_array = (*(*global).pXArray)
+  y_array = (*(*global).pYArray)
+  p_array = (*(*global).pPArray)
+  time_array = (*(*global).pTimeArray)
   
-    *pXarray[index] = Xarray
-        *pYarray[index] = Yarray
-        *pSigmaYarray[index] = SigmaYarray
-        
-  (*(*global).pXarray) = pXarray
-  (*(*global).pYarray) = pYarray
-  (*(*global).pSigmaYArray) = pSigmaYArray
+  *x_array[index] = x
+  *y_array[index] = y
+  *p_array[index] = pulse
+  *time_array[index] = time
   
-  
-  
-  
-  
-  
-  
-  
-  
+  (*(*global).pXArray) = x_array
+  (*(*global).pYArray) = y_array
+  (*(*global).pPArray) = p_array
+  (*(*global).pTimeArray) = time_array
   
   RETURN, 1b
   

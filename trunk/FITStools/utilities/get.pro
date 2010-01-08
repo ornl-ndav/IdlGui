@@ -56,8 +56,8 @@ FUNCTION getTableValue, event=event, main_event=main_event, uname
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getFirstEmptyXarrayIndex, event_load=event_load
-table = getTableValue(event_load=event_load, '')
+FUNCTION getFirstEmptyXarrayIndex, event=event
+table = getTableValue(event=event, 'tab1_fits_table')
 index = get_first_empty_table_index(table)
 return, index
 END
