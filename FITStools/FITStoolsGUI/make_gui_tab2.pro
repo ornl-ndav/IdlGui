@@ -118,5 +118,4 @@ PRO make_gui_tab2, MAIN_TAB, global
   VALUE = 'CREATE ASCII FILE',$
   UNAME = 'tab2_create_ascii_file_button')
   
-  
 END

@@ -65,7 +65,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;*************************************************************************
   
   ;DEBUGGING
-  sDEBUGGING = { tab: {main_tab: 1},$  ;0:step1, 1:logBook
+  sDEBUGGING = { tab: {main_tab: 0},$  ;0:step1, 1:logBook
     fits_path: '~/FITSfiles/'}
   ;******************************************************************************
   ;******************************************************************************

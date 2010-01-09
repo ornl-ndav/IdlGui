@@ -114,6 +114,9 @@ PRO browse_fits_files, Event
   ;update big table
   update_tab1_big_table, Event
   
+  ;update name of P vs C output ascii file
+  update_tab2_pvsc_ascii_file_name, Event
+  
 END
 
 ;------------------------------------------------------------------------------
