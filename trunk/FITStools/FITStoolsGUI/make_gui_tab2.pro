@@ -45,5 +45,78 @@ PRO make_gui_tab2, MAIN_TAB, global
     SCR_XSIZE = xsize, $
     SCR_YSIZE = ysize, $
     TITLE     = '  CREATE P vs C ASCII FILE  ')
-
+    
+  BaseCol = WIDGET_BASE(wTab1Base,$
+    SCR_XSIZE = xsize,$
+    /COLUMN,$
+    /BASE_ALIGN_CENTER)
+    
+  ;space
+  space = WIDGET_LABEL(BaseCol,$
+    VALUE = ' ')
+    
+  ;row1
+  row1 = WIDGET_BASE(BaseCol,$
+    /ROW)
+  value = CW_FIELD(row1,$
+    VALUE = '300',$
+    XSIZE = 5,$
+    /INTEGER,$
+    /RETURN_EVENTS,$
+    UNAME = 'tab2_bin_size_field',$
+    TITLE = 'Bin Size:')
+  units = WIDGET_LABEL(row1,$
+    VALUE = 'microS      ')
+  plot = WIDGET_BUTTON(row1,$
+    VALUE = 'P L O T ...',$
+    UNAME = 'tab2_bin_size_plot',$
+    XSIZE = 200)
+    
+  ;space
+  space = WIDGET_LABEL(BaseCol,$
+    VALUE = ' ')
+    
+  ;row2
+  row2 = WIDGET_BASE(BaseCol,$
+    /COLUMN,$
+    FRAME = 1)
+    
+  rowa = WIDGET_BASE(row2,$
+    /ROW)
+  label = WIDGET_LABEL(rowa,$
+    VALUE = 'Where:')
+  button = WIDGET_BUTTON(rowa,$
+    VALUE = '~/results/',$
+    SCR_XSIZE = 400,$
+    UNAME = 'tab2_where_button')
+    
+  rowb = WIDGET_BASE(row2,$
+    /ROW)
+  label = WIDGET_LABEL(rowb,$
+    VALUE = ' Name:')
+  button = WIDGET_TEXT(rowb,$
+    VALUE = 'N/A',$
+    SCR_XSIZE = 400,$
+    UNAME = 'tab2_file_name')
+    
+  ;space
+  space = WIDGET_LABEL(BaseCol,$
+    VALUE = ' ')
+    
+  ;row3
+  row3 = WIDGET_BASE(BaseCol,$
+    /ROW)
+;  space = WIDGET_LABEL(row3,$
+;  VALUE = '                    ')
+  preview = WIDGET_BUTTON(row3,$
+  VALUE = 'PREVIEW ASCII FILE ...',$
+  SCR_YSIZE = 30,$
+  UNAME = 'tab2_preview_ascii_file_button')
+  space = WIDGET_LABEL(row3,$
+  VALUE = '                            ')
+  create = WIDGET_BUTTON(row3,$
+  VALUE = 'CREATE ASCII FILE',$
+  UNAME = 'tab2_create_ascii_file_button')
+  
+  
 END
