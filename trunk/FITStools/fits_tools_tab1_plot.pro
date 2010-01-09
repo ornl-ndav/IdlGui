@@ -58,11 +58,31 @@ PRO fits_tools_tab1_plot_base_event, Event
       WIDGET_CONTROL, id, DRAW_XSIZE= new_xsize-6
       WIDGET_CONTROL, id, DRAW_YSIZE= new_ysize-6
       
+      replot, Event
+      
     END
     
     ELSE:
     
   ENDCASE
+  
+END
+
+;------------------------------------------------------------------------------
+PRO replot, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global_plot
+  
+  xarray = (*(*global_plot).xarray)
+  yarray = (*(*global_plot).yarray)
+  
+  id = WIDGET_INFO(Event.top, $
+    FIND_BY_UNAME='fits_tools_tab1_plot_draw_uname')
+  WIDGET_CONTROL, id, GET_VALUE = id_value
+  WSET, id_value
+  
+  PLOT, xarray, yarray, psym=1, XSTYLE=1, YSTYLE=1
   
 END
 
@@ -104,8 +124,12 @@ PRO  fits_tools_tab1_plot_base_gui, wBase=wBase, $
 END
 
 ;------------------------------------------------------------------------------
-PRO fits_tools_tab1_plot_base, main_base=main_base, Event=Event, title=title
-
+PRO fits_tools_tab1_plot_base, main_base=main_base, $
+    Event=Event, $
+    title=title, $
+    xarray=xarray, $
+    yarray=yarray
+    
   IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
     id = WIDGET_INFO(main_base, FIND_BY_UNAME='MAIN_BASE')
     WIDGET_CONTROL,main_base,GET_UVALUE=global
@@ -128,12 +152,21 @@ PRO fits_tools_tab1_plot_base, main_base=main_base, Event=Event, title=title
   
   global_plot = PTR_NEW({ wbase: wbase1,$
     global: global, $
+    xarray: PTR_NEW(0L), $
+    yarray: PTR_NEW(0L), $
     main_event: Event})
     
+  (*(*global_plot).xarray) = xarray
+  (*(*global_plot).yarray) = yarray
+  
   WIDGET_CONTROL, wBase1, SET_UVALUE = global_plot
   
   XMANAGER, "fits_tools_tab1_plot_base", wBase1, $
     GROUP_LEADER = ourGroup, /NO_BLOCK
     
+  WIDGET_CONTROL, /HOURGLASS
+  PLOT, xarray, yarray, psym=1, XSTYLE=1, YSTYLE=1
+  WIDGET_CONTROL, HOURGLASS=0
+  
 END
 

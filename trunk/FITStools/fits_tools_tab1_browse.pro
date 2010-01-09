@@ -77,7 +77,6 @@ PRO browse_fits_files, Event
       putValue, Event, 'tab1_loaded_info_file', short_file_name
       status_retrieve = retrieve_data_of_new_file(Event=event, $
         file_name=file_list[i], sData=sData)
-        print, 'status: ' + string(status_retrieve) 
         
       IF (status_retrieve EQ 1b) THEN BEGIN
         add_file_to_list_of_files, Event=event, file_name=file_list[i], $
