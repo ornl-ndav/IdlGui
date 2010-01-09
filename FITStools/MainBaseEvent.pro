@@ -53,7 +53,7 @@ PRO MAIN_BASE_event, Event
       ;if right click
       IF (TAG_NAMES(event, /STRUCTURE_NAME) EQ 'WIDGET_CONTEXT') THEN BEGIN
         IF (tab1_table_not_empty(Event) EQ 1b AND $
-        at_last_one_not_empty_selected_cell(Event) EQ 1b) THEN BEGIN
+          at_last_one_not_empty_selected_cell(Event) EQ 1b) THEN BEGIN
           id = WIDGET_info(eVENT.TOP, FIND_BY_UNAME='context_base')
           WIDGET_DISPLAYCONTEXTMENU, event.ID, event.X, $
             event.Y, id
@@ -70,6 +70,17 @@ PRO MAIN_BASE_event, Event
       remove_selected_tab1_fits_files, Event
     END
     
+    ;plot button Y vs X (right click)
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab1_right_click_plot_y_vs_x'): BEGIN
+      title = 'Y vs X'
+      fits_tools_tab1_plot_base, Event=Event, title=title
+    END
+    
+    ;plot button P vs C (right click)
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab1_right_click_plot_p_vs_c'): BEGIN
+      title = 'P vs C'
+      fits_tools_tab1_plot_base, Event=Event, title=title
+    END
     
     ELSE:
     

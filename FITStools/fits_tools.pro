@@ -45,7 +45,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   APPLICATION = file->getValue(tag=['configuration','application'])
   VERSION = file->getValue(tag=['configuration','version'])
   DEBUGGING = file->getValue(tag=['configuration','debugging'])
-  TESTING = file->getValue(tag=['configuration','testing'])
+  SIMULATE_FITS_LOADING = file->getValue(tag=['configuration',$
+    'simulate_fits_loading'])
   CHECKING_PACKAGES = file->getValue(tag=['configuration','checking_packages'])
   
   ;******************************************************************************
@@ -73,8 +74,10 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
   ;define global variables
   global = PTR_NEW ({fits_path: '~/results/',$
-  
+    SIMULATE_FITS_LOADING: SIMULATE_FITS_LOADING, $ ;yes/no
+    
     tab1_selection: INTARR(2), $ ;top and bottom row selected
+    tab1_base: 0L, $ ;id of plot base of tab1 (for YvsX and PvsC plots)
     
     ;pointers that will contain the values x, y, p and c of the various files
     pXArray: PTR_NEW(0L), $     ;x array in the original file
