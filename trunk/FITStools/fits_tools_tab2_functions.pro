@@ -32,39 +32,32 @@
 ;
 ;==============================================================================
 
-PRO update_tab2_pvsc_ascii_file_name, Event
+FUNCTION is_create_PvsC_button_enabled, Event
 
-  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  ON_IOERROR, error
   
-  list_fits_file = (*(*global).list_fits_file)
+  ;if bin size is not 0 or empty
+  bin_size = FIX(getTextFieldValue(Event, 'tab2_bin_size_value'))
+  IF (bin_size EQ 0) THEN RETURN, 0
   
-  ;get number of fits files loaded
+  ;if there is a file name defined
+  file_name = getTextFieldValue(Event, 'tab2_file_name')
+  IF (file_name EQ '') THEN RETURN, 0
+  
+  ;make sure there are at least 1 file name
   nbr_files_loaded = getFirstEmptyXarrayIndex(event=event)
+  IF (nbr_files_loaded EQ 0) THEN RETURN, 0
   
-  ;retrieve first part of fits file name (bases on first fits file loaded)
-  ;name should be 121609_1 -> 121609
-  first_fits_file = list_fits_file[0]
-  base_name = FILE_BASENAME(first_fits_file[0])
-  name_array = STRSPLIT(base_name,'_',/EXTRACT)
-  base_name = name_array[0]
+  RETURN, 1
   
-  ;create default P vs C file name
-  output_file_name = base_name + '_' + STRCOMPRESS(nbr_files_loaded,/REMOVE_ALL)
-  IF (nbr_files_loaded EQ 1) THEN BEGIN
-    file_prefix = 'file'
-  ENDIF ELSE BEGIN
-    file_prefix = 'files'
-  ENDELSE
-  output_file_name += file_prefix + '_PvsC.txt'
-  
-  putValue, Event, 'tab2_file_name', output_file_name
-  
-END
-
-;------------------------------------------------------------------------------
-PRO check_create_pvsc_button_status, Event
-
-  status = is_create_PvsC_button_enabled(Event)
-  activate_widget, Event, 'tab2_create_ascii_file_button', status
-  
+  error:
+  title = 'Input Error'
+  message_text = 'The bin size you defined is not a valid number!'
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  result = DIALOG_MESSAGE(message_text,$
+    title=title,$
+    /CENTER,$
+    DIALOG_PARENT=id,$
+    /ERROR)
+    
 END

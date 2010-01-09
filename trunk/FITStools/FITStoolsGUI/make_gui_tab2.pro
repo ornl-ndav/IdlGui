@@ -58,13 +58,14 @@ PRO make_gui_tab2, MAIN_TAB, global
   ;row1
   row1 = WIDGET_BASE(BaseCol,$
     /ROW)
-  value = CW_FIELD(row1,$
-    VALUE = '300',$
-    XSIZE = 5,$
-    /INTEGER,$
-    /RETURN_EVENTS,$
-    UNAME = 'tab2_bin_size_field',$
-    TITLE = 'Bin Size:')
+  label = WIDGET_LABEL(row1,$
+  VALUE = 'Bin Size:')
+  value = WIDGET_TEXT(row1,$
+  VALUE = '300',$
+  XSIZE = 5,$
+  /ALL_EVENTS,$
+  /EDITABLE,$
+  UNAME = 'tab2_bin_size_value')
   units = WIDGET_LABEL(row1,$
     VALUE = 'microS      ')
   plot = WIDGET_BUTTON(row1,$
@@ -95,7 +96,9 @@ PRO make_gui_tab2, MAIN_TAB, global
   label = WIDGET_LABEL(rowb,$
     VALUE = ' Name:')
   button = WIDGET_TEXT(rowb,$
-    VALUE = 'N/A',$
+    VALUE = '',$
+    /ALL_EVENTS,$
+    /EDITABLE,$
     SCR_XSIZE = 400,$
     UNAME = 'tab2_file_name')
     
@@ -116,6 +119,7 @@ PRO make_gui_tab2, MAIN_TAB, global
   VALUE = '                            ')
   create = WIDGET_BUTTON(row3,$
   VALUE = 'CREATE ASCII FILE',$
+  SENSITIVE = 0,$
   UNAME = 'tab2_create_ascii_file_button')
   
 END
