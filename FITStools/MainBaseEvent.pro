@@ -73,13 +73,31 @@ PRO MAIN_BASE_event, Event
     ;plot button Y vs X (right click)
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab1_right_click_plot_y_vs_x'): BEGIN
       title = 'Y vs X'
-      fits_tools_tab1_plot_base, Event=Event, title=title
+      tab1_selection = (*global).tab1_selection
+      index = tab1_selection[0]
+      x_array = (*(*global).pXArray)
+      y_array = (*(*global).pYArray)
+      xarray  = *x_array[index]
+      yarray  = *y_array[index]
+      fits_tools_tab1_plot_base, Event=Event, $
+        title=title, $
+        xarray=xarray, $
+        yarray=yarray
     END
     
     ;plot button P vs C (right click)
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab1_right_click_plot_p_vs_c'): BEGIN
       title = 'P vs C'
-      fits_tools_tab1_plot_base, Event=Event, title=title
+      tab1_selection = (*global).tab1_selection
+      index = tab1_selection[0]
+      p_array    = (*(*global).pPArray)
+      time_array = (*(*global).pTimeArray)
+      xarray = *time_array[index]
+      yarray = *p_array[index]
+      fits_tools_tab1_plot_base, Event=Event, $
+        title=title, $
+        xarray=xarray, $
+        yarray=yarray
     END
     
     ELSE:
