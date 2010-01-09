@@ -44,13 +44,27 @@ FUNCTION retrieve_data_of_new_file, Event=event, $
     RETURN, 0b
   ENDIF
   
-  ;reading file
-  sData = mrdfits(file_name, 1, header, status=status)
+  IF ((*global).SIMULATE_FITS_LOADING EQ 'yes') THEN BEGIN
+    
+    rand1 = randomu(100L,100)
+    rand2 = randomu(200L,100)
+    rand3 = randomu(300L,100)
+    time = INDGEN(100)
+    x    = FIX(rand1 * 100)
+    y    = FIX(rand2 * 100)
+    pulse = FIX(rand3 * 100)
   
-  time = sData.count
-  x = sData.x
-  y = sData.y
-  pulse = sData.p
+  ENDIF ELSE BEGIN
+  
+    ;reading file
+    sData = mrdfits(file_name, 1, header, status=status)
+    
+    time = sData.count
+    x = sData.x
+    y = sData.y
+    pulse = sData.p
+    
+  ENDELSE
   
   index = getFirstEmptyXarrayIndex(event=event)
   
