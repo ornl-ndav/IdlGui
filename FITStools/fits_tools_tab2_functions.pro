@@ -61,3 +61,23 @@ FUNCTION is_create_PvsC_button_enabled, Event
     /ERROR)
     
 END
+
+;------------------------------------------------------------------------------
+FUNCTION is_tab2_plot_button_enabled, Event
+
+  ON_IOERROR, error
+  
+  ;if bin size is not 0 or empty
+  bin_size = FIX(getTextFieldValue(Event, 'tab2_bin_size_value'))
+  IF (bin_size EQ 0) THEN RETURN, 0
+  
+  ;make sure there are at least 1 file name
+  nbr_files_loaded = getFirstEmptyXarrayIndex(event=event)
+  IF (nbr_files_loaded EQ 0) THEN RETURN, 0
+  
+  RETURN, 1
+  
+  error:
+  RETURN, 0
+  
+END

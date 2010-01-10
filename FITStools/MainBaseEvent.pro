@@ -68,6 +68,9 @@ PRO MAIN_BASE_event, Event
     ;delete button (right click)
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab1_right_click_delete'): BEGIN
       remove_selected_tab1_fits_files, Event
+      ;check widgets of tab2
+      check_create_pvsc_button_status, Event
+      check_tab2_plot_button_status, Event
     END
     
     ;plot button Y vs X (right click)
@@ -105,10 +108,11 @@ PRO MAIN_BASE_event, Event
     ;bin size input text
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_bin_size_value'): BEGIN
       check_create_pvsc_button_status, Event
+      check_tab2_plot_button_status, Event
     END
     
     ;plot button
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_bin_size_plot': BEGIN
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_bin_size_plot'): BEGIN
     ;      create_p_vs_c_combined_rebinned, Event
     ;      title = 'P vs C'
     ;      fits_tools_tab1_plot_base, Event=Event, $

@@ -102,20 +102,24 @@ PRO browse_fits_files, Event
     
     WIDGET_CONTROL, HOURGLASS=0
     
+    ;if there was at least one file not loaded, inform the user
+    list_fits_error_files = (*(*global).list_fits_error_file)
+    index = get_first_empty_table_index(list_fits_error_files)
+    IF (index EQ -1 OR index NE 0) THEN BEGIN
+      display_loading_fits_file_error_message, Event
+    ENDIF
+    
+    ;update big table
+    update_tab1_big_table, Event
+    
+    ;update name of P vs C output ascii file
+    update_tab2_pvsc_ascii_file_name, Event
+    
+    ;check gui of tab2
+    check_create_pvsc_button_status, Event
+    check_tab2_plot_button_status, Event
+    
   ENDIF
-  
-  ;if there was at least one file not loaded, inform the user
-  list_fits_error_files = (*(*global).list_fits_error_file)
-  index = get_first_empty_table_index(list_fits_error_files)
-  IF (index EQ -1 OR index NE 0) THEN BEGIN
-    display_loading_fits_file_error_message, Event
-  ENDIF
-  
-  ;update big table
-  update_tab1_big_table, Event
-  
-  ;update name of P vs C output ascii file
-  update_tab2_pvsc_ascii_file_name, Event
   
 END
 
@@ -198,16 +202,16 @@ PRO update_tab1_big_table, Event
   big_table = STRARR((*global).max_nbr_fits_files)
   
   x_array = (*(*global).pXArray)
-
+  
   index = 0
   WHILE (index LT (*global).max_nbr_fits_files) DO BEGIN
   
     file_name = list_fits_file[index]
     IF (file_name EQ '') THEN BREAK
-      x_current_array = *x_array[index]
-      nbr_events = N_ELEMENTS(x_current_array)
+    x_current_array = *x_array[index]
+    nbr_events = N_ELEMENTS(x_current_array)
     big_table[index] = file_name + ' (' + $
-    STRCOMPRESS(nbr_events,/REMOVE_ALL) + ' events)'
+      STRCOMPRESS(nbr_events,/REMOVE_ALL) + ' events)'
     index++
   ENDWHILE
   
