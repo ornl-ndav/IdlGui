@@ -32,6 +32,45 @@
 ;
 ;==============================================================================
 
+PRO create_p_vs_c_combined_rebinned, Event
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  ;bin size of step2
+  bin_size = LONG(getTextFieldValue(Event, 'tab2_bin_size_value'))
+  
+  nbr_files_loaded = getFirstEmptyXarrayIndex(event=event)
+  
+  p_array = (*(*global).pPArray)
+  old_sz = N_ELEMENTS(p_array)
+  
+  ;define new size
+  new_array_size = FLOAT(old_sz) / FLOAT(bin_size)
+  IF (new_array_size NE LONG(new_array_size)) THEN new_array_size++
+  new_sz = LONG(new_array_size)
+  p_rebinned_array = LONARR(new_sz)
+  
+  big_index = 0
+  WHILE (big_index LT nbr_files_loaded) DO BEGIN
+
+    array = *p_array[big_index]
+    
+    index_old = 0L
+    index_new = 0L
+    WHILE (index_old LT old_sz) DO BEGIN
+      p_rebinned_array[index_new] += array[index_old]
+      index_old++
+      IF ((index_old MOD bin_size) EQ 0) THEN index_new++
+    ENDWHILE
+    
+    big_index++
+  ENDWHILE
+
+  (*(*global).p_rebinned_array) = p_rebinned_array
+  
+END
+
+;------------------------------------------------------------------------------
 PRO define_path_of_tab2, Event
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
