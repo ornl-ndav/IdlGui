@@ -87,8 +87,12 @@ END
 
 ;------------------------------------------------------------------------------
 PRO check_create_pvsc_button_status, Event
-
   status = is_create_PvsC_button_enabled(Event)
   activate_widget, Event, 'tab2_create_ascii_file_button', status
-  
+END
+
+;------------------------------------------------------------------------------
+PRO check_tab2_plot_button_status, Event
+  status = is_tab2_plot_button_enabled(Event)
+  activate_widget, Event, 'tab2_bin_size_plot', status
 END
