@@ -32,6 +32,31 @@
 ;
 ;==============================================================================
 
+PRO define_path_of_tab2, Event
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  
+  ;retrieve infos
+  path  = (*global).output_path
+  title = 'Select where you want to create the ascii file!'
+  folder = DIALOG_PICKFILE(GET_PATH = new_path,$
+    DIALOG_PARENT = id, $
+    PATH = path,$
+    TITLE = title,$
+    /DIRECTORY,$
+    /READ,$
+    /MUST_EXIST)
+    
+  IF (folder NE '') THEN BEGIN
+    (*global).output_path = folder
+    putNewButtonValue, Event, 'tab2_where_button', folder
+  ENDIF
+  
+END
+
+
+;------------------------------------------------------------------------------
 PRO update_tab2_pvsc_ascii_file_name, Event
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global

@@ -85,6 +85,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     pPArray: PTR_NEW(0L), $     ;p in the original file
     pTimeArray: PTR_NEW(0L), $  ;c array in the original file
     
+    output_path: '~/results/',$ ;where the various files will be created
+    
     max_nbr_fits_files: 20,$    ;maximum number of fits files we can work on
     list_fits_file: PTR_NEW(0L),$ ;list of full fits files names
     list_fits_error_file: PTR_NEW(0L) }) ;list of file that can not be loaded

@@ -100,9 +100,16 @@ PRO MAIN_BASE_event, Event
         yarray=yarray
     END
     
+    ;TAB2, TAB2, TAB2, TAB2, TAB2, TAB2, TAB2, TAB2, TAB2, TAB2, TAB2, TAB2
+    
     ;bin size input text
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_bin_size_value'): BEGIN
       check_create_pvsc_button_status, Event
+    END
+    
+    ;where
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_where_button'): BEGIN
+    define_path_of_tab2, Event
     END
     
     ;file name input text
