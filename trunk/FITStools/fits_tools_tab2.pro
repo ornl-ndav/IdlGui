@@ -55,7 +55,6 @@ PRO define_path_of_tab2, Event
   
 END
 
-
 ;------------------------------------------------------------------------------
 PRO update_tab2_pvsc_ascii_file_name, Event
 
