@@ -75,18 +75,18 @@ PRO fits_tools_tab1_plot_base_event, Event
         x1 = x0y0x1y1[2]
         y1 = x0y0x1y1[3]
         IF (x0 EQ x1) THEN BEGIN
-          replot, Event
+          reset_plot, Event
           RETURN
         ENDIF
         IF (y0 EQ y1) THEN BEGIN
-          replot, Event
+          reset_plot, Event
           RETURN
         ENDIF
         IF ((*global_plot).moving_mouse EQ 0b) THEN BEGIN
-          replot, Event
+          reset_plot, Event
           RETURN
         ENDIF
-        replot, Event, ZOOM=1b
+        replot, Event, ZOOM=(*global).x0y0x1y1
         (*global_plot).x0y0x1y1_saved = [x0,y1,x1,y1]
         (*global_plot).moving_mouse = 0b
       ENDIF
@@ -99,7 +99,7 @@ PRO fits_tools_tab1_plot_base_event, Event
           x0y0x1y1[2] = X
           x0y0x1y1[3] = Y
           (*global_plot).x0y0x1y1 = x0y0x1y1
-          replot, Event, SAVED_ZOOM=1b
+          replot, Event, zoom=(*global_plot).x0y0x1y1_saved
           plot_selection_box, Event
         ENDIF
       ENDIF
@@ -147,8 +147,9 @@ PRO plot_selection_box, Event
   DEVICE, DECOMPOSED=0
   
 END
+
 ;------------------------------------------------------------------------------
-PRO replot, Event, ZOOM=zoom, SAVED_ZOOM=saved_zoom
+PRO reset_plot, Event
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global_plot
@@ -161,40 +162,45 @@ PRO replot, Event, ZOOM=zoom, SAVED_ZOOM=saved_zoom
   WIDGET_CONTROL, id, GET_VALUE = id_value
   WSET, id_value
   
-  IF (N_ELEMENTS(ZOOM) NE 0 OR $
-    N_ELEMENTS(SAVED_ZOOM) NE 0) THEN BEGIN
+  PLOT, xarray, $
+    yarray, $
+    psym=1, $
+    XSTYLE=1, $
+    YSTYLE=1
     
-    IF (N_ELEMENTS(zoom) NE 0) THEN BEGIN
-      x0y0x1y1 = (*global_plot).x0y0x1y1
-    ENDIF ELSE BEGIN
-      x0y0x1y1 = (*global_plot).x0y0x1y1_saved
-    ENDELSE
-    
-    x0 = x0y0x1y1[0]
-    y0 = x0y0x1y1[1]
-    x1 = x0y0x1y1[2]
-    y1 = x0y0x1y1[3]
-    xmin = MIN([x0,x1],MAX=xmax)
-    ymin = MIN([y0,y1],MAX=ymax)
-    
-    PLOT, xarray, $
-      yarray, $
-      XRANGE = [xmin, xmax], $
-      YRANGE = [ymin, ymax], $
-      psym=1, $
-      XSTYLE=1, $
-      YSTYLE=1
-      
-  ENDIF ELSE BEGIN
+END
+
+;------------------------------------------------------------------------------
+PRO replot, Event, zoom=zoom
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global_plot
   
-    PLOT, xarray, $
-      yarray, $
-      psym=1, $
-      XSTYLE=1, $
-      YSTYLE=1
-      
-  ENDELSE
+  xarray = (*(*global_plot).xarray)
+  yarray = (*(*global_plot).yarray)
   
+  id = WIDGET_INFO(Event.top, $
+    FIND_BY_UNAME='fits_tools_tab1_plot_draw_uname')
+  WIDGET_CONTROL, id, GET_VALUE = id_value
+  WSET, id_value
+  
+  x0y0x1y1 = zoom
+  
+  x0 = x0y0x1y1[0]
+  y0 = x0y0x1y1[1]
+  x1 = x0y0x1y1[2]
+  y1 = x0y0x1y1[3]
+  xmin = MIN([x0,x1],MAX=xmax)
+  ymin = MIN([y0,y1],MAX=ymax)
+  
+  PLOT, xarray, $
+    yarray, $
+    XRANGE = [xmin, xmax], $
+    YRANGE = [ymin, ymax], $
+    psym=1, $
+    XSTYLE=1, $
+    YSTYLE=1
+    
 END
 
 ;------------------------------------------------------------------------------

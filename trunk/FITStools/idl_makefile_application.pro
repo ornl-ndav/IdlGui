@@ -56,11 +56,13 @@ cd, CurrentFolder
 .run fits_tools_tab1_functions.pro
 .run fits_tools_tab1_browse.pro
 .run fits_tools_tab1.pro
-.run fits_tools_tab1_plot.pro
 
 ;tab2
 .run fits_tools_tab2_functions.pro
 .run fits_tools_tab2.pro
+
+;tab1 and tab2
+.run fits_tools_tab1_tab2_plot.pro
 
 .run MainBaseEvent.pro
 .run fits_tools.pro
