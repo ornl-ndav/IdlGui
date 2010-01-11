@@ -38,35 +38,56 @@ PRO create_p_vs_c_combined_rebinned, Event
   
   ;bin size of step2
   bin_size = LONG(getTextFieldValue(Event, 'tab2_bin_size_value'))
+  bin_size = bin_size[0]
   
   nbr_files_loaded = getFirstEmptyXarrayIndex(event=event)
   
   p_array = (*(*global).pPArray)
-  old_sz = N_ELEMENTS(p_array)
+  old_sz = N_ELEMENTS(*p_array[0])
   
   ;define new size
-  new_array_size = FLOAT(old_sz) / FLOAT(bin_size)
+  new_array_size = LONG(FLOAT(old_sz) / FLOAT(bin_size))
+  new_array_size = new_array_size[0]
+  
   IF (new_array_size NE LONG(new_array_size)) THEN new_array_size++
   new_sz = LONG(new_array_size)
-  p_rebinned_array = LONARR(new_sz)
+  p_rebinned_array = LONARR(new_sz+1)
   
   big_index = 0
   WHILE (big_index LT nbr_files_loaded) DO BEGIN
-
+  
     array = *p_array[big_index]
-    
-    index_old = 0L
-    index_new = 0L
-    WHILE (index_old LT old_sz) DO BEGIN
-      p_rebinned_array[index_new] += array[index_old]
-      index_old++
-      IF ((index_old MOD bin_size) EQ 0) THEN index_new++
+    sz = N_ELEMENTS(array)
+    local_index = 0L
+    WHILE (local_index LT sz) DO BEGIN
+      p_rebinned_array[local_index / bin_size] += array[local_index]
+      ++local_index
     ENDWHILE
     
     big_index++
   ENDWHILE
-
-  (*(*global).p_rebinned_array) = p_rebinned_array
+  
+  ;  big_index = 0
+  ;  WHILE (big_index LT nbr_files_loaded) DO BEGIN
+  ;
+  ;    array = LONG(*p_array[big_index])
+  ;
+  ;    new_array = CONGRID(array, new_array_size)
+  ;    IF (big_index EQ 0) THEN BEGIN
+  ;      big_rebinned_array = new_array
+  ;    ENDIF ELSE BEGIN
+  ;      big_rebinned_array += new_array
+  ;    ENDELSE
+  ;
+  ;    big_index++
+  ;  ENDWHILE
+  
+;  (*(*global).p_rebinned_y_array) = big_rebinned_array
+  (*(*global).p_rebinned_y_array) = p_rebinned_array
+  help, p_rebinned_array
+ help, bin_size
+  p_rebinned_x_array = LINDGEN(new_sz+1) * bin_size
+  (*(*global).p_rebinned_x_array) = p_rebinned_x_array
   
 END
 

@@ -113,12 +113,14 @@ PRO MAIN_BASE_event, Event
     
     ;plot button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_bin_size_plot'): BEGIN
-          create_p_vs_c_combined_rebinned, Event
-    ;      title = 'P vs C'
-    ;      fits_tools_tab1_plot_base, Event=Event, $
-    ;        title=title, $
-    ;        xarray=xarray, $
-    ;        yarray=yarray
+      WIDGET_CONTROL, /HOURGLASS
+      create_p_vs_c_combined_rebinned, Event
+      title = 'P vs C'
+      fits_tools_tab1_plot_base, Event=Event, $
+        title=title, $
+        xarray=(*(*global).p_rebinned_x_array), $
+        yarray=(*(*global).p_rebinned_y_array)
+      WIDGET_CONTROL, HOURGLASS=0
     END
     
     ;where
