@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article SYSTEM "../docbook-xml/docbookx.dtd" >
+<article id="1.1.0">
+	<articleinfo>
+		<graphic />
+		<authorgroup>
+			<author>
+				<personname>
+					<honorific>Dr</honorific>
+					<firstname>Stuart</firstname>
+					<surname>Campbell</surname>
+				</personname>
+			</author>
+			<author>
+				<personname>
+					<honorific>Dr</honorific>
+					<firstname>Michael</firstname>
+					<surname>Reuter</surname>
+				</personname>
+			</author>
+		</authorgroup>
+		<title>A Quick Users Guide to the DgsReduction GUI</title>
+	</articleinfo>
+	<calloutlist>
+		<callout arearefs="">
+			<calloutlist />
+		</callout>
+	</calloutlist>
+	<sect1>
+		<title>Getting Started</title>
+		<calloutlist>
+			<callout arearefs="">
+				<calloutlist></calloutlist>
+			</callout>
+		</calloutlist>
+		<para>
+			The <application>DgsReduction</application> GUI can be accessed from the list of
+			programs via the
+			<command>sns_idl_tools</command>
+			command which is available on any analysis computer. After clicking on the mandatory IDL splashscreen,
+			the GUI is ready to use and initially looks like the
+			following. To use the GUI, one must either enter all of the information from scratch or load in a saved parameter file. Each of these paths will be discussed in turn.
+		</para>
+	</sect1>
+	<sect1 id="start_scratch">
+		<title>Starting from Scratch</title>
+		<calloutlist>
+			<callout arearefs="">
+				<calloutlist></calloutlist>
+			</callout>
+		</calloutlist>
+	</sect1>
+	<sect1>
+		<title>Using a Parameter File</title>
+		<calloutlist>
+			<callout arearefs="">
+				<calloutlist></calloutlist>
+			</callout>
+		</calloutlist>
+	</sect1>
+</article>
