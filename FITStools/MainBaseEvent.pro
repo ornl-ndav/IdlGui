@@ -145,6 +145,14 @@ PRO MAIN_BASE_event, Event
       (*global).need_to_recalculate_rebinned_step2 = 0b
     END
     
+    ;Create ASCII file
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_create_ascii_file_button'): BEGIN
+      WIDGET_CONTROL, /HOURGLASS
+      tab2_create_ascii_button, Event
+      WIDGET_CONTROL, HOURGLASS=0
+      (*global).need_to_recalculate_rebinned_step2 = 0b
+    END
+    
     ELSE:
     
   ENDCASE
