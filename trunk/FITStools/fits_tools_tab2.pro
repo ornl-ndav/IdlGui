@@ -32,6 +32,34 @@
 ;
 ;==============================================================================
 
+PRO tab2_create_ascii_button, Event
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  IF ((*global).need_to_recalculate_rebinned_step2) THEN BEGIN
+    create_p_vs_c_combined_rebinned, Event
+  ENDIF
+  string_array = create_p_vs_c_ascii_array(Event)
+  
+  sz = N_ELEMENTS(string_array)
+  
+  path = getButtonValue(Event,'tab2_where_button')
+  full_file_name = getTextFieldValue(Event, 'tab2_file_name')
+  file_name = path + full_file_name[0]
+  
+  OPENW, 1, file_name
+  index = 0L
+  WHILE (index LT sz) DO BEGIN
+    PRINTF, 1, string_array[index]
+    index++
+  ENDWHILE
+  
+  CLOSE, 1
+  FREE_LUN, 1
+  
+END
+
+;------------------------------------------------------------------------------
 PRO tab2_preview_button, Event
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
