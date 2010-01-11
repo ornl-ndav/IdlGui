@@ -115,6 +115,7 @@ PRO make_gui_tab2, MAIN_TAB, global
   preview = WIDGET_BUTTON(row3,$
   VALUE = 'PREVIEW ASCII FILE ...',$
   SCR_YSIZE = 30,$
+  SENSITIVE = 0,$
   UNAME = 'tab2_preview_ascii_file_button')
   space = WIDGET_LABEL(row3,$
   VALUE = '                            ')

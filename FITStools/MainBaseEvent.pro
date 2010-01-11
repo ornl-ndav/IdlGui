@@ -46,6 +46,7 @@ PRO MAIN_BASE_event, Event
     ;browse button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab1_browse_fits_file_button'): BEGIN
       browse_fits_files, Event
+      (*global).need_to_recalculate_rebinned_step2 = 1b
     END
     
     ;big table
@@ -71,6 +72,7 @@ PRO MAIN_BASE_event, Event
       ;check widgets of tab2
       check_create_pvsc_button_status, Event
       check_tab2_plot_button_status, Event
+      (*global).need_to_recalculate_rebinned_step2 = 1b
     END
     
     ;plot button Y vs X (right click)
@@ -107,6 +109,7 @@ PRO MAIN_BASE_event, Event
     
     ;bin size input text
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_bin_size_value'): BEGIN
+      (*global).need_to_recalculate_rebinned_step2 = 1b
       check_create_pvsc_button_status, Event
       check_tab2_plot_button_status, Event
     END
@@ -115,6 +118,7 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_bin_size_plot'): BEGIN
       WIDGET_CONTROL, /HOURGLASS
       create_p_vs_c_combined_rebinned, Event
+      (*global).need_to_recalculate_rebinned_step2 = 0b
       title = 'P vs C'
       fits_tools_tab1_plot_base, Event=Event, $
         title=title, $
@@ -131,6 +135,14 @@ PRO MAIN_BASE_event, Event
     ;file name input text
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_file_name'): BEGIN
       check_create_pvsc_button_status, Event
+    END
+    
+    ;Preview button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_preview_ascii_file_button'): BEGIN
+      WIDGET_CONTROL, /HOURGLASS
+      tab2_preview_button, Event
+      WIDGET_CONTROL, HOURGLASS=0
+      (*global).need_to_recalculate_rebinned_step2 = 0b
     END
     
     ELSE:

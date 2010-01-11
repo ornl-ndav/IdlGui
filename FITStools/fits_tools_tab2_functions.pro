@@ -81,3 +81,38 @@ FUNCTION is_tab2_plot_button_enabled, Event
   RETURN, 0
   
 END
+
+;------------------------------------------------------------------------------
+FUNCTION create_p_vs_c_ascii_array, Event
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  list_fits_file = (*(*global).list_fits_file)
+  nbr_files = getFirstEmptyXarrayIndex(event=event)
+  commented_lines = STRARR(nbr_files+2) ;add space and axis definition
+  index = 0
+  WHILE (index LT nbr_files) DO BEGIN
+    commented_lines[index] = '# ' + list_fits_file[index]
+    index++
+  ENDWHILE
+  commented_lines[nbr_files] = ''
+  commented_lines[nbr_files+1] = 'Time(microS) P(counts)'
+  
+  p_rebinned_x_array = (*(*global).p_rebinned_x_array)
+  p_rebinned_y_array = (*(*global).p_rebinned_y_array)
+  
+  sz = N_ELEMENTS(p_rebinned_x_array)
+  data_array = STRARR(sz)
+  index = 0L
+  WHILE (index LT sz) DO BEGIN
+    x = STRCOMPRESS(p_rebinned_x_array[index],/REMOVE_ALL)
+    y = STRCOMPRESS(p_rebinned_y_array[index],/REMOVE_ALL)
+    data_array[index ] = x + ' ' + y
+    index++
+  ENDWHILE
+  
+  full_ascii_array = [commented_lines,data_array]
+  
+  RETURN, full_ascii_array
+    
+END
