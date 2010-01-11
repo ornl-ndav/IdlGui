@@ -8,6 +8,8 @@ cd, IdlUtilitiesPath
 .run get.pro
 .run put.pro
 .run gui.pro
+.run fsc_color.pro
+.run colorbar.pro
 
 ;routines used to read and write FITS files
 cd, CurrentFolder + '/reader_writer_routines'

@@ -71,22 +71,23 @@ PRO fits_tools_tab1_plot_base_event, Event
         (*global_plot).button_pressed = 0b
         x0y0x1y1 = (*global_plot).x0y0x1y1
         x0 = x0y0x1y1[0]
-        x1 = x0y0x1y1[1]
-        y0 = x0y0x1y1[2]
+        y0 = x0y0x1y1[1]
+        x1 = x0y0x1y1[2]
         y1 = x0y0x1y1[3]
         IF (x0 EQ x1) THEN BEGIN
-        replot, Event
-        RETURN
+          replot, Event
+          RETURN
         ENDIF
         IF (y0 EQ y1) THEN BEGIN
-        replot, Event
-        RETURN
+          replot, Event
+          RETURN
         ENDIF
         IF ((*global_plot).moving_mouse EQ 0b) THEN BEGIN
-        replot, Event
-        RETURN
+          replot, Event
+          RETURN
         ENDIF
         replot, Event, ZOOM=1b
+        (*global_plot).x0y0x1y1_saved = [x0,y1,x1,y1]
         (*global_plot).moving_mouse = 0b
       ENDIF
       
@@ -98,6 +99,8 @@ PRO fits_tools_tab1_plot_base_event, Event
           x0y0x1y1[2] = X
           x0y0x1y1[3] = Y
           (*global_plot).x0y0x1y1 = x0y0x1y1
+          replot, Event, SAVED_ZOOM=1b
+          plot_selection_box, Event
         ENDIF
       ENDIF
       
@@ -116,7 +119,36 @@ PRO fits_tools_tab1_plot_base_event, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO replot, Event, ZOOM=zoom
+PRO plot_selection_box, Event
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global_plot
+  
+  x0y0x1y1 = (*global_plot).x0y0x1y1
+  x0 = x0y0x1y1[0]
+  y0 = x0y0x1y1[1]
+  x1 = x0y0x1y1[2]
+  y1 = x0y0x1y1[3]
+  xmin = MIN([x0,x1],MAX=xmax)
+  ymin = MIN([y0,y1],MAX=ymax)
+  
+  id = WIDGET_INFO(Event.top, $
+    FIND_BY_UNAME='fits_tools_tab1_plot_draw_uname')
+  WIDGET_CONTROL, id, GET_VALUE = id_value
+  WSET, id_value
+  
+  DEVICE, DECOMPOSED=1
+  
+  PLOTS, x0, y0, /DATA, COLOR=FSC_COLOR('red')
+  PLOTS, x0, y1, /DATA, /CONTINUE, COLOR=FSC_COLOR('red')
+  PLOTS, x1, y1, /DATA, /CONTINUE, COLOR=FSC_COLOR('red')
+  PLOTS, x1, y0, /DATA, /CONTINUE, COLOR=FSC_COLOR('red')
+  PLOTS, x0, y0, /DATA, /CONTINUE, COLOR=FSC_COLOR('red')
+  
+  DEVICE, DECOMPOSED=0
+  
+END
+;------------------------------------------------------------------------------
+PRO replot, Event, ZOOM=zoom, SAVED_ZOOM=saved_zoom
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global_plot
@@ -129,9 +161,15 @@ PRO replot, Event, ZOOM=zoom
   WIDGET_CONTROL, id, GET_VALUE = id_value
   WSET, id_value
   
-  IF (N_ELEMENTS(ZOOM) NE 0) THEN BEGIN
-  
-    x0y0x1y1 = (*global_plot).x0y0x1y1
+  IF (N_ELEMENTS(ZOOM) NE 0 OR $
+    N_ELEMENTS(SAVED_ZOOM) NE 0) THEN BEGIN
+    
+    IF (N_ELEMENTS(zoom) NE 0) THEN BEGIN
+      x0y0x1y1 = (*global_plot).x0y0x1y1
+    ENDIF ELSE BEGIN
+      x0y0x1y1 = (*global_plot).x0y0x1y1_saved
+    ENDELSE
+    
     x0 = x0y0x1y1[0]
     y0 = x0y0x1y1[1]
     x1 = x0y0x1y1[2]
@@ -231,6 +269,7 @@ PRO fits_tools_tab1_plot_base, main_base=main_base, $
     button_pressed: 0b, $ ;status of button on main plot
     moving_mouse: 0b,$
     x0y0x1y1: LONARR(4), $
+    x0y0x1y1_saved: LONARR(4), $
     
     xarray: PTR_NEW(0L), $
     yarray: PTR_NEW(0L), $

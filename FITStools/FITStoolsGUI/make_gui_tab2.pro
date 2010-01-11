@@ -62,7 +62,7 @@ PRO make_gui_tab2, MAIN_TAB, global
   VALUE = 'Bin Size:')
   value = WIDGET_TEXT(row1,$
   VALUE = '300',$
-  XSIZE = 5,$
+  XSIZE = 7,$
   /ALL_EVENTS,$
   /EDITABLE,$
   UNAME = 'tab2_bin_size_value')
