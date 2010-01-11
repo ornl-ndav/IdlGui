@@ -87,6 +87,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
     p_rebinned_y_array: PTR_NEW(0L), $ ;PvsC rebinned and combined of step2
     p_rebinned_x_array: PTR_NEW(0L), $ ;x axis of PvsC 
+    need_to_recalculate_rebinned_step2: 1b, $ ;reset to 1b each time something
+    ;change (file loaded, file_removed, bin size)
     
     output_path: '~/results/',$ ;where the various files will be created
     

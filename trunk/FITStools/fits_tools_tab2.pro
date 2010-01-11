@@ -32,6 +32,27 @@
 ;
 ;==============================================================================
 
+PRO tab2_preview_button, Event
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  IF ((*global).need_to_recalculate_rebinned_step2) THEN BEGIN
+    create_p_vs_c_combined_rebinned, Event
+  ENDIF
+  string_array = create_p_vs_c_ascii_array(Event)
+  
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  title = 'Preview of '
+  file_name = getTextFieldValue(Event, 'tab2_file_name')
+  title = title + file_name[0]
+  
+  XDISPLAYFILE, '', TEXT=string_array,$
+    TITLE = title, $
+    GROUP = id
+    
+END
+
+;------------------------------------------------------------------------------
 PRO create_p_vs_c_combined_rebinned, Event
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
@@ -59,11 +80,11 @@ PRO create_p_vs_c_combined_rebinned, Event
   
     array = *p_array[big_index]
     time_array = *p_time_array[big_index]
-     
+    
     sz = N_ELEMENTS(array)
     local_index = 0L
     WHILE (local_index LT sz) DO BEGIN
-      time = time_array[local_index] 
+      time = time_array[local_index]
       p_rebinned_array[time / bin_size] += array[local_index]
       ++local_index
     ENDWHILE
@@ -71,25 +92,9 @@ PRO create_p_vs_c_combined_rebinned, Event
     big_index++
   ENDWHILE
   
-  ;  big_index = 0
-  ;  WHILE (big_index LT nbr_files_loaded) DO BEGIN
-  ;
-  ;    array = LONG(*p_array[big_index])
-  ;
-  ;    new_array = CONGRID(array, new_array_size)
-  ;    IF (big_index EQ 0) THEN BEGIN
-  ;      big_rebinned_array = new_array
-  ;    ENDIF ELSE BEGIN
-  ;      big_rebinned_array += new_array
-  ;    ENDELSE
-  ;
-  ;    big_index++
-  ;  ENDWHILE
-  
-;  (*(*global).p_rebinned_y_array) = big_rebinned_array
   (*(*global).p_rebinned_y_array) = p_rebinned_array
   p_rebinned_x_array = LINDGEN(new_sz+1) * bin_size
-
+  
   (*(*global).p_rebinned_x_array) = p_rebinned_x_array
   
 END
@@ -158,4 +163,5 @@ END
 PRO check_tab2_plot_button_status, Event
   status = is_tab2_plot_button_enabled(Event)
   activate_widget, Event, 'tab2_bin_size_plot', status
+  activate_widget, Event, 'tab2_preview_ascii_file_button', status
 END
