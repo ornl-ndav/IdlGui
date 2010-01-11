@@ -41,6 +41,7 @@ PRO fits_tools_tab1_plot_base_event, Event
   
   CASE Event.id OF
   
+    ;plot base
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='fits_tools_tab1_plot_base_uname'): BEGIN
       
@@ -62,6 +63,52 @@ PRO fits_tools_tab1_plot_base_event, Event
       
     END
     
+    ;plot
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='fits_tools_tab1_plot_draw_uname'): BEGIN
+      
+      IF (Event.release EQ 1b) THEN BEGIN ;release button
+        (*global_plot).button_pressed = 0b
+        x0y0x1y1 = (*global_plot).x0y0x1y1
+        x0 = x0y0x1y1[0]
+        x1 = x0y0x1y1[1]
+        y0 = x0y0x1y1[2]
+        y1 = x0y0x1y1[3]
+        IF (x0 EQ x1) THEN BEGIN
+        replot, Event
+        RETURN
+        ENDIF
+        IF (y0 EQ y1) THEN BEGIN
+        replot, Event
+        RETURN
+        ENDIF
+        IF ((*global_plot).moving_mouse EQ 0b) THEN BEGIN
+        replot, Event
+        RETURN
+        ENDIF
+        replot, Event, ZOOM=1b
+        (*global_plot).moving_mouse = 0b
+      ENDIF
+      
+      IF (Event.press EQ 0) THEN BEGIN
+        IF ((*global_plot).button_pressed EQ 1b) THEN BEGIN ;moving mouse
+          (*global_plot).moving_mouse = 1b
+          CURSOR, X, Y, /DATA, /NOWAIT
+          x0y0x1y1 = (*global_plot).x0y0x1y1
+          x0y0x1y1[2] = X
+          x0y0x1y1[3] = Y
+          (*global_plot).x0y0x1y1 = x0y0x1y1
+        ENDIF
+      ENDIF
+      
+      IF (Event.press EQ 1) THEN BEGIN ;left button pressed
+        (*global_plot).button_pressed = 1b
+        CURSOR, X, Y, /DATA
+        (*global_plot).x0y0x1y1 = [X, Y, 0, 0]
+      ENDIF
+      
+    END
+    
     ELSE:
     
   ENDCASE
@@ -69,7 +116,7 @@ PRO fits_tools_tab1_plot_base_event, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO replot, Event
+PRO replot, Event, ZOOM=zoom
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global_plot
@@ -82,7 +129,33 @@ PRO replot, Event
   WIDGET_CONTROL, id, GET_VALUE = id_value
   WSET, id_value
   
-  PLOT, xarray, yarray, psym=1, XSTYLE=1, YSTYLE=1
+  IF (N_ELEMENTS(ZOOM) NE 0) THEN BEGIN
+  
+    x0y0x1y1 = (*global_plot).x0y0x1y1
+    x0 = x0y0x1y1[0]
+    y0 = x0y0x1y1[1]
+    x1 = x0y0x1y1[2]
+    y1 = x0y0x1y1[3]
+    xmin = MIN([x0,x1],MAX=xmax)
+    ymin = MIN([y0,y1],MAX=ymax)
+    
+    PLOT, xarray, $
+      yarray, $
+      XRANGE = [xmin, xmax], $
+      YRANGE = [ymin, ymax], $
+      psym=1, $
+      XSTYLE=1, $
+      YSTYLE=1
+      
+  ENDIF ELSE BEGIN
+  
+    PLOT, xarray, $
+      yarray, $
+      psym=1, $
+      XSTYLE=1, $
+      YSTYLE=1
+      
+  ENDELSE
   
 END
 
@@ -119,6 +192,8 @@ PRO  fits_tools_tab1_plot_base_gui, wBase=wBase, $
   draw = WIDGET_DRAW(main_base,$
     SCR_XSIZE = 300-6,$
     SCR_YSIZE = 300-6,$
+    /BUTTON_EVENTS,$
+    /MOTION_EVENTS,$
     UNAME = 'fits_tools_tab1_plot_draw_uname')
     
 END
@@ -152,6 +227,11 @@ PRO fits_tools_tab1_plot_base, main_base=main_base, $
   
   global_plot = PTR_NEW({ wbase: wbase1,$
     global: global, $
+    
+    button_pressed: 0b, $ ;status of button on main plot
+    moving_mouse: 0b,$
+    x0y0x1y1: LONARR(4), $
+    
     xarray: PTR_NEW(0L), $
     yarray: PTR_NEW(0L), $
     main_event: Event})
