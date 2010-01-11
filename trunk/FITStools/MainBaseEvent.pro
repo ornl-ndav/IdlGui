@@ -117,8 +117,10 @@ PRO MAIN_BASE_event, Event
     ;plot button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_bin_size_plot'): BEGIN
       WIDGET_CONTROL, /HOURGLASS
-      create_p_vs_c_combined_rebinned, Event
-      (*global).need_to_recalculate_rebinned_step2 = 0b
+      IF ((*global).need_to_recalculate_rebinned_step2) THEN BEGIN
+        create_p_vs_c_combined_rebinned, Event
+        (*global).need_to_recalculate_rebinned_step2 = 0b
+      ENDIF
       title = 'P vs C'
       fits_tools_tab1_plot_base, Event=Event, $
         title=title, $
