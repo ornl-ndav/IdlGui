@@ -73,10 +73,10 @@ PRO fits_tools_tab3_plot_base_event, Event
       WIDGET_CONTROL, id, DRAW_YSIZE= new_xsize-6
       
       id = WIDGET_INFO(Event.top, $
-      FIND_BY_UNAME='fits_tools_tab3_bin_slider')
+        FIND_BY_UNAME='fits_tools_tab3_bin_slider')
       WIDGET_CONTROL, id, SCR_XSIZE = new_xsize-20
       id = WIDGET_INFO(Event.top, $
-      FIND_BY_UNAME='fits_tools_tab3_time_slider')
+        FIND_BY_UNAME='fits_tools_tab3_time_slider')
       WIDGET_CONTROL, id, SCR_XSIZE = new_xsize-20
       
     END
@@ -180,7 +180,7 @@ PRO  fits_tools_tab3_plot_base_gui, wBase=wBase, $
   row4 = WIDGET_BASE(main_base,$
     /ROW)
   label = WIDGET_LABEL(row4,$
-    VALUE = 'Correspond to file -> ')
+    VALUE = 'Preview of file -> ')
   value = WIDGET_LABEL(row4,$
     VALUE = 'N/A',$
     SCR_XSIZE = 240,$
@@ -188,6 +188,23 @@ PRO  fits_tools_tab3_plot_base_gui, wBase=wBase, $
     /ALIGN_LEFT,$
     UNAME = 'fits_tools_tab3_current_fits_file')
     
+END
+
+;------------------------------------------------------------------------------
+PRO plot_first_bin_for_tab3, base=base, global_plot=global_plot
+
+  global = (*global_plot).global
+  main_event = (*global_plot).main_event
+
+  bin_size = getTextFieldValue(main_event, 'tab3_bin_size_value')
+  print, 'bin_size: ' + string(bin_size)
+  
+  xarray = (*(*global_plot).xarray)
+  yarray = (*(*global_plot).yarray)
+  timearray = (*(*global_plot).timearray)
+  
+  
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -229,7 +246,7 @@ PRO fits_tools_tab3_plot_base, main_base=main_base, $
     yarray: PTR_NEW(0L), $
     timearray: PTR_NEW(0L), $
     main_event: Event})
-    
+  
   (*(*global_plot).xarray) = xarray
   (*(*global_plot).yarray) = yarray
   (*(*global_plot).timearray) = timearray
@@ -239,4 +256,7 @@ PRO fits_tools_tab3_plot_base, main_base=main_base, $
   XMANAGER, "fits_tools_tab3_plot_base", wBase3, $
     GROUP_LEADER = ourGroup, /NO_BLOCK
     
+  plot_first_bin_for_tab3, base=wBase3, global_plot=global_plot
+  
+  
 END
