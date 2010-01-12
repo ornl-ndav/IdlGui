@@ -44,7 +44,7 @@ PRO make_gui_tab2, MAIN_TAB, global
     YOFFSET   = 0, $
     SCR_XSIZE = xsize, $
     SCR_YSIZE = ysize, $
-    TITLE     = '  CREATE P vs C ASCII FILE  ')
+    TITLE     = '  CREATE Intensity vs Time ASCII FILE  ')
     
   BaseCol = WIDGET_BASE(wTab1Base,$
     SCR_XSIZE = xsize,$
