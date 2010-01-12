@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 
-PRO fits_tools_tab1_plot_base_event, Event
+PRO fits_tools_tab3_plot_base_event, Event
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global_plot
@@ -44,6 +44,41 @@ PRO fits_tools_tab1_plot_base_event, Event
     ;plot base
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='fits_tools_tab3_plot_base_uname'): BEGIN
+      
+      id1 = WIDGET_INFO(Event.top, $
+        FIND_BY_UNAME='fits_tools_tab3_plot_base_uname')
+      WIDGET_CONTROL, id1, /REALIZE
+      geometry = WIDGET_INFO(id1, /GEOMETRY)
+      new_xsize = geometry.scr_xsize
+      new_ysize = geometry.scr_ysize
+      
+      IF (new_xsize LT 400) THEN BEGIN
+        new_xsize = 400
+        new_ysize = 590
+      ENDIF
+      IF (new_ysize LT 590) THEN BEGIN
+        new_xsize = 400
+        new_ysize = 590
+      ENDIF
+      IF (new_xsize GE 400) THEN BEGIN
+        new_ysize = new_xsize+190
+      ENDIF
+      
+      WIDGET_CONTROL, id1, XSIZE= new_xsize
+      WIDGET_CONTROL, id1, YSIZE= new_ysize
+      
+      id = WIDGET_INFO(Event.top, $
+        FIND_BY_UNAME='fits_tools_tab3_plot_draw_uname')
+      WIDGET_CONTROL, id, DRAW_XSIZE= new_xsize-6
+      WIDGET_CONTROL, id, DRAW_YSIZE= new_xsize-6
+      
+      id = WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='fits_tools_tab3_bin_slider')
+      WIDGET_CONTROL, id, SCR_XSIZE = new_xsize-20
+      id = WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='fits_tools_tab3_time_slider')
+      WIDGET_CONTROL, id, SCR_XSIZE = new_xsize-20
+      
     END
     
     ELSE:
@@ -85,7 +120,7 @@ PRO  fits_tools_tab3_plot_base_gui, wBase=wBase, $
   main_base = WIDGET_BASE(wBase,$
     /COLUMN)
     
-    ;row1 
+  ;row1
   row1 = WIDGET_BASE(main_base,$
     /ALIGN_CENTER,$
     /ROW)
@@ -123,35 +158,35 @@ PRO  fits_tools_tab3_plot_base_gui, wBase=wBase, $
     ;    /MOTION_EVENTS,$
     UNAME = 'fits_tools_tab3_plot_draw_uname')
     
-;row3
-    row3 = WIDGET_BASE(main_base,$
+  ;row3
+  row3 = WIDGET_BASE(main_base,$
     /COLUMN)
     
-    bin = WIDGET_SLIDER(row3,$
+  bin = WIDGET_SLIDER(row3,$
     TITLE = 'Bin #',$
     MINIMUM = 0,$
     MAXIMUM = 100,$
     SCR_XSIZE = 380,$
     UNAME = 'fits_tools_tab3_bin_slider')
-
-    time = WIDGET_SLIDER(row3,$
+    
+  time = WIDGET_SLIDER(row3,$
     TITLE = 'Time ',$
     MINIMUM = 0,$
     MAXIMUM = 100,$
     SCR_XSIZE = 380,$
     UNAME = 'fits_tools_tab3_time_slider')
     
-    ;row4
-    row4 = WIDGET_BASE(main_base,$
+  ;row4
+  row4 = WIDGET_BASE(main_base,$
     /ROW)
-    label = WIDGET_LABEL(row4,$
+  label = WIDGET_LABEL(row4,$
     VALUE = 'Correspond to file -> ')
-    value = WIDGET_LABEL(row4,$
+  value = WIDGET_LABEL(row4,$
     VALUE = 'N/A',$
     SCR_XSIZE = 240,$
     frame=1,$
     /ALIGN_LEFT,$
-    UNAME = 'fits_tools_tab3_slider_fits_file')
+    UNAME = 'fits_tools_tab3_current_fits_file')
     
 END
 
