@@ -127,7 +127,7 @@ PRO create_p_vs_c_combined_rebinned, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO define_path_of_tab2, Event
+PRO define_path, Event, tab=tab
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
