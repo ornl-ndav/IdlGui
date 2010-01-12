@@ -168,6 +168,8 @@ PRO reset_plot, Event
   
   xarray = (*(*global_plot).xarray)
   yarray = (*(*global_plot).yarray)
+  xtitle = (*global_plot).xtitle
+  ytitle = (*global_plot).ytitle
   
   id = WIDGET_INFO(Event.top, $
     FIND_BY_UNAME='fits_tools_tab1_plot_draw_uname')
@@ -176,6 +178,9 @@ PRO reset_plot, Event
   
   PLOT, xarray, $
     yarray, $
+    xtitle=xtitle, $
+    ytitle=ytitle, $
+    CHARSIZE=1.2, $
     psym=1, $
     XSTYLE=1, $
     YSTYLE=1
@@ -190,6 +195,8 @@ PRO replot, Event, zoom=zoom
   
   xarray = (*(*global_plot).xarray)
   yarray = (*(*global_plot).yarray)
+  xtitle = (*global_plot).xtitle
+  ytitle = (*global_plot).ytitle
   
   id = WIDGET_INFO(Event.top, $
     FIND_BY_UNAME='fits_tools_tab1_plot_draw_uname')
@@ -207,8 +214,11 @@ PRO replot, Event, zoom=zoom
   
   PLOT, xarray, $
     yarray, $
+    xtitle = xtitle, $
+    ytitle = ytitle, $
     XRANGE = [xmin, xmax], $
     YRANGE = [ymin, ymax], $
+    CHARSIZE=1.2, $
     psym=1, $
     XSTYLE=1, $
     YSTYLE=1
@@ -258,6 +268,8 @@ END
 PRO fits_tools_tab1_plot_base, main_base=main_base, $
     Event=Event, $
     title=title, $
+    xtitle=xtitle, $
+    ytitle=ytitle, $
     xarray=xarray, $
     yarray=yarray
     
@@ -290,6 +302,8 @@ PRO fits_tools_tab1_plot_base, main_base=main_base, $
     x0y0x1y1_saved: LONARR(4), $
     there_is_a_zoom: 0b, $
     
+    xtitle: xtitle, $
+    ytitle: ytitle, $
     xarray: PTR_NEW(0L), $
     yarray: PTR_NEW(0L), $
     main_event: Event})
@@ -303,7 +317,14 @@ PRO fits_tools_tab1_plot_base, main_base=main_base, $
     GROUP_LEADER = ourGroup, /NO_BLOCK
     
   WIDGET_CONTROL, /HOURGLASS
-  PLOT, xarray, yarray, psym=1, XSTYLE=1, YSTYLE=1
+  PLOT, xarray, $
+    yarray, $
+    psym=1, $
+    CHARSIZE=1.2, $
+    XSTYLE=1, $
+    YSTYLE=1, $
+    XTITLE=xtitle, $
+    YTITLE=ytitle
   WIDGET_CONTROL, HOURGLASS=0
   
 END
