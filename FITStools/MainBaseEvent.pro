@@ -86,6 +86,8 @@ PRO MAIN_BASE_event, Event
       yarray  = *y_array[index]
       fits_tools_tab1_plot_base, Event=Event, $
         title=title, $
+        xtitle='X',$
+        ytitle='Y',$
         xarray=xarray, $
         yarray=yarray
     END
@@ -101,6 +103,8 @@ PRO MAIN_BASE_event, Event
       yarray = *p_array[index]
       fits_tools_tab1_plot_base, Event=Event, $
         title=title, $
+        xtitle='Time (microS)',$
+        ytitle='P',$
         xarray=xarray, $
         yarray=yarray
     END
@@ -124,6 +128,8 @@ PRO MAIN_BASE_event, Event
       title = 'P vs C'
       fits_tools_tab1_plot_base, Event=Event, $
         title=title, $
+        xtitle='Bins #',$
+        ytitle='P',$
         xarray=(*(*global).p_rebinned_x_array), $
         yarray=(*(*global).p_rebinned_y_array)
       WIDGET_CONTROL, HOURGLASS=0

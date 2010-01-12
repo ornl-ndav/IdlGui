@@ -91,9 +91,9 @@ PRO create_p_vs_c_combined_rebinned, Event
   
   nbr_files_loaded = getFirstEmptyXarrayIndex(event=event)
   
-  p_array = (*(*global).pPArray)
+;  p_array = (*(*global).pPArray)
   p_time_array = (*(*global).pTimeArray)
-  old_sz = N_ELEMENTS(*p_array[0])
+  old_sz = N_ELEMENTS(*p_time_array[0])
   
   ;define new size
   new_array_size = LONG(FLOAT(old_sz) / FLOAT(bin_size))
@@ -106,15 +106,14 @@ PRO create_p_vs_c_combined_rebinned, Event
   big_index = 0
   WHILE (big_index LT nbr_files_loaded) DO BEGIN
   
-    array = *p_array[big_index]
     time_array = *p_time_array[big_index]
     
-    sz = N_ELEMENTS(array)
+    sz = N_ELEMENTS(time_array)
     local_index = 0L
     WHILE (local_index LT sz) DO BEGIN
       time = time_array[local_index]
-      p_rebinned_array[time / bin_size] += array[local_index]
-      ++local_index
+      p_rebinned_array[time / bin_size] += 1
+            ++local_index
     ENDWHILE
     
     big_index++
