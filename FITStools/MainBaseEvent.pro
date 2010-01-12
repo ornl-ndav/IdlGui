@@ -89,7 +89,7 @@ PRO MAIN_BASE_event, Event
     
     ;plot button P vs C (right click)
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab1_right_click_plot_p_vs_c'): BEGIN
-      title = 'P vs C   ('
+      title = 'P vs time   ('
       list_fits_file = (*(*global).list_fits_file)
       tab1_selection = (*global).tab1_selection
       index = tab1_selection[0]
@@ -138,11 +138,11 @@ PRO MAIN_BASE_event, Event
         create_p_vs_c_combined_rebinned, Event
         (*global).need_to_recalculate_rebinned_step2 = 0b
       ENDIF
-      title = 'P vs C'
+      title = 'Counts vs Time'
       fits_tools_tab1_plot_base, Event=Event, $
         title=title, $
-        xtitle='Bins #',$
-        ytitle='P',$
+        xtitle='Time (microS)',$
+        ytitle='Counts',$
         xarray=(*(*global).p_rebinned_x_array), $
         yarray=(*(*global).p_rebinned_y_array)
       WIDGET_CONTROL, HOURGLASS=0
