@@ -70,6 +70,7 @@ cd, CurrentFolder
 
 ;tab2 and tab3
 .run fits_tools_tab2_tab3.pro
+.run fits_tools_tab3_plot.pro
 
 .run MainBaseEvent.pro
 .run fits_tools.pro

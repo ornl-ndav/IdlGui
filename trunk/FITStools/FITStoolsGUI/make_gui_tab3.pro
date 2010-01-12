@@ -70,7 +70,7 @@ PRO make_gui_tab3, MAIN_TAB, global
     VALUE = 'microS      ')
   plot = WIDGET_BUTTON(row1,$
     VALUE = 'P L O T ...',$
-    SENSITIVE = 0,$
+    SENSITIVE = 1,$  ;remove_me
     UNAME = 'tab3_bin_size_plot',$
     XSIZE = 200)
     

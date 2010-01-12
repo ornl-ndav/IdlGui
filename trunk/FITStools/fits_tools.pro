@@ -65,7 +65,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;*************************************************************************
   
   ;DEBUGGING
-  sDEBUGGING = { tab: {main_tab: 0},$  ;0:load, 1:ascii, 2: fits
+  sDEBUGGING = { tab: {main_tab: 2},$  ;0:load, 1:ascii, 2: fits
     fits_path: '~/FITSfiles/'}
   ;******************************************************************************
   ;******************************************************************************
@@ -77,7 +77,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     SIMULATE_FITS_LOADING: SIMULATE_FITS_LOADING, $ ;yes/no
     
     tab1_selection: INTARR(2), $ ;top and bottom row selected
-    tab1_base: 0L, $ ;id of plot base of tab1 (for YvsX and PvsC plots)
+    tab1_base: 0L, $ ;id of plot base of tab1/tab2 (PvsC, YvsX, IvsC)
+    tab3_base: 0L, $ ;id of plot base of tab3
     
     ;pointers that will contain the values x, y, p and c of the various files
     pXArray: PTR_NEW(0L), $     ;x array in the original file
@@ -86,7 +87,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     pTimeArray: PTR_NEW(0L), $  ;c array in the original file
     
     p_rebinned_y_array: PTR_NEW(0L), $ ;PvsC rebinned and combined of step2
-    p_rebinned_x_array: PTR_NEW(0L), $ ;x axis of PvsC 
+    p_rebinned_x_array: PTR_NEW(0L), $ ;x axis of PvsC
     need_to_recalculate_rebinned_step2: 1b, $ ;reset to 1b each time something
     ;change (file loaded, file_removed, bin size)
     

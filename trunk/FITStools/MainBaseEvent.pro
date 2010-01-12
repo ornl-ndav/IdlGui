@@ -185,6 +185,20 @@ PRO MAIN_BASE_event, Event
       check_tab3_plot_button_status, Event
     END
     
+    ;plot button of tab3
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab3_bin_size_plot'): BEGIN
+    WIDGET_CONTROL, /HOURGLASS
+      title = 'Y vs X'
+      fits_tools_tab3_plot_base, Event=Event, $
+        title=title, $
+        xtitle='X',$
+        ytitle='Y',$
+        xarray=(*(*global).pXArray), $
+        yarray=(*(*global).pYArray), $
+        timearray = (*(*global).pTimeArray)
+      WIDGET_CONTROL, HOURGLASS=0
+    END
+    
     ;where
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab3_where_button'): BEGIN
       define_path, Event, tab=3
