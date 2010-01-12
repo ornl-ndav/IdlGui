@@ -64,5 +64,9 @@ cd, CurrentFolder
 ;tab1 and tab2
 .run fits_tools_tab1_tab2_plot.pro
 
+;tab3
+.run fits_tools_tab3_functions.pro
+.run fits_tools_tab3.pro
+
 .run MainBaseEvent.pro
 .run fits_tools.pro
