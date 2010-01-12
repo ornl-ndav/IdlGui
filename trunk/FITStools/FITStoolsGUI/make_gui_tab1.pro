@@ -51,33 +51,33 @@ PRO make_gui_tab1, MAIN_TAB, global
   loaded_ysize = 50
   loaded_xoffset = (xsize - loaded_xsize) / 2
   loaded_yoffset = (ysize - loaded_ysize) / 2
-
+  
   loaded_base = WIDGET_BASE(wTab1Base,$
-  XOFFSET = loaded_xoffset,$
-  YOFFSET = loaded_yoffset, $
-  SCR_XSIZE = loaded_xsize, $
-  SCR_YSIZE = loaded_ysize, $
-  UNAME = 'tab1_loaded_base_info',$
-  MAP = 0, $
-  /COLUMN, $
-  FRAME = 5)  
+    XOFFSET = loaded_xoffset,$
+    YOFFSET = loaded_yoffset, $
+    SCR_XSIZE = loaded_xsize, $
+    SCR_YSIZE = loaded_ysize, $
+    UNAME = 'tab1_loaded_base_info',$
+    MAP = 0, $
+    /COLUMN, $
+    FRAME = 5)
     
   value = WIDGET_LABEL(loaded_base,$
-  VALUE = 'LOADING ...',$
-  SCR_XSIZE = loaded_xsize-25,$
-  FRAME = 1)
-
+    VALUE = 'LOADING ...',$
+    SCR_XSIZE = loaded_xsize-25,$
+    FRAME = 1)
+    
   rowb = WIDGET_BASE(loaded_base,$
-  /ALIGN_LEFT,$
-  /ROW)
+    /ALIGN_LEFT,$
+    /ROW)
   title = WIDGET_LABEL(rowb,$
-  VALUE = 'Working on file: ')
+    VALUE = 'Working on file: ')
   value = WIDGET_LABEL(rowb,$
-  VALUE = 'N/A',$
-  /ALIGN_LEFT,$
-  SCR_XSIZE = 350,$
-  UNAME = 'tab1_loaded_info_file')
-  
+    VALUE = 'N/A',$
+    /ALIGN_LEFT,$
+    SCR_XSIZE = 350,$
+    UNAME = 'tab1_loaded_info_file')
+    
   ;title to detector infos (x and y)
   det_title = WIDGET_LABEL(wTab1Base,$
     XOFFSET = 15,$
@@ -113,12 +113,16 @@ PRO make_gui_tab1, MAIN_TAB, global
   ;context menu
   contextBase = WIDGET_BASE(table,/CONTEXT_MENU,$
     UNAME = 'context_base')
-    plot1 = WIDGET_BUTTON(contextBase,$
+  plot1 = WIDGET_BUTTON(contextBase,$
     VALUE = 'Plot Y vs X ...',$
     UNAME = 'tab1_right_click_plot_y_vs_x')
-    plot2 = WIDGET_BUTTON(contextBase,$
+  plot2 = WIDGET_BUTTON(contextBase,$
     VALUE = 'Plot P vs C ...',$
     UNAME = 'tab1_right_click_plot_p_vs_c')
+  data = WIDGET_BUTTON(contextBase,$
+    /SEPARATOR, $
+    VALUE = 'Preview [X,Y,P,C] of first 100 data ...',$
+    UNAME = 'tab1_right_click_preview_data')
   delete = WIDGET_BUTTON(contextBase, $
     /SEPARATOR, $
     VALUE='Delete file(s)',$
