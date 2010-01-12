@@ -94,7 +94,7 @@ PRO fits_tools_tab1_plot_base_event, Event
           RETURN
         ENDIF
         replot, Event, ZOOM=(*global_plot).x0y0x1y1
-        (*global_plot).x0y0x1y1_saved = [x0,y1,x1,y1]
+        (*global_plot).x0y0x1y1_saved = [x0,y0,x1,y1]
         (*global_plot).moving_mouse = 0b
         (*global_plot).there_is_a_zoom = 1b
       ENDIF
@@ -328,4 +328,3 @@ PRO fits_tools_tab1_plot_base, main_base=main_base, $
   WIDGET_CONTROL, HOURGLASS=0
   
 END
-
