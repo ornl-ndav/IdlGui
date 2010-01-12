@@ -119,6 +119,8 @@ PRO MAIN_BASE_event, Event
       ;check widgets of tab2
       check_create_pvsc_button_status, Event
       check_tab2_plot_button_status, Event
+      check_create_fits_button_status, Event
+      check_tab3_plot_button_status, Event
       (*global).need_to_recalculate_rebinned_step2 = 1b
     END
     
@@ -172,6 +174,20 @@ PRO MAIN_BASE_event, Event
       tab2_create_ascii_button, Event
       WIDGET_CONTROL, HOURGLASS=0
       (*global).need_to_recalculate_rebinned_step2 = 0b
+    END
+    
+    ;TAB3, TAB3, TAB3, TAB3, TAB3, TAB3, TAB3, TAB3, TAB3, TAB3, TAB3, TAB3
+    
+    ;bin size input text
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab3_bin_size_value'): BEGIN
+      (*global).need_to_recalculate_rebinned_step2 = 1b
+      check_create_fits_button_status, Event
+      check_tab3_plot_button_status, Event
+    END
+    
+    ;file name input text
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab3_file_name'): BEGIN
+      check_create_fits_button_status, Event
     END
     
     ELSE:

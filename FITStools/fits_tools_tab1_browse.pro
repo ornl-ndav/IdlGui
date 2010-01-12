@@ -119,6 +119,10 @@ PRO browse_fits_files, Event
     check_create_pvsc_button_status, Event
     check_tab2_plot_button_status, Event
     
+    ;check gui of tab3
+    check_create_fits_button_status, Event
+    check_tab3_plot_button_status, Event
+    
   ENDIF
   
 END
