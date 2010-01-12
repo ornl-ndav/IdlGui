@@ -44,8 +44,8 @@ PRO fits_tools_tab1_plot_base_event, Event
     ;plot base
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='fits_tools_tab3_plot_base_uname'): BEGIN
-      END
-          
+    END
+    
     ELSE:
     
   ENDCASE
@@ -67,12 +67,15 @@ PRO  fits_tools_tab3_plot_base_gui, wBase=wBase, $
   
   ourGroup = WIDGET_BASE()
   
+  xBaseSize = 400
+  yBaseSize = 590
+  
   wBase = WIDGET_BASE(TITLE = title,$
     UNAME        = 'fits_tools_tab3_plot_base_uname', $
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
-    SCR_YSIZE    = 300,$
-    SCR_XSIZE    = 300,$
+    SCR_YSIZE    = yBaseSize,$
+    SCR_XSIZE    = xBaseSize,$
     MAP          = 1,$
     /BASE_ALIGN_CENTER,$
     /TLB_MOVE_EVENTS, $
@@ -82,12 +85,73 @@ PRO  fits_tools_tab3_plot_base_gui, wBase=wBase, $
   main_base = WIDGET_BASE(wBase,$
     /COLUMN)
     
+    ;row1 
+  row1 = WIDGET_BASE(main_base,$
+    /ALIGN_CENTER,$
+    /ROW)
+  x = WIDGET_LABEL(row1,$
+    VALUE = 'X:')
+  x_value = WIDGET_LABEL(row1,$
+    VALUE = 'N/A',$
+    SCR_XSIZE = 50,$
+    /ALIGN_LEFT,$
+    UNAME = 'fits_tools_tab3_plot_x_value')
+  space = WIDGET_LABEL(row1,$
+    VALUE = '    ')
+  y = WIDGET_LABEL(row1,$
+    VALUE = 'Y:')
+  y_value = WIDGET_LABEL(row1,$
+    VALUE = 'N/A',$
+    /ALIGN_LEFT,$
+    SCR_XSIZE = 50,$
+    UNAME = 'fits_tools_tab3_plot_y_value')
+  space = WIDGET_LABEL(row1,$
+    VALUE = '    ')
+  i = WIDGET_LABEL(row1,$
+    VALUE = 'Count:')
+  i_value = WIDGET_LABEL(row1,$
+    VALUE = 'N/A',$
+    /ALIGN_LEFT,$
+    SCR_XSIZE = 50,$
+    UNAME = 'fits_tools_tab3_plot_counts_value')
+    
   draw = WIDGET_DRAW(main_base,$
-    SCR_XSIZE = 300-6,$
-    SCR_YSIZE = 300-6,$
-    /BUTTON_EVENTS,$
-    /MOTION_EVENTS,$
+    /ALIGN_CENTER,$
+    SCR_XSIZE = xBaseSize-6,$
+    SCR_YSIZE = xBaseSize-6,$
+    ;    /BUTTON_EVENTS,$
+    ;    /MOTION_EVENTS,$
     UNAME = 'fits_tools_tab3_plot_draw_uname')
+    
+;row3
+    row3 = WIDGET_BASE(main_base,$
+    /COLUMN)
+    
+    bin = WIDGET_SLIDER(row3,$
+    TITLE = 'Bin #',$
+    MINIMUM = 0,$
+    MAXIMUM = 100,$
+    SCR_XSIZE = 380,$
+    UNAME = 'fits_tools_tab3_bin_slider')
+
+    time = WIDGET_SLIDER(row3,$
+    TITLE = 'Time ',$
+    MINIMUM = 0,$
+    MAXIMUM = 100,$
+    SCR_XSIZE = 380,$
+    UNAME = 'fits_tools_tab3_time_slider')
+    
+    ;row4
+    row4 = WIDGET_BASE(main_base,$
+    /ROW)
+    label = WIDGET_LABEL(row4,$
+    VALUE = 'Correspond to file -> ')
+    value = WIDGET_LABEL(row4,$
+    VALUE = 'N/A',$
+    SCR_XSIZE = 240,$
+    frame=1,$
+    /ALIGN_LEFT,$
+    UNAME = 'fits_tools_tab3_slider_fits_file')
     
 END
 
