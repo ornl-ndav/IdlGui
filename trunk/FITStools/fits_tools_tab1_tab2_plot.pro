@@ -59,7 +59,11 @@ PRO fits_tools_tab1_plot_base_event, Event
       WIDGET_CONTROL, id, DRAW_XSIZE= new_xsize-6
       WIDGET_CONTROL, id, DRAW_YSIZE= new_ysize-6
       
-      replot, Event
+      IF ((*global_plot).there_is_a_zoom) THEN BEGIN
+        replot, Event, ZOOM=(*global_plot).x0y0x1y1
+      ENDIF ELSE BEGIN
+        reset_plot, Event
+      ENDELSE
       
     END
     
@@ -76,19 +80,23 @@ PRO fits_tools_tab1_plot_base_event, Event
         y1 = x0y0x1y1[3]
         IF (x0 EQ x1) THEN BEGIN
           reset_plot, Event
+          (*global_plot).there_is_a_zoom = 0b
           RETURN
         ENDIF
         IF (y0 EQ y1) THEN BEGIN
           reset_plot, Event
+          (*global_plot).there_is_a_zoom = 0b
           RETURN
         ENDIF
         IF ((*global_plot).moving_mouse EQ 0b) THEN BEGIN
           reset_plot, Event
+          (*global_plot).there_is_a_zoom = 0b
           RETURN
         ENDIF
-        replot, Event, ZOOM=(*global).x0y0x1y1
+        replot, Event, ZOOM=(*global_plot).x0y0x1y1
         (*global_plot).x0y0x1y1_saved = [x0,y1,x1,y1]
         (*global_plot).moving_mouse = 0b
+        (*global_plot).there_is_a_zoom = 1b
       ENDIF
       
       IF (Event.press EQ 0) THEN BEGIN
@@ -99,7 +107,11 @@ PRO fits_tools_tab1_plot_base_event, Event
           x0y0x1y1[2] = X
           x0y0x1y1[3] = Y
           (*global_plot).x0y0x1y1 = x0y0x1y1
-          replot, Event, zoom=(*global_plot).x0y0x1y1_saved
+          IF ((*global_plot).there_is_a_zoom) THEN BEGIN
+            replot, Event, zoom=(*global_plot).x0y0x1y1_saved
+          ENDIF ELSE BEGIN
+            reset_plot, Event
+          ENDELSE
           plot_selection_box, Event
         ENDIF
       ENDIF
@@ -276,6 +288,7 @@ PRO fits_tools_tab1_plot_base, main_base=main_base, $
     moving_mouse: 0b,$
     x0y0x1y1: LONARR(4), $
     x0y0x1y1_saved: LONARR(4), $
+    there_is_a_zoom: 0b, $
     
     xarray: PTR_NEW(0L), $
     yarray: PTR_NEW(0L), $
