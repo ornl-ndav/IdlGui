@@ -66,20 +66,15 @@ PRO MAIN_BASE_event, Event
       ENDELSE
     END
     
-    ;delete button (right click)
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab1_right_click_delete'): BEGIN
-      remove_selected_tab1_fits_files, Event
-      ;check widgets of tab2
-      check_create_pvsc_button_status, Event
-      check_tab2_plot_button_status, Event
-      (*global).need_to_recalculate_rebinned_step2 = 1b
-    END
-    
     ;plot button Y vs X (right click)
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab1_right_click_plot_y_vs_x'): BEGIN
-      title = 'Y vs X'
+      title = 'Y vs X   ('
+      list_fits_file = (*(*global).list_fits_file)
       tab1_selection = (*global).tab1_selection
       index = tab1_selection[0]
+      file_name = list_fits_file[index]
+      short_file_name = FILE_BASENAME(file_name)
+      title += short_file_name[0] + ')'
       x_array = (*(*global).pXArray)
       y_array = (*(*global).pYArray)
       xarray  = *x_array[index]
@@ -94,9 +89,13 @@ PRO MAIN_BASE_event, Event
     
     ;plot button P vs C (right click)
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab1_right_click_plot_p_vs_c'): BEGIN
-      title = 'P vs C'
+      title = 'P vs C   ('
+      list_fits_file = (*(*global).list_fits_file)
       tab1_selection = (*global).tab1_selection
       index = tab1_selection[0]
+      file_name = list_fits_file[index]
+      short_file_name = FILE_BASENAME(file_name)
+      title += short_file_name[0] + ')'
       p_array    = (*(*global).pPArray)
       time_array = (*(*global).pTimeArray)
       xarray = *time_array[index]
@@ -107,6 +106,20 @@ PRO MAIN_BASE_event, Event
         ytitle='P',$
         xarray=xarray, $
         yarray=yarray
+    END
+    
+    ;preview [X,Y,P,C] of first 100 data
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab1_right_click_preview_data'): BEGIN
+      tab1_right_click_data_preview, Event
+    END
+    
+    ;delete button (right click)
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab1_right_click_delete'): BEGIN
+      remove_selected_tab1_fits_files, Event
+      ;check widgets of tab2
+      check_create_pvsc_button_status, Event
+      check_tab2_plot_button_status, Event
+      (*global).need_to_recalculate_rebinned_step2 = 1b
     END
     
     ;TAB2, TAB2, TAB2, TAB2, TAB2, TAB2, TAB2, TAB2, TAB2, TAB2, TAB2, TAB2

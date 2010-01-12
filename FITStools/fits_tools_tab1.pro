@@ -98,3 +98,45 @@ PRO remove_selected_tab1_fits_files, Event
   (*(*global).pTimeArray) = new_time_array
   
 END
+
+;------------------------------------------------------------------------------
+PRO tab1_right_click_data_preview, Event
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  tab1_selection = (*global).tab1_selection
+  index = tab1_selection[0]
+  
+  x_array = (*(*global).pXArray)
+  y_array = (*(*global).pYArray)
+  p_array = (*(*global).pPArray)
+  time_array = (*(*global).pTimeArray)
+  
+  xarray  = *x_array[index]
+  yarray  = *y_array[index]
+  parray  = *p_array[index]
+  tarray  = *time_array[index]
+  
+  data_array = STRARR(102L)
+  data_array[0] = 'X  Y  P  time(microS)'
+  FOR i=1,101L DO BEGIN
+    x = STRCOMPRESS(xarray[i-1],/REMOVE_ALL)
+    y = STRCOMPRESS(yarray[i-1],/REMOVE_ALL)
+    p = STRCOMPRESS(parray[i-1],/REMOVE_ALL)
+    t = STRCOMPRESS(tarray[i-1],/REMOVE_ALL)
+    data_array[i] = x + ' ' + y + ' ' + p + ' ' + t
+  ENDFOR
+  
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  list_fits_file = (*(*global).list_fits_file)
+  tab1_selection = (*global).tab1_selection
+  index = tab1_selection[0]
+  file_name = list_fits_file[index]
+  short_file_name = FILE_BASENAME(file_name)
+  title = 'X, Y, P and C for first 100 lines of file -> ' + short_file_name
+  
+  XDISPLAYFILE, '', TEXT=data_array,$
+    TITLE = title, $
+    GROUP = id
+    
+END
