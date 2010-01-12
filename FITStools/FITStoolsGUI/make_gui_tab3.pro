@@ -38,12 +38,97 @@ PRO make_gui_tab3, MAIN_TAB, global
   xsize = geometry.xsize
   ysize = geometry.ysize - 5
   
-  wTab1Base = WIDGET_BASE(MAIN_TAB,$
+  wTab3Base = WIDGET_BASE(MAIN_TAB,$
     UNAME     = 'tab3_uname',$
     XOFFSET   = 0, $
     YOFFSET   = 0, $
     SCR_XSIZE = xsize, $
     SCR_YSIZE = ysize, $
     TITLE     = '  CREATE FITS IMAGE FILES  ')
+
+  BaseCol = WIDGET_BASE(wTab3Base,$
+    SCR_XSIZE = xsize,$
+    /COLUMN,$
+    /BASE_ALIGN_CENTER)
+    
+  ;space
+  space = WIDGET_LABEL(BaseCol,$
+    VALUE = ' ')
+    
+  ;row1
+  row1 = WIDGET_BASE(BaseCol,$
+    /ROW)
+  label = WIDGET_LABEL(row1,$
+  VALUE = 'Bin Size:')
+  value = WIDGET_TEXT(row1,$
+  VALUE = '300',$
+  XSIZE = 7,$
+  /ALL_EVENTS,$
+  /EDITABLE,$
+  UNAME = 'tab3_bin_size_value')
+  units = WIDGET_LABEL(row1,$
+    VALUE = 'microS      ')
+  plot = WIDGET_BUTTON(row1,$
+    VALUE = 'P L O T ...',$
+    SENSITIVE = 0,$
+    UNAME = 'tab3_bin_size_plot',$
+    XSIZE = 200)
+    
+  ;space
+  space = WIDGET_LABEL(BaseCol,$
+    VALUE = ' ')
+    
+  ;row2
+  row2 = WIDGET_BASE(BaseCol,$
+    /COLUMN,$
+    FRAME = 1)
+    
+  rowa = WIDGET_BASE(row2,$
+    /ROW)
+  label = WIDGET_LABEL(rowa,$
+    VALUE = 'Where:')
+  button = WIDGET_BUTTON(rowa,$
+    VALUE = '~/results/',$
+    SCR_XSIZE = 400,$
+    UNAME = 'tab3_where_button')
+    
+  rowb = WIDGET_BASE(row2,$
+    /ROW)
+  label = WIDGET_LABEL(rowb,$
+    VALUE = ' Name:')
+  button = WIDGET_TEXT(rowb,$
+    VALUE = '',$
+    /ALL_EVENTS,$
+    /EDITABLE,$
+    SCR_XSIZE = 340,$
+    UNAME = 'tab3_file_name')
+    ext = WIDGET_LABEL(rowb,$
+    VALUE = '_###.fits',$
+    /ALIGN_LEFT)
+    
+  ;space
+  space = WIDGET_LABEL(BaseCol,$
+    VALUE = ' ')
+    
+  ;row3
+  row3 = WIDGET_BASE(BaseCol,$
+    /ROW)
+  ;space = WIDGET_LABEL(row3,$
+  ;VALUE = '')
+  info = WIDGET_LABEL(row3,$
+  VALUE = 'Info:',$
+  /ALIGN_LEFT)
+  info_value = WIDGET_LABEL(row3,$
+  VALUE = 'N/A files will be created.            ',$
+  /ALIGN_LEFT,$
+  SENSITIVE = 0,$
+  UNAME = 'tab3_info_message')
+  
+  space = WIDGET_LABEL(row3,$
+  VALUE = '       ')
+  create = WIDGET_BUTTON(row3,$
+  VALUE = 'CREATE FITS FILES',$
+  SENSITIVE = 0,$
+  UNAME = 'tab3_create_fits_files_button')
 
 END
