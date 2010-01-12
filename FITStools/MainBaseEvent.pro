@@ -152,7 +152,7 @@ PRO MAIN_BASE_event, Event
     
     ;where
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_where_button'): BEGIN
-      define_path_of_tab2, Event
+      define_path, Event, tab=2
     END
     
     ;file name input text
@@ -185,6 +185,11 @@ PRO MAIN_BASE_event, Event
       check_tab3_plot_button_status, Event
     END
     
+    ;where
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab3_where_button'): BEGIN
+      define_path, Event, tab=3
+    END
+
     ;file name input text
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab3_file_name'): BEGIN
       check_create_fits_button_status, Event

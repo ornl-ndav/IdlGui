@@ -68,5 +68,8 @@ cd, CurrentFolder
 .run fits_tools_tab3_functions.pro
 .run fits_tools_tab3.pro
 
+;tab2 and tab3
+.run fits_tools_tab2_tab3.pro
+
 .run MainBaseEvent.pro
 .run fits_tools.pro
