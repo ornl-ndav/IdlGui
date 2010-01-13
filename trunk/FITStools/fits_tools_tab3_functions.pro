@@ -32,6 +32,67 @@
 ;
 ;==============================================================================
 
+FUNCTION getStep3Counts, Event, x, y
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global_plot
+  
+  id = WIDGET_INFO(Event.top, $
+    FIND_BY_UNAME='fits_tools_tab3_plot_draw_uname')
+  WIDGET_CONTROL, id, GET_VALUE = id_value
+  WSET, id_value
+  main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
+  draw_xsize = main_base_geometry.xsize
+  draw_ysize = main_base_geometry.ysize
+  
+  current_bin_array = (*(*global_plot).current_bin_array)
+  congrid_current_bin_array = CONGRID(current_bin_array, $
+    draw_xsize, draw_ysize)
+    
+  counts = congrid_current_bin_array[x,y]
+  RETURN, STRCOMPRESS(counts,/REMOVE_ALL)
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getStep3X, Event, x
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global_plot
+  
+  detector_xsize = (*global_plot).detector_xsize
+  
+  id1 = WIDGET_INFO(Event.top, $
+    FIND_BY_UNAME='fits_tools_tab3_plot_draw_uname')
+  WIDGET_CONTROL, id1, /REALIZE
+  geometry = WIDGET_INFO(id1, /GEOMETRY)
+  xsize = geometry.scr_xsize
+  
+  data_x = (x * detector_xsize) / xsize
+  s_data_x = data_x[0]
+  
+  RETURN, STRCOMPRESS(s_data_x,/REMOVE_ALL)
+  
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getStep3Y, Event, y
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global_plot
+  
+  detector_ysize = (*global_plot).detector_ysize
+  
+  id1 = WIDGET_INFO(Event.top, $
+    FIND_BY_UNAME='fits_tools_tab3_plot_draw_uname')
+  WIDGET_CONTROL, id1, /REALIZE
+  geometry = WIDGET_INFO(id1, /GEOMETRY)
+  ysize = geometry.scr_ysize
+  
+  data_y = (y * detector_ysize) / ysize
+  s_data_y = data_y[0]
+  
+  RETURN, STRCOMPRESS(s_data_y,/REMOVE_ALL)
+  
+END
+
+;------------------------------------------------------------------------------
 FUNCTION is_create_fits_button_enabled, Event
 
   ON_IOERROR, error

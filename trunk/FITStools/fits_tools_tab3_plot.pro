@@ -76,6 +76,29 @@ PRO fits_tools_tab3_plot_base_event, Event
       
     END
     
+    ;draw
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='fits_tools_tab3_plot_draw_uname'): BEGIN
+      CURSOR, X_device, Y_device, /DEVICE, /nowait
+      
+      error = 0
+      CATCH, error
+      IF (error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        x = 'N/A'
+        y = 'N/A'
+        counts = 'N/A'
+      ENDIF ELSE BEGIN
+        x = getStep3X(Event, X_device)
+        y = getStep3Y(Event, Y_device)
+        counts = getStep3Counts(Event, x_device, y_device)
+      ENDELSE
+      putValue, Event, 'fits_tools_tab3_plot_x_value', x
+      putValue, Event, 'fits_tools_tab3_plot_y_value', y
+      putValue, Event, 'fits_tools_tab3_plot_counts_value', counts
+      
+    END
+    
     ;bin size ruler
     WIDGET_INFO(Event.top, FIND_BY_UNAME='fits_tools_tab3_bin_slider'): BEGIN
       update_from_to_bin, Event
@@ -204,8 +227,8 @@ PRO  fits_tools_tab3_plot_base_gui, wBase=wBase, $
     /ALIGN_CENTER,$
     SCR_XSIZE = xBaseSize-6,$
     SCR_YSIZE = xBaseSize-6,$
-    ;    /BUTTON_EVENTS,$
-    ;    /MOTION_EVENTS,$
+    /TRACKING_EVENTS,$
+    /MOTION_EVENTS,$
     UNAME = 'fits_tools_tab3_plot_draw_uname')
     
   ;row3
@@ -347,8 +370,8 @@ PRO update_step3_plot, Event
   yarray    = (*(*global_plot).yarray)
   timearray = (*(*global_plot).timearray)
   
-  xsize = (*global_plot).pixel_xsize
-  ysize = (*global_plot).pixel_ysize
+  xsize = (*global_plot).detector_xsize
+  ysize = (*global_plot).detector_ysize
   
   current_bin_array = LONARR(xsize,ysize)
   
@@ -457,8 +480,8 @@ PRO fits_tools_tab3_plot_base, main_base=main_base, $
     
     current_bin_array: PTR_NEW(0L), $ ;current bin displayed
     
-    pixel_xsize: xsize, $
-    pixel_ysize: ysize, $
+    detector_xsize: xsize, $
+    detector_ysize: ysize, $
     nbr_files_loaded: nbr_files_loaded,$
     
     bin_size: bin_size, $
@@ -480,6 +503,5 @@ PRO fits_tools_tab3_plot_base, main_base=main_base, $
     GROUP_LEADER = ourGroup, /NO_BLOCK
     
   plot_first_bin_for_tab3, base=wBase3, global_plot=global_plot
-  
   
 END
