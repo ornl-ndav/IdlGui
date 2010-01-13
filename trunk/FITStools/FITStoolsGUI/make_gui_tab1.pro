@@ -117,7 +117,7 @@ PRO make_gui_tab1, MAIN_TAB, global
     VALUE = 'Plot Y vs X ...',$
     UNAME = 'tab1_right_click_plot_y_vs_x')
   plot2 = WIDGET_BUTTON(contextBase,$
-    VALUE = 'Plot P vs C ...',$
+    VALUE = 'Plot P vs time ...',$
     UNAME = 'tab1_right_click_plot_p_vs_c')
   data = WIDGET_BUTTON(contextBase,$
     /SEPARATOR, $

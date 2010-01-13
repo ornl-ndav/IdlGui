@@ -118,6 +118,8 @@ PRO tab1_right_click_data_preview, Event
   tarray  = *time_array[index]
   
   max_time = MAX(tarray,MIN=min_time)
+  max_time *= (*global).time_resolution
+  min_time *= (*global).time_resolution
   info_array1 = 'Min time recorded: ' + STRCOMPRESS(min_time,/REMOVE_ALL)
   info_array1 += ' ns'
   info_array2 = 'Max time recorded: ' + STRCOMPRESS(max_time,/REMOVE_ALL)
