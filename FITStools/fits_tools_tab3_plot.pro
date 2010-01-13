@@ -72,6 +72,8 @@ PRO fits_tools_tab3_plot_base_event, Event
       WIDGET_CONTROL, id, DRAW_XSIZE= new_xsize-6
       WIDGET_CONTROL, id, DRAW_YSIZE= new_xsize-6
       
+      replot_step3_after_resizing, Event
+      
     END
     
     ;bin size ruler
@@ -87,6 +89,30 @@ PRO fits_tools_tab3_plot_base_event, Event
     ELSE:
     
   ENDCASE
+  
+END
+
+;------------------------------------------------------------------------------
+PRO replot_step3_after_resizing, Event
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global_plot
+  
+  id = WIDGET_INFO(Event.top, $
+    FIND_BY_UNAME='fits_tools_tab3_plot_draw_uname')
+  WIDGET_CONTROL, id, GET_VALUE = id_value
+  WSET, id_value
+  main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
+  draw_xsize = main_base_geometry.xsize
+  draw_ysize = main_base_geometry.ysize
+  
+  current_bin_array = (*(*global_plot).current_bin_array)
+  congrid_current_bin_array = CONGRID(current_bin_array, $
+    draw_xsize, draw_ysize)
+    
+  DEVICE, DECOMPOSED=0
+  LOADCT, 5, /SILENT
+  TVSCL, congrid_current_bin_array
+  DEVICE, DECOMPOSED=1
   
 END
 
