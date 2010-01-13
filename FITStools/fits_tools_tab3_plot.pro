@@ -208,26 +208,33 @@ PRO plot_first_bin_for_tab3, base=base, global_plot=global_plot
   
   current_bin_array = LONARR(xsize,ysize)
   
-  first_timearray = *timearray[0]
-  first_xarray = *xarray[0]
-  first_yarray = *yarray[0] 
+  nbr_files_loaded = getFirstEmptyXarrayIndex(event=main_event)
+  index_nbr_files = 0
+  WHILE (index_nbr_files LT nbr_files_loaded) DO BEGIN
   
-  where_timearray = WHERE(first_timearray LT bin_size)
-  xarray_bin0 = first_xarray[where_timearray]
-  yarray_bin0 = first_yarray[where_timearray]
-  
-  sz = N_ELEMENTS(xarray_bin0)
-  index = 0L
-  WHILE (index LT sz) DO BEGIN
-    x = xarray_bin0[index]
-    y = yarray_bin0[index]
-    ;make sure they are within the range specified in tab1
-    IF (x LT xsize AND y LT ysize) THEN BEGIN
-      current_bin_array[x,y]++
-    ENDIF
-    index++
+    first_timearray = *timearray[index_nbr_files]
+    first_xarray = *xarray[index_nbr_files]
+    first_yarray = *yarray[index_nbr_files]
+    
+    where_timearray = WHERE(first_timearray LT bin_size)
+    xarray_bin0 = first_xarray[where_timearray]
+    yarray_bin0 = first_yarray[where_timearray]
+    
+    sz = N_ELEMENTS(xarray_bin0)
+    index = 0L
+    WHILE (index LT sz) DO BEGIN
+      x = xarray_bin0[index]
+      y = yarray_bin0[index]
+      ;make sure they are within the range specified in tab1
+      IF (x LT xsize AND y LT ysize) THEN BEGIN
+        current_bin_array[x,y]++
+      ENDIF
+      index++
+    ENDWHILE
+    
+    index_nbr_files++
   ENDWHILE
-
+  
   id = WIDGET_INFO(base, $
     FIND_BY_UNAME='fits_tools_tab3_plot_draw_uname')
   WIDGET_CONTROL, id, GET_VALUE = id_value
@@ -237,10 +244,13 @@ PRO plot_first_bin_for_tab3, base=base, global_plot=global_plot
   draw_ysize = main_base_geometry.ysize
   
   congrid_current_bin_array = CONGRID(current_bin_array, $
-  draw_xsize, draw_ysize)
-
+    draw_xsize, draw_ysize)
+   
+  DEVICE, DECOMPOSED=0   
+  LOADCT, 5
   TVSCL, congrid_current_bin_array
   (*(*global_plot).current_bin_array) = current_bin_array
+  DEVICE, DECOMPOSED=1
   
 END
 

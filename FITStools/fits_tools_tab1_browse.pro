@@ -86,12 +86,6 @@ PRO browse_fits_files, Event
           RETURN
         ENDIF
         
-      ;      add_new_data_to_big_array, event_load=event, $
-      ;        sData=sData, $
-      ;        type=type
-      ;      get_initial_plot_range, event_load=event
-      ;      plotAsciiData, event_load=event
-        
       ENDIF ELSE BEGIN ;status_retrieve EQ 0b
       
         add_file_to_list_of_error_files, Event=event, file_name=file_list[i]
