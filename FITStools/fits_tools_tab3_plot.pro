@@ -352,6 +352,12 @@ PRO update_step3_plot, Event
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global_plot
   
+  slider_value = LONG(getSliderValue(Event,'fits_tools_tab3_bin_slider'))
+  old_slider_value = (*global_plot).bin_size_selected
+  
+  IF (slider_value EQ old_slider_value) THEN RETURN
+  (*global_plot).bin_size_selected = slider_value
+  
   no_data_found_in_range_selected = 1b
   
   id = WIDGET_INFO(Event.top, $
@@ -484,6 +490,7 @@ PRO fits_tools_tab3_plot_base, main_base=main_base, $
     detector_ysize: ysize, $
     nbr_files_loaded: nbr_files_loaded,$
     
+    bin_size_selected: 0L, $
     bin_size: bin_size, $
     max_bin: max_bin, $
     xtitle: xtitle, $
