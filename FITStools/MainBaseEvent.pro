@@ -98,7 +98,7 @@ PRO MAIN_BASE_event, Event
       title += short_file_name[0] + ')'
       p_array    = (*(*global).pPArray)
       time_array = (*(*global).pTimeArray)
-      xarray = *time_array[index]
+      xarray = *time_array[index] * (*global).time_resolution
       yarray = *p_array[index]
       fits_tools_tab1_plot_base, Event=Event, $
         title=title, $
@@ -145,7 +145,7 @@ PRO MAIN_BASE_event, Event
         title=title, $
         xtitle='Time (microS)',$
         ytitle='Counts',$
-        xarray=(*(*global).p_rebinned_x_array), $
+        xarray=(*(*global).p_rebinned_x_array)*(*global).time_resolution, $
         yarray=(*(*global).p_rebinned_y_array)
       WIDGET_CONTROL, HOURGLASS=0
     END

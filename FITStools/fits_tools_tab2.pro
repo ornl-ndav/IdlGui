@@ -93,11 +93,15 @@ PRO create_p_vs_c_combined_rebinned, Event
   
 ;  p_array = (*(*global).pPArray)
   p_time_array = (*(*global).pTimeArray)
-  old_sz = N_ELEMENTS(*p_time_array[0])
+ 
+  ;max_time that is determined by the chopper speed
+  max_time_chooper = getTextFieldValue(Event,'tab1_max_time') ;ms
+  max_time_chooper = FLOAT(max_time_chooper[0]) * 1000. ;to be in microS
   
   ;define new size
-  new_array_size = LONG(FLOAT(old_sz) / (FLOAT(bin_size)*1000)) ;to be in ns
-  new_array_size = new_array_size[0]
+  ;new_array_size = LONG(FLOAT(old_sz) / (FLOAT(bin_size)*1000)) ;to be in ns
+  new_array_size = max_time_chooper / FLOAT(bin_size)
+;  new_array_size = new_array_size[0]
   
   IF (new_array_size NE LONG(new_array_size)) THEN new_array_size++
   new_sz = LONG(new_array_size)
@@ -111,7 +115,7 @@ PRO create_p_vs_c_combined_rebinned, Event
     sz = N_ELEMENTS(time_array)
     local_index = 0L
     WHILE (local_index LT sz) DO BEGIN
-      time = time_array[local_index]*10e-3 ;time is in microS
+      time = time_array[local_index]*0.025 ;time is in microS
       p_rebinned_array[time / bin_size] += 1
             ++local_index
     ENDWHILE
