@@ -223,7 +223,7 @@ PRO replot, Event, zoom=zoom
     XSTYLE=1, $
     YSTYLE=1
     
-END
+  END
 
 ;------------------------------------------------------------------------------
 PRO  fits_tools_tab1_plot_base_gui, wBase=wBase, $
@@ -325,6 +325,7 @@ PRO fits_tools_tab1_plot_base, main_base=main_base, $
     YSTYLE=1, $
     XTITLE=xtitle, $
     YTITLE=ytitle
+
   WIDGET_CONTROL, HOURGLASS=0
   
 END

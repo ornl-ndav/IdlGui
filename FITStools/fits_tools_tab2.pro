@@ -87,7 +87,7 @@ PRO create_p_vs_c_combined_rebinned, Event
   
   ;bin size of step2
   bin_size = LONG(getTextFieldValue(Event, 'tab2_bin_size_value'))
-  bin_size = bin_size[0]
+  bin_size = bin_size[0] ;microS
   
   nbr_files_loaded = getFirstEmptyXarrayIndex(event=event)
   
@@ -96,7 +96,7 @@ PRO create_p_vs_c_combined_rebinned, Event
   old_sz = N_ELEMENTS(*p_time_array[0])
   
   ;define new size
-  new_array_size = LONG(FLOAT(old_sz) / FLOAT(bin_size))
+  new_array_size = LONG(FLOAT(old_sz) / ((FLOAT(bin_size)*1000) ;to be in ns
   new_array_size = new_array_size[0]
   
   IF (new_array_size NE LONG(new_array_size)) THEN new_array_size++
