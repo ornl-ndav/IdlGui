@@ -76,13 +76,12 @@ PRO fits_tools_tab3_plot_base_event, Event
     
     ;bin size ruler
     WIDGET_INFO(Event.top, FIND_BY_UNAME='fits_tools_tab3_bin_slider'): BEGIN
-      IF (Event.drag EQ 1) THEN BEGIN ;when moving the cursor
-        update_from_to_bin, Event
-      ENDIF ELSE BEGIN ;releasing the cursor
+      update_from_to_bin, Event
+      IF (Event.drag EQ 0) THEN BEGIN ;when moving the cursor
         WIDGET_CONTROL, /HOURGLASS
         update_step3_plot, Event
         WIDGET_CONTROL, HOURGLASS=0
-      ENDELSE
+      ENDIF
     END
     
     ELSE:
@@ -292,7 +291,7 @@ PRO plot_first_bin_for_tab3, base=base, global_plot=global_plot
     draw_xsize, draw_ysize)
     
   DEVICE, DECOMPOSED=0
-  LOADCT, 5
+  LOADCT, 5, /SILENT
   TVSCL, congrid_current_bin_array
   (*(*global_plot).current_bin_array) = current_bin_array
   DEVICE, DECOMPOSED=1
@@ -343,10 +342,10 @@ PRO update_step3_plot, Event
     first_timearray = *timearray[index_nbr_files]
     first_xarray = *xarray[index_nbr_files]
     first_yarray = *yarray[index_nbr_files]
-
+    
     where_timearray = WHERE(first_timearray GE from_time_ns AND $
       first_timearray LT to_time_ns, sz)
-    
+      
     IF (sz NE 0) THEN BEGIN ;no data found
     
       no_data_found_in_range_selected = 0b
@@ -373,9 +372,9 @@ PRO update_step3_plot, Event
   
   congrid_current_bin_array = CONGRID(current_bin_array, $
     draw_xsize, draw_ysize)
-  
+    
   DEVICE, DECOMPOSED=0
-  LOADCT, 5
+  LOADCT, 5, /SILENT
   TVSCL, congrid_current_bin_array
   (*(*global_plot).current_bin_array) = current_bin_array
   DEVICE, DECOMPOSED=1
