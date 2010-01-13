@@ -195,15 +195,52 @@ PRO plot_first_bin_for_tab3, base=base, global_plot=global_plot
 
   global = (*global_plot).global
   main_event = (*global_plot).main_event
-
+  
   bin_size = getTextFieldValue(main_event, 'tab3_bin_size_value')
-  print, 'bin_size: ' + string(bin_size)
+  bin_size = bin_size[0]
   
   xarray = (*(*global_plot).xarray)
   yarray = (*(*global_plot).yarray)
   timearray = (*(*global_plot).timearray)
   
+  xsize = FIX(getTextFieldValue(main_event,'tab1_x_pixels'))
+  ysize = FIX(getTextFieldValue(main_event,'tab1_y_pixels'))
   
+  current_bin_array = LONARR(xsize,ysize)
+  
+  first_timearray = *timearray[0]
+  first_xarray = *xarray[0]
+  first_yarray = *yarray[0] 
+  
+  where_timearray = WHERE(first_timearray LT bin_size)
+  xarray_bin0 = first_xarray[where_timearray]
+  yarray_bin0 = first_yarray[where_timearray]
+  
+  sz = N_ELEMENTS(xarray_bin0)
+  index = 0L
+  WHILE (index LT sz) DO BEGIN
+    x = xarray_bin0[index]
+    y = yarray_bin0[index]
+    ;make sure they are within the range specified in tab1
+    IF (x LT xsize AND y LT ysize) THEN BEGIN
+      current_bin_array[x,y]++
+    ENDIF
+    index++
+  ENDWHILE
+
+  id = WIDGET_INFO(base, $
+    FIND_BY_UNAME='fits_tools_tab3_plot_draw_uname')
+  WIDGET_CONTROL, id, GET_VALUE = id_value
+  WSET, id_value
+  main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
+  draw_xsize = main_base_geometry.xsize
+  draw_ysize = main_base_geometry.ysize
+  
+  congrid_current_bin_array = CONGRID(current_bin_array, $
+  draw_xsize, draw_ysize)
+
+  TVSCL, congrid_current_bin_array
+  (*(*global_plot).current_bin_array) = current_bin_array
   
 END
 
@@ -240,13 +277,15 @@ PRO fits_tools_tab3_plot_base, main_base=main_base, $
   global_plot = PTR_NEW({ wbase: wbase3,$
     global: global, $
     
+    current_bin_array: PTR_NEW(0L), $ ;current bin displayed
+    
     xtitle: xtitle, $
     ytitle: ytitle, $
     xarray: PTR_NEW(0L), $
     yarray: PTR_NEW(0L), $
     timearray: PTR_NEW(0L), $
     main_event: Event})
-  
+    
   (*(*global_plot).xarray) = xarray
   (*(*global_plot).yarray) = yarray
   (*(*global_plot).timearray) = timearray
