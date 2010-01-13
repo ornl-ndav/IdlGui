@@ -71,6 +71,13 @@ FUNCTION getTextFieldValue, Event, uname
 END
 
 ;------------------------------------------------------------------------------
+FUNCTION getSliderValue, Event, uname
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, id, GET_VALUE=value
+  RETURN, value
+END
+
+;------------------------------------------------------------------------------
 ;this function returns the first row and column of the selection
 FUNCTION getCellSelectedTab1, Event, uname
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)

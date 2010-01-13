@@ -82,7 +82,7 @@ PRO make_gui_tab1, MAIN_TAB, global
   det_title = WIDGET_LABEL(wTab1Base,$
     XOFFSET = 15,$
     YOFFSET = 252,$
-    VALUE   = 'Detector Infos')
+    VALUE   = 'Detector/Files Infos')
     
   tab1_base = WIDGET_BASE(wTab1Base,$
     SCR_XSIZE = xsize-10,$
@@ -139,9 +139,9 @@ PRO make_gui_tab1, MAIN_TAB, global
     FRAME = 1,$
     SCR_XSIZE = xsize-20,$
     /ROW)
-  space_value = '           '
+  space_value = '      '
   label = WIDGET_LABEL(det_base,$
-    VALUE = space_value + '        Number of X pixels ')
+    VALUE = space_value + 'Number of X pixels ')
   value = WIDGET_TEXT(det_base,$
     VALUE = '4000',$
     XSIZE = 4,$
@@ -154,14 +154,17 @@ PRO make_gui_tab1, MAIN_TAB, global
     XSIZE = 4,$
     /EDITABLE,$
     UNAME = 'tab1_y_pixels')
+  label = WIDGET_LABEL(det_base,$
+    VALUE = space_value + '      Max Time ')
+  value = WIDGET_TEXT(det_base,$
+    VALUE = '25',$
+    XSIZE = 5,$
+    /EDITABLE,$
+    UNAME = 'tab1_max_time')
+  label = WIDGET_LABEL(det_base,$
+    VALUE = 'ms')
     
   space = WIDGET_LABEL(base_base,$
     VALUE = ' ')
-    
-    
-    
-    
-    
-    
     
 END
