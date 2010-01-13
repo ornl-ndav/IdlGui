@@ -121,7 +121,7 @@ PRO make_gui_tab1, MAIN_TAB, global
     UNAME = 'tab1_right_click_plot_p_vs_c')
   data = WIDGET_BUTTON(contextBase,$
     /SEPARATOR, $
-    VALUE = 'Preview [X,Y,P,C] of first 100 data ...',$
+    VALUE = 'Infos and Preview [X,Y,P,C] of first 100 data ...',$
     UNAME = 'tab1_right_click_preview_data')
   delete = WIDGET_BUTTON(contextBase, $
     /SEPARATOR, $

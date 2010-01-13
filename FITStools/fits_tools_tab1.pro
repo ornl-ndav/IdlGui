@@ -117,6 +117,15 @@ PRO tab1_right_click_data_preview, Event
   parray  = *p_array[index]
   tarray  = *time_array[index]
   
+  max_time = MAX(tarray,MIN=min_time)
+  info_array1 = 'Min time recorded: ' + STRCOMPRESS(min_time,/REMOVE_ALL)
+  info_array1 += ' ns'
+  info_array2 = 'Max time recorded: ' + STRCOMPRESS(max_time,/REMOVE_ALL)
+  info_array2 += ' ns ('
+  info_array2 += STRCOMPRESS(float(max_time)/1000.,/REMOVE_ALL) + ' microS)'
+  info_array3 = '----------------------------------------'
+  info_array = [info_array1, info_array2, info_array3]
+  
   data_array = STRARR(102L)
   data_array[0] = 'X  Y  P  time(microS)'
   FOR i=1,101L DO BEGIN
@@ -135,7 +144,7 @@ PRO tab1_right_click_data_preview, Event
   short_file_name = FILE_BASENAME(file_name)
   title = 'X, Y, P and C for first 100 lines of file -> ' + short_file_name
   
-  XDISPLAYFILE, '', TEXT=data_array,$
+  XDISPLAYFILE, '', TEXT=[info_array,data_array],$
     TITLE = title, $
     GROUP = id
     
