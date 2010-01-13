@@ -187,7 +187,7 @@ PRO MAIN_BASE_event, Event
     
     ;plot button of tab3
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab3_bin_size_plot'): BEGIN
-    WIDGET_CONTROL, /HOURGLASS
+      WIDGET_CONTROL, /HOURGLASS
       title = 'Y vs X'
       fits_tools_tab3_plot_base, Event=Event, $
         title=title, $
@@ -203,7 +203,7 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab3_where_button'): BEGIN
       define_path, Event, tab=3
     END
-
+    
     ;file name input text
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab3_file_name'): BEGIN
       check_create_fits_button_status, Event
