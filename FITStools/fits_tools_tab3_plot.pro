@@ -72,13 +72,17 @@ PRO fits_tools_tab3_plot_base_event, Event
       WIDGET_CONTROL, id, DRAW_XSIZE= new_xsize-6
       WIDGET_CONTROL, id, DRAW_YSIZE= new_xsize-6
       
-      id = WIDGET_INFO(Event.top, $
-        FIND_BY_UNAME='fits_tools_tab3_bin_slider')
-      WIDGET_CONTROL, id, SCR_XSIZE = new_xsize-20
-      id = WIDGET_INFO(Event.top, $
-        FIND_BY_UNAME='fits_tools_tab3_time_slider')
-      WIDGET_CONTROL, id, SCR_XSIZE = new_xsize-20
-      
+    END
+    
+    ;bin size ruler
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='fits_tools_tab3_bin_slider'): BEGIN
+      IF (Event.drag EQ 1) THEN BEGIN ;when moving the cursor
+        update_from_to_bin, Event
+      ENDIF ELSE BEGIN ;releasing the cursor
+        WIDGET_CONTROL, /HOURGLASS
+        update_step3_plot, Event
+        WIDGET_CONTROL, HOURGLASS=0
+      ENDELSE
     END
     
     ELSE:
@@ -88,9 +92,30 @@ PRO fits_tools_tab3_plot_base_event, Event
 END
 
 ;------------------------------------------------------------------------------
+PRO update_from_to_bin, Event
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global_plot
+  
+  slider_value = LONG(getSliderValue(Event,'fits_tools_tab3_bin_slider'))
+  bin_size = LONG((*global_plot).bin_size)
+  
+  from = FLOAT((bin_size*slider_value))
+  to   = FLOAT((bin_size*(slider_value+1)))
+  
+  sfrom = STRCOMPRESS(from,/REMOVE_ALL)
+  sto   = STRCOMPRESS(to,/REMOVE_ALL)
+  
+  putValue, Event, 'fits_tools_tab3_from_time', sfrom
+  putValue, Event, 'fits_tools_tab3_to_time', sto
+  
+END
+
+;------------------------------------------------------------------------------
 PRO  fits_tools_tab3_plot_base_gui, wBase=wBase, $
     main_base_geometry=main_base_geometry, $
-    title=title
+    title=title, $
+    max_bin=max_bin, $
+    max_time=max_time
     
   main_base_xoffset = main_base_geometry.xoffset
   main_base_yoffset = main_base_geometry.yoffset
@@ -165,16 +190,36 @@ PRO  fits_tools_tab3_plot_base_gui, wBase=wBase, $
   bin = WIDGET_SLIDER(row3,$
     TITLE = 'Bin #',$
     MINIMUM = 0,$
-    MAXIMUM = 100,$
+    MAXIMUM = STRCOMPRESS(max_bin,/REMOVE_ALL),$
     SCR_XSIZE = 380,$
+    /DRAG,$
+    ;    /TRACKING_EVENTS,$
     UNAME = 'fits_tools_tab3_bin_slider')
     
-  time = WIDGET_SLIDER(row3,$
-    TITLE = 'Time ',$
-    MINIMUM = 0,$
-    MAXIMUM = 100,$
-    SCR_XSIZE = 380,$
-    UNAME = 'fits_tools_tab3_time_slider')
+  ;row3b
+  row3b = WIDGET_BASE(main_base,$
+    /ROW,$
+    FRAME=1)
+  min = WIDGET_LABEL(row3b,$
+    VALUE = 'From time (microS):',$
+    /ALIGN_LEFT)
+  value = WIDGET_LABEL(row3b,$
+    VALUE = '0',$
+    SCR_XSIZE = 60,$
+    /ALIGN_LEFT,$
+    UNAME = 'fits_tools_tab3_from_time')
+  min = WIDGET_LABEL(row3b,$
+    VALUE = '  to time (microS):',$
+    /ALIGN_LEFT)
+  value = WIDGET_LABEL(row3b,$
+    VALUE = STRCOMPRESS(max_time,/REMOVE_ALL),$
+    SCR_XSIZE = 60,$
+    /ALIGN_LEFT,$
+    UNAME = 'fits_tools_tab3_to_time')
+    
+  ;space
+  space = WIDGET_LABEL(main_base,$
+    VALUE = ' ')
     
   ;row4
   row4 = WIDGET_BASE(main_base,$
@@ -216,7 +261,7 @@ PRO plot_first_bin_for_tab3, base=base, global_plot=global_plot
     first_xarray = *xarray[index_nbr_files]
     first_yarray = *yarray[index_nbr_files]
     
-    where_timearray = WHERE(first_timearray LT bin_size)
+    where_timearray = WHERE(first_timearray LT bin_size*1000L)
     xarray_bin0 = first_xarray[where_timearray]
     yarray_bin0 = first_yarray[where_timearray]
     
@@ -245,8 +290,91 @@ PRO plot_first_bin_for_tab3, base=base, global_plot=global_plot
   
   congrid_current_bin_array = CONGRID(current_bin_array, $
     draw_xsize, draw_ysize)
-   
-  DEVICE, DECOMPOSED=0   
+    
+  DEVICE, DECOMPOSED=0
+  LOADCT, 5
+  TVSCL, congrid_current_bin_array
+  (*(*global_plot).current_bin_array) = current_bin_array
+  DEVICE, DECOMPOSED=1
+  
+END
+
+;------------------------------------------------------------------------------
+PRO update_step3_plot, Event
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global_plot
+  
+  no_data_found_in_range_selected = 1b
+  
+  id = WIDGET_INFO(Event.top, $
+    FIND_BY_UNAME='fits_tools_tab3_plot_draw_uname')
+  WIDGET_CONTROL, id, GET_VALUE = id_value
+  WSET, id_value
+  main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
+  draw_xsize = main_base_geometry.xsize
+  draw_ysize = main_base_geometry.ysize
+  
+  global     = (*global_plot).global
+  main_event = (*global_plot).main_event
+  
+  bin_size  = (*global_plot).bin_size
+  xarray    = (*(*global_plot).xarray)
+  yarray    = (*(*global_plot).yarray)
+  timearray = (*(*global_plot).timearray)
+  
+  xsize = (*global_plot).pixel_xsize
+  ysize = (*global_plot).pixel_ysize
+  
+  current_bin_array = LONARR(xsize,ysize)
+  
+  s_from_time_micros = getTextFieldValue(Event,'fits_tools_tab3_from_time')
+  s_to_time_microS   = getTextFieldValue(Event,'fits_tools_tab3_to_time')
+  
+  f_from_time_micros = FLOAT(s_from_time_micros[0])
+  f_to_time_micros   = FLOAT(s_to_time_micros[0])
+  
+  from_time_ns = LONG(f_from_time_micros * 1000L)
+  to_time_ns   = LONG(f_to_time_micros * 1000L)
+  
+  nbr_files_loaded = (*global_plot).nbr_files_loaded
+  index_nbr_files = 0
+  WHILE (index_nbr_files LT nbr_files_loaded) DO BEGIN
+  
+    first_timearray = *timearray[index_nbr_files]
+    first_xarray = *xarray[index_nbr_files]
+    first_yarray = *yarray[index_nbr_files]
+
+    where_timearray = WHERE(first_timearray GE from_time_ns AND $
+      first_timearray LT to_time_ns, sz)
+    
+    IF (sz NE 0) THEN BEGIN ;no data found
+    
+      no_data_found_in_range_selected = 0b
+      
+      xarray_bin0 = first_xarray[where_timearray]
+      yarray_bin0 = first_yarray[where_timearray]
+      
+      sz = N_ELEMENTS(xarray_bin0)
+      index = 0L
+      WHILE (index LT sz) DO BEGIN
+        x = xarray_bin0[index]
+        y = yarray_bin0[index]
+        ;make sure they are within the range specified in tab1
+        IF (x LT xsize AND y LT ysize) THEN BEGIN
+          current_bin_array[x,y]++
+        ENDIF
+        index++
+      ENDWHILE
+      
+    ENDIF ;if where_timearray is not empty
+    
+    index_nbr_files++
+  ENDWHILE
+  
+  congrid_current_bin_array = CONGRID(current_bin_array, $
+    draw_xsize, draw_ysize)
+  
+  DEVICE, DECOMPOSED=0
   LOADCT, 5
   TVSCL, congrid_current_bin_array
   (*(*global_plot).current_bin_array) = current_bin_array
@@ -274,11 +402,26 @@ PRO fits_tools_tab3_plot_base, main_base=main_base, $
   ENDELSE
   main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
   
+  bin_size = getTextFieldValue(Event, 'tab3_bin_size_value')
+  bin_size = bin_size[0]
+  max_time = bin_size
+  user_max_time = getTextFieldValue(event,'tab1_max_time')
+  user_max_time = FIX(user_max_time[0])
+  max_bin = (user_max_time * 1000L) / bin_size ;max time
+  ;*1000L to go from ms to microS
+  
+  xsize = FIX(getTextFieldValue(event,'tab1_x_pixels'))
+  ysize = FIX(getTextFieldValue(event,'tab1_y_pixels'))
+  
+  nbr_files_loaded = getFirstEmptyXarrayIndex(event=event)
+  
   ;build gui
   wBase3 = ''
   fits_tools_tab3_plot_base_gui, wBase=wBase3, $
     main_base_geometry=main_base_geometry, $
-    title=title
+    title=title, $
+    max_bin=max_bin, $
+    max_time=max_time
     
   (*global).tab3_base = wBase3
   
@@ -289,6 +432,12 @@ PRO fits_tools_tab3_plot_base, main_base=main_base, $
     
     current_bin_array: PTR_NEW(0L), $ ;current bin displayed
     
+    pixel_xsize: xsize, $
+    pixel_ysize: ysize, $
+    nbr_files_loaded: nbr_files_loaded,$
+    
+    bin_size: bin_size, $
+    max_bin: max_bin, $
     xtitle: xtitle, $
     ytitle: ytitle, $
     xarray: PTR_NEW(0L), $
