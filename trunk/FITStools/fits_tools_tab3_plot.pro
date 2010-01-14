@@ -406,7 +406,7 @@ PRO update_step3_plot, Event
     where_timearray = WHERE(first_timearray GE l_from_time_microS AND $
       first_timearray LT l_to_time_microS, sz)
       
-    IF (sz NE 0) THEN BEGIN ;no data found
+    IF (sz NE 0) THEN BEGIN ;array not empty
     
       no_data_found_in_range_selected = 0b
       
