@@ -98,7 +98,8 @@ PRO MAIN_BASE_event, Event
       title += short_file_name[0] + ')'
       p_array    = (*(*global).pPArray)
       time_array = (*(*global).pTimeArray)
-      xarray = *time_array[index] * (*global).time_resolution
+      ;each tick is 25ns wide (*0.001 to be in microS)
+      xarray = *time_array[index] * (*global).time_resolution*0.001
       yarray = *p_array[index]
       fits_tools_tab1_plot_base, Event=Event, $
         title=title, $
