@@ -156,6 +156,7 @@ PRO make_gui_tab1, MAIN_TAB, global
     UNAME = 'tab1_y_pixels')
   label = WIDGET_LABEL(det_base,$
     VALUE = space_value + '      Max Time ')
+  max_time = STRCOMPRESS((*global).default_max_time_microS * 0.001,/REMOVE_ALL)
   value = WIDGET_TEXT(det_base,$
     VALUE = '25',$
     XSIZE = 5,$

@@ -45,7 +45,7 @@ PRO make_gui_tab3, MAIN_TAB, global
     SCR_XSIZE = xsize, $
     SCR_YSIZE = ysize, $
     TITLE     = '  CREATE FITS IMAGE FILES  ')
-
+    
   BaseCol = WIDGET_BASE(wTab3Base,$
     SCR_XSIZE = xsize,$
     /COLUMN,$
@@ -59,13 +59,13 @@ PRO make_gui_tab3, MAIN_TAB, global
   row1 = WIDGET_BASE(BaseCol,$
     /ROW)
   label = WIDGET_LABEL(row1,$
-  VALUE = 'Bin Size:')
+    VALUE = 'Bin Size:')
   value = WIDGET_TEXT(row1,$
-  VALUE = '300',$
-  XSIZE = 7,$
-  /ALL_EVENTS,$
-  /EDITABLE,$
-  UNAME = 'tab3_bin_size_value')
+    VALUE = '300',$
+    XSIZE = 7,$
+    /ALL_EVENTS,$
+    /EDITABLE,$
+    UNAME = 'tab3_bin_size_value')
   units = WIDGET_LABEL(row1,$
     VALUE = 'microS      ')
   plot = WIDGET_BUTTON(row1,$
@@ -102,9 +102,32 @@ PRO make_gui_tab3, MAIN_TAB, global
     /EDITABLE,$
     SCR_XSIZE = 340,$
     UNAME = 'tab3_file_name')
-    ext = WIDGET_LABEL(rowb,$
+  ext = WIDGET_LABEL(rowb,$
     VALUE = '_###.fits',$
     /ALIGN_LEFT)
+    
+  ;from to time
+  rowc = WIDGET_BASE(row2,$
+    /ROW)
+  label = WIDGET_LABEL(rowc,$
+    VALUE = '     From time')
+  value = WIDGET_TEXT(rowc,$
+    VALUE = '0',$
+    XSIZE = 7,$
+    /EDITABLE,$
+    UNAME = 'tab3_from_time_microS')
+  label = WIDGET_LABEL(rowc,$
+    VALUE = 'microS')
+  label = WIDGET_LABEL(rowc,$
+    VALUE = '        to time')
+  max_time = STRCOMPRESS((*global).default_max_time_microS,/REMOVE_ALL)
+  value = WIDGET_TEXT(rowc,$
+    VALUE = max_time,$
+    XSIZE = 7,$
+    /EDITABLE,$
+    UNAME = 'tab3_to_time_microS')
+  label = WIDGET_LABEL(rowc,$
+    VALUE = 'microS')
     
   ;space
   space = WIDGET_LABEL(BaseCol,$
@@ -116,19 +139,19 @@ PRO make_gui_tab3, MAIN_TAB, global
   ;space = WIDGET_LABEL(row3,$
   ;VALUE = '')
   info = WIDGET_LABEL(row3,$
-  VALUE = 'Info:',$
-  /ALIGN_LEFT)
+    VALUE = 'Info:',$
+    /ALIGN_LEFT)
   info_value = WIDGET_LABEL(row3,$
-  VALUE = 'N/A files will be created.            ',$
-  /ALIGN_LEFT,$
-  SENSITIVE = 0,$
-  UNAME = 'tab3_info_message')
-  
+    VALUE = 'N/A files will be created.            ',$
+    /ALIGN_LEFT,$
+    SENSITIVE = 0,$
+    UNAME = 'tab3_info_message')
+    
   space = WIDGET_LABEL(row3,$
-  VALUE = '       ')
+    VALUE = '       ')
   create = WIDGET_BUTTON(row3,$
-  VALUE = 'CREATE FITS FILES',$
-  SENSITIVE = 0,$
-  UNAME = 'tab3_create_fits_files_button')
-
+    VALUE = 'CREATE FITS FILES',$
+    SENSITIVE = 0,$
+    UNAME = 'tab3_create_fits_files_button')
+    
 END
