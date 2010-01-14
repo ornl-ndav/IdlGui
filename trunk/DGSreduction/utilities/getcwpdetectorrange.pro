@@ -17,7 +17,7 @@ FUNCTION getCWPDetectorRange, instrument, ROWS=ROWS
   IF KEYWORD_SET(ROWS) THEN BEGIN
     rows_to_sum = ROWS
   ENDIF ELSE BEGIN
-    rows_to_sum = 50
+    rows_to_sum = 10
   ENDELSE
   
   lower_bank = 0
