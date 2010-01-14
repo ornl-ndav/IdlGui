@@ -106,8 +106,11 @@ PRO browse_fits_files, Event
     ;update big table
     update_tab1_big_table, Event
     
-    ;update name of P vs C output ascii file
+    ;update name of P vs C output ascii file (tab2)
     update_tab2_pvsc_ascii_file_name, Event
+    
+    ;update name of fits image files (tab3)
+    update_tab3_fits_file_name, Event
     
     ;check gui of tab2
     check_create_pvsc_button_status, Event
