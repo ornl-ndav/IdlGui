@@ -189,7 +189,7 @@ PRO MAIN_BASE_event, Event
     ;plot button of tab3
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab3_bin_size_plot'): BEGIN
       WIDGET_CONTROL, /HOURGLASS
-      title = 'Y vs X'
+      title = 'Intensity of Y vs X (Relative Scale)'
       fits_tools_tab3_plot_base, Event=Event, $
         title=title, $
         xtitle='X',$

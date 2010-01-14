@@ -290,11 +290,13 @@ PRO plot_first_bin_for_tab3, base=base, global_plot=global_plot
   main_event = (*global_plot).main_event
   
   bin_size = getTextFieldValue(main_event, 'tab3_bin_size_value')
-  bin_size = bin_size[0]
+  bin_size = bin_size[0] ;units is microS
   
   xarray = (*(*global_plot).xarray)
   yarray = (*(*global_plot).yarray)
   timearray = (*(*global_plot).timearray)
+  
+  time_resolution_microS = (*global).time_resolution_microS
   
   xsize = FIX(getTextFieldValue(main_event,'tab1_x_pixels'))
   ysize = FIX(getTextFieldValue(main_event,'tab1_y_pixels'))
@@ -303,13 +305,14 @@ PRO plot_first_bin_for_tab3, base=base, global_plot=global_plot
   
   nbr_files_loaded = getFirstEmptyXarrayIndex(event=main_event)
   index_nbr_files = 0
+  
   WHILE (index_nbr_files LT nbr_files_loaded) DO BEGIN
   
-    first_timearray = *timearray[index_nbr_files]
+    first_timearray = *timearray[index_nbr_files] * time_resolution_microS
     first_xarray = *xarray[index_nbr_files]
     first_yarray = *yarray[index_nbr_files]
     
-    where_timearray = WHERE(first_timearray LT bin_size*1000L)
+    where_timearray = WHERE(first_timearray LT bin_size)
     xarray_bin0 = first_xarray[where_timearray]
     yarray_bin0 = first_yarray[where_timearray]
     
@@ -384,22 +387,24 @@ PRO update_step3_plot, Event
   s_from_time_micros = getTextFieldValue(Event,'fits_tools_tab3_from_time')
   s_to_time_microS   = getTextFieldValue(Event,'fits_tools_tab3_to_time')
   
+  time_resolution_microS = (*global_plot).time_resolution_microS
+  
   f_from_time_micros = FLOAT(s_from_time_micros[0])
   f_to_time_micros   = FLOAT(s_to_time_micros[0])
   
-  from_time_ns = LONG(f_from_time_micros * 1000L)
-  to_time_ns   = LONG(f_to_time_micros * 1000L)
+  l_from_time_microS = LONG(f_from_time_microS)
+  l_to_time_microS   = LONG(f_to_time_microS)
   
   nbr_files_loaded = (*global_plot).nbr_files_loaded
   index_nbr_files = 0
   WHILE (index_nbr_files LT nbr_files_loaded) DO BEGIN
   
-    first_timearray = *timearray[index_nbr_files]
+    first_timearray = *timearray[index_nbr_files] * time_resolution_microS
     first_xarray = *xarray[index_nbr_files]
     first_yarray = *yarray[index_nbr_files]
     
-    where_timearray = WHERE(first_timearray GE from_time_ns AND $
-      first_timearray LT to_time_ns, sz)
+    where_timearray = WHERE(first_timearray GE l_from_time_microS AND $
+      first_timearray LT l_to_time_microS, sz)
       
     IF (sz NE 0) THEN BEGIN ;no data found
     
@@ -456,6 +461,7 @@ PRO fits_tools_tab3_plot_base, main_base=main_base, $
   ENDELSE
   main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
   
+  ;determine the max bin size to define the slider min and max values
   bin_size = getTextFieldValue(Event, 'tab3_bin_size_value')
   bin_size = bin_size[0]
   max_time = bin_size
@@ -463,6 +469,7 @@ PRO fits_tools_tab3_plot_base, main_base=main_base, $
   user_max_time = FIX(user_max_time[0])
   max_bin = (user_max_time * 1000L) / bin_size ;max time
   ;*1000L to go from ms to microS
+  time_resolution_microS = (*global).time_resolution_microS
   
   xsize = FIX(getTextFieldValue(event,'tab1_x_pixels'))
   ysize = FIX(getTextFieldValue(event,'tab1_y_pixels'))
@@ -489,6 +496,8 @@ PRO fits_tools_tab3_plot_base, main_base=main_base, $
     detector_xsize: xsize, $
     detector_ysize: ysize, $
     nbr_files_loaded: nbr_files_loaded,$
+    
+    time_resolution_microS: time_resolution_microS, $
     
     bin_size_selected: 0L, $
     bin_size: bin_size, $
