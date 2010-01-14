@@ -42,3 +42,33 @@ PRO check_tab3_plot_button_status, Event
   status = is_tab3_plot_button_enabled(Event)
   activate_widget, Event, 'tab3_bin_size_plot', status
 END
+
+;------------------------------------------------------------------------------
+PRO update_tab3_fits_file_name, Event
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  list_fits_file = (*(*global).list_fits_file)
+  
+  ;get number of fits files loaded
+  nbr_files_loaded = getFirstEmptyXarrayIndex(event=event)
+  
+  ;retrieve first part of fits file name (bases on first fits file loaded)
+  ;name should be 121609_1 -> 121609
+  first_fits_file = list_fits_file[0]
+  base_name = FILE_BASENAME(first_fits_file[0])
+  name_array = STRSPLIT(base_name,'_',/EXTRACT)
+  base_name = name_array[0]
+  
+  ;create default P vs C file name
+  output_file_name = base_name + '_' + STRCOMPRESS(nbr_files_loaded,/REMOVE_ALL)
+  IF (nbr_files_loaded EQ 1) THEN BEGIN
+    file_prefix = 'file'
+  ENDIF ELSE BEGIN
+    file_prefix = 'files'
+  ENDELSE
+  output_file_name += file_prefix
+  
+  putValue, Event, 'tab3_file_name', output_file_name
+  
+END
