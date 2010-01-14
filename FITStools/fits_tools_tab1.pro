@@ -118,18 +118,18 @@ PRO tab1_right_click_data_preview, Event
   tarray  = *time_array[index]
   
   max_time = MAX(tarray,MIN=min_time)
-  max_time *= (*global).time_resolution
-  min_time *= (*global).time_resolution
+  max_time *= (*global).time_resolution_microS
+  min_time *= (*global).time_resolution_microS
   info_array1 = 'Min time recorded: ' + STRCOMPRESS(min_time,/REMOVE_ALL)
-  info_array1 += ' ns'
+  info_array1 += ' microS'
   info_array2 = 'Max time recorded: ' + STRCOMPRESS(max_time,/REMOVE_ALL)
-  info_array2 += ' ns ('
-  info_array2 += STRCOMPRESS(float(max_time)/1000.,/REMOVE_ALL) + ' microS)'
+  info_array2 += ' microS ('
+  info_array2 += STRCOMPRESS(float(max_time)/1000.,/REMOVE_ALL) + ' mS)'
   info_array3 = '----------------------------------------'
   info_array = [info_array1, info_array2, info_array3]
   
   data_array = STRARR(102L)
-  data_array[0] = 'X  Y  P  time(microS)'
+  data_array[0] = 'X  Y  P  time(*25ns)'
   FOR i=1,101L DO BEGIN
     x = STRCOMPRESS(xarray[i-1],/REMOVE_ALL)
     y = STRCOMPRESS(yarray[i-1],/REMOVE_ALL)
