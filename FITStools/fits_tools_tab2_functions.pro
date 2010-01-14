@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 
-FUNCTION is_create_PvsC_button_enabled, Event
+FUNCTION is_create_PvsC_button_enabled, Event, uname=uname
 
   ON_IOERROR, error
   
@@ -60,6 +60,10 @@ FUNCTION is_create_PvsC_button_enabled, Event
     DIALOG_PARENT=id,$
     /ERROR)
     
+  IF (N_ELEMENTS(uname) NE 0) THEN BEGIN
+    putValue, Event, uname, ''
+  ENDIF
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -114,5 +118,5 @@ FUNCTION create_p_vs_c_ascii_array, Event
   full_ascii_array = [commented_lines,data_array]
   
   RETURN, full_ascii_array
-    
+  
 END

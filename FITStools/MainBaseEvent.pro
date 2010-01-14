@@ -130,7 +130,7 @@ PRO MAIN_BASE_event, Event
     ;bin size input text
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_bin_size_value'): BEGIN
       (*global).need_to_recalculate_rebinned_step2 = 1b
-      check_create_pvsc_button_status, Event
+      check_create_pvsc_button_status, Event, uname='tab2_bin_size_value'
       check_tab2_plot_button_status, Event
     END
     
@@ -182,7 +182,7 @@ PRO MAIN_BASE_event, Event
     ;bin size input text
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab3_bin_size_value'): BEGIN
       (*global).need_to_recalculate_rebinned_step2 = 1b
-      check_create_fits_button_status, Event
+      check_create_fits_button_status, Event, uname='tab3_bin_size_value'
       check_tab3_plot_button_status, Event
     END
     
@@ -212,10 +212,10 @@ PRO MAIN_BASE_event, Event
     
     ;from and to time
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab3_from_time_microS'): BEGIN
-      check_create_fits_button_status, Event
+      check_create_fits_button_status, Event, uname='tab3_from_time_microS'
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab3_to_time_microS'): BEGIN
-      check_create_fits_button_status, Event
+      check_create_fits_button_status, Event, uname='tab3_to_time_microS'
     END
     
     ELSE:
