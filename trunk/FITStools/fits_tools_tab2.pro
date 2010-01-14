@@ -187,8 +187,8 @@ PRO update_tab2_pvsc_ascii_file_name, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO check_create_pvsc_button_status, Event
-  status = is_create_PvsC_button_enabled(Event)
+PRO check_create_pvsc_button_status, Event, uname=uname
+  status = is_create_PvsC_button_enabled(Event,uname=uname)
   activate_widget, Event, 'tab2_create_ascii_file_button', status
 END
 

@@ -32,8 +32,8 @@
 ;
 ;==============================================================================
 
-PRO check_create_fits_button_status, Event
-  status = is_create_fits_button_enabled(Event)
+PRO check_create_fits_button_status, Event, uname=uname
+  status = is_create_fits_button_enabled(Event,uname=uname)
   activate_widget, Event, 'tab3_create_fits_files_button', status
 END
 
