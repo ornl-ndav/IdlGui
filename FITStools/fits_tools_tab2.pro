@@ -89,6 +89,8 @@ PRO create_p_vs_c_combined_rebinned, Event
   bin_size = LONG(getTextFieldValue(Event, 'tab2_bin_size_value'))
   bin_size = bin_size[0] ;microS
   
+  time_resolution_microS = (*global).time_resolution_microS
+  
   nbr_files_loaded = getFirstEmptyXarrayIndex(event=event)
   
 ;  p_array = (*(*global).pPArray)
@@ -115,7 +117,7 @@ PRO create_p_vs_c_combined_rebinned, Event
     sz = N_ELEMENTS(time_array)
     local_index = 0L
     WHILE (local_index LT sz) DO BEGIN
-      time = time_array[local_index]*0.025 ;time is in microS
+      time = time_array[local_index]*time_resolution_microS
       p_rebinned_array[time / bin_size] += 1
             ++local_index
     ENDWHILE

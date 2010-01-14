@@ -99,7 +99,7 @@ PRO MAIN_BASE_event, Event
       p_array    = (*(*global).pPArray)
       time_array = (*(*global).pTimeArray)
       ;each tick is 25ns wide (*0.001 to be in microS)
-      xarray = *time_array[index] * (*global).time_resolution*0.001
+      xarray = *time_array[index] * (*global).time_resolution_microS
       yarray = *p_array[index]
       fits_tools_tab1_plot_base, Event=Event, $
         title=title, $
@@ -146,7 +146,7 @@ PRO MAIN_BASE_event, Event
         title=title, $
         xtitle='Time (microS)',$
         ytitle='Counts',$
-        xarray=(*(*global).p_rebinned_x_array)*(*global).time_resolution, $
+        xarray=(*(*global).p_rebinned_x_array), $
         yarray=(*(*global).p_rebinned_y_array)
       WIDGET_CONTROL, HOURGLASS=0
     END

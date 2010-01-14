@@ -86,7 +86,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     pPArray: PTR_NEW(0L), $     ;p in the original file
     pTimeArray: PTR_NEW(0L), $  ;c array in the original file
     
-    time_resolution: 25., $ ;25ns for each tick marks in pTimeArray
+    time_resolution_microS: 25.*0.001, $ ;25ns for each tick marks in pTimeArray
     
     p_rebinned_y_array: PTR_NEW(0L), $ ;PvsC rebinned and combined of step2
     p_rebinned_x_array: PTR_NEW(0L), $ ;x axis of PvsC
