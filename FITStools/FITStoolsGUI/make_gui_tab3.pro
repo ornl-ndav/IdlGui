@@ -115,6 +115,7 @@ PRO make_gui_tab3, MAIN_TAB, global
     VALUE = '0',$
     XSIZE = 7,$
     /EDITABLE,$
+    /ALL_EVENTS,$
     UNAME = 'tab3_from_time_microS')
   label = WIDGET_LABEL(rowc,$
     VALUE = 'microS')
@@ -125,6 +126,7 @@ PRO make_gui_tab3, MAIN_TAB, global
     VALUE = max_time,$
     XSIZE = 7,$
     /EDITABLE,$
+    /ALL_EVENTS,$
     UNAME = 'tab3_to_time_microS')
   label = WIDGET_LABEL(rowc,$
     VALUE = 'microS')

@@ -210,6 +210,14 @@ PRO MAIN_BASE_event, Event
       check_create_fits_button_status, Event
     END
     
+    ;from and to time
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab3_from_time_microS'): BEGIN
+      check_create_fits_button_status, Event
+    END
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab3_to_time_microS'): BEGIN
+      check_create_fits_button_status, Event
+    END
+    
     ELSE:
     
   ENDCASE
