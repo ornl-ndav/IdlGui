@@ -218,6 +218,13 @@ PRO MAIN_BASE_event, Event
       check_create_fits_button_status, Event, uname='tab3_to_time_microS'
     END
     
+    ;Create FITS files
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab3_create_fits_files_button'): BEGIN
+      WIDGET_CONTROL, /HOURGLASS
+      create_fits_files_tab3, Event
+      WIDGET_CONTROL, HOURGLASS=0
+    END
+    
     ELSE:
     
   ENDCASE
