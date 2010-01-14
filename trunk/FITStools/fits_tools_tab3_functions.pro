@@ -32,6 +32,27 @@
 ;
 ;==============================================================================
 
+FUNCTION increase_count, c, d, u
+
+  u++
+  IF (u EQ 10) THEN BEGIN
+    u = 0
+    d++
+  ENDIF
+  
+  IF (d EQ 10) THEN BEGIN
+    d = 0
+    c++
+  ENDIF
+  
+  string_u = STRCOMPRESS(u,/REMOVE_ALL)
+  string_d = STRCOMPRESS(d,/REMOVE_ALL)
+  string_c = STRCOMPRESS(c,/REMOVE_ALL)
+  
+  RETURN, string_c+string_d+string_u
+END
+
+;------------------------------------------------------------------------------
 FUNCTION getStep3Counts, Event, x, y
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global_plot

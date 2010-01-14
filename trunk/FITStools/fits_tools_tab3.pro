@@ -43,7 +43,7 @@ PRO create_fits_files_tab3, Event
   from_time_microS = FLOAT(getTextFieldValue(Event,'tab3_from_time_microS'))
   to_time_microS   = FLOAT(getTextFieldValue(Event,'tab3_to_time_microS'))
   bin_size_microS = FLOAT(getTextFieldValue(Event,'tab3_bin_size_value'))
-
+  
   ;array -> number
   from_time_microS = from_time_microS[0]
   to_time_microS   = to_time_microS[0]
@@ -64,6 +64,11 @@ PRO create_fits_files_tab3, Event
   local_f_to_time_microS   = from_time_microS + bin_size_microS
   current_bin_array = LONARR(xsize,ysize) ;reset the array
   
+  c=0
+  d=0
+  u=1
+  cdu = '000'
+  
   WHILE (local_f_from_time_microS LT to_time_microS) DO BEGIN
   
     index_nbr_files = 0
@@ -75,8 +80,7 @@ PRO create_fits_files_tab3, Event
       
       where_timearray = WHERE(local_timearray GE local_f_from_time_microS AND $
         local_timearray LT local_f_to_time_microS, sz)
-      help, where_timearray
-      
+        
       IF (sz NE 0) THEN BEGIN ;not empty array found
       
         xarray_bin = local_xarray[where_timearray]
@@ -100,9 +104,13 @@ PRO create_fits_files_tab3, Event
     ENDWHILE
     
     ;create the file here
+    full_file_name = where + file_name + '_' + cdu + '.' + ext
+    print, full_file_name
+    fits_write, full_file_name, current_bin_array
     
     local_f_from_time_microS = local_f_to_time_microS
     local_f_to_time_microS   = local_f_from_time_microS + bin_size_microS
+    cdu = increase_count(c, d, u)
     
   ENDWHILE
   
