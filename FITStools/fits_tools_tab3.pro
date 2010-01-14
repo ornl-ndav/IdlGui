@@ -69,6 +69,22 @@ PRO create_fits_files_tab3, Event
   u=1
   cdu = '000'
   
+  ;evaluate how many files we are going to create
+  full_nbr_files = GetHowManyFileWillBeCreated(local_f_from_time_microS,$
+    local_f_to_time_microS, $
+    to_time_microS, $
+    bin_size_microS)
+    
+  progressBar = Obj_New("SHOWPROGRESS", Steps=full_nbr_files)
+  DEVICE, DECOMPOSED=1
+  color = 50
+  progressBar->SetColor, color
+  progressBar->Start
+  color_step = FIX(200./FLOAT(full_nbr_files))
+    
+  local_f_from_time_microS = from_time_microS
+  local_f_to_time_microS   = from_time_microS + bin_size_microS
+  progress_bar_index = 0
   WHILE (local_f_from_time_microS LT to_time_microS) DO BEGIN
   
     index_nbr_files = 0
@@ -103,16 +119,28 @@ PRO create_fits_files_tab3, Event
       index_nbr_files++
     ENDWHILE
     
+    print, string((FLOAT(progress_bar_index)/FLOAT(full_nbr_files))*100.)
+    color += color_step
+    progressBar->setColor, color   
+    progressBar->Update, ((FLOAT(progress_bar_index)/FLOAT(full_nbr_files))*100.)
+    
     ;create the file here
     full_file_name = where + file_name + '_' + cdu + '.' + ext
-    print, full_file_name
-    fits_write, full_file_name, current_bin_array
+    ;fits_write, full_file_name, current_bin_array
+    ;wait, 0.1
     
     local_f_from_time_microS = local_f_to_time_microS
     local_f_to_time_microS   = local_f_from_time_microS + bin_size_microS
     cdu = increase_count(c, d, u)
+    progress_bar_index++
     
   ENDWHILE
+  
+  progressBar->Destroy
+  Obj_Destroy, progressBar
+  
+DEVICE, DECOMPOSED=0
+  
   
 END
 

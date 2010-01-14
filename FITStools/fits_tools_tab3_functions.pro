@@ -32,6 +32,24 @@
 ;
 ;==============================================================================
 
+FUNCTION GetHowManyFileWillBeCreated, index_from_time, $
+    index_to_time, $
+    to_time_microS, $
+    bin_size_microS
+    
+  nbr_file = 0
+  WHILE (index_from_time LT to_time_microS) DO BEGIN
+  
+    nbr_file++
+    index_from_time = index_to_time
+    index_to_time   = index_from_time + bin_size_microS
+    
+  ENDWHILE
+  
+  RETURN, nbr_file
+END
+
+;------------------------------------------------------------------------------
 FUNCTION increase_count, c, d, u
 
   u++
