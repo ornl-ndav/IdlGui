@@ -169,9 +169,9 @@ PRO DGSreduction_Execute, event
       
       FOR j = 0L, N_ELEMENTS(dataruns)-1 DO BEGIN
         ; Need to calculate the offsets for each data file.
-      
+            
         ; Data Runs
-        cwp = get_cwpfactor(instrument, dataruns[j])
+        cwp = get_cwpfactor(instrument, dataruns[j], ENERGY=Ei)
         
         PRINTF, unit, dataruns[j], cwp
         
@@ -198,7 +198,7 @@ PRO DGSreduction_Execute, event
         spawn, 'echo # EMPTY CAN RUNS >> ' + logDir + '/wandering_factors'
         FOR j = 0L, N_ELEMENTS(ecanruns)-1 DO BEGIN
           ; Need to calculate the offsets for each empty can file.
-          cwp = get_cwpfactor(instrument, ecanruns[j])
+          cwp = get_cwpfactor(instrument, ecanruns[j], ENERGY=Ei)
           
           ; Write values to the log file
           PRINTF, unit, ecanruns[j], cwp
@@ -225,7 +225,7 @@ PRO DGSreduction_Execute, event
         spawn, 'echo # BLACK CAN RUNS >> ' + logDir + '/wandering_factors'
         FOR j = 0L, N_ELEMENTS(bcanruns)-1 DO BEGIN
           ; Need to calculate the offsets for each empty can file.
-          cwp = get_cwpfactor(instrument, bcanruns[j])
+          cwp = get_cwpfactor(instrument, bcanruns[j], ENERGY=Ei)
           
           ; Write values to the log file
           PRINTF, unit, bcanruns[j], cwp
