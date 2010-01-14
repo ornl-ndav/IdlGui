@@ -109,6 +109,19 @@ FUNCTION is_create_fits_button_enabled, Event
   nbr_files_loaded = getFirstEmptyXarrayIndex(event=event)
   IF (nbr_files_loaded EQ 0) THEN RETURN, 0
   
+  ;make sure the from and to time are not empty and values that make sense
+  from_time = STRCOMPRESS(getTextFieldValue(Event,$
+  'tab3_from_time_microS'),/REMOVE_ALL)
+  IF (from_time EQ '') THEN RETURN, 0
+  f_from_time = FLOAT(from_time)
+  
+  to_time   = STRCOMPRESS(getTextFieldValue(Event,$
+  'tab3_to_time_microS'),/REMOVE_ALL)
+  IF (to_time EQ '') THEN RETURN, 0 
+  f_to_time = FLOAT(to_time)
+  
+  IF (f_from_time GE f_to_time) THEN RETURN, 0
+  
   RETURN, 1
   
   error:
