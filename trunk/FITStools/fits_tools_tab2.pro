@@ -76,7 +76,8 @@ PRO tab2_preview_button, Event
   
   XDISPLAYFILE, '', TEXT=string_array,$
     TITLE = title, $
-    GROUP = id
+    GROUP = id, $
+    GLOBAL = global
     
 END
 
