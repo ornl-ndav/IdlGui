@@ -120,23 +120,32 @@ PRO tab1_right_click_data_preview, Event
   max_time = MAX(tarray,MIN=min_time)
   max_time *= (*global).time_resolution_microS
   min_time *= (*global).time_resolution_microS
-  info_array1 = 'Min time recorded: ' + STRCOMPRESS(min_time,/REMOVE_ALL)
+  info_array1 = '#Min time recorded: ' + STRCOMPRESS(min_time,/REMOVE_ALL)
   info_array1 += ' microS'
-  info_array2 = 'Max time recorded: ' + STRCOMPRESS(max_time,/REMOVE_ALL)
+  info_array2 = '#Max time recorded: ' + STRCOMPRESS(max_time,/REMOVE_ALL)
   info_array2 += ' microS ('
   info_array2 += STRCOMPRESS(float(max_time)/1000.,/REMOVE_ALL) + ' mS)'
-  info_array3 = '----------------------------------------'
+  info_array3 = ''
   info_array = [info_array1, info_array2, info_array3]
   
-  data_array = STRARR(102L)
-  data_array[0] = 'X  Y  P  time(*25ns)'
-  FOR i=1,101L DO BEGIN
-    x = STRCOMPRESS(xarray[i-1],/REMOVE_ALL)
-    y = STRCOMPRESS(yarray[i-1],/REMOVE_ALL)
-    p = STRCOMPRESS(parray[i-1],/REMOVE_ALL)
-    t = STRCOMPRESS(tarray[i-1],/REMOVE_ALL)
-    data_array[i] = x + ' ' + y + ' ' + p + ' ' + t
-  ENDFOR
+  error = 0
+  CATCH, error
+  IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    data_array = data_array[0:i-1]
+  ENDIF ELSE BEGIN
+  
+    data_array = STRARR(5002L)
+    data_array[0] = '#X  Y  P  time(*25ns)'
+    FOR i=1,5001L DO BEGIN
+      x = STRCOMPRESS(xarray[i-1],/REMOVE_ALL)
+      y = STRCOMPRESS(yarray[i-1],/REMOVE_ALL)
+      p = STRCOMPRESS(parray[i-1],/REMOVE_ALL)
+      t = STRCOMPRESS(tarray[i-1],/REMOVE_ALL)
+      data_array[i] = x + ' ' + y + ' ' + p + ' ' + t
+    ENDFOR
+    
+  ENDELSE
   
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
   list_fits_file = (*(*global).list_fits_file)
@@ -144,9 +153,10 @@ PRO tab1_right_click_data_preview, Event
   index = tab1_selection[0]
   file_name = list_fits_file[index]
   short_file_name = FILE_BASENAME(file_name)
-  title = 'X, Y, P and C for first 100 lines of file -> ' + short_file_name
+  title = 'X, Y, P and C for first 5000 events of file -> ' + short_file_name
   
   XDISPLAYFILE, '', TEXT=[info_array,data_array],$
+    /EDITABLE, $
     TITLE = title, $
     GROUP = id
     
