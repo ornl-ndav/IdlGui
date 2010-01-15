@@ -110,8 +110,6 @@ PRO create_p_vs_c_combined_rebinned, Event
   new_sz = LONG(new_array_size)
   p_rebinned_array = LONARR(new_sz+1)
   
-  help, p_rebinned_array
-  
   big_index = 0
   WHILE (big_index LT nbr_files_loaded) DO BEGIN
   
