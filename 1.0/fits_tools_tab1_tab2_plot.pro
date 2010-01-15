@@ -307,18 +307,21 @@ PRO fits_tools_tab1_plot_base, main_base=main_base, $
     xarray: PTR_NEW(0L), $
     yarray: PTR_NEW(0L), $
     main_event: Event})
-    
-  (*(*global_plot).xarray) = xarray
-  (*(*global_plot).yarray) = yarray
-  
+
+  sort_xarray = SORT(xarray)
+  new_xarray = xarray[sort_xarray]
+  new_yarray = yarray[sort_xarray]
+  (*(*global_plot).xarray) = new_xarray
+  (*(*global_plot).yarray) = new_yarray
+
   WIDGET_CONTROL, wBase1, SET_UVALUE = global_plot
   
   XMANAGER, "fits_tools_tab1_plot_base", wBase1, $
     GROUP_LEADER = ourGroup, /NO_BLOCK
     
   WIDGET_CONTROL, /HOURGLASS
-  PLOT, xarray, $
-    yarray, $
+  PLOT, new_xarray, $
+    new_yarray, $
     psym=1, $
     CHARSIZE=1.2, $
     XSTYLE=1, $

@@ -79,12 +79,15 @@ PRO MAIN_BASE_event, Event
       y_array = (*(*global).pYArray)
       xarray  = *x_array[index]
       yarray  = *y_array[index]
+     ; t0 = systime(/SECONDS)
       fits_tools_tab1_plot_base, Event=Event, $
         title=title, $
         xtitle='X',$
         ytitle='Y',$
         xarray=xarray, $
         yarray=yarray
+      ;t1 = SYSTIME(/SECONDS)
+      ;print, 't1-t0: ' + string(t1-t0)
     END
     
     ;plot button P vs C (right click)
@@ -101,12 +104,15 @@ PRO MAIN_BASE_event, Event
       ;each tick is 25ns wide (*0.001 to be in microS)
       xarray = *time_array[index] * (*global).time_resolution_microS
       yarray = *p_array[index]
+      ;t0 = systime(/SECONDS)
       fits_tools_tab1_plot_base, Event=Event, $
         title=title, $
         xtitle='Time (microS)',$
         ytitle='P',$
         xarray=xarray, $
         yarray=yarray
+      ;t1 = SYSTIME(/SECONDS)
+      ;print, 't1-t0: ' + string(t1-t0)
     END
     
     ;preview [X,Y,P,C] of first 100 data
@@ -143,8 +149,8 @@ PRO MAIN_BASE_event, Event
         CATCH,/CANCEL
         id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
         message = ['I(t) of combined files failed!',$
-        '',$
-        'Please verify the max time you defined in step1!']
+          '',$
+          'Please verify the max time you defined in step1!']
         result = dialog_message(message,$
           /ERROR,$
           /CENTER, $
