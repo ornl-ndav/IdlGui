@@ -137,17 +137,32 @@ PRO MAIN_BASE_event, Event
     ;plot button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_bin_size_plot'): BEGIN
       WIDGET_CONTROL, /HOURGLASS
-      IF ((*global).need_to_recalculate_rebinned_step2) THEN BEGIN
-        create_p_vs_c_combined_rebinned, Event
-        (*global).need_to_recalculate_rebinned_step2 = 0b
-      ENDIF
-      title = 'Counts vs Time'
-      fits_tools_tab1_plot_base, Event=Event, $
-        title=title, $
-        xtitle='Time (microS)',$
-        ytitle='Counts',$
-        xarray=(*(*global).p_rebinned_x_array), $
-        yarray=(*(*global).p_rebinned_y_array)
+      error = 0
+      CATCH, error
+      IF (error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+        message = ['I(t) of combined files failed!',$
+        '',$
+        'Please verify the max time you defined in step1!']
+        result = dialog_message(message,$
+          /ERROR,$
+          /CENTER, $
+          DIALOG_PARENT=id,$
+          TITLE = 'Error plotting I vs Time')
+      ENDIF ELSE BEGIN
+        IF ((*global).need_to_recalculate_rebinned_step2) THEN BEGIN
+          create_p_vs_c_combined_rebinned, Event
+          (*global).need_to_recalculate_rebinned_step2 = 0b
+        ENDIF
+        title = 'Counts vs Time'
+        fits_tools_tab1_plot_base, Event=Event, $
+          title=title, $
+          xtitle='Time (microS)',$
+          ytitle='Counts',$
+          xarray=(*(*global).p_rebinned_x_array), $
+          yarray=(*(*global).p_rebinned_y_array)
+      ENDELSE
       WIDGET_CONTROL, HOURGLASS=0
     END
     
