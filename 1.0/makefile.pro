@@ -1,4 +1,4 @@
-@idl_makefile
+@idl_makefile_application
 
 resolve_routine, "CW_BGROUP", /either
 resolve_routine, "XMANAGER", /either
