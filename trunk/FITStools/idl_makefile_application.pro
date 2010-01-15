@@ -11,6 +11,7 @@ cd, IdlUtilitiesPath
 .run fsc_color.pro
 .run colorbar.pro
 .run showprogress__define.pro
+.run xdisplayfile.pro
 
 ;routines used to read and write FITS files
 cd, CurrentFolder + '/reader_writer_routines'

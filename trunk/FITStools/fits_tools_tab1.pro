@@ -68,8 +68,6 @@ PRO remove_selected_tab1_fits_files, Event
   time_array = (*(*global).pTimeArray)
   (*(*global).list_fits_file) = new_list_fits_file
   
-  help, *x_array[0]
-  
   max_nbr_fits_files = (*global).max_nbr_fits_files
   new_x_array    = PTRARR(max_nbr_fits_files,/ALLOCATE_HEAP)
   new_y_array    = PTRARR(max_nbr_fits_files,/ALLOCATE_HEAP)
@@ -123,10 +121,6 @@ PRO tab1_right_click_data_preview, Event
   p_array = (*(*global).pPArray)
   time_array = (*(*global).pTimeArray)
   
-  help, x_array
-  help, index
-  help, *x_array[index]
-  
   xarray  = *x_array[index]
   yarray  = *y_array[index]
   parray  = *p_array[index]
@@ -173,6 +167,8 @@ PRO tab1_right_click_data_preview, Event
   XDISPLAYFILE, '', TEXT=[info_array,data_array],$
     /EDITABLE, $
     TITLE = title, $
-    GROUP = id
+    GROUP = id, $
+    PATH=(*global).output_path, $
+    GLOBAL=global
     
 END
