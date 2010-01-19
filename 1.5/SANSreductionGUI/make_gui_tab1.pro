@@ -496,8 +496,13 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       /EDITABLE,$
       /ALIGN_LEFT,$
       UNAME = 'circle_tube_center')
-;    space = WIDGET_LABEL(circle_base,$
-;      VALUE =  ' ')
+    minus = WIDGET_BUTTON(row1,$
+      VALUE = '-',$
+      UNAME='circle_tube_center_minus')
+    plus = WIDGET_BUTTON(row1,$
+      VALUE='+',$
+      UNAME = 'circle_tube_center_plus')
+      
     row2 = WIDGET_BASE(circle_base,$
       /ROW)
     label = WIDGET_LABEL(row2,$
@@ -510,8 +515,13 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       /ALIGN_LEFT,$
       /EDITABLE,$
       UNAME = 'circle_pixel_center')
-;    space = WIDGET_LABEL(circle_base,$
-;      VALUE =  ' ')
+    minus = WIDGET_BUTTON(row2,$
+      VALUE = '-',$
+      UNAME='circle_pixel_center_minus')
+    plus = WIDGET_BUTTON(row2,$
+      VALUE='+',$
+      UNAME = 'circle_pixel_center_plus')
+
     row3 = WIDGET_BASE(circle_base,$
       /ROW)
     label = WIDGET_LABEL(row3,$
@@ -523,11 +533,17 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       UNAME = 'circle_radius_value')
     units = WIDGET_LABEL(row3,$
       VALUE = 'mm')
+    minus = WIDGET_BUTTON(row3,$
+      VALUE = '-',$
+      UNAME='circle_radius_center_minus')
+    plus = WIDGET_BUTTON(row3,$
+      VALUE='+',$
+      UNAME = 'circle_radius_center_plus')
       
-      help = WIDGET_LABEL(circle_base,$
+    help = WIDGET_LABEL(circle_base,$
       /ALIGN_LEFT, $
       VALUE = 'HELP:  1. click on the plot to select center')
-      help = WIDGET_LABEL(circle_base,$
+    help = WIDGET_LABEL(circle_base,$
       /ALIGN_LEFT, $
       VALUE = '       2. Enter radius value and hit ENTER')
       
