@@ -98,7 +98,10 @@ PRO MAIN_BASE_event, Event
     
     ;help button of circle exclusion base
     WIDGET_INFO(wWidget, FIND_BY_UNAME='circle_exclusion_help'): BEGIN
+      id = (*global).circle_exclusion_help_base
+      IF (WIDGET_INFO(id, /VALID_ID) EQ 0) THEN BEGIN
       sans_reduction_circle_exclusion_help, Event=Event
+      ENDIF
     END
     
     ;circle and rectangle selection types
