@@ -32,6 +32,19 @@
 ;
 ;==============================================================================
 
+;This procedure replot the main plot before addign the circle selection
+PRO refresh_main_plot_for_circle_selection, Event
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'draw_uname')
+  WIDGET_CONTROL, id, GET_VALUE = id_value
+  WSET, id_value
+  TV, (*(*global).background), true=3
+  
+END
+
+;-------------------------------------------------------------------------------
 ;type: tube, pixel, radius
 ;direction: plus, minus
 PRO change_circle_value, Event, type=type, direction=direction
@@ -83,7 +96,7 @@ PRO change_circle_value, Event, type=type, direction=direction
   putTextFieldValue, Event, uname, STRCOMPRESS(value,/REMOVE_ALL)
   RETURN
   
- error:
+  error:
   
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
   message_text = [type + ' value (' + STRCOMPRESS(value,/REMOVE_ALL) + $
