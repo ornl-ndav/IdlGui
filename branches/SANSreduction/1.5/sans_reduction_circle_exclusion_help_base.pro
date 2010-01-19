@@ -64,31 +64,31 @@ PRO sans_reduction_circle_exclusion_help, Event=Event
   yoffset = main_base_yoffset + 160
   
   ourGroup = WIDGET_BASE()
-
+  
   title = 'How does it work ?'
   wBase = WIDGET_BASE(TITLE = title,$
     ;    UNAME        = 'fits_tools_tab1_plot_base_uname', $
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
-    SCR_YSIZE    = 300,$
-    SCR_XSIZE    = 300,$
+    SCR_YSIZE    = 229,$
+    SCR_XSIZE    = 397,$
     MAP          = 1,$
     ;    /BASE_ALIGN_CENTER,$
     ;    /TLB_MOVE_EVENTS, $
     ;    /TLB_SIZE_EVENTS, $
     GROUP_LEADER = ourGroup)
-
-  (*global).circle_exclusion_help_base = wBase
     
+  (*global).circle_exclusion_help_base = wBase
+  
   main_base = WIDGET_BASE(wBase,$
     /COLUMN)
     
   draw = WIDGET_DRAW(main_base,$
-    SCR_XSIZE = 300-6,$
-    SCR_YSIZE = 300-6,$
+    SCR_XSIZE = 397,$
+    SCR_YSIZE = 229,$
     ;    /BUTTON_EVENTS,$
     ;    /MOTION_EVENTS,$
-    UNAME = 'fits_tools_tab1_plot_draw_uname')
+    UNAME = 'circular_selection_help_draw')
     
   WIDGET_CONTROL, wBase, /REALIZE
   
@@ -101,4 +101,11 @@ PRO sans_reduction_circle_exclusion_help, Event=Event
   XMANAGER, "sans_reduction_circle_exclusion_help", wBase, $
     GROUP_LEADER = ourGroup, /NO_BLOCK
     
+  help_image = READ_PNG('SANSreduction_images/circular_selection_help.png')
+  uname = 'circular_selection_help_draw'
+  mode_id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, help_image, 0, 0,/true
+  
 END
