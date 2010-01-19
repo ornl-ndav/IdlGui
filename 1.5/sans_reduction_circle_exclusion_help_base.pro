@@ -65,7 +65,7 @@ PRO sans_reduction_circle_exclusion_help, Event=Event
   
   ourGroup = WIDGET_BASE()
 
-title = 'How does it work ?'
+  title = 'How does it work ?'
   wBase = WIDGET_BASE(TITLE = title,$
     ;    UNAME        = 'fits_tools_tab1_plot_base_uname', $
     XOFFSET      = xoffset,$
@@ -77,6 +77,8 @@ title = 'How does it work ?'
     ;    /TLB_MOVE_EVENTS, $
     ;    /TLB_SIZE_EVENTS, $
     GROUP_LEADER = ourGroup)
+
+  (*global).circle_exclusion_help_base = wBase
     
   main_base = WIDGET_BASE(wBase,$
     /COLUMN)

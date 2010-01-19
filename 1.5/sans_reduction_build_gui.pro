@@ -152,6 +152,8 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     build_command_line: 1,$
     testing_on_mac: testing_on_mac, $
     
+    circle_exclusion_help_base: 0L, $ ;id of circle exclusion help base
+    
     run_number: '',$
     jk_selection_x0y0x1y1: PTR_NEW(0L), $
     
