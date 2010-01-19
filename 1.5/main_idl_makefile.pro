@@ -84,6 +84,7 @@ cd, CurrentFolder
 .run sans_reduction_display_selection_box.pro
 .run sans_reduction_display_images.pro
 .run sans_reduction_circle_exclusion.pro
+.run sans_reduction_circle_exclusion_help_base.pro
 
 ;min and max counts of main tab
 .run sans_reduction_min_max_counts.pro
