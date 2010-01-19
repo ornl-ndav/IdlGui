@@ -539,14 +539,17 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     plus = WIDGET_BUTTON(row3,$
       VALUE='+',$
       UNAME = 'circle_radius_center_plus')
-      
-    help = WIDGET_LABEL(circle_base,$
-      /ALIGN_LEFT, $
-      VALUE = 'HELP:  1. click on the plot to select center')
-    help = WIDGET_LABEL(circle_base,$
-      /ALIGN_LEFT, $
-      VALUE = '       2. Enter radius value and hit ENTER')
-      
+    
+   row4 = WIDGET_BASE(circle_base,$
+   /ROW)
+   help_button = WIDGET_BUTTON(row4,$
+   VALUE = ' H E L P ',$
+   UNAME = 'circle_exclusion_help')
+   validate = WIDGET_BUTTON(row4,$
+   VALUE = 'VALIDATE  SELECTION',$
+   SCR_XSIZE = 215,$
+   UNAME = 'circle_exclusion_validate') 
+
   ENDIF
   
   ;----------------------------------------------------------------------------
