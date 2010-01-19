@@ -83,6 +83,7 @@ cd, CurrentFolder
 .run sans_reduction_lin_log_plot.pro
 .run sans_reduction_display_selection_box.pro
 .run sans_reduction_display_images.pro
+.run sans_reduction_circle_exclusion.pro
 
 ;min and max counts of main tab
 .run sans_reduction_min_max_counts.pro

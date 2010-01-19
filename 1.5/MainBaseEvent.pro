@@ -59,6 +59,26 @@ PRO MAIN_BASE_event, Event
       tab_event, Event ;_eventcb
     END
     
+    ;plus and minus tube/pixel/radius circle exclusion
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='circle_tube_center_minus'): BEGIN
+      change_circle_value, Event, type='tube', direction='minus'
+    END
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='circle_tube_center_plus'): BEGIN
+      change_circle_value, Event, type='tube', direction='plus'
+    END
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='circle_pixel_center_minus'): BEGIN
+      change_circle_value, Event, type='pixel', direction='minus'
+    END
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='circle_pixel_center_plus'): BEGIN
+      change_circle_value, Event, type='pixel', direction='plus'
+    END
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='circle_radius_center_minus'): BEGIN
+      change_circle_value, Event, type='radius', direction='minus'
+    END
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='circle_radius_center_plus'): BEGIN
+      change_circle_value, Event, type='radius', direction='plus'
+    END
+    
     ;circle and rectangle selection types
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab1_rectangle_selection'): BEGIN
       error = 0
