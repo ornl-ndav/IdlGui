@@ -96,6 +96,11 @@ PRO MAIN_BASE_event, Event
       refresh_main_plot_for_circle_selection, Event
     END
     
+    ;help button of circle exclusion base
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='circle_exclusion_help'): BEGIN
+      sans_reduction_circle_exclusion_help, Event=Event
+    END
+    
     ;circle and rectangle selection types
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab1_rectangle_selection'): BEGIN
       error = 0
