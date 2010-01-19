@@ -481,7 +481,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       YOFFSET = 209,$
       SCR_XSIZE = 290,$
       SCR_YSIZE = 175,$
-      MAP = 0,$
+      MAP = 1,$
       /COLUMN)
       
     row1 = WIDGET_BASE(circle_base,$

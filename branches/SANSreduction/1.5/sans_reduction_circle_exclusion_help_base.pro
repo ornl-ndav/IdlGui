@@ -48,31 +48,24 @@ PRO sans_reduction_circle_exclusion_help_event, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO sans_reduction_circle_exclusion_help, main_base=main_base
-  Event=Event
-  
-  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
-    id = WIDGET_INFO(main_base, FIND_BY_UNAME='MAIN_BASE')
-    WIDGET_CONTROL,main_base,GET_UVALUE=global
-    event = 0
-  ENDIF ELSE BEGIN
-    id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
-    WIDGET_CONTROL,Event.top,GET_UVALUE=global
-  ENDELSE
+PRO sans_reduction_circle_exclusion_help, Event=Event
+
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
   main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
   
   ;build gui
-  wBase1 = ''
   main_base_xoffset = main_base_geometry.xoffset
   main_base_yoffset = main_base_geometry.yoffset
   main_base_xsize = main_base_geometry.xsize
   main_base_ysize = main_base_geometry.ysize
   
   xoffset = main_base_xoffset + main_base_xsize
-  yoffset = main_base_yoffset
+  yoffset = main_base_yoffset + 160
   
   ourGroup = WIDGET_BASE()
-  
+
+title = 'How does it work ?'
   wBase = WIDGET_BASE(TITLE = title,$
     ;    UNAME        = 'fits_tools_tab1_plot_base_uname', $
     XOFFSET      = xoffset,$
@@ -95,15 +88,15 @@ PRO sans_reduction_circle_exclusion_help, main_base=main_base
     ;    /MOTION_EVENTS,$
     UNAME = 'fits_tools_tab1_plot_draw_uname')
     
-  WIDGET_CONTROL, wBase1, /REALIZE
+  WIDGET_CONTROL, wBase, /REALIZE
   
-  global_help = PTR_NEW({ wbase: wbase1,$
+  global_help = PTR_NEW({ wbase: wbase,$
     global: global, $
     main_event: Event})
     
-  WIDGET_CONTROL, wBase1, SET_UVALUE = global_help
+  WIDGET_CONTROL, wBase, SET_UVALUE = global_help
   
-  XMANAGER, "sans_reduction_circle_exclusion_help", wBase1, $
+  XMANAGER, "sans_reduction_circle_exclusion_help", wBase, $
     GROUP_LEADER = ourGroup, /NO_BLOCK
     
 END
