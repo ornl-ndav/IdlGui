@@ -52,7 +52,7 @@ PRO SANSreduction_Cleanup, tlb
   sz = N_ELEMENTS(id_array)
   FOR i=0,sz-1 DO BEGIN
     IF (WIDGET_INFO(id_array[i], /VALID_ID) NE 0) THEN BEGIN
-      WIDGET_CONTROL, id_array[i], /DESTROY
+      WIDGET_CONTROL, id_array[i], /DESTROYcd
     ENDIF
   ENDFOR
   

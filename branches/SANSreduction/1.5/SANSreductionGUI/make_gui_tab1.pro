@@ -525,7 +525,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     row3 = WIDGET_BASE(circle_base,$
       /ROW)
     label = WIDGET_LABEL(row3,$
-      VALUE  = '      Radius     ')
+      VALUE  = '    Radius  ')
     value = WIDGET_TEXT(row3,$
       VALUE = '',$
       XSIZE = 10,$
@@ -534,11 +534,17 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     units = WIDGET_LABEL(row3,$
       VALUE = 'mm')
     minus = WIDGET_BUTTON(row3,$
+      VALUE = '--',$
+      UNAME='circle_radius_center_2minus')
+    minus = WIDGET_BUTTON(row3,$
       VALUE = '-',$
       UNAME='circle_radius_center_minus')
     plus = WIDGET_BUTTON(row3,$
       VALUE='+',$
       UNAME = 'circle_radius_center_plus')
+    plus = WIDGET_BUTTON(row3,$
+      VALUE='++',$
+      UNAME = 'circle_radius_center_2plus')
     
    row4 = WIDGET_BASE(circle_base,$
    /ROW)

@@ -66,7 +66,7 @@ PRO MAIN_BASE_event, Event
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAME='circle_pixel_center'): BEGIN
       refresh_main_plot_for_circle_selection, Event
-      alculate_circle_exclusion_pixels, Event
+      calculate_circle_exclusion_pixels, Event
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAME='circle_radius_value'): BEGIN
       refresh_main_plot_for_circle_selection, Event
@@ -99,8 +99,18 @@ PRO MAIN_BASE_event, Event
       refresh_main_plot_for_circle_selection, Event
       calculate_circle_exclusion_pixels, Event
     END
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='circle_radius_center_2minus'): BEGIN
+      change_circle_value, Event, type='radius', direction='2minus'
+      refresh_main_plot_for_circle_selection, Event
+      calculate_circle_exclusion_pixels, Event
+    END
     WIDGET_INFO(wWidget, FIND_BY_UNAME='circle_radius_center_plus'): BEGIN
       change_circle_value, Event, type='radius', direction='plus'
+      refresh_main_plot_for_circle_selection, Event
+      calculate_circle_exclusion_pixels, Event
+    END
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='circle_radius_center_2plus'): BEGIN
+      change_circle_value, Event, type='radius', direction='2plus'
       refresh_main_plot_for_circle_selection, Event
       calculate_circle_exclusion_pixels, Event
     END
