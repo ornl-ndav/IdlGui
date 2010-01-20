@@ -522,7 +522,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
   IF (DEBUGGING EQ 'yes' AND $
     ucams EQ 'j35') THEN BEGIN
     ;nexus_path           = '~/SVN/IdlGui/branches/SANSreduction/1.0'
-    nexus_path           = '~/EQSANS/2009_2_6_SCI/1/118/NeXus/'
+    nexus_path           = '~/EQSANS/2009_2_6_SCI/1/40/NeXus/'
     ;nexus_path           = '/SNS/EQSANS/2009_2_6_SCI/1/71/NeXus/'
     (*global).nexus_path = nexus_path
     (*global).selection_path = '~/results/'
