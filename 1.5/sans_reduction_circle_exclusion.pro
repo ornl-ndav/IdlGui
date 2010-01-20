@@ -155,7 +155,11 @@ PRO change_circle_value, Event, type=type, direction=direction
     END
     'radius': BEGIN
       uname = 'circle_radius_value'
+      IF (direction EQ '2plus' OR direction EQ '2minus') THEN BEGIN
+      off_value = 1
+      ENDIF ELSE BEGIN
       off_value = 0.1
+      ENDELSE
     END
   ENDCASE
   
@@ -168,7 +172,7 @@ PRO change_circle_value, Event, type=type, direction=direction
     'radius': value = FLOAT(value)
   ENDCASE
   
-  IF (direction EQ 'plus') THEN BEGIN
+  IF (direction EQ 'plus' OR direction EQ '2plus') THEN BEGIN
     value += off_value
   ENDIF ELSE BEGIN
     value -= off_value
