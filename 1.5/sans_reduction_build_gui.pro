@@ -101,6 +101,8 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
   CHECKING_PACKAGES = file->getValue(tag=['configuration','checking_packages'])
   EQSANS_REDUCE = file->getValue(tag=['configuration','eqsans_reduce'])
   EQSANS_REDUCE_MPI = file->getValue(tag=['configuration','eqsans_reduce_mpi'])
+  TUBE_SIZE = file->getValue(tag=['configuration','tube_size'])
+  PIXEL_SIZE = file->getValue(tag=['configuration','pixel_size'])
   ;****************************************************************************
   ;============================================================================
   
@@ -151,6 +153,9 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     scaling_value: '',$
     build_command_line: 1,$
     testing_on_mac: testing_on_mac, $
+    
+    tube_size: FLOAT(TUBE_SIZE), $
+    pixel_size: FLOAT(PIXEL_SIZE), $
     
     circle_exclusion_help_base: 0L, $ ;id of circle exclusion help base
     

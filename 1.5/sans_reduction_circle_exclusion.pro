@@ -32,6 +32,58 @@
 ;
 ;==============================================================================
 
+;This procedure will determines which pixels are part of the circle exclusion
+;region
+PRO calculate_circle_exclusion_pixels, Event
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  ON_IOERROR, error
+  
+  tube_selected  = FIX(getTextFieldValue(Event,'circle_tube_center'))
+  pixel_selected = FIX(getTextFieldValue(Event,'circle_pixel_center'))
+  radius         = FLOAT(getTextFieldValue(Event,'circle_radius_value'))
+  
+  ;determine how many pixels (going to the top and bottom) are in the circle
+  nbr_pixel_up = getNbrOfPixelsInExclusion(Event, pixel_selected, radius, $
+    direction='up')
+  nbr_pixel_down = getNbrOfPixelsInExclusion(Event, pixel_selected, radius, $
+    direction='down')
+    
+  ;print, 'nbr_pixel_up: ' + string(nbr_pixel_up)
+  ;print, 'nbr_pixel_down: ' + string(nbr_pixel_down)
+    
+  ;determine how many tubes (going right and left) are in the circle
+  nbr_tube_right = getNbrOfTubeInExclusion(Event, tube_selected, radius, $
+    direction='right')
+  nbr_tube_left = getNbrOfTubeInExclusion(Event, tube_selected, radius, $
+    direction='left')
+    
+  ;print, 'nbr_tube_right: ' + string(nbr_tube_right)
+  ;print, 'nbr_tube_left: ' + string(nbr_tube_left)
+    
+  ;Now we need to determine which pixels/tubes in the square
+  ;  pixel_selected + nbr_pixel_up -> pixel_selected - nbr_pixel_down
+  ;  tube_selected-nbr-tube_left -> tube_selected + nbr_tube_right
+  ;are really withing radius from the center
+  tube_list  = STRARR(1)
+  pixel_list = STRARR(1)
+  determine_array_of_pixel_tube_selected, Event,$
+    nbr_tube_left=nbr_tube_left, $
+    nbr_tube_right=nbr_tube_right, $
+    nbr_pixel_down=nbr_pixel_down, $
+    nbr_pixel_up=nbr_pixel_up, $
+    radius = radius, $
+    tube_selected = tube_selected, $
+    pixel_selected = pixel_selected, $
+    tube_list = tube_list, $
+    pixel_list = pixel_list
+    
+  error: ;input format is wrong
+  
+END
+
+;------------------------------------------------------------------------------
 ;This procedure replot the main plot before addign the circle selection
 PRO refresh_main_plot_for_circle_selection, Event
 

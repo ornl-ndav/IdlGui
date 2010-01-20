@@ -62,38 +62,47 @@ PRO MAIN_BASE_event, Event
     ;tube, pixel and radius values
     WIDGET_INFO(wWidget, FIND_BY_UNAME='circle_tube_center'): BEGIN
       refresh_main_plot_for_circle_selection, Event
+      calculate_circle_exclusion_pixels, Event
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAME='circle_pixel_center'): BEGIN
       refresh_main_plot_for_circle_selection, Event
+      alculate_circle_exclusion_pixels, Event
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAME='circle_radius_value'): BEGIN
       refresh_main_plot_for_circle_selection, Event
+      calculate_circle_exclusion_pixels, Event
     END
     
     ;plus and minus tube/pixel/radius circle exclusion
     WIDGET_INFO(wWidget, FIND_BY_UNAME='circle_tube_center_minus'): BEGIN
       change_circle_value, Event, type='tube', direction='minus'
       refresh_main_plot_for_circle_selection, Event
+      calculate_circle_exclusion_pixels, Event
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAME='circle_tube_center_plus'): BEGIN
       change_circle_value, Event, type='tube', direction='plus'
       refresh_main_plot_for_circle_selection, Event
+      calculate_circle_exclusion_pixels, Event
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAME='circle_pixel_center_minus'): BEGIN
       change_circle_value, Event, type='pixel', direction='minus'
       refresh_main_plot_for_circle_selection, Event
+      calculate_circle_exclusion_pixels, Event
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAME='circle_pixel_center_plus'): BEGIN
       change_circle_value, Event, type='pixel', direction='plus'
       refresh_main_plot_for_circle_selection, Event
+      calculate_circle_exclusion_pixels, Event
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAME='circle_radius_center_minus'): BEGIN
       change_circle_value, Event, type='radius', direction='minus'
       refresh_main_plot_for_circle_selection, Event
+      calculate_circle_exclusion_pixels, Event
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAME='circle_radius_center_plus'): BEGIN
       change_circle_value, Event, type='radius', direction='plus'
       refresh_main_plot_for_circle_selection, Event
+      calculate_circle_exclusion_pixels, Event
     END
     
     ;help button of circle exclusion base
