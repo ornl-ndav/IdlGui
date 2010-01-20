@@ -79,6 +79,21 @@ PRO calculate_circle_exclusion_pixels, Event
     tube_list = tube_list, $
     pixel_list = pixel_list
     
+  nbr_tube_list = N_ELEMENTS(tube_list)
+  IF (nbr_tube_list EQ 1) THEN RETURN
+  IF (nbr_tube_list EQ 2) THEN BEGIN
+    tube_list = tube_list[1]
+    pixel_lsit = pixel_list[1]
+  ENDIF
+  IF (nbr_tube_list GT 2) THEN BEGIN
+    tube_list = tube_list[1:nbr_tube_list-1]
+    pixel_list = pixel_list[1:nbr_tube_list-1]
+  ENDELSE
+  
+  
+  
+  
+  
   error: ;input format is wrong
   
 END
