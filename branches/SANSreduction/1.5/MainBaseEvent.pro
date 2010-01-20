@@ -100,7 +100,7 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='circle_exclusion_help'): BEGIN
       id = (*global).circle_exclusion_help_base
       IF (WIDGET_INFO(id, /VALID_ID) EQ 0) THEN BEGIN
-      sans_reduction_circle_exclusion_help, Event=Event
+        sans_reduction_circle_exclusion_help, Event=Event
       ENDIF
     END
     
@@ -118,6 +118,11 @@ PRO MAIN_BASE_event, Event
             SELECTION=(*global).selection_type
           putTextFieldValue, Event, 'exclusion_region_tool_title', $
             'Exclusion Region (rectangle)'
+          ;kill circle help base if alive
+          id = (*global).circle_exclusion_help_base
+          IF (WIDGET_INFO(id, /VALID_ID) EQ 1) THEN BEGIN
+            WIDGET_CONTROL, id, /DESTROY
+          ENDIF
         ENDIF
       ENDIF ELSE BEGIN ;endif of catch statement
         IF (event.enter EQ 1) THEN BEGIN
