@@ -88,13 +88,41 @@ PRO calculate_circle_exclusion_pixels, Event
   IF (nbr_tube_list GT 2) THEN BEGIN
     tube_list = tube_list[1:nbr_tube_list-1]
     pixel_list = pixel_list[1:nbr_tube_list-1]
-  ENDELSE
+  ENDIF
   
-  
-  
-  
+  plot_circle_exclusion_pixel, Event, tube_list, pixel_list
   
   error: ;input format is wrong
+  
+END
+
+;------------------------------------------------------------------------------
+PRO plot_circle_exclusion_pixel, Event, tube_array, pixel_array
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'draw_uname')
+  WIDGET_CONTROL, id, GET_VALUE = id_value
+  WSET, id_value
+  
+  IF (N_ELEMENTS(COEFF) EQ 0) THEN  coeff = FLOAT((*global).congrid_x_coeff)
+  
+  DataArray = (*(*global).DataArray)
+  
+   color = FSC_COLOR('green')
+  
+  FOR pixel_index = 0, N_ELEMENTS(pixel_array)-1 DO BEGIN
+  
+    x = tube_array[pixel_index] * coeff
+    y = (pixel_array[pixel_index] - 1 ) * coeff
+    
+    PLOTS, x, y, /DEVICE, COLOR=color
+    PLOTS, x, y, /DEVICE, /CONTINUE, COLOR=color
+    PLOTS, x, y, /DEVICE, /CONTINUE, COLOR=color
+    PLOTS, x, y, /DEVICE, /CONTINUE, COLOR=color
+    PLOTS, x, y, /DEVICE, /CONTINUE, COLOR=color
+    
+  ENDFOR
   
 END
 
