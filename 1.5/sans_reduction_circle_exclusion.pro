@@ -109,7 +109,7 @@ PRO plot_circle_exclusion_pixel, Event, tube_array, pixel_array
   
   DataArray = (*(*global).DataArray)
   
-   color = FSC_COLOR('green')
+  color = FSC_COLOR('green')
   
   FOR pixel_index = 0, N_ELEMENTS(pixel_array)-1 DO BEGIN
   
@@ -158,9 +158,9 @@ PRO change_circle_value, Event, type=type, direction=direction
     'radius': BEGIN
       uname = 'circle_radius_value'
       IF (direction EQ '2plus' OR direction EQ '2minus') THEN BEGIN
-      off_value = 1
+        off_value = 1
       ENDIF ELSE BEGIN
-      off_value = 0.1
+        off_value = 0.1
       ENDELSE
     END
   ENDCASE
@@ -207,5 +207,17 @@ PRO change_circle_value, Event, type=type, direction=direction
     /CENTER, $
     DIALOG_PARENT = id,$
     TITLE = type + ' input ERROR!')
+    
+END
+
+;------------------------------------------------------------------------------
+PRO display_error_message_about_circular_selection, Event
+
+  title = 'Circular Selection Error !'
+  message = ['Circular selection needs to be done with both panels seleted!','',$
+    'Please select BOTH PANELS at the top right of the main plot!']
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  result = DIALOG_MESSAGE(message,$
+    title=title, /ERROR, /CENTER, DIALOG_PARENT=id)
     
 END
