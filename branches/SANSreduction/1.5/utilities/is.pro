@@ -151,3 +151,10 @@ FUNCTION is_from_lower_than_to, Event, MODE=mode, TEST=test
   
   RETURN, 1b
 END
+
+;------------------------------------------------------------------------------
+FUNCTION isBothPanelsSelected, Event
+  result = is_front_back_or_both_plot(Event)
+  IF (result EQ 'both') THEN RETURN, 1
+  RETURN, 0
+END
