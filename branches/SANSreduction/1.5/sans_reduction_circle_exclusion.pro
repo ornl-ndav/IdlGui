@@ -113,14 +113,16 @@ PRO plot_circle_exclusion_pixel, Event, tube_array, pixel_array
   
   FOR pixel_index = 0, N_ELEMENTS(pixel_array)-1 DO BEGIN
   
-    x = tube_array[pixel_index] * coeff
-    y = (pixel_array[pixel_index] - 1 ) * coeff
+    x1 = tube_array[pixel_index] * coeff
+    x2 = (tube_array[pixel_index] + 1) * coeff
+    y1 = (pixel_array[pixel_index] - 1 ) * coeff
+    y2 = (pixel_array[pixel_index]) * coeff
     
-    PLOTS, x, y, /DEVICE, COLOR=color
-    PLOTS, x, y, /DEVICE, /CONTINUE, COLOR=color
-    PLOTS, x, y, /DEVICE, /CONTINUE, COLOR=color
-    PLOTS, x, y, /DEVICE, /CONTINUE, COLOR=color
-    PLOTS, x, y, /DEVICE, /CONTINUE, COLOR=color
+    PLOTS, x1, y1, /DEVICE, COLOR=color
+    PLOTS, x1, y2, /DEVICE, /CONTINUE, COLOR=color
+    PLOTS, x2, y2, /DEVICE, /CONTINUE, COLOR=color
+    PLOTS, x2, y1, /DEVICE, /CONTINUE, COLOR=color
+    PLOTS, x1, y1, /DEVICE, /CONTINUE, COLOR=color
     
   ENDFOR
   
