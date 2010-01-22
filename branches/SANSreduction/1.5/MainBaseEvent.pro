@@ -178,6 +178,13 @@ PRO MAIN_BASE_event, Event
       ENDIF
     END
     
+    ;validate circular selection
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='circle_exclusion_validate'): BEGIN
+      validate_circular_selection, Event
+      saveExclusionBorders, Event, ADD=1;for JK's reduction
+      save_background,  Event, GLOBAL=global
+    END
+    
     ;circle and rectangle selection types
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab1_rectangle_selection'): BEGIN
       error = 0
