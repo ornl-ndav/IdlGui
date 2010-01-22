@@ -200,7 +200,14 @@ END
 
 ;------------------------------------------------------------------------------
 PRO save_jk_selection_array, Event, FileStringArray, nbr_jk
-     
+
+  error = 0
+  CATCH, error
+  IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN
+  ENDIF
+  
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
   nbr_lines = N_ELEMENTS(FileStringArray)

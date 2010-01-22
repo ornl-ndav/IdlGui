@@ -158,6 +158,8 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     pixel_size: FLOAT(PIXEL_SIZE), $
     
     circle_exclusion_help_base: 0L, $ ;id of circle exclusion help base
+    circular_tube_list: PTR_NEW(0L), $
+    circular_pixel_list: PTR_NEW(0L), $
     
     run_number: '',$
     jk_selection_x0y0x1y1: PTR_NEW(0L), $
@@ -479,7 +481,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
       YPAD          = 2,$
       X_SCROLL_SIZE = 500,$
       Y_SCROLL_SIZE = 500)
-;      MBAR          = WID_BASE_0_MBAR)
+  ;      MBAR          = WID_BASE_0_MBAR)
   ENDIF ELSE BEGIN
     MAIN_BASE = WIDGET_BASE( GROUP_LEADER = wGroup,$
       UNAME        = 'MAIN_BASE',$
@@ -491,19 +493,19 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
       SPACE        = 0,$
       XPAD         = 0,$
       YPAD         = 2)
-;      MBAR         = WID_BASE_0_MBAR)
+  ;      MBAR         = WID_BASE_0_MBAR)
   ENDELSE
   
-;  ;HELP MENU in Menu Bar
-;  HELP_MENU = WIDGET_BUTTON(WID_BASE_0_MBAR,$
-;    UNAME = 'help_menu',$
-;    VALUE = 'HELP',$
-;    /MENU)
-;    
-;  HELP_BUTTON = WIDGET_BUTTON(HELP_MENU,$
-;    VALUE = 'HELP',$
-;    UNAME = 'help_button')
-    
+  ;  ;HELP MENU in Menu Bar
+  ;  HELP_MENU = WIDGET_BUTTON(WID_BASE_0_MBAR,$
+  ;    UNAME = 'help_menu',$
+  ;    VALUE = 'HELP',$
+  ;    /MENU)
+  ;
+  ;  HELP_BUTTON = WIDGET_BUTTON(HELP_MENU,$
+  ;    VALUE = 'HELP',$
+  ;    UNAME = 'help_button')
+  
   ;get the color of the GUI to hide the widget_draw that will label the draw
   sys_color = WIDGET_INFO(MAIN_BASE,/SYSTEM_COLORS)
   (*global).sys_color_face_3d = sys_color.face_3d
@@ -564,9 +566,9 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     ;advanced base of JK's reduction
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='jk_reduction_tab')
     WIDGET_CONTROL, id1, SET_TAB_CURRENT = 0
-    ;part 2
-    ;id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_jk_advanced_tab')
-    ;WIDGET_CONTROL, id1, SET_TAB_CURRENT = 0
+  ;part 2
+  ;id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_jk_advanced_tab')
+  ;WIDGET_CONTROL, id1, SET_TAB_CURRENT = 0
     
   ENDIF
   
