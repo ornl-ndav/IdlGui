@@ -32,6 +32,33 @@
 ;
 ;==============================================================================
 
+PRO saveExclusionCircleJK, Event, ADD=add
+
+  ON_IOERROR, error ;catch any conversion to fix or float errors
+  
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  tube_selected  = FIX(getTextFieldValue(Event,'circle_tube_center'))
+  pixel_selected = FIX(getTextFieldValue(Event,'circle_pixel_center'))
+  radius         = FLOAT(getTextFieldValue(Event,'circle_radius_value'))
+  
+  region = [tube_selected, pixel_selected, radius]
+  
+  jk_selection_xyr = (*(*global).jk_selection_xyr)
+  
+  IF ((size(jk_selection_xyr))(0) EQ 0) THEN BEGIN
+    jk_selection_xyr = region
+  ENDIF ELSE BEGIN
+    jk_selection_xyr = [jk_selection_xyr,region]
+  ENDELSE
+  
+  (*(*global).jk_selection_xyr) = jk_selection_xyr
+
+  error:
+  
+END
+
+;------------------------------------------------------------------------------
 ;Validate the exclusion
 PRO validate_circular_selection, Event
 
@@ -59,7 +86,7 @@ PRO validate_circular_selection, Event
       pixel++
       index++
     ENDWHILE
-      
+    
   ENDIF ELSE BEGIN ;enf of if(nbr_pixels_total GT 0)
   
     pixel_array = ['']
@@ -100,7 +127,7 @@ PRO validate_circular_selection, Event
   
   (*(*global).PixelArray_of_DeadTubes) = PixelArray_of_DeadTubes
   
-    add_to_global_exclusion_array, event, pixel_array
+  add_to_global_exclusion_array, event, pixel_array
   
 END
 
