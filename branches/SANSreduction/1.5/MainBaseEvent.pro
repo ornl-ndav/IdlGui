@@ -181,7 +181,7 @@ PRO MAIN_BASE_event, Event
     ;validate circular selection
     WIDGET_INFO(wWidget, FIND_BY_UNAME='circle_exclusion_validate'): BEGIN
       validate_circular_selection, Event
-      saveExclusionBorders, Event, ADD=1;for JK's reduction
+      saveExclusionCircleJK, Event, ADD=add ;for JK's reduction
       save_background,  Event, GLOBAL=global
     END
     
@@ -834,6 +834,7 @@ PRO MAIN_BASE_event, Event
       IF ((*global).data_nexus_file_name NE '') THEN BEGIN
         clear_selection_tool, Event ;_selection
         (*(*global).jk_selection_x0y0x1y1) = PTR_NEW(0L)
+        (*(*global).jk_selection_xyr) = PTR_NEW(0L)
         IF (isAutoExcludeDeadTubeSelected(Event)) THEN BEGIN
           plot_exclusion_of_dead_tubes, Event
         ENDIF

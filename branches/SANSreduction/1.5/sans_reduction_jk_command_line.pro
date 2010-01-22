@@ -466,6 +466,8 @@ PRO CheckCommandline_for_jk, Event
   ENDIF
   
   ;add ROI
+  
+  ;rectangles
   jk_selection = (*(*global).jk_selection_x0y0x1y1)
   nbr = N_ELEMENTS(jk_selection)
   IF (nbr GT 1) THEN BEGIN
@@ -477,6 +479,21 @@ PRO CheckCommandline_for_jk, Event
       x1 = STRCOMPRESS(jk_selection[index*4+2],/REMOVE_ALL)
       y1 = STRCOMPRESS(jk_selection[index*4+3],/REMOVE_ALL)
       cmd += ' -rmask ' + x0 + ' ' + y0 + ' ' + x1 + ' ' + y1
+      index++
+    ENDWHILE
+  ENDIF
+  
+  ;circular
+  jk_selection = (*(*global).jk_selection_xyr)
+  nbr = N_ELEMENTS(jk_selection)
+  IF (nbr GT 1) THEN BEGIN
+    nbr_iteration = nbr/3
+    index = 0
+    WHILE (index LT nbr_iteration) DO BEGIN
+      x = STRCOMPRESS(FIX(jk_selection[index*3]),/REMOVE_ALL)
+      y = STRCOMPRESS(FIX(jk_selection[index*3+1]),/REMOVE_ALL)
+      r = STRCOMPRESS(jk_selection[index*3+2],/REMOVE_ALL)
+      cmd += ' -cmask ' + x + ' ' + y + ' ' + r
       index++
     ENDWHILE
   ENDIF

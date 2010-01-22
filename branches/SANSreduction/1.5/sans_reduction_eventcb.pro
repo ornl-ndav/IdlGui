@@ -385,7 +385,6 @@ PRO tab_event, Event
         IF ((*global).sns_jk_switch EQ 'sns') THEN BEGIN
           CheckCommandLine, Event         ;_command_line
         ENDIF ELSE BEGIN
-          ;          jk_get_run_information, Event
           CheckCommandline_for_jk, Event
         ENDELSE
       END
