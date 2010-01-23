@@ -804,11 +804,41 @@ function ReductionCmd::Generate
       ENDIF
       
       
-      IF (self.hardmask EQ 1) AND (STRLEN(self.instrument) GT 1) THEN $
-        cmd[i] += "~/mask/" + self.instrument + "/" + $
-        self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
-        i+1, self.jobs, /PAD) + "_mask.dat"
+      IF (self.hardmask EQ 1) AND (STRLEN(self.instrument) GT 1) THEN BEGIN
+        ;
+        mask_dir = get_output_directory(self.instrument, self->GetRunNumber(), OVERRIDE=self.OutputOverride) $
+          + "/masks"
         
+        ; Let's make sure that the masks directory exists
+        spawn, 'mkdir -p ' + mask_dir  
+        
+        tmp_maskfile = mask_dir + "/" + $
+          self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
+          i+1, self.jobs, /PAD) + "_mask.dat"
+          
+        source_maskfile = get_maskfile(self.instrument, self->GetRunNumber())
+        tmp_datapaths = Construct_DataPaths(self.lowerbank, self.upperbank, $
+          i+1, self.jobs)
+        banks = STRSPLIT(tmp_datapaths, "-", /EXTRACT)
+        
+        first_element = 0 
+         
+        for ibank = long(banks[0]), long(banks[1]) do begin
+          split_cmd = "grep bank" + strcompress(ibank,/remove_all) + $
+            "_ " + source_maskfile + " >"
+          ; If it's not the first bank, then use >> to append to the file
+          IF (first_element EQ 1) THEN split_cmd += ">"
+          split_cmd += " " + tmp_maskfile
+          print, split_cmd
+          spawn, split_cmd
+          ; Once we have got here we have gone round one...
+          first_element = 1
+        endfor
+        
+        cmd[i] += tmp_maskfile
+        
+      ENDIF
+      
     ENDIF
     
     
