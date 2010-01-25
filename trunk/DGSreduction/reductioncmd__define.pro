@@ -792,9 +792,12 @@ function ReductionCmd::Generate
       OR ((self.hardmask EQ 1) AND (STRLEN(self.instrument) GT 1))) THEN BEGIN
       cmd[i] += " --mask-file="
       
+      
+      ; Vanadium Mask file...
       IF (self.mask EQ 1) AND (STRLEN(self.normalisation) GE 1) $
         AND (STRLEN(self.instrument) GT 1) THEN BEGIN
-        cmd[i] += get_output_directory(self.instrument, self->GetRunNumber(), /HOME, OVERRIDE=self.OutputOverride) + "/" + $
+        cmd[i] += get_output_directory(self.instrument, getFirstNumber(self.normalisation), $
+          OVERRIDE=self.OutputOverride) + "/" + $
           self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
           i+1, self.jobs, /PAD) + "_mask.dat"
           
@@ -804,6 +807,7 @@ function ReductionCmd::Generate
       ENDIF
       
       
+      ; 'Hard' Mask file...
       IF (self.hardmask EQ 1) AND (STRLEN(self.instrument) GT 1) THEN BEGIN
         ;
         mask_dir = get_output_directory(self.instrument, self->GetRunNumber(), OVERRIDE=self.OutputOverride) $
@@ -821,18 +825,18 @@ function ReductionCmd::Generate
           i+1, self.jobs)
         banks = STRSPLIT(tmp_datapaths, "-", /EXTRACT)
         
-        first_element = 0 
+        first_time_around_loop = 0 
          
         for ibank = long(banks[0]), long(banks[1]) do begin
           split_cmd = "grep bank" + strcompress(ibank,/remove_all) + $
             "_ " + source_maskfile + " >"
           ; If it's not the first bank, then use >> to append to the file
-          IF (first_element EQ 1) THEN split_cmd += ">"
+          IF (first_time_around_loop EQ 1) THEN split_cmd += ">"
           split_cmd += " " + tmp_maskfile
           print, split_cmd
           spawn, split_cmd
-          ; Once we have got here we have gone round one...
-          first_element = 1
+          ; Once we have got here we have gone round once...
+          first_time_around_loop = 1
         endfor
         
         cmd[i] += tmp_maskfile
