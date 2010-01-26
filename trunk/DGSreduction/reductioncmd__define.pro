@@ -614,6 +614,46 @@ function ReductionCmd::Check
     ENDIF
   ENDIF
   
+  ; Check to see that the *.norm and mask files for vanadium are split up into
+  ; the correct number of jobs.
+  IF (STRLEN(self.normalisation) GE 1) AND (self.normalisation NE 0) $
+    AND (STRLEN(self.instrument) GT 1) THEN BEGIN
+    
+    norm_error = 0
+    mask_error = 0
+    
+    FOR i = 0L, self.jobs-1 DO BEGIN
+    
+      IF (norm_error EQ 0) THEN BEGIN
+        norm_filename =  get_output_directory(self.instrument, getFirstNumber(self.normalisation)) + "/" + $
+          self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
+          i+1, self.jobs, /PAD) + ".norm"
+          
+        norm_exists = FILE_TEST(norm_filename, /READ)
+        IF (norm_exists EQ 0) THEN BEGIN
+          norm_error = 1
+          ok = 0
+          msg = [msg,['The *.norm files do not seem to match the current data configuration.']]
+        ENDIF
+      ENDIF
+      
+      IF (mask_error EQ 0) THEN BEGIN
+        mask_filename = get_output_directory(self.instrument, getFirstNumber(self.normalisation), $
+          OVERRIDE=self.OutputOverride) + "/" + $
+          self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
+          i+1, self.jobs, /PAD) + "_mask.dat"
+          
+        mask_exists = FILE_TEST(mask_filename, /READ)
+        IF (mask_exists EQ 0) THEN BEGIN
+          mask_exists = 1
+          ok = 0
+          msg = [msg,['The vanadium mask files do not seem to match the current data configuration.']]
+        ENDIF
+        
+      ENDIF
+    ENDFOR
+  ENDIF
+  
   ; Remove the first blank String
   IF (N_ELEMENTS(msg) GT 1) THEN msg = msg(1:*)
   
@@ -812,9 +852,9 @@ function ReductionCmd::Generate
         ;
         mask_dir = get_output_directory(self.instrument, self->GetRunNumber(), OVERRIDE=self.OutputOverride) $
           + "/masks"
-        
+          
         ; Let's make sure that the masks directory exists
-        spawn, 'mkdir -p ' + mask_dir  
+        spawn, 'mkdir -p ' + mask_dir
         
         tmp_maskfile = mask_dir + "/" + $
           self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
@@ -825,8 +865,8 @@ function ReductionCmd::Generate
           i+1, self.jobs)
         banks = STRSPLIT(tmp_datapaths, "-", /EXTRACT)
         
-        first_time_around_loop = 0 
-         
+        first_time_around_loop = 0
+        
         for ibank = long(banks[0]), long(banks[1]) do begin
           split_cmd = "grep bank" + strcompress(ibank,/remove_all) + $
             "_ " + source_maskfile + " >"
