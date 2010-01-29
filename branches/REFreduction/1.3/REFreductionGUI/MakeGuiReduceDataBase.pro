@@ -255,12 +255,13 @@ PRO MakeGuiReduceDataBase, Event, REDUCE_BASE, IndividualBaseWidth
     
   ;tof cut  base
   tof_cut = WIDGET_BASE(data_base,$
-    XOFFSET = 350,$
-    YOFFSET = 120,$
+    XOFFSET = 295,$
+    YOFFSET = 118,$
+    FRAME = 1,$
     /ROW)
     
   label = WIDGET_LABEL(tof_cut,$
-    VALUE = 'TOF cutting (microS):')
+    VALUE = 'TOF cutting:')
   label = WIDGET_LABEL(tof_cut,$
     VALUE = ' min:')
   value = WIDGET_TEXT(tof_cut,$
@@ -277,6 +278,18 @@ PRO MakeGuiReduceDataBase, Event, REDUCE_BASE, IndividualBaseWidth
     /ALL_EVENTS,$
     UNAME = 'tof_cutting_max',$
     /EDITABLE)
+    
+  units_base = WIDGET_BASE(tof_cut,$
+    /ROW,$
+    /EXCLUSIVE)
+    
+  unit2 = WIDGET_BUTTON(units_base,$
+    VALUE = 'mS',$
+    UNAME = 'reduce_data_tof_units_ms')
+  unit1 = WIDGET_BUTTON(units_base,$
+    VALUE = 'microS',$
+    UNAME = 'reduce_data_tof_units_micros')
+   WIDGET_CONTROL, unit2, /SET_BUTTON
     
   ;------------------------------------------------------------------------------
     
