@@ -170,6 +170,44 @@ PRO miniMakeGuiReduceDataBase, Event, REDUCE_BASE, IndividualBaseWidth
     /ALIGN_LEFT,$
     VALUE     = '')
     
+    ;tof cut  base
+  tof_cut = WIDGET_BASE(data_base,$
+    XOFFSET = 190,$
+    YOFFSET = 107,$
+    FRAME = 1,$
+    /ROW)
+    
+  label = WIDGET_LABEL(tof_cut,$
+    VALUE = 'TOF cut:')
+  label = WIDGET_LABEL(tof_cut,$
+    VALUE = ' min:')
+  value = WIDGET_TEXT(tof_cut,$
+    VALUE = '',$
+    XSIZE = 6,$
+    /ALL_EVENTS,$
+    UNAME = 'tof_cutting_min',$
+    /EDITABLE)
+  label = WIDGET_LABEL(tof_cut,$
+    VALUE = ' max:')
+  value = WIDGET_TEXT(tof_cut,$
+    VALUE = '',$
+    XSIZE = 6,$
+    /ALL_EVENTS,$
+    UNAME = 'tof_cutting_max',$
+    /EDITABLE)
+    
+     units_base = WIDGET_BASE(tof_cut,$
+    /ROW,$
+    /EXCLUSIVE)
+    
+  unit2 = WIDGET_BUTTON(units_base,$
+    VALUE = 'mS',$
+    UNAME = 'reduce_data_tof_units_ms')
+  unit1 = WIDGET_BUTTON(units_base,$
+    VALUE = 'microS',$
+    UNAME = 'reduce_data_tof_units_micros')
+   WIDGET_CONTROL, unit2, /SET_BUTTON
+ 
   ;Peak exlusion Base -----------------------------------------------------------
   wPeakBase = WIDGET_BASE(data_base,$
     XOFFSET   = sPeakBase.size[0],$
@@ -252,32 +290,7 @@ PRO miniMakeGuiReduceDataBase, Event, REDUCE_BASE, IndividualBaseWidth
     ROW       = 1,$
     /NO_RELEASE,$
     /EXCLUSIVE)
-    
-  ;tof cut  base
-  tof_cut = WIDGET_BASE(data_base,$
-    XOFFSET = 230,$
-    YOFFSET = 107,$
-    /ROW)
-    
-  label = WIDGET_LABEL(tof_cut,$
-    VALUE = 'TOF cutting (microS):')
-  label = WIDGET_LABEL(tof_cut,$
-    VALUE = ' min:')
-  value = WIDGET_TEXT(tof_cut,$
-    VALUE = '',$
-    XSIZE = 6,$
-    /ALL_EVENTS,$
-    UNAME = 'tof_cutting_min',$
-    /EDITABLE)
-  label = WIDGET_LABEL(tof_cut,$
-    VALUE = ' max:')
-  value = WIDGET_TEXT(tof_cut,$
-    VALUE = '',$
-    XSIZE = 6,$
-    /ALL_EVENTS,$
-    UNAME = 'tof_cutting_max',$
-    /EDITABLE)
-    
+        
   ;frame
   DataFrame = WIDGET_LABEL(data_base,$
     XOFFSET   = DataFrameSize[0],$
