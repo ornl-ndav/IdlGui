@@ -697,7 +697,7 @@ function ReductionCmd::Generate
     ;IF STRLEN(self.output) GT 1 THEN cmd[i] += " --output="+ self.output
     
     IF (STRLEN(self.instrument) GT 1) AND (STRLEN(self.datarun) GE 1) THEN $
-      cmd[i] += " --output=" + get_output_directory(self.instrument, self->GetRunNumber(), /HOME, OVERRIDE=self.OutputOverride) + $
+      cmd[i] += " --output=" + get_output_directory(self.instrument, self->GetRunNumber(), OVERRIDE=self.OutputOverride) + $
       "/" + self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
       i+1, self.jobs, /PAD) + ".txt"
       
@@ -730,7 +730,7 @@ function ReductionCmd::Generate
     IF (STRLEN(self.normalisation) GE 1) AND (self.normalisation NE 0) $
       AND (STRLEN(self.instrument) GT 1) THEN BEGIN
       
-      cmd[i] += " --norm=" + get_output_directory(self.instrument, getFirstNumber(self.normalisation), /HOME) + "/" + $
+      cmd[i] += " --norm=" + get_output_directory(self.instrument, getFirstNumber(self.normalisation)) + "/" + $
         self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
         i+1, self.jobs, /PAD) + ".norm"
         
