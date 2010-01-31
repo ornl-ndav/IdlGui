@@ -139,8 +139,7 @@ PRO DGSreduction_Execute, event
     dgsr_cmd->GetProperty, Jobs=jobs
     
     ; output Directory
-    ; TODO: in order to switch to a shared directory - remove the /HOME from the following command
-    outputDir = get_output_directory(Instrument, runnumber, /HOME, /CREATE)
+    outputDir = get_output_directory(Instrument, runnumber, /CREATE)
     
     ; store the outputDir in the info structure
     info.outputDir = outputDir
@@ -169,7 +168,7 @@ PRO DGSreduction_Execute, event
       
       FOR j = 0L, N_ELEMENTS(dataruns)-1 DO BEGIN
         ; Need to calculate the offsets for each data file.
-            
+      
         ; Data Runs
         cwp = get_cwpfactor(instrument, dataruns[j], ENERGY=Ei)
         
@@ -530,14 +529,17 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
   
   warningBase = WIDGET_BASE(toprow, /COLUMN)
   
-  warningText1 = "DANGER: This is a very early development version."
-  warningText2 = "It WILL crash - there is no sanity checking at the moment."
+  warningText1 = "DANGER: This is a DEVELOPMENT version."
+  warningText2 = "It WILL crash or do other unexpected things!"
   warningText3 = "Otherwise, enjoy! and please be kind :-)"
   
-  ; Hide the warning for a release version!
-  ;warningLabel1 = WIDGET_LABEL(warningBase, VALUE=warningText1, font=wfont)
-  ;warningLabel2 = WIDGET_LABEL(warningBase, VALUE=warningText2)
-  ;warningLabel3 = WIDGET_LABEL(warningBase, VALUE=warningText3)
+  ; Ok first I want to check if we are running a development version
+  IF STRPOS(VERSION, 'BETA') NE -1 THEN BEGIN
+    ; Show the warning for a development version!
+    warningLabel1 = WIDGET_LABEL(warningBase, VALUE=warningText1, font=wfont)
+    warningLabel2 = WIDGET_LABEL(warningBase, VALUE=warningText2)
+    warningLabel3 = WIDGET_LABEL(warningBase, VALUE=warningText3)
+  ENDIF
   
   ; Tabs
   tabID = WIDGET_TAB(tlb)
@@ -552,9 +554,9 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
   make_VanMask_Tab, vanmaskTabBase, dgsn_cmd
   
   
-  ; Administrator Tab
-  adminTabBase = WIDGET_BASE(tabID, TITLE='Administrator', /COLUMN)
-  make_administrator_tab, adminTabBase, DGSR_cmd
+  ; Settings Tab
+  settingsTabBase = WIDGET_BASE(tabID, TITLE='Advanced Settings', /COLUMN)
+  make_settings_tab, settingsTabBase, DGSR_cmd
   
   ; Make the admin tab unavailable for now!
   ;WIDGET_CONTROL, adminTabBase, SENSITIVE=0
