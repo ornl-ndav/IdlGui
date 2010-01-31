@@ -237,7 +237,7 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   ; Also set the default monitor in the ReductionCmd Class
   dgsr_cmd->SetProperty, USmonPath=1
   
-  cwpButton = WIDGET_BUTTON(normOptionsBase, VALUE='Chopper Wandering Phase', $
+  cwpButton = WIDGET_BUTTON(normOptionsBase, VALUE='Auto Wandering Phase', $
     UVALUE='DGSR_CWP', UNAME='DGSR_CWP')
     
   ; Normalisation Files
@@ -265,12 +265,13 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   transBaseLabelGeometry = WIDGET_INFO(transBaseLabel, /GEOMETRY)
   transBaseLabelGeometryYSize = transBaseLabelGeometry.ysize
   transPrettyBase = WIDGET_BASE(transBase, /FRAME, /ROW, $
-    YOFFSET=transBaseLabelGeometryYSize/2, XPAD=10, YPAD=10, SCR_XSIZE=513)
+    YOFFSET=transBaseLabelGeometryYSize/2, XPAD=10, YPAD=10, SCR_XSIZE=450)
+;    YOFFSET=transBaseLabelGeometryYSize/2, XPAD=10, YPAD=10, SCR_XSIZE=513)
     
   dataTransID = CW_FIELD(transPrettyBase, /ALL_EVENTS, TITLE="Data Coeff:", UVALUE="DGSR_DATA-TRANS", $
     UNAME="DGSR_DATA-TRANS", XSIZE=10)
-  normTransID = CW_FIELD(transPrettyBase, /ALL_EVENTS, TITLE="Norm Coeff:", UVALUE="DGSR_NORM-TRANS", $
-    UNAME="DGSR_NORM-TRANS", XSIZE=10)
+;  normTransID = CW_FIELD(transPrettyBase, /ALL_EVENTS, TITLE="Norm Coeff:", UVALUE="DGSR_NORM-TRANS", $
+;    UNAME="DGSR_NORM-TRANS", XSIZE=10)
   detEffID = CW_FIELD(transPrettyBase, /ALL_EVENTS, TITLE="Detector Eff:", UVALUE="DGSR_DET-EFF", $
     UNAME="DGSR_DET-EFF", XSIZE=10)
     
@@ -288,17 +289,17 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
     UNAME="DGSR_MON-INT-MAX", XSIZE=10)
     
   ; Norm integration range
-  normRangeBase = WIDGET_BASE(normOptionsBaseRow1, UNAME="DGSR_NORM-INT-RANGE", /ALIGN_BOTTOM)
-  normRangeBaseLabel = WIDGET_LABEL(normRangeBase, VALUE=' Normalisation Integration Range (meV) ', XOFFSET=5)
-  normRangeBaseLabelGeometry = WIDGET_INFO(normRangeBaseLabel, /GEOMETRY)
-  normRangeBaseLabelGeometryYSize = normRangeBaseLabelGeometry.ysize
-  normRangePrettyBase = WIDGET_BASE(normRangeBase, /FRAME, /ROW, $
-    YOFFSET=normRangeBaseLabelGeometryYSize/2, XPAD=10, YPAD=10)
-    
-  normMinID = CW_FIELD(normRangePrettyBase, /ALL_EVENTS, TITLE="Min:", UVALUE="DGSR_NORM-INT-MIN", $
-    UNAME="DGSR_NORM-INT-MIN", XSIZE=10)
-  normMaxID = CW_FIELD(normRangePrettyBase, /ALL_EVENTS, TITLE="Max:", UVALUE="DGSR_NORM-INT-MAX", $
-    UNAME="DGSR_NORM-INT-MAX", XSIZE=10)
+;  normRangeBase = WIDGET_BASE(normOptionsBaseRow1, UNAME="DGSR_NORM-INT-RANGE", /ALIGN_BOTTOM)
+;  normRangeBaseLabel = WIDGET_LABEL(normRangeBase, VALUE=' Normalisation Integration Range (meV) ', XOFFSET=5)
+;  normRangeBaseLabelGeometry = WIDGET_INFO(normRangeBaseLabel, /GEOMETRY)
+;  normRangeBaseLabelGeometryYSize = normRangeBaseLabelGeometry.ysize
+;  normRangePrettyBase = WIDGET_BASE(normRangeBase, /FRAME, /ROW, $
+;    YOFFSET=normRangeBaseLabelGeometryYSize/2, XPAD=10, YPAD=10)
+;    
+;  normMinID = CW_FIELD(normRangePrettyBase, /ALL_EVENTS, TITLE="Min:", UVALUE="DGSR_NORM-INT-MIN", $
+;    UNAME="DGSR_NORM-INT-MIN", XSIZE=10)
+;  normMaxID = CW_FIELD(normRangePrettyBase, /ALL_EVENTS, TITLE="Max:", UVALUE="DGSR_NORM-INT-MAX", $
+;    UNAME="DGSR_NORM-INT-MAX", XSIZE=10)
     
     
   ; == ROI and MASKS ==
@@ -315,15 +316,18 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
     SCR_YSIZE=145)
     
   maskRow = WIDGET_BASE(maskPrettyBase, /ROW, /NONEXCLUSIVE)
-  maskID = WIDGET_BUTTON(maskRow, VALUE='Vanadium Mask', UVALUE='DGSR_MASK', UNAME='DGSR_MASK')
-  hardMaskID = WIDGET_BUTTON(maskRow, VALUE=' HARD Mask', UVALUE='DGSR_HARD_MASK', UNAME='DGSR_HARD_MASK')
+  ;maskID = WIDGET_BUTTON(maskRow, VALUE='Vanadium Mask', UVALUE='DGSR_MASK', UNAME='DGSR_MASK')
+  hardMaskID = WIDGET_BUTTON(maskRow, VALUE=' Default Mask', UVALUE='DGSR_HARD_MASK', UNAME='DGSR_HARD_MASK')
   ;maskFileID = CW_FIELD(maskRow, TITLE='Filename:', UVALUE='DGSR_MASK_FILENAME', /ALL_EVENTS)
   
+  ; Always turn on the vanadium mask
+  dgsr_cmd->SetProperty, Mask=1
+  
   ;WIDGET_CONTROL, maskID, MAP=0
-  WIDGET_CONTROL, maskID, SENSITIVE=0, SET_BUTTON=1
+  ;WIDGET_CONTROL, maskID, SENSITIVE=0, SET_BUTTON=1
   
   ; ROI
-  roiBase = WIDGET_BASE(maskPrettyBase)
+  roiBase = WIDGET_BASE(reductionTabCol2Row1Col1)
   roiLabel = WIDGET_LABEL(roiBase, VALUE=' Region-of-Interest ', XOFFSET=5)
   roiLabelGeometry = WIDGET_INFO(roiLabel, /GEOMETRY)
   roiLabelYSize = roiLabelGeometry.ysize
