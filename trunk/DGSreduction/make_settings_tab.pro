@@ -30,7 +30,7 @@
 ;   permission.
 ;
 ; :Description:
-;    Constructs the Administrator Tab for the given command object 'myCommandOby' 
+;    Constructs the Settings Tab for the given command object 'myCommandObj' 
 ;    and as a child of 'baseWidget'.
 ;
 ; :Params:
@@ -39,10 +39,7 @@
 ;
 ; :Author: scu
 ;-
-PRO make_administrator_tab, baseWidget, myCommandObj
-
-  ; === Super Secret Password ===
-
+PRO make_settings_tab, baseWidget, myCommandObj
 
   ; === Custom execution queue name ===
   
