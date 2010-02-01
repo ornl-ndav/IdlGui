@@ -234,10 +234,102 @@ END
 ;tof cutting
 tof_min = STRCOMPRESS(getTextFieldValue(Event,'tof_cutting_min'),/REMOVE_ALL)
 IF (tof_min NE '') THEN BEGIN
+
+  IF (isTOFcuttingUnits_microS(Event)) THEN BEGIN ;microS
+  
+    ON_IOERROR, error_min1
+    error_status = 1
+    tof_min = FLOAT(tof_min)
+    error_status = 0
+    tof_min = STRCOMPRESS(tof_min,/REMOVE_ALL)
+    error_min1:
+    IF (error_status) THEN BEGIN
+      tof_min = '?'
+      status_text = '- Please check the TOF cut min value'
+      IF (StatusMessage GT 0) THEN BEGIN
+        append = 1
+      ENDIF ELSE BEGIN
+        append = 0
+      ENDELSE
+      putInfoInReductionStatus, Event, status_text, append
+      StatusMessage += 1
+    ENDIF
+    
+  ENDIF ELSE BEGIN
+  
+    ON_IOERROR, error_min
+    error_status = 1
+    tof_min = FLOAT(tof_min)
+    error_status = 0
+    tof_min *= 1000. ;to convert to microS
+    tof_min = STRCOMPRESS(tof_min,/REMOVE_ALL)
+    
+    error_min:
+    IF (error_status) THEN BEGIN
+      tof_min = '?'
+      status_text = '- Please check the TOF cut min value'
+      IF (StatusMessage GT 0) THEN BEGIN
+        append = 1
+      ENDIF ELSE BEGIN
+        append = 0
+      ENDELSE
+      putInfoInReductionStatus, Event, status_text, append
+      StatusMessage += 1
+    ENDIF
+    
+  ENDELSE
+  
   cmd += ' --tof-cut-min=' + tof_min
+  
 ENDIF
+
 tof_max = STRCOMPRESS(getTextFieldValue(Event,'tof_cutting_max'),/REMOVE_ALL)
 IF (tof_max NE '') THEN BEGIN
+
+  IF (isTOFcuttingUnits_microS(Event)) THEN BEGIN ;microS
+  
+    ON_IOERROR, error_max1
+    error_status = 1
+    tof_max = FLOAT(tof_max)
+    error_status = 0
+    tof_max = STRCOMPRESS(tof_max,/REMOVE_ALL)
+    error_max1:
+    IF (error_status) THEN BEGIN
+      tof_max = '?'
+      status_text = '- Please check the TOF cut max value'
+      IF (StatusMessage GT 0) THEN BEGIN
+        append = 1
+      ENDIF ELSE BEGIN
+        append = 0
+      ENDELSE
+      putInfoInReductionStatus, Event, status_text, append
+      StatusMessage += 1
+    ENDIF
+    
+  ENDIF ELSE BEGIN
+  
+    ON_IOERROR, error_max
+    error_status = 1
+    tof_max = FLOAT(tof_max)
+    error_status = 0
+    tof_max *= 1000. ;to convert to microS
+    tof_max = STRCOMPRESS(tof_max,/REMOVE_ALL)
+    
+    error_max:
+    IF (error_status) THEN BEGIN
+      tof_max = '?'
+      status_text = '- Please check the TOF cut max value'
+      IF (StatusMessage GT 0) THEN BEGIN
+        append = 1
+      ENDIF ELSE BEGIN
+        append = 0
+      ENDELSE
+      putInfoInReductionStatus, Event, status_text, append
+      StatusMessage += 1
+    ENDIF
+    
+  ENDELSE
+  
   cmd += ' --tof-cut-max=' + tof_max
 ENDIF
 
