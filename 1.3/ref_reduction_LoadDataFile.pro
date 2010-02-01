@@ -334,6 +334,9 @@ PRO REFreduction_LoadDatafile, Event, isNeXusFound, NbrNexus
           full_nexus_name,$
           list_pola_state)
           
+          help, nbr_pola_state
+          print, nbr_pola_state
+          
         IF (nbr_pola_state EQ -1) THEN BEGIN ;missing function
           RETURN
         ENDIF

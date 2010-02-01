@@ -37,6 +37,37 @@ FUNCTION check_number_polarization_state, Event, $
     list_pola_state
     
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  ;REMOVE_ME once nxdir works again
+  text = '-> Number of polarization states: '
+  IF ((*global).instrument EQ 'REF_L') THEN BEGIN
+    list_pola_state = ['/entry/']
+  ENDIF ELSE BEGIN
+    list_pola_state = ['entry-Off_Off',$
+      'entry-Off_On',$
+      'entry-On_Off',$
+      'entry-On_On']
+  ENDELsE
+  (*(*global).list_pola_state) = list_pola_state
+  
+  sz = N_ELEMENTS(list_pola_state)
+  text += STRCOMPRESS(sz,/REMOVE_ALL)
+  i=0
+  text += ' ('
+  WHILE (i LT sz) DO BEGIN
+    text += list_pola_state[i]
+    if (i LT (sz-1)) THEN text += ', '
+    i++
+  ENDWHILE
+  text += ')'
+  putLogBookMessage, Event, Text, Append=1
+  RETURN, sz
+  
+  ;end of remove me once nxdir works again
+  
+  
+  
+  
   text = '-> Number of polarization states: '
   cmd = 'nxdir ' + nexus_file_name[0]
   
@@ -50,6 +81,7 @@ FUNCTION check_number_polarization_state, Event, $
     RETURN, -1
   ENDIF ELSE BEGIN
     SPAWN, cmd, listening, err_listening
+    
     list_pola_state = listening  ;keep record of name of pola states
     (*(*global).list_pola_state) = list_pola_state
     IF (err_listening[0] NE '') THEN RETURN, -1
