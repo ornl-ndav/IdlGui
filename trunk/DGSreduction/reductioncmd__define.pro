@@ -310,12 +310,14 @@ PRO ReductionCmd::SetProperty, $
         self.cornergeometry = $
           "/SNS/ARCS/2009_2_18_CAL/calibrations/ARCS_cgeom_20090128.txt"
         self.queue = "arcs"
+        self.jobs = 23
       end
       "CNCS": begin
         self.facility = "SNS"
         self.cornergeometry = $
           "/SNS/CNCS/2009_2_5_CAL/calibrations/CNCS_cgeom_20090224.txt"
         self.queue = "cncsq"
+        self.jobs = 24
       end
       "SEQUOIA": begin
         self.instrument = "SEQ"
@@ -323,15 +325,19 @@ PRO ReductionCmd::SetProperty, $
         self.cornergeometry = $
           "/SNS/SEQ/2009_2_17_CAL/calibrations/SEQ_cgeom_20090302.txt"
         self.queue = "sequoiaq"
+        self.jobs = 23
       end
       "MAPS": begin
         self.facility = "ISIS"
+        self.jobs = 1
       end
       "MARI": begin
         self.facility = "ISIS"
+        self.jobs = 1
       end
       "MERLIN": begin
         self.facility = "ISIS"
+        self.jobs = 1
       end
       else: begin
         ; If it's an unknown instrument then we can't know the facility!
@@ -920,7 +926,7 @@ function ReductionCmd::Generate
     
     ; Auto Wandering Phase
     IF (self.CWP EQ 1) THEN BEGIN
-      ; Don't need to do owt at the moment.
+    ; Don't need to do owt at the moment.
     ENDIF
     
     ; For now let people specify these offsets without turning on the CWP!
