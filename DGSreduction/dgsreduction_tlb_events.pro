@@ -69,6 +69,12 @@ PRO DGSreduction_TLB_Events, event
     'INSTRUMENT_SELECTED': BEGIN
     
       dgsr_cmd->SetProperty, Instrument=event.STR
+      
+      ; Update the default number of jobs
+      jobs_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGS_REDUCTION_JOBS')
+      dgsr_cmd->GetProperty, Jobs=njobs
+      WIDGET_CONTROL, jobs_ID, SET_VALUE=njobs
+      
       ; Set the default detector banks
       lowerbank_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_DATAPATHS_LOWER')
       upperbank_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_DATAPATHS_UPPER')
