@@ -113,6 +113,7 @@ PRO ReductionCmd::GetProperty, $
     OutputOverride=OutputOverride, $     ; Prefix for where to write the output
     Timing=timing, $                     ; Timing of code
     Jobs=jobs, $                         ; Number of Jobs to run
+    UseHome=usehome, $                   ; Flag to indicate whether we should write to the home directory
     _Extra=extra
     
   ; Error Handling
@@ -202,6 +203,7 @@ PRO ReductionCmd::GetProperty, $
   IF ARG_PRESENT(OutputOverride) NE 0 THEN OutputOverride = self.OutputOverride
   IF ARG_PRESENT(Timing) NE 0 THEN Timing = self.timing
   IF ARG_PRESENT(Jobs) NE 0 THEN Jobs = self.jobs
+  IF ARG_PRESENT(UseHome) NE 0 THEN UseHome = self.usehome
   
 END
 
@@ -282,6 +284,7 @@ PRO ReductionCmd::SetProperty, $
     OutputOverride=OutputOverride, $         ; Prefix for where to write the output
     Timing=timing, $                     ; Timing of code
     Jobs=jobs, $                         ; Number of Jobs to run
+    UseHome=usehome, $                   ; Flag to indicate whether we should write to the home directory
     _Extra=extra
     
   ; Error Handling
@@ -433,6 +436,8 @@ PRO ReductionCmd::SetProperty, $
   
   IF N_ELEMENTS(timing) NE 0 THEN self.timing = Timing
   IF N_ELEMENTS(jobs) NE 0 THEN self.jobs = jobs
+  IF N_ELEMENTS(UseHome) NE 0 THEN self.usehome = UseHome
+  
   IF N_ELEMENTS(extra) NE 0 THEN *self.extra = extra
   
 ;print, '--SetProperty--'
@@ -697,7 +702,8 @@ function ReductionCmd::Generate
     ;IF STRLEN(self.output) GT 1 THEN cmd[i] += " --output="+ self.output
     
     IF (STRLEN(self.instrument) GT 1) AND (STRLEN(self.datarun) GE 1) THEN $
-      cmd[i] += " --output=" + get_output_directory(self.instrument, self->GetRunNumber(), OVERRIDE=self.OutputOverride) + $
+      cmd[i] += " --output=" + get_output_directory(self.instrument, self->GetRunNumber(), $
+      HOME=self.usehome, OVERRIDE=self.OutputOverride) + $
       "/" + self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
       i+1, self.jobs, /PAD) + ".txt"
       
@@ -730,7 +736,8 @@ function ReductionCmd::Generate
     IF (STRLEN(self.normalisation) GE 1) AND (self.normalisation NE 0) $
       AND (STRLEN(self.instrument) GT 1) THEN BEGIN
       
-      cmd[i] += " --norm=" + get_output_directory(self.instrument, getFirstNumber(self.normalisation)) + "/" + $
+      cmd[i] += " --norm=" + get_output_directory(self.instrument, getFirstNumber(self.normalisation), $
+        HOME=self.usehome) + "/" + $
         self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
         i+1, self.jobs, /PAD) + ".norm"
         
@@ -837,7 +844,7 @@ function ReductionCmd::Generate
       IF (self.mask EQ 1) AND (STRLEN(self.normalisation) GE 1) $
         AND (STRLEN(self.instrument) GT 1) THEN BEGIN
         cmd[i] += get_output_directory(self.instrument, getFirstNumber(self.normalisation), $
-          OVERRIDE=self.OutputOverride) + "/" + $
+          HOME=self.usehome, OVERRIDE=self.OutputOverride) + "/" + $
           self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
           i+1, self.jobs, /PAD) + "_mask.dat"
           
@@ -850,7 +857,8 @@ function ReductionCmd::Generate
       ; 'Hard' Mask file...
       IF (self.hardmask EQ 1) AND (STRLEN(self.instrument) GT 1) THEN BEGIN
         ;
-        mask_dir = get_output_directory(self.instrument, self->GetRunNumber(), OVERRIDE=self.OutputOverride) $
+        mask_dir = get_output_directory(self.instrument, self->GetRunNumber(), $
+          HOME=self.usehome, OVERRIDE=self.OutputOverride) $
           + "/masks"
           
         ; Let's make sure that the masks directory exists
@@ -910,9 +918,9 @@ function ReductionCmd::Generate
         (self.Error_DebyeWaller ? self.Error_DebyeWaller : '0.0')
     ENDIF
     
-    ; Chopper Wandering Phase
+    ; Auto Wandering Phase
     IF (self.CWP EQ 1) THEN BEGIN
-    
+      ; Don't need to do owt at the moment.
     ENDIF
     
     ; For now let people specify these offsets without turning on the CWP!
@@ -1012,6 +1020,7 @@ function ReductionCmd::Init, $
     OutputOverride=OutputOverride, $     ; Prefix for where to write the output
     Timing=timing, $                     ; Timing of code
     Jobs=jobs, $                         ; Number of Jobs
+    UseHome=usehome, $                   ; Flag to indicate whether we should write to the home directory
     _Extra=extra
     
   ; Error Handling
@@ -1098,6 +1107,7 @@ function ReductionCmd::Init, $
   IF N_ELEMENTS(OutputOverride) EQ 0 THEN OutputOverride = ""
   IF N_ELEMENTS(timing) EQ 0 THEN timing = 0
   IF N_ELEMENTS(jobs) EQ 0 THEN jobs = 1
+  IF N_ELEMENTS(UseHome) EQ 0 THEN UseHome = 0
   
   self.program = program
   self.version = version
@@ -1175,6 +1185,7 @@ function ReductionCmd::Init, $
   self.OutputOverride = OutputOverride
   self.timing = timing
   self.jobs = jobs
+  self.usehome = usehome
   self.extra = PTR_NEW(extra)
   
   RETURN, 1
@@ -1265,5 +1276,6 @@ pro ReductionCmd__Define
     data_cwp: "", $          ; chopper phase corrections for sample data. (usecs)
     timing: 0L, $            ; Timing of code
     jobs : 0L, $             ; Number of Jobs to Run
+    usehome : 0L, $          ; Flag to indicate whether we should write to the home directory
     extra: PTR_NEW() }       ; Extra keywords
 end
