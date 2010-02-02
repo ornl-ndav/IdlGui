@@ -471,6 +471,57 @@ END
 
 ;+
 ; :Description:
+;    Returns the first run number from the normalisation property.
+;    This is used for naming files/directories/jobs when more than
+;    one file is specified.
+;
+;    e.g. normalisation="1234-1250" would return "1234"
+;         normalisation="1234,1235" would return "1234"
+;         normalisation="1250,1243-1249" would return "1250"
+;
+; :Author: scu (campbellsi@ornl.gov)
+;-
+FUNCTION ReductionCmd::GetNormalisationNumber
+
+  RETURN, getFirstNumber(self.normalisation)
+  
+END
+
+;+
+; :Description:
+;    Returns the directory where the results from a reduction
+;    job will be written.
+;
+; :Author: scu (campbellsi@ornl.gov)
+;-
+FUNCTION ReductionCmd::GetReductionOutputDirectory
+
+ print,'ReductionCmd::GetReductionOutputDirectory():'
+  directory = get_output_directory(self.instrument, $
+    self->GetRunNumber(), $
+    HOME=self.usehome, OVERRIDE=self.OutputOverride)
+  print,directory
+  RETURN, directory
+END
+
+;+
+; :Description:
+;    Returns the directory where the results from a
+;    normalisation job will be written.
+;
+; :Author: scu (campbellsi@ornl.gov)
+;-
+FUNCTION ReductionCmd::GetNormalisationOutputDirectory
+  directory = get_output_directory(self.instrument, $
+    getFirstNumber(self.normalisation), $
+    HOME=self.usehome, OVERRIDE=self.OutputOverride)
+  print,directory
+  RETURN, directory
+END
+
+
+;+
+; :Description:
 ;    Procedure to check that all essential parameters have
 ;    been defined.  Also, that we haven't specified any
 ;    conflicting options.
@@ -629,6 +680,8 @@ function ReductionCmd::Check
   ; the correct number of jobs.
   IF (STRLEN(self.normalisation) GE 1) AND (self.normalisation NE 0) $
     AND (STRLEN(self.instrument) GT 1) THEN BEGIN
+    
+    print,'Checking mask and norm files...'
     
     norm_error = 0
     mask_error = 0
@@ -863,36 +916,12 @@ function ReductionCmd::Generate
       ; 'Hard' Mask file...
       IF (self.hardmask EQ 1) AND (STRLEN(self.instrument) GT 1) THEN BEGIN
         ;
-        mask_dir = get_output_directory(self.instrument, self->GetRunNumber(), $
-          HOME=self.usehome, OVERRIDE=self.OutputOverride) $
-          + "/masks"
-          
-        ; Let's make sure that the masks directory exists
-        spawn, 'mkdir -p ' + mask_dir
+        mask_dir = self->GetReductionOutputDirectory() + "/masks"
         
         tmp_maskfile = mask_dir + "/" + $
           self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
           i+1, self.jobs, /PAD) + "_mask.dat"
           
-        source_maskfile = get_maskfile(self.instrument, self->GetRunNumber())
-        tmp_datapaths = Construct_DataPaths(self.lowerbank, self.upperbank, $
-          i+1, self.jobs)
-        banks = STRSPLIT(tmp_datapaths, "-", /EXTRACT)
-        
-        first_time_around_loop = 0
-        
-        for ibank = long(banks[0]), long(banks[1]) do begin
-          split_cmd = "grep bank" + strcompress(ibank,/remove_all) + $
-            "_ " + source_maskfile + " >"
-          ; If it's not the first bank, then use >> to append to the file
-          IF (first_time_around_loop EQ 1) THEN split_cmd += ">"
-          split_cmd += " " + tmp_maskfile
-          print, split_cmd
-          spawn, split_cmd
-          ; Once we have got here we have gone round once...
-          first_time_around_loop = 1
-        endfor
-        
         cmd[i] += tmp_maskfile
         
       ENDIF
