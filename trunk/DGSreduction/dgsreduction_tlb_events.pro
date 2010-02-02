@@ -34,14 +34,14 @@
 
 PRO DGSreduction_TLB_Events, event
   thisEvent = TAG_NAMES(event, /STRUCTURE_NAME)
-   
+  
   ; Get the info structure
   WIDGET_CONTROL, event.top, GET_UVALUE=info, /NO_COPY
   
   ; extract the command object into a separate
   dgsr_cmd = info.dgsr_cmd    ; ReductionCMD object
   dgsn_cmd = info.dgsn_cmd   ; NormCMD object
-
+  
   WIDGET_CONTROL, event.id, GET_UVALUE=myUVALUE
   
   ; Check that we actually got something back in the UVALUE
@@ -82,34 +82,34 @@ PRO DGSreduction_TLB_Events, event
       WIDGET_CONTROL, upperbank_ID, GET_VALUE=upperbank
       ; Get the detector bank limits for the current beamline
       bank = getDetectorBankRange(event.STR)
-      ;IF (lowerbank LE 0) THEN BEGIN 
-        WIDGET_CONTROL, lowerbank_ID, SET_VALUE=bank.lower
-        dgsr_cmd->SetProperty, LowerBank=bank.lower
+      ;IF (lowerbank LE 0) THEN BEGIN
+      WIDGET_CONTROL, lowerbank_ID, SET_VALUE=bank.lower
+      dgsr_cmd->SetProperty, LowerBank=bank.lower
       ;ENDIF
-      ;IF (upperbank LE 0) THEN BEGIN 
-        WIDGET_CONTROL, upperbank_ID, SET_VALUE=bank.upper
-        dgsr_cmd->SetProperty, UpperBank=bank.upper
+      ;IF (upperbank LE 0) THEN BEGIN
+      WIDGET_CONTROL, upperbank_ID, SET_VALUE=bank.upper
+      dgsr_cmd->SetProperty, UpperBank=bank.upper
       ;ENDIF
       
       ; Now do same for 'Vanadium Mask' Tab
       dgsn_cmd->SetProperty, Instrument=event.STR
-      ; Set the default detector banks 
+      ; Set the default detector banks
       lowerbank_norm_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSN_DATAPATHS_LOWER')
       upperbank_norm_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSN_DATAPATHS_UPPER')
       WIDGET_CONTROL, lowerbank_norm_ID, GET_VALUE=lowerbank
       WIDGET_CONTROL, upperbank_norm_ID, GET_VALUE=upperbank
       ; Get the detector bank limits for the current beamline
       bank = getDetectorBankRange(event.STR)
-      ;IF (lowerbank LE 0) THEN BEGIN 
-        WIDGET_CONTROL, lowerbank_norm_ID, SET_VALUE=bank.lower
-        dgsn_cmd->SetProperty, LowerBank=bank.lower
+      ;IF (lowerbank LE 0) THEN BEGIN
+      WIDGET_CONTROL, lowerbank_norm_ID, SET_VALUE=bank.lower
+      dgsn_cmd->SetProperty, LowerBank=bank.lower
       ;ENDIF
-      ;IF (upperbank LE 0) THEN BEGIN 
-        WIDGET_CONTROL, upperbank_norm_ID, SET_VALUE=bank.upper
-        dgsn_cmd->SetProperty, UpperBank=bank.upper
-      ;ENDIF
+      ;IF (upperbank LE 0) THEN BEGIN
+      WIDGET_CONTROL, upperbank_norm_ID, SET_VALUE=bank.upper
+      dgsn_cmd->SetProperty, UpperBank=bank.upper
+    ;ENDIF
     END
-
+    
     'DGS_REDUCTION_JOBS': BEGIN
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
       if (myValue NE "") AND (myValue GT 0) AND (myValue LT info.max_jobs) then begin
@@ -117,23 +117,23 @@ PRO DGSreduction_TLB_Events, event
         dgsn_cmd->SetProperty, Jobs=myValue
         ; If we are doing more than 1 job, we also need to set the --split option
         IF (myValue GT 1) THEN dgsr_cmd->SetProperty, Split=1
-        ; Do the same for the dgs_norm command 
+        ; Do the same for the dgs_norm command
         IF (myValue GT 1) THEN dgsn_cmd->SetProperty, Split=1
         
         ; But if we are only doing 1 then we don't!
         IF (myValue EQ 1) THEN dgsr_cmd->SetProperty, Split=0
-        ; Do the same for the dgs_norm command 
+        ; Do the same for the dgs_norm command
         IF (myValue EQ 1) THEN dgsn_cmd->SetProperty, Split=0
       endif
       
-      ; Disable the "Launch Collector" button if there is only one job
-;      dgsr_collector_button = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_LAUNCH_COLLECTOR_BUTTON')      
-;      IF (myValue EQ 1) THEN BEGIN
-;        WIDGET_CONTROL, dgsr_collector_button, SENSITIVE=0
-;      ENDIF ELSE BEGIN
-;         WIDGET_CONTROL, dgsr_collector_button, SENSITIVE=1
-;      ENDELSE
-
+    ; Disable the "Launch Collector" button if there is only one job
+    ;      dgsr_collector_button = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_LAUNCH_COLLECTOR_BUTTON')
+    ;      IF (myValue EQ 1) THEN BEGIN
+    ;        WIDGET_CONTROL, dgsr_collector_button, SENSITIVE=0
+    ;      ENDIF ELSE BEGIN
+    ;         WIDGET_CONTROL, dgsr_collector_button, SENSITIVE=1
+    ;      ENDELSE
+      
     END
     'DGS_SLURM_QUEUE': BEGIN
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
@@ -150,66 +150,70 @@ PRO DGSreduction_TLB_Events, event
         ; then set the SLURM queue text field
         ;print, 'AUTO'
         slurm_queue_ID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGS_SLURM_QUEUE')
-        dgsr_cmd->GetProperty, Queue=currentSQ 
-        WIDGET_CONTROL, slurm_queue_ID, SET_VALUE=currentSQ 
+        dgsr_cmd->GetProperty, Queue=currentSQ
+        WIDGET_CONTROL, slurm_queue_ID, SET_VALUE=currentSQ
       ENDIF
     END
     'DGS_CUSTOM_SLURM': BEGIN
       IF (event.select EQ 1) THEN BEGIN
-        ;print, 'CUSTOM'
-        ; Do nothing!
+      ;print, 'CUSTOM'
+      ; Do nothing!
       ENDIF
     END
     'DGS_OUTPUT_PREFIX': BEGIN
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
-      ;TODO: Check to see that the directory is valid
-      dgsr_cmd->SetProperty, OutputPrefix=myValue
+      directoryValid = FILE_TEST(myValue, /DIRECTORY, /WRITE)
+      IF (directoryValid EQ 1) THEN dgsr_cmd->SetProperty, OutputPrefix=myValue
     END
     'DGS_AUTO_OUTPUT_PREFIX': BEGIN
       ; For auto prefix - just use relay on whatever is returned by get_output_directory()
       IF (event.select EQ 1) THEN BEGIN
         dgsr_cmd->SetProperty, OutputPrefix=''
-        ; Update the GUI
-        outputPrefixID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGS_OUTPUT_PREFIX')
-        WIDGET_CONTROL, outputPrefixID, SET_VALUE=''
       ENDIF
+    END
+    'DGS_FORCE_HOME_OUTPUT': BEGIN
+      dgsr_cmd->SetProperty, UseHome=event.SELECT
     END
     'DGS_CUSTOM_OUTPUT_PREFIX': BEGIN
       IF (event.select EQ 1) THEN BEGIN
-        ;print, 'CUSTOM'
-        ; Do nothing!
+        ; Get the value from the GUI
+        outputPrefixID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGS_OUTPUT_PREFIX')
+        WIDGET_CONTROL, outputPrefixID, GET_VALUE=myValue
+        ; Update the command object... if the directory exists
+        directoryValid = FILE_TEST(myValue, /DIRECTORY, /WRITE)
+        IF (directoryValid EQ 1) THEN dgsr_cmd->SetProperty, OutputPrefix=myValue
       ENDIF
     END
     'NOTHING': BEGIN
     END
     ELSE: BEGIN
       ; Do nowt
-      print, '*** UVALUE: ' + myUVALUE + ' not handled! ***' 
+      print, '*** UVALUE: ' + myUVALUE + ' not handled! ***'
     END
-
-  ENDCASE 
+    
+  ENDCASE
   
   ; Do a sanity check
   status = dgsr_cmd->check()
   dgsn_status = dgsn_cmd->check()
   
   ; Disable the "Launch Collector" button if we are not ok to run!
-;  dgsr_collector_button = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_LAUNCH_COLLECTOR_BUTTON')
-;  WIDGET_CONTROL, dgsr_collector_button, SENSITIVE=status.ok
-    ; Disable the "Launch Collector" button if we are not ok to run!
-;  dgsn_collector_button = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSN_LAUNCH_COLLECTOR_BUTTON')
-;  WIDGET_CONTROL, dgsn_collector_button, SENSITIVE=dgsn_status.ok
+  ;  dgsr_collector_button = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_LAUNCH_COLLECTOR_BUTTON')
+  ;  WIDGET_CONTROL, dgsr_collector_button, SENSITIVE=status.ok
+  ; Disable the "Launch Collector" button if we are not ok to run!
+  ;  dgsn_collector_button = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSN_LAUNCH_COLLECTOR_BUTTON')
+  ;  WIDGET_CONTROL, dgsn_collector_button, SENSITIVE=dgsn_status.ok
   
   ; Find the Messages Window (DGSR)
   dgsr_info_outputID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGSR_INFO_TEXT')
-  WIDGET_CONTROL, dgsr_info_outputID, SET_VALUE=status.message  
+  WIDGET_CONTROL, dgsr_info_outputID, SET_VALUE=status.message
   ; Find the Messages Window (DGSR)
   dgsn_info_outputID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGSN_INFO_TEXT')
   WIDGET_CONTROL, dgsn_info_outputID, SET_VALUE=dgsn_status.message
   
   ; Also Enable/Disable the DGSR Execute button
   dgsr_executeID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGSR_EXECUTE_BUTTON')
-  WIDGET_CONTROL, dgsr_executeID, SENSITIVE=status.ok 
+  WIDGET_CONTROL, dgsr_executeID, SENSITIVE=status.ok
   ; Also Enable/Disable the DGSN Execute button
   dgsn_executeID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGSN_EXECUTE_BUTTON')
   WIDGET_CONTROL, dgsn_executeID, SENSITIVE=dgsn_status.ok
@@ -223,24 +227,27 @@ PRO DGSreduction_TLB_Events, event
   ; Update the output command window
   WIDGET_CONTROL, dgsn_cmd_outputID, SET_VALUE=dgsn_cmd->generate()
   
+  ; Update the feedback for were we are going to write the results
+  settings_output_dir_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGS_OUTPUT_DIRECTORY_LABEL')
+  WIDGET_CONTROL, settings_output_dir_ID, SET_VALUE=dgsr_cmd->GetReductionOutputDirectory()
   
-  ; Update the name of the SLURM queue (on the Admin Tab)
+  ; Update the name of the SLURM queue (on the Settings Tab)
   slurm_queue_ID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGS_SLURM_QUEUE')
   customSlurmQueueID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGS_CUSTOM_SLURM')
   pressed = WIDGET_INFO(customSlurmQueueID, /BUTTON_SET)
   WIDGET_CONTROL, slurm_queue_ID, SENSITIVE=pressed
   ; Only bother updating the SLURM queue field if we are on automatic
   IF (pressed NE 1) THEN BEGIN
-    dgsr_cmd->GetProperty, Queue=currentSQ 
-    WIDGET_CONTROL, slurm_queue_ID, SET_VALUE=currentSQ 
+    dgsr_cmd->GetProperty, Queue=currentSQ
+    WIDGET_CONTROL, slurm_queue_ID, SET_VALUE=currentSQ
   ENDIF
   
-  ; Update the output prefix (on the Admin Tab)
+  ; Update the output prefix (on the Settings Tab)
   outputPrefixID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGS_OUTPUT_PREFIX')
   customOutputPrefixButtonID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGS_CUSTOM_OUTPUT_PREFIX')
   pressed = WIDGET_INFO(customOutputPrefixButtonID, /BUTTON_SET)
   WIDGET_CONTROL, outputPrefixID, SENSITIVE=pressed
-
+  
   
   ; Put info back
   WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
