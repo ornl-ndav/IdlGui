@@ -1,4 +1,4 @@
-function CalcEi, Estimate, Instrument, RunNumber
+function CalcEi, Instrument, RunNumber, Estimate
 
   ;TODO: Do it properly
   

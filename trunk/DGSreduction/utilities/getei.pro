@@ -63,14 +63,14 @@ function getEi, instrument, runnumber
   case (STRUPCASE(instrument)) of
     "ARCS": begin
       ; Calculate the Ei
-      Ei = calcei(requested_ei, instrument, runnumber)
+      Ei = calcei(instrument, runnumber, requested_ei)
     end
     "CNCS": begin
       Ei = requested_ei
     end
     "SEQUOIA": begin
       ; Calculate the Ei
-      Ei = calcei(requested_ei, instrument, runnumber)
+      Ei = calcei(instrument, runnumber, requested_ei)
     end
     else: begin
       ; If we don't know the beamline then just assumed that the requested Ei is good enough!
