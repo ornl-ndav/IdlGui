@@ -1,7 +1,9 @@
 function get_output_directory, instrument, runnumber, HOME=HOME, CREATE=CREATE, OVERRIDE=OVERRIDE
 
+  print, 'START@GET_OUTPUT_DIRECTORY()', systime()
+  
   UNKNOWN = 0
-
+  
   IF KEYWORD_SET(OVERRIDE) THEN BEGIN
     ; only return the override if it contains something!
     IF STRLEN(OVERRIDE) GE 1 THEN BEGIN
@@ -12,17 +14,25 @@ function get_output_directory, instrument, runnumber, HOME=HOME, CREATE=CREATE, 
         print, 'Creating directory ',OVERRIDE
         spawn, 'mkdir -p ' + OVERRIDE
       ENDIF
+      print, 'END@GET_OUTPUT_DIRECTORY()', systime()
       return, OVERRIDE
     ENDIF
   ENDIF
   
   IF N_ELEMENTS(instrument) EQ 0 THEN UNKNOWN=1
-  IF N_ELEMENTS(runnumber) EQ 0 THEN UNKNOWN=1
+  IF N_ELEMENTS(runnumber) EQ 0 THEN BEGIN
+    UNKNOWN=1
+    runnumber=''
+  ENDIF
+  
+  ; Also check to for a single digit run number
+  IF STRLEN(runnumber) LT 2 THEN UNKNOWN = 1
   
   ; If we don't know what the instrument or run number is then just write to
   ; the ~/results directory!
   IF (UNKNOWN EQ 1) THEN BEGIN
     output_directory  = '/SNS/users/' + get_ucams() + '/results/'
+    print, 'END@GET_OUTPUT_DIRECTORY()', systime()
     return, output_directory
   ENDIF
   
@@ -49,14 +59,19 @@ function get_output_directory, instrument, runnumber, HOME=HOME, CREATE=CREATE, 
     output_directory += STRUPCASE(STRCOMPRESS(string(runnumber),/REMOVE_ALL))
   ENDELSE
   
-  ; Let's check to see if the directory exists
-  directoryThere = FILE_TEST(output_directory, /DIRECTORY)
+  
   
   ; Make it if it doesn't exists (and we have asked for it to be created)
-  IF (directoryThere EQ 0) AND KEYWORD_SET(CREATE) THEN BEGIN
-    print, 'Creating directory ',output_directory
-    spawn, 'mkdir -p ' + output_directory
+  IF KEYWORD_SET(CREATE) THEN BEGIN
+    ; Let's check to see if the directory exists
+    directoryThere = FILE_TEST(output_directory, /DIRECTORY)
+    IF (directoryThere EQ 0) THEN BEGIN
+      print, 'Creating directory ',output_directory
+      spawn, 'mkdir -p ' + output_directory
+    ENDIF
   ENDIF
+  
+  print, 'END@GET_OUTPUT_DIRECTORY()', systime()
   
   return, output_directory
 end
