@@ -138,9 +138,14 @@ PRO DGSreduction_Execute, event
     ; Number of Jobs
     dgsr_cmd->GetProperty, Jobs=jobs
     
-    ; output Directory
-    outputDir = get_output_directory(Instrument, runnumber, /CREATE)
+    ; Output Overrides...
+    dgsr_cmd->GetProperty, UseHome=usehome
+    dgsr_cmd->GetProperty, OutputOverride=outputoverride
     
+    ; output Directory
+    outputDir = get_output_directory(Instrument, runnumber, $
+      UseHome=UseHome, OutputOverride=OutputOverride, /CREATE)
+      
     ; store the outputDir in the info structure
     info.outputDir = outputDir
     
@@ -151,6 +156,16 @@ PRO DGSreduction_Execute, event
     logDir = outputDir + '/logs'
     ; Make the directory
     spawn, 'mkdir -p ' + logDir
+    
+    ; Now let's look at the masks...
+    dgsr_cmd->GetProperty, HardMask=hardmask
+    
+    IF (hardmask EQ 1) THEN BEGIN
+      maskDir = outputDir + '/masks'
+      ; Let's make sure that the masks directory exists
+      spawn, 'mkdir -p ' + maskDir
+      source_maskfile = get_maskfile(instrument, runnumber)
+    ENDIF
     
     ; Check to see if the Chopper Wandering Phase Correction is turned on
     dgsr_cmd->GetProperty, CWP=cwp
@@ -273,6 +288,29 @@ PRO DGSreduction_Execute, event
         Construct_DataPaths(lowerbank, upperbank, index+1, jobs, /PAD) + $
         '.log'
         
+      ; Let's construct the mask files...
+      IF (HardMask EQ 1) THEN BEGIN
+        tmp_maskfile = maskDir + "/" + $
+          self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
+          i+1, self.jobs, /PAD) + "_mask.dat"
+        tmp_datapaths = Construct_DataPaths(lowerbank, upperbank, index+1, jobs)
+        tmp_banks = STRSPLIT(tmp_datapaths, "-", /EXTRACT)
+        
+        first_time_around_loop = 0
+        for ibank = long(banks[0]), long(banks[1]) do begin
+          split_cmd = "grep bank" + strcompress(ibank,/remove_all) + $
+            "_ " + source_maskfile + " >"
+          ; If it's not the first bank, then use >> to append to the file
+          IF (first_time_around_loop EQ 1) THEN split_cmd += ">"
+          split_cmd += " " + tmp_maskfile
+          print, split_cmd
+          spawn, split_cmd
+          ; Once we have got here we have gone round once...
+          first_time_around_loop = 1
+        endfor
+        
+      ENDIF
+      
       cmd = jobcmd + " --output=" + logfile + $
         " --job-name=" + jobname + $
         " " + commands[index]
