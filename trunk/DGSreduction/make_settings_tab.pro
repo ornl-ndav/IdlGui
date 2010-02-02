@@ -78,15 +78,22 @@ PRO make_settings_tab, baseWidget, myCommandObj
   outputPrefixLabel = WIDGET_LABEL(outputPrefixBase, VALUE=' Output Directory ', XOFFSET=5)
   outputPrefixLabelGeometry = WIDGET_INFO(outputPrefixLabel, /GEOMETRY)
   outputPrefixLabelYSize = outputPrefixLabelGeometry.ysize
-  outputPrefixPrettyBase = WIDGET_BASE(outputPrefixBase, /FRAME, /ROW, XPAD=10, YPAD=10, YOFFSET=outputPrefixLabelYSize/2.0)
+  outputPrefixPrettyBase = WIDGET_BASE(outputPrefixBase, /FRAME, /COLUMN, XPAD=10, YPAD=10, YOFFSET=outputPrefixLabelYSize/2.0)
   outputPrefixRow = WIDGET_BASE(outputPrefixPrettyBase, /ROW)
   outputPrefixButtons = WIDGET_BASE(outputPrefixRow, EXCLUSIVE=1)
   autoOutputPrefixButtonID = WIDGET_BUTTON(outputPrefixButtons, VALUE='Automatic', $
     UNAME='DGS_AUTO_OUTPUT_PREFIX', UVALUE='DGS_AUTO_OUTPUT_PREFIX')
+  forceHomeOutputButtonID = WIDGET_BUTTON(outputPrefixButtons, VALUE='Force Home Directory', $
+    UNAME='DGS_FORCE_HOME_OUTPUT', UVALUE='DGS_FORCE_HOME_OUTPUT')
   customOutputPrefixButtonID = WIDGET_BUTTON(outputPrefixButtons, VALUE='Custom', $
     UNAME='DGS_CUSTOM_OUTPUT_PREFIX', UVALUE='DGS_CUSTOM_OUTPUT_PREFIX')
   outputPrefixID = CW_FIELD(outputPrefixRow, YSIZE=1, XSIZE=30, TITLE='Directory:', $
     UNAME='DGS_OUTPUT_PREFIX', UVALUE='DGS_OUTPUT_PREFIX', /ALL_EVENTS)
+    
+  outputFeedbackRow = WIDGET_BASE(outputPrefixPrettyBase, /ROW)
+  outputDirectoryLabel1 = WIDGET_LABEL(outputFeedbackRow, VALUE='Current output will be written to ')
+  outputDirectoryLabel2 = WIDGET_LABEL(outputFeedbackRow, VALUE='<unknown>', UNAME='DGS_OUTPUT_DIRECTORY_LABEL', $
+    XSIZE=50)
   
   ; Make 'Automatic' the default 
   WIDGET_CONTROL, autoOutputPrefixButtonID, SET_BUTTON=1
