@@ -81,15 +81,6 @@ PRO dgsreduction_events, event, dgsr_cmd
       ; TODO: Check filename exists before setting the property!
       dgsr_cmd->SetProperty, ROIfile=myValue
     END
-    'DGSR_MASK': BEGIN
-      ;WIDGET_CONTROL, event.ID, GET_VALUE=myValue
-      dgsr_cmd->SetProperty, Mask=event.SELECT
-    END
-    'DGSR_HARD_MASK': BEGIN
-      ;WIDGET_CONTROL, event.ID, GET_VALUE=myValue
-      ; TODO: Check filename exists before setting the property!
-      dgsr_cmd->SetProperty, HardMask=event.SELECT
-    END
     'DGSR_MAKE_SPE': BEGIN
       dgsr_cmd->SetProperty, SPE=event.SELECT
     END
@@ -293,7 +284,7 @@ PRO dgsreduction_events, event, dgsr_cmd
         dgsr_cmd->SetProperty, Ei=Ei
       ENDIF
       tzero = getTzero(instrument, GetFirstNumber(runnumber), Ei)
-	; Convert it to a string
+      ; Convert it to a string
       tzero = strcompress(string(tzero), /REMOVE_ALL)
       Tzero_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_TZERO')
       WIDGET_CONTROL, tzero_ID, SET_VALUE=tzero
@@ -313,6 +304,41 @@ PRO dgsreduction_events, event, dgsr_cmd
     'DGSR_DATA_CWP': BEGIN
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
       dgsr_cmd->SetProperty, Data_CWP=myValue
+    END
+    'DGSR_NO_HARD_MASK': BEGIN
+      ; Don't need to do anything in here as the buttons 
+      ; are EXCLUSIVE so the Hard Mask one will 'turn off'
+      ; automatically.
+    END
+    'DGSR_HARD_MASK': BEGIN
+      ;WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      ; TODO: Check filename exists before setting the property!
+      dgsr_cmd->SetProperty, HardMask=event.SELECT
+    END
+    'DGSR_CUSTOM_HARD_MASK': BEGIN
+      ; As this is a separate button to the 'HARD MASK' one, we also
+      ; need to explicitly turn on the hard mask option in the 
+      ; command object.
+      dgsr_cmd->SetProperty, HardMask=event.SELECT
+      ; Also make the custom mask source filename field active (or inactive!)
+      customMaskFileID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_SOURCE_MASKFILENAME')
+      WIDGET_CONTROL, customMaskFileID, SENSITIVE=event.SELECT
+      WIDGET_CONTROL, customMaskFileID, GET_VALUE=myValue
+      ; Check that the file exists and is readable
+      fileValid = FILE_TEST(myValue, /READ)
+      IF (fileValid EQ 1) THEN BEGIN
+        ; Set the property on the command object
+        dgsr_cmd->SetProperty, MasterMaskFile=myValue
+      ENDIF
+    END
+    'DGSR_SOURCE_MASKFILENAME': BEGIN
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      ; Check that the file exists and is readable
+      fileValid = FILE_TEST(myValue, /READ)
+      IF (fileValid EQ 1) THEN BEGIN
+        ; Set the property on the command object
+        dgsr_cmd->SetProperty, MasterMaskFile=myValue
+      ENDIF
     END
     ELSE: begin
       ; Do nowt
