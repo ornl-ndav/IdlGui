@@ -184,27 +184,27 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   tofcutmaxID = CW_FIELD(tofcutRow, TITLE="Max:", UVALUE="DGSR_TOF-CUT-MAX", UNAME="DGSR_TOF-CUT-MAX", /ALL_EVENTS, XSIZE=18)
   
   ; == SAMPLE ORIENTATION ==
-  angleRow = WIDGET_BASE(reductionTabCol1Row1Col1, /ROW)
-  
-  angleBase = WIDGET_BASE(angleRow)
-  angleLabel = WIDGET_LABEL(angleBase, VALUE=' Sample Orientation ', XOFFSET=5)
-  angleLabelGeometry = WIDGET_INFO(angleLabel, /GEOMETRY)
-  angleLabelGeometryYSize = angleLabelGeometry.ysize
-  anglePrettyBase = WIDGET_BASE(angleBase, /FRAME, /COLUMN, $
-    YOFFSET=angleLabelGeometryYSize/2, XPAD=10, YPAD=10, $
-    SCR_XSIZE=550)
-    
-  angleinputsRow = WIDGET_BASE(anglePrettyBase, /ROW)
-  seblockID = CW_FIELD(angleinputsRow, TITLE="SE Block Name:", $
-    UVALUE="DGSR_SEBLOCK", UNAME="DGSR_SEBLOCK", /ALL_EVENTS, XSIZE=30)
-  angleoffsetID = CW_FIELD(angleinputsRow, TITLE="Offset (degrees):", $
-    UVALUE="DGSR_ANGLE_OFFSET", UNAME="DGSR_ANGLE_OFFSET", /ALL_EVENTS, XSIZE=13)
-    
-  angleStatusRow = WIDGET_BASE(anglePrettyBase)
-  angleStatusID = WIDGET_LABEL(angleStatusRow, VALUE= "The value for psi = -(180-ANGLE-OFFSET) / 2", UNAME="DGSR_ANGLE_STATUS")
-  
-  ; For now - let's disable the angle input
-  WIDGET_CONTROL, angleRow, SENSITIVE=0
+;  angleRow = WIDGET_BASE(reductionTabCol1Row1Col1, /ROW)
+;  
+;  angleBase = WIDGET_BASE(angleRow)
+;  angleLabel = WIDGET_LABEL(angleBase, VALUE=' Sample Orientation ', XOFFSET=5)
+;  angleLabelGeometry = WIDGET_INFO(angleLabel, /GEOMETRY)
+;  angleLabelGeometryYSize = angleLabelGeometry.ysize
+;  anglePrettyBase = WIDGET_BASE(angleBase, /FRAME, /COLUMN, $
+;    YOFFSET=angleLabelGeometryYSize/2, XPAD=10, YPAD=10, $
+;    SCR_XSIZE=550)
+;    
+;  angleinputsRow = WIDGET_BASE(anglePrettyBase, /ROW)
+;  seblockID = CW_FIELD(angleinputsRow, TITLE="SE Block Name:", $
+;    UVALUE="DGSR_SEBLOCK", UNAME="DGSR_SEBLOCK", /ALL_EVENTS, XSIZE=30)
+;  angleoffsetID = CW_FIELD(angleinputsRow, TITLE="Offset (degrees):", $
+;    UVALUE="DGSR_ANGLE_OFFSET", UNAME="DGSR_ANGLE_OFFSET", /ALL_EVENTS, XSIZE=13)
+;    
+;  angleStatusRow = WIDGET_BASE(anglePrettyBase)
+;  angleStatusID = WIDGET_LABEL(angleStatusRow, VALUE= "The value for psi = -(180-ANGLE-OFFSET) / 2", UNAME="DGSR_ANGLE_STATUS")
+;  
+;  ; For now - let's disable the angle input
+;  WIDGET_CONTROL, angleRow, SENSITIVE=0
   
   ; == NORMALISATION OPTIONS ==
   
@@ -305,7 +305,7 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   ; == ROI and MASKS ==
     
   ; Mask File
-  maskRow = WIDGET_BASE(reductionTabCol2Row1Col1, /ROW)
+  maskRow = WIDGET_BASE(reductionTabCol1Row1Col1, /ROW)
   
   maskBase = WIDGET_BASE(maskRow)
   maskLabel = WIDGET_LABEL(maskBase, VALUE=' Data Selection ', XOFFSET=5)
@@ -315,10 +315,20 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
     YOFFSET=maskLabelYSize/2, YPAD=10, XPAD=10, $
     SCR_YSIZE=145)
     
-  maskRow = WIDGET_BASE(maskPrettyBase, /ROW, /NONEXCLUSIVE)
-  ;maskID = WIDGET_BUTTON(maskRow, VALUE='Vanadium Mask', UVALUE='DGSR_MASK', UNAME='DGSR_MASK')
-  hardMaskID = WIDGET_BUTTON(maskRow, VALUE=' Default Mask', UVALUE='DGSR_HARD_MASK', UNAME='DGSR_HARD_MASK')
+  maskButtonRow = WIDGET_BASE(maskPrettyBase, /ROW, /EXCLUSIVE)
+  ;maskID = WIDGET_BUTTON(maskButtonRow, VALUE='Vanadium Mask', UVALUE='DGSR_MASK', UNAME='DGSR_MASK')
+  noHardMaskID = WIDGET_BUTTON(maskButtonRow, VALUE=' No Mask', $
+    UVALUE='DGSR_NO_HARD_MASK', UNAME='DGSR_NO_HARD_MASK')
+  hardMaskID = WIDGET_BUTTON(maskButtonRow, VALUE=' Default Mask', $
+    UVALUE='DGSR_HARD_MASK', UNAME='DGSR_HARD_MASK')
+  customMaskID = WIDGET_BUTTON(maskButtonRow, VALUE='Custom', $
+    UVALUE='DGSR_CUSTOM_HARD_MASK', UNAME='DGSR_CUSTOM_HARD_MASK')
+  
   ;maskFileID = CW_FIELD(maskRow, TITLE='Filename:', UVALUE='DGSR_MASK_FILENAME', /ALL_EVENTS)
+  
+    sourceMaskFilenameID = CW_FIELD(maskPrettyBase, YSIZE=1, XSIZE=30, TITLE='Filename:', $
+    UNAME='DGSR_SOURCE_MASKFILENAME', UVALUE='DGSR_SOURCE_MASKFILENAME', /ALL_EVENTS)
+  
   
   ; Always turn on the vanadium mask
   dgsr_cmd->SetProperty, Mask=1
