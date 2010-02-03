@@ -114,6 +114,7 @@ PRO ReductionCmd::GetProperty, $
     Timing=timing, $                     ; Timing of code
     Jobs=jobs, $                         ; Number of Jobs to run
     UseHome=usehome, $                   ; Flag to indicate whether we should write to the home directory
+    working_mask_dir=working_mask_dir, $                 ; Directory that the (split) 'hard' mask files are located.
     _Extra=extra
     
   ; Error Handling
@@ -204,6 +205,7 @@ PRO ReductionCmd::GetProperty, $
   IF ARG_PRESENT(Timing) NE 0 THEN Timing = self.timing
   IF ARG_PRESENT(Jobs) NE 0 THEN Jobs = self.jobs
   IF ARG_PRESENT(UseHome) NE 0 THEN UseHome = self.usehome
+  IF ARG_PRESENT(working_mask_dir) NE 0 THEN working_mask_dir = self.working_mask_dir
   
 END
 
@@ -285,6 +287,7 @@ PRO ReductionCmd::SetProperty, $
     Timing=timing, $                     ; Timing of code
     Jobs=jobs, $                         ; Number of Jobs to run
     UseHome=usehome, $                   ; Flag to indicate whether we should write to the home directory
+    working_mask_dir=working_mask_dir, $                 ; Directory that the (split) 'hard' mask files are located.
     _Extra=extra
     
   ; Error Handling
@@ -443,6 +446,8 @@ PRO ReductionCmd::SetProperty, $
   IF N_ELEMENTS(timing) NE 0 THEN self.timing = Timing
   IF N_ELEMENTS(jobs) NE 0 THEN self.jobs = jobs
   IF N_ELEMENTS(UseHome) NE 0 THEN self.usehome = UseHome
+  
+  IF N_ELEMENTS(working_mask_dir) NE 0 THEN self.working_mask_dir = working_mask_dir
   
   IF N_ELEMENTS(extra) NE 0 THEN *self.extra = extra
   
@@ -689,7 +694,7 @@ function ReductionCmd::Check
     FOR i = 0L, self.jobs-1 DO BEGIN
     
       IF (norm_error EQ 0) THEN BEGIN
-        norm_filename =  get_output_directory(self.instrument, getFirstNumber(self.normalisation)) + "/" + $
+        norm_filename =  self->GetNormalisationOutputDirectory() + "/" + $
           self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
           i+1, self.jobs, /PAD) + ".norm"
           
@@ -702,8 +707,7 @@ function ReductionCmd::Check
       ENDIF
       
       IF (mask_error EQ 0) THEN BEGIN
-        mask_filename = get_output_directory(self.instrument, getFirstNumber(self.normalisation), $
-          OVERRIDE=self.OutputOverride) + "/" + $
+        mask_filename = self->GetNormalisationOutputDirectory() + "/" + $
           self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
           i+1, self.jobs, /PAD) + "_mask.dat"
           
@@ -761,8 +765,7 @@ function ReductionCmd::Generate
     ;IF STRLEN(self.output) GT 1 THEN cmd[i] += " --output="+ self.output
     
     IF (STRLEN(self.instrument) GT 1) AND (STRLEN(self.datarun) GE 1) THEN $
-      cmd[i] += " --output=" + get_output_directory(self.instrument, self->GetRunNumber(), $
-      HOME=self.usehome, OVERRIDE=self.OutputOverride) + $
+      cmd[i] += " --output=" + self->GetReductionOutputDirectory() + $
       "/" + self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
       i+1, self.jobs, /PAD) + ".txt"
       
@@ -795,8 +798,7 @@ function ReductionCmd::Generate
     IF (STRLEN(self.normalisation) GE 1) AND (self.normalisation NE 0) $
       AND (STRLEN(self.instrument) GT 1) THEN BEGIN
       
-      cmd[i] += " --norm=" + get_output_directory(self.instrument, getFirstNumber(self.normalisation), $
-        HOME=self.usehome) + "/" + $
+      cmd[i] += " --norm=" + self->GetNormalisationOutputDirectory() + "/" + $
         self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
         i+1, self.jobs, /PAD) + ".norm"
         
@@ -902,8 +904,7 @@ function ReductionCmd::Generate
       ; Vanadium Mask file...
       IF (self.mask EQ 1) AND (STRLEN(self.normalisation) GE 1) $
         AND (STRLEN(self.instrument) GT 1) THEN BEGIN
-        cmd[i] += get_output_directory(self.instrument, getFirstNumber(self.normalisation), $
-          HOME=self.usehome, OVERRIDE=self.OutputOverride) + "/" + $
+        cmd[i] += self->GetNormalisationOutputDirectory() + "/" + $
           self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
           i+1, self.jobs, /PAD) + "_mask.dat"
           
@@ -1056,6 +1057,7 @@ function ReductionCmd::Init, $
     Timing=timing, $                     ; Timing of code
     Jobs=jobs, $                         ; Number of Jobs
     UseHome=usehome, $                   ; Flag to indicate whether we should write to the home directory
+    working_mask_dir=working_mask_dir, $                 ; Directory that the (split) 'hard' mask files are located.
     _Extra=extra
     
   ; Error Handling
@@ -1143,6 +1145,7 @@ function ReductionCmd::Init, $
   IF N_ELEMENTS(timing) EQ 0 THEN timing = 0
   IF N_ELEMENTS(jobs) EQ 0 THEN jobs = 1
   IF N_ELEMENTS(UseHome) EQ 0 THEN UseHome = 0
+  IF N_ELEMENTS(working_mask_dir) EQ 0 THEN working_mask_dir = ""
   
   self.program = program
   self.version = version
@@ -1221,6 +1224,7 @@ function ReductionCmd::Init, $
   self.timing = timing
   self.jobs = jobs
   self.usehome = usehome
+  self.working_mask_dir = working_mask_dir
   self.extra = PTR_NEW(extra)
   
   RETURN, 1
@@ -1312,5 +1316,6 @@ pro ReductionCmd__Define
     timing: 0L, $            ; Timing of code
     jobs : 0L, $             ; Number of Jobs to Run
     usehome : 0L, $          ; Flag to indicate whether we should write to the home directory
+    working_mask_dir: "", $          ; Directory that the (split) 'hard' mask files are located.
     extra: PTR_NEW() }       ; Extra keywords
 end

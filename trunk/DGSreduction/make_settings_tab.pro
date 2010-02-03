@@ -92,8 +92,9 @@ PRO make_settings_tab, baseWidget, myCommandObj
     
   outputFeedbackRow = WIDGET_BASE(outputPrefixPrettyBase, /ROW)
   outputDirectoryLabel1 = WIDGET_LABEL(outputFeedbackRow, VALUE='Current output will be written to ')
-  outputDirectoryLabel2 = WIDGET_LABEL(outputFeedbackRow, VALUE='<unknown>', UNAME='DGS_OUTPUT_DIRECTORY_LABEL', $
-    XSIZE=50)
+  outputDirectoryLabel2 = WIDGET_LABEL(outputFeedbackRow, VALUE='<unknown>', $
+    UNAME='DGS_OUTPUT_DIRECTORY_LABEL', $
+    XSIZE=300, ALIGN_LEFT=1)
   
   ; Make 'Automatic' the default 
   WIDGET_CONTROL, autoOutputPrefixButtonID, SET_BUTTON=1
