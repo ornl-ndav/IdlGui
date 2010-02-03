@@ -144,7 +144,7 @@ PRO DGSreduction_Execute, event
     
     ; output Directory
     outputDir = get_output_directory(Instrument, runnumber, $
-      UseHome=UseHome, OutputOverride=OutputOverride, /CREATE)
+      Home=UseHome, Override=OutputOverride, /CREATE)
       
     ; store the outputDir in the info structure
     info.outputDir = outputDir
@@ -402,10 +402,16 @@ PRO DGSnorm_Execute, event
   ; Number of Jobs
   dgsn_cmd->GetProperty, Jobs=jobs
   
+  
+  ; Output Overrides...
+  dgsr_cmd->GetProperty, UseHome=usehome
+  dgsr_cmd->GetProperty, OutputOverride=outputoverride
+  
   jobcmd = "sbatch -p " + queue + " "
   
   ; Make sure that the output directory exists
-  outputDir = get_output_directory(instrument, runnumber, /HOME, /CREATE)
+  outputDir = get_output_directory(instrument, runnumber, $ 
+    HOME=UseHome, OVERRIDE=OutputOverride, /CREATE)
   
   ; Log Directory
   cd, CURRENT=thisDir

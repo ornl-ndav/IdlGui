@@ -162,13 +162,18 @@ PRO DGSreduction_TLB_Events, event
     END
     'DGS_OUTPUT_PREFIX': BEGIN
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
-      directoryValid = FILE_TEST(myValue, /DIRECTORY, /WRITE)
-      IF (directoryValid EQ 1) THEN dgsr_cmd->SetProperty, OutputPrefix=myValue
+              print,'Custom Dir = ', myValue
+        ; Update the command object... if the directory exists
+        directoryValid = FILE_TEST(myValue, /DIRECTORY, /WRITE)
+        IF (directoryValid EQ 1) THEN BEGIN
+          print,'Setting output prefix = ',myvalue
+          dgsr_cmd->SetProperty, OutputOverride=myValue
+        ENDIF
     END
     'DGS_AUTO_OUTPUT_PREFIX': BEGIN
       ; For auto prefix - just use relay on whatever is returned by get_output_directory()
       IF (event.select EQ 1) THEN BEGIN
-        dgsr_cmd->SetProperty, OutputPrefix=''
+        dgsr_cmd->SetProperty, OutputOverride=''
       ENDIF
     END
     'DGS_FORCE_HOME_OUTPUT': BEGIN
@@ -181,7 +186,9 @@ PRO DGSreduction_TLB_Events, event
         WIDGET_CONTROL, outputPrefixID, GET_VALUE=myValue
         ; Update the command object... if the directory exists
         directoryValid = FILE_TEST(myValue, /DIRECTORY, /WRITE)
-        IF (directoryValid EQ 1) THEN dgsr_cmd->SetProperty, OutputPrefix=myValue
+        IF (directoryValid EQ 1) THEN BEGIN
+          dgsr_cmd->SetProperty, OutputOverride=myValue
+        ENDIF
       ENDIF
     END
     'NOTHING': BEGIN

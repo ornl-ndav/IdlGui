@@ -83,7 +83,6 @@ PRO dgsreduction_events, event, dgsr_cmd
     END
     'DGSR_MASK': BEGIN
       ;WIDGET_CONTROL, event.ID, GET_VALUE=myValue
-      ; TODO: Check filename exists before setting the property!
       dgsr_cmd->SetProperty, Mask=event.SELECT
     END
     'DGSR_HARD_MASK': BEGIN
