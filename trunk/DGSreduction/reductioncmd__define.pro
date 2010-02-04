@@ -505,11 +505,11 @@ END
 ;-
 FUNCTION ReductionCmd::GetReductionOutputDirectory
 
-  print,'ReductionCmd::GetReductionOutputDirectory():'
+  ;print,'ReductionCmd::GetReductionOutputDirectory():'
   directory = get_output_directory(self.instrument, $
     self->GetRunNumber(), $
     HOME=self.usehome, OVERRIDE=self.OutputOverride)
-  print,directory
+  ;print,directory
   RETURN, directory
 END
 
@@ -524,7 +524,7 @@ FUNCTION ReductionCmd::GetNormalisationOutputDirectory
   directory = get_output_directory(self.instrument, $
     getFirstNumber(self.normalisation), $
     HOME=self.usehome, OVERRIDE=self.OutputOverride)
-  print,directory
+  ;print,directory
   RETURN, directory
 END
 
