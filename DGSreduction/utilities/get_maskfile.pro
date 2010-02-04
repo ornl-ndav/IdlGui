@@ -54,8 +54,17 @@ function get_maskfile, instrument, runnumber, OVERRIDE=OVERRIDE
   ; If the file doesn't exist, copy a 'central' mask file to use
   IF (maskFileThere EQ 0) THEN BEGIN
     default_maskfile = '/SNS/' + STRUPCASE(STRCOMPRESS(string(instrument),/REMOVE_ALL))
-    default_maskfile += '/shared/masks/'+ STRUPCASE(STRCOMPRESS(string(instrument),/REMOVE_ALL))
-    default_maskfile += '_default.mask'
+    default_maskfile += '/shared/masks/'
+    
+    ; Let's check to see if this directory exists.
+    sharedMasksDir = FILE_TEST(default_maskfile, /DIRECTORY, /READ)
+    IF (sharedMasksDir EQ 0) THEN BEGIN
+      print, 'Creating masks directory in the shared proposal area.'
+      spawn, 'mkdir -p ' + sharedMasksDir
+    ENDIF
+    
+    ; Now that we've checked the directory is there, add on the filename.
+    default_maskfile += STRUPCASE(STRCOMPRESS(string(instrument),/REMOVE_ALL)) + '_default.mask'
     
     ; Is the default mask there and readable ?
     defaultMaskThere = FILE_TEST(default_maskfile, /READ)
@@ -63,10 +72,12 @@ function get_maskfile, instrument, runnumber, OVERRIDE=OVERRIDE
     IF (defaultMaskThere EQ 1) THEN BEGIN
       ; If it is there copy it to the source filename
       cmd = 'cp ' + default_maskfile + ' ' + source_maskfile
+      print, cmd
       spawn, cmd
     ENDIF ELSE BEGIN
       ; If the file doesn't exist - create a blank file!
       cmd = 'touch ' + source_maskfile
+      print,cmd
       spawn, cmd
     ENDELSE
     
