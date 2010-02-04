@@ -329,6 +329,9 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
     sourceMaskFilenameID = CW_FIELD(maskPrettyBase, YSIZE=1, XSIZE=30, TITLE='Filename:', $
     UNAME='DGSR_SOURCE_MASKFILENAME', UVALUE='DGSR_SOURCE_MASKFILENAME', /ALL_EVENTS)
   
+  ; Make 'Default' Hard mask the default
+  WIDGET_CONTROL, hardMaskID, SET_BUTTON=1
+  dgsr_cmd->SetProperty, HardMask=1
   
   ; Always turn on the vanadium mask
   dgsr_cmd->SetProperty, Mask=1
