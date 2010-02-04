@@ -1,6 +1,6 @@
 function get_output_directory, instrument, runnumber, HOME=HOME, CREATE=CREATE, OVERRIDE=OVERRIDE
 
-  print, 'START@GET_OUTPUT_DIRECTORY()', systime()
+;  print, 'START@GET_OUTPUT_DIRECTORY()', systime()
   
   UNKNOWN = 0
   
@@ -14,7 +14,7 @@ function get_output_directory, instrument, runnumber, HOME=HOME, CREATE=CREATE, 
         print, 'Creating directory ',OVERRIDE
         spawn, 'mkdir -p ' + OVERRIDE
       ENDIF
-      print, 'END@GET_OUTPUT_DIRECTORY()', systime()
+;      print, 'END@GET_OUTPUT_DIRECTORY()', systime()
       return, OVERRIDE
     ENDIF
   ENDIF
@@ -32,7 +32,7 @@ function get_output_directory, instrument, runnumber, HOME=HOME, CREATE=CREATE, 
   ; the ~/results directory!
   IF (UNKNOWN EQ 1) THEN BEGIN
     output_directory  = '/SNS/users/' + get_ucams() + '/results/'
-    print, 'END@GET_OUTPUT_DIRECTORY()', systime()
+;    print, 'END@GET_OUTPUT_DIRECTORY()', systime()
     return, output_directory
   ENDIF
   
@@ -59,8 +59,6 @@ function get_output_directory, instrument, runnumber, HOME=HOME, CREATE=CREATE, 
     output_directory += STRUPCASE(STRCOMPRESS(string(runnumber),/REMOVE_ALL))
   ENDELSE
   
-  
-  
   ; Make it if it doesn't exists (and we have asked for it to be created)
   IF KEYWORD_SET(CREATE) THEN BEGIN
     ; Let's check to see if the directory exists
@@ -71,7 +69,7 @@ function get_output_directory, instrument, runnumber, HOME=HOME, CREATE=CREATE, 
     ENDIF
   ENDIF
   
-  print, 'END@GET_OUTPUT_DIRECTORY()', systime()
+;  print, 'END@GET_OUTPUT_DIRECTORY()', systime()
   
   return, output_directory
 end
