@@ -104,4 +104,16 @@ PRO make_settings_tab, baseWidget, myCommandObj
   myCommandObj->GetProperty, OutputPrefix=outputPrefixName
   WIDGET_CONTROL, outputPrefixID, SET_VALUE=outputPrefixName
   
+  ; === dgs_reduction timing ===
+  timingBase = WIDGET_BASE(baseWidget)
+  timingLabel = WIDGET_LABEL(timingBase, VALUE=' Diagnostic Timing ', XOFFSET=5)
+  timingLabelGeometry = WIDGET_INFO(timingLabel, /GEOMETRY)
+  timingLabelYSize = timingLabelGeometry.ysize
+  timingPrettyBase = WIDGET_BASE(timingBase, /FRAME, /COLUMN, XPAD=10, YPAD=10, YOFFSET=timingLabelYSize/2.0)
+  timingRow = WIDGET_BASE(timingPrettyBase, /ROW)
+  timingButtons = WIDGET_BASE(timingRow, EXCLUSIVE=1)
+  timingOnID = WIDGET_BUTTON(timingButtons, Value='ON', UNAME='DGS_TIMING_ON', UVALUE='DGS_TIMING_ON')
+  timingOffID = WIDGET_BUTTON(timingButtons, Value='OFF', UNAME='DGS_TIMING_OFF', UVALUE='DGS_TIMING_OFF') 
+  ; Make off the default
+  WIDGET_CONTROL, timingOffID, SET_BUTTON=1
 END
