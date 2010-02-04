@@ -43,30 +43,33 @@ FUNCTION GetDefaultSlurmQueue, instrument
   
   defaultQueue = 'heaterq'
   
-    case (STRUPCASE(instrument)) of
-      "ARCS": begin
-        queue = 'arcs'
-      end
-      "CNCS": begin
-        queue = 'cncsq'
-      end
-      "SEQUOIA": begin
-        queue = 'sequoiaq'
-      end
-      "MAPS": begin
-        queue = defaultQueue
-      end
-      "MARI": begin
-        queue = defaultQueue
-      end
-      "MERLIN": begin
-        queue = defaultQueue
-      end
-      else: begin
-        queue = defaultQueue
-      end
-    endcase  
-
+  case (STRUPCASE(instrument)) of
+    "ARCS": begin
+      queue = 'arcs'
+    end
+    "CNCS": begin
+      queue = 'cncsq'
+    end
+    "SEQUOIA": begin
+      queue = 'sequoiaq'
+    end
+    "SEQ": begin
+      queue = 'sequoiaq'
+    end
+    "MAPS": begin
+      queue = defaultQueue
+    end
+    "MARI": begin
+      queue = defaultQueue
+    end
+    "MERLIN": begin
+      queue = defaultQueue
+    end
+    else: begin
+      queue = defaultQueue
+    end
+  endcase
+  
   return, queue
-
+  
 END
