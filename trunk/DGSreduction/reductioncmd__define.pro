@@ -691,6 +691,8 @@ function ReductionCmd::Check
     AND (STRLEN(self.instrument) GT 1) THEN BEGIN
     
     print,'Checking mask and norm files...'
+    ; Let's get the norm output directory so we don't have to keep asking for it!
+    normDir = self->GetNormalisationOutputDirectory()
     
     norm_error = 0
     mask_error = 0
@@ -698,7 +700,7 @@ function ReductionCmd::Check
     FOR i = 0L, self.jobs-1 DO BEGIN
     
       IF (norm_error EQ 0) THEN BEGIN
-        norm_filename =  self->GetNormalisationOutputDirectory() + "/" + $
+        norm_filename =  normDir + "/" + $
           self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
           i+1, self.jobs, /PAD) + ".norm"
           
@@ -711,7 +713,7 @@ function ReductionCmd::Check
       ENDIF
       
       IF (mask_error EQ 0) THEN BEGIN
-        mask_filename = self->GetNormalisationOutputDirectory() + "/" + $
+        mask_filename = normDir + "/" + $
           self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
           i+1, self.jobs, /PAD) + "_mask.dat"
           
@@ -748,6 +750,10 @@ function ReductionCmd::Generate
   
   cmd = STRARR(self.jobs)
   
+  ; Let's get the output directory so we don't have to keep asking for it!
+  outputDir = self->GetReductionOutputDirectory()
+  normDir = self->GetNormalisationOutputDirectory()
+  
   for i = 0L, self.jobs-1 do begin
   
     cmd[i] = ""
@@ -769,7 +775,7 @@ function ReductionCmd::Generate
     ;IF STRLEN(self.output) GT 1 THEN cmd[i] += " --output="+ self.output
     
     IF (STRLEN(self.instrument) GT 1) AND (STRLEN(self.datarun) GE 1) THEN $
-      cmd[i] += " --output=" + self->GetReductionOutputDirectory() + $
+      cmd[i] += " --output=" + outputDir + $
       "/" + self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
       i+1, self.jobs, /PAD) + ".txt"
       
@@ -802,7 +808,7 @@ function ReductionCmd::Generate
     IF (STRLEN(self.normalisation) GE 1) AND (self.normalisation NE 0) $
       AND (STRLEN(self.instrument) GT 1) THEN BEGIN
       
-      cmd[i] += " --norm=" + self->GetNormalisationOutputDirectory() + "/" + $
+      cmd[i] += " --norm=" + normDir + "/" + $
         self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
         i+1, self.jobs, /PAD) + ".norm"
         
@@ -908,7 +914,7 @@ function ReductionCmd::Generate
       ; Vanadium Mask file...
       IF (self.mask EQ 1) AND (STRLEN(self.normalisation) GE 1) $
         AND (STRLEN(self.instrument) GT 1) THEN BEGIN
-        cmd[i] += self->GetNormalisationOutputDirectory() + "/" + $
+        cmd[i] += normDir + "/" + $
           self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
           i+1, self.jobs, /PAD) + "_mask.dat"
           
@@ -921,7 +927,7 @@ function ReductionCmd::Generate
       ; 'Hard' Mask file...
       IF (self.hardmask EQ 1) AND (STRLEN(self.instrument) GT 1) THEN BEGIN
         ;
-        mask_dir = self->GetReductionOutputDirectory() + "/masks"
+        mask_dir = outputDir + "/masks"
         
         tmp_maskfile = mask_dir + "/" + $
           self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
