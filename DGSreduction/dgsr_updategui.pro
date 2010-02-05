@@ -145,13 +145,13 @@ PRO DGSR_UpdateGUI, tlb, dgsr_cmd
   WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
   
   ; Normalisation Integration Range (min)
-  widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_NORM-INT-MIN')
-  dgsr_cmd->GetProperty, NormRange_Min=myValue
-  WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
+;  widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_NORM-INT-MIN')
+;  dgsr_cmd->GetProperty, NormRange_Min=myValue
+;  WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
   ; Normalisation Integration Range (max)
-  widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_NORM-INT-MAX')
-  dgsr_cmd->GetProperty, NormRange_Max=myValue
-  WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
+;  widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_NORM-INT-MAX')
+;  dgsr_cmd->GetProperty, NormRange_Max=myValue
+;  WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
   
   ; Data Trans Coeff
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_DATA-TRANS')
@@ -159,9 +159,9 @@ PRO DGSR_UpdateGUI, tlb, dgsr_cmd
   WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
   
   ; Norm Trans Coeff
-  widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_NORM-TRANS')
-  dgsr_cmd->GetProperty, NormTrans=myValue
-  WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
+;  widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_NORM-TRANS')
+;  dgsr_cmd->GetProperty, NormTrans=myValue
+;  WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
   
   ; Detector Efficiency
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_DET-EFF')
@@ -169,9 +169,9 @@ PRO DGSR_UpdateGUI, tlb, dgsr_cmd
   WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
   
   ; Vanadium Mask Flag
-  widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_MASK')
-  dgsr_cmd->GetProperty, Mask=myValue
-  WIDGET_CONTROL, widget_ID, SET_BUTTON=myValue
+;  widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_MASK')
+;  dgsr_cmd->GetProperty, Mask=myValue
+;  WIDGET_CONTROL, widget_ID, SET_BUTTON=myValue
   
   ; Hard Mask Flag
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_HARD_MASK')
