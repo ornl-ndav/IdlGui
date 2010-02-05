@@ -109,11 +109,11 @@ PRO make_settings_tab, baseWidget, myCommandObj
   timingLabel = WIDGET_LABEL(timingBase, VALUE=' Diagnostic Timing ', XOFFSET=5)
   timingLabelGeometry = WIDGET_INFO(timingLabel, /GEOMETRY)
   timingLabelYSize = timingLabelGeometry.ysize
-  timingPrettyBase = WIDGET_BASE(timingBase, /FRAME, /COLUMN, XPAD=10, YPAD=10, YOFFSET=timingLabelYSize/2.0)
+  timingPrettyBase = WIDGET_BASE(timingBase, /FRAME, /ROW, XPAD=10, YPAD=10, YOFFSET=timingLabelYSize/2.0)
   timingRow = WIDGET_BASE(timingPrettyBase, /ROW)
-  timingButtons = WIDGET_BASE(timingRow, EXCLUSIVE=1)
-  timingOnID = WIDGET_BUTTON(timingButtons, Value='ON', UNAME='DGS_TIMING_ON', UVALUE='DGS_TIMING_ON')
-  timingOffID = WIDGET_BUTTON(timingButtons, Value='OFF', UNAME='DGS_TIMING_OFF', UVALUE='DGS_TIMING_OFF') 
+  timingButtons = WIDGET_BASE(timingRow, /ROW, EXCLUSIVE=1)
+  timingOnID = WIDGET_BUTTON(timingButtons, Value=' ON  ', UNAME='DGS_TIMING_ON', UVALUE='DGS_TIMING_ON')
+  timingOffID = WIDGET_BUTTON(timingButtons, Value=' OFF  ', UNAME='DGS_TIMING_OFF', UVALUE='DGS_TIMING_OFF') 
   ; Make off the default
   WIDGET_CONTROL, timingOffID, SET_BUTTON=1
 END
