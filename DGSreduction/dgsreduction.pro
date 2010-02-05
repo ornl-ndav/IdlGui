@@ -297,7 +297,7 @@ PRO DGSreduction_Execute, event
         tmp_banks = STRSPLIT(tmp_datapaths, "-", /EXTRACT)
         
         first_time_around_loop = 0
-        for ibank = long(banks[0]), long(banks[1]) do begin
+        for ibank = long(tmp_banks[0]), long(tmp_banks[1]) do begin
           split_cmd = "grep bank" + strcompress(ibank,/remove_all) + $
             "_ " + source_maskfile + " >"
           ; If it's not the first bank, then use >> to append to the file
