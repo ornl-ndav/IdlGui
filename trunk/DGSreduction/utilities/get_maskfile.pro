@@ -1,7 +1,7 @@
 ;+
 ; :Description:
-;    This procedure determines the name of the mask file that will be used 
-;    as the 'source' to split up into separate mask files depending on the 
+;    This procedure determines the name of the mask file that will be used
+;    as the 'source' to split up into separate mask files depending on the
 ;    number of jobs/banks the reduction job is split up into.
 ;
 ; :Params:
@@ -25,9 +25,16 @@ function get_maskfile, instrument, runnumber, OVERRIDE=OVERRIDE
   ENDELSE
   
   IF (proposal NE '0') THEN BEGIN
-    source_maskfile  = '/SNS/' + STRUPCASE(STRCOMPRESS(string(instrument),/REMOVE_ALL))
-    source_maskfile += '/' + STRCOMPRESS(string(proposal),/REMOVE_ALL)
-    source_maskfile += '/shared/masks/CNCS.mask'
+    source_maskdir  = '/SNS/' + STRUPCASE(STRCOMPRESS(string(instrument),/REMOVE_ALL))
+    source_maskdir += '/' + STRCOMPRESS(string(proposal),/REMOVE_ALL)
+    source_maskdir += '/shared/masks/'
+    
+    IF (FILE_TEST(source_maskdir, /DIRECTORY, /READ) EQ 0) THEN BEGIN
+      print, 'Creating masks directory in the shared proposal area.'
+      spawn, 'mkdir -p ' + source_maskdir
+    ENDIF
+    
+    source_maskfile = source_maskdir + 'CNCS.mask'
   ENDIF ELSE BEGIN
     source_maskfile  = '/SNS/users/' + get_ucams() + '/masks/'
     source_maskfile += STRUPCASE(STRCOMPRESS(string(instrument),/REMOVE_ALL)) + '.mask'
@@ -59,7 +66,7 @@ function get_maskfile, instrument, runnumber, OVERRIDE=OVERRIDE
     ; Let's check to see if this directory exists.
     sharedMasksDir = FILE_TEST(default_maskfile, /DIRECTORY, /READ)
     IF (sharedMasksDir EQ 0) THEN BEGIN
-      print, 'Creating masks directory in the shared proposal area.'
+      print, 'Creating masks directory in the shared instrument area.'
       spawn, 'mkdir -p ' + sharedMasksDir
     ENDIF
     
