@@ -169,7 +169,7 @@ PRO DGSreduction_Execute, event
       source_maskfile = get_maskfile(instrument, runnumber)
     ENDIF
     
-    ; Check to see if the Chopper Wandering Phase Correction is turned on
+    ; Check to see if the Wandering Phase Correction is turned on
     dgsr_cmd->GetProperty, CWP=cwp
     IF (cwp EQ 1) THEN BEGIN
     
