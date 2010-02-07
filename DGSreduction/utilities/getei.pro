@@ -1,13 +1,13 @@
 ;+
 ; :Description:
 ;    This procedure will atempt to estimate the Ei for a given run
-;    It first gets the requested value of Ei from either the NeXus file 
-;    or the CVINFO file.  It then uses this to determine the Ei from the 
+;    It first gets the requested value of Ei from either the NeXus file
+;    or the CVINFO file.  It then uses this to determine the Ei from the
 ;    monitor spectra, except for CNCS where it is just returned directly.
 ;
 ; :Params:
 ;    instrument - instrument name
-;    runnumber - The run number 
+;    runnumber - The run number
 ;
 ; :Author: scu (campbellsi@ornl.gov)
 ;-
@@ -31,11 +31,11 @@ function getEi, instrument, runnumber
   nexusfile = listening[0]
   
   ; Let's see if the first string returned by findnexus exists and is readable
-  fileThere = FILE_TEST(listening[0], /READ, /REGULAR)
+  nexusThere = FILE_TEST(listening[0], /READ, /REGULAR)
   
   ; Check to see if the Ei is in the NeXus file
   ; TODO: Not needed at the moment as no nexus files have this field!
-  IF (fileThere EQ 1) THEN BEGIN
+  IF (nexusThere EQ 1) THEN BEGIN
   ; If the energy is found in the nexus file then set 'inNeXus = 1'
   ENDIF
   
@@ -51,7 +51,7 @@ function getEi, instrument, runnumber
     IF (FILE_TEST(cvinfo_filename, /READ, /REGULAR) EQ 1) THEN BEGIN
       cmd = cvlog_extract_exe + ' EnergyRequest ' + cvinfo_filename
       ;print, cmd
-      spawn, cmd, listening   
+      spawn, cmd, listening
       requested_ei = float(listening[0])
     ENDIF ELSE BEGIN
       return, ''
@@ -63,14 +63,22 @@ function getEi, instrument, runnumber
   case (STRUPCASE(instrument)) of
     "ARCS": begin
       ; Calculate the Ei
-      Ei = calcei(instrument, runnumber, requested_ei)
+      IF (nexusThere EQ 1) THEN BEGIN
+        Ei = calcei(instrument, runnumber, requested_ei, NEXUSFILE=nexusfile)
+      ENDIF ELSE BEGIN
+        Ei = calcei(instrument, runnumber, requested_ei)
+      ENDELSE
     end
     "CNCS": begin
       Ei = requested_ei
     end
     "SEQUOIA": begin
       ; Calculate the Ei
-      Ei = calcei(instrument, runnumber, requested_ei)
+      IF (nexusThere EQ 1) THEN BEGIN
+        Ei = calcei(instrument, runnumber, requested_ei, NEXUSFILE=nexusfile)
+      ENDIF ELSE BEGIN
+        Ei = calcei(instrument, runnumber, requested_ei)
+      ENDELSE
     end
     else: begin
       ; If we don't know the beamline then just assumed that the requested Ei is good enough!
