@@ -1,4 +1,4 @@
-function CalcEi, Instrument, RunNumber, Estimate
+function CalcEi, Instrument, RunNumber, Estimate, NEXUSFILE=nexusfile
 
   ;TODO: Do it properly
   
