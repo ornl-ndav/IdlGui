@@ -145,8 +145,7 @@ PRO ReductionCmd::GetProperty, $
   IF ARG_PRESENT(DataPaths) NE 0 THEN DataPaths = self.datapaths
   IF ARG_PRESENT(Normalisation) NE 0 THEN Normalisation = self.normalisation
   IF ARG_PRESENT(EmptyCan) NE 0 THEN EmptyCan = self.emptycan
-  ; TODO: Dunno Why This works! Why is it not BlackCan!!!! Stupid IDL!!
-  IF ARG_PRESENT(bcan) EQ 0 THEN BlackCan = self.blackcan
+  IF ARG_PRESENT(BlackCan) NE 0 THEN BlackCan = self.blackcan
   IF ARG_PRESENT(Dark) NE 0 THEN Dark = self.dark
   IF ARG_PRESENT(USmonPath) NE 0 THEN USmonPath = self.usmonpath
   IF ARG_PRESENT(DSmonPath) NE 0 THEN DSmonPath = self.dsmonpath
