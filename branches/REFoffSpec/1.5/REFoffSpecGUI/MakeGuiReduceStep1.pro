@@ -139,7 +139,8 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
   label = WIDGET_LABEL(row1col2,$
     VALUE = 'Pixel vs TOF (microsS)', $
     UNAME = 'reduce_sangle_plot_title',$
-    XOFFSET = 720,$
+;    XOFFSET = 720,$
+    XOFFSET = (*global).sangle_xsize_draw - 125,$
     YOFFSET = 35)
     
   plot = WIDGET_DRAW(row1col2,$
@@ -216,8 +217,15 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
   row1col3c = WIDGET_BASE(row1col3Main,$ ;..................................
     /COLUMN,$
     FRAME=1)
-  title = WIDGET_LABEL(row1col3c,$
-    VALUE = 'Live Infos')
+; Change text on 25 Jan 2010 - RCW
+  title1 = WIDGET_LABEL(row1col3c,$
+     VALUE = 'Cursor')
+;    VALUE = 'Live Infos')
+
+ title2 = WIDGET_LABEL(row1col3c,$
+     VALUE = 'Position')
+;    VALUE = 'Live Infos')
+; Change text on 25 Jan 2010 - RCW
     space = WIDGET_LABEL(row1col3c,$
     VALUE = '-------------')
   
@@ -465,7 +473,14 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
   ENDIF ELSE BEGIN
     value = ''
   ENDELSE
-  
+    
+; For debugging, set the value to desired run numbers (RCW, Dec 31, 2009, Modified Feb 1, 2010)
+ IF (instrument EQ 'REF_L') THEN BEGIN
+    value = '24586-24591' 
+  ENDIF ELSE BEGIN
+    value = '5387-5389' 
+  ENDELSE  
+    
   tRun = CW_FIELD(Row1,$
     XSIZE = 40,$
     UNAME = 'reduce_tab1_run_cw_field',$
@@ -534,8 +549,8 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
   ENDIF
   
   ;space
-  space = WIDGET_LABEL(Base,$
-    VALUE = ' ')
+;  space = WIDGET_LABEL(Base,$
+;    VALUE = ' ')
     
   ;Repeat work for other polarization states (Row #4) ---------------------------
   Row4_row = WIDGET_BASE(Base,$
@@ -552,9 +567,9 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
   ENDELSE
   
   Row4 = WIDGET_BASE(Row4_row,$
-    FRAME = 1,$
-    MAP = map,$
-    /ROW)
+     FRAME = 1,$
+     MAP = map,$
+     /ROW)
     
   ;  label = WIDGET_LABEL(Row4,$
   ;    VALUE = 'Working with Polarization State:')
@@ -563,13 +578,13 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
   ;    /ALIGN_LEFT,$
   ;    UNAME = 'reduce_tab1_working_polarization_state_label',$
   ;    FRAME = 0)
-    
+       
   label = WIDGET_LABEL(Row4,$
     VALUE = 'Work with Following Polarization States:  ')
     
   Row4Base = WIDGET_BASE(Row4,$
     /ROW,$
-    /BASE_ALIGN_TOP,$
+    /BASE_ALIGN_CENTER,$
     /NONEXCLUSIVE)
     
   button1 = WIDGET_BUTTON(Row4Base,$
@@ -593,14 +608,16 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     /NO_RELEASE,$
     SENSITIVE = 1)
     
+    
   ;WIDGET_CONTROL, Row4Base, SET_BUTTON=1 ;all spin states are selected by default
   WIDGET_CONTROL, button1, /SET_BUTTON
   WIDGET_CONTROL, button3, /SET_BUTTON
   
   ;space base
-  space = WIDGET_BASE(Base,$
-    SCR_YSIZE = 50)
-    
+;  space = WIDGET_BASE(Base,$
+;    SCR_YSIZE = 50)
+  
+  ;Buttons for selecting the polarization states (Row #5) ---------------------------  
   ;new row
   Row5 = WIDGET_BASE(Base,$
     /COLUMN,$
@@ -626,7 +643,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     VALUE = '                                               ')
     
   ;match button
-  tooltip = 'Spin States of the Data and Normalization files are identical'
+  tooltip = 'Spin States of the Data and Normalization files are identical.'
   match = WIDGET_DRAW(Row5_row2,$
     SCR_XSIZE = 200,$
     SCR_YSIZE = 109,$
@@ -639,9 +656,9 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
   space_value = '   '
   space = WIDGET_LABEL(Row5_row2,$
     VALUE = space_value)
-    
+   ; Code change RCW (Dec 31, 2009): fix typos below   
   ;do not match and fixed
-  tooltip = 'Spin State of Normalization files if fixed (Off_Off), no ' + $
+  tooltip = 'Spin State of Normalization files is fixed (Off_Off), no ' + $
     'matter the spin state of the Data file.'
   not_match = WIDGET_DRAW(Row5_row2,$
     SCR_XSIZE = 200,$
@@ -657,7 +674,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     
   ;do not match and user defined
   tooltip = 'Spin States of Data and Normalization files do not match and ' + $
-    'can will be manually defined by the user'
+    'must be manually defined by the user.'
   match = WIDGET_DRAW(Row5_row2,$
     SCR_XSIZE = 200,$
     SCR_YSIZE = 109,$

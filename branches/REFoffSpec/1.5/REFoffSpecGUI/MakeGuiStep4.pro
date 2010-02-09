@@ -43,8 +43,12 @@ sBaseTab = { size:  tab_size,$
              title: TabTitles.step4}
                          
 ;TabTitles
-TabTitlesLocal = { range_selection: '  PIXEL RANGE SELECTION  ',$
-                   scaling:         '  SCALING  '}
+  ; Code change RCW (Dec 30, 2009): get ScalingTabNames from XML config file (via ref_off_spec)
+  ; and populate TabTitlesLocal
+
+ScalingTabNames = (*global).ScalingTabNames
+TabTitlesLocal = { range_selection: ScalingTabNames[0],$
+                   scaling:         ScalingTabNames[1]}
 
 ;Inside Tab (range selection, scaling...)
 XYoff = [0,0]
@@ -81,6 +85,6 @@ MAIN_TAB = WIDGET_TAB(BaseTab,$
 make_gui_scaling_step1, MAIN_TAB, sMainTab.size, TabTitlesLocal
 
 ;Scaling ----------------------------------------------------------------------
-make_gui_scaling_step2, MAIN_TAB, sMainTab.size, TabTitlesLocal
+make_gui_scaling_step2, MAIN_TAB, sMainTab.size, TabTitlesLocal, global
 
 END

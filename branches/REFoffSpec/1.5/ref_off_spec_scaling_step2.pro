@@ -109,6 +109,9 @@ PRO re_display_step4_step2_step1_selection, Event, MODE=mode
   ;step1 of scaling has been done). If not, display a message asking for
   ;a selection first.
   
+  ; Code change RCW (Feb 8, 2010): Get Background color from XML file
+     PlotBackground = (*global).BackgroundCurvePlot
+  
   DEVICE, DECOMPOSED=0
   LOADCT, 5, /SILENT
   
@@ -166,6 +169,7 @@ PRO re_display_step4_step2_step1_selection, Event, MODE=mode
                 XTITLE = xtitle, $
                 YTITLE = ytitle,$
                 COLOR  = color,$
+                BACKGROUND = convert_rgb(PlotBackground),$
                 XRANGE = [xmin,xmax],$
                 YRANGE = [ymin,ymax],$
                 XSTYLE = 1,$
@@ -177,6 +181,7 @@ PRO re_display_step4_step2_step1_selection, Event, MODE=mode
                 XTITLE = xtitle, $
                 YTITLE = ytitle,$
                 COLOR  = color,$
+                BACKGROUND = convert_rgb(PlotBackground),$
                 XRANGE = [xmin,xmax],$
                 YRANGE = [ymin,ymax],$
                 XSTYLE = 1,$
@@ -214,6 +219,7 @@ PRO re_display_step4_step2_step1_selection, Event, MODE=mode
             XTITLE = xtitle, $
             YTITLE = ytitle,$
             COLOR  = color,$
+            BACKGROUND = convert_rgb(PlotBackground),$
             XRANGE = [xmin,xmax],$
             YRANGE = [ymin,ymax],$
             XSTYLE = 1,$
@@ -225,6 +231,7 @@ PRO re_display_step4_step2_step1_selection, Event, MODE=mode
             XTITLE = xtitle, $
             YTITLE = ytitle,$
             COLOR  = color,$
+            BACKGROUND = convert_rgb(PlotBackground),$
             XRANGE = [xmin,xmax],$
             YRANGE = [ymin,ymax],$
             XSTYLE = 1,$
@@ -236,7 +243,7 @@ PRO re_display_step4_step2_step1_selection, Event, MODE=mode
         index = 0
         box_color     = (*global).box_color
         WHILE (index LT nbr_plot) DO BEGIN
-        
+; I GOT A ERROR IN THIS ROUTINE - POSSIBLY AT THIS LOCATION - 25 JAN 2010 - RCW        
           IF (N_ELEMENTS(MODE) EQ 0) THEN BEGIN
             t_data_to_plot = *IvsLambda_selection[index]
           ENDIF ELSE BEGIN
@@ -260,6 +267,7 @@ PRO re_display_step4_step2_step1_selection, Event, MODE=mode
                 XTITLE = xtitle, $
                 YTITLE = ytitle,$
                 COLOR  = color,$
+                BACKGROUND = convert_rgb(PlotBackground),$
                 XRANGE = [xmin,xmax],$
                 YRANGE = [ymin,ymax],$
                 XSTYLE = 1,$
@@ -271,6 +279,7 @@ PRO re_display_step4_step2_step1_selection, Event, MODE=mode
                 XTITLE = xtitle, $
                 YTITLE = ytitle,$
                 COLOR  = color,$
+                BACKGROUND = convert_rgb(PlotBackground),$
                 XRANGE = [xmin,xmax],$
                 YRANGE = [ymin,ymax],$
                 XSTYLE = 1,$
@@ -294,7 +303,9 @@ END
 PRO re_plot_lambda_selected, Event
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
-  
+; Code change RCW (Feb 9, 2010: pass CE selection vertical line color in global
+   ceselect_vertical_line_color = (*global).ceselect_vertical_line_color 
+
   ;Lambda
   sLdaMin   = getTextFieldValue(Event,'step4_2_2_lambda1_text_field')
   sLdaMax   = getTextFieldValue(Event,'step4_2_2_lambda2_text_field')
@@ -320,8 +331,11 @@ PRO re_plot_lambda_selected, Event
     f_Lda_min LE f_xmax_now) THEN BEGIN
     
     device_lda  = device_xmax - ratio * (f_xmax_now - f_Lda_min)
-    plots, device_lda, device_ymin, /DEVICE, COLOR=200
-    plots, device_lda, device_ymax, /DEVICE, /CONTINUE, COLOR=200
+; plots, device_lda, device_ymin, /DEVICE, COLOR=200
+; plots, device_lda, device_ymax, /DEVICE, /CONTINUE, COLOR=200
+; Code change RCW (Feb 9, 2010: CE selection vertical line color is set in XML config file
+    plots, device_lda, device_ymin, /DEVICE, COLOR=ceselect_vertical_line_color
+    plots, device_lda, device_ymax, /DEVICE, /CONTINUE, COLOR=ceselect_vertical_line_color
     
   ENDIF
   
@@ -330,8 +344,11 @@ PRO re_plot_lambda_selected, Event
     f_Lda_max LE f_xmax_now) THEN BEGIN
     
     device_lda  = device_xmax - ratio * (f_xmax_now - f_Lda_max)
-    plots, device_lda, device_ymin, /DEVICE, COLOR=200
-    plots, device_lda, device_ymax, /DEVICE, /CONTINUE, COLOR=200
+; plots, device_lda, device_ymin, /DEVICE, COLOR=200
+; plots, device_lda, device_ymax, /DEVICE, /CONTINUE, COLOR=200
+; Code change RCW (Feb 9, 2010: CE selection vertical line color is set in XML config file
+    plots, device_lda, device_ymin, /DEVICE, COLOR=ceselect_vertical_line_color
+    plots, device_lda, device_ymax, /DEVICE, /CONTINUE, COLOR=ceselect_vertical_line_color
     
   ENDIF
   

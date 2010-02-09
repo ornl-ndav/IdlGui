@@ -228,15 +228,23 @@ PRO reduces_step3_output_folder, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO reduce_step3_job_mamager, Event
+PRO reduce_step3_job_manager, Event
 
+  ; Code change RCW (Dec 28, 2009): Typo corrected (mamager replaced by manager in routine name)
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
   WIDGET_CONTROL,/HOURGLASS
-  firefox       = (*global).firefox
+  ; Code change RCW (Dec 28, 2009): firefox replaced by browser obtained from XML config file
+  ;firefox       = (*global).firefox
+  browser = (*global).browser
   srun_web_page = (*global).srun_web_page
-  SPAWN, firefox + ' ' + srun_web_page + ' &'
+  ;SPAWN, firefox + ' ' + srun_web_page + ' &'
+  cmd = browser + ' ' + srun_web_page + ' &'
+  SPAWN, cmd
+  message = '> Reduce - Step3: Spawn ' + cmd
+    IDLsendToGeek_addLogBookText, Event, $
+       message
   WIDGET_CONTROL,HOURGLASS=0
   
 END

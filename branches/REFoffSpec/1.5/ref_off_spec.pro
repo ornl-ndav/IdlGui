@@ -43,7 +43,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
   ;get the current folder
   CD, CURRENT = current_folder
-  
+ 
   file = OBJ_NEW('idlxmlparser', '.REFoffSpec.cfg')
   ;============================================================================
   ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
@@ -55,7 +55,33 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   SCROLLING = file->getValue(tag=['configuration','scrolling'])
   FAKING_DATA = file->getValue(tag=['configuration','faking','data'])
   AM = file->getValue(tag=['configuration','am'])
-  SUPER_USERS = ['j35']
+  BROWSER = file->getValue(tag=['configuration','browser'])
+  MainBaseTitle = file->getValue(tag=['configuration','MainBaseTitle'])
+  STEP1_TITLE = file->getValue(tag=['configuration','MainTabTitles','step1'])
+  STEP2_TITLE = file->getValue(tag=['configuration','MainTabTitles','step2'])
+  STEP3_TITLE = file->getValue(tag=['configuration','MainTabTitles','step3'])
+  STEP4_TITLE = file->getValue(tag=['configuration','MainTabTitles','step4'])
+  STEP5_TITLE = file->getValue(tag=['configuration','MainTabTitles','step5'])
+  STEP6_TITLE = file->getValue(tag=['configuration','MainTabTitles','step6'])
+  STEP7_TITLE = file->getValue(tag=['configuration','MainTabTitles','step7'])
+  STEP8_TITLE = file->getValue(tag=['configuration','MainTabTitles','step8'])
+  RSTEP1_NAME = file->getValue(tag=['configuration','ReduceTabNames','name1'])
+  RSTEP2_NAME = file->getValue(tag=['configuration','ReduceTabNames','name2'])
+  RSTEP3_NAME = file->getValue(tag=['configuration','ReduceTabNames','name3'])
+  SSTEP1_NAME = file->getValue(tag=['configuration','ScalingTabNames','sname1'])
+  SSTEP2_NAME = file->getValue(tag=['configuration','ScalingTabNames','sname2'])
+  SL3STEP1_NAME = file->getValue(tag=['configuration','ScalingLevel3TabNames','sl3name1'])
+  SL3STEP2_NAME = file->getValue(tag=['configuration','ScalingLevel3TabNames','sl3name2'])
+  SL3STEP3_NAME = file->getValue(tag=['configuration','ScalingLevel3TabNames','sl3name3'])
+  REFPIX_INITIAL = file->getValue(tag=['configuration','RefPix','InitialValue'])
+  XSIZE_DRAW = file->getValue(tag=['configuration','PlotWindow','XSizeDraw'])
+  YSIZE_DRAW = file->getValue(tag=['configuration','PlotWindow','YSizeDraw'])
+  BACKGROUND_R = file->getValue(tag=['configuration','CurvePlot','Background','R'])
+  BACKGROUND_G = file->getValue(tag=['configuration','CurvePlot','Background','G'])
+  BACKGROUND_B = file->getValue(tag=['configuration','CurvePlot','Background','B'])
+  CESELECT_VERTLINE_COLOR = file->getValue(tag=['configuration','CurvePlot','CESelect','VerticalLineColor'])
+ ; Note: YSIZE_DRAW is not presently used in the code 
+  SUPER_USERS = ['rwd']
   ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
   ;============================================================================
   
@@ -78,7 +104,8 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     step4_tab: 0,$
     scaling_tab: 1},$
     ascii_path: '~/results/',$
-    reduce_tab1_cw_field: '5242-5244',$
+    reduce_tab1_cw_field: '5387-5389',$
+    reduce_tab2_cw_field: '5392-5394',$
     reduce_tab1_proposal_combobox: 1}
     
   ;****************************************************************************
@@ -91,7 +118,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ENDIF ELSE BEGIN
     ucams = GET_UCAMS()
   ENDELSE
-  
+    
   ;define global variables
   global = ptr_new ({ ucams: ucams,$
     instrument: instrument,$
@@ -101,8 +128,37 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
     left_right_cursor: 96, $
     standard: 31, $
+   ; Code change RCW (Dec 28, 2009): firefox replaced by browser obtained from XML config file entry BROWSER   
+    browser: BROWSER,$
+   
+    ;Tab titles
+   ; Code change RCW (Dec 29, 2009): get TabTitles from XML config file  
+   TabTitles: {  step1:     STEP1_TITLE,$
+                 step2:     STEP2_TITLE,$
+                 step3:     STEP3_TITLE,$
+                 step4:     STEP4_TITLE,$
+                 step5:     STEP5_TITLE,$
+                 step6:     STEP6_TITLE,$
+                 options:   STEP7_TITLE,$
+                 log_book:  STEP8_TITLE},$
+    ; Code change RCW (Dec 30, 2009): get ReduceTabNames and ScalingTabNames from XML config file (NOT USING THESE RIGHT NOW)                
+    ReduceTabNames: [RSTEP1_NAME,$
+                     RSTEP2_NAME,$
+                     RSTEP3_NAME],$
+                     
+    ScalingTabNames: [SSTEP1_NAME,$
+                     SSTEP2_NAME],$
     
-    firefox: '/usr/bin/firefox',$
+    ScalingLevel3TabNames: [SL3STEP1_NAME,$
+                            SL3STEP2_NAME,$
+                            SL3STEP3_NAME],$
+    ; Code change RCW (Feb 1, 2010): get intial value of RefPix from XML config file                        
+    RefPix_InitialValue: REFPIX_INITIAL,$   
+    ; Code change RCW (Feb 8, 2010): get ascii data 2D-plot background colors from XML config file                     
+    BackgroundCurvePlot: [BACKGROUND_R,$
+                            BACKGROUND_G,$
+                             BACKGROUND_B],$
+    ceselect_vertical_line_color: CESELECT_VERTLINE_COLOR,$
     srun_web_page: 'https://neutronsr.us/applications/jobmonitor/squeue.php?view=all',$
     
     reduce_structure: {driver: 'refred_lp',$
@@ -133,7 +189,9 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     sangle_tof: PTR_NEW(0L), $
     sangle_background_plot: PTR_NEW(0L), $
     sangle_table_press_click: 1,$
-    sangle_xsize_draw: 845., $
+; Code change RCW (Feb 8, 2010): get value of xsize_draw from XML config file  
+;    sangle_xsize_draw: 845., $
+    sangle_xsize_draw: XSIZE_DRAW, $
     sangle_ysize_draw: 608., $
     sangle_help_xsize_draw: 255, $
     sangle_help_ysize_draw: 215, $
@@ -171,9 +229,9 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     tmp_reduce_step2_data_spin_state: '',$
     
     list_of_data_spin: ['Off_Off',$
-    'Off_On',$
-    'On_Off',$
-    'On_On'],$
+                        'Off_On',$
+                        'On_Off',$
+                        'On_On'],$
     
     ;step3
     reduce_step3_spin_off_off_unavailable: $
@@ -328,6 +386,8 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ref_pixel_list:      PTR_NEW(0L),$
     ref_pixel_offset_list: PTR_NEW(0L),$
     ref_pixel_list_original: PTR_NEW(0L),$
+    RefPixSave: PTR_NEW(0L), $
+    SangleDone: PTR_NEW(0B), $
     ref_x_list:          PTR_NEW(0L),$
     super_users:         SUPER_USERS,$
     delta_x:             0.,$
@@ -344,7 +404,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ascii_extension:     'txt',$
     ascii_filter:        '*.txt',$
     ascii_path:          '~/results/',$
-    sys_color_face_3d:   INTARR(3),$
+    sys_color_face_3d:    INTARR(3),$
     working_pola_state:  '',$
     list_OF_ascii_files: PTR_NEW(0L),$
     list_OF_ascii_files_p1: PTR_NEW(0L),$
@@ -397,27 +457,31 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     w_shifting_plot2d_draw_uname: '',$
     w_scaling_plot2d_draw_uname: '',$
     w_shifting_plot2d_id: 0,$ ;id of shift. plot2D widget_base
-    w_scaling_plot2d_id: 0$ ;id of scaling plot2D widget_base
+    w_scaling_plot2d_id: 0$ ;id of scaling plot2D widget_base 
     })
     
   ;initialize variables
   (*(*global).list_OF_ascii_files) = STRARR(1)
   (*(*global).reduce_tab1_table) = STRARR(2,1)
   (*(*global).reduce_run_sangle_table) = STRARR(2,1)
-  
+ ; Code change RCW (Feb 1, 2010): set up array for RefPixSave, SangleDone  
+  (*(*global).RefPixSave) = FLTARR(18)
+  (*(*global).SangleDone) = BYTARR(18)
+   
+; Build Application Title ====================================================== 
   MainBaseSize   = (*global).MainBaseSize
-  MainBaseTitle  = 'Reflectometer Off Specular Application'
+;  MainBaseTitle  = 'Reflectometer Off Specular Application'
   IF (instrument EQ 'REF_L') THEN BEGIN
-    MainBaseTitle += ' for REF_L'
+    MainBaseTitle += '_for_REF_L'
   ENDIF ELSE BEGIN
-    MainBaseTitle += ' for REF_M'
+    MainBaseTitle += '_for_REF_M'
   ENDELSE
   
-  MainBaseTitle += ' - ' + VERSION
+  MainBaseTitle += ' Version: ' + VERSION
   IF (DEBUGGING EQ 'yes') THEN BEGIN
     MainBaseTitle += ' (DEBUGGING MODE)'
   ENDIF
-  
+ ;===============================================================================
   ;Build Main Base
   MAIN_BASE = WIDGET_BASE( GROUP_LEADER = wGroup,$
     UNAME        = 'MAIN_BASE',$
@@ -526,7 +590,13 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;  display_reduce_step1_sangle_buttons, MAIN_BASE=main_base, global
 ;  display_reduce_step1_sangle_scale, MAIN_BASE=main_base, global
   
-  ;=============================================================================
+  ;============================================================================= 
+    message = '> Browser: ' + BROWSER
+    IDLsendToGeek_addLogBookText_fromMainBase, MAIN_BASE, 'log_book_text', $
+       message
+    message = '> Instrument: ' + instrument
+    IDLsendToGeek_addLogBookText_fromMainBase, MAIN_BASE, 'log_book_text', $
+       message
   ;=============================================================================
   ;send message to log current run of application
   logger, APPLICATION=application, VERSION=version, UCAMS=ucams
@@ -536,14 +606,17 @@ END
 ; Empty stub procedure used for autoloading.
 PRO ref_off_spec, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-  ;check instrument here
+; Check hostname (lrac or mrac) to determine instrument =========================
+ ; Code change RCW (Jan 12, 2010): hostname returns full name (mrac.sns.gov or lrac.sns.gov)
   SPAWN, 'hostname',listening
   CASE (listening) OF
-    'lrac': instrument = 'REF_L'
-    'mrac': instrument = 'REF_M'
+    'lrac.sns.gov': instrument = 'REF_L'
+    'mrac.sns.gov': instrument = 'REF_M'
     ELSE: instrument = 'UNDEFINED'
   ENDCASE
-  
+; For debugging, force BuildInstrumentGui to run so instrument must be selected - RCW 30 Dec 2009
+;     instrument = 'UNDEFINED'
+; If instrument is UNDEFINED call BuildInstrumentGui, else call BuildGui =========================  
   IF (instrument EQ 'UNDEFINED') THEN BEGIN
     BuildInstrumentGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ENDIF ELSE BEGIN

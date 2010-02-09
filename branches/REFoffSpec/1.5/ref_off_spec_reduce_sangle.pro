@@ -137,11 +137,15 @@ END
 ;------------------------------------------------------------------------------
 PRO display_metatada_of_sangle_selected_row, Event
 
+
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   reduce_run_sangle_table = (*(*global).reduce_run_sangle_table)
   reduce_tab1_table = (*(*global).reduce_tab1_table)
+  
+; Code change RCW (Feb 1, 2010): get intial value of RefPix from XML config file
+  RefPix_InitialValue = (*global).RefPix_InitialValue
   
   ;get sangle row selected
   row_selected = getSangleRowSelected(Event)
@@ -184,7 +188,8 @@ PRO display_metatada_of_sangle_selected_row, Event
     SampleDetDistance = STRCOMPRESS(iNexus->getSampleDetDist(),/REMOVE_ALL)
     putTextFieldValue, Event, 'reduce_sangle_base_sampledetdis_value', $
       SampleDetDistance
-    refpix = '200'
+ ;   refpix = '200'
+    refpix = RefPix_InitialValue
     putTextFieldValue, event, 'reduce_sangle_base_refpix_value', refpix
     putTextFieldValue, Event, 'reduce_sangle_base_refpix_user_value', refpix
     
@@ -314,13 +319,14 @@ PRO plot_selected_data_in_sangle_base, Event, result
   result = retrieve_nexus_data(s_full_nexus_file_name, $
     sangle_spin_state_selected, $
     data)
-    
+
   IF (result EQ 0) THEN RETURN
   
   tData = TOTAL(data,2)
   (*(*global).sangle_tData) = tData
   x = (size(tdata))(1)
   y = (size(tdata))(2)
+
   IF (isButtonSelected(Event, 'reduce_sangle_log')) THEN BEGIN ;log
     index = WHERE(tData EQ 0, nbr)
     IF (nbr GT 0) THEN BEGIN
@@ -332,8 +338,11 @@ PRO plot_selected_data_in_sangle_base, Event, result
   
   x_coeff = FLOAT((*global).sangle_xsize_draw / FLOAT(x))
   (*global).sangle_main_plot_congrid_x_coeff = x_coeff
-  rtData = CONGRID(tData, x_coeff*x, 2*y)
-  
+; Code change RCW (Feb 1, 2010): define y_coeff variable and set to 2.
+  y_coeff = 2.
+;  rtData = CONGRID(tData, x_coeff*x, 2*y)
+  rtData = CONGRID(tData, x_coeff*x, y_coeff*y)
+   
   id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='reduce_sangle_plot')
   WIDGET_CONTROL, id_draw, GET_VALUE=id_value
   WSET,id_value
@@ -341,7 +350,7 @@ PRO plot_selected_data_in_sangle_base, Event, result
   DEVICE, DECOMPOSED=0
   LOADCT, 5, /SILENT
   TVSCL, rtData, /DEVICE
-  
+
   result = 1
   
 END
@@ -351,10 +360,11 @@ PRO replot_selected_data_in_sangle_base, Event
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
-  
+
   tData = (*(*global).sangle_tData)
   x = (size(tdata))(1)
   y = (size(tdata))(2)
+
   IF (isButtonSelected(Event, 'reduce_sangle_log')) THEN BEGIN ;log
     index = WHERE(tData EQ 0, nbr)
     IF (nbr GT 0) THEN BEGIN
@@ -445,14 +455,29 @@ PRO plot_sangle_refpix, Event
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   ON_IOERROR, error
-  
-  ;retrieve RefPix value (from text field)
-  RefPix = getTextFieldValue(Event,'reduce_sangle_base_refpix_user_value')
-  fix_RefPix = FIX(RefPix)
-  
+ 
+   ; Code change RCW (Feb 1, 2010): set up SangleDone, RefPixSave variables
+  SangleDone = (*(*global).SangleDone)
+  RefPixSave = (*(*global).RefPixSave)
+    
   xdevice_max = (*global).sangle_xsize_draw
   
-  RefPix_device = getSangleYDeviceValue(Event,fix_RefPix)
+  ;get sangle row selected, check to see if sangle has been calculated
+   row_selected = getSangleRowSelected(Event)
+
+   IF (SangleDone[row_selected] EQ 1) THEN BEGIN
+        RefPix_device = 2*RefPixSave[row_selected]
+        sRefPixSave = STRCOMPRESS(RefPixSave[row_selected],/REMOVE_ALL)
+; this next statement updates the metadata in the lower left corner - but not all data is updated!
+;        putTextFieldValue, Event, 'reduce_sangle_base_refpix_value', sRefPixSave
+   ENDIF ELSE BEGIN
+  ; else use the default, or value entered by user
+  ;retrieve RefPix value (from text field)
+       RefPix = getTextFieldValue(Event,'reduce_sangle_base_refpix_user_value')
+
+       fix_RefPix = FIX(RefPix)
+       RefPix_device = getSangleYDeviceValue(Event,fix_RefPix)
+   ENDELSE 
   
   id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='reduce_sangle_plot')
   WIDGET_CONTROL, id_draw, GET_VALUE=id_value
@@ -466,7 +491,7 @@ PRO plot_sangle_refpix, Event
   ;add legend
   plot_sangle_selection_legend, Event, string='RefPix', $
     color='red', xdevice_max - 100, RefPix_device + 10
-    
+  
   ;left and right arrows
   IF ((*global).sangle_mode EQ 'refpix') THEN BEGIN
     plot_sangle_arrows, Event, RefPix_device, color='red'
@@ -523,7 +548,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO plot_sangle_refpix_live, Event
-
+;
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
@@ -587,6 +612,14 @@ END
 PRO calculate_new_sangle_value, Event
 
   ON_IOERROR, error
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+; Code change RCW (Feb 1, 2010): set up SangleDone variable
+  SangleDone = (*(*global).SangleDone)
+
+  row_selected = getSangleRowSelected(Event)
   
   ;retrieve various parameters needed
   Dangle  = FLOAT(getTextFieldValue(Event,$
@@ -612,6 +645,10 @@ PRO calculate_new_sangle_value, Event
   sSangle = s_Sangle_rad + ' (' + s_Sangle_deg + ')'
   putTextFieldValue, Event, 'reduce_sangle_base_sangle_user_value', sSangle
   update_sangle_big_table, Event, sSangle
+
+; set flag to indicate that sangle has been calculated
+  SangleDone[row_selected] = 1
+  (*(*global).SangleDone) = SangleDone
   
   RETURN
   
@@ -627,13 +664,22 @@ END
 ;------------------------------------------------------------------------------
 PRO update_sangle_big_table, Event, sSangle
 
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+  SangleDone = (*(*global).SangleDone)
+
   table = getTableValue(Event, 'reduce_sangle_tab_table_uname')
   IF ((size(table))(0) EQ 1) THEN BEGIN ;1d array
     table[1] = sSangle
   ENDIF ELSE BEGIN ;2d array
     ;get sangle row selected
     row_selected = getSangleRowSelected(Event)
-    table[1,row_selected] = sSangle
+    IF (SangleDone[row_selected] EQ 1) THEN BEGIN
+       table[1,row_selected] = sSangle + ' *'
+    ENDIF ELSE BEGIN
+       table[1,row_selected] = sSangle
+    ENDELSE
   ENDELSE
   putValueInTable, Event, 'reduce_sangle_tab_table_uname', table
   
@@ -644,6 +690,9 @@ PRO determine_sangle_refpix_data_from_device_value, Event
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+; Code change RCW (Feb 1, 2010): set up RefPixSave variable
+  RefPixSave = (*(*global).RefPixSave)
   
   Y = Event.y
   
@@ -656,7 +705,11 @@ PRO determine_sangle_refpix_data_from_device_value, Event
   putTextFieldValue, Event, $
     'reduce_sangle_base_refpix_user_value',$
     sRefPix_data
-    
+; Code change RCW (Feb 1, 2010): save RefPix for each data set for display to screen
+  row_selected = getSangleRowSelected(Event)
+  RefPixSave[row_selected] = sRefPix_data
+  (*(*global).RefPixSave) = RefPixSave
+
 END
 
 ;------------------------------------------------------------------------------
@@ -684,6 +737,10 @@ PRO plot_counts_vs_pixel_help, Event
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  ; Code change RCW (Feb 1, 2010): set up SangleDone, RefPixSave variables
+  SangleDone = (*(*global).SangleDone)
+  RefPixSave = (*(*global).RefPixSave)
   
   tData = (*(*global).sangle_tData)
   tof_index = (*global).tof_sangle_index_range
@@ -734,10 +791,20 @@ PRO plot_counts_vs_pixel_help, Event
       'reduce_sangle_base_dirpix_user_value'))
     PLOTS, DirPix, ymin, /DATA, COLOR=FSC_COLOR('white')
     PLOTS, DirPix, ymax, /DATA, COLOR=FSC_COLOR('white'), /CONTINUE
-    
-    ;plot RefPix
-    RefPix  = FLOAT(getTextFieldValue(Event,$
+  
+  ;plot RefPix
+  ;get sangle row selected, check to see if sangle has been calculated
+   row_selected = getSangleRowSelected(Event)
+ 
+   IF (SangleDone[row_selected] EQ 1) THEN BEGIN
+  ; if sangle has been calculated, use stored value of RefPix
+     RefPix = RefPixSave[row_selected]      
+   ENDIF ELSE BEGIN
+  ; else use the default, or value entered by user
+     RefPix  = FLOAT(getTextFieldValue(Event,$
       'reduce_sangle_base_refpix_user_value'))
+   ENDELSE
+
     PLOTS, RefPix, ymin, /DATA, COLOR=FSC_COLOR('red')
     PLOTS, RefPix, ymax, /DATA, COLOR=FSC_COLOR('red'), /CONTINUE
     
@@ -754,16 +821,28 @@ PRO plot_counts_vs_pixel_help, Event
     ENDIF ELSE BEGIN ;linear plot
       PLOT, Data, XTITLE='Pixel', YTITLE='Counts', XSTYLE=1, YSTYLE=1
     ENDELSE
-    
+
+       
     ;plot DirPix
     DirPix  = FLOAT(getTextFieldValue(Event,$
       'reduce_sangle_base_dirpix_user_value'))
     PLOTS, DirPix, min_counts, /DATA, COLOR=FSC_COLOR('white')
     PLOTS, DirPix, max_counts, /DATA, COLOR=FSC_COLOR('white'), /CONTINUE
-    
-    ;plot RefPix
-    RefPix  = FLOAT(getTextFieldValue(Event,$
+
+   
+   ;plot RefPix
+  ;get sangle row selected, check to see if sangle has been calculated
+   row_selected = getSangleRowSelected(Event)
+
+   IF (SangleDone[row_selected] EQ 1) THEN BEGIN
+  ; if sangle has been calculated, use stored value of RefPix
+     RefPix = RefPixSave[row_selected]      
+   ENDIF ELSE BEGIN
+  ; else use the default, or value entered by user
+     RefPix  = FLOAT(getTextFieldValue(Event,$
       'reduce_sangle_base_refpix_user_value'))
+   ENDELSE   
+    
     PLOTS, RefPix, min_counts, /DATA, COLOR=FSC_COLOR('red')
     PLOTS, RefPix, max_counts, /DATA, COLOR=FSC_COLOR('red'), /CONTINUE
     

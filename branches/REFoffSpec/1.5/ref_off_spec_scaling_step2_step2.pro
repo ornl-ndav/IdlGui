@@ -81,6 +81,9 @@ PRO display_step4_step2_step2_selection, Event
   ;step1 of scaling has been done). If not, display a message asking for
   ;a selection first.
   
+  ; Code change RCW (Feb 8, 2010): Get Background color from XML file
+     PlotBackground = (*global).BackgroundCurvePlot
+  
   DEVICE, DECOMPOSED=0
   LOADCT, 5, /SILENT
   
@@ -118,6 +121,7 @@ PRO display_step4_step2_step2_selection, Event
         XTITLE = xtitle, $
         YTITLE = ytitle,$
         COLOR  = color,$
+        BACKGROUND = convert_rgb(PlotBackground),$
         ;YRANGE = [(*global).ymin_log_mode,ymax_value],$
         YRANGE = [ymin_value,ymax_value],$
         XRANGE = [xmin_value,xmax_value],$
@@ -130,6 +134,7 @@ PRO display_step4_step2_step2_selection, Event
         XTITLE = xtitle, $
         YTITLE = ytitle,$
         COLOR  = color,$
+        BACKGROUND = convert_rgb(PlotBackground),$
         XRANGE = [xmin_value,xmax_value],$
         YRANGE = [ymin_value,ymax_value],$
         XSTYLE = 1,$
@@ -142,11 +147,13 @@ PRO display_step4_step2_step2_selection, Event
         ERRPLOT, xrange,$
           t_data_to_plot-alog10(t_data_to_plot_error),$
           t_data_to_plot+alog10(t_data_to_plot_error),$
+          BACKGROUND = convert_rgb(PlotBackground),$
           COLOR = 250
       ENDIF ELSE BEGIN
         ERRPLOT, xrange,$
           t_data_to_plot-t_data_to_plot_error,$
           t_data_to_plot+t_data_to_plot_error,$
+          BACKGROUND = convert_rgb(PlotBackground),$
           COLOR = 250
       ENDELSE
     ENDIF
@@ -246,6 +253,9 @@ END
 PRO plotLambdaSelected, Event
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
+; Code change RCW (Feb 9, 2010: pass CE selection vertical line color in global
+   ceselect_vertical_line_color = (*global).ceselect_vertical_line_color
+
   step4_2_2_lambda_array = (*global).step4_2_2_lambda_array
   
   xmin = (*global).step4_2_2_draw_xmin
@@ -256,9 +266,11 @@ PRO plotLambdaSelected, Event
   FOR i=0,1 DO BEGIN
     lambda = step4_2_2_lambda_array[i]
     IF (lambda GE xmin AND $
-      lambda LT xmax) THEN BEGIN
-      plots, lambda, ymin, /DEVICE, color=200
-      plots, lambda, ymax, /DEVICE, /CONTINUE, color=200
+      lambda LT xmax) THEN BEGIN      
+;     plots, lambda, ymin, /DEVICE, color=200
+;     plots, lambda, ymax, /DEVICE, /CONTINUE, color=200
+     plots, lambda, ymin, /DEVICE, color=ceselect_vertical_line_color
+     plots, lambda, ymax, /DEVICE, /CONTINUE, color=ceselect_vertical_line_color
     ENDIF
   ENDFOR
   

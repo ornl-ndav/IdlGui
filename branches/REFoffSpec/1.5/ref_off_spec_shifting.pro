@@ -636,10 +636,10 @@ CASE (type) OF
                                  'transparency_attenuator_' + $
                                  'shifting_options')
         IF (index EQ 0) THEN BEGIN ;'no'
-            text += " all the data set have their original true intensity"
+            text += "all the data sets have their original true intensity."
         ENDIF ELSE BEGIN        ;'yes'
             text += "the intensity of all the other file is attenuated " + $
-              "by a configurable attenuator factor (see the tab OPTIONS). "
+              "by a configurable attenuator factor (see the OPTIONS tab). "
             coeff = getShiftingAttenuatorPercentage(Event)
             text += " -> This factor is currently set to " + $
               STRCOMPRESS(coeff,/REMOVE_ALL) + "%. "
@@ -647,14 +647,13 @@ CASE (type) OF
     END
     'reference_pixel': BEGIN
         text = "This pixel, defined using left click or by entering its" + $
-          " value in the text box next to the <Reference Pixel:> label " + $
-          "will be align with the Reference Pixel of the Reference File."
+          " value in the text box next to the <Reference Pixel:> label, " + $
+          "will be aligned with the Reference Pixel of the Reference File."
     END
     'pixel_down_up': BEGIN
-        text = "This buttons are used to move down and up the reference" + $
-          " pixel of the active file. Each click moves the pixel by" + $
-          " the number of pixels defined in the text field next to" + $
-          " the <Move by ...> label."
+        text = "These buttons are used to move down and up the reference" + $
+          " pixel of the active file. Each click moves the reference by" + $ 
+          " the number of pixels as defined in the <Move by ...> text field."
     END
     ELSE: text = ''
 ENDCASE

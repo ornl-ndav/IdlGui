@@ -72,18 +72,22 @@ PRO display_step4_step2_step1_selection, Event
       t_data_to_plot /= SF
       
       isLog = getStep4Step2PlotType(Event)
+   ; Code change RCW (Feb 8, 2010): Get Background color from XML file
+        PlotBackground = (*global).BackgroundCurvePlot
+
       IF (index EQ 0) THEN BEGIN
         xrange = (*(*global).step4_step2_step1_xrange)
         xtitle = 'Wavelength'
         ytitle = 'Counts'
         ;        ymax_value = (*global).step4_step1_ymax_value
-        
+
         IF (isLog) THEN BEGIN
           plot, xrange, $
             t_data_to_plot, $
             XTITLE = xtitle, $
             YTITLE = ytitle,$
             COLOR  = color,$
+            BACKGROUND = convert_rgb(PlotBackground),$
             ;YRANGE = [(*global).ymin_log_mode,ymax_value],$
             YRANGE = [ymin_value, ymax_value], $
           XSTYLE = 1,$
@@ -95,6 +99,7 @@ PRO display_step4_step2_step1_selection, Event
             XTITLE = xtitle, $
             YTITLE = ytitle,$
             COLOR  = color,$
+            BACKGROUND = convert_rgb(PlotBackground),$
             YRANGE = [ymin_value, ymax_value],$
             ;            YRANGE = [0, ymax_value],$
             XSTYLE = 1,$
@@ -104,6 +109,7 @@ PRO display_step4_step2_step1_selection, Event
         oplot, xrange,$
           t_data_to_plot, $
           COLOR  = color,$
+          BACKGROUND = convert_rgb(PlotBackground),$
           PSYM   = psym
       ENDELSE
       index++
