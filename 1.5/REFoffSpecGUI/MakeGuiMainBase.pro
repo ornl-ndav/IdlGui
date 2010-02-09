@@ -46,16 +46,17 @@ sMainTabSize = {size : [XYoff[0], $
                         MainBaseSize[2], $
                         MainBaseSize[3]],$
                 uname : 'main_tab'}
-
+; Code change RCW (Dec 29, 2009): get TabTitles from XML config file (via ref_off_spec)
+TabTitles = (*global).TabTitles
 ;Tab titles
-TabTitles = { step1:     ' 1/ REDUCTION',$
-              step2:     ' 2/ LOADING ',$
-              step3:     ' 3/ SHIFTING ',$
-              step4:     ' 4/ SCALING ',$
-              step5:     ' 5/ RECAP. ',$
-              step6:     ' 6/ CREATE OUTPUT ',$
-              options:   ' OPTIONS ',$
-              log_book:  ' LOG BOOK '}
+;TabTitles = { step1:     ' 1/ REDUCTION',$
+;              step2:     ' 2/ LOADING ',$
+;              step3:     ' 3/ SHIFTING ',$
+;              step4:     ' 4/ SCALING ',$
+;              step5:     ' 5/ RECAP. ',$
+;              step6:     ' 6/ CREATE OUTPUT ',$
+;              options:   ' OPTIONS ',$
+;              log_book:  ' LOG BOOK '}
 
 ;******************************************************************************
 ;            BUILD GUI

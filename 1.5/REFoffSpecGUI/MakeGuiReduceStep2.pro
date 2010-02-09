@@ -34,15 +34,14 @@
 
 PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
 
+; Define variable instrument (RCW, Feb 1, 2010)
+  instrument = (*global).instrument
+  
   ;****************************************************************************
   ;            DEFINE STRUCTURE
   ;****************************************************************************
 
-  IF ((*global).instrument EQ 'REF_L') THEN BEGIN
-    tab_title = TabTitles.step2
-  ENDIF ELSE BEGIN
-    tab_title = TabTitles.step3
-  ENDELSE
+  tab_title = TabTitles.step2
   sBase = { size:  stab.size,$
     uname: 'reduce_step2_tab_base',$
     title: tab_title}
@@ -98,8 +97,8 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     UNAME = 'reduce_step2_create_roi_norm_value',$
     FRAME = 1,$
     SCR_XSIZE = 100)
-    
-  IF ((*global).instrument EQ 'REF_M') THEN BEGIN
+; use predefined instrument (RWD, Feb 1, 2010)    
+  IF (instrument EQ 'REF_M') THEN BEGIN
   
     spin_label = WIDGET_LABEL(row1_base,$
       VALUE = '     Spin State:')
@@ -139,7 +138,8 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     value = '                  ')
     
   draw = WIDGET_DRAW(row2_base,$
-    SCR_XSIZE = 2*500,$
+;    SCR_XSIZE = 2*500,$
+    SCR_XSIZE = (*global).sangle_xsize_draw, $
     SCR_YSIZE = 2*304,$
     UNAME = 'reduce_step2_create_roi_draw_uname',$
     /tracking_events,$
@@ -221,9 +221,9 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     value = '    ')
     
   info = WIDGET_LABEL(row3_row2_base,$
-    VALUE = ' HELP: Left click on the plot to select first Y, Right ' + $
-    'click to switch to next Y. or manually input Y1 and Y2 ' + $
-    'or Use Up or Down arrows to move selection.')
+    VALUE = ' HELP: Left click on the plot to select first Y, right ' + $
+    'click to switch to next Y, or manually input Y1 and Y2 ' + $
+    'or use up and down arrows to move selection.')
     
   ;third row (save button)
   save_roi = WIDGET_BUTTON(row3_base,$
@@ -325,7 +325,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
   value = WIDGET_LABEL(col1,$
     VALUE = 'OR')
     
-  value = WIDGET_LABEL(col1,$
+  value = WIDGET_LABEL(col1,$idl
     VALUE = '')
     
   row2 = WIDGET_BASE(col1,$
@@ -333,12 +333,26 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     
   value = WIDGET_LABEL(row2,$
     VALUE = 'Run(s) #:')
-    
+  
+  IF ((*global).DEBUGGING EQ 'yes') THEN BEGIN
+    value = (*global).sDebugging.reduce_tab2_cw_field
+  ENDIF ELSE BEGIN
+    value = ''
+  ENDELSE
+  
+ ; For debugging, set the value to desired run numbers (RCW, Dec 31, 2009, Modified Feb 1, 2010)
+ IF (instrument EQ 'REF_L') THEN BEGIN
+    value = '24580' 
+  ENDIF ELSE BEGIN
+    value = '5392-5394' 
+  ENDELSE 
+  
   text = WIDGET_TEXT(row2,$
-    VALUE = '',$
+    VALUE = value,$
     UNAME = 'reduce_step2_normalization_text_field',$
     /EDITABLE,$
     XSIZE = 40)
+ 
     
   value = WIDGET_LABEL(row2,$
     VALUE = '(ex: 1245,1345-1347,1349)')
@@ -379,7 +393,8 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     
     
   ;-------------- second part of tab ------------------------------------------
-  IF ((*global).instrument EQ 'REF_M') THEN BEGIN
+; use predefined instrument (RCW, Feb 1, 2010)
+  IF (instrument EQ 'REF_M') THEN BEGIN
     value = 'Data Run#     Normalization Run#'
     xsize = 200
   ENDIF ELSE BEGIN

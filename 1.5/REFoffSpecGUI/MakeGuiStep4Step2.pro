@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 
-PRO make_gui_scaling_step2, REDUCE_TAB, tab_size, TabTitles
+PRO make_gui_scaling_step2, REDUCE_TAB, tab_size, TabTitles, global
 
 ;******************************************************************************
 ;            DEFINE STRUCTURE
@@ -135,9 +135,18 @@ sMainTab = { size: [sStep4Draw.size[0]+$
                     555,800],$
              uname: 'step4_step2_tab'}
 
-TabTitles = { critical_edge: 'Critical Edge',$
-              other_files: 'Scaling of Other Files',$
-              all_files: 'All Files'}
+;TabTitles
+  ; Code change RCW (Dec 30, 2009): get ScalingTabNames from XML config file (via ref_off_spec)
+  ; and populate TabTitlesLocal
+
+ScalingLevel3TabNames = (*global).ScalingLevel3TabNames
+TabTitles =  { all_files:       ScalingLevel3TabNames[0],$
+               critical_edge:   ScalingLevel3TabNames[1],$
+               other_files:     ScalingLevel3TabNames[2]}
+
+;TabTitles = { critical_edge: 'Critical Edge',$
+;              other_files: 'Scaling of Other Files',$
+;              all_files: 'All Files'}
 
 ;******************************************************************************
 ;            BUILD GUI

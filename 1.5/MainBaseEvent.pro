@@ -59,14 +59,14 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='step4_step2_tab'): BEGIN
       tab_step4_step2_event, Event ;_eventcb
     END
-    
-    ;111111F11111111111111111111111111111111111111111111111111111111111111111111
-    
+ ;----------------------------------------------------------------------------  
+ ; REDUCE - REDUCE - REDUCE  
+ ;----------------------------------------------------------------------------    
+ ; REDUCE TAB 1 - REDUCE TAB 1 - REDUCE TAB 1
+ ;----------------------------------------------------------------------------    
     WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab'): BEGIN
       reduce_tab_event, Event ;_eventcb
     END
-    
-    ;11111111 tab1 11111111 tab1 11111111 tab1 11111111 tab1 11111111 tab1 1111
     
     ;Browse button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab1_browse_button'): BEGIN
@@ -588,9 +588,9 @@ PRO MAIN_BASE_event, Event
       DEVICE, CURSOR_STANDARD=standard
     ENDELSE
   END
-  
-  ;11111111 tab2 11111111 tab2 11111111 tab2 11111111 tab2 11111111 tab2 111111
-  
+ ;---------------------------------------------------------------------------- 
+ ; REDUCE TAB 2 - REDUCE TAB 2 - REDUCE TAB 2
+ ;---------------------------------------------------------------------------- 
   ;data spin states tab
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='reduce_step2_data_spin_state_tab_uname'): BEGIN
@@ -1536,7 +1536,7 @@ PRO MAIN_BASE_event, Event
     refresh_roi_file_name, Event
   END
   
-  ;11111111 tab3 11111111 tab3 11111111 tab3 11111111 tab3 11111111 tab3 111111
+ ; REDUCE TAB 3 - REDUCE TAB 3 - REDUCE TAB 3
   
   ;big table
   WIDGET_INFO(wWidget, $
@@ -1562,7 +1562,7 @@ PRO MAIN_BASE_event, Event
   
   ;check job manager
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab3_check_jobs'): BEGIN
-    reduce_step3_job_mamager, Event
+    reduce_step3_job_manager, Event
     ;show base that inform the user that the job manager is going to show up
     job_base = job_manager_info_base(Event)
     WAIT, 4
@@ -1570,9 +1570,7 @@ PRO MAIN_BASE_event, Event
     
   END
   
-  ;2222222222222222222222222222222222222222222222222222222222222222222222222222
-  ;2222222222222222222222222222222222222222222222222222222222222222222222222222
-  ;2222222222222222222222222222222222222222222222222222222222222222222222222222
+; LOADING - LOADING - LOADING
   
   ;Browse ASCII file button
   WIDGET_INFO(wWidget, FIND_BY_UNAME='browse_ascii_file_button'): BEGIN
@@ -1724,7 +1722,9 @@ PRO MAIN_BASE_event, Event
     change_xaxis_ticks, Event, type='more' ;_plot
   END
   
-  ;3333333333333333333333333333333333333333333333333333333333333333333333333333
+; SHIFTING - SHIFTING - SHIFTING
+
+
   ;zmax widget_text
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step3_zmax'): BEGIN
     input_error = 0
@@ -2030,13 +2030,11 @@ PRO MAIN_BASE_event, Event
     FIND_BY_UNAME='data_down_shifting'): BEGIN
     manual_move_mode_shifting, Event, DIRECTION='down' ;_shifting
   END
-  
-  ;----------------------------------------------------------------------------
-  ;4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-
-  ;----------------------------------------------------------------------------
-  
-  ;4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/
-  
+;---------------------------------------------------------------------------- 
+; SCALING - SCALING - SCALING
+;---------------------------------------------------------------------------- 
+; SCALING - TAB1 - SCALING - TAB1 - SCALING - TAB1
+;---------------------------------------------------------------------------- 
   ;zmax widget_text
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step4_zmax'): BEGIN
     input_error = 0
@@ -2266,7 +2264,7 @@ PRO MAIN_BASE_event, Event
     ENDIF
   END
   
-  ;4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2
+; SCALING - TAB2 - SCALING - TAB2 - SCALING - TAB2
   
   ;lin/log
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step4_step2_z_axis_linear_log'): BEGIN
@@ -2336,9 +2334,9 @@ PRO MAIN_BASE_event, Event
       re_plot_fitting, Event ;scaling_step2_step2
     ENDIF
   END
-  
-  ;Critical Edge Tab ----------------------------------------------------------
-  
+;----------------------------------------------------------------------------  
+; SCALING - TAB2 - CRITICAL EDGE - SCALING - TAB2 - CRITIAL EDGE
+;----------------------------------------------------------------------------  
   ;if mouse is over plot
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME= $
@@ -2418,7 +2416,7 @@ PRO MAIN_BASE_event, Event
     step4_2_2_reset_scaling, Event ;scaling_step2_step2
   END
   
-  ;4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/
+; SCALING - TAB2 - OTHER FILES - SCALING - TAB2 - OTHER FILES
   ;Scaling of Other Files
   
   ;Automatic Rescaling button -------------------------------------------------
@@ -2483,7 +2481,7 @@ PRO MAIN_BASE_event, Event
   END
   
   ;----------------------------------------------------------------------------
-  ;- RECAP - RECAP - RECAP - RECAP - RECAP - RECAP - RECAP - RECAP - RECAP -
+  ; RECAP - RECAP - RECAP - RECAP - RECAP - RECAP - RECAP - RECAP - RECAP -
   ;----------------------------------------------------------------------------
   
   ;lin/log --------------------------------------------------------------------
@@ -2908,7 +2906,7 @@ PRO MAIN_BASE_event, Event
   END
   
   ;----------------------------------------------------------------------------
-  ;- CREATE OUTPUT - CREATE OUTPUT - CREATE OUTPUT - CREATE OUTPUT - CREATE....
+  ;CREATE OUTPUT - CREATE OUTPUT - CREATE OUTPUT - CREATE OUTPUT - CREATE OUTPUT
   ;----------------------------------------------------------------------------
   
   ;output file path button
@@ -3080,9 +3078,9 @@ PRO MAIN_BASE_event, Event
       value
   END
   
-  
   ;----------------------------------------------------------------------------
-  ;- LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK
+  ;LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK
+  ;----------------------------------------------------------------------------
   WIDGET_INFO(wWidget, FIND_BY_UNAME='send_to_geek_button'): BEGIN
     SendToGeek, Event ;_IDLsendToGeek
   END
