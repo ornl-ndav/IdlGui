@@ -85,7 +85,6 @@ PRO MAIN_BASE_event, Event
       ok_polarization_state, Event
     END
     
-    
     ;data/normalization/empty cell tab
     WIDGET_INFO(wWidget, FIND_BY_UNAME='data_normalization_tab'): begin
       data_norma_empty_cell_tab_event, Event ;_tab
