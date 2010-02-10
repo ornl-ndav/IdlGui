@@ -44,103 +44,103 @@ if ((*global).NormNexusFound) then begin
     tvimg = (*(*global).tvimg_norm_ptr)
     sz=size(tvimg)
     
-;####X-axis
-    xmin = getTextFieldValue(Event,'normalization_rescale_xmin_cwfield')
-    xmax = getTextfieldValue(Event,'normalization_rescale_xmax_cwfield')
-    new_tvimg = fltarr(sz[1],sz[2])
-    Xupdate = [0,0]
-    if (xmin GT xmax) then begin
-        tmp = xmax
-        xmax = xmin
-        xmin = tmp
-        Xupdate[0]=1
-        Xupdate[1]=1
-    endif
-    
-    if (xmin LT NormXYZminmaxArray[0]) then begin
-        xmin = NormXYZminmaxArray[0]
-        Xupdate[0]=1
-    endif
-    
-    if (xmax GT NormXYZminmaxArray[1]) then begin
-        xmax = NormXYZminmaxArray[1]
-        Xupdate[1]=1
-    endif
-    
-    if (Xupdate[0] EQ 1) then begin
-        putTextFieldValue, Event, 'normalization_rescale_xmin_cwfield', xmin, 0
-    endif
-    
-    if (Xupdate[1] EQ 1) then begin
-        putTextFieldValue, Event, 'normalization_rescale_xmax_cwfield', xmax, 0
-    endif
-    
-    xmin *= (*global).congrid_norm_x_coeff
-    xmax *= (*global).congrid_norm_x_coeff
-    
-    new_tvimg(xmin:xmax,*) = tvimg(xmin:xmax,*)
-    tvimg=new_tvimg
-    
-;####Y-axis
-    ymin = getTextFieldValue(Event,'normalization_rescale_ymin_cwfield')
-    ymax = getTextFieldValue(Event,'normalization_rescale_ymax_cwfield')
-    new_tvimg = fltarr(sz[1],sz[2])
-    Yupdate = [0,0]
-    if (ymin GT ymax) then begin
-        tmp = ymax
-        ymax = ymin
-        ymin = tmp
-        Yupdate[0]=1            ;we need to update ymin
-        Yupdate[1]=1            ;we need to update ymax
-    endif
-    
-    if (ymin LT NormXYZminmaxArray[2]) then begin
-        ymin = NormXYZminmaxArray[2]
-        Yupdate[0]=1
-    endif
-    
-    if (ymax GT NormXYZminmaxArray[3]) then begin
-        ymax = NormXYZminmaxArray[3]
-        Yupdate[1]=1
-    endif
-    
-    if (Yupdate[0] EQ 1) then begin
-        putTextFieldValue,Event, 'normalization_rescale_ymin_cwfield',ymin,0
-    endif
-    
-    if (Yupdate[1] EQ 1) then begin
-        putTextfieldValue,Event, 'normalization_rescale_ymax_cwfield',ymax,0
-    endif
-    
-    if (~(*global).miniVersion) then begin
-        ymin *= 2
-        ymax *= 2
-    endif
-    new_tvimg(*,ymin:ymax) = tvimg(*,ymin:ymax)
-    tvimg=new_tvimg
-    
-;####Z-axis
-    zmin = getTextFieldValue(Event,'normalization_rescale_zmin_cwfield')
-    zmax = getTextFieldValue(Event,'normalization_rescale_zmax_cwfield')
-    new_tvimg = fltarr(sz[1],sz[2])
-    index = where(tvimg GE zmin AND tvimg LE zmax,Nbr)
-    if (Nbr GT 0) then begin
-        new_tvimg(index) = tvimg(index)
-        tvimg = new_tvimg
-    endif
-    
-;if z-axis is linear
-    if (getDropListSelectedIndex(Event,'normalization_rescale_z_droplist') $
-        EQ 1) then begin        ;log
-        tvimg = alog(tvimg)
-        index = WHERE(tvimg GE 0, nbr)
-        sz = size(tvimg)
-        new_tvimg = INTARR(sz[1],sz[2])
-        IF (nbr GT 0) THEN BEGIN
-            new_tvimg(index) = tvimg(index)
-        ENDIF
-        tvimg = new_tvimg
-    ENDIF
+;;####X-axis
+;    xmin = getTextFieldValue(Event,'normalization_rescale_xmin_cwfield')
+;    xmax = getTextfieldValue(Event,'normalization_rescale_xmax_cwfield')
+;    new_tvimg = fltarr(sz[1],sz[2])
+;    Xupdate = [0,0]
+;    if (xmin GT xmax) then begin
+;        tmp = xmax
+;        xmax = xmin
+;        xmin = tmp
+;        Xupdate[0]=1
+;        Xupdate[1]=1
+;    endif
+;    
+;    if (xmin LT NormXYZminmaxArray[0]) then begin
+;        xmin = NormXYZminmaxArray[0]
+;        Xupdate[0]=1
+;    endif
+;    
+;    if (xmax GT NormXYZminmaxArray[1]) then begin
+;        xmax = NormXYZminmaxArray[1]
+;        Xupdate[1]=1
+;    endif
+;    
+;    if (Xupdate[0] EQ 1) then begin
+;        putTextFieldValue, Event, 'normalization_rescale_xmin_cwfield', xmin, 0
+;    endif
+;    
+;    if (Xupdate[1] EQ 1) then begin
+;        putTextFieldValue, Event, 'normalization_rescale_xmax_cwfield', xmax, 0
+;    endif
+;    
+;    xmin *= (*global).congrid_norm_x_coeff
+;    xmax *= (*global).congrid_norm_x_coeff
+;    
+;    new_tvimg(xmin:xmax,*) = tvimg(xmin:xmax,*)
+;    tvimg=new_tvimg
+;    
+;;####Y-axis
+;    ymin = getTextFieldValue(Event,'normalization_rescale_ymin_cwfield')
+;    ymax = getTextFieldValue(Event,'normalization_rescale_ymax_cwfield')
+;    new_tvimg = fltarr(sz[1],sz[2])
+;    Yupdate = [0,0]
+;    if (ymin GT ymax) then begin
+;        tmp = ymax
+;        ymax = ymin
+;        ymin = tmp
+;        Yupdate[0]=1            ;we need to update ymin
+;        Yupdate[1]=1            ;we need to update ymax
+;    endif
+;    
+;    if (ymin LT NormXYZminmaxArray[2]) then begin
+;        ymin = NormXYZminmaxArray[2]
+;        Yupdate[0]=1
+;    endif
+;    
+;    if (ymax GT NormXYZminmaxArray[3]) then begin
+;        ymax = NormXYZminmaxArray[3]
+;        Yupdate[1]=1
+;    endif
+;    
+;    if (Yupdate[0] EQ 1) then begin
+;        putTextFieldValue,Event, 'normalization_rescale_ymin_cwfield',ymin,0
+;    endif
+;    
+;    if (Yupdate[1] EQ 1) then begin
+;        putTextfieldValue,Event, 'normalization_rescale_ymax_cwfield',ymax,0
+;    endif
+;    
+;    if (~(*global).miniVersion) then begin
+;        ymin *= 2
+;        ymax *= 2
+;    endif
+;    new_tvimg(*,ymin:ymax) = tvimg(*,ymin:ymax)
+;    tvimg=new_tvimg
+;    
+;;####Z-axis
+;    zmin = getTextFieldValue(Event,'normalization_rescale_zmin_cwfield')
+;    zmax = getTextFieldValue(Event,'normalization_rescale_zmax_cwfield')
+;    new_tvimg = fltarr(sz[1],sz[2])
+;    index = where(tvimg GE zmin AND tvimg LE zmax,Nbr)
+;    if (Nbr GT 0) then begin
+;        new_tvimg(index) = tvimg(index)
+;        tvimg = new_tvimg
+;    endif
+;    
+;;if z-axis is linear
+;    if (getDropListSelectedIndex(Event,'normalization_rescale_z_droplist') $
+;        EQ 1) then begin        ;log
+;        tvimg = alog(tvimg)
+;        index = WHERE(tvimg GE 0, nbr)
+;        sz = size(tvimg)
+;        new_tvimg = INTARR(sz[1],sz[2])
+;        IF (nbr GT 0) THEN BEGIN
+;            new_tvimg(index) = tvimg(index)
+;        ENDIF
+;        tvimg = new_tvimg
+;    ENDIF
     
     REFreduction_Rescale_PlotNorm, Event, tvimg
 
