@@ -45,6 +45,7 @@ if ((*global).DataNexusFound) then begin
     DataXYZminmaxArray = (*(*global).DataXYZminmaxArray)
     
     tvimg = (*(*global).tvimg_data_ptr)
+    help, tvimg
     sz=size(tvimg)
 
 ;####X-axis

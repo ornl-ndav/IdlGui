@@ -32,6 +32,8 @@
 ;
 ;==============================================================================
 
+.run simulate_ref_l_rotated.pro
+
 .run ref_reduction_string.pro
 .run ref_reduction_put.pro
 .run ref_reduction_is.pro

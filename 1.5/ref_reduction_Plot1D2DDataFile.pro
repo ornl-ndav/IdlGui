@@ -39,6 +39,7 @@ FUNCTION REFreduction_Plot1D2DDataFile, Event
 status = REFreduction_Plot2DDataFile(Event)
 IF (status EQ 0) THEN RETURN, status
 
+print, 'about to enter REFreduction_Plot1DDataFile' ;REMOVE_ME
 ;plot the 1D data file
 status = REFreduction_Plot1DDatafile(Event)
 RETURN, status

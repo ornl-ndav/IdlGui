@@ -39,7 +39,7 @@ WIDGET_CONTROL,Event.top,GET_UVALUE=global
 ;check instrument selected
 instrument = (*global).instrument
 no_error = 0
-CATCH, no_error
+;CATCH, no_error
 IF (no_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     IDLsendLogBook_ReplaceLogBookText, $
@@ -92,8 +92,12 @@ PRO Plot2DDataFileForRefL, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 ;retrieve parameters
-Nx         = (*global).Nx_REF_L ;256
-Ny         = (*global).Ny_REF_L ;304
+
+;Nx         = (*global).Nx_REF_L ;256
+;Ny         = (*global).Ny_REF_L ;304
+Nx = (*global).Ny_REF_L  ;detector rotated
+Ny = (*global).Nx_REF_L  ;detector rotated
+
 Plot2DDataFile, Event, Nx, Ny
 Plot2DData_3D_File, Event
 END
@@ -104,8 +108,11 @@ PRO Plot2DDataFileForRefL_batch, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 ;retrieve parameters
-Nx         = (*global).Nx_REF_L ;256
-Ny         = (*global).Ny_REF_L ;304
+;Nx         = (*global).Nx_REF_L ;256
+;Ny         = (*global).Ny_REF_L ;304
+Nx = (*global).Ny_REF_L  ;detector rotated
+Ny = (*global).Nx_REF_L  ;detector rotated
+
 Plot2DDataFile_batch, Event, Nx, Ny
 Plot2DData_3D_File_batch, Event
 END
@@ -158,7 +165,7 @@ img = total(img,1) ; data(Ntof,Nx)
 ;load data up in global ptr array
 (*(*global).DATA_DD_ptr) = img
 ;transpose just for display purpose
-img=transpose(img)
+;img=transpose(img)
 DEVICE, DECOMPOSED = 0
 id_draw = widget_info(Event.top, find_by_uname='load_data_DD_draw')
 widget_control, id_draw, get_value=id_value
@@ -171,7 +178,12 @@ endif else begin
     New_Ny = 2*Ny
     New_Nx = 2*Nx
 endelse
+help, img
+print, 'New_Nx: ' , New_nx
+print, 'New_ny: ' , New_ny
+
 tvimg = rebin(img, New_Nx, New_Ny,/sample)
+
 tvscl, tvimg, /device
 ;remove PROCESSING_message from logbook and say ok
 LogBookText = getLogBookText(Event)

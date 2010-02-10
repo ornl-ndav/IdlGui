@@ -39,7 +39,7 @@ WIDGET_CONTROL,Event.top,GET_UVALUE=global
 ;check instrument selected
 instrument = (*global).instrument
 no_error = 0
-CATCH, no_error
+;CATCH, no_error
 IF (no_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     IDLsendLogBook_ReplaceLogBookText, $
@@ -92,7 +92,7 @@ PRO Plot1DDataFileForRefL, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-N   = (*global).Ny_REF_L ; 304
+N   = (*global).Ny_REF_L ; 304 
 img = (*(*global).DATA_D_ptr) ;data(Ntof,Ny,Nx)
 img = total(img,3) ;data(Ntof,Ny)
 (*(*global).DATA_D_TOTAL_ptr) = img
@@ -182,7 +182,7 @@ if ((*global).miniVersion) then begin
     xsize = 304.
 endif else begin
     new_N = 2 * N
-    xsize = 608.
+    xsize = 256*2l  ;detector rotated
 endelse
 
 IF (file_Ntof LT xsize) THEN BEGIN
