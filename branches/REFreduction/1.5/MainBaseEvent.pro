@@ -165,16 +165,19 @@ PRO MAIN_BASE_event, Event
     ;1D_2D plot of DATA
     WIDGET_INFO(wWidget, FIND_BY_UNAME='load_data_D_draw'): begin
       error = 0
-      CATCH, error
+      ;CATCH, error
       IF (error NE 0) THEN BEGIN
         CATCH,/CANCEL
       ENDIF ELSE BEGIN
         IF ((*global).DataNeXusFound) THEN BEGIN
         
           ;show x/y and counts ************************************************
+          x = Event.x
+;          coeff_congrid_tof = (*global).congrid_x_coeff
+;          new_x = FIX(FLOAT(x) / FLOAT(coeff_congrid_tof))
           putLabelValue, Event, $
             'data_x_info_value', $
-            STRCOMPRESS(Event.x,/REMOVE_ALL)
+            STRCOMPRESS(x,/REMOVE_ALL)
           IF ((*global).miniVersion EQ 1) THEN BEGIN
             coeff = 1
           ENDIF ELSE BEGIN

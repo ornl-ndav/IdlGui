@@ -95,6 +95,8 @@ widget_control,id,get_uvalue=global
 N   = (*global).Ny_REF_L ; 304 
 img = (*(*global).DATA_D_ptr) ;data(Ntof,Ny,Nx)
 img = total(img,3) ;data(Ntof,Ny)
+print, 'DATA_D_TOTAL_ptr: '
+help, img
 (*(*global).DATA_D_TOTAL_ptr) = img
 Plot1DDataFile, Event, img, N
 Plot1DData_3D_File, Event, img
@@ -182,7 +184,7 @@ if ((*global).miniVersion) then begin
     xsize = 304.
 endif else begin
     new_N = 2 * N
-    xsize = 256*2l  ;detector rotated
+    xsize = 304L*2l  ;detector rotated
 endelse
 
 IF (file_Ntof LT xsize) THEN BEGIN

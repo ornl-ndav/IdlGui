@@ -40,8 +40,6 @@ FUNCTION retrieveBanksData, Event, $
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
-  print, 'in retrieveBanksData'
-  
   not_hdf5_format = 0
   ;CATCH, not_hdf5_format
   IF (not_hdf5_format NE 0) THEN BEGIN
@@ -74,10 +72,14 @@ FUNCTION retrieveBanksData, Event, $
     CASE (type) OF
       'data': BEGIN
         data = h5d_read(fieldID)
+        print, 'data fresh from NeXus file:'
+        help, data
         IF (simulate_rotated_detector EQ 'yes') THEN BEGIN
           simulate_REF_L_rotated_angle, data
         ENDIF
         (*(*global).bank1_data) = data
+        print, 'data input simulated: '
+        help, data
       END
       'norm': BEGIN
         data = h5d_read(fieldID)
