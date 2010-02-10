@@ -52,7 +52,8 @@ function get_output_directory, instrument, runnumber, HOME=HOME, CREATE=CREATE, 
   IF (proposal NE '0') THEN BEGIN
     output_directory  = '/SNS/' + STRUPCASE(STRCOMPRESS(string(instrument),/REMOVE_ALL))
     output_directory += '/' + STRCOMPRESS(string(proposal),/REMOVE_ALL)
-    output_directory += '/shared/' +  get_ucams()
+    output_directory += '/shared/' +  get_ucams() + '/'
+    output_directory += STRUPCASE(STRCOMPRESS(string(runnumber),/REMOVE_ALL))
   ENDIF ELSE BEGIN
     output_directory  = '/SNS/users/' + get_ucams() + '/results/'
     output_directory += STRUPCASE(STRCOMPRESS(string(instrument),/REMOVE_ALL)) + '/'
