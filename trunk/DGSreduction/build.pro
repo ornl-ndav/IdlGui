@@ -68,7 +68,7 @@ newPath = EXPAND_PATH('+./') + PATH_SEP(/SEARCH_PATH) + !PATH
 .compile get_runinfo_filename
 .compile get_prenexus_directory
 .compile get_output_directory
-.compile get_mask_directory
+.compile get_maskfiles
 .compile get_event_filename
 .compile get_cwpcache_directory
 .compile get_cvinfo_filename
