@@ -53,7 +53,6 @@ load_data_D_DD_Tab = WIDGET_TAB(LOAD_DATA_BASE,$
 
 ;build Load_Data_1D tab
 MakeGuiLoadData1DTab,$
-
   load_data_D_DD_Tab,$
   D_DD_BaseSize,$
   D_DD_TabTitle,$

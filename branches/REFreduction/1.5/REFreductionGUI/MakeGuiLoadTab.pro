@@ -80,6 +80,8 @@ D_DD_TabTitle = [DTitle,$
 Nx = 256
 Ny = 304
 if (instrument EQ 'REF_L') then begin
+    Nx = 304  ;instrument rotated
+    Ny = 256  ;instrument rotated
     xoff = 49
     yoff = 0
     xsize = 2*Nx
@@ -91,7 +93,7 @@ endif else begin
     ysize = 2*Nx
 endelse
 
-LoadDataNormalization1DGraphSize    = [5,0,608,608]
+LoadDataNormalization1DGraphSize    = [5,0,308*2,256*2]
 LoadDataNormalization2DRefGraphSize = [xoff,yoff,xsize,ysize]
 GlobalLoadDataGraphs = [LoadDataNormalization1DGraphSize,$
                         LoadDataNormalization2DRefGraphSize]
