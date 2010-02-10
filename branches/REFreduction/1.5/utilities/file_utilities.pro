@@ -34,7 +34,7 @@
 
 PRO check_create_output_folder, Event, PATH=path
 
-  WIDGET_CONTROL,id,get_uvalue=global
+  WIDGET_CONTROL,Event.top, get_uvalue=global
 
   IF (FILE_TEST(path,/DIRECTORY)) THEN RETURN ;if directory exists already
   ;if not, create it

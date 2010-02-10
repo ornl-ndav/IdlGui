@@ -115,7 +115,7 @@ PRO create_empty_cell_output_file, Event
     PRINTF, 1, metadata_array[i]
   ENDFOR
   
-  FOR pixel=0,303 DO BEGIN
+  FOR pixel=0,255 DO BEGIN
     PRINTF, 1, single_axes_1 + STRCOMPRESS(pixel,/REMOVE_ALL) + single_axes_2
     PRINTF, 1, single_axes_0
     PRINTF, 1, global_axes_description
