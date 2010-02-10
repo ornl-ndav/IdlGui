@@ -508,7 +508,7 @@ FUNCTION ReductionCmd::GetReductionOutputDirectory
   directory = get_output_directory(self.instrument, $
     self->GetRunNumber(), $
     HOME=self.usehome, OVERRIDE=self.OutputOverride)
-  ;print,directory
+  ;print,'GetReductionOutputDirectory() --> ',directory
   RETURN, directory
 END
 
