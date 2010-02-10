@@ -32,50 +32,17 @@
 ;
 ;==============================================================================
 
-;define path to dependencies and current folder
-spawn, 'pwd', CurrentFolder
+PRO simulate_REF_L_rotated_angle, data
 
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-@main_idl_makefile_utilities.pro
+help, data
 
-;Build REFreduction GUI
-cd, CurrentFolder + '/REFreductionGUI/'
-.run MakeGuiMainTab.pro
-.run MakeGuiLoadTab.pro
-.run MakeGuiNexusInterface.pro
-.run MakeGuiLoadDataNormalizationTab.pro
-.run MakeGuiLoadDataTab.pro
-.run MakeGuiLoadData1D2DTab.pro
-.run MakeGuiLoadData1DTab.pro
-.run MakeGuiLoadData1D_3D_Tab.pro
-.run MakeGuiLoadData2DTab.pro
-.run MakeGuiLoadData2D_3D_Tab.pro
-.run MakeGuiLoadNormalizationTab.pro
-.run MakeGuiLoadNormalization1D2DTab.pro
-.run MakeGuiLoadNormalization1DTab.pro
-.run MakeGuiLoadNormalization1D_3D_Tab.pro
-.run MakeGuiLoadNormalization2DTab.pro
-.run MakeGuiLoadNormalization2D_3D_Tab.pro
-.run MakeGuiEmptyCellTab.pro
-.run MakeGuiInstrumentSelection.pro
+ntof = (size(data))(1)
+dim1 = (size(data))(2)
+dim2 = (size(data))(3)
 
-.run MakeGuiReduceTab.pro
-.run MakeGuiEmptyCell.pro
-.run MakeGuiReduceDataBase.pro
-.run MakeGuiReduceNormalizationBase.pro
-.run MakeGuiReduceQbase.pro
-.run MakeGuiReduceDetectorBase.pro
-.run MakeGuiReduceIntermediatePlotBase.pro
-.run MakeGuiReduceOther.pro
-.run MakeGuiReduceInfo.pro
+data = LONARR(ntof, dim2, dim1)
+data[10:40,128,*] = 1
 
-.run MakeGuiPlotsTab.pro
-.run MakeGuiPlotsMainIntermediatesBases.pro
-.run MakeGuiBatchTab.pro
-.run MakeGuiLogBookTab.pro
+help, data
 
-;Build main procedures
-cd, CurrentFolder
-@main_idl_makefile.pro
-.run ref_reduction_v15.pro
+END

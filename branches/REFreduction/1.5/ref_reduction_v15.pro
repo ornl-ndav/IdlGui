@@ -53,7 +53,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     MainBaseSize  = [50,50,1200,885]
   ENDELSE
   
-  MainBaseTitle = 'Reflectometer Data Reduction Package - '
+  MainBaseTitle = 'Reflectometer Data Reduction Package (detector rotated) - '
   MainBaseTitle += (*global).VERSION
   IF ((*global).DEBUGGING_VERSION EQ 'yes') THEN BEGIN
     MainBaseTitle += ' (DEBUGGING MODE)'
@@ -210,7 +210,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   WIDGET_CONTROL, id, set_value=file_name
   
   IF ((*global).ucams EQ 'j35') THEN BEGIN
-      id = WIDGET_INFO(MAIN_BASE,find_by_uname='reduce_cmd_line_preview')
+    id = WIDGET_INFO(MAIN_BASE,find_by_uname='reduce_cmd_line_preview')
     WIDGET_CONTROL, id, /editable
     WIDGET_CONTROL, /CONTEXT_EVENTS
   ENDIF
@@ -257,22 +257,10 @@ END
 
 
 ; Empty stub procedure used for autoloading.
-pro ref_reduction, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+pro ref_reduction_v15, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-  ;check instrument here
-  SPAWN, 'hostname',listening
-  CASE (listening) OF
-    'lrac': instrument = 'REF_L'
-    'mrac': instrument = 'REF_M'
-    'heater': instrument = 'UNDEFINED'
-    else: instrument = 'UNDEFINED'
-  ENDCASE
+  BuildGui, 'REF_L', GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
-  if (instrument EQ 'UNDEFINED') then begin
-    BuildInstrumentGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-  endif else begin
-    BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, instrument
-  endelse
 end
 
 

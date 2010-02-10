@@ -34,7 +34,7 @@
 
 FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
 
-  file = OBJ_NEW('idlxmlparser', '.REFreduction.cfg')
+  file = OBJ_NEW('idlxmlparser', '.REFreduction_v15.cfg')
   ;==============================================================================
   ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
   APPLICATION = file->getValue(tag=['configuration','application'])+'_low'
@@ -45,7 +45,9 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
   WITH_JOB_MANAGER = file->getValue(tag=['configuration','with_job_manager'])
   CHECKING_PACKAGES = file->getValue(tag=['configuration','checking_packages'])
   DEBUGGING_ON_MAC = file->getValue(tag=['configuration','debugging_on_mac'])
-  
+  SIMULATE_ROTATED_DETECTOR = file->getValue(tag=['configuration',$
+    'simulate_rotated_detector'])
+    
   debugging_structure = getDebuggingStructure()
   
   ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
@@ -74,6 +76,7 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     application:       APPLICATION,$
     instrument:        STRCOMPRESS(INSTRUMENT,/remove_all),$
     with_launch_switch: WITH_LAUNCH_SWITCH,$
+    simulate_rotated_detector: SIMULATE_ROTATED_DETECTOR, $
     
     congrid_x_coeff: 0., $ ;congrid x coeff for data file
     congrid_norm_x_coeff: 0., $ ;congrid x coeff for normalization file
@@ -497,6 +500,13 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     ;Version of REFreduction Tool
     })
     
+  ;DETECTOR ROTATED =================
+  Ny = (*global).Nx_REF_L
+  Nx = (*global).Ny_REF_L
+  (*global).Nx_REF_L = Nx
+  (*global).Ny_REF_L = Ny
+  ;DETECTOR ROTATED =================
+  
   ;make sure the right SF equation (format) is displayed
   sf_equation_file_array = (*global).sf_equation_file_array
   IF (MINIversion) THEN BEGIN

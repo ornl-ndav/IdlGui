@@ -183,7 +183,7 @@ PRO MAIN_BASE_event, Event
           putLabelValue, $
             Event, $
             'data_y_info_value', $
-            STRCOMPRESS(FIX((Event.y/coeff)+1),/REMOVE_ALL)
+            STRCOMPRESS(FIX((Event.y/coeff)),/REMOVE_ALL)
             
           tvimg = (*(*global).tvimg_data_ptr)
           
