@@ -305,15 +305,15 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   ; == ROI and MASKS ==
     
   ; Mask File
-  maskRow = WIDGET_BASE(reductionTabCol1Row1Col1, /ROW)
+  maskRow = WIDGET_BASE(reductionTabCol2Row1Col1, /ROW)
   
   maskBase = WIDGET_BASE(maskRow)
-  maskLabel = WIDGET_LABEL(maskBase, VALUE=' Data Selection ', XOFFSET=5)
+  maskLabel = WIDGET_LABEL(maskBase, VALUE=' Mask Selection ', XOFFSET=5)
   maskLabelGeometry = WIDGET_INFO(maskLabel, /GEOMETRY)
   maskLabelYSize = maskLabelGeometry.ysize
   maskPrettyBase = WIDGET_BASE(maskBase, /FRAME, /COLUMN, $
     YOFFSET=maskLabelYSize/2, YPAD=10, XPAD=10, $
-    SCR_YSIZE=145)
+    SCR_YSIZE=100)
     
   maskButtonRow = WIDGET_BASE(maskPrettyBase, /ROW, /EXCLUSIVE)
   ;maskID = WIDGET_BUTTON(maskButtonRow, VALUE='Vanadium Mask', UVALUE='DGSR_MASK', UNAME='DGSR_MASK')
@@ -340,7 +340,7 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   ;WIDGET_CONTROL, maskID, SENSITIVE=0, SET_BUTTON=1
   
   ; ROI
-  roiBase = WIDGET_BASE(reductionTabCol2Row1Col1)
+  roiBase = WIDGET_BASE(reductionTabCol1Row1Col1)
   roiLabel = WIDGET_LABEL(roiBase, VALUE=' Region-of-Interest ', XOFFSET=5)
   roiLabelGeometry = WIDGET_INFO(roiLabel, /GEOMETRY)
   roiLabelYSize = roiLabelGeometry.ysize
