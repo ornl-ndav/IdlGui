@@ -292,12 +292,6 @@ PRO MAIN_BASE_event, Event
     
     ;SAVE ROI Selection into a file -------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='data_roi_save_button'): begin
-      ;      file_name = $
-      ;        getTextFieldValue(Event,$
-      ;        'data_roi_selection_file_text_field')
-      ;      file_name = file_name[0]
-      ;      path = FILE_DIRNAME(file_name)
-      ;      check_create_output_folder, Event, PATH=path
       REFreduction_CreateDataBackgroundROIFile, Event, 'roi'
     end
     
@@ -313,12 +307,6 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='data_geometry_dirpix_value_user'): BEGIN
       coefficient = getUDCoefficient(Event)
       REFreduction_ManuallyMoveDataBackPeak, Event, 0
-      
-    ;REFreduction_DataSelectionMove, event
-    ;REFReduction_RescaleDataPlot, Event
-    ;dirpix = getTextFieldValue(Event,'data_geometry_dirpix_value_user')
-    ;(*global).dirpix = FLOAT(dirpix)
-    ;plot_average_data_peak_value, Event
     END
     
     ;Peak Ymin and Ymax -------------------------------------------------------
@@ -725,7 +713,7 @@ PRO MAIN_BASE_event, Event
           putLabelValue, $
             Event, $
             'norm_y_info_value', $
-            STRCOMPRESS(FIX((Event.y/coeff)+1),/REMOVE_ALL)
+            STRCOMPRESS(FIX((Event.y/coeff)),/REMOVE_ALL)
             
           tvimg = (*(*global).tvimg_norm_ptr)
           putLabelValue, $
