@@ -1,6 +1,6 @@
-spawn, 'cp REFreduction_v15.cfg .REFreduction_v15.cfg'
+spawn, 'cp REFreduction_v16.cfg .REFreduction_v16.cfg'
 @idl_makefile.pro
-ref_reduction_v15
+ref_reduction_v16
 
 
 
