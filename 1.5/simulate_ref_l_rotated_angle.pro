@@ -34,15 +34,11 @@
 
 PRO simulate_REF_L_rotated_angle, data
 
-help, data
-
 ntof = (size(data))(1)
 dim1 = (size(data))(2)
 dim2 = (size(data))(3)
 
 data = LONARR(ntof, dim2, dim1)
 data[10:40,128,*] = 1
-
-help, data
 
 END

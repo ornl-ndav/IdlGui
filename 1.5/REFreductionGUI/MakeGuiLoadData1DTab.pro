@@ -304,7 +304,6 @@ OutputFileNameLabelSize        = $
    OutputFileFolderButtonSize[1] + yoff_vertical]
 OutputFileNameLabelTitle       = 'Output File Name:'
 
-
 ;******************************************************************************
 ;Build 1D tab
 ;******************************************************************************
