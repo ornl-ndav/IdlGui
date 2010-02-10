@@ -332,6 +332,8 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   ; Make 'Default' Hard mask the default
   WIDGET_CONTROL, hardMaskID, SET_BUTTON=1
   dgsr_cmd->SetProperty, HardMask=1
+  ; Therefore also make the custom filename field inactive
+  WIDGET_CONTROL, sourceMaskFilenameID, SENSITIVE=0
   
   ; Always turn on the vanadium mask
   dgsr_cmd->SetProperty, Mask=1
