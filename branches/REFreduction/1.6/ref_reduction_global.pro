@@ -34,7 +34,7 @@
 
 FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
 
-  file = OBJ_NEW('idlxmlparser', '.REFreduction_v15.cfg')
+  file = OBJ_NEW('idlxmlparser', '.REFreduction_v16.cfg')
   ;==============================================================================
   ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
   APPLICATION = file->getValue(tag=['configuration','application'])+'_low'

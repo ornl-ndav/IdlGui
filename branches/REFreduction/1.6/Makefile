@@ -8,18 +8,18 @@
 # make backup  : deploys the program as backup
 
 all:
-	cp REFreduction_v15.cfg .REFreduction_v15.cfg
+	cp REFreduction_v16.cfg .REFreduction_v16.cfg
 	idl ./makefile.pro;
 #	idl ./mini_makefile.pro;
 
 install:
 	cp ref_reduction.sav /SNS/software/idltools/sav/
-	cp REFreduction_v15 /SNS/software/idltools/
+	cp REFreduction_v16 /SNS/software/idltools/
 #	cp mini_ref_reduction.sav /SNS/software/idltools/sav/
 #	cp mini_ref_reduction /SNS/software/idltools/
 	cp REFreductionHELP/*.* /SNS/software/idltools/help/REFreduction/
 	cp REFreduction_images/*.* /SNS/software/idltools/sav/REFreduction_images/
-	cp .REFreduction_v15.cfg /SNS/software/idltools/sav/
+	cp .REFreduction_v16.cfg /SNS/software/idltools/sav/
 
 test: 
 	cp ref_reduction.sav /usr/local/SNS/idltools/

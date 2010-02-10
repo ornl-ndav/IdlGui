@@ -53,7 +53,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     MainBaseSize  = [50,50,1200,885]
   ENDELSE
   
-  MainBaseTitle = 'Reflectometer Data Reduction Package (detector rotated) - '
+  MainBaseTitle = 'Reflectometer Data Reduction Package (new detector 128x128) - '
   MainBaseTitle += (*global).VERSION
   IF ((*global).DEBUGGING_VERSION EQ 'yes') THEN BEGIN
     MainBaseTitle += ' (DEBUGGING MODE)'
@@ -257,9 +257,9 @@ END
 
 
 ; Empty stub procedure used for autoloading.
-pro ref_reduction_v15, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+pro ref_reduction_v16, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-  BuildGui, 'REF_L', GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+  BuildGui, 'REF_M', GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
 end
 
