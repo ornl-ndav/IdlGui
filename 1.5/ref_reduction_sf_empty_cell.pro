@@ -380,6 +380,7 @@ PRO display_sf_calculation_base_info, Event, $
   putTextFieldValue, Event, TOF_UNAME, STRCOMPRESS(tof_value,/REMOVE_ALL), 0
   
   ;Counts
+  help, data
   counts_value = DATA[x,y]
   putTextFieldValue, Event, COUNTS_UNAME, $
     STRCOMPRESS(counts_value,/REMOVE_ALL), 0

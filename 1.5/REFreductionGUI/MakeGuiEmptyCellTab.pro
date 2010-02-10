@@ -539,7 +539,7 @@ PRO MakeGuiEmptyCellTab, DataNormalizationTab,$
     Y_SCROLL_SIZE = sDataDraw.size[3],$
     X_SCROLL_SIZE = sDataDraw.size[2],$
     XSIZE         = sDataDraw.size[2],$
-    YSIZE         = 304,$
+    YSIZE         = 256,$
     RETAIN        = 2,$
     /SCROLL,$
     UNAME         = sDataDraw.uname,$
@@ -604,7 +604,7 @@ PRO MakeGuiEmptyCellTab, DataNormalizationTab,$
     Y_SCROLL_SIZE = sEmptyCellDraw.size[3],$
     X_SCROLL_SIZE = sEmptyCellDraw.size[2],$
     XSIZE         = sEmptyCellDraw.size[2],$
-    YSIZE         = 304,$
+    YSIZE         = 256,$
     RETAIN        = 2,$
     /SCROLL,$
     /MOTION_EVENTS,$
