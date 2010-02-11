@@ -172,5 +172,6 @@ PRO make_settings_tab, baseWidget, myCommandObj
     
   ; Make 'Coulombs' the default
   WIDGET_CONTROL, coulombButtonID, SET_BUTTON=1
+  myCommandObj->SetProperty, ProtonCurrentUnits='C'
   
 END
