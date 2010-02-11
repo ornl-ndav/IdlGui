@@ -202,9 +202,9 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
     
   angleStatusRow = WIDGET_BASE(anglePrettyBase)
   angleStatusID = WIDGET_LABEL(angleStatusRow, VALUE= "The value for psi = ANGLE + OFFSET", UNAME="DGSR_ANGLE_STATUS")
-;  
-;  ; For now - let's disable the angle input
-;  WIDGET_CONTROL, angleRow, SENSITIVE=0
+  ;
+  ;  ; For now - let's disable the angle input
+  ;  WIDGET_CONTROL, angleRow, SENSITIVE=0
   
   ; == NORMALISATION OPTIONS ==
   
@@ -266,12 +266,12 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   transBaseLabelGeometryYSize = transBaseLabelGeometry.ysize
   transPrettyBase = WIDGET_BASE(transBase, /FRAME, /ROW, $
     YOFFSET=transBaseLabelGeometryYSize/2, XPAD=10, YPAD=10, SCR_XSIZE=450)
-;    YOFFSET=transBaseLabelGeometryYSize/2, XPAD=10, YPAD=10, SCR_XSIZE=513)
+  ;    YOFFSET=transBaseLabelGeometryYSize/2, XPAD=10, YPAD=10, SCR_XSIZE=513)
     
   dataTransID = CW_FIELD(transPrettyBase, /ALL_EVENTS, TITLE="Data Coeff:", UVALUE="DGSR_DATA-TRANS", $
     UNAME="DGSR_DATA-TRANS", XSIZE=10)
-;  normTransID = CW_FIELD(transPrettyBase, /ALL_EVENTS, TITLE="Norm Coeff:", UVALUE="DGSR_NORM-TRANS", $
-;    UNAME="DGSR_NORM-TRANS", XSIZE=10)
+  ;  normTransID = CW_FIELD(transPrettyBase, /ALL_EVENTS, TITLE="Norm Coeff:", UVALUE="DGSR_NORM-TRANS", $
+  ;    UNAME="DGSR_NORM-TRANS", XSIZE=10)
   detEffID = CW_FIELD(transPrettyBase, /ALL_EVENTS, TITLE="Detector Eff:", UVALUE="DGSR_DET-EFF", $
     UNAME="DGSR_DET-EFF", XSIZE=10)
     
@@ -289,17 +289,17 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
     UNAME="DGSR_MON-INT-MAX", XSIZE=10)
     
   ; Norm integration range
-;  normRangeBase = WIDGET_BASE(normOptionsBaseRow1, UNAME="DGSR_NORM-INT-RANGE", /ALIGN_BOTTOM)
-;  normRangeBaseLabel = WIDGET_LABEL(normRangeBase, VALUE=' Normalisation Integration Range (meV) ', XOFFSET=5)
-;  normRangeBaseLabelGeometry = WIDGET_INFO(normRangeBaseLabel, /GEOMETRY)
-;  normRangeBaseLabelGeometryYSize = normRangeBaseLabelGeometry.ysize
-;  normRangePrettyBase = WIDGET_BASE(normRangeBase, /FRAME, /ROW, $
-;    YOFFSET=normRangeBaseLabelGeometryYSize/2, XPAD=10, YPAD=10)
-;    
-;  normMinID = CW_FIELD(normRangePrettyBase, /ALL_EVENTS, TITLE="Min:", UVALUE="DGSR_NORM-INT-MIN", $
-;    UNAME="DGSR_NORM-INT-MIN", XSIZE=10)
-;  normMaxID = CW_FIELD(normRangePrettyBase, /ALL_EVENTS, TITLE="Max:", UVALUE="DGSR_NORM-INT-MAX", $
-;    UNAME="DGSR_NORM-INT-MAX", XSIZE=10)
+  ;  normRangeBase = WIDGET_BASE(normOptionsBaseRow1, UNAME="DGSR_NORM-INT-RANGE", /ALIGN_BOTTOM)
+  ;  normRangeBaseLabel = WIDGET_LABEL(normRangeBase, VALUE=' Normalisation Integration Range (meV) ', XOFFSET=5)
+  ;  normRangeBaseLabelGeometry = WIDGET_INFO(normRangeBaseLabel, /GEOMETRY)
+  ;  normRangeBaseLabelGeometryYSize = normRangeBaseLabelGeometry.ysize
+  ;  normRangePrettyBase = WIDGET_BASE(normRangeBase, /FRAME, /ROW, $
+  ;    YOFFSET=normRangeBaseLabelGeometryYSize/2, XPAD=10, YPAD=10)
+  ;
+  ;  normMinID = CW_FIELD(normRangePrettyBase, /ALL_EVENTS, TITLE="Min:", UVALUE="DGSR_NORM-INT-MIN", $
+  ;    UNAME="DGSR_NORM-INT-MIN", XSIZE=10)
+  ;  normMaxID = CW_FIELD(normRangePrettyBase, /ALL_EVENTS, TITLE="Max:", UVALUE="DGSR_NORM-INT-MAX", $
+  ;    UNAME="DGSR_NORM-INT-MAX", XSIZE=10)
     
     
   ; == ROI and MASKS ==
@@ -323,12 +323,12 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
     UVALUE='DGSR_HARD_MASK', UNAME='DGSR_HARD_MASK')
   customMaskID = WIDGET_BUTTON(maskButtonRow, VALUE='Custom', $
     UVALUE='DGSR_CUSTOM_HARD_MASK', UNAME='DGSR_CUSTOM_HARD_MASK')
-  
+    
   ;maskFileID = CW_FIELD(maskRow, TITLE='Filename:', UVALUE='DGSR_MASK_FILENAME', /ALL_EVENTS)
-  
-    sourceMaskFilenameID = CW_FIELD(maskPrettyBase, YSIZE=1, XSIZE=30, TITLE='Filename:', $
+    
+  sourceMaskFilenameID = CW_FIELD(maskPrettyBase, YSIZE=1, XSIZE=30, TITLE='Filename:', $
     UNAME='DGSR_SOURCE_MASKFILENAME', UVALUE='DGSR_SOURCE_MASKFILENAME', /ALL_EVENTS)
-  
+    
   ; Make 'Default' Hard mask the default
   WIDGET_CONTROL, hardMaskID, SET_BUTTON=1
   dgsr_cmd->SetProperty, HardMask=1
@@ -398,9 +398,10 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   ; Output Formats Selection Boxes
   outputBase = Widget_Base(formatBase, /COLUMN,  /FRAME, $
     YOFFSET=formatLabelYSize/2, YPAD=10, XPAD=10)
-  outputBaseColumns = WIDGET_BASE(outputBase, COLUMN=3)
-  outputBaseCol1 = WIDGET_BASE(outputBaseColumns, /NONEXCLUSIVE)
-  outputBaseCol2 = WIDGET_BASE(outputBaseColumns, /NONEXCLUSIVE)
+  outputBaseColumns = WIDGET_BASE(outputBase, COLUMN=2)
+  outputButtonColumns = WIDGET_BASE(outputBaseColumns, COLUMN=2)
+  outputBaseCol1 = WIDGET_BASE(outputButtonColumns, /NONEXCLUSIVE)
+  outputBaseCol2 = WIDGET_BASE(outputButtonColumns, /NONEXCLUSIVE)
   outputBaseCol3 = WIDGET_BASE(outputBaseColumns, /COLUMN)
   outputBaseRow = WIDGET_BASE(outputBase, /ROW)
   
@@ -420,6 +421,10 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
     UNAME='DGSR_MAKE_COMBINED_WAVE')
   dosButton = WIDGET_BUTTON(outputBaseCol2, VALUE='Phonon DOS', UVALUE='DGSR_PHONON_DOS', UNAME='DGSR_PHONON_DOS')
   
+  ; User Specified Output Directory Label
+  userLabelID = CW_FIELD(outputBaseRow, TITLE='Output Dir Label:', XSIZE=50, $
+    UVALUE='DGSR_USER_LABEL', UNAME='DGSR_USER_LABEL', /ALL_EVENTS)
+    
   ; Column #3
   ; Combined Wavelength Output Option Pretty Frame
   formatOptionsBase = WIDGET_BASE(outputBaseCol3)
