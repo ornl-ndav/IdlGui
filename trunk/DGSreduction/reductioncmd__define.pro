@@ -117,6 +117,7 @@ PRO ReductionCmd::GetProperty, $
     working_mask_dir=working_mask_dir, $ ; Directory that the (split) 'hard' mask files are located.
     MasterMaskFile=mastermaskfile, $     ; An alternative master mask file to use as the source for spliting.
     ProtonCurrentUnits=ProtonCurrentUnits, $ ; The units for the proton current, either 'C','mC','uC' or 'pC'
+    UserLabel=userlabel, $               ; A Label that is applied to the output directory name.
     _Extra=extra
     
   ; Error Handling
@@ -209,6 +210,7 @@ PRO ReductionCmd::GetProperty, $
   IF ARG_PRESENT(working_mask_dir) NE 0 THEN working_mask_dir = self.working_mask_dir
   IF ARG_PRESENT(MasterMaskFile) NE 0 THEN MasterMaskFile = self.mastermaskfile
   IF ARG_PRESENT(ProtonCurrentUnits) NE 0 THEN ProtonCurrentUnits = self.ProtonCurrentUnits
+  IF ARG_PRESENT(UserLabel) NE 0 THEN UserLabel = self.UserLabel
   
 END
 
@@ -293,6 +295,7 @@ PRO ReductionCmd::SetProperty, $
     working_mask_dir=working_mask_dir, $                 ; Directory that the (split) 'hard' mask files are located.
     MasterMaskFile=mastermaskfile, $     ; An alternative master mask file to use as the source for spliting.
     ProtonCurrentUnits=ProtonCurrentUnits, $ ; The units for the proton current, either 'C','mC','uC' or 'pC'
+    UserLabel=userlabel, $               ; A Label that is applied to the output directory name.
     _Extra=extra
     
   ; Error Handling
@@ -454,6 +457,8 @@ PRO ReductionCmd::SetProperty, $
   
   IF N_ELEMENTS(ProtonCurrentUnits) NE 0 THEN self.ProtonCurrentUnits = ProtonCurrentUnits
   
+  IF N_ELEMENTS(UserLabel) NE 0 THEN self.UserLabel = UserLabel
+  
   IF N_ELEMENTS(extra) NE 0 THEN *self.extra = extra
   
 ;print, '--SetProperty--'
@@ -509,7 +514,8 @@ FUNCTION ReductionCmd::GetReductionOutputDirectory
   ;print,'ReductionCmd::GetReductionOutputDirectory():'
   directory = get_output_directory(self.instrument, $
     self->GetRunNumber(), $
-    HOME=self.usehome, OVERRIDE=self.OutputOverride)
+    HOME=self.usehome, OVERRIDE=self.OutputOverride, $
+    LABEL=self.UserLabel)
   ;print,'GetReductionOutputDirectory() --> ',directory
   RETURN, directory
 END
@@ -1077,6 +1083,7 @@ function ReductionCmd::Init, $
     working_mask_dir=working_mask_dir, $ ; Directory that the (split) 'hard' mask files are located.
     MasterMaskFile=mastermaskfile, $     ; An alternative master mask file to use as the source for spliting.
     ProtonCurrentUnits=ProtonCurrentUnits, $ ; The units for the proton current, either 'C','mC','uC' or 'pC'
+    UserLabel=userlabel, $               ; A Label that is applied to the output directory name.
     _Extra=extra
     
   ; Error Handling
@@ -1167,6 +1174,7 @@ function ReductionCmd::Init, $
   IF N_ELEMENTS(working_mask_dir) EQ 0 THEN working_mask_dir = ""
   IF N_ELEMENTS(MasterMaskFile) EQ 0 THEN MasterMaskFile = ""
   IF N_ELEMENTS(ProtonCurrentUnits) EQ 0 THEN ProtonCurrentUnits = ""
+  IF N_ELEMENTS(UserLabel) EQ 0 THEN UserLabel = ""
   
   self.program = program
   self.version = version
@@ -1248,6 +1256,7 @@ function ReductionCmd::Init, $
   self.working_mask_dir = working_mask_dir
   self.mastermaskfile = mastermaskfile
   self.ProtonCurrentUnits = protoncurrentunits
+  self.UserLabel = userlabel
   self.extra = PTR_NEW(extra)
   
   RETURN, 1
@@ -1342,5 +1351,6 @@ pro ReductionCmd__Define
     working_mask_dir: "", $  ; Directory that the (split) 'hard' mask files are located.
     mastermaskfile: "", $    ; An alternative master mask file to use as the source for spliting.
     ProtonCurrentUnits: "", $ ; The units for the proton current, either 'C','mC','uC' or 'pC'
+    UserLabel:"", $          ; A Label that is applied to the output directory name.
     extra: PTR_NEW() }       ; Extra keywords
 end
