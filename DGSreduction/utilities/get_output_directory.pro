@@ -1,8 +1,10 @@
-function get_output_directory, instrument, runnumber, HOME=HOME, CREATE=CREATE, OVERRIDE=OVERRIDE
-
-;  print, 'START@GET_OUTPUT_DIRECTORY()', systime()
-  
+function get_output_directory, instrument, runnumber, HOME=HOME, $
+    CREATE=CREATE, OVERRIDE=OVERRIDE, LABEL=LABEL
+    
+  ;  print, 'START@GET_OUTPUT_DIRECTORY()', systime()
+    
   UNKNOWN = 0
+  output_directory = ''
   
   IF KEYWORD_SET(OVERRIDE) THEN BEGIN
     ; only return the override if it contains something!
@@ -14,7 +16,7 @@ function get_output_directory, instrument, runnumber, HOME=HOME, CREATE=CREATE, 
         print, 'Creating directory ',OVERRIDE
         spawn, 'mkdir -p ' + OVERRIDE
       ENDIF
-;      print, 'END@GET_OUTPUT_DIRECTORY()', systime()
+      ;      print, 'END@GET_OUTPUT_DIRECTORY()', systime()
       return, OVERRIDE
     ENDIF
   ENDIF
@@ -32,33 +34,38 @@ function get_output_directory, instrument, runnumber, HOME=HOME, CREATE=CREATE, 
   ; the ~/results directory!
   IF (UNKNOWN EQ 1) THEN BEGIN
     output_directory  = '/SNS/users/' + get_ucams() + '/results/'
-;    print, 'END@GET_OUTPUT_DIRECTORY()', systime()
-    return, output_directory
-  ENDIF
-  
-  IF KEYWORD_SET(HOME) THEN BEGIN
-    ; If we want to force the results to go into the users home directory
-    ; then the easist way is the just set the proposal=0
-    proposal = '0'
   ENDIF ELSE BEGIN
-    beamtimeinfo_file = get_beamtimeinfo_filename(instrument, runnumber)
-    IF (beamtimeinfo_file EQ 'ERROR') THEN BEGIN
+  
+    IF KEYWORD_SET(HOME) THEN BEGIN
+      ; If we want to force the results to go into the users home directory
+      ; then the easist way is the just set the proposal=0
       proposal = '0'
     ENDIF ELSE BEGIN
-      proposal = getProposalfromPreNeXus(beamtimeinfo_file)
+      beamtimeinfo_file = get_beamtimeinfo_filename(instrument, runnumber)
+      IF (beamtimeinfo_file EQ 'ERROR') THEN BEGIN
+        proposal = '0'
+      ENDIF ELSE BEGIN
+        proposal = getProposalfromPreNeXus(beamtimeinfo_file)
+      ENDELSE
     ENDELSE
+    
+    IF (proposal NE '0') THEN BEGIN
+      output_directory  = '/SNS/' + STRUPCASE(STRCOMPRESS(string(instrument),/REMOVE_ALL))
+      output_directory += '/' + STRCOMPRESS(string(proposal),/REMOVE_ALL)
+      output_directory += '/shared/' +  get_ucams() + '/'
+      output_directory += STRUPCASE(STRCOMPRESS(string(runnumber),/REMOVE_ALL))
+    ENDIF ELSE BEGIN
+      output_directory  = '/SNS/users/' + get_ucams() + '/results/'
+      output_directory += STRUPCASE(STRCOMPRESS(string(instrument),/REMOVE_ALL)) + '/'
+      output_directory += STRUPCASE(STRCOMPRESS(string(runnumber),/REMOVE_ALL))
+    ENDELSE
+    
   ENDELSE
   
-  IF (proposal NE '0') THEN BEGIN
-    output_directory  = '/SNS/' + STRUPCASE(STRCOMPRESS(string(instrument),/REMOVE_ALL))
-    output_directory += '/' + STRCOMPRESS(string(proposal),/REMOVE_ALL)
-    output_directory += '/shared/' +  get_ucams() + '/'
-    output_directory += STRUPCASE(STRCOMPRESS(string(runnumber),/REMOVE_ALL))
-  ENDIF ELSE BEGIN
-    output_directory  = '/SNS/users/' + get_ucams() + '/results/'
-    output_directory += STRUPCASE(STRCOMPRESS(string(instrument),/REMOVE_ALL)) + '/'
-    output_directory += STRUPCASE(STRCOMPRESS(string(runnumber),/REMOVE_ALL))
-  ENDELSE
+  ; If a label is requested then append to the directory name.
+  IF KEYWORD_SET(LABEL) THEN BEGIN
+    output_directory += '-' + STRCOMPRESS(STRING(LABEL),/REMOVE_ALL)
+  ENDIF
   
   ; Make it if it doesn't exists (and we have asked for it to be created)
   IF KEYWORD_SET(CREATE) THEN BEGIN
@@ -70,7 +77,7 @@ function get_output_directory, instrument, runnumber, HOME=HOME, CREATE=CREATE, 
     ENDIF
   ENDIF
   
-;  print, 'END@GET_OUTPUT_DIRECTORY()', systime()
+  ;  print, 'END@GET_OUTPUT_DIRECTORY()', systime()
   
   return, output_directory
 end
