@@ -141,10 +141,12 @@ PRO DGSreduction_Execute, event
     ; Output Overrides...
     dgsr_cmd->GetProperty, UseHome=usehome
     dgsr_cmd->GetProperty, OutputOverride=outputoverride
+    dgsr_cmd->GetProperty, UserLabel=userlabel
     
     ; output Directory
     outputDir = get_output_directory(Instrument, runnumber, $
-      Home=UseHome, Override=OutputOverride, /CREATE)
+      Home=UseHome, Override=OutputOverride, UserLabel=userlabel, $
+      /CREATE)
       
     ; Can we write to the output directory ?
       
@@ -286,11 +288,11 @@ PRO DGSreduction_Execute, event
     for index = 0L, N_ELEMENTS(commands)-1 do begin
     
       padded_datapaths = Construct_DataPaths(lowerbank, upperbank, index+1, jobs, /PAD)
-    
+      
       jobname = instrument + "_" + runnumber + "_bank" + padded_datapaths
-           
+      
       logfile = logDir + '/' + instrument + '_bank' + padded_datapaths + '.log'
-        
+      
       ; Let's construct the mask files...
       IF (HardMask EQ 1) THEN BEGIN
         tmp_maskfile = maskDir + "/" + $
@@ -408,13 +410,15 @@ PRO DGSnorm_Execute, event
   ; Output Overrides...
   dgsr_cmd->GetProperty, UseHome=usehome
   dgsr_cmd->GetProperty, OutputOverride=outputoverride
+  dgsr_cmd->GetProperty, UserLabel=userlabel
   
   jobcmd = "sbatch -p " + queue + " "
   
   ; Make sure that the output directory exists
-  outputDir = get_output_directory(instrument, runnumber, $ 
-    HOME=UseHome, OVERRIDE=OutputOverride, /CREATE)
-  
+  outputDir = get_output_directory(Instrument, runnumber, $
+    Home=UseHome, Override=OutputOverride, UserLabel=userlabel, $
+    /CREATE)
+    
   ; Log Directory
   cd, CURRENT=thisDir
   logDir = outputDir + '/logs'
@@ -430,12 +434,12 @@ PRO DGSnorm_Execute, event
   ; Loop over the command array
   for index = 0L, N_ELEMENTS(commands)-1 do begin
   
-      padded_datapaths = Construct_DataPaths(lowerbank, upperbank, index+1, jobs, /PAD)
-
+    padded_datapaths = Construct_DataPaths(lowerbank, upperbank, index+1, jobs, /PAD)
+    
     jobname = instrument + "_" + runnumber + "_bank" + padded_datapaths
-      
+    
     logfile = logDir + '/' + instrument + '_bank' + padded_datapaths + '.log'
-      
+    
     cmd = jobcmd + " --output=" + logfile + $
       " --job-name=" + jobname + $
       " " + commands[index]
