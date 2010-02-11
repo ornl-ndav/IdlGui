@@ -116,6 +116,7 @@ PRO ReductionCmd::GetProperty, $
     UseHome=usehome, $                   ; Flag to indicate whether we should write to the home directory
     working_mask_dir=working_mask_dir, $ ; Directory that the (split) 'hard' mask files are located.
     MasterMaskFile=mastermaskfile, $     ; An alternative master mask file to use as the source for spliting.
+    ProtonCurrentUnits=ProtonCurrentUnits, $ ; The units for the proton current, either 'C','mC','uC' or 'pC'
     _Extra=extra
     
   ; Error Handling
@@ -207,6 +208,7 @@ PRO ReductionCmd::GetProperty, $
   IF ARG_PRESENT(UseHome) NE 0 THEN UseHome = self.usehome
   IF ARG_PRESENT(working_mask_dir) NE 0 THEN working_mask_dir = self.working_mask_dir
   IF ARG_PRESENT(MasterMaskFile) NE 0 THEN MasterMaskFile = self.mastermaskfile
+  IF ARG_PRESENT(ProtonCurrentUnits) NE 0 THEN ProtonCurrentUnits = self.ProtonCurrentUnits
   
 END
 
@@ -290,6 +292,7 @@ PRO ReductionCmd::SetProperty, $
     UseHome=usehome, $                   ; Flag to indicate whether we should write to the home directory
     working_mask_dir=working_mask_dir, $                 ; Directory that the (split) 'hard' mask files are located.
     MasterMaskFile=mastermaskfile, $     ; An alternative master mask file to use as the source for spliting.
+    ProtonCurrentUnits=ProtonCurrentUnits, $ ; The units for the proton current, either 'C','mC','uC' or 'pC'
     _Extra=extra
     
   ; Error Handling
@@ -312,23 +315,20 @@ PRO ReductionCmd::SetProperty, $
     case (STRUPCASE(instrument)) of
       "ARCS": begin
         self.facility = "SNS"
-        self.cornergeometry = $
-          "/SNS/ARCS/2009_2_18_CAL/calibrations/ARCS_cgeom_20090128.txt"
+        self.cornergeometry = getCornerGeometryFile(self.instrument)
         self.queue = "arcs"
         self.jobs = 23
       end
       "CNCS": begin
         self.facility = "SNS"
-        self.cornergeometry = $
-          "/SNS/CNCS/2009_2_5_CAL/calibrations/CNCS_cgeom_20090224.txt"
+        self.cornergeometry = getCornerGeometryFile(self.instrument)
         self.queue = "cncsq"
         self.jobs = 24
       end
       "SEQUOIA": begin
         self.instrument = "SEQ"
         self.facility = "SNS"
-        self.cornergeometry = $
-          "/SNS/SEQ/2009_2_17_CAL/calibrations/SEQ_cgeom_20090302.txt"
+        self.cornergeometry = getCornerGeometryFile(self.instrument)
         self.queue = "sequoiaq"
         self.jobs = 23
       end
@@ -451,6 +451,8 @@ PRO ReductionCmd::SetProperty, $
   
   IF N_ELEMENTS(working_mask_dir) NE 0 THEN self.working_mask_dir = working_mask_dir
   IF N_ELEMENTS(MasterMaskFile) NE 0 THEN self.mastermaskfile = MasterMaskFile
+  
+  IF N_ELEMENTS(ProtonCurrentUnits) NE 0 THEN self.ProtonCurrentUnits = ProtonCurrentUnits
   
   IF N_ELEMENTS(extra) NE 0 THEN *self.extra = extra
   
@@ -682,6 +684,12 @@ function ReductionCmd::Check
       ok = 0
       msg = [msg,['The creation of a Phonon DOS representation requires a Debye-Waller factor.']]
     ENDIF
+  ENDIF
+  
+  ; Check to see if the Corner Geometry file Exists....
+  IF (FILE_TEST(self.cornergeometry, /READ) EQ 0) THEN BEGIN
+    ok = 0
+    msg = [msg,['The corner geometry file ('+self.cornergeometry+') does not seem to be readable.']]
   ENDIF
   
   ; Check to see that the *.norm and mask files for vanadium are split up into
@@ -1068,6 +1076,7 @@ function ReductionCmd::Init, $
     UseHome=usehome, $                   ; Flag to indicate whether we should write to the home directory
     working_mask_dir=working_mask_dir, $ ; Directory that the (split) 'hard' mask files are located.
     MasterMaskFile=mastermaskfile, $     ; An alternative master mask file to use as the source for spliting.
+    ProtonCurrentUnits=ProtonCurrentUnits, $ ; The units for the proton current, either 'C','mC','uC' or 'pC'
     _Extra=extra
     
   ; Error Handling
@@ -1157,6 +1166,7 @@ function ReductionCmd::Init, $
   IF N_ELEMENTS(UseHome) EQ 0 THEN UseHome = 0
   IF N_ELEMENTS(working_mask_dir) EQ 0 THEN working_mask_dir = ""
   IF N_ELEMENTS(MasterMaskFile) EQ 0 THEN MasterMaskFile = ""
+  IF N_ELEMENTS(ProtonCurrentUnits) EQ 0 THEN ProtonCurrentUnits = ""
   
   self.program = program
   self.version = version
@@ -1237,6 +1247,7 @@ function ReductionCmd::Init, $
   self.usehome = usehome
   self.working_mask_dir = working_mask_dir
   self.mastermaskfile = mastermaskfile
+  self.ProtonCurrentUnits = protoncurrentunits
   self.extra = PTR_NEW(extra)
   
   RETURN, 1
@@ -1330,5 +1341,6 @@ pro ReductionCmd__Define
     usehome : 0L, $          ; Flag to indicate whether we should write to the home directory
     working_mask_dir: "", $  ; Directory that the (split) 'hard' mask files are located.
     mastermaskfile: "", $    ; An alternative master mask file to use as the source for spliting.
+    ProtonCurrentUnits: "", $ ; The units for the proton current, either 'C','mC','uC' or 'pC'
     extra: PTR_NEW() }       ; Extra keywords
 end
