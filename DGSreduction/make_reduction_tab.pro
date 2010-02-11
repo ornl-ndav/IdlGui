@@ -184,24 +184,24 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   tofcutmaxID = CW_FIELD(tofcutRow, TITLE="Max:", UVALUE="DGSR_TOF-CUT-MAX", UNAME="DGSR_TOF-CUT-MAX", /ALL_EVENTS, XSIZE=18)
   
   ; == SAMPLE ORIENTATION ==
-;  angleRow = WIDGET_BASE(reductionTabCol1Row1Col1, /ROW)
-;  
-;  angleBase = WIDGET_BASE(angleRow)
-;  angleLabel = WIDGET_LABEL(angleBase, VALUE=' Sample Orientation ', XOFFSET=5)
-;  angleLabelGeometry = WIDGET_INFO(angleLabel, /GEOMETRY)
-;  angleLabelGeometryYSize = angleLabelGeometry.ysize
-;  anglePrettyBase = WIDGET_BASE(angleBase, /FRAME, /COLUMN, $
-;    YOFFSET=angleLabelGeometryYSize/2, XPAD=10, YPAD=10, $
-;    SCR_XSIZE=550)
-;    
-;  angleinputsRow = WIDGET_BASE(anglePrettyBase, /ROW)
-;  seblockID = CW_FIELD(angleinputsRow, TITLE="SE Block Name:", $
-;    UVALUE="DGSR_SEBLOCK", UNAME="DGSR_SEBLOCK", /ALL_EVENTS, XSIZE=30)
-;  angleoffsetID = CW_FIELD(angleinputsRow, TITLE="Offset (degrees):", $
-;    UVALUE="DGSR_ANGLE_OFFSET", UNAME="DGSR_ANGLE_OFFSET", /ALL_EVENTS, XSIZE=13)
-;    
-;  angleStatusRow = WIDGET_BASE(anglePrettyBase)
-;  angleStatusID = WIDGET_LABEL(angleStatusRow, VALUE= "The value for psi = -(180-ANGLE-OFFSET) / 2", UNAME="DGSR_ANGLE_STATUS")
+  angleRow = WIDGET_BASE(reductionTabCol1Row1Col1, /ROW)
+  
+  angleBase = WIDGET_BASE(angleRow)
+  angleLabel = WIDGET_LABEL(angleBase, VALUE=' Sample Orientation ', XOFFSET=5)
+  angleLabelGeometry = WIDGET_INFO(angleLabel, /GEOMETRY)
+  angleLabelGeometryYSize = angleLabelGeometry.ysize
+  anglePrettyBase = WIDGET_BASE(angleBase, /FRAME, /COLUMN, $
+    YOFFSET=angleLabelGeometryYSize/2, XPAD=10, YPAD=10, $
+    SCR_XSIZE=550)
+    
+  angleinputsRow = WIDGET_BASE(anglePrettyBase, /ROW)
+  seblockID = CW_FIELD(angleinputsRow, TITLE="SE Block Name:", $
+    UVALUE="DGSR_SEBLOCK", UNAME="DGSR_SEBLOCK", /ALL_EVENTS, XSIZE=30)
+  angleoffsetID = CW_FIELD(angleinputsRow, TITLE="Offset (degrees):", $
+    UVALUE="DGSR_ANGLE_OFFSET", UNAME="DGSR_ANGLE_OFFSET", /ALL_EVENTS, XSIZE=13)
+    
+  angleStatusRow = WIDGET_BASE(anglePrettyBase)
+  angleStatusID = WIDGET_LABEL(angleStatusRow, VALUE= "The value for psi = ANGLE + OFFSET", UNAME="DGSR_ANGLE_STATUS")
 ;  
 ;  ; For now - let's disable the angle input
 ;  WIDGET_CONTROL, angleRow, SENSITIVE=0
