@@ -167,6 +167,8 @@ PRO DGSreduction_Execute, event
       ; Let's make sure that the masks directory exists
       spawn, 'mkdir -p ' + maskDir
       source_maskfile = get_maskfile(instrument, runnumber)
+      ; Also copy the mask file into the masks directory
+      spawn, 'cp ' + source_maskfile + ' ' + maskDir
     ENDIF
     
     ; Check to see if the Wandering Phase Correction is turned on
