@@ -306,9 +306,9 @@ PRO dgsreduction_events, event, dgsr_cmd
       dgsr_cmd->SetProperty, Data_CWP=myValue
     END
     'DGSR_NO_HARD_MASK': BEGIN
-      ; Don't need to do anything in here as the buttons 
-      ; are EXCLUSIVE so the Hard Mask one will 'turn off'
-      ; automatically.
+    ; Don't need to do anything in here as the buttons
+    ; are EXCLUSIVE so the Hard Mask one will 'turn off'
+    ; automatically.
     END
     'DGSR_HARD_MASK': BEGIN
       ;WIDGET_CONTROL, event.ID, GET_VALUE=myValue
@@ -317,7 +317,7 @@ PRO dgsreduction_events, event, dgsr_cmd
     END
     'DGSR_CUSTOM_HARD_MASK': BEGIN
       ; As this is a separate button to the 'HARD MASK' one, we also
-      ; need to explicitly turn on the hard mask option in the 
+      ; need to explicitly turn on the hard mask option in the
       ; command object.
       dgsr_cmd->SetProperty, HardMask=event.SELECT
       ; Also make the custom mask source filename field active (or inactive!)
@@ -339,6 +339,10 @@ PRO dgsreduction_events, event, dgsr_cmd
         ; Set the property on the command object
         dgsr_cmd->SetProperty, MasterMaskFile=myValue
       ENDIF
+    END
+    'DGSR_USER_LABEL': BEGIN
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      dgsr_cmd->SetProperty, UserLabel=myValue
     END
     ELSE: begin
       ; Do nowt
