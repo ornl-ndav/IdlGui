@@ -41,9 +41,14 @@
 ;-
 PRO make_settings_tab, baseWidget, myCommandObj
 
+
+  settingsTabBaseColumns = WIDGET_BASE(baseWidget, COLUMN=2)
+  settingsTabCol1 = WIDGET_BASE(settingsTabBaseColumns, /COLUMN)
+  settingsTabCol2 = WIDGET_BASE(settingsTabBaseColumns, /COLUMN)
+
   ; === Custom execution queue name ===
   
-  customQueueBase = WIDGET_BASE(baseWidget)
+  customQueueBase = WIDGET_BASE(settingsTabCol1)
   customQueueLabel = WIDGET_LABEL(customQueueBase, VALUE=' SLURM Queue Selection ', XOFFSET=5)
   customQueueLabelGeometry = WIDGET_INFO(customQueueLabel, /GEOMETRY)
   customQueueLabelYSize = customQueueLabelGeometry.ysize
@@ -74,7 +79,7 @@ PRO make_settings_tab, baseWidget, myCommandObj
   
   ; === Output Prefix ===
   
-  outputPrefixBase = WIDGET_BASE(baseWidget)
+  outputPrefixBase = WIDGET_BASE(settingsTabCol1)
   outputPrefixLabel = WIDGET_LABEL(outputPrefixBase, VALUE=' Output Directory ', XOFFSET=5)
   outputPrefixLabelGeometry = WIDGET_INFO(outputPrefixLabel, /GEOMETRY)
   outputPrefixLabelYSize = outputPrefixLabelGeometry.ysize
@@ -105,7 +110,7 @@ PRO make_settings_tab, baseWidget, myCommandObj
   WIDGET_CONTROL, outputPrefixID, SET_VALUE=outputPrefixName
   
   ; === dgs_reduction timing ===
-  timingBase = WIDGET_BASE(baseWidget)
+  timingBase = WIDGET_BASE(settingsTabCol1)
   timingLabel = WIDGET_LABEL(timingBase, VALUE=' Diagnostic Timing ', XOFFSET=5)
   timingLabelGeometry = WIDGET_INFO(timingLabel, /GEOMETRY)
   timingLabelYSize = timingLabelGeometry.ysize
@@ -116,4 +121,56 @@ PRO make_settings_tab, baseWidget, myCommandObj
   timingOffID = WIDGET_BUTTON(timingButtons, Value=' OFF  ', UNAME='DGS_TIMING_OFF', UVALUE='DGS_TIMING_OFF') 
   ; Make off the default
   WIDGET_CONTROL, timingOffID, SET_BUTTON=1
+  
+  
+  ; === Field to specify the Corner Geometry File ===
+  
+  cornerGeomBase = WIDGET_BASE(settingsTabCol2)
+  cornerGeomLabel = WIDGET_LABEL(cornerGeomBase, VALUE=' Corner Geometry File ', XOFFSET=5)
+  cornerGeomLabelGeometry = WIDGET_INFO(cornerGeomLabel, /GEOMETRY)
+  cornerGeomLabelYSize = cornerGeomLabelGeometry.ysize
+  cornerGeomPrettyBase = WIDGET_BASE(cornerGeomBase, /FRAME, /ROW, XPAD=10, YPAD=10, YOFFSET=cornerGeomLabelYSize/2.0)
+  
+  customCornerGeomRow = WIDGET_BASE(cornerGeomPrettyBase, /ROW)
+  customCornerGeomButtons = WIDGET_BASE(customCornerGeomRow, EXCLUSIVE=1)
+  
+  autoCornerGeomSelectionButtonID = WIDGET_BUTTON(customCornerGeomButtons, VALUE='Automatic', $
+    UNAME='DGS_AUTO_CORNERGEOM', UVALUE='DGS_AUTO_CORNERGEOM')
+  customCornerGeomSelectionButtonID = WIDGET_BUTTON(customCornerGeomButtons, VALUE='Custom', $
+    UNAME='DGS_CUSTOM_CORNERGEOM', UVALUE='DGS_CUSTOM_CORNERGEOM')
+
+  cornerGeomNameID = CW_FIELD(customCornerGeomRow, YSIZE=1, XSIZE=30, TITLE="  Corner Geometry Filename:", $
+    UNAME="DGS_CORNER_GEOMETRY", UVALUE="DGS_CORNER_GEOMETRY", /ALL_EVENTS)
+
+  ; Make 'Automatic' the default 
+  WIDGET_CONTROL, autoCornerGeomSelectionButtonID, SET_BUTTON=1
+  WIDGET_CONTROL, cornerGeomNameID, SENSITIVE=0
+  
+  ; Get the current Queue name and display it
+  myCommandObj->GetProperty, CornerGeometry=cornerGeomertyFilename
+  WIDGET_CONTROL, cornerGeomNameID, SET_VALUE=cornerGeomertyFilename
+  
+  ; === Proton Current Units ===
+  protonUnitsBase = WIDGET_BASE(settingsTabCol2)
+  protonUnitsLabel = WIDGET_LABEL(protonUnitsBase, VALUE=' Proton Current Units ', XOFFSET=5)
+  protonUnitsLabelGeometry = WIDGET_INFO(protonUnitsLabel, /GEOMETRY)
+  protonUnitsLabelYSize = protonUnitsLabelGeometry.ysize
+  protonUnitsPrettyBase = WIDGET_BASE(protonUnitsBase, /FRAME, /ROW, XPAD=10, YPAD=10, $
+    YOFFSET=protonUnitsLabelYSize/2.0)
+  
+  protonUnitsColumn = WIDGET_BASE(protonUnitsPrettyBase, /COLUMN)
+  protonUnitsButtons = WIDGET_BASE(protonUnitsColumn, EXCLUSIVE=1)
+  
+  coulombButtonID = WIDGET_BUTTON(protonUnitsButtons, VALUE='Coulombs (Recommended)', $
+    UNAME='DGS_PROTON_UNITS_COULOMB', UVALUE='DGS_PROTON_UNITS_COULOMB')
+  millCoulombButtonID = WIDGET_BUTTON(protonUnitsButtons, VALUE='Milli-Coulombs (mC)', $
+    UNAME='DGS_PROTON_UNITS_MILLICOULOMB', UVALUE='DGS_PROTON_UNITS_MILLICOULOMB')  
+  microCoulombButtonID = WIDGET_BUTTON(protonUnitsButtons, VALUE='Micro-Coulombs (uC)', $
+    UNAME='DGS_PROTON_UNITS_MICROCOULOMB', UVALUE='DGS_PROTON_UNITS_MICROCOULOMB')
+  picoCoulombButtonID = WIDGET_BUTTON(protonUnitsButtons, VALUE='Pico-Coulombs (pC)', $
+    UNAME='DGS_PROTON_UNITS_PICOCOULOMB', UVALUE='DGS_PROTON_UNITS_PICOCOULOMB')
+    
+  ; Make 'Coulombs' the default
+  WIDGET_CONTROL, coulombButtonID, SET_BUTTON=1
+  
 END
