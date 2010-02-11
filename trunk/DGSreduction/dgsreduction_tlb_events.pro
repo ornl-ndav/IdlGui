@@ -227,6 +227,26 @@ PRO DGSreduction_TLB_Events, event
       ; Do nothing!
       ENDIF
     END
+    'DGS_PROTON_UNITS_COULOMB': BEGIN
+      IF (event.select EQ 1) THEN BEGIN
+        dgsr_cmd->SetProperty, ProtonCurrentUnits="C"
+      ENDIF      
+    END
+    'DGS_PROTON_UNITS_MILLICOULOMB': BEGIN
+      IF (event.select EQ 1) THEN BEGIN
+        dgsr_cmd->SetProperty, ProtonCurrentUnits="mC"
+      ENDIF      
+    END
+    'DGS_PROTON_UNITS_MICROCOULOMB': BEGIN
+      IF (event.select EQ 1) THEN BEGIN
+        dgsr_cmd->SetProperty, ProtonCurrentUnits="uC"
+      ENDIF      
+    END
+    'DGS_PROTON_UNITS_PICOCOULOMB': BEGIN
+      IF (event.select EQ 1) THEN BEGIN
+        dgsr_cmd->SetProperty, ProtonCurrentUnits=""
+      ENDIF      
+    END
     'NOTHING': BEGIN
     END
     ELSE: BEGIN
