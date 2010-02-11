@@ -83,9 +83,14 @@ sDraw = { size: [XYoff[0],$
                  sAsciiList.size[1]+$
                  sAsciiList.size[3]+XYoff[1],$
                  tab_size[2]-125,$
-                 304L*2],$
+; Change made: Replace 304 with detector_pixels_y obtained from XML fole (RCW, Feb 10, 2010)
+                 (*global).detector_pixels_y*2],$
+;                 304L*2],$
+; Change made: Replace 304 with detector_pixels_y obtained from XML fole (RCW, Feb 10, 2010)
           scroll_size: [tab_size[2]-35-XYoff[0],$
-                        304L*2+40],$
+; Change made: Replace 304 with detector_pixels_y obtained from XML fole (RCW, Feb 10, 2010)                    
+                        (*global).detector_pixels_y*2+40],$
+;                        304L*3+40],$
           uname: 'step2_draw'}
           
 XYoff = [-7,-18] ;Scale of Draw ----------------------------------------------

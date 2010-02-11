@@ -82,7 +82,8 @@ MAIN_TAB = WIDGET_TAB(BaseTab,$
                       /TRACKING_EVENTS)
 
 ;Pixel Range Selection --------------------------------------------------------
-make_gui_scaling_step1, MAIN_TAB, sMainTab.size, TabTitlesLocal
+;Change made: pass global to make_gui_scaling_step1 (RC Ward, Feb 11, 2010)
+make_gui_scaling_step1, MAIN_TAB, sMainTab.size, TabTitlesLocal, global
 
 ;Scaling ----------------------------------------------------------------------
 make_gui_scaling_step2, MAIN_TAB, sMainTab.size, TabTitlesLocal, global
