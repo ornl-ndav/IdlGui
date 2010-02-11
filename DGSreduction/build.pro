@@ -52,6 +52,7 @@ newPath = EXPAND_PATH('+./') + PATH_SEP(/SEARCH_PATH) + !PATH
 .compile construct_datapaths
 .compile get_ideal_elastic_tof
 .compile getdetectorbankrange
+.compile getcornergeometryfile
 .compile getcwpdetectorrange
 .compile getdefaultslurmqueue
 .compile getfirstnumber
