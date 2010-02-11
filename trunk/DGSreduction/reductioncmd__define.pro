@@ -989,8 +989,11 @@ function ReductionCmd::Generate
       cmd[i] += " --cwp-ecan=" + self.ecan_cwp
     IF (STRLEN(self.data_cwp) GE 1)  THEN $
       cmd[i] += " --cwp-data=" + self.data_cwp
-      
-      
+     
+; Commented out until the underlying version of Reduction that supports this
+; is released. 
+;    IF (STRLEN(self.ProtonCurrentUnits) GE 1) THEN $
+;      cmd[i] += " --scale-pc=" + self.ProtonCurrentUnits
       
     IF (self.qvector EQ 1) THEN cmd[i] += " --qmesh"
     IF (self.fixed EQ 1) AND (self.qvector EQ 1) THEN cmd[i] += " --fixed"
