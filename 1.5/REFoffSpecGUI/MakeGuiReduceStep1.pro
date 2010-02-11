@@ -151,13 +151,16 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     /MOTION_EVENTS, $
     /BUTTON_EVENTS, $
     XSIZE = (*global).sangle_xsize_draw,$
-    YSIZE = (*global).sangle_ysize_draw)
-    
+    YSIZE = 2 * (*global).detector_pixels_y)
+
   ;scale
   scale = WIDGET_DRAW(row1col2, $
     UNAME = 'reduce_sangle_y_scale', $
     XSIZE = (*global).sangle_xsize_draw + 55,$
-    YSIZE = 2*304+30,$
+; Change made: Replace 304 with detector_pixels_y obtained from XML fole (RCW, Feb 10, 2010)
+    YSIZE = 2 * (*global).detector_pixels_y + 30,$
+;    YSIZE = 2*304+30,$
+
     YOFFSET = 0)
     
   row1col3Main = WIDGET_BASE(row1,$ ;---------------------------------------

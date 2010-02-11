@@ -140,7 +140,9 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
   draw = WIDGET_DRAW(row2_base,$
 ;    SCR_XSIZE = 2*500,$
     SCR_XSIZE = (*global).sangle_xsize_draw, $
-    SCR_YSIZE = 2*304,$
+; Change made: Replace 304 with detector_pixels_y obtained from XML fole (RCW, Feb 10, 2010)
+    SCR_YSIZE = 2 * (*global).detector_pixels_y + 30,$
+;    SCR_YSIZE = 2*304,$
     UNAME = 'reduce_step2_create_roi_draw_uname',$
     /tracking_events,$
     /motion_events,$

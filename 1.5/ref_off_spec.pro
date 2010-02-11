@@ -80,6 +80,9 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   BACKGROUND_G = file->getValue(tag=['configuration','CurvePlot','Background','G'])
   BACKGROUND_B = file->getValue(tag=['configuration','CurvePlot','Background','B'])
   CESELECT_VERTLINE_COLOR = file->getValue(tag=['configuration','CurvePlot','CESelect','VerticalLineColor'])
+  PIXELS_YVALUE = file->getValue(tag=['configuration','Detector','Pixels_YValue'])
+  PIXELS_XVALUE = file->getValue(tag=['configuration','Detector','Pixels_XValue'])
+
  ; Note: YSIZE_DRAW is not presently used in the code 
   SUPER_USERS = ['rwd']
   ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
@@ -156,9 +159,13 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     RefPix_InitialValue: REFPIX_INITIAL,$   
     ; Code change RCW (Feb 8, 2010): get ascii data 2D-plot background colors from XML config file                     
     BackgroundCurvePlot: [BACKGROUND_R,$
-                            BACKGROUND_G,$
-                             BACKGROUND_B],$
+                          BACKGROUND_G,$
+                          BACKGROUND_B],$
     ceselect_vertical_line_color: CESELECT_VERTLINE_COLOR,$
+    ; Code change RCW (Feb 10, 2010): get detector pixels in X and Y directions from XML config file
+    detector_pixels_x: PIXELS_XVALUE,$
+    detector_pixels_y: PIXELS_YVALUE,$
+
     srun_web_page: 'https://neutronsr.us/applications/jobmonitor/squeue.php?view=all',$
     
     reduce_structure: {driver: 'refred_lp',$
@@ -192,7 +199,9 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ; Code change RCW (Feb 8, 2010): get value of xsize_draw from XML config file  
 ;    sangle_xsize_draw: 845., $
     sangle_xsize_draw: XSIZE_DRAW, $
-    sangle_ysize_draw: 608., $
+; Code change RCW (Feb 10, 2010): gset xsize_draw to 2*PIXELS_YVALUE from XML config file  
+;    sangle_ysize_draw: 608., $
+    sangle_ysize_draw: 2*PIXELS_YVALUE, $
     sangle_help_xsize_draw: 255, $
     sangle_help_ysize_draw: 215, $
     sangle_main_plot_congrid_x_coeff: 0.,$
@@ -467,7 +476,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
  ; Code change RCW (Feb 1, 2010): set up array for RefPixSave, SangleDone  
   (*(*global).RefPixSave) = FLTARR(18)
   (*(*global).SangleDone) = BYTARR(18)
-   
+
 ; Build Application Title ====================================================== 
   MainBaseSize   = (*global).MainBaseSize
 ;  MainBaseTitle  = 'Reflectometer Off Specular Application'
