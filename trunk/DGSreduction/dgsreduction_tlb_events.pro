@@ -196,8 +196,36 @@ PRO DGSreduction_TLB_Events, event
     END
     'DGS_TIMING_OFF': BEGIN
     ; Don't need to do anything in here as the buttons
-    ; are EXCLUSIVE so the ON button with set the correct 
+    ; are EXCLUSIVE so the ON button with set the correct
     ; flag on the command object automatically.
+    END
+    'DGS_CORNER_GEOMETRY': BEGIN
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      ;TODO: Check to see if the QUEUE name is valid.
+      print, "Setting Corner Geometry queue to be ", myValue
+      dgsr_cmd->SetProperty, CornerGeometry=myValue
+    END
+    'DGS_AUTO_CORNERGEOM': BEGIN
+      IF (event.select EQ 1) THEN BEGIN
+        ; If Auto - then disable the input field
+        corner_geometry_ID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGS_CORNER_GEOMETRY')
+        WIDGET_CONTROL, corner_geometry_ID, SENSITIVE=0
+        
+        ; If we are using the auto file, get the default filename...
+        dgsr_cmd->GetProperty, Instrument=instrument
+        default_cornergeom = GetCornerGeometryFile(instrument)
+        dgsr_cmd->SetProperty, CornerGeometry=default_cornergeom
+        ; then set the Filename text field
+        dgsr_cmd->GetProperty, CornerGeometry=currentCG
+        WIDGET_CONTROL, corner_geometry_ID, SET_VALUE=currentCG
+      ENDIF
+    END
+    'DGS_CUSTOM_CORNERGEOM': BEGIN
+      IF (event.select EQ 1) THEN BEGIN
+        corner_geometry_ID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGS_CORNER_GEOMETRY')
+        WIDGET_CONTROL, corner_geometry_ID, SENSITIVE=1
+      ; Do nothing!
+      ENDIF
     END
     'NOTHING': BEGIN
     END
