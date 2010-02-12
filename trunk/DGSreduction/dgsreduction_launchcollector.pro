@@ -144,24 +144,24 @@ PRO DGSreduction_LaunchCollector, event, WaitForJobs=waitforjobs
       
     IF STRLEN(seblock) GT 0 THEN BEGIN
       nxspe_cmd += ' --seblock=' + seblock
-    ENDIF  
       
-    rotationangle = get_seblock_value(Instrument, runnumber, SEBLOCK)
-    
-    IF STRLEN(rotationangle) NE 0 THEN BEGIN
-      nxspe_cmd += " -a " + rotationangle
+      rotationangle = get_seblock_value(Instrument, runnumber, SEBLOCK)
       
-      ; Set a default offset
-      tmp_offset = 0.0
-      
-      ; Get the real offset, if it has been defined
-      IF STRLEN(rotationangle_offset) GE 1 THEN BEGIN
-        tmp_offset = float(rotationangle_offset)
+      IF STRLEN(rotationangle) NE 0 THEN BEGIN
+        nxspe_cmd += " -a " + rotationangle
+        
+        ; Set a default offset
+        tmp_offset = 0.0
+        
+        ; Get the real offset, if it has been defined
+        IF STRLEN(rotationangle_offset) GE 1 THEN BEGIN
+          tmp_offset = float(rotationangle_offset)
+        ENDIF
+        
+        mslice_psi = float(RotationAngle) + tmp_offset
+        nxspe_cmd += " --psi=" + mslice_psi
+        
       ENDIF
-      
-      mslice_psi = float(RotationAngle) + tmp_offset
-      nxspe_cmd += " --psi=" + mslice_psi
-      
     ENDIF
     
     spawn, nxspe_cmd
