@@ -42,6 +42,10 @@ PRO DGSreduction_TLB_Events, event
   dgsr_cmd = info.dgsr_cmd    ; ReductionCMD object
   dgsn_cmd = info.dgsn_cmd   ; NormCMD object
   
+  ; Print the busy flag
+  ;dgsr_cmd->GetProperty, busy=busy
+  ;print, 'Busy=',busy
+  
   WIDGET_CONTROL, event.id, GET_UVALUE=myUVALUE
   
   ; Check that we actually got something back in the UVALUE
