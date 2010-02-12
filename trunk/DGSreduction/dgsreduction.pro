@@ -40,10 +40,6 @@ PRO DGSreduction_Execute, event
   catch, theError
   IF theError NE 0 THEN BEGIN
     catch, /cancel
-    ; Make sure that the process flag is off
-    ; Set the processing/busy flag
-    dgsr_cmd = info.dgsr_cmd
-    dgsr_cmd->SetProperty, Busy=0 
     ; Now put the info structure back for consistency
     WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
     ok = ERROR_MESSAGE(!ERROR_STATE.MSG + ' Returning...', TRACEBACK=1, /error)
@@ -117,9 +113,6 @@ PRO DGSreduction_Execute, event
     WIDGET_CONTROL, event.top, GET_UVALUE=info, /NO_COPY
     dgsr_cmd = info.dgsr_cmd
     
-    ; Set the processing/busy flag
-    dgsr_cmd->SetProperty, Busy=1
-    
     ; Get the queue name
     dgsr_cmd->GetProperty, Queue=queue
     ; Get the instrument name
@@ -183,7 +176,7 @@ PRO DGSreduction_Execute, event
     ; Check to see if the Wandering Phase Correction is turned on
     dgsr_cmd->GetProperty, CWP=cwp
     IF (cwp EQ 1) THEN BEGIN
-    
+      
       ; First we need to check if we need to expand the run numbers
       dataruns = ExpandIndividualRunNumbers(RunNumbers[i])
       data_cwp = ''
@@ -337,9 +330,6 @@ PRO DGSreduction_Execute, event
       
       job_string_array = STRSPLIT(job_string, ' ', /EXTRACT)
       jobID[index] = job_string_array[N_ELEMENTS(job_string_array)-1]
-      
-      ; Set the processing/busy flag
-      dgsr_cmd->SetProperty, Busy=0
       
       
     endfor
