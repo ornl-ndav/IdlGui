@@ -82,7 +82,12 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   CESELECT_VERTLINE_COLOR = file->getValue(tag=['configuration','CurvePlot','CESelect','VerticalLineColor'])
   PIXELS_YVALUE = file->getValue(tag=['configuration','Detector','Pixels_YValue'])
   PIXELS_XVALUE = file->getValue(tag=['configuration','Detector','Pixels_XValue'])
-
+  DATA_COLOR = file->getValue(tag=['configuration','ReflectivityPlot','DataColor'])
+  ERROR_COLOR = file->getValue(tag=['configuration','ReflectivityPlot','ErrorColor'])
+  ZOOMBOX_COLOR = file->getValue(tag=['configuration','ReflectivityPlot','ZoomBoxColor'])
+  VERTICAL_COLOR = file->getValue(tag=['configuration','ReflectivityPlot','VerticalColor'])
+  HORIZONTAL_COLOR = file->getValue(tag=['configuration','ReflectivityPlot','HorizontalColor'])
+  AVERAGE_COLOR = file->getValue(tag=['configuration','ReflectivityPlot','AverageColor'])
  ; Note: YSIZE_DRAW is not presently used in the code 
   SUPER_USERS = ['rwd']
   ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
@@ -162,6 +167,13 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
                           BACKGROUND_G,$
                           BACKGROUND_B],$
     ceselect_vertical_line_color: CESELECT_VERTLINE_COLOR,$
+    ref_plot_data_color: DATA_COLOR,$
+    ref_plot_error_color: ERROR_COLOR,$
+    ref_plot_zoombox_color: ZOOMBOX_COLOR,$
+    ref_plot_vertical_color: VERTICAL_COLOR,$
+    ref_plot_horizontal_color: HORIZONTAL_COLOR,$
+    ref_plot_average_color: AVERAGE_COLOR,$
+                    
     ; Code change RCW (Feb 10, 2010): get detector pixels in X and Y directions from XML config file
     detector_pixels_x: PIXELS_XVALUE,$
     detector_pixels_y: PIXELS_YVALUE,$
