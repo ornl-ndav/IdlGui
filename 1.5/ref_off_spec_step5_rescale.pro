@@ -90,6 +90,12 @@ END
 PRO display_step5_rescale_plot, Event, with_range=with_range
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+; Code change RCW (Feb 11, 2010): Get Background color from XML file
+; Code change RCW (Feb 12, 2010): Get line plot colors from XML file
+  PlotBackground = (*global).BackgroundCurvePlot
+  ref_plot_data_color = (*global).ref_plot_data_color
+  ref_plot_error_color = (*global).ref_plot_error_color
   
   CATCH, error
   IF (error NE 0) THEN BEGIN
@@ -142,6 +148,7 @@ PRO display_step5_rescale_plot, Event, with_range=with_range
     ;    print, 'x0y0x1y1[3]: ' + strcompress(x0y0x1y1[3])
     ;    print
     ;
+
     PLOT, x_axis, $
       array_selected_total, $
       XTITLE=x_axis_label, $
@@ -151,6 +158,8 @@ PRO display_step5_rescale_plot, Event, with_range=with_range
       YRANGE = yrange,$
       YSTYLE = 1,$
       CHARSIZE = 2,$
+      BACKGROUND = convert_rgb(PlotBackground),$
+      color = ref_plot_data_color, $
       PSYM=1
       
   ENDIF ELSE BEGIN
@@ -162,6 +171,8 @@ PRO display_step5_rescale_plot, Event, with_range=with_range
       XSTYLE = 1,$
       YSTYLE = 1,$
       CHARSIZE = 2,$
+      BACKGROUND = convert_rgb(PlotBackground),$
+      color = ref_plot_data_color, $
       PSYM=1
       
     xmin = MIN(x_axis,MAX=xmax)
@@ -173,7 +184,13 @@ PRO display_step5_rescale_plot, Event, with_range=with_range
   errplot, x_axis,$
     array_selected_total-array_error_selected_total,$
     array_selected_total+array_error_selected_total,$
-    color=150
+    color=ref_plot_error_color
+ 
+ ; Change in Code: Replot the data points on top of the error bars (RC Ward, Feb 11, 2010)
+    OPLOT, x_axis, $
+    array_selected_total, $
+    color = ref_plot_data_color, $
+    PSYM=1
     
   !P.FONT = 0
   
@@ -183,6 +200,12 @@ END
 PRO display_step5_rescale_plot_from_zoom, Event, with_range=with_range
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+; Code change RCW (Feb 11, 2010): Get Background color from XML file
+; Code change RCW (Feb 12, 2010): Get line plot colors from XML file
+  PlotBackground = (*global).BackgroundCurvePlot
+  ref_plot_data_color = (*global).ref_plot_data_color
+  ref_plot_error_color = (*global).ref_plot_error_color
   
   selection_value = getCWBgroupValue(Event,'step5_selection_group_uname')
   CASE (selection_value) OF
@@ -237,6 +260,8 @@ PRO display_step5_rescale_plot_from_zoom, Event, with_range=with_range
       YRANGE = yrange,$
       YSTYLE = 1,$
       CHARSIZE = 2,$
+      BACKGROUND = convert_rgb(PlotBackground),$
+      color = ref_plot_data_color, $
       PSYM=1
       
   ENDIF ELSE BEGIN ;log
@@ -250,6 +275,8 @@ PRO display_step5_rescale_plot_from_zoom, Event, with_range=with_range
       YRANGE = yrange,$
       YSTYLE = 1,$
       CHARSIZE = 2,$
+      BACKGROUND = convert_rgb(PlotBackground),$
+      color = ref_plot_data_color, $
       PSYM=1,$
       /YLOG
       
@@ -258,8 +285,14 @@ PRO display_step5_rescale_plot_from_zoom, Event, with_range=with_range
   errplot, x_axis,$
     array_selected_total-array_error_selected_total,$
     array_selected_total+array_error_selected_total,$
-    color=150
+    color=ref_plot_error_color 
     
+; Change in Code: Replot the data points on top of the error bars (RC Ward, Feb 11, 2010)
+    OPLOT, x_axis, $
+    array_selected_total, $
+    color = ref_plot_data_color, $
+    PSYM=1
+
   !P.FONT = 0
   
 END
@@ -268,6 +301,12 @@ END
 PRO display_step5_rescale_plot_first_time, Event
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+; Code change RCW (Feb 11, 2010): Get Background color from XML file
+; Code change RCW (Feb 12, 2010): Get line plot colors from XML file
+  PlotBackground = (*global).BackgroundCurvePlot
+  ref_plot_data_color = (*global).ref_plot_data_color
+  ref_plot_error_color  = (*global).ref_plot_error_color
   
   CATCH, error
   IF (error NE 0) THEN BEGIN
@@ -314,6 +353,8 @@ PRO display_step5_rescale_plot_first_time, Event
       XSTYLE = 1,$
       YSTYLE = 1,$
       CHARSIZE = 2,$
+      BACKGROUND = convert_rgb(PlotBackground),$
+      color = ref_plot_data_color, $
       PSYM=1
       
   ENDIF ELSE BEGIN
@@ -326,6 +367,8 @@ PRO display_step5_rescale_plot_first_time, Event
       YSTYLE = 1,$
       /YLOG,$
       CHARSIZE = 2,$
+      BACKGROUND = convert_rgb(PlotBackground),$
+      color = ref_plot_data_color, $
       PSYM=1
       
   ENDELSE
@@ -337,8 +380,14 @@ PRO display_step5_rescale_plot_first_time, Event
   errplot, x_axis,$
     array_selected_total-array_error_selected_total,$
     array_selected_total+array_error_selected_total,$
-    color=150
-    
+    color=ref_plot_error_color 
+ 
+  ; Change in Code: Replot the data points on top of the error bars (RC Ward, Feb 11, 2010)
+    OPLOT, x_axis, $
+    array_selected_total, $
+    color = ref_plot_data_color, $
+    PSYM=1
+ 
   !P.FONT = 0
   
 END
@@ -347,6 +396,12 @@ END
 PRO display_step5_rescale_after_rescale_during_zoom_selection, Event
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+; Code change RCW (Feb 11, 2010): Get Background color from XML file
+; Code change RCW (Feb 12, 2010): Get line plot colors from XML file
+  PlotBackground = (*global).BackgroundCurvePlot
+  ref_plot_data_color = (*global).ref_plot_data_color
+  ref_plot_error_color  = (*global).ref_plot_error_color
   
   ;create array of data
   ;create_step5_selection_data, Event
@@ -387,6 +442,8 @@ PRO display_step5_rescale_after_rescale_during_zoom_selection, Event
       XSTYLE = 1,$
       YSTYLE = 1,$
       CHARSIZE = 2,$
+      BACKGROUND = convert_rgb(PlotBackground),$
+      color = ref_plot_data_color, $
       PSYM=1
       
   ENDIF ELSE BEGIN
@@ -398,6 +455,8 @@ PRO display_step5_rescale_after_rescale_during_zoom_selection, Event
       XSTYLE = 1,$
       YSTYLE = 1,$
       CHARSIZE = 2,$
+      BACKGROUND = convert_rgb(PlotBackground),$
+      color = ref_plot_data_color, $
       PSYM=1,$
       /YLOG
       
@@ -410,7 +469,13 @@ PRO display_step5_rescale_after_rescale_during_zoom_selection, Event
   errplot, x_axis,$
     array_selected_total-array_error_selected_total,$
     array_selected_total+array_error_selected_total,$
-    color=150
+    color=ref_plot_error_color 
+
+  ; Change in Code: Replot the data points on top of the error bars (RC Ward, Feb 11, 2010)
+    OPLOT, x_axis, $
+    array_selected_total, $
+    color = ref_plot_data_color, $
+    PSYM=1
     
   !P.FONT = 0
   
@@ -420,6 +485,12 @@ END
 PRO display_step5_rescale_reset_zoom, Event
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+; Code change RCW (Feb 11, 2010): Get Background color from XML file
+; Code change RCW (Feb 12, 2010): Get line plot colors from XML file
+  PlotBackground = (*global).BackgroundCurvePlot
+  ref_plot_data_color = (*global).ref_plot_data_color
+  ref_plot_error_color  = (*global).ref_plot_error_color
   
   selection_value = getCWBgroupValue(Event,'step5_selection_group_uname')
   CASE (selection_value) OF
@@ -457,6 +528,8 @@ PRO display_step5_rescale_reset_zoom, Event
       XSTYLE = 1,$
       YSTYLE = 1,$
       CHARSIZE = 2,$
+      BACKGROUND = convert_rgb(PlotBackground),$
+      color = ref_plot_data_color, $
       PSYM=1
       
   ENDIF ELSE BEGIN
@@ -468,6 +541,8 @@ PRO display_step5_rescale_reset_zoom, Event
       XSTYLE = 1,$
       YSTYLE = 1,$
       CHARSIZE = 2,$
+      BACKGROUND = convert_rgb(PlotBackground),$
+      color = ref_plot_data_color , $
       PSYM=1,$
       /YLOG
       
@@ -481,7 +556,14 @@ PRO display_step5_rescale_reset_zoom, Event
   errplot, x_axis,$
     array_selected_total-array_error_selected_total,$
     array_selected_total+array_error_selected_total,$
-    color=150
+    color=ref_plot_error_color 
+
+  ; Change in Code: Replot the data points on top of the error bars (RC Ward, Feb 11, 2010)
+    OPLOT, x_axis, $
+    array_selected_total, $
+    color = ref_plot_data_color, $
+    PSYM=1
+
     
   !P.FONT = 0
   
@@ -491,6 +573,11 @@ END
 PRO redisplay_step5_rescale_plot, Event
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  ; Code change RCW (Feb 11, 2010): Get Background color from XML file
+  PlotBackground = (*global).BackgroundCurvePlot
+  ref_plot_data_color = (*global).ref_plot_data_color
+  ref_plot_error_color  = (*global).ref_plot_error_color
   
   selection_value = getCWBgroupValue(Event,'step5_selection_group_uname')
   CASE (selection_value) OF
@@ -538,6 +625,8 @@ PRO redisplay_step5_rescale_plot, Event
       YRANGE = yrange,$
       YSTYLE = 1,$
       CHARSIZE = 2,$
+      BACKGROUND = convert_rgb(PlotBackground),$
+      color = ref_plot_data_color, $
       PSYM=1
       
   ENDIF ELSE BEGIN
@@ -551,6 +640,8 @@ PRO redisplay_step5_rescale_plot, Event
       YRANGE = yrange,$
       YSTYLE = 1,$
       CHARSIZE = 2,$
+      BACKGROUND = convert_rgb(PlotBackground),$
+      color = ref_plot_data_color , $
       PSYM=1,$
       /YLOG
       
@@ -559,7 +650,13 @@ PRO redisplay_step5_rescale_plot, Event
   errplot, x_axis,$
     array_selected_total-array_error_selected_total,$
     array_selected_total+array_error_selected_total,$
-    color=150
+    color=ref_plot_error_color 
+    
+  ; Change in Code: Replot the data points on top of the error bars (RC Ward, Feb 11, 2010)
+    OPLOT, x_axis, $
+    array_selected_total, $
+    color = ref_plot_data_color , $
+    PSYM=1 
     
   !P.FONT = 0
   
@@ -569,6 +666,12 @@ END
 PRO redisplay_step5_rescale_plot_after_scaling, Event
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+; Code change RCW (Feb 11, 2010): Get Background color from XML file
+; Code change RCW (Feb 12, 2010): Get line plot colors from XML file
+  PlotBackground = (*global).BackgroundCurvePlot
+  ref_plot_data_color = (*global).ref_plot_data_color
+  ref_plot_error_color  = (*global).ref_plot_error_color
   
   selection_value = getCWBgroupValue(Event,'step5_selection_group_uname')
   CASE (selection_value) OF
@@ -619,12 +722,21 @@ PRO redisplay_step5_rescale_plot_after_scaling, Event
     YRANGE = yrange,$
     YSTYLE = 1,$
     CHARSIZE = 2,$
+    BACKGROUND = convert_rgb(PlotBackground),$
+    color = ref_plot_data_color, $
     PSYM=1
     
   errplot, x_axis,$
     array_selected_total-array_error_selected_total,$
     array_selected_total+array_error_selected_total,$
-    color=150
+    color=ref_plot_error_color 
+
+  ; Change in Code: Replot the data points on top of the error bars (RC Ward, Feb 11, 2010)
+    OPLOT, x_axis, $
+    array_selected_total, $
+    color = ref_plot_data_color, $
+    PSYM=1
+
     
   !P.FONT = 0
   
@@ -635,6 +747,11 @@ END
 PRO plot_recap_rescale_selection, Event
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+; Code change RCW (Feb 11, 2010): Get Background color from XML file
+; Code change RCW (Feb 12, 2010): Get line plot colors from XML file
+  PlotBackground = (*global).BackgroundCurvePlot
+  ref_plot_zoombox_color = (*global).ref_plot_zoombox_color
   
   x0 = (*global).recap_rescale_x0
   y0 = (*global).recap_rescale_y0
@@ -647,7 +764,7 @@ PRO plot_recap_rescale_selection, Event
   DEVICE, DECOMPOSED=0
   LOADCT, 5, /SILENT
   
-  color = 150
+  color = ref_plot_zoombox_color
   
   PLOTS, [xmin, xmin, xmax, xmax, xmin],$
     [ymin,ymax, ymax, ymin, ymin],$
@@ -661,6 +778,11 @@ END
 PRO plot_recap_rescale_CE_selection, Event
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+; Code change RCW (Feb 11, 2010): Get Background color from XML file
+; Code change RCW (Feb 12, 2010): Get line plot colors from XML file
+  PlotBackground = (*global).BackgroundCurvePlot
+  ref_plot_vertical_color = (*global).ref_plot_vertical_color
   
   x0y0x1y1 = (*global).x0y0x1y1_graph
   y0 = x0y0x1y1[1]
@@ -676,13 +798,15 @@ PRO plot_recap_rescale_CE_selection, Event
   IF (x GE xmin AND $
     x LE xmax) THEN BEGIN
     
-    color = 50
+    color = ref_plot_vertical_color
     
     DEVICE, DECOMPOSED=0
     LOADCT, 5, /SILENT
     
-    PLOTS, x,ymin, color=color, /DATA
-    PLOTS, x,ymax, color=color, /CONTINUE, /DATA
+    PLOTS, x,ymin, $
+    color=color, /DATA
+    PLOTS, x,ymax, $
+    color=color, /CONTINUE, /DATA
     
   ENDIF
   
@@ -692,6 +816,11 @@ END
 PRO plot_recap_rescale_other_selection, Event, type=type
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+; Code change RCW (Feb 11, 2010): Get Background color from XML file
+; Code change RCW (Feb 12, 2010): Get line plot colors from XML file
+  PlotBackground = (*global).BackgroundCurvePlot
+  ref_plot_vertical_color = (*global).ref_plot_vertical_color
   
   CASE (type) OF
     'left': x = (*global).recap_rescale_selection_left
@@ -714,7 +843,7 @@ PRO plot_recap_rescale_other_selection, Event, type=type
   xmin = MIN([xa,xb],MAX=xmax)
   
   IF (type EQ 'all') THEN BEGIN
-    color = 50
+    color = ref_plot_vertical_color
     
     IF (x1 LT xmin) THEN BEGIN
       x1 = xmin
@@ -722,7 +851,8 @@ PRO plot_recap_rescale_other_selection, Event, type=type
       IF (x1 GT xmax) THEN BEGIN
         x1 = xmax
       ENDIF
-      PLOTS, x1,ymin, color=color, /DATA
+      PLOTS, x1,ymin, $
+      color=color, /DATA
       PLOTS, x1,ymax, color=color, /CONTINUE, /DATA
     ENDELSE
     
@@ -732,15 +862,19 @@ PRO plot_recap_rescale_other_selection, Event, type=type
       IF (x2 GT xmax) THEN BEGIN
         x2 = xmax
       ENDIF
-      PLOTS, x2,ymin, color=color, /DATA
-      PLOTS, x2,ymax, color=color, /CONTINUE, /DATA
+      PLOTS, x2,ymin, $
+      color=color, /DATA
+      PLOTS, x2,ymax, $
+      color=color, /CONTINUE, /DATA
     ENDELSE
     
   ENDIF ELSE BEGIN
     x = (x LT xmin) ? xmin : x
     x = (x GT xmax) ? xmax : x
-    PLOTS, x,ymin, color=color, /DATA
-    PLOTS, x,ymax, color=color, /CONTINUE, /DATA
+    PLOTS, x,ymin, $
+    color=color, /DATA
+    PLOTS, x,ymax, $
+    color=color, /CONTINUE, /DATA
   ENDELSE
   
 END
@@ -749,6 +883,11 @@ END
 PRO plot_selection_after_zoom, Event
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+; Code change RCW (Feb 11, 2010): Get Background color from XML file
+; Code change RCW (Feb 12, 2010): Get line plot colors from XML file
+  PlotBackground = (*global).BackgroundCurvePlot
+  ref_plot_vertical_color = (*global).ref_plot_vertical_color
   
   x1 = (*global).recap_rescale_selection_left
   x2 = (*global).recap_rescale_selection_right
@@ -764,18 +903,22 @@ PRO plot_selection_after_zoom, Event
   xb = x0y0x1y1[2]
   xmin = MIN([xa,xb],MAX=xmax)
   
-  color = 50
+  color = ref_plot_vertical_color
   
   IF (x1 GT xmin AND $
     x1 LT xmax) THEN BEGIN
-    PLOTS, x1,ymin, color=color, /DATA
-    PLOTS, x1,ymax, color=color, /CONTINUE, /DATA
+    PLOTS, x1,ymin, $
+    color=color, /DATA
+    PLOTS, x1,ymax, $
+    color=color, /CONTINUE, /DATA
   ENDIF
   
   IF (x2 GT xmin AND $
     x2 LT xmax) THEN BEGIN
-    PLOTS, x2,ymin, color=color, /DATA
-    PLOTS, x2,ymax, color=color, /CONTINUE, /DATA
+    PLOTS, x2,ymin, $
+    color=color, /DATA
+    PLOTS, x2,ymax, $
+    color=color, /CONTINUE, /DATA
   ENDIF
   
 END
@@ -839,6 +982,11 @@ PRO plot_average_recap_rescale, Event
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
+; Code change RCW (Feb 11, 2010): Get Background color from XML file
+; Code change RCW (Feb 12, 2010): Get line plot colors from XML file
+  PlotBackground = (*global).BackgroundCurvePlot
+  ref_plot_horizontal_color = (*global).ref_plot_horizontal_color
+  
   x1 = (*global).recap_rescale_selection_left
   x2 = (*global).recap_rescale_selection_right
   
@@ -859,9 +1007,11 @@ PRO plot_average_recap_rescale, Event
     DEVICE, DECOMPOSED=0
     LOADCT, 5, /SILENT
     
-    color = 200
-    PLOTS, xmin,Average, color=color, /DATA
-    PLOTS, xmax,Average, color=color, /CONTINUE, /DATA
+    color = ref_plot_horizontal_color
+    PLOTS, xmin,Average, $
+    color=color, /DATA
+    PLOTS, xmax,Average, $
+    color=color, /CONTINUE, /DATA
     
   ENDIF
   
@@ -871,6 +1021,11 @@ END
 PRO replot_average_recap_rescale, Event
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+; Code change RCW (Feb 11, 2010): Get Background color from XML file
+; Code change RCW (Feb 12, 2010): Get line plot colors from XML file
+  PlotBackground = (*global).BackgroundCurvePlot
+  ref_plot_horizontal_color = (*global).ref_plot_horizontal_color
   
   x1 = (*global).recap_rescale_selection_left
   x2 = (*global).recap_rescale_selection_right
@@ -904,9 +1059,11 @@ PRO replot_average_recap_rescale, Event
     DEVICE, DECOMPOSED=0
     LOADCT, 5, /SILENT
     
-    color = 200
-    PLOTS, xmin,Average, color=color, /DATA
-    PLOTS, xmax,Average, color=color, /CONTINUE, /DATA
+    color = ref_plot_horizontal_color
+    PLOTS, xmin,Average, $
+    color=color, /DATA
+    PLOTS, xmax,Average, $
+    color=color, /CONTINUE, /DATA
     
   ENDIF
   
@@ -917,6 +1074,11 @@ PRO plot_average_1_recap_rescale, Event ;plot the average horizontal value
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
+; Code change RCW (Feb 11, 2010): Get Background color from XML file
+; Code change RCW (Feb 12, 2010): Get line plot colors from XML file
+  PlotBackground = (*global).BackgroundCurvePlot
+  ref_plot_average_color = (*global).ref_plot_average_color
+  
   x1 = (*global).recap_rescale_selection_left
   x2 = (*global).recap_rescale_selection_right
   xmin = MIN([x1,x2],MAX=xmax)
@@ -924,9 +1086,11 @@ PRO plot_average_1_recap_rescale, Event ;plot the average horizontal value
   DEVICE, DECOMPOSED=0
   LOADCT, 5, /SILENT
   
-  color = 150
-  PLOTS, xmin, 1., color=color, /DATA
-  PLOTS, xmax, 1., color=color, /CONTINUE, /DATA
+  color = ref_plot_average_color
+  PLOTS, xmin, 1., $
+  color=color, /DATA
+  PLOTS, xmax, 1., $
+  color=color, /CONTINUE, /DATA
   
   (*global).recap_rescale_average = 1
   
@@ -936,6 +1100,10 @@ END
 PRO define_default_recap_output_file, Event
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+; Code change RCW (Feb 11, 2010): Get Background color from XML file
+; Code change RCW (Feb 12, 2010): Get line plot colors from XML file
+  PlotBackground = (*global).BackgroundCurvePlot
   
   list_of_ascii_files = (*(*global).list_of_ascii_files)
   
