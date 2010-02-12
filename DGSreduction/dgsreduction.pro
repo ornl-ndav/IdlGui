@@ -307,7 +307,7 @@ PRO DGSreduction_Execute, event
           ; If it's not the first bank, then use >> to append to the file
           IF (first_time_around_loop EQ 1) THEN split_cmd += ">"
           split_cmd += " " + tmp_maskfile
-          print, split_cmd
+          ;print, split_cmd
           spawn, split_cmd
           ; Once we have got here we have gone round once...
           first_time_around_loop = 1
