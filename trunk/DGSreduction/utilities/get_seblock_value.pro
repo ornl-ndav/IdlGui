@@ -15,8 +15,8 @@ function get_seblock_value, instrument, runnumber, seblock
   fileThere = 0
   inNeXus = 0
   
-  findnexus_exe = '/usr/local/bin/findnexus'
-  cvlog_extract_exe = '~/sandpit/HLRedux/scripts/simple_cvlog_reader.py'
+  findnexus_exe = 'findnexus'
+  cvlog_extract_exe = 'simple_cvlog_reader.py'
   
   ; Uppercase the instrument name
   instrument = STRUPCASE(instrument)
