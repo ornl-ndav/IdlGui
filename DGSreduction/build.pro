@@ -56,6 +56,7 @@ newPath = EXPAND_PATH('+./') + PATH_SEP(/SEARCH_PATH) + !PATH
 .compile getcwpdetectorrange
 .compile getdefaultslurmqueue
 .compile getfirstnumber
+.compile get_seblock_value
 .compile expandrunnumbers
 .compile expandindividualrunnumbers
 .compile gettzero
