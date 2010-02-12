@@ -145,7 +145,7 @@ PRO DGSreduction_Execute, event
     
     ; output Directory
     outputDir = get_output_directory(Instrument, runnumber, $
-      Home=UseHome, Override=OutputOverride, UserLabel=userlabel, $
+      Home=UseHome, Override=OutputOverride, Label=userlabel, $
       /CREATE)
       
     ; Can we write to the output directory ?
@@ -416,7 +416,7 @@ PRO DGSnorm_Execute, event
   
   ; Make sure that the output directory exists
   outputDir = get_output_directory(Instrument, runnumber, $
-    Home=UseHome, Override=OutputOverride, UserLabel=userlabel, $
+    Home=UseHome, Override=OutputOverride, Label=userlabel, $
     /CREATE)
     
   ; Log Directory
