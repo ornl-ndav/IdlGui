@@ -34,6 +34,16 @@
 
 pro load_parameters, widgetBase, Filename=filename
 
+  ; Error Handling
+  catch, theError
+  IF theError NE 0 THEN BEGIN
+    catch, /cancel
+    ; Now put the info structure back for consistency
+    WIDGET_CONTROL, widgetBase, SET_UVALUE=info, /NO_COPY
+    ok = ERROR_MESSAGE(!ERROR_STATE.MSG + ' Returning...', TRACEBACK=1, /error)
+    return
+  ENDIF
+
   ; Get the info structure
   WIDGET_CONTROL, widgetBase, GET_UVALUE=info, /NO_COPY
   
