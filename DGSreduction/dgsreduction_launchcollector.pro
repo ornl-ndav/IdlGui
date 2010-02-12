@@ -63,7 +63,7 @@ PRO DGSreduction_LaunchCollector, event, WaitForJobs=waitforjobs
   ; Get the Ei
   dgsr_cmd->GetProperty, Ei=ei
   ; Get the sample rotation angle
-  dgsr_cmd->GetProperty, RotationAngle=rotationangle
+  dgsr_cmd->GetProperty, RotationAngle=rotationangle_offset
   ; Get the SE Block name of the rotation motor
   dgsr_cmd->GetProperty, SEBlock=seblock
   
@@ -142,8 +142,26 @@ PRO DGSreduction_LaunchCollector, event, WaitForJobs=waitforjobs
       " -o " + outdir + "/" + instrument + "_" + runnumber + ".nxspe" + $
       " -e " + ei
       
-    IF STRLEN(rotationangle) GE 1 THEN BEGIN
-      nxspe_cmd += " -a " + calcMslicePsi(rotationangle, seblock)
+    IF STRLEN(seblock) GT 0 THEN BEGIN
+      nxspe_cmd += ' --seblock=' + seblock
+    ENDIF  
+      
+    rotationangle = get_seblock_value(Instrument, runnumber, SEBLOCK)
+    
+    IF STRLEN(rotationangle) NE 0 THEN BEGIN
+      nxspe_cmd += " -a " + rotationangle
+      
+      ; Set a default offset
+      tmp_offset = 0.0
+      
+      ; Get the real offset, if it has been defined
+      IF STRLEN(rotationangle_offset) GE 1 THEN BEGIN
+        tmp_offset = float(rotationangle_offset)
+      ENDIF
+      
+      mslice_psi = float(RotationAngle) + tmp_offset
+      nxspe_cmd += " --psi=" + mslice_psi
+      
     ENDIF
     
     spawn, nxspe_cmd
