@@ -30,7 +30,7 @@ function get_maskfile, instrument, runnumber, OVERRIDE=OVERRIDE
     source_maskdir += '/shared/masks/'
     
     IF (FILE_TEST(source_maskdir, /DIRECTORY, /READ) EQ 0) THEN BEGIN
-      print, 'Creating masks directory in the shared proposal area.'
+      ;print, 'Creating masks directory in the shared proposal area.'
       spawn, 'mkdir -p ' + source_maskdir
     ENDIF
     
@@ -66,7 +66,7 @@ function get_maskfile, instrument, runnumber, OVERRIDE=OVERRIDE
     ; Let's check to see if this directory exists.
     sharedMasksDir = FILE_TEST(default_maskfile, /DIRECTORY, /READ)
     IF (sharedMasksDir EQ 0) THEN BEGIN
-      print, 'Creating masks directory in the shared instrument area.'
+      ;print, 'Creating masks directory in the shared instrument area.'
       spawn, 'mkdir -p ' + sharedMasksDir
     ENDIF
     
@@ -79,12 +79,12 @@ function get_maskfile, instrument, runnumber, OVERRIDE=OVERRIDE
     IF (defaultMaskThere EQ 1) THEN BEGIN
       ; If it is there copy it to the source filename
       cmd = 'cp ' + default_maskfile + ' ' + source_maskfile
-      print, cmd
+      ;print, cmd
       spawn, cmd
     ENDIF ELSE BEGIN
       ; If the file doesn't exist - create a blank file!
       cmd = 'touch ' + source_maskfile
-      print,cmd
+      ;print,cmd
       spawn, cmd
     ENDELSE
     
