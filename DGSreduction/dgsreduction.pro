@@ -671,8 +671,8 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
     adminMode:0L, $ ; Flag to toggle Superuser mode.
     queue:"", $ ; Place holder for a custom queue name
     workingDir:workingDir, $ ; The current working directory
-    outputDir:outputDir, $ The default output base directory
-  extra:ptr_new(extra) $
+    outputDir:outputDir, $ ; The default output base directory
+    extra:ptr_new(extra) $
     }
     
   ; Store the info structure in the user value of the TLB.  Turn keyboard focus events on.
