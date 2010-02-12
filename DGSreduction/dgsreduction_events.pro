@@ -344,6 +344,14 @@ PRO dgsreduction_events, event, dgsr_cmd
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
       dgsr_cmd->SetProperty, UserLabel=myValue
     END
+    'DGSR_SEBLOCK': BEGIN
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      dgsr_cmd->SetProperty, SEBlock=myValue
+    END
+    'DGSR_ANGLE_OFFSET': BEGIN
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      dgsr_cmd->SetProperty, SEBlock=myValue
+    END
     ELSE: begin
       ; Do nowt
       print, '*** UVALUE: ' + myUVALUE + ' not handled! ***'
