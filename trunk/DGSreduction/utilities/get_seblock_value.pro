@@ -31,9 +31,9 @@ function get_seblock_value, instrument, runnumber, seblock
   
   ; Check to see if the Ei is in the NeXus file
   ; TODO: Not needed at the moment as no nexus files have this field!
-  IF (nexusThere EQ 1) THEN BEGIN
+  ;IF (nexusThere EQ 1) THEN BEGIN
   ; If the block is found in the nexus file then set 'inNeXus = 1'
-  ENDIF
+  ;ENDIF
   
   IF (inNeXus NE 1) THEN BEGIN
   
