@@ -38,6 +38,8 @@ PRO DGSreduction_LaunchCollector, event, WaitForJobs=waitforjobs
   catch, theError
   IF theError NE 0 THEN BEGIN
     catch, /cancel
+    ; Now put the info structure back for consistency
+    WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
     ok = ERROR_MESSAGE(!ERROR_STATE.MSG + ' Returning...', TRACEBACK=1, /error)
     return
   ENDIF
