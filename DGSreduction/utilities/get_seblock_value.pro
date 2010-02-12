@@ -12,6 +12,8 @@
 ;-
 function get_seblock_value, instrument, runnumber, seblock
 
+  IF N_ELEMENTS(seblock) EQ 0 THEN seblock = ''
+
   fileThere = 0
   inNeXus = 0
   
@@ -35,7 +37,7 @@ function get_seblock_value, instrument, runnumber, seblock
   ; If the block is found in the nexus file then set 'inNeXus = 1'
   ;ENDIF
   
-  IF (inNeXus NE 1) THEN BEGIN
+  IF (inNeXus NE 1) AND (STRLEN(seblock) GT 0) THEN BEGIN
   
     ; If not, then find the preNeXus files
     findnexus_cmd = findnexus_exe + ' -i ' + instrument + ' --prenexus ' + strcompress(string(runnumber), /REMOVE_ALL)
