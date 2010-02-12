@@ -434,8 +434,8 @@ PRO ReductionCmd::SetProperty, $
   IF N_ELEMENTS(DebyeWaller) NE 0 THEN self.DebyeWaller = DebyeWaller
   IF N_ELEMENTS(Error_DebyeWaller) NE 0 THEN self.Error_DebyeWaller = Error_DebyeWaller
   
-  IF N_ELEMENTS(SEblock) NE 0 THEN self.seblock = SEblock
-  IF N_ELEMENTS(RotationAngle) NE 0 THEN self.rotationangle = RotationAngle
+  IF N_ELEMENTS(SEblock) NE 0 THEN self.seblock = STRCOMPRESS(STRING(SEblock), /REMOVE_ALL)
+  IF N_ELEMENTS(RotationAngle) NE 0 THEN self.rotationangle = STRCOMPRESS(STRING(RotationAngle), /REMOVE_ALL)
   
   IF N_ELEMENTS(CWP) NE 0 THEN self.CWP = cwp
   IF N_ELEMENTS(Ecan_CWP) NE 0 THEN $
@@ -1342,7 +1342,7 @@ pro ReductionCmd__Define
     DebyeWaller: "", $       ; Debye-Waller factor
     Error_DebyeWaller: "", $ ; Error in Debye-Waller factor
     seblock: "", $           ; Sample Environment Block name for the sample rotation
-    RotationAngle:"", $      ; Value of the sample rotation
+    RotationAngle:"", $      ; Value of the sample rotation offset
     OutputOverride: "", $      ; Prefix for where to write the output (normally ~/results/)
     CWP: 0L, $               ; Chopper Wandering Phase on/off
     bcan_cwp: "", $          ; chopper phase corrections for black can data. (usecs)
