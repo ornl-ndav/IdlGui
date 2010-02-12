@@ -118,6 +118,7 @@ PRO ReductionCmd::GetProperty, $
     MasterMaskFile=mastermaskfile, $     ; An alternative master mask file to use as the source for spliting.
     ProtonCurrentUnits=ProtonCurrentUnits, $ ; The units for the proton current, either 'C','mC','uC' or 'pC'
     UserLabel=userlabel, $               ; A Label that is applied to the output directory name.
+    Busy=Busy, $                         ; A flag to indicate that we are busy processing something
     _Extra=extra
     
   ; Error Handling
@@ -211,6 +212,7 @@ PRO ReductionCmd::GetProperty, $
   IF ARG_PRESENT(MasterMaskFile) NE 0 THEN MasterMaskFile = self.mastermaskfile
   IF ARG_PRESENT(ProtonCurrentUnits) NE 0 THEN ProtonCurrentUnits = self.ProtonCurrentUnits
   IF ARG_PRESENT(UserLabel) NE 0 THEN UserLabel = self.UserLabel
+  IF ARG_PRESENT(Busy) NE 0 THEN Busy = self.busy
   
 END
 
@@ -296,6 +298,7 @@ PRO ReductionCmd::SetProperty, $
     MasterMaskFile=mastermaskfile, $     ; An alternative master mask file to use as the source for spliting.
     ProtonCurrentUnits=ProtonCurrentUnits, $ ; The units for the proton current, either 'C','mC','uC' or 'pC'
     UserLabel=userlabel, $               ; A Label that is applied to the output directory name.
+    Busy=Busy, $                         ; A flag to indicate that we are busy processing something
     _Extra=extra
     
   ; Error Handling
@@ -459,6 +462,8 @@ PRO ReductionCmd::SetProperty, $
   
   IF N_ELEMENTS(UserLabel) NE 0 THEN self.UserLabel = UserLabel
   
+  IF N_ELEMENTS(Busy) NE 0 THEN self.busy = Busy
+  
   IF N_ELEMENTS(extra) NE 0 THEN *self.extra = extra
   
 ;print, '--SetProperty--'
@@ -555,6 +560,12 @@ function ReductionCmd::Check
   ok = 1
   datapaths_bad = 0
   msg = ['Everything looks good.']
+  
+  ; Are we doing something else at the moment ?
+  IF (self.busy EQ 1) THEN BEGIN
+    ok = 0
+    msg = [msg,['We are currently processing your job request.']]
+  ENDIF
   
   IF (STRLEN(self.instrument) LT 2) THEN BEGIN
     ok = 0
@@ -989,11 +1000,11 @@ function ReductionCmd::Generate
       cmd[i] += " --cwp-ecan=" + self.ecan_cwp
     IF (STRLEN(self.data_cwp) GE 1)  THEN $
       cmd[i] += " --cwp-data=" + self.data_cwp
-     
-; Commented out until the underlying version of Reduction that supports this
-; is released. 
-;    IF (STRLEN(self.ProtonCurrentUnits) GE 1) THEN $
-;      cmd[i] += " --scale-pc=" + self.ProtonCurrentUnits
+      
+    ; Commented out until the underlying version of Reduction that supports this
+    ; is released.
+    ;    IF (STRLEN(self.ProtonCurrentUnits) GE 1) THEN $
+    ;      cmd[i] += " --scale-pc=" + self.ProtonCurrentUnits
       
     IF (self.qvector EQ 1) THEN cmd[i] += " --qmesh"
     IF (self.fixed EQ 1) AND (self.qvector EQ 1) THEN cmd[i] += " --fixed"
@@ -1087,6 +1098,7 @@ function ReductionCmd::Init, $
     MasterMaskFile=mastermaskfile, $     ; An alternative master mask file to use as the source for spliting.
     ProtonCurrentUnits=ProtonCurrentUnits, $ ; The units for the proton current, either 'C','mC','uC' or 'pC'
     UserLabel=userlabel, $               ; A Label that is applied to the output directory name.
+    Busy=Busy, $                         ; A flag to indicate that we are busy processing something
     _Extra=extra
     
   ; Error Handling
@@ -1178,6 +1190,7 @@ function ReductionCmd::Init, $
   IF N_ELEMENTS(MasterMaskFile) EQ 0 THEN MasterMaskFile = ""
   IF N_ELEMENTS(ProtonCurrentUnits) EQ 0 THEN ProtonCurrentUnits = ""
   IF N_ELEMENTS(UserLabel) EQ 0 THEN UserLabel = ""
+  IF N_ELEMENTS(Busy) EQ 0 THEN Busy = 0
   
   self.program = program
   self.version = version
@@ -1260,6 +1273,7 @@ function ReductionCmd::Init, $
   self.mastermaskfile = mastermaskfile
   self.ProtonCurrentUnits = protoncurrentunits
   self.UserLabel = userlabel
+  self.busy = Busy
   self.extra = PTR_NEW(extra)
   
   RETURN, 1
@@ -1355,5 +1369,6 @@ pro ReductionCmd__Define
     mastermaskfile: "", $    ; An alternative master mask file to use as the source for spliting.
     ProtonCurrentUnits: "", $ ; The units for the proton current, either 'C','mC','uC' or 'pC'
     UserLabel:"", $          ; A Label that is applied to the output directory name.
+    Busy: 0L, $              ; A flag to indicate that we are busy processing something
     extra: PTR_NEW() }       ; Extra keywords
 end
