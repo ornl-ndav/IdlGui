@@ -54,7 +54,7 @@ PRO DGSreduction_Execute, event
   dgsr_cmd = info.dgsr_cmd
   
   number_ticks = dgsr_cmd->EstimateProgressTicks()
-  tick = 100 / number_ticks
+  tick = 100.0 / number_ticks
   
   progressBar = Obj_New("SHOWPROGRESS")
   progressBar->Start
@@ -91,6 +91,7 @@ PRO DGSreduction_Execute, event
   ENDIF
   
   percentage += tick
+  ;print, '%=',percentage
   progressBar->UpDate, percentage
   
   ; First lets check that an instrument has been selected!
@@ -118,6 +119,7 @@ PRO DGSreduction_Execute, event
   ENDIF
   
   percentage += tick
+  ;print, '%=',percentage
   progressBar->UpDate, percentage
   
   ; Loop over separate reduction jobs
@@ -213,6 +215,7 @@ PRO DGSreduction_Execute, event
         cwp = get_cwpfactor(instrument, dataruns[j], ENERGY=Ei, /FIT)
         
         percentage += (4*tick)
+        ;print, '%=',percentage
         progressBar->UpDate, percentage
         
         PRINTF, unit, dataruns[j], cwp
@@ -243,6 +246,7 @@ PRO DGSreduction_Execute, event
           cwp = get_cwpfactor(instrument, ecanruns[j], ENERGY=Ei, /FIT)
           
           percentage += (4*tick)
+          ;print, '%=',percentage
           progressBar->UpDate, percentage
           
           ; Write values to the log file
@@ -273,6 +277,7 @@ PRO DGSreduction_Execute, event
           cwp = get_cwpfactor(instrument, bcanruns[j], ENERGY=Ei, /FIT)
           
           percentage += (4*tick)
+          ;  print, '%=',percentage
           progressBar->UpDate, percentage
           
           ; Write values to the log file
@@ -342,6 +347,7 @@ PRO DGSreduction_Execute, event
           ; Once we have got here we have gone round once...
           first_time_around_loop = 1
           percentage += (2*tick)
+          ;print, '%=',percentage
           progressBar->UpDate, percentage
         endfor
         
@@ -364,6 +370,7 @@ PRO DGSreduction_Execute, event
       jobID[index] = job_string_array[N_ELEMENTS(job_string_array)-1]
       
       percentage += tick
+      ;print, '%=',percentage
       progressBar->UpDate, percentage
     endfor
     
@@ -533,6 +540,7 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
   ; Program Details
   APPLICATION       = 'DGSreduction'
   VERSION           = '1.2.BETA'
+  ;VERSION           = '1.2'
   
   Catch, errorStatus
   
