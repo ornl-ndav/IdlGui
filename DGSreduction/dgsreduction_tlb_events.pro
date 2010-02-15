@@ -205,7 +205,6 @@ PRO DGSreduction_TLB_Events, event
     END
     'DGS_CORNER_GEOMETRY': BEGIN
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
-      ;TODO: Check to see if the QUEUE name is valid.
       print, "Setting Corner Geometry queue to be ", myValue
       dgsr_cmd->SetProperty, CornerGeometry=myValue
     END
@@ -231,25 +230,47 @@ PRO DGSreduction_TLB_Events, event
       ; Do nothing!
       ENDIF
     END
+    'DGS_INST_GEOMETRY': BEGIN
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      print, "Setting Instrument Geometry queue to be ", myValue
+      dgsr_cmd->SetProperty, InstGeometry=myValue
+    END
+    'DGS_AUTO_INSTGEOM': BEGIN
+      IF (event.select EQ 1) THEN BEGIN
+        ; If Auto - then disable the input field
+        inst_geometry_ID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGS_INST_GEOMETRY')
+        WIDGET_CONTROL, inst_geometry_ID, SENSITIVE=0
+        ; If we are using the automatic setting, then the default is no overriding geometry!
+        dgsr_cmd->SetProperty, InstGeometry=''
+        WIDGET_CONTROL, inst_geometry_ID, SET_VALUE=''
+      ENDIF
+    END
+    'DGS_CUSTOM_INSTGEOM': BEGIN
+      IF (event.select EQ 1) THEN BEGIN
+        inst_geometry_ID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGS_INST_GEOMETRY')
+        WIDGET_CONTROL, inst_geometry_ID, SENSITIVE=1
+      ; Do nothing!
+      ENDIF
+    END
     'DGS_PROTON_UNITS_COULOMB': BEGIN
       IF (event.select EQ 1) THEN BEGIN
         dgsr_cmd->SetProperty, ProtonCurrentUnits="C"
-      ENDIF      
+      ENDIF
     END
     'DGS_PROTON_UNITS_MILLICOULOMB': BEGIN
       IF (event.select EQ 1) THEN BEGIN
         dgsr_cmd->SetProperty, ProtonCurrentUnits="mC"
-      ENDIF      
+      ENDIF
     END
     'DGS_PROTON_UNITS_MICROCOULOMB': BEGIN
       IF (event.select EQ 1) THEN BEGIN
         dgsr_cmd->SetProperty, ProtonCurrentUnits="uC"
-      ENDIF      
+      ENDIF
     END
     'DGS_PROTON_UNITS_PICOCOULOMB': BEGIN
       IF (event.select EQ 1) THEN BEGIN
         dgsr_cmd->SetProperty, ProtonCurrentUnits=""
-      ENDIF      
+      ENDIF
     END
     'NOTHING': BEGIN
     END
