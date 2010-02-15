@@ -458,6 +458,13 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   ;factorErrorID = CW_FIELD(debyeWallerPrettyBaseInputRow, TITLE="Error:", UVALUE="DGSR_DWF_ERROR", $
   ;  UNAME="DGSR_DWF_ERROR", /ALL_EVENTS, XSIZE=13, VALUE='0.0')
     
+    
+    outputFeedbackRow = WIDGET_BASE(reductionTabCol2Row2Col1, /ROW)
+  outputDirectoryLabel1 = WIDGET_LABEL(outputFeedbackRow, VALUE='Current output will be written to ')
+  outputDirectoryLabel2 = WIDGET_LABEL(outputFeedbackRow, VALUE='<unknown>', $
+    UNAME='DGSR_OUTPUT_DIRECTORY_LABEL', $
+    XSIZE=300, ALIGN_LEFT=1)
+    
   ; == DEFAULTS ==
     
   ; Set the default(s) as on - to match the defaults in the ReductionCMD class.
