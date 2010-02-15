@@ -40,6 +40,9 @@ PRO DGSreduction_Execute, event
   catch, theError
   IF theError NE 0 THEN BEGIN
     catch, /cancel
+    ; If we catch an error - get rid of the progress window
+    progressBar->Destroy
+    Obj_Destroy, progressBar
     ; Now put the info structure back for consistency
     WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
     ok = ERROR_MESSAGE(!ERROR_STATE.MSG + ' Returning...', TRACEBACK=1, /error)
@@ -49,6 +52,14 @@ PRO DGSreduction_Execute, event
   ; Get the info structure and copy it here
   WIDGET_CONTROL, event.top, GET_UVALUE=info, /NO_COPY
   dgsr_cmd = info.dgsr_cmd
+  
+  number_ticks = dgsr_cmd->EstimateProgressTicks()
+  tick = 100 / number_ticks
+  
+  progressBar = Obj_New("SHOWPROGRESS")
+  progressBar->Start
+  
+  percentage = 0.0
   
   ; Ok first I want to check if we are running a development version
   IF STRPOS(info.version, 'BETA') NE -1 THEN BEGIN
@@ -79,6 +90,9 @@ PRO DGSreduction_Execute, event
     
   ENDIF
   
+  percentage += tick
+  progressBar->UpDate, percentage
+  
   ; First lets check that an instrument has been selected!
   dgsr_cmd->GetProperty, Instrument=instrument
   IF (STRLEN(instrument) LT 2) THEN BEGIN
@@ -102,6 +116,9 @@ PRO DGSreduction_Execute, event
     ok=ERROR_MESSAGE(RunNumbers[1], /INFORMATIONAL)
     return
   ENDIF
+  
+  percentage += tick
+  progressBar->UpDate, percentage
   
   ; Loop over separate reduction jobs
   FOR i = 0L, N_ELEMENTS(RunNumbers)-1 do begin
@@ -173,10 +190,12 @@ PRO DGSreduction_Execute, event
       spawn, 'cp ' + source_maskfile + ' ' + maskDir
     ENDIF
     
+    
+    
     ; Check to see if the Wandering Phase Correction is turned on
     dgsr_cmd->GetProperty, CWP=cwp
     IF (cwp EQ 1) THEN BEGIN
-      
+    
       ; First we need to check if we need to expand the run numbers
       dataruns = ExpandIndividualRunNumbers(RunNumbers[i])
       data_cwp = ''
@@ -192,6 +211,9 @@ PRO DGSreduction_Execute, event
       
         ; Data Runs
         cwp = get_cwpfactor(instrument, dataruns[j], ENERGY=Ei, /FIT)
+        
+        percentage += (4*tick)
+        progressBar->UpDate, percentage
         
         PRINTF, unit, dataruns[j], cwp
         
@@ -220,6 +242,9 @@ PRO DGSreduction_Execute, event
           ; Need to calculate the offsets for each empty can file.
           cwp = get_cwpfactor(instrument, ecanruns[j], ENERGY=Ei, /FIT)
           
+          percentage += (4*tick)
+          progressBar->UpDate, percentage
+          
           ; Write values to the log file
           PRINTF, unit, ecanruns[j], cwp
           
@@ -246,6 +271,9 @@ PRO DGSreduction_Execute, event
         FOR j = 0L, N_ELEMENTS(bcanruns)-1 DO BEGIN
           ; Need to calculate the offsets for each empty can file.
           cwp = get_cwpfactor(instrument, bcanruns[j], ENERGY=Ei, /FIT)
+          
+          percentage += (4*tick)
+          progressBar->UpDate, percentage
           
           ; Write values to the log file
           PRINTF, unit, bcanruns[j], cwp
@@ -287,6 +315,8 @@ PRO DGSreduction_Execute, event
     ; Loop over the command array
     for index = 0L, N_ELEMENTS(commands)-1 do begin
     
+    
+    
       padded_datapaths = Construct_DataPaths(lowerbank, upperbank, index+1, jobs, /PAD)
       
       jobname = instrument + "_" + runnumber + "_bank" + padded_datapaths
@@ -311,6 +341,8 @@ PRO DGSreduction_Execute, event
           spawn, split_cmd
           ; Once we have got here we have gone round once...
           first_time_around_loop = 1
+          percentage += (2*tick)
+          progressBar->UpDate, percentage
         endfor
         
       ENDIF
@@ -331,7 +363,8 @@ PRO DGSreduction_Execute, event
       job_string_array = STRSPLIT(job_string, ' ', /EXTRACT)
       jobID[index] = job_string_array[N_ELEMENTS(job_string_array)-1]
       
-      
+      percentage += tick
+      progressBar->UpDate, percentage
     endfor
     
     ; Put info back
@@ -347,6 +380,9 @@ PRO DGSreduction_Execute, event
   ENDFOR
   ; Start the sub window widget
   ;MonitorJob, Group_Leader=event.top, JobName="My first jobby"
+  
+  progressBar->Destroy
+  Obj_Destroy, progressBar
   
   ; Now we need to reset the DataRun property in the dgsr_cmd object to be what is displayed on the GUI
   WIDGET_CONTROL, event.top, GET_UVALUE=info, /NO_COPY
