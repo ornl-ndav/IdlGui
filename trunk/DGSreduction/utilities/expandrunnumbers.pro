@@ -9,6 +9,8 @@
 ; :Author: scu
 ;-
 FUNCTION ExpandRunNumbers, RunString
+
+  IF N_ELEMENTS(RunString) EQ 0 THEN RunString = ''
  
   ; Calculate how many Reduction jobs we are doing
   DataRunString = STRSPLIT(RunString, "|", /EXTRACT)

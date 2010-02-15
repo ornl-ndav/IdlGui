@@ -543,6 +543,73 @@ END
 
 ;+
 ; :Description:
+;    Returns the total number of run numbers that we
+;    will need to calculate a wandering phase for.
+;
+; :Author: scu (campbellsi@ornl.gov)
+;-
+FUNCTION ReductionCmd::GetNumberOfWanderingRuns
+  cwp_runs = 0
+  IF (self.CWP) THEN BEGIN
+    RunNumbers = ExpandRunNumbers(DataRun)
+    FOR i = 0L, N_ELEMENTS(RunNumbers)-1 do begin
+      ;print, i
+      cwp_runs += N_ELEMENTS(ExpandIndividualRunNumbers(RunNumbers[i]))
+      IF (STRLEN(self.emptycan) GT 0) THEN cwp_runs += N_ELEMENTS(ExpandIndividualRunNumbers(self.emptycan))
+      IF (STRLEN(self.blackcan) GT 0) THEN cwp_runs += N_ELEMENTS(ExpandIndividualRunNumbers(self.blackcan))
+    ENDFOR
+  ENDIF
+  
+  RETURN, cwp_runs
+END
+
+;+
+; :Description:
+;    This procedure tries to estimate the length of time 
+;    (in clock ticks) that it will take to launch this 
+;    reduction job(s).  The ticks will be used to update the 
+;    progress bar.  Various factors have been 'weighted' by
+;    hand from experience on how long each part takes.
+;
+; :Author: scu (campbellsi@ornl.gov)
+;-
+FUNCTION ReductionCmd::EstimateProgressTicks
+
+  ticks = 0L
+  
+  ; Let's add a couple of 'ticks' for the initial stuff
+  ticks += 2
+  
+  ; Are we using a hard mask ?
+  IF (self.hardmask EQ 1) THEN BEGIN
+    ticks += (2*self.jobs)
+  ENDIF
+  
+  ; Launching the jobs (number + 3 dependant)
+  ; (general and SPE collectors & NXSPE converter)
+  ticks += (self.jobs + 3)
+  
+  ; How many individual runs have we to run
+  batches = N_ELEMENTS(ExpandRunNumbers(self.datarun))
+  
+  print,'batches=',batches
+  
+  ; multiple everything so far by this...
+  ticks *= batches
+  
+  ; Let's see how many Wandering Jobs we have to do
+  cwp_runs = self->GetNumberOfWanderingRuns()
+  print,'cwp_runs=',cwp_runs
+  ; As the wandering calc takes a while, lets weight these higher
+  ticks += (4*cwp_runs)
+  
+  print, 'ticks=',ticks
+  
+  RETURN, ticks
+END
+
+;+
+; :Description:
 ;    Procedure to check that all essential parameters have
 ;    been defined.  Also, that we haven't specified any
 ;    conflicting options.
@@ -1119,7 +1186,7 @@ function ReductionCmd::Init, $
   IF N_ELEMENTS(instrument) EQ 0 THEN instrument = ""
   IF N_ELEMENTS(facility) EQ 0 THEN facility = ""
   IF N_ELEMENTS(proposal) EQ 0 THEN proposal = ""
-  IF N_ELEMENTS(spe) eq 0 THEN spe = 1
+  IF N_ELEMENTS(spe) EQ 0 THEN spe = 1
   IF N_ELEMENTS(configfile) EQ 0 THEN configfile = ""
   IF N_ELEMENTS(instgeometry) EQ 0 THEN instgeometry = ""
   IF N_ELEMENTS(cornergeometry) EQ 0 THEN cornergeometry = ""
