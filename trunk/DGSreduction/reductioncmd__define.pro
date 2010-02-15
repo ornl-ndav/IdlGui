@@ -628,6 +628,13 @@ function ReductionCmd::Check
   datapaths_bad = 0
   msg = ['Everything looks good.']
   
+  ; Print a warning if they have selected the wandering phase correction
+  IF (self.cwp EQ 1) THEN BEGIN
+    ; Don't alter 'ok' as this is just informational
+    msg = [msg,['WARNING: You have selected to automatically determine the time ' + $
+      'wandering phase corrections - THIS WILL TAKE A LONG TIME TO CALCULATE!']]
+  ENDIF
+  
   ; Are we doing something else at the moment ?
   IF (self.busy EQ 1) THEN BEGIN
     ok = 0
