@@ -254,21 +254,25 @@ PRO DGSreduction_TLB_Events, event
     END
     'DGS_PROTON_UNITS_COULOMB': BEGIN
       IF (event.select EQ 1) THEN BEGIN
+        ;print, 'Setting Units = C'
         dgsr_cmd->SetProperty, ProtonCurrentUnits="C"
       ENDIF
     END
     'DGS_PROTON_UNITS_MILLICOULOMB': BEGIN
       IF (event.select EQ 1) THEN BEGIN
+         ;     print, 'Setting Units = C'
         dgsr_cmd->SetProperty, ProtonCurrentUnits="mC"
       ENDIF
     END
     'DGS_PROTON_UNITS_MICROCOULOMB': BEGIN
       IF (event.select EQ 1) THEN BEGIN
+          ;    print, 'Setting Units = C'
         dgsr_cmd->SetProperty, ProtonCurrentUnits="uC"
       ENDIF
     END
     'DGS_PROTON_UNITS_PICOCOULOMB': BEGIN
       IF (event.select EQ 1) THEN BEGIN
+           ;   print, 'Setting Units = <none>'
         dgsr_cmd->SetProperty, ProtonCurrentUnits=""
       ENDIF
     END
@@ -316,6 +320,10 @@ PRO DGSreduction_TLB_Events, event
   WIDGET_CONTROL, dgsn_cmd_outputID, SET_VALUE=dgsn_cmd->generate()
   
   ; Update the feedback for were we are going to write the results
+  ; On the Reduction Tab...
+  reduction_output_dir_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_OUTPUT_DIRECTORY_LABEL')
+  WIDGET_CONTROL, reduction_output_dir_ID, SET_VALUE=dgsr_cmd->GetReductionOutputDirectory()
+  ; ... and on the settings tab.
   settings_output_dir_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGS_OUTPUT_DIRECTORY_LABEL')
   WIDGET_CONTROL, settings_output_dir_ID, SET_VALUE=dgsr_cmd->GetReductionOutputDirectory()
   
