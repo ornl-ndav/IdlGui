@@ -47,6 +47,7 @@ newPath = EXPAND_PATH('+./') + PATH_SEP(/SEARCH_PATH) + !PATH
 
 .compile logger
 .compile error_message
+.compile showprogress__define
 .compile get_ucams
 .compile formatbanknumber
 .compile construct_datapaths
