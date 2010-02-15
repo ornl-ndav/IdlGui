@@ -565,9 +565,9 @@ END
 
 ;+
 ; :Description:
-;    This procedure tries to estimate the length of time 
-;    (in clock ticks) that it will take to launch this 
-;    reduction job(s).  The ticks will be used to update the 
+;    This procedure tries to estimate the length of time
+;    (in clock ticks) that it will take to launch this
+;    reduction job(s).  The ticks will be used to update the
 ;    progress bar.  Various factors have been 'weighted' by
 ;    hand from experience on how long each part takes.
 ;
@@ -1070,8 +1070,8 @@ function ReductionCmd::Generate
       
     ; Commented out until the underlying version of Reduction that supports this
     ; is released.
-    ;    IF (STRLEN(self.ProtonCurrentUnits) GE 1) THEN $
-    ;      cmd[i] += " --scale-pc=" + self.ProtonCurrentUnits
+    IF (STRLEN(self.ProtonCurrentUnits) GE 1) THEN $
+      cmd[i] += " --scale-pc=" + self.ProtonCurrentUnits
       
     IF (self.qvector EQ 1) THEN cmd[i] += " --qmesh"
     IF (self.fixed EQ 1) AND (self.qvector EQ 1) THEN cmd[i] += " --fixed"
