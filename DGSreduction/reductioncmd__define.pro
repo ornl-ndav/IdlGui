@@ -455,7 +455,13 @@ PRO ReductionCmd::SetProperty, $
   IF N_ELEMENTS(OutputOverride) NE 0 THEN self.OutputOverride = OutputOverride
   
   IF N_ELEMENTS(timing) NE 0 THEN self.timing = Timing
-  IF N_ELEMENTS(jobs) NE 0 THEN self.jobs = jobs
+
+  IF N_ELEMENTS(jobs) NE 0 THEN BEGIN
+    self.jobs = jobs
+    ; If the number of jobs is > 1 then also set the split flag
+    IF (jobs GT 1) THEN self.split = 1
+  ENDIF
+
   IF N_ELEMENTS(UseHome) NE 0 THEN self.usehome = UseHome
   
   IF N_ELEMENTS(working_mask_dir) NE 0 THEN self.working_mask_dir = working_mask_dir
