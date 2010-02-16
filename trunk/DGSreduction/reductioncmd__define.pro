@@ -324,12 +324,14 @@ PRO ReductionCmd::SetProperty, $
         self.cornergeometry = getCornerGeometryFile(self.instrument)
         self.queue = "arcs"
         self.jobs = 23
+        self.split = 1
       end
       "CNCS": begin
         self.facility = "SNS"
         self.cornergeometry = getCornerGeometryFile(self.instrument)
         self.queue = "cncsq"
         self.jobs = 24
+        self.split = 1
       end
       "SEQUOIA": begin
         self.instrument = "SEQ"
@@ -337,6 +339,7 @@ PRO ReductionCmd::SetProperty, $
         self.cornergeometry = getCornerGeometryFile(self.instrument)
         self.queue = "sequoiaq"
         self.jobs = 23
+        self.split = 1
       end
       "MAPS": begin
         self.facility = "ISIS"
