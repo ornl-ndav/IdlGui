@@ -350,7 +350,7 @@ PRO dgsreduction_events, event, dgsr_cmd
     END
     'DGSR_ANGLE_OFFSET': BEGIN
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
-      dgsr_cmd->SetProperty, SEBlock=myValue
+      dgsr_cmd->SetProperty, RotationAngle=myValue
     END
     ELSE: begin
       ; Do nowt
