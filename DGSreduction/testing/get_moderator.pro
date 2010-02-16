@@ -1,12 +1,15 @@
 ;+
 ; :Description:
-;    Describe the procedure.
+;    Returns the parameters for the moderator from a given
+;    NeXus file.
 ;
 ; :Params:
-;    filename
+;    filename - The NeXus file to read
 ;
 ; :Keywords:
-;    Entry
+;    Entry - A string containing the name of the entry to 
+;            read the moderator from.  If it is not specified
+;            then we will use 'entry' as the name.
 ;
 ; :Author: scu
 ;-
