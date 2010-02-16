@@ -4,10 +4,10 @@
 ;    e.g. "1-23" or "001-023"
 ;
 ; :Params:
-;    lower
-;    upper
-;    job
-;    totaljobs
+;    lower - The lower bank number
+;    upper - The upper bank number
+;    job - The index of the curent job we are currently doing.
+;    totaljobs - The total number of jobs we are spliting up into.
 ;
 ; :Keywords:
 ;    PAD - pads with 0's to return a 3-character string
