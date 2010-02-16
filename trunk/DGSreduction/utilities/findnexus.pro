@@ -63,6 +63,8 @@ FUNCTION findnexus,  $
   
   SPAWN, cmd, full_nexus_name, err_listening
   
+  print,'full_nexus_name', full_nexus_name
+  
   ;check if nexus exists
   sz = (SIZE(full_nexus_name))(1)
   IF (sz EQ 1) THEN BEGIN
@@ -79,8 +81,8 @@ FUNCTION findnexus,  $
   ENDELSE
   
   data = {exists: isNeXusExist, $
-          filename: full_nexus_name}
+          filename: filename}
           
-  
+  return, data
   
 END
