@@ -292,7 +292,7 @@ PRO DGSR_UpdateGUI, tlb, dgsr_cmd
   WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
   ; Angle Offset
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_ANGLE_OFFSET')
-  dgsr_cmd->GetProperty, AngleOffset=myValue
+  dgsr_cmd->GetProperty, RotationAngle=myValue
   WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
   
   ; Output directory label
