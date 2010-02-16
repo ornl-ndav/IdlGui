@@ -144,13 +144,18 @@ PRO DGSreduction_LaunchCollector, event, WaitForJobs=waitforjobs
       " -o " + outdir + "/" + instrument + "_" + runnumber + ".nxspe" + $
       " -e " + ei
       
+    ;print, 'SEBLOCK = ', SEBLOCK
+    
+      
     IF STRLEN(seblock) GT 0 THEN BEGIN
       nxspe_cmd += ' --seblock=' + seblock
       
       rotationangle = get_seblock_value(Instrument, runnumber, SEBLOCK)
       
-      IF STRLEN(rotationangle) NE 0 THEN BEGIN
-        nxspe_cmd += " -a " + rotationangle
+      help,/str,RotationAngle
+      
+      IF N_ELEMENTS(rotationangle) NE 0 THEN BEGIN
+        nxspe_cmd += " -a " + STRCOMPRESS(STRING(rotationangle),/REMOVE_ALL)
         
         ; Set a default offset
         tmp_offset = 0.0
@@ -161,7 +166,7 @@ PRO DGSreduction_LaunchCollector, event, WaitForJobs=waitforjobs
         ENDIF
         
         mslice_psi = float(RotationAngle) + tmp_offset
-        nxspe_cmd += " --psi=" + mslice_psi
+        nxspe_cmd += " --psi=" + STRCOMPRESS(STRING(mslice_psi),/REMOVE_ALL)
         
       ENDIF
     ENDIF
