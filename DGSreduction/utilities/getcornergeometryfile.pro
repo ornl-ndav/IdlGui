@@ -40,9 +40,11 @@
 ;-
 function GetCornerGeometryFile, Instrument
 
+  IF N_ELEMENTS(Instrument) EQ 0 THEN Instrument = ''
+
   case (STRUPCASE(instrument)) of
     "ARCS": begin
-      ornergeometry = $
+      cornergeometry = $
         "/SNS/ARCS/2009_2_18_CAL/calibrations/ARCS_cgeom_20090128.txt"
     end
     "CNCS": begin
