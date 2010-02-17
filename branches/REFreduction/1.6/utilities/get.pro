@@ -219,7 +219,7 @@ FUNCTION getUDCoefficienT, Event
   IF ((*global).miniVersion EQ 1) THEN BEGIN
     RETURN, 1
   ENDIF ELSE BEGIN
-    RETURN, 2
+    RETURN, 4
   ENDELSE
 END
 
