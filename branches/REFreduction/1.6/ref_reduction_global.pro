@@ -266,9 +266,9 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     ;Nx for REF_L instrument
     Ny_REF_L : 304L,$
     ;Ny for REF_L instrument
-    Nx_REF_M : 304L,$
+    Nx_REF_M : 128L,$
     ;Nx for REF_M instrument
-    Ny_REF_M : 256L,$
+    Ny_REF_M : 128L,$
     ;Ny for REF_M instrument
     Ntof_DATA : 0L, $
     ;TOF for data file
