@@ -48,7 +48,7 @@ PRO REFreduction_CreateDataBackgroundROIFile, Event, type
   IF ((*global).miniVersion) THEN BEGIN
     coeff = 1
   ENDIF ELSE BEGIN
-    coeff = 2
+    coeff = 4
   ENDELSE
   
   Ymin = SelectionArray[0]/coeff
@@ -184,7 +184,7 @@ PRO REFreduction_CreateNormBackgroundROIFile, Event, type
   IF ((*global).miniVersion) THEN BEGIN
     coeff = 1
   ENDIF ELSE BEGIN
-    coeff = 2
+    coeff = 4
   ENDELSE
   
   Ymin = SelectionArray[0]/coeff
