@@ -452,9 +452,13 @@ PRO DGSnorm_Execute, event
   
   
   ; Output Overrides...
-  dgsr_cmd->GetProperty, UseHome=usehome
-  dgsr_cmd->GetProperty, OutputOverride=outputoverride
-  dgsr_cmd->GetProperty, UserLabel=userlabel
+  ; COMMENTED OUT BY j35
+  ;dgsr_cmd->GetProperty, UseHome=usehome
+  ;dgsr_cmd->GetProperty, OutputOverride=outputoverride
+  ;dgsr_cmd->GetProperty, UserLabel=userlabel
+  dgsn_cmd->GetProperty, UseHome=usehome
+  dgsn_cmd->GetProperty, OutputOverride=outputoverride
+  dgsn_cmd->GetProperty, UserLabel=userlabel
   
   jobcmd = "sbatch -p " + queue + " "
   
@@ -540,7 +544,7 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
   ; Program Details
   APPLICATION       = 'DGSreduction'
   ;VERSION           = '1.3.BETA'
-  VERSION           = '1.2.0'
+  VERSION           = '1.2.1'
   
   Catch, errorStatus
   
