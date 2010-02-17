@@ -77,8 +77,12 @@ D_DD_TabTitle = [DTitle,$
                  'Y vs X (3D)']
 
 ;Size of 1D and 2D graphs
-Nx = 256
-Ny = 304
+;Nx = 256
+;Ny = 304
+
+Nx = 2*128
+Ny = 2*128
+
 if (instrument EQ 'REF_L') then begin
     Nx = 304  ;instrument rotated
     Ny = 256  ;instrument rotated
@@ -93,7 +97,7 @@ endif else begin
     ysize = 2*Nx
 endelse
 
-LoadDataNormalization1DGraphSize    = [5,0,308*2,256*2]
+LoadDataNormalization1DGraphSize    = [5,0,308*2,Nx*2]
 LoadDataNormalization2DRefGraphSize = [xoff,yoff,xsize,ysize]
 GlobalLoadDataGraphs = [LoadDataNormalization1DGraphSize,$
                         LoadDataNormalization2DRefGraphSize]

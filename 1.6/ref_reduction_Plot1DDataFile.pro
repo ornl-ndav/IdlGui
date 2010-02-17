@@ -136,7 +136,7 @@ PRO Plot1DDataFileForRefM, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-N   = (*global).Nx_REF_M ; 304
+N   = (*global).Nx_REF_M ; 128L
 img = (*(*global).DATA_D_ptr) ;data(Ntof,Ny,Nx)
 img = total(img,2)
 (*(*global).DATA_D_TOTAL_ptr) = img
@@ -232,6 +232,7 @@ id_draw = widget_info(Event.top, find_by_uname='load_data_D_draw')
 widget_control, id_draw, get_value=id_value
 wset,id_value
 erase
+
 ;if (!VERSION.os EQ 'darwin') then begin
 ;   img = swap_endian(img)
 ;endif
@@ -242,7 +243,7 @@ if ((*global).miniVersion) then begin
     new_N = N
     xsize = 304.
 endif else begin
-    new_N = 2 * N
+    new_N = 4 * N
     xsize = 608.
 endelse
 
