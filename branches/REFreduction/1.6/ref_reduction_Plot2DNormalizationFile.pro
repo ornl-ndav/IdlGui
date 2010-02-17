@@ -120,8 +120,8 @@ PRO Plot2DNormalizationFileForRefM, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 ;retrieve parameters
-Nx         = (*global).Nx_REF_M ;304
-Ny         = (*global).Ny_REF_M ;256
+Nx         = (*global).Nx_REF_M ;128
+Ny         = (*global).Ny_REF_M ;128
 Plot2DNormalizationFile, Event, Nx, Ny
 Plot2DNormalization_3D_File, Event
 END
@@ -133,8 +133,8 @@ PRO Plot2DNormalizationFileForRefM_batch, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 ;retrieve parameters
-Nx         = (*global).Nx_REF_M ;304
-Ny         = (*global).Ny_REF_M ;256
+Nx         = (*global).Nx_REF_M ;128
+Ny         = (*global).Ny_REF_M ;128
 Plot2DNormalizationFile_batch, Event, Nx, Ny
 Plot2DNormalization_3D_File_batch, Event
 END
@@ -170,8 +170,8 @@ if ((*global).miniVersion) then begin
     New_Ny = Ny
     New_Nx = Nx
 endif else begin
-    New_Ny = 2*Ny
-    New_Nx = 2*Nx
+    New_Ny = 4*Ny
+    New_Nx = 4*Nx
 endelse
 tvimg = rebin(img, New_Nx, New_Ny,/sample)
 tvscl, tvimg, /device
@@ -204,7 +204,7 @@ if ((*global).miniVersion) then begin
     New_Ny = Ny
     New_Nx = Nx
 endif else begin
-    New_Ny = 2*Ny
+    New_Ny = 4*Ny
     New_Nx = 2*Nx
 endelse
 tvimg = rebin(img, New_Nx, New_Ny,/sample)

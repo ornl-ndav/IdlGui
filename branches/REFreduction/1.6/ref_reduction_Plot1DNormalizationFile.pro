@@ -39,7 +39,7 @@ WIDGET_CONTROL,Event.top,GET_UVALUE=global
 ;check instrument selected
 instrument = (*global).instrument
 no_error = 0
-CATCH, no_error
+;CATCH, no_error
 IF (no_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     IDLsendLogBook_ReplaceLogBookText, $
@@ -122,7 +122,7 @@ PRO Plot1DNormalizationFileForRefM, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-N   = (*global).Nx_REF_M ; 304
+N   = (*global).Nx_REF_M ; 128
 img = (*(*global).NORM_D_ptr) ;data(Ntof,Ny,Nx)
 img = total(img,2)
 (*(*global).NORM_D_Total_ptr) = img
@@ -185,7 +185,7 @@ if ((*global).miniVersion) then begin
     new_N = N
     xsize = 304.
 endif else begin
-    new_N = 2 * N
+    new_N = 4 * N
     xsize = 608.
 endelse
 
