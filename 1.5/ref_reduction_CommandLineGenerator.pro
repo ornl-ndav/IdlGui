@@ -71,6 +71,9 @@ IF ((*global).data_path NE '') THEN BEGIN
   cmd += (*global).data_path_flag_suffix
 ENDIF
 
+;direction of integration
+cmd += " --int-dir='y'"
+
 ;get data ROI file
 data_roi_file = getTextFieldValue(Event, $
   'reduce_data_region_of_interest_file_name')
