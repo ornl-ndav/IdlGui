@@ -39,6 +39,7 @@
 .run ref_reduction_is.pro
 .run ref_reduction_time.pro
 
+.run simulate_ref_m_new_detector.pro
 .run ref_reduction_DumpBinary.pro
 .run ref_reduction_Plot2DDataFile.pro
 .run ref_reduction_Plot1DDataFile.pro

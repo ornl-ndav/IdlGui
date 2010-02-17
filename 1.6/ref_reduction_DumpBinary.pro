@@ -68,30 +68,26 @@ FUNCTION retrieveBanksData, Event, $
       data_path = (*global).nexus_bank1_path
     ENDELSE
     fieldID = h5d_open(fileID,data_path)
-    simulate_rotated_detector = (*global).simulate_rotated_detector
+    simulate_new_detector = (*global).simulate_new_detector
     CASE (type) OF
       'data': BEGIN
         data = h5d_read(fieldID)
-        print, 'data fresh from NeXus file:'
-        help, data
-        IF (simulate_rotated_detector EQ 'yes') THEN BEGIN
-          simulate_REF_L_rotated_angle, data
+        IF (simulate_new_detector EQ 'yes') THEN BEGIN
+          simulate_ref_m_new_detector, data
         ENDIF
         (*(*global).bank1_data) = data
-        print, 'data input simulated: '
-        help, data
       END
       'norm': BEGIN
         data = h5d_read(fieldID)
-        IF (simulate_rotated_detector EQ 'yes') THEN BEGIN
-          simulate_REF_L_rotated_angle, data
+        IF (simulate_new_detector EQ 'yes') THEN BEGIN
+          simulate_ref_m_new_detector, data
         ENDIF
         (*(*global).bank1_norm) = data
       END
       'empty_cell': BEGIN
         data = h5d_read(fieldID)
-        IF (simulate_rotated_detector EQ 'yes') THEN BEGIN
-          simulate_REF_L_rotated_angle, data
+        IF (simulate_new_detector EQ 'yes') THEN BEGIN
+          simulate_ref_m_new_detector, data
         ENDIF
         (*(*global).bank1_empty_cell) = data
       END
