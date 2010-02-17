@@ -448,7 +448,7 @@ PRO putNormBackgroundPeakYMinMaxValueInTextFields, Event
   IF ((*global).miniVersion) THEN BEGIN
     coeff = 1
   ENDIF ELSE BEGIN
-    coeff = 2
+    coeff = 4
   ENDELSE
   
   ;get ROI Ymin, Ymax ===========================================================

@@ -708,7 +708,7 @@ PRO MAIN_BASE_event, Event
           IF ((*global).miniVersion EQ 1) THEN BEGIN
             coeff = 1
           ENDIF ELSE BEGIN
-            coeff = 2
+            coeff = 4
           ENDELSE
           putLabelValue, $
             Event, $
