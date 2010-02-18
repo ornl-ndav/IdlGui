@@ -63,8 +63,11 @@ PRO refresh_recap_plot, Event, RESCALE=rescale
     
     ;get only the central part of the data (when it's not the first one)
     IF (index NE 0) THEN BEGIN
-      local_tfpData      = FLOAT(local_tfpData[*,304L:2*304L-1])
-      local_tfpData_error = FLOAT(local_tfpData_error[*,304L:2*304L-1])
+;      local_tfpData      = FLOAT(local_tfpData[*,304L:2*304L-1])
+;      local_tfpData_error = FLOAT(local_tfpData_error[*,304L:2*304L-1])
+      local_tfpData      = FLOAT(local_tfpData[*,(*global).detector_pixels_y:2*(*global).detector_pixels_y-1])
+      local_tfpData_error = FLOAT(local_tfpData_error[*,(*global).detector_pixels_y:2*(*global).detector_pixels_y-1])
+
     ENDIF
     
     ;applied scaling factor

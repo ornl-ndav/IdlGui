@@ -220,7 +220,8 @@ WHILE (index LT nbr_plot) DO BEGIN
 
 ;get only the central part of the data (when it's not the first one)
     IF (index NE 0) THEN BEGIN
-        local_tfpData = local_tfpData[*,304L:2*304L-1]
+;        local_tfpData = local_tfpData[*,304L:2*304L-1]
+        local_tfpData = local_tfpData[*, (*global).detector_pixels_y:2* (*global).detector_pixels_y-1]        
     ENDIF
 
     IF (N_ELEMENTS(RESET) EQ 0) THEN BEGIN
@@ -377,7 +378,8 @@ TVSCL, total_array, /DEVICE
 i = 0
 box_color = (*global).box_color
 WHILE (i LT nbr_plot) DO BEGIN
-    plotBox, x_coeff, $
+; Change Code: pass Event on command line to call plotBox (RC Ward, Feb 15, 2010)
+    plotBox, Event, x_coeff, $
       y_coeff, $
       0, $
       x_axis[i], $
@@ -484,9 +486,12 @@ WSET,id_value
 xticks = (xticks GT 60) ? 55 : xticks
 (*global).xscale.xticks = xticks
 
-plot, randomn(s,303L), $
+;plot, randomn(s,303L), $
+plot, randomn(s,(*global).detector_pixels_y-1), $
   XRANGE        = xscale,$
-  YRANGE        = [0L,303L],$
+;  YRANGE        = [0L,303L],$
+  YRANGE        = [0L,(*global).detector_pixels_y-1],$ 
+  
   COLOR         = convert_rgb([0B,0B,255B]), $
   BACKGROUND    = convert_rgb((*global).sys_color_face_3d),$
   THICK         = 1, $
@@ -679,7 +684,9 @@ WIDGET_CONTROL,/HOURGLASS
 tfpData       = (*(*global).realign_pData_y)
 tfpData_error = (*(*global).realign_pData_y_error)
 
+; This line was commented out 
 ;local_tfpData = local_tfpData[*,304L:2*304L-1]
+;local_tfpData = local_tfpData[*,(*global).detector_pixels_y:2*(*global).detector_pixels_y-1]
 
 ;array of realign data
 Nbr_array             = (size(tfpData))(1)
@@ -702,9 +709,11 @@ IF (nbr GT 1) THEN BEGIN
         pixel_offset_array[index] = pixel_offset ;save pixel_offset
         ref_pixel_offset_list[index] += pixel_offset
         array        = *tfpData[index]
-        array        = array[*,304L:2*304L-1]
+;        array        = array[*,304L:2*304L-1]
+        array        = array[*,(*global).detector_pixels_y:2*(*global).detector_pixels_y-1]       
         array_error  = *tfpData_error[index]
-        array_error  = array_error[*,304L:2*304L-1]
+;        array_error  = array_error[*,304L:2*304L-1]
+        array_error  = array_error[*,(*global).detector_pixels_y:2*(*global).detector_pixels_y-1]        
         IF (pixel_offset EQ 0 OR $
             ref_pixel_list[index] EQ 0) THEN BEGIN ;if no offset
             realign_tfpData[index]       = tfpData[index]
@@ -713,7 +722,9 @@ IF (nbr GT 1) THEN BEGIN
             IF (pixel_offset GT 0) THEN BEGIN ;needs to move up
 ;move up each row by pixel_offset
 ;needs to start from the top when the offset is positive
-                FOR i=303,pixel_offset,-1 DO BEGIN
+
+;              FOR i=303,pixel_offset,-1 DO BEGIN
+                FOR i=(*global).detector_pixels_y-1,pixel_offset,-1 DO BEGIN
                     array[*,i]       = array[*,i-pixel_offset]
                     array_error[*,i] = array_error[*,i-pixel_offset]
                 ENDFOR
@@ -724,10 +735,12 @@ IF (nbr GT 1) THEN BEGIN
                 ENDFOR
             ENDIF ELSE BEGIN    ;needs to move down
                 pixel_offset = ABS(pixel_offset)
-                FOR i=0,(303-pixel_offset) DO BEGIN
+;               FOR i=0,(303-pixel_offset) DO BEGIN
+                FOR i=0,((*global).detector_pixels_y-1-pixel_offset) DO BEGIN
                     array[*,i]       = array[*,i+pixel_offset]
                     array_error[*,i] = array_error[*,i+pixel_offset]
                 ENDFOR
+;               FOR j=(*global).detector_pixels_y-1,(*global).detector_pixels_y-1-pixel_offset,-1 DO BEGIN                
                 FOR j=303,303-pixel_offset,-1 DO BEGIN
                     array[*,j]       = 0
                     array_error[*,j] = 0
@@ -738,12 +751,16 @@ IF (nbr GT 1) THEN BEGIN
         local_data       = array
         local_data_error = array_error
         dim2         = (size(local_data))(1)
-        big_array    = STRARR(dim2,3*304L)
-        big_array[*,304L:2*304L-1] = local_data
+;        big_array    = STRARR(dim2,3*304L)
+;        big_array[*,304L:2*304L-1] = local_data
+        big_array    = STRARR(dim2,3*(*global).detector_pixels_y)
+        big_array[*,(*global).detector_pixels_y:2*(*global).detector_pixels_y-1] = local_data        
         *realign_tfpData[index] = big_array
 
-        big_array_error    = STRARR(dim2,3*304L)
-        big_array_error[*,304L:2*304L-1] = local_data_error
+;        big_array_error    = STRARR(dim2,3*304L)
+;        big_array_error[*,304L:2*304L-1] = local_data_error
+        big_array_error    = STRARR(dim2,3*(*global).detector_pixels_y)
+        big_array_error[*,(*global).detector_pixels_y:2*(*global).detector_pixels_y-1] = local_data_error        
         *realign_tfpData_error[index] = big_array_error
 
 ;change reference pixel from old to neatew position
@@ -871,10 +888,11 @@ ref_pixel_offset_list = (*(*global).ref_pixel_offset_list)
 manual_ref_pixel      = ref_pixel_offset_list[index_to_work]
 
 array = *tfpData[index_to_work]
-array = array[*,304L:2*304L-1]
+;array = array[*,304L:2*304L-1]
+array = array[*,(*global).detector_pixels_y:2*(*global).detector_pixels_y-1]
 array_error = *tfpData_error[index_to_work]
-array_error = array_error[*,304L:2*304L-1]
-
+;array_error = array_error[*,304L:2*304L-1]
+array_error = array_error[*,(*global).detector_pixels_y:2*(*global).detector_pixels_y-1]
 ;pixel_step += manual_ref_pixel
 ;(*global).manual_ref_pixel = pixel_step
 
@@ -895,7 +913,8 @@ WHILE (big_index LT nbr) DO BEGIN
         IF (pixel_offset GT 0) THEN BEGIN ;needs to move down
 ;move up each row by pixel_offset
 ;needs to start from the top when the offset is positive
-            FOR i=303,pixel_offset,-1 DO BEGIN
+;          FOR i=303,pixel_offset,-1 DO BEGIN
+           FOR i=303,pixel_offset,-1 DO BEGIN
                 array[*,i]       = array[*,i-pixel_offset]
                 array_error[*,i] = array_error[*,i-pixel_offset]
             ENDFOR
@@ -907,11 +926,13 @@ WHILE (big_index LT nbr) DO BEGIN
         ENDIF ELSE BEGIN        ;needs to move up
             IF (pixel_offset LT 0) THEN BEGIN
                 pixel_offset = ABS(pixel_offset)
-                FOR i=0,(303-pixel_offset) DO BEGIN
+;              FOR i=0,(303-pixel_offset) DO BEGIN
+                FOR i=0,((*global).detector_pixels_y-1-pixel_offset) DO BEGIN
                     array[*,i]       = array[*,i+pixel_offset]
                     array_error[*,i] = array_error[*,i+pixel_offset]
                 ENDFOR
-                FOR j=303,303-pixel_offset,-1 DO BEGIN
+;                FOR j=303L,303L-pixel_offset,-1 DO BEGIN
+               FOR j=(*global).detector_pixels_y-1,(*global).detector_pixels_y-1-pixel_offset,-1 DO BEGIN
                     array[*,j]       = 0
                     array_error[*,j] = 0
                 ENDFOR
@@ -922,12 +943,16 @@ WHILE (big_index LT nbr) DO BEGIN
         local_data       = array
         local_data_error = array_error
         dim2         = (size(local_data))(1)
-        big_array    = STRARR(dim2,3*304L)
-        big_array[*,304L:2*304L-1] = local_data
+;        big_array    = STRARR(dim2,3*304L)
+;        big_array[*,304L:2*304L-1] = local_data
+        big_array    = STRARR(dim2,3*(*global).detector_pixels_y)
+        big_array[*,(*global).detector_pixels_y:2*(*global).detector_pixels_y-1] = local_data
         *realign_tfpData[index_to_work] = big_array
 
-        big_array_error    = STRARR(dim2,3*304L)
-        big_array_error[*,304L:2*304L-1] = local_data_error
+;        big_array_error    = STRARR(dim2,3*304L)
+;        big_array_error[*,304L:2*304L-1] = local_data_error
+         big_array_error    = STRARR(dim2,3*(*global).detector_pixels_y)
+         big_array_error[*,(*global).detector_pixels_y:2*(*global).detector_pixels_y-1] = local_data_error
         *realign_tfpData_error[index_to_work] = big_array_error
         
     ENDIF ELSE BEGIN            ;end of 'if (i EQ index_work)'

@@ -58,9 +58,11 @@ WSET,id_value
 xticks = (xticks GT 60) ? 55 : xticks
 (*global).xscale.xticks = xticks
 
-plot, randomn(s,303L), $
+;plot, randomn(s,303L), $
+plot, randomn(s,(*global).detector_pixels_y-1), $
   XRANGE        = xscale,$
-  YRANGE        = [0L,303L],$
+;  YRANGE        = [0L,303L],$
+  YRANGE        = [0L,(*global).detector_pixels_y-1],$
   COLOR         = convert_rgb([0B,0B,255B]), $
   BACKGROUND    = convert_rgb((*global).sys_color_face_3d),$
   THICK         = 1, $
@@ -203,7 +205,9 @@ WHILE (index LT nbr_plot) DO BEGIN
 
 ;get only the central part of the data (when it's not the first one)
     IF (index NE 0) THEN BEGIN
-        local_tfpData = local_tfpData[*,304L:2*304L-1]
+;        local_tfpData = local_tfpData[*,304L:2*304L-1]
+        local_tfpData = local_tfpData[*,(*global).detector_pixels_y:2*(*global).detector_pixels_y-1]        
+        
     ENDIF
     
     IF (N_ELEMENTS(RESET) EQ 0) THEN BEGIN
@@ -349,7 +353,8 @@ TVSCL, total_array, /DEVICE
 i = 0
 box_color = (*global).box_color
 WHILE (i LT nbr_plot) DO BEGIN
-    plotBox, x_coeff, $
+; Change Code: pass Event on command line to call plotBox (RC Ward, Feb 15, 2010)
+    plotBox, Event, x_coeff, $
       y_coeff, $
       0, $
       x_axis[i], $
@@ -409,7 +414,8 @@ nbr_plot = getNbrFiles(Event)
 i = 0
 box_color = (*global).box_color
 WHILE (i LT nbr_plot) DO BEGIN
-    plotBox, x_coeff, $
+; Change Code: pass Event on command line to call plotBox (RC Ward, Feb 15, 2010)
+    plotBox, Event, x_coeff, $
       y_coeff, $
       0, $
       x_axis[i], $

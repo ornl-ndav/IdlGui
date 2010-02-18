@@ -542,12 +542,16 @@ END
 ;------------------------------------------------------------------------------
 ;This function returns the pixel value of the cursor in the sangle main plot
 FUNCTION getSanglePixel, Event
+; Change code: add to get the global structure (RC Ward Feb 15, 2010)
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
   y_coeff = 2.
   Y = Event.y
   pixel = FIX(Y/y_coeff)
   
-  IF (pixel GE 304) THEN RETURN, 'N/A'
+;    IF (pixel GE 304L) THEN RETURN, 'N/A'
+  IF (pixel GE (*global).detector_pixels_y) THEN RETURN, 'N/A'
   IF (pixel LT 0) THEN RETURN, 'N/A'
   RETURN, pixel
 
@@ -561,8 +565,9 @@ FUNCTION getSangleYDeviceValue, Event, data_value
   
   sangle_ysize_draw = (*global).sangle_ysize_draw
   y_coeff = (*global).sangle_main_plot_congrid_y_coeff
-  
-  device = FLOAT(sangle_ysize_draw) * FLOAT(data_value) / FLOAT(304L)
+
+;  device = FLOAT(sangle_ysize_draw) * FLOAT(data_value) / FLOAT(*304L)  
+  device = FLOAT(sangle_ysize_draw) * FLOAT(data_value) / FLOAT((*global).detector_pixels_y)
   
   RETURN, device
   
@@ -577,7 +582,8 @@ FUNCTION getSangleYDataValue, Event, device_value
   sangle_ysize_draw = (*global).sangle_ysize_draw
   y_coeff = (*global).sangle_main_plot_congrid_y_coeff
   
-  data = (FLOAT(device_value) * FLOAT(304L)) / FLOAT(sangle_ysize_draw)
+;  data = (FLOAT(device_value) * FLOAT(304L) ) / FLOAT(sangle_ysize_draw)
+  data = (FLOAT(device_value) * FLOAT((*global).detector_pixels_y) ) / FLOAT(sangle_ysize_draw)  
   
   RETURN, data
   

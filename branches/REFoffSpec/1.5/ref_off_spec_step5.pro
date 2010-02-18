@@ -93,9 +93,11 @@ PRO refresh_plot_scale_step5, EVENT     = Event, $
   xticks = (xticks GT 60) ? 55 : xticks
   (*global).xscale.xticks = xticks
   
-  plot, randomn(s,303L), $
+;  plot, randomn(s,303L), $
+  plot, randomn(s,(*global).detector_pixels_y-1), $
     XRANGE        = xscale,$
-    YRANGE        = [0L,303L],$
+;    YRANGE        = [0L,303L],$
+    YRANGE        = [0L,(*global).detector_pixels_y-1],$
     COLOR         = convert_rgb([0B,0B,255B]), $
     BACKGROUND    = convert_rgb((*global).sys_color_face_3d),$
     THICK         = 1, $

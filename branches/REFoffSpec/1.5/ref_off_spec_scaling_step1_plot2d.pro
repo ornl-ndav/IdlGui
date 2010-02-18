@@ -131,7 +131,8 @@ PRO display_step4_step1_plot2d, Event
       data_to_plot       = FLOAT(local_tfpData(xmin:xmax,ymin:ymax))
     ENDIF ELSE BEGIN
       data_to_plot       = FLOAT(local_tfpData(xmin:xmax, $
-        (304L+ymin):(304L+ymax)))
+;        (304L+ymin):(304L+ymax)))
+        ((*global).detector_pixels_y+ymin):((*global).detector_pixels_y+ymax)))
     ENDELSE
 
     nbr_pixels = (size(data_to_plot))(2)
@@ -193,7 +194,8 @@ PRO display_step4_step1_plot2d, Event
         XSTYLE = 1
     ENDIF ELSE BEGIN
       data_to_plot   = FLOAT(local_tfpData(xmin:xmax, $
-        (304L+ymin):(304L+ymax)))
+;        (304L+ymin):(304L+ymax)))
+        ((*global).detector_pixels_y+ymin):((*global).detector_pixels_y+ymax)))
       nbr_pixels = (size(data_to_plot))(2)
       t_data_to_plot = total(data_to_plot,2)/FLOAT(nbr_pixels)
       oplot, xrange, t_data_to_plot, $
@@ -256,7 +258,8 @@ PRO save_y_error_step4_step1_plot2d, Event
     ENDIF ELSE BEGIN
       data_to_plot_error = $
         FLOAT(local_tfpData_error(xmin:xmax, $
-        (304L+ymin):(304L+ymax)))
+;        (304L+ymin):(304L+ymax)))
+        ((*global).detector_pixels_y+ymin):((*global).detector_pixels_y+ymax)))
     ENDELSE
     t_data_to_plot_error = total(data_to_plot_error,2)
     *IvsLambda_selection_error[index]        = t_data_to_plot_error
