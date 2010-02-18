@@ -122,10 +122,17 @@ WHILE(index LT sz) DO BEGIN
         local_data       = *pData_y[index]
         local_data_error = *pData_y_error[index]
         dim2             = (size(local_data))(1)
-        big_array        = STRARR(dim2,3*304L)
-        big_array_error  = STRARR(dim2,3*304L)
-        big_array[*,304L:2*304L-1]       = local_data
-        big_array_error[*,304L:2*304L-1] = local_data_error
+
+;        big_array        = STRARR(dim2,3*304L)
+;        big_array_error  = STRARR(dim2,3*304L)
+;        big_array[*,(*global).detector_pixels_y:2*304L-1]       = local_data
+;        big_array_error[*,(*global).detector_pixels_y:2*304L-1] = local_data_error
+        
+        big_array        = STRARR(dim2,3*(*global).detector_pixels_y)
+        big_array_error  = STRARR(dim2,3*(*global).detector_pixels_y)
+        big_array[*,(*global).detector_pixels_y:2*(*global).detector_pixels_y-1]       = local_data
+        big_array_error[*,(*global).detector_pixels_y:2*(*global).detector_pixels_y-1] = local_data_error
+
         *realign_pData_y[index]          = big_array
         *realign_pData_y_error[index]    = big_array_error
     ENDELSE

@@ -987,6 +987,8 @@ PRO plot_average_recap_rescale, Event
   PlotBackground = (*global).BackgroundCurvePlot
   ref_plot_horizontal_color = (*global).ref_plot_horizontal_color
   
+  print, ref_plot_horizontal_color
+  
   x1 = (*global).recap_rescale_selection_left
   x2 = (*global).recap_rescale_selection_right
   

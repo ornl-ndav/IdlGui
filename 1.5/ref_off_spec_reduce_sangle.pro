@@ -272,9 +272,9 @@ PRO display_reduce_step1_sangle_scale, $
   sz = N_ELEMENTS(tof)
   XRANGE = [tof[0], tof[sz-1]+delta_tof]
   
-  PLOT, RANDOMN(s,304L), $
+  PLOT, RANDOMN(s,(*global).detector_pixels_y), $
     XRANGE        = xrange, $
-    YRANGE        = [0L,304L],$
+    YRANGE        = [0L,(*global).detector_pixels_y],$
     COLOR         = convert_rgb([0B,0B,255B]), $
     BACKGROUND    = convert_rgb((*global).sys_color_face_3d),$
     THICK         = 1, $
@@ -468,8 +468,7 @@ PRO plot_sangle_refpix, Event
    IF (SangleDone[row_selected] EQ 1) THEN BEGIN
         RefPix_device = 2*RefPixSave[row_selected]
         sRefPixSave = STRCOMPRESS(RefPixSave[row_selected],/REMOVE_ALL)
-; this next statement updates the metadata in the lower left corner - but not all data is updated!
-;        putTextFieldValue, Event, 'reduce_sangle_base_refpix_value', sRefPixSave
+
    ENDIF ELSE BEGIN
   ; else use the default, or value entered by user
   ;retrieve RefPix value (from text field)
@@ -709,6 +708,15 @@ PRO determine_sangle_refpix_data_from_device_value, Event
   row_selected = getSangleRowSelected(Event)
   RefPixSave[row_selected] = sRefPix_data
   (*(*global).RefPixSave) = RefPixSave
+  
+; Code change RCW (Feb 15, 2010): Write values of RefPix for each data set to a file for reuse later
+;  print, (*global).ascii_path
+  output_file_name = (*global).ascii_path + 'refpix.txt'
+  print, output_file_name
+  OPENW, 1, output_file_name
+  PRINTF, 1, RefPixSave
+  CLOSE, 1
+  FREE_LUN, 1
 
 END
 

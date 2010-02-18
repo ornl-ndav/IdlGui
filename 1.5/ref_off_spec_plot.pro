@@ -37,9 +37,13 @@ PRO  cleanup_array, local_tfpdata
 END
 
 ;------------------------------------------------------------------------------
-PRO plotBox, x_coeff, y_coeff, xmin, xmax, COLOR=color
+PRO plotBox, Event, x_coeff, y_coeff, xmin, xmax, COLOR=color
+; Change Code: Add passing of global structure (containing detector_pixels_y) (RC Ward Feb 13, 2010)
+; Had to also pass Event along the command call for call to plotBox.
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
   ymin = 0 * y_coeff
-  ymax = 303 * y_coeff
+;  ymax = 303 * y_coeff
+  ymax = ((*global).detector_pixels_y-1 )* y_coeff
   xmin = xmin * x_coeff
   xmax = xmax * x_coeff
   
@@ -346,7 +350,7 @@ PRO plotAsciiData, Event, TYPE=type, RESCALE=rescale
   i = 0
   box_color = (*global).box_color
   WHILE (i LT nbr_plot) DO BEGIN
-    plotBox, x_coeff, $
+    plotBox, Event, x_coeff, $
       y_coeff, $
       0, $
       x_axis[i], $
@@ -443,10 +447,12 @@ PRO refresh_plot_scale, EVENT     = Event, $
   
   xticks = (xticks GT 60) ? 55 : xticks
   (*global).xscale.xticks = xticks
-  
-  PLOT, RANDOMN(s,303L), $
+
+;  PLOT, RANDOMN(s,303L), $   
+  PLOT, RANDOMN(s,(*global).detector_pixels_y-1), $
     XRANGE        = xscale,$
-    YRANGE        = [0L,303L],$
+;    YRANGE        = [0L,303L],$
+    YRANGE        = [0L,(*global).detector_pixels_y-1],$
     COLOR         = convert_rgb([0B,0B,255B]), $
     BACKGROUND    = convert_rgb((*global).sys_color_face_3d),$
     THICK         = 1, $

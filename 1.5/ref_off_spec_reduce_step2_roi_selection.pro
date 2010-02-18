@@ -74,7 +74,8 @@ PRO plot_reduce_step2_roi, Event
     'left': BEGIN ;changing Y1 and replot Y2 (if any)
       Y1 = EVENT.y
       IF (y1 GE 0 AND $
-        y1 LE 303L*y_rebin_value) THEN BEGIN
+;        y1 LE 303L*y_rebin_value) THEN BEGIN
+        y1 LE ((*global).detector_pixels_y-1)*y_rebin_value) THEN BEGIN
         plot_reduce_step2_roi_y, Event, Y1
         y1 = FIX(DOUBLE(Y1)/DOUBLE(y_rebin_value))
         putTextFieldValue, Event, 'reduce_step2_create_roi_y1_value', $
@@ -88,7 +89,8 @@ PRO plot_reduce_step2_roi, Event
       Y2 = EVENT.y
       plot_reduce_step2_roi_y, Event, Y2
       IF (y2 GE 0 AND $
-        y2 LE 303*y_rebin_value) THEN BEGIN
+;        y2 LE 303*y_rebin_value) THEN BEGIN
+        y2 LE ((*global).detector_pixels_y-1)*y_rebin_value) THEN BEGIN
         y2 = FIX(DOUBLE(Y2)/DOUBLE(y_rebin_value))
         putTextFieldValue, Event, 'reduce_step2_create_roi_y2_value', $
           STRCOMPRESS(y2,/REMOVE_ALL)
@@ -130,7 +132,8 @@ PRO plot_reduce_step2_y, event, uname=uname
   Y2 = getTextFieldValue(Event,uname)
   IF (Y2 NE '') THEN BEGIN
     y2 = FIX(y2)
-    IF (y2 GT 303) THEN RETURN
+;    IF (y2 GT 303) THEN RETURN
+    IF (y2 GT (*global).detector_pixels_y-1) THEN RETURN    
     plot_reduce_step2_roi_y, Event, Y2*(y_rebin_value)
   ENDIF
   
@@ -155,7 +158,8 @@ PRO reduce_step2_manual_move, Event, key=key
         y1--
       ENDELSE
       IF (y1 GE 0 AND $
-        y1 LE 303) THEN BEGIN
+;        y1 LE 303) THEN BEGIN
+        y1 LE (*global).detector_pixels_y-1) THEN BEGIN
         sY1 = STRCOMPRESS(y1,/REMOVE_ALL)
         putTextFieldValue, Event, 'reduce_step2_create_roi_y1_value', sY1
       ENDIF
@@ -172,7 +176,9 @@ PRO reduce_step2_manual_move, Event, key=key
         y2--
       ENDELSE
       IF (y2 GE 0 AND $
-        y2 LE 303) THEN BEGIN
+;        y2 LE 303) THEN BEGIN
+        y2 LE (*global).detector_pixels_y-1) THEN BEGIN        
+                  
         sY2 = STRCOMPRESS(y2,/REMOVE_ALL)
         putTextFieldValue, Event, 'reduce_step2_create_roi_y2_value', sY2
       ENDIF
