@@ -711,7 +711,7 @@ PRO determine_sangle_refpix_data_from_device_value, Event
   
 ; Code change RCW (Feb 15, 2010): Write values of RefPix for each data set to a file for reuse later
 ;  print, (*global).ascii_path
-  output_file_name = (*global).ascii_path + 'refpix.txt'
+  output_file_name = (*global).ascii_path + 'REF_M_5387_Off_Off_' + 'RefPix.txt'
   print, output_file_name
   OPENW, 1, output_file_name
   PRINTF, 1, RefPixSave

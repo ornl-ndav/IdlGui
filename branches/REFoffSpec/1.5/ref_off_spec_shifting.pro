@@ -424,7 +424,6 @@ sz    = N_ELEMENTS(xaxis)
 xrange = [0,xaxis[sz-1]]
 xticks = (sz/50)
 
-;print, xrange
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step3_draw')
 sDraw = WIDGET_INFO(id,/GEOMETRY)
 XYoff = [44,40]

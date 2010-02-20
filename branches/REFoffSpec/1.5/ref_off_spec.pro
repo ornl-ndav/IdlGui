@@ -88,7 +88,8 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   VERTICAL_COLOR = file->getValue(tag=['configuration','ReflectivityPlot','VerticalColor'])
   HORIZONTAL_COLOR = file->getValue(tag=['configuration','ReflectivityPlot','HorizontalColor'])
   AVERAGE_COLOR = file->getValue(tag=['configuration','ReflectivityPlot','AverageColor'])
- ; Note: YSIZE_DRAW is not presently used in the code 
+  REFPIX_LOAD = file->getValue(tag=['configuration','Shifting','RefPixLoad'])
+ ; Note: YSIZE_DRAW and Pixels_XValue are not presently used in the code 
   SUPER_USERS = ['rwd']
   ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
   ;============================================================================
@@ -177,6 +178,9 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ; Code change RCW (Feb 10, 2010): get detector pixels in X and Y directions from XML config file
     detector_pixels_x: PIXELS_XVALUE,$
     detector_pixels_y: PIXELS_YVALUE,$
+    
+   ; Code change (RC Ward Feb 18,2010): Get flag to automatically load RefPix values for Shifting step
+    RefPixLoad: REFPIX_LOAD, $
 
     srun_web_page: 'https://neutronsr.us/applications/jobmonitor/squeue.php?view=all',$
     
