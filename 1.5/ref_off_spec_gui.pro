@@ -280,12 +280,20 @@ PRO CheckShiftingGui, Event
   ;selection has been made
   uname_list = ['auto_shifting_mode']
   ;check how many pixel have been selected
-  ref_x_list = (*(*global).ref_x_list)
-  index = WHERE(ref_x_list NE 0,nbr)
+
+; Code change (RC Ward, Feb 19, 2010): replaced ref_x_list with ref_pixel_list in this routine
+; to fix problem that "Realign Data" button was not being activated in the case of entering
+; text values. Since in that case only ref_pixel_list was being set. Works OK with mouse action.
+; 
+;  ref_x_list = (*(*global).ref_x_list)
+;  index = WHERE(ref_x_list NE 0,nbr)
+  ref_pixel_list = (*(*global).ref_pixel_list)
+  index = WHERE(ref_pixel_list NE 0,nbr)
   current_list_OF_files = (*(*global).list_OF_ascii_files)
   sz = N_ELEMENTS(current_list_OF_files)
   IF (nbr GT 1 AND $
-    ref_x_list[0] NE 0 AND $
+;    ref_x_list[0] NE 0 AND $
+     ref_pixel_list[0] NE 0 AND $
     sz GE 2) THEN BEGIN
     activate_status = 1
   ENDIF ELSE BEGIN

@@ -1969,12 +1969,12 @@ PRO MAIN_BASE_event, Event
      
 ; Change code: replace 303 by detector_pixels_y-1, Check later (RC Ward, Feb 15, 2010)
 
-;      IF (new_pixel_value GT (*global).detector_pixels_y-1) THEN BEGIN
-;        new_pixel_value = (*global).detector_pixels_y-1
-;      ENDIF
-      IF (new_pixel_value GT 303) THEN BEGIN
-        new_pixel_value = 303
+      IF (new_pixel_value GT (*global).detector_pixels_y-1) THEN BEGIN
+        new_pixel_value = (*global).detector_pixels_y-1
       ENDIF
+;      IF (new_pixel_value GT 303) THEN BEGIN
+;        new_pixel_value = 303
+;      ENDIF
 
       ref_pixel_list[index] = new_pixel_value
       putTextFieldValue, Event, $

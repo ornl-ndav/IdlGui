@@ -217,6 +217,31 @@ PRO tab_event, Event
           populate_step3_range_init, Event ;_shifting
           contour_plot_shifting, Event, xaxis ;_shifting
           plotAsciiData_shifting, Event
+; Change code (RC Ward Feb 18, 2010): If RefPixLoad is set to yes in REFoffSpec.cfg 
+; then load the RefPix values from RefPix file
+             refpixload = (*global).RefPixLoad
+             IF (refpixload EQ 'yes') THEN BEGIN
+               box_color = (*global).box_color
+               list_OF_files = (*(*global).list_OF_ascii_files)
+               sz = N_ELEMENTS(list_OF_files)
+               RefPixSave = INTARR(sz)
+               input_file_name = (*global).ascii_path + 'REF_M_5387_Off_Off_' + 'RefPix.txt'
+               OPENR, 1, input_file_name
+               READF, 1, RefPixSave
+               CLOSE, 1
+               FREE_LUN, 1
+               (*(*global).RefPixSave) = RefPixSave 
+               (*(*global).ref_pixel_list_original) = RefPixSave
+                x_value = 400
+                FOR i=0,(sz-1) DO BEGIN
+                   IF (RefPixSave[i] NE 0.) THEN BEGIN
+; draw RefPix line   
+                       plotLine, Event, RefPixSave[i], x_value, box_color[i]           
+                   ENDIF
+                ENDFOR
+                (*(*global).ref_x_list)=RefPixSave
+                (*(*global).ref_pixel_list)=RefPixSave
+             ENDIF
           plotReferencedPixels, Event ;_shifting
           refresh_plot_selection_OF_2d_plot_mode, Event
         ENDIF
