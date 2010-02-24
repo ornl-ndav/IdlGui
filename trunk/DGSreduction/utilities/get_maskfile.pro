@@ -34,7 +34,7 @@ function get_maskfile, instrument, runnumber, OVERRIDE=OVERRIDE
       spawn, 'mkdir -p ' + source_maskdir
     ENDIF
     
-    source_maskfile = source_maskdir + 'CNCS.mask'
+    source_maskfile = source_maskdir + STRUPCASE(STRCOMPRESS(string(instrument),/REMOVE_ALL)) + '.mask'
   ENDIF ELSE BEGIN
     source_maskfile  = '/SNS/users/' + get_ucams() + '/masks/'
     source_maskfile += STRUPCASE(STRCOMPRESS(string(instrument),/REMOVE_ALL)) + '.mask'
