@@ -67,7 +67,7 @@ function get_maskfile, instrument, runnumber, OVERRIDE=OVERRIDE
     sharedMasksDir = FILE_TEST(default_maskfile, /DIRECTORY, /READ)
     IF (sharedMasksDir EQ 0) THEN BEGIN
       ;print, 'Creating masks directory in the shared instrument area.'
-      spawn, 'mkdir -p ' + sharedMasksDir
+      spawn, 'mkdir -p ' + default_maskfile
     ENDIF
     
     ; Now that we've checked the directory is there, add on the filename.
