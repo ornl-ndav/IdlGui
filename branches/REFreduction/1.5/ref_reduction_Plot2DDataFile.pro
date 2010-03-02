@@ -178,9 +178,6 @@ endif else begin
     New_Ny = 2*Ny
     New_Nx = 2*Nx
 endelse
-help, img
-print, 'New_Nx: ' , New_nx
-print, 'New_ny: ' , New_ny
 
 tvimg = rebin(img, New_Nx, New_Ny,/sample)
 

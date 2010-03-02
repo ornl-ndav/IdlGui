@@ -39,7 +39,7 @@ WIDGET_CONTROL,Event.top,GET_UVALUE=global
 ;check instrument selected
 instrument = (*global).instrument
 no_error = 0
-;CATCH, no_error
+CATCH, no_error
 IF (no_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     IDLsendLogBook_ReplaceLogBookText, $
@@ -95,8 +95,6 @@ widget_control,id,get_uvalue=global
 N   = (*global).Ny_REF_L ; 304 
 img = (*(*global).DATA_D_ptr) ;data(Ntof,Ny,Nx)
 img = total(img,3) ;data(Ntof,Ny)
-print, 'DATA_D_TOTAL_ptr: '
-help, img
 (*(*global).DATA_D_TOTAL_ptr) = img
 Plot1DDataFile, Event, img, N
 Plot1DData_3D_File, Event, img
@@ -193,12 +191,14 @@ ENDIF ELSE BEGIN
 coeff_congrid_tof = 1
 ENDELSE
 
+;print, ' -> coeff_congrid_tof: ' + strtrim(coeff_contrid_tof)
+
 (*global).congrid_x_coeff = coeff_congrid_tof
 
 ;change the size of the data draw true plotting area
 ;widget_control, id_draw, DRAW_XSIZE=file_Ntof
 ;tvimg = rebin(img, file_Ntof, new_N,/sample)
-tvimg = CONGRID(img,file_Ntof * coeff_congrid_tof, new_N) 
+tvimg = CONGRID(img,file_Ntof * coeff_congrid_tof, new_N)
 (*(*global).tvimg_data_ptr) = tvimg
 tvscl, tvimg, /device
 ;remove PROCESSING_message from logbook and say ok
