@@ -380,7 +380,6 @@ PRO display_sf_calculation_base_info, Event, $
   putTextFieldValue, Event, TOF_UNAME, STRCOMPRESS(tof_value,/REMOVE_ALL), 0
   
   ;Counts
-  help, data
   counts_value = DATA[x,y]
   putTextFieldValue, Event, COUNTS_UNAME, $
     STRCOMPRESS(counts_value,/REMOVE_ALL), 0
@@ -641,18 +640,6 @@ PRO calculate_sf, Event
       strcompress(empty_cell_proton_charge)
     print, 'distance_sample_moderator:   ' + $
       strcompress(distance_sample_moderator)
-    help, distance_sample_pixel_array
-    print
-    help, data_data
-    help, empty_cell_data
-    help, data_tof_axis
-    print
-    print, 'A:  ' + strcompress(A)
-    print, 'B:  ' + strcompress(B)
-    print, 'D:  ' + strcompress(D)
-    print
-    print, 'Mn: ' + strcompress(Mn)
-    print, 'h:  ' + strcompress(h)
   ENDIF
   
   ;start the calculation of SF

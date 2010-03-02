@@ -147,7 +147,6 @@ if ((*global).DataNexusFound) then begin
         tvimg = new_tvimg
     ENDIF
 
-  help, tvimg
     REFreduction_Rescale_PlotData, Event, tvimg
 
     ;if Zoom window visible update zoom drawing

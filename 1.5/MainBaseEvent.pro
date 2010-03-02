@@ -165,7 +165,7 @@ PRO MAIN_BASE_event, Event
     ;1D_2D plot of DATA
     WIDGET_INFO(wWidget, FIND_BY_UNAME='load_data_D_draw'): begin
       error = 0
-      ;CATCH, error
+      CATCH, error
       IF (error NE 0) THEN BEGIN
         CATCH,/CANCEL
       ENDIF ELSE BEGIN
@@ -173,8 +173,8 @@ PRO MAIN_BASE_event, Event
         
           ;show x/y and counts ************************************************
           x = Event.x
-;          coeff_congrid_tof = (*global).congrid_x_coeff
-;          new_x = FIX(FLOAT(x) / FLOAT(coeff_congrid_tof))
+          ;          coeff_congrid_tof = (*global).congrid_x_coeff
+          ;          new_x = FIX(FLOAT(x) / FLOAT(coeff_congrid_tof))
           putLabelValue, Event, $
             'data_x_info_value', $
             STRCOMPRESS(x,/REMOVE_ALL)
@@ -1348,7 +1348,14 @@ PRO MAIN_BASE_event, Event
           reset_sf_calculation_base_empty_cell_info, Event
         ENDIF
       ENDIF ELSE BEGIN
+        error = 0
+        catch, error
+        if (error ne 0) THEN begin
+          catch, /cancel
+          reset_sf_calculation_base_empty_cell_info, Event
+        endif else begin
         display_sf_calculation_base_empty_cell_info, Event ;_sf_empty_cell
+        endelse
       ENDELSE
     END
     
@@ -1368,7 +1375,14 @@ PRO MAIN_BASE_event, Event
           reset_sf_calculation_base_recap_info, Event
         ENDIF
       ENDIF ELSE BEGIN
+        error = 0
+        catch, error
+        if (error ne 0) then begin
+          catch, /cancel
+          reset_sf_calculation_base_recap_info, Event
+        endif else begin
         display_sf_calculation_base_recap_info, Event ;_sf_empty_cell
+        endelse
       ENDELSE
     END
     
@@ -1884,10 +1898,10 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='detector_error_text_field'):
     WIDGET_INFO(wWidget, FIND_BY_UNAME='detector_units_b_group'):
     WIDGET_INFO(wWidget, FIND_BY_UNAME='q_min_text_field'):
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='tof_cutting_min'): 
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tof_cutting_min'):
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tof_cutting_max'):
     WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_data_tof_units_micros'):
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_data_tof_units_ms'): 
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_data_tof_units_ms'):
     WIDGET_INFO(wWidget, FIND_BY_UNAME='q_max_text_field'):
     WIDGET_INFO(wWidget, FIND_BY_UNAME='q_width_text_field'):
     WIDGET_INFO(wWidget, FIND_BY_UNAME='q_scale_b_group'):

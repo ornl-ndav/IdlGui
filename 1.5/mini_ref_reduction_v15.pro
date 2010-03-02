@@ -51,7 +51,8 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   MainBaseSize  = [50,50,905,685]
   
-  MainBaseTitle = 'miniReflectometer Data Reduction Package - '
+  MainBaseTitle = 'miniReflectometer Data Reduction Package ' + $
+  '(detector rotated) - '
   MainBaseTitle += (*global).VERSION
   IF ((*global).DEBUGGING_VERSION EQ 'yes') THEN BEGIN
     MainBaseTitle += ' (DEBUGGING VERSION)'
@@ -215,7 +216,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;display empty cell images ----------------------------------------------------
   display_images, MAIN_BASE, global
   
-    ;desactivate DANGLE0, DIRPIX, REFPIX
+  ;desactivate DANGLE0, DIRPIX, REFPIX
   IF ((*global).instrument EQ 'REF_L') THEN BEGIN
     id = WIDGET_INFO(MAIN_BASE,find_by_uname='data_geometry_info_base')
     WIDGET_CONTROL, id, SENSITIVE=0
@@ -243,21 +244,8 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 END
 ;------------------------------------------------------------------------------
 ;Empty stub procedure used for autoloading.
-PRO mini_ref_reduction, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-  ;check instrument here
-  SPAWN, 'hostname',LISTENING
-  CASE (listening) OF
-    'lrac': instrument = 'REF_L'
-    'mrac': instrument = 'REF_M'
-    'heater': instrument = 'UNDEFINED'
-    else: instrument = 'UNDEFINED'
-  ENDCASE
-  
-  IF (instrument EQ 'UNDEFINED') THEN BEGIN
-    BuildInstrumentGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-  ENDIF ELSE BEGIN
-    BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, instrument
-  ENDELSE
+PRO mini_ref_reduction_v15, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+  BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, 'REF_L'
 END
 
 

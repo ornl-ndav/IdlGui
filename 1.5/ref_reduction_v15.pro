@@ -258,9 +258,7 @@ END
 
 ; Empty stub procedure used for autoloading.
 pro ref_reduction_v15, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-
   BuildGui, 'REF_L', GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-  
 end
 
 

@@ -72,14 +72,11 @@ FUNCTION retrieveBanksData, Event, $
     CASE (type) OF
       'data': BEGIN
         data = h5d_read(fieldID)
-        print, 'data fresh from NeXus file:'
-        help, data
         IF (simulate_rotated_detector EQ 'yes') THEN BEGIN
           simulate_REF_L_rotated_angle, data
         ENDIF
         (*(*global).bank1_data) = data
         print, 'data input simulated: '
-        help, data
       END
       'norm': BEGIN
         data = h5d_read(fieldID)
@@ -249,7 +246,6 @@ PRO RefReduction_DumpBinary, Event, $
     dumb_status = 0
   ENDIF ELSE BEGIN
     status = retrieveBanksData(Event, full_nexus_name, type, _EXTRA=_extra)
-    print, 'status: ' , status
     IF (status EQ 0) THEN BEGIN
       LogBookText = getLogBookText(Event)
       Message = (*global).failed
