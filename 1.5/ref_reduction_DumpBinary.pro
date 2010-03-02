@@ -76,7 +76,6 @@ FUNCTION retrieveBanksData, Event, $
           simulate_REF_L_rotated_angle, data
         ENDIF
         (*(*global).bank1_data) = data
-        print, 'data input simulated: '
       END
       'norm': BEGIN
         data = h5d_read(fieldID)
