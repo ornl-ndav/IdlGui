@@ -78,7 +78,7 @@ cd, CurrentFolder + '/miniREFreductionGUI/'
 ;build the main procedures
 cd, CurrentFolder
 @main_idl_makefile.pro
-.run mini_ref_reduction.pro
+.run mini_ref_reduction_v16.pro
 
 
 

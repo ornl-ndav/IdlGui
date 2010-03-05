@@ -10,13 +10,13 @@
 all:
 	cp REFreduction_v16.cfg .REFreduction_v16.cfg
 	idl ./makefile.pro;
-#	idl ./mini_makefile.pro;
+	idl ./mini_makefile.pro;
 
 install:
-	cp ref_reduction.sav /SNS/software/idltools/sav/
+	cp ref_reduction_v16.sav /SNS/software/idltools/sav/
 	cp REFreduction_v16 /SNS/software/idltools/
-#	cp mini_ref_reduction.sav /SNS/software/idltools/sav/
-#	cp mini_ref_reduction /SNS/software/idltools/
+	cp mini_ref_reduction_v16.sav /SNS/software/idltools/sav/
+	cp miniREFreduction_v16 /SNS/software/idltools/
 	cp REFreductionHELP/*.* /SNS/software/idltools/help/REFreduction/
 	cp REFreduction_images/*.* /SNS/software/idltools/sav/REFreduction_images/
 	cp .REFreduction_v16.cfg /SNS/software/idltools/sav/
