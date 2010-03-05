@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 
-PRO populate_data_geometry_info, Event
+PRO populate_data_geometry_info, Event, nexus_file_name=nexus_file_name
 
   WIDGET_CONTROL,Event.top,get_uvalue=global
   
@@ -55,10 +55,19 @@ PRO populate_data_geometry_info, Event
   (*global).dirpix_geometry = geometry_file
   
   ;retrieve full path to cv info file
-  cvinfo = get_cvinfo(Event, $
-    INSTRUMENT=instrument,$
-    RUN_NUMBER = run_number)
-    
+  default_cvinfo_file_name = 'REF_M_' + strcompress(run_number,/remove_all) + $
+    '_cvinfo.xml'
+  full_path = file_dirname(nexus_file_name)
+  split_full_path = strsplit(full_path,'/', count=nbr,/extract)
+  path = split_full_path[0:nbr-2]
+  partial_path = strjoin(path,'/') + '/preNeXus/'
+  cvinfo = '/' + partial_path + default_cvinfo_file_name
+  if (~file_test(cvinfo)) then begin
+    cvinfo = get_cvinfo(Event, $
+      INSTRUMENT=instrument,$
+      RUN_NUMBER = run_number)
+  endif
+  
   (*global).cvinfo = cvinfo
   
   IF (geometry_file NE '' AND $

@@ -245,7 +245,6 @@ PRO RefReduction_DumpBinary, Event, $
     dumb_status = 0
   ENDIF ELSE BEGIN
     status = retrieveBanksData(Event, full_nexus_name, type, _EXTRA=_extra)
-    print, 'status: ' , status
     IF (status EQ 0) THEN BEGIN
       LogBookText = getLogBookText(Event)
       Message = (*global).failed

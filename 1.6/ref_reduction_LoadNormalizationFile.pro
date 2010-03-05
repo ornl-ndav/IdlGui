@@ -61,14 +61,14 @@ putTextFieldValue, $
 ;Message = 'OK  ' + '( Full Path is: ' + strcompress(full_nexus_name) + ')'
 ;IDLsendLogBook_ReplaceLogBookText, Event, PROCESSING, Message
 
-;display info about nexus file selected
-LogBookText = $
-  '-> Displaying information about run number using nxsummary:'
-putLogBookMessage, Event, LogBookText, Append=1
-RefReduction_NXsummary, Event, $
-  full_nexus_name, $
-  'normalization_file_info_text', $
-  POLA_STATE=pola_state
+;;display info about nexus file selected
+;LogBookText = $
+;  '-> Displaying information about run number using nxsummary:'
+;putLogBookMessage, Event, LogBookText, Append=1
+;RefReduction_NXsummary, Event, $
+;  full_nexus_name, $
+;  'normalization_file_info_text', $
+;  POLA_STATE=pola_state
 
 ;check format of NeXus file
 IF (H5F_IS_HDF5(full_nexus_name)) THEN BEGIN
