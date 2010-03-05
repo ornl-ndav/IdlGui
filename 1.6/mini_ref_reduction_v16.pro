@@ -51,7 +51,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   MainBaseSize  = [50,50,905,685]
   
-  MainBaseTitle = 'miniReflectometer Data Reduction Package - '
+  MainBaseTitle = 'mini Reflectometer Data Reduction Package (new detector 128x128) - '
   MainBaseTitle += (*global).VERSION
   IF ((*global).DEBUGGING_VERSION EQ 'yes') THEN BEGIN
     MainBaseTitle += ' (DEBUGGING VERSION)'
@@ -243,21 +243,8 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 END
 ;------------------------------------------------------------------------------
 ;Empty stub procedure used for autoloading.
-PRO mini_ref_reduction, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-  ;check instrument here
-  SPAWN, 'hostname',LISTENING
-  CASE (listening) OF
-    'lrac': instrument = 'REF_L'
-    'mrac': instrument = 'REF_M'
-    'heater': instrument = 'UNDEFINED'
-    else: instrument = 'UNDEFINED'
-  ENDCASE
-  
-  IF (instrument EQ 'UNDEFINED') THEN BEGIN
-    BuildInstrumentGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-  ENDIF ELSE BEGIN
-    BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, instrument
-  ENDELSE
+PRO mini_ref_reduction_v16, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+    BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, 'REF_M'
 END
 
 
