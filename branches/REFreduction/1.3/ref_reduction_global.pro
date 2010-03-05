@@ -83,6 +83,7 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     substrate_type: PTR_NEW(0L),$
     findcalib: 'findcalib',$
     ts_geom: 'TS_geom_calc.sh',$
+    REF_M_geom: '/SNS/REF_M/2008_3_4A_CAL/calibrations/REF_M_geom_2008_09_26.xml',$
     dirpix: 0.0,$
     tmp_geometry_file: '~/.tmp_ref_reduction_geo_file.nxs',$
     dirpix_geometry: '',$
