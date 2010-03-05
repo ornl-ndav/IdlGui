@@ -78,6 +78,9 @@ PRO DGSreduction_TLB_Events, event
       jobs_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGS_REDUCTION_JOBS')
       dgsr_cmd->GetProperty, Jobs=njobs
       WIDGET_CONTROL, jobs_ID, SET_VALUE=njobs
+      ; Hack to get correct number of jobs into dgsn_cmd on instrument 
+      ; selection. 2zr Mar 5, 2010
+      dgsn_cmd->SetProperty, Jobs=njobs
       
       ; Set the default detector banks
       lowerbank_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_DATAPATHS_LOWER')
