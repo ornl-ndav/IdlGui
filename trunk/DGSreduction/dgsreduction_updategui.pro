@@ -48,7 +48,7 @@ PRO DGSreduction_UpdateGUI, widgetBase
   ; Instrument
   widget_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='INSTRUMENT_SELECTED')
   dgsr_cmd->GetProperty, Instrument=myValue
-  
+
   ; Hack for SEQ
   IF (myValue EQ 'SEQ') THEN myValue = 'SEQUOIA'
   
@@ -61,6 +61,9 @@ PRO DGSreduction_UpdateGUI, widgetBase
   widget_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGS_REDUCTION_JOBS')
   dgsr_cmd->GetProperty, Jobs=myValue
   WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
+  ; Adding hack to pass this info back to dgsn_cmd for par file init
+  ; 2zr Mar 5, 2010
+  dgsn_cmd->SetProperty, Jobs=myValue
  
 ;  IF (myValue GT 1) THEN BEGIN
 ;    dgsr_collector_button = WIDGET_INFO(widgetBase,FIND_BY_UNAME='DGSR_LAUNCH_COLLECTOR_BUTTON')
