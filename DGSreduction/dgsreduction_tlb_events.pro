@@ -256,24 +256,28 @@ PRO DGSreduction_TLB_Events, event
       IF (event.select EQ 1) THEN BEGIN
         ;print, 'Setting Units = C'
         dgsr_cmd->SetProperty, ProtonCurrentUnits="C"
+        dgsn_cmd->SetProperty, ProtonCurrentUnits="C"
       ENDIF
     END
     'DGS_PROTON_UNITS_MILLICOULOMB': BEGIN
       IF (event.select EQ 1) THEN BEGIN
          ;     print, 'Setting Units = C'
         dgsr_cmd->SetProperty, ProtonCurrentUnits="mC"
+        dgsn_cmd->SetProperty, ProtonCurrentUnits="mC"
       ENDIF
     END
     'DGS_PROTON_UNITS_MICROCOULOMB': BEGIN
       IF (event.select EQ 1) THEN BEGIN
           ;    print, 'Setting Units = C'
         dgsr_cmd->SetProperty, ProtonCurrentUnits="uC"
+        dgsn_cmd->SetProperty, ProtonCurrentUnits="uC"
       ENDIF
     END
     'DGS_PROTON_UNITS_PICOCOULOMB': BEGIN
       IF (event.select EQ 1) THEN BEGIN
            ;   print, 'Setting Units = <none>'
         dgsr_cmd->SetProperty, ProtonCurrentUnits=""
+        dgsn_cmd->SetProperty, ProtonCurrentUnits=""
       ENDIF
     END
     'NOTHING': BEGIN

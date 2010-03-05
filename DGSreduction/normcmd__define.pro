@@ -88,6 +88,7 @@ PRO NormCmd::GetProperty, $
     Timing=timing, $                     ; Timing of code
     Jobs=jobs, $                         ; Number of Jobs
     UseHome=usehome, $                   ; Flag to indicate whether we should write to the home directory
+    ProtonCurrentUnits=ProtonCurrentUnits, $ ; The units for the proton current, either 'C','mC','uC' or 'pC'
     _Extra=extra
     
   ; Error Handling
@@ -151,6 +152,7 @@ PRO NormCmd::GetProperty, $
   IF ARG_PRESENT(Timing) NE 0 THEN Timing = self.timing
   IF ARG_PRESENT(Jobs) NE 0 THEN Jobs = self.jobs 
   IF ARG_PRESENT(UseHome) NE 0 THEN UseHome = self.usehome
+  IF ARG_PRESENT(ProtonCurrentUnits) NE 0 THEN ProtonCurrentUnits = self.ProtonCurrentUnits
   
 END
 
@@ -266,6 +268,7 @@ PRO NormCmd::SetProperty, $
     Timing=timing, $                     ; Timing of code
     Jobs=jobs, $                         ; Number of Jobs
     UseHome=usehome, $                   ; Flag to indicate whether we should write to the home directory
+    ProtonCurrentUnits=ProtonCurrentUnits, $ ; The units for the proton current, either 'C','mC','uC' or 'pC'
     _Extra=extra
     
   ; Error Handling
@@ -372,6 +375,7 @@ PRO NormCmd::SetProperty, $
   IF N_ELEMENTS(timing) NE 0 THEN self.timing = Timing
   IF N_ELEMENTS(jobs) NE 0 THEN self.jobs = jobs
   IF N_ELEMENTS(UseHome) NE 0 THEN self.usehome = UseHome
+  IF N_ELEMENTS(ProtonCurrentUnits) NE 0 THEN self.ProtonCurrentUnits = ProtonCurrentUnits
   IF N_ELEMENTS(extra) NE 0 THEN *self.extra = extra
   
 END
@@ -681,6 +685,9 @@ function NormCmd::Generate
           
     IF STRLEN(self.hi_threshold) GE 1 THEN $
       cmd[i] += " --hi-threshold="+self.hi_threshold
+
+    IF (STRLEN(self.ProtonCurrentUnits) GE 1) THEN $
+      cmd[i] += " --scale-pc=" + self.ProtonCurrentUnits
     
     IF (self.timing EQ 1) THEN cmd[i] += " --timing"
     
@@ -741,6 +748,7 @@ function NormCmd::Init, $
     Timing=timing, $                     ; Timing of code
     Jobs=jobs, $                         ; Number of Jobs
     UseHome=usehome, $                   ; Flag to indicate whether we should write to the home directory
+    ProtonCurrentUnits=ProtonCurrentUnits, $ ; The units for the proton current, either 'C','mC','uC' or 'pC'
     _Extra=extra
     
   ; Error Handling
@@ -802,6 +810,7 @@ function NormCmd::Init, $
   IF N_ELEMENTS(timing) EQ 0 THEN timing = 0
   IF N_ELEMENTS(jobs) EQ 0 THEN jobs = 1
   IF N_ELEMENTS(UseHome) EQ 0 THEN UseHome = 0
+  IF N_ELEMENTS(ProtonCurrentUnits) EQ 0 THEN ProtonCurrentUnits = ""
   
   self.program = program
   self.version = version
@@ -853,6 +862,7 @@ function NormCmd::Init, $
   self.hi_threshold = hi_threshold
   self.timing = timing
   self.jobs = jobs
+  self.ProtonCurrentUnits = protoncurrentunits
   self.extra = PTR_NEW(extra)
   
   RETURN, 1
@@ -918,5 +928,6 @@ pro NormCmd__Define
     timing: 0L, $            ; Timing of code
     jobs : 0L, $             ; Number of Jobs to Run
     usehome : 0L, $          ; Flag to indicate whether we should write to the home directory
+    ProtonCurrentUnits: "", $ ; The units for the proton current, either 'C','mC','uC' or 'pC'
     extra: PTR_NEW() }       ; Extra keywords
 end
