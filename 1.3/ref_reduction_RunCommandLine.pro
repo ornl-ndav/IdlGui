@@ -68,7 +68,8 @@ PRO RefReduction_RunCommandLine, Event
       (*global).dirpix_geometry NE '' AND $
       (*global).cvinfo NE '') THEN BEGIN ;use tmp geo
       geo_cmd = (*global).ts_geom
-      geo_cmd += ' ' + (*global).dirpix_geometry
+      geo_cmd += ' ' + (*global).REF_M_geom
+      ;      geo_cmd += ' ' + (*global).dirpix_geometry
       geo_cmd += ' -m ' + (*global).cvinfo
       geo_cmd += ' -D DIRPIX=' + STRCOMPRESS((*global).dirpix,/REMOVE_ALL)
       geo_cmd += ' -o ' + (*global).tmp_geometry_file
@@ -77,10 +78,10 @@ PRO RefReduction_RunCommandLine, Event
       cmd_text = '-> ' + geo_cmd
       putLogBookMessage, Event, cmd_text, Append=1
       SPAWN, geo_cmd, listening, err_listening
-;      print, listening
-;      print, err_listening
-;      help, listening
-;      help, err_listening
+    ;      print, listening
+    ;      print, err_listening
+    ;      help, listening
+    ;      help, err_listening
     ENDIF
   ENDIF
   

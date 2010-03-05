@@ -67,7 +67,7 @@ endelse
 ;data path
 IF ((*global).data_path NE '') THEN BEGIN
   cmd += ' ' + (*global).data_path_flag
-  cmd += '=' + (*global).data_path
+  cmd += '=/' + (*global).data_path + '/'
   cmd += (*global).data_path_flag_suffix
 ENDIF
 
