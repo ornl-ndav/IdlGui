@@ -65,8 +65,9 @@ PRO DGSnorm_LaunchCollector, event, WaitForJobs=waitforjobs
   jobname = instrument + "_" + runnumber + "_collector"
   
   ; Output Directory
-  outDir = get_output_directory(instrument, runnumber, /HOME, /CREATE)
-  
+  ; outDir = get_output_directory(instrument, runnumber, /HOME, /CREATE)
+  outDir = info.outputDir
+
   ; log Directory
   logDir = outDir + '/logs'
   ;Make sure the that logfile directory exists.
