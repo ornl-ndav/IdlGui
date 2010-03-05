@@ -183,7 +183,7 @@ id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
 WIDGET_CONTROL,id,GET_UVALUE=global
 ;define Parameters
 instrument    = (*global).instrument
-load_back_ext = (*global).load_roi_ext
+load_back_ext = (*global).load_back_ext
 filter        = instrument + '_*' + load_back_ext
 PROCESSING    = (*global).processing_message
 ;get default path 
