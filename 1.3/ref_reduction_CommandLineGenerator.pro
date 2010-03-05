@@ -42,8 +42,8 @@ PRO REFreduction_CommandLineGenerator, Event
   ;add called to SLURM if hostname is not heater,lrac or mrac
   SPAWN, 'hostname', listening
   CASE (listening[0]) OF
-    'lrac' : cmd = 'srun -Q -p lracq '
-    'mrac' : cmd = 'srun -Q -p mracq '
+    'lrac.sns.gov' : cmd = 'srun -Q -p lracq '
+    'mrac.sns.gov' : cmd = 'srun -Q -p mracq '
   ELSE : BEGIN
     cmd = 'srun -Q -p heaterq '
   END
@@ -62,6 +62,7 @@ endif else begin
   status_text += ' (Format example: 1345,1455-1458,1500)'
   putInfoInReductionStatus, Event, status_text, 0
   StatusMessage += 1
+  
 endelse
 
 ;data path
