@@ -467,6 +467,9 @@ PRO DGSnorm_Execute, event
     Home=UseHome, Override=OutputOverride, Label=userlabel, $
     /CREATE)
     
+  ; store the outputDir in the info structure
+  info.outputDir = outputDir
+
   ; Log Directory
   cd, CURRENT=thisDir
   logDir = outputDir + '/logs'

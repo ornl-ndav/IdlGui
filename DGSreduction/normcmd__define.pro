@@ -87,6 +87,7 @@ PRO NormCmd::GetProperty, $
     Hi_Threshold=hi_threshold, $         ; Threshold for pixel to be masked (default: infinity)
     Timing=timing, $                     ; Timing of code
     Jobs=jobs, $                         ; Number of Jobs
+    UseHome=usehome, $                   ; Flag to indicate whether we should write to the home directory
     _Extra=extra
     
   ; Error Handling
@@ -149,6 +150,7 @@ PRO NormCmd::GetProperty, $
   IF ARG_PRESENT(Hi_Threshold) NE 0 THEN Hi_Threshold = self.hi_threshold
   IF ARG_PRESENT(Timing) NE 0 THEN Timing = self.timing
   IF ARG_PRESENT(Jobs) NE 0 THEN Jobs = self.jobs 
+  IF ARG_PRESENT(UseHome) NE 0 THEN UseHome = self.usehome
   
 END
 
@@ -207,6 +209,7 @@ END
 ;    Hi_Threshold
 ;    Timing
 ;    Jobs
+;    UseHome
 ;    _Extra
 ;
 ; :Author: scu
@@ -262,6 +265,7 @@ PRO NormCmd::SetProperty, $
     Hi_Threshold=hi_threshold, $         ; Threshold for pixel to be masked (default: infinity)
     Timing=timing, $                     ; Timing of code
     Jobs=jobs, $                         ; Number of Jobs
+    UseHome=usehome, $                   ; Flag to indicate whether we should write to the home directory
     _Extra=extra
     
   ; Error Handling
@@ -367,6 +371,7 @@ PRO NormCmd::SetProperty, $
   IF N_ELEMENTS(hi_threshold) NE 0 THEN self.hi_threshold = Hi_Threshold
   IF N_ELEMENTS(timing) NE 0 THEN self.timing = Timing
   IF N_ELEMENTS(jobs) NE 0 THEN self.jobs = jobs
+  IF N_ELEMENTS(UseHome) NE 0 THEN self.usehome = UseHome
   IF N_ELEMENTS(extra) NE 0 THEN *self.extra = extra
   
 END
@@ -400,6 +405,22 @@ FUNCTION NormCmd::GetRunNumber
   
   RETURN, STRMID(self.datarun, 0, firstDelimiter)
 
+END
+
+;+
+; :Description:
+;    Returns the directory where the results from a normalisation
+;    job will be written.
+;
+; :Author: 2zr (reuterma@ornl.gov)
+;-
+FUNCTION NormCmd::GetNormOutputDirectory
+
+  ;print,'NormCmd::GetNormOutputDirectory():'
+  directory = get_output_directory(self.instrument, $
+    self->GetRunNumber(), HOME=self.usehome)
+  ;print,'GetNormOutputDirectory() --> ',directory
+  RETURN, directory
 END
 
 ;+
@@ -517,6 +538,9 @@ function NormCmd::Generate
   ENDIF
   
   cmd = STRARR(self.jobs)
+
+  ; Let's get the output directory so we don't have to keep asking for it!
+  outputDir = self->GetNormOutputDirectory()
   
   for i = 0L, self.jobs-1 do begin
    
@@ -539,7 +563,7 @@ function NormCmd::Generate
     ;IF STRLEN(self.output) GT 1 THEN cmd[i] += " --output="+ self.output
     
     IF (STRLEN(self.instrument) GT 1) AND (STRLEN(self.datarun) GE 1) THEN $
-    cmd[i] += " --output=~/results/" + self.instrument + "/" + self->GetRunNumber() + $
+      cmd[i] += " --output=" + outputDir + $
       "/" + self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
       i+1, self.jobs, /PAD) + ".txt"
     
@@ -716,6 +740,7 @@ function NormCmd::Init, $
     Hi_Threshold=hi_threshold, $         ; Threshold for pixel to be masked (default: infinity)
     Timing=timing, $                     ; Timing of code
     Jobs=jobs, $                         ; Number of Jobs
+    UseHome=usehome, $                   ; Flag to indicate whether we should write to the home directory
     _Extra=extra
     
   ; Error Handling
@@ -776,6 +801,7 @@ function NormCmd::Init, $
   IF N_ELEMENTS(hi_threshold) EQ 0 THEN hi_threshold = ""
   IF N_ELEMENTS(timing) EQ 0 THEN timing = 0
   IF N_ELEMENTS(jobs) EQ 0 THEN jobs = 1
+  IF N_ELEMENTS(UseHome) EQ 0 THEN UseHome = 0
   
   self.program = program
   self.version = version
@@ -891,5 +917,6 @@ pro NormCmd__Define
     lo_threshold: "", $      ; Threshold for pixel to be masked (default: 0.0) 
     timing: 0L, $            ; Timing of code
     jobs : 0L, $             ; Number of Jobs to Run
+    usehome : 0L, $          ; Flag to indicate whether we should write to the home directory
     extra: PTR_NEW() }       ; Extra keywords
 end
