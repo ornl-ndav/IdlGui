@@ -665,7 +665,6 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
   ; passed to dgsn_cmd
   dgsr_cmd->GetProperty, ProtonCurrentUnits=pcu
   dgsn_cmd->SetProperty, ProtonCurrentUnits=pcu
-  dgsn_cmd->GetProperty, Jobs=njobs
   
   ; Make the admin tab unavailable for now!
   ;WIDGET_CONTROL, adminTabBase, SENSITIVE=0
