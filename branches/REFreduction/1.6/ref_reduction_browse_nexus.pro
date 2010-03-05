@@ -89,11 +89,12 @@ PRO ok_polarization_state, Event
         POLA_STATE=value_selected
     END
   ENDCASE
-  populate_data_geometry_info, Event
+  populate_data_geometry_info, Event, nexus_file_name=nexus_file_name
 END
 
 ;------------------------------------------------------------------------------
 PRO BrowseDataNexus, Event
+
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   filter    = '*.nxs'
@@ -135,9 +136,16 @@ PRO BrowseDataNexus, Event
       select_polarization_state, Event, nexus_file_name, list_pola_state
     ENDELSE
     
-    IF ((*global).instrument EQ 'REF_M') THEN BEGIN
-      populate_data_geometry_info, Event
-    ENDIF
+    iNexus = OBJ_NEW('IDLgetMetadata', $
+      nexus_file_name, $
+      POLA_STATE_NAME=list_pola_state[0])
+    DataRunNumber = iNexus->getRunNumber()
+    obj_destroy, iNexus
+    (*global).data_run_number = DataRunNumber
+    
+;    IF ((*global).instrument EQ 'REF_M') THEN BEGIN
+;      populate_data_geometry_info, Event, nexus_file_name=nexus_file_name
+;    ENDIF
     
     ;turn off hourglass
     WIDGET_CONTROL,HOURGLASS=0
