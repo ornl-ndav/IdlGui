@@ -124,7 +124,8 @@ END
 
 ;------------------------------------------------------------------------------
 FUNCTION getDataRoiFileName, cmd
-  result = ValueBetweenArg1Arg2(cmd, '--data-roi-file=', 1, ' ', 0)
+  result = ValueBetweenArg1Arg2(cmd, '--data-roi-file=', 1, $
+  ' ', 0)
   IF (result EQ '') THEN RETURN, ''
   RETURN, STRCOMPRESS(result,/REMOVE_ALL)
 END

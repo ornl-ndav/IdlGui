@@ -208,6 +208,7 @@ END
 
 ;Batch run only
 PRO Plot1DDataFile_batch, Event, img, N
+
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -240,10 +241,10 @@ display_Ntof = (*global).Ntof_DATA
 file_Ntof    = (size(img))(1)
 if ((*global).miniVersion) then begin
     new_N = N
-    xsize = 304.
+    xsize = 304L
 endif else begin
     new_N = 2 * N
-    xsize = 608.
+    xsize = 608L
 endelse
 
 IF (file_Ntof LT xsize) THEN BEGIN
