@@ -71,9 +71,6 @@ IF ((*global).data_path NE '') THEN BEGIN
   cmd += (*global).data_path_flag_suffix
 ENDIF
 
-;direction of integration
-cmd += " --int-dir='y'"
-
 ;get data ROI file
 data_roi_file = getTextFieldValue(Event, $
   'reduce_data_region_of_interest_file_name')
@@ -95,6 +92,9 @@ ENDIF ELSE BEGIN
   putInfoInReductionStatus, Event, status_text, append
   StatusMessage += 1
 ENDELSE
+
+;direction of integration
+cmd += " --int-dir='y'"
 
 substrateValue = getCWBgroupValue(Event,'empty_cell_substrate_group')
 IF (substrateValue EQ 1) THEN BEGIN

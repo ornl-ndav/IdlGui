@@ -41,9 +41,9 @@ PRO REFreduction_DataBackgroundPeakSelection, Event, TYPE
   id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
   WIDGET_CONTROL,id,GET_UVALUE=global
   
-  ;reset plot
-  REFReduction_RescaleDataPlot, Event
-  ;RePlot1DDataFile, Event
+;  ;reset plot
+;  REFReduction_RescaleDataPlot, Event
+;  ;RePlot1DDataFile, Event
   
   IF ((*global).DataNeXusFound) THEN BEGIN ;only if there is a NeXus loaded
   
