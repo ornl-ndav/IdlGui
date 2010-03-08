@@ -242,7 +242,9 @@ PRO refresh_recap_plot, Event, RESCALE=rescale
   (*(*global).total_array_untouched) = base_array_untouched
   
   DEVICE, DECOMPOSED=0
-  LOADCT, 5, /SILENT
+; Change code (RC Ward Feb 22, 2010): Pass color_table value for LOADCT from XML configuration file
+  color_table = (*global).color_table
+  LOADCT, color_table, /SILENT
   
   putTextFieldValue, Event, 'step5_zmax', (*global).zmax_g_recap, FORMAT='(e8.1)'
   putTextFieldValue, Event, 'step5_zmin', (*global).zmin_g_recap, FORMAT='(e8.1)'

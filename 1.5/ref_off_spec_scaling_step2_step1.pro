@@ -41,7 +41,9 @@ PRO display_step4_step2_step1_selection, Event
   ;a selection first.
   
   DEVICE, DECOMPOSED=0
-  LOADCT, 5, /SILENT
+; Change code (RC Ward Feb 22, 2010): Pass color_table value for LOADCT from XML configuration file
+  color_table = (*global).color_table
+  LOADCT, color_table, /SILENT
   
   xy_position = (*global).step4_step1_selection
   IF (xy_position[0]+xy_position[2] NE 0 AND $
@@ -87,7 +89,8 @@ PRO display_step4_step2_step1_selection, Event
             XTITLE = xtitle, $
             YTITLE = ytitle,$
             COLOR  = color,$
-            BACKGROUND = convert_rgb(PlotBackground),$
+                BACKGROUND = FSC_COLOR(PlotBackground),$
+;            BACKGROUND = convert_rgb(PlotBackground),$
             ;YRANGE = [(*global).ymin_log_mode,ymax_value],$
             YRANGE = [ymin_value, ymax_value], $
           XSTYLE = 1,$
@@ -99,7 +102,8 @@ PRO display_step4_step2_step1_selection, Event
             XTITLE = xtitle, $
             YTITLE = ytitle,$
             COLOR  = color,$
-            BACKGROUND = convert_rgb(PlotBackground),$
+                BACKGROUND = FSC_COLOR(PlotBackground),$
+;            BACKGROUND = convert_rgb(PlotBackground),$
             YRANGE = [ymin_value, ymax_value],$
             ;            YRANGE = [0, ymax_value],$
             XSTYLE = 1,$
@@ -109,7 +113,6 @@ PRO display_step4_step2_step1_selection, Event
         oplot, xrange,$
           t_data_to_plot, $
           COLOR  = color,$
-          BACKGROUND = convert_rgb(PlotBackground),$
           PSYM   = psym
       ENDELSE
       index++

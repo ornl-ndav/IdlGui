@@ -33,6 +33,7 @@
 ;==============================================================================
 
 PRO plotLine, Event, pixel_value, x_value, color
+
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 ;get xmin and xmax (to cover full plot)
 ;get xmax
@@ -75,22 +76,28 @@ ENDIF ELSE BEGIN
     WHILE (xL GT 0 OR $
            xR LT x_max) DO BEGIN
         IF (xL GT 0) THEN BEGIN
-            plots, xL, y, /DEVICE, COLOR=color
-            plots, xL-i*dx, y, /DEVICE,/CONTINUE,COLOR=color
+            plots, xL, y, /DEVICE, $
+               COLOR=color
+            plots, xL-i*dx, y, /DEVICE,/CONTINUE,$
+               COLOR=color
         ENDIF
         IF (xR LT x_max) THEN BEGIN
-            plots, xR, y, /DEVICE, COLOR=color
+            plots, xR, y, /DEVICE, $
+               COLOR=color
             new_xR = (xR+i*dx GE x_max) ? x_max : xR+i*dx
-            plots, new_xR, y, /DEVICE,/CONTINUE,COLOR=color
+            plots, new_xR, y, /DEVICE,/CONTINUE, $
+               COLOR=color
         ENDIF
         xL -= (i+1)*dx
         xR += (i+1)*dx
         ++i
     ENDWHILE
 ;plot vertical tick
-    plots, x, y-dy, /DEVICE, COLOR=color
-    plots, x, y+dy, /DEVICE, /CONTINUE, COLOR=color
-
+    plots, x, y-dy, /DEVICE, $
+        COLOR=color
+        
+    plots, x, y+dy, /DEVICE, /CONTINUE, $
+        COLOR=color
 ENDELSE
 
 END
@@ -348,7 +355,9 @@ rData_untouched = REBIN(base_array_untouched, $
 total_array = rData
 
 DEVICE, DECOMPOSED=0
-LOADCT, 5, /SILENT
+; Change code (RC Ward Feb 22, 2010): Pass color_table value for LOADCT from XML configuration file
+  color_table = (*global).color_table
+LOADCT,  color_table, /SILENT
 
 (*global).zmax_g = master_max
 (*global).zmin_g = master_min
@@ -401,7 +410,9 @@ WIDGET_CONTROL, Event.top, GET_UVALUE=global
 total_array = (*(*global).total_array)
 
 DEVICE, DECOMPOSED=0
-LOADCT, 5, /SILENT
+; Change code (RC Ward Feb 22, 2010): Pass color_table value for LOADCT from XML configuration file
+  color_table = (*global).color_table
+LOADCT, color_table, /SILENT
 
 ;select plot
 id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='step3_draw')
@@ -470,6 +481,7 @@ ENDIF ELSE BEGIN
     id_draw = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='scale_draw_step3')
 ENDELSE    
 
+; Set color table to B&W linear so that background is neutral color for plot scale
 LOADCT, 0,/SILENT
 
 IF (N_ELEMENTS(XSCALE) EQ 0) THEN xscale = [0,80]

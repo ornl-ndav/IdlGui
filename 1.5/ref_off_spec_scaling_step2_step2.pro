@@ -83,9 +83,12 @@ PRO display_step4_step2_step2_selection, Event
   
   ; Code change RCW (Feb 8, 2010): Get Background color from XML file
      PlotBackground = (*global).BackgroundCurvePlot
+     ref_plot_error_color = (*global).ref_plot_error_color
   
   DEVICE, DECOMPOSED=0
-  LOADCT, 5, /SILENT
+; Change code (RC Ward Feb 22, 2010): Pass color_table value for LOADCT from XML configuration file
+  color_table = (*global).color_table
+  LOADCT, color_table, /SILENT
   
   xy_position = (*global).step4_step1_selection
   IF (xy_position[0]+xy_position[2] NE 0 AND $
@@ -121,7 +124,7 @@ PRO display_step4_step2_step2_selection, Event
         XTITLE = xtitle, $
         YTITLE = ytitle,$
         COLOR  = color,$
-        BACKGROUND = convert_rgb(PlotBackground),$
+        BACKGROUND = FSC_COLOR(PlotBackground),$
         ;YRANGE = [(*global).ymin_log_mode,ymax_value],$
         YRANGE = [ymin_value,ymax_value],$
         XRANGE = [xmin_value,xmax_value],$
@@ -134,27 +137,26 @@ PRO display_step4_step2_step2_selection, Event
         XTITLE = xtitle, $
         YTITLE = ytitle,$
         COLOR  = color,$
-        BACKGROUND = convert_rgb(PlotBackground),$
+         BACKGROUND = FSC_COLOR(PlotBackground),$
         XRANGE = [xmin_value,xmax_value],$
         YRANGE = [ymin_value,ymax_value],$
         XSTYLE = 1,$
         PSYM   = psym
     ENDELSE
-    
+
+; Code Change (RC Ward, Mar 5, 2010): Set color of line to ref_plot_error_color, was 250    
     IF (isWithScalingErrorBars(Event)) THEN BEGIN
     
       IF (isLog) THEN BEGIN
         ERRPLOT, xrange,$
           t_data_to_plot-alog10(t_data_to_plot_error),$
           t_data_to_plot+alog10(t_data_to_plot_error),$
-          BACKGROUND = convert_rgb(PlotBackground),$
-          COLOR = 250
+          color = FSC_COLOR(ref_plot_error_color)
       ENDIF ELSE BEGIN
         ERRPLOT, xrange,$
           t_data_to_plot-t_data_to_plot_error,$
           t_data_to_plot+t_data_to_plot_error,$
-          BACKGROUND = convert_rgb(PlotBackground),$
-          COLOR = 250
+          color = FSC_COLOR(ref_plot_error_color)
       ENDELSE
     ENDIF
   ENDIF
@@ -253,7 +255,7 @@ END
 PRO plotLambdaSelected, Event
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
-; Code change RCW (Feb 9, 2010: pass CE selection vertical line color in global
+; Code change RCW (Feb 9, 2010: pass CE selection vertical line color in global (was set to 200)
    ceselect_vertical_line_color = (*global).ceselect_vertical_line_color
 
   step4_2_2_lambda_array = (*global).step4_2_2_lambda_array
@@ -267,10 +269,8 @@ PRO plotLambdaSelected, Event
     lambda = step4_2_2_lambda_array[i]
     IF (lambda GE xmin AND $
       lambda LT xmax) THEN BEGIN      
-;     plots, lambda, ymin, /DEVICE, color=200
-;     plots, lambda, ymax, /DEVICE, /CONTINUE, color=200
-     plots, lambda, ymin, /DEVICE, color=ceselect_vertical_line_color
-     plots, lambda, ymax, /DEVICE, /CONTINUE, color=ceselect_vertical_line_color
+     plots, lambda, ymin, /DEVICE, color = FSC_COLOR(ceselect_vertical_line_color)
+     plots, lambda, ymax, /DEVICE, /CONTINUE, color = FSC_COLOR(ceselect_vertical_line_color)
     ENDIF
   ENDFOR
   

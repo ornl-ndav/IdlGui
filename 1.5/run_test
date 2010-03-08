@@ -1,0 +1,4 @@
+spawn, 'cp REFoffSpec.cfg .REFoffSpec.cfg'
+@make_test.pro
+make_test
+

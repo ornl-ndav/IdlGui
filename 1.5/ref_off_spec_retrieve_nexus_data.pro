@@ -64,6 +64,7 @@ FUNCTION retrieve_Data, Event, $
     ENDIF ELSE BEGIN
       tData = TOTAL(data,3)
     ENDELSE
+
     (*(*global).norm_tData) = tData
     
     x = (size(tData))(1)

@@ -77,7 +77,8 @@ PRO refresh_plot_scale_step5, EVENT     = Event, $
   
   ;change color of background
   id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='scale_draw_step5')
-  
+
+; Set color table to B&W linear so that background is neutral color for plot scale  
   LOADCT, 0,/SILENT
   
   IF (N_ELEMENTS(XSCALE) EQ 0) THEN xscale = [0,80]

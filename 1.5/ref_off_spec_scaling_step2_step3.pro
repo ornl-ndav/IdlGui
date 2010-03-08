@@ -302,6 +302,8 @@ PRO step4_2_3_manual_scaling, Event, FACTOR=factor
   scaling_factor            = (*(*global).scaling_factor)
   
   ;create new big array
+; Need Code Change (RC Ward, Mar 5, 2010): This fails when "Full Reset" is click on first entering "All Files"
+; Something is not initialize properly. FIX LATER.
   sz = (size(*IvsLambda_selection[0]))(1)
   new_IvsLambda_selection       = FLTARR(nbr_plot,sz)
   new_IvsLambda_selection_error = FLTARR(nbr_plot,sz)

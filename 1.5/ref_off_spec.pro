@@ -74,12 +74,21 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   SL3STEP2_NAME = file->getValue(tag=['configuration','ScalingLevel3TabNames','sl3name2'])
   SL3STEP3_NAME = file->getValue(tag=['configuration','ScalingLevel3TabNames','sl3name3'])
   REFPIX_INITIAL = file->getValue(tag=['configuration','RefPix','InitialValue'])
-  XSIZE_DRAW = file->getValue(tag=['configuration','PlotWindow','XSizeDraw'])
-  YSIZE_DRAW = file->getValue(tag=['configuration','PlotWindow','YSizeDraw'])
-  BACKGROUND_R = file->getValue(tag=['configuration','CurvePlot','Background','R'])
-  BACKGROUND_G = file->getValue(tag=['configuration','CurvePlot','Background','G'])
-  BACKGROUND_B = file->getValue(tag=['configuration','CurvePlot','Background','B'])
+  XSIZE_DRAW = file->getValue(tag=['configuration','DataPlot','XSizeDraw'])
+  YSIZE_DRAW = file->getValue(tag=['configuration','DataPlot','YSizeDraw'])
+  COLOR_TABLE = file->getValue(tag=['configuration','DataPlot','ColorTable'])
+  BOX_COLOR0 = file->getValue(tag=['configuration','DataPlot','BoxColors','BoxColor0'])
+  BOX_COLOR1 = file->getValue(tag=['configuration','DataPlot','BoxColors','BoxColor1'])
+  BOX_COLOR2 = file->getValue(tag=['configuration','DataPlot','BoxColors','BoxColor2'])
+  BOX_COLOR3 = file->getValue(tag=['configuration','DataPlot','BoxColors','BoxColor3'])
+  BOX_COLOR4 = file->getValue(tag=['configuration','DataPlot','BoxColors','BoxColor4'])
+  BOX_COLOR5 = file->getValue(tag=['configuration','DataPlot','BoxColors','BoxColor5'])
+  BOX_COLOR6 = file->getValue(tag=['configuration','DataPlot','BoxColors','BoxColor6'])
+  BOX_COLOR7 = file->getValue(tag=['configuration','DataPlot','BoxColors','BoxColor7'])
+  BOX_COLOR8 = file->getValue(tag=['configuration','DataPlot','BoxColors','BoxColor8'])
+  BACKGROUND_COLOR = file->getValue(tag=['configuration','CurvePlot','BackgroundColor'])
   CESELECT_VERTLINE_COLOR = file->getValue(tag=['configuration','CurvePlot','CESelect','VerticalLineColor'])
+  SELECT_COLOR = file->getValue(tag=['configuration','CurvePlot','CESelect','SelectColor'])
   PIXELS_YVALUE = file->getValue(tag=['configuration','Detector','Pixels_YValue'])
   PIXELS_XVALUE = file->getValue(tag=['configuration','Detector','Pixels_XValue'])
   DATA_COLOR = file->getValue(tag=['configuration','ReflectivityPlot','DataColor'])
@@ -89,8 +98,11 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   HORIZONTAL_COLOR = file->getValue(tag=['configuration','ReflectivityPlot','HorizontalColor'])
   AVERAGE_COLOR = file->getValue(tag=['configuration','ReflectivityPlot','AverageColor'])
   REFPIX_LOAD = file->getValue(tag=['configuration','Shifting','RefPixLoad'])
+  TOF_CUTOFF_MIN = file->getValue(tag=['configuration','TOFCuttoffs','TOFCutoffMin'])
+  TOF_CUTOFF_MAX = file->getValue(tag=['configuration','TOFCuttoffs','TOFCutoffMax'])
  ; Note: YSIZE_DRAW and Pixels_XValue are not presently used in the code 
   SUPER_USERS = ['rwd']
+
   ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
   ;============================================================================
   
@@ -161,13 +173,13 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ScalingLevel3TabNames: [SL3STEP1_NAME,$
                             SL3STEP2_NAME,$
                             SL3STEP3_NAME],$
-    ; Code change RCW (Feb 1, 2010): get intial value of RefPix from XML config file                        
+    ; Code change (RC Ward Feb 1, 2010): get intial value of RefPix from XML config file                        
     RefPix_InitialValue: REFPIX_INITIAL,$   
-    ; Code change RCW (Feb 8, 2010): get ascii data 2D-plot background colors from XML config file                     
-    BackgroundCurvePlot: [BACKGROUND_R,$
-                          BACKGROUND_G,$
-                          BACKGROUND_B],$
+    ; Code change (RC Ward Feb 8, 2010): get ascii data 2D-plot background color from XML config file                     
+    BackgroundCurvePlot: BACKGROUND_COLOR,$
+    ; Code change (RC Ward Feb 26, 2010): use color names for lines in curve plots
     ceselect_vertical_line_color: CESELECT_VERTLINE_COLOR,$
+    ref_plot_select_color: SELECT_COLOR,$
     ref_plot_data_color: DATA_COLOR,$
     ref_plot_error_color: ERROR_COLOR,$
     ref_plot_zoombox_color: ZOOMBOX_COLOR,$
@@ -181,9 +193,18 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
    ; Code change (RC Ward Feb 18,2010): Get flag to automatically load RefPix values for Shifting step
     RefPixLoad: REFPIX_LOAD, $
+    
+   ; Code change (RC Ward Feb 22, 2010): Get Color Table value for LOADCT from XML config file
+    color_table: COLOR_TABLE,$  
+    
+   ; Code change (RC Ward, Mar 2, 2010): Get tof_cutoff_min and tof_cutoff_max values from the XML config file
+   tof_cutoff_min: TOF_CUTOFF_MIN, $
+   tof_cutoff_max: TOF_CUTOFF_MAX, $
 
     srun_web_page: 'https://neutronsr.us/applications/jobmonitor/squeue.php?view=all',$
-    
+
+; refred_lp is the remote reflectometer reduction code. Here were are setting up the names of the parameters to refred.    
+; Change made (RC Ward, Mar 2, 2010): add time of flight cutoffs (min, max) to the call to refred_lp
     reduce_structure: {driver: 'refred_lp',$
     data_paths: '--data-path',$
     data: '--data',$
@@ -191,6 +212,8 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     norm: '--norm',$
     norm_paths: '--norm-data-paths',$
     norm_roi: '--norm-roi-file',$
+    tof_cut_min: '--tof-cut-min',$
+    tof_cut_max: '--tof-cut-max',$    
     output: '--output'},$
     
     nexus_list_OF_pola_state: ['/entry-Off_Off/',$
@@ -420,7 +443,9 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     first_load:          0,$
     congrid_coeff_array: PTR_NEW(0L),$
     application:         APPLICATION,$
-    box_color:           [50,75,100,125,150,175,200,225,250],$
+;    box_color:           [50,75,100,125,150,175,200,225,250],$
+; Change code (RC Ward, Feb 25, 2010): Read box_colors in from XML configuration file so they can be changed easily
+    box_color:           [BOX_COLOR0, BOX_COLOR1, BOX_COLOR2, BOX_COLOR3, BOX_COLOR4, BOX_COLOR5, BOX_COLOR6, BOX_COLOR7, BOX_COLOR8],$
     processing:          '(PROCESSING)',$
     ok:                  'OK',$
     failed:              'FAILED',$
@@ -484,7 +509,9 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     w_shifting_plot2d_id: 0,$ ;id of shift. plot2D widget_base
     w_scaling_plot2d_id: 0$ ;id of scaling plot2D widget_base 
     })
-    
+  
+    print, "background color: ", (*global).BackgroundCurvePlot
+      
   ;initialize variables
   (*(*global).list_OF_ascii_files) = STRARR(1)
   (*(*global).reduce_tab1_table) = STRARR(2,1)
