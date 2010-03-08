@@ -43,6 +43,7 @@ WIDGET_CONTROL, Event.top, GET_UVALUE=global
 ;change color of background    
 id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='scale_draw_step4_step1')
 
+; Set color table to B&W linear so that bacground is neutral color for plot scale
 LOADCT, 0,/SILENT
 
 IF (N_ELEMENTS(XSCALE) EQ 0) THEN xscale = [0,80]
@@ -331,7 +332,9 @@ rData_untouched = REBIN(base_array_untouched, $
 (*(*global).total_array_untouched) = rData_untouched
 
 DEVICE, DECOMPOSED=0
-LOADCT, 5, /SILENT
+; Change code (RC Ward Feb 22, 2010): Pass color_table value for LOADCT from XML configuration file
+  color_table = (*global).color_table
+LOADCT, color_table, /SILENT
 
 (*global).zmax_g = master_max
 (*global).zmin_g = master_min
@@ -394,7 +397,9 @@ WIDGET_CONTROL, Event.top, GET_UVALUE=global
 total_array = (*(*global).total_array)
 
 DEVICE, DECOMPOSED=0
-LOADCT, 5, /SILENT
+; Change code (RC Ward Feb 22, 2010): Pass color_table value for LOADCT from XML configuration file
+  color_table = (*global).color_table
+LOADCT, color_table, /SILENT
 
 ;select plot
 id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='step4_step1_draw')

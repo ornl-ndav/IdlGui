@@ -113,7 +113,9 @@ PRO re_display_step4_step2_step1_selection, Event, MODE=mode
      PlotBackground = (*global).BackgroundCurvePlot
   
   DEVICE, DECOMPOSED=0
-  LOADCT, 5, /SILENT
+  ; Change code (RC Ward Feb 22, 2010): Pass color_table value for LOADCT from XML configuration file
+  color_table = (*global).color_table
+  LOADCT, color_table, /SILENT
   
   xy_position = (*global).step4_step1_selection
   IF (xy_position[0]+xy_position[2] NE 0 AND $
@@ -153,6 +155,7 @@ PRO re_display_step4_step2_step1_selection, Event, MODE=mode
           ENDELSE
           
           color = box_color[index]
+; print, "test-0: index, color: ", index, " ",color
           psym  = getStep4Step2PSYMselected(Event)
           
           isLog = getStep4Step2PlotType(Event)
@@ -169,7 +172,7 @@ PRO re_display_step4_step2_step1_selection, Event, MODE=mode
                 XTITLE = xtitle, $
                 YTITLE = ytitle,$
                 COLOR  = color,$
-                BACKGROUND = convert_rgb(PlotBackground),$
+                BACKGROUND = FSC_COLOR(PlotBackground),$
                 XRANGE = [xmin,xmax],$
                 YRANGE = [ymin,ymax],$
                 XSTYLE = 1,$
@@ -181,7 +184,7 @@ PRO re_display_step4_step2_step1_selection, Event, MODE=mode
                 XTITLE = xtitle, $
                 YTITLE = ytitle,$
                 COLOR  = color,$
-                BACKGROUND = convert_rgb(PlotBackground),$
+                BACKGROUND = FSC_COLOR(PlotBackground),$
                 XRANGE = [xmin,xmax],$
                 YRANGE = [ymin,ymax],$
                 XSTYLE = 1,$
@@ -206,6 +209,7 @@ PRO re_display_step4_step2_step1_selection, Event, MODE=mode
           t_data_to_plot = IvsLambda_selection[index,*]
         ENDELSE
         color = box_color[index]
+;   print, "test-1: index, color: ", index, " ",color
         psym  = getStep4Step2PSYMselected(Event)
         isLog = getStep4Step2PlotType(Event)
         
@@ -219,7 +223,7 @@ PRO re_display_step4_step2_step1_selection, Event, MODE=mode
             XTITLE = xtitle, $
             YTITLE = ytitle,$
             COLOR  = color,$
-            BACKGROUND = convert_rgb(PlotBackground),$
+            BACKGROUND = FSC_COLOR(PlotBackground),$
             XRANGE = [xmin,xmax],$
             YRANGE = [ymin,ymax],$
             XSTYLE = 1,$
@@ -231,7 +235,7 @@ PRO re_display_step4_step2_step1_selection, Event, MODE=mode
             XTITLE = xtitle, $
             YTITLE = ytitle,$
             COLOR  = color,$
-            BACKGROUND = convert_rgb(PlotBackground),$
+            BACKGROUND = FSC_COLOR(PlotBackground),$
             XRANGE = [xmin,xmax],$
             YRANGE = [ymin,ymax],$
             XSTYLE = 1,$
@@ -251,6 +255,7 @@ PRO re_display_step4_step2_step1_selection, Event, MODE=mode
           ENDELSE
           
           color = box_color[index]
+;  print, "test: index-2, color: ", index, " ",color
           psym  = getStep4Step2PSYMselected(Event)
           
           isLog = getStep4Step2PlotType(Event)
@@ -267,19 +272,20 @@ PRO re_display_step4_step2_step1_selection, Event, MODE=mode
                 XTITLE = xtitle, $
                 YTITLE = ytitle,$
                 COLOR  = color,$
-                BACKGROUND = convert_rgb(PlotBackground),$
+                BACKGROUND = FSC_COLOR(PlotBackground),$
                 XRANGE = [xmin,xmax],$
                 YRANGE = [ymin,ymax],$
                 XSTYLE = 1,$
                 PSYM   = psym,$
                 /YLOG
+;  print, "test:just after plot call: index, color, psym: ", index, " ",color, psym
             ENDIF ELSE BEGIN
               plot, xrange, $
                 t_data_to_plot, $
                 XTITLE = xtitle, $
                 YTITLE = ytitle,$
                 COLOR  = color,$
-                BACKGROUND = convert_rgb(PlotBackground),$
+                BACKGROUND = FSC_COLOR(PlotBackground),$
                 XRANGE = [xmin,xmax],$
                 YRANGE = [ymin,ymax],$
                 XSTYLE = 1,$
@@ -290,6 +296,7 @@ PRO re_display_step4_step2_step1_selection, Event, MODE=mode
               t_data_to_plot, $
               COLOR  = color,$
               PSYM   = psym
+;  print, "test:just after oplot call: index, color, psym: ", index, " ",color, psym
           ENDELSE
           index++
         ENDWHILE
@@ -331,11 +338,10 @@ PRO re_plot_lambda_selected, Event
     f_Lda_min LE f_xmax_now) THEN BEGIN
     
     device_lda  = device_xmax - ratio * (f_xmax_now - f_Lda_min)
-; plots, device_lda, device_ymin, /DEVICE, COLOR=200
-; plots, device_lda, device_ymax, /DEVICE, /CONTINUE, COLOR=200
-; Code change RCW (Feb 9, 2010: CE selection vertical line color is set in XML config file
-    plots, device_lda, device_ymin, /DEVICE, COLOR=ceselect_vertical_line_color
-    plots, device_lda, device_ymax, /DEVICE, /CONTINUE, COLOR=ceselect_vertical_line_color
+
+; Code change RCW (Feb 9, 2010: ceselect_vertical_line_color is set in XML config file, was set to 200.
+    plots, device_lda, device_ymin, /DEVICE, COLOR=FSC_COLOR(ceselect_vertical_line_color)
+    plots, device_lda, device_ymax, /DEVICE, /CONTINUE, COLOR=FSC_COLOR(ceselect_vertical_line_color)
     
   ENDIF
   
@@ -344,11 +350,10 @@ PRO re_plot_lambda_selected, Event
     f_Lda_max LE f_xmax_now) THEN BEGIN
     
     device_lda  = device_xmax - ratio * (f_xmax_now - f_Lda_max)
-; plots, device_lda, device_ymin, /DEVICE, COLOR=200
-; plots, device_lda, device_ymax, /DEVICE, /CONTINUE, COLOR=200
-; Code change RCW (Feb 9, 2010: CE selection vertical line color is set in XML config file
-    plots, device_lda, device_ymin, /DEVICE, COLOR=ceselect_vertical_line_color
-    plots, device_lda, device_ymax, /DEVICE, /CONTINUE, COLOR=ceselect_vertical_line_color
+
+; Code change RCW (Feb 9, 2010: ceselect_vertical_line_color is set in XML config file, was set to 200.
+    plots, device_lda, device_ymin, /DEVICE, COLOR=FSC_COLOR(ceselect_vertical_line_color)
+    plots, device_lda, device_ymax, /DEVICE, /CONTINUE, COLOR=FSC_COLOR(ceselect_vertical_line_color)
     
   ENDIF
   

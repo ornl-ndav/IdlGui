@@ -80,6 +80,11 @@ END
 PRO plot_selection_OF_2d_plot_mode, Event
 
 WIDGET_CONTROL, Event.top,GET_UVALUE=global
+; Code change RCW (Feb 11, 2010): Get Background color from XML file
+  PlotBackground = (*global).BackgroundCurvePlot
+; Change code (RC Ward, Feb 24, 2010): Pass color of the selection window from XML configuration file
+  ref_plot_select_color = (*global).ref_plot_select_color
+  ref_plot_data_color = (*global).ref_plot_data_color
 
 xmin = (*global).plot2d_x_left
 ymin = (*global).plot2d_y_left
@@ -87,7 +92,8 @@ ymin = (*global).plot2d_y_left
 xmax = (*global).plot2d_x_right
 ymax = (*global).plot2d_y_right
 
-color = 100 ;color of selection
+; Code Change (RC Ward, Feb 24, 2010): Color of the selection window from XML configuration file, was set to 100.
+color = FSC_COLOR(ref_plot_select_color)
 
 xaxis = (*(*global).x_axis)
 contour_plot_shifting, Event, xaxis
@@ -141,7 +147,10 @@ ENDIF ELSE BEGIN
         plot, xrange, new_array, $
           XRANGE=[ymin/2,ymax/2], $
           XTITLE=xtitle, $
-          YTITLE=ytitle
+          YTITLE=ytitle, $
+          BACKGROUND = FSC_COLOR(PlotBackground), $
+; Code Change (RC Ward, Feb 24, 2010): Color of data curves using ref_plot_data_color from XML configuration file, was set to 50.
+          color = FSC_COLOR(ref_plot_data_color)
     ENDIF
 ENDELSE
 END
@@ -150,6 +159,8 @@ END
 PRO refresh_plot_selection_OF_2d_plot_mode, Event
 
 WIDGET_CONTROL, Event.top,GET_UVALUE=global
+; Change code (RC Ward, Feb 24, 2010): Pass color of the selection window from XML configuration file
+  ref_plot_select_color = (*global).ref_plot_select_color
 
 xmin = (*global).plot2d_x_left
 ymin = (*global).plot2d_y_left
@@ -157,7 +168,8 @@ ymin = (*global).plot2d_y_left
 xmax = (*global).plot2d_x_right
 ymax = (*global).plot2d_y_right
 
-color = 100 ;color of selection
+; Code Change (RC Ward, Feb 24, 2010): Color of the selection window from XML configuration file, was set to 100.
+color = FSC_COLOR(ref_plot_select_color)
 
 total_array = (*(*global).total_array)
 total_array_x_max = (size(total_array))(1)

@@ -219,29 +219,48 @@ PRO tab_event, Event
           plotAsciiData_shifting, Event
 ; Change code (RC Ward Feb 18, 2010): If RefPixLoad is set to yes in REFoffSpec.cfg 
 ; then load the RefPix values from RefPix file
+; This is only to be used by magetism reflectometer data reduction process, so check for REF_M
+           instrument = (*global).instrument
+
+           IF (instrument EQ 'REF_M') THEN BEGIN
              refpixload = (*global).RefPixLoad
+
              IF (refpixload EQ 'yes') THEN BEGIN
                box_color = (*global).box_color
                list_OF_files = (*(*global).list_OF_ascii_files)
                sz = N_ELEMENTS(list_OF_files)
                RefPixSave = INTARR(sz)
-               input_file_name = (*global).ascii_path + 'REF_M_5387_Off_Off_' + 'RefPix.txt'
-               OPENR, 1, input_file_name
-               READF, 1, RefPixSave
-               CLOSE, 1
-               FREE_LUN, 1
-               (*(*global).RefPixSave) = RefPixSave 
-               (*(*global).ref_pixel_list_original) = RefPixSave
-                x_value = 400
-                FOR i=0,(sz-1) DO BEGIN
-                   IF (RefPixSave[i] NE 0.) THEN BEGIN
+; Change code (RC Ward Feb 26, 2010): Read file containing RefPix values on clicking the Shifting step tab
+;               print, list_OF_files[0]
+               list = list_OF_files[0]
+               parts = STR_SEP(list,'.')
+;               print, parts[0]
+               input_file_name = parts[0] + '_RefPix.txt'
+;               print, input_file_name
+               OPENR, 1, input_file_name, ERROR = err
+               IF (ERR EQ 0) THEN BEGIN  ; NO ERROR, FILE EXISTS SO CONTINUE ON
+                 READF, 1, RefPixSave
+                 CLOSE, 1
+                 FREE_LUN, 1
+                 (*(*global).RefPixSave) = RefPixSave 
+                 (*(*global).ref_pixel_list_original) = RefPixSave
+                  x_value = 400
+                 FOR i=0,(sz-1) DO BEGIN
+                     IF (RefPixSave[i] NE 0.) THEN BEGIN
 ; draw RefPix line   
-                       plotLine, Event, RefPixSave[i], x_value, box_color[i]           
-                   ENDIF
-                ENDFOR
-                (*(*global).ref_x_list)=RefPixSave
-                (*(*global).ref_pixel_list)=RefPixSave
+                        plotLine, Event, RefPixSave[i], x_value, box_color[i]           
+                     ENDIF
+                 ENDFOR
+                 (*(*global).ref_x_list)=RefPixSave
+                 (*(*global).ref_pixel_list)=RefPixSave
+               ENDIF ELSE BEGIN
+                 PRINT, "Warning: RefPix file does not exist. Use mouse or text entry to enter values."
+                 CLOSE, 1 
+; DO NOT SET RefPixSave - NOTHING EXISTS: User must enter RefPix values using the mouse.
+               ENDELSE            
              ENDIF
+           
+          ENDIF
           plotReferencedPixels, Event ;_shifting
           refresh_plot_selection_OF_2d_plot_mode, Event
         ENDIF

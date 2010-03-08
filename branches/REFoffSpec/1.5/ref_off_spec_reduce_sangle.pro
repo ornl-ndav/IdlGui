@@ -348,7 +348,9 @@ PRO plot_selected_data_in_sangle_base, Event, result
   WSET,id_value
   
   DEVICE, DECOMPOSED=0
-  LOADCT, 5, /SILENT
+; Change code (RC Ward Feb 22, 2010): Pass color_table value for LOADCT from XML configuration file
+  color_table = (*global).color_table
+  LOADCT, color_table, /SILENT
   TVSCL, rtData, /DEVICE
 
   result = 1
@@ -382,7 +384,9 @@ PRO replot_selected_data_in_sangle_base, Event
   WSET,id_value
   
   DEVICE, DECOMPOSED=0
-  LOADCT, 5, /SILENT
+; Change code (RC Ward Feb 22, 2010): Pass color_table value for LOADCT from XML configuration file
+  color_table = (*global).color_table
+  LOADCT, color_table, /SILENT
   TVSCL, rtData, /DEVICE
   
 END
@@ -692,7 +696,7 @@ PRO determine_sangle_refpix_data_from_device_value, Event
   
 ; Code change RCW (Feb 1, 2010): set up RefPixSave variable
   RefPixSave = (*(*global).RefPixSave)
-  
+
   Y = Event.y
   
   IF (Y LT 0) THEN Y = 0
@@ -709,15 +713,21 @@ PRO determine_sangle_refpix_data_from_device_value, Event
   RefPixSave[row_selected] = sRefPix_data
   (*(*global).RefPixSave) = RefPixSave
   
-; Code change RCW (Feb 15, 2010): Write values of RefPix for each data set to a file for reuse later
-;  print, (*global).ascii_path
-  output_file_name = (*global).ascii_path + 'REF_M_5387_Off_Off_' + 'RefPix.txt'
-  print, output_file_name
-  OPENW, 1, output_file_name
-  PRINTF, 1, RefPixSave
-  CLOSE, 1
-  FREE_LUN, 1
-
+; Code change RCW (Feb 15, 2010): Write values of RefPix to a file named fro the first dataset
+; Note this Rule: User should do SANGLE for first item on the list (lowest number also called Reference File)
+; This is only to be used by magetism reflectometer data reduction process, so check for REF_M
+  instrument = (*global).instrument
+  IF (instrument EQ 'REF_M') THEN BEGIN
+    reduce_tab1_table = (*(*global).reduce_tab1_table)
+    full_nexus_file_name = reduce_tab1_table[1, 0]
+    parts = STR_SEP(full_nexus_file_name,'/')
+    output_file_name = (*global).ascii_path + parts[2]+'_'+ parts[5]+'_Off_Off_' + 'RefPix.txt'
+;   print, output_file_name
+    OPENW, 1, output_file_name
+    PRINTF, 1, RefPixSave
+    CLOSE, 1
+    FREE_LUN, 1
+  ENDIF
 END
 
 ;------------------------------------------------------------------------------

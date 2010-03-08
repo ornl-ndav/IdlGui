@@ -318,7 +318,9 @@ PRO plotAsciiData, Event, TYPE=type, RESCALE=rescale
   InformLogBook, Event, min_array, max_array, xmax_array, ymax_array ;_gui
   
   DEVICE, DECOMPOSED=0
-  LOADCT, 5, /SILENT
+; Change code (RC Ward Feb 22, 2010): Pass color_table value for LOADCT from XML configuration file
+  color_table = (*global).color_table
+  LOADCT, color_table, /SILENT
   
   ;IF (N_ELEMENTS(RESCALE) EQ 0) THEN BEGIN
   ;    (*global).zmin_g = master_min
@@ -433,6 +435,7 @@ PRO refresh_plot_scale, EVENT     = Event, $
   ;WIDGET_CONTROL, id, GET_VALUE=id_value
   ;WSET, id_value
   
+; Set color table to B&W linear so that bacground is neutral color for plot scale
   LOADCT, 0,/SILENT
   
   IF (N_ELEMENTS(XSCALE) EQ 0) THEN xscale = [0,80]

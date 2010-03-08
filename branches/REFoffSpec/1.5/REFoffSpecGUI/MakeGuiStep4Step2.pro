@@ -161,12 +161,15 @@ BaseTab = WIDGET_BASE(REDUCE_TAB,$
                       TITLE     = sBaseTab.title)
 
 ;Main Draw of Step4 -----------------------------------------------------------
+; Code Change (RC Ward Mar 8, 2010): Add parameters RETAIN=2 to force IDL to deal with retaining the window.
+; This should fix the problem of windows going "black".
 wStep4Draw = WIDGET_DRAW(BaseTab,$
                          XOFFSET   = sStep4Draw.size[0],$
                          YOFFSET   = sStep4Draw.size[1],$
                          SCR_XSIZE = sStep4Draw.size[2],$
                          SCR_YSIZE = sStep4Draw.size[3],$
                          UNAMe     = sStep4Draw.uname,$
+                         RETAIN    =2,$
                          /BUTTON_EVENTS,$
                          /MOTION_EVENTS)
 

@@ -147,7 +147,6 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     /tracking_events,$
     /motion_events,$
     /button_events,$
-    RETAIN = 2,$
     /KEYBOARD_EVENT)
     
   ;lin/log cwbgroup

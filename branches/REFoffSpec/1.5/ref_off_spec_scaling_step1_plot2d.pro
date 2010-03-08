@@ -67,6 +67,7 @@ PRO step4_step1_plot2d, Event, GROUP_LEADER=group
   wDraw = WIDGET_DRAW(wBase,$
     SCR_XSIZE = xsize,$
     SCR_YSIZE = ysize,$
+    RETAIN    =2, $
     UNAME     = 'plot_2d_scaling_draw')
     
   (*global).w_scaling_plot2d_id = wBase
@@ -187,7 +188,8 @@ PRO display_step4_step1_plot2d, Event
         YTITLE = ytitle,$
         COLOR  = color,$
 ;        BACKGROUND = convert_rgb([255,255,255]),$
-        BACKGROUND = convert_rgb(PlotBackground),$
+;        BACKGROUND = convert_rgb(PlotBackground),$
+                BACKGROUND = FSC_COLOR(PlotBackground),$
         YRANGE = [ymin_value,ymax_value],$
         PSYM   = psym,$
         /YLOG,$

@@ -434,11 +434,12 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     
   ;draw ------------------------------------------------------------------------
   wDraw = WIDGET_DRAW(RescaleBase,$
-    XOFFSET = sRescaleDraw.size[0],$
-    YOFFSET = sRescaleDraw.size[1],$
+    XOFFSET   = sRescaleDraw.size[0],$
+    YOFFSET   = sRescaleDraw.size[1],$
     SCR_XSIZE = sRescaleDraw.size[2],$
     SCR_YSIZE = sRescaleDraw.size[3],$
-    UNAME = sRescaleDraw.uname,$
+    UNAME     = sRescaleDraw.uname,$
+    RETAIN    =2, $
     /BUTTON_EVENTS,$
     /MOTION_EVENTS)
     
@@ -540,6 +541,7 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     XSIZE         = sDraw.size[2],$
     YSIZE         = sDraw.size[3],$
     UNAME         = sDraw.uname,$
+    RETAIN        =2, $
     /BUTTON_EVENTS,$
     /MOTION_EVENTS)
     
