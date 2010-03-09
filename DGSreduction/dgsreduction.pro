@@ -547,7 +547,7 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
   ; Program Details
   APPLICATION       = 'DGSreduction'
   ;VERSION           = '1.3.BETA'
-  VERSION           = '1.2.3'
+  VERSION           = '1.2.4.BETA'
   
   Catch, errorStatus
   
@@ -675,6 +675,9 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
   ;  logbookID = WIDGET_TEXT(logTab, xsize=80, ysize=20, /SCROLL, /WRAP, $
   ;    UNAME='DGS_REDUCTION_LOGBOOK')
   
+  ; Set the norm object property for the location of norm files to reflect the reduction on
+  dgsr_cmd->GetProperty, NormLocation=location
+  dgsn_cmd->SetProperty, NormLocation=location
   
   ;wMainButtons = WIDGET_BASE(tlb, /ROW)
   mainButtonsColumns = WIDGET_BASE(tlb, COLUMN=3)
