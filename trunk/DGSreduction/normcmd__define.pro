@@ -447,7 +447,7 @@ FUNCTION NormCmd::GetNormalisationOutputDirectory
     end
   endcase
   
-  print,'NormCmd Norm Directory = ',directory
+ ; print,'NormCmd Norm Directory = ',directory
   RETURN, directory
 END
 
