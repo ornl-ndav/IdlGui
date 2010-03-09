@@ -105,10 +105,30 @@ PRO make_settings_tab, baseWidget, myCommandObj
   WIDGET_CONTROL, autoOutputPrefixButtonID, SET_BUTTON=1
   WIDGET_CONTROL, outputPrefixID, SENSITIVE=0
   
-  ; Get the current Queue name and display it
+  ; Get the current name and display it
   myCommandObj->GetProperty, OutputPrefix=outputPrefixName
   WIDGET_CONTROL, outputPrefixID, SET_VALUE=outputPrefixName
   
+  
+  ; === Normalisation file locations ===
+  normlocationBase = WIDGET_BASE(settingsTabCol1)
+  normlocationLabel = WIDGET_LABEL(normlocationBase, VALUE=' Normalisation Directory ', XOFFSET=5)
+  normlocationLabelGeometry = WIDGET_INFO(normlocationLabel, /GEOMETRY)
+  normlocationLabelYSize = normlocationLabelGeometry.ysize
+  normlocationPrettyBase = WIDGET_BASE(normlocationBase, /FRAME, /COLUMN, XPAD=10, YPAD=10, YOFFSET=normlocationLabelYSize/2.0)
+  normlocationRow = WIDGET_BASE(normlocationPrettyBase, /ROW)
+  normlocationButtons = WIDGET_BASE(normlocationRow, EXCLUSIVE=1)
+  instrumentSharedButtonID = WIDGET_BUTTON(normlocationButtons, VALUE='Instrument Shared', $
+    UNAME='DGS_NORMLOC_INST_SHARED', UVALUE='DGS_NORMLOC_INST_SHARED')
+  proposalSharedButtonID = WIDGET_BUTTON(normlocationButtons, VALUE='Proposal Shared', $
+    UNAME='DGS_NORMLOC_PROP_SHARED', UVALUE='DGS_NORMLOC_PROP_SHARED')
+  HomeDirButtonID = WIDGET_BUTTON(normlocationButtons, VALUE='Home Directory', $
+    UNAME='DGS_NORMLOC_HOME_DIR', UVALUE='DGS_NORMLOC_HOME_DIR')
+    
+  ; Make Proposal Shared the default.
+  WIDGET_CONTROL, proposalSharedButtonID, SET_BUTTON=1
+  myCommandObj->SetProperty, NormLocation='PROP'
+    
   ; === dgs_reduction timing ===
   timingBase = WIDGET_BASE(settingsTabCol1)
   timingLabel = WIDGET_LABEL(timingBase, VALUE=' Diagnostic Timing ', XOFFSET=5)
