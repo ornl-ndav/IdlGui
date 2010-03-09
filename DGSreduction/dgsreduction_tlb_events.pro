@@ -78,7 +78,7 @@ PRO DGSreduction_TLB_Events, event
       jobs_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGS_REDUCTION_JOBS')
       dgsr_cmd->GetProperty, Jobs=njobs
       WIDGET_CONTROL, jobs_ID, SET_VALUE=njobs
-      ; Hack to get correct number of jobs into dgsn_cmd on instrument 
+      ; Hack to get correct number of jobs into dgsn_cmd on instrument
       ; selection. 2zr Mar 5, 2010
       dgsn_cmd->SetProperty, Jobs=njobs
       
@@ -264,24 +264,36 @@ PRO DGSreduction_TLB_Events, event
     END
     'DGS_PROTON_UNITS_MILLICOULOMB': BEGIN
       IF (event.select EQ 1) THEN BEGIN
-         ;     print, 'Setting Units = C'
+        ;     print, 'Setting Units = C'
         dgsr_cmd->SetProperty, ProtonCurrentUnits="mC"
         dgsn_cmd->SetProperty, ProtonCurrentUnits="mC"
       ENDIF
     END
     'DGS_PROTON_UNITS_MICROCOULOMB': BEGIN
       IF (event.select EQ 1) THEN BEGIN
-          ;    print, 'Setting Units = C'
+        ;    print, 'Setting Units = C'
         dgsr_cmd->SetProperty, ProtonCurrentUnits="uC"
         dgsn_cmd->SetProperty, ProtonCurrentUnits="uC"
       ENDIF
     END
     'DGS_PROTON_UNITS_PICOCOULOMB': BEGIN
       IF (event.select EQ 1) THEN BEGIN
-           ;   print, 'Setting Units = <none>'
+        ;   print, 'Setting Units = <none>'
         dgsr_cmd->SetProperty, ProtonCurrentUnits=""
         dgsn_cmd->SetProperty, ProtonCurrentUnits=""
       ENDIF
+    END
+    'DGS_NORMLOC_INST_SHARED': BEGIN
+      dgsr_cmd->SetProperty, NormLocation='INST'
+      dgsn_cmd->SetProperty, NormLocation='INST'
+    END
+    'DGS_NORMLOC_PROP_SHARED': BEGIN
+      dgsr_cmd->SetProperty, NormLocation='PROP'
+      dgsn_cmd->SetProperty, NormLocation='PROP'
+    END
+    'DGS_NORMLOC_HOME_DIR': BEGIN
+      dgsr_cmd->SetProperty, NormLocation='HOME'
+      dgsn_cmd->SetProperty, NormLocation='HOME'
     END
     'NOTHING': BEGIN
     END
