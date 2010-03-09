@@ -116,6 +116,7 @@ PRO ReductionCmd::GetProperty, $
     UseHome=usehome, $                   ; Flag to indicate whether we should write to the home directory
     working_mask_dir=working_mask_dir, $ ; Directory that the (split) 'hard' mask files are located.
     MasterMaskFile=mastermaskfile, $     ; An alternative master mask file to use as the source for spliting.
+    NormLocation=normlocation, $         ; Setting for location of norm files ('INST','PROP','HOME')
     ProtonCurrentUnits=ProtonCurrentUnits, $ ; The units for the proton current, either 'C','mC','uC' or 'pC'
     UserLabel=userlabel, $               ; A Label that is applied to the output directory name.
     Busy=Busy, $                         ; A flag to indicate that we are busy processing something
@@ -210,6 +211,7 @@ PRO ReductionCmd::GetProperty, $
   IF ARG_PRESENT(UseHome) NE 0 THEN UseHome = self.usehome
   IF ARG_PRESENT(working_mask_dir) NE 0 THEN working_mask_dir = self.working_mask_dir
   IF ARG_PRESENT(MasterMaskFile) NE 0 THEN MasterMaskFile = self.mastermaskfile
+  IF ARG_PRESENT(NormLocation) NE 0 THEN NormLocation = self.normlocation
   IF ARG_PRESENT(ProtonCurrentUnits) NE 0 THEN ProtonCurrentUnits = self.ProtonCurrentUnits
   IF ARG_PRESENT(UserLabel) NE 0 THEN UserLabel = self.UserLabel
   IF ARG_PRESENT(Busy) NE 0 THEN Busy = self.busy
@@ -296,6 +298,7 @@ PRO ReductionCmd::SetProperty, $
     UseHome=usehome, $                   ; Flag to indicate whether we should write to the home directory
     working_mask_dir=working_mask_dir, $                 ; Directory that the (split) 'hard' mask files are located.
     MasterMaskFile=mastermaskfile, $     ; An alternative master mask file to use as the source for spliting.
+    NormLocation=normlocation, $         ; Setting for location of norm files ('INST','PROP','HOME')
     ProtonCurrentUnits=ProtonCurrentUnits, $ ; The units for the proton current, either 'C','mC','uC' or 'pC'
     UserLabel=userlabel, $               ; A Label that is applied to the output directory name.
     Busy=Busy, $                         ; A flag to indicate that we are busy processing something
@@ -455,17 +458,21 @@ PRO ReductionCmd::SetProperty, $
   IF N_ELEMENTS(OutputOverride) NE 0 THEN self.OutputOverride = OutputOverride
   
   IF N_ELEMENTS(timing) NE 0 THEN self.timing = Timing
-
+  
   IF N_ELEMENTS(jobs) NE 0 THEN BEGIN
     self.jobs = jobs
     ; If the number of jobs is > 1 then also set the split flag
     IF (jobs GT 1) THEN self.split = 1
   ENDIF
-
+  
   IF N_ELEMENTS(UseHome) NE 0 THEN self.usehome = UseHome
   
   IF N_ELEMENTS(working_mask_dir) NE 0 THEN self.working_mask_dir = working_mask_dir
   IF N_ELEMENTS(MasterMaskFile) NE 0 THEN self.mastermaskfile = MasterMaskFile
+  
+  IF N_ELEMENTS(NormLocation) NE 0 THEN BEGIN
+    self.NormLocation = STRUPCASE(NormLocation)
+  ENDIF
   
   IF N_ELEMENTS(ProtonCurrentUnits) NE 0 THEN self.ProtonCurrentUnits = ProtonCurrentUnits
   
@@ -542,10 +549,30 @@ END
 ; :Author: scu (campbellsi@ornl.gov)
 ;-
 FUNCTION ReductionCmd::GetNormalisationOutputDirectory
-  directory = get_output_directory(self.instrument, $
-    getFirstNumber(self.normalisation), $
-    HOME=self.usehome, OVERRIDE=self.OutputOverride)
-  ;print,directory
+
+  directory = ''
+  
+  case (self.NormLocation) of
+    'INST': begin
+      ; Use the instrument shared directory
+      directory = '/SNS/' + self.instrument + '/shared/norm/' + $
+        getFirstNumber(self.normalisation)
+    end
+    'PROP': BEGIN
+      directory = get_output_directory(self.instrument, $
+        getFirstNumber(self.normalisation), /NO_USERDIR)
+    END
+    'HOME': BEGIN
+      directory = get_output_directory(self.instrument, $
+        getFirstNumber(self.normalisation), $
+        HOME=1)
+    END
+    else: begin
+    
+    end
+  endcase
+  
+  ;print,'Norm Directory = ',directory
   RETURN, directory
 END
 
@@ -1179,6 +1206,7 @@ function ReductionCmd::Init, $
     UseHome=usehome, $                   ; Flag to indicate whether we should write to the home directory
     working_mask_dir=working_mask_dir, $ ; Directory that the (split) 'hard' mask files are located.
     MasterMaskFile=mastermaskfile, $     ; An alternative master mask file to use as the source for spliting.
+    NormLocation=normlocation, $         ; Setting for location of norm files ('INST','PROP','HOME')
     ProtonCurrentUnits=ProtonCurrentUnits, $ ; The units for the proton current, either 'C','mC','uC' or 'pC'
     UserLabel=userlabel, $               ; A Label that is applied to the output directory name.
     Busy=Busy, $                         ; A flag to indicate that we are busy processing something
@@ -1271,6 +1299,7 @@ function ReductionCmd::Init, $
   IF N_ELEMENTS(UseHome) EQ 0 THEN UseHome = 0
   IF N_ELEMENTS(working_mask_dir) EQ 0 THEN working_mask_dir = ""
   IF N_ELEMENTS(MasterMaskFile) EQ 0 THEN MasterMaskFile = ""
+  IF N_ELEMENTS(NormLocation) EQ 0 THEN NormLocation = ""
   IF N_ELEMENTS(ProtonCurrentUnits) EQ 0 THEN ProtonCurrentUnits = ""
   IF N_ELEMENTS(UserLabel) EQ 0 THEN UserLabel = ""
   IF N_ELEMENTS(Busy) EQ 0 THEN Busy = 0
@@ -1354,6 +1383,7 @@ function ReductionCmd::Init, $
   self.usehome = usehome
   self.working_mask_dir = working_mask_dir
   self.mastermaskfile = mastermaskfile
+  self.normlocation = normlocation
   self.ProtonCurrentUnits = protoncurrentunits
   self.UserLabel = userlabel
   self.busy = Busy
@@ -1450,6 +1480,7 @@ pro ReductionCmd__Define
     usehome : 0L, $          ; Flag to indicate whether we should write to the home directory
     working_mask_dir: "", $  ; Directory that the (split) 'hard' mask files are located.
     mastermaskfile: "", $    ; An alternative master mask file to use as the source for spliting.
+    NormLocation: "", $      ; Setting for location of norm files ('INST','PROP','HOME')
     ProtonCurrentUnits: "", $ ; The units for the proton current, either 'C','mC','uC' or 'pC'
     UserLabel:"", $          ; A Label that is applied to the output directory name.
     Busy: 0L, $              ; A flag to indicate that we are busy processing something
