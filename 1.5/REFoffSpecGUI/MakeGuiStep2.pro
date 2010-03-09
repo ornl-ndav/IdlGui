@@ -244,6 +244,14 @@ sXaxisMoreTicks = { size: [sXaxisLessTicks.size[0]+$
                            sXaxisLessTicks.size[2]],$
                     value: ' >>> ',$
                     uname: 'x_axis_more_ticks'}
+                    
+XYoff= [15,60]   ; help label
+sHelpLabel = { size: [sAsciiList.size[0]+$
+                           sAsciiList.size[2]+XYoff[0],$
+                           sAsciiList.size[1]+XYoff[1],$
+                           50],$
+                     value: 'GO TO SCALING STEP IF NO SHIFTING IS REQUIRED.',$
+                     frame: 6}
 
 ;******************************************************************************
 ;            BUILD GUI
@@ -464,6 +472,14 @@ more = WIDGET_BUTTON(wTicksBase,$
                      SCR_XSIZE = sXaxisMoreTicks.size[2],$
                      VALUE     = sXaxisMoreTicks.value,$
                      UNAME     = sXaxisMoreTicks.uname)
-
+                     
+; Code Change (RC Ward, Mar 8, 2010):
+; add a comment on the GUI for this step - "Skip to scaling step if no shifting is required"      
+wHelpLabel = WIDGET_LABEL(BaseTab,$
+                         XOFFSET   = sHelpLabel.size[0],$
+                         YOFFSET   = sHelpLabel.size[1],$
+                         VALUE     = sHelpLabel.value, $
+                         FRAME     = sHelpLabel.frame)
+              
 
 END

@@ -509,8 +509,6 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     w_shifting_plot2d_id: 0,$ ;id of shift. plot2D widget_base
     w_scaling_plot2d_id: 0$ ;id of scaling plot2D widget_base 
     })
-  
-    print, "background color: ", (*global).BackgroundCurvePlot
       
   ;initialize variables
   (*(*global).list_OF_ascii_files) = STRARR(1)
