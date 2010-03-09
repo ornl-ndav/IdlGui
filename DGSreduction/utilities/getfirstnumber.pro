@@ -69,7 +69,7 @@ FUNCTION GetFirstNumber, RunNumberString
   ;print, STRMID(RunNumberString, hyphenPosition-4, 4)
   IF STRMID(RunNumberString, hyphenPosition-4, 4) EQ 'IPTS' THEN $
     hyphenPosition = largeNumber
-  
+    
   firstDelimiter = MIN([commaPosition, hyphenPosition])
   
   ; Let's get the string upto the first ',' or '-'
@@ -103,7 +103,8 @@ FUNCTION GetFirstNumber, RunNumberString
         ; Now lets get the run number
         ;print, 'Getting run number from ', runNumber_location, ' in NeXus file.'
         fieldID = H5D_OPEN(FILEID, runNumber_location)
-        runNumber = H5D_READ(FIELDID)
+        runNumber_fromFile = H5D_READ(FIELDID)
+        runNumber = STRING(runNumber_fromFile[0])
       ENDELSE
     ENDIF
     
