@@ -61,8 +61,8 @@ PRO NormCmd::GetProperty, $
     Tmin=tmin, $                         ; minimum tof
     Tmax=tmax, $                         ; maximum tof
     TIBconst=tibconst, $                 ; Time Independent Bkgrd constant
-    TIBrange_Min=tibrange_min, $         ; Range for calculating TIB constant 
-    TIBrange_Max=tibrange_max, $         ; Range for calculating TIB constant 
+    TIBrange_Min=tibrange_min, $         ; Range for calculating TIB constant
+    TIBrange_Max=tibrange_max, $         ; Range for calculating TIB constant
     Ei=ei, $                             ; Incident Energy (meV)
     Tzero=tzero, $                       ; T0
     error_ei=error_ei, $                 ; Error in Incident Energy (meV)
@@ -87,6 +87,7 @@ PRO NormCmd::GetProperty, $
     Hi_Threshold=hi_threshold, $         ; Threshold for pixel to be masked (default: infinity)
     Timing=timing, $                     ; Timing of code
     Jobs=jobs, $                         ; Number of Jobs
+    NormLocation=normlocation, $         ; Setting for location of norm files ('INST','PROP','HOME')
     UseHome=usehome, $                   ; Flag to indicate whether we should write to the home directory
     ProtonCurrentUnits=ProtonCurrentUnits, $ ; The units for the proton current, either 'C','mC','uC' or 'pC'
     _Extra=extra
@@ -98,59 +99,60 @@ PRO NormCmd::GetProperty, $
     ok = ERROR_MESSAGE(!ERROR_STATE.MSG + ' Returning...', TRACEBACK=1, /error)
     return
   ENDIF
-   
+  
   IF ARG_PRESENT(Program) NE 0 THEN Program = self.program
   IF ARG_PRESENT(Version) NE 0 THEN Version = self.version
   IF ARG_PRESENT(Queue) NE 0 THEN Queue = self.queue
   IF ARG_PRESENT(Verbose) NE 0 THEN self.verbose = verbose
   IF ARG_PRESENT(Quiet) NE 0 THEN Quiet = self.quiet
-  IF ARG_PRESENT(DataRun) NE 0 THEN DataRun = self.datarun 
+  IF ARG_PRESENT(DataRun) NE 0 THEN DataRun = self.datarun
   IF ARG_PRESENT(Output) NE 0 THEN Output = self.output
   IF ARG_PRESENT(Instrument) NE 0 THEN Instrument = self.instrument
   IF ARG_PRESENT(Facility) NE 0 THEN Facility = self.facility
   IF ARG_PRESENT(Proposal) NE 0 THEN Proposal = self.proposal
   IF ARG_PRESENT(ConfigFile) NE 0 THEN ConfigFile = self.configfile
   IF ARG_PRESENT(instgeometry) NE 0 THEN InstGeometry = self.instgeometry
-  IF ARG_PRESENT(LowerBank) NE 0 THEN LowerBank  = self.lowerbank 
+  IF ARG_PRESENT(LowerBank) NE 0 THEN LowerBank  = self.lowerbank
   IF ARG_PRESENT(UpperBank) NE 0 THEN UpperBank = self.upperbank
   IF ARG_PRESENT(DataPaths) NE 0 THEN DataPaths = self.datapaths
   IF ARG_PRESENT(EmptyCan) NE 0 THEN EmptyCan = self.emptycan
   IF ARG_PRESENT(BlackCan) EQ 0 THEN BlackCan = self.blackcan
-  IF ARG_PRESENT(Dark) NE 0 THEN Dark = self.dark 
-  IF ARG_PRESENT(USmonPath) NE 0 THEN USmonPath = self.usmonpath 
-  IF ARG_PRESENT(DSmonPath) NE 0 THEN DSmonPath = self.dsmonpath 
+  IF ARG_PRESENT(Dark) NE 0 THEN Dark = self.dark
+  IF ARG_PRESENT(USmonPath) NE 0 THEN USmonPath = self.usmonpath
+  IF ARG_PRESENT(DSmonPath) NE 0 THEN DSmonPath = self.dsmonpath
   IF ARG_PRESENT(ROIfile) NE 0 THEN ROIfile = self.roifile
   IF ARG_PRESENT(Tmin) NE 0 THEN Tmin = self.tmin
   IF ARG_PRESENT(Tmax) NE 0 THEN Tmax = self.tmax
-  IF ARG_PRESENT(TIBconst) NE 0 THEN TIBconst = self.tibconst 
+  IF ARG_PRESENT(TIBconst) NE 0 THEN TIBconst = self.tibconst
   IF ARG_PRESENT(TIBrange_Min) NE 0 THEN TIBrange_Min = self.tibrange_min
   IF ARG_PRESENT(TIBrange_Max) NE 0 THEN TIBrange_Max = self.tibrange_max
-  IF ARG_PRESENT(Ei) NE 0 THEN Ei = self.ei 
-  IF ARG_PRESENT(Tzero) NE 0 THEN Tzero = self.tzero 
+  IF ARG_PRESENT(Ei) NE 0 THEN Ei = self.ei
+  IF ARG_PRESENT(Tzero) NE 0 THEN Tzero = self.tzero
   IF ARG_PRESENT(error_ei) NE 0 THEN error_ei = self.error_ei
-  IF ARG_PRESENT(error_tzero) NE 0 THEN error_tzero = self.error_tzero 
-  IF ARG_PRESENT(NoMonitorNorm) NE 0 THEN NoMonitorNorm = self.nomonitornorm 
-  IF ARG_PRESENT(PCnorm) NE 0 THEN PCnorm = self.pcnorm 
+  IF ARG_PRESENT(error_tzero) NE 0 THEN error_tzero = self.error_tzero
+  IF ARG_PRESENT(NoMonitorNorm) NE 0 THEN NoMonitorNorm = self.nomonitornorm
+  IF ARG_PRESENT(PCnorm) NE 0 THEN PCnorm = self.pcnorm
   IF ARG_PRESENT(MonRange_Min) NE 0 THEN MonRange_Min = self.monrange_min
   IF ARG_PRESENT(MonRange_Max) NE 0 THEN MonRange_Max = self.monrange_max
-  IF ARG_PRESENT(DetEff) NE 0 THEN DetEff = self.deteff 
-  IF ARG_PRESENT(NormTrans) NE 0 THEN NormTrans = self.normtrans 
+  IF ARG_PRESENT(DetEff) NE 0 THEN DetEff = self.deteff
+  IF ARG_PRESENT(NormTrans) NE 0 THEN NormTrans = self.normtrans
   IF ARG_PRESENT(NormRange_Min) NE 0 THEN NormRange_Min = self.normrange_min
-  IF ARG_PRESENT(NormRange_Max) NE 0 THEN NormRange_Max = self.normrange_max 
-  IF ARG_PRESENT(LambdaBins_Min) NE 0 THEN LambdaBins_Min = self.lambdabins_min 
+  IF ARG_PRESENT(NormRange_Max) NE 0 THEN NormRange_Max = self.normrange_max
+  IF ARG_PRESENT(LambdaBins_Min) NE 0 THEN LambdaBins_Min = self.lambdabins_min
   IF ARG_PRESENT(LambdaBins_Max) NE 0 THEN LambdaBins_Max = self.lambdabins_max
-  IF ARG_PRESENT(LambdaBins_Step) NE 0 THEN $ 
-          LambdaBins_Step = self.lambdabins_step 
-  IF ARG_PRESENT(DumpTOF) NE 0 THEN DumpTOF = self.dumptof 
-  IF ARG_PRESENT(DumpWave) NE 0 THEN DumpWave = self.dumpwave 
-  IF ARG_PRESENT(WhiteNorm) NE 0 THEN WhiteNorm = self.whitenorm 
-  IF ARG_PRESENT(DumpEt) NE 0 THEN DumpEt = self.dumpet 
+  IF ARG_PRESENT(LambdaBins_Step) NE 0 THEN $
+    LambdaBins_Step = self.lambdabins_step
+  IF ARG_PRESENT(DumpTOF) NE 0 THEN DumpTOF = self.dumptof
+  IF ARG_PRESENT(DumpWave) NE 0 THEN DumpWave = self.dumpwave
+  IF ARG_PRESENT(WhiteNorm) NE 0 THEN WhiteNorm = self.whitenorm
+  IF ARG_PRESENT(DumpEt) NE 0 THEN DumpEt = self.dumpet
   IF ARG_PRESENT(DumpTIB) NE 0 THEN DumpTIB = self.dumptib
   IF ARG_PRESENT(LambdaRatio) NE 0 THEN LambdaRatio = self.lambdaratio
   IF ARG_PRESENT(Lo_Threshold) NE 0 THEN Lo_Threshold = self.lo_threshold
   IF ARG_PRESENT(Hi_Threshold) NE 0 THEN Hi_Threshold = self.hi_threshold
   IF ARG_PRESENT(Timing) NE 0 THEN Timing = self.timing
-  IF ARG_PRESENT(Jobs) NE 0 THEN Jobs = self.jobs 
+  IF ARG_PRESENT(Jobs) NE 0 THEN Jobs = self.jobs
+  IF ARG_PRESENT(NormLocation) NE 0 THEN NormLocation = self.normlocation
   IF ARG_PRESENT(UseHome) NE 0 THEN UseHome = self.usehome
   IF ARG_PRESENT(ProtonCurrentUnits) NE 0 THEN ProtonCurrentUnits = self.ProtonCurrentUnits
   
@@ -241,8 +243,8 @@ PRO NormCmd::SetProperty, $
     Tmin=tmin, $                         ; minimum tof
     Tmax=tmax, $                         ; maximum tof
     TIBconst=tibconst, $                 ; Time Independent Bkgrd constant
-    TIBrange_Min=tibrange_min, $         ; Range for calculating TIB constant 
-    TIBrange_Max=tibrange_max, $         ; Range for calculating TIB constant 
+    TIBrange_Min=tibrange_min, $         ; Range for calculating TIB constant
+    TIBrange_Max=tibrange_max, $         ; Range for calculating TIB constant
     Ei=ei, $                             ; Incident Energy (meV)
     Tzero=tzero, $                       ; T0
     error_ei=error_ei, $                 ; Error in Incident Energy (meV)
@@ -267,6 +269,7 @@ PRO NormCmd::SetProperty, $
     Hi_Threshold=hi_threshold, $         ; Threshold for pixel to be masked (default: infinity)
     Timing=timing, $                     ; Timing of code
     Jobs=jobs, $                         ; Number of Jobs
+    NormLocation=normlocation, $         ; Setting for location of norm files ('INST','PROP','HOME')
     UseHome=usehome, $                   ; Flag to indicate whether we should write to the home directory
     ProtonCurrentUnits=ProtonCurrentUnits, $ ; The units for the proton current, either 'C','mC','uC' or 'pC'
     _Extra=extra
@@ -325,22 +328,22 @@ PRO NormCmd::SetProperty, $
   IF N_ELEMENTS(lowerbank) NE 0 THEN self.lowerbank = lowerbank
   IF N_ELEMENTS(upperbank) NE 0 THEN self.upperbank = upperbank
   IF N_ELEMENTS(datapaths) NE 0 THEN self.datapaths = datapaths
-   
+  
   IF N_ELEMENTS(emptycan) NE 0 THEN $
     self.emptycan = STRCOMPRESS(STRING(EmptyCan), /REMOVE_ALL)
   ; Don't let it be set to 0
   IF (self.emptycan EQ '0') THEN self.emptycan = ""
-    
+  
   IF N_ELEMENTS(blackcan) NE 0 THEN $
     self.blackcan = STRCOMPRESS(STRING(BlackCan), /REMOVE_ALL)
   ; Don't let it be set to 0
   IF (self.blackcan EQ '0') THEN self.blackcan = ""
-    
+  
   IF N_ELEMENTS(dark) NE 0 THEN $
     self.dark = STRCOMPRESS(STRING(dark), /REMOVE_ALL)
   ; Don't let it be set to 0
   IF (self.dark EQ '0') THEN self.dark = ""
-    
+  
   IF N_ELEMENTS(usmonpath) NE 0 THEN self.usmonpath = USmonPath
   IF N_ELEMENTS(dsmonpath) NE 0 THEN self.dsmonpath = DSmonPath
   IF N_ELEMENTS(roifile) NE 0 THEN self.roifile = ROIfile
@@ -363,8 +366,8 @@ PRO NormCmd::SetProperty, $
   IF N_ELEMENTS(normrange_max) NE 0 THEN self.normrange_max = normrange_max
   IF N_ELEMENTS(lambdabins_min) NE 0 THEN self.lambdabins_min = lambdabins_min
   IF N_ELEMENTS(lambdabins_max) NE 0 THEN self.lambdabins_max = lambdabins_max
-  IF N_ELEMENTS(lambdabins_step) NE 0 THEN $ 
-          self.lambdabins_step = lambdabins_step
+  IF N_ELEMENTS(lambdabins_step) NE 0 THEN $
+    self.lambdabins_step = lambdabins_step
   IF N_ELEMENTS(dumptof) NE 0 THEN self.dumptof = DumpTOF
   IF N_ELEMENTS(dumpwave) NE 0 THEN self.dumpwave = DumpWave
   IF N_ELEMENTS(whitenorm) NE 0 THEN self.whitenorm = WhiteNorm
@@ -374,6 +377,9 @@ PRO NormCmd::SetProperty, $
   IF N_ELEMENTS(hi_threshold) NE 0 THEN self.hi_threshold = Hi_Threshold
   IF N_ELEMENTS(timing) NE 0 THEN self.timing = Timing
   IF N_ELEMENTS(jobs) NE 0 THEN self.jobs = jobs
+  IF N_ELEMENTS(NormLocation) NE 0 THEN BEGIN
+    self.NormLocation = STRUPCASE(NormLocation)
+  ENDIF
   IF N_ELEMENTS(UseHome) NE 0 THEN self.usehome = UseHome
   IF N_ELEMENTS(ProtonCurrentUnits) NE 0 THEN self.ProtonCurrentUnits = ProtonCurrentUnits
   IF N_ELEMENTS(extra) NE 0 THEN *self.extra = extra
@@ -383,9 +389,9 @@ END
 ;+
 ; :Description:
 ;    Returns the first run number from the datarun property.
-;    This is used for naming files/directories/jobs when more than 
+;    This is used for naming files/directories/jobs when more than
 ;    one file is specified.
-;    
+;
 ;    e.g. datarun="1234-1250" would return "1234"
 ;         datarun="1234,1235" would return "1234"
 ;         datarun="1250,1243-1249" would return "1250"
@@ -395,7 +401,7 @@ END
 FUNCTION NormCmd::GetRunNumber
 
   largeNumber = 9999999
-
+  
   ; The runs should be delimited by either a - or ,
   
   ; Lets find see if there are any commas
@@ -408,7 +414,7 @@ FUNCTION NormCmd::GetRunNumber
   firstDelimiter = MIN([commaPosition, hyphenPosition])
   
   RETURN, STRMID(self.datarun, 0, firstDelimiter)
-
+  
 END
 
 ;+
@@ -416,48 +422,69 @@ END
 ;    Returns the directory where the results from a normalisation
 ;    job will be written.
 ;
-; :Author: 2zr (reuterma@ornl.gov)
 ;-
-FUNCTION NormCmd::GetNormOutputDirectory
+FUNCTION NormCmd::GetNormalisationOutputDirectory
 
-  ;print,'NormCmd::GetNormOutputDirectory():'
-  directory = get_output_directory(self.instrument, $
-    self->GetRunNumber(), HOME=self.usehome)
-  ;print,'GetNormOutputDirectory() --> ',directory
+  directory = ''
+  
+  case (self.NormLocation) of
+    'INST': begin
+      ; Use the instrument shared directory
+      directory = '/SNS/' + self.instrument + '/shared/norm/' + $
+        getFirstNumber(self.datarun)
+    end
+    'PROP': BEGIN
+      directory = get_output_directory(self.instrument, $
+        getFirstNumber(self.datarun), /NO_USERDIR)
+    END
+    'HOME': BEGIN
+      directory = get_output_directory(self.instrument, $
+        getFirstNumber(self.datarun), $
+        HOME=1)
+    END
+    else: begin
+    
+    end
+  endcase
+  
+  print,'NormCmd Norm Directory = ',directory
   RETURN, directory
 END
 
 ;+
 ; :Description:
-;    Procedure to check that all essential parameters have 
-;    been defined.  Also, that we haven't specified any 
+;    Procedure to check that all essential parameters have
+;    been defined.  Also, that we haven't specified any
 ;    conflicting options.
-;    
-;    It is intended for producing a string array for display 
-;    in the bottom of the GUI and a status flag to enable/disable 
+;
+;    It is intended for producing a string array for display
+;    in the bottom of the GUI and a status flag to enable/disable
 ;    the execute button.
 ;
-;
-; :Author: scu
 ;-
 function NormCmd::Check
 
-; Let's start out with everything well in the world!
+  ; Let's start out with everything well in the world!
   ok = 1
   datapaths_bad = 0
   msg = ['Everything looks good.']
   
+  normDir = self->GetNormalisationOutputDirectory()
+  IF (FILE_TEST(normDir, /DIRECTORY, /WRITE) NE 1) THEN BEGIN
+    ok = 1
+    msg = [msg,['You cannot write to the specified normalisation directory: ' + normDir]]
+  ENDIF
   
   IF (STRLEN(self.instrument) LT 2) THEN BEGIN
     ok = 0
     msg = [msg,['There is no Instrument selected.']]
   ENDIF
-
+  
   IF (STRLEN(self.datarun) LT 1) THEN BEGIN
     ok = 0
     msg = [msg,["There doesn't seem to be a Vanadium RUN NUMBER defined."]]
   ENDIF
-
+  
   ; Just construct the DataPaths for the first job.
   datapaths = Construct_DataPaths(self.lowerbank, self.upperbank, 1, self.jobs)
   IF (STRLEN(datapaths) LT 1) THEN BEGIN
@@ -473,7 +500,7 @@ function NormCmd::Check
     msg = [msg,['The Detector Banks are not specified correctly.']]
   END
   
-  ; Incident Energy 
+  ; Incident Energy
   IF (STRLEN(self.ei) LT 1) THEN BEGIN
     ok = 0
     msg = [msg,['You need to define the Incident Energy (Ei).']]
@@ -484,7 +511,7 @@ function NormCmd::Check
     ok = 0
     msg = [msg,['You need to define a value for T0.']]
   ENDIF
-
+  
   ; Now let's do some more complicated dependencies
   
   ; If Empty Can OR Black Can then we must specify Data Coeff
@@ -495,17 +522,17 @@ function NormCmd::Check
         "if you have specified either an Empty Can or a Black Can."]]
     ENDIF
   ENDIF
-
+  
   ; You cannot have a Dark current and any TIB
   IF (STRLEN(self.tibconst) GE 1) OR (STRLEN(self.tibrange_min) GE 1) $
     OR (STRLEN(self.tibrange_min) GE 1) THEN BEGIN
-      IF (STRLEN(self.dark) GE 1) AND (self.dark NE 0) THEN BEGIN
-        ok = 0
-        msg = [msg,["ERROR: You cannot specify a Dark Current together with a " + $
-          "Time-Independent-Background."]]
-      ENDIF
+    IF (STRLEN(self.dark) GE 1) AND (self.dark NE 0) THEN BEGIN
+      ok = 0
+      msg = [msg,["ERROR: You cannot specify a Dark Current together with a " + $
+        "Time-Independent-Background."]]
+    ENDIF
   ENDIF
-
+  
   ; Cannot have both a TIB constant and a TIB range
   IF (STRLEN(self.tibconst) GE 1) AND ((STRLEN(self.tibrange_min) GE 1) OR (STRLEN(self.tibrange_max) GE 1)) THEN BEGIN
     ok = 0
@@ -519,13 +546,13 @@ function NormCmd::Check
       msg = [msg,['If you are normalising to the monitor, you need to specify a monitor integration range.']]
     ENDIF
   ENDIF
-
+  
   ; Remove the first blank String
   IF (N_ELEMENTS(msg) GT 1) THEN msg = msg(1:*)
-
+  
   data = { ok : ok, $
-           message : msg}
-
+    message : msg}
+    
   return, data
 end
 
@@ -542,17 +569,17 @@ function NormCmd::Generate
   ENDIF
   
   cmd = STRARR(self.jobs)
-
+  
   ; Let's get the output directory so we don't have to keep asking for it!
-  outputDir = self->GetNormOutputDirectory()
+  outputDir = self->GetNormalisationOutputDirectory()
   
   for i = 0L, self.jobs-1 do begin
-   
-    cmd[i] = ""
   
+    cmd[i] = ""
+    
     ; Queue name
     ;IF STRLEN(self.queue) GT 1 THEN cmd[i] += "sbatch -p " + self.queue + " "
-  
+    
     ; Let's first start with the program name!
     cmd[i] += self.program
     
@@ -570,14 +597,14 @@ function NormCmd::Generate
       cmd[i] += " --output=" + outputDir + $
       "/" + self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
       i+1, self.jobs, /PAD) + ".txt"
-    
+      
     ; Instrument Name
     IF STRLEN(self.instrument) GT 1 THEN cmd[i] += " --inst="+self.instrument
     ; Facility
     IF STRLEN(self.facility) GT 1 THEN cmd[i] += " --facility="+self.facility
     ; Proposal
     IF STRLEN(self.proposal) GT 1 THEN cmd[i] += " --proposal="+self.proposal
-
+    
     ; Config (.rmd) file
     IF STRLEN(self.configfile) GT 1 THEN $
       cmd[i] += " --config="+self.configfile
@@ -585,14 +612,14 @@ function NormCmd::Generate
     IF STRLEN(self.instgeometry) GT 1 THEN $
       cmd[i] += " --inst-geom="+self.instgeometry
     ; Corner Geometry
-
+      
     ; DataPaths
     ; Construct the DataPaths
     self.datapaths = Construct_DataPaths(self.lowerbank, self.upperbank, $
       i+1, self.jobs)
     IF STRLEN(self.datapaths) GE 1 THEN $
       cmd[i] += " --data-paths="+self.datapaths
-
+      
     ; Empty sample container file
     IF (STRLEN(self.emptycan) GE 1) AND (self.emptycan NE 0) THEN $
       cmd[i] += " --ecan="+self.emptycan
@@ -604,7 +631,7 @@ function NormCmd::Generate
       cmd[i] += " --dkcur="+self.dark
     ; Upstream monitor path
     IF (STRLEN(self.usmonpath) GE 1) AND $
-       (STRCOMPRESS(self.usmonpath, /REMOVE_ALL) NE '0') THEN $
+      (STRCOMPRESS(self.usmonpath, /REMOVE_ALL) NE '0') THEN $
       cmd[i] += " --usmon-path=/entry/monitor" + STRCOMPRESS(self.usmonpath, /REMOVE_ALL) + ",1"
     ; Downstream monitor path
     IF STRLEN(self.dsmonpath) GE 1 THEN $
@@ -618,24 +645,24 @@ function NormCmd::Generate
     ; Tmax
     IF STRLEN(self.tmax) GE 1 THEN $
       cmd[i] += " --tof-cut-max="+self.tmax
-    
+      
     ; Time Independent Background (TIB)
     IF STRLEN(self.tibconst) GE 1 THEN $
       cmd[i] += " --tib-const="+self.tibconst+',0'
-   
-	;print, '--Generate--'
-	;print, self.tibrange_min,' ', self.tibrange_max
-	;print, STRLEN(STRCOMPRESS(STRING(self.tibrange_min)),/REMOVE_ALL), ' ', $
-;		STRLEN(STRCOMPRESS(STRING(self.tibrange_max GE 1)),/REMOVE_ALL)
- 
+      
+    ;print, '--Generate--'
+    ;print, self.tibrange_min,' ', self.tibrange_max
+    ;print, STRLEN(STRCOMPRESS(STRING(self.tibrange_min)),/REMOVE_ALL), ' ', $
+    ;		STRLEN(STRCOMPRESS(STRING(self.tibrange_max GE 1)),/REMOVE_ALL)
+      
     ;  TIB constant determination range
     IF (STRLEN(STRING(self.tibrange_min)) GE 1) $
       AND (STRLEN(STRING(self.tibrange_max)) GE 1) THEN BEGIN
       cmd[i] += " --tib-range=" + self.tibrange_min + " " + self.tibrange_max
-      ;print, 'got here'
-;	print, cmd[i]
-	ENDIF
-
+    ;print, 'got here'
+    ;	print, cmd[i]
+    ENDIF
+    
     ; Ei
     IF STRLEN(self.ei) GE 1 THEN $
       cmd[i] += " --initial-energy="+self.ei+","+self.error_ei
@@ -653,23 +680,23 @@ function NormCmd::Generate
     ; Detector Efficiency
     IF STRLEN(self.deteff) GE 1 THEN $
       cmd[i] += " --det-eff="+self.deteff
-
-
+      
+      
     ; transmission for norm data background
     IF STRLEN(self.normtrans) GE 1 THEN $
       cmd[i] += " --norm-trans-coeff=" + self.normtrans + ",0.0"
     ; Normalisation integration range
     IF (STRLEN(self.normrange_min) GE 1 ) $
       AND (STRLEN(self.normrange_max) GE 1) THEN $
-      cmd[i] += " --norm-int-range " + self.normrange_min + " " $ 
-                + self.normrange_max    
+      cmd[i] += " --norm-int-range " + self.normrange_min + " " $
+      + self.normrange_max
     ; Lambda Bins
     IF (STRLEN(self.lambdabins_min) GE 1) $
       AND (STRLEN(self.lambdabins_max) GE 1) $
-      AND (STRLEN(self.lambdabins_step) GE 1) $ 
+      AND (STRLEN(self.lambdabins_step) GE 1) $
       AND (self.dumpwave EQ 1) THEN $
       cmd[i] += " --lambda-bins=" + self.lambdabins_min + "," + $
-          self.lambdabins_max + "," + self.lambdabins_step
+      self.lambdabins_max + "," + self.lambdabins_step
       
     IF (self.dumptof EQ 1) THEN cmd[i] += " --dump-ctof-comb"
     IF (self.dumpwave EQ 1) THEN cmd[i] += " --dump-wave-comb"
@@ -679,16 +706,16 @@ function NormCmd::Generate
     IF (self.dumpet EQ 1) THEN cmd[i] += " --dump-et-comb"
     
     IF (self.dumptib EQ 1) THEN cmd[i] += " --dump-tib"
-         
+    
     IF STRLEN(self.lo_threshold) GE 1 THEN $
       cmd[i] += " --lo-threshold="+self.lo_threshold
-          
+      
     IF STRLEN(self.hi_threshold) GE 1 THEN $
       cmd[i] += " --hi-threshold="+self.hi_threshold
-
+      
     IF (STRLEN(self.ProtonCurrentUnits) GE 1) THEN $
       cmd[i] += " --scale-pc=" + self.ProtonCurrentUnits
-    
+      
     IF (self.timing EQ 1) THEN cmd[i] += " --timing"
     
   endfor
@@ -721,8 +748,8 @@ function NormCmd::Init, $
     Tmin=tmin, $                         ; minimum tof
     Tmax=tmax, $                         ; maximum tof
     TIBconst=tibconst, $                 ; Time Independent Bkgrd constant
-    TIBrange_Min=tibrange_min, $         ; Range for calculating TIB constant 
-    TIBrange_Max=tibrange_max, $         ; Range for calculating TIB constant 
+    TIBrange_Min=tibrange_min, $         ; Range for calculating TIB constant
+    TIBrange_Max=tibrange_max, $         ; Range for calculating TIB constant
     Ei=ei, $                             ; Incident Energy (meV)
     Tzero=tzero, $                       ; T0
     error_ei=error_ei, $                 ; Error in Incident Energy (meV)
@@ -747,6 +774,7 @@ function NormCmd::Init, $
     Hi_Threshold=hi_threshold, $         ; Threshold for pixel to be masked (default: infinity)
     Timing=timing, $                     ; Timing of code
     Jobs=jobs, $                         ; Number of Jobs
+    NormLocation=normlocation, $         ; Setting for location of norm files ('INST','PROP','HOME')
     UseHome=usehome, $                   ; Flag to indicate whether we should write to the home directory
     ProtonCurrentUnits=ProtonCurrentUnits, $ ; The units for the proton current, either 'C','mC','uC' or 'pC'
     _Extra=extra
@@ -809,6 +837,7 @@ function NormCmd::Init, $
   IF N_ELEMENTS(hi_threshold) EQ 0 THEN hi_threshold = ""
   IF N_ELEMENTS(timing) EQ 0 THEN timing = 0
   IF N_ELEMENTS(jobs) EQ 0 THEN jobs = 1
+  IF N_ELEMENTS(NormLocation) EQ 0 THEN NormLocation = ""
   IF N_ELEMENTS(UseHome) EQ 0 THEN UseHome = 0
   IF N_ELEMENTS(ProtonCurrentUnits) EQ 0 THEN ProtonCurrentUnits = ""
   
@@ -862,6 +891,8 @@ function NormCmd::Init, $
   self.hi_threshold = hi_threshold
   self.timing = timing
   self.jobs = jobs
+  self.normlocation = normlocation
+  self.usehome = UseHome
   self.ProtonCurrentUnits = protoncurrentunits
   self.extra = PTR_NEW(extra)
   
@@ -886,7 +917,7 @@ pro NormCmd__Define
     output: "", $            ; Output
     instrument: "", $        ; Instrument (short) name
     facility: "", $          ; Facility name
-    proposal: "", $          ; Proposal ID    
+    proposal: "", $          ; Proposal ID
     configfile: "", $        ; Config (.rmd) filename
     instgeometry: "", $      ; Instrument Geometry filename
     lowerbank: 0L, $         ; Lower Detector Bank
@@ -901,8 +932,8 @@ pro NormCmd__Define
     tmin: "", $              ; minimum tof
     tmax: "", $              ; maximum tof
     tibconst: "", $          ; Time Independant Background constant
-    tibrange_min: "", $      ; Range for calculating TIB constant 
-    tibrange_max: "", $      ; Range for calculating TIB constant 
+    tibrange_min: "", $      ; Range for calculating TIB constant
+    tibrange_max: "", $      ; Range for calculating TIB constant
     ei: "", $                ; Incident Energy (meV)
     error_ei: "", $          ; Error in Incident Energy (meV)
     tzero: "", $             ; T0
@@ -924,9 +955,10 @@ pro NormCmd__Define
     dumptib: 0L, $           ; Dump the TIB constant for all pixels
     whitenorm: 0L, $         ; White beam normalisation
     hi_threshold: "", $      ; Threshold for pixel to be masked (default: infinity)
-    lo_threshold: "", $      ; Threshold for pixel to be masked (default: 0.0) 
+    lo_threshold: "", $      ; Threshold for pixel to be masked (default: 0.0)
     timing: 0L, $            ; Timing of code
     jobs : 0L, $             ; Number of Jobs to Run
+    NormLocation: "", $      ; Setting for location of norm files ('INST','PROP','HOME')
     usehome : 0L, $          ; Flag to indicate whether we should write to the home directory
     ProtonCurrentUnits: "", $ ; The units for the proton current, either 'C','mC','uC' or 'pC'
     extra: PTR_NEW() }       ; Extra keywords
