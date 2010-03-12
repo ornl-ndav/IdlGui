@@ -463,13 +463,14 @@ PRO DGSnorm_Execute, event
   jobcmd = "sbatch -p " + queue + " "
   
   ; Make sure that the output directory exists
-  outputDir = get_output_directory(Instrument, runnumber, $
-    Home=UseHome, Override=OutputOverride, Label=userlabel, $
-    /CREATE)
-    
+  outputDir = dgsn_cmd->GetNormalisationOutputDirectory()
+  IF FILE_TEST(outputDir, /DIRECTORY) EQ 0 THEN BEGIN
+    spawn, 'mkdir -p ' + outputDir
+  ENDIF
+  
   ; store the outputDir in the info structure
-  info.outputDir = outputDir
-
+  ;info.outputDir = outputDir
+  
   ; Log Directory
   cd, CURRENT=thisDir
   logDir = outputDir + '/logs'
@@ -658,10 +659,10 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
   ; Settings Tab
   settingsTabBase = WIDGET_BASE(tabID, TITLE='Advanced Settings', /COLUMN)
   make_settings_tab, settingsTabBase, DGSR_cmd
-  ; Ugly hack to get proton current units default info in dgsn_cmd 
+  ; Ugly hack to get proton current units default info in dgsn_cmd
   ; 2zr Mar 5, 2010
   ; We need to find a better way to duplicate some of the information
-  ; because it isn't just this parameter that doesn't seem to be getting 
+  ; because it isn't just this parameter that doesn't seem to be getting
   ; passed to dgsn_cmd
   dgsr_cmd->GetProperty, ProtonCurrentUnits=pcu
   dgsn_cmd->SetProperty, ProtonCurrentUnits=pcu
