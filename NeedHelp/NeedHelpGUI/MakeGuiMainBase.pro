@@ -68,6 +68,7 @@ PRO MakeGuiMainBase, MAIN_BASE, global
   add_file = widget_button(col2,$
     value = 'Browse for files to add...',$
     uname = 'add_file',$
+    event_pro = 'browse_files',$
     scr_xsize = xsize)
   Table = WIDGET_TABLE(col2,$
     UNAME = 'table_uname',$
