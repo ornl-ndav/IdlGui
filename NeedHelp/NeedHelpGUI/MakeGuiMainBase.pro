@@ -41,11 +41,11 @@ PRO MakeGuiMainBase, MAIN_BASE, global
     location=0)
     
   base = widget_base(tab,$ ;tab1 .........................................
-    title = 'General Help',$
+    title = '  General  Help  ',$
     /column)
     
   base2 = widget_base(tab,$ ;tab2 ........................................
-    title = 'Personalize Help',$
+    title = '  Personalize  Help  ',$
     /column)
     
   ;row1
@@ -106,6 +106,7 @@ PRO MakeGuiMainBase, MAIN_BASE, global
     /row)
   close = widget_button(row3,$
     value = 'CLOSE',$
+    event_pro = 'close_button',$
     xsize = 150,$
     uname = 'close')
   space = widget_label(row3,$

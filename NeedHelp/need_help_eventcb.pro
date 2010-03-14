@@ -32,6 +32,23 @@
 ;
 ;==============================================================================
 
+;+
+; :Description:
+;    This procedure kills the application
+;
+; :Params:
+;    Event
+;
+; :Author: j35
+;-
+PRO close_button, Event
+id = widget_info(Event.top, find_by_uname='MAIN_BASE')
+widget_control, id, /destroy
+END
+
+
+
+
 PRO send_to_geek, Event
   cmd_file = getTextFieldValue(Event,'cl_file_name_label')
   IF (cmd_file NE 'N/A') THEN BEGIN
