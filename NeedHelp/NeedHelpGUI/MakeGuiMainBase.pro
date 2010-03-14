@@ -70,11 +70,45 @@ PRO MakeGuiMainBase, MAIN_BASE, global
   remove_file = widget_button(col2,$
     value = 'Remove files selected',$
     uname = 'remove_file',$
+    sensitive = 0,$
     scr_xsize = xsize)
     
+    ;row 2
+    row2 = widget_base(base,$
+    /row)
+    label = widget_label(row2,$
+    value = 'How can we contact you (ex: (865)123-456, my_email@gmail.com)')
+    text = widget_text(row2,$
+    value = '',$
+    /editable,$
+    uname = 'contact_uname',$
+    /align_left,$
+    scr_xsize = 610)
     
+    ;space
+    space = widget_label(base,$
+    value = ' ')
     
-    
+    ;new row
+    row3 = widget_base(base,$
+    /row)
+    close = widget_button(row3,$
+    value = 'CLOSE',$
+    xsize = 150,$
+    uname = 'close')
+    space = widget_label(row3,$
+    value = '                                                   ' + $
+    '                   ')
+    send = widget_button(row3,$
+    value = 'SEND YOUR MESSAGE',$
+    xsize = 200,$
+    uname = 'send_message')
+    list = ['low','medium','high']
+    label = widget_label(row3,$
+    value = '        Priority:')
+    priority = widget_droplist(row3,$
+    value=list,$
+    uname = 'priority_list')
     
     
 END
