@@ -37,9 +37,44 @@ PRO MakeGuiMainBase, MAIN_BASE, global
   id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='MAIN_BASE')
   main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
   
-  BASE = WIDGET_BASE(MAIN_BASE,$
+  base = widget_base(MAIN_BASE,$
     /COLUMN)
     
-  
+  ;row1
+  row = widget_base(base,$
+    /row)
+  message = widget_text(row,$
+    xsize = 80,$
+    ysize = 5,$
+    /editable,$
+    uname = 'message')
+    
+  xsize = 480
+  col2 = widget_base(row,$
+    /column)
+  add_file = widget_button(col2,$
+    value = 'Browse for files to add...',$
+    uname = 'add_file',$
+    scr_xsize = xsize)
+  Table = WIDGET_TABLE(col2,$
+    UNAME = 'table_uname',$
+    XSIZE = 1,$
+    YSIZE = 10,$
+    SCR_XSIZE = xsize,$
+    SCR_YSIZE = 200,$
+    ;    /SCROLL,$
+    EDITABLE = [0],$
+    COLUMN_WIDTHS = [xsize],$
+    /NO_ROW_HEADERS,$
+    COLUMN_LABELS = ['Files'])
+  remove_file = widget_button(col2,$
+    value = 'Remove files selected',$
+    uname = 'remove_file',$
+    scr_xsize = xsize)
+    
+    
+    
+    
+    
     
 END
