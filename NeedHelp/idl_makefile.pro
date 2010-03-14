@@ -14,13 +14,14 @@ cd, IdlUtilitiesPath
 .run time.pro
 .run logger.pro
 .run xdisplayfile.pro
+.run checking_packages_routine.pro
 
 ;classes
 cd , CurrentFolder + '/Classes/'
 .run IDLxmlParser__define.pro
 .run IDLsendLogBook__define.pro
 .run IDL3columnsASCIIparser__define.pro
-
+  
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.
 
