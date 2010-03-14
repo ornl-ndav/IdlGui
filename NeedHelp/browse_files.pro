@@ -58,8 +58,54 @@
      title=title)
      
    if (new_files_to_add[0] ne '') then begin ;add new files to list
-     list_of_files = (*(*global).list_of_files)
-     add_files_to_list, list_of_files, new_files_to_add
+     add_files_to_list, event, new_files_to_add
+     update_list_of_files_table, event
    endif
+   
+ end
+ 
+ ;+
+ ; :Description:
+ ;    append the new file(s) to the current list of files
+ ;
+ ; :Params:
+ ;    event
+ ;    new_files_to_add
+ ;
+ ;
+ ; :Author: j35
+ ;-
+ pro add_files_to_list, event, new_files_to_add
+   compile_opt idl2
+   
+   widget_control, event.top, get_uvalue=global
+   list_of_files = (*(*global).list_of_files)
+   if (list_of_files[0] eq '') then begin
+     (*(*global).list_of_files) = new_files_to_add
+   endif else begin
+     list_of_files = [list_of_files,new_files_to_add]
+     (*(*global).list_of_files) = list_of_files
+   endelse
+   
+ end
+ 
+ ;+
+ ; :Description:
+ ;    this will refresh the table of step2 with the new list of files
+ ;
+ ; :Params:
+ ;    event
+ ;
+ ;
+ ;
+ ; :Author: j35
+ ;-
+ pro update_list_of_files_table, event
+   compile_opt idl2
+   
+   widget_control, event.top, get_uvalue=global
+   list_of_files = (*(*global).list_of_files)
+   
+   putValue, Event, 'table_uname', transpose(list_of_files)
    
  end
