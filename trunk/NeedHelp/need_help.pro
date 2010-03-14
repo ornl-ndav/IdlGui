@@ -56,8 +56,20 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   VERSION = file->getValue(tag=['configuration','version'])
   DEBUGGING = file->getValue(tag=['configuration','debugging'])
   TESTING = file->getValue(tag=['configuration','testing'])
+  CHECKING_PACKAGES = file->getValue(tag=['configuration','checking_packages']) 
   ;****************************************************************************
   ;============================================================================
+  
+  PACKAGE_REQUIRED_BASE = { driver:           '',$
+    version_required: '',$
+    found: 0,$
+    sub_pkg_version:   ''}
+  ;sub_pkg_version: python program that gives pkg v.
+  my_package = REPLICATE(PACKAGE_REQUIRED_BASE,1)
+  my_package[0].driver           = '/usr/bin/logger'
+  my_package[0].version_required = ''
+    ;************************************************************************
+  ;************************************************************************
   
   ucams = GET_UCAMS()
   
@@ -92,7 +104,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     MainBaseSize: [30,25,800,650]})
     
   MainBaseSize   = (*global).MainBaseSize
-  MainBaseTitle  = 'Dave Ascii Division (DAD)'
+  MainBaseTitle  = 'Need Help'
   MainBaseTitle += ' - ' + VERSION
   ;Build Main Base
   MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
@@ -134,6 +146,11 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   ;send message to log current run of application
   logger, APPLICATION=application, VERSION=version, UCAMS=ucams
+  
+   IF (CHECKING_PACKAGES EQ 'yes') THEN BEGIN
+    checking_packages_routine, MAIN_BASE, my_package, global
+  ENDIF
+  
   
 END
 
