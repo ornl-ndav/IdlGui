@@ -58,9 +58,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   TESTING = file->getValue(tag=['configuration','testing'])
   ;****************************************************************************
   ;============================================================================
-  
-  ucams = GET_UCAMS()
-  
+    
   ;define global variables
   global = PTR_NEW ({ path: '~/',$
     firefox: '/usr/bin/firefox',$
@@ -70,25 +68,21 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     sbatch_driver: 'sbatch',$
     
     default_path: '~/results/',$
-    old_input_text: PTR_NEW(0L), $
     
     debugging:    debugging,$ ;yes or no
-    ucams:        ucams,$
     application:  APPLICATION,$
-    
-    table: PTR_NEW(0L),$
-    column_file_name_tab2: PTR_NEW(0L),$
-    
-    continue_to_run_divisions: 0b,$
-    es_temp_index: 0, $
-    iESdata: PTR_NEW(0L), $ ;instance of elastic scan object ('blue' file)
-    esQrange: PTR_NEW(0L), $ ;array of Q values from elastic scan file
-    es_Q_sf_sferror: PTR_NEW(0L), $ [Q, scaling_factor, scaling_factor_error]
-    
-  processing:   '(PROCESSING)',$
-    ok:           'OK',$
-    failed:       'FAILED',$
     version:      VERSION,$
+    
+    ;structure that contains various infos about the system
+    general_infos: {ucams: '',$
+    version: version, $
+    hostname: '',$
+    home: '', $
+    contact: '', $ ;how can we contact the user
+    message: '', $
+    date: '' }, $
+    
+    ;size and position of application
     MainBaseSize: [30,25,1010,400]})
     
   MainBaseSize   = (*global).MainBaseSize
@@ -108,6 +102,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
   ;attach global structure with widget ID of widget main base widget ID
   WIDGET_CONTROL, MAIN_BASE, SET_UVALUE=global
+  
+  get_general_infos, global
   
   ;confirmation base
   MakeGuiMainBase, MAIN_BASE, global
@@ -133,7 +129,10 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;??????????????????????????????????????????????????????????????????????????????
   
   ;send message to log current run of application
+  ucams = (*global).general_infos.ucams
   logger, APPLICATION=application, VERSION=version, UCAMS=ucams
+  
+  help, (*global).general_infos,/structure
   
 END
 

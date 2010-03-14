@@ -15,6 +15,7 @@ cd, IdlUtilitiesPath
 .run logger.pro
 .run xdisplayfile.pro
 .run get_ucams.pro
+.run get_general_infos.pro
 
 ;classes
 cd , CurrentFolder + '/Classes/'
