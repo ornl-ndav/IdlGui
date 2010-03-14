@@ -89,7 +89,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ok:           'OK',$
     failed:       'FAILED',$
     version:      VERSION,$
-    MainBaseSize: [30,25,1000,400]})
+    MainBaseSize: [30,25,1010,400]})
     
   MainBaseSize   = (*global).MainBaseSize
   MainBaseTitle  = 'Need Help'
