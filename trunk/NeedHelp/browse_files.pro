@@ -60,6 +60,7 @@
    if (new_files_to_add[0] ne '') then begin ;add new files to list
      add_files_to_list, event, new_files_to_add
      update_list_of_files_table, event
+     activate_remove_files_button, event
    endif
    
  end
@@ -107,5 +108,23 @@
    list_of_files = (*(*global).list_of_files)
    
    putValue, Event, 'table_uname', transpose(list_of_files)
+   
+ end
+ 
+ ;+
+ ; :Description:
+ ;    Enabled the remove file button of tab 2
+ ;
+ ; :Params:
+ ;    event
+ ;
+ ;
+ ;
+ ; :Author: j35
+ ;-
+ pro activate_remove_files_button, event
+   compile_opt idl2
+   
+   activate_widget, Event, 'remove_file', 1
    
  end
