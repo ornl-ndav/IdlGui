@@ -59,6 +59,7 @@ PRO MakeGuiMainBase, MAIN_BASE, global
     xsize = 80,$
     ysize = 17,$
     /editable,$
+    value = "<Your message here>",$
     uname = 'message')
     
   xsize = 480
@@ -115,6 +116,7 @@ PRO MakeGuiMainBase, MAIN_BASE, global
   send = widget_button(row3,$
     value = 'SEND YOUR MESSAGE',$
     xsize = 200,$
+    event_pro = 'send_your_message',$
     uname = 'send_message')
   list = ['low','medium','high']
   label = widget_label(row3,$
