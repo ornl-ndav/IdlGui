@@ -32,13 +32,14 @@
 ;
 ;==============================================================================
 
-FUNCTION convert_rgb, rgb
-COMPILE_OPT idl2, HIDDEN
-RETURN, rgb[0] + (rgb[1] * 2L^8) + (rgb[2]*2L^16)
-END
-
-;------------------------------------------------------------------------------
-FUNCTION getHostname
-spawn, 'hostname', listening
-RETURN, listening[0]
+;+
+; 
+; This function returns the ucams of the user
+;
+; @returns ucams
+; 
+; :Author: j35
+;-
+FUNCTION get_ucams
+  RETURN, getenv('USER')
 END
