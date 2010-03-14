@@ -32,6 +32,8 @@ cd, CurrentFolder + '/NeedHelpGUI/'
 
 ;Build all procedures
 cd, CurrentFolder
+.run send_your_message.pro
+.run send_error_message.pro
 
 ;main functions
 .run MainBaseEvent.pro

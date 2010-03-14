@@ -64,8 +64,6 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     firefox: '/usr/bin/firefox',$
     srun_web_page: 'https://neutronsr.us/applications/jobmonitor/'+$
     'squeue.php?view=all',$
-    srun_driver: 'srun',$
-    sbatch_driver: 'sbatch',$
     
     default_path: '~/results/',$
     
@@ -132,7 +130,6 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ucams = (*global).general_infos.ucams
   logger, APPLICATION=application, VERSION=version, UCAMS=ucams
   
-  help, (*global).general_infos,/structure
   
 END
 
