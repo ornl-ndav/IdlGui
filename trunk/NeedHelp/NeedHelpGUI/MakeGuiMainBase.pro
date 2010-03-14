@@ -51,9 +51,13 @@ PRO MakeGuiMainBase, MAIN_BASE, global
   ;row1
   row = widget_base(base2,$
     /row)
-  message = widget_text(row,$
+  col1 = widget_base(row,$
+  /column)  
+  label = widget_label(col1,$
+  value = 'Ask your question / Describe your problem / Give your feedback')
+  message = widget_text(col1,$
     xsize = 80,$
-    ysize = 5,$
+    ysize = 17,$
     /editable,$
     uname = 'message')
     
@@ -85,13 +89,13 @@ PRO MakeGuiMainBase, MAIN_BASE, global
   row2 = widget_base(base2,$
     /row)
   label = widget_label(row2,$
-    value = 'How can we contact you (ex: (865)123-456, my_email@gmail.com)')
+    value = 'How can we contact you (ex: (865)123-456, my_email@gmail.com) ?')
   text = widget_text(row2,$
     value = '',$
     /editable,$
     uname = 'contact_uname',$
     /align_left,$
-    scr_xsize = 610)
+    scr_xsize = 605)
     
   ;space
   space = widget_label(base2,$
@@ -117,6 +121,6 @@ PRO MakeGuiMainBase, MAIN_BASE, global
   priority = widget_droplist(row3,$
     value=list,$
     uname = 'priority_list')
-    
+  widget_control, priority, set_droplist_select=1
     
 END
