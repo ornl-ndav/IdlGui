@@ -58,7 +58,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   TESTING = file->getValue(tag=['configuration','testing'])
   ;****************************************************************************
   ;============================================================================
-    
+  
   ;define global variables
   global = PTR_NEW ({ path: '~/',$
     firefox: '/usr/bin/firefox',$
@@ -70,6 +70,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     debugging:    debugging,$ ;yes or no
     application:  APPLICATION,$
     version:      VERSION,$
+    
+    list_of_files: ptr_new(0L),$  ;list of files to add to message (tab2)
     
     ;structure that contains various infos about the system
     general_infos: {ucams: '',$
@@ -83,6 +85,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ;size and position of application
     MainBaseSize: [30,25,1010,400]})
     
+  ;(*(*global).list_of_files) = strarr(1)
+  
   MainBaseSize   = (*global).MainBaseSize
   MainBaseTitle  = 'Need Help'
   MainBaseTitle += ' - ' + VERSION
