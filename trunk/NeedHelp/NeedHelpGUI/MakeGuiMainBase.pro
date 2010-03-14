@@ -37,11 +37,19 @@ PRO MakeGuiMainBase, MAIN_BASE, global
   id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='MAIN_BASE')
   main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
   
-  base = widget_base(MAIN_BASE,$
-    /COLUMN)
+  tab = widget_tab(MAIN_BASE,$
+    location=0)
+    
+  base = widget_base(tab,$ ;tab1 .........................................
+    title = 'General Help',$
+    /column)
+    
+  base2 = widget_base(tab,$ ;tab2 ........................................
+    title = 'Personalize Help',$
+    /column)
     
   ;row1
-  row = widget_base(base,$
+  row = widget_base(base2,$
     /row)
   message = widget_text(row,$
     xsize = 80,$
@@ -73,40 +81,40 @@ PRO MakeGuiMainBase, MAIN_BASE, global
     sensitive = 0,$
     scr_xsize = xsize)
     
-    ;row 2
-    row2 = widget_base(base,$
+  ;row 2
+  row2 = widget_base(base2,$
     /row)
-    label = widget_label(row2,$
+  label = widget_label(row2,$
     value = 'How can we contact you (ex: (865)123-456, my_email@gmail.com)')
-    text = widget_text(row2,$
+  text = widget_text(row2,$
     value = '',$
     /editable,$
     uname = 'contact_uname',$
     /align_left,$
     scr_xsize = 610)
     
-    ;space
-    space = widget_label(base,$
+  ;space
+  space = widget_label(base2,$
     value = ' ')
     
-    ;new row
-    row3 = widget_base(base,$
+  ;new row
+  row3 = widget_base(base2,$
     /row)
-    close = widget_button(row3,$
+  close = widget_button(row3,$
     value = 'CLOSE',$
     xsize = 150,$
     uname = 'close')
-    space = widget_label(row3,$
+  space = widget_label(row3,$
     value = '                                                   ' + $
     '                   ')
-    send = widget_button(row3,$
+  send = widget_button(row3,$
     value = 'SEND YOUR MESSAGE',$
     xsize = 200,$
     uname = 'send_message')
-    list = ['low','medium','high']
-    label = widget_label(row3,$
+  list = ['low','medium','high']
+  label = widget_label(row3,$
     value = '        Priority:')
-    priority = widget_droplist(row3,$
+  priority = widget_droplist(row3,$
     value=list,$
     uname = 'priority_list')
     
