@@ -32,42 +32,25 @@
 ;
 ;==============================================================================
 
-FUNCTION getTextFieldValue, Event, uname
-id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
-WIDGET_CONTROL, id, GET_VALUE=value
-RETURN, value
+;+
+; :Description:
+;    This procedure collects various infos from the system to learn a little
+;    bit more about the sender
+;
+; :Params:
+;    global: global structure that contains the general infos structure
+;
+; :Author: j35
+;-
+pro get_general_infos, global
+
+  general_infos = (*global).general_infos
+
+  general_infos.home = getenv('HOME')
+  general_infos.date = GenerateIsoTimeStamp()
+  general_infos.hostname = get_hostname()
+  general_infos.ucams = getenv('USER')
+  
+  (*global).general_infos = general_infos
+  
 END
-
-;------------------------------------------------------------------------------
-FUNCTION getTableValue, Event, uname
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-WIDGET_CONTROL, id, GET_VALUE=value
-RETURN, value
-END
-
-;------------------------------------------------------------------------------
-FUNCTION getButtonValue, Event, uname
-  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-  WIDGET_CONTROL, id, GET_VALUE=value
-  RETURN, value
-END
-
-;------------------------------------------------------------------------------
-FUNCTION getDroplistSelect, Event, uname
-id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
-value = WIDGET_INFO(id, /DROPLIST_SELECT)
-RETURN, value
-END
-
-;------------------------------------------------------------------------------
-function get_hostname
-catch, error
-if (error ne 0) then begin
-catch, /cancel
-return, 'N/A'
-endif
-spawn, 'hostname', hostname
-return, hostname
-end
-
-
