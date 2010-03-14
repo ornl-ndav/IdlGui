@@ -64,7 +64,5 @@ PRO MAIN_REALIZE, wWidget
   WIDGET_CONTROL,HOURGLASS=0
 END
 
-;------------------------------------------------------------------------------
-PRO cloop_eventcb, event
-END
+
 

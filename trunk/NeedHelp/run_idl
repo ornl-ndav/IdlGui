@@ -1,6 +1,6 @@
-spawn, 'cp DAD.cfg .DAD.cfg'
+spawn, 'cp NeedHelp.cfg .NeedHelp.cfg'
 @idl_makefile.pro
-dad
+need_help
 
 
 

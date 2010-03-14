@@ -32,15 +32,13 @@
 ;
 ;==============================================================================
 
-PRO DAD_cleanup, tlb
+PRO need_help_cleanup, tlb
 
   WIDGET_CONTROL, tlb, GET_UVALUE=global, /NO_COPY
   IF N_ELEMENTS(global) EQ 0 THEN RETURN
   
   ; Free up the pointers
-  PTR_FREE, (*global).old_input_text
-  PTR_FREE, (*global).table
-  PTR_FREE, (*global).column_file_name_tab2
+  ;  PTR_FREE, (*global).old_input_text
   PTR_FREE, global
   
 END
@@ -51,7 +49,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;get the current folder
   CD, CURRENT = current_folder
   
-  file = OBJ_NEW('IDLxmlParser','.DAD.cfg')
+  file = OBJ_NEW('IDLxmlParser','.NeedHelp.cfg')
   ;============================================================================
   ;****************************************************************************
   APPLICATION = file->getValue(tag=['configuration','application'])
@@ -61,13 +59,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;****************************************************************************
   ;============================================================================
   
-  ;get ucams of user if running on linux
-  ;and set ucams to 'j35' if running on darwin
-  IF (!VERSION.os EQ 'darwin') THEN BEGIN
-    ucams = 'j35'
-  ENDIF ELSE BEGIN
-    ucams = GET_UCAMS()
-  ENDELSE
+  ucams = GET_UCAMS()
   
   ;define global variables
   global = PTR_NEW ({ path: '~/',$
@@ -121,11 +113,11 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   MakeGuiMainBase, MAIN_BASE, global
   
   Widget_Control, /REALIZE, MAIN_BASE
-  XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK, CLEANUP='DAD_cleanup'
+  XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK, CLEANUP='need_help_cleanup'
   
-  ;==============================================================================
+  ;=============================================================================
   ; Date Information
-  ;==============================================================================
+  ;=============================================================================
   ;Put date/time when user started application in first line of log book
   ;time_stamp = GenerateReadableIsoTimeStamp()
   ;message = '>>>>>>  Application started date/time: ' + time_stamp + '  <<<<<<'
@@ -147,7 +139,7 @@ END
 
 ;-----------------------------------------------------------------------------
 ; Empty stub procedure used for autoloading.
-PRO dad, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+PRO need_help, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 END
 

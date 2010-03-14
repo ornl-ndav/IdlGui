@@ -25,20 +25,13 @@ cd , CurrentFolder + '/Classes/'
 ;and create the VM file.
 
 ;Build CLoop GUI
-cd, CurrentFolder + '/DADgui/'
+cd, CurrentFolder + '/NeedHelpGUI/'
 .run MakeGuiMainBase.pro
 
 ;Build all procedures
 cd, CurrentFolder
-.run dad_create_output.pro
-.run dad_check_gui_status.pro
-.run dad_input_dave_ascii.pro
-.run dad_input_es_file.pro
-.run dad_table.pro
-.run dad_run.pro
-.run dad_temperature_selection_base.pro
 
 ;main functions
 .run MainBaseEvent.pro
-.run dad_eventcb.pro
-.run dad.pro
+.run need_help_eventcb.pro
+.run need_help.pro
