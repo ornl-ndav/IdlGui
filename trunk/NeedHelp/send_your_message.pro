@@ -81,7 +81,7 @@ pro send_your_message, event
     print, 'message: ' + message
     help, message
     print, 'list_of_files:'
-    help, list_of_files
+    help, listi_of_files
     print, list_of_files
     print, 'priority: ' + priority
     print, 'mailing_list: ' + mailing_list
@@ -92,13 +92,12 @@ pro send_your_message, event
     hostname=hostname,$
     home=home,$
     date=date,$
-    message=message,$
-    priority=priority)
+    message=message)
     
   email_subject = create_email_subject(ucams=ucams,$
-  priority=priority,$
-  hostname=hostname,$
-  date=date)  
+    priority=priority,$
+    hostname=hostname,$
+    date=date)
     
   ;we have at least one file so we can create the tar file
   if (list_of_files[0] ne '') then begin
@@ -111,16 +110,16 @@ pro send_your_message, event
   endif
   
   ;send email
-
-  
-  
+  cmd_email = 'echo "' + email_message + '" | mutt -s " ' + email_subject + '"'
+  if (list_of_files[0] ne '') then begin
+    cmd_email += ' -a ' + tar_file_name
+  endif
+  cmd_email += ' ' + mailing_list
+  spawn, cmd_email
   
 ;remove tar file
-;  if (list_of_files[0] ne '') then begin
-;    spawn, 'rm ' + tar_file_name
-;  endif
-  
-  
-  
+  if (list_of_files[0] ne '') then begin
+    spawn, 'rm ' + tar_file_name
+  endif
   
 end
