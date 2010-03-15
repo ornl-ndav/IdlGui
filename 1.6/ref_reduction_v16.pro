@@ -87,7 +87,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     /BASE_ALIGN_CENTER)
     
   label = WIDGET_LABEL(pola_base,$
-    VALUE = 'Select a Polarization State:')
+    VALUE = 'Select the working spin state:')
   label = WIDGET_LABEL(pola_base,$
     VALUE = '                                             ',$
     UNAME = 'pola_file_name_uname')
