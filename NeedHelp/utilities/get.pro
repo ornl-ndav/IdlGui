@@ -99,7 +99,7 @@ end
 ;   the configuration file
 ;
 ; @Params:
-;    priority
+;    event
 ;
 ; @returns
 ;    mailing list
@@ -115,6 +115,7 @@ function get_mailing_list, priority
     'low': tag = [tag_root,'low']
     'medium': tag = [tag_root,'medium']
     'high': tag = [tag_root,'high']
+    'debug': tag =[tag_root,'debug']
   endcase
   
   mailing_list = file->getValue(tag=tag)
