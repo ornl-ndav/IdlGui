@@ -59,26 +59,32 @@ function getEi, instrument, runnumber
     
   ENDIF
   
+  ;print,'INSTRUMENT:',instrument
+  
   ; Now are we going to determine the Ei from the monitors ?
   case (STRUPCASE(instrument)) of
     "ARCS": begin
       ; Calculate the Ei
-      IF (nexusThere EQ 1) THEN BEGIN
-        Ei = calcei(instrument, runnumber, requested_ei, NEXUSFILE=nexusfile)
-      ENDIF ELSE BEGIN
-        Ei = calcei(instrument, runnumber, requested_ei)
-      ENDELSE
+      result = calcei_python(instrument, runnumber, requested_ei)
+      ei = result.Ei
+    ;      IF (nexusThere EQ 1) THEN BEGIN
+    ;        Ei = calcei(instrument, runnumber, requested_ei, NEXUSFILE=nexusfile)
+    ;      ENDIF ELSE BEGIN
+    ;        Ei = calcei(instrument, runnumber, requested_ei)
+    ;ENDELSE
     end
     "CNCS": begin
       Ei = requested_ei
     end
-    "SEQUOIA": begin
+  "SEQ": begin
       ; Calculate the Ei
-      IF (nexusThere EQ 1) THEN BEGIN
-        Ei = calcei(instrument, runnumber, requested_ei, NEXUSFILE=nexusfile)
-      ENDIF ELSE BEGIN
-        Ei = calcei(instrument, runnumber, requested_ei)
-      ENDELSE
+    result = calcei_python(instrument, runnumber, requested_ei)
+    ei = result.ei
+  ;      IF (nexusThere EQ 1) THEN BEGIN
+  ;        Ei = calcei(instrument, runnumber, requested_ei, NEXUSFILE=nexusfile)
+  ;      ENDIF ELSE BEGIN
+  ;        Ei = calcei(instrument, runnumber, requested_ei)
+  ;      ENDELSE
     end
     else: begin
       ; If we don't know the beamline then just assumed that the requested Ei is good enough!
