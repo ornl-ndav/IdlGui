@@ -114,7 +114,7 @@ end
 pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
 APPLICATION = 'plotBSS'
-VERSION     = '1.0.1'
+VERSION     = '1.1.0'
 
 ;define parameters
 scr_x 	      = 930             ;main window width
@@ -162,9 +162,9 @@ global = ptr_new({$
                    file_to_plot_bottom : '',$
                    file			:'',$
                    file_already_opened	:0,$
-                   path			:'/SNSlocal/tmp/',$
+                   path			:'/SNS/tmp/',$
                    working_path		:'',$
-                   default_path		:'/SNSlocal/users/',$
+                   default_path		:'/SNS/users/',$
                    event_file_path		:'/SNS/BSS/2006_1_2_SCI/',$
                    event_filename		:'',$
                    event_filename_only	:'',$
@@ -243,8 +243,6 @@ IDENTIFICATION_GO = widget_button(IDENTIFICATION_BASE,$
 		SCR_XSIZE=130, SCR_YSIZE=30,$
 		VALUE="E N T E R",$
 		UNAME='IDENTIFICATION_GO')		
-
-
 
 ;open nexus interface
 ;open nexus_file window
