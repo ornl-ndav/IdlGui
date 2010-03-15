@@ -34,78 +34,81 @@
 
 ;+
 ; :Description:
-;   This procedure will send an email with the message entered by the user
-;   to various people (will depend on the status of the priority).
-;   It will also create a tar file of the files added to the message.
+;   This function copy the files the user wants to attach to the email
+;   in his home folder
+;
+;  :Params:
+;     list_of_files
+;
+;
+;  :Author: j35
+;-
+function cp_to_relative_folder, list_of_files
+  compile_opt idl2
+  
+  tmp_path = './'
+  sz = n_elements(list_of_files)
+  new_list_of_files = strarr(sz)
+  i = 0
+  WHILE (i LT sz) DO BEGIN
+    base_name = file_basename(list_of_files[i])
+    new_list_of_files[i] = tmp_path + base_name + '_tmp'
+    ;copy file
+    spawn, 'cp ' + list_of_files[i] + ' ' + new_list_of_files[i], $
+      listening, err_listening
+    ;change permission of file
+    spawn, 'chmod 755 ' + new_list_of_files[i], listening, err_listening
+    ++i
+  ENDWHILE
+  return, new_list_of_files
+end
+
+
+;+
+; :Description
+;   This function removes the temporary files copied in the home directory
+;   and used to create the tar file
 ;
 ; :Params:
-;    event
+;   list_of_files
+;
 ;
 ; :Author: j35
 ;-
-pro send_your_message, event
+PRO clean_tmp_files, new_list_OF_files
+  new_list = strjoin(new_list_OF_files, ' ')
+  spawn, 'rm ' + new_list, listening
+END
+
+
+;+
+; :Description:
+;    This routine creates the tar file that will be attach to the email
+;
+; :Params:
+;    tar_file_name
+;    list_of_files
+;
+;
+; :Author: j35
+;-
+pro create_tar_folder, tar_file_name, list_of_files
   compile_opt idl2
   
-  ;check that contact is not empty
-  contact = getTextFieldValue(event, 'contact_uname')
-  if (strcompress(contact,/remove_all) eq '') then begin
-    send_error_message, event, error_type='contact'
-    return
-  endif
+  ;copy all the files in ./ directory to be sure we are working with
+  ;relative path
+  new_list_of_files = cp_to_relative_folder(list_of_files)
   
-  widget_control, event.top, get_uvalue=global
-  general_infos = (*global).general_infos
-  ucams    = general_infos.ucams
-  version  = general_infos.version
-  hostname = general_infos.hostname
-  home     = general_infos.home
-  date     = GenerateIsoTimeStamp()
+  tar_cmd = 'tar cvf ' + tar_file_name
+  nbr_files = n_elements(new_list_of_files)
+  i=0
+  while (i LT nbr_files) do begin
+    tar_cmd += ' ' + new_list_of_files[i]
+    ++i
+  endwhile
+  spawn, tar_cmd, listening
   
-  ;get message
-  message = getTextFieldValue(event, 'message')
-  
-  ;list of files
-  list_of_files = (*(*global).list_of_files)
-  
-  ;priority ('low', 'medium', 'high')
-  priority = get_priority(event)
-  ;get email list
-  mailing_list = get_mailing_list(priority)
-  
-  if ((*global).debugging eq 'yes') then begin
-    print, 'ucams: ' + ucams
-    print, 'version: ' + version
-    print, 'hostname: ' + hostname
-    print, 'home: ' + home
-    print, 'date: ' + date
-    print, 'message: ' + message
-    help, message
-    print, 'list_of_files:'
-    help, list_of_files
-    print, list_of_files
-    print, 'priority: ' + priority
-    print, 'mailing_list: ' + mailing_list
-  endif
-  
-  ;we have at least one file so we can create the tar file
-  if (list_of_files[0] ne '') then begin
-    ;create taf file name
-    tar_file_name = './need_help_' + date + '.tar'
-    create_tar_folder, tar_file_name, list_of_files
-    if ((*global).debugging eq 'yes') then begin
-      print, 'tar_file_name: ' + tar_file_name
-    endif
-  endif
-  
-  
-  
-  
-  ;remove tar file
-;  if (list_of_files[0] ne '') then begin
-;    spawn, 'rm ' + tar_file_name
-;  endif
-  
-  
-  
+  ;remove tmp files
+  clean_tmp_files, new_list_OF_files
   
 end
