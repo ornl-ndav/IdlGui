@@ -63,6 +63,7 @@ newPath = EXPAND_PATH('+./') + PATH_SEP(/SEARCH_PATH) + !PATH
 .compile gettzero
 .compile calcei
 .compile getei
+.compile calcei_python
 .compile getmintimefromprenexus
 .compile getmaxtimefromprenexus
 .compile getsteptimefromprenexus
