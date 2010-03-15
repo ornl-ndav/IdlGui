@@ -41,7 +41,7 @@ FUNCTION retrieveBanksData, Event, $
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   not_hdf5_format = 0
-  ;CATCH, not_hdf5_format
+  CATCH, not_hdf5_format
   IF (not_hdf5_format NE 0) THEN BEGIN
     CATCH,/CANCEL
     (*global).isHDF5format = 0
@@ -75,6 +75,11 @@ FUNCTION retrieveBanksData, Event, $
         IF (simulate_rotated_detector EQ 'yes') THEN BEGIN
           simulate_REF_L_rotated_angle, data
         ENDIF
+        x = (size(data))(2)
+        if (x ne 256) then begin
+        using_wrong_version_of_ref_reduction, Event
+        message, 'wrong nexus file format'
+        endif
         (*(*global).bank1_data) = data
       END
       'norm': BEGIN
@@ -82,6 +87,11 @@ FUNCTION retrieveBanksData, Event, $
         IF (simulate_rotated_detector EQ 'yes') THEN BEGIN
           simulate_REF_L_rotated_angle, data
         ENDIF
+        x = (size(data))(2)
+        if (x ne 256) then begin
+        using_wrong_version_of_ref_reduction, Event
+        message, 'wrong nexus file format'
+        endif
         (*(*global).bank1_norm) = data
       END
       'empty_cell': BEGIN
@@ -89,6 +99,11 @@ FUNCTION retrieveBanksData, Event, $
         IF (simulate_rotated_detector EQ 'yes') THEN BEGIN
           simulate_REF_L_rotated_angle, data
         ENDIF
+        x = (size(data))(2)
+        if (x ne 256) then begin
+        using_wrong_version_of_ref_reduction, Event
+        message, 'wrong nexus file format'
+        endif
         (*(*global).bank1_empty_cell) = data
       END
       ELSE: RETURN, 0
