@@ -30,6 +30,10 @@ cd , CurrentFolder + '/Classes/'
 cd, CurrentFolder + '/NeedHelpGUI/'
 .run MakeGuiMainBase.pro
 
+;build all functions
+.run create_email_message.pro
+.run create_email_subject.pro
+
 ;Build all procedures
 cd, CurrentFolder
 .run send_your_message.pro

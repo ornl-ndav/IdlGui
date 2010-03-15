@@ -87,6 +87,19 @@ pro send_your_message, event
     print, 'mailing_list: ' + mailing_list
   endif
   
+  email_message = create_email_message(ucams=ucams,$
+    version=version,$
+    hostname=hostname,$
+    home=home,$
+    date=date,$
+    message=message,$
+    priority=priority)
+    
+  email_subject = create_email_subject(ucams=ucams,$
+  priority=priority,$
+  hostname=hostname,$
+  date=date)  
+    
   ;we have at least one file so we can create the tar file
   if (list_of_files[0] ne '') then begin
     ;create taf file name
@@ -97,10 +110,12 @@ pro send_your_message, event
     endif
   endif
   
+  ;send email
+
   
   
   
-  ;remove tar file
+;remove tar file
 ;  if (list_of_files[0] ne '') then begin
 ;    spawn, 'rm ' + tar_file_name
 ;  endif
