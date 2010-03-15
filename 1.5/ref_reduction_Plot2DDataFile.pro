@@ -39,7 +39,7 @@ WIDGET_CONTROL,Event.top,GET_UVALUE=global
 ;check instrument selected
 instrument = (*global).instrument
 no_error = 0
-;CATCH, no_error
+CATCH, no_error
 IF (no_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     IDLsendLogBook_ReplaceLogBookText, $
