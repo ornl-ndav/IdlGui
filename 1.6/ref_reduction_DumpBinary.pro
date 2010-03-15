@@ -75,7 +75,8 @@ FUNCTION retrieveBanksData, Event, $
         IF (simulate_new_detector EQ 'yes') THEN BEGIN
           simulate_ref_m_new_detector, data
         ENDIF
-        x = (size(data))(1)
+        x = (size(data))(2)
+        help, data
         if (x ne 128) then message, 'Wrong detector geometry' 
         (*(*global).bank1_data) = data
       END
@@ -84,13 +85,13 @@ FUNCTION retrieveBanksData, Event, $
         IF (simulate_new_detector EQ 'yes') THEN BEGIN
           simulate_ref_m_new_detector, data
         ENDIF
-        x = (size(data))(1)
+        x = (size(data))(2)
         if (x ne 128) then message, 'Wrong detector geometry' 
         (*(*global).bank1_norm) = data
       END
       'empty_cell': BEGIN
         data = h5d_read(fieldID)
-        x = (size(data))(1)
+        x = (size(data))(2)
         if (x ne 128) then message, 'Wrong detector geometry' 
         IF (simulate_new_detector EQ 'yes') THEN BEGIN
           simulate_ref_m_new_detector, data
