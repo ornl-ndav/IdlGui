@@ -60,15 +60,33 @@ pro send_your_message, event
   hostname = general_infos.hostname
   home     = general_infos.home
   date     = GenerateIsoTimeStamp()
-
+  
   ;get message
   message = getTextFieldValue(event, 'message')
-    
+  
   ;list of files
   list_of_files = (*(*global).list_of_files)
   
   ;priority ('low', 'medium', 'high')
-  priority = get_priority(event) 
+  priority = get_priority(event)
+  ;get email list
+  mailing_list = get_mailing_list(priority)
+  
+  if ((*global).debugging eq 'yes') then begin
+    print, 'ucams: ' + ucams
+    print, 'version: ' + version
+    print, 'hostname: ' + hostname
+    print, 'home: ' + home
+    print, 'date: ' + date
+    print, 'message: ' + message
+    help, message
+    print, 'list_of_files:'
+    help, list_of_files
+    print, list_of_files
+    print, 'priority: ' + priority
+    print, 'mailing_list: ' + mailing_list
+  endif
+  
   
   
 end
