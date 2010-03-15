@@ -36,12 +36,21 @@
 ; :Params:
 ;    Instrument - The instrument short name
 ;
+; :Keywords:
+;    RUNNUMBER - Optional parameter to pass in a run number
+;
 ; :Author: scu (campbellsi@ornl.gov)
-;-
-function GetCornerGeometryFile, Instrument
+;
+function GetCornerGeometryFile, Instrument, RUNNUMBER=RUNNUMBER
 
   IF N_ELEMENTS(Instrument) EQ 0 THEN Instrument = ''
 
+  IF KEYWORD_SET(RUNNUMBER) THEN BEGIN
+    run = RUNNUMBER
+  ENDIF ELSE BEGIN
+    run = 0
+  ENDELSE
+  
   case (STRUPCASE(instrument)) of
     "ARCS": begin
       cornergeometry = $
