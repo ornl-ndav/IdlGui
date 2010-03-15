@@ -77,10 +77,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     general_infos: {ucams: '',$
     version: version, $
     hostname: '',$
-    home: '', $
-    contact: '', $ ;how can we contact the user
-    message: '', $
-    date: '' }, $
+    home: ''}, $
     
     ;size and position of application
     MainBaseSize: [30,25,1010,400]})
