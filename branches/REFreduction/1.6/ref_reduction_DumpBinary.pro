@@ -41,7 +41,7 @@ FUNCTION retrieveBanksData, Event, $
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   not_hdf5_format = 0
-  ;CATCH, not_hdf5_format
+  CATCH, not_hdf5_format
   IF (not_hdf5_format NE 0) THEN BEGIN
     CATCH,/CANCEL
     (*global).isHDF5format = 0
@@ -75,6 +75,8 @@ FUNCTION retrieveBanksData, Event, $
         IF (simulate_new_detector EQ 'yes') THEN BEGIN
           simulate_ref_m_new_detector, data
         ENDIF
+        x = (size(data))(1)
+        if (x ne 128) then message, 'Wrong detector geometry' 
         (*(*global).bank1_data) = data
       END
       'norm': BEGIN
@@ -82,10 +84,14 @@ FUNCTION retrieveBanksData, Event, $
         IF (simulate_new_detector EQ 'yes') THEN BEGIN
           simulate_ref_m_new_detector, data
         ENDIF
+        x = (size(data))(1)
+        if (x ne 128) then message, 'Wrong detector geometry' 
         (*(*global).bank1_norm) = data
       END
       'empty_cell': BEGIN
         data = h5d_read(fieldID)
+        x = (size(data))(1)
+        if (x ne 128) then message, 'Wrong detector geometry' 
         IF (simulate_new_detector EQ 'yes') THEN BEGIN
           simulate_ref_m_new_detector, data
         ENDIF
@@ -238,7 +244,7 @@ PRO RefReduction_DumpBinary, Event, $
   cmd_text = '-> Retrieving data ... ' + PROCESSING
   putLogBookMessage, Event, cmd_text, Append=1
   no_error = 0
-  ;CATCH, no_error
+  CATCH, no_error
   IF (no_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     IDLsendLogBook_ReplaceLogBookText, Event, PROCESSING, (*global).failed
