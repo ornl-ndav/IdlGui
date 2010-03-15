@@ -85,9 +85,40 @@ end
 function get_priority, event
   compile_opt idl2
   
-  value = getDroplistSelect(event,'priority_list')  
+  value = getDroplistSelect(event,'priority_list')
   if (value eq 0) then return, 'low'
   if (value eq 1) then return, 'medium'
   return, 'high'
+end
+
+
+;+
+; :Description:
+;   This function returns the list of email that will be use to send the
+;   message according to the priority. The mailing list is retrieved from
+;   the configuration file
+;
+; @Params:
+;    priority
+;
+; @returns
+;    mailing list
+;
+; :Author: j35
+;-
+function get_mailing_list, priority
+  compile_opt idl2
+  
+  file = OBJ_NEW('IDLxmlParser','.NeedHelp.cfg')
+  tag_root = ['configuration','priority']
+  case (priority) of
+    'low': tag = [tag_root,'low']
+    'medium': tag = [tag_root,'medium']
+    'high': tag = [tag_root,'high']
+  endcase
+  
+  mailing_list = file->getValue(tag=tag)
+  
+  return, mailing_list
 end
 

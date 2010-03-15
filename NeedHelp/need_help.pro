@@ -58,6 +58,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   TESTING = file->getValue(tag=['configuration','testing'])
   ;****************************************************************************
   ;============================================================================
+  obj_destroy, file
   
   ;define global variables
   global = PTR_NEW ({ path: '~/',$
