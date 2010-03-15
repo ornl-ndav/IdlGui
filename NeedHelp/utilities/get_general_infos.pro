@@ -47,7 +47,6 @@ pro get_general_infos, global
   general_infos = (*global).general_infos
 
   general_infos.home = getenv('HOME')
-  general_infos.date = GenerateIsoTimeStamp()
   general_infos.hostname = get_hostname()
   general_infos.ucams = getenv('USER')
   

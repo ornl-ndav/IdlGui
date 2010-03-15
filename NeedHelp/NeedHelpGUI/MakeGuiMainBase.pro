@@ -66,7 +66,7 @@ PRO MakeGuiMainBase, MAIN_BASE, global
   col2 = widget_base(row,$
     /column)
   add_file = widget_button(col2,$
-    value = 'Browse for files to add...',$
+    value = 'Browse for files you want to attach to your message...',$
     uname = 'add_file',$
     event_pro = 'browse_files',$
     scr_xsize = xsize)
@@ -93,13 +93,14 @@ PRO MakeGuiMainBase, MAIN_BASE, global
   row2 = widget_base(base2,$
     /row)
   label = widget_label(row2,$
-    value = 'How can we contact you (ex: (865)123-456, my_email@gmail.com) ?')
+    value = 'Who are you and how can we contact you (ex: (865) 123-456, ' + $
+    'my_email@gmail.com) ?')
   text = widget_text(row2,$
     value = '',$
     /editable,$
     uname = 'contact_uname',$
     /align_left,$
-    scr_xsize = 605)
+    scr_xsize = 505)
     
   ;space
   space = widget_label(base2,$

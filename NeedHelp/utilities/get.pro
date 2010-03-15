@@ -33,16 +33,16 @@
 ;==============================================================================
 
 FUNCTION getTextFieldValue, Event, uname
-id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
-WIDGET_CONTROL, id, GET_VALUE=value
-RETURN, value
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, id, GET_VALUE=value
+  RETURN, value
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION getTableValue, Event, uname
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-WIDGET_CONTROL, id, GET_VALUE=value
-RETURN, value
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, id, GET_VALUE=value
+  RETURN, value
 END
 
 ;------------------------------------------------------------------------------
@@ -54,20 +54,40 @@ END
 
 ;------------------------------------------------------------------------------
 FUNCTION getDroplistSelect, Event, uname
-id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
-value = WIDGET_INFO(id, /DROPLIST_SELECT)
-RETURN, value
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
+  value = WIDGET_INFO(id, /DROPLIST_SELECT)
+  RETURN, value
 END
 
 ;------------------------------------------------------------------------------
 function get_hostname
-catch, error
-if (error ne 0) then begin
-catch, /cancel
-return, 'N/A'
-endif
-spawn, 'hostname', hostname
-return, hostname
+  catch, error
+  if (error ne 0) then begin
+    catch, /cancel
+    return, 'N/A'
+  endif
+  spawn, 'hostname', hostname
+  return, hostname
 end
 
+
+;+
+; :Description:
+;    This function will return the priority selected by the user
+;
+; :Params:
+;    event
+;
+;  @returns the priority ('low', 'medium' or 'high')
+;
+; :Author: j35
+;-
+function get_priority, event
+  compile_opt idl2
+  
+  value = getDroplistSelect(event,'priority_list')  
+  if (value eq 0) then return, 'low'
+  if (value eq 1) then return, 'medium'
+  return, 'high'
+end
 

@@ -53,4 +53,22 @@ pro send_your_message, event
     return
   endif
   
+  widget_control, event.top, get_uvalue=global
+  general_infos = (*global).general_infos
+  ucams    = general_infos.ucams
+  version  = general_infos.version
+  hostname = general_infos.hostname
+  home     = general_infos.home
+  date     = GenerateIsoTimeStamp()
+
+  ;get message
+  message = getTextFieldValue(event, 'message')
+    
+  ;list of files
+  list_of_files = (*(*global).list_of_files)
+  
+  ;priority ('low', 'medium', 'high')
+  priority = get_priority(event) 
+  
+  
 end
