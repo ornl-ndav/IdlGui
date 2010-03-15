@@ -28,7 +28,7 @@ function get_output_directory, instrument, runnumber, HOME=HOME, $
   ENDIF
   
   ; Also check to for a single digit run number
-  IF STRLEN(runnumber) LT 2 THEN UNKNOWN = 1
+  IF STRLEN(runnumber) LT 3 THEN UNKNOWN = 1
   
   ; If we don't know what the instrument or run number is then just write to
   ; the ~/results directory!

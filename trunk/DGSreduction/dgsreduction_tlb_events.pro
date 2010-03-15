@@ -219,7 +219,7 @@ PRO DGSreduction_TLB_Events, event
         
         ; If we are using the auto file, get the default filename...
         dgsr_cmd->GetProperty, Instrument=instrument
-        default_cornergeom = GetCornerGeometryFile(instrument)
+        default_cornergeom = GetCornerGeometryFile(instrument, RUNNUMBER=dgsr_cmd->GetRunNumber())
         dgsr_cmd->SetProperty, CornerGeometry=default_cornergeom
         ; then set the Filename text field
         dgsr_cmd->GetProperty, CornerGeometry=currentCG
