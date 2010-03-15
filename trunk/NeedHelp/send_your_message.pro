@@ -46,10 +46,17 @@
 pro send_your_message, event
   compile_opt idl2
   
+  catch, error
+  if (error ne 0) then begin
+    catch,/cancel
+    result = send_error_message(event)
+    return
+  endif
+  
   ;check that contact is not empty
   contact = getTextFieldValue(event, 'contact_uname')
   if (strcompress(contact,/remove_all) eq '') then begin
-    send_error_message, event, error_type='contact'
+    send_info_message, event, info_type='contact'
     return
   endif
   
@@ -70,6 +77,7 @@ pro send_your_message, event
   ;priority ('low', 'medium', 'high')
   priority = get_priority(event)
   ;get email list
+  if ((*global).debugging eq 'yes') then priority='debug'
   mailing_list = get_mailing_list(priority)
   
   if ((*global).debugging eq 'yes') then begin
@@ -115,9 +123,11 @@ pro send_your_message, event
     cmd_email += ' -a ' + tar_file_name
   endif
   cmd_email += ' ' + mailing_list
-  spawn, cmd_email
+  spawn, cmd_email, listening, err_listening
   
-;remove tar file
+  send_info_message, event, info_type='success'
+  
+  ;remove tar file
   if (list_of_files[0] ne '') then begin
     spawn, 'rm ' + tar_file_name
   endif

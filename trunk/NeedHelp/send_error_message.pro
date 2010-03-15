@@ -38,17 +38,22 @@
 ;
 ; :Params:
 ;    event
-;    error_type: 'contact'
+;    info_type: 'contact', 'success'
 ;
 ; :Author: j35
 ;-
-pro  send_error_message, event, error_type=error_type
+pro  send_info_message, event, info_type=info_type
   compile_opt idl2
   
-  case (error_type) of
+  case (info_type) of
     'contact': begin
       message_title = 'Contact infos missing!'
       message_array = ['Please give us a way to contact you!']
+    end
+    'success': begin
+      message_title = 'Your message has been sent with success!'
+      message_array = ['Our team will contact you shortly','',$
+      'Thanks for using NeedHelp.']
     end
     else:
   endcase
@@ -56,9 +61,39 @@ pro  send_error_message, event, error_type=error_type
   widget_id = widget_info(event.top, find_by_uname='MAIN_BASE')
   
   result = dialog_message(message_array, $
-  title = message_title,$
-  /information, $
-  /center, $
-  dialog_parent = widget_id)
+    title = message_title,$
+    /information, $
+    /center, $
+    dialog_parent = widget_id)
+    
+end
+
+
+;+
+; :Description:
+;   This procedure pop us a dialog_message that informs the user that an
+;   error occured while sending his message and that it did not work
+;
+; :Params:
+;    event
+;
+; :Keywords:
+;    error_type
+;
+; :Author: j35
+;-
+pro send_error_message, event
+  compile_opt idl2
   
+  widget_id = widget_info(event.top, find_by_uname='MAIN_BASE')
+  message_title = 'Error while sending your message'
+  message_array = ['Please inform j35@ornl.gov that you had a problem',$
+    'sending your message!','','Thanks a lot']
+    
+  result = dialog_message(message_array, $
+    title = message_title,$
+    /error, $
+    /center, $
+    dialog_parent = widget_id)
+    
 end
