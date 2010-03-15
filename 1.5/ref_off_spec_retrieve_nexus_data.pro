@@ -39,6 +39,7 @@ FUNCTION retrieve_Data, Event, $
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   instrument = (*global).instrument
+  ref_pixel_list = (*(*global).ref_pixel_list)
   
   not_hdf5_format = 0
   CATCH, not_hdf5_format

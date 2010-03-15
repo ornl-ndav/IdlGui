@@ -135,9 +135,9 @@ PRO  reduce_step3_run_jobs, Event
 
     ;tof_cutoff_min file
     IF (instrument EQ 'REF_M') THEN BEGIN
-; don't apply cutoff for magentism reflectometer - for now (RC Ward, Mar 1, 2010)
-;     cmd += ' ' + reduce_structure.tof_cut_min + '=' + tof_cutoff_min
-;     cmd += ' ' + reduce_structure.tof_cut_max + '=' + tof_cutoff_max
+; do apply cutoff for magentism reflectometer - for now (RC Ward, Mar 14, 2010)
+     cmd += ' ' + reduce_structure.tof_cut_min + '=' + tof_cutoff_min
+     cmd += ' ' + reduce_structure.tof_cut_max + '=' + tof_cutoff_max
     ENDIF ELSE BEGIN
       cmd += ' ' + reduce_structure.tof_cut_min + '=' + tof_cutoff_min
       cmd += ' ' + reduce_structure.tof_cut_max + '=' + tof_cutoff_max

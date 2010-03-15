@@ -117,14 +117,14 @@ END
 ;------------------------------------------------------------------------------
 PRO update_transparency_coeff_display, Event
   index_selected = getTranFileSelected(Event)
-  print, index_selected
+;  print, index_selected
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   IF (index_selected EQ 0) THEN BEGIN
     value = 'N/A'
     putTextFieldValue, Event, 'transparency_coeff', value
   ENDIF ELSE BEGIN
     trans_coeff_list = (*(*global).trans_coeff_list)
-    print, trans_coeff_list
+;    print, trans_coeff_list
     coeff = trans_coeff_list[index_selected]
     coeff_percentage = 100.*coeff
     putTextFieldValue, Event, 'transparency_coeff', $

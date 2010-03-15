@@ -381,23 +381,22 @@ PRO create_final_array, Event, final_array, final_error_array
   tfpData_error        = (*(*global).realign_pData_y_error)
   
   index      = 0                ;loop variable (nbr of array to add/plot
+  detector_pixels_y = (*global).detector_pixels_y
+
+  DETPIXY = detector_pixels_y
+  
   WHILE (index LT nbr_plot) DO BEGIN
   
     local_tfpData       = *tfpData[index]
     local_tfpData_error = *tfpData_error[index]
     scaling_factor      = scaling_factor_array[index]
-
-;Change: comment out these print to screen statements (RC Ward, Feb 11, 2010)    
-;    print, 'for main data: scaling_factor'
-;    print, scaling_factor
-;    print
     
     ;get only the central part of the data (when it's not the first one)
     IF (index NE 0) THEN BEGIN
 ;      local_tfpData      = local_tfpData[*,304L:2*304L-1]
 ;      local_tfpData_eror = local_tfpData_error[*,304L:2*304L-1]
-      local_tfpData      = local_tfpData[*,(*global).detector_pixels_y:2*(*global).detector_pixels_y-1]
-      local_tfpData_eror = local_tfpData_error[*,(*global).detector_pixels_y:2*(*global).detector_pixels_y-1]      
+      local_tfpData      = local_tfpData[*,DETPIXY:2*DETPIXY-1]
+      local_tfpData_eror = local_tfpData_error[*,DETPIXY:2*DETPIXY-1]      
     ENDIF
     
     ;applied scaling factor
@@ -466,7 +465,9 @@ PRO run_full_process_with_other_pola, Event, sStructure
   PROCESSING = (*global).processing
   OK         = (*global).ok
   FAILED     = (*global).failed
-  
+
+  ref_pixel_list        = (*(*global).ref_pixel_list)
+
   pola_state = getTextFieldValue(Event,sStructure.pola_state_uname)
   LogMessage = '> Working on polarization state ' + $
     STRCOMPRESS(pola_state,/REMOVE_ALL)
@@ -480,15 +481,9 @@ PRO run_full_process_with_other_pola, Event, sStructure
   path             = getTextFieldValue(Event,'create_output_file_path_button')
   ListOfInputFiles = path + ListOfInputFiles
   
-  ;print, ListOfInputFiles ;remove_me
-  
   ;check that all the file exist
   result = FIX(FILE_TEST(ListOfInputFiles,/READ))
-  
-  ;print, TOTAL(result)
-  ;print, nbr_plot
-  
-  
+   
   IF (TOTAL(result) NE nbr_plot) THEN BEGIN
     ReplaceTextInCreateStatus, Event, PROCESSING, FAILED
     RETURN
@@ -697,6 +692,10 @@ PRO step6_realign_data, Event, tfpData, $
   ;retrieve pixel offset
   ref_pixel_list        = (*(*global).ref_pixel_list)
   ref_pixel_offset_list = (*(*global).ref_pixel_offset_list)
+  detector_pixels_y = (*global).detector_pixels_y
+
+  DETPIXY = detector_pixels_y
+  DETPIXYM1 = detector_pixels_y-1
   
   nbr = N_ELEMENTS(ref_pixel_list)
   IF (nbr GT 1) THEN BEGIN
@@ -704,16 +703,19 @@ PRO step6_realign_data, Event, tfpData, $
     realign_tfpData[0]       = tfpData[0]
     realign_tfpData_error[0] = tfpData_error[0]
     index = 1
+ 
     WHILE (index LT nbr) DO BEGIN
       pixel_offset = ref_pixel_list[0]-ref_pixel_list[index]
       pixel_offset_array[index] = pixel_offset ;save pixel_offset
       ref_pixel_offset_list[index] += pixel_offset
-      array        = *tfpData[index]
 ;      array        = array[*,304L:2*304L-1]
-      array        = array[*,(*global).detector_pixels_y:2*(*global).detector_pixels_y-1]
-      array_error  = *tfpData_error[index]
 ;      array_error  = array_error[*,304L:2*304L-1]
-      array_error  = array_error[*,(*global).detector_pixels_y:2*(*global).detector_pixels_y-1]      
+
+      array        = *tfpData[index]
+      array        = array[*,DETPIXY:2*DETPIXY-1]
+      array_error  = *tfpData_error[index]
+      array_error  = array_error[*,DETPIXY:2*DETPIXY-1]      
+
       IF (pixel_offset EQ 0 OR $
         ref_pixel_list[index] EQ 0) THEN BEGIN ;if no offset
         realign_tfpData[index]       = tfpData[index]
@@ -724,7 +726,7 @@ PRO step6_realign_data, Event, tfpData, $
           ;needs to start from the top when the offset is positive
 
 ;          FOR i=303,pixel_offset,-1 DO BEGIN
-          FOR i=(*global).detector_pixels_y-1,pixel_offset,-1 DO BEGIN
+          FOR i=DETPIXYM1,pixel_offset,-1 DO BEGIN
             array[*,i]       = array[*,i-pixel_offset]
             array_error[*,i] = array_error[*,i-pixel_offset]
           ENDFOR
@@ -736,12 +738,12 @@ PRO step6_realign_data, Event, tfpData, $
         ENDIF ELSE BEGIN    ;needs to move down
           pixel_offset = ABS(pixel_offset)
 ;          FOR i=0,(303-pixel_offset) DO BEGIN
-          FOR i=0,((*global).detector_pixels_y-1-pixel_offset) DO BEGIN        
+          FOR i=0,(DETPIXYM1-pixel_offset) DO BEGIN        
             array[*,i]       = array[*,i+pixel_offset]
             array_error[*,i] = array_error[*,i+pixel_offset]
           ENDFOR
 ;          FOR j=303,303-pixel_offset,-1 DO BEGIN
-          FOR j=(*global).detector_pixels_y-1,(*global).detector_pixels_y-1-pixel_offset,-1 DO BEGIN          
+          FOR j=DETPIXYM1,(DETPIXYM1-pixel_offset),-1 DO BEGIN          
             array[*,j]       = 0
             array_error[*,j] = 0
           ENDFOR
@@ -753,17 +755,17 @@ PRO step6_realign_data, Event, tfpData, $
       dim2         = (SIZE(local_data))(1)
 ;      big_array    = STRARR(dim2,3*304L)
 ;      big_array[*,304L:2*304L-1] = local_data
-      big_array    = STRARR(dim2,3*(*global).detector_pixels_y)
-      big_array[*,(*global).detector_pixels_y:2*(*global).detector_pixels_y-1] = local_data      
+
+      big_array    = STRARR(dim2,3*DETPIXY)
+      big_array[*,DETPIXY:2*DETPIXY-1] = local_data      
       *realign_tfpData[index] = big_array
       
 ;      big_array_error    = STRARR(dim2,3*304L)
 ;      big_array_error[*,304L:2*304L-1] = local_data_error
-      big_array_error    = STRARR(dim2,3*(*global).detector_pixels_y)
-      big_array_error[*,(*global).detector_pixels_y:2*(*global).detector_pixels_y-1] = local_data_err      
-      *realign_tfpData_error[index] = big_array_error
-      
-      ;change reference pixel from old to neatew position
+      big_array_error    = STRARR(dim2,3*DETPIXY)
+      big_array_error[*,DETPIXY:2*DETPIXY-1] = local_data_error      
+      *realign_tfpData_error[index] = big_array_error      
+      ;change reference pixel from old to new position
       ref_pixel_list[index] = ref_pixel_list[0]
       ++index
     ENDWHILE
@@ -828,6 +830,7 @@ END
 ;------------------------------------------------------------------------------
 PRO step6_congrid_data, Event, pData_y, pData_y_error
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  detector_pixels_y = (*global).detector_pixels_y
   
   pData_x        = (*(*global).pData_x)
   
@@ -842,6 +845,8 @@ PRO step6_congrid_data, Event, pData_y, pData_y_error
   
   ;work on all the data that have delta_x GT than the delta_x found
   congrid_coeff_array = (*(*global).congrid_coeff_array)
+
+  DETPIXY = detector_pixels_y
   
   ;congrid all data
   index       = 0
@@ -874,7 +879,6 @@ PRO step6_congrid_data, Event, pData_y, pData_y_error
     ENDIF
     ++index
   ENDWHILE
-  
   ;triple the size of each array (except the first one)
   list_OF_files         = (*(*global).list_OF_ascii_files)
   nbr                   = N_ELEMENTS(list_OF_files)
@@ -890,15 +894,17 @@ PRO step6_congrid_data, Event, pData_y, pData_y_error
       local_data       = *pData_y[index]
       local_data_error = *pData_y_error[index]
       dim2             = (SIZE(local_data))(1)
+
 ;      big_array        = STRARR(dim2,3*304L)
 ;      big_array_error  = STRARR(dim2,3*304L)
 ;      big_array[*,304L:2*304L-1]       = local_data
 ;      big_array_error[*,304L:2*304L-1] = local_data_error
       
-      big_array        = STRARR(dim2,3*(*global).detector_pixels_y)
-      big_array_error  = STRARR(dim2,3*(*global).detector_pixels_y)
-      big_array[*,(*global).detector_pixels_y:2*(*global).detector_pixels_y-1]       = local_data
-      big_array_error[*,(*global).detector_pixels_y:2*(*global).detector_pixels_y-1] = local_data_error      
+      big_array        = STRARR(dim2,3*DETPIXY)
+      big_array_error  = STRARR(dim2,3*DETPIXY)       
+
+      big_array[*,DETPIXY:2*DETPIXY-1]       = local_data
+      big_array_error[*,DETPIXY:2*DETPIXY-1] = local_data_error    
       *realign_pData_y[index]          = big_array
       *realign_pData_y_error[index]    = big_array_error
     ENDELSE
@@ -919,13 +925,12 @@ PRO  step6_scale_data, Event, $
     
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  detector_pixels_y = (*global).detector_pixels_y
   
   nbr_plot             = getNbrFiles(Event) ;number of files
   scaling_factor_array = (*(*global).scaling_factor)
-;Change: comment out these print to screen statements (RC Ward, Feb 11, 2010) 
-;  print, 'scaling_factor_array:'
-;  print, scaling_factor_array
-;  print
+
+  DETPIXY = detector_pixels_y
   
   index      = 0                ;loop variable (nbr of array to add/plot
   WHILE (index LT nbr_plot) DO BEGIN
@@ -938,8 +943,8 @@ PRO  step6_scale_data, Event, $
     IF (index NE 0) THEN BEGIN
 ;      local_tfpData      = local_tfpData[*,304L:2*304L-1]
 ;      local_tfpData_eror = local_tfpData_error[*,304L:2*304L-1]
-      local_tfpData      = local_tfpData[*,(*global).detector_pixels_y:2*(*global).detector_pixels_y-1]
-      local_tfpData_eror = local_tfpData_error[*,(*global).detector_pixels_y:2*(*global).detector_pixels_y-1]      
+      local_tfpData      = local_tfpData[*,DETPIXY:2*DETPIXY-1]
+      local_tfpData_eror = local_tfpData_error[*,DETPIXY:2*DETPIXY-1]      
     ENDIF
     
     ;applied scaling factor

@@ -224,6 +224,7 @@ END
 ;------------------------------------------------------------------------------
 PRO plot_step5_i_vs_Q_selection, Event
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  ref_pixel_list = (*(*global).ref_pixel_list)
   
   refresh_recap_plot, Event, RESCALE=1
   
