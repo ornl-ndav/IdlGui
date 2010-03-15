@@ -34,39 +34,6 @@
  
  ;+
  ; :Description:
- ;    This procedure will activate the dialog_pickfile and will gives the
- ;    user the possibility to select one or more files at a time
- ;
- ; :Params:
- ;    event
- ;;
- ; :Author: j35
- ;-
- pro browse_files, event
-   compile_opt idl2
-   
-   widget_control, event.top, get_uvalue=global
-   
-   path = (*global).default_path
-   dialog_parent = widget_info(event.top, find_by_uname='MAIN_BASE')
-   title = 'Select the file(s) your want to add to your message'
-   
-   new_files_to_add = dialog_pickfile(dialog_parent=dialog_parent,$
-     /must_exist,$
-     /multiple_files,$
-     path=path,$
-     title=title)
-     
-   if (new_files_to_add[0] ne '') then begin ;add new files to list
-     add_files_to_list, event, new_files_to_add
-     update_list_of_files_table, event
-     activate_remove_files_button, event
-   endif
-   
- end
- 
- ;+
- ; :Description:
  ;    append the new file(s) to the current list of files
  ;
  ; :Params:
@@ -128,3 +95,37 @@
    activate_widget, Event, 'remove_file', 1
    
  end
+
+ ;+
+ ; :Description:
+ ;    This procedure will activate the dialog_pickfile and will gives the
+ ;    user the possibility to select one or more files at a time
+ ;
+ ; :Params:
+ ;    event
+ ;;
+ ; :Author: j35
+ ;-
+ pro browse_files, event
+   compile_opt idl2
+   
+   widget_control, event.top, get_uvalue=global
+   
+   path = (*global).default_path
+   dialog_parent = widget_info(event.top, find_by_uname='MAIN_BASE')
+   title = 'Select the file(s) your want to add to your message'
+   
+   new_files_to_add = dialog_pickfile(dialog_parent=dialog_parent,$
+     /must_exist,$
+     /multiple_files,$
+     path=path,$
+     title=title)
+     
+   if (new_files_to_add[0] ne '') then begin ;add new files to list
+     add_files_to_list, event, new_files_to_add
+     update_list_of_files_table, event
+     activate_remove_files_button, event
+   endif
+   
+ end
+ 

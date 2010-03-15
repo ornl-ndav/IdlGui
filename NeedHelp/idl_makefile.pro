@@ -35,6 +35,7 @@ cd, CurrentFolder
 .run send_your_message.pro
 .run send_error_message.pro
 .run browse_files.pro
+.run remove_files.pro
 
 ;main functions
 .run MainBaseEvent.pro
