@@ -44,6 +44,8 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;get the current folder
   CD, CURRENT = current_folder
  
+; Change code (RC Ward, Mar 14, 2010): Specify location of configuration file for testing code
+;   file = OBJ_NEW('idlxmlparser', '/SNS/users/rwd/IDLWorkspace71/REFoffSpec1.5/.REFoffSpec.cfg')
   file = OBJ_NEW('idlxmlparser', '.REFoffSpec.cfg')
   ;============================================================================
   ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
@@ -188,8 +190,8 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ref_plot_average_color: AVERAGE_COLOR,$
                     
     ; Code change RCW (Feb 10, 2010): get detector pixels in X and Y directions from XML config file
-    detector_pixels_x: PIXELS_XVALUE,$
-    detector_pixels_y: PIXELS_YVALUE,$
+    detector_pixels_x: LONG(PIXELS_XVALUE),$
+    detector_pixels_y: LONG(PIXELS_YVALUE),$
     
    ; Code change (RC Ward Feb 18,2010): Get flag to automatically load RefPix values for Shifting step
     RefPixLoad: REFPIX_LOAD, $

@@ -350,10 +350,13 @@ wScalingInputBase = WIDGET_BASE(wScalingBase,$
                                 SCR_YSIZE = sScalingCWField.size[3],$
                                 ROW       = 1)
 
+; Code Change (RC Ward, Mar 14, 2010): The value was missing in the following section of code.
+; This caused problems in the step4_2_3_manual_scaling code in scaling and plotting the 2nd data set.
 wScalingInput = CW_FIELD(wScalingInputBase,$
                          XSIZE = sScalingCWField.xsize,$
                          YSIZE = sScalingCWField.ysize,$
                          UNAME = sScalingCWField.uname,$
+                         VALUE = sScalingCWField.value,$
                          TITLE = '',$
                          /RETURN_EVENTS,$
                          /FLOAT)

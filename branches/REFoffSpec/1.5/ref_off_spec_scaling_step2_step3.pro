@@ -204,8 +204,7 @@ PRO step4_2_3_auto_scaling, Event
       
         (*(*global).new_IvsLambda_selection) = new_IvsLambda_selection
         (*(*global).new_IvsLambda_selection_error) = $
-          new_IvsLambda_selection_error
-          
+          new_IvsLambda_selection_error       
         re_display_step4_step2_step1_selection, $
           Event, $
           MODE='AUTOSCALE'  ;scaling_step2
@@ -325,7 +324,6 @@ PRO step4_2_3_manual_scaling, Event, FACTOR=factor
     IdlSendToGeek_addLogBookText, Event, '-> Automatic Rescaling FAILED' + $
       ' - Switch to Manual Mode!'
   ENDIF ELSE BEGIN
-  
     ;get name of reference file
     index = $
       getDropListSelectedIndex(Event, $
@@ -334,16 +332,14 @@ PRO step4_2_3_manual_scaling, Event, FACTOR=factor
       ListOfFiles[index]
     IdlSendToGeek_addLogBookText, Event, '--> Working File  : ' + $
       ListOfFiles[index+1]
-      
+          
     file_index = 0
     WHILE (file_index LT nbr_plot-1) DO BEGIN
-    
       ;;get y and y_error of low and high lda data
       low_lda_y_array        = new_IvsLambda_selection[file_index+1,*]
       low_lda_y_error_array  = new_IvsLambda_selection_error[file_index+1,*]
       
       IF (file_index EQ index) THEN BEGIN
-      
         CASE (FACTOR) OF
           '4': BEGIN
             SF = (*global).manual_scaling_4
@@ -370,14 +366,15 @@ PRO step4_2_3_manual_scaling, Event, FACTOR=factor
             SF = scaling_factor[index+1] / SF
           END
           ELSE: BEGIN
+; SF is set to "1" initially
+; Code Change (RC Ward, Mar 14, 2010): The initial value of SF in the setting up the GUI.
+; This caused problems here in scaling and plotting the 2nd data set.
             SF = getTextFieldValue(Event,'step4_2_3_sf_text_field')
             fSF = FLOAT(SF)
           END
-        ENDCASE
-        
+        ENDCASE       
         scaling_factor[file_index+1] = SF
-        (*(*global).scaling_factor) = scaling_factor
-        
+        (*(*global).scaling_factor) = scaling_factor    
         ;display new SF in cw_field
         putTextFieldValue, Event, 'step4_2_3_sf_text_field',$
           STRCOMPRESS(SF,/REMOVE_ALL)
@@ -404,7 +401,7 @@ PRO step4_2_3_manual_scaling, Event, FACTOR=factor
     (*(*global).new_IvsLambda_selection)       = new_IvsLambda_selection
     (*(*global).new_IvsLambda_selection_error) = $
       new_IvsLambda_selection_error
-      
+    
     re_display_step4_step2_step1_selection, $
       Event, $
       MODE='AUTOSCALE'          ;scaling_step2

@@ -231,12 +231,9 @@ PRO tab_event, Event
                sz = N_ELEMENTS(list_OF_files)
                RefPixSave = INTARR(sz)
 ; Change code (RC Ward Feb 26, 2010): Read file containing RefPix values on clicking the Shifting step tab
-;               print, list_OF_files[0]
                list = list_OF_files[0]
                parts = STR_SEP(list,'.')
-;               print, parts[0]
                input_file_name = parts[0] + '_RefPix.txt'
-;               print, input_file_name
                OPENR, 1, input_file_name, ERROR = err
                IF (ERR EQ 0) THEN BEGIN  ; NO ERROR, FILE EXISTS SO CONTINUE ON
                  READF, 1, RefPixSave
@@ -342,7 +339,7 @@ PRO tab_event, Event
 END
 
 ;------------------------------------------------------------------------------
-;This function is trigerred each time the mouse move over the tab of step4
+;This function is triggered each time the mouse moves over the tab of step4
 PRO scaling_tab_event, Event
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global

@@ -624,7 +624,8 @@ putTextFieldValue, Event, $
 index = getDropListSelectedIndex(Event, $
                                  'active_file_droplist_shifting')
 ref_pixel_list        = (*(*global).ref_pixel_list)
-ref_pixel_list[index] = pixel_value
+ref_pixel_list[index] = pixel_value    
+
 (*(*global).ref_pixel_list) = ref_pixel_list
 (*(*global).ref_pixel_list_original) = ref_pixel_list
 
@@ -707,7 +708,7 @@ pixel_offset_array    = INTARR(Nbr_array)
 
 ;retrieve pixel offset
 ref_pixel_list        = (*(*global).ref_pixel_list)
-ref_pixel_offset_list = (*(*global).ref_pixel_offset_list)
+ref_pixel_offset_list = (*(*global).ref_pixel_offset_list)   
 
 nbr = N_ELEMENTS(ref_pixel_list)
 IF (nbr GT 1) THEN BEGIN
@@ -719,6 +720,7 @@ IF (nbr GT 1) THEN BEGIN
         pixel_offset = ref_pixel_list[0]-ref_pixel_list[index]
         pixel_offset_array[index] = pixel_offset ;save pixel_offset
         ref_pixel_offset_list[index] += pixel_offset
+        
         array        = *tfpData[index]
 ;        array        = array[*,304L:2*304L-1]
         array        = array[*,(*global).detector_pixels_y:2*(*global).detector_pixels_y-1]       

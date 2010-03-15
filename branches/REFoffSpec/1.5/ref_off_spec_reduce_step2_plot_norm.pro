@@ -38,7 +38,9 @@ PRO plot_reduce_step2_norm, Event
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   DEVICE, DECOMPOSED=0
-  loadct,5, /SILENT
+  ; Change code (RC Ward Feb 22, 2010): Pass color_table value for LOADCT from XML configuration file
+  color_table = (*global).color_table
+  LOADCT, color_table, /SILENT
   
   ;select plot
   id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='reduce_step2_create_roi_draw_uname')

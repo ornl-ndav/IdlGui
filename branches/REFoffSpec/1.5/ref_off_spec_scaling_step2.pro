@@ -111,6 +111,7 @@ PRO re_display_step4_step2_step1_selection, Event, MODE=mode
   
   ; Code change RCW (Feb 8, 2010): Get Background color from XML file
      PlotBackground = (*global).BackgroundCurvePlot
+       ref_pixel_list = (*(*global).ref_pixel_list)
   
   DEVICE, DECOMPOSED=0
   ; Change code (RC Ward Feb 22, 2010): Pass color_table value for LOADCT from XML configuration file
@@ -155,7 +156,6 @@ PRO re_display_step4_step2_step1_selection, Event, MODE=mode
           ENDELSE
           
           color = box_color[index]
-; print, "test-0: index, color: ", index, " ",color
           psym  = getStep4Step2PSYMselected(Event)
           
           isLog = getStep4Step2PlotType(Event)
@@ -209,7 +209,6 @@ PRO re_display_step4_step2_step1_selection, Event, MODE=mode
           t_data_to_plot = IvsLambda_selection[index,*]
         ENDELSE
         color = box_color[index]
-;   print, "test-1: index, color: ", index, " ",color
         psym  = getStep4Step2PSYMselected(Event)
         isLog = getStep4Step2PlotType(Event)
         
@@ -255,7 +254,6 @@ PRO re_display_step4_step2_step1_selection, Event, MODE=mode
           ENDELSE
           
           color = box_color[index]
-;  print, "test: index-2, color: ", index, " ",color
           psym  = getStep4Step2PSYMselected(Event)
           
           isLog = getStep4Step2PlotType(Event)
@@ -278,7 +276,6 @@ PRO re_display_step4_step2_step1_selection, Event, MODE=mode
                 XSTYLE = 1,$
                 PSYM   = psym,$
                 /YLOG
-;  print, "test:just after plot call: index, color, psym: ", index, " ",color, psym
             ENDIF ELSE BEGIN
               plot, xrange, $
                 t_data_to_plot, $
@@ -296,11 +293,11 @@ PRO re_display_step4_step2_step1_selection, Event, MODE=mode
               t_data_to_plot, $
               COLOR  = color,$
               PSYM   = psym
-;  print, "test:just after oplot call: index, color, psym: ", index, " ",color, psym
           ENDELSE
           index++
         ENDWHILE
       END                     ;end of 0:
+      
     ENDCASE
   ENDIF
   
@@ -339,7 +336,7 @@ PRO re_plot_lambda_selected, Event
     
     device_lda  = device_xmax - ratio * (f_xmax_now - f_Lda_min)
 
-; Code change RCW (Feb 9, 2010: ceselect_vertical_line_color is set in XML config file, was set to 200.
+; Code change RCW (Feb 9, 2010): ceselect_vertical_line_color is set in XML config file, was set to 200.
     plots, device_lda, device_ymin, /DEVICE, COLOR=FSC_COLOR(ceselect_vertical_line_color)
     plots, device_lda, device_ymax, /DEVICE, /CONTINUE, COLOR=FSC_COLOR(ceselect_vertical_line_color)
     
@@ -351,7 +348,7 @@ PRO re_plot_lambda_selected, Event
     
     device_lda  = device_xmax - ratio * (f_xmax_now - f_Lda_max)
 
-; Code change RCW (Feb 9, 2010: ceselect_vertical_line_color is set in XML config file, was set to 200.
+; Code change RCW (Feb 9, 2010): ceselect_vertical_line_color is set in XML config file, was set to 200.
     plots, device_lda, device_ymin, /DEVICE, COLOR=FSC_COLOR(ceselect_vertical_line_color)
     plots, device_lda, device_ymax, /DEVICE, /CONTINUE, COLOR=FSC_COLOR(ceselect_vertical_line_color)
     
