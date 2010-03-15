@@ -81,9 +81,11 @@ PRO MakeGuiMainBase, MAIN_BASE, global
     COLUMN_WIDTHS = [xsize],$
     /NO_ROW_HEADERS,$
     COLUMN_LABELS = ['Files'])
+  
   remove_file = widget_button(col2,$
     value = 'Remove files selected',$
     uname = 'remove_file',$
+    event_pro = 'remove_files',$
     sensitive = 0,$
     scr_xsize = xsize)
     
