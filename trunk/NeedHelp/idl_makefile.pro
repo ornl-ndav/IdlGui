@@ -36,6 +36,7 @@ cd, CurrentFolder
 .run send_error_message.pro
 .run browse_files.pro
 .run remove_files.pro
+.run create_tar_folder.pro
 
 ;main functions
 .run MainBaseEvent.pro
