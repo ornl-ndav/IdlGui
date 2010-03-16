@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 
-PRO tof_tools_base_event, Event
+PRO configure_spin_state_event, Event
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global_tof
@@ -40,6 +40,12 @@ PRO tof_tools_base_event, Event
   
   CASE Event.id OF
   
+    widget_info(event.top, find_by_uname='spin_state_base_close_button'): begin
+      id = WIDGET_INFO(Event.top, $
+        FIND_BY_UNAME='spin_state_widget_base')
+      WIDGET_CONTROL, id, /DESTROY
+    end
+    
     ELSE:
     
   ENDCASE
@@ -98,6 +104,7 @@ PRO configure_spin_state_gui, wBase, main_base_geometry
   button2 = widget_button(base2,$
     value = 'Off-On',$
     uname = 'spin_state_off_on')
+  widget_control, button1, /set_button
   base3 = widget_base(base1,$
     /row,$
     /nonexclusive)
@@ -107,26 +114,27 @@ PRO configure_spin_state_gui, wBase, main_base_geometry
   button4 = widget_button(base3,$
     value = 'On-On',$
     uname = 'spin_state_on_on')
-    
+  widget_control, button3, /set_button
   space = widget_label(wBase,$
     value = ' ')
   title = widget_label(wBase,$
     value = 'Match Data and Direct Beam spin states:')
   base4 = widget_base(wBase,$
     frame = 1,$
-    xsize = 150,$
+    xsize = 200,$
     /exclusive,$
     /row)
   button1 = widget_button(base4,$
     value = 'yes    ',$
     uname = 'match_spin_state')
   button2 = widget_button(base4,$
-    value = 'no     ',$
+    value = 'no (use Off-Off)',$
     uname = 'not_match_spin_state')
-    
+  widget_control, button2, /set_button
+  
   space = widget_label(wBase,$
     value = ' ')
-    close = widget_button(wBase,$
+  close = widget_button(wBase,$
     value = 'CLOSE',$
     xsize = 150,$
     uname = 'spin_state_base_close_button')
