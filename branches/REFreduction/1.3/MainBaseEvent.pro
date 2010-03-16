@@ -1648,6 +1648,11 @@ PRO MAIN_BASE_event, Event
       CL_outputButton, Event
     end
     
+    ;yes or no other spin states
+    widget_info(wWidget, find_by_uname='other_spin_states'): begin
+      other_spin_state_cw_bgroup, event
+    end
+    
     ;Preview of the command line text box
     ;    WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_cmd_line_preview'):BEGIN
     ;        print, 'here'
@@ -1893,10 +1898,10 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='detector_error_text_field'):
     WIDGET_INFO(wWidget, FIND_BY_UNAME='detector_units_b_group'):
     WIDGET_INFO(wWidget, FIND_BY_UNAME='q_min_text_field'):
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='tof_cutting_min'): 
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tof_cutting_min'):
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tof_cutting_max'):
     WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_data_tof_units_micros'):
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_data_tof_units_ms'): 
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_data_tof_units_ms'):
     WIDGET_INFO(wWidget, FIND_BY_UNAME='q_max_text_field'):
     WIDGET_INFO(wWidget, FIND_BY_UNAME='q_width_text_field'):
     WIDGET_INFO(wWidget, FIND_BY_UNAME='q_scale_b_group'):
