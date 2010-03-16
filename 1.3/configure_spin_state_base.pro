@@ -44,6 +44,8 @@ pro configure_spin_state_event, Event
       id = widget_info(Event.top, $
         find_by_uname='spin_state_widget_base')
       widget_control, id, /destroy
+      event = (*global_spin_state).main_event
+      command_line_generator_for_ref_m, event
     end
     
     ;Off_Off
@@ -75,12 +77,10 @@ pro configure_spin_state_event, Event
       (*global).spin_state_config = spin_state_config
     end
     
-    ;yes/no direct beam spin states
-    widget_info(event.top, find_by_uname='match_spin_state'): begin
-      value = isButtonSelected(Event, 'match_spin_state')
-      (*global).match_spin_states = value
-    end
-;    widget_info(event.top, find_by_uname='not_match_spin_state'): begin
+;    ;yes/no direct beam spin states
+;    widget_info(event.top, find_by_uname='match_spin_state'): begin
+;      value = isButtonSelected(Event, 'match_spin_state')
+;      (*global).match_spin_states = value
 ;    end
     
     else:
@@ -98,7 +98,7 @@ PRO configure_spin_state_gui, wBase, main_base_geometry
   main_base_ysize = main_base_geometry.ysize
   
   spin_state_xsize = 300
-  spin_state_ysize = 255
+  spin_state_ysize = 165
   
   spin_state_xoffset = (main_base_xsize - spin_state_xsize) / 2
   spin_state_xoffset += main_base_xoffset
@@ -154,23 +154,24 @@ PRO configure_spin_state_gui, wBase, main_base_geometry
   widget_control, button3, /set_button
   space = widget_label(wBase,$
     value = ' ')
-  title = widget_label(wBase,$
-    value = 'Match Data and Direct Beam spin states:')
-  base4 = widget_base(wBase,$
-    frame = 1,$
-    xsize = 200,$
-    /exclusive,$
-    /row)
-  button1 = widget_button(base4,$
-    value = 'yes    ',$
-    uname = 'match_spin_state')
-  button2 = widget_button(base4,$
-    value = 'no (use Off-Off)',$
-    uname = 'not_match_spin_state')
-  widget_control, button2, /set_button
-  
-  space = widget_label(wBase,$
-    value = ' ')
+
+;  title = widget_label(wBase,$
+;    value = 'Match Data and Direct Beam spin states:')
+;  base4 = widget_base(wBase,$
+;    frame = 1,$
+;    xsize = 200,$
+;    /exclusive,$
+;    /row)
+;  button1 = widget_button(base4,$
+;    value = 'yes    ',$
+;    uname = 'match_spin_state')
+;  button2 = widget_button(base4,$
+;    value = 'no (use Off-Off)',$
+;    uname = 'not_match_spin_state')
+;  widget_control, button2, /set_button
+;  
+;  space = widget_label(wBase,$
+;    value = ' ')
   close = widget_button(wBase,$
     value = 'CLOSE',$
     xsize = 150,$

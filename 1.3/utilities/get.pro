@@ -338,16 +338,33 @@ FUNCTION isButtonSelected, Event, uname
 END
 
 FUNCTION getPlotTabYaxisScale, Event
-;linear
-uname = 'plot_tab_y_axis_lin'
-IF (isButtonSelected(Event,uname)) THEN RETURN, 'lin'
-;log
-uname = 'plot_tab_y_axis_log'
-IF (isButtonSelected(Event,uname)) THEN RETURN, 'log'
-RETURN, ''
+  ;linear
+  uname = 'plot_tab_y_axis_lin'
+  IF (isButtonSelected(Event,uname)) THEN RETURN, 'lin'
+  ;log
+  uname = 'plot_tab_y_axis_log'
+  IF (isButtonSelected(Event,uname)) THEN RETURN, 'log'
+  RETURN, ''
 END
 
+;------------------------------------------------------------------------------
+;+
+; :Description:
+;   This function returns the number of spin states selected
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+function get_nbr_spin_states, event
 
+  widget_control, event.top, get_uvalue=global
+  spin_state_config = (*global).spin_state_config
+  nbr_spin = total(spin_state_config)
+  return, nbr_spin
+  
+end
 
 
 
