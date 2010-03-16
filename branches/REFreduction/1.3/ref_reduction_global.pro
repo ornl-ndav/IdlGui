@@ -77,7 +77,6 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     
     ;spin state configuration
     spin_state_config: [1b,0b,1b,0b],$
-    match_spin_states: 0, $
     
     congrid_x_coeff: 0., $ ;congrid x coeff for data file
     congrid_norm_x_coeff: 0., $ ;congrid x coeff for normalization file
