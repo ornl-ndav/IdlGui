@@ -1651,6 +1651,7 @@ PRO MAIN_BASE_event, Event
     ;yes or no other spin states
     widget_info(wWidget, find_by_uname='other_spin_states'): begin
       other_spin_state_cw_bgroup, event
+      REFreduction_CommandLineGenerator, Event
     end
     
     ;configure spin state button

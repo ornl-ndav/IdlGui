@@ -85,12 +85,16 @@ PRO command_line_generator_for_ref_m, event
       StatusMessage += 1
     endelse
     
-    ;data path
-    IF ((*global).data_path NE '') THEN BEGIN
+    value = getButtonValue(event,'other_spin_states')
+    if (value eq 1) then begin
+      cmd[index_spin_state] += ' ' + (*global).data_path_flag
+      cmd[index_spin_state] += '=/' + data_path + '/'
+      cmd[index_spin_state] += (*global).data_path_flag_suffix
+    endif else begin
       cmd[index_spin_state] += ' ' + (*global).data_path_flag
       cmd[index_spin_state] += '=/' + data_spin_state_path[index_spin_state] + '/'
       cmd[index_spin_state] += (*global).data_path_flag_suffix
-    ENDIF
+    endelse
     
     ;get data ROI file
     data_roi_file = getTextFieldValue(Event, $
