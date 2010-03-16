@@ -91,6 +91,7 @@
 .run ref_reduction_jpeg.pro
 
 .run other_spin_states.pro
+.run configure_spin_state_base.pro
 
 ;plot tab
 .run ref_reduction_plot_tab.pro
