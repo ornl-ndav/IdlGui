@@ -75,6 +75,28 @@ PRO DGSreduction_UpdateGUI, widgetBase
   ; === Update the Reduction Tab ===
   DGSR_UpdateGUI, widgetBase, dgsr_cmd
   
+  ; Get the value of the normlocation and set it in the command objects
+  widget_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGS_NORMLOC_INST_SHARED')
+  state = WIDGET_INFO(widget_ID, /BUTTON_SET)
+  IF (state EQ 1) THEN BEGIN
+    dgsr_cmd->SetProperty, NormLocation='INST'
+    dgsn_cmd->SetProperty, NormLocation='INST'
+  ENDIF
+  widget_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGS_NORMLOC_PROP_SHARED')
+  state = WIDGET_INFO(widget_ID, /BUTTON_SET)
+  IF (state EQ 1) THEN BEGIN
+    dgsr_cmd->SetProperty, NormLocation='PROP'
+    dgsn_cmd->SetProperty, NormLocation='PROP'
+  ENDIF
+  
+  widget_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGS_NORMLOC_HOME_DIR')
+  state = WIDGET_INFO(widget_ID, /BUTTON_SET)
+  IF (state EQ 1) THEN BEGIN
+    dgsr_cmd->SetProperty, NormLocation='HOME'
+    dgsn_cmd->SetProperty, NormLocation='HOME'
+  ENDIF
+  
+  
   ; Update the Norm Mask Tab
   DGSN_UpdateGUI, widgetBase, dgsn_cmd
 
