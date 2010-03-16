@@ -1653,6 +1653,11 @@ PRO MAIN_BASE_event, Event
       other_spin_state_cw_bgroup, event
     end
     
+    ;configure spin state button
+    widget_info(wWidget, find_by_uname='spin_state_configure'): begin
+      configure_spin_state, Event=event
+    end
+    
     ;Preview of the command line text box
     ;    WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_cmd_line_preview'):BEGIN
     ;        print, 'here'
