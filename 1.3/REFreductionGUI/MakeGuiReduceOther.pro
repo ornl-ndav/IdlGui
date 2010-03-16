@@ -323,11 +323,13 @@ PRO MakeGuiReduceOther, Event, REDUCE_BASE, IndividualBaseWidth, global
       /row,$
       /exclusive,$
       set_value=0,$
+      uname = 'other_spin_states',$
       label_left = 'Repeat reduction for other spin states?',$
       /no_release)
       
     button = widget_button(spin_state,$
       scr_ysize = 25,$
+      uname = 'spin_state_configure',$
       value = ' Configure... ')
       
   endif

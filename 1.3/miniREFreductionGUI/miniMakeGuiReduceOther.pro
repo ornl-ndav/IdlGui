@@ -351,12 +351,14 @@ PRO miniMakeGuiReduceOther, Event, REDUCE_BASE, IndividualBaseWidth, global
       ['Y','N'],$
       /row,$
       /exclusive,$
+      uname = 'other_spin_states',$
       set_value=0,$
       label_left = 'Repeat for other spins?',$
       /no_release)
       
     button = widget_button(spin_state,$
       scr_ysize = 25,$
+      uname = 'spin_state_configure',$
       value = 'Configure...')
       
   endif
