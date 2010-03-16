@@ -48,10 +48,10 @@ ReduceTab2BaseTitle = 'REDUCTION XML FILE'
 ;general info label frame
 GeneralInfoTextFieldSize = [0,0,443,235]
 
-DataReductionStatusFrameSize = [725,599,450,40]
-DataReductionStatusLabelSize = [740,585]
+DataReductionStatusFrameSize = [725,585,450,40]
+DataReductionStatusLabelSize = [740,577]
 DataReductionStatusLabelTitle = 'R E D U C T I O N   S T A T U S'
-DataReductionStatusTextFieldSize = [730,604,440,30]
+DataReductionStatusTextFieldSize = [730,594,440,30]
 
 ;makeGuI
 GeneralInfoAndXmlBase = widget_base(REDUCE_BASE,$

@@ -107,7 +107,7 @@ NormIGbutton = {size : [0,5,230,25],$
                 uname : 'overwrite_norm_instrument_geometry_button'}
 
 ;START data reduction button
-XYoff= [570,d_vertical_L_L-5]
+XYoff= [570,d_vertical_L_L+-5]
 StartDRButtonSize = [5+XYoff[0],$
                      OIGLsize[1]+XYoff[1],$
                      320, $
