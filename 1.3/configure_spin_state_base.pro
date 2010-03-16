@@ -32,25 +32,62 @@
 ;
 ;==============================================================================
 
-PRO configure_spin_state_event, Event
+pro configure_spin_state_event, Event
 
   ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global_tof
-  global = (*global_tof).global
+  widget_control,event.top,get_uvalue=global_spin_state
+  global = (*global_spin_state).global
   
-  CASE Event.id OF
+  case Event.id of
   
     widget_info(event.top, find_by_uname='spin_state_base_close_button'): begin
-      id = WIDGET_INFO(Event.top, $
-        FIND_BY_UNAME='spin_state_widget_base')
-      WIDGET_CONTROL, id, /DESTROY
+      id = widget_info(Event.top, $
+        find_by_uname='spin_state_widget_base')
+      widget_control, id, /destroy
     end
     
-    ELSE:
+    ;Off_Off
+    widget_info(event.top, find_by_uname='spin_state_off_off'): begin
+      off_off_value = isButtonSelected(Event, 'spin_state_off_off')
+      spin_state_config = (*global).spin_state_config
+      spin_state_config[0] = off_off_value
+      (*global).spin_state_config = spin_state_config
+    end
+    ;Off_On
+    widget_info(event.top, find_by_uname='spin_state_off_on'): begin
+      off_on_value = isButtonSelected(Event, 'spin_state_off_on')
+      spin_state_config = (*global).spin_state_config
+      spin_state_config[1] = off_on_value
+      (*global).spin_state_config = spin_state_config
+    end
+    ;On_Off
+    widget_info(event.top, find_by_uname='spin_state_on_off'): begin
+      on_off_value = isButtonSelected(Event, 'spin_state_on_off')
+      spin_state_config = (*global).spin_state_config
+      spin_state_config[2] = on_off_value
+      (*global).spin_state_config = spin_state_config
+    end
+    ;On_On
+    widget_info(event.top, find_by_uname='spin_state_on_on'): begin
+      on_on_value = isButtonSelected(Event, 'spin_state_on_on')
+      spin_state_config = (*global).spin_state_config
+      spin_state_config[3] = on_on_value
+      (*global).spin_state_config = spin_state_config
+    end
     
-  ENDCASE
+    ;yes/no direct beam spin states
+    widget_info(event.top, find_by_uname='match_spin_state'): begin
+      value = isButtonSelected(Event, 'match_spin_state')
+      (*global).match_spin_states = value
+    end
+;    widget_info(event.top, find_by_uname='not_match_spin_state'): begin
+;    end
+    
+    else:
+    
+  endcase
   
-END
+end
 
 ;------------------------------------------------------------------------------
 PRO configure_spin_state_gui, wBase, main_base_geometry
@@ -162,11 +199,11 @@ PRO configure_spin_state, main_base=main_base, Event=event
     
   WIDGET_CONTROL, wBase1, /REALIZE
   
-  global_tof = PTR_NEW({ wbase: wbase1,$
+  global_spin_state = PTR_NEW({ wbase: wbase1,$
     global: global, $
     main_event: Event})
     
-  WIDGET_CONTROL, wBase1, SET_UVALUE = global_tof
+  WIDGET_CONTROL, wBase1, SET_UVALUE = global_spin_state
   
   XMANAGER, "configure_spin_state", wBase1, GROUP_LEADER = ourGroup, /NO_BLOCK
   
