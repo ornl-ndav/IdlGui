@@ -40,6 +40,8 @@ FUNCTION retrieveBanksData, Event, $
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
+  print, 'in retrieveBanksData'
+  
   not_hdf5_format = 0
   CATCH, not_hdf5_format
   IF (not_hdf5_format NE 0) THEN BEGIN
@@ -76,8 +78,10 @@ FUNCTION retrieveBanksData, Event, $
           simulate_ref_m_new_detector, data
         ENDIF
         x = (size(data))(2)
-        help, data
-        if (x ne 128) then message, 'Wrong detector geometry' 
+        if (x ne 128) then begin
+          using_wrong_version_of_ref_reduction, Event
+          message, 'Wrong detector geometry'
+        endif
         (*(*global).bank1_data) = data
       END
       'norm': BEGIN
@@ -86,13 +90,19 @@ FUNCTION retrieveBanksData, Event, $
           simulate_ref_m_new_detector, data
         ENDIF
         x = (size(data))(2)
-        if (x ne 128) then message, 'Wrong detector geometry' 
+        if (x ne 128) then begin
+          using_wrong_version_of_ref_reduction, Event
+          message, 'Wrong detector geometry'
+        endif
         (*(*global).bank1_norm) = data
       END
       'empty_cell': BEGIN
         data = h5d_read(fieldID)
         x = (size(data))(2)
-        if (x ne 128) then message, 'Wrong detector geometry' 
+        if (x ne 128) then begin
+          using_wrong_version_of_ref_reduction, Event
+          message, 'Wrong detector geometry'
+        endif
         IF (simulate_new_detector EQ 'yes') THEN BEGIN
           simulate_ref_m_new_detector, data
         ENDIF
