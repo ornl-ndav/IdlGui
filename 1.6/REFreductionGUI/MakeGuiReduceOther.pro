@@ -109,14 +109,14 @@ OFtext   = { size  : [OFlabel.size[0]+XYoff[0],$
 ;START data reduction button
 XYoff = [720,0]
 StartDRButtonSize = [XYoff[0], $
-                     OIGlabelSize[1]+d_vertical_L_L+30,$
+                     OIGlabelSize[1]+d_vertical_L_L+40,$
                      462, $
-                     40]
+                     30]
 StartDRButtonTitle = '  >  > >> S T A R T    D A T A   ' + $
   ' R E D U C T I O N << <  <'
 
 ;command line preview/generator
-d_vertical_L_L_2       = d_vertical_L_L + 10
+d_vertical_L_L_2       = d_vertical_L_L -5
 CLpreviewLabelSize     = [5, $
                           StartDRButtonSize[1]+d_vertical_L_L_2]
 CLpreviewLabelTitle    = 'Preview of the Command Line (CL)'
