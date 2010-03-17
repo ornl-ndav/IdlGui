@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 
-PRO RefReduction_RunCommandLine, Event
+PRO run_command_line_ref_m, event
 
   ;get global structure
   id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -63,70 +63,71 @@ PRO RefReduction_RunCommandLine, Event
   ;indicate initialization with hourglass icon
   WIDGET_CONTROL,/hourglass
   
-  IF ((*global).instrument EQ 'REF_M') THEN BEGIN
-    IF (~isWithDataInstrumentGeometryOverwrite(Event) AND $
-      (*global).dirpix_geometry NE '' AND $
-      (*global).cvinfo NE '') THEN BEGIN ;use tmp geo
-      geo_cmd = (*global).ts_geom
-      geo_cmd += ' ' + (*global).REF_M_geom
-      ;      geo_cmd += ' ' + (*global).dirpix_geometry
-      geo_cmd += ' -m ' + (*global).cvinfo
-      geo_cmd += ' -D DIRPIX=' + STRCOMPRESS((*global).dirpix,/REMOVE_ALL)
-      geo_cmd += ' -o ' + (*global).tmp_geometry_file
-      cmd_text = 'Running geometry generator:'
-      putLogBookMessage, Event, cmd_text, Append=1
-      cmd_text = '-> ' + geo_cmd
-      putLogBookMessage, Event, cmd_text, Append=1
-      SPAWN, geo_cmd, listening, err_listening
-    ;      print, listening
-    ;      print, err_listening
-    ;      help, listening
-    ;      help, err_listening
-    ENDIF
+  IF (~isWithDataInstrumentGeometryOverwrite(Event) AND $
+    (*global).dirpix_geometry NE '' AND $
+    (*global).cvinfo NE '') THEN BEGIN ;use tmp geo
+    geo_cmd = (*global).ts_geom
+    geo_cmd += ' ' + (*global).REF_M_geom
+    ;      geo_cmd += ' ' + (*global).dirpix_geometry
+    geo_cmd += ' -m ' + (*global).cvinfo
+    geo_cmd += ' -D DIRPIX=' + STRCOMPRESS((*global).dirpix,/REMOVE_ALL)
+    geo_cmd += ' -o ' + (*global).tmp_geometry_file
+    cmd_text = 'Running geometry generator:'
+    putLogBookMessage, Event, cmd_text, Append=1
+    cmd_text = '-> ' + geo_cmd
+    putLogBookMessage, Event, cmd_text, Append=1
+    SPAWN, geo_cmd, listening, err_listening
   ENDIF
   
-  ;display command line in log-book
-  cmd_text = 'Running Command Line:'
-  putLogBookMessage, Event, cmd_text, Append=1
-  cmd_text = ' -> ' + cmd
-  putLogBookMessage, Event, cmd_text, Append=1
-  cmd_text = '......... ' + PROCESSING
-  putLogBookMessage, Event, cmd_text, Append=1
+  sz = N_ELEMENTS(cmd)
+  index = 0
+  while(index lt sz) do begin
   
-  SPAWN, cmd, listening, err_listening
-  
-  IF (err_listening[0] NE '') THEN BEGIN
-  
-    (*global).DataReductionStatus = 'ERROR'
-    LogBookText = getLogBookText(Event)
-    Message = '* ERROR! *'
-    putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
-    ErrorLabel = 'ERROR MESSAGE:'
-    putLogBookMessage, Event, ErrorLabel, Append=1
-    putLogBookMessage, Event, err_listening, Append=1
+    ;display command line in log-book
+    cmd_text = 'Running Command Line #' + strcompress(index,/remove_all) + ': '
+    putLogBookMessage, Event, cmd_text, Append=1
+    cmd_text = ' -> ' + cmd[index]
+    putLogBookMessage, Event, cmd_text, Append=1
+    cmd_text = '......... ' + PROCESSING
+    putLogBookMessage, Event, cmd_text, Append=1
     
-    status_text = 'Data Reduction ........ ERROR! (-> Check Log Book)'
-    putTextFieldValue, event, 'data_reduction_status_text_field', $
-      status_text, 0
+    SPAWN, cmd[index], listening, err_listening
+    
+    IF (err_listening[0] NE '') THEN BEGIN
+    
+      (*global).DataReductionStatus = 'ERROR'
+      LogBookText = getLogBookText(Event)
+      Message = '* ERROR! *'
+      putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
+      ErrorLabel = 'ERROR MESSAGE:'
+      putLogBookMessage, Event, ErrorLabel, Append=1
+      putLogBookMessage, Event, err_listening, Append=1
       
-  ENDIF ELSE BEGIN
-  
-    (*global).DataReductionStatus = 'OK'
-    LogBookText = getLogBookText(Event)
-    Message = 'Done'
-    putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
+      status_text = 'Data Reduction ........ ERROR! (-> Check Log Book)'
+      putTextFieldValue, event, 'data_reduction_status_text_field', $
+        status_text, 0
+        
+    ENDIF ELSE BEGIN
     
-    status_text = 'Data Reduction ........ DONE'
-    putTextFieldValue, event, 'data_reduction_status_text_field', $
-      status_text, 0
+      (*global).DataReductionStatus = 'OK'
+      LogBookText = getLogBookText(Event)
+      Message = 'Done'
+      putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
       
-    ;   IF ((*global).debugger) THEN BEGIN
-    ;We can retrieve info for Batch Tab
-    RetrieveBatchInfoAtLoading, Event
-    ;   ENDIF
-    PopulateBatchTableWithCMDinfo, Event, cmd ;_BatchTab
+      status_text = 'Data Reduction ........ DONE'
+      putTextFieldValue, event, 'data_reduction_status_text_field', $
+        status_text, 0
+        
+    ;      ;   IF ((*global).debugger) THEN BEGIN
+    ;      ;We can retrieve info for Batch Tab
+    ;      RetrieveBatchInfoAtLoading, Event
+    ;      ;   ENDIF
+    ;      PopulateBatchTableWithCMDinfo, Event, cmd ;_BatchTab
+        
+    ENDELSE
     
-  ENDELSE
+    index++
+  endwhile
   
   ;disable RunCommandLine
   ActivateWidget, Event,'start_data_reduction_button', 1

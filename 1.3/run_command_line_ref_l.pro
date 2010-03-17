@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 
-PRO RefReduction_RunCommandLine, Event
+PRO run_command_line_ref_l, Event
 
   ;get global structure
   id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
