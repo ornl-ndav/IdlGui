@@ -67,12 +67,15 @@ PRO command_line_generator_for_ref_m, event
     'entry-Off_On',$
     'entry-On_Off',$
     'entry-On_On']
+  spin_state = ['Off_Off',$
+    'Off_On','On_Off','On_On']
   data_spin_state_path = list_data_path[spin_state_selected_index]
+  data_spin_state      = spin_state[spin_state_selected_index]
   
   index_spin_state = 0
   while (index_spin_state lt nbr_spin_states) do begin
   
-    ;*****DATA*******************************************************************
+    ;*****DATA*****************************************************************
     ;get Data run numbers text field
     data_run_numbers = getTextFieldValue(Event, 'reduce_data_runs_text_field')
     if (data_run_numbers NE '') then begin
@@ -853,8 +856,11 @@ PRO command_line_generator_for_ref_m, event
       ENDIF
     ENDIF
     outputFileName    = getOutputFileName(Event)
+    outputFileName = add_spin_state_to_outputFileName(Event,$
+      outputFileName,$
+      data_spin_state[index_spin_state])
     NewOutputFileName = outputPath + outputFileName
-    cmd[index_spin_state]              += ' --output=' + NewOutputFileName
+    cmd[index_spin_state] += ' --output=' + NewOutputFileName
     
     index_spin_state++
   endwhile

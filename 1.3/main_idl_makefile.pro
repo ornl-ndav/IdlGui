@@ -71,6 +71,7 @@
 .run ref_reduction_LoadBackgroundSelection.pro
 .run ref_reduction_ManuallyMoveBackPeakSelection.pro
 
+.run define_ref_m_output_file_name.pro
 .run ref_reduction_GUIinteraction.pro
 .run ref_reduction_UpdateDataNormGui.pro
 .run ref_reduction_UpdateReduceTabGui.pro
