@@ -193,8 +193,13 @@ END
 ;------------------------------------------------------------------------------
 PRO displayTextRemoved, Event
   cl_text = getTextFieldValue(Event,'preview_cl_file_text_field')
+  cl_text = strjoin(cl_text, ' ')
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME='preview_cl_file_text_field')
   text_selected_index = WIDGET_INFO(id, /TEXT_SELECT)
+  
+  help, cl_text
+  help, text_selected_index
+  print, text_selected_index
   
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
