@@ -70,6 +70,8 @@ FUNCTION OpenDataNeXusFile, Event, $
     'data_file_info_text', $
     POLA_STATE=pola_state
     
+  if (full_nexus_name eq '') then return, 0
+  
   ;check format of NeXus file
   IF (H5F_IS_HDF5(full_nexus_name)) THEN BEGIN
     (*global).isHDF5format = 1
@@ -131,7 +133,7 @@ PRO REFreduction_LoadDatafile, Event, isNeXusFound, NbrNexus
     
     ;check if user wants archived or all nexus runs +++++++++++++++++++++++++++++++
     IF (~isArchivedDataNexusDesired(Event)) THEN BEGIN ;get full list of Nexus
-
+    
       LogBookText = '-> Retrieving full list of DATA Run Number: ' + $
         DataRunNumber
       IDLsendLogBook_addLogBookText, Event, LogBookText
@@ -259,7 +261,7 @@ PRO REFreduction_LoadDatafile, Event, isNeXusFound, NbrNexus
             RefReduction_update_data_gui_if_NeXus_found, Event, result
             
             IF ((*global).instrument EQ 'REF_M') THEN BEGIN
-            populate_data_geometry_info, Event
+              populate_data_geometry_info, Event
             ENDIF
             
             WIDGET_CONTROL,HOURGLASS=0
@@ -282,7 +284,7 @@ PRO REFreduction_LoadDatafile, Event, isNeXusFound, NbrNexus
         ENDELSE             ;end of 1 or more nexus found
         
       ENDELSE
-    
+      
     ;we just want the archived one
     ENDIF ELSE BEGIN ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
@@ -386,7 +388,7 @@ PRO REFreduction_LoadDatafile, Event, isNeXusFound, NbrNexus
           RefReduction_update_data_gui_if_NeXus_found, Event, result
           
           IF ((*global).instrument EQ 'REF_M') THEN BEGIN
-          populate_data_geometry_info, Event
+            populate_data_geometry_info, Event
           ENDIF
           
         ENDIF ELSE BEGIN
