@@ -45,6 +45,7 @@ PRO command_line_generator_for_ref_m, event
   endif else begin
     nbr_spin_states = get_nbr_spin_states(event)
   endelse
+  list_of_output_file_name = strarr(nbr_spin_states)
   
   cmd = strarr(nbr_spin_states)
   
@@ -915,9 +916,13 @@ PRO command_line_generator_for_ref_m, event
       data_spin_state[index_spin_state])
     NewOutputFileName = outputPath + outputFileName
     cmd[index_spin_state] += ' --output=' + NewOutputFileName
+    list_of_output_file_name[index_spin_state] = NewOutputFileName
     
     index_spin_state++
   endwhile
+  
+  ;record the name of all the output files
+  (*(*global).list_of_output_file_name) = list_of_output_file_name
   
   ;generate intermediate plots command line
   IP_cmd = RefReduction_CommandLineIntermediatePlotsGenerator(Event)
