@@ -97,13 +97,14 @@ FUNCTION get_cl_with_fields, Event
     
   text_to_remove = STRARR(3)
   nbr_text_part_to_keep = 1 ;array of part of cl to keep
-  FOR i=0,2 DO BEGIN
+  for i=0,2 do begin
     text_to_remove[i] = getTextFieldValue(Event,uname[i])
-    IF (text_to_remove[i] NE '') THEN nbr_text_part_to_keep++
-  ENDFOR
+    if (text_to_remove[i] ne '') then nbr_text_part_to_keep++
+  endfor
   
   ;get array of position where the string to remove was found first
   cl = getTextFieldValue(Event,'preview_cl_file_text_field')
+  cl = strjoin(cl, ' ')
   index_start = INTARR(3)
   FOR i=0,2 DO BEGIN
     IF (STRCOMPRESS(text_to_remove[i],/REMOVE_ALL) NE '' AND $
