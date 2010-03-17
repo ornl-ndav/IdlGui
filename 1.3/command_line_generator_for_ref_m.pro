@@ -82,10 +82,12 @@ PRO command_line_generator_for_ref_m, event
       cmd[index_spin_state] += ' ' + data_run_numbers
     endif else begin
       cmd[index_spin_state] += ' ?'
-      status_text = '- Please provide at least one data run number'
-      status_text += ' (Format example: 1345,1455-1458,1500)'
-      putInfoInReductionStatus, Event, status_text, 0
-      StatusMessage += 1
+      if (index_spin_state eq 0) then begin
+        status_text = '- Please provide at least one data run number'
+        status_text += ' (Format example: 1345,1455-1458,1500)'
+        putInfoInReductionStatus, Event, status_text, 0
+        StatusMessage += 1
+      endif
     endelse
     
     value = getButtonValue(event,'other_spin_states')
@@ -109,16 +111,18 @@ PRO command_line_generator_for_ref_m, event
       cmd[index_spin_state] += data_roi_file
     ENDIF ELSE BEGIN
       cmd[index_spin_state]        += '?'
-      status_text = '- Please provide a data region of interest file. Go to ' + $
-        'DATA, '
-      status_text += 'select a ROI and save it.'
-      IF (StatusMessage GT 0) THEN BEGIN
-        append = 1
-      ENDIF ELSE BEGIN
-        append = 0
-      ENDELSE
-      putInfoInReductionStatus, Event, status_text, append
-      StatusMessage += 1
+      if (index_spin_state eq 0) then begin
+        status_text = '- Please provide a data region of interest file. Go to ' + $
+          'DATA, '
+        status_text += 'select a ROI and save it.'
+        IF (StatusMessage GT 0) THEN BEGIN
+          append = 1
+        ENDIF ELSE BEGIN
+          append = 0
+        ENDELSE
+        putInfoInReductionStatus, Event, status_text, append
+        StatusMessage += 1
+      endif
     ENDELSE
     
     substrateValue = getCWBgroupValue(Event,'empty_cell_substrate_group')
@@ -147,17 +151,19 @@ PRO command_line_generator_for_ref_m, event
           cmd[index_spin_state] += STRCOMPRESS(data_peak_exclusion_min,/REMOVE_ALL)
         ENDIF ELSE BEGIN
           cmd[index_spin_state]         += '?'
-          status_text  = '- Please provide a data low range ' + $
-            'Peak of Exclusion.'
-          status_text += ' Go to DATA, and select a low value for ' + $
-            'the data peak exclusion.'
-          IF (StatusMessage GT 0) THEN BEGIN
-            append = 1
-          ENDIF ELSE BEGIN
-            append = 0
-          ENDELSE
-          putInfoInReductionStatus, Event, status_text, append
-          StatusMessage += 1
+          if (index_spin_state eq 0) then begin
+            status_text  = '- Please provide a data low range ' + $
+              'Peak of Exclusion.'
+            status_text += ' Go to DATA, and select a low value for ' + $
+              'the data peak exclusion.'
+            IF (StatusMessage GT 0) THEN BEGIN
+              append = 1
+            ENDIF ELSE BEGIN
+              append = 0
+            ENDELSE
+            putInfoInReductionStatus, Event, status_text, append
+            StatusMessage += 1
+          endif
         ENDELSE
         
         data_peak_exclusion_max = $
@@ -168,17 +174,19 @@ PRO command_line_generator_for_ref_m, event
           cmd[index_spin_state] += ' ' + STRCOMPRESS(data_peak_exclusion_max,/REMOVE_ALL)
         ENDIF ELSE BEGIN
           cmd[index_spin_state]         += ' ?'
-          status_text  = '- Please provide a data high ' + $
-            'range Peak of Exclusion.'
-          status_text += ' Go to DATA, and select a high value for ' + $
-            'the data peak exclusion.'
-          IF (StatusMessage GT 0) THEN BEGIN
-            append = 1
-          ENDIF ELSE BEGIN
-            append = 0
-          ENDELSE
-          putInfoInReductionStatus, Event, status_text, append
-          StatusMessage += 1
+          if (index_spin_state eq 0) then begin
+            status_text  = '- Please provide a data high ' + $
+              'range Peak of Exclusion.'
+            status_text += ' Go to DATA, and select a high value for ' + $
+              'the data peak exclusion.'
+            IF (StatusMessage GT 0) THEN BEGIN
+              append = 1
+            ENDIF ELSE BEGIN
+              append = 0
+            ENDELSE
+            putInfoInReductionStatus, Event, status_text, append
+            StatusMessage += 1
+          endif
         ENDELSE
         
         ;Be sure that (Ymin_peak=Ymin_back && Ymax_peak=Ymax_back) is wrong
@@ -193,24 +201,26 @@ PRO command_line_generator_for_ref_m, event
           'data_d_selection_background_ymax_' + $
           'cw_field'), $
           /REMOVE_ALL)
-        IF (Ymin_peak NE '' AND $
-          Ymax_peak NE '' AND $
-          Ymin_back NE '' AND $
-          Ymax_back NE '') THEN BEGIN
-          IF ((Ymin_peak EQ Ymin_back) AND $
-            (Ymax_peak EQ Ymax_back)) THEN BEGIN
-            StatusMessage += 1
-            status_text = '- Data Background and Peak have the same ' + $
-              'Ymin and Ymax values.'
-            status_text += ' Please changes at least 1 of the data.'
-            IF (StatusMessage GT 0) THEN BEGIN
-              append = 1
-            ENDIF ELSE BEGIN
-              append = 0
-            ENDELSE
-            putInfoInReductionStatus, Event, status_text, append
+        if (index_spin_state eq 0) then begin
+          IF (Ymin_peak NE '' AND $
+            Ymax_peak NE '' AND $
+            Ymin_back NE '' AND $
+            Ymax_back NE '') THEN BEGIN
+            IF ((Ymin_peak EQ Ymin_back) AND $
+              (Ymax_peak EQ Ymax_back)) THEN BEGIN
+              StatusMessage += 1
+              status_text = '- Data Background and Peak have the same ' + $
+                'Ymin and Ymax values.'
+              status_text += ' Please changes at least 1 of the data.'
+              IF (StatusMessage GT 0) THEN BEGIN
+                append = 1
+              ENDIF ELSE BEGIN
+                append = 0
+              ENDELSE
+              putInfoInReductionStatus, Event, status_text, append
+            ENDIF
           ENDIF
-        ENDIF
+        endif
         
       ENDIF ELSE BEGIN            ;background file
       
@@ -226,16 +236,18 @@ PRO command_line_generator_for_ref_m, event
           cmd[index_spin_state] += data_roi_file
         ENDIF ELSE BEGIN
           cmd[index_spin_state]        += '?'
-          status_text = '- Please provide a data background file. Go to ' + $
-            'DATA, Peak/Background and '
-          status_text += 'select a ROI and save it.'
-          IF (StatusMessage GT 0) THEN BEGIN
-            append = 1
-          ENDIF ELSE BEGIN
-            append = 0
-          ENDELSE
-          putInfoInReductionStatus, Event, status_text, append
-          StatusMessage += 1
+          if (index_spin_state eq 0) then begin
+            status_text = '- Please provide a data background file. Go to ' + $
+              'DATA, Peak/Background and '
+            status_text += 'select a ROI and save it.'
+            IF (StatusMessage GT 0) THEN BEGIN
+              append = 1
+            ENDIF ELSE BEGIN
+              append = 0
+            ENDELSE
+            putInfoInReductionStatus, Event, status_text, append
+            StatusMessage += 1
+          endif
         ENDELSE
         
       ENDELSE
@@ -273,14 +285,16 @@ PRO command_line_generator_for_ref_m, event
         error_min1:
         IF (error_status) THEN BEGIN
           tof_min = '?'
-          status_text = '- Please check the TOF cut min value'
-          IF (StatusMessage GT 0) THEN BEGIN
-            append = 1
-          ENDIF ELSE BEGIN
-            append = 0
-          ENDELSE
-          putInfoInReductionStatus, Event, status_text, append
-          StatusMessage += 1
+          if (index_spin_state eq 0) then begin
+            status_text = '- Please check the TOF cut min value'
+            IF (StatusMessage GT 0) THEN BEGIN
+              append = 1
+            ENDIF ELSE BEGIN
+              append = 0
+            ENDELSE
+            putInfoInReductionStatus, Event, status_text, append
+            StatusMessage += 1
+          endif
         ENDIF
         
       ENDIF ELSE BEGIN
@@ -295,14 +309,16 @@ PRO command_line_generator_for_ref_m, event
         error_min:
         IF (error_status) THEN BEGIN
           tof_min = '?'
-          status_text = '- Please check the TOF cut min value'
-          IF (StatusMessage GT 0) THEN BEGIN
-            append = 1
-          ENDIF ELSE BEGIN
-            append = 0
-          ENDELSE
-          putInfoInReductionStatus, Event, status_text, append
-          StatusMessage += 1
+          if (index_spin_state eq 0) then begin
+            status_text = '- Please check the TOF cut min value'
+            IF (StatusMessage GT 0) THEN BEGIN
+              append = 1
+            ENDIF ELSE BEGIN
+              append = 0
+            ENDELSE
+            putInfoInReductionStatus, Event, status_text, append
+            StatusMessage += 1
+          endif
         ENDIF
         
       ENDELSE
@@ -324,15 +340,17 @@ PRO command_line_generator_for_ref_m, event
         error_max1:
         IF (error_status) THEN BEGIN
           tof_max = '?'
-          status_text = '- Please check the TOF cut max value'
-          IF (StatusMessage GT 0) THEN BEGIN
-            append = 1
-          ENDIF ELSE BEGIN
-            append = 0
-          ENDELSE
-          putInfoInReductionStatus, Event, status_text, append
-          StatusMessage += 1
-        ENDIF
+          if (index_spin_state eq 0) then begin
+            status_text = '- Please check the TOF cut max value'
+            IF (StatusMessage GT 0) THEN BEGIN
+              append = 1
+            ENDIF ELSE BEGIN
+              append = 0
+            ENDELSE
+            putInfoInReductionStatus, Event, status_text, append
+            StatusMessage += 1
+          endif
+        endif
         
       ENDIF ELSE BEGIN
       
@@ -346,14 +364,16 @@ PRO command_line_generator_for_ref_m, event
         error_max:
         IF (error_status) THEN BEGIN
           tof_max = '?'
-          status_text = '- Please check the TOF cut max value'
-          IF (StatusMessage GT 0) THEN BEGIN
-            append = 1
-          ENDIF ELSE BEGIN
-            append = 0
-          ENDELSE
-          putInfoInReductionStatus, Event, status_text, append
-          StatusMessage += 1
+          if (index_spin_state eq 0) then begin
+            status_text = '- Please check the TOF cut max value'
+            IF (StatusMessage GT 0) THEN BEGIN
+              append = 1
+            ENDIF ELSE BEGIN
+              append = 0
+            ENDELSE
+            putInfoInReductionStatus, Event, status_text, append
+            StatusMessage += 1
+          endif
         ENDIF
         
       ENDELSE
@@ -378,15 +398,17 @@ PRO command_line_generator_for_ref_m, event
         cmd[index_spin_state] += norm_run_numbers
       endif else begin
         cmd[index_spin_state] += '?'
-        status_text = '- Please provide at least one normalization run number'
-        status_text += '(Format example: 1345,1455-1458,1500)'
-        if (StatusMessage GT 0) then begin
-          append = 1
-        endif else begin
-          append = 0
-        endelse
-        putInfoInReductionStatus, Event, status_text, append
-        StatusMessage += 1
+        if (index_spin_state eq 0) then begin
+          status_text = '- Please provide at least one normalization run number'
+          status_text += '(Format example: 1345,1455-1458,1500)'
+          if (StatusMessage GT 0) then begin
+            append = 1
+          endif else begin
+            append = 0
+          endelse
+          putInfoInReductionStatus, Event, status_text, append
+          StatusMessage += 1
+        endif
       endelse
       
       ;normalization path
@@ -411,17 +433,19 @@ PRO command_line_generator_for_ref_m, event
         cmd[index_spin_state] += STRCOMPRESS(norm_roi_file,/remove_all)
       ENDIF ELSE BEGIN
         cmd[index_spin_state] += '?'
-        status_text = '- Please provide a normalization region of interest' + $
-          ' file.'
-        status_text += ' Go to NORMALIZATION, select a background ROI and' + $
-          ' save it.'
-        IF (StatusMessage GT 0) THEN BEGIN
-          append = 1
-        ENDIF ELSE BEGIN
-          append = 0
-        ENDELSE
-        putInfoInReductionStatus, Event, status_text, append
-        StatusMessage += 1
+        if (index_spin_state eq 0) then begin
+          status_text = '- Please provide a normalization region of interest' + $
+            ' file.'
+          status_text += ' Go to NORMALIZATION, select a background ROI and' + $
+            ' save it.'
+          IF (StatusMessage GT 0) THEN BEGIN
+            append = 1
+          ENDIF ELSE BEGIN
+            append = 0
+          ENDELSE
+          putInfoInReductionStatus, Event, status_text, append
+          StatusMessage += 1
+        endif
       ENDELSE
       
       ;get Peak or Background
@@ -447,17 +471,19 @@ PRO command_line_generator_for_ref_m, event
           cmd[index_spin_state] += STRCOMPRESS(norm_peak_exclusion_min,/REMOVE_ALL)
         ENDIF ELSE BEGIN
           cmd[index_spin_state]         += '?'
-          status_text  = '- Please provide a normalization low range ' + $
-            'Peak of Exclusion.'
-          status_text += ' Go to NORMALIZATION, and select a low ' + $
-            'value for the normalization peak exclusion.'
-          IF (StatusMessage GT 0) THEN BEGIN
-            append = 1
-          ENDIF ELSE BEGIN
-            append = 0
-          ENDELSE
-          putInfoInReductionStatus, Event, status_text, append
-          StatusMessage += 1
+          if (index_spin_state eq 0) then begin
+            status_text  = '- Please provide a normalization low range ' + $
+              'Peak of Exclusion.'
+            status_text += ' Go to NORMALIZATION, and select a low ' + $
+              'value for the normalization peak exclusion.'
+            IF (StatusMessage GT 0) THEN BEGIN
+              append = 1
+            ENDIF ELSE BEGIN
+              append = 0
+            ENDELSE
+            putInfoInReductionStatus, Event, status_text, append
+            StatusMessage += 1
+          endif
         ENDELSE
         
         norm_peak_exclusion_max = $
@@ -468,17 +494,19 @@ PRO command_line_generator_for_ref_m, event
           cmd[index_spin_state] += ' ' + STRCOMPRESS(norm_peak_exclusion_max,/REMOVE_ALL)
         ENDIF ELSE BEGIN
           cmd[index_spin_state]         += ' ?'
-          status_text  = '- Please provide a normalization high ' + $
-            'range Peak of Exclusion.'
-          status_text += ' Go to NORMALIZATION, and select a high ' + $
-            'value for the normalization peak exclusion.'
-          IF (StatusMessage GT 0) THEN BEGIN
-            append = 1
-          ENDIF ELSE BEGIN
-            append = 0
-          ENDELSE
-          putInfoInReductionStatus, Event, status_text, append
-          StatusMessage += 1
+          if (index_spin_state eq 0) then begin
+            status_text  = '- Please provide a normalization high ' + $
+              'range Peak of Exclusion.'
+            status_text += ' Go to NORMALIZATION, and select a high ' + $
+              'value for the normalization peak exclusion.'
+            IF (StatusMessage GT 0) THEN BEGIN
+              append = 1
+            ENDIF ELSE BEGIN
+              append = 0
+            ENDELSE
+            putInfoInReductionStatus, Event, status_text, append
+            StatusMessage += 1
+          endif
         ENDELSE
         
         ;Be sure that (Ymin_peak=Ymin_back && Ymax_peak=Ymax_back) is wrong
@@ -500,16 +528,18 @@ PRO command_line_generator_for_ref_m, event
           Ymax_back NE '') THEN BEGIN
           IF ((Ymin_peak EQ Ymin_back) AND $
             (Ymax_peak EQ Ymax_back)) THEN BEGIN
-            StatusMessage += 1
-            status_text = '- Normalization Background and Peak ' + $
-              'have the same Ymin and Ymax values.'
-            status_text += ' Please changes at least 1 of the selection!'
-            IF (StatusMessage GT 0) THEN BEGIN
-              append = 1
-            ENDIF ELSE BEGIN
-              append = 0
-            ENDELSE
-            putInfoInReductionStatus, Event, status_text, append
+            if (index_spin_state eq 0) then begin
+              StatusMessage += 1
+              status_text = '- Normalization Background and Peak ' + $
+                'have the same Ymin and Ymax values.'
+              status_text += ' Please changes at least 1 of the selection!'
+              IF (StatusMessage GT 0) THEN BEGIN
+                append = 1
+              ENDIF ELSE BEGIN
+                append = 0
+              ENDELSE
+              putInfoInReductionStatus, Event, status_text, append
+            endif
           ENDIF
         ENDIF
         
@@ -527,16 +557,18 @@ PRO command_line_generator_for_ref_m, event
           cmd[index_spin_state] += norm_roi_file
         ENDIF ELSE BEGIN
           cmd[index_spin_state]        += '?'
-          status_text = '- Please provide a normalization background ' + $
-            'file. Go to NORMALIZATION, Peak/Background and '
-          status_text += 'select a ROI and save it.'
-          IF (StatusMessage GT 0) THEN BEGIN
-            append = 1
-          ENDIF ELSE BEGIN
-            append = 0
-          ENDELSE
-          putInfoInReductionStatus, Event, status_text, append
-          StatusMessage += 1
+          if (index_spin_state eq 0) then begin
+            status_text = '- Please provide a normalization background ' + $
+              'file. Go to NORMALIZATION, Peak/Background and '
+            status_text += 'select a ROI and save it.'
+            IF (StatusMessage GT 0) THEN BEGIN
+              append = 1
+            ENDIF ELSE BEGIN
+              append = 0
+            ENDELSE
+            putInfoInReductionStatus, Event, status_text, append
+            StatusMessage += 1
+          endif
         ENDELSE
         
       ENDELSE
@@ -570,15 +602,17 @@ PRO command_line_generator_for_ref_m, event
       A = getTextFieldValue(Event, 'empty_cell_substrate_a')
       IF (A EQ '' OR A EQ 0) THEN BEGIN
         cmd[index_spin_state]  += '?'
-        status_text = '- Please provide a valid Coefficient A to' + $
-          ' the Substrate Transmission Equation (tab -> LOAD/EMPTY_CELL)'
-        IF (StatusMessage GT 0) THEN BEGIN
-          append = 1
-        ENDIF ELSE BEGIN
-          append = 0
-        ENDELSE
-        putInfoInReductionStatus, Event, status_text, append
-        StatusMessage += 1
+        if (index_spin_state eq 0) then begin
+          status_text = '- Please provide a valid Coefficient A to' + $
+            ' the Substrate Transmission Equation (tab -> LOAD/EMPTY_CELL)'
+          IF (StatusMessage GT 0) THEN BEGIN
+            append = 1
+          ENDIF ELSE BEGIN
+            append = 0
+          ENDELSE
+          putInfoInReductionStatus, Event, status_text, append
+          StatusMessage += 1
+        endif
       ENDIF ELSE BEGIN
         cmd[index_spin_state] += A
       ENDELSE
@@ -588,15 +622,17 @@ PRO command_line_generator_for_ref_m, event
       B = getTextFieldValue(Event, 'empty_cell_substrate_b')
       IF (B EQ '' OR B EQ 0) THEN BEGIN
         cmd[index_spin_state]  += '?'
-        status_text = '- Please provide a valid Coefficient B to' + $
-          ' the Substrate Transmission Equation (tab -> LOAD/EMPTY_CELL)'
-        IF (StatusMessage GT 0) THEN BEGIN
-          append = 1
-        ENDIF ELSE BEGIN
-          append = 0
-        ENDELSE
-        putInfoInReductionStatus, Event, status_text, append
-        StatusMessage += 1
+        if (index_spin_state eq 0) then begin
+          status_text = '- Please provide a valid Coefficient B to' + $
+            ' the Substrate Transmission Equation (tab -> LOAD/EMPTY_CELL)'
+          IF (StatusMessage GT 0) THEN BEGIN
+            append = 1
+          ENDIF ELSE BEGIN
+            append = 0
+          ENDELSE
+          putInfoInReductionStatus, Event, status_text, append
+          StatusMessage += 1
+        endif
       ENDIF ELSE BEGIN
         cmd[index_spin_state] += B
       ENDELSE
@@ -605,15 +641,17 @@ PRO command_line_generator_for_ref_m, event
       D = getTextFieldValue(Event, 'empty_cell_diameter')
       IF (D EQ '' OR D EQ 0) THEN BEGIN
         cmd[index_spin_state]  += '?'
-        status_text = '- Please provide a valid Substrate Diameter D to' + $
-          ' the Substrate Transmission Equation (tab -> LOAD/EMPTY_CELL)'
-        IF (StatusMessage GT 0) THEN BEGIN
-          append = 1
-        ENDIF ELSE BEGIN
-          append = 0
-        ENDELSE
-        putInfoInReductionStatus, Event, status_text, append
-        StatusMessage += 1
+        if (index_spin_state eq 0) then begin
+          status_text = '- Please provide a valid Substrate Diameter D to' + $
+            ' the Substrate Transmission Equation (tab -> LOAD/EMPTY_CELL)'
+          IF (StatusMessage GT 0) THEN BEGIN
+            append = 1
+          ENDIF ELSE BEGIN
+            append = 0
+          ENDELSE
+          putInfoInReductionStatus, Event, status_text, append
+          StatusMessage += 1
+        endif
       ENDIF ELSE BEGIN
         cmd[index_spin_state] += D
       ENDELSE
@@ -628,15 +666,17 @@ PRO command_line_generator_for_ref_m, event
       empty_cell_nexus_file = (*global).empty_cell_full_nexus_name
       IF (empty_cell_nexus_file EQ '') THEN BEGIN
         cmd[index_spin_state]  += '?'
-        status_text = '- Please provide a valid Empty Cell NeXus File'
-        status_text += ' (tab-> LOAD/EMPTY_CELL)'
-        IF (StatusMessage GT 0) THEN BEGIN
-          append = 1
-        ENDIF ELSE BEGIN
-          append = 0
-        ENDELSE
-        putInfoInReductionStatus, Event, status_text, append
-        StatusMessage += 1
+        if (index_spin_state eq 0) then begin
+          status_text = '- Please provide a valid Empty Cell NeXus File'
+          status_text += ' (tab-> LOAD/EMPTY_CELL)'
+          IF (StatusMessage GT 0) THEN BEGIN
+            append = 1
+          ENDIF ELSE BEGIN
+            append = 0
+          ENDELSE
+          putInfoInReductionStatus, Event, status_text, append
+          StatusMessage += 1
+        endif
       ENDIF ELSE BEGIN
         cmd[index_spin_state] += empty_cell_nexus_file
       ENDELSE
@@ -668,42 +708,48 @@ PRO command_line_generator_for_ref_m, event
         cmd[index_spin_state] += STRCOMPRESS(Q_min,/remove_all)
       endif else begin
         cmd[index_spin_state] += '?'
-        status_text = '- Please provide a Q minimum value'
-        if (StatusMessage GT 0) then begin
-          append = 1
-        endif else begin
-          append = 0
-        endelse
-        putInfoInReductionStatus, Event, status_text, append
-        StatusMessage += 1
+        if (index_spin_state eq 0) then begin
+          status_text = '- Please provide a Q minimum value'
+          if (StatusMessage GT 0) then begin
+            append = 1
+          endif else begin
+            append = 0
+          endelse
+          putInfoInReductionStatus, Event, status_text, append
+          StatusMessage += 1
+        endif
       endelse
       
       if (Q_max NE '') then begin ;Q_max
         cmd[index_spin_state] += ',' + STRCOMPRESS(Q_max,/remove_all)
       endif else begin
         cmd[index_spin_state] += ',?'
-        status_text = '- Please provide a Q maximum value'
-        if (StatusMessage GT 0) then begin
-          append = 1
-        endif else begin
-          append = 0
-        endelse
-        putInfoInReductionStatus, Event, status_text, append
-        StatusMessage += 1
+        if (index_spin_state eq 0) then begin
+          status_text = '- Please provide a Q maximum value'
+          if (StatusMessage GT 0) then begin
+            append = 1
+          endif else begin
+            append = 0
+          endelse
+          putInfoInReductionStatus, Event, status_text, append
+          StatusMessage += 1
+        endif
       endelse
       
       if (Q_width NE '') then begin ;Q_width
         cmd[index_spin_state] += ',' + STRCOMPRESS(Q_width,/remove_all)
       endif else begin
         cmd[index_spin_state] += ',?'
-        status_text = '- Please provide a Q width value'
-        if (StatusMessage GT 0) then begin
-          append = 1
-        endif else begin
-          append = 0
-        endelse
-        putInfoInReductionStatus, Event, status_text, append
-        StatusMessage += 1
+        if (index_spin_state eq 0) then begin
+          status_text = '- Please provide a Q width value'
+          if (StatusMessage GT 0) then begin
+            append = 1
+          endif else begin
+            append = 0
+          endelse
+          putInfoInReductionStatus, Event, status_text, append
+          StatusMessage += 1
+        endif
       endelse
       cmd[index_spin_state] += ',' + Q_scale        ;Q_scale (lin or log)
       
@@ -726,28 +772,32 @@ PRO command_line_generator_for_ref_m, event
         cmd[index_spin_state] += STRCOMPRESS(angle_value,/remove_all)
       endif else begin
         cmd[index_spin_state] += '?'
-        status_text = '- Please provide a detector angle value'
-        if (StatusMessage GT 0) then begin
-          append = 1
-        endif else begin
-          append = 0
-        endelse
-        putInfoInReductionStatus, Event, status_text, append
-        StatusMessage += 1
+        if (index_spin_state eq 0) then begin
+          status_text = '- Please provide a detector angle value'
+          if (StatusMessage GT 0) then begin
+            append = 1
+          endif else begin
+            append = 0
+          endelse
+          putInfoInReductionStatus, Event, status_text, append
+          StatusMessage += 1
+        endif
       endelse
       
       if (angle_err NE '') then begin ;angle_err
         cmd[index_spin_state] += ',' + STRCOMPRESS(angle_err,/remove_all)
       endif else begin
         cmd[index_spin_state] += ',?'
-        status_text = '- Please provide a detector angle error value'
-        if (StatusMessage GT 0) then begin
-          append = 1
-        endif else begin
-          append = 0
-        endelse
-        putInfoInReductionStatus, Event, status_text, append
-        StatusMessage += 1
+        if (index_spin_state eq 0) then begin
+          status_text = '- Please provide a detector angle error value'
+          if (StatusMessage GT 0) then begin
+            append = 1
+          endif else begin
+            append = 0
+          endelse
+          putInfoInReductionStatus, Event, status_text, append
+          StatusMessage += 1
+        endif
       endelse
       
       cmd[index_spin_state] += ',units=' + STRCOMPRESS(angle_units,/remove_all)
@@ -783,14 +833,16 @@ PRO command_line_generator_for_ref_m, event
         button_value = getFileNameOnly(IGFIle)
       endif else begin
         cmd[index_spin_state] += '?'
-        status_text = '- Please select a Data instrument geometry'
-        if (StatusMessage GT 0) then begin
-          append = 1
-        endif else begin
-          append = 0
-        endelse
-        putInfoInReductionStatus, Event, status_text, append
-        StatusMessage += 1
+        if (index_spin_state eq 0) then begin
+          status_text = '- Please select a Data instrument geometry'
+          if (StatusMessage GT 0) then begin
+            append = 1
+          endif else begin
+            append = 0
+          endelse
+          putInfoInReductionStatus, Event, status_text, append
+          StatusMessage += 1
+        endif
         if ((*global).miniVersion EQ 0) then begin
           button_value = 'Select a Data Instrument Geometry File'
         endif else begin
@@ -818,14 +870,16 @@ PRO command_line_generator_for_ref_m, event
         button_value = getFileNameOnly(IGFIle)
       endif else begin
         cmd[index_spin_state] += '?'
-        status_text = '- Please select a Normalization instrument geometry'
-        if (StatusMessage GT 0) then begin
-          append = 1
-        endif else begin
-          append = 0
-        endelse
-        putInfoInReductionStatus, Event, status_text, append
-        StatusMessage += 1
+        if (index_spin_state eq 0) then begin
+          status_text = '- Please select a Normalization instrument geometry'
+          if (StatusMessage GT 0) then begin
+            append = 1
+          endif else begin
+            append = 0
+          endelse
+          putInfoInReductionStatus, Event, status_text, append
+          StatusMessage += 1
+        endif
         if ((*global).miniVersion EQ 0) then begin
           button_value = 'Select a Normalization Instrument Geometry File'
         endif else begin
