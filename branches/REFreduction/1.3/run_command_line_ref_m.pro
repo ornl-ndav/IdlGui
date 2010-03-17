@@ -40,7 +40,7 @@ PRO run_command_line_ref_m, event
   
   PROCESSING = (*global).processing_message ;processing message
   
-  status_text = 'Data Reduction ........ ' + PROCESSING
+  status_text = 'Create temp. geometry .... ' + PROCESSING
   putTextFieldValue, event, 'data_reduction_status_text_field', status_text, 0
   
   ;check the run numbers and replace them by full nexus path
@@ -79,19 +79,27 @@ PRO run_command_line_ref_m, event
     SPAWN, geo_cmd, listening, err_listening
   ENDIF
   
+  status_text = 'Create temp. geometry .... DONE'
+  putTextFieldValue, event, 'data_reduction_status_text_field', status_text, 0
+  
   sz = N_ELEMENTS(cmd)
+  first_ref_m_file_to_plot = -1
   index = 0
   while(index lt sz) do begin
   
+    status_text = 'Data Reduction # ' + strcompress(index+1,/remove_all) + $
+      ' ... ' + PROCESSING
+    putTextFieldValue, event, 'data_reduction_status_text_field', status_text, 0
+    
     ;display command line in log-book
-    cmd_text = 'Running Command Line #' + strcompress(index,/remove_all) + ': '
+    cmd_text = 'Running Command Line #' + strcompress(index+1,/remove_all) + ': '
     putLogBookMessage, Event, cmd_text, Append=1
     cmd_text = ' -> ' + cmd[index]
     putLogBookMessage, Event, cmd_text, Append=1
     cmd_text = '......... ' + PROCESSING
     putLogBookMessage, Event, cmd_text, Append=1
-    
-    SPAWN, cmd[index], listening, err_listening
+       
+    spawn, cmd[index], listening, err_listening
     
     IF (err_listening[0] NE '') THEN BEGIN
     
@@ -103,26 +111,23 @@ PRO run_command_line_ref_m, event
       putLogBookMessage, Event, ErrorLabel, Append=1
       putLogBookMessage, Event, err_listening, Append=1
       
-      status_text = 'Data Reduction ........ ERROR! (-> Check Log Book)'
+      status_text = 'Data Reduction # ' + strcompress(index+1,/remove_all) + $
+        ' ... ERROR! (-> Check Log Book)'
       putTextFieldValue, event, 'data_reduction_status_text_field', $
         status_text, 0
         
     ENDIF ELSE BEGIN
     
       (*global).DataReductionStatus = 'OK'
+      if (first_ref_m_file_to_plot eq -1) then first_ref_m_file_to_plot = index
       LogBookText = getLogBookText(Event)
       Message = 'Done'
       putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
       
-      status_text = 'Data Reduction ........ DONE'
+      status_text = 'Data Reduction # ' + strcompress(index+1,/remove_all) + $
+        ' ... DONE'
       putTextFieldValue, event, 'data_reduction_status_text_field', $
         status_text, 0
-        
-    ;      ;   IF ((*global).debugger) THEN BEGIN
-    ;      ;We can retrieve info for Batch Tab
-    ;      RetrieveBatchInfoAtLoading, Event
-    ;      ;   ENDIF
-    ;      PopulateBatchTableWithCMDinfo, Event, cmd ;_BatchTab
         
     ENDELSE
     
@@ -134,5 +139,9 @@ PRO run_command_line_ref_m, event
   
   ;turn off hourglass
   WIDGET_CONTROL,hourglass=0
+  
+  (*global).first_ref_m_file_to_plot = first_ref_m_file_to_plot
+  print, 'first_ref_m_file_to_plot: ' , first_ref_m_file_to_plot
+  print, (*(*global).list_of_output_file_name)
   
 END

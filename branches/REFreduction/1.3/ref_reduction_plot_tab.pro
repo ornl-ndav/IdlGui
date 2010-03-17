@@ -246,14 +246,13 @@ PRO rePlotAsciiData, Event
   SigmaYarray = (*(*global).SigmaYarray)
   
   plot_error = 0
-  CATCH, plot_error
-  IF (plot_error NE 0) THEN BEGIN
-    CATCH,/CANCEL
-    text = ['Error while plotting the ASCII file.', $
-      'File name: ' + file_name[0]]
-    result = DIALOG_MESSAGE(text,/ERROR)
-    RETURN
-  ENDIF ELSE BEGIN
+  catch, plot_error
+  if (plot_error NE 0) then begin
+    catch,/CANCEL
+    ;    text = ['Error while plotting the ASCII file.]
+    ;    result = DIALOG_MESSAGE(text,/ERROR)
+    return
+  endif else begin
   
     xaxis = (*global).xaxis
     yaxis = (*global).yaxis
@@ -265,7 +264,6 @@ PRO rePlotAsciiData, Event
     yLabel = yaxis + ' (' + yaxis_units + ')'
     
     ;plot
-    
     xyminmax = (*global).old_xyminmax
     x1 = xyminmax[0]
     y1 = xyminmax[1]
@@ -381,7 +379,7 @@ PRO rePlotAsciiData, Event
               ymin = MIN([y1,y2],MAX=ymax)
               plot, Xarray, $
                 Yarray, $
-                color=FSC_COLOR('white'), $                
+                color=FSC_COLOR('white'), $
                 PSYM=2, $
                 XTITLE=xLabel, $
                 YTITLE=yLabel,$
