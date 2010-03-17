@@ -81,7 +81,8 @@
 .run ref_reduction_command_line_generator_for_ref_m.pro
 .run ref_reduction_command_line_generator_for_ref_l.pro
 .run ref_reduction_ReplaceRunNumber.pro
-.run ref_reduction_RunCommandLine.pro
+.run run_command_line_ref_l.pro
+.run run_command_line_ref_m.pro
 .run ref_reduction_LoadMainOutputFile.pro
 .run ref_reduction_LoadXmlOutputFile.pro
 .run ref_reduction_LoadIntermediateFiles.pro

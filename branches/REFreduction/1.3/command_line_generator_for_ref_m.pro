@@ -923,7 +923,6 @@ PRO command_line_generator_for_ref_m, event
   IP_cmd = RefReduction_CommandLineIntermediatePlotsGenerator(Event)
   cmd += IP_cmd
   
-  
   ;display command line in Reduce text box
   putTextFieldValue, Event, 'reduce_cmd_line_preview', cmd, 0
   

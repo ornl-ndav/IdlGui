@@ -433,11 +433,12 @@ END
 PRO REFreductionEventcb_ProcessingCommandLine, Event
 
   ;get global structure
-  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-  widget_control,id,get_uvalue=global
-  
-  ;first run the command line
-  RefReduction_RunCommandLine, Event
+  widget_control,event.top,get_uvalue=global
+  if ((*global).instrument eq 'REF_L') then begin
+    run_command_line_ref_l, event
+  endif else begin
+    run_command_line_ref_m, event
+  endelse
   
   IF ((*global).DataReductionStatus EQ 'OK') then begin
     ;data reduction was successful
@@ -460,7 +461,7 @@ PRO REFreductionEventcb_ProcessingCommandLine, Event
     id1 = WIDGET_INFO(Event.top, FIND_BY_UNAME='main_tab')
     WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;plot tab
     LoadAsciiFile, Event
-
+    
   ;get flt0, flt1 and flt2 and put them into array
   ;    RefReduction_LoadMainOutputFile, Event, FullOutputFileName
     
