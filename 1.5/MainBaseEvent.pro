@@ -1658,6 +1658,12 @@ PRO MAIN_BASE_event, Event
       other_spin_state_cw_bgroup, event
     end
     
+    ;automatic cleaning configure button
+    widget_info(wWidget, $
+      find_by_uname='auto_cleaning_data_configure_button'): begin
+      configure_auto_cleanup, Event=event
+    end
+    
     ;**************************************************************************
     ;**PLOTS TAB*
     ;*************************************************************************

@@ -63,7 +63,6 @@ pro auto_cleaning_base_gui, Event, REDUCE_BASE
   
   configure = widget_button(cleaning_base,$
   value = '  Configure...  ',$
-  event_pro = 'auto_cleaning_data_configure_base',$
   uname = 'auto_cleaning_data_configure_button',$
   sensitive = 0)
   
