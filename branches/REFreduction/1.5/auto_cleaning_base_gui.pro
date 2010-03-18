@@ -32,51 +32,38 @@
 ;
 ;==============================================================================
 
-;define path to dependencies and current folder
-spawn, 'pwd', CurrentFolder
-
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-@main_idl_makefile_utilities.pro
-
-;Build REFreduction GUI
-cd, CurrentFolder + '/REFreductionGUI/'
-.run MakeGuiMainTab.pro
-.run MakeGuiLoadTab.pro
-.run MakeGuiNexusInterface.pro
-.run MakeGuiLoadDataNormalizationTab.pro
-.run MakeGuiLoadDataTab.pro
-.run MakeGuiLoadData1D2DTab.pro
-.run MakeGuiLoadData1DTab.pro
-.run MakeGuiLoadData1D_3D_Tab.pro
-.run MakeGuiLoadData2DTab.pro
-.run MakeGuiLoadData2D_3D_Tab.pro
-.run MakeGuiLoadNormalizationTab.pro
-.run MakeGuiLoadNormalization1D2DTab.pro
-.run MakeGuiLoadNormalization1DTab.pro
-.run MakeGuiLoadNormalization1D_3D_Tab.pro
-.run MakeGuiLoadNormalization2DTab.pro
-.run MakeGuiLoadNormalization2D_3D_Tab.pro
-.run MakeGuiEmptyCellTab.pro
-.run MakeGuiInstrumentSelection.pro
-.run auto_cleaning_base_gui.pro
-
-.run MakeGuiReduceTab.pro
-.run MakeGuiEmptyCell.pro
-.run MakeGuiReduceDataBase.pro
-.run MakeGuiReduceNormalizationBase.pro
-.run MakeGuiReduceQbase.pro
-.run MakeGuiReduceDetectorBase.pro
-.run MakeGuiReduceIntermediatePlotBase.pro
-.run MakeGuiReduceOther.pro
-.run MakeGuiReduceInfo.pro
-
-.run MakeGuiPlotsTab.pro
-.run MakeGuiPlotsMainIntermediatesBases.pro
-.run MakeGuiBatchTab.pro
-.run MakeGuiLogBookTab.pro
-
-;Build main procedures
-cd, CurrentFolder
-@main_idl_makefile.pro
-.run ref_reduction_v15.pro
+;+
+; :Description:
+;   This routine will build the widgets in the reduce tab that will allow
+;   the user to turn on or off the auto cleaning of the data and to configure
+;   the settings (number of points to remove on each side)
+;
+; :Params:
+;    Event
+;    REDUCE_BASE
+;
+; :Author: j35
+;-
+pro auto_cleaning_base_gui, Event, REDUCE_BASE
+  compile_opt idl2
+  
+  cleaning_base = widget_base(REDUCE_BASE,$
+  xoffset = 724,$
+  yoffset = 540,$
+  /row,$
+  frame = 1)
+  
+  group = cw_bgroup(cleaning_base,$
+  ['yes','no'],$
+  /exclusive,$
+  /row,$
+  label_left = 'Automatic clean up of the reduce data: ',$
+  uname = 'auto_cleaning_data_cw_bgroup',$
+  set_value=1)
+  
+  configure = widget_button(cleaning_base,$
+  value = '  Configure...  ',$
+  event_pro = 'auto_cleaning_data_configure_button',$
+  sensitive = 0)
+  
+end

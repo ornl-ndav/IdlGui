@@ -34,7 +34,7 @@
 
 ;+
 ; :Description:
-;   This routine will builds the widgets in the reduce tab that will allow
+;   This routine will build the widgets in the reduce tab that will allow
 ;   the user to turn on or off the auto cleaning of the data and to configure
 ;   the settings (number of points to remove on each side)
 ;

@@ -35,7 +35,7 @@
 PRO MakeGuiReduceInfo, Event, REDUCE_BASE
 
 ;general info and xml preview tab
-GeneralInfoAndXmlBaseSize = [725,310,450,260]
+GeneralInfoAndXmlBaseSize = [725,305,450,230]
 GeneralInfoTabSize = [0,0,GeneralInfoAndXmlBaseSize[2],$
                       GeneralInfoAndXmlBaseSize[3]]
 ReduceTab1BaseSize = [0,0,GeneralInfoTabSize[2],$
@@ -46,12 +46,12 @@ ReduceTab2BaseSize = [0,0,GeneralInfoTabSize[2],$
 ReduceTab2BaseTitle = 'REDUCTION XML FILE'
 
 ;general info label frame
-GeneralInfoTextFieldSize = [0,0,443,235]
+GeneralInfoTextFieldSize = [0,0,443,205]
 
-DataReductionStatusFrameSize = [725,599,450,40]
-DataReductionStatusLabelSize = [740,585]
+DataReductionStatusFrameSize = [725,605,450,40]
+DataReductionStatusLabelSize = [740,605-12]
 DataReductionStatusLabelTitle = 'R E D U C T I O N   S T A T U S'
-DataReductionStatusTextFieldSize = [730,604,440,30]
+DataReductionStatusTextFieldSize = [730,605+5,440,30]
 
 ;makeGuI
 GeneralInfoAndXmlBase = widget_base(REDUCE_BASE,$
