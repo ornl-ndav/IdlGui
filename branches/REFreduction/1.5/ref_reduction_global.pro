@@ -91,6 +91,9 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     dirpix_geometry: '',$
     cvinfo: '',$
     
+    ;automatic cleanup of q range
+    percentage_of_q_to_remove_value: 10,$
+    
     in_empty_cell_empty_cell_ptr: PTR_NEW(0L),$
     in_empty_cell_data_ptr: PTR_NEW(0L),$
     empty_cell_draw_xsize_mini_version: 450.,$

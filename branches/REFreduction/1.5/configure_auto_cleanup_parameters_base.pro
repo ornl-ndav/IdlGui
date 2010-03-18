@@ -42,6 +42,11 @@ pro configure_auto_cleanup_event, Event
   
     widget_info(event.top, $
       find_by_uname='auto_cleanup_config_base_close_button'): begin
+      
+      ;save new auto q percentage value
+      value = getTextfieldvalue(Event,'perecentage_of_q_to_remove_uname')
+      (*global).percentage_of_q_to_remove_value = value
+      
       id = widget_info(Event.top, $
         find_by_uname='auto_cleanup_config_widget_base')
       widget_control, id, /destroy
