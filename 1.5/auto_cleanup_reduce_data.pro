@@ -34,6 +34,33 @@
 
 ;+
 ; :Description:
+;   This function is going to retrieve the first line of the input file
+;   and check if that line starts with '#auto cleaned up: '.
+;   
+; :Params:
+;    file_name
+;
+; @returns 1 if the file has already beeen cleaned up, 0 otherwise
+;
+; :Author: j35
+;-
+function cleaned_up_performed_already, file_name
+  compile_opt idl2
+  
+  openr, 1, file_name
+  first_line = ''
+  readf, 1, first_line
+  close, 1
+  
+  search_string = '#auto cleaned up'
+  split_line = strsplit(first_line,':',/extract)
+  result = strmatch(split_line[0],search_string)
+  
+  return, result 
+end
+
+;+
+; :Description:
 ;   This routine will read the reduce file, takes the argument from the
 ;   auto cleanup configure base and will cleanup the data
 ;
@@ -46,9 +73,15 @@
 ; :Author: j35
 ;-
 pro cleanup_reduce_data, event, file_name = file_name
-    compile_opt idl2
-
-
-
-
+  compile_opt idl2
+  
+  ;check that the input file does not start with the autocleanup
+  ;line
+  ;#auto cleaned up: 10%
+  if (cleaned_up_performed_already(file_name)) then return
+  
+  
+  
+  
+  
 end
