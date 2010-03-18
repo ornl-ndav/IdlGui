@@ -41,41 +41,12 @@ pro configure_auto_cleanup_event, Event
   case Event.id of
   
     widget_info(event.top, $
-    find_by_uname='auto_cleanup_config_base_close_button'): begin
+      find_by_uname='auto_cleanup_config_base_close_button'): begin
       id = widget_info(Event.top, $
         find_by_uname='auto_cleanup_config_widget_base')
       widget_control, id, /destroy
       event = (*global_spin_state).main_event
     end
-    
-;    ;Off_Off
-;    widget_info(event.top, find_by_uname='spin_state_off_off'): begin
-;      off_off_value = isButtonSelected(Event, 'spin_state_off_off')
-;      spin_state_config = (*global).spin_state_config
-;      spin_state_config[0] = off_off_value
-;      (*global).spin_state_config = spin_state_config
-;    end
-;    ;Off_On
-;    widget_info(event.top, find_by_uname='spin_state_off_on'): begin
-;      off_on_value = isButtonSelected(Event, 'spin_state_off_on')
-;      spin_state_config = (*global).spin_state_config
-;      spin_state_config[1] = off_on_value
-;      (*global).spin_state_config = spin_state_config
-;    end
-;    ;On_Off
-;    widget_info(event.top, find_by_uname='spin_state_on_off'): begin
-;      on_off_value = isButtonSelected(Event, 'spin_state_on_off')
-;      spin_state_config = (*global).spin_state_config
-;      spin_state_config[2] = on_off_value
-;      (*global).spin_state_config = spin_state_config
-;    end
-;    ;On_On
-;    widget_info(event.top, find_by_uname='spin_state_on_on'): begin
-;      on_on_value = isButtonSelected(Event, 'spin_state_on_on')
-;      spin_state_config = (*global).spin_state_config
-;      spin_state_config[3] = on_on_value
-;      (*global).spin_state_config = spin_state_config
-;    end
     
     else:
     
@@ -91,8 +62,8 @@ PRO configure_auto_cleanup_gui, wBase, main_base_geometry
   main_base_xsize = main_base_geometry.xsize
   main_base_ysize = main_base_geometry.ysize
   
-  spin_state_xsize = 300
-  spin_state_ysize = 165
+  spin_state_xsize = 350
+  spin_state_ysize = 75
   
   spin_state_xoffset = (main_base_xsize - spin_state_xsize) / 2
   spin_state_xoffset += main_base_xoffset
@@ -113,8 +84,18 @@ PRO configure_auto_cleanup_gui, wBase, main_base_geometry
     /align_center,$
     /column,$
     GROUP_LEADER = ourGroup)
-
-      close = widget_button(wBase,$
+    
+    row = widget_base(wBase,$
+    /row)
+    field = cw_field(row,$
+    /row,$
+    title = 'Percentage of Q to remove on both sides (%) ',$
+    value = 10,$
+    xsize = 2,$
+    /integer,$
+    uname = 'perecentage_of_q_to_remove_uname')
+    
+  close = widget_button(wBase,$
     value = 'CLOSE',$
     xsize = 150,$
     uname = 'auto_cleanup_config_base_close_button')
