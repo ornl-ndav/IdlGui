@@ -92,6 +92,9 @@
 .run ref_reduction_OutputPath.pro
 .run ref_reduction_jpeg.pro
 
+;auto cleaning
+.run auto_cleaning_of_reduce_data_cw_bgroup.pro
+
 ;plot tab
 .run ref_reduction_plot_tab.pro
 
