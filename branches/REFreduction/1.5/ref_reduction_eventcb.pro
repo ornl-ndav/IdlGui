@@ -454,6 +454,12 @@ PRO REFreductionEventcb_ProcessingCommandLine, Event
     ;Display XML file in Reduce tab
     REfReduction_DisplayXmlFile, Event
     
+    ;apply auto cleanup of data if switch is on
+    value = getButtonValue(event,'auto_cleaning_data_cw_bgroup')
+    if (value eq 0) then begin ;apply auto cleanup
+      cleanup_reduce_data, event, file_name = FullOutputFileName
+    endif
+  
     ;Load main data reduction File and  plot it
     putTextFieldValue, Event, 'plot_tab_input_file_text_field', FullOutputFileName
     ;move to new tab
