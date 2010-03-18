@@ -141,7 +141,5 @@ PRO run_command_line_ref_m, event
   WIDGET_CONTROL,hourglass=0
   
   (*global).first_ref_m_file_to_plot = first_ref_m_file_to_plot
-  print, 'first_ref_m_file_to_plot: ' , first_ref_m_file_to_plot
-  print, (*(*global).list_of_output_file_name)
   
 END
