@@ -78,8 +78,8 @@
 .run ref_reduction_UpdatePlotsTabGui.pro
 .run ref_reduction_CommandLineIntermediatePlotsGenerator.pro
 .run ref_reduction_CommandLineGenerator.pro
-.run ref_reduction_command_line_generator_for_ref_m.pro
-.run ref_reduction_command_line_generator_for_ref_l.pro
+.run command_line_generator_for_ref_m.pro
+.run command_line_generator_for_ref_l.pro
 .run ref_reduction_ReplaceRunNumber.pro
 .run run_command_line_ref_l.pro
 .run run_command_line_ref_m.pro
