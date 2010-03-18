@@ -36,7 +36,7 @@
 ; :Description:
 ;   This function is going to retrieve the first line of the input file
 ;   and check if that line starts with '#auto cleaned up: '.
-;   
+;
 ; :Params:
 ;    file_name
 ;
@@ -56,7 +56,7 @@ function cleaned_up_performed_already, file_name
   split_line = strsplit(first_line,':',/extract)
   result = strmatch(split_line[0],search_string)
   
-  return, result 
+  return, result
 end
 
 ;+
@@ -80,8 +80,129 @@ pro cleanup_reduce_data, event, file_name = file_name
   ;#auto cleaned up: 10%
   if (cleaned_up_performed_already(file_name)) then return
   
+  ;retrieve values from the file_name file
+  retrieve_data, file_name, x_array, y_array, y_erro_array
+  help, x_array
+  
+  
   
   
   
   
 end
+
+
+;+
+; :Description:
+;   this procedure parse the array and divides the data into 3 arrays
+;   x, y and y_error
+;
+; :Params:
+;    DataStringArray
+;    Xarray
+;    Yarray
+;    SigmaYarray
+;
+;
+;
+; :Author: j35
+;-
+pro parse_data_array, DataStringArray, Xarray, Yarray, SigmaYarray
+  Nbr = N_ELEMENTS(DataStringArray)
+  j=0
+  i=0
+  WHILE (i LE Nbr-1) DO BEGIN
+    CASE j OF
+      0: BEGIN
+        Xarray[j]      = DataStringArray[i++]
+        Yarray[j]      = DataStringArray[i++]
+        SigmaYarray[j] = DataStringArray[i++]
+      END
+      ELSE: BEGIN
+        Xarray      = [Xarray,DataStringArray[i++]]
+        Yarray      = [Yarray,DataStringArray[i++]]
+        SigmaYarray = [SigmaYarray,DataStringArray[i++]]
+      END
+    ENDCASE
+    j++
+  ENDWHILE
+  ;remove last element of each array
+  sz = N_ELEMENTS(Xarray)
+  Xarray = Xarray[0:sz-2]
+  Yarray = Yarray[0:sz-2]
+  SigmaYarray = SigmaYarray[0:sz-2]
+END
+
+
+;+
+; :Description:
+;   this procedure removes all the inf and nan values from the array
+;
+; :Params:
+;    Xarray
+;    Yarray
+;    SigmaYarray
+;
+;
+;
+; :Author: j35
+;-
+pro remove_inf_nan, Xarray, Yarray, SigmaYarray
+  ;remove -Inf, Inf and NaN
+  RealMinIndex = WHERE(FINITE(Yarray),nbr)
+  IF (nbr GT 0) THEN BEGIN
+    Xarray = Xarray(RealMinIndex)
+    Yarray = Yarray(RealMinIndex)
+    SigmaYarray = SigmaYarray(RealMinIndex)
+  ENDIF
+END
+
+
+;+
+; :Description:
+;   This routine parses the ascii file and retrieves the data and 
+;   save them into the x_array, y_array and y_error_array
+;
+; :Params:
+;    file_name
+;    x_array
+;    y_array
+;    y_error_array
+;
+;
+;
+; :Author: j35
+;-
+pro retrieve_data, file_name, x_array, y_array, y_error_array
+  iAsciiFile = OBJ_NEW('IDL3columnsASCIIparser', file_name)
+  sAscii = iAsciiFile->getData()
+  DataStringArray = *(*sAscii.data)[0].data
+  obj_destroy, iAsciiFile
+  ;this method will creates a 3 columns array (x,y,sigma_y)
+  Nbr = N_ELEMENTS(DataStringArray)
+  x_array      = STRARR(1)
+  y_array      = STRARR(1)
+  y_error_array = STRARR(1)
+  IF (Nbr GT 1) THEN BEGIN
+    parse_data_array, $
+      DataStringArray,$
+      x_array,$
+      y_array,$
+      y_error_array
+    ;Remove all rows with NaN, -inf, +inf ...
+    remove_inf_nan, x_array, y_array, y_error_array
+    ;Change format of array (string -> float)
+    x_array       = FLOAT(temporary(x_array))
+    y_array       = FLOAT(temporary(y_array))
+    y_error_array = FLOAT(temporary(y_error_array))
+  endif
+end
+
+
+
+;main test
+file_name = '~/results/REF_L_20927,20935_2009y_06m_18d_00h_32mn.txt'
+cleanup_reduce_data, '', file_name = file_name
+
+end
+
