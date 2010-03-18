@@ -1354,7 +1354,7 @@ PRO MAIN_BASE_event, Event
           catch, /cancel
           reset_sf_calculation_base_empty_cell_info, Event
         endif else begin
-        display_sf_calculation_base_empty_cell_info, Event ;_sf_empty_cell
+          display_sf_calculation_base_empty_cell_info, Event ;_sf_empty_cell
         endelse
       ENDELSE
     END
@@ -1381,7 +1381,7 @@ PRO MAIN_BASE_event, Event
           catch, /cancel
           reset_sf_calculation_base_recap_info, Event
         endif else begin
-        display_sf_calculation_base_recap_info, Event ;_sf_empty_cell
+          display_sf_calculation_base_recap_info, Event ;_sf_empty_cell
         endelse
       ENDELSE
     END
@@ -1653,10 +1653,10 @@ PRO MAIN_BASE_event, Event
       CL_outputButton, Event
     end
     
-    ;Preview of the command line text box
-    ;    WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_cmd_line_preview'):BEGIN
-    ;        print, 'here'
-    ;    END
+    ;automatic cleaning of the reduce tab
+    widget_info(wWidget, find_by_uname='auto_cleaning_data_cw_bgroup'): begin
+      other_spin_state_cw_bgroup, event
+    end
     
     ;**************************************************************************
     ;**PLOTS TAB*

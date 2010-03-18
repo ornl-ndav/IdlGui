@@ -34,37 +34,19 @@
 
 ;+
 ; :Description:
-;   This routine will build the widgets in the reduce tab that will allow
-;   the user to turn on or off the auto cleaning of the data and to configure
-;   the settings (number of points to remove on each side)
+;   This routine will disable or not the configure according to the status
+;   of the Yes and No buttons
 ;
 ; :Params:
-;    Event
-;    REDUCE_BASE
+;    event
 ;
 ; :Author: j35
 ;-
-pro auto_cleaning_base_gui, Event, REDUCE_BASE
-  compile_opt idl2
-  
-  cleaning_base = widget_base(REDUCE_BASE,$
-  xoffset = 724,$
-  yoffset = 540,$
-  /row,$
-  frame = 1)
-  
-  group = cw_bgroup(cleaning_base,$
-  ['yes','no'],$
-  /exclusive,$
-  /row,$
-  label_left = 'Automatic clean up of the reduce data: ',$
-  uname = 'auto_cleaning_data_cw_bgroup',$
-  set_value=1)
-  
-  configure = widget_button(cleaning_base,$
-  value = '  Configure...  ',$
-  event_pro = 'auto_cleaning_data_configure_base',$
-  uname = 'auto_cleaning_data_configure_button',$
-  sensitive = 0)
-  
+pro other_spin_state_cw_bgroup, event
+
+value = getButtonValue(event,'auto_cleaning_data_cw_bgroup')
+status = 1
+if (value eq 1) then status = 0
+ActivateWidget, Event, 'auto_cleaning_data_configure_button', status
+
 end
