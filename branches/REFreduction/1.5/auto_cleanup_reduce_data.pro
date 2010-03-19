@@ -61,6 +61,54 @@ end
 
 ;+
 ; :Description:
+;   This function returns the index of the first non zero value
+;
+; :Params:
+;    array
+;
+; @return: index of first non zero value
+;
+; :Author: j35
+;-
+function get_min_non_zero, array
+  compile_opt idl2
+  
+  sz = n_elements(array)
+  index = 0
+  while (index lt sz) do begin
+    if (float(array[index]) ne float(0)) then return, index
+    index++
+  endwhile
+  
+  return, -1
+end
+
+;+
+; :Description:
+;   This function returns the index of the last non zero value
+;
+; :Params:
+;    array
+;
+; @return: index of last non zero value
+;
+; :Author: j35
+;-
+function get_max_non_zero, array
+  compile_opt idl2
+  
+  sz = n_elements(array)
+  index = sz-1
+  while (index ge 0) do begin
+    if (float(array[index]) ne float(0)) then return, index
+    index--
+  endwhile
+  
+  return, -1
+end
+
+;+
+; :Description:
 ;   This routine will read the reduce file, takes the argument from the
 ;   auto cleanup configure base and will cleanup the data
 ;
@@ -82,10 +130,16 @@ pro cleanup_reduce_data, event, file_name = file_name
   
   ;retrieve values from the file_name file
   retrieve_data, file_name, x_array, y_array, y_erro_array
-  help, x_array
+  sz = n_elements(y_array)
+  if (sz lt 2) then return
+  ;get indexes of first and last non zero Q values
+  min_non_zero_q = get_min_non_zero(y_array)
+  if (min_non_zero_q eq -1) then return
+  max_non_zero_q = get_max_non_zero(y_array)
+  if (max_non_zero_q eq -1) then return
   
-  
-  
+  ;percentage of Q to remove (user defined)
+  q_percent_to_remove = (*global).percentage_of_q_to_remove_value
   
   
   
@@ -160,7 +214,7 @@ END
 
 ;+
 ; :Description:
-;   This routine parses the ascii file and retrieves the data and 
+;   This routine parses the ascii file and retrieves the data and
 ;   save them into the x_array, y_array and y_error_array
 ;
 ; :Params:
