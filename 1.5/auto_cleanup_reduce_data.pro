@@ -484,10 +484,8 @@ pro cleanup_reduce_data, event, file_name = file_name
   
 end
 
-
-;main test
-file_name = '~/results/REF_L_23291_2010y_02m_12d_13h_54mn_35s.txt'
-cleanup_reduce_data, '', file_name = file_name
-
-end
+;;main test
+;file_name = '~/results/REF_L_23291_2010y_02m_12d_13h_54mn_35s.txt'
+;cleanup_reduce_data, '', file_name = file_name
+;end
 
