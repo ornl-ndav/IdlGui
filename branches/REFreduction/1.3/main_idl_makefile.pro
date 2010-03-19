@@ -96,6 +96,12 @@
 
 .run other_spin_states.pro
 .run configure_spin_state_base.pro
+.run processing_command_line.pro
+
+;auto cleaning
+.run auto_cleaning_of_reduce_data_cw_bgroup.pro
+.run configure_auto_cleanup_parameters_base.pro
+.run auto_cleanup_reduce_data.pro
 
 ;plot tab
 .run ref_reduction_plot_tab.pro

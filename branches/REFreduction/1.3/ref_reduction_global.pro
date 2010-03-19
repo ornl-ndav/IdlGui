@@ -80,6 +80,9 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     list_of_output_file_name: ptr_new(0L),$
     first_ref_m_file_to_plot: -1,$
     
+    ;auto cleaning
+    percentage_of_q_to_remove_value: 10,$
+    
     congrid_x_coeff: 0., $ ;congrid x coeff for data file
     congrid_norm_x_coeff: 0., $ ;congrid x coeff for normalization file
     congrid_empty_cell_x_coeff: 0., $ ;congrid x coeff for empty cell file

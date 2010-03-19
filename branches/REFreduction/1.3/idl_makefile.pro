@@ -59,6 +59,7 @@ cd, CurrentFolder + '/REFreductionGUI/'
 .run MakeGuiLoadNormalization2D_3D_Tab.pro
 .run MakeGuiEmptyCellTab.pro
 .run MakeGuiInstrumentSelection.pro
+.run auto_cleaning_base_gui.pro
 
 .run MakeGuiReduceTab.pro
 .run MakeGuiEmptyCell.pro
@@ -74,6 +75,8 @@ cd, CurrentFolder + '/REFreductionGUI/'
 .run MakeGuiPlotsMainIntermediatesBases.pro
 .run MakeGuiBatchTab.pro
 .run MakeGuiLogBookTab.pro
+
+.run 
 
 ;Build main procedures
 cd, CurrentFolder

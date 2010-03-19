@@ -89,6 +89,9 @@ wBackMessageLabel2 = WIDGET_LABEL(wBackMessageBase,$
 
 ;------------------------------------------------------------------------------
 
+;base that contain widgets for auto cleaning
+auto_cleaning_base_gui, Event, REDUCE_BASE
+
 ;create data base
 MakeGuiReduceDataBase, Event, REDUCE_BASE, IndividualBaseWidth
 

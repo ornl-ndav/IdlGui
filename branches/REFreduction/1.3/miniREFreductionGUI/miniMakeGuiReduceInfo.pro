@@ -35,7 +35,7 @@
 PRO miniMakeGuiReduceInfo, Event, REDUCE_BASE
 
 ;general info and xml preview tab
-GeneralInfoAndXmlBaseSize = [580,265,315,220]
+GeneralInfoAndXmlBaseSize = [580,265,315,170]
 GeneralInfoTabSize = [0, $
                       0, $
                       GeneralInfoAndXmlBaseSize[2],$
@@ -44,7 +44,7 @@ ReduceTab1BaseSize = [0, $
                       0, $
                       GeneralInfoTabSize[2],$
                       GeneralInfoTabSize[3]]
-ReduceTab1BaseTitle = 'COMMAND  LINE STATUS'
+ReduceTab1BaseTitle = 'COMMAND LINE STATUS'
 ReduceTab2BaseSize = [0, $
                       0, $
                       GeneralInfoTabSize[2],$
@@ -52,7 +52,7 @@ ReduceTab2BaseSize = [0, $
 ReduceTab2BaseTitle = 'REDUCTION XML FILE'
 
 ;general info label frame
-GeneralInfoTextFieldSize = [0,0,445,195] 
+GeneralInfoTextFieldSize = [0,0,445,170-25] 
 
 XYoff = [0,-5]
 DataReductionStatusFrameSize = [580,500+XYoff[1],310,40]
