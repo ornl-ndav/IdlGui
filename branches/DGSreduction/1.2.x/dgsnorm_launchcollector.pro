@@ -67,7 +67,7 @@ PRO DGSnorm_LaunchCollector, event, WaitForJobs=waitforjobs
   ; Output Directory
   ; outDir = get_output_directory(instrument, runnumber, /HOME, /CREATE)
   outDir = info.outputDir
-
+  
   ; log Directory
   logDir = outDir + '/logs'
   ;Make sure the that logfile directory exists.
@@ -92,6 +92,7 @@ PRO DGSnorm_LaunchCollector, event, WaitForJobs=waitforjobs
   
   spawn, agg_cmd
   spawn, "echo " + agg_cmd + " > " + logDir + "/agg_commands"
+  ;print, "echo " + agg_cmd + " > " + logDir + "/agg_commands"
   
   ; Put the info structure back
   WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
