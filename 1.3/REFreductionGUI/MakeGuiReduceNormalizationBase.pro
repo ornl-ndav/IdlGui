@@ -106,7 +106,7 @@ sPeakYmaxValue = { size: [sPeakYmaxLabel.size[0]+XYoff[0],$
                    uname: 'norm_exclusion_high_bin_text'}
 
 ;Polarization state to use ----------------------------------------------------
-XYoff = [10,2]
+XYoff = [75,2]
 sPolaStateBase = { size: [sPeakBase.size[0]+$
                           sPeakBase.size[2]+$
                           XYoff[0],$
