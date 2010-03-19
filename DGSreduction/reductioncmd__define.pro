@@ -55,6 +55,7 @@ PRO ReductionCmd::GetProperty, $
     UpperBank=upperbank, $               ; Upper Detector Bank
     DataPaths=datapaths, $               ; Detector Data paths
     Normalisation=normalisation, $       ; Normalisation file
+    NormEmptyCan=normemptycan, $         ; Enpty Can for Vanadium
     EmptyCan=emptycan, $                 ; Empty Can file
     BlackCan=blackcan, $                 ; Black Sample file
     Dark=dark, $                         ; Dark current file
@@ -84,6 +85,7 @@ PRO ReductionCmd::GetProperty, $
     LambdaBins_Step=lambdabins_step, $   ; wavelength bins (step)
     DumpTOF=dumptof, $                   ; Dump combined TOF file
     DumpWave=dumpwave, $                 ; Dump combined wavelength file
+    WhiteNorm=whitenorm, $               ; White beam normalisation
     DumpNorm=dumpnorm, $                 ; Dump combined Norm file
     DumpEt=dumpet, $                     ; Dump combined Et file
     DumpTIB=dumptib, $                   ; Dump the TIB constant for all pixels
@@ -148,6 +150,7 @@ PRO ReductionCmd::GetProperty, $
   IF ARG_PRESENT(UpperBank) NE 0 THEN UpperBank = self.upperbank
   IF ARG_PRESENT(DataPaths) NE 0 THEN DataPaths = self.datapaths
   IF ARG_PRESENT(Normalisation) NE 0 THEN Normalisation = self.normalisation
+  IF ARG_PRESENT(NormEmptyCan) NE 0 THEN NormEmptyCan = self.normemptycan
   IF ARG_PRESENT(EmptyCan) NE 0 THEN EmptyCan = self.emptycan
   IF ARG_PRESENT(BlackCan) NE 0 THEN BlackCan = self.blackcan
   IF ARG_PRESENT(Dark) NE 0 THEN Dark = self.dark
@@ -178,6 +181,7 @@ PRO ReductionCmd::GetProperty, $
     LambdaBins_Step = self.lambdabins_step
   IF ARG_PRESENT(DumpTOF) NE 0 THEN DumpTOF = self.dumptof
   IF ARG_PRESENT(DumpWave) NE 0 THEN DumpWave = self.dumpwave
+  IF N_ELEMENTS(whitenorm) NE 0 THEN self.whitenorm = WhiteNorm
   IF ARG_PRESENT(DumpNorm) NE 0 THEN DumpNorm = self.dumpnorm
   IF ARG_PRESENT(DumpEt) NE 0 THEN DumpEt = self.dumpet
   IF ARG_PRESENT(DumpTIB) NE 0 THEN DumpTIB = self.dumptib
@@ -237,6 +241,7 @@ PRO ReductionCmd::SetProperty, $
     UpperBank=upperbank, $               ; Upper Detector Bank
     DataPaths=datapaths, $               ; Detector Data paths
     Normalisation=normalisation, $       ; Normalisation file
+    NormEmptyCan=normemptycan, $         ; Empty Can for Vanadium
     EmptyCan=emptycan, $                 ; Empty Can file
     BlackCan=blackcan, $                 ; Black Sample file
     Dark=dark, $                         ; Dark current file
@@ -266,6 +271,7 @@ PRO ReductionCmd::SetProperty, $
     LambdaBins_Step=lambdabins_step, $   ; wavelength bins (step)
     DumpTOF=dumptof, $                   ; Dump combined TOF file
     DumpWave=dumpwave, $                 ; Dump combined wavelength file
+    WhiteNorm=whitenorm, $               ; White beam normalisation
     DumpNorm=dumpnorm, $                 ; Dump combined Norm file
     DumpEt=dumpet, $                     ; Dump combined Et file
     DumpTIB=dumptib, $                   ; Dump the TIB constant for all pixels
@@ -383,6 +389,11 @@ PRO ReductionCmd::SetProperty, $
   ; Don't let it be set to 0
   IF (self.emptycan EQ '0') THEN self.emptycan = ""
   
+  IF N_ELEMENTS(NormEmptyCan) NE 0 THEN $
+    self.normemptycan = STRCOMPRESS(STRING(NormEmptyCan), /REMOVE_ALL)
+  ; Don't let it be set to 0
+  IF (self.normemptycan EQ '0') THEN self.normemptycan = ""
+  
   IF N_ELEMENTS(blackcan) NE 0 THEN $
     self.blackcan = STRCOMPRESS(STRING(BlackCan), /REMOVE_ALL)
   ; Don't let it be set to 0
@@ -420,6 +431,7 @@ PRO ReductionCmd::SetProperty, $
     self.lambdabins_step = lambdabins_step
   IF N_ELEMENTS(dumptof) NE 0 THEN self.dumptof = DumpTOF
   IF N_ELEMENTS(dumpwave) NE 0 THEN self.dumpwave = DumpWave
+  IF N_ELEMENTS(whitenorm) NE 0 THEN self.whitenorm = WhiteNorm
   IF N_ELEMENTS(dumpnorm) NE 0 THEN self.dumpnorm = DumpNorm
   IF N_ELEMENTS(dumpet) NE 0 THEN self.dumpet = DumpEt
   IF N_ELEMENTS(dumptib) NE 0 THEN self.dumptib = DumpTIB
@@ -654,8 +666,6 @@ END
 ;    in the bottom of the GUI and a status flag to enable/disable
 ;    the execute button.
 ;
-;
-; :Author: scu
 ;-
 function ReductionCmd::Check
 
@@ -872,6 +882,11 @@ function ReductionCmd::Check
 end
 
 
+;+
+; :Description:
+;    Generates the command strings to execute for reduction jobs.
+;
+;-
 function ReductionCmd::Generate
 
   ; Error Handling
@@ -1145,6 +1160,7 @@ function ReductionCmd::Init, $
     UpperBank=upperbank, $               ; Upper Detector Bank
     DataPaths=datapaths, $               ; detector data paths
     Normalisation=normalisation, $       ; Normalisation file
+    NormEmptyCan=normemptycan, $         ; Empty Can for Vanadium
     EmptyCan=emptycan, $                 ; Empty Can file
     BlackCan=blackcan, $                 ; Black Sample file
     Dark=dark, $                         ; Dark current file
@@ -1174,6 +1190,7 @@ function ReductionCmd::Init, $
     LambdaBins_Step=lambdabins_step, $   ; wavelength bins (step)
     DumpTOF=dumptof, $                   ; Dump combined TOF file
     DumpWave=dumpwave, $                 ; Dump combined wavelength file
+    WhiteNorm=whitenorm, $               ; White beam normalisation
     DumpNorm=dumpnorm, $                 ; Dump combined Norm file
     DumpEt=dumpet, $                     ; Dump combined Et file
     DumpTIB=dumptib, $                   ; Dump the TIB constant for all pixels
@@ -1238,6 +1255,7 @@ function ReductionCmd::Init, $
   IF N_ELEMENTS(upperbank) EQ 0 THEN upperbank = 0
   IF N_ELEMENTS(datapaths) EQ 0 THEN datapaths = ""
   IF N_ELEMENTS(normalisation) EQ 0 THEN normalisation = ""
+  IF N_ELEMENTS(NormEmptyCan) EQ 0 THEN NormEmptyCan = ""
   IF N_ELEMENTS(emptycan) EQ 0 THEN emptycan = ""
   IF N_ELEMENTS(blackcan) EQ 0 THEN blackcan = ""
   IF N_ELEMENTS(dark) EQ 0 THEN dark = ""
@@ -1267,6 +1285,7 @@ function ReductionCmd::Init, $
   IF N_ELEMENTS(lambdabins_step) EQ 0 THEN lambdabins_step = ""
   IF N_ELEMENTS(dumptof) EQ 0 THEN dumptof = 0
   IF N_ELEMENTS(dumpwave) EQ 0 THEN dumpwave = 0
+  IF N_ELEMENTS(whitenorm) EQ 0 THEN whitenorm = 0
   IF N_ELEMENTS(dumpnorm) EQ 0 THEN dumpnorm = 0
   IF N_ELEMENTS(dumpet) EQ 0 THEN dumpet = 0
   IF N_ELEMENTS(DumpTIB) EQ 0 THEN dumptib = 0
@@ -1322,6 +1341,7 @@ function ReductionCmd::Init, $
   self.upperbank = upperbank
   self.datapaths = datapaths
   self.normalisation = normalisation
+  self.normemptycan = normemptycan
   self.emptycan = emptycan
   self.blackcan = blackcan
   self.dark = dark
@@ -1351,6 +1371,7 @@ function ReductionCmd::Init, $
   self.lambdabins_step = lambdabins_step
   self.dumptof = dumptof
   self.dumpwave = dumpwave
+  self.whitenorm = whitenorm
   self.dumpnorm = dumpnorm
   self.dumpet = dumpet
   self.dumptib = dumptib
@@ -1419,6 +1440,7 @@ pro ReductionCmd__Define
     upperbank: 0L, $         ; Upper Detector Bank
     datapaths: "", $         ; Detector Data Paths
     normalisation: "", $     ; Normalisation file
+    NormEmptyCan: "", $      ; Empty Can for Vanadium
     emptycan: "", $          ; Empty Can file
     blackcan: "", $          ; Black Sample file
     dark: "", $              ; Dark current file
@@ -1448,6 +1470,7 @@ pro ReductionCmd__Define
     lambdabins_step: "", $   ; wavelength bins (step)
     dumptof: 0L, $           ; Dump combined TOF file
     dumpwave: 0L, $          ; Dump combined wavelength file
+    whitenorm: 0L, $         ; White beam normalisation
     dumpnorm: 0L, $          ; Dump combined Norm file
     dumpet: 0L, $            ; Dump combined Et file
     dumptib: 0L, $           ; Dump the TIB constant for all pixels
