@@ -64,9 +64,9 @@ FUNCTION OpenDataNeXusFile, Event, $
   if (full_nexus_name eq '') then return, 0
   
   ;display info about nexus file selected
-  LogBookText = $
-    '-> Displaying information about run number using nxsummary:'
-  putLogBookMessage, Event, LogBookText, Append=1
+;  LogBookText = $
+;    '-> Displaying information about run number using nxsummary:'
+;  putLogBookMessage, Event, LogBookText, Append=1
   RefReduction_NXsummary, Event, $
     full_nexus_name, $
     'data_file_info_text', $

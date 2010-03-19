@@ -43,6 +43,9 @@ PROCESSING = (*global).processing_message
 OK         = (*global).ok
 FAILED     = (*global).failed
 
+;AppendReplaceLogBookMessage, Event, FAILED, PROCESSING
+return  ;we are not displaying the nxsummary any more
+
 my_package = (*(*global).my_package)
 
 IF (my_package[3].found EQ 0) THEN BEGIN ;nxsummary is missing
