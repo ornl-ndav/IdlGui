@@ -43,6 +43,8 @@ PROCESSING = (*global).processing_message
 OK         = (*global).ok
 FAILED     = (*global).failed
 
+return ;turning off nxsummary
+
 my_package = (*(*global).my_package)
 
 IF (my_package[3].found EQ 0) THEN BEGIN ;nxsummary is missing
