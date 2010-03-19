@@ -302,7 +302,49 @@ function make_string_array, new_x_array, new_y_array, new_y_error_array
   return, result_array
 end
 
+;+
+; :Description:
+;   This function will return the first part of the file (up to, and not
+;   included, the data
+;
+; :Params:
+;    file_name
+;
+; @returns: the string array of the metadata
+;
+; :Author: j35
+;-
+function retrieve_metadata_array, file_name
+  compile_opt idl2
+  
+  openr, 1, file_name
+  not_stopper_1 = '#*'
+  
+  size_of_file = file_lines(file_name)
+  data = strarr(size_of_file)
+  readf, 1, data
+  close, 1
+  
+  ;get position where data start
+  index = 0
+  while (index lt size_of_file) do begin
+    line = data[index]
+    print, index, line
+    if (line eq '') then begin
+      index++
+      continue
+    endif
+    if (~strmatch(line,not_stopper_1)) then begin
+      result = index
+      break
+    endif
+    index++
+  endwhile
+  return, data[0:index-1]
+end
 
+;==============================================================================
+;==============================================================================
 
 ;+
 ; :Description:
@@ -352,7 +394,8 @@ pro cleanup_reduce_data, event, file_name = file_name
   ;make string array of data
   data_array = make_string_array(new_x_array, new_y_array, new_y_error_array)
   
-  
+  ;retrieve metadata (first part of file)
+  metadata_array =  retrieve_metadata_array(file_name)
   
 end
 
