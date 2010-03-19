@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 
-PRO miniMakeGuiReduceOther, Event, REDUCE_BASE, IndividualBaseWidth
+PRO miniMakeGuiReduceOther, Event, REDUCE_BASE, IndividualBaseWidth, global
 
 ;Dimension
 cwbgroup_list  = [' Yes    ',' No    ']

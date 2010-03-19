@@ -108,20 +108,20 @@ sPeakYmaxValue = { size: [sPeakYmaxLabel.size[0]+XYoff[0],$
                    uname: 'norm_exclusion_high_bin_text'}
 
 ;Polarization state to use ----------------------------------------------------
-XYoff = [10,2]
+XYoff = [55,2]
 sPolaStateBase = { size: [sPeakBase.size[0]+$
                           sPeakBase.size[2]+$
                           XYoff[0],$
                           sPeakBase.size[1]+$
                           XYoff[1],$
-                          220,60],$
+                          185,60],$
                    uname: 'norm_pola_base',$
                    frame: 1}
 
-XYoff = [10,5]
+XYoff = [0,5]
 sPolaCWBgroup = { size: [XYoff[0],$
                          XYoff[1]],$
-                  list: ['Same as Data File','Off-Off'],$
+                  list: ['Same as data','Off-Off'],$
                   title: 'Polarization state:',$
                   uname: 'normalization_pola_state',$
                   value: 0}
