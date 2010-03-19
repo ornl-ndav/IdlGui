@@ -429,8 +429,8 @@ end
 pro cleanup_reduce_data, event, file_name = file_name
   compile_opt idl2
   
-  help, file_name
-  
+  if (~file_test(file_name)) then return
+
   ;check that the input file does not start with the autocleanup
   ;line
   ;#auto cleaned up: 10%
