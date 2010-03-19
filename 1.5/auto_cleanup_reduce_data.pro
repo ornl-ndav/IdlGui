@@ -70,7 +70,7 @@ end
 ;
 ; :Author: j35
 ;-
-function get_min_non_zero, array
+function get_min_non_zero_q_index, array
   compile_opt idl2
   
   sz = n_elements(array)
@@ -94,7 +94,7 @@ end
 ;
 ; :Author: j35
 ;-
-function get_max_non_zero, array
+function get_max_non_zero_q_index, array
   compile_opt idl2
   
   sz = n_elements(array)
@@ -109,42 +109,60 @@ end
 
 ;+
 ; :Description:
-;   This routine will read the reduce file, takes the argument from the
-;   auto cleanup configure base and will cleanup the data
+;   This function returns a 2 elements array of the first and last
+;   Q indexes to keep
 ;
 ; :Params:
 ;    event
-;
-; :Keywords:
-;    file_name
+;    min_non_zero_q_index
+;    max_non_zero_q_index
+;    x_array
 ;
 ; :Author: j35
 ;-
-pro cleanup_reduce_data, event, file_name = file_name
+function calculate_first_last_q_indexes_to_keep, $
+    event,$
+    min_non_zero_q_index,$
+    max_non_zero_q_index,$
+    x_array
   compile_opt idl2
   
-  ;check that the input file does not start with the autocleanup
-  ;line
-  ;#auto cleaned up: 10%
-  if (cleaned_up_performed_already(file_name)) then return
+  catch, error
+  if (error ne 0) then begin
+    catch,/cancel
+    percentage_of_q_to_remove_value = 10.
+  endif else begin
+    widget_control, event.top, get_uvalue=global
+    percentage_of_q_to_remove_value = (*global).percentage_of_q_to_remove_value
+  endelse
   
-  ;retrieve values from the file_name file
-  retrieve_data, file_name, x_array, y_array, y_erro_array
-  sz = n_elements(y_array)
-  if (sz lt 2) then return
-  ;get indexes of first and last non zero Q values
-  min_non_zero_q = get_min_non_zero(y_array)
-  if (min_non_zero_q eq -1) then return
-  max_non_zero_q = get_max_non_zero(y_array)
-  if (max_non_zero_q eq -1) then return
+  q_percent_to_remove = float(percentage_of_q_to_remove_value)/100.
+  q_min = x_array[min_non_zero_q_index]
+  q_max = x_array[max_non_zero_q_index]
   
-  ;percentage of Q to remove (user defined)
-  q_percent_to_remove = (*global).percentage_of_q_to_remove_value
+  q_min_to_keep_calculated = q_percent_to_remove*(q_max-q_min) + q_min
+  q_max_to_keep_calculated = q_max - q_percent_to_remove*(q_max-q_min)
   
+  ;calculate index of first q to keep after clean up
+  sz = n_elements(x_array)
+  q_index_min_to_keep = 0
+  for i=0L, (sz-1) do begin
+    if (x_array[i] ge q_min_to_keep_calculated) then begin
+      q_index_min_to_keep = i
+      break
+    endif
+  endfor
   
+  q_index_max_to_keep = sz -1
+  for i=(sz-1),0,-1 do begin
+    if (x_array[i] le q_max_to_keep_calculated) then begin
+      q_index_max_to_keep = i
+      break
+    endif
+  endfor
   
+  return, [q_index_min_to_keep, q_index_max_to_keep]
 end
-
 
 ;+
 ; :Description:
@@ -252,6 +270,51 @@ pro retrieve_data, file_name, x_array, y_array, y_error_array
   endif
 end
 
+;+
+; :Description:
+;   This routine will read the reduce file, takes the argument from the
+;   auto cleanup configure base and will cleanup the data
+;
+; :Params:
+;    event
+;
+; :Keywords:
+;    file_name
+;
+; :Author: j35
+;-
+pro cleanup_reduce_data, event, file_name = file_name
+  compile_opt idl2
+  
+  ;check that the input file does not start with the autocleanup
+  ;line
+  ;#auto cleaned up: 10%
+  if (cleaned_up_performed_already(file_name)) then return
+  
+  ;retrieve values from the file_name file
+  retrieve_data, file_name, x_array, y_array, y_erro_array
+  sz = n_elements(y_array)
+  if (sz lt 2) then return
+  ;get indexes of first and last non zero Q values
+  min_non_zero_q_index = get_min_non_zero_q_index(y_array)
+  if (min_non_zero_q_index eq -1) then return
+  max_non_zero_q_index = get_max_non_zero_q_index(y_array)
+  if (max_non_zero_q_index eq -1) then return
+  
+  ;percentage of Q to remove (user defined)
+  first_last_q_values_to_keep = $
+    calculate_first_last_q_indexes_to_keep(event,$
+    min_non_zero_q_index,$
+    max_non_zero_q_index,$
+    x_array)
+  first_q_value_to_keep = first_last_q_values_to_keep[0]
+  last_q_value_to_keep  = first_last_q_values_to_keep[1]
+  
+  
+  
+  
+  
+end
 
 
 ;main test
