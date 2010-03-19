@@ -272,6 +272,40 @@ end
 
 ;+
 ; :Description:
+;   This function takes 3 arrays of float and creates a string array
+;   with each element of the various arrays on the same line
+;
+; :Params:
+;    new_x_array
+;    new_y_array
+;    new_y_error_array
+;
+; @returns: the string array (3 columns ascii format)
+;
+; :Author: j35
+;-
+function make_string_array, new_x_array, new_y_array, new_y_error_array
+  compile_opt idl2
+  
+  sz = n_elements(new_y_array)
+  result_array = strarr(sz+1)
+  index = 0
+  while (index lt sz) do begin
+    result = strcompress(new_x_array[index],/remove_all)
+    result += '   ' + strcompress(new_y_array[index],/remove_all)
+    result += '   ' + strcompress(new_y_error_array[index],/remove_all)
+    result_array[index] = result
+    index++
+  endwhile
+  result_array[sz] = strcompress(new_x_array[sz],/remove_all)
+  
+  return, result_array
+end
+
+
+
+;+
+; :Description:
 ;   This routine will read the reduce file, takes the argument from the
 ;   auto cleanup configure base and will cleanup the data
 ;
@@ -292,7 +326,7 @@ pro cleanup_reduce_data, event, file_name = file_name
   if (cleaned_up_performed_already(file_name)) then return
   
   ;retrieve values from the file_name file
-  retrieve_data, file_name, x_array, y_array, y_erro_array
+  retrieve_data, file_name, x_array, y_array, y_error_array
   sz = n_elements(y_array)
   if (sz lt 2) then return
   ;get indexes of first and last non zero Q values
@@ -302,15 +336,21 @@ pro cleanup_reduce_data, event, file_name = file_name
   if (max_non_zero_q_index eq -1) then return
   
   ;percentage of Q to remove (user defined)
-  first_last_q_values_to_keep = $
+  first_last_q_values_indexes_to_keep = $
     calculate_first_last_q_indexes_to_keep(event,$
     min_non_zero_q_index,$
     max_non_zero_q_index,$
     x_array)
-  first_q_value_to_keep = first_last_q_values_to_keep[0]
-  last_q_value_to_keep  = first_last_q_values_to_keep[1]
+  q_min_index = first_last_q_values_indexes_to_keep[0]
+  q_max_index = first_last_q_values_indexes_to_keep[1]
   
+  ;keep only range of interest
+  new_x_array = x_array[q_min_index:q_max_index+1]
+  new_y_array = y_array[q_min_index:q_max_index]
+  new_y_error_array = y_error_array[q_min_index:q_max_index]
   
+  ;make string array of data
+  data_array = make_string_array(new_x_array, new_y_array, new_y_error_array)
   
   
   
