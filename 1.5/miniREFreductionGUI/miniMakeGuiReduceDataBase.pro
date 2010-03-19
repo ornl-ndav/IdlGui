@@ -173,7 +173,7 @@ PRO miniMakeGuiReduceDataBase, Event, REDUCE_BASE, IndividualBaseWidth
     ;tof cut  base
   tof_cut = WIDGET_BASE(data_base,$
     XOFFSET = 190,$
-    YOFFSET = 107,$
+    YOFFSET = 106,$
     FRAME = 1,$
     /ROW)
     
