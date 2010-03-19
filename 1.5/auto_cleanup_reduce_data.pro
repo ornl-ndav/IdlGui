@@ -343,6 +343,74 @@ function retrieve_metadata_array, file_name
   return, data[0:index-1]
 end
 
+;+
+; :Description:
+;    This function is going to create output file that will replace the
+;    current un-cleaned data
+;
+; :Keywords:
+;    file_name
+;
+; :Author: j35
+;-
+function create_reduce_data_file, file_name=file_name, $
+    metadata = metadata, data = data
+  compile_opt idl2
+  
+  catch, error
+  if (error ne 0) then begin
+    catch,/cancel
+    return, 0
+  endif
+  
+  tmp_file_name = file_name + '_tmp'
+  openw, 1, tmp_file_name ;use temporary file name in case of problem
+  ;write metadata
+  sz = n_elements(metadata)
+  for i=0L,sz-1 do begin
+    printf,1,metadata[i]
+  endfor
+  sz = n_elements(data)
+  for i=0L,sz-1 do begin
+    printf, 1, data[i]
+  endfor
+  close, 1
+  free_lun, 1
+  
+  spawn, 'mv ' + tmp_file_name + ' ' + file_name
+  
+  return, 1
+end
+
+;+
+; :Description:
+;    This procedure adds the tag '#auto cleaned up' at the top of the
+;    metadata array
+;
+; :Params:
+;    event
+;    metadata
+;
+; :Author: j35
+;-
+pro add_cleanup_tag, event, metadata
+  compile_opt idl2
+  
+  catch, error
+  if (error ne 0) then begin
+    catch,/cancel
+    percentage_of_q_to_remove_value = 10.
+  endif else begin
+    widget_control, event.top, get_uvalue=global
+    percentage_of_q_to_remove_value = (*global).percentage_of_q_to_remove_value
+  endelse
+  
+  tag = '#auto cleaned up: ' + $
+    strcompress(fix(percentage_of_q_to_remove_value),/remove_all) + '%'
+    
+  metadata = [tag,metadata]
+end
+
 ;==============================================================================
 ;==============================================================================
 
@@ -396,12 +464,30 @@ pro cleanup_reduce_data, event, file_name = file_name
   
   ;retrieve metadata (first part of file)
   metadata_array =  retrieve_metadata_array(file_name)
+  ;add auto cleanup tag at the beginning of file
+  add_cleanup_tag, event, metadata_array
+  
+  ;create new output reduce data file
+  ;dialog_parent = widget_info(event.top,find_by_uname='MAIN_BASE')
+  result = create_reduce_data_file(file_name=file_name, $
+    metadata = metadata_array, $
+    data = data_array)
+  if (result eq 0) then begin
+    title = 'Cleaning of ' + file_name + ' failed!'
+    message_text = 'Program will use un-cleaned data set!'
+    result = dialog_message(message_text,$
+      title = title,$
+      /error,$
+      /center)
+    ;dialog_parent=dialog_parent)
+    return
+  endif
   
 end
 
 
 ;main test
-file_name = '~/results/REF_L_20927,20935_2009y_06m_18d_00h_32mn.txt'
+file_name = '~/results/REF_L_23291_2010y_02m_12d_13h_54mn_35s.txt'
 cleanup_reduce_data, '', file_name = file_name
 
 end
