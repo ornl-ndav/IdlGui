@@ -469,7 +469,7 @@ PRO DGSnorm_Execute, event
   ENDIF
   
   ; store the outputDir in the info structure
-  ;info.outputDir = outputDir
+  info.outputDir = outputDir
   
   ; Log Directory
   cd, CURRENT=thisDir
@@ -548,7 +548,7 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
   ; Program Details
   APPLICATION       = 'DGSreduction'
   ;VERSION           = '1.3.BETA'
-  VERSION           = '1.2.4'
+  VERSION           = '1.2.6'
   
   Catch, errorStatus
   
