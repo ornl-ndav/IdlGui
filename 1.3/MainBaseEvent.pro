@@ -1659,11 +1659,17 @@ PRO MAIN_BASE_event, Event
       configure_spin_state, Event=event
     end
     
-    ;Preview of the command line text box
-    ;    WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_cmd_line_preview'):BEGIN
-    ;        print, 'here'
-    ;    END
+    ;automatic cleaning of the reduce tab
+    widget_info(wWidget, find_by_uname='auto_cleaning_data_cw_bgroup'): begin
+      auto_cleaning_data_cw_bgroup, event
+    end
     
+    ;automatic cleaning configure button
+    widget_info(wWidget, $
+      find_by_uname='auto_cleaning_data_configure_button'): begin
+      configure_auto_cleanup, Event=event
+    end
+        
     ;**************************************************************************
     ;**PLOTS TAB*
     ;*************************************************************************

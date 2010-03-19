@@ -429,62 +429,6 @@ END
 
 
 
-;This function run the command line and will output the plot and info text
-PRO REFreductionEventcb_ProcessingCommandLine, Event
-
-  ;get global structure
-  widget_control,event.top,get_uvalue=global
-  if ((*global).instrument eq 'REF_L') then begin
-    run_command_line_ref_l, event
-    
-    IF ((*global).DataReductionStatus EQ 'OK') then begin
-      ;data reduction was successful
-    
-      ;get name of .txt file
-      output_file_path   = getOutputPathFromButton(Event)
-      output_file_name   = getOutputFileName(Event)
-      FullOutputFileName = output_file_path + output_file_name
-      FullXmlFileName    = getXmlFileName(FullOutputFileName)
-      
-      ;get metadata
-      RefReduction_SaveXmlInfo, Event,  FullXmlFileName
-      
-      ;Display XML file in Reduce tab
-      REfReduction_DisplayXmlFile, Event
-      
-      ;Load main data reduction File and  plot it
-      putTextFieldValue, Event, 'plot_tab_input_file_text_field', FullOutputFileName
-      ;move to new tab
-      id1 = WIDGET_INFO(Event.top, FIND_BY_UNAME='main_tab')
-      WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;plot tab
-      LoadAsciiFile, Event
-      
-    ;get flt0, flt1 and flt2 and put them into array
-    ;    RefReduction_LoadMainOutputFile, Event, FullOutputFileName
-      
-    ;;Plot main data reduction plot for the first time
-    ;    RefReduction_PlotMainDataReductionFileFirstTime, Event
-      
-    ENDIF
-    
-  endif else begin
-    run_command_line_ref_m, event
-    
-    list_of_output_file_name = (*(*global).list_of_output_file_name)
-    first_ref_m_file_to_plot = (*global).first_ref_m_file_to_plot
-    if (first_ref_m_file_to_plot ne -1) then begin
-      FullOutputFileName = list_of_output_file_name[first_ref_m_file_to_plot]
-      ;Load main data reduction File and  plot it
-      putTextFieldValue, Event, 'plot_tab_input_file_text_field', FullOutputFileName
-      ;move to new tab
-      id1 = WIDGET_INFO(Event.top, FIND_BY_UNAME='main_tab')
-      WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;plot tab
-      LoadAsciiFile, Event
-    endif
-    
-  endelse
-  
-END
 
 
 ;This function defines the instrument if the program is started from

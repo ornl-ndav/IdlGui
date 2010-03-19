@@ -31,55 +31,39 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
-;define path to dependencies and current folder
 
-;define path to dependencies and current folder
-spawn, 'pwd', CurrentFolder
-
-;build the utilities
-@main_idl_makefile_utilities.pro
-
-;Build miniREFreduction GUI
-cd, CurrentFolder + '/miniREFreductionGUI/'
-.run miniMakeGuiMainTab.pro
-.run miniMakeGuiNexusInterface.pro
-.run miniMakeGuiLoadTab.pro
-.run miniMakeGuiLoadDataNormalizationTab.pro
-.run miniMakeGuiLoadDataTab.pro
-.run miniMakeGuiLoadData1D2DTab.pro
-.run miniMakeGuiLoadData1DTab.pro
-.run miniMakeGuiLoadData1D_3D_Tab.pro
-.run miniMakeGuiLoadData2DTab.pro
-.run miniMakeGuiLoadData2D_3D_Tab.pro
-.run miniMakeGuiLoadNormalizationTab.pro
-.run miniMakeGuiLoadNormalization1D2DTab.pro
-.run miniMakeGuiLoadNormalization1DTab.pro
-.run miniMakeGuiLoadNormalization1D_3D_Tab.pro
-.run miniMakeGuiLoadNormalization2DTab.pro
-.run miniMakeGuiLoadNormalization2D_3D_Tab.pro
-.run miniMakeGuiEmptyCellTab.pro
-.run miniMakeGuiInstrumentSelection.pro
-.run mini_auto_cleaning_base_gui.pro
-
-.run miniMakeGuiReduceTab.pro
-.run miniMakeGuiEmptyCell.pro
-.run miniMakeGuiReduceDataBase.pro
-.run miniMakeGuiReduceNormalizationBase.pro
-.run miniMakeGuiReduceQbase.pro
-.run miniMakeGuiReduceDetectorBase.pro
-.run miniMakeGuiReduceIntermediatePlotBase.pro
-.run miniMakeGuiReduceOther.pro
-.run miniMakeGuiReduceInfo.pro
-
-.run miniMakeGuiPlotsTab.pro
-.run miniMakeGuiPlotsMainIntermediatesBases.pro
-.run miniMakeGuiBatchTab.pro
-.run miniMakeGuiLogBookTab.pro
-
-;build the main procedures
-cd, CurrentFolder
-@main_idl_makefile.pro
-.run mini_ref_reduction.pro
-
-
-
+;+
+; :Description:
+;   This routine will build the widgets in the reduce tab that will allow
+;   the user to turn on or off the auto cleaning of the data and to configure
+;   the settings (number of points to remove on each side)
+;
+; :Params:
+;    Event
+;    REDUCE_BASE
+;
+; :Author: j35
+;-
+pro auto_cleaning_base_gui, Event, REDUCE_BASE
+  compile_opt idl2
+  
+  cleaning_base = widget_base(REDUCE_BASE,$
+  xoffset = 367,$
+  yoffset = 540,$
+  /row,$
+  frame = 1)
+  
+  group = cw_bgroup(cleaning_base,$
+  ['Y','N'],$
+  /exclusive,$
+  /row,$
+  label_left = 'Auto reduce data clean up:',$
+  uname = 'auto_cleaning_data_cw_bgroup',$
+  set_value=1)
+  
+  configure = widget_button(cleaning_base,$
+  value = 'Configure...',$
+  uname = 'auto_cleaning_data_configure_button',$
+  sensitive = 0)
+  
+end

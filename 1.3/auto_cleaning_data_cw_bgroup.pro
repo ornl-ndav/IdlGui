@@ -31,55 +31,22 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
-;define path to dependencies and current folder
 
-;define path to dependencies and current folder
-spawn, 'pwd', CurrentFolder
+;+
+; :Description:
+;   This routine will disable or not the configure according to the status
+;   of the Yes and No buttons
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro auto_cleaning_data_cw_bgroup, event
 
-;build the utilities
-@main_idl_makefile_utilities.pro
+value = getButtonValue(event,'auto_cleaning_data_cw_bgroup')
+status = 1
+if (value eq 1) then status = 0
+ActivateWidget, Event, 'auto_cleaning_data_configure_button', status
 
-;Build miniREFreduction GUI
-cd, CurrentFolder + '/miniREFreductionGUI/'
-.run miniMakeGuiMainTab.pro
-.run miniMakeGuiNexusInterface.pro
-.run miniMakeGuiLoadTab.pro
-.run miniMakeGuiLoadDataNormalizationTab.pro
-.run miniMakeGuiLoadDataTab.pro
-.run miniMakeGuiLoadData1D2DTab.pro
-.run miniMakeGuiLoadData1DTab.pro
-.run miniMakeGuiLoadData1D_3D_Tab.pro
-.run miniMakeGuiLoadData2DTab.pro
-.run miniMakeGuiLoadData2D_3D_Tab.pro
-.run miniMakeGuiLoadNormalizationTab.pro
-.run miniMakeGuiLoadNormalization1D2DTab.pro
-.run miniMakeGuiLoadNormalization1DTab.pro
-.run miniMakeGuiLoadNormalization1D_3D_Tab.pro
-.run miniMakeGuiLoadNormalization2DTab.pro
-.run miniMakeGuiLoadNormalization2D_3D_Tab.pro
-.run miniMakeGuiEmptyCellTab.pro
-.run miniMakeGuiInstrumentSelection.pro
-.run mini_auto_cleaning_base_gui.pro
-
-.run miniMakeGuiReduceTab.pro
-.run miniMakeGuiEmptyCell.pro
-.run miniMakeGuiReduceDataBase.pro
-.run miniMakeGuiReduceNormalizationBase.pro
-.run miniMakeGuiReduceQbase.pro
-.run miniMakeGuiReduceDetectorBase.pro
-.run miniMakeGuiReduceIntermediatePlotBase.pro
-.run miniMakeGuiReduceOther.pro
-.run miniMakeGuiReduceInfo.pro
-
-.run miniMakeGuiPlotsTab.pro
-.run miniMakeGuiPlotsMainIntermediatesBases.pro
-.run miniMakeGuiBatchTab.pro
-.run miniMakeGuiLogBookTab.pro
-
-;build the main procedures
-cd, CurrentFolder
-@main_idl_makefile.pro
-.run mini_ref_reduction.pro
-
-
-
+end
