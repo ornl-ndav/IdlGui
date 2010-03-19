@@ -142,7 +142,7 @@ IF (NormalizationRunNumber NE '') THEN BEGIN
         LogBookText += ' ... ' + PROCESSING 
         IDLsendLogBook_addLogBookText, Event, ALT=2, LogBookText
 
-        LogBookText = '--> Checking if at least one NeXus file ' + $
+        LogBookText = '--> Checking if at least one N eXus file ' + $
           'can be found ... '
         LogBookText += PROCESSING
         IDLsendLogBook_addLogBookText, Event, LogBookText
