@@ -61,7 +61,7 @@ PRO REFreductionEventcb_ProcessingCommandLine, Event
       if (value eq 0) then begin ;apply auto cleanup
         cleanup_reduce_data, event, file_name = FullOutputFileName
       endif
-          
+      
       ;Load main data reduction File and  plot it
       putTextFieldValue, Event, 'plot_tab_input_file_text_field', FullOutputFileName
       ;move to new tab
@@ -81,6 +81,17 @@ PRO REFreductionEventcb_ProcessingCommandLine, Event
     run_command_line_ref_m, event
     
     list_of_output_file_name = (*(*global).list_of_output_file_name)
+    ;apply auto cleanup of data if switch is on
+    value = getButtonValue(event,'auto_cleaning_data_cw_bgroup')
+    if (value eq 0) then begin ;apply auto cleanup
+      sz = n_elements(list_of_output_file_name)
+      index = 0
+      while (index lt sz) do begin
+        cleanup_reduce_data, event, file_name = list_of_output_file_name[index]
+        index++
+      endwhile
+    endif
+    
     first_ref_m_file_to_plot = (*global).first_ref_m_file_to_plot
     if (first_ref_m_file_to_plot ne -1) then begin
       FullOutputFileName = list_of_output_file_name[first_ref_m_file_to_plot]
