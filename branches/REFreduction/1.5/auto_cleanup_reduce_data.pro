@@ -329,7 +329,6 @@ function retrieve_metadata_array, file_name
   index = 0
   while (index lt size_of_file) do begin
     line = data[index]
-    print, index, line
     if (line eq '') then begin
       index++
       continue
