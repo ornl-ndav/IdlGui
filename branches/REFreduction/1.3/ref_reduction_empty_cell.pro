@@ -52,10 +52,9 @@ FUNCTION OpenEmptyCellNeXusFile, Event, $
   (*global).empty_cell_full_nexus_name = full_nexus_name
   
   ;display info about nexus file selected
-  LogBookText = $
-    '-> Displaying information about run number using nxsummary:'
-    
-  IDLsendLogBook_addLogBookText, Event, LogBookText ;log_book
+;  LogBookText = $
+;    '-> Displaying information about run number using nxsummary:'    
+;  IDLsendLogBook_addLogBookText, Event, LogBookText ;log_book
   
   RefReduction_NXsummary, Event, $
     full_nexus_name, $
