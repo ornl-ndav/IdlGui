@@ -32,24 +32,80 @@
 ;
 ;==============================================================================
 
-pro MakeGuiMainBase, MAIN_BASE, global
+pro design_tab1, base1, global
 
-  id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='MAIN_BASE')
-  main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
-  
-  tab = widget_tab(MAIN_BASE,$
-    location=0)
-    
-  base = widget_base(tab,$ ;tab1 .........................................
-    title = '  General  Help  ',$
-    /column)
-    
-  design_tab1, base, global
-  
-  base2 = widget_base(tab,$ ;tab2 ........................................
-    title = '  Personalize  Help  ',$
-    /column)
-    
-  design_tab2, base2, global
-  
+tab1_base = widget_base(base1,$
+/column)
+
+row1 = widget_base(tab1_base,$
+/row)
+
+col1 = widget_base(row1,$
+/column)
+
+xsize = 150
+ysize = 150
+
+col1_row1 = widget_base(col1,$
+/row)
+button1 = widget_draw(col1_row1,$
+xsize = xsize,$
+ysize = ysize)
+space = widget_label(col1_row1,$
+value = ' ')
+button2 = widget_draw(col1_row1,$
+xsize = xsize,$
+ysize = ysize)
+space = widget_label(col1_row1,$
+value = ' ')
+button3 = widget_draw(col1_row1,$
+xsize = xsize,$
+ysize = ysize)
+space = widget_label(col1_row1,$
+value = ' ')
+button4 = widget_draw(col1_row1,$
+xsize = xsize,$
+ysize = ysize)
+
+col1_row2 = widget_base(col1,$
+/row)
+button1 = widget_draw(col1_row2,$
+xsize = xsize,$
+ysize = ysize)
+space = widget_label(col1_row2,$
+value = ' ')
+button2 = widget_draw(col1_row2,$
+xsize = xsize,$
+ysize = ysize)
+space = widget_label(col1_row2,$
+value = ' ')
+button3 = widget_draw(col1_row2,$
+xsize = xsize,$
+ysize = ysize)
+space = widget_label(col1_row2,$
+value = ' ')
+button4 = widget_draw(col1_row2,$
+xsize = xsize,$
+ysize = ysize)
+
+col2 = widget_base(row1,$
+/column)
+preview = widget_text(col2,$
+value = 'Description of mouse over...',$
+xsize = 50,$
+ysize = 23,$
+uname = 'tab1_preview_button')  
+
+row2 = widget_base(tab1_base,$
+/row)
+close = widget_button(row2,$
+value= 'CLOSE',$
+scr_xsize = 150,$
+event_pro = 'close_button')
+label = widget_label(row2,$
+value = '                                                              ')
+to_tab2 = widget_button(row2, $
+value = '  Request help - Report problem - Give feedback - Request feature - ...  ',$
+uname = 'send_to_tab2') 
+
 end

@@ -29,6 +29,8 @@ cd , CurrentFolder + '/Classes/'
 ;Build CLoop GUI
 cd, CurrentFolder + '/NeedHelpGUI/'
 .run MakeGuiMainBase.pro
+.run design_tab2.pro
+.run design_tab2.pro
 
 ;build all functions
 .run create_email_message.pro
