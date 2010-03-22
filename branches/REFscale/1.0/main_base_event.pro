@@ -185,6 +185,11 @@ PRO MAIN_BASE_ref_scale_event, Event
     DisplayFullPreviewOfButton, Event ;_eventcb
   END
   
+  ;color slider
+  widget_info(wWidget, find_by_uname='list_of_color_slider'): begin
+    steps_tab, Event, 1 ;_Tabs
+  end
+  
   ;------------------------------------------------------------------------------
   ;****** STEP 1 / In the LOAD TOF base *****************************************
   ;------------------------------------------------------------------------------
