@@ -139,7 +139,6 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ucams = (*global).general_infos.ucams
   logger, APPLICATION=application, VERSION=version, UCAMS=ucams
   
-  
 END
 
 ;-----------------------------------------------------------------------------

@@ -44,6 +44,36 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='MAIN_BASE'): BEGIN
     END
     
+    ;tab1 ---------------------------------------------------------------------
+    
+    widget_info(wWidget, find_by_uname='top_button1'): begin
+      display_buttons, event=event, button='faq', status='on'
+    end
+    widget_info(wWidget, find_by_uname='top_button2'): begin
+      display_buttons, event=event, button='orbiter', status='on'
+    end
+    widget_info(wWidget, find_by_uname='top_button3'): begin
+      display_buttons, event=event, button='neutronsr_us', status='on'
+    end
+    widget_info(wWidget, find_by_uname='top_button4'): begin
+    
+    end
+    widget_info(wWidget, find_by_uname='bottom_button1'): begin
+      display_buttons, event=event, button='sns', status='on'
+    end
+    widget_info(wWidget, find_by_uname='bottom_button2'): begin
+      display_buttons, event=event, button='how_to', status='on'
+    end
+    widget_info(wWidget, find_by_uname='bottom_button3'): begin
+    
+    end
+    widget_info(wWidget, find_by_uname='bottom_button4'): begin
+    
+    end
+    
+    
+    ;tab2 ---------------------------------------------------------------------
+    
     ;Load Command Line File Button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='browse_path_button'): BEGIN
       input_dave_ascii_path_button, Event
@@ -101,10 +131,10 @@ PRO MAIN_BASE_event, Event
         FIND_BY_UNAME='MAIN_BASE')
       WIDGET_CONTROL, id, /DESTROY
     END
-   
+    
     ;run jobs
     WIDGET_INFO(wWidget, FIND_BY_UNAME='run_uname'): BEGIN
-    run_divisions, Event
+      run_divisions, Event
     END
     
     ELSE:
