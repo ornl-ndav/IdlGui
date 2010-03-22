@@ -53,6 +53,7 @@ pro design_tab1, base1, global
     xsize = xsize,$
     ysize = ysize,$
     /button_events,$
+    /tracking_events,$
     retain = 2)
   space = widget_label(col1_row1,$
     value = ' ')
@@ -61,6 +62,7 @@ pro design_tab1, base1, global
     xsize = xsize,$
     ysize = ysize,$
     /button_events,$
+    /tracking_events,$
     retain = 2)
   space = widget_label(col1_row1,$
     value = ' ')
@@ -69,6 +71,7 @@ pro design_tab1, base1, global
     xsize = xsize,$
     ysize = ysize,$
     /button_events,$
+    /tracking_events,$
     retain =2 )
   space = widget_label(col1_row1,$
     value = ' ')
@@ -77,6 +80,7 @@ pro design_tab1, base1, global
     xsize = xsize,$
     ysize = ysize,$
     /button_events,$
+    /tracking_events,$
     retain = 2)
     
   col1_row2 = widget_base(col1,$
@@ -86,6 +90,7 @@ pro design_tab1, base1, global
     xsize = xsize,$
     ysize = ysize,$
     /button_events,$
+    /tracking_events,$
     retain = 2)
   space = widget_label(col1_row2,$
     value = ' ')
@@ -94,6 +99,7 @@ pro design_tab1, base1, global
     xsize = xsize,$
     ysize = ysize,$
     /button_events,$
+    /tracking_events,$
     retain = 2)
   space = widget_label(col1_row2,$
     value = ' ')
@@ -102,6 +108,7 @@ pro design_tab1, base1, global
     xsize = xsize,$
     ysize = ysize,$
     /button_events,$
+    /tracking_events,$
     retain = 2)
   space = widget_label(col1_row2,$
     value = ' ')
@@ -110,6 +117,7 @@ pro design_tab1, base1, global
     xsize = xsize,$
     ysize = ysize,$
     /button_events,$
+    /tracking_events,$
     retain = 2)
     
   col2 = widget_base(row1,$
