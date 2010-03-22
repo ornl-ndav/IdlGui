@@ -34,78 +34,94 @@
 
 pro design_tab1, base1, global
 
-tab1_base = widget_base(base1,$
-/column)
-
-row1 = widget_base(tab1_base,$
-/row)
-
-col1 = widget_base(row1,$
-/column)
-
-xsize = 150
-ysize = 150
-
-col1_row1 = widget_base(col1,$
-/row)
-button1 = widget_draw(col1_row1,$
-xsize = xsize,$
-ysize = ysize)
-space = widget_label(col1_row1,$
-value = ' ')
-button2 = widget_draw(col1_row1,$
-xsize = xsize,$
-ysize = ysize)
-space = widget_label(col1_row1,$
-value = ' ')
-button3 = widget_draw(col1_row1,$
-xsize = xsize,$
-ysize = ysize)
-space = widget_label(col1_row1,$
-value = ' ')
-button4 = widget_draw(col1_row1,$
-xsize = xsize,$
-ysize = ysize)
-
-col1_row2 = widget_base(col1,$
-/row)
-button1 = widget_draw(col1_row2,$
-xsize = xsize,$
-ysize = ysize)
-space = widget_label(col1_row2,$
-value = ' ')
-button2 = widget_draw(col1_row2,$
-xsize = xsize,$
-ysize = ysize)
-space = widget_label(col1_row2,$
-value = ' ')
-button3 = widget_draw(col1_row2,$
-xsize = xsize,$
-ysize = ysize)
-space = widget_label(col1_row2,$
-value = ' ')
-button4 = widget_draw(col1_row2,$
-xsize = xsize,$
-ysize = ysize)
-
-col2 = widget_base(row1,$
-/column)
-preview = widget_text(col2,$
-value = 'Description of mouse over...',$
-xsize = 50,$
-ysize = 23,$
-uname = 'tab1_preview_button')  
-
-row2 = widget_base(tab1_base,$
-/row)
-close = widget_button(row2,$
-value= 'CLOSE',$
-scr_xsize = 150,$
-event_pro = 'close_button')
-label = widget_label(row2,$
-value = '                                                              ')
-to_tab2 = widget_button(row2, $
-value = '  Request help - Report problem - Give feedback - Request feature - ...  ',$
-uname = 'send_to_tab2') 
-
+  tab1_base = widget_base(base1,$
+    /column)
+    
+  row1 = widget_base(tab1_base,$
+    /row)
+    
+  col1 = widget_base(row1,$
+    /column)
+    
+  xsize = 150
+  ysize = 150
+  
+  col1_row1 = widget_base(col1,$
+    /row)
+  button1 = widget_draw(col1_row1,$
+    uname = 'top_button1',$
+    xsize = xsize,$
+    ysize = ysize,$
+    retain = 2)
+  space = widget_label(col1_row1,$
+    value = ' ')
+  button2 = widget_draw(col1_row1,$
+    uname = 'top_button2',$
+    xsize = xsize,$
+    ysize = ysize,$
+    retain = 2)
+  space = widget_label(col1_row1,$
+    value = ' ')
+  button3 = widget_draw(col1_row1,$
+    uname = 'top_button3',$
+    xsize = xsize,$
+    ysize = ysize,$
+    retain =2 )
+  space = widget_label(col1_row1,$
+    value = ' ')
+  button4 = widget_draw(col1_row1,$
+    uname = 'top_button4',$
+    xsize = xsize,$
+    ysize = ysize,$
+    retain = 2)
+    
+  col1_row2 = widget_base(col1,$
+    /row)
+  button1 = widget_draw(col1_row2,$
+    uname = 'bottom_button1',$
+    xsize = xsize,$
+    ysize = ysize,$
+    retain = 2)
+  space = widget_label(col1_row2,$
+    value = ' ')
+  button2 = widget_draw(col1_row2,$
+    uname = 'bottom_button2',$
+    xsize = xsize,$
+    ysize = ysize,$
+    retain = 2)
+  space = widget_label(col1_row2,$
+    value = ' ')
+  button3 = widget_draw(col1_row2,$
+    uname = 'bottom_button3',$
+    xsize = xsize,$
+    ysize = ysize,$
+    retain = 2)
+  space = widget_label(col1_row2,$
+    value = ' ')
+  button4 = widget_draw(col1_row2,$
+    uname = 'bottom_button4',$
+    xsize = xsize,$
+    ysize = ysize,$
+    retain = 2)
+    
+  col2 = widget_base(row1,$
+    /column)
+  preview = widget_text(col2,$
+    value = 'Description of mouse over...',$
+    xsize = 50,$
+    ysize = 23,$
+    uname = 'tab1_preview_button')
+    
+  row2 = widget_base(tab1_base,$
+    /row)
+  close = widget_button(row2,$
+    value= 'CLOSE',$
+    scr_xsize = 150,$
+    event_pro = 'close_button')
+  label = widget_label(row2,$
+    value = '                                                              ')
+  to_tab2 = widget_button(row2, $
+    value = '  Request help - Report problem - Give feedback - Request feature - ...  ',$
+    uname = 'send_to_tab2')
+    
 end
