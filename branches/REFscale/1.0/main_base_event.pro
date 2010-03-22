@@ -165,6 +165,12 @@ PRO MAIN_BASE_ref_scale_event, Event
     auto_cleaning_data_cw_bgroup, event
   end
   
+  ;configure button
+  widget_info(wWidget, $
+    find_by_uname='auto_cleaning_data_configure_button'): begin
+    configure_auto_cleanup, Event=event
+  end
+  
   ;------------------------------------------------------------------------------
   ;***** STEP 1 - [LOAD FILES] **************************************************
   ;------------------------------------------------------------------------------
