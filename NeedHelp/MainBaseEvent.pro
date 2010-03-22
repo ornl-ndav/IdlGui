@@ -47,22 +47,141 @@ PRO MAIN_BASE_event, Event
     ;tab1 ---------------------------------------------------------------------
     
     widget_info(wWidget, find_by_uname='top_button1'): begin
-      display_buttons, event=event, button='faq', status='on'
+      catch, error
+      if (error ne 0) then begin
+        catch,/cancel
+        if (event.press eq 1) then begin
+          display_buttons, event=event, button='faq', status='on'
+        endif
+        if (event.release eq 1) then begin
+          display_buttons, event=event, button='faq',status='off'
+        endif
+      endif else begin
+        if (event.enter) then begin
+          ;cursor becomes a hand
+          standard = 58
+        endif else begin
+          standart = 31
+          display_buttons, event=event, button='faq',status='off'
+        ;cursor back to normal
+        endelse
+        id = WIDGET_INFO(Event.top,$
+          find_by_uname='top_button1')
+        WIDGET_CONTROL, id, GET_VALUE=id_value
+        WSET, id_value
+        DEVICE, CURSOR_STANDARD=standard
+      endelse
     end
-    widget_info(wWidget, find_by_uname='top_button2'): begin
-      display_buttons, event=event, button='orbiter', status='on'
-    end
-    widget_info(wWidget, find_by_uname='top_button3'): begin
-      display_buttons, event=event, button='neutronsr_us', status='on'
-    end
-    widget_info(wWidget, find_by_uname='top_button4'): begin
     
+    widget_info(wWidget, find_by_uname='top_button2'): begin
+      catch, error
+      if (error ne 0) then begin
+        catch,/cancel
+        if (event.press eq 1) then begin
+          display_buttons, event=event, button='orbiter', status='on'
+        endif
+        if (event.release eq 1) then begin
+          display_buttons, event=event, button='orbiter',status='off'
+        endif
+      endif else begin
+        if (event.enter) then begin
+          ;cursor becomes a hand
+          standard = 58
+        endif else begin
+          standart = 31
+          display_buttons, event=event, button='orbiter',status='off'
+        ;cursor back to normal
+        endelse
+        id = WIDGET_INFO(Event.top,$
+          find_by_uname='top_button2')
+        WIDGET_CONTROL, id, GET_VALUE=id_value
+        WSET, id_value
+        DEVICE, CURSOR_STANDARD=standard
+      endelse
     end
+    
+    widget_info(wWidget, find_by_uname='top_button3'): begin
+      catch, error
+      if (error ne 0) then begin
+        catch,/cancel
+        if (event.press eq 1) then begin
+          display_buttons, event=event, button='neutronsr_us', status='on'
+        endif
+        if (event.release eq 1) then begin
+          display_buttons, event=event, button='neutronsr_us',status='off'
+        endif
+      endif else begin
+        if (event.enter) then begin
+          ;cursor becomes a hand
+          standard = 58
+        endif else begin
+          standart = 31
+          display_buttons, event=event, button='neutronsr_us',status='off'
+        ;cursor back to normal
+        endelse
+        id = WIDGET_INFO(Event.top,$
+          find_by_uname='top_button3')
+        WIDGET_CONTROL, id, GET_VALUE=id_value
+        WSET, id_value
+        DEVICE, CURSOR_STANDARD=standard
+      endelse
+    end
+    
+    widget_info(wWidget, find_by_uname='top_button4'): begin
+    end
+    
     widget_info(wWidget, find_by_uname='bottom_button1'): begin
-      display_buttons, event=event, button='sns', status='on'
+      catch, error
+      if (error ne 0) then begin
+        catch,/cancel
+        if (event.press eq 1) then begin
+          display_buttons, event=event, button='sns', status='on'
+        endif
+        if (event.release eq 1) then begin
+          display_buttons, event=event, button='sns',status='off'
+        endif
+      endif else begin
+        if (event.enter) then begin
+          ;cursor becomes a hand
+          standard = 58
+        endif else begin
+          standart = 31
+          display_buttons, event=event, button='sns',status='off'
+        ;cursor back to normal
+        endelse
+        id = WIDGET_INFO(Event.top,$
+          find_by_uname='bottom_button1')
+        WIDGET_CONTROL, id, GET_VALUE=id_value
+        WSET, id_value
+        DEVICE, CURSOR_STANDARD=standard
+      endelse
     end
+
     widget_info(wWidget, find_by_uname='bottom_button2'): begin
-      display_buttons, event=event, button='how_to', status='on'
+      catch, error
+      if (error ne 0) then begin
+        catch,/cancel
+        if (event.press eq 1) then begin
+          display_buttons, event=event, button='how_to', status='on'
+        endif
+        if (event.release eq 1) then begin
+          display_buttons, event=event, button='how_to',status='off'
+        endif
+      endif else begin
+        if (event.enter) then begin
+          ;cursor becomes a hand
+          standard = 58
+        endif else begin
+          standart = 31
+          display_buttons, event=event, button='how_to',status='off'
+        ;cursor back to normal
+        endelse
+        id = WIDGET_INFO(Event.top,$
+          find_by_uname='bottom_button2')
+        WIDGET_CONTROL, id, GET_VALUE=id_value
+        WSET, id_value
+        DEVICE, CURSOR_STANDARD=standard
+      endelse
     end
     widget_info(wWidget, find_by_uname='bottom_button3'): begin
     
