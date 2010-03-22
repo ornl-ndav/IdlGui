@@ -84,7 +84,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     MainBaseSize: [30,25,1010,400]})
     
   ;(*(*global).list_of_files) = strarr(1)
-  
+    
   MainBaseSize   = (*global).MainBaseSize
   MainBaseTitle  = 'Need Help'
   MainBaseTitle += ' - ' + VERSION
@@ -127,6 +127,13 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ; WIDGET_CONTROL, id, SET_VALUE=sDebugging.input_text
   ENDIF
   ;??????????????????????????????????????????????????????????????????????????????
+  
+  ;display buttons
+  display_buttons, MAIN_BASE=main_base, button='faq', status='off'
+  display_buttons, MAIN_BASE=main_base, button='orbiter', status='off'
+  display_buttons, MAIN_BASE=main_base, button='how_to', status='off'
+  display_buttons, MAIN_BASE=main_base, button='neutronsr_us', status='off'
+  display_buttons, MAIN_BASE=main_base, button='sns', status='off'
   
   ;send message to log current run of application
   ucams = (*global).general_infos.ucams
