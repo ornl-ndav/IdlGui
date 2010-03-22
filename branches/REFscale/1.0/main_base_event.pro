@@ -160,6 +160,11 @@ PRO MAIN_BASE_ref_scale_event, Event
     WithWithoutErrorBars, Event ;_eventcb
   END
   
+  ;auto cleaning yes/no cw_bgroup
+  widget_info(wWidget, find_by_uname='auto_cleaning_data_cw_bgroup'): begin
+    auto_cleaning_data_cw_bgroup, event
+  end
+  
   ;------------------------------------------------------------------------------
   ;***** STEP 1 - [LOAD FILES] **************************************************
   ;------------------------------------------------------------------------------

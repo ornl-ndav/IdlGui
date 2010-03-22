@@ -349,16 +349,14 @@ PRO MakeGuiMainBaseComponents, MAIN_BASE, StepsTabSize
   ['Yes','No'],$
   /row,$
   label_left = 'Auto Cleanning:',$
-  uname = 'auto_cleaning_group',$
+  uname = 'auto_cleaning_data_cw_bgroup',$
   set_value = 0,$
   /exclusive)
   
   button = widget_button(auto_clean_base,$
   value = '  CONFIGURE ...  ',$
-  uname = 'auto_cleaning_configure_button',$
+  uname = 'auto_cleaning_data_configure_button',$
   sensitive = 1)
-
-
     
   ;Show Error Bars --------------------------------------------------------------
   wShowErrorBarGroup = CW_BGROUP(wSettingsBase,$
