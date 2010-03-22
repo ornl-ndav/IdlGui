@@ -32,68 +32,21 @@
 ;
 ;==============================================================================
 
-;define path to dependencies and current folder
-spawn, 'pwd', CurrentFolder
-IdlUtilitiesPath = "/utilities"
+;+
+; :Description:
+;   This routine will disable or not the configure according to the status
+;   of the Yes and No buttons
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro auto_cleaning_data_cw_bgroup, event
 
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-cd, CurrentFolder + IdlUtilitiesPath
-.run system_utilities.pro
-.run logger.pro
-.run IDLxmlParser__define.pro
-.run get.pro
+value = getButtonValue(event,'auto_cleaning_data_cw_bgroup')
+status = 1
+if (value eq 1) then status = 0
+ActivateWidget, Event, 'auto_cleaning_data_configure_button', status
 
-;Build REFscale GUI
-cd, CurrentFolder + '/REFscaleGUI/'
-.run make_gui_step1.pro
-.run make_gui_step2.pro
-.run make_gui_step3.pro
-.run make_gui_output_file.pro
-.run make_gui_batch.pro
-.run make_gui_main_base_components.pro
-.run make_gui_log_book.pro
-
-;Build main procedures
-cd, CurrentFolder
-.run ref_scale_get.pro
-.run array_delete.pro
-.run ref_scale_arrays.pro
-.run number_formatter.pro
-.run get_numeric.pro
-.run ref_scale_put.pro
-.run ref_scale_is.pro
-.run idl_send_to_geek.pro
-.run idl_get_metadata__define.pro
-
-.run ref_scale_utility.pro
-.run ref_scale_gui.pro
-.run ref_scale_fit.pro
-.run ref_scale_step3.pro
-.run ref_scale_math.pro
-.run ref_scale_file_utility.pro
-.run ref_scale_tof_to_q.pro
-
-;auto cleaning of data
-.run cleanup_reduce_data.pro
-.run auto_cleaning_data_cw_bgroup.pro
-
-.run ref_scale_openfile.pro
-.run ref_scale_plot_subroutines.pro
-.run ref_scale_plot.pro
-.run ref_scale_plot_loaded_files.pro
-.run ref_scale_load.pro
-.run ref_scale_step2.pro
-.run ref_scale_produce_output.pro
-.run ref_scale_tabs.pro
-
-;Batch
-.run idl_load_batch_file__define.pro
-.run idl_create_batch_file__define.pro
-.run ref_scale_batch.pro
-.run idl_parse_command_line__define.pro
-
-.run main_base_event.pro
-.run ref_scale_eventcb.pro
-.run ref_scale.pro
-
+end

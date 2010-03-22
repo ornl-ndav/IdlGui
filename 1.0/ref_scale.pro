@@ -65,6 +65,10 @@ file = OBJ_NEW('idlxmlparser', '.REFscale.cfg')
   
   global = $
     PTR_NEW({ $
+    
+    nbr_data_to_exclude: 1,$  ;number of data to remove on both side when
+    ;performing setp3
+    
     BatchExtension:         '.txt',$
     BatchTable:             PTR_NEW(0L),$
     BatchDefaultPath:       '~/results/',$

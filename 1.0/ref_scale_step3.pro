@@ -128,7 +128,8 @@ PRO Step3AutomaticRescaling, Event
         STRCOMPRESS(Qmax,/REMOVE_ALL)
         
       ;Number of data to exclude from auto-fitting
-      Ncrap = getTextFieldValue(Event,'min_crap_text_field') ;_get
+      ;Ncrap = getTextFieldValue(Event,'min_crap_text_field') ;_get
+      Ncrap = (*global).nbr_data_to_exclude
       Ncrap = FIX(Ncrap)
       
       ;HIGH Q file
