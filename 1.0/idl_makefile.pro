@@ -77,6 +77,7 @@ cd, CurrentFolder
 ;auto cleaning of data
 .run cleanup_reduce_data.pro
 .run auto_cleaning_data_cw_bgroup.pro
+.run configure_auto_cleanup.pro
 
 .run ref_scale_openfile.pro
 .run ref_scale_plot_subroutines.pro

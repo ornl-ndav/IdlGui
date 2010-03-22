@@ -68,6 +68,8 @@ file = OBJ_NEW('idlxmlparser', '.REFscale.cfg')
     
     nbr_data_to_exclude: 1,$  ;number of data to remove on both side when
     ;performing setp3
+    percentage_of_q_to_remove_value: 10,$ ;percentage of data to remove when
+    ;using auto cleanup
     
     BatchExtension:         '.txt',$
     BatchTable:             PTR_NEW(0L),$
