@@ -73,6 +73,9 @@ cd, CurrentFolder
 .run ref_scale_file_utility.pro
 .run ref_scale_tof_to_q.pro
 
+;auto cleaning of data
+.run cleanup_reduce_data.pro
+
 .run ref_scale_openfile.pro
 .run ref_scale_plot_subroutines.pro
 .run ref_scale_plot.pro
