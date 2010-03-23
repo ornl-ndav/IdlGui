@@ -48,7 +48,7 @@ function get_index_button, button
   obj_destroy, file
   
   list = strsplit(button_list,',',/extract)
-  index = where(list eq button)
+  index = where(list eq button[0])
   
   return, index
 end
@@ -80,7 +80,7 @@ PRO display_buttons, MAIN_BASE=main_base, EVENT=event, $
   
   image = 'NeedHelp_images/'
   image += button + '_' + status + '.png'
-
+  
   if (~file_test(image)) then return ;if file does not exist
   
   png_image = READ_PNG(image)

@@ -47,7 +47,6 @@
 pro event_button, Event, uname=uname
 
   button_name = getButtonName(uname)
-  print, 'button_name: ' + button_name
   if (button_name eq '') then return
   error = 0
   catch, error
