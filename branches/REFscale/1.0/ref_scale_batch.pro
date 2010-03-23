@@ -60,8 +60,8 @@ END
 ;==============================================================================
 PRO apply_sf_to_data, Event
 
-;  PRINT, 'entering apply_sf_to_data'
-  
+  ;  PRINT, 'entering apply_sf_to_data'
+
   id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
   WIDGET_CONTROL,id,GET_UVALUE=global
   BatchTable       = (*(*global).BatchTable)
@@ -94,12 +94,12 @@ PRO apply_sf_to_data, Event
     *flt2_rescale_ptr[i] = flt2
     
     
-    ;    flt_index++ ;move on to next data ploted
+  ;    flt_index++ ;move on to next data ploted
     
-;    HELP, *flt0_ptr[i]
-;    HELP, flt1
-;    HELP, flt2
-;    PRINT, '``````````````````````````'
+  ;    HELP, *flt0_ptr[i]
+  ;    HELP, flt1
+  ;    HELP, flt2
+  ;    PRINT, '``````````````````````````'
     
   ENDFOR
   
@@ -198,7 +198,7 @@ END
 
 ;==============================================================================
 FUNCTION batch_repopulate_gui, Event, DRfiles
- 
+
   id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
   WIDGET_CONTROL,id,GET_UVALUE=global
   ;retrieve parameters
@@ -213,6 +213,13 @@ FUNCTION batch_repopulate_gui, Event, DRfiles
     IF (SuccessStatus) THEN BEGIN
       ShortFileName = get_file_name_only(DRfiles[i]) ;_get
       LongFileName  = DRfiles[i]
+      
+      ;apply auto cleanup of data if switch is on
+      value = getButtonValue(event,'auto_cleaning_data_cw_bgroup')
+      if (value eq 0) then begin ;apply auto cleanup
+        cleanup_reduce_data, event, file_name = LongFileName
+      endif
+      
       AddNewFileToDroplist, Event, ShortFileName, LongFileName ;_Gui
     ENDIF ELSE BEGIN
       loading_error = 1
@@ -232,34 +239,34 @@ FUNCTION batch_repopulate_gui, Event, DRfiles
     ;create SF_array
     create_SF_array, Event
     
-;    PRINT, '-> After create_sf_array'
-;    flt0_ptr = (*global).flt0_rescale_ptr
-;    flt1_ptr = (*global).flt1_rescale_ptr
-;    flt2_ptr = (*global).flt2_rescale_ptr
-;    nbrFile = (*global).NbrFilesLoaded
-;    for i=0,(nbrFile-1) do begin
-;      HELP, *flt0_ptr[i]
-;      HELP, *flt1_ptr[i]
-;      HELP, *flt2_ptr[i]
-;      PRINT, '++++++++++++++++++++++++++++++++'
-;    ENDFOR
-;    PRINT
-;    
+    ;    PRINT, '-> After create_sf_array'
+    ;    flt0_ptr = (*global).flt0_rescale_ptr
+    ;    flt1_ptr = (*global).flt1_rescale_ptr
+    ;    flt2_ptr = (*global).flt2_rescale_ptr
+    ;    nbrFile = (*global).NbrFilesLoaded
+    ;    for i=0,(nbrFile-1) do begin
+    ;      HELP, *flt0_ptr[i]
+    ;      HELP, *flt1_ptr[i]
+    ;      HELP, *flt2_ptr[i]
+    ;      PRINT, '++++++++++++++++++++++++++++++++'
+    ;    ENDFOR
+    ;    PRINT
+    ;
     ;apply the SF to the data
     apply_sf_to_data, Event
-;    PRINT, '-> After apply_sf_to_data'
-;    flt0_ptr = (*global).flt0_rescale_ptr
-;    flt1_ptr = (*global).flt1_rescale_ptr
-;    flt2_ptr = (*global).flt2_rescale_ptr
-;    nbrFile = (*global).NbrFilesLoaded
-;    for i=0,(nbrFile-1) do begin
-;      HELP, *flt0_ptr[i]
-;      HELP, *flt1_ptr[i]
-;      HELP, *flt2_ptr[i]
-;      PRINT, '++++++++++++++++++++++++++++++++'
-;    ENDFOR
-;    PRINT
-        
+    ;    PRINT, '-> After apply_sf_to_data'
+    ;    flt0_ptr = (*global).flt0_rescale_ptr
+    ;    flt1_ptr = (*global).flt1_rescale_ptr
+    ;    flt2_ptr = (*global).flt2_rescale_ptr
+    ;    nbrFile = (*global).NbrFilesLoaded
+    ;    for i=0,(nbrFile-1) do begin
+    ;      HELP, *flt0_ptr[i]
+    ;      HELP, *flt1_ptr[i]
+    ;      HELP, *flt2_ptr[i]
+    ;      PRINT, '++++++++++++++++++++++++++++++++'
+    ;    ENDFOR
+    ;    PRINT
+    
     ;plot all loaded files
     PlotLoadedFiles, Event      ;_Plot
     
