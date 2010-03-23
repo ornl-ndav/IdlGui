@@ -43,6 +43,7 @@ cd, CurrentFolder + IdlUtilitiesPath
 .run logger.pro
 .run IDLxmlParser__define.pro
 .run get.pro
+.run IDLxmlParser_define.pro
 
 ;Build REFscale GUI
 cd, CurrentFolder + '/REFscaleGUI/'
