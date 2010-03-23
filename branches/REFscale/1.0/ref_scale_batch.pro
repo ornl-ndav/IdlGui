@@ -236,6 +236,7 @@ FUNCTION batch_repopulate_gui, Event, DRfiles
     ;reset Qmin and Qmax
     (*(*global).Qmin_array) = FLTARR(sz)
     (*(*global).Qmax_array) = FLTARR(sz)
+    
     ;create SF_array
     create_SF_array, Event
     
@@ -269,6 +270,9 @@ FUNCTION batch_repopulate_gui, Event, DRfiles
     
     ;plot all loaded files
     PlotLoadedFiles, Event      ;_Plot
+    
+    ;force the axis to start at 0
+    putValueInTextField, Event,'XaxisMinTextField', strcompress(0,/remove_all)
     
     plot_loaded_file, Event, 'all' ;_Plot
     ;activate step2
