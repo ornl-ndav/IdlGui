@@ -65,7 +65,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     firefox: '/usr/bin/firefox',$
     srun_web_page: 'https://neutronsr.us/applications/jobmonitor/'+$
     'squeue.php?view=all',$
-    
+      
     default_path: '~/results/',$
     
     debugging:    debugging,$ ;yes or no
