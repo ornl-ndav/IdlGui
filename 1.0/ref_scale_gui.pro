@@ -338,7 +338,7 @@ EnableMainBaseButtons, Event, validate ;_gui
 ActivateClearFileButton, Event, validate ;_gui
 ActivateColorSlider, Event, Validate ;_gui
 ActivatePrintFileButton, Event, Validate ;_gui
-ActivateSettingsBase, Event, Validate ;_gui
+;ActivateSettingsBase, Event, Validate ;_gui
 END
 
 ;##############################################################################
@@ -734,7 +734,7 @@ EnableMainBaseButtons, Event, validate ;_gui
 ActivateClearFileButton, Event, validate ;_gui
 ActivateColorSlider, Event, Validate ;_gui
 ActivatePrintFileButton, Event, Validate ;_gui
-ActivateSettingsBase, Event, Validate ;_gui
+;ActivateSettingsBase, Event, Validate ;_gui
 ActivateFullPreviewButton, Event, Validate ;_gui
 END
 
