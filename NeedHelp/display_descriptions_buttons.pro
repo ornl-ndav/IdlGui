@@ -48,8 +48,6 @@
 PRO display_descriptions_buttons, MAIN_BASE=main_base, EVENT=event, $
     button=button, status=status
     
-    print, 'button is: ' + button 
-    
   case (button) of
     'faq': text = 'faq description'
     'orbiter': text = 'orbiter description'
