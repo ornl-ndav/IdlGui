@@ -135,7 +135,7 @@ PRO MakeGuiMainBaseComponents, MAIN_BASE, StepsTabSize
     65],$
     frame : 1,$
     uname : 'settings_base',$
-    map   : 0}
+    map   : 1}
     
   ;Settings Label ---------------------------------------------------------------
   XYoff = [320,38]
