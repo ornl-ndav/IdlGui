@@ -16,6 +16,7 @@ cd, IdlUtilitiesPath
 .run xdisplayfile.pro
 .run get_ucams.pro
 .run get_general_infos.pro
+.run get_button_name.pro
 
 ;classes
 cd , CurrentFolder + '/Classes/'
@@ -43,6 +44,10 @@ cd, CurrentFolder
 .run browse_files.pro
 .run remove_files.pro
 .run create_tar_folder.pro
+
+.run display_buttons.pro
+.run display_descriptions_buttons.pro
+.run button_event.pro
 
 ;main functions
 .run MainBaseEvent.pro

@@ -34,63 +34,47 @@
 
 ;+
 ; :Description:
-;    This function returns the position (index) of the button
+;   This procedures is the event handler of all the buttons (screenshots) of tab1
 ;
-; :Params:
-;    button
-;
-; :Author: j35
-;-
-function get_index_button, button
-
-  file = OBJ_NEW('IDLxmlParser','.NeedHelp.cfg')
-  button_list = file->getValue(tag=['configuration','buttons_pos'])
-  obj_destroy, file
-  
-  list = strsplit(button_list,',',/extract)
-  index = where(list eq button)
-  
-  return, index
-end
-
-
-;+
-; :Description:
-;    This procedure display the button
+; :params:
+;   event
 ;
 ; :Keywords:
-;    MAIN_BASE
-;    EVENT
-;    button
-;    status
+;   uname
 ;
 ; :Author: j35
 ;-
-PRO display_buttons, MAIN_BASE=main_base, EVENT=event, $
-    button=button, status=status
-    
+pro event_button, Event, uname=uname
+
+  button_name = getButtonName(uname)
+  print, 'button_name: ' + button_name
+  if (button_name eq '') then return
+  error = 0
   catch, error
   if (error ne 0) then begin
     catch,/cancel
-    return
-  endif
+    if (event.press eq 1) then begin
+      display_buttons, event=event, button=button_name, status='on'
+    endif
+    if (event.release eq 1) then begin
+      display_buttons, event=event, button=button_name, status='off'
+    endif
+  endif else begin
+    if (event.enter) then begin
+      display_descriptions_buttons, EVENT=event, button=button_name
+      ;cursor becomes a hand
+      standard = 58
+    endif else begin
+    display_descriptions_buttons, EVENT=event, button='no_button'
+      standart = 31
+      display_buttons, event=event, button=button_name,status='off'
+    ;cursor back to normal
+    endelse
+    id = WIDGET_INFO(Event.top,$
+      find_by_uname=uname)
+    WIDGET_CONTROL, id, GET_VALUE=id_value
+    WSET, id_value
+    DEVICE, CURSOR_STANDARD=standard
+  endelse
   
-  index = get_index_button(button) + 1
-  uname = 'button' + strcompress(index,/remove_all)
-  
-  image = 'NeedHelp_images/'
-  image += button + '_' + status + '.png'
-
-  if (~file_test(image)) then return ;if file does not exist
-  
-  png_image = READ_PNG(image)
-  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
-    mode_id = WIDGET_INFO(main_base, FIND_BY_UNAME=uname)
-  ENDIF ELSE BEGIN
-    mode_id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
-  ENDELSE
-  WIDGET_CONTROL, mode_id, GET_VALUE=id
-  WSET, id
-  TV, png_image, 0, 0,/true
-  
-END
+end

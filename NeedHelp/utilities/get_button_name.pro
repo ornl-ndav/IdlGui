@@ -34,63 +34,34 @@
 
 ;+
 ; :Description:
-;    This function returns the position (index) of the button
+;    This function returns the name of the button, according to the uname of the
+;    button (using the configuration file that gives the position of the buttons)
 ;
 ; :Params:
-;    button
+;    button_uname
 ;
 ; :Author: j35
 ;-
-function get_index_button, button
-
+function getButtonName, button_uname
+  compile_opt idl2
+  
+  index_button = strsplit(button_uname,'button',/extract)
+  if (index_button eq -1) then return, ''
+  index_button = fix(index_button) - 1
+  
+  ;get list of buttons
   file = OBJ_NEW('IDLxmlParser','.NeedHelp.cfg')
-  button_list = file->getValue(tag=['configuration','buttons_pos'])
+  list_buttons = file->getValue(tag=['configuration','buttons_pos'])
   obj_destroy, file
+  list = strsplit(list_buttons,',',/extract)
   
-  list = strsplit(button_list,',',/extract)
-  index = where(list eq button)
-  
-  return, index
-end
-
-
-;+
-; :Description:
-;    This procedure display the button
-;
-; :Keywords:
-;    MAIN_BASE
-;    EVENT
-;    button
-;    status
-;
-; :Author: j35
-;-
-PRO display_buttons, MAIN_BASE=main_base, EVENT=event, $
-    button=button, status=status
-    
   catch, error
   if (error ne 0) then begin
     catch,/cancel
-    return
+    return, ''
   endif
-  
-  index = get_index_button(button) + 1
-  uname = 'button' + strcompress(index,/remove_all)
-  
-  image = 'NeedHelp_images/'
-  image += button + '_' + status + '.png'
 
-  if (~file_test(image)) then return ;if file does not exist
+  if (index_button ge n_elements(list)) then return, ''
   
-  png_image = READ_PNG(image)
-  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
-    mode_id = WIDGET_INFO(main_base, FIND_BY_UNAME=uname)
-  ENDIF ELSE BEGIN
-    mode_id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
-  ENDELSE
-  WIDGET_CONTROL, mode_id, GET_VALUE=id
-  WSET, id
-  TV, png_image, 0, 0,/true
-  
-END
+  return, list[index_button]
+end

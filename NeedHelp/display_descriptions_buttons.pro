@@ -34,29 +34,8 @@
 
 ;+
 ; :Description:
-;    This function returns the position (index) of the button
-;
-; :Params:
-;    button
-;
-; :Author: j35
-;-
-function get_index_button, button
-
-  file = OBJ_NEW('IDLxmlParser','.NeedHelp.cfg')
-  button_list = file->getValue(tag=['configuration','buttons_pos'])
-  obj_destroy, file
-  
-  list = strsplit(button_list,',',/extract)
-  index = where(list eq button)
-  
-  return, index
-end
-
-
-;+
-; :Description:
-;    This procedure display the button
+;    this procedure display the description text on the right of tab1 when the
+;    mouse is over such or such button
 ;
 ; :Keywords:
 ;    MAIN_BASE
@@ -66,31 +45,21 @@ end
 ;
 ; :Author: j35
 ;-
-PRO display_buttons, MAIN_BASE=main_base, EVENT=event, $
+PRO display_descriptions_buttons, MAIN_BASE=main_base, EVENT=event, $
     button=button, status=status
     
-  catch, error
-  if (error ne 0) then begin
-    catch,/cancel
-    return
-  endif
+    print, 'button is: ' + button 
+    
+  case (button) of
+    'faq': text = 'faq description'
+    'orbiter': text = 'orbiter description'
+    'sns': text = 'sns description'
+    'neutronsr_us': text = 'neutronsr_us description'
+    'translation': text = 'translation description'
+    'how_to': text = 'how_to description'
+    else: text = 'Move the mouse over a button to get a description of its link.'
+  endcase
   
-  index = get_index_button(button) + 1
-  uname = 'button' + strcompress(index,/remove_all)
-  
-  image = 'NeedHelp_images/'
-  image += button + '_' + status + '.png'
-
-  if (~file_test(image)) then return ;if file does not exist
-  
-  png_image = READ_PNG(image)
-  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
-    mode_id = WIDGET_INFO(main_base, FIND_BY_UNAME=uname)
-  ENDIF ELSE BEGIN
-    mode_id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
-  ENDELSE
-  WIDGET_CONTROL, mode_id, GET_VALUE=id
-  WSET, id
-  TV, png_image, 0, 0,/true
+  putValue, Event, 'tab1_preview_button', text
   
 END

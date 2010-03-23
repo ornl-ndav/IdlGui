@@ -49,7 +49,7 @@ pro design_tab1, base1, global
   col1_row1 = widget_base(col1,$
     /row)
   button1 = widget_draw(col1_row1,$
-    uname = 'top_button1',$
+    uname = 'button1',$
     xsize = xsize,$
     ysize = ysize,$
     /button_events,$
@@ -58,7 +58,7 @@ pro design_tab1, base1, global
   space = widget_label(col1_row1,$
     value = ' ')
   button2 = widget_draw(col1_row1,$
-    uname = 'top_button2',$
+    uname = 'button2',$
     xsize = xsize,$
     ysize = ysize,$
     /button_events,$
@@ -67,7 +67,7 @@ pro design_tab1, base1, global
   space = widget_label(col1_row1,$
     value = ' ')
   button3 = widget_draw(col1_row1,$
-    uname = 'top_button3',$
+    uname = 'button3',$
     xsize = xsize,$
     ysize = ysize,$
     /button_events,$
@@ -76,7 +76,7 @@ pro design_tab1, base1, global
   space = widget_label(col1_row1,$
     value = ' ')
   button4 = widget_draw(col1_row1,$
-    uname = 'top_button4',$
+    uname = 'button4',$
     xsize = xsize,$
     ysize = ysize,$
     /button_events,$
@@ -86,7 +86,7 @@ pro design_tab1, base1, global
   col1_row2 = widget_base(col1,$
     /row)
   button1 = widget_draw(col1_row2,$
-    uname = 'bottom_button1',$
+    uname = 'button5',$
     xsize = xsize,$
     ysize = ysize,$
     /button_events,$
@@ -95,7 +95,7 @@ pro design_tab1, base1, global
   space = widget_label(col1_row2,$
     value = ' ')
   button2 = widget_draw(col1_row2,$
-    uname = 'bottom_button2',$
+    uname = 'button6',$
     xsize = xsize,$
     ysize = ysize,$
     /button_events,$
@@ -104,7 +104,7 @@ pro design_tab1, base1, global
   space = widget_label(col1_row2,$
     value = ' ')
   button3 = widget_draw(col1_row2,$
-    uname = 'bottom_button3',$
+    uname = 'button7',$
     xsize = xsize,$
     ysize = ysize,$
     /button_events,$
@@ -113,7 +113,7 @@ pro design_tab1, base1, global
   space = widget_label(col1_row2,$
     value = ' ')
   button4 = widget_draw(col1_row2,$
-    uname = 'bottom_button4',$
+    uname = 'button8',$
     xsize = xsize,$
     ysize = ysize,$
     /button_events,$
