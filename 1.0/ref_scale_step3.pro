@@ -62,8 +62,8 @@ END
 ;files one after the other
 PRO Step3AutomaticRescaling, Event
 
-;  PRINT, 'Step3AutomaticRescaling' ;remove_me
-  
+  ;  PRINT, 'Step3AutomaticRescaling' ;remove_me
+
   id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
   WIDGET_CONTROL,id,get_uvalue=global
   
@@ -80,13 +80,13 @@ PRO Step3AutomaticRescaling, Event
   idl_send_to_geek_addLogBookText, Event, '-> Number of files loaded : ' + $
     STRCOMPRESS(nbrFile,/REMOVE_ALL)
     
-;  PRINT, 'in checking flt0, flt1 and flt2 rescale ptr'
-;  for i=0,(nbrFile-1) do begin
-;    HELP, *flt0_rescale_ptr[i]
-;    HELP, *flt1_rescale_ptr[i]
-;    HELP, *flt2_rescale_ptr[i]
-;  ENDFOR  
-
+  ;  PRINT, 'in checking flt0, flt1 and flt2 rescale ptr'
+  ;  for i=0,(nbrFile-1) do begin
+  ;    HELP, *flt0_rescale_ptr[i]
+  ;    HELP, *flt1_rescale_ptr[i]
+  ;    HELP, *flt2_rescale_ptr[i]
+  ;  ENDFOR
+    
   IF (isBatchFileLoaded(Event)) THEN BEGIN
     ;Get BatchTable
     BatchTable = (*(*global).BatchTable)
@@ -101,14 +101,19 @@ PRO Step3AutomaticRescaling, Event
       'FAILED - Switch to manual mode !'
     text  = 'Switch to Manual Mode.         '
     title = 'Automatic Rescaling FAILED !'
-    result = DIALOG_MESSAGE(text,/ERROR,TITLE=title)
-    
+    dialog_id = widget_info(event.top, find_by_uname='MAIN_BASE_ref_scale')
+    result = DIALOG_MESSAGE(text,$
+      /ERROR,$
+      TITLE=title,$
+      /center,$
+      dialog_parent=dialog_id)
+      
   ENDIF ELSE BEGIN
   
     FOR i=1,(nbrFile-1) DO BEGIN
     
-;      PRINT, 'i: ' + STRCOMPRESS(i) ;remove_me
-      
+      ;      PRINT, 'i: ' + STRCOMPRESS(i) ;remove_me
+    
       idl_send_to_geek_addLogBookText, Event, '--> Working with File # ' + $
         STRCOMPRESS(i,/REMOVE_ALL)
         
@@ -138,10 +143,10 @@ PRO Step3AutomaticRescaling, Event
       flt1_highQ = *flt1_rescale_ptr[i]
       flt2_highQ = *flt2_rescale_ptr[i]
       
-;      PRINT, 'High Q file'
-;      HELP, flt0_highQ ;remove_me
-;      HELP, flt1_highQ ;remove_me
-;      HELP, flt2_highQ ;remove_me
+      ;      PRINT, 'High Q file'
+      ;      HELP, flt0_highQ ;remove_me
+      ;      HELP, flt1_highQ ;remove_me
+      ;      HELP, flt2_highQ ;remove_me
       
       ;determine the working indexes of flt0, flt1 and flt2 for high Q file
       RangeIndexes = getArrayRangeFromQ1Q2(flt0_highQ, Qmin, Qmax) ;_get
@@ -174,10 +179,10 @@ PRO Step3AutomaticRescaling, Event
       flt1_lowQ = *flt1_rescale_ptr[i-1]
       flt2_lowQ = *flt2_rescale_ptr[i-1]
       
-;      PRINT, 'Low Q file'
-;      HELP, flt0_lowQ ;remove_me
-;      HELP, flt1_lowQ ;remove_me
-;      HELP, flt2_lowQ ;remove_me
+      ;      PRINT, 'Low Q file'
+      ;      HELP, flt0_lowQ ;remove_me
+      ;      HELP, flt1_lowQ ;remove_me
+      ;      HELP, flt2_lowQ ;remove_me
       
       ;determine the working indexes of flt0, flt1 and flt2 for low Q file
       RangeIndexes = getArrayRangeFromQ1Q2(flt0_lowQ, Qmin, Qmax) ;_get

@@ -276,9 +276,12 @@ PRO ref_scale_LoadBatchFile, Event
   ;Retrieve global parameters
   PROCESSING = (*global).processing
   ;pop-up dialog pickfile
+  
+  dialog_id = widget_info(event.top, find_by_uname='MAIN_BASE_ref_scale')
   BatchFileName = DIALOG_PICKFILE(TITLE    = 'Pick Batch File to Load ...',$
     PATH     = (*global).BatchDefaultPath,$
     FILTER   = (*global).BatchDefaultFileFilter,$
+    dialog_parent=dialog_id,$
     GET_PATH = new_path,$
     /MUST_EXIST)
     
@@ -343,7 +346,12 @@ PRO ref_scale_LoadBatchFile, Event
     message = ['The loading of ' + BatchFileName + ' did not work !',$
       'Check the Log Book !']
     title   = 'Problem Loading the Batch File!'
-    result = DIALOG_MESSAGE(message,TITLE=title,/ERROR)
+    dialog_id = widget_info(event.top, find_by_uname='MAIN_BASE_ref_scale')
+    result = DIALOG_MESSAGE(message,$
+      TITLE=title,$
+      /error,$
+      /center,$
+      dialog_parent=dialog_id)
   ENDELSE
 END
 
@@ -384,10 +392,12 @@ PRO ref_scale_save_as_batch_file, Event
   new_path        = ''
   batch_extension = (*global).BatchExtension
   
+      dialog_id = widget_info(event.top, find_by_uname='MAIN_BASE_ref_scale')
   BatchFileName   = DIALOG_PICKFILE(FILTER            = filter,$
     GET_PATH          = new_path,$
     PATH              = path,$
     DEFAULT_EXTENSION = batch_extension,$
+    dialog_parent     = dialog_id,$
     /OVERWRITE_PROMPT,$
     /WRITE)
     

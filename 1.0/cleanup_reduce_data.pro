@@ -430,7 +430,7 @@ pro cleanup_reduce_data, event, file_name = file_name
   compile_opt idl2
   
   if (~file_test(file_name)) then return
-
+  
   ;check that the input file does not start with the autocleanup
   ;line
   ;#auto cleaned up: 10%
@@ -476,8 +476,10 @@ pro cleanup_reduce_data, event, file_name = file_name
   if (result eq 0) then begin
     title = 'Cleaning of ' + file_name + ' failed!'
     message_text = 'Program will use un-cleaned data set!'
+    dialog_id = widget_info(event.top, find_by_uname='MAIN_BASE_ref_scale')
     result = dialog_message(message_text,$
       title = title,$
+      dialog_parent=dialog_id,$
       /error,$
       /center)
     ;dialog_parent=dialog_parent)

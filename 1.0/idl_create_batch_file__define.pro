@@ -38,91 +38,96 @@
 
 ;Procedure that will return all the global variables for this routine
 FUNCTION getGlobalVariable, var
-CASE (var) OF
-;number of columns in the Table (active/data/norm/s1/s2...)
-    'ColumnIndexes'         : RETURN, 9 
+  CASE (var) OF
+    ;number of columns in the Table (active/data/norm/s1/s2...)
+    'ColumnIndexes'         : RETURN, 9
     'NbrColumn'             : RETURN, 10
     'RowIndexes'            : RETURN, 19
     'NbrRow'                : RETURN, 20
     'BatchFileHeadingLines' : RETURN, 3
-ELSE:
-ENDCASE
-RETURN, 'NA'
+    ELSE:
+  ENDCASE
+  RETURN, 'NA'
 END
 
 ;------------------------------------------------------------------------------
 ;This function takes the name of the output file to create
 ;and create the Batch output file
 FUNCTION CreateBatchFile, Event, FullFileName, BatchTable
-;get global structure
-id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
-WIDGET_CONTROL,id,GET_UVALUE=global
-
-NbrRow    = (size(BatchTable))(2)
-NbrColumn = (size(BatchTable))(1)
-text      = STRARR(1)
-text[0]   = '#This Batch File has been produced by REFscale ' + $
-  (*global).version
-text      = [text,'#Date : ' + idl_send_to_geek_GenerateIsoTimeStamp()]
-text      = [text,'#Ucams : ' + (*global).ucams] 
-text      = [text,'']
-
-FOR i=0,(NbrRow-1) DO BEGIN
-;add information only if row is not blank
+  ;get global structure
+  id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
+  WIDGET_CONTROL,id,GET_UVALUE=global
+  
+  NbrRow    = (size(BatchTable))(2)
+  NbrColumn = (size(BatchTable))(1)
+  text      = STRARR(1)
+  text[0]   = '#This Batch File has been produced by REFscale ' + $
+    (*global).version
+  text      = [text,'#Date : ' + idl_send_to_geek_GenerateIsoTimeStamp()]
+  text      = [text,'#Ucams : ' + (*global).ucams]
+  text      = [text,'']
+  
+  FOR i=0,(NbrRow-1) DO BEGIN
+    ;add information only if row is not blank
     IF (BatchTable[0,i] NE '') THEN BEGIN
-        
-        IF (BatchTable[0,i] EQ 'NO' OR $
-            BatchTable[0,i] EQ '> NO <') THEN BEGIN
-            FP     = '#'
-            active = 'NO'
-        ENDIF ELSE BEGIN
-            FP     = ''
-            active = 'YES'
-        ENDELSE
-        
-        text    = [text,'#Active : ' + active]
-        k=1
-        text    = [text,'#Data_Runs : '  + BatchTable[k++,i]]
-        text    = [text,'#Norm_Runs : '  + BatchTable[k++,i]]
-        text    = [text,'#EC_Runs : '    + BatchTable[k++,i]]
-        text    = [text,'#Angle(deg) : ' + BatchTable[k++,i]]
-        text    = [text,'#S1(mm) : '     + BatchTable[k++,i]]
-        text    = [text,'#S2(mm) : '     + BatchTable[k++,i]]
-        text    = [text,'#Date : '       + BatchTable[k++,i]]
-        text    = [text,'#SF : '         + $
-                   STRCOMPRESS(BatchTable[k++,i],/REMOVE_ALL)]
-;add --batch flag to command line
-        cmd_array = strsplit(BatchTable[k++,i], 'srun ', /EXTRACT, /REGEX)
-        cmd       = 'srun --batch -o none' + cmd_array[0]
-        text      = [text, FP+cmd]
-        text      = [text, '']
-        
+    
+      IF (BatchTable[0,i] EQ 'NO' OR $
+        BatchTable[0,i] EQ '> NO <') THEN BEGIN
+        FP     = '#'
+        active = 'NO'
+      ENDIF ELSE BEGIN
+        FP     = ''
+        active = 'YES'
+      ENDELSE
+      
+      text    = [text,'#Active : ' + active]
+      k=1
+      text    = [text,'#Data_Runs : '  + BatchTable[k++,i]]
+      text    = [text,'#Norm_Runs : '  + BatchTable[k++,i]]
+      text    = [text,'#EC_Runs : '    + BatchTable[k++,i]]
+      text    = [text,'#Angle(deg) : ' + BatchTable[k++,i]]
+      text    = [text,'#S1(mm) : '     + BatchTable[k++,i]]
+      text    = [text,'#S2(mm) : '     + BatchTable[k++,i]]
+      text    = [text,'#Date : '       + BatchTable[k++,i]]
+      text    = [text,'#SF : '         + $
+        STRCOMPRESS(BatchTable[k++,i],/REMOVE_ALL)]
+      ;add --batch flag to command line
+      cmd_array = strsplit(BatchTable[k++,i], 'srun ', /EXTRACT, /REGEX)
+      cmd       = 'srun --batch -o none' + cmd_array[0]
+      text      = [text, FP+cmd]
+      text      = [text, '']
+      
     ENDIF
-ENDFOR
-
-;put message about process
-LogText = '-> Creating Batch File ... ' + (*global).processing
-idl_send_to_geek_addLogBookText, Event, LogText
-
-file_error = 0
-CATCH, file_error
-IF (file_error NE 0) THEN BEGIN
+  ENDFOR
+  
+  ;put message about process
+  LogText = '-> Creating Batch File ... ' + (*global).processing
+  idl_send_to_geek_addLogBookText, Event, LogText
+  
+  file_error = 0
+  CATCH, file_error
+  IF (file_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     idl_send_to_geek_ReplaceLogBookText, $
       Event, $
       (*global).processing, $
       (*global).failed
     msg = ['SAVE ' + FullFileName + ' FAILED !',$
-           '>> Please Check LogBook <<']
+      '>> Please Check LogBook <<']
     title = 'SAVE PROCESS FAILED'
-    result = DIALOG_MESSAGE(msg,/ERROR, TITLE=title)
+    dialog_id = widget_info(event.top, find_by_uname='MAIN_BASE_ref_scale')
+    result = DIALOG_MESSAGE(msg,$
+      /ERROR, $
+      TITLE=title,$
+      /center,$
+      dialog_parent=dialog_id)
     RETURN, 0
-ENDIF ELSE BEGIN
-;create output file
+  ENDIF ELSE BEGIN
+    ;create output file
     openw,1,FullFileName
     sz = (SIZE(text))(1)
     FOR j=0,(sz-1) DO BEGIN
-        PRINTF, 1, text[j]
+      PRINTF, 1, text[j]
     ENDFOR
     close,1
     free_lun,1
@@ -130,49 +135,49 @@ ENDIF ELSE BEGIN
       Event, $
       (*global).processing, $
       (*global).ok
-ENDELSE
-
-IF (file_error EQ 0) THEN BEGIN
+  ENDELSE
+  
+  IF (file_error EQ 0) THEN BEGIN
     permission_error = 0
     CATCH, permission_error
     IF (permission_error NE 0) THEN BEGIN
-        CATCH,/CANCEL
-        LogText = '-> Change file permission (->755) ... FAILED'
+      CATCH,/CANCEL
+      LogText = '-> Change file permission (->755) ... FAILED'
     ENDIF ELSE BEGIN
-;give execute permission to file created
-        cmd = 'chmod 755 ' + FullFileName
-        spawn, cmd, listening, err_listening
-        IF (err_listening[0] NE '') THEN BEGIN
-            LogText = '-> Change file permission (->755) ... FAILED'
-            idl_send_to_geek_addLogBookText, Event, LogText
-            spawn, 'ls -l ' + FullFileName, listening
-            LogText = '-> ls -l <FileName> : ' + listening
-            idl_send_to_geek_addLogBookText, Event, LogText
-        ENDIF ELSE BEGIN
-            LogText = '-> Change file permission (->755) ... OK'
-            idl_send_to_geek_addLogBookText, Event, LogText
-            (*global).BatchFileName = FullFileName
-        ENDELSE
+      ;give execute permission to file created
+      cmd = 'chmod 755 ' + FullFileName
+      spawn, cmd, listening, err_listening
+      IF (err_listening[0] NE '') THEN BEGIN
+        LogText = '-> Change file permission (->755) ... FAILED'
+        idl_send_to_geek_addLogBookText, Event, LogText
+        spawn, 'ls -l ' + FullFileName, listening
+        LogText = '-> ls -l <FileName> : ' + listening
+        idl_send_to_geek_addLogBookText, Event, LogText
+      ENDIF ELSE BEGIN
+        LogText = '-> Change file permission (->755) ... OK'
+        idl_send_to_geek_addLogBookText, Event, LogText
+        (*global).BatchFileName = FullFileName
+      ENDELSE
     ENDELSE
-ENDIF
-RETURN, 1
+  ENDIF
+  RETURN, 1
 END
 
 
 ;******************************************************************************
 ;***** Class constructor ******************************************************
 FUNCTION idl_create_batch_file::init, Event, BatchFileName, BatchTable
-status = CreateBatchFile(Event, BatchFileName, BatchTable)
-IF (status EQ 0) THEN RETURN, 0
-RETURN,1
+  status = CreateBatchFile(Event, BatchFileName, BatchTable)
+  IF (status EQ 0) THEN RETURN, 0
+  RETURN,1
 END
 
 ;******************************************************************************
 ;******  Class Define ****;****************************************************
 PRO idl_create_batch_file__define
-struct = {idl_create_batch_file,$
-          BatchTable: STRARR(9,20),$
-          value:      ''}
+  struct = {idl_create_batch_file,$
+    BatchTable: STRARR(9,20),$
+    value:      ''}
 END
 ;******************************************************************************
 ;******************************************************************************
