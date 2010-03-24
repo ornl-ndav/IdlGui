@@ -203,12 +203,12 @@ PRO MakeGuiMainBaseComponents, MAIN_BASE, StepsTabSize
     VALUE     = printButtonTitle,$
     SENSITIVE = 0)
     
-  preview = widget_button(button_base,$
-    uname = 'preview_output_file_button',$
-    scr_xsize = 150,$
-    value = 'OUTPUT FILE PREVIEW...',$
-    sensitive = 0)
-    
+;  preview = widget_button(button_base,$
+;    uname = 'preview_output_file_button',$
+;    scr_xsize = 150,$
+;    value = 'OUTPUT FILE PREVIEW...',$
+;    sensitive = 0)
+  
   ;--rescale base
   RescaleBase = WIDGET_BASE(MAIN_BASE,$
     UNAME     = 'RescaleBase',$

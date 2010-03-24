@@ -177,12 +177,12 @@ PRO ProduceOutputFile, Event
     IF (output_error NE 0) THEN BEGIN
       CATCH,/CANCEL
       idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, FAILED
-      ActivateWidget, Event, 'preview_output_file_button', 0
+;      ActivateWidget, Event, 'preview_output_file_button', 0
     ENDIF ELSE BEGIN
       ;create output file name
       createOutputFile, Event, outputFileName, MasterText ;_produce_output
       idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, OK
-      ActivateWidget, Event, 'preview_output_file_button', 1
+;      ActivateWidget, Event, 'preview_output_file_button', 1
     ENDELSE
     idl_send_to_geek_showLastLineLogBook, Event
     
