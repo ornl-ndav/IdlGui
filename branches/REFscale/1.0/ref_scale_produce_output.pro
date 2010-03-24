@@ -60,6 +60,7 @@ pro browse_output_path, event
   if (new_path ne '') then begin
     (*global).BatchDefaultPath = new_path
     putValueInTextField, Event, 'output_path_button', new_path
+    check_previews_button, event
   endif
   
 end
