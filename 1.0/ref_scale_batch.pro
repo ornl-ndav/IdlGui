@@ -240,41 +240,21 @@ FUNCTION batch_repopulate_gui, Event, DRfiles
     ;create SF_array
     create_SF_array, Event
     
-    ;    PRINT, '-> After create_sf_array'
-    ;    flt0_ptr = (*global).flt0_rescale_ptr
-    ;    flt1_ptr = (*global).flt1_rescale_ptr
-    ;    flt2_ptr = (*global).flt2_rescale_ptr
-    ;    nbrFile = (*global).NbrFilesLoaded
-    ;    for i=0,(nbrFile-1) do begin
-    ;      HELP, *flt0_ptr[i]
-    ;      HELP, *flt1_ptr[i]
-    ;      HELP, *flt2_ptr[i]
-    ;      PRINT, '++++++++++++++++++++++++++++++++'
-    ;    ENDFOR
-    ;    PRINT
-    ;
-    ;apply the SF to the data
-    apply_sf_to_data, Event
-    ;    PRINT, '-> After apply_sf_to_data'
-    ;    flt0_ptr = (*global).flt0_rescale_ptr
-    ;    flt1_ptr = (*global).flt1_rescale_ptr
-    ;    flt2_ptr = (*global).flt2_rescale_ptr
-    ;    nbrFile = (*global).NbrFilesLoaded
-    ;    for i=0,(nbrFile-1) do begin
-    ;      HELP, *flt0_ptr[i]
-    ;      HELP, *flt1_ptr[i]
-    ;      HELP, *flt2_ptr[i]
-    ;      PRINT, '++++++++++++++++++++++++++++++++'
-    ;    ENDFOR
-    ;    PRINT
+    ;if there is already a SF, apply it
+    BatchTable = (*(*global).BatchTable)
+    SF_value_0 = BatchTable[8,0]
+    if (SF_value_0 ne '') then begin
+      ;apply the SF to the data
+      apply_sf_to_data, Event
+      ;plot all loaded files
+      PlotLoadedFiles, Event      ;_Plot
+      ;force the axis to start at 0
+      putValueInTextField, Event,'XaxisMinTextField', strcompress(0,/remove_all)
+      plot_loaded_file, Event, 'all' ;_Plot
+    endif else begin ;perform scaling ourselves
+      auto_full_scaling_from_batch_file, Event
+    endelse
     
-    ;plot all loaded files
-    PlotLoadedFiles, Event      ;_Plot
-    
-    ;force the axis to start at 0
-    putValueInTextField, Event,'XaxisMinTextField', strcompress(0,/remove_all)
-    
-    plot_loaded_file, Event, 'all' ;_Plot
     ;activate step2
     (*global).force_activation_step2 = 1
     ;activate step3
