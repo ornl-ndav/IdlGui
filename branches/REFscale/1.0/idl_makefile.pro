@@ -95,7 +95,6 @@ cd, CurrentFolder
 .run ref_scale_batch.pro
 .run idl_parse_command_line__define.pro
 .run auto_full_scaling_from_batch_file.pro
-.run preview_of_output_file.pro
 
 .run ref_scale_cleanup.pro
 .run main_base_event.pro
