@@ -187,28 +187,37 @@ PRO MakeGuiMainBaseComponents, MAIN_BASE, StepsTabSize
     
   RESET_ALL_BUTTON = WIDGET_BUTTON(button_base,$
     UNAME     = 'reset_all_button',$
-    SCR_XSIZE = 130,$
-    VALUE     = 'RESET FULL SESSION',$
+    VALUE     = 'FULL RESET',$
     SENSITIVE = 0)
     
   REFRESH_PLOT_BUTTON = WIDGET_BUTTON(button_base,$
     UNAME     = 'refresh_plot_button',$
-    SCR_XSIZE = 100,$
-    VALUE     = RefreshPlotButtonTitle,$
+    VALUE     = 'REFRESH PLOT',$
     SENSITIVE = 0)
     
   PRINT_BUTTON = WIDGET_BUTTON(button_base,$
     UNAME     = 'print_button',$
-    SCR_XSIZE = PrintButtonSize[2]-35,$
-    VALUE     = printButtonTitle,$
+    VALUE     = 'CREATE OUTPUT FILE',$
     SENSITIVE = 0)
     
-;  preview = widget_button(button_base,$
-;    uname = 'preview_output_file_button',$
-;    scr_xsize = 150,$
-;    value = 'OUTPUT FILE PREVIEW...',$
-;    sensitive = 0)
-  
+  ;email_base
+  email_base = widget_base(button_base,$
+    /row,$
+    frame = 1)
+    
+  group = cw_bgroup(email_base,$
+    ['Y','N'],$
+    /row,$
+    /exclusive,$
+    set_value=1,$
+    uname = 'send_by_email_output',$
+    label_left = 'email output?',$
+    /no_release)
+    
+  button = widget_button(email_base,$
+    uname = 'email_configure',$
+    value = ' Setup... ')
+    
   ;--rescale base
   RescaleBase = WIDGET_BASE(MAIN_BASE,$
     UNAME     = 'RescaleBase',$
