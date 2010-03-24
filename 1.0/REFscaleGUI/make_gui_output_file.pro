@@ -55,20 +55,25 @@ PRO MakeGuiOutputFile, STEPS_TAB, global
   value = widget_text(row2,$
   value = '',$
   /all_events,$
-  scr_xsize = 425,$
+  /editable,$
+  scr_xsize = 385,$
+  event_pro = 'output_file_name_value',$
   uname = 'output_short_file_name')
+  ext = widget_label(row2,$
+  uname = 'output_file_name_extension',$
+  value = '.txt')
   
   ;row3
   row3 = widget_base(base,$
   /row)
   label = widget_label(row3,$
-  value = '    Scaled data file name:')
+  value = '    Scaled data:')
   value = widget_label(row3,$
   value = 'N/A',$
   uname = 'scaled_data_file_name_value',$
   /align_left,$
   frame = 0,$
-  scr_xsize = 272)
+  scr_xsize = 335)
   preview = widget_button(row3,$
   value = 'Preview...',$
   uname = 'scaled_data_file_preview',$
@@ -78,12 +83,12 @@ PRO MakeGuiOutputFile, STEPS_TAB, global
   row4 = widget_base(base,$
   /row)
   label = widget_label(row4,$
-  value = 'Combined scaled data file:')
+  value = 'Combined scaled:')
   value = widget_label(row4,$
   uname = 'combined_scaled_data_file_name_value',$
   value = 'N/A',$
   /align_left,$
-  scr_xsize = 272)
+  scr_xsize = 335)
   preview = widget_button(row4,$
   value = 'Preview...',$
   uname = 'combined_scaled_data_file_preview',$

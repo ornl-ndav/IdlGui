@@ -65,6 +65,39 @@ pro browse_output_path, event
 end
 
 
+;+
+; :Description:
+;   This procedures will update live (as the user is typing) the contain of
+;   the scaled and combined scaled labels file name in the output file tab
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro output_file_name_value, event
+  compile_opt idl2
+  
+  value = getTextfieldValue(event,'output_short_file_name')
+  ext = getTextFieldValue(event,'output_file_name_extension')
+  
+  scaled = value + ext
+  combined_scaled = value + '_combined' + ext
+  
+  putTextFieldValue, event, 'scaled_data_file_name_value', scaled[0]
+  putTextFieldValue, event, 'combined_scaled_data_file_name_value', $
+    combined_scaled[0]
+    
+  ;check_opreviews_button, event  
+    
+end
+
+
+
+
+
+
+
 ;******************************************************************************
 ;this function create the output file name
 ;if CE file name is REF_L_2893.txt
