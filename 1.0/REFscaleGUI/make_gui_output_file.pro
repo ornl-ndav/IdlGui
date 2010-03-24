@@ -44,6 +44,7 @@ PRO MakeGuiOutputFile, STEPS_TAB, global
   output_path = widget_button(base,$
   value = (*global).BatchDefaultPath,$
   scr_xsize = 519,$
+  event_pro = 'browse_output_path',$
   uname = 'output_path_button')
   
   ;row2
