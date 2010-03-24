@@ -269,8 +269,8 @@ file = OBJ_NEW('idlxmlparser', '.REFscale.cfg')
   ;base, and call XMANAGER to manage everything.
   WIDGET_CONTROL, MAIN_BASE_ref_scale, /REALIZE
   WIDGET_CONTROL, MAIN_BASE_ref_scale, SET_UVALUE=global
-  XMANAGER, 'MAIN_BASE_ref_scale', MAIN_BASE_ref_scale, /NO_BLOCK
-  
+  XMANAGER, 'MAIN_BASE_ref_scale', MAIN_BASE_ref_scale, /NO_BLOCK, $
+  cleanup = 'ref_scale_cleanup'
   
   ;------------------------------------------------------------------------------
   ;- BATCH MODE ONLY ------------------------------------------------------------
