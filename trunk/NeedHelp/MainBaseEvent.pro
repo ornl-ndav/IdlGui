@@ -78,6 +78,12 @@ PRO MAIN_BASE_event, Event
       event_button, Event, uname='button8'
     end
     
+    ;send to tab2
+    widget_info(wWidget, find_by_uname='send_to_tab2'): begin
+      id1 = widget_info(event.top, find_by_uname='main_tab')
+      widget_control, id1, set_tab_current = 1
+    end
+    
     ;tab2 ---------------------------------------------------------------------
     
     ;Load Command Line File Button

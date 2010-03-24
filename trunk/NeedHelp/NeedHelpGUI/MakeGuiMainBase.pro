@@ -38,6 +38,7 @@ pro MakeGuiMainBase, MAIN_BASE, global
   main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
   
   tab = widget_tab(MAIN_BASE,$
+    uname = 'main_tab',$
     location=0)
     
   base = widget_base(tab,$ ;tab1 .........................................
