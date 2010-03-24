@@ -52,6 +52,7 @@ PRO display_descriptions_buttons, MAIN_BASE=main_base, EVENT=event, $
     'faq': text = 'faq description'
     'orbiter': text = 'orbiter description'
     'sns': text = 'sns description'
+    'portal': text = 'portal description'
     'neutronsr_us': text = 'neutronsr_us description'
     'translation': text = 'translation description'
     'how_to': text = 'how_to description'
