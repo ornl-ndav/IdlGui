@@ -145,10 +145,15 @@ PRO MAIN_BASE_ref_scale_event, Event
       steps_tab, Event, 1 ;_Tabs
     END
     
-    ;Event of <OUTPUT FILE> button
+    ;Event of <OUTPUT FILE> button - create output file
     WIDGET_INFO(wWidget, FIND_BY_UNAME='print_button'):BEGIN
     ProduceOutputFile, Event ;_produce_output
   END
+  
+    ;preview of output file button
+    widget_info(wWidget, find_by_uname='preview_output_file_button'): begin
+      preview_of_output_file, event
+    end
   
   ;Event triggered by 'Reset X/Y'
   WIDGET_INFO(wWidget, FIND_BY_UNAME='ResetButton'): BEGIN

@@ -181,10 +181,10 @@ PRO MakeGuiMainBaseComponents, MAIN_BASE, StepsTabSize
   ;//////////////////////////////////////////////////////////////////////////////
     
   button_base = widget_base(MAIN_BASE,$
-  xoffset = ResetAllButtonSize[0],$
-  yoffset = ResetAllButtonSize[1],$
-  /row)
-  
+    xoffset = ResetAllButtonSize[0],$
+    yoffset = ResetAllButtonSize[1],$
+    /row)
+    
   RESET_ALL_BUTTON = WIDGET_BUTTON(button_base,$
     UNAME     = 'reset_all_button',$
     SCR_XSIZE = 130,$
@@ -204,10 +204,10 @@ PRO MakeGuiMainBaseComponents, MAIN_BASE, StepsTabSize
     SENSITIVE = 0)
     
   preview = widget_button(button_base,$
-  uname = 'preview_output_file_button',$
-  scr_xsize = 150,$
-  value = 'OUTPUT FILE PREVIEW...',$
-  sensitive = 0)  
+    uname = 'preview_output_file_button',$
+    scr_xsize = 150,$
+    value = 'OUTPUT FILE PREVIEW...',$
+    sensitive = 0)
     
   ;--rescale base
   RescaleBase = WIDGET_BASE(MAIN_BASE,$
@@ -335,30 +335,30 @@ PRO MakeGuiMainBaseComponents, MAIN_BASE, StepsTabSize
     
   ;Settings Label ---------------------------------------------------------------
   wSettingsLabel = WIDGET_LABEL(wSettingsBase,$
-                                XOFFSET = sSettingsLabel.size[0]+10,$
-                                YOFFSET = sSettingsLabel.size[1]+5,$
-                                VALUE   = sSettingsLabel.value,$
-                                FRAME   = sSettingsLabel.frame)
+    XOFFSET = sSettingsLabel.size[0]+10,$
+    YOFFSET = sSettingsLabel.size[1]+5,$
+    VALUE   = sSettingsLabel.value,$
+    FRAME   = sSettingsLabel.frame)
     
   auto_clean_base = widget_base(wSettingsBase,$
     /row,$
     xoffset = sDataToRemoveLabel.size[0],$
     yoffset = sDataToRemoveLabel.size[1]-10,$
     /align_center)
-;    scr_ysize = 40)
-
+  ;    scr_ysize = 40)
+    
   group = cw_bgroup(auto_clean_base,$
-  ['Yes','No'],$
-  /row,$
-  label_left = 'Auto Cleanning:',$
-  uname = 'auto_cleaning_data_cw_bgroup',$
-  set_value = 0,$
-  /exclusive)
-  
+    ['Yes','No'],$
+    /row,$
+    label_left = 'Auto Cleanning:',$
+    uname = 'auto_cleaning_data_cw_bgroup',$
+    set_value = 0,$
+    /exclusive)
+    
   button = widget_button(auto_clean_base,$
-  value = '  CONFIGURE ...  ',$
-  uname = 'auto_cleaning_data_configure_button',$
-  sensitive = 1)
+    value = '  CONFIGURE ...  ',$
+    uname = 'auto_cleaning_data_configure_button',$
+    sensitive = 1)
     
   ;Show Error Bars --------------------------------------------------------------
   wShowErrorBarGroup = CW_BGROUP(wSettingsBase,$
@@ -386,19 +386,19 @@ PRO MakeGuiMainBaseComponents, MAIN_BASE, StepsTabSize
     /EDITABLE,$
     /ALIGN_LEFT)
     
- ;;Data to Remove ---------------------------------------------------------------
- ; wDataToRemoveLabel = WIDGET_LABEL(wSettingsBase,$
- ;   XOFFSET = sDataToRemoveLabel.size[0],$
- ;   YOFFSET = sDataToRemoveLabel.size[1],$
- ;   VALUE   = sDataToRemoveLabel.value)
- ; wDataToRemoveText = WIDGET_TEXT(wSettingsBase,$
- ;   UNAME     = sDataToRemoveText.uname,$
- ;   XOFFSET   = sDataToRemoveText.size[0],$
- ;   YOFFSET   = sDataToRemoveText.size[1],$
- ;   SCR_XSIZE = sDataToRemoveText.size[2],$
- ;   VALUE     = sDataToRemoveText.value,$
- ;   /EDITABLE,$
- ;   /ALIGN_LEFT)
+;;Data to Remove ---------------------------------------------------------------
+; wDataToRemoveLabel = WIDGET_LABEL(wSettingsBase,$
+;   XOFFSET = sDataToRemoveLabel.size[0],$
+;   YOFFSET = sDataToRemoveLabel.size[1],$
+;   VALUE   = sDataToRemoveLabel.value)
+; wDataToRemoveText = WIDGET_TEXT(wSettingsBase,$
+;   UNAME     = sDataToRemoveText.uname,$
+;   XOFFSET   = sDataToRemoveText.size[0],$
+;   YOFFSET   = sDataToRemoveText.size[1],$
+;   SCR_XSIZE = sDataToRemoveText.size[2],$
+;   VALUE     = sDataToRemoveText.value,$
+;   /EDITABLE,$
+;   /ALIGN_LEFT)
     
 END
 
