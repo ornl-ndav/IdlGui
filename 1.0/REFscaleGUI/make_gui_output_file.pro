@@ -76,6 +76,7 @@ PRO MakeGuiOutputFile, STEPS_TAB, global
   scr_xsize = 335)
   preview = widget_button(row3,$
   value = 'Preview...',$
+  event_pro = 'preview_of_scaled_data_file',$
   uname = 'scaled_data_file_preview',$
   sensitive = 0)
 
