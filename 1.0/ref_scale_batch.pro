@@ -283,6 +283,7 @@ PRO ref_scale_LoadBatchFile, Event
     /MUST_EXIST)
     
   IF (BatchFileName NE '') THEN BEGIN
+    reset_all_button, Event ;full reset of the session
     (*global).BatchFileName = BatchFileName
     LogText = '> Loading Batch File:'
     idl_send_to_geek_addLogBookText, Event, LogText
