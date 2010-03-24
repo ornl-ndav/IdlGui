@@ -131,9 +131,62 @@ pro check_previews_button, event
 end
 
 
+;+
+; :Description:
+;   will used the xdisplayfile and show the contain of the scaled data file
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro preview_of_scaled_data_file, event
+  compile_opt idl2
+  
+  file_name = getTextFieldValue(event, 'scaled_data_file_name_value')
+  preview_of_file, event, file_name[0]
+  
+end
 
+;+
+; :Description:
+;   will used the xdisplayfile and show the contain of the combined
+;   scaled data file
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro preview_of_combined_scaled_data_file, event
+  compile_opt idl2
+  
+  file_name = getTextFieldValue(event, 'combined_scaled_data_file_name_value')
+  preview_of_file, event, file_name[0]
+  
+end
 
-
+;+
+; :Description:
+;   using xdisplayfile, display preview of file name
+;
+; :Params:
+;    event
+;    file_name
+;
+; :Author: j35
+;-
+pro preview_of_file, event, file_name
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  path = (*global).BatchDefaultPath
+  file_name = path + file_name
+  id = widget_info(event.top,find_by_uname='MAIN_BASE_ref_scale')
+  xdisplayfile, file_name, group=id,$
+    title = 'Preview of ' + file_name
+    
+end
 
 
 
