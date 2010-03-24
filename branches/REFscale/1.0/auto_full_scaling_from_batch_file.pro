@@ -32,71 +32,49 @@
 ;
 ;==============================================================================
 
-;define path to dependencies and current folder
-spawn, 'pwd', CurrentFolder
-IdlUtilitiesPath = "/utilities"
-
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-cd, CurrentFolder + IdlUtilitiesPath
-.run system_utilities.pro
-.run logger.pro
-.run IDLxmlParser__define.pro
-.run get.pro
-.run IDLxmlParser_define.pro
-
-;Build REFscale GUI
-cd, CurrentFolder + '/REFscaleGUI/'
-.run make_gui_step1.pro
-.run make_gui_step2.pro
-.run make_gui_step3.pro
-.run make_gui_output_file.pro
-.run make_gui_batch.pro
-.run make_gui_main_base_components.pro
-.run make_gui_log_book.pro
-
-;Build main procedures
-cd, CurrentFolder
-.run ref_scale_get.pro
-.run array_delete.pro
-.run ref_scale_arrays.pro
-.run number_formatter.pro
-.run get_numeric.pro
-.run ref_scale_put.pro
-.run ref_scale_is.pro
-.run idl_send_to_geek.pro
-.run idl_get_metadata__define.pro
-
-.run ref_scale_utility.pro
-.run ref_scale_gui.pro
-.run ref_scale_fit.pro
-.run ref_scale_step3.pro
-.run ref_scale_math.pro
-.run ref_scale_file_utility.pro
-.run ref_scale_tof_to_q.pro
-
-;auto cleaning of data
-.run cleanup_reduce_data.pro
-.run auto_cleaning_data_cw_bgroup.pro
-.run configure_auto_cleanup.pro
-
-.run ref_scale_openfile.pro
-.run ref_scale_plot_subroutines.pro
-.run ref_scale_plot.pro
-.run ref_scale_plot_loaded_files.pro
-.run ref_scale_load.pro
-.run ref_scale_step2.pro
-.run ref_scale_produce_output.pro
-.run ref_scale_tabs.pro
-
-;Batch
-.run idl_load_batch_file__define.pro
-.run idl_create_batch_file__define.pro
-.run ref_scale_batch.pro
-.run idl_parse_command_line__define.pro
-.run auto_full_scaling_from_batch_file.pro
-
-.run main_base_event.pro
-.run ref_scale_eventcb.pro
-.run ref_scale.pro
-
+;+
+; :Description:
+;   This procedures is reached when a batch file has been loaded without
+;   a scaling factor (SF) value for the critical edge (CE) file.
+;   the procedures is going to determine the CE range (min Q -> 0.009),
+;   scale to 1 and scale automatically the following files
+;
+; :Params:
+;    Event
+;;
+; :Author: j35
+;-
+pro auto_full_scaling_from_batch_file, Event
+  compile_opt idl2
+  
+  widget_control, Event.top, get_uvalue=global
+  
+  PlotLoadedFiles, Event      ;_Plot
+  
+  BatchTable       = (*(*global).BatchTable)
+  NbrRowMax        = (SIZE(batchTable))[2]
+  flt0_ptr         = (*global).flt0_ptr
+  flt1_ptr         = (*global).flt1_ptr
+  
+  ;work on CE file (determine Q range to use to average y range to 1)
+  x_axis_ce_file = *flt0_ptr[0]
+  qmin = float(x_axis_ce_file[0])
+  qmax = float(x_axis_ce_file[n_elements(x_axis_ce_file)-1]) < 0.009
+  
+  putValueInTextField, event, 'step2_q1_text_field', qmin
+  putValueInTextField, event, 'step2_q2_text_field', qmax
+  run_full_step2, Event ;_Step2
+  
+  ;change scale to log and replot
+  id = widget_info(event.top, find_by_uname='YaxisLinLog')
+  widget_control, id, set_value=1
+  
+  ;automatic scaling of other files
+  Step3AutomaticRescaling, Event ;_Step3
+  
+  PlotLoadedFiles, Event      ;_Plot
+  ;force the axis to start at 0
+  putValueInTextField, Event,'XaxisMinTextField', strcompress(0,/remove_all)
+  plot_loaded_file, Event, 'all' ;_Plot
+  
+end
