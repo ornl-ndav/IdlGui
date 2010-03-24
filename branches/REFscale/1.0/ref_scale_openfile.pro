@@ -37,30 +37,32 @@
 
 ;This function displays the OPEN FILE from IDL
 FUNCTION OpenFile, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
-widget_control,id,get_uvalue=global
-
-dMDAngleBaseId = widget_info(event.top,find_by_uname='dMD_angle_base')
-widget_control, dMDAngleBaseId, map=0
-
-title    = 'Select file:'
-filter   = '*' + (*global).file_extension
-pid_path = (*global).input_path
-
-;open file
-FullFileName = dialog_pickfile(PATH     = pid_path,$
-                               GET_PATH = path,$
-                               TITLE    = title,$
-                               FILTER   = filter)
-
-IF (FullFileName NE '') THEN BEGIN
+  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
+  widget_control,id,get_uvalue=global
+  
+  dMDAngleBaseId = widget_info(event.top,find_by_uname='dMD_angle_base')
+  widget_control, dMDAngleBaseId, map=0
+  
+  title    = 'Select file:'
+  filter   = '*' + (*global).file_extension
+  pid_path = (*global).input_path
+  
+  ;open file
+  dialog_id = widget_info(event.top, find_by_uname='MAIN_BASE_ref_scale')
+  FullFileName = dialog_pickfile(PATH     = pid_path,$
+    GET_PATH = path,$
+    dialog_parent = dialog_id, $
+    TITLE    = title,$
+    FILTER   = filter)
     
-;redefine the working path
+  IF (FullFileName NE '') THEN BEGIN
+  
+    ;redefine the working path
     path = define_new_default_working_path(Event,FullFileName)
-
-ENDIF
-
-RETURN, FullFileName
+    
+  ENDIF
+  
+  RETURN, FullFileName
 END
 
 ;##############################################################################
@@ -68,28 +70,28 @@ END
 
 ;This function is going to open and store the new fresh open files
 FUNCTION StoreFlts, Event, LongFileName, index
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
-widget_control,id,get_uvalue=global
-
-IF (index EQ 0) THEN BEGIN
+  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
+  widget_control,id,get_uvalue=global
+  
+  IF (index EQ 0) THEN BEGIN
     metadata_CE_file = (*(*global).metadata_CE_file)
-ENDIF
-
-error_plot_status = 0
-catch, error_plot_status
-IF (error_plot_status NE 0) THEN BEGIN
-    
+  ENDIF
+  
+  error_plot_status = 0
+  catch, error_plot_status
+  IF (error_plot_status NE 0) THEN BEGIN
+  
     CATCH,/CANCEL
     text = 'ERROR plotting data'
     displayErrorMessage, Event, text ;_Gui
     RETURN, 0
-
-ENDIF ELSE BEGIN
     
+  ENDIF ELSE BEGIN
+  
     openr,u,LongFileName,/get
     fs = fstat(u)
     
-;define an empty string variable to hold results from reading the file
+    ;define an empty string variable to hold results from reading the file
     tmp  = ''
     tmp0 = ''
     tmp1 = ''
@@ -105,106 +107,114 @@ ENDIF ELSE BEGIN
     onebyte = 0b
     
     WHILE (NOT eof(u)) DO BEGIN
+    
+      readu,u,onebyte         ;,format='(a1)'
+      fs = fstat(u)
+      ;print,'onebyte: ',onebyte
+      ;rewinded file pointer one character
+      
+      IF (fs.cur_ptr EQ 0) THEN BEGIN
+        point_lun,u,0
+      ENDIF ELSE BEGIN
+        point_lun,u,fs.cur_ptr - 1
+      ENDELSE
+      
+      true = 1
+      CASE true OF
+      
+        ((onebyte LT 48) OR (onebyte GT 57)): BEGIN
+          ;case where we have non-numbers
         
-        readu,u,onebyte         ;,format='(a1)'
-        fs = fstat(u)
-                                ;print,'onebyte: ',onebyte
-                                ;rewinded file pointer one character
+          Nelines = Nelines + 1
+          readf,u,tmp
+          
+          IF (index EQ 0) THEN BEGIN
+            metadata_CE_file = [metadata_CE_file,tmp]
+          ENDIF
+          
+        END
         
-        IF (fs.cur_ptr EQ 0) THEN BEGIN 
-            point_lun,u,0
-        ENDIF ELSE BEGIN
-            point_lun,u,fs.cur_ptr - 1
-        ENDELSE
+        ELSE: BEGIN         ;case where we (should) have data
         
-        true = 1
-        CASE true OF
-            
-            ((onebyte LT 48) OR (onebyte GT 57)): BEGIN 
-;case where we have non-numbers
-                
-                Nelines = Nelines + 1
-                readf,u,tmp
-                
-                IF (index EQ 0) THEN BEGIN
-                    metadata_CE_file = [metadata_CE_file,tmp]
-                ENDIF
-                
-            END
-            
-            ELSE: BEGIN         ;case where we (should) have data
-                
-                Ndlines = Ndlines + 1
-                                ;print,'Data Line: ',Ndlines
-                
-                catch, Error_Status
-                IF Error_status NE 0 THEN BEGIN ;you're done now...
-                    CATCH, /CANCEL
-                ENDIF ELSE BEGIN
-                    readf,u,tmp0,tmp1,tmp2,format='(3F0)' ;
-                    flt0 = [flt0,float(tmp0)] ;x axis
-                    flt1 = [flt1,float(tmp1)] ;y axis
-                    flt2 = [flt2,float(tmp2)] ;y_error axis
-                ENDELSE
-            END
-            
-        ENDCASE
+          Ndlines = Ndlines + 1
+          ;print,'Data Line: ',Ndlines
+          
+          catch, Error_Status
+          IF Error_status NE 0 THEN BEGIN ;you're done now...
+            CATCH, /CANCEL
+          ENDIF ELSE BEGIN
+            readf,u,tmp0,tmp1,tmp2,format='(3F0)' ;
+            flt0 = [flt0,float(tmp0)] ;x axis
+            flt1 = [flt1,float(tmp1)] ;y axis
+            flt2 = [flt2,float(tmp2)] ;y_error axis
+          ENDELSE
+        END
         
+      ENDCASE
+      
     ENDWHILE
     
-;strip -1 from beginning of each array
+    ;strip -1 from beginning of each array
     flt0 = flt0[1:*]
     flt1 = flt1[1:*]
     flt2 = flt2[1:*]
     
     close,u
     free_lun,u
-
-;check that flt1 is not empty
-    sz = (size(flt1))(1)  
+    
+    ;check that flt1 is not empty
+    sz = (size(flt1))(1)
     IF (sz LE 1) THEN BEGIN
-        message_text = ['ERROR loading ' + LongFileName,$
-                        'File is probably empty !']
-        title        = 'ERROR !'
-        result = DIALOG_MESSAGE(message_text,TITLE=title)
-        RETURN, 0
-    ENDIF 
-
-;check that flt1 is not only 0 or NAN
+      message_text = ['ERROR loading ' + LongFileName,$
+        'File is probably empty !']
+      title        = 'ERROR !'
+      dialog_id = widget_info(event.top, find_by_uname='MAIN_BASE_ref_scale')
+      result = DIALOG_MESSAGE(message_text,$
+        TITLE=title,$
+        dialog_parent=dialog_id,$
+        /center)
+      RETURN, 0
+    ENDIF
+    
+    ;check that flt1 is not only 0 or NAN
     real_data_array = WHERE(flt1 GT 0, nbr)
     IF (nbr EQ 0) THEN BEGIN
-        message_text = ['ERROR loading ' + LongFileName,$
-                        'File is probably empty !']
-        title        = 'ERROR !'
-        result = DIALOG_MESSAGE(message_text,TITLE=title)
-        RETURN, 0
-    ENDIF 
+      message_text = ['ERROR loading ' + LongFileName,$
+        'File is probably empty !']
+      title        = 'ERROR !'
+      dialog_id = widget_info(event.top, find_by_uname='MAIN_BASE_ref_scale')
+      result = DIALOG_MESSAGE(message_text,$
+        TITLE=title,$
+        /center,$
+        dialog_parent=dialog_id)
+      RETURN, 0
+    ENDIF
     
     DEVICE, DECOMPOSED = 0
     loadct,5,/SILENT
     
-;check if input is TOF or Q
+    ;check if input is TOF or Q
     isTOFvalidated = getButtonValidated(Event,'InputFileFormat')
     
     IF(isTOFvalidated EQ '0') THEN BEGIN ;input file is in TOF
-        
-;Converts the data from TOF to Q
-        (*(*global).flt0_xaxis) = flt0
-        angleValue = (*global).angleValue
-        convert_TOF_to_Q, Event, angleValue
-        flt0 = (*(*global).flt0_xaxis)
-        
+    
+      ;Converts the data from TOF to Q
+      (*(*global).flt0_xaxis) = flt0
+      angleValue = (*global).angleValue
+      convert_TOF_to_Q, Event, angleValue
+      flt0 = (*(*global).flt0_xaxis)
+      
     ENDIF
     
-;remove last 4 lines of metadata_CE_only and
-;store metadata_CE_file for index 0 only
+    ;remove last 4 lines of metadata_CE_only and
+    ;store metadata_CE_file for index 0 only
     IF (index EQ 0) THEN BEGIN
-        size = (size(metadata_CE_file))(1)
-        metadata_CE_file = metadata_CE_file[0:size-5]
-        (*(*global).metadata_CE_file) = metadata_CE_file
+      size = (size(metadata_CE_file))(1)
+      metadata_CE_file = metadata_CE_file[0:size-5]
+      (*(*global).metadata_CE_file) = metadata_CE_file
     ENDIF
     
-;store flt0, ftl1 and flt2 in ptrarr
+    ;store flt0, ftl1 and flt2 in ptrarr
     flt0_ptr = (*global).flt0_ptr
     flt0_rescale_ptr = (*global).flt0_rescale_ptr
     *flt0_ptr[index] = flt0
@@ -226,7 +236,7 @@ ENDIF ELSE BEGIN
     (*global).flt2_ptr = flt2_ptr
     (*global).flt2_rescale_ptr = flt2_rescale_ptr
     
-ENDELSE
-
-RETURN, 1
+  ENDELSE
+  
+  RETURN, 1
 END
