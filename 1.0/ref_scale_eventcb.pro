@@ -63,6 +63,7 @@ putValueInLabel, Event, 'output_file_name_label_dynmaic', '';_put
 putValueInLabel, Event, 'output_file_text_field', '' ;_put
 ;ActivateSettingsBase, Event, 0 ;_gui
 ResetBatch, Event ;_batch
+ActivateWidget, Event, 'preview_output_file_button', 0 ;preview button
 idl_send_to_geek_addLogBookText, Event, '> Reset Full Session' 
 END
 
