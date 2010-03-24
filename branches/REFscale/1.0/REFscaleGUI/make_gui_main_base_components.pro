@@ -180,32 +180,34 @@ PRO MakeGuiMainBaseComponents, MAIN_BASE, StepsTabSize
   ;                               Build GUI
   ;//////////////////////////////////////////////////////////////////////////////
     
-  RESET_ALL_BUTTON = WIDGET_BUTTON(MAIN_BASE,$
+  button_base = widget_base(MAIN_BASE,$
+  xoffset = ResetAllButtonSize[0],$
+  yoffset = ResetAllButtonSize[1],$
+  /row)
+  
+  RESET_ALL_BUTTON = WIDGET_BUTTON(button_base,$
     UNAME     = 'reset_all_button',$
-    XOFFSET   = ResetAllButtonSize[0],$
-    YOFFSET   = ResetAllButtonSize[1],$
-    SCR_XSIZE = ResetAllButtonSize[2],$
-    SCR_YSIZE = ResetAllButtonSize[3],$
+    SCR_XSIZE = 130,$
     VALUE     = 'RESET FULL SESSION',$
     SENSITIVE = 0)
     
-  REFRESH_PLOT_BUTTON = WIDGET_BUTTON(MAIN_BASE,$
+  REFRESH_PLOT_BUTTON = WIDGET_BUTTON(button_base,$
     UNAME     = 'refresh_plot_button',$
-    XOFFSET   = RefreshPlotSize[0],$
-    YOFFSET   = RefreshPlotSize[1],$
-    SCR_XSIZE = RefreshPlotSize[2],$
-    SCR_YSIZE = RefreshPlotSize[3],$
+    SCR_XSIZE = 100,$
     VALUE     = RefreshPlotButtonTitle,$
     SENSITIVE = 0)
     
-  PRINT_BUTTON = WIDGET_BUTTON(MAIN_BASE,$
+  PRINT_BUTTON = WIDGET_BUTTON(button_base,$
     UNAME     = 'print_button',$
-    XOFFSET   = PrintButtonSize[0],$
-    YOFFSET   = PrintButtonSize[1],$
-    SCR_XSIZE = PrintButtonSize[2],$
-    SCR_YSIZE = PrintButtonSize[3],$
+    SCR_XSIZE = PrintButtonSize[2]-35,$
     VALUE     = printButtonTitle,$
     SENSITIVE = 0)
+    
+  preview = widget_button(button_base,$
+  uname = 'preview_output_file_button',$
+  scr_xsize = 150,$
+  value = 'OUTPUT FILE PREVIEW...',$
+  sensitive = 0)  
     
   ;--rescale base
   RescaleBase = WIDGET_BASE(MAIN_BASE,$
