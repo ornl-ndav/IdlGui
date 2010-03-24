@@ -184,7 +184,8 @@ pro preview_of_file, event, file_name
   file_name = path + file_name
   id = widget_info(event.top,find_by_uname='MAIN_BASE_ref_scale')
   xdisplayfile, file_name, group=id,$
-    title = 'Preview of ' + file_name
+    title = 'Preview of ' + file_name, $
+    /center
     
 end
 
