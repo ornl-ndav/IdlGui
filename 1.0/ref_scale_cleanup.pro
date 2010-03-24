@@ -32,72 +32,50 @@
 ;
 ;==============================================================================
 
-;define path to dependencies and current folder
-spawn, 'pwd', CurrentFolder
-IdlUtilitiesPath = "/utilities"
+;+
+; :Description:
+;   This routine cleanup all the pointers from the main program and is
+;   reached when the application is exited.
+;
+; :Params:
+;    tlb
+;
+; :Author: j35
+;-
+pro ref_scale_cleanup, tlb
+  compile_opt idl2
+  
+  widget_control, tlb, get_uvalue=global, /no_copy
 
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-cd, CurrentFolder + IdlUtilitiesPath
-.run system_utilities.pro
-.run logger.pro
-.run IDLxmlParser__define.pro
-.run get.pro
-.run IDLxmlParser_define.pro
-
-;Build REFscale GUI
-cd, CurrentFolder + '/REFscaleGUI/'
-.run make_gui_step1.pro
-.run make_gui_step2.pro
-.run make_gui_step3.pro
-.run make_gui_output_file.pro
-.run make_gui_batch.pro
-.run make_gui_main_base_components.pro
-.run make_gui_log_book.pro
-
-;Build main procedures
-cd, CurrentFolder
-.run ref_scale_get.pro
-.run array_delete.pro
-.run ref_scale_arrays.pro
-.run number_formatter.pro
-.run get_numeric.pro
-.run ref_scale_put.pro
-.run ref_scale_is.pro
-.run idl_send_to_geek.pro
-.run idl_get_metadata__define.pro
-
-.run ref_scale_utility.pro
-.run ref_scale_gui.pro
-.run ref_scale_fit.pro
-.run ref_scale_step3.pro
-.run ref_scale_math.pro
-.run ref_scale_file_utility.pro
-.run ref_scale_tof_to_q.pro
-
-;auto cleaning of data
-.run cleanup_reduce_data.pro
-.run auto_cleaning_data_cw_bgroup.pro
-.run configure_auto_cleanup.pro
-
-.run ref_scale_openfile.pro
-.run ref_scale_plot_subroutines.pro
-.run ref_scale_plot.pro
-.run ref_scale_plot_loaded_files.pro
-.run ref_scale_load.pro
-.run ref_scale_step2.pro
-.run ref_scale_produce_output.pro
-.run ref_scale_tabs.pro
-
-;Batch
-.run idl_load_batch_file__define.pro
-.run idl_create_batch_file__define.pro
-.run ref_scale_batch.pro
-.run idl_parse_command_line__define.pro
-.run auto_full_scaling_from_batch_file.pro
-
-.run ref_scale_cleanup.pro
-.run main_base_event.pro
-.run ref_scale_eventcb.pro
-.run ref_scale.pro
-
+  if (n_elements(global) eq 0) then return
+  
+  ;free up the pointers of the global pointer
+  ptr_free, (*global).BatchTable
+  ptr_free, (*global).flt0_ptr
+  ptr_free, (*global).flt1_ptr
+  ptr_free, (*global).flt2_ptr
+  ptr_free, (*global).flt0_rescale_ptr
+  ptr_free, (*global).flt1_rescale_ptr
+  ptr_free, (*global).flt2_rescale_ptr
+  ptr_free, (*global).fit_cooef_ptr
+  ptr_free, (*global).flt0_range
+  ptr_free, (*global).XYMinMax
+  ptr_free, (*global).CEcooef
+  ptr_free, (*global).flt0_CE_range
+  ptr_free, (*global).metadata_CE_file
+  ptr_free, (*global).flt0_xaxis
+  ptr_free, (*global).flt1_yaxis
+  ptr_free, (*global).flt2_yaxis_err
+  ptr_free, (*global).FileHistory
+  ptr_free, (*global).list_of_files
+  ptr_free, (*global).Q1_array
+  ptr_free, (*global).Q2_array
+  ptr_free, (*global).SF_array
+  ptr_free, (*global).angle_array
+  ptr_free, (*global).color_array
+  ptr_free, (*global).Qmin_array
+  ptr_free, (*global).Qmax_array
+  ptr_free, (*global).ListOfLongFileName
+  ptr_free, global
+  
+end
