@@ -32,50 +32,108 @@
 ;
 ;==============================================================================
 
-PRO MakeGuiOutputFile, STEPS_TAB, Step1Size
-                       
-OutputFileNameLabelStaticSize  = [5,8]
-OutputfileNameLabelDynamicSize = [115,3,400]
+PRO MakeGuiOutputFile, STEPS_TAB, global
 
-OutputFileTextFieldsize        = [ 5, 5+38, 515, 365-35]
-OutputFileTitle                = 'OUTPUT FILE'
-OutputFileNameLabelStaticTitle = 'Output file name:'
+  output_base = widget_base(steps_tab,$
+    uname = 'output_file_base',$
+    title = 'Output File')
+  
+  base = widget_base(output_base,$
+  /column)
+  
+  output_path = widget_button(base,$
+  value = (*global).BatchDefaultPath,$
+  scr_xsize = 519,$
+  uname = 'output_path_button')
+  
+  ;row2
+  row2 = widget_base(base,$
+  /row)
+  label = widget_label(row2,$
+  value = 'Raw file name:')
+  value = widget_text(row2,$
+  value = '',$
+  /all_events,$
+  scr_xsize = 425,$
+  uname = 'output_short_file_name')
+  
+  ;row3
+  row3 = widget_base(base,$
+  /row)
+  label = widget_label(row3,$
+  value = '    Scaled data file name:')
+  value = widget_label(row3,$
+  value = 'N/A',$
+  uname = 'scaled_data_file_name_value',$
+  /align_left,$
+  frame = 0,$
+  scr_xsize = 272)
+  preview = widget_button(row3,$
+  value = 'Preview...',$
+  uname = 'scaled_data_file_preview',$
+  sensitive = 0)
 
-;Build GUI
-OutputFile_BASE = WIDGET_BASE(STEPS_TAB,$
-                              UNAME     = 'output_file_base',$
-                              TITLE     = OutputFileTitle,$
-                              XOFFSET   = Step1Size[0],$
-                              YOFFSET   = Step1Size[1],$
-                              SCR_XSIZE = Step1Size[2],$
-                              SCR_YSIZE = Step1Size[3],$
-                              MAP       = 1)
-
-OutputFileNameLabelStatic = $
-  WIDGET_LABEL(OutputFile_base,$
-               XOFFSET = OutputFileNameLabelStaticSize[0],$
-               YOFFSET = OutputFileNameLabelStaticSize[1],$
-               VALUE   = OutputFileNameLabelStaticTitle)
-
-OutputFileNameLabelDynamic = $
-  WIDGET_TEXT(OutputFile_base,$
-              XOFFSET   = OutputFileNameLabelDynamicSize[0],$
-              YOFFSET   = OutputFileNameLabelDynamicSize[1],$
-              SCR_XSIZE = OutputFileNameLabelDynamicSize[2],$
-              UNAME     = 'output_file_name_label_dynmaic',$
-              VALUE     = '',$
-              FRAME     = 1,$
-              /EDITABLE,$
-              /ALIGN_LEFT)
-
-OutputFileTextfield = WIDGET_TEXT(OutputFile_base,$
-                                  UNAME     = 'output_file_text_field',$
-                                  XOFFSET   = OutputFileTextFieldSize[0],$
-                                  YOFFSET   = OutputFileTextFieldSize[1],$
-                                  SCR_XSIZE = OutputFileTextFieldSize[2],$
-                                  SCR_YSIZE = OutputFileTextFieldsize[3],$
-                                  /SCROLL)
-                                  
+  ;row3
+  row4 = widget_base(base,$
+  /row)
+  label = widget_label(row4,$
+  value = 'Combined scaled data file:')
+  value = widget_label(row4,$
+  uname = 'combined_scaled_data_file_name_value',$
+  value = 'N/A',$
+  /align_left,$
+  scr_xsize = 272)
+  preview = widget_button(row4,$
+  value = 'Preview...',$
+  uname = 'combined_scaled_data_file_preview',$
+  sensitive = 0)
+  
+  end
+  
+    pro tmp
+    
+  OutputFileNameLabelStaticSize  = [5,8]
+  OutputfileNameLabelDynamicSize = [115,3,400]
+  
+  OutputFileTextFieldsize        = [ 5, 5+38, 515, 365-35]
+  OutputFileTitle                = 'OUTPUT FILE'
+  OutputFileNameLabelStaticTitle = 'Output file name:'
+  
+  ;Build GUI
+  OutputFile_BASE = WIDGET_BASE(STEPS_TAB,$
+    UNAME     = 'output_file_base',$
+    TITLE     = OutputFileTitle,$
+    XOFFSET   = Step1Size[0],$
+    YOFFSET   = Step1Size[1],$
+    SCR_XSIZE = Step1Size[2],$
+    SCR_YSIZE = Step1Size[3],$
+    MAP       = 1)
+    
+  OutputFileNameLabelStatic = $
+    WIDGET_LABEL(OutputFile_base,$
+    XOFFSET = OutputFileNameLabelStaticSize[0],$
+    YOFFSET = OutputFileNameLabelStaticSize[1],$
+    VALUE   = OutputFileNameLabelStaticTitle)
+    
+  OutputFileNameLabelDynamic = $
+    WIDGET_TEXT(OutputFile_base,$
+    XOFFSET   = OutputFileNameLabelDynamicSize[0],$
+    YOFFSET   = OutputFileNameLabelDynamicSize[1],$
+    SCR_XSIZE = OutputFileNameLabelDynamicSize[2],$
+    UNAME     = 'output_file_name_label_dynmaic',$
+    VALUE     = '',$
+    FRAME     = 1,$
+    /EDITABLE,$
+    /ALIGN_LEFT)
+    
+  OutputFileTextfield = WIDGET_TEXT(OutputFile_base,$
+    UNAME     = 'output_file_text_field',$
+    XOFFSET   = OutputFileTextFieldSize[0],$
+    YOFFSET   = OutputFileTextFieldSize[1],$
+    SCR_XSIZE = OutputFileTextFieldSize[2],$
+    SCR_YSIZE = OutputFileTextFieldsize[3],$
+    /SCROLL)
+    
 END
 
 ;------------------------------------------------------------------------------
