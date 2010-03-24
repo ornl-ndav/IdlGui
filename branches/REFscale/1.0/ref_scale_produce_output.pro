@@ -32,6 +32,39 @@
 ;
 ;==============================================================================
 
+;+
+; :Description:
+;   This routine will show the dialog_pickfile to let the user selects the
+;   output folde
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro browse_output_path, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  path = (*global).BatchDefaultPath
+  dialog_id = widget_info(event.top, find_by_uname='MAIN_BASE_ref_scale')
+  title = 'Select the destination folder'
+  
+  new_path = dialog_pickfile(/directory,$
+    dialog_parent = dialog_id,$
+    /must_exist,$
+    path = path, $
+    title = title)
+    
+  if (new_path ne '') then begin
+    (*global).BatchDefaultPath = new_path
+    putValueInTextField, Event, 'output_path_button', new_path
+  endif
+  
+end
+
+
 ;******************************************************************************
 ;this function create the output file name
 ;if CE file name is REF_L_2893.txt
@@ -177,12 +210,12 @@ PRO ProduceOutputFile, Event
     IF (output_error NE 0) THEN BEGIN
       CATCH,/CANCEL
       idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, FAILED
-;      ActivateWidget, Event, 'preview_output_file_button', 0
+    ;      ActivateWidget, Event, 'preview_output_file_button', 0
     ENDIF ELSE BEGIN
       ;create output file name
       createOutputFile, Event, outputFileName, MasterText ;_produce_output
       idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, OK
-;      ActivateWidget, Event, 'preview_output_file_button', 1
+    ;      ActivateWidget, Event, 'preview_output_file_button', 1
     ENDELSE
     idl_send_to_geek_showLastLineLogBook, Event
     
