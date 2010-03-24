@@ -88,9 +88,51 @@ pro output_file_name_value, event
   putTextFieldValue, event, 'combined_scaled_data_file_name_value', $
     combined_scaled[0]
     
-  ;check_opreviews_button, event  
-    
+  ;this routine will check if we can enabled or not the preview buttons
+  check_previews_button, event
+  
+  
 end
+
+;+
+; :Description:
+;   This procedure will enables or not the preview button on the right of the
+;   scaled and combined scaled data file name
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro check_previews_button, event
+  compile_opt idl2
+  
+  path = getButtonValue(event,'output_path_button')
+  scaled = getTextFieldValue(event,'scaled_data_file_name_value')
+  combined_scaled = getTextFieldValue(event,$
+    'combined_scaled_data_file_name_value')
+    
+  full_scaled = path + scaled
+  if (file_test(full_scaled)) then begin
+    status = 1
+  endif else begin
+    status = 0
+  endelse
+  ActivateWidget, Event, 'scaled_data_file_preview', status
+  
+  full_combined_scaled = path + combined_scaled
+  if (file_test(full_combined_scaled)) then begin
+    status = 1
+  endif else begin
+    status = 0
+  endelse
+  ActivateWidget, Event, 'combined_scaled_data_file_preview', status
+  
+end
+
+
+
+
 
 
 
