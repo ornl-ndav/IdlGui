@@ -222,113 +222,76 @@ PRO MakeGuiMainBaseComponents, MAIN_BASE, StepsTabSize
   RescaleBase = WIDGET_BASE(MAIN_BASE,$
     UNAME     = 'RescaleBase',$
     XOFFSET   = RescaleBaseSize[0],$
-    YOFFSET   = RescaleBaseSize[1],$
-    SCR_XSIZE = RescaleBaseSize[2],$
-    SCR_YSIZE = RescaleBaseSize[3],$
+    YOFFSET   = RescaleBaseSize[1]+20,$
+    ;    SCR_XSIZE = RescaleBaseSize[2],$
+    ;    SCR_YSIZE = RescaleBaseSize[3],$
     FRAME     = 1,$
+    /row,$
     MAP       = 0)
     
+  ;left part
+  left = widget_base(RescaleBase,$
+    /column)
+    
+  xsize = 16
+  
   ;xaxis
-  XaxisLabel = WIDGET_LABEL(RescaleBase,$
-    XOFFSET   = XaxisLabelSize[0],$
-    YOFFSET   = XaxisLabelSize[1],$
-    SCR_XSIZE = XaxisLabelSize[2],$
-    SCR_YSIZE = XaxisLabelSize[3],$
+  row1 = widget_base(left,$
+    /row)
+  XaxisLabel = WIDGET_LABEL(row1,$
     VALUE     = 'X-axis')
-    
-  XaxisMinLabel = WIDGET_LABEL(RescaleBase,$
-    XOFFSET   = XaxisMinLabelSize[0],$
-    YOFFSET   = XaxisMinLabelSize[1],$
-    SCR_XSIZE = XaxisMinLabelSize[2],$
-    SCR_YSIZE = XaxisMinLabelSize[3],$
+  XaxisMinLabel = WIDGET_LABEL(row1,$
     VALUE     = 'min:')
-    
-  XaxisMinTextField = WIDGET_TEXT(RescaleBase,$
+  XaxisMinTextField = WIDGET_TEXT(row1,$
     UNAME     = 'XaxisMinTextField',$
-    XOFFSET   = XaxisMinTextFieldSize[0],$
-    YOFFSET   = XaxisMinTextFieldSize[1],$
-    SCR_XSIZE = XaxisMinTextFieldSize[2],$
-    SCR_YSIZE = XaxisMinTextFieldSize[3],$
+    xsize = xsize,$
     VALUE     = '',$
     /EDITABLE,$
     /ALIGN_LEFT)
-    
-  XaxisMaxLabel = WIDGET_LABEL(RescaleBase,$
-    XOFFSET   = XaxisMaxLabelSize[0],$
-    YOFFSET   = XaxisMaxLabelSize[1],$
-    SCR_XSIZE = XaxisMaxLabelSize[2],$
-    SCR_YSIZE = XaxisMaxLabelSize[3],$
+  XaxisMaxLabel = WIDGET_LABEL(row1,$
     VALUE     = 'max:')
-    
-  XaxisMaxTextField = WIDGET_TEXT(RescaleBase,$
+  XaxisMaxTextField = WIDGET_TEXT(row1,$
     UNAME     = 'XaxisMaxTextField',$
-    XOFFSET   = XaxisMaxTextFieldSize[0],$
-    YOFFSET   = XaxisMaxTextFieldSize[1],$
-    SCR_XSIZE = XaxisMaxTextFieldSize[2],$
-    SCR_YSIZE = XaxisMaxTextFieldSize[3],$
+    XSIZE = xsize,$
     VALUE     = '',$
     /EDITABLE,$
     /ALIGN_LEFT)
-    
-  ResetButton = WIDGET_BUTTON(RescaleBase,$
-    XOFFSET   = ResetButtonSize[0],$
-    YOFFSET   = ResetButtonSize[1],$
-    SCR_XSIZE = ResetButtonSize[2],$
-    SCR_YSIZE = ResetButtonSize[3],$
-    UNAME     = 'ResetButton',$
-    VALUE     = 'Reset X/Y')
     
   ;yaxis
-  YaxisLabel = WIDGET_LABEL(RescaleBase,$
-    XOFFSET   = YaxisLabelSize[0],$
-    YOFFSET   = YaxisLabelSize[1],$
-    SCR_XSIZE = YaxisLabelSize[2],$
-    SCR_YSIZE = YaxisLabelSize[3],$
+  row2 = widget_base(left, $
+    /row)
+  ;yaxis
+  YaxisLabel = WIDGET_LABEL(row2,$
     VALUE     = 'Y-axis')
-    
-  YaxisMinLabel = WIDGET_LABEL(RescaleBase,$
-    XOFFSET   = YaxisMinLabelSize[0],$
-    YOFFSET   = YaxisMinLabelSize[1],$
-    SCR_XSIZE = YaxisMinLabelSize[2],$
-    SCR_YSIZE = YaxisMinLabelSize[3],$
+  YaxisMinLabel = WIDGET_LABEL(row2,$
     VALUE     = 'min:')
-    
-  YaxisMinTextField = WIDGET_TEXT(RescaleBase,$
+  YaxisMinTextField = WIDGET_TEXT(row2,$
     UNAME     = 'YaxisMinTextField',$
-    XOFFSET   = YaxisMinTextFieldSize[0],$
-    YOFFSET   = YaxisMinTextFieldSize[1],$
-    SCR_XSIZE = YaxisMinTextFieldSize[2],$
-    SCR_YSIZE = YaxisMinTextFieldSize[3],$
+    XSIZE = xsize,$
     VALUE     = '',$
     /EDITABLE,$
     /ALIGN_LEFT)
-    
-  YaxisMaxLabel = WIDGET_LABEL(RescaleBase,$
-    XOFFSET   = YaxisMaxLabelSize[0],$
-    YOFFSET   = YaxisMaxLabelSize[1],$
-    SCR_XSIZE = YaxisMaxLabelSize[2],$
-    SCR_YSIZE = YaxisMaxLabelSize[3],$
+  YaxisMaxLabel = WIDGET_LABEL(row2,$
     VALUE     = 'max:')
-    
-  YaxisMaxTextField = WIDGET_TEXT(RescaleBase,$
+  YaxisMaxTextField = WIDGET_TEXT(row2,$
     UNAME     = 'YaxisMaxTextField',$
-    XOFFSET   = YaxisMaxTextFieldSize[0],$
-    YOFFSET   = YaxisMaxTextFieldSize[1],$
-    SCR_XSIZE = YaxisMaxTextFieldSize[2],$
-    SCR_YSIZE = YaxisMaxTextFieldSize[3],$
+    XSIZE = xsize,$
     VALUE     = '',$
     /EDITABLE,$
     /ALIGN_LEFT)
-    
-  YaxisLinLog = CW_BGROUP(RescaleBase,$
+  YaxisLinLog = CW_BGROUP(row2,$
     axis_lin_log,$
-    XOFFSET   = YaxisLinLogSize[0],$
-    YOFFSET   = YaxisLinLogSize[1],$
-    SET_VALUE = 0.0,$
+    SET_VALUE = 0,$
     ROW       = 1,$
     UNAME     = 'YaxisLinLog',$
     /EXCLUSIVE,$
     /RETURN_NAME)
+    
+  ResetButton = WIDGET_BUTTON(RescaleBase,$
+    SCR_XSIZE = 75,$
+    UNAME     = 'ResetButton',$
+    VALUE     = 'Reset X/Y')
+    
     
   ;------------------------------------------------------------------------------
   ;Settings Base
@@ -340,7 +303,7 @@ PRO MakeGuiMainBaseComponents, MAIN_BASE, StepsTabSize
     SCR_XSIZE = sSettingsBase.size[2],$
     SCR_YSIZE = sSettingsBase.size[3]+5,$
     FRAME     = sSettingsBase.frame,$
-    MAP       = sSettingsBase.map)
+    MAP       = 0)
     
   ;Settings Label ---------------------------------------------------------------
   wSettingsLabel = WIDGET_LABEL(wSettingsBase,$
