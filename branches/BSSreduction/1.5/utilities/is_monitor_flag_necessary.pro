@@ -42,7 +42,7 @@
 ;
 ; :Author: j35
 ;-
-function is_monitor_flag_necessary, list_of_data_files
+function is_monitor_named_monitor1, list_of_data_files
   compile_opt idl2
   
   ;get first the first nexus file only
