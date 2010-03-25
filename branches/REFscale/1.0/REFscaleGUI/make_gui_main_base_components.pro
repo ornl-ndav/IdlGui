@@ -227,7 +227,7 @@ PRO MakeGuiMainBaseComponents, MAIN_BASE, StepsTabSize
     ;    SCR_YSIZE = RescaleBaseSize[3],$
     FRAME     = 1,$
     /row,$
-    MAP       = 0)
+    MAP       = 1)
     
   ;left part
   left = widget_base(RescaleBase,$
@@ -293,6 +293,16 @@ PRO MakeGuiMainBaseComponents, MAIN_BASE, StepsTabSize
     VALUE     = 'Reset X/Y')
     
     
+  ;settings button
+  settings = widget_button(MAIN_BASE,$
+  xoffset = sSettingsBase.size[0],$
+  yoffset = sSettingsBase.size[1]+35,$
+  xsize = 200,$
+  value = 'Settings ...',$
+  event_pro = 'bring_to_life_settings_base',$
+  uname = 'settings_button')
+    
+    
   ;------------------------------------------------------------------------------
   ;Settings Base
   ;------------------------------------------------------------------------------
@@ -306,11 +316,12 @@ PRO MakeGuiMainBaseComponents, MAIN_BASE, StepsTabSize
     MAP       = 0)
     
   ;Settings Label ---------------------------------------------------------------
-  wSettingsLabel = WIDGET_LABEL(wSettingsBase,$
+  quit_settings = widget_button(wSettingsBase,$
     XOFFSET = sSettingsLabel.size[0]+10,$
     YOFFSET = sSettingsLabel.size[1]+5,$
-    VALUE   = sSettingsLabel.value,$
-    FRAME   = sSettingsLabel.frame)
+    VALUE   = 'Close setttings',$
+    event_pro = 'close_settings_base')
+
     
   auto_clean_base = widget_base(wSettingsBase,$
     /row,$
