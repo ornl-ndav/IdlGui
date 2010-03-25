@@ -222,6 +222,14 @@ PRO BSSreduction_CommandLineGenerator, Event
   ENDIF ELSE BEGIN
     na_base_status = 0
     (*global).Configuration.Reduce.tab3.nmn_button = 0
+    
+    ;check if the file is using the Translation Service deployed on 03/2010
+    ;if yes, the following flag is necessary
+    ; --mon-path=/entry/monitor1,1
+    if (is_monitor_flag_necessary(RSDFiles)) then begin
+      cmd += ' --mon-path=/entry/monitor1,1'
+    endif
+    
   ENDELSE
   activate_base, event, 'na_womwsbase', na_base_status
   activate_base, event, 'na_wormsbase', na_base_status
@@ -1516,7 +1524,7 @@ PRO BSSreduction_CommandLineGenerator, Event
       cmd += ',' + strcompress(Error,/remove_all)
     ENDELSE
   ENDIF
-   
+  
   ;*************TAB7*****************
   TabName = 'Tab#7 - DATA CONTROL'
   tab7    = 0
@@ -1977,12 +1985,12 @@ PRO BSSreduction_CommandLineGenerator, Event
     
   ENDIF
   
-   ;Scale S(Q,E) by the solid angle distribution
+  ;Scale S(Q,E) by the solid angle distribution
   IF (isButtonSelected(Event,'scale_sqe_by_solid_angle_group_uname') AND $
     isButtonEnabled(Event, 'scale_sqe_by_solid_angle_base_uname')) THEN BEGIN
     cmd += ' --scale-sqe'
   ENDIF
- 
+  
   ;add a white space
   putInfoInCommandLineStatus, Event, '', 1
   

@@ -73,11 +73,6 @@ IF (sz GT 0) THEN BEGIN
           message
         cmd = pack_list[i] + ' --version'
         spawn, cmd, listening, err_listening
-        print, 'cmd: ' + cmd
-        help, listening
-        print, listening
-        help, err_listening
-        print, err_listening
         
         IF (err_listening[0] EQ '') THEN BEGIN ;found
             IDLsendToGeek_ReplaceLogBookText_fromMainBase, $
