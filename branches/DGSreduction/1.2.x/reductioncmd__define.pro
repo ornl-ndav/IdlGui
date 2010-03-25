@@ -317,7 +317,10 @@ PRO ReductionCmd::SetProperty, $
   IF N_ELEMENTS(queue) NE 0 THEN self.queue = queue
   IF N_ELEMENTS(verbose) NE 0 THEN self.verbose = verbose
   IF N_ELEMENTS(quiet) NE 0 THEN self.quiet = quiet
-  IF N_ELEMENTS(datarun) NE 0 THEN self.datarun = STRCOMPRESS(STRING(datarun), /REMOVE_ALL)
+  IF N_ELEMENTS(datarun) NE 0 THEN BEGIN
+    self.datarun = STRCOMPRESS(STRING(datarun), /REMOVE_ALL)
+    self.cornergeometry = getCornerGeometryFile(self.instrument, RUNNUMBER=self->GetRunNumber())
+  ENDIF
   IF N_ELEMENTS(output) NE 0 THEN self.output = output
   IF N_ELEMENTS(instrument) NE 0 THEN BEGIN
     self.instrument = STRUPCASE(instrument)

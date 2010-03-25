@@ -57,8 +57,13 @@ function GetCornerGeometryFile, Instrument, RUNNUMBER=RUNNUMBER
         "/SNS/ARCS/2009_2_18_CAL/calibrations/ARCS_cgeom_20090128.txt"
     end
     "CNCS": begin
-      cornergeometry = $
-        "/SNS/CNCS/2009_2_5_CAL/calibrations/CNCS_cgeom_20090224.txt"
+      IF (run LT 7848) THEN BEGIN
+        cornergeometry = $
+          "/SNS/CNCS/2009_2_5_CAL/calibrations/CNCS_cgeom_20090224.txt"
+      ENDIF ELSE BEGIN
+        cornergeometry = $
+          "/SNS/CNCS/2010_2_5_CAL/calibrations/CNCS_cgeom_20100325.txt"
+      ENDELSE
     end
     "SEQ": begin
       cornergeometry = $
@@ -72,6 +77,6 @@ function GetCornerGeometryFile, Instrument, RUNNUMBER=RUNNUMBER
       cornergeometry = ""
     end
   endcase
-  
+  print,'Corner Geometry = ', cornergeometry
   return, cornergeometry
 end
