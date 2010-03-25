@@ -37,9 +37,21 @@ pro settings_base_event, Event
   ;get global structure
   widget_control,event.top,get_uvalue=global_settings
   global = (*global_settings).global
+  main_event = (*global_settings).main_event
   
   case Event.id of
   
+    ;auto cleaning yes/no cw_bgroup
+    widget_info(event.top, find_by_uname='auto_cleaning_data_cw_bgroup'): begin
+      auto_cleaning_data_cw_bgroup, event
+    end
+    
+    ;configure button
+    widget_info(event.top, $
+      find_by_uname='auto_cleaning_data_configure_button'): begin
+      configure_auto_cleanup, Event=main_event
+    end
+    
     widget_info(event.top, $
       find_by_uname='settings_base_close_button'): begin
       
@@ -50,7 +62,6 @@ pro settings_base_event, Event
       id = widget_info(Event.top, $
         find_by_uname='settings_widget_base')
       widget_control, id, /destroy
-      main_event = (*global_settings).main_event
       ActivateWidget, main_Event, 'open_settings_base', 1
     end
     
