@@ -292,7 +292,6 @@ PRO MakeGuiMainBaseComponents, MAIN_BASE, StepsTabSize
     UNAME     = 'ResetButton',$
     VALUE     = 'Reset X/Y')
     
-    
   ;settings button
   settings = widget_button(MAIN_BASE,$
   xoffset = sSettingsBase.size[0],$
@@ -300,87 +299,6 @@ PRO MakeGuiMainBaseComponents, MAIN_BASE, StepsTabSize
   xsize = 200,$
   value = 'Settings ...',$
   uname = 'open_settings_base')
-    
-    
-  ;------------------------------------------------------------------------------
-  ;Settings Base
-  ;------------------------------------------------------------------------------
-  wSettingsBase = WIDGET_BASE(MAIN_BASE,$
-    UNAME     = sSettingsBase.uname,$
-    XOFFSET   = sSettingsBase.size[0],$
-    YOFFSET   = sSettingsBase.size[1],$
-    SCR_XSIZE = sSettingsBase.size[2],$
-    SCR_YSIZE = sSettingsBase.size[3]+5,$
-    FRAME     = sSettingsBase.frame,$
-    MAP       = 0)
-    
-  ;Settings Label ---------------------------------------------------------------
-  quit_settings = widget_button(wSettingsBase,$
-    XOFFSET = sSettingsLabel.size[0]+10,$
-    YOFFSET = sSettingsLabel.size[1]+5,$
-    VALUE   = 'Close setttings',$
-    event_pro = 'close_settings_base')
-
-    
-  auto_clean_base = widget_base(wSettingsBase,$
-    /row,$
-    xoffset = sDataToRemoveLabel.size[0],$
-    yoffset = sDataToRemoveLabel.size[1]-10,$
-    /align_center)
-  ;    scr_ysize = 40)
-    
-  group = cw_bgroup(auto_clean_base,$
-    ['Yes','No'],$
-    /row,$
-    label_left = 'Auto Cleanning:',$
-    uname = 'auto_cleaning_data_cw_bgroup',$
-    set_value = 0,$
-    /exclusive)
-    
-  button = widget_button(auto_clean_base,$
-    value = '  CONFIGURE ...  ',$
-    uname = 'auto_cleaning_data_configure_button',$
-    sensitive = 1)
-    
-  ;Show Error Bars --------------------------------------------------------------
-  wShowErrorBarGroup = CW_BGROUP(wSettingsBase,$
-    sShowError.list,$
-    XOFFSET    = sShowError.size[0],$
-    YOFFSET    = sShowError.size[1],$
-    SET_VALUE  = 0.0,$
-    ROW        = 1,$
-    UNAME      = sShowError.uname,$
-    LABEL_LEFT = sShowError.title,$
-    /EXCLUSIVE,$
-    /NO_RELEASE)
-    
-  ;Data to display --------------------------------------------------------------
-  wDataToDisplayLabel = WIDGET_LABEL(wSettingsBase,$
-    XOFFSET = sDataToDisplayLabel.size[0],$
-    YOFFSET = sDataToDisplayLabel.size[1],$
-    VALUE   = sDataToDisplayLabel.value)
-  wDataToDisplayText = WIDGET_TEXT(wSettingsBase,$
-    UNAME     = sDataToDisplayText.uname,$
-    XOFFSET   = sDataToDisplayText.size[0],$
-    YOFFSET   = sDataToDisplayText.size[1],$
-    SCR_XSIZE = sDataToDisplayText.size[2],$
-    VALUE     = sDataToDisplayText.value,$
-    /EDITABLE,$
-    /ALIGN_LEFT)
-    
-;;Data to Remove ---------------------------------------------------------------
-; wDataToRemoveLabel = WIDGET_LABEL(wSettingsBase,$
-;   XOFFSET = sDataToRemoveLabel.size[0],$
-;   YOFFSET = sDataToRemoveLabel.size[1],$
-;   VALUE   = sDataToRemoveLabel.value)
-; wDataToRemoveText = WIDGET_TEXT(wSettingsBase,$
-;   UNAME     = sDataToRemoveText.uname,$
-;   XOFFSET   = sDataToRemoveText.size[0],$
-;   YOFFSET   = sDataToRemoveText.size[1],$
-;   SCR_XSIZE = sDataToRemoveText.size[2],$
-;   VALUE     = sDataToRemoveText.value,$
-;   /EDITABLE,$
-;   /ALIGN_LEFT)
     
 END
 
