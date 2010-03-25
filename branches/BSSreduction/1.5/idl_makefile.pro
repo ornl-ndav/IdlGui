@@ -15,6 +15,7 @@ cd, CurrentFolder + IdlUtilitiesPath
 .run IDLxmlParser__define.pro
 .run logger.pro
 .run CheckPackages.pro
+.run is_monitor_flag_necessary.pro
 
 ;Build BSSreduction GUI
 cd, CurrentFolder + '/BSSreductionGUI/'
