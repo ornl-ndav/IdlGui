@@ -180,6 +180,7 @@ PRO MAIN_BASE_ref_scale_event, Event
     widget_info(wWidget, $
       find_by_uname='open_settings_base'): begin
       settings_base, Event=event
+      ActivateWidget, Event, 'open_settings_base', 0
     end
     
     

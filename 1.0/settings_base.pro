@@ -35,22 +35,23 @@
 pro settings_base_event, Event
 
   ;get global structure
-  widget_control,event.top,get_uvalue=global_spin_state
-  global = (*global_spin_state).global
+  widget_control,event.top,get_uvalue=global_settings
+  global = (*global_settings).global
   
   case Event.id of
   
     widget_info(event.top, $
       find_by_uname='settings_base_close_button'): begin
       
-;      ;save new auto q percentage value
-;      value = getTextfieldvalue(Event,'perecentage_of_q_to_remove_uname')
-;      (*global).percentage_of_q_to_remove_value = value
-;      
+      ;      ;save new auto q percentage value
+      ;      value = getTextfieldvalue(Event,'perecentage_of_q_to_remove_uname')
+      ;      (*global).percentage_of_q_to_remove_value = value
+      ;
       id = widget_info(Event.top, $
         find_by_uname='settings_widget_base')
       widget_control, id, /destroy
-      event = (*global_spin_state).main_event
+      main_event = (*global_settings).main_event
+      ActivateWidget, main_Event, 'open_settings_base', 1
     end
     
     else:
@@ -67,38 +68,68 @@ PRO settings_base_gui, wBase, main_base_geometry
   main_base_xsize = main_base_geometry.xsize
   main_base_ysize = main_base_geometry.ysize
   
-  spin_state_xsize = 350
-  spin_state_ysize = 75
+  xsize = 350
+  ysize = 155
   
-  spin_state_xoffset = (main_base_xsize - spin_state_xsize) / 2
-  spin_state_xoffset += main_base_xoffset
+  xoffset = (main_base_xsize - xsize) / 2
+  xoffset += main_base_xoffset
   
-  spin_state_yoffset = (main_base_ysize - spin_state_ysize) / 2
-  spin_state_yoffset += main_base_yoffset
+  yoffset = (main_base_ysize - ysize) / 2
+  yoffset += main_base_yoffset
   
   ourGroup = WIDGET_BASE()
   
-  wBase = WIDGET_BASE(TITLE = 'Automatic Cleanup Configuration',$
+  wBase = WIDGET_BASE(TITLE = 'S E T T I N G S',$
     UNAME        = 'settings_widget_base',$
-    XOFFSET      = spin_state_xoffset,$
-    YOFFSET      = spin_state_yoffset,$
-    SCR_YSIZE    = spin_state_ysize,$
-    SCR_XSIZE    = spin_state_xsize,$
+    XOFFSET      = xoffset,$
+    YOFFSET      = yoffset,$
+    SCR_YSIZE    = ysize,$
+    SCR_XSIZE    = xsize,$
     MAP          = 1,$
     /BASE_ALIGN_CENTER,$
     /align_center,$
     /column,$
     GROUP_LEADER = ourGroup)
     
-;    row = widget_base(wBase,$
-;    /row)
-;    field = cw_field(row,$
-;    /row,$
-;    title = 'Percentage of Q to remove on both sides (%) ',$
-;    value = 10,$
-;    xsize = 2,$
-;    /integer,$
-;    uname = 'perecentage_of_q_to_remove_uname')
+  auto_clean_base = widget_base(wBase,$
+    /row,$
+    /align_center)
+    
+  group = cw_bgroup(auto_clean_base,$
+    ['Yes','No'],$
+    /row,$
+    label_left = 'Auto Cleanning:',$
+    uname = 'auto_cleaning_data_cw_bgroup',$
+    set_value = 0,$
+    /exclusive)
+    
+  button = widget_button(auto_clean_base,$
+    value = '  CONFIGURE ...  ',$
+    uname = 'auto_cleaning_data_configure_button',$
+    sensitive = 1)
+    
+  ;Show Error Bars --------------------------------------------------------------
+  wShowErrorBarGroup = CW_BGROUP(wBase,$
+    ['Yes','No'],$
+    SET_VALUE  = 0.0,$
+    ROW        = 1,$
+    UNAME      = 'show_error_bar_group',$
+    LABEL_LEFT = 'Show error bars:',$
+    /EXCLUSIVE,$
+    /NO_RELEASE)
+    
+  ;Data to display --------------------------------------------------------------
+  row2 = widget_base(wBase,$
+    /row)
+    
+  wDataToDisplayLabel = WIDGET_LABEL(row2,$
+    VALUE   = 'Number of data to display in step3: ')
+  wDataToDisplayText = WIDGET_TEXT(row2,$
+    UNAME     = 'nbrDataTextField',$
+    xsize     = 10,$
+    VALUE     = '100',$
+    /EDITABLE,$
+    /ALIGN_LEFT)
     
   close = widget_button(wBase,$
     value = 'CLOSE',$
