@@ -32,26 +32,108 @@
 ;
 ;==============================================================================
 
-;+
-; :Description:
-;   enabled the settings base
-;
-; :Params:
-;    event
-;
-; :Author: j35
-;-
-pro bring_to_life_settings_base, event
-  compile_opt idl2
+pro settings_base_event, Event
+
+  ;get global structure
+  widget_control,event.top,get_uvalue=global_spin_state
+  global = (*global_spin_state).global
   
-  ActivateBase, Event, 'settings_base', 1
+  case Event.id of
+  
+    widget_info(event.top, $
+      find_by_uname='settings_base_close_button'): begin
+      
+;      ;save new auto q percentage value
+;      value = getTextfieldvalue(Event,'perecentage_of_q_to_remove_uname')
+;      (*global).percentage_of_q_to_remove_value = value
+;      
+      id = widget_info(Event.top, $
+        find_by_uname='settings_widget_base')
+      widget_control, id, /destroy
+      event = (*global_spin_state).main_event
+    end
+    
+    else:
+    
+  endcase
   
 end
 
+;------------------------------------------------------------------------------
+PRO settings_base_gui, wBase, main_base_geometry
 
-pro close_settings_base, event
-  compile_opt idl2
+  main_base_xoffset = main_base_geometry.xoffset
+  main_base_yoffset = main_base_geometry.yoffset
+  main_base_xsize = main_base_geometry.xsize
+  main_base_ysize = main_base_geometry.ysize
   
-  ActivateBase, Event, 'settings_base', 0
+  spin_state_xsize = 350
+  spin_state_ysize = 75
   
-end
+  spin_state_xoffset = (main_base_xsize - spin_state_xsize) / 2
+  spin_state_xoffset += main_base_xoffset
+  
+  spin_state_yoffset = (main_base_ysize - spin_state_ysize) / 2
+  spin_state_yoffset += main_base_yoffset
+  
+  ourGroup = WIDGET_BASE()
+  
+  wBase = WIDGET_BASE(TITLE = 'Automatic Cleanup Configuration',$
+    UNAME        = 'settings_widget_base',$
+    XOFFSET      = spin_state_xoffset,$
+    YOFFSET      = spin_state_yoffset,$
+    SCR_YSIZE    = spin_state_ysize,$
+    SCR_XSIZE    = spin_state_xsize,$
+    MAP          = 1,$
+    /BASE_ALIGN_CENTER,$
+    /align_center,$
+    /column,$
+    GROUP_LEADER = ourGroup)
+    
+;    row = widget_base(wBase,$
+;    /row)
+;    field = cw_field(row,$
+;    /row,$
+;    title = 'Percentage of Q to remove on both sides (%) ',$
+;    value = 10,$
+;    xsize = 2,$
+;    /integer,$
+;    uname = 'perecentage_of_q_to_remove_uname')
+    
+  close = widget_button(wBase,$
+    value = 'CLOSE',$
+    xsize = 150,$
+    uname = 'settings_base_close_button')
+    
+END
+
+;------------------------------------------------------------------------------
+PRO settings_base, main_base=main_base, Event=event
+
+  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
+    id = WIDGET_INFO(main_base, FIND_BY_UNAME='MAIN_BASE_ref_scale')
+    WIDGET_CONTROL,main_base,GET_UVALUE=global
+    event = 0
+  ENDIF ELSE BEGIN
+    id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
+    WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  ENDELSE
+  main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
+  
+  ;build gui
+  wBase1 = ''
+  settings_base_gui, wBase1, $
+    main_base_geometry
+    
+  WIDGET_CONTROL, wBase1, /REALIZE
+  
+  global_settings = PTR_NEW({ wbase: wbase1,$
+    global: global, $
+    main_event: Event})
+    
+  WIDGET_CONTROL, wBase1, SET_UVALUE = global_settings
+  
+  XMANAGER, "settings_base", wBase1, GROUP_LEADER = ourGroup, /NO_BLOCK
+  
+END
+

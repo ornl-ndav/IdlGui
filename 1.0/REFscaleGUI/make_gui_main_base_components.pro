@@ -299,8 +299,7 @@ PRO MakeGuiMainBaseComponents, MAIN_BASE, StepsTabSize
   yoffset = sSettingsBase.size[1]+35,$
   xsize = 200,$
   value = 'Settings ...',$
-  event_pro = 'bring_to_life_settings_base',$
-  uname = 'settings_button')
+  uname = 'open_settings_base')
     
     
   ;------------------------------------------------------------------------------

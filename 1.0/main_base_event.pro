@@ -146,206 +146,213 @@ PRO MAIN_BASE_ref_scale_event, Event
     END
     
     ;Event of <OUTPUT FILE> button - create output file
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='print_button'):BEGIN
-    ProduceOutputFile, Event ;_produce_output
-  END
-  
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='print_button'): BEGIN
+      ProduceOutputFile, Event ;_produce_output
+    END
+    
     ;preview of output file button
     widget_info(wWidget, find_by_uname='preview_output_file_button'): begin
       preview_of_output_file, event
     end
+    
+    ;Event triggered by 'Reset X/Y'
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='ResetButton'): BEGIN
+      ResetRescaleButton, Event ;_eventcb
+    END
+    
+    ;Event trigerred by with or without error bars
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='show_error_bar_group'): BEGIN
+      WithWithoutErrorBars, Event ;_eventcb
+    END
+    
+    ;auto cleaning yes/no cw_bgroup
+    widget_info(wWidget, find_by_uname='auto_cleaning_data_cw_bgroup'): begin
+      auto_cleaning_data_cw_bgroup, event
+    end
+    
+    ;configure button
+    widget_info(wWidget, $
+      find_by_uname='auto_cleaning_data_configure_button'): begin
+      configure_auto_cleanup, Event=event
+    end
+    
+    ;settings base button
+    widget_info(wWidget, $
+      find_by_uname='open_settings_base'): begin
+      settings_base, Event=event
+    end
+    
+    
+    ;------------------------------------------------------------------------------
+    ;***** STEP 1 - [LOAD FILES] **************************************************
+    ;------------------------------------------------------------------------------
+    ;Event of <Load File> button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='load_button'): BEGIN
+      LoadFileButton, Event ;_Load
+    END
+    
+    ;Event of 'List of Files:' droplist
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='list_of_files_droplist'): BEGIN
+      display_info_about_file, Event ;_Gui
+    END
+    
+    ;Event of <Clear File>
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='clear_button'): BEGIN
+      clear_file, Event ;_Load
+      ;plot all loaded files
+      PlotLoadedFiles, Event ;_Plot
+    END
+    
+    ;Get Full Preview of DR file
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='full_preview_button'): BEGIN
+      DisplayFullPreviewOfButton, Event ;_eventcb
+    END
+    
+    ;color slider
+    widget_info(wWidget, find_by_uname='list_of_color_slider'): begin
+      steps_tab, Event, 1 ;_Tabs
+    end
+    
+    ;------------------------------------------------------------------------------
+    ;****** STEP 1 / In the LOAD TOF base *****************************************
+    ;------------------------------------------------------------------------------
+    
+    ;Event of <CANCEL> button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='cancel_load_button'): BEGIN
+      CancelTOFLoadButton, Event ;_Load
+    END
+    
+    ;Event of <OK> button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='ok_load_button'): BEGIN
+      OkLoadButton, Event ;_Load
+    END
+    
+    ;Event of the 'Distance Moderator-Detector (m):' widget_text
+    WIDGET_INFO(wWidget, FIND_BY_UNAME= $
+      'ModeratorDetectorDistanceTextField'): BEGIN
+      CheckOpenButtonStatus, Event ;_Gui
+    END
+    
+    ;Event of the 'Polar angle:' text_field
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='AngleTextField'): BEGIN
+      CheckOpenButtonStatus, Event ;_Gui
+    END
+    
+    ;------------------------------------------------------------------------------
+    ;***** STEP 2 - [DEFINE CRITICAL EDGE FILE] ***********************************
+    ;------------------------------------------------------------------------------
+    
+    ;Event triggered by <Automatic Fitting/Rescaling of CE>
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='step2_button'): BEGIN
+      run_full_step2, Event ;_Step2
+    END
+    
+    ;Event triggered by <Manual Scaling of CE>
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='step2_manual_scaling_button'): BEGIN
+      manualCEscaling, Event ;_Step2
+    END
+    
+    ;Event trigerred when editing the SF text field
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='step2_sf_text_field'): BEGIN
+      manual_sf_editing, Event ;_Step2
+    END
+    
+    ;Event trigerred by Qmin cw_field
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='step2_q1_text_field'): BEGIN
+      ManualNewQ, Event ;_Step2
+      Step2ReleaseClick, Event ;this reorder the Q1 and Q2
+    END
+    
+    ;Event trigerred by Qmin cw_field
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='step2_q2_text_field'): BEGIN
+      ManualNewQ, Event ;_Step2
+      Step2ReleaseClick, Event ;this reorder the Q1 and Q2
+    END
+    
+    ;------------------------------------------------------------------------------
+    ;***** STEP 3 - [RESCALE FILES] ***********************************************
+    ;------------------------------------------------------------------------------
+    
+    ;Event triggered by widget_droplist
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='step3_work_on_file_droplist'): BEGIN
+      steps_tab, Event, 1   ;_Tab
+    END
+    
+    ;Event triggered by [Automatic rescaling]
+    WIDGET_INFO(wWidget, FIND_BY_UNAME= $
+      'Step3_automatic_rescale_button'): BEGIN
+      Step3AutomaticRescaling, Event ;_Step3
+    END
+    
+    ;Event trigerred by the CW_FIELD SF rescaling
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='Step3SFTextField'): BEGIN
+      step = FLOAT(getTextFieldValue(Event,'Step3SFTextField'))
+      Step3RescaleFile2, Event, step ;_Step3
+    END
+    
+    ;Event triggered by [+++]
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='step3_3increase_button'): BEGIN
+      Step3RescaleFile, Event, 0.5 ;_Step3
+    END
+    
+    ;Event triggered by [++]
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='step3_2increase_button'): BEGIN
+      Step3RescaleFile, Event, 0.1 ;_Step3
+    END
+    
+    ;Event triggered by [+]
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='step3_1increase_button'): BEGIN
+      Step3RescaleFile, Event, 0.01 ;_Step3
+    END
+    
+    ;Event triggered by [---]
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='step3_3decrease_button'): BEGIN
+      Step3RescaleFile, Event, -0.5 ;_Step3
+    END
+    
+    ;Event triggered by [--]
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='step3_2decrease_button'): BEGIN
+      Step3RescaleFile, Event, -0.1 ;_Step3
+    END
+    
+    ;Event triggered by [-]
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='step3_1decrease_button'): BEGIN
+      Step3RescaleFile, Event, -0.01 ;_Step3
+    END
+    
+    ;------------------------------------------------------------------------------
+    ;***** BATCH TAB **************************************************************
+    ;------------------------------------------------------------------------------
+    ;Load Batch File Button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='load_batch_file_button'): BEGIN
+      ref_scale_LoadBatchFile, Event ;_batch
+    END
+    
+    ;Preview Batch File Button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='batch_preview_button'): BEGIN
+      ref_scale_PreviewBatchFile, Event ;_batch
+    END
+    
+    ;SAVE Batch File button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='ref_scale_refresh_batch_file'): BEGIN
+      ref_scale_refresh_batch_file, Event ;_batch
+    END
+    
+    ;SAVE AS Batch File button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='ref_scale_save_as_batch_file'): BEGIN
+      ref_scale_save_as_batch_file, Event ;_batch
+    END
+    
+    ;------------------------------------------------------------------------------
+    ;***** LOG BOOK ***************************************************************
+    ;------------------------------------------------------------------------------
+    ;Send To Geek button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='send_to_geek_button'): BEGIN
+      SendToGeek, Event ;_IDLsendToGeek__define
+    END
+    
+    ELSE:
+  ENDCASE
   
-  ;Event triggered by 'Reset X/Y'
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='ResetButton'): BEGIN
-    ResetRescaleButton, Event ;_eventcb
-  END
-  
-  ;Event trigerred by with or without error bars
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='show_error_bar_group'): BEGIN
-    WithWithoutErrorBars, Event ;_eventcb
-  END
-  
-  ;auto cleaning yes/no cw_bgroup
-  widget_info(wWidget, find_by_uname='auto_cleaning_data_cw_bgroup'): begin
-    auto_cleaning_data_cw_bgroup, event
-  end
-  
-  ;configure button
-  widget_info(wWidget, $
-    find_by_uname='auto_cleaning_data_configure_button'): begin
-    configure_auto_cleanup, Event=event
-  end
-  
-  ;------------------------------------------------------------------------------
-  ;***** STEP 1 - [LOAD FILES] **************************************************
-  ;------------------------------------------------------------------------------
-  ;Event of <Load File> button
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='load_button'): BEGIN
-    LoadFileButton, Event ;_Load
-  END
-  
-  ;Event of 'List of Files:' droplist
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='list_of_files_droplist'): BEGIN
-    display_info_about_file, Event ;_Gui
-  END
-  
-  ;Event of <Clear File>
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='clear_button'): BEGIN
-    clear_file, Event ;_Load
-    ;plot all loaded files
-    PlotLoadedFiles, Event ;_Plot
-  END
-  
-  ;Get Full Preview of DR file
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='full_preview_button'): BEGIN
-    DisplayFullPreviewOfButton, Event ;_eventcb
-  END
-  
-  ;color slider
-  widget_info(wWidget, find_by_uname='list_of_color_slider'): begin
-    steps_tab, Event, 1 ;_Tabs
-  end
-  
-  ;------------------------------------------------------------------------------
-  ;****** STEP 1 / In the LOAD TOF base *****************************************
-  ;------------------------------------------------------------------------------
-  
-  ;Event of <CANCEL> button
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='cancel_load_button'): BEGIN
-    CancelTOFLoadButton, Event ;_Load
-  END
-  
-  ;Event of <OK> button
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='ok_load_button'): BEGIN
-    OkLoadButton, Event ;_Load
-  END
-  
-  ;Event of the 'Distance Moderator-Detector (m):' widget_text
-  WIDGET_INFO(wWidget, FIND_BY_UNAME= $
-    'ModeratorDetectorDistanceTextField'): BEGIN
-    CheckOpenButtonStatus, Event ;_Gui
-  END
-  
-  ;Event of the 'Polar angle:' text_field
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='AngleTextField'): BEGIN
-    CheckOpenButtonStatus, Event ;_Gui
-  END
-  
-  ;------------------------------------------------------------------------------
-  ;***** STEP 2 - [DEFINE CRITICAL EDGE FILE] ***********************************
-  ;------------------------------------------------------------------------------
-  
-  ;Event triggered by <Automatic Fitting/Rescaling of CE>
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='step2_button'): BEGIN
-    run_full_step2, Event ;_Step2
-  END
-  
-  ;Event triggered by <Manual Scaling of CE>
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='step2_manual_scaling_button'): BEGIN
-    manualCEscaling, Event ;_Step2
-  END
-  
-  ;Event trigerred when editing the SF text field
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='step2_sf_text_field'): BEGIN
-    manual_sf_editing, Event ;_Step2
-  END
-  
-  ;Event trigerred by Qmin cw_field
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='step2_q1_text_field'): BEGIN
-    ManualNewQ, Event ;_Step2
-    Step2ReleaseClick, Event ;this reorder the Q1 and Q2
-  END
-  
-  ;Event trigerred by Qmin cw_field
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='step2_q2_text_field'): BEGIN
-    ManualNewQ, Event ;_Step2
-    Step2ReleaseClick, Event ;this reorder the Q1 and Q2
-  END
-  
-  ;------------------------------------------------------------------------------
-  ;***** STEP 3 - [RESCALE FILES] ***********************************************
-  ;------------------------------------------------------------------------------
-  
-  ;Event triggered by widget_droplist
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='step3_work_on_file_droplist'): BEGIN
-    steps_tab, Event, 1   ;_Tab
-  END
-  
-  ;Event triggered by [Automatic rescaling]
-  WIDGET_INFO(wWidget, FIND_BY_UNAME= $
-    'Step3_automatic_rescale_button'): BEGIN
-    Step3AutomaticRescaling, Event ;_Step3
-  END
-  
-  ;Event trigerred by the CW_FIELD SF rescaling
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='Step3SFTextField'): BEGIN
-    step = FLOAT(getTextFieldValue(Event,'Step3SFTextField'))
-    Step3RescaleFile2, Event, step ;_Step3
-  END
-  
-  ;Event triggered by [+++]
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='step3_3increase_button'): BEGIN
-    Step3RescaleFile, Event, 0.5 ;_Step3
-  END
-  
-  ;Event triggered by [++]
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='step3_2increase_button'): BEGIN
-    Step3RescaleFile, Event, 0.1 ;_Step3
-  END
-  
-  ;Event triggered by [+]
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='step3_1increase_button'): BEGIN
-    Step3RescaleFile, Event, 0.01 ;_Step3
-  END
-  
-  ;Event triggered by [---]
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='step3_3decrease_button'): BEGIN
-    Step3RescaleFile, Event, -0.5 ;_Step3
-  END
-  
-  ;Event triggered by [--]
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='step3_2decrease_button'): BEGIN
-    Step3RescaleFile, Event, -0.1 ;_Step3
-  END
-  
-  ;Event triggered by [-]
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='step3_1decrease_button'): BEGIN
-    Step3RescaleFile, Event, -0.01 ;_Step3
-  END
-  
-  ;------------------------------------------------------------------------------
-  ;***** BATCH TAB **************************************************************
-  ;------------------------------------------------------------------------------
-  ;Load Batch File Button
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='load_batch_file_button'): BEGIN
-    ref_scale_LoadBatchFile, Event ;_batch
-  END
-  
-  ;Preview Batch File Button
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='batch_preview_button'): BEGIN
-    ref_scale_PreviewBatchFile, Event ;_batch
-  END
-  
-  ;SAVE Batch File button
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='ref_scale_refresh_batch_file'): BEGIN
-    ref_scale_refresh_batch_file, Event ;_batch
-  END
-  
-  ;SAVE AS Batch File button
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='ref_scale_save_as_batch_file'): BEGIN
-    ref_scale_save_as_batch_file, Event ;_batch
-  END
-  
-  ;------------------------------------------------------------------------------
-  ;***** LOG BOOK ***************************************************************
-  ;------------------------------------------------------------------------------
-  ;Send To Geek button
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='send_to_geek_button'): BEGIN
-    SendToGeek, Event ;_IDLsendToGeek__define
-  END
-  
-  ELSE:
-ENDCASE
-
 END
 
