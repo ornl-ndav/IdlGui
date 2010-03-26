@@ -41,6 +41,16 @@ pro email_configure_base_event, Event
   
   case Event.id of
   
+    ;cancel button
+    widget_info(event.top, $
+      find_by_uname='email_configuration_base_cancel_button'): begin
+      (*global_settings).save_setup = 1b
+      id = widget_info(Event.top, $
+        find_by_uname='email_configure_widget_base')
+      widget_control, id, /destroy
+    end
+    
+    ;close button
     widget_info(event.top, $
       find_by_uname='email_configure_base_close_button'): begin
       
@@ -189,7 +199,7 @@ pro save_status_of_email_configure_button, event
   ;get global structure
   widget_control,event.top,get_uvalue=global_settings
   global = (*global_settings).global
-
+  
   email1 = getTextFieldvalue(event,'email1')
   s_email1 = strcompress(email1,/remove_all)
   (*global).email = s_email1
@@ -297,7 +307,17 @@ PRO email_configure_base_gui, wBase, main_base_geometry, global
   row3 = widget_label(wBase,$
     value = ' ')
     
-  close = widget_button(wBase,$
+  ;buttons row
+  row4 = widget_base(wBase,$
+    /row)
+  cancel = widget_button(row4,$
+    value = 'CANCEL',$
+    uname = 'email_configuration_base_cancel_button')
+    
+  space = widget_label(row4,$
+    value = '                 ')
+    
+  close = widget_button(row4,$
     value = 'SAVE and CLOSE',$
     xsize = 150,$
     uname = 'email_configure_base_close_button')
