@@ -481,7 +481,9 @@ END
 ;##############################################################################
 ;******************************************************************************
 FUNCTION getOutputFileName, Event
-  outputFileName = getTextFieldValue(Event,'output_file_name_label_dynmaic')
-  RETURN, outputFileName
+  widget_control, event.top, get_uvalue=global
+  outputFileName = getTextFieldValue(Event,'scaled_data_file_name_value')
+  path = (*global).BatchDefaultPath
+  RETURN, path+outputFileName
 END
 

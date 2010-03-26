@@ -247,7 +247,8 @@ PRO ProduceOutputFile, Event
   
   ;get output file name
   outputFileName = getOutputFileName(Event)
-  idl_send_to_geek_addLogBookText, Event, '-> Output File Name : ' + $
+  
+    idl_send_to_geek_addLogBookText, Event, '-> Output File Name : ' + $
     outputFileName
     
   ;make sure the user has write access there
@@ -325,9 +326,6 @@ PRO ProduceOutputFile, Event
       ENDFOR
       
     ENDFOR
-    
-    ;output contain of output file in output_file_tab
-    putValueInTextField, Event, 'output_file_text_field', MasterText ;_put
     
     idl_send_to_geek_addLogBookText, Event, '> Producing output file ... ' + $
       PROCESSING
