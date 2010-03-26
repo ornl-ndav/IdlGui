@@ -49,12 +49,23 @@ PRO display_descriptions_buttons, MAIN_BASE=main_base, EVENT=event, $
     button=button, status=status
     
   case (button) of
-    'faq': text = 'faq description'
+    'faq': begin
+      text = ['Frequently Asked Question','',$
+        'All the questions you are afraid to ask.']
+    end
     'orbiter': text = 'orbiter description'
-    'sns': text = 'sns description'
+    'sns': begin
+      text = ['Neutron Science web site','','Web site of the SNS and HFIR']
+    end
     'portal': text = 'portal description'
-    'neutronsr_us': text = 'neutronsr_us description'
-    'translation': text = 'translation description'
+    'neutronsr_us': begin
+      text = ['Neutron Science portal web site',$
+        '',' - Service provided',' - Contacts',' - Resources']
+    end
+    'translation': begin
+      text = ['Translation Monitor','','To monitor live the translation of the ' + $
+        'NeXus files.']
+    end
     'how_to': text = 'how_to description'
     else: text = 'Move the mouse over a button to get a description of its link.'
   endcase

@@ -63,7 +63,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;define global variables
   global = PTR_NEW ({ path: '~/',$
     firefox: '/usr/bin/firefox',$
-          
+    ;firefox: '/Applications/Firefox.app/Contents/MacOS/firefox-bin',$
     default_path: '~/results/',$
     
     debugging:    debugging,$ ;yes or no
