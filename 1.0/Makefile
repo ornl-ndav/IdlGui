@@ -4,9 +4,11 @@
 # Copy the VM programs in their final location
 
 all:
-    cp DAD.cfg .DAD.cfg
+	cp NeedHelp.cfg .NeedHelp.cfg
 	idl ./makefile.pro;
 install:
-	cp dad.sav /SNS/software/idltools/sav/
-	cp DAD /SNS/software/idltools/
+	cp .NeedHelp.cfg /SNS/software/idltools/sav/
+	cp need_help.sav /SNS/software/idltools/sav/
+	cp NeedHelp_images/*.png /SNS/software/idltools/sav/NeedHelp_images/
+	cp NeedHelp /SNS/software/idltools/
 
