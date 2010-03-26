@@ -49,7 +49,7 @@ FUNCTION MoveToEndOutputFlag, Event, cl_text
     
       ;keep text between '--output=' and next space
       string_to_keep = split_string(part2_parsed[1],PATTERN=' ')
-
+      
       ;path = FILE_DIRNAME(part2_parsed[1])
       path = FILE_DIRNAME(string_to_keep[0])
       path += '/'
@@ -165,7 +165,7 @@ PRO Create_step1_big_table, Event
       new_cl = cl_field1_array[0]
       new_cl += STRCOMPRESS(sequence_field1[index_sz],/REMOVE_ALL)
       ;IF (N_ELEMENTS(cl_fiedl1_array) GT 1) THEN BEGIN
-        new_cl += cl_field1_array[1]
+      new_cl += cl_field1_array[1]
       ;ENDIF
       cl_array[index_sz] = new_cl
       index_sz++
@@ -181,7 +181,7 @@ PRO Create_step1_big_table, Event
       new_cl = cl_field2_array[0]
       new_cl += STRCOMPRESS(sequence_field2[index_sz],/REMOVE_ALL)
       ;IF (N_ELEMENTS(cl_fiedl2_array) GT 1) THEN BEGIN
-        new_cl += cl_field2_array[1]
+      new_cl += cl_field2_array[1]
       ;ENDIF
       cl_array[index_sz] = new_cl
       index_sz++
@@ -196,9 +196,9 @@ PRO Create_step1_big_table, Event
       cl_field3_array = STRSPLIT(cl_array[index_sz],'<FIELD#3>',/EXTRACT,/REGEX)
       new_cl = cl_field3_array[0]
       new_cl += STRCOMPRESS(sequence_field3[index_sz],/REMOVE_ALL)
-     ; IF (N_ELEMENTS(cl_fiedl3_array) GT 1) THEN BEGIN
-        new_cl += cl_field3_array[1]
-     ; ENDIF
+      ; IF (N_ELEMENTS(cl_fiedl3_array) GT 1) THEN BEGIN
+      new_cl += cl_field3_array[1]
+      ; ENDIF
       cl_array[index_sz] = new_cl
       index_sz++
     ENDWHILE
@@ -399,6 +399,8 @@ PRO getListFromSelection, Event,SELECTION=selection
     add_seq_number_to_global_seq_number, column_seq_number, tmp_seq_number
   ENDIF
   
+  cleanup_seq_number, column_seq_number
+  
   CASE (selection) OF
     1: (*(*global).sequence_field1) = column_seq_number
     2: (*(*global).sequence_field2) = column_seq_number
@@ -406,6 +408,25 @@ PRO getListFromSelection, Event,SELECTION=selection
   ENDCASE
   
 END
+
+;+
+; :Description:
+;   This routine remove all the empty value
+;
+; :Params:
+;    column_seq_number
+;
+; :Author: j35
+;-
+pro cleanup_seq_number, column_seq_number
+  compile_opt idl2
+  
+  index = where(column_seq_number ne '', nbr)
+  if (nbr gt 0) then begin
+    column_seq_number = temporary(column_seq_number[index])
+  endif
+  
+end
 
 ;------------------------------------------------------------------------------
 PRO determine_replaced_by_sequence, Event
