@@ -30,15 +30,16 @@ cd , CurrentFolder + '/Classes/'
 ;Build CLoop GUI
 cd, CurrentFolder + '/NeedHelpGUI/'
 .run MakeGuiMainBase.pro
+.run design_tab1.pro
 .run design_tab2.pro
-.run design_tab2.pro
+
+;Build all functions and procedures
+cd, CurrentFolder
 
 ;build all functions
 .run create_email_message.pro
 .run create_email_subject.pro
 
-;Build all procedures
-cd, CurrentFolder
 .run send_your_message.pro
 .run send_error_message.pro
 .run browse_files.pro
