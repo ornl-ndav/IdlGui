@@ -215,8 +215,7 @@ FUNCTION batch_repopulate_gui, Event, DRfiles
       LongFileName  = DRfiles[i]
       
       ;apply auto cleanup of data if switch is on
-      value = getButtonValue(event,'auto_cleaning_data_cw_bgroup')
-      if (value eq 0) then begin ;apply auto cleanup
+      if ((*global).settings_auto_cleaning_flag) then begin ;apply auto cleanup
         cleanup_reduce_data, event, file_name = LongFileName
       endif
       
@@ -342,7 +341,7 @@ PRO ref_scale_LoadBatchFile, Event
     ;this function updates the output file name
     update_output_file_name_from_batch, Event ;_output
   ENDIF ELSE BEGIN
-    putValueInLabel, Event, 'output_file_name_label_dynmaic', ''; _put
+    putValueInLabel, Event, 'output_short_file_name', ''; _put
     message = ['The loading of ' + BatchFileName + ' did not work !',$
       'Check the Log Book !']
     title   = 'Problem Loading the Batch File!'
@@ -392,7 +391,7 @@ PRO ref_scale_save_as_batch_file, Event
   new_path        = ''
   batch_extension = (*global).BatchExtension
   
-      dialog_id = widget_info(event.top, find_by_uname='MAIN_BASE_ref_scale')
+  dialog_id = widget_info(event.top, find_by_uname='MAIN_BASE_ref_scale')
   BatchFileName   = DIALOG_PICKFILE(FILTER            = filter,$
     GET_PATH          = new_path,$
     PATH              = path,$

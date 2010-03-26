@@ -131,7 +131,7 @@ PRO plot_loaded_file, Event, index
   loadct,5,/SILENT
   
   ;check if plot will be with error bars or not
-  ErrorBarStatus = getButtonValidated(Event, 'show_error_bar_group') ;_get
+  ErrorBarStatus = (*global).settings_show_error_bar_flag
   
   IF (ClearPlot EQ 1) THEN BEGIN  ;no plot to plot, erase display
   
@@ -251,7 +251,7 @@ PRO plot_loaded_file, Event, index
         END
       ENDCASE
       
-      IF (ErrorBarStatus EQ 0) THEN BEGIN
+      IF (ErrorBarStatus EQ 1) THEN BEGIN
         errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
       ENDIF
       
@@ -326,7 +326,7 @@ PRO plot_loaded_file, Event, index
     
   ENDELSE
   
-  IF (ErrorBarStatus EQ 0) THEN BEGIN
+  IF (ErrorBarStatus EQ 1) THEN BEGIN
     errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
   ENDIF
   
