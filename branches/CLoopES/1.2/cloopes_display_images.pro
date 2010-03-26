@@ -60,4 +60,9 @@ PRO display_tab1_error, MAIN_BASE=main_base, Event=event, STATUS=status
   WSET, id
   TV, image, 0, 0,/true
   
+  wait, 3
+  uname = 'tab1_error_base'
+  MapBase, EVENT=Event, BASE=main_base, UNAME=uname, STATUS=0
+  
+  
 END
