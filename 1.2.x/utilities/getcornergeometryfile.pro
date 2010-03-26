@@ -77,6 +77,6 @@ function GetCornerGeometryFile, Instrument, RUNNUMBER=RUNNUMBER
       cornergeometry = ""
     end
   endcase
-  print,'Corner Geometry = ', cornergeometry
+  ;print,'Corner Geometry = ', cornergeometry
   return, cornergeometry
 end
