@@ -160,6 +160,11 @@ PRO MAIN_BASE_ref_scale_event, Event
       ActivateWidget, Event, 'email_configure', status
     end
     
+    ;pop up configure email base
+    widget_info(wWidget, find_by_uname='email_configure'): begin
+        email_configure_base, Even=event
+    end
+    
     ;preview of output file button
     widget_info(wWidget, find_by_uname='preview_output_file_button'): begin
       preview_of_output_file, event
