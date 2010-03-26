@@ -44,19 +44,56 @@ pro email_configure_base_event, Event
     widget_info(event.top, $
       find_by_uname='email_configure_base_close_button'): begin
       
+      (*global_settings).save_setup = 1b
+      
       ;check that email match
-      check_email_match, event
+      check_email_match, event=event, result=result
+      if (result eq 'Yes') then begin
+        (*global_settings).save_setup = 0b
+        return
+      endif
+      if (result eq 'OK') then begin
+        (*global_settings).save_setup = 0b
+        return
+      endif
+      if (result eq 'No') then begin
+        ;turn off the email output in main base
+        turn_off_email_output, event
+        
+        id = widget_info(Event.top, $
+          find_by_uname='email_configure_widget_base')
+        widget_control, id, /destroy
+      endif
+      if (result eq '') then begin
+        save_status_of_email_configure_button, event
+        id = widget_info(Event.top, $
+          find_by_uname='email_configure_widget_base')
+        widget_control, id, /destroy
+      endif
       
-      save_status_of_email_configure_button, event
-      
-      id = widget_info(Event.top, $
-        find_by_uname='email_configure_widget_base')
-      widget_control, id, /destroy
     end
     
     else:
     
   endcase
+  
+end
+
+;+
+; :Description:
+;   This turns off the email output cw_bgroup and disable the Setup... button
+;
+; :Params:
+;    main_event
+;
+; :Author: j35
+;-
+pro turn_off_email_output, event
+  compile_opt idl2
+  
+  ;get global structure
+  widget_control,event.top,get_uvalue=global_settings
+  (*global_settings).turn_off_email_output = 1b
   
 end
 
@@ -68,13 +105,72 @@ end
 ;
 ; :Params:
 ;    event
+;    result
 ;
 ; :Author: j35
 ;-
-pro check_email_match, event
+pro check_email_match, event=event, base=base, result=result
   compile_opt idl2
   
+  result = ''
   
+  email1 = getTextFieldvalue(event,'email1')
+  s_email1 = strcompress(email1,/remove_all)
+  if (s_email1 eq '') then begin
+    show_email_info_message, event=event, type='empty_email', result=result
+  endif
+  
+  email2 = getTextFieldValue(event,'email2')
+  s_email2 = strcompress(email2,/remove_all)
+  
+  if (not(strmatch(email1,email2))) then begin
+    show_email_info_message, event=event, type='no_match', result=result
+  endif
+  
+end
+
+;+
+; :Description:
+;   This pops up a dialog_message box that will inform the user that the
+;   email given is either empty or that they don't match and ask him to
+;   make a descision
+
+; :Keywords:
+;    event
+;    type
+;    result
+;
+; :Author: j35
+;-
+pro  show_email_info_message, event=event, type=type, result=result
+  compile_opt idl2
+  
+  case (type) of
+    'empty_email': begin
+      message_text = ['You did not define any email','',$
+        'Do you want to setup an email?']
+      title = ['No email defined!']
+      question_flag = 1
+      information_flag = 0
+    end
+    'no_match': begin
+      message_text = ['The two emails you define do not match!']
+      title = 'Emails define do not match!'
+      question_flag = 0
+      information_flag = 1
+    end
+  endcase
+  
+  dialog_parent = widget_info(event.top, $
+    find_by_uname='email_configure_widget_base')
+    
+  result = dialog_message(message_text,$
+    information = information_flag,$
+    question = question_flag,$
+    title = title, $
+    /center,$
+    dialog_parent = dialog_parent)
+    
 end
 
 ;+
@@ -113,10 +209,29 @@ pro email_settings_killed, id
   global = (*global_settings).global
   main_event = (*global_settings).main_event
   
+  if ((*global_settings).save_setup eq 0b) then begin
+    message_text = ['New setup (if any) has not been saved!']
+    title = 'Leaving without saving new setup!'
+    result = dialog_message(message_text,$
+      information = 1,$
+      title = title, $
+      /center,$
+      dialog_parent = id)
+    ActivateWidget, main_event, 'email_configure', 1
+  endif else begin
+    if ((*global_settings).turn_off_email_output eq 1b) then begin
+      id1 = widget_info(main_event.top, find_by_uname='send_by_email_output')
+      widget_control, id1, set_value = 1
+      id2 = widget_info(main_event.top, find_by_uname='email_configure')
+      widget_control, id2, sensitive = 0
+    endif else begin
+      ActivateWidget, main_event, 'email_configure', 1
+    endelse
+  endelse
+  
   id = widget_info(id, $
     find_by_uname='email_configure_widget_base')
   widget_control, id, /destroy
-  ActivateWidget, main_event, 'email_configure', 1
   
 end
 
@@ -153,30 +268,30 @@ PRO email_configure_base_gui, wBase, main_base_geometry, global
     GROUP_LEADER = ourGroup)
     
   row1 = widget_base(wBase,$
-  /row)
+    /row)
   label = widget_label(row1,$
-  value = '        email:')
+    value = '        email:')
   value = widget_text(row1,$
-  value = '',$
-  xsize = 40,$
-  uname = 'email1',$
-  /editable,$
-  /align_left)
-  
+    value = '',$
+    xsize = 40,$
+    uname = 'email1',$
+    /editable,$
+    /align_left)
+    
   row2 = widget_base(wBase,$
-  /row)
+    /row)
   label = widget_label(row2,$
-  value = 'confirm email:')
+    value = 'confirm email:')
   value = widget_text(row2,$
-  xsize = 40,$
-  value = '',$
-  uname = 'email2',$
-  /editable,$
-  /align_left)
+    xsize = 40,$
+    value = '',$
+    uname = 'email2',$
+    /editable,$
+    /align_left)
     
   ;empty row
   row3 = widget_label(wBase,$
-  value = ' ')
+    value = ' ')
     
   close = widget_button(wBase,$
     value = 'SAVE and CLOSE',$
@@ -207,6 +322,8 @@ PRO email_configure_base, main_base=main_base, Event=event
   
   global_settings = PTR_NEW({ wbase: wbase1,$
     global: global, $
+    save_setup: 0b, $
+    turn_off_email_output: 0b,$
     main_event: Event})
     
   WIDGET_CONTROL, wBase1, SET_UVALUE = global_settings
