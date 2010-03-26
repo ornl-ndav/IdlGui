@@ -109,7 +109,7 @@ PRO email_configure_base_gui, wBase, main_base_geometry, global
   main_base_ysize = main_base_geometry.ysize
   
   xsize = 350
-  ysize = 155
+  ysize = 130
   
   xoffset = (main_base_xsize - xsize) / 2
   xoffset += main_base_xoffset
@@ -132,9 +132,31 @@ PRO email_configure_base_gui, wBase, main_base_geometry, global
     /column,$
     GROUP_LEADER = ourGroup)
     
-  auto_clean_base = widget_base(wBase,$
-    /row,$
-    /align_center)
+  row1 = widget_base(wBase,$
+  /row)
+  label = widget_label(row1,$
+  value = '        email:')
+  value = widget_text(row1,$
+  value = '',$
+  xsize = 40,$
+  uname = 'email1',$
+  /editable,$
+  /align_left)
+  
+  row2 = widget_base(wBase,$
+  /row)
+  label = widget_label(row2,$
+  value = 'confirm email:')
+  value = widget_text(row2,$
+  xsize = 40,$
+  value = '',$
+  uname = 'email2',$
+  /editable,$
+  /align_left)
+    
+  ;empty row
+  row3 = widget_label(wBase,$
+  value = ' ')
     
   close = widget_button(wBase,$
     value = 'SAVE and CLOSE',$

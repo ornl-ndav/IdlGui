@@ -162,7 +162,8 @@ PRO MAIN_BASE_ref_scale_event, Event
     
     ;pop up configure email base
     widget_info(wWidget, find_by_uname='email_configure'): begin
-        email_configure_base, Even=event
+      email_configure_base, Even=event
+      ActivateWidget, Event, 'email_configure', 0
     end
     
     ;preview of output file button
@@ -186,7 +187,6 @@ PRO MAIN_BASE_ref_scale_event, Event
       settings_base, Event=event
       ActivateWidget, Event, 'open_settings_base', 0
     end
-    
     
     ;------------------------------------------------------------------------------
     ;***** STEP 1 - [LOAD FILES] **************************************************
