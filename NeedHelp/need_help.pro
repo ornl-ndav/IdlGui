@@ -63,9 +63,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;define global variables
   global = PTR_NEW ({ path: '~/',$
     firefox: '/usr/bin/firefox',$
-    srun_web_page: 'https://neutronsr.us/applications/jobmonitor/'+$
-    'squeue.php?view=all',$
-      
+          
     default_path: '~/results/',$
     
     debugging:    debugging,$ ;yes or no
@@ -131,7 +129,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;display buttons
   display_buttons, MAIN_BASE=main_base, button='faq', status='off'
   display_buttons, MAIN_BASE=main_base, button='orbiter', status='off'
-  display_buttons, MAIN_BASE=main_base, button='how_to', status='off'
+  ;display_buttons, MAIN_BASE=main_base, button='how_to', status='off'
   display_buttons, MAIN_BASE=main_base, button='neutronsr_us', status='off'
   display_buttons, MAIN_BASE=main_base, button='sns', status='off'
   display_buttons, MAIN_BASE=main_base, button='portal', status='off'

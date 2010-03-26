@@ -1,4 +1,4 @@
-;==============================================================================
+;=========================================================================a=====
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -70,8 +70,8 @@ PRO MAIN_BASE_event, Event
       event_button, Event, uname='button6'
     end
     
-    widget_info(wWidget, find_by_uname='button7'): begin
-      event_button, Event, uname='button7'
+    widget_info(wWidget, find_by_uname='button7'): begin ;how_to right now
+      ;event_button, Event, uname='button7'
     end
     
     widget_info(wWidget, find_by_uname='button8'): begin
