@@ -44,6 +44,7 @@ cd, CurrentFolder
 .run browse_files.pro
 .run remove_files.pro
 .run create_tar_folder.pro
+.run launch_web_page.pro
 
 .run display_buttons.pro
 .run display_descriptions_buttons.pro

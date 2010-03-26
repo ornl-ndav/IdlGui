@@ -1,4 +1,4 @@
-;==============================================================================
+;=========================================================================a=====
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -34,47 +34,46 @@
 
 ;+
 ; :Description:
-;   This procedures is the event handler of all the buttons (screenshots) of tab1
+;     launch the web page given as an argument using firefox
 ;
-; :params:
-;   event
-;
-; :Keywords:
-;   uname
+; :Params:
+;    event
+;    web_page
 ;
 ; :Author: j35
 ;-
-pro event_button, Event, uname=uname
+pro launch_web_page, event, web_page
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  widget_control, /hourglass
+  
+  firefox       = (*global).firefox
+  cmd = firefox + ' ' + web_page + ' &'
+  spawn, cmd
+  
+  widget_control, hourglass=0
+  
+end
 
-  button_name = getButtonName(uname)
-  if (button_name eq '') then return
-  error = 0
-  catch, error
-  if (error ne 0) then begin
-    catch,/cancel
-    if (event.press eq 1) then begin
-      display_buttons, event=event, button=button_name, status='on'
-      launch_this_web_page, event, button_name
-    endif
-    if (event.release eq 1) then begin
-      display_buttons, event=event, button=button_name, status='off'
-    endif
-  endif else begin
-    if (event.enter) then begin
-      display_descriptions_buttons, EVENT=event, button=button_name
-      ;cursor becomes a hand
-      standard = 58
-    endif else begin
-    display_descriptions_buttons, EVENT=event, button='no_button'
-      standart = 31
-      display_buttons, event=event, button=button_name,status='off'
-    ;cursor back to normal
-    endelse
-    id = WIDGET_INFO(Event.top,$
-      find_by_uname=uname)
-    WIDGET_CONTROL, id, GET_VALUE=id_value
-    WSET, id_value
-    DEVICE, CURSOR_STANDARD=standard
-  endelse
+;+
+; :Description:
+;    This takes the name of the button, looks for its link in the configuration file
+;    and passes it to the main launch_web_page procedure to open the page
+;
+; :Params:
+;    event
+;    button_name
+;
+; :Author: j35
+;-
+pro launch_this_web_page, event, button_name
+  compile_opt idl2
+  
+  file = OBJ_NEW('IDLxmlParser','.NeedHelp.cfg')
+  link = file->getValue(tag=['configuration','link',button_name)
+  obj_destroy, file
+  
+  launch_web_page, event, link
   
 end
