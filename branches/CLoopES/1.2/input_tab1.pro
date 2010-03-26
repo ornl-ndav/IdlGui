@@ -37,14 +37,14 @@ pro input_text_tab1, event
   CATCH, error
   IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
-    print, 'ici'
+;    print, 'ici'
     displayTextRemoved, Event
     create_cl_array, Event
     remove_output_file_name, Event
   ENDIF ELSE BEGIN
-    print, 'here'
+;    print, 'here'
     IF (event.enter EQ 0) THEN BEGIN ;leaving region
-      print, 'there'
+;      print, 'there'
       cleanup_selection_not_finalized, Event
     ENDIF
   ENDELSE
