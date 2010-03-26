@@ -36,6 +36,7 @@ cd, CurrentFolder + '/CLoopESGUI/'
 cd, CurrentFolder
 
 ;procedures
+.run input_tab1.pro
 .run cloopes_srun.pro
 .run cloopes_tab.pro
 .run cloopes_tab1.pro

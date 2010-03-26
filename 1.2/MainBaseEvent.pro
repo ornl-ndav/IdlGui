@@ -113,23 +113,13 @@ PRO MAIN_BASE_event, Event
     
     ;preview of CL
     WIDGET_INFO(wWidget, FIND_BY_UNAME='preview_cl_file_text_field'): BEGIN
-      CATCH, error
-      IF (error NE 0) THEN BEGIN
-        CATCH,/CANCEL
-        displayTextRemoved, Event
-        create_cl_array, Event
-        remove_output_file_name, Event
-      ENDIF ELSE BEGIN
-        IF (event.enter EQ 0) THEN BEGIN ;leaving region
-          cleanup_selection_not_finalized, Event
-        ENDIF
-      ENDELSE
     END
     
-    ;input text field
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='input_text_field'): BEGIN
-      parse_input_field, Event ;_input_parser
-    END
+    ;;input text field
+    ;WIDGET_INFO(wWidget, FIND_BY_UNAME='input_text_field'): BEGIN
+    ;  print, 'in input'
+    ;  parse_input_field, Event ;_input_parser
+    ;END
     
     ;Help button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='help_button'): BEGIN
