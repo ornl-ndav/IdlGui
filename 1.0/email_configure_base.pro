@@ -44,6 +44,9 @@ pro email_configure_base_event, Event
     widget_info(event.top, $
       find_by_uname='email_configure_base_close_button'): begin
       
+      ;check that email match
+      check_email_match, event
+      
       save_status_of_email_configure_button, event
       
       id = widget_info(Event.top, $
@@ -54,6 +57,23 @@ pro email_configure_base_event, Event
     else:
     
   endcase
+  
+end
+
+;+
+; :Description:
+;   This checks that the email and the confirm email texts match, if not,
+;   a dialog message is displayed and ask the user to fix the issue or to
+;   simply exit the application without saving the emails
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro check_email_match, event
+  compile_opt idl2
+  
   
 end
 
@@ -96,7 +116,7 @@ pro email_settings_killed, id
   id = widget_info(id, $
     find_by_uname='email_configure_widget_base')
   widget_control, id, /destroy
-  ;ActivateWidget, main_Event, 'open_settings_base', 1
+  ActivateWidget, main_event, 'email_configure', 1
   
 end
 
