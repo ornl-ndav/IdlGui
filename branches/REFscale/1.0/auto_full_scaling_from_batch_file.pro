@@ -75,6 +75,7 @@ pro auto_full_scaling_from_batch_file, Event
   PlotLoadedFiles, Event      ;_Plot
   ;force the axis to start at 0
   putValueInTextField, Event,'XaxisMinTextField', strcompress(0,/remove_all)
+  putValueInTextField, Event,'YaxisMinTextField', strcompress(0.000001,/remove_all)
   plot_loaded_file, Event, 'all' ;_Plot
   
 end
