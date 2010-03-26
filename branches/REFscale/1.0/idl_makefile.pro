@@ -81,6 +81,9 @@ cd, CurrentFolder
 .run auto_cleaning_data_cw_bgroup.pro
 .run configure_auto_cleanup.pro
 
+;email output configure base
+.run email_configure_base.pro
+
 .run ref_scale_openfile.pro
 .run ref_scale_plot_subroutines.pro
 .run ref_scale_plot.pro
