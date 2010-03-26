@@ -190,11 +190,6 @@ pro preview_of_file, event, file_name
     
 end
 
-
-
-
-
-
 ;******************************************************************************
 ;this function create the output file name
 ;if CE file name is REF_L_2893.txt
@@ -204,12 +199,13 @@ FUNCTION createOuputFileName, Event
   widget_control,id,get_uvalue=global
   
   full_CE_name = (*global).full_CE_name
+  base_name = file_basename(full_CE_name)
   
   ;remove the .txt extension
-  full_ce_name_1 = strsplit(full_CE_name,'.txt',/regex,/extract)
+  full_ce_name_1 = strsplit(base_name,'.txt',/regex,/extract)
   
   ;add '_CE_scalling.txt'
-  output_file_name = full_ce_name_1[0] + '_CE_scaling.txt'
+  output_file_name = full_ce_name_1[0] + '_scaled
   
   RETURN, output_file_name
 END
@@ -375,8 +371,9 @@ PRO update_output_file_name, Event ;_output
     FileName = createOuputFileName(Event)
     ;display the name of the output file name
     putValueInLabel, Event, $
-      'output_file_name_label_dynmaic', $
+      'output_short_file_name', $
       FileName            ;_put
+    output_file_name_value, event
   ENDIF
 END
 
@@ -388,8 +385,9 @@ PRO update_output_file_name_from_batch, Event ;_output
   FileName = createOuputFileName(Event)
   ;display the name of the output file name
   putValueInLabel, Event, $
-    'output_file_name_label_dynmaic', $
+    'output_short_file_name', $
     FileName                      ;_put
+  output_file_name_value, event
 END
 
 ;##############################################################################

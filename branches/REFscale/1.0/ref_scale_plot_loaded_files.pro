@@ -67,8 +67,9 @@ PRO PlotLoadedFiles, Event
   
   ;get scale
   IsYlin = getScale(Event,'Y')
+
   ;check if plot will be with error bars or not
-  ErrorBarStatus = getButtonValidated(Event, 'show_error_bar_group')
+  ErrorBarStatus = (*global).settings_show_error_bar_flag
   
   IF (size EQ 1 AND $
     ListLongFileName[0] EQ '') THEN BEGIN ;no more files loaded so erase plot
@@ -157,7 +158,7 @@ PRO PlotLoadedFiles, Event
           END
         ENDCASE
         
-        IF (ErrorBarStatus EQ 0) THEN BEGIN ;if we want error bars
+        IF (ErrorBarStatus EQ 1) THEN BEGIN ;if we want error bars
           errplot, $
             flt0, $
             flt1-flt2, $
@@ -190,7 +191,7 @@ PRO PlotLoadedFiles, Event
           END
         ENDCASE
         
-        IF (ErrorBarStatus EQ 0) THEN BEGIN
+        IF (ErrorBarStatus EQ 1) THEN BEGIN
           errplot, flt0, $
             flt1-flt2, $
             flt1+flt2, $

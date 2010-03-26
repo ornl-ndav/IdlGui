@@ -90,7 +90,7 @@ PRO LoadFile_Q, Event
   LongFileName = OpenFile(Event)
   
   ;apply auto cleanup of data if switch is on
-  value = getButtonValue(event,'auto_cleaning_data_cw_bgroup')
+  value = (*global).settings_auto_cleaning_flag
   if (value eq 0) then begin ;apply auto cleanup
     cleanup_reduce_data, event, file_name = LongFileName
   endif
