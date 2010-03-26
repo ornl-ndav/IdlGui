@@ -71,7 +71,7 @@ pro launch_this_web_page, event, button_name
   compile_opt idl2
   
   file = OBJ_NEW('IDLxmlParser','.NeedHelp.cfg')
-  link = file->getValue(tag=['configuration','link',button_name)
+  link = file->getValue(tag=['configuration','link',button_name])
   obj_destroy, file
   
   launch_web_page, event, link
