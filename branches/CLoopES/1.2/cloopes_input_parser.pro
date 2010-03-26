@@ -197,10 +197,6 @@ PRO displayTextRemoved, Event
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME='preview_cl_file_text_field')
   text_selected_index = WIDGET_INFO(id, /TEXT_SELECT)
   
-  help, cl_text
-  help, text_selected_index
-  print, text_selected_index
-  
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
   IF (text_selected_index[1] EQ 0) THEN BEGIN
