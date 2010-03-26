@@ -54,6 +54,10 @@ pro settings_base_event, Event
     
     widget_info(event.top, $
       find_by_uname='settings_base_close_button'): begin
+      
+      ;this will allow the settings tab to come back in the same state
+      save_status_of_settings_button, event
+      
       id = widget_info(Event.top, $
         find_by_uname='settings_widget_base')
       widget_control, id, /destroy
@@ -65,6 +69,44 @@ pro settings_base_event, Event
   
 end
 
+;+
+; :Description:
+;   This procedure save all the flags when leaving the settings base
+;   by using the 'SAVE and CLOSE' button.
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro save_status_of_settings_button, event
+  compile_opt idl2
+  
+  ;get global structure
+  widget_control,event.top,get_uvalue=global_settings
+  global = (*global_settings).global
+  
+  ;auto cleaning flag
+  if (getButtonValidated(event,'auto_cleaning_data_cw_bgroup') eq 1) then begin
+    status = 0b
+  endif else begin
+    status = 1b
+  endelse
+  (*global).settings_auto_cleaning_flag = status
+  
+  ;show error bars
+  if (getButtonValidated(event,'show_error_bar_group') eq 1) then begin
+  status = 0b
+  endif else begin
+  status = 1b
+  endelse
+  (*global).settings_show_error_bar_flag = status
+  
+  ;number of data to display
+  value = getTextFieldValue(event,'nbrDataTextField')
+  (*global).settings_number_of_data_to_display = value
+  
+end
 
 ;+
 ; :Description:
@@ -91,7 +133,7 @@ pro settings_killed, id
 end
 
 ;------------------------------------------------------------------------------
-PRO settings_base_gui, wBase, main_base_geometry
+PRO settings_base_gui, wBase, main_base_geometry, global
 
   main_base_xoffset = main_base_geometry.xoffset
   main_base_yoffset = main_base_geometry.yoffset
@@ -126,23 +168,37 @@ PRO settings_base_gui, wBase, main_base_geometry
     /row,$
     /align_center)
     
+  auto_cleaning_flag = (*global).settings_auto_cleaning_flag
+  if (auto_cleaning_flag eq 1b) then begin
+    value = 0
+    sensitive = 1
+  endif else begin
+    value = 1
+    sensitive = 0
+  endelse
   group = cw_bgroup(auto_clean_base,$
     ['Yes','No'],$
     /row,$
     label_left = 'Auto Cleanning:',$
     uname = 'auto_cleaning_data_cw_bgroup',$
-    set_value = 0,$
+    set_value = value,$
     /exclusive)
     
   button = widget_button(auto_clean_base,$
     value = '  CONFIGURE ...  ',$
     uname = 'auto_cleaning_data_configure_button',$
-    sensitive = 1)
+    sensitive = sensitive)
     
+  show_error_bars = (*global).settings_show_error_bar_flag
+  if (show_error_bars eq 1b) then begin
+    value = 0
+  endif else begin
+    value = 1
+  endelse
   ;Show Error Bars --------------------------------------------------------------
   wShowErrorBarGroup = CW_BGROUP(wBase,$
     ['Yes','No'],$
-    SET_VALUE  = 0.0,$
+    SET_VALUE  = value,$
     ROW        = 1,$
     UNAME      = 'show_error_bar_group',$
     LABEL_LEFT = 'Show error bars:',$
@@ -153,17 +209,18 @@ PRO settings_base_gui, wBase, main_base_geometry
   row2 = widget_base(wBase,$
     /row)
     
+  number_of_data_to_display = (*global).settings_number_of_data_to_display
   wDataToDisplayLabel = WIDGET_LABEL(row2,$
     VALUE   = 'Number of data to display in step3: ')
   wDataToDisplayText = WIDGET_TEXT(row2,$
     UNAME     = 'nbrDataTextField',$
     xsize     = 10,$
-    VALUE     = '100',$
+    VALUE     = strcompress(number_of_data_to_display,/remove_all),$
     /EDITABLE,$
     /ALIGN_LEFT)
     
   close = widget_button(wBase,$
-    value = 'CLOSE',$
+    value = 'SAVE and CLOSE',$
     xsize = 150,$
     uname = 'settings_base_close_button')
     
@@ -185,7 +242,7 @@ PRO settings_base, main_base=main_base, Event=event
   ;build gui
   wBase1 = ''
   settings_base_gui, wBase1, $
-    main_base_geometry
+    main_base_geometry, global
     
   WIDGET_CONTROL, wBase1, /REALIZE
   

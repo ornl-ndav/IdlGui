@@ -68,6 +68,11 @@ file = OBJ_NEW('idlxmlparser', '.REFscale.cfg')
     
     nbr_data_to_exclude: 0,$  ;number of data to remove on both side when
     ;performing setp3
+
+    ;settings base
+    settings_show_error_bar_flag: 1b,$
+    settings_number_of_data_to_display: 100L,$
+    settings_auto_cleaning_flag: 1b,$
     percentage_of_q_to_remove_value: 10,$ ;percentage of data to remove when
     ;using auto cleanup
     
