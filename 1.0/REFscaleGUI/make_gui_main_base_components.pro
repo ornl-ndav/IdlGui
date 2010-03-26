@@ -216,7 +216,8 @@ PRO MakeGuiMainBaseComponents, MAIN_BASE, StepsTabSize
     
   button = widget_button(email_base,$
     uname = 'email_configure',$
-    value = ' Setup... ')
+    value = ' Setup... ',$
+    sensitive = 0)
     
   ;--rescale base
   RescaleBase = WIDGET_BASE(MAIN_BASE,$

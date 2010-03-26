@@ -150,6 +150,16 @@ PRO MAIN_BASE_ref_scale_event, Event
       ProduceOutputFile, Event ;_produce_output
     END
     
+    ;email output
+    widget_info(wWidget, find_by_uname='send_by_email_output'): begin
+      if (getButtonValidated(event,'send_by_email_output') eq 0) then begin
+        status = 1
+      endif else begin
+        status = 0
+      endelse
+      ActivateWidget, Event, 'email_configure', status
+    end
+    
     ;preview of output file button
     widget_info(wWidget, find_by_uname='preview_output_file_button'): begin
       preview_of_output_file, event
@@ -164,7 +174,7 @@ PRO MAIN_BASE_ref_scale_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='show_error_bar_group'): BEGIN
       WithWithoutErrorBars, Event ;_eventcb
     END
-        
+    
     ;settings base button
     widget_info(wWidget, $
       find_by_uname='open_settings_base'): begin
