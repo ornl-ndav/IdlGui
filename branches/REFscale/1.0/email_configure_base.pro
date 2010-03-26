@@ -189,6 +189,10 @@ pro save_status_of_email_configure_button, event
   ;get global structure
   widget_control,event.top,get_uvalue=global_settings
   global = (*global_settings).global
+
+  email1 = getTextFieldvalue(event,'email1')
+  s_email1 = strcompress(email1,/remove_all)
+  (*global).email = s_email1
   
 end
 
@@ -272,7 +276,7 @@ PRO email_configure_base_gui, wBase, main_base_geometry, global
   label = widget_label(row1,$
     value = '        email:')
   value = widget_text(row1,$
-    value = '',$
+    value = (*global).email,$
     xsize = 40,$
     uname = 'email1',$
     /editable,$
@@ -284,7 +288,7 @@ PRO email_configure_base_gui, wBase, main_base_geometry, global
     value = 'confirm email:')
   value = widget_text(row2,$
     xsize = 40,$
-    value = '',$
+    value = (*global).email,$
     uname = 'email2',$
     /editable,$
     /align_left)

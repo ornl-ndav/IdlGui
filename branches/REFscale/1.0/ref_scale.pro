@@ -76,6 +76,9 @@ file = OBJ_NEW('idlxmlparser', '.REFscale.cfg')
     percentage_of_q_to_remove_value: 10,$ ;percentage of data to remove when
     ;using auto cleanup
     
+    ;email where to send the output files
+    email: '',$
+    
     BatchExtension:         '.txt',$
     BatchTable:             PTR_NEW(0L),$
     BatchDefaultPath:       '~/results/',$
