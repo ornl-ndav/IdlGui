@@ -54,20 +54,39 @@ pro settings_base_event, Event
     
     widget_info(event.top, $
       find_by_uname='settings_base_close_button'): begin
-      
-      ;      ;save new auto q percentage value
-      ;      value = getTextfieldvalue(Event,'perecentage_of_q_to_remove_uname')
-      ;      (*global).percentage_of_q_to_remove_value = value
-      ;
       id = widget_info(Event.top, $
         find_by_uname='settings_widget_base')
       widget_control, id, /destroy
-      ActivateWidget, main_Event, 'open_settings_base', 1
     end
     
     else:
     
   endcase
+  
+end
+
+
+;+
+; :Description:
+;   Reached when the settings base is killed
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro settings_killed, id
+  compile_opt idl2
+  
+  ;get global structure
+  widget_control,id,get_uvalue=global_settings
+  global = (*global_settings).global
+  main_event = (*global_settings).main_event
+  
+  id = widget_info(id, $
+    find_by_uname='settings_widget_base')
+  widget_control, id, /destroy
+  ActivateWidget, main_Event, 'open_settings_base', 1
   
 end
 
@@ -97,6 +116,7 @@ PRO settings_base_gui, wBase, main_base_geometry
     SCR_YSIZE    = ysize,$
     SCR_XSIZE    = xsize,$
     MAP          = 1,$
+    kill_notify  = 'settings_killed', $
     /BASE_ALIGN_CENTER,$
     /align_center,$
     /column,$
