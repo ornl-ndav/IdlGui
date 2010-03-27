@@ -487,3 +487,21 @@ FUNCTION getOutputFileName, Event
   RETURN, path+outputFileName
 END
 
+;+
+; :Description:
+;    This function returns the full name of the combined scaled data file
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+function  getCombinedOutputFileName, event
+  widget_control, event.top, get_uvalue=global
+  outputFileName = getTextFieldValue(Event,$
+    'combined_scaled_data_file_name_value')
+  path = (*global).BatchDefaultPath
+  RETURN, path+outputFileName
+END

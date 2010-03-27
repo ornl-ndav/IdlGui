@@ -245,17 +245,19 @@ PRO ProduceOutputFile, Event
   ;text string to output
   MasterText = ''
   
-  ;get output file name
+  ;get scaled output file name
   outputFileName = getOutputFileName(Event)
+  ;get combined scaled output file name
+  combinedOutputFileName = getCombinedOutputFileName(event)
   
-    idl_send_to_geek_addLogBookText, Event, '-> Output File Name : ' + $
-    outputFileName
-    
   ;make sure the user has write access there
   file_path = FILE_DIRNAME(outputFileName)
   IF (FILE_TEST(file_path,/directory,/write)) THEN BEGIN
     idl_send_to_geek_addLogBookText, Event, $
       '-> Does user has write access to this directory ... YES'
+      
+    idl_send_to_geek_addLogBookText, Event, '-> Output File Name : ' + $
+      outputFileName
       
     ;metadata of the CE file
     metadata_CE_file = (*(*global).metadata_CE_file)
@@ -277,16 +279,25 @@ PRO ProduceOutputFile, Event
     flt1_ptr = (*global).flt1_rescale_ptr
     flt2_ptr = (*global).flt2_rescale_ptr
     
+    ;calculate in first loop how many data point total we have
+    nbr_data_point = 0
+    full_flt0 = fltarr(1)
+    full_flt1 = fltarr(1)
+    full_flt2 = fltarr(1)
+    full_master_text = strarr(1)
+    
     ;loop over all the files to get output
     for i=0,(nbrFiles-1) do begin
     
       ;add a blank line before all data
       MasterText   = [MasterText,'']
+      full_master_text = [MasterText,'']
       
       ;get name of file first
       fileName     = list_of_files[i]
       TextFileName = '## ' + fileName + '##'
       MasterText   = [MasterText,TextFileName]
+      full_master_text = [full_master_text,TextFileName]
       
       idl_send_to_geek_addLogBookText, Event, '-> Working with File # ' + $
         STRCOMPRESS(i,/REMOVE_ALL) + ' (' + fileName + ')'
@@ -297,6 +308,7 @@ PRO ProduceOutputFile, Event
       TextAngle    = '#Incident angle: ' + strcompress(angle_value)
       TextAngle   += ' degrees'
       MasterText   = [MasterText,TextAngle]
+      full_master_text = [full_master_text,TextAngle]
       
       ;retrieve flt0, flt1 and flt2
       flt0 = *flt0_ptr[i]
@@ -315,7 +327,18 @@ PRO ProduceOutputFile, Event
       flt1  = flt1(index)
       flt2  = flt2(index)
       
+      if (i eq 0) then begin
+        full_flt0 = flt0
+        full_flt1 = flt1
+        full_flt2 = flt2
+      endif else begin
+        full_flt0 = [full_flt0,flt0]
+        full_flt1 = [full_flt1,flt1]
+        full_flt2 = [full_flt2,flt2]
+      endelse
+      
       flt0Size = (size(flt0))(1)
+      nbr_data_point += flt0Size
       FOR j=0,(flt0Size-1) DO BEGIN
         TextData = strcompress(flt0[j])
         TextData += ' '
@@ -342,6 +365,48 @@ PRO ProduceOutputFile, Event
     ;      ActivateWidget, Event, 'preview_output_file_button', 1
     ENDELSE
     idl_send_to_geek_showLastLineLogBook, Event
+    
+    
+    
+    
+    
+    ;working with combined data file now
+    idl_send_to_geek_addLogBookText, Event, + $
+      '-> Combined Output File Name : ' + $
+      CombinedoutputFileName
+      
+    ;sort the data
+    flt0_sorted_index = sort(full_flt0)
+    full_flt0_sorted = full_flt0[flt0_sorted_index]
+    full_flt1_sorted = full_flt1[flt0_sorted_index]
+    full_flt2_sorted = full_flt2[flt0_sorted_index]
+    
+    sz = n_elements(flt0_sorted_index)
+    data_text = strarr(1)
+    for i=0l,(sz-1) do begin
+      local_data_text = strcompress(full_flt0_sorted[i],/remove_all)
+      local_data_text += ' ' + strcompress(full_flt1_sorted[i],/remove_all)
+      local_data_text += ' ' + strcompress(full_flt2_sorted[i],/remove_all)
+      data_text = [data_text,local_data_text]
+    endfor
+    MasterText = [full_master_text, data_text]
+    
+    idl_send_to_geek_addLogBookText, Event, '> Producing output file ... ' + $
+      PROCESSING
+    output_error = 0
+    CATCH, output_error
+    IF (output_error NE 0) THEN BEGIN
+      CATCH,/CANCEL
+      idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, FAILED
+    ENDIF ELSE BEGIN
+      ;create output file name
+      createOutputFile, Event, CombinedoutputFileName, MasterText ;_produce_output
+      idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, OK
+    ;      ActivateWidget, Event, 'preview_output_file_button', 1
+    ENDELSE
+    idl_send_to_geek_showLastLineLogBook, Event
+    
+    
     
   ENDIF ELSE BEGIN
     idl_send_to_geek_addLogBookText, Event, $
