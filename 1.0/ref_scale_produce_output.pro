@@ -284,14 +284,13 @@ PRO ProduceOutputFile, Event
     full_flt0 = fltarr(1)
     full_flt1 = fltarr(1)
     full_flt2 = fltarr(1)
-    full_master_text = strarr(1)
+    full_master_text = [MasterText,'']
     
     ;loop over all the files to get output
     for i=0,(nbrFiles-1) do begin
     
       ;add a blank line before all data
       MasterText   = [MasterText,'']
-      full_master_text = [MasterText,'']
       
       ;get name of file first
       fileName     = list_of_files[i]
