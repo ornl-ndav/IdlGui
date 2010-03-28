@@ -88,6 +88,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, title
     UNAME     = 'preview_cl_file_text_field',$
     /SCROLL,$
     /ALL_EVENTS,$
+    /tracking_events,$
     event_pro = 'input_text_tab1',$
     /WRAP)
     
