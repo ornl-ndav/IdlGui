@@ -66,7 +66,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;DEBUGGING
   sDEBUGGING = { tab: {main_tab: 0},$  ;0:step1, 1:logBook
     ;    path: '~/results/',$ ;path to CL file
-    path: '~/IDLWorkspace/CLoopES 1.2/',$
+    path: '~/IDLWorkspace80/CLoopES 1.2/',$
     input_text: '639-641'}
   ;******************************************************************************
   ;******************************************************************************
@@ -88,6 +88,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     old_help_text1: '',$
     old_help_text2: '',$
     cl_with_fields: '', $
+    
+    entering_cl_tab1: 0b, $ ;boolean that is 1 when mouse is in cl tab1 region
     
     selection_in_progress: 'SELECTION IN PROGRESS  . . .',$
     sequence_field1: PTR_NEW(0L), $

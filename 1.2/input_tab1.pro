@@ -34,19 +34,25 @@
 
 pro input_text_tab1, event
 
+  widget_control, event.top, get_uvalue=global
+  
   CATCH, error
   IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
-;    print, 'ici'
-    displayTextRemoved, Event
-    create_cl_array, Event
-    remove_output_file_name, Event
+    if ((*global).entering_cl_tab1 eq 1b) then begin
+      displayTextRemoved, Event
+      create_cl_array, Event
+      remove_output_file_name, Event
+    endif
   ENDIF ELSE BEGIN
-;    print, 'here'
     IF (event.enter EQ 0) THEN BEGIN ;leaving region
-;      print, 'there'
       cleanup_selection_not_finalized, Event
+      (*global).entering_cl_tab1 = 0b
     ENDIF
+    if (event.enter eq 1) then begin ;enterring region
+      (*global).entering_cl_tab1 = 1b
+    endif
+    
   ENDELSE
   
   
