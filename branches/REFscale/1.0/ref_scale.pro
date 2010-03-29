@@ -53,7 +53,7 @@ file = OBJ_NEW('idlxmlparser', '.REFscale.cfg')
   ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
   APPLICATION = file->getValue(tag=['configuration','application'])
   VERSION  = file->getValue(tag=['configuration','version'])
-  DEBUGGer = file->getValue(tag=['configuration','debugging'])
+  DEBUGGER = file->getValue(tag=['configuration','debugging'])
   ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
   ;============================================================================
   

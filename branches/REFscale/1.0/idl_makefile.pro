@@ -45,6 +45,8 @@ cd, CurrentFolder + IdlUtilitiesPath
 .run get.pro
 .run IDLxmlParser_define.pro
 .run xdisplayfile.pro
+.run time.pro
+.run get_ucams.pro
 
 ;Build REFscale GUI
 cd, CurrentFolder + '/REFscaleGUI/'
@@ -58,6 +60,7 @@ cd, CurrentFolder + '/REFscaleGUI/'
 
 ;Build main procedures
 cd, CurrentFolder
+.run send_files_by_email.pro
 .run ref_scale_get.pro
 .run array_delete.pro
 .run ref_scale_arrays.pro
