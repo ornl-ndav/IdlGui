@@ -137,7 +137,7 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     XSIZE = 8)
     
   label = WIDGET_LABEL(inter_base,$
-  VALUE = '.')  
+    VALUE = '.')
     
   text = WIDGET_TEXT(inter_base,$
     VALUE = 'dat',$
@@ -260,22 +260,29 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
   row3 = WIDGET_BASE(Base,$
     /ROW)
     
+  button = widget_button(row3,$
+    value = 'Delete selected row',$
+    uname = 'tab2_delete_row',$
+    xsize = 150,$
+    event_pro = 'tab2_delete_row_event',$
+    sensitive = 0)
+    
   button1 = WIDGET_BUTTON(row3,$
     VALUE = 'REFRESH TABLE (check status of files)',$
     UNAME = 'tab2_refresh_table_uname',$
-    XSIZE = 330,$
+    XSIZE = 250,$
     SENSITIVE = 0)
     
   button2 = WIDGET_BUTTON(row3,$
     VALUE = 'PREVIEW / SAVE COMMNAND LINE ...',$
     UNAME = 'tab2_save_command_line',$
-    XSIZE = 250, $
+    XSIZE = 230, $
     SENSITIVE = 1) ;remove_me and put back 0
     
   save_temperature = WIDGET_BUTTON(row3,$
     VALUE = 'Save Temperature ...',$
     UNAME = 'save_temperature',$
-    XSIZE = 200,$
+    XSIZE = 150,$
     TOOLTIP = 'Create output file of Temperature column',$
     SENSITIVE = 0)
     
