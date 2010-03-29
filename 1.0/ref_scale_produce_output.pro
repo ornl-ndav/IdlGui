@@ -424,9 +424,29 @@ PRO ProduceOutputFile, Event
     ENDELSE
     idl_send_to_geek_showLastLineLogBook, Event
     
+    ;send output files by email
+    result1 = 0
+    result2 = 0
+    result_send_email = 0
+    list_file = strarr(1)
+    if (getButtonValidated(event,'send_by_email_output') eq 0) then begin
+      if (file_created_status eq 1) then begin
+        list_file = [list_file,OutputFileName]
+        result1 = 1
+      endif
+      if (combined_file_created_status eq 1) then begin
+        list_file = [list_file,CombinedOutputFileName]
+        result2 = 1
+      endif
+      if (result1 + result2 GT 0) then begin
+        result_send_email = send_files_by_email(event, list_file)
+      endif
+    endif
+    
     ;inform the user that the files have been created (or not)
     message_text = ['']
     file1 = outputFileName
+    
     if (file_created_status eq 1) then begin
       file1 += ' ... OK'
     endif else begin
@@ -439,6 +459,13 @@ PRO ProduceOutputFile, Event
       file2 += ' ... FAILED'
     endelse
     message_text = [message_text,file1,file2]
+    
+    message_text = [message_text, '']
+    if (result_send_email) then begin
+      text = 'Output files sent to ' + (*global).email
+      message_text = [message_text,text]
+    endif
+    
     title = 'Output File Status'
     result = dialog_message(message_text,$
       title = title,$
