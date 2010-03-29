@@ -50,6 +50,39 @@ pro email_configure_base_event, Event
       widget_control, id, /destroy
     end
     
+    ;email2 widget_text
+    widget_info(event.top, $
+    find_by_uname='email2'): begin
+
+      (*global_settings).save_setup = 1b
+      
+      ;check that email match
+      check_email_match, event=event, result=result
+      if (result eq 'Yes') then begin
+        (*global_settings).save_setup = 0b
+        return
+      endif
+      if (result eq 'OK') then begin
+        (*global_settings).save_setup = 0b
+        return
+      endif
+      if (result eq 'No') then begin
+        ;turn off the email output in main base
+        turn_off_email_output, event
+        
+        id = widget_info(Event.top, $
+          find_by_uname='email_configure_widget_base')
+        widget_control, id, /destroy
+      endif
+      if (result eq '') then begin
+        save_status_of_email_configure_button, event
+        id = widget_info(Event.top, $
+          find_by_uname='email_configure_widget_base')
+        widget_control, id, /destroy
+      endif
+    
+    end
+    
     ;close button
     widget_info(event.top, $
       find_by_uname='email_configure_base_close_button'): begin
