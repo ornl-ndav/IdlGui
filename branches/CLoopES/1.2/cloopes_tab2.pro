@@ -514,6 +514,10 @@ PRO check_tab2_run_jobs_button, Event
   
   dim_table = (size(table))(0) ;1 for 1 file, 2 for 2 or more files
   IF (dim_table EQ 2) THEN BEGIN
+    
+    ;activate the delete button
+    activate_widget, event, 'tab2_delete_row', 1
+  
     sz = (SIZE(table))(2)
     ;check that all the files exist and temperature defined
     index = 0
