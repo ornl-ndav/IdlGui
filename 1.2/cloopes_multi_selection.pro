@@ -401,6 +401,13 @@ PRO getListFromSelection, Event,SELECTION=selection
   
   cleanup_seq_number, column_seq_number
   
+  ;add individuals list to global sequence
+  ;ex [1,2,5-7,9] -> will create run [1,2,5-7,9],1,2,5,6,7,9
+  add_bracket_runs_to_sequence, column_seq_number
+  
+  help, column_seq_number
+  print, column_seq_number
+  
   CASE (selection) OF
     1: (*(*global).sequence_field1) = column_seq_number
     2: (*(*global).sequence_field2) = column_seq_number
@@ -408,6 +415,49 @@ PRO getListFromSelection, Event,SELECTION=selection
   ENDCASE
   
 END
+
+;+
+; :Description:
+;    This parse the various seq number and create the full sequence array
+;
+; :Params:
+;    column_seq_number
+
+; :Author: j35
+;-
+pro add_bracket_runs_to_sequence, column_seq_number
+  compile_opt idl2
+  
+  sz = n_elements(column_seq_number)
+  index = 0
+  final_seq = strarr(1)
+  while (index lt sz) do begin
+    line_parsed = strsplit(column_seq_number[index],',',/extract,count=nbr)
+    if (nbr gt 1) then begin
+      final_seq = [final_seq, column_seq_number[index]]
+      for i=0,nbr-1 do begin
+        final_seq = [final_seq,line_parsed[i]]
+      endfor
+    endif else begin
+      final_seq = [final_seq, line_parsed[0]]
+    endelse
+    index++
+  endwhile
+  
+  column_seq_number = final_seq
+  sz = n_elements(column_seq_number)
+  if (sz gt 2) then begin
+    column_seq_number = temporary(column_seq_number[1:n_elements(column_seq_number)-1])
+  endif else begin
+    final_array = strarr(1)
+    final_array[0] = column_seq_number[1]
+    column_seq_number = final_array
+;    column_seq_number = temporary(column_seq_number[1])
+  endelse
+  
+  return
+  
+end
 
 ;+
 ; :Description:
