@@ -236,6 +236,23 @@ PRO ProduceOutputFile, Event
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
   widget_control, id, get_uvalue=global
   
+  ;check first that if user wants to send the output by email, an email
+  ;has been set up
+  if (getButtonValidated(event,'send_by_email_output') eq 0) then begin
+    if ((*global).email eq '') then begin
+      message_text = ['Please define an email address (email output setup...)',$
+      'or turn off email output!','',$
+      'Info: Output files have not been created!']
+      title = 'email address unknown!'
+      result = dialog_message(message_text,$
+        /information,$
+        title = title,$
+        /center,$
+        dialog_parent = id)
+      return
+    endif
+  endif
+  
   PROCESSING = (*global).processing
   OK         = (*global).ok
   FAILED     = (*global).failed
