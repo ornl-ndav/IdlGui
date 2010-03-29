@@ -32,21 +32,61 @@
 ;
 ;==============================================================================
 
+;+
+; :Description:
+;    This procedure removes the row selected
+;    row goes from 0-> n
+;    table_size goes from 1 -> n+1
+;
+; :Params:
+;    table
+;    row
+;
+; :Author: j35
+;-
 pro remove_row_from_table, table, row
   compile_opt idl2
   
   sz = (size(table))[2]
-  if (row gt sz) then return
+  
+  if (row ge sz) then return
   
   ;1 row only
   if ((size(table))[0] eq 1) then begin
+    if (row ne 0) then return
     table = strarr(3)
     return
   endif
   
   ;last row selected
+  if (row eq (sz-1)) then begin
+    table = temporary(table[*,0:sz-2])
+  end
   
+  ;first row selected
+  if (row eq 0) then begin
+;    print, 'in first row selected
+    table = temporary(table[*,1:sz-1])
+    return
+  end
   
+  ;any other row selected
+;  print, 'any other row'
+  index = 0
+  index_tmp = 0
+  table_tmp = strarr(3,sz-1)
+  while (index lt sz) do begin
+    if (index ne row) then begin
+      table_tmp[0,index_tmp] = table[0,index]
+      table_tmp[1,index_tmp] = table[1,index]
+      table_tmp[2,index_tmp] = table[2,index]
+      index_tmp++
+    endif
+    index++
+  endwhile
+  table = table_tmp  
+  
+  return
   
 end
 
