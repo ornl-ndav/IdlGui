@@ -66,7 +66,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;DEBUGGING
   sDEBUGGING = { tab: {main_tab: 0},$  ;0:step1, 1:logBook
     ;    path: '~/results/',$ ;path to CL file
-    path: '~/IDLWorkspace80/CLoopES 1.2/',$
+    path: '~/IDLWorkspace71/CLoopES 1.2/',$
     input_text: '639-641'}
   ;******************************************************************************
   ;******************************************************************************
