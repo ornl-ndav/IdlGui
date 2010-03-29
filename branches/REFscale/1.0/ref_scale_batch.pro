@@ -287,6 +287,7 @@ PRO ref_scale_LoadBatchFile, Event
     GET_PATH = new_path,$
     /MUST_EXIST)
     
+  IF (BatchFileName EQ '') then return  
   IF (BatchFileName NE '') THEN BEGIN
     reset_all_button, Event ;full reset of the session
     (*global).BatchFileName = BatchFileName
