@@ -124,8 +124,7 @@ PRO update_temperature, Event
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
-  error = 0
-  CATCH, error ;remove_me (important if user try to edit STATUS column
+  CATCH, error
   IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
   ENDIF ELSE BEGIN
