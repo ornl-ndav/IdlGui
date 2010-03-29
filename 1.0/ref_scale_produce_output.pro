@@ -241,8 +241,8 @@ PRO ProduceOutputFile, Event
   if (getButtonValidated(event,'send_by_email_output') eq 0) then begin
     if ((*global).email eq '') then begin
       message_text = ['Please define an email address (email output setup...)',$
-      'or turn off email output!','',$
-      'Info: Output files have not been created!']
+        'or turn off email output!','',$
+        'Info: Output files have not been created!']
       title = 'email address unknown!'
       result = dialog_message(message_text,$
         /information,$
@@ -369,11 +369,13 @@ PRO ProduceOutputFile, Event
     idl_send_to_geek_addLogBookText, Event, '> Producing output file ... ' + $
       PROCESSING
     output_error = 0
+    file_created_status = 1
     CATCH, output_error
     IF (output_error NE 0) THEN BEGIN
       CATCH,/CANCEL
       idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, FAILED
       ActivateWidget, Event, 'scaled_data_file_preview', 0
+      file_created_status = 0
     ENDIF ELSE BEGIN
       ;create output file name
       createOutputFile, Event, outputFileName, MasterText ;_produce_output
@@ -382,10 +384,7 @@ PRO ProduceOutputFile, Event
     ENDELSE
     idl_send_to_geek_showLastLineLogBook, Event
     
-    
-    
-    
-    
+    ;--------------------------------------------------------------------------
     ;working with combined data file now
     idl_send_to_geek_addLogBookText, Event, + $
       '-> Combined Output File Name : ' + $
@@ -410,11 +409,13 @@ PRO ProduceOutputFile, Event
     idl_send_to_geek_addLogBookText, Event, '> Producing output file ... ' + $
       PROCESSING
     output_error = 0
+    combined_file_created_status = 1
     CATCH, output_error
     IF (output_error NE 0) THEN BEGIN
       CATCH,/CANCEL
       idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, FAILED
       ActivateWidget, Event, 'combined_scaled_data_file_preview', 0
+      combined_file_created_status = 0
     ENDIF ELSE BEGIN
       ;create output file name
       createOutputFile, Event, CombinedoutputFileName, MasterText ;_produce_output
@@ -423,8 +424,28 @@ PRO ProduceOutputFile, Event
     ENDELSE
     idl_send_to_geek_showLastLineLogBook, Event
     
-    
-    
+    ;inform the user that the files have been created (or not)
+    message_text = ['']
+    file1 = outputFileName
+    if (file_created_status eq 1) then begin
+      file1 += ' ... OK'
+    endif else begin
+      file1 += ' ... FAILED'
+    endelse
+    file2 = CombinedoutputFileName
+    if (combined_file_created_status eq 1) then begin
+      file2 += ' ... OK'
+    endif else begin
+      file2 += ' ... FAILED'
+    endelse
+    message_text = [message_text,file1,file2]
+    title = 'Output File Status'
+    result = dialog_message(message_text,$
+      title = title,$
+      /center,$
+      dialog_parent = id,$
+      /information)
+      
   ENDIF ELSE BEGIN
     idl_send_to_geek_addLogBookText, Event, $
       '-> Does user has write access to this directory ... NO'
@@ -468,9 +489,4 @@ PRO update_output_file_name_from_batch, Event ;_output
     'output_short_file_name', $
     FileName                      ;_put
   output_file_name_value, event
-END
-
-;##############################################################################
-;******************************************************************************
-PRO ref_scale_produce_output
 END
