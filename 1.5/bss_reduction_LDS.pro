@@ -67,7 +67,7 @@ ENDIF ELSE BEGIN
     ENDIF ELSE BEGIN ;file found
         putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
         ;first thing is to move that file to /SNS/BSS/shared/
-        cmd_copy = 'cp ' + listening + ' /SNS/BSS/shared/'
+        cmd_copy = 'cp ' + listening + (*global).tmp_live_shared_folder
         cmd_copy_text = '> ' + cmd_copy + ' ... ' + PROCESSING
         
         AppendLogBookMessage, Event, cmd_copy_text
@@ -90,7 +90,7 @@ ENDIF ELSE BEGIN
                 ArraySplit    = STRSPLIT(listening,'/',/EXTRACT)
                 sz = N_ELEMENTS(ArraySplit)
                 ShortFileName = ArraySplit[sz-1]
-                LongFileName = '/SNS/BSS/shared/' + ShortFileName
+                LongFileName = (*global).tmp_live_shared_folder + ShortFileName
                 putTextFieldValue, Event, 'nexus_full_path_label', $
                   ShortFileName, 0
                 LogBookText = '-> Full live NeXus name: ' + LongFileName
@@ -127,7 +127,7 @@ ENDIF ELSE BEGIN
                         AppendLogBookMessage, Event, text
 ;copy the geo file now to /SNS/BSS/shared/
                         cmd_geo_copy = 'cp ' + geometry_file + $
-                          ' /SNS/BSS/shared/'
+                          ' ' + (*global).tmp_live_shared_folder
                         cmd_geo_copy_text = '-> ' + cmd_geo_copy
                         cmd_geo_copy_text += ' ... ' + PROCESSING
                         AppendLogBookMessage, Event, cmd_geo_copy_text
@@ -148,7 +148,7 @@ ENDIF ELSE BEGIN
                             sz               = N_ELEMENTS(ArraySplit)
                             ShortGeoFileName = ArraySplit[sz-1]
                             FullGeoFileName  = $
-                              '/SNS/BSS/shared/' + ShortGeoFileName
+                              (*global).tmp_live_shared_folder + ShortGeoFileName
                             putTextFieldValue, Event, $
                               'aig_list_of_runs_text',$
                               STRCOMPRESS(FullGeoFileName,/REMOVE_ALL),0
