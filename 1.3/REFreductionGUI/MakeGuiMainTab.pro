@@ -75,7 +75,7 @@ MakeGuiReduceTab, MAIN_TAB, MainTabSize, ReduceTabTitle, PlotsTitle, global
 MakeGuiPlotsTab, MAIN_TAB, MainTabSize, PlotsTabTitle, PlotsTitle
 
 ;build BATCH MODE tab
-MakeGuiBatchTab, MAIN_TAB, MainTabSize, BatchTabTitle, structure
+MakeGuiBatchTab, MAIN_TAB, MainTabSize, BatchTabTitle, structure, global
 
 ;build LOG_BOOK tab
 MakeGuiLogBookTab, MAIN_TAB, MainTabSize, LogBookTabTitle
