@@ -116,11 +116,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;get ucams of user if running on linux
   ;and set ucams to 'j35' if running on darwin
     
-  IF (!VERSION.os EQ 'darwin') THEN BEGIN
-    ucams = 'j35'
-  ENDIF ELSE BEGIN
-    ucams = get_ucams()
-  ENDELSE
+  ucams = get_ucams()
+  live_shared_folder = '/SNS/users/' + ucams + '/.tmp_live_data/'
   
   ;define global variables
   global = ptr_new ({ $
@@ -129,7 +126,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     first_lds_used: 1,$
     
     ;temporary live folder for live data stremaing
-    tmp_live_shared_folder: '~/.tmp_live_data/',$
+    tmp_live_shared_folder: live_shared_folder, $
     
     application: APPLICATION,$
     version: VERSION,$
