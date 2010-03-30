@@ -42,15 +42,15 @@ PROCESSING = (*global).processing
 OK         = 'OK'
 FAILED     = 'FAILED'
 
+;first we need to create the tmp folder
+cmd = 'mkdir ' + (*global).tmp_live_shared_folder
+spawn, cmd, listening, err_listening
+
 findlivenexus = (*global).findlivenexus
 cmd = findlivenexus + ' -i BSS'
 cmd_text = '> Looking for current Live Nexus File (' + cmd + ') ... ' + $
   PROCESSING
 AppendLogBookMessage, Event, cmd_text
-
-;first we need to create the tmp folder
-cmd = 'mkdir ' + (*global).tmp_live_shared_folder
-spawn, cmd, listening, err_listening
 
 ;to grab the LDP NeXus file
 no_error = 0
