@@ -201,9 +201,16 @@ PRO plot_loaded_file, Event, index
               PLOT, $
                 flt0, $
                 flt1, $
+                /nodata,$
                 xrange=[xmin,xmax], $
                 XSTYLE = 1,$
-                yrange=[ymin,ymax], $
+                yrange=[ymin,ymax]
+              oPLOT, $
+                flt0, $
+                flt1, $
+;                xrange=[xmin,xmax], $
+;                XSTYLE = 1,$
+;                yrange=[ymin,ymax], $
                 color=MainPlotColor
             END
             
@@ -213,8 +220,16 @@ PRO plot_loaded_file, Event, index
                 flt1, $
                 /ylog, $
                 XSTYLE = 1,$
+                /nodata,$
                 xrange=[xmin,xmax], $
-                yrange=[ymin,ymax], $
+                yrange=[ymin,ymax]
+              oPLOT, $
+                flt0, $
+                flt1, $
+;                /ylog, $
+;                XSTYLE = 1,$
+ ;               xrange=[xmin,xmax], $
+ ;               yrange=[ymin,ymax], $
                 color=MainPlotColor
             END
           ENDCASE
@@ -231,8 +246,16 @@ PRO plot_loaded_file, Event, index
                 flt1, $
                 /xlog, $
                 XSTYLE = 1,$
+                /nodata,$
                 xrange=[xmin,xmax], $
-                yrange=[ymin,ymax], $
+                yrange=[ymin,ymax]
+              oPLOT, $
+                flt0, $
+                flt1, $
+ ;               /xlog, $
+ ;               XSTYLE = 1,$
+;                xrange=[xmin,xmax], $
+;                yrange=[ymin,ymax], $
                 color=MainPlotColor
             END
             
@@ -242,9 +265,18 @@ PRO plot_loaded_file, Event, index
                 flt1, $
                 /xlog, $
                 /ylog, $
+                /nodata,$
                 XSTYLE = 1,$
                 xrange=[xmin,xmax], $
-                yrange=[ymin,ymax], $
+                yrange=[ymin,ymax]
+              oPLOT, $
+                flt0, $
+                flt1, $
+  ;              /xlog, $
+  ;              /ylog, $
+  ;              XSTYLE = 1,$
+ ;               xrange=[xmin,xmax], $
+ ;               yrange=[ymin,ymax], $
                 color=MainPlotColor
             END
           ENDCASE
@@ -270,25 +302,24 @@ PRO plot_loaded_file, Event, index
         CASE (IsYlin) OF
         
           0: BEGIN
-            PLOT, $
+          oPLOT, $
               flt0, $
               flt1, $
-              XSTYLE = 1,$
-              xrange=[xmin,xmax], $
-              yrange=[ymin,ymax], $
-              color=MainPlotColor, $
-              /noerase
+    ;          XSTYLE = 1,$
+   ;           xrange=[xmin,xmax], $
+   ;           yrange=[ymin,ymax], $
+              color=MainPlotColor
           END
           
           1: BEGIN
-            PLOT, $
+            oPLOT, $
               flt0, $
               flt1, $
-              /ylog, $
-              XSTYLE = 1,$
-              xrange=[xmin,xmax], $
-              yrange=[ymin,ymax], $
-              /noerase, $
+ ;             /ylog, $
+ ;             XSTYLE = 1,$
+  ;            xrange=[xmin,xmax], $
+  ;            yrange=[ymin,ymax], $
+;              /noerase, $
               color=MainPlotColor
           END
         ENDCASE
@@ -298,26 +329,26 @@ PRO plot_loaded_file, Event, index
         CASE (IsYlin) OF
         
           0: BEGIN
-            PLOT, $
+            oPLOT, $
               flt0, $
               flt1, $
-              /xlog, $
-              XSTYLE = 1,$
-              xrange=[xmin,xmax], $
-              yrange=[ymin,ymax], $
-              /noerase, $
+   ;           /xlog, $
+   ;           XSTYLE = 1,$
+  ;            xrange=[xmin,xmax], $
+  ;            yrange=[ymin,ymax], $
+ ;             /noerase, $
               color=MainPlotColor
           END
           1: BEGIN
-            PLOT, $
+            oPLOT, $
               flt0, $
               flt1, $
-              /xlog, $
-              XSTYLE = 1,$
-              /ylog, $
-              xrange=[xmin,xmax], $
-              yrange=[ymin,ymax], $
-              /noerase, $
+  ;            /xlog, $
+  ;            XSTYLE = 1,$
+  ;            /ylog, $
+ ;             xrange=[xmin,xmax], $
+ ;             yrange=[ymin,ymax], $
+ ;             /noerase, $
               color=MainPlotColor
           END
         ENDCASE
