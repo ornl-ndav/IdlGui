@@ -48,6 +48,10 @@ cmd_text = '> Looking for current Live Nexus File (' + cmd + ') ... ' + $
   PROCESSING
 AppendLogBookMessage, Event, cmd_text
 
+;first we need to create the tmp folder
+cmd = 'mkdir ' + (*global).tmp_live_shared_folder
+spawn, cmd, listening, err_listening
+
 ;to grab the LDP NeXus file
 no_error = 0
 CATCH, no_error
@@ -67,7 +71,7 @@ ENDIF ELSE BEGIN
     ENDIF ELSE BEGIN ;file found
         putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
         ;first thing is to move that file to /SNS/BSS/shared/
-        cmd_copy = 'cp ' + listening + (*global).tmp_live_shared_folder
+        cmd_copy = 'cp ' + listening + ' ' +  (*global).tmp_live_shared_folder
         cmd_copy_text = '> ' + cmd_copy + ' ... ' + PROCESSING
         
         AppendLogBookMessage, Event, cmd_copy_text
