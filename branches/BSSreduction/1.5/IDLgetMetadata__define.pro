@@ -347,22 +347,23 @@ ENDIF ELSE BEGIN
     fileID = h5f_open(nexus_full_path)
 ENDELSE
 ;get angle (theta)
-self.angle     = get_theta_degree(fileID)
+;self.angle     = get_theta_degree(fileID)
 ;get s1
-self.S1        = get_s1_mm(fileID)
+;self.S1        = get_s1_mm(fileID)
 ;get s2
-self.S2        = get_s2_mm(fileID)
+;self.S2        = get_s2_mm(fileID)
 ;get RunNumber
 self.RunNumber = get_RunNumber(fileID)
 ;close hdf5 nexus file
 h5f_close, fileID
-IF (self.angle NE '' AND $
-    self.S1 NE '' AND $
-    self.S2 NE '') THEN BEGIN
-    RETURN, 1
-ENDIF ELSE BEGIN
-    RETURN, 0
-ENDELSE
+;IF (self.angle NE '' AND $
+;    self.S1 NE '' AND $
+;    self.S2 NE '') THEN BEGIN
+;    RETURN, 1
+;ENDIF ELSE BEGIN
+;    RETURN, 0
+;ENDELSE
+return, 1
 END
 
 ;******************************************************************************
