@@ -312,24 +312,26 @@ PRO dgsreduction_events, event, dgsr_cmd
     END
     'DGSR_HARD_MASK': BEGIN
       ;WIDGET_CONTROL, event.ID, GET_VALUE=myValue
-      ; TODO: Check filename exists before setting the property!
       dgsr_cmd->SetProperty, HardMask=event.SELECT
     END
     'DGSR_CUSTOM_HARD_MASK': BEGIN
       ; As this is a separate button to the 'HARD MASK' one, we also
       ; need to explicitly turn on the hard mask option in the
       ; command object.
-      dgsr_cmd->SetProperty, HardMask=event.SELECT
+      dgsr_cmd->SetProperty, CustomHardMask=event.SELECT
       ; Also make the custom mask source filename field active (or inactive!)
       customMaskFileID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_SOURCE_MASKFILENAME')
       WIDGET_CONTROL, customMaskFileID, SENSITIVE=event.SELECT
       WIDGET_CONTROL, customMaskFileID, GET_VALUE=myValue
       ; Check that the file exists and is readable
+      print,'Check that the specified mask file ('+myValue+') exists and is readable.'
       fileValid = FILE_TEST(myValue, /READ)
       IF (fileValid EQ 1) THEN BEGIN
         ; Set the property on the command object
         dgsr_cmd->SetProperty, MasterMaskFile=myValue
-      ENDIF
+      ENDIF ELSE BEGIN
+        print,'ERROR: Mask file ('+myValue+') is not readable.'
+      ENDELSE
     END
     'DGSR_SOURCE_MASKFILENAME': BEGIN
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
@@ -338,7 +340,9 @@ PRO dgsreduction_events, event, dgsr_cmd
       IF (fileValid EQ 1) THEN BEGIN
         ; Set the property on the command object
         dgsr_cmd->SetProperty, MasterMaskFile=myValue
-      ENDIF
+      ENDIF ELSE BEGIN
+        print,'ERROR: Mask file ('+myValue+') is not readable.'
+      ENDELSE
     END
     'DGSR_USER_LABEL': BEGIN
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue

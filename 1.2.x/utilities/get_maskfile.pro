@@ -58,6 +58,8 @@ function get_maskfile, instrument, runnumber, OVERRIDE=OVERRIDE
   ; Now let's check to see if the mask file we want to use actually exists!
   maskFileThere = FILE_TEST(source_maskfile, /READ)
   
+  print,'SOURCE MASKFILE = '+source_maskfile
+  
   ; If the file doesn't exist, copy a 'central' mask file to use
   IF (maskFileThere EQ 0) THEN BEGIN
     default_maskfile = '/SNS/' + STRUPCASE(STRCOMPRESS(string(instrument),/REMOVE_ALL))
@@ -68,6 +70,8 @@ function get_maskfile, instrument, runnumber, OVERRIDE=OVERRIDE
     IF (sharedMasksDir EQ 0) THEN BEGIN
       ;print, 'Creating masks directory in the shared instrument area.'
       spawn, 'mkdir -p ' + default_maskfile
+      ; Make it writeable by the default group
+      spawn, 'chmod g+w ' + default_maskfile
     ENDIF
     
     ; Now that we've checked the directory is there, add on the filename.
@@ -78,11 +82,13 @@ function get_maskfile, instrument, runnumber, OVERRIDE=OVERRIDE
     
     IF (defaultMaskThere EQ 1) THEN BEGIN
       ; If it is there copy it to the source filename
+      Print, 'COPYING ' + default_maskfile + ' --> ' + source_maskfile
       cmd = 'cp ' + default_maskfile + ' ' + source_maskfile
       ;print, cmd
       spawn, cmd
     ENDIF ELSE BEGIN
       ; If the file doesn't exist - create a blank file!
+      print,'NO MASK FOUND: Creating a blank one called ' + source_maskfile
       cmd = 'touch ' + source_maskfile
       ;print,cmd
       spawn, cmd
