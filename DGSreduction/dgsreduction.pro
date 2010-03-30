@@ -182,12 +182,23 @@ PRO DGSreduction_Execute, event
     
     ; Now let's look at the masks...
     dgsr_cmd->GetProperty, HardMask=hardmask
+    dgsr_cmd->GetProperty, CustomHardMask=customhardmask
     
-    IF (hardmask EQ 1) THEN BEGIN
+    IF (hardmask EQ 1) OR (customhardmask EQ 1) THEN BEGIN
       maskDir = outputDir + '/masks'
       ; Let's make sure that the masks directory exists
       spawn, 'mkdir -p ' + maskDir
-      source_maskfile = get_maskfile(instrument, runnumber)
+      ; Are we using the default hard mask ?
+      IF (hardmask EQ 1) THEN BEGIN
+        print,'USING DEFAULT HARDMASK'
+        source_maskfile = get_maskfile(instrument, runnumber)
+      ENDIF
+      ; Are we using a custom hard mask ?
+      IF (customhardmask EQ 1) THEN BEGIN
+        dgsr_cmd->GetProperty, MasterMaskFile=mastermaskfile
+        print,'USING CUSTOM MASKFILE:'+MasterMaskFile
+        source_maskfile = get_maskfile(instrument, runnumber, OVERRIDE=mastermaskfile)
+      ENDIF
       ; Also copy the mask file into the masks directory
       spawn, 'cp ' + source_maskfile + ' ' + maskDir
     ENDIF
@@ -329,7 +340,7 @@ PRO DGSreduction_Execute, event
       logfile = logDir + '/' + instrument + '_bank' + padded_datapaths + '.log'
       
       ; Let's construct the mask files...
-      IF (HardMask EQ 1) THEN BEGIN
+      IF (HardMask EQ 1) OR (CustomHardMask EQ 1) THEN BEGIN
         tmp_maskfile = maskDir + "/" + $
           instrument + "_bank" + padded_datapaths + "_mask.dat"
         tmp_datapaths = Construct_DataPaths(lowerbank, upperbank, index+1, jobs)
@@ -547,8 +558,8 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
     
   ; Program Details
   APPLICATION       = 'DGSreduction'
-  ;VERSION           = '1.3.BETA'
-  VERSION           = '1.2.6'
+  VERSION           = '2.0.BETA'
+  ;VERSION           = '1.2.8'
   
   Catch, errorStatus
   
