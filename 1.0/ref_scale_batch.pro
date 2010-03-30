@@ -217,6 +217,8 @@ FUNCTION batch_repopulate_gui, Event, DRfiles
       ;apply auto cleanup of data if switch is on
       if ((*global).settings_auto_cleaning_flag) then begin ;apply auto cleanup
         cleanup_reduce_data, event, file_name = LongFileName
+        ;re-read the data from fresh cleanup file
+        SuccessStatus = StoreFlts(Event, DRfiles[i], i)
       endif
       
       AddNewFileToDroplist, Event, ShortFileName, LongFileName ;_Gui
@@ -249,9 +251,9 @@ FUNCTION batch_repopulate_gui, Event, DRfiles
       PlotLoadedFiles, Event      ;_Plot
       ;force the axis to start at 0
       putValueInTextField, Event,'XaxisMinTextField', $
-      strcompress(0,/remove_all)
+        strcompress(0,/remove_all)
       putValueInTextField, Event,'YaxisMinTextField', $
-      strcompress(0.000001,/remove_all)
+        strcompress(0.000001,/remove_all)
       plot_loaded_file, Event, 'all' ;_Plot
     endif else begin ;perform scaling ourselves
       auto_full_scaling_from_batch_file, Event
@@ -287,7 +289,7 @@ PRO ref_scale_LoadBatchFile, Event
     GET_PATH = new_path,$
     /MUST_EXIST)
     
-  IF (BatchFileName EQ '') then return  
+  IF (BatchFileName EQ '') then return
   IF (BatchFileName NE '') THEN BEGIN
     reset_all_button, Event ;full reset of the session
     (*global).BatchFileName = BatchFileName
