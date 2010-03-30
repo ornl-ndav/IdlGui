@@ -70,6 +70,7 @@ FUNCTION retrieveBanksData, Event, $
     fieldID = h5d_open(fileID,data_path)
     data = h5d_read(fieldID)
     x = (size(data))(2)
+
     if ((*global).instrument eq 'REF_L') then begin
       if (x ne 304) then begin
         using_wrong_version_of_ref_reduction, Event

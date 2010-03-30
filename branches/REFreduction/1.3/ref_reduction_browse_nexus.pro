@@ -182,6 +182,7 @@ PRO load_data_browse_nexus, Event, nexus_file_name, POLA_STATE=pola_state
   OBJ_DESTROY, iNexus
   DataRunNumber = STRCOMPRESS(DataRunNumber,/REMOVE_ALL)
   (*global).DataRunNumber = DataRunNumber
+  (*global).data_run_number = DataRunNumber
   
   LogBookText = '> Openning DATA Run Number: ' + DataRunNumber
   IF (N_ELEMENTS(POLA_STATE)) THEN BEGIN

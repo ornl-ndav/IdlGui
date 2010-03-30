@@ -71,7 +71,7 @@ FUNCTION OpenDataNeXusFile, Event, $
     full_nexus_name, $
     'data_file_info_text', $
     POLA_STATE=pola_state
-    
+  
   ;check format of NeXus file
   IF (H5F_IS_HDF5(full_nexus_name)) THEN BEGIN
     (*global).isHDF5format = 1
