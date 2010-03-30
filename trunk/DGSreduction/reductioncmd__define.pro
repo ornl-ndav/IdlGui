@@ -1151,6 +1151,176 @@ function ReductionCmd::Generate
   return, cmd
 end
 
+
+function ReductionCmd::GenerateNorm
+
+  ; Error Handling
+  catch, theError
+  IF theError NE 0 THEN BEGIN
+    catch, /cancel
+    ok = ERROR_MESSAGE(!ERROR_STATE.MSG + ' Returning...', TRACEBACK=1, /error)
+    return, 0
+  ENDIF
+  
+  cmd = STRARR(self.jobs)
+  
+  ; Let's get the output directory so we don't have to keep asking for it!
+  outputDir = self->GetNormalisationOutputDirectory()
+  
+  for i = 0L, self.jobs-1 do begin
+  
+    cmd[i] = ""
+    
+    ; Queue name
+    ;IF STRLEN(self.queue) GT 1 THEN cmd[i] += "sbatch -p " + self.queue + " "
+    
+    ; Let's first start with the program name!
+    cmd[i] += "dgs_norm"
+    
+    ; Verbose flag
+    IF (self.verbose EQ 1) THEN cmd[i] += " -v"
+    ; Quiet flag
+    IF (self.quiet EQ 1) THEN cmd[i] += " -q"
+    ; Data filename(s)
+    IF STRLEN(self.normalisation) GE 1 THEN $
+      cmd[i] += " " + STRCOMPRESS(STRING(self.normalisation), /REMOVE_ALL)
+    
+    ; Output (this is automatically generated for now!)
+    ;IF STRLEN(self.output) GT 1 THEN cmd[i] += " --output="+ self.output
+    
+    IF (STRLEN(self.instrument) GT 1) AND (STRLEN(self.normalisation) GE 1) THEN $
+      cmd[i] += " --output=" + outputDir + $
+      "/" + self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
+      i+1, self.jobs, /PAD) + ".txt"
+      
+    ; Instrument Name
+    IF STRLEN(self.instrument) GT 1 THEN cmd[i] += " --inst="+self.instrument
+    ; Facility
+    IF STRLEN(self.facility) GT 1 THEN cmd[i] += " --facility="+self.facility
+    ; Proposal
+    IF STRLEN(self.proposal) GT 1 THEN cmd[i] += " --proposal="+self.proposal
+    
+    ; Config (.rmd) file
+    IF STRLEN(self.configfile) GT 1 THEN $
+      cmd[i] += " --config="+self.configfile
+    ; Instrument Geometry
+    IF STRLEN(self.instgeometry) GT 1 THEN $
+      cmd[i] += " --inst-geom="+self.instgeometry
+    ; Corner Geometry
+      
+    ; DataPaths
+    ; Construct the DataPaths
+    self.datapaths = Construct_DataPaths(self.lowerbank, self.upperbank, $
+      i+1, self.jobs)
+    IF STRLEN(self.datapaths) GE 1 THEN $
+      cmd[i] += " --data-paths="+self.datapaths
+      
+    ; Empty sample container file
+    IF (STRLEN(self.NormEmptyCan) GE 1) AND (self.Normemptycan NE 0) THEN $
+      cmd[i] += " --ecan="+self.normemptycan
+    ; black sample container file
+    IF (STRLEN(self.blackcan) GE 1) AND (self.blackcan NE 0) THEN $
+      cmd[i] += " --bcan="+self.blackcan
+    ; Dark Current File
+    IF (STRLEN(self.dark) GE 1) AND (self.dark NE 0) THEN $
+      cmd[i] += " --dkcur="+self.dark
+    ; Upstream monitor path
+    IF (STRLEN(self.usmonpath) GE 1) AND $
+      (STRCOMPRESS(self.usmonpath, /REMOVE_ALL) NE '0') THEN $
+      cmd[i] += " --usmon-path=/entry/monitor" + STRCOMPRESS(self.usmonpath, /REMOVE_ALL) + ",1"
+    ; Downstream monitor path
+    IF STRLEN(self.dsmonpath) GE 1 THEN $
+      cmd[i] += " --dsmon-path="+self.dsmonpath
+    ; ROI filename
+    IF STRLEN(self.roifile) GE 1 THEN $
+      cmd[i] += " --roi-file="+self.roifile
+    ; Tmin
+    IF STRLEN(self.tmin) GE 1 THEN $
+      cmd[i] += " --tof-cut-min="+self.tmin
+    ; Tmax
+    IF STRLEN(self.tmax) GE 1 THEN $
+      cmd[i] += " --tof-cut-max="+self.tmax
+      
+    ; Time Independent Background (TIB)
+    IF STRLEN(self.tibconst) GE 1 THEN $
+      cmd[i] += " --tib-const="+self.tibconst+',0'
+      
+    ;print, '--Generate--'
+    ;print, self.tibrange_min,' ', self.tibrange_max
+    ;print, STRLEN(STRCOMPRESS(STRING(self.tibrange_min)),/REMOVE_ALL), ' ', $
+    ;   STRLEN(STRCOMPRESS(STRING(self.tibrange_max GE 1)),/REMOVE_ALL)
+      
+    ;  TIB constant determination range
+    IF (STRLEN(STRING(self.tibrange_min)) GE 1) $
+      AND (STRLEN(STRING(self.tibrange_max)) GE 1) THEN BEGIN
+      cmd[i] += " --tib-range=" + self.tibrange_min + " " + self.tibrange_max
+    ;print, 'got here'
+    ; print, cmd[i]
+    ENDIF
+    
+    ; Ei
+    IF STRLEN(self.ei) GE 1 THEN $
+      cmd[i] += " --initial-energy="+self.ei+","+self.error_ei
+    ; T0
+    IF STRLEN(self.tzero) GE 1 THEN $
+      cmd[i] += " --time-zero-offset="+self.tzero+","+self.error_tzero
+    ; Flag for turning off monitor normalization
+    IF (self.nomonitornorm EQ 1) THEN cmd[i] += " --no-mon-norm"
+    ; proton charge normalization
+    IF (self.pcnorm EQ 1) AND (self.nomonitornorm EQ 1) THEN cmd[i] += " --pc-norm"
+    ; Monitor integration range
+    IF (STRLEN(self.monrange_min) GE 1) $
+      AND (STRLEN(self.monrange_max) GE 1) THEN $
+      cmd[i] += " --mon-int-range=" + self.monrange_min + " " + self.monrange_max
+    ; Detector Efficiency
+    IF STRLEN(self.deteff) GE 1 THEN $
+      cmd[i] += " --det-eff="+self.deteff
+      
+      
+    ; transmission for norm data background
+    IF STRLEN(self.normtrans) GE 1 THEN $
+      cmd[i] += " --norm-trans-coeff=" + self.normtrans + ",0.0"
+    ; Normalisation integration range
+    IF (STRLEN(self.normrange_min) GE 1 ) $
+      AND (STRLEN(self.normrange_max) GE 1) THEN $
+      cmd[i] += " --norm-int-range " + self.normrange_min + " " $
+      + self.normrange_max
+    ; Lambda Bins
+    IF (STRLEN(self.lambdabins_min) GE 1) $
+      AND (STRLEN(self.lambdabins_max) GE 1) $
+      AND (STRLEN(self.lambdabins_step) GE 1) $
+      AND (self.dumpwave EQ 1) THEN $
+      cmd[i] += " --lambda-bins=" + self.lambdabins_min + "," + $
+      self.lambdabins_max + "," + self.lambdabins_step
+      
+    IF (self.dumptof EQ 1) THEN cmd[i] += " --dump-ctof-comb"
+    IF (self.dumpwave EQ 1) THEN cmd[i] += " --dump-wave-comb"
+    
+    IF (self.whitenorm EQ 1) THEN cmd[i] += " --wb-norm"
+    
+    IF (self.dumpet EQ 1) THEN cmd[i] += " --dump-et-comb"
+    
+    IF (self.dumptib EQ 1) THEN cmd[i] += " --dump-tib"
+    
+    IF STRLEN(self.lo_threshold) GE 1 THEN $
+      cmd[i] += " --lo-threshold="+self.lo_threshold
+      
+    IF STRLEN(self.hi_threshold) GE 1 THEN $
+      cmd[i] += " --hi-threshold="+self.hi_threshold
+      
+    IF (STRLEN(self.ProtonCurrentUnits) GE 1) THEN $
+      cmd[i] += " --scale-pc=" + self.ProtonCurrentUnits
+      
+    IF (self.timing EQ 1) THEN cmd[i] += " --timing"
+    
+  endfor
+  
+  return, cmd
+end
+
+
+
+
 function ReductionCmd::Init, $
     Program=program, $                   ; Program name
     Version=version, $
