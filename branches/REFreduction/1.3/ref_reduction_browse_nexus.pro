@@ -57,6 +57,7 @@ PRO ok_polarization_state, Event
       (*global).data_path = list_pola_state[value_selected]
       nexus_file_name = (*global).data_nexus_full_path
       load_data_browse_nexus, Event, nexus_file_name, POLA_STATE=value_selected
+      populate_data_geometry_info, Event
     END
     'norm_browse': BEGIN
       (*global).norm_path = list_pola_state[value_selected]
@@ -74,6 +75,7 @@ PRO ok_polarization_state, Event
       (*global).data_path = list_pola_state[value_selected]
       nexus_file_name = (*global).data_nexus_full_path
       load_data_browse_nexus, Event, nexus_file_name, POLA_STATE=value_selected
+      populate_data_geometry_info, Event
     END
     'norm_load': BEGIN
       (*global).norm_path = list_pola_state[value_selected]
@@ -89,7 +91,7 @@ PRO ok_polarization_state, Event
         POLA_STATE=value_selected
     END
   ENDCASE
-  populate_data_geometry_info, Event
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -135,6 +137,14 @@ PRO BrowseDataNexus, Event
       select_polarization_state, Event, nexus_file_name, list_pola_state
     ENDELSE
     
+    ;get run number
+    iNexus = OBJ_NEW('IDLgetMetadata', nexus_file_name, POLA_STATE_NAME='entry-Off_Off')
+    DataRunNumber = iNexus->getRunNumber()
+    OBJ_DESTROY, iNexus
+    (*global).data_run_number = DataRunNumber
+    putTextfieldvalue, event, 'load_data_run_number_text_field', $
+      strcompress(DataRunNumber,/remove_all)
+      
     IF ((*global).instrument EQ 'REF_M') THEN BEGIN
       populate_data_geometry_info, Event
     ENDIF
@@ -268,6 +278,15 @@ PRO BrowseNormNexus, Event
       ;ask user to select the polarization state he wants to see
       select_polarization_state, Event, nexus_file_name, list_pola_state
     ENDELSE
+    
+    ;get run number
+    iNexus = OBJ_NEW('IDLgetMetadata', nexus_file_name, POLA_STATE_NAME='entry-Off_Off')
+    NormRunNumber = iNexus->getRunNumber()
+    OBJ_DESTROY, iNexus
+    (*global).NormRunNumber = NormRunNumber
+    putTextfieldvalue, event, 'load_normalization_run_number_text_field', $
+      strcompress(NormRunNumber,/remove_all)
+      
     ;turn off hourglass
     WIDGET_CONTROL,HOURGLASS=0
   ENDIF ELSE BEGIN
