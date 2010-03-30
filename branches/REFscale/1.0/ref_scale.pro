@@ -47,8 +47,8 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ENDIF ELSE BEGIN
     ucams = get_ucams()
   ENDELSE
-    
-file = OBJ_NEW('idlxmlparser', '.REFscale.cfg')
+  
+  file = OBJ_NEW('idlxmlparser', '.REFscale.cfg')
   ;============================================================================
   ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
   APPLICATION = file->getValue(tag=['configuration','application'])
@@ -68,7 +68,7 @@ file = OBJ_NEW('idlxmlparser', '.REFscale.cfg')
     
     nbr_data_to_exclude: 0,$  ;number of data to remove on both side when
     ;performing setp3
-
+    
     ;settings base
     settings_show_error_bar_flag: 1b,$
     settings_number_of_data_to_display: 100L,$
@@ -261,7 +261,7 @@ file = OBJ_NEW('idlxmlparser', '.REFscale.cfg')
     
   ;Buid OUTPUT_PLOT tab
   MakeGuiOutputFile, STEPS_TAB, global
-    
+  
   MakeGuiLoadBatch, STEPS_TAB,$
     StepsTabSize
     
@@ -277,8 +277,8 @@ file = OBJ_NEW('idlxmlparser', '.REFscale.cfg')
   WIDGET_CONTROL, MAIN_BASE_ref_scale, /REALIZE
   WIDGET_CONTROL, MAIN_BASE_ref_scale, SET_UVALUE=global
   XMANAGER, 'MAIN_BASE_ref_scale', MAIN_BASE_ref_scale, /NO_BLOCK, $
-  cleanup = 'ref_scale_cleanup'
-  
+    cleanup = 'ref_scale_cleanup'
+    
   ;------------------------------------------------------------------------------
   ;- BATCH MODE ONLY ------------------------------------------------------------
   ;Show BATCH Tab if Batch Mode is used
@@ -301,20 +301,21 @@ file = OBJ_NEW('idlxmlparser', '.REFscale.cfg')
   IF (DEBUGGER EQ 'yes') THEN BEGIN
     ;default tab
     id1 = WIDGET_INFO(MAIN_BASE_ref_scale, FIND_BY_UNAME='steps_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 3 ;output_file
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 0 ;output_file
     ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;step3
     ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 0 ;output_file
     ;change default path of batch file
     (*global).BatchDefaultPath = '~/results_refl/'
     (*global).input_path       = '/SNS/REF_L/shared/'
+    (*global).input_path =     '~/results/'
   ENDIF
   ;- END OF DEBUGGER MODE ONLY --------------------------------------------------
   ;------------------------------------------------------------------------------
   
-    ;=============================================================================
+  ;=============================================================================
   ;send message to log current run of application
   logger, APPLICATION=application, VERSION=version, UCAMS=ucams
-    
+  
 END
 
 ;
