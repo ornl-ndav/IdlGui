@@ -89,6 +89,7 @@ PRO ReductionCmd::GetProperty, $
     DumpTIB=dumptib, $                   ; Dump the TIB constant for all pixels
     Mask=mask, $                         ; Apply Mask
     HardMask=hardmask, $                 ; Apply Hard Mask
+    CustomHardMask=CustomHardMask, $     ; Apply a Custom Hard Mask File
     LambdaRatio=lambdaratio, $           ; Lambda ratio
     EnergyBins_min=energybins_min, $     ; Energy transfer bins (min)
     EnergyBins_max=energybins_max, $     ; Energy transfer bins (max)
@@ -183,6 +184,7 @@ PRO ReductionCmd::GetProperty, $
   IF ARG_PRESENT(DumpTIB) NE 0 THEN DumpTIB = self.dumptib
   IF ARG_PRESENT(Mask) NE 0 THEN Mask = self.mask
   IF ARG_PRESENT(HardMask) NE 0 THEN HardMask = self.hardmask
+  IF ARG_PRESENT(CustomHardMask) NE 0 THEN CustomHardMask = self.CustomHardMask
   IF ARG_PRESENT(LambdaRatio) NE 0 THEN LambdaRatio = self.lambdaratio
   IF ARG_PRESENT(EnergyBins_Min) NE 0 THEN EnergyBins_Min = self.energybins_min
   IF ARG_PRESENT(EnergyBins_Max) NE 0 THEN EnergyBins_Max = self.energybins_max
@@ -271,6 +273,7 @@ PRO ReductionCmd::SetProperty, $
     DumpTIB=dumptib, $                   ; Dump the TIB constant for all pixels
     Mask=mask, $                         ; Apply Mask
     HardMask=hardmask, $                 ; Apply Hard Mask
+    CustomHardMask=CustomHardMask, $     ; Apply a Custom Hard Mask File
     LambdaRatio=lambdaratio, $           ; Lambda ratio
     EnergyBins_min=energybins_min, $     ; Energy transfer bins (min)
     EnergyBins_max=energybins_max, $     ; Energy transfer bins (max)
@@ -428,6 +431,7 @@ PRO ReductionCmd::SetProperty, $
   IF N_ELEMENTS(dumptib) NE 0 THEN self.dumptib = DumpTIB
   IF N_ELEMENTS(mask) NE 0 THEN self.mask = Mask
   IF N_ELEMENTS(hardmask) NE 0 THEN self.hardmask = HardMask
+  IF N_ELEMENTS(CustomHardMask) NE 0 THEN self.customhardmask = CustomHardMask
   IF N_ELEMENTS(lambdaratio) NE 0 THEN self.lambdaratio = LambdaRatio
   IF N_ELEMENTS(energybins_min) NE 0 THEN self.energybins_min = EnergyBins_Min
   IF N_ELEMENTS(energybins_max) NE 0 THEN self.energybins_max = EnergyBins_Max
@@ -620,7 +624,7 @@ FUNCTION ReductionCmd::EstimateProgressTicks
   ticks += 2
   
   ; Are we using a hard mask ?
-  IF (self.hardmask EQ 1) THEN BEGIN
+  IF (self.hardmask EQ 1) OR (self.customhardmask EQ 1) THEN BEGIN
     ticks += (2*self.jobs)
   ENDIF
   
@@ -875,6 +879,11 @@ function ReductionCmd::Check
 end
 
 
+;+
+; :Description:
+;    Generates the command strings to execute for reduction jobs.
+;
+;-
 function ReductionCmd::Generate
 
   ; Error Handling
@@ -1044,7 +1053,8 @@ function ReductionCmd::Generate
     
     ; Mask File(s)
     IF (((self.mask EQ 1) AND (STRLEN(self.normalisation) GE 1) AND (STRLEN(self.instrument) GT 1)) $
-      OR ((self.hardmask EQ 1) AND (STRLEN(self.instrument) GT 1))) THEN BEGIN
+      OR ((self.hardmask EQ 1) AND (STRLEN(self.instrument) GT 1)) $
+      OR ((self.customhardmask EQ 1) AND (STRLEN(self.instrument) GT 1))) THEN BEGIN
       cmd[i] += " --mask-file="
       
       
@@ -1062,7 +1072,7 @@ function ReductionCmd::Generate
       
       
       ; 'Hard' Mask file...
-      IF (self.hardmask EQ 1) AND (STRLEN(self.instrument) GT 1) THEN BEGIN
+      IF ((self.customhardmask) OR (self.hardmask EQ 1)) AND (STRLEN(self.instrument) GT 1) THEN BEGIN
         ;
         mask_dir = outputDir + "/masks"
         
@@ -1182,6 +1192,7 @@ function ReductionCmd::Init, $
     DumpTIB=dumptib, $                   ; Dump the TIB constant for all pixels
     Mask=mask, $                         ; Apply Mask
     HardMask=hardmask, $                 ; Apply Hard Mask
+    CustomHardMask=CustomHardMask, $     ; Apply a Custom Hard Mask File
     LambdaRatio=lambdaratio, $           ; Lambda ratio
     EnergyBins_min=energybins_min, $     ; Energy transfer bins (min)
     EnergyBins_max=energybins_max, $     ; Energy transfer bins (max)
@@ -1275,6 +1286,7 @@ function ReductionCmd::Init, $
   IF N_ELEMENTS(DumpTIB) EQ 0 THEN dumptib = 0
   IF N_ELEMENTS(mask) EQ 0 THEN mask = 1
   IF N_ELEMENTS(hardmask) EQ 0 THEN hardmask = 0
+  IF N_ELEMENTS(customhardmask) EQ 0 THEN customhardmask = 0
   IF N_ELEMENTS(lambdaratio) EQ 0 THEN lambdaratio = 0
   IF N_ELEMENTS(energybins_min) EQ 0 THEN energybins_min = ""
   IF N_ELEMENTS(energybins_max) EQ 0 THEN energybins_max = ""
@@ -1359,6 +1371,7 @@ function ReductionCmd::Init, $
   self.dumptib = dumptib
   self.mask = mask
   self.hardmask = hardmask
+  self.customhardmask = customhardmask
   self.lambdaratio = lambdaratio
   self.energybins_min = energybins_min
   self.energybins_max = energybins_max
@@ -1456,6 +1469,7 @@ pro ReductionCmd__Define
     dumptib: 0L, $           ; Dump the TIB constant for all pixels
     mask: 0L, $              ; Apply Mask File
     hardmask: 0L, $          ; Apply Hard Mask File
+    customhardmask: 0L, $    ; Apply a Custom Hard Mask File
     lambdaratio: 0L, $       ; Lambda ratio
     energybins_min: "", $    ; Energy transfer bins (min)
     energybins_max: "", $    ; Energy transfer bins (max)
