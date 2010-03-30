@@ -44,6 +44,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   DEBUGGING_VERSION = file->getValue(tag=['configuration','debugging_version'])
   ;==============================================================================
   ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+  obj_destroy, file
   
   PACKAGE_REQUIRED_BASE = { driver:           '',$
     version_required: '',$
@@ -534,8 +535,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   MakeGuiMainTab, MAIN_BASE, MainBaseSize, XYfactor
   
   Widget_Control, /REALIZE, MAIN_BASE
-  ;XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK, CLEANUP='BSSreduction_Cleanup'
-  XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
+  XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK, CLEANUP='BSSreduction_Cleanup'
+  ;XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
   
   ; initialize slider (Grid: Vertical Lines)
   id = widget_info(Main_base,Find_by_Uname='color_slider')
