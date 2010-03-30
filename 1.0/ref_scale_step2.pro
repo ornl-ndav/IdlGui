@@ -155,8 +155,10 @@ PRO Step2_scaleCE, Event
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
   widget_control,id,get_uvalue=global
   ;change the value of the ymax and ymin in the zoom box to 1.2 and 0
-  putValueInTextField, Event, 'YaxisMaxTextField', (*global).rescaling_ymax ;_put
-  putValueInTextField, Event, 'YaxisMinTextField', (*global).rescaling_ymin ;_put
+  ymax = strcompress((*global).rescaling_ymax,/remove_all)
+  putValueInTextField, Event, 'YaxisMaxTextField', ymax
+  ymin = strcompress((*global).rescaling_ymin,/remove_all)
+  putValueInTextField, Event, 'YaxisMinTextField', ymin
   ;replot CE data with new scale
   plot_rescale_CE_file, Event ;_Plot
 END
@@ -217,7 +219,7 @@ PRO run_full_step2, Event
     
     idl_send_to_geek_addLogBookText, Event, '-> Scaling ... ' + PROCESSING
     scale_error = 0
-    CATCH, scale_error
+    ;CATCH, scale_error
     IF (scale_error NE 0) THEN BEGIN
       CATCH,/CANCEL
       idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, FAILED
@@ -232,12 +234,14 @@ PRO run_full_step2, Event
       '-> Scaling Factor (SF) of Critcal ' + $
       'Edge (CE) File : ' + STRCOMPRESS(SF,/REMOVE_ALL)
       
-    ;update the BatchTable
-    index_array = getIndexArrayOfActiveBatchRow(Event)
-    BatchTable      = (*(*global).BatchTable)
-    BatchTable[7,index_array[0]] = STRCOMPRESS(SF,/REMOVE_ALL)
-    (*(*global).BatchTable) = BatchTable
-    UpdateBatchTable, Event, BatchTable ;_batch
+    ;update the BatchTable if any
+    if ((*global).BatchFileName ne '') then begin
+      index_array = getIndexArrayOfActiveBatchRow(Event)
+      BatchTable      = (*(*global).BatchTable)
+      BatchTable[7,index_array[0]] = STRCOMPRESS(SF,/REMOVE_ALL)
+      (*(*global).BatchTable) = BatchTable
+      UpdateBatchTable, Event, BatchTable ;_batch
+    endif
     
     (*global).force_activation_step2 = 0 ;no need to force activation of step2
     
@@ -610,9 +614,9 @@ PRO saveQxFromQ, Event, Q_NUMBER=Q_NUMBER
     (*global).Q2x = newX
   ENDELSE
   
-  ;print, '(*global).Q1x: ' + string(newX)
+;print, '(*global).Q1x: ' + string(newX)
   
-  ;print, 'leaving SaveQxFromQ'
+;print, 'leaving SaveQxFromQ'
   
 END
 
