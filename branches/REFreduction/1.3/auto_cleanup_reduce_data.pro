@@ -484,7 +484,6 @@ pro cleanup_reduce_data, event, file_name = file_name
     return
   endif
   
-  print, 'there'
 end
 
 ;;main test

@@ -32,15 +32,15 @@
 ;
 ;==============================================================================
 
-PRO MakeGuiBatchTab, MAIN_TAB, MainTabSize, BatchTabTitle, structure
+PRO MakeGuiBatchTab, MAIN_TAB, MainTabSize, BatchTabTitle, structure, global
 
   ;check if we want LAUNCH REFSCALE button or not
   with_launch_button = structure.with_launch_button
   
-  ;******************************************************************************
+  ;****************************************************************************
   ;                           Define size arrays
   ;                 [xoffset, yoffset, scr_xsize, scr_ysize]
-  ;******************************************************************************
+  ;****************************************************************************
   ;Main Base
   BatchTab = { size  : [0,0,MainTabSize[2],MainTabSize[3]],$
     uname : 'batch_base',$
@@ -107,29 +107,54 @@ PRO MakeGuiBatchTab, MAIN_TAB, MainTabSize, BatchTabTitle, structure
     
   ;////////////////////////////////////////////////////////
   ;Table Widget
-  NbrRow = 20
-  RowAlign   = [1,0,0,0,1,1,1,0,1,0]
-  sz         = (size(RowAlign))(1)
-  TableAlign = intarr(sz,NbrRow)
-  FOR i=0,(NbrRow-1) DO BEGIN
-    TableAlign(*,i)=RowAlign
-  ENDFOR
-  dTable = { size      : [0,0,MainTabSize[2],420,sz,NbrRow],$
-    uname     : 'batch_table_widget',$
-    sensitive : 1,$
-    label     : ['ACTIVE', $
-    'DATA RUNS', $
-    'NORM. RUNS',$
-    'E.C. RUN',$
-    'ANGLE (degrees)', $
-    'S1 (mm)', $
-    'S2 (mm)', $
-    'DATE',$
-    'SF',$
-    'Command Line                                        '],$
-    align        : TableAlign,$
-    column_width : [60,150,150,100,120,80,80,160,60,425]}
     
+  if ((*global).instrument eq 'REF_L') then begin
+    NbrRow = 20
+    RowAlign   = [1,0,0,0,1,1,1,0,1,0]
+    sz         = (size(RowAlign))(1)
+    TableAlign = intarr(sz,NbrRow)
+    FOR i=0,(NbrRow-1) DO BEGIN
+      TableAlign(*,i)=RowAlign
+    ENDFOR
+    dTable = { size      : [0,0,MainTabSize[2],420,sz,NbrRow],$
+      uname     : 'batch_table_widget',$
+      sensitive : 1,$
+      label     : ['ACTIVE', $
+      'DATA RUNS', $
+      'NORM. RUNS',$
+      'E.C. RUN',$
+      'ANGLE (degrees)', $
+      'S1 (mm)', $
+      'S2 (mm)', $
+      'DATE',$
+      'SF',$
+      'Command Line                                        '],$
+      align        : TableAlign,$
+      column_width : [60,150,150,100,120,80,80,160,60,425]}
+  endif else begin ;REF_M
+    NbrRow = 20
+    RowAlign   = [1,0,0,0,0,0,0,1,0]
+    sz         = (size(RowAlign))(1)
+    TableAlign = intarr(sz,NbrRow)
+    FOR i=0,(NbrRow-1) DO BEGIN
+      TableAlign(*,i)=RowAlign
+    ENDFOR
+    dTable = { size      : [0,0,MainTabSize[2],420,sz,NbrRow],$
+      uname     : 'batch_table_widget',$
+      sensitive : 1,$
+      label     : ['Active', $
+      'Data Runs', $
+      'Data Spin States',$ 
+      'Norm. Runs',$
+      'Norm. Spin States',$
+      'Angle (degrees)', $
+      'Date',$
+      'SF',$
+      'Command Line                                        '],$
+      align        : TableAlign,$
+      column_width : [60,150,110,150,110,110,130,60,400]}
+  endelse
+  
   ;/////////////////////////////////////////////////////////
   ;Frame that will display the content of the selected run #
   ;widget_label (frame)
@@ -400,9 +425,9 @@ PRO MakeGuiBatchTab, MAIN_TAB, MainTabSize, BatchTabTitle, structure
     frame: 0,$
     uname: 'loaded_batch_file_name'}
     
-  ;******************************************************************************
+  ;****************************************************************************
   ;                                Build GUI
-  ;******************************************************************************
+  ;****************************************************************************
   BATCH_BASE = WIDGET_BASE(MAIN_TAB,$
     UNAME     = BatchTab.uname,$
     TITLE     = BatchTab.title,$
