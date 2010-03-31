@@ -40,8 +40,6 @@ FUNCTION retrieveBanksData, Event, $
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
-  print, 'in retrieveBanksData'
-  
   not_hdf5_format = 0
   CATCH, not_hdf5_format
   IF (not_hdf5_format NE 0) THEN BEGIN
