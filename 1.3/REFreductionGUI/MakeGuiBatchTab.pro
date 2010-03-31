@@ -152,7 +152,7 @@ PRO MakeGuiBatchTab, MAIN_TAB, MainTabSize, BatchTabTitle, structure, global
       'SF',$
       'Command Line                                        '],$
       align        : TableAlign,$
-      column_width : [60,150,110,150,110,110,130,60,400]}
+      column_width : [60,130,150,130,150,110,130,60,440]}
   endelse
   
   ;/////////////////////////////////////////////////////////
