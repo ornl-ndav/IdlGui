@@ -1669,7 +1669,7 @@ PRO MAIN_BASE_event, Event
       find_by_uname='auto_cleaning_data_configure_button'): begin
       configure_auto_cleanup, Event=event
     end
-        
+    
     ;**************************************************************************
     ;**PLOTS TAB*
     ;*************************************************************************
@@ -1764,12 +1764,17 @@ PRO MAIN_BASE_event, Event
     ;;Main table
     WIDGET_INFO(wWidget, FIND_BY_UNAME='batch_table_widget'): begin
       status = 0
+      
+      ;continue only if the table is not empty
+      BatchTable = (*(*global).BatchTable)
+      if (batchTable[0,0] eq '') then return
+      
       DataNormFieldInput, Event, status ;_BatchDataNorm
       IF (status) THEN BEGIN
         if ((*global).instrument eq 'REF_L') then begin
-        BatchTab_WidgetTable, Event
+          BatchTab_WidgetTable, Event
         endif else begin
-        BatchTab_WidgetTable_ref_m, event
+          BatchTab_WidgetTable_ref_m, event
         endelse
       ENDIF
     END
