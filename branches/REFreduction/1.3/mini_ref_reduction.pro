@@ -252,6 +252,8 @@ PRO mini_ref_reduction, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     'heater': instrument = 'UNDEFINED'
     else: instrument = 'UNDEFINED'
   ENDCASE
+
+  instrument = 'REF_M'
   
   IF (instrument EQ 'UNDEFINED') THEN BEGIN
     BuildInstrumentGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
