@@ -175,6 +175,7 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     EmptyCellRunNumber: '',$
     PreviousRunReductionValidated : 0,$
     BatchTable : PTR_NEW(0L),$ ;big array of batch table
+    BatchTable_ref_m : ptr_new(0L), $
     isHDF5format : 1,$
     
     dr_output_path : '~/results/', $
@@ -524,6 +525,7 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
   (*(*global).substrate_type)    = getSubstrateType()
   
   (*(*global).BatchTable) = STRARR(10,20)
+  (*(*global).BatchTable_ref_m) = strarr(9,20) ;1 more column for cmd
   
   ;------------------------------------------------------------------------
   ;explanation of the select_data_status and select_norm_status

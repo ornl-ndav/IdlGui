@@ -32,6 +32,28 @@
 ;
 ;==============================================================================
 
+;**********************************************************************
+;GLOBAL - GLOBAL - GLOBAL - GLOBAL - GLOBAL - GLOBAL - GLOBAL - GLOBAL
+;**********************************************************************
+
+;Procedure that will return all the global variables for this routine
+FUNCTION getGlobalVariable_ref_m, var
+  CASE (var) OF
+    ;number of columns in the Table (active/data/norm/s1/s2...)
+    'ColumnIndexes' : RETURN, 8
+    'NbrColumn'     : RETURN, 9
+    'RowIndexes'    : RETURN, 19
+    'NbrRow'        : RETURN, 20
+    'BatchFileHeadingLines' : RETURN, 3
+    ELSE:
+  ENDCASE
+  RETURN, 'NA'
+END
+
+
+
+
+
 ;This function returns the contain of the Text Field
 FUNCTION getTextFieldValue, Event, uname
   TextFieldID = WIDGET_INFO(Event.top,find_by_uname=uname)
@@ -384,6 +406,48 @@ FUNCTION getCurrentRowSelected, Event
 END
 
 
-
-
+;+
+; :Description:
+;   returns the run number for REF_L and REF_M instruments
+;
+; :Params:
+;    nexus_full_path
+;
+; :Keywords:
+;    instrument
+;
+; :Author: j35
+;-
+function get_ref_run_number, nexus_full_path, instrument=instrument
+  compile_opt idl2
+  
+  error_file = 0
+  CATCH, error_file
+  IF (error_file NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN, ''
+  ENDIF ELSE BEGIN
+    fileID = h5f_open(nexus_full_path)
+  ENDELSE
+  
+  if (instrument eq 'REF_M') then begin
+    run_number_path = '/entry-Off_Off/run_number/'
+  endif else begin
+    run_number_path = '/entry/run_number/'
+  endelse
+  
+  error_value = 0
+  CATCH, error_value
+  IF (error_value NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    h5f_close, fileID
+    RETURN, ''
+  ENDIF ELSE BEGIN
+    pathID     = h5d_open(fileID, run_number_path)
+    run_number = h5d_read(pathID)
+    h5d_close, pathID
+    RETURN, run_number
+  endelse
+  
+end
 

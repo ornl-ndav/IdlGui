@@ -32,25 +32,6 @@
 ;
 ;==============================================================================
 
-;**********************************************************************
-;GLOBAL - GLOBAL - GLOBAL - GLOBAL - GLOBAL - GLOBAL - GLOBAL - GLOBAL
-;**********************************************************************
-
-;Procedure that will return all the global variables for this routine
-FUNCTION getGlobalVariable_ref_m, var
-  CASE (var) OF
-    ;number of columns in the Table (active/data/norm/s1/s2...)
-    'ColumnIndexes' : RETURN, 7
-    'NbrColumn'     : RETURN, 8
-    'RowIndexes'    : RETURN, 19
-    'NbrRow'        : RETURN, 20
-    'BatchFileHeadingLines' : RETURN, 3
-    ELSE:
-  ENDCASE
-  RETURN, 'NA'
-END
-
-
 ;+
 ; :Description:
 ;   select the full row. 
