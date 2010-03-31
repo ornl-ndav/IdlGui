@@ -325,13 +325,32 @@ FUNCTION getQtype, cmd
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getAngleValue, cmd
-  IF (isStringFound(cmd,'--angle-offset=')) THEN BEGIN
-    result = ValueBetweenArg1Arg2(cmd, '--angle-offset=', 1, ',', 0)
-    IF (result EQ '') THEN RETURN, ''
-    RETURN, STRCOMPRESS(result,/REMOVE_ALL)
-  ENDIF
-  RETURN, ''
+FUNCTION getSAngleValue, nexus_full_path
+
+  error_file = 0
+  CATCH, error_file
+  IF (error_file NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN, ''
+  ENDIF ELSE BEGIN
+    fileID = h5f_open(nexus_full_path)
+  ENDELSE
+  
+  sangle_path = '/entry-Off_Off/sample/SANGLE/value'
+  
+  error_value = 0
+  CATCH, error_value
+  IF (error_value NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    h5f_close, fileID
+    RETURN, ''
+  ENDIF ELSE BEGIN
+    pathID     = h5d_open(fileID, sangle_path)
+    sangle = h5d_read(pathID)
+    h5d_close, pathID
+    RETURN, sangle
+  endelse
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -623,8 +642,8 @@ FUNCTION IDLparseCommandLine_ref_m::getQtype
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine_ref_m::getAngleValue
-  RETURN, self.AngleValue
+FUNCTION IDLparseCommandLine_ref_m::getSangleValue
+  RETURN, self.SangleValue
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
@@ -748,7 +767,8 @@ FUNCTION IDLparseCommandLine_ref_m::init, cmd_array
           self.MainNormNexusFileName = getMainNormNexusFileName(cmd)
           IF (self.MainNormNexusFileName NE '') THEN BEGIN
             self.MainNormRunNUmber     = $
-              getMainNormRunNumber(self.MainNormNexusFileName)
+              getMainDataRunNumber_ref(self.MainNormNexusFileName, $
+              instrument='REF_M')
           ENDIF ELSE BEGIN
             self.MainNormRunNumber = ''
           ENDELSE
@@ -781,9 +801,9 @@ FUNCTION IDLparseCommandLine_ref_m::init, cmd_array
           self.Qwidth                    = getQwidth(cmd)
           self.Qtype                     = getQtype(cmd)
           ;Angle Offset
-          self.AngleValue                = getAngleValue(cmd)
-          self.AngleError                = getAngleError(cmd)
-          self.AngleUnits                = getAngleUnits(cmd)
+          self.SangleValue                = getSangleValue(cmd)
+          ;self.AngleError                = getAngleError(cmd)
+          ;self.AngleUnits                = getAngleUnits(cmd)
           ;filtering data
           self.FilteringDataFlag         = isWithFilteringDataFlag(cmd)
           ;dt/t
@@ -869,7 +889,7 @@ PRO IDLparseCommandLine_ref_m__define
     Qmax                      : '',$
     Qwidth                    : '',$
     Qtype                     : '',$
-    AngleValue                : '',$
+    SangleValue                : '',$
     AngleError                : '',$
     AngleUnits                : '',$
     FilteringDataFlag         : 'yes',$
