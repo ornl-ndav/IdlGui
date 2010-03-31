@@ -32,20 +32,20 @@
 ;
 ;==============================================================================
 
-pro populate_ref_m_batch_table, event, bash_cmd_array
+pro populate_ref_m_batch_table, event, cmd_array
   compile_opt idl2
   
   ;get global structure
   widget_control,event.top,get_uvalue=global
   
   ;retrieve current Batch Table
-  BatchTable = (*(*global).BatchTable)
+  BatchTable = (*(*global).BatchTable_ref_m)
   
   ;check if there is a row in the BatchTable where the Command Line is
   ;still undefined. If yes, remove this row, if not, remove last row and
   ;move up everything
-  RowIndexes    = getGlobalVariable('RowIndexes')
-  ColumnIndexes = getglobalVariable('ColumnIndexes')
+  RowIndexes    = getGlobalVariable_ref_m('RowIndexes')
+  ColumnIndexes = getglobalVariable_ref_m('ColumnIndexes')
   for i=0,RowIndexes do begin
     if (BatchTable[ColumnIndexes,i] EQ 'N/A') then begin
       RemoveGivenRowInBatchTable_ref_m, BatchTable, i
@@ -53,13 +53,48 @@ pro populate_ref_m_batch_table, event, bash_cmd_array
     endif
   endfor
   
-  ;Create instance of the class
+  ;move down everything to make room for new load data and insert blank
+  ;data
+  AddBlankRowInBatchTable_ref_m, BatchTable
+
+  ;Create instance of the class that will collect the various infos
   ClassInstance = obj_new('IDLparseCommandLine_ref_m',cmd_array)
+
+  MainDataRunNumber = ClassInstance->getMainDataRunNumber()
+  DataSpinStates = ClassInstance->getDataPath()
+  MainNormRunNumber = ClassInstance->getMainNormRunNumber()
+  NormSpinStates = ClassInstance->getNormPath()
+  cmd = ClassInstance->getCmd()
+  
+  BatchTable[1,0] = MainDataRunNumber
+  BatchTable[2,0] = DataSpinStates
+  BatchTable[3,0] = MainNormRunNumber
+  BatchTable[4,0] = NormSpinStates
+  BatchTable[6,0] = GenerateShortReadableIsoTimeStamp()
+  BatchTable[8,0] = cmd
+  
+  ;populate table of batch tab
+  VisualBatchTable = BatchTable[0:8,*]
+  id = widget_info(Event.top,find_by_uname='batch_table_widget')
+  widget_control, id, set_value=VisualBatchTable
+  
+  
   
   
   
 end
 
+;------------------------------------------------------------------------------
+;This function insert a clear row on top of batchTable and move
+;everything else down
+PRO AddBlankRowInBatchTable_ref_m, BatchTable
+  RowIndexes = getglobalVariable_ref_m('RowIndexes')
+  FOR i = 0, RowIndexes-1 DO BEGIN
+    k=(RowIndexes-i)
+    BatchTable[*,k]=BatchTable[*,k-1]
+  ENDFOR
+  ClearStructureFields_ref_m, BatchTable, 0
+END
 
 ;------------------------------------------------------------------------------
 ;This function removes the given row from the BatchTable
@@ -74,6 +109,7 @@ END
 ;------------------------------------------------------------------------------
 ;This function reset all the structure fields of the current index
 PRO ClearStructureFields_ref_m, BatchTable, CurrentBatchTableIndex
-  resetArray = strarr(8)
+  nbr_column = getGlobalVariable_ref_m('NbrColumn')
+  resetArray = strarr(nbr_column)
   BatchTable[*,CurrentBatchTableIndex] = resetArray
 END

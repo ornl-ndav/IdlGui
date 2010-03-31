@@ -106,9 +106,13 @@ FUNCTION getMainDataNexusFileName, cmd
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getMainDataRunNumber, FullNexusName
-  inst = obj_new('IDLgetMetadata',FullNexusName)
-  RETURN, STRCOMPRESS(inst->getRunNumber(),/REMOVE_ALL)
+FUNCTION getMainDataRunNumber_ref, FullNexusName, instrument=instrument
+  if (n_elements(instrument) ne 0) then begin
+    run_number = get_ref_run_number(FullNexusName, instrument=instrument)
+  endif else begin
+    run_number = get_ref_run_number(FullNexusName, instrument='REF_L')
+  endelse
+  RETURN, strcompress(run_number,/remove_all)
 END
 
 ;------------------------------------------------------------------------------
@@ -121,6 +125,17 @@ FUNCTION getAllDataNexusFileName, cmd
   IF (result EQ '') THEN RETURN, ''
   RETURN, result
 END
+
+;------------------------------------------------------------------------------
+function getDataPath, cmd
+  result = ValueBetweenArg1Arg2(cmd, '--data-paths=', 1, ' ', 0)
+  if (result EQ '') THEN RETURN, ''
+  if (result ne '') then begin
+    parse_result = strsplit(result[0],'/',/extract)
+    parse_result2 = strsplit(parse_result[0],'-',/extract)
+  endif
+  return, strcompress(parse_result2[1],/remove_all)
+end
 
 ;------------------------------------------------------------------------------
 FUNCTION getDataRoiFileName, cmd
@@ -184,6 +199,17 @@ FUNCTION getAllNormNexusFileName, cmd
   IF (result EQ '') THEN RETURN, ''
   RETURN, STRCOMPRESS(result,/REMOVE_ALL)
 END
+
+;------------------------------------------------------------------------------
+function getNormPath, cmd
+  result = ValueBetweenArg1Arg2(cmd, '--norm-data-paths=', 1, ' ', 0)
+  if (result EQ '') THEN RETURN, ''
+  if (result ne '') then begin
+    parse_result = strsplit(result[0],'/',/extract)
+    parse_result2 = strsplit(parse_result[0],'-',/extract)
+  endif
+  return, strcompress(parse_result2[1],/remove_all)
+end
 
 ;------------------------------------------------------------------------------
 FUNCTION getNormRoiFileName, cmd
@@ -448,217 +474,231 @@ END
 
 ;******************************************************************************
 ;******************************************************************************
-FUNCTION IDLparseCommandLine::getMainDataNexusFileName
+function IDLparseCommandLine_ref_m::getCmd
+  return, self.cmd
+end
+
+FUNCTION IDLparseCommandLine_ref_m::getMainDataNexusFileName
   RETURN, self.MainDataNexusFileName
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getMainDataRunNumber
+FUNCTION IDLparseCommandLine_ref_m::getMainDataRunNumber
   RETURN, self.MainDataRunNumber
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getAllDAtaNexusFileName
+FUNCTION IDLparseCommandLine_ref_m::getAllDAtaNexusFileName
   RETURN, self.AllDataNexusFileName
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getDataRoiFileName
+FUNCTION IDLparseCommandLine_ref_m::getDataPath
+  RETURN, self.DataPath
+END
+
+;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+FUNCTION IDLparseCommandLine_ref_m::getDataRoiFileName
   RETURN, self.DataRoiFileName
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getDataPeakExclYArray
+FUNCTION IDLparseCommandLine_ref_m::getDataPeakExclYArray
   RETURN, self.DataPeakExclYArray
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getDataBackFileName
+FUNCTION IDLparseCommandLine_ref_m::getDataBackFileName
   RETURN, self.DataBackFileName
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getTOFcuttingMin
+FUNCTION IDLparseCommandLine_ref_m::getTOFcuttingMin
   RETURN, self.TOFcuttingMin
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getTOFcuttingMax
+FUNCTION IDLparseCommandLine_ref_m::getTOFcuttingMax
   RETURN, self.TOFcuttingMax
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getMainNormNexusFileName
+FUNCTION IDLparseCommandLine_ref_m::getMainNormNexusFileName
   RETURN, self.MainNormNexusFileName
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getMainNormRunNumber
+FUNCTION IDLparseCommandLine_ref_m::getMainNormRunNumber
   RETURN, self.MainNormRunNumber
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getAllNormNexusFileName
+FUNCTION IDLparseCommandLine_ref_m::getAllNormNexusFileName
   RETURN, self.AllNormNexusFileName
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getNormRoiFileName
+FUNCTION IDLparseCommandLine_ref_m::getNormPath
+  RETURN, self.NormPath
+END
+
+;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+FUNCTION IDLparseCommandLine_ref_m::getNormRoiFileName
   RETURN, self.NormRoiFileName
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getNormPeakExclYArray
+FUNCTION IDLparseCommandLine_ref_m::getNormPeakExclYArray
   RETURN, self.NormPeakExclYArray
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getNormBackFileName
+FUNCTION IDLparseCommandLine_ref_m::getNormBackFileName
   RETURN, self.NormBackFileName
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getEmptyCellNexusFileName
+FUNCTION IDLparseCommandLine_ref_m::getEmptyCellNexusFileName
   RETURN, self.EmptyCellFileName
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getEmptyCellRunNumber
+FUNCTION IDLparseCommandLine_ref_m::getEmptyCellRunNumber
   RETURN, self.EmptyCellRunNumber
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getEmptyCellA
+FUNCTION IDLparseCommandLine_ref_m::getEmptyCellA
   RETURN, self.EmptyCellA
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getEmptyCellB
+FUNCTION IDLparseCommandLine_ref_m::getEmptyCellB
   RETURN, self.EmptyCellB
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getEmptyCellC
+FUNCTION IDLparseCommandLine_ref_m::getEmptyCellC
   RETURN, self.EmptyCellC
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getEmptyCellD
+FUNCTION IDLparseCommandLine_ref_m::getEmptyCellD
   RETURN, self.EmptyCellD
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getEmptyCellReduceFlag
+FUNCTION IDLparseCommandLine_ref_m::getEmptyCellReduceFlag
   RETURN, self.EmptyCellReduceFlag
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getDataBackgroundFlag
+FUNCTION IDLparseCommandLine_ref_m::getDataBackgroundFlag
   RETURN, self.DataBackgroundFlag
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getNormBackgroundFlag
+FUNCTION IDLparseCommandLine_ref_m::getNormBackgroundFlag
   RETURN, self.NormBackgroundFlag
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getQmin
+FUNCTION IDLparseCommandLine_ref_m::getQmin
   RETURN, self.Qmin
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getQmax
+FUNCTION IDLparseCommandLine_ref_m::getQmax
   RETURN, self.Qmax
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getQwidth
+FUNCTION IDLparseCommandLine_ref_m::getQwidth
   RETURN, self.Qwidth
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getQtype
+FUNCTION IDLparseCommandLine_ref_m::getQtype
   RETURN, self.Qtype
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getAngleValue
+FUNCTION IDLparseCommandLine_ref_m::getAngleValue
   RETURN, self.AngleValue
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getAngleError
+FUNCTION IDLparseCommandLine_ref_m::getAngleError
   RETURN, self.AngleError
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getAngleUnits
+FUNCTION IDLparseCommandLine_ref_m::getAngleUnits
   RETURN, self.AngleUnits
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getFilteringDataFlag
+FUNCTION IDLparseCommandLine_ref_m::getFilteringDataFlag
   RETURN, self.FilteringDataFlag
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getDeltaTOverTFlag
+FUNCTION IDLparseCommandLine_ref_m::getDeltaTOverTFlag
   RETURN, self.DeltaTOverT
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getOverwriteDataInstrGeoFlag
+FUNCTION IDLparseCommandLine_ref_m::getOverwriteDataInstrGeoFlag
   RETURN, self.OverwriteDataInstrGeo
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getDataInstrGeoFileName
+FUNCTION IDLparseCommandLine_ref_m::getDataInstrGeoFileName
   RETURN, self.DataInstrGeoFileName
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getOverwriteNormInstrGeoFlag
+FUNCTION IDLparseCommandLine_ref_m::getOverwriteNormInstrGeoFlag
   RETURN, self.OverwriteNormInstrGeo
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getNormInstrGeoFileName
+FUNCTION IDLparseCommandLine_ref_m::getNormInstrGeoFileName
   RETURN, self.NormInstrGeoFileName
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getOutputPath
+FUNCTION IDLparseCommandLine_ref_m::getOutputPath
   RETURN, self.OutputPath
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getOutputFileName
+FUNCTION IDLparseCommandLine_ref_m::getOutputFileName
   RETURN, self.OutputFileName
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getDataNormCombinedSpecFlag
+FUNCTION IDLparseCommandLine_ref_m::getDataNormCombinedSpecFlag
   RETURN, self.DataNormCombinedSpecFlag
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getDataNormCombinedBackFlag
+FUNCTION IDLparseCommandLine_ref_m::getDataNormCombinedBackFlag
   RETURN, self.DataNormCombinedBackFlag
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getDataNormCombinedSubFlag
+FUNCTION IDLparseCommandLine_ref_m::getDataNormCombinedSubFlag
   RETURN, self.DataNormCombinedSubFlag
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getRvsTOFFlag
+FUNCTION IDLparseCommandLine_ref_m::getRvsTOFFlag
   RETURN, self.RvsTOFFlag
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getRvsTOFcombinedFlag
+FUNCTION IDLparseCommandLine_ref_m::getRvsTOFcombinedFlag
   RETURN, self.RvsTOFcombinedFlag
 END
 
@@ -673,93 +713,133 @@ FUNCTION IDLparseCommandLine_ref_m::init, cmd_array
     RETURN, 0
   ENDIF ELSE BEGIN
   
-    ;Work on Data
-    self.MainDataNexusFileName  = getMainDataNexusFileName(cmd)
-    IF (self.MainDataNexusFileName NE '') THEN BEGIN
-      self.MainDataRunNUmber      = $
-        getMainDataRunNumber(self.MainDataNexusFileName)
-    ENDIF ELSE BEGIN
-      self.MainDataRunNumber  = ''
-    ENDELSE
-    self.AllDataNexusFileName   = getAllDataNexusFileName(cmd)
-    self.DataRoiFileName        = getDataRoiFileName(cmd)
-    self.DataPeakExclYArray     = getDataPeakExclYArray(cmd)
-    self.DataBackFileName       = getDataBackFileName(cmd)
-    self.TOFcuttingMin          = getTOFcuttingMin(cmd)
-    self.TOFcuttingMax          = getTOFcuttingMax(cmd)
+    nbr_cmd = n_elements(cmd_array)
+    index_nbr_cmd = 0
+    first_non_empty_cmd = 1b
+    while (index_nbr_cmd lt nbr_cmd) do begin
     
-    ;Work on Normalization
-    self.MainNormNexusFileName = getMainNormNexusFileName(cmd)
-    IF (self.MainNormNexusFileName NE '') THEN BEGIN
-      self.MainNormRunNUmber     = $
-        getMainNormRunNumber(self.MainNormNexusFileName)
-    ENDIF ELSE BEGIN
-      self.MainNormRunNumber = ''
-    ENDELSE
-    self.AllNormNexusFileName  = getAllNormNexusFileName(cmd)
-    self.NormRoiFileName       = getNormRoiFileName(cmd)
-    self.NormPeakExclYArray    = getNormPeakExclYArray(cmd)
-    self.NormBackFileName      = getNormBackFileName(cmd)
+      ;check if the cmd is empty (means did it work)
+      cmd = cmd_array[index_nbr_cmd]
+      if (cmd ne '') then begin ;cmd ran with success
+      
+        if (first_non_empty_cmd eq 1b) then begin
+        
+          self.cmd = cmd
+          
+          ;Work on Data
+          self.MainDataNexusFileName  = getMainDataNexusFileName(cmd)
+          IF (self.MainDataNexusFileName NE '') THEN BEGIN
+            self.MainDataRunNumber      = $
+              getMainDataRunNumber_ref(self.MainDataNexusFileName, $
+              instrument='REF_M')
+          ENDIF ELSE BEGIN
+            self.MainDataRunNumber  = ''
+          ENDELSE
+          
+          self.AllDataNexusFileName   = getAllDataNexusFileName(cmd)
+          self.DataPath               = getDataPath(cmd)
+          self.DataRoiFileName        = getDataRoiFileName(cmd)
+          self.DataPeakExclYArray     = getDataPeakExclYArray(cmd)
+          self.DataBackFileName       = getDataBackFileName(cmd)
+          self.TOFcuttingMin          = getTOFcuttingMin(cmd)
+          self.TOFcuttingMax          = getTOFcuttingMax(cmd)
+          
+          ;Work on Normalization
+          self.MainNormNexusFileName = getMainNormNexusFileName(cmd)
+          IF (self.MainNormNexusFileName NE '') THEN BEGIN
+            self.MainNormRunNUmber     = $
+              getMainNormRunNumber(self.MainNormNexusFileName)
+          ENDIF ELSE BEGIN
+            self.MainNormRunNumber = ''
+          ENDELSE
+          self.AllNormNexusFileName  = getAllNormNexusFileName(cmd)
+          self.NormPath              = getNormPath(cmd)
+          self.NormRoiFileName       = getNormRoiFileName(cmd)
+          self.NormPeakExclYArray    = getNormPeakExclYArray(cmd)
+          self.NormBackFileName      = getNormBackFileName(cmd)
+          
+          ;Work on Emtpy Cell
+          self.EmptyCellFileName = getEmptyCellFileName(cmd)
+          IF (self.EmptyCellFileName NE '') THEN BEGIN
+            self.EmptyCellRunNumber = $
+              getEmptyCellRunNumber(self.EmptyCellFileName)
+            AB = getEmptyCellAB(cmd)
+            self.EmptyCellA = STRCOMPRESS(AB[0],/REMOVE_ALL)
+            self.EmptyCellB = STRCOMPRESS(AB[1],/REMOVE_ALL)
+            self.EmptyCellC = getEmptyCellC(cmd)
+            self.EmptyCellD = getEmptyCellD(cmd)
+            self.EmptyCellReduceFlag = 'yes'
+          ENDIF
+          
+          ;;Reduce Tab
+          ;Background flags
+          self.DataBackgroundFlag        = isWithDataBackgroundFlagOn(cmd)
+          self.NormBackgroundFlag        = isWithNormBackgroundFlagOn(cmd)
+          ;Q [Qmin,Qmax,Qwidth,linear/log]
+          self.Qmin                      = getQmin(cmd)
+          self.Qmax                      = getQmax(cmd)
+          self.Qwidth                    = getQwidth(cmd)
+          self.Qtype                     = getQtype(cmd)
+          ;Angle Offset
+          self.AngleValue                = getAngleValue(cmd)
+          self.AngleError                = getAngleError(cmd)
+          self.AngleUnits                = getAngleUnits(cmd)
+          ;filtering data
+          self.FilteringDataFlag         = isWithFilteringDataFlag(cmd)
+          ;dt/t
+          self.DeltaTOverT               = isWithDeltaTOverT(cmd)
+          ;overwrite data intrument geometry
+          self.OverwriteDataInstrGeo     = isWithOverwriteDataInstrGeo(cmd)
+          ;Data instrument geometry file name
+          self.DataInstrGeoFileName      = getDataInstrumentGeoFileName(cmd)
+          ;overwrite norm intrument geometry
+          self.OverwriteNormInstrGeo     = isWithOverwriteNormInstrGeo(cmd)
+          ;Norm instrument geometry file name
+          self.NormInstrGeoFileName      = getNormInstrumentGeoFileName(cmd)
+          ;output path
+          self.OutputPath                = getOutputPath(cmd)
+          ;output file name
+          self.OutputFileName            = class_getOutputFileName(cmd)
+          ;;Intermediate File Flags
+          self.DataNormCombinedSpecFlag  = isWithDataNormCombinedSpec(cmd)
+          self.DataNormCombinedBackFlag  = isWithDataNormCombinedBack(cmd)
+          self.DataNormCombinedSubFlag   = isWithDataNormCombinedSub(cmd)
+          self.RvsTOFFlag                = isWithRvsTOF(cmd)
+          self.RvsTOFcombinedFlag        = isWithRvsTOFcombined(cmd)
+          
+          first_non_empty_cmd = 0b
+        endif else begin
+        
+          data_path              = getDataPath(cmd)
+          self.DataPath += '/' + data_path
+          if (self.MainNormRunNumber ne '') then begin
+            norm_path              = getNormPath(cmd)
+            self.NormPath += '/' + norm_path
+          endif
+          self.cmd += ' ; ' + cmd
+          
+        endelse
+        
+      endif
+      
+      index_nbr_cmd++
+    endwhile
     
-    ;Work on Emtpy Cell
-    self.EmptyCellFileName = getEmptyCellFileName(cmd)
-    IF (self.EmptyCellFileName NE '') THEN BEGIN
-      self.EmptyCellRunNumber = $
-        getEmptyCellRunNumber(self.EmptyCellFileName)
-      AB = getEmptyCellAB(cmd)
-      self.EmptyCellA = STRCOMPRESS(AB[0],/REMOVE_ALL)
-      self.EmptyCellB = STRCOMPRESS(AB[1],/REMOVE_ALL)
-      self.EmptyCellC = getEmptyCellC(cmd)
-      self.EmptyCellD = getEmptyCellD(cmd)
-      self.EmptyCellReduceFlag = 'yes'
-    ENDIF
-    
-    ;;Reduce Tab
-    ;Background flags
-    self.DataBackgroundFlag        = isWithDataBackgroundFlagOn(cmd)
-    self.NormBackgroundFlag        = isWithNormBackgroundFlagOn(cmd)
-    ;Q [Qmin,Qmax,Qwidth,linear/log]
-    self.Qmin                      = getQmin(cmd)
-    self.Qmax                      = getQmax(cmd)
-    self.Qwidth                    = getQwidth(cmd)
-    self.Qtype                     = getQtype(cmd)
-    ;Angle Offset
-    self.AngleValue                = getAngleValue(cmd)
-    self.AngleError                = getAngleError(cmd)
-    self.AngleUnits                = getAngleUnits(cmd)
-    ;filtering data
-    self.FilteringDataFlag         = isWithFilteringDataFlag(cmd)
-    ;dt/t
-    self.DeltaTOverT               = isWithDeltaTOverT(cmd)
-    ;overwrite data intrument geometry
-    self.OverwriteDataInstrGeo     = isWithOverwriteDataInstrGeo(cmd)
-    ;Data instrument geometry file name
-    self.DataInstrGeoFileName      = getDataInstrumentGeoFileName(cmd)
-    ;overwrite norm intrument geometry
-    self.OverwriteNormInstrGeo     = isWithOverwriteNormInstrGeo(cmd)
-    ;Norm instrument geometry file name
-    self.NormInstrGeoFileName      = getNormInstrumentGeoFileName(cmd)
-    ;output path
-    self.OutputPath                = getOutputPath(cmd)
-    ;output file name
-    self.OutputFileName            = class_getOutputFileName(cmd)
-    ;;Intermediate File Flags
-    self.DataNormCombinedSpecFlag  = isWithDataNormCombinedSpec(cmd)
-    self.DataNormCombinedBackFlag  = isWithDataNormCombinedBack(cmd)
-    self.DataNormCombinedSubFlag   = isWithDataNormCombinedSub(cmd)
-    self.RvsTOFFlag                = isWithRvsTOF(cmd)
-    self.RvsTOFcombinedFlag        = isWithRvsTOFcombined(cmd)
-  ENDELSE
-  RETURN, 1
-END
+  endelse
+  return,1
+end
 
 ;******************************************************************************
 ;****** Class Define **********************************************************
 PRO IDLparseCommandLine_ref_m__define
   STRUCT = {IDLparseCommandLine_ref_m,$
+  
+    cmd                       : '',$
+    
     MainDataNexusFileName     : '',$
     MainDataRunNumber         : '',$
     AllDataNexusFileName      : '',$
+    DataPath                  : '',$
     DataRoiFileName           : '',$
     DataPeakExclYArray        : ['',''],$
     DataBackFileName          : '',$
@@ -770,6 +850,7 @@ PRO IDLparseCommandLine_ref_m__define
     MainNormNexusFileName     : '',$
     MainNormRunNumber         : '',$
     AllNormNexusFileName      : '',$
+    NormPath                  : '',$
     NormRoiFileName           : '',$
     NormPeakExclYArray        : ['',''],$
     NormBackFileName          : '',$

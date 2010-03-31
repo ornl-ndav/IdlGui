@@ -99,8 +99,9 @@ PRO run_command_line_ref_m, event
     putLogBookMessage, Event, cmd_text, Append=1
     cmd_text = '......... ' + PROCESSING
     putLogBookMessage, Event, cmd_text, Append=1
+    
        
-    spawn, cmd[index], listening, err_listening
+    ;spawn, cmd[index], listening, err_listening ;REMOVE_ME
     
     IF (err_listening[0] NE '') THEN BEGIN
     

@@ -357,6 +357,9 @@ IF (N_ELEMENTS(POLA_STATE_NAME) NE 0) THEN BEGIN ;NeXus file with pola states
    self.RunNumber = get_RunNumber(fileID, POLA_STATE_NAME=pola_state_NAME)
    RETURN, 1
 ENDIF ELSE BEGIN                ;no pola state
+
+  print, 'hererererere'
+
 ;get angle (theta)
    self.angle     = get_theta_degree(fileID)
 ;get s1
