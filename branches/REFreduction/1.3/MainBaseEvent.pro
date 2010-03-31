@@ -1766,7 +1766,11 @@ PRO MAIN_BASE_event, Event
       status = 0
       DataNormFieldInput, Event, status ;_BatchDataNorm
       IF (status) THEN BEGIN
-        BatchTab_WidgetTable, Event ;in ref_reduction_BatchTab.pro
+        if ((*global).instrument eq 'REF_L') then begin
+        BatchTab_WidgetTable, Event
+        endif else begin
+        BatchTab_WidgetTable_ref_m, event
+        endelse
       ENDIF
     END
     

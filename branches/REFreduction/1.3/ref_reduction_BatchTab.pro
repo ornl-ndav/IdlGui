@@ -310,15 +310,6 @@ END
 ;GET - GET - GET - GET - GET - GET - GET - GET - GET - GET - GET - GET
 ;**********************************************************************
 
-;Return the current row selected
-FUNCTION getCurrentRowSelected, Event
-  id = Widget_Info(Event.top,find_by_uname='batch_table_widget')
-  SelectedCell = widget_Info(id,/table_select)
-  RowSelected  = SelectedCell[1]
-  RETURN, RowSelected
-END
-
-;------------------------------------------------------------------------------
 ;This function determines the current table index
 ;It's +1 each time a new data is loaded and if the previous
 ;GO REDUCTION has been validated

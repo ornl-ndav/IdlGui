@@ -367,6 +367,21 @@ function get_nbr_spin_states, event
 end
 
 
+;+
+; :Description:
+;   This routine returns the current row selected in the batch table
+;
+; :Params:
+;    Event
+;
+; :Author: j35
+;-
+FUNCTION getCurrentRowSelected, Event
+  id = Widget_Info(Event.top,find_by_uname='batch_table_widget')
+  SelectedCell = widget_Info(id,/table_select)
+  RowSelected  = SelectedCell[1]
+  RETURN, RowSelected
+END
 
 
 

@@ -37,6 +37,9 @@
 .run ref_reduction_is.pro
 .run ref_reduction_time.pro
 
+;batch table
+.run batch_tab_ref_m.pro
+
 .run ref_reduction_DumpBinary.pro
 .run ref_reduction_Plot2DDataFile.pro
 .run ref_reduction_Plot1DDataFile.pro
