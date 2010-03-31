@@ -143,7 +143,7 @@ PRO miniMakeGuiBatchTab, MAIN_TAB, $
     FOR i=0,(NbrRow-1) DO BEGIN
       TableAlign(*,i)=RowAlign
     ENDFOR
-    dTable = { size      : [0,0,MainTabSize[2],420,sz,NbrRow],$
+    dTable = { size      : [0,0,MainTabSize[2],320,sz,NbrRow],$
       uname     : 'batch_table_widget',$
       sensitive : 1,$
       label     : ['Active', $
@@ -544,78 +544,122 @@ PRO miniMakeGuiBatchTab, MAIN_TAB, $
     ROW        = 1,$
     LABEL_LEFT = dActive.title)
     
+  if ((*global).instrument eq 'REF_L') then begin
+  
+    ;\\\\\\\\\\\\\\\\
+    ;Data Run Number\
+    ;\\\\\\\\\\\\\\\\
+    wRunBase = WIDGET_BASE(BATCH_BASE,$
+      UNAME     = dRunBase.uname,$
+      XOFFSET   = dRunBase.size[0],$
+      YOFFSET   = dRunBase.size[1],$
+      SCR_XSIZE = dRunBase.size[2],$
+      SCR_YSIZE = dRunBase.size[3])
+      
+    wRunField = CW_FIELD(wRunBase,$
+      XSIZE  = dDataRunField.size[0],$
+      YSIZE  = dDataRunField.size[1],$
+      UNAME  = dDataRunField.uname,$
+      TITLE  = dDataRunField.title,$
+      /RETURN_EVENTS)
+      
+    ;\\\\\\\\\\\\\\\\
+    ;Norm Run Number\
+    ;\\\\\\\\\\\\\\\\
+    wNormRunBase = WIDGET_BASE(BATCH_BASE,$
+      UNAME     = dNormRunBase.uname,$
+      XOFFSET   = dNormRunBase.size[0],$
+      YOFFSET   = dNormRunBase.size[1],$
+      SCR_XSIZE = dNormRunBase.size[2],$
+      SCR_YSIZE = dNormRunBase.size[3])
+      
+    wNormRunField = CW_FIELD(wNormRunBase,$
+      XSIZE = dNormRunField.size[0],$
+      YSIZE = dNormRunField.size[1],$
+      UNAME = dNormRunField.uname,$
+      TITLE = dNormRunField.title,$
+      /RETURN_EVENTS)
+      
+    ;\\\\\\\\\\\\
+    ;Angle value\
+    ;\\\\\\\\\\\\
+    wAngleLabel = WIDGET_LABEL(BATCH_BASE,$
+      XOFFSET   = dAngleLabel.size[0],$
+      YOFFSET   = dAngleLabel.size[1],$
+      SCR_XSIZE = dAngleLabel.size[2],$
+      SCR_YSIZE = dAngleLabel.size[3],$
+      UNAME     = dAngleLabel.uname,$
+      VALUE     = dAngleLabel.value,$
+      /ALIGN_LEFT)
+      
+    ;\\\\\\\\\
+    ;S1 value\
+    ;\\\\\\\\\
+    wS1Label = WIDGET_LABEL(BATCH_BASE,$
+      XOFFSET   = dS1Label.size[0],$
+      YOFFSET   = dS1Label.size[1],$
+      SCR_XSIZE = dS1Label.size[2],$
+      SCR_YSIZE = dS1Label.size[3],$
+      UNAME     = dS1Label.uname,$
+      VALUE     = dS1Label.value,$
+      /ALIGN_LEFT)
+      
+    ;\\\\\\\\\
+    ;S2 value\
+    ;\\\\\\\\\
+    wS2Label = WIDGET_LABEL(BATCH_BASE,$
+      XOFFSET   = dS2Label.size[0],$
+      YOFFSET   = dS2Label.size[1],$
+      SCR_XSIZE = dS2Label.size[2],$
+      SCR_YSIZE = dS2Label.size[3],$
+      UNAME     = dS2Label.uname,$
+      VALUE     = dS2Label.value,$
+      /ALIGN_LEFT)
+      
+  endif else begin ;'REF_M'
+  
+    info_base = widget_base(BATCH_BASE,$
+      xoffset = dRunBase.size[0],$
+      yoffset = dRunBase.size[1]-5,$
+      sensitive = 1, $ ;put back 0 FIXME
+      /row)
+      
+    wRunField = CW_FIELD(info_base,$
+      XSIZE  = 10,$
+      UNAME  = dDataRunField.uname,$
+      TITLE  = 'Data runs:',$
+      /RETURN_EVENTS)
+      
+    label = widget_label(info_base,$
+      value = ' Data spins:')
+    spin = widget_droplist(info_base,$
+      uname = 'bash_data_spin_state_droplist',$
+      value = 'N/A   ')
+      
+    wNormRunField = CW_FIELD(info_base,$
+      XSIZE = 10,$
+      UNAME = dNormRunField.uname,$
+      TITLE = '   Norm. Runs:',$
+      /RETURN_EVENTS)
+      
+    spin_label = widget_label(info_base,$
+      value = ' Norm. spin:')
+    spin = widget_label(info_base,$
+      value = 'N/A   ')
+      
+    angle_base = widget_base(BATCH_BASE,$
+    xoffset = dRunBase.size[0] + 343,$
+    yoffset = dRunBase.size[1] + 40,$
+    sensitive = 1,$
+    /row)
     
-  ;\\\\\\\\\\\\\\\\
-  ;Data Run Number\
-  ;\\\\\\\\\\\\\\\\
-  wRunBase = WIDGET_BASE(BATCH_BASE,$
-    UNAME     = dRunBase.uname,$
-    XOFFSET   = dRunBase.size[0],$
-    YOFFSET   = dRunBase.size[1],$
-    SCR_XSIZE = dRunBase.size[2],$
-    SCR_YSIZE = dRunBase.size[3])
-    
-  wRunField = CW_FIELD(wRunBase,$
-    XSIZE  = dDataRunField.size[0],$
-    YSIZE  = dDataRunField.size[1],$
-    UNAME  = dDataRunField.uname,$
-    TITLE  = dDataRunField.title,$
-    /RETURN_EVENTS)
-    
-    
-  ;\\\\\\\\\\\\\\\\
-  ;Norm Run Number\
-  ;\\\\\\\\\\\\\\\\
-  wNormRunBase = WIDGET_BASE(BATCH_BASE,$
-    UNAME     = dNormRunBase.uname,$
-    XOFFSET   = dNormRunBase.size[0],$
-    YOFFSET   = dNormRunBase.size[1],$
-    SCR_XSIZE = dNormRunBase.size[2],$
-    SCR_YSIZE = dNormRunBase.size[3])
-    
-  wNormRunField = CW_FIELD(wNormRunBase,$
-    XSIZE = dNormRunField.size[0],$
-    YSIZE = dNormRunField.size[1],$
-    UNAME = dNormRunField.uname,$
-    TITLE = dNormRunField.title,$
-    /RETURN_EVENTS)
-    
-  ;\\\\\\\\\\\\
-  ;Angle value\
-  ;\\\\\\\\\\\\
-  wAngleLabel = WIDGET_LABEL(BATCH_BASE,$
-    XOFFSET   = dAngleLabel.size[0],$
-    YOFFSET   = dAngleLabel.size[1],$
-    SCR_XSIZE = dAngleLabel.size[2],$
-    SCR_YSIZE = dAngleLabel.size[3],$
-    UNAME     = dAngleLabel.uname,$
-    VALUE     = dAngleLabel.value,$
-    /ALIGN_LEFT)
-    
-  ;\\\\\\\\\
-  ;S1 value\
-  ;\\\\\\\\\
-  wS1Label = WIDGET_LABEL(BATCH_BASE,$
-    XOFFSET   = dS1Label.size[0],$
-    YOFFSET   = dS1Label.size[1],$
-    SCR_XSIZE = dS1Label.size[2],$
-    SCR_YSIZE = dS1Label.size[3],$
-    UNAME     = dS1Label.uname,$
-    VALUE     = dS1Label.value,$
-    /ALIGN_LEFT)
-    
-  ;\\\\\\\\\
-  ;S2 value\
-  ;\\\\\\\\\
-  wS2Label = WIDGET_LABEL(BATCH_BASE,$
-    XOFFSET   = dS2Label.size[0],$
-    YOFFSET   = dS2Label.size[1],$
-    SCR_XSIZE = dS2Label.size[2],$
-    SCR_YSIZE = dS2Label.size[3],$
-    UNAME     = dS2Label.uname,$
-    VALUE     = dS2Label.value,$
-    /ALIGN_LEFT)
-    
+    wAngleLabel = WIDGET_LABEL(angle_base,$
+      SCR_XSIZE = dAngleLabel.size[2],$
+      UNAME     = dAngleLabel.uname,$
+      VALUE     = dAngleLabel.value)
+      
+  endelse
+  
   ;\\\\\\\\\\\\\\\
   ;Repopulate GUI\
   ;\\\\\\\\\\\\\\\
