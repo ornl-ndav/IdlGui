@@ -137,7 +137,7 @@ PRO miniMakeGuiBatchTab, MAIN_TAB, $
       
   endif else begin
     NbrRow = 20
-    RowAlign   = [1,0,0,0,0,0,0,1,0]
+    RowAlign   = [1,0,0,0,0,0,0,1]
     sz         = (size(RowAlign))(1)
     TableAlign = intarr(sz,NbrRow)
     FOR i=0,(NbrRow-1) DO BEGIN
@@ -153,10 +153,9 @@ PRO miniMakeGuiBatchTab, MAIN_TAB, $
       'Norm. Spin States',$
       'Angle (degrees)', $
       'Date',$
-      'SF',$
-      'Command Line                '],$
+      'SF'],$
       align        : TableAlign,$
-      column_width : [60,130,140,130,140,110,130,60,250]}
+      column_width : [60,130,140,130,140,110,130,60]}
   endelse
   
   ;/////////////////////////////////////////////////////////

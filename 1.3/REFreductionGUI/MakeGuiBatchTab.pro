@@ -133,13 +133,13 @@ PRO MakeGuiBatchTab, MAIN_TAB, MainTabSize, BatchTabTitle, structure, global
       column_width : [60,150,150,100,120,80,80,160,60,425]}
   endif else begin ;REF_M
     NbrRow = 20
-    RowAlign   = [1,0,0,0,0,0,0,1,0]
+    RowAlign   = [1,0,0,0,0,0,0,1]
     sz         = (size(RowAlign))(1)
     TableAlign = intarr(sz,NbrRow)
     FOR i=0,(NbrRow-1) DO BEGIN
       TableAlign(*,i)=RowAlign
     ENDFOR
-    dTable = { size      : [0,0,MainTabSize[2],420,sz,NbrRow],$
+    dTable = { size      : [0,0,MainTabSize[2]-60,420,sz,NbrRow],$
       uname     : 'batch_table_widget',$
       sensitive : 1,$
       label     : ['Active', $
@@ -149,10 +149,9 @@ PRO MakeGuiBatchTab, MAIN_TAB, MainTabSize, BatchTabTitle, structure, global
       'Norm. Spin States',$
       'Angle (degrees)', $
       'Date',$
-      'SF',$
-      'Command Line                                        '],$
+      'SF'],$
       align        : TableAlign,$
-      column_width : [60,130,150,130,150,110,130,60,440]}
+      column_width : [60,170,200,170,200,120,140,65]}
   endelse
   
   ;/////////////////////////////////////////////////////////
