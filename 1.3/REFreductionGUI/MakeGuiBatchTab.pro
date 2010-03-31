@@ -198,7 +198,7 @@ PRO MakeGuiBatchTab, MAIN_TAB, MainTabSize, BatchTabTitle, structure, global
     uname : 'batch_norm_run_base_status'}
   dNormRunField = { size  : [20,1],$
     uname : 'batch_norm_run_field_status',$
-    title : 'NORM. RUNS:'}
+    title : 'NORM. RUNS:'} 
   ;Angle value
   XYoff = [xoff,0]
   dAngleLabel = { size  : [dNormRunBase.size[0]+dNormRunBase.size[2]+XYoff[0],$

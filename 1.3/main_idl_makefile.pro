@@ -37,9 +37,6 @@
 .run ref_reduction_is.pro
 .run ref_reduction_time.pro
 
-;batch table
-.run batch_tab_ref_m.pro
-
 .run ref_reduction_DumpBinary.pro
 .run ref_reduction_Plot2DDataFile.pro
 .run ref_reduction_Plot1DDataFile.pro
@@ -109,10 +106,15 @@
 ;plot tab
 .run ref_reduction_plot_tab.pro
 
+;batch table
+.run batch_tab_ref_m.pro
+.run populate_ref_m_batch_table.pro
+
 .run IDLgetMetadata__define.pro
 .run ref_reduction_BatchTab.pro
 .run ref_reduction_BatchDataNorm.pro
 .run IDLparseCommandLine__define.pro
+.run IDLparseCommandLine_ref_m__define.pro
 .run IDLupdateGui__define.pro
 .run ref_reduction_BatchRepopulateGui.pro
 .run ref_reduction_LogBookInterface.pro

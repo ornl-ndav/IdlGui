@@ -83,6 +83,7 @@ PRO run_command_line_ref_m, event
   putTextFieldValue, event, 'data_reduction_status_text_field', status_text, 0
   
   sz = N_ELEMENTS(cmd)
+  bash_cmd_array = cmd
   first_ref_m_file_to_plot = -1
   index = 0
   while(index lt sz) do begin
@@ -103,6 +104,9 @@ PRO run_command_line_ref_m, event
     
     IF (err_listening[0] NE '') THEN BEGIN
     
+      ;remove cmd from array because this cmd failed
+      bash_cmd_array[index] = ''
+  
       (*global).DataReductionStatus = 'ERROR'
       LogBookText = getLogBookText(Event)
       Message = '* ERROR! *'
@@ -134,8 +138,11 @@ PRO run_command_line_ref_m, event
     index++
   endwhile
   
-  ;disable RunCommandLine
+  ;reactivate run command button
   ActivateWidget, Event,'start_data_reduction_button', 1
+  
+  ;populate Batch table
+  populate_ref_m_batch_table, event, bash_cmd_array
   
   ;turn off hourglass
   WIDGET_CONTROL,hourglass=0

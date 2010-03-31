@@ -78,6 +78,7 @@ PRO REFreductionEventcb_ProcessingCommandLine, Event
     ENDIF
     
   endif else begin
+    
     run_command_line_ref_m, event
     
     list_of_output_file_name = (*(*global).list_of_output_file_name)
