@@ -64,12 +64,14 @@ pro populate_ref_m_batch_table, event, cmd_array
   DataSpinStates = ClassInstance->getDataPath()
   MainNormRunNumber = ClassInstance->getMainNormRunNumber()
   NormSpinStates = ClassInstance->getNormPath()
+  Sangle = ClassInstance->getSangleValue()
   cmd = ClassInstance->getCmd()
   
   BatchTable[1,0] = MainDataRunNumber
   BatchTable[2,0] = DataSpinStates
   BatchTable[3,0] = MainNormRunNumber
   BatchTable[4,0] = NormSpinStates
+  BatchTable[5,0] = Sangle
   BatchTable[6,0] = GenerateShortReadableIsoTimeStamp()
   BatchTable[8,0] = cmd
   
