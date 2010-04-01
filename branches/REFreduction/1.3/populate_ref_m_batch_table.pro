@@ -56,10 +56,10 @@ pro populate_ref_m_batch_table, event, cmd_array
   ;move down everything to make room for new load data and insert blank
   ;data
   AddBlankRowInBatchTable_ref_m, BatchTable
-
+  
   ;Create instance of the class that will collect the various infos
   ClassInstance = obj_new('IDLparseCommandLine_ref_m',cmd_array)
-
+  
   MainDataRunNumber = ClassInstance->getMainDataRunNumber()
   DataSpinStates = ClassInstance->getDataPath()
   MainNormRunNumber = ClassInstance->getMainNormRunNumber()
@@ -75,16 +75,48 @@ pro populate_ref_m_batch_table, event, cmd_array
   BatchTable[6,0] = GenerateShortReadableIsoTimeStamp()
   BatchTable[8,0] = cmd
   
+  active_batch_new_line, event, BatchTable
+  
   ;populate table of batch tab
   VisualBatchTable = BatchTable[0:8,*]
   id = widget_info(Event.top,find_by_uname='batch_table_widget')
   widget_control, id, set_value=VisualBatchTable
   
-  
-  
-  
+  (*(*global).BatchTable_ref_m) = BatchTable
   
 end
+
+;+
+; :Description:
+;   This will activate the new batch line that was just added
+;
+; :Params:
+;    event
+;    BatchTable
+;
+; :Author: j35
+;-
+PRO active_batch_new_line, event, BatchTable
+  ;get global structure
+  widget_control,event.top,get_uvalue=global
+  ;remove old current working row
+  RowIndexes = getGlobalVariable_ref_m('RowIndexes')
+  FOR i=0,RowIndexes DO BEGIN
+    CASE (BatchTable[0,i]) OF
+      '> YES <': BEGIN
+        BatchTable[0,i]='YES'
+        BREAK
+      END
+      '> NO <': BEGIN
+        BatchTable[0,i]='NO'
+        BREAK
+      END
+      ELSE:
+    ENDCASE
+  ENDFOR
+  BatchTable[0,0] = '> YES <'
+END
+
 
 ;------------------------------------------------------------------------------
 ;This function insert a clear row on top of batchTable and move
