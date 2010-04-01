@@ -964,7 +964,7 @@ PRO BatchTab_WidgetTable, Event
   CheckRepopulateButton, Event
   SaveDataNormInputValues, Event  ;_batchDataNorm
   
-  ;print, 'Leaving BatchTab_WidgetTable'
+;print, 'Leaving BatchTab_WidgetTable'
   
 END
 
@@ -1417,22 +1417,32 @@ END
 ;------------------------------------------------------------------------------
 PRO BatchTab_LoadBatchFile, Event
   ;get global structure
-  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-  widget_control,id,get_uvalue=global
+  widget_control,event.top,get_uvalue=global
   BatchFileName = DIALOG_PICKFILE(TITLE    = 'Pick Batch File to load ...',$
     PATH     = (*global).BatchDefaultPath,$
     FILTER   = (*global).BatchDefaultFileFilter,$
     GET_PATH = new_path,$
     /MUST_EXIST)
-  BatchTab_LoadBatchFile_step2, Event, $
-    BatchFileName, $
-    new_path
+  if ((*global).instrument eq 'REF_L') then begin
+    BatchTab_LoadBatchFile_step2, Event, $
+      BatchFileName, $
+      new_path
+  endif else begin
+    BatchTab_LoadBatchFile_ref_m_step2, Event, $
+      BatchFileName, $
+      new_path
+  endelse
 END
 
 ;------------------------------------------------------------------------------
 PRO BatchTab_ReloadBatchFile, Event
+  widget_control, event.top, get_uvalue=global
   BatchFileName = getTextFieldValue(Event,'loaded_batch_file_name')
-  BatchTab_LoadBatchFile_step2, Event, BatchFileName, ''
+  if ((*global).instrument eq 'REF_L') then begin
+    BatchTab_LoadBatchFile_step2, Event, BatchFileName, ''
+  endif else begin
+    BatchTab_LoadBatchFile_ref_m_step2, Event, BatchFileName, ''
+  endelse
 END
 
 ;------------------------------------------------------------------------------
@@ -1528,9 +1538,9 @@ PRO BatchTab_SaveCommands, Event
   putLogBookMessage, Event, LogText, APPEND=1
   ;Create the batch output file using the FullFileName
   if ((*global).instrument eq 'REF_L') then begin
-  CreateBatchFile, Event, FullFileName
+    CreateBatchFile, Event, FullFileName
   endif else begin
-  createBatchFile_ref_m, event, FullFileName
+    createBatchFile_ref_m, event, FullFileName
   endelse
 END
 

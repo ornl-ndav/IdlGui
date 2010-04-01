@@ -32,6 +32,24 @@
 ;
 ;==============================================================================
 
+;+
+; :Description:
+;   Check if the current row is active or not
+;
+; :Params:
+;    RowSelected
+;    BatchTable
+;
+; :Author: j35
+;-
+function IsRowSelectedActive_ref_m, RowSelected, BatchTable
+  compile_opt idl2
+  IF (BatchTable[0,RowSelected] EQ 'YES' OR $
+    BatchTable[0,RowSelected] EQ '> YES <') THEN RETURN, 1
+  return, 0
+end
+
+
 function can_we_activate_batch_save_button, event
 
   widget_control, event.top, get_uvalue=global
@@ -42,8 +60,8 @@ function can_we_activate_batch_save_button, event
   file_name = getTextFieldValue(event,'save_as_file_name')
   if (strcompress(file_name[0],/remove_all) eq '') then return, 0
   
-  return,1 
-
+  return,1
+  
 end
 
 ;+
@@ -124,7 +142,7 @@ PRO DisplayInfoOfSelectedRow_ref_m, Event, RowSelected
     
   ENDIF ELSE BEGIN
   
-    IF (isRowSelectedActive(RowSelected,BatchTable)) THEN BEGIN
+    IF (isRowSelectedActive_ref_m(RowSelected,BatchTable)) THEN BEGIN
       ValidateActive, Event, 0
     ENDIF ELSE BEGIN
       ValidateActive, Event, 1
@@ -299,6 +317,267 @@ pro activate_or_not_save_batch_button, event
     status = 0
   endelse
   ActivateWidget, Event, 'save_as_file_button', status
-
+  
   
 end
+
+;+
+; :Description:
+;   This procedure retrieves the contain of the batch file
+;
+; :Params:
+;    BatchFileName
+;    NbrLine
+;
+;
+;
+; :Author: j35
+;-
+FUNCTION PopulateFileArray_ref_m, BatchFileName, NbrLine
+  compile_opt idl2
+  
+  openr, u, BatchFileName, /get
+  onebyte = 0b
+  tmp = ''
+  i = 0
+  NbrLine = getNbrLines(BatchFileName)
+  FileArray = strarr(NbrLine)
+  
+  WHILE (NOT eof(u)) DO BEGIN
+  
+    readu,u,onebyte
+    fs = fstat(u)
+    
+    IF (fs.cur_ptr EQ 0) THEN BEGIN
+      point_lun,u,0
+    ENDIF ELSE BEGIN
+      point_lun,u,fs.cur_ptr - 1
+    ENDELSE
+    
+    readf,u,tmp
+    FileArray[i++] = tmp
+    
+  ENDWHILE
+  
+  close, u
+  free_lun,u
+  NbrElement = i                  ;nbr of lines
+  
+  RETURN, FileArray
+END
+
+
+;+
+; :Description:
+;   This procedure retrieves the information from the batch file to populate
+;   the BatchTable_ref_m
+;
+; :Params:
+;    Event
+;    BatchFileName
+;
+; :Author: j35
+;-
+FUNCTION PopulateBatchTable_ref_m, Event, BatchFileName
+
+  widget_control,event.top,get_uvalue=global
+  
+  populate_error = 0
+  ;CATCH, populate_error
+  NbrColumn = getGlobalVariable_ref_m('NbrColumn')
+  NbrRow    = getGlobalVariable_ref_m('NbrRow')
+  
+  BatchTable = strarr(NbrColumn,NbrRow)
+  FileArray = strarr(1)
+  IF (populate_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    AppendReplaceLogBookMessage, Event, $
+      (*global).FAILED, $
+      (*global).processing_message
+    LogText = '-> FileArray:'
+    putLogBookMessage, Event, LogText, APPEND=1
+    putLogBookMessage, Event, FileArray, APPEND=1
+  ENDIF ELSE BEGIN
+    NbrLine   = 0
+    FileArray = PopulateFileArray_ref_m(BatchFileName, NbrLine)
+    BatchIndex = -1             ;row index
+    FileIndex  = 0
+    NbrHeadingLines = getGlobalVariable_ref_m('BatchFileHeadingLines')
+    WHILE (FileIndex LT NbrLine) DO BEGIN
+      IF (FileIndex LT NbrHeadingLines) THEN BEGIN
+        ;add work on header here
+        ++FileIndex
+      ENDIF ELSE BEGIN
+        IF (FileArray[FileIndex] EQ '') THEN BEGIN
+          ++BatchIndex
+          ++FileIndex
+        ENDIF ELSE BEGIN
+          SplitArray = strsplit(FileArray[FileIndex],' : ', $
+            /extract,$
+            COUNT=length)
+          CASE (SplitArray[0]) OF
+            '#Active'    : BatchTable[0,BatchIndex] = SplitArray[1]
+            '#Data_Runs' : BatchTable[1,BatchIndex] = SplitArray[1]
+            '#Data_Spin_States': BatchTable[2,BatchIndex] = SplitArray[1]
+            '#Norm_Runs' : BEGIN
+              norm_error = 0
+              CATCH,norm_error
+              IF (norm_error NE 0) THEN BEGIN
+                CATCH,/CANCEL
+                BatchTable[3,BatchIndex] = ''
+              ENDIF ELSE BEGIN
+                BatchTable[3,BatchIndex] = SplitArray[1]
+              ENDELSE
+            END
+            '#Norm_Spin_States' : BEGIN
+              norm_error = 0
+              CATCH,norm_error
+              IF (norm_error NE 0) THEN BEGIN
+                CATCH,/CANCEL
+                BatchTable[4,BatchIndex] = ''
+              ENDIF ELSE BEGIN
+                BatchTable[4,BatchIndex] = SplitArray[1]
+              ENDELSE
+            END
+            '#Angle(deg)': BEGIN
+              angle_error = 0
+              catch, angle_error
+              if (angle_error ne 0) then begin
+                catch,/cancel
+                BatchTable[5,BatchIndex] = ''
+              endif else begin
+                BatchTable[5,BatchIndex] = SplitArray[1]
+              endelse
+            end
+            '#Date'      : BatchTable[6,BatchIndex] = SplitArray[1]
+            ;              STRJOIN(SplitArray[1:length-1],':')
+            '#SF'        : BEGIN
+              sz = (size(SplitArray))(1)
+              IF (sz GT 1) THEN BEGIN
+                BatchTable[7,BatchIndex] = SplitArray[1]
+              ENDIF ELSE BEGIN
+                BatchTable[7,BatchIndex] = ''
+              ENDELSE
+            END
+          ELSE         : BEGIN
+            if (splitArray[0] ne '') then begin
+                                 cmd           = strjoin(SplitArray,' ')
+              ;            CommentArray= strsplit(SplitArray[0],'#', $
+              ;             /extract, $
+              ;            COUNT=nbr)
+              ;if (nbr gt 0) then begin
+                BatchTable[8,BatchIndex] = cmd
+              ;endif
+            endif
+          ;            SplitArray[0] =CommentArray[0]
+          ;            cmd           = strjoin(SplitArray,' ')
+          ;            ;check if "-o none" is there or not
+          ;            IF (STRMATCH(cmd,'*-o none*')) THEN BEGIN
+          ;              string_split = ' --batch -o none'
+          ;            ENDIF ELSE BEGIN
+          ;              string_split = ' --batch'
+          ;            ENDELSE
+          ;            cmd_array     = STRSPLIT(cmd, $
+          ;              string_split, $
+          ;              /EXTRACT, $
+          ;              /REGEX,$
+          ;              COUNT = length)
+          ;            IF (length NE 0) THEN BEGIN
+          ;              cmd = cmd_array[0] + ' ' + cmd_array[1]
+          ;            ENDIF
+          ;            BatchTable[8,BatchIndex] = cmd
+          END
+        ENDCASE
+        ++FileIndex
+      ENDELSE
+    ENDELSE
+  ENDWHILE
+  AppendReplaceLogBookMessage, Event, 'OK', (*global).processing_message
+ENDELSE
+RETURN, BatchTable
+END
+
+;+
+; :Description:
+;   Loading Batch button
+;
+; :Params:
+;    Event
+;    BatchFileName
+;    new_path
+;
+; :Author: j35
+;-
+PRO BatchTab_LoadBatchFile_ref_m_step2, Event, BatchFileName, new_path
+
+  widget_control,event.top,get_uvalue=global
+  
+  IF (BatchFileName NE '') THEN BEGIN
+    batch_error = 0
+    ;CATCH, batch_error
+    IF (batch_error NE 0) THEN BEGIN
+      CATCH,/CANCEL
+      LogText = '> Application was unable to open the batch file '
+      LogText += BatchFileName
+      putLogBookMessage, Event, LogText, APPEND=1
+      spawn, 'ls -l ' + BatchFileName, listening
+      putLogBookMessage, Event, listening, APPEND=1
+    ENDIF ELSE BEGIN
+      LogText = '> Loading Batch File:'
+      putLogBookMessage, Event, LogText, APPEND=1
+      LogText = '-> File Name : ' + BatchFileName
+      putLogBookMessage, Event, LogText, APPEND=1
+      IF (new_path NE '') THEN BEGIN
+        (*global).BatchDefaultPath = new_path
+      ENDIF
+      
+      LogText = '-> Populate Batch Table ... ' + (*global).processing_message
+      putLogBookMessage, Event, LogText, APPEND=1
+      BatchTable = PopulateBatchTable_ref_m(Event, BatchFileName)
+      (*(*global).BatchTable_ref_m) = BatchTable
+      DisplayBatchTable_ref_M, Event, BatchTable
+      (*global).BatchFileName = BatchFileName
+      ;this function updates the widgets (button) of the tab
+      
+      UpdateBatchTabGui, Event
+      RowSelected = (*global).PrevBatchRowSelected
+      ;Update info of selected row
+      DisplayInfoOfSelectedRow_ref_m, Event, RowSelected
+      ;display path and file name of file in SAVE AS widgets
+      FileArray = getFilePathAndName(BatchFileName)
+      FilePath  = FileArray[0]
+      FileName  = FileArray[1]
+      ;put path in PATH button
+      (*global).BatchDefaultPath = FilePath
+      ;change name of button
+      putBatchFolderName, Event, FilePath
+      ;put name of file in widget_text
+      putBatchFileName, Event, FileName
+      ;put name of file in Refresh label
+      putTextFieldValue, event, 'loaded_batch_file_name', BatchFileName, 0
+      ;enable or not the REPOPULATE Button
+      CheckRepopulateButton, Event
+      ;enable or not the REFRESH Button
+      CheckRefreshButton, Event
+    ENDELSE
+  ENDIF
+END
+
+;+
+; :Description:
+;   procedures that display the BatchTable in the Basch table
+;
+; :Params:
+;    Event
+;    BatchTable
+;
+;
+;
+; :Author: j35
+;-
+PRO DisplayBatchTable_ref_m, Event, BatchTable
+  live_BatchTable = BatchTable[0:8,*]
+  NewBatchTable = BatchTable
+  id = widget_info(Event.top,find_by_uname='batch_table_widget')
+  widget_control, id, set_value=NewBatchTable
+END
