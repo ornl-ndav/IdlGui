@@ -69,10 +69,11 @@ PRO tab_event, Event
         ENDIF
       END
       3: BEGIN                ;if BATCH tab is now selected
-        ;retrieve info for batch mode
-        ;IF ((*global).debugger) THEN BEGIN
-        ;  UpdateBatchTable, Event ;in ref_reduction_BatchTab.pro
-        ;ENDIF
+        if ((*global).instrument eq 'REF_L') then begin
+          UpdateBatchTable, Event
+        endif else begin
+          UpdateBatchTable_ref_m, event
+        endelse
       END
       ELSE:
     ENDCASE
