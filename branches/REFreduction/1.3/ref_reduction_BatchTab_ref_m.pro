@@ -32,6 +32,20 @@
 ;
 ;==============================================================================
 
+function can_we_activate_batch_save_button, event
+
+  widget_control, event.top, get_uvalue=global
+  
+  BatchTable = (*(*global).BatchTable_ref_m)
+  if (BatchTable[0,0] eq '') then return, 0
+  
+  file_name = getTextFieldValue(event,'save_as_file_name')
+  if (strcompress(file_name[0],/remove_all) eq '') then return, 0
+  
+  return,1 
+
+end
+
 ;+
 ; :Description:
 ;   Check if a row has already been selected or not
@@ -73,11 +87,11 @@ PRO UpdateBatchTable_ref_m, Event
     DisplayInfoOfSelectedRow_ref_m, Event, CurrentWorkingRow
   ENDELSE
   
-  ;check if there are any not 'N/A' command line, if yes, then activate
-  ;DELETE SELECTION, DELETE ACTIVE, RUN ACTIVE AND SAVE ACTIVE(S)
- ; UpdateBatchTabGui, Event
-  ;enable or not the REPOPULATE Button
- ; CheckRepopulateButton, Event
+;check if there are any not 'N/A' command line, if yes, then activate
+;DELETE SELECTION, DELETE ACTIVE, RUN ACTIVE AND SAVE ACTIVE(S)
+; UpdateBatchTabGui, Event
+;enable or not the REPOPULATE Button
+; CheckRepopulateButton, Event
 END
 
 ;+
@@ -267,3 +281,25 @@ PRO GenerateBatchFileName_ref_m, Event
   putTextFieldValue, Event, 'save_as_file_name', file_name, 0
 END
 
+;+
+; :Description:
+;   this checks if the bash_table is not empty, if there is a batch file
+;   name defined and then activate the save batch button
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro activate_or_not_save_batch_button, event
+  compile_opt idl2
+  
+  if (can_we_activate_batch_save_button(event)) then begin
+    status = 1
+  endif else begin
+    status = 0
+  endelse
+  ActivateWidget, Event, 'save_as_file_button', status
+
+  
+end

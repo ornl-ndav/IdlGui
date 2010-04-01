@@ -457,7 +457,7 @@ function GetMajorRunNumber_ref_m, Event
 
   widget_control,event.top,get_uvalue=global
   
-  BatchTable = (*(*global).BatchTable_ref_m
+  BatchTable = (*(*global).BatchTable_ref_m)
   MajorRuns = BatchTable[1,0]
   MajorRunsArray = strsplit(MajorRuns,',',/extract)
   MajorRun = MajorRunsArray[0]
