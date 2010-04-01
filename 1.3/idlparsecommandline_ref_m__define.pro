@@ -203,7 +203,7 @@ END
 ;------------------------------------------------------------------------------
 function getNormPath, cmd
   result = ValueBetweenArg1Arg2(cmd, '--norm-data-paths=', 1, ' ', 0)
-  if (result EQ '') THEN RETURN, ''
+  if (result EQ '') THEN RETURN, getDataPath(cmd)
   if (result ne '') then begin
     parse_result = strsplit(result[0],'/',/extract)
     parse_result2 = strsplit(parse_result[0],'-',/extract)

@@ -86,6 +86,7 @@ PRO run_command_line_ref_m, event
   bash_cmd_array = cmd
   first_ref_m_file_to_plot = -1
   index = 0
+  nbr_reduction_success = 0
   while(index lt sz) do begin
   
     status_text = 'Data Reduction # ' + strcompress(index+1,/remove_all) + $
@@ -100,14 +101,13 @@ PRO run_command_line_ref_m, event
     cmd_text = '......... ' + PROCESSING
     putLogBookMessage, Event, cmd_text, Append=1
     
-       
     ;spawn, cmd[index], listening, err_listening ;REMOVE_ME
     
     IF (err_listening[0] NE '') THEN BEGIN
     
       ;remove cmd from array because this cmd failed
       bash_cmd_array[index] = ''
-  
+      
       (*global).DataReductionStatus = 'ERROR'
       LogBookText = getLogBookText(Event)
       Message = '* ERROR! *'
@@ -123,8 +123,11 @@ PRO run_command_line_ref_m, event
         
     ENDIF ELSE BEGIN
     
+      nbr_reduction_success++ ;at least 1 successful reduction
+      
       (*global).DataReductionStatus = 'OK'
       if (first_ref_m_file_to_plot eq -1) then first_ref_m_file_to_plot = index
+      
       LogBookText = getLogBookText(Event)
       Message = 'Done'
       putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
@@ -142,8 +145,10 @@ PRO run_command_line_ref_m, event
   ;reactivate run command button
   ActivateWidget, Event,'start_data_reduction_button', 1
   
-  ;populate Batch table
-  populate_ref_m_batch_table, event, bash_cmd_array
+  if (nbr_reduction_success gt 0) then begin
+    ;populate Batch table
+    populate_ref_m_batch_table, event, bash_cmd_array
+  endif
   
   ;turn off hourglass
   WIDGET_CONTROL,hourglass=0
