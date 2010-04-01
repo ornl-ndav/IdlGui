@@ -74,7 +74,6 @@ pro populate_ref_m_batch_table, event, cmd_array
   BatchTable[5,0] = Sangle
   BatchTable[6,0] = GenerateShortReadableIsoTimeStamp()
   BatchTable[8,0] = cmd
-  
   active_batch_new_line, event, BatchTable
   
   ;populate table of batch tab
