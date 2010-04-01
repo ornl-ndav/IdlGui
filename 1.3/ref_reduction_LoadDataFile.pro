@@ -43,7 +43,8 @@ FUNCTION OpenDataNeXusFile, Event, $
   instrument = (*global).instrument
   
   ;store run number of data file
-  (*global).data_run_number = DataRunNumber
+  ;(*global).data_run_number = DataRunNumber
+  ;(*global).DataRunNumber = DataRunNumber
   
   ;store full path to NeXus
   (*global).data_full_nexus_name = full_nexus_name
@@ -130,6 +131,7 @@ PRO REFreduction_LoadDatafile, Event, isNeXusFound, NbrNexus
   IF (DataRunNumber NE '') THEN BEGIN ;data run number is not empty
   
     (*global).DataRunNumber = DataRunNumber
+    (*global).data_run_number = DataRunNumber
     
     ;check if user wants archived or all nexus runs +++++++++++++++++++++++++++++++
     IF (~isArchivedDataNexusDesired(Event)) THEN BEGIN ;get full list of Nexus
