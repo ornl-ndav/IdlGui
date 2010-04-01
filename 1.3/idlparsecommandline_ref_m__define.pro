@@ -769,14 +769,19 @@ FUNCTION IDLparseCommandLine_ref_m::init, cmd_array
             self.MainNormRunNUmber     = $
               getMainDataRunNumber_ref(self.MainNormNexusFileName, $
               instrument='REF_M')
+            self.AllNormNexusFileName  = getAllNormNexusFileName(cmd)
+            self.NormPath              = getNormPath(cmd)
+            self.NormRoiFileName       = getNormRoiFileName(cmd)
+            self.NormPeakExclYArray    = getNormPeakExclYArray(cmd)
+            self.NormBackFileName      = getNormBackFileName(cmd)
           ENDIF ELSE BEGIN
             self.MainNormRunNumber = ''
+            self.AllNormNexusFileName  = ''
+            self.NormPath              = ''
+            self.NormRoiFileName       = ''
+            self.NormPeakExclYArray    = ''
+            self.NormBackFileName      = ''
           ENDELSE
-          self.AllNormNexusFileName  = getAllNormNexusFileName(cmd)
-          self.NormPath              = getNormPath(cmd)
-          self.NormRoiFileName       = getNormRoiFileName(cmd)
-          self.NormPeakExclYArray    = getNormPeakExclYArray(cmd)
-          self.NormBackFileName      = getNormBackFileName(cmd)
           
           ;Work on Emtpy Cell
           self.EmptyCellFileName = getEmptyCellFileName(cmd)
