@@ -255,7 +255,6 @@ PRO ClearStructureFields_ref_m, BatchTable, CurrentBatchTableIndex
   BatchTable[*,CurrentBatchTableIndex] = resetArray
 END
 
-
 ;------------------------------------------------------------------------------
 PRO GenerateBatchFileName_ref_m, Event
   ;get global structure
