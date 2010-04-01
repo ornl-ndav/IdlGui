@@ -54,6 +54,7 @@ pro BatchTab_WidgetTable_ref_m, event
   ;get global structure
   widget_control,event.top,get_uvalue=global
   rowSelected = getCurrentRowSelected(Event)
+  
   ;Select Full Row
   SelectFullRow_ref_m, Event, RowSelected
   IF (RowSelected LT 10) THEN BEGIN
@@ -79,9 +80,10 @@ pro BatchTab_WidgetTable_ref_m, event
 
   ;display info of selected row in INPUT base
   IF (rowSelected NE (*global).PrevBatchRowSelected) THEN BEGIN
-    ;DisplayInfoOfSelectedRow, Event, RowSelected
+    DisplayInfoOfSelectedRow_ref_m, Event, RowSelected
     (*global).PrevBatchRowSelected = rowSelected
   ENDIF
+  
   ;enable or not the REPOPULATE Button
   ;CheckRepopulateButton, Event
   ;SaveDataNormInputValues, Event  ;_batchDataNorm
