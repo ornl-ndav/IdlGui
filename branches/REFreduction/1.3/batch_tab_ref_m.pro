@@ -45,7 +45,7 @@
 PRO SelectFullRow_ref_m, Event, RowSelected
   ColumnIndexes = getGlobalVariable_ref_m('ColumnIndexes')
   id = Widget_Info(Event.top,find_by_uname='batch_table_widget')
-  widget_control, id, set_table_select=[0,RowSelected,ColumnIndexes,RowSelected]
+  widget_control, id, set_table_select=[0,RowSelected,ColumnIndexes-1,RowSelected]
 END
 
 

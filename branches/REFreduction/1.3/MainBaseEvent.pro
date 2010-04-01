@@ -1764,19 +1764,21 @@ PRO MAIN_BASE_event, Event
     ;;Main table
     WIDGET_INFO(wWidget, FIND_BY_UNAME='batch_table_widget'): begin
       status = 0
-      
-      ;continue only if the table is not empty
-      BatchTable = (*(*global).BatchTable)
-      if (batchTable[0,0] eq '') then return
-      
-      DataNormFieldInput, Event, status ;_BatchDataNorm
-      IF (status) THEN BEGIN
-        if ((*global).instrument eq 'REF_L') then begin
+            
+      if ((*global).instrument eq 'REF_L') then begin
+        ;continue only if the table is not empty
+        BatchTable = (*(*global).BatchTable)
+        if (batchTable[0,0] eq '') then return
+        DataNormFieldInput, Event, status ;_BatchDataNorm
+        IF (status) THEN BEGIN
           BatchTab_WidgetTable, Event
-        endif else begin
-          BatchTab_WidgetTable_ref_m, event
-        endelse
-      ENDIF
+        endif
+      endif else begin ;REF_M
+        ;continue only if the table is not empty
+        BatchTable = (*(*global).BatchTable_ref_m)
+        if (batchTable[0,0] eq '') then return
+        BatchTab_WidgetTable_ref_m, event
+      endelse
     END
     
     ;;Activate or not
