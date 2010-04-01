@@ -1527,7 +1527,11 @@ PRO BatchTab_SaveCommands, Event
   LogText = '-> Create Batch File Name ... ' + (*global).processing_message
   putLogBookMessage, Event, LogText, APPEND=1
   ;Create the batch output file using the FullFileName
+  if ((*global).instrument eq 'REF_L') then begin
   CreateBatchFile, Event, FullFileName
+  endif else begin
+  createBatchFile_ref_m, event, FullFileName
+  endelse
 END
 
 ;------------------------------------------------------------------------------

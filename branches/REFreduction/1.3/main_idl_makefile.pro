@@ -108,7 +108,8 @@
 
 ;batch table
 .run batch_tab_ref_m.pro
-.run populate_ref_m_batch_table.pro
+.run create_batch_file_ref_m.pro
+.run ref_reduction_BatchTab_ref_m.pro
 
 .run IDLgetMetadata__define.pro
 .run ref_reduction_BatchTab.pro

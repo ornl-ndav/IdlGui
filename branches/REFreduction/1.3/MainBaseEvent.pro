@@ -1866,17 +1866,12 @@ PRO MAIN_BASE_event, Event
       SaveDataNormInputValues, Event
     end
     
-    ;;Launch REFscale
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='launch_refscale_button'): BEGIN
-      BatchTab_LaunchREFscale, Event ;_BatchTab
-    end
-    
     ;;Browse for path
     WIDGET_INFO(wWidget, FIND_BY_UNAME='save_as_path'): begin
       BatchTab_BrowsePath, Event
     end
     
-    ;;Save set of command lines
+    ;;Save Batch file
     WIDGET_INFO(wWidget, FIND_BY_UNAME='save_as_file_button'): begin
       BatchTab_SaveCommands, Event
     end

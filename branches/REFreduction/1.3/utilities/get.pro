@@ -451,3 +451,15 @@ function get_ref_run_number, nexus_full_path, instrument=instrument
   
 end
 
+;------------------------------------------------------------------------------
+;This function retrives the first run number of the top row input
+function GetMajorRunNumber_ref_m, Event
+
+  widget_control,event.top,get_uvalue=global
+  
+  BatchTable = (*(*global).BatchTable_ref_m
+  MajorRuns = BatchTable[1,0]
+  MajorRunsArray = strsplit(MajorRuns,',',/extract)
+  MajorRun = MajorRunsArray[0]
+  RETURN, MajorRun
+END

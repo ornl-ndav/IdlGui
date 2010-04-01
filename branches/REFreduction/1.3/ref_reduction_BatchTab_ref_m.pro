@@ -32,6 +32,100 @@
 ;
 ;==============================================================================
 
+;+
+; :Description:
+;   Check if a row has already been selected or not
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+function IsAnyRowSelected_ref_m, event
+  id = widget_info(Event.top,find_by_uname='batch_table_widget')
+  Selection = widget_info(id,/table_select)
+  ColumnIndexes = getGlobalVariable_ref_m('ColumnIndexes')
+  IF (Selection[2] EQ ColumnIndexes) THEN RETURN, 1
+  RETURN, 0
+end
+
+;+
+; :Description:
+;   reach each time the user select the Batch tab
+;
+; :Params:
+;    Event
+;
+; :Author: j35
+;-
+PRO UpdateBatchTable_ref_m, Event
+
+  ;get global structure
+  widget_control,event.top,get_uvalue=global
+  
+  BatchTable = (*(*global).BatchTable_ref_m)
+  
+  ;check if a row has been already selected, if no, select first row
+  IF (IsAnyRowSelected_ref_m(Event) NE 1) THEN BEGIN
+    SelectFullRow_ref_m, Event, 0
+  ENDIF ELSE BEGIN
+    CurrentWorkingRow = getCurrentRowSelected(Event)
+    DisplayInfoOfSelectedRow_ref_m, Event, CurrentWorkingRow
+  ENDELSE
+  
+  ;check if there are any not 'N/A' command line, if yes, then activate
+  ;DELETE SELECTION, DELETE ACTIVE, RUN ACTIVE AND SAVE ACTIVE(S)
+ ; UpdateBatchTabGui, Event
+  ;enable or not the REPOPULATE Button
+ ; CheckRepopulateButton, Event
+END
+
+;+
+; :Description:
+;   This function displays all the fields of the current selected row
+;   in the INPUT base below the main batch table
+;
+; :Params:
+;    Event
+;    RowSelected
+;
+;
+;
+; :Author: j35
+;-
+PRO DisplayInfoOfSelectedRow_ref_m, Event, RowSelected
+
+  ;get global structure
+  widget_control,event.top,get_uvalue=global
+  
+  ;get BatchTable value
+  BatchTable = (*(*global).BatchTable_ref_m)
+  
+  IF (RowSelected EQ -1) THEN BEGIN ;clear input base
+  
+    UpdateDataField,  Event, ''
+    UpdateNormField,  Event, ''
+    UpdateAngleField, Event, ''
+    UpdateCMDField,   Event, ''
+    
+  ENDIF ELSE BEGIN
+  
+    IF (isRowSelectedActive(RowSelected,BatchTable)) THEN BEGIN
+      ValidateActive, Event, 0
+    ENDIF ELSE BEGIN
+      ValidateActive, Event, 1
+    ENDELSE
+    
+    UpdateDataField,  Event, BatchTable[1,RowSelected]
+    UpdateNormField,  Event, BatchTable[3,RowSelected]
+    UpdateAngleField, Event, BatchTable[5,RowSelected]
+    UpdateCMDField,   Event, BatchTable[8,RowSelected]
+    
+  ENDELSE
+  
+END
+
+
 pro populate_ref_m_batch_table, event, cmd_array
   compile_opt idl2
   
@@ -146,3 +240,30 @@ PRO ClearStructureFields_ref_m, BatchTable, CurrentBatchTableIndex
   resetArray = strarr(nbr_column)
   BatchTable[*,CurrentBatchTableIndex] = resetArray
 END
+
+
+;------------------------------------------------------------------------------
+PRO GenerateBatchFileName_ref_m, Event
+  ;get global structure
+  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  widget_control,id,get_uvalue=global
+  
+  ;get first part (ex: REF_L_Batch_ )
+  file_name = (*global).instrument
+  file_name += '_Batch_'
+  
+  ;add first run number loaded (first row)
+  ;(ex: REF_L_Batch_Run3454 )
+  MainRunNumber = GetMajorRunNumber_ref_m(Event)
+  file_name += 'Run' + strcompress(MainRunNumber,/remove_all)
+  
+  ;add time stamp (ex: REF_L_Batch_3454_2008y_02m_10d )
+  TimeBatchFormat = RefReduction_GenerateIsoTimeStamp()
+  file_name += '_' + TimeBatchFormat
+  
+  ;add extension  (ex: REF_L_Batch_3454_2008y_02m_10d.txt)
+  file_name += '.txt'
+  
+  putTextFieldValue, Event, 'save_as_file_name', file_name, 0
+END
+

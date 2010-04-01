@@ -126,7 +126,10 @@ PRO run_command_line_ref_m, event
       nbr_reduction_success++ ;at least 1 successful reduction
       
       (*global).DataReductionStatus = 'OK'
-      if (first_ref_m_file_to_plot eq -1) then first_ref_m_file_to_plot = index
+      if (first_ref_m_file_to_plot eq -1) then begin
+        first_ref_m_file_to_plot = index
+        GenerateBatchFileName_ref_m, Event
+      endif
       
       LogBookText = getLogBookText(Event)
       Message = 'Done'
