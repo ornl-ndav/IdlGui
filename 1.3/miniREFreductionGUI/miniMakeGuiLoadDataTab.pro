@@ -213,25 +213,107 @@ PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
     SCR_YSIZE = NxsummaryZoomTabSize[3],$
     /TRACKING_EVENTS)
     
-  ;NXsummary tab #1
-  data_Nxsummary_base = WIDGET_BASE(NxsummaryZoomTab,$
-    UNAME     = 'data_nxsummary_base',$
-    XOFFSET   = 0,$
-    YOFFSET   = 0,$
-    SCR_XSIZE = NXsummaryZoomTabSize[2],$
-    SCR_YSIZE = NXsummaryZoomTabSize[3],$
-    TITLE     = NxsummaryZoomTitle[0])
+    ;Info tab #1
+  info_base = WIDGET_BASE(NxsummaryZoomTab,$
+    uname='data_info_base',$
+    xoffset=0,$
+    yoffset=0,$
+    scr_xsize=NXsummaryZoomTabSize[2],$
+    ;scr_ysize=NXsummaryZoomTabSize[3],$
+    title='Nexus Information',$
+    /column)
+
+    space = widget_label(info_base,$
+    value = ' ')
+
+    label_array = ['Date',$
+    'Start','End','Duration','Proton Charge (pC)',$
+    'Bin size (microS)'] + ':'
+    uname_array = ['info_date',$
+    'info_start','info_end','info_duration','info_proton_charge',$
+    'info_bin_size']
+    sz = n_elements(label_array)
+    for i=0L,(sz-1) do begin
+    row = widget_base(info_base,$
+    /row)
+    label = widget_label(row,$
+    /align_right,$
+    scr_xsize = 150,$
+    value = label_array[i])
+    value = widget_label(row,$
+    value = 'N/A',$
+    uname = uname_array[i],$
+    /align_left,$
+    scr_xsize = 200)
+    endfor
     
-  data_file_info_text = WIDGET_TEXT(data_Nxsummary_base,$
-    XOFFSET   = FileInfoSize[0],$
-    YOFFSET   = FileInfoSize[1],$
-    SCR_XSIZE = FileInfoSize[2],$
-    SCR_YSIZE = FileInfoSize[3],$
-    VALUE     = '',$
-    UNAME     = 'data_file_info_text',$
-    /WRAP,$
-    /SCROLL)
+    space = widget_label(info_base,$
+    value = ' ')
     
+    ;dangle0
+    row = widget_base(info_base,$
+    /row)
+    label = widget_label(row,$
+    /align_right,$
+    scr_xsize = 150,$
+    value = 'Dangle0:')
+    value = widget_label(row,$
+    /align_left,$
+    value = 'N/A',$
+    uname = 'info_dangl0',$
+    scr_xsize = 200)
+    
+    ;dirpix
+    row = widget_base(info_base,$
+    /row)
+    label = widget_label(row,$
+    /align_right,$
+    scr_xsize = 150,$
+    value = 'Dirpix:')
+    value = widget_text(row,$
+    /align_left,$
+    /editable,$
+    value = 'N/A',$
+    uname = 'info_dirpix',$
+    scr_xsize = 200)
+    
+    ;refpix
+    row = widget_base(info_base,$
+    /row)
+    label = widget_label(row,$
+    /align_right,$
+    scr_xsize = 150,$
+    value = 'Refpix:')
+    value = widget_text(row,$
+    /align_left,$
+    /editable,$
+    value = 'N/A',$
+    uname = 'info_refpix',$
+    scr_xsize = 200)
+    
+    ;sangle
+    row = widget_base(info_base,$
+    /row)
+    label = widget_label(row,$
+    /align_right,$
+    scr_xsize = 150,$
+    value = 'Sangle:')
+    value = widget_label(row,$
+    /align_left,$
+    value = 'N/A',$
+    uname = 'info_sangle',$
+    scr_xsize = 200)
+  
+;  data_file_info_text = WIDGET_TEXT(data_Nxsummary_base,$
+;    XOFFSET   = FileInfoSize[0],$
+;    YOFFSET   = FileInfoSize[1],$
+;    SCR_XSIZE = FileInfoSize[2],$
+;    SCR_YSIZE = FileInfoSize[3],$
+;    VALUE     = '',$
+;    UNAME     = 'data_file_info_text',$
+;    /WRAP,$
+;    /SCROLL)
+   
   ;ZOOM tab #2
   data_Zoom_base = WIDGET_BASE(NxsummaryZoomTab,$
     UNAME     = 'data_zoom_base',$
