@@ -54,3 +54,4 @@ cd, CurrentFolder + '/utilities'
 .run xdisplayfile.pro
 .run fsc_color.pro
 .run IDL3columnsASCIIparser__define.pro
+.run NeXusMetadata__define.pro
