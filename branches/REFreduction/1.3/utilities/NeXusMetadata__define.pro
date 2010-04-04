@@ -32,266 +32,145 @@
 ;
 ;==============================================================================
 
-;This class method returns the Run Number of the given nexus
-FUNCTION get_RunNumber, fileID, POLA_STATE_NAME=pola_state_name
-  IF (N_ELEMENTS(POLA_STATE_NAME) EQ 0) THEN BEGIN
-    run_number_path = '/entry/run_number/'
-  ENDIF ELSE BEGIN
-    run_number_path = '/' + pola_state_name + '/run_number/'
-  ENDELSE
-  error_value = 0
-  CATCH, error_value
-  IF (error_value NE 0) THEN BEGIN
-    CATCH,/CANCEL
-    RETURN, ''
-  ENDIF ELSE BEGIN
-    pathID     = h5d_open(fileID, run_number_path)
-    run_number = h5d_read(pathID)
+;+
+; :Description:
+;    function returns the dangle value and its units in the 2 elements
+;    string array
+;
+; :Author: j35
+;-
+function NeXusMetadata::getDangle
+compile_opt idl2
+  path_value = '/entry-Off_Off/instrument/bank1/DANGLE/value/'
+  path_units = '/entry-Off_Off/instrument/bank1/DANGLE/units/'
+  catch, error_value
+  if (error_value ne 0) then begin
+    catch,cancel
+    return, ['N/A','N/A']
+  endif else begin
+    pathID_value = h5d_open(self.fileID, path_value)
+    dangle_value = h5d_read(pathID_value)
+    pathID_units = h5d_open(self.fileID, path_units)
+    dangle_units = h5d_read(pathID_units)
     h5d_close, pathID
-    RETURN, run_number
-  ENDELSE
-END
-
-;------------------------------------------------------------------------------
-;This class method returns the s1b value
-FUNCTION get_s1b, fileID
-  s1b_path   = '/entry/instrument/aperture1/s1b/value/'
-  error_value = 0
-  CATCH, error_value
-  IF (error_value NE 0) THEN BEGIN
-    CATCH,/CANCEL
-    RETURN, ''
-  ENDIF ELSE BEGIN
-    pathID     = h5d_open(fileID,s1b_path)
-    s1b        = h5d_read(pathID)
-    h5d_close, pathID
-    RETURN, s1b
-  ENDELSE
-END
-
-;------------------------------------------------------------------------------
-;This function returns the units of s1b
-FUNCTION get_s1b_units, fileID
-  s1b_units_path = '/entry/instrument/aperture1/s1b/value/'
-  error_units = 0
-  CATCH, error_units
-  IF (error_units NE 0) THEN BEGIN
-    CATCH,/CANCEL
-    RETURN, ''
-  ENDIF ELSE BEGIN
-    pathID         = h5d_open(fileID,s1b_units_path)
-    pathUnitsID    = h5a_open_name(pathID,'units')
-    s1b_units      = h5a_read(pathUnitsID)
-    h5a_close, pathUnitsID
-    h5d_close, pathID
-    RETURN, s1b_units
-  ENDELSE
-END
-
-;------------------------------------------------------------------------------
-;This function returns s1b in mm
-FUNCTION get_s1b_mm, fileID
-  s1b_value = get_s1b(fileID)
-  s1b_units = get_s1b_units(fileID)
-  CASE (s1b_units) OF
-    'millimetre': RETURN, convert_to_mm(s1b_value,s1b_units)
-    'radian'    : RETURN, s1b_value
-  ELSE        : RETURN, 'N/A'
-ENDCASE
-END
-
-;------------------------------------------------------------------------------
-;This class method returns the s1t value
-FUNCTION get_s1t, fileID
-  s1t_path   = '/entry/instrument/aperture1/s1t/value/'
-  error_value = 0
-  CATCH, error_value
-  IF (error_value NE 0) THEN BEGIN
-    CATCH,/CANCEL
-    RETURN, ''
-  ENDIF ELSE BEGIN
-    pathID     = h5d_open(fileID,s1t_path)
-    s1t        = h5d_read(pathID)
-    h5d_close, pathID
-    RETURN, s1t
-  ENDELSE
-END
-
-;------------------------------------------------------------------------------
-;This function returns the units of s1t
-FUNCTION get_s1t_units, fileID
-  s1t_units_path = '/entry/instrument/aperture1/s1t/value/'
-  error_units = 0
-  CATCH, error_units
-  IF (error_units NE 0) THEN BEGIN
-    CATCH,/CANCEL
-    RETURN, ''
-  ENDIF ELSE BEGIN
-    pathID         = h5d_open(fileID,s1t_units_path)
-    pathUnitsID    = h5a_open_name(pathID,'units')
-    s1t_units      = h5a_read(pathUnitsID)
-    h5a_close, pathUnitsID
-    h5d_close, pathID
-    RETURN, s1t_units
-  ENDELSE
-END
-
-;------------------------------------------------------------------------------
-;This function returns s1t in mm
-FUNCTION get_s1t_mm, fileID
-  s1t_value = get_s1t(fileID)
-  s1t_units = get_s1t_units(fileID)
-  CASE (s1t_units) OF
-    'millimetre': RETURN, convert_to_mm(s1t_value,s1t_units)
-    'metre'     : RETURN, s1t_value
-  ELSE        : RETURN, 'N/A'
-ENDCASE
-END
-
-;------------------------------------------------------------------------------
-;This class method returns the S1 value (in mm)
-FUNCTION get_s1_mm, fileID
-  s1t       = get_s1t_mm(fileID)
-  s1b       = get_s1b_mm(fileID)
-  IF (strcompress(s1t,/remove_all) NE 'N/A' AND strcompress(s1b,/remove_all) $
-    NE 'N/A') THEN BEGIN
-    RETURN, ABS(s1t-s1b)
-  ENDIF ELSE BEGIN
-    RETURN, 'N/A'
-  ENDELSE
-END
-
-;------------------------------------------------------------------------------
-;This class method returns the s2b value
-FUNCTION get_s2b, fileID
-  s2b_path   = '/entry/instrument/aperture2/s2b/value/'
-  error_value = 0
-  CATCH, error_value
-  IF (error_value NE 0) THEN BEGIN
-    CATCH, /CANCEL
-    RETURN, ''
-  ENDIF ELSE BEGIN
-    pathID     = h5d_open(fileID,s2b_path)
-    s2b        = h5d_read(pathID)
-    h5d_close, pathID
-    RETURN, s2b
-  ENDELSE
-END
-
-;------------------------------------------------------------------------------
-;This function returns the units of s2b
-FUNCTION get_s2b_units, fileID
-  s2b_units_path = '/entry/instrument/aperture2/s2b/value/'
-  error_units = 0
-  CATCH, error_units
-  IF (error_units NE 0) THEN BEGIN
-    CATCH,/CANCEL
-    RETURN,''
-  ENDIF ELSE BEGIN
-    pathID         = h5d_open(fileID,s2b_units_path)
-    pathUnitsID    = h5a_open_name(pathID,'units')
-    s2b_units      = h5a_read(pathUnitsID)
-    h5a_close, pathUnitsID
-    h5d_close, pathID
-    RETURN, s2b_units
-  ENDELSE
-END
-
-;------------------------------------------------------------------------------
-;This function returns s2b in mm
-FUNCTION get_s2b_mm, fileID
-  s2b_value = get_s2b(fileID)
-  s2b_units = get_s2b_units(fileID)
-  CASE (s2b_units) OF
-    'millimetre': RETURN, convert_to_mm(s2b_value,s2b_units)
-    'metre'     : RETURN, s2b_value
-  ELSE        : RETURN, 'N/A'
-ENDCASE
-END
-
-;------------------------------------------------------------------------------
-;This class method returns the s2t value
-FUNCTION get_s2t, fileID
-  s2t_path   = '/entry/instrument/aperture2/s2t/value/'
-  error_value = 0
-  CATCH, error_value
-  IF (error_value NE 0) THEN BEGIN
-    CATCH,/cancel
-    RETURN, ''
-  ENDIF ELSE BEGIN
-    pathID     = h5d_open(fileID,s2t_path)
-    s2t        = h5d_read(pathID)
-    h5d_close, pathID
-    RETURN, s2t
-  ENDELSE
-END
-
-;------------------------------------------------------------------------------
-;This function returns the units of s2t
-FUNCTION get_s2t_units, fileID
-  s2t_units_path = '/entry/instrument/aperture2/s2t/value/'
-  error_units = 0
-  CATCH, error_units
-  IF (error_units NE 0) THEN BEGIN
-    CATCH,/CANCEL
-    RETURN, ''
-  ENDIF ELSE BEGIN
-    pathID         = h5d_open(fileID,s2t_units_path)
-    pathUnitsID    = h5a_open_name(pathID,'units')
-    s2t_units      = h5a_read(pathUnitsID)
-    h5a_close, pathUnitsID
-    h5d_close, pathID
-    RETURN, s2t_units
-  ENDELSE
-END
-
-;------------------------------------------------------------------------------
-;This function returns s2t in mm
-FUNCTION get_s2t_mm, fileID
-  s2t_value = get_s2t(fileID)
-  s2t_units = get_s2t_units(fileID)
-  CASE (s2t_units) OF
-    'millimetre': RETURN, convert_to_mm(s2t_value,s2t_units)
-    'metre'     : RETURN, s2t_value
-  ELSE        : RETURN, 'N/A'
-ENDCASE
-END
-
-;------------------------------------------------------------------------------
-;This class method returns the S2 value (in mm)
-FUNCTION get_s2_mm, fileID
-  s2t       = get_s2t_mm(fileID)
-  s2b       = get_s2b_mm(fileID)
-  IF (strcompress(s2t,/remove_all) NE 'N/A' AND strcompress(s2b,/remove_all) NE $
-    'N/A') THEN BEGIN
-    RETURN, ABS(s2t-s2b)
-  ENDIF ELSE BEGIN
-    RETURN, 'N/A'
-  ENDELSE
-END
-
-
-
-
-FUNCTION get_theta_units, fileID
-  theta_units_path = '/entry/instrument/bank1/Theta/readback/'
-  error_units = 0
-  CATCH, error_units
-  IF (error_units NE 0) THEN BEGIN
-    CATCH,/CANCEL
-    RETURN, ''
-  ENDIF ELSE BEGIN
-    pathID
-    RETURN, self.angle
-  ENDelse
+    return, [dangle_value,dangle_units]
+  endelse
 end
 
-function NeXusMetadata::getStart
+
+;+
+; :Description:
+;    function returns the DIRPIX value
+;
+; :Author: j35
+;-
+function NeXusMetadata::getDirpix
 compile_opt idl2
-path = '/entry-Off_Off/start_time/'
-catch, error_value
+  path = '/entry-Off_Off/instrument/bank1/DIRPIX/value/'
+  catch, error_value
+  if (error_value ne 0) then begin
+    catch,cancel
+    return, 'N/A'
+  endif else begin
+    pathID = h5d_open(self.fileID, path)
+    dirpix = h5d_read(pathID)
+    h5d_close, pathID
+    return, dirpix
+  endelse
+end
+
+;+
+; :Description:
+;    function returns the proton charge in picoCoulomb
+;
+; :Author: j35
+;-
+function NeXusMetadata::getProtonCharge
+compile_opt idl2
+  path = '/entry-Off_Off/proton_charge/'
+  catch, error_value
+  if (error_value ne 0) then begin
+    catch,cancel
+    return, 'N/A'
+  endif else begin
+    pathID = h5d_open(self.fileID, path)
+    proton_charge = h5d_read(pathID)
+    h5d_close, pathID
+    return, proton_charge + 'pC'
+  endelse
+end
 
 
+;+
+; :Description:
+;    function returns the duration of the experiment in seconds
+;
+; :Author: j35
+;-
+function NeXusMetadata::getDuration
+  compile_opt idl2
+  path = '/entry-Off_Off/duration/'
+  catch, error_value
+  if (error_value ne 0) then begin
+    catch,cancel
+    return, 'N/A'
+  endif else begin
+    pathID = h5d_open(self.fileID, path)
+    duration = h5d_read(pathID)
+    h5d_close, pathID
+    return, duration + 's'
+  endelse
+end
+
+;+
+; :Description:
+;    function returns the end time of the experiment with the following
+;    format 20:35:46 (2009-11-25)
+;
+; :Author: j35
+;-
+function NeXusMetadata::getEnd
+  compile_opt idl2
+  path = '/entry-Off_Off/end_time/'
+  catch, error_value
+  if (error_value ne 0) then begin
+    catch,cancel
+    return, 'N/A'
+  endif else begin
+    pathID = h5d_open(self.fileID, path)
+    date = h5d_read(pathID)
+    h5d_close, pathID
+    date_split = strsplit(date,'T',/extract)
+    time_split = strsplit(date_split[1],'-',/extract)
+    end_time = time_split[0] + ' (' + date_split[0] + ')'
+    return, end_time
+  endelse
+end
+
+;+
+; :Description:
+;    function returns the start time of the experiment with the following
+;    format 20:30:45 (2009-11-25)
+;
+; :Author: j35
+;-
+function NeXusMetadata::getStart
+  compile_opt idl2
+  path = '/entry-Off_Off/start_time/'
+  catch, error_value
+  if (error_value ne 0) then begin
+    catch,cancel
+    return, 'N/A'
+  endif else begin
+    pathID = h5d_open(self.fileID, path)
+    date = h5d_read(pathID)
+    h5d_close, pathID
+    date_split = strsplit(date,'T',/extract)
+    time_split = strsplit(date_split[1],'-',/extract)
+    start = time_split[0] + ' (' + date_split[0] + ')'
+    return, start
+  endelse
+end
 
 ;+
 ; :Description:
@@ -311,7 +190,8 @@ function NeXusMetadata::getDate
     pathID = h5d_open(self.fileID, path)
     date   = h5d_read(pathID)
     h5d_close, pathID
-    return, date
+    date_split = strsplit(date,'T',/extract)
+    return, date_split[0]
   endelse
 end
 
@@ -329,6 +209,7 @@ end
 ;+
 ; :Description:
 ;    class constructor that check if the NeXus file is valid
+;    The various methods will only work with a REF_M NeXus file
 ;
 ; :Params:
 ;    nexus_full_path
