@@ -268,8 +268,6 @@ pro ref_reduction, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     else: instrument = 'UNDEFINED'
   ENDCASE
 
-  instrument = 'REF_M'
-
   if (instrument EQ 'UNDEFINED') then begin
     BuildInstrumentGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   endif else begin
