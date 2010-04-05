@@ -67,8 +67,8 @@ PRO REFreduction_DataSelectionPressLeft, event
   IF (ROISignalBackZoomStatus NE 3) THEN BEGIN
   
     ;where to stop the plot of the lines
-  ;  xsize_1d_draw = (*global).Ntof_DATA-1
-  xsize_1d_draw = 608L
+    ;  xsize_1d_draw = (*global).Ntof_DATA-1
+    xsize_1d_draw = 608L
     
     mouse_status = (*global).select_data_status
     IF ((*global).mouse_debugging EQ 'yes') THEN BEGIN
@@ -513,7 +513,7 @@ PRO REFreduction_DataSelectionRelease, event
   ;update Back and Peak Ymin and Ymax cw_fields
   putDataBackgroundPeakYMinMaxValueInTextFields, Event
   
- ; plot_average_data_peak_value, Event
+; plot_average_data_peak_value, Event
   
 END
 
@@ -731,12 +731,12 @@ PRO ReplotAllSelection, Event
   ON_IOERROR, input_error
   
   IF ((*global).instrument EQ 'REF_M') THEN BEGIN
-  dirpix = getTextFieldValue(Event,'data_geometry_dirpix_value_user')
-  (*global).dirpix = FLOAT(dirpix)
-  plot_average_data_peak_value, Event
+    refpix = getTextFieldValue(Event,'info_refpix')
+    (*global).refpix = FLOAT(refpix)
+    plot_average_data_peak_value, Event
   ENDIF
   
-  input_error: 
+  input_error:
   
 END
 
@@ -746,8 +746,8 @@ PRO plot_average_data_peak_value, Event
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   coefficient = getUDCoefficient(Event) ;1 for low, 2 for high
-  dirpix = (*global).dirpix
-  geo_dirpix = coefficient * dirpix
+  refpix = (*global).refpix
+  geo_refpix = coefficient * refpix
   
   ;where to stop the plot of the lines
   ;xsize_1d_draw = (*global).Ntof_DATA-1
@@ -759,8 +759,8 @@ PRO plot_average_data_peak_value, Event
   
   color = 50
   
-  PLOTS, 0, geo_dirpix, /device, color=color
-  PLOTS, xsize_1d_draw, geo_dirpix, /device, /continue, color=color, $
+  PLOTS, 0, geo_refpix, /device, color=color
+  PLOTS, xsize_1d_draw, geo_refpix, /device, /continue, color=color, $
     LINESTYLE = 2
     
 END
