@@ -154,6 +154,7 @@ LOAD_BASE = WIDGET_BASE(MAIN_TAB,$
                         y_scroll_size = 300,$
                        /scroll)
 
+widget_control, main_base, get_uvalue=global
 
 ;Build DATA and NORMALIZATION tabs
 miniMakeGuiLoadDataNormalizationTab,$
