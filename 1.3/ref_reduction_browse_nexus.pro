@@ -146,7 +146,7 @@ PRO BrowseDataNexus, Event
       strcompress(DataRunNumber,/remove_all)
       
     IF ((*global).instrument EQ 'REF_M') THEN BEGIN
-      populate_data_geometry_info, Event
+      populate_data_geometry_info, Event, nexus_file_name
     ENDIF
     
     ;turn off hourglass
