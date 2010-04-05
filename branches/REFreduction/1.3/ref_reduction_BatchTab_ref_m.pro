@@ -32,6 +32,46 @@
 ;
 ;==============================================================================
 
+function isThereAnyCmdDefined, Event
+  widget_control,event.top,get_uvalue=global
+  
+  BatchTable = (*(*global).BatchTable_ref_m)
+  RowIndexes = getGlobalVariable_ref_m('RowIndexes')
+  FOR i=0,RowIndexes DO BEGIN
+    IF (BatchTable[9,i] NE 'N/A' AND $
+      BatchTable[9,i] NE '') THEN BEGIN
+      RETURN,1
+    ENDIF
+  ENDFOR
+  RETURN,0
+END
+
+;------------------------------------------------------------------------------
+FUNCTION isThereAnyDataActivate, Event
+  ;get global structure
+  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  widget_control,id,get_uvalue=global
+  BatchTable = (*(*global).BatchTable)
+  RowIndexes = getGlobalVariable('RowIndexes')
+  FOR i=0,RowIndexes DO BEGIN
+    IF (BatchTable[0,i] EQ 'YES' OR $
+      BatchTable[0,i] EQ '> YES <') THEN RETURN, 1
+  ENDFOR
+  RETURN,0
+END
+
+;------------------------------------------------------------------------------
+FUNCTION isThereAnyDataInBatchTable, Event
+  ;get global structure
+  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  widget_control,id,get_uvalue=global
+  BatchTable      = (*(*global).BatchTable)
+  BatchTableReset = strarr(9,20)
+  IF (ARRAY_EQUAL(BatchTable,BatchTableReset)) THEN RETURN, 0
+  RETURN,1
+END
+
+
 ;+
 ; :Description:
 ;   Check if the current row is active or not
@@ -461,13 +501,13 @@ FUNCTION PopulateBatchTable_ref_m, Event, BatchFileName
             END
           ELSE         : BEGIN
             if (splitArray[0] ne '') then begin
-                                 cmd           = strjoin(SplitArray,' ')
+              cmd           = strjoin(SplitArray,' ')
               ;            CommentArray= strsplit(SplitArray[0],'#', $
               ;             /extract, $
               ;            COUNT=nbr)
               ;if (nbr gt 0) then begin
-                BatchTable[8,BatchIndex] = cmd
-              ;endif
+              BatchTable[8,BatchIndex] = cmd
+            ;endif
             endif
           ;            SplitArray[0] =CommentArray[0]
           ;            cmd           = strjoin(SplitArray,' ')
@@ -575,9 +615,129 @@ END
 ;
 ; :Author: j35
 ;-
-PRO DisplayBatchTable_ref_m, Event, BatchTable
+pro DisplayBatchTable_ref_m, Event, BatchTable
   live_BatchTable = BatchTable[0:8,*]
   NewBatchTable = BatchTable
   id = widget_info(Event.top,find_by_uname='batch_table_widget')
   widget_control, id, set_value=NewBatchTable
+end
+
+;+
+; :Description:
+;   remove the row selected
+;
+; :Params:
+;    Event
+;
+; :Author: j35
+;-
+pro BatchTab_DeleteSelection_ref_m, Event
+
+  widget_control,event.top,get_uvalue=global
+  
+  ;retrieve main table
+  BatchTable = (*(*global).BatchTable_ref_m)
+  ;current row selected
+  RowSelected = (*global).PrevBatchRowSelected
+  if (BatchTable[0,RowSelected] eq '') then return
+  RowIndexes = getGlobalVariable_ref_m('RowIndexes')
+  FOR i = RowSelected, (RowIndexes-1) DO BEGIN
+    BatchTable[*,i]=BatchTable[*,i+1]
+  ENDFOR
+  ClearStructureFields_ref_m, BatchTable, RowIndexes
+  (*(*global).BatchTable) = BatchTable
+  DisplayBatchTable_ref_m, Event, BatchTable
+  ;this function updates the widgets (button) of the tab
+  UpdateBatchTabGui_ref_m, Event
+  DisplayInfoOfSelectedRow_ref_m, Event, RowSelected
+  ;generate a new batch file name
+  GenerateBatchFileName_ref_m, Event
+  ;enable or not the REPOPULATE Button
+  CheckRepopulateButton_ref_m, Event
 END
+
+;+
+; :Description:
+;   cleanup the selected row and replace it with empty string array
+;
+; :Params:
+;    BatchTable
+;    CurrentBatchTableIndex
+;
+;
+;
+; :Author: j35
+;-
+pro ClearStructureFields_ref_m, BatchTable, CurrentBatchTableIndex
+  compile_opt idl2
+  
+  resetArray = strarr(9)
+  BatchTable[*,CurrentBatchTableIndex] = resetArray
+END
+
+;+
+; :Description:
+;   Check if the repopulate GUI can be validated or not
+;
+; :Params:
+;    Event
+;
+; :Author: j35
+;-
+pro CheckRepopulateButton_ref_m, Event
+  compile_opt idl2
+  
+  widget_control,event.top,get_uvalue=global
+  BatchTable  = (*(*global).BatchTable_ref_m)
+  SelectedRow = getCurrentRowSelected(Event)
+  cmd         = BatchTable[9,SelectedRow]
+  IF (cmd NE '') THEN BEGIN
+    activateButtonStatus = 1
+  ENDIF ELSE BEGIN
+    activateButtonStatus = 0
+  ENDELSE
+  id = widget_info(Event.top,find_by_uname='repopulate_gui')
+  widget_control, id, sensitive=activateButtonStatus
+END
+
+;+
+; :Description:
+;   check if there are any not 'N/A' command line, if yes, then activate
+;   DELETE SELECTION, DELETE ACTIVE, RUN ACTIVE AND SAVE ACTIVE(S)
+;
+; :Params:
+;    Event
+;
+; :Author: j35
+;-
+pro UpdateBatchTabGui_ref_m, Event
+  compile_opt idl2
+  
+  ;check if delete active and save activte can be
+  ;validated or not
+  IF (isThereAnyDataActivate(Event)) THEN BEGIN
+    activateStatus = 1
+    ;check if run active can be validated or not
+    IF (isThereAnyCmdDefined(Event)) THEN BEGIN
+      activateStatus2 = 1
+    ENDIF ELSE BEGIN
+      activateStatus2 = 0
+    ENDELSE
+    activateRunActiveButton, Event, activateStatus2
+  ENDIF ELSE BEGIN
+    activateStatus = 0
+    activateRunActiveButton, Event, activateStatus
+  ENDELSE
+  activateDeleteActiveButton, Event, activateStatus
+  activateSaveActiveButton, Event, activateStatus
+  
+  ;check if there is anything in the BatchTable
+  IF (isThereAnyDataInBatchTable(Event)) THEN BEGIN
+    activateStatus = 1
+  ENDIF ELSE BEGIN
+    activateStatus = 0
+  ENDELSE
+  
+  activateDeleteSelectionButton, Event, activateStatus
+  
+end
