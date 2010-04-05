@@ -128,3 +128,38 @@ PRO calculate_data_refpix, Event
   ENDELSE
   
 END
+
+
+;+
+; :Description:
+;   calculates the sangle value (deg and rad) and display its value in
+;   its widget_label in the info (nexus information) of the data loaded
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro calculate_sangle, event
+  compile_opt idl2
+  
+  on_ioerror, error
+  
+  ;retrieve the various parameters used in the calculation of sangle
+  dirpix = getTextFieldValue(event,'info_dirpix')
+  f_dirpix = float(dirpix)
+  refpix = getTextFieldValue(event,'info_refpix')
+  f_refpix = float(refpix)
+  detector_sample_distance = getTextFieldValue(event,$
+    'info_detector_sample_distance')
+    
+    
+    
+    
+    
+    
+  error:
+  sangle = 'N/A'
+  putTextFieldValue, event, 'info_sangle', sangle
+  
+end

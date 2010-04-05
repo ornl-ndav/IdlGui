@@ -370,66 +370,7 @@ PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
     YOFFSET   = 0,$
     SCR_XSIZE = NXsummaryZoomTabSize[2],$
     SCR_YSIZE = NXsummaryZoomTabSize[3])
-    
-  ;  ;geometry info --------------------------------------------------------------
-  ;  GeoBase = WIDGET_BASE(LOAD_DATA_BASE,$
-  ;    XOFFSET = 365,$
-  ;    YOFFSET = 450,$
-  ;    SCR_XSIZE = 205,$
-  ;    SCR_YSIZE = 115,$
-  ;    UNAME = 'data_geometry_info_base',$
-  ;    FRAME = 1,$
-  ;    /COLUMN)
-  ;
-  ;   title = widget_label(GeoBase,$
-  ;   value = 'Geometry Information')
-  ;
-  ;  row1 = WIDGET_BASE(GeoBase,$
-  ;  xpad = 0,$
-  ;    /row)
-  ;  label1 = WIDGET_LABEL(row1,$
-  ;    value = 'DANGLE0 :')
-  ;  label2 = WIDGET_LABEL(row1,$
-  ;    value = 'N/A',$
-  ;    scr_xsize = 70,$
-  ;    /align_left,$
-  ;    uname = 'data_geometry_dangle_value')
-  ;    label3 = widget_label(row1,$
-  ;    value = ' ',$
-  ;    scr_xsize = 50,$
-  ;    /align_left,$
-  ;    uname = 'data_geometry_dangle_units')
-  ;
-  ;  row2 = WIDGET_BASE(GeoBase,$
-  ;    xpad = 0,$
-  ;    /row)
-  ;  label1 = WIDGET_LABEL(row2,$
-  ;    value = 'DIRPIX')
-  ;  label = widget_label(row2,$
-  ;  value = '(N/A) :',$
-  ;  scr_xsize = 75,$
-  ;  /align_left,$
-  ;  uname = 'data_geometry_dirpix_value')
-  ;  label2 = WIDGET_TEXT(row2,$
-  ;    value = 'N/A',$
-  ;    scr_xsize = 82,$
-  ;    /EDITABLE,$
-  ;    /align_left,$
-  ;    uname = 'data_geometry_dirpix_value_user')
-  ;
-  ;  row3 = WIDGET_BASE(GeoBase,$
-  ;      xpad = 0,$
-  ;      /row)
-  ;  label1 = WIDGET_LABEL(row3,$
-  ;    value = 'REFPIX :')
-  ;  label2 = WIDGET_LABEL(row3,$
-  ;    value = 'N/A',$
-  ;    scr_xsize = 70,$
-  ;    /align_left,$
-  ;    uname = 'data_geometry_refpix_value')
-    
-  ;----------------------------------------------------------------------------
-    
+        
   ;Help base and text field that will show what is going on in the
   ;drawing region
   LeftInteractionHelpMessageBase = $
