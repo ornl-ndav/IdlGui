@@ -34,6 +34,54 @@
 
 ;+
 ; :Description:
+;   returns the string between two arguments
+;
+; :Params:
+;    base_string
+;    arg1
+;    arg2
+
+; :Author: j35
+;-
+function get_value_between_arg1_arg2, base_string, arg1, arg2
+  compile_opt idl2
+  
+  Split1 = strsplit(base_string,arg1,/EXTRACT,/REGEX,COUNT=length)
+  if (length GT 1) then begin
+    Split2 = strsplit(Split1[1],arg2,/EXTRACT,/REGEX)
+    return, Split2[0]
+  endif else begin
+    return, ''
+  endelse
+end
+
+
+;+
+; :Description
+;   returns the bin size used to histogrammed the NeXus file
+;
+; :Author: j35
+;-
+function NeXusMetadata::getBinSize
+  compile_opt idl2
+  path_value = 'entry-Off_Off/SNSHistoTool/command1/'
+  catch, error_value
+  if (error_value ne 0) then begin
+    catch,/cancel
+    return, 'N/A'
+  endif else begin
+    pathID_value = h5d_open(self.fileID, path_value)
+    cmd = h5d_read(pathID_value)
+    h5d_close, pathID_value
+    
+    value = get_value_between_arg1_arg2(cmd[0], '-l ','--state')
+    return, strcompress(value,/remove_all)
+  endelse
+end
+
+
+;+
+; :Description:
 ;    function returns the dangle value and its units in the 2 elements
 ;    string array
 ;
