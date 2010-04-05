@@ -67,21 +67,22 @@ PRO RefReduction_RunCommandLine, Event
     IF (~isWithDataInstrumentGeometryOverwrite(Event) AND $
       (*global).dirpix_geometry NE '' AND $
       (*global).cvinfo NE '') THEN BEGIN ;use tmp geo
+      
+      dirpix = getTextFieldValue(event,'info_dirpix')
+      refpix = getTextFieldValue(event,'info_refpix')
+      
       geo_cmd = (*global).ts_geom
       geo_cmd += ' ' + (*global).REF_M_geom
       ;      geo_cmd += ' ' + (*global).dirpix_geometry
       geo_cmd += ' -m ' + (*global).cvinfo
-      geo_cmd += ' -D DIRPIX=' + STRCOMPRESS((*global).dirpix,/REMOVE_ALL)
+      geo_cmd += ' -D DIRPIX=' + dirpix
+      geo_cmd += ' -D REFPIX=' + refpix
       geo_cmd += ' -o ' + (*global).tmp_geometry_file
       cmd_text = 'Running geometry generator:'
       putLogBookMessage, Event, cmd_text, Append=1
       cmd_text = '-> ' + geo_cmd
       putLogBookMessage, Event, cmd_text, Append=1
       SPAWN, geo_cmd, listening, err_listening
-    ;      print, listening
-    ;      print, err_listening
-    ;      help, listening
-    ;      help, err_listening
     ENDIF
   ENDIF
   
