@@ -52,7 +52,8 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
     ArchivedOrAllCWBgroupSize,$
     NexusListSizeGlobal,$
     NexusListLabelGlobal,$
-    LoadctList
+    LoadctList,$
+    global
     
   ;define widget variables
   ;[xoffset, yoffset, scr_xsize, scr_ysize]
@@ -220,100 +221,102 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
     ;scr_ysize=NXsummaryZoomTabSize[3],$
     title='Nexus Information',$
     /column)
-
+    
+  if ((*global).instrument eq 'REF_M') then begin
+  
     space = widget_label(info_base,$
-    value = ' ')
-
+      value = ' ')
+      
     label_array = ['Date',$
-    'Start','End','Duration','Proton Charge (pC)',$
-    'Bin size (microS)'] + ':'
+      'Start','End','Duration','Proton Charge (pC)',$
+      'Bin size (microS)'] + ':'
     uname_array = ['info_date',$
-    'info_start','info_end','info_duration','info_proton_charge',$
-    'info_bin_size']
+      'info_start','info_end','info_duration','info_proton_charge',$
+      'info_bin_size']
     sz = n_elements(label_array)
     for i=0L,(sz-1) do begin
-    row = widget_base(info_base,$
-    /row)
-    label = widget_label(row,$
-    /align_right,$
-    scr_xsize = 150,$
-    value = label_array[i])
-    value = widget_label(row,$
-    value = 'N/A',$
-    uname = uname_array[i],$
-    /align_left,$
-    scr_xsize = 200)
+      row = widget_base(info_base,$
+        /row)
+      label = widget_label(row,$
+        /align_right,$
+        scr_xsize = 150,$
+        value = label_array[i])
+      value = widget_label(row,$
+        value = 'N/A',$
+        uname = uname_array[i],$
+        /align_left,$
+        scr_xsize = 200)
     endfor
     
     space = widget_label(info_base,$
-    value = ' ')
-    
+      value = ' ')
+      
     ;dangle0
     row = widget_base(info_base,$
-    /row)
+      /row)
     label = widget_label(row,$
-    /align_right,$
-    scr_xsize = 150,$
-    value = 'Dangle0:')
+      /align_right,$
+      scr_xsize = 150,$
+      value = 'Dangle:')
     value = widget_label(row,$
-    /align_left,$
-    value = 'N/A',$
-    uname = 'info_dangl0',$
-    scr_xsize = 200)
-    
+      /align_left,$
+      value = 'N/A',$
+      uname = 'info_dangl',$
+      scr_xsize = 200)
+      
     ;dirpix
     row = widget_base(info_base,$
-    /row)
+      /row)
     label = widget_label(row,$
-    /align_right,$
-    scr_xsize = 150,$
-    value = 'Dirpix:')
+      /align_right,$
+      scr_xsize = 150,$
+      value = 'Dirpix:')
     value = widget_text(row,$
-    /align_left,$
-    /editable,$
-    value = 'N/A',$
-    uname = 'info_dirpix',$
-    scr_xsize = 200)
-    
+      /align_left,$
+      /editable,$
+      value = 'N/A',$
+      uname = 'info_dirpix',$
+      scr_xsize = 200)
+      
     ;refpix
     row = widget_base(info_base,$
-    /row)
+      /row)
     label = widget_label(row,$
-    /align_right,$
-    scr_xsize = 150,$
-    value = 'Refpix:')
+      /align_right,$
+      scr_xsize = 150,$
+      value = 'Refpix:')
     value = widget_text(row,$
-    /align_left,$
-    /editable,$
-    value = 'N/A',$
-    uname = 'info_refpix',$
-    scr_xsize = 200)
-    
+      /align_left,$
+      /editable,$
+      value = 'N/A',$
+      uname = 'info_refpix',$
+      scr_xsize = 200)
+      
     ;sangle
     row = widget_base(info_base,$
-    /row)
+      /row)
     label = widget_label(row,$
-    /align_right,$
-    scr_xsize = 150,$
-    value = 'Sangle:')
+      /align_right,$
+      scr_xsize = 150,$
+      value = 'Sangle:')
     value = widget_label(row,$
-    /align_left,$
-    value = 'N/A',$
-    uname = 'info_sangle',$
-    scr_xsize = 200)
-    
-    
-    
-;  data_file_info_text = WIDGET_TEXT(data_Nxsummary_base,$
-;    xoffset=FileInfoSize[0],$
-;    yoffset=FileInfoSize[1],$
-;    scr_xsize=FileInfoSize[2],$
-;    scr_ysize=FileInfoSize[3]-20,$
-;    /wrap,$
-;    /scroll,$
-;    value='',$
-;    uname='data_file_info_text')
-;    
+      /align_left,$
+      value = 'N/A',$
+      uname = 'info_sangle',$
+      scr_xsize = 200)
+      
+  endif
+  
+  ;  data_file_info_text = WIDGET_TEXT(data_Nxsummary_base,$
+  ;    xoffset=FileInfoSize[0],$
+  ;    yoffset=FileInfoSize[1],$
+  ;    scr_xsize=FileInfoSize[2],$
+  ;    scr_ysize=FileInfoSize[3]-20,$
+  ;    /wrap,$
+  ;    /scroll,$
+  ;    value='',$
+  ;    uname='data_file_info_text')
+  ;
   ;ZOOM tab #2
   data_Zoom_base = WIDGET_BASE(NxsummaryZoomTab,$
     uname='data_zoom_base',$
