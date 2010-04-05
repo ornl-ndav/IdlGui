@@ -256,40 +256,59 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
       /row)
     label = widget_label(row,$
       /align_right,$
-      scr_xsize = 150,$
+      scr_xsize = 100,$
       value = 'Dangle:')
     value = widget_label(row,$
       /align_left,$
       value = 'N/A',$
-      uname = 'info_dangl',$
-      scr_xsize = 200)
+      uname = 'info_dangle',$
+      scr_xsize = 150,$
+      frame = 0)
+    label = widget_label(row,$
+      /align_right,$
+      value = 'Dangle0:')
+    value = widget_label(row,$
+      /align_left,$
+      value = 'N/A',$
+      uname = 'info_dangle0',$
+      scr_xsize = 150,$
+      frame = 0)
       
     ;dirpix
     row = widget_base(info_base,$
       /row)
     label = widget_label(row,$
       /align_right,$
-      scr_xsize = 150,$
+      scr_xsize = 100,$
       value = 'Dirpix:')
     value = widget_text(row,$
       /align_left,$
       /editable,$
       value = 'N/A',$
       uname = 'info_dirpix',$
-      scr_xsize = 200)
-      
+      scr_xsize = 150)
     ;refpix
-    row = widget_base(info_base,$
-      /row)
     label = widget_label(row,$
       /align_right,$
-      scr_xsize = 150,$
       value = 'Refpix:')
     value = widget_text(row,$
       /align_left,$
       /editable,$
       value = 'N/A',$
       uname = 'info_refpix',$
+      scr_xsize = 150)
+      
+    ;detector-sample distance
+    row = widget_base(info_base,$
+    /row)
+    label = widget_label(row,$
+    /align_right,$
+    scr_xsize = 208,$
+      value  = 'Detector-Sample distance:')
+      value = widget_label(row,$
+      /align_left,$
+      value = 'N/A',$
+      uname = 'info_detector_sample_distance',$
       scr_xsize = 200)
       
     ;sangle
@@ -297,7 +316,7 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
       /row)
     label = widget_label(row,$
       /align_right,$
-      scr_xsize = 150,$
+      scr_xsize = 100,$
       value = 'Sangle:')
     value = widget_label(row,$
       /align_left,$
