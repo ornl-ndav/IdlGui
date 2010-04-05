@@ -1834,7 +1834,11 @@ PRO MAIN_BASE_event, Event
     
     ;;Delete Selection
     WIDGET_INFO(wWidget, FIND_BY_UNAME='delete_selection_button'): begin
+      if ((*global).instrument eq 'REF_L') then begin
       BatchTab_DeleteSelection, Event
+      endif else begin
+      BatchTab_DeleteSelection_ref_m, Event
+      endelse
       SaveDataNormInputValues, Event
     end
     

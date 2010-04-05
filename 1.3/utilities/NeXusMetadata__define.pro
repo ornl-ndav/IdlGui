@@ -40,8 +40,8 @@
 ; :Author: j35
 ;-
 function NeXusMetadata::getDangle
-compile_opt idl2
-  path_value = '/entry-Off_Off/instrument/bank1/DANGLE/value/'
+  compile_opt idl2
+  path_value = '/entry-Off_Off/instrument/bank1/DANGLE/readback/'
   path_units = '/entry-Off_Off/instrument/bank1/DANGLE/units/'
   catch, error_value
   if (error_value ne 0) then begin
@@ -49,14 +49,15 @@ compile_opt idl2
     return, ['N/A','N/A']
   endif else begin
     pathID_value = h5d_open(self.fileID, path_value)
-    dangle_value = h5d_read(pathID_value)
-    pathID_units = h5d_open(self.fileID, path_units)
-    dangle_units = h5d_read(pathID_units)
-    h5d_close, pathID
+    dangle_value = strcompress(h5d_read(pathID_value),/remove_all)
+    
+    pathID_units = h5a_open_name(pathID_value,'units')
+    dangle_units = strcompress(h5a_read(pathID_units),/remove_all)
+    
+    h5d_close, pathID_value
     return, [dangle_value,dangle_units]
   endelse
 end
-
 
 ;+
 ; :Description:
@@ -65,7 +66,7 @@ end
 ; :Author: j35
 ;-
 function NeXusMetadata::getDirpix
-compile_opt idl2
+  compile_opt idl2
   path = '/entry-Off_Off/instrument/bank1/DIRPIX/value/'
   catch, error_value
   if (error_value ne 0) then begin
@@ -86,7 +87,7 @@ end
 ; :Author: j35
 ;-
 function NeXusMetadata::getProtonCharge
-compile_opt idl2
+  compile_opt idl2
   path = '/entry-Off_Off/proton_charge/'
   catch, error_value
   if (error_value ne 0) then begin
@@ -96,7 +97,7 @@ compile_opt idl2
     pathID = h5d_open(self.fileID, path)
     proton_charge = h5d_read(pathID)
     h5d_close, pathID
-    return, proton_charge + 'pC'
+    return, strcompress(proton_charge,/remove_all) + 'pC'
   endelse
 end
 
@@ -118,7 +119,7 @@ function NeXusMetadata::getDuration
     pathID = h5d_open(self.fileID, path)
     duration = h5d_read(pathID)
     h5d_close, pathID
-    return, duration + 's'
+    return, strcompress(duration,/remove_all) + 's'
   endelse
 end
 
@@ -221,7 +222,7 @@ function NeXusMetadata::init, nexus_full_path
   
   ;open hdf5 nexus file
   error_file = 0
-  cach, error_file
+  catch, error_file
   if (error_file ne 0) then begin
     catch,/cancel
     return,0
