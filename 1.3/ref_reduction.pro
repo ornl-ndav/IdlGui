@@ -258,7 +258,7 @@ END
 
 ; Empty stub procedure used for autoloading.
 pro ref_reduction, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-
+  
   ;check instrument here
   SPAWN, 'hostname',listening
   CASE (listening) OF
@@ -267,7 +267,9 @@ pro ref_reduction, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     'heater.ornl.gov': instrument = 'UNDEFINED'
     else: instrument = 'UNDEFINED'
   ENDCASE
-  
+
+  instrument = 'REF_M'
+
   if (instrument EQ 'UNDEFINED') then begin
     BuildInstrumentGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   endif else begin
