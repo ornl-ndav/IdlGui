@@ -61,6 +61,58 @@ end
 
 ;+
 ; :Description:
+;   function returns the DANGLE0 value
+;
+; :Author: j35
+;-
+function NeXusMetadata::getDangle0
+  compile_opt idl2
+  path_value = '/entry-Off_Off/instrument/bank1/DANGLE0/readback/'
+  path_units = '/entry-Off_Off/instrument/bank1/DANGLE0/units/'
+  catch, error_value
+  if (error_value ne 0) then begin
+    catch,cancel
+    return, ['N/A','N/A']
+  endif else begin
+    pathID_value = h5d_open(self.fileID, path_value)
+    dangle_value = strcompress(h5d_read(pathID_value),/remove_all)
+    
+    pathID_units = h5a_open_name(pathID_value,'units')
+    dangle_units = strcompress(h5a_read(pathID_units),/remove_all)
+    
+    h5d_close, pathID_value
+    return, [dangle_value,dangle_units]
+  endelse
+end
+
+;+
+; :Description:
+;   Returns the detector-sample distance with its units
+;
+; :Author: j35
+;-
+function NeXusMetadata::getSampleDetDistance
+  compile_opt idl2
+  path_value = '/entry-Off_Off/instrument/bank1/SampleDetDis/readback/'
+  path_units = '/entry-Off_Off/instrument/bank1/SampleDetDis/units'
+  catch, error_value
+  if (error_value ne 0) then begin
+    catch,cancel
+    return, ['N/A','N/A']
+  endif else begin
+    pathID_value = h5d_open(self.fileID, path_value)
+    dis_value = strcompress(h5d_read(pathID_value),/remove_all)
+    
+    pathID_units = h5a_open_name(pathID_value,'units')
+    dis_units = strcompress(h5a_read(pathID_units),/remove_all)
+    
+    h5d_close, pathID_value
+    return, [dis_value,dis_units]
+  endelse
+end
+
+;+
+; :Description:
 ;    function returns the DIRPIX value
 ;
 ; :Author: j35
