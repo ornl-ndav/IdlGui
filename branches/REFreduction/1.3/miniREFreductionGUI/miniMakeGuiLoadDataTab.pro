@@ -227,7 +227,7 @@ PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
     value = ' ')
 
     label_array = ['Date',$
-    'Start','End','Duration','Proton Charge (pC)',$
+    'Start','End','Duration','Proton Charge',$
     'Bin size (microS)'] + ':'
     uname_array = ['info_date',$
     'info_start','info_end','info_duration','info_proton_charge',$

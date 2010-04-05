@@ -58,6 +58,10 @@ PRO populate_data_geometry_info, Event, nexus_file_name
   proton_charge = iNexus->getProtonCharge()
   putTextfieldValue, event, 'info_proton_charge', proton_Charge[0]
   
+  ;bin size
+  bin_size = iNexus->getBinSize()
+  putTextFieldValue, event, 'info_bin_size', bin_size[0]
+  
   ;Dangle
   dangle_units = iNexus->getDangle()
   dangle = dangle_units[0] + ' ' + dangle_units[1]
