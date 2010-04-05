@@ -224,9 +224,6 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
     
   if ((*global).instrument eq 'REF_M') then begin
   
-    space = widget_label(info_base,$
-      value = ' ')
-      
     label_array = ['Date',$
       'Start','End','Duration','Proton Charge',$
       'Bin size (microS)'] + ':'
@@ -262,16 +259,20 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
       /align_left,$
       value = 'N/A',$
       uname = 'info_dangle',$
-      scr_xsize = 150,$
+      scr_xsize = 250,$
       frame = 0)
+
+    row = widget_base(info_base,$
+      /row)
     label = widget_label(row,$
       /align_right,$
+      scr_xsize = 100,$
       value = 'Dangle0:')
     value = widget_label(row,$
       /align_left,$
       value = 'N/A',$
       uname = 'info_dangle0',$
-      scr_xsize = 150,$
+      scr_xsize = 250,$
       frame = 0)
       
     ;dirpix

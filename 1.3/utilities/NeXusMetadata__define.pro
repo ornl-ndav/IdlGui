@@ -34,6 +34,46 @@
 
 ;+
 ; :Description:
+;   this functions converts the string number from degrees to radians
+;
+; :Params:
+;    dangle_value
+;
+; :Author: j35
+;-
+function convert_deg_to_rad, dangle_value
+  compile_opt idl2
+  
+  on_ioerror, error
+  value = float(dangle_value)
+  return, strcompress(!dtor * value,/remove_all)
+
+  error:
+  return, 'N/A'
+end
+
+;+
+; :Description:
+;   this functions converts the string number from radians to degrees
+;
+; :Params:
+;    dangle_value
+;
+; :Author: j35
+;-
+function convert_rad_to_deg, dangle_value
+  compile_opt idl2
+  
+  on_ioerror, error
+  value = float(dangle_value)
+  return, strcompress(value / !dtor,/remove_all)
+
+  error:
+  return, 'N/A'
+end
+
+;+
+; :Description:
 ;   returns the string between two arguments
 ;
 ; :Params:
@@ -82,8 +122,7 @@ end
 
 ;+
 ; :Description:
-;    function returns the dangle value and its units in the 2 elements
-;    string array
+;    function returns an string array of the dangle value in degrees and rads
 ;
 ; :Author: j35
 ;-
@@ -102,14 +141,22 @@ function NeXusMetadata::getDangle
     pathID_units = h5a_open_name(pathID_value,'units')
     dangle_units = strcompress(h5a_read(pathID_units),/remove_all)
     
+    if (dangle_units eq 'degree') then begin
+      dangle_rad = convert_deg_to_rad(dangle_value)
+      dangle_degree = dangle_value
+    endif else begin
+      dangle_degree = convert_rad_to_deg(dangle_value)
+      dangle_rad = dangle_value
+    endelse
+    
     h5d_close, pathID_value
-    return, [dangle_value,dangle_units]
+    return, [dangle_degree,dangle_rad]
   endelse
 end
 
 ;+
 ; :Description:
-;   function returns the DANGLE0 value
+;   function returns an string array of the dangle0 value in degrees and rads
 ;
 ; :Author: j35
 ;-
@@ -128,8 +175,16 @@ function NeXusMetadata::getDangle0
     pathID_units = h5a_open_name(pathID_value,'units')
     dangle_units = strcompress(h5a_read(pathID_units),/remove_all)
     
+    if (dangle_units eq 'degree') then begin
+      dangle_rad = convert_deg_to_rad(dangle_value)
+      dangle_degree = dangle_value
+    endif else begin
+      dangle_degree = convert_rad_to_deg(dangle_value)
+      dangle_rad = dangle_value
+    endelse
+
     h5d_close, pathID_value
-    return, [dangle_value,dangle_units]
+    return, [dangle_degree,dangle_rad]
   endelse
 end
 
@@ -197,7 +252,7 @@ function NeXusMetadata::getProtonCharge
     pathID = h5d_open(self.fileID, path)
     proton_charge = h5d_read(pathID)
     h5d_close, pathID
-    return, strcompress(proton_charge,/remove_all) + 'pC'
+    return, strcompress(proton_charge,/remove_all) + ' pC'
   endelse
 end
 
