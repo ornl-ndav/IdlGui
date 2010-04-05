@@ -63,14 +63,15 @@ PRO populate_data_geometry_info, Event, nexus_file_name
   putTextFieldValue, event, 'info_bin_size', bin_size[0]
   
   ;Dangle
-  dangle_units = iNexus->getDangle()
-  dangle = dangle_units[0] + ' ' + dangle_units[1]
+  dangle_value = iNexus->getDangle()
+  dangle = dangle_value[0] + ' degrees (' + dangle_value[1] + ' rad)'
+  
   putTextFieldValue, event, 'info_dangle', dangle
   
   ;Dangle0
-  dangle_units = iNexus->getDangle0()
-  dangle = dangle_units[0] + ' ' + dangle_units[1]
-  putTextFieldValue, event, 'info_dangle0', dangle
+  dangle0_value = iNexus->getDangle0()
+  dangle0 = dangle0_value[0] + ' degrees (' + dangle0_value[1] + ' rad)'
+  putTextFieldValue, event, 'info_dangle0', dangle0
   
   ;dirpix
   dirpix = iNexus->getDirpix()
@@ -80,6 +81,8 @@ PRO populate_data_geometry_info, Event, nexus_file_name
   dist_units = iNexus->getSampleDetDistance()
   dist = dist_units[0] + ' ' + dist_units[1]
   putTextFieldValue, event, 'info_detector_sample_distance', dist
+  
+  obj_destroy, iNexus
   
 END
 
