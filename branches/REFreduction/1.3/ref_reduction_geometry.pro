@@ -80,14 +80,14 @@ PRO populate_data_geometry_info, Event, nexus_file_name
 END
 
 ;------------------------------------------------------------------------------
-PRO calculate_data_dirpix, Event
+PRO calculate_data_refpix, Event
 
   WIDGET_CONTROL,Event.top,get_uvalue=global
   
   CATCH, error
   IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
-    dirpix = 'N/A'
+    refpix = 'N/A'
   ENDIF ELSE BEGIN
   
     ON_IOERROR, done_calculation
@@ -99,24 +99,24 @@ PRO calculate_data_dirpix, Event
     
       ymin = FLOAT(ymin)
       ymax = FLOAT(ymax)
-      dirpix = MEAN([ymin,ymax])
-      (*global).dirpix = dirpix
+      refpix = MEAN([ymin,ymax])
+      (*global).refpix = refpix
       
     ENDIF ELSE BEGIN
     
-      dirpix = 'N/A'
+      refpix = 'N/A'
       
     ENDELSE
     
-    putTextFieldValue, event, 'data_geometry_dirpix_value_user', $
-      STRCOMPRESS(dirpix,/REMOVE_ALL), 0
+    putTextFieldValue, event, 'info_refpix', $
+      STRCOMPRESS(refpix,/REMOVE_ALL), 0
       
     RETURN
     
     done_calculation:
-    dirpix = 'N/A'
-    putTextFieldValue, event, 'data_geometry_dirpix_value_user', $
-      STRCOMPRESS(dirpix,/REMOVE_ALL), 0
+    refpix = 'N/A'
+    putTextFieldValue, event, 'info_refpix', $
+      STRCOMPRESS(refpix,/REMOVE_ALL), 0
       
   ENDELSE
   

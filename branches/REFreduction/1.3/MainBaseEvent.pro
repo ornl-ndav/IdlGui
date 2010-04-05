@@ -165,7 +165,7 @@ PRO MAIN_BASE_event, Event
     ;1D_2D plot of DATA
     WIDGET_INFO(wWidget, FIND_BY_UNAME='load_data_D_draw'): begin
       error = 0
-      CATCH, error
+      ;CATCH, error
       IF (error NE 0) THEN BEGIN
         CATCH,/CANCEL
       ENDIF ELSE BEGIN
@@ -199,7 +199,7 @@ PRO MAIN_BASE_event, Event
               117: BEGIN
                 REFreduction_ManuallyMoveDataBackPeakUp, Event
                 IF ((*global).instrument EQ 'REF_M') THEN BEGIN
-                  calculate_data_dirpix, Event
+                  calculate_data_refpix, Event
                   plot_average_data_peak_value, Event
                 ENDIF
                 
@@ -207,7 +207,7 @@ PRO MAIN_BASE_event, Event
               100: BEGIN
                 REFreduction_ManuallyMoveDataBackPeakDown, Event
                 IF ((*global).instrument EQ 'REF_M') THEN BEGIN
-                  calculate_data_dirpix, Event
+                  calculate_data_refpix, Event
                   plot_average_data_peak_value, Event
                 ENDIF
               END
@@ -217,7 +217,7 @@ PRO MAIN_BASE_event, Event
               7: BEGIN
                 REFreduction_ManuallyMoveDataBackPeakUp, Event
                 IF ((*global).instrument EQ 'REF_M') THEN BEGIN
-                  calculate_data_dirpix, Event
+                  calculate_data_refpix, Event
                   plot_average_data_peak_value, Event
                 ENDIF
                 
@@ -225,7 +225,7 @@ PRO MAIN_BASE_event, Event
               8: BEGIN
                 REFreduction_ManuallyMoveDataBackPeakDown, Event
                 IF ((*global).instrument EQ 'REF_M') THEN BEGIN
-                  calculate_data_dirpix, Event
+                  calculate_data_refpix, Event
                   plot_average_data_peak_value, Event
                 ENDIF
               END
@@ -246,7 +246,7 @@ PRO MAIN_BASE_event, Event
           IF (Event.type EQ 1) THEN BEGIN ;release
             REFreduction_DataSelectionRelease, Event
             IF ((*global).instrument EQ 'REF_M') THEN BEGIN
-              calculate_data_dirpix, Event
+              calculate_data_refpix, Event
               plot_average_data_peak_value, Event
             ENDIF
           ENDIF
@@ -307,7 +307,7 @@ PRO MAIN_BASE_event, Event
     end
     
     ;dirpix widget_text
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='data_geometry_dirpix_value_user'): BEGIN
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='info_refpix'): BEGIN
       coefficient = getUDCoefficient(Event)
       REFreduction_ManuallyMoveDataBackPeak, Event, 0
       
