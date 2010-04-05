@@ -57,7 +57,7 @@ PRO ok_polarization_state, Event
       (*global).data_path = list_pola_state[value_selected]
       nexus_file_name = (*global).data_nexus_full_path
       load_data_browse_nexus, Event, nexus_file_name, POLA_STATE=value_selected
-      populate_data_geometry_info, Event
+      populate_data_geometry_info, Event, nexus_file_name
     END
     'norm_browse': BEGIN
       (*global).norm_path = list_pola_state[value_selected]
@@ -75,7 +75,7 @@ PRO ok_polarization_state, Event
       (*global).data_path = list_pola_state[value_selected]
       nexus_file_name = (*global).data_nexus_full_path
       load_data_browse_nexus, Event, nexus_file_name, POLA_STATE=value_selected
-      populate_data_geometry_info, Event
+      populate_data_geometry_info, Event, nexus_file_name
     END
     'norm_load': BEGIN
       (*global).norm_path = list_pola_state[value_selected]

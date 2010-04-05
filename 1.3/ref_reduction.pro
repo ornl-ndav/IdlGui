@@ -256,7 +256,16 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 END
 
 
-; Empty stub procedure used for autoloading.
+;+
+; :Description:
+;   main procedure of program. Launch at startup
+;
+; :Keywords:
+;    GROUP_LEADER
+;    _EXTRA
+;
+; :Author: j35
+;-
 pro ref_reduction, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   ;check instrument here
