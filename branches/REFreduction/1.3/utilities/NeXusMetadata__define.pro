@@ -128,7 +128,7 @@ function NeXusMetadata::getDirpix
     pathID = h5d_open(self.fileID, path)
     dirpix = h5d_read(pathID)
     h5d_close, pathID
-    return, dirpix
+    return, strcompress(dirpix,/remove_all)
   endelse
 end
 

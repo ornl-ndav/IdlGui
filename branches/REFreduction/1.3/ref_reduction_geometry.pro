@@ -36,6 +36,47 @@ PRO populate_data_geometry_info, Event, nexus_file_name
 
   WIDGET_CONTROL,Event.top,get_uvalue=global
   
+  iNexus = obj_new('NeXusMetadata', nexus_file_name)
+  
+  ;get date and put it in place
+  date = iNexus->getDate()
+  putTextFieldValue, event, 'info_date', date
+  
+  ;get start
+  start_time = iNexus->getStart()
+  putTextFieldValue, event, 'info_start', start_time
+  
+  ;get end
+  end_time = iNexus->getEnd()
+  putTextFieldValue, event, 'info_end', end_time
+  
+  ;get duration
+  duration = iNexus->getDuration()
+  putTextFieldValue, event, 'info_duration', duration[0]
+  
+  ;proton charge
+  proton_charge = iNexus->getProtonCharge()
+  putTextfieldValue, event, 'info_proton_charge', proton_Charge[0]
+  
+  ;Dangle
+  dangle_units = iNexus->getDangle()
+  dangle = dangle_units[0] + ' ' + dangle_units[1]
+  putTextFieldValue, event, 'info_dangle', dangle
+  
+  ;Dangle0
+  dangle_units = iNexus->getDangle0()
+  dangle = dangle_units[0] + ' ' + dangle_units[1]
+  putTextFieldValue, event, 'info_dangle0', dangle
+  
+  ;dirpix
+  dirpix = iNexus->getDirpix()
+  putTextFieldValue, event, 'info_dirpix', dirpix[0]
+  
+  ;detector sample distance
+  dist_units = iNexus->getSampleDetDistance()
+  dist = dist_units[0] + ' ' + dist_units[1]
+  putTextFieldValue, event, 'info_detector_sample_distance', dist
+  
 END
 
 ;------------------------------------------------------------------------------
