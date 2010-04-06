@@ -34,18 +34,43 @@
 
 ;This function converts an angle from radian to degree
 FUNCTION convert_rad_to_deg, RadValue
-value1 = float(RadValue)*(float(180))
-value  = value1 / float(!PI)
-return, value
+  value1 = float(RadValue)*(float(180))
+  value  = value1 / float(!PI)
+  return, value
 END
 
 ;------------------------------------------------------------------------------
 ;This function converts a lenght from various units to millimetre
 FUNCTION convert_to_mm, value, units
-CASE (units) OF
-    'metre': coefficient = long(1./1000)
-    ELSE   : coefficient = 1
+  CASE (units) OF
+    'metre': coefficient = long(1000)
+  ELSE   : coefficient = 1
 ENDCASE
 RETURN, value*coefficient
 END
-    
+
+;+
+; :Description:
+;   convert into metres other distance units
+;
+; :Params:
+;    value
+;    units
+;
+; :Author: j35
+;-
+function convert_to_m, value, units
+  compile_opt idl2
+  
+  on_ioerror, error
+  float_value= float(value)
+  coefficient = 1.
+  case (units) of
+    'millimetre': coefficient = float(1./1000.)
+    else:
+  endcase
+  return, float_value * coefficient
+
+  error:
+  return, -1
+end

@@ -118,6 +118,8 @@ PRO calculate_data_refpix, Event
     putTextFieldValue, event, 'info_refpix', $
       STRCOMPRESS(refpix,/REMOVE_ALL), 0
       
+    calculate_sangle, event
+    
     RETURN
     
     done_calculation:
@@ -128,7 +130,6 @@ PRO calculate_data_refpix, Event
   ENDELSE
   
 END
-
 
 ;+
 ; :Description:
@@ -143,21 +144,48 @@ END
 pro calculate_sangle, event
   compile_opt idl2
   
-  on_ioerror, error
+  widget_control, event.top, get_uvalue=global
   
-  ;retrieve the various parameters used in the calculation of sangle
+  ;on_ioerror, error
+  
+  ;retrieve dirpix and refpix
   dirpix = getTextFieldValue(event,'info_dirpix')
-  f_dirpix = float(dirpix)
+  f_dirpix = float(dirpix[0])
+  print, 'f_dirpix: ' , f_dirpix
+  
   refpix = getTextFieldValue(event,'info_refpix')
-  f_refpix = float(refpix)
+  f_refpix = float(refpix[0])
+  print, 'f_refpix: ' , f_refpix
+  
+  ;get distance into metre
   detector_sample_distance = getTextFieldValue(event,$
     'info_detector_sample_distance')
-    
-    
-    
-    
-    
-    
+  distance_units = strsplit(detector_sample_distance[0],' ',/extract)
+  f_det_sample_distance = convert_to_m(distance_units[0], $
+    strcompress(distance_units[1],/remove_all))
+  if (f_det_sample_distance eq -1) then message, /ioerror
+  print, 'f_det_sample_distance: ' , f_det_sample_distance
+  
+  ;get dangle and dangle0 in radians
+  dangle = getTextFieldValue(event,'info_dangle')
+  dangle_rad = get_value_between_arg1_arg2(dangle[0], '\(', 'rad)')
+  f_dangle_rad = float(dangle_rad)
+  print, 'f_dangle_rad: ' , f_dangle_rad
+  
+  dangle0 = getTextFieldValue(event,'info_dangle0')
+  dangle0_rad = get_value_between_arg1_arg2(dangle0[0], '\(', 'rad)')
+  f_dangle0_rad = float(dangle0_rad)
+  print, 'f_dangle0_rad: ' , f_dangle0_rad
+  
+  ;get size of detectors
+  det_size_m = float((*global).detector_size_m)
+  
+  ;do the calculation
+  part1 = (f_dangle_rad - f_dangle0_rad)/2.
+  part2 = (f_dirpix - 
+  
+  
+  
   error:
   sangle = 'N/A'
   putTextFieldValue, event, 'info_sangle', sangle

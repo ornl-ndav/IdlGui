@@ -83,7 +83,7 @@ end
 
 ; :Author: j35
 ;-
-function get_value_between_arg1_arg2, base_string, arg1, arg2
+function NeXusMetadata_get_value_between_arg1_arg2, base_string, arg1, arg2
   compile_opt idl2
   
   Split1 = strsplit(base_string,arg1,/EXTRACT,/REGEX,COUNT=length)
@@ -114,7 +114,7 @@ function NeXusMetadata::getBinSize
     cmd = h5d_read(pathID_value)
     h5d_close, pathID_value
     
-    value = get_value_between_arg1_arg2(cmd[0], '-l ','--state')
+    value = NeXusMetadata_get_value_between_arg1_arg2(cmd[0], '-l ','--state')
     return, strcompress(value,/remove_all)
   endelse
 end

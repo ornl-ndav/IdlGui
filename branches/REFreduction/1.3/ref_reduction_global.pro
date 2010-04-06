@@ -45,6 +45,7 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
   WITH_JOB_MANAGER = file->getValue(tag=['configuration','with_job_manager'])
   CHECKING_PACKAGES = file->getValue(tag=['configuration','checking_packages'])
   DEBUGGING_ON_MAC = file->getValue(tag=['configuration','debugging_on_mac'])
+  detector_size_m = file->getValue(tag=['configuration','detector_size_m'])
   
   debugging_structure = getDebuggingStructure()
   
@@ -79,6 +80,9 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     spin_state_config: [1b,0b,1b,0b],$
     list_of_output_file_name: ptr_new(0L),$
     first_ref_m_file_to_plot: -1,$
+    
+    ;sangle caluclation
+    detector_size_m: '',$
     
     ;auto cleaning
     percentage_of_q_to_remove_value: 10,$
