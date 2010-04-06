@@ -463,3 +463,36 @@ function GetMajorRunNumber_ref_m, Event
   MajorRun = MajorRunsArray[0]
   RETURN, MajorRun
 END
+
+;+
+; :Description:
+;   returns the string between two arguments
+;
+; :Params:
+;    base_string
+;    arg1
+;    arg2
+
+; :Author: j35
+;-
+function get_value_between_arg1_arg2, base_string, arg1, arg2
+  compile_opt idl2
+  
+help, base_string
+help, arg1
+help, arg2
+print, base_string
+print, arg1
+print, arg2
+  
+  Split1 = strsplit(base_string[0],arg1,/EXTRACT,/REGEX,COUNT=length)
+  help, split1
+  if (length GT 1) then begin
+  
+    Split2 = strsplit(Split1[1],arg2,/EXTRACT,/REGEX)
+    help, split2
+    return, Split2[0]
+  endif else begin
+    return, ''
+  endelse
+end
