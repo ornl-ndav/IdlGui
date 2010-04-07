@@ -146,16 +146,16 @@ pro calculate_sangle, event
   
   widget_control, event.top, get_uvalue=global
   
-  ;on_ioerror, error
+  on_ioerror, error
   
   ;retrieve dirpix and refpix
   dirpix = getTextFieldValue(event,'info_dirpix')
   f_dirpix = float(dirpix[0])
-  print, 'f_dirpix: ' , f_dirpix
+  ;print, 'f_dirpix: ' , f_dirpix
   
   refpix = getTextFieldValue(event,'info_refpix')
   f_refpix = float(refpix[0])
-  print, 'f_refpix: ' , f_refpix
+  ;print, 'f_refpix: ' , f_refpix
   
   ;get distance into metre
   detector_sample_distance = getTextFieldValue(event,$
@@ -164,36 +164,28 @@ pro calculate_sangle, event
   f_det_sample_distance = convert_to_m(distance_units[0], $
     strcompress(distance_units[1],/remove_all))
   if (f_det_sample_distance eq -1) then message, /ioerror
-  print, 'f_det_sample_distance: ' , f_det_sample_distance
+  ;print, 'f_det_sample_distance: ' , f_det_sample_distance
   
   ;get dangle and dangle0 in radians
   dangle = getTextFieldValue(event,'info_dangle')
   dangle_rad = get_value_between_arg1_arg2(dangle[0], '\(', 'rad)')
   f_dangle_rad = float(dangle_rad)
-  print, 'f_dangle_rad: ' , f_dangle_rad
+  ;print, 'f_dangle_rad: ' , f_dangle_rad
   
   dangle0 = getTextFieldValue(event,'info_dangle0')
   dangle0_rad = get_value_between_arg1_arg2(dangle0[0], '\(', 'rad)')
   f_dangle0_rad = float(dangle0_rad)
-  print, 'f_dangle0_rad: ' , f_dangle0_rad
+  ;print, 'f_dangle0_rad: ' , f_dangle0_rad
   
   ;get size of detectors
   det_size_m = float((*global).detector_size_m)
-  print, 'det_size_m: ' , det_size_m
+  ;print, 'det_size_m: ' , det_size_m
   
   ;do the calculation
-  print, '===='
   part1 = (f_dangle_rad - f_dangle0_rad)/2.
-  print, part1
   part2 = (f_dirpix - f_refpix) * det_size_m
-  print, part2
   part3 = 2. * f_det_sample_distance
-  print, part3
-  print,' ======'
-  help, part1
-  help, part2
-  help, part3
-  
+
   rad_sangle = part1 + (part2/part3)
   deg_sangle = convert_rad_to_deg(rad_sangle)
   
