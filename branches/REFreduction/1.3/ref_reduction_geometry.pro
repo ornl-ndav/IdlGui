@@ -179,12 +179,28 @@ pro calculate_sangle, event
   
   ;get size of detectors
   det_size_m = float((*global).detector_size_m)
+  print, 'det_size_m: ' , det_size_m
   
   ;do the calculation
+  print, '===='
   part1 = (f_dangle_rad - f_dangle0_rad)/2.
-  part2 = (f_dirpix - 
+  print, part1
+  part2 = (f_dirpix - f_refpix) * det_size_m
+  print, part2
+  part3 = 2. * f_det_sample_distance
+  print, part3
+  print,' ======'
+  help, part1
+  help, part2
+  help, part3
   
+  rad_sangle = part1 + (part2/part3)
+  deg_sangle = convert_rad_to_deg(rad_sangle)
   
+  sangle = strcompress(deg_sangle,/remove_all) + ' degrees (' + $
+  strcompress(rad_sangle,/remove_all) + ' rad)' 
+  putTextFieldValue, event, 'info_sangle', sangle
+  return
   
   error:
   sangle = 'N/A'
