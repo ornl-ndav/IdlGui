@@ -91,7 +91,8 @@ PRO calculate_data_refpix, Event
 
   WIDGET_CONTROL,Event.top,get_uvalue=global
   
-  CATCH, error
+  ;CATCH, error
+  error = 0
   IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
     refpix = 'N/A'
@@ -146,7 +147,7 @@ pro calculate_sangle, event
   
   widget_control, event.top, get_uvalue=global
   
-  on_ioerror, error
+  ;on_ioerror, error
   
   ;retrieve dirpix and refpix
   dirpix = getTextFieldValue(event,'info_dirpix')
