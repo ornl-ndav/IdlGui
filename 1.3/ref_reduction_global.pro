@@ -82,7 +82,7 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     first_ref_m_file_to_plot: -1,$
     
     ;sangle caluclation
-    detector_size_m: '',$
+    detector_size_m: detector_size_m,$
     
     ;auto cleaning
     percentage_of_q_to_remove_value: 10,$
