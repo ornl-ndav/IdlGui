@@ -252,7 +252,6 @@ PRO MAIN_BASE_event, Event
           ENDIF
           IF (Event.type EQ 2) THEN BEGIN ;move
             REFreduction_DataSelectionMove, Event
-          ;           calculate_data_dirpix, Event
           ENDIF
         ENDIF
         
@@ -307,7 +306,7 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='data_roi_load_button'): begin
       REFreduction_LoadDataROISelection, Event
       IF ((*global).instrument EQ 'REF_M') THEN BEGIN
-        calculate_data_dirpix, Event
+        calculate_data_refpix, Event
       ENDIF
     end
     
