@@ -272,6 +272,11 @@ PRO MAIN_BASE_event, Event
       REFreduction_ZoomRescaleData, Event
     end
     
+    ;Nexus Information
+    widget_info(wWidget, find_by_uname='info_dirpix'): begin
+      calculate_sangle, event
+    end
+    
     ;ROI Ymin and Ymax --------------------------------------------------------
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME= $
@@ -310,12 +315,7 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='info_refpix'): BEGIN
       coefficient = getUDCoefficient(Event)
       REFreduction_ManuallyMoveDataBackPeak, Event, 0
-      
-    ;REFreduction_DataSelectionMove, event
-    ;REFReduction_RescaleDataPlot, Event
-    ;dirpix = getTextFieldValue(Event,'data_geometry_dirpix_value_user')
-    ;(*global).dirpix = FLOAT(dirpix)
-    ;plot_average_data_peak_value, Event
+      calculate_sangle, event
     END
     
     ;Peak Ymin and Ymax -------------------------------------------------------
@@ -1764,7 +1764,7 @@ PRO MAIN_BASE_event, Event
     ;;Main table
     WIDGET_INFO(wWidget, FIND_BY_UNAME='batch_table_widget'): begin
       status = 0
-            
+      
       if ((*global).instrument eq 'REF_L') then begin
         ;continue only if the table is not empty
         BatchTable = (*(*global).BatchTable)
@@ -1835,9 +1835,9 @@ PRO MAIN_BASE_event, Event
     ;;Delete Selection
     WIDGET_INFO(wWidget, FIND_BY_UNAME='delete_selection_button'): begin
       if ((*global).instrument eq 'REF_L') then begin
-      BatchTab_DeleteSelection, Event
+        BatchTab_DeleteSelection, Event
       endif else begin
-      BatchTab_DeleteSelection_ref_m, Event
+        BatchTab_DeleteSelection_ref_m, Event
       endelse
       SaveDataNormInputValues, Event
     end
