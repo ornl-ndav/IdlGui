@@ -117,7 +117,7 @@ PRO REFreduction_DataBackgroundPeakSelection, Event, TYPE
     ;refresh value of cw_fields
     putDataBackgroundPeakYMinMaxValueInTextFields, Event
     
-    calculate_data_dirpix, Event
+    calculate_data_refpix, Event
     
     ;Replot selection selected
     ReplotAllSelection, Event

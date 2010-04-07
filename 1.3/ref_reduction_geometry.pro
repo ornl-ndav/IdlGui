@@ -147,7 +147,7 @@ pro calculate_sangle, event
   
   widget_control, event.top, get_uvalue=global
   
-  ;on_ioerror, error
+  on_ioerror, error
   
   ;retrieve dirpix and refpix
   dirpix = getTextFieldValue(event,'info_dirpix')

@@ -83,7 +83,7 @@ PRO BatchTab_ChangeDataNormRunNumber, Event
     IF (data_runs NE '') THEN BEGIN
       DataNexus = getNexusFromRunArray(Event, data_runs, $
         (*global).instrument, $
-        SOURCE_FILE = 'data')
+        SOURCE_FILE='data')
       (*(*global).batch_data_runs) = data_runs
       (*(*global).batch_DataNexus) = DataNexus
       ;check that the NeXus have the same angle, S1 and S2 values
