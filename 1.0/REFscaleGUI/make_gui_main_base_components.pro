@@ -293,9 +293,30 @@ PRO MakeGuiMainBaseComponents, MAIN_BASE, StepsTabSize
     UNAME     = 'ResetButton',$
     VALUE     = 'Reset X/Y')
     
+  ;spin states base
+  spin_state = widget_base(MAIN_BASE,$
+  xoffset = sSettingsBase.size[0],$
+  yoffset = sSettingsBase.size[1]+35,$
+  /row,$
+  map = 1,$
+  /nonexclusive)
+    
+  off_off = widget_button(spin_state,$
+  value = 'Off_Off',$
+  uname = 'off_off')
+  off_on = widget_button(spin_state,$
+  value = 'Off_On',$
+  uname = 'off_on')
+  on_off = widget_button(spin_state,$
+  value = 'On_Off',$
+  uname = 'on_off')
+  on_on = widget_button(spin_state,$
+  value = 'On_On',$
+  uname = 'on_on')
+    
   ;settings button
   settings = widget_button(MAIN_BASE,$
-  xoffset = sSettingsBase.size[0],$
+  xoffset = sSettingsBase.size[0]+330,$
   yoffset = sSettingsBase.size[1]+35,$
   xsize = 200,$
   value = 'Settings ...',$
