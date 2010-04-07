@@ -65,6 +65,10 @@ putValueInLabel, Event, 'output_short_file_name', '';_put
 ;update the various labels below
 output_file_name_value, event
 
+;reset spin states
+(*(*global).data_spin_state) = strarr(1)
+(*(*global).norm_spin_state) = strarr(1)
+
 ;putValueInLabel, Event, 'output_file_text_field', '' ;_put
 ;ActivateSettingsBase, Event, 0 ;_gui
 ResetBatch, Event ;_batch

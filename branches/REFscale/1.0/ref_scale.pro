@@ -79,6 +79,9 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ;email where to send the output files
     email: '',$
     
+    data_spin_state: ptr_new(0L), $ ;list of data spin states loaded
+    norm_spin_state: ptr_new(0L), $ ;list of norm spin states loaded
+    
     BatchExtension:         '.txt',$
     BatchTable:             PTR_NEW(0L),$
     BatchDefaultPath:       '~/results/',$
@@ -167,6 +170,8 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ColorSliderDefaultValue = (*global).ColorSliderDefaultValue
   color_array[0]     = ColorSliderDefaultValue
   ListOfLongFileName = STRARR(1)
+  data_spin_state = STRARR(1)
+  norm_spin_state = STRARR(1)
   
   (*(*global).CEcooef)            = CEcooef
   (*(*global).FileHistory)        = FileHistory
@@ -182,6 +187,8 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   (*(*global).metadata_CE_file)   = metadata_CE_file
   (*global).ucams                 = ucams
   (*(*global).BatchTable)         = STRARR(10,50)
+  (*(*global).data_spin_state)     = data_spin_state
+  (*(*global).norm_spin_state)     = norm_spin_state
   
   IF (!VERSION.os EQ 'darwin') THEN BEGIN
     (*global).input_path = '~/tmp/'

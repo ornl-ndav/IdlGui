@@ -157,7 +157,7 @@ PRO UpdateBatchTable, Event, BatchTable
   ;display information from column 2/3/8/7 (in this order)
   NewTable = STRARR(5,20)
   ;help, BatchTable ;remove_me
-  ;print, BatchTable ;remove_me
+  print, BatchTable ;remove_me
   NewTable[0,*] = BatchTable[0,*]
   NewTable[1,*] = BatchTable[1,*]
   NewTable[2,*] = BatchTable[2,*]
@@ -308,6 +308,9 @@ PRO ref_scale_LoadBatchFile, Event
     (*(*global).BatchTable) = BatchTable
     ;Update Batch Tab and put BatchTable there
     UpdateBatchTable, Event, BatchTable
+    
+    stop
+    
     ;Retrieve List of Data Reduction files
     DRfiles = retrieveDRfiles(Event, BatchTable)
     ;Check that all the files exist
