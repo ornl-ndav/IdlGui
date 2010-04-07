@@ -63,21 +63,22 @@ PRO run_command_line_ref_m, event
   ;indicate initialization with hourglass icon
   WIDGET_CONTROL,/hourglass
   
-  IF (~isWithDataInstrumentGeometryOverwrite(Event) AND $
-    (*global).dirpix_geometry NE '' AND $
-    (*global).cvinfo NE '') THEN BEGIN ;use tmp geo
-    geo_cmd = (*global).ts_geom
-    geo_cmd += ' ' + (*global).REF_M_geom
-    ;      geo_cmd += ' ' + (*global).dirpix_geometry
-    geo_cmd += ' -m ' + (*global).cvinfo
-    geo_cmd += ' -D DIRPIX=' + STRCOMPRESS((*global).dirpix,/REMOVE_ALL)
-    geo_cmd += ' -o ' + (*global).tmp_geometry_file
-    cmd_text = 'Running geometry generator:'
-    putLogBookMessage, Event, cmd_text, Append=1
-    cmd_text = '-> ' + geo_cmd
-    putLogBookMessage, Event, cmd_text, Append=1
-    SPAWN, geo_cmd, listening, err_listening
-  ENDIF
+  geo_cmd = (*global).ts_geom
+  geo_cmd += ' ' + (*global).REF_M_geom
+  geo_cmd += ' -m ' + (*global).cvinfo
+  
+  ;get dirpix and refpix values
+  dirpix = float(getTextFieldValue(event,'info_dirpix'))
+  refpix = float(getTextFieldValue(event,'info_refpix'))
+    
+  geo_cmd += ' -D DIRPIX=' + strcompress(dirpix,/remove_all)
+  geo_cmd += ' -D REFPIX=' + strcompress(refpix,/remove_all)
+  geo_cmd += ' -o ' + (*global).tmp_geometry_file
+  cmd_text = 'Running geometry generator:'
+  putLogBookMessage, Event, cmd_text, Append=1
+  cmd_text = '-> ' + geo_cmd
+  putLogBookMessage, Event, cmd_text, Append=1
+  SPAWN, geo_cmd, listening, err_listening
   
   status_text = 'Create temp. geometry .... DONE'
   putTextFieldValue, event, 'data_reduction_status_text_field', status_text, 0
@@ -101,7 +102,7 @@ PRO run_command_line_ref_m, event
     cmd_text = '......... ' + PROCESSING
     putLogBookMessage, Event, cmd_text, Append=1
     
-    ;spawn, cmd[index], listening, err_listening ;REMOVE_ME
+    spawn, cmd[index], listening, err_listening ;REMOVE_ME
     
     IF (err_listening[0] NE '') THEN BEGIN
     
