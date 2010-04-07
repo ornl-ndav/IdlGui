@@ -137,6 +137,7 @@ FUNCTION retrieveDRfiles, Event, BatchTable
       outputFileName = iRow->getOutputFileName()
       DRfiles[j++] = outputPath + outputFileName
     ENDIF
+    obj_destroy, iRow
   ENDFOR
   RETURN,DRfiles
 END
@@ -309,36 +310,41 @@ PRO ref_scale_LoadBatchFile, Event
     ;Update Batch Tab and put BatchTable there
     UpdateBatchTable, Event, BatchTable
     
-    stop
+    if ((*global).working_with_ref_m_batch) then begin ;ref_m batch file
     
-    ;Retrieve List of Data Reduction files
-    DRfiles = retrieveDRfiles(Event, BatchTable)
-    ;Check that all the files exist
-    FileStatus = CheckFilesExist(Event, DRfiles)
-    IF (FileStatus EQ 1) THEN BEGIN ;continue loading process
-      ;Repopulate GUI
-      result = batch_repopulate_gui(Event, DRfiles)
-      IF (result EQ 1) THEN BEGIN
-        LogText = '> Loading Batch File ' + BatchFileName + ' ... OK'
-        idl_send_to_geek_addLogBookText, Event, LogText
-        refresh_bash_file_status = 1
-      ENDIF ELSE BEGIN
+      DRfiles = retrieveDRfiles_ref_m(event, BatchTable)
+      
+    endif else begin ;ref_l batch file
+    
+      ;Retrieve List of Data Reduction files
+      DRfiles = retrieveDRfiles(Event, BatchTable)
+      ;Check that all the files exist
+      FileStatus = CheckFilesExist(Event, DRfiles)
+      IF (FileStatus EQ 1) THEN BEGIN ;continue loading process
+        ;Repopulate GUI
+        result = batch_repopulate_gui(Event, DRfiles)
+        IF (result EQ 1) THEN BEGIN
+          LogText = '> Loading Batch File ' + BatchFileName + ' ... OK'
+          idl_send_to_geek_addLogBookText, Event, LogText
+          refresh_bash_file_status = 1
+        ENDIF ELSE BEGIN
+          LogText = '> Loading Batch File ' + BatchFileName + ' ... FAILED'
+          idl_send_to_geek_addLogBookText, Event, LogText
+          LogText = '-> This can be due to the fact that 1 or more ' + $
+            'of the DR files does not exist !'
+          idl_send_to_geek_addLogBookText, Event, LogText
+          refresh_bash_file_status = 0 ;enable REFRESH and SAVE AS Bash File
+        ENDELSE
+      ENDIF ELSE BEGIN            ;stop loading process
         LogText = '> Loading Batch File ' + BatchFileName + ' ... FAILED'
         idl_send_to_geek_addLogBookText, Event, LogText
-        LogText = '-> This can be due to the fact that 1 or more ' + $
-          'of the DR files does not exist !'
+        LogText = '-> This can be due to the fact that 1 or more of the ' + $
+          ' DR files does not exist !'
         idl_send_to_geek_addLogBookText, Event, LogText
-        refresh_bash_file_status = 0 ;enable REFRESH and SAVE AS Bash File
+        refresh_bash_file_status = 0 ;enable REFRESH and SAVE AS Bash Fil
+        reset_all_button, Event
       ENDELSE
-    ENDIF ELSE BEGIN            ;stop loading process
-      LogText = '> Loading Batch File ' + BatchFileName + ' ... FAILED'
-      idl_send_to_geek_addLogBookText, Event, LogText
-      LogText = '-> This can be due to the fact that 1 or more of the ' + $
-        ' DR files does not exist !'
-      idl_send_to_geek_addLogBookText, Event, LogText
-      refresh_bash_file_status = 0 ;enable REFRESH and SAVE AS Bash Fil
-      reset_all_button, Event
-    ENDELSE
+    endelse
   ENDIF ELSE BEGIN
     ;disable REFRESH and SAVE AS Bash File
     refresh_bash_file_status = 0

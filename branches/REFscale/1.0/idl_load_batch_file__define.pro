@@ -183,6 +183,7 @@ FUNCTION PopulateBatchTable, Event, BatchFileName
               if (data_error ne 0) then begin
                 catch,/cancel
               endif else begin
+                (*global).working_with_ref_m_batch = 1b
                 spinState = SplitArray[1]
                 add_data_spin_state, event, spinState
               endelse
