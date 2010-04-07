@@ -101,6 +101,7 @@ cd, CurrentFolder
 ;Batch
 .run idl_load_batch_file__define.pro
 .run idl_create_batch_file__define.pro
+.run retrieve_dr_files_ref_m.pro
 .run ref_scale_batch.pro
 .run idl_parse_command_line__define.pro
 .run auto_full_scaling_from_batch_file.pro

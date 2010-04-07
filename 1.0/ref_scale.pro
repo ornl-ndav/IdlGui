@@ -81,6 +81,7 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
     data_spin_state: ptr_new(0L), $ ;list of data spin states loaded
     norm_spin_state: ptr_new(0L), $ ;list of norm spin states loaded
+    working_with_ref_m_batch: 0b, $ ;1 if file batch loaded is REF_M
     
     BatchExtension:         '.txt',$
     BatchTable:             PTR_NEW(0L),$
