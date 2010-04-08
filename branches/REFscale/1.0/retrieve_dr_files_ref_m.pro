@@ -50,13 +50,9 @@ function retrieveDRfiles_ref_m, event, BatchTable
   
   ;check number of spin states to load
   widget_control, event.top, get_uvalue=global
-  data_spin_states = (*global).data_spin_state
-  nbr_spin_states = 1
-  if (data_spin_states[0] ne '') then begin
-    spin = strsplit(data_spin_states,'/',/extract,count=nbr)
-    nbr_spin_states = nbr
-  endif
-  
+  data_spin_states = (*(*global).data_spin_state)
+  nbr_spin_states = n_elements(data_spin_states)
+
   ;Create array of list of files
   DRfiles = STRARR(nbr_spin_states, NbrDrFiles)
   ;get for each row the path/output_file_name
@@ -68,14 +64,16 @@ function retrieveDRfiles_ref_m, event, BatchTable
       outputFileName = iRow->getOutputFileName()
       
       path_split = strsplit(outputPath,' ',/extract,count=nbr)
-      file_split = strsplit(outputFileName,' ',/extraxt)
+      file_split = strsplit(outputFileName,' ',/extract)
       index = 0
+      
       while (index lt nbr) do begin
-        DRfiles[index,j++] = path_split[index] + file_split[index]
+        DRfiles[index,j] = path_split[index] + file_split[index]
         index++
       endwhile
     ENDIF
     obj_destroy, iRow
+    j++
   ENDFOR
   
   return, DRfiles

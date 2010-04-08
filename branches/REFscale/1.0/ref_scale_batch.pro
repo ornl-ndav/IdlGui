@@ -157,8 +157,6 @@ END
 PRO UpdateBatchTable, Event, BatchTable
   ;display information from column 2/3/8/7 (in this order)
   NewTable = STRARR(5,20)
-  ;help, BatchTable ;remove_me
-  print, BatchTable ;remove_me
   NewTable[0,*] = BatchTable[0,*]
   NewTable[1,*] = BatchTable[1,*]
   NewTable[2,*] = BatchTable[2,*]
@@ -304,7 +302,7 @@ PRO ref_scale_LoadBatchFile, Event
     ;put name of batch file in text field
     putValueInTextField, Event, 'load_batch_file_text_field', BatchFileName
     ;retrieve BatchTable
-    iTable     = OBJ_NEW('idl_load_batch_file', BatchFileName, Event)
+    iTable = OBJ_NEW('idl_load_batch_file', BatchFileName, Event)
     BatchTable = iTable->getBatchTable()
     (*(*global).BatchTable) = BatchTable
     ;Update Batch Tab and put BatchTable there
@@ -313,6 +311,9 @@ PRO ref_scale_LoadBatchFile, Event
     if ((*global).working_with_ref_m_batch) then begin ;ref_m batch file
     
       DRfiles = retrieveDRfiles_ref_m(event, BatchTable)
+      
+      help, DRfiles
+      print, DRfiles
       
     endif else begin ;ref_l batch file
     
@@ -344,29 +345,54 @@ PRO ref_scale_LoadBatchFile, Event
         refresh_bash_file_status = 0 ;enable REFRESH and SAVE AS Bash Fil
         reset_all_button, Event
       ENDELSE
+      
+      ActivateWidget, Event, 'ref_scale_refresh_batch_file', refresh_bash_file_status
+      ActivateWidget, Event, 'ref_scale_save_as_batch_file', refresh_bash_file_status
+      ActivateWidget, Event, 'batch_preview_button', refresh_bash_file_status
+      IF (refresh_bash_file_status) THEN BEGIN ;loading was successfull
+        ;this function updates the output file name
+        update_output_file_name_from_batch, Event ;_output
+      ENDIF ELSE BEGIN
+        putValueInLabel, Event, 'output_short_file_name', ''; _put
+        message = ['The loading of ' + BatchFileName + ' did not work !',$
+          'Check the Log Book !']
+        title   = 'Problem Loading the Batch File!'
+        dialog_id = widget_info(event.top, find_by_uname='MAIN_BASE_ref_scale')
+        result = DIALOG_MESSAGE(message,$
+          TITLE=title,$
+          /error,$
+          /center,$
+          dialog_parent=dialog_id)
+      ENDELSE
+      
     endelse
+    
+    
+    
   ENDIF ELSE BEGIN
     ;disable REFRESH and SAVE AS Bash File
     refresh_bash_file_status = 0
   ENDELSE
-  ActivateWidget, Event, 'ref_scale_refresh_batch_file', refresh_bash_file_status
-  ActivateWidget, Event, 'ref_scale_save_as_batch_file', refresh_bash_file_status
-  ActivateWidget, Event, 'batch_preview_button', refresh_bash_file_status
-  IF (refresh_bash_file_status) THEN BEGIN ;loading was successfull
-    ;this function updates the output file name
-    update_output_file_name_from_batch, Event ;_output
-  ENDIF ELSE BEGIN
-    putValueInLabel, Event, 'output_short_file_name', ''; _put
-    message = ['The loading of ' + BatchFileName + ' did not work !',$
-      'Check the Log Book !']
-    title   = 'Problem Loading the Batch File!'
-    dialog_id = widget_info(event.top, find_by_uname='MAIN_BASE_ref_scale')
-    result = DIALOG_MESSAGE(message,$
-      TITLE=title,$
-      /error,$
-      /center,$
-      dialog_parent=dialog_id)
-  ENDELSE
+  
+  
+;  ActivateWidget, Event, 'ref_scale_refresh_batch_file', refresh_bash_file_status
+;  ActivateWidget, Event, 'ref_scale_save_as_batch_file', refresh_bash_file_status
+;  ActivateWidget, Event, 'batch_preview_button', refresh_bash_file_status
+;  IF (refresh_bash_file_status) THEN BEGIN ;loading was successfull
+;    ;this function updates the output file name
+;    update_output_file_name_from_batch, Event ;_output
+;  ENDIF ELSE BEGIN
+;    putValueInLabel, Event, 'output_short_file_name', ''; _put
+;    message = ['The loading of ' + BatchFileName + ' did not work !',$
+;      'Check the Log Book !']
+;    title   = 'Problem Loading the Batch File!'
+;    dialog_id = widget_info(event.top, find_by_uname='MAIN_BASE_ref_scale')
+;    result = DIALOG_MESSAGE(message,$
+;      TITLE=title,$
+;      /error,$
+;      /center,$
+;      dialog_parent=dialog_id)
+;  ENDELSE
 END
 
 ;==============================================================================
