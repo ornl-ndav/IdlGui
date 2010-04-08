@@ -68,6 +68,7 @@ PRO reset_all_button, Event
   ;reset spin states
   (*(*global).data_spin_state) = strarr(1)
   (*(*global).norm_spin_state) = strarr(1)
+  (*(*global).list_of_spins_for_each_angle) = ptr_new(0L)
   uname = ['off_off','off_on','on_off','on_on']
   for i=0, 3 do begin
     ActivateWidget, event, uname[i], 0

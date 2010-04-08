@@ -46,3 +46,21 @@ FUNCTION getButtonValue, Event, uname
   RETURN, value
 END
 
+;+
+; :Description:
+;   This functions returns the number of spin states used for the first angle
+;   (1,2,3 or 4)
+;
+; :Params:
+;    data_spin_states
+;
+; :Author: j35
+;-
+function get_number_of_spin_states_per_angle, data_spin_states
+  compile_opt idl2
+  
+  first_run = data_spin_states[0]
+  spins = strsplit(first_run,'/',/extract,count=nbr)
+  return, nbr
+  
+end
