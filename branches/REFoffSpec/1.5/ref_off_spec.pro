@@ -44,8 +44,6 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;get the current folder
   CD, CURRENT = current_folder
  
-; Change code (RC Ward, Mar 14, 2010): Specify location of configuration file for testing code
-;   file = OBJ_NEW('idlxmlparser', '/SNS/users/rwd/IDLWorkspace71/REFoffSpec1.5/.REFoffSpec.cfg')
   file = OBJ_NEW('idlxmlparser', '.REFoffSpec.cfg')
   ;============================================================================
   ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
@@ -91,8 +89,10 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   BACKGROUND_COLOR = file->getValue(tag=['configuration','CurvePlot','BackgroundColor'])
   CESELECT_VERTLINE_COLOR = file->getValue(tag=['configuration','CurvePlot','CESelect','VerticalLineColor'])
   SELECT_COLOR = file->getValue(tag=['configuration','CurvePlot','CESelect','SelectColor'])
-  PIXELS_YVALUE = file->getValue(tag=['configuration','Detector','Pixels_YValue'])
-  PIXELS_XVALUE = file->getValue(tag=['configuration','Detector','Pixels_XValue'])
+  PIXELS_YNUMBER = file->getValue(tag=['configuration','Detector','Pixels_YNumber'])
+  PIXELS_XNUMBER = file->getValue(tag=['configuration','Detector','Pixels_XNumber'])
+  PIXELS_YSIZE = file->getValue(tag=['configuration','Detector','Pixels_YSize'])
+  NUMBER_OF_SANGLE = file->getValue(tag=['configuration','Detector','Number_of_Sangle'])
   DATA_COLOR = file->getValue(tag=['configuration','ReflectivityPlot','DataColor'])
   ERROR_COLOR = file->getValue(tag=['configuration','ReflectivityPlot','ErrorColor'])
   ZOOMBOX_COLOR = file->getValue(tag=['configuration','ReflectivityPlot','ZoomBoxColor'])
@@ -100,6 +100,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   HORIZONTAL_COLOR = file->getValue(tag=['configuration','ReflectivityPlot','HorizontalColor'])
   AVERAGE_COLOR = file->getValue(tag=['configuration','ReflectivityPlot','AverageColor'])
   REFPIX_LOAD = file->getValue(tag=['configuration','Shifting','RefPixLoad'])
+  APPLY_TOF_CUTOFFS = file->getValue(tag=['configuration','TOFCuttoffs','ApplyTOFCutoffs'])
   TOF_CUTOFF_MIN = file->getValue(tag=['configuration','TOFCuttoffs','TOFCutoffMin'])
   TOF_CUTOFF_MAX = file->getValue(tag=['configuration','TOFCuttoffs','TOFCutoffMax'])
  ; Note: YSIZE_DRAW and Pixels_XValue are not presently used in the code 
@@ -190,8 +191,11 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ref_plot_average_color: AVERAGE_COLOR,$
                     
     ; Code change RCW (Feb 10, 2010): get detector pixels in X and Y directions from XML config file
-    detector_pixels_x: LONG(PIXELS_XVALUE),$
-    detector_pixels_y: LONG(PIXELS_YVALUE),$
+    detector_pixels_x: LONG(PIXELS_XNUMBER),$
+    detector_pixels_y: LONG(PIXELS_YNUMBER),$
+    ; Code change RCW (Apr 6, 2010): get detector pixels size in Y direction from XML config file
+    detector_pixels_size_y: PIXELS_YSIZE, $
+    number_of_sangle: NUMBER_OF_SANGLE, $
     
    ; Code change (RC Ward Feb 18,2010): Get flag to automatically load RefPix values for Shifting step
     RefPixLoad: REFPIX_LOAD, $
@@ -200,6 +204,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     color_table: COLOR_TABLE,$  
     
    ; Code change (RC Ward, Mar 2, 2010): Get tof_cutoff_min and tof_cutoff_max values from the XML config file
+   apply_tof_cutoffs: APPLY_TOF_CUTOFFS, $
    tof_cutoff_min: TOF_CUTOFF_MIN, $
    tof_cutoff_max: TOF_CUTOFF_MAX, $
 
@@ -240,9 +245,9 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ; Code change RCW (Feb 8, 2010): get value of xsize_draw from XML config file  
 ;    sangle_xsize_draw: 845., $
     sangle_xsize_draw: XSIZE_DRAW, $
-; Code change RCW (Feb 10, 2010): gset xsize_draw to 2*PIXELS_YVALUE from XML config file  
+; Code change RCW (Feb 10, 2010): gset xsize_draw to 2*PIXELS_YNUMBER from XML config file  
 ;    sangle_ysize_draw: 608., $
-    sangle_ysize_draw: 2*PIXELS_YVALUE, $
+    sangle_ysize_draw: 2*PIXELS_YNUMBER, $
     sangle_help_xsize_draw: 255, $
     sangle_help_ysize_draw: 215, $
     sangle_main_plot_congrid_x_coeff: 0.,$
@@ -258,19 +263,33 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     sangle_zoom_xy_minmax: FLTARR(4),$ ;corners of zoom sangle help plot box
     sangle_current_zoom_para: FLTARR(4), $ ;para used for current zoom plot
     zoom_left_click_pressed: 0b, $ ;boolean button pressed or not (zoom help)
-    
-    reduce_step1_spin_match_disable: $
-    'REFoffSpec_images/spin_states_match_button_unselected.png',$
-    reduce_step1_spin_match_enable: $
-    'REFoffSpec_images/spin_states_match_button_selected.png',$
-    reduce_step1_spin_do_not_match_fixed_disable: $
-    'REFoffSpec_images/spin_states_do_not_match_fixed_unselected.png',$
-    reduce_step1_spin_do_not_match_fixed_enable: $
-    'REFoffSpec_images/spin_states_do_not_match_fixed_selected.png',$
-    reduce_step1_spin_do_not_match_user_defined_disable: $
-    'REFoffSpec_images/spin_states_do_not_match_user_defined_unselected.png',$
-    reduce_step1_spin_do_not_match_user_defined_enable: $
-    'REFoffSpec_images/spin_states_do_not_match_user_defined_selected.png',$
+
+; Code change (RC Ward, March 24, 2010): Change images used for setting spin matching for data/norm    
+    Spins_Not_Matching_Enable: $
+       'REFoffSpec_images/Spins_Not_Matching_Enable.png',$
+    Spins_Not_Matching_Disable: $
+       'REFoffSpec_images/Spins_Not_Matching_Disable.png',$     
+    Spins_Matching_Enable: $
+       'REFoffSpec_images/Spins_Matching_Enable.png',$
+    Spins_Matching_Disable: $
+       'REFoffSpec_images/Spins_Matching_Disable.png',$
+    User_Defined_Spins_Matching_Enable: $
+       'REFoffSpec_images/User_Defined_Spins_Matching_Enable.png', $
+    User_Defined_Spins_Matching_Disable: $
+       'REFoffSpec_images/User_Defined_Spins_Matching_Disable.png', $
+; These are the old images used for setting spin matching for data/norm
+;    reduce_step1_spin_match_disable: $
+;    'REFoffSpec_images/spin_states_match_button_unselected.png',$
+;    reduce_step1_spin_match_enable: $
+;    'REFoffSpec_images/spin_states_match_button_selected.png',$
+;    reduce_step1_spin_do_not_match_fixed_disable: $
+;    'REFoffSpec_images/spin_states_do_not_match_fixed_unselected.png',$
+;    reduce_step1_spin_do_not_match_fixed_enable: $
+;    'REFoffSpec_images/spin_states_do_not_match_fixed_selected.png',$
+;    reduce_step1_spin_do_not_match_user_defined_disable: $
+;    'REFoffSpec_images/spin_states_do_not_match_user_defined_unselected.png',$
+;    reduce_step1_spin_do_not_match_user_defined_enable: $
+;    'REFoffSpec_images/spin_states_do_not_match_user_defined_selected.png',$
     
     reduce_step1_sangle_equation: $
     'REFoffSpec_images/sangle_equation.png', $
@@ -452,7 +471,9 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ok:                  'OK',$
     failed:              'FAILED',$
     version:             VERSION,$
-    MainBaseSize:        [30,50,1276,901],$
+; Change code (RC Ward, March 27, 2010): Decrease size of all windows in vertical direction    
+   MainBaseSize:        [30,50,1300,770],$
+;    MainBaseSize:        [30,50,1276,901],$
     ascii_extension:     'txt',$
     ascii_filter:        '*.txt',$
     ascii_path:          '~/results/',$

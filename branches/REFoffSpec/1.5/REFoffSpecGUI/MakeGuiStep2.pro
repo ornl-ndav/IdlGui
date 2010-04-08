@@ -256,14 +256,15 @@ sHelpLabel = { size: [sAsciiList.size[0]+$
 ;******************************************************************************
 ;            BUILD GUI
 ;******************************************************************************
-
+; Code Change (RC Ward, Mar 31, 2010): Add SCROLL capability to the WIDGET_BASE BaseTab
 BaseTab = WIDGET_BASE(REDUCE_TAB,$
                       UNAME     = sBaseTab.uname,$
                       XOFFSET   = sBaseTab.size[0],$
                       YOFFSET   = sBaseTab.size[1],$
                       SCR_XSIZE = sBaseTab.size[2],$
                       SCR_YSIZE = sBaseTab.size[3],$
-                      TITLE     = sBaseTab.title)
+                      TITLE     = sBaseTab.title, $
+                      /SCROLL)
 
 ;Browse button ----------------------------------------------------------------
 wBrowseButton = WIDGET_BUTTON(BaseTab,$

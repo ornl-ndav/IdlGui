@@ -49,6 +49,8 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
   ;****************************************************************************
   ;            BUILD GUI
   ;****************************************************************************
+; Code Change (RC Ward, 27 March 2010): Extensive redsign of the GUI was implemented
+; Shrink vertical screen size for viewing on laptop or reduced resolution monitor
     
   Base = WIDGET_BASE(REDUCE_TAB,$
     UNAME     = sBase.uname,$
@@ -133,11 +135,14 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
   ;second row --------------------------
   row2_base = WIDGET_BASE(big_base,$
     /ROW)
+; column 1
+  row2col1 = WIDGET_BASE(row2_base,$ ;...................................
+    /COLUMN)
     
-  space = WIDGET_LABEL(row2_base,$
+  space = WIDGET_LABEL(row2col1,$
     value = '                  ')
     
-  draw = WIDGET_DRAW(row2_base,$
+  draw = WIDGET_DRAW(row2col1,$
 ;    SCR_XSIZE = 2*500,$
     SCR_XSIZE = (*global).sangle_xsize_draw, $
 ; Change made: Replace 304 with detector_pixels_y obtained from XML fole (RCW, Feb 10, 2010)
@@ -148,10 +153,14 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     /motion_events,$
     /button_events,$
     /KEYBOARD_EVENT)
-    
-  ;lin/log cwbgroup
+
+; column 2
+  row2col2 = WIDGET_BASE(row2_base,$ ;...................................
+    /COLUMN)   
+        
+;lin/log cwbgroup
   value = ['Lin ','Log ']
-  group = CW_BGROUP(row2_base,$
+  group = CW_BGROUP(row2col2,$
     value,$
     COLUMN=1,$
     SET_VALUE = 1,$
@@ -161,95 +170,100 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     SPACE = 5,$
     UNAME = 'reduce_step2_create_roi_lin_log',$
     /EXCLUSIVE)
-    
-  ;third row ---------------------------
-  row3_row = WIDGET_BASE(big_base,$
-    /ROW)
-    
-  space = WIDGET_LABEL(row3_row,$
-    value = '   ')
-    
-  row3_base = WIDGET_BASE(row3_row,$
-    /COLUMN,$
-    ;    /ALIGN_CENTER,$
-    FRAME = 1)
-    
-  ;first inside row (browse button)
-  browse_button = WIDGET_BUTTON(row3_base,$
+ 
+;first inside row (browse button)
+  browse_button = WIDGET_BUTTON(row2col2,$
     VALUE = 'B R O W S E   F O R   A   R O I . . .',$
-    SCR_XSIZE = 600,$
+    SCR_XSIZE = 320,$
     TOOLTIP = 'Click to browse for a ROI file and plot it',$
     UNAME = 'reduce_step2_create_roi_browse_roi_button')
-    
-  ;second inside row
-  row3_row2_base = WIDGET_BASE(row3_base,$
+
+   row3col2_base2 = WIDGET_BASE(row2col2,$
     /ROW)
     
-  y1_working = WIDGET_LABEL(row3_row2_base,$
+  y1_working = WIDGET_LABEL(row3col2_base2,$
     VALUE = '>>',$
+    /ALIGN_LEFT, $  
     UNAME = 'reduce_step2_create_roi_y1_l_status')
-  y1_label = WIDGET_LABEL(row3_row2_base,$
+  y1_label = WIDGET_LABEL(row3col2_base2,$
+    /ALIGN_LEFT, $  
     VALUE = 'Y1:')
-  y1_value = WIDGET_TEXT(row3_row2_base,$
+  y1_value = WIDGET_TEXT(row3col2_base2,$
     VALUE = ' ',$
     XSIZE = 3,$
     /EDITABLE,$
     /ALIGN_LEFT,$
     UNAME = 'reduce_step2_create_roi_y1_value')
-  y1_working = WIDGET_LABEL(row3_row2_base,$
+  y1_working = WIDGET_LABEL(row3col2_base2,$
     VALUE = '<<',$
+    /ALIGN_LEFT, $  
     UNAME = 'reduce_step2_create_roi_y1_r_status')
-    
-  space = WIDGET_LABEL(row3_row2_base,$
+       
+  space = WIDGET_LABEL(row3col2_base2,$
     value = '  ')
+  
     
-  y2_working = WIDGET_LABEL(row3_row2_base,$
+  y2_working = WIDGET_LABEL(row3col2_base2,$
     VALUE = ' ',$
     UNAME = 'reduce_step2_create_roi_y2_l_status')
-  y2_label = WIDGET_LABEL(row3_row2_base,$
+  y2_label = WIDGET_LABEL(row3col2_base2,$
     VALUE = 'Y2:')
-  y2_value = WIDGET_TEXT(row3_row2_base,$
+  y2_value = WIDGET_TEXT(row3col2_base2,$
     VALUE = ' ',$
     XSIZE = 3,$
     /EDITABLE,$
     /ALIGN_LEFT,$
     UNAME = 'reduce_step2_create_roi_y2_value')
-  y2_working = WIDGET_LABEL(row3_row2_base,$
+  y2_working = WIDGET_LABEL(row3col2_base2,$
     VALUE = ' ',$
     UNAME = 'reduce_step2_create_roi_y2_r_status')
     
-  space = WIDGET_LABEL(row3_row2_base,$
+  space = WIDGET_LABEL(row2col2,$
     value = '    ')
     
-  info = WIDGET_LABEL(row3_row2_base,$
-    VALUE = ' HELP: Left click on the plot to select first Y, right ' + $
-    'click to switch to next Y, or manually input Y1 and Y2 ' + $
-    'or use up and down arrows to move selection.')
+  info = WIDGET_LABEL(row2col2,$
+    VALUE = ' HELP: Left click on the plot to select first Y, right ')
+  info = WIDGET_LABEL(row2col2,$
+    VALUE = 'click to switch to next Y, or manually input Y1 and Y2 ')
+  info = WIDGET_LABEL(row2col2,$
+    VALUE = 'or use up and down arrows to move selection.')
     
   ;third row (save button)
-  save_roi = WIDGET_BUTTON(row3_base,$
+  save_roi = WIDGET_BUTTON(row2col2,$
     VALUE = 'S A V E   R O I',$
+    SCR_XSIZE = 320,$
     TOOLTIP = 'Click to Save the ROI you created',$
     UNAME = 'reduce_step2_create_roi_save_roi',$
     SENSITIVE = 0)
     
   ;save and quit base
-  save_quit_roi = WIDGET_BUTTON(row3_base,$
+  save_quit_roi = WIDGET_BUTTON(row2col2,$
     VALUE = 'SAVE ROI and RETURN TO TABLE',$
-    tooltip = 'Click to Save the ROI and Return to the table',$
+    SCR_XSIZE = 320,$
+    TOOLTIP = 'Click to Save the ROI and Return to the table',$
     uname = 'reduce_step2_create_roi_save_roi_quit',$
     SENSITIVE = 0)
-    
-  RetourButton = WIDGET_BUTTON(ModifyBase,$
-    XOFFSET = sBase.size[2] - 140,$
-    YOFFSET = sBase.size[3] - 90,$
+
+   space = WIDGET_LABEL(row2col2,$
+    value = '    ')
+   space = WIDGET_LABEL(row2col2,$
+    value = '    ')
+   space = WIDGET_LABEL(row2col2,$
+    value = '    ')
+   space = WIDGET_LABEL(row2col2,$
+    value = '    ')
+   space = WIDGET_LABEL(row2col2,$
+    value = '    ')   
+
+    ReturnButton = WIDGET_BUTTON(row2col2,$
     SCR_XSIZE = 120,$
     SCR_YSIZE = 30,$
     VALUE = '  RETURN TO TABLE  ',$
     UNAME = 'reduce_step2_return_to_table_button')
     
-  ;end of Creae/modify/visualize base =========================================
-    
+;end of Create/modify/visualize base =========================================
+
+;Main base --------------------------------------------------------------------    
   xoff = 30
   
   ;title of normalization input frame

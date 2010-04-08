@@ -54,7 +54,7 @@ PRO refresh_recap_plot, Event, RESCALE=rescale
   
   trans_coeff_list = (*(*global).trans_coeff_list)
   
-  index = 0                ;loop variable (nbr of array to add/plot
+  index = 0                ;loop variable (nbr of array to add/plot)
   WHILE (index LT nbr_plot) DO BEGIN
   
     local_tfpData       = *tfpData[index]
@@ -70,7 +70,7 @@ PRO refresh_recap_plot, Event, RESCALE=rescale
 
     ENDIF
     
-    ;applied scaling factor
+    ;apply scaling factor
     local_tfpData       /= scaling_factor
     local_tfpData_error /= scaling_factor
     
@@ -171,9 +171,7 @@ PRO refresh_recap_plot, Event, RESCALE=rescale
           value_error_old = base_array_error[index_indices[0,i],index_indices[1,i]]
           value_error_new_untouched = local_tfpdata_error_untouched[index_indices[0,i],$
             index_indices[1,i]]
-            
-            
-            
+               
           IF (value_old EQ 0) THEN BEGIN
           
             base_array[index_indices[0,i],index_indices[1,i]] = value_new

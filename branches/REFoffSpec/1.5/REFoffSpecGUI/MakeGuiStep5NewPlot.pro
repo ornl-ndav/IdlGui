@@ -32,14 +32,14 @@
 ;
 ;==============================================================================
 
-PRO make_gui_scaling_step2, REDUCE_TAB, tab_size, TabTitles, global
+PRO make_gui_step5_new, REDUCE_TAB, tab_size, TabTitles, global
 
 ;******************************************************************************
 ;            DEFINE STRUCTURE
 ;******************************************************************************
 
 sBaseTab = { size:  tab_size,$
-             uname: 'step4_step1_tab_base',$
+             uname: 'step5_new_tab_base',$
              title: TabTitles.scaling}
 
 ;Main draw of step 4 ----------------------------------------------------------
@@ -47,19 +47,15 @@ XYoff = [5,5]
 sStep4Draw = { size: [XYoff[0],$
                       XYOff[1],$
                       700,700],$
-               uname: 'draw_step4_step2'}
+               uname: 'draw_step5_new'}
 
 ;Zoom base (x-axis and y_axis) ------------------------------------------------
-; Change code (RC Ward, April 5, 2010): Change location of this box
-;XYoff = [30,25]
-XYoff = [710,-92]
-; Change code (RC Ward, April 5, 2010): Decrease width of this box
+XYoff = [710, -92]
 sZoomBase = { size: [sStep4Draw.size[0]+XYoff[0],$
                      sStep4Draw.size[1]+$
                      sStep4Draw.size[3]+XYoff[1],$
-;                     650,90],$
-                      545,90],$
-              uname: 'step4_2_zoom_base',$
+                     545,90],$
+              uname: 'step5_zoom_base',$
               frame: 3}
 
 ;x-axis -----------------------------------------------------------------------
@@ -76,7 +72,7 @@ sXMinBaseField = { size: [sXaxisLabel.size[0]+XYoff[0],$
                           13],$
                    label_left: 'Min:',$
                    value: '',$
-                   uname: 'step4_2_zoom_x_min'}
+                   uname: 'step5_new_x_min'}
                   
 XYoff = [10,0]
 sXMaxBaseField = { size: [sXMinBaseField.size[0]+$
@@ -85,11 +81,9 @@ sXMaxBaseField = { size: [sXMinBaseField.size[0]+$
                           sXMinBaseField.size[2:3]],$
                    label_left: 'Max:',$
                    value: '',$
-                   uname: 'step4_2_zoom_x_max'}
+                   uname: 'step5_new_x_max'}
                   
 ;RESET x axis -----------------------------------------------------------------
-; Change code (RC Ward, April 5, 2010): Move position of RESET button
-;XYoff = [315,5]
 XYoff = [155,5]
 sResetXaxis = { size: [sXMaxBaseField.size[0]+$
                        XYoff[0],$
@@ -97,14 +91,14 @@ sResetXaxis = { size: [sXMaxBaseField.size[0]+$
                        XYoff[1],$
                        100],$
                 value: 'FULL RESET',$
-                uname: 'step4_2_zoom_reset_axis'}
-                
+                uname: 'step5_new_reset_axis'}
+
 ;y-axis -----------------------------------------------------------------------
 XYoff= [0,40]
 sYaxisLabel = { size: [sXaxisLabel.size[0]+XYoff[0],$
                        sXaxisLabel.size[1]+XYoff[1]],$
                 value: 'Y-axis'}
-                      
+                       
 ;min and max (base and cw_fields) ---------------------------------------------
 XYoff = [0,-10]
 sYMinBaseField = { size: [sXMinBaseField.size[0]+XYoff[0],$
@@ -112,15 +106,15 @@ sYMinBaseField = { size: [sXMinBaseField.size[0]+XYoff[0],$
                           sXMinBaseField.size[2:3]],$
                    label_left: 'Min:',$
                    value: '',$
-                   uname: 'step4_2_zoom_y_min'}
-                 
+                   uname: 'step5_new_y_min'}
+                  
 XYoff = [0,0]
 sYMaxBaseField = { size: [sXMaxBaseField.size[0]+XYoff[0],$
                           sYminBaseField.size[1]+XYoff[1],$
                           sXMaxBaseField.size[2:3]],$
                    label_left: 'Max:',$
                    value: '',$
-                   uname: 'step4_2_zoom_y_max'}
+                   uname: 'step5_new_y_max'}
                   
 ;X lin/log plot ---------------------------------------------------------------
 XYoff = [0,0]
@@ -129,20 +123,17 @@ sLinLog = { size: [sYmaxBaseField.size[0]+$
                    sYmaxBaseField.size[1]+XYoff[1]],$
             list: ['Linear','Log'],$
             label: '',$
-            uname: 'step4_step2_z_axis_linear_log',$
+            uname: 'step5_new_z_axis_linear_log',$
             value: 1.0}
 
-;tab of step4/step2 -----------------------------------------------------------
-
-; Change code (RC Ward, April 5, 2010): Shorten vertical size of the SMainTab
+;tab of step5/new -----------------------------------------------------------
 XYoff = [5,5]
 sMainTab = { size: [sStep4Draw.size[0]+$
                     sSTep4Draw.size[2]+$
                     XYoff[0],$
                     XYoff[1],$
-;                    555,800],$
                     555,600],$
-             uname: 'step4_step2_tab'}
+             uname: 'step5_new_tab'}
 
 ;TabTitles
   ; Code change RCW (Dec 30, 2009): get ScalingTabNames from XML config file (via ref_off_spec)
@@ -156,8 +147,6 @@ TabTitles =  { all_files:       ScalingLevel3TabNames[0],$
 ;TabTitles = { critical_edge: 'Critical Edge',$
 ;              other_files: 'Scaling of Other Files',$
 ;              all_files: 'All Files'}
-
-
 
 ;******************************************************************************
 ;            BUILD GUI
@@ -174,7 +163,7 @@ BaseTab = WIDGET_BASE(REDUCE_TAB,$
 ;Main Draw of Step4 -----------------------------------------------------------
 ; Code Change (RC Ward Mar 8, 2010): Add parameters RETAIN=2 to force IDL to deal with retaining the window.
 ; This should fix the problem of windows going "black".
-wStep4Draw = WIDGET_DRAW(BaseTab,$
+wStep5Draw = WIDGET_DRAW(BaseTab,$
                          XOFFSET   = sStep4Draw.size[0],$
                          YOFFSET   = sStep4Draw.size[1],$
                          SCR_XSIZE = sStep4Draw.size[2],$
@@ -202,7 +191,7 @@ wXaxisLabel = WIDGET_LABEL(wZoomBase,$
 ;Min base/value ---------------------------------------------------------------
 wXminBase = WIDGET_BASE(wZoomBase,$
                         XOFFSET   = sXMinBaseField.size[0],$
-                        YOFFSET   = sXMinBaseField.size[1],$
+                       YOFFSET   = sXMinBaseField.size[1],$
                         SCR_XSIZE = sXMinBaseField.size[2])
 
 wXminValue = CW_FIELD(wXminBase,$
@@ -285,7 +274,7 @@ wLinLog = CW_BGROUP(wZoomBase,$
                     /ROW,$
                     /NO_RELEASE)
 
-;step4/step2 tab (ce and SF of all other files) -------------------------------
+;step5/new tab (ce and SF of all other files) -------------------------------
 MAIN_TAB = WIDGET_TAB(BaseTab,$
                       UNAME = sMainTab.uname,$
                       LOCATION = 0,$
@@ -295,15 +284,6 @@ MAIN_TAB = WIDGET_TAB(BaseTab,$
                       SCR_YSIZE = sMainTab.size[3],$
                       SENSITIVE = 1,$
                       /TRACKING_EVENTS)
-
-;All Files
-make_gui_scaling_step2_step1, MAIN_TAB, sMainTab.size, TabTitles
-
-;Critical Edge
-make_gui_scaling_step2_step2, MAIN_TAB, sMainTab.size, TabTitles
-
-;Other Files
-make_gui_scaling_step2_step3, MAIN_TAB, sMainTab.size, TabTitles
 
 
 END

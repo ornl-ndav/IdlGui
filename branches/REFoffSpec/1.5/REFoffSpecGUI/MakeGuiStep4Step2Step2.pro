@@ -174,38 +174,7 @@ sManualBase =  { size   : [sAutoBase.size[0]+XYoff[0],$
 sManualBaseTitle = { size  : [sManualBase.size[0]+15,$
                               sManualBase.size[1]-8],$
                      value : 'Manual Mode'}
-
-;***** Manual Fitting Equation Label ******************************************
-;sManualFittingLabel = { size  : [5,10],$
-;;                        value : 'Fitting equation:  Y='}
-;                        value : 'Average Value of Selection is: '}
-;
-;;***** Manual Fitting a text field ********************************************
-;XYoff               = [135,-8]
-;sManualFitting_a_TF = { size  : [sManualFittingLabel.size[0]+XYoff[0],$
-;                                 sManualFittingLabel.size[1]+XYoff[1],$
-;                                 80,$
-;                                 25],$
-;                        value : 'a',$
-;                        frame : 1,$
-;                        uname : 'step2_fitting_equation_a_text_field'}
-
-;;***** Manual Fitting Equation b label ****************************************
-;XYoff              = [5,0]
-;sManualFitting_b_L = { size  : [sManualFitting_a_TF.size[0]+ $
-;                                sManualFitting_a_TF.size[2]+XYoff[0],$
-;                                sManualFittingLabel.size[1]],$
-;                       value : 'X +'}
-;
-;;***** Manual Fitting Equation b text field ***********************************
-;XYoff               = [25,0]
-;sManualFitting_b_TF = { size  : [sManualFitting_b_L.size[0]+XYoff[0],$
-;                                 sManualFitting_a_TF.size[1:3]],$
-;                        value : 'b',$
-;                        frame : 1,$
-;                        uname : 'step2_fitting_equation_b_text_field'}
-
-;***** Manual Scalling ********************************************************
+; Code commented out has been removed here - RC Ward, April 5, 2010
 
 ;***** Average Y Before *******************************************************
 XYoff           = [5,15]
@@ -283,7 +252,8 @@ sResetManualScaling = { size: [sManualScalingButton.size[0]+$
                         value: 'RESET SCALING'}
 
 ;**** Lambda shortcut name used ***********************************************
-XYoff = [-100,-60]
+; Change code (RC Ward, April 5, 2010): Move this label up on the screen
+XYoff = [-100,-220]
 sLambdaShortcut = { size: [tab_size[2]+XYoff[0],$
                            tab_size[3]+XYoff[1]],$
                     value: 'Lda = Lambda',$
@@ -439,43 +409,7 @@ wManualBase = WIDGET_BASE(STEP_BASE,$
                           SCR_YSIZE = sManualBase.size[3],$
                           UNAME     = sManualBase.uname,$
                           FRAME     = sManualBase.frame)
-
-;***** Manual Fitting Equation Label ******************************************
-;wManualFittingLabel = WIDGET_LABEL(wManualBase,$
-;                                   XOFFSET = sManualFittingLabel.size[0],$
-;                                   YOFFSET = sManualFittingLabel.size[1],$
-;                                   VALUE   = sManualFittingLabel.value)
-;
-;;***** Manual Fitting a text field ********************************************
-;wManualFitting_a_TF = WIDGET_LABEL(wManualBase,$
-;                                   XOFFSET   = sManualFitting_a_TF.size[0],$
-;                                   YOFFSET   = sManualFitting_a_TF.size[1],$
-;                                   SCR_XSIZE = sManualFitting_a_TF.size[2],$
-;                                   SCR_YSIZE = sManualFitting_a_TF.size[3],$
-;                                   UNAME     = sManualFitting_a_TF.uname,$
-;                                   VALUE     = sManualFitting_a_TF.value,$
-;                                   FRAME     = sManualFitting_a_TF.frame,$
-;                                   /ALIGN_LEFT)
-;
-;;***** Manual Fitting Equation b label ****************************************
-;wManualFitting_b_L = WIDGET_LABEL(wManualBase,$
-;                                  XOFFSET = sManualFitting_b_L.size[0],$
-;                                  YOFFSET = sManualFitting_b_L.size[1],$
-;                                  VALUE   = sManualFitting_b_L.value)
-;
-;;***** Manual Fitting Equation b text field ***********************************
-;wManualFitting_b_TF = WIDGET_LABEL(wManualBase,$
-;                                   XOFFSET   = sManualFitting_b_TF.size[0],$
-;                                   YOFFSET   = sManualFitting_b_TF.size[1],$
-;                                   SCR_XSIZE = sManualFitting_b_TF.size[2],$
-;                                   SCR_YSIZE = sManualFitting_b_TF.size[3],$
-;                                   UNAME     = sManualFitting_b_TF.uname,$
-;                                   VALUE     = sManualFitting_b_TF.value,$
-;                                   FRAME     = sManualFitting_b_TF.frame,$
-;                                   /ALIGN_LEFT)
-;
-
-;***** Manual Scalling ********************************************************
+; Code commented out has been removed here - RC Ward, April 5, 2010
 
 ;***** Average Y Before *******************************************************
 wAverageYBefore = WIDGET_LABEL(wManualBase,$

@@ -264,7 +264,9 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     
   ;cw_bgroup of
   ;selection to make (none, counts vs Q .... etc) -----------------
-  XYoff = [10,5]
+;  XYoff = [10,5]
+; Change code (RC Ward, April , 2010): Move this set of radio buttons up slightly on the screen
+  XYoff = [10,0]
   sSelectionGroupBase = { size: [sScale.size[0]+XYoff[0],$
     sScale.size[1]+$
     sScale.size[3]+$

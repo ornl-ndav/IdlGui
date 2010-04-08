@@ -44,11 +44,12 @@ PRO make_gui_Reduce_step3, REDUCE_TAB, sTab, TabTitles, global
     title: tab_title}
     
   instrument = (*global).instrument
+  number_of_sangle = (*global).number_of_sangle
   
   ;****************************************************************************
   ;            BUILD GUI
   ;****************************************************************************
-  
+; Change code (RC Ward, Apr 6): Create scrollable wmain window  
   Base = WIDGET_BASE(REDUCE_TAB,$
     UNAME     = sBase.uname,$
     XOFFSET   = sBase.size[0],$
@@ -99,9 +100,12 @@ PRO make_gui_Reduce_step3, REDUCE_TAB, sTab, TabTitles, global
     /RESIZEABLE_COLUMNS,$
     ALIGNMENT = 0,$
     XSIZE = xsize,$
-    YSIZE = 40,$
+; Change code (RC Ward, April 7, 2010): Varible number_of_sangle is passed in confguration file
+;    YSIZE = 40,$
+    YSIZE = 2*number_of_sangle,$
     SCR_XSIZE = scr_xsize,$
-    SCR_YSIZE = 750,$
+; Change code (RC Ward, April 7, 2010): Decrease vertical size of window
+    SCR_YSIZE = 500,$
     COLUMN_WIDTHS = column_widths,$
     /SCROLL,$
     /EDITABLE,$

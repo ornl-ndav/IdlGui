@@ -98,7 +98,7 @@ IF (sz GT 0) THEN BEGIN
         message = ['They are ' + $
                    STRCOMPRESS(nbr_missing_packages,/REMOVE_ALL) + $
                    ' missing package(s) you need to ' + $
-                   'fully used this application.']
+                   'fully use this application.']
         message = [message,'Check Log Book For More Information !']
         result = DIALOG_MESSAGE(message, $
                                 /INFORMATION, $
