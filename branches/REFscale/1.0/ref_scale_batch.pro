@@ -311,9 +311,7 @@ PRO ref_scale_LoadBatchFile, Event
     if ((*global).working_with_ref_m_batch) then begin ;ref_m batch file
     
       DRfiles = retrieveDRfiles_ref_m(event, BatchTable)
-      
-      help, DRfiles
-      print, DRfiles
+      activate_right_spin_states_button, event
       
     endif else begin ;ref_l batch file
     
@@ -461,3 +459,35 @@ PRO ref_scale_save_as_batch_file, Event
   
 END
 
+;+
+; :Description:
+;   this procedure takes a string of data spin states and activates or hide
+;   the spin states of interest. This is based on the first entry of the
+;   batch file assuming that all the other entries use the same set of spin
+;   states
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro activate_right_spin_states_button, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  data_spin_state = (*(*global).data_spin_state)
+  spin_state = data_spin_state[0]
+  spins = strsplit(spin_state,'/',/extract,count=nbr)
+  print, spins
+  
+  index = 0
+  while (index lt nbr) do begin
+  print, 'index: ', index
+    uname = strlowcase(strcompress(spins[index],/remove_all))
+    ActivateWidget, event, uname, 1
+    set_button, event, uname
+    index++
+  endwhile
+  
+end

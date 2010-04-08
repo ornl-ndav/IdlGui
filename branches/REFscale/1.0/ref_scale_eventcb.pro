@@ -38,51 +38,58 @@
 ;reset full session
 PRO reset_all_button, Event
 
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
-widget_control,id,get_uvalue=global
-
-;reset all arrays
-ResetArrays, Event ;_utility
-ReinitializeColorArray, Event   ;_utility
-ClearAllDropLists, Event        ;_Gui
-ClearAllTextBoxes, Event        ;_Gui
-ClearFileInfoStep1, Event       ;_Gui
-ClearMainPlot, Event            ;_Gui
-ResetPositionOfSlider, Event    ;_Gui
-ResetAllOtherParameters, Event
-ResetRescaleBase,Event
-ActivateRescaleBase, Event, 0
-ActivateClearFileButton, Event, 0
-ClearCElabelStep2, Event        ;_Gui
-ClearStep2GlobalVariable, Event ;_Step2
-ActivatePrintFileButton, Event, 0
-(*global).NbrFilesLoaded = 0 ;Reset nbr of files loaded
-ActivateStep2, Event, 0 ;_Gui, desactivate base of step2
-ActivateStep3, Event, 0 ;_Gui, desactivate base of step3
-
-;reset the output file name
-putValueInLabel, Event, 'output_short_file_name', '';_put
-;update the various labels below
-output_file_name_value, event
-
-;reset spin states
-(*(*global).data_spin_state) = strarr(1)
-(*(*global).norm_spin_state) = strarr(1)
-
-;putValueInLabel, Event, 'output_file_text_field', '' ;_put
-;ActivateSettingsBase, Event, 0 ;_gui
-ResetBatch, Event ;_batch
-;ActivateWidget, Event, 'preview_output_file_button', 0 ;preview button
-idl_send_to_geek_addLogBookText, Event, '> Reset Full Session' 
+  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
+  widget_control,id,get_uvalue=global
+  
+  ;reset all arrays
+  ResetArrays, Event ;_utility
+  ReinitializeColorArray, Event   ;_utility
+  ClearAllDropLists, Event        ;_Gui
+  ClearAllTextBoxes, Event        ;_Gui
+  ClearFileInfoStep1, Event       ;_Gui
+  ClearMainPlot, Event            ;_Gui
+  ResetPositionOfSlider, Event    ;_Gui
+  ResetAllOtherParameters, Event
+  ResetRescaleBase,Event
+  ActivateRescaleBase, Event, 0
+  ActivateClearFileButton, Event, 0
+  ClearCElabelStep2, Event        ;_Gui
+  ClearStep2GlobalVariable, Event ;_Step2
+  ActivatePrintFileButton, Event, 0
+  (*global).NbrFilesLoaded = 0 ;Reset nbr of files loaded
+  ActivateStep2, Event, 0 ;_Gui, desactivate base of step2
+  ActivateStep3, Event, 0 ;_Gui, desactivate base of step3
+  
+  ;reset the output file name
+  putValueInLabel, Event, 'output_short_file_name', '';_put
+  ;update the various labels below
+  output_file_name_value, event
+  
+  ;reset spin states
+  (*(*global).data_spin_state) = strarr(1)
+  (*(*global).norm_spin_state) = strarr(1)
+  uname = ['off_off','off_on','on_off','on_on']
+  for i=0, 3 do begin
+    ActivateWidget, event, uname[i], 0
+  endfor
+  ;reset all spin states button
+  id = widget_info(event.top, find_by_Uname='spin_state_button_base')
+  widget_control, id, set_button=0
+  
+  ;putValueInLabel, Event, 'output_file_text_field', '' ;_put
+  ;ActivateSettingsBase, Event, 0 ;_gui
+  ResetBatch, Event ;_batch
+  ;ActivateWidget, Event, 'preview_output_file_button', 0 ;preview button
+  idl_send_to_geek_addLogBookText, Event, '> Reset Full Session'
 END
 
 ;##############################################################################
 ;******************************************************************************
 
 PRO rescale_data_changed, Event
-widget_control,id,GET_UVALUE=global
-(*global).replot_me  = 1
-(*global).replotQnew = 1 ;means we need to replot the Qs
+  widget_control,id,GET_UVALUE=global
+  (*global).replot_me  = 1
+  (*global).replotQnew = 1 ;means we need to replot the Qs
 END
 
 ;##############################################################################
@@ -90,11 +97,11 @@ END
 
 ;reset X and Y axis rescalling
 PRO ResetRescaleButton, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
-widget_control,id,get_uvalue=global
-;repopulate Xmin, Xmax, Ymin and Ymax with first XYMinMax values
-putXYMinMax, Event, (*(*global).XYMinMax) ;_put
-DoPlot, Event
+  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
+  widget_control,id,get_uvalue=global
+  ;repopulate Xmin, Xmax, Ymin and Ymax with first XYMinMax values
+  putXYMinMax, Event, (*(*global).XYMinMax) ;_put
+  DoPlot, Event
 END
 
 ;##############################################################################
@@ -102,31 +109,31 @@ END
 
 ;This function reinitialize the Rescale base
 PRO ResetRescaleBase,Event
-;reset X and Y, Min and Max text fields
-XminId = widget_info(Event.top,find_by_uname='XaxisMinTextField')
-XmaxId = widget_info(Event.top,find_by_uname='XaxisMaxTextField')
-YminId = widget_info(Event.top,find_by_uname='YaxisMinTextField')
-YmaxId = widget_info(Event.top,find_by_uname='YaxisMaxTextField')
-XYMinMax = [XminId, XmaxId, YminId, YmaxId]
-for i=0,3 do begin
-   widget_control, XYMinMax[i], set_value=''
-endfor
-;reset Y lin/log
-YaxisLinLogId = widget_info(Event.top,find_by_uname='YaxisLinLog')
-widget_control, YaxisLinLogId, set_value=0
+  ;reset X and Y, Min and Max text fields
+  XminId = widget_info(Event.top,find_by_uname='XaxisMinTextField')
+  XmaxId = widget_info(Event.top,find_by_uname='XaxisMaxTextField')
+  YminId = widget_info(Event.top,find_by_uname='YaxisMinTextField')
+  YmaxId = widget_info(Event.top,find_by_uname='YaxisMaxTextField')
+  XYMinMax = [XminId, XmaxId, YminId, YmaxId]
+  for i=0,3 do begin
+    widget_control, XYMinMax[i], set_value=''
+  endfor
+  ;reset Y lin/log
+  YaxisLinLogId = widget_info(Event.top,find_by_uname='YaxisLinLog')
+  widget_control, YaxisLinLogId, set_value=0
 END
 
 ;##############################################################################
 ;******************************************************************************
 ;This function display the full contain of the DR file
 PRO DisplayFullPreviewOfButton, Event ;_eventcb
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
-widget_control,id,GET_UVALUE=global
-index  = getSelectedIndex(Event, 'list_of_files_droplist')
-ListOfFiles = (*(*global).ListOfLongFileName)
-selected_file = ListOfFiles[index]
-title = 'PREVIEW of ' + selected_file
-XDISPLAYFILE, selected_file, TITLE=title
+  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
+  widget_control,id,GET_UVALUE=global
+  index  = getSelectedIndex(Event, 'list_of_files_droplist')
+  ListOfFiles = (*(*global).ListOfLongFileName)
+  selected_file = ListOfFiles[index]
+  title = 'PREVIEW of ' + selected_file
+  XDISPLAYFILE, selected_file, TITLE=title
 END
 
 ;##############################################################################
@@ -139,18 +146,18 @@ END
 ;******************************************************************************
 
 PRO MAIN_REALIZE, wWidget
-tlb = get_tlb(wWidget)
-;indicate initialization with hourglass icon
-widget_control,/hourglass
-;turn off hourglass
-widget_control,hourglass=0
+  tlb = get_tlb(wWidget)
+  ;indicate initialization with hourglass icon
+  widget_control,/hourglass
+  ;turn off hourglass
+  widget_control,hourglass=0
 end
 
 ;##############################################################################
 ;******************************************************************************
 
 PRO WithWithoutErrorBars, Event
-plot_loaded_file, Event, 'all'  ;_Plot
+  plot_loaded_file, Event, 'all'  ;_Plot
 END
 
 

@@ -297,21 +297,26 @@ PRO MakeGuiMainBaseComponents, MAIN_BASE, StepsTabSize
   spin_state = widget_base(MAIN_BASE,$
   xoffset = sSettingsBase.size[0],$
   yoffset = sSettingsBase.size[1]+35,$
+  uname = 'spin_state_button_base',$
   /row,$
   map = 1,$
   /nonexclusive)
     
   off_off = widget_button(spin_state,$
   value = 'Off_Off',$
+  sensitive = 0,$
   uname = 'off_off')
   off_on = widget_button(spin_state,$
   value = 'Off_On',$
+  sensitive = 0,$
   uname = 'off_on')
   on_off = widget_button(spin_state,$
   value = 'On_Off',$
+  sensitive = 0,$
   uname = 'on_off')
   on_on = widget_button(spin_state,$
   value = 'On_On',$
+  sensitive = 0,$
   uname = 'on_on')
     
   ;settings button
