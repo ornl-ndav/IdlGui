@@ -54,6 +54,7 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   APPLICATION = file->getValue(tag=['configuration','application'])
   VERSION  = file->getValue(tag=['configuration','version'])
   DEBUGGER = file->getValue(tag=['configuration','debugging'])
+  auto_cleaning_data = file->getValue(tag=['configuration','auto_cleaning'])
   ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
   ;============================================================================
   
@@ -62,6 +63,12 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   TagArray      = StrArray[1]
   BranchArray   = StrArray[2]
   CurrentBranch =  VerArray + '.' + TagArray
+  
+  if (auto_cleaning_data eq 'yes') then begin
+    auto_cleaning = 1b
+  endif else begin
+    auto_cleaning = 0b
+  endelse
   
   global = $
     PTR_NEW({ $
@@ -72,7 +79,7 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ;settings base
     settings_show_error_bar_flag: 1b,$
     settings_number_of_data_to_display: 100L,$
-    settings_auto_cleaning_flag: 1b,$
+    settings_auto_cleaning_flag: auto_cleaning,$
     percentage_of_q_to_remove_value: 10,$ ;percentage of data to remove when
     ;using auto cleanup
     
