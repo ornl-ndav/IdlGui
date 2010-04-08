@@ -352,12 +352,52 @@ PRO ref_scale_LoadBatchFile, Event
       DRfiles = retrieveDRfiles_ref_m(event, BatchTable)
       activate_right_spin_states_button, event
       
+      ;get full file name of CE reduced file
+      (*global).full_CE_name = DRfiles[0,0]
+      
       ;check that all the files exist to move on
       FileStatus = CheckFilesExist_ref_m(Event, DRfiles)
       
-            
+      if (FileStatus eq 1) then begin ;continue loading process
+      
+        DRfiles = DRfiles[0,*]
+        rDRfiles = reform(DRfiles,n_elements(DRfiles))
+        result = batch_repopulate_gui(Event, rDRfiles)
       
       
+      
+      
+      
+      
+        refresh_bash_file_status = 1 ;enable REFRESH and SAVE AS Bash File
+      endif else begin            ;stop loading process
+        LogText = '> Loading Batch File ' + BatchFileName + ' ... FAILED'
+        idl_send_to_geek_addLogBookText, Event, LogText
+        LogText = '-> This can be due to the fact that 1 or more of the ' + $
+          ' DR files does not exist !'
+        idl_send_to_geek_addLogBookText, Event, LogText
+        refresh_bash_file_status = 0 ;enable REFRESH and SAVE AS Bash File
+        reset_all_button, Event
+      endelse
+      
+      ActivateWidget, Event, 'ref_scale_refresh_batch_file', refresh_bash_file_status
+      ActivateWidget, Event, 'ref_scale_save_as_batch_file', refresh_bash_file_status
+      ActivateWidget, Event, 'batch_preview_button', refresh_bash_file_status
+      if (refresh_bash_file_status) then begin ;loading was successful
+        ;this function updates the output file name
+        update_output_file_name_from_batch, Event ;_output
+      endif else begin
+        putValueInLabel, Event, 'output_short_file_name', ''; _put
+        message = ['The loading of ' + BatchFileName + ' did not work !',$
+          'Check the Log Book !']
+        title   = 'Problem Loading the Batch File!'
+        dialog_id = widget_info(event.top, find_by_uname='MAIN_BASE_ref_scale')
+        result = DIALOG_MESSAGE(message,$
+          TITLE=title,$
+          /error,$
+          /center,$
+          dialog_parent=dialog_id)
+      endelse
       
     endif else begin ;ref_l batch file
     
