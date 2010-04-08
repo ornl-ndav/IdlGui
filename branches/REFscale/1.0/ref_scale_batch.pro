@@ -195,6 +195,45 @@ FUNCTION CheckFilesExist, Event, DRfiles
   RETURN, file_status
 END
 
+
+;+
+; :Description:
+;   checks if all the file exist and return 1 in this case. 0 otherwise
+;
+; :Params:
+;    Event
+;    DRfiles
+;
+; :Author: j35
+;-
+function CheckFilesExist_ref_m, Event, DRfiles
+  compile_opt idl2
+  
+  LogText = '-> Check if all Intermediate files exist or not:'
+  file_status = 1
+  
+  sz1 = (size(DRfiles))[1]
+  sz2 = (size(DRfiles))[2]
+  index2 = 0
+  while (index2 lt sz2) do begin
+    index1 = 0
+    while (index1 lt sz1) do begin
+      if (file_test(DRfiles[index1,index2])) then begin
+        LogText = '--> ' + DRfiles[index1,index2] + '... FOUND'
+      endif else begin
+        LogText = '--> ' + DRfiles[index1,index2] + '... NOT FOUND!!'
+        file_status = 0
+      endelse
+      idl_send_to_geek_addLogBookText, Event, LogText
+      index1++
+    endwhile
+    index2++
+  endwhile
+  
+  return, file_status
+end
+
+
 ;==============================================================================
 FUNCTION batch_repopulate_gui, Event, DRfiles
 
@@ -312,6 +351,13 @@ PRO ref_scale_LoadBatchFile, Event
     
       DRfiles = retrieveDRfiles_ref_m(event, BatchTable)
       activate_right_spin_states_button, event
+      
+      ;check that all the files exist to move on
+      FileStatus = CheckFilesExist_ref_m(Event, DRfiles)
+      
+            
+      
+      
       
     endif else begin ;ref_l batch file
     
@@ -479,11 +525,10 @@ pro activate_right_spin_states_button, event
   data_spin_state = (*(*global).data_spin_state)
   spin_state = data_spin_state[0]
   spins = strsplit(spin_state,'/',/extract,count=nbr)
-  print, spins
+  (*(*global).list_of_spins_for_each_angle) = spins
   
   index = 0
   while (index lt nbr) do begin
-  print, 'index: ', index
     uname = strlowcase(strcompress(spins[index],/remove_all))
     ActivateWidget, event, uname, 1
     set_button, event, uname

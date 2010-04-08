@@ -51,7 +51,7 @@ function retrieveDRfiles_ref_m, event, BatchTable
   ;check number of spin states to load
   widget_control, event.top, get_uvalue=global
   data_spin_states = (*(*global).data_spin_state)
-  nbr_spin_states = n_elements(data_spin_states)
+  nbr_spin_states = get_number_of_spin_states_per_angle(data_spin_states)
 
   ;Create array of list of files
   DRfiles = STRARR(nbr_spin_states, NbrDrFiles)

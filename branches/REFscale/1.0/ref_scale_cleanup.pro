@@ -51,6 +51,9 @@ pro ref_scale_cleanup, tlb
   
   ;free up the pointers of the global pointer
   ptr_free, (*global).BatchTable
+  ptr_free, (*global).data_spin_state
+  ptr_free, (*global).norm_spin_state
+  ptr_free, (*global).list_of_spins_for_each_angle
   ptr_free, (*global).flt0_ptr
   ptr_free, (*global).flt1_ptr
   ptr_free, (*global).flt2_ptr
