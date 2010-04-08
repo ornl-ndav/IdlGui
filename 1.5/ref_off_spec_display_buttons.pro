@@ -105,10 +105,12 @@ PRO display_reduce_step1_spin_states_match, $
   ; 1: enable
   case (activate) OF
     0: BEGIN ;nothing is activated
-      mode = READ_PNG((*global).reduce_step1_spin_match_disable)
+;      mode = READ_PNG((*global).reduce_step1_spin_match_disable)
+      mode = READ_PNG((*global).Spins_Matching_Disable)
     END
     1: BEGIN ;activate previous button
-      mode = READ_PNG((*global).reduce_step1_spin_match_enable)
+;      mode = READ_PNG((*global).reduce_step1_spin_match_enable)
+      mode = READ_PNG((*global).Spins_Matching_Enable)
     END
   ENDCASE
   
@@ -137,10 +139,12 @@ PRO display_reduce_step1_spin_states_do_not_match_fixed, $
   ; 1: enable
   case (activate) OF
     0: BEGIN ;nothing is activated
-      mode = READ_PNG((*global).reduce_step1_spin_do_not_match_fixed_disable)
+;      mode = READ_PNG((*global).reduce_step1_spin_do_not_match_fixed_disable)
+      mode = READ_PNG((*global).Spins_Not_Matching_Disable)
     END
     1: BEGIN ;activate previous button
-      mode = READ_PNG((*global).reduce_step1_spin_do_not_match_fixed_enable)
+;      mode = READ_PNG((*global).reduce_step1_spin_do_not_match_fixed_enable)
+      mode = READ_PNG((*global).Spins_Not_Matching_Enable)
     END
   ENDCASE
   
@@ -169,10 +173,12 @@ PRO display_reduce_step1_spin_states_do_not_match_user_defined, $
   ; 1: enable
   case (activate) OF
     0: BEGIN ;nothing is activated
-      mode = READ_PNG((*global).reduce_step1_spin_do_not_match_user_defined_disable)
+;      mode = READ_PNG((*global).reduce_step1_spin_do_not_match_user_defined_disable)
+      mode = READ_PNG((*global).User_Defined_Spins_Matching_Disable)
     END
     1: BEGIN ;activate previous button
-      mode = READ_PNG((*global).reduce_step1_spin_do_not_match_user_defined_enable)
+;      mode = READ_PNG((*global).reduce_step1_spin_do_not_match_user_defined_enable)
+      mode = READ_PNG((*global).User_Defined_Spins_Matching_Enable)
     END
   ENDCASE
   

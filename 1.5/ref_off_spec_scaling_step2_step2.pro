@@ -437,6 +437,7 @@ PRO step4_2_2_automatic_fitting_scaling, Event
   Lda_array = get_step4_step2_step2_lambda(Event)
   Lda_min   = Lda_array[0]
   Lda_max   = Lda_array[1]
+  print, "min, max: ", Lda_min, Lda_max
   IDLsendToGeek_addLogBookText, Event, '--> Lambda min : ' + $
     STRCOMPRESS(Lda_min,/REMOVE_ALL)
   IDLsendToGeek_addLogBookText, Event, '--> Lambda max : ' + $
@@ -451,6 +452,7 @@ PRO step4_2_2_automatic_fitting_scaling, Event
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
     fit_scale_status = 0
   ENDIF ELSE BEGIN
+  print, "call fitCE"
     Step4_step2_step2_fitCE, Event, lda_min, lda_max ;scaling_step2_step2
     IF ((*global).step4_2_2_fitting_status EQ 0) THEN BEGIN
       IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
@@ -524,6 +526,8 @@ PRO step4_step2_step2_scaleCE, Event, RESET=reset
   y_error_array                          = *new_IvsLambda_selection_error[0]
   
   y_array_rescale                        = y_array/f_scale_factor
+  print, y_array_rescale
+  print, index, f_scale_factor
   
   y_error_array_rescale                  = y_error_array/f_scale_factor
   *new_IvsLambda_selection[0]            = y_array_rescale
@@ -590,20 +594,26 @@ PRO Step4_step2_step2_fitCE, Event, lda_min, lda_max
   xrange = (*(*global).step4_step2_step1_xrange)
   ;get index where lda_min and lda_max are
   lda_index = getArrayRangeFromlda1lda2(xrange, lda_min, lda_max)
+  print, "lda_index: ", lda_index
   ;Isolate the X, Y and Y_error array between lda_min and lda_max
   x_array_to_fit            = xrange[lda_index[0]:lda_index[1]]
+  print, "x_array_to_fit: ", x_array_to_fit
   (*(*global).step4_2_2_x_array_to_fit) = x_array_to_fit
   IvsLambda_selection       = (*(*global).IvsLambda_selection_backup)
   ;IvsLambda_selection_error = (*(*global).IvsLambda_selection_error_backup)
   y_array                   = *IvsLambda_selection[0]
   ;y_error_array             = *IvsLambda_selection_error[0]
   y_array_to_fit            = y_array[lda_index[0]:lda_index[1]]
+  print, "y_array_to_fit: ", y_array_to_fit
   ;y_error_array_to_fit      = y_error_array[lda_index[0]:lda_index[1]]
   
   ;calculate the average value over the range selected
   AverageValue = MEAN(y_array_to_fit)
-  (*global).AverageValue = AverageValue
+; Code change (RC Ward, March 23, 2010): Try using MAX value here
+; AverageValue = MAX(y_array_to_fit)
   
+  (*global).AverageValue = AverageValue
+  print, "AverageValue: ", AverageValue
   putTextFieldValue, Event, $
     'step2_y_before_text_field',$
     STRCOMPRESS(AverageValue,/REMOVE_ALL)

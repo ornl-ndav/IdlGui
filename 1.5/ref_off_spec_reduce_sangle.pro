@@ -621,6 +621,8 @@ PRO calculate_new_sangle_value, Event
 
 ; Code change RCW (Feb 1, 2010): set up SangleDone variable
   SangleDone = (*(*global).SangleDone)
+; Code change RCW (Feb 1, 2010): pass in szie of detector pixels in y direction (used for calculating Sangle
+  detector_pixels_size_y = (*global).detector_pixels_size_y
 
   row_selected = getSangleRowSelected(Event)
   
@@ -635,12 +637,21 @@ PRO calculate_new_sangle_value, Event
     'reduce_sangle_base_sampledetdis_value'))
   DirPix  = FLOAT(getTextFieldValue(Event,$
     'reduce_sangle_base_dirpix_user_value'))
-    
+  print, "Dangle: ", Dangle
+  print, "Dangle: ", Dangle
+  print, "RefPix: ", RefPix
+  print, "DirPix: ", DirPix     
+  print, "SDdist: ", SDdist
+  print, "detector_pixels_size_y: ", detector_pixels_size_y
   part1 = (Dangle - Dangle0 ) / 2.
-  part2 = (DirPix - RefPix) * 7.e-4
+;  part2 = (DirPix - RefPix) * 7.e-4
+  part2 = (DirPix - RefPix) * detector_pixels_size_y
   part3 = 2. * SDdist
-  
+  print, "part1: ", part1
+  print, "part2: ", part2
+  print, "part3: ", part3
   Sangle = part1 + part2 / part3
+  print, "Sangle: ", Sangle
   
   s_Sangle_rad = STRCOMPRESS(Sangle,/REMOVE_ALL)
   s_Sangle_deg = STRCOMPRESS(convert_to_deg(Sangle),/REMOVE_ALL)
@@ -672,14 +683,15 @@ PRO update_sangle_big_table, Event, sSangle
 
   SangleDone = (*(*global).SangleDone)
 
+; Correction made (RC Ward, 30 Mar 2010): For single file, correctly mark file when Sangle calculation complete
   table = getTableValue(Event, 'reduce_sangle_tab_table_uname')
   IF ((size(table))(0) EQ 1) THEN BEGIN ;1d array
-    table[1] = sSangle
+    table[1] = sSangle + ' *'
   ENDIF ELSE BEGIN ;2d array
     ;get sangle row selected
     row_selected = getSangleRowSelected(Event)
     IF (SangleDone[row_selected] EQ 1) THEN BEGIN
-       table[1,row_selected] = sSangle + ' *'
+       table[1,row_selected] = '*'+ sSangle 
     ENDIF ELSE BEGIN
        table[1,row_selected] = sSangle
     ENDELSE
@@ -713,20 +725,24 @@ PRO determine_sangle_refpix_data_from_device_value, Event
   RefPixSave[row_selected] = sRefPix_data
   (*(*global).RefPixSave) = RefPixSave
   
-; Code change RCW (Feb 15, 2010): Write values of RefPix to a file named fro the first dataset
+; Code change RCW (Feb 15, 2010): Write values of RefPix to a file named for the first dataset
 ; Note this Rule: User should do SANGLE for first item on the list (lowest number also called Reference File)
 ; This is only to be used by magetism reflectometer data reduction process, so check for REF_M
   instrument = (*global).instrument
+  RefPixLoad = (*global).RefPixLoad
   IF (instrument EQ 'REF_M') THEN BEGIN
-    reduce_tab1_table = (*(*global).reduce_tab1_table)
-    full_nexus_file_name = reduce_tab1_table[1, 0]
-    parts = STR_SEP(full_nexus_file_name,'/')
-    output_file_name = (*global).ascii_path + parts[2]+'_'+ parts[5]+'_Off_Off_' + 'RefPix.txt'
+; test added on 31 March 2010 - needs to be tested
+    IF (RefPixLoad EQ 'yes') THEN BEGIN
+     reduce_tab1_table = (*(*global).reduce_tab1_table)
+     full_nexus_file_name = reduce_tab1_table[1, 0]
+     parts = STR_SEP(full_nexus_file_name,'/')
+     output_file_name = (*global).ascii_path + parts[2]+'_'+ parts[5]+'_Off_Off_' + 'RefPix.txt'
 ;   print, output_file_name
-    OPENW, 1, output_file_name
-    PRINTF, 1, RefPixSave
-    CLOSE, 1
-    FREE_LUN, 1
+     OPENW, 1, output_file_name
+     PRINTF, 1, RefPixSave
+     CLOSE, 1
+     FREE_LUN, 1
+    ENDIF
   ENDIF
 END
 

@@ -35,6 +35,7 @@
 PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
 
   instrument = (*global).instrument
+  number_of_sangle = (*global).number_of_sangle
   
   ;****************************************************************************
   ;            DEFINE STRUCTURE
@@ -58,25 +59,27 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     map = 1)
     
   ;****************************************************************************
-    
-  SangleBaseEquation = WIDGET_BASE(TabBase, $
-    UNAME = 'reduce_step1_sangle_base_equation', $
-    XOFFSET   = 450, $
-    YOFFSET   = 695, $
-    SCR_XSIZE = 350, $
-    SCR_YSIZE = 100, $
-    map = 0)
+; Change code (RC Ward, March 22, 2010): Remove the graphic with the equation for Sangle.    
+;  SangleBaseEquation = WIDGET_BASE(TabBase, $
+;    UNAME = 'reduce_step1_sangle_base_equation', $
+;    XOFFSET   = 450, $
+;    YOFFSET   = 695, $
+;    SCR_XSIZE = 350, $
+;    SCR_YSIZE = 100, $
+;    map = 0)
     
   ;equation
-  equation = WIDGET_DRAW(SangleBaseEquation,$
-    UNAME = 'reduce_step1_sangle_equation',$
-    XSIZE = 350,$
-    YSIZE = 100)
-    
+;  equation = WIDGET_DRAW(SangleBaseEquation,$
+;    UNAME = 'reduce_step1_sangle_equation',$
+;    XSIZE = 350,$
+;    YSIZE = 100)
+
+; Code Change (RC Ward, 27 March 2010): Extensive redsign of the GUI was implemented
+; Allowed shrinking the vertical screen size for viewing on laptop    
   SangleBaseLabel = WIDGET_BASE(TabBase, $
     UNAME = 'reduce_step1_sangle_base_label', $
-    XOFFSET = 15, $
-    YOFFSET = 638, $
+    XOFFSET = 45, $
+    YOFFSET = 640, $
     MAP = 0, $
     /ROW)
     
@@ -111,7 +114,9 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     ;    /RESIZEABLE_COLUMNS,$
     ALIGNMENT = 0,$
     XSIZE = 2,$
-    YSIZE = 18,$
+; Code change (RC Ward, April 7, 2010): use variable to specify the number of scattering angles    
+;   YSIZE = 18,$
+    YSIZE = number_of_sangle,$
     SCR_XSIZE = 232,$
     SCR_YSIZE = 380,$
     COLUMN_WIDTHS = [105,148],$
@@ -160,7 +165,6 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
 ; Change made: Replace 304 with detector_pixels_y obtained from XML fole (RCW, Feb 10, 2010)
     YSIZE = 2 * (*global).detector_pixels_y + 30,$
 ;    YSIZE = 2*304+30,$
-
     YOFFSET = 0)
     
   row1col3Main = WIDGET_BASE(row1,$ ;---------------------------------------
@@ -169,7 +173,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
   row1col3 = WIDGET_BASE(row1col3Main,$ ;..................................
     /COLUMN, $
     /EXCLUSIVE)
-    
+        
   button1 = WIDGET_BUTTON(row1col3,$
     VALUE = 'Off_Off',$
     UNAME = 'reduce_sangle_1',$
@@ -212,182 +216,216 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     SENSITIVE = 1)
     
   WIDGET_CONTROL, button2, /SET_BUTTON
-  
-  space = WIDGET_LABEL(row1col3Main, $
-    VALUE = ' ')
-    
-  ;live cursor info
+;================================
+; Table of values from the nexus header
+;================================
   row1col3c = WIDGET_BASE(row1col3Main,$ ;..................................
+    /COLUMN, $
+    FRAME = 1)
+   base3c = WIDGET_BASE(row1col3c,$
+    /ROW)
+    
+  value = WIDGET_LABEL(base3c,$
+    /ALIGN_LEFT, $
+    VALUE = 'File: N/A',$
+    SCR_XSIZE = 300,$
+    UNAME = 'reduce_sangle_base_full_file_name') 
+
+  row1col3d = WIDGET_BASE(row1col3Main,$ ;..................................
+    /ROW,$
+    FRAME=1)  
+  base3d = WIDGET_BASE(row1col3d,$
+    /ROW)  
+
+  label = WIDGET_LABEL(base3d,$
+    /ALIGN_LEFT, $
+    VALUE = '      Dangle [rad (deg)]: ')
+  value = WIDGET_LABEL(base3d,$
+    VALUE = 'N/A',$
+    SCR_XSIZE = 140,$
+    /ALIGN_LEFT, $
+    UNAME = 'reduce_sangle_base_dangle_value')
+ 
+  row1col3e = WIDGET_BASE(row1col3Main,$ ;..................................
+    /ROW,$
+    FRAME=1)
+  base3e = WIDGET_BASE(row1col3e,$
+    /ROW) 
+    
+  label = WIDGET_LABEL(base3e,$
+    /ALIGN_LEFT, $
+    VALUE = '     Dangle0 [rad (deg)]: ')
+  value = WIDGET_LABEL(base3e,$
+    VALUE = 'N/A',$
+    SCR_XSIZE = 140,$
+    /ALIGN_LEFT, $
+    UNAME = 'reduce_sangle_base_dangle0_value')
+    
+  row1col3f = WIDGET_BASE(row1col3Main,$ ;..................................
+    /ROW,$
+    FRAME=1)
+  base3f = WIDGET_BASE(row1col3f,$
+    /ROW)
+
+  label = WIDGET_LABEL(base3f,$
+    /ALIGN_LEFT, $
+    VALUE = '      Sangle [rad (deg)]: ')
+  value = WIDGET_LABEL(base3f,$
+    VALUE = 'N/A',$
+    SCR_XSIZE = 140,$
+    /ALIGN_LEFT, $
+    UNAME = 'reduce_sangle_base_sangle_value')
+    
+   row1col3g = WIDGET_BASE(row1col3Main,$ ;..................................
+    /ROW,$
+    FRAME=1)
+
+     base3g = WIDGET_BASE(row1col3g,$
+    /ROW)    
+    
+  label = WIDGET_LABEL(base3g,$
+    /ALIGN_LEFT, $
+    VALUE = '                  DirPix: ')
+  value = WIDGET_LABEL(base3g,$
+    VALUE = 'N/A',$
+    SCR_XSIZE = 140,$
+    /ALIGN_LEFT, $
+    UNAME = 'reduce_sangle_base_dirpix_value')
+    
+  row1col3h = WIDGET_BASE(row1col3Main,$ ;..................................
+    /ROW,$
+    FRAME=1)
+
+  base3h = WIDGET_BASE(row1col3h,$
+    /ROW)    
+    
+  label = WIDGET_LABEL(base3h,$
+    /ALIGN_LEFT, $
+    VALUE = '                  RefPix: ')
+  value = WIDGET_LABEL(base3h,$
+    VALUE = 'N/A',$
+    SCR_XSIZE = 140,$
+    /ALIGN_LEFT, $
+    UNAME = 'reduce_sangle_base_refpix_value')
+
+  row1col3i = WIDGET_BASE(row1col3Main,$ ;..................................
+    /ROW,$
+    FRAME=1)
+
+  base3i = WIDGET_BASE(row1col3i,$
+    /ROW)    
+      
+  label = WIDGET_LABEL(base3i,$
+    /ALIGN_LEFT, $
+    VALUE = 'Sample-Det. distance [m]: ')
+  value = WIDGET_LABEL(base3i,$
+    VALUE = 'N/A',$
+    SCR_XSIZE = 140,$
+    /ALIGN_LEFT, $
+    UNAME = 'reduce_sangle_base_sampledetdis_value')
+;================================
+; Cursor Position
+;================================              
+  ;live cursor info
+  row1col3j = WIDGET_BASE(row1col3Main,$ ;..................................
+    /COLUMN,$
+    FRAME=2)
+
+   base3j = WIDGET_BASE(row1col3j,$
+    /ROW)
+    
+; Code change (RC Ward, 25 Jan 2010): Change text here
+  title1 = WIDGET_LABEL(base3j,$
+     VALUE = 'Cursor Position:',$
+     /ALIGN_CENTER)
+
+  row1col3k = WIDGET_BASE(row1col3Main,$ ;..................................
     /COLUMN,$
     FRAME=1)
-; Change text on 25 Jan 2010 - RCW
-  title1 = WIDGET_LABEL(row1col3c,$
-     VALUE = 'Cursor')
-;    VALUE = 'Live Infos')
 
- title2 = WIDGET_LABEL(row1col3c,$
-     VALUE = 'Position')
-;    VALUE = 'Live Infos')
-; Change text on 25 Jan 2010 - RCW
-    space = WIDGET_LABEL(row1col3c,$
-    VALUE = '-------------')
-  
-  tof = WIDGET_LABEL(row1col3c,$
+   base3k = WIDGET_BASE(row1col3k,$
+    /ROW)
+
+  tof = WIDGET_LABEL(base3k,$
     VALUE = 'TOF (microS):',$
     /ALIGN_LEFT)
-  value = WIDGET_LABEL(row1col3c,$
+  value = WIDGET_LABEL(base3k,$
     VALUE = 'N/A',$
     SCR_XSIZE = 80,$
     UNAME = 'reduce_sangle_live_info_tof',$
     /ALIGN_LEFT)
-  space = WIDGET_LABEL(row1col3c,$
-    VALUE = '')
-  tof = WIDGET_LABEL(row1col3c,$
+
+  tof = WIDGET_LABEL(base3k,$
     VALUE = 'Pixel:',$
     /ALIGN_LEFT)
-  value = WIDGET_LABEL(row1col3c,$
+  value = WIDGET_LABEL(base3k,$
     VALUE = 'N/A',$
     SCR_XSIZE = 80,$
     UNAME = 'reduce_sangle_live_info_pixel',$
     /ALIGN_LEFT)
-    
-  row2 = WIDGET_BASE(SangleBase, $ ;...........................
+;================================ 
+;RefPix and DirPix
+  row1col3m = WIDGET_BASE(row1col3Main,$ ;..................................
+    /COLUMN, $
+     FRAME = 2) 
+  base3m = WIDGET_BASE(row1col3m,$
+;    XOFFSET = 155,$
+;    YOFFSET = 40,$
     /ROW)
-    
-  row2col1 = WIDGET_BASE(row2,$ ;.............................
-    /COLUMN,$
-    FRAME = 1)
-    
-  empty = WIDGET_LABEL(row2col1,$
-    VALUE = '')
-    
-  rowa = WIDGET_BASE(row2col1,$
-    /ROW)
-  label = WIDGET_LABEL(rowa,$
-    /ALIGN_LEFT, $
-    VALUE = '          Full file name: ')
-  value = WIDGET_LABEL(rowa,$
-    VALUE = 'N/A',$
-    /ALIGN_LEFT, $
-    SCR_XSIZE = 500,$
-    UNAME = 'reduce_sangle_base_full_file_name')
-    
-  rowb = WIDGET_BASE(row2col1,$
-    /ROW)
-  label = WIDGET_LABEL(rowb,$
-    /ALIGN_LEFT, $
-    VALUE = '      Dangle [rad (deg)]: ')
-  value = WIDGET_LABEL(rowb,$
-    VALUE = 'N/A',$
-    /ALIGN_LEFT, $
-    SCR_XSIZE = 200,$
-    UNAME = 'reduce_sangle_base_dangle_value')
-    
-  rowbb = WIDGET_BASE(row2col1,$
-    /ROW)
-  label = WIDGET_LABEL(rowbb,$
-    /ALIGN_LEFT, $
-    VALUE = '     Dangle0 [rad (deg)]: ')
-  value = WIDGET_LABEL(rowbb,$
-    VALUE = 'N/A',$
-    /ALIGN_LEFT, $
-    SCR_XSIZE = 200,$
-    UNAME = 'reduce_sangle_base_dangle0_value')
-    
-  rowc = WIDGET_BASE(row2col1,$
-    /ROW)
-  label = WIDGET_LABEL(rowc,$
-    /ALIGN_LEFT, $
-    VALUE = '      Sangle [rad (deg)]: ')
-  value = WIDGET_LABEL(rowc,$
-    VALUE = 'N/A',$
-    /ALIGN_LEFT, $
-    SCR_XSIZE = 200,$
-    UNAME = 'reduce_sangle_base_sangle_value')
-    
-  rowd = WIDGET_BASE(row2col1,$
-    /ROW)
-  label = WIDGET_LABEL(rowd,$
-    /ALIGN_LEFT, $
-    VALUE = '                  Dirpix: ')
-  value = WIDGET_LABEL(rowd,$
-    VALUE = 'N/A',$
-    /ALIGN_LEFT, $
-    SCR_XSIZE = 100,$
-    UNAME = 'reduce_sangle_base_dirpix_value')
-    
-  rowe = WIDGET_BASE(row2col1,$
-    /ROW)
-  label = WIDGET_LABEL(rowe,$
-    /ALIGN_LEFT, $
-    VALUE = '                  RefPix: ')
-  value = WIDGET_LABEL(rowe,$
-    /ALIGN_LEFT, $
-    VALUE = 'N/A',$
-    SCR_XSIZE = 100,$
-    UNAME = 'reduce_sangle_base_refpix_value')
-    
-  rowf = WIDGET_BASE(row2col1,$
-    /ROW)
-  label = WIDGET_LABEL(rowf,$
-    /ALIGN_LEFT, $
-    VALUE = 'Sample-Det. distance [m]: ')
-  value = WIDGET_LABEL(rowf,$
-    /ALIGN_LEFT, $
-    VALUE = 'N/A',$
-    SCR_XSIZE = 100,$
-    UNAME = 'reduce_sangle_base_sampledetdis_value')
-    
-  row2col2 = WIDGET_BASE(row2,$ ;.............................
-    FRAME = 0)
-    
-  base1 = WIDGET_BASE(row2col2,$
-    XOFFSET = 155,$
-    YOFFSET = 40,$
-    /ROW)
-  label = WIDGET_LABEL(base1,$
+
+  label = WIDGET_LABEL(base3m,$
     /ALIGN_LEFT,$
-    VALUE = 'RefPix:')
-  value = WIDGET_TEXT(base1,$
+    VALUE = 'RefPix:')    
+  value = WIDGET_TEXT(base3m,$
     VALUE = 'N/A',$
     UNAME = 'reduce_sangle_base_refpix_user_value',$
     /EDITABLE, $
     XSIZE = 10)
-    space = WIDGET_LABEL(base1,$
+    space = WIDGET_LABEL(base3m,$
     VALUE = '  ')
-  label = WIDGET_LABEL(base1,$
+    
+  label = WIDGET_LABEL(base3m,$
     /ALIGN_LEFT,$
     VALUE = 'DirPix:')
-  value = WIDGET_TEXT(base1,$
+  value = WIDGET_TEXT(base3m,$
     VALUE = 'N/A',$
     UNAME = 'reduce_sangle_base_dirpix_user_value',$
     /EDITABLE, $
     XSIZE = 10)
-    
-  base2 = WIDGET_BASE(row2col2,$
-    XOFFSET = 155,$
-    YOFFSET = 110,$
+;=================================
+; Sangle
+  row1col3n = WIDGET_BASE(row1col3Main,$ ;..................................
+    /COLUMN, $
+     FRAME = 2) 
+  base3n = WIDGET_BASE(row1col3n,$
     FRAME = 1,$
-    /BASE_ALIGN_CENTER,$
     /ROW)
-  label = WIDGET_LABEL(base2,$
-;    /ALIGN_LEFT,$
-    VALUE = 'Sangle [rad (deg)]: ')
-  value = WIDGET_LABEL(base2,$
+
+  label = WIDGET_LABEL(base3n,$
+    /ALIGN_LEFT,$
+    VALUE = 'Sangle [rad (deg)]: ')    
+  value = WIDGET_LABEL(base3n,$
     VALUE = 'N/A (N/A)',$
     UNAME = 'reduce_sangle_base_sangle_user_value',$
-    SCR_XSIZE = 200)
-;    /ALIGN_LEFT)
+    SCR_XSIZE = 200,$
+    /ALIGN_LEFT)
+;=================================
+; DONE button
+
+  row1col3o = WIDGET_BASE(row1col3Main,$ ;..................................
+    /COLUMN, $
+     FRAME = 0) 
+   base3o = WIDGET_BASE(row1col3o,$
+    /ROW)
     
-  done = WIDGET_BUTTON(row2col2,$
+  done = WIDGET_BUTTON(row1col3o,$
     VALUE = 'DONE WITH SANGLE CALCULATION',$
     UNAME = 'reduce_sangle_done_button',$
-    YOFFSET = 165, $
-    XOFFSET = 20, $
-    SCR_XSIZE = 475)
+    SCR_XSIZE = 320) 
     
+
   ;****************************************************************************
-    
+  ; THIS IS THE INITIAL PAGE  
   TopBase = WIDGET_BASE(TabBase,$
     UNAME     = 'reduce_step1_top_base',$
     XOFFSET   = sBase.size[0],$
@@ -516,11 +554,16 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     /RESIZEABLE_COLUMNS,$
     ALIGNMENT = 0,$
     XSIZE = 2,$
-    YSIZE = 18,$
-    SCR_XSIZE = 1230,$
-    SCR_YSIZE = 400,$
-    COLUMN_WIDTHS = [100,1110],$
-    /SCROLL,$
+; Code change (RC Ward, April 7, 2010): use variable to specify the number of scattering angles    
+;    YSIZE = 18,$
+     YSIZE = number_of_sangle,$
+;    SCR_XSIZE = 1230,$
+;    SCR_YSIZE = 400,$
+; Code change (RC Ward, April 7, 2010): Change size of table - make it more realistic
+    SCR_XSIZE = 800, $
+    SCR_YSIZE = 300, $
+    COLUMN_WIDTHS = [100,700],$
+;    /SCROLL,$
     /ALL_EVENTS)
     
   WIDGET_CONTROL, table, SET_TABLE_SELECT=[0,0,1,0]
@@ -610,8 +653,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     UNAME = 'reduce_tab1_pola_4',$
     /NO_RELEASE,$
     SENSITIVE = 1)
-    
-    
+       
   ;WIDGET_CONTROL, Row4Base, SET_BUTTON=1 ;all spin states are selected by default
   WIDGET_CONTROL, button1, /SET_BUTTON
   WIDGET_CONTROL, button3, /SET_BUTTON
@@ -645,11 +687,12 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
   big_space = WIDGET_LABEL(Row5_row2,$
     VALUE = '                                               ')
     
+; Code change (RC Ward, March 27, 2010): Images used for the buttons were simplified.    
   ;match button
   tooltip = 'Spin States of the Data and Normalization files are identical.'
   match = WIDGET_DRAW(Row5_row2,$
-    SCR_XSIZE = 200,$
-    SCR_YSIZE = 109,$
+    SCR_XSIZE = 243,$
+    SCR_YSIZE = 47,$
     /BUTTON_EVENTS,$
     /MOTION_EVENTS,$
     /TRACKING_EVENTS,$
@@ -664,8 +707,8 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
   tooltip = 'Spin State of Normalization files is fixed (Off_Off), no ' + $
     'matter the spin state of the Data file.'
   not_match = WIDGET_DRAW(Row5_row2,$
-    SCR_XSIZE = 200,$
-    SCR_YSIZE = 109,$
+    SCR_XSIZE = 245,$
+    SCR_YSIZE = 47,$
     /BUTTON_EVENTS,$
     /MOTION_EVENTS,$
     /TRACKING_EVENTS,$
@@ -679,8 +722,8 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
   tooltip = 'Spin States of Data and Normalization files do not match and ' + $
     'must be manually defined by the user.'
   match = WIDGET_DRAW(Row5_row2,$
-    SCR_XSIZE = 200,$
-    SCR_YSIZE = 109,$
+    SCR_XSIZE = 245,$
+    SCR_YSIZE = 47,$
     /BUTTON_EVENTS,$
     /MOTION_EVENTS,$
     /TRACKING_EVENTS,$

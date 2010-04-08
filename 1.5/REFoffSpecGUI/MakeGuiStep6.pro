@@ -495,7 +495,8 @@ PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
     YOFFSET   = sBaseTab.size[1],$
     SCR_XSIZE = sBaseTab.size[2],$
     SCR_YSIZE = sBaseTab.size[3],$
-    TITLE     = sBaseTab.title)
+    TITLE     = sBaseTab.title, $
+    /SCROLL)
     
   ;Output file name frame -----------------------------------------------------
   ;title
@@ -589,7 +590,8 @@ PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
     /NO_ROW_HEADERS,$
     /ROW_MAJOR,$
     /EDITABLE,$
-    /RESIZEABLE_COLUMNS)
+    /RESIZEABLE_COLUMNS,$
+    /SCROLL)
     
   ;label of polarization state used ---------------------------------------------
   wSummaryWorkingPola = $
@@ -777,7 +779,7 @@ PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
     UNAME   = sPolar2SummaryTitle.uname,$
     VALUE   = sPolar2SummaryTitle.value)
     
-  ;excluse polar2
+  ;exclude polar2
   wPolar = WIDGET_BASE(BaseTab,$
     XOFFSET = sTurnOffPolar2.size[0],$
     YOFFSET = sTurnoffPolar2.size[1],$
@@ -813,7 +815,8 @@ PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
     /NO_ROW_HEADERS,$
     /ROW_MAJOR,$
     /EDITABLE,$
-    /RESIZEABLE_COLUMNS)
+    /RESIZEABLE_COLUMNS, $
+    /SCROLL)
     
   ;label of polarization state used ---------------------------------------------
   wPolar2SummaryPola = $
@@ -907,7 +910,8 @@ PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
     /NO_ROW_HEADERS,$
     /EDITABLE,$
     /ROW_MAJOR,$
-    /RESIZEABLE_COLUMNS)
+    /RESIZEABLE_COLUMNS,$
+    /SCROLL)
     
   ;label of polarization state used ---------------------------------------------
   wPolar3SummaryPola = $
@@ -1001,7 +1005,8 @@ PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
     /NO_ROW_HEADERS,$
     /ROW_MAJOR,$
     /EDITABLE,$    
-    /RESIZEABLE_COLUMNS)
+    /RESIZEABLE_COLUMNS,$
+    /SCROLL)
     
   ;label of polarization state used ---------------------------------------------
   wPolar4SummaryPola = $

@@ -37,12 +37,16 @@ PRO  reduce_step3_run_jobs, Event
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   instrument = (*global).instrument
-; Code change (RC Ward, Mar 2, 2010): pass TOF Cuttoff min and max through global variable
+; Code change (RC Ward, Mar 2, 2010): pass TOF Cutoff min and max through global variable
+; Code change (RC Ward, Mar 17, 2010): apply TOF cutoffs only if switch is yes
+  apply_tof_cutoffs = (*global).apply_tof_cutoffs
   tof_cutoff_min = (*global).tof_cutoff_min
   tof_cutoff_max = (*global).tof_cutoff_max  
-  print, "TOF Cuttoff Min: ", tof_cutoff_min
-  print, "TOF Cuttoff Max: ", tof_cutoff_max
-    
+  print, "Apply Cutoffs: ", apply_tof_cutoffs
+  if (apply_tof_cutoffs EQ "yes") THEN BEGIN
+    print, "TOF Cutoff Min: ", tof_cutoff_min
+    print, "TOF Cutoff Max: ", tof_cutoff_max
+  ENDIF  
   ;get big table of step3
   big_table = getTableValue(Event, 'reduce_tab3_main_spin_state_table_uname')
   nbr_row = (SIZE(big_table))(2)
@@ -134,14 +138,11 @@ PRO  reduce_step3_run_jobs, Event
     cmd += ' ' + reduce_structure.norm_roi + '=' + norm_roi
 
     ;tof_cutoff_min file
-    IF (instrument EQ 'REF_M') THEN BEGIN
-; do apply cutoff for magentism reflectometer - for now (RC Ward, Mar 14, 2010)
+    IF (apply_tof_cutoffs EQ 'yes') THEN BEGIN
+; apply TOF cutoffs only if apply_tof_cutoffs is yes (RC Ward, Mar 17, 2010)
      cmd += ' ' + reduce_structure.tof_cut_min + '=' + tof_cutoff_min
      cmd += ' ' + reduce_structure.tof_cut_max + '=' + tof_cutoff_max
-    ENDIF ELSE BEGIN
-      cmd += ' ' + reduce_structure.tof_cut_min + '=' + tof_cutoff_min
-      cmd += ' ' + reduce_structure.tof_cut_max + '=' + tof_cutoff_max
-    ENDELSE
+    ENDIF
     print, 'cmd: ', cmd
 
     

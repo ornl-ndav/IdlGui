@@ -107,8 +107,9 @@ PRO MAIN_BASE_event, Event
     check_sangle_spin_state_buttons, Event
     MapBase, Event, 'reduce_step1_sangle_base', 1
     MapBase, Event, 'reduce_step1_sangle_base_label', 1
-    MapBase, Event, 'reduce_step1_sangle_base_equation', 1
-    display_reduce_step1_sangle_buttons, Event=event, global
+; Change code (RC Ward, March 22, 2010): Remove the graphic with the equation for Sangle.
+;    MapBase, Event, 'reduce_step1_sangle_base_equation', 1
+;    display_reduce_step1_sangle_buttons, Event=event, global
     select_sangle_first_run_number_by_default, Event
     display_metatada_of_sangle_selected_row, Event
     retrieve_tof_array_from_nexus, Event, result
@@ -498,7 +499,8 @@ PRO MAIN_BASE_event, Event
     save_sangle_table, Event
     MapBase, Event, 'reduce_step1_sangle_base', 0
     MapBase, Event, 'reduce_step1_sangle_base_label', 0
-    MapBase, Event, 'reduce_step1_sangle_base_equation', 0
+; Change code (RC Ward, March 22, 2010): Remove the graphic with the equation for Sangle.   
+;    MapBase, Event, 'reduce_step1_sangle_base_equation', 0
     display_reduce_step1_buttons, EVENT=EVENT,$
       ACTIVATE=(*global).reduce_step1_spin_state_mode, $
       global
