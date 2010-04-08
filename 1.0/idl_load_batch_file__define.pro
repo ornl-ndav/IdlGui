@@ -53,7 +53,7 @@ pro add_data_spin_state, event, spinState
   
   data_spin_state = (*(*global).data_spin_state)
   if (data_spin_state[0] eq '') then begin
-    data_spin_state[0] = data_spin_state[0]
+    data_spin_state[0] = spinState[0]
   endif else begin
     data_spin_state = [data_spin_state,spinState[0]]
   endelse
@@ -257,8 +257,6 @@ FUNCTION PopulateBatchTable, Event, BatchFileName
                 /EXTRACT, $
                 /REGEX,$
                 COUNT = length)
-              print, 'lenght: ' , length
-              help, cmd_array
               IF (length NE 1) THEN BEGIN
                 cmd = cmd_array[0] + ' ' + cmd_array[1]
               ENDIF else begin
