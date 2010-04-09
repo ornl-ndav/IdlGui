@@ -90,7 +90,7 @@ dTable = { size      : [XYoff[0], $
                         'SF',$
                         'DATE'],$
            align        : TableAlign,$
-           column_width : [40,140,140,60,160]}
+           column_width : [40,140,140,70,160]}
 
 ;Refresh bash file button -----------------------------------------------------
 XYoff = [0,5]
