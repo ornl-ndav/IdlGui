@@ -69,6 +69,7 @@ PRO reset_all_button, Event
   (*(*global).data_spin_state) = strarr(1)
   (*(*global).norm_spin_state) = strarr(1)
   (*(*global).list_of_spins_for_each_angle) = ptr_new(0L)
+  (*global).working_with_ref_m_batch = 0b ;reset type of batch file
   uname = ['off_off','off_on','on_off','on_on']
   for i=0, 3 do begin
     ActivateWidget, event, uname[i], 0
