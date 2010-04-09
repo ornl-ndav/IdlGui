@@ -300,7 +300,7 @@ PRO MakeGuiMainBaseComponents, MAIN_BASE, StepsTabSize
   uname = 'spin_state_button_base',$
   /row,$
   map = 1,$
-  /nonexclusive)
+  /exclusive)
     
   off_off = widget_button(spin_state,$
   value = 'Off_Off',$

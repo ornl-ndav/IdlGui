@@ -364,12 +364,12 @@ PRO ref_scale_LoadBatchFile, Event
         DRfiles = DRfiles[0,*]
         rDRfiles = reform(DRfiles,n_elements(DRfiles))
         result = batch_repopulate_gui(Event, rDRfiles)
-      
-      
-      
-      
-      
-      
+        
+        
+        
+        
+        
+        
         refresh_bash_file_status = 1 ;enable REFRESH and SAVE AS Bash File
       endif else begin            ;stop loading process
         LogText = '> Loading Batch File ' + BatchFileName + ' ... FAILED'
@@ -569,10 +569,14 @@ pro activate_right_spin_states_button, event
   (*(*global).list_of_spins_for_each_angle) = spins
   
   index = 0
+  first_time = 1b
   while (index lt nbr) do begin
     uname = strlowcase(strcompress(spins[index],/remove_all))
     ActivateWidget, event, uname, 1
-    set_button, event, uname
+    if (first_time) then begin
+      set_button, event, uname
+      first_time = 0b
+    endif
     index++
   endwhile
   
