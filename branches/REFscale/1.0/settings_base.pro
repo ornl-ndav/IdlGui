@@ -49,7 +49,7 @@ pro settings_base_event, Event
     ;configure button
     widget_info(event.top, $
       find_by_uname='auto_cleaning_data_configure_button'): begin
-      configure_auto_cleanup, Event=main_event
+      configure_auto_cleanup, Event=main_event, global=global
     end
     
     widget_info(event.top, $

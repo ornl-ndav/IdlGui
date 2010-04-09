@@ -60,7 +60,7 @@ pro configure_auto_cleanup_event, Event
 end
 
 ;------------------------------------------------------------------------------
-PRO configure_auto_cleanup_gui, wBase, main_base_geometry
+PRO configure_auto_cleanup_gui, wBase, main_base_geometry, global
 
   main_base_xoffset = main_base_geometry.xoffset
   main_base_yoffset = main_base_geometry.yoffset
@@ -95,7 +95,7 @@ PRO configure_auto_cleanup_gui, wBase, main_base_geometry
     field = cw_field(row,$
     /row,$
     title = 'Percentage of Q to remove on both sides (%) ',$
-    value = 10,$
+    value = (*global).percentage_of_q_to_remove_value,$
     xsize = 2,$
     /integer,$
     uname = 'perecentage_of_q_to_remove_uname')
@@ -108,22 +108,22 @@ PRO configure_auto_cleanup_gui, wBase, main_base_geometry
 END
 
 ;------------------------------------------------------------------------------
-PRO configure_auto_cleanup, main_base=main_base, Event=event
+PRO configure_auto_cleanup, Event=event, global=global
 
-  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
-    id = WIDGET_INFO(main_base, FIND_BY_UNAME='MAIN_BASE_ref_scale')
-    WIDGET_CONTROL,main_base,GET_UVALUE=global
-    event = 0
-  ENDIF ELSE BEGIN
+;  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
+;    id = WIDGET_INFO(main_base, FIND_BY_UNAME='MAIN_BASE_ref_scale')
+;    WIDGET_CONTROL,main_base,GET_UVALUE=global
+;    event = 0
+;  ENDIF ELSE BEGIN
     id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
-    WIDGET_CONTROL,Event.top,GET_UVALUE=global
-  ENDELSE
+;    WIDGET_CONTROL,Event.top,GET_UVALUE=global
+;  ENDELSE
   main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
   
   ;build gui
   wBase1 = ''
   configure_auto_cleanup_gui, wBase1, $
-    main_base_geometry
+    main_base_geometry, global
     
   WIDGET_CONTROL, wBase1, /REALIZE
   

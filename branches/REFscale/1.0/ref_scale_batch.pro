@@ -235,7 +235,7 @@ end
 
 
 ;==============================================================================
-FUNCTION batch_repopulate_gui, Event, DRfiles
+FUNCTION batch_repopulate_gui, Event, DRfiles, spin_state_nbr=spin_state_nbr
 
   id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
   WIDGET_CONTROL,id,GET_UVALUE=global
@@ -247,7 +247,10 @@ FUNCTION batch_repopulate_gui, Event, DRfiles
   
   FOR i=0,(sz-1) DO BEGIN
     index = (*global).NbrFilesLoaded
-    SuccessStatus = StoreFlts(Event, DRfiles[i], i)
+    SuccessStatus = StoreFlts(Event, $
+      DRfiles[i], i, $
+      spin_state_nbr=spin_state_nbr)
+      
     IF (SuccessStatus) THEN BEGIN
       ShortFileName = get_file_name_only(DRfiles[i]) ;_get
       LongFileName  = DRfiles[i]
@@ -463,15 +466,17 @@ PRO ref_scale_LoadBatchFile, Event
       
       if (FileStatus eq 1) then begin ;continue loading process
       
-        ;first, work with only first spin state
-        DRfiles = DRfiles[0,*]
-        rDRfiles = reform(DRfiles,n_elements(DRfiles))
-        result = batch_repopulate_gui(Event, rDRfiles)
-        
-        
-        
-        
-        
+        ;work on 1 spin state at a time
+        nbr_spin = (size(DRfiles))[2]
+        index_spin = 0
+        while (index_spin lt nbr_spin) do begin
+          DRfiles = DRfiles[index_spin,*]
+          rDRfiles = reform(DRfiles,n_elements(DRfiles))
+          result = batch_repopulate_gui(Event, $
+            rDRfiles, $
+            spin_state_nbr=index_spin)
+          index_spin++
+        endwhile
         
         refresh_bash_file_status = 1 ;enable REFRESH and SAVE AS Bash File
       endif else begin            ;stop loading process
