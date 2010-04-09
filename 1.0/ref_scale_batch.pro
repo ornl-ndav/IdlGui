@@ -312,6 +312,109 @@ FUNCTION batch_repopulate_gui, Event, DRfiles
 END
 
 ;==============================================================================
+PRO ref_scale_PreviewBatchFile, Event
+  id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
+  WIDGET_CONTROL,id,GET_UVALUE=global
+  ;retrieve BatchFileName
+  BatchFileName = getBatchFileName(Event)
+  XDISPLAYFILE, BatchFileName, TITLE='Preview of ' + BatchFileName
+END
+
+;==============================================================================
+PRO ref_scale_refresh_batch_file, Event
+  id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
+  WIDGET_CONTROL,id,GET_UVALUE=global
+  
+  LogText = '> Refresh Batch File:'
+  idl_send_to_geek_addLogBookText, Event, LogText
+  BatchFileName = (*global).BatchFileName
+  LogText = '-> Batch File Name: ' + BatchFileName
+  idl_send_to_geek_addLogBookText, Event, LogText
+  
+  iFile = OBJ_NEW('idl_create_batch_file', $
+    Event, $
+    BatchFileName, $
+    (*(*global).BatchTable))
+    
+END
+
+;==============================================================================
+PRO ref_scale_save_as_batch_file, Event
+  id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
+  WIDGET_CONTROL,id,GET_UVALUE=global
+  
+  path            = (*global).BatchDefaultPath
+  filter          = (*global).BatchDefaultFileFilter
+  new_path        = ''
+  batch_extension = (*global).BatchExtension
+  
+  dialog_id = widget_info(event.top, find_by_uname='MAIN_BASE_ref_scale')
+  BatchFileName   = DIALOG_PICKFILE(FILTER            = filter,$
+    GET_PATH          = new_path,$
+    PATH              = path,$
+    DEFAULT_EXTENSION = batch_extension,$
+    dialog_parent     = dialog_id,$
+    /OVERWRITE_PROMPT,$
+    /WRITE)
+    
+  IF (BatchFileName NE '') THEN BEGIN
+    LogText = '> Save Batch File:'
+    idl_send_to_geek_addLogBookText, Event, LogText
+    (*global).BatchFileName = BatchFileName
+    LogText = '-> Batch File Name: ' + BatchFileName
+    idl_send_to_geek_addLogBookText, Event, LogText
+    ;put new name of BatchFile in LoadBatchFile text field
+    putValueInTextField, Event, 'load_batch_file_text_field', BatchFileName
+    ;Create batch file
+    iFile = OBJ_NEW('idl_create_batch_file', $
+      Event, $
+      BatchFileName, $
+      (*(*global).BatchTable))
+    ;reset the path
+    (*global).BatchDefaultPath = new_path
+  ENDIF
+  
+  
+END
+
+;+
+; :Description:
+;   this procedure takes a string of data spin states and activates or hide
+;   the spin states of interest. This is based on the first entry of the
+;   batch file assuming that all the other entries use the same set of spin
+;   states
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro activate_right_spin_states_button, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  data_spin_state = (*(*global).data_spin_state)
+  spin_state = data_spin_state[0]
+  spins = strsplit(spin_state,'/',/extract,count=nbr)
+  (*(*global).list_of_spins_for_each_angle) = spins
+  
+  index = 0
+  first_time = 1b
+  while (index lt nbr) do begin
+    uname = strlowcase(strcompress(spins[index],/remove_all))
+    ActivateWidget, event, uname, 1
+    if (first_time) then begin
+      set_button, event, uname
+      first_time = 0b
+    endif
+    index++
+  endwhile
+  
+end
+
+
+;==============================================================================
 PRO ref_scale_LoadBatchFile, Event
   id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
   WIDGET_CONTROL,id,GET_UVALUE=global
@@ -480,104 +583,3 @@ PRO ref_scale_LoadBatchFile, Event
 ;  ENDELSE
 END
 
-;==============================================================================
-PRO ref_scale_PreviewBatchFile, Event
-  id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
-  WIDGET_CONTROL,id,GET_UVALUE=global
-  ;retrieve BatchFileName
-  BatchFileName = getBatchFileName(Event)
-  XDISPLAYFILE, BatchFileName, TITLE='Preview of ' + BatchFileName
-END
-
-;==============================================================================
-PRO ref_scale_refresh_batch_file, Event
-  id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
-  WIDGET_CONTROL,id,GET_UVALUE=global
-  
-  LogText = '> Refresh Batch File:'
-  idl_send_to_geek_addLogBookText, Event, LogText
-  BatchFileName = (*global).BatchFileName
-  LogText = '-> Batch File Name: ' + BatchFileName
-  idl_send_to_geek_addLogBookText, Event, LogText
-  
-  iFile = OBJ_NEW('idl_create_batch_file', $
-    Event, $
-    BatchFileName, $
-    (*(*global).BatchTable))
-    
-END
-
-;==============================================================================
-PRO ref_scale_save_as_batch_file, Event
-  id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
-  WIDGET_CONTROL,id,GET_UVALUE=global
-  
-  path            = (*global).BatchDefaultPath
-  filter          = (*global).BatchDefaultFileFilter
-  new_path        = ''
-  batch_extension = (*global).BatchExtension
-  
-  dialog_id = widget_info(event.top, find_by_uname='MAIN_BASE_ref_scale')
-  BatchFileName   = DIALOG_PICKFILE(FILTER            = filter,$
-    GET_PATH          = new_path,$
-    PATH              = path,$
-    DEFAULT_EXTENSION = batch_extension,$
-    dialog_parent     = dialog_id,$
-    /OVERWRITE_PROMPT,$
-    /WRITE)
-    
-  IF (BatchFileName NE '') THEN BEGIN
-    LogText = '> Save Batch File:'
-    idl_send_to_geek_addLogBookText, Event, LogText
-    (*global).BatchFileName = BatchFileName
-    LogText = '-> Batch File Name: ' + BatchFileName
-    idl_send_to_geek_addLogBookText, Event, LogText
-    ;put new name of BatchFile in LoadBatchFile text field
-    putValueInTextField, Event, 'load_batch_file_text_field', BatchFileName
-    ;Create batch file
-    iFile = OBJ_NEW('idl_create_batch_file', $
-      Event, $
-      BatchFileName, $
-      (*(*global).BatchTable))
-    ;reset the path
-    (*global).BatchDefaultPath = new_path
-  ENDIF
-  
-  
-END
-
-;+
-; :Description:
-;   this procedure takes a string of data spin states and activates or hide
-;   the spin states of interest. This is based on the first entry of the
-;   batch file assuming that all the other entries use the same set of spin
-;   states
-;
-; :Params:
-;    event
-;
-; :Author: j35
-;-
-pro activate_right_spin_states_button, event
-  compile_opt idl2
-  
-  widget_control, event.top, get_uvalue=global
-  
-  data_spin_state = (*(*global).data_spin_state)
-  spin_state = data_spin_state[0]
-  spins = strsplit(spin_state,'/',/extract,count=nbr)
-  (*(*global).list_of_spins_for_each_angle) = spins
-  
-  index = 0
-  first_time = 1b
-  while (index lt nbr) do begin
-    uname = strlowcase(strcompress(spins[index],/remove_all))
-    ActivateWidget, event, uname, 1
-    if (first_time) then begin
-      set_button, event, uname
-      first_time = 0b
-    endif
-    index++
-  endwhile
-  
-end

@@ -214,25 +214,47 @@ FUNCTION StoreFlts, Event, LongFileName, index
       (*(*global).metadata_CE_file) = metadata_CE_file
     ENDIF
     
+;    ;store flt0, ftl1 and flt2 in ptrarr
+;    flt0_ptr = (*global).flt0_ptr
+;    flt0_rescale_ptr = (*global).flt0_rescale_ptr
+;    *flt0_ptr[index] = flt0
+;    *flt0_rescale_ptr[index] = flt0
+;    (*global).flt0_ptr = flt0_ptr
+;    (*global).flt0_rescale_ptr = flt0_rescale_ptr
+;    
+;    flt1_ptr = (*global).flt1_ptr
+;    flt1_rescale_ptr = (*global).flt1_rescale_ptr
+;    *flt1_ptr[index] = flt1
+;    *flt1_rescale_ptr[index] = flt1
+;    (*global).flt1_ptr = flt1_ptr
+;    (*global).flt1_rescale_ptr = flt1_rescale_ptr
+;    
+;    flt2_ptr = (*global).flt2_ptr
+;    flt2_rescale_ptr = (*global).flt2_rescale_ptr
+;    *flt2_ptr[index] = flt2
+;    *flt2_rescale_ptr[index] = flt2
+;    (*global).flt2_ptr = flt2_ptr
+;    (*global).flt2_rescale_ptr = flt2_rescale_ptr
+
     ;store flt0, ftl1 and flt2 in ptrarr
     flt0_ptr = (*global).flt0_ptr
     flt0_rescale_ptr = (*global).flt0_rescale_ptr
-    *flt0_ptr[index] = flt0
-    *flt0_rescale_ptr[index] = flt0
+    *flt0_ptr[index,0] = flt0
+    *flt0_rescale_ptr[index,0] = flt0
     (*global).flt0_ptr = flt0_ptr
     (*global).flt0_rescale_ptr = flt0_rescale_ptr
     
     flt1_ptr = (*global).flt1_ptr
     flt1_rescale_ptr = (*global).flt1_rescale_ptr
-    *flt1_ptr[index] = flt1
-    *flt1_rescale_ptr[index] = flt1
+    *flt1_ptr[index,0] = flt1
+    *flt1_rescale_ptr[index,0] = flt1
     (*global).flt1_ptr = flt1_ptr
     (*global).flt1_rescale_ptr = flt1_rescale_ptr
     
     flt2_ptr = (*global).flt2_ptr
     flt2_rescale_ptr = (*global).flt2_rescale_ptr
-    *flt2_ptr[index] = flt2
-    *flt2_rescale_ptr[index] = flt2
+    *flt2_ptr[index,0] = flt2
+    *flt2_rescale_ptr[index,0] = flt2
     (*global).flt2_ptr = flt2_ptr
     (*global).flt2_rescale_ptr = flt2_rescale_ptr
     
