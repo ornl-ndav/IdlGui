@@ -360,6 +360,7 @@ PRO ref_scale_LoadBatchFile, Event
       
       if (FileStatus eq 1) then begin ;continue loading process
       
+        ;first, work with only first spin state
         DRfiles = DRfiles[0,*]
         rDRfiles = reform(DRfiles,n_elements(DRfiles))
         result = batch_repopulate_gui(Event, rDRfiles)

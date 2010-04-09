@@ -58,7 +58,7 @@ pro auto_full_scaling_from_batch_file, Event
   
   ;work on CE file (determine Q range to use to average y range to 1)
   x_axis_ce_file = *flt0_ptr[0]
-  qmin = float(x_axis_ce_file[0])
+  qmin = float(x_axis_ce_file[0]) 
   qmax = float(x_axis_ce_file[n_elements(x_axis_ce_file)-1]) < 0.009
   
   putValueInTextField, event, 'step2_q1_text_field', qmin

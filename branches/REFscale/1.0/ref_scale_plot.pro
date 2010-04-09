@@ -208,9 +208,9 @@ PRO plot_loaded_file, Event, index
               oPLOT, $
                 flt0, $
                 flt1, $
-;                xrange=[xmin,xmax], $
-;                XSTYLE = 1,$
-;                yrange=[ymin,ymax], $
+                ;                xrange=[xmin,xmax], $
+                ;                XSTYLE = 1,$
+                ;                yrange=[ymin,ymax], $
                 color=MainPlotColor
             END
             
@@ -226,10 +226,10 @@ PRO plot_loaded_file, Event, index
               oPLOT, $
                 flt0, $
                 flt1, $
-;                /ylog, $
-;                XSTYLE = 1,$
- ;               xrange=[xmin,xmax], $
- ;               yrange=[ymin,ymax], $
+                ;                /ylog, $
+                ;                XSTYLE = 1,$
+                ;               xrange=[xmin,xmax], $
+                ;               yrange=[ymin,ymax], $
                 color=MainPlotColor
             END
           ENDCASE
@@ -252,10 +252,10 @@ PRO plot_loaded_file, Event, index
               oPLOT, $
                 flt0, $
                 flt1, $
- ;               /xlog, $
- ;               XSTYLE = 1,$
-;                xrange=[xmin,xmax], $
-;                yrange=[ymin,ymax], $
+                ;               /xlog, $
+                ;               XSTYLE = 1,$
+                ;                xrange=[xmin,xmax], $
+                ;                yrange=[ymin,ymax], $
                 color=MainPlotColor
             END
             
@@ -272,11 +272,11 @@ PRO plot_loaded_file, Event, index
               oPLOT, $
                 flt0, $
                 flt1, $
-  ;              /xlog, $
-  ;              /ylog, $
-  ;              XSTYLE = 1,$
- ;               xrange=[xmin,xmax], $
- ;               yrange=[ymin,ymax], $
+                ;              /xlog, $
+                ;              /ylog, $
+                ;              XSTYLE = 1,$
+                ;               xrange=[xmin,xmax], $
+                ;               yrange=[ymin,ymax], $
                 color=MainPlotColor
             END
           ENDCASE
@@ -302,12 +302,12 @@ PRO plot_loaded_file, Event, index
         CASE (IsYlin) OF
         
           0: BEGIN
-          oPLOT, $
+            oPLOT, $
               flt0, $
               flt1, $
-    ;          XSTYLE = 1,$
-   ;           xrange=[xmin,xmax], $
-   ;           yrange=[ymin,ymax], $
+              ;          XSTYLE = 1,$
+              ;           xrange=[xmin,xmax], $
+              ;           yrange=[ymin,ymax], $
               color=MainPlotColor
           END
           
@@ -315,11 +315,11 @@ PRO plot_loaded_file, Event, index
             oPLOT, $
               flt0, $
               flt1, $
- ;             /ylog, $
- ;             XSTYLE = 1,$
-  ;            xrange=[xmin,xmax], $
-  ;            yrange=[ymin,ymax], $
-;              /noerase, $
+              ;             /ylog, $
+              ;             XSTYLE = 1,$
+              ;            xrange=[xmin,xmax], $
+              ;            yrange=[ymin,ymax], $
+              ;              /noerase, $
               color=MainPlotColor
           END
         ENDCASE
@@ -332,23 +332,23 @@ PRO plot_loaded_file, Event, index
             oPLOT, $
               flt0, $
               flt1, $
-   ;           /xlog, $
-   ;           XSTYLE = 1,$
-  ;            xrange=[xmin,xmax], $
-  ;            yrange=[ymin,ymax], $
- ;             /noerase, $
+              ;           /xlog, $
+              ;           XSTYLE = 1,$
+              ;            xrange=[xmin,xmax], $
+              ;            yrange=[ymin,ymax], $
+              ;             /noerase, $
               color=MainPlotColor
           END
           1: BEGIN
             oPLOT, $
               flt0, $
               flt1, $
-  ;            /xlog, $
-  ;            XSTYLE = 1,$
-  ;            /ylog, $
- ;             xrange=[xmin,xmax], $
- ;             yrange=[ymin,ymax], $
- ;             /noerase, $
+              ;            /xlog, $
+              ;            XSTYLE = 1,$
+              ;            /ylog, $
+              ;             xrange=[xmin,xmax], $
+              ;             yrange=[ymin,ymax], $
+              ;             /noerase, $
               color=MainPlotColor
           END
         ENDCASE
@@ -419,6 +419,8 @@ PRO plot_rescale_CE_file, Event
   
   ;divide by scaling factor
   CE_scaling_factor = (*global).CE_scaling_factor
+  putTextFieldValue, Event, 'step2_sf_text_field', $
+    strcompress(CE_scaling_factor,/remove_all)
   flt1              = flt1/CE_scaling_factor
   flt2              = flt2/CE_scaling_factor
   
@@ -476,7 +478,6 @@ PRO plot_rescale_CE_file, Event
 ENDCASE
 
 errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
-
 
 ;polynome of degree 1 for CE
 IF (cooef[0] NE 0 AND $

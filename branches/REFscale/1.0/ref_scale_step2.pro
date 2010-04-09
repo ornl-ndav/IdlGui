@@ -238,7 +238,8 @@ PRO run_full_step2, Event
     if ((*global).BatchFileName ne '') then begin
       index_array = getIndexArrayOfActiveBatchRow(Event)
       BatchTable      = (*(*global).BatchTable)
-      BatchTable[7,index_array[0]] = STRCOMPRESS(SF,/REMOVE_ALL)
+      BatchTable[8,index_array[0]] = STRCOMPRESS(SF,/REMOVE_ALL)
+      print, 'SF: ' , SF
       (*(*global).BatchTable) = BatchTable
       UpdateBatchTable, Event, BatchTable ;_batch
     endif
