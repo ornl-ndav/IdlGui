@@ -109,6 +109,20 @@ PRO BrowseDataNexus, Event
     GET_PATH          = new_path,$
     /FIX_FILTER,$
     /READ)
+    
+  if (not(file_test(nexus_file_name))) then begin
+    text = '-> Invalid NeXus file name!'
+    putLogBookMessage, Event, Text, Append=1
+    id = widget_info(event.top, find_by_uname='MAIN_BASE')
+    message = ['    Invalid NeXus file name!    ']
+    result = dialog_message(message,$
+      title = 'Please select NeXus file!',$
+      /error,$
+      /center,$
+      dialog_parent=id)
+    return
+  endif
+  
   IF (nexus_file_name NE '') THEN BEGIN
     (*global).data_nexus_full_path = nexus_file_name
     (*global).browse_data_path = new_path
@@ -243,6 +257,20 @@ PRO BrowseNormNexus, Event
     GET_PATH          = new_path,$
     /FIX_FILTER,$
     /READ)
+  
+    if (not(file_test(nexus_file_name))) then begin
+    text = '-> Invalid NeXus file name!'
+    putLogBookMessage, Event, Text, Append=1
+    id = widget_info(event.top, find_by_uname='MAIN_BASE')
+    message = ['     Invalid NeXus file name!     ']
+    result = dialog_message(message,$
+      title = 'Please select NeXus file!',$
+      /error,$
+      /center,$
+      dialog_parent=id)
+    return
+  endif
+  
   IF (nexus_file_name NE '') THEN BEGIN
     (*global).browse_data_path = new_path
     (*global).norm_nexus_full_path = nexus_file_name
