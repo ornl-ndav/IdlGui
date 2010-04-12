@@ -21,17 +21,19 @@
 
 PRO test
   file_name = $
-  '/SNS/users/dfp/Desktop/ IdlGui/trunk/plotInstrument/InstrumentData.xml'
+    '/SNS/users/dfp/Desktop/ IdlGui/trunk/plotInstrument/InstrumentData.xml'
   file = OBJ_NEW('PlotData', file_name)
   
   
   ;TESTING
   PATH = "/SNS/REF_L/2007_2_4B_SCI/2/3132/NeXus/REF_L_3132.nxs"
   PATH = "/SNS/users/dfp/IdlGui/trunk/plotInstrument/NeXus/BSS_3753.nxs"
+  ;PATH = "/SNS/users/dfp/IdlGui/trunk/plotInstrument/NeXus/CNCS_355.nxs"
+  ;path = "/SNS/CNCS/2008_2_5_SCI/1/116/NeXus/CNCS_116.nxs"
   
-   text = file -> Graph(path, 'BSS', 4)
-
- 
+  text = file -> Graph(path, 'BSS',4)
+  
+  
   
   
   print, 'DONE'
