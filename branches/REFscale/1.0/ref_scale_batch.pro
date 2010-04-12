@@ -31,6 +31,7 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
+
 ;This function creates the SF array when loading the batch file, and
 ;populate the angle values in the same time.
 PRO create_SF_array, Event
@@ -456,6 +457,7 @@ PRO ref_scale_LoadBatchFile, Event
     if ((*global).working_with_ref_m_batch) then begin ;ref_m batch file
     
       DRfiles = retrieveDRfiles_ref_m(event, BatchTable)
+      (*(*global).DRfiles) = DRfiles
       activate_right_spin_states_button, event
       
       ;get full file name of CE reduced file

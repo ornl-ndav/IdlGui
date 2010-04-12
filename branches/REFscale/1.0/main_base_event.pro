@@ -181,6 +181,24 @@ PRO MAIN_BASE_ref_scale_event, Event
       WithWithoutErrorBars, Event ;_eventcb
     END
     
+    ;spin states button
+    widget_info(wWidget, find_by_uname='off_off'): begin
+      spin_index = get_index_of_this_spin_in_list_of_spins(event,'off_off')
+      display_spin_index, event, spin_index
+    end
+    widget_info(wWidget, find_by_uname='off_on'): begin
+      spin_index = get_index_of_this_spin_in_list_of_spins(event,'off_on')
+      display_spin_index, event, spin_index
+    end
+    widget_info(wWidget, find_by_uname='on_off'): begin
+      spin_index = get_index_of_this_spin_in_list_of_spins(event,'on_off')
+      display_spin_index, event, spin_index
+    end
+    widget_info(wWidget, find_by_uname='on_on'): begin
+      spin_index = get_index_of_this_spin_in_list_of_spins(event,'on_on')
+      display_spin_index, event, spin_index
+    end
+    
     ;settings base button
     widget_info(wWidget, $
       find_by_uname='open_settings_base'): begin
@@ -188,9 +206,9 @@ PRO MAIN_BASE_ref_scale_event, Event
       ActivateWidget, Event, 'open_settings_base', 0
     end
     
-    ;------------------------------------------------------------------------------
-    ;***** STEP 1 - [LOAD FILES] **************************************************
-    ;------------------------------------------------------------------------------
+    ;--------------------------------------------------------------------------
+    ;***** STEP 1 - [LOAD FILES] **********************************************
+    ;--------------------------------------------------------------------------
     ;Event of <Load File> button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='load_button'): BEGIN
       LoadFileButton, Event ;_Load

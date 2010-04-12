@@ -64,3 +64,36 @@ function get_number_of_spin_states_per_angle, data_spin_states
   return, nbr
   
 end
+
+;+
+; :Description:
+;   This functions looks for the index of the given spin states in the list
+;   of spin states of files loaded
+;   ex: this_spin = 'off_off'
+;       list_of_spin = ['off_off','off_on']
+;       will return -> 0
+;
+; :Params:
+;    event
+;    this_spin
+;
+; :Author: j35
+;-
+function get_index_of_this_spin_in_list_of_spins, event, this_spin
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  this_spin = strlowcase(this_spin[0])
+  
+  list_spin_state = (*(*global).list_of_spins_for_each_angle)
+  nbr_spin = n_elements(list_spin_state)
+  index = 0
+  while (index lt nbr_spin) do begin
+    if (this_spin eq strlowcase(list_spin_state[index])) then return, index
+    index++
+  endwhile
+  
+  return, -1
+end
+
