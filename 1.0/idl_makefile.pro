@@ -99,6 +99,7 @@ cd, CurrentFolder
 .run settings_base.pro
 
 ;Batch
+.run ref_scale_spin_states.pro
 .run idl_load_batch_file__define.pro
 .run idl_create_batch_file__define.pro
 .run retrieve_dr_files_ref_m.pro

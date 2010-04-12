@@ -91,6 +91,8 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     working_with_ref_m_batch: 0b, $ ;1 if file batch loaded is REF_M
     list_of_spins_for_each_angle: ptr_new(0L), $
     ;spin states used for each data file
+    current_spin_index: -1, $ ;current index of spin state (-1 for REF_L)
+    DRfiles: ptr_new(0L), $ ;[spin_states,files]
     
     BatchExtension:         '.txt',$
     BatchTable:             PTR_NEW(0L),$

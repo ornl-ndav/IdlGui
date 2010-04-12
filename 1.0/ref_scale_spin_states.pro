@@ -34,52 +34,24 @@
 
 ;+
 ; :Description:
-;   This routine cleanup all the pointers from the main program and is
-;   reached when the application is exited.
+;   retrieves the new list of files for new spin states and plot it
 ;
 ; :Params:
-;    tlb
-;
+;    event
+;    spin_index
+
 ; :Author: j35
 ;-
-pro ref_scale_cleanup, tlb
+pro display_spin_index, event, spin_index
   compile_opt idl2
   
-  widget_control, tlb, get_uvalue=global, /no_copy
-
-  if (n_elements(global) eq 0) then return
+  widget_control, event.top, get_uvalue=global
   
-  ;free up the pointers of the global pointer
-  ptr_free, (*global).BatchTable
-  ptr_free, (*global).data_spin_state
-  ptr_free, (*global).norm_spin_state
-  ptr_free, (*global).list_of_spins_for_each_angle
-  ptr_free, (*global).DRfiles
-  ptr_free, (*global).flt0_ptr
-  ptr_free, (*global).flt1_ptr
-  ptr_free, (*global).flt2_ptr
-  ptr_free, (*global).flt0_rescale_ptr
-  ptr_free, (*global).flt1_rescale_ptr
-  ptr_free, (*global).flt2_rescale_ptr
-  ptr_free, (*global).fit_cooef_ptr
-  ptr_free, (*global).flt0_range
-  ptr_free, (*global).XYMinMax
-  ptr_free, (*global).CEcooef
-  ptr_free, (*global).flt0_CE_range
-  ptr_free, (*global).metadata_CE_file
-  ptr_free, (*global).flt0_xaxis
-  ptr_free, (*global).flt1_yaxis
-  ptr_free, (*global).flt2_yaxis_err
-  ptr_free, (*global).FileHistory
-  ptr_free, (*global).list_of_files
-  ptr_free, (*global).Q1_array
-  ptr_free, (*global).Q2_array
-  ptr_free, (*global).SF_array
-  ptr_free, (*global).angle_array
-  ptr_free, (*global).color_array
-  ptr_free, (*global).Qmin_array
-  ptr_free, (*global).Qmax_array
-  ptr_free, (*global).ListOfLongFileName
-  ptr_free, global
+  DRfiles = (*(*global).DRfiles)
+  local_DRfiles = DRfiles[spin_index,*]
+  rDRfiles = reform(local_DRfiles,n_elements(local_DRfiles))
+  putDroplistValue, event, 'list_of_files_droplist', rDRfiles
+  (*global).current_spin_index = spin_index
+  steps_tab, Event, 1 ;_Tabs
   
 end

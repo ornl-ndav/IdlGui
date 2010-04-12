@@ -66,6 +66,7 @@ PRO reset_all_button, Event
   output_file_name_value, event
   
   ;reset spin states
+  (*global).current_spin_index = -1
   (*(*global).data_spin_state) = strarr(1)
   (*(*global).norm_spin_state) = strarr(1)
   (*(*global).list_of_spins_for_each_angle) = ptr_new(0L)
