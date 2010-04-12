@@ -12,14 +12,11 @@
 ;   dPath should be set either by user or from xml
 
 
-
-
-
 ;---------------------------------------------------------------------------
 PRO PlotData::cleanup
-;free the pointers
-PTR_FREE, self.data, self.colData
-
+  ;free the pointers
+  PTR_FREE, self.data, self.colData
+  
 END
 
 
@@ -34,6 +31,7 @@ PRO PlotData::startElement, URI, local, strName, attr, value
       ;      self.currCol = 0
       ;      self.currRow = 0
       IF N_ELEMENTS(attr) NE 0 THEN BEGIN
+        print, value
         IF value EQ self.instrument THEN self.flag = 1
       ENDIF
     END
@@ -68,7 +66,7 @@ PRO PlotData::endElement, URI, local, strName
     ENDIF ELSE BEGIN
     
       CASE strName OF
-              
+      
         'col': BEGIN
         
           IF PTR_VALID(SELF.data) THEN BEGIN
@@ -81,17 +79,23 @@ PRO PlotData::endElement, URI, local, strName
         END
         
         'row': BEGIN
-        
-          bank = self.buffer     
-          dPath = '/entry/instrument/bank#/data'
-          data = getData(self.pathNexus, dPath, bank, self.rebinBy)  
-           
+          IF STRMATCH(self.buffer,'blank*') THEN BEGIN
+            size = STRSPLIT(self.buffer, '(,)', /EXTRACT)
+            data = fltarr(fix(size[1]),fix(size[2]))  
+          ENDIF ELSE BEGIN
+            bank = self.buffer
+            dPath = '/entry/instrument/bank#/data'
+            data = getData(self.pathNexus, dPath, self.rebinBy, bank)
+          ENDELSE
+          
+          help, data
+          
           IF PTR_VALID(self.colData) THEN BEGIN
             *self.colData = [[*self.colData], [data]]
           ENDIF ELSE BEGIN
             self.colData = ptr_new(data)
           ENDELSE
-
+          
         END
         
         ELSE:
@@ -127,7 +131,7 @@ END
 
 
 ;---------------------------------------------------------------------------
-FUNCTION getData, path, dPath_template, bank, rebinBy
+FUNCTION getData, path, dPath_template, rebinBy, bank
 
   print, "GETDATA"
   
@@ -146,7 +150,7 @@ FUNCTION getData, path, dPath_template, bank, rebinBy
     print, fileID
     
     print, 'opening data path...'
-    
+    help, dpath_template
     dPath = STRJOIN(STRSPLIT(dPath_template, '#', /EXTRACT), bank)
     print, dpath
     fieldID = H5D_OPEN(fileID,dPath)
@@ -158,10 +162,10 @@ FUNCTION getData, path, dPath_template, bank, rebinBy
     
     print, "closing hdf5 file"
     H5F_CLOSE, fileID
-  ENDELSE
-  
-  data = recalculate(data, rebinBy)
-  
+    ; ENDELSE
+    help, data
+    data = recalculate(data, rebinBy)
+  END
   RETURN, data
 END
 
@@ -174,11 +178,19 @@ END
 
 ;---------------------------------------------------------------------------
 PRO PlotData::endDocument
-  dim = SIZE(*self.data, /DIMENSIONS)
-  
-  WINDOW, 0, XSIZE = dim[0], YSIZE = dim[1], TITLE = self.path
-  LOADCT, 5
-  TVSCL, *self.data
+  IF PTR_VALID(self.data) THEN BEGIN
+    dim = SIZE(*self.data, /DIMENSIONS)
+    ;
+    print, dim
+    help, *self.data
+    ; print, *self.data
+    print, "drawing"
+    WINDOW, 0, XSIZE = dim[0], YSIZE = dim[1], TITLE = self.path
+    WSET, 0
+    DEVICE, decomposed=0
+    LOADCT, 5
+    TVSCL, *self.data
+  END
 END
 
 ;---------------------------------------------------------------------------
@@ -195,7 +207,7 @@ FUNCTION PlotData::Graph, pathNexus, instrument, rebinBy
     self.pathNexus = pathNexus
     self.rebinBy = rebinBy
     
-    
+    print, self.path
     self -> IDLffxmlsax::ParseFile, self.path
     
   ENDIF ELSE BEGIN
