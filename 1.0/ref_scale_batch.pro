@@ -59,14 +59,12 @@ PRO create_SF_array, Event
 END
 
 ;==============================================================================
-PRO apply_sf_to_data, Event
+PRO apply_sf_to_data, Event, DRfiles,  spin_state_nbr=spin_state_nbr
 
-  ;  PRINT, 'entering apply_sf_to_data'
-
-  id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
-  WIDGET_CONTROL,id,GET_UVALUE=global
+  widget_control, event.top, GET_UVALUE=global
+  
   BatchTable       = (*(*global).BatchTable)
-  NbrRowMax        = (SIZE(batchTable))(2)
+  NbrRowMax        = (size(batchTable))(2)
   flt0_ptr         = (*global).flt0_ptr
   flt1_ptr         = (*global).flt1_ptr
   flt2_ptr         = (*global).flt2_ptr
@@ -74,41 +72,50 @@ PRO apply_sf_to_data, Event
   flt2_rescale_ptr = (*global).flt2_rescale_ptr
   flt_index        = 0
   
-  FOR i=0,(NbrRowMax-1) DO BEGIN
+  nbr_files = (size(DRfiles))[1]
   
-    SF_value = BatchTable[8,i]
-    IF (SF_value EQ '') THEN BEGIN
-      CONTINUE
-    ENDIF ELSE BEGIN
-      SF = FLOAT(SF_value)
-    ENDELSE
-    ;    flt1 = *flt1_ptr[flt_index]
-    ;    flt2 = *flt2_ptr[flt_index]
-    flt1 = *flt1_ptr[i]
-    flt2 = *flt2_ptr[i]
+  index_nbr_files = 0
+  while (index_nbr_files lt nbr_files) do begin
+    SF_value = BatchTable[8,index_nbr_files]
+    if (SF_value eq '') then begin
+      continue
+    endif else begin
+      sf = float(SF_value)
+    endelse
+    
+    ;if (n_elements(spin_state_nbr) ne 0) then begin
+    
+    ;  flt1 = *flt1_ptr[spin_state_nbr, index_nbr_files]
+    ;  flt2 = *flt2_ptr[spin_state_nbr, index_nbr_files]
+      
+    ;endif else begin
+    
+      flt1 = *flt1_ptr[index_nbr_files]
+      flt2 = *flt2_ptr[index_nbr_files]
+      
+    ;endelse
     
     ;rescale data
-    flt1 = flt1 / SF
-    flt2 = flt2 / SF
+    flt1 /= SF
+    flt2 /= SF
     
-    *flt1_rescale_ptr[i] = flt1
-    *flt2_rescale_ptr[i] = flt2
+    if (n_elements(spin_state_nbr) ne 0) then begin
     
+      *flt1_rescale_ptr[spin_state_nbr, index_nbr_files] = flt1
+      *flt2_rescale_ptr[spin_state_nbr, index_nbr_files] = flt2
+      
+    endif else begin
     
-  ;    flt_index++ ;move on to next data ploted
+      *flt1_rescale_ptr[index_nbr_files] = flt1
+      *flt2_rescale_ptr[index_nbr_files] = flt2
+      
+    endelse
     
-  ;    HELP, *flt0_ptr[i]
-  ;    HELP, flt1
-  ;    HELP, flt2
-  ;    PRINT, '``````````````````````````'
-    
-  ENDFOR
+    index_nbr_files++
+  endwhile
   
-  (*global).flt1_rescale_ptr = flt1_rescale_ptr
-  (*global).flt2_rescale_ptr = flt2_rescale_ptr
-  
-;  PRINT, 'leaving apply_sf_to_data'
-;  PRINT
+  (*global).flt1_rescale_ptr = flt1_ptr
+  (*global).flt2_rescale_ptr = flt2_ptr
   
 END
 
@@ -236,17 +243,19 @@ end
 
 
 ;==============================================================================
-FUNCTION batch_repopulate_gui, Event, DRfiles, spin_state_nbr=spin_state_nbr
+function batch_repopulate_gui, Event, DRfiles, spin_state_nbr=spin_state_nbr
 
-  id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
   WIDGET_CONTROL,id,GET_UVALUE=global
+  
   ;retrieve parameters
   (*global).NbrFilesLoaded = 0
   loading_error            = 0
+  
   ;Nbr of files to load
   sz = (SIZE(DRfiles))(1)
   
-  FOR i=0,(sz-1) DO BEGIN
+  for i=0,(sz-1) do begin
     index = (*global).NbrFilesLoaded
     SuccessStatus = StoreFlts(Event, $
       DRfiles[i], i, $
@@ -275,6 +284,7 @@ FUNCTION batch_repopulate_gui, Event, DRfiles, spin_state_nbr=spin_state_nbr
   ENDFOR
   
   IF (loading_error EQ 0) THEN BEGIN
+  
     ;define color_array
     index_array = getIndexArrayOfActiveBatchRow(Event)
     sz          = (SIZE(index_array))(1)
@@ -284,15 +294,21 @@ FUNCTION batch_repopulate_gui, Event, DRfiles, spin_state_nbr=spin_state_nbr
     (*(*global).Qmin_array) = FLTARR(sz)
     (*(*global).Qmax_array) = FLTARR(sz)
     
-    ;create SF_array
-    create_SF_array, Event
+    if (n_elements(spin_state_nbr) ne 0 and $
+      spin_state_nbr eq 0) then begin
+      ;create SF_array
+      create_SF_array, Event
+    endif else begin
+      ;create SF_array
+      create_SF_array, Event
+    endelse
     
     ;if there is already a SF, apply it
     BatchTable = (*(*global).BatchTable)
     SF_value_0 = BatchTable[8,0]
     if (SF_value_0 ne '') then begin
       ;apply the SF to the data
-      apply_sf_to_data, Event
+      apply_sf_to_data, Event, DRfiles,  spin_state_nbr=spin_state_nbr
       ;plot all loaded files
       PlotLoadedFiles, Event      ;_Plot
       ;force the axis to start at 0
@@ -424,14 +440,15 @@ end
 
 ;==============================================================================
 PRO ref_scale_LoadBatchFile, Event
-  id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
-  WIDGET_CONTROL,id,GET_UVALUE=global
+
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
   ;Retrieve global parameters
   PROCESSING = (*global).processing
-  ;pop-up dialog pickfile
   
+  ;pop-up dialog pickfile
   dialog_id = widget_info(event.top, find_by_uname='MAIN_BASE_ref_scale')
-  BatchFileName = DIALOG_PICKFILE(TITLE    = 'Pick Batch File to Load ...',$
+  BatchFileName = dialog_pickfile(title = 'Pick Batch File to Load ...',$
     PATH     = (*global).BatchDefaultPath,$
     FILTER   = (*global).BatchDefaultFileFilter,$
     dialog_parent=dialog_id,$
@@ -439,6 +456,7 @@ PRO ref_scale_LoadBatchFile, Event
     /MUST_EXIST)
     
   IF (BatchFileName EQ '') then return
+  
   IF (BatchFileName NE '') THEN BEGIN
     reset_all_button, Event ;full reset of the session
     (*global).BatchFileName = BatchFileName
@@ -477,7 +495,7 @@ PRO ref_scale_LoadBatchFile, Event
         index_spin = 0
         while (index_spin lt nbr_spin) do begin
           local_DRfiles = DRfiles[index_spin,*]
-          rDRfiles = reform(local_DRfiles,n_elements(local_DRfiles))
+          rDRfiles = reform(local_DRfiles, n_elements(local_DRfiles))
           result = batch_repopulate_gui(Event, $
             rDRfiles, $
             spin_state_nbr=index_spin)
@@ -485,7 +503,9 @@ PRO ref_scale_LoadBatchFile, Event
         endwhile
         
         refresh_bash_file_status = 1 ;enable REFRESH and SAVE AS Bash File
+        
       endif else begin            ;stop loading process
+      
         LogText = '> Loading Batch File ' + BatchFileName + ' ... FAILED'
         idl_send_to_geek_addLogBookText, Event, LogText
         LogText = '-> This can be due to the fact that 1 or more of the ' + $
@@ -493,6 +513,7 @@ PRO ref_scale_LoadBatchFile, Event
         idl_send_to_geek_addLogBookText, Event, LogText
         refresh_bash_file_status = 0 ;enable REFRESH and SAVE AS Bash File
         reset_all_button, Event
+        
       endelse
       
       ActivateWidget, Event, 'ref_scale_refresh_batch_file', refresh_bash_file_status
@@ -566,13 +587,10 @@ PRO ref_scale_LoadBatchFile, Event
       
     endelse
     
-    
-    
   ENDIF ELSE BEGIN
     ;disable REFRESH and SAVE AS Bash File
     refresh_bash_file_status = 0
   ENDELSE
-  
   
 ;  ActivateWidget, Event, 'ref_scale_refresh_batch_file', refresh_bash_file_status
 ;  ActivateWidget, Event, 'ref_scale_save_as_batch_file', refresh_bash_file_status
@@ -592,5 +610,6 @@ PRO ref_scale_LoadBatchFile, Event
 ;      /center,$
 ;      dialog_parent=dialog_id)
 ;  ENDELSE
+  
 END
 
