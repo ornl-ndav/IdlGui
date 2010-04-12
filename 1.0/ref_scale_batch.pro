@@ -467,11 +467,11 @@ PRO ref_scale_LoadBatchFile, Event
       if (FileStatus eq 1) then begin ;continue loading process
       
         ;work on 1 spin state at a time
-        nbr_spin = (size(DRfiles))[2]
+        nbr_spin = (size(DRfiles))[1]
         index_spin = 0
         while (index_spin lt nbr_spin) do begin
-          DRfiles = DRfiles[index_spin,*]
-          rDRfiles = reform(DRfiles,n_elements(DRfiles))
+          local_DRfiles = DRfiles[index_spin,*]
+          rDRfiles = reform(local_DRfiles,n_elements(local_DRfiles))
           result = batch_repopulate_gui(Event, $
             rDRfiles, $
             spin_state_nbr=index_spin)
