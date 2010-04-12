@@ -76,7 +76,6 @@ IF (getNbrOfFiles(Event) GT 0) THEN BEGIN
 ;            saveQxFromQ, Event, Q_NUMBER=2
 ;plot the Qmin and Qmax if any have been selected
             plotQs, Event, (*global).Q1, (*global).Q2 ;_Plot
-           
         END
 
          2: BEGIN ;if third tab plot only the file selected

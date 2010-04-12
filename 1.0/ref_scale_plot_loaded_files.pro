@@ -60,6 +60,10 @@ PRO PlotLoadedFiles, Event
   Qmax_array = (*(*global).Qmax_array)
   
   size = getSizeOfArray(ListLongFileName)
+
+  print, ListLongfileName
+  help, ListLongFileName
+  print
   
   draw_id = WIDGET_INFO(Event.top, find_by_uname='plot_window')
   WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
