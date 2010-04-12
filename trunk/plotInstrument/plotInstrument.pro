@@ -8,23 +8,24 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   APPLICATION        = 'plotInstrument'
   VERSION            = '1.0.0'
   FASCILITY = 'SNS'
-  TESTING = 'yes'
-  ;pathInstrumentList = '/SNS/software/etc/instrumentlist.xml'
-  pathInstrumentList = 'instrumentlist.xml'
+  TESTING = 'no'; 'yes'
+  pathInstrumentList = '/SNS/software/etc/instrumentlist.xml'
+  ;pathInstrumentList = 'instrumentlist.xml'
   
   spawn, 'hostname', hostname
   
-  ;for testing
-  hostname = 'lrac'
+  ;for testing-------------------------------------------------
+  hostname = 'bac'
+  ;------------------------------------------------------------
   
+  ;edit hostname to address
   hostname = "computer = " + STRTRIM(hostname, 2) + ".sns.gov"
-  
-  
+  ;make an instance of xmlparser
   xmlParser = OBJ_NEW('idlxmlparser', pathInstrumentList)
-  
+  ;get the instrument list
   instrumentList = xmlParser -> getValue(location = $
     ['name = ' + fascility, 'instrument'], searchTag = 'shortname')
-    
+  ;get the cpuName
   cpuName =  xmlParser -> getValue(location = $
     ['name = ' + fascility, 'instrument'], searchTag = 'shortname', condition = hostname)
     
@@ -36,18 +37,16 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
   ;define global variables
   global = PTR_NEW ({path: "", $
-    ;path: "/SNS/users/dfp/IdlGui/trunk/plotInstrument/NeXus/REF_M_118.nxs",$
-    ;    column_sequence: PTR_NEW(0L),$
-    ;    column_cl: PTR_NEW(0L),$
-    ;    cl_array: STRARR(2),$
+    work_path: "~/",$
+    graphed: 0, $
     data: ptr_new(), $
     fascility: fascility, $
     application:  APPLICATION,$
     version:      VERSION,$
     cpuName: cpuName,$
     instConst: {X: 0,$
-    Y: 0,$
-    rebinBy: 0}, $
+                Y: 0,$
+                rebinBy: 0}, $
     instrumentList: instrumentList, $
     MainBaseSize: [30,25,600,150]})
     
