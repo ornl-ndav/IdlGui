@@ -42,22 +42,6 @@ PRO plot_loaded_file, Event, index
   id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
   WIDGET_CONTROL,id,get_uvalue=global
   
-  ;  PRINT, 'in plot_loaded_file'
-  ;
-  ;  ;retrieve flt0, flt1 and flt2
-  ;  flt0_ptr = (*global).flt0_rescale_ptr
-  ;  flt1_ptr = (*global).flt1_rescale_ptr
-  ;  flt2_ptr = (*global).flt2_rescale_ptr
-  ;
-  ;  nbrFile = (*global).NbrFilesLoaded
-  ;  PRINT, 'in #0'
-  ;  for i=0L,(nbrFile-1) do begin
-  ;    HELP, *flt0_ptr[i]
-  ;    HELP, *flt1_ptr[i]
-  ;    HELP, *flt2_ptr[i]
-  ;    PRINT, '**************************'
-  ;  ENDFOR
-  
   ;0 means that the fitting plot won't be seen
   ;1 means that the fitting plot will be seen
   show_error_plot=0
@@ -112,21 +96,7 @@ PRO plot_loaded_file, Event, index
   ENDIF ELSE BEGIN
     ClearPlot = 1
   ENDELSE
-  
-  ;  ;retrieve flt0, flt1 and flt2
-  ;  flt0_ptr = (*global).flt0_rescale_ptr
-  ;  flt1_ptr = (*global).flt1_rescale_ptr
-  ;  flt2_ptr = (*global).flt2_rescale_ptr
-  ;
-  ;  nbrFile = (*global).NbrFilesLoaded
-  ;  PRINT, 'in #1'
-  ;  for i=0,(nbrFile-1) do begin
-  ;    HELP, *flt0_ptr[i]
-  ;    HELP, *flt1_ptr[i]
-  ;    HELP, *flt2_ptr[i]
-  ;    PRINT, '**************************'
-  ;  ENDFOR
-  
+    
   DEVICE, DECOMPOSED = 0
   loadct,5,/SILENT
   
@@ -143,15 +113,6 @@ PRO plot_loaded_file, Event, index
     flt0_ptr = (*global).flt0_rescale_ptr
     flt1_ptr = (*global).flt1_rescale_ptr
     flt2_ptr = (*global).flt2_rescale_ptr
-    
-    ;    nbrFile = (*global).NbrFilesLoaded
-    ;    PRINT, 'in #2'
-    ;    for i=0,(nbrFile-1) do begin
-    ;      HELP, *flt0_ptr[i]
-    ;      HELP, *flt1_ptr[i]
-    ;      HELP, *flt2_ptr[i]
-    ;      PRINT, '**************************'
-    ;    ENDFOR
     
     index_size = (SIZE(index_to_plot))(1)
     FOR i=0,(index_size-1) DO BEGIN
