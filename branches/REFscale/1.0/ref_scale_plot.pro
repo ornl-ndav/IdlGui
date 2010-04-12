@@ -163,13 +163,17 @@ PRO plot_loaded_file, Event, index
         MainPlotColor = 255
       ENDELSE
       
-      ;retrieve particular flt0, flt1 and flt2
-      flt0 = *flt0_ptr[index_to_plot[i]]
-      ;      PRINT, 'index_to_plot[i]: ' + STRCOMPRESS(index_to_plot[i])
-      flt1 = *flt1_ptr[index_to_plot[i]]
-      ;      PRINT, 'index_to_plot[i]: ' + STRCOMPRESS(index_to_plot[i])
-      flt2 = *flt2_ptr[index_to_plot[i]]
-      ;      PRINT, 'index_to_plot[i]: ' + STRCOMPRESS(index_to_plot[i])
+      spin_index = (*global).current_spin_index
+      if (spin_index ne -1) then begin
+        flt0 = *flt0_ptr[index_to_plot[i],spin_index]
+        flt1 = *flt1_ptr[index_to_plot[i],spin_index]
+        flt2 = *flt2_ptr[index_to_plot[i],spin_index]
+      endif else begin
+        ;retrieve particular flt0, flt1 and flt2
+        flt0 = *flt0_ptr[index_to_plot[i]]
+        flt1 = *flt1_ptr[index_to_plot[i]]
+        flt2 = *flt2_ptr[index_to_plot[i]]
+      endelse
       
       color_array = (*(*global).color_array)
       colorIndex = color_array[index_to_plot[i]]

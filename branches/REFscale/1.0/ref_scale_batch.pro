@@ -263,7 +263,11 @@ FUNCTION batch_repopulate_gui, Event, DRfiles, spin_state_nbr=spin_state_nbr
         SuccessStatus = StoreFlts(Event, DRfiles[i], i)
       endif
       
-      AddNewFileToDroplist, Event, ShortFileName, LongFileName ;_Gui
+      if (n_elements(spin_state_nbr) ne 0 and $
+        spin_state_nbr eq 0) then begin
+        AddNewFileToDroplist, Event, ShortFileName, LongFileName ;_Gui
+      endif
+      
     ENDIF ELSE BEGIN
       loading_error = 1
       BREAK ;leave the for loop
