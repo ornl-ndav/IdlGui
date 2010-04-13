@@ -83,17 +83,21 @@ PRO apply_sf_to_data, Event, DRfiles,  spin_state_nbr=spin_state_nbr
       sf = float(SF_value)
     endelse
     
-    ;if (n_elements(spin_state_nbr) ne 0) then begin
+    if (n_elements(spin_state_nbr) ne 0) then begin
     
-    ;  flt1 = *flt1_ptr[spin_state_nbr, index_nbr_files]
-    ;  flt2 = *flt2_ptr[spin_state_nbr, index_nbr_files]
+      print, 'index_nbr_files: ' , index_nbr_files
+      print, 'spin_state_nbr: ' , spin_state_nbr
+      help, *flt1_ptr[spin_state_nbr, index_nbr_files]
       
-    ;endif else begin
+      flt1 = *flt1_ptr[index_nbr_files, spin_state_nbr]
+      flt2 = *flt2_ptr[index_nbr_files, spin_state_nbr]
+      
+    endif else begin
     
       flt1 = *flt1_ptr[index_nbr_files]
       flt2 = *flt2_ptr[index_nbr_files]
       
-    ;endelse
+    endelse
     
     ;rescale data
     flt1 /= SF
@@ -101,8 +105,8 @@ PRO apply_sf_to_data, Event, DRfiles,  spin_state_nbr=spin_state_nbr
     
     if (n_elements(spin_state_nbr) ne 0) then begin
     
-      *flt1_rescale_ptr[spin_state_nbr, index_nbr_files] = flt1
-      *flt2_rescale_ptr[spin_state_nbr, index_nbr_files] = flt2
+      *flt1_rescale_ptr[index_nbr_files, spin_state_nbr] = flt1
+      *flt2_rescale_ptr[index_nbr_files, spin_state_nbr] = flt2
       
     endif else begin
     
@@ -114,8 +118,10 @@ PRO apply_sf_to_data, Event, DRfiles,  spin_state_nbr=spin_state_nbr
     index_nbr_files++
   endwhile
   
-  (*global).flt1_rescale_ptr = flt1_ptr
-  (*global).flt2_rescale_ptr = flt2_ptr
+;(*global).flt1_rescale_ptr = flt1_rescale_ptr
+;(*global).flt2_rescale_ptr = flt2_rescale_ptr
+;(*global).flt1_rescale_ptr = flt1
+;(*global).flt2_rescale_ptr = flt2
   
 END
 
@@ -245,8 +251,7 @@ end
 ;==============================================================================
 function batch_repopulate_gui, Event, DRfiles, spin_state_nbr=spin_state_nbr
 
-  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
-  WIDGET_CONTROL,id,GET_UVALUE=global
+  widget_control, event.top, GET_UVALUE=global
   
   ;retrieve parameters
   (*global).NbrFilesLoaded = 0
@@ -255,13 +260,19 @@ function batch_repopulate_gui, Event, DRfiles, spin_state_nbr=spin_state_nbr
   ;Nbr of files to load
   sz = (SIZE(DRfiles))(1)
   
-  for i=0,(sz-1) do begin
+  for i=0,(sz-1) do begin ;loop over number of files
+  
     index = (*global).NbrFilesLoaded
     SuccessStatus = StoreFlts(Event, $
       DRfiles[i], i, $
       spin_state_nbr=spin_state_nbr)
       
-    IF (SuccessStatus) THEN BEGIN
+      print, 'spin_state_nbr: ' , spin_state_nbr
+      flt1_ptr = (*global).flt1_ptr
+      help, *flt1_ptr[i, spin_state_nbr]
+      
+    if (SuccessStatus) then begin
+    
       ShortFileName = get_file_name_only(DRfiles[i]) ;_get
       LongFileName  = DRfiles[i]
       
@@ -272,66 +283,85 @@ function batch_repopulate_gui, Event, DRfiles, spin_state_nbr=spin_state_nbr
         SuccessStatus = StoreFlts(Event, DRfiles[i], i)
       endif
       
+      ;add list of files for only first spin state
       if (n_elements(spin_state_nbr) ne 0 and $
         spin_state_nbr eq 0) then begin
         AddNewFileToDroplist, Event, ShortFileName, LongFileName ;_Gui
       endif
       
-    ENDIF ELSE BEGIN
-      loading_error = 1
-      BREAK ;leave the for loop
-    ENDELSE
-  ENDFOR
-  
-  IF (loading_error EQ 0) THEN BEGIN
-  
-    ;define color_array
-    index_array = getIndexArrayOfActiveBatchRow(Event)
-    sz          = (SIZE(index_array))(1)
-    color_array = (FLOAT(225)/sz)*INDGEN(sz)+25
-    (*(*global).color_array) = color_array
-    ;reset Qmin and Qmax
-    (*(*global).Qmin_array) = FLTARR(sz)
-    (*(*global).Qmax_array) = FLTARR(sz)
-    
-    if (n_elements(spin_state_nbr) ne 0 and $
-      spin_state_nbr eq 0) then begin
-      ;create SF_array
-      create_SF_array, Event
     endif else begin
-      ;create SF_array
-      create_SF_array, Event
+    
+      loading_error = 1
+      break ;leave the for loop
+      
     endelse
     
-    ;if there is already a SF, apply it
-    BatchTable = (*(*global).BatchTable)
-    SF_value_0 = BatchTable[8,0]
-    if (SF_value_0 ne '') then begin
+  endfor
+  
+  if (loading_error EQ 0) then begin
+  
+    ;for REF_L or first REF_M spin state
+    if ((n_elements(spin_state_nbr) ne 0 and $
+      spin_state_nbr eq 0) or $
+      n_elements(spin_state_nbr) eq 0) then begin
+      
+      ;define color_array
+      index_array = getIndexArrayOfActiveBatchRow(Event)
+      sz          = (SIZE(index_array))(1)
+      color_array = (FLOAT(225)/sz)*INDGEN(sz)+25
+      (*(*global).color_array) = color_array
+      ;reset Qmin and Qmax
+      (*(*global).Qmin_array) = FLTARR(sz)
+      (*(*global).Qmax_array) = FLTARR(sz)
+      
+      ;create SF_array
+      create_SF_array, Event
+      
+      ;if there is already a SF, apply it
+      BatchTable = (*(*global).BatchTable)
+      SF_value_0 = BatchTable[8,0]
+      if (SF_value_0 ne '') then begin
+      
+        ;apply the SF to the data
+        apply_sf_to_data, Event, DRfiles,  spin_state_nbr=spin_state_nbr
+        ;plot all loaded files
+        PlotLoadedFiles, Event      ;_Plot
+        ;force the axis to start at 0
+        putValueInTextField, Event,'XaxisMinTextField', $
+          strcompress(0,/remove_all)
+        putValueInTextField, Event,'YaxisMinTextField', $
+          strcompress(0.000001,/remove_all)
+        plot_loaded_file, Event, 'all' ;_Plot
+        
+      endif else begin ;perform scaling ourselves
+      
+        auto_full_scaling_from_batch_file, Event
+        
+      endelse
+      
+    endif
+    
+    ;for REF_M other spin states
+    if (n_elements(spin_state_nbr) ne 0 and $
+      spin_state_nbr ne 0) then begin
       ;apply the SF to the data
       apply_sf_to_data, Event, DRfiles,  spin_state_nbr=spin_state_nbr
-      ;plot all loaded files
-      PlotLoadedFiles, Event      ;_Plot
-      ;force the axis to start at 0
-      putValueInTextField, Event,'XaxisMinTextField', $
-        strcompress(0,/remove_all)
-      putValueInTextField, Event,'YaxisMinTextField', $
-        strcompress(0.000001,/remove_all)
-      plot_loaded_file, Event, 'all' ;_Plot
-    endif else begin ;perform scaling ourselves
-      auto_full_scaling_from_batch_file, Event
-    endelse
+    endif
     
     ;activate step2
     (*global).force_activation_step2 = 1
     ;activate step3
     ActivateStep3_fromBatch, Event, 1
-    RETURN, 1
-  ENDIF ELSE BEGIN
+    return, 1
+    
+  endif else begin
+  
     (*global).force_activation_step2 = 0
     ActivateStep3_fromBatch, Event, 0
     reset_all_button, Event
-    RETURN, 0
-  ENDELSE
+    return, 0
+    
+  endelse
   
 END
 
@@ -494,12 +524,14 @@ PRO ref_scale_LoadBatchFile, Event
         nbr_spin = (size(DRfiles))[1]
         index_spin = 0
         while (index_spin lt nbr_spin) do begin
+        
           local_DRfiles = DRfiles[index_spin,*]
           rDRfiles = reform(local_DRfiles, n_elements(local_DRfiles))
           result = batch_repopulate_gui(Event, $
             rDRfiles, $
             spin_state_nbr=index_spin)
           index_spin++
+          
         endwhile
         
         refresh_bash_file_status = 1 ;enable REFRESH and SAVE AS Bash File
