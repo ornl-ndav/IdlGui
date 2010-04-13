@@ -147,7 +147,11 @@ PRO MAIN_BASE_ref_scale_event, Event
     
     ;Event of <OUTPUT FILE> button - create output file
     WIDGET_INFO(wWidget, FIND_BY_UNAME='print_button'): BEGIN
-      ProduceOutputFile, Event ;_produce_output
+      if ((*global).working_with_ref_m_batch) then begin
+        ProduceOutputFile_ref_m, event
+      endif else begin
+        ProduceOutputFile, Event ;_produce_output
+      endelse
     END
     
     ;email output
