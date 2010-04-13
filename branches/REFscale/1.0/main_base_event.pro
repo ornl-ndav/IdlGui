@@ -343,9 +343,41 @@ PRO MAIN_BASE_ref_scale_event, Event
       Step3RescaleFile, Event, -0.01 ;_Step3
     END
     
-    ;------------------------------------------------------------------------------
-    ;***** BATCH TAB **************************************************************
-    ;------------------------------------------------------------------------------
+    ;--------------------------------------------------------------------------
+    ;***** Output File ********************************************************
+    ;--------------------------------------------------------------------------
+    widget_info(wWidget, find_by_uname='scaled_data_file_preview_0'): begin
+      preview_of_scaled_data_file, event, 0
+    end
+    widget_info(wWidget, find_by_uname='scaled_data_file_preview_1'): begin
+      preview_of_scaled_data_file, event, 1
+    end
+    widget_info(wWidget, find_by_uname='scaled_data_file_preview_2'): begin
+      preview_of_scaled_data_file, event, 2
+    end
+    widget_info(wWidget, find_by_uname='scaled_data_file_preview_3'): begin
+      preview_of_scaled_data_file, event, 3
+    end
+    widget_info(wWidget, $
+      find_by_uname='combined_scaled_data_file_preview_0'): begin
+      preview_of_combined_scaled_data_file, event, 0
+    end
+    widget_info(wWidget, $
+      find_by_uname='combined_scaled_data_file_preview_1'): begin
+      preview_of_combined_scaled_data_file, event, 1
+    end
+    widget_info(wWidget, $
+      find_by_uname='combined_scaled_data_file_preview_2'): begin
+      preview_of_combined_scaled_data_file, event, 2
+    end
+    widget_info(wWidget, $
+      find_by_uname='combined_scaled_data_file_preview_3'): begin
+      preview_of_combined_scaled_data_file, event, 3
+    end
+    
+    ;--------------------------------------------------------------------------
+    ;***** BATCH TAB **********************************************************
+    ;--------------------------------------------------------------------------
     ;Load Batch File Button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='load_batch_file_button'): BEGIN
       ref_scale_LoadBatchFile, Event ;_batch
