@@ -37,64 +37,82 @@ PRO MakeGuiOutputFile, STEPS_TAB, global
   output_base = widget_base(steps_tab,$
     uname = 'output_file_base',$
     title = 'Output File')
-  
+    
   base = widget_base(output_base,$
-  /column)
-  
+    /column)
+    
   output_path = widget_button(base,$
-  value = (*global).BatchDefaultPath,$
-  scr_xsize = 519,$
-  event_pro = 'browse_output_path',$
-  uname = 'output_path_button')
-  
+    value = (*global).BatchDefaultPath,$
+    scr_xsize = 519,$
+    event_pro = 'browse_output_path',$
+    uname = 'output_path_button')
+    
   ;row2
   row2 = widget_base(base,$
-  /row)
+    /row)
   label = widget_label(row2,$
-  value = 'Raw file name:')
+    value = 'Raw file name:')
   value = widget_text(row2,$
-  value = '',$
-  /all_events,$
-  /editable,$
-  scr_xsize = 385,$
-  event_pro = 'output_file_name_value',$
-  uname = 'output_short_file_name')
+    value = '',$
+    /all_events,$
+    /editable,$
+    scr_xsize = 385,$
+    event_pro = 'output_file_name_value',$
+    uname = 'output_short_file_name')
   ext = widget_label(row2,$
-  uname = 'output_file_name_extension',$
-  value = '.txt')
-  
+    uname = 'output_file_name_extension',$
+    value = '.txt')
+    
   ;row3
   row3 = widget_base(base,$
-  /row)
+    /row)
   label = widget_label(row3,$
-  value = '    Scaled data:')
-  value = widget_label(row3,$
-  value = 'N/A',$
-  uname = 'scaled_data_file_name_value',$
-  /align_left,$
-  frame = 0,$
-  scr_xsize = 335)
-  preview = widget_button(row3,$
-  value = 'Preview...',$
-  event_pro = 'preview_of_scaled_data_file',$
-  uname = 'scaled_data_file_preview',$
-  sensitive = 0)
-
-  ;row3
+    scr_ysize = 10,$
+    value = '                                   S C A L E D  ')
+    
+  for i=0,3 do begin
+    row = widget_base(base,$
+      /row)
+    label = widget_label(row,$
+      value = '',$
+      scr_xsize = 50)
+    value = widget_label(row,$
+      value = 'N/A',$
+      /align_left,$
+      frame = 0,$
+      scr_xsize = 380,$
+      uname = 'scaled_data_file_name_value_' + strcompress(i,/remove_all))
+    preview = widget_button(row,$
+      value = 'Preview...',$
+      event_pro = 'preview_of_scaled_data_file',$
+      uname = 'scaled_data_file_preview_' + strcompress(i,/remove_all),$
+      sensitive = 0)
+  endfor
+  
+  ;row4
   row4 = widget_base(base,$
-  /row)
+    /row)
   label = widget_label(row4,$
-  value = 'Combined scaled:')
-  value = widget_label(row4,$
-  uname = 'combined_scaled_data_file_name_value',$
-  value = 'N/A',$
-  /align_left,$
-  scr_xsize = 335)
-  preview = widget_button(row4,$
-  value = 'Preview...',$
-  event_pro = 'preview_of_combined_scaled_data_file',$
-  uname = 'combined_scaled_data_file_preview',$
-  sensitive = 0)
+    scr_ysize = 10,$
+    value = '                                 C O M B I N E D  ')
+    
+  for i=0,3 do begin
+    row = widget_base(base,$
+      /row)
+    label = widget_label(row,$
+      value = '',$
+      scr_xsize = 50)
+    value = widget_label(row,$
+      value = 'N/A',$
+      /align_left,$
+      scr_xsize = 380,$
+      uname = 'combined_scaled_data_file_name_value_' + strcompress(i,/remove_all))
+    preview = widget_button(row,$
+      value = 'Preview...',$
+      event_pro = 'preview_of_combied_scaled_data_file',$
+      uname = 'combined_scaled_data_file_preview_' + strcompress(i,/remove_all),$
+      sensitive = 0)
+  endfor
   
-  end
-  
+end
+

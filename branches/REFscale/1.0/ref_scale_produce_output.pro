@@ -79,19 +79,48 @@ end
 pro output_file_name_value, event
   compile_opt idl2
   
+  widget_control, event.top, get_uvalue=global
+  
   value = getTextfieldValue(event,'output_short_file_name')
   ext = getTextFieldValue(event,'output_file_name_extension')
   
-  scaled = value + ext
-  combined_scaled = value + '_combined' + ext
+  ;check if we are working with spin states
+  working_with_ref_m_batch = (*global).working_with_ref_m_batch
+  if (working_with_ref_m_batch) then begin
+    spins = (*(*global).list_of_spins_for_each_angle)
+  endif else begin
+    spins = ['']
+  endelse
   
-  putTextFieldValue, event, 'scaled_data_file_name_value', scaled[0]
-  putTextFieldValue, event, 'combined_scaled_data_file_name_value', $
-    combined_scaled[0]
+  scaled_uname = 'scaled_data_file_name_value_'
+  combined_scaled_uname = 'combined_scaled_data_file_name_value_'
+  
+  nbr_spins = n_elements(spins)
+  scaled = value
+  combined_scaled = value
+  index = 0
+  while (index lt nbr_spins) do begin
+    if (spins[index] ne '') then begin
+      scaled += '_' + spins[index] + ext
+      putTextFieldValue, event, scaled_uname + strcompress(index,/remove_all), $
+      scaled[0]
+      combined_scaled += '_combined_' + spins[index] + ext
+      putTextFieldValue, event, combined_scaled_uname + $
+        strcompress(index,/remove_all), combined_scaled[0]
+    endif else begin
+      scaled += ext
+      putTextFieldValue, event, scaled_uname + strcompress(index,/remove_all), $
+      scaled[0]
+      combined_scaled += '_combined_' + ext
+      putTextFieldValue, event, combined_scaled_uname + $
+        strcompress(index,/remove_all), combined_scaled[0]
+    endelse
     
-  ;this routine will check if we can enabled or not the preview buttons
-  check_previews_button, event
+    index++
+  endwhile
   
+  ;this routine will check if we can enabled or not the preview buttons
+ ; check_previews_button, event
   
 end
 
@@ -508,8 +537,7 @@ END
 ;##############################################################################
 ;******************************************************************************
 PRO update_output_file_name_from_batch, Event ;_output
-  id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
-  WIDGET_CONTROL, id, GET_UVALUE=global
+  WIDGET_CONTROL, event.top, GET_UVALUE=global
   FileName = createOuputFileName(Event)
   ;display the name of the output file name
   putValueInLabel, Event, $

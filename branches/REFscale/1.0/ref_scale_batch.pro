@@ -267,9 +267,7 @@ function batch_repopulate_gui, Event, DRfiles, spin_state_nbr=spin_state_nbr
       DRfiles[i], i, $
       spin_state_nbr=spin_state_nbr)
       
-      print, 'spin_state_nbr: ' , spin_state_nbr
       flt1_ptr = (*global).flt1_ptr
-      help, *flt1_ptr[i, spin_state_nbr]
       
     if (SuccessStatus) then begin
     
