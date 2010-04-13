@@ -97,3 +97,21 @@ function get_index_of_this_spin_in_list_of_spins, event, this_spin
   return, -1
 end
 
+
+function getOutputfileName_of_index, event, index
+  scaled_uname = 'scaled_data_file_name_value_'
+  index = strcompress(index,/remove_all)
+  uname = scaled_uname + index
+  file = getTextfieldValue(event,uname)
+    path = getButtonValue(event,'output_path_button')
+  return, path + file[0]
+end
+
+function getCombinedOutputfileName_of_index, event, index
+  scaled_uname = 'combined_scaled_data_file_name_value_'
+  index = strcompress(index,/remove_all)
+  uname = scaled_uname + index
+  file = getTextfieldValue(event,uname)
+    path = getButtonValue(event,'output_path_button')
+  return, path + file[0]
+end

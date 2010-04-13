@@ -77,11 +77,11 @@ function send_files_by_email, event, files
   email_subject = 'Output files created by REFscale on ' + date
   
   ;send email
-  cmd_email = 'echo "' + email_message + '" | mutt -s " ' + email_subject + '"'
+  cmd_email = 'echo "' + email_message + '" | mail -s " ' + email_subject + '"'
   index = 0
-  cmd_email += ' -a '
+;  cmd_email += ' -a '
   while (index lt n_elements(list_of_files)) do begin
-    cmd_email += list_of_files[index] + ' '
+    cmd_email += ' -a ' + list_of_files[index]
     index++
   endwhile
   

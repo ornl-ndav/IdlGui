@@ -95,6 +95,7 @@ cd, CurrentFolder
 .run ref_scale_load.pro
 .run ref_scale_step2.pro
 .run ref_scale_produce_output.pro
+.run ref_scale_produce_output_ref_m.pro
 .run ref_scale_tabs.pro
 .run settings_base.pro
 
@@ -106,6 +107,7 @@ cd, CurrentFolder
 .run ref_scale_batch.pro
 .run idl_parse_command_line__define.pro
 .run auto_full_scaling_from_batch_file.pro
+
 
 .run ref_scale_cleanup.pro
 .run main_base_event.pro
