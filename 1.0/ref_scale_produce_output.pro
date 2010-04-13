@@ -101,26 +101,31 @@ pro output_file_name_value, event
   index = 0
   while (index lt nbr_spins) do begin
     if (spins[index] ne '') then begin
-      scaled += '_' + spins[index] + ext
-      putTextFieldValue, event, scaled_uname + strcompress(index,/remove_all), $
-      scaled[0]
-      combined_scaled += '_combined_' + spins[index] + ext
+      local_scaled = scaled + '_' + spins[index] + ext
+      putTextFieldValue, event, $
+        scaled_uname + strcompress(index,/remove_all), $
+        local_scaled[0]
+      putTextFieldValue, event, 'scaled_data_spin_state_' + $
+        strcompress(index,/remove_all), spins[index] + ':'
+      local_combined_scaled = combined_scaled + '_combined_' + spins[index] + ext
       putTextFieldValue, event, combined_scaled_uname + $
-        strcompress(index,/remove_all), combined_scaled[0]
+        strcompress(index,/remove_all), local_combined_scaled[0]
+      putTextFieldValue, event, 'combined_scaled_data_spin_state_' + $
+        strcompress(index,/remove_all), spins[index] + ':'
     endif else begin
-      scaled += ext
+      local_scaled = scaled + ext
       putTextFieldValue, event, scaled_uname + strcompress(index,/remove_all), $
-      scaled[0]
-      combined_scaled += '_combined_' + ext
+        local_scaled[0]
+      local_combined_scaled = combined_scaled + '_combined_' + ext
       putTextFieldValue, event, combined_scaled_uname + $
-        strcompress(index,/remove_all), combined_scaled[0]
+        strcompress(index,/remove_all), local_combined_scaled[0]
     endelse
     
     index++
   endwhile
   
-  ;this routine will check if we can enabled or not the preview buttons
- ; check_previews_button, event
+;this routine will check if we can enabled or not the preview buttons
+ check_previews_button, event
   
 end
 
@@ -138,28 +143,34 @@ pro check_previews_button, event
   compile_opt idl2
   
   path = getButtonValue(event,'output_path_button')
-  scaled = getTextFieldValue(event,'scaled_data_file_name_value')
-  combined_scaled = getTextFieldValue(event,$
-    'combined_scaled_data_file_name_value')
-    
-  full_scaled = path + scaled
-  if (file_test(full_scaled)) then begin
-    status = 1
-  endif else begin
-    status = 0
-  endelse
-  ActivateWidget, Event, 'scaled_data_file_preview', status
   
-  full_combined_scaled = path + combined_scaled
-  if (file_test(full_combined_scaled)) then begin
-    status = 1
-  endif else begin
-    status = 0
-  endelse
-  ActivateWidget, Event, 'combined_scaled_data_file_preview', status
+  scaled_uname = 'scaled_data_file_name_value_'
+  combined_scaled_uname = 'combined_scaled_data_file_name_value_'
+  
+  for i=0,3 do begin
+    index = strcompress(i,/remove_all)
+    
+    scaled = getTextFieldValue(event,scaled_uname+index)
+    full_scaled = path + scaled
+    if (file_test(full_scaled)) then begin
+      status = 1
+    endif else begin
+      status = 0
+    endelse
+    ActivateWidget, Event, 'scaled_data_file_preview_' + index, status
+    
+    combined_scaled = getTextFieldValue(event,combined_scaled_uname+index)
+    full_scaled = path + scaled
+    if (file_test(full_scaled)) then begin
+      status = 1
+    endif else begin
+      status = 0
+    endelse
+    ActivateWidget, Event, 'combined_scaled_data_file_preview_' + index, status
+    
+  endfor
   
 end
-
 
 ;+
 ; :Description:
@@ -167,13 +178,15 @@ end
 ;
 ; :Params:
 ;    event
+;    index
 ;
 ; :Author: j35
 ;-
-pro preview_of_scaled_data_file, event
+pro preview_of_scaled_data_file, event, index
   compile_opt idl2
   
-  file_name = getTextFieldValue(event, 'scaled_data_file_name_value')
+  index = strcompress(index,/remove_all)
+  file_name = getTextFieldValue(event, 'scaled_data_file_name_value_' + index)
   preview_of_file, event, file_name[0]
   
 end
@@ -185,13 +198,16 @@ end
 ;
 ; :Params:
 ;    event
+;    index
 ;
 ; :Author: j35
 ;-
-pro preview_of_combined_scaled_data_file, event
+pro preview_of_combined_scaled_data_file, event, index
   compile_opt idl2
   
-  file_name = getTextFieldValue(event, 'combined_scaled_data_file_name_value')
+  index = strcompress(index,/remove_all)
+  file_name = getTextFieldValue(event, $
+  'combined_scaled_data_file_name_value_' + index)
   preview_of_file, event, file_name[0]
   
 end

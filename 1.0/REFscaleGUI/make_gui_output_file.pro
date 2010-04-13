@@ -74,17 +74,17 @@ PRO MakeGuiOutputFile, STEPS_TAB, global
     row = widget_base(base,$
       /row)
     label = widget_label(row,$
-      value = '',$
+      value = 'N/A',$
+      uname = 'scaled_data_spin_state_' + strcompress(i,/remove_all),$
       scr_xsize = 50)
     value = widget_label(row,$
       value = 'N/A',$
       /align_left,$
       frame = 0,$
-      scr_xsize = 380,$
+      scr_xsize = 400,$
       uname = 'scaled_data_file_name_value_' + strcompress(i,/remove_all))
     preview = widget_button(row,$
-      value = 'Preview...',$
-      event_pro = 'preview_of_scaled_data_file',$
+      value = 'Preview..',$
       uname = 'scaled_data_file_preview_' + strcompress(i,/remove_all),$
       sensitive = 0)
   endfor
@@ -100,16 +100,16 @@ PRO MakeGuiOutputFile, STEPS_TAB, global
     row = widget_base(base,$
       /row)
     label = widget_label(row,$
-      value = '',$
+      value = 'N/A',$
+      uname = 'combined_scaled_data_spin_state_' + strcompress(i,/remove_all),$
       scr_xsize = 50)
     value = widget_label(row,$
       value = 'N/A',$
       /align_left,$
-      scr_xsize = 380,$
+      scr_xsize = 400,$
       uname = 'combined_scaled_data_file_name_value_' + strcompress(i,/remove_all))
     preview = widget_button(row,$
-      value = 'Preview...',$
-      event_pro = 'preview_of_combied_scaled_data_file',$
+      value = 'Preview..',$
       uname = 'combined_scaled_data_file_preview_' + strcompress(i,/remove_all),$
       sensitive = 0)
   endfor
