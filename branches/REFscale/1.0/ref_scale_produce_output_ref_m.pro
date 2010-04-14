@@ -200,7 +200,6 @@ pro ProduceOutputFile_ref_m, Event
     if (output_error NE 0) THEN BEGIN
       catch, /cancel
       idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, FAILED
-      ;      ActivateWidget, Event, 'scaled_data_file_preview', 0
       file_created_status[index_spin] = 0
     endif else begin
       ;create output file name
@@ -208,7 +207,6 @@ pro ProduceOutputFile_ref_m, Event
       MasterText = MasterText[1:*]
       createOutputFile, Event, outputFileName, MasterText ;_produce_output
       idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, OK
-      ;      ActivateWidget, Event, 'scaled_data_file_preview', 1
       file_created_status[index_spin] = 1
     endelse
     idl_send_to_geek_showLastLineLogBook, Event
@@ -224,8 +222,11 @@ pro ProduceOutputFile_ref_m, Event
     full_flt0_sorted = full_flt0[flt0_sorted_index]
     full_flt1_sorted = full_flt1[flt0_sorted_index]
     full_flt2_sorted = full_flt2[flt0_sorted_index]
-    
-    sz = n_elements(flt0_sorted_index)
+
+    ;average overlap data values
+    average_overlap, full_flt0_sorted, full_flt1_sorted, full_flt2_sorted
+
+    sz = n_elements(full_flt0_sorted)
     data_text = strarr(1)
     for i=0l,(sz-1) do begin
       local_data_text = strcompress(full_flt0_sorted[i],/remove_all)
