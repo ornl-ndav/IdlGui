@@ -78,10 +78,14 @@ PRO reset_all_button, Event
   putValueInLabel, Event, 'output_short_file_name', '';_put
   ;output_file_name_value, event
   scaled_uname = 'scaled_data_file_name_value_'
+  spin_state_uname = 'scaled_data_spin_state_'
   combined_scaled_uname = 'combined_scaled_data_file_name_value_'
+  combined_spin_state_uname = 'combined_scaled_data_spin_state_'
   for i=0,3 do begin
     index = strcompress(i,/remove_all)
+    putTextFieldValue, event, spin_state_uname + index, ''
     putTextFieldValue, event, scaled_uname + index, 'N/A'
+    putTextFieldValue, event, combined_spin_state_uname + index, ''
     putTextFieldValue, event, combined_scaled_uname + index, 'N/A'
   endfor
   check_previews_button, event
