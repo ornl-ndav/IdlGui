@@ -196,25 +196,24 @@ pro ProduceOutputFile_ref_m, Event
         MasterText = [MasterText,TextData]
       ENDFOR
       
-    ENDFOR
+    ENDFOR ;loop over all the files for a given spin
     
     idl_send_to_geek_addLogBookText, Event, '--> Producing output file ... ' + $
       PROCESSING
     output_error = 0
-    file_created_status = 1
-    CATCH, output_error
-    IF (output_error NE 0) THEN BEGIN
-      CATCH,/CANCEL
+    catch, output_error
+    if (output_error NE 0) THEN BEGIN
+      catch, /cancel
       idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, FAILED
-      ActivateWidget, Event, 'scaled_data_file_preview', 0
+      ;      ActivateWidget, Event, 'scaled_data_file_preview', 0
       file_created_status[index_spin] = 0
-    ENDIF ELSE BEGIN
+    endif else begin
       ;create output file name
       createOutputFile, Event, outputFileName, MasterText ;_produce_output
       idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, OK
-      ActivateWidget, Event, 'scaled_data_file_preview', 1
+      ;      ActivateWidget, Event, 'scaled_data_file_preview', 1
       file_created_status[index_spin] = 1
-    ENDELSE
+    endelse
     idl_send_to_geek_showLastLineLogBook, Event
     
     ;--------------------------------------------------------------------------
@@ -242,24 +241,25 @@ pro ProduceOutputFile_ref_m, Event
     idl_send_to_geek_addLogBookText, Event, '-> Producing output file ... ' + $
       PROCESSING
     output_error = 0
-    combined_file_created_status = 1
     CATCH, output_error
     IF (output_error NE 0) THEN BEGIN
       CATCH,/CANCEL
       idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, FAILED
-      ActivateWidget, Event, 'combined_scaled_data_file_preview', 0
+      ;      ActivateWidget, Event, 'combined_scaled_data_file_preview', 0
       combined_file_created_status[index_spin] = 0
     ENDIF ELSE BEGIN
       ;create output file name
       createOutputFile, Event, CombinedoutputFileName, MasterText ;_produce_output
       idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, OK
-      ActivateWidget, Event, 'combined_scaled_data_file_preview', 1
+      ;      ActivateWidget, Event, 'combined_scaled_data_file_preview', 1
       combined_file_created_status[index_spin] = 1
     ENDELSE
     idl_send_to_geek_showLastLineLogBook, Event
     
     index_spin++
   endwhile
+
+  catch,/cancel
   
   ;send output files by email
   result1 = 0
@@ -293,6 +293,7 @@ pro ProduceOutputFile_ref_m, Event
   endif
   
   title = 'Output File Status'
+  message_text = ['Output File created!']
   result = dialog_message(message_text,$
     title = title,$
     /center,$
