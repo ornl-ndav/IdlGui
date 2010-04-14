@@ -74,7 +74,8 @@ FUNCTION StoreFlts, Event, LongFileName, index, spin_state_nbr=spin_state_nbr
   widget_control, event.top, get_uvalue=global
 
   IF (index EQ 0) THEN BEGIN
-    metadata_CE_file = (*(*global).metadata_CE_file)
+    global_metadata_CE_file = (*global).metadata_CE_file
+    metadata_CE_file = strarr(1)
   ENDIF
   
   if (n_elements(spin_state_nbr) eq 0) then begin
@@ -213,34 +214,14 @@ FUNCTION StoreFlts, Event, LongFileName, index, spin_state_nbr=spin_state_nbr
     ;remove last 4 lines of metadata_CE_only and
     ;store metadata_CE_file for index 0 only
     IF (index EQ 0) THEN BEGIN
+      if (n_elements(spin_state_nbr) eq 0) then begin
+      spin_state_nbr = 0
+      endif
       size = (size(metadata_CE_file))(1)
       metadata_CE_file = metadata_CE_file[0:size-5]
-      (*(*global).metadata_CE_file) = metadata_CE_file
+      *global_metadata_CE_file[spin_state_nbr] = metadata_CE_file
+      (*global).metadata_CE_file = global_metadata_CE_file
     ENDIF
-    
-    ;    ;store flt0, ftl1 and flt2 in ptrarr
-    ;    flt0_ptr = (*global).flt0_ptr
-    ;    flt0_rescale_ptr = (*global).flt0_rescale_ptr
-    ;    *flt0_ptr[index] = flt0
-    ;    *flt0_rescale_ptr[index] = flt0
-    ;    (*global).flt0_ptr = flt0_ptr
-    ;    (*global).flt0_rescale_ptr = flt0_rescale_ptr
-    ;
-    ;    flt1_ptr = (*global).flt1_ptr
-    ;    flt1_rescale_ptr = (*global).flt1_rescale_ptr
-    ;    *flt1_ptr[index] = flt1
-    ;    *flt1_rescale_ptr[index] = flt1
-    ;    (*global).flt1_ptr = flt1_ptr
-    ;    (*global).flt1_rescale_ptr = flt1_rescale_ptr
-    ;
-    ;    flt2_ptr = (*global).flt2_ptr
-    ;    flt2_rescale_ptr = (*global).flt2_rescale_ptr
-    ;    *flt2_ptr[index] = flt2
-    ;    *flt2_rescale_ptr[index] = flt2
-    ;    (*global).flt2_ptr = flt2_ptr
-    ;    (*global).flt2_rescale_ptr = flt2_rescale_ptr
-    
-    ;store flt0, ftl1 and flt2 in ptrarr
     
     flt0_ptr = (*global).flt0_ptr
     flt0_rescale_ptr = (*global).flt0_rescale_ptr

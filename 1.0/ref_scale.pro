@@ -146,7 +146,7 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     CEcooef: PTR_NEW(0L),$ ;the fitting coeff of the CE file
     flt0_CE_range: PTR_NEW(0L),$ ;flt0 between Q1 and Q2 for CE file
     CE_scaling_factor: FLOAT(0),$ ;The CE scaling factor to go from Y to 1
-    metadata_CE_file: PTR_NEW(0L),$ ;first part of the CE input file
+    metadata_CE_file: ptrarr(4,/allocate_heap),$ ;first part of the CE input file
     flt0_xaxis: PTR_NEW(0L),$ ;x-axis of loaded file
     flt1_yaxis: PTR_NEW(0L),$ ;y-axis of loaded file
     flt2_yaxis_err: PTR_NEW(0L),$ ;y-axis error of loaded file
@@ -171,7 +171,6 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   CEcooef          = LONARR(3)
   FileHistory      = STRARR(1)
   list_of_files    = STRARR(1)
-  metadata_CE_file = STRARR(1)
   Qmin_array       = FLTARR(1)
   Qmax_array       = FLTARR(1)
   Q1_array         = LONARR(1)
@@ -196,7 +195,6 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   (*(*global).angle_array)        = angle_array
   (*(*global).color_array)        = color_array
   (*(*global).ListOfLongFileName) = ListOfLongFileName
-  (*(*global).metadata_CE_file)   = metadata_CE_file
   (*global).ucams                 = ucams
   (*(*global).BatchTable)         = STRARR(10,50)
   (*(*global).data_spin_state)     = data_spin_state
