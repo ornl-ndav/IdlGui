@@ -100,8 +100,8 @@ end
 
 function getOutputfileName_of_index, event, index
   scaled_uname = 'scaled_data_file_name_value_'
-  index = strcompress(index,/remove_all)
-  uname = scaled_uname + index
+  local_index = strcompress(index,/remove_all)
+  uname = scaled_uname + local_index
   file = getTextfieldValue(event,uname)
     path = getButtonValue(event,'output_path_button')
   return, path + file[0]
@@ -109,8 +109,8 @@ end
 
 function getCombinedOutputfileName_of_index, event, index
   scaled_uname = 'combined_scaled_data_file_name_value_'
-  index = strcompress(index,/remove_all)
-  uname = scaled_uname + index
+  local_index = strcompress(index,/remove_all)
+  uname = scaled_uname + local_index
   file = getTextfieldValue(event,uname)
     path = getButtonValue(event,'output_path_button')
   return, path + file[0]

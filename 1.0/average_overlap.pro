@@ -34,62 +34,72 @@
 
 ;+
 ; :Description:
-;   This function send by email the output files
+;   This procedures will average the values with the same x value using the
+;   following formula
+;   value1 : x1, y1, yerror1
+;   value2 : x1, y2, yerror2
+;   newx = x1 (= x2)
+;   newy = [x1/yerror1^2)+(x2/yerror2^2)] / [1/yerror1^2 + 1/yerrror2^2]
+;   newyerror = sqrt(1/(1/yerror1^2 + 1/yerror2^2))
 ;
 ; :Params:
-;    event
-;    file_name
+;    full_flt0_sorted
+;    full_ftl1_sorted
+;    full_flt2_sorted
 ;
 ; :Author: j35
 ;-
-function send_files_by_email, event, files
+pro average_overlap, full_flt0_sorted, full_flt1_sorted, full_flt2_sorted
   compile_opt idl2
   
-  result = 0
+  n_row = n_elements(full_flt0_sorted)
   
-  ;catch, error
-  error = 0
-  if (error ne 0) then begin
-    catch, /cancel
-    return, 0
-  endif
+  new_full_flt0_sorted = fltarr(1)
+  new_full_flt1_sorted = fltarr(1)
+  new_full_flt2_sorted = fltarr(1)
   
-  widget_control, event.top, get_uvalue=global
-  email = (*global).email
+  for i=0L, n_row-2 do begin
   
-  ucams    = get_ucams()
-  version  = (*global).version
-  date     = GenerateIsoTimeStamp()
+    value_left = full_flt0_sorted[i]
+    value_right = full_flt0_sorted[i+1]
+    
+    if (value_left ne value_right) then begin ;no need to average
+    
+      new_xValue = full_flt0_sorted[i]
+      new_yValue = full_flt1_sorted[i]
+      new_yerrorValue = full_flt2_sorted[i]
+      
+    endif else begin ;needs to average values
+    
+      ;new xaxis value
+      new_xValue = mean([value_left, value_right])
+      
+      yL = full_flt1_sorted[i]
+      yerrorL = full_flt2_sorted[i]
+      yerrorL2 = yerrorL * yerrorL
+      yR = full_flt1_sorted[i+1]
+      yerrorR = full_flt2_sorted[i+1]
+      yerrorR2 = yerrorR * yerrorR
+      
+      ;new yaxis value
+      new_y1 = yL/yerrorL2 + yR/yerrorR2
+      new_y2 = 1./yerrorL2 + 1./yerrorR2
+      new_yValue = new_y1 / new_y2
+      
+      ;new yaxis error value
+      new_yerrorValue = sqrt(1/new_y2)
+      
+      i++
+    endelse
+    
+    new_full_flt0_sorted = [new_full_flt0_sorted, new_xValue]
+    new_full_flt1_sorted = [new_full_flt1_sorted, new_yValue]
+    new_full_flt2_sorted = [new_full_flt2_sorted, new_yerrorValue]
+    
+  endfor
   
-  ;list of files
-  list_of_files = files[1:*]
+  full_flt0_sorted = new_full_flt0_sorted[1:*]
+  full_flt1_sorted = new_full_flt1_sorted[1:*]
+  full_flt2_sorted = new_full_flt2_sorted[1:*]
   
-  ;message of email
-  email_message = 'Output files created by ' + ucams + $
-    ' with REFscale (' + version + ') on ' + date + '. Files: - '
-  index = 0
-  while (index lt n_elements(list_of_files)) do begin
-    email_message += file_basename(list_of_files[index]) + ' - '
-    index++
-  endwhile
-  
-  ;message subject
-  email_subject = 'Output files created by REFscale on ' + date
-  
-  ;send email
-  cmd_email = 'echo "' + email_message + '" | mutt -s " ' + email_subject + '"'
-  index = 0
-;  cmd_email += ' -a '
-  while (index lt n_elements(list_of_files)) do begin
-    cmd_email += ' -a ' + list_of_files[index]
-    index++
-  endwhile
-  
-  cmd_email += ' ' + email
-  
-  print, cmd_email
-  
-  spawn, cmd_email, listening, err_listening
-  
-  return, 1
 end
