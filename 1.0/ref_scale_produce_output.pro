@@ -322,8 +322,8 @@ PRO ProduceOutputFile, Event
       outputFileName
       
     ;metadata of the CE file
-    metadata_CE_file = (*(*global).metadata_CE_file)
-    MasterText += metadata_CE_file
+    metadata_CE_file = (*global).metadata_CE_file
+    MasterText += *metadata_CE_file[0]
     
     ;remove first blank line
     MasterText = MasterText[1:*]
@@ -419,13 +419,13 @@ PRO ProduceOutputFile, Event
     IF (output_error NE 0) THEN BEGIN
       CATCH,/CANCEL
       idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, FAILED
-      ActivateWidget, Event, 'scaled_data_file_preview', 0
+      ActivateWidget, Event, 'scaled_data_file_preview_0', 0
       file_created_status = 0
     ENDIF ELSE BEGIN
       ;create output file name
       createOutputFile, Event, outputFileName, MasterText ;_produce_output
       idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, OK
-      ActivateWidget, Event, 'scaled_data_file_preview', 1
+      ActivateWidget, Event, 'scaled_data_file_preview_0', 1
     ENDELSE
     idl_send_to_geek_showLastLineLogBook, Event
     
@@ -459,13 +459,13 @@ PRO ProduceOutputFile, Event
     IF (output_error NE 0) THEN BEGIN
       CATCH,/CANCEL
       idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, FAILED
-      ActivateWidget, Event, 'combined_scaled_data_file_preview', 0
+      ActivateWidget, Event, 'combined_scaled_data_file_preview_0', 0
       combined_file_created_status = 0
     ENDIF ELSE BEGIN
       ;create output file name
       createOutputFile, Event, CombinedoutputFileName, MasterText ;_produce_output
       idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, OK
-      ActivateWidget, Event, 'combined_scaled_data_file_preview', 1
+      ActivateWidget, Event, 'combined_scaled_data_file_preview_0', 1
     ENDELSE
     idl_send_to_geek_showLastLineLogBook, Event
     

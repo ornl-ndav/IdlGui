@@ -482,7 +482,7 @@ END
 ;******************************************************************************
 FUNCTION getOutputFileName, Event
   widget_control, event.top, get_uvalue=global
-  outputFileName = getTextFieldValue(Event,'scaled_data_file_name_value')
+  outputFileName = getTextFieldValue(Event,'scaled_data_file_name_value_0')
   path = (*global).BatchDefaultPath
   RETURN, path+outputFileName
 END
@@ -501,7 +501,7 @@ END
 function  getCombinedOutputFileName, event
   widget_control, event.top, get_uvalue=global
   outputFileName = getTextFieldValue(Event,$
-    'combined_scaled_data_file_name_value')
+    'combined_scaled_data_file_name_value_0')
   path = (*global).BatchDefaultPath
   RETURN, path+outputFileName
 END
