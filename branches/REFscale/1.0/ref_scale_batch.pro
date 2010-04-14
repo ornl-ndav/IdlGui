@@ -85,10 +85,6 @@ PRO apply_sf_to_data, Event, DRfiles,  spin_state_nbr=spin_state_nbr
     
     if (n_elements(spin_state_nbr) ne 0) then begin
     
-      print, 'index_nbr_files: ' , index_nbr_files
-      print, 'spin_state_nbr: ' , spin_state_nbr
-      help, *flt1_ptr[spin_state_nbr, index_nbr_files]
-      
       flt1 = *flt1_ptr[index_nbr_files, spin_state_nbr]
       flt2 = *flt2_ptr[index_nbr_files, spin_state_nbr]
       

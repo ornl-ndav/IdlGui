@@ -59,9 +59,6 @@ pro ProduceOutputFile_ref_m, Event
   
   idl_send_to_geek_addLogBookText, Event, '> Create Output File Array :'
   
-  ;text string to output
-  MasterText = ''
-  
   list_of_spins_for_each_angle = (*(*global).list_of_spins_for_each_angle)
   nbr_spins = n_elements(list_of_spins_for_each_angle)
   
@@ -87,22 +84,20 @@ pro ProduceOutputFile_ref_m, Event
       '-> Does user has write access to this directory ... YES'
   endelse
   
-  ;metadata of the CE file
-  metadata_CE_file = (*(*global).metadata_CE_file)
-  MasterText += metadata_CE_file
-  
-  ;remove first blank line
-  MasterText = MasterText[1:*]
-  
   ;get list of files
   DRfiles = (*(*global).DRfiles)
   
   file_created_status = intarr(nbr_spins)
   combined_file_created_status = intarr(nbr_spins)
   
+  ;metadata of the CE file
+  metadata_CE_file = (*global).metadata_CE_file
+  
   index_spin = 0
   while (index_spin lt nbr_spins) do begin
   
+    MasterText = *metadata_CE_file[index_spin]
+    
     s_index_spin = strcompress(index_spin,/remove_all)
     local_scaled_uname = scaled_uname + s_index_spin
     outputFileName = getTextFieldValue(event,local_scaled_uname)
@@ -145,7 +140,7 @@ pro ProduceOutputFile_ref_m, Event
       fileName     = list_of_files[i]
       TextFileName = '## ' + fileName + '##'
       MasterText   = [MasterText,TextFileName]
-      full_master_text = [full_master_text,TextFileName]
+      full_master_text  = [full_master_text,TextFileName]
       
       idl_send_to_geek_addLogBookText, Event, '--> Working with File # ' + $
         STRCOMPRESS(i,/REMOVE_ALL) + ' (' + fileName + ')'
@@ -209,6 +204,8 @@ pro ProduceOutputFile_ref_m, Event
       file_created_status[index_spin] = 0
     endif else begin
       ;create output file name
+      ;remove first row of MasterText
+      MasterText = MasterText[1:*]
       createOutputFile, Event, outputFileName, MasterText ;_produce_output
       idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, OK
       ;      ActivateWidget, Event, 'scaled_data_file_preview', 1
@@ -249,6 +246,7 @@ pro ProduceOutputFile_ref_m, Event
       combined_file_created_status[index_spin] = 0
     ENDIF ELSE BEGIN
       ;create output file name
+      MasterText = MasterText[1:*]
       createOutputFile, Event, CombinedoutputFileName, MasterText ;_produce_output
       idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, OK
       ;      ActivateWidget, Event, 'combined_scaled_data_file_preview', 1
@@ -258,7 +256,7 @@ pro ProduceOutputFile_ref_m, Event
     
     index_spin++
   endwhile
-
+  
   catch,/cancel
   
   ;send output files by email
@@ -294,6 +292,7 @@ pro ProduceOutputFile_ref_m, Event
   
   title = 'Output File Status'
   message_text = ['Output File created!']
+  id = widget_info(event.top, find_by_uname='MAIN_BASE_ref_scale')
   result = dialog_message(message_text,$
     title = title,$
     /center,$
