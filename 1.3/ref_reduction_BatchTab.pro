@@ -981,37 +981,74 @@ END
 ;------------------------------------------------------------------------------
 PRO BatchTab_ActivateRow, Event
   ;get global structure
-  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-  widget_control,id,get_uvalue=global
-  ;retrieve main table
-  BatchTable = (*(*global).BatchTable)
-  ;current row selected
-  RowSelected = (*global).PrevBatchRowSelected
-  ;get value of active_button
-  isCurrentWorking = isItCurrentWorkingRow(RowSelected,BatchTable)
-  ActiveValue      = ValueOfActive(Event)
-  ;get status of active or not (from BatchTable)
-  ActiveSelection = isRowSelectedActive(RowSelected,BatchTable)
-  IF (ABS(activeValue - ActiveSelection) NE 1) THEN BEGIN
-    IF (activeValue EQ 0) THEN BEGIN
-      IF (isCurrentWorking) THEN BEGIN
-        BatchTable[0,RowSelected]='> YES <'
+  widget_control, event.top, get_uvalue=global
+  
+  if ((*global).instrument eq 'REF_L') then begin
+  
+    ;retrieve main table
+    BatchTable = (*(*global).BatchTable)
+    ;current row selected
+    RowSelected = (*global).PrevBatchRowSelected
+    ;get value of active_button
+    isCurrentWorking = isItCurrentWorkingRow(RowSelected,BatchTable)
+    ActiveValue      = ValueOfActive(Event)
+    ;get status of active or not (from BatchTable)
+    ActiveSelection = isRowSelectedActive(RowSelected,BatchTable)
+    IF (ABS(activeValue - ActiveSelection) NE 1) THEN BEGIN
+      IF (activeValue EQ 0) THEN BEGIN
+        IF (isCurrentWorking) THEN BEGIN
+          BatchTable[0,RowSelected]='> YES <'
+        ENDIF ELSE BEGIN
+          BatchTable[0,RowSelected]='YES'
+        ENDELSE
       ENDIF ELSE BEGIN
-        BatchTable[0,RowSelected]='YES'
+        IF (isCurrentWorking) THEN BEGIN
+          BatchTable[0,RowSelected]='> NO <'
+        ENDIF ELSE BEGIN
+          BatchTable[0,RowSelected]='NO'
+        ENDELSE
       ENDELSE
-    ENDIF ELSE BEGIN
-      IF (isCurrentWorking) THEN BEGIN
-        BatchTable[0,RowSelected]='> NO <'
+      (*(*global).BatchTable) = BatchTable
+      DisplayBatchTable, Event, BatchTable
+    ENDIF
+    UpdateBatchTabGui, Event
+    ;generate a new batch file name
+    GenerateBatchFileName, Event
+    
+  endif else begin
+  
+    ;retrieve main table
+    BatchTable = (*(*global).BatchTable_ref_m)
+    ;current row selected
+    RowSelected = (*global).PrevBatchRowSelected
+    ;get value of active_button
+    isCurrentWorking = isItCurrentWorkingRow(RowSelected,BatchTable)
+    ActiveValue      = ValueOfActive(Event)
+    ;get status of active or not (from BatchTable)
+    ActiveSelection = isRowSelectedActive(RowSelected,BatchTable)
+    IF (ABS(activeValue - ActiveSelection) NE 1) THEN BEGIN
+      IF (activeValue EQ 0) THEN BEGIN
+        IF (isCurrentWorking) THEN BEGIN
+          BatchTable[0,RowSelected]='> YES <'
+        ENDIF ELSE BEGIN
+          BatchTable[0,RowSelected]='YES'
+        ENDELSE
       ENDIF ELSE BEGIN
-        BatchTable[0,RowSelected]='NO'
+        IF (isCurrentWorking) THEN BEGIN
+          BatchTable[0,RowSelected]='> NO <'
+        ENDIF ELSE BEGIN
+          BatchTable[0,RowSelected]='NO'
+        ENDELSE
       ENDELSE
-    ENDELSE
-    (*(*global).BatchTable) = BatchTable
-    DisplayBatchTable, Event, BatchTable
-  ENDIF
-  UpdateBatchTabGui, Event
-  ;generate a new batch file name
-  GenerateBatchFileName, Event
+      (*(*global).BatchTable_ref_m) = BatchTable
+      DisplayBatchTable_ref_m, Event, BatchTable
+    ENDIF
+    UpdateBatchTabGui, Event
+    ;generate a new batch file name
+    GenerateBatchFileName, Event
+    
+  endelse
+  
 END
 
 ;------------------------------------------------------------------------------
