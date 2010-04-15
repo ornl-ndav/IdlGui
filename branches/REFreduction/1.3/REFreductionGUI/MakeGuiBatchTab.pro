@@ -640,7 +640,9 @@ PRO MakeGuiBatchTab, MAIN_TAB, MainTabSize, BatchTabTitle, structure, global
     spin_label = widget_label(info_base,$
       value = ' Norm. spin state:')
     spin = widget_label(info_base,$
-      value = 'N/A   ')
+      uname = 'bash_norm_spin_state_label',$
+      /align_left,$
+      value = 'N/A    ')
       
     wAngleLabel = WIDGET_LABEL(info_base,$
       SCR_XSIZE = dAngleLabel.size[2],$
