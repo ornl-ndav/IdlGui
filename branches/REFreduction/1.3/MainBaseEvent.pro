@@ -1788,7 +1788,13 @@ PRO MAIN_BASE_event, Event
     ;;Change Data Run number
     WIDGET_INFO(wWidget, FIND_BY_UNAME='batch_data_run_field_status'): begin
       WIDGET_CONTROL, /hourglass
-      BatchTab_ChangeDataNormRunNumber, Event
+      if ((*global).instrument eq 'REF_L') then begin
+        BatchTab_ChangeDataNormRunNumber, Event
+      endif else begin
+        MapBase, event, 'processing_base', 1 ;display processing base
+        change_batch_data_norm_run_number_ref_m, event
+        MapBase, event, 'processing_base', 0 ;hide processing base
+      endelse
       SaveDataNormInputValues, Event ;_batchDataNorm
       WIDGET_CONTROL, hourglass=0
     end
@@ -1832,7 +1838,13 @@ PRO MAIN_BASE_event, Event
     ;;Change Normalization Run number
     WIDGET_INFO(wWidget, FIND_BY_UNAME='batch_norm_run_field_status'): begin
       WIDGET_CONTROL, /hourglass
-      BatchTab_ChangeDataNormRunNumber, Event
+      if ((*global).instrument eq 'REF_L') then begin
+        BatchTab_ChangeDataNormRunNumber, Event
+      endif else begin
+        MapBase, event, 'processing_base', 1 ;display processing base
+        change_batch_data_norm_run_number_ref_m, event
+        MapBase, event, 'processing_base', 0 ;hide processing base
+      endelse
       SaveDataNormInputValues, Event ;_batchDataNorm
       WIDGET_CONTROL, hourglass=0
     end
