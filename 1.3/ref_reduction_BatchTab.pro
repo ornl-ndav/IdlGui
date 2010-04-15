@@ -464,17 +464,27 @@ END
 ;------------------------------------------------------------------------------
 FUNCTION isThereAnyCmdDefined, Event
   ;get global structure
-  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-  widget_control,id,get_uvalue=global
-  BatchTable = (*(*global).BatchTable)
-  RowIndexes = getGlobalVariable('RowIndexes')
-  FOR i=0,RowIndexes DO BEGIN
-    IF (BatchTable[9,i] NE 'N/A' AND $
-      BatchTable[9,i] NE '') THEN BEGIN
-      RETURN,1
-    ENDIF
-  ENDFOR
-  RETURN,0
+  widget_control,event.top,get_uvalue=global
+  if ((*global).instrument eq 'REF_L') then begin
+    RowIndexes = getGlobalVariable('RowIndexes')
+    BatchTable = (*(*global).BatchTable)
+    FOR i=0,RowIndexes DO BEGIN
+      IF (BatchTable[9,i] NE 'N/A' AND $
+        BatchTable[9,i] NE '') THEN BEGIN
+        RETURN,1
+      ENDIF
+    ENDFOR
+    RETURN,0
+  endif else begin ;ref_M (check that there is a run number
+    RowIndexes = getGlobalVariable_ref_m('RowIndexes')
+    BatchTable = (*(*global).BatchTable_ref_m)
+    FOR i=0,RowIndexes DO BEGIN
+      IF (BatchTable[1,i] NE '')THEN BEGIN
+        RETURN,1
+      ENDIF
+    ENDFOR
+    RETURN,0
+  endelse
 END
 
 ;------------------------------------------------------------------------------
@@ -1006,79 +1016,159 @@ END
 
 ;------------------------------------------------------------------------------
 PRO BatchTab_MoveUpSelection, Event
+
   ;get global structure
-  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-  widget_control,id,get_uvalue=global
-  ;retrieve main table
-  BatchTable = (*(*global).BatchTable)
-  ;current row selected
-  RowSelected = (*global).PrevBatchRowSelected
-  IF (RowSelected NE 0) THEN BEGIN ;move up
-    ;get current array at row selected
-    ArrayFrom = BatchTable[*,RowSelected]
-    ;get array at (row-1) selected
-    ArrayTo   = BatchTable[*,RowSelected-1]
-    ;switch values between row selected and previous row
-    BatchTable[*,RowSelected]   = ArrayTo
-    BatchTable[*,RowSelected-1] = ArrayFrom
-    ;display new table and save it
-    DisplayBatchTable, Event, BatchTable
-    (*(*global).BatchTable) = BatchTable
-    ;select previous row and save it as new selection
-    SelectFullRow, Event, (RowSelected-1)
-    (*global).PrevBatchRowSelected = (RowSelected-1)
-    ;activate down selection button
-    activateDownButton, Event, 1
-  ENDIF
-  IF ((RowSelected-1) EQ 0) THEN BEGIN
-    activateUpButtonStatus = 0
-  ENDIF ELSE BEGIN
-    activateUpButtonStatus = 1
-  ENDELSE
-  activateUpButton, Event, activateUpButtonStatus
-  ;generate a new batch file name
-  GenerateBatchFileName, Event
-  ;enable or not the REPOPULATE Button
-  CheckRepopulateButton, Event
+  widget_control,event.top,get_uvalue=global
+  
+  if ((*global).instrument eq 'REF_L') then begin
+  
+    ;retrieve main table
+    BatchTable = (*(*global).BatchTable)
+    ;current row selected
+    RowSelected = (*global).PrevBatchRowSelected
+    IF (RowSelected NE 0) THEN BEGIN ;move up
+      ;get current array at row selected
+      ArrayFrom = BatchTable[*,RowSelected]
+      ;get array at (row-1) selected
+      ArrayTo   = BatchTable[*,RowSelected-1]
+      ;switch values between row selected and previous row
+      BatchTable[*,RowSelected]   = ArrayTo
+      BatchTable[*,RowSelected-1] = ArrayFrom
+      ;display new table and save it
+      DisplayBatchTable, Event, BatchTable
+      (*(*global).BatchTable) = BatchTable
+      ;select previous row and save it as new selection
+      SelectFullRow, Event, (RowSelected-1)
+      (*global).PrevBatchRowSelected = (RowSelected-1)
+      ;activate down selection button
+      activateDownButton, Event, 1
+    ENDIF
+    IF ((RowSelected-1) EQ 0) THEN BEGIN
+      activateUpButtonStatus = 0
+    ENDIF ELSE BEGIN
+      activateUpButtonStatus = 1
+    ENDELSE
+    activateUpButton, Event, activateUpButtonStatus
+    ;generate a new batch file name
+    GenerateBatchFileName, Event
+    ;enable or not the REPOPULATE Button
+    CheckRepopulateButton, Event
+    
+  endif else begin ;ref_m
+  
+    ;retrieve main table
+    BatchTable = (*(*global).BatchTable_ref_m)
+    ;current row selected
+    RowSelected = (*global).PrevBatchRowSelected
+    IF (RowSelected NE 0) THEN BEGIN ;move up
+      ;get current array at row selected
+      ArrayFrom = BatchTable[*,RowSelected]
+      ;get array at (row-1) selected
+      ArrayTo   = BatchTable[*,RowSelected-1]
+      ;switch values between row selected and previous row
+      BatchTable[*,RowSelected]   = ArrayTo
+      BatchTable[*,RowSelected-1] = ArrayFrom
+      ;display new table and save it
+      DisplayBatchTable_ref_m, Event, BatchTable
+      (*(*global).BatchTable_ref_m) = BatchTable
+      ;select previous row and save it as new selection
+      SelectFullRow_ref_m, Event, (RowSelected-1)
+      (*global).PrevBatchRowSelected = (RowSelected-1)
+      ;activate down selection button
+      activateDownButton, Event, 1
+    ENDIF
+    IF ((RowSelected-1) EQ 0) THEN BEGIN
+      activateUpButtonStatus = 0
+    ENDIF ELSE BEGIN
+      activateUpButtonStatus = 1
+    ENDELSE
+    activateUpButton, Event, activateUpButtonStatus
+    ;generate a new batch file name
+    GenerateBatchFileName, Event
+    ;enable or not the REPOPULATE Button
+    CheckRepopulateButton, Event
+    
+  endelse
+  
 END
 
 ;------------------------------------------------------------------------------
 PRO BatchTab_MoveDownSelection, Event
   ;get global structure
-  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-  widget_control,id,get_uvalue=global
-  ;retrieve main table
-  BatchTable = (*(*global).BatchTable)
-  ;current row selected
-  RowSelected = (*global).PrevBatchRowSelected
-  RowIndexes = getGlobalVariable('RowIndexes')
-  IF (RowSelected NE RowIndexes) THEN BEGIN ;move down
-    ;get current array at row selected
-    ArrayFrom = BatchTable[*,RowSelected]
-    ;get array at (row+1) selected
-    ArrayTo   = BatchTable[*,RowSelected+1]
-    ;switch values between row selected and previous row
-    BatchTable[*,RowSelected]   = ArrayTo
-    BatchTable[*,RowSelected+1] = ArrayFrom
-    ;display new table and save it
-    DisplayBatchTable, Event, BatchTable
-    (*(*global).BatchTable) = BatchTable
-    ;select previous row and save it as new selection
-    SelectFullRow, Event, (RowSelected+1)
-    (*global).PrevBatchRowSelected = (RowSelected+1)
-    ;activate up selection button
-    activateUpButton, Event, 1
-  ENDIF
-  IF ((RowSelected+1) EQ RowIndexes) THEN BEGIN
-    activateDownButtonStatus = 0
-  ENDIF ELSE BEGIN
-    activateDownButtonStatus = 1
-  ENDELSE
-  activateDownButton, Event, activateDownButtonStatus
-  ;generate a new batch file name
-  GenerateBatchFileName, Event
-  ;enable or not the REPOPULATE Button
-  CheckRepopulateButton, Event
+  widget_control,event.top,get_uvalue=global
+  
+  if ((*global).instrument eq 'REF_L') then begin
+  
+    ;retrieve main table
+    BatchTable = (*(*global).BatchTable)
+    ;current row selected
+    RowSelected = (*global).PrevBatchRowSelected
+    RowIndexes = getGlobalVariable('RowIndexes')
+    IF (RowSelected NE RowIndexes) THEN BEGIN ;move down
+      ;get current array at row selected
+      ArrayFrom = BatchTable[*,RowSelected]
+      ;get array at (row+1) selected
+      ArrayTo   = BatchTable[*,RowSelected+1]
+      ;switch values between row selected and previous row
+      BatchTable[*,RowSelected]   = ArrayTo
+      BatchTable[*,RowSelected+1] = ArrayFrom
+      ;display new table and save it
+      DisplayBatchTable, Event, BatchTable
+      (*(*global).BatchTable) = BatchTable
+      ;select previous row and save it as new selection
+      SelectFullRow, Event, (RowSelected+1)
+      (*global).PrevBatchRowSelected = (RowSelected+1)
+      ;activate up selection button
+      activateUpButton, Event, 1
+    ENDIF
+    IF ((RowSelected+1) EQ RowIndexes) THEN BEGIN
+      activateDownButtonStatus = 0
+    ENDIF ELSE BEGIN
+      activateDownButtonStatus = 1
+    ENDELSE
+    activateDownButton, Event, activateDownButtonStatus
+    ;generate a new batch file name
+    GenerateBatchFileName, Event
+    ;enable or not the REPOPULATE Button
+    CheckRepopulateButton, Event
+    
+  endif else begin ;REF_M
+  
+    ;retrieve main table
+    BatchTable = (*(*global).BatchTable_ref_m)
+    ;current row selected
+    RowSelected = (*global).PrevBatchRowSelected
+    RowIndexes = getGlobalVariable_ref_m('RowIndexes')
+    IF (RowSelected NE RowIndexes) THEN BEGIN ;move down
+      ;get current array at row selected
+      ArrayFrom = BatchTable[*,RowSelected]
+      ;get array at (row+1) selected
+      ArrayTo   = BatchTable[*,RowSelected+1]
+      ;switch values between row selected and previous row
+      BatchTable[*,RowSelected]   = ArrayTo
+      BatchTable[*,RowSelected+1] = ArrayFrom
+      ;display new table and save it
+      DisplayBatchTable_ref_m, Event, BatchTable
+      (*(*global).BatchTable_ref_m) = BatchTable
+      ;select previous row and save it as new selection
+      SelectFullRow_ref_m, Event, (RowSelected+1)
+      (*global).PrevBatchRowSelected = (RowSelected+1)
+      ;activate up selection button
+      activateUpButton, Event, 1
+    ENDIF
+    IF ((RowSelected+1) EQ RowIndexes) THEN BEGIN
+      activateDownButtonStatus = 0
+    ENDIF ELSE BEGIN
+      activateDownButtonStatus = 1
+    ENDELSE
+    activateDownButton, Event, activateDownButtonStatus
+    ;generate a new batch file name
+    GenerateBatchFileName, Event
+    ;enable or not the REPOPULATE Button
+    CheckRepopulateButton, Event
+    
+  endelse
+  
 END
 
 ;------------------------------------------------------------------------------
