@@ -273,7 +273,7 @@ PRO miniMakeGuiBatchTab, MAIN_TAB, $
     dMDbutton.size[1]+XYoff[1],$
     130,35],$
     uname     : 'delete_selection_button',$
-    value     : 'DELETE SELECTION',$
+    value     : 'DELETE ROW',$
     sensitive : 0}
     
   XYoff = [5,0]

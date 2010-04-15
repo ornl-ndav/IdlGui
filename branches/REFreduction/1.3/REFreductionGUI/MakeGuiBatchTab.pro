@@ -270,7 +270,7 @@ PRO MakeGuiBatchTab, MAIN_TAB, MainTabSize, BatchTabTitle, structure, global
     dMDButton.size[1],$
     200,35],$
     uname     : 'delete_selection_button',$
-    value     : 'DELETE  SELECTION',$
+    value     : 'DELETE  ROW',$
     sensitive : 0}
     
   XYoff = [10,0]

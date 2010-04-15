@@ -645,7 +645,7 @@ pro BatchTab_DeleteSelection_ref_m, Event
     BatchTable[*,i]=BatchTable[*,i+1]
   ENDFOR
   ClearStructureFields_ref_m, BatchTable, RowIndexes
-  (*(*global).BatchTable) = BatchTable
+  (*(*global).BatchTable_ref_m) = BatchTable
   DisplayBatchTable_ref_m, Event, BatchTable
   ;this function updates the widgets (button) of the tab
   UpdateBatchTabGui_ref_m, Event
@@ -690,7 +690,7 @@ pro CheckRepopulateButton_ref_m, Event
   widget_control,event.top,get_uvalue=global
   BatchTable  = (*(*global).BatchTable_ref_m)
   SelectedRow = getCurrentRowSelected(Event)
-  cmd         = BatchTable[9,SelectedRow]
+  cmd         = BatchTable[8,SelectedRow]
   IF (cmd NE '') THEN BEGIN
     activateButtonStatus = 1
   ENDIF ELSE BEGIN
