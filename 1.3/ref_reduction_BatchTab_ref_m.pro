@@ -176,7 +176,9 @@ PRO DisplayInfoOfSelectedRow_ref_m, Event, RowSelected
   IF (RowSelected EQ -1) THEN BEGIN ;clear input base
   
     UpdateDataField,  Event, ''
+    UpdateDataSpinStateField, Event, ''
     UpdateNormField,  Event, ''
+    UpdateNormSpinStateField, Event, ''
     UpdateAngleField, Event, ''
     UpdateCMDField,   Event, ''
     
@@ -189,13 +191,61 @@ PRO DisplayInfoOfSelectedRow_ref_m, Event, RowSelected
     ENDELSE
     
     UpdateDataField,  Event, BatchTable[1,RowSelected]
+    UpdateDataSpinStateField, Event, BatchTable[2,RowSelected]
     UpdateNormField,  Event, BatchTable[3,RowSelected]
+    UpdateNormSpinStateField, Event, BatchTable[4,RowSelected]
     UpdateAngleField, Event, BatchTable[5,RowSelected]
     UpdateCMDField,   Event, BatchTable[8,RowSelected]
     
   ENDELSE
   
 END
+
+;+
+; :Description:
+;   Populates the droplist of the information box with the spin states of the
+;   selected row
+;
+; :Params:
+;    Event
+;    data_spins
+;
+; :Author: j35
+;-
+pro UpdateDataSpinStateField, Event, data_spins
+  compile_opt idl2
+  
+  data_spins_split = strsplit(data_spins,'/',/extract,count=nbr)
+  id = widget_info(Event.top,find_by_uname='bash_data_spin_state_droplist')
+  if (nbr ge 1) then begin
+    widget_control, id, set_value=data_spins_split
+  endif else begin
+    widget_control, id, set_value=['']
+  endelse
+  
+end
+
+;+
+; :Description:
+;   Populates the norm spin state label with the corresponding spin state
+;   according to the spin state selected in the data droplist spin state
+;
+; :Params:
+;    Event
+;    norm_spins
+;
+; :Author: j35
+;-
+pro UpdateNormSpinStateField, Event, norm_spins
+  compile_opt idl2
+  
+  norm_spins_split = strsplit(norm_spins,'/',/extract,count=nbr)
+  spin = norm_spins_split[0]
+  putTextFieldValue, event, 'bash_norm_spin_state_label', spin
+  
+end
+
+
 
 
 pro populate_ref_m_batch_table, event, cmd_array
