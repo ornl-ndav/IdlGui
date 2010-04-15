@@ -1793,6 +1793,22 @@ PRO MAIN_BASE_event, Event
       WIDGET_CONTROL, hourglass=0
     end
     
+    ;data spin state
+    widget_info(wWidget, find_by_uname='bash_data_spin_state_droplist'): begin
+      CurrentWorkingRow = getCurrentRowSelected(Event)
+      BatchTable = (*(*global).BatchTable_ref_m)
+      norm_spin_state = BatchTable[4,CurrentWorkingRow]
+      data_spin_state_selected = $
+        getDropListSelectedIndex(Event,'bash_data_spin_state_droplist')
+      norm_spin_split = strsplit(norm_spin_state,'/',/extract,count=nbr)
+      if (nbr gt 1) then begin
+        norm_spin = norm_spin_split[data_spin_state_selected]
+      endif else begin
+        norm_spin = norm_spin_split[0]
+      endelse
+      putTextFieldValue, event, 'bash_norm_spin_state_label', norm_spin
+    end
+    
     ;;Repopulate GUI
     WIDGET_INFO(wWidget, FIND_BY_UNAME='repopulate_gui'): begin
       DataNormFieldInput, Event
