@@ -222,10 +222,10 @@ pro ProduceOutputFile_ref_m, Event
     full_flt0_sorted = full_flt0[flt0_sorted_index]
     full_flt1_sorted = full_flt1[flt0_sorted_index]
     full_flt2_sorted = full_flt2[flt0_sorted_index]
-
+    
     ;average overlap data values
     average_overlap, full_flt0_sorted, full_flt1_sorted, full_flt2_sorted
-
+    
     sz = n_elements(full_flt0_sorted)
     data_text = strarr(1)
     for i=0l,(sz-1) do begin
@@ -293,6 +293,10 @@ pro ProduceOutputFile_ref_m, Event
   
   title = 'Output File Status'
   message_text = ['Output File created!']
+  if (result2 + result1 GT 0) then begin
+    message_text = [message_text,$
+    'Files sent to ' + (*global).email]
+  endif
   id = widget_info(event.top, find_by_uname='MAIN_BASE_ref_scale')
   result = dialog_message(message_text,$
     title = title,$

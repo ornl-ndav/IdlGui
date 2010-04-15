@@ -205,6 +205,27 @@ FUNCTION CheckFilesExist, Event, DRfiles
   RETURN, file_status
 END
 
+;+
+; :Description:
+;    checks if the user does not try to add more than 1 time the same ascii
+;    file. If it does, the program complains and the loading process will
+;    stop there
+;
+; :Params:
+;    event
+;    DRfiles
+
+; :Author: j35
+;-
+function checkFilesUniq, event, DRfiles
+  compile_opt idl2
+  
+  help, DRfiles
+  
+  return, 0
+  
+end
+
 
 ;+
 ; :Description:
@@ -243,6 +264,66 @@ function CheckFilesExist_ref_m, Event, DRfiles
   return, file_status
 end
 
+;+
+; :Description:
+;   This functions checks if the list of files is uniq.
+;
+; :Params:
+;    event
+;    DRfiles
+;
+; :Author: j35
+;-
+function CheckFileUniq, event, DRfiles
+  compile_opt idl2
+  
+  nbr_files = n_elements(DRfiles)
+  
+  if (nbr_files eq 1) then begin
+    display_error_message, Event, type='1file'
+    return, 0
+  endif
+  
+  uniq_array = DRfiles[uniq(DRfiles, sort(DRfiles))]
+  nbr_uniq = n_elements(uniq_array)
+  if (nbr_uniq ne nbr_files) then begin
+    display_error_message, event, type='not_uniq'
+    return, 0
+  endif
+  
+  return, 1
+end
+
+;+
+; :Description:
+;   This procedure pops up a personalize dialog_message according to the
+;   type given
+;
+; :Params:
+;    event
+;
+; :Keywords:
+;    type
+;
+; :Author: j35
+;-
+pro display_error_message, event, type=type
+  compile_opt idl2
+  
+  id = widget_info(event.top, find_by_uname='MAIN_BASE_ref_scale')
+  
+  case (type) of
+  '1file': message = 'Batch file contains only 1 ascii file to load!'
+  'not_uniq': message = 'Batch file contains several times the same ascii file!'
+  endcase
+
+  result = dialog_message(message,$
+  /error,$
+  /center,$
+  dialog_parent=id,$
+  title='Loading Error!')
+
+end
 
 ;==============================================================================
 function batch_repopulate_gui, Event, DRfiles, spin_state_nbr=spin_state_nbr
@@ -263,8 +344,8 @@ function batch_repopulate_gui, Event, DRfiles, spin_state_nbr=spin_state_nbr
       DRfiles[i], i, $
       spin_state_nbr=spin_state_nbr)
       
-      flt1_ptr = (*global).flt1_ptr
-      
+    flt1_ptr = (*global).flt1_ptr
+    
     if (SuccessStatus) then begin
     
       ShortFileName = get_file_name_only(DRfiles[i]) ;_get
@@ -511,6 +592,9 @@ PRO ref_scale_LoadBatchFile, Event
       
       ;check that all the files exist to move on
       FileStatus = CheckFilesExist_ref_m(Event, DRfiles)
+      
+      ;check that list of files is uniq
+      FileStatus = CheckFileUniq(Event, DRfiles)
       
       if (FileStatus eq 1) then begin ;continue loading process
       
