@@ -418,7 +418,17 @@ PRO command_line_generator_for_ref_m, event
         pola_state = getCWBgroupValue(Event, 'normalization_pola_state')
         IF (pola_state EQ 1) THEN BEGIN
           cmd[index_spin_state] += ' ' + (*global).norm_path_flag
-        ENDIF
+        ENDIF else begin
+          value = getButtonValue(event,'other_spin_states')
+            cmd[index_spin_state] += ' --norm-data-paths'
+          if (value eq 1) then begin
+            cmd[index_spin_state] += '=/' + (*global).data_path + '/'
+            cmd[index_spin_state] += (*global).data_path_flag_suffix
+          endif else begin
+            cmd[index_spin_state] += '=/' + data_spin_state_path[index_spin_state] + '/'
+            cmd[index_spin_state] += (*global).data_path_flag_suffix
+          endelse
+        endelse
       ENDIF ELSE BEGIN
         norm_pola_sensitive = 0
       ENDELSE
