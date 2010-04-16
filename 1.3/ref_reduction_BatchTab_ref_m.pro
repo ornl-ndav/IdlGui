@@ -614,7 +614,7 @@ PRO BatchTab_LoadBatchFile_ref_m_step2, Event, BatchFileName, new_path
   
   IF (BatchFileName NE '') THEN BEGIN
     batch_error = 0
-    ;CATCH, batch_error
+    CATCH, batch_error
     IF (batch_error NE 0) THEN BEGIN
       CATCH,/CANCEL
       LogText = '> Application was unable to open the batch file '

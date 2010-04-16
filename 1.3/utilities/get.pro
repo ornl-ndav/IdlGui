@@ -487,3 +487,46 @@ function get_value_between_arg1_arg2, base_string, arg1, arg2
     return, ''
   endelse
 end
+
+
+;+
+; :Description:
+;   this function returns the cvinfo file using the data run number
+;   and findnexus with --prenexus flag to get the cvinfo file
+;
+; :Params:
+;    event
+
+; :Author: j35
+;-
+function getcvinfo_file, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  data_run_number = getTextFieldValue(event,$
+    'load_data_run_number_text_field')
+  instrument = (*global).instrument
+  
+  cmd = 'findnexus --prenexus ' + data_run_number
+  spawn, cmd, listening
+  
+  cvinfo_name = '/' + instrument + '_' + data_run_number
+  cvinfo_name += '_cvinfo.xml'
+  
+  return, listening[0] + cvinfo_name
+  
+end
+
+
+function getgeometry_file, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  instrument = (*global).instrument
+  
+  cmd = 'findcalib -g -i ' + instrument
+  spawn, cmd, listening
+  return, listening[0]
+  
+end
