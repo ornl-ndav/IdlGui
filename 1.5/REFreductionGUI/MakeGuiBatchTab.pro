@@ -654,7 +654,7 @@ PRO MakeGuiBatchTab, MAIN_TAB, MainTabSize, BatchTabTitle, structure
     VALUE     = dMDButton.value)
     
     
-  ;\\\\\\\\\\\\\\\\\\\\\\\\
+ ;\\\\\\\\\\\\\\\\\\\\\\\\
   ;Delete Selection Button\
   ;\\\\\\\\\\\\\\\\\\\\\\\\
   wDeleteSelectionButton = WIDGET_BUTTON(BATCH_BASE,$
@@ -663,7 +663,7 @@ PRO MakeGuiBatchTab, MAIN_TAB, MainTabSize, BatchTabTitle, structure
     YOFFSET   = $
     dDeleteSelectionButton.size[1],$
     SCR_XSIZE = $
-    dDeleteSelectionButton.size[2],$
+    dDeleteSelectionButton.size[2]-50,$
     SCR_YSIZE = $
     dDeleteSelectionButton.size[3],$
     UNAME     = $
@@ -673,17 +673,25 @@ PRO MakeGuiBatchTab, MAIN_TAB, MainTabSize, BatchTabTitle, structure
     SENSITIVE = $
     dDeleteSelectionButton.sensitive)
     
-  ;\\\\\\\\\\\\\\\\\\\\\
-  ;Delete Active Button\
-  ;\\\\\\\\\\\\\\\\\\\\\
+    ;used to be delete active, now is clear all
   wDeleteButton = WIDGET_BUTTON(BATCH_BASE,$
-    XOFFSET   = dDeleteButton.size[0],$
+    XOFFSET   = dDeleteButton.size[0]-50,$
     YOFFSET   = dDeleteButton.size[1],$
-    SCR_XSIZE = dDeleteButton.size[2],$
+    SCR_XSIZE = dDeleteButton.size[2]-50,$
     SCR_YSIZE = dDeleteButton.size[3],$
-    UNAME     = dDeleteButton.uname,$
-    VALUE     = dDeleteButton.value,$
+    UNAME     = 'batch_clear_all',$
+    VALUE     = 'CLEAR ALL',$
     SENSITIVE = dDeleteButton.sensitive)
+    
+    ;sort rows
+    wSort = widget_button(batch_base,$
+    xoffset = dDeleteButton.size[0]+dDeleteButton.size[2]-90,$
+    yoffset = dDeleteButton.size[1],$
+    scr_xsize = dDeleteButton.size[2]-110,$
+    scr_ysize = dDeleteButton.size[3],$
+    uname = 'batch_sort_rows',$
+    value = 'SORT ROWS',$
+    sensitive = 0)
     
   ;\\\\\\\\\\\\\\\\\\
   ;Run Active Button\
