@@ -1821,13 +1821,12 @@ PRO MAIN_BASE_event, Event
       SaveDataNormInputValues, Event
     end
     
-    ;;Delete Active
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='delete_active_button'): begin
-      BatchTab_WarningDeleteActive, Event
-      SaveDataNormInputValues, Event
+    ;reset all batch
+    widget_info(wWidget, find_by_Uname='batch_clear_all'): begin
+      reset_all_batch, event
     end
     
-    ;;Run Active live
+    ;Run Active live
     WIDGET_INFO(wWidget, FIND_BY_UNAME='run_active_button'): begin
       BatchTab_RunActive, Event
     end

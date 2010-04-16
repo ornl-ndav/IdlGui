@@ -92,6 +92,9 @@
 .run ref_reduction_OutputPath.pro
 .run ref_reduction_jpeg.pro
 
+;batcht tab
+.run reset_all_batch.pro
+
 ;auto cleaning
 .run auto_cleaning_of_reduce_data_cw_bgroup.pro
 .run configure_auto_cleanup_parameters_base.pro
