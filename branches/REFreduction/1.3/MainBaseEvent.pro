@@ -1874,6 +1874,11 @@ PRO MAIN_BASE_event, Event
       reset_all_batch, event
     end
     
+    ;sort rows
+    widget_info(wWidget, find_by_uname='batch_sort_rows'): begin
+      sort_batch_rows, event
+    end
+    
     ;;Run Active live
     WIDGET_INFO(wWidget, FIND_BY_UNAME='run_active_button'): begin
       BatchTab_RunActive, Event

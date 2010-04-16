@@ -32,34 +32,66 @@
 ;
 ;==============================================================================
 
-pro reset_all_batch, event
+;+
+; :Description:
+;   This retrieves the first data run number from the Data Runs column
+;   and returns this list
+;
+; :Params:
+;    BatchTable
+;
+; :returns:
+;     list of first data run
+;
+; :Author: j35
+;-
+function retrieve_sorted_index_data_runs, BatchTable
+  compile_opt idl2
+  
+  data_column = BatchTable[1,*]
+  index = where(data_column eq '')
+  data_column[index] = 'ZZZZZZZZ'
+  index_sorted = sort(data_column)
+  return, index_sorted
+
+end
+
+;+
+; :Description:
+;   sort the batch table according to the increasing value of the first
+;   data run number
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro sort_batch_rows, event
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global
   
   if ((*global).instrument eq 'REF_L') then begin
-    (*(*global).BatchTable) = STRARR(10,20)
     BatchTable = (*(*global).BatchTable)
-    DisplayBatchTable, Event, BatchTable
-    DisplayInfoOfSelectedRow, Event, -1
-    ;generate a new batch file name
-    GenerateBatchFileName, Event
-    ;enable or not the REPOPULATE Button
-    CheckRepopulateButton, Event
   endif else begin
-    (*(*global).BatchTable_ref_m) = strarr(9,20)
     BatchTable = (*(*global).BatchTable_ref_m)
-    DisplayInfoOfSelectedRow_ref_m, Event, -1
-    DisplayBatchTable_ref_m, Event, BatchTable
-    ;generate a new batch file name
-    GenerateBatchFileName_ref_m, Event
-    ;enable or not the REPOPULATE Button
-    CheckRepopulateButton_ref_m, Event
   endelse
-  activateSortrowsButton, event, 0
-  activateClearAllButton, event, 0
-  activateRunActiveButton, Event, 0
-  activateSaveActiveButton, Event, 0
-  activateDeleteSelectionButton, Event, 0
+  
+  ;retrieve list of first data run in second column of BatchTable
+  index_sorted = retrieve_sorted_index_data_runs(BatchTable)
+  
+  ;sort table according to second column
+  BatchTable = BatchTable[*,index_sorted]
+  
+  RowSelected = getCurrentRowSelected(Event)
+  if ((*global).instrument eq 'REF_L') then begin
+    (*(*global).BatchTable) = BatchTable
+    DisplayBatchTable, Event, BatchTable
+    DisplayInfoOfSelectedRow, Event, RowSelected
+  endif else begin
+    (*(*global).BatchTable_ref_m) = BatchTable
+    DisplayBatchTable_ref_m, Event, BatchTable
+    DisplayInfoOfSelectedRow_ref_m, Event, RowSelected
+  endelse
   
 end
