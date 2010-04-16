@@ -84,6 +84,8 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     ;sangle caluclation
     detector_size_m: detector_size_m,$
     
+    row_selected: 0,$
+    
     ;auto cleaning
     percentage_of_q_to_remove_value: 10,$
     

@@ -115,6 +115,7 @@
 .run change_batch_data_norm_run_number_ref_m.pro
 .run reset_all_batch.pro
 .run sort_batch_rows.pro
+.run duplicate_batch_row.pro
 
 .run IDLgetMetadata__define.pro
 .run ref_reduction_BatchTab.pro

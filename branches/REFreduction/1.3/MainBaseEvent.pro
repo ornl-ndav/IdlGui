@@ -40,6 +40,23 @@ PRO MAIN_BASE_event, Event
   id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
   WIDGET_CONTROL,id,get_uvalue=global
   
+  if (TAG_NAMES(event, /STRUCTURE_NAME) EQ 'WIDGET_CONTEXT') then begin
+    ; Obtain the widget ID of the context menu base.
+    contextBase = WIDGET_INFO(event.ID, $
+      FIND_BY_UNAME = 'batch_table_context_menu')
+    ;Select Full Row
+    if ((*global).instrument eq 'REF_L') then begin
+      SelectFullRow, event, event.row
+    endif else begin
+      SelectFullRow_ref_m, Event, event.row
+    endelse
+    (*global).row_selected = event.row
+    ; Display the context menu and send its events to the
+    ; other event handler routines.
+    WIDGET_DISPLAYCONTEXTMENU, event.ID, event.X, $
+      event.Y, contextBase
+  endif
+  
   wWidget =  Event.top            ;widget id
   
   CASE Event.id OF
@@ -1779,6 +1796,11 @@ PRO MAIN_BASE_event, Event
         BatchTab_WidgetTable_ref_m, event
       endelse
     END
+    
+    ;duplicate row button
+    widget_info(wWidget, find_by_uname='batch_table_duplicate_row'): begin
+    duplicate_batch_row, event
+    end
     
     ;;Activate or not
     WIDGET_INFO(wWidget, FIND_BY_UNAME='batch_run_active_status'): begin
