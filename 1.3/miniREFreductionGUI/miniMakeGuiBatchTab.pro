@@ -734,23 +734,31 @@ PRO miniMakeGuiBatchTab, MAIN_TAB, $
     WIDGET_BUTTON(BATCH_BASE,$
     XOFFSET   = dDeleteSelectionButton.size[0],$
     YOFFSET   = dDeleteSelectionButton.size[1],$
-    SCR_XSIZE = dDeleteSelectionButton.size[2],$
+    SCR_XSIZE = dDeleteSelectionButton.size[2]-40,$
     SCR_YSIZE = dDeleteSelectionButton.size[3],$
     UNAME     = dDeleteSelectionButton.uname,$
     VALUE     = dDeleteSelectionButton.value,$
     SENSITIVE = dDeleteSelectionButton.sensitive)
     
-  ;\\\\\\\\\\\\\\\\\\\\\
-  ;Delete Active Button\
-  ;\\\\\\\\\\\\\\\\\\\\\
+    ;clear all
   wDeleteButton = WIDGET_BUTTON(BATCH_BASE,$
-    XOFFSET   = dDeleteButton.size[0],$
+    XOFFSET   = dDeleteButton.size[0]-40,$
     YOFFSET   = dDeleteButton.size[1],$
-    SCR_XSIZE = dDeleteButton.size[2],$
+    SCR_XSIZE = dDeleteButton.size[2]-60,$
     SCR_YSIZE = dDeleteButton.size[3],$
-    UNAME     = dDeleteButton.uname,$
-    VALUE     = dDeleteButton.value,$
+    UNAME     = 'batch_clear_all',$
+    VALUE     = 'CLEAR ALL',$
     SENSITIVE = dDeleteButton.sensitive)
+    
+        ;sort rows
+    wSort = widget_button(batch_base,$
+    xoffset = dDeleteButton.size[0]+dDeleteButton.size[2]-95,$
+    yoffset = dDeleteButton.size[1],$
+    scr_xsize = dDeleteButton.size[2]-35,$
+    scr_ysize = dDeleteButton.size[3],$
+    uname = 'batch_sort_rows',$
+    value = 'SORT ROWS',$
+    sensitive = 0)
     
   ;\\\\\\\\\\\\\\\\\\
   ;Run Active Button\
