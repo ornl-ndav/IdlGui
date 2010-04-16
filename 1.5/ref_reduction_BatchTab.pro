@@ -973,7 +973,7 @@ PRO BatchTab_WidgetTable, Event
   CheckRepopulateButton, Event
   SaveDataNormInputValues, Event  ;_batchDataNorm
   
-  ;print, 'Leaving BatchTab_WidgetTable'
+;print, 'Leaving BatchTab_WidgetTable'
   
 END
 
@@ -989,6 +989,12 @@ PRO BatchTab_ActivateRow, Event
   ;get value of active_button
   isCurrentWorking = isItCurrentWorkingRow(RowSelected,BatchTable)
   ActiveValue      = ValueOfActive(Event)
+  
+  ;if empty row
+  if (strcompress(BatchTable[0,RowSelected],/remove_all) eq '') then return
+  ;get status of active or not (from BatchTable)
+  ActiveSelection = isRowSelectedActive(RowSelected,BatchTable)
+  
   ;get status of active or not (from BatchTable)
   ActiveSelection = isRowSelectedActive(RowSelected,BatchTable)
   IF (ABS(activeValue - ActiveSelection) NE 1) THEN BEGIN
