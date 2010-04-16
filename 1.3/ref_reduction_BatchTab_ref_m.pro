@@ -32,14 +32,14 @@
 ;
 ;==============================================================================
 
-function isThereAnyCmdDefined, Event
+function isThereAnyCmdDefined_ref_m, Event
   widget_control,event.top,get_uvalue=global
   
   BatchTable = (*(*global).BatchTable_ref_m)
   RowIndexes = getGlobalVariable_ref_m('RowIndexes')
   FOR i=0,RowIndexes DO BEGIN
-    IF (BatchTable[9,i] NE 'N/A' AND $
-      BatchTable[9,i] NE '') THEN BEGIN
+    IF (BatchTable[8,i] NE 'N/A' AND $
+      BatchTable[8,i] NE '') THEN BEGIN
       RETURN,1
     ENDIF
   ENDFOR
@@ -47,12 +47,12 @@ function isThereAnyCmdDefined, Event
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION isThereAnyDataActivate, Event
+FUNCTION isThereAnyDataActivate_ref_m, Event
   ;get global structure
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
   widget_control,id,get_uvalue=global
-  BatchTable = (*(*global).BatchTable)
-  RowIndexes = getGlobalVariable('RowIndexes')
+  BatchTable = (*(*global).BatchTable_ref_m)
+  RowIndexes = getGlobalVariable_ref_m('RowIndexes')
   FOR i=0,RowIndexes DO BEGIN
     IF (BatchTable[0,i] EQ 'YES' OR $
       BatchTable[0,i] EQ '> YES <') THEN RETURN, 1
@@ -61,11 +61,11 @@ FUNCTION isThereAnyDataActivate, Event
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION isThereAnyDataInBatchTable, Event
+FUNCTION isThereAnyDataInBatchTable_ref_m, Event
   ;get global structure
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
   widget_control,id,get_uvalue=global
-  BatchTable      = (*(*global).BatchTable)
+  BatchTable      = (*(*global).BatchTable_ref_m)
   BatchTableReset = strarr(9,20)
   IF (ARRAY_EQUAL(BatchTable,BatchTableReset)) THEN RETURN, 0
   RETURN,1
@@ -189,6 +189,16 @@ PRO DisplayInfoOfSelectedRow_ref_m, Event, RowSelected
     ENDIF ELSE BEGIN
       ValidateActive, Event, 1
     ENDELSE
+    
+    ;if BatchTable empty, then clear info widgets
+    if (BatchTable[0,RowSelected] eq '') then begin
+      UpdateDataField,  Event, ''
+      UpdateDataSpinStateField, Event, ''
+      UpdateNormField,  Event, ''
+      UpdateNormSpinStateField, Event, ''
+      UpdateAngleField, Event, ''
+      UpdateCMDField,   Event, ''
+    endif
     
     UpdateDataField,  Event, BatchTable[1,RowSelected]
     UpdateDataSpinStateField, Event, BatchTable[2,RowSelected]
@@ -629,7 +639,7 @@ PRO BatchTab_LoadBatchFile_ref_m_step2, Event, BatchFileName, new_path
       (*global).BatchFileName = BatchFileName
       ;this function updates the widgets (button) of the tab
       
-      UpdateBatchTabGui, Event
+      UpdateBatchTabGui_ref_m, Event
       RowSelected = (*global).PrevBatchRowSelected
       ;Update info of selected row
       DisplayInfoOfSelectedRow_ref_m, Event, RowSelected
@@ -765,10 +775,10 @@ pro UpdateBatchTabGui_ref_m, Event
   
   ;check if delete active and save activte can be
   ;validated or not
-  IF (isThereAnyDataActivate(Event)) THEN BEGIN
+  IF (isThereAnyDataActivate_ref_m(Event)) THEN BEGIN
     activateStatus = 1
     ;check if run active can be validated or not
-    IF (isThereAnyCmdDefined(Event)) THEN BEGIN
+    IF (isThereAnyCmdDefined_ref_m(Event)) THEN BEGIN
       activateStatus2 = 1
     ENDIF ELSE BEGIN
       activateStatus2 = 0
@@ -778,16 +788,16 @@ pro UpdateBatchTabGui_ref_m, Event
     activateStatus = 0
     activateRunActiveButton, Event, activateStatus
   ENDELSE
-  activateDeleteActiveButton, Event, activateStatus
   activateSaveActiveButton, Event, activateStatus
+  activateSortrowsButton, event, activateStatus
+  activateClearAllButton, event, activateStatus
   
   ;check if there is anything in the BatchTable
-  IF (isThereAnyDataInBatchTable(Event)) THEN BEGIN
+  IF (isThereAnyDataInBatchTable_ref_m(Event)) THEN BEGIN
     activateStatus = 1
   ENDIF ELSE BEGIN
     activateStatus = 0
   ENDELSE
-  
   activateDeleteSelectionButton, Event, activateStatus
   
 end

@@ -652,6 +652,16 @@ PRO activateDeleteActiveButton, Event, status
   widget_control, id, sensitive=status
 END
 
+pro activateClearAllButton, event, status
+  id = widget_info(Event.top,find_by_uname='batch_clear_all')
+  widget_control, id, sensitive=status
+end
+
+pro activateSortrowsButton, event, status
+  id = widget_info(Event.top,find_by_uname='batch_sort_rows')
+  widget_control, id, sensitive=status
+end
+
 ;------------------------------------------------------------------------------
 ;This function activates or not the RUN ACTIVE buttons
 PRO activateRunActiveButton, Event, status
@@ -742,7 +752,6 @@ PRO UpdateBatchTabGui, Event
     activateStatus = 0
     activateRunActiveButton, Event, activateStatus
   ENDELSE
-  activateDeleteActiveButton, Event, activateStatus
   activateSaveActiveButton, Event, activateStatus
   
   ;check if there is anything in the BatchTable
@@ -751,8 +760,9 @@ PRO UpdateBatchTabGui, Event
   ENDIF ELSE BEGIN
     activateStatus = 0
   ENDELSE
-  
+  activateClearAllButton, event, activateStatus  
   activateDeleteSelectionButton, Event, activateStatus
+  activateSortrowsButton, event, activateStatus
   
 END
 
@@ -992,6 +1002,12 @@ PRO BatchTab_ActivateRow, Event
     ;get value of active_button
     isCurrentWorking = isItCurrentWorkingRow(RowSelected,BatchTable)
     ActiveValue      = ValueOfActive(Event)
+    
+    ;if empty row
+    if (strcompress(BatchTable[0,RowSelected],/remove_all) eq '') then return
+    ;get status of active or not (from BatchTable)
+    ActiveSelection = isRowSelectedActive(RowSelected,BatchTable)
+    
     ;get status of active or not (from BatchTable)
     ActiveSelection = isRowSelectedActive(RowSelected,BatchTable)
     IF (ABS(activeValue - ActiveSelection) NE 1) THEN BEGIN
@@ -1024,7 +1040,7 @@ PRO BatchTab_ActivateRow, Event
     ;get value of active_button
     isCurrentWorking = isItCurrentWorkingRow(RowSelected,BatchTable)
     ActiveValue      = ValueOfActive(Event)
-
+    
     ;if empty row
     if (strcompress(BatchTable[0,RowSelected],/remove_all) eq '') then return
     ;get status of active or not (from BatchTable)
