@@ -644,6 +644,16 @@ PRO activateDeleteSelectionButton, Event, status
   widget_control, id, sensitive=status
 END
 
+pro activateClearAllButton, event, status
+  id = widget_info(Event.top,find_by_uname='batch_clear_all')
+  widget_control, id, sensitive=status
+end
+
+pro activateSortrowsButton, event, status
+  id = widget_info(Event.top,find_by_uname='batch_sort_rows')
+  widget_control, id, sensitive=status
+end
+
 ;------------------------------------------------------------------------------
 ;This function activates or not the DELETE ACTIVE button
 PRO activateDeleteActiveButton, Event, status
@@ -749,8 +759,9 @@ PRO UpdateBatchTabGui, Event
   ENDIF ELSE BEGIN
     activateStatus = 0
   ENDELSE
-  
   activateDeleteSelectionButton, Event, activateStatus
+  activateClearAllButton, event, activateStatus
+  activateSortRowsButton, event, activateStatus
   
 END
 
