@@ -493,8 +493,16 @@ PRO MakeGuiBatchTab, MAIN_TAB, MainTabSize, BatchTabTitle, structure
     ALIGNMENT     = dTable.align,$
     /NO_ROW_HEADERS,$
     /ROW_MAJOR,$
+    /context_events, $
     /RESIZEABLE_COLUMNS,$
     /ALL_EVENTS)
+    
+  context_base = widget_base(wTable,$
+    uname = 'batch_table_context_menu',$
+    /context_menu)
+  copy_row = widget_button(context_base,$
+    value = 'Duplicate selected row',$
+    uname = 'batch_table_duplicate_row')
     
   ;\\\\\\\\\\\\\\\\\\\
   ;Display Data Title\
@@ -654,7 +662,7 @@ PRO MakeGuiBatchTab, MAIN_TAB, MainTabSize, BatchTabTitle, structure
     VALUE     = dMDButton.value)
     
     
- ;\\\\\\\\\\\\\\\\\\\\\\\\
+  ;\\\\\\\\\\\\\\\\\\\\\\\\
   ;Delete Selection Button\
   ;\\\\\\\\\\\\\\\\\\\\\\\\
   wDeleteSelectionButton = WIDGET_BUTTON(BATCH_BASE,$
@@ -673,7 +681,7 @@ PRO MakeGuiBatchTab, MAIN_TAB, MainTabSize, BatchTabTitle, structure
     SENSITIVE = $
     dDeleteSelectionButton.sensitive)
     
-    ;used to be delete active, now is clear all
+  ;used to be delete active, now is clear all
   wDeleteButton = WIDGET_BUTTON(BATCH_BASE,$
     XOFFSET   = dDeleteButton.size[0]-50,$
     YOFFSET   = dDeleteButton.size[1],$
@@ -683,8 +691,8 @@ PRO MakeGuiBatchTab, MAIN_TAB, MainTabSize, BatchTabTitle, structure
     VALUE     = 'CLEAR ALL',$
     SENSITIVE = dDeleteButton.sensitive)
     
-    ;sort rows
-    wSort = widget_button(batch_base,$
+  ;sort rows
+  wSort = widget_button(batch_base,$
     xoffset = dDeleteButton.size[0]+dDeleteButton.size[2]-90,$
     yoffset = dDeleteButton.size[1],$
     scr_xsize = dDeleteButton.size[2]-110,$

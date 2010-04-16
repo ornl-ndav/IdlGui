@@ -494,8 +494,16 @@ PRO miniMakeGuiBatchTab, MAIN_TAB, $
     ALIGNMENT     = dTable.align,$
     /NO_ROW_HEADERS,$
     /ROW_MAJOR,$
+    /context_events, $
     /RESIZEABLE_COLUMNS,$
     /ALL_EVENTS)
+    
+  context_base = widget_base(wTable,$
+    uname = 'batch_table_context_menu',$
+    /context_menu)
+  copy_row = widget_button(context_base,$
+    value = 'Duplicate selected row',$
+    uname = 'batch_table_duplicate_row')
     
   ;\\\\\\\\\\\\\\\\\\\
   ;Display Data Title\

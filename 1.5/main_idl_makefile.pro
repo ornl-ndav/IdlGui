@@ -95,6 +95,7 @@
 ;batch tab
 .run reset_all_batch.pro
 .run sort_batch_rows.pro
+.run duplicate_batch_row.pro
 
 ;auto cleaning
 .run auto_cleaning_of_reduce_data_cw_bgroup.pro
