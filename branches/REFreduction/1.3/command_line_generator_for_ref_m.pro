@@ -920,7 +920,7 @@ PRO command_line_generator_for_ref_m, event
         putInfoInReductionStatus, Event, status_text, append
       ENDIF
     ENDIF
-    outputFileName    = getOutputFileName(Event)
+    outputFileName = getOutputFileName(Event)
     outputFileName = add_spin_state_to_outputFileName(Event,$
       outputFileName,$
       data_spin_state[index_spin_state])

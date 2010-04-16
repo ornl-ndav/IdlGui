@@ -32,6 +32,50 @@
 ;
 ;==============================================================================
 
+;+
+; :Description:
+;   This creates the output file name that will depends on the data run number
+;   and the data spin state
+;
+; :Params:
+;    Event
+;    new_cmd
+;    DataRun
+;;
+; :Author: j35
+;-
+function UpdateOutputFlag_ref_m, Event, new_cmd, DataRun, DataSpin
+  compile_opt idl2
+  
+  split1      = '--output='
+  ArraySplit1 = strsplit(new_cmd,split1,/EXTRACT,/REGEX)
+  part1       = ArraySplit1[0] + split1
+  ;get path of output file name
+  ArrayPath   = strsplit(ArraySplit1[1],'/',/EXTRACT,COUNT=length)
+  if (length gt 1) then begin
+    path  = strjoin(arraypath[0:length-2],'/')
+  endif else begin
+    path  = arraypath[0]
+  endelse
+  
+  ;create new output file name
+  ;get global structure
+  widget_control,event.top,get_uvalue=global
+  NewFileName  = path + '/'
+  instrument   = (*global).instrument
+  NewFileName += instrument
+  NewfileName += '_' + strcompress(DataRun,/REMOVE_ALL)
+  DateStamp    = GenerateDateStamp()
+  NewfileName += '_' + DateStamp
+  newFileName += '_' + DataSpin ;add spin state
+  NewfileName += '.txt'
+  
+  ;recreate the cmd
+  new_cmd = part1 + NewFileName
+  return, new_cmd
+end
+
+
 pro change_batch_data_norm_run_number_ref_m, event
   compile_opt idl2
   
@@ -41,6 +85,11 @@ pro change_batch_data_norm_run_number_ref_m, event
   
   ;retrieve main table
   BatchTable = (*(*global).BatchTable_ref_m)
+  
+  ;data spin state
+  data_spin = BatchTable[2,RowSelected]
+  data_spin_array = strsplit(data_spin,'/',/extract)
+  
   ;cmd string is...
   cmd = BatchTable[8,RowSelected]
   
@@ -86,28 +135,59 @@ pro change_batch_data_norm_run_number_ref_m, event
     new_cmd += ' ' + split2 + part2
     
     ;change the --output flag in the cmd
-    new_cmd = UpdateOutputFlag(Event, new_cmd, data_runs[0])
+    new_cmd = UpdateOutputFlag_ref_m(Event, $
+    new_cmd, $
+    data_runs[0], $
+    data_spin_array[index])
     
     new_main_cmd[index] = new_cmd
     
-    ;WORK on NORM runs
+    index++
+  endwhile
+  
+  SetBaseYSize, Event, 'processing_base', 50
+  ;change top label
+  value  = 'PROCESSING  NEW  NORMALIZATION  INPUT  . . .  '
+  value += '( P L E A S E   W A I T ) '
+  putLabelValue, Event, 'pro_top_label', value
+  
+  ;WORK on NORM runs
+  
+  index = 0
+  while (index lt nbr_split) do begin
+  
     split1 = ' --norm='
-    part1_array = strsplit(new_main_cmd[index], split1, /extract)
-    part1 = part1_array[0]
+    part1_array = strsplit(new_main_cmd[index], split1, /extract, /regex)
+    part1 = part1_array[0] ;everything before --norm='
     ;get second part (after norm run)
-    split2 = 
+    split2 = '--norm-data-paths='
+    part2_array = strsplit(new_main_cmd[index], split2, /extract, /regex)
+    part2 = part2_array[1] ;everything after --data-norm-path=
+    new_cmd = part1 + ' ' + split1
     
+    norm_runs = getTextFieldValue(Event,'batch_norm_run_field_status')
+    if (norm_runs[0] eq '') then return ;stop if not data runs
     
+    NormNexusFullPathList = getNexusFromRunArray(event, norm_runs, $
+      (*global).instrument, source_file='norm')
+      
+    sz = n_elements(NormNexusFullPathList)
+    BatchTable[3,RowSelected] = strjoin(norm_runs,',')
     
+    ;! do not autorize add of more than 1 norm 
+    ;
+    ;if (sz gt 1) then begin
+    ;  for i=0,(sz-1) do begin
+    ;    new_cmd += ' ' + NormNexusFullPathList[i]
+    ;  endfor
+    ;endif else begin
+    if (sz ge 1) then begin
+      new_cmd += NormNexusFullPathList[0]
+    endif
+    ;endelse
+    new_cmd += ' ' + split2 + part2
     
-    
-    
-    
-    
-    
-    
-    
-    
+    new_main_cmd[index] = new_cmd
     
     index++
   endwhile
@@ -124,17 +204,6 @@ pro change_batch_data_norm_run_number_ref_m, event
   ;Save BatchTable back to Global
   (*(*global).BatchTable_ref_m) = BatchTable
   DisplayBatchTable_ref_m, Event, BatchTable
-  SetBaseYSize, Event, 'processing_base', 50
-  ;change top label
-  value  = 'PROCESSING  NEW  NORMALIZATION  INPUT  . . .  '
-  value += '( P L E A S E   W A I T ) '
-  putLabelValue, Event, 'pro_top_label', value
-  
-  
-  
-  
-  ;work on norm file now
-  
   
   ;Hide processing base
   MapBase, Event, 'processing_base', 0
