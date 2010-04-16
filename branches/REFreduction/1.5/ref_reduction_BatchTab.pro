@@ -741,7 +741,6 @@ PRO UpdateBatchTabGui, Event
     activateStatus = 0
     activateRunActiveButton, Event, activateStatus
   ENDELSE
-  activateDeleteActiveButton, Event, activateStatus
   activateSaveActiveButton, Event, activateStatus
   
   ;check if there is anything in the BatchTable
