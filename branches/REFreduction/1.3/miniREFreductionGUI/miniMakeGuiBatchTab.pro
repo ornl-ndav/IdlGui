@@ -647,11 +647,11 @@ PRO miniMakeGuiBatchTab, MAIN_TAB, $
       value = 'N/A   ')
       
     angle_base = widget_base(BATCH_BASE,$
-    xoffset = dRunBase.size[0] + 343,$
-    yoffset = dRunBase.size[1] + 40,$
-    sensitive = 1,$
-    /row)
-    
+      xoffset = dRunBase.size[0] + 343,$
+      yoffset = dRunBase.size[1] + 40,$
+      sensitive = 1,$
+      /row)
+      
     wAngleLabel = WIDGET_LABEL(angle_base,$
       SCR_XSIZE = dAngleLabel.size[2],$
       UNAME     = dAngleLabel.uname,$
@@ -740,7 +740,7 @@ PRO miniMakeGuiBatchTab, MAIN_TAB, $
     VALUE     = dDeleteSelectionButton.value,$
     SENSITIVE = dDeleteSelectionButton.sensitive)
     
-    ;clear all
+  ;clear all
   wDeleteButton = WIDGET_BUTTON(BATCH_BASE,$
     XOFFSET   = dDeleteButton.size[0]-40,$
     YOFFSET   = dDeleteButton.size[1],$
@@ -750,8 +750,8 @@ PRO miniMakeGuiBatchTab, MAIN_TAB, $
     VALUE     = 'CLEAR ALL',$
     SENSITIVE = dDeleteButton.sensitive)
     
-        ;sort rows
-    wSort = widget_button(batch_base,$
+  ;sort rows
+  wSort = widget_button(batch_base,$
     xoffset = dDeleteButton.size[0]+dDeleteButton.size[2]-95,$
     yoffset = dDeleteButton.size[1],$
     scr_xsize = dDeleteButton.size[2]-35,$
