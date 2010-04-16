@@ -91,6 +91,8 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     dirpix_geometry: '',$
     cvinfo: '',$
     
+    row_selected: 0,$ ;right row selected in batch tab
+    
     ;automatic cleanup of q range
     percentage_of_q_to_remove_value: 10,$
     
