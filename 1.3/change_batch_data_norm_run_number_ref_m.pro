@@ -53,6 +53,7 @@ pro change_batch_data_norm_run_number_ref_m, event
   index = 0
   while (index lt nbr_split) do begin
   
+    ;WORK ON DATA runs
     ;get first part of cmd ex: srun -Q -p lracq reflect_reduction
     split1      = 'reflect_reduction'
     part1_array = strsplit(cmd_split[index],split1,/extract,/regex)
@@ -88,6 +89,25 @@ pro change_batch_data_norm_run_number_ref_m, event
     new_cmd = UpdateOutputFlag(Event, new_cmd, data_runs[0])
     
     new_main_cmd[index] = new_cmd
+    
+    ;WORK on NORM runs
+    split1 = ' --norm='
+    part1_array = strsplit(new_main_cmd[index], split1, /extract)
+    part1 = part1_array[0]
+    ;get second part (after norm run)
+    split2 = 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     index++
   endwhile
