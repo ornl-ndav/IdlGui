@@ -1024,8 +1024,12 @@ PRO BatchTab_ActivateRow, Event
     ;get value of active_button
     isCurrentWorking = isItCurrentWorkingRow(RowSelected,BatchTable)
     ActiveValue      = ValueOfActive(Event)
+
+    ;if empty row
+    if (strcompress(BatchTable[0,RowSelected],/remove_all) eq '') then return
     ;get status of active or not (from BatchTable)
     ActiveSelection = isRowSelectedActive(RowSelected,BatchTable)
+    
     IF (ABS(activeValue - ActiveSelection) NE 1) THEN BEGIN
       IF (activeValue EQ 0) THEN BEGIN
         IF (isCurrentWorking) THEN BEGIN
