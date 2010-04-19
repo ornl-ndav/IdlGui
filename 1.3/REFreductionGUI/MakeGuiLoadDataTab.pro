@@ -225,11 +225,9 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
   if ((*global).instrument eq 'REF_M') then begin
   
     label_array = ['Date',$
-      'Start','End','Duration','Proton Charge',$
-      'Bin size (microS)'] + ':'
+      'Start','End','Duration','Proton Charge'] + ':'
     uname_array = ['info_date',$
-      'info_start','info_end','info_duration','info_proton_charge',$
-      'info_bin_size']
+      'info_start','info_end','info_duration','info_proton_charge']
     sz = n_elements(label_array)
     for i=0L,(sz-1) do begin
       row = widget_base(info_base,$
@@ -245,6 +243,47 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
         scr_xsize = 200)
     endfor
     
+    ;bin min, max, size, type
+    bin_base = widget_base(info_base,/row)
+    label = widget_label(bin_base,$
+      /align_right,$
+      scr_xsize = 150,$
+      value='Min bin (microS):')
+    value = widget_label(bin_base,$
+      value='N/A',$
+      scr_xsize= 100,$
+      /align_left,$
+      uname = 'info_bin_min')
+    label = widget_label(bin_base,$
+      /align_right,$
+      scr_xsize = 110,$
+      value='Max bin (microS):')
+    value = widget_label(bin_base,$
+      value='N/A',$
+      scr_xsize= 100,$
+      /align_left,$
+      uname = 'info_bin_max')
+      
+    bin_base = widget_base(info_base,/row)
+    label = widget_label(bin_base,$
+      /align_right,$
+      scr_xsize = 150,$
+      value='Bin size (microS):')
+    value = widget_label(bin_base,$
+      value='N/A',$
+      scr_xsize= 100,$
+      /align_left,$
+      uname = 'info_bin_size')
+    label = widget_label(bin_base,$
+      /align_right,$
+      scr_xsize = 110,$
+      value='Bin type:')
+    value = widget_label(bin_base,$
+      value='N/A',$
+      scr_xsize= 100,$
+      /align_left,$
+      uname = 'info_bin_type')      
+      
     space = widget_label(info_base,$
       value = ' ')
       
@@ -261,7 +300,7 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
       uname = 'info_dangle',$
       scr_xsize = 250,$
       frame = 0)
-
+      
     row = widget_base(info_base,$
       /row)
     label = widget_label(row,$
@@ -301,12 +340,12 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
       
     ;detector-sample distance
     row = widget_base(info_base,$
-    /row)
+      /row)
     label = widget_label(row,$
-    /align_right,$
-    scr_xsize = 208,$
+      /align_right,$
+      scr_xsize = 208,$
       value  = 'Detector-Sample distance:')
-      value = widget_label(row,$
+    value = widget_label(row,$
       /align_left,$
       value = 'N/A',$
       uname = 'info_detector_sample_distance',$
@@ -359,7 +398,7 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
     yoffset=0,$
     scr_xsize=NXsummaryZoomTabSize[2],$
     scr_ysize=NXsummaryZoomTabSize[3])
-        
+    
   ;Help base and text field that will show what is going on in the
   ;drawing region
   LeftInteractionHelpMessageBase = WIDGET_BASE(LOAD_DATA_BASE,$
@@ -410,5 +449,5 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
     scr_ysize=FileInfoSize[7],$
     /scroll,$
     /wrap)
-   
+    
 END
