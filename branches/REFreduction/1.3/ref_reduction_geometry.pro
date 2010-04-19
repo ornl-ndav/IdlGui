@@ -58,9 +58,21 @@ PRO populate_data_geometry_info, Event, nexus_file_name
   proton_charge = iNexus->getProtonCharge()
   putTextfieldValue, event, 'info_proton_charge', proton_Charge[0]
   
+  ;min bin
+  min_bin = iNexus->getMinBin()
+  putTextFieldValue, event, 'info_bin_min', min_bin[0]
+  
+  ;max bin
+  max_bin = iNexus->getMaxBin()
+  putTextFieldValue, event, 'info_bin_max', max_bin[0]
+  
   ;bin size
   bin_size = iNexus->getBinSize()
   putTextFieldValue, event, 'info_bin_size', bin_size[0]
+  
+  ;bin type
+  bin_type = iNexus->getBinType()
+  putTextFieldValue, event, 'info_bin_type', bin_type[0]
   
   ;Dangle
   dangle_value = iNexus->getDangle()
