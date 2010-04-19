@@ -111,8 +111,8 @@ PRO BrowseDataNexus, Event
     GET_PATH          = new_path,$
     /FIX_FILTER,$
     /READ)
-  
-   if (not(file_test(nexus_file_name))) then begin
+    
+  if (not(file_test(nexus_file_name))) then begin
     text = '-> Invalid NeXus file name!'
     putLogBookMessage, Event, Text, Append=1
     id = widget_info(event.top, find_by_uname='MAIN_BASE')
@@ -192,7 +192,19 @@ PRO load_data_browse_nexus, Event, nexus_file_name, POLA_STATE=pola_state
   ENDIF ELSE BEGIN
     iNexus = OBJ_NEW('IDLgetMetadata', nexus_file_name)
   ENDELSE
+  catch, error
+  if (error ne 0) then begin
+    catch,/cancel
+    (*global).DataNeXusFound = 0
+    IDLsendLogBook_ReplaceLogBookText, $
+      Event, $
+      ALT=1, $
+      PROCESSING, $
+      FAILED
+    RETURN
+  endif
   DataRunNumber = iNexus->getRunNumber()
+  
   OBJ_DESTROY, iNexus
   DataRunNumber = STRCOMPRESS(DataRunNumber,/REMOVE_ALL)
   (*global).DataRunNumber = DataRunNumber
@@ -268,8 +280,8 @@ PRO BrowseNormNexus, Event
     GET_PATH          = new_path,$
     /FIX_FILTER,$
     /READ)
-  
-   if (not(file_test(nexus_file_name))) then begin
+    
+  if (not(file_test(nexus_file_name))) then begin
     text = '-> Invalid NeXus file name!'
     putLogBookMessage, Event, Text, Append=1
     id = widget_info(event.top, find_by_uname='MAIN_BASE')
