@@ -188,13 +188,13 @@ MakeGuiLoadNormalizationTab,$
   loadctList
 
 ;build empty cell tab
-MakeGuiEmptyCellTab,$
-  DataNormalizationTab,$
-  DataNormalizationTabSize,$
-  EmptyCellTitle,$
-  D_DD_TabSize,$
-  NexusListSizeGlobal,$
-  NexusListLabelGlobal,$
-  MAIN_BASE
+;MakeGuiEmptyCellTab,$
+;  DataNormalizationTab,$
+;  DataNormalizationTabSize,$
+;  EmptyCellTitle,$
+;  D_DD_TabSize,$
+;  NexusListSizeGlobal,$
+;  NexusListLabelGlobal,$
+;  MAIN_BASE
 
 END

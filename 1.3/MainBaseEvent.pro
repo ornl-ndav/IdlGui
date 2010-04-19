@@ -104,7 +104,7 @@ PRO MAIN_BASE_event, Event
     
     ;data/normalization/empty cell tab
     WIDGET_INFO(wWidget, FIND_BY_UNAME='data_normalization_tab'): begin
-      data_norma_empty_cell_tab_event, Event ;_tab
+      ;data_norma_empty_cell_tab_event, Event ;_tab
     end
     
     ;==========================================================================
@@ -1422,14 +1422,14 @@ PRO MAIN_BASE_event, Event
     ;yes or no data background
     WIDGET_INFO(wWidget, FIND_BY_UNAME='data_background_cw_bgroup'): BEGIN
       MapBase, Event, 'background_message_uname', 0
-      substrateValue = getCWBgroupValue(Event,'empty_cell_substrate_group')
-      IF (isDataWithBackground(Event) EQ 1 AND $
-        substrateValue EQ 0) THEN BEGIN
-        focus_empty_cell_base, Event, 0
-        MapBase, Event, 'empty_cell_or_data_background_base', 1
-      ENDIF ELSE BEGIN
+;      substrateValue = getCWBgroupValue(Event,'empty_cell_substrate_group')
+;      IF (isDataWithBackground(Event) EQ 1 AND $
+;        substrateValue EQ 0) THEN BEGIN
+;        focus_empty_cell_base, Event, 0
+;        MapBase, Event, 'empty_cell_or_data_background_base', 1
+;      ENDIF ELSE BEGIN
         REFreduction_CommandLineGenerator, Event
-      ENDELSE
+;      ENDELSE
     END
     
     ;empty cell yes or no

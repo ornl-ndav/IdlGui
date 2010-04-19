@@ -60,11 +60,11 @@ PRO display_images, MAIN_BASE, global
   image = READ_PNG(sImages.data_background)
   TV, image, 0,0,/true
   
-  ;display equation of Scalling factor in Empty Cell tab
-  draw1 = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='scaling_factor_equation_draw')
-  WIDGET_CONTROL, draw1, GET_VALUE=id
-  WSET, id
-  image = READ_PNG((*global).sf_equation_file)
-  TV, image, 0,0,/true
+;  ;display equation of Scalling factor in Empty Cell tab
+;  draw1 = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='scaling_factor_equation_draw')
+;  WIDGET_CONTROL, draw1, GET_VALUE=id
+;  WSET, id
+;  image = READ_PNG((*global).sf_equation_file)
+;  TV, image, 0,0,/true
   
 END

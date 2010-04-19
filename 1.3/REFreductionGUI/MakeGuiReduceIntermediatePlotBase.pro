@@ -222,10 +222,10 @@ plot8Base = widget_base(InterBase,$
                         uname='reduce_plot8_base',$
                         map=1)
 
-plot8Label = widget_label(plot8Base,$
-                          xoffset=0,$
-                          yoffset=0,$
-                          value=InterList[8] + NotAvailableTitle)
+;plot8Label = widget_label(plot8Base,$
+;                          xoffset=0,$
+;                          yoffset=0,$
+;                          value=InterList[8] + NotAvailableTitle)
 
 
 InterList = cw_bgroup(InterBase,$
