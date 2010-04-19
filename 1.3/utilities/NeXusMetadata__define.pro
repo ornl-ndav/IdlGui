@@ -47,7 +47,7 @@ function convert_deg_to_rad, dangle_value
   on_ioerror, error
   value = float(dangle_value)
   return, strcompress(!dtor * value,/remove_all)
-
+  
   error:
   return, 'N/A'
 end
@@ -67,7 +67,7 @@ function convert_rad_to_deg, dangle_value
   on_ioerror, error
   value = float(dangle_value)
   return, strcompress(value / !dtor,/remove_all)
-
+  
   error:
   return, 'N/A'
 end
@@ -98,7 +98,7 @@ end
 
 ;+
 ; :Description
-;   returns the bin size used to histogrammed the NeXus file
+;   returns the bin size used to histogram the NeXus file
 ;
 ; :Author: j35
 ;-
@@ -115,10 +115,93 @@ function NeXusMetadata::getBinSize
     h5d_close, pathID_value
     
     value = NeXusMetadata_get_value_between_arg1_arg2(cmd[0], '-l ','--state')
+    if (value eq '') then begin
+      value = NeXusMetadata_get_value_between_arg1_arg2(cmd[0], '-L ','--state')
+    endif
     return, strcompress(value,/remove_all)
   endelse
 end
 
+;+
+; :Description:
+;   returns the min time used to histogram the NeXus file
+;
+; :Author: j35
+;-
+function NeXusMetadata::getMinBin
+  compile_opt idl2
+  path_value = 'entry-Off_Off/SNSHistoTool/command1/'
+  catch, error_value
+  if (error_value ne 0) then begin
+    catch,/cancel
+    return, 'N/A'
+  endif else begin
+    pathID_value = h5d_open(self.fileID, path_value)
+    cmd = h5d_read(pathID_value)
+    h5d_close, pathID_value
+    
+    value = NeXusMetadata_get_value_between_arg1_arg2(cmd[0], $
+      '--time_offset ','--max_time_bin')
+    return, strcompress(value,/remove_all)
+  endelse
+end
+
+;+
+; :Description:
+;   returns the max time used to histogram the NeXus file
+;
+; :Author: j35
+;-
+function NeXusMetadata::getMaxBin
+  compile_opt idl2
+  path_value = 'entry-Off_Off/SNSHistoTool/command1/'
+  catch, error_value
+  if (error_value ne 0) then begin
+    catch,/cancel
+    return, 'N/A'
+  endif else begin
+    pathID_value = h5d_open(self.fileID, path_value)
+    cmd = h5d_read(pathID_value)
+    h5d_close, pathID_value
+    
+    value = NeXusMetadata_get_value_between_arg1_arg2(cmd[0], $
+      '--max_time_bin ','-l ')
+    if (value eq '') then begin
+      value = NeXusMetadata_get_value_between_arg1_arg2(cmd[0], $
+        '--max_time_bin ','-L ')
+    endif
+    return, strcompress(value,/remove_all)
+  endelse
+end
+
+;+
+; :Description:
+;   returns the bin type used to histogram the NeXus file
+;
+; :Author: j35
+;-
+function NeXusMetadata::getBinType
+  compile_opt idl2
+  path_value = 'entry-Off_Off/SNSHistoTool/command1/'
+  catch, error_value
+  if (error_value ne 0) then begin
+    catch,/cancel
+    return, 'N/A'
+  endif else begin
+    pathID_value = h5d_open(self.fileID, path_value)
+    cmd = h5d_read(pathID_value)
+    h5d_close, pathID_value
+    
+    value = NeXusMetadata_get_value_between_arg1_arg2(cmd[0], $
+      '-l ','--state ')
+    if (value ne '') then begin
+      value = 'linear'
+    endif else begin
+      value = 'log'
+    endelse
+    return, strcompress(value,/remove_all)
+  endelse
+end
 
 ;+
 ; :Description:
@@ -182,7 +265,7 @@ function NeXusMetadata::getDangle0
       dangle_degree = convert_rad_to_deg(dangle_value)
       dangle_rad = dangle_value
     endelse
-
+    
     h5d_close, pathID_value
     return, [dangle_degree,dangle_rad]
   endelse
