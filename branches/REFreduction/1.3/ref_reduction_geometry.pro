@@ -34,6 +34,8 @@
 
 PRO populate_data_geometry_info, Event, nexus_file_name
 
+  if (nexus_file_name eq '') then return
+
   WIDGET_CONTROL,Event.top,get_uvalue=global
   
   iNexus = obj_new('NeXusMetadata', nexus_file_name)
