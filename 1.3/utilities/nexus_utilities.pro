@@ -152,6 +152,11 @@ FUNCTION find_full_nexus_name, Event,$
   
   cmd += " " + STRCOMPRESS(run_number,/remove_all)
   SPAWN, cmd, full_nexus_name, err_listening
+  if (err_listening[0] ne '') then begin
+    cmd += " --nows"
+    SPAWN, cmd, full_nexus_name, err_listening
+  endif
+  
   ;check if nexus exists
   sz = (SIZE(full_nexus_name))(1)
   IF (sz EQ 1) THEN BEGIN
@@ -178,21 +183,14 @@ FUNCTION find_list_nexus_name, Event, run_number, instrument, isNexusExist
   cmd = "findnexus -i" + instrument
   cmd += " " + STRCOMPRESS(run_number,/remove_all)
   cmd += " --listall"
-  
-  ; spawn, 'hostname',listening
-  ; CASE (listening) OF
-  ;     'lrac':
-  ;     'mrac':
-  ;     else: BEGIN
-  ;         if ((*global).instrument EQ (*global).REF_L) then begin
-  ;             cmd = 'srun -p lracq ' + cmd
-  ;         endif else begin
-  ;             cmd = 'srun -p mracq ' + cmd
-  ;         endelse
-  ;     END
-  ; ENDCASE
-  
   SPAWN, cmd, full_nexus_name, err_listening
+  
+  if (err_listening[0] ne '') then begin
+    cmd = "findnexus -i" + instrument
+    cmd += " " + STRCOMPRESS(run_number,/remove_all)
+    cmd += " --listall --nows"
+    SPAWN, cmd, full_nexus_name, err_listening
+  endif
   
   ;get size of result
   sz = (SIZE(full_nexus_name))(1)
