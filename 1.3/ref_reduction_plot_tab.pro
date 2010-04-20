@@ -45,6 +45,7 @@ PRO plot_tab_browse_button, Event
   ;filter     = (*global).ascii_filter
   path       = (*global).dr_output_path
   title      = 'Browsing for an ASCII file ...'
+  widget_id = widget_info(event.top, find_by_uname='MAIN_BASE')
   
   ;text = 'Browsing for an ASCII file ... ' + PROCESSING
   ;IDLsendToGeek_addLogBookText, Event, text
@@ -53,6 +54,7 @@ PRO plot_tab_browse_button, Event
     ;FILTER            = filter,$
     GET_PATH          = new_path,$
     PATH              = path,$
+    dialog_parent     = widget_id,$
     TITLE             = title,$
     /MUST_EXIST)
     
@@ -151,7 +153,10 @@ PRO LoadAsciiFile, Event
     putTextFieldValue, event, 'plot_tab_input_file_text_field', ''
     text = ['Error while loading the ASCII file', $
       'File name: ' + file_name[0]]
-    result = DIALOG_MESSAGE(text,/ERROR)
+    widget_id = widget_info(event.top, find_by_uname='MAIN_BASE')
+    result = DIALOG_MESSAGE(text,/ERROR,$
+      dialog_parent=widget_id,$
+      /center)
     ERASE
     (*global).ascii_file_load_status = 0b
   ENDIF ELSE BEGIN
@@ -207,7 +212,9 @@ PRO LoadAsciiFile, Event
       putTextFieldValue, event, 'plot_tab_input_file_text_field', ''
       text = ['Error while loading the ASCII file', $
         'File name: ' + file_name[0]]
-      result = DIALOG_MESSAGE(text,/ERROR)
+        widget_id = widget_info(event.top, find_by_uname='MAIN_BASE')
+      result = DIALOG_MESSAGE(text,/ERROR,$
+      dialog_parent=widget_id,/center)
       ERASE
       (*global).ascii_file_load_status = 0b
     ENDELSE

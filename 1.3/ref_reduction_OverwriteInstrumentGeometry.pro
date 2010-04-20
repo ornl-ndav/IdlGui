@@ -43,11 +43,13 @@ filter = getIGfilter(Event, instrument)
 
 ;default_file_name
 defaultFile = getLastGeometryFile(Event, IGpath)
+widget_id = widget_info(event.top, find_by_uname='MAIN_BASE')
 
 ;open file
 IGFullFileName = dialog_pickfile(path=IGpath,$
                                  get_path=path,$
                                  title=title,$
+                                 dialog_parent = widget_id,$
                                  filter=filter,$
                                  default_extension='nxs',$
                                  /fix_filter,$
@@ -83,6 +85,8 @@ title = instrument + ' Normalization Instrument Geometry' ;title of pickfile
 ;determine filter
 filter = getIGfilter(Event, instrument)
 
+widget_id = widget_info(event.top, find_by_uname='MAIN_BASE')
+
 ;default_file_name
 defaultFile = getLastGeometryFile(Event, IGpath)
 
@@ -91,6 +95,7 @@ IGFullFileName = dialog_pickfile(path=IGpath,$
                                  get_path=path,$
                                  title=title,$
                                  filter=filter,$
+                                 dialog_parent=widget_id,$
                                  default_extension='nxs',$
                                  /fix_filter,$
                                  file=defaultFile)

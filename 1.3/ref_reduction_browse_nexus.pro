@@ -103,11 +103,14 @@ PRO BrowseDataNexus, Event
   title     = 'Select a NeXus file ...'
   path      = (*global).browse_data_path
   text = '> Browsing for a Data NeXus file:'
+  widget_id = widget_info(event.top, find_by_uname='MAIN_BASE')
+
   putLogBookMessage, Event, Text, Append=1
   nexus_file_name = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
     FILTER            = filter,$
     TITLE             = title, $
     PATH              = path,$
+    dialog_parent     = widget_id, $
     GET_PATH          = new_path,$
     /FIX_FILTER,$
     /READ)
@@ -272,11 +275,12 @@ PRO BrowseNormNexus, Event
   title     = 'Select a NeXus file ...'
   path      = (*global).browse_data_path
   text = '> Browsing for a Normalization NeXus file:'
+    widget_id = widget_info(event.top, find_by_uname='MAIN_BASE')
   putLogBookMessage, Event, Text, Append=1
   nexus_file_name = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
     FILTER            = filter,$
     TITLE             = title, $
-    PATH              = path,$
+    dialog_parent     = widget_id,$
     GET_PATH          = new_path,$
     /FIX_FILTER,$
     /READ)

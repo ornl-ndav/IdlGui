@@ -104,11 +104,13 @@ filter       = instrument + '_*' + load_roi_ext
 PROCESSING   = (*global).processing_message
 ;get default path 
 WorkingPath  = (*global).working_path
+  widget_id = widget_info(event.top, find_by_uname='MAIN_BASE')
 title        = instrument + ' Data ROI Selection File' ;title of pickfile
 
 ;open file
 ROIFullFileName = DIALOG_PICKFILE(PATH              = WorkingPath,$
                                   GET_PATH          = path,$
+                                  dialog_parent     = widget_id,$
                                   TITLE             = title,$
                                   FILTER            = filter,$
                                   DEFAULT_EXTENSION = '.dat',$
@@ -188,12 +190,14 @@ filter        = instrument + '_*' + load_back_ext
 PROCESSING    = (*global).processing_message
 ;get default path 
 WorkingPath   = (*global).working_path
+  widget_id = widget_info(event.top, find_by_uname='MAIN_BASE')
 ;title of pickfile
 title         = instrument + ' Data Background Selection File' 
 
 ;open file
 BackFullFileName = DIALOG_PICKFILE(PATH              = WorkingPath,$
                                   GET_PATH          = path,$
+                                  dialog_parent     = widget_id,$
                                   TITLE             = title,$
                                   FILTER            = filter,$
                                   DEFAULT_EXTENSION = '.dat',$
@@ -343,6 +347,7 @@ filter       = instrument + '_*' + load_roi_ext
 PROCESSING   = (*global).processing_message
 ;get default path 
 WorkingPath  = (*global).working_path
+  widget_id = widget_info(event.top, find_by_uname='MAIN_BASE')
 title        = instrument + ' Normalization ROI Selection File' 
 ;title of pickfile
 
@@ -350,6 +355,7 @@ title        = instrument + ' Normalization ROI Selection File'
 ROIFullFileName = DIALOG_PICKFILE(PATH              = WorkingPath,$
                                   GET_PATH          = path,$
                                   TITLE             = title,$
+                                  dialog_parent     = widget_id,$
                                   FILTER            = filter,$
                                   DEFAULT_EXTENSION = '.dat',$
                                   /FIX_FILTER)
@@ -430,6 +436,7 @@ filter            = instrument + '_*' + load_back_ext
 PROCESSING        = (*global).processing_message
 ;get default path 
 WorkingPath       = (*global).working_path
+  widget_id = widget_info(event.top, find_by_uname='MAIN_BASE')
 ;title of pickfile
 title             = instrument + ' Normalization Background Selection File' 
 
@@ -437,6 +444,7 @@ title             = instrument + ' Normalization Background Selection File'
 BackROIFullFileName = DIALOG_PICKFILE(PATH=WorkingPath,$
                                       GET_PATH          = path,$
                                       TITLE             = title,$
+                                      dialog_parent     = widget_id,$
                                       FILTER            = filter,$
                                       DEFAULT_EXTENSION = '.dat',$
                                       /FIX_FILTER)
