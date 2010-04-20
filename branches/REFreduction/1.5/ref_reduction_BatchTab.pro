@@ -1446,6 +1446,7 @@ PRO BatchTab_LoadBatchFile, Event
   widget_control,id,get_uvalue=global
   BatchFileName = DIALOG_PICKFILE(TITLE    = 'Pick Batch File to load ...',$
     PATH     = (*global).BatchDefaultPath,$
+    dialog_parent = id,$
     FILTER   = (*global).BatchDefaultFileFilter,$
     GET_PATH = new_path,$
     /MUST_EXIST)
@@ -1523,6 +1524,7 @@ PRO BatchTab_BrowsePath, Event
   
   new_path = DIALOG_PICKFILE(/DIRECTORY,$
     TITLE = 'Pick output folder name ...',$
+    dialog_parent = id,$
     PATH  = (*global).BatchDefaultPath,$
     /MUST_EXIST)
     

@@ -180,7 +180,8 @@ IF (sz GT 0) THEN BEGIN
        message = [message,'Check Log Book For More Information !']
        result = DIALOG_MESSAGE(message, $
                                /INFORMATION, $
-                               DIALOG_PARENT=MAIN_BASE)
+                               DIALOG_PARENT=MAIN_BASE,$
+                               /center)
    ENDIF
    
 ENDIF ELSE BEGIN                ;end of 'if (sz GT 0)'

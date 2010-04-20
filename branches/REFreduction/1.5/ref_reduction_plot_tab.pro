@@ -49,9 +49,12 @@ PRO plot_tab_browse_button, Event
   ;text = 'Browsing for an ASCII file ... ' + PROCESSING
   ;IDLsendToGeek_addLogBookText, Event, text
   
+  widget_id = widget_info(event.top, find_by_uname='MAIN_BASE')
+  
   ascii_file_name = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
     ;FILTER            = filter,$
     GET_PATH          = new_path,$
+    dialog_parent     = widget_id,$
     PATH              = path,$
     TITLE             = title,$
     /MUST_EXIST)
@@ -136,6 +139,7 @@ PRO LoadAsciiFile, Event
   widget_control,/hourglass
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  widget_id = widget_info(event.top, find_by_uname='MAIN_BASE')
   ;retrieve parameters
   OK         = (*global).ok
   PROCESSING = (*global).processing
@@ -151,7 +155,8 @@ PRO LoadAsciiFile, Event
     putTextFieldValue, event, 'plot_tab_input_file_text_field', ''
     text = ['Error while loading the ASCII file', $
       'File name: ' + file_name[0]]
-    result = DIALOG_MESSAGE(text,/ERROR)
+    result = DIALOG_MESSAGE(text,/ERROR,$
+    dialog_parent=widget_id,/center)
     ERASE
     (*global).ascii_file_load_status = 0b
   ENDIF ELSE BEGIN
@@ -165,7 +170,8 @@ PRO LoadAsciiFile, Event
         putTextFieldValue, event, 'plot_tab_input_file_text_field', ''
         text = ['The ASCII file you are trying to load',$
           'does not have the right format']
-        result = DIALOG_MESSAGE(text,/ERROR)
+        result = DIALOG_MESSAGE(text,/ERROR,$
+        dialog_parent=widget_id,/center)
         ERASE
         (*global).ascii_file_load_status = 0b
       ENDIF ELSE BEGIN
@@ -207,7 +213,8 @@ PRO LoadAsciiFile, Event
       putTextFieldValue, event, 'plot_tab_input_file_text_field', ''
       text = ['Error while loading the ASCII file', $
         'File name: ' + file_name[0]]
-      result = DIALOG_MESSAGE(text,/ERROR)
+      result = DIALOG_MESSAGE(text,/ERROR,$
+      dialog_parent=widget_id,/center)
       ERASE
       (*global).ascii_file_load_status = 0b
     ENDELSE
@@ -251,7 +258,8 @@ PRO rePlotAsciiData, Event
     CATCH,/CANCEL
     text = ['Error while plotting the ASCII file.', $
       'File name: ' + file_name[0]]
-    result = DIALOG_MESSAGE(text,/ERROR)
+    result = DIALOG_MESSAGE(text,/ERROR,$
+    dialog_parent=draw_id,/center)
     RETURN
   ENDIF ELSE BEGIN
   
