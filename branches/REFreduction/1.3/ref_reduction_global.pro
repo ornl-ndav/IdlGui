@@ -82,7 +82,9 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     first_ref_m_file_to_plot: -1,$
     
     ;sangle caluclation
-    detector_size_m: detector_size_m,$
+    detector_size_m: detector_size_m,$ 
+    detector_position_m: 0.,$ ;retrieve from NeXus file and used to cal. sangle
+    detTransOffset_m: 1.199599359, $ ;Detetector trans offset (to cal.sangle)
     
     row_selected: 0,$
     
