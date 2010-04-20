@@ -387,3 +387,19 @@ FUNCTION isTOFcuttingUnits_microS, Event
   result = WIDGET_INFO(id, /button_SET)
   RETURN, result
 END
+
+;+
+; :Description:
+;   returns 1b if the button has been checked, 0 otherwise
+;
+; :Params:
+;    event
+;    uname
+
+; :Author: j35
+;-
+function isButtonChecked, event, uname
+  id = widget_info(event.top, find_by_uname=uname)
+  return, widget_info(id,/button_set)
+end
+

@@ -32,8 +32,27 @@
 ;
 ;==============================================================================
 
-pro batch_reload_spin_state_selection_base_event, Event
+function getButtonValidated, event
+  compile_opt idl2
+  
+  ;get global structure
+  widget_control,event.top,get_uvalue=global_settings
+  
+  spin_states = (*global_settings).spin_states
+  nbr_spin = n_elements(spin_states)
+  for i=0,(nbr_spin-1) do begin
+    status_button = isButtonChecked(event,strlowcase(spin_states[i]))
+    if (status_button) then return, i
+  endfor
+  
+  return, -1
+  
+end
 
+
+pro batch_reload_spin_state_selection_event, Event
+  compile_opt idl2
+  
   ;get global structure
   widget_control,event.top,get_uvalue=global_settings
   global = (*global_settings).global
@@ -43,11 +62,25 @@ pro batch_reload_spin_state_selection_base_event, Event
   
     ;cancel button
     widget_info(event.top, $
-      find_by_uname='email_configuration_base_cancel_button'): begin
-      (*global_settings).save_setup = 1b
+      find_by_uname='cancel_button'): begin
+      (*global).cancel_repopulating = 1b
       id = widget_info(Event.top, $
-        find_by_uname='email_configure_widget_base')
+        find_by_uname='batch_reload_spin_state_selection_base')
       widget_control, id, /destroy
+    end
+    
+    ;load button
+    widget_info(event.top, find_by_uname='load_button'): begin
+      ;check button validated
+      index_validated = getButtonValidated(event)
+      (*global).batch_spin_index_repopulated_selected = index_validated
+      (*global).cancel_repopulating = 0b
+      id = widget_info(Event.top, $
+        find_by_uname='batch_reload_spin_state_selection_base')
+      widget_control, id, /destroy
+      RepopulateGui_ref_m_with_spin_states, $
+        main_event, $
+        spin_state_index=(*global).batch_spin_index_repopulated_selected
     end
     
     else:
@@ -58,119 +91,16 @@ end
 
 ;+
 ; :Description:
-;   This turns off the email output cw_bgroup and disable the Setup... button
-;
-; :Params:
-;    main_event
-;
-; :Author: j35
-;-
-pro turn_off_email_output, event
-  compile_opt idl2
-  
-  ;get global structure
-  widget_control,event.top,get_uvalue=global_settings
-  (*global_settings).turn_off_email_output = 1b
-  
-end
-
-;+
-; :Description:
-;   This checks that the email and the confirm email texts match, if not,
-;   a dialog message is displayed and ask the user to fix the issue or to
-;   simply exit the application without saving the emails
+;   Determines the uname of the button clicked (but not used)
 ;
 ; :Params:
 ;    event
-;    result
-;
+
 ; :Author: j35
 ;-
-pro check_email_match, event=event, base=base, result=result
-  compile_opt idl2
-  
-  result = ''
-  
-  email1 = getTextFieldvalue(event,'email1')
-  s_email1 = strcompress(email1,/remove_all)
-  if (s_email1 eq '') then begin
-    show_email_info_message, event=event, type='empty_email', result=result
-  endif
-  
-  email2 = getTextFieldValue(event,'email2')
-  s_email2 = strcompress(email2,/remove_all)
-  
-  if (not(strmatch(email1,email2))) then begin
-    show_email_info_message, event=event, type='no_match', result=result
-  endif
-  
-end
-
-;+
-; :Description:
-;   This pops up a dialog_message box that will inform the user that the
-;   email given is either empty or that they don't match and ask him to
-;   make a descision
-
-; :Keywords:
-;    event
-;    type
-;    result
-;
-; :Author: j35
-;-
-pro  show_email_info_message, event=event, type=type, result=result
-  compile_opt idl2
-  
-  case (type) of
-    'empty_email': begin
-      message_text = ['You did not define any email','',$
-        'Do you want to setup an email?']
-      title = ['No email defined!']
-      question_flag = 1
-      information_flag = 0
-    end
-    'no_match': begin
-      message_text = ['The two emails you define do not match!']
-      title = 'Emails define do not match!'
-      question_flag = 0
-      information_flag = 1
-    end
-  endcase
-  
-  dialog_parent = widget_info(event.top, $
-    find_by_uname='email_configure_widget_base')
-    
-  result = dialog_message(message_text,$
-    information = information_flag,$
-    question = question_flag,$
-    title = title, $
-    /center,$
-    dialog_parent = dialog_parent)
-    
-end
-
-;+
-; :Description:
-;   This procedure save all the flags when leaving the settings base
-;   by using the 'SAVE and CLOSE' button.
-;
-; :Params:
-;    event
-;
-; :Author: j35
-;-
-pro save_status_of_email_configure_button, event
-  compile_opt idl2
-  
-  ;get global structure
-  widget_control,event.top,get_uvalue=global_settings
-  global = (*global_settings).global
-  
-  email1 = getTextFieldvalue(event,'email1')
-  s_email1 = strcompress(email1,/remove_all)
-  (*global).email = s_email1
-  
+pro batch_reload_spin_state_button, event
+  uname = widget_info(event.id, /uname)
+;print, uname
 end
 
 ;+
@@ -217,7 +147,9 @@ pro email_settings_killed, id
 end
 
 ;------------------------------------------------------------------------------
-PRO batch_reload_spin_state_selection_gui, wBase, main_base_geometry, global, $
+PRO batch_reload_spin_state_selection_gui, wBase, $
+    main_base_geometry, $
+    global, $
     spin_states=spin_states
     
   main_base_xoffset = main_base_geometry.xoffset
@@ -225,8 +157,9 @@ PRO batch_reload_spin_state_selection_gui, wBase, main_base_geometry, global, $
   main_base_xsize = main_base_geometry.xsize
   main_base_ysize = main_base_geometry.ysize
   
+  nbr_spins = n_elements(spin_states)
   xsize = 300
-  ysize = 150
+  ysize = 25 + 30 * nbr_spins
   
   xoffset = (main_base_xsize - xsize) / 2
   xoffset += main_base_xoffset
@@ -240,7 +173,7 @@ PRO batch_reload_spin_state_selection_gui, wBase, main_base_geometry, global, $
     UNAME        = 'batch_reload_spin_state_selection_base',$
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
-    SCR_YSIZE    = ysize,$
+    ;    SCR_YSIZE    = ysize,$
     SCR_XSIZE    = xsize,$
     MAP          = 1,$
     ;    kill_notify  = 'email_settings_killed', $
@@ -253,30 +186,18 @@ PRO batch_reload_spin_state_selection_gui, wBase, main_base_geometry, global, $
     /column,$
     /exclusive)
     
-  button1= widget_button(base,$
-    value = 'Off-Off',$
-    sensitive = 1,$
-    /no_release,$
-    uname = 'batch_reload_spin_state_off_off')
-    
-  button2= widget_button(base,$
-    value = 'Off-On',$
-    sensitive = 1,$
-    /no_release,$
-    uname = 'batch_reload_spin_state_off_on')
-    
-  button3= widget_button(base,$
-    value = 'On-Off',$
-    sensitive = 1,$
-    /no_release,$
-    uname = 'batch_reload_spin_state_on_off')
-    
-  button4= widget_button(base,$
-    value = 'On-On',$
-    sensitive = 1,$
-    /no_release,$
-    uname = 'batch_reload_spin_state_on_on')
-    
+  button_to_validate = 0
+  for i=0,(nbr_spins-1) do begin
+    button1= widget_button(base,$
+      value = spin_states[i],$
+      /no_release,$
+      event_pro = 'batch_reload_spin_state_button',$
+      uname = strlowcase(spin_states[i]))
+    if (i eq 0) then button_to_validate = button1
+  endfor
+  
+  widget_control, button_to_validate, /set_button
+  
   row = widget_base(wBase,$
     /row)
     
@@ -315,6 +236,7 @@ PRO batch_reload_spin_state_selection, main_base=main_base, Event=event, $
   
   global_settings = PTR_NEW({ wbase: wbase1,$
     global: global, $
+    spin_states: spin_states,$
     main_event: Event})
     
   WIDGET_CONTROL, wBase1, SET_UVALUE = global_settings
