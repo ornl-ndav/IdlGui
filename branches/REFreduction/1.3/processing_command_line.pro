@@ -39,6 +39,7 @@ PRO REFreductionEventcb_ProcessingCommandLine, Event
   widget_control,event.top,get_uvalue=global
   
   if ((*global).instrument eq 'REF_L') then begin
+    
     run_command_line_ref_l, event
     
     IF ((*global).DataReductionStatus EQ 'OK') then begin

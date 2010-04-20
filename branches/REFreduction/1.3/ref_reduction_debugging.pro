@@ -38,7 +38,7 @@ PRO debugging, MAIN_BASE, global
       id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
   ;   WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 ;REDUCE
   ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;PLOT
-  ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 3 ;BATCH
+     WIDGET_CONTROL, id1, SET_TAB_CURRENT = 3 ;BATCH
   ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 4 ;LOG BOOK
   
   ;default path of Load Batch files

@@ -85,7 +85,7 @@ pro BatchTab_WidgetTable_ref_m, event
   ENDIF
   
   ;enable or not the REPOPULATE Button
-  ;CheckRepopulateButton, Event
+  CheckRepopulateButton_ref_m, Event
   ;SaveDataNormInputValues, Event  ;_batchDataNorm
   
 end
