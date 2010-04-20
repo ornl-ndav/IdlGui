@@ -120,7 +120,7 @@ FUNCTION getAllDataNexusFileName, cmd
   result = ValueBetweenArg1Arg2(cmd, $
     'reflect_reduction ',$
     1, $
-    '--data-roi-file', $
+    '--data-paths', $
     0)
   IF (result EQ '') THEN RETURN, ''
   RETURN, result
@@ -194,7 +194,7 @@ FUNCTION getAllNormNexusFileName, cmd
   result = ValueBetweenArg1Arg2(cmd,$
     '--norm=',$
     1,$
-    '--norm-roi-file=',$
+    '--norm-data-paths=',$
     0)
   IF (result EQ '') THEN RETURN, ''
   RETURN, STRCOMPRESS(result,/REMOVE_ALL)

@@ -116,6 +116,7 @@
 .run reset_all_batch.pro
 .run sort_batch_rows.pro
 .run duplicate_batch_row.pro
+.run batch_reload_spin_state_selection_base.pro
 
 .run IDLgetMetadata__define.pro
 .run ref_reduction_BatchTab.pro
@@ -124,6 +125,8 @@
 .run IDLparseCommandLine_ref_m__define.pro
 .run IDLupdateGui__define.pro
 .run ref_reduction_BatchRepopulateGui.pro
+.run ref_reduction_BatchRepopulateGui_ref_m.pro
+
 .run ref_reduction_LogBookInterface.pro
 .run IDLcreateXMLJobFile__define.pro
 .run IDLsendLogBook__define.pro

@@ -1580,6 +1580,7 @@ PRO BatchTab_LoadBatchFile, Event
     BatchTab_LoadBatchFile_ref_m_step2, Event, $
       BatchFileName, $
       new_path
+    CheckRepopulateButton_ref_m, Event
   endelse
 END
 

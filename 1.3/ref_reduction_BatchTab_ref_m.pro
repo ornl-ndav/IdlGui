@@ -801,3 +801,30 @@ pro UpdateBatchTabGui_ref_m, Event
   activateDeleteSelectionButton, Event, activateStatus
   
 end
+
+
+;+
+; :Description:
+;   This functions checks if the repopulate button can be enabled or not
+;
+; :Params:
+;    Event
+;
+; :Author: j35
+;-
+PRO CheckRepopulateButton, Event
+  compile_opt idl2
+  
+  widget_control,event.top,get_uvalue=global
+  
+  BatchTable  = (*(*global).BatchTable_ref_m)
+  SelectedRow = getCurrentRowSelected(Event)
+  cmd         = BatchTable[8,SelectedRow]
+  IF (cmd NE '') THEN BEGIN
+    activateButtonStatus = 1
+  ENDIF ELSE BEGIN
+    activateButtonStatus = 0
+  ENDELSE
+  id = widget_info(Event.top,find_by_uname='repopulate_gui')
+  widget_control, id, sensitive=activateButtonStatus
+END
