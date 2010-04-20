@@ -49,6 +49,8 @@ PRO BatchTab_ChangeDataNormRunNumber, Event
     CATCH,/CANCEL
     message = 'Please check the DATA RUNS input (ex: 3004,3004,3005) '
     result = DIALOG_MESSAGE(message,$
+    dialog_parent=id,$
+    /center,$
       /ERROR)
     ;Hide processing base
     MapBase, Event, 'processing_base', 0
@@ -664,7 +666,9 @@ PRO DataNormFieldInput, Event, status
     message = 'Data and/or Norm. fields have been modifed. Do you want to ' + $
       'validate the changes ?'
     result = DIALOG_MESSAGE(message, /QUESTION, TITLE='Validate or not ' + $
-      'changes ?')
+      'changes ?',$
+      dialog_parent=id,$
+      /center)
     IF (result EQ 'Yes') THEN BEGIN
       BatchTab_ChangeDataNormRunNumber, Event
       SaveDataNormInputValues, Event ;_batchDataNorm

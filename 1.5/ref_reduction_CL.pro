@@ -52,8 +52,10 @@ widget_control,id,get_uvalue=global
 ;get default cl_ouput_path
 path  = (*global).cl_output_path
 title = 'Select a place where to put the file...'
+widget_id = widget_info(event.top, find_by_uname='MAIN_BASE')
 output_path = DIALOG_PICKFILE(PATH  = path,$
                               TITLE = title,$
+                              dialog_parent = widget_id,$
                               /DIRECTORY)
 ;do something only if output_path is not empty and 
 ;if it exists
@@ -80,8 +82,10 @@ widget_control,id,get_uvalue=global
 filter = (*global).cl_file_ext3
 path   = (*global).cl_output_path
 title  = 'Select file name that will contain the command line text...'
+widget_id = widget_info(event.top, find_by_uname='MAIN_BASE')
 output_file = DIALOG_PICKFILE(PATH              = path,$
                               TITLE             = title,$
+                              dialog_parent = widget_id,$
                               FILTER = filter)
 IF (output_file NE '' AND $
     FILE_TEST(output_file)) THEN BEGIN

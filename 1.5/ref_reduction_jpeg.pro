@@ -84,7 +84,9 @@ PRO save_as_jpeg, Event
     putLogBookMessage, Event, LogBookText, Append=1
     text  = 'JPEG file ' + FileName + ' has been created with success!'
     title = 'Screenshot of current plot displayed has been taken'
-    result = DIALOG_MESSAGE(text,/INFORMATION,TITLE=title)
+    result = DIALOG_MESSAGE(text,/INFORMATION,TITLE=title,$
+    dialog_parent=id,$
+    /center)
   ENDIF
   
 END

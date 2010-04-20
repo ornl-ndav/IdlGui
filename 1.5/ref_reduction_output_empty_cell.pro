@@ -38,9 +38,11 @@ PRO empty_cell_output_folder, Event
   
   path  = (*global).browse_data_path
   title = 'Select a destination folder for the ascii file'
+  widget_id = widget_info(event.top, find_by_uname='MAIN_BASE')
   
   result = DIALOG_PICKFILE(/DIRECTORY,$
     /MUST_EXIST,$
+    dialog_parent = widget_id,$
     PATH=path,$
     TITLE=title)
     
