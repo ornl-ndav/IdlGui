@@ -34,7 +34,6 @@
 
 .run ref_reduction_string.pro
 .run ref_reduction_put.pro
-.run ref_reduction_is.pro
 .run ref_reduction_time.pro
 
 .run ref_reduction_DumpBinary.pro
@@ -56,10 +55,6 @@
 .run ref_reduction_RescaleNormalization1D3DPlot.pro
 .run ref_reduction_RescaleNormalization2D3DPlot.pro
 .run ref_reduction_browse_nexus.pro
-;.run ref_reduction_PlotEmptyCell.pro
-;.run ref_reduction_output_empty_cell.pro
-;.run ref_reduction_empty_cell.pro
-;.run ref_reduction_sf_empty_cell.pro
 
 .run ref_reduction_DataMouseSelection.pro
 .run ref_reduction_NormMouseSelection.pro
@@ -124,8 +119,10 @@
 .run IDLparseCommandLine__define.pro
 .run IDLparseCommandLine_ref_m__define.pro
 .run IDLupdateGui__define.pro
+.run IDLupdateGui_ref_m__define.pro
 .run ref_reduction_BatchRepopulateGui.pro
 .run ref_reduction_BatchRepopulateGui_ref_m.pro
+.run ref_reduction_BatchRepopulateGui_ref_m_step2.pro
 
 .run ref_reduction_LogBookInterface.pro
 .run IDLcreateXMLJobFile__define.pro

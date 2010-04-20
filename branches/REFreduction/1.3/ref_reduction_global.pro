@@ -81,6 +81,13 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     list_of_output_file_name: ptr_new(0L),$
     first_ref_m_file_to_plot: -1,$
     
+    ;batch repopulate
+    data_spin_state_to_replot: '',$ ;from the batch mode
+    norm_spin_state_ro_replot: '',$
+    batch_spin_index_repopulated_selected: 0,$ ;index of spin state to use
+    ;to repopulate the GUI
+    cancel_repopulating: 0b,$ ;
+    
     ;sangle caluclation
     detector_size_m: detector_size_m,$ 
     detector_position_m: 0.,$ ;retrieve from NeXus file and used to cal. sangle

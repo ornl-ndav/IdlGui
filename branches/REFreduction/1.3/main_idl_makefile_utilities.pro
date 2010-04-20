@@ -55,3 +55,4 @@ cd, CurrentFolder + '/utilities'
 .run fsc_color.pro
 .run IDL3columnsASCIIparser__define.pro
 .run NeXusMetadata__define.pro
+.run is.pro
