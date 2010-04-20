@@ -760,7 +760,7 @@ PRO UpdateBatchTabGui, Event
   ENDIF ELSE BEGIN
     activateStatus = 0
   ENDELSE
-  activateClearAllButton, event, activateStatus  
+  activateClearAllButton, event, activateStatus
   activateDeleteSelectionButton, Event, activateStatus
   activateSortrowsButton, event, activateStatus
   
@@ -1565,8 +1565,10 @@ END
 PRO BatchTab_LoadBatchFile, Event
   ;get global structure
   widget_control,event.top,get_uvalue=global
+  widget_id = widget_info(event.top, find_by_uname='MAIN_BASE')
   BatchFileName = DIALOG_PICKFILE(TITLE    = 'Pick Batch File to load ...',$
     PATH     = (*global).BatchDefaultPath,$
+    dialog_parent = widget_id,$
     FILTER   = (*global).BatchDefaultFileFilter,$
     GET_PATH = new_path,$
     /MUST_EXIST)
