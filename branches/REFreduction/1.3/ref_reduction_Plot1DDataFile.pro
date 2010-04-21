@@ -130,10 +130,9 @@ Plot1DData_3D_File, Event, img
 END
 
 ;Plots the 1D view of the data file for the REF_M for batch run only
-PRO Plot1DDataFileForRefM, Event
+PRO Plot1DDataFileForRefM_batch, Event
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+widget_control,event.top,get_uvalue=global
 N   = (*global).Nx_REF_M ; 304
 img = (*(*global).DATA_D_ptr) ;data(Ntof,Ny,Nx)
 img = total(img,2)

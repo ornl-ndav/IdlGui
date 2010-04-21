@@ -59,8 +59,14 @@ PRO UpdateAllDataNexusFileName, Event, AllDataNexusFileName
 END
 
 ;------------------------------------------------------------------------------
-PRO UpdateMainDataNexusFileName, Event, MainDataNexusFileName, DataRunNumber
-  REFreduction_OpenPlotDataNexus,Event, DataRunNumber, MainDataNexusFileName
+PRO UpdateMainDataNexusFileName, Event, $
+    MainDataNexusFileName, $
+    DataRunNumber, $
+    DataPath
+  open_and_plot_nexus_ref_m,Event, $
+    DataRunNumber, $
+    MainDataNexusFileName, $
+    DataPath
 END
 
 ;------------------------------------------------------------------------------
@@ -437,7 +443,6 @@ FUNCTION IDLupdateGui_ref_m::init, structure
   NbrError   = 0
   DataError  = 0
   
-  
   ;work on MainDataRunNumber
   text = '--> Display Main Data Run Number ............................. ' $
     + PROCESSING
@@ -478,9 +483,16 @@ FUNCTION IDLupdateGui_ref_m::init, structure
   ENDIF ELSE BEGIN
     UpdateMainDataNexusFileName, Event, $
       structure.MainDataNexusFileName, $
-      structure.MainDataRunNumber
+      structure.MainDataRunNumber, $
+      structure.DataPath
     AppendReplaceLogBookMessage, Event, OK, PROCESSING
   ENDELSE
+  
+  ;populate geometry info
+  text = '--> Populate Geometry File .................................... ' $
+    + PROCESSING
+  putLogBookMessage, event, text, append=1
+  populate_data_geometry_info, Event, structure.MainDataNexusFileName
   
   ;Activate Data Widgets
   text = '--> Activate Data Widgets .................................... ' $
@@ -554,7 +566,7 @@ FUNCTION IDLupdateGui_ref_m::init, structure
   ENDELSE
   ;replot Data (main and selections)
   REFreduction_DataBackgroundPeakSelection, Event, ''
-  
+
   ;TOF cutting
   text = '--> Load TOF cutting min and max ............................. ' $
     + PROCESSING
@@ -563,6 +575,8 @@ FUNCTION IDLupdateGui_ref_m::init, structure
     structure.TOFcuttingMin, $
     structure.TOFcuttingMax
   AppendReplaceLogBookMessage, Event, OK, PROCESSING
+
+return, 1
   
   ;Work on Normalization data files
   IF (structure.MainNormRunNumber NE '') THEN BEGIN

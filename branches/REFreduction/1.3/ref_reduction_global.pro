@@ -80,10 +80,12 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     spin_state_config: [1b,0b,1b,0b],$
     list_of_output_file_name: ptr_new(0L),$
     first_ref_m_file_to_plot: -1,$
+    list_of_norm_spins: ptr_new(0L),$
+    list_of_data_spins: ptr_new(0l),$
     
     ;batch repopulate
     data_spin_state_to_replot: '',$ ;from the batch mode
-    norm_spin_state_ro_replot: '',$
+    norm_spin_state_to_replot: '',$
     batch_spin_index_repopulated_selected: 0,$ ;index of spin state to use
     ;to repopulate the GUI
     cancel_repopulating: 0b,$ ;

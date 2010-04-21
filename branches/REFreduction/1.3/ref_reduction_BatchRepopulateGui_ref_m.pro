@@ -51,19 +51,18 @@ PRO RepopulateGui_ref_m, Event
   ClassInstance = obj_new('IDLparseCommandLine_ref_m',cmd_array)
   DataPath = ClassInstance->getDataPath()
   data_spins = strsplit(DataPath,'/',/extract)
-  nbr_data_spins = n_elements(data_spins)
+  (*(*global).list_of_data_spins) = data_spins
   NormPath = ClassInstance->getNormPath()
+  norm_spins = strsplit(NormPath,'/',/extract)
+  (*(*global).list_of_norm_spins) = norm_spins
   obj_destroy, ClassInstance
   
+  nbr_data_spins = n_elements(data_spins)
   if (nbr_data_spins gt 1) then begin ;more than 1 command line
   
     ;ask user to select which spin state he wants to load
     batch_reload_spin_state_selection, Event=event, spin_states=data_spins
-    (*global).data_spin_state_to_replot = $
-      data_spins[(*global).batch_spin_index_repopulated_selected]
-    (*globa).norm_spin_state_to_replot = $
-      norm_spins[(*global).batch_spin_index_repopulated_selected]
-      
+    
   endif else begin
   
     (*global).data_spin_state_to_replot = DataPath[0]

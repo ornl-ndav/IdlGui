@@ -51,6 +51,7 @@ FUNCTION REFreduction_Plot1D2DDataFile_batch, Event
 
 ;plot the 2D data file (default old view)
 status = REFreduction_Plot2DDataFile_batch(Event)
+
 IF (status EQ 0) THEN RETURN, status
 
 ;plot the 1D data file

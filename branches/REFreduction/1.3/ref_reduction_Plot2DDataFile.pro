@@ -138,7 +138,7 @@ Plot2DData_3D_File_batch, Event
 END
 
 ;**********************************************************************
-;Procedure that plots REF_L and REF_M 2D data plots                   *
+;Procedure that plots REF_M and REF_M 2D data plots                   *
 ;**********************************************************************
 PRO Plot2DDataFile, Event, Nx, Ny
 ;get global structure
@@ -186,10 +186,12 @@ widget_control,id,get_uvalue=global
 ;retrieve parameters
 tmp_file = (*global).full_data_tmp_dat_file
 img = (*(*global).bank1_data)
+
 (*global).Ntof_DATA = (size(img))(1)
 ;store big array that will be used by 1D plot
 (*(*global).DATA_D_ptr) = img ;data(Ntof,Ny,Nx)
 img = total(img,1) ; data(Ntof,Nx)
+
 ;load data up in global ptr array
 (*(*global).DATA_DD_ptr) = img
 ;transpose just for display purpose
