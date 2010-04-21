@@ -96,11 +96,11 @@ PRO populate_data_geometry_info, Event, nexus_file_name
   dist = dist_units[0] + ' ' + dist_units[1]
   putTextFieldValue, event, 'info_detector_sample_distance', dist
   
-  ;detector position
-  detPosition_units = iNexus->getDetPosition()
-  detPosition_m = convert_to_m(strcompress(detPosition_units[0],/remove_all), $
-    strcompress(detPosition_units[1],/remove_all))
-  (*global).detector_position_m = float(detPosition_m)
+;  ;detector position
+;  detPosition_units = iNexus->getDetPosition()
+;  detPosition_m = convert_to_m(strcompress(detPosition_units[0],/remove_all), $
+;    strcompress(detPosition_units[1],/remove_all))
+;  (*global).detector_position_m = float(detPosition_m)
   
   obj_destroy, iNexus
   
@@ -185,9 +185,9 @@ pro calculate_sangle, event
   f_det_sample_distance = convert_to_m(distance_units[0], $
     strcompress(distance_units[1],/remove_all))
   if (f_det_sample_distance eq -1) then message, /ioerror
-  detector_position_m = (*global).detector_position_m
-  detTransOffset_m    = (*global).detTransOffset_m
-  f_det_sample_distance += detector_position_m - detTransOffset_m
+  ;detector_position_m = (*global).detector_position_m
+  ;detTransOffset_m    = (*global).detTransOffset_m
+  ;f_det_sample_distance += detector_position_m - detTransOffset_m
   ;print, 'f_det_sample_distance: ' , f_det_sample_distance
   
   ;get dangle and dangle0 in radians
