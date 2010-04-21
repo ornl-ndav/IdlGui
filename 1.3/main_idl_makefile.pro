@@ -113,6 +113,9 @@
 .run duplicate_batch_row.pro
 .run batch_reload_spin_state_selection_base.pro
 
+;repopulate table
+.run repopulate_gui_open_data_nexus_ref_m.pro
+
 .run IDLgetMetadata__define.pro
 .run ref_reduction_BatchTab.pro
 .run ref_reduction_BatchDataNorm.pro

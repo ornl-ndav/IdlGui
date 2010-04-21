@@ -78,9 +78,17 @@ pro batch_reload_spin_state_selection_event, Event
       id = widget_info(Event.top, $
         find_by_uname='batch_reload_spin_state_selection_base')
       widget_control, id, /destroy
+      
+      data_spins = (*(*global).list_of_data_spins)
+      norm_spins = (*(*global).list_of_norm_spins)
+      
+      (*global).data_spin_state_to_replot = data_spins[index_validated]
+      (*global).norm_spin_state_to_replot = norm_spins[index_validated]
+      
       RepopulateGui_ref_m_with_spin_states, $
         main_event, $
-        spin_state_index=(*global).batch_spin_index_repopulated_selected
+        spin_state_index = index_validated
+        
     end
     
     else:
