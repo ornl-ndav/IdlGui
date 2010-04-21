@@ -129,7 +129,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;display buttons
   display_buttons, MAIN_BASE=main_base, button='faq', status='off'
   display_buttons, MAIN_BASE=main_base, button='orbiter', status='off'
-  ;display_buttons, MAIN_BASE=main_base, button='how_to', status='off'
+  display_buttons, MAIN_BASE=main_base, button='slurm', status='off'
+  display_buttons, MAIN_BASE=main_base, button='ldp', status='off'
   display_buttons, MAIN_BASE=main_base, button='neutronsr_us', status='off'
   display_buttons, MAIN_BASE=main_base, button='sns', status='off'
   display_buttons, MAIN_BASE=main_base, button='portal', status='off'

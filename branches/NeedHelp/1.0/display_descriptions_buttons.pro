@@ -53,11 +53,17 @@ PRO display_descriptions_buttons, MAIN_BASE=main_base, EVENT=event, $
       text = ['Frequently Asked Question','',$
         'All the questions you are afraid to ask.']
     end
-    'orbiter': text = 'orbiter description'
+    'orbiter': begin
+      text = ['Orbiter:','',' - dashboard',' - browser',$
+        ' - various monitoring',' - FAQ']
+    end
     'sns': begin
       text = ['Neutron Science web site','','Web site of the SNS and HFIR']
     end
-    'portal': text = 'portal description'
+    'portal': begin
+      text = ['Portal','',' - browse data',' - search for data',$
+        ' - plot NeXus',' - ...']
+    end
     'neutronsr_us': begin
       text = ['Neutron Science portal web site',$
         '',' - Service provided',' - Contacts',' - Resources']
@@ -66,7 +72,8 @@ PRO display_descriptions_buttons, MAIN_BASE=main_base, EVENT=event, $
       text = ['Translation Monitor','','To monitor live the translation of the ' + $
         'NeXus files.']
     end
-    'how_to': text = 'how_to description'
+    'slurm': text = 'Job monitor web page.'
+    'ldp': text = 'Live data processing web page'
     else: text = 'Move the mouse over a button to get a description of its link.'
   endcase
   
