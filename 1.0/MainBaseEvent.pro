@@ -86,57 +86,57 @@ PRO MAIN_BASE_event, Event
     
     ;tab2 ---------------------------------------------------------------------
     
-    ;Load Command Line File Button
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='browse_path_button'): BEGIN
-      input_dave_ascii_path_button, Event
-    END
-    
-    ;prefix
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='input_prefix_name'): BEGIN
-      parse_input_field_tab2, Event
-      check_run_jobs_button, Event
-    END
-    
-    ;suffix
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='input_suffix_name'): BEGIN
-      parse_input_field_tab2, Event
-      check_run_jobs_button, Event
-    END
-    
-    ;<User_defined>
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='input_sequence'): BEGIN
-      parse_input_field_tab2, Event
-      check_run_jobs_button, Event
-    END
-    
-    ;Help button
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='input_sequence_help'): BEGIN
-      help_button, Event
-    END
-    
-    ;Browse ES button
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='browse_es_file_button'): BEGIN
-      browse_es_file, Event
-      check_run_jobs_button, Event
-    END
-    
-    ;ES input text field
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='es_input_file_name'): BEGIN
-      es_input_file_name, Event
-      check_run_jobs_button, Event
-    END
-    
-    ;Preview and / or edit button of ES file
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='es_file_preview_button'): BEGIN
-      es_preview_file, Event
-    END
-    
-    ;refresh status of file in table
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='refresh_table_uname'): BEGIN
-      refresh_status_of_table, Event
-      check_run_jobs_button, Event
-    END
-    
+;    ;Load Command Line File Button
+;    WIDGET_INFO(wWidget, FIND_BY_UNAME='browse_path_button'): BEGIN
+;      input_dave_ascii_path_button, Event
+;    END
+;    
+;    ;prefix
+;    WIDGET_INFO(wWidget, FIND_BY_UNAME='input_prefix_name'): BEGIN
+;      parse_input_field_tab2, Event
+;      check_run_jobs_button, Event
+;    END
+;    
+;    ;suffix
+;    WIDGET_INFO(wWidget, FIND_BY_UNAME='input_suffix_name'): BEGIN
+;      parse_input_field_tab2, Event
+;      check_run_jobs_button, Event
+;    END
+;    
+;    ;<User_defined>
+;    WIDGET_INFO(wWidget, FIND_BY_UNAME='input_sequence'): BEGIN
+;      parse_input_field_tab2, Event
+;      check_run_jobs_button, Event
+;    END
+;    
+;    ;Help button
+;    WIDGET_INFO(wWidget, FIND_BY_UNAME='input_sequence_help'): BEGIN
+;      help_button, Event
+;    END
+;    
+;    ;Browse ES button
+;    WIDGET_INFO(wWidget, FIND_BY_UNAME='browse_es_file_button'): BEGIN
+;      browse_es_file, Event
+;      check_run_jobs_button, Event
+;    END
+;    
+;    ;ES input text field
+;    WIDGET_INFO(wWidget, FIND_BY_UNAME='es_input_file_name'): BEGIN
+;      es_input_file_name, Event
+;      check_run_jobs_button, Event
+;    END
+;    
+;    ;Preview and / or edit button of ES file
+;    WIDGET_INFO(wWidget, FIND_BY_UNAME='es_file_preview_button'): BEGIN
+;      es_preview_file, Event
+;    END
+;    
+;    ;refresh status of file in table
+;    WIDGET_INFO(wWidget, FIND_BY_UNAME='refresh_table_uname'): BEGIN
+;      refresh_status_of_table, Event
+;      check_run_jobs_button, Event
+;    END
+;    
     ;Quit button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='quit_uname'): BEGIN
       id = WIDGET_INFO(Event.top, $
@@ -144,11 +144,11 @@ PRO MAIN_BASE_event, Event
       WIDGET_CONTROL, id, /DESTROY
     END
     
-    ;run jobs
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='run_uname'): BEGIN
-      run_divisions, Event
-    END
-    
+;    ;run jobs
+;    WIDGET_INFO(wWidget, FIND_BY_UNAME='run_uname'): BEGIN
+;      run_divisions, Event
+;    END
+;    
     ELSE:
     
   ENDCASE

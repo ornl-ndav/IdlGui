@@ -100,7 +100,8 @@ pro send_your_message, event
     hostname=hostname,$
     home=home,$
     date=date,$
-    message=message)
+    message=message,$
+    contact=contact)
     
   email_subject = create_email_subject(ucams=ucams,$
     priority=priority,$

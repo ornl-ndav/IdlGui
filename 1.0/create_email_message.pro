@@ -52,7 +52,9 @@ function create_email_message, ucams=ucams,$
     hostname=hostname,$
     home=home,$
     date=date,$
-    message=message
+    message=message,$
+    contact=contact
+    
     compile_opt idl2
     
    email_message = 'Message sent with NeedHelp (version: ' + version + ')'
@@ -61,6 +63,7 @@ function create_email_message, ucams=ucams,$
    email_message += ' from ' + hostname + '.'
    email_message += ' Message added is: ' + strjoin(message,' ') + '.'
    email_message += ' Home folder is ' + home
-    
+   email_message += '. Way to contact user: ' + contact
+
   return, email_message
 end
