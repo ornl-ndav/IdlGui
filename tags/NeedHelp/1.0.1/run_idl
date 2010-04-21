@@ -1,0 +1,12 @@
+spawn, 'cp NeedHelp.cfg .NeedHelp.cfg'
+@idl_makefile.pro
+need_help
+
+
+
+
+
+
+
+
+
