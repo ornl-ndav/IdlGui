@@ -120,6 +120,10 @@ pro RepopulateGui_ref_m_with_spin_states, event, spin_state_index=spin_state_ind
     '..... ' + MainNormRunNumber
   putLogBookMessage, Event, text, APPEND=1
   
+  text = '--> Norm Spin State to plot ......................................' + $
+  '..... ' +     (*global).norm_spin_state_to_replot
+  putLogBookMessage, Event, text, APPEND=1
+  
   AllNormNexusFileName = ClassInstance->getAllNormNexusFileName()
   text = '--> List of All Norm Nexus File Names (AllNormNexusFileName) .....' + $
     '..... ' + AllNormNexusFileName
@@ -256,6 +260,7 @@ pro RepopulateGui_ref_m_with_spin_states, event, spin_state_index=spin_state_ind
   sRepopulateGui = {Event                     : Event,$
     MainDataNexusFileName     : MainDataNexusFileName,$
     MainDataRunNumber         : MainDataRunNumber,$
+    DataPath                  : (*global).data_spin_state_to_replot,$
     AllDataNexusFileName      : AllDataNexusFileName,$
     DataRoiFileName           : DataRoiFileName,$
     DataPeakExclYmin          : DataPeakExclYArray[0],$
@@ -263,6 +268,7 @@ pro RepopulateGui_ref_m_with_spin_states, event, spin_state_index=spin_state_ind
     DataBackFileName          : DataBackFileName,$
     MainNormNexusFileName     : MainNormNexusFileName,$
     MainNormRunNumber         : MainNormRunNumber,$
+    NormPath                  : (*global).norm_spin_state_to_replot,$
     AllNormNexusFileName      : AllNormNexusFileName,$
     NormRoiFileName           : NormRoiFileName,$
     NormPeakExclYmin          : NormPeakExclYArray[0],$

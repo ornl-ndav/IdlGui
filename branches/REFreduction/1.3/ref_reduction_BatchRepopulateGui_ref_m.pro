@@ -56,18 +56,20 @@ PRO RepopulateGui_ref_m, Event
   obj_destroy, ClassInstance
   
   if (nbr_data_spins gt 1) then begin ;more than 1 command line
-
-    (*global).data_spin_state_to_replot = $
-    data_spins[(*global).batch_spin_index_repopulated_selected]
-    (*globa).norm_spin_state_to_replot = $
-    norm_spins[(*global).batch_spin_index_repopulated_selected]
+  
     ;ask user to select which spin state he wants to load
     batch_reload_spin_state_selection, Event=event, spin_states=data_spins
-    
+    (*global).data_spin_state_to_replot = $
+      data_spins[(*global).batch_spin_index_repopulated_selected]
+    (*globa).norm_spin_state_to_replot = $
+      norm_spins[(*global).batch_spin_index_repopulated_selected]
+      
   endif else begin
   
+    (*global).data_spin_state_to_replot = DataPath[0]
+    (*global).norm_spin_state_to_replot = NormPath[0]
     RepopulateGui_ref_m_with_spin_states, event
     
   endelse
-
+  
 end
