@@ -249,7 +249,6 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
 END
 
-
 ;+
 ; :Description:
 ;   main procedure of program. Launch at startup

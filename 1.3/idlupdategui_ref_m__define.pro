@@ -492,13 +492,15 @@ FUNCTION IDLupdateGui_ref_m::init, structure
       structure.MainDataRunNumber, $
       structure.DataPath
     AppendReplaceLogBookMessage, Event, OK, PROCESSING
+    (*global).data_path = '/entry-' + structure.DataPath + '/'
   ENDELSE
   
   ;populate geometry info
-  text = '--> Populate Geometry File .................................... ' $
+  text = '--> Populate Geometry File ................................... ' $
     + PROCESSING
   putLogBookMessage, event, text, append=1
   populate_data_geometry_info, Event, structure.MainDataNexusFileName
+  AppendReplaceLogBookMessage, Event, OK, PROCESSING
   
   ;Activate Data Widgets
   text = '--> Activate Data Widgets .................................... ' $
@@ -545,6 +547,7 @@ FUNCTION IDLupdateGui_ref_m::init, structure
   ;activate peak or background cw_bgroup
   SetCWBgroup, Event, 'peak_data_back_group', dataPeakStatus
   SwitchPeakBackgroundDataBase, Event
+  SwitchPeakBackgroundReduceDatabase, Event ;_GUIinteraction
   
   IF (dataPeakStatus EQ 0) THEN BEGIN
     ;work on DataPeakExclYmin and DataPeakExclYmax
@@ -629,6 +632,7 @@ FUNCTION IDLupdateGui_ref_m::init, structure
         structure.MainNormRunNumber, $
         structure.NormPath
       AppendReplaceLogBookMessage, Event, OK, PROCESSING
+      (*global).norm_path = '/entry-' + structure.NormPath + '/'
     ENDELSE
     
     ;Activate Norm Widgets
@@ -676,6 +680,7 @@ FUNCTION IDLupdateGui_ref_m::init, structure
     ;activate peak or background cw_bgroup
     SetCWBgroup, Event, 'peak_norm_back_group', normPeakStatus
     SwitchPeakBackgroundNormBase, Event
+    SwitchPeakBackgroundReduceNormBase, Event
     
     IF (normPeakStatus EQ 0) THEN BEGIN
       ;work on NormPeakExclYmin and NormPeakExclYmax
@@ -715,49 +720,6 @@ FUNCTION IDLupdateGui_ref_m::init, structure
     
   ENDELSE
   
-  ;Work on Empty Cell tab -------------------------------------------------------
-  IF (structure.EmptyCellRunNumber NE '') THEN BEGIN
-  
-    empty_cell_error = 0
-    
-    text = '--> Display Empty Cell Run Number ............................ ' $
-      + PROCESSING
-    putLogBookMessage, Event, text, APPEND=1
-    IF (structure.EmptyCellRunNumber EQ '') THEN BEGIN
-      AppendReplaceLogBookMessage, Event, NO, PROCESSING
-    ENDIF ELSE BEGIN
-      status = UpdateEmptyCellRunNumber(Event, structure.EmptyCellRunNumber)
-      IF (status EQ 0) THEN BEGIN
-        AppendReplaceLogBookMessage, Event, FAILED, PROCESSING
-        ++NbrError
-        ++DataError
-      ENDIF ELSE BEGIN
-        AppendReplaceLogBookMessage, Event, OK, PROCESSING
-      ENDELSE
-    ENDELSE
-    
-    ;Load the Empty Cell Run Number
-    text = '--> Load and Plot Empty Cell Run Number ...................... ' $
-      + PROCESSING
-    putLogBookMessage, Event, text, APPEND=1
-    UpdateEmptyCellNexusFileName, Event, $
-      structure.EmptyCellFileName, $
-      structure.EmptyCellRunNumber
-    AppendReplaceLogBookMessage, Event, OK, PROCESSING
-    
-    ;populate A, B, D and C factors
-    text = '--> Populate A, B, C and D ................................... ' $
-      + PROCESSING
-    putLogBookMessage, Event, text, APPEND=1
-    UpdateEmptyCellCoefficient, Event,$
-      structure.EmptyCellA,$
-      structure.EmptyCellB,$
-      structure.EmptyCellC,$
-      structure.EmptyCellD
-    AppendReplaceLogBookMessage, Event, OK, PROCESSING
-    
-  ENDIF ;end of if there is an empty cell run number
-  
   ;Work on Qmin, Qmax, Qwidth and Qtype
   text = '--> Load Qmin, Qmax, Qwidth and Qtype ........................ ' $
     + PROCESSING
@@ -767,16 +729,6 @@ FUNCTION IDLupdateGui_ref_m::init, structure
     structure.Qmax, $
     structure.Qwidth, $
     structure.Qtype
-  AppendReplaceLogBookMessage, Event, OK, PROCESSING
-  
-  ;Work on AngleValue and AngleError
-  text = '--> Load Angle Value and Error ............................... ' $
-    + PROCESSING
-  putLogBookMessage, Event, text, APPEND=1
-  UpdateAngle, Event, $
-    structure.AngleValue, $
-    structure.AngleError, $
-    structure.AngleUnits
   AppendReplaceLogBookMessage, Event, OK, PROCESSING
   
   ;Work on filtering flag

@@ -46,7 +46,7 @@ pro open_and_plot_norm_nexus_ref_m, Event, $
   open_nexus_norm_ref_m_batch, event, $
     NormRunNumber, $
     MainNormNexusFileName, $
-    data_path
+    Normpath
     
   ;then plot norm file (1D and 2D)
   result = REFreduction_Plot1D2DNormalizationFile_batch(Event)
@@ -64,6 +64,8 @@ pro open_and_plot_norm_nexus_ref_m, Event, $
   putNormalizationLogBookMessage, Event, text, Append=1
   ;to see the last line of the data log book
   showLastNormLogBookLine, Event
+  
+  (*global).NormNexusFound = 1b
   
 end
 
@@ -111,6 +113,9 @@ PRO open_and_plot_data_nexus_ref_m, Event, $
   putDataLogBookMessage, Event, text, Append=1
   ;to see the last line of the data log book
   showLastDataLogBookLine, Event
+  
+  (*global).DataNexusFound = 1b
+  
 END
 
 ;+
@@ -202,6 +207,8 @@ PRO open_nexus_norm_ref_m_batch, Event, RunNumber, full_nexus_name, data_path
     working_path = (*global).working_path
     
     retrieveBanksData_ref_m, Event, full_nexus_name, 'norm', spin_state=data_path
+    
+    help, (*(*global).bank1_norm)
     
     if ((*global).isHDF5format) then begin
       ;create name of BackgroundROIFile and put it in its box
