@@ -70,6 +70,31 @@ PRO browse_cl_file, Event
   ENDIF
   
 END
+
+;+
+; :Description:
+;   this function takes the arg and remove it from the command line
+;
+; :Params:
+;    cdl
+;
+; :Keywords:
+;    arg
+;
+; :Author: j35
+;-
+function cleanup_cl, cdl, arg=arg
+  compile_opt idl2
+  
+  cdl_array = strsplit(cdl,arg,/extract,/regex,count=nbr)
+  cdl_local = ''
+  if (nbr eq 1) then cdl_local = cdl_array[0]
+  if (nbr gt 1) then cdl_local = cdl_array[0] + cdl_array[1]
+  if (nbr eq -1) then cld_local = cdl
+
+  return, cdl_local
+end
+
 ;-------------------------------------------------------------------------------
 ;This function read the file passed as an argument and display its contain in
 ;the preview text field
@@ -80,6 +105,10 @@ PRO displayCLfile, Event, file_name
   file_array = STRARR(nbr_lines)
   READF,1, file_array
   CLOSE,1
-  putValue, Event, 'preview_cl_file_text_field', file_array
+  
+  cdl = file_array[0]
+  command_line = cleanup_cl(cdl, arg=' --batch')
+  
+  putValue, Event, 'preview_cl_file_text_field', command_line
 END
 
