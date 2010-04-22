@@ -745,6 +745,12 @@ function ReductionCmd::Check
     msg = [msg,["The Q-Range isn't defined correctly."]]
   ENDIF
   
+  ; Check that the max Energy Transfer is less than Ei
+  IF (self.energybins_max GE self.ei) THEN BEGIN
+    ok = 0
+    msg = [msg,['You cannot have Emax >= Ei.']]
+  ENDIF
+  
   ; Now let's do some more complicated dependencies
   
   ; If Empty Can OR Black Can then we must specify Data Coeff
@@ -1067,6 +1073,7 @@ function ReductionCmd::Generate
           
         ; Put a ',' in if the hardmask is defined as well.
         IF (self.mask EQ 1) AND (self.hardmask EQ 1) THEN cmd[i] += ","
+        IF (self.mask EQ 1) AND (self.customhardmask EQ 1) THEN cmd[i] += ","
         
       ENDIF
       
