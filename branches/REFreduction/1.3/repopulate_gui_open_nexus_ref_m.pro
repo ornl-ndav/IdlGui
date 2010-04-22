@@ -32,6 +32,41 @@
 ;
 ;==============================================================================
 
+pro open_and_plot_norm_nexus_ref_m, Event, $
+    NormRunNumber, $
+    MainNormNexusFileName, $
+    NormPath
+    
+  compile_opt idl2
+  
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  ;Open That NeXus file
+  open_nexus_norm_ref_m_batch, event, $
+    NormRunNumber, $
+    MainNormNexusFileName, $
+    data_path
+    
+  ;then plot norm file (1D and 2D)
+  result = REFreduction_Plot1D2DNormalizationFile_batch(Event)
+  
+  ;tell the user that the load and plot process is done
+  InitialStrarr = getNormalizationLogBookText(Event)
+  putTextAtEndOfNormalizationLogBookLastLine, $
+    Event, $
+    InitialStrarr, $
+    ' Done', $
+    (*global).processing_message
+  
+  ;display full path to NeXus in Norm log book
+  text = '(Nexus path: ' + strcompress(MainNormNexusFileName,/remove_all) + ')'
+  putNormalizationLogBookMessage, Event, text, Append=1
+  ;to see the last line of the data log book
+  showLastNormLogBookLine, Event
+  
+end
+
 ;+
 ; :Description:
 ;   This load and plot the data batch file
@@ -44,7 +79,7 @@
 ;
 ; :Author: j35
 ;-
-PRO open_and_plot_nexus_ref_m, Event, $
+PRO open_and_plot_data_nexus_ref_m, Event, $
     DataRunNumber, $
     currFullDataNexusName, $
     data_path
@@ -55,24 +90,13 @@ PRO open_and_plot_nexus_ref_m, Event, $
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   ;Open That NeXus file
-  IF ((*global).debugging_version EQ 'yes') THEN BEGIN
-    print, 'Just before OpenDataNexusFile_batch'
-  ENDIF
-  open_nexus_ref_m_batch, event, DataRunNumber, currFullDataNexusName, data_path
-  IF ((*global).debugging_version EQ 'yes') THEN BEGIN
-    print, 'Just after OpenDataNexusFile_batch'
-  ENDIF
-  
-  (*global).DataNexusFound  = 1
-  
-  IF ((*global).debugging_version EQ 'yes') THEN BEGIN
-    print, 'Just before REFreduction_Plot1D2DDataFile_batch'
-  ENDIF
+  open_nexus_ref_m_batch, event, $
+    DataRunNumber, $
+    currFullDataNexusName, $
+    data_path
+    
   ;then plot data file (1D and 2D)
   result = REFreduction_Plot1D2DDataFile_batch(Event)
-  IF ((*global).debugging_version EQ 'yes') THEN BEGIN
-    print, 'Just after REFreduction_Plot1D2DDataFile_batch'
-  ENDIF
   
   ;tell the user that the load and plot process is done
   InitialStrarr = getDataLogBookText(Event)
@@ -107,10 +131,6 @@ PRO open_nexus_ref_m_batch, Event, DataRunNumber, full_nexus_name, data_path
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
-  IF ((*global).debugging_version EQ 'yes') THEN BEGIN
-    PRINT, 'Entering OpenDataNexusFile_batch'
-  ENDIF
-  
   ;store run number of data file
   (*global).data_run_number = DataRunNumber
   
@@ -121,21 +141,12 @@ PRO open_nexus_ref_m_batch, Event, DataRunNumber, full_nexus_name, data_path
   
   ;check format of NeXus file
   IF (H5F_IS_HDF5(full_nexus_name)) THEN BEGIN
-    IF ((*global).debugging_version EQ 'yes') THEN BEGIN
-      PRINT, '-> file is HDF5'
-    ENDIF
-    
+  
     (*global).isHDF5format = 1
     ;dump binary data into local directory of user
     working_path = (*global).working_path
     
-    IF ((*global).debugging_version EQ 'yes') THEN BEGIN
-      PRINT, '-> About to enter REFreduction_DumpBinaryData_batch'
-    ENDIF
     retrieveBanksData_ref_m, Event, full_nexus_name, 'data', spin_state=data_path
-    IF ((*global).debugging_version EQ 'yes') THEN BEGIN
-      PRINT, '-> About to leave REFreduction_DumpBinaryData_batch'
-    ENDIF
     
     IF ((*global).isHDF5format) THEN BEGIN
       ;create name of BackgroundROIFile and put it in its box
@@ -144,11 +155,9 @@ PRO open_nexus_ref_m_batch, Event, DataRunNumber, full_nexus_name, data_path
         working_path, $
         DataRunNumber
     ENDIF
-  ENDIF ELSE BEGIN
-    IF ((*global).debugging_version EQ 'yes') THEN BEGIN
-      PRINT, '-> file is not HDF5'
-    ENDIF
     
+  ENDIF ELSE BEGIN
+  
     (*global).isHDF5format = 0
     ;tells the data log book that the format is wrong
     InitialStrarr = getDataLogBookText(Event)
@@ -159,12 +168,63 @@ PRO open_nexus_ref_m_batch, Event, DataRunNumber, full_nexus_name, data_path
       PROCESSING
   ENDELSE
   
-  IF ((*global).debugging_version EQ 'yes') THEN BEGIN
-    PRINT, 'Leaving OpenDataNexusFile_batch'
-  ENDIF
-  
 END
 
+;+
+; :Description:
+;   open the nexus ref_m file
+;
+; :Params:
+;    Event
+;    DataRunNumber
+;    full_nexus_name
+;    data_path
+;
+; :Author: j35
+;-
+PRO open_nexus_norm_ref_m_batch, Event, RunNumber, full_nexus_name, data_path
+  compile_opt idl2
+  
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  ;store run number of data file
+  (*global).norm_run_number = RunNumber
+  
+  ;store full path to NeXus
+  (*global).norm_full_nexus_name = full_nexus_name
+  
+  ;check format of NeXus file
+  if (H5F_IS_HDF5(full_nexus_name)) then begin
+  
+    (*global).isHDF5format = 1
+    ;dump binary data into local directory of user
+    working_path = (*global).working_path
+    
+    retrieveBanksData_ref_m, Event, full_nexus_name, 'norm', spin_state=data_path
+    
+    if ((*global).isHDF5format) then begin
+      ;create name of BackgroundROIFile and put it in its box
+      REFreduction_CreateDefaultNormBackgroundROIFileName, Event, $
+        'REF_M', $
+        working_path, $
+        RunNumber
+    endif
+    
+  endif else begin
+  
+    (*global).isHDF5format = 0
+    ;tells the data log book that the format is wrong
+    InitialStrarr = getNormalizationLogBookText(Event)
+    putTextAtEndOfDataLogBookLastLine, $
+      Event, $
+      InitialStrarr, $
+      (*global).failed, $
+      PROCESSING
+  
+  endelse
+  
+end
 
 ;+
 ; :Description:

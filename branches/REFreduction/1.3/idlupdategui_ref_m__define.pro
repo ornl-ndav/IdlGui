@@ -63,7 +63,7 @@ PRO UpdateMainDataNexusFileName, Event, $
     MainDataNexusFileName, $
     DataRunNumber, $
     DataPath
-  open_and_plot_nexus_ref_m,Event, $
+  open_and_plot_data_nexus_ref_m,Event, $
     DataRunNumber, $
     MainDataNexusFileName, $
     DataPath
@@ -145,8 +145,14 @@ PRO UpdateAllNormNexusFileName, Event, AllNormNexusFileName
 END
 
 ;------------------------------------------------------------------------------
-PRO UpdateMainNormNexusFileName, Event, MainNormNexusFileName, NormRunNumber
-  REFreduction_OpenPlotNormNexus, Event, NormRunNumber, MainNormNexusFileName
+PRO UpdateMainNormNexusFileName, Event, $
+    MainNormNexusFileName, $
+    NormRunNumber, $
+    NormPath
+  open_and_plot_norm_nexus_ref_m, Event, $
+    NormRunNumber, $
+    MainNormNexusFileName, $
+    NormPath
 END
 
 ;------------------------------------------------------------------------------
@@ -566,7 +572,7 @@ FUNCTION IDLupdateGui_ref_m::init, structure
   ENDELSE
   ;replot Data (main and selections)
   REFreduction_DataBackgroundPeakSelection, Event, ''
-
+  
   ;TOF cutting
   text = '--> Load TOF cutting min and max ............................. ' $
     + PROCESSING
@@ -575,8 +581,6 @@ FUNCTION IDLupdateGui_ref_m::init, structure
     structure.TOFcuttingMin, $
     structure.TOFcuttingMax
   AppendReplaceLogBookMessage, Event, OK, PROCESSING
-
-return, 1
   
   ;Work on Normalization data files
   IF (structure.MainNormRunNumber NE '') THEN BEGIN
@@ -622,7 +626,8 @@ return, 1
     ENDIF ELSE BEGIN
       UpdateMainNormNexusFileName, Event, $
         structure.MainNormNexusFileName, $
-        structure.MainNormRunNumber
+        structure.MainNormRunNumber, $
+        structure.NormPath
       AppendReplaceLogBookMessage, Event, OK, PROCESSING
     ENDELSE
     
