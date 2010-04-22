@@ -638,6 +638,8 @@ PRO BatchTab_LoadBatchFile_ref_m_step2, Event, BatchFileName, new_path
       DisplayBatchTable_ref_M, Event, BatchTable
       (*global).BatchFileName = BatchFileName
       ;this function updates the widgets (button) of the tab
+
+      command_line_generator_for_ref_m, event
       
       UpdateBatchTabGui_ref_m, Event
       RowSelected = (*global).PrevBatchRowSelected
@@ -659,6 +661,7 @@ PRO BatchTab_LoadBatchFile_ref_m_step2, Event, BatchFileName, new_path
       CheckRepopulateButton, Event
       ;enable or not the REFRESH Button
       CheckRefreshButton, Event
+
     ENDELSE
   ENDIF
 END
