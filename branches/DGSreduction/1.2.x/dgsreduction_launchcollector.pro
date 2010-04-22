@@ -68,6 +68,8 @@ PRO DGSreduction_LaunchCollector, event, WaitForJobs=waitforjobs
   dgsr_cmd->GetProperty, RotationAngle=rotationangle_offset
   ; Get the SE Block name of the rotation motor
   dgsr_cmd->GetProperty, SEBlock=seblock
+  ; Get the Lambda Scaling flag
+  dgsr_cmd->GetProperty, lambdaratio=lambda_scaling
   
   ;Construct the jobname
   jobname = instrument + "_" + runnumber + "_collector"
@@ -142,8 +144,8 @@ PRO DGSreduction_LaunchCollector, event, WaitForJobs=waitforjobs
       " --spe=" + outdir + "/" + instrument + "_" + runnumber + ".spe" + $
       " --phx=" + outdir + "/" + instrument + "_" + runnumber + ".phx" + $
       " -o " + outdir + "/" + instrument + "_" + runnumber + ".nxspe" + $
-      " -e " + ei
-      
+      " -e " + ei + " --lambda-scaling=" + lambda_scaling
+    
     ;print, 'SEBLOCK = ', SEBLOCK
     
       
