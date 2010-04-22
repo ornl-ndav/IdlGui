@@ -68,7 +68,7 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   datarun_cwp_id = CW_FIELD(dataSourceRow, xsize=5, ysize=1, TITLE="", UVALUE="DGSR_DATA_CWP", UNAME='DGSR_DATA_CWP', $
     /ALL_EVENTS)
     
-  livefileButton = WIDGET_BUTTON(dataSourceRow, VALUE="Live NeXus", UVALUE="DGSR_LIVENEXUS", UNAME="DGSR_LIVENEXUS", SENSITIVE=0)
+  livefileButton = WIDGET_BUTTON(dataSourceRow, VALUE="Live NeXus", UVALUE="DGSR_LIVENEXUS", UNAME="DGSR_LIVENEXUS")
   ;checkfileButton = WIDGET_BUTTON(dataSourceRow, VALUE="Check File", UVALUE="DGSR_FINDNEXUS", SENSITIVE=0)
   
   dataSourceHint1 = '1,4-6 will add run 1,4,5,6 together.'
