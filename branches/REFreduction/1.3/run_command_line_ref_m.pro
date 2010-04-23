@@ -149,7 +149,7 @@ PRO run_command_line_ref_m, event
         status_text, 0
         
       ;manually creating I(Q) output file
-      if (strlowcase((*global)overwrite_q_ouput_file) eq 'yes') then begin
+      if (strlowcase((*global).overwrite_q_output_file) eq 'yes') then begin
       
         text = 'Overwriting I(Q) output file ... ' + PROCESSING
         putLogBookMessage, Event, cmd_text, Append=1

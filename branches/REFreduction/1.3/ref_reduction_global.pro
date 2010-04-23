@@ -46,8 +46,8 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
   CHECKING_PACKAGES = file->getValue(tag=['configuration','checking_packages'])
   DEBUGGING_ON_MAC = file->getValue(tag=['configuration','debugging_on_mac'])
   detector_size_m = file->getValue(tag=['configuration','detector_size_m'])
-  OVERWRITE_Q_OUPUT_FILE = file->getValue(tag=['configuration',$
-    'overwrite_q_ouput_file'])
+  OVERWRITE_Q_OUTPUT_FILE = file->getValue(tag=['configuration',$
+    'overwrite_q_output_file'])
     
   debugging_structure = getDebuggingStructure()
   
@@ -79,7 +79,7 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     with_launch_switch: WITH_LAUNCH_SWITCH,$
     
     ;REFreduction calculate itself the I(Q) output file
-    overwrite_q_ouput_file: OVERWRITE_Q_OUPUT_FILE,$
+    overwrite_q_output_file: OVERWRITE_Q_OUTPUT_FILE,$
     
     ;spin state configuration
     spin_state_config: [1b,0b,1b,0b],$

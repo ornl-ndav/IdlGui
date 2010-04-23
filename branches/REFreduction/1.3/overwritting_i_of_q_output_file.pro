@@ -34,85 +34,6 @@
 
 ;+
 ; :Description:
-;   This procedures takes the name of the output file,
-;    replaces the extension with the extension of
-;    the crtof output file (.crtof) and uses that file to calculate I(Q)
-;    and then replaces the output file.
-;
-; :Params:
-;    event
-;
-; :Keywords:
-;    cmd
-;    output_file_name
-;
-; :Author: j35
-;-
-pro overwritting_i_of_q_output_file, event, $
-    cmd=cmd_index, $
-    output_file_name=output_file_name
-  compile_opt idl2
-  
-  ;get name of crtof file
-  file_array = strsplit(output_file_name,'.txt',/extract,/regex)
-  crtof_ext = '.crtof'
-  crtof_output_file_name = file_array[0] + crtof_ext
-  
-  ;get metadata of output_file_name up to the data
-  openr, 1, output_file_name
-  file_length = file_lines(output_file_name)
-  all_data_file = strarr(file_length)
-  readf, 1, all_data_file
-  close, 1
-  ;keep everyting up to 3 lines after first blank
-  blk_line = where(all_data_file eq '')
-  metadata = all_data_file[0:blk_line[0]+3]
-  
-  ;get data (tof, I, sigmaI) of crtof
-  iAsciiFile = OBJ_NEW('IDL3columnsASCIIparser', crtof_output_file_name)
-  if (OBJ_VALID(iAsciiFile)) then begin
-    no_error = 0
-    ;CATCH,no_error
-    if (no_error NE 0) then begin
-      CATCH,/CANCEL
-    ;return
-    endif else begin
-      sAscii = iAsciiFile->getData()
-      DataStringArray = *(*sAscii.data)[0].data
-      obj_destroy, iAsciiFile ;cleanup object
-      ;this method will creates a 3 columns array (x,y,sigma_y)
-      Nbr = N_ELEMENTS(DataStringArray)
-      if (Nbr GT 1) then begin
-        Xarray      = STRARR(1)
-        Yarray      = STRARR(1)
-        SigmaYarray = STRARR(1)
-        parse_data_string_array, $
-          Event,$
-          DataStringArray,$
-          Xarray,$
-          Yarray,$
-          SigmaYarray
-          
-        ;Remove all rows with NaN, -inf, +inf ...
-        cleanup_data, Xarray, Yarray, SigmaYarray
-        ;Change format of array (string -> float)
-        Xarray      = FLOAT(Xarray)
-        Yarray      = FLOAT(Yarray)
-        SigmaYarray = FLOAT(SigmaYarray)
-      endif
-    endelse
-  endif
-  
-  convert_tof_to_q, event, xarray
-  
-  ;produces output file
-  create_new_reduces_output_file, event, file_name=output_file_name,$
-    metadata = metadata, x=Xarray, y=Yarray, sigmaY=SigmaYarray
-    
-end
-
-;+
-; :Description:
 ;    This procedures creates the new .txt reduced file
 ;
 ; :Params:
@@ -258,3 +179,82 @@ pro cleanup_data, Xarray, Yarray, SigmaYarray
     SigmaYarray = SigmaYarray[RealMinIndex]
   endif
 end
+
+;+
+; :Description:
+;   This procedures takes the name of the output file,
+;    replaces the extension with the extension of
+;    the crtof output file (.crtof) and uses that file to calculate I(Q)
+;    and then replaces the output file.
+;
+; :Params:
+;    event
+;
+; :Keywords:
+;    cmd
+;    output_file_name
+;
+; :Author: j35
+;-
+pro overwritting_i_of_q_output_file, event, $
+    cmd=cmd_index, $
+    output_file_name=output_file_name
+  compile_opt idl2
+  
+  ;get name of crtof file
+  file_array = strsplit(output_file_name,'.txt',/extract,/regex)
+  crtof_ext = '.crtof'
+  crtof_output_file_name = file_array[0] + crtof_ext
+  
+  ;get metadata of output_file_name up to the data
+  openr, 1, output_file_name
+  file_length = file_lines(output_file_name)
+  all_data_file = strarr(file_length)
+  readf, 1, all_data_file
+  close, 1
+  ;keep everyting up to 3 lines after first blank
+  blk_line = where(all_data_file eq '')
+  metadata = all_data_file[0:blk_line[0]+3]
+  
+  ;get data (tof, I, sigmaI) of crtof
+  iAsciiFile = OBJ_NEW('IDL3columnsASCIIparser', crtof_output_file_name)
+  if (OBJ_VALID(iAsciiFile)) then begin
+    no_error = 0
+    ;CATCH,no_error
+    if (no_error NE 0) then begin
+      CATCH,/CANCEL
+    ;return
+    endif else begin
+      sAscii = iAsciiFile->getData()
+      DataStringArray = *(*sAscii.data)[0].data
+      obj_destroy, iAsciiFile ;cleanup object
+      ;this method will creates a 3 columns array (x,y,sigma_y)
+      Nbr = N_ELEMENTS(DataStringArray)
+      if (Nbr GT 1) then begin
+        Xarray      = STRARR(1)
+        Yarray      = STRARR(1)
+        SigmaYarray = STRARR(1)
+        parse_data_string_array, Event, $
+          DataStringArray, $
+          Xarray, $
+          Yarray, $
+          SigmaYarray
+          
+        ;Remove all rows with NaN, -inf, +inf ...
+        cleanup_data, Xarray, Yarray, SigmaYarray
+        ;Change format of array (string -> float)
+        Xarray      = FLOAT(Xarray)
+        Yarray      = FLOAT(Yarray)
+        SigmaYarray = FLOAT(SigmaYarray)
+      endif
+    endelse
+  endif
+  
+  convert_tof_to_q, event, xarray
+  
+  ;produces output file
+  create_new_reduces_output_file, event, file_name=output_file_name,$
+    metadata = metadata, x=Xarray, y=Yarray, sigmaY=SigmaYarray
+    
+end
+
