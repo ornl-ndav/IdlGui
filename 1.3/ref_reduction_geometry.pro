@@ -211,6 +211,7 @@ pro calculate_sangle, event
   part3 = 2. * f_det_sample_distance
 
   rad_sangle = part1 + (part2/part3)
+  (*global).rad_sangle = rad_sangle
   deg_sangle = convert_rad_to_deg(rad_sangle)
   
   sangle = strcompress(deg_sangle,/remove_all) + ' degrees (' + $

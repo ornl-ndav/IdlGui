@@ -92,6 +92,7 @@
 .run other_spin_states.pro
 .run configure_spin_state_base.pro
 .run processing_command_line.pro
+.run overwrite_i_of_q_output_file.pro
 
 ;auto cleaning
 .run auto_cleaning_data_cw_bgroup.pro
