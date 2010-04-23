@@ -46,7 +46,9 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
   CHECKING_PACKAGES = file->getValue(tag=['configuration','checking_packages'])
   DEBUGGING_ON_MAC = file->getValue(tag=['configuration','debugging_on_mac'])
   detector_size_m = file->getValue(tag=['configuration','detector_size_m'])
-  
+  OVERWRITE_Q_OUPUT_FILE = file->getValue(tag=['configuration',$
+    'overwrite_q_ouput_file'])
+    
   debugging_structure = getDebuggingStructure()
   
   ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
@@ -76,6 +78,9 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     instrument:        STRCOMPRESS(INSTRUMENT,/remove_all),$
     with_launch_switch: WITH_LAUNCH_SWITCH,$
     
+    ;REFreduction calculate itself the I(Q) output file
+    overwrite_q_ouput_file: OVERWRITE_Q_OUPUT_FILE,$
+    
     ;spin state configuration
     spin_state_config: [1b,0b,1b,0b],$
     list_of_output_file_name: ptr_new(0L),$
@@ -91,9 +96,10 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     cancel_repopulating: 0b,$ ;
     
     ;sangle caluclation
-    detector_size_m: detector_size_m,$ 
+    detector_size_m: detector_size_m,$
     detector_position_m: 0.,$ ;retrieve from NeXus file and used to cal. sangle
     detTransOffset_m: 1.199599359, $ ;Detetector trans offset (to cal.sangle)
+    rad_sangle: 0., $ ;sangle value in radians
     
     row_selected: 0,$
     

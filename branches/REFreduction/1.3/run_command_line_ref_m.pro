@@ -129,7 +129,7 @@ PRO run_command_line_ref_m, event
       putTextFieldValue, event, 'data_reduction_status_text_field', $
         status_text, 0
         
-    ENDIF ELSE BEGIN
+    endif else begin
     
       nbr_reduction_success++ ;at least 1 successful reduction
       
@@ -148,7 +148,25 @@ PRO run_command_line_ref_m, event
       putTextFieldValue, event, 'data_reduction_status_text_field', $
         status_text, 0
         
-    ENDELSE
+      ;manually creating I(Q) output file
+      if (strlowcase((*global)overwrite_q_ouput_file) eq 'yes') then begin
+      
+        text = 'Overwriting I(Q) output file ... ' + PROCESSING
+        putLogBookMessage, Event, cmd_text, Append=1
+        
+        list_of_output_file_name = (*(*global).list_of_output_file_name)
+        
+        overwritting_i_of_q_output_file, event, $
+          cmd=cmd[index], $
+          output_file_name=list_of_output_file_name[index]
+          
+        LogBookText = getLogBookText(Event)
+        Message = 'Done'
+        putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
+        
+      endif
+      
+    endelse
     
     index++
   endwhile
