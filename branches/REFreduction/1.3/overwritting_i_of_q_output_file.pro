@@ -79,7 +79,7 @@ pro overwritting_i_of_q_output_file, event, $
     endif else begin
       sAscii = iAsciiFile->getData()
       DataStringArray = *(*sAscii.data)[0].data
-      obj_destroy, sAscii ;cleanup object
+      obj_destroy, iAsciiFile ;cleanup object
       ;this method will creates a 3 columns array (x,y,sigma_y)
       Nbr = N_ELEMENTS(DataStringArray)
       if (Nbr GT 1) then begin
@@ -103,15 +103,58 @@ pro overwritting_i_of_q_output_file, event, $
     endelse
   endif
   
-  convert_tof_to_q, event, xarray, yarray, SigmaYarray
+  convert_tof_to_q, event, xarray
   
-  
-  
-  
-  
+  ;produces output file
+  create_new_reduces_output_file, event, file_name=output_file_name,$
+    metadata = metadata, x=Xarray, y=Yarray, sigmaY=SigmaYarray
+    
 end
 
-
+;+
+; :Description:
+;    This procedures creates the new .txt reduced file
+;
+; :Params:
+;    event
+;
+; :Keywords:
+;    file_name
+;    metadata
+;    x
+;    y
+;    sigmaY
+;
+; :Author: j35
+;-
+pro create_new_reduces_output_file, event, file_name=file_name,$
+    metadata=metadata, x=x, y=y, sigmaY=sigmaY
+  compile_opt idl2
+  
+  error_file = 0
+  catch, error_file
+  if (error_file ne 0) then begin
+    catch,/cancel
+    return
+  endif else begin
+    openw, 1, file_name
+    ;write metadata
+    sz = n_elements(metadata)
+    for i=0L,(sz-1) do begin
+      printf, 1, metadata[i]
+    endfor
+    ;write data
+    sz = n_elements(x)
+    for i=0L,(sz-1) do begin
+      line = strcompress(x[i],/remove_all)
+      line += ' ' + strcompress(y[i],/remove_all)
+      line += ' ' + strcompress(sigmaY[i],/remove_all)
+      printf, 1, line
+    endfor
+  endelse
+  close, 1
+  free_lun, 1
+end
 
 ;+
 ; :Description:
@@ -124,11 +167,11 @@ end
 ;
 ; :Author: j35
 ;-
-pro convert_tof_to_q, event, xarray, yarray, SigmaYarray
+pro convert_tof_to_q, event, xarray
   compile_opt idl2
-
+  
   widget_control, event.top, get_uvalue=global
-
+  
   ;4Pi -> term1
   term1 = float(4.* !PI)
   ;252.78 * L(m) -> term2 (where L(m) is 21.043)
@@ -138,13 +181,10 @@ pro convert_tof_to_q, event, xarray, yarray, SigmaYarray
   term3 = sin(float(rad_sangle))
   ;term4 = term1 * term2 * term3
   term4 = term1 * term2 * term3
-
+  
   sz = n_elements(xarray)
   for i=0,(sz-1) do begin
-    yarray[i] = term4 / float(xarray[i]
-  
-  
-  
+    xarray[i] = term4 / float(xarray[i])
   endfor
   
 end
