@@ -120,6 +120,8 @@ END
 ;This function creates the Intermediate Plots part of the command line
 FUNCTION RefReduction_CommandLineIntermediatePlotsGenerator, Event
 
+  widget_control, event.top, get_uvalue=global
+
   ;get status of all buttons
   InterPlotsStatus = getCWBgroupValue(Event, 'intermediate_plot_list')
   
@@ -155,7 +157,7 @@ FUNCTION RefReduction_CommandLineIntermediatePlotsGenerator, Event
   endif
   
   ;force crtof output file if this flag (from config file) is on
-  if (strlowcase((*global).overwrite_q_ouput_file) eq 'yes') then begin
+  if (strlowcase((*global).overwrite_q_output_file) eq 'yes') then begin
     IP_cmd += ' --dump-rtof-comb'
   endif else begin
     ;rtof combined plot
