@@ -206,15 +206,20 @@ END
 
 ;WORK ON Qmin, Qmax, Qwidth and Qtype ;========================================
 PRO UpdateQ, Event, Qmin, Qmax, Qwidth, Qtype
-  putTextFieldValue, Event, 'q_min_text_field', Qmin, 0
-  putTextFieldValue, Event, 'q_max_text_field', Qmax, 0
-  putTextFieldValue, Event, 'q_width_text_field', Qwidth, 0
-  IF (Qtype EQ 'lin') THEN BEGIN
-    group_value = 0
-  ENDIF ELSE BEGIN
-    group_value = 1
-  ENDELSE
-  SetCWBgroup, Event, 'q_scale_b_group', group_value
+  if (Qmin ne '') then begin
+    putTextFieldValue, Event, 'q_min_text_field', Qmin, 0
+    putTextFieldValue, Event, 'q_max_text_field', Qmax, 0
+    putTextFieldValue, Event, 'q_width_text_field', Qwidth, 0
+    IF (Qtype EQ 'lin') THEN BEGIN
+      group_value = 0
+    ENDIF ELSE BEGIN
+      group_value = 1
+    ENDELSE
+    SetCWBgroup, Event, 'q_scale_b_group', group_value
+  endif else begin
+        SetCWBgroup, event,'q_mode_group', 0
+        ActivateOrNotAutoQmode, Event ;_GUI
+  endelse
 END
 
 ;WORK on TOF cutting ----------------------------------------------------------

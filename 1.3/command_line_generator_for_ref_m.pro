@@ -25,7 +25,7 @@
 ;   and/or other materials provided with the distribution.
 ; - Neither the name of the Spallation Neutron Source, Oak Ridge National
 ;   Laboratory nor the names of its contributors may be used to endorse or
-;   promote products derived from this software without specific prior written
+;   promote products derived from this software without specific written
 ;   permission.
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
