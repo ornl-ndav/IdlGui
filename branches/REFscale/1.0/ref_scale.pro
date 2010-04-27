@@ -76,6 +76,8 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     nbr_data_to_exclude: 0,$  ;number of data to remove on both side when
     ;performing setp3
     
+    instrument: 'REF_L', $ ;by default, REF_L instrument
+    
     ;settings base
     settings_show_error_bar_flag: 1b,$
     settings_number_of_data_to_display: 100L,$
