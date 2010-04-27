@@ -78,6 +78,7 @@ PRO apply_sf_to_data, Event, DRfiles,  spin_state_nbr=spin_state_nbr
   while (index_nbr_files lt nbr_files) do begin
     SF_value = BatchTable[8,index_nbr_files]
     if (SF_value eq '') then begin
+      index_nbr_files++
       continue
     endif else begin
       sf = float(SF_value)
@@ -313,20 +314,22 @@ pro display_error_message, event, type=type
   id = widget_info(event.top, find_by_uname='MAIN_BASE_ref_scale')
   
   case (type) of
-  '1file': message = 'Batch file contains only 1 ascii file to load!'
-  'not_uniq': message = 'Batch file contains several times the same ascii file!'
+    '1file': message = 'Batch file contains only 1 ascii file to load!'
+    'not_uniq': message = 'Batch file contains several times the same ascii file!'
   endcase
-
+  
   result = dialog_message(message,$
-  /error,$
-  /center,$
-  dialog_parent=id,$
-  title='Loading Error!')
-
+    /error,$
+    /center,$
+    dialog_parent=id,$
+    title='Loading Error!')
+    
 end
 
 ;==============================================================================
 function batch_repopulate_gui, Event, DRfiles, spin_state_nbr=spin_state_nbr
+
+  print, 'enter batch_repopulate_gui'
 
   widget_control, event.top, GET_UVALUE=global
   
@@ -336,8 +339,11 @@ function batch_repopulate_gui, Event, DRfiles, spin_state_nbr=spin_state_nbr
   
   ;Nbr of files to load
   sz = (SIZE(DRfiles))(1)
+  help, DRfiles
   
   for i=0,(sz-1) do begin ;loop over number of files
+  
+    print, 'i: ' , i
   
     index = (*global).NbrFilesLoaded
     SuccessStatus = StoreFlts(Event, $
@@ -376,9 +382,8 @@ function batch_repopulate_gui, Event, DRfiles, spin_state_nbr=spin_state_nbr
   if (loading_error EQ 0) then begin
   
     ;for REF_L or first REF_M spin state
-    if ((n_elements(spin_state_nbr) ne 0 and $
-      spin_state_nbr eq 0) or $
-      n_elements(spin_state_nbr) eq 0) then begin
+
+    if (spin_state_nbr eq 0) then begin
       
       ;define color_array
       index_array = getIndexArrayOfActiveBatchRow(Event)
@@ -409,7 +414,7 @@ function batch_repopulate_gui, Event, DRfiles, spin_state_nbr=spin_state_nbr
         plot_loaded_file, Event, 'all' ;_Plot
         
       endif else begin ;perform scaling ourselves
-      
+        
         auto_full_scaling_from_batch_file, Event
         
       endelse
@@ -417,8 +422,7 @@ function batch_repopulate_gui, Event, DRfiles, spin_state_nbr=spin_state_nbr
     endif
     
     ;for REF_M other spin states
-    if (n_elements(spin_state_nbr) ne 0 and $
-      spin_state_nbr ne 0) then begin
+    if (spin_state_nbr gt 0) then begin
       ;apply the SF to the data
       apply_sf_to_data, Event, DRfiles,  spin_state_nbr=spin_state_nbr
     endif
@@ -587,14 +591,20 @@ PRO ref_scale_LoadBatchFile, Event
       (*(*global).DRfiles) = DRfiles
       activate_right_spin_states_button, event
       
+      ;;point1 OK
+      
       ;get full file name of CE reduced file
       (*global).full_CE_name = DRfiles[0,0]
       
       ;check that all the files exist to move on
       FileStatus = CheckFilesExist_ref_m(Event, DRfiles)
       
+      ;;point2 OK
+      
       ;check that list of files is uniq
       FileStatus = CheckFileUniq(Event, DRfiles)
+      
+      ;;point3 OK
       
       if (FileStatus eq 1) then begin ;continue loading process
       
@@ -609,6 +619,7 @@ PRO ref_scale_LoadBatchFile, Event
             rDRfiles, $
             spin_state_nbr=index_spin)
           index_spin++
+          if (result eq 0) then return  ;display error dialog message
           
         endwhile
         
