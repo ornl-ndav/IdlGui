@@ -208,8 +208,6 @@ PRO open_nexus_norm_ref_m_batch, Event, RunNumber, full_nexus_name, data_path
     
     retrieveBanksData_ref_m, Event, full_nexus_name, 'norm', spin_state=data_path
     
-    help, (*(*global).bank1_norm)
-    
     if ((*global).isHDF5format) then begin
       ;create name of BackgroundROIFile and put it in its box
       REFreduction_CreateDefaultNormBackgroundROIFileName, Event, $
