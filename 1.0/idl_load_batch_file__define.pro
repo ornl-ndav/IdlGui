@@ -184,6 +184,7 @@ FUNCTION PopulateBatchTable, Event, BatchFileName
                 catch,/cancel
               endif else begin
                 (*global).working_with_ref_m_batch = 1b
+                (*global).instrument = 'REF_M'
                 spinState = SplitArray[1]
                 add_data_spin_state, event, spinState
               endelse
