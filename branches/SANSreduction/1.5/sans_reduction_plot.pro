@@ -94,11 +94,14 @@ FUNCTION retrieveData, Event, FullNexusName, DataArrayResult
         RETURN, 0
       ENDIF
       
+      print, FullNexusName
+      
       ;get first front rack
       sInstance  = OBJ_NEW('IDLgetNexusMetadata',$
         FullNexusName,$
         NbrBank = 1,$
         BankData = 'bank1')
+        help, sInstance
       DataArray1 = *(sInstance->getData())
       OBJ_DESTROY, sInstance
       
