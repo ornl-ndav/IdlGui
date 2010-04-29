@@ -25,4 +25,7 @@ test:
 	cp SANSreduction_images/*.png /usr/local/SNS/idltools/SANSreduction_images/
 	cp SANSreductionHelp/*.* /usr/local/SNS/idltools/SANSreductionHelp/
 	cp mini_sans_reduction.sav /usr/local/SNS/idltools/
+
+	
+	
 	
