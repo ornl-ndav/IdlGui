@@ -144,7 +144,7 @@ PRO DGSreduction_LaunchCollector, event, WaitForJobs=waitforjobs
       " --spe=" + outdir + "/" + instrument + "_" + runnumber + ".spe" + $
       " --phx=" + outdir + "/" + instrument + "_" + runnumber + ".phx" + $
       " -o " + outdir + "/" + instrument + "_" + runnumber + ".nxspe" + $
-      " -e " + ei + " --lambda-scaling=" + lambda_scaling
+      " -e " + ei + " --lambda-scaling=" + STRCOMPRESS(STRING(lambda_scaling), /REMOVE_ALL)
     
     ;print, 'SEBLOCK = ', SEBLOCK
     
