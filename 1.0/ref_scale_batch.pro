@@ -339,11 +339,8 @@ function batch_repopulate_gui, Event, DRfiles, spin_state_nbr=spin_state_nbr
   
   ;Nbr of files to load
   sz = (SIZE(DRfiles))(1)
-  help, DRfiles
   
   for i=0,(sz-1) do begin ;loop over number of files
-  
-    print, 'i: ' , i
   
     index = (*global).NbrFilesLoaded
     SuccessStatus = StoreFlts(Event, $
@@ -591,20 +588,14 @@ PRO ref_scale_LoadBatchFile, Event
       (*(*global).DRfiles) = DRfiles
       activate_right_spin_states_button, event
       
-      ;;point1 OK
-      
       ;get full file name of CE reduced file
       (*global).full_CE_name = DRfiles[0,0]
       
       ;check that all the files exist to move on
       FileStatus = CheckFilesExist_ref_m(Event, DRfiles)
       
-      ;;point2 OK
-      
       ;check that list of files is uniq
       FileStatus = CheckFileUniq(Event, DRfiles)
-      
-      ;;point3 OK
       
       if (FileStatus eq 1) then begin ;continue loading process
       
