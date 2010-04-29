@@ -222,8 +222,8 @@ FUNCTION retrieve_total_monitor_counts, info
 END
 
 FUNCTION retrieve_wavelength_range, info
-  ;CATCH, error
   error = 0
+  CATCH, error
   error_array_1frame  = ['N/A','N/A','N/A']
   error_array_2frames = ['N/A','N/A','N/A','N/A','N/A','N/A']
   frame_nbr = 1
