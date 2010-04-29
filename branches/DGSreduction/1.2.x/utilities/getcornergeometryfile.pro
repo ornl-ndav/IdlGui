@@ -67,12 +67,12 @@ function GetCornerGeometryFile, Instrument, RUNNUMBER=RUNNUMBER
     end
     "SEQ": begin
       cornergeometry = $
-        "/SNS/SEQ/2009_2_17_CAL/calibrations/SEQ_cgeom_20090413.txt"
+        "/SNS/SEQ/2010_2_17_CAL/calibrations/SEQ_cgeom_20100419.txt"
     end
-    "SEQUOIA": begin
-      cornergeometry = $
-        "/SNS/SEQ/2009_2_17_CAL/calibrations/SEQ_cgeom_20090413.txt"
-    end
+;    "SEQUOIA": begin
+;      cornergeometry = $
+;        "/SNS/SEQ/2009_2_17_CAL/calibrations/SEQ_cgeom_20090413.txt"
+;    end
     else: begin
       cornergeometry = ""
     end
