@@ -35,7 +35,8 @@
 ;+
 ; :Description:
 ;    This takes the name of the button, looks for its link in the configuration file
-;    and passes it to the main launch_web_page procedure to open the page
+;    and passes it to the main launch_appication procedure to start the
+;    application
 ;
 ; :Params:
 ;    event
@@ -43,35 +44,34 @@
 ;
 ; :Author: j35
 ;-
-pro launch_this_web_page, event, button_name
+pro launch_this_application, event, button_name
   compile_opt idl2
   
   file = OBJ_NEW('IDLxmlParser','.NeedHelp.cfg')
-  link = file->getValue(tag=['configuration','link',button_name])
+  application = file->getValue(tag=['configuration','link',button_name])
   obj_destroy, file
   
-  launch_web_page, event, link
+  launch_application, event, application
   
 end
 
 ;+
 ; :Description:
-;     launch the web page given as an argument using firefox
+;     launch the application given
 ;
 ; :Params:
 ;    event
-;    web_page
+;    application
 ;
 ; :Author: j35
 ;-
-pro launch_web_page, event, web_page
+pro launch_application, event, application
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global
   widget_control, /hourglass
   
-  firefox       = (*global).firefox
-  cmd = firefox + ' ' + web_page + ' &'
+  cmd = application + ' &'
   spawn, cmd
   
   widget_control, hourglass=0
