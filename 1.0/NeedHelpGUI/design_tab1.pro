@@ -82,19 +82,19 @@ pro design_tab1, base1, global
     /button_events,$
     /tracking_events,$
     retain = 2)
-    
-  col1_row2 = widget_base(col1,$
-    /row)
-  button1 = widget_draw(col1_row2,$
+  space = widget_label(col1_row1,$
+    value = ' ')
+  button5 = widget_draw(col1_row1,$
     uname = 'button5',$
     xsize = xsize,$
     ysize = ysize,$
     /button_events,$
     /tracking_events,$
     retain = 2)
-  space = widget_label(col1_row2,$
-    value = ' ')
-  button2 = widget_draw(col1_row2,$
+    
+  col1_row2 = widget_base(col1,$
+    /row)
+  button1 = widget_draw(col1_row2,$
     uname = 'button6',$
     xsize = xsize,$
     ysize = ysize,$
@@ -103,7 +103,7 @@ pro design_tab1, base1, global
     retain = 2)
   space = widget_label(col1_row2,$
     value = ' ')
-  button3 = widget_draw(col1_row2,$
+  button2 = widget_draw(col1_row2,$
     uname = 'button7',$
     xsize = xsize,$
     ysize = ysize,$
@@ -112,20 +112,29 @@ pro design_tab1, base1, global
     retain = 2)
   space = widget_label(col1_row2,$
     value = ' ')
-  button4 = widget_draw(col1_row2,$
+  button3 = widget_draw(col1_row2,$
     uname = 'button8',$
     xsize = xsize,$
     ysize = ysize,$
     /button_events,$
     /tracking_events,$
     retain = 2)
+  space = widget_label(col1_row2,$
+    value = ' ')
+  button4 = widget_draw(col1_row2,$
+    uname = 'button9',$
+    xsize = xsize,$
+    ysize = ysize,$
+    /button_events,$
+    /tracking_events,$
+    retain = 2)
     
-  col2 = widget_base(row1,$
+  col2 = widget_base(col1_row2,$
     /column)
   preview = widget_text(col2,$
     value = 'Description of mouse over...',$
     xsize = 50,$
-    ysize = 23,$
+    ysize = 10,$
     uname = 'tab1_preview_button')
     
   row2 = widget_base(tab1_base,$
