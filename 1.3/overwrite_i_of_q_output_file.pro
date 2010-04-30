@@ -110,6 +110,12 @@ pro convert_tof_to_q, event, xarray
   
 end
 
+;pro normalize_by_proton_charge, event, yarray, SigmaYarray, output_file_name
+;compile_opt idl2
+
+end
+
+
 ;+
 ; :Description:
 ;    Parse the string data into 3 data arrays
@@ -251,6 +257,8 @@ pro overwritting_i_of_q_output_file, event, $
   endif
   
   convert_tof_to_q, event, xarray
+  
+;  normalize_by_proton_charge, event, yarray, SigmaYarray, output_file_name
   
   ;produces output file
   create_new_reduces_output_file, event, file_name=output_file_name,$
