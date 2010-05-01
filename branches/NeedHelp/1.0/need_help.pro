@@ -136,6 +136,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   display_buttons, MAIN_BASE=main_base, button='portal', status='off'
   display_buttons, MAIN_BASE=main_base, button='translation', status='off'
   display_buttons, MAIN_BASE=main_base, button='sns_tools', status='off'
+  display_buttons, MAIN_BASE=main_base, button='systems_status', status='off'
   
   ;send message to log current run of application
   ucams = (*global).general_infos.ucams

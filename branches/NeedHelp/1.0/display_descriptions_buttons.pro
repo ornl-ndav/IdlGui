@@ -75,6 +75,7 @@ PRO display_descriptions_buttons, MAIN_BASE=main_base, EVENT=event, $
     'slurm': text = 'Job monitor web page.'
     'ldp': text = 'Live data processing web page'
     'sns_tools': text = 'Portal for all the SNS Applications'
+    'systems_status': text= 'To get status of the various analysis computers'
     else: text = 'Move the mouse over a button to get a description of its link.'
   endcase
   
