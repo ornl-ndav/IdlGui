@@ -72,7 +72,8 @@ pro launch_application, event, application
   widget_control, /hourglass
   
   cmd = application + ' &'
-  spawn, cmd
+  print, cmd
+spawn, cmd
   
   widget_control, hourglass=0
   
