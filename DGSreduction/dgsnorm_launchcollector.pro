@@ -44,22 +44,22 @@ PRO DGSnorm_LaunchCollector, event, WaitForJobs=waitforjobs
   
   ; Get out the info structure
   WIDGET_CONTROL, event.top, GET_UVALUE=info, /NO_COPY
-  dgsn_cmd = info.dgsn_cmd
+  dgs_cmd = info.dgs_cmd
   
   ; For the moment generate the logs in the current directory
   cd, CURRENT=thisDirectory
   
   ; Get the queue name
-  dgsn_cmd->GetProperty, Queue=queue
+  dgs_cmd->GetProperty, Queue=queue
   ; Get the instrument name
-  dgsn_cmd->GetProperty, Instrument=instrument
+  dgs_cmd->GetProperty, Instrument=instrument
   ; Get the detector bank limits
-  dgsn_cmd->GetProperty, LowerBank=lowerbank
-  dgsn_cmd->GetProperty, UpperBank=upperbank
+  dgs_cmd->GetProperty, LowerBank=lowerbank
+  dgs_cmd->GetProperty, UpperBank=upperbank
   ; Get the Run Number (the first integer in the datarun)
-  runnumber = dgsn_cmd->GetRunNumber()
+  runnumber = dgs_cmd->GetNormalisationNumber()
   ; Number of Jobs
-  dgsn_cmd->GetProperty, Jobs=jobs
+  dgs_cmd->GetProperty, Jobs=jobs
   
   ;Construct the jobname
   jobname = instrument + "_" + runnumber + "_collector"
