@@ -10,7 +10,7 @@
 ;
 ; :Author: scu
 ;-
-FUNCTION getCWPDetectorRange, instrument, ROWS=ROWS
+FUNCTION get_CWPDetectorRange, instrument, ROWS=ROWS
 
   IF N_ELEMENTS(instrument) EQ 0 THEN INSTRUMENT = ""
   

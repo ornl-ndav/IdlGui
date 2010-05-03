@@ -14,7 +14,7 @@ function GetCWPspectrum, instrument, runnumber, ROWS=ROWS
   dataspace_tof_id = H5D_GET_SPACE(data_tof_id)
   tof = H5D_READ(data_tof_id, FILE_SPACE=dataspace_tof_id)
   
-  ranges = getcwpdetectorrange(instrument, ROWS=ROWS)
+  ranges = get_cwpdetectorrange(instrument, ROWS=ROWS)
   nchannels = N_ELEMENTS(tof) - 1
   nrows = ranges.upper_row - ranges.lower_row
   

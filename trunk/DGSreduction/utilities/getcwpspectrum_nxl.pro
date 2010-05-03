@@ -43,7 +43,7 @@ function GetCWPspectrum_NXL, instrument, runnumber
       spawn, cmd_str
     ENDIF
     
-    ranges = getcwpdetectorrange(instrument)
+    ranges = get_cwpdetectorrange(instrument)
     
     ; Now we need to read in this file and add up the spectra
     file_id = h5f_open(outputFilename)
