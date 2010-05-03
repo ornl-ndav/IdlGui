@@ -431,15 +431,15 @@ FUNCTION NormCmd::GetNormalisationOutputDirectory
     'INST': begin
       ; Use the instrument shared directory
       directory = '/SNS/' + self.instrument + '/shared/norm/' + $
-        getFirstNumber(self.datarun)
+        get_FirstNumber(self.datarun)
     end
     'PROP': BEGIN
       directory = get_output_directory(self.instrument, $
-        getFirstNumber(self.datarun), /NO_USERDIR)
+        get_FirstNumber(self.datarun), /NO_USERDIR)
     END
     'HOME': BEGIN
       directory = get_output_directory(self.instrument, $
-        getFirstNumber(self.datarun), $
+        get_FirstNumber(self.datarun), $
         HOME=1)
     END
     else: begin

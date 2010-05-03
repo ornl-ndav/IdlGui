@@ -520,7 +520,7 @@ END
 ;-
 FUNCTION ReductionCmd::GetRunNumber
 
-  RETURN, getFirstNumber(self.datarun)
+  RETURN, get_FirstNumber(self.datarun)
   
 END
 
@@ -538,7 +538,7 @@ END
 ;-
 FUNCTION ReductionCmd::GetNormalisationNumber
 
-  RETURN, getFirstNumber(self.normalisation)
+  RETURN, get_FirstNumber(self.normalisation)
   
 END
 
@@ -575,15 +575,15 @@ FUNCTION ReductionCmd::GetNormalisationOutputDirectory
     'INST': begin
       ; Use the instrument shared directory
       directory = '/SNS/' + self.instrument + '/shared/norm/' + $
-        getFirstNumber(self.normalisation)
+        get_FirstNumber(self.normalisation)
     end
     'PROP': BEGIN
       directory = get_output_directory(self.instrument, $
-        getFirstNumber(self.normalisation), /NO_USERDIR)
+        get_FirstNumber(self.normalisation), /NO_USERDIR)
     END
     'HOME': BEGIN
       directory = get_output_directory(self.instrument, $
-        getFirstNumber(self.normalisation), $
+        get_FirstNumber(self.normalisation), $
         HOME=1)
     END
     else: begin
@@ -708,7 +708,7 @@ function ReductionCmd::Check
   
   ;Check that the run numbers entered in the "Run Number" box are sensible
   IF (STRLEN(self.datarun) GE 1) THEN BEGIN
-    IF (getFirstNumber(self.datarun) EQ '-1') THEN BEGIN
+    IF (get_FirstNumber(self.datarun) EQ '-1') THEN BEGIN
       ok = 0
       msg = [msg, ['Run Number is incorrectly specified or the file does not exist.']]
     ENDIF

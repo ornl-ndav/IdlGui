@@ -80,7 +80,7 @@ PRO DGSreduction_TLB_Events, event
       WIDGET_CONTROL, lowerbank_ID, GET_VALUE=lowerbank
       WIDGET_CONTROL, upperbank_ID, GET_VALUE=upperbank
       ; Get the detector bank limits for the current beamline
-      bank = getDetectorBankRange(event.STR)
+      bank = get_DetectorBankRange(event.STR)
       ;IF (lowerbank LE 0) THEN BEGIN
       WIDGET_CONTROL, lowerbank_ID, SET_VALUE=bank.lower
       dgsr_cmd->SetProperty, LowerBank=bank.lower
@@ -122,7 +122,7 @@ PRO DGSreduction_TLB_Events, event
       IF (event.select EQ 1) THEN BEGIN
         ; If we are using the auto queue, get the default queue...
         dgsr_cmd->GetProperty, Instrument=instrument
-        default_queue = GetDefaultSlurmQueue(instrument)
+        default_queue = Get_DefaultSlurmQueue(instrument)
         dgsr_cmd->SetProperty, Queue=default_queue
         ; then set the SLURM queue text field
         ;print, 'AUTO'

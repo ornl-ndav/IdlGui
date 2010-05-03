@@ -45,7 +45,7 @@ function get_output_directory, instrument, runnumber, HOME=HOME, $
       IF (beamtimeinfo_file EQ 'ERROR') THEN BEGIN
         proposal = '0'
       ENDIF ELSE BEGIN
-        proposal = getProposalfromPreNeXus(beamtimeinfo_file)
+        proposal = get_Proposal_fromPreNeXus(beamtimeinfo_file)
       ENDELSE
     ENDELSE
     

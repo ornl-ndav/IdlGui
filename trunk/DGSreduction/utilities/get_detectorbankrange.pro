@@ -8,7 +8,7 @@
 ;
 ; :Author: scu
 ;-
-FUNCTION getDetectorBankRange, instrument
+FUNCTION get_DetectorBankRange, instrument
 
   IF N_ELEMENTS(instrument) EQ 0 THEN INSTRUMENT = ""
 

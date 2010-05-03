@@ -1,4 +1,4 @@
-function getProposalfromPreNeXus, beamtimeinfo_filename
+function get_Proposal_fromPreNeXus, beamtimeinfo_filename
 
   Catch, theError
   IF theError NE 0 THEN BEGIN

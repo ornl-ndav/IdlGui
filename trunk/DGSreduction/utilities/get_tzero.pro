@@ -1,4 +1,4 @@
-function getTzero, instrument, runnumber, ei
+function get_Tzero, instrument, runnumber, ei
 
 	; Make sure that Ei is a number
 	ei = double(ei)

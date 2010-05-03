@@ -37,7 +37,7 @@
 ;
 ; :Author: scu
 ;-
-FUNCTION GetDefaultSlurmQueue, instrument
+FUNCTION Get_DefaultSlurmQueue, instrument
 
   IF N_ELEMENTS(instrument) EQ 0 THEN INSTRUMENT = ""
   
