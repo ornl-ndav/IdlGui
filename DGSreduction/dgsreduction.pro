@@ -432,12 +432,12 @@ PRO DGSnorm_Execute, event
   
   ; Get the info structure and copy it here
   WIDGET_CONTROL, event.top, GET_UVALUE=info, /NO_COPY
-  dgsn_cmd = info.dgsn_cmd
+  dgsr_cmd = info.dgsr_cmd
   
   ; Do some sanity checking.
   
   ; First lets check that an instrument has been selected!
-  dgsn_cmd->GetProperty, Instrument=instrument
+  dgsr_cmd->GetProperty, Instrument=instrument
   IF (STRLEN(instrument) LT 2) THEN BEGIN
     ; First put back the info structure
     WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
@@ -447,34 +447,30 @@ PRO DGSnorm_Execute, event
   END
   
   ; Generate the array of commands to run
-  commands = dgsn_cmd->generate()
+  commands = dgs_cmd->generateNorm()
   
   ; Get the queue name
-  dgsn_cmd->GetProperty, Queue=queue
+  dgs_cmd->GetProperty, Queue=queue
   ; Get the instrument name
-  dgsn_cmd->GetProperty, Instrument=instrument
+  dgs_cmd->GetProperty, Instrument=instrument
   ; Get the detector bank limits
-  dgsn_cmd->GetProperty, LowerBank=lowerbank
-  dgsn_cmd->GetProperty, UpperBank=upperbank
+  dgs_cmd->GetProperty, LowerBank=lowerbank
+  dgs_cmd->GetProperty, UpperBank=upperbank
   ; Get the Run Number (the first integer in the datarun)
-  runnumber = dgsn_cmd->GetRunNumber()
+  runnumber = dgs_cmd->GetNormalisationNumber()
   ; Number of Jobs
-  dgsn_cmd->GetProperty, Jobs=jobs
+  dgs_cmd->GetProperty, Jobs=jobs
   
   
   ; Output Overrides...
-  ; COMMENTED OUT BY j35
-  ;dgsr_cmd->GetProperty, UseHome=usehome
-  ;dgsr_cmd->GetProperty, OutputOverride=outputoverride
-  ;dgsr_cmd->GetProperty, UserLabel=userlabel
-  dgsn_cmd->GetProperty, UseHome=usehome
-  dgsn_cmd->GetProperty, OutputOverride=outputoverride
-  dgsn_cmd->GetProperty, UserLabel=userlabel
+  dgs_cmd->GetProperty, UseHome=usehome
+  dgs_cmd->GetProperty, OutputOverride=outputoverride
+  dgs_cmd->GetProperty, UserLabel=userlabel
   
   jobcmd = "sbatch -p " + queue + " "
   
   ; Make sure that the output directory exists
-  outputDir = dgsn_cmd->GetNormalisationOutputDirectory()
+  outputDir = dgs_cmd->GetNormalisationOutputDirectory()
   IF FILE_TEST(outputDir, /DIRECTORY) EQ 0 THEN BEGIN
     spawn, 'mkdir -p ' + outputDir
   ENDIF
@@ -553,7 +549,6 @@ END
 ;---------------------------------------------------------
 
 PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
-    DGSN_cmd=dgsn_cmd, $
     _Extra=extra
     
   ; Program Details
@@ -579,7 +574,6 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
   title = APPLICATION + ' (' + VERSION + ') as ' + username
   
   IF N_ELEMENTS(dgsr_cmd) EQ 0 THEN dgsr_cmd = OBJ_NEW("ReductionCMD")
-  IF N_ELEMENTS(dgsn_cmd) EQ 0 THEN dgsn_cmd = OBJ_NEW("NormCMD")
   
   ; Define the TLB.
   tlb = WIDGET_BASE(COLUMN=1, TITLE=title, /FRAME, MBAR=menubarID)
@@ -664,19 +658,12 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
   ; normalisation tab
   vanmaskTabBase = WIDGET_BASE(tabID, Title='Vanadium Mask', /COLUMN)
   ;label = WIDGET_LABEL(vanmaskTabBase, VALUE="Nothing to see here! - Move along :-)")
-  make_VanMask_Tab, vanmaskTabBase, dgsn_cmd
+  make_VanMask_Tab, vanmaskTabBase, dgsr_cmd
   
   
   ; Settings Tab
   settingsTabBase = WIDGET_BASE(tabID, TITLE='Advanced Settings', /COLUMN)
   make_settings_tab, settingsTabBase, DGSR_cmd
-  ; Ugly hack to get proton current units default info in dgsn_cmd
-  ; 2zr Mar 5, 2010
-  ; We need to find a better way to duplicate some of the information
-  ; because it isn't just this parameter that doesn't seem to be getting
-  ; passed to dgsn_cmd
-  dgsr_cmd->GetProperty, ProtonCurrentUnits=pcu
-  dgsn_cmd->SetProperty, ProtonCurrentUnits=pcu
   
   ; Make the admin tab unavailable for now!
   ;WIDGET_CONTROL, adminTabBase, SENSITIVE=0
@@ -686,11 +673,7 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
   ;  label = WIDGET_LABEL(logTab, VALUE="Nothing to see here!")
   ;  logbookID = WIDGET_TEXT(logTab, xsize=80, ysize=20, /SCROLL, /WRAP, $
   ;    UNAME='DGS_REDUCTION_LOGBOOK')
-  
-  ; Set the norm object property for the location of norm files to reflect the reduction on
-  dgsr_cmd->GetProperty, NormLocation=location
-  dgsn_cmd->SetProperty, NormLocation=location
-  
+    
   ;wMainButtons = WIDGET_BASE(tlb, /ROW)
   mainButtonsColumns = WIDGET_BASE(tlb, COLUMN=3)
   mainButtonsCol1 = WIDGET_BASE(mainButtonsColumns, /ROW)
@@ -734,14 +717,12 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
   WIDGET_CONTROL, tlb, /REALIZE
   
   info = { dgsr_cmd:dgsr_cmd, $
-    dgsn_cmd:dgsn_cmd, $
     application:application, $
     version:version, $
     debug:debug, $
     max_jobs:1000, $  ; Max No. of jobs (to stop a large -ve Integer becoming a valid number in the input box!)
     username:username, $
     title:title, $
-    ;    runs:runs, $ ; the list of run numbers to use for reduction (this will largely be the same as that in the dgsr_cmd object - except for the case of separate jobs ":")
     adminMode:0L, $ ; Flag to toggle Superuser mode.
     queue:"", $ ; Place holder for a custom queue name
     workingDir:workingDir, $ ; The current working directory
@@ -759,6 +740,4 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
   ;send message to log current run of application
   logger, APPLICATION=application, VERSION=version, UCAMS=username
   
-; Print a lovely welcome!
-;write2log, 'Welcome to DGSreduction..."
 END
