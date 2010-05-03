@@ -140,6 +140,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   display_buttons_tab3, MAIN_BASE=main_base, button='fix_firefox', status='off'
   display_buttons_tab3, MAIN_BASE=main_base, button='fix_gnome', status='off'
   display_buttons_tab3, MAIN_BASE=main_base, button='fix_isaw', status='off'
+  display_buttons_tab3, MAIN_BASE=main_base, button='fix_data_link', status='off'  
     
   ;send message to log current run of application
   ucams = (*global).general_infos.ucams

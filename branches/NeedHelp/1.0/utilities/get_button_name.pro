@@ -45,7 +45,7 @@
 function getButtonName, button_uname
   compile_opt idl2
   
-  index_button = strsplit(button_uname,'button',/extract)
+  index_button = strsplit(button_uname,'button',/extract,/regex)
   if (index_button eq -1) then return, ''
   index_button = fix(index_button) - 1
   
@@ -79,7 +79,7 @@ end
 function getButtonNameTab3, button_uname
   compile_opt idl2
   
-  index_button = strsplit(button_uname,'tab3_button',/extract)
+  index_button = strsplit(button_uname,'tab3_button',/extract,/regex)
   if (index_button eq -1) then return, ''
   index_button = fix(index_button) - 1
   

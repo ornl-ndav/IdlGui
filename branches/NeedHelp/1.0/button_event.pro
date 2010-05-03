@@ -107,7 +107,8 @@ pro tab3_event_button, Event, uname=uname
       display_buttons_tab3, event=event, button=button_name, status='on'
       if (button_name eq 'fix_firefox' or $
       button_name eq 'fix_gnome' or $
-      button_name eq 'fix_isaw') then begin ;launch application
+      button_name eq 'fix_isaw' or $
+      button_name eq 'fix_data_link') then begin ;launch application
       launch_this_application, event, button_name
       endif else begin ;launch web page
       launch_this_web_page, event, button_name
