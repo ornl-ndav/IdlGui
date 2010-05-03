@@ -71,6 +71,9 @@ pro launch_application, event, application
   widget_control, event.top, get_uvalue=global
   widget_control, /hourglass
   
+  reco_space = strsplit(application,'\',/extract)
+  application = strjoin(reco_space,' ')
+  
   cmd = application + ' &'
   print, cmd
   spawn, cmd

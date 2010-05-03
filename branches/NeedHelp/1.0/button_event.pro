@@ -105,8 +105,9 @@ pro tab3_event_button, Event, uname=uname
     catch,/cancel
     if (event.press eq 1) then begin
       display_buttons_tab3, event=event, button=button_name, status='on'
-      if (button_name eq 'sns_tools' or $
-      button_name eq 'fix_firefox') then begin ;launch application
+      if (button_name eq 'fix_firefox' or $
+      button_name eq 'fix_gnome' or $
+      button_name eq 'fix_isaw') then begin ;launch application
       launch_this_application, event, button_name
       endif else begin ;launch web page
       launch_this_web_page, event, button_name
