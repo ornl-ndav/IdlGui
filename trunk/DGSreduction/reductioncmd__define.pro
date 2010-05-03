@@ -336,14 +336,14 @@ PRO ReductionCmd::SetProperty, $
     case (STRUPCASE(instrument)) of
       "ARCS": begin
         self.facility = "SNS"
-        self.cornergeometry = getCornerGeometryFile(self.instrument)
+        self.cornergeometry = get_CornerGeometryFile(self.instrument, RUNNUMBER=self->GetRunNumber())
         self.queue = "arcs"
         self.jobs = 23
         self.split = 1
       end
       "CNCS": begin
         self.facility = "SNS"
-        self.cornergeometry = getCornerGeometryFile(self.instrument)
+        self.cornergeometry = get_CornerGeometryFile(self.instrument, RUNNUMBER=self->GetRunNumber())
         self.queue = "cncsq"
         self.jobs = 24
         self.split = 1
@@ -351,7 +351,7 @@ PRO ReductionCmd::SetProperty, $
       "SEQUOIA": begin
         self.instrument = "SEQ"
         self.facility = "SNS"
-        self.cornergeometry = getCornerGeometryFile(self.instrument)
+        self.cornergeometry = get_CornerGeometryFile(self.instrument, RUNNUMBER=self->GetRunNumber())
         self.queue = "sequoiaq"
         self.jobs = 23
         self.split = 1
@@ -757,6 +757,16 @@ function ReductionCmd::Check
     msg = [msg,["The Q-Range isn't defined correctly."]]
   ENDIF
   
+  ; Check that the max Energy Transfer is less than Ei
+;  IF (self.energybins_max GE self.ei) THEN BEGIN
+;    ok = 0
+;    print, 'Ei = ', self.ei
+;    print, 'Emax = ', self.energybins_max
+;    msg = [msg,['You cannot have Emax ('+ $
+;      STRCOMPRESS(STRING(self.energybins_max),/REMOVE_ALL)+ $
+;      'meV) >= Ei ('+STRCOMPRESS(STRING(self.ei),/REMOVE_ALL)+'meV).']]
+;  ENDIF
+  
   ; Now let's do some more complicated dependencies
   
   ; If Empty Can OR Black Can then we must specify Data Coeff
@@ -1079,6 +1089,7 @@ function ReductionCmd::Generate
           
         ; Put a ',' in if the hardmask is defined as well.
         IF (self.mask EQ 1) AND (self.hardmask EQ 1) THEN cmd[i] += ","
+        IF (self.mask EQ 1) AND (self.customhardmask EQ 1) THEN cmd[i] += ","
         
       ENDIF
       
@@ -1136,8 +1147,6 @@ function ReductionCmd::Generate
     IF (STRLEN(self.data_cwp) GE 1)  THEN $
       cmd[i] += " --cwp-data=" + self.data_cwp
       
-    ; Commented out until the underlying version of Reduction that supports this
-    ; is released.
     IF (STRLEN(self.ProtonCurrentUnits) GE 1) THEN $
       cmd[i] += " --scale-pc=" + self.ProtonCurrentUnits
       
