@@ -21,7 +21,7 @@ function get_maskfile, instrument, runnumber, OVERRIDE=OVERRIDE
   IF (beamtimeinfo_file EQ 'ERROR') THEN BEGIN
     proposal = '0'
   ENDIF ELSE BEGIN
-    proposal = getProposalfromPreNeXus(beamtimeinfo_file)
+    proposal = get_Proposal_fromPreNeXus(beamtimeinfo_file)
   ENDELSE
   
   IF (proposal NE '0') THEN BEGIN

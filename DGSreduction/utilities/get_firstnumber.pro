@@ -44,7 +44,7 @@
 ;
 ; :Author: scu (campbellsi@ornl.gov)
 ;-
-FUNCTION GetFirstNumber, RunNumberString
+FUNCTION Get_FirstNumber, RunNumberString
 
   largeNumber = 9999999
   runNumber = '-1'

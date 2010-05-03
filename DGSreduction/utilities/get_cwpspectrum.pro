@@ -1,4 +1,4 @@
-function GetCWPspectrum, instrument, runnumber, ROWS=ROWS
+function Get_CWPspectrum, instrument, runnumber, ROWS=ROWS
 
   ; Let's first find the NeXus filename
   findnexus_cmd = 'findnexus -i ' + instrument + ' ' + strcompress(string(runnumber), /REMOVE_ALL)

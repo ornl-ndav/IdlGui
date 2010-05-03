@@ -263,7 +263,7 @@ PRO dgsreduction_events, event, dgsr_cmd
       ; And the run number string
       dgsr_cmd->GetProperty, datarun=runnumber
       ;print, runnumber
-      Ei = GetEi(instrument, GetFirstNumber(runnumber))
+      Ei = Get_Ei(instrument, Get_FirstNumber(runnumber))
       ; Convert it to a string
       Ei = strcompress(string(Ei), /REMOVE_ALL)
       Ei_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_EI')
@@ -278,12 +278,12 @@ PRO dgsreduction_events, event, dgsr_cmd
       ; And the run number string
       dgsr_cmd->GetProperty, datarun=runnumber
       IF (Ei EQ 0.0) OR (STRLEN(Ei) EQ 0) THEN BEGIN
-        Ei = GetEi(instrument, GetFirstNumber(runnumber))
+        Ei = Get_Ei(instrument, Get_FirstNumber(runnumber))
         Ei_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_EI')
         WIDGET_CONTROL, Ei_ID, SET_VALUE=Ei
         dgsr_cmd->SetProperty, Ei=Ei
       ENDIF
-      tzero = getTzero(instrument, GetFirstNumber(runnumber), Ei)
+      tzero = get_Tzero(instrument, Get_FirstNumber(runnumber), Ei)
       ; Convert it to a string
       tzero = strcompress(string(tzero), /REMOVE_ALL)
       Tzero_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_TZERO')

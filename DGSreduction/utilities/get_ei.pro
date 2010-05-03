@@ -11,7 +11,7 @@
 ;
 ; :Author: scu (campbellsi@ornl.gov)
 ;-
-function getEi, instrument, runnumber
+function get_Ei, instrument, runnumber
 
   ; initialise Ei
   Ei = 0.0

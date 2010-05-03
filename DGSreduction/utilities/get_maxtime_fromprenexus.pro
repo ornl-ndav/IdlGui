@@ -1,10 +1,10 @@
-function getMinTimefromPreNeXus, runinfo_filename
+function get_MaxTime_fromPreNeXus, runinfo_filename
 
   Catch, theError
   IF theError NE 0 THEN BEGIN
     CATCH, /CANCEL
     ; If we have an error, then just return a sensible default
-    return, '0'
+    return, '100000'
   ENDIF
   
   oDoc = OBJ_NEW('IDLffXMLDOMDocument',filename=runinfo_filename)
@@ -16,7 +16,7 @@ function getMinTimefromPreNeXus, runinfo_filename
   obj4=obj3->GetElementsByTagName('NumTimeChannels')
   obj4a=obj4->item(0)
   obj4b=obj4a->getattributes()
-  obj4c=obj4b->getnameditem('startbin')
+  obj4c=obj4b->getnameditem('endbin')
   result = STRCOMPRESS(obj4c->getvalue())
   OBJ_DESTROY, oDocList
   RETURN, result

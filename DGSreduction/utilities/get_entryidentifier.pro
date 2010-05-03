@@ -1,4 +1,4 @@
-function getEntryIdentifier, nexusfilename
+function get_EntryIdentifier, nexusfilename
 
   runNumber_location = '/entry/entry_identifier'
   

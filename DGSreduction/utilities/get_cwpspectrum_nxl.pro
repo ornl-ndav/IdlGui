@@ -1,4 +1,4 @@
-function GetCWPspectrum_NXL, instrument, runnumber
+function Get_CWPspectrum_NXL, instrument, runnumber
 
   ; Let's first check to see if the NeXus file has been produced with the
   ; integrated views.
@@ -10,9 +10,9 @@ function GetCWPspectrum_NXL, instrument, runnumber
     event2histo_nxl_exe = '/SNS/software/TESTING/bin/event2histo_nxl'
     
     runinfo_filename = get_runinfo_filename(instrument, runnumber)
-    tmin = getMinTimefromPreNeXus(runinfo_filename)
-    tmax = getMaxTimefromPreNeXus(runinfo_filename)
-    tstep = getStepTimefromPreNeXus(runinfo_filename)
+    tmin = get_MinTime_fromPreNeXus(runinfo_filename)
+    tmax = get_MaxTime_fromPreNeXus(runinfo_filename)
+    tstep = get_StepTime_fromPreNeXus(runinfo_filename)
     event_file = get_event_filename(instrument, runnumber)
     
     ; Construct the output filename

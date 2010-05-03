@@ -1,7 +1,7 @@
 function get_cwpfactor, instrument, runnumber, PLOT=PLOT, $
     PRINT=PRINT, ROWS=ROWS, ENERGY=ENERGY, FIT=FIT
     
-  data = GetCWPspectrum(instrument, runnumber, ROWS=ROWS)
+  data = Get_CWPspectrum(instrument, runnumber, ROWS=ROWS)
   
   ; need to find the elastic position
   
@@ -16,10 +16,10 @@ function get_cwpfactor, instrument, runnumber, PLOT=PLOT, $
     real_elastic_tof = data.tof[max_position]
   ENDELSE
   
-  ei = getei(instrument, runnumber)
+  ei = get_ei(instrument, runnumber)
   IF KEYWORD_SET(ENERGY) THEN ei = ENERGY
   
-  tzero = gettzero(instrument, runnumber, ei)
+  tzero = get_tzero(instrument, runnumber, ei)
   
   ideal_elastic_tof = get_ideal_elastic_tof(instrument, ei, tzero)
   

@@ -1,4 +1,4 @@
-function getStepTimefromPreNeXus, runinfo_filename
+function get_MinTime_fromPreNeXus, runinfo_filename
 
   Catch, theError
   IF theError NE 0 THEN BEGIN
@@ -16,7 +16,7 @@ function getStepTimefromPreNeXus, runinfo_filename
   obj4=obj3->GetElementsByTagName('NumTimeChannels')
   obj4a=obj4->item(0)
   obj4b=obj4a->getattributes()
-  obj4c=obj4b->getnameditem('width')
+  obj4c=obj4b->getnameditem('startbin')
   result = STRCOMPRESS(obj4c->getvalue())
   OBJ_DESTROY, oDocList
   RETURN, result
