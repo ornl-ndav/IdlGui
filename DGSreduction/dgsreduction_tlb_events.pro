@@ -40,11 +40,6 @@ PRO DGSreduction_TLB_Events, event
   
   ; extract the command object into a separate
   dgsr_cmd = info.dgsr_cmd    ; ReductionCMD object
-  dgsn_cmd = info.dgsn_cmd   ; NormCMD object
-  
-  ; Print the busy flag
-  ;dgsr_cmd->GetProperty, busy=busy
-  ;print, 'Busy=',busy
   
   WIDGET_CONTROL, event.id, GET_UVALUE=myUVALUE
   
@@ -78,9 +73,6 @@ PRO DGSreduction_TLB_Events, event
       jobs_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGS_REDUCTION_JOBS')
       dgsr_cmd->GetProperty, Jobs=njobs
       WIDGET_CONTROL, jobs_ID, SET_VALUE=njobs
-      ; Hack to get correct number of jobs into dgsn_cmd on instrument
-      ; selection. 2zr Mar 5, 2010
-      dgsn_cmd->SetProperty, Jobs=njobs
       
       ; Set the default detector banks
       lowerbank_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_DATAPATHS_LOWER')
@@ -98,39 +90,17 @@ PRO DGSreduction_TLB_Events, event
       dgsr_cmd->SetProperty, UpperBank=bank.upper
       ;ENDIF
       
-      ; Now do same for 'Vanadium Mask' Tab
-      dgsn_cmd->SetProperty, Instrument=event.STR
-      ; Set the default detector banks
-      lowerbank_norm_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSN_DATAPATHS_LOWER')
-      upperbank_norm_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSN_DATAPATHS_UPPER')
-      WIDGET_CONTROL, lowerbank_norm_ID, GET_VALUE=lowerbank
-      WIDGET_CONTROL, upperbank_norm_ID, GET_VALUE=upperbank
-      ; Get the detector bank limits for the current beamline
-      bank = getDetectorBankRange(event.STR)
-      ;IF (lowerbank LE 0) THEN BEGIN
-      WIDGET_CONTROL, lowerbank_norm_ID, SET_VALUE=bank.lower
-      dgsn_cmd->SetProperty, LowerBank=bank.lower
-      ;ENDIF
-      ;IF (upperbank LE 0) THEN BEGIN
-      WIDGET_CONTROL, upperbank_norm_ID, SET_VALUE=bank.upper
-      dgsn_cmd->SetProperty, UpperBank=bank.upper
-    ;ENDIF
     END
     
     'DGS_REDUCTION_JOBS': BEGIN
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
       if (myValue NE "") AND (myValue GT 0) AND (myValue LT info.max_jobs) then begin
         dgsr_cmd->SetProperty, Jobs=myValue
-        dgsn_cmd->SetProperty, Jobs=myValue
         ; If we are doing more than 1 job, we also need to set the --split option
         IF (myValue GT 1) THEN dgsr_cmd->SetProperty, Split=1
-        ; Do the same for the dgs_norm command
-        IF (myValue GT 1) THEN dgsn_cmd->SetProperty, Split=1
         
         ; But if we are only doing 1 then we don't!
         IF (myValue EQ 1) THEN dgsr_cmd->SetProperty, Split=0
-        ; Do the same for the dgs_norm command
-        IF (myValue EQ 1) THEN dgsn_cmd->SetProperty, Split=0
       endif
       
     ; Disable the "Launch Collector" button if there is only one job
@@ -219,7 +189,7 @@ PRO DGSreduction_TLB_Events, event
         
         ; If we are using the auto file, get the default filename...
         dgsr_cmd->GetProperty, Instrument=instrument
-        default_cornergeom = GetCornerGeometryFile(instrument, RUNNUMBER=dgsr_cmd->GetRunNumber())
+        default_cornergeom = Get_CornerGeometryFile(instrument, RUNNUMBER=dgsr_cmd->GetRunNumber())
         dgsr_cmd->SetProperty, CornerGeometry=default_cornergeom
         ; then set the Filename text field
         dgsr_cmd->GetProperty, CornerGeometry=currentCG
@@ -259,41 +229,34 @@ PRO DGSreduction_TLB_Events, event
       IF (event.select EQ 1) THEN BEGIN
         ;print, 'Setting Units = C'
         dgsr_cmd->SetProperty, ProtonCurrentUnits="C"
-        dgsn_cmd->SetProperty, ProtonCurrentUnits="C"
       ENDIF
     END
     'DGS_PROTON_UNITS_MILLICOULOMB': BEGIN
       IF (event.select EQ 1) THEN BEGIN
         ;     print, 'Setting Units = C'
         dgsr_cmd->SetProperty, ProtonCurrentUnits="mC"
-        dgsn_cmd->SetProperty, ProtonCurrentUnits="mC"
       ENDIF
     END
     'DGS_PROTON_UNITS_MICROCOULOMB': BEGIN
       IF (event.select EQ 1) THEN BEGIN
         ;    print, 'Setting Units = C'
         dgsr_cmd->SetProperty, ProtonCurrentUnits="uC"
-        dgsn_cmd->SetProperty, ProtonCurrentUnits="uC"
       ENDIF
     END
     'DGS_PROTON_UNITS_PICOCOULOMB': BEGIN
       IF (event.select EQ 1) THEN BEGIN
         ;   print, 'Setting Units = <none>'
         dgsr_cmd->SetProperty, ProtonCurrentUnits=""
-        dgsn_cmd->SetProperty, ProtonCurrentUnits=""
       ENDIF
     END
     'DGS_NORMLOC_INST_SHARED': BEGIN
       dgsr_cmd->SetProperty, NormLocation='INST'
-      dgsn_cmd->SetProperty, NormLocation='INST'
     END
     'DGS_NORMLOC_PROP_SHARED': BEGIN
       dgsr_cmd->SetProperty, NormLocation='PROP'
-      dgsn_cmd->SetProperty, NormLocation='PROP'
     END
     'DGS_NORMLOC_HOME_DIR': BEGIN
       dgsr_cmd->SetProperty, NormLocation='HOME'
-      dgsn_cmd->SetProperty, NormLocation='HOME'
     END
     'NOTHING': BEGIN
     END
@@ -306,7 +269,8 @@ PRO DGSreduction_TLB_Events, event
   
   ; Do a sanity check
   status = dgsr_cmd->check()
-  dgsn_status = dgsn_cmd->check()
+  ; TODO: Add checks for Norm, and other tabs ?
+  ;dgsn_status = dgsn_cmd->check()
   
   ; Disable the "Launch Collector" button if we are not ok to run!
   ;  dgsr_collector_button = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_LAUNCH_COLLECTOR_BUTTON')
@@ -319,15 +283,15 @@ PRO DGSreduction_TLB_Events, event
   dgsr_info_outputID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGSR_INFO_TEXT')
   WIDGET_CONTROL, dgsr_info_outputID, SET_VALUE=status.message
   ; Find the Messages Window (DGSR)
-  dgsn_info_outputID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGSN_INFO_TEXT')
-  WIDGET_CONTROL, dgsn_info_outputID, SET_VALUE=dgsn_status.message
+  ;dgsn_info_outputID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGSN_INFO_TEXT')
+  ;WIDGET_CONTROL, dgsn_info_outputID, SET_VALUE=dgsn_status.message
   
   ; Also Enable/Disable the DGSR Execute button
   dgsr_executeID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGSR_EXECUTE_BUTTON')
   WIDGET_CONTROL, dgsr_executeID, SENSITIVE=status.ok
   ; Also Enable/Disable the DGSN Execute button
-  dgsn_executeID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGSN_EXECUTE_BUTTON')
-  WIDGET_CONTROL, dgsn_executeID, SENSITIVE=dgsn_status.ok
+;  dgsn_executeID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGSN_EXECUTE_BUTTON')
+;  WIDGET_CONTROL, dgsn_executeID, SENSITIVE=status.ok
   
   ; Find the output window (DGS)
   dgs_cmd_outputID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_CMD_TEXT')
@@ -336,7 +300,7 @@ PRO DGSreduction_TLB_Events, event
   ; Find the output window (DGSN)
   dgsn_cmd_outputID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSN_CMD_TEXT')
   ; Update the output command window
-  WIDGET_CONTROL, dgsn_cmd_outputID, SET_VALUE=dgsn_cmd->generate()
+  WIDGET_CONTROL, dgsn_cmd_outputID, SET_VALUE=dgsr_cmd->generateNorm()
   
   ; Update the feedback for were we are going to write the results
   ; On the Reduction Tab...
