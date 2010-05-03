@@ -97,7 +97,14 @@ PRO MAIN_BASE_event, Event
       tab3_event_button, Event, uname='tab3_button1'
     end
     
+    widget_info(wWidget, find_by_uname='tab3_button2'): begin
+      tab3_event_button, Event, uname='tab3_button2'
+    end
     
+    widget_info(wWidget, find_by_uname='tab3_button3'): begin
+      tab3_event_button, Event, uname='tab3_button3'
+    end
+
     ;tab2 ---------------------------------------------------------------------
     
 ;    ;Load Command Line File Button

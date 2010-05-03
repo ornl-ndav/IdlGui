@@ -102,6 +102,8 @@ PRO display_descriptions_buttons_tab3, MAIN_BASE=main_base, EVENT=event, $
     
   case (button) of
     'fix_firefox': text = 'Fix most firefox issues by wiping your browser profile.'
+    'fix_gnome': text = 'Fix issues with the gnome desktop. !!!This will wipe out your gnome preferences!!!'
+    'fix_isaw': text = 'Fix issues with ISAW'
     else: text = 'Move the mouse over a button to get a description of its link.'
   endcase
   
