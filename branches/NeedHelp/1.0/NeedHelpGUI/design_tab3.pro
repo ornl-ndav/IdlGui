@@ -14,7 +14,7 @@
 ; Copyright (c) 2006, Spallation Neutron Source, Oak Ridge National Lab,
 ; Oak Ridge, TN 37831 USA
 ; All rights reserved.
-;
+; 
 ; Redistribution and use in source and binary forms, with or without
 ; modification, are permitted provided that the following conditions are met:
 ;
@@ -32,31 +32,73 @@
 ;
 ;==============================================================================
 
-pro MakeGuiMainBase, MAIN_BASE, global
+pro design_tab3, base3, global
 
-  id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='MAIN_BASE')
-  main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
-  
-  tab = widget_tab(MAIN_BASE,$
-    uname = 'main_tab',$
-    location=0)
-    
-  base = widget_base(tab,$ ;tab1 .........................................
-    title = '  Important  Links  ',$
+tab1_base = widget_base(base3,$
     /column)
     
-  design_tab1, base, global
-  
-  base2 = widget_base(tab,$ ;tab2 ........................................
-    title = '  Personalize  Help  ',$
+  row1 = widget_base(tab1_base,$
+    /row)
+    
+  col1 = widget_base(row1,$
     /column)
     
-  design_tab2, base2, global
-
-  base3 = widget_base(tab, $ ;tab3 .......................................
-  title = '  Desesperate Actions  ',$
-  /column)
+  xsize = 100
+  ysize = 100
   
-  design_tab3, base3, global
-  
+  col1_row1 = widget_base(col1,$
+    /row)
+  button1 = widget_draw(col1_row1,$
+    uname = 'tab3_button1',$
+    xsize = xsize,$
+    ysize = ysize,$
+    /button_events,$
+    /tracking_events,$
+    retain = 2)
+  space = widget_label(col1_row1,$
+    value = ' ')
+  button2 = widget_draw(col1_row1,$
+    uname = 'tab3_button2',$
+    xsize = xsize,$
+    ysize = ysize,$
+    /button_events,$
+    /tracking_events,$
+    retain = 2)
+  space = widget_label(col1_row1,$
+    value = ' ')
+  button3 = widget_draw(col1_row1,$
+    uname = 'tab3_button3',$
+    xsize = xsize,$
+    ysize = ysize,$
+    /button_events,$
+    /tracking_events,$
+    retain =2 )
+  space = widget_label(col1_row1,$
+    value = ' ')
+  button4 = widget_draw(col1_row1,$
+    uname = 'tab3_button4',$
+    xsize = xsize,$
+    ysize = ysize,$
+    /button_events,$
+    /tracking_events,$
+    retain = 2)
+  space = widget_label(col1_row1,$
+    value = ' ')
+  button5 = widget_draw(col1_row1,$
+    uname = 'tab3_button5',$
+    xsize = xsize,$
+    ysize = ysize,$
+    /button_events,$
+    /tracking_events,$
+    retain = 2)
+  space = widget_label(col1_row1,$
+    value = ' ')
+  button6 = widget_draw(col1_row1,$
+    uname = 'tab3_button6',$
+    xsize = xsize,$
+    ysize = ysize,$
+    /button_events,$
+    /tracking_events,$
+    retain = 2)    
+    
 end

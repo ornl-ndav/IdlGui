@@ -32,6 +32,7 @@ cd, CurrentFolder + '/NeedHelpGUI/'
 .run MakeGuiMainBase.pro
 .run design_tab1.pro
 .run design_tab2.pro
+.run design_tab3.pro
 
 ;Build all functions and procedures
 cd, CurrentFolder
