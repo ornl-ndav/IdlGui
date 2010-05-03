@@ -75,7 +75,7 @@ pro launch_application, event, application
   application = strjoin(reco_space,' ')
   
   cmd = application + ' &'
-  print, cmd
+;  print, cmd
   spawn, cmd
   
   widget_control, hourglass=0
