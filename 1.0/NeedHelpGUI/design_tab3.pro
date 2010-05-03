@@ -106,8 +106,8 @@ pro design_tab3, base3, global
     
   preview = widget_text(row2,$
     value = 'Description of mouse over...',$
-    xsize = 113,$
-    ysize = 3,$
+    xsize = 161,$
+    ysize = 6,$
     uname = 'tab3_preview_button')
     
     

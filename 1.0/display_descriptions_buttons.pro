@@ -101,10 +101,22 @@ PRO display_descriptions_buttons_tab3, MAIN_BASE=main_base, EVENT=event, $
     button=button, status=status
     
   case (button) of
-    'fix_firefox': text = 'Fix most firefox issues by wiping your browser profile.'
-    'fix_gnome': text = 'Fix issues with the gnome desktop. !!!This will wipe out your gnome preferences!!!'
-    'fix_isaw': text = 'Fix issues with ISAW.'
-    'fix_data_link': text = 'Fix missing data links.'
+    'fix_firefox': text = ['Fix most firefox issues by wiping your browser ' + $
+    'profile.','This option will also release Firefox in the event you are ' + $
+    'unable to open a new browser session thus enabling you to start' + $
+    ' a new Firefox session']
+    'fix_gnome': text = 'Fix issues with the gnome desktop. ' + $
+    '!!!This will wipe out your gnome preferences!!!'
+    'fix_isaw': text = ['This option will fix certain ISAW issues by ' + $
+    'removing the IsawProps.dat file in your home directory. ', $ 
+    'Note that you will also loose your ISAW settings once this file is ' + $
+    ' deleted and subsequently running ISAW will create a new IsawProps.dat file.']
+    'fix_data_link': text = ['It is unusual to need to use this option, ' + $
+    'however it will make links to your experiment data in the event these ' + $
+    'data links were missing. ', $
+    'Running this script is not harmful and once run, ' + $
+    'you should then be able to acces your experiment data if the links to ' + $
+    'these data were missing.'] 
     else: text = 'Move the mouse over a button to get a description of its link.'
   endcase
   
