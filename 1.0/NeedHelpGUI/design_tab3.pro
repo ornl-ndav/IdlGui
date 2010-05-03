@@ -14,7 +14,7 @@
 ; Copyright (c) 2006, Spallation Neutron Source, Oak Ridge National Lab,
 ; Oak Ridge, TN 37831 USA
 ; All rights reserved.
-; 
+;
 ; Redistribution and use in source and binary forms, with or without
 ; modification, are permitted provided that the following conditions are met:
 ;
@@ -34,7 +34,7 @@
 
 pro design_tab3, base3, global
 
-tab1_base = widget_base(base3,$
+  tab1_base = widget_base(base3,$
     /column)
     
   row1 = widget_base(tab1_base,$
@@ -99,6 +99,16 @@ tab1_base = widget_base(base3,$
     ysize = ysize,$
     /button_events,$
     /tracking_events,$
-    retain = 2)    
+    retain = 2)
+ 
+  row2 = widget_base(tab1_base,$
+    /row)
+    
+  preview = widget_text(row2,$
+    value = 'Description of mouse over...',$
+    xsize = 113,$
+    ysize = 3,$
+    uname = 'tab3_preview_button')
+    
     
 end

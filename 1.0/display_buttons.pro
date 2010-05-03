@@ -94,3 +94,67 @@ PRO display_buttons, MAIN_BASE=main_base, EVENT=event, $
   TV, png_image, 0, 0,/true
   
 END
+
+
+;+
+; :Description:
+;    This function returns the position (index) of the button
+;
+; :Params:
+;    button
+;
+; :Author: j35
+;-
+function get_index_button_tab3, button
+
+  file = OBJ_NEW('IDLxmlParser','.NeedHelp.cfg')
+  button_list = file->getValue(tag=['configuration','tab3_buttons_pos'])
+  obj_destroy, file
+  
+  list = strsplit(button_list,',',/extract)
+  index = where(list eq button[0])
+  
+  return, index
+end
+
+
+;+
+; :Description:
+;    This procedure display the button
+;
+; :Keywords:
+;    MAIN_BASE
+;    EVENT
+;    button
+;    status
+;
+; :Author: j35
+;-
+PRO display_buttons_tab3, MAIN_BASE=main_base, EVENT=event, $
+    button=button, status=status
+    
+  catch, error
+  if (error ne 0) then begin
+    catch,/cancel
+    return
+  endif
+  
+  index = get_index_button_tab3(button) + 1
+  uname = 'tab3_button' + strcompress(index,/remove_all)
+  
+  image = 'NeedHelp_images/'
+  image += button + '_' + status + '.png'
+  
+  if (~file_test(image)) then return ;if file does not exist
+  
+  png_image = READ_PNG(image)
+  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
+    mode_id = WIDGET_INFO(main_base, FIND_BY_UNAME=uname)
+  ENDIF ELSE BEGIN
+    mode_id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
+  ENDELSE
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, png_image, 0, 0,/true
+  
+END
