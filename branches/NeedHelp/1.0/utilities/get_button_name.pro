@@ -65,3 +65,37 @@ function getButtonName, button_uname
   
   return, list[index_button]
 end
+
+;+
+; :Description:
+;    This function returns the name of the button of tab3, according to the uname of the
+;    button (using the configuration file that gives the position of the buttons)
+;
+; :Params:
+;    button_uname
+;
+; :Author: j35
+;-
+function getButtonNameTab3, button_uname
+  compile_opt idl2
+  
+  index_button = strsplit(button_uname,'tab3_button',/extract)
+  if (index_button eq -1) then return, ''
+  index_button = fix(index_button) - 1
+  
+  ;get list of buttons
+  file = OBJ_NEW('IDLxmlParser','.NeedHelp.cfg')
+  list_buttons = file->getValue(tag=['configuration','tab3_buttons_pos'])
+  obj_destroy, file
+  list = strsplit(list_buttons,',',/extract)
+  
+  catch, error
+  if (error ne 0) then begin
+    catch,/cancel
+    return, ''
+  endif
+
+  if (index_button ge n_elements(list)) then return, ''
+  
+  return, list[index_button]
+end

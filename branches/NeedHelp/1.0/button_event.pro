@@ -82,3 +82,55 @@ pro event_button, Event, uname=uname
   endelse
   
 end
+
+;+
+; :Description:
+;   This procedures is the event handler of all the buttons (screenshots) of tab3
+;
+; :params:
+;   event
+;
+; :Keywords:
+;   uname
+;
+; :Author: j35
+;-
+pro tab3_event_button, Event, uname=uname
+
+  button_name = getButtonNameTab3(uname)
+  if (button_name eq '') then return
+  error = 0
+  catch, error
+  if (error ne 0) then begin
+    catch,/cancel
+    if (event.press eq 1) then begin
+      display_buttons_tab3, event=event, button=button_name, status='on'
+      if (button_name eq 'sns_tools' or $
+      button_name eq 'fix_firefox') then begin ;launch application
+      launch_this_application, event, button_name
+      endif else begin ;launch web page
+      launch_this_web_page, event, button_name
+      endelse
+    endif
+    if (event.release eq 1) then begin
+      display_buttons_tab3, event=event, button=button_name, status='off'
+    endif
+  endif else begin
+    if (event.enter) then begin
+      display_descriptions_buttons_tab3, EVENT=event, button=button_name
+      ;cursor becomes a hand
+      standard = 58
+    endif else begin
+    display_descriptions_buttons_tab3, EVENT=event, button='no_button'
+      standart = 31
+      display_buttons_tab3, event=event, button=button_name,status='off'
+    ;cursor back to normal
+    endelse
+    id = WIDGET_INFO(Event.top,$
+      find_by_uname=uname)
+    WIDGET_CONTROL, id, GET_VALUE=id_value
+    WSET, id_value
+    DEVICE, CURSOR_STANDARD=standard
+  endelse
+  
+end

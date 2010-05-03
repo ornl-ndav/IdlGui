@@ -91,6 +91,12 @@ PRO MAIN_BASE_event, Event
       id1 = widget_info(event.top, find_by_uname='main_tab')
       widget_control, id1, set_tab_current = 1
     end
+
+    ;Tab3
+    widget_info(wWidget, find_by_uname='tab3_button1'): begin
+      tab3_event_button, Event, uname='tab3_button1'
+    end
+    
     
     ;tab2 ---------------------------------------------------------------------
     

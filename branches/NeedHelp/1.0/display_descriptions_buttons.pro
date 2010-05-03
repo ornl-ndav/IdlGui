@@ -82,3 +82,29 @@ PRO display_descriptions_buttons, MAIN_BASE=main_base, EVENT=event, $
   putValue, Event, 'tab1_preview_button', text
   
 END
+
+
+;+
+; :Description:
+;    this procedure display the description text on the right of tab1 when the
+;    mouse is over such or such button
+;
+; :Keywords:
+;    MAIN_BASE
+;    EVENT
+;    button
+;    status
+;
+; :Author: j35
+;-
+PRO display_descriptions_buttons_tab3, MAIN_BASE=main_base, EVENT=event, $
+    button=button, status=status
+    
+  case (button) of
+    'fix_firefox': text = 'Fix most firefox issues by wiping your browser profile.'
+    else: text = 'Move the mouse over a button to get a description of its link.'
+  endcase
+  
+  putValue, Event, 'tab3_preview_button', text
+  
+END
