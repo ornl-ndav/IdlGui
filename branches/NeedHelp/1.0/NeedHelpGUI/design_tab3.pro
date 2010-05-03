@@ -82,24 +82,24 @@ pro design_tab3, base3, global
     /button_events,$
     /tracking_events,$
     retain = 2)
-  space = widget_label(col1_row1,$
-    value = ' ')
-  button5 = widget_draw(col1_row1,$
-    uname = 'tab3_button5',$
-    xsize = xsize,$
-    ysize = ysize,$
-    /button_events,$
-    /tracking_events,$
-    retain = 2)
-  space = widget_label(col1_row1,$
-    value = ' ')
-  button6 = widget_draw(col1_row1,$
-    uname = 'tab3_button6',$
-    xsize = xsize,$
-    ysize = ysize,$
-    /button_events,$
-    /tracking_events,$
-    retain = 2)
+;  space = widget_label(col1_row1,$
+;    value = ' ')
+;  button5 = widget_draw(col1_row1,$
+;    uname = 'tab3_button5',$
+;    xsize = xsize,$
+;    ysize = ysize,$
+;    /button_events,$
+;    /tracking_events,$
+;    retain = 2)
+;  space = widget_label(col1_row1,$
+;    value = ' ')
+;  button6 = widget_draw(col1_row1,$
+;    uname = 'tab3_button6',$
+;    xsize = xsize,$
+;    ysize = ysize,$
+;    /button_events,$
+;    /tracking_events,$
+;    retain = 2)
  
   row2 = widget_base(tab1_base,$
     /row)
