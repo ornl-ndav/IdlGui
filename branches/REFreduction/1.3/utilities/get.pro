@@ -508,7 +508,7 @@ function getcvinfo_file, event
     'load_data_run_number_text_field')
   instrument = (*global).instrument
   
-  cmd = 'findnexus --prenexus ' + data_run_number
+  cmd = 'findnexus --prenexus -i ' + instrument + ' ' + data_run_number
   spawn, cmd, listening
   
   cvinfo_name = '/' + instrument + '_' + data_run_number
