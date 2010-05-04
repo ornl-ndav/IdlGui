@@ -328,7 +328,7 @@ PRO ReductionCmd::SetProperty, $
   IF N_ELEMENTS(quiet) NE 0 THEN self.quiet = quiet
   IF N_ELEMENTS(datarun) NE 0 THEN BEGIN
     self.datarun = STRCOMPRESS(STRING(datarun), /REMOVE_ALL)
-    self.cornergeometry = getCornerGeometryFile(self.instrument, RUNNUMBER=self->GetRunNumber())
+    self.cornergeometry = get_CornerGeometryFile(self.instrument, RUNNUMBER=self->GetRunNumber())
   ENDIF
   IF N_ELEMENTS(output) NE 0 THEN self.output = output
   IF N_ELEMENTS(instrument) NE 0 THEN BEGIN
@@ -899,6 +899,114 @@ function ReductionCmd::Check
     
   return, data
 end
+
+
+;+
+; :Description:
+;    Procedure to check that all essential parameters have
+;    been defined.  Also, that we haven't specified any
+;    conflicting options.
+;
+;    It is intended for producing a string array for display
+;    in the bottom of the GUI and a status flag to enable/disable
+;    the execute button.
+;
+;-
+function ReductionCmd::CheckNorm
+
+  ; Let's start out with everything well in the world!
+  ok = 1
+  datapaths_bad = 0
+  msg = ['Everything looks good.']
+  
+;  normDir = self->GetNormalisationOutputDirectory()
+;  IF (FILE_TEST(normDir, /DIRECTORY, /WRITE) NE 1) THEN BEGIN
+;    ok = 1
+;    msg = [msg,['You cannot write to the specified normalisation directory: ' + normDir]]
+;  ENDIF
+  
+  IF (STRLEN(self.instrument) LT 2) THEN BEGIN
+    ok = 0
+    msg = [msg,['There is no Instrument selected.']]
+  ENDIF
+  
+  IF (STRLEN(self.normalisation) LT 1) THEN BEGIN
+    ok = 0
+    msg = [msg,["There doesn't seem to be a Vanadium RUN NUMBER defined."]]
+  ENDIF
+  
+  ; Just construct the DataPaths for the first job.
+  datapaths = Construct_DataPaths(self.lowerbank, self.upperbank, 1, self.jobs)
+  IF (STRLEN(datapaths) LT 1) THEN BEGIN
+    datapaths_bad = 1
+    ok = 0
+    msg = [msg,['The Detector Banks are not specified correctly.']]
+  END
+  
+  ; Also check for the last job (but only if the first job check above was ok)
+  datapaths = Construct_DataPaths(self.lowerbank, self.upperbank, self.jobs, self.jobs)
+  IF (STRLEN(datapaths) LT 1) AND (datapaths_bad NE 1) THEN BEGIN
+    ok = 0
+    msg = [msg,['The Detector Banks are not specified correctly.']]
+  END
+  
+  ; Incident Energy
+  IF (STRLEN(self.ei) LT 1) THEN BEGIN
+    ok = 0
+    msg = [msg,['You need to define the Incident Energy (Ei).']]
+  ENDIF
+  
+  ; T0
+  IF (STRLEN(self.tzero) LT 1) THEN BEGIN
+    ok = 0
+    msg = [msg,['You need to define a value for T0.']]
+  ENDIF
+  
+  ; Now let's do some more complicated dependencies
+  
+  ; If Empty Can OR Black Can then we must specify Data Coeff
+  IF (STRLEN(self.emptycan) GE 1) OR (STRLEN(self.blackcan) GE 1) THEN BEGIN
+    IF (STRLEN(self.normtrans) LT 1) THEN BEGIN
+      ok = 0
+      msg = [msg,["ERROR: You need to specify and value for 'Norm Coeff' " + $
+        "if you have specified either an Empty Can or a Black Can."]]
+    ENDIF
+  ENDIF
+  
+  ; You cannot have a Dark current and any TIB
+  IF (STRLEN(self.tibconst) GE 1) OR (STRLEN(self.tibrange_min) GE 1) $
+    OR (STRLEN(self.tibrange_min) GE 1) THEN BEGIN
+    IF (STRLEN(self.dark) GE 1) AND (self.dark NE 0) THEN BEGIN
+      ok = 0
+      msg = [msg,["ERROR: You cannot specify a Dark Current together with a " + $
+        "Time-Independent-Background."]]
+    ENDIF
+  ENDIF
+  
+  ; Cannot have both a TIB constant and a TIB range
+  IF (STRLEN(self.tibconst) GE 1) AND ((STRLEN(self.tibrange_min) GE 1) OR (STRLEN(self.tibrange_max) GE 1)) THEN BEGIN
+    ok = 0
+    msg = [msg,['ERROR: You cannot specify a TIB constant and a TIB range.']]
+  ENDIF
+  
+  ; Need to specify a min/max for the monitor integration if we are normalising to the monitor
+  IF (self.nomonitornorm EQ 0) THEN BEGIN
+    IF (STRLEN(self.monrange_min) LT 1) OR (STRLEN(self.monrange_max) LT 1) THEN BEGIN
+      ok = 0
+      msg = [msg,['If you are normalising to the monitor, you need to specify a monitor integration range.']]
+    ENDIF
+  ENDIF
+  
+  ; Remove the first blank String
+  IF (N_ELEMENTS(msg) GT 1) THEN msg = msg(1:*)
+  
+  data = { ok : ok, $
+    message : msg}
+    
+  return, data
+end
+
+
 
 
 ;+
