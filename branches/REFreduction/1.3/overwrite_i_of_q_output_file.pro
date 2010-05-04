@@ -113,9 +113,6 @@ end
 ;pro normalize_by_proton_charge, event, yarray, SigmaYarray, output_file_name
 ;compile_opt idl2
 
-end
-
-
 ;+
 ; :Description:
 ;    Parse the string data into 3 data arrays
