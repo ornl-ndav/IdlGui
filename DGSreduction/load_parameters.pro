@@ -70,8 +70,6 @@ pro load_parameters, widgetBase, Filename=filename
   dgsr_cmd->SetProperty, Mask=1 
 
   info.dgsr_cmd = dgsr_cmd
-  info.dgsn_cmd = dgsn_cmd
-  
   
   ; Find the output window (DGS)
   dgsr_cmd_outputID = WIDGET_INFO(widgetBase,FIND_BY_UNAME='DGSR_CMD_TEXT')
@@ -81,7 +79,7 @@ pro load_parameters, widgetBase, Filename=filename
   ; Find the output window (DGSN)
   dgsn_cmd_outputID = WIDGET_INFO(widgetBase,FIND_BY_UNAME='DGSN_CMD_TEXT')
   ; Update the output command window
-  WIDGET_CONTROL, dgsn_cmd_outputID, SET_VALUE=dgsn_cmd->generate()
+  WIDGET_CONTROL, dgsn_cmd_outputID, SET_VALUE=dgsr_cmd->generateNorm()
   
   ; Put info back
   WIDGET_CONTROL, widgetBase, SET_UVALUE=info, /NO_COPY
