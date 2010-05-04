@@ -40,8 +40,6 @@ widget_control,id,get_uvalue=global
 
 if ((*global).DataNexusFound) then begin
 
-    print, 'in rescale_data_plot'
-
     coeff_congrid_tof = (*global).congrid_x_coeff
 
     DataXYZminmaxArray = (*(*global).DataXYZminmaxArray)
