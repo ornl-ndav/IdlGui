@@ -104,14 +104,6 @@ PRO PopulateIntermPLotsArray, Event
     IntermPlots[7] = 0
   endelse
   
-  ;Emtpy cell R vs TOF plot
-  IF (isBaseMap(Event,'reduce_plot8_base') EQ 0 AND $
-    InterPlotsStatus[8] EQ 1) THEN BEGIN
-    IntermPlots[8] = 1
-  ENDIF ELSE BEGIN
-    IntermPlots[8] = 0
-  ENDELSE
-  
   (*global).IntermPlots = IntermPlots
   
 END
@@ -121,7 +113,7 @@ END
 FUNCTION RefReduction_CommandLineIntermediatePlotsGenerator, Event
 
   widget_control, event.top, get_uvalue=global
-
+  
   ;get status of all buttons
   InterPlotsStatus = getCWBgroupValue(Event, 'intermediate_plot_list')
   
@@ -166,10 +158,15 @@ FUNCTION RefReduction_CommandLineIntermediatePlotsGenerator, Event
     endif
   endelse
   
-  ;empty cell R vs TOF plot
-  IF (InterPlotsStatus[8] EQ 1) THEN BEGIN
-    IP_cmd += ' --dump-ecell-rtof'
-  ENDIF
+  ;produce R vs Q plot and R vs Q after rebinning
+  ;get status of all buttons
+  InterPlotsStatus_2 = getCWBgroupValue(Event, 'intermediate_plot_list_2')
+  if (InterPlotsStatus_2[0] eq 1) then begin
+    IP_cmd += ' --dump-rq'
+  endif
+  if (InterPlotsStatus_2[1] eq 1) then begin
+    IP_cmd += ' --dump-rqr'
+  endif
   
   ;create array of Intermediate files to plot
   PopulateIntermPLotsArray, Event
