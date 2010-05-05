@@ -264,6 +264,7 @@ PRO REFreduction_LoadDatafile, Event, isNeXusFound, NbrNexus
             
             IF ((*global).instrument EQ 'REF_M') THEN BEGIN
               populate_data_geometry_info, Event
+              calculate_sangle, event
             ENDIF
             
             WIDGET_CONTROL,HOURGLASS=0
@@ -391,6 +392,7 @@ PRO REFreduction_LoadDatafile, Event, isNeXusFound, NbrNexus
           
           IF ((*global).instrument EQ 'REF_M') THEN BEGIN
             populate_data_geometry_info, Event
+            calculate_sangle, event
           ENDIF
           
         ENDIF ELSE BEGIN
