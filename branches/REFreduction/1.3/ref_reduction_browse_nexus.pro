@@ -58,6 +58,7 @@ PRO ok_polarization_state, Event
       nexus_file_name = (*global).data_nexus_full_path
       load_data_browse_nexus, Event, nexus_file_name, POLA_STATE=value_selected
       populate_data_geometry_info, Event, nexus_file_name
+      calculate_sangle, event
     END
     'norm_browse': BEGIN
       (*global).norm_path = list_pola_state[value_selected]
@@ -76,6 +77,7 @@ PRO ok_polarization_state, Event
       nexus_file_name = (*global).data_nexus_full_path
       load_data_browse_nexus, Event, nexus_file_name, POLA_STATE=value_selected
       populate_data_geometry_info, Event, nexus_file_name
+      calculate_sangle, event
     END
     'norm_load': BEGIN
       (*global).norm_path = list_pola_state[value_selected]
@@ -104,7 +106,7 @@ PRO BrowseDataNexus, Event
   path      = (*global).browse_data_path
   text = '> Browsing for a Data NeXus file:'
   widget_id = widget_info(event.top, find_by_uname='MAIN_BASE')
-
+  
   putLogBookMessage, Event, Text, Append=1
   nexus_file_name = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
     FILTER            = filter,$
@@ -164,6 +166,7 @@ PRO BrowseDataNexus, Event
       
     IF ((*global).instrument EQ 'REF_M') THEN BEGIN
       populate_data_geometry_info, Event, nexus_file_name
+      calculate_sangle, event
     ENDIF
     
     ;turn off hourglass
@@ -275,7 +278,7 @@ PRO BrowseNormNexus, Event
   title     = 'Select a NeXus file ...'
   path      = (*global).browse_data_path
   text = '> Browsing for a Normalization NeXus file:'
-    widget_id = widget_info(event.top, find_by_uname='MAIN_BASE')
+  widget_id = widget_info(event.top, find_by_uname='MAIN_BASE')
   putLogBookMessage, Event, Text, Append=1
   nexus_file_name = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
     FILTER            = filter,$
