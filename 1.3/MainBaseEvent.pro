@@ -378,10 +378,14 @@ PRO MAIN_BASE_event, Event
     ;Peak/Background tab (peak/background cw_bgroup)
     WIDGET_INFO(wWidget, FIND_BY_UNAME='peak_data_back_group'): BEGIN
       SwitchPeakBackgroundDataBase, Event ;_GUIinteraction
-      SwitchPeakBackgroundReduceDatabase, Event ;_GUIinteraction
+      if (~isDataWithBackground(Event)) then begin ;without background
+        MapBase, event, 'hide_background_base', 1
+      endif else begin
+        MapBase, event, 'hide_background_base', 0
+        SwitchPeakBackgroundReduceDatabase, Event ;_GUIinteraction
+      endelse
       ;replot the selection activated
       REFReduction_RescaleDataPlot,Event
-      ;       RePlot1DDataFile, Event
       ReplotAllSelection, Event
     END
     
@@ -1421,15 +1425,12 @@ PRO MAIN_BASE_event, Event
     
     ;yes or no data background
     WIDGET_INFO(wWidget, FIND_BY_UNAME='data_background_cw_bgroup'): BEGIN
-      MapBase, Event, 'background_message_uname', 0
-      ;      substrateValue = getCWBgroupValue(Event,'empty_cell_substrate_group')
-      ;      IF (isDataWithBackground(Event) EQ 1 AND $
-      ;        substrateValue EQ 0) THEN BEGIN
-      ;        focus_empty_cell_base, Event, 0
-      ;        MapBase, Event, 'empty_cell_or_data_background_base', 1
-      ;      ENDIF ELSE BEGIN
+      if (~isDataWithBackground(Event)) then begin ;without background
+        MapBase, event, 'hide_background_base', 1
+      endif else begin
+        MapBase, event, 'hide_background_base', 0
+      endelse
       REFreduction_CommandLineGenerator, Event
-    ;      ENDELSE
     END
     
     ;empty cell yes or no

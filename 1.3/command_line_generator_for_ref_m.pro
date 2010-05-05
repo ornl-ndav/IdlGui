@@ -126,149 +126,148 @@ PRO command_line_generator_for_ref_m, event
       endif
     ENDELSE
     
-    ;    substrateValue = getCWBgroupValue(Event,'empty_cell_substrate_group')
-    ;    IF (substrateValue EQ 1) THEN BEGIN
-    ;
-    ;get Peak or Background
-    PeakBaseStatus = isPeakBaseMap(Event)
-    IF (PeakBaseStatus EQ 1) THEN BEGIN ;exclusion peak
+    if (isDataWithBackground(Event)) then begin ;with background substraction
     
-      ;bring values of ymin and ymax from data base
-      ymin = getTextFieldValue(Event,'data_d_selection_peak_ymin_cw_field')
-      ymax = getTextFieldValue(Event,'data_d_selection_peak_ymax_cw_field')
-      putTextFieldValue, Event, $
-        'data_exclusion_low_bin_text', $
-        STRCOMPRESS(ymin[0],/REMOVE_ALL), 0
-      putTextFieldValue, Event, $
-        'data_exclusion_high_bin_text', $
-        STRCOMPRESS(ymax[0],/REMOVE_ALL), 0
-        
-      cmd[index_spin_state] += ' --data-peak-excl='
-      ;get data peak exclusion
-      data_peak_exclusion_min = $
-        STRCOMPRESS(getTextFieldValue(Event,'data_exclusion_low_bin_text'), $
-        /remove_all)
-      IF (data_peak_exclusion_min NE '') THEN BEGIN
-        cmd[index_spin_state] += STRCOMPRESS(data_peak_exclusion_min,/REMOVE_ALL)
-      ENDIF ELSE BEGIN
-        cmd[index_spin_state]         += '?'
-        if (index_spin_state eq 0) then begin
-          status_text  = '- Please provide a data low range ' + $
-            'Peak of Exclusion.'
-          status_text += ' Go to DATA, and select a low value for ' + $
-            'the data peak exclusion.'
-          IF (StatusMessage GT 0) THEN BEGIN
-            append = 1
-          ENDIF ELSE BEGIN
-            append = 0
-          ENDELSE
-          putInfoInReductionStatus, Event, status_text, append
-          StatusMessage += 1
-        endif
-      ENDELSE
+      ;get Peak or Background
+      PeakBaseStatus = isPeakBaseMap(Event)
+      IF (PeakBaseStatus EQ 1) THEN BEGIN ;exclusion peak
       
-      data_peak_exclusion_max = $
-        STRCOMPRESS(getTextFieldValue(Event, $
-        'data_exclusion_high_bin_text'),$ $
-        /REMOVE_ALL)
-      IF (data_peak_exclusion_max NE '') THEN BEGIN
-        cmd[index_spin_state] += ' ' + STRCOMPRESS(data_peak_exclusion_max,/REMOVE_ALL)
-      ENDIF ELSE BEGIN
-        cmd[index_spin_state]         += ' ?'
-        if (index_spin_state eq 0) then begin
-          status_text  = '- Please provide a data high ' + $
-            'range Peak of Exclusion.'
-          status_text += ' Go to DATA, and select a high value for ' + $
-            'the data peak exclusion.'
-          IF (StatusMessage GT 0) THEN BEGIN
-            append = 1
-          ENDIF ELSE BEGIN
-            append = 0
-          ENDELSE
-          putInfoInReductionStatus, Event, status_text, append
-          StatusMessage += 1
-        endif
-      ENDELSE
-      
-      ;Be sure that (Ymin_peak=Ymin_back && Ymax_peak=Ymax_back) is wrong
-      Ymin_peak = data_peak_exclusion_min
-      Ymax_peak = data_peak_exclusion_max
-      Ymin_back = $
-        STRCOMPRESS(getTextFieldValue(Event, $
-        'data_d_selection_background_ymin_cw_field'), $
-        /REMOVE_all)
-      Ymax_back = $
-        STRCOMPRESS(getTextFieldValue(Event, $
-        'data_d_selection_background_ymax_' + $
-        'cw_field'), $
-        /REMOVE_ALL)
-      if (index_spin_state eq 0) then begin
-        IF (Ymin_peak NE '' AND $
-          Ymax_peak NE '' AND $
-          Ymin_back NE '' AND $
-          Ymax_back NE '') THEN BEGIN
-          IF ((Ymin_peak EQ Ymin_back) AND $
-            (Ymax_peak EQ Ymax_back)) THEN BEGIN
-            StatusMessage += 1
-            status_text = '- Data Background and Peak have the same ' + $
-              'Ymin and Ymax values.'
-            status_text += ' Please changes at least 1 of the data.'
+        ;bring values of ymin and ymax from data base
+        ymin = getTextFieldValue(Event,'data_d_selection_peak_ymin_cw_field')
+        ymax = getTextFieldValue(Event,'data_d_selection_peak_ymax_cw_field')
+        putTextFieldValue, Event, $
+          'data_exclusion_low_bin_text', $
+          STRCOMPRESS(ymin[0],/REMOVE_ALL), 0
+        putTextFieldValue, Event, $
+          'data_exclusion_high_bin_text', $
+          STRCOMPRESS(ymax[0],/REMOVE_ALL), 0
+          
+        cmd[index_spin_state] += ' --data-peak-excl='
+        ;get data peak exclusion
+        data_peak_exclusion_min = $
+          STRCOMPRESS(getTextFieldValue(Event,'data_exclusion_low_bin_text'), $
+          /remove_all)
+        IF (data_peak_exclusion_min NE '') THEN BEGIN
+          cmd[index_spin_state] += STRCOMPRESS(data_peak_exclusion_min,/REMOVE_ALL)
+        ENDIF ELSE BEGIN
+          cmd[index_spin_state]         += '?'
+          if (index_spin_state eq 0) then begin
+            status_text  = '- Please provide a data low range ' + $
+              'Peak of Exclusion.'
+            status_text += ' Go to DATA, and select a low value for ' + $
+              'the data peak exclusion.'
             IF (StatusMessage GT 0) THEN BEGIN
               append = 1
             ENDIF ELSE BEGIN
               append = 0
             ENDELSE
             putInfoInReductionStatus, Event, status_text, append
-          ENDIF
-        ENDIF
-      endif
-      
-    ENDIF ELSE BEGIN            ;background file
-    
-      ;get value of back file from data base
-      BackFile = getTextFieldValue(Event,'data_back_selection_file_value')
-      BackFile = BackFile[0]
-      cmd[index_spin_state] += ' --dbkg-roi-file='
-      ;get data ROI file
-      data_roi_file = $
-        getTextFieldValue(Event, $
-        'data_back_selection_file_value')
-      IF (data_roi_file NE '') THEN BEGIN
-        cmd[index_spin_state] += data_roi_file
-      ENDIF ELSE BEGIN
-        cmd[index_spin_state]        += '?'
+            StatusMessage += 1
+          endif
+        ENDELSE
+        
+        data_peak_exclusion_max = $
+          STRCOMPRESS(getTextFieldValue(Event, $
+          'data_exclusion_high_bin_text'),$ $
+          /REMOVE_ALL)
+        IF (data_peak_exclusion_max NE '') THEN BEGIN
+          cmd[index_spin_state] += ' ' + STRCOMPRESS(data_peak_exclusion_max,/REMOVE_ALL)
+        ENDIF ELSE BEGIN
+          cmd[index_spin_state]         += ' ?'
+          if (index_spin_state eq 0) then begin
+            status_text  = '- Please provide a data high ' + $
+              'range Peak of Exclusion.'
+            status_text += ' Go to DATA, and select a high value for ' + $
+              'the data peak exclusion.'
+            IF (StatusMessage GT 0) THEN BEGIN
+              append = 1
+            ENDIF ELSE BEGIN
+              append = 0
+            ENDELSE
+            putInfoInReductionStatus, Event, status_text, append
+            StatusMessage += 1
+          endif
+        ENDELSE
+        
+        ;Be sure that (Ymin_peak=Ymin_back && Ymax_peak=Ymax_back) is wrong
+        Ymin_peak = data_peak_exclusion_min
+        Ymax_peak = data_peak_exclusion_max
+        Ymin_back = $
+          STRCOMPRESS(getTextFieldValue(Event, $
+          'data_d_selection_background_ymin_cw_field'), $
+          /REMOVE_all)
+        Ymax_back = $
+          STRCOMPRESS(getTextFieldValue(Event, $
+          'data_d_selection_background_ymax_' + $
+          'cw_field'), $
+          /REMOVE_ALL)
         if (index_spin_state eq 0) then begin
-          status_text = '- Please provide a data background file. Go to ' + $
-            'DATA, Peak/Background and '
-          status_text += 'select a ROI and save it.'
-          IF (StatusMessage GT 0) THEN BEGIN
-            append = 1
-          ENDIF ELSE BEGIN
-            append = 0
-          ENDELSE
-          putInfoInReductionStatus, Event, status_text, append
-          StatusMessage += 1
+          IF (Ymin_peak NE '' AND $
+            Ymax_peak NE '' AND $
+            Ymin_back NE '' AND $
+            Ymax_back NE '') THEN BEGIN
+            IF ((Ymin_peak EQ Ymin_back) AND $
+              (Ymax_peak EQ Ymax_back)) THEN BEGIN
+              StatusMessage += 1
+              status_text = '- Data Background and Peak have the same ' + $
+                'Ymin and Ymax values.'
+              status_text += ' Please changes at least 1 of the data.'
+              IF (StatusMessage GT 0) THEN BEGIN
+                append = 1
+              ENDIF ELSE BEGIN
+                append = 0
+              ENDELSE
+              putInfoInReductionStatus, Event, status_text, append
+            ENDIF
+          ENDIF
         endif
+        
+      ENDIF ELSE BEGIN            ;background file
+      
+        ;get value of back file from data base
+        BackFile = getTextFieldValue(Event,'data_back_selection_file_value')
+        BackFile = BackFile[0]
+        cmd[index_spin_state] += ' --dbkg-roi-file='
+        ;get data ROI file
+        data_roi_file = $
+          getTextFieldValue(Event, $
+          'data_back_selection_file_value')
+        IF (data_roi_file NE '') THEN BEGIN
+          cmd[index_spin_state] += data_roi_file
+        ENDIF ELSE BEGIN
+          cmd[index_spin_state]        += '?'
+          if (index_spin_state eq 0) then begin
+            status_text = '- Please provide a data background file. Go to ' + $
+              'DATA, Peak/Background and '
+            status_text += 'select a ROI and save it.'
+            IF (StatusMessage GT 0) THEN BEGIN
+              append = 1
+            ENDIF ELSE BEGIN
+              append = 0
+            ENDELSE
+            putInfoInReductionStatus, Event, status_text, append
+            StatusMessage += 1
+          endif
+        ENDELSE
+        
       ENDELSE
       
-    ENDELSE
-    
-    ;    ENDIF ;end of if empty_cell selected
+    endif
     
     ;check if user wants data background or not
     IF (isDataWithBackground(Event)) THEN BEGIN ;yes, with background
       ;activate DATA Intermediate Plots
       MapBase, Event, 'reduce_plot2_base', 0
-;      MapBase, Event, 'reduce_plot3_base', 0
+    ;      MapBase, Event, 'reduce_plot3_base', 0
     ENDIF ELSE BEGIN
       cmd[index_spin_state] += ' --no-bkg'
-;      ;desactivate DATA Intermediate Plots
-;      substrateValue = getCWBgroupValue(Event,'empty_cell_substrate_group')
-;      IF (substrateValue EQ 0) THEN BEGIN
-;        MapBase, Event, 'reduce_plot3_base', 0
-;      ENDIF ELSE BEGIN
-;        MapBase, Event, 'reduce_plot3_base', 1
-;      ENDELSE
+      ;      ;desactivate DATA Intermediate Plots
+      ;      substrateValue = getCWBgroupValue(Event,'empty_cell_substrate_group')
+      ;      IF (substrateValue EQ 0) THEN BEGIN
+      ;        MapBase, Event, 'reduce_plot3_base', 0
+      ;      ENDIF ELSE BEGIN
+      ;        MapBase, Event, 'reduce_plot3_base', 1
+      ;      ENDELSE
       MapBase, Event, 'reduce_plot2_base', 1
     END
     
@@ -604,103 +603,103 @@ PRO command_line_generator_for_ref_m, event
     ;get name of instrument
     cmd[index_spin_state] += ' --inst=' + (*global).instrument
     
-;    ;*****EMPTY CELL*************************************************************
-;    substrateValue = getCWBgroupValue(Event,'empty_cell_substrate_group')
-;    IF (substrateValue EQ 0) THEN BEGIN
-;    
-;      cmd[index_spin_state] += ' --subtrans-coeff='
-;      
-;      A = getTextFieldValue(Event, 'empty_cell_substrate_a')
-;      IF (A EQ '' OR A EQ 0) THEN BEGIN
-;        cmd[index_spin_state]  += '?'
-;        if (index_spin_state eq 0) then begin
-;          status_text = '- Please provide a valid Coefficient A to' + $
-;            ' the Substrate Transmission Equation (tab -> LOAD/EMPTY_CELL)'
-;          IF (StatusMessage GT 0) THEN BEGIN
-;            append = 1
-;          ENDIF ELSE BEGIN
-;            append = 0
-;          ENDELSE
-;          putInfoInReductionStatus, Event, status_text, append
-;          StatusMessage += 1
-;        endif
-;      ENDIF ELSE BEGIN
-;        cmd[index_spin_state] += A
-;      ENDELSE
-;      
-;      cmd[index_spin_state] += ' '
-;      
-;      B = getTextFieldValue(Event, 'empty_cell_substrate_b')
-;      IF (B EQ '' OR B EQ 0) THEN BEGIN
-;        cmd[index_spin_state]  += '?'
-;        if (index_spin_state eq 0) then begin
-;          status_text = '- Please provide a valid Coefficient B to' + $
-;            ' the Substrate Transmission Equation (tab -> LOAD/EMPTY_CELL)'
-;          IF (StatusMessage GT 0) THEN BEGIN
-;            append = 1
-;          ENDIF ELSE BEGIN
-;            append = 0
-;          ENDELSE
-;          putInfoInReductionStatus, Event, status_text, append
-;          StatusMessage += 1
-;        endif
-;      ENDIF ELSE BEGIN
-;        cmd[index_spin_state] += B
-;      ENDELSE
-;      
-;      cmd[index_spin_state] += ' --substrate-diam='
-;      D = getTextFieldValue(Event, 'empty_cell_diameter')
-;      IF (D EQ '' OR D EQ 0) THEN BEGIN
-;        cmd[index_spin_state]  += '?'
-;        if (index_spin_state eq 0) then begin
-;          status_text = '- Please provide a valid Substrate Diameter D to' + $
-;            ' the Substrate Transmission Equation (tab -> LOAD/EMPTY_CELL)'
-;          IF (StatusMessage GT 0) THEN BEGIN
-;            append = 1
-;          ENDIF ELSE BEGIN
-;            append = 0
-;          ENDELSE
-;          putInfoInReductionStatus, Event, status_text, append
-;          StatusMessage += 1
-;        endif
-;      ENDIF ELSE BEGIN
-;        cmd[index_spin_state] += D
-;      ENDELSE
-;      
-;      SF = getTextFieldValue(Event,'empty_cell_scaling_factor')
-;      IF (SF NE '') THEN BEGIN
-;        cmd[index_spin_state] += ' --scale-ecell=' + SF
-;      ENDIF
-;      
-;      ;NeXus file
-;      cmd[index_spin_state] += ' --ecell='
-;      empty_cell_nexus_file = (*global).empty_cell_full_nexus_name
-;      IF (empty_cell_nexus_file EQ '') THEN BEGIN
-;        cmd[index_spin_state]  += '?'
-;        if (index_spin_state eq 0) then begin
-;          status_text = '- Please provide a valid Empty Cell NeXus File'
-;          status_text += ' (tab-> LOAD/EMPTY_CELL)'
-;          IF (StatusMessage GT 0) THEN BEGIN
-;            append = 1
-;          ENDIF ELSE BEGIN
-;            append = 0
-;          ENDELSE
-;          putInfoInReductionStatus, Event, status_text, append
-;          StatusMessage += 1
-;        endif
-;      ENDIF ELSE BEGIN
-;        cmd[index_spin_state] += empty_cell_nexus_file
-;      ENDELSE
-;      
-;      ;remove Empty Cell Intermediate Plots
-;      MapBase, Event, 'reduce_plot8_base', 0
-;      
-;    ENDIF ELSE BEGIN
-;    
-;      ;remove Empty Cell Intermediate Plots
-;      MapBase, Event, 'reduce_plot8_base', 1
-;      
-;    ENDELSE
+    ;    ;*****EMPTY CELL*************************************************************
+    ;    substrateValue = getCWBgroupValue(Event,'empty_cell_substrate_group')
+    ;    IF (substrateValue EQ 0) THEN BEGIN
+    ;
+    ;      cmd[index_spin_state] += ' --subtrans-coeff='
+    ;
+    ;      A = getTextFieldValue(Event, 'empty_cell_substrate_a')
+    ;      IF (A EQ '' OR A EQ 0) THEN BEGIN
+    ;        cmd[index_spin_state]  += '?'
+    ;        if (index_spin_state eq 0) then begin
+    ;          status_text = '- Please provide a valid Coefficient A to' + $
+    ;            ' the Substrate Transmission Equation (tab -> LOAD/EMPTY_CELL)'
+    ;          IF (StatusMessage GT 0) THEN BEGIN
+    ;            append = 1
+    ;          ENDIF ELSE BEGIN
+    ;            append = 0
+    ;          ENDELSE
+    ;          putInfoInReductionStatus, Event, status_text, append
+    ;          StatusMessage += 1
+    ;        endif
+    ;      ENDIF ELSE BEGIN
+    ;        cmd[index_spin_state] += A
+    ;      ENDELSE
+    ;
+    ;      cmd[index_spin_state] += ' '
+    ;
+    ;      B = getTextFieldValue(Event, 'empty_cell_substrate_b')
+    ;      IF (B EQ '' OR B EQ 0) THEN BEGIN
+    ;        cmd[index_spin_state]  += '?'
+    ;        if (index_spin_state eq 0) then begin
+    ;          status_text = '- Please provide a valid Coefficient B to' + $
+    ;            ' the Substrate Transmission Equation (tab -> LOAD/EMPTY_CELL)'
+    ;          IF (StatusMessage GT 0) THEN BEGIN
+    ;            append = 1
+    ;          ENDIF ELSE BEGIN
+    ;            append = 0
+    ;          ENDELSE
+    ;          putInfoInReductionStatus, Event, status_text, append
+    ;          StatusMessage += 1
+    ;        endif
+    ;      ENDIF ELSE BEGIN
+    ;        cmd[index_spin_state] += B
+    ;      ENDELSE
+    ;
+    ;      cmd[index_spin_state] += ' --substrate-diam='
+    ;      D = getTextFieldValue(Event, 'empty_cell_diameter')
+    ;      IF (D EQ '' OR D EQ 0) THEN BEGIN
+    ;        cmd[index_spin_state]  += '?'
+    ;        if (index_spin_state eq 0) then begin
+    ;          status_text = '- Please provide a valid Substrate Diameter D to' + $
+    ;            ' the Substrate Transmission Equation (tab -> LOAD/EMPTY_CELL)'
+    ;          IF (StatusMessage GT 0) THEN BEGIN
+    ;            append = 1
+    ;          ENDIF ELSE BEGIN
+    ;            append = 0
+    ;          ENDELSE
+    ;          putInfoInReductionStatus, Event, status_text, append
+    ;          StatusMessage += 1
+    ;        endif
+    ;      ENDIF ELSE BEGIN
+    ;        cmd[index_spin_state] += D
+    ;      ENDELSE
+    ;
+    ;      SF = getTextFieldValue(Event,'empty_cell_scaling_factor')
+    ;      IF (SF NE '') THEN BEGIN
+    ;        cmd[index_spin_state] += ' --scale-ecell=' + SF
+    ;      ENDIF
+    ;
+    ;      ;NeXus file
+    ;      cmd[index_spin_state] += ' --ecell='
+    ;      empty_cell_nexus_file = (*global).empty_cell_full_nexus_name
+    ;      IF (empty_cell_nexus_file EQ '') THEN BEGIN
+    ;        cmd[index_spin_state]  += '?'
+    ;        if (index_spin_state eq 0) then begin
+    ;          status_text = '- Please provide a valid Empty Cell NeXus File'
+    ;          status_text += ' (tab-> LOAD/EMPTY_CELL)'
+    ;          IF (StatusMessage GT 0) THEN BEGIN
+    ;            append = 1
+    ;          ENDIF ELSE BEGIN
+    ;            append = 0
+    ;          ENDELSE
+    ;          putInfoInReductionStatus, Event, status_text, append
+    ;          StatusMessage += 1
+    ;        endif
+    ;      ENDIF ELSE BEGIN
+    ;        cmd[index_spin_state] += empty_cell_nexus_file
+    ;      ENDELSE
+    ;
+    ;      ;remove Empty Cell Intermediate Plots
+    ;      MapBase, Event, 'reduce_plot8_base', 0
+    ;
+    ;    ENDIF ELSE BEGIN
+    ;
+    ;      ;remove Empty Cell Intermediate Plots
+    ;      MapBase, Event, 'reduce_plot8_base', 1
+    ;
+    ;    ENDELSE
     
     ;*****Q VALUES***************************************************************
     

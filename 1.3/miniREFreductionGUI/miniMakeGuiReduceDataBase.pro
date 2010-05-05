@@ -130,6 +130,15 @@ PRO miniMakeGuiReduceDataBase, Event, REDUCE_BASE, IndividualBaseWidth
     SCR_XSIZE = DataBaseSize[2],$
     SCR_YSIZE = DataBaseSize[3])
     
+  ;base that will hide the Peak Exclusion Region and background file
+  hide_base = widget_base(data_base,$
+    xoffset = sPeakBase.size[0],$
+    yoffset = sPeakBase.size[1]-3,$
+    scr_xsize = sPeakBase.size[2],$
+    scr_ysize = sPeakBase.size[3],$
+    map = 0,$
+    uname = 'hide_background_base')
+    
   ;Data main label
   DataLabel = WIDGET_LABEL(data_base,$
     XOFFSET = DataLabelSize[0],$
@@ -170,7 +179,7 @@ PRO miniMakeGuiReduceDataBase, Event, REDUCE_BASE, IndividualBaseWidth
     /ALIGN_LEFT,$
     VALUE     = '')
     
-    ;tof cut  base
+  ;tof cut  base
   tof_cut = WIDGET_BASE(data_base,$
     XOFFSET = 190,$
     YOFFSET = 106,$
@@ -196,7 +205,7 @@ PRO miniMakeGuiReduceDataBase, Event, REDUCE_BASE, IndividualBaseWidth
     UNAME = 'tof_cutting_max',$
     /EDITABLE)
     
-     units_base = WIDGET_BASE(tof_cut,$
+  units_base = WIDGET_BASE(tof_cut,$
     /ROW,$
     /EXCLUSIVE)
     
@@ -206,8 +215,8 @@ PRO miniMakeGuiReduceDataBase, Event, REDUCE_BASE, IndividualBaseWidth
   unit1 = WIDGET_BUTTON(units_base,$
     VALUE = 'microS',$
     UNAME = 'reduce_data_tof_units_micros')
-   WIDGET_CONTROL, unit2, /SET_BUTTON
- 
+  WIDGET_CONTROL, unit2, /SET_BUTTON
+  
   ;Peak exlusion Base -----------------------------------------------------------
   wPeakBase = WIDGET_BASE(data_base,$
     XOFFSET   = sPeakBase.size[0],$
@@ -290,7 +299,7 @@ PRO miniMakeGuiReduceDataBase, Event, REDUCE_BASE, IndividualBaseWidth
     ROW       = 1,$
     /NO_RELEASE,$
     /EXCLUSIVE)
-        
+    
   ;frame
   DataFrame = WIDGET_LABEL(data_base,$
     XOFFSET   = DataFrameSize[0],$
