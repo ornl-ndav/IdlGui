@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 PRO command_line_generator_for_ref_l, event
-  
+
   ;get global structure
   id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
   WIDGET_CONTROL,id,get_uvalue=global
@@ -94,8 +94,10 @@ ENDIF ELSE BEGIN
   StatusMessage += 1
 ENDELSE
 
-substrateValue = getCWBgroupValue(Event,'empty_cell_substrate_group')
-IF (substrateValue EQ 1) THEN BEGIN
+;substrateValue = getCWBgroupValue(Event,'empty_cell_substrate_group')
+;IF (substrateValue EQ 1) THEN BEGIN
+
+if (isDataWithBackground(Event)) then begin ;with background substraction
 
   ;get Peak or Background
   PeakBaseStatus = isPeakBaseMap(Event)
@@ -213,7 +215,9 @@ IF (substrateValue EQ 1) THEN BEGIN
     
   ENDELSE
   
-ENDIF ;end of if empty_cell selected
+endif ;end of if with background substraction
+
+;ENDIF ;end of if empty_cell selected
 
 ;check if user wants data background or not
 IF (isDataWithBackground(Event)) THEN BEGIN ;yes, with background
