@@ -199,34 +199,14 @@ plot7Label = widget_label(plot7Base,$
                           yoffset=0,$
                           value=InterList[6] + NotAvailableTitle)
 
-;;plot 8 base/label
-;plot8Base = widget_base(InterBase,$
-;                        xoffset=plot8BaseSize[0],$
-;                        yoffset=plot8Basesize[1],$
-;                        scr_xsize=plot8BaseSize[2],$
-;                        scr_ysize=plot8Basesize[3],$
-;                        uname='reduce_plot8_base',$
-;                        map=0)
-
-;plot8Label = widget_label(plot8Base,$
-;                          xoffset=0,$
-;                          yoffset=0,$
-;                          value=InterList[7] + NotAvailableTitle)
-
-;plot 9 base/label
-plot8Base = widget_base(InterBase,$
-                        xoffset=plot8BaseSize[0],$
-                        yoffset=plot8Basesize[1],$
-                        scr_xsize=plot8BaseSize[2],$
-                        scr_ysize=plot8Basesize[3],$
-                        uname='reduce_plot8_base',$
-                        map=1)
-
-;plot8Label = widget_label(plot8Base,$
-;                          xoffset=0,$
-;                          yoffset=0,$
-;                          value=InterList[8] + NotAvailableTitle)
-
+w1 = cw_bgroup(InterBase,$
+               ['R vs Q Plot   ','R vs Q after rebinning Plot'],$
+               xoffset = InterListSize[0],$
+               yoffset = 240,$
+               uname = 'intermediate_plot_list_2',$
+               /nonexclusive,$
+               /row,$
+               set_value=[0,0])
 
 InterList = cw_bgroup(InterBase,$
                       InterList,$
@@ -234,8 +214,8 @@ InterList = cw_bgroup(InterBase,$
                       yoffset=InterListSize[1],$
                       uname='intermediate_plot_list',$
                       /nonexclusive,$
-                      set_value=[0,0,0,0,0,0,0,0])
-                            
+                      set_value=[0,0,0,0,0,0])
+                                                        
 InterMainFrame = widget_label(InterBase,$
                               xoffset=InterMainFrameSize[0],$
                               yoffset=InterMainFrameSize[1],$

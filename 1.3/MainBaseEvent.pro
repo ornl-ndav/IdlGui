@@ -1686,6 +1686,12 @@ PRO MAIN_BASE_event, Event
       configure_auto_cleanup, Event=event
     end
     
+    ;R vs Q plot and R vs Q after rebinning plot
+    widget_info(wWidget, $
+      find_by_uname='intermediate_plot_list_2'): begin
+      REFreduction_CommandLineGenerator, Event
+    end
+    
     ;**************************************************************************
     ;**PLOTS TAB*
     ;*************************************************************************

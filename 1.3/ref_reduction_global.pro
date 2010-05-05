@@ -583,9 +583,8 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     'Normalization Combined Background TOF Plot',$
     'Normalization Combined Subtracted TOF Plot',$
     'R vs TOF Plot',$
-    'R vs TOF Combined Plot',$
-    ;              'XML output file',$
-    'Empty Cell R vs TOF Plot']
+    'R vs TOF Combined Plot']
+
   (*(*global).PlotsTitle) = PlotsTitle
   MainPlotTitle = 'Main Data Reduction Plot'
   (*global).MainPlotTitle = MainPlotTitle
@@ -607,8 +606,8 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     '_norm.bkg',$
     '_norm.sub',$
     '.rtof',$
-    '.crtof',$
-    '.ecrtof']
+    '.crtof']
+
   (*(*global).ExtOfAllPlots) = ExtOfAllPlots
   
   
