@@ -190,6 +190,15 @@ normalization_base = WIDGET_BASE(REDUCE_BASE,$
                                  SCR_XSIZE = NormalizationBaseSize[2],$
                                  SCR_YSIZE = NormalizationBaseSize[3])
 
+    ;base that will hide the Peak Exclusion Region and background file
+  hide_base = widget_base(normalization_base,$
+    xoffset = sPeakBase.size[0],$
+    yoffset = sPeakBase.size[1],$
+    scr_xsize = sPeakBase.size[2],$
+    scr_ysize = sPeakBase.size[3],$
+    map = 0,$
+    uname = 'hide_norm_background_base')
+
 ;Normalization main label
 NormalizationLabel = WIDGET_LABEL(normalization_base,$
                                   XOFFSET = NormalizationLabelSize[0],$

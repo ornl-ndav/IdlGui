@@ -378,11 +378,11 @@ PRO MAIN_BASE_event, Event
     ;Peak/Background tab (peak/background cw_bgroup)
     WIDGET_INFO(wWidget, FIND_BY_UNAME='peak_data_back_group'): BEGIN
       SwitchPeakBackgroundDataBase, Event ;_GUIinteraction
+      SwitchPeakBackgroundReduceDatabase, Event ;_GUIinteraction
       if (~isDataWithBackground(Event)) then begin ;without background
         MapBase, event, 'hide_background_base', 1
       endif else begin
         MapBase, event, 'hide_background_base', 0
-        SwitchPeakBackgroundReduceDatabase, Event ;_GUIinteraction
       endelse
       ;replot the selection activated
       REFReduction_RescaleDataPlot,Event
@@ -870,11 +870,15 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='peak_norm_back_group'): BEGIN
       SwitchPeakBackgroundNormBase, Event ;_GUI
       SwitchPeakBackgroundReduceNormBase, Event ;_GUI
+      if (~isNormWithBackground(Event)) then begin ;without background
+        MapBase, event, 'hide_norm_background_base', 1
+      endif else begin
+        MapBase, event, 'hide_norm_background_base', 0
+      endelse
       ;replot the selection activated
       REFReduction_RescaleNormalizationPlot,Event
-      ;       RePlot1DNormFile, Event
       ReplotNormAllSelection, Event
-    END
+    end
     
     ;**************************************************************************
     
@@ -1433,6 +1437,16 @@ PRO MAIN_BASE_event, Event
       REFreduction_CommandLineGenerator, Event
     END
     
+    ;yes or no norm background
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='normalization_background_cw_bgroup'): BEGIN
+      if (~isNormWithBackground(Event)) then begin ;without background
+        MapBase, event, 'hide_norm_background_base', 1
+      endif else begin
+        MapBase, event, 'hide_norm_background_base', 0
+      endelse
+      REFreduction_CommandLineGenerator, Event
+    END
+    
     ;empty cell yes or no
     WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_cell_substrate_group'): BEGIN
       substrateValue = getCWBgroupValue(Event,'empty_cell_substrate_group')
@@ -1976,7 +1990,6 @@ PRO MAIN_BASE_event, Event
   ;command line generator
   SWITCH Event.id OF
     WIDGET_INFO(wWidget, FIND_BY_UNAME='yes_no_normalization_bgroup'):
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='normalization_background_cw_bgroup'):
     WIDGET_INFO(wWidget, FIND_BY_UNAME='normalization_pola_state'):
     WIDGET_INFO(wWidget, FIND_BY_UNAME='intermediate_plot_cwbgroup'):
     WIDGET_INFO(wWidget, FIND_BY_UNAME='intermediate_plot_list'):
