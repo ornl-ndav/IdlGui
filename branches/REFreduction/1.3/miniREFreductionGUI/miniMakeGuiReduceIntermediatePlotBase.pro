@@ -201,36 +201,21 @@ plot7Label = WIDGET_LABEL(plot7Base,$
                           YOFFSET = 0,$
                           VALUE   = InterList[6] + NotAvailableTitle)
 
-;plot 8 base/label
-plot8Base = widget_base(InterBase,$
-                        xoffset=plot8BaseSize[0],$
-                        yoffset=plot8Basesize[1],$
-                        scr_xsize=plot8BaseSize[2],$
-                        scr_ysize=plot8Basesize[3],$
-                        uname='reduce_plot8_base',$
-                        map=1)
-
-;plot8Label = widget_label(plot8Base,$
-;                          xoffset=0,$
-;                          yoffset=0,$
-;                          value=InterList[8] + NotAvailableTitle)
-
+w1 = cw_bgroup(InterBase,$
+               ['R vs Q','R vs Q after rebinning'],$
+               xoffset = InterListSize[0],$
+               yoffset = 229,$
+               uname = 'intermediate_plot_list_2',$
+               /nonexclusive,$
+               /row,$
+               set_value=[0,0])
 
 InterList = CW_BGROUP(InterBase,$
                       InterList,$
                       XOFFSET   =InterListSize[0],$
                       YOFFSET   =InterListSize[1],$
                       UNAME     ='intermediate_plot_list',$
-                      SET_VALUE =[0,0,0,0,0,0,0,0],$
+                      SET_VALUE =[0,0,0,0,0,0],$
                       /NONEXCLUSIVE)
                             
-; InterMainFrame = WIDGET_LABEL(InterBase,$
-;                               XOFFSET   = InterMainFrameSize[0],$
-;                               YOFFSET   = InterMainFrameSize[1],$
-;                               SCR_XSIZE = InterMainFrameSize[2],$
-;                               SCR_YSIZE = InterMainFrameSize[3],$
-;                               FRAME     = 1,$
-;                               VALUE='')
-
-
 END
