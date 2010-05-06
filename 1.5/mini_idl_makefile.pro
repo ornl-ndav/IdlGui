@@ -57,12 +57,10 @@ cd, CurrentFolder + '/miniREFreductionGUI/'
 .run miniMakeGuiLoadNormalization1D_3D_Tab.pro
 .run miniMakeGuiLoadNormalization2DTab.pro
 .run miniMakeGuiLoadNormalization2D_3D_Tab.pro
-.run miniMakeGuiEmptyCellTab.pro
 .run miniMakeGuiInstrumentSelection.pro
 .run mini_auto_cleaning_base_gui.pro
 
 .run miniMakeGuiReduceTab.pro
-.run miniMakeGuiEmptyCell.pro
 .run miniMakeGuiReduceDataBase.pro
 .run miniMakeGuiReduceNormalizationBase.pro
 .run miniMakeGuiReduceQbase.pro

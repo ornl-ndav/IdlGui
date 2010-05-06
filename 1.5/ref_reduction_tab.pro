@@ -45,18 +45,18 @@ PRO tab_event, Event
   IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
     CASE (CurrTabSelect) OF
       0: BEGIN
-        tab_id = widget_info(Event.top, $
-          find_by_uname='data_normalization_tab')
-        CurrDNECtabSelect = widget_info(tab_id,/tab_current)
-        PrevDNECtabSelect = (*global).PrevDNECtabSelect
-        IF(CurrDNECtabSelect NE PrevDNECtabSelect) THEN BEGIN
-          IF (isBaseMap(Event, $
-            'empty_cell_scaling_' + $
-            'factor_calculation_base')) THEN BEGIN
-            ;refresh the equation plot
-            RefreshEquationDraw, Event ;_empty_cell
-          ENDIF
-        ENDIF
+;        tab_id = widget_info(Event.top, $
+;          find_by_uname='data_normalization_tab')
+;        CurrDNECtabSelect = widget_info(tab_id,/tab_current)
+;        PrevDNECtabSelect = (*global).PrevDNECtabSelect
+;        IF(CurrDNECtabSelect NE PrevDNECtabSelect) THEN BEGIN
+;          IF (isBaseMap(Event, $
+;            'empty_cell_scaling_' + $
+;            'factor_calculation_base')) THEN BEGIN
+;            ;refresh the equation plot
+;            RefreshEquationDraw, Event ;_empty_cell
+;          ENDIF
+;        ENDIF
       END
       1: BEGIN                ;if REDUCE tab is now selected
         REFreduction_CommandLineGenerator, Event
@@ -221,22 +221,3 @@ PRO norm_plots_tab_event, Event
   
 END
 
-;------------------------------------------------------------------------------
-PRO data_norma_empty_cell_tab_event, Event
-  ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
-  
-  tab_id = widget_info(Event.top, $
-    find_by_uname='data_normalization_tab')
-  CurrDNECtabSelect = widget_info(tab_id,/tab_current)
-  PrevDNECtabSelect = (*global).PrevDNECtabSelect
-  IF(CurrDNECtabSelect NE PrevDNECtabSelect) THEN BEGIN
-    IF (isBaseMap(Event, $
-      'empty_cell_scaling_' + $
-      'factor_calculation_base')) THEN BEGIN
-      ;refresh the equation plot
-      RefreshEquationDraw, Event ;_empty_cell
-    ENDIF
-  ENDIF
-  
-END
