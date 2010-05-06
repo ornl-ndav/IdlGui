@@ -120,7 +120,7 @@ PRO MakeGuiBatchTab, MAIN_TAB, MainTabSize, BatchTabTitle, structure
     label     : ['ACTIVE', $
     'DATA RUNS', $
     'NORM. RUNS',$
-    'E.C. RUN',$
+    '(NOT USED)',$
     'ANGLE (degrees)', $
     'S1 (mm)', $
     'S2 (mm)', $

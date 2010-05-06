@@ -123,7 +123,7 @@ PRO miniMakeGuiBatchTab, MAIN_TAB, $
     label     : ['ACTIVE', $
     'DATA', $
     'NORM.',$
-    'E.C.',$
+    'NOT USED', $
     'ANGLE (deg)', $
     'S1 (mm)', $
     'S2 (mm)', $
