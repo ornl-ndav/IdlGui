@@ -104,14 +104,6 @@ endif else begin
     IntermPlots[7] = 0
 endelse
 
-;Emtpy cell R vs TOF plot
-IF (isBaseMap(Event,'reduce_plot8_base') EQ 0 AND $
-    InterPlotsStatus[8] EQ 1) THEN BEGIN
-   IntermPlots[8] = 1
-ENDIF ELSE BEGIN
-   IntermPlots[8] = 0
-ENDELSE
-
 (*global).IntermPlots = IntermPlots
 
 END
@@ -158,11 +150,6 @@ endif
 if (InterPlotsStatus[7] EQ 1) then begin
     IP_cmd += ' --dump-rtof-comb'
 endif
-
-;empty cell R vs TOF plot
-IF (InterPlotsStatus[8] EQ 1) THEN BEGIN
-   IP_cmd += ' --dump-ecell-rtof'
-ENDIF
 
 ;create array of Intermediate files to plot
 PopulateIntermPLotsArray, Event

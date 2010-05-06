@@ -59,8 +59,7 @@ PRO populate_list_of_proposal, MAIN_BASE, instrument
 ListOfProposal = getListOfProposal(instrument, $
                                    MAIN_BASE)
 
-uname_list = ['empty_cell_proposal_folder_droplist',$
-              'data_proposal_folder_droplist',$
+uname_list = ['data_proposal_folder_droplist',$
               'norm_proposal_folder_droplist']
 
 sz = N_ELEMENTS(uname_list)

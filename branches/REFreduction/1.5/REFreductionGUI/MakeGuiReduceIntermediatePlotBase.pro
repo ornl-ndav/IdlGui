@@ -200,33 +200,6 @@ plot7Label = widget_label(plot7Base,$
                           yoffset=0,$
                           value=InterList[6] + NotAvailableTitle)
 
-;;plot 8 base/label
-;plot8Base = widget_base(InterBase,$
-;                        xoffset=plot8BaseSize[0],$
-;                        yoffset=plot8Basesize[1],$
-;                        scr_xsize=plot8BaseSize[2],$
-;                        scr_ysize=plot8Basesize[3],$
-;                        uname='reduce_plot8_base',$
-;                        map=0)
-
-;plot8Label = widget_label(plot8Base,$
-;                          xoffset=0,$
-;                          yoffset=0,$
-;                          value=InterList[7] + NotAvailableTitle)
-
-;plot 9 base/label
-plot8Base = widget_base(InterBase,$
-                        xoffset=plot8BaseSize[0],$
-                        yoffset=plot8Basesize[1],$
-                        scr_xsize=plot8BaseSize[2],$
-                        scr_ysize=plot8Basesize[3],$
-                        uname='reduce_plot8_base',$
-                        map=1)
-
-plot8Label = widget_label(plot8Base,$
-                          xoffset=0,$
-                          yoffset=0,$
-                          value=InterList[8] + NotAvailableTitle)
 
 
 InterList = cw_bgroup(InterBase,$

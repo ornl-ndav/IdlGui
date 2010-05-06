@@ -298,7 +298,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   IF ((*global).DEBUGGING_VERSION EQ 'yes') THEN debugging, MAIN_BASE, global
   
   ;display empty cell images ----------------------------------------------------
-  display_images, MAIN_BASE, global
+  ;display_images, MAIN_BASE, global
   
   ;------------------------------------------------------------------------------
   ;populate the list of proposal droplist (data, normalization,empty_cell)
