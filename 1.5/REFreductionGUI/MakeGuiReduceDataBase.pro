@@ -129,6 +129,15 @@ PRO MakeGuiReduceDataBase, Event, REDUCE_BASE, IndividualBaseWidth
     SCR_XSIZE = DataBaseSize[2],$
     SCR_YSIZE = DataBaseSize[3])
     
+  ;base that will hide the Peak Exclusion Region and background file
+  hide_base = widget_base(data_base,$
+  xoffset = sPeakBase.size[0],$
+  yoffset = sPeakBase.size[1],$
+  scr_xsize = sPeakBase.size[2],$
+  scr_ysize = sPeakBase.size[3],$
+  map = 0,$
+  uname = 'hide_background_base')
+  
   ;Data main label
   DataLabel = WIDGET_LABEL(data_base,$
     XOFFSET = DataLabelSize[0],$
