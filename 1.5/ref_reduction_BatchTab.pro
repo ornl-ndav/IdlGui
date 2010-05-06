@@ -935,15 +935,6 @@ PRO PopulateBatchTableWithDataNormRunNumbers, Event, BatchTable
 END
 
 ;------------------------------------------------------------------------------
-PRO PopulateBatchTableWithEmptyCellInfo, Event, BatchTable
-  ;get Empty Cell run number
-  ECrunNumber = getTextFieldValue(Event,'empty_cell_nexus_run_number')
-  IF (ECrunNumber NE '') THEN BEGIN
-    BatchTable[3,0] = STRCOMPRESS(ECrunNumber,/REMOVE_ALL)
-  ENDIF
-END
-
-;------------------------------------------------------------------------------
 ;This function is reached by the all_events of the main table in the
 ;batch tab
 PRO BatchTab_WidgetTable, Event
@@ -1634,9 +1625,7 @@ PRO RetrieveBatchInfoAtLoading, Event
   PopulateBatchTableWithOthersInfo, Event, BatchTable
   ;populate index 0 with all Data and Norm run numbers
   PopulateBatchTableWithDataNormRunNumbers, Event, BatchTable
-  ;populate index 0 with empty cell information
-  PopulateBatchTableWithEmptyCellInfo, Event, BatchTable
-  
+    
   (*(*global).BatchTable) = BatchTable
   ;display new BatchTable
   DisplayBatchTable, Event, BatchTable
