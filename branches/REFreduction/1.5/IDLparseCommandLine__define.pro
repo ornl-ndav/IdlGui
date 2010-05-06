@@ -125,7 +125,7 @@ END
 ;------------------------------------------------------------------------------
 FUNCTION getDataRoiFileName, cmd
   result = ValueBetweenArg1Arg2(cmd, '--data-roi-file=', 1, $
-  ' ', 0)
+    ' ', 0)
   IF (result EQ '') THEN RETURN, ''
   RETURN, STRCOMPRESS(result,/REMOVE_ALL)
 END
@@ -148,14 +148,14 @@ END
 
 ;------------------------------------------------------------------------------
 FUNCTION getTOFcuttingMin, cmd
- result = ValueBetweenArg1Arg2(cmd, '--tof-cut-min=', 1, ' ', 0)
+  result = ValueBetweenArg1Arg2(cmd, '--tof-cut-min=', 1, ' ', 0)
   IF (result EQ '') THEN RETURN, ''
   RETURN, STRCOMPRESS(result,/REMOVE_ALL)
 END
- 
+
 ;------------------------------------------------------------------------------
 FUNCTION getTOFcuttingMax, cmd
- result = ValueBetweenArg1Arg2(cmd, '--tof-cut-max=', 1, ' ', 0)
+  result = ValueBetweenArg1Arg2(cmd, '--tof-cut-max=', 1, ' ', 0)
   IF (result EQ '') THEN RETURN, ''
   RETURN, STRCOMPRESS(result,/REMOVE_ALL)
 END
@@ -207,48 +207,6 @@ FUNCTION getNormBackFileName, cmd
   result = ValueBetweenArg1Arg2(cmd, '--nbkg-roi-file=', 1, ' ', 0)
   IF (result EQ '') THEN RETURN, ''
   RETURN, result
-END
-
-;------------------------------------------------------------------------------
-FUNCTION getEmptyCellFileName, cmd
-  result = ValueBetweenArg1Arg2(cmd, '--ecell=', 1, ' ', 0)
-  IF (result EQ '') THEN RETURN, ''
-  RETURN, STRCOMPRESS(result,/REMOVE_ALL)
-END
-
-;------------------------------------------------------------------------------
-FUNCTION getEmptyCellRunNumber, fullNexusName
-  inst = obj_new('IDLgetMetadata',FullNexusName)
-  RunNumber = inst->getRunNumber()
-  OBJ_DESTROY, inst
-  RETURN, STRCOMPRESS(RunNumber,/REMOVE_ALL)
-END
-
-;------------------------------------------------------------------------------
-FUNCTION getEmptyCellAB, cmd
-  part2 = ValueAfterArg1(cmd, '--subtrans-coeff=')
-  IF (part2 NE '') THEN BEGIN
-    split = STRSPLIT(part2[0],' ',/EXTRACT)
-    A = split[0]
-    B = split[1]
-    RETURN, [A,B]
-  ENDIF ElSE BEGIN
-    RETURN, ['','']
-  ENDELSE
-END
-
-;------------------------------------------------------------------------------
-FUNCTION getEmptyCellC, cmd
-  result = ValueBetweenArg1Arg2(cmd, '--scale-ecell=', 1, ' ', 0)
-  IF (result EQ '') THEN RETURN, ''
-  RETURN, STRCOMPRESS(result,/REMOVE_ALL)
-END
-
-;------------------------------------------------------------------------------
-FUNCTION getEmptyCellD, cmd
-  result = ValueBetweenArg1Arg2(cmd, '--substrate-diam=', 1, ' ', 0)
-  IF (result EQ '') THEN RETURN, ''
-  RETURN, STRCOMPRESS(result,/REMOVE_ALL)
 END
 
 ;------------------------------------------------------------------------------
@@ -519,41 +477,6 @@ FUNCTION IDLparseCommandLine::getNormBackFileName
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getEmptyCellNexusFileName
-  RETURN, self.EmptyCellFileName
-END
-
-;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getEmptyCellRunNumber
-  RETURN, self.EmptyCellRunNumber
-END
-
-;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getEmptyCellA
-  RETURN, self.EmptyCellA
-END
-
-;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getEmptyCellB
-  RETURN, self.EmptyCellB
-END
-
-;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getEmptyCellC
-  RETURN, self.EmptyCellC
-END
-
-;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getEmptyCellD
-  RETURN, self.EmptyCellD
-END
-
-;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getEmptyCellReduceFlag
-  RETURN, self.EmptyCellReduceFlag
-END
-
-;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 FUNCTION IDLparseCommandLine::getDataBackgroundFlag
   RETURN, self.DataBackgroundFlag
 END
@@ -700,19 +623,6 @@ FUNCTION IDLparseCommandLine::init, cmd
     self.NormPeakExclYArray    = getNormPeakExclYArray(cmd)
     self.NormBackFileName      = getNormBackFileName(cmd)
     
-    ;Work on Emtpy Cell
-    self.EmptyCellFileName = getEmptyCellFileName(cmd)
-    IF (self.EmptyCellFileName NE '') THEN BEGIN
-      self.EmptyCellRunNumber = $
-        getEmptyCellRunNumber(self.EmptyCellFileName)
-      AB = getEmptyCellAB(cmd)
-      self.EmptyCellA = STRCOMPRESS(AB[0],/REMOVE_ALL)
-      self.EmptyCellB = STRCOMPRESS(AB[1],/REMOVE_ALL)
-      self.EmptyCellC = getEmptyCellC(cmd)
-      self.EmptyCellD = getEmptyCellD(cmd)
-      self.EmptyCellReduceFlag = 'yes'
-    ENDIF
-    
     ;;Reduce Tab
     ;Background flags
     self.DataBackgroundFlag        = isWithDataBackgroundFlagOn(cmd)
@@ -772,14 +682,6 @@ PRO IDLparseCommandLine__define
     NormRoiFileName           : '',$
     NormPeakExclYArray        : ['',''],$
     NormBackFileName          : '',$
-    
-    EmptyCellFileName         : '',$
-    EmptyCellRunNumber        : '',$
-    EmptyCellA                : '',$
-    EmptyCellB                : '',$
-    EmptyCellD                : '',$
-    EmptyCellC                : '',$
-    EmptyCellReduceFlag       : 'no',$
     
     DataBackgroundFlag        : 'yes',$
     NormBackgroundFlag        : 'yes',$
