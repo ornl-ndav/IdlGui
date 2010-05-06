@@ -696,49 +696,6 @@ FUNCTION IDLupdateGui::init, structure
     
   ENDELSE
   
-  ;Work on Empty Cell tab -------------------------------------------------------
-  IF (structure.EmptyCellRunNumber NE '') THEN BEGIN
-  
-    empty_cell_error = 0
-    
-    text = '--> Display Empty Cell Run Number ............................ ' $
-      + PROCESSING
-    putLogBookMessage, Event, text, APPEND=1
-    IF (structure.EmptyCellRunNumber EQ '') THEN BEGIN
-      AppendReplaceLogBookMessage, Event, NO, PROCESSING
-    ENDIF ELSE BEGIN
-      status = UpdateEmptyCellRunNumber(Event, structure.EmptyCellRunNumber)
-      IF (status EQ 0) THEN BEGIN
-        AppendReplaceLogBookMessage, Event, FAILED, PROCESSING
-        ++NbrError
-        ++DataError
-      ENDIF ELSE BEGIN
-        AppendReplaceLogBookMessage, Event, OK, PROCESSING
-      ENDELSE
-    ENDELSE
-    
-    ;Load the Empty Cell Run Number
-    text = '--> Load and Plot Empty Cell Run Number ...................... ' $
-      + PROCESSING
-    putLogBookMessage, Event, text, APPEND=1
-    UpdateEmptyCellNexusFileName, Event, $
-      structure.EmptyCellFileName, $
-      structure.EmptyCellRunNumber
-    AppendReplaceLogBookMessage, Event, OK, PROCESSING
-    
-    ;populate A, B, D and C factors
-    text = '--> Populate A, B, C and D ................................... ' $
-      + PROCESSING
-    putLogBookMessage, Event, text, APPEND=1
-    UpdateEmptyCellCoefficient, Event,$
-      structure.EmptyCellA,$
-      structure.EmptyCellB,$
-      structure.EmptyCellC,$
-      structure.EmptyCellD
-    AppendReplaceLogBookMessage, Event, OK, PROCESSING
-    
-  ENDIF ;end of if there is an empty cell run number
-  
   ;Work on Qmin, Qmax, Qwidth and Qtype
   text = '--> Load Qmin, Qmax, Qwidth and Qtype ........................ ' $
     + PROCESSING
