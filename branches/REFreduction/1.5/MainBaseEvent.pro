@@ -371,11 +371,23 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='peak_data_back_group'): BEGIN
       SwitchPeakBackgroundDataBase, Event ;_GUIinteraction
       SwitchPeakBackgroundReduceDatabase, Event ;_GUIinteraction
+      if (~isDataWithBackground(Event)) then begin ;without background
+        MapBase, event, 'hide_background_base', 1
+      endif else begin
+        MapBase, event, 'hide_background_base', 0
+      endelse
       ;replot the selection activated
       REFReduction_RescaleDataPlot,Event
-      ;       RePlot1DDataFile, Event
       ReplotAllSelection, Event
     END
+    
+    ;    ;Peak/Background tab (peak/background cw_bgroup)
+    ;    WIDGET_INFO(wWidget, FIND_BY_UNAME='peak_data_back_group'): BEGIN
+    ;      SwitchPeakBackgroundDataBase, Event ;_GUIinteraction
+    ;      SwitchPeakBackgroundReduceDatabase, Event ;_GUIinteraction
+    ;      REFReduction_RescaleDataPlot,Event
+    ;      ReplotAllSelection, Event
+    ;END
     
     ;CONTRAST TAB
     ;Contrast editor of data 1D tab
@@ -858,11 +870,25 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='peak_norm_back_group'): BEGIN
       SwitchPeakBackgroundNormBase, Event ;_GUI
       SwitchPeakBackgroundReduceNormBase, Event ;_GUI
+      if (~isNormWithBackground(Event)) then begin ;without background
+        MapBase, event, 'hide_norm_background_base', 1
+      endif else begin
+        MapBase, event, 'hide_norm_background_base', 0
+      endelse
       ;replot the selection activated
       REFReduction_RescaleNormalizationPlot,Event
-      ;       RePlot1DNormFile, Event
       ReplotNormAllSelection, Event
-    END
+    end
+    
+    ;    ;Peak/Background tab (peak/background cw_bgroup)
+    ;    WIDGET_INFO(wWidget, FIND_BY_UNAME='peak_norm_back_group'): BEGIN
+    ;      SwitchPeakBackgroundNormBase, Event ;_GUI
+    ;      SwitchPeakBackgroundReduceNormBase, Event ;_GUI
+    ;      ;replot the selection activated
+    ;      REFReduction_RescaleNormalizationPlot,Event
+    ;      ;       RePlot1DNormFile, Event
+    ;      ReplotNormAllSelection, Event
+    ;    END
     
     ;**************************************************************************
     
@@ -1427,28 +1453,21 @@ PRO MAIN_BASE_event, Event
     
     ;yes or no data background
     WIDGET_INFO(wWidget, FIND_BY_UNAME='data_background_cw_bgroup'): BEGIN
-      MapBase, Event, 'background_message_uname', 0
-      substrateValue = getCWBgroupValue(Event,'empty_cell_substrate_group')
-      IF (isDataWithBackground(Event) EQ 1 AND $
-        substrateValue EQ 0) THEN BEGIN
-        focus_empty_cell_base, Event, 0
-        MapBase, Event, 'empty_cell_or_data_background_base', 1
-      ENDIF ELSE BEGIN
-        REFreduction_CommandLineGenerator, Event
-      ENDELSE
+      if (~isDataWithBackground(Event)) then begin ;without background
+        MapBase, event, 'hide_background_base', 1
+      endif else begin
+        MapBase, event, 'hide_background_base', 0
+      endelse
+      REFreduction_CommandLineGenerator, Event
     END
     
-    ;empty cell yes or no
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_cell_substrate_group'): BEGIN
-      substrateValue = getCWBgroupValue(Event,'empty_cell_substrate_group')
-      IF (isDataWithBackground(Event) EQ 1 AND $
-        substrateValue EQ 0) THEN BEGIN
-        ;display data background message
-        MapBase, Event, 'background_message_uname', 1
-        SetCWBgroup, Event, 'data_background_cw_bgroup', 1
-      ENDIF ELSE BEGIN
-        MapBase, Event, 'background_message_uname', 0
-      ENDELSE
+    ;yes or no norm background
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='normalization_background_cw_bgroup'): BEGIN
+      if (~isNormWithBackground(Event)) then begin ;without background
+        MapBase, event, 'hide_norm_background_base', 1
+      endif else begin
+        MapBase, event, 'hide_norm_background_base', 0
+      endelse
       REFreduction_CommandLineGenerator, Event
     END
     

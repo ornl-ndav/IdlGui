@@ -32,6 +32,7 @@
 ;
 ;==============================================================================
 
+
 PRO MakeGuiReduceIntermediatePlotBase, Event, $
                                        REDUCE_BASE, $
                                        IndividualBaseWidth, $
