@@ -37,7 +37,7 @@ PRO browse_button, Event
   global = (*global_load).global
   
   path = (*global).path
-  filter = ['*.dat','*.txt']
+  filter = [['*.dat','*.txt']]
   widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='plot_ascii_load_base_uname')
   title = 'Select ASCII file(s) to load'
   
@@ -138,9 +138,15 @@ PRO add_new_data_to_big_array, event_load=event_load, $
   
     ;how many set of data we need to save
     ArrayTitle = sData.ArrayTitle
-    nbr_files = (size(ArrayTitle))(2)
+    if ((size(arrayTitle))[0] eq 2) then begin
+      nbr_files = (size(ArrayTitle))(2)
+    endif else begin
+      nbr_files = 1
+    endelse
+    
     index = first_empty_index
     local_index = 0
+    
     WHILE (index LT (nbr_files+first_empty_index)) DO BEGIN
     
       Xarray = *sData.pxaxis[local_index]
@@ -333,7 +339,7 @@ PRO trigger_status_column, Event
   ENDELSE
   putValueInTable, Event, 'plot_ascii_load_base_table', load_table
   (*global).load_table = load_table
-    
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -346,7 +352,7 @@ PRO delete_plot_ascii_load_selected_row, Event
   WIDGET_CONTROL, Event.top, GET_UVALUE=global_load
   global     = (*global_load).global
   load_table = (*global).load_table
-
+  
   pXarray      = (*(*global).pXarray)
   pYarray      = (*(*global).pYarray)
   pSigmaYarray = (*(*global).pSigmaYArray)
@@ -373,7 +379,7 @@ PRO delete_plot_ascii_load_selected_row, Event
   
   (*global).load_table = new_load_table
   putValueInTable, Event, 'plot_ascii_load_base_table', new_load_table
-
+  
   (*(*global).pXarray)      = pXarray_new
   (*(*global).pYarray)      = pYarray_new
   (*(*global).pSigmaYArray) = pSigmaYarray_new

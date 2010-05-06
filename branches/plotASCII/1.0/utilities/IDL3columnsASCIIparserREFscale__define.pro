@@ -52,47 +52,34 @@ FUNCTION read_data_multi, file
   
 END
 
-;------------------------------------------------------------------------------
-FUNCTION IDL3columnsASCIIparserREFscale::getDataQuickly
-  data   = read_data_multi(self.path)
-  nLines = FILE_LINES(self.path)
-  index  = WHERE(data EQ '',nbr) ;nbr is the number of arrays in that file
-  ;add last line
-  index = [index,nLines]
-  
-  pArray      = PTRARR(nbr,/ALLOCATE_HEAP)
-  ArrayTitle  = STRARR(2,nbr) ;name of file and incident angle
-  pXaxis      = PTRARR(nbr,/ALLOCATE_HEAP)
-  pYaxis      = PTRARR(nbr,/ALLOCATE_HEAP)
-  pSigmaYaxis = PTRARR(nbr,/ALLOCATE_HEAP)
+FUNCTIon getDataQuicklyCombined, data, nLines, index, path
+    
+  pArray      = PTRARR(1,/ALLOCATE_HEAP)
+  ArrayTitle  = STRARR(2,1) ;name of file and incident angle
+  pXaxis      = PTRARR(1,/ALLOCATE_HEAP)
+  pYaxis      = PTRARR(1,/ALLOCATE_HEAP)
+  pSigmaYaxis = PTRARR(1,/ALLOCATE_HEAP)
   
   ;retrieve data
-  FOR i=0,(nbr-1) DO BEGIN
-    ArrayTitle[0,i] = data[index[i]+1]
-    ArrayTitle[1,i] = data[index[i]+2]
-    *pArray[i] = data[index[i]+3:index[i+1]-1]
-  ENDFOR
+  *pArray[0] = data[index[1]+1:index[1+1]-1]
   
-  ;parse the various arrays
-  FOR i=0,(nbr-1) DO BEGIN
-    nbr_line = N_ELEMENTS(*pArray[i])
-    local_Xaxis= STRARR(nbr_line)
-    local_Yaxis= STRARR(nbr_line)
-    local_SigmaYaxis = STRARR(nbr_line)
-    array = *pArray[i]
-    FOR j=0,(nbr_line-1) DO BEGIN
-      line_split = STRSPLIT(array[j],' ',/EXTRACT)
-      local_Xaxis[j] = line_split[0]
-      local_Yaxis[j] = line_split[1]
-      local_SigmaYaxis[j] = line_split[2]
-    ENDFOR
-    *pXaxis[i] = FLOAT(local_Xaxis)
-    *pYaxis[i] = FLOAT(local_Yaxis)
-    *pSigmaYaxis[i] = FLOAT(local_SigmaYaxis)
+  nbr_line = N_ELEMENTS(*pArray[0])
+  local_Xaxis= STRARR(nbr_line)
+  local_Yaxis= STRARR(nbr_line)
+  local_SigmaYaxis = STRARR(nbr_line)
+  array = *pArray[0]
+  FOR j=0,(nbr_line-1) DO BEGIN
+    line_split = STRSPLIT(array[j],' ',/EXTRACT)
+    local_Xaxis[j] = line_split[0]
+    local_Yaxis[j] = line_split[1]
+    local_SigmaYaxis[j] = line_split[2]
   ENDFOR
+  *pXaxis[0] = FLOAT(local_Xaxis)
+  *pYaxis[0] = FLOAT(local_Yaxis)
+  *pSigmaYaxis[0] = FLOAT(local_SigmaYaxis)
   
   big_structure = { ArrayTitle: ArrayTitle,$
-    filename: self.path, $
+    filename: path, $
     xaxis: 'scalar wavevector transfer',$
     xaxis_units: '1/Angstroms',$
     yaxis: 'Intensity',$
@@ -104,6 +91,72 @@ FUNCTION IDL3columnsASCIIparserREFscale::getDataQuickly
     pSigmaYaxis: pSigmaYaxis}
     
   RETURN, big_structure
+  
+END
+
+
+;------------------------------------------------------------------------------
+FUNCTION IDL3columnsASCIIparserREFscale::getDataQuickly
+  data   = read_data_multi(self.path)
+  nLines = FILE_LINES(self.path)
+  index  = WHERE(data EQ '',nbr) ;nbr is the number of arrays in that file
+  ;add last line
+  index = [index,nLines]
+  
+  catch, error
+  if (error ne 0) then begin ;we are working with a combined ascii file
+    catch,/cancel
+    big_structure = $
+      getDataQuicklyCombined(data, nLines, index, self.path)
+  endif else begin
+  
+    pArray      = PTRARR(nbr,/ALLOCATE_HEAP)
+    ArrayTitle  = STRARR(2,nbr) ;name of file and incident angle
+    pXaxis      = PTRARR(nbr,/ALLOCATE_HEAP)
+    pYaxis      = PTRARR(nbr,/ALLOCATE_HEAP)
+    pSigmaYaxis = PTRARR(nbr,/ALLOCATE_HEAP)
+    
+    ;retrieve data
+    FOR i=0,(nbr-1) DO BEGIN
+      ArrayTitle[0,i] = data[index[i]+1]
+      ArrayTitle[1,i] = data[index[i]+2]
+      *pArray[i] = data[index[i]+3:index[i+1]-1]
+    ENDFOR
+    
+    ;parse the various arrays
+    FOR i=0,(nbr-1) DO BEGIN
+      nbr_line = N_ELEMENTS(*pArray[i])
+      local_Xaxis= STRARR(nbr_line)
+      local_Yaxis= STRARR(nbr_line)
+      local_SigmaYaxis = STRARR(nbr_line)
+      array = *pArray[i]
+      FOR j=0,(nbr_line-1) DO BEGIN
+        line_split = STRSPLIT(array[j],' ',/EXTRACT)
+        local_Xaxis[j] = line_split[0]
+        local_Yaxis[j] = line_split[1]
+        local_SigmaYaxis[j] = line_split[2]
+      ENDFOR
+      *pXaxis[i] = FLOAT(local_Xaxis)
+      *pYaxis[i] = FLOAT(local_Yaxis)
+      *pSigmaYaxis[i] = FLOAT(local_SigmaYaxis)
+    ENDFOR
+    
+    big_structure = { ArrayTitle: ArrayTitle,$
+      filename: self.path, $
+      xaxis: 'scalar wavevector transfer',$
+      xaxis_units: '1/Angstroms',$
+      yaxis: 'Intensity',$
+      yaxis_units: 'counts',$
+      sigma_yaxis: 'sigma',$
+      sigma_yaxis_units: '',$
+      pXaxis: pXaxis,$
+      pYaxis: pYaxis, $
+      pSigmaYaxis: pSigmaYaxis}
+      
+  endelse
+  
+  RETURN, big_structure
+  
 END
 
 ;------------------------------------------------------------------------------
