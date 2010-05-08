@@ -431,7 +431,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     X_Y_min_max_backup: STRARR(4),$
     ymin_log_mode: 0.001,$
     scaling_step2_ymin_ymax: DBLARR(2), $ ;ymin and ymax for zoom widgets of step2
-    step4_ymin_global_value: 0.000001, $ ;value min of y for log scale
+    step4_ymin_global_value: 0.00001, $ ;value min of y for log scale
     step4_2_2_fitting_status: 0,$
     step4_2_2_lambda_selected: 'min',$
     step4_2_2_fitting_parameters: FLTARR(2),$
@@ -472,8 +472,8 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     failed:              'FAILED',$
     version:             VERSION,$
 ; Change code (RC Ward, March 27, 2010): Decrease size of all windows in vertical direction    
-   MainBaseSize:        [30,50,1300,770],$
-;    MainBaseSize:        [30,50,1276,901],$
+;   MainBaseSize:        [30,50,1300,770],$
+    MainBaseSize:        [30,50,1276,901],$
     ascii_extension:     'txt',$
     ascii_filter:        '*.txt',$
     ascii_path:          '~/results/',$

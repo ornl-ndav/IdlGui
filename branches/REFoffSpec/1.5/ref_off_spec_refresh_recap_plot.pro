@@ -158,10 +158,10 @@ PRO refresh_recap_plot, Event, RESCALE=rescale
         array_dimension = [x_size, y_size]
         index_indices = ARRAY_INDICES(dims,index_no_null,/DIMENSIONS)
         sz = (size(index_indices,/DIMENSION))[1]
-        
-        i=0
-        WHILE (i LT sz-1) DO BEGIN
-        
+; Code Change (RC Ward, 28 April, 2010): Define i as LONG or 32-bit integer. It was going beyond  32767 and
+; going negative. So needed to be a LONG integer   
+        i= LONG(0)
+        WHILE (i LT sz-1) DO BEGIN       
           value_new = local_tfpdata[index_indices[0,i],index_indices[1,i]]
           value_old = base_array[index_indices[0,i],index_indices[1,i]]
           value_new_untouched = local_tfpdata_untouched[index_indices[0,i],$

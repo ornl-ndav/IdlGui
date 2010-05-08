@@ -2492,7 +2492,67 @@ PRO MAIN_BASE_event, Event
   ;----------------------------------------------------------------------------
   ; RECAP - RECAP - RECAP - RECAP - RECAP - RECAP - RECAP - RECAP - RECAP -
   ;----------------------------------------------------------------------------
+;***********************************************************************************************
+; Change Code (RC Ward, 29 April 2010): ADD THE FOLLOWING WIDGET_INFO for controlling plot scale  
+  ;X/Y/Min/Max
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_new_zoom_x_min'): BEGIN
+    ;re_display_step4_step2_step1_selection, Event ; step 5
+    step4_2_3_manual_scaling, Event, FACTOR='manual' ; step 5
+;    tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step5_new_step2_tab')
+;    CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
+;    IF (CurrTabSelect EQ 1) THEN BEGIN
+      re_plot_lambda_selected, Event ;step 5
+;      re_plot_fitting, Event ;step 5
+;    ENDIF
+  END
   
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_new_zoom_x_max'): BEGIN
+    ;re_display_step4_step2_step1_selection, Event ;step 5
+    step4_2_3_manual_scaling, Event, FACTOR='manual' ;step 5
+;    tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step5_new_step2_tab')
+;    CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
+;    IF (CurrTabSelect EQ 1) THEN BEGIN
+      re_plot_lambda_selected, Event ;step 5
+;      re_plot_fitting, Event ;step 5
+;    ENDIF
+  END
+  
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_new_zoom_reset_axis'): BEGIN
+    reset_zoom_widgets, Event ;step 5
+    step4_2_3_manual_scaling, Event, FACTOR='manual' ;step 5
+    ;    re_display_step4_step2_step1_selection, Event ;step 5
+;    tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step5_new_step2_tab')
+;    CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
+;    IF (CurrTabSelect EQ 1) THEN BEGIN
+      plotLambdaSelected, Event ; step5
+;      re_plot_fitting, Event ;step 5
+;    ENDIF
+  END
+  
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_new_zoom_y_min'): BEGIN
+    ;re_display_step4_step2_step1_selection, Event ;step 5
+    step4_2_3_manual_scaling, Event, FACTOR='manual' ;step 5
+;    tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step5_new_step2_tab')
+;    CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
+;    IF (CurrTabSelect EQ 1) THEN BEGIN
+      re_plot_lambda_selected, Event ;step 5
+;      re_plot_fitting, Event ;step 5
+;    ENDIF
+  END
+  
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_new_zoom_y_max'): BEGIN
+    ;re_display_step4_step2_step1_selection, Event ;scaling_step2
+    step4_2_3_manual_scaling, Event, FACTOR='manual' ;scaling_step2_step3
+;    tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step5_new_step2_tab')
+;    CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
+;    IF (CurrTabSelect EQ 1) THEN BEGIN
+      re_plot_lambda_selected, Event ;step 5
+;      re_plot_fitting, Event ;step 5
+;    ENDIF
+  END
+; Code Change (RC Ward, 29 April 2010): The above WIDGET_INFOs were added to control plot scale
+;***********************************************************************************************
+
   ;lin/log --------------------------------------------------------------------
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='z_axis_linear_log_step5'): BEGIN
@@ -2671,9 +2731,11 @@ PRO MAIN_BASE_event, Event
           (*global).step5_x1 = Event.x
           (*global).step5_y1 = Event.y
           inform_log_book_step5_selection, Event ;_step5
-          enabled_or_not_recap_rescale_button, Event
+;          enabled_or_not_recap_rescale_button, Event
+; Change Code (RC Ward, 7 May 2010):  Call  display_step5_rescale_plot  rather than  display_step5_rescale_plot_first_time    
           MapBase, Event, 'step5_rescale_base', 1
-          display_step5_rescale_plot_first_time, Event
+;          display_step5_rescale_plot_first_time, Event
+          display_step5_rescale_plot, Event
           define_default_recap_output_file, Event
         ENDIF
         
@@ -2822,11 +2884,11 @@ PRO MAIN_BASE_event, Event
         
         plot_selection_after_zoom, Event
       ENDIF
-      
+     
       replot_average_recap_rescale, Event
-      
+     
     ENDIF ELSE BEGIN ;selection selected
-    
+   
       IF (event.press EQ 1) THEN BEGIN ;press left
         IF ((*global).first_recap_rescale_plot) THEN BEGIN
           display_step5_rescale_plot, Event, with_range=1
@@ -2882,7 +2944,7 @@ PRO MAIN_BASE_event, Event
         ENDELSE
         ;check if we can enabled rescale button
         IF ((*global).recap_rescale_left_mouse) THEN BEGIN
-          enabled_or_not_recap_rescale_button, Event
+;           enabled_or_not_recap_rescale_button, Event
           plot_average_recap_rescale, Event
         ENDIF
         (*global).recap_rescale_left_mouse = 0

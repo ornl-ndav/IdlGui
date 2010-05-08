@@ -162,7 +162,7 @@ PRO tab_event, Event
   IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
     CASE (CurrTabSelect) OF
     
-      ;*************************************************************************
+;*** STEP 1 *******************************************************************
       0: BEGIN ;step1 (reduction)
       
         reduce_tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='reduce_tab')
@@ -200,14 +200,17 @@ PRO tab_event, Event
         ENDCASE
         
       END ;end of step1 *******************************************************
-      
+
+;*** STEP 2 *******************************************************************     
       1: BEGIN ;load
         IF((*global).something_to_plot) THEN BEGIN
           xaxis = (*(*global).x_axis)
           contour_plot, Event, xaxis
           plotAsciiData, Event, RESCALE=1, TYPE='replot'
         ENDIF
-      END
+      END ;end of step2 *******************************************************
+
+;*** STEP 3 *******************************************************************
       
       2: BEGIN ;shifting
         display_shifting_help, Event, ''
@@ -262,8 +265,9 @@ PRO tab_event, Event
           refresh_plot_selection_OF_2d_plot_mode, Event
         ENDIF
         CheckShiftingGui, Event ;_gui
-      END
+      END ;end of step3 *******************************************************
       
+;*** STEP 4 *******************************************************************
       3: BEGIN ;scaling
         tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='scaling_main_tab')
         step4CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
@@ -280,12 +284,14 @@ PRO tab_event, Event
           ;plotLambdaSelected, Event ;scaling_step2_step2
           ENDELSE
         ENDIF
-      END
-      
+      END ;end of step4 *******************************************************
+
+;*** STEP 5 **********************************************************************      
       4: BEGIN ;recap
         check_step5_gui, Event ;_step5
         LoadBaseStatus  = isBaseMapped(Event,'shifting_base_step5')
         ;ScaleBaseStatus = isBaseMapped(Event,'scaling_base_step5')
+
         IF (LoadBaseStatus EQ 0) THEN BEGIN
           id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='step5_draw')
           WIDGET_CONTROL, id_draw, GET_VALUE=id_value
@@ -303,34 +309,46 @@ PRO tab_event, Event
               refresh_recap_plot, Event, RESCALE=1;_step5
             ENDELSE
           ENDELSE
-          
+; TEST 18 Apr 2010 - add connection to zoom boxes
+;          step5_rescale_populate_zoom_widgets, Event ;scaling_step2 used in step 5
+;          re_display_step4_step2_step1_selection, Event ;scaling_step2 used in step 5       
+; TEST DID NOT WORK - NEED TO FIGURE THIS OUT
           ;show selection if one is selected
           selection_value = $
             getCWBgroupValue(Event,'step5_selection_group_uname')
           CASE (selection_value) OF
             1: BEGIN
+print, "second call to step5_rescale_populate_zoom_widgets"
+;               create_step5_selection_data, Event 
+;               step5_rescale_populate_zoom_widgets, Event
               IF ((*global).step5_x0 + $
                 (*global).step5_x1 + $
                 (*global).step5_y0 + $
                 (*global).step5_y1 NE 0) THEN BEGIN
                 replot_step5_i_vs_Q_selection, Event ;step5
+print, "third call to step5_rescale_populate_zoom_widgets"
+;                step5_rescale_populate_zoom_widgets, Event
               ENDIF
             END
             ELSE:
           ENDCASE
           
         ENDIF
-      END
+      END  ;end of step5 *******************************************************
       
+;*** STEP 6 ********************************************************************
       5: BEGIN ;create output file
         UpdateStep6Gui, Event ;_step6
-      END
-      
+      END  ;end of step6 *******************************************************
+
+;*** STEP 7 ********************************************************************      
       6: BEGIN ;options
-      END
-      
+      END  ;end of step7 *******************************************************
+
+;*** STEP 8 ********************************************************************
       7: BEGIN ;logbook
-      END
+      END  ;end of step8 *******************************************************
+      
       
       ELSE:
     ENDCASE
