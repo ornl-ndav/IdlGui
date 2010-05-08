@@ -182,7 +182,7 @@ PRO ReductionCmd::GetProperty, $
     LambdaBins_Step = self.lambdabins_step
   IF ARG_PRESENT(DumpTOF) NE 0 THEN DumpTOF = self.dumptof
   IF ARG_PRESENT(DumpWave) NE 0 THEN DumpWave = self.dumpwave
-  IF N_ELEMENTS(whitenorm) NE 0 THEN self.whitenorm = WhiteNorm
+  IF ARG_PRESENT(whitenorm) NE 0 THEN whitenorm = self.WhiteNorm
   IF ARG_PRESENT(DumpNorm) NE 0 THEN DumpNorm = self.dumpnorm
   IF ARG_PRESENT(DumpEt) NE 0 THEN DumpEt = self.dumpet
   IF ARG_PRESENT(DumpTIB) NE 0 THEN DumpTIB = self.dumptib
