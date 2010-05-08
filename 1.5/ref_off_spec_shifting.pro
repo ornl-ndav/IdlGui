@@ -301,7 +301,7 @@ WHILE (index LT nbr_plot) DO BEGIN
         master_min = local_min
         master_max = local_max
     ENDIF
-
+; ERROR OCCURED ON NEXT LINE ON 5MAY10. Index out of range on call to ARRAY_INDICES.
     ind1    = ARRAY_INDICES(local_tfpData,idx1)
     delta_x = xaxis[1]-xaxis[0]
     xmax_array[index] = ind1[0]*delta_x

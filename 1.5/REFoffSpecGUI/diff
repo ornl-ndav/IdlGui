@@ -1,0 +1,35 @@
+48,61c48,54
+<   XYoff = [5,5]
+< ; Code Change (RC Ward, April 10, 2010): Change size of window
+< ;  sRescaleBase = { size: [XYoff[0],$
+< ;                          XYoff[1],$
+< ;                         700,700],$
+< ;    uname: 'step5_rescale_base',$
+< ;    map: 0}
+<    sRescaleBase = { size: tab_size[0],$
+<                           tab_size[0],$
+<                           tab_size[2],$
+<                           730],$
+<                     uname: 'step5_rescale_base',$
+<                     map: 0}                         
+<                           
+---
+>   XYoff = [0,0]
+>   sRescaleBase = { size: [tab_size[0],$
+>     tab_size[1],$
+>     tab_size[2],$
+>     730],$
+>     uname: 'step5_rescale_base',$
+>     map: 0}
+439,441d431
+< ; Code Change (RC Ward Mar 8, 2010): Add parameters RETAIN=2 to force IDL to deal with retaining the window.
+< ; This should fix the problem of windows going "black".
+< 
+448d437
+<     RETAIN =2,$
+544,546d532
+< ; Code Change (RC Ward Mar 8, 2010): Add parameters RETAIN=2 to force IDL to deal with retaining the window.
+< ; This should fix the problem of windows going "black".
+< 
+553d538
+<     RETAIN        =2, $

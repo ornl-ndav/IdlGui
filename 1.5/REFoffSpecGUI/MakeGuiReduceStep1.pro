@@ -364,7 +364,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     UNAME = 'reduce_sangle_live_info_pixel',$
     /ALIGN_LEFT)
 ;================================ 
-;RefPix and DirPix
+;Dangle0
   row1col3m = WIDGET_BASE(row1col3Main,$ ;..................................
     /COLUMN, $
      FRAME = 2) 
@@ -375,10 +375,10 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
 
   label = WIDGET_LABEL(base3m,$
     /ALIGN_LEFT,$
-    VALUE = 'RefPix:')    
+    VALUE = 'Dangle0:')    
   value = WIDGET_TEXT(base3m,$
     VALUE = 'N/A',$
-    UNAME = 'reduce_sangle_base_refpix_user_value',$
+    UNAME = 'reduce_sangle_base_dangle0_user_value',$
     /EDITABLE, $
     XSIZE = 10)
     space = WIDGET_LABEL(base3m,$
@@ -386,25 +386,56 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     
   label = WIDGET_LABEL(base3m,$
     /ALIGN_LEFT,$
-    VALUE = 'DirPix:')
+    VALUE = 'Sam Dist:')    
   value = WIDGET_TEXT(base3m,$
+    VALUE = 'N/A',$
+    UNAME = 'reduce_sangle_base_sampledetdis_user_value',$
+    /EDITABLE, $
+    XSIZE = 10)
+    space = WIDGET_LABEL(base3m,$
+    VALUE = '  ')
+;================================ 
+;RefPix and DirPix
+  row1col3n = WIDGET_BASE(row1col3Main,$ ;..................................
+    /COLUMN, $
+     FRAME = 2) 
+  base3n = WIDGET_BASE(row1col3n,$
+;    XOFFSET = 155,$
+;    YOFFSET = 40,$
+    /ROW)
+
+  label = WIDGET_LABEL(base3n,$
+    /ALIGN_LEFT,$
+    VALUE = 'RefPix:')    
+  value = WIDGET_TEXT(base3n,$
+    VALUE = 'N/A',$
+    UNAME = 'reduce_sangle_base_refpix_user_value',$
+    /EDITABLE, $
+    XSIZE = 10)
+    space = WIDGET_LABEL(base3n,$
+    VALUE = '  ')
+    
+  label = WIDGET_LABEL(base3n,$
+    /ALIGN_LEFT,$
+    VALUE = 'DirPix:')
+  value = WIDGET_TEXT(base3n,$
     VALUE = 'N/A',$
     UNAME = 'reduce_sangle_base_dirpix_user_value',$
     /EDITABLE, $
     XSIZE = 10)
 ;=================================
 ; Sangle
-  row1col3n = WIDGET_BASE(row1col3Main,$ ;..................................
+  row1col3o = WIDGET_BASE(row1col3Main,$ ;..................................
     /COLUMN, $
      FRAME = 2) 
-  base3n = WIDGET_BASE(row1col3n,$
+  base3o = WIDGET_BASE(row1col3o,$
     FRAME = 1,$
     /ROW)
 
-  label = WIDGET_LABEL(base3n,$
+  label = WIDGET_LABEL(base3o,$
     /ALIGN_LEFT,$
     VALUE = 'Sangle [rad (deg)]: ')    
-  value = WIDGET_LABEL(base3n,$
+  value = WIDGET_LABEL(base3o,$
     VALUE = 'N/A (N/A)',$
     UNAME = 'reduce_sangle_base_sangle_user_value',$
     SCR_XSIZE = 200,$
@@ -412,13 +443,13 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
 ;=================================
 ; DONE button
 
-  row1col3o = WIDGET_BASE(row1col3Main,$ ;..................................
+  row1col3p = WIDGET_BASE(row1col3Main,$ ;..................................
     /COLUMN, $
      FRAME = 0) 
-   base3o = WIDGET_BASE(row1col3o,$
+   base3o = WIDGET_BASE(row1col3p,$
     /ROW)
     
-  done = WIDGET_BUTTON(row1col3o,$
+  done = WIDGET_BUTTON(row1col3p,$
     VALUE = 'DONE WITH SANGLE CALCULATION',$
     UNAME = 'reduce_sangle_done_button',$
     SCR_XSIZE = 320) 

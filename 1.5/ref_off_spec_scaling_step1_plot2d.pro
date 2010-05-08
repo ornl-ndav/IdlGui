@@ -51,7 +51,7 @@ PRO step4_step1_plot2d, Event, GROUP_LEADER=group
     WIDGET_CONTROL,(*global).w_scaling_plot2d_id, /SHOW
     RETURN
   ENDIF
-  
+
   xsize = 500
   ysize = 500
   
@@ -67,7 +67,7 @@ PRO step4_step1_plot2d, Event, GROUP_LEADER=group
   wDraw = WIDGET_DRAW(wBase,$
     SCR_XSIZE = xsize,$
     SCR_YSIZE = ysize,$
-    RETAIN    =2, $
+    RETAIN    = 2, $
     UNAME     = 'plot_2d_scaling_draw')
     
   (*global).w_scaling_plot2d_id = wBase
@@ -80,7 +80,7 @@ END
 
 ;------------------------------------------------------------------------------
 ;This procedure show the plot2d (if not there already) and display
-;counts vs tof for the given selection made
+;counts vs wavelength for the given selection made  
 PRO display_step4_step1_plot2d, Event
   WIDGET_CONTROL, Event.top,GET_UVALUE=global
   
@@ -88,7 +88,11 @@ PRO display_step4_step1_plot2d, Event
   step4_step1_plot2d, $           ;scaling_step1_plot2d
     Event, $
     GROUP_LEADER=Event.top
-  ;put value there
+
+  ; Code change RCW (Feb 8, 2010): Get Background color from XML file
+  PlotBackground = (*global).BackgroundCurvePlot
+
+  ;this is the x,y pixel selections for the user's selection window
   xy_selection = (*global).step4_step1_selection
   
   xmin = xy_selection[0]
@@ -98,13 +102,13 @@ PRO display_step4_step1_plot2d, Event
   
   xmin = MIN([xmin,xmax],MAX=xmax)
   ymin = MIN([ymin,ymax],MAX=ymax)
-  
+ 
   ymin = FIX(ymin/2)
   ymax = FIX(ymax/2)
   
   IF (xmin EQ xmax) THEN xmax += 1
   IF (ymin EQ ymax) THEN ymax += 1
-  
+   
   ;plot counts vs tof of region selected
   id_draw = WIDGET_INFO((*global).w_scaling_plot2d_id, $
     FIND_BY_UNAME=(*global).w_scaling_plot2d_draw_uname)
@@ -113,21 +117,25 @@ PRO display_step4_step1_plot2d, Event
   
   tfpData  = (*(*global).realign_pData_y)
   nbr_plot = getNbrFiles(Event)
-  ;array that will contain the counts vs wavelenght of each data file
+  ;array that will contain the counts vs wavelength of each data file
   IvsLambda_selection        = PTRARR(nbr_plot,/ALLOCATE_HEAP)
   IvsLambda_selection_backup = PTRARR(nbr_plot,/ALLOCATE_HEAP)
   
   ;determine ymax
   index_ymax = 0
   ymax_value = 0
+
   WHILE (index_ymax LT nbr_plot) DO BEGIN
-  
+; Change code 9RC Ward, 29 April 2010): save value of xmax for the first dataset (xmax0) for computing xrange
+    IF (index_ymax EQ 0) THEN BEGIN
+       xmax0 = xmax       
+    ENDIF
     local_tfpData       = *tfpData[index_ymax]
     
     sz = (size(local_tfpDAta))(1)
     xmin = (xmin GE sz) ? (sz-1) : xmin
-    xmax = (xmax GE sz) ? (sz-1) : xmax
-    
+    xmax = (xmax GE sz) ? (sz-1) : xmax  
+
     IF (index_ymax EQ 0) THEN BEGIN
       data_to_plot       = FLOAT(local_tfpData(xmin:xmax,ymin:ymax))
     ENDIF ELSE BEGIN
@@ -135,7 +143,10 @@ PRO display_step4_step1_plot2d, Event
 ;        (304L+ymin):(304L+ymax)))
         ((*global).detector_pixels_y+ymin):((*global).detector_pixels_y+ymax)))
     ENDELSE
-
+;*******************************************************************************
+; Data to be plotted is summed over one dimension and divided by the number 
+; of pixels in the selection window
+;*******************************************************************************
     nbr_pixels = (size(data_to_plot))(2)
     t_data_to_plot = total(data_to_plot,2)/FLOAT(nbr_pixels)
     
@@ -152,61 +163,59 @@ PRO display_step4_step1_plot2d, Event
   (*(*global).IvsLambda_selection)        = IvsLambda_selection
   (*(*global).IvsLambda_selection_backup) = IvsLambda_selection_backup
   
+; Change code (RC Ward, 29 April 2010): The code below was changed to behave like that in 
+; ref_off_spec_scaling_step2_step1.pro routine: display_step4_step2_step1_selection
+; It obtains t_data_to_plot from IvsLambda_selection array, rather tahn recomputing this,
+; since recomputing was causing problems with the function not being plotted over its entire range.
   index = 0
+  box_color     = (*global).box_color
   WHILE (index LT nbr_plot) DO BEGIN
-  
-    box_color     = (*global).box_color
     color         = box_color[index]
-    local_tfpData = *tfpData[index]
-
     psym = getStep4Step2PSYMselected(Event)
+    t_data_to_plot = *IvsLambda_selection[index]
+ 
     IF (index EQ 0) THEN BEGIN
-      data_to_plot   = FLOAT(local_tfpData(xmin:xmax,ymin:ymax))
-      nbr_pixels = (size(data_to_plot))(2)
-      t_data_to_plot = total(data_to_plot,2)/FLOAT(nbr_pixels)
-      sz = N_ELEMENTS(t_data_to_plot)
+
+; get delta_x
       xaxis = (*(*global).x_axis)
       delta_x = xaxis[1]-xaxis[0]
       (*global).step4_1_plot2d_delta_x = delta_x
-      xrange = (FINDGEN(sz)+ xmin) * delta_x
+      
+; Change code 9RC Ward, 29 April 2010): compute xrange from the value of xmax for the first dataset (xmax0)
+      xrange = (FINDGEN(xmax0)+ xmin) * delta_x
+;      sx = N_ELEMENTS(xrange)
+
       (*(*global).step4_step2_step1_xrange) = xrange
       xtitle = 'Wavelength'
       ytitle = 'Counts'
-      
-      ymin_local = (*global).step4_ymin_global_value
-      ymin_value = (ymin_local LT ymax_value) ? ymin_local : (ymax_value/10.)
-      
-      ymin_ymax = [ymin_value, ymax_value]
-      (*global).scaling_step2_ymin_ymax = ymin_ymax
           
-   ; Code change RCW (Feb 8, 2010): Get Background color from XML file
-      PlotBackground = (*global).BackgroundCurvePlot
+      ymin_local = (*global).step4_ymin_global_value
+      ymin_value = (ymin_local LT ymax_value) ? ymin_local : (ymax_value/10.)   
+      ymin_ymax = [ymin_value, ymax_value]
+      (*global).scaling_step2_ymin_ymax = ymin_ymax         
 
       plot, xrange, $
         t_data_to_plot, $
         XTITLE = xtitle, $
         YTITLE = ytitle,$
         COLOR  = color,$
+; Code change RCW (Feb 8, 2010): Get Background color from XML file
 ;        BACKGROUND = convert_rgb([255,255,255]),$
 ;        BACKGROUND = convert_rgb(PlotBackground),$
-                BACKGROUND = FSC_COLOR(PlotBackground),$
+        BACKGROUND = FSC_COLOR(PlotBackground),$
         YRANGE = [ymin_value,ymax_value],$
         PSYM   = psym,$
         /YLOG,$
         XSTYLE = 1
     ENDIF ELSE BEGIN
-      data_to_plot   = FLOAT(local_tfpData(xmin:xmax, $
-;        (304L+ymin):(304L+ymax)))
-        ((*global).detector_pixels_y+ymin):((*global).detector_pixels_y+ymax)))
-      nbr_pixels = (size(data_to_plot))(2)
-      t_data_to_plot = total(data_to_plot,2)/FLOAT(nbr_pixels)
-      oplot, xrange, t_data_to_plot, $
+      oplot, xrange, $
+        t_data_to_plot, $
         COLOR  = color,$
         PSYM   = psym
     ENDELSE
     index++
   ENDWHILE
-  
+ 
 END
 
 ;------------------------------------------------------------------------------

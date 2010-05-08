@@ -285,7 +285,7 @@ WHILE (index LT nbr_plot) DO BEGIN
     
 ;store x-axis end value
     x_axis[index] = (size(local_tfpData,/DIMENSION))[0]
-    
+
 ;determine max and min value of y (over all the data arrays)
     master_min = (local_min LT master_min) ? local_min : master_min
     master_max = (local_max GT master_max) ? local_max : master_max

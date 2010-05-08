@@ -35,13 +35,13 @@
 PRO create_step5_selection_data, Event
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
-  
+print, "create_step5_selection_data"  
   selection_value = getCWBgroupValue(Event,'step5_selection_group_uname')
   CASE (selection_value) OF
     1: type = 'IvsQ'
     2: type = 'IvsLambda'
   ENDCASE
-  
+
   WIDGET_CONTROL, /HOURGLASS
   
   base_array_untouched = (*(*global).total_array_untouched)
@@ -56,6 +56,8 @@ PRO create_step5_selection_data, Event
   ymin = MIN([y0,y1],MAX=ymax)
   ymin = FIX(ymin/2)
   ymax = FIX(ymax/2)
+
+print, " xmin, xmax, ymin, ymax: ", xmin, xmax, ymin, ymax
   
   array_selected = base_array_untouched[xmin:xmax,ymin:ymax]
   y = (SIZE(array_selected))(2)
@@ -83,12 +85,24 @@ PRO create_step5_selection_data, Event
   ymin = MIN(array_selected_total,MAX=ymax)
   
   (*global).x0y0x1y1 = [xmin,ymin,xmax,ymax]
-  
+
+     sxmin = STRCOMPRESS(xmin,/REMOVE_ALL)
+     sxmax = STRCOMPRESS(xmax,/REMOVE_ALL)      
+     symin = STRCOMPRESS(ymin,/REMOVE_ALL)
+     symax = STRCOMPRESS(ymax,/REMOVE_ALL)
+           
+      (*global).X_Y_min_max_backup = [sxmin, symin, sxmax, symax]
+print, "test: sxmin: ", sxmin, " sxmax: ", sxmax, " symin: ", symin, " symax: ",symax   
+      putTextFieldValue, Event, 'step5_new_zoom_x_min', sxmin
+      putTextFieldValue, Event, 'step5_new_zoom_x_max', sxmax
+      putTextFieldValue, Event, 'step5_new_zoom_y_min', symin
+      putTextFieldValue, Event, 'step5_new_zoom_y_max', symax
+ 
 END
 
 ;------------------------------------------------------------------------------
 PRO display_step5_rescale_plot, Event, with_range=with_range
-
+print, "display_step5_rescale_plot" 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
 ; Code change RCW (Feb 11, 2010): Get Background color from XML file
@@ -102,9 +116,9 @@ PRO display_step5_rescale_plot, Event, with_range=with_range
     CATCH,/CANCEL
     RETURN
   ENDIF
-  
+print, "INSIDE display_step5_rescale_plot!"  
   ;create array of data
-  ;create_step5_selection_data, Event
+  create_step5_selection_data, Event
   
   selection_value = getCWBgroupValue(Event,'step5_selection_group_uname')
   CASE (selection_value) OF
@@ -135,13 +149,21 @@ PRO display_step5_rescale_plot, Event, with_range=with_range
   LOADCT, color_table, /SILENT
   
   IF (N_ELEMENTS(with_range)) THEN BEGIN
-  
-    x0y0x1y1 = (*global).x0y0x1y1_graph
-    xmin = MIN ([x0y0x1y1[0],x0y0x1y1[2]],MAX=xmax)
-    ymin = MIN ([x0y0x1y1[1],x0y0x1y1[3]],MAX=ymax)
+
+; Change code (RC Ward, 29 April 2010): Add this code to pick up the axis scaling values
+    xmin = getTextFieldValue(Event,'step5_new_zoom_x_min')
+    xmax = getTextFieldValue(Event,'step5_new_zoom_x_max')
+    ymin = getTextFieldValue(Event,'step5_new_zoom_y_min')
+    ymax = getTextFieldValue(Event,'step5_new_zoom_y_max')
     xrange = [xmin,xmax]
     yrange = [ymin,ymax]
-    
+pint, "test after getTExtFieldValue display_step5_rescale - xmin, xmax, ymin, ymax: ", xmin, xmax, ymin, ymax
+; Change code (RC Ward, 29 April 2010): comment out this code once the code above is set up  
+;    x0y0x1y1 = (*global).x0y0x1y1_graph
+;    xmin = MIN ([x0y0x1y1[0],x0y0x1y1[2]],MAX=xmax)
+;    ymin = MIN ([x0y0x1y1[1],x0y0x1y1[3]],MAX=ymax)
+;    xrange = [xmin,xmax]
+;    yrange = [ymin,ymax]   
     ;    print, 'x0y0x1y1_graph[1]: ' + strcompress(x0y0x1y1[1])
     ;    print, 'x0y0x1y1_graph[3]: ' + strcompress(x0y0x1y1[3])
     ;
@@ -150,6 +172,11 @@ PRO display_step5_rescale_plot, Event, with_range=with_range
     ;    print, 'x0y0x1y1[3]: ' + strcompress(x0y0x1y1[3])
     ;    print
     ;
+
+; test for lin/log
+    LinLog = getCWBgroupValue(Event, 'step5_rescale_lin_log_plot')
+    print, "Inside 1st part - LinLog: ", LinLog
+    IF (LinLog EQ 0) THEN BEGIN ;linear
 
     PLOT, x_axis, $
       array_selected_total, $
@@ -164,7 +191,30 @@ PRO display_step5_rescale_plot, Event, with_range=with_range
       color = FSC_COLOR(ref_plot_data_color), $
       PSYM=1
       
+    ENDIF ELSE BEGIN ;log
+ 
+     PLOT, x_axis, $
+      array_selected_total, $
+      XTITLE=x_axis_label, $
+      YTITLE=y_axis_label,$
+      XRANGE = xrange,$
+      XSTYLE = 1,$
+      YRANGE = yrange,$
+      YSTYLE = 1,$
+      CHARSIZE = 2,$
+      BACKGROUND = FSC_COLOR(PlotBackground),$
+      color = FSC_COLOR(ref_plot_data_color), $
+      PSYM=1,$
+      /YLOG
+      
+    ENDELSE
+      
   ENDIF ELSE BEGIN
+
+; test for lin/log
+    LinLog = getCWBgroupValue(Event, 'step5_rescale_lin_log_plot')
+    print, "Inside 2nd part - LinLog: ", LinLog
+    IF (LinLog EQ 0) THEN BEGIN ;linear
   
     PLOT, x_axis, $
       array_selected_total, $
@@ -176,6 +226,23 @@ PRO display_step5_rescale_plot, Event, with_range=with_range
       BACKGROUND = FSC_COLOR(PlotBackground),$
       color = FSC_COLOR(ref_plot_data_color), $
       PSYM=1
+      
+    ENDIF ELSE BEGIN ;log
+
+    PLOT, x_axis, $
+      array_selected_total, $
+      XTITLE=x_axis_label, $
+      YTITLE=y_axis_label,$
+      XSTYLE = 1,$
+      YSTYLE = 1,$
+      CHARSIZE = 2,$
+      BACKGROUND = FSC_COLOR(PlotBackground),$
+      color = FSC_COLOR(ref_plot_data_color), $
+      PSYM=1,$
+      /YLOG
+
+    ENDELSE
+
       
     xmin = MIN(x_axis,MAX=xmax)
     ymin = MIN(array_selected_total,MAX=ymax)
@@ -200,7 +267,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO display_step5_rescale_plot_from_zoom, Event, with_range=with_range
-
+print, "display_step5_rescale_plot_from_zoom"
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
 ; Code change RCW (Feb 11, 2010): Get Background color from XML file
@@ -236,10 +303,19 @@ PRO display_step5_rescale_plot_from_zoom, Event, with_range=with_range
 ; Change code (RC Ward Feb 22, 2010): Pass color_table value for LOADCT from XML configuration file
   color_table = (*global).color_table
   LOADCT, color_table, /SILENT
+
+; Change code (RC Ward, 29 April 2010): Add this code to pick up the axis scaling values
+    xmin = getTextFieldValue(Event,'step5_new_zoom_x_min')
+    xmax = getTextFieldValue(Event,'step5_new_zoom_x_max')
+    ymin = getTextFieldValue(Event,'step5_new_zoom_y_min')
+    ymax = getTextFieldValue(Event,'step5_new_zoom_y_max')
+pint, "test after getTExtFieldValue in display_step5_rescale from zoom - xmin, xmax, ymin, ymax: ", xmin, xmax, ymin, ymax
+; Change code (RC Ward, 29 April 2010): comment out this code once the code above is set up  
   
-  x0y0x1y1 = (*global).x0y0x1y1_graph
-  xmin = MIN ([x0y0x1y1[0],x0y0x1y1[2]],MAX=xmax)
-  ymin = MIN ([x0y0x1y1[1],x0y0x1y1[3]],MAX=ymax)
+;  x0y0x1y1 = (*global).x0y0x1y1_graph
+;  xmin = MIN ([x0y0x1y1[0],x0y0x1y1[2]],MAX=xmax)
+;  ymin = MIN ([x0y0x1y1[1],x0y0x1y1[3]],MAX=ymax)
+
   xrange = [xmin,xmax]
   yrange = [ymin,ymax]
   
@@ -253,6 +329,7 @@ PRO display_step5_rescale_plot_from_zoom, Event, with_range=with_range
   ;
   
   LinLog = getCWBgroupValue(Event, 'step5_rescale_lin_log_plot')
+
   IF (LinLog EQ 0) THEN BEGIN ;linear
   
     PLOT, x_axis, $
@@ -303,7 +380,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO display_step5_rescale_plot_first_time, Event
-
+print, "display_step5_rescale_plot_first_time"
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
 ; Code change RCW (Feb 11, 2010): Get Background color from XML file
@@ -319,6 +396,7 @@ PRO display_step5_rescale_plot_first_time, Event
   ENDIF
   
   ;create array of data
+print, " in display_step5_rescale_plot_first_time - call to create_step5_selection_data"
   create_step5_selection_data, Event
   
   selection_value = getCWBgroupValue(Event,'step5_selection_group_uname')
@@ -341,14 +419,25 @@ PRO display_step5_rescale_plot_first_time, Event
   array_error_selected_total = (*(*global).step5_selection_y_error_array)
   
   id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='step5_rescale_draw')
+print, "id_draw: ", id_draw
   WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+  print, "id_value: ", id_value
   WSET,id_value
   
   DEVICE, DECOMPOSED=0
 ; Change code (RC Ward Feb 22, 2010): Pass color_table value for LOADCT from XML configuration file
   color_table = (*global).color_table
   LOADCT, color_table, /SILENT
-  
+ 
+; Change code (RC Ward, 29 April 2010): Add this code to pick up the axis scaling values
+    xmin = getTextFieldValue(Event,'step5_new_zoom_x_min')
+    xmax = getTextFieldValue(Event,'step5_new_zoom_x_max')
+    ymin = getTextFieldValue(Event,'step5_new_zoom_y_min')
+    ymax = getTextFieldValue(Event,'step5_new_zoom_y_max')
+pint, "test after getTExtFieldValue in display_step5_rescale first time - xmin, xmax, ymin, ymax: ", xmin, xmax, ymin, ymax
+    xrange = [xmin,xmax]
+    yrange = [ymin,ymax]
+     
   LinLog = getCWBgroupValue(Event, 'step5_rescale_lin_log_plot')
   IF (LinLog EQ 0) THEN BEGIN ;linear
   
@@ -357,8 +446,11 @@ PRO display_step5_rescale_plot_first_time, Event
       XTITLE=x_axis_label, $
       YTITLE=y_axis_label,$
       XSTYLE = 1,$
+      XRANGE = xrange,$
       YSTYLE = 1,$
-      CHARSIZE = 2,$
+      RETAIN = 2, $
+      YRANGE = yrange,$
+;      CHARSIZE = 2,$
       BACKGROUND = FSC_COLOR(PlotBackground),$
       color = FSC_COLOR(ref_plot_data_color), $
       PSYM=1
@@ -370,9 +462,12 @@ PRO display_step5_rescale_plot_first_time, Event
       XTITLE=x_axis_label, $
       YTITLE=y_axis_label,$
       XSTYLE = 1,$
+      XRANGE = xrange,$
       YSTYLE = 1,$
+      RETAIN = 2, $
+      YRANGE = yrange,$
       /YLOG,$
-      CHARSIZE = 2,$
+;      CHARSIZE = 2,$
       BACKGROUND = FSC_COLOR(PlotBackground),$
       color = FSC_COLOR(ref_plot_data_color), $
       PSYM=1
@@ -400,7 +495,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO display_step5_rescale_after_rescale_during_zoom_selection, Event
-
+print, "display_step5_rescale_after_rescale_during_zoom_selection"
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
 ; Code change RCW (Feb 11, 2010): Get Background color from XML file
@@ -491,7 +586,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO display_step5_rescale_reset_zoom, Event
-
+print, "display_step5_rescale_reset_zoom"
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
 ; Code change RCW (Feb 11, 2010): Get Background color from XML file
@@ -581,7 +676,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO redisplay_step5_rescale_plot, Event
-
+print, "redisplay_step5_rescale_plot"
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
   ; Code change RCW (Feb 11, 2010): Get Background color from XML file
@@ -617,11 +712,18 @@ PRO redisplay_step5_rescale_plot, Event
   color_table = (*global).color_table
   LOADCT, color_table, /SILENT
   
-  x0y0x1y1 = (*global).x0y0x1y1
-  ;(*global).x0y0x1y1_graph = x0y0x1y1
+; Change code (RC Ward, 29 April 2010): Add this code to pick up the axis scaling values
+    xmin = getTextFieldValue(Event,'step5_new_zoom_x_min')
+    xmax = getTextFieldValue(Event,'step5_new_zoom_x_max')
+    ymin = getTextFieldValue(Event,'step5_new_zoom_y_min')
+    ymax = getTextFieldValue(Event,'step5_new_zoom_y_max')
+print, "test after getTExtFieldValue in display_step5_rescale first time - xmin, xmax, ymin, ymax: ", xmin, xmax, ymin, ymax
   
-  xmin = MIN ([x0y0x1y1[0],x0y0x1y1[2]],MAX=xmax)
-  ymin = MIN ([x0y0x1y1[1],x0y0x1y1[3]],MAX=ymax)
+;  x0y0x1y1 = (*global).x0y0x1y1
+  ;(*global).x0y0x1y1_graph = x0y0x1y1 (already commented out)
+  
+;  xmin = MIN ([x0y0x1y1[0],x0y0x1y1[2]],MAX=xmax)
+;  ymin = MIN ([x0y0x1y1[1],x0y0x1y1[3]],MAX=ymax)
   xrange = [xmin,xmax]
   yrange = [ymin,ymax]
   
@@ -676,7 +778,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO redisplay_step5_rescale_plot_after_scaling, Event
-
+print, "redisplay_step5_rescale_plot_after_scaling"
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
 ; Code change RCW (Feb 11, 2010): Get Background color from XML file
@@ -759,7 +861,7 @@ END
 ;------------------------------------------------------------------------------
 ;plot selection for zoom
 PRO plot_recap_rescale_selection, Event
-
+print, "plot_recap_rescale_selection"
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
 ; Code change RCW (Feb 12, 2010): Get line plot colors from XML file
@@ -790,7 +892,7 @@ END
 ;------------------------------------------------------------------------------
 ;plot selection for zoom
 PRO plot_recap_rescale_CE_selection, Event
-
+print, "plot_recap_rescale_CE_selection"
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
 ; Code change RCW (Feb 12, 2010): Get line plot colors from XML file
@@ -828,7 +930,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO plot_recap_rescale_other_selection, Event, type=type
-
+print, "plot_recap_rescale_other_selection"
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
 ; Code change RCW (Feb 12, 2010): Get line plot colors from XML file
@@ -895,7 +997,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO plot_selection_after_zoom, Event
-
+print, "plot_selection_after_zoom"
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
 ; Code change RCW (Feb 12, 2010): Get line plot colors from XML file
@@ -939,25 +1041,25 @@ PRO plot_selection_after_zoom, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO enabled_or_not_recap_rescale_button, Event
-
-  WIDGET_CONTROL, Event.top, GET_UVALUE=global
-  
-  x1 = (*global).recap_rescale_selection_left
-  x2 = (*global).recap_rescale_selection_right
-  
-  IF (x1 NE 0. AND x2 NE 0.) THEN BEGIN
-    status = 1
-  ENDIF ELSE BEGIN
-    status = 0
-  ENDELSE
-  activate_widget, Event, 'step5_rescale_scale_to_1', status
-  
-END
+;PRO enabled_or_not_recap_rescale_button, Event
+;print, "enabled_or_not_recap_rescale_button"
+;  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+;  
+;  x1 = (*global).recap_rescale_selection_left
+;  x2 = (*global).recap_rescale_selection_right
+;  
+;  IF (x1 NE 0. AND x2 NE 0.) THEN BEGIN
+;    status = 1
+;  ENDIF ELSE BEGIN
+;    status = 0
+;  ENDELSE
+;  activate_widget, Event, 'step5_rescale_scale_to_1', status
+;  
+;END
 
 ;------------------------------------------------------------------------------
 PRO calculate_average_recap_rescale, Event
-
+print, "calculate_average_recap_rescale"
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
   x1 = (*global).recap_rescale_selection_left
@@ -994,7 +1096,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO plot_average_recap_rescale, Event
-
+print, "plot_average_recap_rescale"
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
 ; Code change RCW (Feb 12, 2010): Get line plot colors from XML file
@@ -1035,7 +1137,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO replot_average_recap_rescale, Event
-
+print, "replot_average_recap_rescale"
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
 ; Code change RCW (Feb 12, 2010): Get line plot colors from XML file
@@ -1087,7 +1189,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO plot_average_1_recap_rescale, Event ;plot the average horizontal value
-
+print, "plot_average_1_recap_rescale"
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
 ; Code change RCW (Feb 12, 2010): Get line plot colors from XML file
@@ -1114,7 +1216,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO define_default_recap_output_file, Event
-
+print, "define_default_recap_output_file"
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
     
   list_of_ascii_files = (*(*global).list_of_ascii_files)
@@ -1152,3 +1254,58 @@ PRO define_default_recap_output_file, Event
   update_step5_preview_button, Event ;step5
   
 END
+;PRO step5_rescale_populate_zoom_widgets, Event
+  ;get global structure
+;  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+;  print, "inside step5_rescale_populate_zoom_widgets"
+;  selection_value = getCWBgroupValue(Event,'step5_selection_group_uname')
+;  CASE (selection_value) OF
+;    0: type = 'None'
+;    1: type = 'IvsQ'
+;    2: type = 'IvsLambda'
+;  ENDCASE
+;  print, type
+;  IF (type EQ 'None') THEN BEGIN
+;    GOTO, JUMP  
+;  ENDIF
+;  print, "Inside type ne none" 
+;  ;check that xmax is not empty or equal to 0
+;  xmax_value = getTextFieldValue(Event,'step4_2_zoom_x_max')
+;  
+;  no_data = 0
+;  CATCH, no_data
+;  IF (no_data NE 0) THEN BEGIN
+;    CATCH,/CANCEL
+;  ENDIF ELSE BEGIN
+;    IF (xmax_value EQ '' OR $
+;      xmax_value EQ FLOAT(0)) THEN BEGIN
+;    xrange = (*(*global).step4_step2_step1_xrange)
+;IF (type EQ 'IvsLambda') THEN BEGIN
+;    print, "Keeping real space"
+;ENDIF ELSE BEGIN
+;    print, "Converting to recirpocal space"
+;    xrange = convert_from_lambda_to_Q(xrange)   
+;ENDELSE   
+;     sz = (size(xrange))(1)
+;     xmin = xrange[0]
+;     xmax = xrange[sz-1]
+;           
+;     sxmin = STRCOMPRESS(xmin,/REMOVE_ALL)
+;     sxmax = STRCOMPRESS(xmax,/REMOVE_ALL)      
+;
+;    ymin_ymax = (*global).scaling_step2_ymin_ymax
+;    symin = STRCOMPRESS(ymin_ymax[0],/REMOVE_ALL)
+;    symax = STRCOMPRESS(ymin_ymax[1],/REMOVE_ALL)
+;           
+;      (*global).X_Y_min_max_backup = [sxmin, symin, sxmax, symax]
+;print, "test: sxmin: ", sxmin, " sxmax: ", sxmax, " symin: ", symin, " symax: ",symax   
+;      putTextFieldValue, Event, 'step5_new_zoom_x_min', sxmin
+;      putTextFieldValue, Event, 'step5_new_zoom_x_max', sxmax
+;      putTextFieldValue, Event, 'step5_new_zoom_y_min', symin
+;      putTextFieldValue, Event, 'step5_new_zoom_y_max', symax
+;      
+;    ENDIF
+;  ENDELSE
+;  
+; JUMP:
+;END
