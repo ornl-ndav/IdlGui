@@ -48,7 +48,7 @@ PRO DGSreduction_TLB_Events, event
   
   ; Start the handler for the DGSN_* events
   IF STRMID(myUVALUE, 0, 4) EQ 'DGSN' THEN BEGIN
-    dgsnorm_events, event, dgsn_cmd
+    dgsnorm_events, event, dgsr_cmd
     ; Now set the UVALUE we are checking to 'NOTHING' so
     ; we don't get caught by the default on the next CASE statement
     myUVALUE = "NOTHING"
@@ -270,7 +270,7 @@ PRO DGSreduction_TLB_Events, event
   ; Do a sanity check
   status = dgsr_cmd->check()
   ; TODO: Add checks for Norm, and other tabs ?
-  ;dgsn_status = dgsn_cmd->check()
+  dgsn_status = dgsr_cmd->checkNorm()
   
   ; Disable the "Launch Collector" button if we are not ok to run!
   ;  dgsr_collector_button = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_LAUNCH_COLLECTOR_BUTTON')
@@ -283,15 +283,15 @@ PRO DGSreduction_TLB_Events, event
   dgsr_info_outputID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGSR_INFO_TEXT')
   WIDGET_CONTROL, dgsr_info_outputID, SET_VALUE=status.message
   ; Find the Messages Window (DGSR)
-  ;dgsn_info_outputID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGSN_INFO_TEXT')
-  ;WIDGET_CONTROL, dgsn_info_outputID, SET_VALUE=dgsn_status.message
+  dgsn_info_outputID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGSN_INFO_TEXT')
+  WIDGET_CONTROL, dgsn_info_outputID, SET_VALUE=dgsn_status.message
   
   ; Also Enable/Disable the DGSR Execute button
   dgsr_executeID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGSR_EXECUTE_BUTTON')
   WIDGET_CONTROL, dgsr_executeID, SENSITIVE=status.ok
   ; Also Enable/Disable the DGSN Execute button
-;  dgsn_executeID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGSN_EXECUTE_BUTTON')
-;  WIDGET_CONTROL, dgsn_executeID, SENSITIVE=status.ok
+  dgsn_executeID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGSN_EXECUTE_BUTTON')
+  WIDGET_CONTROL, dgsn_executeID, SENSITIVE=dgsn_status.ok
   
   ; Find the output window (DGS)
   dgs_cmd_outputID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_CMD_TEXT')

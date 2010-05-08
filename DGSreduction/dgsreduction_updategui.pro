@@ -39,16 +39,15 @@ PRO DGSreduction_UpdateGUI, widgetBase
 
   ; Get the info structure
   WIDGET_CONTROL, widgetBase, GET_UVALUE=info, /NO_COPY
-
+  
   ; extract the command object into a separate
   dgsr_cmd = info.dgsr_cmd    ; ReductionCMD object
-  dgsn_cmd = info.dgsn_cmd   ; NormCMD object
-
+  
   ; === Update Common Stuff ===
   ; Instrument
   widget_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='INSTRUMENT_SELECTED')
   dgsr_cmd->GetProperty, Instrument=myValue
-
+  
   ; Hack for SEQ
   IF (myValue EQ 'SEQ') THEN myValue = 'SEQUOIA'
   
@@ -56,61 +55,114 @@ PRO DGSreduction_UpdateGUI, widgetBase
     WIDGET_CONTROL, widget_ID, GET_VALUE=instruments
     WIDGET_CONTROL, widget_ID, SET_COMBOBOX_SELECT=(WHERE(instruments EQ myValue))
   ENDIF
-
+  
   ; Number of Jobs
   widget_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGS_REDUCTION_JOBS')
   dgsr_cmd->GetProperty, Jobs=myValue
   WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
-  ; Adding hack to pass this info back to dgsn_cmd for par file init
-  ; 2zr Mar 5, 2010
-  dgsn_cmd->SetProperty, Jobs=myValue
- 
-;  IF (myValue GT 1) THEN BEGIN
-;    dgsr_collector_button = WIDGET_INFO(widgetBase,FIND_BY_UNAME='DGSR_LAUNCH_COLLECTOR_BUTTON')
-;    WIDGET_CONTROL, dgsr_collector_button, SENSITIVE=1
-;    dgsn_collector_button = WIDGET_INFO(widgetBase,FIND_BY_UNAME='DGSN_LAUNCH_COLLECTOR_BUTTON')
-;    WIDGET_CONTROL, dgsn_collector_button, SENSITIVE=1
-;  ENDIF
- 
+  
+  ;  IF (myValue GT 1) THEN BEGIN
+  ;    dgsr_collector_button = WIDGET_INFO(widgetBase,FIND_BY_UNAME='DGSR_LAUNCH_COLLECTOR_BUTTON')
+  ;    WIDGET_CONTROL, dgsr_collector_button, SENSITIVE=1
+  ;    dgsn_collector_button = WIDGET_INFO(widgetBase,FIND_BY_UNAME='DGSN_LAUNCH_COLLECTOR_BUTTON')
+  ;    WIDGET_CONTROL, dgsn_collector_button, SENSITIVE=1
+  ;  ENDIF
+  
   ; === Update the Reduction Tab ===
   DGSR_UpdateGUI, widgetBase, dgsr_cmd
   
   ; Get the value of the normlocation and set it in the command objects
-  widget_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGS_NORMLOC_INST_SHARED')
-  state = WIDGET_INFO(widget_ID, /BUTTON_SET)
-  IF (state EQ 1) THEN BEGIN
-    dgsr_cmd->SetProperty, NormLocation='INST'
-    dgsn_cmd->SetProperty, NormLocation='INST'
-  ENDIF
-  widget_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGS_NORMLOC_PROP_SHARED')
-  state = WIDGET_INFO(widget_ID, /BUTTON_SET)
-  IF (state EQ 1) THEN BEGIN
-    dgsr_cmd->SetProperty, NormLocation='PROP'
-    dgsn_cmd->SetProperty, NormLocation='PROP'
-  ENDIF
+  ;  widget_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGS_NORMLOC_INST_SHARED')
+  ;  state = WIDGET_INFO(widget_ID, /BUTTON_SET)
+  ;  IF (state EQ 1) THEN BEGIN
+  ;    dgsr_cmd->SetProperty, NormLocation='INST'
+  ;  ENDIF
+  ;  widget_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGS_NORMLOC_PROP_SHARED')
+  ;  state = WIDGET_INFO(widget_ID, /BUTTON_SET)
+  ;  IF (state EQ 1) THEN BEGIN
+  ;    dgsr_cmd->SetProperty, NormLocation='PROP'
+  ;  ENDIF
+  ;  widget_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGS_NORMLOC_HOME_DIR')
+  ;  state = WIDGET_INFO(widget_ID, /BUTTON_SET)
+  ;  IF (state EQ 1) THEN BEGIN
+  ;    dgsr_cmd->SetProperty, NormLocation='HOME'
+  ;  ENDIF
   
-  widget_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGS_NORMLOC_HOME_DIR')
-  state = WIDGET_INFO(widget_ID, /BUTTON_SET)
-  IF (state EQ 1) THEN BEGIN
-    dgsr_cmd->SetProperty, NormLocation='HOME'
-    dgsn_cmd->SetProperty, NormLocation='HOME'
-  ENDIF
+  ; Normalisation Directory
+  dgsr_cmd->GetProperty, NormLocation=myValue
+  case (myValue) of
+    'INST': begin
+      widget_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGS_NORMLOC_INST_SHARED')
+      WIDGET_CONTROL, widget_ID, SET_BUTTON=1
+    end
+    'PROP': begin
+      widget_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGS_NORMLOC_PROP_SHARED')
+      WIDGET_CONTROL, widget_ID, SET_BUTTON=1
+    END
+    'HOME': BEGIN
+      widget_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGS_NORMLOC_HOME_DIR')
+      WIDGET_CONTROL, widget_ID, SET_BUTTON=1
+    END
+    ELSE: BEGIN
+    END
+  ENDCASE
   
+  ; Proton Beam Units
+  dgsr_cmd->GetProperty, ProtonCurrentUnits=myValue
+  case (myValue) of
+    'C': begin
+      widget_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGS_PROTON_UNITS_COULOMB')
+      WIDGET_CONTROL, widget_ID, SET_BUTTON=1
+    end
+    'mC': begin
+      widget_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGS_PROTON_UNITS_MILLICOULOMB')
+      WIDGET_CONTROL, widget_ID, SET_BUTTON=1
+    END
+    'uC': BEGIN
+      widget_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGS_PROTON_UNITS_MICROCOULOMB')
+      WIDGET_CONTROL, widget_ID, SET_BUTTON=1
+    END
+    ELSE: BEGIN
+      widget_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGS_PROTON_UNITS_PICOCOULOMB')
+      WIDGET_CONTROL, widget_ID, SET_BUTTON=1
+    END
+  ENDCASE
+   
+  ; Output Directory
+  
+  ; Corner Geometry
+  
+  ; Instrument Geometry
+  
+  ; SLURM Queue
+  
+  
+  ; dgs_reduction timing
+  widget_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGS_TIMING_ON')
+  dgsr_cmd->GetProperty, Timing=myValue
+  WIDGET_CONTROL, widget_ID, SET_BUTTON=myValue
+  IF (myValue EQ 0) THEN BEGIN
+    widget_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGS_TIMING_OFF')
+    WIDGET_CONTROL, widget_ID, SET_BUTTON=1
+  ENDIF
   
   ; Update the Norm Mask Tab
-  DGSN_UpdateGUI, widgetBase, dgsn_cmd
-
+  DGSN_UpdateGUI, widgetBase, dgsr_cmd
+  
   
   dgsr_status = dgsr_cmd->Check()
-  dgsn_status = dgsn_cmd->Check()
+  
+  dgsn_status = dgsr_cmd->CheckNorm()
   
   ; Find the Status message window
   dgsr_infoID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGSR_INFO_TEXT')
-  WIDGET_CONTROL, dgsr_infoID, SET_VALUE=dgsr_status.message  ; Find the Status message window
+  WIDGET_CONTROL, dgsr_infoID, SET_VALUE=dgsr_status.message
+  
+  ; Find the Norm Status message window
   dgsn_infoID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGSN_INFO_TEXT')
   WIDGET_CONTROL, dgsr_infoID, SET_VALUE=dgsn_status.message
-
+  
   ; Put info back
   WIDGET_CONTROL, widgetBase, SET_UVALUE=info, /NO_COPY
-
+  
 END
