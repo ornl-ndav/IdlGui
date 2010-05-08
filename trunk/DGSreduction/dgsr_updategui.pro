@@ -116,6 +116,11 @@ PRO DGSR_UpdateGUI, tlb, dgsr_cmd
   WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
   ;  IF (LONG(myValue) LE 0) THEN WIDGET_CONTROL, widget_ID, SET_VALUE=NULL
   
+  ; Norm Empty Can Run
+  widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_NORMEMPTYCAN')
+  dgsr_cmd->GetProperty, NormEmptyCan=myValue
+  WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
+  
   ; Empty Can Run
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_EMPTYCAN')
   dgsr_cmd->GetProperty, EmptyCan=myValue
@@ -145,13 +150,13 @@ PRO DGSR_UpdateGUI, tlb, dgsr_cmd
   WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
   
   ; Normalisation Integration Range (min)
-  ;  widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_NORM-INT-MIN')
-  ;  dgsr_cmd->GetProperty, NormRange_Min=myValue
-  ;  WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
+  widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_NORM-INT-MIN')
+  dgsr_cmd->GetProperty, NormRange_Min=myValue
+  WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
   ; Normalisation Integration Range (max)
-  ;  widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_NORM-INT-MAX')
-  ;  dgsr_cmd->GetProperty, NormRange_Max=myValue
-  ;  WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
+  widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_NORM-INT-MAX')
+  dgsr_cmd->GetProperty, NormRange_Max=myValue
+  WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
   
   ; Data Trans Coeff
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_DATA-TRANS')
@@ -159,9 +164,9 @@ PRO DGSR_UpdateGUI, tlb, dgsr_cmd
   WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
   
   ; Norm Trans Coeff
-  ;  widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_NORM-TRANS')
-  ;  dgsr_cmd->GetProperty, NormTrans=myValue
-  ;  WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
+  widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_NORM-TRANS')
+  dgsr_cmd->GetProperty, NormTrans=myValue
+  WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
   
   ; Detector Efficiency
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_DET-EFF')
@@ -286,6 +291,21 @@ PRO DGSR_UpdateGUI, tlb, dgsr_cmd
   dgsr_cmd->GetProperty, CWP=myValue
   WIDGET_CONTROL, widget_ID, SET_BUTTON=myValue
   
+  ; Empty Can CWP
+  widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_EMPTYCAN_CWP')
+  dgsr_cmd->GetProperty, Ecan_CWP=myValue
+  WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
+    
+  ; Black Can CWP
+  widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_BLACKCAN_CWP')
+  dgsr_cmd->GetProperty, Bcan_CWP=myValue
+  WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
+  
+  ; Sample CWP
+  widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_DATA_CWP')
+  dgsr_cmd->GetProperty, Data_CWP=myValue
+  WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
+  
   ; SEBlock
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_SEBLOCK')
   dgsr_cmd->GetProperty, SEBlock=myValue
@@ -300,4 +320,38 @@ PRO DGSR_UpdateGUI, tlb, dgsr_cmd
   dgsr_cmd->GetProperty, UserLabel=myValue
   WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
   
+  ; No Mask
+  ;
+  ;  IF (myValue EQ 1) THEN BEGIN
+  ;    widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_NO_HARD_MASK')
+  ;  ENDIF ELSE BEGIN
+  ;
+  ;  ENDELSE
+  
+  ; Hard Mask
+  widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_HARD_MASK')
+  dgsr_cmd->GetProperty, HardMask=myValue
+  WIDGET_CONTROL, widget_ID, SET_BUTTON=myValue
+  
+  ; No Mask
+  widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_NO_HARD_MASK')
+  dgsr_cmd->GetProperty, HardMask=myValue
+  ; We need the inverse of whatever the hardmask is...
+  IF (myValue EQ 1) THEN myStatus = 0
+  IF (myValue EQ 0) THEN myStatus = 1
+  WIDGET_CONTROL, widget_ID, SET_BUTTON=myStatus
+  
+  ; Custom Mask
+  widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_CUSTOM_HARD_MASK')
+  dgsr_cmd->GetProperty, CustomHardMask=myValue
+  WIDGET_CONTROL, widget_ID, SET_BUTTON=myValue
+  CustomMaskState = myValue
+  ; Make the filename field active if needed.
+  maskfilename_ID = WIDGET_INFO(tlb,FIND_BY_UNAME='DGSR_SOURCE_MASKFILENAME')
+  WIDGET_CONTROL, maskfilename_ID, SENSITIVE=CustomMaskState
+  
+  ; Source Mask Filename
+  widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_SOURCE_MASKFILENAME')
+  dgsr_cmd->GetProperty, MasterMaskFile=myValue
+  WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
 END

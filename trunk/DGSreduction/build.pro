@@ -101,7 +101,9 @@ newPath = EXPAND_PATH('+./') + PATH_SEP(/SEARCH_PATH) + !PATH
 .compile dgsreduction_loadparameters
 .compile dgsreduction_exportscript
 .compile make_reduction_tab
-.compile make_vanmask_tab
+.compile make_corrections_tab
+.compile make_normalisation_tab
+.compile make_advancedoptions_tab
 .compile dgsreduction
 .compile reductioncmd__define
 .compile normcmd__define

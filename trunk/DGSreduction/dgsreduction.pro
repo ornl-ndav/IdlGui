@@ -619,16 +619,6 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
     UNAME='INSTRUMENT_SELECTED', VALUE=[' ','ARCS','CNCS','SEQUOIA'], $
     XSIZE=90, YSIZE=30)
     
-  ;  jobBase = WIDGET_BASE(toprow, /ALIGN_RIGHT)
-  ;  jobLabel = WIDGET_LABEL(jobBase, VALUE=' Job Submission ', XOFFSET=5)
-  ;  jobLabelGeometry = WIDGET_INFO(jobLabel, /GEOMETRY)
-  ;  jobLabelGeometryYSize = jobLabelGeometry.ysize
-  ;  jobPrettyBase = WIDGET_BASE(jobBase, /FRAME, $
-  ;        YOFFSET=jobLabelGeometryYSize/2, XPAD=10, YPAD=10)
-  jobID = CW_FIELD(toprow, TITLE="                      No. of Jobs:", $
-    UVALUE="DGS_REDUCTION_JOBS", UNAME='DGS_REDUCTION_JOBS', $
-    VALUE=1, /INTEGER, /ALL_EVENTS)
-    
   paddingText = "                       "
   paddingLabel = WIDGET_LABEL(toprow, VALUE=paddingText)
   
@@ -652,17 +642,23 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
   tabID = WIDGET_TAB(tlb)
   
   ; Reduction Tab
-  reductionTabBase = WIDGET_BASE(tabID, Title='Reduction', /COLUMN)
+  reductionTabBase = WIDGET_BASE(tabID, Title='Data Selection', /COLUMN)
   make_Reduction_Tab, reductionTabBase, dgsr_cmd
   
-  ; normalisation tab
-  vanmaskTabBase = WIDGET_BASE(tabID, Title='Vanadium Mask', /COLUMN)
-  ;label = WIDGET_LABEL(vanmaskTabBase, VALUE="Nothing to see here! - Move along :-)")
-  make_VanMask_Tab, vanmaskTabBase, dgsr_cmd
+  ; Corrections tab
+  correctionsTabBase = WIDGET_BASE(tabID, Title='Corrections', /COLUMN)
+  make_Corrections_Tab, correctionsTabBase, dgsr_cmd
   
+  ; Normalisation tab
+  normalisationTabBase = WIDGET_BASE(tabID, Title='Normalisation', /COLUMN)
+  make_Normalisation_Tab, normalisationTabBase, dgsr_cmd  
+  
+  ; Advanced Options tab
+  advancedoptionsTabBase = WIDGET_BASE(tabID, Title='Advanced Settings', /COLUMN)
+  make_advancedoptions_Tab, advancedoptionsTabBase, dgsr_cmd
   
   ; Settings Tab
-  settingsTabBase = WIDGET_BASE(tabID, TITLE='Advanced Settings', /COLUMN)
+  settingsTabBase = WIDGET_BASE(tabID, TITLE='Adv. (File) Settings', /COLUMN)
   make_settings_tab, settingsTabBase, DGSR_cmd
   
   ; Make the admin tab unavailable for now!
@@ -673,7 +669,55 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
   ;  label = WIDGET_LABEL(logTab, VALUE="Nothing to see here!")
   ;  logbookID = WIDGET_TEXT(logTab, xsize=80, ysize=20, /SCROLL, /WRAP, $
   ;    UNAME='DGS_REDUCTION_LOGBOOK')
+  
+  
+  ; Check the DGSR command
+  status=dgsr_cmd->Check()
+  NormStatus = dgsr_cmd->checkNorm()
+  
+  ; === Message Tabs ===
+  reductionMessageTabsID = WIDGET_TAB(tlb)
+  
+  MessageBoxSize = 160
+  
+  ; Info Messages Tab
+  InfoTab = WIDGET_BASE(reductionMessageTabsID, TITLE='Messages')
+  infoMessagesID = WIDGET_TEXT(InfoTab, XSIZE=MessageBoxSize, YSIZE=6, /SCROLL, /WRAP, $
+    VALUE=status.message, UNAME='DGSR_INFO_TEXT')
     
+  ; Norm Info Messages Tab
+  NormInfoTab = WIDGET_BASE(reductionMessageTabsID, TITLE='Norm Messages')
+  NorminfoMessagesID = WIDGET_TEXT(NormInfoTab, XSIZE=MessageBoxSize, YSIZE=6, /SCROLL, /WRAP, $
+    VALUE=Normstatus.message, UNAME='DGSN_INFO_TEXT')
+    
+  ; Reduction Tab
+  CommandTab = WIDGET_BASE(reductionMessageTabsID, Title='Command to execute', /COLUMN)
+  ;textID = WIDGET_LABEL(baseWidget, VALUE='Command to execute:', /ALIGN_LEFT)
+  outputID= WIDGET_TEXT(CommandTab, xsize=MessageBoxSize, ysize=6, /SCROLL, /WRAP, $
+    VALUE=dgsr_cmd->generate(), UNAME='DGSR_CMD_TEXT')
+    
+  ; Norm Tab
+  NormCommandTab = WIDGET_BASE(reductionMessageTabsID, Title='Command to execute (Norm)', /COLUMN)
+  ;textID = WIDGET_LABEL(baseWidget, VALUE='Command to execute:', /ALIGN_LEFT)
+  NormOutputID= WIDGET_TEXT(NormCommandTab, xsize=MessageBoxSize, ysize=6, /SCROLL, /WRAP, $
+    VALUE=dgsr_cmd->generateNorm(), UNAME='DGSN_CMD_TEXT')
+    
+    
+  ; === COMMAND BUTTONS ===
+    
+  ButtonRow = WIDGET_BASE(tlb, /ROW, /ALIGN_RIGHT)
+  ;
+  ;  GatherButton = WIDGET_BUTTON(ButtonRow, VALUE='GATHER (Only Run when SLURM Jobs Completed)', $
+  ;    EVENT_PRO='DGSreduction_LaunchCollector', UNAME='DGSR_LAUNCH_COLLECTOR_BUTTON')
+  ;  ; As by default we have 1 job - we should disable the collector button
+  ;  WIDGET_CONTROL, GatherButton, SENSITIVE=0
+  
+  ; Define a Reduction Run button
+  executeID = WIDGET_BUTTON(ButtonRow, Value=' EXECUTE >>> ', $
+    EVENT_PRO='DGSreduction_Execute', UNAME='DGSR_EXECUTE_BUTTON')
+    
+  WIDGET_CONTROL, executeID, SENSITIVE=status.ok
+  
   ;wMainButtons = WIDGET_BASE(tlb, /ROW)
   mainButtonsColumns = WIDGET_BASE(tlb, COLUMN=3)
   mainButtonsCol1 = WIDGET_BASE(mainButtonsColumns, /ROW)
@@ -681,7 +725,7 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
   mainButtonsCol3 = WIDGET_BASE(mainButtonsColumns, /ROW)
   mainButtonsCol1Row1 = WIDGET_BASE(mainButtonsCol1, /ROW, /ALIGN_LEFT)
   mainButtonsCol2Row1 = WIDGET_BASE(mainButtonsCol2, /ROW)
-  mainButtonsCol3Row1 = WIDGET_BASE(mainButtonsCol3, /ROW, /ALIGN_RIGHT, XOFFSET=750)
+  mainButtonsCol3Row1 = WIDGET_BASE(mainButtonsCol3, /ROW, /ALIGN_RIGHT, XOFFSET=700)
   
   ; Define a Quit button
   quitID = WIDGET_BUTTON(mainButtonsCol1Row1, Value=' QUIT ', EVENT_PRO='DGSreduction_Quit')
@@ -706,6 +750,7 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
     
   loadParametersButton = WIDGET_BUTTON(mainButtonsCol2Row1, VALUE='LOAD ALL Parameters', $
     UNAME='DGS_LOADPARAMETERS', EVENT_PRO='DGSreduction_LoadParameters')
+    
     
   ;TODO: Load in the default Value
     

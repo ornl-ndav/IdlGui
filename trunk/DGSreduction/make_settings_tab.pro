@@ -46,9 +46,20 @@ PRO make_settings_tab, baseWidget, myCommandObj
   settingsTabCol1 = WIDGET_BASE(settingsTabBaseColumns, /COLUMN)
   settingsTabCol2 = WIDGET_BASE(settingsTabBaseColumns, /COLUMN)
   
+  jobBase = WIDGET_BASE(settingsTabCol2, /ALIGN_RIGHT)
+  jobLabel = WIDGET_LABEL(jobBase, VALUE=' Job Submission ', XOFFSET=5)
+  jobLabelGeometry = WIDGET_INFO(jobLabel, /GEOMETRY)
+  jobLabelGeometryYSize = jobLabelGeometry.ysize
+  jobPrettyBase = WIDGET_BASE(jobBase, /FRAME, /COLUMN, $
+    YOFFSET=jobLabelGeometryYSize/2, XPAD=10, YPAD=10)
+    
+  jobID = CW_FIELD(jobPrettyBase, TITLE="No. of Jobs:", $
+    UVALUE="DGS_REDUCTION_JOBS", UNAME='DGS_REDUCTION_JOBS', $
+    VALUE=1, /INTEGER, /ALL_EVENTS)
+    
   ; === Custom execution queue name ===
-  
-  customQueueBase = WIDGET_BASE(settingsTabCol1)
+    
+  customQueueBase = WIDGET_BASE(jobPrettyBase)
   customQueueLabel = WIDGET_LABEL(customQueueBase, VALUE=' SLURM Queue Selection ', XOFFSET=5)
   customQueueLabelGeometry = WIDGET_INFO(customQueueLabel, /GEOMETRY)
   customQueueLabelYSize = customQueueLabelGeometry.ysize
@@ -111,7 +122,7 @@ PRO make_settings_tab, baseWidget, myCommandObj
   
   
   ; === Normalisation file locations ===
-  normlocationBase = WIDGET_BASE(settingsTabCol1)
+  normlocationBase = WIDGET_BASE(settingsTabCol2)
   normlocationLabel = WIDGET_LABEL(normlocationBase, VALUE=' Normalisation Directory ', XOFFSET=5)
   normlocationLabelGeometry = WIDGET_INFO(normlocationLabel, /GEOMETRY)
   normlocationLabelYSize = normlocationLabelGeometry.ysize
@@ -128,23 +139,10 @@ PRO make_settings_tab, baseWidget, myCommandObj
   ; Make Proposal Shared the default.
   WIDGET_CONTROL, proposalSharedButtonID, SET_BUTTON=1
   myCommandObj->SetProperty, NormLocation='PROP'
-    
-  ; === dgs_reduction timing ===
-  timingBase = WIDGET_BASE(settingsTabCol1)
-  timingLabel = WIDGET_LABEL(timingBase, VALUE=' Diagnostic Timing ', XOFFSET=5)
-  timingLabelGeometry = WIDGET_INFO(timingLabel, /GEOMETRY)
-  timingLabelYSize = timingLabelGeometry.ysize
-  timingPrettyBase = WIDGET_BASE(timingBase, /FRAME, /ROW, XPAD=10, YPAD=10, YOFFSET=timingLabelYSize/2.0)
-  timingRow = WIDGET_BASE(timingPrettyBase, /ROW)
-  timingButtons = WIDGET_BASE(timingRow, /ROW, EXCLUSIVE=1)
-  timingOnID = WIDGET_BUTTON(timingButtons, Value=' ON  ', UNAME='DGS_TIMING_ON', UVALUE='DGS_TIMING_ON')
-  timingOffID = WIDGET_BUTTON(timingButtons, Value=' OFF  ', UNAME='DGS_TIMING_OFF', UVALUE='DGS_TIMING_OFF')
-  ; Make off the default
-  WIDGET_CONTROL, timingOffID, SET_BUTTON=1
   
   
   ; === Field to specify the Corner Geometry File ===
-  cornerGeomBase = WIDGET_BASE(settingsTabCol2)
+  cornerGeomBase = WIDGET_BASE(settingsTabCol1)
   cornerGeomLabel = WIDGET_LABEL(cornerGeomBase, VALUE=' Corner Geometry File ', XOFFSET=5)
   cornerGeomLabelGeometry = WIDGET_INFO(cornerGeomLabel, /GEOMETRY)
   cornerGeomLabelYSize = cornerGeomLabelGeometry.ysize
@@ -170,7 +168,7 @@ PRO make_settings_tab, baseWidget, myCommandObj
   WIDGET_CONTROL, cornerGeomNameID, SET_VALUE=cornerGeomertyFilename
   
   ; === Instrument Geometry Override ===
-  instGeomBase = WIDGET_BASE(settingsTabCol2)
+  instGeomBase = WIDGET_BASE(settingsTabCol1)
   instGeomLabel = WIDGET_LABEL(instGeomBase, VALUE=' Instrument Geometry File ', XOFFSET=5)
   instGeomLabelGeometry = WIDGET_INFO(instGeomLabel, /GEOMETRY)
   instGeomLabelYSize = instGeomLabelGeometry.ysize
@@ -191,28 +189,6 @@ PRO make_settings_tab, baseWidget, myCommandObj
   WIDGET_CONTROL, autoInstGeomSelectionButtonID, SET_BUTTON=1
   WIDGET_CONTROL, instGeomNameID, SENSITIVE=0
   
-  ; === Proton Current Units ===
-  protonUnitsBase = WIDGET_BASE(settingsTabCol2)
-  protonUnitsLabel = WIDGET_LABEL(protonUnitsBase, VALUE=' Proton Current Units ', XOFFSET=5)
-  protonUnitsLabelGeometry = WIDGET_INFO(protonUnitsLabel, /GEOMETRY)
-  protonUnitsLabelYSize = protonUnitsLabelGeometry.ysize
-  protonUnitsPrettyBase = WIDGET_BASE(protonUnitsBase, /FRAME, /ROW, XPAD=10, YPAD=10, $
-    YOFFSET=protonUnitsLabelYSize/2.0)
-    
-  protonUnitsColumn = WIDGET_BASE(protonUnitsPrettyBase, /COLUMN)
-  protonUnitsButtons = WIDGET_BASE(protonUnitsColumn, EXCLUSIVE=1)
   
-  coulombButtonID = WIDGET_BUTTON(protonUnitsButtons, VALUE='Coulombs (Recommended)', $
-    UNAME='DGS_PROTON_UNITS_COULOMB', UVALUE='DGS_PROTON_UNITS_COULOMB')
-  millCoulombButtonID = WIDGET_BUTTON(protonUnitsButtons, VALUE='Milli-Coulombs (mC)', $
-    UNAME='DGS_PROTON_UNITS_MILLICOULOMB', UVALUE='DGS_PROTON_UNITS_MILLICOULOMB')
-  microCoulombButtonID = WIDGET_BUTTON(protonUnitsButtons, VALUE='Micro-Coulombs (uC)', $
-    UNAME='DGS_PROTON_UNITS_MICROCOULOMB', UVALUE='DGS_PROTON_UNITS_MICROCOULOMB')
-  picoCoulombButtonID = WIDGET_BUTTON(protonUnitsButtons, VALUE='Pico-Coulombs (pC)', $
-    UNAME='DGS_PROTON_UNITS_PICOCOULOMB', UVALUE='DGS_PROTON_UNITS_PICOCOULOMB')
-    
-  ; Make 'Coulombs' the default
-  WIDGET_CONTROL, coulombButtonID, SET_BUTTON=1
-  myCommandObj->SetProperty, ProtonCurrentUnits='C'
   
 END

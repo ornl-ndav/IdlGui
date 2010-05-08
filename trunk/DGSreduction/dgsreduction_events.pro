@@ -177,7 +177,11 @@ PRO dgsreduction_events, event, dgsr_cmd
       ; Norm Filename
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
       dgsr_cmd->SetProperty, Normalisation=myValue
-      
+    END
+    'DGSR_NORMEMPTYCAN': BEGIN
+      ; Empty Can Filename
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      dgsr_cmd->SetProperty, NormEmptyCan=myValue
     END
     'DGSR_EMPTYCAN': BEGIN
       ; Empty Can Filename
