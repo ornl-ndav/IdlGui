@@ -751,20 +751,15 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
   ;  ; As by default we have 1 job - we should disable the collector button
   ;  WIDGET_CONTROL, GatherButton, SENSITIVE=0
   
-  ; Define a Reduction Run button
-  executeID = WIDGET_BUTTON(ButtonRow, Value=' EXECUTE >>> ', $
-    EVENT_PRO='DGSreduction_Execute', UNAME='DGSR_EXECUTE_BUTTON')
-    
-  WIDGET_CONTROL, executeID, SENSITIVE=status.ok
   
-  ;wMainButtons = WIDGET_BASE(tlb, /ROW)
+ ;wMainButtons = WIDGET_BASE(tlb, /ROW)
   mainButtonsColumns = WIDGET_BASE(tlb, COLUMN=3)
   mainButtonsCol1 = WIDGET_BASE(mainButtonsColumns, /ROW)
   mainButtonsCol2 = WIDGET_BASE(mainButtonsColumns, /ROW)
   mainButtonsCol3 = WIDGET_BASE(mainButtonsColumns, /ROW)
   mainButtonsCol1Row1 = WIDGET_BASE(mainButtonsCol1, /ROW, /ALIGN_LEFT)
   mainButtonsCol2Row1 = WIDGET_BASE(mainButtonsCol2, /ROW)
-  mainButtonsCol3Row1 = WIDGET_BASE(mainButtonsCol3, /ROW, /ALIGN_RIGHT, XOFFSET=700)
+  mainButtonsCol3Row1 = WIDGET_BASE(mainButtonsCol3, /ROW, /ALIGN_RIGHT);, XOFFSET=700)
   
   ; Define a Quit button
   quitID = WIDGET_BUTTON(mainButtonsCol1Row1, Value=' QUIT ', EVENT_PRO='DGSreduction_Quit')
@@ -791,6 +786,13 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
     UNAME='DGS_LOADPARAMETERS', EVENT_PRO='DGSreduction_LoadParameters')
     
     
+  ; Define a Reduction Run button
+  executeID = WIDGET_BUTTON(mainButtonsCol3Row1, Value=' EXECUTE >>> ', $
+    EVENT_PRO='DGSreduction_Execute', UNAME='DGSR_EXECUTE_BUTTON')
+    
+     
+  WIDGET_CONTROL, executeID, SENSITIVE=status.ok  
+   
   ;TODO: Load in the default Value
     
   ; Define some default directories...
