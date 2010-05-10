@@ -41,7 +41,7 @@ PRO DGSreduction_Execute, event
   IF theError NE 0 THEN BEGIN
     catch, /cancel
     ; If we catch an error - get rid of the progress window
-    progressBar->Destroy
+    IF N_ELEMENTS(progressBar) NE 0 THEN progressBar->Destroy
     Obj_Destroy, progressBar
     ; Now put the info structure back for consistency
     WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
@@ -308,6 +308,30 @@ PRO DGSreduction_Execute, event
       
     ENDIF
     
+    ; Let's check to see if the vanadium masks/norm files are already there...
+    vanfilesThere = dgsr_cmd->CheckVanadiumFiles()
+    IF (vanfilesThere EQ 0) THEN BEGIN
+    
+      print, 'No Vanadium mask/norm files found - running dgs_norm'
+      
+      ; We need to put the info structure back so it is available to the DGSNORM_EXECUTE command
+      WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
+      
+      ; Execute the norm jobs and get the jobIDs back
+      normJobs = DGSnorm_Execute_Function(event)
+      print, 'Norm Job IDs = ', normJobs.jobID
+      
+      help,/str,normJobs
+      
+      ; Get the info structure and copy it here
+      WIDGET_CONTROL, event.top, GET_UVALUE=info, /NO_COPY
+      
+      ; Do we need to do this ?
+      dgsr_cmd = info.dgsr_cmd
+      
+    ENDIF
+    
+    
     ; Generate the array of commands to run
     commands = dgsr_cmd->generate()
     
@@ -365,9 +389,16 @@ PRO DGSreduction_Execute, event
       ENDIF
       
       cmd = jobcmd + " --output=" + logfile + $
-        " --job-name=" + jobname + $
-        " " + commands[index]
+        " --job-name=" + jobname
         
+      ; Add dependency to Norm jobs if needed
+      IF (vanfilesThere EQ 0) THEN BEGIN
+        cmd += " --dependency=afterok:" + normJobs.jobID[index]
+      ENDIF
+      
+      ; Add finally add the actual command!
+      cmd += " " + commands[index]
+      
       if (index EQ 0) then begin
         spawn, 'echo ' + cmd + ' > ' + logDir + '/reduction_commands'
       endif else begin
@@ -420,30 +451,30 @@ END
 
 ;---------------------------------------------------------
 
-PRO DGSnorm_Execute, event
+FUNCTION DGSnorm_Execute_Function, event
 
   ; Error Handling
   catch, theError
   IF theError NE 0 THEN BEGIN
     catch, /cancel
     ok = ERROR_MESSAGE(!ERROR_STATE.MSG + ' Returning...', TRACEBACK=1, /error)
-    return
+    return, -1
   ENDIF
   
   ; Get the info structure and copy it here
   WIDGET_CONTROL, event.top, GET_UVALUE=info, /NO_COPY
-  dgsr_cmd = info.dgsr_cmd
+  dgs_cmd = info.dgsr_cmd
   
   ; Do some sanity checking.
   
   ; First lets check that an instrument has been selected!
-  dgsr_cmd->GetProperty, Instrument=instrument
+  dgs_cmd->GetProperty, Instrument=instrument
   IF (STRLEN(instrument) LT 2) THEN BEGIN
     ; First put back the info structure
     WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
     ; Then show an error message!
     ok=ERROR_MESSAGE("Please select an Instrument from the list.", /INFORMATIONAL)
-    return
+    return, -1
   END
   
   ; Generate the array of commands to run
@@ -528,13 +559,19 @@ PRO DGSnorm_Execute, event
   ; Launch the collectors - waiting for the reduction jobs to finish first
   DGSnorm_LaunchCollector, event, WAITFORJOBS=jobID
   
-; Start the sub window widget
-;MonitorJob, Group_Leader=event.top, JobName="My first jobby"
+  ; Start the sub window widget
+  ;MonitorJob, Group_Leader=event.top, JobName="My first jobby"
+  
+  data = { jobID : jobID }
+  
+  return, data
   
 END
 
 ;---------------------------------------------------------
-
+PRO DGSnorm_Execute, event
+  jobs = DGSnorm_Execute_Function(event)
+END
 ;---------------------------------------------------------
 
 PRO DGSreduction_Cleanup, tlb
@@ -651,7 +688,7 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
   
   ; Normalisation tab
   normalisationTabBase = WIDGET_BASE(tabID, Title='Normalisation', /COLUMN)
-  make_Normalisation_Tab, normalisationTabBase, dgsr_cmd  
+  make_Normalisation_Tab, normalisationTabBase, dgsr_cmd
   
   ; Advanced Options tab
   advancedoptionsTabBase = WIDGET_BASE(tabID, Title='Advanced Settings', /COLUMN)

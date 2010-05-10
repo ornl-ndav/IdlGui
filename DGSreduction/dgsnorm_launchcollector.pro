@@ -44,7 +44,7 @@ PRO DGSnorm_LaunchCollector, event, WaitForJobs=waitforjobs
   
   ; Get out the info structure
   WIDGET_CONTROL, event.top, GET_UVALUE=info, /NO_COPY
-  dgs_cmd = info.dgs_cmd
+  dgs_cmd = info.dgsr_cmd
   
   ; For the moment generate the logs in the current directory
   cd, CURRENT=thisDirectory

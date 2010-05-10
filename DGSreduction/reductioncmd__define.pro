@@ -758,14 +758,14 @@ function ReductionCmd::Check
   ENDIF
   
   ; Check that the max Energy Transfer is less than Ei
-;  IF (self.energybins_max GE self.ei) THEN BEGIN
-;    ok = 0
-;    print, 'Ei = ', self.ei
-;    print, 'Emax = ', self.energybins_max
-;    msg = [msg,['You cannot have Emax ('+ $
-;      STRCOMPRESS(STRING(self.energybins_max),/REMOVE_ALL)+ $
-;      'meV) >= Ei ('+STRCOMPRESS(STRING(self.ei),/REMOVE_ALL)+'meV).']]
-;  ENDIF
+  ;  IF (self.energybins_max GE self.ei) THEN BEGIN
+  ;    ok = 0
+  ;    print, 'Ei = ', self.ei
+  ;    print, 'Emax = ', self.energybins_max
+  ;    msg = [msg,['You cannot have Emax ('+ $
+  ;      STRCOMPRESS(STRING(self.energybins_max),/REMOVE_ALL)+ $
+  ;      'meV) >= Ei ('+STRCOMPRESS(STRING(self.ei),/REMOVE_ALL)+'meV).']]
+  ;  ENDIF
   
   ; Now let's do some more complicated dependencies
   
@@ -870,6 +870,64 @@ function ReductionCmd::Check
         norm_exists = FILE_TEST(norm_filename, /READ)
         IF (norm_exists EQ 0) THEN BEGIN
           norm_error = 1
+          ok = 1
+          msg = [msg,['The *.norm files do not seem to match the current data configuration.']]
+        ENDIF
+      ENDIF
+      
+      IF (mask_error EQ 0) THEN BEGIN
+        mask_filename = normDir + "/" + $
+          self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
+          i+1, self.jobs, /PAD) + "_mask.dat"
+          
+        mask_exists = FILE_TEST(mask_filename, /READ)
+        IF (mask_exists EQ 0) THEN BEGIN
+          mask_exists = 1
+          ok = 1
+          msg = [msg,['The vanadium mask files do not seem to match the current data configuration.']]
+        ENDIF
+        
+      ENDIF
+    ENDFOR
+  ENDIF
+  
+  ; Remove the first blank String
+  IF (N_ELEMENTS(msg) GT 1) THEN msg = msg(1:*)
+  
+  data = { ok : ok, $
+    message : msg}
+    
+  return, data
+end
+
+
+function ReductionCmd::CheckVanadiumFiles
+
+  ok = 1
+  msg = ['']
+  
+  ; Check to see that the *.norm and mask files for vanadium are split up into
+  ; the correct number of jobs.
+  IF (STRLEN(self.normalisation) GE 1) AND (self.normalisation NE 0) $
+    AND (STRLEN(self.instrument) GT 1) THEN BEGIN
+    
+    print,'Checking mask and norm files...'
+    ; Let's get the norm output directory so we don't have to keep asking for it!
+    normDir = self->GetNormalisationOutputDirectory()
+    
+    norm_error = 0
+    mask_error = 0
+    
+    FOR i = 0L, self.jobs-1 DO BEGIN
+    
+      IF (norm_error EQ 0) THEN BEGIN
+        norm_filename =  normDir + "/" + $
+          self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
+          i+1, self.jobs, /PAD) + ".norm"
+          
+        norm_exists = FILE_TEST(norm_filename, /READ)
+        IF (norm_exists EQ 0) THEN BEGIN
+          norm_error = 1
           ok = 0
           msg = [msg,['The *.norm files do not seem to match the current data configuration.']]
         ENDIF
@@ -891,15 +949,12 @@ function ReductionCmd::Check
     ENDFOR
   ENDIF
   
-  ; Remove the first blank String
-  IF (N_ELEMENTS(msg) GT 1) THEN msg = msg(1:*)
+  ;  data = { ok : ok, $
+  ;    message : msg}
+  ;
+  return, ok
   
-  data = { ok : ok, $
-    message : msg}
-    
-  return, data
 end
-
 
 ;+
 ; :Description:
@@ -919,11 +974,11 @@ function ReductionCmd::CheckNorm
   datapaths_bad = 0
   msg = ['Everything looks good.']
   
-;  normDir = self->GetNormalisationOutputDirectory()
-;  IF (FILE_TEST(normDir, /DIRECTORY, /WRITE) NE 1) THEN BEGIN
-;    ok = 1
-;    msg = [msg,['You cannot write to the specified normalisation directory: ' + normDir]]
-;  ENDIF
+  ;  normDir = self->GetNormalisationOutputDirectory()
+  ;  IF (FILE_TEST(normDir, /DIRECTORY, /WRITE) NE 1) THEN BEGIN
+  ;    ok = 1
+  ;    msg = [msg,['You cannot write to the specified normalisation directory: ' + normDir]]
+  ;  ENDIF
   
   IF (STRLEN(self.instrument) LT 2) THEN BEGIN
     ok = 0
@@ -1301,10 +1356,10 @@ function ReductionCmd::GenerateNorm
     ; Data filename(s)
     IF STRLEN(self.normalisation) GE 1 THEN $
       cmd[i] += " " + STRCOMPRESS(STRING(self.normalisation), /REMOVE_ALL)
-    
+      
     ; Output (this is automatically generated for now!)
     ;IF STRLEN(self.output) GT 1 THEN cmd[i] += " --output="+ self.output
-    
+      
     IF (STRLEN(self.instrument) GT 1) AND (STRLEN(self.normalisation) GE 1) THEN $
       cmd[i] += " --output=" + outputDir + $
       "/" + self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
