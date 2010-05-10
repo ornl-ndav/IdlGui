@@ -127,15 +127,94 @@ PRO DGSreduction_UpdateGUI, widgetBase
       WIDGET_CONTROL, widget_ID, SET_BUTTON=1
     END
   ENDCASE
-   
+  
   ; Output Directory
+  dgsr_cmd->GetProperty, OutputOverride=myValue
+  outputPrefixID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGS_OUTPUT_PREFIX')
+  ; Make the custom field insensitive ... we can enable is later if we need to
+  WIDGET_CONTROL, outputPrefixID, SENSITIVE=0
+  
+  IF STRLEN(myValue) EQ 0 THEN BEGIN
+    ; If the Override Output doesn't contain owt then we are using the 'auto' setting
+    widget_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGS_AUTO_OUTPUT_PREFIX')
+    WIDGET_CONTROL, widget_ID, SET_BUTTON=1
+  ENDIF ELSE BEGIN
+    ; If OutputOverride contains something, then use the custom setting
+    widget_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGS_CUSTOM_OUTPUT_PREFIX')
+    WIDGET_CONTROL, widget_ID, SET_BUTTON=1
+    ; Also make the custom field sensitive
+    WIDGET_CONTROL, outputPrefixID, SENSITIVE=1
+    ; And set the value
+    WIDGET_CONTROL, outputPrefixID, SET_VALUE=myValue
+  ENDELSE
+  
+  ; Finally check to see if we have 'forced' the use of the home directory
+  widget_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGS_FORCE_HOME_OUTPUT')
+  dgsr_cmd->GetProperty, UseHome=myValue
+  WIDGET_CONTROL, widget_ID, SET_BUTTON=myValue
   
   ; Corner Geometry
+  corner_geometry_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGS_CORNER_GEOMETRY')
+  dgsr_cmd->GetProperty, CornerGeometry=myValue
+  ; May as well set the gui text field with this value
+  WIDGET_CONTROL, corner_geometry_ID, SET_VALUE=myValue
+  ; But make it insensitive..
+  WIDGET_CONTROL, corner_geometry_ID, SENSITIVE=0
+  ; Now we need to work out if this file is the default one or not ?
+  default_cornergeom = Get_CornerGeometryFile(instrument, RUNNUMBER=dgsr_cmd->GetRunNumber())
+  IF (myValue EQ default_cornergeom) THEN BEGIN
+    ; We are using the auto value
+    widget_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGS_AUTO_CORNERGEOM')
+    WIDGET_CONTROL, widget_ID, SET_BUTTON=1
+  ENDIF ELSE BEGIN
+    ; Using Custom
+    widget_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGS_CUSTOM_CORNERGEOM')
+    WIDGET_CONTROL, widget_ID, SET_BUTTON=1
+    ; Also make the file field active
+    WIDGET_CONTROL, corner_geometry_ID, SENSITIVE=1
+  ENDELSE
   
   ; Instrument Geometry
+  inst_geometry_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGS_INST_GEOMETRY')
+  dgsr_cmd->GetProperty, InstGeometry=myValue
+  ; May as well set the gui text field with this value
+  WIDGET_CONTROL, inst_geometry_ID, SET_VALUE=myValue
+  ; But make it insensitive..
+  WIDGET_CONTROL, inst_geometry_ID, SENSITIVE=0
+  ; Now we need to work out if this file is the default one or not ?
+  IF STRLEN(myValue) EQ 0 THEN BEGIN
+    ; We are using the auto value
+    widget_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGS_AUTO_INSTGEOM')
+    WIDGET_CONTROL, widget_ID, SET_BUTTON=1
+  ENDIF ELSE BEGIN
+    ; Using Custom
+    widget_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGS_CUSTOM_INSTGEOM')
+    WIDGET_CONTROL, widget_ID, SET_BUTTON=1
+    ; Also make the file field active
+    WIDGET_CONTROL, inst_geometry_ID, SENSITIVE=1
+  ENDELSE
+  
   
   ; SLURM Queue
-  
+  slurm_queue_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGS_SLURM_QUEUE')
+  dgsr_cmd->GetProperty, Queue=myValue
+  ; May as well set the gui text field with this value
+  WIDGET_CONTROL, slurm_queue_ID, SET_VALUE=myValue
+  ; But make it insensitive..
+  WIDGET_CONTROL, slurm_queue_ID, SENSITIVE=0
+  ; Now we need to work out if this file is the default one or not ?
+  default_queue = Get_DefaultSlurmQueue(instrument)  
+  IF (myValue EQ default_queue) THEN BEGIN
+    ; We are using the auto value
+    widget_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGS_AUTO_SLURM')
+    WIDGET_CONTROL, widget_ID, SET_BUTTON=1
+  ENDIF ELSE BEGIN
+    ; Using Custom
+    widget_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGS_CUSTOM_SLURM')
+    WIDGET_CONTROL, widget_ID, SET_BUTTON=1
+    ; Also make the file field active
+    WIDGET_CONTROL, slurm_queue_ID, SENSITIVE=1
+  ENDELSE
   
   ; dgs_reduction timing
   widget_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGS_TIMING_ON')
