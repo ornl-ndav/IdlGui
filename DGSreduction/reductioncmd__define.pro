@@ -911,7 +911,7 @@ function ReductionCmd::CheckVanadiumFiles
   IF (STRLEN(self.normalisation) GE 1) AND (self.normalisation NE 0) $
     AND (STRLEN(self.instrument) GT 1) THEN BEGIN
     
-    print,'Checking mask and norm files...'
+    ;print,'Checking mask and norm files...'
     ; Let's get the norm output directory so we don't have to keep asking for it!
     normDir = self->GetNormalisationOutputDirectory()
     

@@ -34,6 +34,129 @@
 
 ;---------------------------------------------------------
 
+FUNCTION DGSnorm_Execute_Function, event
+
+  ; Error Handling
+  catch, theError
+  IF theError NE 0 THEN BEGIN
+    catch, /cancel
+    ok = ERROR_MESSAGE(!ERROR_STATE.MSG + ' Returning...', TRACEBACK=1, /error)
+    return, -1
+  ENDIF
+  
+  ; Get the info structure and copy it here
+  WIDGET_CONTROL, event.top, GET_UVALUE=info, /NO_COPY
+  dgs_cmd = info.dgsr_cmd
+  
+  ; Do some sanity checking.
+  
+  ; First lets check that an instrument has been selected!
+  dgs_cmd->GetProperty, Instrument=instrument
+  IF (STRLEN(instrument) LT 2) THEN BEGIN
+    ; First put back the info structure
+    WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
+    ; Then show an error message!
+    ok=ERROR_MESSAGE("Please select an Instrument from the list.", /INFORMATIONAL)
+    return, -1
+  END
+  
+  ; Generate the array of commands to run
+  commands = dgs_cmd->generateNorm()
+  
+  ; Get the queue name
+  dgs_cmd->GetProperty, Queue=queue
+  ; Get the instrument name
+  dgs_cmd->GetProperty, Instrument=instrument
+  ; Get the detector bank limits
+  dgs_cmd->GetProperty, LowerBank=lowerbank
+  dgs_cmd->GetProperty, UpperBank=upperbank
+  ; Get the Run Number (the first integer in the datarun)
+  runnumber = dgs_cmd->GetNormalisationNumber()
+  ; Number of Jobs
+  dgs_cmd->GetProperty, Jobs=jobs
+  
+  
+  ; Output Overrides...
+  dgs_cmd->GetProperty, UseHome=usehome
+  dgs_cmd->GetProperty, OutputOverride=outputoverride
+  dgs_cmd->GetProperty, UserLabel=userlabel
+  
+  jobcmd = "sbatch -p " + queue + " "
+  
+  ; Make sure that the output directory exists
+  outputDir = dgs_cmd->GetNormalisationOutputDirectory()
+  IF FILE_TEST(outputDir, /DIRECTORY) EQ 0 THEN BEGIN
+    spawn, 'mkdir -p ' + outputDir
+  ENDIF
+  
+  ; store the outputDir in the info structure
+  info.outputDir = outputDir
+  
+  ; Log Directory
+  cd, CURRENT=thisDir
+  logDir = outputDir + '/logs'
+  
+  ; Make the directory if it doesn't exists
+  IF FILE_TEST(logDir, /DIRECTORY) EQ 0 THEN BEGIN
+    spawn, 'mkdir -p ' + logDir
+  ENDIF
+  
+  ; Create an array to hold the SLURM jobID numbers
+  jobID = STRARR(N_ELEMENTS(commands))
+  
+  ; Loop over the command array
+  for index = 0L, N_ELEMENTS(commands)-1 do begin
+  
+    padded_datapaths = Construct_DataPaths(lowerbank, upperbank, index+1, jobs, /PAD)
+    
+    jobname = instrument + "_" + runnumber + "_bank" + padded_datapaths
+    
+    logfile = logDir + '/' + instrument + '_bank' + padded_datapaths + '.log'
+    
+    cmd = jobcmd + " --output=" + logfile + $
+      " --job-name=" + jobname + $
+      " " + commands[index]
+      
+    if (index EQ 0) then begin
+      spawn, "echo " + cmd + " > " + logDir + "/norm_commands"
+    endif else begin
+      spawn, "echo " + cmd + " >> " + logDir + "/norm_commands"
+    endelse
+    
+    ; Actually Launch the jobs
+    spawn, cmd, dummy, job_string
+    
+    job_string_array = STRSPLIT(job_string, ' ', /EXTRACT)
+    jobID[index] = job_string_array[N_ELEMENTS(job_string_array)-1]
+    
+  endfor
+  
+  ; Put info back
+  WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
+  
+  ; Now let's save a copy of the parameters
+  parfile = logDir + '/dgsreduction.par'
+  save_parameters, event, FILENAME=parfile
+  
+  
+  ; Launch the collectors - waiting for the reduction jobs to finish first
+  DGSnorm_LaunchCollector, event, WAITFORJOBS=jobID
+  
+  ; Start the sub window widget
+  ;MonitorJob, Group_Leader=event.top, JobName="My first jobby"
+  
+  data = { jobID : jobID }
+  
+  return, data
+  
+END
+
+;---------------------------------------------------------
+PRO DGSnorm_Execute, event
+  jobs = DGSnorm_Execute_Function(event)
+END
+;---------------------------------------------------------
+
 PRO DGSreduction_Execute, event
 
   ; Error Handling
@@ -122,8 +245,33 @@ PRO DGSreduction_Execute, event
   ;print, '%=',percentage
   progressBar->UpDate, percentage
   
+  
+  ; Let's check to see if the vanadium masks/norm files are already there...
+  vanfilesThere = dgsr_cmd->CheckVanadiumFiles()
+  IF (vanfilesThere EQ 0) THEN BEGIN
+  
+    print, '** No Vanadium mask/norm files found - running dgs_norm **'
+    
+    ; We need to put the info structure back so it is available to the DGSNORM_EXECUTE command
+    WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
+    
+    ; Execute the norm jobs and get the jobIDs back
+    normJobs = DGSnorm_Execute_Function(event)
+    print, 'Norm Job IDs = ', normJobs.jobID
+    
+    help,/str,normJobs
+    
+  ;      ; Get the info structure and copy it here
+  ;      WIDGET_CONTROL, event.top, GET_UVALUE=info, /NO_COPY
+  ;
+  ;      ; Do we need to do this ?
+  ;      dgsr_cmd = info.dgsr_cmd
+    
+  ENDIF
+  
   ; Loop over separate reduction jobs
   FOR i = 0L, N_ELEMENTS(RunNumbers)-1 do begin
+  
   
     ; We now get the info structure out again - seems silly I know,
     ; but we need to have it available to put back into the UVALUE
@@ -308,29 +456,6 @@ PRO DGSreduction_Execute, event
       
     ENDIF
     
-    ; Let's check to see if the vanadium masks/norm files are already there...
-    vanfilesThere = dgsr_cmd->CheckVanadiumFiles()
-    IF (vanfilesThere EQ 0) THEN BEGIN
-    
-      print, 'No Vanadium mask/norm files found - running dgs_norm'
-      
-      ; We need to put the info structure back so it is available to the DGSNORM_EXECUTE command
-      WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
-      
-      ; Execute the norm jobs and get the jobIDs back
-      normJobs = DGSnorm_Execute_Function(event)
-      print, 'Norm Job IDs = ', normJobs.jobID
-      
-      help,/str,normJobs
-      
-      ; Get the info structure and copy it here
-      WIDGET_CONTROL, event.top, GET_UVALUE=info, /NO_COPY
-      
-      ; Do we need to do this ?
-      dgsr_cmd = info.dgsr_cmd
-      
-    ENDIF
-    
     
     ; Generate the array of commands to run
     commands = dgsr_cmd->generate()
@@ -449,129 +574,6 @@ PRO DGSreduction_Quit, event
   WIDGET_CONTROL, event.top, /DESTROY
 END
 
-;---------------------------------------------------------
-
-FUNCTION DGSnorm_Execute_Function, event
-
-  ; Error Handling
-  catch, theError
-  IF theError NE 0 THEN BEGIN
-    catch, /cancel
-    ok = ERROR_MESSAGE(!ERROR_STATE.MSG + ' Returning...', TRACEBACK=1, /error)
-    return, -1
-  ENDIF
-  
-  ; Get the info structure and copy it here
-  WIDGET_CONTROL, event.top, GET_UVALUE=info, /NO_COPY
-  dgs_cmd = info.dgsr_cmd
-  
-  ; Do some sanity checking.
-  
-  ; First lets check that an instrument has been selected!
-  dgs_cmd->GetProperty, Instrument=instrument
-  IF (STRLEN(instrument) LT 2) THEN BEGIN
-    ; First put back the info structure
-    WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
-    ; Then show an error message!
-    ok=ERROR_MESSAGE("Please select an Instrument from the list.", /INFORMATIONAL)
-    return, -1
-  END
-  
-  ; Generate the array of commands to run
-  commands = dgs_cmd->generateNorm()
-  
-  ; Get the queue name
-  dgs_cmd->GetProperty, Queue=queue
-  ; Get the instrument name
-  dgs_cmd->GetProperty, Instrument=instrument
-  ; Get the detector bank limits
-  dgs_cmd->GetProperty, LowerBank=lowerbank
-  dgs_cmd->GetProperty, UpperBank=upperbank
-  ; Get the Run Number (the first integer in the datarun)
-  runnumber = dgs_cmd->GetNormalisationNumber()
-  ; Number of Jobs
-  dgs_cmd->GetProperty, Jobs=jobs
-  
-  
-  ; Output Overrides...
-  dgs_cmd->GetProperty, UseHome=usehome
-  dgs_cmd->GetProperty, OutputOverride=outputoverride
-  dgs_cmd->GetProperty, UserLabel=userlabel
-  
-  jobcmd = "sbatch -p " + queue + " "
-  
-  ; Make sure that the output directory exists
-  outputDir = dgs_cmd->GetNormalisationOutputDirectory()
-  IF FILE_TEST(outputDir, /DIRECTORY) EQ 0 THEN BEGIN
-    spawn, 'mkdir -p ' + outputDir
-  ENDIF
-  
-  ; store the outputDir in the info structure
-  info.outputDir = outputDir
-  
-  ; Log Directory
-  cd, CURRENT=thisDir
-  logDir = outputDir + '/logs'
-  
-  ; Make the directory if it doesn't exists
-  IF FILE_TEST(logDir, /DIRECTORY) EQ 0 THEN BEGIN
-    spawn, 'mkdir -p ' + logDir
-  ENDIF
-  
-  ; Create an array to hold the SLURM jobID numbers
-  jobID = STRARR(N_ELEMENTS(commands))
-  
-  ; Loop over the command array
-  for index = 0L, N_ELEMENTS(commands)-1 do begin
-  
-    padded_datapaths = Construct_DataPaths(lowerbank, upperbank, index+1, jobs, /PAD)
-    
-    jobname = instrument + "_" + runnumber + "_bank" + padded_datapaths
-    
-    logfile = logDir + '/' + instrument + '_bank' + padded_datapaths + '.log'
-    
-    cmd = jobcmd + " --output=" + logfile + $
-      " --job-name=" + jobname + $
-      " " + commands[index]
-      
-    if (index EQ 0) then begin
-      spawn, "echo " + cmd + " > " + logDir + "/norm_commands"
-    endif else begin
-      spawn, "echo " + cmd + " >> " + logDir + "/norm_commands"
-    endelse
-    
-    ; Actually Launch the jobs
-    spawn, cmd, dummy, job_string
-    
-    job_string_array = STRSPLIT(job_string, ' ', /EXTRACT)
-    jobID[index] = job_string_array[N_ELEMENTS(job_string_array)-1]
-    
-  endfor
-  
-  ; Put info back
-  WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
-  
-  ; Now let's save a copy of the parameters
-  parfile = logDir + '/dgsreduction.par'
-  save_parameters, event, FILENAME=parfile
-  
-  
-  ; Launch the collectors - waiting for the reduction jobs to finish first
-  DGSnorm_LaunchCollector, event, WAITFORJOBS=jobID
-  
-  ; Start the sub window widget
-  ;MonitorJob, Group_Leader=event.top, JobName="My first jobby"
-  
-  data = { jobID : jobID }
-  
-  return, data
-  
-END
-
-;---------------------------------------------------------
-PRO DGSnorm_Execute, event
-  jobs = DGSnorm_Execute_Function(event)
-END
 ;---------------------------------------------------------
 
 PRO DGSreduction_Cleanup, tlb
