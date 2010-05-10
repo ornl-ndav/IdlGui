@@ -1264,7 +1264,7 @@ function ReductionCmd::Generate
         
         tmp_maskfile = mask_dir + "/" + $
           self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
-          i+1, self.jobs, /PAD) + "_mask.dat"
+          i+1, self.jobs, /PAD) + "_hardmask.dat"
           
         cmd[i] += tmp_maskfile
         
