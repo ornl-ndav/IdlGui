@@ -491,7 +491,7 @@ PRO DGSreduction_Execute, event
       ; Let's construct the mask files...
       IF (HardMask EQ 1) OR (CustomHardMask EQ 1) THEN BEGIN
         tmp_maskfile = maskDir + "/" + $
-          instrument + "_bank" + padded_datapaths + "_mask.dat"
+          instrument + "_bank" + padded_datapaths + "_hardmask.dat"
         tmp_datapaths = Construct_DataPaths(lowerbank, upperbank, index+1, jobs)
         tmp_banks = STRSPLIT(tmp_datapaths, "-", /EXTRACT)
         
