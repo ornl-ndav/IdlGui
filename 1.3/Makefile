@@ -31,7 +31,7 @@ backup:
 
 test: 
 	cp ref_reduction.sav /SNS/software/idltools/test/sav/
-	cp ref_reduction /SNS/software/idltools/test/
+	cp ref_reduction_test /SNS/software/idltools/test/
 	cp mini_ref_reduction.sav /SNS/software/idltools/test/sav/
 	cp mini_ref_reduction /SNS/software/idltools/test/
 	cp REFreductionHELP/*.* /SNS/software/idltools/test/help/REFreduction/
