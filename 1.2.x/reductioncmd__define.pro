@@ -1083,7 +1083,7 @@ function ReductionCmd::Generate
       
       
       ; 'Hard' Mask file...
-      IF ((self.customhardmask) OR (self.hardmask EQ 1)) AND (STRLEN(self.instrument) GT 1) THEN BEGIN
+      IF ((self.customhardmask EQ 1) OR (self.hardmask EQ 1)) AND (STRLEN(self.instrument) GT 1) THEN BEGIN
         ;
         mask_dir = outputDir + "/masks"
         
