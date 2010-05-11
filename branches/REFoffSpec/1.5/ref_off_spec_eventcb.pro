@@ -309,16 +309,14 @@ PRO tab_event, Event
               refresh_recap_plot, Event, RESCALE=1;_step5
             ENDELSE
           ENDELSE
-; TEST 18 Apr 2010 - add connection to zoom boxes
+; Change Code (RC Ward, 18 Apr 2010/11 May 2010) - add connection to zoom boxes
 ;          step5_rescale_populate_zoom_widgets, Event ;scaling_step2 used in step 5
 ;          re_display_step4_step2_step1_selection, Event ;scaling_step2 used in step 5       
-; TEST DID NOT WORK - NEED TO FIGURE THIS OUT
-          ;show selection if one is selected
+;show selection if one is selected
           selection_value = $
             getCWBgroupValue(Event,'step5_selection_group_uname')
           CASE (selection_value) OF
             1: BEGIN
-print, "second call to step5_rescale_populate_zoom_widgets"
 ;               create_step5_selection_data, Event 
 ;               step5_rescale_populate_zoom_widgets, Event
               IF ((*global).step5_x0 + $
@@ -326,7 +324,6 @@ print, "second call to step5_rescale_populate_zoom_widgets"
                 (*global).step5_y0 + $
                 (*global).step5_y1 NE 0) THEN BEGIN
                 replot_step5_i_vs_Q_selection, Event ;step5
-print, "third call to step5_rescale_populate_zoom_widgets"
 ;                step5_rescale_populate_zoom_widgets, Event
               ENDIF
             END

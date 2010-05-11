@@ -35,7 +35,7 @@
 PRO create_step5_selection_data, Event
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
-print, "create_step5_selection_data"  
+
   selection_value = getCWBgroupValue(Event,'step5_selection_group_uname')
   CASE (selection_value) OF
     1: type = 'IvsQ'
@@ -56,8 +56,6 @@ print, "create_step5_selection_data"
   ymin = MIN([y0,y1],MAX=ymax)
   ymin = FIX(ymin/2)
   ymax = FIX(ymax/2)
-
-print, " xmin, xmax, ymin, ymax: ", xmin, xmax, ymin, ymax
   
   array_selected = base_array_untouched[xmin:xmax,ymin:ymax]
   y = (SIZE(array_selected))(2)
@@ -92,7 +90,7 @@ print, " xmin, xmax, ymin, ymax: ", xmin, xmax, ymin, ymax
      symax = STRCOMPRESS(ymax,/REMOVE_ALL)
            
       (*global).X_Y_min_max_backup = [sxmin, symin, sxmax, symax]
-print, "test: sxmin: ", sxmin, " sxmax: ", sxmax, " symin: ", symin, " symax: ",symax   
+  
       putTextFieldValue, Event, 'step5_new_zoom_x_min', sxmin
       putTextFieldValue, Event, 'step5_new_zoom_x_max', sxmax
       putTextFieldValue, Event, 'step5_new_zoom_y_min', symin
@@ -102,7 +100,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO display_step5_rescale_plot, Event, with_range=with_range
-print, "display_step5_rescale_plot" 
+
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
 ; Code change RCW (Feb 11, 2010): Get Background color from XML file
@@ -116,7 +114,7 @@ print, "display_step5_rescale_plot"
     CATCH,/CANCEL
     RETURN
   ENDIF
-print, "INSIDE display_step5_rescale_plot!"  
+  
   ;create array of data
   create_step5_selection_data, Event
   
@@ -157,7 +155,7 @@ print, "INSIDE display_step5_rescale_plot!"
     ymax = getTextFieldValue(Event,'step5_new_zoom_y_max')
     xrange = [xmin,xmax]
     yrange = [ymin,ymax]
-pint, "test after getTExtFieldValue display_step5_rescale - xmin, xmax, ymin, ymax: ", xmin, xmax, ymin, ymax
+
 ; Change code (RC Ward, 29 April 2010): comment out this code once the code above is set up  
 ;    x0y0x1y1 = (*global).x0y0x1y1_graph
 ;    xmin = MIN ([x0y0x1y1[0],x0y0x1y1[2]],MAX=xmax)
@@ -175,7 +173,7 @@ pint, "test after getTExtFieldValue display_step5_rescale - xmin, xmax, ymin, ym
 
 ; test for lin/log
     LinLog = getCWBgroupValue(Event, 'step5_rescale_lin_log_plot')
-    print, "Inside 1st part - LinLog: ", LinLog
+
     IF (LinLog EQ 0) THEN BEGIN ;linear
 
     PLOT, x_axis, $
@@ -213,7 +211,7 @@ pint, "test after getTExtFieldValue display_step5_rescale - xmin, xmax, ymin, ym
 
 ; test for lin/log
     LinLog = getCWBgroupValue(Event, 'step5_rescale_lin_log_plot')
-    print, "Inside 2nd part - LinLog: ", LinLog
+
     IF (LinLog EQ 0) THEN BEGIN ;linear
   
     PLOT, x_axis, $
@@ -267,7 +265,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO display_step5_rescale_plot_from_zoom, Event, with_range=with_range
-print, "display_step5_rescale_plot_from_zoom"
+
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
 ; Code change RCW (Feb 11, 2010): Get Background color from XML file
@@ -309,9 +307,8 @@ print, "display_step5_rescale_plot_from_zoom"
     xmax = getTextFieldValue(Event,'step5_new_zoom_x_max')
     ymin = getTextFieldValue(Event,'step5_new_zoom_y_min')
     ymax = getTextFieldValue(Event,'step5_new_zoom_y_max')
-pint, "test after getTExtFieldValue in display_step5_rescale from zoom - xmin, xmax, ymin, ymax: ", xmin, xmax, ymin, ymax
+
 ; Change code (RC Ward, 29 April 2010): comment out this code once the code above is set up  
-  
 ;  x0y0x1y1 = (*global).x0y0x1y1_graph
 ;  xmin = MIN ([x0y0x1y1[0],x0y0x1y1[2]],MAX=xmax)
 ;  ymin = MIN ([x0y0x1y1[1],x0y0x1y1[3]],MAX=ymax)
@@ -419,9 +416,9 @@ print, " in display_step5_rescale_plot_first_time - call to create_step5_selecti
   array_error_selected_total = (*(*global).step5_selection_y_error_array)
   
   id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='step5_rescale_draw')
-print, "id_draw: ", id_draw
+
   WIDGET_CONTROL, id_draw, GET_VALUE=id_value
-  print, "id_value: ", id_value
+
   WSET,id_value
   
   DEVICE, DECOMPOSED=0
@@ -434,7 +431,7 @@ print, "id_draw: ", id_draw
     xmax = getTextFieldValue(Event,'step5_new_zoom_x_max')
     ymin = getTextFieldValue(Event,'step5_new_zoom_y_min')
     ymax = getTextFieldValue(Event,'step5_new_zoom_y_max')
-pint, "test after getTExtFieldValue in display_step5_rescale first time - xmin, xmax, ymin, ymax: ", xmin, xmax, ymin, ymax
+
     xrange = [xmin,xmax]
     yrange = [ymin,ymax]
      
@@ -495,7 +492,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO display_step5_rescale_after_rescale_during_zoom_selection, Event
-print, "display_step5_rescale_after_rescale_during_zoom_selection"
+
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
 ; Code change RCW (Feb 11, 2010): Get Background color from XML file
@@ -586,7 +583,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO display_step5_rescale_reset_zoom, Event
-print, "display_step5_rescale_reset_zoom"
+
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
 ; Code change RCW (Feb 11, 2010): Get Background color from XML file
@@ -676,7 +673,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO redisplay_step5_rescale_plot, Event
-print, "redisplay_step5_rescale_plot"
+
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
   ; Code change RCW (Feb 11, 2010): Get Background color from XML file
@@ -717,7 +714,7 @@ print, "redisplay_step5_rescale_plot"
     xmax = getTextFieldValue(Event,'step5_new_zoom_x_max')
     ymin = getTextFieldValue(Event,'step5_new_zoom_y_min')
     ymax = getTextFieldValue(Event,'step5_new_zoom_y_max')
-print, "test after getTExtFieldValue in display_step5_rescale first time - xmin, xmax, ymin, ymax: ", xmin, xmax, ymin, ymax
+
   
 ;  x0y0x1y1 = (*global).x0y0x1y1
   ;(*global).x0y0x1y1_graph = x0y0x1y1 (already commented out)
@@ -1257,7 +1254,7 @@ END
 ;PRO step5_rescale_populate_zoom_widgets, Event
   ;get global structure
 ;  WIDGET_CONTROL, Event.top, GET_UVALUE=global
-;  print, "inside step5_rescale_populate_zoom_widgets"
+;  `, "inside step5_rescale_populate_zoom_widgets"
 ;  selection_value = getCWBgroupValue(Event,'step5_selection_group_uname')
 ;  CASE (selection_value) OF
 ;    0: type = 'None'
