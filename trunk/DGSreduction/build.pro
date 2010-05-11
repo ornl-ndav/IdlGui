@@ -80,6 +80,8 @@ newPath = EXPAND_PATH('+./') + PATH_SEP(/SEARCH_PATH) + !PATH
 .compile calcmslicepsi
 .compile get_cwpspectrum
 .compile get_cwpspectrum_nxl
+.compile partofcurrentexperiment
+.compile get_lastrun
 
 .compile monitorjob_events
 .compile monitorjob
