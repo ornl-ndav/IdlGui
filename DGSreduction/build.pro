@@ -108,7 +108,7 @@ newPath = EXPAND_PATH('+./') + PATH_SEP(/SEARCH_PATH) + !PATH
 .compile make_advancedoptions_tab
 .compile dgsreduction
 .compile reductioncmd__define
-;.compile normcmd__define
+.compile normcmd__define
 
 resolve_all
 
