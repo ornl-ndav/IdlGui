@@ -58,6 +58,9 @@ pro event_button, Event, uname=uname
       launch_this_application, event, button_name
       endif else begin ;launch web page
       launch_this_web_page, event, button_name
+      widget_control, /hourglass
+      wait, 1.5
+      widget_control, hourglass=0
       endelse
     endif
     if (event.release eq 1) then begin
