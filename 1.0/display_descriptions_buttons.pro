@@ -87,7 +87,6 @@ PRO display_descriptions_buttons, MAIN_BASE=main_base, EVENT=event, $
   
 END
 
-
 ;+
 ; :Description:
 ;    this procedure display the description text on the right of tab1 when the
