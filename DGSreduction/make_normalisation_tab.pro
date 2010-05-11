@@ -75,7 +75,7 @@ PRO make_Normalisation_Tab, baseWidget, dgs_cmd
     
   ; Norm integration range
   normRangeBase = WIDGET_BASE(vanadiumCol, UNAME="DGSN_NORM-INT-RANGE")
-  normRangeBaseLabel = WIDGET_LABEL(normRangeBase, VALUE=' Integration Range (meV) ', $
+  normRangeBaseLabel = WIDGET_LABEL(normRangeBase, VALUE=' Normalisation Integration Range (meV) ', $
     UNAME="DGSN_NORM-INT-RANGE_LABEL", XOFFSET=5)
   normRangeBaseLabelGeometry = WIDGET_INFO(normRangeBaseLabel, /GEOMETRY)
   normRangeBaseLabelGeometryYSize = normRangeBaseLabelGeometry.ysize
