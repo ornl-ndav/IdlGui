@@ -293,6 +293,19 @@ PRO DGSreduction_Execute, event
     ; Set the run number in the object
     dgsr_cmd->SetProperty, DataRun=RunNumbers[i]
     
+    ; Let's check to see if this run is part of the current proposal
+    ; *** CNCS ONLY AT THE MOMENT ***
+    ; Have they already switched from the default queue ?
+    IF ((Instrument EQ 'CNCS') AND (STRUPCASE(queue) EQ 'CNCSQ')) THEN BEGIN
+      IF (PartOfCurrentExperiment(Instrument, RunNumbers[i]) NE 1) THEN BEGIN
+        ; Set the Queue to HEATERQ
+        print, 'Redirecting Job --> HEATERQ...'
+        Queue='heaterq'
+      ENDIF
+    ENDIF
+    
+    ;print, 'SLURM QUEUE = ', Queue
+    
     ;Print, 'Run Numbers = ', runnumbers[i]
     
     ; Get the Ei
