@@ -38,7 +38,7 @@ PRO dgsnorm_events, event, dgs_cmd
   
   ; Check that we actually got something back in the UVALUE
   IF N_ELEMENTS(myUVALUE) EQ 0 THEN myUVALUE="NOTHING"
-
+  
   CASE (myUVALUE) OF
     'DGSN_WHITE_NORM': BEGIN
       dgs_cmd->SetProperty, WhiteNorm=event.SELECT
@@ -46,25 +46,25 @@ PRO dgsnorm_events, event, dgs_cmd
       IF (event.SELECT) THEN BEGIN
         WIDGET_CONTROL, normLabel, SET_VALUE=" Normalisation Integration Range (A)   "
       ENDIF ELSE BEGIN
-       WIDGET_CONTROL, normLabel, SET_VALUE=" Normalisation Integration Range (meV) "
+        WIDGET_CONTROL, normLabel, SET_VALUE=" Normalisation Integration Range (meV) "
       ENDELSE
-    END 
-  
-
+    END
+    
+    
     'DGSN_LO_THRESHOLD':BEGIN
-      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
-      dgs_cmd->SetProperty, Lo_Threshold=myValue
-    END
-    'DGSN_HI_THRESHOLD':BEGIN
-      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
-      dgs_cmd->SetProperty, Hi_Threshold=myValue
-    END
-    'NOTHING': BEGIN
-    END
-    ELSE: begin
-    ; Do nowt
-      print, '*** UVALUE: ' + myUVALUE + ' not handled! ***' 
-    END
-  ENDCASE
+    WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+    dgs_cmd->SetProperty, Lo_Threshold=myValue
+  END
+  'DGSN_HI_THRESHOLD':BEGIN
+  WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+  dgs_cmd->SetProperty, Hi_Threshold=myValue
+END
+'NOTHING': BEGIN
+END
+ELSE: begin
+  ; Do nowt
+  print, '*** UVALUE: ' + myUVALUE + ' not handled! ***'
+END
+ENDCASE
 
 END

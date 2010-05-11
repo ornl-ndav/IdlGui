@@ -42,5 +42,5 @@
 ; :Author: scu
 ;-
 PRO DGSreduction_ExportScript, event
-  
+
 END

@@ -447,7 +447,7 @@ FUNCTION NormCmd::GetNormalisationOutputDirectory
     end
   endcase
   
- ; print,'NormCmd Norm Directory = ',directory
+  ; print,'NormCmd Norm Directory = ',directory
   RETURN, directory
 END
 
@@ -469,11 +469,11 @@ function NormCmd::Check
   datapaths_bad = 0
   msg = ['Everything looks good.']
   
-;  normDir = self->GetNormalisationOutputDirectory()
-;  IF (FILE_TEST(normDir, /DIRECTORY, /WRITE) NE 1) THEN BEGIN
-;    ok = 1
-;    msg = [msg,['You cannot write to the specified normalisation directory: ' + normDir]]
-;  ENDIF
+  ;  normDir = self->GetNormalisationOutputDirectory()
+  ;  IF (FILE_TEST(normDir, /DIRECTORY, /WRITE) NE 1) THEN BEGIN
+  ;    ok = 1
+  ;    msg = [msg,['You cannot write to the specified normalisation directory: ' + normDir]]
+  ;  ENDIF
   
   IF (STRLEN(self.instrument) LT 2) THEN BEGIN
     ok = 0

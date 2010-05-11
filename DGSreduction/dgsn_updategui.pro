@@ -33,7 +33,7 @@
 ;-
 
 PRO DGSN_UpdateGUI, tlb, dgsn_cmd
-  
+
   ; White Beam Norm
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSN_WHITE_NORM')
   dgsn_cmd->GetProperty, WhiteNorm=myValue
@@ -42,17 +42,17 @@ PRO DGSN_UpdateGUI, tlb, dgsn_cmd
   normLabel = WIDGET_INFO(tlb, FIND_BY_UNAME="DGSN_NORM-INT-RANGE_LABEL")
   IF (myValue) THEN BEGIN
     WIDGET_CONTROL, normLabel, SET_VALUE=" Normalisation Integration Range (A)   "
-  ENDIF ELSE BEGIN       
+  ENDIF ELSE BEGIN
     WIDGET_CONTROL, normLabel, SET_VALUE=" Normalisation Integration Range (meV) "
   ENDELSE
   
   ; Low Threshold
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSN_LO_THRESHOLD')
   dgsn_cmd->GetProperty, Lo_Threshold=myValue
-  WIDGET_CONTROL, widget_ID, SET_VALUE=myValue  
+  WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
   
   ; Hi Threshold
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSN_HI_THRESHOLD')
   dgsn_cmd->GetProperty, Hi_Threshold=myValue
-  WIDGET_CONTROL, widget_ID, SET_VALUE=myValue  
+  WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
 END

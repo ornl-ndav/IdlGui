@@ -44,8 +44,8 @@ PRO make_advancedoptions_tab, baseWidget, myCommandObj
   settingsTabBaseColumns = WIDGET_BASE(baseWidget, COLUMN=2)
   settingsTabCol1 = WIDGET_BASE(settingsTabBaseColumns, /COLUMN)
   settingsTabCol2 = WIDGET_BASE(settingsTabBaseColumns, /COLUMN)
-
-   ; == Wandering Phase ==
+  
+  ; == Wandering Phase ==
   cwpRow = WIDGET_BASE(settingsTabCol1, /ROW)
   cwpBase = WIDGET_BASE(cwpRow)
   cwpLabel = WIDGET_LABEL(cwpBase, VALUE=' Wandering Phase Correction ', XOFFSET=5)
@@ -68,7 +68,7 @@ PRO make_advancedoptions_tab, baseWidget, myCommandObj
     UNAME="DGSR_EMPTYCAN_CWP")
   blackcanTzeroID = CW_FIELD(cwpFilesBase, /ALL_EVENTS, TITLE='  Black Can Offsets:', UVALUE="DGSR_BLACKCAN_CWP", $
     UNAME="DGSR_BLACKCAN_CWP")
- 
+    
   ; ROI
   roiBase = WIDGET_BASE(settingsTabCol1)
   roiLabel = WIDGET_LABEL(roiBase, VALUE=' Region-of-Interest ', XOFFSET=5)
@@ -79,9 +79,9 @@ PRO make_advancedoptions_tab, baseWidget, myCommandObj
   roiRow = WIDGET_BASE(roiPrettyBase, ROW=1)
   roiFileID = CW_FIELD(roiRow, TITLE='Filename: ', UVALUE='DGSR_ROI_FILENAME', $
     UNAME='DGSR_ROI_FILENAME', /ALL_EVENTS, XSIZE=20)
-  
-  
-    ; === Proton Current Units ===
+    
+    
+  ; === Proton Current Units ===
   protonUnitsBase = WIDGET_BASE(settingsTabCol2)
   protonUnitsLabel = WIDGET_LABEL(protonUnitsBase, VALUE=' Proton Current Units ', XOFFSET=5)
   protonUnitsLabelGeometry = WIDGET_INFO(protonUnitsLabel, /GEOMETRY)
@@ -105,7 +105,7 @@ PRO make_advancedoptions_tab, baseWidget, myCommandObj
   WIDGET_CONTROL, coulombButtonID, SET_BUTTON=1
   myCommandObj->SetProperty, ProtonCurrentUnits='C'
   
-    ; === dgs_reduction timing ===
+  ; === dgs_reduction timing ===
   timingBase = WIDGET_BASE(settingsTabCol2)
   timingLabel = WIDGET_LABEL(timingBase, VALUE=' Diagnostic Timing ', XOFFSET=5)
   timingLabelGeometry = WIDGET_INFO(timingLabel, /GEOMETRY)

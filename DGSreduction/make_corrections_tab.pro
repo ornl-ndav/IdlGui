@@ -84,7 +84,7 @@ PRO make_Corrections_Tab, baseWidget, dgsr_cmd
     UNAME="DGSR_DARK")
   darkBrowseButton = WIDGET_BUTTON(darkcurrentbase, VALUE=" Browse... ", UVALUE="DGS_BROWSE_DARK", UNAME="DGS_BROWSE_DARK")
   
-    
+  
   dataTransID = CW_FIELD(backfilesFilesBase, /ALL_EVENTS, TITLE="Transmission Coeff (Sample Background):", UVALUE="DGSR_DATA-TRANS", $
     UNAME="DGSR_DATA-TRANS", XSIZE=10)
     
