@@ -43,7 +43,7 @@ pro load_parameters, widgetBase, Filename=filename
     ok = ERROR_MESSAGE(!ERROR_STATE.MSG + ' Returning...', TRACEBACK=1, /error)
     return
   ENDIF
-
+  
   ; Get the info structure
   WIDGET_CONTROL, widgetBase, GET_UVALUE=info, /NO_COPY
   
@@ -53,9 +53,9 @@ pro load_parameters, widgetBase, Filename=filename
   
   ; Check that we haven't pressed cancel
   IF filename EQ '' THEN BEGIN
-      ; Put info back
-      WIDGET_CONTROL, widgetBase, SET_UVALUE=info, /NO_COPY
-      RETURN
+    ; Put info back
+    WIDGET_CONTROL, widgetBase, SET_UVALUE=info, /NO_COPY
+    RETURN
   ENDIF
   
   print, 'Loading ALL parameters from ' + filename
@@ -67,9 +67,46 @@ pro load_parameters, widgetBase, Filename=filename
   RESTORE, FILENAME=filename, /RELAXED_STRUCTURE_ASSIGNMENT
   
   ; Set the mask to be always on.
-  dgsr_cmd->SetProperty, Mask=1 
-
+  dgsr_cmd->SetProperty, Mask=1
+  
   info.dgsr_cmd = dgsr_cmd
+  
+  ; Check that the 'version' variable exists
+  IF N_ELEMENTS(version) EQ 0 THEN version='0.0'
+  
+  ; Do the right thing for old par files...
+  ; (Which is basically, get the value from the dgsn_cmd object and set the
+  ; new property in the dgsr_cmd object)
+  IF (STRMID(VERSION,0,3) NE '2.0') AND (N_ELEMENTS(dgsn_cmd) GT 0) THEN BEGIN
+    ; Vanadium Runs
+    dgsn_cmd->GetProperty, datarun=normalisation
+    dgsr_cmd->SetProperty, Normalisation=normalisation
+    ; Vanadium Empty Can
+    dgsn_cmd->GetProperty, EmptyCan=NormEmptyCan
+    dgsr_cmd->setProperty, NormEmptyCan=NormEmptyCan
+    ; Normalisation Location
+    dgsn_cmd->GetProperty, NormLocation=NormLocation
+    dgsr_cmd->SetProperty, NormLocation=NormLocation
+    ; Low threshold
+    dgsn_cmd->GetProperty, lo_threshold=lo_threshold
+    dgsr_cmd->SetProperty, lo_threshold=lo_threshold
+    ; High threshold
+    dgsn_cmd->GetProperty, hi_threshold=hi_threshold
+    dgsr_cmd->SetProperty, hi_threshold=hi_threshold
+    ; normtrans
+    dgsn_cmd->GetProperty, normtrans=normtrans
+    dgsr_cmd->SetProperty, normtrans=normtrans
+    ; Normalisation integration range (min)
+    dgsn_cmd->GetProperty, normrange_min=normrange_min
+    dgsr_cmd->SetProperty, normrange_min=normrange_min
+    ; Normalisation integration range (max)
+    dgsn_cmd->GetProperty, normrange_max=normrange_max
+    dgsr_cmd->SetProperty, normrange_max=normrange_max
+    ; White Beam Vanadium Flag
+    dgsn_cmd->GetProperty, whitenorm=whitenorm
+    dgsr_cmd->SetProperty, whitenorm=whitenorm
+  ENDIF
+  
   
   ; Find the output window (DGS)
   dgsr_cmd_outputID = WIDGET_INFO(widgetBase,FIND_BY_UNAME='DGSR_CMD_TEXT')
