@@ -295,7 +295,7 @@ PRO DGSR_UpdateGUI, tlb, dgsr_cmd
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_EMPTYCAN_CWP')
   dgsr_cmd->GetProperty, Ecan_CWP=myValue
   WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
-    
+  
   ; Black Can CWP
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_BLACKCAN_CWP')
   dgsr_cmd->GetProperty, Bcan_CWP=myValue

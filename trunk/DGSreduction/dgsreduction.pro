@@ -752,7 +752,7 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
   ;  WIDGET_CONTROL, GatherButton, SENSITIVE=0
   
   
- ;wMainButtons = WIDGET_BASE(tlb, /ROW)
+  ;wMainButtons = WIDGET_BASE(tlb, /ROW)
   mainButtonsColumns = WIDGET_BASE(tlb, COLUMN=3)
   mainButtonsCol1 = WIDGET_BASE(mainButtonsColumns, /ROW)
   mainButtonsCol2 = WIDGET_BASE(mainButtonsColumns, /ROW)
@@ -790,11 +790,11 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
   executeID = WIDGET_BUTTON(mainButtonsCol3Row1, Value=' EXECUTE >>> ', $
     EVENT_PRO='DGSreduction_Execute', UNAME='DGSR_EXECUTE_BUTTON')
     
-     
-  WIDGET_CONTROL, executeID, SENSITIVE=status.ok  
-   
-  ;TODO: Load in the default Value
     
+  WIDGET_CONTROL, executeID, SENSITIVE=status.ok
+  
+  ;TODO: Load in the default Value
+  
   ; Define some default directories...
   workingDir = '/SNS/users/' + get_ucams()
   outputDir = get_output_directory()
