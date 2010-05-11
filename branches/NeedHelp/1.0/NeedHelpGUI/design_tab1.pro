@@ -173,24 +173,24 @@ pro design_tab1, base1, global
     /button_events,$
     /tracking_events,$
     retain = 2)
-  space = widget_label(col1_row2,$
-    value = '')
-  button4 = widget_draw(col1_row2,$
-    uname = 'button15',$
-    xsize = xsize,$
-    ysize = ysize,$
-    /button_events,$
-    /tracking_events,$
-    retain = 2)
-  space = widget_label(col1_row2,$
-    value = '')
-  button4 = widget_draw(col1_row2,$
-    uname = 'button16',$
-    xsize = xsize,$
-    ysize = ysize,$
-    /button_events,$
-    /tracking_events,$
-    retain = 2)
+;  space = widget_label(col1_row2,$
+;    value = '')
+;  button4 = widget_draw(col1_row2,$
+;    uname = 'button15',$
+;    xsize = xsize,$
+;    ysize = ysize,$
+;    /button_events,$
+;    /tracking_events,$
+;    retain = 2)
+;  space = widget_label(col1_row2,$
+;    value = '')
+;  button4 = widget_draw(col1_row2,$
+;    uname = 'button16',$
+;    xsize = xsize,$
+;    ysize = ysize,$
+;    /button_events,$
+;    /tracking_events,$
+;    retain = 2)
     
   preview = widget_text(col1,$
     value = 'Description of mouse over...',$
