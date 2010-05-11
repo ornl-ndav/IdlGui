@@ -86,6 +86,22 @@ PRO MAIN_BASE_event, Event
       event_button, Event, uname='button10'
     end
 
+    widget_info(wWidget, find_by_uname='button11'): begin
+      event_button, Event, uname='button11'
+    end
+
+    widget_info(wWidget, find_by_uname='button12'): begin
+      event_button, Event, uname='button12'
+    end
+
+    widget_info(wWidget, find_by_uname='button13'): begin
+      event_button, Event, uname='button13'
+    end
+
+    widget_info(wWidget, find_by_uname='button14'): begin
+      event_button, Event, uname='button14'
+    end
+
     ;send to tab2
     widget_info(wWidget, find_by_uname='send_to_tab2'): begin
       id1 = widget_info(event.top, find_by_uname='main_tab')
