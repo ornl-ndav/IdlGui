@@ -158,10 +158,13 @@ PRO make_settings_tab, baseWidget, myCommandObj
     
   cornerGeomNameID = CW_FIELD(customCornerGeomRow, YSIZE=1, XSIZE=30, TITLE="  Corner Geometry Filename:", $
     UNAME="DGS_CORNER_GEOMETRY", UVALUE="DGS_CORNER_GEOMETRY", /ALL_EVENTS)
+  cornerGeomNamebrowserbutton = WIDGET_BUTTON(customCornerGeomRow, VALUE=' Browse... ', $
+    UNAME='DGS_BROWSE_CORNER_GEOMETRY', UVALUE='DGS_BROWSE_CORNER_GEOMETRY')
     
   ; Make 'Automatic' the default
   WIDGET_CONTROL, autoCornerGeomSelectionButtonID, SET_BUTTON=1
   WIDGET_CONTROL, cornerGeomNameID, SENSITIVE=0
+  WIDGET_CONTROL, cornerGeomNamebrowserbutton, SENSITIVE=0
   
   ; Get the current file name and display it
   myCommandObj->GetProperty, CornerGeometry=cornerGeomertyFilename
@@ -182,12 +185,15 @@ PRO make_settings_tab, baseWidget, myCommandObj
   customInstGeomSelectionButtonID = WIDGET_BUTTON(customInstGeomButtons, VALUE='Custom', $
     UNAME='DGS_CUSTOM_INSTGEOM', UVALUE='DGS_CUSTOM_INSTGEOM')
     
-  instGeomNameID = CW_FIELD(customInstGeomRow, YSIZE=1, XSIZE=30, TITLE="  Instrument Geometry Filename:", $
+  instGeomNameID = CW_FIELD(customInstGeomRow, YSIZE=1, XSIZE=30, TITLE="  Inst Geometry Filename:", $
     UNAME="DGS_INST_GEOMETRY", UVALUE="DGS_INST_GEOMETRY", /ALL_EVENTS)
+  instGeomNamebrowserbutton = WIDGET_BUTTON(customInstGeomRow, VALUE=' Browse... ', $
+    UNAME='DGS_BROWSE_INST_GEOMETRY', UVALUE='DGS_BROWSE_INST_GEOMETRY')
     
   ; Make 'Automatic' the default
   WIDGET_CONTROL, autoInstGeomSelectionButtonID, SET_BUTTON=1
   WIDGET_CONTROL, instGeomNameID, SENSITIVE=0
+  WIDGET_CONTROL, instGeomNamebrowserbutton, SENSITIVE=0
   
   
   

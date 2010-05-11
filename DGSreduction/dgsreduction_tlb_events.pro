@@ -88,7 +88,7 @@ PRO DGSreduction_TLB_Events, event
       ;IF (upperbank LE 0) THEN BEGIN
       WIDGET_CONTROL, upperbank_ID, SET_VALUE=bank.upper
       dgsr_cmd->SetProperty, UpperBank=bank.upper
-      ;ENDIF
+    ;ENDIF
       
     END
     
@@ -185,7 +185,9 @@ PRO DGSreduction_TLB_Events, event
       IF (event.select EQ 1) THEN BEGIN
         ; If Auto - then disable the input field
         corner_geometry_ID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGS_CORNER_GEOMETRY')
+        corner_geometry_browse_ID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGS_BROWSE_CORNER_GEOMETRY')
         WIDGET_CONTROL, corner_geometry_ID, SENSITIVE=0
+        WIDGET_CONTROL, corner_geometry_browse_ID, SENSITIVE=0
         
         ; If we are using the auto file, get the default filename...
         dgsr_cmd->GetProperty, Instrument=instrument
@@ -199,7 +201,9 @@ PRO DGSreduction_TLB_Events, event
     'DGS_CUSTOM_CORNERGEOM': BEGIN
       IF (event.select EQ 1) THEN BEGIN
         corner_geometry_ID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGS_CORNER_GEOMETRY')
+        corner_geometry_browse_ID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGS_BROWSE_CORNER_GEOMETRY')
         WIDGET_CONTROL, corner_geometry_ID, SENSITIVE=1
+        WIDGET_CONTROL, corner_geometry_browse_ID, SENSITIVE=1
       ; Do nothing!
       ENDIF
     END
@@ -212,7 +216,9 @@ PRO DGSreduction_TLB_Events, event
       IF (event.select EQ 1) THEN BEGIN
         ; If Auto - then disable the input field
         inst_geometry_ID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGS_INST_GEOMETRY')
+        inst_geometry_browse_ID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGS_BROWSE_INST_GEOMETRY')
         WIDGET_CONTROL, inst_geometry_ID, SENSITIVE=0
+        WIDGET_CONTROL, inst_geometry_browse_ID, SENSITIVE=0
         ; If we are using the automatic setting, then the default is no overriding geometry!
         dgsr_cmd->SetProperty, InstGeometry=''
         WIDGET_CONTROL, inst_geometry_ID, SET_VALUE=''
@@ -221,7 +227,9 @@ PRO DGSreduction_TLB_Events, event
     'DGS_CUSTOM_INSTGEOM': BEGIN
       IF (event.select EQ 1) THEN BEGIN
         inst_geometry_ID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGS_INST_GEOMETRY')
+        inst_geometry_browse_ID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGS_BROWSE_INST_GEOMETRY')
         WIDGET_CONTROL, inst_geometry_ID, SENSITIVE=1
+        WIDGET_CONTROL, inst_geometry_browse_ID, SENSITIVE=1
       ; Do nothing!
       ENDIF
     END
@@ -257,6 +265,78 @@ PRO DGSreduction_TLB_Events, event
     END
     'DGS_NORMLOC_HOME_DIR': BEGIN
       dgsr_cmd->SetProperty, NormLocation='HOME'
+    END
+    'DGS_BROWSE_DATARUN': BEGIN
+      filename = DIALOG_PICKFILE(PATH=info.workingDir, Filter='*.nxs', GET_PATH=path)
+      ; Check that we haven't pressed cancel
+      IF filename NE '' THEN BEGIN
+        widget_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_DATARUN')
+        WIDGET_CONTROL, widget_ID, SET_VALUE=filename
+      ENDIF
+    END
+    'DGS_BROWSE_EMPTYCAN': BEGIN
+      filename = DIALOG_PICKFILE(PATH=info.workingDir, Filter='*.nxs', GET_PATH=path)
+      ; Check that we haven't pressed cancel
+      IF filename NE '' THEN BEGIN
+        widget_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_EMPTYCAN')
+        WIDGET_CONTROL, widget_ID, SET_VALUE=filename
+      ENDIF
+    END
+    'DGS_BROWSE_BLACKCAN': BEGIN
+      filename = DIALOG_PICKFILE(PATH=info.workingDir, Filter='*.nxs', GET_PATH=path)
+      ; Check that we haven't pressed cancel
+      IF filename NE '' THEN BEGIN
+        widget_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_BLACKCAN')
+        WIDGET_CONTROL, widget_ID, SET_VALUE=filename
+      ENDIF
+    END
+    'DGS_BROWSE_DARK': BEGIN
+      filename = DIALOG_PICKFILE(PATH=info.workingDir, Filter='*.nxs', GET_PATH=path)
+      ; Check that we haven't pressed cancel
+      IF filename NE '' THEN BEGIN
+        widget_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_DARK')
+        WIDGET_CONTROL, widget_ID, SET_VALUE=filename
+      ENDIF
+    END
+    'DGS_BROWSE_SOURCE_MASKFILENAME': BEGIN
+      filename = DIALOG_PICKFILE(PATH=info.workingDir, Filter='*.mask,*.dat', GET_PATH=path)
+      ; Check that we haven't pressed cancel
+      IF filename NE '' THEN BEGIN
+        widget_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_SOURCE_MASKFILENAME')
+        WIDGET_CONTROL, widget_ID, SET_VALUE=filename
+      ENDIF
+    END
+    'DGS_BROWSE_NORMRUN': BEGIN
+      filename = DIALOG_PICKFILE(PATH=info.workingDir, Filter='*.nxs', GET_PATH=path)
+      ; Check that we haven't pressed cancel
+      IF filename NE '' THEN BEGIN
+        widget_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_NORMRUN')
+        WIDGET_CONTROL, widget_ID, SET_VALUE=filename
+      ENDIF
+    END
+    'DGS_BROWSE_NORMEMPTYCAN': BEGIN
+      filename = DIALOG_PICKFILE(PATH=info.workingDir, Filter='*.nxs', GET_PATH=path)
+      ; Check that we haven't pressed cancel
+      IF filename NE '' THEN BEGIN
+        widget_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_NORMEMPTYCAN')
+        WIDGET_CONTROL, widget_ID, SET_VALUE=filename
+      ENDIF
+    END
+    'DGS_BROWSE_CORNER_GEOMETRY': BEGIN
+      filename = DIALOG_PICKFILE(PATH=info.workingDir, Filter='*.txt', GET_PATH=path)
+      ; Check that we haven't pressed cancel
+      IF filename NE '' THEN BEGIN
+        widget_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGS_CORNER_GEOMETRY')
+        WIDGET_CONTROL, widget_ID, SET_VALUE=filename
+      ENDIF
+    END
+    'DGS_BROWSE_INST_GEOMETRY': BEGIN
+      filename = DIALOG_PICKFILE(PATH=info.workingDir, Filter='*.nxs', GET_PATH=path)
+      ; Check that we haven't pressed cancel
+      IF filename NE '' THEN BEGIN
+        widget_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGS_INST_GEOMETRY')
+        WIDGET_CONTROL, widget_ID, SET_VALUE=filename
+      ENDIF
     END
     'NOTHING': BEGIN
     END

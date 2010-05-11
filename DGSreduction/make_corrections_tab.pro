@@ -193,6 +193,7 @@ PRO make_Corrections_Tab, baseWidget, dgsr_cmd
   dgsr_cmd->SetProperty, HardMask=1
   ; Therefore also make the custom filename field inactive
   WIDGET_CONTROL, sourceMaskFilenameID, SENSITIVE=0
+  WIDGET_CONTROL, sourceMaskFilenameBrowseButton, SENSITIVE=0
   
   ; Always turn on the vanadium mask
   dgsr_cmd->SetProperty, Mask=1
