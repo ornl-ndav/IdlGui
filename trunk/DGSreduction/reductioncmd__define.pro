@@ -647,18 +647,18 @@ FUNCTION ReductionCmd::EstimateProgressTicks
   ; How many individual runs have we to run
   batches = N_ELEMENTS(ExpandRunNumbers(self.datarun))
   
-  print,'batches=',batches
+  ;print,'batches=',batches
   
   ; multiple everything so far by this...
   ticks *= batches
   
   ; Let's see how many Wandering Jobs we have to do
   cwp_runs = self->GetNumberOfWanderingRuns()
-  print,'cwp_runs=',cwp_runs
+  ;print,'cwp_runs=',cwp_runs
   ; As the wandering calc takes a while, lets weight these higher
   ticks += (4*cwp_runs)
   
-  print, 'ticks=',ticks
+  ;print, 'ticks=',ticks
   
   RETURN, ticks
 END
