@@ -331,7 +331,9 @@ PRO dgsreduction_events, event, dgsr_cmd
       dgsr_cmd->SetProperty, CustomHardMask=event.SELECT
       ; Also make the custom mask source filename field active (or inactive!)
       customMaskFileID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_SOURCE_MASKFILENAME')
+      customMaskFileBrowseID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGS_BROWSE_SOURCE_MASKFILENAME')
       WIDGET_CONTROL, customMaskFileID, SENSITIVE=event.SELECT
+      WIDGET_CONTROL, customMaskFileBrowseID, SENSITIVE=event.SELECT
       WIDGET_CONTROL, customMaskFileID, GET_VALUE=myValue
       ; Check that the file exists and is readable
       print,'Check that the specified mask file ('+myValue+') exists and is readable.'

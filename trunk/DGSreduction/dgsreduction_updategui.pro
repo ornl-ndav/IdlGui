@@ -155,11 +155,13 @@ PRO DGSreduction_UpdateGUI, widgetBase
   
   ; Corner Geometry
   corner_geometry_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGS_CORNER_GEOMETRY')
+  corner_geometry_browse_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGS_BROWSE_CORNER_GEOMETRY')
   dgsr_cmd->GetProperty, CornerGeometry=myValue
   ; May as well set the gui text field with this value
   WIDGET_CONTROL, corner_geometry_ID, SET_VALUE=myValue
   ; But make it insensitive..
   WIDGET_CONTROL, corner_geometry_ID, SENSITIVE=0
+  WIDGET_CONTROL, corner_geometry_browse_ID, SENSITIVE=0
   ; Now we need to work out if this file is the default one or not ?
   default_cornergeom = Get_CornerGeometryFile(instrument, RUNNUMBER=dgsr_cmd->GetRunNumber())
   IF (myValue EQ default_cornergeom) THEN BEGIN
@@ -172,15 +174,19 @@ PRO DGSreduction_UpdateGUI, widgetBase
     WIDGET_CONTROL, widget_ID, SET_BUTTON=1
     ; Also make the file field active
     WIDGET_CONTROL, corner_geometry_ID, SENSITIVE=1
+    WIDGET_CONTROL, corner_geometry_browse_ID, SENSITIVE=1
   ENDELSE
   
   ; Instrument Geometry
   inst_geometry_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGS_INST_GEOMETRY')
+  inst_geometry_browse_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGS_BROWSE_INST_GEOMETRY')
+  
   dgsr_cmd->GetProperty, InstGeometry=myValue
   ; May as well set the gui text field with this value
   WIDGET_CONTROL, inst_geometry_ID, SET_VALUE=myValue
   ; But make it insensitive..
   WIDGET_CONTROL, inst_geometry_ID, SENSITIVE=0
+  WIDGET_CONTROL, inst_geometry_browse_ID, SENSITIVE=0
   ; Now we need to work out if this file is the default one or not ?
   IF STRLEN(myValue) EQ 0 THEN BEGIN
     ; We are using the auto value
@@ -192,6 +198,7 @@ PRO DGSreduction_UpdateGUI, widgetBase
     WIDGET_CONTROL, widget_ID, SET_BUTTON=1
     ; Also make the file field active
     WIDGET_CONTROL, inst_geometry_ID, SENSITIVE=1
+    WIDGET_CONTROL, inst_geometry_browse_ID, SENSITIVE=1
   ENDELSE
   
   
@@ -203,7 +210,7 @@ PRO DGSreduction_UpdateGUI, widgetBase
   ; But make it insensitive..
   WIDGET_CONTROL, slurm_queue_ID, SENSITIVE=0
   ; Now we need to work out if this file is the default one or not ?
-  default_queue = Get_DefaultSlurmQueue(instrument)  
+  default_queue = Get_DefaultSlurmQueue(instrument)
   IF (myValue EQ default_queue) THEN BEGIN
     ; We are using the auto value
     widget_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGS_AUTO_SLURM')
