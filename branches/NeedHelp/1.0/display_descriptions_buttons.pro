@@ -50,8 +50,8 @@ PRO display_descriptions_buttons, MAIN_BASE=main_base, EVENT=event, $
     
   case (button) of
     'faq': begin
-      text = ['Frequently Asked Question','',$
-        'All the questions you are afraid to ask.']
+      text = ['Frequently Asked Questions','',$
+        'All the questions (and answers) you were afraid to ask.']
     end
     'orbiter': begin
       text = ['Orbiter:','',' - dashboard',' - browser',$
@@ -76,10 +76,12 @@ PRO display_descriptions_buttons, MAIN_BASE=main_base, EVENT=event, $
     'ldp': text = 'Live data processing web page'
     'sns_tools': text = 'Portal for all the SNS Applications'
     'systems_status': text= 'To get status of the various analysis computers'
-    'faq_admin': text = ''
-    'faq_users': text = ''
-    'links_for_admins': text = ''
-    'links_for_users': text = ''
+    'faq_admin': text = 'Frequently Asked Questions for administrators.'
+    'faq_users': text = ['Frequently Asked Questions for users',$
+    '','Answers to all the questions you were afraid to ask.']
+    'links_for_admins': text = 'Important links for administrators'
+    'links_for_users': text = ['Important links for users','',$
+    'All the links any users need to know.']
     else: text = 'Move the mouse over a button to get a description of its link.'
   endcase
   
