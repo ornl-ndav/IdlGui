@@ -401,7 +401,7 @@ if (isReductionWithNormalization(Event)) then begin
     StatusMessage += 1
   ENDELSE
   
-  if (~isNormWithBackground(Event)) then begin ;without background
+  if (isNormWithBackground(Event)) then begin ;without background
   
     ;get Peak or Background
     PeakBaseStatus = isNormPeakBaseMap(Event)

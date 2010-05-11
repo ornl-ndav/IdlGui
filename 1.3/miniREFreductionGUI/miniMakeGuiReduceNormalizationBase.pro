@@ -163,7 +163,7 @@ PRO miniMakeGuiReduceNormalizationBase, Event, REDUCE_BASE, IndividualBaseWidth
     YOFFSET   = NormalizationYesNoBaseSize[1],$
     SCR_XSIZE = NormalizationYesNoBaseSize[2],$
     SCR_YSIZE = NormalizationyesNoBaseSize[3])
-        
+    
   ;normalization yes or no
   NormalizationBGroupLabel = $
     WIDGET_LABEL(NormalizationYesNoBase,$
@@ -189,7 +189,7 @@ PRO miniMakeGuiReduceNormalizationBase, Event, REDUCE_BASE, IndividualBaseWidth
     SCR_XSIZE = NormalizationBaseSize[2],$
     SCR_YSIZE = NormalizationBaseSize[3])
     
-    ;base that will hide the Peak Exclusion Region and background file
+  ;base that will hide the Peak Exclusion Region and background file
   hide_base = widget_base(normalization_base,$
     xoffset = sPeakBase.size[0],$
     yoffset = sPeakBase.size[1],$
@@ -197,7 +197,7 @@ PRO miniMakeGuiReduceNormalizationBase, Event, REDUCE_BASE, IndividualBaseWidth
     scr_ysize = sPeakBase.size[3],$
     map = 0,$
     uname = 'hide_norm_background_base')
-  
+    
   ;Normalization main label
   NormalizationLabel = WIDGET_LABEL(normalization_base,$
     XOFFSET = NormalizationLabelSize[0],$
