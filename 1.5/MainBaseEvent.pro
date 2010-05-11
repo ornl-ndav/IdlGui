@@ -2146,10 +2146,12 @@ PRO MAIN_BASE_event, Event
         intensity = STRCOMPRESS(sIntensity,/REMOVE_ALL)
       ENDIF ELSE BEGIN
         intensity = 'N/A'
+        
       ENDELSE
       CountsText = 'Counts: ' + STRCOMPRESS(intensity,/REMOVE_ALL)
       putTextFieldValue, Event, 'counts_value_scaling_step1', CountsText
-      
+
+; Mouse actions on creating selection window for scaling step      
       ;left click -------------------------------------------------------
       IF (Event.press EQ 1) THEN BEGIN ;left click
         bClick = $
@@ -2158,13 +2160,12 @@ PRO MAIN_BASE_event, Event
         (*global).step4_step1_left_mouse_pressed = 1
         (*global).ResizeOrMove = $
           check_IF_resize_OR_move_situation(Event)
-        IF (bClick) THEN BEGIN ;left click (no resize)
-          save_selection_left_position_step4_step1, $
-            Event     ;_scaling_step1
+;        IF (bClick) THEN BEGIN ;left click (no resize)
+          save_selection_left_position_step4_step1,  Event     ;_scaling_step1
           display_x_y_min_max_step4_step1, Event, TYPE='left_click'
-        ENDIF ELSE BEGIN ;resize or move
-          save_fix_corner, Event ;scaling_step1
-        ENDELSE
+;        ENDIF ELSE BEGIN ;resize or move
+;          save_fix_corner, Event ;scaling_step1
+;        ENDELSE
         reset_step4_2_2_selection, Event ;scaling_step2_step2
       ENDIF               ;end of left click
       
@@ -2173,12 +2174,12 @@ PRO MAIN_BASE_event, Event
         (*global).step4_step1_left_mouse_pressed) THEN BEGIN
         bClick = (*global).bClick_step4_step1
         replotAsciiData_scaling_step1, Event ;scaling_step1
-        IF (bClick) THEN BEGIN
+;        IF (bClick) THEN BEGIN
           plotStep4Step1Selection, Event ;scaling_step1
-        ENDIF ELSE BEGIN ;move region
-          move_selection_step4_step1, Event ;scaling_step1
-          refresh_plotStep4Step1Selection, Event
-        ENDELSE
+;        ENDIF ELSE BEGIN ;move region
+;          move_selection_step4_step1, Event ;scaling_step1
+;;          refresh_plotStep4Step1Selection, Event
+;        ENDELSE
         display_x_y_min_max_step4_step1, Event, TYPE='move'
         display_step4_step1_plot2d, Event
       ENDIF
@@ -2189,11 +2190,11 @@ PRO MAIN_BASE_event, Event
         bClick = (*global).bClick_step4_step1
         (*global).step4_step1_left_mouse_pressed = 0
         replotAsciiData_scaling_step1, Event ;scaling_step1
-        IF (bClick) THEN BEGIN
+;        IF (bClick) THEN BEGIN
           plotStep4Step1Selection, Event ;scaling_step1
-        ENDIF ELSE BEGIN
-          refresh_plotStep4Step1Selection, Event
-        ENDELSE
+;        ENDIF ELSE BEGIN
+;          refresh_plotStep4Step1Selection, Event
+;        ENDELSE
         save_y_error_step4_step1_plot2d, Event ;scaling_step1_plot2d
       ENDIF
     ENDIF
@@ -2496,59 +2497,29 @@ PRO MAIN_BASE_event, Event
 ; Change Code (RC Ward, 29 April 2010): ADD THE FOLLOWING WIDGET_INFO for controlling plot scale  
   ;X/Y/Min/Max
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_new_zoom_x_min'): BEGIN
-    ;re_display_step4_step2_step1_selection, Event ; step 5
-    step4_2_3_manual_scaling, Event, FACTOR='manual' ; step 5
-;    tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step5_new_step2_tab')
-;    CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
-;    IF (CurrTabSelect EQ 1) THEN BEGIN
       re_plot_lambda_selected, Event ;step 5
-;      re_plot_fitting, Event ;step 5
-;    ENDIF
+      display_step5_rescale_plot_from_zoom, Event
   END
   
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_new_zoom_x_max'): BEGIN
-    ;re_display_step4_step2_step1_selection, Event ;step 5
-    step4_2_3_manual_scaling, Event, FACTOR='manual' ;step 5
-;    tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step5_new_step2_tab')
-;    CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
-;    IF (CurrTabSelect EQ 1) THEN BEGIN
       re_plot_lambda_selected, Event ;step 5
-;      re_plot_fitting, Event ;step 5
-;    ENDIF
+      display_step5_rescale_plot_from_zoom, EventF
   END
   
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_new_zoom_reset_axis'): BEGIN
-    reset_zoom_widgets, Event ;step 5
-    step4_2_3_manual_scaling, Event, FACTOR='manual' ;step 5
-    ;    re_display_step4_step2_step1_selection, Event ;step 5
-;    tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step5_new_step2_tab')
-;    CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
-;    IF (CurrTabSelect EQ 1) THEN BEGIN
+      reset_zoom_widgets, Event ;step 5
       plotLambdaSelected, Event ; step5
-;      re_plot_fitting, Event ;step 5
-;    ENDIF
+      display_step5_rescale_plot, Event
   END
   
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_new_zoom_y_min'): BEGIN
-    ;re_display_step4_step2_step1_selection, Event ;step 5
-    step4_2_3_manual_scaling, Event, FACTOR='manual' ;step 5
-;    tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step5_new_step2_tab')
-;    CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
-;    IF (CurrTabSelect EQ 1) THEN BEGIN
       re_plot_lambda_selected, Event ;step 5
-;      re_plot_fitting, Event ;step 5
-;    ENDIF
+      display_step5_rescale_plot_from_zoom, Event
   END
   
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_new_zoom_y_max'): BEGIN
-    ;re_display_step4_step2_step1_selection, Event ;scaling_step2
-    step4_2_3_manual_scaling, Event, FACTOR='manual' ;scaling_step2_step3
-;    tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step5_new_step2_tab')
-;    CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
-;    IF (CurrTabSelect EQ 1) THEN BEGIN
       re_plot_lambda_selected, Event ;step 5
-;      re_plot_fitting, Event ;step 5
-;    ENDIF
+      display_step5_rescale_plot_from_zoom, Event
   END
 ; Code Change (RC Ward, 29 April 2010): The above WIDGET_INFOs were added to control plot scale
 ;***********************************************************************************************
@@ -2710,13 +2681,15 @@ PRO MAIN_BASE_event, Event
         getCWBgroupValue(Event,'step5_selection_group_uname')
         
       IF (selection_value NE 0) THEN BEGIN
-      
+; Mouse actions on creating selection window for step5
+      ;left click mouse ----------------------------------------------------      
         IF (event.press EQ 1) THEN BEGIN ;press left
           (*global).left_mouse_pressed = 1
           (*global).step5_x0 = Event.x
           (*global).step5_y0 = Event.y
         ENDIF
         
+      ;move mouse ----------------------------------------------------
         IF (event.type EQ 2 AND $ ;move mouse with left pressed
           (*global).left_mouse_pressed EQ 1) THEN BEGIN
           CASE (selection_value) OF
@@ -2726,6 +2699,7 @@ PRO MAIN_BASE_event, Event
           ENDCASE
         ENDIF
         
+      ;release mouse ----------------------------------------------------
         IF (event.type EQ 1) THEN BEGIN ;release mouse
           (*global).left_mouse_pressed = 0
           (*global).step5_x1 = Event.x
@@ -2783,7 +2757,9 @@ PRO MAIN_BASE_event, Event
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_rescale_draw'): BEGIN
     DEVICE, CURSOR_STANDARD=31
     ;zoom or selection
-    isZoomSelected = isRecapScaleZoomSelected(Event)
+;    isZoomSelected = isRecapScaleZoomSelected(Event)
+; Change code (RC Ward, 11 May 2010): Branch around the "zoom" portion here. It is no longer used.
+    isZoomSelected = 0
     IF (isZoomSelected) THEN BEGIN ;using zoom
     
       IF (event.press EQ 1) THEN BEGIN ;press left

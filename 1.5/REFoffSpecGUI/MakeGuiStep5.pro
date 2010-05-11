@@ -128,10 +128,10 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
   ;go back to recap plot button
   XYoff = [1110,5]
   sRescaleButton = { size: [XYoff[0],$
-    XYoff[1],$
-    150],$
-    uname: 'step5_rescale_go_back_button',$
-    value: 'Return to Rescale Plot'}
+                            XYoff[1],$
+                            150],$
+                    uname: 'step5_rescale_go_back_button',$
+                    value: 'Return to Rescale Plot'}
 ; Change code (RC Ward, 16 April 2010): Add buttons to control scale as in Step 4
 ;Zoom base (x-axis and y_axis) ------------------------------------------------
 XYoff = [710, -92]
@@ -139,8 +139,8 @@ sZoomBase = { size: [sRescaleBase.size[0]+XYoff[0],$
                      sRescaleBase.size[1]+$
                      sRescaleBase.size[3]+XYoff[1],$
                      545,90],$
-                 uname: 'step5_new_zoom_base',$
-                 frame: 3}
+             uname: 'step5_new_zoom_base',$
+             frame: 3}
  
  ;x-axis -----------------------------------------------------------------------
 XYoff= [10,15]
@@ -350,8 +350,7 @@ sYMaxBaseField = { size: [sXMaxBaseField.size[0]+XYoff[0],$
     frame: 0,$
     sensitive: 1,$
     uname: 'step5_selection_group' }
-
-; Change code (RC Ward, 3 May 2010): Remove None as a selectio, and default to Counts vs Lambda perp    
+   
     sSelectionGroup = { value: [' None ', $
     ' Counts vs Q ',$
     ' Counts vs Lambda Perpendicular '],$
@@ -446,27 +445,27 @@ sYMaxBaseField = { size: [sXMaxBaseField.size[0]+XYoff[0],$
     MAP = sRescaleBase.map)
 
 ;  Code Change (RC Ward, April 10, 2010): Remove these buttons from the screen
-;  Control of scaling will be as in  Step 4 1D plot     
+;  Control of scaling will be as in Step 4 1D plot     
   ;zoom and selection base ---------------------------------------------------
-  wZoomSelectionBase = WIDGET_BASE(RescaleBase,$
-    XOFFSET = sZoomSelectionBase.size[0],$
-    YOFFSET = sZoomSelectionBase.size[1],$
-    SCR_XSIZE = sZoomSelectionBase.size[2],$
-    /EXCLUSIVE,$
-    /ROW)
+;  wZoomSelectionBase = WIDGET_BASE(RescaleBase,$
+;    XOFFSET = sZoomSelectionBase.size[0],$
+;    YOFFSET = sZoomSelectionBase.size[1],$
+;    SCR_XSIZE = sZoomSelectionBase.size[2],$
+;    /EXCLUSIVE,$
+;    /ROW)
     
   ;Zoom button
-  wZoomButton = WIDGET_BUTTON(wZoomSelectionBase,$
-    VALUE = sZoomButton.value,$
-    UNAME = sZoomButton.uname)
+;  wZoomButton = WIDGET_BUTTON(wZoomSelectionBase,$
+;    VALUE = sZoomButton.value,$
+;    UNAME = sZoomButton.uname)
     
   ;Selection button
-  wSelectionButton = WIDGET_BUTTON(wZoomSelectionBase,$
-    VALUE = sSelectionButton.value,$
-    UNAME = sSelectionButton.uname)
+;  wSelectionButton = WIDGET_BUTTON(wZoomSelectionBase,$
+;    VALUE = sSelectionButton.value,$
+;    UNAME = sSelectionButton.uname)
     
   ;WIDGET_CONTROL, wZoomButton, /SET_BUTTON (was already commented out - RC Ward)
-  WIDGET_CONTROL, wSelectionButton, /SET_BUTTON
+;  WIDGET_CONTROL, wSelectionButton, /SET_BUTTON
   
   ;full reset ----------------------------------------------------------------
 ;  wButton = WIDGET_BUTTON(RescaleBase,$
@@ -505,7 +504,7 @@ sYMaxBaseField = { size: [sXMaxBaseField.size[0]+XYoff[0],$
     /ROW,$
     UNAME = sLinLog1.uname)
     
-  ;go back button ------------------------------------------------------------
+;go back button ------------------------------------------------------------
   wButton = WIDGET_BUTTON(RescaleBase,$
     XOFFSET = sRescaleButton.size[0],$
     YOFFSET = sRescaleButton.size[1],$
