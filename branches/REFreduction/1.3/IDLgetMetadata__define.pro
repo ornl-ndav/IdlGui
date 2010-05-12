@@ -358,8 +358,6 @@ IF (N_ELEMENTS(POLA_STATE_NAME) NE 0) THEN BEGIN ;NeXus file with pola states
    RETURN, 1
 ENDIF ELSE BEGIN                ;no pola state
 
-  print, 'hererererere'
-
 ;get angle (theta)
    self.angle     = get_theta_degree(fileID)
 ;get s1

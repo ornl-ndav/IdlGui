@@ -1771,8 +1771,6 @@ PRO RetrieveBatchInfoAtLoading, Event
   PopulateBatchTableWithOthersInfo, Event, BatchTable
   ;populate index 0 with all Data and Norm run numbers
   PopulateBatchTableWithDataNormRunNumbers, Event, BatchTable
-  ;populate index 0 with empty cell information
-  PopulateBatchTableWithEmptyCellInfo, Event, BatchTable
   
   (*(*global).BatchTable) = BatchTable
   ;display new BatchTable

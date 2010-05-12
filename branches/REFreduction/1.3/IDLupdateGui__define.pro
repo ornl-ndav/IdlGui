@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 ;WORK ON DATA FILE ============================================================
-FUNCTION UpdateMainDataRunNumber, Event, DataRunNumber
+FUNCTION ref_l_UpdateMainDataRunNumber, Event, DataRunNumber
   no_error = 0
   CATCH,no_error
   IF (no_error NE 0) THEN BEGIN
@@ -51,7 +51,7 @@ FUNCTION UpdateMainDataRunNumber, Event, DataRunNumber
 END
 
 ;------------------------------------------------------------------------------
-PRO UpdateAllDataNexusFileName, Event, AllDataNexusFileName
+PRO ref_l_UpdateAllDataNexusFileName, Event, AllDataNexusFileName
   putTextFieldValue, Event, $
     'reduce_data_runs_text_field',$
     AllDataNexusFileName,$
@@ -59,12 +59,12 @@ PRO UpdateAllDataNexusFileName, Event, AllDataNexusFileName
 END
 
 ;------------------------------------------------------------------------------
-PRO UpdateMainDataNexusFileName, Event, MainDataNexusFileName, DataRunNumber
+PRO ref_l_UpdateMainDataNexusFileName, Event, MainDataNexusFileName, DataRunNumber
   REFreduction_OpenPlotDataNexus,Event, DataRunNumber, MainDataNexusFileName
 END
 
 ;------------------------------------------------------------------------------
-PRO ClearDataRoiFields, Event
+PRO ref_l_ClearDataRoiFields, Event
   putTextFieldValue, Event, $
     'data_d_selection_roi_ymin_cw_field',$
     '',$
@@ -77,12 +77,12 @@ PRO ClearDataRoiFields, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO UpdateDataRoiFileName, Event, DataRoiFileName
+PRO ref_l_UpdateDataRoiFileName, Event, DataRoiFileName
   REFreduction_LoadDataROIFile, Event, DataRoiFileName
 END
 
 ;------------------------------------------------------------------------------
-PRO UpdateDataPeakExclY, Event, Ymin, Ymax
+PRO ref_l_UpdateDataPeakExclY, Event, Ymin, Ymax
   putTextFieldValue, Event, $
     'data_d_selection_peak_ymin_cw_field',$
     Ymin,$
@@ -94,7 +94,7 @@ PRO UpdateDataPeakExclY, Event, Ymin, Ymax
 END
 
 ;------------------------------------------------------------------------------
-PRO ClearDataBackFields, Event
+PRO ref_l_ClearDataBackFields, Event
   putTextFieldValue, Event, $
     'data_d_selection_background_ymin_cw_field',$
     '',$
@@ -107,12 +107,12 @@ PRO ClearDataBackFields, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO UpdateDataBackFileName, Event, DataBackFileName
+PRO ref_l_UpdateDataBackFileName, Event, DataBackFileName
   REFreduction_LoadDataBackFile, Event, DataBackFileName
 END
 
 ;WORK ON NORMALIZATION FILE ===================================================
-FUNCTION UpdateMainNormRunNumber, Event, NormRunNumber
+FUNCTION ref_l_UpdateMainNormRunNumber, Event, NormRunNumber
   no_error = 0
   CATCH, no_error
   IF (no_error NE 0) THEN BEGIN
@@ -131,7 +131,7 @@ FUNCTION UpdateMainNormRunNumber, Event, NormRunNumber
 END
 
 ;------------------------------------------------------------------------------
-PRO UpdateAllNormNexusFileName, Event, AllNormNexusFileName
+PRO ref_l_UpdateAllNormNexusFileName, Event, AllNormNexusFileName
   putTextFieldValue, Event, $
     'reduce_normalization_runs_text_field',$
     AllNormNexusFileName,$
@@ -139,12 +139,12 @@ PRO UpdateAllNormNexusFileName, Event, AllNormNexusFileName
 END
 
 ;------------------------------------------------------------------------------
-PRO UpdateMainNormNexusFileName, Event, MainNormNexusFileName, NormRunNumber
+PRO ref_l_UpdateMainNormNexusFileName, Event, MainNormNexusFileName, NormRunNumber
   REFreduction_OpenPlotNormNexus, Event, NormRunNumber, MainNormNexusFileName
 END
 
 ;------------------------------------------------------------------------------
-PRO ClearNormRoiFields, Event
+PRO ref_l_ClearNormRoiFields, Event
   putTextFieldValue, Event, $
     'norm_d_selection_roi_ymin_cw_field',$
     '',$
@@ -157,12 +157,12 @@ PRO ClearNormRoiFields, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO UpdateNormRoiFileName, Event, NormRoiFileName
+PRO ref_l_UpdateNormRoiFileName, Event, NormRoiFileName
   REFreduction_LoadNormROIFile, Event, NormRoiFileName
 END
 
 ;------------------------------------------------------------------------------
-PRO UpdateNormPeakExclY, Event, Ymin, Ymax
+PRO ref_l_UpdateNormPeakExclY, Event, Ymin, Ymax
   putTextFieldValue, Event, $
     'norm_d_selection_peak_ymin_cw_field',$
     Ymin,$
@@ -175,7 +175,7 @@ PRO UpdateNormPeakExclY, Event, Ymin, Ymax
 END
 
 ;------------------------------------------------------------------------------
-PRO ClearNormBackFields, Event
+PRO ref_l_ClearNormBackFields, Event
   putTextFieldValue, Event, $
     'norm_d_selection_background_ymin_cw_field',$
     '',$
@@ -188,12 +188,12 @@ PRO ClearNormBackFields, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO UpdateNormBackFileName, Event, NormBackFileName
+PRO ref_l_UpdateNormBackFileName, Event, NormBackFileName
   REFreduction_LoadNormBackFile, Event, NormBackFileName
 END
 
 ;WORK ON Qmin, Qmax, Qwidth and Qtype ;========================================
-PRO UpdateQ, Event, Qmin, Qmax, Qwidth, Qtype
+PRO ref_l_UpdateQ, Event, Qmin, Qmax, Qwidth, Qtype
   putTextFieldValue, Event, 'q_min_text_field', Qmin, 0
   putTextFieldValue, Event, 'q_max_text_field', Qmax, 0
   putTextFieldValue, Event, 'q_width_text_field', Qwidth, 0
@@ -206,7 +206,7 @@ PRO UpdateQ, Event, Qmin, Qmax, Qwidth, Qtype
 END
 
 ;WORK on TOF cutting ----------------------------------------------------------
-PRO UpdateTOFcutting, Event, TOFmin, TOFmax
+PRO ref_l_UpdateTOFcutting, Event, TOFmin, TOFmax
   ;check status of tof units
   if(isTOFcuttingUnits_microS(Event)) then begin
     putTextFieldValue, Event, 'tof_cutting_min', STRCOMPRESS(TOFmin,/REMOVE_ALL)
@@ -220,7 +220,7 @@ PRO UpdateTOFcutting, Event, TOFmin, TOFmax
 END
 
 ;WORK ON EMPTY CELL FILE ======================================================
-FUNCTION UpdateEmptyCellRunNumber, Event, RunNumber
+FUNCTION ref_l_UpdateEmptyCellRunNumber, Event, RunNumber
   no_error = 0
   ;CATCH,no_error
   IF (no_error NE 0) THEN BEGIN
@@ -239,12 +239,12 @@ FUNCTION UpdateEmptyCellRunNumber, Event, RunNumber
 END
 
 ;------------------------------------------------------------------------------
-PRO UpdateEmptyCellNexusFileName, Event, full_name, run_number
+PRO ref_l_UpdateEmptyCellNexusFileName, Event, full_name, run_number
   OpenPlotEmptyCell, Event, run_number, full_name
 END
 
 ;------------------------------------------------------------------------------
-PRO UpdateEmptyCellCoefficient, Event, A, B, C, D
+PRO ref_l_UpdateEmptyCellCoefficient, Event, A, B, C, D
 
   putTextFieldValue, Event, 'empty_cell_substrate_a', $
     STRCOMPRESS(A,/REMOVE_ALL), 0
@@ -261,7 +261,7 @@ PRO UpdateEmptyCellCoefficient, Event, A, B, C, D
 END
 
 ;WORK ON AngleValue and AngleError ============================================
-PRO UpdateAngle, Event, Value, Error, units
+PRO ref_l_UpdateAngle, Event, Value, Error, units
   putTextFieldValue, Event, 'detector_value_text_field', Value, 0
   putTextFieldValue, Event, 'detector_error_text_field', Error, 0
   IF (units EQ 'degrees') THEN BEGIN
@@ -273,7 +273,7 @@ PRO UpdateAngle, Event, Value, Error, units
 END
 
 ;WORK on Filtering Data Flag ==================================================
-PRO UpdateFilteringDataFlag, Event, FlagStatus
+PRO ref_l_UpdateFilteringDataFlag, Event, FlagStatus
   IF (FlagStatus EQ 'yes') THEN BEGIN
     buttonValue = 0
   ENDIF ELSE BEGIN
@@ -283,7 +283,7 @@ PRO UpdateFilteringDataFlag, Event, FlagStatus
 END
 
 ;WORK on dt/t Flag ============================================================
-PRO UpdateDeltaToverTFlag, Event, DeltaToverTFlag
+PRO ref_l_UpdateDeltaToverTFlag, Event, DeltaToverTFlag
   IF (DeltaToverTFlag EQ 'yes') THEN BEGIN
     buttonValue = 0
   ENDIF ELSE BEGIN
@@ -293,7 +293,7 @@ PRO UpdateDeltaToverTFlag, Event, DeltaToverTFlag
 END
 
 ;Work on OverwriteDataInstrumentGeometry ======================================
-PRO UpdateOverwriteDataInstrGeoFlag, $
+PRO ref_l_UpdateOverwriteDataInstrGeoFlag, $
     Event, $
     OverwriteDataInstrGeoFlag, $
     DataInstrGeoFileName
@@ -325,7 +325,7 @@ PRO UpdateOverwriteDataInstrGeoFlag, $
 END
 
 ;Work on OverwriteNormInstrumentGeometry ======================================
-PRO UpdateOverwriteNormInstrGeoFlag, $
+PRO ref_l_UpdateOverwriteNormInstrGeoFlag, $
     Event, $
     OverwriteNormInstrGeoFlag, $
     NormInstrGeoFileName
@@ -357,18 +357,18 @@ PRO UpdateOverwriteNormInstrGeoFlag, $
 END
 
 ;Work on Output Path and output FileName ======================================
-PRO UpdateOutputPath, Event, OutputPath
+PRO ref_l_UpdateOutputPath, Event, OutputPath
   setButtonValue, Event, 'of_button', OutputPath
 END
 
 ;------------------------------------------------------------------------------
-PRO UpdateOutputFileName, Event, OutputFileName
+PRO ref_l_UpdateOutputFileName, Event, OutputFileName
   putTextFieldValue, Event, 'of_text', OutputFileName, 0
 END
 
 ;Work on Intermediate files ===================================================
 ;DataNormCombinedSpecFlag
-PRO UpdateIntermediateFiles, Event, $
+PRO ref_l_UpdateIntermediateFiles, Event, $
     DataNormCombinedSpecFlag,$
     DataNormCombinedBackFlag,$
     DataNormCombinedSubFlag,$
@@ -445,7 +445,7 @@ FUNCTION IDLupdateGui::init, structure
   IF (structure.MainDataRunNumber EQ '') THEN BEGIN
     AppendReplaceLogBookMessage, Event, NO, PROCESSING
   ENDIF ELSE BEGIN
-    status = UpdateMainDataRunNumber(Event, structure.MainDataRunNumber)
+    status = ref_l_UpdateMainDataRunNumber(Event, structure.MainDataRunNumber)
     IF (status EQ 0) THEN BEGIN
       AppendReplaceLogBookMessage, Event, FAILED, PROCESSING
       ++NbrError
@@ -462,7 +462,7 @@ FUNCTION IDLupdateGui::init, structure
   IF (structure.AllDataNexusFileName EQ '') THEN BEGIN
     AppendReplaceLogBookMessage, Event, NO, PROCESSING
   ENDIF ELSE BEGIN
-    UpdateAllDataNexusFileName, Event, structure.AllDataNexusFileName
+    ref_l_UpdateAllDataNexusFileName, Event, structure.AllDataNexusFileName
     AppendReplaceLogBookMessage, Event, OK, PROCESSING
   ENDELSE
   
@@ -476,7 +476,7 @@ FUNCTION IDLupdateGui::init, structure
     ++NbrError
     ++DataError
   ENDIF ELSE BEGIN
-    UpdateMainDataNexusFileName, Event, $
+    ref_l_UpdateMainDataNexusFileName, Event, $
       structure.MainDataNexusFileName, $
       structure.MainDataRunNumber
     AppendReplaceLogBookMessage, Event, OK, PROCESSING
@@ -503,9 +503,9 @@ FUNCTION IDLupdateGui::init, structure
     AppendReplaceLogBookMessage, Event, NO, PROCESSING
     ++NbrError
     ++DataError
-    ClearDataRoiFields, Event
+    ref_l_ClearDataRoiFields, Event
   ENDIF ELSE BEGIN
-    UpdateDataRoiFileName, Event, structure.DataRoiFileName
+    ref_l_UpdateDataRoiFileName, Event, structure.DataRoiFileName
     AppendReplaceLogBookMessage, Event, OK, PROCESSING
   ENDELSE
   
@@ -527,13 +527,13 @@ FUNCTION IDLupdateGui::init, structure
   ;activate peak or background cw_bgroup
   SetCWBgroup, Event, 'peak_data_back_group', dataPeakStatus
   SwitchPeakBackgroundDataBase, Event
-  
+   
   IF (dataPeakStatus EQ 0) THEN BEGIN
     ;work on DataPeakExclYmin and DataPeakExclYmax
     text = '--> Load Data Peak Exclusion Ymin and Ymax ................... ' $
       + PROCESSING
     putLogBookMessage, Event, text, APPEND=1
-    UpdateDataPeakExclY, Event, $
+    ref_l_UpdateDataPeakExclY, Event, $
       structure.DataPeakExclYmin, $
       structure.DataPeakExclYmax
     AppendReplaceLogBookMessage, Event, OK, PROCESSING
@@ -546,9 +546,9 @@ FUNCTION IDLupdateGui::init, structure
       AppendReplaceLogBookMessage, Event, NO, PROCESSING
       ++NbrError
       ++DataError
-      ClearDataBackFields, Event
+      ref_l_ClearDataBackFields, Event
     ENDIF ELSE BEGIN
-      UpdateDataBackFileName, Event, structure.DataBackFileName
+      ref_l_UpdateDataBackFileName, Event, structure.DataBackFileName
       AppendReplaceLogBookMessage, Event, OK, PROCESSING
     ENDELSE
   ENDELSE
@@ -559,7 +559,7 @@ FUNCTION IDLupdateGui::init, structure
   text = '--> Load TOF cutting min and max ............................. ' $
     + PROCESSING
   putLogBookMessage, Event, text, APPEND=1
-  UpdateTOFcutting, Event, $
+  ref_l_UpdateTOFcutting, Event, $
     structure.TOFcuttingMin, $
     structure.TOFcuttingMax
   AppendReplaceLogBookMessage, Event, OK, PROCESSING
@@ -575,7 +575,7 @@ FUNCTION IDLupdateGui::init, structure
     IF (structure.MainNormRunNumber EQ '') THEN BEGIN
       AppendReplaceLogBookMessage, Event, NO, PROCESSING
     ENDIF ELSE BEGIN
-      status = UpdateMainNormRunNumber(Event, structure.MainNormRunNumber)
+      status = ref_l_UpdateMainNormRunNumber(Event, structure.MainNormRunNumber)
       IF (status EQ 0) THEN BEGIN
         AppendReplaceLogBookMessage, Event, FAILED, PROCESSING
         ++NbrError
@@ -592,7 +592,7 @@ FUNCTION IDLupdateGui::init, structure
     IF (structure.AllNormNexusFileName EQ '') THEN BEGIN
       AppendReplaceLogBookMessage, Event, NO, PROCESSING
     ENDIF ELSE BEGIN
-      UpdateAllNormNexusFileName, Event, structure.AllNormNexusFileName
+      ref_l_UpdateAllNormNexusFileName, Event, structure.AllNormNexusFileName
       AppendReplaceLogBookMessage, Event, OK, PROCESSING
     ENDELSE
     
@@ -606,7 +606,7 @@ FUNCTION IDLupdateGui::init, structure
       ++NbrError
       ++NormError
     ENDIF ELSE BEGIN
-      UpdateMainNormNexusFileName, Event, $
+      ref_l_UpdateMainNormNexusFileName, Event, $
         structure.MainNormNexusFileName, $
         structure.MainNormRunNumber
       AppendReplaceLogBookMessage, Event, OK, PROCESSING
@@ -633,9 +633,9 @@ FUNCTION IDLupdateGui::init, structure
       AppendReplaceLogBookMessage, Event, NO, PROCESSING
       ++NbrError
       ++NormError
-      ClearNormRoiFields, Event
+      ref_l_ClearNormRoiFields, Event
     ENDIF ELSE BEGIN
-      UpdateNormRoiFileName, Event, structure.NormRoiFileName
+      ref_l_UpdateNormRoiFileName, Event, structure.NormRoiFileName
       AppendReplaceLogBookMessage, Event, OK, PROCESSING
     ENDELSE
     
@@ -663,7 +663,7 @@ FUNCTION IDLupdateGui::init, structure
       text = '--> Load Normalizaion Peak Exclusion Ymin and Ymax .......' + $
         '.... ' + PROCESSING
       putLogBookMessage, Event, text, APPEND=1
-      UpdateNormPeakExclY, Event, $
+      ref_l_UpdateNormPeakExclY, Event, $
         structure.NormPeakExclYmin, $
         structure.NormPeakExclYmax
       AppendReplaceLogBookMessage, Event, OK, PROCESSING
@@ -678,7 +678,7 @@ FUNCTION IDLupdateGui::init, structure
         ++NormError
         ClearNormBackFields, Event
       ENDIF ELSE BEGIN
-        UpdateNormBackFileName, Event, structure.NormBackFileName
+        ref_l_UpdateNormBackFileName, Event, structure.NormBackFileName
         AppendReplaceLogBookMessage, Event, OK, PROCESSING
       ENDELSE
     ENDELSE
@@ -695,55 +695,12 @@ FUNCTION IDLupdateGui::init, structure
     NormReducePartGuiStatus, Event, 'hide'
     
   ENDELSE
-  
-  ;Work on Empty Cell tab -------------------------------------------------------
-  IF (structure.EmptyCellRunNumber NE '') THEN BEGIN
-  
-    empty_cell_error = 0
     
-    text = '--> Display Empty Cell Run Number ............................ ' $
-      + PROCESSING
-    putLogBookMessage, Event, text, APPEND=1
-    IF (structure.EmptyCellRunNumber EQ '') THEN BEGIN
-      AppendReplaceLogBookMessage, Event, NO, PROCESSING
-    ENDIF ELSE BEGIN
-      status = UpdateEmptyCellRunNumber(Event, structure.EmptyCellRunNumber)
-      IF (status EQ 0) THEN BEGIN
-        AppendReplaceLogBookMessage, Event, FAILED, PROCESSING
-        ++NbrError
-        ++DataError
-      ENDIF ELSE BEGIN
-        AppendReplaceLogBookMessage, Event, OK, PROCESSING
-      ENDELSE
-    ENDELSE
-    
-    ;Load the Empty Cell Run Number
-    text = '--> Load and Plot Empty Cell Run Number ...................... ' $
-      + PROCESSING
-    putLogBookMessage, Event, text, APPEND=1
-    UpdateEmptyCellNexusFileName, Event, $
-      structure.EmptyCellFileName, $
-      structure.EmptyCellRunNumber
-    AppendReplaceLogBookMessage, Event, OK, PROCESSING
-    
-    ;populate A, B, D and C factors
-    text = '--> Populate A, B, C and D ................................... ' $
-      + PROCESSING
-    putLogBookMessage, Event, text, APPEND=1
-    UpdateEmptyCellCoefficient, Event,$
-      structure.EmptyCellA,$
-      structure.EmptyCellB,$
-      structure.EmptyCellC,$
-      structure.EmptyCellD
-    AppendReplaceLogBookMessage, Event, OK, PROCESSING
-    
-  ENDIF ;end of if there is an empty cell run number
-  
   ;Work on Qmin, Qmax, Qwidth and Qtype
   text = '--> Load Qmin, Qmax, Qwidth and Qtype ........................ ' $
     + PROCESSING
   putLogBookMessage, Event, text, APPEND=1
-  UpdateQ, Event, $
+  ref_l_UpdateQ, Event, $
     structure.Qmin, $
     structure.Qmax, $
     structure.Qwidth, $
@@ -754,7 +711,7 @@ FUNCTION IDLupdateGui::init, structure
   text = '--> Load Angle Value and Error ............................... ' $
     + PROCESSING
   putLogBookMessage, Event, text, APPEND=1
-  UpdateAngle, Event, $
+  ref_l_UpdateAngle, Event, $
     structure.AngleValue, $
     structure.AngleError, $
     structure.AngleUnits
@@ -764,21 +721,21 @@ FUNCTION IDLupdateGui::init, structure
   text = '--> Load on Filtering Data Flag .............................. ' $
     + PROCESSING
   putLogBookMessage, Event, text, APPEND=1
-  UpdateFilteringDataFlag, Event, structure.FilteringDataFlag
+  ref_l_UpdateFilteringDataFlag, Event, structure.FilteringDataFlag
   AppendReplaceLogBookMessage, Event, OK, PROCESSING
   
   ;Work on dt/t flag
   text = '--> Load on dt/t Flag ........................................ ' $
     + PROCESSING
   putLogBookMessage, Event, text, APPEND=1
-  UpdateDeltaToverTFlag, Event, structure.DeltaToverTFlag
+  ref_l_UpdateDeltaToverTFlag, Event, structure.DeltaToverTFlag
   AppendReplaceLogBookMessage, Event, OK, PROCESSING
   
   ;Work on OverwriteDataInstrGeoFlag and DataInstrGeoFilename
   text = '--> Load Overwrite Data Instrument Geometry Flag ............. ' $
     + PROCESSING
   putLogBookMessage, Event, text, APPEND=1
-  UpdateOverwriteDataInstrGeoFlag, Event, $
+  ref_l_UpdateOverwriteDataInstrGeoFlag, Event, $
     structure.OverwriteDataInstrGeoFlag, $
     structure.DataInstrGeoFileName
   AppendReplaceLogBookMessage, Event, OK, PROCESSING
@@ -787,7 +744,7 @@ FUNCTION IDLupdateGui::init, structure
   text = '--> Load Overwrite Normalization Instrument Geometry Flag .... ' $
     + PROCESSING
   putLogBookMessage, Event, text, APPEND=1
-  UpdateOverwriteNormInstrGeoFlag, Event, $
+  ref_l_UpdateOverwriteNormInstrGeoFlag, Event, $
     structure.OverwriteNormInstrGeoFlag, $
     structure.NormInstrGeoFileName
   AppendReplaceLogBookMessage, Event, OK, PROCESSING
@@ -796,13 +753,13 @@ FUNCTION IDLupdateGui::init, structure
   text = '--> Load Output Path ......................................... ' $
     + PROCESSING
   putLogBookMessage, Event, text, APPEND=1
-  UpdateOutputPath, Event, structure.OutputPath
+  ref_l_UpdateOutputPath, Event, structure.OutputPath
   AppendReplaceLogBookMessage, Event, OK, PROCESSING
   
   text = '--> Load Output File Name .................................... ' $
     + PROCESSING
   putLogBookMessage, Event, text, APPEND=1
-  UpdateOutputFileName, Event, structure.OutputFileName
+  ref_l_UpdateOutputFileName, Event, structure.OutputFileName
   AppendReplaceLogBookMessage, Event, OK, PROCESSING
   
   ;Work Intermediate Files
@@ -810,7 +767,7 @@ FUNCTION IDLupdateGui::init, structure
   text = '--> Load Intermediate Files .................................. ' $
     + PROCESSING
   putLogBookMessage, Event, text, APPEND=1
-  UpdateIntermediateFiles, Event, $
+  ref_l_UpdateIntermediateFiles, Event, $
     structure.DataNormCombinedSpecFlag,$
     structure.DataNormCombinedBackFlag,$
     structure.DataNormCombinedSubFlag,$

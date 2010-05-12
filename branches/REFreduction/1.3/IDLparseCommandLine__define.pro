@@ -39,7 +39,7 @@
 ;the 'arg1Index' of the resulting array
 ;#2 -> it splits the result from step1 using 'arg2' and keeps
 ;the 'arg2Index' of the resulting array
-FUNCTION ValueBetweenArg1Arg2, base_string, $
+FUNCTION ref_l_ValueBetweenArg1Arg2, base_string, $
     arg1, arg1Index, $
     arg2, arg2Index
   Split1 = STRSPLIT(base_string,arg1,/EXTRACT,/REGEX,COUNT=length)
@@ -54,7 +54,7 @@ END
 ;------------------------------------------------------------------------------
 ;This function parse the 'base_string' and returns the string found
 ;before the string 'arg1'
-FUNCTION ValueBeforeArg1, base_string, arg1
+FUNCTION ref_l_ValueBeforeArg1, base_string, arg1
   Split = STRSPLIT(base_string, arg1,/EXTRACT,/REGEX)
   RETURN, Split[0]
 END
@@ -62,20 +62,20 @@ END
 ;------------------------------------------------------------------------------
 ;This function parse the 'base_string' and returns the string found
 ;after the string 'arg1'
-FUNCTION ValueAfterArg1, base_string, arg1
+FUNCTION ref_l_ValueAfterArg1, base_string, arg1
   Split = STRSPLIT(base_string, arg1,/EXTRACT,/REGEX)
   RETURN, Split[1]
 END
 
 ;------------------------------------------------------------------------------
 ;This function returns 1 if 'arg' has been found in 'base_string'
-FUNCTION isStringFound, base_string, arg
+FUNCTION ref_l_isStringFound, base_string, arg
   RETURN, STRMATCH(base_string,'*'+arg+'*')
 END
 
 ;------------------------------------------------------------------------------
 ;This function returns the full string up to the last 'arg' found
-FUNCTION ValueBeforeLastArg, base_string, arg
+FUNCTION ref_l_ValueBeforeLastArg, base_string, arg
   Split = STRSPLIT(base_string,arg,/EXTRACT,/REGEX,COUNT=length)
   IF (length GT 1) THEN BEGIN
     result = STRJOIN(Split[0:length-2],arg)
@@ -91,7 +91,7 @@ END
 
 ;------------------------------------------------------------------------------
 ;This function returns the full string after the last 'arg' found
-FUNCTION ValueAfterLastArg, base_string, arg
+FUNCTION ref_l_ValueAfterLastArg, base_string, arg
   Split = STRSPLIT(base_string,arg,/EXTRACT,/REGEX,COUNT=length)
   RETURN, Split[length-1]
 END
@@ -99,84 +99,87 @@ END
 ;------------------------------------------------------------------------------
 ;------------------------------------------------------------------------------
 ;------------------------------------------------------------------------------
-FUNCTION getMainDataNexusFileName, cmd
-  result = ValueBetweenArg1Arg2(cmd, 'reflect_reduction', 1, ' ', 0)
+FUNCTION ref_l_getMainDataNexusFileName, cmd
+  result = ref_l_ValueBetweenArg1Arg2(cmd, 'reflect_reduction', 1, ' ', 0)
   IF (result EQ '') THEN RETURN, ''
   RETURN, STRCOMPRESS(result,/REMOVE_ALL)
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getMainDataRunNumber, FullNexusName
+FUNCTION ref_l_getMainDataRunNumber, FullNexusName
   inst = obj_new('IDLgetMetadata',FullNexusName)
   RETURN, STRCOMPRESS(inst->getRunNumber(),/REMOVE_ALL)
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getAllDataNexusFileName, cmd
-  result = ValueBetweenArg1Arg2(cmd, $
+FUNCTION ref_l_getAllDataNexusFileName, cmd
+  result = ref_l_ValueBetweenArg1Arg2(cmd, $
     'reflect_reduction ',$
     1, $
     '--data-roi-file', $
     0)
+  
+  print, result
+  
   IF (result EQ '') THEN RETURN, ''
   RETURN, result
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getDataRoiFileName, cmd
-  result = ValueBetweenArg1Arg2(cmd, '--data-roi-file=', 1, ' ', 0)
+FUNCTION ref_l_getDataRoiFileName, cmd
+  result = ref_l_ValueBetweenArg1Arg2(cmd, '--data-roi-file=', 1, ' ', 0)
   IF (result EQ '') THEN RETURN, ''
   RETURN, STRCOMPRESS(result,/REMOVE_ALL)
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getDataPeakExclYArray, cmd
-  Ymin = ValueBetweenArg1Arg2(cmd, '--data-peak-excl=', 1, ' ', 0)
+FUNCTION ref_l_getDataPeakExclYArray, cmd
+  Ymin = ref_l_ValueBetweenArg1Arg2(cmd, '--data-peak-excl=', 1, ' ', 0)
   IF (Ymin EQ '') THEN Ymin=''
-  Ymax = ValueBetweenArg1Arg2(cmd, '--data-peak-excl=', 1, ' ', 1)
+  Ymax = ref_l_ValueBetweenArg1Arg2(cmd, '--data-peak-excl=', 1, ' ', 1)
   IF (Ymax EQ '') THEN Ymax=''
   RETURN, [STRCOMPRESS(Ymin),STRCOMPRESS(Ymax)]
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getDataBackFileName, cmd
-  result = ValueBetweenArg1Arg2(cmd, '--dbkg-roi-file=', 1, ' ', 0)
+FUNCTION ref_l_getDataBackFileName, cmd
+  result = ref_l_ValueBetweenArg1Arg2(cmd, '--dbkg-roi-file=', 1, ' ', 0)
   IF (result EQ '') THEN RETURN, ''
   RETURN, STRCOMPRESS(result,/REMOVE_ALL)
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getTOFcuttingMin, cmd
- result = ValueBetweenArg1Arg2(cmd, '--tof-cut-min=', 1, ' ', 0)
+FUNCTION ref_l_getTOFcuttingMin, cmd
+ result = ref_l_ValueBetweenArg1Arg2(cmd, '--tof-cut-min=', 1, ' ', 0)
   IF (result EQ '') THEN RETURN, ''
   RETURN, STRCOMPRESS(result,/REMOVE_ALL)
 END
  
 ;------------------------------------------------------------------------------
-FUNCTION getTOFcuttingMax, cmd
- result = ValueBetweenArg1Arg2(cmd, '--tof-cut-max=', 1, ' ', 0)
+FUNCTION ref_l_getTOFcuttingMax, cmd
+ result = ref_l_ValueBetweenArg1Arg2(cmd, '--tof-cut-max=', 1, ' ', 0)
   IF (result EQ '') THEN RETURN, ''
   RETURN, STRCOMPRESS(result,/REMOVE_ALL)
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getMainNormNexusFileName, cmd
-  result  = ValueBetweenArg1Arg2(cmd, '--norm=', 1, ' ', 0)
+FUNCTION ref_l_getMainNormNexusFileName, cmd
+  result  = ref_l_ValueBetweenArg1Arg2(cmd, '--norm=', 1, ' ', 0)
   IF (result EQ '') THEN RETURN, ''
-  result1 = ValueBeforeArg1(result, ',')
+  result1 = ref_l_ValueBeforeArg1(result, ',')
   IF (result1 EQ '') THEN RETURN, ''
   RETURN, STRCOMPRESS(result1,/REMOVE_ALL)
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getMainNormRunNumber, FullNexusName
+FUNCTION ref_l_getMainNormRunNumber, FullNexusName
   inst = obj_new('IDLgetMetadata',FullNexusName)
   RETURN, STRCOMPRESS(inst->getRunNumber(),/REMOVE_ALL)
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getAllNormNexusFileName, cmd
-  result = ValueBetweenArg1Arg2(cmd,$
+FUNCTION ref_l_getAllNormNexusFileName, cmd
+  result = ref_l_ValueBetweenArg1Arg2(cmd,$
     '--norm=',$
     1,$
     '--norm-roi-file=',$
@@ -186,73 +189,31 @@ FUNCTION getAllNormNexusFileName, cmd
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getNormRoiFileName, cmd
-  result = ValueBetweenArg1Arg2(cmd, '--norm-roi-file=', 1, ' ', 0)
+FUNCTION ref_l_getNormRoiFileName, cmd
+  result = ref_l_ValueBetweenArg1Arg2(cmd, '--norm-roi-file=', 1, ' ', 0)
   IF (result EQ '') THEN RETURN, ''
   RETURN, result
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getNormPeakExclYArray, cmd
-  Ymin = ValueBetweenArg1Arg2(cmd, '--norm-peak-excl=', 1, ' ', 0)
+FUNCTION ref_l_getNormPeakExclYArray, cmd
+  Ymin = ref_l_ValueBetweenArg1Arg2(cmd, '--norm-peak-excl=', 1, ' ', 0)
   IF (Ymin EQ '') THEN Ymin=''
-  Ymax = ValueBetweenArg1Arg2(cmd, '--norm-peak-excl=', 1, ' ', 1)
+  Ymax = ref_l_ValueBetweenArg1Arg2(cmd, '--norm-peak-excl=', 1, ' ', 1)
   IF (Ymax EQ '') THEN Ymax=''
   RETURN, [STRCOMPRESS(Ymin),STRCOMPRESS(Ymax)]
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getNormBackFileName, cmd
-  result = ValueBetweenArg1Arg2(cmd, '--nbkg-roi-file=', 1, ' ', 0)
+FUNCTION ref_l_getNormBackFileName, cmd
+  result = ref_l_ValueBetweenArg1Arg2(cmd, '--nbkg-roi-file=', 1, ' ', 0)
   IF (result EQ '') THEN RETURN, ''
   RETURN, result
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getEmptyCellFileName, cmd
-  result = ValueBetweenArg1Arg2(cmd, '--ecell=', 1, ' ', 0)
-  IF (result EQ '') THEN RETURN, ''
-  RETURN, STRCOMPRESS(result,/REMOVE_ALL)
-END
-
-;------------------------------------------------------------------------------
-FUNCTION getEmptyCellRunNumber, fullNexusName
-  inst = obj_new('IDLgetMetadata',FullNexusName)
-  RunNumber = inst->getRunNumber()
-  OBJ_DESTROY, inst
-  RETURN, STRCOMPRESS(RunNumber,/REMOVE_ALL)
-END
-
-;------------------------------------------------------------------------------
-FUNCTION getEmptyCellAB, cmd
-  part2 = ValueAfterArg1(cmd, '--subtrans-coeff=')
-  IF (part2 NE '') THEN BEGIN
-    split = STRSPLIT(part2[0],' ',/EXTRACT)
-    A = split[0]
-    B = split[1]
-    RETURN, [A,B]
-  ENDIF ElSE BEGIN
-    RETURN, ['','']
-  ENDELSE
-END
-
-;------------------------------------------------------------------------------
-FUNCTION getEmptyCellC, cmd
-  result = ValueBetweenArg1Arg2(cmd, '--scale-ecell=', 1, ' ', 0)
-  IF (result EQ '') THEN RETURN, ''
-  RETURN, STRCOMPRESS(result,/REMOVE_ALL)
-END
-
-;------------------------------------------------------------------------------
-FUNCTION getEmptyCellD, cmd
-  result = ValueBetweenArg1Arg2(cmd, '--substrate-diam=', 1, ' ', 0)
-  IF (result EQ '') THEN RETURN, ''
-  RETURN, STRCOMPRESS(result,/REMOVE_ALL)
-END
-
-;------------------------------------------------------------------------------
-FUNCTION isWithDataBackgroundFlagOn, cmd
-  IF (isStringFound(cmd,'--no-bkg')) THEN BEGIN
+FUNCTION ref_l_isWithDataBackgroundFlagOn, cmd
+  IF (ref_l_isStringFound(cmd,'--no-bkg')) THEN BEGIN
     RETURN, 'yes'
   ENDIF ELSE BEGIN
     RETURN, 'no'
@@ -260,8 +221,8 @@ FUNCTION isWithDataBackgroundFlagOn, cmd
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION isWithNormBackgroundFlagOn, cmd
-  IF (isStringFound(cmd,'--no-norm-bkg')) THEN BEGIN
+FUNCTION ref_l_isWithNormBackgroundFlagOn, cmd
+  IF (ref_l_isStringFound(cmd,'--no-norm-bkg')) THEN BEGIN
     RETURN, 'yes'
   ENDIF ELSE BEGIN
     RETURN, 'no'
@@ -269,39 +230,39 @@ FUNCTION isWithNormBackgroundFlagOn, cmd
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getQmin, cmd
-  result = ValueBetweenArg1Arg2(cmd, '--mom-trans-bins=', 1, ',', 0)
+FUNCTION ref_l_getQmin, cmd
+  result = ref_l_ValueBetweenArg1Arg2(cmd, '--mom-trans-bins=', 1, ',', 0)
   IF (result EQ '') THEN RETURN, ''
   RETURN, STRCOMPRESS(result,/REMOVE_ALL)
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getQmax, cmd
-  result = ValueBetweenArg1Arg2(cmd, '--mom-trans-bins=', 1, ',', 1)
+FUNCTION ref_l_getQmax, cmd
+  result = ref_l_ValueBetweenArg1Arg2(cmd, '--mom-trans-bins=', 1, ',', 1)
   IF (result EQ '') THEN RETURN, ''
   RETURN, STRCOMPRESS(result,/REMOVE_ALL)
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getQwidth, cmd
-  result = ValueBetweenArg1Arg2(cmd, '--mom-trans-bins=', 1, ',', 2)
+FUNCTION ref_l_getQwidth, cmd
+  result = ref_l_ValueBetweenArg1Arg2(cmd, '--mom-trans-bins=', 1, ',', 2)
   IF (result EQ '') THEN RETURN, ''
   RETURN, STRCOMPRESS(result,/REMOVE_ALL)
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getQtype, cmd
-  result  = ValueBetweenArg1Arg2(cmd, '--mom-trans-bins=', 1, ',', 3)
+FUNCTION ref_l_getQtype, cmd
+  result  = ref_l_ValueBetweenArg1Arg2(cmd, '--mom-trans-bins=', 1, ',', 3)
   IF (result EQ '') THEN RETURN, ''
-  result1 = ValueBeforeArg1(result, ' ')
+  result1 = ref_l_ValueBeforeArg1(result, ' ')
   IF (result1 EQ '') THEN RETURN, ''
   RETURN, STRCOMPRESS(result1,/REMOVE_ALL)
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getAngleValue, cmd
-  IF (isStringFound(cmd,'--angle-offset=')) THEN BEGIN
-    result = ValueBetweenArg1Arg2(cmd, '--angle-offset=', 1, ',', 0)
+FUNCTION ref_l_getAngleValue, cmd
+  IF (ref_l_isStringFound(cmd,'--angle-offset=')) THEN BEGIN
+    result = ref_l_ValueBetweenArg1Arg2(cmd, '--angle-offset=', 1, ',', 0)
     IF (result EQ '') THEN RETURN, ''
     RETURN, STRCOMPRESS(result,/REMOVE_ALL)
   ENDIF
@@ -309,9 +270,9 @@ FUNCTION getAngleValue, cmd
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getAngleError, cmd
-  IF (isStringFound(cmd,'--angle-offset=')) THEN BEGIN
-    result = ValueBetweenArg1Arg2(cmd, '--angle-offset=', 1, ',', 1)
+FUNCTION ref_l_getAngleError, cmd
+  IF (ref_l_isStringFound(cmd,'--angle-offset=')) THEN BEGIN
+    result = ref_l_ValueBetweenArg1Arg2(cmd, '--angle-offset=', 1, ',', 1)
     IF (result EQ '') THEN RETURN, ''
     RETURN, STRCOMPRESS(result,/REMOVE_ALL)
   ENDIF
@@ -319,19 +280,19 @@ FUNCTION getAngleError, cmd
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getAngleUnits, cmd
+FUNCTION ref_l_getAngleUnits, cmd
   units_error = 0
   CATCH, units_error
   IF (units_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     return, ''
   ENDIF ELSE BEGIN
-    IF (isStringFound(cmd,'--angle-offset=')) THEN BEGIN
-      result  = ValueBetweenArg1Arg2(cmd, '--angle-offset=', 1, ',', 2)
+    IF (ref_l_isStringFound(cmd,'--angle-offset=')) THEN BEGIN
+      result  = ref_l_ValueBetweenArg1Arg2(cmd, '--angle-offset=', 1, ',', 2)
       IF (result EQ '') THEN RETURN, ''
-      result1 = ValueBeforeArg1(result,' ')
+      result1 = ref_l_ValueBeforeArg1(result,' ')
       IF (result1 EQ '') THEN RETURN, ''
-      result2 = ValueAfterArg1(result1,'=')
+      result2 = ref_l_ValueAfterArg1(result1,'=')
       IF (result2 EQ '') THEN RETURN, ''
       RETURN, STRCOMPRESS(result2,/REMOVE_ALL)
     ENDIF
@@ -340,8 +301,8 @@ FUNCTION getAngleUnits, cmd
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION isWithFilteringDataFlag, cmd
-  IF (isStringFound(cmd,'--no-filter=')) THEN BEGIN
+FUNCTION ref_l_isWithFilteringDataFlag, cmd
+  IF (ref_l_isStringFound(cmd,'--no-filter=')) THEN BEGIN
     RETURN, 'no'
   ENDIF ELSE BEGIN
     RETURN, 'yes'
@@ -349,8 +310,8 @@ FUNCTION isWithFilteringDataFlag, cmd
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION isWithDeltaTOverT, cmd
-  IF (isStringFound(cmd,'--store-dtot')) THEN BEGIN
+FUNCTION ref_l_isWithDeltaTOverT, cmd
+  IF (ref_l_isStringFound(cmd,'--store-dtot')) THEN BEGIN
     RETURN, 'yes'
   ENDIF ELSE BEGIN
     RETURN, 'no'
@@ -358,8 +319,8 @@ FUNCTION isWithDeltaTOverT, cmd
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION isWithOverwriteDataInstrGeo, cmd
-  IF (isStringFound(cmd,'--data-inst-geom=')) THEN BEGIN
+FUNCTION ref_l_isWithOverwriteDataInstrGeo, cmd
+  IF (ref_l_isStringFound(cmd,'--data-inst-geom=')) THEN BEGIN
     RETURN, 'yes'
   ENDIF ELSE BEGIN
     RETURN, 'no'
@@ -367,9 +328,9 @@ FUNCTION isWithOverwriteDataInstrGeo, cmd
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getDataInstrumentGeoFileName, cmd
-  IF (isStringFound(cmd,'--data-inst-geom=')) THEN BEGIN
-    result = ValueBetweenArg1Arg2(cmd, '--data-inst-geom=', 1, ' ', 0)
+FUNCTION ref_l_getDataInstrumentGeoFileName, cmd
+  IF (ref_l_isStringFound(cmd,'--data-inst-geom=')) THEN BEGIN
+    result = ref_l_ValueBetweenArg1Arg2(cmd, '--data-inst-geom=', 1, ' ', 0)
     IF (result EQ '') THEN RETURN, ''
     RETURN, STRCOMPRESS(result,/REMOVE_ALL)
   ENDIF ELSE BEGIN
@@ -378,8 +339,8 @@ FUNCTION getDataInstrumentGeoFileName, cmd
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION isWithOverwriteNormInstrGeo, cmd
-  IF (isStringFound(cmd,'--norm-inst-geom=')) THEN BEGIN
+FUNCTION ref_l_isWithOverwriteNormInstrGeo, cmd
+  IF (ref_l_isStringFound(cmd,'--norm-inst-geom=')) THEN BEGIN
     RETURN, 'yes'
   ENDIF ELSE BEGIN
     RETURN, 'no'
@@ -387,9 +348,9 @@ FUNCTION isWithOverwriteNormInstrGeo, cmd
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getNormInstrumentGeoFileName, cmd
-  IF (isStringFound(cmd,'--norm-inst-geom=')) THEN BEGIN
-    result = ValueBetweenArg1Arg2(cmd, '--norm-inst-geom=', 1, ' ', 0)
+FUNCTION ref_l_getNormInstrumentGeoFileName, cmd
+  IF (ref_l_isStringFound(cmd,'--norm-inst-geom=')) THEN BEGIN
+    result = ref_l_ValueBetweenArg1Arg2(cmd, '--norm-inst-geom=', 1, ' ', 0)
     IF (result EQ '') THEN RETURN, ''
     RETURN, STRCOMPRESS(result,/REMOVE_ALL)
   ENDIF ELSE BEGIN
@@ -398,18 +359,18 @@ FUNCTION getNormInstrumentGeoFileName, cmd
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getOutputPath, cmd
-  result = ValueBetweenArg1Arg2(cmd, '--output=', 1, ' ', 0)
+FUNCTION ref_l_getOutputPath, cmd
+  result = ref_l_ValueBetweenArg1Arg2(cmd, '--output=', 1, ' ', 0)
   IF (result EQ '') THEN RETURN, ''
-  result1 = ValueBeforeLastArg(result, '/')
+  result1 = ref_l_ValueBeforeLastArg(result, '/')
   RETURN, STRCOMPRESS(result1,/REMOVE_ALL)
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION class_getOutputFileName, cmd
-  result  = ValueBetweenArg1Arg2(cmd, '--output=', 1, ' ', 0)
+FUNCTION ref_l_class_getOutputFileName, cmd
+  result  = ref_l_ValueBetweenArg1Arg2(cmd, '--output=', 1, ' ', 0)
   IF (result NE '') THEN BEGIN
-    result1 = ValueAfterLastArg(result, '/')
+    result1 = ref_l_ValueAfterLastArg(result, '/')
   ENDIF ELSE BEGIN
     result1 = ''
   ENDELSE
@@ -417,32 +378,32 @@ FUNCTION class_getOutputFileName, cmd
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION isWithDataNormCombinedSpec, cmd
-  IF (isStringFound(cmd,'--dump-specular')) THEN RETURN, 'yes'
+FUNCTION ref_l_isWithDataNormCombinedSpec, cmd
+  IF (ref_l_isStringFound(cmd,'--dump-specular')) THEN RETURN, 'yes'
   RETURN, 'no'
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION isWithDataNormCombinedBack, cmd
-  IF (isStringFound(cmd,'--dump-bkg')) THEN RETURN, 'yes'
+FUNCTION ref_l_isWithDataNormCombinedBack, cmd
+  IF (ref_l_isStringFound(cmd,'--dump-bkg')) THEN RETURN, 'yes'
   RETURN, 'no'
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION isWithDataNormCombinedSub, cmd
-  IF (isStringFound(cmd,'--dump-sub')) THEN RETURN, 'yes'
+FUNCTION ref_l_isWithDataNormCombinedSub, cmd
+  IF (ref_l_isStringFound(cmd,'--dump-sub')) THEN RETURN, 'yes'
   RETURN, 'no'
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION isWithRvsTOF, cmd
-  IF (isStringFound(cmd,'--dump-rtof')) THEN RETURN, 'yes'
+FUNCTION ref_l_isWithRvsTOF, cmd
+  IF (ref_l_isStringFound(cmd,'--dump-rtof')) THEN RETURN, 'yes'
   RETURN, 'no'
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION isWithRvsTOFcombined, cmd
-  IF (isStringFound(cmd,'--dump-rtof-comb')) THEN RETURN, 'yes'
+FUNCTION ref_l_isWithRvsTOFcombined, cmd
+  IF (ref_l_isStringFound(cmd,'--dump-rtof-comb')) THEN RETURN, 'yes'
   RETURN, 'no'
 END
 
@@ -515,41 +476,6 @@ END
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 FUNCTION IDLparseCommandLine::getNormBackFileName
   RETURN, self.NormBackFileName
-END
-
-;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getEmptyCellNexusFileName
-  RETURN, self.EmptyCellFileName
-END
-
-;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getEmptyCellRunNumber
-  RETURN, self.EmptyCellRunNumber
-END
-
-;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getEmptyCellA
-  RETURN, self.EmptyCellA
-END
-
-;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getEmptyCellB
-  RETURN, self.EmptyCellB
-END
-
-;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getEmptyCellC
-  RETURN, self.EmptyCellC
-END
-
-;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getEmptyCellD
-  RETURN, self.EmptyCellD
-END
-
-;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-FUNCTION IDLparseCommandLine::getEmptyCellReduceFlag
-  RETURN, self.EmptyCellReduceFlag
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
@@ -672,81 +598,68 @@ FUNCTION IDLparseCommandLine::init, cmd
     RETURN, 0
   ENDIF ELSE BEGIN
     ;Work on Data
-    self.MainDataNexusFileName  = getMainDataNexusFileName(cmd)
+    self.MainDataNexusFileName  = ref_l_getMainDataNexusFileName(cmd)
     IF (self.MainDataNexusFileName NE '') THEN BEGIN
       self.MainDataRunNUmber      = $
-        getMainDataRunNumber(self.MainDataNexusFileName)
+        ref_l_getMainDataRunNumber(self.MainDataNexusFileName)
     ENDIF ELSE BEGIN
       self.MainDataRunNumber  = ''
     ENDELSE
-    self.AllDataNexusFileName   = getAllDataNexusFileName(cmd)
-    self.DataRoiFileName        = getDataRoiFileName(cmd)
-    self.DataPeakExclYArray     = getDataPeakExclYArray(cmd)
-    self.DataBackFileName       = getDataBackFileName(cmd)
-    self.TOFcuttingMin          = getTOFcuttingMin(cmd)
-    self.TOFcuttingMax          = getTOFcuttingMax(cmd)
+    self.AllDataNexusFileName   = ref_l_getAllDataNexusFileName(cmd)
+    self.DataRoiFileName        = ref_l_getDataRoiFileName(cmd)
+    self.DataPeakExclYArray     = ref_l_getDataPeakExclYArray(cmd)
+    self.DataBackFileName       = ref_l_getDataBackFileName(cmd)
+    self.TOFcuttingMin          = ref_l_getTOFcuttingMin(cmd)
+    self.TOFcuttingMax          = ref_l_getTOFcuttingMax(cmd)
     
     ;Work on Normalization
-    self.MainNormNexusFileName = getMainNormNexusFileName(cmd)
+    self.MainNormNexusFileName = ref_l_getMainNormNexusFileName(cmd)
     IF (self.MainNormNexusFileName NE '') THEN BEGIN
       self.MainNormRunNUmber     = $
-        getMainNormRunNumber(self.MainNormNexusFileName)
+        ref_l_getMainNormRunNumber(self.MainNormNexusFileName)
     ENDIF ELSE BEGIN
       self.MainNormRunNumber = ''
     ENDELSE
-    self.AllNormNexusFileName  = getAllNormNexusFileName(cmd)
-    self.NormRoiFileName       = getNormRoiFileName(cmd)
-    self.NormPeakExclYArray    = getNormPeakExclYArray(cmd)
-    self.NormBackFileName      = getNormBackFileName(cmd)
-    
-    ;Work on Emtpy Cell
-    self.EmptyCellFileName = getEmptyCellFileName(cmd)
-    IF (self.EmptyCellFileName NE '') THEN BEGIN
-      self.EmptyCellRunNumber = $
-        getEmptyCellRunNumber(self.EmptyCellFileName)
-      AB = getEmptyCellAB(cmd)
-      self.EmptyCellA = STRCOMPRESS(AB[0],/REMOVE_ALL)
-      self.EmptyCellB = STRCOMPRESS(AB[1],/REMOVE_ALL)
-      self.EmptyCellC = getEmptyCellC(cmd)
-      self.EmptyCellD = getEmptyCellD(cmd)
-      self.EmptyCellReduceFlag = 'yes'
-    ENDIF
+    self.AllNormNexusFileName  = ref_l_getAllNormNexusFileName(cmd)
+    self.NormRoiFileName       = ref_l_getNormRoiFileName(cmd)
+    self.NormPeakExclYArray    = ref_l_getNormPeakExclYArray(cmd)
+    self.NormBackFileName      = ref_l_getNormBackFileName(cmd)
     
     ;;Reduce Tab
     ;Background flags
-    self.DataBackgroundFlag        = isWithDataBackgroundFlagOn(cmd)
-    self.NormBackgroundFlag        = isWithNormBackgroundFlagOn(cmd)
+    self.DataBackgroundFlag        = ref_l_isWithDataBackgroundFlagOn(cmd)
+    self.NormBackgroundFlag        = ref_l_isWithNormBackgroundFlagOn(cmd)
     ;Q [Qmin,Qmax,Qwidth,linear/log]
-    self.Qmin                      = getQmin(cmd)
-    self.Qmax                      = getQmax(cmd)
-    self.Qwidth                    = getQwidth(cmd)
-    self.Qtype                     = getQtype(cmd)
+    self.Qmin                      = ref_l_getQmin(cmd)
+    self.Qmax                      = ref_l_getQmax(cmd)
+    self.Qwidth                    = ref_l_getQwidth(cmd)
+    self.Qtype                     = ref_l_getQtype(cmd)
     ;Angle Offset
-    self.AngleValue                = getAngleValue(cmd)
-    self.AngleError                = getAngleError(cmd)
-    self.AngleUnits                = getAngleUnits(cmd)
+    self.AngleValue                = ref_l_getAngleValue(cmd)
+    self.AngleError                = ref_l_getAngleError(cmd)
+    self.AngleUnits                = ref_l_getAngleUnits(cmd)
     ;filtering data
-    self.FilteringDataFlag         = isWithFilteringDataFlag(cmd)
+    self.FilteringDataFlag         = ref_l_isWithFilteringDataFlag(cmd)
     ;dt/t
-    self.DeltaTOverT               = isWithDeltaTOverT(cmd)
+    self.DeltaTOverT               = ref_l_isWithDeltaTOverT(cmd)
     ;overwrite data intrument geometry
-    self.OverwriteDataInstrGeo     = isWithOverwriteDataInstrGeo(cmd)
+    self.OverwriteDataInstrGeo     = ref_l_isWithOverwriteDataInstrGeo(cmd)
     ;Data instrument geometry file name
-    self.DataInstrGeoFileName      = getDataInstrumentGeoFileName(cmd)
+    self.DataInstrGeoFileName      = ref_l_getDataInstrumentGeoFileName(cmd)
     ;overwrite norm intrument geometry
-    self.OverwriteNormInstrGeo     = isWithOverwriteNormInstrGeo(cmd)
+    self.OverwriteNormInstrGeo     = ref_l_isWithOverwriteNormInstrGeo(cmd)
     ;Norm instrument geometry file name
-    self.NormInstrGeoFileName      = getNormInstrumentGeoFileName(cmd)
+    self.NormInstrGeoFileName      = ref_l_getNormInstrumentGeoFileName(cmd)
     ;output path
-    self.OutputPath                = getOutputPath(cmd)
+    self.OutputPath                = ref_l_getOutputPath(cmd)
     ;output file name
-    self.OutputFileName            = class_getOutputFileName(cmd)
+    self.OutputFileName            = ref_l_class_getOutputFileName(cmd)
     ;;Intermediate File Flags
-    self.DataNormCombinedSpecFlag  = isWithDataNormCombinedSpec(cmd)
-    self.DataNormCombinedBackFlag  = isWithDataNormCombinedBack(cmd)
-    self.DataNormCombinedSubFlag   = isWithDataNormCombinedSub(cmd)
-    self.RvsTOFFlag                = isWithRvsTOF(cmd)
-    self.RvsTOFcombinedFlag        = isWithRvsTOFcombined(cmd)
+    self.DataNormCombinedSpecFlag  = ref_l_isWithDataNormCombinedSpec(cmd)
+    self.DataNormCombinedBackFlag  = ref_l_isWithDataNormCombinedBack(cmd)
+    self.DataNormCombinedSubFlag   = ref_l_isWithDataNormCombinedSub(cmd)
+    self.RvsTOFFlag                = ref_l_isWithRvsTOF(cmd)
+    self.RvsTOFcombinedFlag        = ref_l_isWithRvsTOFcombined(cmd)
   ENDELSE
   RETURN, 1
 END
@@ -771,14 +684,6 @@ PRO IDLparseCommandLine__define
     NormRoiFileName           : '',$
     NormPeakExclYArray        : ['',''],$
     NormBackFileName          : '',$
-    
-    EmptyCellFileName         : '',$
-    EmptyCellRunNumber        : '',$
-    EmptyCellA                : '',$
-    EmptyCellB                : '',$
-    EmptyCellD                : '',$
-    EmptyCellC                : '',$
-    EmptyCellReduceFlag       : 'no',$
     
     DataBackgroundFlag        : 'yes',$
     NormBackgroundFlag        : 'yes',$

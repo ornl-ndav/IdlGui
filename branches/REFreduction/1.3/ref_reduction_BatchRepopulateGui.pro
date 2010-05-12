@@ -135,42 +135,7 @@ PRO RepopulateGui, Event
   text = '--> Normalization Back Full File Name (NormBackFileName) .........' + $
     '..... ' + NormBackFileName
   putLogBookMessage, Event, text, APPEND=1
-  
-  EmptyCellFileName = ClassInstance->getEmptyCellNexusFileName()
-  text = '--> Empty Cell Full File Name (EmptyCellFileName) ................' + $
-    '..... ' + EmptyCellFileName
-  putLogBookMessage, Event, text, APPEND=1
-  
-  EmptyCellRunNumber = ClassInstance->getEmptyCellRunNumber()
-  text = '--> Empty Cell Run Number (EmptyCellRunNumber) ...................' + $
-    '..... ' + EmptyCellRunNumber
-  putLogBookMessage, Event, text, APPEND=1
-  
-  EmptyCellA = ClassInstance->getEmptyCellA()
-  text = '--> Empty Cell coefficient A (EmptyCellA) ........................' + $
-    '..... ' + EmptyCellA
-  putLogBookMessage, Event, text, APPEND=1
-  
-  EmptyCellB = ClassInstance->getEmptyCellB()
-  text = '--> Empty Cell coefficient B (EmptyCellB) ........................' + $
-    '..... ' + EmptyCellB
-  putLogBookMessage, Event, text, APPEND=1
-  
-  EmptyCellC = ClassInstance->getEmptyCellC()
-  text = '--> Empty Cell coefficient C (EmptyCellC) ........................' + $
-    '..... ' + EmptyCellC
-  putLogBookMessage, Event, text, APPEND=1
-  
-  EmptyCellD = ClassInstance->getEmptyCellD()
-  text = '--> Empty Cell coefficient D (EmptyCellD) ........................' + $
-    '..... ' + EmptyCellD
-  putLogBookMessage, Event, text, APPEND=1
-  
-  EmptyCellFlag = ClassInstance->getEmptyCellReduceFlag()
-  text = '--> Empty Cell Flag (EmptyCellFlag) ..............................' + $
-    '..... ' + EmptyCellFlag
-  putLogBookMessage, Event, text, APPEND=1
-  
+    
   DataBackgroundFlag = ClassInstance->getDataBackgroundFlag()
   text = '--> With Data Background (DataBackgroundFlag) ? ..................' + $
     '..... ' + DataBackgroundFlag
@@ -311,13 +276,6 @@ PRO RepopulateGui, Event
     NormPeakExclYmin          : NormPeakExclYArray[0],$
     NormPeakExclYmax          : NormPeakExclYArray[1],$
     NormBackFileName          : NormBackFileName,$
-    EmptyCellFileName         : EmptyCellFileName,$
-    EmptyCellRunNumber        : EmptyCellRunNumber,$
-    EmptyCellA                : EmptyCellA,$
-    EmptyCellB                : EmptyCellB,$
-    EmptyCellC                : EmptyCellC,$
-    EmptyCellD                : EmptyCellD,$
-    EmptyCellFlag             : EmptyCellFlag,$
     TOFcuttingMin             : TOFcuttingMin,$
     TOFcuttingMax             : TOFcuttingMax,$
     DataBackgroundFlag        : DataBackgroundFlag,$
