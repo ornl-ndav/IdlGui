@@ -330,7 +330,7 @@ end
 function batch_repopulate_gui, Event, DRfiles, spin_state_nbr=spin_state_nbr
 
   print, 'enter batch_repopulate_gui'
-
+  
   widget_control, event.top, GET_UVALUE=global
   
   ;retrieve parameters
@@ -379,9 +379,9 @@ function batch_repopulate_gui, Event, DRfiles, spin_state_nbr=spin_state_nbr
   if (loading_error EQ 0) then begin
   
     ;for REF_L or first REF_M spin state
-
+  
     if (spin_state_nbr eq 0) then begin
-      
+    
       ;define color_array
       index_array = getIndexArrayOfActiveBatchRow(Event)
       sz          = (SIZE(index_array))(1)
@@ -411,7 +411,7 @@ function batch_repopulate_gui, Event, DRfiles, spin_state_nbr=spin_state_nbr
         plot_loaded_file, Event, 'all' ;_Plot
         
       endif else begin ;perform scaling ourselves
-        
+      
         auto_full_scaling_from_batch_file, Event
         
       endelse
@@ -447,7 +447,10 @@ PRO ref_scale_PreviewBatchFile, Event
   WIDGET_CONTROL,id,GET_UVALUE=global
   ;retrieve BatchFileName
   BatchFileName = getBatchFileName(Event)
-  XDISPLAYFILE, BatchFileName, TITLE='Preview of ' + BatchFileName
+  XDISPLAYFILE, BatchFileName, $
+    TITLE='Preview of ' + BatchFileName, $
+    /center, $
+    group=id
 END
 
 ;==============================================================================

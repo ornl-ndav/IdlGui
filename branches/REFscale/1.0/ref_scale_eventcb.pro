@@ -147,7 +147,7 @@ PRO DisplayFullPreviewOfButton, Event ;_eventcb
   ListOfFiles = (*(*global).ListOfLongFileName)
   selected_file = ListOfFiles[index]
   title = 'PREVIEW of ' + selected_file
-  XDISPLAYFILE, selected_file, TITLE=title
+  XDISPLAYFILE, selected_file, TITLE=title, group=id, /center
 END
 
 ;##############################################################################
