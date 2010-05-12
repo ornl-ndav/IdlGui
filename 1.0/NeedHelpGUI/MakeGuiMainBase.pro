@@ -54,7 +54,7 @@ pro MakeGuiMainBase, MAIN_BASE, global
   design_tab2, base2, global
 
   base3 = widget_base(tab, $ ;tab3 .......................................
-  title = '  Desesperate Actions  ',$
+  title = '  Desperate Actions  ',$
   /column)
   
   design_tab3, base3, global
