@@ -444,7 +444,7 @@ PRO ProduceOutputFile, Event
     ;average overlap data values
     average_overlap, full_flt0_sorted, full_flt1_sorted, full_flt2_sorted
     
-    sz = n_elements(flt0_sorted_index)
+    sz = n_elements(full_flt0_sorted)
     data_text = strarr(1)
     for i=0l,(sz-1) do begin
       local_data_text = strcompress(full_flt0_sorted[i],/remove_all)
