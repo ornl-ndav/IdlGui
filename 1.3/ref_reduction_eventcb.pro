@@ -256,7 +256,7 @@ PRO REFreduction_OpenPlotDataNexus, Event, DataRunNumber, currFullDataNexusName
   IF ((*global).debugging_version EQ 'yes') THEN BEGIN
     print, 'Just before OpenDataNexusFile_batch'
   ENDIF
-  OpenDataNexusFile_batch, Event, DataRunNumber, currFullDataNexusName, spin_state=spin_state
+  OpenDataNexusFile_batch, Event, DataRunNumber, currFullDataNexusName
   IF ((*global).debugging_version EQ 'yes') THEN BEGIN
     print, 'Just after OpenDataNexusFile_batch'
   ENDIF

@@ -435,7 +435,7 @@ PRO OpenDataNeXusFile_batch, Event, DataRunNumber, full_nexus_name
   IF ((*global).debugging_version EQ 'yes') THEN BEGIN
     PRINT, 'Before NXsummaryBatch'
   ENDIF
-  RefReduction_NXsummaryBatch, Event, full_nexus_name, 'data_file_info_text'
+;  RefReduction_NXsummaryBatch, Event, full_nexus_name, 'data_file_info_text'
   IF ((*global).debugging_version EQ 'yes') THEN BEGIN
     PRINT, 'After NXsummaryBatch'
   ENDIF

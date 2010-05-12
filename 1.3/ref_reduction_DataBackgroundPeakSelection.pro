@@ -117,7 +117,9 @@ PRO REFreduction_DataBackgroundPeakSelection, Event, TYPE
     ;refresh value of cw_fields
     putDataBackgroundPeakYMinMaxValueInTextFields, Event
     
-    calculate_data_refpix, Event
+    if ((*global).instrument eq 'REF_M') then begin
+      calculate_data_refpix, Event
+    endif
     
     ;Replot selection selected
     ReplotAllSelection, Event

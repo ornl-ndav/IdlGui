@@ -223,16 +223,10 @@ endif ;end of if with background substraction
 IF (isDataWithBackground(Event)) THEN BEGIN ;yes, with background
   ;activate DATA Intermediate Plots
   MapBase, Event, 'reduce_plot2_base', 0
-  MapBase, Event, 'reduce_plot3_base', 0
+;  MapBase, Event, 'reduce_plot3_base', 0
 ENDIF ELSE BEGIN
   cmd += ' --no-bkg'
   ;desactivate DATA Intermediate Plots
-  substrateValue = getCWBgroupValue(Event,'empty_cell_substrate_group')
-  IF (substrateValue EQ 0) THEN BEGIN
-    MapBase, Event, 'reduce_plot3_base', 0
-  ENDIF ELSE BEGIN
-    MapBase, Event, 'reduce_plot3_base', 1
-  ENDELSE
   MapBase, Event, 'reduce_plot2_base', 1
 END
 
@@ -541,96 +535,6 @@ endelse                         ;end of (~isWithoutNormalization)
 
 ;get name of instrument
 cmd += ' --inst=' + (*global).instrument
-
-;*****EMPTY CELL***************************************************************
-substrateValue = getCWBgroupValue(Event,'empty_cell_substrate_group')
-IF (substrateValue EQ 0) THEN BEGIN
-
-  cmd += ' --subtrans-coeff='
-  
-  A = getTextFieldValue(Event, 'empty_cell_substrate_a')
-  IF (A EQ '' OR A EQ 0) THEN BEGIN
-    cmd  += '?'
-    status_text = '- Please provide a valid Coefficient A to' + $
-      ' the Substrate Transmission Equation (tab -> LOAD/EMPTY_CELL)'
-    IF (StatusMessage GT 0) THEN BEGIN
-      append = 1
-    ENDIF ELSE BEGIN
-      append = 0
-    ENDELSE
-    putInfoInReductionStatus, Event, status_text, append
-    StatusMessage += 1
-  ENDIF ELSE BEGIN
-    cmd += A
-  ENDELSE
-  
-  cmd += ' '
-  
-  B = getTextFieldValue(Event, 'empty_cell_substrate_b')
-  IF (B EQ '' OR B EQ 0) THEN BEGIN
-    cmd  += '?'
-    status_text = '- Please provide a valid Coefficient B to' + $
-      ' the Substrate Transmission Equation (tab -> LOAD/EMPTY_CELL)'
-    IF (StatusMessage GT 0) THEN BEGIN
-      append = 1
-    ENDIF ELSE BEGIN
-      append = 0
-    ENDELSE
-    putInfoInReductionStatus, Event, status_text, append
-    StatusMessage += 1
-  ENDIF ELSE BEGIN
-    cmd += B
-  ENDELSE
-  
-  cmd += ' --substrate-diam='
-  D = getTextFieldValue(Event, 'empty_cell_diameter')
-  IF (D EQ '' OR D EQ 0) THEN BEGIN
-    cmd  += '?'
-    status_text = '- Please provide a valid Substrate Diameter D to' + $
-      ' the Substrate Transmission Equation (tab -> LOAD/EMPTY_CELL)'
-    IF (StatusMessage GT 0) THEN BEGIN
-      append = 1
-    ENDIF ELSE BEGIN
-      append = 0
-    ENDELSE
-    putInfoInReductionStatus, Event, status_text, append
-    StatusMessage += 1
-  ENDIF ELSE BEGIN
-    cmd += D
-  ENDELSE
-  
-  SF = getTextFieldValue(Event,'empty_cell_scaling_factor')
-  IF (SF NE '') THEN BEGIN
-    cmd += ' --scale-ecell=' + SF
-  ENDIF
-  
-  ;NeXus file
-  cmd += ' --ecell='
-  empty_cell_nexus_file = (*global).empty_cell_full_nexus_name
-  IF (empty_cell_nexus_file EQ '') THEN BEGIN
-    cmd  += '?'
-    status_text = '- Please provide a valid Empty Cell NeXus File'
-    status_text += ' (tab-> LOAD/EMPTY_CELL)'
-    IF (StatusMessage GT 0) THEN BEGIN
-      append = 1
-    ENDIF ELSE BEGIN
-      append = 0
-    ENDELSE
-    putInfoInReductionStatus, Event, status_text, append
-    StatusMessage += 1
-  ENDIF ELSE BEGIN
-    cmd += empty_cell_nexus_file
-  ENDELSE
-  
-  ;remove Empty Cell Intermediate Plots
-  MapBase, Event, 'reduce_plot8_base', 0
-  
-ENDIF ELSE BEGIN
-
-  ;remove Empty Cell Intermediate Plots
-  MapBase, Event, 'reduce_plot8_base', 1
-  
-ENDELSE
 
 ;*****Q VALUES*****************************************************************
 
