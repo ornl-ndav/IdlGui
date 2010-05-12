@@ -32,6 +32,31 @@
 ;
 ;==============================================================================
 
+;+
+; :Description:
+;   This procedure defines the name of the geometry file
+;
+; :Params:
+;    event
+
+; :Author: j35
+;-
+pro create_name_of_tmp_geometry_file, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  output_path = getOutputPathFromButton(Event)
+  data_run_number = strcompress((*global).data_run_number,/remove_all)
+  geo_file_name = (*global).instrument + '_' + data_run_number
+  geo_file_name += '_geometry.nxs'
+
+  tmp_geometry_file = output_path + geo_file_name
+  (*global).tmp_geometry_file = tmp_geometry_file
+  print, 'tmp_geometry_file: ' + tmp_geometry_file
+  
+end
+
 PRO run_command_line_ref_m, event
 
   ;get global structure
@@ -79,6 +104,9 @@ PRO run_command_line_ref_m, event
     
     geo_cmd += ' -D DIRPIX=' + strcompress(dirpix,/remove_all)
     geo_cmd += ' -D REFPIX=' + strcompress(refpix,/remove_all)
+
+    create_name_of_tmp_geometry_file, event
+
     geo_cmd += ' -o ' + (*global).tmp_geometry_file
     cmd_text = 'Running geometry generator:'
     putLogBookMessage, Event, cmd_text, Append=1

@@ -32,7 +32,18 @@
 ;
 ;==============================================================================
 
+;+
+; :Description:
+;   This procedure create the geometry file and run the reduction command
+;   line
+;
+; :Params:
+;    Event
+
+; :Author: j35
+;-
 PRO RefReduction_RunCommandLine, Event
+  compile_opt idl2
 
   ;get global structure
   id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -70,10 +81,8 @@ PRO RefReduction_RunCommandLine, Event
       
       dirpix = getTextFieldValue(event,'info_dirpix')
       refpix = getTextFieldValue(event,'info_refpix')
-      
       geo_cmd = (*global).ts_geom
       geo_cmd += ' ' + (*global).REF_M_geom
-      ;      geo_cmd += ' ' + (*global).dirpix_geometry
       geo_cmd += ' -m ' + (*global).cvinfo
       geo_cmd += ' -D DIRPIX=' + dirpix
       geo_cmd += ' -D REFPIX=' + refpix
