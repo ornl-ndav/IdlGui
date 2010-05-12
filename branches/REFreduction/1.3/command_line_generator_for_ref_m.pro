@@ -381,7 +381,16 @@ PRO command_line_generator_for_ref_m, event
       cmd[index_spin_state] += ' --tof-cut-max=' + tof_max
     ENDIF
     
-    ;*****NORMALIZATION**********************************************************
+    ;scattering angle flag
+    cmd[index_spin_state] += ' --scatt-angle='
+    rad_sangle = (*global).rad_sangle
+    rad_sangle_x2 = strcompress(2. * float(rad_sangle),/remove_all)
+    rad_sangle_error = strcompress(0.,/remove_all)
+    rad_sangle_units = 'units=radians'
+    cmd[index_spin_state] += rad_sangle_x2 + ',' + $
+      rad_sangle_error + ',' + rad_sangle_units
+      
+    ;*****NORMALIZATION********************************************************
     ;check if user wants to use normalization or not
     if (isReductionWithNormalization(Event)) then begin
     
