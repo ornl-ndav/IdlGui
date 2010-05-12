@@ -73,6 +73,7 @@ PRO tab_event, Event
           UpdateBatchTable, Event
         endif else begin
           UpdateBatchTable_ref_m, event
+          UpdateBatchTabGui_ref_m, Event
           activate_or_not_save_batch_button, event
         endelse
       END

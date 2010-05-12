@@ -657,8 +657,8 @@ PRO BatchTab_LoadBatchFile_ref_m_step2, Event, BatchFileName, new_path
       putBatchFileName, Event, FileName
       ;put name of file in Refresh label
       putTextFieldValue, event, 'loaded_batch_file_name', BatchFileName, 0
-      ;enable or not the REPOPULATE Button
-      CheckRepopulateButton, Event
+;      ;enable or not the REPOPULATE Button
+;      CheckRepopulateButton, Event
       ;enable or not the REFRESH Button
       CheckRefreshButton, Event
 
