@@ -18,5 +18,5 @@ backup:
 dev:
 	cp .REFscale.cfg /SNS/software/idltools/dev/sav/
 	cp ref_scale.sav /SNS/software/idltools/dev/sav/
-	cp REFscale /SNS/software/idltools/dev/
+	cp REFscale_dev /SNS/software/idltools/dev/
 	
