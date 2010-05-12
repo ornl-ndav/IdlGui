@@ -170,11 +170,6 @@ PRO MAIN_BASE_ref_scale_event, Event
       ActivateWidget, Event, 'email_configure', 0
     end
     
-    ;preview of output file button
-    widget_info(wWidget, find_by_uname='preview_output_file_button'): begin
-      preview_of_output_file, event
-    end
-    
     ;Event triggered by 'Reset X/Y'
     WIDGET_INFO(wWidget, FIND_BY_UNAME='ResetButton'): BEGIN
       ResetRescaleButton, Event ;_eventcb
