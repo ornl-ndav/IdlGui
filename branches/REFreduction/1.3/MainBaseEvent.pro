@@ -1928,12 +1928,20 @@ PRO MAIN_BASE_event, Event
     
     ;;Run Active live
     WIDGET_INFO(wWidget, FIND_BY_UNAME='run_active_button'): begin
-      BatchTab_RunActive, Event
+      if ((*global).instrument eq 'REF_L') then begin
+        BatchTab_RunActive_ref_l, Event
+      endif else begin
+        BatchTab_RunActive_ref_m, event
+      endelse
     end
     
     ;;Run Active in Background
     WIDGET_INFO(wWidget, FIND_BY_UNAME='run_active_background_button'): begin
-      BatchTab_RunActiveBackground, Event
+      if ((*global).instrument eq 'REF_L') then begin
+        BatchTab_RunActiveBackground_ref_l, Event
+      endif else begin
+        BatchTab_RunActiveBackground_ref_m, Event
+      endelse
     end
     
     ;;Load Batch File
