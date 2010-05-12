@@ -1500,34 +1500,45 @@ PRO BatchTab_RunActive_ref_m, Event
           '/' + strcompress(NbrProcess,/remove_all)
         putTextFieldValue, Event, 'progress_bar_label', info, 0
         
-        LogText = '-> Running command ' + $
-          strcompress(ProcessToRun,/remove_all) $
-          + '/' + strcompress(NbrProcess,/remove_all)
-        putLogBookMessage, Event, LogText, APPEND=1
-        LogText = '--> Command is: ' + BatchTable[8,i]
-        putLogBookMessage, Event, LogText, APPEND=1
-        LogText = '--> Running ... ' + (*global).processing_message
-        putLogBookMessage, Event, LogText, APPEND=1
-        run_error = 0
-        CATCH, run_error
-        IF (run_error NE 0) THEN BEGIN
-          CATCH,/CANCEL
-          AppendReplaceLogBookMessage, Event, (*global).FAILED, $
-            (*global).processing_message
-        ENDIF ELSE BEGIN
+        full_cmd = BatchTable[8,i]
+        global_cmd_array = strsplit(full_cmd,';',/extract,/regex)
+        sz = n_elements(global_cmd_array)
+        index_cmd = 0
+        while (index_cmd lt sz) do begin
         
-          spawn, BatchTable[8,i], listening, err_listening
-          IF (err_listening[0] NE '') THEN BEGIN
+          current_cmd = global_cmd_array[index_cmd]
+          
+          LogText = '-> Running command ' + $
+            strcompress(ProcessToRun,/remove_all) $
+            + '/' + strcompress(NbrProcess,/remove_all)
+          putLogBookMessage, Event, LogText, APPEND=1
+          LogText = '--> Command is: ' + current_cmd
+          putLogBookMessage, Event, LogText, APPEND=1
+          LogText = '--> Running ... ' + (*global).processing_message
+          putLogBookMessage, Event, LogText, APPEND=1
+          run_error = 0
+          CATCH, run_error
+          IF (run_error NE 0) THEN BEGIN
+            CATCH,/CANCEL
             AppendReplaceLogBookMessage, Event, (*global).FAILED, $
               (*global).processing_message
-            LogText = '--> ERROR MESSAGE:'
-            putLogBookMessage, Event, LogText, APPEND=1
-            putLogBookMessage, Event, err_listening, APPEND=1
           ENDIF ELSE BEGIN
-            AppendReplaceLogBookMessage, Event, 'OK', $
-              (*global).processing_message
+          
+            spawn, current_cmd, listening, err_listening
+            IF (err_listening[0] NE '') THEN BEGIN
+              AppendReplaceLogBookMessage, Event, (*global).FAILED, $
+                (*global).processing_message
+              LogText = '--> ERROR MESSAGE:'
+              putLogBookMessage, Event, LogText, APPEND=1
+              putLogBookMessage, Event, err_listening, APPEND=1
+            ENDIF ELSE BEGIN
+              AppendReplaceLogBookMessage, Event, 'OK', $
+                (*global).processing_message
+            ENDELSE
           ENDELSE
-        ENDELSE
+          
+          index_cmd++
+        endwhile
         
         ;top progress bar
         x2 = (ProcessToRun)*(x_step)
@@ -1703,31 +1714,31 @@ PRO BatchTab_RunActiveBackground_ref_m, Event
   FAILED     = (*global).failed
   OK         = (*global).ok
   
-  IF ((*global).with_job_manager EQ 'yes') THEN BEGIN
-    LogText = '> Running Active Fields of Batch Table in Background using JOB' + $
-      ' Manager: '
-    putLogBookMessage, Event, LogText, APPEND=1
-    ;retrieve parameters
-    ucams             = (*global).ucams
-    application       = (*global).application
-    instrument        = (*global).instrument
-    xml_file_location = (*global).xml_file_location
-    job_manager_cmd   = (*global).job_manager_cmd
-    ;display parameters
-    LogText = '-> ucams            : ' + ucams
-    putLogBookMessage, Event, LogText, APPEND=1
-    LogText = '-> application      : ' + application
-    putLogBookMessage, Event, LogText, APPEND=1
-    LogText = '-> instrument       : ' +  instrument
-    putLogBookMessage, Event, LogText, APPEND=1
-    LogText = '-> xml_file_location: ' + xml_file_location
-    putLogBookMessage, Event, LogText, APPEND=1
-    LogText = '-> job_manager_cmd  : ' + job_manager_cmd
-    putLogBookMessage, Event, LogText, APPEND=1
-  ENDIF ELSE BEGIN
-    LogText = '> Running Active Fields of Batch Table in Background using SLURM: '
-    putLogBookMessage, Event, LogText, APPEND=1
-  ENDELSE
+  ;  IF ((*global).with_job_manager EQ 'yes') THEN BEGIN
+  ;    LogText = '> Running Active Fields of Batch Table in Background using JOB' + $
+  ;      ' Manager: '
+  ;    putLogBookMessage, Event, LogText, APPEND=1
+  ;    ;retrieve parameters
+  ;    ucams             = (*global).ucams
+  ;    application       = (*global).application
+  ;    instrument        = (*global).instrument
+  ;    xml_file_location = (*global).xml_file_location
+  ;    job_manager_cmd   = (*global).job_manager_cmd
+  ;    ;display parameters
+  ;    LogText = '-> ucams            : ' + ucams
+  ;    putLogBookMessage, Event, LogText, APPEND=1
+  ;    LogText = '-> application      : ' + application
+  ;    putLogBookMessage, Event, LogText, APPEND=1
+  ;    LogText = '-> instrument       : ' +  instrument
+  ;    putLogBookMessage, Event, LogText, APPEND=1
+  ;    LogText = '-> xml_file_location: ' + xml_file_location
+  ;    putLogBookMessage, Event, LogText, APPEND=1
+  ;    LogText = '-> job_manager_cmd  : ' + job_manager_cmd
+  ;    putLogBookMessage, Event, LogText, APPEND=1
+  ;  ENDIF ELSE BEGIN
+  LogText = '> Running Active Fields of Batch Table in Background using SLURM: '
+  putLogBookMessage, Event, LogText, APPEND=1
+  ;  ENDELSE
   
   ;turn on hourglass
   WIDGET_CONTROL,/HOURGLASS
@@ -1746,47 +1757,55 @@ PRO BatchTab_RunActiveBackground_ref_m, Event
       IF (BatchTable[0,i] EQ '> YES <' OR $
         BatchTable[0,i] EQ 'YES') THEN BEGIN
         
-        ;Using Job Manager
-        IF ((*global).with_job_manager EQ 'yes') THEN BEGIN
+        ;        ;Using Job Manager
+        ;        IF ((*global).with_job_manager EQ 'yes') THEN BEGIN
+        ;
+        ;          LogText = '-> Create XML file OF ' + $
+        ;            STRCOMPRESS(ProcessToRun,/REMOVE_ALL) + $
+        ;            '/' + STRCOMPRESS(NbrProcess,/REMOVE_ALL) + $
+        ;            ' ... ' + PROCESSING
+        ;          putLogBookMessage, Event, LogText, APPEND=1
+        ;          run_error = 0
+        ;          CATCH, run_error
+        ;          IF (run_error NE 0) THEN BEGIN
+        ;            CATCH,/CANCEL
+        ;            AppendReplaceLogBookMessage, Event, FAILED, PROCESSING
+        ;          ENDIF ELSE BEGIN
+        ;            ;create the XML file
+        ;            oXML = OBJ_NEW('IDLcreateXMLJobFile',$
+        ;              APPLICATION       = application,$
+        ;              INSTRUMENT        = instrument,$
+        ;              UCAMS             = ucams,$
+        ;              XML_FILE_LOCATION = xml_file_location,$
+        ;              COMMAND_LINE      = BatchTable[8,i])
+        ;            AppendReplaceLogBookMessage, Event, OK, PROCESSING
+        ;            xml_file_name = oXML->getFullXmlFileName()
+        ;            LogText = '-> XML file is : ' + xml_file_name
+        ;            putLogBookMessage, Event, LogText, APPEND=1
+        ;            ;Launch the job
+        ;            cmd = job_manager_cmd + xml_file_name + ' 2> /dev/null'
+        ;            LogText = '--> Launch job using cmd : ' + cmd
+        ;            putLogBookMessage, Event, LogText, APPEND=1
+        ;            LogText = '---> Launching cmd ... ' + PROCESSING
+        ;            putLogBookMessage, Event, LogText, APPEND=1
+        ;            spawn, cmd, listening, err_listening
+        ;            IF (err_listening[0] NE '') THEN BEGIN
+        ;              AppendReplaceLogBookMessage, Event, FAILED, PROCESSING
+        ;            ENDIF ELSE BEGIN
+        ;              AppendReplaceLogBookMessage, Event, OK, PROCESSING
+        ;            ENDELSE
+        ;          ENDELSE
+        ;
+        ;        ENDIF ELSE BEGIN
         
-          LogText = '-> Create XML file OF ' + $
-            STRCOMPRESS(ProcessToRun,/REMOVE_ALL) + $
-            '/' + STRCOMPRESS(NbrProcess,/REMOVE_ALL) + $
-            ' ... ' + PROCESSING
-          putLogBookMessage, Event, LogText, APPEND=1
-          run_error = 0
-          CATCH, run_error
-          IF (run_error NE 0) THEN BEGIN
-            CATCH,/CANCEL
-            AppendReplaceLogBookMessage, Event, FAILED, PROCESSING
-          ENDIF ELSE BEGIN
-            ;create the XML file
-            oXML = OBJ_NEW('IDLcreateXMLJobFile',$
-              APPLICATION       = application,$
-              INSTRUMENT        = instrument,$
-              UCAMS             = ucams,$
-              XML_FILE_LOCATION = xml_file_location,$
-              COMMAND_LINE      = BatchTable[8,i])
-            AppendReplaceLogBookMessage, Event, OK, PROCESSING
-            xml_file_name = oXML->getFullXmlFileName()
-            LogText = '-> XML file is : ' + xml_file_name
-            putLogBookMessage, Event, LogText, APPEND=1
-            ;Launch the job
-            cmd = job_manager_cmd + xml_file_name + ' 2> /dev/null'
-            LogText = '--> Launch job using cmd : ' + cmd
-            putLogBookMessage, Event, LogText, APPEND=1
-            LogText = '---> Launching cmd ... ' + PROCESSING
-            putLogBookMessage, Event, LogText, APPEND=1
-            spawn, cmd, listening, err_listening
-            IF (err_listening[0] NE '') THEN BEGIN
-              AppendReplaceLogBookMessage, Event, FAILED, PROCESSING
-            ENDIF ELSE BEGIN
-              AppendReplaceLogBookMessage, Event, OK, PROCESSING
-            ENDELSE
-          ENDELSE
+        full_cmd = BatchTable[8,i]
+        global_cmd_array = strsplit(full_cmd,';',/extract,/regex)
+        sz = n_elements(global_cmd_array)
+        index_cmd = 0
+        while (index_cmd lt sz) do begin
+        
+          current_cmd = global_cmd_array[index_cmd]
           
-        ENDIF ELSE BEGIN
-        
           LogText = '-> Launching command ' + $
             strcompress(ProcessToRun,/remove_all) $
             + '/' + strcompress(NbrProcess,/remove_all)
@@ -1798,9 +1817,9 @@ PRO BatchTab_RunActiveBackground_ref_m, Event
             AppendReplaceLogBookMessage, Event, (*global).FAILED, $
               (*global).processing_message
           ENDIF ELSE BEGIN ;add --batch just after srun
-            cmd       = BatchTable[8,i]
+            cmd       = current_cmd
             cmd_array = STRSPLIT(cmd,'srun',/extract,/regex)
-            cmd       = 'srun --batch -o none' + cmd_array[0]
+            cmd       = 'srun --batch -o none' + current_cmd
             LogText = '--> Command is: ' + cmd
             putLogBookMessage, Event, LogText, APPEND=1
             spawn, cmd, listening, err_listening
@@ -1808,9 +1827,13 @@ PRO BatchTab_RunActiveBackground_ref_m, Event
             ENDIF ELSE BEGIN
             ENDELSE
           ENDELSE
-          ++ProcessToRun
           
-        ENDELSE
+          index_cmd++
+        endwhile
+        
+        ++ProcessToRun
+        
+      ;        ENDELSE
       ENDIF
     ENDFOR
     
