@@ -381,15 +381,15 @@ PRO command_line_generator_for_ref_m, event
       cmd[index_spin_state] += ' --tof-cut-max=' + tof_max
     ENDIF
     
-        ;scattering angle flag
-        cmd[index_spin_state] += ' --scatt-angle='
-        rad_sangle = (*global).rad_sangle
-        rad_sangle_x2 = strcompress(2. * float(rad_sangle),/remove_all)
-        rad_sangle_error = strcompress(0.,/remove_all)
-        rad_sangle_units = 'units=radians'
-        cmd[index_spin_state] += rad_sangle_x2 + ',' + $
-          rad_sangle_error + ',' + rad_sangle_units
-    
+    ;scattering angle flag
+    cmd[index_spin_state] += ' --scatt-angle='
+    rad_sangle = (*global).rad_sangle
+    rad_sangle_x2 = strcompress(2. * float(rad_sangle),/remove_all)
+    rad_sangle_error = strcompress(0.,/remove_all)
+    rad_sangle_units = 'units=radians'
+    cmd[index_spin_state] += rad_sangle_x2 + ',' + $
+      rad_sangle_error + ',' + rad_sangle_units
+      
     ;*****NORMALIZATION********************************************************
     ;check if user wants to use normalization or not
     if (isReductionWithNormalization(Event)) then begin
@@ -876,12 +876,12 @@ PRO command_line_generator_for_ref_m, event
         button_value
     ENDIF
     
-    IF ((*global).instrument EQ 'REF_M') THEN BEGIN
-      IF (~isWithDataInstrumentGeometryOverwrite(Event)) then BEGIN
-        create_name_of_tmp_geometry_file, event
-        cmd[index_spin_state] += ' --data-inst-geom=' + (*global).tmp_geometry_file
-      ENDIF
-    ENDIF
+;    IF ((*global).instrument EQ 'REF_M') THEN BEGIN
+;      IF (~isWithDataInstrumentGeometryOverwrite(Event)) then BEGIN
+;        create_name_of_tmp_geometry_file, event
+;        cmd[index_spin_state] += ' --data-inst-geom=' + (*global).tmp_geometry_file
+;      ENDIF
+;    ENDIF
     
     ;overwrite norm instrument geometry file
     if (isWithNormInstrumentGeometryOverwrite(Event)) then BEGIN
