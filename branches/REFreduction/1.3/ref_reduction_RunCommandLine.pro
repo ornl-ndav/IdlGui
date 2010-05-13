@@ -74,26 +74,26 @@ PRO RefReduction_RunCommandLine, Event
   ;indicate initialization with hourglass icon
   WIDGET_CONTROL,/hourglass
   
-  IF ((*global).instrument EQ 'REF_M') THEN BEGIN
-    IF (~isWithDataInstrumentGeometryOverwrite(Event) AND $
-      (*global).dirpix_geometry NE '' AND $
-      (*global).cvinfo NE '') THEN BEGIN ;use tmp geo
-      
-      dirpix = getTextFieldValue(event,'info_dirpix')
-      refpix = getTextFieldValue(event,'info_refpix')
-      geo_cmd = (*global).ts_geom
-      geo_cmd += ' ' + (*global).REF_M_geom
-      geo_cmd += ' -m ' + (*global).cvinfo
-      geo_cmd += ' -D DIRPIX=' + dirpix
-      geo_cmd += ' -D REFPIX=' + refpix
-      geo_cmd += ' -o ' + (*global).tmp_geometry_file
-      cmd_text = 'Running geometry generator:'
-      putLogBookMessage, Event, cmd_text, Append=1
-      cmd_text = '-> ' + geo_cmd
-      putLogBookMessage, Event, cmd_text, Append=1
-      SPAWN, geo_cmd, listening, err_listening
-    ENDIF
-  ENDIF
+;  IF ((*global).instrument EQ 'REF_M') THEN BEGIN
+;    IF (~isWithDataInstrumentGeometryOverwrite(Event) AND $
+;      (*global).dirpix_geometry NE '' AND $
+;      (*global).cvinfo NE '') THEN BEGIN ;use tmp geo
+;      
+;      dirpix = getTextFieldValue(event,'info_dirpix')
+;      refpix = getTextFieldValue(event,'info_refpix')
+;      geo_cmd = (*global).ts_geom
+;      geo_cmd += ' ' + (*global).REF_M_geom
+;      geo_cmd += ' -m ' + (*global).cvinfo
+;      geo_cmd += ' -D DIRPIX=' + dirpix
+;      geo_cmd += ' -D REFPIX=' + refpix
+;      geo_cmd += ' -o ' + (*global).tmp_geometry_file
+;      cmd_text = 'Running geometry generator:'
+;      putLogBookMessage, Event, cmd_text, Append=1
+;      cmd_text = '-> ' + geo_cmd
+;      putLogBookMessage, Event, cmd_text, Append=1
+;      SPAWN, geo_cmd, listening, err_listening
+;    ENDIF
+;  ENDIF
   
   ;display command line in log-book
   cmd_text = 'Running Command Line:'
