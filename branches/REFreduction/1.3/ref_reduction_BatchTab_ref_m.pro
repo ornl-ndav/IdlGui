@@ -831,3 +831,57 @@ PRO CheckRepopulateButton, Event
   id = widget_info(Event.top,find_by_uname='repopulate_gui')
   widget_control, id, sensitive=activateButtonStatus
 END
+
+;------------------------------------------------------------------------------
+;This function gives the index of the current running batch row
+;+
+; :Description:
+;   return the current working row of the REF_M batch table
+;
+; :Params:
+;    Event
+;
+; :Author: j35
+;-
+function getCurrentWorkingRow_ref_m, Event
+  ;get global structure
+  widget_control,event.top,get_uvalue=global
+  RowIndexes = getGlobalVariable_ref_m('RowIndexes')
+  BatchTable = (*(*global).BatchTable_ref_m)
+  FOR i=0,RowIndexes DO BEGIN
+    IF (BatchTable[0,i] EQ '> YES <' OR $
+      BatchTable[0,i] EQ '> NO <') THEN RETURN, i
+  ENDFOR
+  RETURN, -1
+end
+
+;------------------------------------------------------------------------------
+;This function gets the index of the row used to repopulate the GUI
+;and makes this row as the current working row
+PRO RepopulatedRowBecomesWorkingRow_ref_m, Event
+  ;get global structure
+  id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  WIDGET_CONTROL,id,GET_UVALUE=global
+  RowIndexes = getGlobalVariable_ref_m('RowIndexes')
+  BatchTable = (*(*global).BatchTable_ref_m)
+  ;get current working row and change its status
+  CurrentWorkingRow = getCurrentWorkingRow_ref_m(Event)
+  IF (CurrentWorkingRow NE -1) THEN BEGIN
+    CASE (BatchTable[0,CurrentWorkingRow]) OF
+      '> YES <' : BatchTable[0,CurrentWorkingRow]='YES'
+      '> NO <'  : BatchTable[0,CurrentWorkingRow]='NO'
+      ELSE:
+    ENDCASE
+  ENDIF
+  ;get current selected row
+  CurrentSelectedRow = getCurrentRowSelected(Event)
+  BatchTable[0,CurrentSelectedRow] = '> YES <'
+  (*(*global).BatchTable_ref_m) = BatchTable
+  ;This function updates the Batch tab GUI
+  UpdateBatchTabGui_ref_m, Event
+  ;This function repopulates the batch table with BatchTable
+  DisplayBatchTable_ref_m, Event, BatchTable
+  ;generate a new batch file name
+  GenerateBatchFileName_ref_m, Event
+END
+

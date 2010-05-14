@@ -167,25 +167,25 @@ pro RepopulateGui_ref_m_with_spin_states, event, spin_state_index=spin_state_ind
     '..... ' + NormBackgroundFlag
   putLogBookMessage, Event, text, APPEND=1
   
-  Qmin = ClassInstance->getQmin()
-  text = '--> Qmin (Qmin) ..................................................' + $
-    '..... ' + Qmin
-  putLogBookMessage, Event, text, APPEND=1
-  
-  Qmax = ClassInstance->getQmax()
-  text = '--> Qmax (Qmax) ..................................................' + $
-    '..... ' + Qmax
-  putLogBookMessage, Event, text, APPEND=1
-  
-  Qwidth = ClassInstance->getQwidth()
-  text = '--> Qwidth (Qwidth) ..............................................' + $
-    '..... ' + Qwidth
-  putLogBookMessage, Event, text, APPEND=1
-  
-  Qtype = ClassInstance->getQtype()
-  text = '--> Qtype (Qtype) ................................................' + $
-    '..... ' + Qtype
-  putLogBookMessage, Event, text, APPEND=1
+;  Qmin = ClassInstance->getQmin()
+;  text = '--> Qmin (Qmin) ..................................................' + $
+;    '..... ' + Qmin
+;  putLogBookMessage, Event, text, APPEND=1
+;  
+;  Qmax = ClassInstance->getQmax()
+;  text = '--> Qmax (Qmax) ..................................................' + $
+;    '..... ' + Qmax
+;  putLogBookMessage, Event, text, APPEND=1
+;  
+;  Qwidth = ClassInstance->getQwidth()
+;  text = '--> Qwidth (Qwidth) ..............................................' + $
+;    '..... ' + Qwidth
+;  putLogBookMessage, Event, text, APPEND=1
+;  
+;  Qtype = ClassInstance->getQtype()
+;  text = '--> Qtype (Qtype) ................................................' + $
+;    '..... ' + Qtype
+;  putLogBookMessage, Event, text, APPEND=1
   
   FilteringDataFlag = ClassInstance->getFilteringDataFlag()
   text = '--> With Filtering Data (FilteringDataFlag) ? ....................' + $
@@ -278,10 +278,10 @@ pro RepopulateGui_ref_m_with_spin_states, event, spin_state_index=spin_state_ind
     TOFcuttingMax             : TOFcuttingMax,$
     DataBackgroundFlag        : DataBackgroundFlag,$
     NormBackgroundFlag        : NormBackgroundFlag,$
-    Qmin                      : Qmin,$
-    Qmax                      : Qmax,$
-    Qwidth                    : Qwidth,$
-    Qtype                     : Qtype,$
+;    Qmin                      : Qmin,$
+;    Qmax                      : Qmax,$
+;    Qwidth                    : Qwidth,$
+;    Qtype                     : Qtype,$
     FilteringDataFlag         : FilteringDataFlag,$
     DeltaToverTFlag           : DeltaToverTFlag,$
     OverwriteDataInstrGeoFlag : OverwriteDataInstrGeoFlag,$
@@ -316,7 +316,7 @@ pro RepopulateGui_ref_m_with_spin_states, event, spin_state_index=spin_state_ind
   putLabelValue, Event, 'pro_top_label', message
   
   ;Repopulated row becomes the active row
-  RepopulatedRowBecomesWorkingRow, Event
+  RepopulatedRowBecomesWorkingRow_ref_m, Event
   
   ;turn off hourglass
   WIDGET_CONTROL,HOURGLASS=0
