@@ -800,11 +800,13 @@ FUNCTION IDLparseCommandLine_ref_m::init, cmd_array
           ;Background flags
           self.DataBackgroundFlag        = isWithDataBackgroundFlagOn(cmd)
           self.NormBackgroundFlag        = isWithNormBackgroundFlagOn(cmd)
-          ;Q [Qmin,Qmax,Qwidth,linear/log]
-          self.Qmin                      = getQmin(cmd)
-          self.Qmax                      = getQmax(cmd)
-          self.Qwidth                    = getQwidth(cmd)
-          self.Qtype                     = getQtype(cmd)
+
+;          ;Q [Qmin,Qmax,Qwidth,linear/log]
+;          self.Qmin                      = getQmin(cmd)
+;          self.Qmax                      = getQmax(cmd)
+;          self.Qwidth                    = getQwidth(cmd)
+;          self.Qtype                     = getQtype(cmd)
+
           ;Angle Offset
           self.SangleValue                = getSangleValue(cmd)
           ;self.AngleError                = getAngleError(cmd)
@@ -890,10 +892,10 @@ PRO IDLparseCommandLine_ref_m__define
     
     DataBackgroundFlag        : 'yes',$
     NormBackgroundFlag        : 'yes',$
-    Qmin                      : '',$
-    Qmax                      : '',$
-    Qwidth                    : '',$
-    Qtype                     : '',$
+;    Qmin                      : '',$
+;    Qmax                      : '',$
+;    Qwidth                    : '',$
+;    Qtype                     : '',$
     SangleValue                : '',$
     AngleError                : '',$
     AngleUnits                : '',$

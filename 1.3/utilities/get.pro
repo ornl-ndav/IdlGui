@@ -405,7 +405,6 @@ FUNCTION getCurrentRowSelected, Event
   RETURN, RowSelected
 END
 
-
 ;+
 ; :Description:
 ;   returns the run number for REF_L and REF_M instruments

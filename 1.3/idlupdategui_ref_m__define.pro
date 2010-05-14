@@ -725,16 +725,16 @@ FUNCTION IDLupdateGui_ref_m::init, structure
     
   ENDELSE
   
-  ;Work on Qmin, Qmax, Qwidth and Qtype
-  text = '--> Load Qmin, Qmax, Qwidth and Qtype ........................ ' $
-    + PROCESSING
-  putLogBookMessage, Event, text, APPEND=1
-  UpdateQ, Event, $
-    structure.Qmin, $
-    structure.Qmax, $
-    structure.Qwidth, $
-    structure.Qtype
-  AppendReplaceLogBookMessage, Event, OK, PROCESSING
+;  ;Work on Qmin, Qmax, Qwidth and Qtype
+;  text = '--> Load Qmin, Qmax, Qwidth and Qtype ........................ ' $
+;    + PROCESSING
+;  putLogBookMessage, Event, text, APPEND=1
+;  UpdateQ, Event, $
+;    structure.Qmin, $
+;    structure.Qmax, $
+;    structure.Qwidth, $
+;    structure.Qtype
+;  AppendReplaceLogBookMessage, Event, OK, PROCESSING
   
   ;Work on filtering flag
   text = '--> Load on Filtering Data Flag .............................. ' $
