@@ -716,67 +716,67 @@ PRO command_line_generator_for_ref_m, event
     
     ;*****Q VALUES***************************************************************
     
-    ;Q values -------------------------------------------------------------------
-    ;check if Mode is auto or not
-    AutoModeStatus = getCWBgroupValue(Event,'q_mode_group')
-    IF (AutoModeStatus EQ 1) THEN BEGIN ;manual mode
-      ;get Q infos
-      Q_min = getTextFieldValue(Event, 'q_min_text_field')
-      Q_max = getTextFieldValue(Event, 'q_max_text_field')
-      Q_width = getTextfieldValue(Event, 'q_width_text_field')
-      Q_scale = getQSCale(Event)
-      cmd[index_spin_state] += ' --mom-trans-bins='
-      
-      if (Q_min NE '') then begin ;Q_min
-        cmd[index_spin_state] += STRCOMPRESS(Q_min,/remove_all)
-      endif else begin
-        cmd[index_spin_state] += '?'
-        if (index_spin_state eq 0) then begin
-          status_text = '- Please provide a Q minimum value'
-          if (StatusMessage GT 0) then begin
-            append = 1
-          endif else begin
-            append = 0
-          endelse
-          putInfoInReductionStatus, Event, status_text, append
-          StatusMessage += 1
-        endif
-      endelse
-      
-      if (Q_max NE '') then begin ;Q_max
-        cmd[index_spin_state] += ',' + STRCOMPRESS(Q_max,/remove_all)
-      endif else begin
-        cmd[index_spin_state] += ',?'
-        if (index_spin_state eq 0) then begin
-          status_text = '- Please provide a Q maximum value'
-          if (StatusMessage GT 0) then begin
-            append = 1
-          endif else begin
-            append = 0
-          endelse
-          putInfoInReductionStatus, Event, status_text, append
-          StatusMessage += 1
-        endif
-      endelse
-      
-      if (Q_width NE '') then begin ;Q_width
-        cmd[index_spin_state] += ',' + STRCOMPRESS(Q_width,/remove_all)
-      endif else begin
-        cmd[index_spin_state] += ',?'
-        if (index_spin_state eq 0) then begin
-          status_text = '- Please provide a Q width value'
-          if (StatusMessage GT 0) then begin
-            append = 1
-          endif else begin
-            append = 0
-          endelse
-          putInfoInReductionStatus, Event, status_text, append
-          StatusMessage += 1
-        endif
-      endelse
-      cmd[index_spin_state] += ',' + Q_scale        ;Q_scale (lin or log)
-      
-    ENDIF
+;    ;Q values -------------------------------------------------------------------
+;    ;check if Mode is auto or not
+;    AutoModeStatus = getCWBgroupValue(Event,'q_mode_group')
+;    IF (AutoModeStatus EQ 1) THEN BEGIN ;manual mode
+;      ;get Q infos
+;      Q_min = getTextFieldValue(Event, 'q_min_text_field')
+;      Q_max = getTextFieldValue(Event, 'q_max_text_field')
+;      Q_width = getTextfieldValue(Event, 'q_width_text_field')
+;      Q_scale = getQSCale(Event)
+;      cmd[index_spin_state] += ' --mom-trans-bins='
+;      
+;      if (Q_min NE '') then begin ;Q_min
+;        cmd[index_spin_state] += STRCOMPRESS(Q_min,/remove_all)
+;      endif else begin
+;        cmd[index_spin_state] += '?'
+;        if (index_spin_state eq 0) then begin
+;          status_text = '- Please provide a Q minimum value'
+;          if (StatusMessage GT 0) then begin
+;            append = 1
+;          endif else begin
+;            append = 0
+;          endelse
+;          putInfoInReductionStatus, Event, status_text, append
+;          StatusMessage += 1
+;        endif
+;      endelse
+;      
+;      if (Q_max NE '') then begin ;Q_max
+;        cmd[index_spin_state] += ',' + STRCOMPRESS(Q_max,/remove_all)
+;      endif else begin
+;        cmd[index_spin_state] += ',?'
+;        if (index_spin_state eq 0) then begin
+;          status_text = '- Please provide a Q maximum value'
+;          if (StatusMessage GT 0) then begin
+;            append = 1
+;          endif else begin
+;            append = 0
+;          endelse
+;          putInfoInReductionStatus, Event, status_text, append
+;          StatusMessage += 1
+;        endif
+;      endelse
+;      
+;      if (Q_width NE '') then begin ;Q_width
+;        cmd[index_spin_state] += ',' + STRCOMPRESS(Q_width,/remove_all)
+;      endif else begin
+;        cmd[index_spin_state] += ',?'
+;        if (index_spin_state eq 0) then begin
+;          status_text = '- Please provide a Q width value'
+;          if (StatusMessage GT 0) then begin
+;            append = 1
+;          endif else begin
+;            append = 0
+;          endelse
+;          putInfoInReductionStatus, Event, status_text, append
+;          StatusMessage += 1
+;        endif
+;      endelse
+;      cmd[index_spin_state] += ',' + Q_scale        ;Q_scale (lin or log)
+;      
+;    ENDIF
     
     ;get info about detector angle
     angle_value = getTextFieldValue(Event,'detector_value_text_field')
