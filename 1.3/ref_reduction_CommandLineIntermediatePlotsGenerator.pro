@@ -158,15 +158,15 @@ FUNCTION RefReduction_CommandLineIntermediatePlotsGenerator, Event
     endif
   endelse
   
-  ;produce R vs Q plot and R vs Q after rebinning
-  ;get status of all buttons
-  InterPlotsStatus_2 = getCWBgroupValue(Event, 'intermediate_plot_list_2')
-  if (InterPlotsStatus_2[0] eq 1) then begin
-    IP_cmd += ' --dump-rq'
-  endif
-  if (InterPlotsStatus_2[1] eq 1) then begin
-    IP_cmd += ' --dump-rqr'
-  endif
+;  ;produce R vs Q plot and R vs Q after rebinning
+;  ;get status of all buttons
+;  InterPlotsStatus_2 = getCWBgroupValue(Event, 'intermediate_plot_list_2')
+;  if (InterPlotsStatus_2[0] eq 1) then begin
+;    IP_cmd += ' --dump-rq'
+;  endif
+;  if (InterPlotsStatus_2[1] eq 1) then begin
+;    IP_cmd += ' --dump-rqr'
+;  endif
   
   ;create array of Intermediate files to plot
   PopulateIntermPLotsArray, Event

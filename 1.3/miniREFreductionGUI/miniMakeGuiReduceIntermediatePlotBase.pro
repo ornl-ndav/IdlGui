@@ -201,14 +201,14 @@ plot7Label = WIDGET_LABEL(plot7Base,$
                           YOFFSET = 0,$
                           VALUE   = InterList[6] + NotAvailableTitle)
 
-w1 = cw_bgroup(InterBase,$
-               ['R vs Q','R vs Q after rebinning'],$
-               xoffset = InterListSize[0],$
-               yoffset = 229,$
-               uname = 'intermediate_plot_list_2',$
-               /nonexclusive,$
-               /row,$
-               set_value=[0,0])
+;w1 = cw_bgroup(InterBase,$
+;               ['R vs Q','R vs Q after rebinning'],$
+;               xoffset = InterListSize[0],$
+;               yoffset = 229,$
+;               uname = 'intermediate_plot_list_2',$
+;               /nonexclusive,$
+;               /row,$
+;               set_value=[0,0])
 
 InterList = CW_BGROUP(InterBase,$
                       InterList,$

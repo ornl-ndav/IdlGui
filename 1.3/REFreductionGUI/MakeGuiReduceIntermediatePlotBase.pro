@@ -199,14 +199,14 @@ plot7Label = widget_label(plot7Base,$
                           yoffset=0,$
                           value=InterList[6] + NotAvailableTitle)
 
-w1 = cw_bgroup(InterBase,$
-               ['R vs Q Plot   ','R vs Q after rebinning Plot'],$
-               xoffset = InterListSize[0],$
-               yoffset = 240,$
-               uname = 'intermediate_plot_list_2',$
-               /nonexclusive,$
-               /row,$
-               set_value=[0,0])
+;w1 = cw_bgroup(InterBase,$
+;               ['R vs Q Plot   ','R vs Q after rebinning Plot'],$
+;               xoffset = InterListSize[0],$
+;               yoffset = 240,$
+;               uname = 'intermediate_plot_list_2',$
+;               /nonexclusive,$
+;               /row,$
+;               set_value=[0,0])
 
 InterList = cw_bgroup(InterBase,$
                       InterList,$
