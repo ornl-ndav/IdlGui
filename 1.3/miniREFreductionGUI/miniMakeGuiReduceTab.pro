@@ -111,7 +111,7 @@ miniMakeGuiReduceDataBase, Event, REDUCE_BASE, IndividualBaseWidth
 miniMakeGuiReduceNormalizationBase, Event, REDUCE_BASE, IndividualBaseWidth
 
 ;create Q base
-miniMakeGuiReduceQBase, Event, REDUCE_BASE, IndividualBaseWidth
+miniMakeGuiReduceQBase, Event, REDUCE_BASE, IndividualBaseWidth, global
 
 ;create detector angle
 miniMakeGuiReduceDetectorBase, Event, REDUCE_BASE, IndividualBaseWidth
