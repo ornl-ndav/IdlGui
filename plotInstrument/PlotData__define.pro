@@ -42,8 +42,15 @@ PRO PlotData::startElement, URI, local, strName, attr, value
     END
     
     'row': BEGIN
-    ;self.currRow++
-    
+      ;self.currRow++
+      IF N_ELEMENTS(attr) NE 0 THEN BEGIN
+        print, attr, value, double(value)
+        IF attr EQ "rebin" THEN BEGIN
+          *self.tmp = self.rebinBy
+          self.rebinBy[1] = self.rebinBy[1] * double(value)
+        ENDIF
+      ENDIF
+      
     END
     
     
@@ -68,7 +75,7 @@ PRO PlotData::endElement, URI, local, strName
       CASE strName OF
       
         'col': BEGIN
-        
+          print, "column------*"
           IF PTR_VALID(SELF.data) THEN BEGIN
             *self.data = [*self.data, *self.colData]
           ENDIF ELSE BEGIN
@@ -79,13 +86,31 @@ PRO PlotData::endElement, URI, local, strName
         END
         
         'row': BEGIN
+          print, "row------*"
           IF STRMATCH(self.buffer,'blank*') THEN BEGIN
             size = STRSPLIT(self.buffer, '(,)', /EXTRACT)
-            data = fltarr(fix(size[1]),fix(size[2]))  
+            data = fltarr(fix(size[1]),fix(size[2]))
           ENDIF ELSE BEGIN
             bank = self.buffer
             dPath = '/entry/instrument/bank#/data'
-            data = getData(self.pathNexus, dPath, self.rebinBy, bank)
+            
+;            wrong_instrument = 0
+;            CATCH, wrong_instrument
+;            IF (wrong_instrument NE 0) THEN BEGIN
+;              CATCH,/CANCEL
+;              ;display message about invalid file format
+;              print, "ERROR ********** wrong instrument?"
+;              print, wrong_instrument
+;            ENDIF ELSE BEGIN
+              data = getData(self.pathNexus, dPath, self.rebinBy, bank)
+              print, N_ELEMENTS(*self.tmp)
+              help, *self.tmp
+              IF  N_ELEMENTS(*self.tmp) NE 1 THEN BEGIN
+                self.rebinBy = *self.tmp
+                *self.tmp = ''
+              ENDIF
+              
+;            ENDELSE
           ENDELSE
           
           help, data
@@ -125,7 +150,8 @@ FUNCTION recalculate, data, rebinBy
   data = TOTAL(data, 1)
   data = TRANSPOSE(data)
   size = SIZE(data, /DIMENSIONS)
-  data = REBIN(data, size[0]* rebinBy, size[1] * rebinBy)
+  print, "rebinby: " + string(rebinBy)
+  data = REBIN(data, size[0]* rebinBy[0], size[1] * rebinBy[1])
   RETURN, data
 END
 
@@ -165,7 +191,8 @@ FUNCTION getData, path, dPath_template, rebinBy, bank
     ; ENDELSE
     help, data
     data = recalculate(data, rebinBy)
-  END
+  ENDELSE
+  print, "GETDATA: data received"
   RETURN, data
 END
 
@@ -185,7 +212,7 @@ PRO PlotData::endDocument
     help, *self.data
     ; print, *self.data
     print, "drawing"
-    WINDOW, 0, XSIZE = dim[0], YSIZE = dim[1], TITLE = self.path
+    WINDOW, 0, XSIZE = dim[0], YSIZE = dim[1], TITLE = self.pathNexus
     WSET, 0
     DEVICE, decomposed=0
     LOADCT, 5
@@ -206,6 +233,7 @@ FUNCTION PlotData::Graph, pathNexus, instrument, rebinBy
     self.instrument = instrument
     self.pathNexus = pathNexus
     self.rebinBy = rebinBy
+    self.tmp = ptr_new('')
     
     print, self.path
     self -> IDLffxmlsax::ParseFile, self.path
@@ -233,7 +261,8 @@ PRO PlotData__define
     INHERITS IDLffXMLSAX, $
     
     instrument: '', $
-    rebinBy: 1, $
+    rebinBy: [1,1], $
+    tmp: ptr_new(), $
     pathNexus: '', $
     banks: 0, $
     Size: [0,0], $
