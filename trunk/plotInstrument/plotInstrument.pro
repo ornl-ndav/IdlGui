@@ -15,7 +15,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   spawn, 'hostname', hostname
   
   ;for testing-------------------------------------------------
-  hostname = 'bac'
+  hostname = 'arcs1'
   ;------------------------------------------------------------
   
   ;edit hostname to address
