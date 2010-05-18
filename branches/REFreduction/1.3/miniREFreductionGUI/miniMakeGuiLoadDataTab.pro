@@ -52,7 +52,7 @@ PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
     ArchivedOrAllCWBgroupSize,$
     NexusListSizeGlobal,$
     NexusListLabelGlobal,$
-    LoadctList
+    LoadctList, global
     
   ;define widget variables
   ;[xoffset, yoffset, scr_xsize, scr_ysize]
@@ -223,26 +223,28 @@ PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
     title='Nexus Information',$
     /column)
     
-  label_array = ['Date',$
-    'Start','End','Duration','Proton Charge'] + ':'
-  uname_array = ['info_date',$
-    'info_start','info_end','info_duration','info_proton_charge']
-  sz = n_elements(label_array)
-  for i=0L,(sz-1) do begin
-    row = widget_base(info_base,$
-      /row)
-    label = widget_label(row,$
-      /align_right,$
-      scr_xsize = 150,$
-      value = label_array[i])
-    value = widget_label(row,$
-      value = 'N/A',$
-      uname = uname_array[i],$
-      /align_left,$
-      scr_xsize = 200)
-  endfor
+  if ((*global).instrument eq 'REF_M') then begin
   
-      ;bin min, max, size, type
+    label_array = ['Date',$
+      'Start','End','Duration','Proton Charge'] + ':'
+    uname_array = ['info_date',$
+      'info_start','info_end','info_duration','info_proton_charge']
+    sz = n_elements(label_array)
+    for i=0L,(sz-1) do begin
+      row = widget_base(info_base,$
+        /row)
+      label = widget_label(row,$
+        /align_right,$
+        scr_xsize = 150,$
+        value = label_array[i])
+      value = widget_label(row,$
+        value = 'N/A',$
+        uname = uname_array[i],$
+        /align_left,$
+        scr_xsize = 200)
+    endfor
+    
+    ;bin min, max, size, type
     bin_base = widget_base(info_base,/row)
     label = widget_label(bin_base,$
       /align_right,$
@@ -281,92 +283,92 @@ PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
       value='N/A',$
       scr_xsize= 100,$
       /align_left,$
-      uname = 'info_bin_type')      
+      uname = 'info_bin_type')
+      
+    space = widget_label(info_base,$
+      value = ' ')
+      
+    ;dangle0
+    row = widget_base(info_base,$
+      /row)
+    label = widget_label(row,$
+      /align_right,$
+      scr_xsize = 100,$
+      value = 'Dangle:')
+    value = widget_label(row,$
+      /align_left,$
+      value = 'N/A',$
+      uname = 'info_dangle',$
+      scr_xsize = 250,$
+      frame = 0)
+      
+    row = widget_base(info_base,$
+      /row)
+    label = widget_label(row,$
+      scr_xsize = 100,$
+      /align_right,$
+      value = 'Dangle0:')
+    value = widget_label(row,$
+      /align_left,$
+      value = 'N/A',$
+      uname = 'info_dangle0',$
+      scr_xsize = 250,$
+      frame = 0)
+      
+    ;dirpix
+    row = widget_base(info_base,$
+      /row)
+    label = widget_label(row,$
+      /align_right,$
+      scr_xsize = 100,$
+      value = 'Dirpix:')
+    value = widget_text(row,$
+      /align_left,$
+      /editable,$
+      value = 'N/A',$
+      uname = 'info_dirpix',$
+      scr_xsize = 150)
+    ;refpix
+    label = widget_label(row,$
+      /align_right,$
+      value = 'Refpix:')
+    value = widget_text(row,$
+      /align_left,$
+      /editable,$
+      value = 'N/A',$
+      uname = 'info_refpix',$
+      scr_xsize = 150)
+      
+    ;detector-sample distance
+    row = widget_base(info_base,$
+      /row)
+    label = widget_label(row,$
+      /align_right,$
+      scr_xsize = 208,$
+      value  = 'Detector-Sample distance:')
+    value = widget_label(row,$
+      /align_left,$
+      value = 'N/A',$
+      uname = 'info_detector_sample_distance',$
+      scr_xsize = 200)
+      
+    ;sangle
+    row = widget_base(info_base,$
+      /row)
+    label = widget_label(row,$
+      /align_right,$
+      scr_xsize = 100,$
+      value = 'Sangle:')
+    value = widget_label(row,$
+      /align_left,$
+      value = 'N/A',$
+      uname = 'info_sangle',$
+      scr_xsize = 200)
+      
+      
+  endif
   
-  space = widget_label(info_base,$
-    value = ' ')
-    
-  ;dangle0
-  row = widget_base(info_base,$
-    /row)
-  label = widget_label(row,$
-    /align_right,$
-    scr_xsize = 100,$
-    value = 'Dangle:')
-  value = widget_label(row,$
-    /align_left,$
-    value = 'N/A',$
-    uname = 'info_dangle',$
-    scr_xsize = 250,$
-    frame = 0)
-    
-  row = widget_base(info_base,$
-    /row)
-  label = widget_label(row,$
-    scr_xsize = 100,$
-    /align_right,$
-    value = 'Dangle0:')
-  value = widget_label(row,$
-    /align_left,$
-    value = 'N/A',$
-    uname = 'info_dangle0',$
-    scr_xsize = 250,$
-    frame = 0)
-    
-  ;dirpix
-  row = widget_base(info_base,$
-    /row)
-  label = widget_label(row,$
-    /align_right,$
-    scr_xsize = 100,$
-    value = 'Dirpix:')
-  value = widget_text(row,$
-    /align_left,$
-    /editable,$
-    value = 'N/A',$
-    uname = 'info_dirpix',$
-    scr_xsize = 150)
-  ;refpix
-  label = widget_label(row,$
-    /align_right,$
-    value = 'Refpix:')
-  value = widget_text(row,$
-    /align_left,$
-    /editable,$
-    value = 'N/A',$
-    uname = 'info_refpix',$
-    scr_xsize = 150)
-    
-  ;detector-sample distance
-  row = widget_base(info_base,$
-    /row)
-  label = widget_label(row,$
-    /align_right,$
-    scr_xsize = 208,$
-    value  = 'Detector-Sample distance:')
-  value = widget_label(row,$
-    /align_left,$
-    value = 'N/A',$
-    uname = 'info_detector_sample_distance',$
-    scr_xsize = 200)
-    
-  ;sangle
-  row = widget_base(info_base,$
-    /row)
-  label = widget_label(row,$
-    /align_right,$
-    scr_xsize = 100,$
-    value = 'Sangle:')
-  value = widget_label(row,$
-    /align_left,$
-    value = 'N/A',$
-    uname = 'info_sangle',$
-    scr_xsize = 200)
-    
-    
-    
-    
-    
+  
   ;  data_file_info_text = WIDGET_TEXT(data_Nxsummary_base,$
   ;    XOFFSET   = FileInfoSize[0],$
   ;    YOFFSET   = FileInfoSize[1],$
@@ -376,7 +378,7 @@ PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
   ;    UNAME     = 'data_file_info_text',$
   ;    /WRAP,$
   ;    /SCROLL)
-    
+  
   ;ZOOM tab #2
   data_Zoom_base = WIDGET_BASE(NxsummaryZoomTab,$
     UNAME     = 'data_zoom_base',$
@@ -409,7 +411,7 @@ PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
     YOFFSET   = 0,$
     SCR_XSIZE = NXsummaryZoomTabSize[2],$
     SCR_YSIZE = NXsummaryZoomTabSize[3])
-        
+    
   ;Help base and text field that will show what is going on in the
   ;drawing region
   LeftInteractionHelpMessageBase = $
