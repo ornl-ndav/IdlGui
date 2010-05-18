@@ -98,121 +98,89 @@ cmd += " --int-dir='y'"
 
 if (isDataWithBackground(Event)) then begin ;with background substraction
 
-  ;get Peak or Background
-  PeakBaseStatus = isPeakBaseMap(Event)
-  IF (PeakBaseStatus EQ 1) THEN BEGIN ;exclusion peak
-  
-    ;bring values of ymin and ymax from data base
-    ymin = getTextFieldValue(Event,'data_d_selection_peak_ymin_cw_field')
-    ymax = getTextFieldValue(Event,'data_d_selection_peak_ymax_cw_field')
-    putTextFieldValue, Event, $
-      'data_exclusion_low_bin_text', $
-      STRCOMPRESS(ymin[0],/REMOVE_ALL), 0
-    putTextFieldValue, Event, $
-      'data_exclusion_high_bin_text', $
-      STRCOMPRESS(ymax[0],/REMOVE_ALL), 0
-      
-    cmd += ' --data-peak-excl='
-    ;get data peak exclusion
-    data_peak_exclusion_min = $
-      STRCOMPRESS(getTextFieldValue(Event,'data_exclusion_low_bin_text'), $
-      /remove_all)
-    IF (data_peak_exclusion_min NE '') THEN BEGIN
-      cmd += STRCOMPRESS(data_peak_exclusion_min,/REMOVE_ALL)
+  ;bring values of ymin and ymax from data base
+  ymin = getTextFieldValue(Event,'data_d_selection_peak_ymin_cw_field')
+  ymax = getTextFieldValue(Event,'data_d_selection_peak_ymax_cw_field')
+  putTextFieldValue, Event, $
+    'data_exclusion_low_bin_text', $
+    STRCOMPRESS(ymin[0],/REMOVE_ALL), 0
+  putTextFieldValue, Event, $
+    'data_exclusion_high_bin_text', $
+    STRCOMPRESS(ymax[0],/REMOVE_ALL), 0
+    
+  cmd += ' --data-peak-excl='
+  ;get data peak exclusion
+  data_peak_exclusion_min = $
+    STRCOMPRESS(getTextFieldValue(Event,'data_exclusion_low_bin_text'), $
+    /remove_all)
+  IF (data_peak_exclusion_min NE '') THEN BEGIN
+    cmd += STRCOMPRESS(data_peak_exclusion_min,/REMOVE_ALL)
+  ENDIF ELSE BEGIN
+    cmd         += '?'
+    status_text  = '- Please provide a data low range ' + $
+      'Peak of Exclusion.'
+    status_text += ' Go to DATA, and select a low value for ' + $
+      'the data peak exclusion.'
+    IF (StatusMessage GT 0) THEN BEGIN
+      append = 1
     ENDIF ELSE BEGIN
-      cmd         += '?'
-      status_text  = '- Please provide a data low range ' + $
-        'Peak of Exclusion.'
-      status_text += ' Go to DATA, and select a low value for ' + $
-        'the data peak exclusion.'
-      IF (StatusMessage GT 0) THEN BEGIN
-        append = 1
-      ENDIF ELSE BEGIN
-        append = 0
-      ENDELSE
-      putInfoInReductionStatus, Event, status_text, append
-      StatusMessage += 1
+      append = 0
     ENDELSE
-    
-    data_peak_exclusion_max = $
-      STRCOMPRESS(getTextFieldValue(Event, $
-      'data_exclusion_high_bin_text'),$ $
-      /REMOVE_ALL)
-    IF (data_peak_exclusion_max NE '') THEN BEGIN
-      cmd += ' ' + STRCOMPRESS(data_peak_exclusion_max,/REMOVE_ALL)
-    ENDIF ELSE BEGIN
-      cmd         += ' ?'
-      status_text  = '- Please provide a data high ' + $
-        'range Peak of Exclusion.'
-      status_text += ' Go to DATA, and select a high value for ' + $
-        'the data peak exclusion.'
-      IF (StatusMessage GT 0) THEN BEGIN
-        append = 1
-      ENDIF ELSE BEGIN
-        append = 0
-      ENDELSE
-      putInfoInReductionStatus, Event, status_text, append
-      StatusMessage += 1
-    ENDELSE
-    
-    ;Be sure that (Ymin_peak=Ymin_back && Ymax_peak=Ymax_back) is wrong
-    Ymin_peak = data_peak_exclusion_min
-    Ymax_peak = data_peak_exclusion_max
-    Ymin_back = $
-      STRCOMPRESS(getTextFieldValue(Event, $
-      'data_d_selection_background_ymin_cw_field'), $
-      /REMOVE_all)
-    Ymax_back = $
-      STRCOMPRESS(getTextFieldValue(Event, $
-      'data_d_selection_background_ymax_' + $
-      'cw_field'), $
-      /REMOVE_ALL)
-    IF (Ymin_peak NE '' AND $
-      Ymax_peak NE '' AND $
-      Ymin_back NE '' AND $
-      Ymax_back NE '') THEN BEGIN
-      IF ((Ymin_peak EQ Ymin_back) AND $
-        (Ymax_peak EQ Ymax_back)) THEN BEGIN
-        StatusMessage += 1
-        status_text = '- Data Background and Peak have the same ' + $
-          'Ymin and Ymax values.'
-        status_text += ' Please changes at least 1 of the data.'
-        IF (StatusMessage GT 0) THEN BEGIN
-          append = 1
-        ENDIF ELSE BEGIN
-          append = 0
-        ENDELSE
-        putInfoInReductionStatus, Event, status_text, append
-      ENDIF
-    ENDIF
-    
-  ENDIF ELSE BEGIN            ;background file
-  
-    ;get value of back file from data base
-    BackFile = getTextFieldValue(Event,'data_back_selection_file_value')
-    BackFile = BackFile[0]
-    cmd += ' --dbkg-roi-file='
-    ;get data ROI file
-    data_roi_file = $
-      getTextFieldValue(Event, $
-      'data_back_selection_file_value')
-    IF (data_roi_file NE '') THEN BEGIN
-      cmd += data_roi_file
-    ENDIF ELSE BEGIN
-      cmd        += '?'
-      status_text = '- Please provide a data background file. Go to ' + $
-        'DATA, Peak/Background and '
-      status_text += 'select a ROI and save it.'
-      IF (StatusMessage GT 0) THEN BEGIN
-        append = 1
-      ENDIF ELSE BEGIN
-        append = 0
-      ENDELSE
-      putInfoInReductionStatus, Event, status_text, append
-      StatusMessage += 1
-    ENDELSE
-    
+    putInfoInReductionStatus, Event, status_text, append
+    StatusMessage += 1
   ENDELSE
+  
+  data_peak_exclusion_max = $
+    STRCOMPRESS(getTextFieldValue(Event, $
+    'data_exclusion_high_bin_text'),$ $
+    /REMOVE_ALL)
+  IF (data_peak_exclusion_max NE '') THEN BEGIN
+    cmd += ' ' + STRCOMPRESS(data_peak_exclusion_max,/REMOVE_ALL)
+  ENDIF ELSE BEGIN
+    cmd         += ' ?'
+    status_text  = '- Please provide a data high ' + $
+      'range Peak of Exclusion.'
+    status_text += ' Go to DATA, and select a high value for ' + $
+      'the data peak exclusion.'
+    IF (StatusMessage GT 0) THEN BEGIN
+      append = 1
+    ENDIF ELSE BEGIN
+      append = 0
+    ENDELSE
+    putInfoInReductionStatus, Event, status_text, append
+    StatusMessage += 1
+  ENDELSE
+  
+;  ;Be sure that (Ymin_peak=Ymin_back && Ymax_peak=Ymax_back) is wrong
+;  Ymin_peak = data_peak_exclusion_min
+;  Ymax_peak = data_peak_exclusion_max
+;  Ymin_back = $
+;    STRCOMPRESS(getTextFieldValue(Event, $
+;    'data_d_selection_background_ymin_cw_field'), $
+;    /REMOVE_all)
+;  Ymax_back = $
+;    STRCOMPRESS(getTextFieldValue(Event, $
+;    'data_d_selection_background_ymax_' + $
+;    'cw_field'), $
+;    /REMOVE_ALL)
+;  IF (Ymin_peak NE '' AND $
+;    Ymax_peak NE '' AND $
+;    Ymin_back NE '' AND $
+;    Ymax_back NE '') THEN BEGIN
+;    IF ((Ymin_peak EQ Ymin_back) AND $
+;      (Ymax_peak EQ Ymax_back)) THEN BEGIN
+;      StatusMessage += 1
+;      status_text = '- Data Background and Peak have the same ' + $
+;        'Ymin and Ymax values.'
+;      status_text += ' Please changes at least 1 of the data.'
+;      IF (StatusMessage GT 0) THEN BEGIN
+;        append = 1
+;      ENDIF ELSE BEGIN
+;        append = 0
+;      ENDELSE
+;      putInfoInReductionStatus, Event, status_text, append
+;    ENDIF
+;  ENDIF
   
 ENDIF
 

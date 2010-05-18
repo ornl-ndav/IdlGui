@@ -292,99 +292,99 @@ PRO putDataBackgroundPeakYMinMaxValueInTextFields, Event
     -1:begin
     case (ROISelection[1]) OF
       -1:                 ;do nothing
-      else:begin
-      Ymax = ROISelection[1]
-      if (Ymax LT 1) then Ymax = 0
-      if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
-      putCWFieldValue, event, $
-        'data_d_selection_roi_ymax_cw_field', Ymax/coeff
-    end
-  endcase
-end
-else:begin
-case (ROISelection[1]) OF
-  -1: begin
-    Ymin = ROISelection[0]
-    if (Ymin LT 1) then Ymin = 0
-    if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
-    putCWFieldValue, event, $
-      'data_d_selection_roi_ymin_cw_field', Ymin/coeff
+      else: begin
+        Ymax = ROISelection[1]
+        if (Ymax LT 1) then Ymax = 0
+        if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
+        putCWFieldValue, event, $
+          'data_d_selection_roi_ymax_cw_field', Ymax/coeff
+      end
+    endcase
   end
-  else:begin
-  Ymin = Min(ROISelection,max=Ymax)
-  (*(*global).data_roi_selection) = [Ymin,Ymax]
-  if (Ymin LT 1) then Ymin = 0
-  if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
-  putCWFieldValue, $
-    event, $
-    'data_d_selection_roi_ymin_cw_field', $
-    Ymin/coeff
-  if (Ymax LT 1) then Ymax = 0
-  if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
-  putCWFieldValue, $
-    event, $
-    'data_d_selection_roi_ymax_cw_field', $
-    Ymax/coeff
-  ValidateSaveButton = 1 ;enable SAVE button
-end
-endcase
-end
+  else: begin
+    case (ROISelection[1]) OF
+      -1: begin
+        Ymin = ROISelection[0]
+        if (Ymin LT 1) then Ymin = 0
+        if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
+        putCWFieldValue, event, $
+          'data_d_selection_roi_ymin_cw_field', Ymin/coeff
+      end
+      else: begin
+        Ymin = Min(ROISelection,max=Ymax)
+        (*(*global).data_roi_selection) = [Ymin,Ymax]
+        if (Ymin LT 1) then Ymin = 0
+        if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
+        putCWFieldValue, $
+          event, $
+          'data_d_selection_roi_ymin_cw_field', $
+          Ymin/coeff
+        if (Ymax LT 1) then Ymax = 0
+        if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
+        putCWFieldValue, $
+          event, $
+          'data_d_selection_roi_ymax_cw_field', $
+          Ymax/coeff
+        ValidateSaveButton = 1 ;enable SAVE button
+      end
+    endcase
+  end
 endcase
 
 ActivateWidget, Event, 'data_roi_save_button', ValidateSaveButton
 ActivateWidget, Event, 'data_roi_selection_file_text_field', $
   ValidateSaveButton
   
-;get Background Ymin, Ymax ====================================================
-BackSelection = (*(*global).data_back_selection)
-ValidateSaveButton = 0
-;check all cases (-1,-1) (-1,value) (value,-1) and (value,value)
-CASE (BackSelection[0]) OF
-  -1:begin
-  case (BackSelection[1]) OF
-    -1: ;do nothing
-    else:begin
-    Ymax = BackSelection[1]
-    if (Ymax LT 1) then Ymax = 0
-    if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
-    putCWFieldValue, event, $
-      'data_d_selection_background_ymax_cw_field', Ymax/coeff
-  end
-endcase
-end
-else:begin
-case (BackSelection[1]) OF
-  -1: begin
-    Ymin = BackSelection[0]
-    if (Ymin LT 1) then Ymin = 0
-    if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
-    putCWFieldValue, event, $
-      'data_d_selection_background_ymin_cw_field', Ymin/coeff
-  end
-  else:begin
-  Ymin = Min(BackSelection,max=Ymax)
-  (*(*global).data_back_selection) = [Ymin,Ymax]
-  if (Ymin LT 1) then Ymin = 0
-  if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
-  putCWFieldValue, $
-    event, $
-    'data_d_selection_background_ymin_cw_field', $
-    Ymin/coeff
-  if (Ymax LT 1) then Ymax = 0
-  if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
-  putCWFieldValue, $
-    event, $
-    'data_d_selection_background_ymax_cw_field', $
-    Ymax/coeff
-  ValidateSaveButton = 1 ;enable SAVE button
-end
-endcase
-end
-endcase
-
-ActivateWidget, Event, 'data_back_save_button', ValidateSaveButton
-ActivateWidget, Event, 'data_back_d_selection_file_text_field', $
-  ValidateSaveButton
+;;get Background Ymin, Ymax ====================================================
+;BackSelection = (*(*global).data_back_selection)
+;ValidateSaveButton = 0
+;;check all cases (-1,-1) (-1,value) (value,-1) and (value,value)
+;CASE (BackSelection[0]) OF
+;  -1: begin
+;    case (BackSelection[1]) OF
+;      -1: ;do nothing
+;      else: begin
+;        Ymax = BackSelection[1]
+;        if (Ymax LT 1) then Ymax = 0
+;        if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
+;        putCWFieldValue, event, $
+;          'data_d_selection_background_ymax_cw_field', Ymax/coeff
+;      end
+;    endcase
+;  end
+;  else: begin
+;    case (BackSelection[1]) OF
+;      -1: begin
+;        Ymin = BackSelection[0]
+;        if (Ymin LT 1) then Ymin = 0
+;        if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
+;        putCWFieldValue, event, $
+;          'data_d_selection_background_ymin_cw_field', Ymin/coeff
+;      end
+;      else: begin
+;        Ymin = Min(BackSelection,max=Ymax)
+;        (*(*global).data_back_selection) = [Ymin,Ymax]
+;        if (Ymin LT 1) then Ymin = 0
+;        if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
+;        putCWFieldValue, $
+;          event, $
+;          'data_d_selection_background_ymin_cw_field', $
+;          Ymin/coeff
+;        if (Ymax LT 1) then Ymax = 0
+;        if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
+;        putCWFieldValue, $
+;          event, $
+;          'data_d_selection_background_ymax_cw_field', $
+;          Ymax/coeff
+;        ValidateSaveButton = 1 ;enable SAVE button
+;      end
+;    endcase
+;  end
+;endcase
+;
+;ActivateWidget, Event, 'data_back_save_button', ValidateSaveButton
+;ActivateWidget, Event, 'data_back_d_selection_file_text_field', $
+;  ValidateSaveButton
   
 ;get Peak Ymin and Ymax =======================================================
 PeakSelection = (*(*global).data_peak_selection)

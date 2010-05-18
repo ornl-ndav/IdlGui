@@ -173,7 +173,7 @@ PRO MAIN_BASE_event, Event
     ;1D_2D plot of DATA
     WIDGET_INFO(wWidget, FIND_BY_UNAME='load_data_D_draw'): begin
       error = 0
-      CATCH, error
+      ;CATCH, error
       IF (error NE 0) THEN BEGIN
         CATCH,/CANCEL
       ENDIF ELSE BEGIN
@@ -288,14 +288,12 @@ PRO MAIN_BASE_event, Event
       FIND_BY_UNAME= $
       'data_d_selection_roi_ymin_cw_field'): begin
       REFreduction_DataBackgroundPeakSelection, Event, 'roi_ymin'
-      plot_average_data_peak_value, Event
     end
     
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME= $
       'data_d_selection_roi_ymax_cw_field'): begin
       REFreduction_DataBackgroundPeakSelection, Event, 'roi_ymax'
-      plot_average_data_peak_value, Event
     end
     
     ;SAVE ROI Selection into a file -------------------------------------------
@@ -320,6 +318,7 @@ PRO MAIN_BASE_event, Event
     ;Peak Ymin and Ymax -------------------------------------------------------
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='data_d_selection_peak_ymin_cw_field'): begin
+      print, 'peak ymin'
       REFreduction_DataBackgroundPeakSelection, Event, 'peak_ymin'
     end
     
@@ -332,6 +331,7 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME= $
       'data_d_selection_background_ymin_cw_field'): begin
+      print, 'back ymin'
       REFreduction_DataBackgroundPeakSelection, Event, 'back_ymin'
     end
     

@@ -52,10 +52,10 @@ PRO REFreduction_DataSelectionPressLeft, event
       color   = (*global).peak_selection_color
       y_array = (*(*global).data_peak_selection)
     END
-    2: BEGIN                    ;back
-      color   = (*global).back_selection_color
-      y_array = (*(*global).data_back_selection)
-    END
+;    2: BEGIN                    ;back
+;      color   = (*global).back_selection_color
+;      y_array = (*(*global).data_back_selection)
+;    END
     3: BEGIN                    ;zoom
       ;be sure the data draw has been selected
       id_draw = WIDGET_INFO(Event.top, FIND_BY_UNAME='load_data_D_draw')
@@ -290,10 +290,10 @@ PRO REFreduction_DataSelectionMove, event
       color   = (*global).peak_selection_color
       y_array = (*(*global).data_peak_selection)
     END
-    2: BEGIN                    ;back
-      color   = (*global).back_selection_color
-      y_array = (*(*global).data_back_selection)
-    END
+;    2: BEGIN                    ;back
+;      color   = (*global).back_selection_color
+;      y_array = (*(*global).data_back_selection)
+;    END
     3: BEGIN                    ;zoom
     END
   ENDCASE
@@ -532,7 +532,8 @@ PRO ReplotOtherSelection, Event, ROIsignalBackZoomStatus
   xsize_1d_draw = 608L
   
   ;check if user wants peak or background
-  isPeakSelected = isDataPeakSelected(Event)
+  isPeakSelected = 1b
+  ;isDataPeakSelected(Event)
   
   id_draw = WIDGET_INFO(Event.top, FIND_BY_UNAME='load_data_D_draw')
   WIDGET_CONTROL, id_draw, GET_VALUE=id_value
@@ -657,7 +658,7 @@ PRO ReplotAllSelection, Event
   xsize_1d_draw = 608L
   
   ;check if user wants peak or background
-  isPeakSelected = isDataPeakSelected(Event)
+  isPeakSelected = 1b
   
   id_draw = WIDGET_INFO(Event.top, FIND_BY_UNAME='load_data_D_draw')
   WIDGET_CONTROL, id_draw, GET_VALUE=id_value
@@ -729,16 +730,6 @@ PRO ReplotAllSelection, Event
       fact   = (*global).DataZoomFactor,$
       uname  = 'data_zoom_draw'
   ENDIF
-  
-  ON_IOERROR, input_error
-  
-  IF ((*global).instrument EQ 'REF_M') THEN BEGIN
-    dirpix = getTextFieldValue(Event,'data_geometry_dirpix_value_user')
-    (*global).dirpix = FLOAT(dirpix)
-    plot_average_data_peak_value, Event
-  ENDIF
-  
-  input_error:
   
 END
 
