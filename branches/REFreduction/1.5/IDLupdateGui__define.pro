@@ -512,46 +512,14 @@ FUNCTION IDLupdateGui::init, structure
   ;Activate LOAD DATA ROI file
   ActivateWidget, Event, 'data_roi_load_button', 1
   
-  ;check if user wanted peak exclusion or background file
-  text = '--> Check status of PEAK or BACKGROUND ?'
+  ;work on DataPeakExclYmin and DataPeakExclYmax
+  text = '--> Load Data Peak Exclusion Ymin and Ymax ................... ' $
+    + PROCESSING
   putLogBookMessage, Event, text, APPEND=1
-  IF (structure.DataPeakExclYmin EQ '') THEN BEGIN
-    text = '---> BACKGROUND'
-    dataPeakStatus = 1
-  ENDIF ELSE BEGIN
-    text = '---> PEAK EXCLUSION'
-    dataPeakStatus = 0
-  ENDELSE
-  putLogBookMessage, Event, text, APPEND=1
-  
-  ;activate peak or background cw_bgroup
-  SetCWBgroup, Event, 'peak_data_back_group', dataPeakStatus
-  SwitchPeakBackgroundDataBase, Event
-  
-  IF (dataPeakStatus EQ 0) THEN BEGIN
-    ;work on DataPeakExclYmin and DataPeakExclYmax
-    text = '--> Load Data Peak Exclusion Ymin and Ymax ................... ' $
-      + PROCESSING
-    putLogBookMessage, Event, text, APPEND=1
-    UpdateDataPeakExclY, Event, $
-      structure.DataPeakExclYmin, $
-      structure.DataPeakExclYmax
-    AppendReplaceLogBookMessage, Event, OK, PROCESSING
-  ENDIF ELSE BEGIN
-    text = '--> Load Data BACK File ...................................... ' $
-      + PROCESSING
-    putLogBookMessage, Event, text, APPEND=1
-    IF (structure.DataBackFilename EQ '' OR $
-      FILE_TEST(structure.DataBackFilename) NE 1) THEN BEGIN
-      AppendReplaceLogBookMessage, Event, NO, PROCESSING
-      ++NbrError
-      ++DataError
-      ClearDataBackFields, Event
-    ENDIF ELSE BEGIN
-      UpdateDataBackFileName, Event, structure.DataBackFileName
-      AppendReplaceLogBookMessage, Event, OK, PROCESSING
-    ENDELSE
-  ENDELSE
+  UpdateDataPeakExclY, Event, $
+    structure.DataPeakExclYmin, $
+    structure.DataPeakExclYmax
+  AppendReplaceLogBookMessage, Event, OK, PROCESSING
   ;replot Data (main and selections)
   REFreduction_DataBackgroundPeakSelection, Event, ''
   
@@ -642,46 +610,14 @@ FUNCTION IDLupdateGui::init, structure
     ;Activate LOAD Normalization ROI file
     ActivateWidget, Event, 'norm_roi_load_button', 1
     
-    ;check if user wanted peak exclusion or background file
-    text = '--> Check status of PEAK or BACKGROUND ?'
+    ;work on NormPeakExclYmin and NormPeakExclYmax
+    text = '--> Load Normalizaion Peak Exclusion Ymin and Ymax .......' + $
+      '.... ' + PROCESSING
     putLogBookMessage, Event, text, APPEND=1
-    IF (structure.NormPeakExclYmin EQ '') THEN BEGIN
-      text = '---> BACKGROUND'
-      normPeakStatus = 1
-    ENDIF ELSE BEGIN
-      text = '---> PEAK EXCLUSION'
-      normPeakStatus = 0
-    ENDELSE
-    putLogBookMessage, Event, text, APPEND=1
-    
-    ;activate peak or background cw_bgroup
-    SetCWBgroup, Event, 'peak_norm_back_group', normPeakStatus
-    SwitchPeakBackgroundNormBase, Event
-    
-    IF (normPeakStatus EQ 0) THEN BEGIN
-      ;work on NormPeakExclYmin and NormPeakExclYmax
-      text = '--> Load Normalizaion Peak Exclusion Ymin and Ymax .......' + $
-        '.... ' + PROCESSING
-      putLogBookMessage, Event, text, APPEND=1
-      UpdateNormPeakExclY, Event, $
-        structure.NormPeakExclYmin, $
-        structure.NormPeakExclYmax
-      AppendReplaceLogBookMessage, Event, OK, PROCESSING
-    ENDIF ELSE BEGIN
-      text = '--> Load Norm. BACK File ................................' + $
-        '..... ' + PROCESSING
-      putLogBookMessage, Event, text, APPEND=1
-      IF (structure.NormBackFilename EQ '' OR $
-        FILE_TEST(structure.NormBackFilename) NE 1) THEN BEGIN
-        AppendReplaceLogBookMessage, Event, NO, PROCESSING
-        ++NbrError
-        ++NormError
-        ClearNormBackFields, Event
-      ENDIF ELSE BEGIN
-        UpdateNormBackFileName, Event, structure.NormBackFileName
-        AppendReplaceLogBookMessage, Event, OK, PROCESSING
-      ENDELSE
-    ENDELSE
+    UpdateNormPeakExclY, Event, $
+      structure.NormPeakExclYmin, $
+      structure.NormPeakExclYmax
+    AppendReplaceLogBookMessage, Event, OK, PROCESSING
     ;replot Data (main and selections)
     REFreduction_NormBackgroundPeakSelection, Event, ''
     
