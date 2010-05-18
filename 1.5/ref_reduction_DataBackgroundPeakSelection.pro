@@ -41,9 +41,9 @@ PRO REFreduction_DataBackgroundPeakSelection, Event, TYPE
   id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
   WIDGET_CONTROL,id,GET_UVALUE=global
   
-;  ;reset plot
-;  REFReduction_RescaleDataPlot, Event
-;  ;RePlot1DDataFile, Event
+  ;  ;reset plot
+  ;  REFReduction_RescaleDataPlot, Event
+  ;  ;RePlot1DDataFile, Event
   
   IF ((*global).DataNeXusFound) THEN BEGIN ;only if there is a NeXus loaded
   
@@ -93,31 +93,31 @@ PRO REFreduction_DataBackgroundPeakSelection, Event, TYPE
     PeakSelection = [PeakYmin,PeakYmax]
     (*(*global).data_peak_selection) = PeakSelection
     
-    ;get Background Ymin, Ymax
-    BackYmin = getTextFieldValue(Event, $
-      'data_d_selection_background_ymin_cw_field')
-    BackYmax = getTextFieldValue(Event, $
-      'data_d_selection_background_ymax_cw_field')
-      
-    IF (BackYmin EQ '') THEN BEGIN
-      BackYmin = -1
-    ENDIF ELSE BEGIN
-      BackYmin *= coeff
-    ENDELSE
-    
-    IF (BackYmax EQ '') THEN BEGIN
-      BackYmax = -1
-    ENDIF ELSE BEGIN
-      BackYmax *= coeff
-    ENDELSE
-    
-    BackSelection = [BackYmin,BackYmax]
-    (*(*global).data_back_selection) = BackSelection
+    ;    ;get Background Ymin, Ymax
+    ;    BackYmin = getTextFieldValue(Event, $
+    ;      'data_d_selection_background_ymin_cw_field')
+    ;    BackYmax = getTextFieldValue(Event, $
+    ;      'data_d_selection_background_ymax_cw_field')
+    ;
+    ;    IF (BackYmin EQ '') THEN BEGIN
+    ;      BackYmin = -1
+    ;    ENDIF ELSE BEGIN
+    ;      BackYmin *= coeff
+    ;    ENDELSE
+    ;
+    ;    IF (BackYmax EQ '') THEN BEGIN
+    ;      BackYmax = -1
+    ;    ENDIF ELSE BEGIN
+    ;      BackYmax *= coeff
+    ;    ENDELSE
+    ;
+    ;    BackSelection = [BackYmin,BackYmax]
+    ;    (*(*global).data_back_selection) = BackSelection
     
     ;refresh value of cw_fields
     putDataBackgroundPeakYMinMaxValueInTextFields, Event
     
-    calculate_data_dirpix, Event
+    REFReduction_RescaleDataPlot, Event
     
     ;Replot selection selected
     ReplotAllSelection, Event

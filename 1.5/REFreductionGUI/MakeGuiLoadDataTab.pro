@@ -263,129 +263,129 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
     scr_xsize=NXsummaryZoomTabSize[2],$
     scr_ysize=NXsummaryZoomTabSize[3])
     
-  ;geometry info --------------------------------------------------------------
-  GeoBase = WIDGET_BASE(LOAD_DATA_BASE,$
-    XOFFSET = 680,$
-    YOFFSET = 425,$
-    SCR_XSIZE = 160,$
-    SCR_YSIZE = 290,$
-    FRAME = 1,$
-    XPAD         = 0,$
-    YPAD         = 0,$
-    UNAME = 'data_geometry_info_base',$
-    /COLUMN)
-    
-  row1 = WIDGET_BASE(GeoBase,$
-  xpad = 0,$
-    /column)
-  label1 = WIDGET_LABEL(row1,$
-    value = 'DANGLE0:')
-  col1 = WIDGET_BASE(row1,$
-  xpad = 0,$
-    /column)
-  row11 = WIDGET_BASE(col1,$
-  xpad = 0,$
-    /row)
-  lab = WIDGET_LABEL(row11,$
-    value = 'Value:')
-  val = WIDGET_LABEL(row11,$
-    value = 'N/A',$
-    scr_xsize = 85,$
-    /align_left,$
-    uname = 'data_geometry_dangle_value')
-  row12 = WIDGET_BASE(col1,$
-  xpad = 0,$
-    /row)
-  lab = WIDGET_LABEL(row12,$
-    value = 'Units:')
-  val = WIDGET_LABEL(row12,$
-    value = 'N/A',$
-    scr_xsize = 105,$
-    /align_left,$
-    uname = 'data_geometry_dangle_units')
-    
-  row2 = WIDGET_BASE(GeoBase,$
-  xpad = 0,$
-    /column)
-  label1 = WIDGET_LABEL(row2,$
-    value = 'DIRPIX:')
-  col2 = WIDGET_BASE(row2,$
-  xpad = 0,$
-    /column)
-  row21 = WIDGET_BASE(col2,$
-  xpad = 0,$
-    /row)
-  lab = WIDGET_LABEL(row21,$
-    value = 'Value :')
-  val = WIDGET_LABEL(row21,$
-    value = 'N/A',$
-    scr_xsize = 85,$
-    /align_left,$
-    uname = 'data_geometry_dirpix_value')
-  row31 = WIDGET_BASE(col2,$
-  xpad = 0,$
-    /row)
-  lab = WIDGET_LABEL(row31,$
-    value = 'Val. (user):')
-  val = WIDGET_TEXT(row31,$
-    value = 'N/A',$
-    scr_xsize = 80,$
-    /align_right,$
-    /EDITABLE,$
-    uname = 'data_geometry_dirpix_value_user')
-    
-  row22 = WIDGET_BASE(col2,$
-  xpad = 0,$
-    /row)
-  lab = WIDGET_LABEL(row22,$
-    value = 'Units:')
-  val = WIDGET_LABEL(row22,$
-    value = 'N/A',$
-    scr_xsize = 95,$
-    /align_left,$
-    uname = 'data_geometry_dirpix_units')
-    
-  row3 = WIDGET_BASE(GeoBase,$
-  xpad = 0,$
-    /column)
-  label1 = WIDGET_LABEL(row3,$
-    value = 'REFPIX:')
-  col3 = WIDGET_BASE(row3,$
-  xpad = 0,$
-    /column)
-  row31 = WIDGET_BASE(col3,$
-  xpad = 0,$
-    /row)
-  lab = WIDGET_LABEL(row31,$
-    value = 'Value:')
-  val = WIDGET_LABEL(row31,$
-    value = 'N/A',$
-    scr_xsize = 85,$
-    /align_left,$
-    uname = 'data_geometry_refpix_value')
-  row32 = WIDGET_BASE(col3,$
-      xpad = 0,$
-    /row)
-  lab = WIDGET_LABEL(row32,$
-    value = 'Units:')
-  val = WIDGET_LABEL(row32,$
-    value = 'N/A',$
-    scr_xsize = 85,$
-    /align_left,$
-    uname = 'data_geometry_refpix_units')
-    
-  ;----------------------------------------------------------------------------
+;  ;geometry info --------------------------------------------------------------
+;  GeoBase = WIDGET_BASE(LOAD_DATA_BASE,$
+;    XOFFSET = 680,$
+;    YOFFSET = 425,$
+;    SCR_XSIZE = 160,$
+;    SCR_YSIZE = 290,$
+;    FRAME = 1,$
+;    XPAD         = 0,$
+;    YPAD         = 0,$
+;    UNAME = 'data_geometry_info_base',$
+;    /COLUMN)
+;    
+;  row1 = WIDGET_BASE(GeoBase,$
+;  xpad = 0,$
+;    /column)
+;  label1 = WIDGET_LABEL(row1,$
+;    value = 'DANGLE0:')
+;  col1 = WIDGET_BASE(row1,$
+;  xpad = 0,$
+;    /column)
+;  row11 = WIDGET_BASE(col1,$
+;  xpad = 0,$
+;    /row)
+;  lab = WIDGET_LABEL(row11,$
+;    value = 'Value:')
+;  val = WIDGET_LABEL(row11,$
+;    value = 'N/A',$
+;    scr_xsize = 85,$
+;    /align_left,$
+;    uname = 'data_geometry_dangle_value')
+;  row12 = WIDGET_BASE(col1,$
+;  xpad = 0,$
+;    /row)
+;  lab = WIDGET_LABEL(row12,$
+;    value = 'Units:')
+;  val = WIDGET_LABEL(row12,$
+;    value = 'N/A',$
+;    scr_xsize = 105,$
+;    /align_left,$
+;    uname = 'data_geometry_dangle_units')
+;    
+;  row2 = WIDGET_BASE(GeoBase,$
+;  xpad = 0,$
+;    /column)
+;  label1 = WIDGET_LABEL(row2,$
+;    value = 'DIRPIX:')
+;  col2 = WIDGET_BASE(row2,$
+;  xpad = 0,$
+;    /column)
+;  row21 = WIDGET_BASE(col2,$
+;  xpad = 0,$
+;    /row)
+;  lab = WIDGET_LABEL(row21,$
+;    value = 'Value :')
+;  val = WIDGET_LABEL(row21,$
+;    value = 'N/A',$
+;    scr_xsize = 85,$
+;    /align_left,$
+;    uname = 'data_geometry_dirpix_value')
+;  row31 = WIDGET_BASE(col2,$
+;  xpad = 0,$
+;    /row)
+;  lab = WIDGET_LABEL(row31,$
+;    value = 'Val. (user):')
+;  val = WIDGET_TEXT(row31,$
+;    value = 'N/A',$
+;    scr_xsize = 80,$
+;    /align_right,$
+;    /EDITABLE,$
+;    uname = 'data_geometry_dirpix_value_user')
+;    
+;  row22 = WIDGET_BASE(col2,$
+;  xpad = 0,$
+;    /row)
+;  lab = WIDGET_LABEL(row22,$
+;    value = 'Units:')
+;  val = WIDGET_LABEL(row22,$
+;    value = 'N/A',$
+;    scr_xsize = 95,$
+;    /align_left,$
+;    uname = 'data_geometry_dirpix_units')
+;    
+;  row3 = WIDGET_BASE(GeoBase,$
+;  xpad = 0,$
+;    /column)
+;  label1 = WIDGET_LABEL(row3,$
+;    value = 'REFPIX:')
+;  col3 = WIDGET_BASE(row3,$
+;  xpad = 0,$
+;    /column)
+;  row31 = WIDGET_BASE(col3,$
+;  xpad = 0,$
+;    /row)
+;  lab = WIDGET_LABEL(row31,$
+;    value = 'Value:')
+;  val = WIDGET_LABEL(row31,$
+;    value = 'N/A',$
+;    scr_xsize = 85,$
+;    /align_left,$
+;    uname = 'data_geometry_refpix_value')
+;  row32 = WIDGET_BASE(col3,$
+;      xpad = 0,$
+;    /row)
+;  lab = WIDGET_LABEL(row32,$
+;    value = 'Units:')
+;  val = WIDGET_LABEL(row32,$
+;    value = 'N/A',$
+;    scr_xsize = 85,$
+;    /align_left,$
+;    uname = 'data_geometry_refpix_units')
+;    
+;  ;----------------------------------------------------------------------------
     
   ;Help base and text field that will show what is going on in the
   ;drawing region
   LeftInteractionHelpMessageBase = WIDGET_BASE(LOAD_DATA_BASE,$
     uname='left_interaction_' + $
     'help_message_base',$
-    xoffset= 850,$
+    xoffset= 680,$
     ;LeftInteractionHelpsize[0],$
     yoffset= $
     LeftInteractionHelpsize[1],$
-    scr_xsize= 325,$
+    scr_xsize= 500,$
     ;LeftInteractionHelpsize[2],$
     scr_ysize= $
     LeftInteractionHelpsize[3],$
@@ -408,7 +408,7 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
   LeftInteractionHelpTextField = WIDGET_TEXT(LeftInteractionHelpMessageBase,$
     xoffset=LeftInteractionHelpSize[6],$
     yoffset=LeftInteractionHelpSize[7],$
-    scr_xsize= 315,$
+    scr_xsize= 490,$
     ;                                           LeftInteractionHelpSize[8],$
     scr_ysize= $
     LeftInteractionHelpSize[9],$
