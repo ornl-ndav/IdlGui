@@ -1662,7 +1662,7 @@ PRO MAIN_BASE_event, Event
       BatchTab_BrowsePath, Event
     end
     
-    ;;Save set of command lines
+    ;;Save Batch File
     WIDGET_INFO(wWidget, FIND_BY_UNAME='save_as_file_button'): begin
       BatchTab_SaveCommands, Event
     end
