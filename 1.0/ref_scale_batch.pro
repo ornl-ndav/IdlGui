@@ -589,6 +589,7 @@ PRO ref_scale_LoadBatchFile, Event
     
       DRfiles = retrieveDRfiles_ref_m(event, BatchTable)
       (*(*global).DRfiles) = DRfiles
+      
       activate_right_spin_states_button, event
       
       ;get full file name of CE reduced file
@@ -596,7 +597,7 @@ PRO ref_scale_LoadBatchFile, Event
       
       ;check that all the files exist to move on
       FileStatus = CheckFilesExist_ref_m(Event, DRfiles)
-      
+
       ;check that list of files is uniq
       FileStatus = CheckFileUniq(Event, DRfiles)
       
