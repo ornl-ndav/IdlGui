@@ -152,6 +152,8 @@ PRO MAIN_BASE_ref_scale_event, Event
       endif else begin
         ProduceOutputFile, Event ;_produce_output
       endelse
+      ;this routine will check if we can enabled or not the preview buttons
+      check_previews_button, event
     END
     
     ;email output
