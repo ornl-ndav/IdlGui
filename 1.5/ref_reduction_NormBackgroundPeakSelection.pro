@@ -95,28 +95,28 @@ if ((*global).NormNeXusFound) then begin ;only if there is a NeXus loaded
     PeakSelection = [PeakYmin,PeakYmax]
     (*(*global).norm_peak_selection) = PeakSelection
     
-;get Background Ymin, Ymax
-    BackYmin = $
-      getTextFieldValue(Event, $
-                        'norm_d_selection_background_ymin_cw_field')
-    BackYmax = $
-      getTextFieldValue(Event, $
-                        'norm_d_selection_background_ymax_cw_field')
-
-    if (BackYmin EQ '') then begin
-        BackYmin = -1
-    endif else begin
-        BackYmin *= coeff
-    endelse
-
-    if (BackYmax EQ '') then begin
-        BackYmax = -1
-    endif else begin
-        BackYmax *= coeff
-    endelse
-
-    BackSelection = [BackYmin,BackYmax]
-    (*(*global).norm_back_selection) = BackSelection
+;;get Background Ymin, Ymax
+;    BackYmin = $
+;      getTextFieldValue(Event, $
+;                        'norm_d_selection_background_ymin_cw_field')
+;    BackYmax = $
+;      getTextFieldValue(Event, $
+;                        'norm_d_selection_background_ymax_cw_field')
+;
+;    if (BackYmin EQ '') then begin
+;        BackYmin = -1
+;    endif else begin
+;        BackYmin *= coeff
+;    endelse
+;
+;    if (BackYmax EQ '') then begin
+;        BackYmax = -1
+;    endif else begin
+;        BackYmax *= coeff
+;    endelse
+;
+;    BackSelection = [BackYmin,BackYmax]
+;    (*(*global).norm_back_selection) = BackSelection
     
 ;refresh value of cw_fields
     putNormBackgroundPeakYMinMaxValueInTextFields, Event

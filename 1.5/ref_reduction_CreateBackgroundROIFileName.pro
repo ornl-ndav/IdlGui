@@ -77,8 +77,8 @@ putTextFieldValue, Event,$
   'norm_roi_selection_file_text_field',$
   DefaultROIFileName,0
 
-putTextFieldValue, Event,$
-  'norm_back_d_selection_file_text_field',$
-  DefaultBackFileName,0
+;putTextFieldValue, Event,$
+;  'norm_back_d_selection_file_text_field',$
+;  DefaultBackFileName,0
 
 END

@@ -496,7 +496,7 @@ PRO ReplotNormOtherSelection, Event, ROIsignalBackZoomStatus
   xsize_1d_draw = 608L
   
   ;check if user wants peak or background
-  isPeakSelected = isNormPeakSelected(Event)
+  isPeakSelected = 1b
   
   id_draw = WIDGET_INFO(Event.top, $
     FIND_BY_UNAME='load_normalization_D_draw')
@@ -622,7 +622,7 @@ PRO ReplotNormAllSelection, Event
   xsize_1d_draw = 608L
   
   ;check if user wants peak or background
-  isPeakSelected = isNormPeakSelected(Event)
+  isPeakSelected = 1b
   
   id_draw = WIDGET_INFO(Event.top, $
     FIND_BY_UNAME='load_normalization_D_draw')
