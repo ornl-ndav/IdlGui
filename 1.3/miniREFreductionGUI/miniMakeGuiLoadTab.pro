@@ -36,7 +36,7 @@ PRO miniMakeGuiLoadTab, MAIN_TAB, $
                         MainTabSize, $
                         LoadTabTitle, $
                         instrument, $
-                        MAIN_BASE
+                        MAIN_BASE,global
 
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
@@ -173,6 +173,6 @@ miniMakeGuiLoadDataNormalizationTab,$
   NxsummaryZoomTitle,$
   ZoomScaleBaseSize,$
   ZoomScaleTitle,$
-  MAIN_BASE
+  MAIN_BASE, global
   
 END

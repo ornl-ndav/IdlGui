@@ -63,7 +63,7 @@ MAIN_TAB = WIDGET_TAB(MAIN_BASE,$
                       /TRACKING_EVENTS)
 
 ;build LOAD tab
-miniMakeGuiLoadTab, MAIN_TAB, MainTabSize, LoadTabTitle, instrument, MAIN_BASE
+miniMakeGuiLoadTab, MAIN_TAB, MainTabSize, LoadTabTitle, instrument, MAIN_BASE, global
 
 ;build REDUCE tab
 miniMakeGuiReduceTab, MAIN_TAB, MainTabSize, ReduceTabTitle, PlotsTitle, global

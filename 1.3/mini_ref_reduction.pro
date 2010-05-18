@@ -216,10 +216,10 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   display_images, MAIN_BASE, global
   
     ;desactivate DANGLE0, DIRPIX, REFPIX
-  IF ((*global).instrument EQ 'REF_L') THEN BEGIN
-    id = WIDGET_INFO(MAIN_BASE,find_by_uname='data_geometry_info_base')
-    WIDGET_CONTROL, id, SENSITIVE=0
-  ENDIF
+;  IF ((*global).instrument EQ 'REF_L') THEN BEGIN
+;    id = WIDGET_INFO(MAIN_BASE,find_by_uname='data_geometry_info_base')
+;    WIDGET_CONTROL, id, SENSITIVE=0
+;  ENDIF
   
   ;==============================================================================
   ;checking packages
@@ -253,8 +253,6 @@ PRO mini_ref_reduction, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     else: instrument = 'UNDEFINED'
   ENDCASE
 
-  instrument = 'REF_M'
-  
   IF (instrument EQ 'UNDEFINED') THEN BEGIN
     BuildInstrumentGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ENDIF ELSE BEGIN
