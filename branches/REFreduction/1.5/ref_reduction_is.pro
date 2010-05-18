@@ -76,11 +76,7 @@ Function isNormBackPeakZoomSelected, Event
   CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
   CASE (CurrTabSelect) OF
     0: RETURN, 0
-    1: BEGIN
-      id = WIDGET_INFO(Event.top,FIND_BY_UNAME='peak_norm_back_group')
-      WIDGET_CONTROL, id, GET_VALUE = SelectionStatus
-      RETURN, SelectionSTatus+1
-    END
+    1: return, 1
     2: RETURN, 3
   ENDCASE
 END

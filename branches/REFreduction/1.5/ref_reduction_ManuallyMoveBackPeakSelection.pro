@@ -290,25 +290,25 @@ if ((*global).NormNeXusFound) then begin ;only if there is a NeXus loaded
         ENDIF
     ENDELSE
 
-;get Background Ymin, Ymax
-    BackYmin = getTextFieldValue(Event,'norm_d_selection_background_ymin_cw_field')
-    BackYmax = getTextFieldValue(Event,'norm_d_selection_background_ymax_cw_field')
-
-    IF (BackYmin EQ '') THEN BEGIN
-        BackYmin = -1
-    ENDIF ELSE BEGIN
-        IF (MiniVersion EQ 0) THEN BEGIN
-            BackYmin *= 2
-        ENDIF
-    ENDELSE
-
-    IF (BackYmax EQ '') THEN BEGIN
-        BackYmax = -1
-    ENDIF ELSE BEGIN
-        IF (MiniVersion EQ 0) THEN BEGIN
-            BackYmax *= 2
-            ENDIF
-    ENDELSE
+;;get Background Ymin, Ymax
+;    BackYmin = getTextFieldValue(Event,'norm_d_selection_background_ymin_cw_field')
+;    BackYmax = getTextFieldValue(Event,'norm_d_selection_background_ymax_cw_field')
+;
+;    IF (BackYmin EQ '') THEN BEGIN
+;        BackYmin = -1
+;    ENDIF ELSE BEGIN
+;        IF (MiniVersion EQ 0) THEN BEGIN
+;            BackYmin *= 2
+;        ENDIF
+;    ENDELSE
+;
+;    IF (BackYmax EQ '') THEN BEGIN
+;        BackYmax = -1
+;    ENDIF ELSE BEGIN
+;        IF (MiniVersion EQ 0) THEN BEGIN
+;            BackYmax *= 2
+;            ENDIF
+;    ENDELSE
 
     CASE (TYPE) OF
         'roi_ymin' : BEGIN
@@ -341,8 +341,8 @@ if ((*global).NormNeXusFound) then begin ;only if there is a NeXus loaded
     ROISelection = [ROIYmin,ROIYmax]
     (*(*global).norm_roi_selection) = ROISelection
 
-    BackSelection = [BackYmin,BackYmax]
-    (*(*global).norm_back_selection) = BackSelection
+;    BackSelection = [BackYmin,BackYmax]
+;    (*(*global).norm_back_selection) = BackSelection
 
     PeakSelection = [PeakYmin,PeakYmax]
     (*(*global).norm_peak_selection) = PeakSelection

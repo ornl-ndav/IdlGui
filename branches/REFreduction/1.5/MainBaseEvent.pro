@@ -173,7 +173,7 @@ PRO MAIN_BASE_event, Event
     ;1D_2D plot of DATA
     WIDGET_INFO(wWidget, FIND_BY_UNAME='load_data_D_draw'): begin
       error = 0
-      ;CATCH, error
+      CATCH, error
       IF (error NE 0) THEN BEGIN
         CATCH,/CANCEL
       ENDIF ELSE BEGIN
@@ -714,7 +714,7 @@ PRO MAIN_BASE_event, Event
     ;1D plot of NORM
     WIDGET_INFO(wWidget, FIND_BY_UNAME='load_normalization_D_draw'): begin
       error = 0
-      CATCH, error
+      ;CATCH, error
       IF (error NE 0) THEN BEGIN
         CATCH,/CANCEL
       ENDIF ELSE BEGIN
