@@ -84,8 +84,8 @@ sHiddenBase = { size  : [XYoff[0],$
 ;------------------------------------------------------------------------------
 ;***** Scaling Factor Base ****************************************************
 XYoff        = [5,10]
-sScalingBase = { size  : [XYoff[0],$
-                          XYoff[1],$
+sScalingBase = { size  : [XYoff[0]+150,$
+                          XYoff[1]+40,$
                           188,120],$
                  frame : 1}
 
@@ -112,7 +112,7 @@ XYoff = [5,10]
 sButton3Plus = { size  : [XYoff[0],$
                           XYoff[1],$
                           55,30],$
-                 value : '+++',$
+                 value : '+100%',$
                  uname : 'step3_3increase_button'}
 
 ;***** ++ Button **************************************************************
@@ -121,7 +121,7 @@ Xreducer = 0
 sButton2Plus = { size  : [sButton3Plus.size[0]+sButton3Plus.size[2]+XYoff[0],$
                           sButton3Plus.size[1]+XYoff[1],$
                           sButton3Plus.size[2]-Xreducer,30],$
-                 value : '++',$
+                 value : '+10%',$
                  uname : 'step3_2increase_button'}
 
 ;***** + Button ***************************************************************
@@ -129,7 +129,7 @@ XYoff = [5,0]
 sButton1Plus = { size  : [sButton2Plus.size[0]+sButton2Plus.size[2]+XYoff[0],$
                           sButton2Plus.size[1]+XYoff[1],$
                           sButton2Plus.size[2]-Xreducer,30],$
-                 value : '+',$
+                 value : '+1%',$
                  uname : 'step3_1increase_button'}
 
 ;***** --- Button *************************************************************
@@ -137,7 +137,7 @@ XYoff = [0,85]
 sButton3Less = { size  : [sButton3Plus.size[0]+XYoff[0],$
                           XYoff[1],$
                           55,30],$
-                 value : '---',$
+                 value : '-99%',$
                  uname : 'step3_3decrease_button'}
 
 ;***** -- Button **************************************************************
@@ -145,7 +145,7 @@ XYoff = [0,0]
 sButton2Less = { size  : [sButton2Plus.size[0]+XYoff[0],$
                           sButton3Less.size[1]+XYoff[1],$
                           sButton3Plus.size[2]-Xreducer,30],$
-                 value : '--',$
+                 value : '-10%',$
                  uname : 'step3_2decrease_button'}
 
 ;***** - Button ***************************************************************
@@ -153,7 +153,7 @@ XYoff = [0,0]
 sButton1Less = { size  : [sButton1Plus.size[0]+XYoff[0],$
                           sButton2Less.size[1]+XYoff[1],$
                           sButton2Plus.size[2]-Xreducer,30],$
-                 value : '-',$
+                 value : '-1%',$
                  uname : 'step3_1decrease_button'}
 
 ;------------------------------------------------------------------------------

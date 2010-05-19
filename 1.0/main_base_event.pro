@@ -316,32 +316,32 @@ PRO MAIN_BASE_ref_scale_event, Event
     
     ;Event triggered by [+++]
     WIDGET_INFO(wWidget, FIND_BY_UNAME='step3_3increase_button'): BEGIN
-      Step3RescaleFile, Event, 0.5 ;_Step3
+      Step3RescaleFile, Event, '+100%' ;_Step3
     END
     
     ;Event triggered by [++]
     WIDGET_INFO(wWidget, FIND_BY_UNAME='step3_2increase_button'): BEGIN
-      Step3RescaleFile, Event, 0.1 ;_Step3
+      Step3RescaleFile, Event, '+10%' ;_Step3
     END
     
     ;Event triggered by [+]
     WIDGET_INFO(wWidget, FIND_BY_UNAME='step3_1increase_button'): BEGIN
-      Step3RescaleFile, Event, 0.01 ;_Step3
+      Step3RescaleFile, Event, '+1%' ;_Step3
     END
     
     ;Event triggered by [---]
     WIDGET_INFO(wWidget, FIND_BY_UNAME='step3_3decrease_button'): BEGIN
-      Step3RescaleFile, Event, -0.5 ;_Step3
+      Step3RescaleFile, Event, '-99%' ;_Step3
     END
     
     ;Event triggered by [--]
     WIDGET_INFO(wWidget, FIND_BY_UNAME='step3_2decrease_button'): BEGIN
-      Step3RescaleFile, Event, -0.1 ;_Step3
+      Step3RescaleFile, Event, '-10%' ;_Step3
     END
     
     ;Event triggered by [-]
     WIDGET_INFO(wWidget, FIND_BY_UNAME='step3_1decrease_button'): BEGIN
-      Step3RescaleFile, Event, -0.01 ;_Step3
+      Step3RescaleFile, Event, '-1%' ;_Step3
     END
     
     ;--------------------------------------------------------------------------
