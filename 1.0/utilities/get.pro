@@ -103,7 +103,7 @@ function getOutputfileName_of_index, event, index
   local_index = strcompress(index,/remove_all)
   uname = scaled_uname + local_index
   file = getTextfieldValue(event,uname)
-    path = getButtonValue(event,'output_path_button')
+  path = getButtonValue(event,'output_path_button')
   return, path + file[0]
 end
 
@@ -112,6 +112,30 @@ function getCombinedOutputfileName_of_index, event, index
   local_index = strcompress(index,/remove_all)
   uname = scaled_uname + local_index
   file = getTextfieldValue(event,uname)
-    path = getButtonValue(event,'output_path_button')
+  path = getButtonValue(event,'output_path_button')
   return, path + file[0]
+end
+
+;+
+; :Description:
+;   return the number of element in the widget-droplist list of files (tab1)
+;
+; :Params:
+;    event
+;;
+; :Author: j35
+;-
+function get_nbr_of_files_loaded, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  id = widget_info(event.top, find_by_uname='list_of_files_droplist')
+  widget_control, id, get_value=value
+  
+  nbr_files_loaded = n_elements(value)
+  (*global).NbrFilesLoaded = nbr_files_loaded
+  
+  return, nbr_files_loaded
+  
 end

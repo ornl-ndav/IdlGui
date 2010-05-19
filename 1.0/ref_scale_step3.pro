@@ -76,7 +76,8 @@ PRO Step3AutomaticRescaling, Event
   Qmax_array       = (*(*global).Qmax_array)
   
   ;get number of files loaded
-  nbrFile = (*global).NbrFilesLoaded
+  nbrFile = get_nbr_of_files_loaded(event)
+
   idl_send_to_geek_addLogBookText, Event, '-> Number of files loaded : ' + $
     STRCOMPRESS(nbrFile,/REMOVE_ALL)
     
@@ -93,7 +94,7 @@ PRO Step3AutomaticRescaling, Event
   ENDIF
   
   no_error = 0
-  CATCH, no_error
+  ;CATCH, no_error
   IF (no_error NE 0) THEN BEGIN
   
     CATCH,/CANCEL
