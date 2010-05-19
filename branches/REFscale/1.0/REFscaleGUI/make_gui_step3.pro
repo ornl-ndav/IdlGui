@@ -359,36 +359,36 @@ wButton1Less = WIDGET_BUTTON(wScalingBase,$
 
 ;------------------------------------------------------------------------------
 
-;***** Display or not data ****************************************************
-wDisplayDataLabel = WIDGET_LABEL(wHiddenBase,$
-                                 XOFFSET = sDisplayDataLabel.size[0],$
-                                 YOFFSET = sDisplayDataLabel.size[1],$
-                                 VALUE   = sDisplayDataLabel.value)
-
-;***** Display data cw_bgroup *************************************************
-wDisplayDataGroup = CW_BGROUP(wHiddenBase,$
-                              sDisplayDataGroup.list,$
-                              XOFFSET   = sDisplayDataGroup.size[0],$
-                              YOFFSET   = sDisplayDataGroup.size[1],$
-                              SET_VALUE = sDisplayDataGroup.value,$
-                              UNAME     = sDisplayDataGroup.uname,$
-                              ROW       = 1,$
-                              /EXCLUSIVE)
-
-;***** flt0, flt1_low and flt1_high text field ********************************
-wStep3FltTextField = WIDGET_TEXT(wHiddenBase,$
-                                 UNAME     = sStep3FltTextField.uname,$
-                                 XOFFSET   = sStep3FltTextField.size[0],$
-                                 YOFFSET   = sStep3FltTextField.size[1],$
-                                 SCR_XSIZE = sStep3FltTextField.size[2],$
-                                 SCR_YSIZE = sStep3FltTextField.size[3],$
-                                 /SCROLL)
-
-;***** flt0, flt1_low and flt1_high label *************************************
-wStep3FltLabel = WIDGET_LABEL(wHiddenBase,$
-                              XOFFSET = sStep3FltLabel.size[0],$
-                              YOFFSET = sStep3FltLabel.size[1],$
-                              VALUE   = sStep3FltLabel.value)
+;;***** Display or not data ****************************************************
+;wDisplayDataLabel = WIDGET_LABEL(wHiddenBase,$
+;                                 XOFFSET = sDisplayDataLabel.size[0],$
+;                                 YOFFSET = sDisplayDataLabel.size[1],$
+;                                 VALUE   = sDisplayDataLabel.value)
+;
+;;***** Display data cw_bgroup *************************************************
+;wDisplayDataGroup = CW_BGROUP(wHiddenBase,$
+;                              sDisplayDataGroup.list,$
+;                              XOFFSET   = sDisplayDataGroup.size[0],$
+;                              YOFFSET   = sDisplayDataGroup.size[1],$
+;                              SET_VALUE = sDisplayDataGroup.value,$
+;                              UNAME     = sDisplayDataGroup.uname,$
+;                              ROW       = 1,$
+;                              /EXCLUSIVE)
+;
+;;***** flt0, flt1_low and flt1_high text field ********************************
+;wStep3FltTextField = WIDGET_TEXT(wHiddenBase,$
+;                                 UNAME     = sStep3FltTextField.uname,$
+;                                 XOFFSET   = sStep3FltTextField.size[0],$
+;                                 YOFFSET   = sStep3FltTextField.size[1],$
+;                                 SCR_XSIZE = sStep3FltTextField.size[2],$
+;                                 SCR_YSIZE = sStep3FltTextField.size[3],$
+;                                 /SCROLL)
+;
+;;***** flt0, flt1_low and flt1_high label *************************************
+;wStep3FltLabel = WIDGET_LABEL(wHiddenBase,$
+;                              XOFFSET = sStep3FltLabel.size[0],$
+;                              YOFFSET = sStep3FltLabel.size[1],$
+;                              VALUE   = sStep3FltLabel.value)
 END
 
 ;------------------------------------------------------------------------------
