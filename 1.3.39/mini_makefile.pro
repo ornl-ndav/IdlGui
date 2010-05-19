@@ -14,6 +14,8 @@ resolve_routine, "CW_FIELD",/either
 resolve_routine, "XDISPLAYFILE", /either
 resolve_routine, "TVREAD", /either
 resolve_routine, "CONGRID", /either
+resolve_routine, "mean",/either
+resolve_routine, "moment",/either
 
 save,/routines,filename = 'mini_ref_reduction.sav'
 exit

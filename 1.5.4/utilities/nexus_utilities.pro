@@ -142,7 +142,7 @@ FUNCTION find_full_nexus_name, Event,$
     END
   ENDCASE
   
-  cmd = "findnexus --archive -i" + instrument
+  cmd = "findnexus --nows --archive -i" + instrument
   
   value = isButtonSelected(Event, button_uname)
   IF (value EQ 1) THEN BEGIN ;get proposal selected
@@ -175,7 +175,7 @@ FUNCTION find_list_nexus_name, Event, run_number, instrument, isNexusExist
   id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
   WIDGET_CONTROL,id,get_uvalue=global
   
-  cmd = "findnexus -i" + instrument
+  cmd = "findnexus --nows -i" + instrument
   cmd += " " + STRCOMPRESS(run_number,/remove_all)
   cmd += " --listall"
   

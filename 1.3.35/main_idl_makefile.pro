@@ -102,6 +102,8 @@
 .run auto_cleaning_of_reduce_data_cw_bgroup.pro
 .run configure_auto_cleanup_parameters_base.pro
 .run auto_cleanup_reduce_data.pro
+.run auto_cleaning_data_cw_bgroup.pro
+.run configure_auto_cleanup.pro
 
 ;plot tab
 .run ref_reduction_plot_tab.pro
