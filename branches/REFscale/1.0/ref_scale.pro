@@ -142,7 +142,7 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     XYMinMax: PTR_NEW(0L),$
     ucams: '',$ ;remote user ucams
     file_extension: '.txt',$ ;file extension of file to load
-    input_path: '',$ ;default path to file to load
+    input_path: '~/results/',$ ;default path to file to load
     PrevTabSelect: 0,$ ;value of previous tab selected
     angleValue: FLOAT(0),$ ;current value of the angle (float)
     CEcooef: PTR_NEW(0L),$ ;the fitting coeff of the CE file
@@ -201,12 +201,6 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   (*(*global).BatchTable)         = STRARR(10,50)
   (*(*global).data_spin_state)     = data_spin_state
   (*(*global).norm_spin_state)     = norm_spin_state
-  
-  IF (!VERSION.os EQ 'darwin') THEN BEGIN
-    (*global).input_path = '~/tmp/'
-  ENDIF ELSE BEGIN
-    (*global).input_path = '~' + ucams
-  ENDELSE
   
   MainBaseSize         = [50 , 50, 1200, 600]
   PlotWindowSize       = [5  , 5 , 650 , 590]
