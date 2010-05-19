@@ -124,7 +124,7 @@ PRO miniMakeGuiReduceNormalizationBase, Event, REDUCE_BASE, IndividualBaseWidth
     list: ['Same as data','Off-Off'],$
     title: 'Polarization state:',$
     uname: 'normalization_pola_state',$
-    value: 0}
+    value: 1}
     
   ;Background Base, label and text_field ----------------------------------------
   sBackBase = { size:  sPeakBase.size,$
