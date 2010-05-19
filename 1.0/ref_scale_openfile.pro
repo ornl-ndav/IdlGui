@@ -49,7 +49,8 @@ FUNCTION OpenFile, Event
   
   ;open file
   dialog_id = widget_info(event.top, find_by_uname='MAIN_BASE_ref_scale')
-  FullFileName = dialog_pickfile(PATH     = pid_path,$
+  print, pid_path
+  FullFileName = dialog_pickfile(PATH = pid_path,$
     GET_PATH = path,$
     dialog_parent = dialog_id, $
     TITLE    = title,$
