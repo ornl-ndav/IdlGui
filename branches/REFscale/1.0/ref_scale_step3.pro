@@ -112,17 +112,12 @@ PRO Step3AutomaticRescaling, Event
   
     FOR i=1,(nbrFile-1) DO BEGIN
     
-      ;      PRINT, 'i: ' + STRCOMPRESS(i) ;remove_me
-    
       idl_send_to_geek_addLogBookText, Event, '--> Working with File # ' + $
         STRCOMPRESS(i,/REMOVE_ALL)
         
       CurrentFileName = getFileFromIndex(Event, i)
       idl_send_to_geek_addLogBookText, Event, '---> Name of File : ' + $
         CurrentFileName
-        
-      ;        help, Qmin_array ;remove_me
-      ;        help, Qmax_array ;remove_me
         
       ;get Qmin and Qmax
       Qmin = FLOAT(Qmin_array[i])
