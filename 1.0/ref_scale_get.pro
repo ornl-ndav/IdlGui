@@ -212,7 +212,7 @@ END
 FUNCTION GEValue, flt1, flt2, nbr
   new_flt2 = flt2 ^ 2
   new_flt1 = flt1 ^ 2
-  index = WHERE(flt2 LT flt1,nbr)
+  index = WHERE(flt2 LE flt1,nbr)
   RETURN, index
 END
 
