@@ -88,10 +88,9 @@ PRO LoadFile_Q, Event
   
   ;launch the program that open the dialog_pickfile
   LongFileName = OpenFile(Event)
-  
+
   ;apply auto cleanup of data if switch is on
-  value = (*global).settings_auto_cleaning_flag
-  if (value eq 0) then begin ;apply auto cleanup
+  if ((*global).settings_auto_cleaning_flag) then begin
     cleanup_reduce_data, event, file_name = LongFileName
   endif
     
@@ -124,7 +123,7 @@ PRO LoadFile_Q, Event
         AddNewFileToDroplist, Event, ShortFileName, LongFileName ;_Gui
         display_info_about_selected_file, Event, LongFileName ;_Gui
         ;retrieve angle value from First data nexus file listed
-        SaveAngleValueFromNexus, Event, index ;_get
+;        SaveAngleValueFromNexus, Event, index ;_get
         populateColorLabel, Event, LongFileName ;_Gui
         ;plot all loaded files
         PlotLoadedFiles, Event ;_Plot

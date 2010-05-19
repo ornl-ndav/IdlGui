@@ -49,7 +49,6 @@ FUNCTION OpenFile, Event
   
   ;open file
   dialog_id = widget_info(event.top, find_by_uname='MAIN_BASE_ref_scale')
-  print, pid_path
   FullFileName = dialog_pickfile(PATH = pid_path,$
     GET_PATH = path,$
     dialog_parent = dialog_id, $
@@ -58,8 +57,10 @@ FUNCTION OpenFile, Event
     
   IF (FullFileName NE '') THEN BEGIN
   
-    ;redefine the working path
-    path = define_new_default_working_path(Event,FullFileName)
+    (*global).input_path = path
+  
+    ;;redefine the working path
+    ;path = define_new_default_working_path(Event,FullFileName)
     
   ENDIF
   
