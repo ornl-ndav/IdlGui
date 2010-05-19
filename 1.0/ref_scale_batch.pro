@@ -329,8 +329,6 @@ end
 ;==============================================================================
 function batch_repopulate_gui, Event, DRfiles, spin_state_nbr=spin_state_nbr
 
-  print, 'enter batch_repopulate_gui'
-  
   widget_control, event.top, GET_UVALUE=global
   
   ;retrieve parameters
@@ -432,10 +430,10 @@ function batch_repopulate_gui, Event, DRfiles, spin_state_nbr=spin_state_nbr
     
   endif else begin
   
-    (*global).force_activation_step2 = 0
-    ActivateStep3_fromBatch, Event, 0
-    reset_all_button, Event
-    return, 0
+      (*global).force_activation_step2 = 0
+      ActivateStep3_fromBatch, Event, 0
+      reset_all_button, Event
+      return, 0
     
   endelse
   
@@ -597,7 +595,7 @@ PRO ref_scale_LoadBatchFile, Event
       
       ;check that all the files exist to move on
       FileStatus = CheckFilesExist_ref_m(Event, DRfiles)
-
+      
       ;check that list of files is uniq
       FileStatus = CheckFileUniq(Event, DRfiles)
       
@@ -606,6 +604,7 @@ PRO ref_scale_LoadBatchFile, Event
         ;work on 1 spin state at a time
         nbr_spin = (size(DRfiles))[1]
         index_spin = 0
+        try_load_first_spin_only = 0b
         while (index_spin lt nbr_spin) do begin
         
           local_DRfiles = DRfiles[index_spin,*]
@@ -614,11 +613,37 @@ PRO ref_scale_LoadBatchFile, Event
             rDRfiles, $
             spin_state_nbr=index_spin)
           index_spin++
-          if (result eq 0) then return  ;display error dialog message
+          if (result eq 0) then begin   ;try to load first spin state only
+            try_load_first_spin_only = 1b
+            
+            title = 'Error loading one of the other spin state'
+            msg_txt = ['Program encounter an error while trying to load',$
+            'one of the other spin state.',$
+            '','This may due to a file with only zeroes in it !','','',$
+            'You are going to work with only the first spin state loaded!']
+            local_mesg = dialog_message(msg_txt,/error,/center,$
+            dialog_parent=dialog_id, title=title)
+            
+          endif
           
         endwhile
         
-        refresh_bash_file_status = 1 ;enable REFRESH and SAVE AS Bash File
+        ;try to load first spin state only
+        if (try_load_first_spin_only) then begin
+          local_DRfiles = DRfiles[0,*]
+          rDRfiles = reform(local_DRfiles, n_elements(local_DRfiles))
+          
+          result = batch_repopulate_gui(Event, $
+            rDRfiles)
+          if (result eq 0) then begin   ;first spin state failed also
+            refresh_bash_file_status = 0
+          endif else begin
+            refresh_bash_file_status = 1 ;enable REFRESH and SAVE AS Bash File
+            UpdateBatchTable, Event, BatchTable
+          endelse
+        endif else begin
+          refresh_bash_file_status = 1 ;enable REFRESH and SAVE AS Bash File
+        endelse
         
       endif else begin            ;stop loading process
       
