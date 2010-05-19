@@ -431,6 +431,12 @@ pro cleanup_reduce_data, event, file_name = file_name
   
   if (~file_test(file_name)) then return
   
+  catch, error
+  if (error ne 0) then begin
+    catch,/cancel
+    return
+  endif
+  
   ;check that the input file does not start with the autocleanup
   ;line
   ;#auto cleaned up: 10%
