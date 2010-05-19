@@ -96,7 +96,7 @@ PRO plot_loaded_file, Event, index
   ENDIF ELSE BEGIN
     ClearPlot = 1
   ENDELSE
-    
+  
   DEVICE, DECOMPOSED = 0
   loadct,5,/SILENT
   
@@ -377,10 +377,22 @@ PRO plot_rescale_CE_file, Event
   flt1_ptr = (*global).flt1_ptr
   flt2_ptr = (*global).flt2_ptr
   
-  ;retrieve particular flt0, flt1 and flt2
-  flt0 = *flt0_ptr[0]
-  flt1 = *flt1_ptr[0]
-  flt2 = *flt2_ptr[0]
+  ;rescale the other spin states as well
+  spin_index = (*global).current_spin_index
+  if (spin_index ne -1) then begin
+  
+    flt0 = *flt0_ptr[0,spin_index]
+    flt1 = *flt1_ptr[0,spin_index]
+    flt2 = *flt2_ptr[0,spin_index]
+    
+  endif else begin
+  
+    ;retrieve particular flt0, flt1 and flt2
+    flt0 = *flt0_ptr[0]
+    flt1 = *flt1_ptr[0]
+    flt2 = *flt2_ptr[0]
+    
+  endelse
   
   ;divide by scaling factor
   CE_scaling_factor = (*global).CE_scaling_factor
@@ -396,20 +408,6 @@ PRO plot_rescale_CE_file, Event
     Cooef[1] /= CE_scaling_Factor
   ENDIF
   
-  ;save new values
-  flt0_rescale_ptr           = (*global).flt0_rescale_ptr
-  *flt0_rescale_ptr[0]       = flt0
-  (*global).flt0_rescale_ptr = flt0_rescale_ptr
-  
-  flt1_rescale_ptr           = (*global).flt1_rescale_ptr
-  *flt1_rescale_ptr[0]       = flt1
-  (*global).flt1_rescale_ptr = flt1_rescale_ptr
-  
-  flt2_rescale_ptr           = (*global).flt2_rescale_ptr
-  *flt2_rescale_ptr[0]       = flt2
-  (*global).flt2_rescale_ptr = flt2_rescale_ptr
-  ;end of rescaling part
-  
   colorIndex = color_array[0]
   
   XYMinMax = getXYMinMax(Event) ;_get
@@ -419,40 +417,76 @@ PRO plot_rescale_CE_file, Event
   ymax     = FLOAT(XYMinMax[3])
   
   CASE (IsXlin) OF
-    0:BEGIN
-    CASE (IsYlin) OF
-      0: BEGIN
-        PLOT,flt0,flt1,xrange=[xmin,xmax],yrange=[ymin,ymax]
-      END
-      1: BEGIN
-        PLOT,flt0,flt1,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax]
-      END
-    ENDCASE
-  END
-  1: BEGIN
-    CASE (IsYlin) OF
-      0: BEGIN
-        PLOT,flt0,flt1,/xlog,xrange=[xmin,xmax],yrange=[ymin,ymax]
-      END
-      1: BEGIN
-        PLOT,flt0,flt1,/xlog,/ylog,xrange=[xmin,xmax], $
-          yrange=[ymin,ymax]
-      END
-    ENDCASE
-  END
-ENDCASE
-
-errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
-
-;polynome of degree 1 for CE
-IF (cooef[0] NE 0 AND $
-  cooef[1] NE 0) THEN BEGIN
-  show_error_plot=1
-  flt0_new = (*(*global).flt0_CE_range)
-  y_new = cooef(1)*flt0_new + cooef(0)
-  OPLOT,flt0_new,y_new,color=400,thick=1.5
-ENDIF
-
+    0: BEGIN
+      CASE (IsYlin) OF
+        0: BEGIN
+          PLOT,flt0,flt1,xrange=[xmin,xmax],yrange=[ymin,ymax]
+        END
+        1: BEGIN
+          PLOT,flt0,flt1,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax]
+        END
+      ENDCASE
+    END
+    1: BEGIN
+      CASE (IsYlin) OF
+        0: BEGIN
+          PLOT,flt0,flt1,/xlog,xrange=[xmin,xmax],yrange=[ymin,ymax]
+        END
+        1: BEGIN
+          PLOT,flt0,flt1,/xlog,/ylog,xrange=[xmin,xmax], $
+            yrange=[ymin,ymax]
+        END
+      ENDCASE
+    END
+  ENDCASE
+  
+  errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
+  
+  ;polynome of degree 1 for CE
+  IF (cooef[0] NE 0 AND $
+    cooef[1] NE 0) THEN BEGIN
+    show_error_plot=1
+    flt0_new = (*(*global).flt0_CE_range)
+    y_new = cooef(1)*flt0_new + cooef(0)
+    OPLOT,flt0_new,y_new,color=400,thick=1.5
+  ENDIF
+  
+  ;repeat scaling for other spin states (if any)
+  
+  flt1_rescale_ptr = (*global).flt1_rescale_ptr
+  flt2_rescale_ptr = (*global).flt2_rescale_ptr
+  
+  DRfiles = (*(*global).DRfiles)
+  nbr_spin = (size(DRfiles))[1]
+  current_spin_index = (*global).current_spin_index
+  if (nbr_spin gt 1) then begin
+  
+    spin_index = 0
+    while (spin_index lt nbr_spin) do begin
+    
+      if (spin_index ne current_spin_index) then begin
+        flt1 = *flt1_ptr[0,spin_index]
+        flt2 = *flt2_ptr[0,spin_index]
+        flt1 = flt1/CE_scaling_factor
+        flt2 = flt2/CE_scaling_factor
+      endif
+      
+      *flt1_rescale_ptr[0,spin_index] = flt1
+      *flt2_rescale_ptr[0,spin_index] = flt2
+      
+      spin_index++
+    endwhile
+    
+  endif else begin
+  
+    *flt1_rescale_ptr[0]       = flt1
+    *flt2_rescale_ptr[0]       = flt2
+    
+  endelse
+  
+  (*global).flt1_rescale_ptr = flt1_rescale_ptr
+  (*global).flt2_rescale_ptr = flt2_rescale_ptr
+  
 END
 
 ;##############################################################################
