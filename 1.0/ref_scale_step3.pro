@@ -418,12 +418,12 @@ PRO Step3RescaleFile, Event, delta_SF
   
   ;this function displays in step3 the list of flt0, flt1 for low Q file
   ;and flt1 for high Q file only if user wants too.
-  displayData = getButtonValidated(Event,'display_value_yes_no') ;_get
-  IF (displayData EQ 0) THEN BEGIN
-    Step3OutputFlt0Flt1, Event ;_Step3
-  ENDIF ELSE BEGIN ;clear text box
-    putValueInTextField, Event,'step3_flt_text_field','' ;_put
-  ENDELSE
+;  displayData = getButtonValidated(Event,'display_value_yes_no') ;_get
+;  IF (displayData EQ 0) THEN BEGIN
+;    Step3OutputFlt0Flt1, Event ;_Step3
+;  ENDIF ELSE BEGIN ;clear text box
+;    putValueInTextField, Event,'step3_flt_text_field','' ;_put
+;  ENDELSE
   idl_send_to_geek_showLastLineLogBook, Event
 END
 
@@ -483,14 +483,15 @@ PRO Step3RescaleFile2, Event, delta_SF
   
   plot_loaded_file, Event, '2plots' ;_Plot
   
-  ;this function displays in step3 the list of flt0, flt1 for low Q file
-  ;and flt1 for high Q file only if user wants too.
-  displayData = getButtonValidated(Event,'display_value_yes_no') ;_get
-  IF (displayData EQ 0) THEN BEGIN
-    Step3OutputFlt0Flt1, Event ;_Step3
-  ENDIF ELSE BEGIN ;clear text box
-    putValueInTextField, Event,'step3_flt_text_field','' ;_put
-  ENDELSE
+;  ;this function displays in step3 the list of flt0, flt1 for low Q file
+;  ;and flt1 for high Q file only if user wants too.
+;  displayData = getButtonValidated(Event,'display_value_yes_no') ;_get
+;  IF (displayData EQ 0) THEN BEGIN
+;    Step3OutputFlt0Flt1, Event ;_Step3
+;  ENDIF ELSE BEGIN ;clear text box
+;    putValueInTextField, Event,'step3_flt_text_field','' ;_put
+;  ENDELSE
+
   idl_send_to_geek_showLastLineLogBook, Event
 END
 
