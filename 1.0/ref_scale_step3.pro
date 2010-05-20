@@ -248,8 +248,6 @@ PRO Step3AutomaticRescaling, Event
         spin_index = 0
         while (spin_index lt nbr_spin) do begin
         
-          print, 'spin_index: ' , spin_index
-        
           flt1_highQ = *flt1_rescale_ptr[i,spin_index]
           flt2_highQ = *flt2_rescale_ptr[i,spin_index]
           
