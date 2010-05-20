@@ -145,7 +145,7 @@ FUNCTION PopulateBatchTable, Event, BatchFileName
   PROCESSING = (*global).processing
   
   populate_error = 0
-  ;CATCH, populate_error
+  CATCH, populate_error
   NbrColumn  = getGlobalVariable('NbrColumn')
   NbrRow     = getGlobalVariable('NbrRow')
   BatchTable = STRARR(NbrColumn,NbrRow)

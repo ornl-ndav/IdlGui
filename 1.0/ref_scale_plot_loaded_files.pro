@@ -82,7 +82,7 @@ PRO PlotLoadedFiles, Event
   flt2_ptr = (*global).flt2_rescale_ptr
   
   error_plot_status = 0
-  ;CATCH, error_plot_status
+  CATCH, error_plot_status
   IF (error_plot_status NE 0) THEN BEGIN
     CATCH,/CANCEL
     text = 'ERROR plotting data'

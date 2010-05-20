@@ -47,7 +47,7 @@ function send_files_by_email, event, files
   
   result = 0
   
-  ;catch, error
+  catch, error
   error = 0
   if (error ne 0) then begin
     catch, /cancel
