@@ -174,6 +174,7 @@ FUNCTION PopulateBatchTable, Event, BatchFileName
           SplitArray = STRSPLIT(FileArray[FileIndex],' : ', $
             /EXTRACT,$
             COUNT=length)
+            
           CASE (SplitArray[0]) OF
             '#Active'    : BatchTable[0,BatchIndex] = SplitArray[1]
             '#Data_Runs' : BatchTable[1,BatchIndex] = SplitArray[1]
@@ -229,8 +230,26 @@ FUNCTION PopulateBatchTable, Event, BatchFileName
                 BatchTable[4,BatchIndex] = SplitArray[1]
               endelse
             end
-            '#S1(mm)'    : BatchTable[5,BatchIndex] = SplitArray[1]
-            '#S2(mm)'    : BatchTable[6,BatchIndex] = SplitArray[1]
+            '#S1(mm)'    : begin
+              s1_error = 0
+              catch, s1_error
+              if (s1_error ne 0) then begin
+                catch, /cancel
+                BatchTable[5,BatchIndex] = ''
+              endif else begin
+                BatchTable[5,BatchIndex] = SplitArray[1]
+              endelse
+            end
+            '#S2(mm)'    : begin 
+              s1_error = 0
+              catch, s1_error
+              if (s1_error ne 0) then begin
+                catch, /cancel
+                BatchTable[6,BatchIndex] = ''
+              endif else begin
+                BatchTable[6,BatchIndex] = SplitArray[1]
+              endelse
+            end
             '#Date'      : BatchTable[7,BatchIndex] = $
               STRJOIN(SplitArray[1:length-1],':')
             '#SF'        : BEGIN

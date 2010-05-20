@@ -345,8 +345,8 @@ function batch_repopulate_gui, Event, DRfiles, spin_state_nbr=spin_state_nbr
       DRfiles[i], i, $
       spin_state_nbr=spin_state_nbr)
       
-;    flt1_ptr = (*global).flt1_ptr
-    
+      print, spin_state_nbr
+      
     if (SuccessStatus) then begin
     
       ShortFileName = get_file_name_only(DRfiles[i]) ;_get
@@ -406,6 +406,8 @@ function batch_repopulate_gui, Event, DRfiles, spin_state_nbr=spin_state_nbr
           strcompress(0,/remove_all)
         putValueInTextField, Event,'YaxisMinTextField', $
           strcompress(0.000001,/remove_all)
+        putValueInTextField, Event,'YaxisMaxTextField', $
+          strcompress(2,/remove_all)
         plot_loaded_file, Event, 'all' ;_Plot
         
       endif else begin ;perform scaling ourselves
@@ -414,7 +416,7 @@ function batch_repopulate_gui, Event, DRfiles, spin_state_nbr=spin_state_nbr
         
       endelse
       
-    endif
+    endif ;end of >>> if(spin_state_nbr) eq 0
     
     ;for REF_M other spin states
     if (spin_state_nbr gt 0) then begin
