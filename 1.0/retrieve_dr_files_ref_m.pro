@@ -34,7 +34,7 @@
 
 function retrieveDRfiles_ref_m, event, BatchTable
   compile_opt idl2
-  
+
   ;Get Nbr of non-empty rows
   NbrRow         = getGlobalVariable('NbrRow')
   NbrRowNotEmpty = 0
@@ -52,24 +52,23 @@ function retrieveDRfiles_ref_m, event, BatchTable
   widget_control, event.top, get_uvalue=global
   data_spin_states = (*(*global).data_spin_state)
   nbr_spin_states = get_number_of_spin_states_per_angle(data_spin_states)
-
+  
   ;Create array of list of files
   DRfiles = STRARR(nbr_spin_states, NbrDrFiles)
   ;get for each row the path/output_file_name
   j=0
   FOR i=0,(NbrRowNotEmpty-1) DO BEGIN
     iRow = OBJ_NEW('idl_parse_command_line', BatchTable[9,i])
+
     IF (BatchTable[0,i] EQ 'YES') THEN BEGIN
-      outputPath     = iRow->getOutputPath()
-      outputFileName = iRow->getOutputFileName()
+      outputPath = iRow->getOutputPath()
+      outputFileName= iRow->getOutputFileName()
+      outputFileName_array = strsplit(outputFileName,' ',/extract)
       
-      path_split = strsplit(outputPath,' ',/extract,count=nbr)
-      file_split = strsplit(outputFileName,' ',/extract)
-      index = 0
-      
-      while (index lt nbr) do begin
-        DRfiles[index,j] = path_split[index] + file_split[index]
-        index++
+      index_spin = 0
+      while (index_spin lt n_elements(outputFileName_array)) do begin
+        DRfiles[index_spin,i] = outputPath + '/' + outputFileName_array[index_spin]
+        index_spin++
       endwhile
     ENDIF
     obj_destroy, iRow

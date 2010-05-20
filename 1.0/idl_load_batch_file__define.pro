@@ -78,7 +78,7 @@ pro add_norm_spin_state, event, spinState
   
   norm_spin_state = (*(*global).norm_spin_state)
   if (norm_spin_state[0] eq '') then begin
-    norm_spin_state[0] = norm_spin_state[0]
+    norm_spin_state[0] = spinState[0]
   endif else begin
     norm_spin_state = [norm_spin_state,spinState[0]]
   endelse
@@ -173,6 +173,7 @@ FUNCTION PopulateBatchTable, Event, BatchFileName
         ENDIF ELSE BEGIN
           SplitArray = STRSPLIT(FileArray[FileIndex],' : ', $
             /EXTRACT,$
+            /regex,$
             COUNT=length)
             
           CASE (SplitArray[0]) OF
@@ -266,23 +267,27 @@ FUNCTION PopulateBatchTable, Event, BatchFileName
                 COUNT=nbr)
               SplitArray[0] =CommentArray[0]
               cmd           = strjoin(SplitArray,' ')
-              ;check if "-o none" is there or not
-              IF (STRMATCH(cmd,'*-o none*')) THEN BEGIN
-                string_split = ' --batch -o none'
-              ENDIF ELSE BEGIN
-                string_split = ' --batch'
-              ENDELSE
-              cmd_array     = STRSPLIT(cmd, $
-                string_split, $
-                /EXTRACT, $
-                /REGEX,$
-                COUNT = length)
-              IF (length NE 1) THEN BEGIN
-                cmd = cmd_array[0] + ' ' + cmd_array[1]
-              ENDIF else begin
-                cmd = cmd_array[0]
-              endelse
+
+;              ;check if "-o none" is there or not
+;              IF (strmatch(strlowcase(cmd),'*-o none*')) THEN BEGIN
+;                string_split = ' --batch -o none'
+;              ENDIF ELSE BEGIN
+;                string_split = ' --batch'
+;              ENDELSE
+;              
+;              cmd_array     = STRSPLIT(cmd, $
+;                string_split, $
+;                /EXTRACT, $
+;                /REGEX,$
+;                COUNT = length)
+;              IF (length NE 1) THEN BEGIN
+;                cmd = cmd_array[0] + ' ' + cmd_array[1]
+;              ENDIF else begin
+;                cmd = cmd_array[0]
+;              endelse
+
               BatchTable[9,BatchIndex] = cmd
+
             END
           ENDCASE
           ++FileIndex

@@ -345,8 +345,6 @@ function batch_repopulate_gui, Event, DRfiles, spin_state_nbr=spin_state_nbr
       DRfiles[i], i, $
       spin_state_nbr=spin_state_nbr)
       
-      print, spin_state_nbr
-      
     if (SuccessStatus) then begin
     
       ShortFileName = get_file_name_only(DRfiles[i]) ;_get
