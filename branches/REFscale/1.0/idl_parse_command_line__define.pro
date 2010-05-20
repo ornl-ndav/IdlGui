@@ -52,15 +52,9 @@ FUNCTION getOutputPath, cmd
     RETURN, STRCOMPRESS(result1,/REMOVE_ALL)
   endif else begin ;ref_m batch file
     output_path = ''
-    index = 0
-    while (index lt nbr) do begin
-      result = ValueBetweenArg1Arg2(split1[index], '--output=', 1, ' ', 0)
-      IF (result EQ '') THEN RETURN, ''
-      result1 = strcompress(ValueBeforeLastArg(result, '/'),/remove_all)
-      output_path += ' ' + result1
-      index++
-    endwhile
-    return, output_path
+    result = ValueBetweenArg1Arg2(split1[0], '--output=', 1, ' ', 0)
+    IF (result EQ '') THEN RETURN, ''
+    return, file_dirname(result[0])
   endelse
 END
 
@@ -82,8 +76,7 @@ FUNCTION class_getOutputFileName, cmd
     while (index lt nbr) do begin
       result = ValueBetweenArg1Arg2(split1[index], '--output=', 1, ' ', 0)
       IF (result EQ '') THEN RETURN, ''
-      result1 = strcompress(ValueAfterLastArg(result, '/'),/remove_all)
-      output_file += ' ' + result1
+      output_file += ' ' + file_basename(result[0])
       index++
     endwhile
     return, output_file
@@ -110,9 +103,9 @@ FUNCTION idl_parse_command_line::init, cmd
     RETURN, 0
   ENDIF ELSE BEGIN
     ;output path
-    self.OutputPath                = getOutputPath(cmd)
+    self.OutputPath = getOutputPath(cmd)
     ;output file name
-    self.OutputFileName            = class_getOutputFileName(cmd)
+    self.OutputFileName = class_getOutputFileName(cmd)
   ENDELSE
   RETURN, 1
 END

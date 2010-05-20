@@ -66,6 +66,9 @@ FUNCTION CreateBatchFile, Event, FullFileName, BatchTable
   text      = [text,'#Date : ' + idl_send_to_geek_GenerateIsoTimeStamp()]
   text      = [text,'#Ucams : ' + (*global).ucams]
   text      = [text,'']
+
+  data_spin_states = (*(*global).data_spin_state)
+  norm_spin_states = (*(*global).norm_spin_state)
   
   FOR i=0,(NbrRow-1) DO BEGIN
     ;add information only if row is not blank
@@ -83,7 +86,9 @@ FUNCTION CreateBatchFile, Event, FullFileName, BatchTable
       text    = [text,'#Active : ' + active]
       k=1
       text    = [text,'#Data_Runs : '  + BatchTable[k++,i]]
+      text    = [text,'#Data_Spin_States : ' + data_spin_states[i]]
       text    = [text,'#Norm_Runs : '  + BatchTable[k++,i]]
+      text    = [text,'#Norm_Spin_States : ' + norm_spin_states[i]]
       text    = [text,'#EC_Runs : '    + BatchTable[k++,i]]
       text    = [text,'#Angle(deg) : ' + BatchTable[k++,i]]
       text    = [text,'#S1(mm) : '     + BatchTable[k++,i]]
@@ -96,11 +101,11 @@ FUNCTION CreateBatchFile, Event, FullFileName, BatchTable
       nbr_ele = n_elements(cmd_array)
       if (nbr_ele gt 1) then begin
         for j=0,nbr_ele-1 do begin
-          cmd_array[j] = 'srun --batch -O none ' + cmd_array[j]
+          cmd_array[j] = 'srun --batch -o none ' + cmd_array[j]
         endfor
         cmd = strjoin(cmd_array,' ')
       endif else begin
-        cmd = 'srun --batch -O none ' + cmd_array[0]
+        cmd = 'srun --batch -o none ' + cmd_array[0]
       endelse
       text      = [text, FP+cmd]
       text      = [text, '']
