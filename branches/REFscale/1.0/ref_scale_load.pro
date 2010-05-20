@@ -158,7 +158,7 @@ PRO LoadTOFFile, Event
   ;LongFileName=ReflSupportOpenFile_OPEN_FILE(Event)
   LongFileName=OpenFile(Event) ;_Load
   file_error = 0
-  ;CATCH, file_error
+  CATCH, file_error
   IF (file_error NE 0) THEN BEGIN
     CATCH,/cancel
     idl_send_to_geek_addLogBookText, Event, '> Loading a TOF file .... FAILED '

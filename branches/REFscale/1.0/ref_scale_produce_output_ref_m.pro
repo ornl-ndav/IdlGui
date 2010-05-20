@@ -292,7 +292,7 @@ pro ProduceOutputFile_ref_m, Event
   endif
   
   title = 'Output File Status'
-  message_text = ['Output File created!']
+  message_text = ['Output Files created!']
   if (result2 + result1 GT 0) then begin
     message_text = [message_text,$
     'Files sent to ' + (*global).email]
