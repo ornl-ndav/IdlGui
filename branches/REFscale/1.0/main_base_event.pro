@@ -311,7 +311,8 @@ PRO MAIN_BASE_ref_scale_event, Event
     ;Event trigerred by the CW_FIELD SF rescaling
     WIDGET_INFO(wWidget, FIND_BY_UNAME='Step3SFTextField'): BEGIN
       step = FLOAT(getTextFieldValue(Event,'Step3SFTextField'))
-      Step3RescaleFile2, Event, step ;_Step3
+      Step3RescaleFile, Event, 'manual'
+      ;Step3RescaleFile2, Event, step ;_Step3
     END
     
     ;Event triggered by [+++]
