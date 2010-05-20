@@ -155,14 +155,41 @@ function get_current_spin_index, event
   
   uname_list = ['off_off','off_on','on_off','on_on']
   sz = n_elements(uname_list)
+  index_spin_offset = 0
   for i=0,(sz-1) do begin
     id = widget_info(event.top, find_by_uname=uname_list[i])
     sensitivity = widget_info(id, /sensitive)
     if (sensitivity) then begin
       button_set = widget_info(id,/button_set)
-      if (button_set) then return, i
+      if (button_set) then return, index_spin_offset
+      index_spin_offset++
     endif
   endfor
   return, -1
+  
+end
+
+
+;+
+; :Description:
+;   This function returns the number of spin states
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+function get_nbr_spin_states, event
+  compile_opt idl2
+  
+  uname_list = ['off_off','off_on','on_off','on_on']
+  sz = n_elements(uname_list)
+  nbr_spins = 0
+  for i=0,(sz-1) do begin
+    id = widget_info(event.top, find_by_uname=uname_list[i])
+    sensitivity = widget_info(id, /sensitive)
+    if (sensitivity) then nbr_spins++
+  endfor
+  return, nbr_spins
   
 end

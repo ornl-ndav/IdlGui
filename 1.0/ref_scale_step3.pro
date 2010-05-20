@@ -178,11 +178,6 @@ PRO Step3AutomaticRescaling, Event
       flt1_lowQ = *flt1_rescale_ptr[i-1]
       flt2_lowQ = *flt2_rescale_ptr[i-1]
       
-      ;      PRINT, 'Low Q file'
-      ;      HELP, flt0_lowQ ;remove_me
-      ;      HELP, flt1_lowQ ;remove_me
-      ;      HELP, flt2_lowQ ;remove_me
-      
       ;determine the working indexes of flt0, flt1 and flt2 for low Q file
       RangeIndexes = getArrayRangeFromQ1Q2(flt0_lowQ, Qmin, Qmax) ;_get
       left_index   = RangeIndexes[0]
@@ -396,9 +391,6 @@ PRO Step3RescaleFile, Event, delta_SF
   idl_send_to_geek_addLogBookText, Event, '-> Manual Rescaling of : ' + $
     CurrentFileName
     
-  flt1_ptr = (*global).flt1_ptr
-  flt2_ptr = (*global).flt2_ptr
-  
   ;get value of current SF
   sSF = getTextFieldValue(Event,'Step3SFTextField') ;_get
   SF  = FLOAT(sSF)
@@ -447,18 +439,44 @@ PRO Step3RescaleFile, Event, delta_SF
   ;get selected index of droplist
   index = getSelectedIndex(Event,'step3_work_on_file_droplist') ;_get
   
-  flt1 = *flt1_ptr[index]
-  flt2 = *flt2_ptr[index]
-  
-  ;rescale data
-  flt1 = flt1 / SF
-  flt2 = flt2 / SF
+  flt1_ptr = (*global).flt1_ptr
+  flt2_ptr = (*global).flt2_ptr
   
   flt1_rescale_ptr = (*global).flt1_rescale_ptr
   flt2_rescale_ptr = (*global).flt2_rescale_ptr
   
-  *flt1_rescale_ptr[index] = flt1
-  *flt2_rescale_ptr[index] = flt2
+  ;rescale the right spin state data set
+  spin_index = get_current_spin_index(event)
+  if (spin_index ne -1) then begin
+  
+    nbr_spins = get_nbr_spin_states(event)
+    for i_nbr_spins=0,(nbr_spins-1) do begin
+    
+      flt1 = *flt1_ptr[index,i_nbr_spins]
+      flt2 = *flt2_ptr[index,i_nbr_spins]
+      
+      ;rescale data
+      flt1 = flt1 / SF
+      flt2 = flt2 / SF
+      
+      *flt1_rescale_ptr[index,i_nbr_spins] = flt1
+      *flt2_rescale_ptr[index,i_nbr_spins] = flt2
+      
+    endfor
+    
+  endif else begin
+  
+    flt1 = *flt1_ptr[index]
+    flt2 = *flt2_ptr[index]
+    
+    ;rescale data
+    flt1 = flt1 / SF
+    flt2 = flt2 / SF
+    
+    *flt1_rescale_ptr[index] = flt1
+    *flt2_rescale_ptr[index] = flt2
+    
+  endelse
   
   (*global).flt1_rescale_ptr = flt1_rescale_ptr
   (*global).flt2_rescale_ptr = flt2_rescale_ptr
