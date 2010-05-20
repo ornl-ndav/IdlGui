@@ -87,8 +87,6 @@ function send_files_by_email, event, files
   
   cmd_email += ' ' + email
   
-  print, cmd_email
-  
   spawn, cmd_email, listening, err_listening
   
   return, 1

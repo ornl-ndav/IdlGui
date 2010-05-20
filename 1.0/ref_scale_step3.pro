@@ -113,8 +113,6 @@ PRO Step3AutomaticRescaling, Event
   
     ;rescale the other spin states as well
     spin_index = get_current_spin_index(event)
-    print, 'spin_index: ' , spin_index
-    print, '-----------'
     
     FOR i=1,(nbrFile-1) DO BEGIN
     
