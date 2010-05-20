@@ -93,10 +93,17 @@ FUNCTION CreateBatchFile, Event, FullFileName, BatchTable
         STRCOMPRESS(BatchTable[k++,i],/REMOVE_ALL)]
       ;add --batch flag to command line
       cmd_array = strsplit(BatchTable[k++,i], 'srun ', /EXTRACT, /REGEX)
-      cmd       = 'srun --batch -o none' + cmd_array[0]
+      nbr_ele = n_elements(cmd_array)
+      if (nbr_ele gt 1) then begin
+        for j=0,nbr_ele-1 do begin
+          cmd_array[j] = 'srun --batch -O none ' + cmd_array[j]
+        endfor
+        cmd = strjoin(cmd_array,' ')
+      endif else begin
+        cmd = 'srun --batch -O none ' + cmd_array[0]
+      endelse
       text      = [text, FP+cmd]
       text      = [text, '']
-      
     ENDIF
   ENDFOR
   
