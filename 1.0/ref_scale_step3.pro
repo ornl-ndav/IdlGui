@@ -50,7 +50,7 @@ PRO SaveNewSFstep3, Event, SF, index
     IndexArray = getIndexArrayOfActiveBatchRow(Event)
     ;get BatchTable
     BatchTable = (*(*global).BatchTable)
-    BatchTable[7,IndexArray[index]] = STRCOMPRESS(SF,/REMOVE_ALL)
+    BatchTable[8,IndexArray[index]] = STRCOMPRESS(SF,/REMOVE_ALL)
     (*(*global).BatchTable) = BatchTable
     UpdateBatchTable, Event, BatchTable
   ENDELSE
@@ -426,6 +426,10 @@ PRO Step3RescaleFile, Event, delta_SF
   
   SF = SF[0]
   
+  SF_array = (*(*global).SF_array)
+  SF_array[index] = SF
+  (*(*global).SF_array) = SF_array
+
   IF (isBatchFileLoaded(Event)) THEN BEGIN
     ;save new value of SF in BatchTable only if there is a file there
     SaveNewSFstep3, Event, SF, index
