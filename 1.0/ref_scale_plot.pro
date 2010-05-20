@@ -458,7 +458,8 @@ PRO plot_rescale_CE_file, Event
   
   DRfiles = (*(*global).DRfiles)
   nbr_spin = (size(DRfiles))[1]
-  current_spin_index = (*global).current_spin_index
+  ;current_spin_index = (*global).current_spin_index
+  current_spin_index = get_current_spin_index(event)
   if (nbr_spin gt 1) then begin
   
     spin_index = 0

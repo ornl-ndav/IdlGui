@@ -77,7 +77,7 @@ PRO Step3AutomaticRescaling, Event
   
   ;get number of files loaded
   nbrFile = get_nbr_of_files_loaded(event)
-
+  
   idl_send_to_geek_addLogBookText, Event, '-> Number of files loaded : ' + $
     STRCOMPRESS(nbrFile,/REMOVE_ALL)
     
@@ -111,6 +111,11 @@ PRO Step3AutomaticRescaling, Event
       
   ENDIF ELSE BEGIN
   
+    ;rescale the other spin states as well
+    spin_index = get_current_spin_index(event)
+    print, 'spin_index: ' , spin_index
+    print, '-----------'
+    
     FOR i=1,(nbrFile-1) DO BEGIN
     
       idl_send_to_geek_addLogBookText, Event, '--> Working with File # ' + $
@@ -235,17 +240,46 @@ PRO Step3AutomaticRescaling, Event
       flt1_rescale_ptr = (*global).flt1_rescale_ptr
       flt2_rescale_ptr = (*global).flt2_rescale_ptr
       
-      flt1_highQ = *flt1_rescale_ptr[i]
-      flt2_highQ = *flt2_rescale_ptr[i]
+      ;repeat the scaling for other spin states
+      if (spin_index ne -1) then begin
       
-      flt1_highQ = flt1_highQ / SF
-      flt2_highQ = flt2_highQ / SF
+        ;repeat sf for all spin states
+        DRfiles = (*(*global).DRfiles)
+        nbr_spin = (size(DRfiles))[1]
+        
+        spin_index = 0
+        while (spin_index lt nbr_spin) do begin
+        
+          print, 'spin_index: ' , spin_index
+        
+          flt1_highQ = *flt1_rescale_ptr[i,spin_index]
+          flt2_highQ = *flt2_rescale_ptr[i,spin_index]
+          
+          flt1_highQ = flt1_highQ / SF
+          flt2_highQ = flt2_highQ / SF
+          
+          *flt1_rescale_ptr[i,spin_index] = flt1_highQ
+          *flt2_rescale_ptr[i,spin_index] = flt2_HighQ
+          
+          spin_index++
+        endwhile
+        
+      endif else begin
       
-      *flt1_rescale_ptr[i] = flt1_highQ
-      *flt2_rescale_ptr[i] = flt2_HighQ
+        flt1_highQ = *flt1_rescale_ptr[i]
+        flt2_highQ = *flt2_rescale_ptr[i]
+        
+        flt1_highQ = flt1_highQ / SF
+        flt2_highQ = flt2_highQ / SF
+        
+        *flt1_rescale_ptr[i] = flt1_highQ
+        *flt2_rescale_ptr[i] = flt2_HighQ
+        
+      endelse
       
       (*global).flt1_rescale_ptr = flt1_rescale_ptr
       (*global).flt2_rescale_ptr = flt2_rescale_ptr
+      
     ENDFOR
     
     IF (isBatchFileLoaded(Event)) THEN BEGIN

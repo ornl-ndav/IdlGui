@@ -219,7 +219,7 @@ PRO run_full_step2, Event
     
     idl_send_to_geek_addLogBookText, Event, '-> Scaling ... ' + PROCESSING
     scale_error = 0
-    ;CATCH, scale_error
+    CATCH, scale_error
     IF (scale_error NE 0) THEN BEGIN
       CATCH,/CANCEL
       idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, FAILED
