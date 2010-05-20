@@ -417,6 +417,7 @@ PRO Step3RescaleFile, Event, delta_SF
       SF_local = SF/100.
       SF -= SF_local
     end
+    else:
   endcase
   
   if (SF LE 0) then begin
