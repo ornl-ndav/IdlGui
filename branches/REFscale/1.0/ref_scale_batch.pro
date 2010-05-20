@@ -345,7 +345,7 @@ function batch_repopulate_gui, Event, DRfiles, spin_state_nbr=spin_state_nbr
       DRfiles[i], i, $
       spin_state_nbr=spin_state_nbr)
       
-    flt1_ptr = (*global).flt1_ptr
+;    flt1_ptr = (*global).flt1_ptr
     
     if (SuccessStatus) then begin
     
@@ -436,7 +436,7 @@ function batch_repopulate_gui, Event, DRfiles, spin_state_nbr=spin_state_nbr
       return, 0
     
   endelse
-  
+    
 END
 
 ;==============================================================================
