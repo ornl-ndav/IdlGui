@@ -42,9 +42,23 @@ PRO LoadCEFile, Event, CE_file_name, Q1, Q2
   flt0_ptr = (*global).flt0_ptr
   flt1_ptr = (*global).flt1_ptr
   flt2_ptr = (*global).flt2_ptr
-  flt0     = *flt0_ptr[0]
-  flt1     = *flt1_ptr[0]
-  flt2     = *flt2_ptr[0]
+  
+  ;rescale the other spin states as well
+  spin_index = get_current_spin_index(event)
+  if (spin_index ne -1) then begin
+  
+    flt0     = *flt0_ptr[0, spin_index]
+    flt1     = *flt1_ptr[0, spin_index]
+    flt2     = *flt2_ptr[0, spin_index]
+    
+  endif else begin
+  
+    flt0     = *flt0_ptr[0]
+    flt1     = *flt1_ptr[0]
+    flt2     = *flt2_ptr[0]
+    
+  endelse
+  
   ;determine the working flt0, flt1 and flt2
   RangeIndexes = getArrayRangeFromQ1Q2(flt0, Q1, Q2) ;_get
   left_index   = RangeIndexes[0]
@@ -141,6 +155,10 @@ PRO Step2_fitCE, Event
     ;put scaling factor in its box
     scaling_factor = float(Ybefore) / float(Yafter)
     (*global).CE_scaling_factor = scaling_factor
+    SF_array = (*(*global).SF_array)
+    SF_array[0] = scaling_factor
+    (*(*global).SF_array) = SF_array
+    
   ENDIF ELSE BEGIN ;scaling factor can be calculated
     scaling_factor = 'NaN'
   ENDELSE

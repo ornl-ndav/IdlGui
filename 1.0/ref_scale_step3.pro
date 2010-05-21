@@ -69,9 +69,13 @@ PRO Step3AutomaticRescaling, Event
   
   idl_send_to_geek_addLogBookText, Event, '> Automatic Rescaling :'
   
-  flt0_rescale_ptr = (*global).flt0_rescale_ptr
-  flt1_rescale_ptr = (*global).flt1_rescale_ptr
-  flt2_rescale_ptr = (*global).flt2_rescale_ptr
+  ;  flt0_rescale_ptr = (*global).flt0_rescale_ptr
+  ;  flt1_rescale_ptr = (*global).flt1_rescale_ptr
+  ;  flt2_rescale_ptr = (*global).flt2_rescale_ptr
+  flt0_rescale_ptr = (*global).flt0_ptr
+  flt1_rescale_ptr = (*global).flt1_ptr
+  flt2_rescale_ptr = (*global).flt2_ptr
+  
   Qmin_array       = (*(*global).Qmin_array)
   Qmax_array       = (*(*global).Qmax_array)
   
@@ -226,12 +230,18 @@ PRO Step3AutomaticRescaling, Event
       
       ;store the SF
       SF_array = (*(*global).SF_array)
+      print, 'before SF: '
+      print, SF_array
       SF_array[i] = SF
+      print, 'i: ' , i
+      print, 'after SF: '
+      print, SF_array
+      print
       (*(*global).SF_array) = SF_array
       
       ;Rescale the initial data
-      flt1_rescale_ptr = (*global).flt1_rescale_ptr
-      flt2_rescale_ptr = (*global).flt2_rescale_ptr
+      ;    flt1_rescale_ptr = (*global).flt1_rescale_ptr
+      ;    flt2_rescale_ptr = (*global).flt2_rescale_ptr
       
       ;repeat the scaling for other spin states
       if (spin_index ne -1) then begin
@@ -377,6 +387,12 @@ PRO Step3OutputFlt0Flt1, Event
   idl_send_to_geek_showLastLineLogBook, Event
 END
 
+
+function apply_sf, flt, sf
+  return, flt/SF
+end
+
+
 ;^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*
 ;This function rescale manually the working file using the new SF
 PRO Step3RescaleFile, Event, delta_SF
@@ -429,7 +445,7 @@ PRO Step3RescaleFile, Event, delta_SF
   SF_array = (*(*global).SF_array)
   SF_array[index] = SF
   (*(*global).SF_array) = SF_array
-
+  
   IF (isBatchFileLoaded(Event)) THEN BEGIN
     ;save new value of SF in BatchTable only if there is a file there
     SaveNewSFstep3, Event, SF, index
@@ -457,15 +473,49 @@ PRO Step3RescaleFile, Event, delta_SF
     nbr_spins = get_nbr_spin_states(event)
     for i_nbr_spins=0,(nbr_spins-1) do begin
     
-      flt1 = *flt1_ptr[index,i_nbr_spins]
-      flt2 = *flt2_ptr[index,i_nbr_spins]
+      flt1 = (*flt1_ptr[index,i_nbr_spins])
+      flt2 = (*flt2_ptr[index,i_nbr_spins])
       
-      ;rescale data
-      flt1 = flt1 / SF
-      flt2 = flt2 / SF
+      ;      if (i_nbr_spins eq 0) then begin
+      ;        print, 'before'
+      ;        print, 'flt1_ptr: '
+      ;        print, *flt1_ptr[index,i_nbr_spins]
+      ;        print
+      ;        print, 'flt1_rescale_ptr: '
+      ;        print, *flt1_rescale_ptr[index,i_nbr_spins]
+      ;        print
+      ;      endif
       
-      *flt1_rescale_ptr[index,i_nbr_spins] = flt1
-      *flt2_rescale_ptr[index,i_nbr_spins] = flt2
+      new_flt1 = apply_sf(flt1[*], SF)
+      new_flt2 = apply_sf(flt2[*], SF)
+      
+      ;      if (i_nbr_spins eq 0) then begin
+      ;        print, 'after'
+      ;        print, 'new_flt1: '
+      ;        print, new_flt1
+      ;        print, 'flt1_ptr: '
+      ;        print, *flt1_ptr[index,i_nbr_spins]
+      ;        print
+      ;        print, 'flt1_rescale_ptr: '
+      ;        print, *flt1_rescale_ptr[index,i_nbr_spins]
+      ;        print
+      ;      endif
+      
+      flt1_rescale_ptr[index,i_nbr_spins] = ptr_new(0L)
+      *flt1_rescale_ptr[index,i_nbr_spins] = new_flt1
+      flt2_rescale_ptr[index,i_nbr_spins] = ptr_new(0L)
+      *flt2_rescale_ptr[index,i_nbr_spins] = new_flt2
+      
+    ;      if (i_nbr_spins eq 0) then begin
+    ;        print, 'after2'
+    ;        print, 'new_flt1: '
+    ;        print, new_flt1
+    ;        print, 'flt1_ptr: '
+    ;        print, *flt1_ptr[index,i_nbr_spins]
+    ;        print
+    ;        print, 'flt1_rescale_ptr: '
+    ;        print, *flt1_rescale_ptr[index,i_nbr_spins]
+    ;      endif
       
     endfor
     
@@ -475,11 +525,13 @@ PRO Step3RescaleFile, Event, delta_SF
     flt2 = *flt2_ptr[index]
     
     ;rescale data
-    flt1 = flt1 / SF
-    flt2 = flt2 / SF
+    new_flt1 = apply_sf(flt1[*], SF)
+    new_flt2 = apply_sf(flt2[*], SF)
     
-    *flt1_rescale_ptr[index] = flt1
-    *flt2_rescale_ptr[index] = flt2
+    flt1_recsale_ptr[index] = ptr_new(0L)
+    *flt1_rescale_ptr[index] = new_flt1
+    flt2_rescale_ptr[index] = ptr_new(0L)
+    *flt2_rescale_ptr[index] = new_flt2
     
   endelse
   

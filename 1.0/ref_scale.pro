@@ -123,12 +123,14 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     replot_me: 1,$ ;to replot main plot will be 0 just after being replot
     replotQnew: 0,$
     force_activation_step2: 0,$
+
     flt0_ptr: PTRARR(50,4,/allocate_heap),$ ;arrays of all the x-axis
     flt1_ptr: PTRARR(50,4,/allocate_heap),$ ;arrays of all the y-axis
     flt2_ptr: PTRARR(50,4,/allocate_heap),$ ;arrays of all the y-error-axis
     flt0_rescale_ptr: PTRARR(50,4,/allocate_heap),$ ;arrays of all the x-axis after rescaling
     flt1_rescale_ptr: PTRARR(50,4,/allocate_heap),$ ;arrays of all the y-axis after rescaling
     flt2_rescale_ptr: PTRARR(50,4,/allocate_heap),$ ;arrays of all the y-error-axis after rescaling
+
     fit_cooef_ptr: PTRARR(50,4,/allocate_heap),$
     flt0_range: PTRARR(2,4,/allocate_heap) ,$ ;flt0 between Q1 and Q2 for lowQ and hihgQ files
     rescaling_ymax: 1.2,$ ;ymax when rescalling data
