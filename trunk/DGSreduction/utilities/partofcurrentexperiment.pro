@@ -15,6 +15,13 @@ function PartOfCurrentExperiment, instrument, runnumber
   current_proposal = get_Proposal_fromPreNeXus(current_beamtime_info)
 
   IF (run_proposal EQ current_proposal) THEN match = 1
+ 
+  ;If we couldn't find the current_proposal then just say we match
+  IF current_proposal EQ '0' THEN BEGIN
+    match = 1
+    ; Log the error
+    PRINT, 'ORBITER Webservice not found - disabling inteligent queue selection ***'
+  ENDIF
 
   return, match
 end
