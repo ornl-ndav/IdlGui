@@ -142,10 +142,12 @@ PRO DGSreduction_TLB_Events, event
       print,'Custom Dir = ', myValue
       ; Update the command object... if the directory exists
       directoryValid = FILE_TEST(myValue, /DIRECTORY, /WRITE)
-      IF (directoryValid EQ 1) THEN BEGIN
-        print,'Setting output prefix = ',myvalue
+      ;IF (directoryValid EQ 1) THEN BEGIN
+       ; print,'Setting output prefix = ',myvalue
         dgsr_cmd->SetProperty, OutputOverride=myValue
-      ENDIF
+      ;ENDIF ELSE BEGIN
+      ;  PRINT, ' ERROR: Cannot write to ', myValue
+      ;ENDELSE
     END
     'DGS_AUTO_OUTPUT_PREFIX': BEGIN
       ; For auto prefix - just use relay on whatever is returned by get_output_directory()
@@ -163,9 +165,11 @@ PRO DGSreduction_TLB_Events, event
         WIDGET_CONTROL, outputPrefixID, GET_VALUE=myValue
         ; Update the command object... if the directory exists
         directoryValid = FILE_TEST(myValue, /DIRECTORY, /WRITE)
-        IF (directoryValid EQ 1) THEN BEGIN
+        ;IF (directoryValid EQ 1) THEN BEGIN
           dgsr_cmd->SetProperty, OutputOverride=myValue
-        ENDIF
+        ;ENDIF ELSE BEGIN
+        ;  PRINT, ' ERROR: Cannot write to ', myValue
+        ;ENDELSE
       ENDIF
     END
     'DGS_TIMING_ON': BEGIN
