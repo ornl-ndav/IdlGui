@@ -125,7 +125,7 @@ PRO DGSreduction_LaunchCollector, event, WaitForJobs=waitforjobs
       ENDFOR
     ENDIF
     
-    spe_cmd += " add_spefiles.py --force " + instrument + " -d " + outdir + $
+    spe_cmd += " add_spefiles.py --force " + instrument + "_" + runnumber + " -d " + outdir + $
       " -o " + outdir + "/" + instrument + "_" + runnumber + ".spe"
       
     spawn, spe_cmd, dummy, job_string
