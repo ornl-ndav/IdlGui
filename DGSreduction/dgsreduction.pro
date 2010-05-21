@@ -111,7 +111,7 @@ FUNCTION DGSnorm_Execute_Function, event
     
     jobname = instrument + "_" + runnumber + "_bank" + padded_datapaths
     
-    logfile = logDir + '/' + instrument + '_bank' + padded_datapaths + '.log'
+    logfile = logDir + '/' + instrument + '_' + runnumber + '_bank' + padded_datapaths + '.log'
     
     cmd = jobcmd + " --output=" + logfile + $
       " --job-name=" + jobname + $
@@ -294,15 +294,16 @@ PRO DGSreduction_Execute, event
     dgsr_cmd->SetProperty, DataRun=RunNumbers[i]
     
     ; Let's check to see if this run is part of the current proposal
-    ; *** CNCS ONLY AT THE MOMENT ***
     ; Have they already switched from the default queue ?
-    IF ((Instrument EQ 'CNCS') AND (STRUPCASE(queue) EQ 'CNCSQ')) THEN BEGIN
+    IF (STRLOWCASE(queue) EQ Get_DefaultSlurmQueue(instrument)) THEN BEGIN
       IF (PartOfCurrentExperiment(Instrument, RunNumbers[i]) NE 1) THEN BEGIN
         ; Set the Queue to HEATERQ
         print, 'Redirecting Job --> HEATERQ...'
         Queue='heaterq'
       ENDIF
     ENDIF
+    
+    
     
     ;print, 'SLURM QUEUE = ', Queue
     
@@ -499,7 +500,7 @@ PRO DGSreduction_Execute, event
       
       jobname = instrument + "_" + runnumber + "_bank" + padded_datapaths
       
-      logfile = logDir + '/' + instrument + '_bank' + padded_datapaths + '.log'
+      logfile = logDir + '/' + instrument + '_' + runnumber + '_bank' + padded_datapaths + '.log'
       
       ; Let's construct the mask files...
       IF (HardMask EQ 1) OR (CustomHardMask EQ 1) THEN BEGIN
