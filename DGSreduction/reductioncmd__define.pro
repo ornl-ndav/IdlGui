@@ -848,6 +848,12 @@ function ReductionCmd::Check
     msg = [msg,['The corner geometry file ('+self.cornergeometry+') does not seem to be readable.']]
   ENDIF
   
+  ; You cannot specify a 'batch' of runs and also specify a custom output directory
+;  IF (STRLEN(self.OutputOverride) GE 1) AND (STRPOS(self.datarun, ':') NE -1) THEN BEGIN
+;    ok = 1
+;    msg = [msg,['Sorry - you cannot specify a series of batch runs and a custom output directory']]
+;  ENDIF
+;  
   ; Check to see that the *.norm and mask files for vanadium are split up into
   ; the correct number of jobs.
   IF (STRLEN(self.normalisation) GE 1) AND (self.normalisation NE 0) $
@@ -1107,7 +1113,7 @@ function ReductionCmd::Generate
     
     IF (STRLEN(self.instrument) GT 1) AND (STRLEN(self.datarun) GE 1) THEN $
       cmd[i] += " --output=" + outputDir + $
-      "/" + self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
+      "/" + self.instrument + "_" + STRCOMPRESS(STRING(self.datarun), /REMOVE_ALL) + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
       i+1, self.jobs, /PAD) + ".txt"
       
     ; Instrument Name
