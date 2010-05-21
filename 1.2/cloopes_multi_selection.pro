@@ -405,9 +405,6 @@ PRO getListFromSelection, Event,SELECTION=selection
   ;ex [1,2,5-7,9] -> will create run [1,2,5-7,9],1,2,5,6,7,9
   add_bracket_runs_to_sequence, column_seq_number
   
-  help, column_seq_number
-  print, column_seq_number
-  
   CASE (selection) OF
     1: (*(*global).sequence_field1) = column_seq_number
     2: (*(*global).sequence_field2) = column_seq_number
