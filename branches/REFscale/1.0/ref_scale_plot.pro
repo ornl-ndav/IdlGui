@@ -396,6 +396,7 @@ PRO plot_rescale_CE_file, Event
   
   ;divide by scaling factor
   CE_scaling_factor = (*global).CE_scaling_factor
+  print, 'CE_scaling_factor: ' , ce_scaling_factor
   putTextFieldValue, Event, 'step2_sf_text_field', $
     strcompress(CE_scaling_factor,/remove_all)
   flt1              = flt1/CE_scaling_factor
