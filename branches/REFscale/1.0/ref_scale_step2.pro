@@ -181,7 +181,6 @@ PRO Step2_scaleCE, Event
   plot_rescale_CE_file, Event ;_Plot
 END
 
-
 ;^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*
 
 ;when using automatic fitting and scaling of CE (step2)

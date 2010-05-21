@@ -32,6 +32,23 @@
 ;
 ;==============================================================================
 
+;+
+; :Description:
+;   array is passed by value and it returns the array divided by the SF
+;
+; :Params:
+;    flt
+;    sf
+;
+; :Author: j35
+;-
+function apply_sf, flt, sf
+  compile_opt idl2
+  return, flt/SF
+end
+
+
+
 ;##############################################################################
 ;******************************************************************************
 ;This function takes the new SF from the CW_FIELD and put it in the
@@ -72,9 +89,9 @@ PRO Step3AutomaticRescaling, Event
   ;  flt0_rescale_ptr = (*global).flt0_rescale_ptr
   ;  flt1_rescale_ptr = (*global).flt1_rescale_ptr
   ;  flt2_rescale_ptr = (*global).flt2_rescale_ptr
-  flt0_rescale_ptr = (*global).flt0_ptr
-  flt1_rescale_ptr = (*global).flt1_ptr
-  flt2_rescale_ptr = (*global).flt2_ptr
+  flt0_ptr = (*global).flt0_ptr
+  flt1_ptr = (*global).flt1_ptr
+  flt2_ptr = (*global).flt2_ptr
   
   Qmin_array       = (*(*global).Qmin_array)
   Qmax_array       = (*(*global).Qmax_array)
@@ -142,14 +159,9 @@ PRO Step3AutomaticRescaling, Event
       
       ;HIGH Q file
       ;get flt0 of high Q file
-      flt0_highQ = *flt0_rescale_ptr[i]
-      flt1_highQ = *flt1_rescale_ptr[i]
-      flt2_highQ = *flt2_rescale_ptr[i]
-      
-      ;      PRINT, 'High Q file'
-      ;      HELP, flt0_highQ ;remove_me
-      ;      HELP, flt1_highQ ;remove_me
-      ;      HELP, flt2_highQ ;remove_me
+      flt0_highQ = *flt0_ptr[i]
+      flt1_highQ = *flt1_ptr[i]
+      flt2_highQ = *flt2_ptr[i]
       
       ;determine the working indexes of flt0, flt1 and flt2 for high Q file
       RangeIndexes = getArrayRangeFromQ1Q2(flt0_highQ, Qmin, Qmax) ;_get
@@ -175,6 +187,10 @@ PRO Step3AutomaticRescaling, Event
         flt1_highQ_new = flt1_highQ_new(RangeIndexes)
         flt2_highQ_new = flt2_highQ_new(RangeIndexes)
       ENDIF
+      
+      flt0_rescale_ptr = (*global).flt0_rescale_ptr
+      flt1_rescale_ptr = (*global).flt1_rescale_ptr
+      flt2_rescale_ptr = (*global).flt2_rescale_ptr
       
       ;LOW Q file
       ;get flt0 of low Q file
@@ -219,6 +235,7 @@ PRO Step3AutomaticRescaling, Event
       
       ;SF
       SF = (TLowQflt0 * THighQflt1)/(TLowQflt1 * THighQflt0)
+      
       idl_send_to_geek_addLogBookText, Event, '---> SF : ' + $
         STRCOMPRESS(SF,/REMOVE_ALL)
         
@@ -230,13 +247,7 @@ PRO Step3AutomaticRescaling, Event
       
       ;store the SF
       SF_array = (*(*global).SF_array)
-      print, 'before SF: '
-      print, SF_array
       SF_array[i] = SF
-      print, 'i: ' , i
-      print, 'after SF: '
-      print, SF_array
-      print
       (*(*global).SF_array) = SF_array
       
       ;Rescale the initial data
@@ -253,27 +264,34 @@ PRO Step3AutomaticRescaling, Event
         spin_index = 0
         while (spin_index lt nbr_spin) do begin
         
-          flt1_highQ = *flt1_rescale_ptr[i,spin_index]
-          flt2_highQ = *flt2_rescale_ptr[i,spin_index]
+          flt1_highQ = *flt1_ptr[i,spin_index]
+          flt2_highQ = *flt2_ptr[i,spin_index]
           
-          flt1_highQ = flt1_highQ / SF
-          flt2_highQ = flt2_highQ / SF
+          new_flt1_highQ = apply_sf(flt1_highQ[*], SF)
+          new_flt2_highQ = apply_sf(flt2_highQ[*], SF)
           
-          *flt1_rescale_ptr[i,spin_index] = flt1_highQ
-          *flt2_rescale_ptr[i,spin_index] = flt2_HighQ
+          flt1_rescale_ptr[i,spin_index] = ptr_new(0L)
+          *flt1_rescale_ptr[i,spin_index] = new_flt1_highQ
+          flt2_rescale_ptr[i,spin_index] = ptr_new(0L)
+          *flt2_rescale_ptr[i,spin_index] = new_flt2_HighQ
           
           spin_index++
         endwhile
         
       endif else begin
       
-        flt1_highQ = *flt1_rescale_ptr[i]
-        flt2_highQ = *flt2_rescale_ptr[i]
+        flt1_highQ = *flt1_ptr[i]
+        flt2_highQ = *flt2_ptr[i]
+        
+        new_flt1_highQ = apply_sf(flt1_highQ[*], SF)
+        new_flt2_highQ = apply_sf(flt2_highQ[*], SF)
         
         flt1_highQ = flt1_highQ / SF
         flt2_highQ = flt2_highQ / SF
         
+        flt1_rescale_ptr[i] = ptr_new(0L)
         *flt1_rescale_ptr[i] = flt1_highQ
+        flt2_rescale_ptr[i] = ptr_new(0L)
         *flt2_rescale_ptr[i] = flt2_HighQ
         
       endelse
@@ -386,11 +404,6 @@ PRO Step3OutputFlt0Flt1, Event
   ENDFOR
   idl_send_to_geek_showLastLineLogBook, Event
 END
-
-
-function apply_sf, flt, sf
-  return, flt/SF
-end
 
 
 ;^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*
