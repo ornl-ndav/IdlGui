@@ -57,10 +57,13 @@ FUNCTION Get_FirstNumber, RunNumberString
     IF !ERROR_STATE.CODE EQ -1008 THEN runNumber_location = '/entry/run_number'
   ENDIF
   
-  ; The runs should be delimited by either a - or ,
+  ; The runs should be delimited by either a - or , (or even :)
   
   ; Lets find see if there are any commas
   commaPosition = STRPOS(RunNumberString, ',')
+  IF commaPosition EQ -1 THEN commaPosition = largeNumber
+  
+  commaPosition = STRPOS(RunNumberString, ':')
   IF commaPosition EQ -1 THEN commaPosition = largeNumber
   
   hyphenPosition = STRPOS(RunNumberString, '-')
