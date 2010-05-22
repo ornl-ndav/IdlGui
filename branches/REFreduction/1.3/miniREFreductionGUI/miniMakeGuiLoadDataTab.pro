@@ -288,20 +288,35 @@ PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
     space = widget_label(info_base,$
       value = ' ')
       
-    ;dangle0
+    ;dangle
     row = widget_base(info_base,$
       /row)
     label = widget_label(row,$
       /align_right,$
       scr_xsize = 100,$
       value = 'Dangle:')
-    value = widget_label(row,$
-      /align_left,$
+    value = widget_text(row,$
+      /editable,$
+      /all_events,$
       value = 'N/A',$
-      uname = 'info_dangle',$
-      scr_xsize = 250,$
+      uname = 'info_dangle_deg',$
+      xsize = 15,$
       frame = 0)
+    unit = widget_label(row,$
+      /align_left,$
+      value = 'deg      or   ')
+    value = widget_text(row,$
+      /editable,$
+      /all_events,$
+      value = 'N/A',$
+      uname = 'info_dangle_rad',$
+      xsize = 15,$
+      frame = 0)
+    unit = widget_label(row,$
+      /align_left,$
+      value = 'rad')
       
+    ;dangle0
     row = widget_base(info_base,$
       /row)
     label = widget_label(row,$

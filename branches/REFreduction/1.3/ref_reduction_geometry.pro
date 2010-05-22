@@ -35,7 +35,7 @@
 PRO populate_data_geometry_info, Event, nexus_file_name
 
   if (nexus_file_name eq '') then return
-
+  
   WIDGET_CONTROL,Event.top,get_uvalue=global
   
   iNexus = obj_new('NeXusMetadata', nexus_file_name)
@@ -78,9 +78,10 @@ PRO populate_data_geometry_info, Event, nexus_file_name
   
   ;Dangle
   dangle_value = iNexus->getDangle()
-  dangle = dangle_value[0] + ' degrees (' + dangle_value[1] + ' rad)'
-  
-  putTextFieldValue, event, 'info_dangle', dangle
+  dangle_deg = dangle_value[0]
+  putTextFieldValue, event, 'info_dangle_deg', dangle_deg
+  dangle_rad = dangle_value[1]
+  putTextFieldValue, event, 'info_dangle_rad', dangle_rad
   
   ;Dangle0
   dangle0_value = iNexus->getDangle0()
@@ -96,11 +97,11 @@ PRO populate_data_geometry_info, Event, nexus_file_name
   dist = dist_units[0] + ' ' + dist_units[1]
   putTextFieldValue, event, 'info_detector_sample_distance', dist
   
-;  ;detector position
-;  detPosition_units = iNexus->getDetPosition()
-;  detPosition_m = convert_to_m(strcompress(detPosition_units[0],/remove_all), $
-;    strcompress(detPosition_units[1],/remove_all))
-;  (*global).detector_position_m = float(detPosition_m)
+  ;  ;detector position
+  ;  detPosition_units = iNexus->getDetPosition()
+  ;  detPosition_m = convert_to_m(strcompress(detPosition_units[0],/remove_all), $
+  ;    strcompress(detPosition_units[1],/remove_all))
+  ;  (*global).detector_position_m = float(detPosition_m)
   
   obj_destroy, iNexus
   
@@ -191,9 +192,9 @@ pro calculate_sangle, event
   ;print, 'f_det_sample_distance: ' , f_det_sample_distance
   
   ;get dangle and dangle0 in radians
-  dangle = getTextFieldValue(event,'info_dangle')
-  dangle_rad = get_value_between_arg1_arg2(dangle[0], '\(', 'rad)')
-  f_dangle_rad = float(dangle_rad)
+  dangle_rad = FLOAT(getTextFieldValue(event,'info_dangle_rad'))
+  ;  dangle_rad = get_value_between_arg1_arg2(dangle[0], '\(', 'rad)')
+  ;  f_dangle_rad = float(dangle_rad)
   ;print, 'f_dangle_rad: ' , f_dangle_rad
   
   dangle0 = getTextFieldValue(event,'info_dangle0')
@@ -209,18 +210,44 @@ pro calculate_sangle, event
   part1 = (f_dangle_rad - f_dangle0_rad)/2.
   part2 = (f_dirpix - f_refpix) * det_size_m
   part3 = 2. * f_det_sample_distance
-
+  
   rad_sangle = part1 + (part2/part3)
   (*global).rad_sangle = rad_sangle
   deg_sangle = convert_rad_to_deg(rad_sangle)
   
   sangle = strcompress(deg_sangle,/remove_all) + ' degrees (' + $
-  strcompress(rad_sangle,/remove_all) + ' rad)' 
+    strcompress(rad_sangle,/remove_all) + ' rad)'
   putTextFieldValue, event, 'info_sangle', sangle
   return
   
   error:
   sangle = 'N/A'
   putTextFieldValue, event, 'info_sangle', sangle
+  
+end
+
+
+;+
+; :Description:
+;    This convert the deg/rad dangle into the opposite units and display
+;    its value in the corresponding dangle text field
+;
+; :Params:
+;    event
+;;
+; :Author: j35
+;-
+pro convert_dangle_units, event, from=from, to=to
+  compile_opt idl2
+  
+  if (from eq 'deg') then begin
+    dangle_deg = float(getTextFieldValue(event,'info_dangle_deg'))
+    dangle_rad = convert_deg_to_rad(dangle_deg)
+    putTextFieldValue, event, 'info_dangle_rad', strcompress(dangle_rad,/remove_all)
+  endif else begin
+    dangle_rad = float(getTextFieldValue(event,'info_dangle_rad'))
+    dangle_deg = convert_rad_to_deg(dangle_rad)
+    putTextFieldValue, event, 'info_dangle_deg', strcompress(dangle_deg,/remove_all)
+  endelse
   
 end

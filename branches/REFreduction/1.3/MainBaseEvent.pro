@@ -292,6 +292,14 @@ PRO MAIN_BASE_event, Event
     widget_info(wWidget, find_by_uname='info_dirpix'): begin
       calculate_sangle, event
     end
+    widget_info(wWidget, find_by_uname='info_dangle_deg'): begin
+      convert_dangle_units, event, from='deg', to='rad'
+      calculate_sangle, event
+    end
+    widget_info(wWidget, find_by_uname='info_dangle_rad'): begin
+      convert_dangle_units, event, from='rad', to='deg'
+      calculate_sangle, event
+    end
     
     ;ROI Ymin and Ymax --------------------------------------------------------
     WIDGET_INFO(wWidget, $

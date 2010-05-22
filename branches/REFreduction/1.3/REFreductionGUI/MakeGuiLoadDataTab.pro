@@ -282,7 +282,7 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
       value='N/A',$
       scr_xsize= 100,$
       /align_left,$
-      uname = 'info_bin_type')      
+      uname = 'info_bin_type')
       
     space = widget_label(info_base,$
       value = ' ')
@@ -294,12 +294,24 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
       /align_right,$
       scr_xsize = 100,$
       value = 'Dangle:')
-    value = widget_label(row,$
-      /align_left,$
+    value = widget_text(row,$
+      /editable,$
+      /all_events,$
       value = 'N/A',$
-      uname = 'info_dangle',$
-      scr_xsize = 250,$
-      frame = 0)
+      uname = 'info_dangle_deg',$
+      xsize = 15)
+      unit = widget_label(row,$
+      /align_left,$
+      value = 'deg      or   ')
+    value = widget_text(row,$
+      /editable,$
+      value = 'N/A',$
+      /all_events,$
+      uname = 'info_dangle_rad',$
+      xsize = 15)
+      unit = widget_label(row,$
+      /align_left,$
+      value = 'rad')
       
     row = widget_base(info_base,$
       /row)
