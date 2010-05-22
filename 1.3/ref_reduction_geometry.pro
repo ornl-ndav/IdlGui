@@ -192,7 +192,8 @@ pro calculate_sangle, event
   ;print, 'f_det_sample_distance: ' , f_det_sample_distance
   
   ;get dangle and dangle0 in radians
-  dangle_rad = FLOAT(getTextFieldValue(event,'info_dangle_rad'))
+  dangle_rad = getTextFieldValue(event,'info_dangle_rad')
+  f_dangle_rad = FLOAT(dangle_rad[0])
   ;  dangle_rad = get_value_between_arg1_arg2(dangle[0], '\(', 'rad)')
   ;  f_dangle_rad = float(dangle_rad)
   ;print, 'f_dangle_rad: ' , f_dangle_rad
