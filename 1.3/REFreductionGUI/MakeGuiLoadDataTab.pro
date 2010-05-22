@@ -370,11 +370,22 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
       /align_right,$
       scr_xsize = 100,$
       value = 'Sangle:')
-    value = widget_label(row,$
-      /align_left,$
+    value = widget_text(row,$
+    /editable,$
       value = 'N/A',$
-      uname = 'info_sangle',$
-      scr_xsize = 250)
+      /all_events,$
+      uname = 'info_sangle_deg',$
+      xsize = 15)
+      units = widget_label(row,$
+      value = 'deg   or  ')
+    value = widget_text(row,$
+    /editable,$
+      value = 'N/A',$
+      /all_events,$
+      uname = 'info_sangle_rad',$
+      xsize = 15)
+      units = widget_label(row,$
+      value = 'rad')
       
   endif
   

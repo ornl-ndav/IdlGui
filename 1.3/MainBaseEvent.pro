@@ -300,7 +300,13 @@ PRO MAIN_BASE_event, Event
       convert_dangle_units, event, from='rad', to='deg'
       calculate_sangle, event
     end
-    
+    widget_info(wWidget, find_by_uname='info_sangle_rad'): begin
+    convert_sangle_units, event, from= 'rad'
+    end
+    widget_info(wWidget, find_by_uname='info_sangle_deg'): begin
+    convert_sangle_units, event, from= 'deg'
+    end
+        
     ;ROI Ymin and Ymax --------------------------------------------------------
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME= $
