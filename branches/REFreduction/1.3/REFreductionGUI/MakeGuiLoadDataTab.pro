@@ -374,7 +374,7 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
       /align_left,$
       value = 'N/A',$
       uname = 'info_sangle',$
-      scr_xsize = 200)
+      scr_xsize = 250)
       
   endif
   
