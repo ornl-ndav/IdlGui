@@ -367,19 +367,29 @@ PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
       uname = 'info_detector_sample_distance',$
       scr_xsize = 200)
       
-    ;sangle
+          ;sangle
     row = widget_base(info_base,$
       /row)
     label = widget_label(row,$
       /align_right,$
       scr_xsize = 100,$
       value = 'Sangle:')
-    value = widget_label(row,$
-      /align_left,$
+    value = widget_text(row,$
+    /editable,$
       value = 'N/A',$
-      uname = 'info_sangle',$
-      scr_xsize = 200)
-      
+      /all_events,$
+      uname = 'info_sangle_deg',$
+      xsize = 15)
+      units = widget_label(row,$
+      value = 'deg   or  ')
+    value = widget_text(row,$
+    /editable,$
+      value = 'N/A',$
+      /all_events,$
+      uname = 'info_sangle_rad',$
+      xsize = 15)
+      units = widget_label(row,$
+      value = 'rad')
       
   endif
   

@@ -216,14 +216,17 @@ pro calculate_sangle, event
   (*global).rad_sangle = rad_sangle
   deg_sangle = convert_rad_to_deg(rad_sangle)
   
-  sangle = strcompress(deg_sangle,/remove_all) + ' degrees (' + $
-    strcompress(rad_sangle,/remove_all) + ' rad)'
-  putTextFieldValue, event, 'info_sangle', sangle
+;  sangle = strcompress(deg_sangle,/remove_all) + ' degrees (' + $
+;    strcompress(rad_sangle,/remove_all) + ' rad)'
+  putTextFieldValue, event, 'info_sangle_deg', strcompress(deg_sangle,/remove_all)
+  putTextfieldValue, event, 'info_sangle_rad', strcompress(rad_sangle,/remove_all)
+  
   return
   
   error:
   sangle = 'N/A'
-  putTextFieldValue, event, 'info_sangle', sangle
+  putTextFieldValue, event, 'info_sangle_deg', sangle
+  putTextFieldValue, event, 'info_sangle_rad', sangle
   
 end
 
@@ -252,3 +255,38 @@ pro convert_dangle_units, event, from=from, to=to
   endelse
   
 end
+
+
+;+
+; :Description:
+;    This convert the deg/rad sangle into the opposite units and display
+;    its value in the corresponding sangle text field
+;
+; :Params:
+;    event
+;
+; :Keywords:
+;    from
+;
+; :Author: j35
+;-
+pro convert_sangle_units, event, from=from
+  compile_opt idl2
+  
+    widget_control, event.top, get_uvalue=global
+  
+  if (from eq 'deg') then begin
+    sangle_deg = float(getTextFieldValue(event,'info_sangle_deg'))
+    sangle_rad = convert_deg_to_rad(sangle_deg)
+    putTextFieldValue, event, 'info_sangle_rad', $
+    strcompress(sangle_rad,/remove_all)
+  endif else begin
+    sangle_rad = float(getTextFieldValue(event,'info_sangle_rad'))
+    sangle_deg = convert_rad_to_deg(sangle_rad)
+    putTextFieldValue, event, 'info_sangle_deg', $
+     strcompress(sangle_deg,/remove_all)
+  endelse
+
+    (*global).rad_sangle = sangle_rad
+
+  end
