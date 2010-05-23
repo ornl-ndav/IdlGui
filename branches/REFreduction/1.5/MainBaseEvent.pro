@@ -1628,6 +1628,7 @@ PRO MAIN_BASE_event, Event
     ;sort rows
     widget_info(wWidget, find_by_uname='batch_sort_rows'): begin
       sort_batch_rows, event
+      GenerateBatchFileName, Event
     end
     
     ;Run Active live
