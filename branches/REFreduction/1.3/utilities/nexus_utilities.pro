@@ -152,9 +152,13 @@ FUNCTION find_full_nexus_name, Event,$
   
   cmd += " " + STRCOMPRESS(run_number,/remove_all)
   SPAWN, cmd, full_nexus_name, err_listening
-  if (err_listening[0] ne '') then begin
-    cmd += " --nows"
-    SPAWN, cmd, full_nexus_name, err_listening
+  
+  if (full_nexus_name[0] ne '') then begin ;make sure it's really a nexus file
+    result = strmatch(strlowcase(full_nexus_name[0]), 'failed to fill in *')
+    if (result ge 1) then begin
+      isNexusExist = 0
+      return, ''
+    endif
   endif
   
   ;check if nexus exists
@@ -184,14 +188,15 @@ FUNCTION find_list_nexus_name, Event, run_number, instrument, isNexusExist
   cmd += " " + STRCOMPRESS(run_number,/remove_all)
   cmd += " --listall"
   SPAWN, cmd, full_nexus_name, err_listening
-  
-  if (err_listening[0] ne '') then begin
-    cmd = "findnexus -i" + instrument
-    cmd += " " + STRCOMPRESS(run_number,/remove_all)
-    cmd += " --listall --nows"
-    SPAWN, cmd, full_nexus_name, err_listening
+
+  if (full_nexus_name[0] ne '') then begin ;make sure it's really a nexus file
+    result = strmatch(strlowcase(full_nexus_name[0]), 'failed to fill in *')
+    if (result ge 1) then begin
+      isNexusExist = 0
+      return, ''
+    endif
   endif
-  
+
   ;get size of result
   sz = (SIZE(full_nexus_name))(1)
   
