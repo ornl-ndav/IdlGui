@@ -60,14 +60,14 @@ PRO PlotLoadedFiles, Event
   Qmax_array = (*(*global).Qmax_array)
   
   size = getSizeOfArray(ListLongFileName)
-
+  
   draw_id = WIDGET_INFO(Event.top, find_by_uname='plot_window')
   WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
   WSET,view_plot_id
   
   ;get scale
   IsYlin = getScale(Event,'Y')
-
+  
   ;check if plot will be with error bars or not
   ErrorBarStatus = (*global).settings_show_error_bar_flag
   
@@ -122,55 +122,31 @@ PRO PlotLoadedFiles, Event
         
         CASE (IsYlin) OF
           0: BEGIN
-;            IF (firstTimePlotting) THEN BEGIN
-;              PLOT, $
-;                flt0, $
-;                flt1, $
-;                XSTYLE = 1,$
-;                color=MainPlotColor
-;            ENDIF ELSE BEGIN
-              PLOT, $
-                flt0, $
-                flt1, $
-                xrange = [xmin,xmax],$
-                yrange = [ymin,ymax],$
-                /nodata,$
-                XSTYLE = 1
-                ;                YSTYLE = 1,$
-                ;color=MainPlotColor
-              oPLOT, $
-                flt0, $
-                flt1, $
-;                xrange = [xmin,xmax],$
-;                yrange = [ymin,ymax],$
-;                XSTYLE = 1,$
-                ;                YSTYLE = 1,$
-                color=MainPlotColor
-;            ENDELSE
+            PLOT, $
+              flt0, $
+              flt1, $
+              xrange = [xmin,xmax],$
+              yrange = [ymin,ymax],$
+              /nodata,$
+              color = 0,$
+              XSTYLE = 1
+            oPLOT, $
+              flt0, $
+              flt1, $
+              color=MainPlotColor
           END
           1: BEGIN
- ;           IF (firstTimePlotting) THEN BEGIN
- ;             PLOT, $
- ;               flt0, $
- ;               flt1, $
- ;               /ylog, $
- ;               color=MainPlotColor
- ;           ENDIF ELSE BEGIN
-              PLOT, $
-                flt0, $
-                flt1, $
-                XSTYLE = 1,$
-                /nodata,$
-                xrange = [xmin,xmax]
-;                /ylog
-                oplot, $
-                flt0, $
-                flt1, $
-;                XSTYLE = 1,$
-;                xrange = [xmin,xmax],$
-                /ylog, $
-                color=MainPlotColor
-  ;          ENDELSE
+            PLOT, $
+              flt0, $
+              flt1, $
+              XSTYLE = 1,$
+              /nodata,$
+              xrange = [xmin,xmax]
+            oplot, $
+              flt0, $
+              flt1, $
+              /ylog, $
+              color=MainPlotColor
           END
         ENDCASE
         
@@ -186,31 +162,15 @@ PRO PlotLoadedFiles, Event
       
         CASE (IsYlin) OF
           0: BEGIN
-;            PLOT, $
-;              flt0, $
-;              flt1, $
-;              xrange = [xmin,xmax],$
-;              yrange = [ymin,ymax],$
-;              XSTYLE = 1,$
-;              /NOERASE,$
-;              color=MainPlotColor
             oPLOT, $
               flt0, $
               flt1, $
-  ;            xrange = [xmin,xmax],$
-  ;            yrange = [ymin,ymax],$
-  ;            XSTYLE = 1,$
-              ;/NOERASE,$
               color=MainPlotColor
           END
           1: BEGIN
             oPLOT, $
               flt0, $
               flt1, $
-;              /ylog, $
-   ;           xrange = [xmin,xmax],$
-   ;           yrange = [ymin,ymax],$
-   ;           XSTYLE = 1,$
               color=MainPlotColor
           END
         ENDCASE
@@ -224,14 +184,7 @@ PRO PlotLoadedFiles, Event
         
       ENDELSE
       
-      ;        XYMinMax = retrieveXYMinMax(Event) ;_get
-      ;        xmin = FLOAT(XYMinMax[0])
-      ;        xmax = FLOAT(XYMinMax[1])
-      ;        ymin = FLOAT(XYMinMax[2])
-      ;        ymax = FLOAT(XYMinMax[3])
-      
       ;determine Qmin and Qmax
-      
       QminQmax = getQminQmaxValue(flt0, flt1) ;_get
       Qmin = QminQmax[0]
       Qmax = QminQmax[1]
@@ -245,8 +198,5 @@ PRO PlotLoadedFiles, Event
   ;store back the array of all the Qmin of the functions loaded
   (*(*global).Qmin_array) = Qmin_array
   (*(*global).Qmax_array) = Qmax_array
-  
-;PRINT, 'Leaving PlotLoadedFiles'
-;PRINT
   
 END

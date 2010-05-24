@@ -119,7 +119,7 @@ PRO plot_loaded_file, Event, index
     
       ;color index of main plot
       IF (i EQ 0) THEN BEGIN
-        MainPlotColor = 100
+        MainPlotColor = 0
       ENDIF ELSE BEGIN
         MainPlotColor = 255
       ENDELSE
@@ -158,180 +158,144 @@ PRO plot_loaded_file, Event, index
       
         CASE (IsXlin) OF
         
+          0: BEGIN
+          
+            CASE (IsYlin) OF
+            
+              0: BEGIN
+                PLOT, $
+                  flt0, $
+                  flt1, $
+                  /nodata,$
+                  xrange=[xmin,xmax], $
+                  XSTYLE = 1,$
+                  color = 0,$
+                  yrange=[ymin,ymax]
+                oPLOT, $
+                  flt0, $
+                  flt1, $
+                  color=MainPlotColor
+              END
+              
+              1: BEGIN
+                PLOT, $
+                  flt0, $
+                  flt1, $
+                  /ylog, $
+                  XSTYLE = 1,$
+                  /nodata,$
+                  color = 0,$
+                  xrange=[xmin,xmax], $
+                  yrange=[ymin,ymax]
+                oPLOT, $
+                  flt0, $
+                  flt1, $
+                  color=MainPlotColor
+              END
+            ENDCASE
+            
+          END
+          
+          1: BEGIN
+          
+            CASE (IsYlin) OF
+            
+              0: BEGIN
+                PLOT, $
+                  flt0, $
+                  flt1, $
+                  /xlog, $
+                  XSTYLE = 1,$
+                  /nodata,$
+                  xrange=[xmin,xmax], $
+                  yrange=[ymin,ymax]
+                oPLOT, $
+                  flt0, $
+                  flt1, $
+                  color=MainPlotColor
+              END
+              
+              1: BEGIN
+                PLOT, $
+                  flt0, $
+                  flt1, $
+                  /xlog, $
+                  /ylog, $
+                  /nodata,$
+                  XSTYLE = 1,$
+                  xrange=[xmin,xmax], $
+                  yrange=[ymin,ymax]
+                oPLOT, $
+                  flt0, $
+                  flt1, $
+                  color=MainPlotColor
+              END
+            ENDCASE
+          END
+        ENDCASE
+        
+        IF (ErrorBarStatus EQ 1) THEN BEGIN
+          errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
+        ENDIF
+        
+      ENDIF ELSE BEGIN
+      
+        XYMinMax = retrieveXYMinMax(Event) ;_get
+        xmin = FLOAT(XYMinMax[0])
+        xmax = FLOAT(XYMinMax[1])
+        ymin = FLOAT(XYMinMax[2])
+        ymax = FLOAT(XYMinMax[3])
+        
+        CASE (IsXlin) OF
+        
           0:BEGIN
           
           CASE (IsYlin) OF
           
             0: BEGIN
-              PLOT, $
-                flt0, $
-                flt1, $
-                /nodata,$
-                xrange=[xmin,xmax], $
-                XSTYLE = 1,$
-                yrange=[ymin,ymax]
               oPLOT, $
                 flt0, $
                 flt1, $
-                ;                xrange=[xmin,xmax], $
-                ;                XSTYLE = 1,$
-                ;                yrange=[ymin,ymax], $
                 color=MainPlotColor
             END
             
             1: BEGIN
-              PLOT, $
-                flt0, $
-                flt1, $
-                /ylog, $
-                XSTYLE = 1,$
-                /nodata,$
-                xrange=[xmin,xmax], $
-                yrange=[ymin,ymax]
               oPLOT, $
                 flt0, $
                 flt1, $
-                ;                /ylog, $
-                ;                XSTYLE = 1,$
-                ;               xrange=[xmin,xmax], $
-                ;               yrange=[ymin,ymax], $
                 color=MainPlotColor
             END
           ENDCASE
-          
         END
         
         1: BEGIN
-        
           CASE (IsYlin) OF
           
             0: BEGIN
-              PLOT, $
-                flt0, $
-                flt1, $
-                /xlog, $
-                XSTYLE = 1,$
-                /nodata,$
-                xrange=[xmin,xmax], $
-                yrange=[ymin,ymax]
               oPLOT, $
                 flt0, $
                 flt1, $
-                ;               /xlog, $
-                ;               XSTYLE = 1,$
-                ;                xrange=[xmin,xmax], $
-                ;                yrange=[ymin,ymax], $
                 color=MainPlotColor
             END
-            
             1: BEGIN
-              PLOT, $
-                flt0, $
-                flt1, $
-                /xlog, $
-                /ylog, $
-                /nodata,$
-                XSTYLE = 1,$
-                xrange=[xmin,xmax], $
-                yrange=[ymin,ymax]
               oPLOT, $
                 flt0, $
                 flt1, $
-                ;              /xlog, $
-                ;              /ylog, $
-                ;              XSTYLE = 1,$
-                ;               xrange=[xmin,xmax], $
-                ;               yrange=[ymin,ymax], $
                 color=MainPlotColor
             END
           ENDCASE
         END
       ENDCASE
       
-      IF (ErrorBarStatus EQ 1) THEN BEGIN
-        errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
-      ENDIF
-      
-    ENDIF ELSE BEGIN
+    ENDELSE
     
-      XYMinMax = retrieveXYMinMax(Event) ;_get
-      xmin = FLOAT(XYMinMax[0])
-      xmax = FLOAT(XYMinMax[1])
-      ymin = FLOAT(XYMinMax[2])
-      ymax = FLOAT(XYMinMax[3])
-      
-      CASE (IsXlin) OF
-      
-        0:BEGIN
-        
-        CASE (IsYlin) OF
-        
-          0: BEGIN
-            oPLOT, $
-              flt0, $
-              flt1, $
-              ;          XSTYLE = 1,$
-              ;           xrange=[xmin,xmax], $
-              ;           yrange=[ymin,ymax], $
-              color=MainPlotColor
-          END
-          
-          1: BEGIN
-            oPLOT, $
-              flt0, $
-              flt1, $
-              ;             /ylog, $
-              ;             XSTYLE = 1,$
-              ;            xrange=[xmin,xmax], $
-              ;            yrange=[ymin,ymax], $
-              ;              /noerase, $
-              color=MainPlotColor
-          END
-        ENDCASE
-      END
-      
-      1: BEGIN
-        CASE (IsYlin) OF
-        
-          0: BEGIN
-            oPLOT, $
-              flt0, $
-              flt1, $
-              ;           /xlog, $
-              ;           XSTYLE = 1,$
-              ;            xrange=[xmin,xmax], $
-              ;            yrange=[ymin,ymax], $
-              ;             /noerase, $
-              color=MainPlotColor
-          END
-          1: BEGIN
-            oPLOT, $
-              flt0, $
-              flt1, $
-              ;            /xlog, $
-              ;            XSTYLE = 1,$
-              ;            /ylog, $
-              ;             xrange=[xmin,xmax], $
-              ;             yrange=[ymin,ymax], $
-              ;             /noerase, $
-              color=MainPlotColor
-          END
-        ENDCASE
-      END
-    ENDCASE
+    IF (ErrorBarStatus EQ 1) THEN BEGIN
+      errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
+    ENDIF
     
-  ENDELSE
+  ENDFOR
   
-  IF (ErrorBarStatus EQ 1) THEN BEGIN
-    errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
-  ENDIF
-  
-ENDFOR
-
 ENDELSE
-
-;PRINT, 'leaving plot_loaded_file'
-;PRINT
 
 END
 
