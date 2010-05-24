@@ -82,6 +82,7 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     settings_show_error_bar_flag: 1b,$
     settings_number_of_data_to_display: 100L,$
     settings_auto_cleaning_flag: auto_cleaning,$
+    settings_white_background_color: 0b,$
     percentage_of_q_to_remove_value: 10,$ ;percentage of data to remove when
     ;using auto cleanup
     

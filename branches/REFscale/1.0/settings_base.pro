@@ -52,6 +52,16 @@ pro settings_base_event, Event
       configure_auto_cleanup, Event=main_event, global=global
     end
     
+    ;color of background
+    widget_info(event.top, $
+      find_by_uname='background_color_uname'): begin
+      
+      ;works to do herererererer
+  
+      
+      
+    end
+    
     widget_info(event.top, $
       find_by_uname='settings_base_close_button'): begin
       
@@ -96,15 +106,23 @@ pro save_status_of_settings_button, event
   
   ;show error bars
   if (getButtonValidated(event,'show_error_bar_group') eq 1) then begin
-  status = 0b
+    status = 0b
   endif else begin
-  status = 1b
+    status = 1b
   endelse
   (*global).settings_show_error_bar_flag = status
   
   ;number of data to display
   value = getTextFieldValue(event,'nbrDataTextField')
   (*global).settings_number_of_data_to_display = value
+  
+  ;color of background
+  if (getButtonValidated(event,'background_color_uname') eq 0) then begin
+    status = 0b
+  endif else begin
+    status = 1b
+  endelse
+  (*global).settings_white_background_color = status
   
 end
 
@@ -141,7 +159,7 @@ PRO settings_base_gui, wBase, main_base_geometry, global
   main_base_ysize = main_base_geometry.ysize
   
   xsize = 350
-  ysize = 155
+  ysize = 195
   
   xoffset = (main_base_xsize - xsize) / 2
   xoffset += main_base_xoffset
@@ -218,6 +236,16 @@ PRO settings_base_gui, wBase, main_base_geometry, global
     VALUE     = strcompress(number_of_data_to_display,/remove_all),$
     /EDITABLE,$
     /ALIGN_LEFT)
+    
+  ;color of background
+  background_color = (*global).settings_white_background_color
+  color = cw_bgroup(wBase,$
+    ['White','Black'],$
+    /row,$
+    /exclusive,$
+    label_left = 'Color of background:',$
+    set_value = background_color,$
+    uname = 'background_color_uname')
     
   close = widget_button(wBase,$
     value = 'SAVE and CLOSE',$
