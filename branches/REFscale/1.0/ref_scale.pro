@@ -330,6 +330,8 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;=============================================================================
   ;send message to log current run of application
   logger, APPLICATION=application, VERSION=version, UCAMS=ucams
+
+  !P.BACKGROUND = 255
   
 END
 
