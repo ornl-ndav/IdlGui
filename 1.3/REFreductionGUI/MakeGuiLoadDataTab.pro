@@ -300,7 +300,7 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
       value = 'N/A',$
       uname = 'info_dangle_deg',$
       xsize = 15)
-      unit = widget_label(row,$
+    unit = widget_label(row,$
       /align_left,$
       value = 'deg      or   ')
     value = widget_text(row,$
@@ -309,7 +309,7 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
       /all_events,$
       uname = 'info_dangle_rad',$
       xsize = 15)
-      unit = widget_label(row,$
+    unit = widget_label(row,$
       /align_left,$
       value = 'rad')
       
@@ -371,20 +371,20 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
       scr_xsize = 100,$
       value = 'Sangle:')
     value = widget_text(row,$
-    /editable,$
+      /editable,$
       value = 'N/A',$
       /all_events,$
       uname = 'info_sangle_deg',$
       xsize = 15)
-      units = widget_label(row,$
+    units = widget_label(row,$
       value = 'deg   or  ')
     value = widget_text(row,$
-    /editable,$
+      /editable,$
       value = 'N/A',$
       /all_events,$
       uname = 'info_sangle_rad',$
       xsize = 15)
-      units = widget_label(row,$
+    units = widget_label(row,$
       value = 'rad')
       
   endif
@@ -427,14 +427,10 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
   LeftInteractionHelpMessageBase = WIDGET_BASE(LOAD_DATA_BASE,$
     uname='left_interaction_' + $
     'help_message_base',$
-    xoffset= 850,$
-    ;LeftInteractionHelpsize[0],$
-    yoffset= $
-    LeftInteractionHelpsize[1],$
-    scr_xsize= 325,$
-    ;LeftInteractionHelpsize[2],$
-    scr_ysize= $
-    LeftInteractionHelpsize[3],$
+    xoffset= LeftInteractionHelpsize[0],$
+    yoffset= LeftInteractionHelpsize[1]+20,$
+    scr_xsize= LeftInteractionHelpsize[2],$
+    scr_ysize= LeftInteractionHelpsize[3]-25,$
     frame=1)
     
   LeftInteractionHelpMessageLabel = WIDGET_LABEL($
@@ -445,7 +441,7 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
     xoffset= $
     LeftInteractionHelpSize[4],$
     yoffset= $
-    LeftInteractionHelpSize[5],$
+    LeftInteractionHelpSize[5]+0,$
     scr_xsize= $
     LeftInteractionHelpSize[8],$
     value= $
@@ -453,11 +449,10 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
     
   LeftInteractionHelpTextField = WIDGET_TEXT(LeftInteractionHelpMessageBase,$
     xoffset=LeftInteractionHelpSize[6],$
-    yoffset=LeftInteractionHelpSize[7],$
-    scr_xsize= 315,$
-    ;                                           LeftInteractionHelpSize[8],$
+    yoffset=LeftInteractionHelpSize[7]+5,$
+    scr_xsize= LeftInteractionHelpSize[8],$
     scr_ysize= $
-    LeftInteractionHelpSize[9],$
+    LeftInteractionHelpSize[9]-28,$
     uname= $
     'DATA_left_interaction_help_text',$
     /wrap,$
