@@ -47,6 +47,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   DEBUGGING = file->getValue(tag=['configuration','debugging'])
   TESTING = file->getValue(tag=['configuration','testing'])
   CHECKING_PACKAGES = file->getValue(tag=['configuration','checking_packages'])
+  with_batch = file->getValue(tag=['configuration','with_batch'])
   
   ;******************************************************************************
   ;******************************************************************************
@@ -82,6 +83,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;define global variables
   global = PTR_NEW ({ $
     PrevReduceTabSelect: 0,$
+     
+    with_batch: with_batch, $ ;'yes' or 'no'
     
     path: '~/results/',$
     old_input_text: PTR_NEW(0L),$

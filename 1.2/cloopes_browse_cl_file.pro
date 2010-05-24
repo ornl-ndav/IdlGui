@@ -91,7 +91,7 @@ function cleanup_cl, cdl, arg=arg
   if (nbr eq 1) then cdl_local = cdl_array[0]
   if (nbr gt 1) then cdl_local = cdl_array[0] + cdl_array[1]
   if (nbr eq -1) then cld_local = cdl
-
+  
   return, cdl_local
 end
 
@@ -107,8 +107,14 @@ PRO displayCLfile, Event, file_name
   CLOSE,1
   
   cdl = file_array[0]
-  command_line = cleanup_cl(cdl, arg=' --batch')
   
+  widget_control, event.top, get_uvalue=global
+  if ((*global).with_batch eq 'yes') then begin
+    command_line = cdl
+  endif else begin
+    command_line = cleanup_cl(cdl, arg=' --batch')
+  endelse
+   
   putValue, Event, 'preview_cl_file_text_field', command_line
 END
 
