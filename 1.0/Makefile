@@ -10,10 +10,10 @@ install:
 	cp ref_scale.sav /SNS/software/idltools/sav/
 	cp REFscale /SNS/software/idltools/
 
-backup: 
-	cp ref_scale.sav /SNS/software/idltools/sav_backup/
-	cp REFscale_backup /SNS/software/idltools/
-	cp .REFscale.cfg /SNS/software/idltools/sav_backup/
+beta:
+	cp .REFscale.cfg /SNS/software/idltools/beta/sav/
+	cp ref_scale.sav /SNS/software/idltools/beta/sav/
+	cp REFscale_beta /SNS/software/idltools/beta/
 	
 dev:
 	cp .REFscale.cfg /SNS/software/idltools/dev/sav/
