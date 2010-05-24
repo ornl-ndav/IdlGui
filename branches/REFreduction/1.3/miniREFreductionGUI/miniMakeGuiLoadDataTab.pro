@@ -442,9 +442,9 @@ PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
   LeftInteractionHelpMessageBase = $
     WIDGET_BASE(LOAD_DATA_BASE,$
     UNAME     = 'left_interaction_help_message_base',$
-    XOFFSET   = 580,$
+    XOFFSET   = LeftInteractionHelpSize[0],$
     YOFFSET   = LeftInteractionHelpsize[1],$
-    SCR_XSIZE = 308,$
+    SCR_XSIZE = LeftInteractionHelpSize[2],$
     SCR_YSIZE = LeftInteractionHelpsize[3],$
     FRAME     = 1)
     
@@ -458,9 +458,9 @@ PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
     
   LeftInteractionHelpTextField = $
     WIDGET_TEXT(LeftInteractionHelpMessageBase,$
-    XOFFSET   = 2,$
+    XOFFSET   = LeftInteractionHelpSize[6],$
     YOFFSET   = LeftInteractionHelpSize[7],$
-    SCR_XSIZE = 300,$
+    SCR_XSIZE = LeftInteractionHelpSize[8],$
     SCR_YSIZE = LeftInteractionHelpSize[9],$
     UNAME     = 'DATA_left_interaction_help_text',$
     /WRAP,$
