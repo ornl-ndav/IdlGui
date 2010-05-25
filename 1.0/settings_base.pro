@@ -55,16 +55,13 @@ pro settings_base_event, Event
     ;color of background
     widget_info(event.top, $
       find_by_uname='background_color_uname'): begin
-      
-      ;works to do herererererer
-  
-      
-      
+      save_status_of_settings_button, event
+      steps_tab, main_event, 1
     end
     
     widget_info(event.top, $
       find_by_uname='settings_base_close_button'): begin
-      
+
       ;this will allow the settings tab to come back in the same state
       save_status_of_settings_button, event
       
