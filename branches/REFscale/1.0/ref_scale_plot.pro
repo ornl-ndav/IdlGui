@@ -42,6 +42,15 @@ PRO plot_loaded_file, Event, index
   id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
   WIDGET_CONTROL,id,get_uvalue=global
   
+  settings_white_background_color = (*global).settings_white_background_color
+  if (settings_white_background_color eq 0) then begin
+    !P.BACKGROUND = 255
+    axis_color = 0
+  endif else begin
+    !P.BACKGROUND = 0
+    axis_color = 255
+  endelse
+  
   ;0 means that the fitting plot won't be seen
   ;1 means that the fitting plot will be seen
   show_error_plot=0
@@ -169,7 +178,7 @@ PRO plot_loaded_file, Event, index
                   /nodata,$
                   xrange=[xmin,xmax], $
                   XSTYLE = 1,$
-                  color = 0,$
+                  color = axis_color,$
                   yrange=[ymin,ymax]
                 oPLOT, $
                   flt0, $
@@ -184,7 +193,7 @@ PRO plot_loaded_file, Event, index
                   /ylog, $
                   XSTYLE = 1,$
                   /nodata,$
-                  color = 0,$
+                  color = axis_color,$
                   xrange=[xmin,xmax], $
                   yrange=[ymin,ymax]
                 oPLOT, $
@@ -207,6 +216,7 @@ PRO plot_loaded_file, Event, index
                   /xlog, $
                   XSTYLE = 1,$
                   /nodata,$
+                  color = axis_color,$
                   xrange=[xmin,xmax], $
                   yrange=[ymin,ymax]
                 oPLOT, $
@@ -222,6 +232,7 @@ PRO plot_loaded_file, Event, index
                   /xlog, $
                   /ylog, $
                   /nodata,$
+                  color = axis_color,$
                   XSTYLE = 1,$
                   xrange=[xmin,xmax], $
                   yrange=[ymin,ymax]
