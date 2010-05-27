@@ -541,7 +541,7 @@ PRO Step3RescaleFile, Event, delta_SF
     new_flt1 = apply_sf(flt1[*], SF)
     new_flt2 = apply_sf(flt2[*], SF)
     
-    flt1_recsale_ptr[index] = ptr_new(0L)
+    flt1_rescale_ptr[index] = ptr_new(0L)
     *flt1_rescale_ptr[index] = new_flt1
     flt2_rescale_ptr[index] = ptr_new(0L)
     *flt2_rescale_ptr[index] = new_flt2
