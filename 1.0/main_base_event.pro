@@ -269,6 +269,7 @@ PRO MAIN_BASE_ref_scale_event, Event
     ;Event triggered by <Automatic Fitting/Rescaling of CE>
     WIDGET_INFO(wWidget, FIND_BY_UNAME='step2_button'): BEGIN
       run_full_step2, Event ;_Step2
+      replot_main_plot, Event ;_Plot
     END
     
     ;Event triggered by <Manual Scaling of CE>
