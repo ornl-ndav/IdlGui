@@ -39,6 +39,15 @@ PRO PlotLoadedFiles, Event
   ;retrieve global structure
   WIDGET_CONTROL, Event.top, get_uvalue=global
   
+    settings_white_background_color = (*global).settings_white_background_color
+  if (settings_white_background_color eq 0) then begin
+    !P.BACKGROUND = 255
+    axis_color = 0
+  endif else begin
+    !P.BACKGROUND = 0
+    axis_color = 255
+  endelse
+  
   ListLongFileName = (*(*global).ListOfLongFileName)
   
   ;1 if first load, 0 otherwise
@@ -128,7 +137,7 @@ PRO PlotLoadedFiles, Event
               xrange = [xmin,xmax],$
               yrange = [ymin,ymax],$
               /nodata,$
-              color = 0,$
+              color = axis_color,$
               XSTYLE = 1
             oPLOT, $
               flt0, $
@@ -141,6 +150,7 @@ PRO PlotLoadedFiles, Event
               flt1, $
               XSTYLE = 1,$
               /nodata,$
+              color = axis_color,$
               xrange = [xmin,xmax]
             oplot, $
               flt0, $

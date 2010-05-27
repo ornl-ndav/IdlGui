@@ -383,6 +383,13 @@ PRO plot_rescale_CE_file, Event
     Cooef[1] /= CE_scaling_Factor
   ENDIF
   
+  settings_white_background_color = (*global).settings_white_background_color
+  if (settings_white_background_color eq 0) then begin
+    axis_color = 0
+  endif else begin
+    axis_color = 255
+  endelse
+  
   colorIndex = color_array[0]
   
   XYMinMax = getXYMinMax(Event) ;_get
@@ -395,20 +402,34 @@ PRO plot_rescale_CE_file, Event
     0: BEGIN
       CASE (IsYlin) OF
         0: BEGIN
-          PLOT,flt0,flt1,xrange=[xmin,xmax],yrange=[ymin,ymax]
+          PLOT,flt0,flt1,$
+            xrange=[xmin,xmax],$
+            yrange=[ymin,ymax], $
+            color=axis_color
         END
         1: BEGIN
-          PLOT,flt0,flt1,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax]
+          PLOT,flt0,flt1,$
+            /ylog,$
+            xrange=[xmin,xmax],$
+            yrange=[ymin,ymax],$
+            color=axis_color
         END
       ENDCASE
     END
     1: BEGIN
       CASE (IsYlin) OF
         0: BEGIN
-          PLOT,flt0,flt1,/xlog,xrange=[xmin,xmax],yrange=[ymin,ymax]
+          PLOT,flt0,flt1,$
+            /xlog,$
+            xrange=[xmin,xmax],$
+            yrange=[ymin,ymax],$
+            color=axis_color
         END
         1: BEGIN
-          PLOT,flt0,flt1,/xlog,/ylog,xrange=[xmin,xmax], $
+          PLOT,flt0,flt1,$
+            /xlog,/ylog,$
+            color=axis_color,$
+            xrange=[xmin,xmax], $
             yrange=[ymin,ymax]
         END
       ENDCASE
@@ -501,17 +522,24 @@ PRO PlotQs, Event, Q1, Q2
   ymin = DOUBLE(XMinMax[2])
   ymax = DOUBLE(XMinMax[3])
   
+  settings_white_background_color = (*global).settings_white_background_color
+  if (settings_white_background_color eq 1) then begin ;black background
+    color = 200
+  endif else begin
+    color = 100
+  endelse
+  
   IF (Q1 GT xmin AND $
     Q1 LT xmax) THEN BEGIN
     ;plot Q1
-    PLOTS, Q1, ymin, /data, color=200
-    PLOTS, Q1, ymax, /data, /continue, color=200
+    PLOTS, Q1, ymin, /data, color=color
+    PLOTS, Q1, ymax, /data, /continue, color=color
   ENDIF
   IF (Q2 GT xmin AND $
     Q2 LT xmax) THEN BEGIN
     ;plot Q2
-    PLOTS, Q2, ymin, /data, color=200
-    PLOTS, Q2, ymax, /data, /continue, color=200
+    PLOTS, Q2, ymin, /data, color=color
+    PLOTS, Q2, ymax, /data, /continue, color=color
   ENDIF
 END
 
@@ -527,18 +555,17 @@ PRO PlotQ, Event, X1
   ymin = DOUBLE(XMinMax[2])
   ymax = DOUBLE(XMinMax[3])
   
-  ;  ymin = (*global).draw_ymin
-  ;  ymax = (*global).draw_ymax
-  ;  xmin = (*global).draw_xmin
-  ;  xmax = (*global).draw_xmax
+  settings_white_background_color = (*global).settings_white_background_color
+  if (settings_white_background_color eq 1) then begin ;black background
+    color = 200
+  endif else begin
+    color = 100
+  endelse
   
   IF (X1 GE xmin AND $
     X1 LE xmax) THEN BEGIN
-    ;plot Q
-    ;PLOTS, X1, ymin, /device, color=200
-    ;PLOTS, X1, ymax, /device, /continue, color=200
-    PLOTS, X1, ymin, /data, color=200
-    PLOTS, X1, ymax, /data, /continue, color=200
+    PLOTS, X1, ymin, /data, color=color
+    PLOTS, X1, ymax, /data, /continue, color=color
   ENDIF
 END
 
