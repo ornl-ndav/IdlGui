@@ -200,14 +200,14 @@ PRO MAIN_BASE_event, Event
           putLabelValue, $
             Event, $
             'data_y_info_value', $
-            STRCOMPRESS(FIX((Event.y/coeff)+1),/REMOVE_ALL)
+            STRCOMPRESS(long((Event.y/coeff)+1),/REMOVE_ALL)
             
           tvimg = (*(*global).tvimg_data_ptr)
           
           putLabelValue, $
             Event, $
             'data_counts_info_value', $
-            STRCOMPRESS(FIX(tvimg[Event.x,Event.y]),/REMOVE_ALL)
+            STRCOMPRESS(long(tvimg[Event.x,Event.y]),/REMOVE_ALL)
           ;********************************************************************
             
           IF ((*global).first_event) THEN BEGIN
@@ -756,13 +756,13 @@ PRO MAIN_BASE_event, Event
           putLabelValue, $
             Event, $
             'norm_y_info_value', $
-            STRCOMPRESS(FIX((Event.y/coeff)+1),/REMOVE_ALL)
+            STRCOMPRESS(long((Event.y/coeff)+1),/REMOVE_ALL)
             
           tvimg = (*(*global).tvimg_norm_ptr)
           putLabelValue, $
             Event, $
             'norm_counts_info_value', $
-            STRCOMPRESS(FIX(tvimg[Event.x,Event.y]),/REMOVE_ALL)
+            STRCOMPRESS(long(tvimg[Event.x,Event.y]),/REMOVE_ALL)
           ;********************************************************************
             
           IF ((*global).first_event) THEN BEGIN
