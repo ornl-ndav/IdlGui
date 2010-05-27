@@ -44,7 +44,7 @@ FUNCTION OpenFile, Event
   widget_control, dMDAngleBaseId, map=0
   
   title    = 'Select file:'
-  filter   = '*' + (*global).file_extension
+  filter   = (*global).file_filter
   pid_path = (*global).input_path
   
   ;open file
@@ -54,7 +54,7 @@ FUNCTION OpenFile, Event
     dialog_parent = dialog_id, $
     TITLE    = title,$
     FILTER   = filter)
-    
+
   IF (FullFileName NE '') THEN BEGIN
   
     (*global).input_path = path

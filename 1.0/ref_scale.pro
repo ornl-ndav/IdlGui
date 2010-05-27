@@ -124,14 +124,14 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     replot_me: 1,$ ;to replot main plot will be 0 just after being replot
     replotQnew: 0,$
     force_activation_step2: 0,$
-
+    
     flt0_ptr: PTRARR(50,4,/allocate_heap),$ ;arrays of all the x-axis
     flt1_ptr: PTRARR(50,4,/allocate_heap),$ ;arrays of all the y-axis
     flt2_ptr: PTRARR(50,4,/allocate_heap),$ ;arrays of all the y-error-axis
     flt0_rescale_ptr: PTRARR(50,4,/allocate_heap),$ ;arrays of all the x-axis after rescaling
     flt1_rescale_ptr: PTRARR(50,4,/allocate_heap),$ ;arrays of all the y-axis after rescaling
     flt2_rescale_ptr: PTRARR(50,4,/allocate_heap),$ ;arrays of all the y-error-axis after rescaling
-
+    
     fit_cooef_ptr: PTRARR(50,4,/allocate_heap),$
     flt0_range: PTRARR(2,4,/allocate_heap) ,$ ;flt0 between Q1 and Q2 for lowQ and hihgQ files
     rescaling_ymax: 1.2,$ ;ymax when rescalling data
@@ -144,7 +144,8 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     distanceMD: 14.85,$ ;distance Moderator-Detector (m)
     XYMinMax: PTR_NEW(0L),$
     ucams: '',$ ;remote user ucams
-    file_extension: '.txt',$ ;file extension of file to load
+    file_extension: '.txt*',$ ;file extension of file to load
+    file_filter: '',$
     input_path: '~/results/',$ ;default path to file to load
     PrevTabSelect: 0,$ ;value of previous tab selected
     angleValue: FLOAT(0),$ ;current value of the angle (float)
@@ -173,6 +174,18 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     show_other_fit: 0$ ;0 means that the step3 has not been done yet
     })
     
+  spawn, 'hostname', hostname
+  instrument = ''
+  if (hostname eq 'lrac.sns.gov') then instrument = 'REF_L'
+  if (hostname eq 'mrac.sns.gov') then instrument = 'REF_M'
+  case (instrument) of
+    'REF_L': file_filter = 'REF_L_*' + (*global).file_extension
+    'REF_M': file_filter = 'REF_M_*' + (*global).file_extension
+    else: file_filter = ''
+  endcase
+  (*global).file_filter = file_filter
+  
+  
   CEcooef          = LONARR(3)
   FileHistory      = STRARR(1)
   list_of_files    = STRARR(1)
@@ -331,7 +344,7 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;=============================================================================
   ;send message to log current run of application
   logger, APPLICATION=application, VERSION=version, UCAMS=ucams
-
+  
   !P.BACKGROUND = 255
   
 END
