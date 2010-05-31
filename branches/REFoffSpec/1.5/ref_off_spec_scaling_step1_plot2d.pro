@@ -181,7 +181,7 @@ PRO display_step4_step1_plot2d, Event
       delta_x = xaxis[1]-xaxis[0]
       (*global).step4_1_plot2d_delta_x = delta_x
       
-; Change code 9RC Ward, 29 April 2010): compute xrange from the value of xmax for the first dataset (xmax0)
+; Change code (RC Ward, 29 April 2010): compute xrange from the value of xmax for the first dataset (xmax0)
       xrange = (FINDGEN(xmax0)+ xmin) * delta_x
 ;      sx = N_ELEMENTS(xrange)
 
@@ -191,6 +191,7 @@ PRO display_step4_step1_plot2d, Event
           
       ymin_local = (*global).step4_ymin_global_value
       ymin_value = (ymin_local LT ymax_value) ? ymin_local : (ymax_value/10.)   
+
       ymin_ymax = [ymin_value, ymax_value]
       (*global).scaling_step2_ymin_ymax = ymin_ymax         
 

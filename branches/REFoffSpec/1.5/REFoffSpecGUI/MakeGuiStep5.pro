@@ -131,7 +131,7 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
                             XYoff[1],$
                             150],$
                     uname: 'step5_rescale_go_back_button',$
-                    value: 'Return to Rescale Plot'}
+                    value: 'Select New Data Range'}
 ; Change code (RC Ward, 16 April 2010): Add buttons to control scale as in Step 4
 ;Zoom base (x-axis and y_axis) ------------------------------------------------
 XYoff = [710, -92]
@@ -426,13 +426,16 @@ sYMaxBaseField = { size: [sXMaxBaseField.size[0]+XYoff[0],$
   ;            BUILD GUI
   ;*****************************************************************************
     
+; Code Change (RC Ward, May 31, 2010): Add SCROLL capability to the WIDGET_BASE BaseTab
+
   BaseTab = WIDGET_BASE(REDUCE_TAB,$
     UNAME     = sBaseTab.uname,$
     XOFFSET   = sBaseTab.size[0],$
     YOFFSET   = sBaseTab.size[1],$
     SCR_XSIZE = sBaseTab.size[2],$
     SCR_YSIZE = sBaseTab.size[3],$
-    TITLE     = sBaseTab.title)
+    TITLE     = sBaseTab.title, $
+    /SCROLL)
     
   ;-----------------------------------------------------------------------------
   ;Rescale base ----------------------------------------------------------------

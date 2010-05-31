@@ -62,15 +62,14 @@ sMainTab = { size: [XYoff[0],$
 ;            BUILD GUI
 ;******************************************************************************
 ; Code Change (RC Ward, Mar 31, 2010): Add SCROLL capability to the WIDGET_BASE BaseTab
-; This scrolling did not work - that are sub windows on this base window and that affects things
 BaseTab = WIDGET_BASE(REDUCE_TAB,$
                       UNAME     = sBaseTab.uname,$
                       XOFFSET   = sBaseTab.size[0],$
                       YOFFSET   = sBaseTab.size[1],$
                       SCR_XSIZE = sBaseTab.size[2],$
                       SCR_YSIZE = sBaseTab.size[3],$
-                      TITLE     = sBaseTab.title)
-;                      /SCROLL)
+                      TITLE     = sBaseTab.title, $
+                      /SCROLL)
 
 ;Main Tab inside base ---------------------------------------------------------
 MAIN_TAB = WIDGET_TAB(BaseTab,$
