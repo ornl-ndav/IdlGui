@@ -90,7 +90,7 @@ PRO create_step5_selection_data, Event
      symax = STRCOMPRESS(ymax,/REMOVE_ALL)
            
       (*global).X_Y_min_max_backup = [sxmin, symin, sxmax, symax]
-  
+      symin = STRCOMPRESS((*global).step4_ymin_global_value,/REMOVE_ALL)  
       putTextFieldValue, Event, 'step5_new_zoom_x_min', sxmin
       putTextFieldValue, Event, 'step5_new_zoom_x_max', sxmax
       putTextFieldValue, Event, 'step5_new_zoom_y_min', symin
@@ -102,6 +102,8 @@ END
 PRO display_step5_rescale_plot, Event, with_range=with_range
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+;print, "test - with_range: ", with_range
 
 ; Code change RCW (Feb 11, 2010): Get Background color from XML file
 ; Code change RCW (Feb 12, 2010): Get line plot colors from XML file
@@ -149,6 +151,7 @@ PRO display_step5_rescale_plot, Event, with_range=with_range
   IF (N_ELEMENTS(with_range)) THEN BEGIN
 
 ; Change code (RC Ward, 29 April 2010): Add this code to pick up the axis scaling values
+
     xmin = getTextFieldValue(Event,'step5_new_zoom_x_min')
     xmax = getTextFieldValue(Event,'step5_new_zoom_x_max')
     ymin = getTextFieldValue(Event,'step5_new_zoom_y_min')

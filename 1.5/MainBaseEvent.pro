@@ -2494,32 +2494,34 @@ PRO MAIN_BASE_event, Event
   ; RECAP - RECAP - RECAP - RECAP - RECAP - RECAP - RECAP - RECAP - RECAP -
   ;----------------------------------------------------------------------------
 ;***********************************************************************************************
-; Change Code (RC Ward, 29 April 2010): ADD THE FOLLOWING WIDGET_INFO for controlling plot scale  
+; Change Code (RC Ward, 29 April 2010): ADD THE FOLLOWING WIDGET_INFO for controlling plot scale
+; Note the with_range is set to 1 for all these calls on 31 May 2010 as a test -might cause proble
+; these are not presently used it think?  
   ;X/Y/Min/Max
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_new_zoom_x_min'): BEGIN
       re_plot_lambda_selected, Event ;step 5
-      display_step5_rescale_plot_from_zoom, Event
+      display_step5_rescale_plot_from_zoom, Event, with_range=1
   END
   
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_new_zoom_x_max'): BEGIN
       re_plot_lambda_selected, Event ;step 5
-      display_step5_rescale_plot_from_zoom, EventF
+      display_step5_rescale_plot_from_zoom, Event, with_range=1
   END
   
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_new_zoom_reset_axis'): BEGIN
       reset_zoom_widgets, Event ;step 5
       plotLambdaSelected, Event ; step5
-      display_step5_rescale_plot, Event
+      display_step5_rescale_plot, Event, with_range=1
   END
   
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_new_zoom_y_min'): BEGIN
       re_plot_lambda_selected, Event ;step 5
-      display_step5_rescale_plot_from_zoom, Event
+      display_step5_rescale_plot_from_zoom, Event, with_range=1
   END
   
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_new_zoom_y_max'): BEGIN
       re_plot_lambda_selected, Event ;step 5
-      display_step5_rescale_plot_from_zoom, Event
+      display_step5_rescale_plot_from_zoom, Event, with_range=1
   END
 ; Code Change (RC Ward, 29 April 2010): The above WIDGET_INFOs were added to control plot scale
 ;***********************************************************************************************
@@ -2709,7 +2711,8 @@ PRO MAIN_BASE_event, Event
 ; Change Code (RC Ward, 7 May 2010):  Call  display_step5_rescale_plot  rather than  display_step5_rescale_plot_first_time    
           MapBase, Event, 'step5_rescale_base', 1
 ;          display_step5_rescale_plot_first_time, Event
-          display_step5_rescale_plot, Event
+; Change code (RC Ward, 31 May 2010): call routine with with_range set to 1
+          display_step5_rescale_plot, Event, with_range=1
           define_default_recap_output_file, Event
         ENDIF
         
@@ -2748,6 +2751,7 @@ PRO MAIN_BASE_event, Event
   
   ;lin/log cw_bgroup
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_rescale_lin_log_plot'): BEGIN
+    
     redisplay_step5_rescale_plot, Event
     plot_recap_rescale_other_selection, Event, type='all'
     replot_average_recap_rescale, Event
@@ -2869,6 +2873,7 @@ PRO MAIN_BASE_event, Event
         IF ((*global).first_recap_rescale_plot) THEN BEGIN
           display_step5_rescale_plot, Event, with_range=1
         ENDIF ELSE BEGIN
+        
           redisplay_step5_rescale_plot, Event
         ENDELSE
         plot_recap_rescale_CE_selection, Event
@@ -2897,6 +2902,7 @@ PRO MAIN_BASE_event, Event
         IF ((*global).first_recap_rescale_plot) THEN BEGIN
           display_step5_rescale_plot, Event, with_range=1
         ENDIF ELSE BEGIN
+
           redisplay_step5_rescale_plot, Event
         ENDELSE
         ;plot selection
@@ -2945,7 +2951,8 @@ PRO MAIN_BASE_event, Event
   ;reset scale button
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='step5_rescale_scale_to_1_reset'): BEGIN
-    display_step5_rescale_plot_first_time, Event
+; Change code (RC Ward, 31 May 2010); add check of range (xmin, xmax, ymin, ymax)
+    display_step5_rescale_plot_first_time, Event, with_range=1
     activate_widget, Event, 'step5_rescale_scale_to_1_reset', 0
     (*global).recap_rescale_selection_left = 0
     (*global).recap_rescale_selection_right = 0

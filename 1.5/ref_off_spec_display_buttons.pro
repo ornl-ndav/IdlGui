@@ -245,24 +245,25 @@ PRO display_reduce_step1_buttons, MAIN_BASE = main_base,$
     END
     ELSE:
   ENDCASE
+; Change code (RC Ward, May 28, 2010): Comment these out - no longer used 
   
-  display_reduce_step1_spin_states_match, $
-    MAIN_BASE=MAIN_BASE,$
-    EVENT=EVENT,$
-    ACTIVATE=activate_match,$
-    global
+;  display_reduce_step1_spin_states_match, $
+;    MAIN_BASE=MAIN_BASE,$
+;    EVENT=EVENT,$
+;    ACTIVATE=activate_match,$
+;    global
     
-  display_reduce_step1_spin_states_do_not_match_fixed, $
-    MAIN_BASE=MAIN_BASE,$
-    EVENT=EVENT,$
-    ACTIVATE = activate_no_match_fixed,$
-    global
+;  display_reduce_step1_spin_states_do_not_match_fixed, $
+;    MAIN_BASE=MAIN_BASE,$
+;    EVENT=EVENT,$
+;    ACTIVATE = activate_no_match_fixed,$
+;    global
     
-  display_reduce_step1_spin_states_do_not_match_user_defined, $
-    MAIN_BASE=MAIN_BASE,$
-    EVENT=EVENT,$
-    ACTIVATE = activate_no_match_user,$
-    global
+;  display_reduce_step1_spin_states_do_not_match_user_defined, $
+;    MAIN_BASE=MAIN_BASE,$
+;    EVENT=EVENT,$
+;    ACTIVATE = activate_no_match_user,$
+;    global
 END
 
 ;------------------------------------------------------------------------------

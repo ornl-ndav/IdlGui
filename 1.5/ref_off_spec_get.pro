@@ -349,22 +349,68 @@ FUNCTION getReduceStep2SpinStateRow, Event, Row=row, $
   
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+; Begin CHANGE ===May 29, 2010 ========================================================= 
+; Change code (RC Ward, May 29, 2010): test to see if we can capture the spin states
+  list_of_data_spin = (*global).list_of_data_spin
+
+    reflect_spin_state_to_check = ['reduce_tab1_pola_1', $
+    'reduce_tab1_pola_2',$
+    'reduce_tab1_pola_3',$
+    'reduce_tab1_pola_4']
+    direct_spin_state_to_check = ['reduce_tab1_direct_pola_1', $
+    'reduce_tab1_direct_pola_2',$
+    'reduce_tab1_direct_pola_3',$
+    'reduce_tab1_direct_pola_4']    
+   nbr_spin_states = N_ELEMENTS(reflect_spin_state_to_check)
+   count_direct = 0
+   FOR i=0,(nbr_spin_states-1) DO BEGIN
+      reflect_enabled_status = 0
+      direct_enabled_status = 0
+      IF (isButtonSelected(Event, reflect_spin_state_to_check[i])) THEN BEGIN
+         reflect_enabled_status = 1   
+      ENDIF
+      IF (isButtonSelected(Event, direct_spin_state_to_check[i])) THEN BEGIN
+         direct_enabled_status = 1   
+         count_direct = count_direct + 1
+         index_direct = i
+      ENDIF
+      print, "Spin States- Refelct: ", i, " status: ", reflect_enabled_status, $
+        "   Direct: ", i, " status: ", direct_enabled_status  
+   ENDFOR
+   print, " "
+; test to see if there is a single direct (or normalization) spin state
+      print, count_direct
+      IF (count_direct eq 1) then begin
+; always use the single spin state selected by the user 
+; similar to old spin_mode = 2, but allows for all spin state possibilities
+         data_spin = list_of_data_spin[index_direct]
+         print, "data_spin: ", data_spin
+         RETURN, data_spin
+      ENDIF ELSE BEGIN
+; if not a single direct (normalization spin state), then match data spin state
+; equivalent of old spin_mode = 1
+         RETURN, data_spin_state        
+      ENDELSE
+;   
+; END CHANGE ===May 29, 2010 =========================================================   
+
+; This is the old way to comput the spin_mode - comment out as os May 30, 2010
+;  spin_mode = (*global).reduce_step1_spin_state_mode
   
-  spin_mode = (*global).reduce_step1_spin_state_mode
-  
-  CASE (spin_mode) OF
-    1: BEGIN ;match data spin state
-      RETURN, data_spin_state
-    END
-    2: BEGIN ;always off_off
-      RETURN, 'Off_Off'
-    END
-    3: BEGIN ;user defined
-      base_name = STRLOWCASE(data_spin_state)
-      uname = 'reduce_tab2_spin_combo_' + base_name + sRow
-      RETURN, getComboListSelectedValue(Event,uname)
-    END
-  ENDCASE
+;  CASE (spin_mode) OF
+;    1: BEGIN ;match data spin state
+;      RETURN, data_spin_state
+;    END
+;    2: BEGIN ;always off_off
+;      RETURN, 'Off_Off'
+;    END
+;    3: BEGIN ;user defined
+;      base_name = STRLOWCASE(data_spin_state)
+;      uname = 'reduce_tab2_spin_combo_' + base_name + sRow
+;      RETURN, getComboListSelectedValue(Event,uname)
+;    END
+;  ENDCASE
   
 END
 

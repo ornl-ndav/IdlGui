@@ -386,7 +386,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     
   label = WIDGET_LABEL(base3m,$
     /ALIGN_LEFT,$
-    VALUE = 'Sam Dist:')    
+    VALUE = 'Sam-Det Dist:')    
   value = WIDGET_TEXT(base3m,$
     VALUE = 'N/A',$
     UNAME = 'reduce_sangle_base_sampledetdis_user_value',$
@@ -546,13 +546,15 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     value = ''
   ENDELSE
     
+;=================== COMMENT OUT LATTER =============================================================
 ; For debugging, set the value to desired run numbers (RCW, Dec 31, 2009, Modified Feb 1, 2010)
  IF (instrument EQ 'REF_L') THEN BEGIN
     value = '24586-24591' 
   ENDIF ELSE BEGIN
     value = '5387-5389' 
   ENDELSE  
-    
+;=================== COMMENT OUT LATTER =============================================================    
+
   tRun = CW_FIELD(Row1,$
     XSIZE = 40,$
     UNAME = 'reduce_tab1_run_cw_field',$
@@ -562,13 +564,6 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     
   label = WIDGET_LABEL(Row1,$
     VALUE = '(ex: 1245,1345-1347,1349)')
-    
-    
-  ;label = WIDGET_LABEL(Row1,$
-  ;                     VALUE = '     List of Proposal:')
-  ;ComboBox = WIDGET_COMBOBOX(Row1,$
-  ;                           VALUE = '                         ',$
-  ;                           UNAME = 'reduce_tab1_list_of_proposal')
     
   ;Table (Row #2) ---------------------------------------------------------------
   Row2 = WIDGET_BASE(Base,$
@@ -585,6 +580,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     /RESIZEABLE_COLUMNS,$
     ALIGNMENT = 0,$
     XSIZE = 2,$
+
 ; Code change (RC Ward, April 7, 2010): use variable to specify the number of scattering angles    
 ;    YSIZE = 18,$
      YSIZE = number_of_sangle,$
@@ -624,19 +620,15 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
       UNAME = 'reduce_step1_sangle_button', $
       SENSITIVE = 0)
   ENDIF
-  
-  ;space
-;  space = WIDGET_LABEL(Base,$
-;    VALUE = ' ')
     
-  ;Repeat work for other polarization states (Row #4) ---------------------------
+;Repeat work for other polarization states (Row #4) ---------------------------
   Row4_row = WIDGET_BASE(Base,$
     UNAME = 'reduce_tab1_row4_base',$
     /ROW)
-    
-  space = WIDGET_LABEL(Row4_row,$
-    VALUE = '                                                      ')
-    
+; shift the buttons over a bit          
+  space = WIDGET_LABEL(Row4_row, $
+    VALUE='                          ')
+                     
   IF (instrument EQ 'REF_L') THEN BEGIN
     map = 0
   ENDIF ELSE BEGIN
@@ -647,21 +639,12 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
      FRAME = 1,$
      MAP = map,$
      /ROW)
-    
-  ;  label = WIDGET_LABEL(Row4,$
-  ;    VALUE = 'Working with Polarization State:')
-  ;  label = WIDGET_LABEL(Row4,$
-  ;    VALUE = 'N/A                     ',$q
-  ;    /ALIGN_LEFT,$
-  ;    UNAME = 'reduce_tab1_working_polarization_state_label',$
-  ;    FRAME = 0)
        
   label = WIDGET_LABEL(Row4,$
-    VALUE = 'Work with Following Polarization States:  ')
+    VALUE = 'Relected Data Polarization States: ')
     
   Row4Base = WIDGET_BASE(Row4,$
     /ROW,$
-    /BASE_ALIGN_CENTER,$
     /NONEXCLUSIVE)
     
   button1 = WIDGET_BUTTON(Row4Base,$
@@ -685,80 +668,127 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     /NO_RELEASE,$
     SENSITIVE = 1)
        
-  ;WIDGET_CONTROL, Row4Base, SET_BUTTON=1 ;all spin states are selected by default
+; NOTE (RC Ward, May 29, 2010) - These defaults are imbedded into the program
+;WIDGET_CONTROL, Row4Base, SET_BUTTON=1 ;all spin states are selected by default
   WIDGET_CONTROL, button1, /SET_BUTTON
   WIDGET_CONTROL, button3, /SET_BUTTON
-  
-  ;space base
-;  space = WIDGET_BASE(Base,$
-;    SCR_YSIZE = 50)
-  
-  ;Buttons for selecting the polarization states (Row #5) ---------------------------  
+    
+; Buttons for selecting the direct beam polarization states (Row #5) ---------------------------  
+; Change code (RC WARD, May 28, 2010): Modify the way that the direct beam polarization states are specied.
+
   ;new row
-  Row5 = WIDGET_BASE(Base,$
-    /COLUMN,$
-    /BASE_ALIGN_CENTER,$
-    MAP = map)
-    
-  Row5_row1 = WIDGET_BASE(Row5,$
+;  Row5 = WIDGET_BASE(Base,$
+;    /COLUMN,$
+;    /BASE_ALIGN_CENTER,$
+;    MAP = map)
+;  Row5_row1 = WIDGET_BASE(Row5,$
+;    /ROW)
+;        
+  Row5_row = WIDGET_BASE(Base,$
+    UNAME = 'reduce_tab1_row5_base',$
     /ROW)
+; shift the buttons over a bit          
+  space = WIDGET_LABEL(Row5_row, $
+    VALUE='                          ')
+
+  IF (instrument EQ 'REF_L') THEN BEGIN
+    map = 0
+  ENDIF ELSE BEGIN
+    map = 1
+  ENDELSE
+  
+  Row5 = WIDGET_BASE(Row5_row,$
+     FRAME = 1,$
+     MAP = map,$
+     /ROW)
+
+  label = WIDGET_LABEL(Row5,$
+    VALUE = '  Direct Beam Polarization States: ')
+
+  Row5Base = WIDGET_BASE(Row5,$
+    /ROW, $
+    /NONEXCLUSIVE)
+        
+  button5 = WIDGET_BUTTON(Row5Base,$
+    VALUE = 'Off_Off  ',$
+    UNAME = 'reduce_tab1_direct_pola_1',$
+    /NO_RELEASE,$
+    SENSITIVE = 1)
+  button6 = WIDGET_BUTTON(Row5Base,$
+    VALUE = 'Off_On  ',$
+    UNAME = 'reduce_tab1_direct_pola_2',$
+    /NO_RELEASE,$
+    SENSITIVE = 1)
+  button7 = WIDGET_BUTTON(Row5Base,$
+    VALUE = 'On_Off  ',$
+    UNAME = 'reduce_tab1_direct_pola_3',$
+    /NO_RELEASE,$
+    SENSITIVE = 1)
+  button8 = WIDGET_BUTTON(Row5Base,$
+    VALUE = 'On_On  ',$
+    UNAME = 'reduce_tab1_direct_pola_4',$
+    /NO_RELEASE,$
+    SENSITIVE = 1)
+; NOTE (RC Ward, May 29, 2010) - These defaults are imbedded into the program
+;WIDGET_CONTROL, Row5Base, SET_BUTTON=1 ;all direct beam spin states are selected by default
+  WIDGET_CONTROL, button5, /SET_BUTTON
     
-  space = WIDGET_LABEL(Row5_row1,$
-    VALUE = '                                           ')
+;  space = WIDGET_LABEL(Row5_row1,$
+;    VALUE = '                                           ')
     
-  label = WIDGET_LABEL(Row5_row1,$
-    FONT = "8X13",$
-    VALUE = 'Select the way you want to match the Data and Normalization' + $
-    ' Spin States')
+;  label = WIDGET_LABEL(Row5_row1,$
+;    FONT = "8X13",$
+;    VALUE = 'Select the way you want to match the Data and Normalization' + $
+;    ' Spin States')
     
-  Row5_row2 = WIDGET_BASE(Row5,$
-    /ROW,$
-    /BASE_ALIGN_CENTER)
+;  Row5_row2 = WIDGET_BASE(Row5,$
+;    /ROW,$
+;    /BASE_ALIGN_CENTER)
     
-  big_space = WIDGET_LABEL(Row5_row2,$
-    VALUE = '                                               ')
+;  big_space = WIDGET_LABEL(Row5_row2,$
+;    VALUE = '                                               ')
     
 ; Code change (RC Ward, March 27, 2010): Images used for the buttons were simplified.    
   ;match button
-  tooltip = 'Spin States of the Data and Normalization files are identical.'
-  match = WIDGET_DRAW(Row5_row2,$
-    SCR_XSIZE = 243,$
-    SCR_YSIZE = 47,$
-    /BUTTON_EVENTS,$
-    /MOTION_EVENTS,$
-    /TRACKING_EVENTS,$
-    TOOLTIP = tooltip,$
-    UNAME = 'reduce_step1_spin_match')
+;  tooltip = 'Spin States of the Data and Normalization files are identical.'
+;  match = WIDGET_DRAW(Row5_row2,$
+;    SCR_XSIZE = 243,$
+;    SCR_YSIZE = 47,$
+;    /BUTTON_EVENTS,$
+;    /MOTION_EVENTS,$
+;    /TRACKING_EVENTS,$
+;    TOOLTIP = tooltip,$
+;    UNAME = 'reduce_step1_spin_match')
     
-  space_value = '   '
-  space = WIDGET_LABEL(Row5_row2,$
-    VALUE = space_value)
+;  space_value = '   '
+;  space = WIDGET_LABEL(Row5_row2,$
+;    VALUE = space_value)
    ; Code change RCW (Dec 31, 2009): fix typos below   
   ;do not match and fixed
-  tooltip = 'Spin State of Normalization files is fixed (Off_Off), no ' + $
-    'matter the spin state of the Data file.'
-  not_match = WIDGET_DRAW(Row5_row2,$
-    SCR_XSIZE = 245,$
-    SCR_YSIZE = 47,$
-    /BUTTON_EVENTS,$
-    /MOTION_EVENTS,$
-    /TRACKING_EVENTS,$
-    TOOLTIP = tooltip,$
-    UNAME = 'reduce_step1_spin_do_not_match_fixed')
+;  tooltip = 'Spin State of Normalization files is fixed (Off_Off), no ' + $
+;    'matter the spin state of the Data file.'
+;  not_match = WIDGET_DRAW(Row5_row2,$
+;    SCR_XSIZE = 245,$
+;    SCR_YSIZE = 47,$
+;    /BUTTON_EVENTS,$
+;    /MOTION_EVENTS,$
+;    /TRACKING_EVENTS,$
+;    TOOLTIP = tooltip,$
+;    UNAME = 'reduce_step1_spin_do_not_match_fixed')
     
-  space = WIDGET_LABEL(Row5_row2,$
-    VALUE = space_value)
-    
+;  space = WIDGET_LABEL(Row5_row2,$
+;    VALUE = space_value)
+;    
   ;do not match and user defined
-  tooltip = 'Spin States of Data and Normalization files do not match and ' + $
-    'must be manually defined by the user.'
-  match = WIDGET_DRAW(Row5_row2,$
-    SCR_XSIZE = 245,$
-    SCR_YSIZE = 47,$
-    /BUTTON_EVENTS,$
-    /MOTION_EVENTS,$
-    /TRACKING_EVENTS,$
-    TOOLTIP = tooltip,$
-    UNAME = 'reduce_step1_spin_do_not_match_user_defined')
-    
+;  tooltip = 'Spin States of Data and Normalization files do not match and ' + $
+;    'must be manually defined by the user.'
+;  match = WIDGET_DRAW(Row5_row2,$
+;    SCR_XSIZE = 245,$
+;    SCR_YSIZE = 47,$
+;    /BUTTON_EVENTS,$
+;    /MOTION_EVENTS,$
+;    /TRACKING_EVENTS,$
+;    TOOLTIP = tooltip,$
+;    UNAME = 'reduce_step1_spin_do_not_match_user_defined')
+;    
 END

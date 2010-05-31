@@ -203,6 +203,7 @@ PRO tab_event, Event
 
 ;*** STEP 2 *******************************************************************     
       1: BEGIN ;load
+        print, " something_to_plot: ", (*global).something_to_plot
         IF((*global).something_to_plot) THEN BEGIN
           xaxis = (*(*global).x_axis)
           contour_plot, Event, xaxis

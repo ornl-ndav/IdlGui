@@ -451,6 +451,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     step4_step1_move_selection_position: INTARR(2),$
     left_mouse_pressed:  0,$
     step4_step1_left_mouse_pressed: 0,$
+    
     plot_realign_data:   0,$
     ref_pixel_list:      PTR_NEW(0L),$
     ref_pixel_offset_list: PTR_NEW(0L),$
@@ -472,7 +473,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     failed:              'FAILED',$
     version:             VERSION,$
 ; Change code (RC Ward, March 27, 2010): Decrease size of all windows in vertical direction    
-;   MainBaseSize:        [30,50,1300,770],$
+;  MainBaseSize:        [30,50,1300,770],$
     MainBaseSize:        [30,50,1276,901],$
     ascii_extension:     'txt',$
     ascii_filter:        '*.txt',$

@@ -216,7 +216,7 @@ END
 
 ;------------------------------------------------------------------------------
 ;This procedures checks the working polarization states defined in the reduce
-;tab1 and make the corresponding spin states in the sangle base enabled
+;tab1 and makes the corresponding spin states in the sangle base enabled
 PRO check_sangle_spin_state_buttons, Event
 
   spin_state_to_check = ['reduce_tab1_pola_1', $
