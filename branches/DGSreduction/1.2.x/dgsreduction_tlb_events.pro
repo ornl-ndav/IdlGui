@@ -171,11 +171,11 @@ PRO DGSreduction_TLB_Events, event
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
       print,'Custom Dir = ', myValue
       ; Update the command object... if the directory exists
-      directoryValid = FILE_TEST(myValue, /DIRECTORY, /WRITE)
-      IF (directoryValid EQ 1) THEN BEGIN
-        print,'Setting output prefix = ',myvalue
+     ; directoryValid = FILE_TEST(myValue, /DIRECTORY, /WRITE)
+     ; IF (directoryValid EQ 1) THEN BEGIN
+     ;   print,'Setting output prefix = ',myvalue
         dgsr_cmd->SetProperty, OutputOverride=myValue
-      ENDIF
+     ; ENDIF
     END
     'DGS_AUTO_OUTPUT_PREFIX': BEGIN
       ; For auto prefix - just use relay on whatever is returned by get_output_directory()
@@ -192,10 +192,10 @@ PRO DGSreduction_TLB_Events, event
         outputPrefixID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGS_OUTPUT_PREFIX')
         WIDGET_CONTROL, outputPrefixID, GET_VALUE=myValue
         ; Update the command object... if the directory exists
-        directoryValid = FILE_TEST(myValue, /DIRECTORY, /WRITE)
-        IF (directoryValid EQ 1) THEN BEGIN
+       ; directoryValid = FILE_TEST(myValue, /DIRECTORY, /WRITE)
+       ; IF (directoryValid EQ 1) THEN BEGIN
           dgsr_cmd->SetProperty, OutputOverride=myValue
-        ENDIF
+       ; ENDIF
       ENDIF
     END
     'DGS_TIMING_ON': BEGIN
