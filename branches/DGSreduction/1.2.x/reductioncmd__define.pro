@@ -746,14 +746,14 @@ function ReductionCmd::Check
   ENDIF
   
   ; Check that the max Energy Transfer is less than Ei
-;  IF (self.energybins_max GE self.ei) THEN BEGIN
-;    ok = 0
-;    print, 'Ei = ', self.ei
-;    print, 'Emax = ', self.energybins_max
-;    msg = [msg,['You cannot have Emax ('+ $
-;      STRCOMPRESS(STRING(self.energybins_max),/REMOVE_ALL)+ $
-;      'meV) >= Ei ('+STRCOMPRESS(STRING(self.ei),/REMOVE_ALL)+'meV).']]
-;  ENDIF
+  ;  IF (self.energybins_max GE self.ei) THEN BEGIN
+  ;    ok = 0
+  ;    print, 'Ei = ', self.ei
+  ;    print, 'Emax = ', self.energybins_max
+  ;    msg = [msg,['You cannot have Emax ('+ $
+  ;      STRCOMPRESS(STRING(self.energybins_max),/REMOVE_ALL)+ $
+  ;      'meV) >= Ei ('+STRCOMPRESS(STRING(self.ei),/REMOVE_ALL)+'meV).']]
+  ;  ENDIF
   
   ; Now let's do some more complicated dependencies
   
@@ -834,6 +834,12 @@ function ReductionCmd::Check
   IF (FILE_TEST(self.cornergeometry, /READ) EQ 0) THEN BEGIN
     ok = 0
     msg = [msg,['The corner geometry file ('+self.cornergeometry+') does not seem to be readable.']]
+  ENDIF
+  
+  ; You cannot specify a 'batch' of runs and also specify a custom output directory
+  IF (STRLEN(self.OutputOverride) GE 1) AND (STRPOS(self.datarun, ':') NE -1) THEN BEGIN
+    ok = 0
+    msg = [msg,['Sorry - you cannot specify a series of batch runs and a custom output directory']]
   ENDIF
   
   ; Check to see that the *.norm and mask files for vanadium are split up into
