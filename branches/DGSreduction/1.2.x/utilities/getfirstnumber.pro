@@ -57,11 +57,14 @@ FUNCTION GetFirstNumber, RunNumberString
     IF !ERROR_STATE.CODE EQ -1008 THEN runNumber_location = '/entry/run_number'
   ENDIF
   
-  ; The runs should be delimited by either a - or ,
+  ; The runs should be delimited by either a - or , (or even :)
   
   ; Lets find see if there are any commas
   commaPosition = STRPOS(RunNumberString, ',')
   IF commaPosition EQ -1 THEN commaPosition = largeNumber
+  
+  colonPosition = STRPOS(RunNumberString, ':')
+  IF colonPosition EQ -1 THEN colonPosition = largeNumber
   
   hyphenPosition = STRPOS(RunNumberString, '-')
   IF hyphenPosition EQ -1 THEN hyphenPosition = largeNumber
@@ -70,7 +73,7 @@ FUNCTION GetFirstNumber, RunNumberString
   IF STRMID(RunNumberString, hyphenPosition-4, 4) EQ 'IPTS' THEN $
     hyphenPosition = largeNumber
     
-  firstDelimiter = MIN([commaPosition, hyphenPosition])
+  firstDelimiter = MIN([commaPosition, hyphenPosition, colonPosition])
   
   ; Let's get the string upto the first ',' or '-'
   firstString = STRMID(RunNumberString, 0, firstDelimiter)
