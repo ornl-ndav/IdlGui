@@ -803,7 +803,14 @@ function ReductionCmd::Check
     ENDIF
   endfor
   
-  
+  ; Check for non-expected special characters in the User Label Run field
+  BadSymbols = ['!','@','#','$','%','^','&','*','(',')','<','>','?','[',']','{','}',' ']
+  for index = 0L, N_ELEMENTS(BadSymbols)-1 do begin
+    IF (STRPOS(self.UserLabel, BadSymbols[index]) NE -1) THEN BEGIN
+      ok = 0
+      msg = [msg,['"' + BadSymbols[index]+'" is not an allowed delimiter in the output directory specification.']]
+    ENDIF
+  endfor
   
   ; Need to specify a min/max for the monitor integration if we are normalising to the monitor
   IF (self.nomonitornorm EQ 0) THEN BEGIN
