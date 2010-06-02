@@ -356,7 +356,7 @@ PRO MakeGuiLoadNormalization1DTab, D_DD_Tab, $
     
   ;Ymin
   wRoiYminBase = WIDGET_BASE(wRoiBase,$
-    XOFFSET   = sRoiYmin.size[0],$
+    XOFFSET   = sRoiYmin.size[0]+2,$
     YOFFSET   = sRoiYmin.size[1],$
     SCR_XSIZE = sRoiYmin.size[2],$
     SCR_YSIZE = sRoiYmin.size[3],$
@@ -368,6 +368,19 @@ PRO MakeGuiLoadNormalization1DTab, D_DD_Tab, $
     RETURN_EVENTS = 1,$
     UNAME         = sRoiYmin.uname,$
     TITLE         = sRoiYmin.title)
+    
+  back_base = widget_base(wRoiBase,$
+    xoffset = sRoiYmin.size[0]-2,$
+    yoffset = sRoiYmin.size[1]-2,$
+    scr_xsize = sRoiYmin.size[2]+4,$
+    scr_ysize = sRoiYmin.size[3]+4,$
+    map = 1,$
+    uname = 'ymin_norm_base_background')
+  back_draw = widget_draw(back_base,$
+    xoffset = 0,$
+    yoffset = 0,$
+    scr_xsize = sRoiYmin.size[2]+4,$
+    scr_ysize = sRoiYmin.size[3]+4)
     
   ;Ymax
   wRoiYmaxBase = WIDGET_BASE(wRoiBase,$
@@ -383,6 +396,19 @@ PRO MakeGuiLoadNormalization1DTab, D_DD_Tab, $
     RETURN_EVENTS = 1,$
     UNAME         = sRoiYmax.uname,$
     TITLE         = sRoiYmax.title)
+    
+  back_base = widget_base(wRoiBase,$
+    xoffset = sRoiYmax.size[0]-2,$
+    yoffset = sRoiYmax.size[1]-2,$
+    scr_xsize = sRoiYmax.size[2]+4,$
+    map = 0,$
+    scr_ysize = sRoiYmax.size[3]+4,$
+    uname = 'ymax_norm_base_background')
+  back_draw = widget_draw(back_base,$
+    xoffset = 0,$
+    yoffset = 0,$
+    scr_xsize = sRoiYmax.size[2]+4,$
+    scr_ysize = sRoiYmax.size[3]+4)
     
   ;OR label
   wOrLabel = WIDGET_LABEL(wRoiBase,$
