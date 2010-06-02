@@ -542,7 +542,6 @@ PRO MakeGuiLoadData1DTab, D_DD_Tab, $
     map = 0)
   back_draw = widget_draw(back_base)
   
-  
   ;TAB #1-3 Zoom base ===========================================================
   wZoomBase = WIDGET_BASE(wRoiTab,$
     XOFFSET   = sZoomBase.size[0],$
