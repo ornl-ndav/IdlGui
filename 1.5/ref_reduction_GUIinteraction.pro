@@ -206,20 +206,42 @@ PRO SwitchDataYminYmaxLabel, Event
   id = WIDGET_INFO(Event.top,FIND_BY_UNAME='data_ymin_ymax_label')
   WIDGET_CONTROL, id, GET_VALUE = value
   IF ((*global).miniVersion EQ 0) THEN BEGIN
+    base1_to_see = 'Data1SelectionROIYminBase'
+    base2_to_see = 'Data1SelectionROIYmaxBase'
     IF (value EQ 'Current working selection -> Ymin') THEN BEGIN
       value = 'Current working selection -> Ymax'
+      uname_to_see = 'ymax_data_base_background'
+      uname_to_hide = 'ymin_data_base_background'
     ENDIF ELSE BEGIN
       value = 'Current working selection -> Ymin'
+      uname_to_see = 'ymin_data_base_background'
+      uname_to_hide = 'ymax_data_base_background'
     ENDELSE
   ENDIF ELSE BEGIN
+    base1_to_see = 'Data1SelectionBackgroundYminBase'
+    base2_to_see = 'Data1SelectionBackgroundYmaxBase'
     IF (value EQ 'Working with -> Ymin') THEN BEGIN
       value = 'Working with -> Ymax'
+      uname_to_see = 'ymax_data_base_background'
+      uname_to_hide = 'ymin_data_base_background'
     ENDIF ELSE BEGIN
       value = 'Working with -> Ymin'
+      uname_to_see = 'ymin_data_base_background'
+      uname_to_hide = 'ymax_data_base_background'
     ENDELSE
   ENDELSE
   WIDGET_CONTROL, id, SET_VALUE = value
-END
+  
+  id_see = widget_info(event.top, find_by_uname=uname_to_see)
+  id_hide = widget_info(event.top, find_by_uname=uname_to_hide)
+  base1_id_see = widget_info(event.top, find_by_uname=base1_to_see)
+  base2_id_see = widget_info(event.top, find_by_uname=base2_to_see)
+  widget_control, id_see, /map
+  widget_control, id_hide, map=0
+  widget_control, base1_id_see, /map
+  widget_control, base2_id_see, /map
+  
+end
 
 ;------------------------------------------------------------------------------
 ;This function switches the normalization Ymin and Ymax labels
