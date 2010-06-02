@@ -34,26 +34,26 @@
 
 ;to retrieve the year
 FUNCTION getYear
-dateUnformated = SYSTIME()    
-DateArray      = STRSPLIT(dateUnformated,' ',/EXTRACT) 
-YEAR           = STRCOMPRESS(DateArray[4])
-RETURN, YEAR
+  dateUnformated = SYSTIME()
+  DateArray      = STRSPLIT(dateUnformated,' ',/EXTRACT)
+  YEAR           = STRCOMPRESS(DateArray[4])
+  RETURN, YEAR
 END
 
 ;------------------------------------------------------------------------------
 ;logger message
 PRO logger, APPLICATION=application, VERSION=version, UCAMS=ucams
 
-logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
-logger_message += APPLICATION + '_' + VERSION + ' ' + UCAMS
-logger_message += ' ' + getYear()
-
-error = 0
-CATCH, error
-IF (error NE 0) THEN BEGIN
+  logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
+  logger_message += APPLICATION + '_' + VERSION + ' ' + UCAMS
+  logger_message += ' ' + getYear()
+  
+  error = 0
+  CATCH, error
+  IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
-ENDIF ELSE BEGIN
+  ENDIF ELSE BEGIN
     spawn, logger_message
-ENDELSE
-
+  ENDELSE
+  
 END

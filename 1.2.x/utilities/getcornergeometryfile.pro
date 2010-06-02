@@ -1,4 +1,4 @@
-;+;+
+;+
 ; :Copyright:
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -69,10 +69,10 @@ function GetCornerGeometryFile, Instrument, RUNNUMBER=RUNNUMBER
       cornergeometry = $
         "/SNS/SEQ/2010_2_17_CAL/calibrations/SEQ_cgeom_20100419.txt"
     end
-;    "SEQUOIA": begin
-;      cornergeometry = $
-;        "/SNS/SEQ/2009_2_17_CAL/calibrations/SEQ_cgeom_20090413.txt"
-;    end
+    ;    "SEQUOIA": begin
+    ;      cornergeometry = $
+    ;        "/SNS/SEQ/2009_2_17_CAL/calibrations/SEQ_cgeom_20090413.txt"
+    ;    end
     else: begin
       cornergeometry = ""
     end

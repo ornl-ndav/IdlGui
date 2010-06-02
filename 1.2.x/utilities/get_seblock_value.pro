@@ -13,7 +13,7 @@
 function get_seblock_value, instrument, runnumber, seblock
 
   IF N_ELEMENTS(seblock) EQ 0 THEN seblock = ''
-
+  
   fileThere = 0
   inNeXus = 0
   

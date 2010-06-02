@@ -34,12 +34,12 @@ function GetCWPspectrum, instrument, runnumber, ROWS=ROWS
     data_tmp2 = temporary(total(data_tmp1, 2))
     
     if (n_elements(cwp_data) EQ 0) then begin
-        cwp_data =   temporary(data_tmp2)
+      cwp_data =   temporary(data_tmp2)
     endif else begin
-        cwp_data = cwp_data + temporary(data_tmp2)
+      cwp_data = cwp_data + temporary(data_tmp2)
     endelse
-
-
+    
+    
   ENDFOR
   
   

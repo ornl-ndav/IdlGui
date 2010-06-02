@@ -4,8 +4,8 @@ function calcMslicePsi,  rotationangle, seblock
   seblock_value = 0.0
   
   ;psi = - (180 - seblock_value - rotationangle) / 2.0
-
+  
   psi = seblock_value + rotationangle_offset
-
+  
   return, psi
 end

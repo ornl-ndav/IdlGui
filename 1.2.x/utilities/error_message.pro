@@ -137,117 +137,117 @@
 
 
 FUNCTION ERROR_MESSAGE, theMessage, Error=error, Informational=information, $
-   Traceback=traceback, NoName=noname, Title=title, _Extra=extra
-
-On_Error, 2
-
-   ; Check for presence and type of message.
-
-IF N_Elements(theMessage) EQ 0 THEN theMessage = !Error_State.Msg
-s = Size(theMessage)
-messageType = s[s[0]+1]
-IF messageType NE 7 THEN BEGIN
-   Message, "The message parameter must be a string.", _Extra=extra
-ENDIF
-IF N_Elements(traceback) EQ 0 THEN traceback = 0
-
-   ; Get the call stack and the calling routine's name.
-
-Help, Calls=callStack
-callingRoutine = (StrSplit(StrCompress(callStack[1])," ", /Extract))[0]
-
-   ; Are widgets supported?
-
-widgetsSupported = ((!D.Flags AND 65536L) NE 0)
-IF widgetsSupported THEN BEGIN
-
-      ; If this is an error produced with the MESSAGE command, it is a trapped
-      ; error and will have the name "IDL_M_USER_ERR".
-
-   IF !ERROR_STATE.NAME EQ "IDL_M_USER_ERR" THEN BEGIN
-
+    Traceback=traceback, NoName=noname, Title=title, _Extra=extra
+    
+  On_Error, 2
+  
+  ; Check for presence and type of message.
+  
+  IF N_Elements(theMessage) EQ 0 THEN theMessage = !Error_State.Msg
+  s = Size(theMessage)
+  messageType = s[s[0]+1]
+  IF messageType NE 7 THEN BEGIN
+    Message, "The message parameter must be a string.", _Extra=extra
+  ENDIF
+  IF N_Elements(traceback) EQ 0 THEN traceback = 0
+  
+  ; Get the call stack and the calling routine's name.
+  
+  Help, Calls=callStack
+  callingRoutine = (StrSplit(StrCompress(callStack[1])," ", /Extract))[0]
+  
+  ; Are widgets supported?
+  
+  widgetsSupported = ((!D.Flags AND 65536L) NE 0)
+  IF widgetsSupported THEN BEGIN
+  
+    ; If this is an error produced with the MESSAGE command, it is a trapped
+    ; error and will have the name "IDL_M_USER_ERR".
+  
+    IF !ERROR_STATE.NAME EQ "IDL_M_USER_ERR" THEN BEGIN
+    
       IF N_Elements(title) EQ 0 THEN title = 'Trapped Error'
-
-         ; If the message has the name of the calling routine in it,
-         ; it should be stripped out. Can you find a colon in the string?
-
+      
+      ; If the message has the name of the calling routine in it,
+      ; it should be stripped out. Can you find a colon in the string?
+      
       ; Is the calling routine an object method? If so, special processing
       ; is required. Object methods will have two colons together.
-
+      
       doublecolon = StrPos(theMessage, "::")
       IF doublecolon NE -1 THEN BEGIN
-
-         prefix = StrMid(theMessage, 0, doublecolon+2)
-         submessage = StrMid(theMessage, doublecolon+2)
-         colon = StrPos(submessage, ":")
-         IF colon NE -1 THEN BEGIN
-
-               ; Extract the text up to the colon. Is this the same as
-               ; the callingRoutine? If so, strip it.
-
-            IF StrMid(theMessage, 0, colon+StrLen(prefix)) EQ callingRoutine THEN $
-               theMessage = StrMid(theMessage, colon+1+StrLen(prefix))
-         ENDIF
+      
+        prefix = StrMid(theMessage, 0, doublecolon+2)
+        submessage = StrMid(theMessage, doublecolon+2)
+        colon = StrPos(submessage, ":")
+        IF colon NE -1 THEN BEGIN
+        
+          ; Extract the text up to the colon. Is this the same as
+          ; the callingRoutine? If so, strip it.
+        
+          IF StrMid(theMessage, 0, colon+StrLen(prefix)) EQ callingRoutine THEN $
+            theMessage = StrMid(theMessage, colon+1+StrLen(prefix))
+        ENDIF
       ENDIF ELSE BEGIN
-
-         colon = StrPos(theMessage, ":")
-         IF colon NE -1 THEN BEGIN
-
-               ; Extract the text up to the colon. Is this the same as
-               ; the callingRoutine? If so, strip it.
-
-            IF StrMid(theMessage, 0, colon) EQ callingRoutine THEN $
-               theMessage = StrMid(theMessage, colon+1)
-         ENDIF
-
+      
+        colon = StrPos(theMessage, ":")
+        IF colon NE -1 THEN BEGIN
+        
+          ; Extract the text up to the colon. Is this the same as
+          ; the callingRoutine? If so, strip it.
+        
+          IF StrMid(theMessage, 0, colon) EQ callingRoutine THEN $
+            theMessage = StrMid(theMessage, colon+1)
+        ENDIF
+        
       ENDELSE
-
-
-         ; Add the calling routine's name, unless NONAME is set.
-
+      
+      
+      ; Add the calling routine's name, unless NONAME is set.
+      
       IF Keyword_Set(noname) THEN BEGIN
-         answer = Dialog_Message(theMessage, Title=title, _Extra=extra, $
-            Error=error, Information=information)
+        answer = Dialog_Message(theMessage, Title=title, _Extra=extra, $
+          Error=error, Information=information)
       ENDIF ELSE BEGIN
-         answer = Dialog_Message(StrUpCase(callingRoutine) + ": " + $
-            theMessage, Title=title, _Extra=extra, $
-            Error=error, Information=information)
+        answer = Dialog_Message(StrUpCase(callingRoutine) + ": " + $
+          theMessage, Title=title, _Extra=extra, $
+          Error=error, Information=information)
       ENDELSE
-
-   ENDIF ELSE BEGIN
-
-         ; Otherwise, this is an IDL system error.
-
+      
+    ENDIF ELSE BEGIN
+    
+      ; Otherwise, this is an IDL system error.
+    
       IF N_Elements(title) EQ 0 THEN title = 'System Error'
-
+      
       IF StrUpCase(callingRoutine) EQ "$MAIN$" THEN $
-         answer = Dialog_Message(theMessage, _Extra=extra, Title=title, $
-            Error=error, Information=information) ELSE $
-      IF Keyword_Set(noname) THEN BEGIN
-         answer = Dialog_Message(theMessage, _Extra=extra, Title=title, $
-            Error=error, Information=information)
+        answer = Dialog_Message(theMessage, _Extra=extra, Title=title, $
+        Error=error, Information=information) ELSE $
+        IF Keyword_Set(noname) THEN BEGIN
+        answer = Dialog_Message(theMessage, _Extra=extra, Title=title, $
+          Error=error, Information=information)
       ENDIF ELSE BEGIN
-         answer = Dialog_Message(StrUpCase(callingRoutine) + "--> " + $
-            theMessage, _Extra=extra, Title=title, $
-            Error=error, Information=information)
+        answer = Dialog_Message(StrUpCase(callingRoutine) + "--> " + $
+          theMessage, _Extra=extra, Title=title, $
+          Error=error, Information=information)
       ENDELSE
-   ENDELSE
-ENDIF ELSE BEGIN
-      Message, theMessage, /Continue, /NoPrint, /NoName, /NoPrefix, _Extra=extra
-      Print, '%' + callingRoutine + ': ' + theMessage
-      answer = 'OK'
-ENDELSE
-
-   ; Provide traceback information if requested and this is NOT an informational message.
-
-IF Keyword_Set(traceback) AND ~Keyword_Set(informational) THEN BEGIN
-   Help, /Last_Message, Output=traceback
-   Print,''
-   Print, 'Traceback Report from ' + StrUpCase(callingRoutine) + ':'
-   Print, ''
-   FOR j=0,N_Elements(traceback)-1 DO Print, "     " + traceback[j]
-ENDIF
-
-RETURN, answer
+    ENDELSE
+  ENDIF ELSE BEGIN
+    Message, theMessage, /Continue, /NoPrint, /NoName, /NoPrefix, _Extra=extra
+    Print, '%' + callingRoutine + ': ' + theMessage
+    answer = 'OK'
+  ENDELSE
+  
+  ; Provide traceback information if requested and this is NOT an informational message.
+  
+  IF Keyword_Set(traceback) AND ~Keyword_Set(informational) THEN BEGIN
+    Help, /Last_Message, Output=traceback
+    Print,''
+    Print, 'Traceback Report from ' + StrUpCase(callingRoutine) + ':'
+    Print, ''
+    FOR j=0,N_Elements(traceback)-1 DO Print, "     " + traceback[j]
+  ENDIF
+  
+  RETURN, answer
 END ; ----------------------------------------------------------------------------
 

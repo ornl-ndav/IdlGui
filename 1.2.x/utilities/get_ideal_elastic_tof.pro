@@ -8,7 +8,7 @@ function get_ideal_elastic_tof, instrument, ei, tzero
   planck_const = 6.626076e-34
   c1 = double(neutron_mass / (planck_const * 1.0e4))
   
- 
+  
   
   case (STRUPCASE(instrument)) of
     "ARCS": begin
