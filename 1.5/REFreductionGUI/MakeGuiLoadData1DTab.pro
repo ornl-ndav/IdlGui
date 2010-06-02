@@ -338,7 +338,7 @@ PRO MakeGuiLoadData1DTab, D_DD_Tab, $
     YOFFSET   = BackPeakRescaleTabSize[1],$
     SCR_XSIZE = BackPeakRescaleTabSize[2],$
     SCR_YSIZE = BackPeakRescaleTabSize[3],$
-    SENSITIVE = 0,$
+    SENSITIVE = 1,$  ;FIXME
     LOCATION  = 0)
     
   ;TAB #1 (ROI and Peak/Background Selection) -----------------------------------
@@ -429,7 +429,7 @@ PRO MakeGuiLoadData1DTab, D_DD_Tab, $
     yoffset = 0,$
     scr_xsize = sRoiYmax.size[2]+4,$
     scr_ysize = sRoiYmax.size[3]+4)
-        
+    
   ;OR label
   wOrLabel = WIDGET_LABEL(wRoiBase,$
     XOFFSET = sOrLabel.size[0],$
@@ -491,26 +491,58 @@ PRO MakeGuiLoadData1DTab, D_DD_Tab, $
     
   ;PEAK base --------------------------------------------------------------------
   wPeakBase = WIDGET_BASE(wPeakBackBase,$
-    XOFFSET   = sPeakBase.size[0],$
-    YOFFSET   = sPeakBase.size[1],$
-    SCR_XSIZE = sPeakBase.size[2],$
-    SCR_YSIZE = sPeakBase.size[3]-15,$
+    XOFFSET   = 0,$
+    YOFFSET   = 0,$
+    SCR_XSIZE = 500,$
+    SCR_YSIZE = 80,$
     UNAME     = sPeakBase.uname,$
-    /row,$
+    ;    /row,$
     MAP       = sPeakBase.map)
     
-  ymin = cw_field(wPeakBase,$
-    title = '                         Ymin:',$
+  xoff = 150
+  yoff = 30
+  
+  yminbase = widget_base(wPeakBase,$
+    uname = 'data_peak_ymin_base',$
+    xoffset = xoff,$
+    yoffset = yoff)
+  ymin = cw_field(yminbase,$
+    title = 'Ymin:',$
     uname = sPeakRoiYmin.uname,$
     /return_events,$
     xsize = 4)
     
-  ymin = cw_field(wPeakBase,$
-    title = '      Ymax:',$
+  back_base = widget_base(wPeakBase,$
+    uname = 'data_back_peak_ymin_base',$
+    xoffset = xoff-2, $
+    yoffset = yoff-2, $
+    scr_xsize = 89,$
+    scr_ysize = 41,$
+    map = 1)
+  back_draw = widget_draw(back_base)
+  
+  xoff2 = xoff + 150
+  
+  ymaxbase = widget_base(wPeakBase,$
+    uname = 'data_peak_ymax_base',$
+    xoffset = xoff2,$
+    yoffset = yoff)
+  ymin = cw_field(ymaxbase,$
+    title = 'Ymax:',$
     uname = sPeakRoiYmax.uname,$
     /return_events,$
     xsize = 4)
     
+  back_base = widget_base(wPeakBase,$
+    uname = 'data_back_peak_ymax_base',$
+    xoffset = xoff2-2, $
+    yoffset = yoff-2, $
+    scr_xsize = 89,$
+    scr_ysize = 41,$
+    map = 0)
+  back_draw = widget_draw(back_base)
+  
+  
   ;TAB #1-3 Zoom base ===========================================================
   wZoomBase = WIDGET_BASE(wRoiTab,$
     XOFFSET   = sZoomBase.size[0],$
