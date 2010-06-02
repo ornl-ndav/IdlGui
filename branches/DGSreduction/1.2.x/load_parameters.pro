@@ -43,7 +43,7 @@ pro load_parameters, widgetBase, Filename=filename
     ok = ERROR_MESSAGE(!ERROR_STATE.MSG + ' Returning...', TRACEBACK=1, /error)
     return
   ENDIF
-
+  
   ; Get the info structure
   WIDGET_CONTROL, widgetBase, GET_UVALUE=info, /NO_COPY
   
@@ -53,9 +53,9 @@ pro load_parameters, widgetBase, Filename=filename
   
   ; Check that we haven't pressed cancel
   IF filename EQ '' THEN BEGIN
-      ; Put info back
-      WIDGET_CONTROL, widgetBase, SET_UVALUE=info, /NO_COPY
-      RETURN
+    ; Put info back
+    WIDGET_CONTROL, widgetBase, SET_UVALUE=info, /NO_COPY
+    RETURN
   ENDIF
   
   print, 'Loading ALL parameters from ' + filename
@@ -67,8 +67,8 @@ pro load_parameters, widgetBase, Filename=filename
   RESTORE, FILENAME=filename, /RELAXED_STRUCTURE_ASSIGNMENT
   
   ; Set the mask to be always on.
-  dgsr_cmd->SetProperty, Mask=1 
-
+  dgsr_cmd->SetProperty, Mask=1
+  
   info.dgsr_cmd = dgsr_cmd
   info.dgsn_cmd = dgsn_cmd
   

@@ -128,7 +128,7 @@ PRO make_settings_tab, baseWidget, myCommandObj
   ; Make Proposal Shared the default.
   WIDGET_CONTROL, proposalSharedButtonID, SET_BUTTON=1
   myCommandObj->SetProperty, NormLocation='PROP'
-    
+  
   ; === dgs_reduction timing ===
   timingBase = WIDGET_BASE(settingsTabCol1)
   timingLabel = WIDGET_LABEL(timingBase, VALUE=' Diagnostic Timing ', XOFFSET=5)

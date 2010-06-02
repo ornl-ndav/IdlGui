@@ -35,12 +35,12 @@
 PRO MonitorJob_Events, event
 
   thisEvent = TAG_NAMES(event, /STRUCTURE_NAME)
-
-    
+  
+  
   IF thisEvent EQ 'WIDGET_TIMER' THEN BEGIN
     ; Get the info structure and copy it here
     WIDGET_CONTROL, event.top, GET_UVALUE=jobinfo ;, /NO_COPY
-  
+    
     ; Query the state of the jobs
     
     
@@ -54,7 +54,7 @@ PRO MonitorJob_Events, event
     ; Reset the Timer
     WIDGET_CONTROL, event.top, TIMER=jobinfo.interval
   ENDIF
-
-
-
+  
+  
+  
 END

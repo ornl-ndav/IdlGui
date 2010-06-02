@@ -145,9 +145,9 @@ PRO DGSreduction_LaunchCollector, event, WaitForJobs=waitforjobs
       " --phx=" + outdir + "/" + instrument + "_" + runnumber + ".phx" + $
       " -o " + outdir + "/" + instrument + "_" + runnumber + ".nxspe" + $
       " -e " + ei + " --lambda-scaling=" + STRCOMPRESS(STRING(lambda_scaling), /REMOVE_ALL)
-    
+      
     ;print, 'SEBLOCK = ', SEBLOCK
-    
+      
       
     IF STRLEN(seblock) GT 0 THEN BEGIN
       nxspe_cmd += ' --seblock=' + seblock
