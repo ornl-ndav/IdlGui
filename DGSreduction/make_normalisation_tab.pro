@@ -59,8 +59,8 @@ PRO make_Normalisation_Tab, baseWidget, dgs_cmd
   normfilebase = WIDGET_BASE(vanadiumCol, /ROW)
   normFileID = CW_FIELD(normfilebase, XSIZE=30, /ALL_EVENTS,     TITLE="          Vanadium: ", UVALUE="DGSR_NORMRUN", $
     UNAME="DGSR_NORMRUN")
-  normemptycanbrowserbutton = WIDGET_BUTTON(normfilebase, VALUE=' Browse... ', $
-    UNAME='DGS_BROWSE_NORMRUN', UVALUE='DGS_BROWSE_NORMRUN')
+;  normemptycanbrowserbutton = WIDGET_BUTTON(normfilebase, VALUE=' Browse... ', $
+;    UNAME='DGS_BROWSE_NORMRUN', UVALUE='DGS_BROWSE_NORMRUN')
     
   normemptycanbase = WIDGET_BASE(vanadiumCol, /ROW)
   normemptycanFileID = CW_FIELD(normemptycanbase, XSIZE=30, /ALL_EVENTS, TITLE="Vanadium Empty Can: ", $
