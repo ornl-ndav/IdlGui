@@ -746,14 +746,14 @@ function ReductionCmd::Check
   ENDIF
   
   ; Check that the max Energy Transfer is less than Ei
-  ;  IF (self.energybins_max GE self.ei) THEN BEGIN
-  ;    ok = 0
-  ;    print, 'Ei = ', self.ei
-  ;    print, 'Emax = ', self.energybins_max
-  ;    msg = [msg,['You cannot have Emax ('+ $
-  ;      STRCOMPRESS(STRING(self.energybins_max),/REMOVE_ALL)+ $
-  ;      'meV) >= Ei ('+STRCOMPRESS(STRING(self.ei),/REMOVE_ALL)+'meV).']]
-  ;  ENDIF
+  IF (self.energybins_max GE self.ei) THEN BEGIN
+    ok = 0
+    ;print, 'Ei = ', self.ei
+    ;print, 'Emax = ', self.energybins_max
+    msg = [msg,['You cannot have Emax ('+ $
+      STRCOMPRESS(STRING(self.energybins_max),/REMOVE_ALL)+ $
+      'meV) >= Ei ('+STRCOMPRESS(STRING(self.ei),/REMOVE_ALL)+'meV).']]
+  ENDIF
   
   ; Now let's do some more complicated dependencies
   
