@@ -205,6 +205,8 @@ PRO SwitchDataYminYmaxLabel, Event
   widget_control,id,get_uvalue=global
   id = WIDGET_INFO(Event.top,FIND_BY_UNAME='data_ymin_ymax_label')
   WIDGET_CONTROL, id, GET_VALUE = value
+  base1_peak_to_see = 'data_peak_ymin_base'
+  base2_peak_to_see = 'data_peak_ymax_base'
   IF ((*global).miniVersion EQ 0) THEN BEGIN
     base1_to_see = 'Data1SelectionROIYminBase'
     base2_to_see = 'Data1SelectionROIYmaxBase'
@@ -212,10 +214,14 @@ PRO SwitchDataYminYmaxLabel, Event
       value = 'Current working selection -> Ymax'
       uname_to_see = 'ymax_data_base_background'
       uname_to_hide = 'ymin_data_base_background'
+      uname_peak_to_hide = 'data_back_peak_ymin_base'
+      uname_peak_to_see = 'data_back_peak_ymax_base'
     ENDIF ELSE BEGIN
       value = 'Current working selection -> Ymin'
       uname_to_see = 'ymin_data_base_background'
       uname_to_hide = 'ymax_data_base_background'
+      uname_peak_to_see = 'data_back_peak_ymin_base'
+      uname_peak_to_hide = 'data_back_peak_ymax_base'
     ENDELSE
   ENDIF ELSE BEGIN
     base1_to_see = 'Data1SelectionBackgroundYminBase'
@@ -234,12 +240,23 @@ PRO SwitchDataYminYmaxLabel, Event
   
   id_see = widget_info(event.top, find_by_uname=uname_to_see)
   id_hide = widget_info(event.top, find_by_uname=uname_to_hide)
+  peak_id_see = widget_info(event.top, find_by_uname=uname_peak_to_see)
+  peak_id_hide = widget_info(event.top, find_by_uname=uname_peak_to_hide)
   base1_id_see = widget_info(event.top, find_by_uname=base1_to_see)
   base2_id_see = widget_info(event.top, find_by_uname=base2_to_see)
+  base1_peak_id_see = widget_info(event.top, $
+    find_by_uname=base1_peak_to_see)
+  base2_peak_id_see = widget_info(event.top, $
+    find_by_uname=base2_peak_to_see)
+    
   widget_control, id_see, /map
   widget_control, id_hide, map=0
+  widget_control, peak_id_see, /map
+  widget_control, peak_id_hide, map=0
   widget_control, base1_id_see, /map
   widget_control, base2_id_see, /map
+  widget_control, base1_peak_id_see, /map
+  widget_control, base2_peak_id_see, /map
   
 end
 
@@ -251,6 +268,8 @@ PRO SwitchNormYminYmaxLabel, Event
   widget_control,id,get_uvalue=global
   id = WIDGET_INFO(Event.top,FIND_BY_UNAME='norm_ymin_ymax_label')
   WIDGET_CONTROL, id, GET_VALUE = value
+  base1_peak_to_see = 'data_peak_ymin_base'
+  base1_peak_to_see = 'data_peak_ymax_base'
   IF ((*global).miniVersion EQ 0) THEN BEGIN
     base1_to_see = 'Norm1SelectionBackgroundYminBase'
     base2_to_see = 'Norm1SelectionBackgroundYmaxBase'
@@ -258,10 +277,14 @@ PRO SwitchNormYminYmaxLabel, Event
       value = 'Current working selection -> Ymax'
       uname_to_see = 'ymax_norm_base_background'
       uname_to_hide = 'ymin_norm_base_background'
+      uname_peak_to_hide = 'data_back_peak_ymin_base'
+      uname_peak_to_see = 'data_back_peak_ymin_base'
     ENDIF ELSE BEGIN
       value = 'Current working selection -> Ymin'
       uname_to_hide = 'ymax_norm_base_background'
       uname_to_see = 'ymin_norm_base_background'
+      uname_peak_to_see = 'data_back_peak_ymin_base'
+      uname_peak_to_hide = 'data_back_peak_ymin_base'
     ENDELSE
   ENDIF ELSE BEGIN
     base1_to_see = 'Norm1SelectionBackgroundYminBase'
@@ -280,12 +303,22 @@ PRO SwitchNormYminYmaxLabel, Event
   
   id_see = widget_info(event.top, find_by_uname=uname_to_see)
   id_hide = widget_info(event.top, find_by_uname=uname_to_hide)
+  peak_id_see = widget_info(event.top, find_by_uname=uname_peak_to_see)
+  peak_id_hide = widget_info(event.top, find_by_uname=uname_peak_to_hide)
   base1_id_see = widget_info(event.top, find_by_uname=base1_to_see)
   base2_id_see = widget_info(event.top, find_by_uname=base2_to_see)
+  base1_peak_id_see = widget_info(event.top, $
+    find_by_uname=base1_peak_to_see)
+  base2_peak_id_see = widget_info(event.top, $
+    find_by_uname=base2_peak_to_see)
   widget_control, id_see, /map
   widget_control, id_hide, map=0
+  widget_control, peak_id_see, /map
+  widget_control, peak_id_hide, map=0
   widget_control, base1_id_see, /map
   widget_control, base2_id_see, /map
+  widget_control, base1_peak_id_see, /map
+  widget_control, base2_peak_id_see, /map
   
 END
 
