@@ -11,7 +11,7 @@
 ; :Author: scu
 ;-
 FUNCTION ExpandIndividualRunNumbers, RunString
- 
+
   ; Calculate how many Reduction jobs we are doing
   DataRunString = STRSPLIT(RunString, ",", /EXTRACT)
   

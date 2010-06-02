@@ -25,7 +25,7 @@ FUNCTION Construct_DataPaths, lower, upper, job, totaljobs, PAD=pad
   IF (upper LT 0) THEN upper = 0
   
   ; Work out what the lower/upper are for this job
-
+  
   IF (lower NE 0) AND (upper NE 0) THEN BEGIN
     IF (totaljobs EQ 1) THEN BEGIN
       this_lower = lower
@@ -47,9 +47,9 @@ FUNCTION Construct_DataPaths, lower, upper, job, totaljobs, PAD=pad
       this_upper = formatBankNumber(this_upper)
       
     ENDIF
-  
+    
     datapaths=STRCOMPRESS(STRING(this_lower), /REMOVE_ALL) + "-" $
-        + STRCOMPRESS(STRING(this_upper), /REMOVE_ALL)
+      + STRCOMPRESS(STRING(this_upper), /REMOVE_ALL)
     RETURN, datapaths
   ENDIF
   
@@ -62,13 +62,13 @@ FUNCTION Construct_DataPaths, lower, upper, job, totaljobs, PAD=pad
   ENDIF
   
   IF (lower EQ 0) AND (upper NE 0) THEN BEGIN
-      IF KEYWORD_SET(PAD) THEN BEGIN
+    IF KEYWORD_SET(PAD) THEN BEGIN
       RETURN, formatBankNumber(lower)
     ENDIF ELSE BEGIN
       RETURN, STRING(STRCOMPRESS(upper, /REMOVE_ALL))
     ENDELSE
   ENDIF
-
+  
   RETURN, ""
- 
+  
 END

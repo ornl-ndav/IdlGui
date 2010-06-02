@@ -1,6 +1,6 @@
 ;+
 ; :Description:
-;    Given a detector bank number it returns the bank 
+;    Given a detector bank number it returns the bank
 ;    number as a string in a 3 number format.
 ;    e.g. '001', '023' or '123'
 ;
@@ -18,17 +18,17 @@ FUNCTION formatBankNumber, bank
   IF (bank LT 10) THEN BEGIN
     output = '00'+ STRTRIM(STRING(bank), 2)
     RETURN, output
-  ENDIF 
+  ENDIF
   
   IF ((bank GE 10) AND (bank LT 100)) THEN BEGIN
     output = '0'+ STRTRIM(STRING(bank), 2)
     RETURN, output
-  ENDIF 
+  ENDIF
   
   IF (bank GE 100) THEN BEGIN
     output = STRTRIM(STRING(bank), 2)
     RETURN, output
-  ENDIF 
+  ENDIF
   
   RETURN, output
 END

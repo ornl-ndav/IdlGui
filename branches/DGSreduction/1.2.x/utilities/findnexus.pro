@@ -40,7 +40,7 @@ FUNCTION findnexus,  $
     isNexusExist
     
   ;WIDGET_CONTROL,Event.top,GET_UVALUE=global
-  
+    
   filename = ""
   
   IF (N_ELEMENTS(RUN_NUMBER) EQ 0) THEN RETURN, 'ERROR'
@@ -81,8 +81,8 @@ FUNCTION findnexus,  $
   ENDELSE
   
   data = {exists: isNeXusExist, $
-          filename: filename}
-          
+    filename: filename}
+    
   return, data
   
 END
