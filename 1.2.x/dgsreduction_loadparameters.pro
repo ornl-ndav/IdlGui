@@ -42,7 +42,7 @@
 ; :Author: scu
 ;-
 PRO DGSreduction_LoadParameters, event
-  
+
   ; Just extract the widgetbase from the event and call the load routine
   load_parameters, event.top
   

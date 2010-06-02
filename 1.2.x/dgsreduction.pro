@@ -191,7 +191,7 @@ PRO DGSreduction_Execute, event
       ; Are we using the default hard mask ?
       IF (hardmask EQ 1) THEN BEGIN
         print,'USING DEFAULT HARDMASK'
-      source_maskfile = get_maskfile(instrument, runnumber)
+        source_maskfile = get_maskfile(instrument, runnumber)
       ENDIF
       ; Are we using a custom hard mask ?
       IF (customhardmask EQ 1) THEN BEGIN

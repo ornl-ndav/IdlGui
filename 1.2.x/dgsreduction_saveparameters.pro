@@ -41,5 +41,5 @@
 ; :Author: scu
 ;-
 PRO DGSreduction_SaveParameters, event
-  
+
 END

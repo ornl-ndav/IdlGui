@@ -459,7 +459,7 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   ;  UNAME="DGSR_DWF_ERROR", /ALL_EVENTS, XSIZE=13, VALUE='0.0')
     
     
-    outputFeedbackRow = WIDGET_BASE(reductionTabCol2Row2Col1, /ROW)
+  outputFeedbackRow = WIDGET_BASE(reductionTabCol2Row2Col1, /ROW)
   outputDirectoryLabel1 = WIDGET_LABEL(outputFeedbackRow, VALUE='Current output will be written to ')
   outputDirectoryLabel2 = WIDGET_LABEL(outputFeedbackRow, VALUE='<unknown>', $
     UNAME='DGSR_OUTPUT_DIRECTORY_LABEL', $

@@ -33,12 +33,12 @@
 ;-
 
 PRO dgsnorm_events, event, dgsn_cmd
-  
+
   WIDGET_CONTROL, event.id, GET_UVALUE=myUVALUE
   
   ; Check that we actually got something back in the UVALUE
   IF N_ELEMENTS(myUVALUE) EQ 0 THEN myUVALUE="NOTHING"
-
+  
   CASE (myUVALUE) OF
     'DGSN_DATARUN': BEGIN
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
@@ -51,13 +51,13 @@ PRO dgsnorm_events, event, dgsn_cmd
     END
     'DGSN_TZERO': BEGIN
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
-      dgsn_cmd->SetProperty, Tzero=myValue      
+      dgsn_cmd->SetProperty, Tzero=myValue
     END
     'DGSN_FINDNEXUS': BEGIN
       dgsn_cmd->GetProperty, Instrument=instrument
       dgsn_cmd->GetProperty, DataRun=run_number
-      ; TODO: Sort out findnexus
-      ;nxsfile = findnexus(RUN_NUMBER=run_number, INSTRUMENT=instrument)
+    ; TODO: Sort out findnexus
+    ;nxsfile = findnexus(RUN_NUMBER=run_number, INSTRUMENT=instrument)
     END
     'DGSN_DATAPATHS_LOWER': BEGIN
       WIDGET_CONTROL, event.ID, GET_VALUE=lowerValue
@@ -90,7 +90,7 @@ PRO dgsnorm_events, event, dgsn_cmd
       IF (event.SELECT) THEN BEGIN
         WIDGET_CONTROL, normLabel, SET_VALUE=" Normalisation Integration Range (A)   "
       ENDIF ELSE BEGIN
-       WIDGET_CONTROL, normLabel, SET_VALUE=" Normalisation Integration Range (meV) "
+        WIDGET_CONTROL, normLabel, SET_VALUE=" Normalisation Integration Range (meV) "
       ENDELSE
     END
     'DGSN_LAMBDA_MIN': BEGIN
@@ -121,21 +121,21 @@ PRO dgsnorm_events, event, dgsn_cmd
       ; Upstream Monitor Number (usualy 1)
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
       dgsn_cmd->SetProperty, USmonPath=STRCOMPRESS(myValue, /REMOVE_ALL)
-    END   
+    END
     'DGSN_EMPTYCAN': BEGIN
       ; Empty Can Filename
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
-      dgsn_cmd->SetProperty, EmptyCan=myValue      
-    END    
+      dgsn_cmd->SetProperty, EmptyCan=myValue
+    END
     'DGSN_BLACKCAN': BEGIN
       ; Black Can Filename
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
-      dgsn_cmd->SetProperty, BlackCan=myValue      
-    END    
+      dgsn_cmd->SetProperty, BlackCan=myValue
+    END
     'DGSN_DARK': BEGIN
       ; Dark Current Filename
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
-      dgsn_cmd->SetProperty, Dark=myValue      
+      dgsn_cmd->SetProperty, Dark=myValue
     END
     'DGSN_TIBCONST': BEGIN
       ; Time Independent Background Constant
@@ -183,19 +183,19 @@ PRO dgsnorm_events, event, dgsn_cmd
       dgsn_cmd->SetProperty, DetEff=myValue
     END
     'DGSN_LO_THRESHOLD':BEGIN
-      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
-      dgsn_cmd->SetProperty, Lo_Threshold=myValue
-    END
-    'DGSN_HI_THRESHOLD':BEGIN
-      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
-      dgsn_cmd->SetProperty, Hi_Threshold=myValue
-    END
-    'NOTHING': BEGIN
-    END
-    ELSE: begin
-    ; Do nowt
-      print, '*** UVALUE: ' + myUVALUE + ' not handled! ***' 
-    END
-  ENDCASE
+    WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+    dgsn_cmd->SetProperty, Lo_Threshold=myValue
+  END
+  'DGSN_HI_THRESHOLD':BEGIN
+  WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+  dgsn_cmd->SetProperty, Hi_Threshold=myValue
+END
+'NOTHING': BEGIN
+END
+ELSE: begin
+  ; Do nowt
+  print, '*** UVALUE: ' + myUVALUE + ' not handled! ***'
+END
+ENDCASE
 
 END
