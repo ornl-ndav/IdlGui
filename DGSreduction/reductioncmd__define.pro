@@ -758,7 +758,7 @@ function ReductionCmd::Check
   ENDIF
   
   ; Check that the max Energy Transfer is less than Ei
-  IF (self.energybins_max GE self.ei) THEN BEGIN
+  IF (double(self.energybins_max) GE double(self.ei)) THEN BEGIN
     ok = 0
     ;      print, 'Ei = ', self.ei
     ;      print, 'Emax = ', self.energybins_max
@@ -815,15 +815,15 @@ function ReductionCmd::Check
     ENDIF
   endfor
   
-    ; Check for non-expected special characters in the User Label Run field
-    BadSymbols = ['!','@','#','$','%','^','&','*','(',')','<','>','?','[',']','{','}',' ']
-    for index = 0L, N_ELEMENTS(BadSymbols)-1 do begin
-      IF (STRPOS(self.UserLabel, BadSymbols[index]) NE -1) THEN BEGIN
-        ok = 0
-        msg = [msg,['"' + BadSymbols[index]+'" is not an allowed delimiter in the output directory specification.']]
-      ENDIF
-    endfor
-
+  ; Check for non-expected special characters in the User Label Run field
+  BadSymbols = ['!','@','#','$','%','^','&','*','(',')','<','>','?','[',']','{','}',' ']
+  for index = 0L, N_ELEMENTS(BadSymbols)-1 do begin
+    IF (STRPOS(self.UserLabel, BadSymbols[index]) NE -1) THEN BEGIN
+      ok = 0
+      msg = [msg,['"' + BadSymbols[index]+'" is not an allowed delimiter in the output directory specification.']]
+    ENDIF
+  endfor
+  
   
   ; Need to specify a min/max for the monitor integration if we are normalising to the monitor
   IF (self.nomonitornorm EQ 0) THEN BEGIN
@@ -857,11 +857,11 @@ function ReductionCmd::Check
   ENDIF
   
   ; You cannot specify a 'batch' of runs and also specify a custom output directory
-;  IF (STRLEN(self.OutputOverride) GE 1) AND (STRPOS(self.datarun, ':') NE -1) THEN BEGIN
-;    ok = 1
-;    msg = [msg,['Sorry - you cannot specify a series of batch runs and a custom output directory']]
-;  ENDIF
-;  
+  ;  IF (STRLEN(self.OutputOverride) GE 1) AND (STRPOS(self.datarun, ':') NE -1) THEN BEGIN
+  ;    ok = 1
+  ;    msg = [msg,['Sorry - you cannot specify a series of batch runs and a custom output directory']]
+  ;  ENDIF
+  ;
   ; Check to see that the *.norm and mask files for vanadium are split up into
   ; the correct number of jobs.
   IF (STRLEN(self.normalisation) GE 1) AND (self.normalisation NE 0) $
@@ -1121,7 +1121,8 @@ function ReductionCmd::Generate
     
     IF (STRLEN(self.instrument) GT 1) AND (STRLEN(self.datarun) GE 1) THEN $
       cmd[i] += " --output=" + outputDir + $
-      "/" + self.instrument + "_" + STRCOMPRESS(STRING(self.datarun), /REMOVE_ALL) + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
+      "/" + self.instrument + "_" + Get_FirstNumber(STRCOMPRESS(STRING(self.datarun), /REMOVE_ALL)) + $
+      "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
       i+1, self.jobs, /PAD) + ".txt"
       
     ; Instrument Name
