@@ -136,6 +136,7 @@ PRO make_Normalisation_Tab, baseWidget, dgs_cmd
   lambdaratioID = WIDGET_BUTTON(normOptionsBase, VALUE='Ki/Kf Scaling', $
     UVALUE='DGSR_LAMBDA-RATIO', UNAME='DGSR_LAMBDA-RATIO')
     
+    
   monitorNumberID = CW_FIELD(normOptionsBaseColumn1, TITLE="Monitor Number:", UVALUE="DGSR_USMON", $
     UNAME="DGSR_USMON", VALUE=1, /INTEGER, /ALL_EVENTS, XSIZE=5)
   ; Also set the default monitor in the ReductionCmd Class
@@ -170,12 +171,12 @@ PRO make_Normalisation_Tab, baseWidget, dgs_cmd
   monMaxID = CW_FIELD(monitorRangePrettyBase, /ALL_EVENTS, TITLE="Max:", UVALUE="DGSR_MON-INT-MAX", $
     UNAME="DGSR_MON-INT-MAX", XSIZE=10)
     
-    
-    
   ; == DEFAULTS ==
-    
-  ; Disable Proton Charge Norm until No-Monitor Norm is selected
-  WIDGET_CONTROL, pc_button, SENSITIVE=0
+  ; Make normalising to the proton current the default.
+  dgs_cmd->SetProperty, NoMonitorNorm=1
+  dgs_cmd->SetProperty, PcNorm=1
+  WIDGET_CONTROL, pc_button, SET_BUTTON=1
+  WIDGET_CONTROL, noMon_button, SET_BUTTON=1
   
   NormStatus = dgs_cmd->checkNorm()
   WIDGET_CONTROL, executeNormID, SENSITIVE=Normstatus.ok
