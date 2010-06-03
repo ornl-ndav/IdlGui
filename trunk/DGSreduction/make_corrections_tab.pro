@@ -86,25 +86,7 @@ PRO make_Corrections_Tab, baseWidget, dgsr_cmd
   
   
   dataTransID = CW_FIELD(backfilesFilesBase, /ALL_EVENTS, TITLE="Transmission Coeff (Sample Background):", UVALUE="DGSR_DATA-TRANS", $
-    UNAME="DGSR_DATA-TRANS", XSIZE=10)
-    
-    
-  ; == Thresholds ==
-  thresholdRow = WIDGET_BASE(reductionTabCol2Row1Col2, /ROW) ; Just for formatting
-  
-  thresholdBase = WIDGET_BASE(thresholdRow)
-  thresholdLabel = WIDGET_LABEL(thresholdBase, Value=' Cut off Threshold ', XOFFSET=5)
-  thresholdLabelGeomtry = WIDGET_INFO(thresholdLabel, /GEOMETRY)
-  thresholdLabelGeomtryYSize = thresholdLabelGeomtry.ysize
-  thresholdPrettyBase = WIDGET_BASE(thresholdBase, /FRAME, /COLUMN, $
-    YOFFSET=thresholdLabelGeomtryYSize/2, XPAD=10, YPAD=10)
-    
-  thresholdValuesRow = WIDGET_BASE(thresholdPrettyBase, /ROW)
-  tofcutminID = CW_FIELD(thresholdValuesRow, TITLE="Low:", UVALUE="DGSN_LO_THRESHOLD", $
-    UNAME="DGSN_LO_THRESHOLD", /ALL_EVENTS, XSIZE=17)
-  tofcutmaxID = CW_FIELD(thresholdValuesRow, TITLE="High:", UVALUE="DGSN_HI_THRESHOLD", $
-    UNAME="DGSN_HI_THRESHOLD", /ALL_EVENTS, XSIZE=18)
-    
+    UNAME="DGSR_DATA-TRANS", XSIZE=10) 
     
   ; == TOF CUTTING ==
   tofRow = WIDGET_BASE(reductionTabCol2Row1Col2, /ROW) ; Just for formatting
