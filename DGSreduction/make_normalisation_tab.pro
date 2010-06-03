@@ -59,8 +59,8 @@ PRO make_Normalisation_Tab, baseWidget, dgs_cmd
   normfilebase = WIDGET_BASE(vanadiumCol, /ROW)
   normFileID = CW_FIELD(normfilebase, XSIZE=30, /ALL_EVENTS,     TITLE="          Vanadium: ", UVALUE="DGSR_NORMRUN", $
     UNAME="DGSR_NORMRUN")
-;  normemptycanbrowserbutton = WIDGET_BUTTON(normfilebase, VALUE=' Browse... ', $
-;    UNAME='DGS_BROWSE_NORMRUN', UVALUE='DGS_BROWSE_NORMRUN')
+  ;  normemptycanbrowserbutton = WIDGET_BUTTON(normfilebase, VALUE=' Browse... ', $
+  ;    UNAME='DGS_BROWSE_NORMRUN', UVALUE='DGS_BROWSE_NORMRUN')
     
   normemptycanbase = WIDGET_BASE(vanadiumCol, /ROW)
   normemptycanFileID = CW_FIELD(normemptycanbase, XSIZE=30, /ALL_EVENTS, TITLE="Vanadium Empty Can: ", $
@@ -93,6 +93,23 @@ PRO make_Normalisation_Tab, baseWidget, dgs_cmd
   ; Define a Norm Run button
   executeNormID = WIDGET_BUTTON(vanadiumCol, Value=' Process Vanadium Now >>> ', $
     EVENT_PRO='DGSnorm_Execute', UNAME='DGSN_EXECUTE_BUTTON')
+    
+    
+  ; == Thresholds ==
+  thresholdRow = WIDGET_BASE(normTabCol1, /ROW) ; Just for formatting
+  
+  thresholdBase = WIDGET_BASE(thresholdRow)
+  thresholdLabel = WIDGET_LABEL(thresholdBase, Value=' Cut off Threshold ', XOFFSET=5)
+  thresholdLabelGeomtry = WIDGET_INFO(thresholdLabel, /GEOMETRY)
+  thresholdLabelGeomtryYSize = thresholdLabelGeomtry.ysize
+  thresholdPrettyBase = WIDGET_BASE(thresholdBase, /FRAME, /COLUMN, $
+    YOFFSET=thresholdLabelGeomtryYSize/2, XPAD=10, YPAD=10)
+    
+  thresholdValuesRow = WIDGET_BASE(thresholdPrettyBase, /ROW)
+  tofcutminID = CW_FIELD(thresholdValuesRow, TITLE="Low:", UVALUE="DGSN_LO_THRESHOLD", $
+    UNAME="DGSN_LO_THRESHOLD", /ALL_EVENTS, XSIZE=17)
+  tofcutmaxID = CW_FIELD(thresholdValuesRow, TITLE="High:", UVALUE="DGSN_HI_THRESHOLD", $
+    UNAME="DGSN_HI_THRESHOLD", /ALL_EVENTS, XSIZE=18)
     
   ; == NORMALISATION OPTIONS ==
     
