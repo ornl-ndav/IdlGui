@@ -99,7 +99,7 @@ FUNCTION Get_FirstNumber, RunNumberString
       ; it is a live file!
       liveString = STRPOS(firstString, '/shared/live')
       IF liveString NE -1 THEN BEGIN
-        runNumber = 'live'
+        runNumber = 'LIVE'
       ENDIF ELSE BEGIN
         ; First lets open the file
         fileID = h5f_open(firstString)
