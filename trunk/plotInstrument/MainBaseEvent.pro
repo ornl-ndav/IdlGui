@@ -1,22 +1,30 @@
 ;==============================================================================
 
 PRO graph, Event
-print, "graph function called"
+  print, "graph function called"
   WIDGET_CONTROL, /HOURGLASS
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   cmbInst = WIDGET_INFO(Event.top, FIND_BY_UNAME='cmbInst')
+  cmbPlot = WIDGET_INFO(Event.top, FIND_BY_UNAME='linlog')
+  cmbRebin = WIDGET_INFO(Event.top, FIND_BY_UNAME='cmbRebin')
   INSTRUMENT = WIDGET_INFO(cmbInst, /COMBOBOX_GETTEXT)
+  plot = WIDGET_INFO(cmbPlot, /COMBOBOX_GETTEXT)
+  a = fix(WIDGET_INFO(cmbRebin, /COMBOBOX_GETTEXT))
+  rebin = [a,a]
+  print, rebin
+  
   file_name = $
     '/SNS/users/dfp/IdlGui/trunk/plotInstrument/InstrumentData.xml'
   file = OBJ_NEW('PlotData', file_name)
-  print, (*global).path 
+  print, (*global).path
+  
   ;DEBUG /remove
-  ;(*global).path = "/SNS/users/dfp/IdlGui/trunk/plotInstrument/NeXus/BSS_3753.nxs"
+  (*global).path = "/SNS/users/dfp/IdlGui/trunk/plotInstrument/NeXus/BSS_3753.nxs"
   ;(*global).path = "/SNS/users/dfp/IdlGui/trunk/plotInstrument/NeXus/CNCS_355.nxs"
   ;(*global).path = "/SNS/EQSANS/2009_2_6_SCI/1/112/NeXus/EQSANS_112.nxs"
   ;(*global).path = "/SNS/users/dfp/IdlGui/trunk/plotInstrument/NeXus/ARCS_3481.nxs"
   
-  text = file -> Graph((*global).path, INSTRUMENT, [4,4])
+  text = file -> Graph((*global).path, INSTRUMENT, rebin, plot)
   WIDGET_CONTROL, HOURGLASS=0
   print, "done"
 END
@@ -51,7 +59,7 @@ PRO findByRunNbr, Event
   print, command
   SPAWN, command, path
   print, "========="
-
+  
   IF (path NE '') THEN BEGIN
     (*global).path = path
     print, (*global).path

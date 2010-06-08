@@ -34,9 +34,12 @@ PRO MakeGuiMainBase, MAIN_BASE, global
     
   cmbDPath = WIDGET_COMBOBOX(row2, XSIZE = 300, uname = "cmbDPath", /EDITABLE)
   
+  cmbPlot = WIDGET_COMBOBOX(row2, XSIZE = 70, uname = "linlog", /DYNAMIC_RESIZE, $
+    VALUE = ["LIN","LOG"])
+  cmbRebin = WIDGET_COMBOBOX(row2, XSIZE = 70, uname = "cmbRebin", /DYNAMIC_RESIZE, $
+    VALUE = ['1','2','3','4','5','6','7','8'])
   btnGraph = WIDGET_BUTTON(row2, uname = "graph", value = "Graph", $
     /SENSITIVE)
-    
     
     
   IF (*global).cpuName NE "" THEN BEGIN
