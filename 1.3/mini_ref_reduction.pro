@@ -247,9 +247,9 @@ PRO mini_ref_reduction, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;check instrument here
   SPAWN, 'hostname',LISTENING
   CASE (listening) OF
-    'lrac': instrument = 'REF_L'
-    'mrac': instrument = 'REF_M'
-    'heater': instrument = 'UNDEFINED'
+    'lrac.sns.gov': instrument = 'REF_L'
+    'mrac.sns.gov': instrument = 'REF_M'
+    'heater.ornl.gov': instrument = 'UNDEFINED'
     else: instrument = 'UNDEFINED'
   ENDCASE
 
