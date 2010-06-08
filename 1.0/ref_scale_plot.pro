@@ -133,7 +133,9 @@ PRO plot_loaded_file, Event, index
         MainPlotColor = 255
       ENDELSE
       
-      spin_index = (*global).current_spin_index
+      spin_index = get_current_spin_index(event)
+      ;spin_index = (*global).current_spin_index
+      
       if (spin_index ne -1) then begin
         flt0 = *flt0_ptr[index_to_plot[i],spin_index]
         flt1 = *flt1_ptr[index_to_plot[i],spin_index]
