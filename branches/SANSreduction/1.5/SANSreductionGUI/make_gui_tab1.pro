@@ -455,13 +455,11 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     circle_rectangle = WIDGET_BASE(wTab1Base,$
       UNAME = 'circle_rectangle_selection_shape_base',$
       XOFFSET = 895,$
-      YOFFSET = 174,$
+      YOFFSET = 173,$
       FRAME = 0,$
       MAP = 0,$
       /ROW)
       
-    label = WIDGET_LABEL(circle_rectangle,$
-      VALUE = 'Type:')
     rec = WIDGET_DRAW(circle_rectangle,$
       SCR_XSIZE = 30,$
       SCR_YSIZE = 30,$
@@ -474,6 +472,13 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       /BUTTON_EVENTS,$
       /TRACKING_EVENTS,$
       UNAME = 'tab1_circle_selection')
+    sec = widget_draw(circle_rectangle, $
+    scr_xsize = 30,$
+    scr_ysize = 30,$
+    /button_events, $
+    /tracking_events,$
+    uname = 'tab1_sector_selection')
+      
       
     circle_base = WIDGET_BASE(wTab1Base,$
       UNAME = 'tab1_circle_selection_base',$
