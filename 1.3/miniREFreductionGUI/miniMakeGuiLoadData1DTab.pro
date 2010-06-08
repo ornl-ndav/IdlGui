@@ -345,6 +345,7 @@ BackPeakRescaleTab = WIDGET_TAB(load_data_D_tab_base,$
                                 YOFFSET   = BackPeakRescaleTabSize[1],$
                                 SCR_XSIZE = BackPeakRescaleTabSize[2],$
                                 SCR_YSIZE = BackPeakRescaleTabSize[3],$
+                                SENSITIVE = 0,$
                                 LOCATION  = 0)
 
 ;TAB #1 (ROI and Peak/Background Selection) -----------------------------------
@@ -626,7 +627,6 @@ ContrastDropList = WIDGET_DROPLIST(ContrastBase,$
                                    SCR_XSIZE = ContrastDropListSize[2],$
                                    SCR_YSIZE = ContrastDropListSize[3],$
                                    UNAME     = 'data_contrast_droplist',$
-                                   SENSITIVE = 0,$
                                    /TRACKING_EVENTS)
 
 ContrastBottomSlider = WIDGET_SLIDER(ContrastBase,$
@@ -641,7 +641,6 @@ ContrastBottomSlider = WIDGET_SLIDER(ContrastBase,$
                                      TITLE     = ContrastBottomSliderTitle,$
                                      VALUE     = $
                                      ContrastBottomSliderDefaultValue,$
-                                     SENSITIVE = 0,$
                                      /TRACKING_EVENTS)
 
 ContrastNumberSlider = WIDGET_SLIDER(ContrastBase,$
@@ -656,7 +655,6 @@ ContrastNumberSlider = WIDGET_SLIDER(ContrastBase,$
                                      TITLE     = ContrastNumberSliderTitle,$
                                      VALUE     = $
                                      ContrastNumberSliderDefaultValue,$
-                                     SENSITIVE = 0,$
                                      /TRACKING_EVENTS)
 
 ResetContrastButton = WIDGET_BUTTON(ContrastBase,$
@@ -665,7 +663,6 @@ ResetContrastButton = WIDGET_BUTTON(ContrastBase,$
                                     SCR_XSIZE = ResetContrastButtonSize[2],$
                                     SCR_YSIZE = ResetContrastButtonSize[3],$
                                     VALUE     = ResetContrastButtonTitle,$
-                                    SENSITIVE = 0,$
                                     UNAME     = 'data_reset_contrast_button')
 
 
@@ -741,8 +738,7 @@ ResetXScaleButton = WIDGET_BUTTON(RescaleXBase,$
                                   SCR_XSIZE = ResetScaleButtonSize[2],$
                                   SCR_YSIZE = ResetScaleButtonSize[3],$
                                   VALUE     = ResetXScaleButtonTitle,$
-                                  UNAME     = 'data_reset_xaxis_button',$
-                                  SENSITIVE = 0)
+                                  UNAME     = 'data_reset_xaxis_button')
 
 ;Y base
 RescaleYLabel = WIDGET_LABEL(RescaleBase,$
@@ -794,8 +790,7 @@ ResetYScaleButton = WIDGET_BUTTON(RescaleYBase,$
                                   SCR_XSIZE = ResetScaleButtonSize[2],$
                                   SCR_YSIZE = ResetScaleButtonSize[3],$
                                   VALUE     = ResetYScaleButtonTitle,$
-                                  UNAME     = 'data_reset_yaxis_button',$
-                                  SENSITIVE =0)
+                                  UNAME     = 'data_reset_yaxis_button')
 
 ;Z base
 RescaleZLabel = WIDGET_LABEL(RescaleBase,$
@@ -848,8 +843,7 @@ RescaleZScaleDroplist = WIDGET_DROPLIST(RescaleZBase,$
                                         RescaleScaleDroplistSize[0],$
                                         YOFFSET   = $
                                         RescaleScaleDroplistSize[1],$
-                                        UNAME     = 'data_rescale_z_droplist',$
-                                        SENSITIVE = 0)
+                                        UNAME     = 'data_rescale_z_droplist')
 
 ResetZScaleButton = WIDGET_BUTTON(RescaleZBase,$
                                   XOFFSET   = ResetScaleButtonSize[0],$
@@ -857,8 +851,7 @@ ResetZScaleButton = WIDGET_BUTTON(RescaleZBase,$
                                   SCR_XSIZE = ResetScaleButtonSize[2],$
                                   SCR_YSIZE = ResetScaleButtonSize[3],$
                                   VALUE     = ResetZScaleButtonTitle,$
-                                  UNAME     = 'data_reset_zaxis_button',$
-                                  SENSITIVE = 0)
+                                  UNAME     = 'data_reset_zaxis_button')
 
 ;full reset
 FullResetButton = WIDGET_BUTTON(RescaleBase,$
@@ -867,8 +860,7 @@ FullResetButton = WIDGET_BUTTON(RescaleBase,$
                                 SCR_XSIZE = FullResetButtonSize[2],$
                                 SCR_YSIZE = FullResetButtonSize[3],$
                                 UNAME     = 'data_full_reset_button',$
-                                VALUE     = FullResetButtonTitle,$
-                                SENSITIVE = 0)
+                                VALUE     = FullResetButtonTitle)
 
 END
 

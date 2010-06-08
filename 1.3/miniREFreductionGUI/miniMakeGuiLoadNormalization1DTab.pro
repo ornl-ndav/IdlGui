@@ -350,6 +350,7 @@ BackPeakRescaleTab = $
              YOFFSET   = BackPeakRescaleTabSize[1],$
              SCR_XSIZE = BackPeakRescaleTabSize[2],$
              SCR_YSIZE = BackPeakRescaleTabSize[3],$
+             sensitive = 0,$
              LOCATION  = 0)
 
 BackPeakBase = WIDGET_BASE(BackPeakRescaleTab,$
