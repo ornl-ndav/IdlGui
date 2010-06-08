@@ -591,30 +591,47 @@ PRO MAIN_BASE_event, Event
               (*global).x0_device = x0_device
               (*global).y0_device = y0_device
               
-              IF ((*global).selection_shape_type EQ 'rectangle') THEN BEGIN
-              
-                putTextFieldValue, Event, $
-                  'corner_pixel_x0', $
-                  STRCOMPRESS(X+1)
-                putTextFieldValue, Event, $
-                  'corner_pixel_y0', $
-                  STRCOMPRESS(Y)
-                  
-              ENDIF ELSE BEGIN ;circle selection
-              
-                tube = FIX(x+1)
-                pixel = FIX(y)
+              case ((*global).selection_shape_type) of
+                'rectangle': begin
                 
-                putTextFieldValue, Event, $
-                  'circle_tube_center', $
-                  STRCOMPRESS(tube)
-                putTextFieldValue, Event, $
-                  'circle_pixel_center', $
-                  STRCOMPRESS(pixel)
-                  
-                refresh_main_plot_for_circle_selection, Event
+                  putTextFieldValue, Event, $
+                    'corner_pixel_x0', $
+                    STRCOMPRESS(X+1)
+                  putTextFieldValue, Event, $
+                    'corner_pixel_y0', $
+                    STRCOMPRESS(Y)
+                    
+                end
+                'circle': begin
                 
-              ENDELSE
+                  tube = FIX(x+1)
+                  pixel = FIX(y)
+                  
+                  putTextFieldValue, Event, $
+                    'circle_tube_center', $
+                    STRCOMPRESS(tube)
+                  putTextFieldValue, Event, $
+                    'circle_pixel_center', $
+                    STRCOMPRESS(pixel)
+                    
+                  refresh_main_plot_for_circle_selection, Event
+                  
+                end
+                
+                'sector': begin
+
+                  tube = FIX(x+1)
+                  pixel = FIX(y)
+                  
+                  putTextFieldValue, Event, $
+                    'sector_tube_center', $
+                    STRCOMPRESS(tube)
+                  putTextFieldValue, Event, $
+                    'sector_pixel_center', $
+                    STRCOMPRESS(pixel)
+
+                end
+              endcase
               
             ENDELSE
             

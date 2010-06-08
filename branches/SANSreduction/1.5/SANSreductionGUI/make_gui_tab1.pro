@@ -486,7 +486,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       YOFFSET = 209,$
       SCR_XSIZE = 290,$
       SCR_YSIZE = 175,$
-      MAP = 1,$
+      MAP = 0,$
       /COLUMN)
       
       space = widget_label(sector_base,$
@@ -498,14 +498,14 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       value = 'Center -->  Tube:')
       tube = widget_text(row1,$
       value = '',$
-      xsize = 3,$
+      xsize = 4,$
       /editable,$
       uname = 'sector_tube_center')
       label2 = widget_label(row1,$
       value = '  Pixel:')
       pixel = widget_text(row1,$
       value = '',$
-      xsize = 3,$
+      xsize = 4,$
       /editable,$
       uname = 'sector_pixel_center')
       
