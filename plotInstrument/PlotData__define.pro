@@ -43,6 +43,12 @@ PRO PlotData::startElement, URI, local, strName, attr, value
     
     'row': BEGIN
       ;self.currRow++
+
+      IF  N_ELEMENTS(*self.tmp) NE 1 THEN BEGIN
+        self.rebinBy = *self.tmp
+        *self.tmp = ''
+      ENDIF
+      
       IF N_ELEMENTS(attr) NE 0 THEN BEGIN
         print, attr, value, double(value)
         IF attr EQ "rebin" THEN BEGIN
@@ -77,6 +83,8 @@ PRO PlotData::endElement, URI, local, strName
         'col': BEGIN
           print, "column------*"
           IF PTR_VALID(SELF.data) THEN BEGIN
+            help, *self.data
+            help, *self.coldata
             *self.data = [*self.data, *self.colData]
           ENDIF ELSE BEGIN
             self.data = ptr_new(*self.colData)
@@ -94,23 +102,24 @@ PRO PlotData::endElement, URI, local, strName
             bank = self.buffer
             dPath = '/entry/instrument/bank#/data'
             
-;            wrong_instrument = 0
-;            CATCH, wrong_instrument
-;            IF (wrong_instrument NE 0) THEN BEGIN
-;              CATCH,/CANCEL
-;              ;display message about invalid file format
-;              print, "ERROR ********** wrong instrument?"
-;              print, wrong_instrument
-;            ENDIF ELSE BEGIN
-              data = getData(self.pathNexus, dPath, self.rebinBy, bank)
-              print, N_ELEMENTS(*self.tmp)
-              help, *self.tmp
-              IF  N_ELEMENTS(*self.tmp) NE 1 THEN BEGIN
-                self.rebinBy = *self.tmp
-                *self.tmp = ''
-              ENDIF
-              
-;            ENDELSE
+            ;            wrong_instrument = 0
+            ;            CATCH, wrong_instrument
+            ;            IF (wrong_instrument NE 0) THEN BEGIN
+            ;              CATCH,/CANCEL
+            ;              ;display message about invalid file format
+            ;              print, "ERROR ********** wrong instrument?"
+            ;              print, wrong_instrument
+            ;            ENDIF ELSE BEGIN
+            print, self.pathNexus
+            print, dPath
+            print, self.rebinBy
+            print, bank
+            print, self.plot
+            
+            data = getData(self.pathNexus, dPath, self.rebinBy, bank, self.plot)
+            
+            
+          ;            ENDELSE
           ENDELSE
           
           help, data
@@ -144,54 +153,70 @@ END
 
 ;---------------------------------------------------------------------------
 
-FUNCTION recalculate, data, rebinBy
+FUNCTION recalculate, data, rebinBy, plot
   print, "recalculating"
   
-  data = TOTAL(data, 1)
+  IF (plot EQ "LOG") THEN BEGIN
+  
+    ;remove 0 values and replace with NAN
+    ;and calculate log
+    index = WHERE(data EQ 0, nbr)
+    IF (nbr GT 0) THEN BEGIN
+      print, 'log'
+      data[index] = !VALUES.D_NAN
+      data = ALOG10(data)
+      data = BYTSCL(data,/NAN)
+    ENDIF
+  ENDIF ELSE BEGIN
+    print, 'lin'
+    data = TOTAL(data, 1)
+    
+  ENDELSE
   data = TRANSPOSE(data)
   size = SIZE(data, /DIMENSIONS)
   print, "rebinby: " + string(rebinBy)
   data = REBIN(data, size[0]* rebinBy[0], size[1] * rebinBy[1])
+  help, data
   RETURN, data
 END
 
 
 ;---------------------------------------------------------------------------
-FUNCTION getData, path, dPath_template, rebinBy, bank
+FUNCTION getData, path, dPath_template, rebinBy, bank, plot
 
   print, "GETDATA"
   
-  not_hdf5_format = 0
-  CATCH, not_hdf5_format
-  IF (not_hdf5_format NE 0) THEN BEGIN
-    CATCH,/CANCEL
-    ;display message about invalid file format
-    print, "ERROR **********"
-    print, not_hdf5_format
-  ENDIF ELSE BEGIN
-    print, 'opening file...'
-    print, path
-    fileID    = H5F_OPEN(path)
-    print, 'fileID'
-    print, fileID
-    
-    print, 'opening data path...'
-    help, dpath_template
-    dPath = STRJOIN(STRSPLIT(dPath_template, '#', /EXTRACT), bank)
-    print, dpath
-    fieldID = H5D_OPEN(fileID,dPath)
-    print, 'fieldID'
-    print, fieldID
-    data = H5D_READ(fieldID)
-    print, 'copied data...'
-    H5D_CLOSE, fieldID
-    
-    print, "closing hdf5 file"
-    H5F_CLOSE, fileID
-    ; ENDELSE
-    help, data
-    data = recalculate(data, rebinBy)
-  ENDELSE
+  ;  not_hdf5_format = 0
+  ;  CATCH, not_hdf5_format
+  ;  IF (not_hdf5_format NE 0) THEN BEGIN
+  ;    CATCH,/CANCEL
+  ;    ;display message about invalid file format
+  ;    print, "ERROR **********"
+  ;    print, not_hdf5_format
+  ;  ENDIF ELSE BEGIN
+  print, 'opening file...'
+  print, path
+  fileID    = H5F_OPEN(path)
+  print, 'fileID'
+  print, fileID
+  
+  print, 'opening data path...'
+  help, dpath_template
+  dPath = STRJOIN(STRSPLIT(dPath_template, '#', /EXTRACT), bank)
+  print, dpath
+  fieldID = H5D_OPEN(fileID,dPath)
+  print, 'fieldID'
+  print, fieldID
+  data = H5D_READ(fieldID)
+  print, 'copied data...'
+  H5D_CLOSE, fieldID
+  
+  print, "closing hdf5 file"
+  H5F_CLOSE, fileID
+  ; ENDELSE
+  help, data
+  data = recalculate(data, rebinBy, plot)
+  ;ENDELSE
   print, "GETDATA: data received"
   RETURN, data
 END
@@ -228,11 +253,12 @@ PRO PlotData::characters, char
 END
 
 ;---------------------------------------------------------------------------
-FUNCTION PlotData::Graph, pathNexus, instrument, rebinBy
+FUNCTION PlotData::Graph, pathNexus, instrument, rebinBy, plot
   IF (instrument NE '') && (pathNexus NE '') THEN BEGIN
     self.instrument = instrument
     self.pathNexus = pathNexus
     self.rebinBy = rebinBy
+    self.plot = plot
     self.tmp = ptr_new('')
     
     print, self.path
@@ -275,7 +301,7 @@ PRO PlotData__define
     ;    currCol: 0, $
     ;    currRow: 0, $
     path: '', $
-    mode: 0, $
+    plot: "", $
     flag: 0, $
     count: 0, $
     buffer: ''}
