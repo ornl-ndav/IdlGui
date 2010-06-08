@@ -473,21 +473,78 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       /TRACKING_EVENTS,$
       UNAME = 'tab1_circle_selection')
     sec = widget_draw(circle_rectangle, $
-    scr_xsize = 30,$
-    scr_ysize = 30,$
-    /button_events, $
-    /tracking_events,$
-    uname = 'tab1_sector_selection')
+      scr_xsize = 30,$
+      scr_ysize = 30,$
+      /button_events, $
+      /tracking_events,$
+      uname = 'tab1_sector_selection')
       
+    ;----------------------------------------------------
     sector_base = widget_base(wTab1Base,$
       UNAME = 'tab1_sector_selection_base',$
       XOFFSET = 705,$
       YOFFSET = 209,$
       SCR_XSIZE = 290,$
       SCR_YSIZE = 175,$
-      MAP = 0,$
+      MAP = 1,$
       /COLUMN)
       
+      space = widget_label(sector_base,$
+      value = '')
+      
+      row1 = widget_base(sector_base,$
+      /row)
+      label = widget_label(row1,$
+      value = 'Center -->  Tube:')
+      tube = widget_text(row1,$
+      value = '',$
+      xsize = 3,$
+      /editable,$
+      uname = 'sector_tube_center')
+      label2 = widget_label(row1,$
+      value = '  Pixel:')
+      pixel = widget_text(row1,$
+      value = '',$
+      xsize = 3,$
+      /editable,$
+      uname = 'sector_pixel_center')
+      
+      row2 = widget_base(sector_base,$
+      /row)
+      start_angle_label = widget_label(row2,$
+      value = '   Start angle:')
+      start_angle = widget_text(row2,$
+      value = '',$
+      xsize = 3,$
+      /editable,$
+      uname = 'sector_start_angle')
+      unit = widget_label(row2,$
+      value = 'degrees')     
+            
+      row3 = widget_base(sector_base,$
+      /row)
+      end_angle_label = widget_label(row3,$
+      value = '     End angle:')
+      end_angle = widget_text(row3,$
+      value = '',$
+      xsize = 3,$
+      /editable,$
+      uname = 'sector_end_angle')
+      unit = widget_label(row3,$
+      value = 'degrees')     
+      
+      row4 = widget_base(sector_base,$
+      /row)
+      help = widget_button(row4,$
+      value = 'H E L P',$
+      scr_xsize = 85,$
+      uname = 'sector_help')
+      validate = widget_button(row4,$
+      value = 'VALIDATE BUTTON',$
+      scr_xsize = 195,$
+      uname = 'validate_sector_selection')
+
+    ;-----------------------------------------------------------
     circle_base = WIDGET_BASE(wTab1Base,$
       UNAME = 'tab1_circle_selection_base',$
       XOFFSET = 705,$
@@ -534,7 +591,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     plus = WIDGET_BUTTON(row2,$
       VALUE='+',$
       UNAME = 'circle_pixel_center_plus')
-
+      
     row3 = WIDGET_BASE(circle_base,$
       /ROW)
     label = WIDGET_LABEL(row3,$
@@ -558,17 +615,17 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     plus = WIDGET_BUTTON(row3,$
       VALUE='++',$
       UNAME = 'circle_radius_center_2plus')
-    
-   row4 = WIDGET_BASE(circle_base,$
-   /ROW)
-   help_button = WIDGET_BUTTON(row4,$
-   VALUE = ' H E L P ',$
-   UNAME = 'circle_exclusion_help')
-   validate = WIDGET_BUTTON(row4,$
-   VALUE = 'VALIDATE  SELECTION',$
-   SCR_XSIZE = 215,$
-   UNAME = 'circle_exclusion_validate') 
-
+      
+    row4 = WIDGET_BASE(circle_base,$
+      /ROW)
+    help_button = WIDGET_BUTTON(row4,$
+      VALUE = ' H E L P ',$
+      UNAME = 'circle_exclusion_help')
+    validate = WIDGET_BUTTON(row4,$
+      VALUE = 'VALIDATE  SELECTION',$
+      SCR_XSIZE = 215,$
+      UNAME = 'circle_exclusion_validate')
+      
   ENDIF
   
   ;----------------------------------------------------------------------------
