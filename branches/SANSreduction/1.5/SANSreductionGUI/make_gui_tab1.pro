@@ -479,6 +479,14 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     /tracking_events,$
     uname = 'tab1_sector_selection')
       
+    sector_base = widget_base(wTab1Base,$
+      UNAME = 'tab1_sector_selection_base',$
+      XOFFSET = 705,$
+      YOFFSET = 209,$
+      SCR_XSIZE = 290,$
+      SCR_YSIZE = 175,$
+      MAP = 0,$
+      /COLUMN)
       
     circle_base = WIDGET_BASE(wTab1Base,$
       UNAME = 'tab1_circle_selection_base',$
