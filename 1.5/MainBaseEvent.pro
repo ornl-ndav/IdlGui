@@ -245,6 +245,40 @@ PRO MAIN_BASE_event, Event
       ENDELSE ;enf of catch statement
     END
     
+    ;sector selection
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab1_sector_selection'): BEGIN
+      error = 0
+      CATCH, error
+      IF (error NE 0) THEN BEGIN ;press button or othe events
+        CATCH,/CANCEL
+        IF (event.press EQ 1) THEN BEGIN ;pressed button
+          MapBase, Event, uname='tab1_circle_selection_base', 0
+          display_circle_rectangle_buttons, EVENT=event, TYPE='sector'
+          (*global).selection_shape_type = 'sector'
+;          display_selection_images, EVENT=event, $
+;            SELECTION=(*global).selection_type
+          putTextFieldValue, Event, 'exclusion_region_tool_title', $
+            'Exclusion Region (sector)'
+          ;kill circle help base if alive
+          id = (*global).circle_exclusion_help_base
+          IF (WIDGET_INFO(id, /VALID_ID) EQ 1) THEN BEGIN
+            WIDGET_CONTROL, id, /DESTROY
+          ENDIF
+        ENDIF
+      ENDIF ELSE BEGIN ;endif of catch statement
+        IF (event.enter EQ 1) THEN BEGIN
+          standard = 58
+        ENDIF ELSE BEGIN
+          standard = 31
+        ENDELSE
+        id = WIDGET_INFO(Event.top,$
+          find_by_uname='tab1_sector_selection')
+        WIDGET_CONTROL, id, GET_VALUE=id_value
+        WSET, id_value
+        DEVICE, CURSOR_STANDARD=standard
+      ENDELSE ;enf of catch statement
+    END
+
     ;- Run Number cw_field ----------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='run_number_cw_field'): BEGIN
       load_run_number, Event     ;_eventcb
