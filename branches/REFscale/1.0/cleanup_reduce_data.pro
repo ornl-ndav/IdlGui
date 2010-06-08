@@ -441,7 +441,7 @@ pro cleanup_reduce_data, event, file_name = file_name
   ;line
   ;#auto cleaned up: 10%
   if (cleaned_up_performed_already(file_name)) then return
-  
+
   ;retrieve values from the file_name file
   retrieve_data, file_name, x_array, y_array, y_error_array
   sz = n_elements(y_array)

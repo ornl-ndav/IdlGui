@@ -334,7 +334,7 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;step3
     ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 0 ;output_file
     ;change default path of batch file
-    (*global).BatchDefaultPath = '~/results_refl/'
+    (*global).BatchDefaultPath = '~/results_refm/'
     (*global).input_path       = '/SNS/REF_L/shared/'
     (*global).input_path =     '~/results/'
   ENDIF

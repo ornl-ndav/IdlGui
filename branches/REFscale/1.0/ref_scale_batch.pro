@@ -354,7 +354,9 @@ function batch_repopulate_gui, Event, DRfiles, spin_state_nbr=spin_state_nbr
       if ((*global).settings_auto_cleaning_flag) then begin ;apply auto cleanup
         cleanup_reduce_data, event, file_name = LongFileName
         ;re-read the data from fresh cleanup file
-        SuccessStatus = StoreFlts(Event, DRfiles[i], i)
+        SuccessStatus = StoreFlts(Event, DRfiles[i], $
+          i, $
+          spin_state_nbr=spin_state_nbr)
       endif
       
       ;add list of files for only first spin state
@@ -430,13 +432,13 @@ function batch_repopulate_gui, Event, DRfiles, spin_state_nbr=spin_state_nbr
     
   endif else begin
   
-      (*global).force_activation_step2 = 0
-      ActivateStep3_fromBatch, Event, 0
-      reset_all_button, Event
-      return, 0
+    (*global).force_activation_step2 = 0
+    ActivateStep3_fromBatch, Event, 0
+    reset_all_button, Event
+    return, 0
     
   endelse
-    
+  
 END
 
 ;==============================================================================
@@ -618,12 +620,12 @@ PRO ref_scale_LoadBatchFile, Event
             
             title = 'Error loading one of the other spin state'
             msg_txt = ['Program encounter an error while trying to load',$
-            'one of the other spin state.',$
-            '','This may due to a file with only zeroes in it !','','',$
-            'You are going to work with only the first spin state loaded!']
+              'one of the other spin state.',$
+              '','This may due to a file with only zeroes in it !','','',$
+              'You are going to work with only the first spin state loaded!']
             local_mesg = dialog_message(msg_txt,/error,/center,$
-            dialog_parent=dialog_id, title=title)
-            
+              dialog_parent=dialog_id, title=title)
+              
           endif
           
         endwhile
