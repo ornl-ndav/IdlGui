@@ -193,6 +193,7 @@ PRO MAIN_BASE_event, Event
         CATCH,/CANCEL
         IF (event.press EQ 1) THEN BEGIN ;pressed button
           MapBase, Event, uname='tab1_circle_selection_base', 0
+          MapBase, Event, uname='tab1_sector_selection_base', 0
           display_circle_rectangle_buttons, EVENT=event, TYPE='rectangle'
           (*global).selection_shape_type = 'rectangle'
           display_selection_images, EVENT=event, $
@@ -226,6 +227,7 @@ PRO MAIN_BASE_event, Event
         CATCH,/CANCEL
         IF (event.press EQ 1) THEN BEGIN ;pressed button
           MapBase, Event, uname='tab1_circle_selection_base', 1
+          MapBase, Event, uname='tab1_sector_selection_base', 0
           display_circle_rectangle_buttons, EVENT=event, TYPE='circle'
           (*global).selection_shape_type = 'circle'
           putTextFieldValue, Event, 'exclusion_region_tool_title', $
@@ -252,11 +254,12 @@ PRO MAIN_BASE_event, Event
       IF (error NE 0) THEN BEGIN ;press button or othe events
         CATCH,/CANCEL
         IF (event.press EQ 1) THEN BEGIN ;pressed button
+          MapBase, Event, uname='tab1_sector_selection_base', 1
           MapBase, Event, uname='tab1_circle_selection_base', 0
           display_circle_rectangle_buttons, EVENT=event, TYPE='sector'
           (*global).selection_shape_type = 'sector'
-;          display_selection_images, EVENT=event, $
-;            SELECTION=(*global).selection_type
+          ;          display_selection_images, EVENT=event, $
+          ;            SELECTION=(*global).selection_type
           putTextFieldValue, Event, 'exclusion_region_tool_title', $
             'Exclusion Region (sector)'
           ;kill circle help base if alive
@@ -278,7 +281,7 @@ PRO MAIN_BASE_event, Event
         DEVICE, CURSOR_STANDARD=standard
       ENDELSE ;enf of catch statement
     END
-
+    
     ;- Run Number cw_field ----------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='run_number_cw_field'): BEGIN
       load_run_number, Event     ;_eventcb
