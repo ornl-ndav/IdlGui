@@ -99,13 +99,7 @@ PRO Create_step1_big_table, Event
   
   cl_with_fields = (*global).cl_with_fields
   
-  print, 'before'
-  print, cl_with_fields
-  
   cl_with_fields = MoveToEndOutputFlag(Event, cl_with_fields)
-  
-  print, 'after'
-  print, cl_with_fields
   
   sequence_field1 = (*(*global).sequence_field1)
   sequence_field2 = (*(*global).sequence_field2)
