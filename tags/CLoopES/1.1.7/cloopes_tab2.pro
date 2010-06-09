@@ -88,7 +88,7 @@ PRO populate_tab2, Event
   tab2_table = (*(*global).tab2_table)
   
   error = 0
-  ;CATCH, error
+  CATCH, error
   IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
     refresh_button_status = 0
