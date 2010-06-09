@@ -48,22 +48,23 @@ FUNCTION MoveToEndOutputFlag, Event, cl_text
     IF (N_ELEMENTS(part2_parsed) GT 1) THEN BEGIN ;there is the tag --output
     
       ;keep text between '--output=' and next space
-      string_to_keep = split_string(part2_parsed[1],PATTERN=' ')
+      string_to_keep_array = strsplit(part2_parsed[1],' ',/extract, /regex)
+      current_output_file = string_to_keep_array[0]
       
-      ;path = FILE_DIRNAME(part2_parsed[1])
-      path = FILE_DIRNAME(string_to_keep[0])
+      path = FILE_DIRNAME(current_output_file)
       path += '/'
       (*global).step1_output_path = path
       
-      sz = N_ELEMENTS(string_to_keep)
+      sz = N_ELEMENTS(string_to_keep_array)
       
       IF (sz GE 2) THEN BEGIN ;output path was not last
       
         IF (sz GT 2) THEN BEGIN ;join all the other part after 'output=....'
-          new_part = STRJOIN(string_to_keep[2:sz-1],' ')
-          end_string  = string_to_keep[0] + ' ' + new_part
+          new_part = STRJOIN(string_to_keep_array[1:sz-1],' ')
+          end_string = new_part
+;          end_string  = string_to_keep_array[0] + ' ' + new_part
         ENDIF ELSE BEGIN
-          end_string = string_to_keep[1]
+          end_string = string_to_keep_array[1]
         ENDELSE
         cl_text = part2_parsed[0] + ' ' + end_string + $
           ' --output=' + path + (*global).output_suffix
@@ -98,7 +99,13 @@ PRO Create_step1_big_table, Event
   
   cl_with_fields = (*global).cl_with_fields
   
+  print, 'before'
+  print, cl_with_fields
+  
   cl_with_fields = MoveToEndOutputFlag(Event, cl_with_fields)
+  
+  print, 'after'
+  print, cl_with_fields
   
   sequence_field1 = (*(*global).sequence_field1)
   sequence_field2 = (*(*global).sequence_field2)
