@@ -295,11 +295,11 @@ end
 ; :Author: j35
 ;-
 function getSigmaYX4, Xarray, sigmaYarray
-compile_opt idl2
-
+  compile_opt idl2
+  
   new_sigmaYarray = float(sigmaYarray) * float(Xarray) ^ 4
   return, new_sigmaYarray
-
+  
 end
 
 ;+
@@ -369,7 +369,23 @@ pro plotAsciiData, event_load=event_load, main_event=main_event
       yAxis = *pYaxis[0]
       yAxis_units = *pYaxis_units[0]
       xLabel = xaxis + ' (' + xaxis_units + ')'
-      yLabel = yaxis + ' (' + yaxis_units + ')'
+      
+      case (isYaxisType(event)) of
+        'Y': yLabel = yaxis + ' (' + yaxis_units + ')'
+        'YX4': begin
+          yLabel = yaxis + ' * ' + xaxis + '^4 (' + yaxis_units
+          yLabel += ')(' + xaxis_units + ')^4'
+        end
+        else: begin
+          yaxis_type = (*global).yaxis_type
+          if (yaxis_type eq 'YX4') then begin
+            yLabel = yaxis + ' * ' + xaxis + '^4 (' + yaxis_units
+            yLabel += ')(' + xaxis_units + ')^4'
+          endif else begin
+            yLabel = yaxis + ' (' + yaxis_units + ')'
+          endelse
+        end
+      endcase
       
       CASE (isYaxisLin(Event)) OF
         'lin': yaxis = 'lin'
@@ -388,7 +404,7 @@ pro plotAsciiData, event_load=event_load, main_event=main_event
           if (yaxis_type eq 'YX4') then begin
             Yarray = getYX4(Xarray, Yarray)
             sigmaYarray = getSigmaYX4(Xarray, sigmaYarray)
-          end
+          endif
         end
       endcase
       
@@ -440,9 +456,9 @@ pro plotAsciiData, event_load=event_load, main_event=main_event
             PSYM=2
         ENDELSE
       ENDELSE
-          errplot, Xarray,Yarray-SigmaYarray,Yarray+SigmaYarray,$
-            color=FSC_COLOR(color)
-      
+      errplot, Xarray,Yarray-SigmaYarray,Yarray+SigmaYarray,$
+        color=FSC_COLOR(color)
+        
     ENDIF ;end of if plot activated
     index++
   ENDWHILE
