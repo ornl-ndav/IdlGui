@@ -61,12 +61,17 @@ PRO browse_button, Event
       retrieve_data_of_new_file, file_list[i], $
         Event_load=event, $
         sData=sData, $
-        type=type
-      add_new_data_to_big_array, event_load=event, $
-        sData=sData, $
-        type=type
-      get_initial_plot_range, event_load=event
-      plotAsciiData, event_load=event
+        type=type, $
+        result=result
+      if (result) then begin
+        add_new_data_to_big_array, event_load=event, $
+          sData=sData, $
+          type=type
+        get_initial_plot_range, event_load=event
+        plotAsciiData, event_load=event
+      endif else begin
+      ;failed somewhere
+      endelse
     ENDFOR
     
     WIDGET_CONTROL, HOURGLASS=0
@@ -80,6 +85,12 @@ PRO add_new_data_to_big_array, event_load=event_load, $
     sData=sData, $
     type=type
     
+  catch, error
+  if (error ne 0) then begin
+    catch,/cancel
+    return
+  endif
+  
   WIDGET_CONTROL, event_load.top, GET_UVALUE=global_load
   global = (*global_load).global
   
@@ -193,10 +204,12 @@ PRO add_new_data_to_big_array, event_load=event_load, $
 END
 
 ;------------------------------------------------------------------------------
-PRO retrieve_data_of_new_file, new_file, event_load=event_load, $
+PRO retrieve_data_of_new_file, new_file, $
+    event_load=event_load, $
     main_event=main_event,  $
     sdata=sdata, $
-    type=type ;either single_ascii or REFscale
+    type=type, $
+    result=result ;either single_ascii or REFscale
     
   IF (N_ELEMENTS(event_load) NE 0) THEN BEGIN
     event = event_load
@@ -247,7 +260,11 @@ PRO retrieve_data_of_new_file, new_file, event_load=event_load, $
       type = 'single_ascii'
     ENDELSE
     OBJ_DESTROY, iAsciiFile
-  ENDIF
+    result = 1
+  ENDIF else begin
+    result = 0
+    return
+  endelse
   
   ;try multi ascii file if single ascii file failed
   IF (type EQ '') THEN BEGIN

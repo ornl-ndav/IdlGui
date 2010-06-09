@@ -53,7 +53,7 @@ FUNCTION read_data_multi, file
 END
 
 FUNCTIon getDataQuicklyCombined, data, nLines, index, path
-    
+
   pArray      = PTRARR(1,/ALLOCATE_HEAP)
   ArrayTitle  = STRARR(2,1) ;name of file and incident angle
   pXaxis      = PTRARR(1,/ALLOCATE_HEAP)
@@ -68,7 +68,7 @@ FUNCTIon getDataQuicklyCombined, data, nLines, index, path
   local_Yaxis= STRARR(nbr_line)
   local_SigmaYaxis = STRARR(nbr_line)
   array = *pArray[0]
-  FOR j=0,(nbr_line-1) DO BEGIN
+  FOR j=0L,(nbr_line-1) DO BEGIN
     line_split = STRSPLIT(array[j],' ',/EXTRACT)
     local_Xaxis[j] = line_split[0]
     local_Yaxis[j] = line_split[1]
@@ -106,8 +106,16 @@ FUNCTION IDL3columnsASCIIparserREFscale::getDataQuickly
   catch, error
   if (error ne 0) then begin ;we are working with a combined ascii file
     catch,/cancel
-    big_structure = $
-      getDataQuicklyCombined(data, nLines, index, self.path)
+    
+    catch, error2
+    if (error2 ne 0) then begin
+      catch,/cancel
+      return, ''
+    endif else begin
+      big_structure = $
+        getDataQuicklyCombined(data, nLines, index, self.path)
+    endelse
+  
   endif else begin
   
     pArray      = PTRARR(nbr,/ALLOCATE_HEAP)
