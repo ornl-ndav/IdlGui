@@ -32,21 +32,21 @@
 ;
 ;==============================================================================
 
-FUNCTION getSrunQueue
+function getSrunQueue
 
-;retrieve hostanme
-hostname = getHostname()
-
-;retrieve flag for this hostname
-fileID = OBJ_NEW('IDLxmlParser','/SNS/software/idltools/sav/slurm.xml')
-queue_flag = fileID->getValue(tag=['srun',hostname])
-
-;in case the hostname can not be recognized
-IF (queue_flag EQ '') THEN BEGIN
-queue_flag = fileID->getValue(tag=['srun','heater'])
-ENDIF
-
-RETURN, queue_flag
+  ;retrieve hostanme
+  hostname = getHostname()
+  
+  ;retrieve flag for this hostname
+  fileID = OBJ_NEW('IDLxmlParser','/SNS/software/idltools/sav/slurm.xml')
+  queue_flag = fileID->getValue(tag=['srun',hostname])
+  
+  ;in case the hostname can not be recognized
+  IF (queue_flag EQ '') THEN BEGIN
+    queue_flag = fileID->getValue(tag=['srun','heater'])
+  ENDIF
+  
+  RETURN, queue_flag
 END
 
 ;------------------------------------------------------------------------------

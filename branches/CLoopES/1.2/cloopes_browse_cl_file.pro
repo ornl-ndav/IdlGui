@@ -93,12 +93,13 @@ function cleanup_cl, cdl, arg=arg
   if (nbr eq -1) then cld_local = cdl
   
   return, cdl_local
+  
 end
 
 ;-------------------------------------------------------------------------------
 ;This function read the file passed as an argument and display its contain in
 ;the preview text field
-PRO displayCLfile, Event, file_name
+pro displayCLfile, Event, file_name
   OPENR, 1, file_name
   nbr_lines = FILE_LINES(file_name)
   ;WHILE (~EOF(1)) DO BEGIN
@@ -109,12 +110,45 @@ PRO displayCLfile, Event, file_name
   cdl = file_array[0]
   
   widget_control, event.top, get_uvalue=global
-  if ((*global).with_batch eq 'yes') then begin
-    command_line = cdl
-  endif else begin
-    command_line = cleanup_cl(cdl, arg=' --batch')
-  endelse
-   
+  if ((*global).with_srun eq 'yes') then begin ;with srun call
+    ;    if ((*global).srun eq 'slurm') then begin ;with srun call
+  
+    srun_queue = getSrunQueue()
+    if (~strmatch(cdl,'sbatch')) then begin ;no sbatch called found
+    
+      if (~strmatch(cdl,'srun')) then begin ;no srun called found
+      
+        if ((*global).with_batch eq 'yes') then begin
+          command_line = 'sbatch -p ' + srun_queue + ' ' + cdl
+        endif else begin
+          command_line = 'srun -p ' + srun_queue + ' ' + cdl
+        endelse
+        
+      endif else begin ;found srun, but not sbatch
+      
+        if ((*global).with_batch eq 'yes') then begin
+          cld = cleanup_cl(cdl, arg='srun ')
+          command_line = 'sbatch ' + cdl
+        endif else begin
+          command_line = cdl
+        endelse
+        
+      endelse ;end of found or not srun
+      
+    endif else begin ;found sbatch
+    
+      if ((*global).with_batch eq 'yes') then begin
+        command_line = cdl
+      endif else begin
+        cld = cleanup_cl(cdl, arg='sbatch ')
+        command_line = 'srun ' + cdl
+      endelse
+      
+    endelse ;end of found sbatch
+    
+  endif
+  
   putValue, Event, 'preview_cl_file_text_field', command_line
-END
+  
+end
 
