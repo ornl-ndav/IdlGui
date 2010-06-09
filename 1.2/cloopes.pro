@@ -48,6 +48,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   TESTING = file->getValue(tag=['configuration','testing'])
   CHECKING_PACKAGES = file->getValue(tag=['configuration','checking_packages'])
   with_batch = file->getValue(tag=['configuration','with_batch'])
+  srun = file->getValue(tag=['configuration','srun'])
+  with_srun = file->getValue(tag=['configuration','with_srun'])
   
   ;******************************************************************************
   ;******************************************************************************
@@ -85,6 +87,9 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     PrevReduceTabSelect: 0,$
      
     with_batch: with_batch, $ ;'yes' or 'no'
+    
+    srun: srun,$ ;['am','slurm']
+    with_srun: with_srun, $
     
     path: '~/results/',$
     old_input_text: PTR_NEW(0L),$
