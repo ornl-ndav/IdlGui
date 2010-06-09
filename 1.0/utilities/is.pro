@@ -52,5 +52,23 @@ FUNCTION isYaxisLin, Event
   value = WIDGET_INFO(id,/BUTTON_SET)
   IF (value EQ 1) THEN RETURN, 'lin'
   RETURN, 'log'
-   
+  
 END
+
+function isYaxisType, event
+
+  CATCH, error
+  IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN, '-1'
+  ENDIF
+  
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  tools_base = (*global).tools_base
+  id = WIDGET_INFO(tools_base, FIND_BY_UNAME='y_axis_type_y')
+  
+  value = WIDGET_INFO(id,/BUTTON_SET)
+  IF (value EQ 1) THEN RETURN, 'Y'
+  RETURN, 'YX4'
+  
+end

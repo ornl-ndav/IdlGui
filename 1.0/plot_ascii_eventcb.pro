@@ -260,9 +260,61 @@ PRO get_initial_plot_range, event_load=event_load, main_event=main_event
   
 END
 
-;==============================================================================
-;Plot Data in widget_draw
-PRO plotAsciiData, event_load=event_load, main_event=main_event
+;+
+; :Description:
+;   This function produces the YX4 yaxis type
+;
+; :Params:
+;    Xarray
+;    Yarray
+;
+; :Returns:
+;   Yarray * Xarray^4
+;
+; :Author: j35
+;-
+function getYX4, Xarray, Yarray
+  compile_opt idl2
+  
+  new_Yarray = float(Yarray) * float(Xarray) ^ 4
+  return, new_Yarray
+  
+end
+
+;+
+; :Description:
+;   This function produces the SigmaYX4 axis
+;
+; :Params:
+;    Xarray
+;    sigmaYarray
+;
+; :Returns;
+;   SigmaYarray = SigmaYarray * Xarray^4
+;
+; :Author: j35
+;-
+function getSigmaYX4, Xarray, sigmaYarray
+compile_opt idl2
+
+  new_sigmaYarray = float(sigmaYarray) * float(Xarray) ^ 4
+  return, new_sigmaYarray
+
+end
+
+;+
+; :Description:
+;   Plot data in widget draw
+;
+;
+;
+; :Keywords:
+;    event_load
+;    main_event
+;
+; :Author: j35
+;-
+pro plotAsciiData, event_load=event_load, main_event=main_event
 
   IF (N_ELEMENTS(event_load) NE 0) THEN BEGIN
     event = event_load
@@ -325,6 +377,21 @@ PRO plotAsciiData, event_load=event_load, main_event=main_event
         ELSE: yaxis = (*global).lin_log_yaxis
       ENDCASE
       
+      case (isYaxisType(event)) of
+        'Y': ;nothing to do here
+        'YX4': begin
+          Yarray = getYX4(Xarray, Yarray)
+          sigmaYarray = getSigmaYX4(Xarray, sigmaYarray)
+        end
+        else: begin
+          yaxis_type = (*global).yaxis_type
+          if (yaxis_type eq 'YX4') then begin
+            Yarray = getYX4(Xarray, Yarray)
+            sigmaYarray = getSigmaYX4(Xarray, sigmaYarray)
+          end
+        end
+      endcase
+      
       color = ascii_color[index]
       
       IF (first_file_plotted_index EQ 0) THEN BEGIN
@@ -373,9 +440,9 @@ PRO plotAsciiData, event_load=event_load, main_event=main_event
             PSYM=2
         ENDELSE
       ENDELSE
-      errplot, Xarray,Yarray-SigmaYarray,Yarray+SigmaYarray,$
-        color=FSC_COLOR(color)
-        
+          errplot, Xarray,Yarray-SigmaYarray,Yarray+SigmaYarray,$
+            color=FSC_COLOR(color)
+      
     ENDIF ;end of if plot activated
     index++
   ENDWHILE
