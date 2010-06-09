@@ -199,7 +199,7 @@ PRO LoadPlotSelection, Event
     'ROI file ... ' + PROCESSING
     
   error = 0
-  ;CATCH, error
+  CATCH, error
   IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
@@ -244,6 +244,7 @@ PRO LoadPlotSelection, Event
             (*global).there_is_a_selection = 1
           ENDELSE
         ENDELSE
+  
       ENDIF ELSE BEGIN ;SNS ---------------------------------------------------
 
         load_inclusion_roi_for_sns, Event, FileStringArray
