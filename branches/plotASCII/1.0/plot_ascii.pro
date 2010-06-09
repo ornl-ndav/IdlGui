@@ -86,6 +86,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ;tools base
     tools_base: 0L, $
     lin_log_yaxis: 'lin',$
+    yaxis_type: 'Y',$
     left_click: 0b, $
     
     ;load base

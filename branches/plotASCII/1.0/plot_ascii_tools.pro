@@ -51,6 +51,16 @@ PRO plot_ascii_tools_base_event, Event
       (*global).lin_log_yaxis = 'log'
     END
     
+    ;yaxis type
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='y_axis_type_y'): BEGIN
+      plot_ascii_file, main_event=main_event
+      (*global).yaxis_type = 'Y'
+    END
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='y_axis_type_yx4'): BEGIN
+      plot_ascii_file, main_event=main_event
+      (*global).yaxis_type = 'YX4'
+    END
+    
     ;x1, x2, y1 and y2
     WIDGET_INFO(Event.top, FIND_BY_UNAME='plot_ascii_tools_x1'): BEGIN
       x1 = getTextFieldValue(event, 'plot_ascii_tools_x1')
@@ -107,8 +117,10 @@ PRO plot_ascii_tools_base_event, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO plot_ascii_tools_base_gui, wBase, main_base_geometry, lin_log_yaxis
-
+PRO plot_ascii_tools_base_gui, wBase, main_base_geometry, $
+    lin_log_yaxis, $
+    yaxis_type
+    
   main_base_xoffset = main_base_geometry.xoffset
   main_base_yoffset = main_base_geometry.yoffset
   main_base_xsize = main_base_geometry.xsize
@@ -155,6 +167,31 @@ PRO plot_ascii_tools_base_gui, wBase, main_base_geometry, lin_log_yaxis
     WIDGET_CONTROL, button1, /SET_BUTTON
   ENDIF ELSE BEGIN
     WIDGET_CONTROL, button2, /SET_BUTTON
+  ENDELSE
+  
+  ;y axis type
+  row2 = widget_base(main_base,$
+    /row)
+  label = widget_label(row2,$
+    value = 'Y axis type:')
+  base = WIDGET_BASE(row2,$
+    XOFFSET=0,$
+    YOFFSET=0,$
+    /ROW,$
+    /EXCLUSIVE)
+  button3 = WIDGET_BUTTON(base,$
+    VALUE='Y',$
+    /NO_RELEASE,$
+    UNAME = 'y_axis_type_y')
+  button4 = WIDGET_BUTTON(base,$
+    VALUE='Y*X^4',$
+    /NO_RELEASE,$
+    UNAME = 'y_axis_type_yx4')
+    
+  IF (yaxis_type EQ 'Y') THEN BEGIN
+    WIDGET_CONTROL, button3, /SET_BUTTON
+  ENDIF ELSE BEGIN
+    WIDGET_CONTROL, button4, /SET_BUTTON
   ENDELSE
   
   ;zoom_base
@@ -226,12 +263,14 @@ PRO plot_ascii_tools_base, main_base=main_base, Event
   main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
   
   lin_log_yaxis = (*global).lin_log_yaxis ;'lin' or 'log'
+  yaxis_type = (*global).yaxis_type ;Y or YX4
   
   ;build gui
   wBase1 = ''
   plot_ascii_tools_base_gui, wBase1, $
     main_base_geometry, $
-    lin_log_yaxis
+    lin_log_yaxis, $
+    yaxis_type
   (*global).tools_base = wBase1
   
   WIDGET_CONTROL, wBase1, /REALIZE
