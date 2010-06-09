@@ -53,7 +53,9 @@ function is_monitor_named_monitor1, list_of_data_files
   catch, error
   if (error ne 0) then begin ;we are dealing with an old NeXus file
     catch,/cancel
+    if (obj_valid(fileID)) then begin
     h5f_close, fileID
+    endif
     return, 0b
   endif
   fileID  = h5f_open(nexus_file)
