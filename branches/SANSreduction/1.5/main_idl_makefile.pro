@@ -89,6 +89,9 @@ cd, CurrentFolder
 .run sans_reduction_circle_exclusion.pro
 .run sans_reduction_circle_exclusion_help_base.pro
 
+;sector selection
+.run sector_selection.pro
+
 ;min and max counts of main tab
 .run sans_reduction_min_max_counts.pro
 

@@ -59,6 +59,14 @@ PRO MAIN_BASE_event, Event
       tab_event, Event ;_eventcb
     END
     
+    ;sector start and end angles
+    widget_info(wWidget, find_by_uname='sector_start_angle'): begin
+      sector_selection, event
+    end
+    widget_info(wWidget, find_by_uname='sector_end_angle'): begin
+      sector_selection, event
+    end
+    
     ;tube, pixel and radius values
     WIDGET_INFO(wWidget, FIND_BY_UNAME='circle_tube_center'): BEGIN
       status = isBothPanelsSelected(Event)
