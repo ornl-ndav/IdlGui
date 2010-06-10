@@ -73,6 +73,11 @@ PRO MAIN_BASE_event, Event
     widget_info(wWidget, find_by_uname='sector_end_angle'): begin
       sector_selection_check, event
     end
+    ;validate sector selection
+    widget_info(wWidget, find_by_uname='validate_sector_selection'): begin
+      validate_sector_selection, Event
+      save_background,  Event, GLOBAL=global
+    end
     
     ;tube, pixel and radius values
     WIDGET_INFO(wWidget, FIND_BY_UNAME='circle_tube_center'): BEGIN
