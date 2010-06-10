@@ -62,13 +62,26 @@ function getAngle, event, $
   tube_size = (*global).tube_size
   pixel_size = (*global).pixel_size
   
-  delta_pixel = float(abs(local_pixel - pixel_center)) * pixel_size
-  delta_tube  = float(abs(local_tube - tube_center)) * tube_size
+  delta_pixel = float(local_pixel - pixel_center) * pixel_size
+  delta_tube  = float(local_tube - tube_center) * tube_size
   
-  angle = atan(delta_pixel,delta_tube)
+  angle = atan(abs(delta_pixel),abs(delta_tube))
   angle_deg = angle / !dtor
   
-  return, angle_deg
+  if (delta_tube ge 0) then begin ;right part
+    if (delta_pixel ge 0) then begin ;top right part
+      return, angle_deg
+    endif else begin ;bottom right part
+      return, -angle_deg
+    endelse
+  endif else begin ;left part
+    if (delta_pixel ge 0) then begin ;top left part
+      return, -angle_deg
+    endif else begin ;bottom left part
+      return, angle_deg
+    endelse
+  endelse
+  
 end
 
 ;+
@@ -109,17 +122,55 @@ function getAngleOffset, tube_center=tube_center, $
     if (pixel_diff ge 0) then begin ;we are in the top right corner
       angle_offset = 0
     endif else begin ;we are in the bottom right corner
-      angle_offset = 270
+      angle_offset = 360
     endelse
   endif else begin ;we are on the left of the tube center
-    if (pixel_diff ge 0) then begin ;we are in the top left corner
-      angle_offset = 90
-    endif else begin ;we are in the bottom left corner
-      angle_offset = 180
-    endelse
+    angle_offset = 180
   endelse
   
   return, float(angle_offset)
+  
+end
+
+;+
+; :Description:
+;   the main purpose is to check if the start and end angles are valid
+;   (number <= 360) and if start angle is > end angle, select from start to 360
+;   and 0 to end angle
+;
+; :Params:
+;    event
+
+; :Author: j35
+;-
+pro sector_selection_check, event
+  compile_opt idl2
+  
+  ;angles
+  s_start_angle = strcompress(getTextFieldValue(event,$
+    'sector_start_angle'),/remove_all)
+  if (s_start_angle eq '') then return
+  s_end_angle   = strcompress(getTextFieldValue(event,$
+    'sector_end_angle'),/remove_all)
+  if (s_end_angle eq '') then return
+  start_angle = fix(s_start_angle)
+  end_angle   = fix(s_end_angle)
+  
+  if (start_angle gt 360) then return
+  if (end_angle gt 360) then return
+  
+  ;by default, we want to exclude nothing
+  exclusion_detector_array = INTARR(48,4,256)
+  
+  ;replot background
+  refresh_main_plot_for_circle_selection, Event
+  
+  if (start_angle gt end_angle) then begin
+    sector_selection, event, start_angle, 360, exclusion_detector_array
+    sector_selection, event, 0, end_angle, exclusion_detector_array
+  endif else begin
+    sector_selection, event, start_angle, end_angle, exclusion_detector_array
+  endelse
   
 end
 
@@ -132,22 +183,12 @@ end
 ;
 ; :Author: j35
 ;-
-pro sector_selection, event
+pro sector_selection, event, start_angle, end_angle, exclusion_detector_array
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global
   
   on_ioerror, error
-  
-  ;angles
-  s_start_angle = strcompress(getTextFieldValue(event,$
-    'sector_start_angle'),/remove_all)
-  if (s_start_angle eq '') then return
-  s_end_angle   = strcompress(getTextFieldValue(event,$
-    'sector_end_angle'),/remove_all)
-  if (s_end_angle eq '') then return
-  start_angle = fix(s_start_angle)
-  end_angle   = fix(s_end_angle)
   
   ;center
   s_tube  = strcompress(getTextFieldValue(event,$
@@ -159,8 +200,6 @@ pro sector_selection, event
   center_tube  = fix(s_tube)
   center_pixel = fix(s_pixel)
   
-  ;by default, we want to exclude nothing
-  exclusion_detector_array = INTARR(48,4,256)
   index = 0L
   for bank=0,47 do begin
     for tube=0,3 do begin
@@ -175,8 +214,6 @@ pro sector_selection, event
           local_tube = current_tube,$
           local_pixel= current_pixel)
           
-        if (angle_offset eq 0) then print, 'angle is offset 0'
-        
         ;get angle
         local_angle = getAngle(event, $
           tube_center=center_tube,$
@@ -186,8 +223,6 @@ pro sector_selection, event
           
         ;final angle
         global_angle = angle_offset + local_angle
-        
-        ;if (global_angle le end_angle) then print, global_angle
         
         if (global_angle ge start_angle) then begin
           if (global_angle le end_angle) then begin
@@ -199,16 +234,13 @@ pro sector_selection, event
     endfor
   endfor
   
-  ;replot background
-  refresh_main_plot_for_circle_selection, Event
-  
   tube_list  = STRARR(1)
   pixel_list = STRARR(1)
   determine_array_of_pixel_tube_selected_by_sector, Event,$
     exclusion_detector_array,$
     tube_list,$
     pixel_list
-  
+    
   nbr_tube_list = N_ELEMENTS(tube_list)
   IF (nbr_tube_list EQ 1) THEN RETURN
   IF (nbr_tube_list EQ 2) THEN BEGIN
