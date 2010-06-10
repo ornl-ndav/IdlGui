@@ -59,10 +59,16 @@ PRO MAIN_BASE_event, Event
       tab_event, Event ;_eventcb
     END
     
+    ;center tube and pixel
+    widget_info(wWidget, find_by_uname='sector_pixel_center'): begin
+      sector_selection_check, event
+    end
+    widget_info(wWidget, find_by_uname='sector_tube_center'): begin
+      sector_selection_check, event
+    end
     ;sector start and end angles
     widget_info(wWidget, find_by_uname='sector_start_angle'): begin
       sector_selection_check, event
-      
     end
     widget_info(wWidget, find_by_uname='sector_end_angle'): begin
       sector_selection_check, event
@@ -626,9 +632,8 @@ PRO MAIN_BASE_event, Event
                   refresh_main_plot_for_circle_selection, Event
                   
                 end
-                
                 'sector': begin
-
+                
                   tube = FIX(x+1)
                   pixel = FIX(y)
                   
@@ -638,7 +643,10 @@ PRO MAIN_BASE_event, Event
                   putTextFieldValue, Event, $
                     'sector_pixel_center', $
                     STRCOMPRESS(pixel)
-
+                    
+                  ;calculate sector if start and end angles are there
+                  sector_selection_check, event
+                  
                 end
               endcase
               
