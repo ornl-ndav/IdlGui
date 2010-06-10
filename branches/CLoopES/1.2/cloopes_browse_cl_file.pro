@@ -114,39 +114,28 @@ pro displayCLfile, Event, file_name
     ;    if ((*global).srun eq 'slurm') then begin ;with srun call
   
     srun_queue = getSrunQueue()
-    if (~strmatch(cdl,'sbatch')) then begin ;no sbatch called found
-    
-      if (~strmatch(cdl,'srun')) then begin ;no srun called found
-      
-        if ((*global).with_batch eq 'yes') then begin
-          command_line = 'sbatch -p ' + srun_queue + ' ' + cdl
-        endif else begin
-          command_line = 'srun -p ' + srun_queue + ' ' + cdl
-        endelse
-        
-      endif else begin ;found srun, but not sbatch
-      
-        if ((*global).with_batch eq 'yes') then begin
-          cld = cleanup_cl(cdl, arg='srun ')
-          command_line = 'sbatch ' + cdl
-        endif else begin
-          command_line = cdl
-        endelse
-        
-      endelse ;end of found or not srun
-      
-    endif else begin ;found sbatch
+    if (~strmatch(cdl,'srun')) then begin ;no srun called found
     
       if ((*global).with_batch eq 'yes') then begin
-        command_line = cdl
+        command_line = 'srun --batch -p ' + srun_queue + ' ' + cdl
       endif else begin
-        cld = cleanup_cl(cdl, arg='sbatch ')
-        command_line = 'srun ' + cdl
+        command_line = 'srun -p ' + srun_queue + ' ' + cdl
       endelse
       
-    endelse ;end of found sbatch
+    endif else begin ;found srun
     
-  endif
+      if ((*global).with_batch eq 'yes') then begin
+        if (~strmatch(cld, '--batch')) then begin
+          new_cdl = cleanup_cl(cdl,'srun')
+          cdl = 'srun --batch ' + new_cld
+        endif
+      endif
+      command_line = cdl
+    endelse
+    
+  endif else begin
+    command_line = cld
+  endelse
   
   putValue, Event, 'preview_cl_file_text_field', command_line
   
