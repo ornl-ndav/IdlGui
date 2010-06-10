@@ -210,7 +210,7 @@ PRO plot_circle_exclusion_pixel, Event, tube_array, pixel_array
   
   IF (N_ELEMENTS(COEFF) EQ 0) THEN  coeff = FLOAT((*global).congrid_x_coeff)
   
-  DataArray = (*(*global).DataArray)
+;  DataArray = (*(*global).DataArray)
   
   color = FSC_COLOR('green')
   

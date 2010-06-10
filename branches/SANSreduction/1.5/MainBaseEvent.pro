@@ -62,6 +62,7 @@ PRO MAIN_BASE_event, Event
     ;sector start and end angles
     widget_info(wWidget, find_by_uname='sector_start_angle'): begin
       sector_selection, event
+      
     end
     widget_info(wWidget, find_by_uname='sector_end_angle'): begin
       sector_selection, event
