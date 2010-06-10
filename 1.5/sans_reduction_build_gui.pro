@@ -163,6 +163,8 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     circle_exclusion_help_base: 0L, $ ;id of circle exclusion help base
     circular_tube_list: PTR_NEW(0L), $
     circular_pixel_list: PTR_NEW(0L), $
+    sector_tube_list: ptr_new(0L),$
+    sector_pixel_list: ptr_new(0L),$
     
     run_number: '',$
     jk_selection_x0y0x1y1: PTR_NEW(0L), $
