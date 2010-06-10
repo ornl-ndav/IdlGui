@@ -339,3 +339,87 @@ pro plot_sector_exclusion_pixel, Event, tube_array, pixel_array
   endfor
   
 end
+
+
+
+
+;+
+; :Description:
+;   This procedures is triggered when the user hits the validate sector
+;   selection. The selection is then saved and added to the other selection
+;
+; :Params:
+;    Event
+;
+; :Author: j35
+;-
+PRO validate_sector_selection, Event
+compile_opt idl2
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  tube_list = (*(*global).sector_tube_list)
+  pixel_list = (*(*global).sector_pixel_list)
+  
+  nbr_pixels_total = N_ELEMENTS(tube_list)
+  pixel_array = STRARR(nbr_pixels_total)
+  
+  IF (nbr_pixels_total GT 0) THEN BEGIN
+    index = 0
+    WHILE (index LT nbr_pixels_total) DO BEGIN
+      tube = tube_list[index]
+      pixel = pixel_list[index]
+      bank = getBankNumber(tube)
+      tube_local = getTubeLocal(tube)
+      line = 'bank' + STRCOMPRESS(bank,/REMOVE_ALL)
+      line += '_' + STRCOMPRESS(tube_local,/REMOVE_ALL)
+      line += '_' + STRCOMPRESS(pixel,/REMOVE_ALL)
+      pixel_array[index] = line
+      pixel++
+      index++
+    ENDWHILE
+    
+  ENDIF ELSE BEGIN ;enf of if(nbr_pixels_total GT 0)
+  
+    pixel_array = ['']
+    
+  ENDELSE
+  
+;  ;check if Automatically Exclude Dead Tubes is ON
+;  IF (isAutoExcludeDeadTubeSelected(Event)) THEN BEGIN
+;    dead_tube_nbr = (*(*global).dead_tube_nbr)
+;    nbr_dead_tube = N_ELEMENTS(dead_tube_nbr)
+;    sz_pixel_array = LONG(nbr_dead_tube) * 256L
+;    IF (sz_pixel_array GT 0) THEN BEGIN
+;      PixelArray_of_Deadtubes = STRARR(sz_pixel_array)
+;      
+;      index = 0L ;make sure the index is long
+;      dead_tube_index = 0L
+;      WHILE (dead_tube_index LT nbr_dead_tube) DO BEGIN
+;        tube_global = dead_tube_nbr[dead_tube_index]
+;        bank = getBankNumber(tube_global+1)
+;        tube_local = getTubeLocal(tube_global+1)
+;        FOR pixel=0,255L DO BEGIN
+;          line = 'bank' + STRCOMPRESS(bank,/REMOVE_ALL)
+;          line += '_' + STRCOMPRESS(tube_local,/REMOVE_ALL)
+;          line += '_' + STRCOMPRESS(pixel,/REMOVE_ALL)
+;          PixelArray_of_DeadTubes[index] = line
+;          index++
+;        ENDFOR
+;        dead_tube_index++
+;      ENDWHILE
+;      
+;    ENDIF ELSE BEGIN;reset PixelArray_of_DeadTubes
+;      PixelArray_of_DeadTubes = STRARR(1)
+;    ENDELSE
+;  ENDIF ELSE BEGIN
+;    PixelArray_of_DeadTubes = STRARR(1)
+    
+;  ENDELSE
+  
+;  (*(*global).PixelArray_of_DeadTubes) = PixelArray_of_DeadTubes
+  
+  add_to_global_exclusion_array, event, pixel_array
+  
+END
+
