@@ -169,6 +169,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     run_number: '',$
     jk_selection_x0y0x1y1: PTR_NEW(0L), $
     jk_selection_xyr: PTR_NEW(0L), $
+    jk_selection_sector: ptr_new(0L),$
     
     eqsans_reduce: EQSANS_REDUCE, $
     eqsans_reduce_mpi: EQSANS_REDUCE_MPI, $

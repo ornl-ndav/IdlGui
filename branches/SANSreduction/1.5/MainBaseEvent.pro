@@ -76,6 +76,7 @@ PRO MAIN_BASE_event, Event
     ;validate sector selection
     widget_info(wWidget, find_by_uname='validate_sector_selection'): begin
       validate_sector_selection, Event
+      save_exclusion_sector_jk, Event, ADD=add
       save_background,  Event, GLOBAL=global
     end
     
