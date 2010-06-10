@@ -340,9 +340,6 @@ pro plot_sector_exclusion_pixel, Event, tube_array, pixel_array
   
 end
 
-
-
-
 ;+
 ; :Description:
 ;   This procedures is triggered when the user hits the validate sector
@@ -354,8 +351,8 @@ end
 ; :Author: j35
 ;-
 PRO validate_sector_selection, Event
-compile_opt idl2
-
+  compile_opt idl2
+  
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
   tube_list = (*(*global).sector_tube_list)
@@ -385,41 +382,75 @@ compile_opt idl2
     
   ENDELSE
   
-;  ;check if Automatically Exclude Dead Tubes is ON
-;  IF (isAutoExcludeDeadTubeSelected(Event)) THEN BEGIN
-;    dead_tube_nbr = (*(*global).dead_tube_nbr)
-;    nbr_dead_tube = N_ELEMENTS(dead_tube_nbr)
-;    sz_pixel_array = LONG(nbr_dead_tube) * 256L
-;    IF (sz_pixel_array GT 0) THEN BEGIN
-;      PixelArray_of_Deadtubes = STRARR(sz_pixel_array)
-;      
-;      index = 0L ;make sure the index is long
-;      dead_tube_index = 0L
-;      WHILE (dead_tube_index LT nbr_dead_tube) DO BEGIN
-;        tube_global = dead_tube_nbr[dead_tube_index]
-;        bank = getBankNumber(tube_global+1)
-;        tube_local = getTubeLocal(tube_global+1)
-;        FOR pixel=0,255L DO BEGIN
-;          line = 'bank' + STRCOMPRESS(bank,/REMOVE_ALL)
-;          line += '_' + STRCOMPRESS(tube_local,/REMOVE_ALL)
-;          line += '_' + STRCOMPRESS(pixel,/REMOVE_ALL)
-;          PixelArray_of_DeadTubes[index] = line
-;          index++
-;        ENDFOR
-;        dead_tube_index++
-;      ENDWHILE
-;      
-;    ENDIF ELSE BEGIN;reset PixelArray_of_DeadTubes
-;      PixelArray_of_DeadTubes = STRARR(1)
-;    ENDELSE
-;  ENDIF ELSE BEGIN
-;    PixelArray_of_DeadTubes = STRARR(1)
-    
-;  ENDELSE
+  ;  ;check if Automatically Exclude Dead Tubes is ON
+  ;  IF (isAutoExcludeDeadTubeSelected(Event)) THEN BEGIN
+  ;    dead_tube_nbr = (*(*global).dead_tube_nbr)
+  ;    nbr_dead_tube = N_ELEMENTS(dead_tube_nbr)
+  ;    sz_pixel_array = LONG(nbr_dead_tube) * 256L
+  ;    IF (sz_pixel_array GT 0) THEN BEGIN
+  ;      PixelArray_of_Deadtubes = STRARR(sz_pixel_array)
+  ;
+  ;      index = 0L ;make sure the index is long
+  ;      dead_tube_index = 0L
+  ;      WHILE (dead_tube_index LT nbr_dead_tube) DO BEGIN
+  ;        tube_global = dead_tube_nbr[dead_tube_index]
+  ;        bank = getBankNumber(tube_global+1)
+  ;        tube_local = getTubeLocal(tube_global+1)
+  ;        FOR pixel=0,255L DO BEGIN
+  ;          line = 'bank' + STRCOMPRESS(bank,/REMOVE_ALL)
+  ;          line += '_' + STRCOMPRESS(tube_local,/REMOVE_ALL)
+  ;          line += '_' + STRCOMPRESS(pixel,/REMOVE_ALL)
+  ;          PixelArray_of_DeadTubes[index] = line
+  ;          index++
+  ;        ENDFOR
+  ;        dead_tube_index++
+  ;      ENDWHILE
+  ;
+  ;    ENDIF ELSE BEGIN;reset PixelArray_of_DeadTubes
+  ;      PixelArray_of_DeadTubes = STRARR(1)
+  ;    ENDELSE
+  ;  ENDIF ELSE BEGIN
+  ;    PixelArray_of_DeadTubes = STRARR(1)
   
-;  (*(*global).PixelArray_of_DeadTubes) = PixelArray_of_DeadTubes
+  ;  ENDELSE
+  
+  ;  (*(*global).PixelArray_of_DeadTubes) = PixelArray_of_DeadTubes
   
   add_to_global_exclusion_array, event, pixel_array
   
 END
 
+;+
+; :Description:
+;   Save parameters of sector selected that will be added to ROI file 
+;
+; :Params:
+;    Event
+;
+; :Keywords:
+;    ADD
+;
+; :Author: j35
+;-
+pro save_exclusion_sector_jk, Event, ADD=add
+  compile_opt idl2
+  
+  on_ioerror, error ;catch any conversion to fix or float errors
+  
+  widget_control, event.top, get_uvalue=global
+  
+  ;  region = [tube_selected, pixel_selected, radius]
+  
+  jk_selection_sector = (*(*global).jk_selection_sector)
+  
+  IF ((size(jk_selection_sector))[0] EQ 0) THEN BEGIN
+    jk_selection_sector = region
+  ENDIF ELSE BEGIN
+    jk_selection_sector = [jk_selection_sector,region]
+  ENDELSE
+  
+  (*(*global).jk_selection_sector) = jk_selection_sector
+  
+  error:
+  
+END
