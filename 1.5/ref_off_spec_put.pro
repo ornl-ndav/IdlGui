@@ -94,7 +94,7 @@ END
 PRO putListOfFilesShifting, Event, list_OF_files
   putList, Event, 'active_file_droplist_shifting', list_OF_files
 END
-
+;===================================================== STEP4 =====
 ;------------------------------------------------------------------------------
 PRO putXminStep4Step1Value, Event, value
   putTextFieldValue, Event, 'selection_info_xmin_value', $
@@ -126,6 +126,35 @@ PRO put_step4_step2_step2_lambda, Event, lambda_min, lambda_max
   putTextFieldValue, Event,'step4_2_2_lambda2_text_field', $
     STRCOMPRESS(lambda_max,/REMOVE_ALL)
 END
+;===================================================== STEP4 =====
+;===================================================== STEP5 =====
+; Change Code (RC Ward, 3 Jun 2010): These routines added to implement the xmin,ymin, xmax,ymax
+; control of the plot in STEP 5
+;------------------------------------------------------------------------------
+PRO putXminStep5Value, Event, value
+  putTextFieldValue, Event, 'step5_selection_info_xmin_value', $
+    STRCOMPRESS(value,/REMOVE_ALL)
+END
+
+;------------------------------------------------------------------------------
+PRO putYminStep5Value, Event, value
+  putTextFieldValue, Event, 'step5_selection_info_ymin_value', $
+    STRCOMPRESS(value,/REMOVE_ALL)
+END
+
+;------------------------------------------------------------------------------
+PRO putXmaxStep5Value, Event, value
+  putTextFieldValue, Event, 'step5_selection_info_xmax_value', $
+    STRCOMPRESS(value,/REMOVE_ALL)
+END
+
+;------------------------------------------------------------------------------
+PRO putYmaxStep5Value, Event, value
+  putTextFieldValue, Event, 'step5_selection_info_ymax_value', $
+    STRCOMPRESS(value,/REMOVE_ALL)
+END
+;===================================================== STEP5 =====
+
 
 ;------------------------------------------------------------------------------
 PRO putMessageInCreateStatus, Event, text

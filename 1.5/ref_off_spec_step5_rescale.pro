@@ -47,15 +47,22 @@ PRO create_step5_selection_data, Event
   base_array_untouched = (*(*global).total_array_untouched)
   base_array_error     = (*(*global).total_array_error_untouched)
   
-  x0 = (*global).step5_x0 ;lambda
-  y0 = (*global).step5_y0 ;pixel
-  x1 = (*global).step5_x1 ;lambda
-  y1 = (*global).step5_y1 ;pixel
+;  x0 = (*global).step5_x0 ;lambda
+;  y0 = (*global).step5_y0 ;pixel
+;  x1 = (*global).step5_x1 ;lambda
+;  y1 = (*global).step5_y1 ;pixel
   
-  xmin = MIN([x0,x1],MAX=xmax)
-  ymin = MIN([y0,y1],MAX=ymax)
-  ymin = FIX(ymin/2)
-  ymax = FIX(ymax/2)
+;  xmin = MIN([x0,x1],MAX=xmax)
+;  ymin = MIN([y0,y1],MAX=ymax)
+;  ymin = FIX(ymin/2)
+;  ymax = FIX(ymax/2)
+; CHANGE CODE (RC Ward, 13 June 2010): 
+; REPLACE SCREEN CAPTURE OF SCALING WITH THAT FROM STEP4 AS MODIFIED BY USER
+     xmin = (*global).step5_selection_savefor_step4[0]
+     xmax = (*global).step5_selection_savefor_step4[2]
+     ymin = (*global).step5_selection_savefor_step4[1]
+     ymax = (*global).step5_selection_savefor_step4[3]
+print, 'inside create_step5_selection_data - xmin,xmax,ymin,ymax: ', xmin,xmax,ymin,ymax
   
   array_selected = base_array_untouched[xmin:xmax,ymin:ymax]
   y = (SIZE(array_selected))(2)
@@ -102,8 +109,6 @@ END
 PRO display_step5_rescale_plot, Event, with_range=with_range
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
-
-;print, "test - with_range: ", with_range
 
 ; Code change RCW (Feb 11, 2010): Get Background color from XML file
 ; Code change RCW (Feb 12, 2010): Get line plot colors from XML file
@@ -998,46 +1003,45 @@ END
 ;------------------------------------------------------------------------------
 PRO plot_selection_after_zoom, Event
 print, "plot_selection_after_zoom"
+; Change Code (RC Ward, 8 June 2010): This code is now used to plot the selection box in Step 5
+; It will be called initially to show the original selection box from Step 4
+; and whenever there is a change in the selection box by the user
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
 ; Code change RCW (Feb 12, 2010): Get line plot colors from XML file
-  ref_plot_vertical_color = (*global).ref_plot_vertical_color
+; Code Change (RC Ward, 8 June 2010): Change color to that of zoombox color
+  ref_plot_zoombox_color = (*global).ref_plot_zoombox_color
   
-  x1 = (*global).recap_rescale_selection_left
-  x2 = (*global).recap_rescale_selection_right
+  xrange = (*global).step5_selection_savefor_step4
   
   DEVICE, DECOMPOSED=0
 ; Change code (RC Ward Feb 22, 2010): Pass color_table value for LOADCT from XML configuration file
   color_table = (*global).color_table
   LOADCT, color_table, /SILENT
   
-  x0y0x1y1 = (*global).x0y0x1y1
-  y0 = x0y0x1y1[1]
-  y1 = x0y0x1y1[3]
+  y0 = xrange[1]
+  y1 = xrange[3]
   ymin = MIN([y0,y1], MAX=ymax)
-  xa = x0y0x1y1[0]
-  xb = x0y0x1y1[2]
-  xmin = MIN([xa,xb],MAX=xmax)
+  x1 = xrange[0]
+  x2 = xrange[2]
+  xmin = MIN([x1,x2],MAX=xmax)
   
-;  color = ref_plot_vertical_color
-     color = FSC_COLOR(ref_plot_vertical_color)
+print, "in plot_selection_after_zoom: selection box is: ", xmin, xmax, ymin, ymax  
+;  color = ref_plot_zoombox_color
+     color = FSC_COLOR(ref_plot_zoombox_color)
   
-  IF (x1 GT xmin AND $
-    x1 LT xmax) THEN BEGIN
-    PLOTS, x1,ymin, $
-    color=color, /DATA
-    PLOTS, x1,ymax, $
-    color=color, /CONTINUE, /DATA
-  ENDIF
-  
-  IF (x2 GT xmin AND $
-    x2 LT xmax) THEN BEGIN
-    PLOTS, x2,ymin, $
-    color=color, /DATA
-    PLOTS, x2,ymax, $
-    color=color, /CONTINUE, /DATA
-  ENDIF
-  
+    PLOTS, xmin,ymin, color=color, /DATA
+    PLOTS, xmin,ymax, color=color, /CONTINUE, /DATA
+ 
+    PLOTS, xmax,ymin, color=color, /DATA
+    PLOTS, xmax,ymax, color=color, /CONTINUE, /DATA
+    
+    PLOTS, xmin,ymin, color=color, /DATA
+    PLOTS, xmax,ymin, color=color, /CONTINUE, /DATA
+ 
+    PLOTS, xmin,ymax, color=color, /DATA
+    PLOTS, xmax,ymax, color=color, /CONTINUE, /DATA
+ 
 END
 
 ;------------------------------------------------------------------------------
@@ -1254,58 +1258,27 @@ print, "define_default_recap_output_file"
   update_step5_preview_button, Event ;step5
   
 END
-;PRO step5_rescale_populate_zoom_widgets, Event
-  ;get global structure
-;  WIDGET_CONTROL, Event.top, GET_UVALUE=global
-;  `, "inside step5_rescale_populate_zoom_widgets"
-;  selection_value = getCWBgroupValue(Event,'step5_selection_group_uname')
-;  CASE (selection_value) OF
-;    0: type = 'None'
-;    1: type = 'IvsQ'
-;    2: type = 'IvsLambda'
-;  ENDCASE
-;  print, type
-;  IF (type EQ 'None') THEN BEGIN
-;    GOTO, JUMP  
-;  ENDIF
-;  print, "Inside type ne none" 
-;  ;check that xmax is not empty or equal to 0
-;  xmax_value = getTextFieldValue(Event,'step4_2_zoom_x_max')
+PRO step5_rescale_populate_zoom_widgets, Event  ;get global structure
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  print, "inside step5_rescale_populate_zoom_widgets"
+; Change code (RC Ward, 7 June 2010): This routine gets the coordinates of the selection box
+; in STEP4 and applies it to STEP5, putting xmin, xmax, ymin, ymax into the boxes
 ;  
-;  no_data = 0
-;  CATCH, no_data
-;  IF (no_data NE 0) THEN BEGIN
-;    CATCH,/CANCEL
-;  ENDIF ELSE BEGIN
-;    IF (xmax_value EQ '' OR $
-;      xmax_value EQ FLOAT(0)) THEN BEGIN
-;    xrange = (*(*global).step4_step2_step1_xrange)
-;IF (type EQ 'IvsLambda') THEN BEGIN
-;    print, "Keeping real space"
-;ENDIF ELSE BEGIN
-;    print, "Converting to recirpocal space"
-;    xrange = convert_from_lambda_to_Q(xrange)   
-;ENDELSE   
-;     sz = (size(xrange))(1)
-;     xmin = xrange[0]
-;     xmax = xrange[sz-1]
+     xrange = (*global).step5_selection_savefor_step4
+     xmin = xrange[0]
+     xmax = xrange[2]
+     ymin = xrange[1]
+     ymax = xrange[3]
 ;           
-;     sxmin = STRCOMPRESS(xmin,/REMOVE_ALL)
-;     sxmax = STRCOMPRESS(xmax,/REMOVE_ALL)      
+     sxmin = STRCOMPRESS(xmin,/REMOVE_ALL)
+     sxmax = STRCOMPRESS(xmax,/REMOVE_ALL)      
+     symin = STRCOMPRESS(ymin,/REMOVE_ALL)
+     symax = STRCOMPRESS(ymax,/REMOVE_ALL)      
 ;
-;    ymin_ymax = (*global).scaling_step2_ymin_ymax
-;    symin = STRCOMPRESS(ymin_ymax[0],/REMOVE_ALL)
-;    symax = STRCOMPRESS(ymin_ymax[1],/REMOVE_ALL)
-;           
-;      (*global).X_Y_min_max_backup = [sxmin, symin, sxmax, symax]
-;print, "test: sxmin: ", sxmin, " sxmax: ", sxmax, " symin: ", symin, " symax: ",symax   
-;      putTextFieldValue, Event, 'step5_new_zoom_x_min', sxmin
-;      putTextFieldValue, Event, 'step5_new_zoom_x_max', sxmax
-;      putTextFieldValue, Event, 'step5_new_zoom_y_min', symin
-;      putTextFieldValue, Event, 'step5_new_zoom_y_max', symax
+print, "step5_rescale_populate_zoom_widgets - sxmin: ", sxmin, " sxmax: ", sxmax, " symin: ", symin, " symax: ",symax   
+      putTextFieldValue, Event, 'step5_selection_info_xmin_value', sxmin
+      putTextFieldValue, Event, 'step5_selection_info_xmax_value', sxmax
+      putTextFieldValue, Event, 'step5_selection_info_ymin_value', symin
+      putTextFieldValue, Event, 'step5_selection_info_ymax_value', symax
 ;      
-;    ENDIF
-;  ENDELSE
-;  
-; JUMP:
-;END
+END

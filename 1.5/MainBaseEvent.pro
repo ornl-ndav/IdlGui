@@ -2493,6 +2493,42 @@ PRO MAIN_BASE_event, Event
   ;----------------------------------------------------------------------------
   ; RECAP - RECAP - RECAP - RECAP - RECAP - RECAP - RECAP - RECAP - RECAP -
   ;----------------------------------------------------------------------------
+; Change Code (RC Ward, 3 Jun 2010): These changes were added to implement the xmin,ymin, xmax,ymax
+; control of the plot in STEP 5
+;Selection Info Text Fields for Step 5 Plot -------------------------------------------------
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='step5_selection_info_xmin_value'): BEGIN
+    current_list_OF_files = (*(*global).list_OF_ascii_files)
+    IF (current_list_OF_files[0] NE '') THEN BEGIN
+      move_selection_manually_step5, Event ;step5
+    ENDIF
+  END
+  
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='step5_selection_info_ymin_value'): BEGIN
+    current_list_OF_files = (*(*global).list_OF_ascii_files)
+    IF (current_list_OF_files[0] NE '') THEN BEGIN
+      move_selection_manually_step5, Event ;step5
+    ENDIF
+  END
+  
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='step5_selection_info_xmax_value'): BEGIN
+    current_list_OF_files = (*(*global).list_OF_ascii_files)
+    IF (current_list_OF_files[0] NE '') THEN BEGIN
+      move_selection_manually_step5, Event ;step5
+    ENDIF
+  END
+  
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='step5_selection_info_ymax_value'): BEGIN
+    current_list_OF_files = (*(*global).list_OF_ascii_files)
+    IF (current_list_OF_files[0] NE '') THEN BEGIN
+      move_selection_manually_step5, Event ;step5
+    ENDIF
+  END
+; ====== END CHANGE  3 June 2010 ==============================================================  
+
 ;***********************************************************************************************
 ; Change Code (RC Ward, 29 April 2010): ADD THE FOLLOWING WIDGET_INFO for controlling plot scale
 ; Note the with_range is set to 1 for all these calls on 31 May 2010 as a test -might cause proble
@@ -2530,6 +2566,7 @@ PRO MAIN_BASE_event, Event
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='z_axis_linear_log_step5'): BEGIN
     refresh_recap_plot, Event ;_step5
+    refresh_plotStep5Selection, Event
   END
   
   ;zmax widget_text
@@ -2593,6 +2630,13 @@ PRO MAIN_BASE_event, Event
   ;Reset zmin and zmax
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_z_reset'): BEGIN
     refresh_recap_plot, Event
+ ; Change code (RC Ward, 13 June, 2010): When resetting, also reset xmin,ymin,xmax,ymax
+ ; and draw selection box
+ ; pick up the xmin,ymin,xmax,ymax from Step 4 
+              step5_rescale_populate_zoom_widgets, Event
+ ; draw the selection box
+              refresh_plotStep5Selection, Event
+
     (*global).zmax_g_recap_backup = (*global).zmax_g_recap
     (*global).zmin_g_recap_backup = (*global).zmin_g_recap
   END
@@ -2646,9 +2690,17 @@ PRO MAIN_BASE_event, Event
   ;----------------------------------------------------------------------------
   ;draw
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_draw'): BEGIN
+; TRY THIS - NOT SURE IT WILL WORK - APPARENTLY NOT NEEDED ===========================
+;    id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='step5_draw')
+;    WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+;    WSET,id_value
+; ======================================
     DEVICE, CURSOR_STANDARD=31
+; print, "at top of WIDGET INFO in MainBaseEvent - step5_draw"
+
     LoadBaseStatus  = isBaseMapped(Event,'shifting_base_step5')
     ;ScaleBaseStatus = isBaseMapped(Event,'scaling_base_step5')
+
     IF (LoadBaseStatus EQ 0) THEN BEGIN
       delta_x = (*global).delta_x
       x = Event.x
@@ -2673,52 +2725,44 @@ PRO MAIN_BASE_event, Event
         counts = total_array(x,y1)
         sIntensity = STRING(counts,FORMAT='(e8.1)')
         intensity = STRCOMPRESS(sIntensity,/REMOVE_ALL)
+
+;       plot_selection_after_zoom, Event
       ENDIF ELSE BEGIN
         intensity = 'N/A'
       ENDELSE
       CountsText = 'Counts: ' + STRCOMPRESS(intensity,/REMOVE_ALL)
       putTextFieldValue, Event, 'counts_value_step5', CountsText
-      
+     
       selection_value = $
         getCWBgroupValue(Event,'step5_selection_group_uname')
+; print, 'In MainBaseEvent for Step 5 - selection_value: ', selection_value    
         
       IF (selection_value NE 0) THEN BEGIN
+; Change Code (RC Ward, 13 June, 2010):
+; Define the default file name - this is displayed on the I vs Q plot page
+;       define_default_recap_output_file, Event 
+    
+; Change Code (RC Ward, 13 June, 2010): Code now uses the selection window from Step 4 
+;    as modified by user and the action is left click the mouse in the screen
 ; Mouse actions on creating selection window for step5
       ;left click mouse ----------------------------------------------------      
         IF (event.press EQ 1) THEN BEGIN ;press left
-          (*global).left_mouse_pressed = 1
-          (*global).step5_x0 = Event.x
-          (*global).step5_y0 = Event.y
-        ENDIF
-        
-      ;move mouse ----------------------------------------------------
-        IF (event.type EQ 2 AND $ ;move mouse with left pressed
-          (*global).left_mouse_pressed EQ 1) THEN BEGIN
-          CASE (selection_value) OF
-            1: plot_step5_i_vs_Q_selection, Event ;_step5
-            2: plot_step5_i_vs_Q_selection, Event ;_step5
-            ELSE:
-          ENDCASE
-        ENDIF
-        
-      ;release mouse ----------------------------------------------------
-        IF (event.type EQ 1) THEN BEGIN ;release mouse
-          (*global).left_mouse_pressed = 0
-          (*global).step5_x1 = Event.x
-          (*global).step5_y1 = Event.y
+; Change Code (RC Ward, 13 June, 2010): Define the default file name - 
+;      this is displayed on the I vs Q plot page
+       define_default_recap_output_file, Event 
           inform_log_book_step5_selection, Event ;_step5
-;          enabled_or_not_recap_rescale_button, Event
-; Change Code (RC Ward, 7 May 2010):  Call  display_step5_rescale_plot  rather than  display_step5_rescale_plot_first_time    
           MapBase, Event, 'step5_rescale_base', 1
-;          display_step5_rescale_plot_first_time, Event
+; Change Code (RC Ward, 7 May 2010):  Call  display_step5_rescale_plot  
+;    rather than display_step5_rescale_plot_first_time 
 ; Change code (RC Ward, 31 May 2010): call routine with with_range set to 1
           display_step5_rescale_plot, Event, with_range=1
           define_default_recap_output_file, Event
+
         ENDIF
-        
+                
       ENDIF ;end of 'if (selection_value NE 0)'
       
-    ENDIF
+    ENDIF; end of 'if (LoadBaseStatus EQ 0)'
     
   END
   
@@ -2765,107 +2809,107 @@ PRO MAIN_BASE_event, Event
 ; Change code (RC Ward, 11 May 2010): Branch around the "zoom" portion here. It is no longer used.
     isZoomSelected = 0
     IF (isZoomSelected) THEN BEGIN ;using zoom
-    
-      IF (event.press EQ 1) THEN BEGIN ;press left
-        (*global).recap_rescale_x0 = Event.x
-        (*global).recap_rescale_y0 = Event.y
-        CURSOR, x,y,/data,/nowait
-        x0y0x1y1 = (*global).x0y0x1y1
-        
-        x0y0x1y1_graph = (*global).x0y0x1y1_graph
-        x0_graph = x0y0x1y1_graph[0]
-        y0_graph = x0y0x1y1_graph[1]
-        x1_graph = x0y0x1y1_graph[2]
-        y1_graph = x0y0x1y1_graph[3]
-        
-        IF (x LT x0y0x1y1_graph[0]) THEN x=x0y0x1y1_graph[0]
-        IF (x GT x0y0x1y1_graph[2]) THEN x=x0y0x1y1_graph[2]
-        IF (y LT x0y0x1y1_graph[1]) THEN y=x0y0x1y1_graph[1]
-        IF (y GT x0y0x1y1_graph[3]) THEN y=x0y0x1y1_graph[3]
-        
-        x0y0x1y1[0] = x
-        x0y0x1y1[1] = y
-        
-        (*global).x0y0x1y1 = x0y0x1y1
-        (*global).recap_rescale_left_mouse = 1
-        
-        plot_recap_rescale_other_selection, Event, type='all'
-        
-      ENDIF
-      
-      IF (event.type EQ 2 AND $ ;move mouse with left pressed
-        (*global).recap_rescale_left_mouse EQ 1) THEN BEGIN
-        
-        ;make sure the event.x stays within 5 and 1267
-        ;make sure the event.y stays within 5 and 696
-        IF (Event.x GT 5 AND $
-          Event.x LT 1267 AND $
-          Event.y GT 5 AND $
-          Event.y LT 696) THEN BEGIN
-          
-          CURSOR, x,y, /DATA, /NOWAIT
-          (*global).last_valid_x = x
-          (*global).last_valid_y = y
-          
+;    
+;      IF (event.press EQ 1) THEN BEGIN ;press left
+;        (*global).recap_rescale_x0 = Event.x
+;        (*global).recap_rescale_y0 = Event.y
+;        CURSOR, x,y,/data,/nowait
+;        x0y0x1y1 = (*global).x0y0x1y1
+;        
+;        x0y0x1y1_graph = (*global).x0y0x1y1_graph
+;        x0_graph = x0y0x1y1_graph[0]
+;        y0_graph = x0y0x1y1_graph[1]
+;        x1_graph = x0y0x1y1_graph[2]
+;        y1_graph = x0y0x1y1_graph[3]
+;        
+;        IF (x LT x0y0x1y1_graph[0]) THEN x=x0y0x1y1_graph[0]
+;        IF (x GT x0y0x1y1_graph[2]) THEN x=x0y0x1y1_graph[2]
+;        IF (y LT x0y0x1y1_graph[1]) THEN y=x0y0x1y1_graph[1]
+;        IF (y GT x0y0x1y1_graph[3]) THEN y=x0y0x1y1_graph[3]
+;        
+;        x0y0x1y1[0] = x
+;        x0y0x1y1[1] = y
+;        
+;        (*global).x0y0x1y1 = x0y0x1y1
+;        (*global).recap_rescale_left_mouse = 1
+;        
+;        plot_recap_rescale_other_selection, Event, type='all'
+;        
+;      ENDIF
+;      
+;      IF (event.type EQ 2 AND $ ;move mouse with left pressed
+;        (*global).recap_rescale_left_mouse EQ 1) THEN BEGIN
+;        
+;        ;make sure the event.x stays within 5 and 1267
+;        ;make sure the event.y stays within 5 and 696
+;        IF (Event.x GT 5 AND $
+;          Event.x LT 1267 AND $
+;          Event.y GT 5 AND $
+;          Event.y LT 696) THEN BEGIN
+;          
+;          CURSOR, x,y, /DATA, /NOWAIT
+;          (*global).last_valid_x = x
+;          (*global).last_valid_y = y
+;          
           ;replot main plot
-          display_step5_rescale_plot_from_zoom, Event, with_range=1
-          
+;          display_step5_rescale_plot_from_zoom, Event, with_range=1
+;          
           ;display_step5_rescale_after_rescale_during_zoom_selection, Event
           ;plot selection
-          (*global).recap_rescale_x1 = Event.x
-          (*global).recap_rescale_y1 = Event.y
-          plot_recap_rescale_selection, Event
+;          (*global).recap_rescale_x1 = Event.x
+;          (*global).recap_rescale_y1 = Event.y
+;          plot_recap_rescale_selection, Event
           
-          plot_recap_rescale_other_selection, Event, type='all'
+;          plot_recap_rescale_other_selection, Event, type='all'
           
-        ENDIF
+;        ENDIF
         
-      ENDIF
+;      ENDIF
       
-      IF (event.release EQ 1) THEN BEGIN ;release mouse
+;      IF (event.release EQ 1) THEN BEGIN ;release mouse
       
         ;make sure the event.x stays within 5 and 1267
         ;make sure the event.y stays within 5 and 696
-        IF (Event.x GT 5 AND $
-          Event.x LT 1267 AND $
-          Event.y GT 5 AND $
-          Event.y LT 696) THEN BEGIN
+;       IF (Event.x GT 5 AND $
+;          Event.x LT 1267 AND $
+;          Event.y GT 5 AND $
+;          Event.y LT 696) THEN BEGIN
           
-          CURSOR,x,y,/data,/nowait
+;          CURSOR,x,y,/data,/nowait
           
-        ENDIF ELSE BEGIN
+;        ENDIF ELSE BEGIN
         
-          x = (*global).last_valid_x
-          y = (*global).last_valid_y
+;          x = (*global).last_valid_x
+;          y = (*global).last_valid_y
           
-        ENDELSE
+;        ENDELSE
         
-        (*global).recap_rescale_left_mouse = 0
-        x0y0x1y1 = (*global).x0y0x1y1
+;        (*global).recap_rescale_left_mouse = 0
+;        x0y0x1y1 = (*global).x0y0x1y1
         
-        x0y0x1y1_graph = (*global).x0y0x1y1_graph
-        x0_graph = x0y0x1y1_graph[0]
-        y0_graph = x0y0x1y1_graph[1]
-        x1_graph = x0y0x1y1_graph[2]
-        y1_graph = x0y0x1y1_graph[3]
-        xmin = MIN([x0_graph,x1_graph],MAX=xmax)
-        ymin = MIN([y0_graph,y1_graph],MAX=ymax)
+;        x0y0x1y1_graph = (*global).x0y0x1y1_graph
+;        x0_graph = x0y0x1y1_graph[0]
+;        y0_graph = x0y0x1y1_graph[1]
+;        x1_graph = x0y0x1y1_graph[2]
+;        y1_graph = x0y0x1y1_graph[3]
+;        xmin = MIN([x0_graph,x1_graph],MAX=xmax)
+;        ymin = MIN([y0_graph,y1_graph],MAX=ymax)
         
-        IF (x LT 0) THEN x = xmax
-        IF (y LT 0) THEN y = ymax
+;        IF (x LT 0) THEN x = xmax
+;        IF (y LT 0) THEN y = ymax
         
-        x0y0x1y1[2] = x
-        x0y0x1y1[3] = y
-        (*global).x0y0x1y1 = x0y0x1y1
-        (*global).x0y0x1y1_graph = x0y0x1y1
+;        x0y0x1y1[2] = x
+;        x0y0x1y1[3] = y
+;        (*global).x0y0x1y1 = x0y0x1y1
+;        (*global).x0y0x1y1_graph = x0y0x1y1
         
-        redisplay_step5_rescale_plot, Event
-        (*global).first_recap_rescale_plot = 0
+;        redisplay_step5_rescale_plot, Event
+;        (*global).first_recap_rescale_plot = 0
         
-        plot_selection_after_zoom, Event
-      ENDIF
+;        plot_selection_after_zoom, Event
+;      ENDIF
      
-      replot_average_recap_rescale, Event
+;      replot_average_recap_rescale, Event
      
     ENDIF ELSE BEGIN ;selection selected
    
