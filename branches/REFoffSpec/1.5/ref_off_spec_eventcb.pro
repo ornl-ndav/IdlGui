@@ -203,7 +203,6 @@ PRO tab_event, Event
 
 ;*** STEP 2 *******************************************************************     
       1: BEGIN ;load
-        print, " something_to_plot: ", (*global).something_to_plot
         IF((*global).something_to_plot) THEN BEGIN
           xaxis = (*(*global).x_axis)
           contour_plot, Event, xaxis
@@ -305,17 +304,29 @@ PRO tab_event, Event
           ENDIF ELSE BEGIN
             IF ((*global).zmax_g_recap EQ 0d AND $
               (*global).zmin_g_recap EQ 0d) THEN BEGIN
+   ; draw 2D data
               refresh_recap_plot, Event
+   ; pick up the xmin,ymin,xmax,ymax from Step 4 
+              step5_rescale_populate_zoom_widgets, Event
+   ; draw the selection box
+              refresh_plotStep5Selection, Event
             ENDIF ELSE BEGIN
+   ; draw 2D data
               refresh_recap_plot, Event, RESCALE=1;_step5
+   ; pick up the xmin,ymin,xmax,ymax from Step 4 
+              step5_rescale_populate_zoom_widgets, Event
+   ; draw the selection box
+              refresh_plotStep5Selection, Event   
             ENDELSE
-          ENDELSE
+         ENDELSE
+; 
 ; Change Code (RC Ward, 18 Apr 2010/11 May 2010) - add connection to zoom boxes
 ;          step5_rescale_populate_zoom_widgets, Event ;scaling_step2 used in step 5
 ;          re_display_step4_step2_step1_selection, Event ;scaling_step2 used in step 5       
 ;show selection if one is selected
           selection_value = $
             getCWBgroupValue(Event,'step5_selection_group_uname')
+       print, 'test eventcb - selection_value: ', selection_value
           CASE (selection_value) OF
             1: BEGIN
 ;               create_step5_selection_data, Event 

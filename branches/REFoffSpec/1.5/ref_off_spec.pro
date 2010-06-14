@@ -412,6 +412,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     step5_selection_x_array: PTR_NEW(0L),$
     step5_selection_y_array: PTR_NEW(0L),$
     step5_selection_y_error_array: PTR_NEW(0L),$
+    step5_selection_savefor_step4: [0,0,0,0], $ 
     recap_rescale_left_mouse: 0, $
     recap_rescale_working_with: 'left',$
     recap_rescale_x0: 0,$

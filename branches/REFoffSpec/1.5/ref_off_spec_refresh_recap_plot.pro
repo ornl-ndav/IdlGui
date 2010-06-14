@@ -35,7 +35,7 @@
 PRO refresh_recap_plot, Event, RESCALE=rescale
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
-  
+print, "refresh_recap_plot"  
   nbr_plot    = getNbrFiles(Event) ;number of files
   
   scaling_factor_array = (*(*global).scaling_factor)
@@ -269,3 +269,115 @@ PRO refresh_recap_plot, Event, RESCALE=rescale
     POSITION = position
     
 END
+; Change Code (RC Ward, 3 Jun 2010): Add rountine to plot the selection box on the plot for Step 5
+
+PRO refresh_plotStep5Selection, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+print, "refresh_plotStep5Selection"
+
+  id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='step5_draw')
+  WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+  WSET,id_value
+  
+xy_position = (*global).step5_selection_savefor_step4
+xmin = xy_position[0]
+ymin = xy_position[1]
+xmax = xy_position[2]
+ymax = xy_position[3]
+print, " inside refresh_plotStep5Selection: xmin,xmax, ymin, ymax: ", xmin,xmax, ymin, ymax
+ymin_plot = 2 * ymin
+ymax_plot = 2* ymax
+;IF (xmin + xmax NE 0) THEN BEGIN
+    color = 200
+    PLOTS, [xmin, xmin, xmax, xmax, xmin],$
+      [ymin_plot,ymax_plot, ymax_plot, ymin_plot, ymin_plot],$
+      /DEVICE,$
+      COLOR = color
+;ENDIF
+END
+; 
+; Change Code (RC Ward, 3 Jun 2010): These routines added to implement the xmin,ymin, xmax,ymax
+; control of the plot in STEP 5
+;------------------------------------------------------------------------------
+;This procedure is reached each time the user hits enter in one of the
+;four text field xmin, ymin, xmax and ymax
+  PRO move_selection_manually_step5, Event
+    WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+;work on Min values
+    xmin = FIX(getStep5XminValue(Event))
+    ymin = FIX(getStep5YminValue(Event))
+;    ymin_to_test = 2*ymin
+     ymin_to_test = ymin
+
+;this make sure that we are not outside the window
+;    physical_x_y, Event, xmin, ymin_to_test
+;    ymin = ymin_to_test / 2
+
+;work on Max values
+    xmax = getStep5XmaxValue(Event)
+    ymax = getStep5YmaxValue(Event)
+;    ymax_to_test = 2*ymax
+    ymax_to_test = ymax
+
+;this make sure that we are not outside the window
+;    physical_x_y, Event, xmax, ymax_to_test
+;    ymax = ymax_to_test / 2
+
+    xmin = MIN([xmin,xmax],MAX=xmax)
+    ymin = MIN([ymin,ymax],MAX=ymax)
+
+    (*global).step5_selection_savefor_step4 = [xmin, ymin_to_test, xmax, ymax_to_test]     
+
+;refresh Step 5 plot
+    refresh_recap_plot, Event, RESCALE=1  
+;refresh selection plot
+    refresh_plotStep5Selection, Event   
+
+;put back the right values of xmin, ymin, xmax and ymax
+    putXminStep5Value, Event, xmin
+    putYminStep5Value, Event, ymin
+    putXmaxStep5Value, Event, xmax
+    putYmaxStep5Value, Event, ymax
+END
+; Change Code (RC Ward, 3 Jun 2010): These routines added to implement the xmin,ymin, xmax,ymax
+; control of the plot in STEP 5
+;PRO display_x_y_min_max_step5, Event, TYPE=type
+;   WIDGET_CONTROL, Event.top, GET_UVALUE=global
+;   IF (TYPE EQ 'left_click') THEN BEGIN
+   ; type is left_click, display only xmin,ymin
+;    selection_position = (*global).step4_step1_move_selection_position   
+;      x0 = (*global).step5_x0
+;      y0 = (*global).step5_y0
+;      xmin = x0
+;      ymin = y0/2
+;      xmax = 'N/A'
+;      ymax = 'N/A'
+;  ENDIF ELSE BEGIN
+  ; type is move, display xmin,xmax,ymin,ymax
+  ;    xy_position = (*global).step4_step1_selection 
+;      x0 = (*global).step5_x0
+;      y0 = (*global).step5_y0
+;      xmin = x0
+;      ymin = y0/2
+;      x1 = (*global).step5_x1
+;      y1 = (*global).step5_y1
+;      xmax = x1
+;      ymax = y1/2
+;      xmin = MIN([xmin,xmax],MAX=xmax)
+;      ymin = MIN([ymin,ymax],MAX=ymax)
+
+;  ENDELSE
+; print, "test xmin, xmax, ymin, ymax: ", xmin, xmax, ymin, ymax
+;  sxmin = STRCOMPRESS(xmin,/REMOVE_ALL)
+;  symin = STRCOMPRESS(ymin,/REMOVE_ALL)
+;  sxmax = STRCOMPRESS(xmax,/REMOVE_ALL)
+;  symax = STRCOMPRESS(ymax,/REMOVE_ALL)
+
+;  putTextfieldValue, Event, 'step5_selection_info_xmin_value', sxmin
+;  putTextfieldValue, Event, 'step5_selection_info_ymin_value', symin
+;  putTextfieldValue, Event, 'step5_selection_info_xmax_value', sxmax
+;  putTextfieldValue, Event, 'step5_selection_info_ymax_value', symax
+
+;END
+; =============== END CHANGE  3 June 2010 ===============================================

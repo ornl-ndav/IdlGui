@@ -135,15 +135,31 @@ sZmin = { size: [sZmax.size[0]+XYoff[0],$
           sensitive: 0,$
           value: ''}
 
+
+
 ;Selection Info ---------------------------------------------------------------
 ;XYoff = [10,15]
-XYoff = [20, 5]
+;XYoff = [20, 5]  Change made earlier in location of boxes June 2010
+; Change code (11 June 200): Locate these boxes in the same place on Step4/Step1 and Step5
+XYoff = [560,5]
 sSelectionInfoBase = { size: [XYoff[0],$
                               sScale.size[1]+sScale.size[3]+XYoff[1],$
                               550,50],$
 ;                              300,80],$
                        uname: 'step4_step1_selection_info_base',$
                        frame: 1}
+; Change made (RC Ward, 11 June 2010): Add help on selection window
+;Selection Window Help ---------------------------------------------------------------
+XYoff = [-400,10]
+sSelectionInfoHelp1 = { size: [sSelectionInfoBase.size[0]+XYoff[0],$
+                             sSelectionInfoBase.size[1]+XYoff[1]],$
+                        value: 'Use the mouse to draw window for initial selection.'}
+
+XYoff = [-420,30]
+sSelectionInfoHelp2 = { size: [sSelectionInfoBase.size[0]+XYoff[0],$
+                             sSelectionInfoBase.size[1]+XYoff[1]],$
+                        value: 'To alter selection window, enter change and press <Enter>.'}
+                        
 XYoff = [20,-8]
 sSelectionInfoTitle = { size: [sSelectionInfoBase.size[0]+XYoff[0],$
                                sSelectionInfoBase.size[1]+XYoff[1]],$
@@ -285,7 +301,7 @@ wXLabel = WIDGET_LABEL(BaseTab,$
                        VALUE     = sXlabel.value,$
                        UNAME     = sXlabel.uname,$
                        /ALIGN_LEFT)
-wXLabel = WIDGET_LABEL(BaseTab,$
+wYLabel = WIDGET_LABEL(BaseTab,$
                        XOFFSET   = sYLabel.size[0],$
                        YOFFSET   = sYLabel.size[1],$
                        SCR_XSIZE = sYLabel.size[2],$
@@ -375,7 +391,7 @@ wLinLog = CW_BGROUP(BaseTab,$
                     /EXCLUSIVE,$
                     /ROW,$
                     /NO_RELEASE)
-
+                    
 ;Selection Info ---------------------------------------------------------------
 
 ;title
@@ -392,6 +408,19 @@ wSelectionInfoBase = WIDGET_BASE(BaseTab,$
                                  SCR_YSIZE = sSelectionInfoBase.size[3],$
                                  FRAME     = sSelectionInfoBase.frame,$
                                  UNAME     = sSelectionInfoBase.uname)
+
+; Change made (RC Ward, 11 June 2010): Add help line regarding the selection window
+;Selection Window Help---------------------------------------------------------------
+
+wSelectionInfoHelp1 = WIDGET_LABEL(BaseTab,$
+                               XOFFSET = sSelectionInfoHelp1.size[0],$
+                               YOFFSET = sSelectionInfoHelp1.size[1],$
+                               VALUE   = sSelectionInfoHelp1.value)
+
+wSelectionInfoHelp2 = WIDGET_LABEL(BaseTab,$
+                               XOFFSET = sSelectionInfoHelp2.size[0],$
+                               YOFFSET = sSelectionInfoHelp2.size[1],$
+                               VALUE   = sSelectionInfoHelp2.value)
 
 ;Xmin (label/value)
 wXminLabel = WIDGET_LABEL(wSelectionInfoBase,$

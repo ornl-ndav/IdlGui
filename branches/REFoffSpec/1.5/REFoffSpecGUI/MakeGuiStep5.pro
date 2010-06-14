@@ -52,13 +52,13 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
    sRescaleBase = { size: [tab_size[0],$
                           tab_size[1],$
                           tab_size[2],$
-                          730],$
+                          750],$
                     uname: 'step5_rescale_base',$
                     map: 0}                         
                           
 ;  Code Change (RC Ward, April 10, 2010): Eventually remove these buttons from the screen.
 ;  Control of scaling will be as in Scaling Step 1D plot 
-  ;buttons zoom or selection
+;buttons zoom or selection
   XYoff = [0,0]
   sZoomSelectionBase = { size: [XYoff[0],$
                                 XYoff[1],$
@@ -346,7 +346,8 @@ sYMaxBaseField = { size: [sXMaxBaseField.size[0]+XYoff[0],$
     sScale.size[1]+$
     sScale.size[3]+$
     XYoff[1],$
-    800,40],$
+;    800,40],$
+     550, 40],$
     frame: 0,$
     sensitive: 1,$
     uname: 'step5_selection_group' }
@@ -421,6 +422,73 @@ sYMaxBaseField = { size: [sXMaxBaseField.size[0]+XYoff[0],$
     value: 'PREVIEW',$
     uname: 'preview_button_i_vs_q',$
     sensitive: 0}
+ 
+ ; Code added (RC Ward, 2 Jun 2010): Add the selection window values: Xmin, Xmax, Ymin and Ymax
+;Selection Info ---------------------------------------------------------------
+;XYoff = [10,15]
+XYoff = [560, 5]
+sSelectionInfoBase = { size: [XYoff[0],$
+                              sScale.size[1]+sScale.size[3]+XYoff[1],$
+                              550,50],$
+;                              300,80],$
+                       uname: 'step5_selection_info_base',$
+                       frame: 1}
+XYoff = [20,-8]
+sSelectionInfoTitle = { size: [sSelectionInfoBase.size[0]+XYoff[0],$
+                               sSelectionInfoBase.size[1]+XYoff[1]],$
+                        value: 'SELECTION WINDOW INFO'}
+                        
+;Xmin (label/value)
+XYoff = [10,15]
+sSelectionInfoXminLabel = { size: [XYoff[0],$
+                                   XYoff[1]],$
+                            value: 'Xmin'}
+XYoff = [30,-6]
+sSelectionInfoXminValue = { size: [sSelectionInfoXminLabel.size[0]+$
+                                   XYoff[0],$
+                                   sSelectionInfoXminLabel.size[1]+$
+                                   XYoff[1],$
+                                   10],$
+                            value: '',$
+                            uname: 'step5_selection_info_xmin_value'}
+;Xmax (label/value)
+XYoff = [150,0]
+sSelectionInfoXmaxLabel = { size: [XYoff[0],$
+                                   sSelectionInfoXminLabel.size[1]+XYoff[1]],$
+                            value: 'Xmax'}
+XYoff = [30,0]
+sSelectionInfoXmaxValue = { size: [sSelectionInfoXmaxLabel.size[0]+ $
+                                   XYoff[0],$
+                                   sSelectionInfoXminValue.size[1]+XYoff[1],$
+                                   sSelectionInfoXminValue.size[2]],$
+                            value: '',$
+                            uname: 'step5_selection_info_xmax_value'}                        
+
+;Ymin (label/value)
+XYoff = [280, 15]
+sSelectionInfoYminLabel = { size: [XYoff[0],$
+                                   XYoff[1]],$
+                            value: 'Ymin'}
+XYoff = [30,-6]
+sSelectionInfoYminValue = { size: [sSelectionInfoYminLabel.size[0]+$
+                                   XYoff[0],$
+                                   sSelectionInfoYminLabel.size[1]+$
+                                   XYoff[1],$
+                                   10],$
+                            value: '',$
+                            uname: 'step5_selection_info_ymin_value'}
+;Ymax (label/value)
+XYoff = [410,0]
+sSelectionInfoYmaxLabel = { size: [XYoff[0],$
+                                   sSelectionInfoYminLabel.size[1]+XYoff[1]],$
+                            value: 'Ymax'}
+XYoff = [30,0]
+sSelectionInfoYmaxValue = { size: [sSelectionInfoYmaxLabel.size[0]+ $
+                                   XYoff[0],$
+                                   sSelectionInfoYminValue.size[1]+XYoff[1],$
+                                   sSelectionInfoYminValue.size[2]],$
+                            value: '',$
+                            uname: 'step5_selection_info_ymax_value'}
     
   ;*****************************************************************************
   ;            BUILD GUI
@@ -864,5 +932,81 @@ wYmaxValue = CW_FIELD(wYmaxBase,$
     VALUE     = sPreviewButton.value,$
     SENSITIVE = sPreviewButton.sensitive,$
     UNAME     = sPreviewButton.uname)
+
+; Added code (RC Ward, 2 Jun 2010): Put plot scaling values [xmin, xmax, ymin, ymax] on screen
+;Base
+wSelectionTitle = WIDGET_LABEL(BaseTab,$
+                               XOFFSET = sSelectionInfoTitle.size[0],$
+                               YOFFSET = sSelectionInfoTitle.size[1],$
+                               VALUE   = sSelectionInfoTitle.value) 
+                               
+wSelectionInfoBase = WIDGET_BASE(BaseTab,$
+                                 XOFFSET   = sSelectionInfoBase.size[0],$
+                                 YOFFSET   = sSelectionInfoBase.size[1],$
+                                 SCR_XSIZE = sSelectionInfoBase.size[2],$
+                                 SCR_YSIZE = sSelectionInfoBase.size[3],$
+                                 FRAME     = sSelectionInfoBase.frame,$
+                                 UNAME     = sSelectionInfoBase.uname)
+                                                                  
+;Xmin (label/value)
+wXminLabel = WIDGET_LABEL(wSelectionInfoBase,$
+                          XOFFSET = sSelectionInfoXminLabel.size[0],$
+                          YOFFSET = sSelectionInfoXminLabel.size[1],$
+                          VALUE   = sSelectionInfoXminLabel.value)
+
+wXminValue = WIDGET_TEXT(wSelectionInfoBase,$
+                         XOFFSET = sSelectionInfoXminValue.size[0],$
+                         YOFFSET = sSelectionInfoXminValue.size[1],$
+                         XSIZE   = sSelectionInfoXminValue.size[2],$
+                         UNAME   = sSelectionInfoXminValue.uname,$
+                         VALUE   = sSelectionInfoXminValue.value,$
+                         /EDITABLE,$
+                         /ALIGN_LEFT)
+                                 
+;Xmax (label/value)
+wXmaxLabel = WIDGET_LABEL(wSelectionInfoBase,$
+                          XOFFSET = sSelectionInfoXmaxLabel.size[0],$
+                          YOFFSET = sSelectionInfoXmaxLabel.size[1],$
+                          VALUE   = sSelectionInfoXmaxLabel.value)
+
+wXmaxValue = WIDGET_TEXT(wSelectionInfoBase,$
+                         XOFFSET = sSelectionInfoXmaxValue.size[0],$
+                         YOFFSET = sSelectionInfoXmaxValue.size[1],$
+                         XSIZE   = sSelectionInfoXmaxValue.size[2],$
+                         UNAME   = sSelectionInfoXmaxValue.uname,$
+                         VALUE   = sSelectionInfoXmaxValue.value,$
+                         /EDITABLE,$
+                         /ALIGN_LEFT)
+
+;Ymin (label/value)
+wYminLabel = WIDGET_LABEL(wSelectionInfoBase,$
+                          XOFFSET = sSelectionInfoYminLabel.size[0],$
+                          YOFFSET = sSelectionInfoYminLabel.size[1],$
+                          VALUE   = sSelectionInfoYminLabel.value)
+
+wYminValue = WIDGET_TEXT(wSelectionInfoBase,$
+                         XOFFSET = sSelectionInfoYminValue.size[0],$
+                         YOFFSET = sSelectionInfoYminValue.size[1],$
+                         XSIZE   = sSelectionInfoYminValue.size[2],$
+                         UNAME   = sSelectionInfoYminValue.uname,$
+                         VALUE   = sSelectionInfoYminValue.value,$
+                         /EDITABLE,$
+                         /ALIGN_LEFT)
+
+;Ymax (label/value)
+wYmaxLabel = WIDGET_LABEL(wSelectionInfoBase,$
+                          XOFFSET = sSelectionInfoYmaxLabel.size[0],$
+                          YOFFSET = sSelectionInfoYmaxLabel.size[1],$
+                          VALUE   = sSelectionInfoYmaxLabel.value)
+
+wYmaxValue = WIDGET_TEXT(wSelectionInfoBase,$
+                         XOFFSET = sSelectionInfoYmaxValue.size[0],$
+                         YOFFSET = sSelectionInfoYmaxValue.size[1],$
+                         XSIZE   = sSelectionInfoYmaxValue.size[2],$
+                         UNAME   = sSelectionInfoYmaxValue.uname,$
+                         VALUE   = sSelectionInfoYmaxValue.value,$
+                         /EDITABLE,$
+                         /ALIGN_LEFT)
+;====== Added code 2 Jun 2010 =============================================
     
 END

@@ -179,6 +179,29 @@ END
 FUNCTION getStep4Step1YmaxValue, Event
   RETURN, getTextFieldValue(Event, 'selection_info_ymax_value')
 END
+;===================================================== STEP5 =====
+; Change Code (RC Ward, 3 Jun 2010): These routines added to implement the xmin,ymin, xmax,ymax
+; control of the plot in STEP 5
+;------------------------------------------------------------------------------
+FUNCTION getStep5XminValue, Event
+  RETURN, getTextFieldValue(Event, 'step5_selection_info_xmin_value')
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getStep5YminValue, Event
+  RETURN, getTextFieldValue(Event, 'step5_selection_info_ymin_value')
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getStep5XmaxValue, Event
+  RETURN, getTextFieldValue(Event, 'step5_selection_info_xmax_value')
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getStep5YmaxValue, Event
+  RETURN, getTextFieldValue(Event, 'step5_selection_info_ymax_value')
+END
+;===================================================== STEP5 =====
 
 ;------------------------------------------------------------------------------
 FUNCTION get_step4_step2_step2_lambda, Event
