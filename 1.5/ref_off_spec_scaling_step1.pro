@@ -758,8 +758,9 @@ ENDIF ELSE BEGIN
     xmin = MIN([xmin,xmax],MAX=xmax)
     ymin = MIN([ymin,ymax],MAX=ymax)
 ; Change Code (RC Ward, 7 June 2010): Save the values of xmin, ymin, xmax, ymax for Step 5
-    (*global).step5_selection_savefor_step4 = [xmin, ymin, xmax, ymax]
-    print, ' in step 4 step 1: ', xmin, ymin, xmax, ymax
+    (*global).step5_selection_savefrom_step4 = [xmin, ymin, xmax, ymax]
+
+;    print, ' in step 4 step 1: ', xmin, ymin, xmax, ymax
 ENDELSE
 
 sxmin = STRCOMPRESS(xmin,/REMOVE_ALL)
@@ -817,8 +818,9 @@ ymin = MIN([ymin,ymax],MAX=ymax)
 
    (*global).step4_step1_selection = [xmin, ymin_to_test, xmax, ymax_to_test]
 ; Change Code (RC Ward, 7 June 2010): Save the values of xmin, ymin, xmax, ymax for Step 5
-   (*global).step5_selection_savefor_step4 = [xmin, ymin, xmax, ymax]
-   print, ' in step 4 step 1: ', xmin, ymin, xmax, ymax
+   (*global).step5_selection_savefrom_step4 = [xmin, ymin, xmax, ymax]
+
+;   print, ' in step 4 step 1: ', xmin, ymin, xmax, ymax
 
 ;refresh plot
 replotAsciiData_scaling_step1, Event

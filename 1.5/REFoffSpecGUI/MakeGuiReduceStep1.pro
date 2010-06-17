@@ -327,42 +327,73 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
 ; Cursor Position
 ;================================              
   ;live cursor info
+;  row1col3j = WIDGET_BASE(row1col3Main,$ ;..................................
+;    /COLUMN,$
+;    FRAME=2)
+
+;   base3j = WIDGET_BASE(row1col3j,$
+;    /ROW)
+    
+; Code change (RC Ward, 25 Jan 2010): Change text here
+;  title1 = WIDGET_LABEL(base3j,$
+;     VALUE = 'Cursor Position:',$
+;     /ALIGN_CENTER);
+
   row1col3j = WIDGET_BASE(row1col3Main,$ ;..................................
     /COLUMN,$
-    FRAME=2)
+    FRAME=1)
 
    base3j = WIDGET_BASE(row1col3j,$
     /ROW)
-    
-; Code change (RC Ward, 25 Jan 2010): Change text here
-  title1 = WIDGET_LABEL(base3j,$
-     VALUE = 'Cursor Position:',$
-     /ALIGN_CENTER)
 
+  tof = WIDGET_LABEL(base3j,$
+    VALUE = 'Cursor: TOF (microS):',$
+    /ALIGN_LEFT)
+  value = WIDGET_LABEL(base3j,$
+    VALUE = 'N/A',$
+    SCR_XSIZE = 80,$
+    UNAME = 'reduce_sangle_live_info_tof',$
+    /ALIGN_LEFT)
+
+  tof = WIDGET_LABEL(base3j,$
+    VALUE = 'Pixel:',$
+    /ALIGN_LEFT)
+  value = WIDGET_LABEL(base3j,$
+    VALUE = 'N/A',$
+    SCR_XSIZE = 80,$
+    UNAME = 'reduce_sangle_live_info_pixel',$
+    /ALIGN_LEFT)
+;================================ 
+; Change code (RC Ward, 16 June 2010): display default tof_cutoffs and allow user to change them
+;TOF cutoffs    
   row1col3k = WIDGET_BASE(row1col3Main,$ ;..................................
     /COLUMN,$
     FRAME=1)
 
    base3k = WIDGET_BASE(row1col3k,$
     /ROW)
-
-  tof = WIDGET_LABEL(base3k,$
-    VALUE = 'TOF (microS):',$
-    /ALIGN_LEFT)
-  value = WIDGET_LABEL(base3k,$
+    
+  label = WIDGET_LABEL(base3k,$
+    /ALIGN_LEFT,$
+    VALUE = 'TOF Cutoffs: Min:')    
+  value = WIDGET_TEXT(base3k,$
     VALUE = 'N/A',$
-    SCR_XSIZE = 80,$
-    UNAME = 'reduce_sangle_live_info_tof',$
-    /ALIGN_LEFT)
-
-  tof = WIDGET_LABEL(base3k,$
-    VALUE = 'Pixel:',$
-    /ALIGN_LEFT)
-  value = WIDGET_LABEL(base3k,$
+    UNAME = 'reduce_sangle_base_tof_cutoff_min_value',$
+    /EDITABLE, $
+    XSIZE = 10)
+    space = WIDGET_LABEL(base3k,$
+    VALUE = '  ')
+    
+  label = WIDGET_LABEL(base3k,$
+    /ALIGN_LEFT,$
+    VALUE = 'Max:')    
+  value = WIDGET_TEXT(base3k,$
     VALUE = 'N/A',$
-    SCR_XSIZE = 80,$
-    UNAME = 'reduce_sangle_live_info_pixel',$
-    /ALIGN_LEFT)
+    UNAME = 'reduce_sangle_base_tof_cutoff_max_value',$
+    /EDITABLE, $
+    XSIZE = 10)
+    space = WIDGET_LABEL(base3k,$
+    VALUE = '  ')
 ;================================ 
 ;Dangle0
   row1col3m = WIDGET_BASE(row1col3Main,$ ;..................................
@@ -548,11 +579,12 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     
 ;=================== COMMENT OUT LATTER =============================================================
 ; For debugging, set the value to desired run numbers (RCW, Dec 31, 2009, Modified Feb 1, 2010)
- IF (instrument EQ 'REF_L') THEN BEGIN
-    value = '24586-24591' 
-  ENDIF ELSE BEGIN
-    value = '5387-5389' 
-  ENDELSE  
+; Commented out for release of Ver 1.5.0 on 16 June 2010
+; IF (instrument EQ 'REF_L') THEN BEGIN
+;    value = '24586-24591' 
+;  ENDIF ELSE BEGIN
+;    value = '5387-5389' 
+;  ENDELSE  
 ;=================== COMMENT OUT LATTER =============================================================    
 
   tRun = CW_FIELD(Row1,$

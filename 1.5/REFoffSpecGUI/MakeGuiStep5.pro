@@ -429,7 +429,7 @@ sYMaxBaseField = { size: [sXMaxBaseField.size[0]+XYoff[0],$
 XYoff = [560, 5]
 sSelectionInfoBase = { size: [XYoff[0],$
                               sScale.size[1]+sScale.size[3]+XYoff[1],$
-                              550,50],$
+                              600,50],$
 ;                              300,80],$
                        uname: 'step5_selection_info_base',$
                        frame: 1}
@@ -489,6 +489,13 @@ sSelectionInfoYmaxValue = { size: [sSelectionInfoYmaxLabel.size[0]+ $
                                    sSelectionInfoYminValue.size[2]],$
                             value: '',$
                             uname: 'step5_selection_info_ymax_value'}
+XYoff = [540,0]
+sSelectionInfoPlot          = { size: [XYoff[0],$
+                                   sSelectionInfoYminValue.size[1]+XYoff[1],$
+                                   50, 30],$
+                            value: 'Plot',$
+                            uname: 'step5_selection_info_plot_value'}                            
+                            
     
   ;*****************************************************************************
   ;            BUILD GUI
@@ -685,10 +692,10 @@ wYmaxValue = CW_FIELD(wYmaxBase,$
     UNAME = sRescaleDraw.uname,$
     RETAIN = 2,$
     /BUTTON_EVENTS,$
-    /MOTION_EVENTS)
-    
-  ;-----------------------------------------------------------------------------
-  ;Scaling base ----------------------------------------------------------------
+    /MOTION_EVENTS)    
+;****************************************************************************
+; THIS IS THE INITIAL PAGE  
+;Scaling base ----------------------------------------------------------------
   wShiftbase = WIDGET_BASE(BaseTab,$
     XOFFSET   = sShiftBase.size[0],$
     YOFFSET   = sShiftBase.size[1],$
@@ -869,7 +876,8 @@ wYmaxValue = CW_FIELD(wYmaxBase,$
     SET_VALUE = sSelectionGroup.set_value,$
     /NO_RELEASE,$
     /ROW)
-    
+
+   
   ;counts vs Q base ------------------------------------------------------------
   wQbase = WIDGET_BASE(BaseTab,$
     XOFFSET   = sIvsQbase.size[0],$
@@ -893,6 +901,7 @@ wYmaxValue = CW_FIELD(wYmaxBase,$
     SCR_XSIZE = sInsideFrame.size[2],$
     SCR_YSIZE = sInsideFrame.size[3],$
     FRAME     = sInsideFrame.frame)
+
   ;folder button
   button = WIDGET_BUTTON(wInsideBase,$
     VALUE     = sFolderButton.value,$
@@ -932,7 +941,7 @@ wYmaxValue = CW_FIELD(wYmaxBase,$
     VALUE     = sPreviewButton.value,$
     SENSITIVE = sPreviewButton.sensitive,$
     UNAME     = sPreviewButton.uname)
-
+;========================================================
 ; Added code (RC Ward, 2 Jun 2010): Put plot scaling values [xmin, xmax, ymin, ymax] on screen
 ;Base
 wSelectionTitle = WIDGET_LABEL(BaseTab,$
@@ -1008,5 +1017,13 @@ wYmaxValue = WIDGET_TEXT(wSelectionInfoBase,$
                          /EDITABLE,$
                          /ALIGN_LEFT)
 ;====== Added code 2 Jun 2010 =============================================
-    
+;====== Added code 15 Jun 2010 ============================================  
+wPlot = WIDGET_BUTTON(wSelectionInfoBase,$
+                         XOFFSET = sSelectionInfoPlot.size[0],$
+                         YOFFSET = sSelectionInfoPlot.size[1],$
+                         XSIZE   = sSelectionInfoPlot.size[2],$
+                         YSIZE   = sSelectionInfoPlot.size[3],$
+                         UNAME   = sSelectionInfoPlot.uname,$
+                         VALUE   = sSelectionInfoPlot.value)
+;====== Added code 15 Jun 2010 ============================================    
 END

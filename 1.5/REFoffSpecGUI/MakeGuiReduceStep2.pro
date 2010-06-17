@@ -355,12 +355,13 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     value = ''
   ENDELSE
   
- ; For debugging, set the value to desired run numbers (RCW, Dec 31, 2009, Modified Feb 1, 2010)
- IF (instrument EQ 'REF_L') THEN BEGIN
-    value = '24580' 
-  ENDIF ELSE BEGIN
-    value = '5392-5394' 
-  ENDELSE 
+; For debugging, set the value to desired run numbers (RCW, Dec 31, 2009, Modified Feb 1, 2010)
+; Commented out for release of Ver 1.5.0 on 16 June 2010
+; IF (instrument EQ 'REF_L') THEN BEGIN
+;    value = '24580' 
+;  ENDIF ELSE BEGIN
+;    value = '5392-5394' 
+;  ENDELSE 
   
   text = WIDGET_TEXT(row2,$
     VALUE = value,$

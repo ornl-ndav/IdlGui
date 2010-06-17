@@ -1320,15 +1320,21 @@ PRO create_step6_selection_data, Event, final_array, $
     
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
-  x0 = (*global).step5_x0 ;lambda
-  y0 = (*global).step5_y0 ;pixel
-  x1 = (*global).step5_x1 ;lambda
-  y1 = (*global).step5_y1 ;pixel
+;  x0 = (*global).step5_x0 ;lambda
+;  y0 = (*global).step5_y0 ;pixel
+;  x1 = (*global).step5_x1 ;lambda
+;  y1 = (*global).step5_y1 ;pixel
   
-  xmin = MIN([x0,x1],MAX=xmax)
-  ymin = MIN([y0,y1],MAX=ymax)
-  ymin = FIX(ymin/2)
-  ymax = FIX(ymax/2)
+;  xmin = MIN([x0,x1],MAX=xmax)
+;  ymin = MIN([y0,y1],MAX=ymax)
+;  ymin = FIX(ymin/2)
+;  ymax = FIX(ymax/2)
+; Change Code (RC Ward, 14 June 2010): Replace these values with the stored values mow user in Step 5
+     xrange = (*global).step5_selection_savefrom_step4
+     xmin = xrange[0]
+     xmax = xrange[2]
+     ymin = xrange[1]
+     ymax = xrange[3]
   
   base_array_untouched = final_array
   base_array_error     = final_error_array

@@ -326,7 +326,7 @@ PRO tab_event, Event
 ;show selection if one is selected
           selection_value = $
             getCWBgroupValue(Event,'step5_selection_group_uname')
-       print, 'test eventcb - selection_value: ', selection_value
+;       print, 'test eventcb - selection_value: ', selection_value
           CASE (selection_value) OF
             1: BEGIN
 ;               create_step5_selection_data, Event 

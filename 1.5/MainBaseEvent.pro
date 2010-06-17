@@ -2686,7 +2686,20 @@ PRO MAIN_BASE_event, Event
   WIDGET_INFO(wWidget, FIND_BY_UNAME='preview_button_i_vs_q'): BEGIN
     step5_preview_button, Event ;step5
   END
-  
+; ========= CHANGE CODE (RC WARD, 15 JUNE 2010): Add action if 'Plot' button is pressed in Step 5 I vs Q plot page
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_selection_info_plot_value'): BEGIN
+; Change Code (RC Ward, 13 June, 2010): Define the default file name - 
+;      this is displayed on the I vs Q plot page
+       define_default_recap_output_file, Event 
+          inform_log_book_step5_selection, Event ;_step5
+          MapBase, Event, 'step5_rescale_base', 1
+; Change Code (RC Ward, 7 May 2010):  Call  display_step5_rescale_plot  
+;    rather than display_step5_rescale_plot_first_time 
+; Change code (RC Ward, 31 May 2010): call routine with with_range set to 1
+          display_step5_rescale_plot, Event, with_range=1
+          define_default_recap_output_file, Event  
+END  
+; ========= END CHANGE CODE (RC WARD, 15 JUNE 2010): Add action if 'Plot' button is pressed in Step 5 I vs Q plot pa  
   ;----------------------------------------------------------------------------
   ;draw
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_draw'): BEGIN
