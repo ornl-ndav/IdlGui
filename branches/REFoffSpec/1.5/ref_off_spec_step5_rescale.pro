@@ -58,11 +58,18 @@ PRO create_step5_selection_data, Event
 ;  ymax = FIX(ymax/2)
 ; CHANGE CODE (RC Ward, 13 June 2010): 
 ; REPLACE SCREEN CAPTURE OF SCALING WITH THAT FROM STEP4 AS MODIFIED BY USER
-     xmin = (*global).step5_selection_savefor_step4[0]
-     xmax = (*global).step5_selection_savefor_step4[2]
-     ymin = (*global).step5_selection_savefor_step4[1]
-     ymax = (*global).step5_selection_savefor_step4[3]
-print, 'inside create_step5_selection_data - xmin,xmax,ymin,ymax: ', xmin,xmax,ymin,ymax
+
+;     xmin = (*global).step5_selection_savefrom_step4[0]
+;     xmax = (*global).step5_selection_savefrom_step4[2]
+;     ymin = (*global).step5_selection_savefrom_step4[1]
+;     ymax = (*global).step5_selection_savefrom_step4[3]
+
+     range = (*global).step5_selection_savefrom_step4
+     xmin = range[0]
+     xmax = range[2]
+     ymin = range[1]
+     ymax = range[3]
+;print, 'inside create_step5_selection_data - xmin,xmax,ymin,ymax: ', xmin,xmax,ymin,ymax
   
   array_selected = base_array_untouched[xmin:xmax,ymin:ymax]
   y = (SIZE(array_selected))(2)
@@ -385,7 +392,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO display_step5_rescale_plot_first_time, Event
-print, "display_step5_rescale_plot_first_time"
+;print, "display_step5_rescale_plot_first_time"
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
 ; Code change RCW (Feb 11, 2010): Get Background color from XML file
@@ -401,7 +408,7 @@ print, "display_step5_rescale_plot_first_time"
   ENDIF
   
   ;create array of data
-print, " in display_step5_rescale_plot_first_time - call to create_step5_selection_data"
+;print, " in display_step5_rescale_plot_first_time - call to create_step5_selection_data"
   create_step5_selection_data, Event
   
   selection_value = getCWBgroupValue(Event,'step5_selection_group_uname')
@@ -783,7 +790,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO redisplay_step5_rescale_plot_after_scaling, Event
-print, "redisplay_step5_rescale_plot_after_scaling"
+;print, "redisplay_step5_rescale_plot_after_scaling"
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
 ; Code change RCW (Feb 11, 2010): Get Background color from XML file
@@ -866,7 +873,7 @@ END
 ;------------------------------------------------------------------------------
 ;plot selection for zoom
 PRO plot_recap_rescale_selection, Event
-print, "plot_recap_rescale_selection"
+;print, "plot_recap_rescale_selection"
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
 ; Code change RCW (Feb 12, 2010): Get line plot colors from XML file
@@ -897,7 +904,7 @@ END
 ;------------------------------------------------------------------------------
 ;plot selection for zoom
 PRO plot_recap_rescale_CE_selection, Event
-print, "plot_recap_rescale_CE_selection"
+;print, "plot_recap_rescale_CE_selection"
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
 ; Code change RCW (Feb 12, 2010): Get line plot colors from XML file
@@ -935,7 +942,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO plot_recap_rescale_other_selection, Event, type=type
-print, "plot_recap_rescale_other_selection"
+;print, "plot_recap_rescale_other_selection"
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
 ; Code change RCW (Feb 12, 2010): Get line plot colors from XML file
@@ -1002,7 +1009,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO plot_selection_after_zoom, Event
-print, "plot_selection_after_zoom"
+;print, "plot_selection_after_zoom"
 ; Change Code (RC Ward, 8 June 2010): This code is now used to plot the selection box in Step 5
 ; It will be called initially to show the original selection box from Step 4
 ; and whenever there is a change in the selection box by the user
@@ -1012,21 +1019,21 @@ print, "plot_selection_after_zoom"
 ; Code Change (RC Ward, 8 June 2010): Change color to that of zoombox color
   ref_plot_zoombox_color = (*global).ref_plot_zoombox_color
   
-  xrange = (*global).step5_selection_savefor_step4
+  range = (*global).step5_selection_savefrom_step4
   
   DEVICE, DECOMPOSED=0
 ; Change code (RC Ward Feb 22, 2010): Pass color_table value for LOADCT from XML configuration file
   color_table = (*global).color_table
   LOADCT, color_table, /SILENT
   
-  y0 = xrange[1]
-  y1 = xrange[3]
+  y0 = range[1]
+  y1 = range[3]
   ymin = MIN([y0,y1], MAX=ymax)
-  x1 = xrange[0]
-  x2 = xrange[2]
+  x1 = range[0]
+  x2 = range[2]
   xmin = MIN([x1,x2],MAX=xmax)
   
-print, "in plot_selection_after_zoom: selection box is: ", xmin, xmax, ymin, ymax  
+;print, "in plot_selection_after_zoom: selection box is: ", xmin, xmax, ymin, ymax  
 ;  color = ref_plot_zoombox_color
      color = FSC_COLOR(ref_plot_zoombox_color)
   
@@ -1063,7 +1070,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO calculate_average_recap_rescale, Event
-print, "calculate_average_recap_rescale"
+;print, "calculate_average_recap_rescale"
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
   x1 = (*global).recap_rescale_selection_left
@@ -1100,7 +1107,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO plot_average_recap_rescale, Event
-print, "plot_average_recap_rescale"
+;print, "plot_average_recap_rescale"
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
 ; Code change RCW (Feb 12, 2010): Get line plot colors from XML file
@@ -1141,7 +1148,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO replot_average_recap_rescale, Event
-print, "replot_average_recap_rescale"
+;print, "replot_average_recap_rescale"
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
 ; Code change RCW (Feb 12, 2010): Get line plot colors from XML file
@@ -1193,7 +1200,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO plot_average_1_recap_rescale, Event ;plot the average horizontal value
-print, "plot_average_1_recap_rescale"
+;print, "plot_average_1_recap_rescale"
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
 ; Code change RCW (Feb 12, 2010): Get line plot colors from XML file
@@ -1220,7 +1227,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO define_default_recap_output_file, Event
-print, "define_default_recap_output_file"
+;print, "define_default_recap_output_file"
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
     
   list_of_ascii_files = (*(*global).list_of_ascii_files)
@@ -1260,22 +1267,22 @@ print, "define_default_recap_output_file"
 END
 PRO step5_rescale_populate_zoom_widgets, Event  ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
-  print, "inside step5_rescale_populate_zoom_widgets"
+;  print, "inside step5_rescale_populate_zoom_widgets"
 ; Change code (RC Ward, 7 June 2010): This routine gets the coordinates of the selection box
 ; in STEP4 and applies it to STEP5, putting xmin, xmax, ymin, ymax into the boxes
 ;  
-     xrange = (*global).step5_selection_savefor_step4
-     xmin = xrange[0]
-     xmax = xrange[2]
-     ymin = xrange[1]
-     ymax = xrange[3]
+     range = (*global).step5_selection_savefrom_step4
+     xmin = range[0]
+     xmax = range[2]
+     ymin = range[1]
+     ymax = range[3]
 ;           
      sxmin = STRCOMPRESS(xmin,/REMOVE_ALL)
      sxmax = STRCOMPRESS(xmax,/REMOVE_ALL)      
      symin = STRCOMPRESS(ymin,/REMOVE_ALL)
      symax = STRCOMPRESS(ymax,/REMOVE_ALL)      
 ;
-print, "step5_rescale_populate_zoom_widgets - sxmin: ", sxmin, " sxmax: ", sxmax, " symin: ", symin, " symax: ",symax   
+;print, "step5_rescale_populate_zoom_widgets - sxmin: ", sxmin, " sxmax: ", sxmax, " symin: ", symin, " symax: ",symax   
       putTextFieldValue, Event, 'step5_selection_info_xmin_value', sxmin
       putTextFieldValue, Event, 'step5_selection_info_xmax_value', sxmax
       putTextFieldValue, Event, 'step5_selection_info_ymin_value', symin

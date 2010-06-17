@@ -191,10 +191,20 @@ PRO display_metatada_of_sangle_selected_row, Event
       SampleDetDistance
     putTextFieldValue, Event, 'reduce_sangle_base_sampledetdis_user_value', $
       SampleDetDistance
- ;   refpix = '200'
+ 
+;   refpix = '200'
     refpix = RefPix_InitialValue
     putTextFieldValue, event, 'reduce_sangle_base_refpix_value', refpix
     putTextFieldValue, Event, 'reduce_sangle_base_refpix_user_value', refpix
+
+; Change code (RC Ward, 16 June 2010): pick up intial values of tof_cutoff_min and tof_cutoff_max
+    tof_cutoff_min = (*global).tof_cutoff_min
+    tof_cutoff_max = (*global).tof_cutoff_max
+    
+    putTextFieldValue, event, 'reduce_sangle_base_tof_cutoff_min_value', tof_cutoff_min
+;    putTextFieldValue, Event, 'reduce_sangle_base_tof_cutoff_min_user_value', tof_cutoff_min
+    putTextFieldValue, event, 'reduce_sangle_base_tof_cutoff_max_value', tof_cutoff_max
+;    putTextFieldValue, Event, 'reduce_sangle_base_tof_cutoff_max_user_value', tof_cutoff_max
     
     OBJ_DESTROY, iNexus
     
@@ -209,7 +219,9 @@ PRO display_metatada_of_sangle_selected_row, Event
     putTextFieldValue, Event, 'reduce_sangle_base_dirpix_value', 'N/A'
     putTextFieldValue, Event, 'reduce_sangle_base_sampledetdis_value', 'N/A'
     putTextFieldValue, event, 'reduce_sangle_base_refpix_value', 'N/A'
-    
+    putTextFieldValue, event, 'reduce_sangle_base_tof_cutoff_min_value', 'N/A'
+    putTextFieldValue, event, 'reduce_sangle_base_tof_cutoff_max_value', 'N/A'
+        
   ENDELSE
   
 END
@@ -641,26 +653,38 @@ PRO calculate_new_sangle_value, Event
     'reduce_sangle_base_sampledetdis_user_value'))
   DirPix  = FLOAT(getTextFieldValue(Event,$
     'reduce_sangle_base_dirpix_user_value'))
-  print, "=== Sangle Calculations ==="
-  print, "Dangle: ", Dangle
-  print, "Dangle0: ", Dangle0
-  print, "RefPix: ", RefPix
-  print, "DirPix: ", DirPix     
-  print, "SDdist: ", SDdist
-  print, "detector_pixels_size_y: ", detector_pixels_size_y
+  TOFCutoffMin = FIX(getTextFieldValue(Event,$
+    'reduce_sangle_base_tof_cutoff_min_value'))
+  TOFCutoffMax = FIX(getTextFieldValue(Event,$
+    'reduce_sangle_base_tof_cutoff_max_value'))
+  sTOFCutoffMin = STRCOMPRESS(TOFCutoffMin,/REMOVE_ALL)
+  sTOFCutoffMax = STRCOMPRESS(TOFCutoffMax,/REMOVE_ALL)  
+  (*global).tof_cutoff_min = sTOFCutoffMin
+  (*global).tof_cutoff_max = sTOFCutoffMax
+; DEBUG ========================================
+;    print, "=== Sangle Calculations ==="
+;    print, "Dangle: ", Dangle
+;    print, "Dangle0: ", Dangle0
+;    print, "RefPix: ", RefPix
+;    print, "DirPix: ", DirPix     
+;    print, "SDdist: ", SDdist
+;    print, "TOF_cutoff_min: ", TOFCutoffMin
+;    print, "TOF_cutoff_max: ", TOFCutoffMax
+;    print, "detector_pixels_size_y: ", detector_pixels_size_y
+; DEBUG ========================================
   part1 = (Dangle - Dangle0 ) / 2.
-;  part2 = (DirPix - RefPix) * 7.e-4
   part2_numer = (DirPix - RefPix) * detector_pixels_size_y
   part2_denom = 2. * SDdist
   part2 = part2_numer/part2_denom
-
-  print, "part1: ", part1
-  print, "part2_numer: ", part2_numer
-  print, "part2_denom: ", part2_denom
-  print, "part2: ", part2
   Sangle = part1 + part2 
-  print, "Sangle: ", Sangle
-  print, "============================"  
+; DEBUG ========================================  
+;    print, "part1: ", part1
+;    print, "part2_numer: ", part2_numer
+;    print, "part2_denom: ", part2_denom
+;    print, "part2: ", part2
+;    print, "Sangle: ", Sangle
+;    print, "============================"  
+; DEBUG ========================================
   s_Sangle_rad = STRCOMPRESS(Sangle,/REMOVE_ALL)
   s_Sangle_deg = STRCOMPRESS(convert_to_deg(Sangle),/REMOVE_ALL)
   
@@ -745,22 +769,28 @@ PRO determine_sangle_refpix_data_from_device_value, Event
      reduce_tab1_table = (*(*global).reduce_tab1_table)
      full_nexus_file_name = reduce_tab1_table[1, 0]
      parts = STR_SEP(full_nexus_file_name,'/')
+; DEBUG ========================================
 ; debug RefPix output filename
-print, " parts_1: ",parts[1]
-print, " parts_2: ",parts[2]
-print, " parts_3: ",parts[3]
-print, " parts_4: ",parts[4]
-print, " parts_5: ",parts[5]
+;    print, " parts_1: ",parts[1]
+;    print, " parts_2: ",parts[2]
+;    print, " parts_3: ",parts[3]
+;    print, " parts_4: ",parts[4]
+;    print, " parts_5: ",parts[5]
+; DEBUG ========================================
     IF (parts[2] EQ 'users') THEN BEGIN
     ; strip .nxs off parts[5]
        usethis = STR_SEP(parts[5],'.')
-       print, "usethis_0: ",usethis[0]
-       print, "usethis_1: ", usethis[1]
+; DEBUG ========================================       
+;       print, "usethis_0: ",usethis[0]
+;       print, "usethis_1: ", usethis[1]
+; DEBUG ========================================
        output_file_name = (*global).ascii_path + usethis[0]+'_Off_Off_' + 'RefPix.txt'
     ENDIF ELSE BEGIN
      output_file_name = (*global).ascii_path + parts[2]+'_'+ parts[5]+'_Off_Off_' + 'RefPix.txt'
     ENDELSE
-print, output_file_name
+; DEBUG ========================================
+;       print, output_file_name
+; DEBUG ========================================
      OPENW, 1, output_file_name
      PRINTF, 1, RefPixSave
      CLOSE, 1

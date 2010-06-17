@@ -398,17 +398,17 @@ FUNCTION getReduceStep2SpinStateRow, Event, Row=row, $
          count_direct = count_direct + 1
          index_direct = i
       ENDIF
-      print, "Spin States- Refelct: ", i, " status: ", reflect_enabled_status, $
-        "   Direct: ", i, " status: ", direct_enabled_status  
+;      print, "Spin States- Reflect: ", i, " status: ", reflect_enabled_status, $
+;        "   Direct: ", i, " status: ", direct_enabled_status  
    ENDFOR
-   print, " "
+;   print, " "
 ; test to see if there is a single direct (or normalization) spin state
-      print, count_direct
+;      print, count_direct
       IF (count_direct eq 1) then begin
 ; always use the single spin state selected by the user 
 ; similar to old spin_mode = 2, but allows for all spin state possibilities
          data_spin = list_of_data_spin[index_direct]
-         print, "data_spin: ", data_spin
+;         print, "data_spin: ", data_spin
          RETURN, data_spin
       ENDIF ELSE BEGIN
 ; if not a single direct (normalization spin state), then match data spin state

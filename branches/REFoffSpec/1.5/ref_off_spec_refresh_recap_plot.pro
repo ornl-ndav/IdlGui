@@ -35,7 +35,7 @@
 PRO refresh_recap_plot, Event, RESCALE=rescale
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
-print, "refresh_recap_plot"  
+;print, "refresh_recap_plot"  
   nbr_plot    = getNbrFiles(Event) ;number of files
   
   scaling_factor_array = (*(*global).scaling_factor)
@@ -273,18 +273,18 @@ END
 
 PRO refresh_plotStep5Selection, Event
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
-print, "refresh_plotStep5Selection"
+;print, "refresh_plotStep5Selection"
 
   id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='step5_draw')
   WIDGET_CONTROL, id_draw, GET_VALUE=id_value
   WSET,id_value
   
-xy_position = (*global).step5_selection_savefor_step4
+xy_position = (*global).step5_selection_savefrom_step4
 xmin = xy_position[0]
 ymin = xy_position[1]
 xmax = xy_position[2]
 ymax = xy_position[3]
-print, " inside refresh_plotStep5Selection: xmin,xmax, ymin, ymax: ", xmin,xmax, ymin, ymax
+;print, " inside refresh_plotStep5Selection: xmin,xmax, ymin, ymax: ", xmin,xmax, ymin, ymax
 ymin_plot = 2 * ymin
 ymax_plot = 2* ymax
 ;IF (xmin + xmax NE 0) THEN BEGIN
@@ -303,31 +303,21 @@ END
 ;four text field xmin, ymin, xmax and ymax
   PRO move_selection_manually_step5, Event
     WIDGET_CONTROL, Event.top, GET_UVALUE=global
-
+    
+; Change code (RC Ward, 14 June 2010): clean up coding here and rename step5_selection_savefor_step4 
+;   to step5_selection_savefrom_step4
 ;work on Min values
     xmin = FIX(getStep5XminValue(Event))
     ymin = FIX(getStep5YminValue(Event))
-;    ymin_to_test = 2*ymin
-     ymin_to_test = ymin
-
-;this make sure that we are not outside the window
-;    physical_x_y, Event, xmin, ymin_to_test
-;    ymin = ymin_to_test / 2
 
 ;work on Max values
     xmax = getStep5XmaxValue(Event)
     ymax = getStep5YmaxValue(Event)
-;    ymax_to_test = 2*ymax
-    ymax_to_test = ymax
-
-;this make sure that we are not outside the window
-;    physical_x_y, Event, xmax, ymax_to_test
-;    ymax = ymax_to_test / 2
 
     xmin = MIN([xmin,xmax],MAX=xmax)
     ymin = MIN([ymin,ymax],MAX=ymax)
 
-    (*global).step5_selection_savefor_step4 = [xmin, ymin_to_test, xmax, ymax_to_test]     
+    (*global).step5_selection_savefrom_step4 = [xmin, ymin, xmax, ymax]     
 
 ;refresh Step 5 plot
     refresh_recap_plot, Event, RESCALE=1  

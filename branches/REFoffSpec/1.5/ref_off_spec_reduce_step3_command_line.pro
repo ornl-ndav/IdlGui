@@ -42,11 +42,13 @@ PRO  reduce_step3_run_jobs, Event
   apply_tof_cutoffs = (*global).apply_tof_cutoffs
   tof_cutoff_min = (*global).tof_cutoff_min
   tof_cutoff_max = (*global).tof_cutoff_max  
-  print, "Apply Cutoffs: ", apply_tof_cutoffs
-  if (apply_tof_cutoffs EQ "yes") THEN BEGIN
-    print, "TOF Cutoff Min: ", tof_cutoff_min
-    print, "TOF Cutoff Max: ", tof_cutoff_max
-  ENDIF  
+; DEBUG ========================================
+;  print, "Apply Cutoffs: ", apply_tof_cutoffs
+;  if (apply_tof_cutoffs EQ "yes") THEN BEGIN
+;    print, "TOF Cutoff Min: ", tof_cutoff_min
+;    print, "TOF Cutoff Max: ", tof_cutoff_max
+;  ENDIF  
+; DEBUG ========================================  
   ;get big table of step3
   big_table = getTableValue(Event, 'reduce_tab3_main_spin_state_table_uname')
   nbr_row = (SIZE(big_table))(2)
