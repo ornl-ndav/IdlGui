@@ -53,6 +53,15 @@ pro launch_this_application, event, button_name
   
   launch_application, event, application
   
+  ;pop up dialog message that informs the user that the process worked
+  widget_id = widget_info(event.top, find_by_uname='MAIN_BASE')
+  title = 'Fix applied with success!'
+  message_text = ['Your fix has been applied, if problem persists','',$
+  'please use the >Personalize help< tab of this application', '',$
+  'to contact us and to help us finding the issue!'] 
+  result = dialog_message(message_text,/information,title=title,$
+  /center,dialog_parent=widget_id)
+
 end
 
 ;+
