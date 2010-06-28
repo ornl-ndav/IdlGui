@@ -55,12 +55,12 @@ pro event_button, Event, uname=uname
     if (event.press eq 1) then begin
       display_buttons, event=event, button=button_name, status='on'
       if (button_name eq 'sns_tools') then begin ;launch application
-      launch_this_application, event, button_name
+        launch_this_application, event, button_name
       endif else begin ;launch web page
-      launch_this_web_page, event, button_name
-      widget_control, /hourglass
-      wait, 1.5
-      widget_control, hourglass=0
+        launch_this_web_page, event, button_name
+        widget_control, /hourglass
+        wait, 1.5
+        widget_control, hourglass=0
       endelse
     endif
     if (event.release eq 1) then begin
@@ -72,7 +72,7 @@ pro event_button, Event, uname=uname
       ;cursor becomes a hand
       standard = 58
     endif else begin
-    display_descriptions_buttons, EVENT=event, button='no_button'
+      display_descriptions_buttons, EVENT=event, button='no_button'
       standart = 31
       display_buttons, event=event, button=button_name,status='off'
     ;cursor back to normal
@@ -109,12 +109,12 @@ pro tab3_event_button, Event, uname=uname
     if (event.press eq 1) then begin
       display_buttons_tab3, event=event, button=button_name, status='on'
       if (button_name eq 'fix_firefox' or $
-      button_name eq 'fix_gnome' or $
-      button_name eq 'fix_isaw' or $
-      button_name eq 'fix_data_link') then begin ;launch application
-      launch_this_application, event, button_name
+        button_name eq 'fix_gnome' or $
+        button_name eq 'fix_isaw' or $
+        button_name eq 'fix_data_link') then begin ;launch application
+        launch_this_application, event, button_name
       endif else begin ;launch web page
-      launch_this_web_page, event, button_name
+        launch_this_web_page, event, button_name
       endelse
     endif
     if (event.release eq 1) then begin
@@ -126,7 +126,7 @@ pro tab3_event_button, Event, uname=uname
       ;cursor becomes a hand
       standard = 58
     endif else begin
-    display_descriptions_buttons_tab3, EVENT=event, button='no_button'
+      display_descriptions_buttons_tab3, EVENT=event, button='no_button'
       standart = 31
       display_buttons_tab3, event=event, button=button_name,status='off'
     ;cursor back to normal
