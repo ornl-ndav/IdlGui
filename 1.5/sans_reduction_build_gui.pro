@@ -157,6 +157,9 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     build_command_line: 1,$
     testing_on_mac: testing_on_mac, $
     
+    tube_center: 0.,$ ;used for sector selection
+    pixel_center: 0.,$ ;used for sector selection
+    
     tube_size: FLOAT(TUBE_SIZE), $
     pixel_size: FLOAT(PIXEL_SIZE), $
     
