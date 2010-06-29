@@ -821,6 +821,7 @@ PRO launch_beam_center_base_event, Event
     ;OK button
     WIDGET_INFO(Event.top, FIND_BY_UNAME='beam_stop_ok_button'): BEGIN
       WIDGET_CONTROL, /HOURGLASS
+      
       result1 = create_tmp_geometry(Event)
       result2 = populate_jk_reduction_with_beam_center(Event)
       WIDGET_CONTROL, HOURGLASS=0
@@ -840,6 +841,30 @@ PRO launch_beam_center_base_event, Event
           DIALOG_PARENT=parent_id)
         id = WIDGET_INFO(Event.top, $
           FIND_BY_UNAME='beam_center_calculation_base')
+          
+        ;save tube and pixel center values in main global
+        bc_tube  = FLOAT(getTextFieldValue(Event,$
+          'beam_center_tube_center_value'))
+        bc_pixel = FLOAT(getTextFieldValue(Event,$
+          'beam_center_pixel_center_value'))
+        main_global = (*global).main_global
+        (*main_global).tube_center = bc_tube
+        (*main_global).pixel_center = bc_pixel
+        main_event = (*global).main_event
+        
+        case ((*main_global).selection_shape_type) of
+          'sector': begin
+            putTextFieldValue, main_event, $
+              'sector_tube_center', $
+              STRCOMPRESS(bc_tube)
+            putTextFieldValue, main_event, $
+              'sector_pixel_center', $
+              STRCOMPRESS(bc_pixel)
+          end
+          else:
+        endcase
+        
+        
         WIDGET_CONTROL, id, /DESTROY
       ENDIF
       IF (result1 EQ 0) THEN BEGIN
