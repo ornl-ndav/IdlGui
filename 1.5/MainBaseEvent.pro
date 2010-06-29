@@ -277,6 +277,23 @@ PRO MAIN_BASE_event, Event
         IF (event.press EQ 1) THEN BEGIN ;pressed button
           MapBase, Event, uname='tab1_sector_selection_base', 1
           MapBase, Event, uname='tab1_circle_selection_base', 0
+          
+          bc_tube = (*global).tube_center
+          bc_pixel = (*global).pixel_center
+          if (bc_tube eq 0) then begin
+            bc_tube = 'N/A'
+            bc_pixel = 'N/A'
+          endif else begin
+            if (bc_pixel eq 0) then begin
+              bc_tube = 'N/A'
+              bc_pixel = 'N/A'
+            endif
+          endelse
+          putTextFieldValue, event, 'sector_tube_center', $
+            STRCOMPRESS(bc_tube)
+          putTextFieldValue, event, 'sector_pixel_center', $
+            STRCOMPRESS(bc_pixel)
+            
           display_circle_rectangle_buttons, EVENT=event, TYPE='sector'
           (*global).selection_shape_type = 'sector'
           ;          display_selection_images, EVENT=event, $
@@ -640,19 +657,19 @@ PRO MAIN_BASE_event, Event
                 end
                 'sector': begin
                 
-;                  tube = FIX(x+1)
-;                  pixel = FIX(y)
-;                  
-;                  putTextFieldValue, Event, $
-;                    'sector_tube_center', $
-;                    STRCOMPRESS(tube)
-;                  putTextFieldValue, Event, $
-;                    'sector_pixel_center', $
-;                    STRCOMPRESS(pixel)
-;                    
-;                  ;calculate sector if start and end angles are there
-;                  sector_selection_check, event
-                  
+                ;                  tube = FIX(x+1)
+                ;                  pixel = FIX(y)
+                ;
+                ;                  putTextFieldValue, Event, $
+                ;                    'sector_tube_center', $
+                ;                    STRCOMPRESS(tube)
+                ;                  putTextFieldValue, Event, $
+                ;                    'sector_pixel_center', $
+                ;                    STRCOMPRESS(pixel)
+                ;
+                ;                  ;calculate sector if start and end angles are there
+                ;                  sector_selection_check, event
+                
                 end
               endcase
               
