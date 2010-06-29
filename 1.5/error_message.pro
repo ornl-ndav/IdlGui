@@ -153,7 +153,7 @@ FUNCTION ERROR_MESSAGE, theMessage, Error=error, Informational=information, $
    IF N_Elements(traceback) EQ 0 THEN traceback = 1
    
    ; Get the call stack and the calling routine's name.
-   Help, Calls=callStack
+   ;Help, Calls=callStack
    callingRoutine = (StrSplit(StrCompress(callStack[1])," ", /Extract))[0]
    
    
