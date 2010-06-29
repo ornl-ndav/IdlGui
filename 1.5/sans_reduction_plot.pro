@@ -45,7 +45,7 @@ FUNCTION retrieveData, Event, FullNexusName, DataArrayResult
   color = 50
   
   retrieve_error = 0
- ; CATCH, retrieve_error
+  CATCH, retrieve_error
   IF (retrieve_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     progressBar->Destroy
