@@ -498,6 +498,20 @@ PRO CheckCommandline_for_jk, Event
     ENDWHILE
   ENDIF
   
+  ;sector
+  jk_selection = (*(*global).jk_selection_sector)
+  nbr = N_ELEMENTS(jk_selection)
+  IF (nbr GT 1) THEN BEGIN
+    nbr_iteration = nbr/2
+    index = 0
+    WHILE (index LT nbr_iteration) DO BEGIN
+      angle_min = STRCOMPRESS(FIX(jk_selection[index*2]),/REMOVE_ALL)
+      angle_max = STRCOMPRESS(FIX(jk_selection[index*2+1]),/REMOVE_ALL)
+      cmd += ' -pie ' + angle_min + ' ' + angle_max
+      index++
+    ENDWHILE
+  ENDIF
+  
   ;- Put cmd in the text box -
   putCommandLine, Event, cmd
   

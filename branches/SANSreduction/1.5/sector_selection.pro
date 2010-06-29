@@ -421,7 +421,7 @@ END
 
 ;+
 ; :Description:
-;   Save parameters of sector selected that will be added to ROI file 
+;   Save parameters of sector selected that will be added to ROI file
 ;
 ; :Params:
 ;    Event
@@ -438,11 +438,13 @@ pro save_exclusion_sector_jk, Event, ADD=add
   
   widget_control, event.top, get_uvalue=global
   
-  ;FIXME
-  ;  region = [tube_selected, pixel_selected, radius]
-  
   jk_selection_sector = (*(*global).jk_selection_sector)
   
+  s_start_angle = strcompress(getTextFieldValue(event,$
+    'sector_start_angle'),/remove_all)
+  s_end_angle   = strcompress(getTextFieldValue(event,$
+    'sector_end_angle'),/remove_all)
+  region = [s_start_angle, s_end_angle]
   IF ((size(jk_selection_sector))[0] EQ 0) THEN BEGIN
     jk_selection_sector = region
   ENDIF ELSE BEGIN
