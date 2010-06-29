@@ -1,0 +1,5 @@
+SANSreduction (version 1.0.4)
+Oak Ridge National Laboratory (ORNL)
+Spallation Neutron Source (SNS)
+email : bilheuxjm@ornl.gov
+
