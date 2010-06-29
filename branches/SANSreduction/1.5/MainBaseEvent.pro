@@ -75,9 +75,12 @@ PRO MAIN_BASE_event, Event
     end
     ;validate sector selection
     widget_info(wWidget, find_by_uname='validate_sector_selection'): begin
+      sector_selection_check, event
       validate_sector_selection, Event
       save_exclusion_sector_jk, Event, ADD=add
       save_background,  Event, GLOBAL=global
+      putTextFieldValue, Event, 'sector_start_angle', ''
+      putTextFieldValue, Event, 'sector_end_angle', ''
     end
     
     ;tube, pixel and radius values
