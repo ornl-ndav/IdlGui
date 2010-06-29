@@ -640,18 +640,18 @@ PRO MAIN_BASE_event, Event
                 end
                 'sector': begin
                 
-                  tube = FIX(x+1)
-                  pixel = FIX(y)
-                  
-                  putTextFieldValue, Event, $
-                    'sector_tube_center', $
-                    STRCOMPRESS(tube)
-                  putTextFieldValue, Event, $
-                    'sector_pixel_center', $
-                    STRCOMPRESS(pixel)
-                    
-                  ;calculate sector if start and end angles are there
-                  sector_selection_check, event
+;                  tube = FIX(x+1)
+;                  pixel = FIX(y)
+;                  
+;                  putTextFieldValue, Event, $
+;                    'sector_tube_center', $
+;                    STRCOMPRESS(tube)
+;                  putTextFieldValue, Event, $
+;                    'sector_pixel_center', $
+;                    STRCOMPRESS(pixel)
+;                    
+;                  ;calculate sector if start and end angles are there
+;                  sector_selection_check, event
                   
                 end
               endcase
