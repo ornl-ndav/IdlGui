@@ -262,7 +262,6 @@ pro sector_selection, event, start_angle, end_angle, exclusion_detector_array
   
 end
 
-
 ;+
 ; :Description:
 ;   This procedures creates the list of pixel and tube to include in
@@ -439,6 +438,7 @@ pro save_exclusion_sector_jk, Event, ADD=add
   
   widget_control, event.top, get_uvalue=global
   
+  ;FIXME
   ;  region = [tube_selected, pixel_selected, radius]
   
   jk_selection_sector = (*(*global).jk_selection_sector)

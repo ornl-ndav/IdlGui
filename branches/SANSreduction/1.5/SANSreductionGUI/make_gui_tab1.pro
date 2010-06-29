@@ -489,61 +489,61 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       MAP = 0,$
       /COLUMN)
       
-      space = widget_label(sector_base,$
+    space = widget_label(sector_base,$
       value = '')
       
-      row1 = widget_base(sector_base,$
+    row1 = widget_base(sector_base,$
       /row)
-      label = widget_label(row1,$
+    label = widget_label(row1,$
       value = 'Center -->  Tube:')
-      tube = widget_text(row1,$
-      value = '',$
-      xsize = 4,$
-      /editable,$
+    tube = widget_label(row1,$
+      value = 'N/A',$
+      scr_xsize = 50,$
+      /align_left,$
       uname = 'sector_tube_center')
-      label2 = widget_label(row1,$
+    label2 = widget_label(row1,$
       value = '  Pixel:')
-      pixel = widget_text(row1,$
-      value = '',$
-      xsize = 4,$
-      /editable,$
+    pixel = widget_label(row1,$
+      value = 'N/A',$
+      scr_xsize = 50,$
+      /align_left,$
       uname = 'sector_pixel_center')
       
-      row2 = widget_base(sector_base,$
+    row2 = widget_base(sector_base,$
       /row)
-      start_angle_label = widget_label(row2,$
+    start_angle_label = widget_label(row2,$
       value = '   Start angle:')
-      start_angle = widget_text(row2,$
+    start_angle = widget_text(row2,$
       value = '',$
       xsize = 3,$
       /editable,$
       uname = 'sector_start_angle')
-      unit = widget_label(row2,$
-      value = 'degrees')     
-            
-      row3 = widget_base(sector_base,$
+    unit = widget_label(row2,$
+      value = 'degrees')
+      
+    row3 = widget_base(sector_base,$
       /row)
-      end_angle_label = widget_label(row3,$
+    end_angle_label = widget_label(row3,$
       value = '     End angle:')
-      end_angle = widget_text(row3,$
+    end_angle = widget_text(row3,$
       value = '',$
       xsize = 3,$
       /editable,$
       uname = 'sector_end_angle')
-      unit = widget_label(row3,$
-      value = 'degrees')     
+    unit = widget_label(row3,$
+      value = 'degrees')
       
-      row4 = widget_base(sector_base,$
+    row4 = widget_base(sector_base,$
       /row)
-      help = widget_button(row4,$
+    help = widget_button(row4,$
       value = 'H E L P',$
       scr_xsize = 85,$
       uname = 'sector_help')
-      validate = widget_button(row4,$
+    validate = widget_button(row4,$
       value = 'VALIDATE BUTTON',$
       scr_xsize = 195,$
       uname = 'validate_sector_selection')
-
+      
     ;-----------------------------------------------------------
     circle_base = WIDGET_BASE(wTab1Base,$
       UNAME = 'tab1_circle_selection_base',$

@@ -97,6 +97,7 @@ cd, CurrentFolder
 
 ;save selection borders
 .run sans_reduction_exclusion_borders.pro
+.run save_roi.pro
 
 ;jk reduction
 .run sans_reduction_jk_tab1_functions.pro
