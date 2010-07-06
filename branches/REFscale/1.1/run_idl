@@ -1,3 +1,3 @@
-spawn, 'cp REFscale.cfg .REFscale.cfg'
+spawn, 'cp REFscale_m.cfg .REFscale_m.cfg'
 @idl_makefile
-ref_scale
+ref_scale_m
