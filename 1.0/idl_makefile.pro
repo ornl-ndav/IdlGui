@@ -112,5 +112,5 @@ cd, CurrentFolder
 .run ref_scale_cleanup.pro
 .run main_base_event.pro
 .run ref_scale_eventcb.pro
-.run ref_scale.pro
+.run ref_scale_l.pro
 
