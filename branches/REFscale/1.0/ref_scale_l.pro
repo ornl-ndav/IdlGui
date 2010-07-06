@@ -1,3 +1,4 @@
+
 ;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -48,7 +49,7 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ucams = get_ucams()
   ENDELSE
   
-  file = OBJ_NEW('idlxmlparser', '.REFscale.cfg')
+  file = OBJ_NEW('idlxmlparser', '.REFscale_l.cfg')
   ;============================================================================
   ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
   APPLICATION = file->getValue(tag=['configuration','application'])
@@ -232,7 +233,7 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   Step2Title  = 'STEP2: Critical Edge'
   Step3Title  = 'STEP3: Other Files'
   ListOfFiles = ['                                                   ']
-  MainTitle   = "REFLECTOMETER RESCALING PROGRAM - " + VERSION
+  MainTitle   = "REFLECTOMETER RESCALING PROGRAM for REF_L - " + VERSION
   
   ;Build Main Base
   MAIN_BASE_ref_scale = WIDGET_BASE(GROUP_LEADER = BatchMode, $
@@ -352,7 +353,7 @@ END
 ;
 ; Empty stub procedure used for autoloading.
 ;
-PRO ref_scale, BatchMode    = BatchMode, $
+PRO ref_scale_l, BatchMode    = BatchMode, $
     BatchFile    = BatchFile, $
     GROUP_LEADER = wGroup, $
     _EXTRA       = _VWBExtra_
