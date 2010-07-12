@@ -850,6 +850,12 @@ function ReductionCmd::Check
     ENDIF
   ENDIF
   
+  ; You cannot specify a 'batch' of runs and also specify a custom output directory
+  IF (STRLEN(self.OutputOverride) GE 1) AND (STRPOS(self.datarun, ':') NE -1) THEN BEGIN
+    ok = 1
+    msg = [msg,['You have specified a series of batch runs and a custom output directory - this is not recommended.  You may see some strange results with the non-NXSPE files.']]
+  ENDIF
+  
   ; Check to see if the Corner Geometry file Exists....
   IF (FILE_TEST(self.cornergeometry, /READ) EQ 0) THEN BEGIN
     ok = 0
