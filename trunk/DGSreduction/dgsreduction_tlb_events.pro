@@ -276,6 +276,7 @@ PRO DGSreduction_TLB_Events, event
       IF filename NE '' THEN BEGIN
         widget_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_DATARUN')
         WIDGET_CONTROL, widget_ID, SET_VALUE=filename
+        dgsr_cmd->SetProperty, DataRun=filename
       ENDIF
     END
     'DGS_BROWSE_EMPTYCAN': BEGIN
@@ -284,6 +285,7 @@ PRO DGSreduction_TLB_Events, event
       IF filename NE '' THEN BEGIN
         widget_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_EMPTYCAN')
         WIDGET_CONTROL, widget_ID, SET_VALUE=filename
+        dgsr_cmd->SetProperty, EmptyCan=filename
       ENDIF
     END
     'DGS_BROWSE_BLACKCAN': BEGIN
@@ -292,6 +294,7 @@ PRO DGSreduction_TLB_Events, event
       IF filename NE '' THEN BEGIN
         widget_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_BLACKCAN')
         WIDGET_CONTROL, widget_ID, SET_VALUE=filename
+        dgsr_cmd->SetProperty, BlackCan=filename
       ENDIF
     END
     'DGS_BROWSE_DARK': BEGIN
@@ -300,6 +303,7 @@ PRO DGSreduction_TLB_Events, event
       IF filename NE '' THEN BEGIN
         widget_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_DARK')
         WIDGET_CONTROL, widget_ID, SET_VALUE=filename
+        dgsr_cmd->SetProperty, Dark=filename
       ENDIF
     END
     'DGS_BROWSE_SOURCE_MASKFILENAME': BEGIN
@@ -308,6 +312,7 @@ PRO DGSreduction_TLB_Events, event
       IF filename NE '' THEN BEGIN
         widget_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_SOURCE_MASKFILENAME')
         WIDGET_CONTROL, widget_ID, SET_VALUE=filename
+        dgsr_cmd->SetProperty, MasterMaskFile=filename
       ENDIF
     END
     'DGS_BROWSE_NORMRUN': BEGIN
@@ -316,6 +321,7 @@ PRO DGSreduction_TLB_Events, event
       IF filename NE '' THEN BEGIN
         widget_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_NORMRUN')
         WIDGET_CONTROL, widget_ID, SET_VALUE=filename
+        dgsr_cmd->SetProperty, Normalisation=filename
       ENDIF
     END
     'DGS_BROWSE_NORMEMPTYCAN': BEGIN
@@ -324,6 +330,7 @@ PRO DGSreduction_TLB_Events, event
       IF filename NE '' THEN BEGIN
         widget_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_NORMEMPTYCAN')
         WIDGET_CONTROL, widget_ID, SET_VALUE=filename
+        dgsr_cmd->SetProperty, NormEmptyCan=filename
       ENDIF
     END
     'DGS_BROWSE_CORNER_GEOMETRY': BEGIN
@@ -332,6 +339,7 @@ PRO DGSreduction_TLB_Events, event
       IF filename NE '' THEN BEGIN
         widget_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGS_CORNER_GEOMETRY')
         WIDGET_CONTROL, widget_ID, SET_VALUE=filename
+        dgsr_cmd->SetProperty, CornerGeometry=filename
       ENDIF
     END
     'DGS_BROWSE_INST_GEOMETRY': BEGIN
@@ -340,6 +348,7 @@ PRO DGSreduction_TLB_Events, event
       IF filename NE '' THEN BEGIN
         widget_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGS_INST_GEOMETRY')
         WIDGET_CONTROL, widget_ID, SET_VALUE=filename
+        dgsr_cmd->SetProperty, InstGeometry=filename
       ENDIF
     END
     'NOTHING': BEGIN
