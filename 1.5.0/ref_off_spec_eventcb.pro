@@ -235,7 +235,9 @@ PRO tab_event, Event
                RefPixSave = INTARR(sz)
 ; Change code (RC Ward Feb 26, 2010): Read file containing RefPix values on clicking the Shifting step tab
                list = list_OF_files[0]
-               parts = STR_SEP(list,'.')
+; Change code (RC Ward 1 July 2010): user STRSPLIT instead of the obsolete STR_SEP
+               parts = STRSPLIT(list,'.',/EXTRACT)
+;               parts = STR_SEP(list,'.')
                input_file_name = parts[0] + '_RefPix.txt'
                OPENR, 1, input_file_name, ERROR = err
                IF (ERR EQ 0) THEN BEGIN  ; NO ERROR, FILE EXISTS SO CONTINUE ON
