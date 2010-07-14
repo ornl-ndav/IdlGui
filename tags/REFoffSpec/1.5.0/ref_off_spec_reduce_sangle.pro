@@ -768,7 +768,9 @@ PRO determine_sangle_refpix_data_from_device_value, Event
     IF (RefPixLoad EQ 'yes') THEN BEGIN
      reduce_tab1_table = (*(*global).reduce_tab1_table)
      full_nexus_file_name = reduce_tab1_table[1, 0]
-     parts = STR_SEP(full_nexus_file_name,'/')
+; change code (RC Ward, 1 July 2010): Use STRSPLIT rather than obsolete STR_SEP
+     parts = STRSPLIT(full_nexus_file_name,'/',/EXTRACT)
+;     parts = STR_SEP(full_nexus_file_name,'/')
 ; DEBUG ========================================
 ; debug RefPix output filename
 ;    print, " parts_1: ",parts[1]
@@ -779,7 +781,9 @@ PRO determine_sangle_refpix_data_from_device_value, Event
 ; DEBUG ========================================
     IF (parts[2] EQ 'users') THEN BEGIN
     ; strip .nxs off parts[5]
-       usethis = STR_SEP(parts[5],'.')
+; change code (RC Ward, 1 July 2010): Use STRSPLIT rather than obsolete STR_SEP
+       usethis = STRSPLIT(parts[4],'.',/EXTRACT)
+;       usethis = STR_SEP(parts[5],'.')
 ; DEBUG ========================================       
 ;       print, "usethis_0: ",usethis[0]
 ;       print, "usethis_1: ", usethis[1]
