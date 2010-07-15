@@ -39,7 +39,7 @@ PRO BuildInstrumentGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   MakeGuiInstrumentSelection, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 END
 
-PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+PRO BuildGui, instrument, MainBaseSize, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
   ;get the current folder
   CD, CURRENT = current_folder
@@ -544,7 +544,9 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   (*(*global).SangleDone) = BYTARR(18)
 
 ; Build Application Title ====================================================== 
-  MainBaseSize   = (*global).MainBaseSize
+; CHANGE CODE (RC WARD, 22 June 2010): Pass MainBaseSize in from MakeGuiInstrumentSelection to control resolution
+;  MainBaseSize   = (*global).MainBaseSize
+   (*global).MainBaseSize = MainBaseSize
 ;  MainBaseTitle  = 'Reflectometer Off Specular Application'
   IF (instrument EQ 'REF_L') THEN BEGIN
     MainBaseTitle += '_for_REF_L'
@@ -690,7 +692,7 @@ PRO ref_off_spec, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ELSE: instrument = 'UNDEFINED'
   ENDCASE
 ; For debugging, force BuildInstrumentGui to run so instrument must be selected - RCW 30 Dec 2009
-;     instrument = 'UNDEFINED'
+     instrument = 'UNDEFINED'
 ; If instrument is UNDEFINED call BuildInstrumentGui, else call BuildGui =========================  
   IF (instrument EQ 'UNDEFINED') THEN BEGIN
     BuildInstrumentGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_

@@ -154,7 +154,18 @@ PRO  reduce_step3_run_jobs, Event
     ENDIF ELSE BEGIN
       col_index = 5
     ENDELSE
+
     output_file_name = output_path + big_table[col_index,row]
+;======================================    
+; Change Code (RC Ward, 13 July, 2010): Delete the output file (ASCII file) before running batch job.
+; This forces the code to wait until new files are written before putting up the message that user can proceed
+    remove_output_file = 'rm ' + output_file_name
+    print, "remove old output file ", remove_output_file
+    SPAWN, remove_output_file
+    print, " "
+;    list_output_file_name = 'ls -al ' + output_file_name
+;    SPAWN, list_output_file_name
+;======================================
     cmd += ' ' + reduce_structure.output + '=' + output_file_name
     
     cl_table[row] = cmd

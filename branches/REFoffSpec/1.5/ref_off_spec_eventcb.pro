@@ -38,16 +38,31 @@ PRO REFreductionEventcb_InstrumentSelected, Event
 
   id = widget_info(Event.top,find_by_uname='instrument_selection_cw_bgroup')
   widget_control, id, get_value=instrument_selected
+
+; CHANGE CODE (RC WARD, 22 June 2010): Add selection for resolution so code can run on laptop or desktop
+  id = widget_info(Event.top,find_by_uname='resolution_selection_cw_bgroup')
+  widget_control, id, get_value=resolution_selected
+
+  if (resolution_selected EQ 0) then begin
+; desktop resolution 
+      MainBaseSize = [30,50,1276,901]
+  endif else begin  
+     MainBaseSize = [30,50,1300,770]
+  endelse
   
   ;descativate instrument selection base and activate main base
   ISBaseID = widget_info(Event.top,find_by_uname='MAIN_BASE')
   widget_control, ISBaseId, map=0
-  
+
+
+; CHANGE CODE (RC WARD, 22 June 2010): Pass MainBaseSize from here to control resolution
   if (instrument_selected EQ 0) then begin
-    BuildGui, 'REF_L', GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+    BuildGui, 'REF_L', MainBaseSize, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   endif else begin
-    BuildGui, 'REF_M', GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+    BuildGui, 'REF_M', MainBaseSize, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   endelse
+  
+  
   
 END
 
@@ -235,7 +250,10 @@ PRO tab_event, Event
                RefPixSave = INTARR(sz)
 ; Change code (RC Ward Feb 26, 2010): Read file containing RefPix values on clicking the Shifting step tab
                list = list_OF_files[0]
-               parts = STR_SEP(list,'.')
+; Change code (RC Ward 30 June 2010): STR_SEP is obsolte. Replace with IDL routine STRSPLIT
+;               parts = STR_SEP(list,'.')
+                parts = STRSPLIT(list,'.',/EXTRACT)
+print, "test: ", parts[0]," ", parts[1]
                input_file_name = parts[0] + '_RefPix.txt'
                OPENR, 1, input_file_name, ERROR = err
                IF (ERR EQ 0) THEN BEGIN  ; NO ERROR, FILE EXISTS SO CONTINUE ON
@@ -316,7 +334,7 @@ PRO tab_event, Event
    ; pick up the xmin,ymin,xmax,ymax from Step 4 
               step5_rescale_populate_zoom_widgets, Event
    ; draw the selection box
-              refresh_plotStep5Selection, Event   
+              refresh_plotStep5Selection, Event       
             ENDELSE
          ENDELSE
 ; 

@@ -625,7 +625,6 @@ index = getDropListSelectedIndex(Event, $
                                  'active_file_droplist_shifting')
 ref_pixel_list        = (*(*global).ref_pixel_list)
 ref_pixel_list[index] = pixel_value    
-
 (*(*global).ref_pixel_list) = ref_pixel_list
 (*(*global).ref_pixel_list_original) = ref_pixel_list
 

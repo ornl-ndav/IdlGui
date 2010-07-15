@@ -207,7 +207,7 @@ PRO step4_2_3_auto_scaling, Event
           new_IvsLambda_selection_error       
         re_display_step4_step2_step1_selection, $
           Event, $
-          MODE='AUTOSCALE'  ;scaling_step2
+          MODE='AUTOSCALE' ;scaling_step2
         (*(*global).scaling_factor) = scaling_factor
         
       ENDIF
@@ -406,7 +406,7 @@ PRO step4_2_3_manual_scaling, Event, FACTOR=factor
     
     re_display_step4_step2_step1_selection, $
       Event, $
-      MODE='AUTOSCALE'          ;scaling_step2
+      MODE='AUTOSCALE'  ;scaling_step2
       
   ENDELSE
   
@@ -425,4 +425,10 @@ PRO step4_2_3_reset_scaling, Event
   ENDWHILE
   (*(*global).scaling_factor) = scaling_factor
   re_display_step4_step2_step1_selection, Event ;scaling_step2
+END
+PRO step4_2_3_separate_window, Event
+  ;get global structure
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  re_display_step4_step2_step1_separate_window, Event, $
+       MODE='AUTOSCALE';scaling_step2
 END

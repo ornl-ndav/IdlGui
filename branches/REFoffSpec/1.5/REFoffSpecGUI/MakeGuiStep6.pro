@@ -874,7 +874,7 @@ PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
     UNAME   = sPolar3SummaryTitle.uname,$
     VALUE   = sPolar3SummaryTitle.value)
     
-  ;excluse polar2
+  ;exclude polar3
   wPolar = WIDGET_BASE(BaseTab,$
     XOFFSET = sTurnOffPolar3.size[0],$
     YOFFSET = sTurnoffPolar3.size[1],$
@@ -969,7 +969,7 @@ PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
     UNAME   = sPolar4SummaryTitle.uname,$
     VALUE   = sPolar4SummaryTitle.value)
     
-  ;excluse polar2
+  ;exclude polar4
   wPolar = WIDGET_BASE(BaseTab,$
     XOFFSET = sTurnOffPolar4.size[0],$
     YOFFSET = sTurnoffPolar4.size[1],$
