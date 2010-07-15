@@ -34,13 +34,17 @@
 
 PRO MakeGuiInstrumentSelection, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-InstrumentSelectionBaseSize = [400,300,240,140]
+InstrumentSelectionBaseSize = [400,300,240,240]
 InstrumentSelectioncwbgroupSize = [10,5]
 InstrumentSelectioncwbgroupTitle = 'SELECT YOUR INSTRUMENT'
 InstrumentList = ['Liquids Reflectometer (REF_L)',$
                   'Magnetism Reflectometer (REF_M)']
+
 InstrumentSelectionGoButtonSize = [10,100,220,30]
 InstrumentSelectionGoButtontitle = 'VALIDATE INSTRUMENT'
+
+ResolutioncwbgroupTitle = 'SELECT RESOLUTION'
+ResolutionList = ['Desktop','Laptop']
 
 ;Build GUI
 MAIN_BASE = widget_base(GROUP_LEADER=wGroup,$
@@ -65,15 +69,26 @@ InstrumentCWBgroup = cw_bgroup(MAIN_BASE,$
                                /exclusive,$
                                xoffset=InstrumentSelectioncwbgroupSize[0],$
                                yoffset=InstrumentSelectioncwbgroupSize[1],$
-                               set_value=0,$
+                               set_value=1,$
                                uname='instrument_selection_cw_bgroup',$
                                column=1,$
                                label_top=InstrumentSelectioncwbgroupTitle)
+                               
+; CHANGE CODE (RC WARD, 22 June 2010): Add selection for resolution so code can run on laptop or desktop
+ResolutionCWBgroup = cw_bgroup(MAIN_BASE,$
+                               ResolutionList,$
+                               /exclusive,$
+                               xoffset=InstrumentSelectioncwbgroupSize[0],$
+                               yoffset=InstrumentSelectioncwbgroupSize[0]+90,$
+                               set_value=0,$
+                               uname='resolution_selection_cw_bgroup',$
+                               column=1, $
+                               label_top=ResolutioncwbgroupTitle)
 
 InstrumentSelectionGoButton = $
    widget_button(MAIN_BASE,$
                  xoffset=InstrumentSelectionGoButtonSize[0],$
-                 yoffset=InstrumentSelectionGoButtonSize[1],$
+                 yoffset=InstrumentSelectionGoButtonSize[1]+90,$
                  scr_xsize=InstrumentSelectionGoButtonSize[2],$
                  scr_ysize=InstrumentSelectionGoButtonSize[3],$
                  value=InstrumentSelectionGoButtonTitle,$

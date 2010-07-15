@@ -197,6 +197,11 @@ PRO display_metatada_of_sangle_selected_row, Event
     putTextFieldValue, event, 'reduce_sangle_base_refpix_value', refpix
     putTextFieldValue, Event, 'reduce_sangle_base_refpix_user_value', refpix
 
+; Change code (RC Ward, 13 July 2010): pick up intial values of tof_cutoff_min and tof_cutoff_max
+
+    apply_tof_cutoffs = (*global).apply_tof_cutoffs
+    putTextFieldValue, event, 'reduce_sangle_base_apply_tof_cutoffs_value', apply_tof_cutoffs
+
 ; Change code (RC Ward, 16 June 2010): pick up intial values of tof_cutoff_min and tof_cutoff_max
     tof_cutoff_min = (*global).tof_cutoff_min
     tof_cutoff_max = (*global).tof_cutoff_max
@@ -219,6 +224,7 @@ PRO display_metatada_of_sangle_selected_row, Event
     putTextFieldValue, Event, 'reduce_sangle_base_dirpix_value', 'N/A'
     putTextFieldValue, Event, 'reduce_sangle_base_sampledetdis_value', 'N/A'
     putTextFieldValue, event, 'reduce_sangle_base_refpix_value', 'N/A'
+    putTextFieldValue, event, 'reduce_sangle_base_apply_tof_cutoffs_value', 'N/A'
     putTextFieldValue, event, 'reduce_sangle_base_tof_cutoff_min_value', 'N/A'
     putTextFieldValue, event, 'reduce_sangle_base_tof_cutoff_max_value', 'N/A'
         
@@ -629,7 +635,7 @@ END
 ;------------------------------------------------------------------------------
 PRO calculate_new_sangle_value, Event
 
-  ON_IOERROR, error
+;  ON_IOERROR, error
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
@@ -653,6 +659,10 @@ PRO calculate_new_sangle_value, Event
     'reduce_sangle_base_sampledetdis_user_value'))
   DirPix  = FLOAT(getTextFieldValue(Event,$
     'reduce_sangle_base_dirpix_user_value'))
+  ApplyTOFCuttoffs = getTextFieldValue(Event,$
+    'reduce_sangle_base_apply_tof_cutoffs_value')
+;  sApplyTOFCuttoffs = STRCOMPRESS(ApplyTOFCuttoffs,/REMOVE_ALL)
+  (*global).apply_tof_cutoffs = ApplyTOFCuttoffs 
   TOFCutoffMin = FIX(getTextFieldValue(Event,$
     'reduce_sangle_base_tof_cutoff_min_value'))
   TOFCutoffMax = FIX(getTextFieldValue(Event,$
@@ -662,14 +672,20 @@ PRO calculate_new_sangle_value, Event
   (*global).tof_cutoff_min = sTOFCutoffMin
   (*global).tof_cutoff_max = sTOFCutoffMax
 ; DEBUG ========================================
-;    print, "=== Sangle Calculations ==="
+;    print, "=== Sangle Calculatio ns ==="
 ;    print, "Dangle: ", Dangle
 ;    print, "Dangle0: ", Dangle0
 ;    print, "RefPix: ", RefPix
 ;    print, "DirPix: ", DirPix     
 ;    print, "SDdist: ", SDdist
-;    print, "TOF_cutoff_min: ", TOFCutoffMin
-;    print, "TOF_cutoff_max: ", TOFCutoffMax
+    print, "ApplyTOFCuttoffs: ", ApplyTOFCuttoffs 
+    LogMessage = 'NO TOF Cutoffs Applied'
+    if (ApplyTOFCuttoffs EQ 'yes') THEN BEGIN
+      LogMessage = 'TOF Cutoffs Applied'
+      print, "TOF_cutoff_min: ", TOFCutoffMin
+      print, "TOF_cutoff_max: ", TOFCutoffMax
+    ENDIF
+    IDLsendToGeek_addLogBookText, Event, LogMessage 
 ;    print, "detector_pixels_size_y: ", detector_pixels_size_y
 ; DEBUG ========================================
   part1 = (Dangle - Dangle0 ) / 2.
@@ -768,33 +784,51 @@ PRO determine_sangle_refpix_data_from_device_value, Event
     IF (RefPixLoad EQ 'yes') THEN BEGIN
      reduce_tab1_table = (*(*global).reduce_tab1_table)
      full_nexus_file_name = reduce_tab1_table[1, 0]
-     parts = STR_SEP(full_nexus_file_name,'/')
+; Change code (RC Ward 30 June 2010): STR_SEP is obsolete. Replace with IDL routine STRSPLIT
+;     parts = STR_SEP(full_nexus_file_name,'/')
+     parts = STRSPLIT(full_nexus_file_name,'/',/EXTRACT)
 ; DEBUG ========================================
 ; debug RefPix output filename
-;    print, " parts_1: ",parts[1]
-;    print, " parts_2: ",parts[2]
-;    print, " parts_3: ",parts[3]
-;    print, " parts_4: ",parts[4]
-;    print, " parts_5: ",parts[5]
+    print, " parts_0: ",parts[0]
+    print, " parts_1: ",parts[1]
+    print, " parts_2: ",parts[2]
+    print, " parts_3: ",parts[3]
+    print, " parts_4: ",parts[4]
+    print, " parts_5: ",parts[5]
 ; DEBUG ========================================
-    IF (parts[2] EQ 'users') THEN BEGIN
+    IF (parts[1] EQ 'users') THEN BEGIN
     ; strip .nxs off parts[5]
-       usethis = STR_SEP(parts[5],'.')
+; Change code (RC Ward 30 June 2010): STR_SEP is obsolte. Replace with IDL routine STRSPLIT
+;       usethis = STR_SEP(parts[5],'.')
+       usethis = STRSPLIT(parts[5],'.',/EXTRACT)       
 ; DEBUG ========================================       
-;       print, "usethis_0: ",usethis[0]
-;       print, "usethis_1: ", usethis[1]
+       print, "usethis_0: ",usethis[0]
+       print, "usethis_1: ", usethis[1]
 ; DEBUG ========================================
-       output_file_name = (*global).ascii_path + usethis[0]+'_Off_Off_' + 'RefPix.txt'
+; Change code (RC Ward 30 June 2010): Had to write out a RefPix file for each spins state
+;       output_file_name = (*global).ascii_path + usethis[0]+'_Off_Off_' + 'RefPix.txt'
+        output_file_stub = (*global).ascii_path + parts[4] + '/' + usethis[0]
     ENDIF ELSE BEGIN
-     output_file_name = (*global).ascii_path + parts[2]+'_'+ parts[5]+'_Off_Off_' + 'RefPix.txt'
+;    output_file_name = (*global).ascii_path + parts[2]+ '_' + parts[5]+'_Off_Off_' + 'RefPix.txt'
+     output_file_stub = (*global).ascii_path + parts[4] + '/' + parts[1] + '_' + parts[4]
     ENDELSE
+     output_file_name = output_file_stub + '_Off_Off_' + 'RefPix.txt'
 ; DEBUG ========================================
-;       print, output_file_name
+       print, output_file_name
 ; DEBUG ========================================
      OPENW, 1, output_file_name
      PRINTF, 1, RefPixSave
      CLOSE, 1
      FREE_LUN, 1
+     output_file_name = output_file_stub + '_On_Off_' + 'RefPix.txt'
+; DEBUG ========================================
+       print, output_file_name
+; DEBUG ========================================
+     OPENW, 1, output_file_name
+     PRINTF, 1, RefPixSave
+     CLOSE, 1
+     FREE_LUN, 1     
+     
     ENDIF
   ENDIF
 END

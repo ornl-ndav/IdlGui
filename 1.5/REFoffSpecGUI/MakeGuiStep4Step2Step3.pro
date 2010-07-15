@@ -80,11 +80,21 @@ sStep3ManualLabel = { size  : [sStep3ManualBase.size[0]+XYoff[0],$
                       value : 'Manual Rescaling'}
                                
 ;**** Reference lda file Label ************************************************
+; Change Code (RC Ward, 5 July 2010): Change label to "low Q" from "low lambda"
 XYoff      = [10,20]
 sLowLdaLabel = { size  : [XYoff[0],$
                           XYoff[1]],$
-                 value : 'Low Lambda file (Reference):',$
+                 value : 'Low Q file (Reference):',$
                  uname : 'step4_2_3_manual_reference_label'}
+; Change Code (RC Ward, 5 July 2010): Add button to produce plot in separate window
+XYoff = [-40,90]
+sSeparatePlotButton = { size: [sAutoRescaleButton.size[0]+$
+                             sAutoRescaleButton.size[2]+XYoff[0],$
+                             sAutoRescaleButton.size[1]+XYoff[1],$
+                             90,30],$
+                      value: 'SCALED PLOT',$
+                      sensitive: 1,$
+                      uname: 'step4_2_3_separate_window'}
 
 ;**** Refernce lda File Name value ********************************************
 XYoff      = [180,0]
@@ -265,6 +275,16 @@ wResetRescaleButton = WIDGET_BUTTON(wMainBase,$
                                     SCR_YSIZE = sResetScaleButton.size[3],$
                                     VALUE     = sResetScaleButton.value,$
                                     SENSITIVE = sResetScaleButton.sensitive)
+
+;**** Separate Plot button ****************************************************
+wSeparatePlotButton = WIDGET_BUTTON(wMainBase,$
+                                    UNAME     = sSeparatePlotButton.uname,$
+                                    XOFFSET   = sSeparatePlotButton.size[0],$
+                                    YOFFSET   = sSeparatePlotButton.size[1],$
+                                    SCR_XSIZE = sSeparatePlotButton.size[2],$
+                                    SCR_YSIZE = sSeparatePlotButton.size[3],$
+                                    VALUE     = sSeparatePlotButton.value,$
+                                    SENSITIVE = sSeparatePlotButton.sensitive)
 
 ;------------------------------------------------------------------------------
 ;***** Manual Mode Label ******************************************************

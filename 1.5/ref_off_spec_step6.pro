@@ -82,8 +82,12 @@ PRO CreateDefaultOutputFileName, Event, list_OF_files ;_output_file
   short_file_name = FILE_BASENAME(first_file_loaded,'.txt')
   time_stamp = GenerateIsoTimeStamp()
   (*global).time_stamp = time_stamp
-  short_file_name += '_' + time_stamp
-  short_file_name += '_scaling.txt'
+; Change code (RC Ward, 1 July 2010): Remove time stamp and change end of output filename
+;  short_file_name += '_' + time_stamp
+;  short_file_name += '_scaling.txt'
+
+   sz = N_ELEMENTS(list_OF_files)
+   short_file_name += '_' + STRCOMPRESS(sz,/REMOVE_ALL) + 'Files' + '_Scaled2D.txt' 
   putTextFieldValue, Event, 'create_output_file_name_text_field', $
     short_file_name
 END
@@ -92,13 +96,18 @@ END
 ;this also defined the default output file name
 PRO CreateDefaultOutputFileNameForOtherStates, Event, $
     base_file_name, $
-    uname
+    uname, $
+    list_OF_files
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   ;get short file name
   short_file_name = FILE_BASENAME(base_file_name,'.txt')
   time_stamp      = (*global).time_stamp
-  short_file_name += '_' + time_stamp
-  short_file_name += '_scaling.txt'
+; Change code (RC Ward, 1 July 2010): Remove time stamp and change end of output filename
+;  short_file_name += '_' + time_stamp
+;  short_file_name += '_scaling.txt'
+
+   sz = N_ELEMENTS(list_OF_files)
+   short_file_name += '_' + STRCOMPRESS(sz,/REMOVE_ALL) + 'Files' + '_Scaled2D.txt'
   IF (time_stamp EQ '') THEN BEGIN
     short_file_name = ''
   ENDIF
@@ -262,17 +271,21 @@ PRO PopulateOtherPolaStates, Event
     working_table_array,$
     short_list_OF_ascii_files_p3, $
     POLA_STATE='p#4'
-    
+
+; change code (RC Ward, 1 July 2010): pass list_OF_files here to get number of files     
   ;populate output file name for each polarization state
   CreateDefaultOutputFileNameForOtherStates, Event, $
     short_list_OF_ascii_files_p1[0],$
-    'pola2_output_file_name_value'
+    'pola2_output_file_name_value', $
+    list_OF_files
   CreateDefaultOutputFileNameForOtherStates, Event, $
     short_list_OF_ascii_files_p2[0],$
-    'pola3_output_file_name_value'
+    'pola3_output_file_name_value', $
+    list_OF_files
   CreateDefaultOutputFileNameForOtherStates, Event, $
     short_list_OF_ascii_files_p3[0],$
-    'pola4_output_file_name_value'
+    'pola4_output_file_name_value', $
+    list_OF_files
     
   ;determine name of I vs Q TOF files if there is one already in place for
   ;working spin state
@@ -461,6 +474,10 @@ END
 PRO run_full_process_with_other_pola, Event, sStructure
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+  ;retrieve pixel offset
+  ref_pixel_list        = (*(*global).ref_pixel_list)
+  ref_pixel_offset_list = (*(*global).ref_pixel_offset_list) 
   
   PROCESSING = (*global).processing
   OK         = (*global).ok
@@ -472,8 +489,12 @@ PRO run_full_process_with_other_pola, Event, sStructure
   LogMessage = '> Working on polarization state ' + $
     STRCOMPRESS(pola_state,/REMOVE_ALL)
   addMessageInCreateStatus, Event, LogMessage
+  IDLsendToGeek_addLogBookText, Event, LogMessage 
+    
   LogMessage = '    Checking list of files .................. ' + PROCESSING
   addMessageInCreateStatus, Event, LogMessage
+  IDLsendToGeek_addLogBookText, Event, LogMessage 
+
   ;start recovering the name of the input files
   Table = getTableValue(Event, sStructure.summary_table_uname)
   nbr_plot = getNbrFiles(Event)
@@ -493,6 +514,8 @@ PRO run_full_process_with_other_pola, Event, sStructure
   
   LogMessage = '    Read data from input files .............. ' + PROCESSING
   addMessageInCreateStatus, Event, LogMessage
+  IDLsendToGeek_addLogBookText, Event, LogMessage 
+
   error2 = 0
   CATCH, error2
   IF (error2 NE 0) THEN BEGIN
@@ -507,6 +530,8 @@ PRO run_full_process_with_other_pola, Event, sStructure
   
   LogMessage = '    Reformat (rebin) data ................... ' + PROCESSING
   addMessageInCreateStatus, Event, LogMessage
+  IDLsendToGeek_addLogBookText, Event, LogMessage 
+
   error4 = 0
   CATCH, error4
   IF (error4 NE 0) THEN BEGIN
@@ -521,6 +546,8 @@ PRO run_full_process_with_other_pola, Event, sStructure
   
   LogMessage = '    Shift Data .............................. ' + PROCESSING
   addMessageInCreateStatus, Event, LogMessage
+  IDLsendToGeek_addLogBookText, Event, LogMessage 
+
   error3 = 0
   CATCH, error3
   IF (error3 NE 0) THEN BEGIN
@@ -534,11 +561,28 @@ PRO run_full_process_with_other_pola, Event, sStructure
       realign_tfpData,$
       realign_tfpData_error
     ReplaceTextInCreateStatus, Event, PROCESSING, OK
+
+; Change code (RC Ward, 8 July 2010): print in Ststus box the shits employed
+    nbr = N_ELEMENTS(ref_pixel_list)
+    IF (nbr GT 1) THEN BEGIN
+       index = 1
+       WHILE (index LT nbr) DO BEGIN 
+          pixel_offset = ref_pixel_list[0] - ref_pixel_offset_list[index]
+          sIndex = STRING(index, FORMAT = '(I5)')
+          sPixel_offset = STRING(pixel_offset, FORMAT='(I5)')
+          LogMessage = '    Dataset: ' + sIndex + '  Shift applied: ' + sPixel_offset
+          addMessageInCreateStatus, Event, LogMessage
+          IDLsendToGeek_addLogBookText, Event, LogMessage 
+       index++
+       ENDWHILE
+    ENDIF
   ENDELSE
   CATCH,/CANCEL
   
   LogMessage = '    Scale Data .............................. ' + PROCESSING
   addMessageInCreateStatus, Event, LogMessage
+  IDLsendToGeek_addLogBookText, Event, LogMessage 
+
   error5 = 0
   CATCH, error5
   IF (error5 NE 0) THEN BEGIN
@@ -557,6 +601,8 @@ PRO run_full_process_with_other_pola, Event, sStructure
   
   LogMessage = '    Specular Peak Output File ............... ' + PROCESSING
   addMessageInCreateStatus, Event, LogMessage
+  IDLsendToGeek_addLogBookText, Event, LogMessage 
+
   working_state_i_vs_q_file = getTextFieldValue(Event,$
     'i_vs_q_output_file_working_spin_state')
   IF (working_state_i_vs_q_file NE 'N/A' OR $
@@ -604,6 +650,8 @@ PRO step6_create_output_file_other_pola, Event, $
   
   LogMessage = '    Create output file ...................... ' + PROCESSING
   addMessageInCreateStatus, Event, LogMessage
+  IDLsendToGeek_addLogBookText, Event, LogMessage 
+
   error7 = 0
   CATCH, error7
   IF (error7 NE 0) THEN BEGIN
@@ -691,7 +739,9 @@ PRO step6_realign_data, Event, tfpData, $
   
   ;retrieve pixel offset
   ref_pixel_list        = (*(*global).ref_pixel_list)
-  ref_pixel_offset_list = (*(*global).ref_pixel_offset_list)
+;   print, "test Step6: ref_pixel_list: ", ref_pixel_list
+  ref_pixel_offset_list = (*(*global).ref_pixel_offset_list) 
+;   print, "test Step6: ref_pixel_offset_list: ", ref_pixel_offset_list
   detector_pixels_y = (*global).detector_pixels_y
 
   DETPIXY = detector_pixels_y
@@ -702,10 +752,14 @@ PRO step6_realign_data, Event, tfpData, $
     ;copy the first array
     realign_tfpData[0]       = tfpData[0]
     realign_tfpData_error[0] = tfpData_error[0]
-    index = 1
- 
+
+    index = 1 
     WHILE (index LT nbr) DO BEGIN
-      pixel_offset = ref_pixel_list[0]-ref_pixel_list[index]
+; Change code (RC Ward, 8 July 2010): Use ref_pixel_offset_list values to propoerly scale the additional 
+; datasets. The values of ref_pixel_list are reset to the reference value in the code. They can't be used. 
+;      pixel_offset = ref_pixel_list[0]-ref_pixel_list[index]
+      pixel_offset = ref_pixel_list[0] - ref_pixel_offset_list[index]
+;  print, "in step6_realign_data of Step 6: for the ith dataset - pixel_offset: ", index, pixel_offset
       pixel_offset_array[index] = pixel_offset ;save pixel_offset
       ref_pixel_offset_list[index] += pixel_offset
 ;      array        = array[*,304L:2*304L-1]
@@ -1006,13 +1060,17 @@ PRO create_output_array, Event
     LogMessage = '> Working on Initial Polarization State (' + $
       STRCOMPRESS(pola_state,/REMOVE_ALL) + ')'
     putMessageInCreateStatus, Event, LogMessage
+    IDLsendToGeek_addLogBookText, Event, LogMessage 
     LogMessage = '    Create output data (shifting/scaling) ... ' + PROCESSING
     addMessageInCreateStatus, Event, LogMessage
+    IDLsendToGeek_addLogBookText, Event, LogMessage 
   ENDIF ELSE BEGIN
     LogMessage = '> Working on creating output files:'
     putMessageInCreateStatus, Event, LogMessage
+    IDLsendToGeek_addLogBookText, Event, LogMessage 
     LogMessage = '    Create output data (shifting/scaling) ... ' + PROCESSING
     addMessageInCreateStatus, Event, LogMessage
+    IDLsendToGeek_addLogBookText, Event, LogMessage 
   ENDELSE
   
   activate_status_pola1 = 0
@@ -1034,7 +1092,8 @@ PRO create_output_array, Event
     
     LogMessage = '    Write data to file ...................... ' + PROCESSING
     addMessageInCreateStatus, Event, LogMessage
-    
+    IDLsendToGeek_addLogBookText, Event, LogMessage   
+
     error1 = 0
     CATCH, error1
     IF (error1 NE 0) THEN BEGIN
@@ -1152,8 +1211,10 @@ PRO create_output_array, Event
   
   LogMessage = ''
   addMessageInCreateStatus, Event, LogMessage
+  IDLsendToGeek_addLogBookText, Event, LogMessage 
   LogMessage = '**** Create Output File process .... DONE ****'
   addMessageInCreateStatus, Event, LogMessage
+  IDLsendToGeek_addLogBookText, Event, LogMessage 
   
   ;turn off hourglass
   WIDGET_CONTROL,HOURGLASS=0

@@ -1614,7 +1614,8 @@ PRO MAIN_BASE_event, Event
         IF (x LT size_x AND $
           y LT size_y) THEN BEGIN
           counts = total_array(x,y)
-          sIntensity = STRING(counts,FORMAT='(e8.1)')
+; CHANGE MADE (RC WARD, 22 June 2010): Change format for printing Counts
+          sIntensity = STRING(counts,FORMAT='(e8.2)')
           intensity = STRCOMPRESS(sIntensity,/REMOVE_ALL)
         ENDIF ELSE BEGIN
           intensity = 'N/A'
@@ -1828,7 +1829,8 @@ PRO MAIN_BASE_event, Event
       IF (x LT size_x AND $
         y LT size_y) THEN BEGIN
         counts = total_array(x,y)
-        sIntensity = STRING(counts,FORMAT='(e8.1)')
+; CHANGE MADE (RC WARD, 22 June 2010): Change format for printing Counts        
+        sIntensity = STRING(counts,FORMAT='(e8.2)')
         intensity = STRCOMPRESS(sIntensity,/REMOVE_ALL)
       ENDIF ELSE BEGIN
         intensity = 'N/A'
@@ -2142,7 +2144,8 @@ PRO MAIN_BASE_event, Event
         x GE 0 AND $
         y GE 0) THEN BEGIN
         counts = total_array(x,y)
-        sIntensity = STRING(counts,FORMAT='(e8.1)')
+; CHANGE MADE (RC WARD, 22 June 2010): Change format for printing Counts
+        sIntensity = STRING(counts,FORMAT='(e8.2)')
         intensity = STRCOMPRESS(sIntensity,/REMOVE_ALL)
       ENDIF ELSE BEGIN
         intensity = 'N/A'
@@ -2489,6 +2492,10 @@ PRO MAIN_BASE_event, Event
     FIND_BY_UNAME='step4_2_3_sf_text_field'): BEGIN
     step4_2_3_manual_scaling, Event, FACTOR='manual' ;scaling_step2_step3
   END
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='step4_2_3_separate_window'): BEGIN
+    step4_2_3_separate_window, Event  ;scaling_step2_step3
+  END
   
   ;----------------------------------------------------------------------------
   ; RECAP - RECAP - RECAP - RECAP - RECAP - RECAP - RECAP - RECAP - RECAP -
@@ -2736,7 +2743,8 @@ END
         x GE 0 AND $
         y GE 0) THEN BEGIN
         counts = total_array(x,y1)
-        sIntensity = STRING(counts,FORMAT='(e8.1)')
+; CHANGE MADE (RC WARD, 22 June 2010): Change format for printing Counts        
+        sIntensity = STRING(counts,FORMAT='(e8.2)')
         intensity = STRCOMPRESS(sIntensity,/REMOVE_ALL)
 
 ;       plot_selection_after_zoom, Event

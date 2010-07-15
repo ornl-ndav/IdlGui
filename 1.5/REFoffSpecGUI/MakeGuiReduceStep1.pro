@@ -285,10 +285,10 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     
   label = WIDGET_LABEL(base3g,$
     /ALIGN_LEFT, $
-    VALUE = '                  DirPix: ')
+    VALUE = '     DirPix: ')
   value = WIDGET_LABEL(base3g,$
     VALUE = 'N/A',$
-    SCR_XSIZE = 140,$
+    SCR_XSIZE = 80,$
     /ALIGN_LEFT, $
     UNAME = 'reduce_sangle_base_dirpix_value')
     
@@ -296,29 +296,29 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     /ROW,$
     FRAME=1)
 
-  base3h = WIDGET_BASE(row1col3h,$
-    /ROW)    
+  space = WIDGET_LABEL(base3g,$
+    VALUE = '  ')  
     
-  label = WIDGET_LABEL(base3h,$
+  label = WIDGET_LABEL(base3g,$
     /ALIGN_LEFT, $
-    VALUE = '                  RefPix: ')
-  value = WIDGET_LABEL(base3h,$
+    VALUE = ' RefPix: ')
+  value = WIDGET_LABEL(base3g,$
     VALUE = 'N/A',$
-    SCR_XSIZE = 140,$
+    SCR_XSIZE = 80,$
     /ALIGN_LEFT, $
     UNAME = 'reduce_sangle_base_refpix_value')
 
-  row1col3i = WIDGET_BASE(row1col3Main,$ ;..................................
+  row1col3h = WIDGET_BASE(row1col3Main,$ ;..................................
     /ROW,$
     FRAME=1)
 
-  base3i = WIDGET_BASE(row1col3i,$
+  base3h = WIDGET_BASE(row1col3h,$
     /ROW)    
       
-  label = WIDGET_LABEL(base3i,$
+  label = WIDGET_LABEL(base3h,$
     /ALIGN_LEFT, $
     VALUE = 'Sample-Det. distance [m]: ')
-  value = WIDGET_LABEL(base3i,$
+  value = WIDGET_LABEL(base3h,$
     VALUE = 'N/A',$
     SCR_XSIZE = 140,$
     /ALIGN_LEFT, $
@@ -339,31 +339,48 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
 ;     VALUE = 'Cursor Position:',$
 ;     /ALIGN_CENTER);
 
+  row1col3i = WIDGET_BASE(row1col3Main,$ ;..................................
+    /COLUMN,$
+    FRAME=1)
+
+   base3i = WIDGET_BASE(row1col3i,$
+    /ROW)
+
+  tof = WIDGET_LABEL(base3i,$
+    VALUE = 'Cursor: TOF (microS):',$
+    /ALIGN_LEFT)
+  value = WIDGET_LABEL(base3i,$
+    VALUE = 'N/A',$
+    SCR_XSIZE = 80,$
+    UNAME = 'reduce_sangle_live_info_tof',$
+    /ALIGN_LEFT)
+
+  tof = WIDGET_LABEL(base3i,$
+    VALUE = 'Pixel:',$
+    /ALIGN_LEFT)
+  value = WIDGET_LABEL(base3i,$
+    VALUE = 'N/A',$
+    SCR_XSIZE = 80,$
+    UNAME = 'reduce_sangle_live_info_pixel',$
+    /ALIGN_LEFT)
+;================================ 
+; Change code (RC Ward, 13 July 2010): display default apply_tof_cutoffs and allow user to change that
   row1col3j = WIDGET_BASE(row1col3Main,$ ;..................................
     /COLUMN,$
     FRAME=1)
 
    base3j = WIDGET_BASE(row1col3j,$
     /ROW)
-
-  tof = WIDGET_LABEL(base3j,$
-    VALUE = 'Cursor: TOF (microS):',$
-    /ALIGN_LEFT)
-  value = WIDGET_LABEL(base3j,$
+    
+  label = WIDGET_LABEL(base3j,$
+    /ALIGN_LEFT,$
+    VALUE = 'Apply TOF Cutoffs: (yes/no):')    
+  value = WIDGET_TEXT(base3j,$
     VALUE = 'N/A',$
-    SCR_XSIZE = 80,$
-    UNAME = 'reduce_sangle_live_info_tof',$
-    /ALIGN_LEFT)
-
-  tof = WIDGET_LABEL(base3j,$
-    VALUE = 'Pixel:',$
-    /ALIGN_LEFT)
-  value = WIDGET_LABEL(base3j,$
-    VALUE = 'N/A',$
-    SCR_XSIZE = 80,$
-    UNAME = 'reduce_sangle_live_info_pixel',$
-    /ALIGN_LEFT)
-;================================ 
+    UNAME = 'reduce_sangle_base_apply_tof_cutoffs_value',$
+    /EDITABLE, $
+    XSIZE = 6)
+; 
 ; Change code (RC Ward, 16 June 2010): display default tof_cutoffs and allow user to change them
 ;TOF cutoffs    
   row1col3k = WIDGET_BASE(row1col3Main,$ ;..................................
@@ -381,7 +398,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     UNAME = 'reduce_sangle_base_tof_cutoff_min_value',$
     /EDITABLE, $
     XSIZE = 10)
-    space = WIDGET_LABEL(base3k,$
+  space = WIDGET_LABEL(base3k,$
     VALUE = '  ')
     
   label = WIDGET_LABEL(base3k,$
@@ -392,7 +409,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     UNAME = 'reduce_sangle_base_tof_cutoff_max_value',$
     /EDITABLE, $
     XSIZE = 10)
-    space = WIDGET_LABEL(base3k,$
+  space = WIDGET_LABEL(base3k,$
     VALUE = '  ')
 ;================================ 
 ;Dangle0
@@ -412,7 +429,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     UNAME = 'reduce_sangle_base_dangle0_user_value',$
     /EDITABLE, $
     XSIZE = 10)
-    space = WIDGET_LABEL(base3m,$
+  space = WIDGET_LABEL(base3m,$
     VALUE = '  ')
     
   label = WIDGET_LABEL(base3m,$
@@ -423,7 +440,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     UNAME = 'reduce_sangle_base_sampledetdis_user_value',$
     /EDITABLE, $
     XSIZE = 10)
-    space = WIDGET_LABEL(base3m,$
+  space = WIDGET_LABEL(base3m,$
     VALUE = '  ')
 ;================================ 
 ;RefPix and DirPix
@@ -443,7 +460,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     UNAME = 'reduce_sangle_base_refpix_user_value',$
     /EDITABLE, $
     XSIZE = 10)
-    space = WIDGET_LABEL(base3n,$
+  space = WIDGET_LABEL(base3n,$
     VALUE = '  ')
     
   label = WIDGET_LABEL(base3n,$
