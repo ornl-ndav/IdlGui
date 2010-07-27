@@ -97,18 +97,57 @@ PRO step4_2_3_auto_scaling, Event
     message = 'Process Failed. Please repeat the Scaling Step!'
     result = DIALOG_MESSAGE(message, /ERROR)
   ENDIF ELSE BEGIN
+
     ;create new big array
-    sz = (size(*IvsLambda_selection[0]))(1)
-    new_IvsLambda_selection       = FLTARR(nbr_plot,sz)
-    new_IvsLambda_selection_error = FLTARR(nbr_plot,sz)
-    index = 0
-    WHILE (index LT nbr_plot) DO BEGIN
-      new_IvsLambda_selection[index,*] = $
-        *IvsLambda_selection[index]
-      new_IvsLambda_selection_error[index,*] = $
-        *IvsLambda_selection_error[index]
-      index++
-    ENDWHILE
+;    sz = (size(*IvsLambda_selection[0]))(1)
+;    new_IvsLambda_selection       = FLTARR(nbr_plot,sz)
+;    new_IvsLambda_selection_error = FLTARR(nbr_plot,sz)
+;    index = 0
+;    WHILE (index LT nbr_plot) DO BEGIN
+;      new_IvsLambda_selection[index,*] = $
+;        *IvsLambda_selection[index]
+;      new_IvsLambda_selection_error[index,*] = $
+;        *IvsLambda_selection_error[index]
+;      index++
+;    ENDWHILE
+; Change code (RC Ward, 17 July 2010): Handle the IvsLambda_selection and the 
+; IvsLambda_selection_error arrys separately here, since they are different sizes. 
+  size_IvsL = size(*IvsLambda_selection[0])
+  size_Ivsl_error = size(*IvsLambda_selection_error[0])
+  sz = (size_IvsL)(1)
+  sz_error = (size_IVSL_error)(1)
+;  sz = (size(*IvsLambda_selection[0]))(1)
+;  sz = (size(IvsLambda_selection[0]))(1)
+; DEBUG ====================================
+  print, "auto_scaling - size_IvsL: ", size_IvsL
+  print, "auto_scaling - size_IvsL_error: ", size_IvsL_error
+  print, "=====auto_scaling - sz: ",sz
+  print, "=====auto_scaling - sz_error: ",sz_error
+; DEBUG ====================================
+  new_IvsLambda_selection       = FLTARR(nbr_plot,sz)
+  new_IvsLambda_selection_error = FLTARR(nbr_plot,sz_error)
+  size_new_IvsL = size(new_IvsLambda_selection)
+  size_new_IvsL_error = size(new_IvsLambda_selection_error)
+; DEBUG ====================================
+  print, "auto_scaling - size_new_IvsL: ", size_new_IvsL
+  print, "auto_scaling - size_new_IvsL_error: ", size_new_IvsL_error
+; DEBUG ====================================
+  index = 0
+  WHILE (index LT nbr_plot) DO BEGIN
+   print, "auto_scaling - inside while loop: index: ", index
+    new_IvsLambda_selection[index,*] = $
+      *IvsLambda_selection[index]
+    index++
+  ENDWHILE
+; Change code (RC Ward, 17 July 2010): Since it appears that error bars cannot now be shown on
+; the Scaling plots, I am commenting this part of the code out. Fix it later once we undertstand things!
+;  index = 0
+;  WHILE (index LT nbr_plot) DO BEGIN
+;   print, "auto_scaling - inside while loop for error: index: ", index
+;    new_IvsLambda_selection_error[index,*] = $
+;      *IvsLambda_selection_error[index]
+;    index++
+;  ENDWHILE
     
     auto_scale_status = 1       ;ok by default
     
@@ -301,21 +340,45 @@ PRO step4_2_3_manual_scaling, Event, FACTOR=factor
   scaling_factor            = (*(*global).scaling_factor)
   
   ;create new big array
-; Need Code Change (RC Ward, Mar 5, 2010): This fails when "Full Reset" is click on first entering "All Files"
-; Something is not initialize properly. FIX LATER.
-  sz = (size(*IvsLambda_selection[0]))(1)
+;Change code (RC Ward, 17 July 2010): Handle the IvsLambda_selection and the 
+; IvsLambda_selection_error arrys separately here, since they are different sizes. 
+  size_IvsL = size(*IvsLambda_selection[0])
+  size_Ivsl_error = size(*IvsLambda_selection_error[0])
+  sz = (size_IvsL)(1)
+  sz_error = (size_IVSL_error)(1)
+;  sz = (size(*IvsLambda_selection[0]))(1)
 ;  sz = (size(IvsLambda_selection[0]))(1)
-;  print, "test - size: ",sz
+; DEBUG ====================================
+  print, "manual_scaling - size_IvsL: ", size_IvsL
+  print, "manual_scaling  - size_IvsL_error: ", size_IvsL_error
+  print, "=====manual_scaling - sz: ",sz
+  print, "=====manual_scaling - sz_error: ",sz_error
+; DEBUG ====================================
   new_IvsLambda_selection       = FLTARR(nbr_plot,sz)
-  new_IvsLambda_selection_error = FLTARR(nbr_plot,sz)
+  new_IvsLambda_selection_error = FLTARR(nbr_plot,sz_error)
+  size_new_IvsL = size(new_IvsLambda_selection)
+  size_new_IvsL_error = size(new_IvsLambda_selection_error)
+; DEBUG ====================================
+  print, "manual_scaling - size_new_IvsL: ", size_new_IvsL
+  print, "manual_scaling - size_new_IvsL_error: ", size_new_IvsL_error
+; DEBUG ====================================
   index = 0
   WHILE (index LT nbr_plot) DO BEGIN
+   print, "manual_scaling - inside while loop: index: ", index
     new_IvsLambda_selection[index,*] = $
       *IvsLambda_selection[index]
-    new_IvsLambda_selection_error[index,*] = $
-      *IvsLambda_selection_error[index]
     index++
   ENDWHILE
+; Change code (RC Ward, 17 July 2010): Since it appears that error bars cannot now be shown on
+; the Scaling plots, I am commenting this part of the code out. Fix it later once we undertstand things!
+;  index = 0
+;  WHILE (index LT nbr_plot) DO BEGIN
+;   print, "manual_scaling - inside while loop for error: index: ", index
+;    new_IvsLambda_selection_error[index,*] = $
+;      *IvsLambda_selection_error[index]
+;    index++
+;  ENDWHILE
+
   
   auto_scale_status = 1 ;ok by default
   

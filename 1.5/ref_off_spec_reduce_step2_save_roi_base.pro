@@ -95,10 +95,12 @@ PRO save_roi_base, Event, path=path, $
     /COLUMN,$
     SCR_XSIZE = 400,$
     frame = 5,$
-    title = 'Select name of ROI file name to create')
+    title = 'Enter name of ROI file or use deafult')
     
   ;*****************************************
   ;
+; Change code (24 July 2010): User can no longer select location for roi file.
+; those files are saved to the ascii_path where all the reduction files are.
   ;path label
   label = WIDGET_LABEL(roi_base,$
     VALUE = 'PATH')
@@ -188,9 +190,13 @@ PRO change_path, Event
     
   IF (result NE '') THEN BEGIN
     global = global_roi.global
-    (*global).ROI_path = result
+;    (*global).ROI_path = result
+; Change code (RC Ward, 17 July 2010): See if this updates the location of output files
+    (*global).ascii_path = result
+ print, "test: output folder set to: ", result   
     putButtonValue, Event, 'reduce_step2_roi_path_button', result
-  ENDIF
+
+  ENDIF   
   
 END
 
@@ -213,7 +219,9 @@ PRO change_file_name, Event
     file_name = FILE_BASENAME(file)
     
     global = global_roi.global
-    (*global).ROI_path = new_path
+;    (*global).ROI_path = new_path
+; Change code (RC Ward, 17 July 2010): See if this updates the location of output files
+    (*global).ascii_path = new_path    
     putButtonValue, Event, 'reduce_step2_roi_path_button', new_path
     putButtonValue, Event, 'reduce_step2_roi_file_name_text', file_name
   ENDIF

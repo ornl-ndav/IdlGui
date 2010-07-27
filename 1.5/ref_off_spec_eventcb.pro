@@ -43,6 +43,13 @@ PRO REFreductionEventcb_InstrumentSelected, Event
   id = widget_info(Event.top,find_by_uname='resolution_selection_cw_bgroup')
   widget_control, id, get_value=resolution_selected
 
+; CHANGE CODE (RC WARD, 23 July 2010): Capture users path for reduce step files
+  id = widget_info(Event.top,find_by_uname='reduce_step_path')
+  widget_control, id, get_value=reduce_step_path
+
+print, "new_path: ", reduce_step_path
+  
+
   if (resolution_selected EQ 0) then begin
 ; desktop resolution 
       MainBaseSize = [30,50,1276,901]
@@ -57,9 +64,9 @@ PRO REFreductionEventcb_InstrumentSelected, Event
 
 ; CHANGE CODE (RC WARD, 22 June 2010): Pass MainBaseSize from here to control resolution
   if (instrument_selected EQ 0) then begin
-    BuildGui, 'REF_L', MainBaseSize, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+    BuildGui, 'REF_L', reduce_step_path, MainBaseSize, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   endif else begin
-    BuildGui, 'REF_M', MainBaseSize, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+    BuildGui, 'REF_M', reduce_step_path, MainBaseSize, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   endelse
   
   
@@ -255,6 +262,7 @@ PRO tab_event, Event
                 parts = STRSPLIT(list,'.',/EXTRACT)
 print, "test: ", parts[0]," ", parts[1]
                input_file_name = parts[0] + '_RefPix.txt'
+print, "OPEN RefPix file: ", input_file_name
                OPENR, 1, input_file_name, ERROR = err
                IF (ERR EQ 0) THEN BEGIN  ; NO ERROR, FILE EXISTS SO CONTINUE ON
                  READF, 1, RefPixSave

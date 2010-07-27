@@ -126,8 +126,10 @@ PRO make_gui_Reduce_step3, REDUCE_TAB, sTab, TabTitles, global
     VALUE = 'Output Folder:')
     
   ;output folder button
+  ascii_path = (*global).ascii_path
   output = WIDGET_BUTTON(base1,$
-    VALUE = '~/results/',$
+;    VALUE = '~/results/',$
+     VALUE = ascii_path, $
     SCR_XSIZE = 400,$
     UNAME = 'reduce_tab3_output_folder_button')
     

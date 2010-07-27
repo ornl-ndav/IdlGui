@@ -34,7 +34,7 @@
 
 PRO MakeGuiInstrumentSelection, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-InstrumentSelectionBaseSize = [400,300,240,240]
+InstrumentSelectionBaseSize = [400,300,240,300]
 InstrumentSelectioncwbgroupSize = [10,5]
 InstrumentSelectioncwbgroupTitle = 'SELECT YOUR INSTRUMENT'
 InstrumentList = ['Liquids Reflectometer (REF_L)',$
@@ -79,16 +79,34 @@ ResolutionCWBgroup = cw_bgroup(MAIN_BASE,$
                                ResolutionList,$
                                /exclusive,$
                                xoffset=InstrumentSelectioncwbgroupSize[0],$
-                               yoffset=InstrumentSelectioncwbgroupSize[0]+90,$
+                               yoffset=InstrumentSelectioncwbgroupSize[1]+90,$
                                set_value=0,$
                                uname='resolution_selection_cw_bgroup',$
                                column=1, $
                                label_top=ResolutioncwbgroupTitle)
 
+; CHANGE CODE (RC WARD, 23 July 2010): Add ability for user to change location of reduce step files
+;label
+path_label = 'PATH FOR REDUCE STEP FILES'
+    label = WIDGET_LABEL(MAIN_BASE,$
+                    xoffset=InstrumentSelectioncwbgroupSize[0],$
+                    yoffset=InstrumentSelectioncwbgroupSize[1]+175,$
+                    VALUE   = path_label)
+
+path = '~/results/'
+new_path = WIDGET_TEXT(MAIN_BASE,$
+                    xoffset=InstrumentSelectioncwbgroupSize[0],$
+                    yoffset=InstrumentSelectioncwbgroupSize[1]+200,$
+                    SCR_XSIZE = 220,$
+                    UNAME     = 'reduce_step_path',$
+                    VALUE     = path,$
+                    /EDITABLE,$
+                    /ALIGN_LEFT)
+
 InstrumentSelectionGoButton = $
    widget_button(MAIN_BASE,$
                  xoffset=InstrumentSelectionGoButtonSize[0],$
-                 yoffset=InstrumentSelectionGoButtonSize[1]+90,$
+                 yoffset=InstrumentSelectionGoButtonSize[1]+150,$
                  scr_xsize=InstrumentSelectionGoButtonSize[2],$
                  scr_ysize=InstrumentSelectionGoButtonSize[3],$
                  value=InstrumentSelectionGoButtonTitle,$

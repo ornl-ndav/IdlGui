@@ -68,7 +68,10 @@ PRO browse_reduce_step2_roi_file, Event
   ;retrieve infos
   extension  = 'dat'
   filter     = ['*.dat','*.txt']
-  path       = (*global).roi_path
+; Change code (RC Ward, 24 July 2010): ROI files will always be loacted with reduction step files
+; that is the path ias ascii_path
+;  path       = (*global).roi_path
+   path = (*global).ascii_path
   title      = 'Browsing for a ROI file'
   
   file_name = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
@@ -85,6 +88,8 @@ PRO browse_reduce_step2_roi_file, Event
     WIDGET_CONTROL,/hourglass
     
     (*global).roi_path = new_path
+; Change code (RC Ward, 17 July 2010): See if this updates the location of output files    
+    (*global).ascii_path = new_path
     
     ;    ;Load ROI button (Load, extract and plot)
     ;    load_roi_selection, Event, file_name

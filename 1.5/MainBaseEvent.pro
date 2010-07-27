@@ -3031,13 +3031,13 @@ END
   ;output file path button
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='create_output_file_path_button'): BEGIN
-    OutputFilePathButton, Event ;step5
+    OutputFilePathButton, Event   ;step6
   END
   
   ;File Name text field
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='create_output_file_name_text_field'): BEGIN
-    RefreshOutputFileName, Event ;step5
+    RefreshOutputFileName, Event   ;step6
   END
   
   ;Create output file button
