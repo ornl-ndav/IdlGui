@@ -7,16 +7,13 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;******************************************************************************
   APPLICATION        = 'plotInstrument'
   VERSION            = '1.0.0'
-  FASCILITY = 'SNS'
-  TESTING = 'no'; 'yes'
+  UCAMS              = "dfp"
+  FASCILITY          = 'SNS'
+  TESTING            = 1
   pathInstrumentList = '/SNS/software/etc/instrumentlist.xml'
-  ;pathInstrumentList = 'instrumentlist.xml'
   
   spawn, 'hostname', hostname
   
-  ;for testing-------------------------------------------------
-  hostname = 'arcs1'
-  ;------------------------------------------------------------
   
   ;edit hostname to address
   hostname = "computer = " + STRTRIM(hostname, 2) + ".sns.gov"
@@ -37,25 +34,25 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
   ;define global variables
   global = PTR_NEW ({path: "", $
-    work_path: "~/",$
-    graphed: 0, $
-    data: ptr_new(), $
-    fascility: fascility, $
-    application:  APPLICATION,$
-    version:      VERSION,$
-    cpuName: cpuName,$
-    instConst: {X: 0,$
-                Y: 0,$
-                rebinBy: 0}, $
+    work_path:      "~/",$
+    graphed:        0, $
+    data:           ptr_new(), $
+    fascility:      fascility, $
+    application:    APPLICATION,$
+    version:        VERSION,$
+    ucams:          UCAMS, $
+    testing:        testing, $
+    cpuName:        cpuName,$
+    instConst:      {X: 0, Y: 0, rebinBy: 0}, $
     instrumentList: instrumentList, $
-    MainBaseSize: [30,25,600,150]})
+    MainBaseSize:   [30,25,500,250]})
     
-  IF (testing EQ 'yes') THEN BEGIN
-    (*global).path = '~/IDLWorkspace/plotInstrument'
+  IF testing THEN BEGIN
+    (*global).WORK_path = '~/IdlGui/trunk/plotInstrument/NeXus'
   ENDIF
   
   MainBaseSize   = (*global).MainBaseSize
-  MainBaseTitle  = 'plotInstrument - ' + VERSION
+  MainBaseTitle  = APPLICATION + ' - ' + VERSION
   
   ;Build Main Base
   MAIN_BASE = Widget_Base(GROUP_LEADER = wGroup,$
