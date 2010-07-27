@@ -627,8 +627,11 @@ PRO reduce_step2_browse_roi, Event, row=row, data_spin_state=data_spin_state
   OK         = (*global).ok
   FAILED     = (*global).failed
   
-  path  = (*global).ROI_path
-  
+; Change code (RC Ward, 24 July 2010): ROI files will always be loacted with reduction step files
+; that is the path ias ascii_path  
+;  path  = (*global).ROI_path
+   path = (*global).ascii_path  
+print, "in reduce_step2  path: ",path   
   data_run = getTextFieldValue(Event,'reduce_tab2_data_value' + $
     STRCOMPRESS(row,/REMOVE_ALL))
   title = 'Select Region Of Interest File for Data Run # ' + data_run + $

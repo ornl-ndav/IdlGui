@@ -37,8 +37,13 @@ PRO reduce_step2_save_roi, Event, quit_flag=quit_flag
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+; Change code (RC Ward, 24 July 2010): ROI files written to the ascii_path location
+; Now user cannot change this.  
+;  path    = (*global).ROI_path
+  path = (*global).ascii_path
+ print, "In reduce_step2_save_roi_step2 - path: ",path  
   
-  path    = (*global).ROI_path
   title   = 'ROI file name'
   file    = getDefaultReduceStep2RoiFileName(event)
   
@@ -71,7 +76,11 @@ PRO reduce_step2_save_roi_step2, Event, quit_flag=quit_flag
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
-  path = (*global).reduce_step2_roi_path
+; Change code (RC Ward, 24 July 2010): ROI files written to the ascii_path location
+; Now user cannot change this.
+;  path = (*global).reduce_step2_roi_path
+  path = (*global).ascii_path
+ print, "In reduce_step2_save_roi_step2 - path: ",path
   file = (*global).reduce_step2_roi_file_name
   
   file_name = path + file

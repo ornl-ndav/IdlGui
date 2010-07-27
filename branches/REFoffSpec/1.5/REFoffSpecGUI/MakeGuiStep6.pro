@@ -39,7 +39,7 @@ PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
   NbrColumns = 3
   
   instrument = (*global).instrument
-  
+
   ;******************************************************************************
   ;            DEFINE STRUCTURE
   ;******************************************************************************
@@ -60,11 +60,13 @@ PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
     sOutputFileBase.size[1]+ $
     XYoff[1]],$
     value: 'Output File Name'}
+
+; CANT FIGURE THIS OUT HERE - HOW DOES IT GET THE VALUE TO PUT INTO THE BUTTON?
   XYoff = [5,10] ;folder button
   sOutputFolder = { size: [XYoff[0],$
     XYoff[1],$
     sOutputFileBase.size[2]-2*XYoff[0]],$
-    value: '~/results/',$
+    value: '~/results',$
     uname: 'create_output_file_path_button'}
   XYoff = [5,35] ;file name label
   sOutputFileNameLabel = { size: [XYoff[0],$
@@ -488,7 +490,7 @@ PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
   ;****************************************************************************
   ;            BUILD GUI
   ;****************************************************************************
-    
+ 
   BaseTab = WIDGET_BASE(REDUCE_TAB,$
     UNAME     = sBaseTab.uname,$
     XOFFSET   = sBaseTab.size[0],$
@@ -766,7 +768,7 @@ PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
     button = WIDGET_BUTTON(row4,$
       VALUE = 'PREVIEW',$
       UNAME = 'i_vs_q_output_file_spin_state4_preview')
-      
+   
   ENDIF
   
   IF (instrument EQ 'REF_L') THEN RETURN

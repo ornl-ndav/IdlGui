@@ -77,7 +77,19 @@ PRO CreateDefaultOutputFileName, Event, list_OF_files ;_output_file
   first_file_loaded = list_OF_files[0]
   ;get path
   path = FILE_DIRNAME(first_file_loaded,/MARK_DIRECTORY)
-  putTextFieldValue, Event, 'create_output_file_path_button', path
+
+; Change code (RC Ward, 21 July 2010): Pick up correct location of input files (ascii_path)
+; Also set correct location of output (this does not do this as expected)==========
+; set up path to input files
+  (*global).ascii_path = path
+print, "input files located here: ", path
+
+; set up path to output files
+  output_path = (*global).working_path
+  putTextFieldValue, Event, 'create_output_file_path_button', output_path
+print, "CreateDefaultOutputFilename: output files will be put here: ", output_path   
+;===================================================================================
+
   ;get short file name
   short_file_name = FILE_BASENAME(first_file_loaded,'.txt')
   time_stamp = GenerateIsoTimeStamp()
@@ -130,8 +142,7 @@ PRO RefreshOutputFileName, Event
 END
 
 ;------------------------------------------------------------------------------
-;This procedure is reached when the user click to define the output
-;file path
+;This procedure is reached when the user click to define the output file path
 PRO OutputFilePathButton, Event
   ;get path (label of this button)
   path = getTextFieldValue(Event,'create_output_file_path_button')
@@ -353,6 +364,11 @@ END
 PRO UpdateStep6Gui, Event
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
+; Change code (RC Ward, 26 July 2010): update the value of the path on the button====
+  path = (*global).working_path
+; update the path on the button
+  putTextFieldValue, Event,'create_output_file_path_button', path
+;====================================================================================
   
   ;refresh the name of the default output file name
   RefreshOutputFileName, Event
@@ -499,9 +515,11 @@ PRO run_full_process_with_other_pola, Event, sStructure
   Table = getTableValue(Event, sStructure.summary_table_uname)
   nbr_plot = getNbrFiles(Event)
   ListOfInputFiles = Table[0,0:nbr_plot-1]
-  path             = getTextFieldValue(Event,'create_output_file_path_button')
+print, ListOfInputFiles
+;  path             = getTextFieldValue(Event,'create_output_file_path_button')
+  path             = (*global).ascii_path
   ListOfInputFiles = path + ListOfInputFiles
-  
+print, ListOfInputFiles 
   ;check that all the file exist
   result = FIX(FILE_TEST(ListOfInputFiles,/READ))
    
@@ -562,7 +580,7 @@ PRO run_full_process_with_other_pola, Event, sStructure
       realign_tfpData_error
     ReplaceTextInCreateStatus, Event, PROCESSING, OK
 
-; Change code (RC Ward, 8 July 2010): print in Ststus box the shits employed
+; Change code (RC Ward, 8 July 2010): print in status box the shifts employed
     nbr = N_ELEMENTS(ref_pixel_list)
     IF (nbr GT 1) THEN BEGIN
        index = 1

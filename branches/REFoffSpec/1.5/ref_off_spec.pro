@@ -39,7 +39,7 @@ PRO BuildInstrumentGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   MakeGuiInstrumentSelection, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 END
 
-PRO BuildGui, instrument, MainBaseSize, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+PRO BuildGui,  instrument, reduce_step_path, MainBaseSize, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
   ;get the current folder
   CD, CURRENT = current_folder
@@ -105,6 +105,8 @@ PRO BuildGui, instrument, MainBaseSize, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   TOF_CUTOFF_MAX = file->getValue(tag=['configuration','TOFCuttoffs','TOFCutoffMax'])
  ; Note: YSIZE_DRAW and Pixels_XValue are not presently used in the code 
   SUPER_USERS = ['rwd']
+
+print, "reduce_step_path: ", reduce_step_path
 
   ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
   ;============================================================================
@@ -570,7 +572,11 @@ PRO BuildGui, instrument, MainBaseSize, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     SPACE        = 0,$
     XPAD         = 0,$
     YPAD         = 2)
-    
+ ; Change code (RC Ward, 23 July 2010): Load the users value for reduce step path
+  (*global).ascii_path = reduce_step_path
+  (*global).working_path = reduce_step_path
+ ;===============================================================================
+ 
   ;get the color of the GUI to hide the widget_draw that will draw the label
   sys_color = WIDGET_INFO(MAIN_BASE,/SYSTEM_COLORS)
   (*global).sys_color_face_3d = sys_color.face_3d

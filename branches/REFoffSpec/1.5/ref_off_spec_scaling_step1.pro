@@ -760,7 +760,7 @@ ENDIF ELSE BEGIN
 ; Change Code (RC Ward, 7 June 2010): Save the values of xmin, ymin, xmax, ymax for Step 5
     (*global).step5_selection_savefrom_step4 = [xmin, ymin, xmax, ymax]
 
-; Change code (RC Ward, 8 July 2010): print in Ststus box the shits employed
+; Change code (RC Ward, 8 July 2010): print in status box the shifts employed
 sxmin = STRING(xmin, FORMAT = '(I5)')
 symin = STRING(ymin, FORMAT = '(I5)')
 sxmax = STRING(xmax, FORMAT = '(I5)')
@@ -830,7 +830,7 @@ ymin = MIN([ymin,ymax],MAX=ymax)
 ; Change Code (RC Ward, 7 June 2010): Save the values of xmin, ymin, xmax, ymax for Step 5
    (*global).step5_selection_savefrom_step4 = [xmin, ymin, xmax, ymax]
 
-; Change code (RC Ward, 8 July 2010): print in Ststus box the shits employed
+; Change code (RC Ward, 8 July 2010): print in status box the shifts employed
 sxmin = STRING(xmin, FORMAT = '(I5)')
 symin = STRING(ymin, FORMAT = '(I5)')
 sxmax = STRING(xmax, FORMAT = '(I5)')

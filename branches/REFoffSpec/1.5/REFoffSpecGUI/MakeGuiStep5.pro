@@ -380,7 +380,8 @@ sYMaxBaseField = { size: [sXMaxBaseField.size[0]+XYoff[0],$
   XYoff = [15,-8] ;title
   sTitle = { size: [sInsideFrame.size[0]+XYoff[0],$
     sInsideFrame.size[1]+XYoff[1]],$
-    value: 'Selection: I vs Q'}
+    value: 'Select working directory for output: Counts vs Q or Lambda Perpendicular'}
+;    value: 'Selection: I vs Q'}
     
   XYoff = [5,8] ;folder button
   sFolderButton = { size: [XYoff[0],$

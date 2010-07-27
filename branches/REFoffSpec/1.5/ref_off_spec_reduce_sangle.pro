@@ -806,11 +806,13 @@ PRO determine_sangle_refpix_data_from_device_value, Event
        print, "usethis_1: ", usethis[1]
 ; DEBUG ========================================
 ; Change code (RC Ward 30 June 2010): Had to write out a RefPix file for each spins state
+; Change code (RC Ward, 23 July 2010): Path to reduce step files (ascii_path) now specified by user
 ;       output_file_name = (*global).ascii_path + usethis[0]+'_Off_Off_' + 'RefPix.txt'
-        output_file_stub = (*global).ascii_path + parts[4] + '/' + usethis[0]
+        output_file_stub = (*global).ascii_path + usethis[0]
     ENDIF ELSE BEGIN
 ;    output_file_name = (*global).ascii_path + parts[2]+ '_' + parts[5]+'_Off_Off_' + 'RefPix.txt'
-     output_file_stub = (*global).ascii_path + parts[4] + '/' + parts[1] + '_' + parts[4]
+     output_file_stub = (*global).ascii_path  + parts[1] + '_' + parts[4]
+   print, "RefPix output_file_stub: ", output_file_stub
     ENDELSE
      output_file_name = output_file_stub + '_Off_Off_' + 'RefPix.txt'
 ; DEBUG ========================================
