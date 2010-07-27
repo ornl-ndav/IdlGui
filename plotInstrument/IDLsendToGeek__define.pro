@@ -35,71 +35,14 @@
 ;**********************************************************************
 ;GLOBAL - GLOBAL - GLOBAL - GLOBAL - GLOBAL - GLOBAL - GLOBAL - GLOBAL
 ;**********************************************************************
-FUNCTION cp_to_relative_folder, list_OF_files
-tmp_path = './'
-new_list_OF_files = list_OF_files
-sz = N_ELEMENTS(list_OF_files)
-i = 0
-WHILE (i LT sz) DO BEGIN
-    base_name = FILE_BASENAME(list_OF_files[i])
-    new_list_OF_files[i] = tmp_path + base_name
-    spawn, 'cp ' + list_OF_files[i] + ' ' + tmp_path, listening, err_listening
-    ++i
-ENDWHILE
-RETURN, new_list_OF_files
-END
 
-;------------------------------------------------------------------------------
-PRO clean_tmp_files, new_list_OF_files
-new_list = STRJOIN(new_list_OF_files, ' ')
-SPAWN, 'rm ' + new_list, listening
-END
-
-;------------------------------------------------------------------------------
-PRO create_tar_folder, Event, FullFileName, list_OF_files, FullTarFile
-index = WHERE(list_OF_files NE '', nbr)
-
-;copy all the files in ./ directory to be sure we are working with
-;relative path
-sz = N_ELEMENTS(list_OF_files)
-IF (sz GT 0 AND $
-    list_OF_files[0] NE '') THEN BEGIN
-    new_list_OF_files = cp_to_relative_folder(list_OF_files)
-ENDIF ELSE BEGIN
-    new_list_OF_files = ['']
-ENDELSE
-
-IF (nbr GT 0) THEN BEGIN
-    final_list1 = new_list_OF_files(index)
-    final_list = [FullFileName,final_list1]
-ENDIF ELSE BEGIN
-    final_list = [FullFileName]
-ENDELSE
-
-tar_cmd = 'tar cvf ' + FullTarFile
-nbr_files = N_ELEMENTS(final_list)
-i=0
-
-WHILE (i LT nbr_files) DO BEGIN
-    tar_cmd += ' ' + final_list[i]
-    ++i
-ENDWHILE
-spawn, tar_cmd, listening
-
-;remove tmp files
-clean_tmp_files, [new_list_OF_files,FullFileName]
-
-END
-
-;------------------------------------------------------------------------------
 ;Procedure that will return all the global variables for this routine
 FUNCTION IDLsendToGeek_getGlobalVariable, Event, var
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 CASE (var) OF
-    'WorkingPath'     : RETURN, '~/'
-    'LogBookPath'     : RETURN, './'
+    'LogBookPath'     : RETURN, '~/'
     'ApplicationName' : RETURN, (*global).application
     'LogBookUname'    : RETURN, 'log_book_text'
     'ucams'           : RETURN, (*global).ucams
@@ -263,14 +206,10 @@ END
 PRO SendToGeek, Event
 ;create full name of log Book file
 LogBookPath   = IDLsendToGeek_getGlobalVariable(Event,'LogBookPath')
-WorkingPath   = IDLsendToGeek_getGlobalVariable(Event,'WorkingPath')
 TimeStamp     = IDLsendToGeek_GenerateIsoTimeStamp()
 application   = IDLsendToGeek_getGlobalVariable(Event,'ApplicationName')
 FullFileName  = LogBookPath + application + '_' 
-FullTarFile   = application + '_' + TimeStamp + '.tar'
 FullFileName += TimeStamp + '.log'
-
-CD, '~/', CURRENT=current_path
 
 ;get full text of LogBook
 LogBookText   = IDLsendToGeek_getLogBookText(Event)
@@ -288,7 +227,7 @@ If (no_error NE 0) THEN BEGIN
 ;tell the user that the email has not been sent
     LogBookText = 'An error occured while contacting the GEEK. ' + $
       'Please email j35@ornl.gov!'
-    IDLsendToGeek_AddLogBookText, Event, LogBookText
+    IDLsendToGeek_putLogBookText, Event, LogBookText
 ENDIF ELSE BEGIN
     OPENW, 1, FullFileName
     sz = (SIZE(LogBookText))(1)
@@ -298,18 +237,13 @@ ENDIF ELSE BEGIN
     ENDFOR
     CLOSE,1
     FREE_LUN,1
-    IDLsendToGeek_EmailLogBook, Event, FullFileName, FullTarFile
+    IDLsendToGeek_EmailLogBook, Event, FullFileName
 ENDELSE
-
-;go back to initial folder
-CD, current_path
-
 END
 
-
+;------------------------------------------------------------------------------
 ;This function send by email a copy of the logBook
-PRO IDLsendToGeek_EmailLogBook, Event, FullFileName, FullTarFile
-WIDGET_CONTROL, Event.top, GET_UVALUE=global
+PRO IDLsendToGeek_EmailLogBook, Event, FullFileName
 version   = IDLsendToGeek_getGlobalVariable(Event,'version')
 ucams     = IDLsendToGeek_getGlobalVariable(Event,'ucams')
 ;add ucams 
@@ -319,7 +253,7 @@ spawn, 'hostname', hostname
 ;get message added by user
 message   = IDLsendToGeek_getMessage(Event)
 ;email logBook
-text = "'Log Book of SANSreduction "
+text = "'Log Book of plotROI "
 text += version + " sent by " + ucams
 text += " from " + hostname + "."
 text += ". Message is: "
@@ -340,21 +274,21 @@ If (no_error NE 0) THEN BEGIN
       'Please email j35@ornl.gov!'
     IDLsendToGeek_putLogBookText, Event, LogBookText
 ENDIF ELSE BEGIN
+    ROIFileName = ''
     application    = IDLsendToGeek_getGlobalVariable(Event,'ApplicationName')
-    list_OF_files = (*(*global).list_OF_files_to_send)
-    create_tar_folder, Event, FullFileName, list_OF_files, FullTarFile
-
     subject        = application + " LogBook"
     cmd  =  'echo ' + text + '| mutt -s "' + subject + '" -a ' + $
-      FullTarFile
-;    cmd += ' j35@ornl.gov'
-  cmd += ' scsupport@ornl.gov'
+      FullFileName
+    IF (ROIFileName NE '') THEN BEGIN
+        cmd += ' -a ' + RoiFileName 
+    ENDIF
+    cmd += ' j35@ornl.gov'
     SPAWN, cmd
 ;tell the user that the email has been sent
     LogBookText = 'LogBook has been sent successfully !'
     IDLsendToGeek_addLogBookText, Event, LogBookText
-;remove tar file
-    spawn, 'rm ' + FullTarFile
+;remove log book
+    spawn, 'rm ' + FullFileName,listening
 ENDELSE
 END
 

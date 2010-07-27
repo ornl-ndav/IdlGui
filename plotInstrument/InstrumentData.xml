@@ -135,10 +135,10 @@
 		<row>36</row>
 	</col>
 	<col>
-		<row>blank(32,512)</row>
+		<row>blank(8,128)</row>
 	</col>
 	<col>
-		<row>blank(32,512)</row>
+		<row>blank(8,128)</row>
 	</col>
 	<col>
 		<row>37</row>

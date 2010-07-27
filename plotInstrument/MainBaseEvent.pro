@@ -1,43 +1,50 @@
 ;==============================================================================
 
 PRO graph, Event
-  print, "graph function called"
+  IDLsendToGeek_addLogBookText, Event, "graph function called"
   WIDGET_CONTROL, /HOURGLASS
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   cmbInst = WIDGET_INFO(Event.top, FIND_BY_UNAME='cmbInst')
   cmbPlot = WIDGET_INFO(Event.top, FIND_BY_UNAME='linlog')
+  cmbDPath = WIDGET_INFO(Event.top, FIND_BY_UNAME='cmbDPath')
   cmbRebin = WIDGET_INFO(Event.top, FIND_BY_UNAME='cmbRebin')
   INSTRUMENT = WIDGET_INFO(cmbInst, /COMBOBOX_GETTEXT)
+  dPath = WIDGET_INFO(cmbDPath, /COMBOBOX_GETTEXT)
   plot = WIDGET_INFO(cmbPlot, /COMBOBOX_GETTEXT)
-  a = fix(WIDGET_INFO(cmbRebin, /COMBOBOX_GETTEXT))
+  a = double(WIDGET_INFO(cmbRebin, /COMBOBOX_GETTEXT))
   rebin = [a,a]
-  print, rebin
+  
+  IDLsendToGeek_addLogBookText, Event, string(rebin)
   
   file_name = $
     '/SNS/users/dfp/IdlGui/trunk/plotInstrument/InstrumentData.xml'
   file = OBJ_NEW('PlotData', file_name)
-  print, (*global).path
   
-  ;DEBUG /remove
-  (*global).path = "/SNS/users/dfp/IdlGui/trunk/plotInstrument/NeXus/BSS_3753.nxs"
+  
+  IF (*global).testing then begin
+  ;(*global).path = "/SNS/users/dfp/IdlGui/trunk/plotInstrument/NeXus/BSS_3753.nxs"
   ;(*global).path = "/SNS/users/dfp/IdlGui/trunk/plotInstrument/NeXus/CNCS_355.nxs"
   ;(*global).path = "/SNS/EQSANS/2009_2_6_SCI/1/112/NeXus/EQSANS_112.nxs"
   ;(*global).path = "/SNS/users/dfp/IdlGui/trunk/plotInstrument/NeXus/ARCS_3481.nxs"
+  ENDIF
   
-  text = file -> Graph((*global).path, INSTRUMENT, rebin, plot)
+  IDLsendToGeek_addLogBookText, Event, 'path: ' + (*global).path
+  
+  error = 0
+  IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    IDLsendToGeek_addLogBookText, Event, "GRAPHING ERROR!!!"
+    IDLsendToGeek_addLogBookText, Event, STRING(error)
+  ENDIF ELSE BEGIN
+    text = file -> Graph((*global).path, INSTRUMENT, rebin, plot, dPath)
+    IDLsendToGeek_addLogBookText, Event, STRING(text)
+  ENDELSE
+  
   WIDGET_CONTROL, HOURGLASS=0
-  print, "done"
+  IDLsendToGeek_addLogBookText, Event, "done"
 END
 
-PRO updatePath, Event
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
-  idPath = WIDGET_INFO(Event.top, FIND_BY_UNAME="pathLabel")
-  IF (*global).path NE "" THEN BEGIN
-    WIDGET_CONTROL, idPath, SET_VALUE = "Path: " + (*global).path
-  ENDIF ELSE BEGIN
-    WIDGET_CONTROL, idPath, SET_VALUE = "Path: no path"
-  ENDELSE
-END
+
 
 PRO findByRunNbr, Event
   ;get global structure
@@ -48,24 +55,24 @@ PRO findByRunNbr, Event
   INSTRUMENT = WIDGET_INFO(cmbInst, /COMBOBOX_GETTEXT)
   WIDGET_CONTROL,textBox, GET_VALUE = runNbr
   
-  ;  error = 0
-  ;  CATCH, error
-  ;  IF (error NE 0) THEN BEGIN
-  ;    CATCH,/CANCEL
-  ;    print, "ERROR!!!"
-  ;    print, error
-  ;  ENDIF ELSE BEGIN
-  command = 'findnexus -f SNS -i ' + instrument + ' ' + runNbr
-  print, command
-  SPAWN, command, path
-  print, "========="
+  error = 0
+  CATCH, error
+  IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    IDLsendToGeek_addLogBookText, Event, "ERROR!!!"
+    IDLsendToGeek_addLogBookText, Event, STRING(error)
+  ENDIF ELSE BEGIN
+    command = 'findnexus -f SNS -i ' + instrument + ' ' + runNbr
+    IDLsendToGeek_addLogBookText, Event, command
+    SPAWN, command, path
+    IDLsendToGeek_addLogBookText, Event, "========="
+    
+    IF (path NE '') THEN BEGIN
+      (*global).path = path
+    END
+  ENDELSE
+  IDLsendToGeek_addLogBookText, Event, 'path: ' + (*global).path
   
-  IF (path NE '') THEN BEGIN
-    (*global).path = path
-    print, (*global).path
-  END
-  ;ENDELSE
-  updatePath, Event
   WIDGET_CONTROL, HOURGLASS=0
 END
 
@@ -96,7 +103,7 @@ PRO fileBrowse, Event
   ENDIF
   
   
-  updatePath, Event
+  IDLsendToGeek_addLogBookText, Event, 'path: ' + (*global).path
 END
 
 PRO MAIN_BASE_EVENT, event
@@ -127,16 +134,19 @@ PRO MAIN_BASE_EVENT, event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='graph'): BEGIN
       graph, Event
     END
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='cmbInst'): BEGIN
-      findByRunNbr, Event
+;    WIDGET_INFO(wWidget, FIND_BY_UNAME='cmbInst'): BEGIN
+;      findByRunNbr, Event
+;    END
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='send_to_geek_button'): BEGIN
+      SendToGeek, Event
     END
+    
     
     
     ELSE:
     
   ENDCASE
   
-;updateStatus, Event
   
   
 END
