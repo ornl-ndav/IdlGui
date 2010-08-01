@@ -678,7 +678,7 @@ putTextFieldValue, Event, 'help_text_field_shifting', text
 END
 
 ;------------------------------------------------------------------------------
-;this is reach by the automatic realign button
+;this is reached by the automatic realign button
 PRO realign_data, Event
 
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
@@ -717,6 +717,7 @@ IF (nbr GT 1) THEN BEGIN
     index = 1
     WHILE (index LT nbr) DO BEGIN
         pixel_offset = ref_pixel_list[0]-ref_pixel_list[index]
+   print, "in shifting: index, " ",pixel_offset
         pixel_offset_array[index] = pixel_offset ;save pixel_offset
         ref_pixel_offset_list[index] += pixel_offset
         

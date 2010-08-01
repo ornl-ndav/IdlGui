@@ -437,7 +437,7 @@ PRO step5_browse_path_button, Event
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   path  = (*global).working_path
-  title = 'Select where you want to create the ASCII file'
+  title = 'Select a directory for output files'
   
   path = DIALOG_PICKFILE(PATH = path,$
     TITLE = title, $

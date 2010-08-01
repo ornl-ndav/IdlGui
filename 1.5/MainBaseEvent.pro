@@ -3163,7 +3163,7 @@ END
   
   ;----------------------------------------------------------------------------
   ;- OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS ------
-  
+  ;----------------------------------------------------------------------------  
   ;cw_bgroup of 'Use non active file attenuator'
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME= $

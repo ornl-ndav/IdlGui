@@ -69,7 +69,13 @@ PRO create_step5_selection_data, Event
      xmax = range[2]
      ymin = range[1]
      ymax = range[3]
-;print, 'inside create_step5_selection_data - xmin,xmax,ymin,ymax: ', xmin,xmax,ymin,ymax
+; Change code (RC Ward, 1 Aug 2010): print in status box the shifts employed
+sxmin = STRING(xmin, FORMAT = '(I5)')
+symin = STRING(ymin, FORMAT = '(I5)')
+sxmax = STRING(xmax, FORMAT = '(I5)')
+symax = STRING(ymax, FORMAT = '(I5)')
+LogMessage = '    Selection Window  xmin: ' + sxmin + '  xmax: ' + sxmax + '  ymin: ' + symin + '  symax: ' + symax
+IDLsendToGeek_addLogBookText, Event, LogMessage      
   
   array_selected = base_array_untouched[xmin:xmax,ymin:ymax]
   y = (SIZE(array_selected))(2)
