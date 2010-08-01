@@ -82,12 +82,12 @@ PRO CreateDefaultOutputFileName, Event, list_OF_files ;_output_file
 ; Also set correct location of output (this does not do this as expected)==========
 ; set up path to input files
   (*global).ascii_path = path
-print, "input files located here: ", path
+;print, "input files located here: ", path
 
 ; set up path to output files
   output_path = (*global).working_path
   putTextFieldValue, Event, 'create_output_file_path_button', output_path
-print, "CreateDefaultOutputFilename: output files will be put here: ", output_path   
+;print, "CreateDefaultOutputFilename: output files will be put here: ", output_path   
 ;===================================================================================
 
   ;get short file name
@@ -146,8 +146,10 @@ END
 PRO OutputFilePathButton, Event
   ;get path (label of this button)
   path = getTextFieldValue(Event,'create_output_file_path_button')
+  title = 'Select a directory for output files'
   new_path = DIALOG_PICKFILE(/DIRECTORY,$
     PATH     = path,$
+    TITLE = title, $
     GET_PATH = new_path,$
     /MUST_EXIST)
     
@@ -515,11 +517,11 @@ PRO run_full_process_with_other_pola, Event, sStructure
   Table = getTableValue(Event, sStructure.summary_table_uname)
   nbr_plot = getNbrFiles(Event)
   ListOfInputFiles = Table[0,0:nbr_plot-1]
-print, ListOfInputFiles
+;print, ListOfInputFiles
 ;  path             = getTextFieldValue(Event,'create_output_file_path_button')
   path             = (*global).ascii_path
   ListOfInputFiles = path + ListOfInputFiles
-print, ListOfInputFiles 
+;print, ListOfInputFiles 
   ;check that all the file exist
   result = FIX(FILE_TEST(ListOfInputFiles,/READ))
    
@@ -580,12 +582,13 @@ print, ListOfInputFiles
       realign_tfpData_error
     ReplaceTextInCreateStatus, Event, PROCESSING, OK
 
+; Change code (RC Ward, 1 Aug, 2010): Correction to calculation of pixel_offset here
 ; Change code (RC Ward, 8 July 2010): print in status box the shifts employed
     nbr = N_ELEMENTS(ref_pixel_list)
     IF (nbr GT 1) THEN BEGIN
        index = 1
        WHILE (index LT nbr) DO BEGIN 
-          pixel_offset = ref_pixel_list[0] - ref_pixel_offset_list[index]
+          pixel_offset = ref_pixel_offset_list[index]
           sIndex = STRING(index, FORMAT = '(I5)')
           sPixel_offset = STRING(pixel_offset, FORMAT='(I5)')
           LogMessage = '    Dataset: ' + sIndex + '  Shift applied: ' + sPixel_offset
@@ -773,11 +776,12 @@ PRO step6_realign_data, Event, tfpData, $
 
     index = 1 
     WHILE (index LT nbr) DO BEGIN
+; Change code (RC Ward, 1 Aug, 2010): Correction to calculation of pixel_offset here
 ; Change code (RC Ward, 8 July 2010): Use ref_pixel_offset_list values to propoerly scale the additional 
 ; datasets. The values of ref_pixel_list are reset to the reference value in the code. They can't be used. 
 ;      pixel_offset = ref_pixel_list[0]-ref_pixel_list[index]
-      pixel_offset = ref_pixel_list[0] - ref_pixel_offset_list[index]
-;  print, "in step6_realign_data of Step 6: for the ith dataset - pixel_offset: ", index, pixel_offset
+      pixel_offset = ref_pixel_offset_list[index]
+;  print, "index: ", index, " pixel_offset: ", pixel_offset
       pixel_offset_array[index] = pixel_offset ;save pixel_offset
       ref_pixel_offset_list[index] += pixel_offset
 ;      array        = array[*,304L:2*304L-1]

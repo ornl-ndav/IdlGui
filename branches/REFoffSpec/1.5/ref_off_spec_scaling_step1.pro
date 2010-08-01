@@ -761,15 +761,15 @@ ENDIF ELSE BEGIN
     (*global).step5_selection_savefrom_step4 = [xmin, ymin, xmax, ymax]
 
 ; Change code (RC Ward, 8 July 2010): print in status box the shifts employed
-sxmin = STRING(xmin, FORMAT = '(I5)')
-symin = STRING(ymin, FORMAT = '(I5)')
-sxmax = STRING(xmax, FORMAT = '(I5)')
-symax = STRING(ymax, FORMAT = '(I5)')
-LogMessage = '    Selection Window  xmin: ' + sxmin + '  xmax: ' + sxmax + '  ymin: ' + symin + '  symax: ' + symax
-IDLsendToGeek_addLogBookText, Event, LogMessage 
+;sxmin = STRING(xmin, FORMAT = '(I5)')
+;symin = STRING(ymin, FORMAT = '(I5)')
+;sxmax = STRING(xmax, FORMAT = '(I5)')
+;symax = STRING(ymax, FORMAT = '(I5)')
+;LogMessage = '    Selection Window  xmin: ' + sxmin + '  xmax: ' + sxmax + '  ymin: ' + symin + '  symax: ' + symax
+;IDLsendToGeek_addLogBookText, Event, LogMessage 
 ;print, LogMessage
-
 ;    print, ' in step 4 step 1: ', xmin, ymin, xmax, ymax
+
 ENDELSE
 
 sxmin = STRCOMPRESS(xmin,/REMOVE_ALL)
@@ -781,7 +781,6 @@ putTextfieldValue, Event, 'selection_info_xmin_value', sxmin
 putTextfieldValue, Event, 'selection_info_ymin_value', symin
 putTextfieldValue, Event, 'selection_info_xmax_value', sxmax
 putTextfieldValue, Event, 'selection_info_ymax_value', symax
-
 
 END
 

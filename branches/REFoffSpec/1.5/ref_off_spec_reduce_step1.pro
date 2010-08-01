@@ -557,18 +557,22 @@ PRO reduce_tab1_run_cw_field, Event ;_reduce_step1
   index    = 0
   nexus_file_list = STRARR(nbr_runs)
   WHILE (index LT nbr_runs) DO BEGIN
-    full_nexus_name = findnexus(Event,$
+ RUN_NUMBER = ListOfRuns[index]
+ INSTRUMENT = (*global).instrument
+
+     full_nexus_name = findnexus(Event,$
       RUN_NUMBER = ListOfRuns[index],$
       INSTRUMENT = (*global).instrument,$
       ;        PROPOSAL   = proposalSelected,$
       isNexusExist)
-    LogText = '-> Run #: ' + ListOfRuns[index]
+    LogText = '-> Run #: ' + ListOfRuns[index]  
     IF (isNexusExist) THEN BEGIN
       LogText += ' => ' + full_nexus_name
       nexus_file_list[index] = full_nexus_name
     ENDIF ELSE BEGIN
       LogText += ' => NeXus file not FOUND !'
     ENDELSE
+ print,"Run #: ", RUN_NUMBER, "  Instrument: ", INSTRUMENT, " Status: ",LogText
     IDLsendToGeek_addLogBookText, Event, LogText
     index++
   ENDWHILE
