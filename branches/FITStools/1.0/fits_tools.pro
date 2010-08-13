@@ -37,7 +37,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;get the current folder
   CD, CURRENT = current_folder
   
-  file = OBJ_NEW('IDLxmlParser','.FITStools.cfg')
+  file = OBJ_NEW('IDLxmlParser','FITStools.cfg')
   
   ;******************************************************************************
   ;******************************************************************************
