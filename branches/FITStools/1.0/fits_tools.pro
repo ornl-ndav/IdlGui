@@ -37,7 +37,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;get the current folder
   CD, CURRENT = current_folder
   
-  file = OBJ_NEW('IDLxmlParser','FITStools.cfg')
+  file = OBJ_NEW('IDLxmlParser','.FITStools.cfg')
   
   ;******************************************************************************
   ;******************************************************************************
@@ -96,7 +96,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
     output_path: '~/results/',$ ;where the various files will be created
     
-    max_nbr_fits_files: 20,$    ;maximum number of fits files we can work on
+    max_nbr_fits_files: 300,$    ;maximum number of fits files we can work on
     list_fits_file: PTR_NEW(0L),$ ;list of full fits files names
     list_fits_error_file: PTR_NEW(0L) }) ;list of file that can not be loaded
     
