@@ -193,7 +193,7 @@ PRO change_path, Event
 ;    (*global).ROI_path = result
 ; Change code (RC Ward, 17 July 2010): See if this updates the location of output files
     (*global).ascii_path = result
- print, "test: output folder set to: ", result   
+; print, "test: output folder set to: ", result   
     putButtonValue, Event, 'reduce_step2_roi_path_button', result
 
   ENDIF   

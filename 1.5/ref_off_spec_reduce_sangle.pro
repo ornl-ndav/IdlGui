@@ -678,12 +678,12 @@ PRO calculate_new_sangle_value, Event
 ;    print, "RefPix: ", RefPix
 ;    print, "DirPix: ", DirPix     
 ;    print, "SDdist: ", SDdist
-    print, "ApplyTOFCuttoffs: ", ApplyTOFCuttoffs 
+;    print, "ApplyTOFCuttoffs: ", ApplyTOFCuttoffs 
     LogMessage = 'NO TOF Cutoffs Applied'
     if (ApplyTOFCuttoffs EQ 'yes') THEN BEGIN
       LogMessage = 'TOF Cutoffs Applied'
-      print, "TOF_cutoff_min: ", TOFCutoffMin
-      print, "TOF_cutoff_max: ", TOFCutoffMax
+;      print, "TOF_cutoff_min: ", TOFCutoffMin
+;      print, "TOF_cutoff_max: ", TOFCutoffMax
     ENDIF
     IDLsendToGeek_addLogBookText, Event, LogMessage 
 ;    print, "detector_pixels_size_y: ", detector_pixels_size_y
@@ -789,12 +789,12 @@ PRO determine_sangle_refpix_data_from_device_value, Event
      parts = STRSPLIT(full_nexus_file_name,'/',/EXTRACT)
 ; DEBUG ========================================
 ; debug RefPix output filename
-    print, " parts_0: ",parts[0]
-    print, " parts_1: ",parts[1]
-    print, " parts_2: ",parts[2]
-    print, " parts_3: ",parts[3]
-    print, " parts_4: ",parts[4]
-    print, " parts_5: ",parts[5]
+;    print, " parts_0: ",parts[0]
+;    print, " parts_1: ",parts[1]
+;    print, " parts_2: ",parts[2]
+;    print, " parts_3: ",parts[3]
+;    print, " parts_4: ",parts[4]
+;    print, " parts_5: ",parts[5]
 ; DEBUG ========================================
     IF (parts[1] EQ 'users') THEN BEGIN
     ; strip .nxs off parts[5]
@@ -802,8 +802,8 @@ PRO determine_sangle_refpix_data_from_device_value, Event
 ;       usethis = STR_SEP(parts[5],'.')
        usethis = STRSPLIT(parts[5],'.',/EXTRACT)       
 ; DEBUG ========================================       
-       print, "usethis_0: ",usethis[0]
-       print, "usethis_1: ", usethis[1]
+;       print, "usethis_0: ",usethis[0]
+;       print, "usethis_1: ", usethis[1]
 ; DEBUG ========================================
 ; Change code (RC Ward 30 June 2010): Had to write out a RefPix file for each spins state
 ; Change code (RC Ward, 23 July 2010): Path to reduce step files (ascii_path) now specified by user
@@ -812,11 +812,11 @@ PRO determine_sangle_refpix_data_from_device_value, Event
     ENDIF ELSE BEGIN
 ;    output_file_name = (*global).ascii_path + parts[2]+ '_' + parts[5]+'_Off_Off_' + 'RefPix.txt'
      output_file_stub = (*global).ascii_path  + parts[1] + '_' + parts[4]
-   print, "RefPix output_file_stub: ", output_file_stub
+;   print, "RefPix output_file_stub: ", output_file_stub
     ENDELSE
      output_file_name = output_file_stub + '_Off_Off_' + 'RefPix.txt'
 ; DEBUG ========================================
-       print, output_file_name
+;       print, output_file_name
 ; DEBUG ========================================
      OPENW, 1, output_file_name
      PRINTF, 1, RefPixSave
@@ -824,7 +824,7 @@ PRO determine_sangle_refpix_data_from_device_value, Event
      FREE_LUN, 1
      output_file_name = output_file_stub + '_On_Off_' + 'RefPix.txt'
 ; DEBUG ========================================
-       print, output_file_name
+;       print, output_file_name
 ; DEBUG ========================================
      OPENW, 1, output_file_name
      PRINTF, 1, RefPixSave

@@ -74,7 +74,7 @@ sxmin = STRING(xmin, FORMAT = '(I5)')
 symin = STRING(ymin, FORMAT = '(I5)')
 sxmax = STRING(xmax, FORMAT = '(I5)')
 symax = STRING(ymax, FORMAT = '(I5)')
-LogMessage = '    Selection Window  xmin: ' + sxmin + '  xmax: ' + sxmax + '  ymin: ' + symin + '  symax: ' + symax
+LogMessage = '> Step 5 (RECAP): Selection Window  xmin: ' + sxmin + '  xmax: ' + sxmax + '  ymin: ' + symin + '  symax: ' + symax
 IDLsendToGeek_addLogBookText, Event, LogMessage      
   
   array_selected = base_array_untouched[xmin:xmax,ymin:ymax]

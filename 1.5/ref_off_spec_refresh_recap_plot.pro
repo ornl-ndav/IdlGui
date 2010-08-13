@@ -31,12 +31,30 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
-
 PRO refresh_recap_plot, Event, RESCALE=rescale
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
 ;print, "refresh_recap_plot"  
   nbr_plot    = getNbrFiles(Event) ;number of files
+
+; 
+; Code Change (RC Ward, 3 Aug 2010): Specify curve splicing alternative
+; [0] is use Max value in overlap range (default); [1] is let the higher Q curve override lower Q
+;  splicing_alternative = (*global).splicing_alternative
+
+;print, " in refresh_recap_plot: apply splicing_alternative: ", splicing_alternative
+;======================================================================================
+; Change code (13 Aug 2010): Check to see if user has changed the splicing alternative
+  splicing_alternative = isMaxValueStep5Selected(Event)
+;  print, "test (in RECAP): splicing_altnerative: ", splicing_alternative
+;======================================================================================
+  if (splicing_alternative EQ 0) then begin
+  LogText = '> Step 5 (RECAP): User selected splicing option where higher Q data overrides previous lower Q data.'
+  endif else begin
+  LogText = '> Step 5 (RECAP): User selected splicing option where MAX value is used in overlap region.'  
+  endelse
+  IDLsendToGeek_addLogBookText, Event, LogText
+
   
   scaling_factor_array = (*(*global).scaling_factor)
   tfpData              = (*(*global).realign_pData_y)
@@ -116,6 +134,7 @@ PRO refresh_recap_plot, Event, RESCALE=rescale
     
     ;check if user wants linear or logarithmic plot
     bLogPlot = isLogZaxisStep5Selected(Event)
+
     IF (bLogPlot) THEN BEGIN
     
       zero_index = WHERE(local_tfpData EQ 0, counts)
@@ -196,8 +215,12 @@ PRO refresh_recap_plot, Event, RESCALE=rescale
                 value_error_new_untouched
                 
             ENDIF ELSE BEGIN
+; Change code (RC Ward, 3 Aug 2010): Apply splicing alternative:
+; Change code (RC Ward, 13 Aug 2010): Default was change to higher Q overides
+; [0] is let the higher Q curve override lower Q (default) [1] is use Max value in overlap range  
+            IF (splicing_alternative EQ 1) THEN BEGIN
+; Max values overides in overlap reggion
               IF (value_new GT value_old) THEN BEGIN
-              
                 base_array[index_indices[0,i],index_indices[1,i]] = value_new
                 base_array_untouched[index_indices[0,i],index_indices[1,i]] = $
                   value_new_untouched
@@ -205,9 +228,19 @@ PRO refresh_recap_plot, Event, RESCALE=rescale
                 base_array_error[index_indices[0,i],index_indices[1,i]] = $
                   value_error_new
                 base_array_error_untouched[index_indices[0,i],index_indices[1,i]] = $
-                  value_error_new_untouched
-                  
+                  value_error_new_untouched                  
               ENDIF
+             ENDIF ELSE BEGIN
+; Do nothing if splcing alternative is [1], that is higher Q curve overrides lower Q
+                base_array[index_indices[0,i],index_indices[1,i]] = value_new
+                base_array_untouched[index_indices[0,i],index_indices[1,i]] = $
+                  value_new_untouched
+                  
+                base_array_error[index_indices[0,i],index_indices[1,i]] = $
+                  value_error_new
+                base_array_error_untouched[index_indices[0,i],index_indices[1,i]] = $
+                  value_error_new_untouched  
+              ENDELSE
             ENDELSE
           ENDELSE
           i++
@@ -300,7 +333,7 @@ END
 ; control of the plot in STEP 5
 ;------------------------------------------------------------------------------
 ;This procedure is reached each time the user hits enter in one of the
-;four text field xmin, ymin, xmax and ymax
+;four text fields: xmin, ymin, xmax and ymax
   PRO move_selection_manually_step5, Event
     WIDGET_CONTROL, Event.top, GET_UVALUE=global
     
@@ -330,44 +363,4 @@ END
     putXmaxStep5Value, Event, xmax
     putYmaxStep5Value, Event, ymax
 END
-; Change Code (RC Ward, 3 Jun 2010): These routines added to implement the xmin,ymin, xmax,ymax
-; control of the plot in STEP 5
-;PRO display_x_y_min_max_step5, Event, TYPE=type
-;   WIDGET_CONTROL, Event.top, GET_UVALUE=global
-;   IF (TYPE EQ 'left_click') THEN BEGIN
-   ; type is left_click, display only xmin,ymin
-;    selection_position = (*global).step4_step1_move_selection_position   
-;      x0 = (*global).step5_x0
-;      y0 = (*global).step5_y0
-;      xmin = x0
-;      ymin = y0/2
-;      xmax = 'N/A'
-;      ymax = 'N/A'
-;  ENDIF ELSE BEGIN
-  ; type is move, display xmin,xmax,ymin,ymax
-  ;    xy_position = (*global).step4_step1_selection 
-;      x0 = (*global).step5_x0
-;      y0 = (*global).step5_y0
-;      xmin = x0
-;      ymin = y0/2
-;      x1 = (*global).step5_x1
-;      y1 = (*global).step5_y1
-;      xmax = x1
-;      ymax = y1/2
-;      xmin = MIN([xmin,xmax],MAX=xmax)
-;      ymin = MIN([ymin,ymax],MAX=ymax)
 
-;  ENDELSE
-; print, "test xmin, xmax, ymin, ymax: ", xmin, xmax, ymin, ymax
-;  sxmin = STRCOMPRESS(xmin,/REMOVE_ALL)
-;  symin = STRCOMPRESS(ymin,/REMOVE_ALL)
-;  sxmax = STRCOMPRESS(xmax,/REMOVE_ALL)
-;  symax = STRCOMPRESS(ymax,/REMOVE_ALL)
-
-;  putTextfieldValue, Event, 'step5_selection_info_xmin_value', sxmin
-;  putTextfieldValue, Event, 'step5_selection_info_ymin_value', symin
-;  putTextfieldValue, Event, 'step5_selection_info_xmax_value', sxmax
-;  putTextfieldValue, Event, 'step5_selection_info_ymax_value', symax
-
-;END
-; =============== END CHANGE  3 June 2010 ===============================================

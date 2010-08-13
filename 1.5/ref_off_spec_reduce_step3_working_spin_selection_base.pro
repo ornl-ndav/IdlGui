@@ -323,14 +323,14 @@ PRO working_spin_state, Event
     /MODAL,$
     /COLUMN,$
     /BASE_ALIGN_CENTER,$
-    SCR_XSIZE = 310,$
+    SCR_XSIZE = 190,$
     frame = 5,$
-    title = 'Select Working Spin State (shift/scale)')
+    title = 'Select Spin State')
     
   ;*****************************************
     
-  xsize = 300
-  ysize = 100
+  xsize = 175
+  ysize = 45
   
   ;off_off
   off_off = WIDGET_DRAW(spin_base,$

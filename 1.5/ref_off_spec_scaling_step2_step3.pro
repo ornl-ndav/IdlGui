@@ -119,22 +119,22 @@ PRO step4_2_3_auto_scaling, Event
 ;  sz = (size(*IvsLambda_selection[0]))(1)
 ;  sz = (size(IvsLambda_selection[0]))(1)
 ; DEBUG ====================================
-  print, "auto_scaling - size_IvsL: ", size_IvsL
-  print, "auto_scaling - size_IvsL_error: ", size_IvsL_error
-  print, "=====auto_scaling - sz: ",sz
-  print, "=====auto_scaling - sz_error: ",sz_error
+  ;print, "auto_scaling - size_IvsL: ", size_IvsL
+  ;print, "auto_scaling - size_IvsL_error: ", size_IvsL_error
+  ;print, "=====auto_scaling - sz: ",sz
+  ;print, "=====auto_scaling - sz_error: ",sz_error
 ; DEBUG ====================================
   new_IvsLambda_selection       = FLTARR(nbr_plot,sz)
   new_IvsLambda_selection_error = FLTARR(nbr_plot,sz_error)
   size_new_IvsL = size(new_IvsLambda_selection)
   size_new_IvsL_error = size(new_IvsLambda_selection_error)
 ; DEBUG ====================================
-  print, "auto_scaling - size_new_IvsL: ", size_new_IvsL
-  print, "auto_scaling - size_new_IvsL_error: ", size_new_IvsL_error
+  ;print, "auto_scaling - size_new_IvsL: ", size_new_IvsL
+  ;print, "auto_scaling - size_new_IvsL_error: ", size_new_IvsL_error
 ; DEBUG ====================================
   index = 0
   WHILE (index LT nbr_plot) DO BEGIN
-   print, "auto_scaling - inside while loop: index: ", index
+ ;  print, "auto_scaling - inside while loop: index: ", index
     new_IvsLambda_selection[index,*] = $
       *IvsLambda_selection[index]
     index++
@@ -349,22 +349,22 @@ PRO step4_2_3_manual_scaling, Event, FACTOR=factor
 ;  sz = (size(*IvsLambda_selection[0]))(1)
 ;  sz = (size(IvsLambda_selection[0]))(1)
 ; DEBUG ====================================
-  print, "manual_scaling - size_IvsL: ", size_IvsL
-  print, "manual_scaling  - size_IvsL_error: ", size_IvsL_error
-  print, "=====manual_scaling - sz: ",sz
-  print, "=====manual_scaling - sz_error: ",sz_error
+;  print, "manual_scaling - size_IvsL: ", size_IvsL
+;  print, "manual_scaling  - size_IvsL_error: ", size_IvsL_error
+;  print, "=====manual_scaling - sz: ",sz
+;  print, "=====manual_scaling - sz_error: ",sz_error
 ; DEBUG ====================================
   new_IvsLambda_selection       = FLTARR(nbr_plot,sz)
   new_IvsLambda_selection_error = FLTARR(nbr_plot,sz_error)
   size_new_IvsL = size(new_IvsLambda_selection)
   size_new_IvsL_error = size(new_IvsLambda_selection_error)
 ; DEBUG ====================================
-  print, "manual_scaling - size_new_IvsL: ", size_new_IvsL
-  print, "manual_scaling - size_new_IvsL_error: ", size_new_IvsL_error
+;  print, "manual_scaling - size_new_IvsL: ", size_new_IvsL
+;  print, "manual_scaling - size_new_IvsL_error: ", size_new_IvsL_error
 ; DEBUG ====================================
   index = 0
   WHILE (index LT nbr_plot) DO BEGIN
-   print, "manual_scaling - inside while loop: index: ", index
+;   print, "manual_scaling - inside while loop: index: ", index
     new_IvsLambda_selection[index,*] = $
       *IvsLambda_selection[index]
     index++

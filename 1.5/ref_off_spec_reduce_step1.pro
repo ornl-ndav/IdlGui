@@ -572,7 +572,7 @@ PRO reduce_tab1_run_cw_field, Event ;_reduce_step1
     ENDIF ELSE BEGIN
       LogText += ' => NeXus file not FOUND !'
     ENDELSE
- print,"Run #: ", RUN_NUMBER, "  Instrument: ", INSTRUMENT, " Status: ",LogText
+ ;print,"Run #: ", RUN_NUMBER, "  Instrument: ", INSTRUMENT, " Status: ",LogText
     IDLsendToGeek_addLogBookText, Event, LogText
     index++
   ENDWHILE

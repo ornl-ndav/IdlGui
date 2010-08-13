@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 
-;re_plot the fittin
+;re_plot the fitting
 PRO re_plot_fitting, Event
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
@@ -55,9 +55,15 @@ END
 ;------------------------------------------------------------------------------
 ;plot the fitting only
 PRO plot_fitting, Event, x_axis=x_axis, A=a, B=b
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  ; Code change RCW (Feb 12, 2010): Get line plot colors from XML file
+  ref_plot_vertical_color = (*global).ref_plot_vertical_color
+  color = FSC_COLOR(ref_plot_vertical_color)
+;print, "Color set to ref_plot_vertical_color (red)"
   ;y_new = FLOAT(b)*x_axis + FLOAT(a)
   y_new = FLOAT(a) + 0*x_axis
-  oplot, x_axis, y_new, COLOR=250, thick=1.5
+;  oplot, x_axis, y_new, COLOR=250, thick=1.5
+   oplot, x_axis, y_new, COLOR=color, thick=1.5
 END
 
 ;------------------------------------------------------------------------------
@@ -572,7 +578,10 @@ PRO step4_step2_step2_scaleCE, Event, RESET=reset
   ;b_rescale = b / f_scale_factor
   ;(*global).step4_2_2_fitting_parameters = [a_rescale,b_rescale]
   ;we can now replot CE file and fitting line too
-    
+
+; Change code (RC Ward, 6 Aug 2010): update ymax to 10.0
+  ymax_value = 10.
+  putTextFieldValue, Event, 'step4_2_zoom_y_max', ymax_value
   ;replot data
   display_step4_step2_step2_selection, Event
   ;plot Lambda on top of plot

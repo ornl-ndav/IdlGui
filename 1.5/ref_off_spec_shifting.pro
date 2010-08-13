@@ -717,7 +717,7 @@ IF (nbr GT 1) THEN BEGIN
     index = 1
     WHILE (index LT nbr) DO BEGIN
         pixel_offset = ref_pixel_list[0]-ref_pixel_list[index]
-   print, "in shifting: index, " ",pixel_offset
+;;   print, "in shifting: ",index, " ",pixel_offset
         pixel_offset_array[index] = pixel_offset ;save pixel_offset
         ref_pixel_offset_list[index] += pixel_offset
         

@@ -43,11 +43,18 @@ PRO REFreductionEventcb_InstrumentSelected, Event
   id = widget_info(Event.top,find_by_uname='resolution_selection_cw_bgroup')
   widget_control, id, get_value=resolution_selected
 
+; Change Code (RC Ward, 13 Aug 2010); This was removed from the front screen on this day
+; CHANGE CODE (RC WARD, 3 August 2010): Add choice of splicing alternative
+;  id = widget_info(Event.top,find_by_uname='splicing_alternative_cw_bgroup')
+;  widget_control, id, get_value=splicing_alternative
+ 
+;print, "splicing_alternative: ",  splicing_alternative
+
 ; CHANGE CODE (RC WARD, 23 July 2010): Capture users path for reduce step files
   id = widget_info(Event.top,find_by_uname='reduce_step_path')
   widget_control, id, get_value=reduce_step_path
 
-print, "new_path: ", reduce_step_path
+;print, "new_path: ", reduce_step_path
   
 
   if (resolution_selected EQ 0) then begin
@@ -64,9 +71,9 @@ print, "new_path: ", reduce_step_path
 
 ; CHANGE CODE (RC WARD, 22 June 2010): Pass MainBaseSize from here to control resolution
   if (instrument_selected EQ 0) then begin
-    BuildGui, 'REF_L', reduce_step_path, MainBaseSize, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+    BuildGui, 'REF_L', reduce_step_path, splicing_alternative, MainBaseSize, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   endif else begin
-    BuildGui, 'REF_M', reduce_step_path, MainBaseSize, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+    BuildGui, 'REF_M', reduce_step_path, splicing_alternative, MainBaseSize, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   endelse
   
   
@@ -260,9 +267,9 @@ PRO tab_event, Event
 ; Change code (RC Ward 30 June 2010): STR_SEP is obsolte. Replace with IDL routine STRSPLIT
 ;               parts = STR_SEP(list,'.')
                 parts = STRSPLIT(list,'.',/EXTRACT)
-print, "test: ", parts[0]," ", parts[1]
+;print, "test: ", parts[0]," ", parts[1]
                input_file_name = parts[0] + '_RefPix.txt'
-print, "OPEN RefPix file: ", input_file_name
+;print, "OPEN RefPix file: ", input_file_name
                OPENR, 1, input_file_name, ERROR = err
                IF (ERR EQ 0) THEN BEGIN  ; NO ERROR, FILE EXISTS SO CONTINUE ON
                  READF, 1, RefPixSave

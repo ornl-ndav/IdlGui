@@ -156,12 +156,22 @@ PRO  reduce_step3_run_jobs, Event
     ENDELSE
 
     output_file_name = output_path + big_table[col_index,row]
+; Change code (RC Ward, 6 Aug 2010): create rmd file name
+    file_parts = STRSPLIT(output_file_name,'.',/EXTRACT)
+    file = file_parts[0]
+;    print, "test: ", file
+    rmd_file_name = file + '.rmd'
+;    print, "test: ", rmd_file_name
+;
 ;======================================    
 ; Change Code (RC Ward, 13 July, 2010): Delete the output file (ASCII file) before running batch job.
 ; This forces the code to wait until new files are written before putting up the message that user can proceed
     remove_output_file = 'rm ' + output_file_name
     print, "remove old output file ", remove_output_file
     SPAWN, remove_output_file
+    remove_rmd_file = 'rm ' + rmd_file_name
+    print, "remove old rmd file ", remove_rmd_file
+    SPAWN, remove_rmd_file
     print, " "
 ;    list_output_file_name = 'ls -al ' + output_file_name
 ;    SPAWN, list_output_file_name

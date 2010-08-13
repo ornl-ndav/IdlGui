@@ -47,8 +47,8 @@ FUNCTION job_manager_info_base, event
     title = 'LOADING JOB MANAGER PAGE ...')
     
   draw = WIDGET_DRAW(job_base,$
-    SCR_XSIZE = 400,$
-    SCR_YSIZE = 200,$
+    SCR_XSIZE = 265,$
+    SCR_YSIZE = 30,$
     UNAME = 'job_manager_splash_draw')
     
   ;    space = WIDGET_LABEL(job_base,$
