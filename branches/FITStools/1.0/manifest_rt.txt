@@ -1,0 +1,1 @@
+.FITStools.cfg
