@@ -39,7 +39,7 @@ PRO BuildInstrumentGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   MakeGuiInstrumentSelection, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 END
 
-PRO BuildGui,  instrument, reduce_step_path, MainBaseSize, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
   ;get the current folder
   CD, CURRENT = current_folder
@@ -103,11 +103,13 @@ PRO BuildGui,  instrument, reduce_step_path, MainBaseSize, GROUP_LEADER=wGroup, 
   APPLY_TOF_CUTOFFS = file->getValue(tag=['configuration','TOFCuttoffs','ApplyTOFCutoffs'])
   TOF_CUTOFF_MIN = file->getValue(tag=['configuration','TOFCuttoffs','TOFCutoffMin'])
   TOF_CUTOFF_MAX = file->getValue(tag=['configuration','TOFCuttoffs','TOFCutoffMax'])
+  SPLICING_ALTERNATIVE = file->getValue(tag=['configuration','Recap','SplicingAlternative'])
  ; Note: YSIZE_DRAW and Pixels_XValue are not presently used in the code 
   SUPER_USERS = ['rwd']
 
-print, "reduce_step_path: ", reduce_step_path
-
+;print, "reduce_step_path: ", reduce_step_path
+;print, "splicing_alternative: ", splicing_alternative
+; Change code (RC Ward, 7 Aug 2010): Change the splash screen for:  Job_Mananger_on_the_way.png
   ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
   ;============================================================================
   
@@ -209,6 +211,10 @@ print, "reduce_step_path: ", reduce_step_path
    apply_tof_cutoffs: APPLY_TOF_CUTOFFS, $
    tof_cutoff_min: TOF_CUTOFF_MIN, $
    tof_cutoff_max: TOF_CUTOFF_MAX, $
+; Change code (RC Ward, 3 Aug 2010): pass splicing alternative for Step 5 (RECAP) from front screen
+; get splicing_alternative from the front screen, not the config file
+   splicing_alternative: SPLICING_ALTERNATIVE, $
+;    splicing_alternative: splicing_alternative, $ 
 
     srun_web_page: 'https://neutronsr.us/applications/jobmonitor/squeue.php?view=all',$
 
@@ -305,37 +311,67 @@ print, "reduce_step_path: ", reduce_step_path
                         'On_On'],$
     
     ;step3
+; test - add this to see how it looks - fix up later
     reduce_step3_spin_off_off_unavailable: $
-    'REFoffSpec_images/off_off_disable.png',$
+    'REFoffSpec_images/Off_Off_Disabled_Cropped.PNG',$
     reduce_step3_spin_off_off_disable: $
-    'REFoffSpec_images/off_off_unselected.png',$
+    'REFoffSpec_images/Off_Off_Inactive_Cropped.PNG',$
     reduce_step3_spin_off_off_enable: $
-    'REFoffSpec_images/off_off_selected.png',$
+    'REFoffSpec_images/Off_Off_Active_Cropped.PNG',$
     
     reduce_step3_spin_off_on_unavailable: $
-    'REFoffSpec_images/off_on_disable.png',$
+    'REFoffSpec_images/Off_On_Disabled_Cropped.PNG',$
     reduce_step3_spin_off_on_disable: $
-    'REFoffSpec_images/off_on_unselected.png',$
+    'REFoffSpec_images/Off_On_Inactive_Cropped.PNG',$
     reduce_step3_spin_off_on_enable: $
-    'REFoffSpec_images/off_on_selected.png',$
+    'REFoffSpec_images/Off_On_Active_Cropped.PNG',$
     
     reduce_step3_spin_on_off_unavailable: $
-    'REFoffSpec_images/on_off_disable.png',$
+    'REFoffSpec_images/On_Off_Disabled_Cropped.PNG',$
     reduce_step3_spin_on_off_disable: $
-    'REFoffSpec_images/on_off_unselected.png',$
+    'REFoffSpec_images/On_Off_Inactive_Cropped.PNG',$
     reduce_step3_spin_on_off_enable: $
-    'REFoffSpec_images/on_off_selected.png',$
+    'REFoffSpec_images/On_Off_Active_Cropped.PNG',$
     
     reduce_step3_spin_on_on_unavailable: $
-    'REFoffSpec_images/on_on_disable.png',$
+    'REFoffSpec_images/On_On_Disabled_Cropped.PNG',$
     reduce_step3_spin_on_on_disable: $
-    'REFoffSpec_images/on_on_unselected.png',$
+    'REFoffSpec_images/On_On_Inactive_Cropped.PNG',$
     reduce_step3_spin_on_on_enable: $
-    'REFoffSpec_images/on_on_selected.png',$
+    'REFoffSpec_images/On_On_Active_Cropped.PNG',$
+
+; here is the original code
+;    reduce_step3_spin_off_off_unavailable: $
+;    'REFoffSpec_images/off_off_disable.png',$
+;    reduce_step3_spin_off_off_disable: $
+;    'REFoffSpec_images/off_off_unselected.png',$
+;    reduce_step3_spin_off_off_enable: $
+;    'REFoffSpec_images/off_off_selected.png',$
     
+;    reduce_step3_spin_off_on_unavailable: $
+;    'REFoffSpec_images/off_on_disable.png',$
+;    reduce_step3_spin_off_on_disable: $
+;    'REFoffSpec_images/off_on_unselected.png',$
+;    reduce_step3_spin_off_on_enable: $
+;    'REFoffSpec_images/off_on_selected.png',$
+    
+;    reduce_step3_spin_on_off_unavailable: $
+;    'REFoffSpec_images/on_off_disable.png',$
+;    reduce_step3_spin_on_off_disable: $
+;    'REFoffSpec_images/on_off_unselected.png',$
+;    reduce_step3_spin_on_off_enable: $
+;    'REFoffSpec_images/on_off_selected.png',$
+    
+;    reduce_step3_spin_on_on_unavailable: $
+;    'REFoffSpec_images/on_on_disable.png',$
+;    reduce_step3_spin_on_on_disable: $
+;    'REFoffSpec_images/on_on_unselected.png',$
+;    reduce_step3_spin_on_on_enable: $
+;    'REFoffSpec_images/on_on_selected.png',$
+   
     step3_working_spin: '',$
     job_manager_splash_draw: $
-    'REFoffSpec_images/job_manager_is_coming.png',$
+    'REFoffSpec_images/Job_Mananger_on_the_way.png',$
     list_of_files_to_load_in_step2: PTR_NEW(0L),$
     go_shift_scale: $
     'REFoffSpec_images/go_shift_scale.png',$

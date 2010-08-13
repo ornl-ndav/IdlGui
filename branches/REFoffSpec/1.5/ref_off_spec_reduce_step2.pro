@@ -631,7 +631,7 @@ PRO reduce_step2_browse_roi, Event, row=row, data_spin_state=data_spin_state
 ; that is the path ias ascii_path  
 ;  path  = (*global).ROI_path
    path = (*global).ascii_path  
-print, "in reduce_step2  path: ",path   
+;print, "in reduce_step2  path: ",path   
   data_run = getTextFieldValue(Event,'reduce_tab2_data_value' + $
     STRCOMPRESS(row,/REMOVE_ALL))
   title = 'Select Region Of Interest File for Data Run # ' + data_run + $

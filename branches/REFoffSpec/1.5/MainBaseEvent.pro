@@ -2575,6 +2575,14 @@ PRO MAIN_BASE_event, Event
     refresh_recap_plot, Event ;_step5
     refresh_plotStep5Selection, Event
   END
+
+; Code Change (RC Ward, 13 Aug 2010): Do this if toggling between splicing alternatives
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='slicing_alternative_step5'): BEGIN
+    refresh_recap_plot, Event ;_step5
+    refresh_plotStep5Selection, Event
+  END
+
   
   ;zmax widget_text
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_zmax'): BEGIN
@@ -2636,6 +2644,7 @@ PRO MAIN_BASE_event, Event
   
   ;Reset zmin and zmax
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_z_reset'): BEGIN
+ ; refresh plot
     refresh_recap_plot, Event
  ; Change code (RC Ward, 13 June, 2010): When resetting, also reset xmin,ymin,xmax,ymax
  ; and draw selection box
@@ -2698,7 +2707,8 @@ PRO MAIN_BASE_event, Event
 ; Change Code (RC Ward, 13 June, 2010): Define the default file name - 
 ;      this is displayed on the I vs Q plot page
        define_default_recap_output_file, Event 
-          inform_log_book_step5_selection, Event ;_step5
+; Change Code (RC Ward, 10 Aug, 2010): No longer need to write mouse event window selections to LogBook
+;          inform_log_book_step5_selection, Event ;_step5
           MapBase, Event, 'step5_rescale_base', 1
 ; Change Code (RC Ward, 7 May 2010):  Call  display_step5_rescale_plot  
 ;    rather than display_step5_rescale_plot_first_time 
@@ -2771,7 +2781,8 @@ END
 ; Change Code (RC Ward, 13 June, 2010): Define the default file name - 
 ;      this is displayed on the I vs Q plot page
        define_default_recap_output_file, Event 
-          inform_log_book_step5_selection, Event ;_step5
+; Change Code (RC Ward, 10 Aug, 2010): No longer need to write mouse event window selections to LogBook
+;          inform_log_book_step5_selection, Event ;_step5
           MapBase, Event, 'step5_rescale_base', 1
 ; Change Code (RC Ward, 7 May 2010):  Call  display_step5_rescale_plot  
 ;    rather than display_step5_rescale_plot_first_time 

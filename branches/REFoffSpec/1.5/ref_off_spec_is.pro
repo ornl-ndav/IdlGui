@@ -58,7 +58,15 @@ id = WIDGET_INFO(Event.top,FIND_BY_UNAME='z_axis_linear_log_step5')
 WIDGET_CONTROL, id, GET_VALUE=isLogSelected
 RETURN, isLogSelected
 END
-
+;======================================================================================
+; Change code (RC Ward, 13 Aug 2010): check to see if the Max Value splicing alternative is selected
+;------------------------------------------------------------------------------
+FUNCTION isMaxValueStep5Selected, Event
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='splicing_alternative_step5')
+WIDGET_CONTROL, id, GET_VALUE=isMaxValueSelected
+RETURN, isMaxValueSelected
+END
+;======================================================================================
 ;------------------------------------------------------------------------------
 FUNCTION isThisIndexSelected, Event, index_selected, this_index
 bFoundList = WHERE(index_selected EQ this_index,nbr)

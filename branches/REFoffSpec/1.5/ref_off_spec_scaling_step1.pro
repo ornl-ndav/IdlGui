@@ -765,7 +765,7 @@ ENDIF ELSE BEGIN
 ;symin = STRING(ymin, FORMAT = '(I5)')
 ;sxmax = STRING(xmax, FORMAT = '(I5)')
 ;symax = STRING(ymax, FORMAT = '(I5)')
-;LogMessage = '    Selection Window  xmin: ' + sxmin + '  xmax: ' + sxmax + '  ymin: ' + symin + '  symax: ' + symax
+;LogMessage = '> Step 4: Selection Window  xmin: ' + sxmin + '  xmax: ' + sxmax + '  ymin: ' + symin + '  symax: ' + symax
 ;IDLsendToGeek_addLogBookText, Event, LogMessage 
 ;print, LogMessage
 ;    print, ' in step 4 step 1: ', xmin, ymin, xmax, ymax
@@ -834,7 +834,7 @@ sxmin = STRING(xmin, FORMAT = '(I5)')
 symin = STRING(ymin, FORMAT = '(I5)')
 sxmax = STRING(xmax, FORMAT = '(I5)')
 symax = STRING(ymax, FORMAT = '(I5)')
-LogMessage = '    Selection Window  xmin: ' + sxmin + '  xmax: ' + sxmax + '  ymin: ' + symin + '  symax: ' + symax
+LogMessage = '> Step 4:    Selection Window  xmin: ' + sxmin + '  xmax: ' + sxmax + '  ymin: ' + symin + '  symax: ' + symax
 IDLsendToGeek_addLogBookText, Event, LogMessage 
 ;print, LogMessage
 

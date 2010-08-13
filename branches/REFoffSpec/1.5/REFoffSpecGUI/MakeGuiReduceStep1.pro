@@ -105,7 +105,8 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     
   row1col1 = WIDGET_BASE(row1,$ ;...................................
     /COLUMN)
-    
+
+; column 1    
   table = WIDGET_TABLE(row1col1,$
     COLUMN_LABELS = ['Data Run #',$
     'Sangle [rad (deg)]'],$
@@ -137,7 +138,8 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
    /MOTION_EVENTS,$
    /TRACKING_EVENTS,$
    UNAME = 'sangle_help_draw') 
-    
+
+; column 2    
   row1col2 = WIDGET_BASE(row1,$ ;............................
     UNAME = 'reduce_sangle_plot_base')
     
@@ -166,7 +168,32 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     YSIZE = 2 * (*global).detector_pixels_y + 30,$
 ;    YSIZE = 2*304+30,$
     YOFFSET = 0)
+ ; Change code (RC Ward, 7 Aug 2010): Add label on x-axis, namely "TOF (msec)".  
+    label = WIDGET_LABEL(row1col2, $
+         VALUE = 'TOF (msec)',$
+         XOFFSET= 300,$
+         YOFFSET= 635)
+; Change code (RC Ward, 7 Aug 2010): Move log/linear toggle to lower right, underneath the plot
+  row1col2a = WIDGET_BASE(row1col2, $
+         /ROW,$
+         XOFFSET = 500,$
+         YOFFSET = 635,$
+         /EXCLUSIVE)
     
+  button1 = WIDGET_BUTTON(row1col2a, $
+    VALUE = 'Linear',$
+    /NO_RELEASE, $
+    UNAME = 'reduce_sangle_lin',$
+    SENSITIVE = 1)
+  button2 = WIDGET_BUTTON(row1col2a, $
+    VALUE = 'Log',$
+    /NO_RELEASE, $
+    UNAME = 'reduce_sangle_log', $
+    SENSITIVE = 1)
+    
+  WIDGET_CONTROL, button2, /SET_BUTTON
+
+; column 3    
   row1col3Main = WIDGET_BASE(row1,$ ;---------------------------------------
     /COLUMN)
     
@@ -196,26 +223,27 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     SENSITIVE = 0)
     
   WIDGET_CONTROL, button1, /SET_BUTTON
-  
-  space = WIDGET_LABEL(row1col3Main, $
-    VALUE = ' ')
+
+; Change code (RC Ward, 7 Aug 2010): Remove log/linear toggle from this location and move (see above)  
+;  space = WIDGET_LABEL(row1col3Main, $
+;    VALUE = ' ')
     
-  row1col3b = WIDGET_BASE(row1col3Main,$ ;..................................
-    /COLUMN, $
-    /EXCLUSIVE)
+;  row1col3b = WIDGET_BASE(row1col3Main,$ ;..................................
+;    /COLUMN, $
+;    /EXCLUSIVE)
     
-  button1 = WIDGET_BUTTON(row1col3b,$
-    VALUE = 'Linear',$
-    /NO_RELEASE, $
-    UNAME = 'reduce_sangle_lin',$
-    SENSITIVE = 1)
-  button2 = WIDGET_BUTTON(row1col3b,$
-    VALUE = 'Log',$
-    /NO_RELEASE, $
-    UNAME = 'reduce_sangle_log', $
-    SENSITIVE = 1)
+;  button1 = WIDGET_BUTTON(row1col3b,$
+;    VALUE = 'Linear',$
+;    /NO_RELEASE, $
+;    UNAME = 'reduce_sangle_lin',$
+;    SENSITIVE = 1)
+;  button2 = WIDGET_BUTTON(row1col3b,$
+;    VALUE = 'Log',$
+;    /NO_RELEASE, $
+;    UNAME = 'reduce_sangle_log', $
+;    SENSITIVE = 1)
     
-  WIDGET_CONTROL, button2, /SET_BUTTON
+;  WIDGET_CONTROL, button2, /SET_BUTTON
 ;================================
 ; Table of values from the nexus header
 ;================================

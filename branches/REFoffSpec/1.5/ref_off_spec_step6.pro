@@ -504,7 +504,7 @@ PRO run_full_process_with_other_pola, Event, sStructure
   ref_pixel_list        = (*(*global).ref_pixel_list)
 
   pola_state = getTextFieldValue(Event,sStructure.pola_state_uname)
-  LogMessage = '> Working on polarization state ' + $
+  LogMessage = '> Step 6: Working on polarization state ' + $
     STRCOMPRESS(pola_state,/REMOVE_ALL)
   addMessageInCreateStatus, Event, LogMessage
   IDLsendToGeek_addLogBookText, Event, LogMessage 
@@ -777,7 +777,7 @@ PRO step6_realign_data, Event, tfpData, $
     index = 1 
     WHILE (index LT nbr) DO BEGIN
 ; Change code (RC Ward, 1 Aug, 2010): Correction to calculation of pixel_offset here
-; Change code (RC Ward, 8 July 2010): Use ref_pixel_offset_list values to propoerly scale the additional 
+; Change code (RC Ward, 8 July 2010): Use ref_pixel_offset_list values to properly scale the additional 
 ; datasets. The values of ref_pixel_list are reset to the reference value in the code. They can't be used. 
 ;      pixel_offset = ref_pixel_list[0]-ref_pixel_list[index]
       pixel_offset = ref_pixel_offset_list[index]
@@ -1079,7 +1079,7 @@ PRO create_output_array, Event
   
   IF (instrument EQ 'REF_M') THEN BEGIN
     pola_state = getTextFieldValue(Event,'summary_working_polar_value')
-    LogMessage = '> Working on Initial Polarization State (' + $
+    LogMessage = '> Step 6: Working on Initial Polarization State (' + $
       STRCOMPRESS(pola_state,/REMOVE_ALL) + ')'
     putMessageInCreateStatus, Event, LogMessage
     IDLsendToGeek_addLogBookText, Event, LogMessage 
@@ -1087,7 +1087,7 @@ PRO create_output_array, Event
     addMessageInCreateStatus, Event, LogMessage
     IDLsendToGeek_addLogBookText, Event, LogMessage 
   ENDIF ELSE BEGIN
-    LogMessage = '> Working on creating output files:'
+    LogMessage = '> Step 6: Working on creating output files:'
     putMessageInCreateStatus, Event, LogMessage
     IDLsendToGeek_addLogBookText, Event, LogMessage 
     LogMessage = '    Create output data (shifting/scaling) ... ' + PROCESSING

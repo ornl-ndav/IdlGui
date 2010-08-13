@@ -34,17 +34,26 @@
 
 PRO MakeGuiInstrumentSelection, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
+; Change code (RC Ward, 3 Aug 2010): Change title of this front GUI
+MainBaseTitle = 'REFoffSpec 1.5.1'
+
 InstrumentSelectionBaseSize = [400,300,240,300]
 InstrumentSelectioncwbgroupSize = [10,5]
 InstrumentSelectioncwbgroupTitle = 'SELECT YOUR INSTRUMENT'
+
 InstrumentList = ['Liquids Reflectometer (REF_L)',$
                   'Magnetism Reflectometer (REF_M)']
 
 InstrumentSelectionGoButtonSize = [10,100,220,30]
+; Change code (RC Ward, 3 Aug 2010): Change title of this front GUI
 InstrumentSelectionGoButtontitle = 'VALIDATE INSTRUMENT'
+InstrumentSelectionGoButtontitle = 'Proceed'
 
 ResolutioncwbgroupTitle = 'SELECT RESOLUTION'
 ResolutionList = ['Desktop','Laptop']
+
+SplicingAlternativecwbgroupTitle = 'SELECT SPLICING ALTERNATIVE'
+SplicingAlternativeList = ['Use Max Value','Higher Q Overrides']
 
 ;Build GUI
 MAIN_BASE = widget_base(GROUP_LEADER=wGroup,$
@@ -52,7 +61,7 @@ MAIN_BASE = widget_base(GROUP_LEADER=wGroup,$
                         yoffset=InstrumentSelectionBaseSize[1],$
                         scr_xsize=InstrumentSelectionBaseSize[2],$
                         scr_ysize=InstrumentSelectionBaseSize[3],$
-                        Title = 'Instument Selection',$
+                        Title = MainBaseTitle,$
                         SPACE=0,$
                         XPAD=0,$
                         YPAD=0,$
@@ -85,18 +94,33 @@ ResolutionCWBgroup = cw_bgroup(MAIN_BASE,$
                                column=1, $
                                label_top=ResolutioncwbgroupTitle)
 
+; Change code (RC Ward, 13 Aug 2010): This was removed from the FRONT screen - code left in place
+; in case we might return to this approach. Use a overall window size of 400.
+; CHANGE CODE (RC WARD, 3 Aug 2010): Add selection for splicing alternative
+; [0] is use Max value in overlap range (default); [1] is let the higher Q curve override lower Q
+; default is set to [1]
+;SplicingAlternativeCWBgroup = cw_bgroup(MAIN_BASE,$
+;                               SplicingAlternativeList,$
+;                               /exclusive,$
+;                               xoffset=InstrumentSelectioncwbgroupSize[0],$
+;                               yoffset=InstrumentSelectioncwbgroupSize[1]+175,$
+;                               set_value=1,$
+;                               uname='splicing_alternative_cw_bgroup',$
+;                               column=1, $
+;                               label_top=SplicingAlternativecwbgroupTitle)
+
 ; CHANGE CODE (RC WARD, 23 July 2010): Add ability for user to change location of reduce step files
 ;label
 path_label = 'PATH FOR REDUCE STEP FILES'
     label = WIDGET_LABEL(MAIN_BASE,$
                     xoffset=InstrumentSelectioncwbgroupSize[0],$
-                    yoffset=InstrumentSelectioncwbgroupSize[1]+175,$
+                    yoffset=InstrumentSelectioncwbgroupSize[1]+190,$
                     VALUE   = path_label)
 
 path = '~/results/'
 new_path = WIDGET_TEXT(MAIN_BASE,$
                     xoffset=InstrumentSelectioncwbgroupSize[0],$
-                    yoffset=InstrumentSelectioncwbgroupSize[1]+200,$
+                    yoffset=InstrumentSelectioncwbgroupSize[1]+210,$
                     SCR_XSIZE = 220,$
                     UNAME     = 'reduce_step_path',$
                     VALUE     = path,$
@@ -106,7 +130,7 @@ new_path = WIDGET_TEXT(MAIN_BASE,$
 InstrumentSelectionGoButton = $
    widget_button(MAIN_BASE,$
                  xoffset=InstrumentSelectionGoButtonSize[0],$
-                 yoffset=InstrumentSelectionGoButtonSize[1]+150,$
+                 yoffset=InstrumentSelectionGoButtonSize[1]+160,$
                  scr_xsize=InstrumentSelectionGoButtonSize[2],$
                  scr_ysize=InstrumentSelectionGoButtonSize[3],$
                  value=InstrumentSelectionGoButtonTitle,$

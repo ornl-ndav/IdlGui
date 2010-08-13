@@ -281,11 +281,13 @@ sYMaxBaseField = { size: [sXMaxBaseField.size[0]+XYoff[0],$
                      uname: 'x_axis_more_ticks_step5'}
     
   ;Lin/Log z-axis for 2D plot--------------------------------------------------------------
-  XYoff = [750,0]
+; Change code (RC Ward, 12 Aug 2010): Shift these buttons to the left
+;  XYoff = [750,0]
+   XYoff = [660,0]
   sLinLog = { size: [XYoff[0],$
                      XYoff[1]],$
               list: ['Linear','Log'],$
-             label: 'Z-axis:',$
+             label: ' ',$
              uname: 'z_axis_linear_log_step5',$
              value: 1.0}
     
@@ -857,6 +859,25 @@ wYmaxValue = CW_FIELD(wYmaxBase,$
      /EXCLUSIVE,$
      /ROW,$
      /NO_RELEASE)
+;======================================================================================
+; Change code (RC Ward, 12 Aug 2010): Add buttons to control splicing alternative
+; I need to pick up the values that are set in Config here, not default to 1
+; Also, this does not refresh the screen and I don't know why!
+; default is set to [1]
+   XYoff = [820,0]
+SplicingAlternativecwbgroupTitle = 'Splicing: '
+SplicingAlternativeList = ['High Q Overrides','Max Value']
+SplicingAlternativeCWBgroup = cw_bgroup(BaseTab,$
+                               SplicingAlternativeList,$
+                               /exclusive,$
+                               xoffset=XYoff[0],$
+                               yoffset=XYoff[1],$
+                               set_value=(*global).splicing_alternative,$
+                               uname='splicing_alternative_step5',$
+                               label_left=SplicingAlternativecwbgroupTitle, $
+                               /row, $
+                               /NO_RELEASE)
+;======================================================================================
     
   ;cw_bgroup of selection to make (none, counts vs Q .... etc) -----------------
   wSelectionGroupBase = WIDGET_BASE(BaseTab,$
