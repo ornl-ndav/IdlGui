@@ -106,6 +106,7 @@ PRO input_dave_ascii_path_button, Event
   result = DIALOG_PICKFILE(/DIRECTORY, $
     DIALOG_PARENT = widget_id, $
     /MUST_EXIST, $
+    path = path,$
     TITLE = title)
     
   IF (result[0] NE '')  THEN BEGIN
