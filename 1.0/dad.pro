@@ -147,8 +147,7 @@ END
 
 ;-----------------------------------------------------------------------------
 ; Empty stub procedure used for autoloading.
-PRO dad, GROUP_LEADER=wGroup,
- _EXTRA=_VWBExtra_
+PRO dad, GROUP_LEADER=wGroup,_EXTRA=_VWBExtra_
   BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 END
 

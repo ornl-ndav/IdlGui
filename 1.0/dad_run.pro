@@ -219,7 +219,13 @@ PRO run_divisions, Event
   
   ;get big_table
   table = getTableValue(Event, 'table_uname')
-  nbr_files = (size(table))(2)
+  dim = (size(table))(0)
+  if (dim eq 1) then begin
+    nbr_files = 1
+  endif else begin
+    nbr_files = (size(table))(2)
+  endelse
+  
   index_file = 0
   WHILE (index_file LT nbr_files) DO BEGIN
   
