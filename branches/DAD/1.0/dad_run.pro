@@ -181,11 +181,11 @@ FUNCTION perform_division, Event, $
   
     FOR j=0,(nbr_row-1) DO BEGIN
     
-      A = dave_data[i,j,0]
-      B = ES_DATA[0,i]
+      A = double(dave_data[i,j,0])
+      B = double(ES_DATA[0,i])
       
-      sigmaA = dave_data[i,j,1]
-      sigmaB = ES_DATA[1,i]
+      sigmaA = double(dave_data[i,j,1])
+      sigmaB = double(ES_DATA[1,i])
       
       value = A / B
       
@@ -257,7 +257,7 @@ PRO run_divisions, Event
       Qrange, $
       iData, $
       Metadata)
-      
+  
     IF (status EQ 0) THEN BEGIN
       table[3,index_file] = 'FAILED'
       putValue, Event,'table_uname', table
