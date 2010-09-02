@@ -60,11 +60,11 @@ versionLight = 0
 ;get hostname
 spawn, 'hostname', hostname
 CASE (hostname) OF
-    'heater': instrumentIndex = 0
-    'lrac'  : instrumentIndex = 2
-    'mrac'  : instrumentIndex = 3
+    'heater.sns.gov': instrumentIndex = 0
+    'lrac.sns.gov'  : instrumentIndex = 2
+    'mrac.sns.gov'  : instrumentIndex = 3
     'bac.sns.gov'  : instrumentIndex = 1
-    'bac2'  : instrumentIndex = 1
+    'bac2.sns.gov'  : instrumentIndex = 1
     else    : instrumentIndex = 0
 ENDCASE 
 
