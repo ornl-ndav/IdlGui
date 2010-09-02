@@ -386,7 +386,7 @@ field = CW_FIELD(field_base,$
                  UNAME         = runNumberBase.cw_field.uname,$
                  RETURN_EVENTS = 1,$
                  TITLE         = runNumberBase.title,$
-                 /INTEGER)
+                 /LONG)
                    
 orLabel = WIDGET_LABEL(base,$
                        XOFFSET   = orLabel.size[0],$
