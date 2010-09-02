@@ -59,21 +59,48 @@ FUNCTION create_cmd, Event
   
   dim = (size(table))(0)
   IF (dim EQ 2) THEN BEGIN ;more than 1 file
+  
+    ;checking if we are working with increasing T
+    temp0 = float(table[2,0])
+    temp1 = float(table[2,1])
+    delta_temp = temp1 - temp0
+    if (delta_temp gt 0) then begin
+      bIncreasingTemp = 1b
+    endif else begin
+      bIncreasingTemp = 0b
+    endelse
+    
     sz = (SIZE(table))(2)
-    index = 0
     first_data = 1
-    WHILE (index LT sz) DO BEGIN
-      file_name = table[0,index]
-      IF (file_name NE '') THEN BEGIN
-        IF (first_data) THEN BEGIN
-          cmd += file_name
-          first_data = 0
-        ENDIF ELSE BEGIN
-          cmd += ',' + file_name
-        ENDELSE
-      ENDIF
-      index++
-    ENDWHILE
+    if (bIncreasingTemp) then begin ;increasing temp
+      index = 0
+      WHILE (index LT sz) DO BEGIN
+        file_name = table[0,index]
+        IF (file_name NE '') THEN BEGIN
+          IF (first_data) THEN BEGIN
+            cmd += file_name
+            first_data = 0
+          ENDIF ELSE BEGIN
+            cmd += ',' + file_name
+          ENDELSE
+        ENDIF
+        index++
+      ENDWHILE
+    endif else begin ;decreasing temp
+      index = sz-1
+      while (index ge 0) do begin
+        file_name = table[0,index]
+        if (file_name ne '') then begin
+          if (first_data) then begin
+            cmd += file_name
+            first_data = 0
+          endif else begin
+            cmd += ',' + file_name
+          endelse
+        endif
+        index--
+      endwhile
+    endelse
     
     ;add Energy integration range
     inte_min = getTextFieldValue(Event,'energy_integration_range_min_value')
@@ -84,20 +111,36 @@ FUNCTION create_cmd, Event
     ;add temperature
     cmd += ' --temps='
     ;get table value
-    index = 0
     first_data = 1
-    WHILE (index LT sz) DO BEGIN
-      temperature = STRCOMPRESS(table[2,index],/REMOVE_ALL)
-      IF (table[0,index] NE '') THEN BEGIN
-        IF (first_data) THEN BEGIN
-          cmd += temperature
-          first_data = 0
-        ENDIF ELSE BEGIN
-          cmd += ',' + temperature
-        ENDELSE
-      ENDIF
-      index++
-    ENDWHILE
+    if (bIncreasingTemp) then begin ;increasing temp
+      index = 0
+      WHILE (index LT sz) DO BEGIN
+        temperature = STRCOMPRESS(table[2,index],/REMOVE_ALL)
+        IF (table[0,index] NE '') THEN BEGIN
+          IF (first_data) THEN BEGIN
+            cmd += temperature
+            first_data = 0
+          ENDIF ELSE BEGIN
+            cmd += ',' + temperature
+          ENDELSE
+        ENDIF
+        index++
+      ENDWHILE
+    endif else begin ;decreasing temp
+      index = sz-1
+      while (index ge 0) do begin
+        temperature = STRCOMPRESS(table[2,index],/REMOVE_ALL)
+        IF (table[0,index] NE '') THEN BEGIN
+          IF (first_data) THEN BEGIN
+            cmd += temperature
+            first_data = 0
+          ENDIF ELSE BEGIN
+            cmd += ',' + temperature
+          ENDELSE
+        ENDIF
+        index--
+      ENDWHILE
+    endelse
     
   ENDIF ELSE BEGIN ;just one file
   
@@ -125,15 +168,17 @@ END
 PRO run_job_tab2, Event
 
   cmd = create_cmd(Event)
-
+  
   ;output folder
   output_path = getButtonValue(Event, 'tab2_output_folder_button_uname')
   CD, output_path, CURRENT=old_path
-
+  
   cmd_text = '-> Launching job: '
   cmd_text += cmd
   IDLsendLogBook_addLogBookText, Event, ALT=alt, cmd_text
   SPAWN, cmd
+  
+  print, cmd
   
   CD, old_path
   
