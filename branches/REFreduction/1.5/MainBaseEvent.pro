@@ -1481,10 +1481,22 @@ PRO MAIN_BASE_event, Event
           geometry = WIDGET_INFO(id,/GEOMETRY)
           xsize = geometry.draw_xsize
           ysize = geometry.draw_ysize
-          IF (X LE 0) THEN RETURN
-          IF (X GE xsize) THEN RETURN
-          IF (Y LE 0) THEN RETURN
-          IF (Y GE ysize) THEN RETURN
+          IF (X LE 0) then begin
+            (*global).plot_tab_left_click = 0b
+            return
+          endif
+          IF (X GE xsize) then begin
+            (*global).plot_tab_left_click = 0b
+            return
+          endif
+          IF (Y LE 0) then begin
+            (*global).plot_tab_left_click = 0b
+            return
+          endif
+          IF (Y GE ysize) then begin
+            (*global).plot_tab_left_click = 0b
+            return
+          endif
           
           rePlotAsciiData, Event ;_tab_plot
           CURSOR, X, Y, /DATA, /NOWAIT
