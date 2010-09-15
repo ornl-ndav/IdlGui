@@ -50,67 +50,13 @@ cd, CurrentFolder + IdlUtilitiesPath
 .run idl3columnsasciiparser__define.pro
 
 ;Build REFscale GUI
-cd, CurrentFolder + '/REFscaleGUI/'
-.run make_gui_step1.pro
-.run make_gui_step2.pro
-.run make_gui_step3.pro
-.run make_gui_output_file.pro
-.run make_gui_batch.pro
-.run make_gui_main_base_components.pro
-.run make_gui_log_book.pro
+cd, CurrentFolder + '/REFoffScaleGUI/'
+.run tab_designer.pro
 
 ;Build main procedures
 cd, CurrentFolder
-.run send_files_by_email.pro
-.run ref_scale_get.pro
-.run array_delete.pro
-.run ref_scale_arrays.pro
-.run number_formatter.pro
-.run get_numeric.pro
-.run ref_scale_put.pro
-.run ref_scale_is.pro
-.run idl_send_to_geek.pro
-.run idl_get_metadata__define.pro
-
-.run ref_scale_utility.pro
-.run ref_scale_gui.pro
-.run ref_scale_fit.pro
-.run ref_scale_step3.pro
-.run ref_scale_math.pro
-.run ref_scale_file_utility.pro
-.run ref_scale_tof_to_q.pro
-
-;auto cleaning of data
-.run cleanup_reduce_data.pro
-.run auto_cleaning_data_cw_bgroup.pro
-.run configure_auto_cleanup.pro
-
-;email output configure base
-.run email_configure_base.pro
-.run average_overlap.pro
-
-.run ref_scale_openfile.pro
-.run ref_scale_plot_subroutines.pro
-.run ref_scale_plot.pro
-.run ref_scale_plot_loaded_files.pro
-.run ref_scale_load.pro
-.run ref_scale_step2.pro
-.run ref_scale_produce_output.pro
-.run ref_scale_produce_output_ref_m.pro
-.run ref_scale_tabs.pro
-.run settings_base.pro
-
-;Batch
-.run ref_scale_spin_states.pro
-.run idl_load_batch_file__define.pro
-.run idl_create_batch_file__define.pro
-.run retrieve_dr_files_ref_m.pro
-.run ref_scale_batch.pro
-.run idl_parse_command_line__define.pro
-.run auto_full_scaling_from_batch_file.pro
-
-.run ref_scale_cleanup.pro
+.run ref_off_scale_cleanup.pro
 .run main_base_event.pro
 .run ref_scale_eventcb.pro
-.run ref_scale_m.pro
+.run ref_off_scale.pro
 
