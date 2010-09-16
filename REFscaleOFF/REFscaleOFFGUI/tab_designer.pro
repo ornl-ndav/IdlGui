@@ -59,19 +59,19 @@ pro design_tabs, MAIN_BASE, global
   row2col1 = widget_base(row2,$
     /column)
   spin1 = widget_button(row2col1,$
-    value = 'State 1',$
+    value = 'Off_Off',$
     sensitive = 0,$
     uname = 'tab1state1')
   spin2 = widget_button(row2col1,$
-    value = 'State 2',$
+    value = 'Off_On',$
     sensitive = 0,$
     uname = 'tab1state2')
   spin3 = widget_button(row2col1,$
-    value = 'State 3',$
+    value = 'On_Off',$
     sensitive = 0,$
     uname = 'tab1state3')
   spin4 = widget_button(row2col1,$
-    value = 'State 4',$
+    value = 'On_On',$
     sensitive = 0,$
     uname = 'tab1state4')
   
