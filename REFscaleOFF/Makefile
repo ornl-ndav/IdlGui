@@ -1,22 +1,23 @@
-# Makefile for REFscale (REF_M)
+# Makefile for REFscaleOFF
 # Compile the necessary modules
 # Create the VM program 
+
 all:
-	cp REFscale_m.cfg .REFscale_m.cfg
+	cp REFscaleOFF.cfg .REFscaleOFF.cfg
 	idl ./makefile.pro
 
 install: 
-	cp .REFscale_m.cfg /SNS/software/idltools/sav/
-	cp ref_scale_m.sav /SNS/software/idltools/sav/
-	cp REFscale_m /SNS/software/idltools/
+	cp .REFscaleOFF.cfg /SNS/software/idltools/sav/
+	cp ref_scale_off.sav /SNS/software/idltools/sav/
+	cp REFscaleOFF /SNS/software/idltools/
 
 beta:
-	cp .REFscale_m.cfg /SNS/software/idltools/beta/sav/
-	cp ref_scale_m.sav /SNS/software/idltools/beta/sav/
-	cp REFscale_m_beta /SNS/software/idltools/beta/
+	cp .REFscaleOFF.cfg /SNS/software/idltools/beta/sav/
+	cp ref_scale_off.sav /SNS/software/idltools/beta/sav/
+	cp REFscale_off_beta /SNS/software/idltools/beta/
 	
 dev:
-	cp .REFscale_m.cfg /SNS/software/idltools/dev/sav/
-	cp ref_scale_m.sav /SNS/software/idltools/dev/sav/
-	cp REFscale_m_dev /SNS/software/idltools/dev/
+	cp .REFscaleOFF.cfg /SNS/software/idltools/dev/sav/
+	cp ref_scale_off.sav /SNS/software/idltools/dev/sav/
+	cp REFscale_off_dev /SNS/software/idltools/dev/
 	

@@ -32,25 +32,14 @@
 ;
 ;==============================================================================
 
-;define path to dependencies and current folder
-spawn, 'pwd', CurrentFolder
-IdlUtilitiesPath = "/utilities"
-
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-cd, CurrentFolder + IdlUtilitiesPath
-.run get_ucams.pro
-.run IDLxmlParser__define.pro
-.run logger.pro
-
-;Build REFscale GUI
-cd, CurrentFolder + '/REFscaleOFFGUI/'
-.run tab_designer.pro
-
-;Build main procedures
-cd, CurrentFolder
-.run ref_off_scale_cleanup.pro
-.run main_base_event.pro
-.run ref_scale_eventcb.pro
-.run ref_scale_off.pro
-
+;+
+; 
+; This function returns the ucams of the user
+;
+; @returns ucams
+; 
+; :Author: j35
+;-
+FUNCTION get_ucams
+  RETURN, getenv('USER')
+END
