@@ -50,5 +50,5 @@ resolve_routine, "XMANAGER", /either
 resolve_routine, "mean", /either
 resolve_routine, "moment", /either
 
-save,/routines,filename = CurrentFolder + '/ref_off_scale.sav'
+save,/routines,filename = CurrentFolder + '/ref_scale_off.sav'
 exit

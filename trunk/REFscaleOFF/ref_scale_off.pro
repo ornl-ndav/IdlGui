@@ -42,7 +42,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ucams = get_ucams()
   ENDELSE
   
-  file = OBJ_NEW('idlxmlparser', '.REFoffScale.cfg')
+  file = OBJ_NEW('idlxmlparser', '.REFscaleOFF.cfg')
   ;============================================================================
   ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
   APPLICATION = file->getValue(tag=['configuration','application'])
@@ -123,7 +123,7 @@ END
 ;
 ; Empty stub procedure used for autoloading.
 ;
-PRO ref_off_scale, BatchMode    = BatchMode, $
+PRO ref_scale_off, BatchMode    = BatchMode, $
     BatchFile    = BatchFile, $
     GROUP_LEADER = wGroup, $
     _EXTRA       = _VWBExtra_
