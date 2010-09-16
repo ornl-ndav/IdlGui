@@ -32,28 +32,28 @@
 ;
 ;==============================================================================
 
-;define path to dependencies and current folder
-spawn, 'pwd', CurrentFolder
-IdlUtilitiesPath = "/utilities"
+;to retrieve the year
+FUNCTION getYear
+dateUnformated = SYSTIME()    
+DateArray      = STRSPLIT(dateUnformated,' ',/EXTRACT) 
+YEAR           = STRCOMPRESS(DateArray[4])
+RETURN, YEAR
+END
 
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-cd, CurrentFolder + IdlUtilitiesPath
-.run get_ucams.pro
-.run IDLxmlParser__define.pro
-.run logger.pro
+;------------------------------------------------------------------------------
+;logger message
+PRO logger, APPLICATION=application, VERSION=version, UCAMS=ucams
 
-;Build REFscale GUI
-cd, CurrentFolder + '/REFscaleOFFGUI/'
-.run tab_designer.pro
+logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
+logger_message += APPLICATION + '_' + VERSION + ' ' + UCAMS
+logger_message += ' ' + getYear()
 
-;Build main procedures
-cd, CurrentFolder
-;Load files (tab#1)
-.run load_files_button.pro
-.run load_files.pro
+error = 0
+CATCH, error
+IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+ENDIF ELSE BEGIN
+    spawn, logger_message
+ENDELSE
 
-.run ref_off_scale_cleanup.pro
-.run main_base_event.pro
-.run ref_scale_off.pro
-
+END

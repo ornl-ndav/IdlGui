@@ -32,28 +32,64 @@
 ;
 ;==============================================================================
 
-;define path to dependencies and current folder
-spawn, 'pwd', CurrentFolder
-IdlUtilitiesPath = "/utilities"
+;+
+; :Description:
+;    return true (1b) if the file is a batch file
+;    This is defined according to the name of the file ('BATCH' in it or not)
+;
+; :Params:
+;    file_name
+;
+; :Returns:
+;    1b if file is a Batch file
+;    0b if file is a crtof reduce file (not a reduce file)
+;
+; :Author: j35
+;-
+function isFileBatch, file_name
+  compile_opt idl2
+  u_file_name   = strupcase(file_name)
+  search_string = 'BATCH'
+  return, strmatch(u_file_name,search_string)
+end
 
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-cd, CurrentFolder + IdlUtilitiesPath
-.run get_ucams.pro
-.run IDLxmlParser__define.pro
-.run logger.pro
 
-;Build REFscale GUI
-cd, CurrentFolder + '/REFscaleOFFGUI/'
-.run tab_designer.pro
-
-;Build main procedures
-cd, CurrentFolder
-;Load files (tab#1)
-.run load_files_button.pro
-.run load_files.pro
-
-.run ref_off_scale_cleanup.pro
-.run main_base_event.pro
-.run ref_scale_off.pro
-
+;+
+; :Description:
+;   This procedure load the files and save the data in the array of pointer DATA and ERROR_DATA
+;
+; :Params:
+;    event
+;    ListFullFileName
+;
+; :Author: j35
+;-
+pro load_files, event, ListFullFileName
+  compile_opt idl2
+  
+  sz = n_elements(ListFullFileName)
+  index = 0
+  while (index lt sz) do begin
+    file_name = ListFullFileName[index]
+    file_is_batch = 0b ;by default, file is not a batch file
+    file_is_batch = isFileBatch(file_name)
+    if (file_is_batch) then begin
+      load_batch_file, event, file_name
+    endif else begin
+      load_rtof_file, event, file_name
+    endelse
+    
+    index++
+  endwhile
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+end

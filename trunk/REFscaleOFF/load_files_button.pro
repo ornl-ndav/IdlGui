@@ -32,28 +32,27 @@
 ;
 ;==============================================================================
 
-;define path to dependencies and current folder
-spawn, 'pwd', CurrentFolder
-IdlUtilitiesPath = "/utilities"
+pro load_files_button, event
 
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-cd, CurrentFolder + IdlUtilitiesPath
-.run get_ucams.pro
-.run IDLxmlParser__define.pro
-.run logger.pro
+  widget_control, event.top, get_uvalue=global
+  
+  input_path  = (*global).input_path
+  title       = 'Select Reduced or Batch files to load'
+  filter      = ['*.txt','*.dat']
+  dialog_id   = widget_info(event.top, find_by_uname='main_base')
+  
+  ListFullFileName = dialog_pickfile(PATH = input_path,$
+    GET_PATH = path,$
+    dialog_parent = dialog_id, $
+    TITLE    = title,$
+    /multiple_files,$
+    FILTER   = filter)
+    
+  if (ListFullFileName[0] ne '') then begin
+    (*global).input_path = path
+    load_files, event, ListFullFileName
+  endif
+  
+end
 
-;Build REFscale GUI
-cd, CurrentFolder + '/REFscaleOFFGUI/'
-.run tab_designer.pro
-
-;Build main procedures
-cd, CurrentFolder
-;Load files (tab#1)
-.run load_files_button.pro
-.run load_files.pro
-
-.run ref_off_scale_cleanup.pro
-.run main_base_event.pro
-.run ref_scale_off.pro
 

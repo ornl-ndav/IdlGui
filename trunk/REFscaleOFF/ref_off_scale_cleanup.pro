@@ -32,28 +32,23 @@
 ;
 ;==============================================================================
 
-;define path to dependencies and current folder
-spawn, 'pwd', CurrentFolder
-IdlUtilitiesPath = "/utilities"
+;+
+; :Description:
+;   This routine cleanup all the pointers from the main program and is
+;   reached when the application is exited.
+;
+; :Params:
+;    tlb
+;
+; :Author: j35
+;-
+pro ref_off_scale_cleanup, tlb
+  compile_opt idl2
+  
+  widget_control, tlb, get_uvalue=global, /no_copy
 
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-cd, CurrentFolder + IdlUtilitiesPath
-.run get_ucams.pro
-.run IDLxmlParser__define.pro
-.run logger.pro
-
-;Build REFscale GUI
-cd, CurrentFolder + '/REFscaleOFFGUI/'
-.run tab_designer.pro
-
-;Build main procedures
-cd, CurrentFolder
-;Load files (tab#1)
-.run load_files_button.pro
-.run load_files.pro
-
-.run ref_off_scale_cleanup.pro
-.run main_base_event.pro
-.run ref_scale_off.pro
-
+  if (n_elements(global) eq 0) then return
+  
+  ;ptr_free, global
+  
+end
