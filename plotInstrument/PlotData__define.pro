@@ -19,6 +19,36 @@ PRO PlotData::cleanup
   
 END
 
+
+;---------------------------------------------------------------------------
+
+FUNCTION recalculate, data, rebinBy, plot
+  print, "recalculating"
+  
+  IF (plot EQ "LOG") THEN BEGIN
+  
+    ;remove 0 values and replace with NAN
+    ;and calculate log
+    index = WHERE(data EQ 0, nbr)
+    IF (nbr GT 0) THEN BEGIN
+      print, 'log'
+      data[index] = !VALUES.D_NAN
+      data = ALOG10(data)
+      data = BYTSCL(data,/NAN)
+    ENDIF
+  ENDIF ELSE BEGIN
+    print, 'lin'
+    data = TOTAL(data, 1)
+    
+  ENDELSE
+  data = TRANSPOSE(data)
+  size = SIZE(data, /DIMENSIONS)
+  print, "rebinby: " + string(rebinBy)
+  data = REBIN(data, size[0]* rebinBy[0], size[1] * rebinBy[1])
+  help, data
+  RETURN, data
+END
+
 ;---------------------------------------------------------------------------
 FUNCTION getData, path, rebinBy, bank, plot, dpath_template
 
@@ -26,15 +56,15 @@ FUNCTION getData, path, rebinBy, bank, plot, dpath_template
   data = 0
   
   
-  not_hdf5_format = 0
-  CATCH, not_hdf5_format
-  IF (not_hdf5_format NE 0) THEN BEGIN
-    CATCH,/CANCEL
-    ;display message about invalid file format
-    print, "ERROR **********"
-    print, not_hdf5_format
-    RETURN, ["ERROR", not_hdf5_format, "Couldn't get data"]
-  ENDIF ELSE BEGIN
+;  not_hdf5_format = 0
+;  CATCH, not_hdf5_format
+;  IF (not_hdf5_format NE 0) THEN BEGIN
+;    CATCH,/CANCEL
+;    ;display message about invalid file format
+;    print, "ERROR **********"
+;    print, not_hdf5_format
+;    RETURN, ["ERROR", not_hdf5_format, "Couldn't get data"]
+;  ENDIF ELSE BEGIN
     print, 'opening file...'
     print, path
     fileID    = H5F_OPEN(path)
@@ -54,7 +84,7 @@ FUNCTION getData, path, rebinBy, bank, plot, dpath_template
     
     print, "closing hdf5 file"
     H5F_CLOSE, fileID
-  ENDELSE
+;  ENDELSE
   help, data
   data = recalculate(data, rebinBy, plot)
   print, "GETDATA: data received"
@@ -182,38 +212,6 @@ PRO PlotData::endElement, URI, local, strName
 ;  print, '-------------'
   
 END
-
-
-;---------------------------------------------------------------------------
-
-FUNCTION recalculate, data, rebinBy, plot
-  print, "recalculating"
-  
-  IF (plot EQ "LOG") THEN BEGIN
-  
-    ;remove 0 values and replace with NAN
-    ;and calculate log
-    index = WHERE(data EQ 0, nbr)
-    IF (nbr GT 0) THEN BEGIN
-      print, 'log'
-      data[index] = !VALUES.D_NAN
-      data = ALOG10(data)
-      data = BYTSCL(data,/NAN)
-    ENDIF
-  ENDIF ELSE BEGIN
-    print, 'lin'
-    data = TOTAL(data, 1)
-    
-  ENDELSE
-  data = TRANSPOSE(data)
-  size = SIZE(data, /DIMENSIONS)
-  print, "rebinby: " + string(rebinBy)
-  data = REBIN(data, size[0]* rebinBy[0], size[1] * rebinBy[1])
-  help, data
-  RETURN, data
-END
-
-
 
 
 ;---------------------------------------------------------------------------

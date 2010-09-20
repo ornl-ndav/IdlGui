@@ -1,7 +1,7 @@
 ;==============================================================================
 
 PRO graph, Event
-  IDLsendToGeek_addLogBookText, Event, "graph function called"
+  IDLsendToGeek_addLogBookText, Event,"Graphing..."
   WIDGET_CONTROL, /HOURGLASS
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   cmbInst = WIDGET_INFO(Event.top, FIND_BY_UNAME='cmbInst')
@@ -14,7 +14,7 @@ PRO graph, Event
   a = double(WIDGET_INFO(cmbRebin, /COMBOBOX_GETTEXT))
   rebin = [a,a]
   
-  IDLsendToGeek_addLogBookText, Event, string(rebin)
+  IDLsendToGeek_addLogBookText, Event, 'Rebin by: ' + string(rebin)
   
   file_name = $
     '/SNS/users/dfp/IdlGui/trunk/plotInstrument/InstrumentData.xml'
@@ -28,7 +28,7 @@ PRO graph, Event
   ;(*global).path = "/SNS/users/dfp/IdlGui/trunk/plotInstrument/NeXus/ARCS_3481.nxs"
   ENDIF
   
-  IDLsendToGeek_addLogBookText, Event, 'path: ' + (*global).path
+  IDLsendToGeek_addLogBookText, Event, 'analyzing file: ' + (*global).path
   
   error = 0
   IF (error NE 0) THEN BEGIN
@@ -102,7 +102,7 @@ PRO fileBrowse, Event
     (*global).path = file_name
   ENDIF
   
-  
+  IDLsendToGeek_addLogBookText, Event, 'file selected'
   IDLsendToGeek_addLogBookText, Event, 'path: ' + (*global).path
 END
 
