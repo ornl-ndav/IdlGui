@@ -85,8 +85,24 @@ pro design_tabs, MAIN_BASE, global
     /no_row_headers,$
     editable=editable_table,$
     /row_major,$
-    column_widths = [450,50],$
+    /context_events,$
+    column_widths = [650,50],$
     /all_events)
+   
+   ;context_menu
+   contextBase = widget_base(table,$
+   /context_menu,$ 
+   uname = 'context_base')
+   plot = widget_button(contextBase,$
+   value = 'Plot file...',$
+   uname = 'table_plot') 
+   preview = widget_button(contextBase,$
+   value = 'Preview file...',$
+   uname = 'table_preview') 
+   delete = widget_button(contextBase,$
+   value = 'Delete file',$
+   uname = 'table_delete',$
+   /separator) 
     
   row3 = widget_base(base1,$
     /align_right,$
@@ -110,7 +126,7 @@ pro design_tabs, MAIN_BASE, global
   value = 'Where:')
   button = widget_button(row1,$
   value = '~/results',$
-  scr_xsize = 537)
+  scr_xsize = 737)
   
   row2 = widget_base(base2,$
   /row)
@@ -118,7 +134,7 @@ pro design_tabs, MAIN_BASE, global
   value = 'Base File Name:')
   value = widget_text(row2,$
   value = 'N/A',$
-  scr_xsize = 485,$
+  scr_xsize = 685,$
   /editable)
     
     space = widget_label(base2,$
@@ -160,7 +176,7 @@ pro design_tabs, MAIN_BASE, global
   /align_center)
   create_output = widget_button(row5,$
   value = 'CREATE OUTPUT',$
-  scr_xsize = 500)  
+  scr_xsize = 700)  
     
     
     
