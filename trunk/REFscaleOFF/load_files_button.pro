@@ -38,7 +38,7 @@ pro load_files_button, event
   
   input_path  = (*global).input_path
   title       = 'Select Reduced or Batch files to load'
-  filter      = ['*.txt','*.dat']
+  filter      = ['*.rtof','*.txt']
   dialog_id   = widget_info(event.top, find_by_uname='main_base')
   
   ListFullFileName = dialog_pickfile(PATH = input_path,$
