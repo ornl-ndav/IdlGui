@@ -916,7 +916,7 @@ PRO command_line_generator_for_ref_m, event
     endif
     
     ;get name from output path and name
-    outputPath = getOutputPathFromButton(Event)
+    outputPath = (*global).dr_output_path
     ;check that user have access to that folder
     IF (FILE_TEST(outputPath,/WRITE) EQ 0) THEN BEGIN
       SPAWN, 'mkdir ' + outputPath, listening, err_listening
