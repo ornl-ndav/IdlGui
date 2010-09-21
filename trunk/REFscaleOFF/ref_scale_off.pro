@@ -71,11 +71,13 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     tmp_pData_y: ptr_new(0L),$
     tmp_pData_y_error: ptr_new(0L),$
     
-    pData_x: ptrarr(20,/allocate_heap),$
-    pData_y: ptrarr(20,/allocate_heap),$
-    pData_y_error: ptrarr(20,/allocate_heap),$
+    ;By default up to 20 files and 4 spin states
+    pData_x: ptrarr(20,4,/allocate_heap),$
+    pData_y: ptrarr(20,4,/allocate_heap),$
+    pData_y_error: ptrarr(20,4,/allocate_heap),$
     
-    files_SF_list: strarr(2,20),$ ;LOAD and SCALE table (column1:Files, column2:SF)
+    ;4:spin states, ;2:columns, 20:rows
+    files_SF_list: strarr(4,2,20),$ ;LOAD and SCALE table (column1:Files, column2:SF)
     
     input_path: '~/results/' })
     

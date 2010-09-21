@@ -63,18 +63,20 @@ end
 ;
 ; :Author: j35
 ;-
-pro add_file_to_list_of_loaded_files, event, file_name
+pro add_file_to_list_of_loaded_files, event, file_name, spin_state=spin_state
   compile_opt idl2
+  
+  if (n_elements(spin_state) eq 0) then spin_state = 0
   
   widget_control, event.top, get_uvalue=global
   
   files_SF_list = (*global).files_SF_list
-  sz = (size(files_SF_list))[1]
+  sz = (size(files_SF_list))[2]
   index = 0
   while(index lt sz) do begin
-    if (files_SF_list[0,index] eq '') then begin
-      files_SF_list[0,index] = file_name
-      files_SF_list[1,index] = 'N/A'
+    if (files_SF_list[spin_state,0,index] eq '') then begin
+      files_SF_list[spin_state,0,index] = file_name
+      files_SF_list[spin_state,1,index] = 'N/A'
       break
     endif
     index++
@@ -93,11 +95,16 @@ end
 
 ; :Author: j35
 ;-
-pro refresh_table, event
+pro refresh_table, event, spin_state=spin_state
   compile_opt idl2
   
+  if (n_elements(spin_state) eq 0) then spin_state = 0
   widget_control, event.top, get_uvalue=global
-  putValue, event, 'tab1_table', (*global).files_SF_list
+  
+  files_SF_list = (*global).files_SF_list
+  table_value = files_SF_list[spin_state,*,*]
+  table_value = reform(table_value)
+  putValue, event, 'tab1_table', table_value
   
 end
 
@@ -112,8 +119,10 @@ end
 ;
 ; :Author: j35
 ;-
-pro add_data_to_list_of_loaded_data, event
+pro add_data_to_list_of_loaded_data, event, spin_state=spin_state
   compile_opt idl2
+  
+  if (n_elements(spin_state) eq 0) then spin_state = 0
   
   widget_control, event.top, get_uvalue=global
   
@@ -131,9 +140,9 @@ pro add_data_to_list_of_loaded_data, event
   pData_y       = (*global).pData_y
   pData_y_error = (*global).pData_y_error
    
-  *pData_x[new_entry_index]       = _pData_x
-  *pData_y[new_entry_index]       = _pData_y
-  *pData_y_error[new_entry_index] = _pData_y_error
+  *pData_x[new_entry_index,spin_state]       = _pData_x
+  *pData_y[new_entry_index,spin_state]       = _pData_y
+  *pData_y_error[new_entry_index,spin_state] = _pData_y_error
 
   (*global).pData_x       = pData_x
   (*global).pData_y       = pData_y
