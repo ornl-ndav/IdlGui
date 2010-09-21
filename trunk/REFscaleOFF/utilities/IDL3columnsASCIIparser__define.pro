@@ -336,11 +336,18 @@ END
 FUNCTION IDL3columnsASCIIparser::getDataQuickly
   data  = READ_DATA(self.path, 2) ;reads full file
   nLines = FILE_LINES(self.path)
-  index = WHERE(data EQ '#N 3',nbr) ;retrieves the number of pixels to retrieve
+  
+    index = WHERE(data EQ '#N 3',nbr) ;retrieves the number of pixels to retrieve
   pARRAY = PTRARR(nbr,/ALLOCATE_HEAP)
   FOR i=1,(nbr-1) DO BEGIN
     *pARRAY[i-1] = data[index[i-1]+2:index[i]-3]  ;???? maybe 4 here
   ENDFOR
+  
+    if (nbr ge 1) then begin ;retrieve pixel number
+    split1 = strsplit(data[index[0]-1],',',/extract,/regex)
+    split2 = strsplit(split1[n_elements(split1)-1],')',/regex,/extract)
+    self.start_pixel = strcompress(split2[0],/remove_all)
+  endif
   
   ;each index of each pArray is
   ; a string of 1 row of the data
@@ -399,6 +406,11 @@ FUNCTION IDL3columnsASCIIparser::getAllTag
   RETURN, output
 END
 
+;Return the first pixel displayed
+function IDL3columnsASCIIparser::getStartPixel
+  return, self.start_pixel
+end
+
 ;------------------------------------------------------------------------------
 FUNCTION IDL3columnsASCIIparser::init, location
   ;set up the path
@@ -410,6 +422,7 @@ END
 PRO IDL3columnsASCIIparser__define
   struct = {IDL3columnsASCIIparser,$
     data: ptr_new(),$
+    start_pixel: '',$
     path: ''}
 END
 
