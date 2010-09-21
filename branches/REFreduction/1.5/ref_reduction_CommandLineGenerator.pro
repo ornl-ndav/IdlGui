@@ -630,7 +630,7 @@ setButtonValue, Event, 'overwrite_norm_instrument_geometry_button', $
 endif
 
 ;get name from output path and name
-outputPath        = getOutputPathFromButton(Event)
+outputPath = (*global).dr_output_path     
 ;check that user have access to that folder
 IF (FILE_TEST(outputPath,/WRITE) EQ 0) THEN BEGIN
   SPAWN, 'mkdir ' + outputPath, listening, err_listening
