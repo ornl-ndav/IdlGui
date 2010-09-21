@@ -53,6 +53,22 @@ function isFileBatch, file_name
   return, strmatch(u_file_name,search_string)
 end
 
+;+
+; :Description:
+;    Add the file_name to the list of files loaded only if file has not been loaded yet
+;
+; :Params:
+;    event
+;    file_name
+;
+; :Author: j35
+;-
+pro add_file_to_list_of_loaded_files, event, file_name
+  compile_opt idl2
+
+  
+
+end
 
 ;+
 ; :Description:
@@ -76,20 +92,18 @@ pro load_files, event, ListFullFileName
     if (file_is_batch) then begin
       load_batch_file, event, file_name
     endif else begin
-      load_rtof_file, event, file_name
+      result = load_rtof_file(event, file_name)
+      
+      widget_control, event.top, get_uvalue=global
+      help, (*(*global).tmp_pData_x)
+      help, (*(*global).tmp_pData_y)
+  
+      
+      
+      if (result) then add_file_to_list_of_loaded_files, event, file_name
     endelse
     
     index++
   endwhile
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+
 end

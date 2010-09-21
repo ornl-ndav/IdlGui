@@ -96,28 +96,43 @@ function load_rtof_file, event, file_name
   
   iClass = OBJ_NEW('IDL3columnsASCIIparser', file_name)
   pData = iClass->getDataQuickly()
+  start_pixel = iClass->getStartPixel()
   OBJ_DESTROY, iClass
   
   ;get commun global x-axis
   x_axis = get_commun_x_axis(pData)
-  print, x_axis
-  
-  return, 1b
-  
   
   ;keep only the second column
-  _pData_x       = FLTARR((SIZE(*pData[0]))[2])
-  _pData_y       = FLTARR(N_ELEMENTS(pData),(SIZE(*pData[0]))[2])
-  _pData_y_error = FLTARR(N_ELEMENTS(pData),(SIZE(*pData[0]))[2])
-  FOR j=0,(N_ELEMENTS(pData)-1) DO BEGIN ;retrieve y_array and error_y_array
-    _pData_x[*]         = (*pData[j])[0,*] ;retrieve x-array
-    _pData_y[j,*]       = (*pData[j])[1,*]
-    _pData_y_error[j,*] = (*pData[j])[2,*]
-  ENDFOR
+  _pData_x       = x_axis
+  _pData_y       = fltarr(n_elements(pData),n_elements(_pData_x))
+  _pData_y_error = fltarr(n_elements(pData),n_elements(_pData_x))
   
-  help, _pData_x
+  ;loop over pixels
+  for j=0,(n_elements(pData)-1) do begin ;retrieve y_array and error_y_array
+    _xarray             = (*pData[j])[0,*] ;retrieve x-array
+    sz = n_elements(_xarray)
+    if (sz ge 2) then begin
+      ;loop over yaxis values
+      for i=0,sz-1 do begin
+        _x = _xarray[i] ;retrieve local x value
+        _x_index = where(_x eq x_axis, nbr) ;find position of x value in global x_axis
+        if (nbr ne 0) then begin
+          _pData_y[j,_x_index[0]] = (*pData[j])[1,i]
+          _pData_y_error[j,_x_index[0]] = (*pData[j])[2,i]
+        endif
+      endfor
+    endif
+  ;Debug
+  ;_pData_y[j,*]       = (*pData[j])[1,*]
+  ;_pData_y_error[j,*] = (*pData[j])[2,*]
+  endfor
+  
+  (*(*global).tmp_pData_x) = _pData_x ;x_axis -> help, _pData_x => Array[61]
+  (*(*global).tmp_pData_y) = _pData_y ;y_axis -> help, -pData_y => Array[<nbr_pixel>,<nbr_x_axis_data>]
+  (*(*global).tmp_pData_y_error) = _pData_y_error
   
   return, 1b
+  
   
 ;    *final_new_pData[i]         = new_pData
 ;    *final_new_pData_y_error[i] = new_pData_y_error

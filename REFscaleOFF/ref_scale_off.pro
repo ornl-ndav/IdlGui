@@ -65,8 +65,12 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   endelse
   
   global = ptr_new({ $
+    tmp_pData_x: ptr_new(0L),$
+    tmp_pData_y: ptr_new(0L),$
+    tmp_pData_y_error: ptr_new(0L),$
+    
     input_path: '~/results/' })
-      
+   
   MainBaseSize  = [50 , 50, 600, 535]
   MainTitle   = "REFLECTOMETER OFF SPECULAR SCALING - " + VERSION
   

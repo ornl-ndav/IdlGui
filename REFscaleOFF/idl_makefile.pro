@@ -42,6 +42,7 @@ cd, CurrentFolder + IdlUtilitiesPath
 .run get_ucams.pro
 .run IDLxmlParser__define.pro
 .run logger.pro
+.run IDL3columnsASCIIparser__define.pro
 
 ;Build REFscale GUI
 cd, CurrentFolder + '/REFscaleOFFGUI/'
@@ -49,7 +50,10 @@ cd, CurrentFolder + '/REFscaleOFFGUI/'
 
 ;Build main procedures
 cd, CurrentFolder
-;Load files (tab#1)
+
+;functions (tab#1)
+.run load_rtof_file.pro
+;procedures (tab#1)
 .run load_files_button.pro
 .run load_files.pro
 
