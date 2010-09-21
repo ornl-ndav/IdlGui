@@ -65,9 +65,80 @@ end
 ;-
 pro add_file_to_list_of_loaded_files, event, file_name
   compile_opt idl2
-
   
+  widget_control, event.top, get_uvalue=global
+  
+  files_SF_list = (*global).files_SF_list
+  sz = (size(files_SF_list))[1]
+  index = 0
+  while(index lt sz) do begin
+    if (files_SF_list[0,index] eq '') then begin
+      files_SF_list[0,index] = file_name
+      files_SF_list[1,index] = 'N/A'
+      break
+    endif
+    index++
+  endwhile
+  
+  (*global).files_SF_list = files_SF_list
+  
+end
 
+;+
+; :Description:
+;    Refresh the table of the LOAD and SCALE tab (tab #1)
+;
+; :Params:
+;    event
+
+; :Author: j35
+;-
+pro refresh_table, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  putValue, event, 'tab1_table', (*global).files_SF_list
+  
+end
+
+
+;+
+; :Description:
+;    Add the tmp_pData_x, tmp_pData_y and tmp_pData_y_error
+;    to the full list of data (x, y and error)
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro add_data_to_list_of_loaded_data, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  _pData_x = (*(*global).tmp_pData_x)
+  _pData_y = (*(*global).tmp_pData_y)
+  _pData_y_error = (*(*global).tmp_pData_y_error)
+  
+  ;find first empty entry using the table data
+  files_SF_list = (*global).files_SF_list
+  file_names = files_SF_list[0,*]
+  empty_index = where(file_names eq '',nbr)
+  if (nbr ne -1) then new_entry_index = empty_index[0] ;where to put the new data
+  
+  pData_x       = (*global).pData_x
+  pData_y       = (*global).pData_y
+  pData_y_error = (*global).pData_y_error
+   
+  *pData_x[new_entry_index]       = _pData_x
+  *pData_y[new_entry_index]       = _pData_y
+  *pData_y_error[new_entry_index] = _pData_y_error
+
+  (*global).pData_x       = pData_x
+  (*global).pData_y       = pData_y
+  (*global).pData_y_error = pData_y_error
+  
 end
 
 ;+
@@ -89,21 +160,23 @@ pro load_files, event, ListFullFileName
     file_name = ListFullFileName[index]
     file_is_batch = 0b ;by default, file is not a batch file
     file_is_batch = isFileBatch(file_name)
-    if (file_is_batch) then begin
+    if (file_is_batch) then begin ;batch file
       load_batch_file, event, file_name
-    endif else begin
+    endif else begin ;rtof file
       result = load_rtof_file(event, file_name)
-      
       widget_control, event.top, get_uvalue=global
-      help, (*(*global).tmp_pData_x)
-      help, (*(*global).tmp_pData_y)
-  
+      ;      help, (*(*global).tmp_pData_x)
+      ;      help, (*(*global).tmp_pData_y)
+      add_data_to_list_of_loaded_data, event
       
       
-      if (result) then add_file_to_list_of_loaded_files, event, file_name
+      if (result) then begin
+        add_file_to_list_of_loaded_files, event, file_name
+        refresh_table, event
+      endif
     endelse
     
     index++
   endwhile
-
+  
 end

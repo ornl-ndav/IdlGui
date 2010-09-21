@@ -49,6 +49,9 @@ pro ref_off_scale_cleanup, tlb
 
   if (n_elements(global) eq 0) then return
   
-  ;ptr_free, global
+  ptr_free, (*global).tmp_pData_x
+  ptr_free, (*global).tmp_pData_y
+  ptr_free, (*global).tmp_pData_y_error
+  ptr_free, global
   
 end

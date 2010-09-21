@@ -90,10 +90,6 @@ function load_rtof_file, event, file_name
   
   widget_control, event.top, get_uvalue=global
   
-  ;  final_new_pData         = PTRARR(nbr,/ALLOCATE_HEAP)
-  ;  final_new_pData_y_error = PTRARR(nbr,/ALLOCATE_HEAP)
-  ;  final_new_pData_x       = PTRARR(nbr,/ALLOCATE_HEAP)
-  
   iClass = OBJ_NEW('IDL3columnsASCIIparser', file_name)
   pData = iClass->getDataQuickly()
   start_pixel = iClass->getStartPixel()
@@ -132,17 +128,6 @@ function load_rtof_file, event, file_name
   (*(*global).tmp_pData_y_error) = _pData_y_error
   
   return, 1b
-  
-  
-;    *final_new_pData[i]         = new_pData
-;    *final_new_pData_y_error[i] = new_pData_y_error
-;    *final_new_pData_x[i]       = new_pData_x
-;    ++i
-  
-;  (*(*global).pData_y)         = final_new_pData
-;  (*(*global).pData_y_error)   = final_new_pData_y_error
-;  (*(*global).pData_x)         = final_new_pData_x
-;  (*global).plot_realign_data = 0
-  
+      
 END
 
