@@ -65,12 +65,20 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   endelse
   
   global = ptr_new({ $
+  
+    ;used to bring back data from load_crtof_file procedure to load_files
     tmp_pData_x: ptr_new(0L),$
     tmp_pData_y: ptr_new(0L),$
     tmp_pData_y_error: ptr_new(0L),$
     
+    pData_x: ptrarr(20,/allocate_heap),$
+    pData_y: ptrarr(20,/allocate_heap),$
+    pData_y_error: ptrarr(20,/allocate_heap),$
+    
+    files_SF_list: strarr(2,20),$ ;LOAD and SCALE table (column1:Files, column2:SF)
+    
     input_path: '~/results/' })
-   
+    
   MainBaseSize  = [50 , 50, 600, 535]
   MainTitle   = "REFLECTOMETER OFF SPECULAR SCALING - " + VERSION
   
@@ -80,19 +88,19 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     XOFFSET      = MainBaseSize[0],$
     YOFFSET      = MainBaseSize[1],$
     SCR_XSIZE    = MainBaseSize[2], $
-    SCR_YSIZE    = MainBaseSize[3], $                    
+    SCR_YSIZE    = MainBaseSize[3], $
     TITLE        = MainTitle)
-  
+    
   design_tabs, MAIN_BASE, global
   
   ;Realize the widgets, set the user value of the top-level
   ;base, and call XMANAGER to manage everything.
   WIDGET_CONTROL, main_base, /REALIZE
-  WIDGET_CONTROL, main_base, SET_UVALUE=global    
+  WIDGET_CONTROL, main_base, SET_UVALUE=global
   XMANAGER, 'main_base', main_base, /NO_BLOCK, $
     cleanup = 'ref_off_scale_cleanup'
     
-  ;------------------------------------------------------------------------------      
+  ;------------------------------------------------------------------------------
   ;- BATCH MODE ONLY ------------------------------------------------------------
   ;Show BATCH Tab if Batch Mode is used
   IF (BatchMode NE '') THEN BEGIN
