@@ -71,7 +71,8 @@ pro add_file_to_list_of_loaded_files, event, file_name, spin_state=spin_state
   widget_control, event.top, get_uvalue=global
   
   files_SF_list = (*global).files_SF_list
-  sz = (size(files_SF_list))[2]
+  sz = (size(files_SF_list))[3]
+  
   index = 0
   while(index lt sz) do begin
     if (files_SF_list[spin_state,0,index] eq '') then begin
@@ -81,7 +82,7 @@ pro add_file_to_list_of_loaded_files, event, file_name, spin_state=spin_state
     endif
     index++
   endwhile
-  
+
   (*global).files_SF_list = files_SF_list
   
 end
@@ -177,8 +178,6 @@ pro load_files, event, ListFullFileName
       ;      help, (*(*global).tmp_pData_x)
       ;      help, (*(*global).tmp_pData_y)
       add_data_to_list_of_loaded_data, event
-      
-      
       if (result) then begin
         add_file_to_list_of_loaded_files, event, file_name
         refresh_table, event
