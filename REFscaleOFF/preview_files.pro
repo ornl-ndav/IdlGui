@@ -45,14 +45,18 @@ pro preview_files, event, from_line, to_line, spin_state=spin_state
   
   index = from_line
   delta_offset = 20
+  index_offset = 0
   while (index le to_line) do begin
   
     file_name = files_SF_list[spin_state,0,index]
+    if (file_test(file_name)) then begin
     xdisplayfile, file_name, $
       title=file_name, $
       group=id,$
       /center,$
-      offset=index*delta_offset
+      offset=index_offset*delta_offset
+      index_offset++
+      endif
       
     index++
   endwhile
