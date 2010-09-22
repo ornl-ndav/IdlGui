@@ -34,6 +34,89 @@
 
 ;+
 ; :Description:
+;    Remove all the blank lines of the given spin state index (0, 1, 2 or 3)
+;
+; :Params:
+;    files_SF_list
+;    nbr_spins
+;    nbr_column
+;    nbr_row
+;
+; :Keywords:
+;    spin_index
+;
+; :Author: j35
+;-
+pro remove_empty_lines_of_this_spin, spin_index=i, files_SF_list, nbr_spins, nbr_column, nbr_row
+  compile_opt idl2
+  
+  _line_index = 0
+  _tmp_spin_table =strarr(nbr_spins, nbr_column, nbr_row)
+  _no_empty = where(files_SF_list[i,0,*] ne '', nbr)
+  _empty = where(files_SF_list[i,0,*] eq '', nbr_empty)
+  
+  if (nbr ge 1) then begin
+    if (nbr_empty ne -1) then begin ;check if the first empty is outside the last not empty
+      if (_empty[0] gt _no_empty[n_elements(_no_empty)-1]) then return
+    endif
+    left_index = indgen(nbr)
+    help, left_index
+    help, _no_empty
+    _tmp_spin_table[i,*,left_index] = files_SF_list[i,*,_no_empty]
+    files_SF_list[i,*,*] = _tmp_spin_table[i,*,*]
+  endif
+  
+end
+
+;+
+; :Description:
+;    Go through all the lines of the table (tab1) and remove
+;    the empty lines
+;
+; :Params:
+;    event
+;    spin_state: -1 = all spin states
+;                 0 = first spin state (Off_Off) or when there is no spin states
+;                 1 = second spin state (Off_On)
+;                 2 = third spin state (On_Off)
+;                 3 = fourth spin state (On_On)
+;
+; :Author: j35
+;-
+pro remove_empty_lines, event, spin_state=spin_state
+  compile_opt idl2
+  
+  if (n_elements(spin_state) eq 0) then spin_state=0
+  
+  widget_control, event.top, get_uvalue=global
+  
+  files_SF_list = (*global).files_SF_list
+  
+  nbr_row = (size(files_SF_list))[3]
+  nbr_spins = (size(files_SF_list))[1]
+  nbr_column = (size(files_SF_list))[2]
+  
+  case (spin_state) of
+    -1 : begin
+      i=0
+      while (i lt nbr_spins) do begin
+        remove_empty_lines_of_this_spin, spin_index=i, files_SF_list, nbr_spins, nbr_column, nbr_row
+        i++
+      endwhile
+    end
+    0 : remove_empty_lines_of_this_spin, spin_index=0, files_SF_list, nbr_spins, nbr_column, nbr_row
+    1 : remove_empty_lines_of_this_spin, spin_index=1, files_SF_list, nbr_spins, nbr_column, nbr_row
+    2 : remove_empty_lines_of_this_spin, spin_index=2, files_SF_list, nbr_spins, nbr_column, nbr_row
+    3 : remove_empty_lines_of_this_spin, spin_index=3, files_SF_list, nbr_spins, nbr_column, nbr_row
+    else:
+  endcase
+  
+  (*global).files_SF_list  = files_SF_list
+  
+end
+
+;+
+; :Description:
 ;    remove all the entries from a given row_number
 ;       -> Files entry (big table)
 ;       -> data arrays

@@ -1,4 +1,4 @@
-;==============================================================================
+;===============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,39 +30,31 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;==============================================================================
+;===============================================================================
 
-;define path to dependencies and current folder
-spawn, 'pwd', CurrentFolder
-IdlUtilitiesPath = "/utilities"
-
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-cd, CurrentFolder + IdlUtilitiesPath
-.run put.pro
-.run get.pro
-.run get_ucams.pro
-.run IDLxmlParser__define.pro
-.run logger.pro
-.run IDL3columnsASCIIparser__define.pro
-.run xdisplayfile.pro
-
-;Build REFscale GUI
-cd, CurrentFolder + '/REFscaleOFFGUI/'
-.run tab_designer.pro
-
-;Build main procedures
-cd, CurrentFolder
-
-;functions (tab#1)
-.run load_rtof_file.pro
-;procedures (tab#1)
-.run load_files_button.pro
-.run load_files.pro
-.run delete_data_set.pro
-.run preview_files.pro
-
-.run ref_off_scale_cleanup.pro
-.run main_base_event.pro
-.run ref_scale_off.pro
-
+pro preview_files, event, from_line, to_line, spin_state=spin_state
+  compile_opt idl2
+  
+  if (n_elements(spin_state) eq 0) then spin_state = 0
+  
+  widget_control, event.top, get_uvalue=global
+  
+  files_SF_list = (*global).files_SF_list
+  
+  id = widget_info(event.top, find_by_uname='main_base')
+  
+  index = from_line
+  delta_offset = 20
+  while (index le to_line) do begin
+  
+    file_name = files_SF_list[spin_state,0,index]
+    xdisplayfile, file_name, $
+      title=file_name, $
+      group=id,$
+      /center,$
+      offset=index*delta_offset
+      
+    index++
+  endwhile
+  
+end
