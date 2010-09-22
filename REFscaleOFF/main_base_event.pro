@@ -53,6 +53,12 @@ PRO main_base_event, Event
       ;        ENDIF
       endif
     end
+
+    ;right click in table -> preview of file(s) selected
+    widget_info(wWidget, find_by_uname='table_preview'): begin
+      selection = get_table_lines_selected(event)
+      preview_files, event, selection[1], selection[3]
+    end
     
     ;right click in table -> delete selected entries.
     widget_info(wWidget, find_by_uname='table_delete'): begin
@@ -60,7 +66,6 @@ PRO main_base_event, Event
       delete_entry, event, selection[1], selection[3]
       refresh_table, event
     end
-    
     
     else:
   endcase
