@@ -1,4 +1,4 @@
-;==============================================================================
+;===============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,40 +30,38 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;==============================================================================
-
-function get_table_lines_selected, event
-  id = widget_info(event.top, find_by_uname='tab1_table')
-  selection = widget_info(id, /table_select)
-  return, selection
-end
+;===============================================================================
 
 ;+
 ; :Description:
-;    returns the number of files loaded
+;   retrieve the various file selected and plot in a separete window the rtof
+;   files
+;   x axis is tof
+;   y axis is pixel
 ;
 ; :Params:
 ;    event
-;
-;  :Returns:
-;    nbr_files
+;    from_line
+;    to_line
+;    spin_state: -1 = all spin states
+;                 0 = first spin state (Off_Off) or when there is no spin states
+;                 1 = second spin state (Off_On)
+;                 2 = third spin state (On_Off)
+;                 3 = fourth spin state (On_On)
 ;
 ; :Author: j35
 ;-
-function get_number_of_files_loaded, event
+pro plot_rtof_file, event, from_line, to_line, spin_state=spin_state
   compile_opt idl2
+  
+  if (n_elements(spin_state) eq 0) then spin_state=0
   
   widget_control, event.top, get_uvalue=global
   
-  ;find first empty entry using the table data
   files_SF_list = (*global).files_SF_list
-  file_names = files_SF_list[0,*]
-  empty_index = where(file_names eq '',nbr)
-  if (nbr eq -1) then begin
-    nbr_files = (size(file_SF_list))[3]
-  endif else begin
-    nbr_files = empty_index[0]
-  endelse
   
-  return, nbr_files
+    
+  
+  
+  
 end
