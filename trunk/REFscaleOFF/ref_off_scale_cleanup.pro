@@ -52,6 +52,19 @@ pro ref_off_scale_cleanup, tlb
   ptr_free, (*global).tmp_pData_x
   ptr_free, (*global).tmp_pData_y
   ptr_free, (*global).tmp_pData_y_error
+  
+  ptr_free, (*global).pData_x
+  ptr_free, (*global).pData_y
+  ptr_free, (*global).pData_y_error
+  
+  ptr_free, (*global).pData_x_2d
+  ptr_free, (*global).pData_y_2d
+  ptr_free, (*global).pData_y_error_2d
+  
+  ptr_free, (*global).pDataPlot_x
+  ptr_free, (*global).pDataPlot_y
+  ptr_free, (*global).pDataPlot_y_error
+  
   ptr_free, global
   
 end

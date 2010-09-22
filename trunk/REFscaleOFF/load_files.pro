@@ -113,47 +113,6 @@ end
 
 ;+
 ; :Description:
-;    Add the tmp_pData_x, tmp_pData_y and tmp_pData_y_error
-;    to the full list of data (x, y and error)
-;
-; :Params:
-;    event
-;
-; :Author: j35
-;-
-pro add_data_to_list_of_loaded_data, event, spin_state=spin_state
-  compile_opt idl2
-  
-  if (n_elements(spin_state) eq 0) then spin_state = 0
-  
-  widget_control, event.top, get_uvalue=global
-  
-  _pData_x = (*(*global).tmp_pData_x)
-  _pData_y = (*(*global).tmp_pData_y)
-  _pData_y_error = (*(*global).tmp_pData_y_error)
-  
-  ;find first empty entry using the table data
-  files_SF_list = (*global).files_SF_list
-  file_names = files_SF_list[0,*]
-  empty_index = where(file_names eq '',nbr)
-  if (nbr ne -1) then new_entry_index = empty_index[0] ;where to put the new data
-  
-  pData_x       = (*global).pData_x
-  pData_y       = (*global).pData_y
-  pData_y_error = (*global).pData_y_error
-  
-  *pData_x[new_entry_index,spin_state]       = _pData_x
-  *pData_y[new_entry_index,spin_state]       = _pData_y
-  *pData_y_error[new_entry_index,spin_state] = _pData_y_error
-  
-  (*global).pData_x       = pData_x
-  (*global).pData_y       = pData_y
-  (*global).pData_y_error = pData_y_error
-  
-end
-
-;+
-; :Description:
 ;   This procedure load the files and save the data in the array of pointer DATA and ERROR_DATA
 ;
 ; :Params:
@@ -178,7 +137,6 @@ pro load_files, event, ListFullFileName
       widget_control, event.top, get_uvalue=global
       ;      help, (*(*global).tmp_pData_x)
       ;      help, (*(*global).tmp_pData_y)
-      add_data_to_list_of_loaded_data, event
       if (result) then begin
         add_file_to_list_of_loaded_files, event, file_name
         refresh_table, event

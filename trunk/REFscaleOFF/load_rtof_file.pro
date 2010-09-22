@@ -71,6 +71,126 @@ function get_commun_x_axis, pData
   return, global_x_axis[1:n_elements(global_x_axis)-1]
 end
 
+;+
+; :Description:
+;    this calculate the common x-axis of all the pixel
+;    of a same data set
+;
+; :Params:
+;    event
+;    nbr_files -> the number of files loaded
+;
+; :Author: j35
+;-
+pro create_x_axis_data_sets, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  _pData_x = (*(*global).tmp_pData_x) ;x_axis -> help, _pData_x => Array[61]
+  
+  ;retrieve minimum increment
+  sz = n_elements(_pData_x)
+  case (sz) of
+    0: increment = 0
+    1: increment = 0
+    2: increment = _pData_x[1]-_pData_x[0]
+    else: begin
+      increment = _pData_x[1]-_pData_x[0]
+      index = 2
+      while(index lt sz) do begin
+        tmp_increment = _pData_x[index]-_pData_x[index-1]
+        if (tmp_increment lt increment) then increment = tmp_increment
+        index++
+      endwhile
+    end
+  endcase
+  
+  if (increment eq 0) then begin
+    _pData_x_2d = !NULL
+  endif else begin
+    new_sz = (_pData_x[sz-1] - _pData_x[0]) / increment
+    _pData_x_2d = indgen(new_sz+1) * increment + _pData_x[0]
+  endelse
+  
+  help, _pData_x_2d
+  print, _pData_x_2d
+  print, '_____________________'
+  
+end
+
+;+
+; :Description:
+;    this will create the 2d of each data sets loaded to
+;    be used directly by tv for right-click-> plot of data
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro create_2d_data_sets, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  create_x_axis_data_sets, event
+  
+  _pData_x = (*(*global).tmp_pData_x) ;x_axis -> help, _pData_x => Array[61]
+  _pData_y = (*(*global).tmp_pData_y) ;y_axis -> help, -pData_y => Array[<nbr_pixel>,<nbr_x_axis_data>]
+  _pData_y_error = (*(*global).tmp_pData_y_error)
+  
+end
+
+;+
+; :Description:
+;    Add the tmp_pData_x, tmp_pData_y and tmp_pData_y_error
+;    to the full list of data (x, y and error)
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro add_data_to_list_of_loaded_data, event, spin_state=spin_state
+  compile_opt idl2
+  
+  if (n_elements(spin_state) eq 0) then spin_state = 0
+  
+  widget_control, event.top, get_uvalue=global
+  
+  _pData_x = (*(*global).tmp_pData_x)
+  _pData_y = (*(*global).tmp_pData_y)
+  _pData_y_error = (*(*global).tmp_pData_y_error)
+  
+  ;find first empty entry using the table data
+  files_SF_list = (*global).files_SF_list
+  file_names = files_SF_list[0,*]
+  empty_index = where(file_names eq '',nbr)
+  if (nbr ne -1) then new_entry_index = empty_index[0] ;where to put the new data
+  
+  pData_x       = (*global).pData_x
+  pData_y       = (*global).pData_y
+  pData_y_error = (*global).pData_y_error
+  
+  *pData_x[new_entry_index,spin_state]       = _pData_x
+  *pData_y[new_entry_index,spin_state]       = _pData_y
+  *pData_y_error[new_entry_index,spin_state] = _pData_y_error
+  
+  (*global).pData_x       = pData_x
+  (*global).pData_y       = pData_y
+  (*global).pData_y_error = pData_y_error
+  
+  create_2d_data_sets, event
+  
+  ;*pData_x_2d[new_entry_index,spin_state]       = (*(*global).tmp_pData_x_2d)
+  ;*pData_y_2d[new_entry_index,spin_state]       = (*(*global).pData_y_2d)
+  ;*pData_y_error_2d[new_entry_index,spin_state] = (*(*global).pData_y_error_2d)
+  
+  ;(*global).pData_x_2d       = pData_x_2d
+  ;(*global).pData_y_2d       = pData_y_2d
+  ;(*global).pData_y_error_2d = pData_y_error_2d
+  
+end
 
 ;+
 ; :Description:
@@ -127,7 +247,9 @@ function load_rtof_file, event, file_name
   (*(*global).tmp_pData_y) = _pData_y ;y_axis -> help, -pData_y => Array[<nbr_pixel>,<nbr_x_axis_data>]
   (*(*global).tmp_pData_y_error) = _pData_y_error
   
+  add_data_to_list_of_loaded_data, event
+  
   return, 1b
-      
+  
 END
 
