@@ -32,35 +32,34 @@
 ;
 ;==============================================================================
 
-;define path to dependencies and current folder
-spawn, 'pwd', CurrentFolder
-IdlUtilitiesPath = "/utilities"
-
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-cd, CurrentFolder + IdlUtilitiesPath
-.run put.pro
-.run get.pro
-.run get_ucams.pro
-.run IDLxmlParser__define.pro
-.run logger.pro
-.run IDL3columnsASCIIparser__define.pro
-
-;Build REFscale GUI
-cd, CurrentFolder + '/REFscaleOFFGUI/'
-.run tab_designer.pro
-
-;Build main procedures
-cd, CurrentFolder
-
-;functions (tab#1)
-.run load_rtof_file.pro
-;procedures (tab#1)
-.run load_files_button.pro
-.run load_files.pro
-.run delete_data_set.pro
-
-.run ref_off_scale_cleanup.pro
-.run main_base_event.pro
-.run ref_scale_off.pro
-
+;+
+; :Description:
+;    remove all the entries from a given row_number
+;       -> Files entry (big table)
+;       -> data arrays
+;
+; :Params:
+;    event
+;    from_row
+;    to_row
+;
+; :Author: j35
+;-
+pro delete_entry, event, from_row, to_row, spin_state=spin_state
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  if (n_elements(spin_state) eq 0) then spin_state = 0
+  
+  files_SF_list = (*global).files_SF_list
+  
+  index = from_row
+  while (index le to_row) do begin
+    files_SF_list[spin_state,*,index] = ''
+    index++
+  endwhile
+  
+  (*global).files_SF_list = files_SF_list
+  
+end

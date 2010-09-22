@@ -37,11 +37,30 @@ PRO main_base_event, Event
   ;get global structure
   wWidget =  Event.top          ;widget id
   widget_control, wWidget, get_uvalue=global
-
+  
   case (Event.id) of
   
     widget_info(wWidget, find_by_uname='main_base'): BEGIN
     end
+    
+    ;interaction with table of tab1 (LOAD and SCALE)
+    widget_info(wWidget, find_by_uname='tab1_table'): begin
+      IF (tag_names(event, /structure_name) EQ 'WIDGET_CONTEXT') THEN BEGIN
+        ;        IF (tab1_table_not_empty(Event) EQ 1b AND $
+        ;          at_last_one_not_empty_selected_cell(Event) EQ 1b) THEN BEGIN
+        id = widget_info(event.top, find_by_uname='context_base')
+        widget_displaycontextmenu, event.id, event.X, event.Y, id
+      ;        ENDIF
+      endif
+    end
+    
+    ;right click in table -> delete selected entries.
+    widget_info(wWidget, find_by_uname='table_delete'): begin
+      selection = get_table_lines_selected(event)
+      delete_entry, event, selection[1], selection[3]
+      refresh_table, event
+    end
+    
     
     else:
   endcase
