@@ -41,16 +41,42 @@
 ;
 ; :Author: j35
 ;-
-pro settings_base_event, Event
+pro px_vs_tof_plots_base_event, Event
   compile_opt idl2
   
   ;get global structure
-  widget_control,event.top,get_uvalue=global_settings
-  global = (*global_settings).global
-  main_event = (*global_settings).main_event
+  widget_control,event.top,get_uvalue=global_plot
+  global = (*global_plot).global
+  main_event = (*global_plot).main_event
   
   case Event.id of
   
+    widget_info(event.top, find_by_uname='px_vs_tof_widget_base'): begin
+    
+      id = widget_info(event.top, find_by_uname='px_vs_tof_widget_base')
+      ;widget_control, id, /realize
+      geometry = widget_info(id,/geometry)
+      new_xsize = geometry.scr_xsize
+      new_ysize = geometry.scr_ysize
+      
+      widget_control, id, xsize = new_xsize
+      widget_control, id, ysize = new_ysize
+      
+      id = widget_info(event.top, find_by_uname='draw')
+      widget_control, id, draw_xsize = new_xsize
+      widget_control, id, draw_ysize = new_ysize
+      
+      Data = (*(*global_plot).data)
+      cData = congrid(Data, new_ysize, new_xsize,/interp)
+      
+      widget_control, id, GET_VALUE = plot_id
+      wset, plot_id
+      erase
+      
+      tvscl, transpose(cData)
+      
+    end
+    
     widget_info(event.top, $
       find_by_uname='settings_base_close_button'): begin
       
@@ -105,10 +131,10 @@ end
 ; :Author: j35
 ;-
 PRO px_vs_tof_plots_base_gui, wBase, $
-main_base_geometry, $
-global, $
-file_name, $
-offset
+    main_base_geometry, $
+    global, $
+    file_name, $
+    offset
   compile_opt idl2
   
   main_base_xoffset = main_base_geometry.xoffset
@@ -141,6 +167,7 @@ offset
     /BASE_ALIGN_CENTER,$
     /align_center,$
     /column,$
+    /tlb_size_events,$
     GROUP_LEADER = ourGroup)
     
   draw = widget_draw(wBase,$
@@ -192,26 +219,27 @@ PRO px_vs_tof_plots_base, main_base=main_base, $
   WIDGET_CONTROL, wBase, /REALIZE
   
   default_plot_size = (*global).default_plot_size
-  global_settings = PTR_NEW({ wbase: wbase,$
+  global_plot = PTR_NEW({ wbase: wbase,$
     global: global, $
+    data: ptr_new(0L), $
     xsize: default_plot_size[0],$
     ysize: default_plot_size[1],$
     main_event: event})
     
-  WIDGET_CONTROL, wBase, SET_UVALUE = global_settings
+  WIDGET_CONTROL, wBase, SET_UVALUE = global_plot
   
   XMANAGER, "px_vs_tof_plots_base", wBase, GROUP_LEADER = ourGroup, /NO_BLOCK
   
   ;retrieve the data to plot
   pData_y = (*global).pData_y
-  
   Data = *pData_y[file_index, spin_state]
+  (*(*global_plot).data) = Data
   
   cData = congrid(Data, default_plot_size[0], default_plot_size[1])
   
-        DEVICE, DECOMPOSED = 0
-      loadct, 5, /SILENT
-    
+  DEVICE, DECOMPOSED = 0
+  loadct, 5, /SILENT
+  
   id = widget_info(wBase,find_by_uname='draw')
   widget_control, id, GET_VALUE = plot_id
   wset, plot_id
