@@ -113,9 +113,7 @@ pro create_x_axis_data_sets, event
     _pData_x_2d = indgen(new_sz+1) * increment + _pData_x[0]
   endelse
   
-  help, _pData_x_2d
-  print, _pData_x_2d
-  print, '_____________________'
+  (*(*global).tmp_pData_x_2d) = _pData_x_2d
   
 end
 
@@ -134,6 +132,13 @@ pro create_2d_data_sets, event
   
   widget_control, event.top, get_uvalue=global
   create_x_axis_data_sets, event
+  _pData_x_2d = (*(*global).tmp_pData_x_2d)
+  
+
+
+
+
+  
   
   _pData_x = (*(*global).tmp_pData_x) ;x_axis -> help, _pData_x => Array[61]
   _pData_y = (*(*global).tmp_pData_y) ;y_axis -> help, -pData_y => Array[<nbr_pixel>,<nbr_x_axis_data>]
