@@ -80,18 +80,20 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     pData_y: ptrarr(20,4,/allocate_heap),$
     pData_y_error: ptrarr(20,4,/allocate_heap),$
     
-    ;2d data of loaded files (common x-axis for all pixels of a same data set)
-    pData_x_2d: ptrarr(20,4,/allocate_heap),$
-    pData_y_2d: ptrarr(20,4,/allocate_heap),$
-    pData_y_error_2d: ptrarr(20,4,/allocate_heap),$
+   ; ;2d data of loaded files (common x-axis for all pixels of a same data set)
+   ; pData_x_2d: ptrarr(20,4,/allocate_heap),$
+   ; pData_y_2d: ptrarr(20,4,/allocate_heap),$
+   ; pData_y_error_2d: ptrarr(20,4,/allocate_heap),$
 
-    pDataPlot_x: ptrarr(20,4,/allocate_heap),$
-    pDataPlot_y: ptrarr(20,4,/allocate_heap),$
-    pDataPlot_y_error: ptrarr(20,4,/allocate_heap),$
+   ; pDataPlot_x: ptrarr(20,4,/allocate_heap),$
+   ; pDataPlot_y: ptrarr(20,4,/allocate_heap),$
+   ; pDataPlot_y_error: ptrarr(20,4,/allocate_heap),$
     
     ;4:spin states, ;3:columns, 20:rows
     files_SF_list: strarr(4,3,20),$ ;LOAD and SCALE table (spins,columns,rows)
     tmp_start_pixel: '',$
+    
+    default_plot_size: [600,600],$
     
     input_path: '~/results/' })
     

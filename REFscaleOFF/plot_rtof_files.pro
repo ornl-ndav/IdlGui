@@ -51,7 +51,7 @@
 ;
 ; :Author: j35
 ;-
-pro plot_rtof_file, event, from_line, to_line, spin_state=spin_state
+pro plot_rtof_files, event, from_line, to_line, spin_state=spin_state
   compile_opt idl2
   
   if (n_elements(spin_state) eq 0) then spin_state=0
@@ -60,8 +60,20 @@ pro plot_rtof_file, event, from_line, to_line, spin_state=spin_state
   
   files_SF_list = (*global).files_SF_list
   
+  index = from_line
+  delta_offset = 20
+  index_offset = 0
+  while (index le to_line) do begin
+  
+    file_name = files_SF_list[spin_state,0,index]
+    if (file_test(file_name)) then begin
+      px_vs_tof_plots_base, event = event, $
+        file_name = file_name, $
+        file_index = index, $
+        offset = delta_offset * index 
+    endif
     
-  
-  
+    index++
+  endwhile
   
 end

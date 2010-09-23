@@ -183,7 +183,7 @@ pro add_data_to_list_of_loaded_data, event, spin_state=spin_state
   
   ;find first empty entry using the table data
   files_SF_list = (*global).files_SF_list
-  file_names = files_SF_list[0,*]
+  file_names = files_SF_list[spin_state,0,*]
   empty_index = where(file_names eq '',nbr)
   if (nbr ne -1) then new_entry_index = empty_index[0] ;where to put the new data
   
@@ -198,6 +198,7 @@ pro add_data_to_list_of_loaded_data, event, spin_state=spin_state
   (*global).pData_x       = pData_x
   (*global).pData_y       = pData_y
   (*global).pData_y_error = pData_y_error
+
 
   ;!!!INFO!!!!
   ; use transpose *(pData_y[0,0]) to plot spin_state:0 or Off_Off
