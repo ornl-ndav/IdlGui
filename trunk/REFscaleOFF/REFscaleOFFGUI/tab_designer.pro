@@ -79,14 +79,14 @@ pro design_tabs, MAIN_BASE, global
   
   table = widget_table(row2,$
     uname = 'tab1_table',$
-    xsize = 2,$
+    xsize = 3,$
     ysize = 20,$
-    column_labels = ['Files','SF'],$
+    column_labels = ['Files','SF','1st Px'],$
     /no_row_headers,$
     editable=editable_table,$
     /row_major,$
     /context_events,$
-    column_widths = [650,50],$
+    column_widths = [690,80,50],$
     /all_events)
    
    ;context_menu

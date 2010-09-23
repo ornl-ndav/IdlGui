@@ -78,6 +78,7 @@ pro add_file_to_list_of_loaded_files, event, file_name, spin_state=spin_state
     if (files_SF_list[spin_state,0,index] eq '') then begin
       files_SF_list[spin_state,0,index] = file_name
       files_SF_list[spin_state,1,index] = 'N/A'
+      files_SF_list[spin_state,2,index] = (*global).tmp_start_pixel
       break
     endif
     index++
