@@ -56,6 +56,7 @@ PRO main_base_event, Event
 
     ;right click in table -> plot of file(s) selected
     widget_info(wWidget, find_by_uname='table_plot'): begin
+      selection = get_table_lines_selected(event)
     plot_rtof_files, event, selection[1], selection[3]
     end
 

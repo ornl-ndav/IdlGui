@@ -34,7 +34,7 @@
 
 ;+
 ; :Description:
-;   main base event    
+;   main base event
 ;
 ; :Params:
 ;   Event
@@ -43,7 +43,7 @@
 ;-
 pro settings_base_event, Event
   compile_opt idl2
-
+  
   ;get global structure
   widget_control,event.top,get_uvalue=global_settings
   global = (*global_settings).global
@@ -53,7 +53,7 @@ pro settings_base_event, Event
   
     widget_info(event.top, $
       find_by_uname='settings_base_close_button'): begin
-
+      
       ;this will allow the settings tab to come back in the same state
       save_status_of_settings_button, event
       
@@ -77,7 +77,7 @@ end
 ;
 ; :Author: j35
 ;-
-pro ps_vs_tof_widget_killed, id
+pro px_vs_tof_widget_killed, id
   compile_opt idl2
   
   ;get global structure
@@ -86,16 +86,16 @@ pro ps_vs_tof_widget_killed, id
   main_event = (*global_settings).main_event
   
   id = widget_info(id, $
-    find_by_uname='settings_widget_base')
+    find_by_uname='px_vs_tof_widget_base')
   widget_control, id, /destroy
-  ;ActivateWidget, main_Event, 'open_settings_base', 1
+;ActivateWidget, main_Event, 'open_settings_base', 1
   
 end
 
 
 ;+
 ; :Description:
-;   create the base    
+;   create the base
 ;
 ; :Params:
 ;    wBase
@@ -104,44 +104,56 @@ end
 ;
 ; :Author: j35
 ;-
-PRO px_vs_tof_plots_base_gui, wBase, main_base_geometry, global
+PRO px_vs_tof_plots_base_gui, wBase, $
+main_base_geometry, $
+global, $
+file_name, $
+offset
   compile_opt idl2
-
+  
   main_base_xoffset = main_base_geometry.xoffset
   main_base_yoffset = main_base_geometry.yoffset
   main_base_xsize = main_base_geometry.xsize
   main_base_ysize = main_base_geometry.ysize
   
-  xsize = 350
-  ysize = 195
+  xsize = 600
+  ysize = 600
   
   xoffset = (main_base_xsize - xsize) / 2
   xoffset += main_base_xoffset
+  xoffset += offset
   
   yoffset = (main_base_ysize - ysize) / 2
   yoffset += main_base_yoffset
+  yoffset += offset
   
   ourGroup = WIDGET_BASE()
   
-  wBase = WIDGET_BASE(TITLE = 'Pixel vs TOF', $
+  title = 'Pixel vs TOF of ' + file_name
+  wBase = WIDGET_BASE(TITLE = title, $
     UNAME        = 'px_vs_tof_widget_base', $
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
     SCR_YSIZE    = ysize,$
     SCR_XSIZE    = xsize,$
     MAP          = 1,$
-    kill_notify  = 'ps_vs_tof_widget_killed', $
+    kill_notify  = 'px_vs_tof_widget_killed', $
     /BASE_ALIGN_CENTER,$
     /align_center,$
     /column,$
     GROUP_LEADER = ourGroup)
     
+  draw = widget_draw(wBase,$
+    scr_xsize = xsize,$
+    scr_ysize = ysize,$
+    uname = 'draw')
+    
 END
 
 ;+
 ; :Description:
-;     Creates the base and plot the pixel vs tof of the 
-;     given file index   
+;     Creates the base and plot the pixel vs tof of the
+;     given file index
 
 ; :Keywords:
 ;    main_base
@@ -149,9 +161,16 @@ END
 ;
 ; :Author: j35
 ;-
-PRO px_vs_tof_plots_base, main_base=main_base, event=event
+PRO px_vs_tof_plots_base, main_base=main_base, $
+    event=event, $
+    file_name = file_name, $
+    file_index = file_index, $
+    spin_state=spin_state,$
+    offset = offset
   compile_opt idl2
-
+  
+  if (n_elements(spin_state) eq 0) then spin_state = 0
+  
   IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
     id = WIDGET_INFO(main_base, FIND_BY_UNAME='main_base')
     WIDGET_CONTROL,main_base,GET_UVALUE=global
@@ -163,19 +182,37 @@ PRO px_vs_tof_plots_base, main_base=main_base, event=event
   main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
   
   ;build gui
-  wBase1 = ''
-  px_vs_tof_plots_base_gui, wBase1, $
-    main_base_geometry, global
+  wBase = ''
+  px_vs_tof_plots_base_gui, wBase, $
+    main_base_geometry, $
+    global, $
+    file_name, $
+    offset
     
-  WIDGET_CONTROL, wBase1, /REALIZE
+  WIDGET_CONTROL, wBase, /REALIZE
   
-  global_settings = PTR_NEW({ wbase: wbase1,$
+  default_plot_size = (*global).default_plot_size
+  global_settings = PTR_NEW({ wbase: wbase,$
     global: global, $
+    xsize: default_plot_size[0],$
+    ysize: default_plot_size[1],$
     main_event: event})
     
-  WIDGET_CONTROL, wBase1, SET_UVALUE = global_settings
+  WIDGET_CONTROL, wBase, SET_UVALUE = global_settings
   
-  XMANAGER, "px_vs_tof_plots_base", wBase1, GROUP_LEADER = ourGroup, /NO_BLOCK
+  XMANAGER, "px_vs_tof_plots_base", wBase, GROUP_LEADER = ourGroup, /NO_BLOCK
+  
+  ;retrieve the data to plot
+  pData_y = (*global).pData_y
+  
+  Data = *pData_y[file_index, spin_state]
+  
+  cData = congrid(Data, default_plot_size[0], default_plot_size[1])
+  
+  id = widget_info(wBase,find_by_uname='draw')
+  widget_control, id, GET_VALUE = plot_id
+  wset, plot_id
+  tvscl, cData
   
 END
 
