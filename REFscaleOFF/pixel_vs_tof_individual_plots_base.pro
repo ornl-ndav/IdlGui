@@ -209,10 +209,13 @@ PRO px_vs_tof_plots_base, main_base=main_base, $
   
   cData = congrid(Data, default_plot_size[0], default_plot_size[1])
   
+        DEVICE, DECOMPOSED = 0
+      loadct, 5, /SILENT
+    
   id = widget_info(wBase,find_by_uname='draw')
   widget_control, id, GET_VALUE = plot_id
   wset, plot_id
-  tvscl, cData
+  tvscl, transpose(cData)
   
 END
 
