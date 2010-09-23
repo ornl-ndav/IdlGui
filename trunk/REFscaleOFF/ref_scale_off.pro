@@ -90,7 +90,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     pDataPlot_y_error: ptrarr(20,4,/allocate_heap),$
     
     ;4:spin states, ;2:columns, 20:rows
-    files_SF_list: strarr(4,2,20),$ ;LOAD and SCALE table (column1:Files, column2:SF)
+    files_SF_list: strarr(4,2,20),$ ;LOAD and SCALE table (spins,columns,rows)
     
     input_path: '~/results/' })
     
