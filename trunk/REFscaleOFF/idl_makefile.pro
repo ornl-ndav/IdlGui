@@ -61,6 +61,7 @@ cd, CurrentFolder
 .run load_files.pro
 .run delete_data_set.pro
 .run preview_files.pro
+.run pixel_vs_tof_individual_plots_base.pro
 
 .run ref_off_scale_cleanup.pro
 .run main_base_event.pro
