@@ -78,16 +78,17 @@ end
 ;
 ; :Params:
 ;    event
-;    nbr_files -> the number of files loaded
+;    _pData_x   commun x-axis but with missing values (ex: [0,2,4,10,12,18])
+;
+; :Returns:
+;   returns the x-axis without missing values (ex: [0,2,4,6,8,10,12,14,16,18])
 ;
 ; :Author: j35
 ;-
-pro create_x_axis_data_sets, event
+function create_x_axis_data_sets, event, _pData_x
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global
-  
-  _pData_x = (*(*global).tmp_pData_x) ;x_axis -> help, _pData_x => Array[61]
   
   ;retrieve minimum increment
   sz = n_elements(_pData_x)
@@ -114,6 +115,7 @@ pro create_x_axis_data_sets, event
   endelse
   
   (*(*global).tmp_pData_x_2d) = _pData_x_2d
+  return, _pData_x_2d
   
 end
 
@@ -134,15 +136,27 @@ pro create_2d_data_sets, event
   create_x_axis_data_sets, event
   _pData_x_2d = (*(*global).tmp_pData_x_2d)
   
-
-
-
-
-  
-  
   _pData_x = (*(*global).tmp_pData_x) ;x_axis -> help, _pData_x => Array[61]
   _pData_y = (*(*global).tmp_pData_y) ;y_axis -> help, -pData_y => Array[<nbr_pixel>,<nbr_x_axis_data>]
   _pData_y_error = (*(*global).tmp_pData_y_error)
+
+  sz_2d_x_axis = (size(_pData_x_2d))[1]
+  sz_x_axis    = (size(_pData_x))[1]
+
+  if (sz_2d_x_axis eq sz_x_axis) then begin
+  
+  
+  
+  endif
+
+  print, 'in create_2d_data_sets'
+  help, _pData_y
+  help, _pData_x
+  help, _pData_x_2d
+
+
+  
+  
   
 end
 
@@ -184,8 +198,16 @@ pro add_data_to_list_of_loaded_data, event, spin_state=spin_state
   (*global).pData_x       = pData_x
   (*global).pData_y       = pData_y
   (*global).pData_y_error = pData_y_error
+
+  ;!!!INFO!!!!
+  ; use transpose *(pData_y[0,0]) to plot spin_state:0 or Off_Off
+  ; 1st file loaded and x-axis is tof and y-axis if pixel
+  ; help, *pData_x[0,0]
+  ; help, *pData_y[0,0]
+  ; tvscl, transpose(*pData_y[0,0])
   
-  create_2d_data_sets, event
+  ;SEEMS USELESS FOR NOW
+  ;create_2d_data_sets, event
   
   ;*pData_x_2d[new_entry_index,spin_state]       = (*(*global).tmp_pData_x_2d)
   ;*pData_y_2d[new_entry_index,spin_state]       = (*(*global).pData_y_2d)
@@ -194,6 +216,15 @@ pro add_data_to_list_of_loaded_data, event, spin_state=spin_state
   ;(*global).pData_x_2d       = pData_x_2d
   ;(*global).pData_y_2d       = pData_y_2d
   ;(*global).pData_y_error_2d = pData_y_error_2d
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
 end
 
@@ -218,11 +249,13 @@ function load_rtof_file, event, file_name
   iClass = OBJ_NEW('IDL3columnsASCIIparser', file_name)
   pData = iClass->getDataQuickly()
   start_pixel = iClass->getStartPixel()
+  (*global).tmp_start_pixel = start_pixel
   OBJ_DESTROY, iClass
   
   ;get commun global x-axis
-  x_axis = get_commun_x_axis(pData)
-  
+  tmp_x_axis = get_commun_x_axis(pData)
+  x_axis = create_x_axis_data_sets(event, tmp_x_axis)
+ 
   ;keep only the second column
   _pData_x       = x_axis
   _pData_y       = fltarr(n_elements(pData),n_elements(_pData_x))

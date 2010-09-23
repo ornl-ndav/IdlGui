@@ -89,12 +89,13 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     pDataPlot_y: ptrarr(20,4,/allocate_heap),$
     pDataPlot_y_error: ptrarr(20,4,/allocate_heap),$
     
-    ;4:spin states, ;2:columns, 20:rows
-    files_SF_list: strarr(4,2,20),$ ;LOAD and SCALE table (spins,columns,rows)
+    ;4:spin states, ;3:columns, 20:rows
+    files_SF_list: strarr(4,3,20),$ ;LOAD and SCALE table (spins,columns,rows)
+    tmp_start_pixel: '',$
     
     input_path: '~/results/' })
     
-  MainBaseSize  = [50 , 50, 600, 535]
+  MainBaseSize  = [50 , 50]
   MainTitle   = "REFLECTOMETER OFF SPECULAR SCALING - " + VERSION
   
   ;Build Main Base
