@@ -359,6 +359,8 @@ END
 ;Work on Output Path and output FileName ======================================
 PRO UpdateOutputPath, Event, OutputPath
   setButtonValue, Event, 'of_button', OutputPath
+    widget_control, event.top, get_uvalue=global
+  (*global).dr_output_path = OutputPath
 END
 
 ;------------------------------------------------------------------------------
