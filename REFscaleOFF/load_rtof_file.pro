@@ -149,15 +149,6 @@ pro create_2d_data_sets, event
   
   endif
 
-  print, 'in create_2d_data_sets'
-  help, _pData_y
-  help, _pData_x
-  help, _pData_x_2d
-
-
-  
-  
-  
 end
 
 ;+
