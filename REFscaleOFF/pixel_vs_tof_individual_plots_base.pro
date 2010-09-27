@@ -74,10 +74,17 @@ pro px_vs_tof_plots_base_event, Event
       widget_control, id, xsize = new_xsize
       widget_control, id, ysize = new_ysize
       
+      border = (*global_plot).border
+      
       id = widget_info(event.top, find_by_uname='draw')
+      widget_control, id, draw_xsize = new_xsize-2*border
+      widget_control, id, draw_ysize = new_ysize-2*border
+      
+      id = widget_info(event.top,find_by_Uname='scale')
       widget_control, id, draw_xsize = new_xsize
       widget_control, id, draw_ysize = new_ysize
       
+      plot_beam_center_scale, event=event
       refresh_plot, event
       
     end
@@ -211,7 +218,9 @@ PRO px_vs_tof_plots_base_gui, wBase, $
     main_base_geometry, $
     global, $
     file_name, $
-    offset
+    offset, $
+    border
+    
   compile_opt idl2
   
   main_base_xoffset = main_base_geometry.xoffset
@@ -243,7 +252,7 @@ PRO px_vs_tof_plots_base_gui, wBase, $
     kill_notify  = 'px_vs_tof_widget_killed', $
     /BASE_ALIGN_CENTER,$
     /align_center,$
-    /column,$
+    ;    /column,$
     /tlb_size_events,$
     mbar = bar1,$
     GROUP_LEADER = ourGroup)
@@ -272,11 +281,94 @@ PRO px_vs_tof_plots_base_gui, wBase, $
     uname = 'plot_setting_interpolated')
     
   draw = widget_draw(wBase,$
-    scr_xsize = xsize,$
-    scr_ysize = ysize,$
+    xoffset = border,$
+    yoffset = border,$
+    scr_xsize = xsize-2*border,$
+    scr_ysize = ysize-2*border,$
     uname = 'draw')
     
+  scale = widget_draw(wBase,$
+    uname = 'scale',$
+    scr_xsize = xsize,$
+    scr_ysize = ysize)
+    
 END
+
+
+;+
+; :Description:
+;    Plot the scale around the plot
+;
+; :Params:
+;    base
+;
+; :Author: j35
+;-
+pro plot_beam_center_scale, base=base, event=event
+  compile_opt idl2
+  
+  if (n_elements(base) ne 0) then begin
+    id = widget_info(base,find_by_Uname='scale')
+    sys_color = widget_info(base,/system_colors)
+    widget_control, base, get_uvalue=global_plot
+  endif else begin
+    id = widget_info(event.top, find_by_uname='scale')
+    sys_color = widget_info(event.top, /system_colors)
+    widget_control, event.top, get_uvalue=global_plot
+  endelse
+  
+  widget_control, id, get_value=id_value
+  wset, id_value
+  
+  ;change color of background
+  device, decomposed=1
+  sys_color_window_bk = sys_color.window_bk
+  
+  tof_axis = (*global_plot).tof_axis
+  min_x = tof_axis[0]
+  max_x = tof_axis[1] + tof_axis[1]
+  min_y = 105
+  max_y = 155+1
+  
+  xticks = 10
+  yticks = (max_y - min_y)
+  
+  xmargin = 6.6
+  ymargin = 4
+  
+  xrange = [min_x, max_x]
+  yrange = [min_y, max_y]
+  
+  plot, randomn(s,80), $
+    XRANGE     = xrange,$
+    YRANGE     = yrange,$
+    COLOR      = convert_rgb([0B,0B,255B]), $
+    BACKGROUND = convert_rgb(sys_color_window_bk),$
+    THICK      = 1, $
+    TICKLEN    = -0.015, $
+    XTICKLAYOUT = 0,$
+    XSTYLE      = 1,$
+    YSTYLE      = 1,$
+    YTICKLAYOUT = 0,$
+    XTICKS      = xticks,$
+    XMINOR      = 2,$
+    YMINOR      = 2,$
+    YTICKS      = yticks,$
+    XTITLE      = 'TOF (10^3 microS)',$
+    ;    YTITLE      = 'Pixels',$
+    XMARGIN     = [xmargin, xmargin+0.2],$
+    YMARGIN     = [ymargin, ymargin],$
+    /NODATA
+  axis, yaxis=1, YRANGE=yrange, YTICKS=yticks, YSTYLE=1, $
+    COLOR=convert_rgb([0B,0B,255B]), TICKLEN = -0.015
+  axis, xaxis=1, XRANGE=xrange, XTICKS=xticks, XSTYLE=1, $
+    COLOR=convert_rgb([0B,0B,255B]), TICKLEN = -0.015
+    
+  device, decomposed=0
+  
+END
+
+
 
 ;+
 ; :Description:
@@ -309,13 +401,16 @@ PRO px_vs_tof_plots_base, main_base=main_base, $
   ENDELSE
   main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
   
+  border = 40
+  
   ;build gui
   wBase = ''
   px_vs_tof_plots_base_gui, wBase, $
     main_base_geometry, $
     global, $
     file_name, $
-    offset
+    offset, $
+    border
     
   WIDGET_CONTROL, wBase, /REALIZE
   
@@ -326,11 +421,24 @@ PRO px_vs_tof_plots_base, main_base=main_base, $
     plot_setting: (*global).plot_setting,$
     xsize: default_plot_size[0],$
     ysize: default_plot_size[1],$
+    border: border, $ ;border of main plot (space reserved for scale)
+    tof_axis: fltarr(2),$  ;[start, end]
     main_event: event})
     
   WIDGET_CONTROL, wBase, SET_UVALUE = global_plot
   
   XMANAGER, "px_vs_tof_plots_base", wBase, GROUP_LEADER = ourGroup, /NO_BLOCK
+  
+  ;retrieve scale
+  pData_x = (*global).pData_x
+  Data_x = *pData_x[file_index,spin_state]
+  start_tof = Data_x[0]/1000
+  end_tof = Data_x[-1]/1000
+  delta_tof = Data_x[1]-Data_x[0]/1000
+  tof_axis = (*global_plot).tof_axis
+  tof_axis[0] = start_tof
+  tof_axis[1] = end_tof + delta_tof
+  (*global_plot).tof_axis = tof_axis
   
   ;retrieve the data to plot
   pData_y = (*global).pData_y
@@ -345,6 +453,8 @@ PRO px_vs_tof_plots_base, main_base=main_base, $
   
   DEVICE, DECOMPOSED = 0
   loadct, 5, /SILENT
+  
+  plot_beam_center_scale, base=wBase
   
   id = widget_info(wBase,find_by_uname='draw')
   widget_control, id, GET_VALUE = plot_id
