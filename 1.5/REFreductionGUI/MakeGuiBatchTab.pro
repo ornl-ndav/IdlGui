@@ -395,7 +395,7 @@ PRO MakeGuiBatchTab, MAIN_TAB, MainTabSize, BatchTabTitle, structure
   XYoff = [110,0]
   dBatchFileLoadedLabel = { size: [dRefreshStaticLabel.size[0]+XYoff[0],$
     dRefreshStaticLabel.size[1]+XYoff[1],$
-    400],$
+    450],$
     value: 'N/A',$
     frame: 0,$
     uname: 'loaded_batch_file_name'}

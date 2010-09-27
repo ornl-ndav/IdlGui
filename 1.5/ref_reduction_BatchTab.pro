@@ -284,9 +284,9 @@ FUNCTION UpdateOutputFlag, Event, new_cmd, DataRun
   ;get path of output file name
   ArrayPath   = STRSPLIT(ArraySplit1[1],'/',/EXTRACT,COUNT=length)
   IF (length GT 1) THEN BEGIN
-    path  = STRJOIN(ArrayPath[0:length-2],'/')
+    path  = '/' + STRJOIN(ArrayPath[0:length-2],'/')
   ENDIF ELSE BEGIN
-    path  = ArrayPath[0]
+    path  = '/' + ArrayPath[0]
   ENDELSE
   
   ;create new output file name
