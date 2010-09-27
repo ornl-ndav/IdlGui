@@ -255,12 +255,20 @@ PRO px_vs_tof_plots_base_gui, wBase, $
     value = 'Settings',$
     /menu)
     
+  if ((*global).plot_setting eq 'untouched') then begin
+    set2_value = '*  ' + plot_setting1
+    set1_value = '   ' + plot_setting2
+  endif else begin
+    set2_value = '   ' + plot_setting1
+    set1_value = '*  ' + plot_setting2
+  endelse
+  
   set2 = widget_button(mPlot, $
-    value = ('*  ' + plot_setting1),$
+    value = set2_value,$
     uname = 'plot_setting_untouched')
     
   set1 = widget_button(mPlot, $
-    value = ('   ' + plot_setting2),$
+    value = set1_value,$
     uname = 'plot_setting_interpolated')
     
   draw = widget_draw(wBase,$
