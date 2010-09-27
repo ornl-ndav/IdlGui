@@ -125,11 +125,12 @@ pro refresh_plot, event
   Data = (*(*global_plot).data)
   new_xsize = (*global_plot).xsize
   new_ysize = (*global_plot).ysize
+  border = (*global_plot).border
   
   if ((*global_plot).plot_setting eq 'untouched') then begin
-    cData = congrid(Data, new_ysize, new_xsize)
+    cData = congrid(Data, new_ysize-2*border, new_xsize-2*border)
   endif else begin
-    cData = congrid(Data, new_ysize, new_xsize,/interp)
+    cData = congrid(Data, new_ysize-2*border, new_xsize-2*border,/interp)
   endelse
   
   id = widget_info(event.top, find_by_uname='draw')
@@ -214,7 +215,7 @@ end
 ;
 ; :Author: j35
 ;-
-PRO px_vs_tof_plots_base_gui, wBase, $
+pro px_vs_tof_plots_base_gui, wBase, $
     main_base_geometry, $
     global, $
     file_name, $
@@ -292,8 +293,7 @@ PRO px_vs_tof_plots_base_gui, wBase, $
     scr_xsize = xsize,$
     scr_ysize = ysize)
     
-END
-
+end
 
 ;+
 ; :Description:
@@ -309,10 +309,12 @@ pro plot_beam_center_scale, base=base, event=event
   
   if (n_elements(base) ne 0) then begin
     id = widget_info(base,find_by_Uname='scale')
+    id_base = widget_info(base, find_by_uname='px_vs_tof_widget_base')
     sys_color = widget_info(base,/system_colors)
     widget_control, base, get_uvalue=global_plot
   endif else begin
     id = widget_info(event.top, find_by_uname='scale')
+    id_base = widget_info(event.top, find_by_uname='px_vs_tof_widget_base')
     sys_color = widget_info(event.top, /system_colors)
     widget_control, event.top, get_uvalue=global_plot
   endelse
@@ -325,12 +327,20 @@ pro plot_beam_center_scale, base=base, event=event
   sys_color_window_bk = sys_color.window_bk
   
   tof_axis = (*global_plot).tof_axis
-  min_x = tof_axis[0]
-  max_x = tof_axis[1] + tof_axis[1]
-  min_y = 105
-  max_y = 155+1
   
-  xticks = 10
+  min_x = tof_axis[0]
+  max_x = tof_axis[1]
+  
+  ;minimum and maximum pixel
+  nbr_pixel = (*global_plot).nbr_pixel
+  min_y = (*global_plot).start_pixel
+  max_y = min_y + nbr_pixel
+
+  ;determine the number of xaxis data to show
+  geometry = widget_info(id_base,/geometry)
+  xsize = geometry.scr_xsize
+  ;ysize = geometry.scr_ysize
+  xticks = fix(xsize / 100)
   yticks = (max_y - min_y)
   
   xmargin = 6.6
@@ -339,36 +349,36 @@ pro plot_beam_center_scale, base=base, event=event
   xrange = [min_x, max_x]
   yrange = [min_y, max_y]
   
+  ticklen = -0.0015
+  
   plot, randomn(s,80), $
     XRANGE     = xrange,$
     YRANGE     = yrange,$
     COLOR      = convert_rgb([0B,0B,255B]), $
     BACKGROUND = convert_rgb(sys_color_window_bk),$
-    THICK      = 1, $
-    TICKLEN    = -0.015, $
+    THICK      = 0.5, $
+    TICKLEN    = ticklen, $
     XTICKLAYOUT = 0,$
     XSTYLE      = 1,$
     YSTYLE      = 1,$
     YTICKLAYOUT = 0,$
     XTICKS      = xticks,$
     XMINOR      = 2,$
-    YMINOR      = 2,$
+    ;YMINOR      = 2,$
     YTICKS      = yticks,$
-    XTITLE      = 'TOF (10^3 microS)',$
+    XTITLE      = 'TOF',$
     ;    YTITLE      = 'Pixels',$
     XMARGIN     = [xmargin, xmargin+0.2],$
     YMARGIN     = [ymargin, ymargin],$
     /NODATA
   axis, yaxis=1, YRANGE=yrange, YTICKS=yticks, YSTYLE=1, $
-    COLOR=convert_rgb([0B,0B,255B]), TICKLEN = -0.015
+    COLOR=convert_rgb([0B,0B,255B]), TICKLEN = ticklen
   axis, xaxis=1, XRANGE=xrange, XTICKS=xticks, XSTYLE=1, $
-    COLOR=convert_rgb([0B,0B,255B]), TICKLEN = -0.015
+    COLOR=convert_rgb([0B,0B,255B]), TICKLEN = ticklen
     
   device, decomposed=0
   
-END
-
-
+end
 
 ;+
 ; :Description:
@@ -381,7 +391,7 @@ END
 ;
 ; :Author: j35
 ;-
-PRO px_vs_tof_plots_base, main_base=main_base, $
+pro px_vs_tof_plots_base, main_base=main_base, $
     event=event, $
     file_name = file_name, $
     file_index = file_index, $
@@ -421,6 +431,8 @@ PRO px_vs_tof_plots_base, main_base=main_base, $
     plot_setting: (*global).plot_setting,$
     xsize: default_plot_size[0],$
     ysize: default_plot_size[1],$
+    start_pixel: 0L,$
+    nbr_pixel: 0L,$
     border: border, $ ;border of main plot (space reserved for scale)
     tof_axis: fltarr(2),$  ;[start, end]
     main_event: event})
@@ -432,9 +444,9 @@ PRO px_vs_tof_plots_base, main_base=main_base, $
   ;retrieve scale
   pData_x = (*global).pData_x
   Data_x = *pData_x[file_index,spin_state]
-  start_tof = Data_x[0]/1000
-  end_tof = Data_x[-1]/1000
-  delta_tof = Data_x[1]-Data_x[0]/1000
+  start_tof = Data_x[0]
+  end_tof = Data_x[-1]
+  delta_tof = Data_x[1]-Data_x[0]
   tof_axis = (*global_plot).tof_axis
   tof_axis[0] = start_tof
   tof_axis[1] = end_tof + delta_tof
@@ -445,14 +457,22 @@ PRO px_vs_tof_plots_base, main_base=main_base, $
   Data = *pData_y[file_index, spin_state]
   (*(*global_plot).data) = Data
   
+  ;number of pixels
+  (*global_plot).nbr_pixel = (size(data))[1] ;nbr of pixels to plot
+  
+  ;start pixel
+  files_sf_list = (*global).files_SF_list
+  (*global_plot).start_pixel = files_SF_list[spin_state,2,file_index]
+    
   if ((*global_plot).plot_setting eq 'untouched') then begin
-    cData = congrid(Data, default_plot_size[0], default_plot_size[1])
+    cData = congrid(Data, default_plot_size[0]-2*border, default_plot_size[1]-2*border)
   endif else begin
-    cData = congrid(Data, default_plot_size[0], default_plot_size[1],/interp)
+    cData = congrid(Data, default_plot_size[0]-2*border, default_plot_size[1]-2*border,/interp)
   endelse
   
   DEVICE, DECOMPOSED = 0
-  loadct, 5, /SILENT
+  ;loadct, 5, /SILENT
+  loadct, 10, /silent
   
   plot_beam_center_scale, base=wBase
   
@@ -460,6 +480,6 @@ PRO px_vs_tof_plots_base, main_base=main_base, $
   widget_control, id, GET_VALUE = plot_id
   wset, plot_id
   tvscl, transpose(cData)
-  
-END
+    
+end
 
