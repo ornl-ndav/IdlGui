@@ -51,6 +51,15 @@ pro px_vs_tof_plots_base_event, Event
   
   case Event.id of
   
+    widget_info(event.top, find_by_unam='plot_setting_untouched'): begin
+      switch_local_settings_plot_values, event
+      refresh_plot, event
+    end
+    widget_info(event.top, find_by_unam='plot_setting_interpolated'): begin
+      switch_local_settings_plot_values, event
+      refresh_plot, event
+    end
+    
     widget_info(event.top, find_by_uname='px_vs_tof_widget_base'): begin
     
       id = widget_info(event.top, find_by_uname='px_vs_tof_widget_base')
@@ -59,6 +68,9 @@ pro px_vs_tof_plots_base_event, Event
       new_xsize = geometry.scr_xsize
       new_ysize = geometry.scr_ysize
       
+      (*global_plot).xsize = new_xsize
+      (*global_plot).ysize = new_ysize
+      
       widget_control, id, xsize = new_xsize
       widget_control, id, ysize = new_ysize
       
@@ -66,14 +78,7 @@ pro px_vs_tof_plots_base_event, Event
       widget_control, id, draw_xsize = new_xsize
       widget_control, id, draw_ysize = new_ysize
       
-      Data = (*(*global_plot).data)
-      cData = congrid(Data, new_ysize, new_xsize,/interp)
-      
-      widget_control, id, GET_VALUE = plot_id
-      wset, plot_id
-      erase
-      
-      tvscl, transpose(cData)
+      refresh_plot, event
       
     end
     
@@ -91,6 +96,78 @@ pro px_vs_tof_plots_base_event, Event
     else:
     
   endcase
+  
+end
+
+;+
+; :Description:
+;    refresh the 2d plot
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro refresh_plot, event
+  compile_opt idl2
+  
+  ;get global structure
+  widget_control,event.top,get_uvalue=global_plot
+  global = (*global_plot).global
+  
+  Data = (*(*global_plot).data)
+  new_xsize = (*global_plot).xsize
+  new_ysize = (*global_plot).ysize
+  
+  if ((*global_plot).plot_setting eq 'untouched') then begin
+    cData = congrid(Data, new_ysize, new_xsize)
+  endif else begin
+    cData = congrid(Data, new_ysize, new_xsize,/interp)
+  endelse
+  
+  id = widget_info(event.top, find_by_uname='draw')
+  widget_control, id, GET_VALUE = plot_id
+  wset, plot_id
+  erase
+  
+  tvscl, transpose(cData)
+  
+end
+
+;+
+; :Description:
+;    Switch local label of plot settings button
+;    validated.
+;    add * at the beginning of string when button is validated
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro switch_local_settings_plot_values, event
+  compile_opt idl2
+  
+  widget_control,event.top,get_uvalue=global_plot
+  global = (*global_plot).global
+  
+  plot_setting1 = (*global).plot_setting1
+  plot_setting2 = (*global).plot_setting2
+  
+  set1_value = getValue(event, 'plot_setting_untouched')
+  
+  if (set1_value eq ('   ' + plot_setting1)) then begin ;setting1 needs to be checked
+    set1_value = '*  ' + plot_setting1
+    set2_value = '   ' + plot_setting2
+    (*global_plot).plot_setting = 'untouched'
+  endif else begin
+    set1_value = '   ' + plot_setting1
+    set2_value = '*  ' + plot_setting2
+    (*global_plot).plot_setting = 'interpolated'
+  endelse
+  
+  putValue, event, 'plot_setting_untouched', set1_value
+  putValue, event, 'plot_setting_interpolated', set2_value
   
 end
 
@@ -168,7 +245,23 @@ PRO px_vs_tof_plots_base_gui, wBase, $
     /align_center,$
     /column,$
     /tlb_size_events,$
+    mbar = bar1,$
     GROUP_LEADER = ourGroup)
+    
+  plot_setting1 = (*global).plot_setting1
+  plot_setting2 = (*global).plot_setting2
+  
+  mPlot = widget_button(bar1, $
+    value = 'Settings',$
+    /menu)
+    
+  set2 = widget_button(mPlot, $
+    value = ('*  ' + plot_setting1),$
+    uname = 'plot_setting_untouched')
+    
+  set1 = widget_button(mPlot, $
+    value = ('   ' + plot_setting2),$
+    uname = 'plot_setting_interpolated')
     
   draw = widget_draw(wBase,$
     scr_xsize = xsize,$
@@ -222,6 +315,7 @@ PRO px_vs_tof_plots_base, main_base=main_base, $
   global_plot = PTR_NEW({ wbase: wbase,$
     global: global, $
     data: ptr_new(0L), $
+    plot_setting: (*global).plot_setting,$
     xsize: default_plot_size[0],$
     ysize: default_plot_size[1],$
     main_event: event})
@@ -235,7 +329,11 @@ PRO px_vs_tof_plots_base, main_base=main_base, $
   Data = *pData_y[file_index, spin_state]
   (*(*global_plot).data) = Data
   
-  cData = congrid(Data, default_plot_size[0], default_plot_size[1])
+  if ((*global_plot).plot_setting eq 'untouched') then begin
+    cData = congrid(Data, default_plot_size[0], default_plot_size[1])
+  endif else begin
+    cData = congrid(Data, default_plot_size[0], default_plot_size[1],/interp)
+  endelse
   
   DEVICE, DECOMPOSED = 0
   loadct, 5, /SILENT

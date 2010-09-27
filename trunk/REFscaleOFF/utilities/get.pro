@@ -67,3 +67,23 @@ function get_number_of_files_loaded, event
   
   return, nbr_files
 end
+
+;+
+; :Description:
+;    return the value of the widget defined
+;    by its uname (passed as argument)
+;
+; :Params:
+;    event
+;    uname
+;
+; :Author: j35
+;-
+function getValue, event, uname
+  compile_opt idl2
+  
+  id = widget_info(event.top, find_by_uname=uname)
+  widget_control, id, get_value=value
+  return, value
+  
+end
