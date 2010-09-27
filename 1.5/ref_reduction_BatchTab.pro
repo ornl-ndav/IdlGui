@@ -283,12 +283,19 @@ FUNCTION UpdateOutputFlag, Event, new_cmd, DataRun
   part1       = ArraySplit1[0] + split1
   ;get path of output file name
   ArrayPath   = STRSPLIT(ArraySplit1[1],'/',/EXTRACT,COUNT=length)
-  IF (length GT 1) THEN BEGIN
-    path  = '/' + STRJOIN(ArrayPath[0:length-2],'/')
-  ENDIF ELSE BEGIN
-    path  = '/' + ArrayPath[0]
-  ENDELSE
+  indexPath   = strsplit(ArraySplit1[1],'/', count=length_index)
   
+  print, indexPath
+  
+  IF (length GT 1) THEN BEGIN
+    path  = STRJOIN(ArrayPath[0:length-2],'/')
+    if (indexPath[0] eq 1) then begin
+    path = '/' + path
+    endif
+  ENDIF ELSE BEGIN
+    path  = ArrayPath[0]
+  ENDELSE
+
   ;create new output file name
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
