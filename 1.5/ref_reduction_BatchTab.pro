@@ -285,8 +285,6 @@ FUNCTION UpdateOutputFlag, Event, new_cmd, DataRun
   ArrayPath   = STRSPLIT(ArraySplit1[1],'/',/EXTRACT,COUNT=length)
   indexPath   = strsplit(ArraySplit1[1],'/', count=length_index)
   
-  print, indexPath
-  
   IF (length GT 1) THEN BEGIN
     path  = STRJOIN(ArrayPath[0:length-2],'/')
     if (indexPath[0] eq 1) then begin
