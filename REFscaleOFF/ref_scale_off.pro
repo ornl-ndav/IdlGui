@@ -66,6 +66,11 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   global = ptr_new({ $
   
+    ;label of menu buttons
+    plot_setting1: 'Untouched plots',$
+    plot_setting2: 'Interpolated plots',$
+    plot_setting: 'untouched',$
+  
     ;used to bring back data from load_crtof_file procedure to load_files
     tmp_pData_x: ptr_new(0L),$
     tmp_pData_y: ptr_new(0L),$
@@ -107,8 +112,10 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     YOFFSET      = MainBaseSize[1],$
 ;    SCR_XSIZE    = MainBaseSize[2], $
 ;    SCR_YSIZE    = MainBaseSize[3], $
+    mbar = bar,$
     TITLE        = MainTitle)
     
+    design_menu, bar, global
   design_tabs, MAIN_BASE, global
   
   ;Realize the widgets, set the user value of the top-level

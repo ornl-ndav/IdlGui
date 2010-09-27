@@ -1,4 +1,4 @@
-;==============================================================================
+;===============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,43 +30,40 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;==============================================================================
+;===============================================================================
 
-;define path to dependencies and current folder
-spawn, 'pwd', CurrentFolder
-IdlUtilitiesPath = "/utilities"
-
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-cd, CurrentFolder + IdlUtilitiesPath
-.run put.pro
-.run get.pro
-.run get_ucams.pro
-.run IDLxmlParser__define.pro
-.run logger.pro
-.run IDL3columnsASCIIparser__define.pro
-.run xdisplayfile.pro
-
-;Build REFscale GUI
-cd, CurrentFolder + '/REFscaleOFFGUI/'
-.run tab_designer.pro
-.run menu_designer.pro
-
-;Build main procedures
-cd, CurrentFolder
-
-;functions (tab#1)
-.run load_rtof_file.pro
-;procedures (tab#1)
-.run load_files_button.pro
-.run load_files.pro
-.run delete_data_set.pro
-.run preview_files.pro
-.run plot_rtof_files.pro
-.run pixel_vs_tof_individual_plots_base.pro
-.run menu_eventcb.pro
-
-.run ref_off_scale_cleanup.pro
-.run main_base_event.pro
-.run ref_scale_off.pro
-
+;+
+; :Description:
+;    Switch label of plot settings button
+;    validated.
+;    add * at the beginning of string when button is validated
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro switch_settings_plot_values, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  plot_setting1 = (*global).plot_setting1
+  plot_setting2 = (*global).plot_setting2
+  
+  set1_value = getValue(event, 'plot_setting_untouched')
+  
+  if (set1_value eq ('   ' + plot_setting1)) then begin ;setting1 needs to be checked
+    set1_value = '*  ' + plot_setting1
+    set2_value = '   ' + plot_setting2
+    (*global).plot_setting = 'untouched'
+  endif else begin
+    set1_value = '   ' + plot_setting1
+    set2_value = '*  ' + plot_setting2
+    (*global).plot_setting = 'interpolated' 
+  endelse
+  
+  putValue, event, 'plot_setting_untouched', set1_value
+  putValue, event, 'plot_setting_interpolated', set2_value
+  
+  end
