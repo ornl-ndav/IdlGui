@@ -108,7 +108,7 @@ pro refresh_table, event, spin_state=spin_state
   files_SF_list = (*global).files_SF_list
   table_value = files_SF_list[spin_state,*,*]
   table_value = reform(table_value)
-  putValue, event, 'tab1_table', table_value
+  putValue, event=event, 'tab1_table', table_value
   
 end
 

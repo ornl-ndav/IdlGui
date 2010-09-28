@@ -51,7 +51,7 @@ pro switch_settings_plot_values, event
   plot_setting1 = (*global).plot_setting1
   plot_setting2 = (*global).plot_setting2
   
-  set1_value = getValue(event, 'plot_setting_untouched')
+  set1_value = getValue(event=event, 'plot_setting_untouched')
   
   if (set1_value eq ('   ' + plot_setting1)) then begin ;setting1 needs to be checked
     set1_value = '*  ' + plot_setting1
@@ -60,10 +60,50 @@ pro switch_settings_plot_values, event
   endif else begin
     set1_value = '   ' + plot_setting1
     set2_value = '*  ' + plot_setting2
-    (*global).plot_setting = 'interpolated' 
+    (*global).plot_setting = 'interpolated'
   endelse
   
-  putValue, event, 'plot_setting_untouched', set1_value
-  putValue, event, 'plot_setting_interpolated', set2_value
+  putValue, event=event, 'plot_setting_untouched', set1_value
+  putValue, event=event, 'plot_setting_interpolated', set2_value
   
-  end
+end
+
+;+
+; :Description:
+;    Change the value of the global loadct and reverse labels of old and new
+;    loadct buttons
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro change_global_loadct, event
+  compile_opt idl2
+  
+  new_uname = widget_info(event.id, /uname)
+  widget_control,event.top,get_uvalue=global
+  
+  ;get old loadct
+  old_loadct = strcompress((*global).default_loadct,/remove_all)
+  old_uname = 'global_loadct_' + old_loadct
+  label = getValue(event=event,old_uname)
+  ;remove keep central part
+  raw_label1 = strsplit(label,'>>',/regex,/extract)
+  raw_label2 = strsplit(raw_label1[1],'<<',/regex,/extract)
+  raw_label = strcompress(raw_label2[0],/remove_all)
+  ;put it back
+  putValue, event=event, old_uname, raw_label
+  
+  ;change value of new loadct
+  new_label = getValue(event=event, new_uname)
+  new_label = strcompress(new_label,/remove_all)
+  ;add selection string
+  new_label = '>  > >> ' + new_label + ' << <  <'
+  putValue, event=event, new_uname, new_label
+  
+  ;save new loadct
+  new_uname_array = strsplit(new_uname,'_',/extract)
+  (*global).default_loadct = fix(new_uname_array[2])
+  
+end

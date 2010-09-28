@@ -66,6 +66,7 @@ function get_number_of_files_loaded, event
   endelse
   
   return, nbr_files
+    
 end
 
 ;+
@@ -73,16 +74,23 @@ end
 ;    return the value of the widget defined
 ;    by its uname (passed as argument)
 ;
+; :Keywords:
+;   event
+;   base
+;
 ; :Params:
-;    event
 ;    uname
 ;
 ; :Author: j35
 ;-
-function getValue, event, uname
+function getValue, event=event, base=base, uname
   compile_opt idl2
   
-  id = widget_info(event.top, find_by_uname=uname)
+  if (n_elements(event) ne 0) then begin
+    id = widget_info(event.top, find_by_uname=uname)
+  endif else begin
+  id = widget_info(base, find_by_uname=uname)
+  endelse
   widget_control, id, get_value=value
   return, value
   
