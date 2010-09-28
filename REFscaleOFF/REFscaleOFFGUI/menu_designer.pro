@@ -32,14 +32,24 @@
 ;
 ;===============================================================================
 
-pro design_menu, bar, global
+;+
+; :Description:
+;    This design the plot settings menu
+;
+; :Params:
+;    bar
+;    global
+
+; :Author: j35
+;-
+pro design_plot_settings_menu, bar, global
   compile_opt idl2
   
   plot_setting1 = (*global).plot_setting1
   plot_setting2 = (*global).plot_setting2
   
   mPlot = widget_button(bar, $
-    value = 'Plot Settings',$
+    value = 'Type',$
     /menu)
     
   set2 = widget_button(mPlot, $
@@ -105,11 +115,55 @@ pro design_menu, bar, global
       uname = 'global_loadct_' + strcompress(i,/remove_all))
   endfor
   
+end
 
+;+
+; :Description:
+;    Design the scale settings
+;
+; :Params:
+;    bar
+;    global
+;
+; :Author: j35
+;-
+pro design_scale_settings_menu, bar, global
+  compile_opt idl2
   
+  scale_setting = (*global).scale_settings ;0 for lin, 1 for log
   
-  
-  
-  
+  mPlot = widget_button(bar, $
+    value = 'Axes',$
+    /menu)
+    
+  set2 = widget_button(mPlot, $
+    value = ('*  ' + 'linear'), $
+    event_pro = 'switch_axes_type',$
+    uname = 'scale_setting_linear')
+    
+  set1 = widget_button(mPlot, $
+    value = ('   ' + 'logarithmic'),$
+    event_pro = 'switch_axes_type',$
+    uname = 'scale_setting_log')
   
 end
+
+
+;+
+; :Description:
+;    Design the various menus of the main base
+;
+; :Params:
+;    bar
+;    global
+;
+; :Author: j35
+;-
+pro design_menu, bar, global
+  compile_opt idl2
+  
+  design_plot_settings_menu, bar, global
+  design_scale_settings_menu, bar, global
+  
+end
+

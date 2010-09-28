@@ -107,3 +107,74 @@ pro change_global_loadct, event
   (*global).default_loadct = fix(new_uname_array[2])
   
 end
+
+;+
+; :Description:
+;    Switches the selected button in the main base menu called
+;    'Axes'
+;
+; :Params:
+;    event
+
+; :Author: j35
+;-
+pro switch_axes_type, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+   scale_setting = (*global).scale_settings ;0 for lin, 1 for log
+  
+  set1_value = getValue(event=event, 'scale_setting_linear')
+  
+  if (set1_value eq ('   ' + 'linear')) then begin ;setting1 needs to be checked
+    set1_value = '*  ' + 'linear'
+    set2_value = '   ' + 'logarithmic'
+    (*global).scale_settings = 0
+  endif else begin
+    set1_value = '   ' + 'linear'
+    set2_value = '*  ' + 'logarithmic'
+    (*global).scale_settings = 1
+  endelse
+  
+  putValue, event=event, 'scale_setting_linear', set1_value
+  putValue, event=event, 'scale_setting_log', set2_value
+  
+end
+
+;+
+; :Description:
+;    Switches the selected button in the individual plot bases
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro local_switch_axes_type, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_plot
+  
+   scale_setting = (*global_plot).default_scale_settings ;0 for lin, 1 for log
+  
+  set1_value = getValue(event=event, 'local_scale_setting_linear')
+  
+  if (set1_value eq ('   ' + 'linear')) then begin ;setting1 needs to be checked
+    set1_value = '*  ' + 'linear'
+    set2_value = '   ' + 'logarithmic'
+    (*global_plot).default_scale_settings = 0
+  endif else begin
+    set1_value = '   ' + 'linear'
+    set2_value = '*  ' + 'logarithmic'
+    (*global_plot).default_scale_settings = 1
+  endelse
+  
+  putValue, event=event, 'local_scale_setting_linear', set1_value
+  putValue, event=event, 'local_scale_setting_log', set2_value
+  
+  lin_log_data, event=event
+  refresh_plot, event
+  refresh_plot_colorbar, event
+  
+end
