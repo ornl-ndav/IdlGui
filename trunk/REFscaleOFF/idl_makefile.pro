@@ -69,6 +69,7 @@ cd, CurrentFolder
 .run preview_files.pro
 .run plot_rtof_files.pro
 .run pixel_vs_tof_individual_plots_base.pro
+.run individual_plot_eventcb.pro
 .run menu_eventcb.pro
 .run plot_colorbar.pro
 
