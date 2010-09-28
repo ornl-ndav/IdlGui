@@ -60,8 +60,6 @@ pro remove_empty_lines_of_this_spin, spin_index=i, files_SF_list, nbr_spins, nbr
       if (_empty[0] gt _no_empty[n_elements(_no_empty)-1]) then return
     endif
     left_index = indgen(nbr)
-    help, left_index
-    help, _no_empty
     _tmp_spin_table[i,*,left_index] = files_SF_list[i,*,_no_empty]
     files_SF_list[i,*,*] = _tmp_spin_table[i,*,*]
   endif

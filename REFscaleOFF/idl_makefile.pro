@@ -49,6 +49,8 @@ cd, CurrentFolder + IdlUtilitiesPath
 .run IDL3columnsASCIIparser__define.pro
 .run xdisplayfile.pro
 .run convert.pro
+.run colorbar.pro
+.run fsc_color.pro
 
 ;Build REFscale GUI
 cd, CurrentFolder + '/REFscaleOFFGUI/'
@@ -68,6 +70,7 @@ cd, CurrentFolder
 .run plot_rtof_files.pro
 .run pixel_vs_tof_individual_plots_base.pro
 .run menu_eventcb.pro
+.run plot_colorbar.pro
 
 .run ref_off_scale_cleanup.pro
 .run main_base_event.pro

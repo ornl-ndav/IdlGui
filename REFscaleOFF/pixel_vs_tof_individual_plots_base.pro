@@ -77,17 +77,24 @@ pro px_vs_tof_plots_base_event, Event
       widget_control, id, ysize = new_ysize
       
       border = (*global_plot).border
+      colorbar_xsize = (*global_plot).colorbar_xsize
       
       id = widget_info(event.top, find_by_uname='draw')
-      widget_control, id, draw_xsize = new_xsize-2*border
+      widget_control, id, draw_xsize = new_xsize-2*border-colorbar_xsize
       widget_control, id, draw_ysize = new_ysize-2*border
       
       id = widget_info(event.top,find_by_Uname='scale')
-      widget_control, id, draw_xsize = new_xsize
+      widget_control, id, draw_xsize = new_xsize-colorbar_xsize
       widget_control, id, draw_ysize = new_ysize
+      
+      id = widget_info(event.top, find_by_uname='colorbar')
+      widget_control, id, xoffset=new_xsize-colorbar_xsize
+      widget_control, id, draw_ysize = new_ysize
+      widget_control, id, draw_xsize = colorbar_xsize
       
       plot_beam_center_scale, event=event
       refresh_plot, event
+      refresh_plot_colorbar, event
       
       return
     end
@@ -196,36 +203,37 @@ end
 ; :Author: j35
 ;-
 pro change_loadct, event
-compile_opt idl2
-
-new_uname = widget_info(event.id, /uname)
-widget_control,event.top,get_uvalue=global_plot
-
-;get old loadct
-old_loadct = strcompress((*global_plot).default_loadct,/remove_all)
-old_uname = 'loadct_' + old_loadct
-label = getValue(event=event,old_uname)
-;remove keep central part
-raw_label1 = strsplit(label,'>>',/regex,/extract)
-raw_label2 = strsplit(raw_label1[1],'<<',/regex,/extract)
-raw_label = strcompress(raw_label2[0],/remove_all)
-;put it back 
-putValue, event=event, old_uname, raw_label
-
-;change value of new loadct
-new_label = getValue(event=event, new_uname)
-new_label = strcompress(new_label,/remove_all)
-;add selection string
-new_label = '>  > >> ' + new_label + ' << <  <'
-putValue, event=event, new_uname, new_label
-
-;save new loadct  
-new_uname_array = strsplit(new_uname,'_',/extract)
-(*global_plot).default_loadct = fix(new_uname_array[1])
-
-;replot
-refresh_plot, event
-
+  compile_opt idl2
+  
+  new_uname = widget_info(event.id, /uname)
+  widget_control,event.top,get_uvalue=global_plot
+  
+  ;get old loadct
+  old_loadct = strcompress((*global_plot).default_loadct,/remove_all)
+  old_uname = 'loadct_' + old_loadct
+  label = getValue(event=event,old_uname)
+  ;remove keep central part
+  raw_label1 = strsplit(label,'>>',/regex,/extract)
+  raw_label2 = strsplit(raw_label1[1],'<<',/regex,/extract)
+  raw_label = strcompress(raw_label2[0],/remove_all)
+  ;put it back
+  putValue, event=event, old_uname, raw_label
+  
+  ;change value of new loadct
+  new_label = getValue(event=event, new_uname)
+  new_label = strcompress(new_label,/remove_all)
+  ;add selection string
+  new_label = '>  > >> ' + new_label + ' << <  <'
+  putValue, event=event, new_uname, new_label
+  
+  ;save new loadct
+  new_uname_array = strsplit(new_uname,'_',/extract)
+  (*global_plot).default_loadct = fix(new_uname_array[1])
+  
+  ;replot
+  refresh_plot, event
+  refresh_plot_colorbar, event
+  
 end
 
 ;+
@@ -268,8 +276,9 @@ pro px_vs_tof_plots_base_gui, wBase, $
     global, $
     file_name, $
     offset, $
-    border
-        
+    border, $
+    colorbar_xsize
+    
   compile_opt idl2
   
   main_base_xoffset = main_base_geometry.xoffset
@@ -296,7 +305,7 @@ pro px_vs_tof_plots_base_gui, wBase, $
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
     SCR_YSIZE    = ysize,$
-    SCR_XSIZE    = xsize,$
+    SCR_XSIZE    = xsize+colorbar_xsize,$
     MAP          = 1,$
     kill_notify  = 'px_vs_tof_widget_killed', $
     /BASE_ALIGN_CENTER,$
@@ -329,7 +338,7 @@ pro px_vs_tof_plots_base_gui, wBase, $
     value = set1_value,$
     uname = 'plot_setting_interpolated')
     
-    list_loadct = ['B-W Linear',$
+  list_loadct = ['B-W Linear',$
     'Blue/White',$
     'Green-Red-Blue-White',$
     'Red temperature',$
@@ -383,8 +392,8 @@ pro px_vs_tof_plots_base_gui, wBase, $
       uname = 'loadct_' + strcompress(i,/remove_all),$
       event_pro = 'change_loadct')
   endfor
-    
-  draw = widget_draw(wBase,$
+  
+  draw = widget_draw(wbase,$
     xoffset = border,$
     yoffset = border,$
     scr_xsize = xsize-2*border,$
@@ -395,6 +404,13 @@ pro px_vs_tof_plots_base_gui, wBase, $
     uname = 'scale',$
     scr_xsize = xsize,$
     scr_ysize = ysize)
+    
+  colorbar =  widget_draw(wBase,$
+    uname = 'colorbar',$
+    xoffset = xsize,$
+    scr_xsize = colorbar_xsize,$
+    scr_ysize = ysize)
+    
     
 end
 
@@ -438,7 +454,7 @@ pro plot_beam_center_scale, base=base, event=event
   nbr_pixel = (*global_plot).nbr_pixel
   min_y = (*global_plot).start_pixel
   max_y = min_y + nbr_pixel
-
+  
   ;determine the number of xaxis data to show
   geometry = widget_info(id_base,/geometry)
   xsize = geometry.scr_xsize
@@ -515,6 +531,7 @@ pro px_vs_tof_plots_base, main_base=main_base, $
   main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
   
   border = 40
+  colorbar_xsize = 70
   default_loadct = (*global).default_loadct
   
   ;build gui
@@ -524,7 +541,8 @@ pro px_vs_tof_plots_base, main_base=main_base, $
     global, $
     file_name, $
     offset, $
-    border
+    border, $
+    colorbar_xsize
     
   WIDGET_CONTROL, wBase, /REALIZE
   
@@ -537,9 +555,11 @@ pro px_vs_tof_plots_base, main_base=main_base, $
     ysize: default_plot_size[1],$
     start_pixel: 0L,$
     nbr_pixel: 0L,$
+    colorbar_xsize: colorbar_xsize,$
     default_loadct: default_loadct, $ ;prism by default
     border: border, $ ;border of main plot (space reserved for scale)
     tof_axis: fltarr(2),$  ;[start, end]
+    zrange: fltarr(2),$
     main_event: event})
     
   WIDGET_CONTROL, wBase, SET_UVALUE = global_plot
@@ -568,7 +588,7 @@ pro px_vs_tof_plots_base, main_base=main_base, $
   ;start pixel
   files_sf_list = (*global).files_SF_list
   (*global_plot).start_pixel = files_SF_list[spin_state,2,file_index]
-    
+  
   if ((*global_plot).plot_setting eq 'untouched') then begin
     cData = congrid(Data, default_plot_size[0]-2*border, default_plot_size[1]-2*border)
   endif else begin
@@ -584,14 +604,22 @@ pro px_vs_tof_plots_base, main_base=main_base, $
   widget_control, id, GET_VALUE = plot_id
   wset, plot_id
   tvscl, transpose(cData)
-    
-  ;change label of default loadct  
+  
+  zmin = 0
+  zmax = max(Data)
+  zrange = (*global_plot).zrange
+  zrange[0] = zmin
+  zrange[1] = zmax
+  (*global_plot).zrange = zrange
+  plot_colorbar, base=wBase, zmin, zmax
+  
+  ;change label of default loadct
   pre = '>  > >> '
   post = ' << <  <'
   uname = 'loadct_' + strcompress(default_loadct,/remove_all)
   value = getValue(base=wBase, uname)
   new_value = pre + value + post
   setValue, base=wBase, uname, new_value
-    
+  
 end
 
