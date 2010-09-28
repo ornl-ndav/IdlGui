@@ -465,6 +465,9 @@ pro px_vs_tof_plots_base_gui, wBase, $
     yoffset = border,$
     scr_xsize = xsize-2*border,$
     scr_ysize = ysize-2*border,$
+    /button_events,$
+    /motion_events,$
+    event_pro = 'draw_eventcb',$
     uname = 'draw')
     
   scale = widget_draw(wBase,$
@@ -583,6 +586,7 @@ pro px_vs_tof_plots_base, main_base=main_base, $
     file_index = file_index, $
     spin_state=spin_state,$
     offset = offset
+    
   compile_opt idl2
   
   if (n_elements(spin_state) eq 0) then spin_state = 0
@@ -630,6 +634,10 @@ pro px_vs_tof_plots_base, main_base=main_base, $
     border: border, $ ;border of main plot (space reserved for scale)
     tof_axis: fltarr(2),$  ;[start, end]
     zrange: fltarr(2),$
+    
+    left_click: 0b,$ ;by default, left button is not clicked
+    draw_zoom_selection: intarr(4),$ ;[x0,y0,x1,y1]
+    
     main_event: event})
     
   WIDGET_CONTROL, wBase, SET_UVALUE = global_plot
