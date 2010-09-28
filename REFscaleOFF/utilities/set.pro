@@ -32,44 +32,28 @@
 ;
 ;==============================================================================
 
-;define path to dependencies and current folder
-spawn, 'pwd', CurrentFolder
-IdlUtilitiesPath = "/utilities"
-
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-cd, CurrentFolder + IdlUtilitiesPath
-.run put.pro
-.run get.pro
-.run set.pro
-;.run gui.pro
-.run get_ucams.pro
-.run IDLxmlParser__define.pro
-.run logger.pro
-.run IDL3columnsASCIIparser__define.pro
-.run xdisplayfile.pro
-.run convert.pro
-
-;Build REFscale GUI
-cd, CurrentFolder + '/REFscaleOFFGUI/'
-.run tab_designer.pro
-.run menu_designer.pro
-
-;Build main procedures
-cd, CurrentFolder
-
-;functions (tab#1)
-.run load_rtof_file.pro
-;procedures (tab#1)
-.run load_files_button.pro
-.run load_files.pro
-.run delete_data_set.pro
-.run preview_files.pro
-.run plot_rtof_files.pro
-.run pixel_vs_tof_individual_plots_base.pro
-.run menu_eventcb.pro
-
-.run ref_off_scale_cleanup.pro
-.run main_base_event.pro
-.run ref_scale_off.pro
-
+;+
+; :Description:
+;    Change the value of the given widget
+;
+; :Params:
+;    uname
+;    value
+;
+; :Keywords:
+;    base
+;    event
+;
+; :Author: j35
+;-
+pro setValue, base=base, event=event, uname, value
+  compile_opt idl2
+  
+  if (n_elements(event) ne 0) then begin
+    id = widget_info(event.top, find_by_uname=uname)
+  endif else begin
+    id = widget_info(base, find_by_uname=uname)
+  endelse
+  widget_control, id, set_value=value
+  
+end

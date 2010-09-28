@@ -169,7 +169,7 @@ pro switch_local_settings_plot_values, event
   plot_setting1 = (*global).plot_setting1
   plot_setting2 = (*global).plot_setting2
   
-  set1_value = getValue(event, 'plot_setting_untouched')
+  set1_value = getValue(event=event, 'plot_setting_untouched')
   
   if (set1_value eq ('   ' + plot_setting1)) then begin ;setting1 needs to be checked
     set1_value = '*  ' + plot_setting1
@@ -181,8 +181,8 @@ pro switch_local_settings_plot_values, event
     (*global_plot).plot_setting = 'interpolated'
   endelse
   
-  putValue, event, 'plot_setting_untouched', set1_value
-  putValue, event, 'plot_setting_interpolated', set2_value
+  putValue, event=event, 'plot_setting_untouched', set1_value
+  putValue, event=event, 'plot_setting_interpolated', set2_value
   
 end
 
@@ -202,25 +202,26 @@ new_uname = widget_info(event.id, /uname)
 widget_control,event.top,get_uvalue=global_plot
 
 ;get old loadct
-old_loadct = (*global_plot).default_loadct
-old_uname = strcompress(old_loadct,/remove_all)
-label = getValue(event,old_uname)
+old_loadct = strcompress((*global_plot).default_loadct,/remove_all)
+old_uname = 'loadct_' + old_loadct
+label = getValue(event=event,old_uname)
 ;remove keep central part
 raw_label1 = strsplit(label,'>>',/regex,/extract)
 raw_label2 = strsplit(raw_label1[1],'<<',/regex,/extract)
 raw_label = strcompress(raw_label2[0],/remove_all)
 ;put it back 
-putValue, event, old_uname, raw_label
+putValue, event=event, old_uname, raw_label
 
 ;change value of new loadct
-new_label = getValue(event, new_uname)
+new_label = getValue(event=event, new_uname)
 new_label = strcompress(new_label,/remove_all)
 ;add selection string
 new_label = '>  > >> ' + new_label + ' << <  <'
-putValue, event, new_uname, new_label
+putValue, event=event, new_uname, new_label
 
 ;save new loadct  
-(*global_plot).default_loadct = fix(new_uname)
+new_uname_array = strsplit(new_uname,'_',/extract)
+(*global_plot).default_loadct = fix(new_uname_array[1])
 
 ;replot
 refresh_plot, event
@@ -251,7 +252,6 @@ pro px_vs_tof_widget_killed, id
   
 end
 
-
 ;+
 ; :Description:
 ;   create the base
@@ -269,7 +269,7 @@ pro px_vs_tof_plots_base_gui, wBase, $
     file_name, $
     offset, $
     border
-    
+        
   compile_opt idl2
   
   main_base_xoffset = main_base_geometry.xoffset
@@ -334,7 +334,7 @@ pro px_vs_tof_plots_base_gui, wBase, $
     'Green-Red-Blue-White',$
     'Red temperature',$
     'Std Gamma-II',$
-    '>  > >> Prism << <  <',$
+    'Prism',$
     'Red-Purple',$
     'Green/White Linear',$
     'Green/White Exponential                  ',$
@@ -372,14 +372,15 @@ pro px_vs_tof_plots_base_gui, wBase, $
     
   set = widget_button(mPlot,$
     value = list_loadct[0],$
-    uname = '0',$
+    uname = 'loadct_0',$
+    event_pro = 'change_loadct',$
     /separator)
     
   sz = n_elements(list_loadct)
   for i=1L,(sz-1) do begin
     set = widget_button(mPlot,$
       value = list_loadct[i],$
-      uname = strcompress(i,/remove_all),$
+      uname = 'loadct_' + strcompress(i,/remove_all),$
       event_pro = 'change_loadct')
   endfor
     
@@ -583,6 +584,14 @@ pro px_vs_tof_plots_base, main_base=main_base, $
   widget_control, id, GET_VALUE = plot_id
   wset, plot_id
   tvscl, transpose(cData)
+    
+  ;change label of default loadct  
+  pre = '>  > >> '
+  post = ' << <  <'
+  uname = 'loadct_' + strcompress(default_loadct,/remove_all)
+  value = getValue(base=wBase, uname)
+  new_value = pre + value + post
+  setValue, base=wBase, uname, new_value
     
 end
 

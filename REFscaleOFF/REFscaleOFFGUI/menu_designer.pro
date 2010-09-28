@@ -58,7 +58,7 @@ pro design_menu, bar, global
     '>  > >> Prism << <  <',$
     'Red-Purple',$
     'Green/White Linear',$
-    'Green/White Exponential',$
+    'Green/White Exponential                  ',$
     'Green-Pink',$
     'Blue-Red',$
     '16 level',$
@@ -93,14 +93,16 @@ pro design_menu, bar, global
     
   set = widget_button(mPlot,$
     value = list_loadct[0],$
-    uname = 'menu_0',$
+    uname = 'global_loadct_0',$
+    event_pro = 'change_global_loadct',$
     /separator)
     
   sz = n_elements(list_loadct)
   for i=1L,(sz-1) do begin
     set = widget_button(mPlot,$
       value = list_loadct[i],$
-      uname = strcompress(i,/remove_all))
+      event_pro = 'change_global_loadct',$
+      uname = 'global_loadct_' + strcompress(i,/remove_all))
   endfor
   
 

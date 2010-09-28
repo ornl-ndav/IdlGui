@@ -32,7 +32,11 @@
 ;
 ;==============================================================================
 
-pro putValue, Event, uname, value
-  uname_id = widget_info(Event.top,find_by_uname=uname)
+pro putValue, event=event, base=base, uname, value
+  if (n_elements(event) ne 0) then begin
+    uname_id = widget_info(event.top,find_by_uname=uname)
+  endif else begin
+    uname_id = widget_info(base,find_by_uname=uname)
+  endelse
   widget_control, uname_id, set_value=value
 end
