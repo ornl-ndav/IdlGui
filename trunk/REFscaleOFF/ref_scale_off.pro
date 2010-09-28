@@ -70,6 +70,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     plot_setting1: 'Untouched plots',$
     plot_setting2: 'Interpolated plots',$
     plot_setting: 'untouched',$
+    scale_settings: 0, $ ;0 for linear, 1 for logarithmic
   
     ;used to bring back data from load_crtof_file procedure to load_files
     tmp_pData_x: ptr_new(0L),$
@@ -116,7 +117,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     mbar = bar,$
     TITLE        = MainTitle)
     
-    design_menu, bar, global
+  design_menu, bar, global
   design_tabs, MAIN_BASE, global
   
   ;Realize the widgets, set the user value of the top-level

@@ -32,7 +32,22 @@
 ;
 ;==============================================================================
 
-pro plot_colorbar, event=event, base=base, zmin, zmax
+;+
+; :Description:
+;    Plot the first time the scale on the right of the main plot
+;
+; :Params:
+;    zmin
+;    zmax
+;
+; :Keywords:
+;    event
+;    base
+;    type   0 for linear, 1 for logarithmic
+;
+; :Author: j35
+;-
+pro plot_colorbar, event=event, base=base, zmin, zmax, type=type
   compile_opt idl2
   
   if (n_elements(event) ne 0) then begin
@@ -48,34 +63,37 @@ pro plot_colorbar, event=event, base=base, zmin, zmax
   
   loadct, (*global_plot).default_loadct, /silent
   
-  ;  IF (isLogZaxisSelected(Event)) THEN BEGIN
-  ;    divisions = 10
-  ;    perso_format = '(e8.1)'
-  ;    range  = FLOAT([master_min,master_max])
-  ;    colorbar, $
-  ;      NCOLORS      = 255, $
-  ;      POSITION     = [0.75,0.01,0.95,0.99], $
-  ;      RANGE        = range,$
-  ;      DIVISIONS    = divisions,$
-  ;      PERSO_FORMAT = perso_format,$
-  ;      YLOG = 1,$
-  ;      /VERTICAL
-  ;  ENDIF ELSE BEGIN
+  default_scale_settings = (*global_plot).default_scale_settings
+  if (default_scale_settings eq 0) then begin ;linear
   
-  divisions = 20
-  perso_format = '(e8.1)'
-  range = [zmin,zmax]
-  colorbar, $
-    NCOLORS      = 255, $
-    POSITION     = [0.75,0.01,0.95,0.99], $
-    RANGE        = range,$
-    DIVISIONS    = divisions,$
-    PERSO_FORMAT = perso_format,$
-    /VERTICAL
-;  ENDELSE
-    
-END
-
+    divisions = 20
+    perso_format = '(e8.1)'
+    range = [zmin,zmax]
+    colorbar, $
+      NCOLORS      = 255, $
+      POSITION     = [0.75,0.01,0.95,0.99], $
+      RANGE        = range,$
+      DIVISIONS    = divisions,$
+      PERSO_FORMAT = perso_format,$
+      /VERTICAL
+      
+  endif else begin
+  
+    divisions = 10
+    perso_format = '(e8.1)'
+    range = float([zmin,zmax])
+    colorbar, $
+      NCOLORS      = 255, $
+      POSITION     = [0.75,0.01,0.95,0.99], $
+      RANGE        = range,$
+      DIVISIONS    = divisions,$
+      PERSO_FORMAT = perso_format,$
+      /VERTICAL,$
+      ylog = 1
+      
+  endelse
+  
+end
 
 ;+
 ; :Description:
@@ -98,19 +116,39 @@ pro refresh_plot_colorbar, event
   id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='colorbar')
   widget_control, id_draw, get_value=id_value
   wset,id_value
+  erase
   
   loadct, (*global_plot).default_loadct, /silent
   
-  divisions = 20
-  perso_format = '(e8.1)'
-  range = [zmin,zmax]
-  colorbar, $
-    NCOLORS      = 255, $
-    POSITION     = [0.75,0.01,0.95,0.99], $
-    RANGE        = range,$
-    DIVISIONS    = divisions,$
-    PERSO_FORMAT = perso_format,$
-    annotatecolor = 'white',$
-    /VERTICAL
-
+  default_scale_settings = (*global_plot).default_scale_settings
+  if (default_scale_settings eq 0) then begin ;linear
+  
+    divisions = 20
+    perso_format = '(e8.1)'
+    range = [zmin,zmax]
+    colorbar, $
+      NCOLORS      = 255, $
+      POSITION     = [0.75,0.01,0.95,0.99], $
+      RANGE        = range,$
+      DIVISIONS    = divisions,$
+      PERSO_FORMAT = perso_format,$
+      annotatecolor = 'white',$
+      /VERTICAL
+      
+  endif else begin
+  
+    divisions = 10
+    perso_format = '(e8.1)'
+    range = float([zmin,zmax])
+    colorbar, $
+      NCOLORS      = 255, $
+      POSITION     = [0.75,0.01,0.95,0.99], $
+      RANGE        = range,$
+      DIVISIONS    = divisions,$
+      PERSO_FORMAT = perso_format,$
+      /VERTICAL,$
+      ylog = 1
+      
+  endelse
+  
 end

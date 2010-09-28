@@ -120,6 +120,47 @@ end
 
 ;+
 ; :Description:
+;    Switch linear/log plot
+;
+; :Keywords:
+;    event
+;    base
+;
+; :Author: j35
+;-
+pro lin_log_data, event=event, base=base
+  compile_opt idl2
+  
+  ;get global structure
+  if (n_elements(event) ne 0) then begin
+    widget_control,event.top,get_uvalue=global_plot
+  endif else begin
+    widget_control, base, get_uvalue=global_plot
+  endelse
+  global = (*global_plot).global
+  
+  Data = (*(*global_plot).data_linear)
+  scale_setting = (*global_plot).default_scale_settings ;0 for lin, 1 for log
+  
+  if (scale_setting eq 1) then begin ;log
+  
+    ;remove 0 values and replace with NAN
+    ;and calculate log
+    index = where(Data eq 0, nbr)
+    if (nbr GT 0) then begin
+      Data[index] = !VALUES.D_NAN
+      Data = ALOG10(Data)
+      Data = BYTSCL(Data,/NAN)
+    endif
+    
+  endif
+  
+  (*(*global_plot).data) = Data
+  
+end
+
+;+
+; :Description:
 ;    refresh the 2d plot
 ;
 ; :Params:
@@ -319,7 +360,7 @@ pro px_vs_tof_plots_base_gui, wBase, $
   plot_setting2 = (*global).plot_setting2
   
   mPlot = widget_button(bar1, $
-    value = 'Settings',$
+    value = 'Type ',$
     /menu)
     
   if ((*global).plot_setting eq 'untouched') then begin
@@ -393,6 +434,32 @@ pro px_vs_tof_plots_base_gui, wBase, $
       event_pro = 'change_loadct')
   endfor
   
+  
+  scale_setting = (*global).scale_settings ;0 for lin, 1 for log
+  if (scale_setting eq 0) then begin
+    set1_value = '*  linear'
+    set2_value = '   logarithmic'
+  endif else begin
+    set1_value = '   linear'
+    set2_value = '*  logarithmic'
+  endelse
+  
+  mPlot = widget_button(bar1, $
+    value = 'Axes',$
+    /menu)
+    
+  set1 = widget_button(mPlot, $
+    value = set1_value, $
+    event_pro = 'local_switch_axes_type',$
+    uname = 'local_scale_setting_linear')
+    
+  set2 = widget_button(mPlot, $
+    value = set2_value,$
+    event_pro = 'local_switch_axes_type',$
+    uname = 'local_scale_setting_log')
+    
+  ;-------- end of menu
+    
   draw = widget_draw(wbase,$
     xoffset = border,$
     yoffset = border,$
@@ -533,6 +600,7 @@ pro px_vs_tof_plots_base, main_base=main_base, $
   border = 40
   colorbar_xsize = 70
   default_loadct = (*global).default_loadct
+  default_scale_settings = (*global).scale_settings
   
   ;build gui
   wBase = ''
@@ -550,6 +618,7 @@ pro px_vs_tof_plots_base, main_base=main_base, $
   global_plot = PTR_NEW({ wbase: wbase,$
     global: global, $
     data: ptr_new(0L), $
+    data_linear: ptr_new(0L), $
     plot_setting: (*global).plot_setting,$
     xsize: default_plot_size[0],$
     ysize: default_plot_size[1],$
@@ -557,6 +626,7 @@ pro px_vs_tof_plots_base, main_base=main_base, $
     nbr_pixel: 0L,$
     colorbar_xsize: colorbar_xsize,$
     default_loadct: default_loadct, $ ;prism by default
+    default_scale_settings: default_scale_settings, $ ;lin or log z-axis
     border: border, $ ;border of main plot (space reserved for scale)
     tof_axis: fltarr(2),$  ;[start, end]
     zrange: fltarr(2),$
@@ -580,7 +650,9 @@ pro px_vs_tof_plots_base, main_base=main_base, $
   ;retrieve the data to plot
   pData_y = (*global).pData_y
   Data = *pData_y[file_index, spin_state]
-  (*(*global_plot).data) = Data
+  (*(*global_plot).data_linear) = Data
+  
+  lin_log_data, base=wBase
   
   ;number of pixels
   (*global_plot).nbr_pixel = (size(data))[1] ;nbr of pixels to plot
@@ -588,7 +660,8 @@ pro px_vs_tof_plots_base, main_base=main_base, $
   ;start pixel
   files_sf_list = (*global).files_SF_list
   (*global_plot).start_pixel = files_SF_list[spin_state,2,file_index]
-  
+
+  Data = (*(*global_plot).data)  
   if ((*global_plot).plot_setting eq 'untouched') then begin
     cData = congrid(Data, default_plot_size[0]-2*border, default_plot_size[1]-2*border)
   endif else begin
@@ -611,7 +684,7 @@ pro px_vs_tof_plots_base, main_base=main_base, $
   zrange[0] = zmin
   zrange[1] = zmax
   (*global_plot).zrange = zrange
-  plot_colorbar, base=wBase, zmin, zmax
+  plot_colorbar, base=wBase, zmin, zmax, type=default_scale_settings
   
   ;change label of default loadct
   pre = '>  > >> '

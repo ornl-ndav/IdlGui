@@ -36,8 +36,8 @@ pro design_tabs, MAIN_BASE, global
   compile_opt idl2
   
   tabs = widget_tab(MAIN_BASE,$
-  uname = 'tab_uname')
-  
+    uname = 'tab_uname')
+    
   base1 = widget_base(tabs,$
     title = 'LOAD and SCALE',$
     /column)
@@ -74,7 +74,7 @@ pro design_tabs, MAIN_BASE, global
     value = 'On_On',$
     sensitive = 0,$
     uname = 'tab1state4')
-  
+    
   editable_table = indgen(2*20) MOD 2
   
   table = widget_table(row2,$
@@ -88,30 +88,30 @@ pro design_tabs, MAIN_BASE, global
     /context_events,$
     column_widths = [690,80,50],$
     /all_events)
-   
-   ;context_menu
-   contextBase = widget_base(table,$
-   /context_menu,$ 
-   uname = 'context_base')
-   plot = widget_button(contextBase,$
-   value = 'Plot file...',$
-   uname = 'table_plot') 
-   preview = widget_button(contextBase,$
-   value = 'Preview file...',$
-   uname = 'table_preview') 
-   delete = widget_button(contextBase,$
-   value = 'Delete file',$
-   uname = 'table_delete',$
-   /separator) 
+    
+  ;context_menu
+  contextBase = widget_base(table,$
+    /context_menu,$
+    uname = 'context_base')
+  plot = widget_button(contextBase,$
+    value = 'Plot file...',$
+    uname = 'table_plot')
+  preview = widget_button(contextBase,$
+    value = 'Preview file...',$
+    uname = 'table_preview')
+  delete = widget_button(contextBase,$
+    value = 'Delete file',$
+    uname = 'table_delete',$
+    /separator)
     
   row3 = widget_base(base1,$
     /align_right,$
     /row)
   wScale = widget_button(row3,$
-  value = ' AUTOMATIC SCALING ')
+    value = ' AUTOMATIC SCALING ')
   wPlot = widget_button(row3,$
     value = ' SHOW PLOT ')
-    space = widget_label(row3,$
+  space = widget_label(row3,$
     value = '  ')
     
   ;TAB2 =========================================
@@ -121,66 +121,66 @@ pro design_tabs, MAIN_BASE, global
     /column)
     
   row1 = widget_base(base2,$
-  /row)
+    /row)
   label = widget_label(row1,$
-  value = 'Where:')
+    value = 'Where:')
   button = widget_button(row1,$
-  value = '~/results',$
-  scr_xsize = 737)
-  
+    value = '~/results',$
+    scr_xsize = 737)
+    
   row2 = widget_base(base2,$
-  /row)
+    /row)
   label = widget_label(row2,$
-  value = 'Base File Name:')
+    value = 'Base File Name:')
   value = widget_text(row2,$
-  value = 'N/A',$
-  scr_xsize = 685,$
-  /editable)
+    value = 'N/A',$
+    scr_xsize = 685,$
+    /editable)
     
-    space = widget_label(base2,$
+  space = widget_label(base2,$
     value = ' ')
-
+    
   row3 = widget_base(base2,$
-  /column)
-    row3a = widget_base(row3,$
-  /row,$
-  /nonexclusive)
+    /column)
+  row3a = widget_base(row3,$
+    /row,$
+    /nonexclusive)
   button1 = widget_button(row3a,$
-  value = '3 columns ASCII')
+    value = '3 columns ASCII')
   row3b = widget_base(row3,$
-  /row,$
-  /nonexclusive)
+    /row,$
+    /nonexclusive)
   button2 = widget_button(row3b,$
-  value = '2D table')
-  
-  row4 = widget_base(base2,$
-  /row)
-  row4a = widget_base(row4,$
-  /row,$
-  /nonexclusive)
-  button3 = widget_button(row4a,$
-  value = 'Also send file(s) by email')
-  row4b = widget_base(row4,$
-  /row)
-  email = widget_text(row4b,$
-  value = '',$
-  xsize = 50,$
-  /editable)
+    value = '2D table')
     
-    space = widget_label(base2,$
+  row4 = widget_base(base2,$
+    /row)
+  row4a = widget_base(row4,$
+    /row,$
+    /nonexclusive)
+  button3 = widget_button(row4a,$
+    value = 'Also send file(s) by email')
+  row4b = widget_base(row4,$
+    /row)
+  email = widget_text(row4b,$
+    value = '',$
+    xsize = 50,$
+    /editable)
+    
+  space = widget_label(base2,$
     value = ' ')
-    space = widget_label(base2,$
+  space = widget_label(base2,$
     value = ' ')
     
   row5 = widget_base(base2,$
-  /align_center)
+    /align_center)
   create_output = widget_button(row5,$
-  value = 'CREATE OUTPUT',$
-  scr_xsize = 700)  
+    value = 'CREATE OUTPUT',$
+    scr_xsize = 700)
     
     
     
     
-
+    
     
 end
