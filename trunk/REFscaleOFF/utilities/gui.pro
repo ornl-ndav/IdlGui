@@ -32,43 +32,9 @@
 ;
 ;==============================================================================
 
-;define path to dependencies and current folder
-spawn, 'pwd', CurrentFolder
-IdlUtilitiesPath = "/utilities"
+pro resize_widget, event, uname, str_sz
 
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-cd, CurrentFolder + IdlUtilitiesPath
-.run put.pro
-.run get.pro
-;.run gui.pro
-.run get_ucams.pro
-.run IDLxmlParser__define.pro
-.run logger.pro
-.run IDL3columnsASCIIparser__define.pro
-.run xdisplayfile.pro
-.run convert.pro
+id = widget_info(event.top, find_by_uname=uname)
+widget_control, id, xsize=str_sz*3
 
-;Build REFscale GUI
-cd, CurrentFolder + '/REFscaleOFFGUI/'
-.run tab_designer.pro
-.run menu_designer.pro
-
-;Build main procedures
-cd, CurrentFolder
-
-;functions (tab#1)
-.run load_rtof_file.pro
-;procedures (tab#1)
-.run load_files_button.pro
-.run load_files.pro
-.run delete_data_set.pro
-.run preview_files.pro
-.run plot_rtof_files.pro
-.run pixel_vs_tof_individual_plots_base.pro
-.run menu_eventcb.pro
-
-.run ref_off_scale_cleanup.pro
-.run main_base_event.pro
-.run ref_scale_off.pro
-
+end

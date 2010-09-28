@@ -99,6 +99,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     tmp_start_pixel: '',$
     
     default_plot_size: [600,600],$
+    default_loadct: 5,$ ;prism
     
     input_path: '~/results/' })
     

@@ -39,7 +39,7 @@ pro design_menu, bar, global
   plot_setting2 = (*global).plot_setting2
   
   mPlot = widget_button(bar, $
-    value = 'Settings',$
+    value = 'Plot Settings',$
     /menu)
     
   set2 = widget_button(mPlot, $
@@ -50,4 +50,64 @@ pro design_menu, bar, global
     value = ('   ' + plot_setting2),$
     uname = 'plot_setting_interpolated')
     
+  list_loadct = ['B-W Linear',$
+    'Blue/White',$
+    'Green-Red-Blue-White',$
+    'Red temperature',$
+    'Std Gamma-II',$
+    '>  > >> Prism << <  <',$
+    'Red-Purple',$
+    'Green/White Linear',$
+    'Green/White Exponential',$
+    'Green-Pink',$
+    'Blue-Red',$
+    '16 level',$
+    'Rainbow',$
+    'Steps',$
+    'Stern Special',$
+    'Haze',$
+    'Blue-Pastel-R',$
+    'Pastels',$
+    'Hue Sat Lightness 1',$
+    'Hue Sat Ligthness 2',$
+    'Hue Sat Value 1',$
+    'Hue Sat Value 2',$
+    'Purple-Red + Stri',$
+    'Beach',$
+    'Mac Style',$
+    'Eos A',$
+    'Eos B',$
+    'Hardcandy',$
+    'Nature',$
+    'Ocean',$
+    'Peppermint',$
+    'Plasma',$
+    'Blue-Red',$
+    'Rainbow',$
+    'Blue Waves',$
+    'Volcano',$
+    'Waves',$
+    'Rainbow18',$
+    'Rainbow + white',$
+    'Rainbow + black']
+    
+  set = widget_button(mPlot,$
+    value = list_loadct[0],$
+    uname = 'menu_0',$
+    /separator)
+    
+  sz = n_elements(list_loadct)
+  for i=1L,(sz-1) do begin
+    set = widget_button(mPlot,$
+      value = list_loadct[i],$
+      uname = strcompress(i,/remove_all))
+  endfor
+  
+
+  
+  
+  
+  
+  
+  
 end
