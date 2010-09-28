@@ -552,7 +552,7 @@ pro plot_beam_center_scale, base=base, event=event
     XMINOR      = 2,$
     ;YMINOR      = 2,$
     YTICKS      = yticks,$
-    XTITLE      = 'TOF',$
+    XTITLE      = 'TOF (!4l!Xs)',$
     ;    YTITLE      = 'Pixels',$
     XMARGIN     = [xmargin, xmargin+0.2],$
     YMARGIN     = [ymargin, ymargin],$
