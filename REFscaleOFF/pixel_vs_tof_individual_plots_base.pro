@@ -54,10 +54,12 @@ pro px_vs_tof_plots_base_event, Event
     widget_info(event.top, find_by_unam='plot_setting_untouched'): begin
       switch_local_settings_plot_values, event
       refresh_plot, event
+      return
     end
     widget_info(event.top, find_by_unam='plot_setting_interpolated'): begin
       switch_local_settings_plot_values, event
       refresh_plot, event
+      return
     end
     
     widget_info(event.top, find_by_uname='px_vs_tof_widget_base'): begin
@@ -87,6 +89,7 @@ pro px_vs_tof_plots_base_event, Event
       plot_beam_center_scale, event=event
       refresh_plot, event
       
+      return
     end
     
     widget_info(event.top, $
@@ -98,6 +101,8 @@ pro px_vs_tof_plots_base_event, Event
       id = widget_info(Event.top, $
         find_by_uname='settings_widget_base')
       widget_control, id, /destroy
+      
+      return
     end
     
     else:
@@ -138,6 +143,8 @@ pro refresh_plot, event
   wset, plot_id
   erase
   
+  loadct, (*global_plot).default_loadct, /silent
+  
   tvscl, transpose(cData)
   
 end
@@ -177,6 +184,47 @@ pro switch_local_settings_plot_values, event
   putValue, event, 'plot_setting_untouched', set1_value
   putValue, event, 'plot_setting_interpolated', set2_value
   
+end
+
+;+
+; :Description:
+;    this procedure is reached by the loadct menu and change the default loadct
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro change_loadct, event
+compile_opt idl2
+
+new_uname = widget_info(event.id, /uname)
+widget_control,event.top,get_uvalue=global_plot
+
+;get old loadct
+old_loadct = (*global_plot).default_loadct
+old_uname = strcompress(old_loadct,/remove_all)
+label = getValue(event,old_uname)
+;remove keep central part
+raw_label1 = strsplit(label,'>>',/regex,/extract)
+raw_label2 = strsplit(raw_label1[1],'<<',/regex,/extract)
+raw_label = strcompress(raw_label2[0],/remove_all)
+;put it back 
+putValue, event, old_uname, raw_label
+
+;change value of new loadct
+new_label = getValue(event, new_uname)
+new_label = strcompress(new_label,/remove_all)
+;add selection string
+new_label = '>  > >> ' + new_label + ' << <  <'
+putValue, event, new_uname, new_label
+
+;save new loadct  
+(*global_plot).default_loadct = fix(new_uname)
+
+;replot
+refresh_plot, event
+
 end
 
 ;+
@@ -280,6 +328,60 @@ pro px_vs_tof_plots_base_gui, wBase, $
   set1 = widget_button(mPlot, $
     value = set1_value,$
     uname = 'plot_setting_interpolated')
+    
+    list_loadct = ['B-W Linear',$
+    'Blue/White',$
+    'Green-Red-Blue-White',$
+    'Red temperature',$
+    'Std Gamma-II',$
+    '>  > >> Prism << <  <',$
+    'Red-Purple',$
+    'Green/White Linear',$
+    'Green/White Exponential                  ',$
+    'Green-Pink',$
+    'Blue-Red',$
+    '16 level',$
+    'Rainbow',$
+    'Steps',$
+    'Stern Special',$
+    'Haze',$
+    'Blue-Pastel-R',$
+    'Pastels',$
+    'Hue Sat Lightness 1',$
+    'Hue Sat Ligthness 2',$
+    'Hue Sat Value 1',$
+    'Hue Sat Value 2',$
+    'Purple-Red + Stri',$
+    'Beach',$
+    'Mac Style',$
+    'Eos A',$
+    'Eos B',$
+    'Hardcandy',$
+    'Nature',$
+    'Ocean',$
+    'Peppermint',$
+    'Plasma',$
+    'Blue-Red',$
+    'Rainbow',$
+    'Blue Waves',$
+    'Volcano',$
+    'Waves',$
+    'Rainbow18',$
+    'Rainbow + white',$
+    'Rainbow + black']
+    
+  set = widget_button(mPlot,$
+    value = list_loadct[0],$
+    uname = '0',$
+    /separator)
+    
+  sz = n_elements(list_loadct)
+  for i=1L,(sz-1) do begin
+    set = widget_button(mPlot,$
+      value = list_loadct[i],$
+      uname = strcompress(i,/remove_all),$
+      event_pro = 'change_loadct')
+  endfor
     
   draw = widget_draw(wBase,$
     xoffset = border,$
@@ -412,6 +514,7 @@ pro px_vs_tof_plots_base, main_base=main_base, $
   main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
   
   border = 40
+  default_loadct = (*global).default_loadct
   
   ;build gui
   wBase = ''
@@ -433,6 +536,7 @@ pro px_vs_tof_plots_base, main_base=main_base, $
     ysize: default_plot_size[1],$
     start_pixel: 0L,$
     nbr_pixel: 0L,$
+    default_loadct: default_loadct, $ ;prism by default
     border: border, $ ;border of main plot (space reserved for scale)
     tof_axis: fltarr(2),$  ;[start, end]
     main_event: event})
@@ -471,8 +575,7 @@ pro px_vs_tof_plots_base, main_base=main_base, $
   endelse
   
   DEVICE, DECOMPOSED = 0
-  ;loadct, 5, /SILENT
-  loadct, 10, /silent
+  loadct, default_loadct, /SILENT
   
   plot_beam_center_scale, base=wBase
   
