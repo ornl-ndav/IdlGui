@@ -46,7 +46,7 @@ pro draw_eventcb, event
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global_plot
-    
+  
   draw_zoom_selection = (*global_plot).draw_zoom_selection
   
   if ((*global_plot).left_click) then begin ;moving mouse with left click
@@ -71,13 +71,97 @@ pro draw_eventcb, event
     (*global_plot).left_click = 0b
     x1 = event.x
     y1 = event.y
+    
+    ;make sure we stay within the display
+    id = widget_info(event.top, find_by_uname='draw')
+    geometry = widget_info(id, /geometry)
+    xsize = geometry.xsize
+    ysize = geometry.ysize
+    
+    if (x1 gt xsize) then x1 = xsize
+    if (x1 lt 0) then x1 = 0
+    if (y1 gt ysize) then y1 = ysize
+    if (y1 lt 0) then y1 = 0
+    
     draw_zoom_selection[2] = x1
     draw_zoom_selection[3] = y1
+    
     (*global_plot).draw_zoom_selection = draw_zoom_selection
-        zoom_selection, event
+    zoom_selection, event
     refresh_plot, event
   endif
   
+end
+
+;+
+; :Description:
+;    Using the device y0 and y1, this function returns the
+;    data y0 and y1
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+function determine_range_pixel_selected, event
+  compile_opt idl2
+
+widget_control, event.top, get_uvalue=global_plot
+
+  draw_zoom_selection = (*global_plot).draw_zoom_selection
+  y0_device = float(draw_zoom_selection[1])
+  y1_device = float(draw_zoom_selection[3])
+  
+  congrid_ycoeff = (*global_plot).congrid_xcoeff  ;using xcoeff because of transpose
+  
+  yrange = float((*global_plot).yrange) ;min and max pixels
+  
+  ;calculation of y0_data value
+  rat = float(y0_device) / float(congrid_ycoeff)
+  y0_data = fix(rat * (yrange[1] - yrange[0]) + yrange[0])
+
+  ;calculation of y1_data value
+  rat = float(y1_device) / float(congrid_ycoeff)
+  y1_data = fix(rat * (yrange[1] - yrange[0]) + yrange[0])
+
+  return, [y0_data, y1_data]
+
+end
+
+;+
+; :Description:
+;    Using the device x0 and y=x1, this function returns the
+;    data x0 and x1
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+function determine_range_tof_selected, event
+  compile_opt idl2
+
+widget_control, event.top, get_uvalue=global_plot
+
+  draw_zoom_selection = (*global_plot).draw_zoom_selection
+  x0_device = float(draw_zoom_selection[0])
+  x1_device = float(draw_zoom_selection[2])
+  
+  congrid_xcoeff = (*global_plot).congrid_ycoeff  ;using ycoeff because of transpose
+  
+  xrange = float((*global_plot).xrange) ;min and max pixels
+  
+  ;calculation of x0_data value
+  rat = float(x0_device) / float(congrid_xcoeff)  
+  x0_data = long(rat * (xrange[1] - xrange[0]) + xrange[0])
+
+  ;calculation of x1_data value
+  rat = float(x1_device) / float(congrid_xcoeff)
+  
+  x1_data = long(rat * (xrange[1] - xrange[0]) + xrange[0])
+
+  return, [x0_data, x1_data]
+
 end
 
 ;+
@@ -90,12 +174,16 @@ end
 ; :Author: j35
 ;-
 pro zoom_selection, event
-compile_opt idl2
+  compile_opt idl2
+  
+  pixel_range = determine_range_pixel_selected(event)
+  tof_range   = determine_range_tof_selected(event)
+  
 
 
 
 
-
+  
 end
 
 ;+
@@ -118,7 +206,7 @@ pro refresh_zoom_selection, event
   
   selection = (*global_plot).draw_zoom_selection
   
-    id = widget_info(event.top,find_by_uname='draw')
+  id = widget_info(event.top,find_by_uname='draw')
   widget_control, id, GET_VALUE = plot_id
   wset, plot_id
   
@@ -129,10 +217,10 @@ pro refresh_zoom_selection, event
   ymin = min(yrange, max=ymax)
   
   plots, [xmin, xmin, xmax, xmax, xmin],$
-  [ymin, ymax, ymax, ymin, ymin],$
-        /DEVICE,$
-      LINESTYLE = 3,$
-      COLOR = 200
-  
+    [ymin, ymax, ymax, ymin, ymin],$
+    /DEVICE,$
+    LINESTYLE = 3,$
+    COLOR = 200
+    
 end
 
