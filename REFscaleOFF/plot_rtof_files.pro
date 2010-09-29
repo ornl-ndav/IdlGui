@@ -70,7 +70,14 @@ pro plot_rtof_files, event, from_line, to_line, spin_state=spin_state
       px_vs_tof_plots_base, event = event, $
         file_name = file_name, $
         file_index = index, $
-        offset = delta_offset * index 
+        offset = (delta_offset * index), $
+        default_loadct = (*global).default_loadct, $
+        default_scale_settings = (*global).scale_settings, $
+        default_plot_size = (*global).default_plot_size, $
+        current_plot_setting = (*global).plot_setting, $
+        pData_x = (*global).pData_x, $
+        pData_y = (*global).pData_y
+  
     endif
     
     index++

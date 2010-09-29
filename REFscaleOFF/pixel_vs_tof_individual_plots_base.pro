@@ -46,7 +46,6 @@ pro px_vs_tof_plots_base_event, Event
   
   ;get global structure
   widget_control,event.top,get_uvalue=global_plot
-  global = (*global_plot).global
   main_event = (*global_plot).main_event
   
   case Event.id of
@@ -137,7 +136,6 @@ pro lin_log_data, event=event, base=base
   endif else begin
     widget_control, base, get_uvalue=global_plot
   endelse
-  global = (*global_plot).global
   
   Data = (*(*global_plot).data_linear)
   scale_setting = (*global_plot).default_scale_settings ;0 for lin, 1 for log
@@ -173,7 +171,6 @@ pro refresh_plot, event
   
   ;get global structure
   widget_control,event.top,get_uvalue=global_plot
-  global = (*global_plot).global
   
   Data = (*(*global_plot).data)
   new_xsize = (*global_plot).xsize
@@ -212,10 +209,9 @@ pro switch_local_settings_plot_values, event
   compile_opt idl2
   
   widget_control,event.top,get_uvalue=global_plot
-  global = (*global_plot).global
   
-  plot_setting1 = (*global).plot_setting1
-  plot_setting2 = (*global).plot_setting2
+  plot_setting1 = (*global_plot).plot_setting1
+  plot_setting2 = (*global_plot).plot_setting2
   
   set1_value = getValue(event=event, 'plot_setting_untouched')
   
@@ -290,9 +286,8 @@ pro px_vs_tof_widget_killed, id
   compile_opt idl2
   
   ;get global structure
-  widget_control,id,get_uvalue=global_settings
-  global = (*global_settings).global
-  main_event = (*global_settings).main_event
+  widget_control,id,get_uvalue=global_plot
+  main_event = (*global_plot).main_event
   
   id = widget_info(id, $
     find_by_uname='px_vs_tof_widget_base')
@@ -318,7 +313,12 @@ pro px_vs_tof_plots_base_gui, wBase, $
     file_name, $
     offset, $
     border, $
-    colorbar_xsize
+    colorbar_xsize, $
+    plot_setting1 = plot_setting1,$
+    plot_setting2 = plot_setting2, $
+    current_plot_setting = current_plot_setting, $
+    scale_setting = scale_setting
+    
     
   compile_opt idl2
   
@@ -351,19 +351,15 @@ pro px_vs_tof_plots_base_gui, wBase, $
     kill_notify  = 'px_vs_tof_widget_killed', $
     /BASE_ALIGN_CENTER,$
     /align_center,$
-    ;    /column,$
     /tlb_size_events,$
     mbar = bar1,$
     GROUP_LEADER = ourGroup)
     
-  plot_setting1 = (*global).plot_setting1
-  plot_setting2 = (*global).plot_setting2
-  
   mPlot = widget_button(bar1, $
     value = 'Type ',$
     /menu)
     
-  if ((*global).plot_setting eq 'untouched') then begin
+  if (current_plot_setting eq 'untouched') then begin
     set2_value = '*  ' + plot_setting1
     set1_value = '   ' + plot_setting2
   endif else begin
@@ -434,8 +430,6 @@ pro px_vs_tof_plots_base_gui, wBase, $
       event_pro = 'change_loadct')
   endfor
   
-  
-  scale_setting = (*global).scale_settings ;0 for lin, 1 for log
   if (scale_setting eq 0) then begin
     set1_value = '*  linear'
     set2_value = '   logarithmic'
@@ -585,26 +579,29 @@ pro px_vs_tof_plots_base, main_base=main_base, $
     file_name = file_name, $
     file_index = file_index, $
     spin_state=spin_state,$
-    offset = offset
+    offset = offset, $
+    default_loadct = default_loadct, $
+    default_scale_settings = default_scale_settings, $
+    default_plot_size = default_plot_size, $
+    current_plot_setting = current_plot_setting, $
+    pData_x = pData_x, $
+    pData_y = pData_y
+
     
   compile_opt idl2
   
   if (n_elements(spin_state) eq 0) then spin_state = 0
   
-  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
-    id = WIDGET_INFO(main_base, FIND_BY_UNAME='main_base')
-    WIDGET_CONTROL,main_base,GET_UVALUE=global
-    event = 0
-  ENDIF ELSE BEGIN
-    id = WIDGET_INFO(Event.top, FIND_BY_UNAME='main_base')
-    WIDGET_CONTROL,Event.top,GET_UVALUE=global
-  ENDELSE
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='main_base')
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
   main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
   
+  ;SETUP
   border = 40
   colorbar_xsize = 70
-  default_loadct = (*global).default_loadct
-  default_scale_settings = (*global).scale_settings
+  
+  plot_setting1 = 'Untouched plots'
+  plot_setting2 = 'Interpolated plots'
   
   ;build gui
   wBase = ''
@@ -614,16 +611,18 @@ pro px_vs_tof_plots_base, main_base=main_base, $
     file_name, $
     offset, $
     border, $
-    colorbar_xsize
+    colorbar_xsize, $
+    plot_setting1 = plot_setting1,$
+    plot_setting2 = plot_setting2, $
+    current_plot_setting = current_plot_setting, $
+    scale_setting = default_scale_settings
     
   WIDGET_CONTROL, wBase, /REALIZE
   
-  default_plot_size = (*global).default_plot_size
   global_plot = PTR_NEW({ wbase: wbase,$
     global: global, $
     data: ptr_new(0L), $
     data_linear: ptr_new(0L), $
-    plot_setting: (*global).plot_setting,$
     xsize: default_plot_size[0],$
     ysize: default_plot_size[1],$
     start_pixel: 0L,$
@@ -638,6 +637,10 @@ pro px_vs_tof_plots_base, main_base=main_base, $
     left_click: 0b,$ ;by default, left button is not clicked
     draw_zoom_selection: intarr(4),$ ;[x0,y0,x1,y1]
     
+    plot_setting1: plot_setting1,$
+    plot_setting2: plot_setting2,$
+    plot_setting: current_plot_setting,$ ;untouched or interpolated
+    
     main_event: event})
     
   WIDGET_CONTROL, wBase, SET_UVALUE = global_plot
@@ -645,7 +648,6 @@ pro px_vs_tof_plots_base, main_base=main_base, $
   XMANAGER, "px_vs_tof_plots_base", wBase, GROUP_LEADER = ourGroup, /NO_BLOCK
   
   ;retrieve scale
-  pData_x = (*global).pData_x
   Data_x = *pData_x[file_index,spin_state]
   start_tof = Data_x[0]
   end_tof = Data_x[-1]
@@ -656,7 +658,6 @@ pro px_vs_tof_plots_base, main_base=main_base, $
   (*global_plot).tof_axis = tof_axis
   
   ;retrieve the data to plot
-  pData_y = (*global).pData_y
   Data = *pData_y[file_index, spin_state]
   (*(*global_plot).data_linear) = Data
   
@@ -668,8 +669,8 @@ pro px_vs_tof_plots_base, main_base=main_base, $
   ;start pixel
   files_sf_list = (*global).files_SF_list
   (*global_plot).start_pixel = files_SF_list[spin_state,2,file_index]
-
-  Data = (*(*global_plot).data)  
+  
+  Data = (*(*global_plot).data)
   if ((*global_plot).plot_setting eq 'untouched') then begin
     cData = congrid(Data, default_plot_size[0]-2*border, default_plot_size[1]-2*border)
   endif else begin
