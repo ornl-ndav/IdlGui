@@ -176,12 +176,15 @@ pro refresh_plot, event
   new_xsize = (*global_plot).xsize
   new_ysize = (*global_plot).ysize
   border = (*global_plot).border
-  
+  colorbar_xsize = (*global_plot).colorbar_xsize
+      
   if ((*global_plot).plot_setting eq 'untouched') then begin
-    cData = congrid(Data, new_ysize-2*border, new_xsize-2*border)
+    cData = congrid(Data, new_ysize-2*border, new_xsize-2*border-colorbar_xsize)
   endif else begin
-    cData = congrid(Data, new_ysize-2*border, new_xsize-2*border,/interp)
+    cData = congrid(Data, new_ysize-2*border, new_xsize-2*border-colorbar_xsize,/interp)
   endelse
+  (*global_plot).congrid_xcoeff = new_ysize-2*border
+  (*global_plot).congrid_ycoeff = new_xsize-2*border-colorbar_xsize
   
   id = widget_info(event.top, find_by_uname='draw')
   widget_control, id, GET_VALUE = plot_id
@@ -530,7 +533,10 @@ pro plot_beam_center_scale, base=base, event=event
   ymargin = 4
   
   xrange = [min_x, max_x]
+  (*global_plot).xrange = xrange
+
   yrange = [min_y, max_y]
+  (*global_plot).yrange = yrange
   
   ticklen = -0.0015
   
@@ -634,10 +640,15 @@ pro px_vs_tof_plots_base, main_base=main_base, $
     default_scale_settings: default_scale_settings, $ ;lin or log z-axis
     border: border, $ ;border of main plot (space reserved for scale)
     tof_axis: fltarr(2),$  ;[start, end]
+    xrange: fltarr(2),$ ;[tof_min, tof_max]
     zrange: fltarr(2),$
+    yrange: intarr(2),$ ;[min_pixel,max_pixel]
     
     left_click: 0b,$ ;by default, left button is not clicked
     draw_zoom_selection: intarr(4),$ ;[x0,y0,x1,y1]
+    
+    congrid_xcoeff: 0., $ ;x coeff used in the congrid function to plot main data
+    congrid_ycoeff: 0., $ ;y coeff used in the congrid function to plot main data
     
     plot_setting1: plot_setting1,$
     plot_setting2: plot_setting2,$
@@ -668,16 +679,14 @@ pro px_vs_tof_plots_base, main_base=main_base, $
   ;number of pixels
   (*global_plot).nbr_pixel = (size(data_y))[1] ;nbr of pixels to plot
   
-  ;start pixel
-  ;files_sf_list = (*global).files_SF_list
-  ;(*global_plot).start_pixel = files_SF_list[spin_state,2,file_index
-  
   Data = (*(*global_plot).data)
   if ((*global_plot).plot_setting eq 'untouched') then begin
     cData = congrid(Data, default_plot_size[0]-2*border, default_plot_size[1]-2*border)
   endif else begin
     cData = congrid(Data, default_plot_size[0]-2*border, default_plot_size[1]-2*border,/interp)
   endelse
+  (*global_plot).congrid_xcoeff = default_plot_size[0]-2*border
+  (*global_plot).congrid_ycoeff = default_plot_size[1]-2*border
   
   DEVICE, DECOMPOSED = 0
   loadct, default_loadct, /SILENT

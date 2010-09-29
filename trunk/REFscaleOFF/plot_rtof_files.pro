@@ -69,7 +69,7 @@ pro plot_rtof_files, event, from_line, to_line, spin_state=spin_state
   
     file_name = files_SF_list[spin_state,0,index]
     if (file_test(file_name)) then begin
-      
+    
       px_vs_tof_plots_base, event = event, $
         file_name = file_name, $
         file_index = index, $
@@ -81,10 +81,11 @@ pro plot_rtof_files, event, from_line, to_line, spin_state=spin_state
         Data_x =  *pData_x[index,spin_state], $
         Data_y = *pData_y[index, spin_state], $ ;Data_y, $
         start_pixel = files_SF_list[spin_state, 2, index]
-
+        
     endif
     
     index++
+  
   endwhile
   
 end
