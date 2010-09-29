@@ -584,9 +584,11 @@ pro px_vs_tof_plots_base, main_base=main_base, $
     default_scale_settings = default_scale_settings, $
     default_plot_size = default_plot_size, $
     current_plot_setting = current_plot_setting, $
-    pData_x = pData_x, $
-    pData_y = pData_y
-
+;    pData_x = pData_x, $ ;remove_me
+    Data_x = Data_x, $
+    Data_y = Data_y, $ ;Data_y
+    start_pixel = start_pixel
+;    pData_y = pData_y, $ ;remove_me
     
   compile_opt idl2
   
@@ -625,7 +627,7 @@ pro px_vs_tof_plots_base, main_base=main_base, $
     data_linear: ptr_new(0L), $
     xsize: default_plot_size[0],$
     ysize: default_plot_size[1],$
-    start_pixel: 0L,$
+    start_pixel: start_pixel,$
     nbr_pixel: 0L,$
     colorbar_xsize: colorbar_xsize,$
     default_loadct: default_loadct, $ ;prism by default
@@ -648,7 +650,7 @@ pro px_vs_tof_plots_base, main_base=main_base, $
   XMANAGER, "px_vs_tof_plots_base", wBase, GROUP_LEADER = ourGroup, /NO_BLOCK
   
   ;retrieve scale
-  Data_x = *pData_x[file_index,spin_state]
+;  Data_x = *pData_x[file_index,spin_state]
   start_tof = Data_x[0]
   end_tof = Data_x[-1]
   delta_tof = Data_x[1]-Data_x[0]
@@ -658,17 +660,17 @@ pro px_vs_tof_plots_base, main_base=main_base, $
   (*global_plot).tof_axis = tof_axis
   
   ;retrieve the data to plot
-  Data = *pData_y[file_index, spin_state]
-  (*(*global_plot).data_linear) = Data
+;  Data = *pData_y[file_index, spin_state]
+  (*(*global_plot).data_linear) = Data_y
   
   lin_log_data, base=wBase
   
   ;number of pixels
-  (*global_plot).nbr_pixel = (size(data))[1] ;nbr of pixels to plot
+  (*global_plot).nbr_pixel = (size(data_y))[1] ;nbr of pixels to plot
   
   ;start pixel
-  files_sf_list = (*global).files_SF_list
-  (*global_plot).start_pixel = files_SF_list[spin_state,2,file_index]
+  ;files_sf_list = (*global).files_SF_list
+  ;(*global_plot).start_pixel = files_SF_list[spin_state,2,file_index
   
   Data = (*(*global_plot).data)
   if ((*global_plot).plot_setting eq 'untouched') then begin
