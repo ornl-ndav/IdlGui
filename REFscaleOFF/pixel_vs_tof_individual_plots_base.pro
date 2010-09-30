@@ -596,13 +596,14 @@ pro px_vs_tof_plots_base, main_base=main_base, $
     current_plot_setting = current_plot_setting, $
     Data_x = Data_x, $
     Data_y = Data_y, $ ;Data_y
-    start_pixel = start_pixel
+    start_pixel = start_pixel, $
+    main_base_uname = main_base_uname
     
   compile_opt idl2
   
   if (n_elements(spin_state) eq 0) then spin_state = 0
   
-  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='main_base')
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME=main_base_uname)
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
   
@@ -631,8 +632,14 @@ pro px_vs_tof_plots_base, main_base=main_base, $
   
   global_plot = PTR_NEW({ wbase: wbase,$
     global: global, $
+    
+    ;used to plot selection zoom
+    file_name: file_name, $
+    default_plot_size: default_plot_size, $
+    
     data: ptr_new(0L), $
     data_linear: ptr_new(0L), $
+    data_x: Data_x, $ ;[0,200,400,600...]
     xsize: default_plot_size[0],$
     ysize: default_plot_size[1],$
     start_pixel: start_pixel,$

@@ -71,6 +71,7 @@ pro plot_rtof_files, event, from_line, to_line, spin_state=spin_state
     if (file_test(file_name)) then begin
     
       px_vs_tof_plots_base, event = event, $
+        main_base_uname = 'main_base', $
         file_name = file_name, $
         offset = (delta_offset * index), $
         default_loadct = (*global).default_loadct, $

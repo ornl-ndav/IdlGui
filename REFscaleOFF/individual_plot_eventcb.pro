@@ -105,9 +105,9 @@ end
 ;-
 function determine_range_pixel_selected, event
   compile_opt idl2
-
-widget_control, event.top, get_uvalue=global_plot
-
+  
+  widget_control, event.top, get_uvalue=global_plot
+  
   draw_zoom_selection = (*global_plot).draw_zoom_selection
   y0_device = float(draw_zoom_selection[1])
   y1_device = float(draw_zoom_selection[3])
@@ -119,13 +119,13 @@ widget_control, event.top, get_uvalue=global_plot
   ;calculation of y0_data value
   rat = float(y0_device) / float(congrid_ycoeff)
   y0_data = fix(rat * (yrange[1] - yrange[0]) + yrange[0])
-
+  
   ;calculation of y1_data value
   rat = float(y1_device) / float(congrid_ycoeff)
   y1_data = fix(rat * (yrange[1] - yrange[0]) + yrange[0])
-
+  
   return, [y0_data, y1_data]
-
+  
 end
 
 ;+
@@ -140,9 +140,9 @@ end
 ;-
 function determine_range_tof_selected, event
   compile_opt idl2
-
-widget_control, event.top, get_uvalue=global_plot
-
+  
+  widget_control, event.top, get_uvalue=global_plot
+  
   draw_zoom_selection = (*global_plot).draw_zoom_selection
   x0_device = float(draw_zoom_selection[0])
   x1_device = float(draw_zoom_selection[2])
@@ -152,16 +152,16 @@ widget_control, event.top, get_uvalue=global_plot
   xrange = float((*global_plot).xrange) ;min and max pixels
   
   ;calculation of x0_data value
-  rat = float(x0_device) / float(congrid_xcoeff)  
+  rat = float(x0_device) / float(congrid_xcoeff)
   x0_data = long(rat * (xrange[1] - xrange[0]) + xrange[0])
-
+  
   ;calculation of x1_data value
   rat = float(x1_device) / float(congrid_xcoeff)
   
   x1_data = long(rat * (xrange[1] - xrange[0]) + xrange[0])
-
+  
   return, [x0_data, x1_data]
-
+  
 end
 
 ;+
@@ -182,13 +182,42 @@ pro zoom_selection, event
   ;retrieve selected region from big array
   widget_control, event.top, get_uvalue=global_plot
   
-  data_y = (*(*global_plot).data_linear)
+  ;calculate pixel and tof index range
+  start_pixel = (*global_plot).start_pixel
+  pixel_range_index = pixel_range - start_pixel
+  pixel_range_index = pixel_range_index[sort(pixel_range_index)]
   
-  help, data_y
-
-
-
+  tof_min = min(tof_range,max=tof_max)
+  Data_x = (*global_plot).Data_x
+  zoom_data_x = Data_x[pixel_range_index[0]:pixel_range_index[1]]
   
+  ;left tof
+  tof_range_index_left = where(tof_min ge Data_x)
+  tof_range_index_min = tof_range_index_left[-1]
+  
+  ;right tof
+  tof_range_index_right = where(Data_x ge tof_max)
+  tof_range_index_max = tof_range_index_right[0]
+  
+  tof_range_index = [tof_range_index_min, tof_range_index_max]
+  
+  ;create new array of selected region
+  data_y = (*(*global_plot).data_linear) ;Array[pixel,tof]
+  zoom_data_y = data_y[pixel_range_index[0]:pixel_range_index[1],$
+    tof_range_index[0]:tof_range_index[1]]
+    
+   px_vs_tof_plots_base, event = event, $
+        main_base_uname = 'px_vs_tof_widget_base', $
+        file_name = (*global_plot).file_name, $
+        offset = 50, $
+        default_loadct = (*global_plot).default_loadct, $
+        default_scale_settings = (*global_plot).default_scale_settings, $
+        default_plot_size = (*global_plot).default_plot_size, $
+        current_plot_setting = (*global_plot).plot_setting, $
+        Data_x =  zoom_data_x, $
+        Data_y = zoom_data_y, $ ;Data_y, $
+        start_pixel = pixel_range[0]
+    
 end
 
 ;+
