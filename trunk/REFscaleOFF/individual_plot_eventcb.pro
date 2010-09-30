@@ -177,20 +177,24 @@ pro zoom_selection, event
   compile_opt idl2
   
   pixel_range = determine_range_pixel_selected(event)
+  pixel_range = pixel_range[sort(pixel_range)]
   tof_range   = determine_range_tof_selected(event)
+  tof_range = tof_range[sort(tof_range)]
   
   ;retrieve selected region from big array
   widget_control, event.top, get_uvalue=global_plot
   
   ;calculate pixel and tof index range
+  
+  ;pixel
   start_pixel = (*global_plot).start_pixel
   pixel_range_index = pixel_range - start_pixel
   pixel_range_index = pixel_range_index[sort(pixel_range_index)]
   
+  ;tof
   tof_min = min(tof_range,max=tof_max)
   Data_x = (*global_plot).Data_x
-  zoom_data_x = Data_x[pixel_range_index[0]:pixel_range_index[1]]
-  
+   
   ;left tof
   tof_range_index_left = where(tof_min ge Data_x)
   tof_range_index_min = tof_range_index_left[-1]
@@ -203,6 +207,7 @@ pro zoom_selection, event
   
   ;create new array of selected region
   data_y = (*(*global_plot).data_linear) ;Array[pixel,tof]
+  zoom_data_x = Data_x[tof_range_index[0]:tof_range_index_max]
   zoom_data_y = data_y[pixel_range_index[0]:pixel_range_index[1],$
     tof_range_index[0]:tof_range_index[1]]
     
@@ -214,9 +219,11 @@ pro zoom_selection, event
         default_scale_settings = (*global_plot).default_scale_settings, $
         default_plot_size = (*global_plot).default_plot_size, $
         current_plot_setting = (*global_plot).plot_setting, $
-        Data_x =  zoom_data_x, $
+        Data_x =  zoom_data_x, $ ;tof
         Data_y = zoom_data_y, $ ;Data_y, $
         start_pixel = pixel_range[0]
+   
+
     
 end
 
