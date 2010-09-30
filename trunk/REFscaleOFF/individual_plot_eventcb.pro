@@ -179,7 +179,12 @@ pro zoom_selection, event
   pixel_range = determine_range_pixel_selected(event)
   tof_range   = determine_range_tof_selected(event)
   
-
+  ;retrieve selected region from big array
+  widget_control, event.top, get_uvalue=global_plot
+  
+  data_y = (*(*global_plot).data_linear)
+  
+  help, data_y
 
 
 
