@@ -121,13 +121,10 @@ end
 pro switch_axes_type, event
   compile_opt idl2
   
+  uname = widget_info(event.id, /uname)
   widget_control, event.top, get_uvalue=global
   
-   scale_setting = (*global).scale_settings ;0 for lin, 1 for log
-  
-  set1_value = getValue(event=event, 'scale_setting_linear')
-  
-  if (set1_value eq ('   ' + 'linear')) then begin ;setting1 needs to be checked
+  if (uname eq 'scale_setting_linear') then begin
     set1_value = '*  ' + 'linear'
     set2_value = '   ' + 'logarithmic'
     (*global).scale_settings = 0
@@ -154,13 +151,10 @@ end
 pro local_switch_axes_type, event
   compile_opt idl2
   
+  uname = widget_info(event.id, /uname)
   widget_control, event.top, get_uvalue=global_plot
   
-   scale_setting = (*global_plot).default_scale_settings ;0 for lin, 1 for log
-  
-  set1_value = getValue(event=event, 'local_scale_setting_linear')
-  
-  if (set1_value eq ('   ' + 'linear')) then begin ;setting1 needs to be checked
+  if (uname eq 'local_scale_setting_linear') then begin
     set1_value = '*  ' + 'linear'
     set2_value = '   ' + 'logarithmic'
     (*global_plot).default_scale_settings = 0

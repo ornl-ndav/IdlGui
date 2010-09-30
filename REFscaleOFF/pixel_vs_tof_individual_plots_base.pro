@@ -137,6 +137,8 @@ pro lin_log_data, event=event, base=base
     widget_control, base, get_uvalue=global_plot
   endelse
   
+  
+  
   Data = (*(*global_plot).data_linear)
   scale_setting = (*global_plot).default_scale_settings ;0 for lin, 1 for log
   
