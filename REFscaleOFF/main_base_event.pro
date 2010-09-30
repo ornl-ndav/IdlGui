@@ -80,6 +80,11 @@ PRO main_base_event, Event
       refresh_table, event
     end
     
+    ;Automatic Scaling button
+    widget_info(wWidget, find_by_uname='automatic_scaling'): begin
+      auto_scale, event
+    end
+    
     else:
   endcase
   

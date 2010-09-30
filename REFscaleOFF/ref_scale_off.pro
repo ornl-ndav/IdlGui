@@ -72,6 +72,8 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     plot_setting: 'untouched',$
     scale_settings: 0, $ ;0 for linear, 1 for logarithmic
   
+    top_bottom_exclusion_percentage: 5,$ ;5%
+  
     ;used to bring back data from load_crtof_file procedure to load_files
     tmp_pData_x: ptr_new(0L),$
     tmp_pData_y: ptr_new(0L),$
