@@ -222,9 +222,7 @@ pro zoom_selection, event
         Data_x =  zoom_data_x, $ ;tof
         Data_y = zoom_data_y, $ ;Data_y, $
         start_pixel = pixel_range[0]
-   
 
-    
 end
 
 ;+

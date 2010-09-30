@@ -147,9 +147,9 @@ pro lin_log_data, event=event, base=base
     index = where(Data eq 0, nbr)
     if (nbr GT 0) then begin
       Data[index] = !VALUES.D_NAN
+      endif
       Data = ALOG10(Data)
       Data = BYTSCL(Data,/NAN)
-    endif
     
   endif
   
