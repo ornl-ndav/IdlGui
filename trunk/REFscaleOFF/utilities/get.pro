@@ -44,24 +44,30 @@ end
 ;
 ; :Params:
 ;    event
+;    
+; :Keywords:
+;   spin_state    the spin state to used (0, 1, 2 or 3)
 ;
 ;  :Returns:
 ;    nbr_files
 ;
 ; :Author: j35
 ;-
-function get_number_of_files_loaded, event
+function get_number_of_files_loaded, event, spin_state=spin_state
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global
   
   ;find first empty entry using the table data
-  files_SF_list = (*global).files_SF_list
-  file_names = files_SF_list[0,*]
+  files_SF_list = (*global).files_SF_list ;[spin, column, row]
+  file_names = files_SF_list[spin_state,0,*]
+  file_names = reform(file_names)
+  
   empty_index = where(file_names eq '',nbr)
   if (nbr eq -1) then begin
     nbr_files = (size(file_SF_list))[3]
   endif else begin
+    empty_index = reform(empty_index)
     nbr_files = empty_index[0]
   endelse
   
