@@ -177,11 +177,17 @@ pro refresh_plot, event
   new_ysize = (*global_plot).ysize
   border = (*global_plot).border
   colorbar_xsize = (*global_plot).colorbar_xsize
-      
+  
+  id = WIDGET_INFO(event.top, FIND_BY_UNAME='draw')
+  draw_geometry = WIDGET_INFO(id,/GEOMETRY)
+  xsize = draw_geometry.xsize
+  ysize = draw_geometry.ysize
+  
   if ((*global_plot).plot_setting eq 'untouched') then begin
-    cData = congrid(Data, new_ysize-2*border, new_xsize-2*border-colorbar_xsize)
+    cData = congrid(Data, ysize, xsize)
   endif else begin
-    cData = congrid(Data, new_ysize-2*border, new_xsize-2*border-colorbar_xsize,/interp)
+    cData = congrid(Data, ysize, xsize,/interp)
+  ;    cData = congrid(Data, new_ysize-2*border, new_xsize-2*border-colorbar_xsize,/interp)
   endelse
   (*global_plot).congrid_xcoeff = new_ysize-2*border
   (*global_plot).congrid_ycoeff = new_xsize-2*border-colorbar_xsize
@@ -534,7 +540,7 @@ pro plot_beam_center_scale, base=base, event=event
   
   xrange = [min_x, max_x]
   (*global_plot).xrange = xrange
-
+  
   yrange = [min_y, max_y]
   (*global_plot).yrange = yrange
   
@@ -583,18 +589,14 @@ end
 pro px_vs_tof_plots_base, main_base=main_base, $
     event=event, $
     file_name = file_name, $
-    file_index = file_index, $
-    spin_state=spin_state,$
     offset = offset, $
     default_loadct = default_loadct, $
     default_scale_settings = default_scale_settings, $
     default_plot_size = default_plot_size, $
     current_plot_setting = current_plot_setting, $
-;    pData_x = pData_x, $ ;remove_me
     Data_x = Data_x, $
     Data_y = Data_y, $ ;Data_y
     start_pixel = start_pixel
-;    pData_y = pData_y, $ ;remove_me
     
   compile_opt idl2
   
@@ -661,7 +663,7 @@ pro px_vs_tof_plots_base, main_base=main_base, $
   XMANAGER, "px_vs_tof_plots_base", wBase, GROUP_LEADER = ourGroup, /NO_BLOCK
   
   ;retrieve scale
-;  Data_x = *pData_x[file_index,spin_state]
+  ;  Data_x = *pData_x[file_index,spin_state]
   start_tof = Data_x[0]
   end_tof = Data_x[-1]
   delta_tof = Data_x[1]-Data_x[0]
@@ -671,7 +673,7 @@ pro px_vs_tof_plots_base, main_base=main_base, $
   (*global_plot).tof_axis = tof_axis
   
   ;retrieve the data to plot
-;  Data = *pData_y[file_index, spin_state]
+  ;  Data = *pData_y[file_index, spin_state]
   (*(*global_plot).data_linear) = Data_y
   
   lin_log_data, base=wBase
@@ -680,10 +682,15 @@ pro px_vs_tof_plots_base, main_base=main_base, $
   (*global_plot).nbr_pixel = (size(data_y))[1] ;nbr of pixels to plot
   
   Data = (*(*global_plot).data)
+  id = WIDGET_INFO(wBase, FIND_BY_UNAME='draw')
+  draw_geometry = WIDGET_INFO(id,/GEOMETRY)
+  xsize = draw_geometry.xsize
+  ysize = draw_geometry.ysize
   if ((*global_plot).plot_setting eq 'untouched') then begin
-    cData = congrid(Data, default_plot_size[0]-2*border, default_plot_size[1]-2*border)
+    ;cData = congrid(Data, default_plot_size[0]-2*border, default_plot_size[1]-2*border-colorbar_xsize)
+    cData = congrid(Data, ysize, xsize)
   endif else begin
-    cData = congrid(Data, default_plot_size[0]-2*border, default_plot_size[1]-2*border,/interp)
+    cData = congrid(Data, ysize, xsize,/interp)
   endelse
   (*global_plot).congrid_xcoeff = default_plot_size[0]-2*border
   (*global_plot).congrid_ycoeff = default_plot_size[1]-2*border
