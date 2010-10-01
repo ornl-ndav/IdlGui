@@ -80,8 +80,8 @@ function create_merged_common_axis, _axis_left, _axis_right
   new_element = _min
   _common_axis = !NULL
   while (new_element le _max) do begin
-  _common_axis = [_common_axis,new_element]
-  new_element += delta
+    _common_axis = [_common_axis,new_element]
+    new_element += delta
   endwhile
   
   return, _common_axis
@@ -130,8 +130,6 @@ function  create_common_xaxis, event
       
       _common_xaxis = create_merged_common_axis(_xaxis_left, _xaxis_right)
       
-      
-      
       left_file_index = right_file_index
       right_file_index++
     endwhile
@@ -141,6 +139,89 @@ function  create_common_xaxis, event
   endfor
   
   return, common_xaxis
+  
+end
+
+;+
+; :Description:
+;    Create the master scaled data set
+;
+; :Params:
+;    event
+;
+; :Keywords:
+;    xaxis
+;    data
+;
+; :Author: j35
+;-
+function create_common_global_data, event, xaxis=xaxis, data=data
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  master_data = ptrarr(4,/allocate_heap) ;for the 4 spin states
+  pData_x = (*global).pData_x
+  file_index_sorted = (*global).file_index_sorted
+  
+  for spin=0,3 do begin ;go over all the spin states
+  
+    nbr_files = get_number_of_files_loaded(event, spin_state=spin)
+    
+    ;0 or just 1 file loaded for that spin state so we don't need
+    ;to do anything
+    if (nbr_files le 1) then continue
+    
+    _file_index_sorted = *file_index_sorted[spin]
+    
+    ;get size of xaxis for that spin (tof)
+    _xaxis_spin = *xaxis[spin] ;common global x axis of given spin state
+    _x_sz = n_elements(_xaxis_spin)
+    
+    ;get number of element in yaxis (pixels)
+    _data_spin = *data[0,spin] ;scaled data of given spin state
+    _y_sz = n_elements(_data_spin)
+    
+    ;initialize master array
+    *master_data[spin] = ptr_new(0L)
+    _master_data = fltarr(_x_sz, _y_sz)
+    
+    ;Method
+    ;loop over all the files
+    ;then loop over each xaxis
+    ;find where they are in the global axis and keep that index
+    ;check if there are any values already in the global rescale data at that
+    ;index and if yes, add mean, otherwise just add all tof array at that location
+    iFile = 0
+    while (iFile lt nbr_files) do begin
+    
+      _xaxis = *pData_x[_file_index_sorted[iFile]]
+      _ydata = *data[_file_index_sorted[iFile],spin]
+      
+      _sz_axis = n_elements(_xaxis)
+      for i=0,(_sz_axis-1) do begin
+      
+      ;where the local tof index is in the global axis axis
+      _where = where(_xaxis[i] eq _xaxis_spin)
+      
+      _new_tof_array_at_given_tof    = _ydata[_where[0]]
+      _total_global_tof_array_at_given_tof = total(_master_data[_where[0]])
+      if (_total_global_tof_array_at_given_tof ne 0) then begin
+      _average = (_new_tof_array_at_given_tof + _master_data[_where[0]]) / 2.
+      _master_data[_where[0],*] = _average
+      endif else begin
+      _master_data[_where[0],*] = _new_tof_array_at_given_tof
+      endelse
+      
+      endfor
+
+      iFile++
+    endwhile
+    
+    *master_data[spin] = _master_data
+    
+  endfor
+  
+  return, master_data
   
 end
 
@@ -162,6 +243,12 @@ pro create_scaled_big_array, event
   pData_y_scaled = (*global).pData_y_scaled
   
   xaxis = create_common_xaxis(event)
+  
+  master_data = create_common_global_data(event, xaxis=xaxis, data=pData_y_scaled)
+  
+;  window, 1
+;  my_data = *master_data[1]
+;  tvscl, my_data
   
   
   
