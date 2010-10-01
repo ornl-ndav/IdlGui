@@ -88,6 +88,11 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     pData_y: ptrarr(20,4,/allocate_heap),$
     pData_y_error: ptrarr(20,4,/allocate_heap),$
     
+    ;data scaled
+    pData_y_scaled: ptrarr(20,4,/allocate_heap), $
+    ;index list of files sorted (for each spin) by their x-axis
+    file_index_sorted: ptrarr(4,/allocate_heap), $
+    
    ; ;2d data of loaded files (common x-axis for all pixels of a same data set)
    ; pData_x_2d: ptrarr(20,4,/allocate_heap),$
    ; pData_y_2d: ptrarr(20,4,/allocate_heap),$
