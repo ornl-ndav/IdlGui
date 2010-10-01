@@ -179,12 +179,12 @@ function create_common_global_data, event, xaxis=xaxis, data=data
     
     ;get number of element in yaxis (pixels)
     _data_spin = *data[0,spin] ;scaled data of given spin state
-    _y_sz = n_elements(_data_spin)
+    _y_sz = (size(_data_spin))[1]
     
     ;initialize master array
     *master_data[spin] = ptr_new(0L)
-    _master_data = fltarr(_x_sz, _y_sz)
-    
+    _master_data = fltarr(_y_sz, _x_sz) ;ex Array[<pixel>,<tof>]
+
     ;Method
     ;loop over all the files
     ;then loop over each xaxis
@@ -200,20 +200,21 @@ function create_common_global_data, event, xaxis=xaxis, data=data
       _sz_axis = n_elements(_xaxis)
       for i=0,(_sz_axis-1) do begin
       
-      ;where the local tof index is in the global axis axis
-      _where = where(_xaxis[i] eq _xaxis_spin)
-      
-      _new_tof_array_at_given_tof    = _ydata[_where[0]]
-      _total_global_tof_array_at_given_tof = total(_master_data[_where[0]])
-      if (_total_global_tof_array_at_given_tof ne 0) then begin
-      _average = (_new_tof_array_at_given_tof + _master_data[_where[0]]) / 2.
-      _master_data[_where[0],*] = _average
-      endif else begin
-      _master_data[_where[0],*] = _new_tof_array_at_given_tof
-      endelse
-      
-      endfor
+        ;where the local tof index is in the global axis axis
+        _where = where(_xaxis[i] eq _xaxis_spin)
 
+        _new_tof_array_at_given_tof = _ydata[*,i]
+        _total_global_tof_array_at_given_tof = total(_master_data[*,_where[0]])
+        if (_total_global_tof_array_at_given_tof ne 0) then begin
+          _average = (_new_tof_array_at_given_tof + _master_data[*,_where[0]]) / 2.
+          
+          _master_data[*,_where[0]] = _average
+        endif else begin
+          _master_data[*,_where[0]] = _new_tof_array_at_given_tof
+        endelse
+        
+      endfor
+      
       iFile++
     endwhile
     
@@ -246,9 +247,17 @@ pro create_scaled_big_array, event
   
   master_data = create_common_global_data(event, xaxis=xaxis, data=pData_y_scaled)
   
-;  window, 1
-;  my_data = *master_data[1]
-;  tvscl, my_data
+  window, 1
+  my_data = *master_data[0]
+  
+  loadct, 5
+  _my_data = congrid(my_data, 600,600)
+  index =where(_my_data eq 0)
+  _my_data[index] = !values.D_NAN
+  _my_data = alog10(_my_data)
+  _my_data = bytscl(_my_data,/nan)
+
+  tvscl, transpose(_my_data)
   
   
   
