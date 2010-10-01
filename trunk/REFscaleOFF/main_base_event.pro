@@ -83,6 +83,7 @@ PRO main_base_event, Event
     ;Automatic Scaling button
     widget_info(wWidget, find_by_uname='automatic_scaling'): begin
       auto_scale, event
+      create_scaled_big_array, event
     end
     
     else:

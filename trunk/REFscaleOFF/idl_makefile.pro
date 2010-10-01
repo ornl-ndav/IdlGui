@@ -73,6 +73,7 @@ cd, CurrentFolder
 .run menu_eventcb.pro
 .run plot_colorbar.pro
 .run auto_scale.pro
+.run create_scaled_big_array.pro
 
 .run ref_off_scale_cleanup.pro
 .run main_base_event.pro

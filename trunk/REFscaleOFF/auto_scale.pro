@@ -167,6 +167,39 @@ end
 
 ;+
 ; :Description:
+;    This just creates a soft copy of the individual data sets.
+;    This copy will be used to rescaled the data
+;
+; :Params:
+;    event
+
+; :Author: j35
+;-
+pro create_clone_of_pData_y, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  pData_y = (*global).pData_y ;big table
+  nbr_files = (size(pData_y))[1]
+  nbr_spin = (size(pData_y))[2]
+  
+  pData_y_scaled = ptrarr(nbr_files,nbr_spin,/allocate_heap)  
+  
+  for iFile=0,(nbr_files-1) do begin
+  for jSpin=0, (nbr_spin-1) do begin
+    _pData_y = *pData_y[iFile, jSpin]
+    pData_y_scaled[iFile, jSpin] = ptr_new(0L)
+    *pData_y_scaled[iFile, jSpin] = _pData_y
+  endfor
+  endfor
+  
+  (*global).pData_y_scaled = pData_y_scaled
+
+end
+
+;+
+; :Description:
 ;    Performs the automatic scaling of the data
 ;
 ; :Params:
@@ -181,8 +214,13 @@ pro auto_scale, event
   
   files_SF_list = (*global).files_SF_list
   pData_x = (*global).pData_x ;tof axis  [row, spin_state]
-  pData_y = (*global).pData_y ;big table
   
+  ;copy pData_y data into pData_y_scaled
+  create_clone_of_pData_y, event
+  pData_y_scaled = (*global).pData_y_scaled
+
+  file_index_sorted = (*global).file_index_sorted
+
   for spin=0,3 do begin ;go over all the spin states
     nbr_files = get_number_of_files_loaded(event, spin_state=spin)
     
@@ -192,20 +230,21 @@ pro auto_scale, event
     
     ;make sure the files are sorted relative to their tof axis
     ;this will return an array of index of the input files
-    file_index_sorted = sort_files(pData_x[0:(nbr_files-1), spin])
+    _file_index_sorted = sort_files(pData_x[0:(nbr_files-1), spin])
+    *file_index_sorted[spin] = _file_index_sorted
     
     ;go 2 by 2
     ;Method: - find the overlap region
     ;        - remove default 5% region on top and bottom
     ;        - calculate average value for each tof (left and right) and find SF
-    ;        - determine average SF of all the SF
+    ;        - determine average SF of all the SF    
     
     left_file_index = 0
     right_file_index = 1
     while (right_file_index le (nbr_files-1)) do begin
     
-      left_array = *pData_x[file_index_sorted[left_file_index], spin]
-      right_array = *pData_x[file_index_sorted[right_file_index], spin]
+      left_array = *pData_x[_file_index_sorted[left_file_index], spin]
+      right_array = *pData_x[_file_index_sorted[right_file_index], spin]
       
       overlap_tof_array = get_overlap_region(left_array = left_array, $
         right_array = right_array)
@@ -215,10 +254,10 @@ pro auto_scale, event
         ;pop up dialog message
         return
       endif
-      
+    
       error = 0
       ;isolate left and right arrays of this region
-      left_data = *pData_y[file_index_sorted[left_file_index],spin]
+      left_data = *pData_y_scaled[_file_index_sorted[left_file_index],spin]
       left_overlap_array = get_overlap_array(event, $
         data=left_data,$
         xaxis=left_array, $
@@ -230,7 +269,7 @@ pro auto_scale, event
         return
       endif
       
-      right_data = *pData_y[file_index_sorted[right_file_index],spin]
+      right_data = *pData_y_scaled[_file_index_sorted[right_file_index],spin]
       right_overlap_array = get_overlap_array(event, $
         data=right_data,$
         xaxis=right_array, $
@@ -244,14 +283,19 @@ pro auto_scale, event
       
       ;calculate SF
       SF = calculate_SF(left_overlap_array, right_overlap_array)
-      files_SF_list[spin, 1, right_file_index] = strcompress(SF,/remove_all)
+      files_SF_list[spin, 1, _file_index_sorted[right_file_index]] = strcompress(SF,/remove_all)
       
+      *pData_y_scaled[_file_index_sorted[right_file_index],spin] /= SF
+    
       left_file_index = right_file_index
       right_file_index++
     endwhile
     
   endfor
-  
+
+  (*global).pData_y_scaled = pData_y_scaled
+  (*global).file_index_sorted = file_index_sorted
+    
   (*global).files_SF_list = files_SF_list
   refresh_table, event
     
