@@ -244,21 +244,9 @@ pro create_scaled_big_array, event
   pData_y_scaled = (*global).pData_y_scaled
   
   xaxis = create_common_xaxis(event)
+  (*global).master_xaxis = xaxis
   
   master_data = create_common_global_data(event, xaxis=xaxis, data=pData_y_scaled)
-  
-  window, 1
-  my_data = *master_data[0]
-  
-  loadct, 5
-  _my_data = congrid(my_data, 600,600)
-  index =where(_my_data eq 0)
-  _my_data[index] = !values.D_NAN
-  _my_data = alog10(_my_data)
-  _my_data = bytscl(_my_data,/nan)
-
-  tvscl, transpose(_my_data)
-  
-  
-  
+  (*global).master_data = master_data
+    
 end

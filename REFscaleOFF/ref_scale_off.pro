@@ -74,6 +74,9 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
     top_bottom_exclusion_percentage: 5,$ ;5%
   
+    master_data: ptrarr(4,/allocate_heap), $
+    master_xaxis: ptrarr(4,/allocate_heap), $
+  
     ;used to bring back data from load_crtof_file procedure to load_files
     tmp_pData_x: ptr_new(0L),$
     tmp_pData_y: ptr_new(0L),$
@@ -107,6 +110,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     tmp_start_pixel: '',$
     
     default_plot_size: [600,600],$
+    default_plot_size_global_plot: [800,600],$
     default_loadct: 5,$ ;prism
     
     input_path: '~/results/' })
