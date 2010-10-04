@@ -65,8 +65,8 @@ pro cursor_info_base_gui, wBase, $
   main_base_xsize = parent_base_geometry.xsize
   main_base_ysize = parent_base_geometry.ysize
   
-  xsize = 300
-  ysize = 100
+;  xsize = 300
+;  ysize = 100
   
   xoffset = main_base_xsize
   xoffset += main_base_xoffset
@@ -80,14 +80,52 @@ pro cursor_info_base_gui, wBase, $
     UNAME        = 'cursor_info_base', $
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
-    SCR_YSIZE    = ysize,$
-    SCR_XSIZE    = xsize,$
+;    SCR_YSIZE    = ysize,$
+;    SCR_XSIZE    = xsize,$
     MAP          = 1,$
     kill_notify  = 'cursor_info_base_killed', $
-    /BASE_ALIGN_CENTER,$
-    /align_center,$
+    /column,$
     /tlb_size_events,$
     GROUP_LEADER = ourGroup)
+    
+     row1 = widget_base(wBase,$
+    /row)
+    lab = widget_label(row1,$
+    value = 'TOF:',$
+    scr_xsize= 60,$
+    /align_right)
+    val = widget_label(row1,$
+    value = 'N/A',$
+    uname = 'cursor_info_x_value_uname',$
+    scr_xsize = 100,$
+    /align_left)
+    unit = widget_label(row1,$
+    value = 'microS',$
+    /align_left)
+    
+    row2 = widget_base(wBase,$
+    /row)
+    lab = widget_label(row2,$
+    value = 'Pixel:',$
+    scr_xsize= 60,$
+    /align_right)
+    val = widget_label(row2,$
+    value = 'N/A',$
+    uname = 'cursor_info_y_value_uname',$
+    scr_xsize = 150,$
+    /align_left)
+
+  row3 = widget_base(wBase,$
+    /row)
+    lab = widget_label(row3,$
+    value = 'Counts:',$
+    scr_xsize= 60,$
+    /align_right)
+    val = widget_label(row3,$
+    uname = 'cursor_info_z_value_uname',$
+    value = 'N/A',$
+    scr_xsize = 150,$
+    /align_left)
     
 end
 

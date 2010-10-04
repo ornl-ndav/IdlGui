@@ -89,6 +89,7 @@ pro counts_vs_axis_base_gui, wBase, $
     /BASE_ALIGN_CENTER,$
     /align_center,$
     /tlb_size_events,$
+    /column,$
     GROUP_LEADER = ourGroup)
     
 end

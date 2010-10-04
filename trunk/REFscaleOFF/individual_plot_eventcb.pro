@@ -59,6 +59,95 @@ end
 
 ;+
 ; :Description:
+;    calculate the x data from the x device
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+function retrieve_data_x_value, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_plot
+  
+  catch, error
+  if (error ne 0) then begin
+    catch,/cancel
+    return, 'N/A'
+  endif
+  
+  x_device = event.x
+  congrid_xcoeff = (*global_plot).congrid_ycoeff  ;using ycoeff because of transpose
+  xrange = float((*global_plot).xrange) ;min and max pixels
+  
+  rat = float(x_device) / float(congrid_xcoeff)
+  x_data = long(rat * (xrange[1] - xrange[0]) + xrange[0])
+  
+  return, x_data
+  
+end
+
+;+
+; :Description:
+;    calculate the y data from the y device
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+function retrieve_data_y_value, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_plot
+  
+  catch, error
+  if (error ne 0) then begin
+    catch,/cancel
+    return, 'N/A'
+  endif
+  
+  y_device = event.y
+  congrid_ycoeff = (*global_plot).congrid_xcoeff  ;using xcoeff because of transpose
+  yrange = float((*global_plot).yrange) ;min and max pixels
+  
+  rat = float(y_device) / float(congrid_ycoeff)
+  y_data = fix(rat * (yrange[1] - yrange[0]) + yrange[0])
+  
+  return, y_data
+  
+end
+
+
+function retrieve_data_z_value, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_plot
+  
+  catch, error
+  if (error ne 0) then begin
+    catch,/cancel
+    return, 'N/A'
+  endif
+  
+  data = (*(*global_plot).data_linear) ;[51,65] where 51 is #pixels
+  
+  xdata_max = (size(data))[2]
+  ydata_max = (size(data))[1]
+  
+  congrid_xcoeff = (*global_plot).congrid_ycoeff  ;using ycoeff because of transpose
+  congrid_ycoeff = (*global_plot).congrid_xcoeff  ;using xcoeff because of transpose
+  
+  xdata = fix(float(event.x) * float(xdata_max) / congrid_xcoeff)
+  ydata = fix(float(event.y) * float(ydata_max) / congrid_ycoeff)
+  
+  return, data[ydata,xdata]
+  
+end
+
+;+
+; :Description:
 ;    reach when the user interacts with the plot (left click, move mouse
 ;    with left click).
 ;
@@ -72,53 +161,88 @@ pro draw_eventcb, event
   
   widget_control, event.top, get_uvalue=global_plot
   
-  draw_zoom_selection = (*global_plot).draw_zoom_selection
+  catch, error
+  if (error ne 0) then begin
+    catch,/cancel
+    
+    info_base = (*global_plot).cursor_info_base
+    ;if x,y and counts base is on, shows live values of x,y and counts
+    if (widget_info(info_base, /valid_id) ne 0) then begin
+    
+      x = retrieve_data_x_value(event)
+      y = retrieve_data_y_value(event)
+      z = retrieve_data_z_value(event)
+      
+      putValue, base=info_base, 'cursor_info_x_value_uname', strcompress(x,/remove_all)
+      putValue, base=info_base, 'cursor_info_y_value_uname', strcompress(y,/remove_all)
+      putValue, base=info_base, 'cursor_info_z_value_uname', strcompress(z,/remove_all)
+      
+    endif
+    
+    draw_zoom_selection = (*global_plot).draw_zoom_selection
+    
+    if ((*global_plot).left_click) then begin ;moving mouse with left click
+      x1 = event.x
+      y1 = event.y
+      draw_zoom_selection[2] = x1
+      draw_zoom_selection[3] = y1
+      (*global_plot).draw_zoom_selection = draw_zoom_selection
+      refresh_zoom_selection, event
+    endif
+    
+    if (event.press eq 1) then begin ;user left clicked
+      (*global_plot).left_click = 1b
+      x0 = event.x
+      y0 = event.y
+      draw_zoom_selection[0] = x0
+      draw_zoom_selection[1] = y0
+      (*global_plot).draw_zoom_selection = draw_zoom_selection
+    endif
+    
+    if (event.release eq 1) then begin ;user release left clicked
+      (*global_plot).left_click = 0b
+      x1 = event.x
+      y1 = event.y
+      
+      ;make sure we stay within the display
+      id = widget_info(event.top, find_by_uname='draw')
+      geometry = widget_info(id, /geometry)
+      xsize = geometry.xsize
+      ysize = geometry.ysize
+      
+      if (x1 gt xsize) then x1 = xsize
+      if (x1 lt 0) then x1 = 0
+      if (y1 gt ysize) then y1 = ysize
+      if (y1 lt 0) then y1 = 0
+      
+      ;check that user selected a box,not only 1 pixel
+      result = is_real_selection(event, x1, y1)
+      if (result eq 0) then return
+      
+      draw_zoom_selection[2] = x1
+      draw_zoom_selection[3] = y1
+      
+      (*global_plot).draw_zoom_selection = draw_zoom_selection
+      zoom_selection, event
+      refresh_plot, event
+    endif
+    
+  endif else begin ;endif of catch error
   
-  if ((*global_plot).left_click) then begin ;moving mouse with left click
-    x1 = event.x
-    y1 = event.y
-    draw_zoom_selection[2] = x1
-    draw_zoom_selection[3] = y1
-    (*global_plot).draw_zoom_selection = draw_zoom_selection
-    refresh_zoom_selection, event
-  endif
-  
-  if (event.press eq 1) then begin ;user left clicked
-    (*global_plot).left_click = 1b
-    x0 = event.x
-    y0 = event.y
-    draw_zoom_selection[0] = x0
-    draw_zoom_selection[1] = y0
-    (*global_plot).draw_zoom_selection = draw_zoom_selection
-  endif
-  
-  if (event.release eq 1) then begin ;user release left clicked
-    (*global_plot).left_click = 0b
-    x1 = event.x
-    y1 = event.y
+   info_base = (*global_plot).cursor_info_base
+    ;if x,y and counts base is on, shows live values of x,y and counts
+    if (widget_info(info_base, /valid_id) ne 0) then begin
     
-    ;make sure we stay within the display
-    id = widget_info(event.top, find_by_uname='draw')
-    geometry = widget_info(id, /geometry)
-    xsize = geometry.xsize
-    ysize = geometry.ysize
+    if (event.enter eq 0) then begin ;leaving plot
+      na = 'N/A'
+      putValue, base=info_base, 'cursor_info_x_value_uname', na
+      putValue, base=info_base, 'cursor_info_y_value_uname', na
+      putValue, base=info_base, 'cursor_info_z_value_uname', na
+    endif
     
-    if (x1 gt xsize) then x1 = xsize
-    if (x1 lt 0) then x1 = 0
-    if (y1 gt ysize) then y1 = ysize
-    if (y1 lt 0) then y1 = 0
+    endif
     
-    ;check that user selected a box,not only 1 pixel
-    result = is_real_selection(event, x1, y1)
-    if (result eq 0) then return
-    
-    draw_zoom_selection[2] = x1
-    draw_zoom_selection[3] = y1
-    
-    (*global_plot).draw_zoom_selection = draw_zoom_selection
-    zoom_selection, event
-    refresh_plot, event
-  endif
+  endelse
   
 end
 
