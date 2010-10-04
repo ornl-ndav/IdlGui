@@ -472,20 +472,22 @@ pro px_vs_tof_plots_base_gui, wBase, $
     scr_ysize = ysize-2*border,$
     /button_events,$
     /motion_events,$
+    /retain, $
     event_pro = 'draw_eventcb',$
     uname = 'draw')
     
   scale = widget_draw(wBase,$
     uname = 'scale',$
     scr_xsize = xsize,$
-    scr_ysize = ysize)
+    scr_ysize = ysize,$
+    /retain)
     
   colorbar =  widget_draw(wBase,$
     uname = 'colorbar',$
     xoffset = xsize,$
     scr_xsize = colorbar_xsize,$
-    scr_ysize = ysize)
-    
+    scr_ysize = ysize,$
+    /retain)
     
 end
 

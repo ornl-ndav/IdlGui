@@ -75,6 +75,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     top_bottom_exclusion_percentage: 5,$ ;5%
   
     master_data: ptrarr(4,/allocate_heap), $
+    master_data_error: ptrarr(4,/allocate_heap), $
     master_xaxis: ptrarr(4,/allocate_heap), $
   
     ;used to bring back data from load_crtof_file procedure to load_files
@@ -93,6 +94,8 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
     ;data scaled
     pData_y_scaled: ptrarr(20,4,/allocate_heap), $
+    pData_y_error_scaled: ptrarr(20,4,/allocate_heap), $
+    
     ;index list of files sorted (for each spin) by their x-axis
     file_index_sorted: ptrarr(4,/allocate_heap), $
     
