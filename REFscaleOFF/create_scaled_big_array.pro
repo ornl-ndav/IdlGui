@@ -144,22 +144,27 @@ end
 
 ;+
 ; :Description:
-;    Create the master scaled data set
+;    Create the master scaled data and error data sets
 ;
 ; :Params:
 ;    event
 ;
 ; :Keywords:
 ;    xaxis
-;    data
 ;
 ; :Author: j35
 ;-
-function create_common_global_data, event, xaxis=xaxis, data=data
+pro create_common_global_data, event, xaxis=xaxis
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global
+  
+  data = (*global).pData_y_scaled
+  data_error = (*global).pData_y_error_scaled
+  
+  
   master_data = ptrarr(4,/allocate_heap) ;for the 4 spin states
+  master_data_error = ptrarr(4,/allocate_heap) ;data error for the 4 spin states
   pData_x = (*global).pData_x
   file_index_sorted = (*global).file_index_sorted
   
@@ -183,7 +188,9 @@ function create_common_global_data, event, xaxis=xaxis, data=data
     
     ;initialize master array
     *master_data[spin] = ptr_new(0L)
-    _master_data = fltarr(_y_sz, _x_sz) ;ex Array[<pixel>,<tof>]
+    _master_data = fltarr(_y_sz, _x_sz) ;Array[<pixel>,<tof>]
+    *master_data_error[spin] = ptr_new(0L)
+    _master_data_error = fltarr(_y_sz, _x_sz) ;ex [<pixel>,<tof>]
 
     ;Method
     ;loop over all the files
@@ -196,6 +203,7 @@ function create_common_global_data, event, xaxis=xaxis, data=data
     
       _xaxis = *pData_x[_file_index_sorted[iFile]]
       _ydata = *data[_file_index_sorted[iFile],spin]
+      _ydata_error = *data_error[_file_index_sorted[iFile],spin]
       
       _sz_axis = n_elements(_xaxis)
       for i=0,(_sz_axis-1) do begin
@@ -204,13 +212,40 @@ function create_common_global_data, event, xaxis=xaxis, data=data
         _where = where(_xaxis[i] eq _xaxis_spin)
 
         _new_tof_array_at_given_tof = _ydata[*,i]
+        _new_tof_array_error_at_given_tof = _ydata_error[*,i]
         _total_global_tof_array_at_given_tof = total(_master_data[*,_where[0]])
         if (_total_global_tof_array_at_given_tof ne 0) then begin
-          _average = (_new_tof_array_at_given_tof + _master_data[*,_where[0]]) / 2.
+          
+          ;value
+          _new = _new_tof_array_at_given_tof
+          _prev = _master_data[*,_where[0]]
+          
+          ;value error
+          _new_error = _new_tof_array_error_at_given_tof
+          _prev_error = _master_data_error[*,_where[0]]
+          
+          ;global var
+          _new_error_2 = _new_error * _new_error
+          _1_new_error_2 = 1./_new_error_2
+          _prev_error_2 = _prev_error * _prev_error
+          _1_prev_error_2 = 1./_prev_error_2
+          
+          ;average value
+          _num = _prev * _1_prev_error_2 + _new * _1_new_error_2
+          _den = _1_prev_error_2 + _1_new_error_2
+          _average = _num / _den
+
+          ;average value error
+          _average_error = 1./sqrt(_den)
           
           _master_data[*,_where[0]] = _average
+          _master_data_error[*,_where[0]] = _average_error
+  
         endif else begin
+  
           _master_data[*,_where[0]] = _new_tof_array_at_given_tof
+          _master_data_error[*,_where[0]] = _new_tof_array_error_at_given_tof
+    
         endelse
         
       endfor
@@ -219,10 +254,12 @@ function create_common_global_data, event, xaxis=xaxis, data=data
     endwhile
     
     *master_data[spin] = _master_data
+    *master_data_error[spin] = _master_data_error
     
   endfor
   
-  return, master_data
+  (*global).master_data_error = master_data_error
+  (*global).master_data = master_data
   
 end
 
@@ -241,12 +278,9 @@ pro create_scaled_big_array, event
   
   widget_control, event.top, get_uvalue=global
   
-  pData_y_scaled = (*global).pData_y_scaled
-  
   xaxis = create_common_xaxis(event)
   (*global).master_xaxis = xaxis
   
-  master_data = create_common_global_data(event, xaxis=xaxis, data=pData_y_scaled)
-  (*global).master_data = master_data
+  create_common_global_data, event, xaxis=xaxis
     
 end

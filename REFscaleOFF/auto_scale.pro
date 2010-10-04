@@ -200,6 +200,38 @@ end
 
 ;+
 ; :Description:
+;    Creates a copy of the individual error data sets.
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro create_clone_of_pData_y_error, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  pData_y_error = (*global).pData_y_error ;big table
+  nbr_files = (size(pData_y_error))[1]
+  nbr_spin = (size(pData_y_error))[2]
+  
+  pData_y_error_scaled = ptrarr(nbr_files,nbr_spin,/allocate_heap)  
+  
+  for iFile=0,(nbr_files-1) do begin
+  for jSpin=0, (nbr_spin-1) do begin
+    _pData_y_error = *pData_y_error[iFile, jSpin]
+    pData_y_error_scaled[iFile, jSpin] = ptr_new(0L)
+    *pData_y_error_scaled[iFile, jSpin] = _pData_y_error
+  endfor
+  endfor
+  
+  (*global).pData_y_error_scaled = pData_y_error_scaled
+
+end
+
+;+
+; :Description:
 ;    Performs the automatic scaling of the data
 ;
 ; :Params:
@@ -218,6 +250,9 @@ pro auto_scale, event
   ;copy pData_y data into pData_y_scaled
   create_clone_of_pData_y, event
   pData_y_scaled = (*global).pData_y_scaled
+  ;copy pData_y_error into pData_y_error_scaled
+  create_clone_of_pData_y_error, event
+  pData_y_error_scaled = (*global).pData_y_error_scaled
 
   file_index_sorted = (*global).file_index_sorted
 
@@ -286,6 +321,7 @@ pro auto_scale, event
       files_SF_list[spin, 1, _file_index_sorted[right_file_index]] = strcompress(SF,/remove_all)
       
       *pData_y_scaled[_file_index_sorted[right_file_index],spin] /= SF
+      *pData_y_error_scaled[_file_index_sorted[right_file_index],spin] /= SF
     
       left_file_index = right_file_index
       right_file_index++
@@ -294,6 +330,7 @@ pro auto_scale, event
   endfor
 
   (*global).pData_y_scaled = pData_y_scaled
+  (*global).pData_y_error_scaled = pData_y_error_scaled
   (*global).file_index_sorted = file_index_sorted
     
   (*global).files_SF_list = files_SF_list
