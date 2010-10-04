@@ -109,7 +109,12 @@ pro design_tabs, MAIN_BASE, global
     /row)
   wScale = widget_button(row3,$
     uname = 'automatic_scaling',$
-    value = ' AUTOMATIC SCALING ')
+    value = ' AUTO SCALING ')
+  wScale = widget_button(row3,$
+    uname = 'automatic_scaling_and_plot',$
+    value = ' AUTO SCALING and SHOW PLOT')
+  space = widget_label(row3,$
+    value = '   ')
   wPlot = widget_button(row3,$
     value = ' SHOW PLOT ')
   space = widget_label(row3,$

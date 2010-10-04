@@ -86,6 +86,13 @@ PRO main_base_event, Event
       create_scaled_big_array, event
     end
     
+    ;Automatic Scaling button and show plot
+    widget_info(wWidget, find_by_uname='automatic_scaling_and_plot'): begin
+      auto_scale, event
+      create_scaled_big_array, event
+      show_big_array, event
+    end
+
     else:
   endcase
   
