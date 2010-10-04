@@ -34,6 +34,31 @@
 
 ;+
 ; :Description:
+;    returns 1 if there is a real selection, 0 otherwise
+;
+; :Params:
+;    event
+;    x1
+;    y1
+;
+; :Author: j35
+;-
+function is_real_selection, event, x1, y1
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_plot
+  
+  draw_zoom_selection = (*global_plot).draw_zoom_selection
+  x0 = draw_zoom_selection[0]
+  y0 = draw_zoom_selection[1]
+  
+  if (x0 eq x1 AND y0 eq y1) then return, 0
+  return, 1
+  
+end
+
+;+
+; :Description:
 ;    reach when the user interacts with the plot (left click, move mouse
 ;    with left click).
 ;
@@ -82,6 +107,10 @@ pro draw_eventcb, event
     if (x1 lt 0) then x1 = 0
     if (y1 gt ysize) then y1 = ysize
     if (y1 lt 0) then y1 = 0
+    
+    ;check that user selected a box,not only 1 pixel
+    result = is_real_selection(event, x1, y1)
+    if (result eq 0) then return
     
     draw_zoom_selection[2] = x1
     draw_zoom_selection[3] = y1
@@ -194,7 +223,7 @@ pro zoom_selection, event
   ;tof
   tof_min = min(tof_range,max=tof_max)
   Data_x = (*global_plot).Data_x
-   
+  
   ;left tof
   tof_range_index_left = where(tof_min ge Data_x)
   tof_range_index_min = tof_range_index_left[-1]
@@ -211,18 +240,18 @@ pro zoom_selection, event
   zoom_data_y = data_y[pixel_range_index[0]:pixel_range_index[1],$
     tof_range_index[0]:tof_range_index[1]]
     
-   px_vs_tof_plots_base, event = event, $
-        main_base_uname = 'px_vs_tof_widget_base', $
-        file_name = (*global_plot).file_name, $
-        offset = 50, $
-        default_loadct = (*global_plot).default_loadct, $
-        default_scale_settings = (*global_plot).default_scale_settings, $
-        default_plot_size = (*global_plot).default_plot_size, $
-        current_plot_setting = (*global_plot).plot_setting, $
-        Data_x =  zoom_data_x, $ ;tof
-        Data_y = zoom_data_y, $ ;Data_y, $
-        start_pixel = pixel_range[0]
-
+  px_vs_tof_plots_base, event = event, $
+    main_base_uname = 'px_vs_tof_widget_base', $
+    file_name = (*global_plot).file_name, $
+    offset = 50, $
+    default_loadct = (*global_plot).default_loadct, $
+    default_scale_settings = (*global_plot).default_scale_settings, $
+    default_plot_size = (*global_plot).default_plot_size, $
+    current_plot_setting = (*global_plot).plot_setting, $
+    Data_x =  zoom_data_x, $ ;tof
+    Data_y = zoom_data_y, $ ;Data_y, $
+    start_pixel = pixel_range[0]
+    
 end
 
 ;+
