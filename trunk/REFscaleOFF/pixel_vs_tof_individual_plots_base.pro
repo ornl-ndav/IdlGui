@@ -149,9 +149,9 @@ pro lin_log_data, event=event, base=base
     index = where(Data eq 0, nbr)
     if (nbr GT 0) then begin
       Data[index] = !VALUES.D_NAN
-      endif
-      Data = ALOG10(Data)
-      Data = BYTSCL(Data,/NAN)
+    endif
+    Data = ALOG10(Data)
+    Data = BYTSCL(Data,/NAN)
     
   endif
   
@@ -304,6 +304,98 @@ pro px_vs_tof_widget_killed, id
     find_by_uname='px_vs_tof_widget_base')
   widget_control, id, /destroy
 ;ActivateWidget, main_Event, 'open_settings_base', 1
+  
+end
+
+;+
+; :Description:
+;    Shows the cursor, counts vs pixel and counts vs tof bases
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro show_all_info, event
+compile_opt idl2
+
+show_cursor_info, event
+show_counts_vs_xaxis, event
+show_counts_vs_yaxis, event
+
+end
+
+;+
+; :Description:
+;    show the cursor info base
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro show_cursor_info, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_plot
+  
+  info_base = (*global_plot).cursor_info_base
+  
+  if (widget_info(info_base, /valid_id) EQ 0) THEN BEGIN
+    parent_base_uname = 'px_vs_tof_widget_base'
+    cursor_info_base, event=event, $
+      parent_base_uname=parent_base_uname
+  endif
+  
+end
+
+;+
+; :Description:
+;    show the counts vs tof (lambda) base
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro show_counts_vs_xaxis, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_plot
+  
+  info_base = (*global_plot).counts_vs_xaxis_info_base
+  
+  if (widget_info(info_base, /valid_id) EQ 0) THEN BEGIN
+    parent_base_uname = 'px_vs_tof_widget_base'
+    counts_vs_axis_base, event=event, $
+      parent_base_uname=parent_base_uname, $
+      xaxis='tof'
+  endif
+  
+end
+
+;+
+; :Description:
+;    show the counts vs pixel (angle) base
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro show_counts_vs_yaxis, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_plot
+  
+  info_base = (*global_plot).counts_vs_yaxis_info_base
+  
+  if (widget_info(info_base, /valid_id) EQ 0) THEN BEGIN
+    parent_base_uname = 'px_vs_tof_widget_base'
+    counts_vs_axis_base, event=event, $
+      parent_base_uname=parent_base_uname, $
+      xaxis='pixel'
+  endif
   
 end
 
@@ -462,6 +554,30 @@ pro px_vs_tof_plots_base_gui, wBase, $
     value = set2_value,$
     event_pro = 'local_switch_axes_type',$
     uname = 'local_scale_setting_log')
+    
+  info = widget_button(bar1, $
+    value = 'Infos',$
+    /menu)
+    
+  set = widget_button(info, $
+  value = 'Show all',$
+  event_pro = 'show_all_info',$
+  uname = 'show_all_info_uname')
+
+  set1 = widget_button(info, $
+    value = 'Show Cursor Infos',$
+    event_pro = 'show_cursor_info',$
+    uname = 'show_or_hide_cursor_info_uname')
+    
+  set2 = widget_button(info, $
+    value = 'Show Counts vs xaxis at cursor y position',$
+    event_pro = 'show_counts_vs_xaxis',$
+    uname = 'show_counts_vs_xaxis_uname')
+    
+  set3 = widget_button(info, $
+    value = 'Show Counts vs yaxis at cursor x position',$
+    event_pro = 'show_counts_vs_yaxis',$
+    uname = 'show_counts_vs_yaxis_uname')
     
   ;-------- end of menu
     
@@ -640,6 +756,10 @@ pro px_vs_tof_plots_base, main_base=main_base, $
     ;used to plot selection zoom
     file_name: file_name, $
     default_plot_size: default_plot_size, $
+    
+    cursor_info_base: 0L, $ ;id of info base
+    counts_vs_xaxis_info_base: 0L, $ ;id of info counts vs x
+    counts_vs_yaxis_info_base: 0L, $ ;id of info counts vs y
     
     data: ptr_new(0L), $
     data_linear: ptr_new(0L), $
