@@ -137,8 +137,6 @@ pro lin_log_data, event=event, base=base
     widget_control, base, get_uvalue=global_plot
   endelse
   
-  
-  
   Data = (*(*global_plot).data_linear)
   scale_setting = (*global_plot).default_scale_settings ;0 for lin, 1 for log
   
@@ -300,10 +298,11 @@ pro px_vs_tof_widget_killed, id
   widget_control,id,get_uvalue=global_plot
   main_event = (*global_plot).main_event
   
-  id = widget_info(id, $
-    find_by_uname='px_vs_tof_widget_base')
-  widget_control, id, /destroy
-;ActivateWidget, main_Event, 'open_settings_base', 1
+  info_base = (*global_plot).cursor_info_base
+  ;if x,y and counts base is on, shows live values of x,y and counts
+  if (widget_info(info_base, /valid_id) ne 0) then begin
+    widget_control, info_base, /destroy
+  endif
   
 end
 
@@ -317,12 +316,12 @@ end
 ; :Author: j35
 ;-
 pro show_all_info, event
-compile_opt idl2
-
-show_cursor_info, event
-show_counts_vs_xaxis, event
-show_counts_vs_yaxis, event
-
+  compile_opt idl2
+  
+  show_cursor_info, event
+  show_counts_vs_xaxis, event
+  show_counts_vs_yaxis, event
+  
 end
 
 ;+
@@ -560,11 +559,12 @@ pro px_vs_tof_plots_base_gui, wBase, $
     /menu)
     
   set = widget_button(info, $
-  value = 'Show all',$
-  event_pro = 'show_all_info',$
-  uname = 'show_all_info_uname')
-
+    value = 'Show all',$
+    event_pro = 'show_all_info',$
+    uname = 'show_all_info_uname')
+    
   set1 = widget_button(info, $
+    /separator,$
     value = 'Show Cursor Infos',$
     event_pro = 'show_cursor_info',$
     uname = 'show_or_hide_cursor_info_uname')
@@ -588,6 +588,7 @@ pro px_vs_tof_plots_base_gui, wBase, $
     scr_ysize = ysize-2*border,$
     /button_events,$
     /motion_events,$
+    /tracking_events,$
     /retain, $
     event_pro = 'draw_eventcb',$
     uname = 'draw')
