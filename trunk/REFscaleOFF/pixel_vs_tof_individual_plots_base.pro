@@ -304,6 +304,18 @@ pro px_vs_tof_widget_killed, id
     widget_control, info_base, /destroy
   endif
   
+  ;close the xaxis info if openned
+  xaxis_info_base = (*global_plot).counts_vs_xaxis_base
+  if (widget_info(xaxis_info_base, /valid_id) ne 0) then begin
+    widget_control, xaxis_info_base, /destroy
+  endif
+  
+  ;close the yaxis info if openned
+  yaxis_info_base = (*global_plot).counts_vs_yaxis_base
+  if (widget_info(yaxis_info_base, /valid_id) ne 0) then begin
+    widget_control, yaxis_info_base, /destroy
+  endif
+  
 end
 
 ;+

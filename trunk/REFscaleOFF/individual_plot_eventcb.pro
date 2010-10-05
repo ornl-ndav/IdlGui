@@ -167,11 +167,22 @@ end
 ;
 ; :Author: j35
 ;-
-pro plot_counts_vs_xaxis, event
-compile_opt idl2
-
+pro plot_counts_vs_xaxis, event, clear=clear
+  compile_opt idl2
+  
   widget_control, event.top, get_uvalue=global_plot
-
+  
+  xaxis_plot_uname = (*global_plot).counts_vs_xaxis_plot_uname
+  counts_vs_xaxis_base = (*global_plot).counts_vs_xaxis_base
+  id = widget_info(counts_vs_xaxis_base, find_by_uname=xaxis_plot_uname)
+  widget_control, id, GET_VALUE = plot_id
+  wset, plot_id
+  
+  if (n_elements(clear) ne 0) then begin
+    erase
+    return
+  endif
+  
   data = (*(*global_plot).data_linear) ;[51,65] where 51 is #pixels
   
   xdata_max = (size(data))[2]
@@ -180,16 +191,76 @@ compile_opt idl2
   congrid_xcoeff = (*global_plot).congrid_ycoeff  ;using ycoeff because of transpose
   congrid_ycoeff = (*global_plot).congrid_xcoeff  ;using xcoeff because of transpose
   
-  xdata = fix(float(event.x) * float(xdata_max) / congrid_xcoeff)
-  ydata = fix(float(event.y) * float(ydata_max) / congrid_ycoeff)
+  xdata = fix(float(event.x) * float(xdata_max) / congrid_xcoeff) ;tof
+  ydata = fix(float(event.y) * float(ydata_max) / congrid_ycoeff) ;pixel
   
-  counts_vs_xaxis_plot_id = (*(*global_plot).counts_vs_xaxis_plot_id)  
+  xrange = (*global_plot).xrange
+  zrange = (*global_plot).zrange
+  
+  xaxis_plot_uname = (*global_plot).counts_vs_xaxis_plot_uname
+  counts_vs_xaxis_base = (*global_plot).counts_vs_xaxis_base
+  id = widget_info(counts_vs_xaxis_base, find_by_uname=xaxis_plot_uname)
+  widget_control, id, GET_VALUE = plot_id
+  wset, plot_id
+  
+  sz_x = (size(data))[1]
+  if (ydata ge sz_x) then begin
+    erase
+    return
+  endif
+  
+  plot, data[ydata,*], xtitle='TOF (!4l!Xs)', ytitle='Counts'
+  
+end
 
-   xrange = (*global_plot).xrange
-   zrange = (*global_plot).zrange
-    
-
-
+;+
+; :Description:
+;    display the counts vs pixel (or angle) plot
+;    in the new widget_base on the right of the main GUI
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro plot_counts_vs_yaxis, event, clear=clear
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_plot
+  
+  yaxis_plot_uname = (*global_plot).counts_vs_yaxis_plot_uname
+  counts_vs_yaxis_base = (*global_plot).counts_vs_yaxis_base
+  id = widget_info(counts_vs_yaxis_base, find_by_uname=yaxis_plot_uname)
+  widget_control, id, GET_VALUE = plot_id
+  wset, plot_id
+  
+  if (n_elements(clear) ne 0) then begin
+    erase
+    return
+  endif
+  
+  data = (*(*global_plot).data_linear) ;[51,65] where 51 is #pixels
+  
+  xdata_max = (size(data))[2]
+  ydata_max = (size(data))[1]
+  
+  congrid_xcoeff = (*global_plot).congrid_ycoeff  ;using ycoeff because of transpose
+  congrid_ycoeff = (*global_plot).congrid_xcoeff  ;using xcoeff because of transpose
+  
+  xdata = fix(float(event.x) * float(xdata_max) / congrid_xcoeff) ;tof
+  ydata = fix(float(event.y) * float(ydata_max) / congrid_ycoeff) ;pixel
+  
+  xrange = (*global_plot).xrange
+  zrange = (*global_plot).zrange
+  
+  sz_y = (size(data))[2]
+  if (xdata ge sz_y) then begin
+    erase
+    return
+  endif
+  
+  plot, data[*,xdata], xtitle='Pixel', ytitle='Counts'
+  
 end
 
 ;+
@@ -227,15 +298,14 @@ pro draw_eventcb, event
     
     ;counts vs xaxis (tof or lambda)
     counts_vs_xaxis_plot_id = (*global_plot).counts_vs_xaxis_base
-    if (obj_valid(counts_vs_xaxis_plot_id)) then begin
+    if (widget_info(counts_vs_xaxis_plot_id,/valid_id) ne 0) then begin
       plot_counts_vs_xaxis, event
     endif
-
+    
     ;counts vs yaxis (pixel or angle)
     counts_vs_yaxis_plot_id = (*global_plot).counts_vs_yaxis_base
-    if (obj_valid(counts_vs_yaxis_plot_id)) then begin
-    
-    
+    if (widget_info(counts_vs_yaxis_plot_id,/valid_id) ne 0) then begin
+      plot_counts_vs_yaxis, event
     endif
     
     draw_zoom_selection = (*global_plot).draw_zoom_selection
@@ -289,16 +359,28 @@ pro draw_eventcb, event
   endif else begin ;endif of catch error
   
     if (event.enter eq 0) then begin ;leaving plot
-   info_base = (*global_plot).cursor_info_base
-    ;if x,y and counts base is on, shows live values of x,y and counts
-    if (widget_info(info_base, /valid_id) ne 0) then begin
-
-      na = 'N/A'
-      putValue, base=info_base, 'cursor_info_x_value_uname', na
-      putValue, base=info_base, 'cursor_info_y_value_uname', na
-      putValue, base=info_base, 'cursor_info_z_value_uname', na
-    endif
-    
+      info_base = (*global_plot).cursor_info_base
+      ;if x,y and counts base is on, shows live values of x,y and counts
+      if (widget_info(info_base, /valid_id) ne 0) then begin
+      
+        na = 'N/A'
+        putValue, base=info_base, 'cursor_info_x_value_uname', na
+        putValue, base=info_base, 'cursor_info_y_value_uname', na
+        putValue, base=info_base, 'cursor_info_z_value_uname', na
+      endif
+      
+      ;counts vs xaxis (tof or lambda)
+      counts_vs_xaxis_plot_id = (*global_plot).counts_vs_xaxis_base
+      if (widget_info(counts_vs_xaxis_plot_id,/valid_id) ne 0) then begin
+        plot_counts_vs_xaxis, event, clear=1
+      endif
+      
+      ;counts vs yaxis (pixel or angle)
+      counts_vs_yaxis_plot_id = (*global_plot).counts_vs_yaxis_base
+      if (widget_info(counts_vs_yaxis_plot_id,/valid_id) ne 0) then begin
+        plot_counts_vs_yaxis, event, clear=1
+      endif
+      
     endif
     
   endelse
