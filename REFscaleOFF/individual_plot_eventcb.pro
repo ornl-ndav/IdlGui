@@ -119,7 +119,18 @@ function retrieve_data_y_value, event
   
 end
 
-
+;+
+; :Description:
+;    returns the exact number of counts of the x and y device position
+;
+; :Params:
+;    event
+;
+; :Returns:
+;    counts
+;
+; :Author: j35
+;-
 function retrieve_data_z_value, event
   compile_opt idl2
   
@@ -144,6 +155,41 @@ function retrieve_data_z_value, event
   
   return, data[ydata,xdata]
   
+end
+
+;+
+; :Description:
+;    display the counts vs tof (or lambda) plot
+;    in the new widget_base on the right of the main GUI
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro plot_counts_vs_xaxis, event
+compile_opt idl2
+
+  widget_control, event.top, get_uvalue=global_plot
+
+  data = (*(*global_plot).data_linear) ;[51,65] where 51 is #pixels
+  
+  xdata_max = (size(data))[2]
+  ydata_max = (size(data))[1]
+  
+  congrid_xcoeff = (*global_plot).congrid_ycoeff  ;using ycoeff because of transpose
+  congrid_ycoeff = (*global_plot).congrid_xcoeff  ;using xcoeff because of transpose
+  
+  xdata = fix(float(event.x) * float(xdata_max) / congrid_xcoeff)
+  ydata = fix(float(event.y) * float(ydata_max) / congrid_ycoeff)
+  
+  counts_vs_xaxis_plot_id = (*(*global_plot).counts_vs_xaxis_plot_id)  
+
+   xrange = (*global_plot).xrange
+   zrange = (*global_plot).zrange
+    
+
+
 end
 
 ;+
@@ -177,6 +223,19 @@ pro draw_eventcb, event
       putValue, base=info_base, 'cursor_info_y_value_uname', strcompress(y,/remove_all)
       putValue, base=info_base, 'cursor_info_z_value_uname', strcompress(z,/remove_all)
       
+    endif
+    
+    ;counts vs xaxis (tof or lambda)
+    counts_vs_xaxis_plot_id = (*global_plot).counts_vs_xaxis_base
+    if (obj_valid(counts_vs_xaxis_plot_id)) then begin
+      plot_counts_vs_xaxis, event
+    endif
+
+    ;counts vs yaxis (pixel or angle)
+    counts_vs_yaxis_plot_id = (*global_plot).counts_vs_yaxis_base
+    if (obj_valid(counts_vs_yaxis_plot_id)) then begin
+    
+    
     endif
     
     draw_zoom_selection = (*global_plot).draw_zoom_selection
@@ -229,11 +288,11 @@ pro draw_eventcb, event
     
   endif else begin ;endif of catch error
   
+    if (event.enter eq 0) then begin ;leaving plot
    info_base = (*global_plot).cursor_info_base
     ;if x,y and counts base is on, shows live values of x,y and counts
     if (widget_info(info_base, /valid_id) ne 0) then begin
-    
-    if (event.enter eq 0) then begin ;leaving plot
+
       na = 'N/A'
       putValue, base=info_base, 'cursor_info_x_value_uname', na
       putValue, base=info_base, 'cursor_info_y_value_uname', na
