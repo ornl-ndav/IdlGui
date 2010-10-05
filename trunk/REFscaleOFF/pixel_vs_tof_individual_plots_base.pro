@@ -362,13 +362,11 @@ pro show_counts_vs_xaxis, event
   
   widget_control, event.top, get_uvalue=global_plot
   
-  info_base = (*global_plot).counts_vs_xaxis_info_base
-  
-  if (widget_info(info_base, /valid_id) EQ 0) THEN BEGIN
-    parent_base_uname = 'px_vs_tof_widget_base'
-    counts_vs_axis_base, event=event, $
-      parent_base_uname=parent_base_uname, $
-      xaxis='tof'
+  counts_vs_xaxis_plot_id = (*global_plot).counts_vs_xaxis_base
+  if (obj_valid(counts_vs_xaxis_plot_id) eq 0) then begin ;no plot yet
+  counts_vs_axis_base, event=event, $
+    parent_base_uname = 'px_vs_tof_widget_base', $
+    xaxis = 'tof'
   endif
   
 end
@@ -387,13 +385,11 @@ pro show_counts_vs_yaxis, event
   
   widget_control, event.top, get_uvalue=global_plot
   
-  info_base = (*global_plot).counts_vs_yaxis_info_base
-  
-  if (widget_info(info_base, /valid_id) EQ 0) THEN BEGIN
-    parent_base_uname = 'px_vs_tof_widget_base'
-    counts_vs_axis_base, event=event, $
-      parent_base_uname=parent_base_uname, $
-      xaxis='pixel'
+  counts_vs_yaxis_plot_id = (*global_plot).counts_vs_yaxis_base
+  if (obj_valid(counts_vs_yaxis_plot_id) eq 0) then begin ;no plot yet
+counts_vs_axis_base, event=event, $
+    parent_base_uname = 'px_vs_tof_widget_base', $
+    xaxis = 'pixel'
   endif
   
 end
@@ -759,8 +755,10 @@ pro px_vs_tof_plots_base, main_base=main_base, $
     default_plot_size: default_plot_size, $
     
     cursor_info_base: 0L, $ ;id of info base
-    counts_vs_xaxis_info_base: 0L, $ ;id of info counts vs x
-    counts_vs_yaxis_info_base: 0L, $ ;id of info counts vs y
+    counts_vs_xaxis_base: 0L, $ ;id of info counts vs x
+    counts_vs_yaxis_base: 0L, $ ;id of info counts vs y
+    counts_vs_xaxis_plot_uname: '',$
+    counts_vs_yaxis_plot_uname: '',$
     
     data: ptr_new(0L), $
     data_linear: ptr_new(0L), $
