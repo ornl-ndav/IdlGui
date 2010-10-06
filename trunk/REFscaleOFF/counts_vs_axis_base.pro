@@ -134,15 +134,35 @@ end
 pro counts_vs_axis_base_killed, id
   compile_opt idl2
   
-    catch, error
+  catch, error
   if (error ne 0) then begin
-  catch,/cancel
-  return
+    catch,/cancel
+    return
   endif
   
-    widget_control, id, get_uvalue=global_axis_plot
-    event = (*global_axis_plot).parent_event
-   refresh_plot, event
+  widget_control, id, get_uvalue=global_axis_plot
+  event = (*global_axis_plot).parent_event
+  refresh_plot, event
+  
+end
+
+;+
+; :Description:
+;    Cleanup routine
+;
+; :Params:
+;    tlb
+;
+; :Author: j35
+;-
+pro counts_vs_axis_base_cleanup, tlb
+  compile_opt idl2
+  
+  widget_control, tlb, get_uvalue=global_axis_plot, /no_copy
+  
+  if (n_elements(global_axis_plot) eq 0) then return
+  
+  ptr_free, global_axis_plot
   
 end
 
@@ -214,7 +234,8 @@ pro counts_vs_axis_base, event=event, $
     
   WIDGET_CONTROL, _base, SET_UVALUE = global_axis_plot
   
-  XMANAGER, "counts_vs_axis_base", _base, GROUP_LEADER = ourGroup, /NO_BLOCK
-  
+  XMANAGER, "counts_vs_axis_base", _base, GROUP_LEADER = ourGroup, /NO_BLOCK, $
+    cleanup='counts_vs_axis_base_cleanup'
+    
 end
 
