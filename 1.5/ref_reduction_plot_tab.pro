@@ -81,7 +81,6 @@ END
 
 ;------------------------------------------------------------------------------
 PRO preview_ascii_file, Event
-  print, 'here'
   FileName = getTextFieldValue(Event, 'plot_tab_input_file_text_field')
   TITLE = 'Preview of the ASCII File: ' + FileName
   ref_reduction_xdisplayFile,  FileName,$

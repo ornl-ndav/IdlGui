@@ -443,7 +443,7 @@ PRO REFreductionEventcb_ProcessingCommandLine, Event
     ;data reduction was successful
   
     ;get name of .txt file
-    output_file_path   = getOutputPathFromButton(Event)
+    output_file_path   = (*global).dr_output_path
     output_file_name   = getOutputFileName(Event)
     FullOutputFileName = output_file_path + output_file_name
     FullXmlFileName    = getXmlFileName(FullOutputFileName)
