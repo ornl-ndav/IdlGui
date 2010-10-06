@@ -312,6 +312,33 @@ pro draw_eventcb, event
       plot_counts_vs_yaxis, event
     endif
     
+    ;Draw vertical and horizontal lines when info mode is ON
+    if (widget_info(info_base,/valid_id) ne 0 || $
+    widget_info(counts_vs_xaxis_plot_id,/valid_id) ne 0 || $
+    widget_info(counts_vs_yaxis_plot_id,/valid_id) ne 0) then begin
+    
+      refresh_plot, event
+      x=event.x
+      y=event.y
+      id = widget_info(event.top, find_by_uname='draw')
+      geometry = widget_info(id,/geometry)
+      xsize = geometry.xsize
+      ysize = geometry.ysize
+      
+      off = 20
+      
+      plots, x, 0, /device
+      plots, x, y-off, /device, /continue, color=fsc_color('white')
+      plots, x, y+off, /device
+      plots, x, ysize, /device, /continue, color=fsc_color('white')
+
+      plots, 0, y, /device
+      plots, x-off, y, /device, /continue, color=fsc_color('white')
+      plots, x+off, y, /device
+      plots, xsize, y, /device, /continue, color=fsc_color('white')
+
+    endif
+    
     draw_zoom_selection = (*global_plot).draw_zoom_selection
     
     if ((*global_plot).left_click) then begin ;moving mouse with left click
