@@ -706,9 +706,32 @@ end
 
 ;+
 ; :Description:
+;    Cleanup routine
+;
+; :Params:
+;    tlb
+;
+; :Author: j35
+;-
+pro px_vs_tof_plots_base_cleanup, tlb
+compile_opt idl2
+
+  widget_control, tlb, get_uvalue=global_plot, /no_copy
+
+  if (n_elements(global_plot) eq 0) then return
+  
+  ptr_free, (*global_plot).data
+  ptr_free, (*global_plot).data_linear
+  
+  ptr_free, global_plot
+
+end
+
+;+
+; :Description:
 ;     Creates the base and plot the pixel vs tof of the
 ;     given file index
-
+;
 ; :Keywords:
 ;    main_base
 ;    event
@@ -803,7 +826,8 @@ pro px_vs_tof_plots_base, main_base=main_base, $
     
   WIDGET_CONTROL, wBase, SET_UVALUE = global_plot
   
-  XMANAGER, "px_vs_tof_plots_base", wBase, GROUP_LEADER = ourGroup, /NO_BLOCK
+  XMANAGER, "px_vs_tof_plots_base", wBase, GROUP_LEADER = ourGroup, /NO_BLOCK, $
+  cleanup = 'px_vs_tof_plots_base_cleanup'
   
   ;retrieve scale
   ;  Data_x = *pData_x[file_index,spin_state]

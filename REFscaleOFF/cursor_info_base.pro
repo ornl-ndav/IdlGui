@@ -129,6 +129,17 @@ pro cursor_info_base_gui, wBase, $
     
 end
 
+;+
+; :Description:
+;    Killed routine
+;    
+; :Params:
+;    id
+;
+;
+;
+; :Author: j35
+;-
 pro cursor_info_base_killed, id
   compile_opt idl2
   
@@ -142,6 +153,26 @@ pro cursor_info_base_killed, id
   widget_control,id,get_uvalue=global_info
   event = (*global_info).parent_event
   refresh_plot, event
+
+end
+
+;+
+; :Description:
+;    Cleanup routine
+;
+; :Params:
+;    tlb
+;
+; :Author: j35
+;-
+pro counts_info_base_cleanup, tlb
+compile_opt idl2
+
+widget_control, tlb, get_uvalue=global_info, /no_copy
+
+  if (n_elements(global_info) eq 0) then return
+  
+  ptr_free, global_info
 
 end
 
@@ -181,7 +212,8 @@ pro cursor_info_base, event=event, $
     
   WIDGET_CONTROL, _base, SET_UVALUE = global_info
   
-  XMANAGER, "cursor_info_base", _base, GROUP_LEADER = ourGroup, /NO_BLOCK
+  XMANAGER, "cursor_info_base", _base, GROUP_LEADER = ourGroup, /NO_BLOCK, $
+  cleanup='counts_info_base_cleanup'
   
 end
 
