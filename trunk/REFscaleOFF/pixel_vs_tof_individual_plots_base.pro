@@ -287,15 +287,13 @@ end
 ;   Reached when the settings base is killed
 ;
 ; :Params:
-;    event
+;    global_plot
 ;
 ; :Author: j35
 ;-
-pro px_vs_tof_widget_killed, id
+pro px_vs_tof_widget_killed, global_plot
   compile_opt idl2
   
-  ;get global structure
-  widget_control,id,get_uvalue=global_plot
   main_event = (*global_plot).main_event
   
   info_base = (*global_plot).cursor_info_base
@@ -458,7 +456,7 @@ pro px_vs_tof_plots_base_gui, wBase, $
     SCR_YSIZE    = ysize,$
     SCR_XSIZE    = xsize+colorbar_xsize,$
     MAP          = 1,$
-    kill_notify  = 'px_vs_tof_widget_killed', $
+;    kill_notify  = 'px_vs_tof_widget_killed', $
     /BASE_ALIGN_CENTER,$
     /align_center,$
     /tlb_size_events,$
@@ -597,7 +595,7 @@ pro px_vs_tof_plots_base_gui, wBase, $
     /button_events,$
     /motion_events,$
     /tracking_events,$
-    /retain, $
+    retain=2, $
     event_pro = 'draw_eventcb',$
     uname = 'draw')
     
@@ -718,6 +716,8 @@ compile_opt idl2
 
   widget_control, tlb, get_uvalue=global_plot, /no_copy
 
+  px_vs_tof_widget_killed, global_plot
+
   if (n_elements(global_plot) eq 0) then return
   
   ptr_free, (*global_plot).data
@@ -812,6 +812,8 @@ pro px_vs_tof_plots_base, main_base=main_base, $
     zrange: fltarr(2),$
     yrange: intarr(2),$ ;[min_pixel,max_pixel]
     
+    background: ptr_new(0L), $ ;background of main plot
+    
     left_click: 0b,$ ;by default, left button is not clicked
     draw_zoom_selection: intarr(4),$ ;[x0,y0,x1,y1]
     
@@ -893,6 +895,8 @@ pro px_vs_tof_plots_base, main_base=main_base, $
   value = getValue(base=wBase, uname)
   new_value = pre + value + post
   setValue, base=wBase, uname, new_value
+  
+  save_background,  main_base=wBase
   
 end
 
