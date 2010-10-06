@@ -61,7 +61,8 @@ pro plot_colorbar, event=event, base=base, zmin, zmax, type=type
   wset,id_value
   erase
   
-  loadct, (*global_plot).default_loadct, /silent
+  default_loadct = (*global_plot).default_loadct
+  loadct, default_loadct, /silent
   
   default_scale_settings = (*global_plot).default_scale_settings
   if (default_scale_settings eq 0) then begin ;linear
@@ -82,15 +83,31 @@ pro plot_colorbar, event=event, base=base, zmin, zmax, type=type
     divisions = 10
     perso_format = '(e8.1)'
     range = float([zmin,zmax])
-    colorbar, $
-      NCOLORS      = 255, $
-      POSITION     = [0.75,0.01,0.95,0.99], $
-      RANGE        = range,$
-      DIVISIONS    = divisions,$
-      PERSO_FORMAT = perso_format,$
-      /VERTICAL,$
-      ylog = 1
-      
+    
+    if (default_loadct eq 6) then begin
+      colorbar, $
+        AnnotateColor = 'white',$
+        NCOLORS      = 255, $
+        POSITION     = [0.75,0.01,0.95,0.99], $
+        RANGE        = range,$
+        DIVISIONS    = divisions,$
+        PERSO_FORMAT = perso_format,$
+        /VERTICAL,$
+        ylog = 1
+        
+    endif else begin
+    
+      colorbar, $
+        NCOLORS      = 255, $
+        POSITION     = [0.75,0.01,0.95,0.99], $
+        RANGE        = range,$
+        DIVISIONS    = divisions,$
+        PERSO_FORMAT = perso_format,$
+        /VERTICAL,$
+        ylog = 1
+        
+    endelse
+    
   endelse
   
 end
@@ -118,7 +135,8 @@ pro refresh_plot_colorbar, event
   wset,id_value
   erase
   
-  loadct, (*global_plot).default_loadct, /silent
+  default_loadct = (*global_plot).default_loadct
+  loadct, default_loadct, /silent
   
   default_scale_settings = (*global_plot).default_scale_settings
   if (default_scale_settings eq 0) then begin ;linear
@@ -140,15 +158,32 @@ pro refresh_plot_colorbar, event
     divisions = 10
     perso_format = '(e8.1)'
     range = float([zmin,zmax])
-    colorbar, $
-      NCOLORS      = 255, $
-      POSITION     = [0.75,0.01,0.95,0.99], $
-      RANGE        = range,$
-      DIVISIONS    = divisions,$
-      PERSO_FORMAT = perso_format,$
-      /VERTICAL,$
-      ylog = 1
-      
+    
+    if (default_loadct eq 6) then begin
+    
+      colorbar, $
+        AnnotateColor = 'white',$
+        NCOLORS      = 255, $
+        POSITION     = [0.75,0.01,0.95,0.99], $
+        RANGE        = range,$
+        DIVISIONS    = divisions,$
+        PERSO_FORMAT = perso_format,$
+        /VERTICAL,$
+        ylog = 1
+        
+    endif else begin
+    
+      colorbar, $
+        NCOLORS      = 255, $
+        POSITION     = [0.75,0.01,0.95,0.99], $
+        RANGE        = range,$
+        DIVISIONS    = divisions,$
+        PERSO_FORMAT = perso_format,$
+        /VERTICAL,$
+        ylog = 1
+        
+    endelse
+    
   endelse
   
 end
