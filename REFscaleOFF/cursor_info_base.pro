@@ -132,15 +132,17 @@ end
 pro cursor_info_base_killed, id
   compile_opt idl2
   
+  catch, error
+  if (error ne 0) then begin
+  catch,/cancel
+  return
+  endif
+  
   ;get global structure
-  widget_control,id,get_uvalue=global_plot
-  main_event = (*global_plot).main_event
-  
-  id = widget_info(id, $
-    find_by_uname='cursor_info_base')
-  widget_control, id, /destroy
-;ActivateWidget, main_Event, 'open_settings_base', 1
-  
+  widget_control,id,get_uvalue=global_info
+  event = (*global_info).parent_event
+  refresh_plot, event
+
 end
 
 ;+
@@ -174,9 +176,10 @@ pro cursor_info_base, event=event, $
   WIDGET_CONTROL, _base, /REALIZE
   
   global_info = PTR_NEW({ _base: _base,$
+    parent_event: event, $
     global: global_plot })
     
-  WIDGET_CONTROL, _base, SET_UVALUE = global_plot
+  WIDGET_CONTROL, _base, SET_UVALUE = global_info
   
   XMANAGER, "cursor_info_base", _base, GROUP_LEADER = ourGroup, /NO_BLOCK
   

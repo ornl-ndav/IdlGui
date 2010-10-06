@@ -134,13 +134,15 @@ end
 pro counts_vs_axis_base_killed, id
   compile_opt idl2
   
-  ;get global structure
-;  widget_control,id,get_uvalue=global_plot
-;  main_event = (*global_plot).main_event
+    catch, error
+  if (error ne 0) then begin
+  catch,/cancel
+  return
+  endif
   
-;  id = widget_info(id, $
-;    find_by_uname='counts_vs_axis_base')
-;  widget_control, id, /destroy
+    widget_control, id, get_uvalue=global_axis_plot
+    event = (*global_axis_plot).parent_event
+   refresh_plot, event
   
 end
 
@@ -205,6 +207,7 @@ pro counts_vs_axis_base, event=event, $
   
   global_axis_plot = PTR_NEW({ _base: _base,$
     xsize: xsize, $
+    parent_event: event, $
     plot_uname: plot_uname, $
     ysize: ysize, $
     global: global_plot })
