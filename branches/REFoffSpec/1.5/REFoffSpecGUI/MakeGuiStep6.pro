@@ -34,6 +34,8 @@
 
 PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
 
+; STEP 6 (OUTPUT) HAS A SINGLE SCREEN PAGE
+
   ;summary table settings
   NbrRows    = 6
   NbrColumns = 3
@@ -490,6 +492,8 @@ PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
   ;****************************************************************************
   ;            BUILD GUI
   ;****************************************************************************
+
+; STEP 6 (OUTPUT) HAS A SINGLE SCREEN PAGE
  
   BaseTab = WIDGET_BASE(REDUCE_TAB,$
     UNAME     = sBaseTab.uname,$

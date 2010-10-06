@@ -42,22 +42,70 @@ PRO readAsciiData, Event
   final_new_pData         = PTRARR(nbr,/ALLOCATE_HEAP)
   final_new_pData_y_error = PTRARR(nbr,/ALLOCATE_HEAP)
   final_new_pData_x       = PTRARR(nbr,/ALLOCATE_HEAP)
+
   WHILE (i LT nbr) DO BEGIN
     iClass = OBJ_NEW('IDL3columnsASCIIparser',list_OF_files[i])
     pData = iClass->getDataQuickly()
     OBJ_DESTROY, iClass
-    ;keep only the second column
-    new_pData_x       = STRARR((SIZE(*pData[0]))(2))
-    new_pData_x[*]    = (*pData[i])[0,*] ;retrieve x-array
-    new_pData         = STRARR(N_ELEMENTS(pData),(SIZE(*pData[0]))(2))
-    new_pData_y_error = FLTARR(N_ELEMENTS(pData),(SIZE(*pData[0]))(2))
     
-    FOR j=0,(N_ELEMENTS(pData)-1) DO BEGIN ;retrieve y_array and error_y_array
-      new_pData[j,*]         = (*pData[j])[1,*]
-      new_pData_y_error[j,*] = (*pData[j])[2,*]
-    ENDFOR
+; Change code (RC Ward, October 5-6, 2010): Fix data that does not start at zero to start at zero    
+; note that data is in pData as follows: (*pData[i])[0,*] is x axis array for dataset i
+;                                        (*pData[j])[1,*] is 2D y data for pixel j for all xaxis values
+;                                        (*pData[j])[2,*] is 2D y_error data for pixel j for all xaxis values 
+; We want to extend these arrays such that they start at zero and extend up to but below the intial value of x
+; using the delta that we get from the difference between the original first two values.
+; So first compute delta
+    pData_x = FLTARR((SIZE(*pData[0]))(2))
+    pData_x[*] = (*pData[i])[0,*]
+;    print, pData_x[1], pData_x[0]
+    delta = pData_x[1] - pData_x[0]
+;    print, "read_ascii_data:  delta: ", delta
+     j = 0
+; Now add values to new_pData_x up to the original value pData_x[0]
+    new = FLTARR((SIZE(*pData[0]))(2))
+    WHILE (delta*j LT pData_x[0]) DO BEGIN
+      new[j] = delta*j
+;      print, new[j]
+      j++
+    ENDWHILE
+    NUMBER = j-1
+;    print, "read_ascii: number of new elements for x: ", NUMBER
+    new_pData_x       = STRARR((SIZE(*pData[0]))(2) + NUMBER+1)
+; load new_pData_x
+   FOR j=0, NUMBER DO BEGIN
+     new_pData_x[j] = new[j]
+;     print, "read_ascii: j, new_pData_x[j]: ", j, "  ",new_pData_x[j]
+   ENDFOR
+; now load the rest of the x values from original array
+   FOR j=0, (SIZE(*pData[0]))(2)-1 DO BEGIN
+    k = j+1+NUMBER
+    new_pData_x[k]    = (*pData[i])[0,j] ;retrieve x-array
+;    print, "read_ascii: k, new_pData_x[k]: ", k, "  ",new_pData_x[k]
+   ENDFOR
+; define new data arrays
+    new_pData_y       = FLTARR(N_ELEMENTS(pData), (SIZE(*pData[0]))(2)+NUMBER+1)
+    new_pData_y_error = FLTARR(N_ELEMENTS(pData), (SIZE(*pData[0]))(2)+NUMBER+1)
 
-    *final_new_pData[i]         = new_pData
+; now move the y and error data over by the same amount, inserting zeros
+  FOR l=0,(N_ELEMENTS(pData)-1) DO BEGIN ;retrieve y_array and error_y_array
+     FOR j=0, NUMBER DO BEGIN        
+       new_pData_y[l,j] = 0.
+       new_pData_y_error[l,j] = 0.
+;   IF (l EQ 12) THEN BEGIN
+;          print, "read_ascii: j, new_pData_y_error: l=12,j=",j, "  ",new_pData_y_error[l,j]
+;   ENDIF
+     ENDFOR
+     FOR j=0, (SIZE(*pData[0]))(2)-1 DO BEGIN
+       k = j+1+NUMBER
+       new_pData_y[l,k]    =  (*pData[l])[1,j]  ;retrieve y-array
+       new_pData_y_error[l,k]    =  (*pData[l])[2,j]  ;retrieve y-array
+;    IF (l EQ 12) THEn BEGIN
+;         print, "read_ascii: k, new_pData_y_error: l=12,k=",k, "  ",new_pData_y_error[l,k]
+;    ENDIF
+     ENDFOR
+  ENDFOR 
+
+    *final_new_pData[i]         = new_pData_y
     *final_new_pData_y_error[i] = new_pData_y_error
     *final_new_pData_x[i]       = new_pData_x
     ++i

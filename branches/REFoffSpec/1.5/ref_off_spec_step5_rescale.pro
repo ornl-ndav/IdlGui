@@ -148,10 +148,12 @@ PRO display_step5_rescale_plot, Event, with_range=with_range
   IF (type EQ 'IvsQ') THEN BEGIN
     x_axis_label = 'Q( Angstroms!E-1!N )'
   ENDIF ELSE BEGIN
-    x_axis_label = 'Lambda_T (Angstroms)'
+    x_axis_label = 'Lambda perp (Angstroms)'
   ENDELSE
   
-  y_axis_label = 'Intensity'
+; Change code (RC Ward, 5 Sept 2010): Y axis label changed to Reflectivity
+;  y_axis_label = 'Intensity'
+   y_axis_label = 'Reflectivity'
   
   x_axis = (*(*global).step5_selection_x_array)
   array_selected_total = (*(*global).step5_selection_y_array)
@@ -1239,7 +1241,11 @@ PRO define_default_recap_output_file, Event
   list_of_ascii_files = (*(*global).list_of_ascii_files)
   
   selection_value = getCWBgroupValue(Event,'step5_selection_group_uname')
+; Change code (RC Ward, 5 Sept 2010): Add Case 0 
   CASE (selection_value) OF
+    0: BEGIN ;NO OUTPUT
+       ext = 'NONE.txt'
+    END
     1: BEGIN ;IvsQ
       ext = 'IvsQ.txt'
     END
@@ -1247,6 +1253,18 @@ PRO define_default_recap_output_file, Event
       ext = 'IvsLambda.txt'
     END
   ENDCASE
+;  CASE (selection_value) OF
+;    0: BEGIN ;NO OUTPUT
+;       ext = 'NONE.txt'
+;    END
+;    1: BEGIN ;IvsQ
+;      ext = 'RvsQ.txt'
+;    END
+;    2: BEGIN ;IvsLambda
+;      ext = 'RvsLambdaP.txt'
+;    END
+;  ENDCASE
+
   
   ;get list of run numbers
   ;run_numbers = getRunNumbersFromAscii(*(*global).list_of_ascii_files)i

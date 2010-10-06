@@ -405,6 +405,10 @@ END
 PRO create_final_array, Event, final_array, final_error_array
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+; Code Change (RC Ward, 16 Sept 2010): pick up splicing alternative from global variable
+; [0] is use Max value in overlap range (default); [1] is let the higher Q curve override lower Q
+   splicing_alternative = (*global).splicing_alternative
   
   nbr_plot             = getNbrFiles(Event) ;number of files
   scaling_factor_array = (*(*global).scaling_factor)
@@ -452,10 +456,21 @@ PRO create_final_array, Event, final_array, final_error_array
           y = index_indices[1,i]
           value_new = local_tfpData(x,y)
           value_old = base_array(x,y)
-          IF (value_new GT value_old) THEN BEGIN
-            base_array(x,y)       = value_new
-            base_error_array(x,y) = local_tfpData_error(x,y)
-          ENDIF
+
+; Change code (RC Ward, 16 Sept 2010): Here is where we need to determine curve splicing approach chosen
+;  Apply splicing alternative - The default is set to "higher Q overides"
+; [0] is let the higher Q curve override lower Q (default) [1] is use Max value in overlap range  
+           IF (splicing_alternative EQ 1) THEN BEGIN
+           ; Max values overides in overlap region
+              IF (value_new GT value_old) THEN BEGIN
+                base_array(x,y)       = value_new
+                base_error_array(x,y) = local_tfpData_error(x,y)
+              ENDIF
+           ENDIF ELSE BEGIN
+; Do nothing if splcing alternative is [1], that is higher Q curve overrides lower Q
+                base_array(x,y)       = value_new
+                base_error_array(x,y) = local_tfpData_error(x,y)
+           ENDELSE
           ++i
         ENDWHILE
       ENDIF
@@ -468,6 +483,8 @@ PRO create_final_array, Event, final_array, final_error_array
   ;final_array is base_array
   final_array       = base_array
   final_error_array = base_error_array
+   nbr_y = (SIZE(final_array))(2) ;nbr of pixels
+;   print, " create_final_array: nbr_y: ",nbr_y
 END
 
 
@@ -522,7 +539,7 @@ PRO run_full_process_with_other_pola, Event, sStructure
   path             = (*global).ascii_path
   ListOfInputFiles = path + ListOfInputFiles
 ;print, ListOfInputFiles 
-  ;check that all the file exist
+  ;check that all the files exist
   result = FIX(FILE_TEST(ListOfInputFiles,/READ))
    
   IF (TOTAL(result) NE nbr_plot) THEN BEGIN
@@ -917,6 +934,7 @@ PRO step6_congrid_data, Event, pData_y, pData_y_error
   
   ;get min delta_x and index
   min_delta_x = MIN(delta_x)
+;  print, "Step 6 congrid_data: ", min_delta_x
   min_index   = WHERE(delta_x EQ min_delta_x)
   
   ;work on all the data that have delta_x GT than the delta_x found
@@ -1002,7 +1020,11 @@ PRO  step6_scale_data, Event, $
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   detector_pixels_y = (*global).detector_pixels_y
-  
+
+; Code Change (RC Ward, 16 Sept 2010): pick up splicing alternative from global variable
+; [0] is use Max value in overlap range (default); [1] is let the higher Q curve override lower Q
+   splicing_alternative = (*global).splicing_alternative
+
   nbr_plot             = getNbrFiles(Event) ;number of files
   scaling_factor_array = (*(*global).scaling_factor)
 
@@ -1045,10 +1067,20 @@ PRO  step6_scale_data, Event, $
           y = index_indices[1,i]
           value_new       = local_tfpData(x,y)
           value_old = base_array(x,y)
-          IF (value_new GT value_old) THEN BEGIN
-            base_array(x,y)       = value_new
-            base_error_array(x,y) = local_tfpData_error(x,y)
-          ENDIF
+; Change code (RC Ward, 16 Sept 2010): Here is where we need to determine curve splicing approach chosen
+;  Apply splicing alternative - The default is set to "higher Q overides"
+; [0] is let the higher Q curve override lower Q (default) [1] is use Max value in overlap range  
+           IF (splicing_alternative EQ 1) THEN BEGIN
+           ; Max values overides in overlap region
+             IF (value_new GT value_old) THEN BEGIN
+               BASE_ARRAY(X,Y)       = VALUE_NEW
+               BASE_ERROR_ARRAY(X,Y) = LOCAL_TFPDATA_ERROR(X,Y)
+             ENDIF
+           ENDIF ELSE BEGIN
+; Do nothing if splcing alternative is [1], that is higher Q curve overrides lower Q
+               BASE_ARRAY(X,Y)       = VALUE_NEW
+               BASE_ERROR_ARRAY(X,Y) = LOCAL_TFPDATA_ERROR(X,Y)
+           ENDELSE               
           ++i
         ENDWHILE
       ENDIF
@@ -1069,45 +1101,61 @@ PRO create_output_array, Event
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   instrument = (*global).instrument
-  
+
+; Code Change (RC Ward, 18 Sept 2010): pick up splicing alternative from global variable
+; and print to LogBook and to status screen
+; [0] is use Max value in overlap range (default); [1] is let the higher Q curve override lower Q
+   splicing_alternative = (*global).splicing_alternative
+ 
   PROCESSING = (*global).processing
   OK         = (*global).ok
   FAILED     = (*global).failed
   
   ;indicate initialization with hourglass icon
   WIDGET_CONTROL,/HOURGLASS
+
+; print splicing_alternative to screen and to LogBook
+  if (splicing_alternative EQ 0) then begin
+    LogMessage = '> Step 6: Splicing alternative: ' + splicing_alternative + ' or Higher Q Overrides' 
+  endif else begin
+    LogMessage = '> Step 6: Splicing alternative: ' + splicing_alternative + ' or Use Max Value'
+  endelse  
+  putMessageInCreateStatus, Event, LogMessage
+  IDLsendToGeek_addLogBookText, Event, LogMessage 
   
   IF (instrument EQ 'REF_M') THEN BEGIN
     pola_state = getTextFieldValue(Event,'summary_working_polar_value')
     LogMessage = '> Step 6: Working on Initial Polarization State (' + $
       STRCOMPRESS(pola_state,/REMOVE_ALL) + ')'
-    putMessageInCreateStatus, Event, LogMessage
+    addMessageInCreateStatus, Event, LogMessage
     IDLsendToGeek_addLogBookText, Event, LogMessage 
     LogMessage = '    Create output data (shifting/scaling) ... ' + PROCESSING
     addMessageInCreateStatus, Event, LogMessage
     IDLsendToGeek_addLogBookText, Event, LogMessage 
   ENDIF ELSE BEGIN
     LogMessage = '> Step 6: Working on creating output files:'
-    putMessageInCreateStatus, Event, LogMessage
+    addMessageInCreateStatus, Event, LogMessage
     IDLsendToGeek_addLogBookText, Event, LogMessage 
     LogMessage = '    Create output data (shifting/scaling) ... ' + PROCESSING
     addMessageInCreateStatus, Event, LogMessage
     IDLsendToGeek_addLogBookText, Event, LogMessage 
   ENDELSE
   
+  
   activate_status_pola1 = 0
   activate_status_pola2 = 0
   activate_status_pola3 = 0
   activate_status_pola4 = 0
   
-  error = 0
-  CATCH, error
-  IF (error NE 0) THEN BEGIN
-    CATCH,/CANCEL
-    ReplaceTextInCreateStatus, Event, PROCESSING, FAILED
-  ENDIF ELSE BEGIN
+;  error = 0
+;  CATCH, error
+;  IF (error NE 0) THEN BEGIN
+;    CATCH,/CANCEL
+;    ReplaceTextInCreateStatus, Event, PROCESSING, FAILED
+;  ENDIF ELSE BEGIN
     ;retrieve x-axis
     xaxis = (*(*global).x_axis)
+
     ;get final array
     create_final_array, Event, final_array, final_error_array
     ReplaceTextInCreateStatus, Event, PROCESSING, OK
@@ -1116,20 +1164,31 @@ PRO create_output_array, Event
     addMessageInCreateStatus, Event, LogMessage
     IDLsendToGeek_addLogBookText, Event, LogMessage   
 
-    error1 = 0
-    CATCH, error1
-    IF (error1 NE 0) THEN BEGIN
-      CATCH,/CANCEL
-      ReplaceTextInCreateStatus, Event, PROCESSING, FAILED
-    ENDIF ELSE BEGIN
-      nbr_x = DOUBLE(N_ELEMENTS(xaxis)) ;nbr of tof
-      nbr_y = DOUBLE((SIZE(final_array))(2)) ;nbr of pixels
-      
+;    error1 = 0
+;    CATCH, error1
+;    IF (error1 NE 0) THEN BEGIN
+;      CATCH,/CANCEL
+;      ReplaceTextInCreateStatus, Event, PROCESSING, FAILED
+;    ENDIF ELSE BEGIN
+;      nbr_x = DOUBLE(N_ELEMENTS(xaxis)) ;number of tof
+;      nbr_y = DOUBLE((SIZE(final_array))(2)) ;number of pixels
+
+       nbr_x = N_ELEMENTS(xaxis) ;number of tof
+       nbr_y = (SIZE(final_array))(2) ;number of pixels
+
+;print, " create_output_array: nbr_x: ", nbr_x
+;print, " create_output_array: nbr_y: ", nbr_y
+         i = 0
+;        FOR j=0,(nbr_x-1) DO BEGIN
+;          print, " create_output_array: i, j, final_array: ",i, j, final_array[j,i]
+;        ENDFOR     
       index = 0L
       output_strarray = STRARR(DOUBLE(2+DOUBLE(nbr_y)*DOUBLE((nbr_x+4))))
       output_strarray[index++] = $
         '#F Scaling Data File created with REFoffSpec'
         
+sz= SIZE(final_array)   
+;print, "Size info for final_array: ",sz        
       FOR i=0,(nbr_y-1) DO BEGIN
         output_strarray[index++] = ''
         output_strarray[index++] = "#S 1 Spectrum ID ('bank1', (" + $
@@ -1139,6 +1198,7 @@ PRO create_output_array, Event
         output_strarray[index++] = "#L lambda_T(Angstroms)  " + $
           "Intensity(Counts/A)  Sigma(Counts/A)"
         FOR j=0,(nbr_x-1) DO BEGIN
+;        print, " create_output_array: i, j, final_array: ",i, j, final_array[j,i]
           text = STRCOMPRESS(xaxis[j],/REMOVE_ALL)
           text += '   ' + STRCOMPRESS(final_array[j,i],/REMOVE_ALL)
           text += '   ' + STRCOMPRESS(final_error_array[j,i],/REMOVE_ALL)
@@ -1166,10 +1226,9 @@ PRO create_output_array, Event
       
       IF (instrument EQ 'REF_M') THEN BEGIN
       
+        ;pola#2
         value = getButtonStatus(Event,'exclude_polarization_state2')
         IF (value EQ 0) THEN BEGIN ;we want this pola state
-          ;loop over the three other polarization states
-          ;pola#2
           sStructure = { summary_table_uname: $
             'polarization_state2_summary_table',$
             pola_state_uname: $
@@ -1219,9 +1278,9 @@ PRO create_output_array, Event
         
       ENDIF
       
-    ENDELSE
-    CATCH,/CANCEL
-  ENDELSE
+;    ENDELSE
+;    CATCH,/CANCEL
+;  ENDELSE
   
   ;activate preview widgets
   activate_widget, Event, 'step6_preview_pola_state1', activate_status_pola1

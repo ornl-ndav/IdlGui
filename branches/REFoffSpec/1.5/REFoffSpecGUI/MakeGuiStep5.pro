@@ -147,6 +147,9 @@ XYoff= [10,15]
 sXaxisLabel = { size: [XYoff[0],$
                        XYoff[1]],$
                 value: 'X-axis'}
+sWarningLabel = { size: [XYoff[0],$
+                         XYoff[1]],$
+                  value: 'REMEMBER TO SAVE R vs Q'}
 
 ;min and max (base and cw_fields) ---------------------------------------------
 XYoff = [50,-10]
@@ -342,7 +345,7 @@ sYMaxBaseField = { size: [sXMaxBaseField.size[0]+XYoff[0],$
     value: ''}
     
   ;cw_bgroup of
-  ;selection to make (none, counts vs Q .... etc) -----------------
+  ;selection to make (none, R vs Q, R vs lampa perp .... etc) -----------------
   XYoff = [10,5]
   sSelectionGroupBase = { size: [sScale.size[0]+XYoff[0],$
     sScale.size[1]+$
@@ -354,14 +357,15 @@ sYMaxBaseField = { size: [sXMaxBaseField.size[0]+XYoff[0],$
     sensitive: 1,$
     uname: 'step5_selection_group' }
    
+; Change code (RC Ward, 6 Sept, 2010): Replace Counts with R.
     sSelectionGroup = { value: [' None ', $
-    ' Counts vs Q ',$
-    ' Counts vs Lambda Perpendicular '],$
+    ' R vs Q ',$
+    ' R vs Lambda Perpendicular '],$
     set_value: 0,$
     label: 'Selection Type:  ',$
     uname: 'step5_selection_group_uname' }
     
-  ;counts vs Q base ------------------------------------------------------------
+  ;R vs Q base ------------------------------------------------------------
   XYoff = [0,5]
   sIvsQbase = { size: [sSelectionGroupBase.size[0]+XYoff[0],$
     sSelectionGroupBase.size[1]+$
@@ -379,10 +383,11 @@ sYMaxBaseField = { size: [sXMaxBaseField.size[0]+XYoff[0],$
     sIvsQbase.size[3]-2*XYoff[1]],$
     frame: 1}
     
+; Change code (RC Ward, 6 Sept 2010: Replace "Counts" with "Reflectivity"
   XYoff = [15,-8] ;title
   sTitle = { size: [sInsideFrame.size[0]+XYoff[0],$
     sInsideFrame.size[1]+XYoff[1]],$
-    value: 'Select working directory for output: Counts vs Q or Lambda Perpendicular'}
+    value: 'Select working directory for output: Reflectivity vs Q or Lambda Perpendicular'}
 ;    value: 'Selection: I vs Q'}
     
   XYoff = [5,8] ;folder button
@@ -411,7 +416,7 @@ sYMaxBaseField = { size: [sXMaxBaseField.size[0]+XYoff[0],$
     140,$
     sFolderButton.size[3]],$
     uname: 'step5_create_button_i_vs_q',$
-    value: 'CREATE ASCII FILE',$
+    value: 'SAVE R vs Q',$
     sensitive: 0}
     
   XYoff = [0,0] ;preview button
@@ -503,7 +508,7 @@ sSelectionInfoPlot          = { size: [XYoff[0],$
   ;*****************************************************************************
   ;            BUILD GUI
   ;*****************************************************************************
-    
+; ====== SECOND PAGE ======    
 ; Code Change (RC Ward, May 31, 2010): Add SCROLL capability to the WIDGET_BASE BaseTab
 
   BaseTab = WIDGET_BASE(REDUCE_TAB,$
@@ -592,9 +597,22 @@ sSelectionInfoPlot          = { size: [XYoff[0],$
     SCR_XSIZE = sRescaleButton.size[2],$
     UNAME = sRescaleButton.uname,$
     VALUE = sRescaleButton.value)
+; Change code (RC Ward, 5 Sept 2010): Add warning to user to save Reflectivity vs Q
+wWarningBase = WIDGET_BASE(RescaleBase,$
+                        XOFFSET   = sZoomBase.size[0],$
+                        YOFFSET   = sZoomBase.size[1]-100,$
+                        SCR_XSIZE = sZoomBase.size[2],$
+                        SCR_YSIZE = sZoomBase.size[3],$
+                        UNAME     = sZoomBase.uname,$
+                        FRAME     = sZoomBase.frame)
+; WARNING TO USERS ( added 5 Sept 2010)
+wWarningLabel = WIDGET_LABEL(wWarningBase,$
+                           XOFFSET = sWarningLabel.size[0],$
+                           YOFFSET = sWarningLabel.size[1],$
+                           VALUE   = sWarningLabel.value)
+
 ; Change code (RC Ward, 16 April 2010): Add buttons to control scale as in Step 4
 ;Zoom base --------------------------------------------------------------------
-;wZoomBase = WIDGET_BASE(BaseTab,$
 wZoomBase = WIDGET_BASE(RescaleBase,$
                         XOFFSET   = sZoomBase.size[0],$
                         YOFFSET   = sZoomBase.size[1],$
@@ -602,7 +620,6 @@ wZoomBase = WIDGET_BASE(RescaleBase,$
                         SCR_YSIZE = sZoomBase.size[3],$
                         UNAME     = sZoomBase.uname,$
                         FRAME     = sZoomBase.frame)
-
 ;X-axis -----------------------------------------------------------------------
 wXaxisLabel = WIDGET_LABEL(wZoomBase,$
                            XOFFSET = sXaxisLabel.size[0],$
@@ -697,7 +714,7 @@ wYmaxValue = CW_FIELD(wYmaxBase,$
     /BUTTON_EVENTS,$
     /MOTION_EVENTS)    
 ;****************************************************************************
-; THIS IS THE INITIAL PAGE  
+; ====== INITIAL PAGE ======= 
 ;Scaling base ----------------------------------------------------------------
   wShiftbase = WIDGET_BASE(BaseTab,$
     XOFFSET   = sShiftBase.size[0],$
@@ -879,7 +896,7 @@ SplicingAlternativeCWBgroup = cw_bgroup(BaseTab,$
                                /NO_RELEASE)
 ;======================================================================================
     
-  ;cw_bgroup of selection to make (none, counts vs Q .... etc) -----------------
+  ;cw_bgroup of selection to make (none, R vs Q .... etc) -----------------
   wSelectionGroupBase = WIDGET_BASE(BaseTab,$
     XOFFSET   = sSelectionGroupBase.size[0],$
     YOFFSET   = sSelectionGroupBase.size[1],$
@@ -900,7 +917,7 @@ SplicingAlternativeCWBgroup = cw_bgroup(BaseTab,$
     /ROW)
 
    
-  ;counts vs Q base ------------------------------------------------------------
+  ;R vs Q base ------------------------------------------------------------
   wQbase = WIDGET_BASE(BaseTab,$
     XOFFSET   = sIvsQbase.size[0],$
     YOFFSET   = sIvsQbase.size[1],$
