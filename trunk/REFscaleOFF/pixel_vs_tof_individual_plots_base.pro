@@ -784,6 +784,7 @@ pro px_vs_tof_plots_base, main_base=main_base, $
     default_scale_settings: default_scale_settings, $ ;lin or log z-axis
     border: border, $ ;border of main plot (space reserved for scale)
     tof_axis: fltarr(2),$  ;[start, end]
+    delta_tof: 0., $ ;tof increment
     xrange: fltarr(2),$ ;[tof_min, tof_max]
     zrange: fltarr(2),$
     yrange: intarr(2),$ ;[min_pixel,max_pixel]
@@ -809,6 +810,7 @@ pro px_vs_tof_plots_base, main_base=main_base, $
   start_tof = Data_x[0]
   end_tof = Data_x[-1]
   delta_tof = Data_x[1]-Data_x[0]
+  (*global_plot).delta_tof = delta_tof
   tof_axis = (*global_plot).tof_axis
   tof_axis[0] = start_tof
   tof_axis[1] = end_tof + delta_tof

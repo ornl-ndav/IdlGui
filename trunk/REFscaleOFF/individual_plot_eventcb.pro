@@ -194,9 +194,6 @@ pro plot_counts_vs_xaxis, event, clear=clear
   xdata = fix(float(event.x) * float(xdata_max) / congrid_xcoeff) ;tof
   ydata = fix(float(event.y) * float(ydata_max) / congrid_ycoeff) ;pixel
   
-  xrange = (*global_plot).xrange
-  zrange = (*global_plot).zrange
-  
   xaxis_plot_uname = (*global_plot).counts_vs_xaxis_plot_uname
   counts_vs_xaxis_base = (*global_plot).counts_vs_xaxis_base
   id = widget_info(counts_vs_xaxis_base, find_by_uname=xaxis_plot_uname)
@@ -209,7 +206,13 @@ pro plot_counts_vs_xaxis, event, clear=clear
     return
   endif
   
-  plot, data[ydata,*], xtitle='TOF (!4l!Xs)', ytitle='Counts'
+  nbr_pixel = n_elements(data[ydata,*])
+  tof_axis = (*global_plot).tof_axis
+  start_tof = tof_axis[0]
+  delta_tof = (*global_plot).delta_tof
+  yrange = indgen(nbr_pixel) * delta_tof + start_tof
+  
+  plot, yrange, data[ydata,*], xtitle='TOF (!4l!Xs)', ytitle='Counts'
   
 end
 
@@ -250,16 +253,17 @@ pro plot_counts_vs_yaxis, event, clear=clear
   xdata = fix(float(event.x) * float(xdata_max) / congrid_xcoeff) ;tof
   ydata = fix(float(event.y) * float(ydata_max) / congrid_ycoeff) ;pixel
   
-  xrange = (*global_plot).xrange
-  zrange = (*global_plot).zrange
-  
   sz_y = (size(data))[2]
   if (xdata ge sz_y) then begin
     erase
     return
   endif
   
-  plot, data[*,xdata], xtitle='Pixel', ytitle='Counts'
+  nbr_pixel = n_elements(data[*,xdata])
+  start_pixel = (*global_plot).start_pixel
+  xrange = indgen(nbr_pixel) + start_pixel
+    
+  plot, xrange, data[*,xdata], xtitle='Pixel', ytitle='Counts'
   
 end
 
