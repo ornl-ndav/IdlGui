@@ -83,7 +83,7 @@ function retrieve_data_x_value, event
   
   rat = float(x_device) / float(congrid_xcoeff)
   x_data = long(rat * (xrange[1] - xrange[0]) + xrange[0])
-  
+
   return, x_data
   
 end
@@ -188,8 +188,8 @@ pro plot_counts_vs_xaxis, event, clear=clear
   xdata_max = (size(data))[2]
   ydata_max = (size(data))[1]
   
-  congrid_xcoeff = (*global_plot).congrid_ycoeff  ;using ycoeff because of transpose
-  congrid_ycoeff = (*global_plot).congrid_xcoeff  ;using xcoeff because of transpose
+  congrid_xcoeff = (*global_plot).congrid_xcoeff  ;using ycoeff because of transpose
+  congrid_ycoeff = (*global_plot).congrid_ycoeff  ;using xcoeff because of transpose
   
   xdata = fix(float(event.x) * float(xdata_max) / congrid_xcoeff) ;tof
   ydata = fix(float(event.y) * float(ydata_max) / congrid_ycoeff) ;pixel
@@ -472,7 +472,7 @@ function determine_range_tof_selected, event
   x0_device = float(draw_zoom_selection[0])
   x1_device = float(draw_zoom_selection[2])
   
-  congrid_xcoeff = (*global_plot).congrid_ycoeff  ;using ycoeff because of transpose
+  congrid_xcoeff = (*global_plot).congrid_ycoeff
   
   xrange = float((*global_plot).xrange) ;min and max pixels
   
@@ -482,11 +482,10 @@ function determine_range_tof_selected, event
   
   ;calculation of x1_data value
   rat = float(x1_device) / float(congrid_xcoeff)
-  
   x1_data = long(rat * (xrange[1] - xrange[0]) + xrange[0])
   
   return, [x0_data, x1_data]
-  
+
 end
 
 ;+

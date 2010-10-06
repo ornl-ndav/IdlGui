@@ -189,8 +189,8 @@ pro refresh_plot, event
     cData = congrid(Data, ysize, xsize,/interp)
   ;    cData = congrid(Data, new_ysize-2*border, new_xsize-2*border-colorbar_xsize,/interp)
   endelse
-  (*global_plot).congrid_xcoeff = new_ysize-2*border
-  (*global_plot).congrid_ycoeff = new_xsize-2*border-colorbar_xsize
+  (*global_plot).congrid_xcoeff = ysize
+  (*global_plot).congrid_ycoeff = xsize
   
   id = widget_info(event.top, find_by_uname='draw')
   widget_control, id, GET_VALUE = plot_id
@@ -376,9 +376,9 @@ pro show_counts_vs_xaxis, event
   
   counts_vs_xaxis_plot_id = (*global_plot).counts_vs_xaxis_base
   if (obj_valid(counts_vs_xaxis_plot_id) eq 0) then begin ;no plot yet
-  counts_vs_axis_base, event=event, $
-    parent_base_uname = 'px_vs_tof_widget_base', $
-    xaxis = 'tof'
+    counts_vs_axis_base, event=event, $
+      parent_base_uname = 'px_vs_tof_widget_base', $
+      xaxis = 'tof'
   endif
   
 end
@@ -399,9 +399,9 @@ pro show_counts_vs_yaxis, event
   
   counts_vs_yaxis_plot_id = (*global_plot).counts_vs_yaxis_base
   if (obj_valid(counts_vs_yaxis_plot_id) eq 0) then begin ;no plot yet
-counts_vs_axis_base, event=event, $
-    parent_base_uname = 'px_vs_tof_widget_base', $
-    xaxis = 'pixel'
+    counts_vs_axis_base, event=event, $
+      parent_base_uname = 'px_vs_tof_widget_base', $
+      xaxis = 'pixel'
   endif
   
 end
@@ -836,8 +836,13 @@ pro px_vs_tof_plots_base, main_base=main_base, $
   endif else begin
     cData = congrid(Data, ysize, xsize,/interp)
   endelse
-  (*global_plot).congrid_xcoeff = default_plot_size[0]-2*border
-  (*global_plot).congrid_ycoeff = default_plot_size[1]-2*border
+  
+   id = widget_info(wBase, find_by_uname='px_vs_tof_widget_base')
+      geometry = widget_info(id,/geometry)
+      _xsize = geometry.scr_xsize
+      _ysize = geometry.scr_ysize
+  (*global_plot).congrid_xcoeff = _ysize-2*border
+  (*global_plot).congrid_ycoeff = _xsize-2*border-colorbar_xsize
   
   DEVICE, DECOMPOSED = 0
   loadct, default_loadct, /SILENT
