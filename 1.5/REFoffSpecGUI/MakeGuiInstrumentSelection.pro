@@ -35,7 +35,7 @@
 PRO MakeGuiInstrumentSelection, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
 ; Change code (RC Ward, 3 Aug 2010): Change title of this front GUI
-MainBaseTitle = 'REFoffSpec 1.5.1'
+MainBaseTitle = 'REFoffSpec 1.5.2'
 
 InstrumentSelectionBaseSize = [400,300,240,300]
 InstrumentSelectioncwbgroupSize = [10,5]

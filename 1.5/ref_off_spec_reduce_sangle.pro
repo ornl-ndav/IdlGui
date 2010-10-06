@@ -167,7 +167,9 @@ PRO display_metatada_of_sangle_selected_row, Event
     s_dangle_deg = STRCOMPRESS(convert_to_deg(dangle),/REMOVE_ALL)
     dangle_text = s_dangle_rad + ' (' + s_dangle_deg + ')'
     putTextFieldValue, Event, 'reduce_sangle_base_dangle_value', dangle_text
-    
+; Change code (RC Ward, 6 Sept 2010): Add capability to enter Dangle
+    putTextFieldValue, Event, 'reduce_sangle_base_dangle_user_value', dangle_text    
+
     dangle0 = iNexus->getDangle0()
     s_dangle0_rad = STRCOMPRESS(dangle0,/REMOVE_ALL)
     s_dangle0_deg = STRCOMPRESS(convert_to_deg(dangle0),/REMOVE_ALL)
@@ -646,10 +648,12 @@ PRO calculate_new_sangle_value, Event
   detector_pixels_size_y = (*global).detector_pixels_size_y
 
   row_selected = getSangleRowSelected(Event)
-  
+ 
+; Change code (RC Ward, 6 Sept 2010): Add capability for user to enter Dangle 
   ;retrieve various parameters needed
   Dangle  = FLOAT(getTextFieldValue(Event,$
-    'reduce_sangle_base_dangle_value'))
+;    'reduce_sangle_base_dangle_value'))
+    'reduce_sangle_base_dangle_user_value'))
   Dangle0 = FLOAT(getTextFieldValue(Event,$
 ;    'reduce_sangle_base_dangle0_value'))
     'reduce_sangle_base_dangle0_user_value'))
@@ -672,7 +676,7 @@ PRO calculate_new_sangle_value, Event
   (*global).tof_cutoff_min = sTOFCutoffMin
   (*global).tof_cutoff_max = sTOFCutoffMax
 ; DEBUG ========================================
-;    print, "=== Sangle Calculatio ns ==="
+;    print, "=== Sangle Calculations ==="
 ;    print, "Dangle: ", Dangle
 ;    print, "Dangle0: ", Dangle0
 ;    print, "RefPix: ", RefPix

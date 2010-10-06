@@ -37,6 +37,9 @@ PRO  reduce_step3_run_jobs, Event
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   instrument = (*global).instrument
+; Code change (RC Ward, Oct 5, 2010): Pass queue for submitting reduction code (refred_lp) from config file
+  queue = (*global).queue
+; print, "test: queue: ",queue
 ; Code change (RC Ward, Mar 2, 2010): pass TOF Cutoff min and max through global variable
 ; Code change (RC Ward, Mar 17, 2010): apply TOF cutoffs only if switch is yes
   apply_tof_cutoffs = (*global).apply_tof_cutoffs
@@ -61,7 +64,8 @@ PRO  reduce_step3_run_jobs, Event
         'lrac' : cmd_srun = 'sbatch -p lracq '
         'mrac' : cmd_srun = 'sbatch -p mracq '
         ELSE: BEGIN
-          cmd_srun = 'sbatch -p heaterq '
+;          cmd_srun = 'sbatch -p heaterq '
+           cmd_srun = 'sbatch -p ' + queue + ' '
         END
       ENDCASE
     END

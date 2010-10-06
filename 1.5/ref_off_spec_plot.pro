@@ -398,7 +398,7 @@ PRO contour_plot, Event, xaxis
   IF (sz GT sDraw.xsize) THEN BEGIN
     xRange = [0,xaxis[sDraw.xsize]]
   ENDIF
-  
+ 
   ;save parameters
   (*global).xscale.xrange   = xrange
   (*global).xscale.xticks   = xticks

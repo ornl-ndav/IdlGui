@@ -104,6 +104,7 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
   TOF_CUTOFF_MIN = file->getValue(tag=['configuration','TOFCuttoffs','TOFCutoffMin'])
   TOF_CUTOFF_MAX = file->getValue(tag=['configuration','TOFCuttoffs','TOFCutoffMax'])
   SPLICING_ALTERNATIVE = file->getValue(tag=['configuration','Recap','SplicingAlternative'])
+  QUEUE = file->getValue(tag=['configuration','Reduction','Queue'])
  ; Note: YSIZE_DRAW and Pixels_XValue are not presently used in the code 
   SUPER_USERS = ['rwd']
 
@@ -211,11 +212,11 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
    apply_tof_cutoffs: APPLY_TOF_CUTOFFS, $
    tof_cutoff_min: TOF_CUTOFF_MIN, $
    tof_cutoff_max: TOF_CUTOFF_MAX, $
-; Change code (RC Ward, 3 Aug 2010): pass splicing alternative for Step 5 (RECAP) from front screen
-; get splicing_alternative from the front screen, not the config file
+; Change code (RC Ward, 3 Aug 2010): set up default value of splicing_alternative
+; [0] is use Max value in overlap range (default); [1] is let the higher Q curve override lower Q
    splicing_alternative: SPLICING_ALTERNATIVE, $
-;    splicing_alternative: splicing_alternative, $ 
-
+; Change code (RC Ward, 5 Oct, 2010): queue for reduction code (redref_lp) processing
+   queue: QUEUE, $
     srun_web_page: 'https://neutronsr.us/applications/jobmonitor/squeue.php?view=all',$
 
 ; refred_lp is the remote reflectometer reduction code. Here were are setting up the names of the parameters to refred.    
@@ -470,7 +471,7 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     X_Y_min_max_backup: STRARR(4),$
     ymin_log_mode: 0.001,$
     scaling_step2_ymin_ymax: DBLARR(2), $ ;ymin and ymax for zoom widgets of step2
-    step4_ymin_global_value: 0.00001, $ ;value min of y for log scale
+    step4_ymin_global_value: 1.E-6, $ ;value min of y for log scale
     step4_2_2_fitting_status: 0,$
     step4_2_2_lambda_selected: 'min',$
     step4_2_2_fitting_parameters: FLTARR(2),$

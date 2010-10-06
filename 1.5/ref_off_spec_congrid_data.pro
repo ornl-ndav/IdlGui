@@ -33,6 +33,7 @@
 ;==============================================================================
 PRO determine_delta_x, sz, pData_x, delta_x
 index = 0
+
 WHILE (index LT sz) DO BEGIN
     x0 = (*pData_x[index])[0]
     x1 = (*pData_x[index])[1]
@@ -50,16 +51,21 @@ pData_x        = (*(*global).pData_x)
 pData_y        = (*(*global).pData_y)
 pData_y_error  = (*(*global).pData_y_error)
 
+;print, "pData_x[0][0], etc.: ", (*pData_x[0])[0]," ", (*pData_x[1])[0], " ", (*pData_x[2])[0], " ", (*pData_x[3])[0]
+
 ;determine the delta_x of each set of data
 sz      = (size(pData_y))(1)
 delta_x = FLTARR(sz)
+;print, " congrid_data: sz, delta_x: ", sz, delta_x
 determine_delta_x, sz, pData_x, delta_x
+;print, " congrid_data: after determine_delta_x: delta_x: ", delta_x
 
 ;get min delta_x and index
 min_delta_x = MIN(delta_x)
 min_index   = WHERE(delta_x EQ min_delta_x)
 
 min_index = min_index[0]
+;print, " congrid_data: min_delta_x, min_index: ", min_delta_x, min_index
 
 ;work on all the data that have delta_x GT than the delta_x found
 index = 0
@@ -79,13 +85,18 @@ ENDWHILE
 index       = 0
 max_x_size  = 0                 ;max number of elements
 max_x_value = 0                 ;maximum x value
+
 WHILE (index LT sz) DO BEGIN
     coeff = congrid_coeff_array[index]
     current_x_max_size  = (size(*pData_x[index]))(1)
     current_max_x_value = MAX(FLOAT(*pData_x[index]))
+;--------------------------    
+;print, "congrid_data: index, current_max_x_value: ", index, " ", current_max_x_value
     IF (current_max_x_value GT max_x_value) THEN BEGIN
         max_x_value = current_max_x_value
+;  print, "congrid_data: index, max_x_value: ", index," ", max_x_value
     ENDIF
+;--------------------------
     IF (current_x_max_size GT max_x_size) THEN BEGIN
         max_x_size = current_x_max_size
     ENDIF
@@ -140,13 +151,16 @@ WHILE(index LT sz) DO BEGIN
 ENDWHILE
 
 ;each new array pData_y (with congrid in x direction to share the same
-;x-axis are store in pData_y
+;x-axis are stored in pData_y
 (*(*global).pData_y)       = pData_y
 (*(*global).pData_y_error) = pData_y_error
 
-;define new x-axis
 x_size = FLOAT(max_x_value) / FLOAT(min_delta_x)
 x_axis = FINDGEN(FIX(x_size+1)) * min_delta_x
+
+;print, " congrid_data: x_size: ", x_size
+;print, " congrid_data: nbr_x: ", N_ELEMENTS(x_axis)
+;print, "x_axis: ", x_axis
 
 (*(*global).x_axis) = x_axis
 (*global).delta_x = x_axis[1]-x_axis[0]
@@ -154,5 +168,8 @@ x_axis = FINDGEN(FIX(x_size+1)) * min_delta_x
 (*(*global).realign_pData_y_error) = realign_pData_y_error
 (*(*global).untouched_realign_pData_y)       = realign_pData_y
 (*(*global).untouched_realign_pData_y_error) = realign_pData_y_error
+
+tfpData = (*(*global).realign_pData_y)
+local_tfpData       = *tfpData[0]
 
 END

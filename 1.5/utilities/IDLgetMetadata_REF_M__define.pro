@@ -33,8 +33,18 @@
 ;==============================================================================
 
 FUNCTION get_sangle, fileID
+; Change code (RC Ward, 15 Sept 2010): Get run_number to determine how to read metadata.
+run_number_path = '/entry-Off_Off/run_number/'
+pathID = h5d_open(fileID, run_number_path)
+run_number = h5d_read(pathID)
+;print, "in get_sangle - run_number: ", run_number
+if (run_number LE 6682) then begin
   sangle_value_path = '/entry-Off_Off/sample/SANGLE/readback/'
   sangle_units_path = '/entry-Off_Off/sample/SANGLE/readback/units/'
+endif else begin
+  sangle_value_path = '/entry-Off_Off/sample/SANGLE/value/'
+  sangle_units_path = '/entry-Off_Off/sample/SANGLE/value/units/'
+endelse
   error_value = 0
   CATCH, error_value
   IF (error_value NE 0) THEN BEGIN
@@ -52,8 +62,17 @@ END
 
 ;-------------------------------------------------------------------------------
 FUNCTION get_dangle, fileID
+; Change code (RC Ward, 15 Sept 2010): Get run_number to determine how to read metadata.
+run_number_path = '/entry-Off_Off/run_number/'
+pathID = h5d_open(fileID, run_number_path)
+run_number = h5d_read(pathID)
+if (run_number LE 6682) then begin
   dangle_value_path = '/entry-Off_Off/instrument/bank1/DANGLE/readback/'
   dangle_units_path = '/entry-Off_Off/instrument/bank1/DANGLE/readback/units/'
+endif else begin
+  dangle_value_path = '/entry-Off_Off/instrument/bank1/DANGLE/value/'
+  dangle_units_path = '/entry-Off_Off/instrument/bank1/DANGLE/value/units/'
+endelse
   error_value = 0
   CATCH, error_value
   IF (error_value NE 0) THEN BEGIN
@@ -71,8 +90,17 @@ END
 
 ;-------------------------------------------------------------------------------
 FUNCTION get_dangle0, fileID
+; Change code (RC Ward, 15 Sept 2010): Get run_number to determine how to read metadata.
+run_number_path = '/entry-Off_Off/run_number/'
+pathID = h5d_open(fileID, run_number_path)
+run_number = h5d_read(pathID)
+if (run_number LE 6682) then begin
   dangle_value_path = '/entry-Off_Off/instrument/bank1/DANGLE0/readback/'
   dangle_units_path = '/entry-Off_Off/instrument/bank1/DANGLE0/readback/units/'
+endif else begin
+  dangle_value_path = '/entry-Off_Off/instrument/bank1/DANGLE0/value/'
+  dangle_units_path = '/entry-Off_Off/instrument/bank1/DANGLE0/value/units/'
+endelse  
   error_value = 0
   CATCH, error_value
   IF (error_value NE 0) THEN BEGIN
@@ -90,7 +118,15 @@ END
 
 ;------------------------------------------------------------------------------
 FUNCTION get_dirpix, fileID
+; Change code (RC Ward, 15 Sept 2010): Get run_number to determine how to read metadata.
+run_number_path = '/entry-Off_Off/run_number/'
+pathID = h5d_open(fileID, run_number_path)
+run_number = h5d_read(pathID)
+if (run_number LE 6682) then begin
   dirpix_path = '/entry-Off_Off/instrument/bank1/DIRPIX/readback/'
+endif else begin
+  dirpix_path = '/entry-Off_Off/instrument/bank1/DIRPIX/value/'
+endelse
   error_value = 0
   CATCH, error_value
   IF (error_value NE 0) THEN BEGIN
@@ -106,8 +142,17 @@ END
 
 ;------------------------------------------------------------------------------
 FUNCTION get_sample_det_distance, fileID
+; Change code (RC Ward, 15 Sept 2010): Get run_number to determine how to read metadata.
+run_number_path = '/entry-Off_Off/run_number/'
+pathID = h5d_open(fileID, run_number_path)
+run_number = h5d_read(pathID)
+if (run_number LE 6682) then begin
   dist_value_path = '/entry-Off_Off/instrument/bank1/SampleDetDis/readback/'
   dist_units_path = '/entry-Off_Off/instrument/bank1/SampleDetDis/readback/units/'
+endif else begin
+  dist_value_path = '/entry-Off_Off/instrument/bank1/SampleDetDis/value/'
+  dist_units_path = '/entry-Off_Off/instrument/bank1/SampleDetDis/value/units/'
+endelse
   error_value = 0
   CATCH, error_value
   IF (error_value NE 0) THEN BEGIN

@@ -331,7 +331,7 @@ PRO produce_i_vs_q_output_file, Event
   IF (type EQ 'IvsQ') THEN BEGIN
     x_axis_label = 'Q(Angstroms^-1)'
   ENDIF ELSE BEGIN
-    x_axis_label = 'Lambda_T(Angstroms)'
+    x_axis_label = 'Lambda perp(Angstroms)'
   ENDELSE
   FileLine[++index] = '#L ' + x_axis_label + $
     ' Intensity(Counts/A) Sigma(Counts/A)'

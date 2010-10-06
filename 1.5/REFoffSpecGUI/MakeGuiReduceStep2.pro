@@ -240,7 +240,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
   save_quit_roi = WIDGET_BUTTON(row2col2,$
     VALUE = 'SAVE ROI and RETURN TO TABLE',$
     SCR_XSIZE = 320,$
-    TOOLTIP = 'Click to Save the ROI and Return to the table',$
+;    TOOLTIP = 'Click to Save the ROI and Return to the table',$
     uname = 'reduce_step2_create_roi_save_roi_quit',$
     SENSITIVE = 0)
 

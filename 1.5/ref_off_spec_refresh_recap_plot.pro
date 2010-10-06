@@ -48,6 +48,9 @@ PRO refresh_recap_plot, Event, RESCALE=rescale
   splicing_alternative = isMaxValueStep5Selected(Event)
 ;  print, "test (in RECAP): splicing_altnerative: ", splicing_alternative
 ;======================================================================================
+; create global variable
+  (*global).splicing_alternative = splicing_alternative
+
   if (splicing_alternative EQ 0) then begin
   LogText = '> Step 5 (RECAP): User selected splicing option where higher Q data overrides previous lower Q data.'
   endif else begin

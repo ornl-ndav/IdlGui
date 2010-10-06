@@ -48,7 +48,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
   ;****************************************************************************
   ;            BUILD GUI
   ;****************************************************************************
-    
+  ; ====== SECOND PAGE ======   
   TabBase = WIDGET_BASE(REDUCE_TAB,$
     UNAME     = 'reduce_step1_top_base',$
     XOFFSET   = sBase.size[0],$
@@ -168,9 +168,9 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     YSIZE = 2 * (*global).detector_pixels_y + 30,$
 ;    YSIZE = 2*304+30,$
     YOFFSET = 0)
- ; Change code (RC Ward, 7 Aug 2010): Add label on x-axis, namely "TOF (msec)".  
+ ; Change code (RC Ward, 7 Aug 2010): Add label on x-axis, namely "TOF (micro seconds)".  
     label = WIDGET_LABEL(row1col2, $
-         VALUE = 'TOF (msec)',$
+         VALUE = 'TOF (micro seconds)',$
          XOFFSET= 300,$
          YOFFSET= 635)
 ; Change code (RC Ward, 7 Aug 2010): Move log/linear toggle to lower right, underneath the plot
@@ -345,7 +345,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
       
   label = WIDGET_LABEL(base3h,$
     /ALIGN_LEFT, $
-    VALUE = 'Sample-Det. distance [m]: ')
+    VALUE = 'Sample-Detector Distance [m]: ')
   value = WIDGET_LABEL(base3h,$
     VALUE = 'N/A',$
     SCR_XSIZE = 140,$
@@ -449,6 +449,19 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
 ;    YOFFSET = 40,$
     /ROW)
 
+; Change code (RC Ward, 6 Sept 2010): Add entry box for Dangle.
+
+  label = WIDGET_LABEL(base3m,$
+    /ALIGN_LEFT,$
+    VALUE = 'Dangle:')    
+  value = WIDGET_TEXT(base3m,$
+    VALUE = 'N/A',$
+    UNAME = 'reduce_sangle_base_dangle_user_value',$
+    /EDITABLE, $
+    XSIZE = 10)
+  space = WIDGET_LABEL(base3m,$
+    VALUE = '  ')
+
   label = WIDGET_LABEL(base3m,$
     /ALIGN_LEFT,$
     VALUE = 'Dangle0:')    
@@ -459,11 +472,21 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     XSIZE = 10)
   space = WIDGET_LABEL(base3m,$
     VALUE = '  ')
+
+; Change code (RC Ward, 6 Sept 2010): Move Sample-Detector distance down to separate line
     
-  label = WIDGET_LABEL(base3m,$
+     row1col3mm = WIDGET_BASE(row1col3Main,$ ;..................................
+    /COLUMN, $
+     FRAME = 2) 
+  base3mm = WIDGET_BASE(row1col3mm,$
+;    XOFFSET = 155,$
+;    YOFFSET = 40,$
+    /ROW)
+    
+  label = WIDGET_LABEL(base3mm,$
     /ALIGN_LEFT,$
-    VALUE = 'Sam-Det Dist:')    
-  value = WIDGET_TEXT(base3m,$
+    VALUE = 'Sample-Detector Distance (m):')    
+  value = WIDGET_TEXT(base3mm,$
     VALUE = 'N/A',$
     UNAME = 'reduce_sangle_base_sampledetdis_user_value',$
     /EDITABLE, $
@@ -532,7 +555,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     
 
   ;****************************************************************************
-  ; THIS IS THE INITIAL PAGE  
+  ; ====== INITIAL PAGE ======  
   TopBase = WIDGET_BASE(TabBase,$
     UNAME     = 'reduce_step1_top_base',$
     XOFFSET   = sBase.size[0],$
@@ -718,7 +741,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
      /ROW)
        
   label = WIDGET_LABEL(Row4,$
-    VALUE = 'Relected Data Polarization States: ')
+    VALUE = 'Reflected Data Polarization States: ')
     
   Row4Base = WIDGET_BASE(Row4,$
     /ROW,$
