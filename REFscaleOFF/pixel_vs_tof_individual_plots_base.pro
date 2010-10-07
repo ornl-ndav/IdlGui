@@ -208,8 +208,8 @@ pro refresh_plot, event, recalculate=recalculate
   loadct, (*global_plot).default_loadct, /silent
   
   tvscl, transpose(cData)
-  
-  
+
+  save_background, event=event
   
 end
 
@@ -287,7 +287,7 @@ pro change_loadct, event
   (*global_plot).default_loadct = fix(new_uname_array[1])
   
   ;replot
-  refresh_plot, event
+  refresh_plot, event, recalculate=1
   refresh_plot_colorbar, event
   
 end
