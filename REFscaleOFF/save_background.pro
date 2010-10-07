@@ -48,7 +48,7 @@
 ;
 ; :Author: j35
 ;-
-pro save_background,  event, main_base=main_base
+pro save_background,  event=event, main_base=main_base
 compile_opt idl2
 
   IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
@@ -67,13 +67,9 @@ compile_opt idl2
   xsize   = geometry.xsize
   ysize   = geometry.ysize
   
-  help, background
-  
   ;DEVICE, copy =[0, 0, xsize, ysize, 0, 0, id_value]
   DEVICE, copy =[0, 0, xsize, ysize, 0, 0]
   
   (*(*global_plot).background) = background
-  
-  help, background
   
 END

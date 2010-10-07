@@ -52,12 +52,12 @@ pro px_vs_tof_plots_base_event, Event
   
     widget_info(event.top, find_by_unam='plot_setting_untouched'): begin
       switch_local_settings_plot_values, event
-      refresh_plot, event
+      refresh_plot, event, recalculate=1
       return
     end
     widget_info(event.top, find_by_unam='plot_setting_interpolated'): begin
       switch_local_settings_plot_values, event
-      refresh_plot, event
+      refresh_plot, event, recalculate=1
       return
     end
     
@@ -92,7 +92,7 @@ pro px_vs_tof_plots_base_event, Event
       widget_control, id, draw_xsize = colorbar_xsize
       
       plot_beam_center_scale, event=event
-      refresh_plot, event
+      refresh_plot, event, recalculate=1
       refresh_plot_colorbar, event
       
       return
@@ -166,11 +166,19 @@ end
 ;
 ; :Author: j35
 ;-
-pro refresh_plot, event
+pro refresh_plot, event, recalculate=recalculate
   compile_opt idl2
   
   ;get global structure
   widget_control,event.top,get_uvalue=global_plot
+  
+  if (n_elements(recalculate) eq 0) then begin
+    id = widget_info(event.top, find_by_uname='draw')
+    widget_control, id, GET_VALUE = plot_id
+    wset, plot_id
+    TV, (*(*global_plot).background), true=3
+    return
+  endif
   
   Data = (*(*global_plot).data)
   new_xsize = (*global_plot).xsize
@@ -200,6 +208,8 @@ pro refresh_plot, event
   loadct, (*global_plot).default_loadct, /silent
   
   tvscl, transpose(cData)
+  
+  
   
 end
 
@@ -456,7 +466,7 @@ pro px_vs_tof_plots_base_gui, wBase, $
     SCR_YSIZE    = ysize,$
     SCR_XSIZE    = xsize+colorbar_xsize,$
     MAP          = 1,$
-;    kill_notify  = 'px_vs_tof_widget_killed', $
+    ;    kill_notify  = 'px_vs_tof_widget_killed', $
     /BASE_ALIGN_CENTER,$
     /align_center,$
     /tlb_size_events,$
@@ -712,19 +722,19 @@ end
 ; :Author: j35
 ;-
 pro px_vs_tof_plots_base_cleanup, tlb
-compile_opt idl2
-
+  compile_opt idl2
+  
   widget_control, tlb, get_uvalue=global_plot, /no_copy
-
+  
   px_vs_tof_widget_killed, global_plot
-
+  
   if (n_elements(global_plot) eq 0) then return
   
   ptr_free, (*global_plot).data
   ptr_free, (*global_plot).data_linear
   
   ptr_free, global_plot
-
+  
 end
 
 ;+
@@ -829,8 +839,8 @@ pro px_vs_tof_plots_base, main_base=main_base, $
   WIDGET_CONTROL, wBase, SET_UVALUE = global_plot
   
   XMANAGER, "px_vs_tof_plots_base", wBase, GROUP_LEADER = ourGroup, /NO_BLOCK, $
-  cleanup = 'px_vs_tof_plots_base_cleanup'
-  
+    cleanup = 'px_vs_tof_plots_base_cleanup'
+    
   ;retrieve scale
   ;  Data_x = *pData_x[file_index,spin_state]
   start_tof = Data_x[0]
@@ -863,10 +873,10 @@ pro px_vs_tof_plots_base, main_base=main_base, $
     cData = congrid(Data, ysize, xsize,/interp)
   endelse
   
-   id = widget_info(wBase, find_by_uname='px_vs_tof_widget_base')
-      geometry = widget_info(id,/geometry)
-      _xsize = geometry.scr_xsize
-      _ysize = geometry.scr_ysize
+  id = widget_info(wBase, find_by_uname='px_vs_tof_widget_base')
+  geometry = widget_info(id,/geometry)
+  _xsize = geometry.scr_xsize
+  _ysize = geometry.scr_ysize
   (*global_plot).congrid_xcoeff = _ysize-2*border
   (*global_plot).congrid_ycoeff = _xsize-2*border-colorbar_xsize
   
