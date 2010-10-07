@@ -108,14 +108,18 @@ pro design_tabs, MAIN_BASE, global
     /align_right,$
     /row)
   wScale = widget_button(row3,$
+    sensitive = 0,$
     uname = 'automatic_scaling',$
     value = ' AUTO SCALING ')
   wScale = widget_button(row3,$
+    sensitive = 0,$
     uname = 'automatic_scaling_and_plot',$
     value = ' AUTO SCALING and SHOW PLOT')
   space = widget_label(row3,$
     value = '   ')
   wPlot = widget_button(row3,$
+    uname = 'show_plot',$
+    sensitive = 0,$
     value = ' SHOW PLOT ')
   space = widget_label(row3,$
     value = '  ')
@@ -143,6 +147,7 @@ pro design_tabs, MAIN_BASE, global
     value = 'Base File Name:')
   value = widget_text(row2,$
     value = 'N/A',$
+    uname = 'output_base_file_name',$
     scr_xsize = 685,$
     /editable)
     
@@ -190,10 +195,5 @@ pro design_tabs, MAIN_BASE, global
   create_output = widget_button(row5,$
     value = 'CREATE OUTPUT',$
     scr_xsize = 700)
-    
-    
-    
-    
-    
-    
+        
 end

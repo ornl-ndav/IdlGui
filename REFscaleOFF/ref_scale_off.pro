@@ -112,6 +112,8 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     files_SF_list: strarr(4,3,20),$ ;LOAD and SCALE table (spins,columns,rows)
     tmp_start_pixel: '',$
     
+    table_changed: 1b, $
+    
     default_plot_size: [600,600],$
     default_plot_size_global_plot: [800,600],$
     default_loadct: 5,$ ;prism

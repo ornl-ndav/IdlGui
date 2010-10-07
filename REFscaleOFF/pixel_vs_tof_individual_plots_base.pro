@@ -208,7 +208,7 @@ pro refresh_plot, event, recalculate=recalculate
   loadct, (*global_plot).default_loadct, /silent
   
   tvscl, transpose(cData)
-
+  
   save_background, event=event
   
 end
