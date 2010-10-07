@@ -83,7 +83,7 @@ function retrieve_data_x_value, event
   
   rat = float(x_device) / float(congrid_xcoeff)
   x_data = long(rat * (xrange[1] - xrange[0]) + xrange[0])
-
+  
   return, x_data
   
 end
@@ -262,7 +262,7 @@ pro plot_counts_vs_yaxis, event, clear=clear
   nbr_pixel = n_elements(data[*,xdata])
   start_pixel = (*global_plot).start_pixel
   xrange = indgen(nbr_pixel) + start_pixel
-    
+  
   plot, xrange, data[*,xdata], xtitle='Pixel', ytitle='Counts'
   
 end
@@ -311,7 +311,7 @@ pro draw_eventcb, event
     if (widget_info(counts_vs_yaxis_plot_id,/valid_id) ne 0) then begin
       plot_counts_vs_yaxis, event
     endif
-        
+    
     draw_zoom_selection = (*global_plot).draw_zoom_selection
     
     if ((*global_plot).left_click) then begin ;moving mouse with left click
@@ -362,14 +362,14 @@ pro draw_eventcb, event
     
     ;Draw vertical and horizontal lines when info mode is ON
     if (widget_info(info_base,/valid_id) ne 0 || $
-    widget_info(counts_vs_xaxis_plot_id,/valid_id) ne 0 || $
-    widget_info(counts_vs_yaxis_plot_id,/valid_id) ne 0) then begin
-
-    if ((*global_plot).left_click) then begin
-    endif else begin
-    refresh_plot, event
-    endelse
-    
+      widget_info(counts_vs_xaxis_plot_id,/valid_id) ne 0 || $
+      widget_info(counts_vs_yaxis_plot_id,/valid_id) ne 0) then begin
+      
+      if ((*global_plot).left_click) then begin
+      endif else begin
+        refresh_plot, event
+      endelse
+      
       x=event.x
       y=event.y
       id = widget_info(event.top, find_by_uname='draw')
@@ -383,12 +383,12 @@ pro draw_eventcb, event
       plots, x, y-off, /device, /continue, color=fsc_color('white')
       plots, x, y+off, /device
       plots, x, ysize, /device, /continue, color=fsc_color('white')
-
+      
       plots, 0, y, /device
       plots, x-off, y, /device, /continue, color=fsc_color('white')
       plots, x+off, y, /device
       plots, xsize, y, /device, /continue, color=fsc_color('white')
-
+      
     endif
     
   endif else begin ;endif of catch error
@@ -489,7 +489,7 @@ function determine_range_tof_selected, event
   x1_data = long(rat * (xrange[1] - xrange[0]) + xrange[0])
   
   return, [x0_data, x1_data]
-
+  
 end
 
 ;+

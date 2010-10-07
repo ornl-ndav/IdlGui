@@ -168,7 +168,9 @@ pro local_switch_axes_type, event
   putValue, event=event, 'local_scale_setting_log', set2_value
   
   lin_log_data, event=event
-  refresh_plot, event
+  refresh_plot, event, recalculate=1
   refresh_plot_colorbar, event
+  
+  save_background,  event=event
   
 end
