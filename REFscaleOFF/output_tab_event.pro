@@ -58,8 +58,35 @@ pro output_path_event, event
     /must_exist)
     
   if (strcompress(new_path,/remove_all) ne 0) then begin
-  putValue, event=event, 'output_path', new_path
-  (*global).output_path = path
+    putValue, event=event, 'output_path', new_path
+    (*global).output_path = path
   endif
   
+end
+
+;+
+; :Description:
+;    procedure triggered by the 'send by email' button
+;    activate or not the email text field
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro send_by_email_button, event
+  compile_opt idl2
+  
+  id = event.id
+  button_status = isButtonSelected(id=id)
+  
+  if (button_status eq 0) then begin
+    text_field_status = 0
+  endif else begin
+    text_field_status = 1
+  endelse
+  setSensitive, event=event, $
+    uname='send_by_email_base_uname', $
+    sensitive=text_field_status
+    
 end

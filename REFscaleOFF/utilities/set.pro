@@ -57,3 +57,26 @@ pro setValue, base=base, event=event, uname, value
   widget_control, id, set_value=value
   
 end
+
+;+
+; :Description:
+;    Changes the status of a widget (sensitive or not)
+;
+; :Keywords:
+;    id
+;    event
+;    uname
+;    sensitive
+;
+; :Author: j35
+;-
+pro setSensitive, id=id, event=event, uname=uname, sensitive=sensitive
+  compile_opt idl2
+  
+  if (n_elements(event) ne 0 && $
+    n_elements(uname) ne 0) then begin
+    id = widget_info(event.top, find_by_uname=uname)
+    widget_control, id, sensitive=sensitive
+  endif
+  
+end
