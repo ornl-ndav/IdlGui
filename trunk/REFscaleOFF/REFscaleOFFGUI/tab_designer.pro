@@ -130,8 +130,11 @@ pro design_tabs, MAIN_BASE, global
     /row)
   label = widget_label(row1,$
     value = 'Where:')
+    path = expand_path('~/results/')
   button = widget_button(row1,$
-    value = '~/results',$
+    value = path,$
+    uname = 'output_path',$
+    event_pro = 'output_path_event',$
     scr_xsize = 737)
     
   row2 = widget_base(base2,$
