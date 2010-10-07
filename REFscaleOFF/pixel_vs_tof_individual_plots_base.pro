@@ -799,6 +799,9 @@ pro px_vs_tof_plots_base, main_base=main_base, $
     file_name: file_name, $
     default_plot_size: default_plot_size, $
     
+    counts_vs_xaxis_yaxis_type: 0,$ ;0 for linear, 1 for log
+    counts_vs_yaxis_yaxis_type: 0,$ ;0 for linear, 1 for log
+    
     cursor_info_base: 0L, $ ;id of info base
     counts_vs_xaxis_base: 0L, $ ;id of info counts vs x
     counts_vs_yaxis_base: 0L, $ ;id of info counts vs y
