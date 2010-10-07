@@ -53,6 +53,8 @@ pro load_files_button, event
     load_files, event, ListFullFileName
   endif
   
+  create_default_output_file_name, event
+  
 end
 
 

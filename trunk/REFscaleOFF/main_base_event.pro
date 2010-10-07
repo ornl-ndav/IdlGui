@@ -77,6 +77,7 @@ PRO main_base_event, Event
     widget_info(wWidget, find_by_uname='table_delete'): begin
       selection = get_table_lines_selected(event)
       delete_entry, event, selection[1], selection[3]
+      (*global).table_changed = 1b
       refresh_table, event
     end
     
@@ -84,6 +85,8 @@ PRO main_base_event, Event
     widget_info(wWidget, find_by_uname='automatic_scaling'): begin
       auto_scale, event
       create_scaled_big_array, event
+      (*global).table_changed = 0b
+      check_status_of_tab1_buttons, event
     end
     
     ;Automatic Scaling button and show plot
@@ -91,8 +94,15 @@ PRO main_base_event, Event
       auto_scale, event
       create_scaled_big_array, event
       show_big_array, event
+      (*global).table_changed = 0b
+      check_status_of_tab1_buttons, event
     end
-
+    
+    ;Show plot button
+    widget_info(wWidget, find_by_uname='show_plot'): begin
+      show_big_array, event
+    end
+    
     else:
   endcase
   

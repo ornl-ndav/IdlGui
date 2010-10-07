@@ -34,6 +34,29 @@
 
 ;+
 ; :Description:
+;    Creates the default output file name and put it in the
+;    base File Name box in the output tab
+;
+; :Params:
+;    event
+
+; :Author: j35
+;-
+pro create_default_output_file_name, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  files_SF_list = (*global).files_SF_list
+  
+  default_output_file_name = 'default_file_name'
+  
+  putValue, event=event, 'output_base_file_name', default_output_file_name
+  
+end
+
+;+
+; :Description:
 ;    implement the button that determines where the output data will be created
 ;
 ; :Params:
