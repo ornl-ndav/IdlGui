@@ -1,4 +1,4 @@
-;==============================================================================
+;===============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,23 +30,39 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;==============================================================================
+;===============================================================================
 
 ;+
 ; :Description:
-;    resize a widget
+;    Return the status of a button (selected or not)
 ;
-; :Params:
+; :Keywords:
+;    id
 ;    event
 ;    uname
-;    str_sz
+;    
+; :Returns:
+;   status of the button  -> 0 for not selected
+;                         -> 1 for selected
 ;
 ; :Author: j35
 ;-
-pro resize_widget, event, uname, str_sz
-compile_opt idl2
-
-id = widget_info(event.top, find_by_uname=uname)
-widget_control, id, xsize=str_sz*3
-
+function isButtonSelected, id=id, event=event, uname=uname
+  compile_opt idl2
+  
+  if (n_elements(id) ne 0) then begin
+    status = widget_info(id,/button_set)
+    return, status
+  endif
+  
+  if (n_elements(event) ne 0 && $
+    n_elements(uname) ne 0) then begin
+    
+    id = widget_info(event.top, find_by_uname=uname)
+    status = widget_info(id,/button_set)
+    return, status
+  endif
+  
+return, 'N/A'  
+  
 end

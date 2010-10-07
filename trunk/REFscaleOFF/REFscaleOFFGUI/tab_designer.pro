@@ -155,12 +155,12 @@ pro design_tabs, MAIN_BASE, global
     /row,$
     /nonexclusive)
   button1 = widget_button(row3a,$
-    value = '3 columns ASCII')
+    value = '3 columns ASCII     (_scaled.rtof)')
   row3b = widget_base(row3,$
     /row,$
     /nonexclusive)
   button2 = widget_button(row3b,$
-    value = '2D table')
+    value = '2D table            (_excel.txt)')
     
   row4 = widget_base(base2,$
     /row)
@@ -168,8 +168,12 @@ pro design_tabs, MAIN_BASE, global
     /row,$
     /nonexclusive)
   button3 = widget_button(row4a,$
+    event_pro = 'send_by_email_button',$
+    uname = 'send_by_email_button_uname',$
     value = 'Also send file(s) by email')
   row4b = widget_base(row4,$
+  sensitive = 0,$
+  uname = 'send_by_email_base_uname',$
     /row)
   email = widget_text(row4b,$
     value = '',$
