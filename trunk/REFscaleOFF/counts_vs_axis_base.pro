@@ -77,6 +77,47 @@ end
 
 ;+
 ; :Description:
+;    Switches the selected button in the individual plot bases
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro counts_vs_axis_yaxis_type, event
+  compile_opt idl2
+  
+  uname = widget_info(event.id, /uname)
+  widget_control, event.top, get_uvalue=global_axis_plot
+  global_plot = (*global_axis_plot).global
+  
+  if (uname eq 'counts_vs_axis_yaxis_lin') then begin
+    set1_value = '*  ' + 'linear'
+    set2_value = '   ' + 'logarithmic'
+    default_yscale_settings = 0
+  endif else begin
+    set1_value = '   ' + 'linear'
+    set2_value = '*  ' + 'logarithmic'
+    default_yscale_settings = 1
+  endelse
+  (*global_axis_plot).default_yscale_settings = default_yscale_settings
+  
+  putValue, event=event, 'counts_vs_axis_yaxis_lin', set1_value
+  putValue, event=event, 'counts_vs_axis_yaxis_log', set2_value
+  
+  xaxis_type = (*global_axis_plot).xaxis ;'tof' or 'pixel'
+  parent_event = (*global_axis_plot).parent_event
+  if (xaxis_type eq 'tof') then begin
+    (*global_plot).counts_vs_xaxis_yaxis_type = default_yscale_settings
+  endif else begin
+    (*global_plot).counts_vs_yaxis_yaxis_type = default_yscale_settings
+  endelse
+  
+end
+
+
+;+
+; :Description:
 ;    Build the GUI
 ;
 ; :Params:
@@ -121,6 +162,7 @@ pro counts_vs_axis_base_gui, wBase, $
     MAP          = 1,$
     kill_notify  = 'counts_vs_axis_base_killed', $
     /column,$
+    mbar = bar1, $
     /tlb_size_events,$
     GROUP_LEADER = ourGroup)
     
@@ -128,6 +170,20 @@ pro counts_vs_axis_base_gui, wBase, $
     scr_xsize = xsize,$
     scr_ysize = ysize,$
     uname = plot_uname)
+    
+  yaxis = widget_button(bar1,$
+    value = 'Y-axis',$
+    /menu)
+    
+  lin = widget_button(yaxis,$
+    value = '*  linear',$
+    event_pro = 'counts_vs_axis_yaxis_type',$
+    uname = 'counts_vs_axis_yaxis_lin')
+    
+  log = widget_button(yaxis,$
+    value = '   logarithmic',$
+    event_pro = 'counts_vs_axis_yaxis_type',$
+    uname = 'counts_vs_axis_yaxis_log')
     
 end
 
@@ -227,7 +283,9 @@ pro counts_vs_axis_base, event=event, $
   
   global_axis_plot = PTR_NEW({ _base: _base,$
     xsize: xsize, $
+    default_yscale_settings: 0, $ ;0 for linear, 1 for logarithmic
     parent_event: event, $
+    xaxis: xaxis, $ ;'tof' or 'pixel'
     plot_uname: plot_uname, $
     ysize: ysize, $
     global: global_plot })

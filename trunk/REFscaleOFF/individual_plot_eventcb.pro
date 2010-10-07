@@ -212,7 +212,12 @@ pro plot_counts_vs_xaxis, event, clear=clear
   delta_tof = (*global_plot).delta_tof
   yrange = indgen(nbr_pixel) * delta_tof + start_tof
   
+  yaxis_type = (*global_plot).counts_vs_xaxis_yaxis_type
+  if (yaxis_type eq 0) then begin
   plot, yrange, data[ydata,*], xtitle='TOF (!4l!Xs)', ytitle='Counts'
+  endif else begin
+  plot, yrange, data[ydata,*], xtitle='TOF (!4l!Xs)', ytitle='Counts', /ylog
+  endelse
   
 end
 
@@ -263,7 +268,12 @@ pro plot_counts_vs_yaxis, event, clear=clear
   start_pixel = (*global_plot).start_pixel
   xrange = indgen(nbr_pixel) + start_pixel
   
+  yaxis_type = (*global_plot).counts_vs_yaxis_yaxis_type
+  if (yaxis_type eq 0) then begin
   plot, xrange, data[*,xdata], xtitle='Pixel', ytitle='Counts'
+  endif else begin
+  plot, xrange, data[*,xdata], xtitle='Pixel', ytitle='Counts',/ylog
+  endelse
   
 end
 
