@@ -1,4 +1,4 @@
-;==============================================================================
+;===============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,58 +30,36 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;==============================================================================
+;===============================================================================
 
-;define path to dependencies and current folder
-spawn, 'pwd', CurrentFolder
-IdlUtilitiesPath = "/utilities"
+;+
+; :Description:
+;    implement the button that determines where the output data will be created
+;
+; :Params:
+;    event
 
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-cd, CurrentFolder + IdlUtilitiesPath
-.run put.pro
-.run get.pro
-.run set.pro
-;.run gui.pro
-.run get_ucams.pro
-.run IDLxmlParser__define.pro
-.run logger.pro
-.run IDL3columnsASCIIparser__define.pro
-.run xdisplayfile.pro
-.run convert.pro
-.run colorbar.pro
-.run fsc_color.pro
-
-;Build REFscale GUI
-cd, CurrentFolder + '/REFscaleOFFGUI/'
-.run tab_designer.pro
-.run menu_designer.pro
-
-;Build main procedures
-cd, CurrentFolder
-
-;functions (tab#1)
-.run load_rtof_file.pro
-;procedures (tab#1)
-.run load_files_button.pro
-.run load_files.pro
-.run delete_data_set.pro
-.run preview_files.pro
-.run plot_rtof_files.pro
-.run pixel_vs_tof_individual_plots_base.pro
-.run cursor_info_base.pro
-.run counts_vs_axis_base.pro
-.run individual_plot_eventcb.pro
-.run menu_eventcb.pro
-.run plot_colorbar.pro
-.run auto_scale.pro
-.run create_scaled_big_array.pro
-.run save_background.pro
-
-;output tab
-.run output_tab_event.pro
-
-.run ref_off_scale_cleanup.pro
-.run main_base_event.pro
-.run ref_scale_off.pro
-
+; :Author: j35
+;-
+pro output_path_event, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  path = (*global).output_path
+  dialog_id   = widget_info(event.top, find_by_uname='main_base')
+  title = 'Select where to save the output files'
+  
+  result = dialog_pickfile(path=path,$
+    get_path = new_path,$
+    dialog_parent = dialog_id, $
+    title = title,$
+    /directory,$
+    /must_exist)
+    
+  if (strcompress(new_path,/remove_all) ne 0) then begin
+  putValue, event=event, 'output_path', new_path
+  (*global).output_path = path
+  endif
+  
+end

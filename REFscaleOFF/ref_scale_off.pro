@@ -116,6 +116,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     default_plot_size_global_plot: [800,600],$
     default_loadct: 5,$ ;prism
     
+    output_path: '~/results/',$ ;used in the output tab 
     input_path: '~/results/' })
     
   MainBaseSize  = [50 , 50]
