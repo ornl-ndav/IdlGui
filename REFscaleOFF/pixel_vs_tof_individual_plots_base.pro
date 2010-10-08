@@ -764,9 +764,9 @@ pro refresh_px_vs_tof_plots_base, wBase = wBase, $
   
   widget_control, wBase, get_uvalue=global_plot
   
-  (*global_plot).default_loadct = default_loadct
-  (*global_plot).default_scale_settings = default_scale_settings
-  (*global_plot).plot_setting = current_plot_setting
+  default_loadct = (*global_plot).default_loadct
+  default_scale_settings = (*global_plot).default_scale_settings
+  current_plot_setting = (*global_plot).plot_setting
   
   ;retrieve scale
   start_tof = Data_x[0]
