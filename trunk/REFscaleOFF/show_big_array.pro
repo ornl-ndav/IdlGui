@@ -42,28 +42,43 @@
 ; :Author: j35
 ;-
 pro show_big_array, event, spin_state=spin_state
-compile_opt idl2
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  if (n_elements(spin_state) eq 0) then spin_state=0
+  
+  auto_scale_plot_base = (*global).auto_scale_plot_base
+    xaxis = (*global).master_xaxis
+    data  = (*global).master_data
+    files_SF_list = (*global).files_SF_list
 
-widget_control, event.top, get_uvalue=global
-
-if (n_elements(spin_state) eq 0) then spin_state=0
-
-xaxis = (*global).master_xaxis
-data  = (*global).master_data  
-files_SF_list = (*global).files_SF_list
-
-delta_offset = 20
-
- px_vs_tof_plots_base, event = event, $
-        main_base_uname = 'main_base', $
-        file_name = 'Rescaled data', $
-        offset = delta_offset, $
-        default_loadct = (*global).default_loadct, $
-        default_scale_settings = (*global).scale_settings, $
-        default_plot_size = (*global).default_plot_size_global_plot, $
-        current_plot_setting = (*global).plot_setting, $
-        Data_x =  *xaxis[spin_state], $
-        Data_y = *data[spin_state], $
-        start_pixel = files_SF_list[spin_state, 2, 0]
-
+  if (widget_info(auto_scale_plot_base, /valid_id) eq 0) then begin
+    
+    delta_offset = 20
+    
+    px_vs_tof_plots_base, event = event, $
+      main_base_uname = 'main_base', $
+      file_name = 'Rescaled data', $
+      offset = delta_offset, $
+      default_loadct = (*global).default_loadct, $
+      default_scale_settings = (*global).scale_settings, $
+      default_plot_size = (*global).default_plot_size_global_plot, $
+      current_plot_setting = (*global).plot_setting, $
+      Data_x =  *xaxis[spin_state], $
+      Data_y = *data[spin_state], $
+      start_pixel = files_SF_list[spin_state, 2, 0]
+      
+  endif else begin
+  
+    refresh_px_vs_tof_plots_base, wBase=(*global).auto_scale_plot_base,$
+      default_loadct = (*global).default_loadct, $
+      default_scale_settings = (*global).scale_settings, $
+      current_plot_setting = (*global).plot_setting, $
+      Data_x =  *xaxis[spin_state], $
+      Data_y = *data[spin_state], $
+      start_pixel = files_SF_list[spin_state, 2, 0]
+      
+  endelse
+  
 end

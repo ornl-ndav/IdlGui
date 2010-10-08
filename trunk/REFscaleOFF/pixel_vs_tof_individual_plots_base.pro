@@ -739,6 +739,108 @@ end
 
 ;+
 ; :Description:
+;     refresh the plot
+;
+; :Keywords:
+;    base
+;    default_loadct
+;    default_scale_settings
+;    current_plot_setting
+;    Data_x
+;    Data_y
+;    start_pixel
+;
+; :Author: j35
+;-
+pro refresh_px_vs_tof_plots_base, wBase = wBase, $
+    default_loadct = default_loadct, $
+    default_scale_settings = default_scale_settings, $
+    current_plot_setting = current_plot_setting, $
+    Data_x =  Data_x, $
+    Data_y = Data_y, $
+    start_pixel = start_pixel
+    
+  compile_opt idl2
+  
+  widget_control, wBase, get_uvalue=global_plot
+  
+  (*global_plot).default_loadct = default_loadct
+  (*global_plot).default_scale_settings = default_scale_settings
+  (*global_plot).plot_setting = current_plot_setting
+  
+  ;retrieve scale
+  start_tof = Data_x[0]
+  end_tof = Data_x[-1]
+  delta_tof = Data_x[1]-Data_x[0]
+  (*global_plot).delta_tof = delta_tof
+  tof_axis = (*global_plot).tof_axis
+  tof_axis[0] = start_tof
+  tof_axis[1] = end_tof + delta_tof
+  (*global_plot).tof_axis = tof_axis
+  
+  ;retrieve the data to plot
+  ;  Data = *pData_y[file_index, spin_state]
+  (*(*global_plot).data_linear) = Data_y
+  
+  lin_log_data, base=wBase
+  
+  ;number of pixels
+  (*global_plot).nbr_pixel = (size(data_y))[1] ;nbr of pixels to plot
+  
+  Data = (*(*global_plot).data)
+  id = WIDGET_INFO(wBase, FIND_BY_UNAME='draw')
+  draw_geometry = WIDGET_INFO(id,/GEOMETRY)
+  xsize = draw_geometry.xsize
+  ysize = draw_geometry.ysize
+  if ((*global_plot).plot_setting eq 'untouched') then begin
+    ;cData = congrid(Data, default_plot_size[0]-2*border, default_plot_size[1]-2*border-colorbar_xsize)
+    cData = congrid(Data, ysize, xsize)
+  endif else begin
+    cData = congrid(Data, ysize, xsize,/interp)
+  endelse
+  
+  border = (*global_plot).border
+  colorbar_xsize = (*global_plot).colorbar_xsize
+  
+  id = widget_info(wBase, find_by_uname='px_vs_tof_widget_base')
+  geometry = widget_info(id,/geometry)
+  _xsize = geometry.scr_xsize
+  _ysize = geometry.scr_ysize
+  (*global_plot).congrid_xcoeff = _ysize-2*border
+  (*global_plot).congrid_ycoeff = _xsize-2*border-colorbar_xsize
+  
+  DEVICE, DECOMPOSED = 0
+  loadct, default_loadct, /SILENT
+  
+  plot_beam_center_scale, base=wBase
+  
+  id = widget_info(wBase,find_by_uname='draw')
+  widget_control, id, GET_VALUE = plot_id
+  wset, plot_id
+  tvscl, transpose(cData)
+  
+  zmin = 0
+  zmax = max(Data)
+  zrange = (*global_plot).zrange
+  zrange[0] = zmin
+  zrange[1] = zmax
+  (*global_plot).zrange = zrange
+  plot_colorbar, base=wBase, zmin, zmax, type=default_scale_settings
+  
+  ;change label of default loadct
+  pre = '>  > >> '
+  post = ' << <  <'
+  uname = 'loadct_' + strcompress(default_loadct,/remove_all)
+  value = getValue(base=wBase, uname)
+  new_value = pre + value + post
+  setValue, base=wBase, uname, new_value
+  
+  save_background,  main_base=wBase
+  
+end
+
+;+
+; :Description:
 ;     Creates the base and plot the pixel vs tof of the
 ;     given file index
 ;
@@ -789,7 +891,8 @@ pro px_vs_tof_plots_base, main_base=main_base, $
     plot_setting2 = plot_setting2, $
     current_plot_setting = current_plot_setting, $
     scale_setting = default_scale_settings
-    
+  (*global).auto_scale_plot_base = wBase
+  
   WIDGET_CONTROL, wBase, /REALIZE
   
   global_plot = PTR_NEW({ wbase: wbase,$
