@@ -158,11 +158,11 @@ function calculate_SF, left_overlap_data, right_overlap_data
     right_mean = mean(float(right_overlap_data[*,index]))
     _sf = right_mean/left_mean
     sf_mean[index] = _sf
-  index++
+    index++
   endwhile
   
   return, mean(sf_mean)
-
+  
 end
 
 ;+
@@ -184,18 +184,18 @@ pro create_clone_of_pData_y, event
   nbr_files = (size(pData_y))[1]
   nbr_spin = (size(pData_y))[2]
   
-  pData_y_scaled = ptrarr(nbr_files,nbr_spin,/allocate_heap)  
+  pData_y_scaled = ptrarr(nbr_files,nbr_spin,/allocate_heap)
   
   for iFile=0,(nbr_files-1) do begin
-  for jSpin=0, (nbr_spin-1) do begin
-    _pData_y = *pData_y[iFile, jSpin]
-    pData_y_scaled[iFile, jSpin] = ptr_new(0L)
-    *pData_y_scaled[iFile, jSpin] = _pData_y
-  endfor
+    for jSpin=0, (nbr_spin-1) do begin
+      _pData_y = *pData_y[iFile, jSpin]
+      pData_y_scaled[iFile, jSpin] = ptr_new(0L)
+      *pData_y_scaled[iFile, jSpin] = _pData_y
+    endfor
   endfor
   
   (*global).pData_y_scaled = pData_y_scaled
-
+  
 end
 
 ;+
@@ -216,18 +216,45 @@ pro create_clone_of_pData_y_error, event
   nbr_files = (size(pData_y_error))[1]
   nbr_spin = (size(pData_y_error))[2]
   
-  pData_y_error_scaled = ptrarr(nbr_files,nbr_spin,/allocate_heap)  
+  pData_y_error_scaled = ptrarr(nbr_files,nbr_spin,/allocate_heap)
   
   for iFile=0,(nbr_files-1) do begin
-  for jSpin=0, (nbr_spin-1) do begin
-    _pData_y_error = *pData_y_error[iFile, jSpin]
-    pData_y_error_scaled[iFile, jSpin] = ptr_new(0L)
-    *pData_y_error_scaled[iFile, jSpin] = _pData_y_error
-  endfor
+    for jSpin=0, (nbr_spin-1) do begin
+      _pData_y_error = *pData_y_error[iFile, jSpin]
+      pData_y_error_scaled[iFile, jSpin] = ptr_new(0L)
+      *pData_y_error_scaled[iFile, jSpin] = _pData_y_error
+    endfor
   endfor
   
   (*global).pData_y_error_scaled = pData_y_error_scaled
+  
+end
 
+;+
+; :Description:
+;    Save the big table when the user changes any of the SF values
+;
+; :Params:
+;    event
+;
+; :Keywords:
+;    spin_state
+;
+; :Author: j35
+;-
+pro save_table, event, spin_state=spin_state
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  files_SF_list = (*global).files_SF_list
+  
+  if (n_elements(spin_state) eq 0) then spin_state = 0
+  
+  table = getValue(id = event.id)
+  files_SF_list[spin_state,*,*] = table
+  (*global).files_SF_list = files_SF_list
+  
 end
 
 ;+
@@ -245,6 +272,7 @@ pro auto_scale, event
   widget_control, event.top, get_uvalue=global
   
   files_SF_list = (*global).files_SF_list
+  
   pData_x = (*global).pData_x ;tof axis  [row, spin_state]
   
   ;copy pData_y data into pData_y_scaled
@@ -253,9 +281,9 @@ pro auto_scale, event
   ;copy pData_y_error into pData_y_error_scaled
   create_clone_of_pData_y_error, event
   pData_y_error_scaled = (*global).pData_y_error_scaled
-
+  
   file_index_sorted = (*global).file_index_sorted
-
+  
   for spin=0,3 do begin ;go over all the spin states
     nbr_files = get_number_of_files_loaded(event, spin_state=spin)
     
@@ -272,7 +300,7 @@ pro auto_scale, event
     ;Method: - find the overlap region
     ;        - remove default 5% region on top and bottom
     ;        - calculate average value for each tof (left and right) and find SF
-    ;        - determine average SF of all the SF    
+    ;        - determine average SF of all the SF
     
     left_file_index = 0
     right_file_index = 1
@@ -289,7 +317,7 @@ pro auto_scale, event
         ;pop up dialog message
         return
       endif
-    
+      
       error = 0
       ;isolate left and right arrays of this region
       left_data = *pData_y_scaled[_file_index_sorted[left_file_index],spin]
@@ -318,22 +346,28 @@ pro auto_scale, event
       
       ;calculate SF
       SF = calculate_SF(left_overlap_array, right_overlap_array)
+      
+      ;put 1 as SF for first file
+      if (left_file_index eq 0) then begin
+        files_SF_list[spin, 1, _file_index_sorted[0]] = strcompress(1,/remove_all)
+      endif
+      
       files_SF_list[spin, 1, _file_index_sorted[right_file_index]] = strcompress(SF,/remove_all)
       
       *pData_y_scaled[_file_index_sorted[right_file_index],spin] /= SF
       *pData_y_error_scaled[_file_index_sorted[right_file_index],spin] /= SF
-    
+      
       left_file_index = right_file_index
       right_file_index++
     endwhile
     
   endfor
-
+  
   (*global).pData_y_scaled = pData_y_scaled
   (*global).pData_y_error_scaled = pData_y_error_scaled
   (*global).file_index_sorted = file_index_sorted
-    
+  
   (*global).files_SF_list = files_SF_list
   refresh_table, event
-    
+  
 end

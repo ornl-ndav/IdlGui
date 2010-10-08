@@ -162,7 +162,6 @@ pro create_common_global_data, event, xaxis=xaxis
   data = (*global).pData_y_scaled
   data_error = (*global).pData_y_error_scaled
   
-  
   master_data = ptrarr(4,/allocate_heap) ;for the 4 spin states
   master_data_error = ptrarr(4,/allocate_heap) ;data error for the 4 spin states
   pData_x = (*global).pData_x

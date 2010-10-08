@@ -136,16 +136,16 @@ widget_control, event.top, get_uvalue=global
 
   if (n_elements(spin_state) eq 0) then spin_state = 0
 
- files_SF_list = (*global).files_SF_list
- sz = (size(files_SF_list))[3]
+  files_SF_list = (*global).files_SF_list
+  sz = (size(files_SF_list))[3]
   
+  ;for Automatic mode
+  ;
   ;if no file loaded, disable everyting
   status_auto_scaling = 1
-  status_auto_scaling_show_plot = 1
   if (files_SF_list[spin_state,0,0] eq '' || $
   files_SF_list[spin_state,0,1] eq '') then begin
   status_auto_scaling = 0
-  status_auto_scaling_show_plot = 0
   endif
 
   ;we can activate plot button if scale has been performed and nothing changed
@@ -153,8 +153,31 @@ widget_control, event.top, get_uvalue=global
 
   setSensitive, event=event, uname='automatic_scaling', sensitive=status_auto_scaling
   setSensitive, event=event, uname='automatic_scaling_and_plot', $
-  sensitive=status_auto_scaling_show_plot
+  sensitive=status_auto_scaling
   setSensitive, event=event, uname='show_plot', sensitive=status_show_plot
+
+  ;For manual mode
+  ;
+  ;check that there is at least 1 file loaded
+  status_auto_scaling = 1
+  if (files_SF_list[spin_state,0,0] eq '') then begin
+  status_auto_scaling = 0
+  endif
+  
+  ;check that all the files loaded have a SF value defined
+  index = 0
+  while (index lt sz) do begin
+    _file_name = files_SF_list[spin_state,0,index]
+    if (_file_name eq '') then break
+    _SF = files_SF_list[spin_state,1,index]
+    if (_SF eq 'N/A' || _SF eq '0') then begin
+    status_auto_scaling = 0
+    break
+    endif
+  index++
+  endwhile
+  setSensitive, event=event, uname='manual_scaling', sensitive=status_auto_scaling
+  setSensitive, event=event, uname='manual_scaling_and_plot', sensitive=status_auto_scaling
 
 end
 
