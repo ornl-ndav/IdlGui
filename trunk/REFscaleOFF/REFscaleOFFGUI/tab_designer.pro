@@ -75,7 +75,7 @@ pro design_tabs, MAIN_BASE, global
     sensitive = 0,$
     uname = 'tab1state4')
     
-  editable_table = indgen(2*20) MOD 2
+  editable_table = [0,1,0]
   
   table = widget_table(row2,$
     uname = 'tab1_table',$
@@ -107,6 +107,16 @@ pro design_tabs, MAIN_BASE, global
   row3 = widget_base(base1,$
     /align_right,$
     /row)
+  mScale = widget_button(row3,$
+  sensitive = 0,$
+  uname = 'manual_scaling',$
+  value = ' MANUAL SCALING ')
+  mScale = widget_button(row3,$
+  sensitive = 0,$
+  uname = 'manual_scaling_and_plot',$
+  value = ' MANUAL SCALING and SHOW PLOT')
+  space = widget_label(row3,$
+    value = '   ')
   wScale = widget_button(row3,$
     sensitive = 0,$
     uname = 'automatic_scaling',$
@@ -116,7 +126,7 @@ pro design_tabs, MAIN_BASE, global
     uname = 'automatic_scaling_and_plot',$
     value = ' AUTO SCALING and SHOW PLOT')
   space = widget_label(row3,$
-    value = '   ')
+    value = '     ')
   wPlot = widget_button(row3,$
     uname = 'show_plot',$
     sensitive = 0,$

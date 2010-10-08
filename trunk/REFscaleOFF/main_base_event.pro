@@ -59,6 +59,7 @@ PRO main_base_event, Event
         widget_displaycontextmenu, event.id, event.X, event.Y, id
       ;        ENDIF
       endif
+      save_table, event
     end
     
     ;right click in table -> plot of file(s) selected
@@ -79,6 +80,23 @@ PRO main_base_event, Event
       delete_entry, event, selection[1], selection[3]
       (*global).table_changed = 1b
       refresh_table, event
+    end
+    
+    ;Manual scaling button
+    widget_info(wWidget, find_by_uname='manual_scaling'): begin
+      manual_scale, event
+      create_scaled_big_array, event
+      (*global).table_changed = 0b
+      check_status_of_tab1_buttons, event
+    end
+    
+    ;Manual scaling button and show plot
+    widget_info(wWidget, find_by_uname='manual_scaling_and_plot'): begin
+    manual_scale, event
+      create_scaled_big_array, event
+      (*global).table_changed = 0b
+      check_status_of_tab1_buttons, event
+      show_big_array, event
     end
     
     ;Automatic Scaling button
