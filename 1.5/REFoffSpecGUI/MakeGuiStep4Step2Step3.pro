@@ -157,13 +157,14 @@ sScalingCWField = { size  : [XYoff[0],$
                     uname : 'step4_2_3_sf_text_field',$
                     value : '1'}
 
+; Change code (RC Ward, 8 Oct 2010): Change wording on these tooltips - Scaling means to "divide by"
 ;***** +++ Button *************************************************************
 XYoff = [5,10]
 sButton3Plus = { size  : [XYoff[0],$
                           XYoff[1],$
                           55,30],$
                  value : 'REFoffSpec_images/3increase.bmp',$
-                 tooltip: 'Scale curve by factor of 5',$
+                 tooltip: 'Scale (divide) curve by factor of 0.2',$
                  uname : 'step4_2_3_3increase_button'}
 ; Change Code (RC Ward, 4 Aug 2010): Alter to show what scaling really is
 ;                 tooltip: 'Increase Scaling Factor by 100',$
@@ -175,7 +176,7 @@ sButton2Plus = { size  : [sButton3Plus.size[0]+sButton3Plus.size[2]+XYoff[0],$
                           sButton3Plus.size[1]+XYoff[1],$
                           sButton3Plus.size[2]-Xreducer,30],$
                  value : 'REFoffSpec_images/2increase.bmp',$
-                 tooltip: 'Scale curve by factor of 2',$
+                 tooltip: 'Scale (divide) curve by factor of 0.5',$
                  uname : 'step4_2_3_2increase_button'}
 ; Change Code (RC Ward, 4 Aug 2010): Alter to show what scaling really is
 ;                 tooltip: 'Increase Scaling Factor by 10',$
@@ -186,7 +187,7 @@ sButton1Plus = { size  : [sButton2Plus.size[0]+sButton2Plus.size[2]+XYoff[0],$
                           sButton2Plus.size[1]+XYoff[1],$
                           sButton2Plus.size[2]-Xreducer,30],$
                  value : 'REFoffSpec_images/1increase.bmp',$
-                 tooltip: 'Scale curve by factor of 1.5',$
+                 tooltip: 'Scale (divide) curve by factor of 0.6667',$
                  uname : 'step4_2_3_1increase_button'}
 ; Change Code (RC Ward, 4 Aug 2010): Alter to show what scaling really is
 ;                 tooltip: 'Increase Scaling Factor by 2',$
@@ -197,7 +198,7 @@ sButton3Less = { size  : [sButton3Plus.size[0]+XYoff[0],$
                           XYoff[1],$
                           55,30],$
                  value : 'REFoffSpec_images/3decrease.bmp',$
-                 tooltip: 'Scale curve by factor of 0.2',$
+                 tooltip: 'Scale (divide) curve by factor of 5',$
                  uname : 'step4_2_3_3decrease_button'}
 ; Change Code (RC Ward, 4 Aug 2010): Alter to show what scaling really is                 
 ;                 tooltip: 'Decrease Scaling Factor by 100',$
@@ -208,7 +209,7 @@ sButton2Less = { size  : [sButton2Plus.size[0]+XYoff[0],$
                           sButton3Less.size[1]+XYoff[1],$
                           sButton3Plus.size[2]-Xreducer,30],$
                  value : 'REFoffSpec_images/2decrease.bmp',$
-                 tooltip: 'Scale curve by factor of 0.5',$
+                 tooltip: 'Scale (divide) curve by factor of 2',$
                  uname : 'step4_2_3_2decrease_button'}
 ; Change Code (RC Ward, 4 Aug 2010): Alter to show what scaling really is
 ;                 tooltip: 'Decrease Scaling Factor by 10',$
@@ -218,7 +219,7 @@ sButton1Less = { size  : [sButton1Plus.size[0]+XYoff[0],$
                           sButton2Less.size[1]+XYoff[1],$
                           sButton2Plus.size[2]-Xreducer,30],$
                  value : 'REFoffSpec_images/1decrease.bmp',$
-                 tooltip: 'Scale curve by factor of 0.6667',$
+                 tooltip: 'Scale (divide) curve by factor of 1.5',$
                  uname : 'step4_2_3_1decrease_button'}
 ; Change Code (RC Ward, 4 Aug 2010): Alter to show what scaling really is
 ;                 tooltip: 'Decrease Scaling Factor by 2',$
