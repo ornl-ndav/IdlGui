@@ -42,14 +42,38 @@
 
 ; :Author: j35
 ;-
-pro create_default_output_file_name, event
+pro create_default_output_file_name, event, spin_state=spin_state
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global
   
-  files_SF_list = (*global).files_SF_list
+  if (n_elements(spin_state) eq 0) then spin_state = 0
   
-  default_output_file_name = 'default_file_name'
+  files_SF_list = (*global).files_SF_list
+  nbr_files = get_number_of_files_loaded(event)
+  
+  instrument = getInstrument(files_SF_list[spin_state, 0, 0])
+  
+  ;loop over all the names of the files to get the first run number
+  ;and the number of run added to it
+  index = 0
+  _output_file_name = instrument
+  while(index lt nbr_files) do begin
+  
+    _file_name = files_SF_list[spin_state, 0, index]
+    
+    ;retrieve first run number and number of runs
+    _split1 = strsplit(_file_name,',',/extract,count=nbr_runs)
+    _split2 = strsplit(_split1[0],'_',/extract)
+    _start_run = _split2[-1]
+    
+    _output_file_name += '_' + _start_run + '(' + $
+    strcompress(nbr_runs,/remove_all) + ')'
+    
+    index++
+  endwhile
+  
+  default_output_file_name = _output_file_name
   
   putValue, event=event, 'output_base_file_name', default_output_file_name
   

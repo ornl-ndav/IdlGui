@@ -32,6 +32,41 @@
 ;
 ;==============================================================================
 
+;+
+; :Description:
+;    returns the name of the instrument according to the name of the input
+;    file provided
+;
+; :Params:
+;    file_name
+;
+; :Author: j35
+;-
+function getInstrument, file_name
+  compile_opt idl2
+  
+  catch, error
+  if (error ne 0) then begin
+    catch,/cancel
+    return, 'instr_undefined_'
+  endif
+  
+  _split1 = strsplit(file_name,'/',/extract)
+  _split2 = strsplit(_split1[-1],'_',/extract)
+  
+  return, _split2[0] + '_' + _split2[1]
+  
+end
+
+;+
+; :Description:
+;    get list of lines selected in table (tab1)
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
 function get_table_lines_selected, event
   id = widget_info(event.top, find_by_uname='tab1_table')
   selection = widget_info(id, /table_select)
@@ -44,7 +79,7 @@ end
 ;
 ; :Params:
 ;    event
-;    
+;
 ; :Keywords:
 ;   spin_state    the spin state to used (0, 1, 2 or 3)
 ;
@@ -57,6 +92,8 @@ function get_number_of_files_loaded, event, spin_state=spin_state
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global
+  
+  if (n_elements(spin_state) eq 0) then spin_state=0
   
   ;find first empty entry using the table data
   files_SF_list = (*global).files_SF_list ;[spin, column, row]
@@ -72,7 +109,7 @@ function get_number_of_files_loaded, event, spin_state=spin_state
   endelse
   
   return, nbr_files
-    
+  
 end
 
 ;+
@@ -99,7 +136,7 @@ function getValue, id=id, event=event, base=base, uname
     _id = widget_info(base, find_by_uname=uname)
   endif
   if (n_elements(id) ne 0) then begin
-  _id = id
+    _id = id
   endif
   widget_control, _id, get_value=value
   return, value

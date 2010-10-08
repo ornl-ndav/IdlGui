@@ -202,13 +202,28 @@ pro design_tabs, MAIN_BASE, global
     
   space = widget_label(base2,$
     value = ' ')
-  space = widget_label(base2,$
-    value = ' ')
     
   row5 = widget_base(base2,$
     /align_center)
   create_output = widget_button(row5,$
     value = 'CREATE OUTPUT',$
     scr_xsize = 700)
+        
+  space = widget_label(base2,$
+    value = ' ')
+
+  row6 = widget_base(base2,$
+  uname = 'files_created_base_uname',$
+  map = 0,$
+  /row)
+  label = widget_label(row6,$
+  value = 'Files created:')
+  text = widget_text(row6,$
+  uname = 'list_of_files_created',$
+  value = 'N/A',$
+  xsize = 110,$
+  /scroll,$
+  ysize = 10)      
+        
         
 end
