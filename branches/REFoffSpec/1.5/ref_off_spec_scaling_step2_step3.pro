@@ -435,6 +435,8 @@ PRO step4_2_3_manual_scaling, Event, FACTOR=factor
 ; Code Change (RC Ward, Mar 14, 2010): The initial value of SF in the setting up the GUI.
 ; This caused problems here in scaling and plotting the 2nd data set.
             SF = getTextFieldValue(Event,'step4_2_3_sf_text_field')
+; Code Change (RC Ward, Oct 8, 2010): multiply SF by the scaling_factor[index+1] as above
+            SF = scaling_factor[index+1] * SF
             fSF = FLOAT(SF)
           END
         ENDCASE       
