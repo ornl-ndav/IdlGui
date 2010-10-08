@@ -66,6 +66,9 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   global = ptr_new({ $
   
+    auto_scale_plot_base: 0L,$
+    manual_scale_plot_base: 0L, $
+  
     ;label of menu buttons
     plot_setting1: 'Untouched plots',$
     plot_setting2: 'Interpolated plots',$
