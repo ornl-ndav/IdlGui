@@ -55,6 +55,7 @@ pro create_rtof_output_file, event, path_output_file_name = path_output_file_nam
   master_data_error = (*global).master_data_error
   master_xaxis = (*global).master_xaxis
   files_SF_list = (*global).files_SF_list
+  list_of_files_created = (*(*global).list_of_files_created)
   
   spin_state_name = (*global).spin_state_name
   
@@ -115,10 +116,13 @@ pro create_rtof_output_file, event, path_output_file_name = path_output_file_nam
       
       close, 1
       free_lun, 1
+      list_of_files_created = [list_of_files_created, full_output_file_name]
       
     endif ;end of enough file to get something to work with
     
   endfor
+  
+    (*(*global).list_of_files_created) = list_of_files_created
   
 end
 
@@ -145,6 +149,7 @@ pro create_excel_output_file, event, path_output_file_name = path_output_file_na
   master_data_error = (*global).master_data_error
   master_xaxis = (*global).master_xaxis
   files_SF_list = (*global).files_SF_list
+  list_of_files_created = (*(*global).list_of_files_created)
   
   spin_state_name = (*global).spin_state_name
   
@@ -205,15 +210,18 @@ pro create_excel_output_file, event, path_output_file_name = path_output_file_na
       
       ;write file
       for k=0, (_vertical_size-1) do begin
-      printf, 1, _big_string_array[k]
+        printf, 1, _big_string_array[k]
       endfor
       
       close, 1
       free_lun, 1
+      list_of_files_created = [list_of_files_created, full_output_file_name]
       
     endif ;end of enough file to get something to work with
     
   endfor
+  
+  (*(*global).list_of_files_created) = list_of_files_created
   
 end
 
@@ -255,6 +263,8 @@ pro create_output, event
   
   widget_control, event.top, get_uvalue=global
   
+  (*(*global).list_of_files_created) = !NULL
+  
   ;where are we going to create this output file
   output_path = (*global).output_path
   ;base file name
@@ -277,5 +287,18 @@ pro create_output, event
   if (email_status) then begin
     send_by_email, event, rtof_status=rtof_status, excel_status=excel_status
   endif
+  
+  ;list output files
+  mapBase, event=event, status=1, uname='files_created_base_uname'
+  list_of_files_created = (*(*global).list_of_files_created)
+  sz = n_elements(list_of_files_created)
+  index = 0
+  while (index lt sz) do begin
+    _file_name = list_of_files_created[index]
+    if (_file_name ne '' && _file_name ne 'N/A') then begin
+      putValue, event=event, 'list_of_files_created', _file_name, append=1
+    endif
+    index++
+  endwhile
   
 end
