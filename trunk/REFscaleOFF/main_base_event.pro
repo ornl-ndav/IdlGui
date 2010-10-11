@@ -140,6 +140,10 @@ PRO main_base_event, Event
       check_status_of_tab2_buttons, event
     end
     
+    widget_info(wWidget, find_by_uname='create_output_button'): begin
+    create_output, event
+    end
+    
     else:
   endcase
   

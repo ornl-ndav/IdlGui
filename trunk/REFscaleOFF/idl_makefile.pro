@@ -80,6 +80,7 @@ cd, CurrentFolder
 .run create_scaled_big_array.pro
 .run save_background.pro
 .run check_status_buttons.pro
+.run create_output.pro
 
 ;output tab
 .run output_tab_event.pro

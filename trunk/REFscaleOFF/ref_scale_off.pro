@@ -69,6 +69,8 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     auto_scale_plot_base: 0L,$
     manual_scale_plot_base: 0L, $
   
+    spin_state_name: ['Off_Off','Off_On','On_Off','On_On'],$
+  
     ;label of menu buttons
     plot_setting1: 'Untouched plots',$
     plot_setting2: 'Interpolated plots',$
@@ -110,6 +112,9 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
    ; pDataPlot_x: ptrarr(20,4,/allocate_heap),$
    ; pDataPlot_y: ptrarr(20,4,/allocate_heap),$
    ; pDataPlot_y_error: ptrarr(20,4,/allocate_heap),$
+    
+    rtof_ext: '_scaled.rtof', $
+    excel_ext: '_excel.txt', $
     
     ;4:spin states, ;3:columns, 20:rows
     files_SF_list: strarr(4,3,20),$ ;LOAD and SCALE table (spins,columns,rows)
