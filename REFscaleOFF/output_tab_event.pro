@@ -67,8 +67,8 @@ pro create_default_output_file_name, event, spin_state=spin_state
     _split2 = strsplit(_split1[0],'_',/extract)
     _start_run = _split2[-1]
     
-    _output_file_name += '_' + _start_run + '(' + $
-    strcompress(nbr_runs,/remove_all) + ')'
+    _output_file_name += '_' + _start_run + '#' + $
+    strcompress(nbr_runs,/remove_all)
     
     index++
   endwhile

@@ -125,7 +125,6 @@ end
 FUNCTION READ_DATA, file, half
   ;Open the data file.
   OPENR, 1, file
-  
   ;Set up variables
   line = STRARR(1)
   tmp = ''
@@ -140,7 +139,7 @@ FUNCTION READ_DATA, file, half
         IF (tmp EQ '') THEN BEGIN
           BREAK
         ENDIF ELSE BEGIN
-          IF (i EQ 0) THEN BEGIN
+          IF (i EQ 0) THEN BEGIN  
             line[i] = tmp
             i = 1
           ENDIF ELSE BEGIN
@@ -151,13 +150,14 @@ FUNCTION READ_DATA, file, half
       close, 1
       RETURN, line
     END
-    2: BEGIN                  ;second half
+    2: BEGIN     
       WHILE (~EOF(1)) DO BEGIN
         nbr_lines = FILE_LINES(file)
         my_array = STRARR(1,nbr_lines)
         READF,1, my_array
       ENDWHILE
       close,1
+      free_lun, 1
       RETURN, my_array
     END
   ENDCASE

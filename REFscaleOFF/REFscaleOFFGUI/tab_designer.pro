@@ -176,16 +176,18 @@ pro design_tabs, MAIN_BASE, global
   row3a = widget_base(row3,$
     /row,$
     /nonexclusive)
+    rtof_ext = (*global).rtof_ext
   button1 = widget_button(row3a,$
     uname = '3_columns_ascii_button',$
-    value = '3 columns ASCII     (_scaled.rtof)')
+    value = '3 columns ASCII     ' + rtof_ext)
   row3b = widget_base(row3,$
     /row,$
     /nonexclusive)
+    excel_ext = (*global).excel_ext
     widget_control, button1, /set_button
   button2 = widget_button(row3b,$
   uname = '2d_table_ascii_button',$
-    value = '2D table            (_excel.txt)')
+    value = '2D table            ' + excel_ext)
     
   row4 = widget_base(base2,$
     /row)
