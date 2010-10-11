@@ -42,12 +42,9 @@
 ; :Keywords:
 ;    path_output_file_name
 ;
-; :Returns:
-;   result  1:worked, 0:failed
-;
 ; :Author: j35
 ;-
-function create_rtof_output_file, event, path_output_file_name = path_output_file_name
+pro create_rtof_output_file, event, path_output_file_name = path_output_file_name
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global
@@ -87,7 +84,7 @@ function create_rtof_output_file, event, path_output_file_name = path_output_fil
       _index_file = 0
       while (_index_file lt _nbr_files) do begin
         printf, 1, "#F " + files_SF_list[_spin,0,_index_file] + $
-        " with SF: " + files_SF_list[_spin,1,_index_file] 
+          " with SF: " + files_SF_list[_spin,1,_index_file]
         _index_file++
       endwhile
       
@@ -119,11 +116,9 @@ function create_rtof_output_file, event, path_output_file_name = path_output_fil
       close, 1
       free_lun, 1
       
-    endif
+    endif ;end of enough file to get something to work with
     
   endfor
-  
-  return, 1
   
 end
 
@@ -137,16 +132,88 @@ end
 ; :Keywords:
 ;    path_output_file_name
 ;
-; :Returns:
-;   result  1:worked, 0:failed
-;
 ; :Author: j35
 ;-
-function create_excel_output_file, event, path_output_file_name = path_output_file_name
+pro create_excel_output_file, event, path_output_file_name = path_output_file_name
   compile_opt idl2
   
+  widget_control, event.top, get_uvalue=global
   
-  return, 1 ;file created with success
+  _ext = (*global).excel_ext
+  
+  master_data = (*global).master_data
+  master_data_error = (*global).master_data_error
+  master_xaxis = (*global).master_xaxis
+  files_SF_list = (*global).files_SF_list
+  
+  spin_state_name = (*global).spin_state_name
+  
+  _L = "#L time_of_flight(microsecond) data() Sigma()"
+  _N = "#N 3"
+  
+  ;loop over all spin states
+  for _spin=0,3 do begin
+  
+    _nbr_files = get_number_of_files_loaded(event, spin_state=_spin)
+    if (_nbr_files ge 2) then begin ;create file
+    
+      full_output_file_name = path_output_file_name + '_' + spin_state_name[_spin]
+      full_output_file_name += _ext
+      
+      _xaxis = *master_xaxis[_spin]
+      _delta_x = _xaxis[1] - _xaxis[0]
+      _max_x = strcompress(_xaxis[-1] + _delta_x,/remove_all)
+      _yaxis = *master_data[_spin]
+      ;   _yaxis_error = *master_data_error[_spin]
+      
+      xaxis_sz = n_elements(_xaxis)
+      pixel_sz = (size(_yaxis))[1]
+      
+      openw, 1, full_output_file_name
+      
+      _index_file = 0
+      while (_index_file lt _nbr_files) do begin
+        printf, 1, "#F " + files_SF_list[_spin,0,_index_file] + $
+          " with SF: " + files_SF_list[_spin,1,_index_file]
+        _index_file++
+      endwhile
+      printf, 1, ""
+      
+      _horizontal_size = pixel_sz + 2 ;+2 for x and y axis declaration
+      _vertical_size = xaxis_sz
+      big_table = strarr(_vertical_size, _horizontal_size)
+      
+      ;first column
+      big_table[*,0] = strcompress(_xaxis,/remove_all)
+      big_table[*,1] = 'N/A'
+      pixel_array = indgen(pixel_sz) + files_SF_list[_spin, 2,0]
+      big_table[0:(pixel_sz-1),1] = strcompress(pixel_array,/remove_all)
+      
+      ;help, _yaxis ;[pixel, tof]
+      _pixel_sz = (size(_yaxis))[1]
+      for i=0,(_pixel_sz-1) do begin
+        big_table[*,i+2] = _yaxis[i,*]
+      endfor
+      
+      ;create string array
+      _big_string_array = strarr(_vertical_size)
+      for j=0, (_vertical_size-1) do begin
+        _row = big_table[j,*]
+        _row = reform(_row)
+        _big_string_array[j] = strjoin(_row, ' ')
+      endfor
+      
+      ;write file
+      for k=0, (_vertical_size-1) do begin
+      printf, 1, _big_string_array[k]
+      endfor
+      
+      close, 1
+      free_lun, 1
+      
+    endif ;end of enough file to get something to work with
+    
+  endfor
   
 end
 
@@ -161,19 +228,16 @@ end
 ;    rtof_status   1=send this file, 0=do not send this file
 ;    excel_status   1=send this file, 0=do not send this file
 ;
-; :Returns:
-;   result  1:worked, 0:failed
-;
 ; :Author: j35
 ;-
-function send_by_email, event, rtof_status=rtof_status, excel_status=excel_status
+pro send_by_email, event, rtof_status=rtof_status, excel_status=excel_status
   compile_opt idl2
   
   
   
   
   
-  return, 1 ;send files by email with success
+  
   
 end
 
@@ -199,19 +263,19 @@ pro create_output, event
   ;is 3 columns rtof ASCII output file selected
   rtof_status = isButtonSelected(event=event, uname='3_columns_ascii_button')
   if (rtof_status) then begin
-    rtof_status = create_rtof_output_file(event, path_output_file_name=output_path + base_file_name)
+    create_rtof_output_file, event, path_output_file_name=output_path + base_file_name
   endif
   
   ;is excel ASCII output file selected
   excel_status= isButtonSelected(event=event, uname='2d_table_ascii_button')
   if (excel_status) then begin
-    excel_status = create_excel_output_file(event, path_output_file_name=output_path + base_file_name)
+    create_excel_output_file, event, path_output_file_name=output_path + base_file_name
   endif
   
   ;send by email or not
   email_status = isButtonSelected(event=event, uname='send_by_email_button_uname')
   if (email_status) then begin
-    status = send_by_email(event, rtof_status=rtof_status, excel_status=excel_status)
+    send_by_email, event, rtof_status=rtof_status, excel_status=excel_status
   endif
   
 end
