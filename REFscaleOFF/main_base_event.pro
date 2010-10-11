@@ -43,6 +43,14 @@ PRO main_base_event, Event
     widget_info(wWidget, find_by_uname='main_base'): BEGIN
     end
     
+    ;main tab
+    widget_info(wWidget, find_by_uname='tab_uname'): begin
+      tab_selected = getTabSelected(id=event.id)
+      if (tab_selected eq 1) then begin ;tab #2
+        check_status_of_tab2_buttons, event
+      endif
+    end
+    
     widget_info(wWidget, find_by_unam='plot_setting_untouched'): begin
       switch_settings_plot_values, event
     end
@@ -92,7 +100,7 @@ PRO main_base_event, Event
     
     ;Manual scaling button and show plot
     widget_info(wWidget, find_by_uname='manual_scaling_and_plot'): begin
-    manual_scale, event
+      manual_scale, event
       create_scaled_big_array, event
       (*global).table_changed = 0b
       check_status_of_tab1_buttons, event
@@ -119,6 +127,17 @@ PRO main_base_event, Event
     ;Show plot button
     widget_info(wWidget, find_by_uname='show_plot'): begin
       show_big_array, event
+    end
+    
+    ;********************** OUTPUT TAB ******************
+    widget_info(wWidget, find_by_uname='2d_table_ascii_button'): begin
+      check_status_of_tab2_buttons, event
+    end
+    widget_info(wWidget, find_by_uname='3_columns_ascii_button'): begin
+      check_status_of_tab2_buttons, event
+    end
+    widget_info(wWidget, find_by_uname='output_base_file_name'): begin
+      check_status_of_tab2_buttons, event
     end
     
     else:

@@ -40,7 +40,7 @@
 ;    id
 ;    event
 ;    uname
-;    
+;
 ; :Returns:
 ;   status of the button  -> 0 for not selected
 ;                         -> 1 for selected
@@ -63,6 +63,52 @@ function isButtonSelected, id=id, event=event, uname=uname
     return, status
   endif
   
-return, 'N/A'  
+  return, 'N/A'
+  
+end
+
+;+
+; :Description:
+;    returns the status of the button
+;    1 if enabled
+;    0 if disabled
+;
+; :Keywords:
+;    event
+;    uname
+;
+; :Returns:
+;   status of the button
+;
+;
+; :Author: j35
+;-
+function isButtonEnabled, event=event, uname=uname
+  compile_opt idl2
+  
+  id = widget_info(event.top, find_by_uname=uname)
+  status = widget_info(id, /sensitive)
+  return, status
+  
+end
+
+;+
+; :Description:
+;    returns the status of the show_plot button (tab1)
+;
+; :Params:
+;    event
+;
+; :Returns:
+;   returns the status of the button
+
+; :Author: j35
+;-
+function isShowScaledDataButtonEnabled, event
+  compile_opt idl2
+  
+  uname = 'show_plot'
+  status = isButtonEnabled(event=event, uname=uname)
+  return, status
   
 end

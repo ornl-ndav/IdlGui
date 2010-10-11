@@ -114,6 +114,30 @@ end
 
 ;+
 ; :Description:
+;    get the total number of files loaded
+;    in all the spin states
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+function get_total_number_of_files_loaded, event
+  compile_opt idl2
+  
+  _number_files = 0
+  
+  ;loop over all the spin states
+  for i=0,3 do begin
+    _number_files += get_number_of_files_loaded(event, spin_state=i)
+  endfor
+  
+  return, _number_files
+  
+end
+
+;+
+; :Description:
 ;    return the value of the widget defined
 ;    by its uname (passed as argument)
 ;
@@ -142,3 +166,31 @@ function getValue, id=id, event=event, base=base, uname
   return, value
   
 end
+
+;+
+; :Description:
+;    Determine which tab is currently selected
+;
+; :Keywords:
+;    id
+;    event
+;    uname
+;
+; :Returns:
+;   returns the current tab selected
+;
+; :Author: j35
+;-
+function getTabSelected, id=id, event=event, uname=uname
+   compile_opt idl2
+   
+   if (n_elements(event) ne 0) then begin
+   id = widget_info(event.top, find_by_uname=uname)
+endif
+
+  tab_selected = widget_info(id, /tab_current)
+  return, tab_selected
+   
+   end
+
+
