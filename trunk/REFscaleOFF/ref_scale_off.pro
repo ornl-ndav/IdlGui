@@ -71,6 +71,9 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
     spin_state_name: ['Off_Off','Off_On','On_Off','On_On'],$
   
+    ;list of files created
+    list_of_files_created: ptr_new(0L), $
+  
     ;label of menu buttons
     plot_setting1: 'Untouched plots',$
     plot_setting2: 'Interpolated plots',$

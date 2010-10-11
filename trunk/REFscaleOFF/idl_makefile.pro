@@ -43,7 +43,7 @@ cd, CurrentFolder + IdlUtilitiesPath
 .run get.pro
 .run set.pro
 .run is.pro
-;.run gui.pro
+.run gui.pro
 .run get_ucams.pro
 .run IDLxmlParser__define.pro
 .run logger.pro

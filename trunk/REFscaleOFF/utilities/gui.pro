@@ -44,9 +44,28 @@
 ; :Author: j35
 ;-
 pro resize_widget, event, uname, str_sz
-compile_opt idl2
+  compile_opt idl2
+  
+  id = widget_info(event.top, find_by_uname=uname)
+  widget_control, id, xsize=str_sz*3
+  
+end
 
-id = widget_info(event.top, find_by_uname=uname)
-widget_control, id, xsize=str_sz*3
-
+;+
+; :Description:
+;    Map the base given by the uname
+;
+; :Keywords:
+;    event
+;    map
+;    uname
+;
+; :Author: j35
+;-
+pro mapBase, event=event, status=status, uname=uname
+  compile_opt idl2
+  
+  id = widget_info(event.top, find_by_uname=uname)
+  widget_control, id, map=status
+  
 end
