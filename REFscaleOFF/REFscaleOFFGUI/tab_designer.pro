@@ -184,10 +184,11 @@ pro design_tabs, MAIN_BASE, global
     /row,$
     /nonexclusive)
     excel_ext = (*global).excel_ext
-    widget_control, button1, /set_button
+;    widget_control, button1, /set_button
   button2 = widget_button(row3b,$
   uname = '2d_table_ascii_button',$
     value = '2D table            ' + excel_ext)
+     widget_control, button2, /set_button
     
   row4 = widget_base(base2,$
     /row)
