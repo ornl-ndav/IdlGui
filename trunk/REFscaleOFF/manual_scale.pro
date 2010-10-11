@@ -42,8 +42,8 @@
 ; :Author: j35
 ;-
 pro manual_scale, event
-compile_opt idl2
-
+  compile_opt idl2
+  
   widget_control, event.top, get_uvalue=global
   
   files_SF_list = (*global).files_SF_list
@@ -71,17 +71,17 @@ compile_opt idl2
     _file_index_sorted = sort_files(pData_x[0:(nbr_files-1), spin])
     *file_index_sorted[spin] = _file_index_sorted
     
-     left_file_index = 0
+    left_file_index = 0
     while (left_file_index le (nbr_files-1)) do begin
     
-    SF = float(files_SF_list[spin, 1, _file_index_sorted[left_file_index]])
-    
+      SF = float(files_SF_list[spin, 1, _file_index_sorted[left_file_index]])
+      
       *pData_y_scaled[_file_index_sorted[left_file_index],spin] /= SF
       *pData_y_error_scaled[_file_index_sorted[left_file_index],spin] /= SF
       
       left_file_index++
-
-endwhile
+      
+    endwhile
     
   endfor
   

@@ -79,6 +79,7 @@ cd, CurrentFolder
 .run manual_scale.pro
 .run create_scaled_big_array.pro
 .run save_background.pro
+.run check_status_buttons.pro
 
 ;output tab
 .run output_tab_event.pro

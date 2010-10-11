@@ -36,6 +36,7 @@ pro design_tabs, MAIN_BASE, global
   compile_opt idl2
   
   tabs = widget_tab(MAIN_BASE,$
+    /tracking_events, $
     uname = 'tab_uname')
     
   base1 = widget_base(tabs,$
@@ -164,6 +165,7 @@ pro design_tabs, MAIN_BASE, global
     value = 'N/A',$
     uname = 'output_base_file_name',$
     scr_xsize = 685,$
+    /all_events,$
     /editable)
     
   space = widget_label(base2,$
@@ -175,11 +177,14 @@ pro design_tabs, MAIN_BASE, global
     /row,$
     /nonexclusive)
   button1 = widget_button(row3a,$
+    uname = '3_columns_ascii_button',$
     value = '3 columns ASCII     (_scaled.rtof)')
   row3b = widget_base(row3,$
     /row,$
     /nonexclusive)
+    widget_control, button1, /set_button
   button2 = widget_button(row3b,$
+  uname = '2d_table_ascii_button',$
     value = '2D table            (_excel.txt)')
     
   row4 = widget_base(base2,$
@@ -196,7 +201,7 @@ pro design_tabs, MAIN_BASE, global
   uname = 'send_by_email_base_uname',$
     /row)
   email = widget_text(row4b,$
-    value = '',$
+    value = '<your uname>',$
     xsize = 50,$
     /editable)
     
@@ -206,6 +211,8 @@ pro design_tabs, MAIN_BASE, global
   row5 = widget_base(base2,$
     /align_center)
   create_output = widget_button(row5,$
+  uname = 'create_output_button',$
+  sensitive = 0,$
     value = 'CREATE OUTPUT',$
     scr_xsize = 700)
         
