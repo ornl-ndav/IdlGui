@@ -32,66 +32,48 @@
 ;
 ;==============================================================================
 
-;define path to dependencies and current folder
-spawn, 'pwd', CurrentFolder
-IdlUtilitiesPath = "/utilities"
-
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-cd, CurrentFolder + IdlUtilitiesPath
-.run put.pro
-.run get.pro
-.run set.pro
-.run is.pro
-.run gui.pro
-.run get_ucams.pro
-.run IDLxmlParser__define.pro
-.run logger.pro
-.run IDL3columnsASCIIparser__define.pro
-.run xdisplayfile.pro
-.run convert.pro
-.run colorbar.pro
-.run fsc_color.pro
-.run time.pro
-
-;Build REFscale GUI
-cd, CurrentFolder + '/REFscaleOFFGUI/'
-.run tab_designer.pro
-.run menu_designer.pro
-
-;Build main procedures
-cd, CurrentFolder
-
-;functions (tab#1)
-.run load_rtof_file.pro
-;procedures (tab#1)
-.run load_files_button.pro
-.run load_files.pro
-.run delete_data_set.pro
-.run preview_files.pro
-.run plot_rtof_files.pro
-.run pixel_vs_tof_individual_plots_base.pro
-.run cursor_info_base.pro
-.run counts_vs_axis_base.pro
-.run individual_plot_eventcb.pro
-.run menu_eventcb.pro
-.run plot_colorbar.pro
-.run auto_scale.pro
-.run manual_scale.pro
-.run create_scaled_big_array.pro
-.run save_background.pro
-.run check_status_buttons.pro
-
-;tab#2
-.run create_output.pro
-.run create_tar_folder.pro
-.run send_email.pro
-.run send_error_message.pro
-
-;output tab
-.run output_tab_event.pro
-
-.run ref_off_scale_cleanup.pro
-.run main_base_event.pro
-.run ref_scale_off.pro
-
+;+
+; :Description:
+;   This procedure will send an email with the message entered by the user
+;   to various people (will depend on the status of the priority).
+;   It will also create a tar file of the files added to the message.
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro send_email, event, email=email, tar_file=tar_file, list_of_files=list_of_files
+  compile_opt idl2
+  
+  catch, error
+  error = 0
+  if (error ne 0) then begin
+    catch,/cancel
+    result = send_error_message(event)
+    return
+  endif
+  
+  widget_control, event.top, get_uvalue=global
+  date = GenerateIsoTimeStamp()
+  
+  email_message = 'Scaled files created with REFscaleOFF (' + (*global).version + ')'
+  email_subject = 'Scaled files created with REFscaleOFF'
+  
+  ;send email
+  cmd_email = 'echo "' + email_message + '" | mail -s " ' + email_subject + '"'
+  if (list_of_files[0] ne '') then begin
+    cmd_email += ' -a ' + tar_file
+  endif
+  cmd_email += ' ' + email
+  ;spawn, cmd_email, listening, err_listening
+  print, cmd_email
+  
+  send_info_message, event, info_type='success'
+  
+  ;remove tar file
+  if (list_of_files[0] ne '') then begin
+    spawn, 'rm ' + tar_file
+  endif
+  
+end

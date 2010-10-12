@@ -32,66 +32,68 @@
 ;
 ;==============================================================================
 
-;define path to dependencies and current folder
-spawn, 'pwd', CurrentFolder
-IdlUtilitiesPath = "/utilities"
+;+
+; :Description:
+;    Inform the user that infos are missing to continue
+;
+; :Params:
+;    event
+;    info_type: 'contact', 'success'
+;
+; :Author: j35
+;-
+pro  send_info_message, event, info_type=info_type
+  compile_opt idl2
+  
+  case (info_type) of
+    'contact': begin
+      message_title = 'Contact infos missing!'
+      message_array = ['Please give us a way to contact you!']
+    end
+    'success': begin
+      message_title = 'Your message has been sent with success!'
+      message_array = ['Our team will contact you shortly','',$
+      'Thanks for using NeedHelp.']
+    end
+    else:
+  endcase
+  
+  widget_id = widget_info(event.top, find_by_uname='main_base')
+  
+  result = dialog_message(message_array, $
+    title = message_title,$
+    /information, $
+    /center, $
+    dialog_parent = widget_id)
+    
+end
 
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-cd, CurrentFolder + IdlUtilitiesPath
-.run put.pro
-.run get.pro
-.run set.pro
-.run is.pro
-.run gui.pro
-.run get_ucams.pro
-.run IDLxmlParser__define.pro
-.run logger.pro
-.run IDL3columnsASCIIparser__define.pro
-.run xdisplayfile.pro
-.run convert.pro
-.run colorbar.pro
-.run fsc_color.pro
-.run time.pro
 
-;Build REFscale GUI
-cd, CurrentFolder + '/REFscaleOFFGUI/'
-.run tab_designer.pro
-.run menu_designer.pro
-
-;Build main procedures
-cd, CurrentFolder
-
-;functions (tab#1)
-.run load_rtof_file.pro
-;procedures (tab#1)
-.run load_files_button.pro
-.run load_files.pro
-.run delete_data_set.pro
-.run preview_files.pro
-.run plot_rtof_files.pro
-.run pixel_vs_tof_individual_plots_base.pro
-.run cursor_info_base.pro
-.run counts_vs_axis_base.pro
-.run individual_plot_eventcb.pro
-.run menu_eventcb.pro
-.run plot_colorbar.pro
-.run auto_scale.pro
-.run manual_scale.pro
-.run create_scaled_big_array.pro
-.run save_background.pro
-.run check_status_buttons.pro
-
-;tab#2
-.run create_output.pro
-.run create_tar_folder.pro
-.run send_email.pro
-.run send_error_message.pro
-
-;output tab
-.run output_tab_event.pro
-
-.run ref_off_scale_cleanup.pro
-.run main_base_event.pro
-.run ref_scale_off.pro
-
+;+
+; :Description:
+;   This procedure pop us a dialog_message that informs the user that an
+;   error occured while sending his message and that it did not work
+;
+; :Params:
+;    event
+;
+; :Keywords:
+;    error_type
+;
+; :Author: j35
+;-
+pro send_error_message, event
+  compile_opt idl2
+  
+  widget_id = widget_info(event.top, find_by_uname='main_base')
+  message_title = 'Error while sending your message'
+  message_array = ['Please inform j35@ornl.gov that you had a problem',$
+    'sending your message!','','Thanks a lot']
+    
+  result = dialog_message(message_array, $
+    title = message_title,$
+    /error, $
+    /center, $
+    dialog_parent = widget_id)
+    
+end

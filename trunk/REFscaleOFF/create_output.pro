@@ -232,19 +232,21 @@ end
 ; :Params:
 ;    event
 ;
-; :Keywords:
-;    rtof_status   1=send this file, 0=do not send this file
-;    excel_status   1=send this file, 0=do not send this file
-;
 ; :Author: j35
 ;-
-pro send_by_email, event, rtof_status=rtof_status, excel_status=excel_status
+pro send_by_email, event
   compile_opt idl2
   
+  widget_control, event.top, get_uvalue=global
   
+  list_of_files_created = (*(*global).list_of_files_created)
+  email = getValue(event=event, 'email_widget_text')
   
+  tar_file_name = (*global).tar_base_file_name + '.tar'
+  create_tar_folder, tar_file_name, list_of_files_created
   
-  
+  send_email, event, email=email, tar_file=tar_file_name, $
+  list_of_files=list_of_files_created
   
   
 end
@@ -269,6 +271,7 @@ pro create_output, event
   output_path = (*global).output_path
   ;base file name
   base_file_name = getValue(event=event, 'output_base_file_name')
+  (*global).tar_base_file_name = base_file_name
   
   ;is 3 columns rtof ASCII output file selected
   rtof_status = isButtonSelected(event=event, uname='3_columns_ascii_button')
@@ -285,7 +288,7 @@ pro create_output, event
   ;send by email or not
   email_status = isButtonSelected(event=event, uname='send_by_email_button_uname')
   if (email_status) then begin
-    send_by_email, event, rtof_status=rtof_status, excel_status=excel_status
+    send_by_email, event
   endif
   
   ;list output files
