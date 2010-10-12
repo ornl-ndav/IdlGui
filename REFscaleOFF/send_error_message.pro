@@ -28,9 +28,9 @@
 ;   promote products derived from this software without specific prior written
 ;   permission.
 ;
-; @author : j35 (bilheuxjm@ornl.gov)
+; @author : j35 (bilheuxjm@ornl.  gov)
 ;
-;==============================================================================
+;============================== ================================================
 
 ;+
 ; :Description:
@@ -51,9 +51,8 @@ pro  send_info_message, event, info_type=info_type
       message_array = ['Please give us a way to contact you!']
     end
     'success': begin
-      message_title = 'Your message has been sent with success!'
-      message_array = ['Our team will contact you shortly','',$
-      'Thanks for using NeedHelp.']
+      message_title = 'Your files has been sent with success!'
+      message_array = ['Thanks for using REFscaleOFF.']
     end
     else:
   endcase

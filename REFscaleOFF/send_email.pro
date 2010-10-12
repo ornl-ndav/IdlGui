@@ -53,7 +53,7 @@ pro send_email, event, email=email, tar_file=tar_file, list_of_files=list_of_fil
     result = send_error_message(event)
     return
   endif
-  
+    
   widget_control, event.top, get_uvalue=global
   date = GenerateIsoTimeStamp()
   
@@ -61,13 +61,12 @@ pro send_email, event, email=email, tar_file=tar_file, list_of_files=list_of_fil
   email_subject = 'Scaled files created with REFscaleOFF'
   
   ;send email
-  cmd_email = 'echo "' + email_message + '" | mail -s " ' + email_subject + '"'
+  cmd_email = 'echo "' + email_message + '" | mutt -s " ' + email_subject + '"'
   if (list_of_files[0] ne '') then begin
     cmd_email += ' -a ' + tar_file
-  endif
+  endif    
   cmd_email += ' ' + email
-  ;spawn, cmd_email, listening, err_listening
-  print, cmd_email
+  spawn, cmd_email, listening, err_listening
   
   send_info_message, event, info_type='success'
   
