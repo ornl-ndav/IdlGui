@@ -230,7 +230,7 @@ pro design_tabs, MAIN_BASE, global
   value = 'Files created:')
   text = widget_text(row6,$
   uname = 'list_of_files_created',$
-  value = 'N/A',$
+  value = '',$
   xsize = 110,$
   /scroll,$
   ysize = 10)      
