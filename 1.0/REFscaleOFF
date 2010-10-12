@@ -1,2 +1,2 @@
-idl -vm="/SNS/software/idltools/sav/ref_scale_m.sav"
+idl -vm="/SNS/software/idltools/sav/ref_scale_off.sav"
 

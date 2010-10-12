@@ -81,6 +81,7 @@ cd, CurrentFolder
 .run create_scaled_big_array.pro
 .run save_background.pro
 .run check_status_buttons.pro
+.run show_big_array.pro
 
 ;tab#2
 .run create_output.pro

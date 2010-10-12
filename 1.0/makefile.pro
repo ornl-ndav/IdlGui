@@ -44,11 +44,11 @@ resolve_routine, "errplot",/either
 resolve_routine, "read_bmp",/either
 resolve_routine, "poly_fit",/either
 resolve_routine, "uniq",/either
-resolve_routine, "ref_scale_m", /either
 resolve_routine, "CW_BGROUP", /either
 resolve_routine, "XMANAGER", /either
 resolve_routine, "mean", /either
 resolve_routine, "moment", /either
+resolve_routine, "congrid", /either
 
 save,/routines,filename = CurrentFolder + '/ref_scale_off.sav'
 exit
