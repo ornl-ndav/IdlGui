@@ -206,6 +206,7 @@ pro design_tabs, MAIN_BASE, global
   email = widget_text(row4b,$
     value = '<your uname>',$
     xsize = 50,$
+    uname = 'email_widget_text',$
     /editable)
     
   space = widget_label(base2,$

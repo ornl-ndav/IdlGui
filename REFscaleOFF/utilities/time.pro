@@ -32,66 +32,76 @@
 ;
 ;==============================================================================
 
-;define path to dependencies and current folder
-spawn, 'pwd', CurrentFolder
-IdlUtilitiesPath = "/utilities"
+;Change the format from Thu Aug 23 16:15:23 2007
+;to 2007y_08m_23d_16h_15mn_23s
+Function GenerateIsoTimeStamp
 
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-cd, CurrentFolder + IdlUtilitiesPath
-.run put.pro
-.run get.pro
-.run set.pro
-.run is.pro
-.run gui.pro
-.run get_ucams.pro
-.run IDLxmlParser__define.pro
-.run logger.pro
-.run IDL3columnsASCIIparser__define.pro
-.run xdisplayfile.pro
-.run convert.pro
-.run colorbar.pro
-.run fsc_color.pro
-.run time.pro
+dateUnformated = SYSTIME()    
+DateArray      = STRSPLIT(dateUnformated,' ',/EXTRACT) 
+DateIso        = STRCOMPRESS(DateArray[4]) + 'y_'
 
-;Build REFscale GUI
-cd, CurrentFolder + '/REFscaleOFFGUI/'
-.run tab_designer.pro
-.run menu_designer.pro
+month = 0
+CASE (DateArray[1]) OF
+    'Jan':month='01m'
+    'Feb':month='02m'
+    'Mar':month='03m'
+    'Apr':month='04m'
+    'May':month='05m'
+    'Jun':month='06m'
+    'Jul':month='07m'
+    'Aug':month='08m'
+    'Sep':month='09m'
+    'Oct':month='10m'
+    'Nov':month='11m'
+    'Dec':month='12m'
+ENDCASE
 
-;Build main procedures
-cd, CurrentFolder
+DateIso += STRCOMPRESS(month,/REMOVE_ALL) + '_'
+DateIso += STRCOMPRESS(DateArray[2],/REMOVE_ALL) + 'd_'
 
-;functions (tab#1)
-.run load_rtof_file.pro
-;procedures (tab#1)
-.run load_files_button.pro
-.run load_files.pro
-.run delete_data_set.pro
-.run preview_files.pro
-.run plot_rtof_files.pro
-.run pixel_vs_tof_individual_plots_base.pro
-.run cursor_info_base.pro
-.run counts_vs_axis_base.pro
-.run individual_plot_eventcb.pro
-.run menu_eventcb.pro
-.run plot_colorbar.pro
-.run auto_scale.pro
-.run manual_scale.pro
-.run create_scaled_big_array.pro
-.run save_background.pro
-.run check_status_buttons.pro
+;change format of time
+time     = STRSPLIT(DateArray[3],':',/EXTRACT)
+DateIso += STRCOMPRESS(time[0],/REMOVE_ALL) + 'h_'
+DateIso += STRCOMPRESS(time[1],/REMOVE_ALL) + 'mn_'
+DateIso += STRCOMPRESS(time[2],/REMOVE_ALL) + 's'
 
-;tab#2
-.run create_output.pro
-.run create_tar_folder.pro
-.run send_email.pro
-.run send_error_message.pro
+RETURN, DateIso
+END
 
-;output tab
-.run output_tab_event.pro
+;------------------------------------------------------------------------------
 
-.run ref_off_scale_cleanup.pro
-.run main_base_event.pro
-.run ref_scale_off.pro
+Function GenerateReadableIsoTimeStamp
+
+dateUnformated = SYSTIME()    
+DateArray      = STRSPLIT(dateUnformated,' ',/EXTRACT) 
+
+month = 0
+CASE (DateArray[1]) OF
+    'Jan':month='01'
+    'Feb':month='02'
+    'Mar':month='03'
+    'Apr':month='04'
+    'May':month='05'
+    'Jun':month='06'
+    'Jul':month='07'
+    'Aug':month='08'
+    'Sep':month='09'
+    'Oct':month='10'
+    'Nov':month='11'
+    'Dec':month='12'
+ENDCASE
+
+DateIso  = STRCOMPRESS(month,/REMOVE_ALL) + '/'
+DateIso += STRCOMPRESS(DateArray[2],/REMOVE_ALL) + '/'
+DateIso += STRCOMPRESS(DateArray[4]) + ' ; '
+
+;change format of time
+time     = STRSPLIT(DateArray[3],':',/EXTRACT)
+DateIso += STRCOMPRESS(time[0],/REMOVE_ALL) + 'h '
+DateIso += STRCOMPRESS(time[1],/REMOVE_ALL) + 'mn '
+DateIso += STRCOMPRESS(time[2],/REMOVE_ALL) + 's'
+
+RETURN, DateIso
+END
+
 

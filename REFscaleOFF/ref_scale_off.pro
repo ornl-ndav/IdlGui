@@ -66,10 +66,13 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   global = ptr_new({ $
   
+    version: VERSION, $
+  
     auto_scale_plot_base: 0L,$
     manual_scale_plot_base: 0L, $
   
     spin_state_name: ['Off_Off','Off_On','On_Off','On_On'],$
+    tar_base_file_name: '',$
   
     ;list of files created
     list_of_files_created: ptr_new(0L), $
