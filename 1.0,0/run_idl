@@ -1,3 +1,0 @@
-spawn, 'cp REFscaleOFF.cfg .REFscaleOFF.cfg'
-@idl_makefile
-ref_scale_off	
