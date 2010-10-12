@@ -122,7 +122,7 @@ pro create_rtof_output_file, event, path_output_file_name = path_output_file_nam
     
   endfor
   
-    (*(*global).list_of_files_created) = list_of_files_created
+  (*(*global).list_of_files_created) = list_of_files_created
   
 end
 
@@ -293,11 +293,23 @@ pro create_output, event
   list_of_files_created = (*(*global).list_of_files_created)
   sz = n_elements(list_of_files_created)
   index = 0
+  first_file = 1b
   while (index lt sz) do begin
     _file_name = list_of_files_created[index]
-    if (_file_name ne '' && _file_name ne 'N/A') then begin
-      putValue, event=event, 'list_of_files_created', _file_name, append=1
+    if (_file_name eq '') then begin
+      index++
+      continue
     endif
+    if (_file_name eq 'N/A') then begin
+      index++
+      continue
+    endif
+    if (first_file) then begin
+      putValue, event=event, 'list_of_files_created', _file_name
+      first_file = 0b
+    endif else begin
+      putValue, event=event, 'list_of_files_created', _file_name, append=1
+    endelse
     index++
   endwhile
   
