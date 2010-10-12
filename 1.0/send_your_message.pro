@@ -119,7 +119,7 @@ pro send_your_message, event
   endif
   
   ;send email
-  cmd_email = 'echo "' + email_message + '" | mail -s " ' + email_subject + '"'
+  cmd_email = 'echo "' + email_message + '" | mutt -s " ' + email_subject + '"'
   if (list_of_files[0] ne '') then begin
     cmd_email += ' -a ' + tar_file_name
   endif
