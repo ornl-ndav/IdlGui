@@ -122,15 +122,19 @@ function get_overlap_array, event, $
   nbr_pixel = (size(data))[1]
   nbr_pixel_to_remove = fix((float(top_bottom_exclusion_percentage)/100.)*float(nbr_pixel))
   
+  ;make sure we remove at least 1 pixel
+  if (nbr_pixel_to_remove eq 0) then nbr_pixel_to_remove++
+  
   pixel_bottom_index = nbr_pixel_to_remove
-  pixel_top_index = nbr_pixel - nbr_pixel_to_remove
+  pixel_top_index = nbr_pixel - nbr_pixel_to_remove - 1
   
   if (pixel_bottom_index ge pixel_top_index) then begin
     error = 1
     return, data
   endif
   
-  return, data[pixel_bottom_index:pixel_top_index,index_left:index_right]
+  _data = data[pixel_bottom_index:pixel_top_index,index_left:index_right]
+  return, _data
   
 end
 
