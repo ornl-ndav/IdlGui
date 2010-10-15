@@ -613,14 +613,14 @@ pro px_vs_tof_plots_base_gui, wBase, $
     uname = 'scale',$
     scr_xsize = xsize,$
     scr_ysize = ysize,$
-    /retain)
+    retain=2)
     
   colorbar =  widget_draw(wBase,$
     uname = 'colorbar',$
     xoffset = xsize,$
     scr_xsize = colorbar_xsize,$
     scr_ysize = ysize,$
-    /retain)
+    retain=2)
     
 end
 

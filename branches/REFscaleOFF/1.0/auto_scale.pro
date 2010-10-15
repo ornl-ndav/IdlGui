@@ -120,8 +120,9 @@ function get_overlap_array, event, $
   top_bottom_exclusion_percentage = (*global).top_bottom_exclusion_percentage
   
   nbr_pixel = (size(data))[1]
-  nbr_pixel_to_remove = fix((float(top_bottom_exclusion_percentage)/100.)*float(nbr_pixel))
-  
+  nbr_pixel_to_remove = fix((float(top_bottom_exclusion_percentage)/100.)*$
+    float(nbr_pixel))
+    
   ;make sure we remove at least 1 pixel
   if (nbr_pixel_to_remove eq 0) then nbr_pixel_to_remove++
   
@@ -332,7 +333,8 @@ pro auto_scale, event
         error = error)
       if (error) then begin
         ;FIXME
-        ;dialog message about not enough pixels to be able to remove top and bottom percentage
+        ;dialog message about not enough pixels to be able to remove $
+        ;top and bottom percentage
         return
       endif
       
@@ -344,7 +346,8 @@ pro auto_scale, event
         error = error)
       if (error) then begin
         ;FIXME
-        ;dialog message about not enough pixels to be able to remove top and bottom percentage
+        ;dialog message about not enough pixels to be able to remove 
+        ;top and bottom percentage
         return
       endif
       
@@ -353,10 +356,12 @@ pro auto_scale, event
       
       ;put 1 as SF for first file
       if (left_file_index eq 0) then begin
-        files_SF_list[spin, 1, _file_index_sorted[0]] = strcompress(1,/remove_all)
+        files_SF_list[spin, 1, _file_index_sorted[0]] = $
+        strcompress(1,/remove_all)
       endif
       
-      files_SF_list[spin, 1, _file_index_sorted[right_file_index]] = strcompress(SF,/remove_all)
+      files_SF_list[spin, 1, _file_index_sorted[right_file_index]] = $
+      strcompress(SF,/remove_all)
       
       *pData_y_scaled[_file_index_sorted[right_file_index],spin] /= SF
       *pData_y_error_scaled[_file_index_sorted[right_file_index],spin] /= SF
