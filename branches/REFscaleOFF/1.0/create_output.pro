@@ -44,7 +44,8 @@
 ;
 ; :Author: j35
 ;-
-pro create_rtof_output_file, event, path_output_file_name = path_output_file_name
+pro create_rtof_output_file, event, $
+path_output_file_name = path_output_file_name
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global
@@ -68,7 +69,8 @@ pro create_rtof_output_file, event, path_output_file_name = path_output_file_nam
     _nbr_files = get_number_of_files_loaded(event, spin_state=_spin)
     if (_nbr_files ge 2) then begin ;create file
     
-      full_output_file_name = path_output_file_name + '_' + spin_state_name[_spin]
+      full_output_file_name = path_output_file_name + '_' + $
+      spin_state_name[_spin]
       full_output_file_name += rtof_ext
       
       _xaxis = *master_xaxis[_spin]
@@ -138,7 +140,8 @@ end
 ;
 ; :Author: j35
 ;-
-pro create_excel_output_file, event, path_output_file_name = path_output_file_name
+pro create_excel_output_file, event, $
+path_output_file_name = path_output_file_name
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global
@@ -162,7 +165,8 @@ pro create_excel_output_file, event, path_output_file_name = path_output_file_na
     _nbr_files = get_number_of_files_loaded(event, spin_state=_spin)
     if (_nbr_files ge 2) then begin ;create file
     
-      full_output_file_name = path_output_file_name + '_' + spin_state_name[_spin]
+      full_output_file_name = path_output_file_name + '_' + $
+      spin_state_name[_spin]
       full_output_file_name += _ext
       
       _xaxis = *master_xaxis[_spin]
@@ -190,7 +194,7 @@ pro create_excel_output_file, event, path_output_file_name = path_output_file_na
       
       ;first column
       big_table[*,0] = strcompress(_xaxis,/remove_all)
-      big_table[*,1] = 'N/A'
+      big_table[*,1] = '-1'
       pixel_array = indgen(pixel_sz) + files_SF_list[_spin, 2,0]
       big_table[0:(pixel_sz-1),1] = strcompress(pixel_array,/remove_all)
       
@@ -276,17 +280,20 @@ pro create_output, event
   ;is 3 columns rtof ASCII output file selected
   rtof_status = isButtonSelected(event=event, uname='3_columns_ascii_button')
   if (rtof_status) then begin
-    create_rtof_output_file, event, path_output_file_name=output_path + base_file_name
+    create_rtof_output_file, event, $
+    path_output_file_name=output_path + base_file_name
   endif
   
   ;is excel ASCII output file selected
   excel_status= isButtonSelected(event=event, uname='2d_table_ascii_button')
   if (excel_status) then begin
-    create_excel_output_file, event, path_output_file_name=output_path + base_file_name
+    create_excel_output_file, event, $
+    path_output_file_name=output_path + base_file_name
   endif
   
   ;send by email or not
-  email_status = isButtonSelected(event=event, uname='send_by_email_button_uname')
+  email_status = isButtonSelected(event=event, $
+  uname='send_by_email_button_uname')
   if (email_status) then begin
     send_by_email, event
   endif
