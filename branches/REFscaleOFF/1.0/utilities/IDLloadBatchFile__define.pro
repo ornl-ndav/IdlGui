@@ -38,31 +38,6 @@
 
 ;+
 ; :Description:
-;   add the new spin state to the data spin state strarr
-;
-; :Params:
-;    event
-;    spinState
-;
-; :Author: j35
-;-
-pro add_data_spin_state, event, spinState
-  compile_opt idl2
-  
-  widget_control, event.top, get_uvalue=global
-  
-  data_spin_state = (*(*global).data_spin_state)
-  if (data_spin_state[0] eq '') then begin
-    data_spin_state[0] = spinState[0]
-  endif else begin
-    data_spin_state = [data_spin_state,spinState[0]]
-  endelse
-  (*(*global).data_spin_state) = data_spin_state
-  
-end
-
-;+
-; :Description:
 ;   add the new spin state to the new norm spin state strarr
 ;
 ; :Params:
@@ -90,9 +65,12 @@ end
 ;Procedure that will return all the global variables for this routine
 FUNCTION getGlobalVariable, var
   CASE (var) OF
-    ;number of columns in the Table (active/data/norm/s1/s2...)
-    'ColumnIndexes'         : RETURN, 8
-    'NbrColumn'             : RETURN, 9
+    ;number of columns in the Table
+  
+    ;active|data_runs|data_spin_states|Norm_runs|norm_spin_states
+    ;EC_runs|Angle|s1|s2|date|SF|command_line
+    'ColumnIndexes'         : RETURN, 11
+    'NbrColumn'             : RETURN, 12
     'RowIndexes'            : RETURN, 19
     'NbrRow'                : RETURN, 20
     'BatchFileHeadingLines' : RETURN, 3
@@ -134,14 +112,56 @@ FUNCTION PopulateFileArray, BatchFileName, NbrLine
   RETURN, FileArray
 END
 
+;+
+;
+; Descriptions:
+;   Add the second part of the string array (if any)
+;   at the right place in the BatchTable
+;
+; keywords:
+;   column_index
+;   row_index
+;   split_array
+;   BatchTable
+;   cmd_line    if True, takes split_array[0], otherwise split_array[1]
+;
+;-
+pro addToBatchTable, column_index = column_index, $
+    row_index = row_index, $
+    split_array = split_array, $
+    BatchTable = BatchTable, $
+    cmd_line = cmd_line
+  compile_opt idl2
+  
+  error = 0
+  catch, error
+  if (error ne 0) then begin
+    catch,/cancel
+    BatchTable[column_index, row_index] = ''
+  endif else begin
+    if (n_elements(cmd_line) eq 0) then begin
+      value = split_array[1]
+    endif else begin
+      value = split_array[0]
+    endelse
+    BatchTable[column_index, row_index] = value
+  endelse
+  
+end
+
 ;------------------------------------------------------------------------------
 FUNCTION PopulateBatchTable, Event, BatchFileName
 
+  widget_control, event.top, get_uvalue=global
+  
   populate_error = 0
-  CATCH, populate_error
+  ; CATCH, populate_error
   NbrColumn  = getGlobalVariable('NbrColumn')
   NbrRow     = getGlobalVariable('NbrRow')
-  BatchTable = STRARR(NbrColumn,NbrRow)
+  BatchTable = STRARR(NbrColumn,NbrRow) ;[spin_state, column row]
+  ;spin state is for off_off, off_on ...
+  ;column is cmd | SF
+  ;row is list of files
   FileArray  = STRARR(1)
   IF (populate_error NE 0) THEN BEGIN
     CATCH,/CANCEL
@@ -166,124 +186,56 @@ FUNCTION PopulateBatchTable, Event, BatchFileName
             COUNT=length)
             
           CASE (SplitArray[0]) OF
-            '#Active'    : BatchTable[0,BatchIndex] = SplitArray[1]
-            '#Data_Runs' : BatchTable[1,BatchIndex] = SplitArray[1]
-            '#Data_Spin_States' : begin
-              data_error = 0
-              catch, data_error
-              if (data_error ne 0) then begin
-                catch,/cancel
-              endif else begin
-                (*global).working_with_ref_m_batch = 1b
-                (*global).instrument = 'REF_M'
-                spinState = SplitArray[1]
-                add_data_spin_state, event, spinState
-              endelse
-            end
-            '#Norm_Runs' : BEGIN
-              norm_error = 0
-              CATCH,norm_error
-              IF (norm_error NE 0) THEN BEGIN
-                CATCH,/CANCEL
-                BatchTable[2,BatchIndex] = ''
-              ENDIF ELSE BEGIN
-                BatchTable[2,BatchIndex] = SplitArray[1]
-              ENDELSE
-            END
-            '#Norm_Spin_States' : begin
-              norm_error = 0
-              catch, norm_error
-              if (norm_error ne 0) then begin
-                catch,/cancel
-              endif else begin
-                normSpinState = SplitArray[1]
-                add_norm_spin_state, event, normSpinState
-              endelse
-            end
-            '#EC_Runs' : BEGIN
-              ec_error = 0
-              CATCH,ec_error
-              IF (ec_error NE 0) THEN BEGIN
-                CATCH,/CANCEL
-                BatchTable[3,BatchIndex] = ''
-              ENDIF ELSE BEGIN
-                BatchTable[3,BatchIndex] = SplitArray[1]
-              ENDELSE
-            END
-            '#Angle(deg)' : begin
-              angle_error = 0
-              catch, angle_error
-              if (angle_error ne 0) then begin
-                catch,/cancel
-                BatchTable[4,BatchIndex] = ''
-              endif else begin
-                BatchTable[4,BatchIndex] = SplitArray[1]
-              endelse
-            end
-            '#S1(mm)'    : begin
-              s1_error = 0
-              catch, s1_error
-              if (s1_error ne 0) then begin
-                catch, /cancel
-                BatchTable[5,BatchIndex] = ''
-              endif else begin
-                BatchTable[5,BatchIndex] = SplitArray[1]
-              endelse
-            end
-            '#S2(mm)'    : begin 
-              s1_error = 0
-              catch, s1_error
-              if (s1_error ne 0) then begin
-                catch, /cancel
-                BatchTable[6,BatchIndex] = ''
-              endif else begin
-                BatchTable[6,BatchIndex] = SplitArray[1]
-              endelse
-            end
-            '#Date'      : BatchTable[7,BatchIndex] = $
-              STRJOIN(SplitArray[1:length-1],':')
-            '#SF'        : BEGIN
-              sz = (size(SplitArray))(1)
-              IF (sz GT 1) THEN BEGIN
-                BatchTable[8,BatchIndex] = SplitArray[1]
-              ENDIF ELSE BEGIN
-                BatchTable[8,BatchIndex] = ''
-              ENDELSE
-            END
+            '#Active'    : addToBatchTable, column_index = 0, $
+              row_index = BatchIndex, $
+              split_array = SplitArray, $
+              BatchTable = BatchTable
+            '#Data_Runs' : addToBatchTable, column_index = 1, $
+              row_index = BatchIndex, $
+              split_array = SplitArray, $
+              BatchTable = BatchTable
+            '#Data_Spin_States' : addToBatchTable, column_index = 2, $
+              row_index = BatchIndex, $
+              split_array = SplitArray, $
+              BatchTable = BatchTable
+            '#Norm_Runs' : addToBatchTable, column_index = 3, $
+              row_index = BatchIndex, $
+              split_array = SplitArray, $
+              BatchTable = BatchTable
+            '#Norm_Spin_States' : addToBatchTable, column_index = 4, $
+              row_index = BatchIndex, $
+              split_array = SplitArray, $
+              BatchTable = BatchTable
+            '#EC_Runs' : addToBatchTable, column_index = 5, $
+              row_index = BatchIndex, $
+              split_array = SplitArray, $
+              BatchTable = BatchTable
+            '#Angle(deg)' : addToBatchTable, column_index = 6, $
+              row_index = BatchIndex, $
+              split_array = SplitArray, $
+              BatchTable = BatchTable
+            '#S1(mm)'    : addToBatchTable, column_index = 7, $
+              row_index = BatchIndex, $
+              split_array = SplitArray, $
+              BatchTable = BatchTable
+            '#S2(mm)'    : addToBatchTable, column_index = 8, $
+              row_index = BatchIndex, $
+              split_array = SplitArray, $
+              BatchTable = BatchTable
+            '#Date'      : addToBatchTable, column_index = 9, $
+              row_index = BatchIndex, $
+              split_array = SplitArray, $
+              BatchTable = BatchTable
+            '#SF'        : addToBatchTable, column_index = 10, $
+              row_index = BatchIndex, $
+              split_array = SplitArray, $
+              BatchTable = BatchTable
             ELSE: BEGIN ;command line
-            
-              print, 'in else:'
-              print, splitarray[0]
-            
-              CommentArray= STRSPLIT(SplitArray[0],'#', $
-                /EXTRACT, $
-                COUNT=nbr)
-              SplitArray[0] =CommentArray[0]
-              cmd           = strjoin(SplitArray,' ')
-
-
-
-
-;              ;check if "-o none" is there or not
-;              IF (strmatch(strlowcase(cmd),'*-o none*')) THEN BEGIN
-;                string_split = ' --batch -o none'
-;              ENDIF ELSE BEGIN
-;                string_split = ' --batch'
-;              ENDELSE
-;              
-;              cmd_array     = STRSPLIT(cmd, $
-;                string_split, $
-;                /EXTRACT, $
-;                /REGEX,$
-;                COUNT = length)
-;              IF (length NE 1) THEN BEGIN
-;                cmd = cmd_array[0] + ' ' + cmd_array[1]
-;              ENDIF else begin
-;                cmd = cmd_array[0]
-;              endelse
-
-              BatchTable[9,BatchIndex] = cmd
-
+              addToBatchTable, column_index = 11, $
+                row_index = BatchIndex, $
+                split_array = SplitArray, $
+                BatchTable = BatchTable, $
+                cmd_line = 1b
             END
           ENDCASE
           ++FileIndex
@@ -315,7 +267,7 @@ END
 ;******  Class Define ****;****************************************************
 PRO IDLloadBatchFile__define
   struct = {IDLloadBatchFile,$
-    BatchTable: STRARR(10,20),$
+    BatchTable: STRARR(12,20),$
     value:      ''}
 END
 ;******************************************************************************
