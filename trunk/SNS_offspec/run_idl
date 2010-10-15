@@ -1,4 +1,5 @@
 .run xcw_direct.pro
+.run xcr_direct.pro
 .run SNS_convert_QXQZ.pro
 .run SNS_convert_THLAM.pro
 .run sns_divide_spectrum.pro
