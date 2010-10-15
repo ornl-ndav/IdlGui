@@ -169,6 +169,7 @@ pro counts_vs_axis_base_gui, wBase, $
   draw = widget_draw(wBase,$
     scr_xsize = xsize,$
     scr_ysize = ysize,$
+    /retain,$
     uname = plot_uname)
     
   yaxis = widget_button(bar1,$
