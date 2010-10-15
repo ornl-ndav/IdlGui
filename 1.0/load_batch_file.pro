@@ -32,30 +32,27 @@
 ;
 ;==============================================================================
 
-pro load_files_button, event
+;+
+; :Description:
+;    Load a list of batch file
+;
+; :Params:
+;    event
+;    file_name
+;
+; :Author: j35
+;-
+pro load_batch_file, event, file_name
+ compile_opt idl2
 
-  widget_control, event.top, get_uvalue=global
-  
-  input_path  = (*global).input_path
-  title       = 'Select Reduced or Batch files to load'
-  filter      = ['*.txt','*.rtof']
-  dialog_id   = widget_info(event.top, find_by_uname='main_base')
-  
-  ListFullFileName = dialog_pickfile(PATH = input_path,$
-    GET_PATH = path,$
-    dialog_parent = dialog_id, $
-    TITLE    = title,$
-    /multiple_files,$
-    FILTER   = filter)
-    
-  if (ListFullFileName[0] ne '') then begin
-    (*global).input_path = path
-    load_files, event, ListFullFileName
-  endif
-  
-  
-  ;create_default_output_file_name, event ;FIXME
-  
+ widget_control, event.top, get_uvalue=global
+ 
+  iTable = OBJ_NEW('IDLloadBatchFile', file_name, Event)
+  BatchTable = iTable->getBatchTable()
+
+  print, "=================="
+  help, BatchTable
+  print, BatchTable 
+
+ 
 end
-
-

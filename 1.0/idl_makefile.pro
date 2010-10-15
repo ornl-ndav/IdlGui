@@ -53,6 +53,7 @@ cd, CurrentFolder + IdlUtilitiesPath
 .run colorbar.pro
 .run fsc_color.pro
 .run time.pro
+.run IDLloadBatchFile__define.pro
 
 ;Build REFscale GUI
 cd, CurrentFolder + '/REFscaleOFFGUI/'
@@ -67,6 +68,8 @@ cd, CurrentFolder
 ;procedures (tab#1)
 .run load_files_button.pro
 .run load_files.pro
+.run load_rtof_file.pro
+.run load_batch_file.pro
 .run delete_data_set.pro
 .run preview_files.pro
 .run plot_rtof_files.pro
