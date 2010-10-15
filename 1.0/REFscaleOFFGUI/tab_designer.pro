@@ -179,7 +179,7 @@ pro design_tabs, MAIN_BASE, global
     rtof_ext = (*global).rtof_ext
   button1 = widget_button(row3a,$
     uname = '3_columns_ascii_button',$
-    value = '3 columns ASCII     ' + rtof_ext)
+    value = '3 columns ASCII (' + rtof_ext + ')')
   row3b = widget_base(row3,$
     /row,$
     /nonexclusive)
@@ -187,7 +187,7 @@ pro design_tabs, MAIN_BASE, global
 ;    widget_control, button1, /set_button
   button2 = widget_button(row3b,$
   uname = '2d_table_ascii_button',$
-    value = '2D table            ' + excel_ext)
+    value = '2D table (' + excel_ext + ')')
      widget_control, button2, /set_button
     
   row4 = widget_base(base2,$
@@ -225,7 +225,7 @@ pro design_tabs, MAIN_BASE, global
 
   row6 = widget_base(base2,$
   uname = 'files_created_base_uname',$
-  map = 0,$
+  map = 1,$
   /row)
   label = widget_label(row6,$
   value = 'Files created:')

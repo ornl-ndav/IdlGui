@@ -299,7 +299,7 @@ pro create_output, event
   endif
   
   ;list output files
-  mapBase, event=event, status=1, uname='files_created_base_uname'
+;  mapBase, event=event, status=1, uname='files_created_base_uname'
   list_of_files_created = (*(*global).list_of_files_created)
   sz = n_elements(list_of_files_created)
   index = 0

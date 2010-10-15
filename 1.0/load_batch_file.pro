@@ -50,9 +50,6 @@ pro load_batch_file, event, file_name
   iTable = OBJ_NEW('IDLloadBatchFile', file_name, Event)
   BatchTable = iTable->getBatchTable()
 
-  print, "=================="
   help, BatchTable
-  print, BatchTable 
 
- 
 end
