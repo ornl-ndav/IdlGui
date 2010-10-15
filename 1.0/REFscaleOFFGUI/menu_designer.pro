@@ -60,12 +60,14 @@ pro design_plot_settings_menu, bar, global
     value = ('   ' + plot_setting2),$
     uname = 'plot_setting_interpolated')
     
+  default_loadct = (*global).default_loadct  
+    
   list_loadct = ['B-W Linear',$
     'Blue/White',$
     'Green-Red-Blue-White',$
     'Red temperature',$
     'Std Gamma-II',$
-    '>  > >> Prism << <  <',$
+    'Prism',$
     'Red-Purple',$
     'Green/White Linear',$
     'Green/White Exponential                  ',$
@@ -100,6 +102,10 @@ pro design_plot_settings_menu, bar, global
     'Rainbow18',$
     'Rainbow + white',$
     'Rainbow + black']
+    
+    prefix = '>  > >> '
+    postfix = ' << <  <'
+    list_loadct[default_loadct] = prefix + list_loadct[default_loadct] + postfix
     
   set = widget_button(mPlot,$
     value = list_loadct[0],$
