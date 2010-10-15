@@ -1,4 +1,4 @@
-;==============================================================================
+
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -49,7 +49,7 @@
 function isFileBatch, file_name
   compile_opt idl2
   u_file_name   = strupcase(file_name)
-  search_string = 'BATCH'
+  search_string = '*BATCH*'
   return, strmatch(u_file_name,search_string)
 end
 
@@ -118,7 +118,8 @@ end
 
 ;+
 ; :Description:
-;   This procedure load the files and save the data in the array of pointer DATA and ERROR_DATA
+;   This procedure load the files and save the data in the array of 
+;   pointer DATA and ERROR_DATA
 ;
 ; :Params:
 ;    event

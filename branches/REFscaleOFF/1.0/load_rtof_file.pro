@@ -209,15 +209,6 @@ pro add_data_to_list_of_loaded_data, event, spin_state=spin_state
   ;(*global).pData_y_2d       = pData_y_2d
   ;(*global).pData_y_error_2d = pData_y_error_2d
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
 end
 
 ;+
