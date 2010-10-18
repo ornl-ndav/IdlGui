@@ -171,13 +171,11 @@ pro create_common_global_data, event, xaxis=xaxis
   
   for spin=0,3 do begin ;go over all the spin states
   
-    print, 'stop_scaling_spin_status[spin]: ', stop_scaling_spin_status[spin]
-  
     ;continue if this spin state has the green lights !
     if (stop_scaling_spin_status[spin]) then continue
   
     nbr_files = get_number_of_files_loaded(event, spin_state=spin)
-    
+
     ;0 or just 1 file loaded for that spin state so we don't need
     ;to do anything
     if (nbr_files le 1) then continue

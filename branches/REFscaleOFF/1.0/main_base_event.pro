@@ -94,8 +94,14 @@ PRO main_base_event, Event
     widget_info(wWidget, find_by_uname='table_delete'): begin
       selection = get_table_lines_selected(event)
       delete_entry, event, selection[1], selection[3]
+      
+      ;check the current spin state selected
+      spin_state = get_current_spin_state_selected(event)  
+      _files_SF_list = (*global).files_SF_list
+      full_reset, event
+      load_files, event, _files_SF_list[spin_state, 0,*]
       (*global).table_changed = 1b
-      refresh_table, event
+      ;refresh_table, event
     end
     
     ;Manual scaling button

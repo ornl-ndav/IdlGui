@@ -182,15 +182,35 @@ end
 ; :Author: j35
 ;-
 function getTabSelected, id=id, event=event, uname=uname
-   compile_opt idl2
-   
-   if (n_elements(event) ne 0) then begin
-   id = widget_info(event.top, find_by_uname=uname)
-endif
-
+  compile_opt idl2
+  
+  if (n_elements(event) ne 0) then begin
+    id = widget_info(event.top, find_by_uname=uname)
+  endif
+  
   tab_selected = widget_info(id, /tab_current)
   return, tab_selected
-   
-   end
+  
+end
 
+;+
+; :Description:
+;    Determine the current spin state selected
+;
+; :Params:
+;   event
+; :Returns:
+;   returns the current spin state
+;
+; :Author: j35
+;-
+function get_current_spin_state_selected, event
+  compile_opt idl2
+  
+  
+  ;FIXME
+  
+  return, 0
+  
+end
 

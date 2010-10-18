@@ -52,10 +52,7 @@ pro load_files_button, event
     (*global).input_path = path
     load_files, event, ListFullFileName
   endif
-  
-  
-  ;create_default_output_file_name, event ;FIXME
-  
+
 end
 
 
