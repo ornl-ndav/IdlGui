@@ -171,6 +171,8 @@ pro create_common_global_data, event, xaxis=xaxis
   
   for spin=0,3 do begin ;go over all the spin states
   
+    print, 'stop_scaling_spin_status[spin]: ', stop_scaling_spin_status[spin]
+  
     ;continue if this spin state has the green lights !
     if (stop_scaling_spin_status[spin]) then continue
   
