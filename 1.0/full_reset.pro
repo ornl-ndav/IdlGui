@@ -32,72 +32,31 @@
 ;
 ;==============================================================================
 
-;define path to dependencies and current folder
-spawn, 'pwd', CurrentFolder
-IdlUtilitiesPath = "/utilities"
-
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-cd, CurrentFolder + IdlUtilitiesPath
-.run put.pro
-.run get.pro
-.run set.pro
-.run is.pro
-.run gui.pro
-.run get_ucams.pro
-.run IDLxmlParser__define.pro
-.run logger.pro
-.run IDL3columnsASCIIparser__define.pro
-.run xdisplayfile.pro
-.run convert.pro
-.run colorbar.pro
-.run fsc_color.pro
-.run time.pro
-.run IDLloadBatchFile__define.pro
-
-;Build REFscale GUI
-cd, CurrentFolder + '/REFscaleOFFGUI/'
-.run tab_designer.pro
-.run menu_designer.pro
-
-;Build main procedures
-cd, CurrentFolder
-
-;functions (tab#1)
-.run load_rtof_file.pro
-;procedures (tab#1)
-.run load_files_button.pro
-.run load_files.pro
-.run load_rtof_file.pro
-.run load_batch_file.pro
-.run delete_data_set.pro
-.run preview_files.pro
-.run plot_rtof_files.pro
-.run pixel_vs_tof_individual_plots_base.pro
-.run cursor_info_base.pro
-.run counts_vs_axis_base.pro
-.run individual_plot_eventcb.pro
-.run menu_eventcb.pro
-.run plot_colorbar.pro
-.run auto_scale.pro
-.run manual_scale.pro
-.run create_scaled_big_array.pro
-.run save_background.pro
-.run check_status_buttons.pro
-.run show_big_array.pro
-.run configure_auto_scale_base.pro
-.run full_reset.pro
-
-;tab#2
-.run create_output.pro
-.run create_tar_folder.pro
-.run send_email.pro
-.run send_error_message.pro
-
-;output tab
-.run output_tab_event.pro
-
-.run ref_off_scale_cleanup.pro
-.run main_base_event.pro
-.run ref_scale_off.pro
-
+pro full_reset, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  (*global).stop_scaling_spin_status = intarr(4)
+  (*global).list_of_files_created = ptr_new(0L)
+  
+  (*global).master_data = ptrarr(4,/allocate_heap)
+  (*global).master_data_error = ptrarr(4,/allocate_heap)
+  (*global).master_xaxis = ptrarr(4,/allocate_heap)
+  
+  (*global).tmp_pData_x = ptr_new(0L)
+  (*global).tmp_pData_y = ptr_new(0L)
+  (*global).tmp_pData_y_error = ptr_new(0L)
+  
+  (*global).tmp_pData_x_2d = ptr_new(0L)
+  (*global).tmp_pData_y_2d = ptr_new(0L)
+  (*global).tmp_pData_y_error_2d = ptr_new(0L)
+  
+  (*global).pData_x = ptrarr(20,4,/allocate_heap)
+  (*global).pData_y = ptrarr(20,4,/allocate_heap)
+  (*global).pData_y_error = ptrarr(20,4,/allocate_heap)
+  
+  (*global).file_index_sorted = ptrarr(4,/allocate_heap) 
+  (*global).files_SF_list = strarr(4,3,20)
+  
+end

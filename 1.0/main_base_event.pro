@@ -48,6 +48,7 @@ PRO main_base_event, Event
      delete_entry, event, 0, 19
       (*global).table_changed = 1b
       refresh_table, event
+      full_reset, event
     end
     
     ;main tab
@@ -116,6 +117,7 @@ PRO main_base_event, Event
     
     ;Automatic Scaling button
     widget_info(wWidget, find_by_uname='automatic_scaling'): begin
+      (*global).stop_scaling_spin_status = intarr(4)
       auto_scale, event
       create_scaled_big_array, event
       (*global).table_changed = 0b
@@ -124,6 +126,7 @@ PRO main_base_event, Event
     
     ;Automatic Scaling button and show plot
     widget_info(wWidget, find_by_uname='automatic_scaling_and_plot'): begin
+      (*global).stop_scaling_spin_status = intarr(4)
       auto_scale, event
       create_scaled_big_array, event
       show_big_array, event
