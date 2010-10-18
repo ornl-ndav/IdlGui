@@ -111,7 +111,15 @@ input_rtof_file = retrieve_rtof_file_name(BatchTable[11,index_row])
 SpinBatchTable[0,index_row] = input_rtof_file
 endif else begin ;1 or more different spin state
 
+
+
+
+
+
 endelse
+
+
+
 
 index_row++
 endwhile
@@ -138,14 +146,27 @@ pro load_batch_file, event, file_name
   iTable = OBJ_NEW('IDLloadBatchFile', file_name, Event)
   BatchTable = iTable->getBatchTable()
 
-  SpinBatchTable = retrieve_input_files_per_spin(BatchTable)
+  SpinBatchTable = retrieve_input_files_per_spin(BatchTable)  ;[4,20]
   ;ex:
   ;  ~/results/REF_L_38216,38221,38226_2010y_10m_14d_12h_18mn.rtof
   ;  ~/results/REF_L_38217,38221,38226_2010y_10m_14d_12h_18mn.rtof
   ;  ~/results/REF_L_38218,38221,38226_2010y_10m_14d_12h_18mn.rtof
 
+  for i=0,3 do begin ;spin states
 
+  FullListFullFileName = reform(SpinBatchTable[i,*])
 
+  ;remove empty lines
+  not_empty_lines = where(FullListFullFileName ne '', nbr)
+  if (nbr ne 0) then begin
+  ListFullFileName = FullListFullFileName[not_empty_lines]
+  endif else begin
+  ListFullFileName = FullListFullFileName
+  endelse
 
-
+  if (ListFullFileName[0] ne '') then begin
+  load_files, event, ListFullFileName
+  endif
+endfor
+  
 end
