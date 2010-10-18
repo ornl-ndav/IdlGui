@@ -130,6 +130,11 @@ pro design_tabs, MAIN_BASE, global
     uname = 'automatic_scaling_and_plot',$
     tooltip = 'Automatic scaling and plot data',$
     value = ' AUTO SCALING and SHOW PLOT')
+  wScale = widget_button(row3,$
+  sensitive = 1,$
+  uname = 'configure_auto_scale',$
+  tooltip = 'Configuration of the automatic scaling parameters used',$
+  value = 'CONFIGURATION...')
   space = widget_label(row3,$
     value = '     ')
   wPlot = widget_button(row3,$
