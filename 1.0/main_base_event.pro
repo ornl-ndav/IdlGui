@@ -43,6 +43,13 @@ PRO main_base_event, Event
     widget_info(wWidget, find_by_uname='main_base'): BEGIN
     end
     
+    ;full reset
+    widget_info(wWidget, find_by_uname='full_reset'): begin
+     delete_entry, event, 0, 19
+      (*global).table_changed = 1b
+      refresh_table, event
+    end
+    
     ;main tab
     widget_info(wWidget, find_by_uname='tab_uname'): begin
       tab_selected = getTabSelected(id=event.id)
