@@ -47,6 +47,9 @@ pro show_big_array, event, spin_state=spin_state
   widget_control, event.top, get_uvalue=global
   
   if (n_elements(spin_state) eq 0) then spin_state=0
+
+   stop_scaling_spin_status = (*global).stop_scaling_spin_status
+   if (stop_scaling_spin_status[spin_state]) then return
   
   auto_scale_plot_base = (*global).auto_scale_plot_base
     xaxis = (*global).master_xaxis

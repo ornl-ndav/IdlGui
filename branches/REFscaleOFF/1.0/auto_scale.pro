@@ -264,6 +264,35 @@ end
 
 ;+
 ; :Description:
+;    make sure the current spin states list of files
+;    do have the same starting pixel
+;
+; :Params:
+;    event
+;
+; :Keywords:
+;    spin_staet
+;    nbr_files
+;
+; :Author: j35
+;-
+function check_first_pixel, event, spin_state=spin_state, nbr_files=nbr_files
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  files_SF_list = (*global).files_SF_list ;[4,3,20]
+  
+  list_of_files = files_SF_list[spin_state,2,0:nbr_files-1]
+  
+  print, list_of_files
+  help, list_of_files
+  return, 1
+  
+end
+
+;+
+; :Description:
 ;    Performs the automatic scaling of the data
 ;
 ; :Params:
@@ -289,6 +318,10 @@ pro auto_scale, event
   
   file_index_sorted = (*global).file_index_sorted
   
+  ;will be 1 if the file of a given spin state do not have the same
+  ;first pixel
+  first_pixel_result_array = intarr(4) ;[0,0,0,0] by default
+  
   for spin=0,3 do begin ;go over all the spin states
     nbr_files = get_number_of_files_loaded(event, spin_state=spin)
     
@@ -300,6 +333,11 @@ pro auto_scale, event
     ;this will return an array of index of the input files
     _file_index_sorted = sort_files(pData_x[0:(nbr_files-1), spin])
     *file_index_sorted[spin] = _file_index_sorted
+    
+    ;make sure all the files have the same 1st Pixel
+    first_pixel_result = check_first_pixel(event, spin_state=spin, nbr_files=nbr_files)
+    first_pixel_result_array[spin] = first_pixel_result
+    if (first_pixel_result eq 1) then continue ;move on to next spin state
     
     ;go 2 by 2
     ;Method: - find the overlap region
@@ -346,7 +384,7 @@ pro auto_scale, event
         error = error)
       if (error) then begin
         ;FIXME
-        ;dialog message about not enough pixels to be able to remove 
+        ;dialog message about not enough pixels to be able to remove
         ;top and bottom percentage
         return
       endif
@@ -357,12 +395,12 @@ pro auto_scale, event
       ;put 1 as SF for first file
       if (left_file_index eq 0) then begin
         files_SF_list[spin, 1, _file_index_sorted[0]] = $
-        strcompress(1,/remove_all)
+          strcompress(1,/remove_all)
       endif
       
       files_SF_list[spin, 1, _file_index_sorted[right_file_index]] = $
-      strcompress(SF,/remove_all)
-      
+        strcompress(SF,/remove_all)
+        
       *pData_y_scaled[_file_index_sorted[right_file_index],spin] /= SF
       *pData_y_error_scaled[_file_index_sorted[right_file_index],spin] /= SF
       
@@ -378,5 +416,22 @@ pro auto_scale, event
   
   (*global).files_SF_list = files_SF_list
   refresh_table, event
+  
+  if (total(first_pixel_result_array) ne 0) then begin
+    message = 'Range of pixel do not match for following spin state(s): '
+    wh = where(first_pixel_result_array ne 0)
+    spin_state = (*global).spin_state_name
+    _spin = strjoin(spin_state[wh],',')
+    full_message = message + _spin
+    id = widget_info(event.top, find_by_uname='main_base')
+    result = dialog_message(full_message,$
+      dialog_parent = id,$
+      /center,$
+      /information,$
+      title = 'Error scaling at least 1 of the spin states')
+    stop_scaling_spin_status = (*global).stop_scaling_spin_status
+    stop_scaling_spin_status += first_pixel_result_array
+    (*global).stop_scaling_spin_status = stop_scaling_spin_status
+  endif
   
 end
