@@ -167,7 +167,12 @@ pro create_common_global_data, event, xaxis=xaxis
   pData_x = (*global).pData_x
   file_index_sorted = (*global).file_index_sorted
   
+  stop_scaling_spin_status = (*global).stop_scaling_spin_status
+  
   for spin=0,3 do begin ;go over all the spin states
+  
+    ;continue if this spin state has the green lights !
+    if (stop_scaling_spin_status[spin]) then continue
   
     nbr_files = get_number_of_files_loaded(event, spin_state=spin)
     

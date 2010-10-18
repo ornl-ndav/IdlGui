@@ -74,6 +74,9 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     spin_state_name: ['Off_Off','Off_On','On_Off','On_On'],$
     tar_base_file_name: '',$
   
+    ;if =1, spin state should not be scaled
+    stop_scaling_spin_status: intarr(4), $
+  
     ;list of files created
     list_of_files_created: ptr_new(0L), $
   
