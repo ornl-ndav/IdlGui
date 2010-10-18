@@ -51,7 +51,7 @@ pro remove_empty_lines_of_this_spin, spin_index=i, files_SF_list, nbr_spins, nbr
   compile_opt idl2
   
   _line_index = 0
-  _tmp_spin_table =strarr(nbr_spins, nbr_column, nbr_row)
+  _tmp_spin_table = strarr(nbr_spins, nbr_column, nbr_row)
   _no_empty = where(files_SF_list[i,0,*] ne '', nbr)
   _empty = where(files_SF_list[i,0,*] eq '', nbr_empty)
   
@@ -102,10 +102,18 @@ pro remove_empty_lines, event, spin_state=spin_state
         i++
       endwhile
     end
-    0 : remove_empty_lines_of_this_spin, spin_index=0, files_SF_list, nbr_spins, nbr_column, nbr_row
-    1 : remove_empty_lines_of_this_spin, spin_index=1, files_SF_list, nbr_spins, nbr_column, nbr_row
-    2 : remove_empty_lines_of_this_spin, spin_index=2, files_SF_list, nbr_spins, nbr_column, nbr_row
-    3 : remove_empty_lines_of_this_spin, spin_index=3, files_SF_list, nbr_spins, nbr_column, nbr_row
+    0 : begin
+      remove_empty_lines_of_this_spin, spin_index=0, files_SF_list, nbr_spins, nbr_column, nbr_row
+    end
+    1 : begin
+      remove_empty_lines_of_this_spin, spin_index=1, files_SF_list, nbr_spins, nbr_column, nbr_row
+    end
+    2 : begin
+      remove_empty_lines_of_this_spin, spin_index=2, files_SF_list, nbr_spins, nbr_column, nbr_row
+    end
+    3 : begin
+      remove_empty_lines_of_this_spin, spin_index=3, files_SF_list, nbr_spins, nbr_column, nbr_row
+    end
     else:
   endcase
   

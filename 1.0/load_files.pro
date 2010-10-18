@@ -118,7 +118,7 @@ end
 
 ;+
 ; :Description:
-;   This procedure load the files and save the data in the array of 
+;   This procedure load the files and save the data in the array of
 ;   pointer DATA and ERROR_DATA
 ;
 ; :Params:
@@ -134,6 +134,10 @@ pro load_files, event, ListFullFileName
   index = 0
   while (index lt sz) do begin
     file_name = ListFullFileName[index]
+    if (file_name eq '') then begin
+      index++
+      continue ;make sure file name is not empty string
+    endif
     file_is_batch = 0b ;by default, file is not a batch file
     file_is_batch = isFileBatch(file_name)
     if (file_is_batch) then begin ;batch file

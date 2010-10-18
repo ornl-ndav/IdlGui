@@ -282,13 +282,13 @@ function check_first_pixel, event, spin_state=spin_state, nbr_files=nbr_files
   widget_control, event.top, get_uvalue=global
   
   files_SF_list = (*global).files_SF_list ;[4,3,20]
+  list_of_pixels = float(files_SF_list[spin_state,2,0:nbr_files-1])
   
-  list_of_files = files_SF_list[spin_state,2,0:nbr_files-1]
-  
-  print, list_of_files
-  help, list_of_files
-  return, 1
-  
+  average = float(mean(list_of_pixels))
+  index_diff = where(list_of_pixels ne average,nbr)
+  if (nbr ne 0) then return, 1
+  return, 0
+    
 end
 
 ;+
