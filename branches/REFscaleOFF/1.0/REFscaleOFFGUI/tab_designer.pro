@@ -76,6 +76,15 @@ pro design_tabs, MAIN_BASE, global
     sensitive = 0,$
     uname = 'tab1state4')
     
+  for i=0,3 do begin
+  space = widget_label(row2col1,$
+  value = ' ')
+  endfor
+  
+  reset = widget_button(row2col1,$
+  value = 'RESET',$
+  uname = 'full_reset') 
+    
   editable_table = [0,1,0]
   
   table = widget_table(row2,$

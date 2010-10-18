@@ -32,6 +32,15 @@
 ;
 ;==============================================================================
 
+;+
+; :Description:
+;    Event handler.
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
 pro configure_auto_scale_base_event, event
   compile_opt idl2
   
@@ -68,6 +77,20 @@ pro configure_auto_scale_base_event, event
   
 end
 
+;+
+; :Description:
+;    Design of GUI
+;
+; :Params:
+;    _base
+;    global
+;    main_base_geometry
+;
+; :Keywords:
+;    id_main_base
+;
+; :Author: j35
+;-
 pro configure_auto_scale_base_gui, _base, $
     global, $
     main_base_geometry, $
@@ -120,7 +143,15 @@ pro configure_auto_scale_base_gui, _base, $
     
 end
 
-
+;+
+; :Description:
+;    Bring to life the configuration base
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
 pro configure_auto_scale_base, event
   compile_opt idl2
   
