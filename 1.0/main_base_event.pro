@@ -124,6 +124,11 @@ PRO main_base_event, Event
       check_status_of_tab1_buttons, event
     end
     
+    ;configuration of automatic scaling
+    widget_info(wWidget, find_by_uname='configure_auto_scale'): begin
+      configure_auto_scale_base, event
+    end
+
     ;Show plot button
     widget_info(wWidget, find_by_uname='show_plot'): begin
       show_big_array, event
