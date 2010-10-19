@@ -43,12 +43,16 @@ PRO main_base_event, Event
     widget_info(wWidget, find_by_uname='main_base'): BEGIN
     end
     
-    ;spins or no spins buttons
+    ;no spins button selected
     widget_info(wWidget, find_by_uname='no_spins_uname'): begin
       mapBase, event=event, status=0, uname='spins_base'
+     (*global).current_spin_state_selected = 0
     end
+
+    ;spins button selected
     widget_info(wWidget, find_by_uname='spins_uname'): begin
       mapBase, event=event, status=1, uname='spins_base'
+     (*global).current_spin_state_selected = 0
     end
     
     ;various spins state buttons
