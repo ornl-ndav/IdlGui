@@ -89,28 +89,28 @@ pro design_tabs, MAIN_BASE, global
     /no_release,$
     /bitmap,$
     value = 'images/Off_Off_active.bmp',$
-    uname = 'tab1state1')
+    uname = 'off_off_button_uname')
   spin2 = widget_button(part2,$
     scr_xsize = 75,$
     scr_ysize = 25,$
     /no_release,$
     /bitmap,$
     value = 'images/Off_On_inactive.bmp',$
-    uname = 'tab1state2')
+    uname = 'off_on_button_uname')
   spin3 = widget_button(part2,$
     /no_release,$
     /bitmap,$
     value = 'images/On_Off_inactive.bmp',$
     scr_xsize = 75,$
     scr_ysize = 25,$
-    uname = 'tab1state3')
+    uname = 'on_off_button_uname')
   spin4 = widget_button(part2,$
     value = 'images/On_On_inactive.bmp',$
     /no_release,$
     /bitmap,$
     scr_xsize = 75,$
     scr_ysize = 25,$
-    uname = 'tab1state4')
+    uname = 'on_on_button_uname')
     
   for i=0,3 do begin
     space = widget_label(row2col1,$
