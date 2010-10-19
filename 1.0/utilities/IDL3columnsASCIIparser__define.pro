@@ -139,7 +139,7 @@ FUNCTION READ_DATA, file, half
         IF (tmp EQ '') THEN BEGIN
           BREAK
         ENDIF ELSE BEGIN
-          IF (i EQ 0) THEN BEGIN  
+          IF (i EQ 0) THEN BEGIN
             line[i] = tmp
             i = 1
           ENDIF ELSE BEGIN
@@ -150,7 +150,7 @@ FUNCTION READ_DATA, file, half
       close, 1
       RETURN, line
     END
-    2: BEGIN     
+    2: BEGIN
       WHILE (~EOF(1)) DO BEGIN
         nbr_lines = FILE_LINES(file)
         my_array = STRARR(1,nbr_lines)
@@ -329,21 +329,66 @@ pro populate_structure, all_data, MyStruct
   MyStruct.sigma_yaxis_units = sigma_all[1]
   *MyStruct.data = data_structure
   
-  
-END
+end
 
-;------------------------------------------------------------------------------
-FUNCTION IDL3columnsASCIIparser::getDataQuickly
-  data  = READ_DATA(self.path, 2) ;reads full file
-  nLines = FILE_LINES(self.path)
+;+
+; :Description:
+;    This procedures cleanup the data file by removing all the lines that
+;    have an intensity of 0 or NaN
+;
+; :Params:
+;    file_name
+
+; :Author: j35
+;-
+function cleanup_file, file_name
+  compile_opt idl2
   
-    index = WHERE(data EQ '#N 3',nbr) ;retrieves the number of pixels to retrieve
+  data = read_data(file_name, 2) ;reads full file
+  nLines = file_lines(file_name)
+  
+  ;by default, we want to keep all the lines
+  lines_to_remove = intarr(nLines)
+  for i=0,(nLines-1) do begin
+    if (strmatch(data[i],'* nan *')) then begin
+      lines_to_remove[i] = 1
+    endif else begin
+      if (strmatch(data[i],'* 0.0 *')) then begin
+        lines_to_remove[i] = 1
+      endif
+    endelse
+  endfor
+  
+  index_to_keep = where(lines_to_remove eq 0, nbr)
+  if (nbr lt nLines) then begin
+    data_to_keep = data[index_to_keep]
+  endif
+  
+  return, data_to_keep
+end
+
+;+
+; :Description:
+;    Output the data without major formatting
+;
+; :Author: j35
+;-
+FUNCTION IDL3columnsASCIIparser::getDataQuickly
+
+  ;remove all the lines where value is 0 or NaN
+  data = cleanup_file(self.path)
+  
+  ;data  = READ_DATA(self.path, 2) ;reads full file
+  ;nLines = FILE_LINES(self.path)
+  nLines = n_elements(data)
+  
+  index = WHERE(data EQ '#N 3',nbr) ;retrieves the number of pixels to retrieve
   pARRAY = PTRARR(nbr,/ALLOCATE_HEAP)
   FOR i=1,(nbr-1) DO BEGIN
     *pARRAY[i-1] = data[index[i-1]+2:index[i]-3]  ;???? maybe 4 here
   ENDFOR
   
-    if (nbr ge 1) then begin ;retrieve pixel number
+  if (nbr ge 1) then begin ;retrieve pixel number
     split1 = strsplit(data[index[0]-1],',',/extract,/regex)
     split2 = strsplit(split1[n_elements(split1)-1],')',/regex,/extract)
     self.start_pixel = strcompress(split2[0],/remove_all)
