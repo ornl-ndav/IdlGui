@@ -46,6 +46,8 @@
 pro spins_button_interactions, event=event, status=status
   compile_opt idl2
   
+  widget_control, event.top, get_uvalue=global
+  
   spin_list = ['Off_Off','Off_On','On_Off','On_On']
   images_spin_list = 'images/' + spin_list
   active_list = images_spin_list + '_active.bmp'
@@ -63,7 +65,7 @@ pro spins_button_interactions, event=event, status=status
     'on_on' : index = 3
   endcase
   button_bmp[index] = active_list[index]
-  
+  (*global).current_spin_state_selected = index
   
   for i=0,3 do begin
     display_button, event=event, $
