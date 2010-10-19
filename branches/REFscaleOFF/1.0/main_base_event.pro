@@ -43,6 +43,14 @@ PRO main_base_event, Event
     widget_info(wWidget, find_by_uname='main_base'): BEGIN
     end
     
+    ;spins or no spins buttons
+    widget_info(wWidget, find_by_uname='no_spins_uname'): begin
+    mapBase, event=event, status=0, uname='spins_base'
+    end
+    widget_info(wWidget, find_by_uname='spins_uname'): begin
+    mapBase, event=event, status=1, uname='spins_base'    
+    end
+    
     ;full reset
     widget_info(wWidget, find_by_uname='full_reset'): begin
      delete_entry, event, 0, 19

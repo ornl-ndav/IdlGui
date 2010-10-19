@@ -59,31 +59,67 @@ pro design_tabs, MAIN_BASE, global
     /row)
   row2col1 = widget_base(row2,$
     /column)
-  spin1 = widget_button(row2col1,$
-    value = 'Off_Off',$
-    sensitive = 0,$
+  
+  space = widget_label(row2col1,$
+  value = ' ')
+
+  part1 = widget_base(row2col1,$
+  /exclusive)
+  nospins = widget_button(part1,$
+  /no_release,$
+  uname = 'no_spins_uname',$
+  value = 'NO SPINS')
+  spins = widget_button(part1,$
+  /no_release,$
+  uname = 'spins_uname',$
+  value = 'SPINS')
+  widget_control, nospins, /set_button
+  
+;  space = widget_label(row2col1,$
+;  value = ' ')
+  
+  part2 = widget_base(row2col1,$
+  uname = 'spins_base',$
+  map = 0,$
+  /column)  
+  spin1 = widget_button(part2,$
+    scr_xsize = 75,$
+    scr_ysize = 25,$
+    sensitive = 1,$
+    /no_release,$
+    /bitmap,$
+    value = 'images/Off_Off_active.bmp',$
     uname = 'tab1state1')
-  spin2 = widget_button(row2col1,$
-    value = 'Off_On',$
-    sensitive = 0,$
+  spin2 = widget_button(part2,$
+    scr_xsize = 75,$
+    scr_ysize = 25,$
+    /no_release,$
+    /bitmap,$
+    value = 'images/Off_On_inactive.bmp',$
     uname = 'tab1state2')
-  spin3 = widget_button(row2col1,$
-    value = 'On_Off',$
-    sensitive = 0,$
+  spin3 = widget_button(part2,$
+    /no_release,$
+    /bitmap,$
+    value = 'images/On_Off_inactive.bmp',$
+    scr_xsize = 75,$
+    scr_ysize = 25,$
     uname = 'tab1state3')
-  spin4 = widget_button(row2col1,$
-    value = 'On_On',$
-    sensitive = 0,$
+  spin4 = widget_button(part2,$
+    value = 'images/On_On_inactive.bmp',$
+    /no_release,$
+    /bitmap,$
+    scr_xsize = 75,$
+    scr_ysize = 25,$
     uname = 'tab1state4')
     
   for i=0,3 do begin
-  space = widget_label(row2col1,$
-  value = ' ')
+    space = widget_label(row2col1,$
+      value = ' ')
   endfor
   
   reset = widget_button(row2col1,$
-  value = 'RESET',$
-  uname = 'full_reset') 
+    value = 'RESET',$
+    uname = 'full_reset')
     
   editable_table = [0,1,0]
   
@@ -118,15 +154,15 @@ pro design_tabs, MAIN_BASE, global
     /align_right,$
     /row)
   mScale = widget_button(row3,$
-  sensitive = 0,$
-  uname = 'manual_scaling',$
-  tooltip = 'Scale data according to SF defined in table',$
-  value = ' MANUAL SCALING ')
+    sensitive = 0,$
+    uname = 'manual_scaling',$
+    tooltip = 'Scale data according to SF defined in table',$
+    value = ' MANUAL SCALING ')
   mScale = widget_button(row3,$
-  sensitive = 0,$
-  uname = 'manual_scaling_and_plot',$
-  tooltip = 'Scale data using SF defined in table and plot data',$
-  value = ' MANUAL SCALING and SHOW PLOT')
+    sensitive = 0,$
+    uname = 'manual_scaling_and_plot',$
+    tooltip = 'Scale data using SF defined in table and plot data',$
+    value = ' MANUAL SCALING and SHOW PLOT')
   space = widget_label(row3,$
     value = '   ')
   wScale = widget_button(row3,$
@@ -140,10 +176,10 @@ pro design_tabs, MAIN_BASE, global
     tooltip = 'Automatic scaling and plot data',$
     value = ' AUTO SCALING and SHOW PLOT')
   wScale = widget_button(row3,$
-  sensitive = 1,$
-  uname = 'configure_auto_scale',$
-  tooltip = 'Configuration of the automatic scaling parameters used',$
-  value = 'CONFIGURATION...')
+    sensitive = 1,$
+    uname = 'configure_auto_scale',$
+    tooltip = 'Configuration of the automatic scaling parameters used',$
+    value = 'CONFIGURATION...')
   space = widget_label(row3,$
     value = '     ')
   wPlot = widget_button(row3,$
@@ -164,7 +200,7 @@ pro design_tabs, MAIN_BASE, global
     /row)
   label = widget_label(row1,$
     value = 'Where:')
-    path = expand_path('~/results/')
+  path = expand_path('~/results/')
   button = widget_button(row1,$
     value = path,$
     uname = 'output_path',$
@@ -190,20 +226,20 @@ pro design_tabs, MAIN_BASE, global
   row3a = widget_base(row3,$
     /row,$
     /nonexclusive)
-    rtof_ext = (*global).rtof_ext
+  rtof_ext = (*global).rtof_ext
   button1 = widget_button(row3a,$
     uname = '3_columns_ascii_button',$
     value = '3 columns ASCII (' + rtof_ext + ')')
   row3b = widget_base(row3,$
     /row,$
     /nonexclusive)
-    excel_ext = (*global).excel_ext
-;    widget_control, button1, /set_button
+  excel_ext = (*global).excel_ext
+  ;    widget_control, button1, /set_button
   button2 = widget_button(row3b,$
-  uname = '2d_table_ascii_button',$
+    uname = '2d_table_ascii_button',$
     value = '2D table (' + excel_ext + ')')
-     widget_control, button2, /set_button
-    
+  widget_control, button2, /set_button
+  
   row4 = widget_base(base2,$
     /row)
   row4a = widget_base(row4,$
@@ -214,8 +250,8 @@ pro design_tabs, MAIN_BASE, global
     uname = 'send_by_email_button_uname',$
     value = 'Also send file(s) by email')
   row4b = widget_base(row4,$
-  sensitive = 0,$
-  uname = 'send_by_email_base_uname',$
+    sensitive = 0,$
+    uname = 'send_by_email_base_uname',$
     /row)
   email = widget_text(row4b,$
     value = '<your uname>',$
@@ -229,26 +265,26 @@ pro design_tabs, MAIN_BASE, global
   row5 = widget_base(base2,$
     /align_center)
   create_output = widget_button(row5,$
-  uname = 'create_output_button',$
-  sensitive = 0,$
+    uname = 'create_output_button',$
+    sensitive = 0,$
     value = 'CREATE OUTPUT',$
     scr_xsize = 700)
-        
+    
   space = widget_label(base2,$
     value = ' ')
-
+    
   row6 = widget_base(base2,$
-  uname = 'files_created_base_uname',$
-  map = 1,$
-  /row)
+    uname = 'files_created_base_uname',$
+    map = 1,$
+    /row)
   label = widget_label(row6,$
-  value = 'Files created:')
+    value = 'Files created:')
   text = widget_text(row6,$
-  uname = 'list_of_files_created',$
-  value = '',$
-  xsize = 110,$
-  /scroll,$
-  ysize = 10)      
-        
-        
+    uname = 'list_of_files_created',$
+    value = '',$
+    xsize = 110,$
+    /scroll,$
+    ysize = 10)
+    
+    
 end
