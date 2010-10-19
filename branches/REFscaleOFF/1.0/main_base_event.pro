@@ -45,15 +45,29 @@ PRO main_base_event, Event
     
     ;spins or no spins buttons
     widget_info(wWidget, find_by_uname='no_spins_uname'): begin
-    mapBase, event=event, status=0, uname='spins_base'
+      mapBase, event=event, status=0, uname='spins_base'
     end
     widget_info(wWidget, find_by_uname='spins_uname'): begin
-    mapBase, event=event, status=1, uname='spins_base'    
+      mapBase, event=event, status=1, uname='spins_base'
+    end
+    
+    ;various spins state buttons
+    widget_info(wWidget, find_by_uname='off_off_button_uname'): begin
+      spins_button_interactions, event=event, status='off_off'
+    end
+    widget_info(wWidget, find_by_uname='off_on_button_uname'): begin
+      spins_button_interactions, event=event, status='off_on'
+    end
+    widget_info(wWidget, find_by_uname='on_off_button_uname'): begin
+      spins_button_interactions, event=event, status='on_off'
+    end
+    widget_info(wWidget, find_by_uname='on_on_button_uname'): begin
+      spins_button_interactions, event=event, status='on_on'
     end
     
     ;full reset
     widget_info(wWidget, find_by_uname='full_reset'): begin
-     delete_entry, event, 0, 19
+      delete_entry, event, 0, 19
       (*global).table_changed = 1b
       refresh_table, event
       full_reset, event
@@ -104,12 +118,12 @@ PRO main_base_event, Event
       delete_entry, event, selection[1], selection[3]
       
       ;check the current spin state selected
-      spin_state = get_current_spin_state_selected(event)  
+      spin_state = get_current_spin_state_selected(event)
       _files_SF_list = (*global).files_SF_list
       full_reset, event
       load_files, event, _files_SF_list[spin_state, 0,*]
       (*global).table_changed = 1b
-      ;refresh_table, event
+    ;refresh_table, event
     end
     
     ;Manual scaling button
@@ -152,7 +166,7 @@ PRO main_base_event, Event
     widget_info(wWidget, find_by_uname='configure_auto_scale'): begin
       configure_auto_scale_base, event
     end
-
+    
     ;Show plot button
     widget_info(wWidget, find_by_uname='show_plot'): begin
       show_big_array, event
@@ -170,7 +184,7 @@ PRO main_base_event, Event
     end
     
     widget_info(wWidget, find_by_uname='create_output_button'): begin
-    create_output, event
+      create_output, event
     end
     
     else:

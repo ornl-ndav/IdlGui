@@ -32,73 +32,62 @@
 ;
 ;==============================================================================
 
-;define path to dependencies and current folder
-spawn, 'pwd', CurrentFolder
-IdlUtilitiesPath = "/utilities"
+;+
+; :Description:
+;    Activate the current button name passed as argument
+;    and descativate the other ones
+;
+; :Keywords:
+;    event
+;    status   [off_off,off_on, on_off, on_on]
+;
+; :Author: j35
+;-
+pro spins_button_interactions, event=event, status=status
+  compile_opt idl2
+  
+  spin_list = ['Off_Off','Off_On','On_Off','On_On']
+  images_spin_list = 'images/' + spin_list
+  active_list = images_spin_list + '_active.bmp'
+  inactive_list = spin_list + '_inactive.bmp'
+  button_uname_list = strlowcase(spin_list) + '_button_uname'
+  
+  ;by default, all the buttons are inactivated
+  button_bmp = inactive_list
+  
+  index = 0
+  case (strlowcase(status)) of  
+    'off_off' : index = 0
+    'off_on' : index = 1
+    'on_off' : index = 2
+    'on_on' : index = 3
+  endcase
+  button_bmp[index] = active_list[index]
+  
+  
+  for i=0,3 do begin
+    display_button, event=event, $
+      button_uname=button_uname_list[i], $
+      button_bmp = button_bmp[i]
+  endfor
+  
+end
 
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-cd, CurrentFolder + IdlUtilitiesPath
-.run put.pro
-.run get.pro
-.run set.pro
-.run is.pro
-.run gui.pro
-.run get_ucams.pro
-.run IDLxmlParser__define.pro
-.run logger.pro
-.run IDL3columnsASCIIparser__define.pro
-.run xdisplayfile.pro
-.run convert.pro
-.run colorbar.pro
-.run fsc_color.pro
-.run time.pro
-.run IDLloadBatchFile__define.pro
+;+
+; :Description:
+;    display the button
 
-;Build REFscale GUI
-cd, CurrentFolder + '/REFscaleOFFGUI/'
-.run tab_designer.pro
-.run menu_designer.pro
-
-;Build main procedures
-cd, CurrentFolder
-
-;functions (tab#1)
-.run load_rtof_file.pro
-;procedures (tab#1)
-.run load_files_button.pro
-.run load_files.pro
-.run load_rtof_file.pro
-.run load_batch_file.pro
-.run delete_data_set.pro
-.run preview_files.pro
-.run plot_rtof_files.pro
-.run pixel_vs_tof_individual_plots_base.pro
-.run cursor_info_base.pro
-.run counts_vs_axis_base.pro
-.run individual_plot_eventcb.pro
-.run menu_eventcb.pro
-.run plot_colorbar.pro
-.run auto_scale.pro
-.run manual_scale.pro
-.run create_scaled_big_array.pro
-.run save_background.pro
-.run check_status_buttons.pro
-.run show_big_array.pro
-.run configure_auto_scale_base.pro
-.run full_reset.pro
-.run spins_button_interactions.pro
-
-;tab#2
-.run create_output.pro
-.run create_tar_folder.pro
-.run send_email.pro
-.run send_error_message.pro
-
-;output tab
-.run output_tab_event.pro
-
-.run ref_off_scale_cleanup.pro
-.run main_base_event.pro
-.run ref_scale_off.pro
-
+; :Keywords:
+;    event
+;    button_uname
+;    button_bmp
+;
+; :Author: j35
+;-
+pro display_button, event=event, button_uname=button_uname, button_bmp=button_bmp
+  compile_opt idl2
+  
+  id = widget_info(event.top, find_by_uname=button_uname)
+  widget_control, id, set_value=button_bmp, /bitmap
+  
+END
