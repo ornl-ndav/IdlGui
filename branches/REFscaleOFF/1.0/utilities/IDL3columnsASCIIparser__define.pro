@@ -362,7 +362,9 @@ function cleanup_file, file_name
   index_to_keep = where(lines_to_remove eq 0, nbr)
   if (nbr lt nLines) then begin
     data_to_keep = data[index_to_keep]
-  endif
+  endif else begin
+  data_to_keep = data
+  endelse
   
   return, data_to_keep
 end
