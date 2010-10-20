@@ -811,14 +811,14 @@ PRO MAIN_BASE_event, Event
     
     ;ROI Ymin and Ymax --------------------------------------------------------
     WIDGET_INFO(wWidget, $
-      FIND_BY_UNAME= $
-      'nom_d_selection_roi_ymin_cw_field'): begin
+      FIND_BY_UNAME= 'norm_d_selection_roi_ymin_cw_field'): begin
       REFreduction_NormBackgroundPeakSelection, Event, 'roi_ymin'
     end
     
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME= $
       'norm_d_selection_roi_ymax_cw_field'): begin
+      print, 'there'
       REFreduction_NormBackgroundPeakSelection, Event, 'roi_ymax'
     end
     
