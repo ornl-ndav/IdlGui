@@ -125,11 +125,11 @@ pro check_status_of_tab2_buttons, event
   
   ;make sure that we have at least 1 output format selected
   if (~isButtonSelected(event=event,uname='3_columns_ascii_button') && $
-  ~isButtonSelected(event=event,uname='2d_table_ascii_button')) then begin
+    ~isButtonSelected(event=event,uname='2d_table_ascii_button')) then begin
     setSensitive, event=event, uname='create_output_button', sensitive=0
     return
   endif
-
+  
   ;make sure we have at least 2 files loaded in the various spin states
   widget_control, event.top, get_uvalue=global
   files_SF_list = (*global).files_SF_list
@@ -148,8 +148,76 @@ pro check_status_of_tab2_buttons, event
     setSensitive, event=event, uname='create_output_button', sensitive=0
     return
   endif
-    
+  
   setSensitive, event=event, uname='create_output_button', sensitive=1
+  
+end
+
+;+
+; :Description:
+;    activate the "NO SPINS" button
+;
+; :Params:
+;    event
+
+; :Author: j35
+;-
+pro select_no_spins_button, event
+  compile_opt idl2
+  activate_button, event=event, status=1, uname='no_spins_uname'
+end
+
+;+
+; :Description:
+;    activate the "SPINS" button
+;
+; :Params:
+;    event
+
+; :Author: j35
+;-
+pro select_spins_button, event
+  compile_opt idl2
+  activate_button, event=event, status=1, uname='spins_uname'
+end
+
+;+
+; :Description:
+;    Check if we can activate the spin state buttons
+;    and also which ones
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro check_spin_buttons_status, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  spin_state_buttons_status = (*global).spin_state_buttons_status
+  
+  if (total(spin_state_buttons_status) eq 0) then begin
+    mapBase, event=event, status=0, uname='spins_base'
+    (*global).current_spin_state_selected = 0
+    select_no_spins_button, event
+    return
+  endif
+  
+  mapBase, event=event, status=1, uname='spins_base'
+  (*global).current_spin_state_selected = 1
+  select_spins_button, event
+  
+  spin_state_name = strlowcase((*global).spin_state_name) + '_base_uname'
+  
+  for i=0,3 do begin
+  
+    _status = 0
+    if (spin_state_buttons_status[i] eq 1) then _status= 1
+    mapBase, event=event, status=_status, uname= spin_state_name[i]
+    
+  endfor
   
 end
 

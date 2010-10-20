@@ -59,30 +59,32 @@ pro design_tabs, MAIN_BASE, global
     /row)
   row2col1 = widget_base(row2,$
     /column)
-  
+    
   space = widget_label(row2col1,$
-  value = ' ')
-
+    value = ' ')
+    
   part1 = widget_base(row2col1,$
-  /exclusive)
+    /exclusive)
   nospins = widget_button(part1,$
-  /no_release,$
-  uname = 'no_spins_uname',$
-  value = 'NO SPINS')
+    /no_release,$
+    uname = 'no_spins_uname',$
+    value = 'NO SPINS')
   spins = widget_button(part1,$
-  /no_release,$
-  uname = 'spins_uname',$
-  value = 'SPINS')
+    /no_release,$
+    uname = 'spins_uname',$
+    value = 'SPINS')
   widget_control, nospins, /set_button
   
-;  space = widget_label(row2col1,$
-;  value = ' ')
+  ;  space = widget_label(row2col1,$
+  ;  value = ' ')
   
   part2 = widget_base(row2col1,$
-  uname = 'spins_base',$
-  map = 0,$
-  /column)  
-  spin1 = widget_button(part2,$
+    uname = 'spins_base',$
+    map = 0,$
+    /column)
+  spin1base = widget_base(part2,$
+    uname = 'off_off_base_uname')
+  spin1 = widget_button(spin1base,$
     scr_xsize = 75,$
     scr_ysize = 25,$
     sensitive = 1,$
@@ -90,21 +92,30 @@ pro design_tabs, MAIN_BASE, global
     /bitmap,$
     value = 'images/Off_Off_active.bmp',$
     uname = 'off_off_button_uname')
-  spin2 = widget_button(part2,$
+    
+  spin2base = widget_base(part2,$
+    uname = 'off_on_base_uname')
+  spin2 = widget_button(spin2base,$
     scr_xsize = 75,$
     scr_ysize = 25,$
     /no_release,$
     /bitmap,$
     value = 'images/Off_On_inactive.bmp',$
     uname = 'off_on_button_uname')
-  spin3 = widget_button(part2,$
+    
+  spin3base = widget_base(part2,$
+    uname = 'on_off_base_uname')
+  spin3 = widget_button(spin3base,$
     /no_release,$
     /bitmap,$
     value = 'images/On_Off_inactive.bmp',$
     scr_xsize = 75,$
     scr_ysize = 25,$
     uname = 'on_off_button_uname')
-  spin4 = widget_button(part2,$
+    
+  spin4base = widget_base(part2,$
+    uname = 'on_on_base_uname')
+  spin4 = widget_button(spin4base,$
     value = 'images/On_On_inactive.bmp',$
     /no_release,$
     /bitmap,$
