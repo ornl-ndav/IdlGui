@@ -32,75 +32,34 @@
 ;
 ;==============================================================================
 
-;define path to dependencies and current folder
-spawn, 'pwd', CurrentFolder
-IdlUtilitiesPath = "/utilities"
+;;+
+; :Description:
+;    Copy the big table except for the spin states given as an argument
+;
+; :Params:
+;    _files_SF_list
+;
+; :Keywords:
+;    except_spin_state
+;
+; :Author: j35
+;-
+function make_copy_files_SF_list, files_SF_list, except_spin_state=except_spin_state
+compile_opt idl2
 
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-cd, CurrentFolder + IdlUtilitiesPath
-.run put.pro
-.run get.pro
-.run set.pro
-.run is.pro
-.run gui.pro
-.run get_ucams.pro
-.run IDLxmlParser__define.pro
-.run logger.pro
-.run IDL3columnsASCIIparser__define.pro
-.run xdisplayfile.pro
-.run convert.pro
-.run colorbar.pro
-.run fsc_color.pro
-.run time.pro
-.run IDLloadBatchFile__define.pro
+nbr_row = (size(files_SF_list))[3]
+nbr_col = (size(files_SF_list))[2]
+nbr_tab = (size(files_SF_list))[1]
 
-;Build REFscale GUI
-cd, CurrentFolder + '/REFscaleOFFGUI/'
-.run tab_designer.pro
-.run menu_designer.pro
+_files_SF_list = strarr(nbr_tab, nbr_col, nbr_row)
 
-;Build main procedures
-cd, CurrentFolder
+for i=0,(nbr_tab-1) do begin
+  
+  if (i eq except_spin_state) then continue
+  _files_SF_list[i,*,*] = files_SF_list[i,*,*]
 
-;functions (tab#1)
-.run load_rtof_file.pro
-.run copy_files_SF_list.pro
+endfor
 
-;procedures (tab#1)
-.run load_files_button.pro
-.run load_files.pro
-.run load_rtof_file.pro
-.run load_batch_file.pro
-.run delete_data_set.pro
-.run preview_files.pro
-.run plot_rtof_files.pro
-.run pixel_vs_tof_individual_plots_base.pro
-.run cursor_info_base.pro
-.run counts_vs_axis_base.pro
-.run individual_plot_eventcb.pro
-.run menu_eventcb.pro
-.run plot_colorbar.pro
-.run auto_scale.pro
-.run manual_scale.pro
-.run create_scaled_big_array.pro
-.run save_background.pro
-.run check_status_buttons.pro
-.run show_big_array.pro
-.run configure_auto_scale_base.pro
-.run full_reset.pro
-.run spins_button_interactions.pro
+return, _files_SF_list
 
-;tab#2
-.run create_output.pro
-.run create_tar_folder.pro
-.run send_email.pro
-.run send_error_message.pro
-
-;output tab
-.run output_tab_event.pro
-
-.run ref_off_scale_cleanup.pro
-.run main_base_event.pro
-.run ref_scale_off.pro
-
+end

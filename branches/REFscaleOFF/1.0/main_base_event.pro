@@ -106,7 +106,8 @@ PRO main_base_event, Event
         widget_displaycontextmenu, event.id, event.X, event.Y, id
       ;        ENDIF
       endif
-      save_table, event
+      spin_state = get_current_spin_state_selected(event)
+      save_table, event, spin_state=spin_state
     end
     
     ;right click in table -> plot of file(s) selected
@@ -124,15 +125,15 @@ PRO main_base_event, Event
     ;right click in table -> delete selected entries.
     widget_info(wWidget, find_by_uname='table_delete'): begin
       selection = get_table_lines_selected(event)
-      delete_entry, event, selection[1], selection[3]
-      
       ;check the current spin state selected
       spin_state = get_current_spin_state_selected(event)
+      delete_entry, event, selection[1], selection[3], spin_state=spin_state
       _files_SF_list = (*global).files_SF_list
+      files_SF_list = make_copy_files_SF_list(_files_SF_list, except_spin_state=spin_state)
       full_reset, event
+      (*global).files_SF_list = files_SF_list
       load_files, event, _files_SF_list[spin_state, 0,*]
       (*global).table_changed = 1b
-    ;refresh_table, event
     end
     
     ;Manual scaling button
