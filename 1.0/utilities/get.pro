@@ -207,10 +207,10 @@ end
 function get_current_spin_state_selected, event
   compile_opt idl2
   
+  widget_control, event.top, get_uvalue=global
   
-  ;FIXME
-  
-  return, 0
+  current_spin_state_selected = (*global).current_spin_state_selected
+  return, current_spin_state_selected
   
 end
 

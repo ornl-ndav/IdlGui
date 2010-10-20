@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 
-pro full_reset, event
+pro full_reset, event, except_files_sf_list=except_files_sf_list
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global
@@ -57,7 +57,9 @@ pro full_reset, event
   (*global).pData_y_error = ptrarr(20,4,/allocate_heap)
   
   (*global).file_index_sorted = ptrarr(4,/allocate_heap) 
+  if (n_elements(except_files_sf_list) eq 0) then begin
   (*global).files_SF_list = strarr(4,3,20)
+  endif
   
 end
 
