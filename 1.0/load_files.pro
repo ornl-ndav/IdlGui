@@ -127,8 +127,10 @@ end
 ;
 ; :Author: j35
 ;-
-pro load_files, event, ListFullFileName
+pro load_files, event, ListFullFileName, spin_state=spin_state
   compile_opt idl2
+  
+  if (n_elements(spin_state) eq 0) then spin_state = 0
   
   sz = n_elements(ListFullFileName)
   index = 0
@@ -148,7 +150,7 @@ pro load_files, event, ListFullFileName
       ;      help, (*(*global).tmp_pData_x)
       ;      help, (*(*global).tmp_pData_y)
       if (result) then begin
-        add_file_to_list_of_loaded_files, event, file_name
+        add_file_to_list_of_loaded_files, event, file_name, spin_state=spin_state
         refresh_table, event
       endif
     endelse

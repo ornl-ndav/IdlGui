@@ -73,6 +73,8 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
     spin_state_name: ['Off_Off','Off_On','On_Off','On_On'],$
     current_spin_state_selected: 0,$ ;0, 1, 2 or 3
+    spin_state_buttons_status: intarr(4),$ ;which spin buttons we should activate
+  
     tar_base_file_name: '',$
   
     ;if =1, spin state should not be scaled

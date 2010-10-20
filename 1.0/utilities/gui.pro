@@ -69,3 +69,22 @@ pro mapBase, event=event, status=status, uname=uname
   widget_control, id, map=status
   
 end
+
+;+
+; :Description:
+;    Activate or not a button
+
+; :Keywords:
+;    event
+;    status
+;    uname
+;
+; :Author: j35
+;-
+pro activate_button, event=event, status=status, uname=uname
+compile_opt idl2
+
+  id = widget_info(event.top, find_by_uname=uname)
+  widget_control, id, /set_button
+
+end
