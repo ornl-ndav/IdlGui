@@ -75,9 +75,6 @@ pro design_tabs, MAIN_BASE, global
     value = 'SPINS')
   widget_control, nospins, /set_button
   
-  ;  space = widget_label(row2col1,$
-  ;  value = ' ')
-  
   part2 = widget_base(row2col1,$
     uname = 'spins_base',$
     map = 0,$
