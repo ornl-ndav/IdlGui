@@ -58,15 +58,19 @@ PRO main_base_event, Event
     ;various spins state buttons
     widget_info(wWidget, find_by_uname='off_off_button_uname'): begin
       spins_button_interactions, event=event, status='off_off'
+      refresh_table, event, spin_state=0
     end
     widget_info(wWidget, find_by_uname='off_on_button_uname'): begin
       spins_button_interactions, event=event, status='off_on'
+      refresh_table, event, spin_state=1
     end
     widget_info(wWidget, find_by_uname='on_off_button_uname'): begin
       spins_button_interactions, event=event, status='on_off'
+      refresh_table, event, spin_state=2
     end
     widget_info(wWidget, find_by_uname='on_on_button_uname'): begin
       spins_button_interactions, event=event, status='on_on'
+      refresh_table, event, spin_state=3
     end
     
     ;full reset
