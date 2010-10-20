@@ -790,7 +790,7 @@ PRO MAIN_BASE_event, Event
     ;ROI Ymin and Ymax --------------------------------------------------------
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME= $
-      'nom_d_selection_roi_ymin_cw_field'): begin
+      'norm_d_selection_roi_ymin_cw_field'): begin
       REFreduction_NormBackgroundPeakSelection, Event, 'roi_ymin'
     end
     
