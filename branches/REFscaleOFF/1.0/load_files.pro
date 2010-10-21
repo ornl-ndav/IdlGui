@@ -147,25 +147,24 @@ pro load_files, event, ListFullFileName, spin_state=spin_state
       widget_control, event.top, get_uvalue=global
       if (result) then begin
         if (isAutomaticLoadingOn(event)) then begin
-        spin_state = try_figure_out_spin_of_file(event=event, file_name=file_name)
-        ;make sure the spins are shown if ther is another spin state found
-        if (spin_state ne 0) then begin
-        ;activate SPINS button
-        activate_button, event=event, status=1, uname='spins_uname'
-        ;shows all spins
-        mapBase, event=event, status=1, uname='spins_base'
-        ;activate right spin
-        spin_state_name = strlowcase((*global).spin_state_name)
-        spins_button_interactions, event=event, status=spin_state_name[spin_state]
-        endif
-        endif else begin
-        spin_state = (*global).current_spin_state_selected
+          spin_state = try_figure_out_spin_of_file(event=event, file_name=file_name)
+          ;make sure the spins are shown if ther is another spin state found
+          if (spin_state ne 0) then begin
+            ;activate SPINS button
+            activate_button, event=event, status=1, uname='spins_uname'
+            ;shows all spins
+            mapBase, event=event, status=1, uname='spins_base'
+            ;activate right spin
+            spin_state_name = strlowcase((*global).spin_state_name)
+            spins_button_interactions, event=event, status=spin_state_name[spin_state]
+          endif
+        endif else begin ;manual loading
+          spin_state = (*global).current_spin_state_selected
         endelse
         add_file_to_list_of_loaded_files, event, file_name, spin_state=spin_state
         refresh_table, event, spin_state=spin_state
       endif
     endelse
-    
     index++
   endwhile
   
