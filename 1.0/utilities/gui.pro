@@ -82,9 +82,35 @@ end
 ; :Author: j35
 ;-
 pro activate_button, event=event, status=status, uname=uname
-compile_opt idl2
-
+  compile_opt idl2
+  
   id = widget_info(event.top, find_by_uname=uname)
   widget_control, id, /set_button
-
+  
 end
+
+;+
+; :Description:
+;    Display a dialog message about a problem defined in the
+;    arguments.
+;
+; :Keywords:
+;    event
+;    message
+;    title
+;
+; :Author: j35
+;-
+pro show_error_message, event=event, message=message, title=title
+  compile_opt idl2
+  
+  id = widget_info(event.top, find_by_uname='main_base')
+  result = dialog_message(message,$
+    title = title, $
+    dialog_parent=id,$
+    /center,$
+    /information)
+    
+end
+
+

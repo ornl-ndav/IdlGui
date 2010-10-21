@@ -130,6 +130,10 @@ end
 pro load_files, event, ListFullFileName, spin_state=spin_state
   compile_opt idl2
   
+  ;keep record of the files that crash the program when loading
+  ;to display error message at the end
+  list_of_files_with_error = !null
+  
   sz = n_elements(ListFullFileName)
   index = 0
   while (index lt sz) do begin
@@ -138,34 +142,54 @@ pro load_files, event, ListFullFileName, spin_state=spin_state
       index++
       continue ;make sure file name is not empty string
     endif
-    file_is_batch = 0b ;by default, file is not a batch file
-    file_is_batch = isFileBatch(file_name)
-    if (file_is_batch) then begin ;batch file
-      load_batch_file, event, file_name
-    endif else begin ;rtof file
-      result = load_rtof_file(event, file_name)
-      widget_control, event.top, get_uvalue=global
-      if (result) then begin
-        if (isAutomaticLoadingOn(event)) then begin
-          spin_state = try_figure_out_spin_of_file(event=event, file_name=file_name)
-          ;make sure the spins are shown if ther is another spin state found
-          if (spin_state ne 0) then begin
-            ;activate SPINS button
-            activate_button, event=event, status=1, uname='spins_uname'
-            ;shows all spins
-            mapBase, event=event, status=1, uname='spins_base'
-            ;activate right spin
-            spin_state_name = strlowcase((*global).spin_state_name)
-            spins_button_interactions, event=event, status=spin_state_name[spin_state]
-          endif
-        endif else begin ;manual loading
-          spin_state = (*global).current_spin_state_selected
-        endelse
-        add_file_to_list_of_loaded_files, event, file_name, spin_state=spin_state
-        refresh_table, event, spin_state=spin_state
-      endif
-    endelse
+    
+    catch,error
+    if (error ne 0) then begin
+    
+      catch,/cancel
+      list_of_files_with_error = [list_of_files_with_error,file_name]
+      
+    endif else begin
+    
+      file_is_batch = 0b ;by default, file is not a batch file
+      file_is_batch = isFileBatch(file_name)
+      if (file_is_batch) then begin ;batch file
+        load_batch_file, event, file_name
+      endif else begin ;rtof file
+        result = load_rtof_file(event, file_name)
+        widget_control, event.top, get_uvalue=global
+        if (result) then begin
+          if (isAutomaticLoadingOn(event)) then begin
+            spin_state = try_figure_out_spin_of_file(event=event, file_name=file_name)
+            ;make sure the spins are shown if ther is another spin state found
+            if (spin_state ne 0) then begin
+              ;activate SPINS button
+              activate_button, event=event, status=1, uname='spins_uname'
+              ;shows all spins
+              mapBase, event=event, status=1, uname='spins_base'
+              ;activate right spin
+              spin_state_name = strlowcase((*global).spin_state_name)
+              spins_button_interactions, event=event, status=spin_state_name[spin_state]
+            endif
+          endif else begin ;manual loading
+            spin_state = (*global).current_spin_state_selected
+          endelse
+          add_file_to_list_of_loaded_files, event, file_name, spin_state=spin_state
+          refresh_table, event, spin_state=spin_state
+        endif
+      endelse
+      
+    endelse ;end of catch statement
+    
     index++
   endwhile
+  
+  if (n_elements(list_of_files_with_error) gt 0) then begin
+    message = ['Error loading the following file(s):','']
+    msg_files = '  -> ' + list_of_files_with_error
+    message = [message, msg_files]
+    title = 'ERROR LOADING FILES'
+    show_error_message, event=event, message=message, title=title
+  endif
   
 end
