@@ -43,13 +43,20 @@ PRO plot_loaded_file, Event, index
   WIDGET_CONTROL,id,get_uvalue=global
   
   settings_white_background_color = (*global).settings_white_background_color
-  if (settings_white_background_color eq 0) then begin
+  case (settings_white_background_color) of
+    0: begin ;white
     !P.BACKGROUND = 255
     axis_color = 0
-  endif else begin
+    end
+    1: begin ;black
     !P.BACKGROUND = 0
     axis_color = 255
-  endelse
+  end
+    2: begin ;dark grey
+    !P.BACKGROUND = 120
+    axis_color = 0
+    end
+    endcase
   
   ;0 means that the fitting plot won't be seen
   ;1 means that the fitting plot will be seen
@@ -108,7 +115,7 @@ PRO plot_loaded_file, Event, index
   
   DEVICE, DECOMPOSED = 0
   loadct,5,/SILENT
-  
+
   ;check if plot will be with error bars or not
   ErrorBarStatus = (*global).settings_show_error_bar_flag
   
@@ -166,6 +173,8 @@ PRO plot_loaded_file, Event, index
       ymax = FLOAT(XYMinMax[3])
       
       IF (i EQ 0) THEN BEGIN
+      
+        loadct, 0
       
         CASE (IsXlin) OF
         
@@ -252,6 +261,8 @@ PRO plot_loaded_file, Event, index
         ENDIF
         
       ENDIF ELSE BEGIN
+
+        loadct, 5
       
         XYMinMax = retrieveXYMinMax(Event) ;_get
         xmin = FLOAT(XYMinMax[0])

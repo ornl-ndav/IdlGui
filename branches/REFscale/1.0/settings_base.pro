@@ -114,11 +114,11 @@ pro save_status_of_settings_button, event
   (*global).settings_number_of_data_to_display = value
   
   ;color of background
-  if (getButtonValidated(event,'background_color_uname') eq 0) then begin
-    status = 0b
-  endif else begin
-    status = 1b
-  endelse
+  case (getButtonValidated(event,'background_color_uname')) of
+  0: status = 0
+  1: status = 1
+  2: status = 2
+  endcase
   (*global).settings_white_background_color = status
   
 end
@@ -237,7 +237,7 @@ PRO settings_base_gui, wBase, main_base_geometry, global
   ;color of background
   background_color = (*global).settings_white_background_color
   color = cw_bgroup(wBase,$
-    ['White','Black'],$
+    ['White','Black','Dark Grey'],$
     /row,$
     /exclusive,$
     label_left = 'Color of background:',$
