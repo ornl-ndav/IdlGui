@@ -64,6 +64,7 @@ cd, CurrentFolder + '/REFscaleOFFGUI/'
 cd, CurrentFolder
 
 ;functions (tab#1)
+.run automatic_loading_mode.pro
 .run load_rtof_file.pro
 .run copy_files_SF_list.pro
 

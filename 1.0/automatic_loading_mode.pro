@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,103 +30,41 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
 ;+
 ; :Description:
-;    Return the status of a button (selected or not)
+;    This function will try to figure out the spin state of the rtof loaded
+;    file according to the file name. If it can't find one of the 4 common spin
+;    states in the name of the file, will return the spin state index 0
 ;
 ; :Keywords:
-;    id
 ;    event
-;    uname
-;
-; :Returns:
-;   status of the button  -> 0 for not selected
-;                         -> 1 for selected
+;    file_name
 ;
 ; :Author: j35
 ;-
-function isButtonSelected, id=id, event=event, uname=uname
+function try_figure_out_spin_of_file, event=event, file_name=file_name
   compile_opt idl2
   
-  if (n_elements(id) ne 0) then begin
-    status = widget_info(id,/button_set)
-    return, status
-  endif
+  if (n_elements(file_name) eq 0) then return, 0
   
-  if (n_elements(event) ne 0 && $
-    n_elements(uname) ne 0) then begin
+  _file_name = strlowcase(file_name)
+  
+  widget_control, event.top, get_uvalue=global
+  spin_state_name = (*global).spin_state_name
+  
+  index = 0
+  nbr_spin = n_elements(spin_state_name)
+  while (index lt nbr_spin) do begin
+  
+    _searchString = '*_' + strlowcase(spin_state_name[index]) + '*'
+    _result = strmatch(_file_name,_searchString)
+    if (_result eq 1) then return, index
     
-    id = widget_info(event.top, find_by_uname=uname)
-    status = widget_info(id,/button_set)
-    return, status
-  endif
+    index++
+  endwhile
   
-  return, 'N/A'
-  
-end
-
-;+
-; :Description:
-;    returns the status of the button
-;    1 if enabled
-;    0 if disabled
-;
-; :Keywords:
-;    event
-;    uname
-;
-; :Returns:
-;   status of the button
-;
-;
-; :Author: j35
-;-
-function isButtonEnabled, event=event, uname=uname
-  compile_opt idl2
-  
-  id = widget_info(event.top, find_by_uname=uname)
-  status = widget_info(id, /sensitive)
-  return, status
-  
-end
-
-;+
-; :Description:
-;    returns the status of the show_plot button (tab1)
-;
-; :Params:
-;    event
-;
-; :Returns:
-;   returns the status of the button
-
-; :Author: j35
-;-
-function isShowScaledDataButtonEnabled, event
-  compile_opt idl2
-  
-  uname = 'show_plot'
-  status = isButtonEnabled(event=event, uname=uname)
-  return, status
-  
-end
-
-;+
-; :Description:
-;    returns the status of the automatic loading button
-;
-; :Params:
-;    event
-
-; :Author: j35
-;-
-function isAutomaticLoadingOn, event
-  compile_opt idl2
-  
-  uname = 'auto_spin_detection'
-  button_selected = isButtonSelected(event=event, uname=uname)
-  return, button_selected
+  return, 0
   
 end
