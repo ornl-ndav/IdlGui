@@ -81,6 +81,7 @@ PRO main_base_event, Event
       (*global).table_changed = 1b
       refresh_table, event
       full_reset, event
+      spins_button_interactions, event=event, status='off_off'
     end
     
     ;main tab

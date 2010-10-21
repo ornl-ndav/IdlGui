@@ -95,9 +95,22 @@ pro check_status_of_tab1_buttons, event, spin_state = spin_state
   setSensitive, event=event, uname='manual_scaling', sensitive=status_auto_scaling
   setSensitive, event=event, uname='manual_scaling_and_plot', sensitive=status_auto_scaling
   
-  ;check in which spin states we have files
-  ;if we have only off_off, move to off_off
-  
+;  ;check in which spin states we have files
+;  ;if we have only off_off, move to off_off
+;  ;help, files_SF_list ;[4,3,20]
+;  spin_sz = (size(files_SF_list))[1]
+;  only_one_spin = 1b
+;  for i=1,(spin_sz-1) do begin
+;    if (files_SF_list[i,0,0] ne '') then begin
+;      only_one_spin = 0b
+;      break
+;    endif
+;  endfor
+;  if (only_one_spin) then begin
+;    if (isButtonEnabled(event=event, uname='spins_uname')) then begin
+;      spins_button_interactions, event=event, status='off_off'
+;    endif
+;  endif
   
 end
 
@@ -215,13 +228,13 @@ pro check_spin_buttons_status, event
   
   spin_state_name = strlowcase((*global).spin_state_name) + '_base_uname'
   
- ; for i=0,3 do begin
- ; 
- ;   _status = 0
- ;   if (spin_state_buttons_status[i] eq 1) then _status= 1
- ;   mapBase, event=event, status=_status, uname= spin_state_name[i]
- ;   
- ; endfor
+; for i=0,3 do begin
+;
+;   _status = 0
+;   if (spin_state_buttons_status[i] eq 1) then _status= 1
+;   mapBase, event=event, status=_status, uname= spin_state_name[i]
+;
+; endfor
   
 end
 
