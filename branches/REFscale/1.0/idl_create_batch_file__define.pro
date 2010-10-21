@@ -67,8 +67,8 @@ FUNCTION CreateBatchFile, Event, FullFileName, BatchTable
   text      = [text,'#Ucams : ' + (*global).ucams]
   text      = [text,'']
 
-  data_spin_states = (*(*global).data_spin_state)
-  norm_spin_states = (*(*global).norm_spin_state)
+;  data_spin_states = (*(*global).data_spin_state)
+;  norm_spin_states = (*(*global).norm_spin_state)
   
   FOR i=0,(NbrRow-1) DO BEGIN
     ;add information only if row is not blank
@@ -86,9 +86,9 @@ FUNCTION CreateBatchFile, Event, FullFileName, BatchTable
       text    = [text,'#Active : ' + active]
       k=1
       text    = [text,'#Data_Runs : '  + BatchTable[k++,i]]
-      text    = [text,'#Data_Spin_States : ' + data_spin_states[i]]
+ ;     text    = [text,'#Data_Spin_States : ' + data_spin_states[i]]
       text    = [text,'#Norm_Runs : '  + BatchTable[k++,i]]
-      text    = [text,'#Norm_Spin_States : ' + norm_spin_states[i]]
+;      text    = [text,'#Norm_Spin_States : ' + norm_spin_states[i]]
       text    = [text,'#EC_Runs : '    + BatchTable[k++,i]]
       text    = [text,'#Angle(deg) : ' + BatchTable[k++,i]]
       text    = [text,'#S1(mm) : '     + BatchTable[k++,i]]
