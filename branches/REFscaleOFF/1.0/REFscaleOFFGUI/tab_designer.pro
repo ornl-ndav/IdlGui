@@ -54,12 +54,30 @@ pro design_tabs, MAIN_BASE, global
     event_pro = 'load_files_button',$
     scr_xsize = 100,$
     tooltip='Browse for reduced or batch files.')
+ 
+ space = widget_label(row1,$
+ value = '                              ')
+ label = widget_label(row1,$
+ value = 'Loading Type:')
+ auto_manual_base = widget_base(row1,$
+  /row,$
+  /exclusive)
+  auto = widget_button(auto_manual_base,$
+  value = 'AUTOMATIC',$
+  uname = 'auto_spin_detection',$
+  tooltip = 'Spins of loaded files will be determined automatically' + $
+  ' according to the file name.')
+  manual = widget_button(auto_manual_base,$
+  value = 'MANUAL',$
+  uname = 'manual_spin_detection',$
+  tooltip = 'Select manually the spins that corresponds to each loaded files')
+  widget_control, auto, /set_button
     
   row2 = widget_base(base1,$
     /row)
   row2col1 = widget_base(row2,$
     /column)
-    
+   
   space = widget_label(row2col1,$
     value = ' ')
     
