@@ -46,7 +46,8 @@ PRO main_base_event, Event
     ;no spins button selected
     widget_info(wWidget, find_by_uname='no_spins_uname'): begin
       mapBase, event=event, status=0, uname='spins_base'
-     (*global).current_spin_state_selected = 0
+      spins_button_interactions, event=event, status='off_off'
+      (*global).current_spin_state_selected = 0
       refresh_table, event
     end
 

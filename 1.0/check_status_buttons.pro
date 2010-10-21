@@ -95,6 +95,10 @@ pro check_status_of_tab1_buttons, event, spin_state = spin_state
   setSensitive, event=event, uname='manual_scaling', sensitive=status_auto_scaling
   setSensitive, event=event, uname='manual_scaling_and_plot', sensitive=status_auto_scaling
   
+  ;check in which spin states we have files
+  ;if we have only off_off, move to off_off
+  
+  
 end
 
 ;+
@@ -211,13 +215,13 @@ pro check_spin_buttons_status, event
   
   spin_state_name = strlowcase((*global).spin_state_name) + '_base_uname'
   
-  for i=0,3 do begin
-  
-    _status = 0
-    if (spin_state_buttons_status[i] eq 1) then _status= 1
-    mapBase, event=event, status=_status, uname= spin_state_name[i]
-    
-  endfor
+ ; for i=0,3 do begin
+ ; 
+ ;   _status = 0
+ ;   if (spin_state_buttons_status[i] eq 1) then _status= 1
+ ;   mapBase, event=event, status=_status, uname= spin_state_name[i]
+ ;   
+ ; endfor
   
 end
 
