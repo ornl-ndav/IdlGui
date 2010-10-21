@@ -45,9 +45,9 @@ PRO MAIN_BASE_ref_scale_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='MAIN_BASE_ref_scale'): BEGIN
     END
     
-    ;------------------------------------------------------------------------------
-    ;***** GENERAL FUNCTION *******************************************************
-    ;------------------------------------------------------------------------------
+    ;--------------------------------------------------------------------------
+    ;***** GENERAL FUNCTION ***************************************************
+    ;--------------------------------------------------------------------------
     
     ;Event triggered by 'X-axis  min:' widget_text
     WIDGET_INFO(wWidget, FIND_BY_UNAME='XaxisMinTextField'): BEGIN
@@ -274,7 +274,8 @@ PRO MAIN_BASE_ref_scale_event, Event
     
     ;Event triggered by <Manual Scaling of CE>
     WIDGET_INFO(wWidget, FIND_BY_UNAME='step2_manual_scaling_button'): BEGIN
-      manualCEscaling, Event ;_Step2
+      ;manualCEscaling, Event ;_Step2
+      manual_ce_scaling, event
     END
     
     ;Event trigerred when editing the SF text field

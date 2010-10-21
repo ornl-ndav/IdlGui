@@ -248,7 +248,7 @@ sSFtextField     = { size      : [XYoff[0],$
                                   XYoff[1],$
                                   80,30],$
                      value     : '',$
-                     sensitive : 0,$
+                     sensitive : 1,$
                      uname     : 'step2_sf_text_field'}
 
 ;***** Manual Scaling Button ***************************************************
@@ -256,7 +256,7 @@ XYoff                = [45,32]
 sManualScalingButton = { size      : [ sAverageYBefore.size[0]+XYoff[0],$
                                        sAverageYAfter.size[1]+XYoff[1],$
                                        400,30],$ $
-                         sensitive : 0,$
+                         sensitive : 1,$
                          uname     : 'step2_manual_scaling_button',$
                          value     : 'Manual Scaling of CE'}
 

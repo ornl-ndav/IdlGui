@@ -174,7 +174,7 @@ PRO plot_loaded_file, Event, index
       
       IF (i EQ 0) THEN BEGIN
       
-        loadct, 0
+        loadct, 0, /silent
       
         CASE (IsXlin) OF
         
@@ -262,7 +262,7 @@ PRO plot_loaded_file, Event, index
         
       ENDIF ELSE BEGIN
 
-        loadct, 5
+        loadct, 5, /silent
       
         XYMinMax = retrieveXYMinMax(Event) ;_get
         xmin = FLOAT(XYMinMax[0])
@@ -349,6 +349,22 @@ PRO plot_rescale_CE_file, Event
   id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
   WIDGET_CONTROL,id,get_uvalue=global
   
+  settings_white_background_color = (*global).settings_white_background_color
+  case (settings_white_background_color) of
+    0: begin ;white
+    !P.BACKGROUND = 255
+    axis_color = 0
+    end
+    1: begin ;black
+    !P.BACKGROUND = 0
+    axis_color = 255
+  end
+    2: begin ;dark grey
+    !P.BACKGROUND = 120
+    axis_color = 0
+    end
+    endcase
+    
   draw_id = WIDGET_INFO(Event.top, find_by_uname='plot_window')
   WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
   WSET,view_plot_id
@@ -359,7 +375,8 @@ PRO plot_rescale_CE_file, Event
   color_array = (*(*global).color_array)
   
   DEVICE, DECOMPOSED = 0
-  loadct,5,/SILENT
+; loadct,5,/SILENT
+  loadct,0,/silent
   
   flt0_ptr = (*global).flt0_ptr
   flt1_ptr = (*global).flt1_ptr
@@ -465,34 +482,34 @@ PRO plot_rescale_CE_file, Event
   flt1_rescale_ptr = (*global).flt1_rescale_ptr
   flt2_rescale_ptr = (*global).flt2_rescale_ptr
   
-  DRfiles = (*(*global).DRfiles)
-  nbr_spin = (size(DRfiles))[1]
-  ;current_spin_index = (*global).current_spin_index
-  current_spin_index = get_current_spin_index(event)
-  if (nbr_spin gt 1) then begin
-  
-    spin_index = 0
-    while (spin_index lt nbr_spin) do begin
-    
-      if (spin_index ne current_spin_index) then begin
-        flt1 = *flt1_ptr[0,spin_index]
-        flt2 = *flt2_ptr[0,spin_index]
-        flt1 = flt1/CE_scaling_factor
-        flt2 = flt2/CE_scaling_factor
-      endif
-      
-      *flt1_rescale_ptr[0,spin_index] = flt1
-      *flt2_rescale_ptr[0,spin_index] = flt2
-      
-      spin_index++
-    endwhile
-    
-  endif else begin
-  
+;  DRfiles = (*(*global).DRfiles)
+;  nbr_spin = (size(DRfiles))[1]
+;  ;current_spin_index = (*global).current_spin_index
+;  current_spin_index = get_current_spin_index(event)
+;  if (nbr_spin gt 1) then begin
+;  
+;    spin_index = 0
+;    while (spin_index lt nbr_spin) do begin
+;    
+;      if (spin_index ne current_spin_index) then begin
+;        flt1 = *flt1_ptr[0,spin_index]
+;        flt2 = *flt2_ptr[0,spin_index]
+;        flt1 = flt1/CE_scaling_factor
+;        flt2 = flt2/CE_scaling_factor
+;      endif
+;      
+;      *flt1_rescale_ptr[0,spin_index] = flt1
+;      *flt2_rescale_ptr[0,spin_index] = flt2
+;      
+;      spin_index++
+;    endwhile
+;    
+;  endif else begin
+;  
     *flt1_rescale_ptr[0]       = flt1
     *flt2_rescale_ptr[0]       = flt2
     
-  endelse
+;  endelse
   
   (*global).flt1_rescale_ptr = flt1_rescale_ptr
   (*global).flt2_rescale_ptr = flt2_rescale_ptr
