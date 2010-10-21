@@ -50,11 +50,11 @@ PRO main_base_event, Event
       (*global).current_spin_state_selected = 0
       refresh_table, event
     end
-
+    
     ;spins button selected
     widget_info(wWidget, find_by_uname='spins_uname'): begin
       mapBase, event=event, status=1, uname='spins_base'
-     (*global).current_spin_state_selected = 0
+      (*global).current_spin_state_selected = 0
     end
     
     ;various spins state buttons
@@ -166,12 +166,22 @@ PRO main_base_event, Event
     
     ;Automatic Scaling button and show plot
     widget_info(wWidget, find_by_uname='automatic_scaling_and_plot'): begin
-      (*global).stop_scaling_spin_status = intarr(4)
-      auto_scale, event
-      create_scaled_big_array, event
-      show_big_array, event
-      (*global).table_changed = 0b
-      check_status_of_tab1_buttons, event
+      catch, error
+      if (error ne 0) then begin
+        catch,/cancel
+        title = 'ERROR while trying to scale the data!'
+        message = ['Check the format of the rtof files loaded:','',$
+        '   - same range of pixels',$
+        '   - not same range of tof']
+        show_error_message, event=event, message=message, title=title
+      endif else begin
+        (*global).stop_scaling_spin_status = intarr(4)
+        auto_scale, event
+        create_scaled_big_array, event
+        show_big_array, event
+        (*global).table_changed = 0b
+        check_status_of_tab1_buttons, event
+      endelse
     end
     
     ;configuration of automatic scaling
