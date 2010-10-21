@@ -80,6 +80,8 @@ cd, CurrentFolder
 .run ref_scale_file_utility.pro
 .run ref_scale_tof_to_q.pro
 
+.run manual_scaling.pro
+
 ;auto cleaning of data
 .run cleanup_reduce_data.pro
 .run auto_cleaning_data_cw_bgroup.pro
