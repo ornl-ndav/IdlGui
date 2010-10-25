@@ -693,7 +693,7 @@ END
 ;##############################################################################
 ;******************************************************************************
 PRO ActivateStep3_fromBatch, Event, validate
-  ActivateWidget, Event, 'Step3_automatic_rescale_button', 0
+  ActivateWidget, Event, 'Step3_automatic_rescale_button', 1
   ActivateWidget, Event, 'Step3ManualModeFrame', validate
 END
 
