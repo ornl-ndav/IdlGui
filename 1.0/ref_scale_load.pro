@@ -87,7 +87,13 @@ PRO LoadFile_Q, Event
   FAILED     = (*global).failed
   
   ;launch the program that open the dialog_pickfile
-  LongFileName = OpenFile(Event)
+  LongFileNames = OpenFile(Event)
+  if (LongFileNames[0] eq '') then return
+  sz = n_elements(LongFileNames)
+  index = 0
+  while (index lt sz) do begin
+ 
+  LongFileName = LongFileNames[index]
 
   ;apply auto cleanup of data if switch is on
   if ((*global).settings_auto_cleaning_flag) then begin
@@ -138,6 +144,11 @@ PRO LoadFile_Q, Event
   ;Update GUi
   StepsUpdateGui, Event ;_Gui
   idl_send_to_geek_showLastLineLogBook, Event
+  
+  index++
+  endwhile
+  
+  
 END
 
 ;##############################################################################
@@ -156,7 +167,14 @@ PRO LoadTOFFile, Event
   
   ;launch the program that open the OPEN IDL FILE window
   ;LongFileName=ReflSupportOpenFile_OPEN_FILE(Event)
-  LongFileName=OpenFile(Event) ;_Load
+  LongFileNames=OpenFile(Event) ;_Load
+  if (LongFileNames[0] eq '') then return
+  sz = n_elements(LongFileNames)
+  index = 0
+  while (index lt sz) do begin
+  
+  LongFileName = LongFileNames[index]
+  
   file_error = 0
   CATCH, file_error
   IF (file_error NE 0) THEN BEGIN
@@ -199,6 +217,10 @@ PRO LoadTOFFile, Event
     idl_send_to_geek_addLogBookText, Event, '> Loading a TOF file .... DONE'
   ENDELSE
   idl_send_to_geek_showLastLineLogBook, Event
+  
+  index++
+  endwhile
+  
 END
 
 ;^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*
