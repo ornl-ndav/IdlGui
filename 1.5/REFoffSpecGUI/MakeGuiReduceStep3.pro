@@ -123,8 +123,8 @@ PRO make_gui_Reduce_step3, REDUCE_TAB, sTab, TabTitles, global
     
   ;output folder label
   label = WIDGET_LABEL(base1,$
-    VALUE = 'Output Folder:')
-    
+;    VALUE = 'Output Folder:')
+     VALUE = 'Reduce Folder:')    
   ;output folder button
   ascii_path = (*global).ascii_path
   output = WIDGET_BUTTON(base1,$
