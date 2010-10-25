@@ -486,6 +486,7 @@ PRO plot_sangle_refpix, Event
    ; Code change RCW (Feb 1, 2010): set up SangleDone, RefPixSave variables
   SangleDone = (*(*global).SangleDone)
   RefPixSave = (*(*global).RefPixSave)
+  RefPix_InitialValue = (*global).RefPix_InitialValue
     
   xdevice_max = (*global).sangle_xsize_draw
   
@@ -495,14 +496,84 @@ PRO plot_sangle_refpix, Event
    IF (SangleDone[row_selected] EQ 1) THEN BEGIN
         RefPix_device = 2*RefPixSave[row_selected]
         sRefPixSave = STRCOMPRESS(RefPixSave[row_selected],/REMOVE_ALL)
-
+;Change Code (RC Ward, 20 Oct 2010): Put RefPix value into text box
+        putTextFieldValue, Event, 'reduce_sangle_base_refpix_user_value', sRefPixSave
    ENDIF ELSE BEGIN
   ; else use the default, or value entered by user
   ;retrieve RefPix value (from text field)
        RefPix = getTextFieldValue(Event,'reduce_sangle_base_refpix_user_value')
-
        fix_RefPix = FIX(RefPix)
        RefPix_device = getSangleYDeviceValue(Event,fix_RefPix)
+; Change Code (RC Ward, 24 Oct 2010) ====================================================\
+; if value differs from the default, assume user has entered it and save this value of RefPix
+       IF (RefPix NE RefPix_InitialValue) THEN BEGIN
+; save the value
+          RefPixSave[row_selected] = RefPix
+          (*(*global).RefPixSave) = RefPixSave
+          calculate_new_sangle_value, Event
+          plot_counts_vs_pixel_help, Event 
+; Code change RCW (Feb 15, 2010): Write values of RefPix to a file named for the first dataset
+; Note this Rule: User should do SANGLE for first item on the list (lowest number also called Reference File)
+; This is only to be used by magetism reflectometer data reduction process, so check for REF_M
+; Code Change (RC Ward, 21 April 2010): Fix code to handle data files from the user directory (/results/)
+  instrument = (*global).instrument
+  RefPixLoad = (*global).RefPixLoad
+  IF (instrument EQ 'REF_M') THEN BEGIN
+; test added on 31 March 2010 - needs to be tested
+    IF (RefPixLoad EQ 'yes') THEN BEGIN
+     reduce_tab1_table = (*(*global).reduce_tab1_table)
+     full_nexus_file_name = reduce_tab1_table[1, 0]
+; Change code (RC Ward 30 June 2010): STR_SEP is obsolete. Replace with IDL routine STRSPLIT
+;     parts = STR_SEP(full_nexus_file_name,'/')
+     parts = STRSPLIT(full_nexus_file_name,'/',/EXTRACT)
+; DEBUG ========================================
+; debug RefPix output filename
+;    print, " parts_0: ",parts[0]
+;    print, " parts_1: ",parts[1]
+;    print, " parts_2: ",parts[2]
+;    print, " parts_3: ",parts[3]
+;    print, " parts_4: ",parts[4]
+;    print, " parts_5: ",parts[5]
+; DEBUG ========================================
+    IF (parts[1] EQ 'users') THEN BEGIN
+    ; strip .nxs off parts[5]
+; Change code (RC Ward 30 June 2010): STR_SEP is obsolte. Replace with IDL routine STRSPLIT
+;       usethis = STR_SEP(parts[5],'.')
+       usethis = STRSPLIT(parts[5],'.',/EXTRACT)       
+; DEBUG ========================================       
+;       print, "usethis_0: ",usethis[0]
+;       print, "usethis_1: ", usethis[1]
+; DEBUG ========================================
+; Change code (RC Ward 30 June 2010): Had to write out a RefPix file for each spins state
+; Change code (RC Ward, 23 July 2010): Path to reduce step files (ascii_path) now specified by user
+;       output_file_name = (*global).ascii_path + usethis[0]+'_Off_Off_' + 'RefPix.txt'
+        output_file_stub = (*global).ascii_path + usethis[0]
+    ENDIF ELSE BEGIN
+;    output_file_name = (*global).ascii_path + parts[2]+ '_' + parts[5]+'_Off_Off_' + 'RefPix.txt'
+     output_file_stub = (*global).ascii_path  + parts[1] + '_' + parts[4]
+;   print, "RefPix output_file_stub: ", output_file_stub
+    ENDELSE
+     output_file_name = output_file_stub + '_Off_Off_' + 'RefPix.txt'
+; DEBUG ========================================
+;       print, output_file_name
+; DEBUG ========================================
+     OPENW, 1, output_file_name
+     PRINTF, 1, RefPixSave
+     CLOSE, 1
+     FREE_LUN, 1
+     output_file_name = output_file_stub + '_On_Off_' + 'RefPix.txt'
+; DEBUG ========================================
+;       print, output_file_name
+; DEBUG ========================================
+     OPENW, 1, output_file_name
+     PRINTF, 1, RefPixSave
+     CLOSE, 1
+     FREE_LUN, 1     
+     
+    ENDIF
+   ENDIF
+  ENDIF
+; Change Code (RC Ward, 24 Oct 2010) ====================================================/  
    ENDELSE 
   
   id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='reduce_sangle_plot')
@@ -710,12 +781,13 @@ PRO calculate_new_sangle_value, Event
   
   sSangle = s_Sangle_rad + ' (' + s_Sangle_deg + ')'
   putTextFieldValue, Event, 'reduce_sangle_base_sangle_user_value', sSangle
-  update_sangle_big_table, Event, sSangle
+;  update_sangle_big_table, Event, sSangle
 
 ; set flag to indicate that sangle has been calculated
   SangleDone[row_selected] = 1
   (*(*global).SangleDone) = SangleDone
-  
+; Change made (RC Ward, 25 Oct 2010): move this call down after setting SangleDone 
+  update_sangle_big_table, Event, sSangle  
   RETURN
   
   error:
