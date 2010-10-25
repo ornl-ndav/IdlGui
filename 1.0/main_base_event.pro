@@ -280,7 +280,8 @@ PRO MAIN_BASE_ref_scale_event, Event
     
     ;Event trigerred when editing the SF text field
     WIDGET_INFO(wWidget, FIND_BY_UNAME='step2_sf_text_field'): BEGIN
-      manual_sf_editing, Event ;_Step2
+      manual_ce_scaling, event
+      ;manual_sf_editing, Event ;_Step2
     END
     
     ;Event trigerred by Qmin cw_field
