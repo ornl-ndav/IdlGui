@@ -53,10 +53,11 @@ FUNCTION OpenFile, Event
     GET_PATH = path,$
     dialog_parent = dialog_id, $
     TITLE    = title,$
+    /multiple_files,$
+    /must_exist,$
     FILTER   = filter)
 
-  IF (FullFileName NE '') THEN BEGIN
-  
+  IF (FullFileName[0] NE '') THEN BEGIN
     (*global).input_path = path
   
     ;;redefine the working path
