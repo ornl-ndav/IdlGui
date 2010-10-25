@@ -68,7 +68,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     XPAD          = 0,$
     MBAR          = WID_BASE_0_MBAR,$
     X_SCROLL_SIZE = MainBaseSize[2],$
-    Y_SCROLL_SIZE = 600,$
+    Y_SCROLL_SIZE = 500,$
     /SCROLL)
     
   ;attach global structure with widget ID of widget main base widget ID
