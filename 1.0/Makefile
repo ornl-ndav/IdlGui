@@ -19,6 +19,6 @@ beta:
 	
 dev:
 	cp .REFscaleOFF.cfg /SNS/software/idltools/dev/sav/
-	cp ref_scale_off.sav /SNS/software/idltools/dev/sav/
+	cp ref_scale_off.sav /SNS/software/idltools/dev/sav/	
 	cp REFscale_off_dev /SNS/software/idltools/dev/
 	

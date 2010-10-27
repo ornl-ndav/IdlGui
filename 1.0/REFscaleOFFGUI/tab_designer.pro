@@ -105,7 +105,7 @@ pro design_tabs, MAIN_BASE, global
     sensitive = 1,$
     /no_release,$
     /bitmap,$
-    value = 'images/Off_Off_active.bmp',$
+    value = 'REFscaleOFF_images/Off_Off_active.bmp',$
     uname = 'off_off_button_uname')
     
   spin2base = widget_base(part2,$
@@ -115,7 +115,7 @@ pro design_tabs, MAIN_BASE, global
     scr_ysize = 25,$
     /no_release,$
     /bitmap,$
-    value = 'images/Off_On_inactive.bmp',$
+    value = 'REFscaleOFF_images/Off_On_inactive.bmp',$
     uname = 'off_on_button_uname')
     
   spin3base = widget_base(part2,$
@@ -123,7 +123,7 @@ pro design_tabs, MAIN_BASE, global
   spin3 = widget_button(spin3base,$
     /no_release,$
     /bitmap,$
-    value = 'images/On_Off_inactive.bmp',$
+    value = 'REFscaleOFF_images/On_Off_inactive.bmp',$
     scr_xsize = 75,$
     scr_ysize = 25,$
     uname = 'on_off_button_uname')
@@ -131,7 +131,7 @@ pro design_tabs, MAIN_BASE, global
   spin4base = widget_base(part2,$
     uname = 'on_on_base_uname')
   spin4 = widget_button(spin4base,$
-    value = 'images/On_On_inactive.bmp',$
+    value = 'REFscaleOFF_images/On_On_inactive.bmp',$
     /no_release,$
     /bitmap,$
     scr_xsize = 75,$
