@@ -51,7 +51,7 @@ pro spins_button_interactions, event=event, status=status
   spin_list = ['Off_Off','Off_On','On_Off','On_On']
   images_spin_list = 'REFscaleOFF_images/' + spin_list
   active_list = images_spin_list + '_active.bmp'
-  inactive_list = spin_list + '_inactive.bmp'
+  inactive_list = images_spin_list + '_inactive.bmp'
   button_uname_list = strlowcase(spin_list) + '_button_uname'
   
   ;by default, all the buttons are inactivated
@@ -88,7 +88,8 @@ end
 ;-
 pro display_button, event=event, button_uname=button_uname, button_bmp=button_bmp
   compile_opt idl2
-  
+
+  print, button_bmp
   id = widget_info(event.top, find_by_uname=button_uname)
   widget_control, id, set_value=button_bmp, /bitmap
   
