@@ -49,7 +49,7 @@ pro spins_button_interactions, event=event, status=status
   widget_control, event.top, get_uvalue=global
   
   spin_list = ['Off_Off','Off_On','On_Off','On_On']
-  images_spin_list = 'images/' + spin_list
+  images_spin_list = 'REFscaleOFF_images/' + spin_list
   active_list = images_spin_list + '_active.bmp'
   inactive_list = spin_list + '_inactive.bmp'
   button_uname_list = strlowcase(spin_list) + '_button_uname'
