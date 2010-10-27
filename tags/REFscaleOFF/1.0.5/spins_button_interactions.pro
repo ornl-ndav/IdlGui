@@ -89,7 +89,6 @@ end
 pro display_button, event=event, button_uname=button_uname, button_bmp=button_bmp
   compile_opt idl2
 
-  print, button_bmp
   id = widget_info(event.top, find_by_uname=button_uname)
   widget_control, id, set_value=button_bmp, /bitmap
   
