@@ -7,6 +7,7 @@ all:
 	idl ./makefile.pro
 
 install: 
+	cp REFscaleOFF_images/*.bmp /SNS/software/idltools/sav/REFscaleOFF_images/
 	cp .REFscaleOFF.cfg /SNS/software/idltools/sav/
 	cp ref_scale_off.sav /SNS/software/idltools/sav/
 	cp REFscaleOFF /SNS/software/idltools/
