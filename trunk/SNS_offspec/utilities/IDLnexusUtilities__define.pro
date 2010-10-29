@@ -259,10 +259,17 @@ end
 function IDLnexusUtilities::get_twoTheta
   compile_opt idl2
   
-  if (self.instrument eq 'REF_M') then return, ['']
+  if (self.instrument eq 'REF_M') then return, ['','']
   
   twotheta_path = self.entry_spin_state + '/instrument/bank1/tthd/average_value'
   twotheta_data = retrieve_value(file_name=self.file_name, path=twotheta_path)
+  
+
+
+
+
+  
+  
   
   return, twotheta_data
 end
