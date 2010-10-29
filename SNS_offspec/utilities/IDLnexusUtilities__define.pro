@@ -34,6 +34,140 @@
 
 ;+
 ; :Description:
+;   retrieve the value at the location defined in the path
+;
+; :Keywords:
+;    file_name
+;    path
+;
+; :Author: j35
+;-
+function retrieve_value, file_name=file_name, path=path
+  compile_opt idl2
+  
+  fileID = h5f_open(file_name)
+  value_id = h5d_open(fileID, path)
+  value = h5d_read(value_id)
+  h5d_close, value_id
+  h5f_close, fileID
+  
+  return, value
+end
+
+;+
+; :Description:
+;    This local function returns the distance Sample-Detector
+;    for the REF_M instrument (old and new format of NeXus files)
+
+; :Keywords:
+;    entry_spin_state
+;    fileID
+;
+; :Returns;
+;   [distance, units]
+;
+; :Author: j35
+;-
+function _get_d_SD_for_ref_m, entry_spin_state = entry_spin_state , fileID=fileID
+  compile_opt idl2
+  
+  path_value = entry_spin_state + '/instrument/bank1/SampleDetDis/readback/'
+  path_units = entry_spin_state + '/instrument/bank1/SampleDetDis/units'
+  
+  catch, error_value
+  if (error_value ne 0) then begin
+    catch,/cancel
+    ;we are dealing with a new NeXus with new path_value (readback -> value)
+    path_value = entry_spin_state + '/instrument/bank1/SampleDetDis/value/'
+    catch, error_value_2
+    if (error_value_2 ne 0) then begin
+      catch,/cancel
+      return, ['N/A','N/A']
+    endif else begin
+      pathID_value = h5d_open(fileID, path_value)
+      dis_value = strcompress(h5d_read(pathID_value),/remove_all)
+      
+      pathID_units = h5a_open_name(pathID_value,'units')
+      dis_units = strcompress(h5a_read(pathID_units),/remove_all)
+      
+      h5d_close, pathID_value
+      return, [dis_value,dis_units]
+    endelse
+  endif else begin
+    pathID_value = h5d_open(fileID, path_value)
+    dis_value = strcompress(h5d_read(pathID_value),/remove_all)
+    
+    pathID_units = h5a_open_name(pathID_value,'units')
+    dis_units = strcompress(h5a_read(pathID_units),/remove_all)
+    
+    h5d_close, pathID_value
+    return, [dis_value,dis_units]
+  endelse
+  
+end
+
+;+
+; :Description:
+;    This local function returns the distance Sample-Detector
+;    for the REF_L instrument
+;
+; :Keywords:
+;    fileID
+;
+; :Returns;
+;   [distance, units]
+;
+; :Author: j35
+;-
+function _get_d_SD_for_ref_l, fileID=fileID
+  compile_opt idl2
+  
+  ;FIXME
+  return, ['N/A','N/A']
+  
+end
+
+;+
+; :Description:
+;    retrieves the distance Sample - Detector
+;
+; :Author: j35
+;-
+function IDLnexusUtilities::get_d_SD
+  compile_opt idl2
+  
+  fileID = h5f_open(self.file_name)
+  
+  instrument = self.instrument
+  case (strlowcase(self.instrument)) of
+    'ref_l': value_units = _get_d_SD_for_ref_l(fileID=fileID)
+    'ref_m': value_units = _get_d_SD_for_ref_m(entry_spin_state=self.entry_spin_state, fileID=fileID)
+    else:
+  endcase
+  
+  h5f_close, fileID
+  
+  return, value_units
+  
+end
+
+;+
+; :Description:
+;    retrieves the distance Moderator - Sample
+;
+; :Author: j35
+;-
+function IDLnexusUtilities::get_d_MS
+  compile_opt idl2
+  
+  
+  
+  
+  
+end
+
+;+
+; :Description:
 ;    Retrieve the 3D data set [tof, pixel_x, pixel_y]
 ;
 ; :Keywords:
@@ -41,31 +175,10 @@
 ;
 ; :Author: j35
 ;-
-function IDLnexusUtilities::get_full_data, spin_state=spin_state
-compile_opt idl2
-
-  if (n_elements(spin_state) eq 0) then spin_state=self.spin_state
-  
-  fileID = h5f_open(self.file_name)
-  
-  if (spin_state eq '') then begin
-    count_path = 'entry/bank1/data/'
-  endif else begin
-    ;make sure the spin_state has the right format
-    case (strlowcase(spin_state)) of
-    'off_off' : spin_state = 'Off_Off'
-    'off_on'  : spin_state = 'Off_On'
-    'on_off'  : spin_state = 'On_Off'
-    'on_on'   : spin_state = 'On_On'
-    endcase
-    count_path = 'entry-'+spin_state+'/bank1/data/'
-  endelse
-  
-  count_id = h5d_open(fileID, count_path)
-  count_data = h5d_read(count_id)
-  h5d_close, count_id
-  h5f_close, fileID
-
+function IDLnexusUtilities::get_full_data
+  compile_opt idl2
+  count_path = self.entry_spin_state + 'bank1/data/'
+  count_data = retrieve_value(file_name=self.file_name, path=count_path)
   return, count_data
 end
 
@@ -76,32 +189,15 @@ end
 ;    produce 2 columns data set with first column
 ;    being the tof(ms) and second column the counts.
 ;
-; :Keywords:
-;    spin_state
-;
 ; :Author: j35
 ;-
-function IDLnexusUtilities::get_TOF_counts_data, spin_state=spin_state
+function IDLnexusUtilities::get_TOF_counts_data
   compile_opt idl2
-  
-  if (n_elements(spin_state) eq 0) then spin_state=self.spin_state
   
   fileID = h5f_open(self.file_name)
   
-  if (spin_state eq '') then begin
-    tof_path   = 'entry/bank1/time_of_flight/'
-    count_path = 'entry/bank1/data/'
-  endif else begin
-    ;make sure the spin_state has the right format
-    case (strlowcase(spin_state)) of
-    'off_off' : spin_state = 'Off_Off'
-    'off_on'  : spin_state = 'Off_On'
-    'on_off'  : spin_state = 'On_Off'
-    'on_on'   : spin_state = 'On_On'
-    endcase
-    tof_path   = 'entry-'+spin_state+'/bank1/time_of_flight/'
-    count_path = 'entry-'+spin_state+'/bank1/data/'
-  endelse
+  tof_path   = self.entry_spin_state + '/bank1/time_of_flight/'
+  count_path = self.entry_spin_state + '/bank1/data/'
   
   tof_id = h5d_open(fileID, tof_path)
   tof_data = h5d_read(tof_id)
@@ -113,6 +209,7 @@ function IDLnexusUtilities::get_TOF_counts_data, spin_state=spin_state
   count_data = h5d_read(count_id)
   h5d_close, count_id
   
+  ;close file
   h5f_close, fileID
   
   ;integrated over all the pixels
@@ -126,7 +223,7 @@ function IDLnexusUtilities::get_TOF_counts_data, spin_state=spin_state
   
   data[0,*] = tof_data[0:-2]
   data[1,*] = _count_data
-
+  
   return, data
 end
 
@@ -138,14 +235,33 @@ end
 ; :Params:
 ;    full_nexus_name
 ;
+; :Keywords:
+;   spin_state
+;
 ; :Author: j35
 ;-
-function IDLnexusUtilities::init, full_nexus_name
+function IDLnexusUtilities::init, full_nexus_name, spin_state=spin_state
   compile_opt idl2
   
   ;check if nexus file exist
   if (file_test(full_nexus_name) ne 1) then return, 0
   self.file_name = full_nexus_name
+  
+  if (n_elements(spin_state) ne 0) then begin
+    ;make sure the spin_state has the right format
+    case (strlowcase(spin_state)) of
+      'off_off' : spin_state = 'Off_Off'
+      'off_on'  : spin_state = 'Off_On'
+      'on_off'  : spin_state = 'On_Off'
+      'on_on'   : spin_state = 'On_On'
+    endcase
+    self.spin_state = spin_state
+    self.entry_spin_state = 'entry-' + spin_state
+    self.instrument = 'REF_M'
+  endif else begin
+  self.instrument = 'REF_L'
+  endelse
+  
   return, 1
   
 end
@@ -163,6 +279,8 @@ pro IDLnexusUtilities__define
   struct = { IDLnexusUtilities, $
     file_name: '',$
     spin_state: '',$
+    instrument: '',$
+    entry_spin_state: 'entry/',$
     var: ''}
     
 end
