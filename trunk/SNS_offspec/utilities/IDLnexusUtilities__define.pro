@@ -229,6 +229,46 @@ end
 
 ;+
 ; :Description:
+;    Retrieves the theta angle value
+;
+; :Returns:
+;   theta value
+;
+; :Author: j35
+;-
+function IDLnexusUtilities::get_theta
+  compile_opt idl2
+  
+  if (self.instrument eq 'REF_M') then return, ['']
+  
+  theta_path = self.entry_spin_state + '/sample/ths/average_value'
+  theta_data = retrieve_value(file_name=self.file_name, path=theta_path)
+  
+  return, theta_data
+end
+
+;+
+; :Description:
+;   Retrieves the twoTheta angle value
+;
+; :Returns:
+;   twoTheta value
+;
+; :Author: j35
+;-
+function IDLnexusUtilities::get_twoTheta
+  compile_opt idl2
+  
+  if (self.instrument eq 'REF_M') then return, ['']
+  
+  twotheta_path = self.entry_spin_state + '/instrument/bank1/tthd/average_value'
+  twotheta_data = retrieve_value(file_name=self.file_name, path=twotheta_path)
+  
+  return, twotheta_data
+end
+
+;+
+; :Description:
 ;    init procedure of the program that check if the
 ;    file exist
 ;
@@ -259,11 +299,11 @@ function IDLnexusUtilities::init, full_nexus_name, spin_state=spin_state
     self.entry_spin_state = 'entry-' + spin_state
     self.instrument = 'REF_M'
   endif else begin
-  self.instrument = 'REF_L'
+    self.instrument = 'REF_L'
+    self.entry_spin_state = 'entry'
   endelse
   
   return, 1
-  
 end
 
 ;+
@@ -280,7 +320,7 @@ pro IDLnexusUtilities__define
     file_name: '',$
     spin_state: '',$
     instrument: '',$
-    entry_spin_state: 'entry/',$
+    entry_spin_state: '',$
     var: ''}
     
 end
