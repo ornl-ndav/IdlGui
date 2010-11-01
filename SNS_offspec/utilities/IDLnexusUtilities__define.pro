@@ -392,7 +392,7 @@ end
 ;-
 function IDLnexusUtilities::get_full_data
   compile_opt idl2
-  count_path = self.entry_spin_state + 'bank1/data/'
+  count_path = self.entry_spin_state + '/bank1/data/'
   count_data = retrieve_value(file_name=self.file_name, path=count_path)
   return, count_data
 end
