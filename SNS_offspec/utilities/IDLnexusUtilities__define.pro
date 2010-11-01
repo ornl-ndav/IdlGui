@@ -32,6 +32,15 @@
 ;
 ;==============================================================================
 
+;
+;!!! IMPORTANT !!!
+;
+; Dependencies: configuration file (.cfg) defined in the heade of this class
+; This configuration file is used when some of the infos can not be found
+; in the NeXus file, and provides default values for those.
+;
+;
+
 ;+
 ; :Description:
 ;   retrieve the value at the location defined in the path
@@ -52,6 +61,33 @@ function retrieve_value, file_name=file_name, path=path
   h5f_close, fileID
   
   return, value
+end
+
+;+
+; :Description:
+;    return the value and the units at the given path
+;
+; :Keywords:
+;    file_name
+;    path
+;
+; :Returns:
+;   [value, units]
+;
+; :Author: j35
+;-
+function retrieve_value_units, file_name=file_name, path=path
+  compile_opt idl2
+  
+  fileID = h5f_open(file_name)
+  value_id = h5d_open(fileID, path)
+  value = strcompress(h5d_read(value_id),/remove_all)
+  units_id = h5a_open_name(value_id, 'units')
+  units = strcompress(h5a_read(units_id),/remove_all)
+  h5d_close, value_id
+  h5f_close, fileID
+  return, [value, units]
+  
 end
 
 ;+
@@ -82,7 +118,20 @@ function _get_d_SD_for_ref_m, entry_spin_state = entry_spin_state , fileID=fileI
     catch, error_value_2
     if (error_value_2 ne 0) then begin
       catch,/cancel
-      return, ['N/A','N/A']
+      
+      catch, error2
+      if (error2 ne 0) then begin
+        catch,/cancel
+        return, ['N/A','N/A']
+      endif else begin
+        ;retrieve value from configuration file
+        iCfg = obj_new('idlxmlparser', self.configuration_file)
+        value = iCfg->getValue(tag=['configuration','REF_M','d_SD'])
+        units = iCfg->getValue(tag=['configuration','REF_M','d_SD'], attr='units')
+        obj_destroy, iCfg
+        return, [value,units]
+      endelse
+      
     endif else begin
       pathID_value = h5d_open(fileID, path_value)
       dis_value = strcompress(h5d_read(pathID_value),/remove_all)
@@ -239,20 +288,20 @@ end
 function IDLnexusUtilities::get_theta
   compile_opt idl2
   
-  if (self.instrument eq 'REF_M') then return, ['']
+  if (self.instrument eq 'REF_M') then return, ['','']
   
   theta_path = self.entry_spin_state + '/sample/ths/average_value'
-  theta_data = retrieve_value(file_name=self.file_name, path=theta_path)
+  value_units = retrieve_value_units(file_name=self.file_name, path=theta_path)
   
-  return, theta_data
+  return, value_units
 end
 
 ;+
 ; :Description:
-;   Retrieves the twoTheta angle value
+;   Retrieves the twoTheta angle value and units
 ;
 ; :Returns:
-;   twoTheta value
+;   twoTheta value and units [value,unit]
 ;
 ; :Author: j35
 ;-
@@ -262,16 +311,9 @@ function IDLnexusUtilities::get_twoTheta
   if (self.instrument eq 'REF_M') then return, ['','']
   
   twotheta_path = self.entry_spin_state + '/instrument/bank1/tthd/average_value'
-  twotheta_data = retrieve_value(file_name=self.file_name, path=twotheta_path)
+  value_units = retrieve_value_units(file_name=self.file_name, path=twotheta_path)
   
-
-
-
-
-  
-  
-  
-  return, twotheta_data
+  return, value_units
 end
 
 ;+
@@ -327,6 +369,7 @@ pro IDLnexusUtilities__define
     file_name: '',$
     spin_state: '',$
     instrument: '',$
+    configuration_file: 'SNS_offspec_instruments.cfg',$
     entry_spin_state: '',$
     var: ''}
     
