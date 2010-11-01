@@ -1,8 +1,8 @@
 
 ;#### how to get metadata and data from NeXus files ####
-;file_name = 'NeXus/REF_L_38955.nxs'
-file_name = 'NeXus/REF_M_5000.nxs'
-myObject = obj_new('IDLnexusUtilities',file_name, spin_state='Off_Off')
+;file_name = 'unit_test_files/REF_L_38955.nxs'
+file_name= 'unit_test_files/REF_M_5000.nxs'
+myObject = obj_new('IDLnexusUtilities',file_name,spin_state='Off_Off')
 ;d_sd = myObject->get_twotheta()
 v_u = myObject->get_d_SD()
 help, v_u

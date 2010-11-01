@@ -103,6 +103,7 @@ end
 ;    old_file_path_units    ex: '/instrument/moderator/ModeratorSamDis/units'
 ;    new_file_path_value    ex: '/instrument/moderator/ModeratorSamDis/value/'
 ;    config_path_array      ex:['configuration','REF_L','d_MS']
+;    configuration_file     ex: 'SNS_offspec_instruments.cfg'
 ;
 ; :Author: j35
 ;-
@@ -111,7 +112,8 @@ function _get_value_units_from_old_new_cfg, fileID = fileID, $
     old_file_path_value = old_file_path_value, $
     old_file_path_units = old_file_path_units, $
     new_file_path_value = new_file_path_value, $
-    config_path_array = config_path_array
+    config_path_array = config_path_array, $
+    configuration_file = configuration_file
     
   if (n_elements(entry_spin_state) eq 0) then entry_spin_state = ''
   
@@ -133,7 +135,7 @@ function _get_value_units_from_old_new_cfg, fileID = fileID, $
         return, ['N/A','N/A']
       endif else begin
         ;retrieve value from configuration file
-        iCfg = obj_new('idlxmlparser', self.configuration_file)
+        iCfg = obj_new('idlxmlparser', configuration_file)
         value = iCfg->getValue(tag=config_path_array)
         units = iCfg->getValue(tag=config_path_array, attr='units')
         obj_destroy, iCfg
@@ -177,7 +179,9 @@ end
 ;
 ; :Author: j35
 ;-
-function _get_d_SD_for_ref_m, entry_spin_state = entry_spin_state , fileID=fileID
+function _get_d_SD_for_ref_m, entry_spin_state = entry_spin_state , $
+fileID=fileID, $
+configuration_file = configuration_file
   compile_opt idl2
   
   old_file_path_value = '/instrument/bank1/SampleDetDis/readback/'
@@ -190,7 +194,8 @@ function _get_d_SD_for_ref_m, entry_spin_state = entry_spin_state , fileID=fileI
     old_file_path_value = old_file_path_value, $
     old_file_path_units = old_file_path_units, $
     new_file_path_value = new_file_path_value, $
-    config_path_array = config_path_array
+    config_path_array = config_path_array, $
+    configuration_file = configuration_file)
     
   return, value_units
   
@@ -209,16 +214,17 @@ end
 ;
 ; :Author: j35
 ;-
-function _get_d_SD_for_ref_l, fileID=fileID
-  compile_opt idl2
+function _get_d_SD_for_ref_l, fileID=fileID, configuration_file=configuration_file
   
-  catch, error
+  compile_opt idl2
+  error = 0
+  ;catch, error
   if (error ne 0) then begin
     catch,/cancel
     return, ['N/A','N/A']
   endif else begin
     ;retrieve value from configuration file
-    iCfg = obj_new('idlxmlparser', self.configuration_file)
+    iCfg = obj_new('idlxmlparser', configuration_file)
     value = iCfg->getValue(tag=['configuration','REF_L','d_SD'])
     units = iCfg->getValue(tag=['configuration','REF_L','d_SD'], attr='units')
     obj_destroy, iCfg
@@ -237,11 +243,15 @@ function IDLnexusUtilities::get_d_SD
   compile_opt idl2
   
   fileID = h5f_open(self.file_name)
+  configuration_file = self.configuration_file
   
   instrument = self.instrument
   case (strlowcase(self.instrument)) of
-    'ref_l': value_units = _get_d_SD_for_ref_l(fileID=fileID)
-    'ref_m': value_units = _get_d_SD_for_ref_m(entry_spin_state=self.entry_spin_state, fileID=fileID)
+    'ref_l': value_units = _get_d_SD_for_ref_l(fileID=fileID, $
+    configuration_file=configuration_file)
+    'ref_m': value_units = _get_d_SD_for_ref_m(entry_spin_state=self.entry_spin_state, $
+    fileID=fileID, $
+    configuration_file = configuration_file)
     else:
   endcase
   
@@ -508,6 +518,8 @@ function IDLnexusUtilities::init, full_nexus_name, spin_state=spin_state
     self.entry_spin_state = 'entry'
   endelse
   
+  self.configuration_file = 'SNS_offspec_instruments.cfg'
+  
   return, 1
 end
 
@@ -525,7 +537,7 @@ pro IDLnexusUtilities__define
     file_name: '',$
     spin_state: '',$
     instrument: '',$
-    configuration_file: 'SNS_offspec_instruments.cfg',$
+    configuration_file: '',$
     entry_spin_state: '',$
     var: ''}
     

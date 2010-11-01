@@ -1,0 +1,20 @@
+cd, current=current_path
+			
+cd,'mgunit'
+.run mgtestrunner__define.pro
+.run mgtestclirunner__define.pro
+;.run error_is_fail.pro
+;.run error_is_pass.pro
+.run mgtestcase__define.pro
+.run mgtestsuite__define.pro
+.run assert.pro
+.run mgunit.pro
+
+cd,current_path
+cd,'utilities'
+.run IDLnexusUtilities__define.pro
+.run IDLxmlParser__define.pro
+
+cd,current_path
+;mgunit, ['IDLnexusUtilitiesTest'], log_file='results.log'		
+mgunit, ['IDLnexusUtilitiesTest']	
