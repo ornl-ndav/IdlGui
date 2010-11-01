@@ -92,29 +92,37 @@ end
 
 ;+
 ; :Description:
-;    This local function returns the distance Sample-Detector
-;    for the REF_M instrument (old and new format of NeXus files)
+;    General function that will returns the value/units array for the
+;    old/new NeXus version or using the config file if none of the first
+;    ones work.
 
 ; :Keywords:
-;    entry_spin_state
 ;    fileID
-;
-; :Returns;
-;   [distance, units]
+;    entry_spin_state       ex: '' or 'entry-Off_Off'
+;    old_file_path_value    ex: '/instrument/moderator/ModeratorSamDis/readback/'
+;    old_file_path_units    ex: '/instrument/moderator/ModeratorSamDis/units'
+;    new_file_path_value    ex: '/instrument/moderator/ModeratorSamDis/value/'
+;    config_path_array      ex:['configuration','REF_L','d_MS']
 ;
 ; :Author: j35
 ;-
-function _get_d_SD_for_ref_m, entry_spin_state = entry_spin_state , fileID=fileID
-  compile_opt idl2
+function _get_value_units_from_old_new_cfg, fileID = fileID, $
+    entry_spin_state = entry_spin_state, $
+    old_file_path_value = old_file_path_value, $
+    old_file_path_units = old_file_path_units, $
+    new_file_path_value = new_file_path_value, $
+    config_path_array = config_path_array
+    
+  if (n_elements(entry_spin_state) eq 0) then entry_spin_state = ''
   
-  path_value = entry_spin_state + '/instrument/bank1/SampleDetDis/readback/'
-  path_units = entry_spin_state + '/instrument/bank1/SampleDetDis/units'
+  path_value = entry_spin_state + old_file_path_value
+  path_units = entry_spin_state + old_file_path_units
   
   catch, error_value
   if (error_value ne 0) then begin
     catch,/cancel
     ;we are dealing with a new NeXus with new path_value (readback -> value)
-    path_value = entry_spin_state + '/instrument/bank1/SampleDetDis/value/'
+    path_value = entry_spin_state + new_file_path_value
     catch, error_value_2
     if (error_value_2 ne 0) then begin
       catch,/cancel
@@ -126,8 +134,8 @@ function _get_d_SD_for_ref_m, entry_spin_state = entry_spin_state , fileID=fileI
       endif else begin
         ;retrieve value from configuration file
         iCfg = obj_new('idlxmlparser', self.configuration_file)
-        value = iCfg->getValue(tag=['configuration','REF_M','d_SD'])
-        units = iCfg->getValue(tag=['configuration','REF_M','d_SD'], attr='units')
+        value = iCfg->getValue(tag=config_path_array)
+        units = iCfg->getValue(tag=config_path_array, attr='units')
         obj_destroy, iCfg
         return, [value,units]
       endelse
@@ -158,6 +166,39 @@ end
 ;+
 ; :Description:
 ;    This local function returns the distance Sample-Detector
+;    for the REF_M instrument (old and new format of NeXus files)
+
+; :Keywords:
+;    entry_spin_state
+;    fileID
+;
+; :Returns;
+;   [distance, units]
+;
+; :Author: j35
+;-
+function _get_d_SD_for_ref_m, entry_spin_state = entry_spin_state , fileID=fileID
+  compile_opt idl2
+  
+  old_file_path_value = '/instrument/bank1/SampleDetDis/readback/'
+  old_file_path_units = '/instrument/bank1/SampleDetDis/units'
+  new_file_path_value = '/instrument/bank1/SampleDetDis/value/'
+  config_path_array   = ['configuration','REF_M','d_SD']
+  
+  value_units = _get_value_units_from_old_new_cfg (fileID = fileID, $
+    entry_spin_state = entry_spin_state, $
+    old_file_path_value = old_file_path_value, $
+    old_file_path_units = old_file_path_units, $
+    new_file_path_value = new_file_path_value, $
+    config_path_array = config_path_array
+    
+  return, value_units
+  
+end
+
+;+
+; :Description:
+;    This local function returns the distance Sample-Detector
 ;    for the REF_L instrument
 ;
 ; :Keywords:
@@ -171,8 +212,18 @@ end
 function _get_d_SD_for_ref_l, fileID=fileID
   compile_opt idl2
   
-  ;FIXME
-  return, ['N/A','N/A']
+  catch, error
+  if (error ne 0) then begin
+    catch,/cancel
+    return, ['N/A','N/A']
+  endif else begin
+    ;retrieve value from configuration file
+    iCfg = obj_new('idlxmlparser', self.configuration_file)
+    value = iCfg->getValue(tag=['configuration','REF_L','d_SD'])
+    units = iCfg->getValue(tag=['configuration','REF_L','d_SD'], attr='units')
+    obj_destroy, iCfg
+    return, [value,units]
+  endelse
   
 end
 
@@ -202,6 +253,102 @@ end
 
 ;+
 ; :Description:
+;    This local function returns the distance Moderator-Sample
+;    for the REF_L instrument
+;
+; :Keywords:
+;    fileID
+;
+; :Returns;
+;   [distance, units]
+;
+; :Author: j35
+;-
+function _get_d_MS_for_ref_l, fileID=fileID
+  compile_opt idl2
+  
+  catch, error
+  if (error ne 0) then begin
+    catch,/cancel
+    return, ['N/A','N/A']
+  endif else begin
+    ;retrieve value from configuration file
+    iCfg = obj_new('idlxmlparser', self.configuration_file)
+    value = iCfg->getValue(tag=['configuration','REF_L','d_MS'])
+    units = iCfg->getValue(tag=['configuration','REF_L','d_MS'], attr='units')
+    obj_destroy, iCfg
+    return, [value,units]
+  endelse
+  
+end
+
+;+
+; :Description:
+;    This local function returns the distance Moderator-Sample
+;    for the REF_M instrument (old and new format of NeXus files)
+
+; :Keywords:
+;    entry_spin_state
+;    fileID
+;
+; :Returns;
+;   [distance, units]
+;
+; :Author: j35
+;-
+function _get_d_MS_for_ref_m, entry_spin_state = entry_spin_state , fileID=fileID
+  compile_opt idl2
+  
+  path_value = entry_spin_state + '/instrument/moderator/ModeratorSamDis/readback/'
+  path_units = entry_spin_state + '/instrument/moderator/ModeratorSamDis/units'
+  
+  catch, error_value
+  if (error_value ne 0) then begin
+    catch,/cancel
+    ;we are dealing with a new NeXus with new path_value (readback -> value)
+    path_value = entry_spin_state + '/instrument/moderator/ModeratorSamDis/value/'
+    catch, error_value_2
+    if (error_value_2 ne 0) then begin
+      catch,/cancel
+      
+      catch, error2
+      if (error2 ne 0) then begin
+        catch,/cancel
+        return, ['N/A','N/A']
+      endif else begin
+        ;retrieve value from configuration file
+        iCfg = obj_new('idlxmlparser', self.configuration_file)
+        value = iCfg->getValue(tag=['configuration','REF_M','d_MS'])
+        units = iCfg->getValue(tag=['configuration','REF_M','d_MS'], attr='units')
+        obj_destroy, iCfg
+        return, [value,units]
+      endelse
+      
+    endif else begin
+      pathID_value = h5d_open(fileID, path_value)
+      dis_value = strcompress(h5d_read(pathID_value),/remove_all)
+      
+      pathID_units = h5a_open_name(pathID_value,'units')
+      dis_units = strcompress(h5a_read(pathID_units),/remove_all)
+      
+      h5d_close, pathID_value
+      return, [dis_value,dis_units]
+    endelse
+  endif else begin
+    pathID_value = h5d_open(fileID, path_value)
+    dis_value = strcompress(h5d_read(pathID_value),/remove_all)
+    
+    pathID_units = h5a_open_name(pathID_value,'units')
+    dis_units = strcompress(h5a_read(pathID_units),/remove_all)
+    
+    h5d_close, pathID_value
+    return, [dis_value,dis_units]
+  endelse
+  
+end
+
+;+
+; :Description:
 ;    retrieves the distance Moderator - Sample
 ;
 ; :Author: j35
@@ -209,9 +356,18 @@ end
 function IDLnexusUtilities::get_d_MS
   compile_opt idl2
   
+  fileID = h5f_open(self.file_name)
   
+  instrument = self.instrument
+  case (strlowcase(self.instrument)) of
+    'ref_l': value_units = _get_d_MS_for_ref_l(fileID=fileID)
+    'ref_m': value_units = _get_d_MS_for_ref_m(entry_spin_state=self.entry_spin_state, fileID=fileID)
+    else:
+  endcase
   
+  h5f_close, fileID
   
+  return, value_units
   
 end
 
