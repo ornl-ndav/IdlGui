@@ -1,13 +1,23 @@
 
 ;#### how to get metadata and data from NeXus files ####
 ;file_name = 'unit_test_files/REF_L_38955.nxs'
-file_name= 'unit_test_files/REF_M_5000.nxs'
-myObject = obj_new('IDLnexusUtilities',file_name,spin_state='Off_Off')
-;d_sd = myObject->get_twotheta()
-v_u = myObject->get_d_SD()
-help, v_u
-print, v_u
-obj_destroy, myObject
+;myObject = obj_new('IDLnexusUtilities',file_name)
+file_name= 'unit_test_files/REF_M_8324.nxs'
+myObject = obj_new('IDLnexusUtilities',file_name, spin_state='Off_Off')
+;value = myObject->get_twotheta()
+;v_u = myObject->get_d_SD()
+;help, value
+;print, value
+
+;value = myObject->get_theta()
+;obj_destroy, myObject
+;print, value
+
+data = myObject->get_tof_counts_data()
+help, data
+print, size(data)
+
+print, data[0:10]
 
 ;;#### how to get metadata from xml file ####
 ;file_name = 'SNS_offspec_instruments.cfg'
