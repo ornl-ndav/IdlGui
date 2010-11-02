@@ -1,0 +1,16 @@
+cd, current=current_path
+
+cd,current_path
+cd,'utilities'
+.run IDLnexusUtilities__define.pro
+.run IDLxmlParser__define.pro
+
+cd,current_path
+.run xcw_direct.pro
+.run xcr_direct.pro
+.run SNS_convert_QXQZ.pro
+.run SNS_convert_THLAM.pro
+.run sns_divide_spectrum.pro
+.run SNS_extract_specular.pro
+.run SNS_read_NEXUS.pro
+.run SNS_offspec_QXQZ_from_NEXUS_looper_NEW.pro
