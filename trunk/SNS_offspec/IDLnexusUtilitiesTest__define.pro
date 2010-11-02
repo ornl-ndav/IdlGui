@@ -49,7 +49,7 @@ function IDLnexusUtilitiesTest::test_REF_M_old_SD_value
   v_u = myObject->get_d_SD()
   obj_destroy, myObject
   
-  assert, v_u[0] eq '2340.00', 'Wrong d_SD value for REF_M_5000 (old NeXus format) Off_Off'
+  assert, v_u.value eq '2340.00', 'Wrong d_SD value for REF_M_5000 (old NeXus format) Off_Off'
   
   return, 1
 end
@@ -69,7 +69,7 @@ function IDLnexusUtilitiesTest::test_REF_M_old_SD_unit
   v_u = myObject->get_d_SD()
   obj_destroy, myObject
   
-  assert, v_u[1] eq 'millimetre', 'Wrong d_SD unit for REF_M_5000 (old NeXus format) Off_Off'
+  assert, v_u.units eq 'millimetre', 'Wrong d_SD unit for REF_M_5000 (old NeXus format) Off_Off'
   
   return, 1
 end
@@ -89,7 +89,7 @@ function IDLnexusUtilitiesTest::test_REF_M_new_SD_value
   v_u = myObject->get_d_SD()
   obj_destroy, myObject
   
-  assert, v_u[0] eq '2562.00', 'Wrong d_SD value for REF_M_8324 (new NeXus format) Off_Off'
+  assert, v_u.value eq '2562.00', 'Wrong d_SD value for REF_M_8324 (new NeXus format) Off_Off'
   
   return, 1
 end
@@ -109,7 +109,7 @@ function IDLnexusUtilitiesTest::test_REF_M_new_SD_unit
   v_u = myObject->get_d_SD()
   obj_destroy, myObject
   
-  assert, v_u[1] eq 'millimetre', 'Wrong d_SD unit for REF_M_8324 (new NeXus format) Off_Off'
+  assert, v_u.units eq 'millimetre', 'Wrong d_SD unit for REF_M_8324 (new NeXus format) Off_Off'
   
   return, 1
 end
@@ -130,7 +130,7 @@ function IDLnexusUtilitiesTest::test_REF_L_SD_value
   v_u = myObject->get_d_SD()
   obj_destroy, myObject
   
-  assert, v_u[0] eq '1430.0', 'Wrong d_SD value for REF_L_38955'
+  assert, v_u.value eq '1430.0', 'Wrong d_SD value for REF_L_38955'
   
   return, 1
 end
@@ -149,7 +149,7 @@ function IDLnexusUtilitiesTest::test_REF_L_SD_unit
   v_u = myObject->get_d_SD()
   obj_destroy, myObject
   
-  assert, v_u[1] eq 'mm', 'Wrong d_SD unit for REFL_L_38955'
+  assert, v_u.units eq 'mm', 'Wrong d_SD unit for REFL_L_38955'
   
   return, 1
 end
@@ -170,7 +170,7 @@ function IDLnexusUtilitiesTest::test_REF_L_theta_value
   v_u = myObject->get_theta()
   obj_destroy, myObject
   
-  assert, v_u[0] eq '0.730263', 'Wrong theta value for REF_L_38955'
+  assert, v_u.value eq '0.730263', 'Wrong theta value for REF_L_38955'
   
   return, 1
 end
@@ -190,7 +190,7 @@ function IDLnexusUtilitiesTest::test_REF_L_theta_unit
   v_u = myObject->get_theta()
   obj_destroy, myObject
   
-  assert, v_u[1] eq 'degree', 'Wrong theta unit for REF_L_38955'
+  assert, v_u.units eq 'degree', 'Wrong theta unit for REF_L_38955'
   
   return, 1
 end
@@ -213,7 +213,7 @@ function IDLnexusUtilitiesTest::test_REF_M_old_theta_unit
   v_u = myObject->get_theta()
   obj_destroy, myObject
   
-  assert, v_u[1] eq '', 'Wrong theta unit for REF_M_5000 (old format)'
+  assert, v_u.units eq '', 'Wrong theta unit for REF_M_5000 (old format)'
   
   return, 1
 end
@@ -233,7 +233,7 @@ function IDLnexusUtilitiesTest::test_REF_M_old_theta_value
   v_u = myObject->get_theta()
   obj_destroy, myObject
   
-  assert, v_u[0] eq '', 'Wrong theta value for REF_M_5000 (old format)'
+  assert, v_u.value eq '', 'Wrong theta value for REF_M_5000 (old format)'
   
   return, 1
 end
@@ -252,8 +252,8 @@ function IDLnexusUtilitiesTest::test_REF_M_new_theta_unit
   myObject = obj_new('IDLnexusUtilities',file_name, spin_state='Off_Off')
   v_u = myObject->get_theta()
   obj_destroy, myObject
-  
-  assert, v_u[1] eq '', 'Wrong theta unit for REF_M_8324 (new format)'
+
+  assert, v_u.units eq '', 'Wrong theta unit for REF_M_8324 (new format)'
   
   return, 1
 end
@@ -273,7 +273,7 @@ function IDLnexusUtilitiesTest::test_REF_M_new_theta_value
   v_u = myObject->get_theta()
   obj_destroy, myObject
   
-  assert, v_u[0] eq '', 'Wrong theta value for REF_M_8324 (new format)'
+  assert, v_u.value eq '', 'Wrong theta value for REF_M_8324 (new format)'
   
   return, 1
 end
@@ -294,7 +294,7 @@ function IDLnexusUtilitiesTest::test_REF_L_twotheta_value
   v_u = myObject->get_twotheta()
   obj_destroy, myObject
   
-  assert, v_u[0] eq '5.46954', 'Wrong twotheta value for REF_L_38955'
+  assert, v_u.value eq '5.46954', 'Wrong twotheta value for REF_L_38955'
   
   return, 1
 end
@@ -313,7 +313,7 @@ function IDLnexusUtilitiesTest::test_REF_L_twotheta_unit
   v_u = myObject->get_twotheta()
   obj_destroy, myObject
   
-  assert, v_u[1] eq 'degree', 'Wrong twotheta value for REFL_38955'
+  assert, v_u.units eq 'degree', 'Wrong twotheta value for REFL_38955'
   
   return, 1
 end
@@ -335,7 +335,7 @@ function IDLnexusUtilitiesTest::test_REF_M_old_twotheta_unit
   v_u = myObject->get_twotheta()
   obj_destroy, myObject
   
-  assert, v_u[1] eq '', 'Wrong twotheta unit for REF_M_5000 (old format)'
+  assert, v_u.units eq '', 'Wrong twotheta unit for REF_M_5000 (old format)'
   
   return, 1
 end
@@ -355,7 +355,7 @@ function IDLnexusUtilitiesTest::test_REF_M_old_twotheta_value
   v_u = myObject->get_twotheta()
   obj_destroy, myObject
   
-  assert, v_u[0] eq '', 'Wrong twotheta value for REF_M_5000 (old format)'
+  assert, v_u.units eq '', 'Wrong twotheta value for REF_M_5000 (old format)'
   
   return, 1
 end
