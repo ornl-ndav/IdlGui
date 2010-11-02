@@ -2,8 +2,8 @@
 ;#### how to get metadata and data from NeXus files ####
 ;file_name = 'unit_test_files/REF_L_38955.nxs'
 ;myObject = obj_new('IDLnexusUtilities',file_name)
-file_name= 'unit_test_files/REF_M_8324.nxs'
-myObject = obj_new('IDLnexusUtilities',file_name, spin_state='Off_Off')
+;file_name= 'unit_test_files/REF_M_8324.nxs'
+;myObject = obj_new('IDLnexusUtilities',file_name, spin_state='Off_Off')
 ;value = myObject->get_twotheta()
 ;v_u = myObject->get_d_SD()
 ;help, value
@@ -13,17 +13,21 @@ myObject = obj_new('IDLnexusUtilities',file_name, spin_state='Off_Off')
 ;obj_destroy, myObject
 ;print, value
 
-data = myObject->get_tof_counts_data()
-help, data
-print, size(data)
+;data = myObject->get_tof_counts_data()
+;help, data
+;print, size(data)
 
-print, data[0:10]
+;print, data[0:10]
 
 ;;#### how to get metadata from xml file ####
-;file_name = 'SNS_offspec_instruments.cfg'
-;iFile = OBJ_NEW('idlxmlparser', file_name)
-;d_sd = iFile->getValue(tag=['configuration','REF_L','d_SD'], attr='units')
-;print, d_sd
-;obj_destroy, iFile
+file_name = 'SNS_offspec_instruments.cfg'
+iFile = OBJ_NEW('idlxmlparser', file_name)
+d_sd = iFile->getValue(tag=['configuration','REF_L','d_SD'], attr='units')
+print, d_sd
+
+value = iFile->getValue(tag=['configuration','REF_M','d_MS'])
+print, value
+
+obj_destroy, iFile
 
 end
