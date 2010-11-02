@@ -90,6 +90,8 @@ function retrieve_value_units, file_name=file_name, path=path
   
 end
 
+;************** local functions ***********************************************
+
 ;+
 ; :Description:
 ;    General function that will returns the value/units array for the
@@ -98,12 +100,12 @@ end
 
 ; :Keywords:
 ;    fileID
-;    entry_spin_state       ex: '' or 'entry-Off_Off'
-;    old_file_path_value    ex: '/instrument/moderator/ModeratorSamDis/readback/'
-;    old_file_path_units    ex: '/instrument/moderator/ModeratorSamDis/units'
-;    new_file_path_value    ex: '/instrument/moderator/ModeratorSamDis/value/'
+;    entry_spin_state       ex:'' or 'entry-Off_Off'
+;    old_file_path_value    ex:'/instrument/moderator/ModeratorSamDis/readback/'
+;    old_file_path_units    ex:'/instrument/moderator/ModeratorSamDis/units'
+;    new_file_path_value    ex:'/instrument/moderator/ModeratorSamDis/value/'
 ;    config_path_array      ex:['configuration','REF_L','d_MS']
-;    configuration_file     ex: 'SNS_offspec_instruments.cfg'
+;    configuration_file     ex:'SNS_offspec_instruments.cfg'
 ;
 ; :Author: j35
 ;-
@@ -180,8 +182,8 @@ end
 ; :Author: j35
 ;-
 function _get_d_SD_for_ref_m, entry_spin_state = entry_spin_state , $
-fileID=fileID, $
-configuration_file = configuration_file
+    fileID=fileID, $
+    configuration_file = configuration_file
   compile_opt idl2
   
   old_file_path_value = '/instrument/bank1/SampleDetDis/readback/'
@@ -214,8 +216,9 @@ end
 ;
 ; :Author: j35
 ;-
-function _get_d_SD_for_ref_l, fileID=fileID, configuration_file=configuration_file
-  
+function _get_d_SD_for_ref_l, fileID=fileID, $
+    configuration_file=configuration_file
+    
   compile_opt idl2
   error = 0
   ;catch, error
@@ -226,38 +229,11 @@ function _get_d_SD_for_ref_l, fileID=fileID, configuration_file=configuration_fi
     ;retrieve value from configuration file
     iCfg = obj_new('idlxmlparser', configuration_file)
     value = iCfg->getValue(tag=['config','instruments','REF_L','d_SD'])
-    units = iCfg->getValue(tag=['config','instruments','REF_L','d_SD'], attr='units')
+    units = iCfg->getValue(tag=['config','instruments','REF_L','d_SD'], $
+      attr='units')
     obj_destroy, iCfg
     return, [value,units]
   endelse
-  
-end
-
-;+
-; :Description:
-;    retrieves the distance Sample - Detector
-;
-; :Author: j35
-;-
-function IDLnexusUtilities::get_d_SD
-  compile_opt idl2
-  
-  fileID = h5f_open(self.file_name)
-  configuration_file = self.configuration_file
-  
-  instrument = self.instrument
-  case (strlowcase(self.instrument)) of
-    'ref_l': value_units = _get_d_SD_for_ref_l(fileID=fileID, $
-    configuration_file=configuration_file)
-    'ref_m': value_units = _get_d_SD_for_ref_m(entry_spin_state=self.entry_spin_state, $
-    fileID=fileID, $
-    configuration_file = configuration_file)
-    else:
-  endcase
-  
-  h5f_close, fileID
-  
-  return, value_units
   
 end
 
@@ -285,7 +261,8 @@ function _get_d_MS_for_ref_l, fileID=fileID
     ;retrieve value from configuration file
     iCfg = obj_new('idlxmlparser', self.configuration_file)
     value = iCfg->getValue(tag=['config','instruments','REF_L','d_MS'])
-    units = iCfg->getValue(tag=['config','instruments','REF_L','d_MS'], attr='units')
+    units = iCfg->getValue(tag=['config','instruments','REF_L','d_MS'], $
+      attr='units')
     obj_destroy, iCfg
     return, [value,units]
   endelse
@@ -306,17 +283,21 @@ end
 ;
 ; :Author: j35
 ;-
-function _get_d_MS_for_ref_m, entry_spin_state = entry_spin_state , fileID=fileID
+function _get_d_MS_for_ref_m, entry_spin_state = entry_spin_state , $
+    fileID=fileID
   compile_opt idl2
   
-  path_value = entry_spin_state + '/instrument/moderator/ModeratorSamDis/readback/'
-  path_units = entry_spin_state + '/instrument/moderator/ModeratorSamDis/units'
-  
+  path_value = entry_spin_state + $
+    '/instrument/moderator/ModeratorSamDis/readback/'
+  path_units = entry_spin_state + $
+    '/instrument/moderator/ModeratorSamDis/units'
+    
   catch, error_value
   if (error_value ne 0) then begin
     catch,/cancel
     ;we are dealing with a new NeXus with new path_value (readback -> value)
-    path_value = entry_spin_state + '/instrument/moderator/ModeratorSamDis/value/'
+    path_value = entry_spin_state + $
+      '/instrument/moderator/ModeratorSamDis/value/'
     catch, error_value_2
     if (error_value_2 ne 0) then begin
       catch,/cancel
@@ -329,7 +310,8 @@ function _get_d_MS_for_ref_m, entry_spin_state = entry_spin_state , fileID=fileI
         ;retrieve value from configuration file
         iCfg = obj_new('idlxmlparser', self.configuration_file)
         value = iCfg->getValue(tag=['config','instruments','REF_M','d_MS'])
-        units = iCfg->getValue(tag=['config','instruments','REF_M','d_MS'], attr='units')
+        units = iCfg->getValue(tag=['config','instruments','REF_M','d_MS'], $
+          attr='units')
         obj_destroy, iCfg
         return, [value,units]
       endelse
@@ -357,29 +339,7 @@ function _get_d_MS_for_ref_m, entry_spin_state = entry_spin_state , fileID=fileI
   
 end
 
-;+
-; :Description:
-;    retrieves the distance Moderator - Sample
-;
-; :Author: j35
-;-
-function IDLnexusUtilities::get_d_MS
-  compile_opt idl2
-  
-  fileID = h5f_open(self.file_name)
-  
-  instrument = self.instrument
-  case (strlowcase(self.instrument)) of
-    'ref_l': value_units = _get_d_MS_for_ref_l(fileID=fileID)
-    'ref_m': value_units = _get_d_MS_for_ref_m(entry_spin_state=self.entry_spin_state, fileID=fileID)
-    else:
-  endcase
-  
-  h5f_close, fileID
-  
-  return, value_units
-  
-end
+;******************************************************************************
 
 ;+
 ; :Description:
@@ -444,22 +404,22 @@ end
 
 ;+
 ; :Description:
-;    Retrieves the theta angle value
+;    Retrieves the theta angle value and its units
 ;
 ; :Returns:
-;   theta value
+;   structure {value:'theta value', units:'theta units'
 ;
 ; :Author: j35
 ;-
 function IDLnexusUtilities::get_theta
   compile_opt idl2
   
-  if (self.instrument eq 'REF_M') then return, ['','']
+  if (self.instrument eq 'REF_M') then return, {value:'',units:''}
   
   theta_path = self.entry_spin_state + '/sample/ths/average_value'
   value_units = retrieve_value_units(file_name=self.file_name, path=theta_path)
   
-  return, value_units
+  return, {value:value_units[0], units:value_units[1]}
 end
 
 ;+
@@ -467,21 +427,81 @@ end
 ;   Retrieves the twoTheta angle value and units
 ;
 ; :Returns:
-;   twoTheta value and units [value,unit]
+;   structure of twoTheta value and units {value:value, units:units}
 ;
 ; :Author: j35
 ;-
 function IDLnexusUtilities::get_twoTheta
   compile_opt idl2
   
-  if (self.instrument eq 'REF_M') then return, ['','']
+  if (self.instrument eq 'REF_M') then return, {value:'',units:''}
   
   twotheta_path = self.entry_spin_state + '/instrument/bank1/tthd/average_value'
-  value_units = retrieve_value_units(file_name=self.file_name, path=twotheta_path)
-  
-  return, value_units
+  value_units = retrieve_value_units(file_name=self.file_name, $
+    path=twotheta_path)
+    
+  return, {value:value_units[0], units:value_units[1]}
 end
 
+;+
+; :Description:
+;    retrieves the distance Moderator - Sample and its units
+;
+; :Returns:
+;   structure {value:value, units:units}
+;
+; :Author: j35
+;-
+function IDLnexusUtilities::get_d_MS
+  compile_opt idl2
+  
+  fileID = h5f_open(self.file_name)
+  
+  instrument = self.instrument
+  case (strlowcase(self.instrument)) of
+    'ref_l': value_units = _get_d_MS_for_ref_l(fileID=fileID)
+    'ref_m': value_units = _get_d_MS_for_ref_m(entry_spin_state=$
+      self.entry_spin_state, fileID=fileID)
+    else:
+  endcase
+  
+  h5f_close, fileID
+  
+  return, {value:value_units[0], units:value_units[1]}
+  
+end
+
+;+
+; :Description:
+;    retrieves the distance Sample - Detector and its units
+;    
+; :Units:
+;   structure of {value:value, units:units}
+;
+; :Author: j35
+;-
+function IDLnexusUtilities::get_d_SD
+  compile_opt idl2
+  
+  fileID = h5f_open(self.file_name)
+  configuration_file = self.configuration_file
+  
+  instrument = self.instrument
+  case (strlowcase(self.instrument)) of
+    'ref_l': value_units = _get_d_SD_for_ref_l(fileID=fileID, $
+      configuration_file=configuration_file)
+    'ref_m': value_units = _get_d_SD_for_ref_m(entry_spin_state=$
+      self.entry_spin_state, $
+      fileID=fileID, $
+      configuration_file = configuration_file)
+    else:
+  endcase
+  
+  h5f_close, fileID
+  
+  return, {value:value_units[0], units:value_units[1]}
+  
+end
 ;+
 ; :Description:
 ;    init procedure of the program that check if the

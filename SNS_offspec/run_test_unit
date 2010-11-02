@@ -16,6 +16,10 @@ cd,'utilities'
 .run IDLxmlParser__define.pro
 
 cd,current_path
+.run IDLnexusUtilitiesTest__define.pro
+.run IDLsystemTest__define.pro
+.run IDLxmlParserTest__define.pro	
+
 ;mgunit, ['IDLnexusUtilitiesTest'], log_file='results.log'		
 mgunit, ['IDLnexusUtilitiesTest', 'IDLxmlParserTest', 'IDLsystemTest']	
 ;mgunit, ['IDLsystemTest'] ;REMOVE_ME		
