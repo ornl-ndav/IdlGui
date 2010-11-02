@@ -38,13 +38,14 @@
 
 ; :Author: j35
 ;-
-function IDLsystemTest::version
+function IDLsystemTest::testVersion
   compile_opt idl2
   
   sVersion = !VERSION
   current_version = float(sVersion.release)
   
-  assert, current_version ge 8.0, 'Program required version IDL 8.0 or higher'
+  assert, current_version ge 8.0, 'Program required version IDL 8.0 or higher (' + $
+  'current version is ' + strcompress(current_version,/remove_all) + ')'
   return, 1
 end
 
