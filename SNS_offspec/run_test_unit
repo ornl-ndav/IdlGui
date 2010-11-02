@@ -17,5 +17,5 @@ cd,'utilities'
 
 cd,current_path
 ;mgunit, ['IDLnexusUtilitiesTest'], log_file='results.log'		
-;mgunit, ['IDLnexusUtilitiesTest', 'IDLxmlParserTest']	
-mgunit, ['IDLxmlParserTest'] ;REMOVE_ME		
+mgunit, ['IDLnexusUtilitiesTest', 'IDLxmlParserTest']	
+;mgunit, ['IDLxmlParserTest'] ;REMOVE_ME		
