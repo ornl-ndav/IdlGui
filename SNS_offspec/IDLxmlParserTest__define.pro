@@ -43,7 +43,7 @@ function IDLxmlParserTest::test_cfg_value
   
   file_name= 'SNS_offspec_instruments.cfg'
   myObject = obj_new('IDLxmlParser', file_name)
-  value = myObject->getValue(tag=['configuration','REF_M','d_MS'])
+  value = myObject->getValue(tag=['config','instruments','REF_M','d_MS'])
   obj_destroy, myObject
   
   assert, value eq '13480.0', 'Wrong Value retrieved from cfg file (d_MS for REF_M)'
@@ -61,7 +61,7 @@ function IDLxmlParserTest::test_cfg_attribute
   
   file_name= 'SNS_offspec_instruments.cfg'
   myObject = obj_new('IDLxmlParser', file_name)
-  value = myObject->getValue(tag=['configuration','REF_L','d_SD'], attr='units')
+  value = myObject->getValue(tag=['config','instruments','REF_L','d_SD'], attr='units')
   obj_destroy, myObject
   
   assert, value eq 'mm', 'Wrong Value retrieved from cfg file (d_SD for REF_L)'

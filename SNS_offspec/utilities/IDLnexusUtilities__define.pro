@@ -187,7 +187,7 @@ configuration_file = configuration_file
   old_file_path_value = '/instrument/bank1/SampleDetDis/readback/'
   old_file_path_units = '/instrument/bank1/SampleDetDis/units'
   new_file_path_value = '/instrument/bank1/SampleDetDis/value/'
-  config_path_array   = ['configuration','REF_M','d_SD']
+  config_path_array   = ['config','instruments','REF_M','d_SD']
   
   value_units = _get_value_units_from_old_new_cfg (fileID = fileID, $
     entry_spin_state = entry_spin_state, $
@@ -225,8 +225,8 @@ function _get_d_SD_for_ref_l, fileID=fileID, configuration_file=configuration_fi
   endif else begin
     ;retrieve value from configuration file
     iCfg = obj_new('idlxmlparser', configuration_file)
-    value = iCfg->getValue(tag=['configuration','REF_L','d_SD'])
-    units = iCfg->getValue(tag=['configuration','REF_L','d_SD'], attr='units')
+    value = iCfg->getValue(tag=['config','instruments','REF_L','d_SD'])
+    units = iCfg->getValue(tag=['config','instruments','REF_L','d_SD'], attr='units')
     obj_destroy, iCfg
     return, [value,units]
   endelse
@@ -284,8 +284,8 @@ function _get_d_MS_for_ref_l, fileID=fileID
   endif else begin
     ;retrieve value from configuration file
     iCfg = obj_new('idlxmlparser', self.configuration_file)
-    value = iCfg->getValue(tag=['configuration','REF_L','d_MS'])
-    units = iCfg->getValue(tag=['configuration','REF_L','d_MS'], attr='units')
+    value = iCfg->getValue(tag=['config','instruments','REF_L','d_MS'])
+    units = iCfg->getValue(tag=['config','instruments','REF_L','d_MS'], attr='units')
     obj_destroy, iCfg
     return, [value,units]
   endelse
@@ -328,8 +328,8 @@ function _get_d_MS_for_ref_m, entry_spin_state = entry_spin_state , fileID=fileI
       endif else begin
         ;retrieve value from configuration file
         iCfg = obj_new('idlxmlparser', self.configuration_file)
-        value = iCfg->getValue(tag=['configuration','REF_M','d_MS'])
-        units = iCfg->getValue(tag=['configuration','REF_M','d_MS'], attr='units')
+        value = iCfg->getValue(tag=['config','instruments','REF_M','d_MS'])
+        units = iCfg->getValue(tag=['config','instruments','REF_M','d_MS'], attr='units')
         obj_destroy, iCfg
         return, [value,units]
       endelse
