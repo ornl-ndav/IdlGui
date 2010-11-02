@@ -14,7 +14,7 @@ pro run
   savepath = path
   
   ;spec_path = 'C:\Users\Erik\Documents\LIPID MULTILAYERS\NEXUS\'
-  spec_path = path
+  spec_path = '~/IDLWorkspace80/SNS_offspec/'
   
   ;norm
   spec_file = 'Al_can_spectrum.dat'   ;FIXME what is this Al_can_spectrum

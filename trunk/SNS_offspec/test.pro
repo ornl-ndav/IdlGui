@@ -22,10 +22,13 @@
 ;;#### how to get metadata from xml file ####
 file_name = 'SNS_offspec_instruments.cfg'
 iFile = OBJ_NEW('idlxmlparser', file_name)
-d_sd = iFile->getValue(tag=['configuration','REF_L','d_SD'], attr='units')
+d_sd = iFile->getValue(tag=['config','instruments','REF_L','d_SD'], attr='units')
 print, d_sd
 
-value = iFile->getValue(tag=['configuration','REF_M','d_MS'])
+value = iFile->getValue(tag=['config','instruments','REF_M','d_MS'])
+print, value
+
+value = iFile->getValue(tag=['config','constants','h'])
 print, value
 
 obj_destroy, iFile

@@ -40,7 +40,7 @@ function SNS_convert_QXQZ, THLAM, thvec, lamvec, theta_in, qxvec, qzvec
       if data[i,j] gt 0 then begin
       
         lambdalo=lambda_bin_vec[i]
-        lambda_step = 0.0530462 ;Lambda of 200microS
+        lambda_step = 0.0530462 ;Lambda of 200microS  lambda_step is in Angstroms
         lambdahi=lambdalo+lambda_step
         
         if j ne data_size[1]-1 then theta_step=abs(theta_vec[j+1]-theta_vec[j])
