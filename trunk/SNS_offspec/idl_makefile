@@ -6,6 +6,11 @@ cd,'utilities'
 .run IDLxmlParser__define.pro
 
 cd,current_path
+
+;test
+.run IDLnexusUtilitiesTest__define.pro
+.run IDLxmlParserTest__define.pro
+
 .run xcw_direct.pro
 .run xcr_direct.pro
 .run SNS_convert_QXQZ.pro

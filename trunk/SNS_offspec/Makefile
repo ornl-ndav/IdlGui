@@ -13,6 +13,5 @@ install:
 #	cp miniSANSreduction /SNS/software/idltools/
 
 test:
-	idl ./makefile.pro
-	idl ./run_test_unit
+	idl ./make_and_run_test_unit
 
