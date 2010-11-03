@@ -76,6 +76,8 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
     log_book_text: ['',''], $;log book 
 
+    bFindnexus: 0b, $
+
    ;input and output files path
     output_path: '~/results/',$ ;used in the output tab 
     input_path: '~/results/' })
@@ -92,6 +94,11 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;    SCR_YSIZE    = MainBaseSize[3], $
     mbar = bar,$
     TITLE        = MainTitle)
+    
+   bFindnexus = is_findnexus_there()
+   ;REMOVE_ME
+   ;bFindnexus = 1 
+   (*global).bFindnexus = bFindnexus
     
 ;  design_menu, bar, global
   design_tabs, MAIN_BASE, global
