@@ -88,6 +88,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
 ;  design_menu, bar, global
   design_tabs, MAIN_BASE, global
+  design_menu, bar, global
   
   ;Realize the widgets, set the user value of the top-level
   ;base, and call XMANAGER to manage everything.
