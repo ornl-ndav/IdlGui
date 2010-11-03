@@ -69,6 +69,8 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     applicaiton: APPLICATION, $
     version: VERSION, $
 
+    list_data_runs: ptr_new(0L),$
+
    ;input and output files path
     output_path: '~/results/',$ ;used in the output tab 
     input_path: '~/results/' })

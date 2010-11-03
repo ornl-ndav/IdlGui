@@ -55,7 +55,9 @@ pro design_tabs, MAIN_BASE, global
   label = widget_label(row1,$
     value = 'Data run numbers:')
   text = widget_text(row1,$
-    value = 'N/A',$
+    value = '2000,2010-2015,2040,2042,2050-2055',$
+    /editable,$
+    uname = 'data_run_numbers_text_field',$
     xsize = 100)
   ex = widget_label(row1,$
     value = '(ex: 200,2004-2006)')

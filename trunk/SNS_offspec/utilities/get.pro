@@ -34,86 +34,6 @@
 
 ;+
 ; :Description:
-;    returns the name of the instrument according to the name of the input
-;    file provided
-;
-; :Params:
-;    file_name
-;
-; :Author: j35
-;-
-function getInstrument, file_name
-  compile_opt idl2
-  
-  catch, error
-  if (error ne 0) then begin
-    catch,/cancel
-    return, 'instr_undefined_'
-  endif
-  
-  _split1 = strsplit(file_name,'/',/extract)
-  _split2 = strsplit(_split1[-1],'_',/extract)
-  
-  return, _split2[0] + '_' + _split2[1]
-  
-end
-
-;+
-; :Description:
-;    get list of lines selected in table (tab1)
-;
-; :Params:
-;    event
-;
-; :Author: j35
-;-
-function get_table_lines_selected, event
-  id = widget_info(event.top, find_by_uname='tab1_table')
-  selection = widget_info(id, /table_select)
-  return, selection
-end
-
-;+
-; :Description:
-;    returns the number of files loaded
-;
-; :Params:
-;    event
-;
-; :Keywords:
-;   spin_state    the spin state to used (0, 1, 2 or 3)
-;
-;  :Returns:
-;    nbr_files
-;
-; :Author: j35
-;-
-function get_number_of_files_loaded, event, spin_state=spin_state
-  compile_opt idl2
-  
-  widget_control, event.top, get_uvalue=global
-  
-  if (n_elements(spin_state) eq 0) then spin_state=0
-  
-  ;find first empty entry using the table data
-  files_SF_list = (*global).files_SF_list ;[spin, column, row]
-  file_names = files_SF_list[spin_state,0,*]
-  file_names = reform(file_names)
-  
-  empty_index = where(file_names eq '',nbr)
-  if (nbr eq -1) then begin
-    nbr_files = (size(file_SF_list))[3]
-  endif else begin
-    empty_index = reform(empty_index)
-    nbr_files = empty_index[0]
-  endelse
-  
-  return, nbr_files
-  
-end
-
-;+
-; :Description:
 ;    get the total number of files loaded
 ;    in all the spin states
 ;
@@ -150,7 +70,7 @@ end
 ;
 ; :Author: j35
 ;-
-function getValue, id=id, event=event, base=base, uname
+function getValue, id=id, event=event, base=base, uname=uname
   compile_opt idl2
   
   if (n_elements(event) ne 0) then begin
@@ -213,4 +133,34 @@ function get_current_spin_state_selected, event
   return, current_spin_state_selected
   
 end
+
+;+
+; :Description:
+;    using the left and right values, create the sequence
+;
+; :Keywords:
+;    from   first number of sequence
+;    to     last number of sequence
+;
+; :Author: j35
+;-
+function getSequence, from=left, to=right
+  compile_opt idl2
+  
+  no_error = 0
+  catch, no_error
+  if (no_error ne 0) then begin
+    catch,/cancel
+    return, ['']
+  endif else begin
+    on_ioerror, done
+    iLeft  = fix(left)
+    iRight = fix(right)
+    sequence = indgen(iRight-iLeft+1)+iLeft
+    return, strcompress(string(sequence),/remove_all)
+    done:
+    return, [strcompress(left,/remove_all)]
+  ENDELSE
+END
+
 
