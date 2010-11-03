@@ -18,6 +18,7 @@ cd, CurrentFolder + IDLUtilitiesPath
 ;build GUI
 cd, CurrentFolder + '/SOS_GUI'
 .run design_tabs.pro
+.run menu_designer.pro
 
 ;build main routines and tests
 cd, CurrentFolder
