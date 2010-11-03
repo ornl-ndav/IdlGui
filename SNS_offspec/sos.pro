@@ -74,6 +74,8 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ;id of log book window
     view_log_book_id : 0L, $
 
+    log_book_text: ['',''], $;log book 
+
    ;input and output files path
     output_path: '~/results/',$ ;used in the output tab 
     input_path: '~/results/' })

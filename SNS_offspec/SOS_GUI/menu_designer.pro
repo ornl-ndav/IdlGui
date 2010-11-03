@@ -45,7 +45,6 @@ pro design_view_menu, bar, global
     
 end
 
-
 ;+
 ; :Description:
 ;    Design the various menus of the main base
