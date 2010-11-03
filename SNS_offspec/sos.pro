@@ -66,8 +66,10 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   global = ptr_new({ $
   
+    applicaiton: APPLICATION, $
     version: VERSION, $
-      
+
+   ;input and output files path
     output_path: '~/results/',$ ;used in the output tab 
     input_path: '~/results/' })
     
@@ -91,8 +93,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;base, and call XMANAGER to manage everything.
   WIDGET_CONTROL, main_base, /REALIZE
   WIDGET_CONTROL, main_base, SET_UVALUE=global
-  XMANAGER, 'main_base', main_base, /NO_BLOCK, $
-    cleanup = 'sos_cleanup'
+  xmanager, 'main_base', main_base, /NO_BLOCK, cleanup = 'sos_cleanup'
     
   ;=============================================================================
   ;send message to log current run of application

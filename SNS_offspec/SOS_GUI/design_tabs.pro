@@ -39,10 +39,184 @@ pro design_tabs, MAIN_BASE, global
     /tracking_events, $
     uname = 'tab_uname')
     
+  ;********* tab 1 *****************
   base1 = widget_base(tabs,$
-    title = 'LOAD AND RUN',$
+    title = 'LOAD AND RUN')
+    
+  _base1 = widget_base(base1,$
+    /column)
+    
+  data_box = widget_base(_base1,$
+    frame = 1,$
+    /base_align_center,$
+    /column)
+    
+  row1 = widget_base(data_box,/row)
+  label = widget_label(row1,$
+    value = 'Data run numbers:')
+  text = widget_text(row1,$
+    value = 'N/A',$
+    xsize = 100)
+  ex = widget_label(row1,$
+    value = '(ex: 200,2004-2006)')
+    
+  row2 = widget_label(data_box,$
+    value = 'OR')
+    
+  row3 = widget_button(data_box,$
+    value = 'Browse for data NeXus files ...',$
+    scr_xsize = 845)
+    
+  ;SPACE
+  space = widget_label(_base1,$
+    value = ' ')
+    
+  ;NORMALIZATION
+  norm_box = widget_base(_base1,$
+    frame = 1,$
+    /base_align_center,$
+    /row)
+    
+  label = widget_label(norm_box,$
+    value = 'Normalization run number:')
+  text = widget_text(norm_box,$
+    value = 'N/A',$
+    xsize = 10)
+  or_label = widget_label(norm_box,$
+    value = '  OR  ')
+  button = widget_button(norm_box,$
+    value = 'Browse for a normalization NeXus file ...',$
+    scr_xsize = 500)
+    
+  ;SPACE
+  space = widget_label(_base1,$
+    value = ' ')
+
+  ;PARAMETERS
+  para_box = widget_base(_base1,$
+    frame = 1,$
+    /base_align_center,$
+    /column)
+    
+  row1 = widget_base(para_box,$
+    /row)
+  row1col1 = widget_base(row1,$
+    /column)
+    
+  field1 = cw_field(row1col1,$
+    /integer,$
+    xsize = 6,$
+    value = '500',$
+    title = 'Bins:  Qx')
+  field2 = cw_field(row1col1,$
+    xsize = 6,$
+    /integer,$
+    value = '500',$
+    title = '       Qz')
+    
+  space = widget_label(row1,$
+    value = '              ')
+    
+  row1col2 = widget_base(row1,$
+    /column)
+  field1 = cw_field(row1col2,$
+    /floating,$
+    xsize = 8,$
+    value = '-0.004',$
+    title = 'Ranges:  Qx')
+  field2 = cw_field(row1col2,$
+    xsize = 8,$
+    /floating,$
+    value = '-0.004',$
+    title = '         Qz')
+  field3 = cw_field(row1col2,$
+    xsize = 8,$
+    /floating,$
+    value = '9.75',$
+    title = '   TOF (ms)')
+
+  row1col3 = widget_base(row1,$
+    /column)
+  field1 = cw_field(row1col3,$
+    /floating,$
+    xsize = 8,$
+    value = '0.004',$
+    title = 'to  ')
+  field2 = cw_field(row1col3,$
+    xsize = 8,$
+    /floating,$
+    value = '0.004',$
+    title = 'to  ')
+  field3 = cw_field(row1col3,$
+    xsize = 8,$
+    /floating,$
+    value = '22.0',$
+    title = 'to  ')
+    
+  space = widget_label(row1,$
+    value = '              ')
+    
+  row1col4 = widget_base(row1,$
+    /column)
+  field1 = cw_field(row1col4,$
+    /floating,$
+    xsize = 8,$
+    value = '133',$
+    title = '   Center pixel')
+  field2 = cw_field(row1col4,$
+    xsize = 8,$
+    /floating,$
+    value = '0.7',$
+    title = 'Pixel size (mm)')
+
+  row2 = widget_base(para_box,$
+  /align_left,$
+    /row)
+  row2col1 = widget_base(row2,$
     /column)
 
+  field1 = cw_field(row2col1,$
+    /integer,$
+    xsize = 3,$
+    value = '102',$
+    title = 'Pixels:   min')
+  field2 = cw_field(row2col1,$
+    xsize = 3,$
+    /integer,$
+    value = '165',$
+    title = '          max')
     
+  space = widget_label(row2,$
+    value = '              ')
+    
+  row2col2 = widget_base(row2,$
+    /column)
+  field1 = cw_field(row2col2,$
+    /floating,$
+    xsize = 10,$
+    value = '1430.0',$
+    title = '   Distance sample to detector (mm) ')
+  field2 = cw_field(row2col2,$
+    xsize = 10,$
+    /floating,$
+    value = '14910.',$
+    title = 'Distance moderator to detector (mm) ')
+
+  ;progress bar and go button
+  bottom_box = widget_base(_base1,$
+    /align_center,$
+    /row)
+    
+  progress_base = widget_base(bottom_box,$
+  map = 0)
+  progress_bar = widget_draw(progress_base,$
+  scr_xsize = 400,$
+  scr_ysize = 25)  
+    
+  space = widget_label(bottom_box,$
+  value = '                     ')
+    
+  ok = widget_button(bottom_box,$
+  value = '>   >  > >> G O << <  <   <')  
     
 end
