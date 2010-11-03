@@ -14,6 +14,3 @@ install:
 
 test:
 	idl ./make_and_run_test_unit
-
-doc:
-	idl ./make_doc.pro
