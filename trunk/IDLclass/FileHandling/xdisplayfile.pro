@@ -92,8 +92,6 @@ END
 
 
 
-
-
 PRO XDisplayFileGrowToScreen, tlb, text, height, nlines
   ; Grow the text widget so that it displays all of the text or
   ; it is as large as the screen can hold.
@@ -266,6 +264,9 @@ PRO XDisplayFile, FILENAME, TITLE = TITLE, GROUP = GROUP, WIDTH = WIDTH, $
     endif else begin
     offset = 0
     endelse
+  
+  if(~keyword_set(xoffset)) then xoffset = 0
+  if(~keyword_set(yoffset)) then yoffset = 0
   
   IF(NOT(KEYWORD_SET(TEXT))) THEN BEGIN
     IF noTitle THEN TITLE = FILENAME
