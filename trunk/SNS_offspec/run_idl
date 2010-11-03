@@ -2,10 +2,10 @@ cd, current=current_path
 
 cd,current_path
 cd,'utilities'
-.run IDLnexusUtilities__define.pro
-.run IDLxmlParser__define.pro
 
 cd,current_path
+.run IDLnexusUtilities__define.pro
+.run IDLxmlParser__define.pro
 .run xcw_direct.pro
 .run xcr_direct.pro
 .run SNS_convert_QXQZ.pro

@@ -80,6 +80,6 @@ tof_units = tof_units, $
 d_SD_m = d_SD_m, $
 d_MS_m = d_MS_m, $
 lambda_units = 'Angstroms')
-print, 'Lambda is (Angstroms): ' , lambda
+print, '--> Test: Lambda for 200microsS is (Angstroms): ' , lambda
 end
 
