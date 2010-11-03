@@ -92,8 +92,6 @@ END
 
 
 
-
-
 PRO XDisplayFileGrowToScreen, tlb, text, height, nlines
   ; Grow the text widget so that it displays all of the text or
   ; it is as large as the screen can hold.
@@ -143,7 +141,11 @@ PRO XDisplayFile, FILENAME, TITLE = TITLE, GROUP = GROUP, WIDTH = WIDTH, $
     DONE_BUTTON=done_button, MODAL=MODAL, $
     EDITABLE=editable, GROW_TO_SCREEN=grow_to_screen, $
     WTEXT=filetext, BLOCK=block, RETURN_ID=return_id, $
-    center = center, offset = offset
+    center = center, $
+    offset = offset, $
+    xoffset = xoffset, $
+    yoffset = yoffset
+    
   ;+
   ; NAME:
   ;	XDISPLAYFILE
@@ -177,6 +179,12 @@ PRO XDisplayFile, FILENAME, TITLE = TITLE, GROUP = GROUP, WIDTH = WIDTH, $
   ; OFFSET: number of pixel to offset the widget_base relative to the center 
   ; (if center flag set) or to the top left corner
   ;
+  ; XOFFSET: number of pixel to offset the widget_base relative to the left
+  ; (ignored if CENTER flag has been set)
+  ; 
+  ; YOFFSET: number of pixel to offset the widget_base relative to the top
+  ; (ignored if CENTER flag has been set)
+  ; 
   ;	DONE_BUTTON: the text to use for the Done button.  If omitted,
   ;		the text "Done with <filename>" is used.
   ;
@@ -229,13 +237,13 @@ PRO XDisplayFile, FILENAME, TITLE = TITLE, GROUP = GROUP, WIDTH = WIDTH, $
   ; MODIFICATION HISTORY:
   ;	Written By Steve Richards, December 1990
   ;	Graceful error recovery, DMS, Feb, 1992.
-  ;       12 Jan. 1994  - KDB
-  ;               If file was empty, program would crash. Fixed.
-  ;       4 Oct. 1994     MLR Fixed bug if /TEXT was present and /TITLE was not.
-  ;	2 jan 1997	DMS Added DONE_BUTTON keyword, made Done
-  ;			button align on left, removed padding.
-  ;	19 Nov 2004, GROW_TO_SCREEN and RETURN_ID keywords. Allow for
-  ;                       user to resize display. General updating.
+  ;       12 Jan. 1994  - KDB If file was empty, program would crash. Fixed.
+  ;       4 Oct. 1994   - MLR Fixed bug if /TEXT was present and /TITLE was not.
+  ;	      2 jan 1997	- DMS Added DONE_BUTTON keyword, made Done
+  ;			                button align on left, removed padding.
+  ;	      19 Nov 2004, GROW_TO_SCREEN and RETURN_ID keywords. Allow for
+  ;                     user to resize display. General updating.
+  ;       03 Octo 2010, CENTER, OFFSET, XOFFSET and YOFFSET flags added
   ;-
     
   ; Establish defaults if keywords not specified
@@ -256,6 +264,9 @@ PRO XDisplayFile, FILENAME, TITLE = TITLE, GROUP = GROUP, WIDTH = WIDTH, $
     endif else begin
     offset = 0
     endelse
+  
+  if(~keyword_set(xoffset)) then xoffset = 0
+  if(~keyword_set(yoffset)) then yoffset = 0
   
   IF(NOT(KEYWORD_SET(TEXT))) THEN BEGIN
     IF noTitle THEN TITLE = FILENAME
@@ -313,8 +324,8 @@ PRO XDisplayFile, FILENAME, TITLE = TITLE, GROUP = GROUP, WIDTH = WIDTH, $
       
     endif else begin
       
-      xoff = 0
-      yoff = 0
+      xoff = xoffset
+      yoff = yoffset
     
     endelse
     

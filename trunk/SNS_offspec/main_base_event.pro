@@ -42,12 +42,50 @@ PRO main_base_event, Event
   
     widget_info(wWidget, find_by_uname='main_base'): BEGIN
     end
+    
+    ;MENU
+    ;view log book button
+    widget_info(wWidget, find_by_uname='view_log_book_switch'): begin
+    
+      tmp_array = ['first line','second line','','fourth line']
+      
+      view_log_book_id = (*global).view_log_book_id
+      if (widget_info(view_log_book_id, /valid_id) eq 0) then begin
+        groupID = widget_info(event.top, find_by_uname='main_base')
+        
+        id = widget_info(wWidget, find_by_uname='main_base')
+        geometry = widget_info(id,/geometry)
+        
+        main_base_xoffset = geometry.xoffset
+        main_base_yoffset = geometry.yoffset
+        main_base_xsize = geometry.xsize
+;        main_base_ysize = geometry.ysize
+        
+        xoffset = main_base_xoffset + main_base_xsize
+        yoffset = main_base_yoffset
+        
+        xdisplayfile, 'LogBook', $
+          text=tmp_array,$
+          title='Live Log Book',$
+          group = groupID, $
+          wtext=view_log_book_id, $
+          xoffset = xoffset, $
+          yoffset = yoffset
+        (*global).view_log_book_id = view_log_book_id
 
+; Use this code to replace contain of log book live !
+; widget_control, (*global).view_log_book_id, set_value=['dfdfdfd']
+        
+      endif
+      
+    end
+    
+    ;TAB1
     ;Data run numbers text field
     widget_info(wWidget, find_by_uname='data_run_numbers_text_field'): begin
       parse_data_run_numbers, event
     end
-
+    
     else:
   endcase
   
