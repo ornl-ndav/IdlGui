@@ -40,7 +40,8 @@ pro design_view_menu, bar, global
     /menu)
     
   set2 = widget_button(mPlot, $
-    value = ('> ' + 'Log Book'))
+    uname = 'view_log_book_switch',$
+    value = ('Show log book'))
     
 end
 
