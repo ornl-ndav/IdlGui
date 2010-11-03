@@ -40,5 +40,8 @@ cd, CurrentFolder
 .run SNS_extract_specular.pro
 .run SNS_read_NEXUS.pro
 .run SNS_offspec_QXQZ_from_NEXUS_looper_NEW.pro
+
+.run data_box_eventcb.pro
+
 .run sos.pro
 .run sos_cleanup.pro
