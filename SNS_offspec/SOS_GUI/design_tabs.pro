@@ -35,6 +35,8 @@
 pro design_tabs, MAIN_BASE, global
   compile_opt idl2
   
+  bFindnexus = (*global).bFindnexus
+  
   tabs = widget_tab(MAIN_BASE,$
     /tracking_events, $
     uname = 'tab_uname')
@@ -48,26 +50,32 @@ pro design_tabs, MAIN_BASE, global
     
   data_box = widget_base(_base1,$
     frame = 1,$
+    /align_center,$
     /base_align_center,$
     /column)
     
-  row1 = widget_base(data_box,/row)
-  label = widget_label(row1,$
-    value = 'Data run numbers:')
-  text = widget_text(row1,$
-    value = '2000,2010-2015,2040,2042,2050-2055',$
-    /editable,$
-    uname = 'data_run_numbers_text_field',$
-    xsize = 100)
-  ex = widget_label(row1,$
-    value = '(ex: 200,2004-2006)')
-    
-  row2 = widget_label(data_box,$
-    value = 'OR')
-    
+  ;display those widgets if findnexus is in the path
+  if (bFindnexus) then begin
+  
+    row1 = widget_base(data_box,/row)
+    label = widget_label(row1,$
+      value = 'Data run numbers:')
+    text = widget_text(row1,$
+      value = '2000,2010-2015,2040,2042,2050-2055',$
+      /editable,$
+      uname = 'data_run_numbers_text_field',$
+      xsize = 100)
+    ex = widget_label(row1,$
+      value = '(ex: 200,2004-2006)')
+      
+    row2 = widget_label(data_box,$
+      value = 'OR')
+      
+  endif
+  
   row3 = widget_button(data_box,$
     value = 'Browse for data NeXus files ...',$
-    scr_xsize = 845)
+    scr_xsize = 575)
     
   ;SPACE
   space = widget_label(_base1,$
@@ -76,24 +84,31 @@ pro design_tabs, MAIN_BASE, global
   ;NORMALIZATION
   norm_box = widget_base(_base1,$
     frame = 1,$
+    /align_center,$
     /base_align_center,$
     /row)
     
-  label = widget_label(norm_box,$
-    value = 'Normalization run number:')
-  text = widget_text(norm_box,$
-    value = 'N/A',$
-    xsize = 10)
-  or_label = widget_label(norm_box,$
-    value = '  OR  ')
+  ;display those widgets if findnexus is in the path
+  if (bFindnexus) then begin
+  
+    label = widget_label(norm_box,$
+      value = 'Normalization run number:')
+    text = widget_text(norm_box,$
+      value = 'N/A',$
+      xsize = 10)
+    or_label = widget_label(norm_box,$
+      value = '  OR  ')
+      
+  endif
+  
   button = widget_button(norm_box,$
     value = 'Browse for a normalization NeXus file ...',$
-    scr_xsize = 500)
+    scr_xsize = 575)
     
   ;SPACE
   space = widget_label(_base1,$
     value = ' ')
-
+    
   ;PARAMETERS
   para_box = widget_base(_base1,$
     frame = 1,$
@@ -136,7 +151,7 @@ pro design_tabs, MAIN_BASE, global
     /floating,$
     value = '9.75',$
     title = '   TOF (ms)')
-
+    
   row1col3 = widget_base(row1,$
     /column)
   field1 = cw_field(row1col3,$
@@ -170,13 +185,13 @@ pro design_tabs, MAIN_BASE, global
     /floating,$
     value = '0.7',$
     title = 'Pixel size (mm)')
-
+    
   row2 = widget_base(para_box,$
-  /align_left,$
+    /align_left,$
     /row)
   row2col1 = widget_base(row2,$
     /column)
-
+    
   field1 = cw_field(row2col1,$
     /integer,$
     xsize = 3,$
@@ -203,22 +218,22 @@ pro design_tabs, MAIN_BASE, global
     /floating,$
     value = '14910.',$
     title = 'Distance moderator to detector (mm) ')
-
+    
   ;progress bar and go button
   bottom_box = widget_base(_base1,$
     /align_center,$
     /row)
     
   progress_base = widget_base(bottom_box,$
-  map = 0)
+    map = 0)
   progress_bar = widget_draw(progress_base,$
-  scr_xsize = 400,$
-  scr_ysize = 25)  
+    scr_xsize = 400,$
+    scr_ysize = 25)
     
   space = widget_label(bottom_box,$
-  value = '                     ')
+    value = '                     ')
     
   ok = widget_button(bottom_box,$
-  value = '>   >  > >> G O << <  <   <')  
+    value = '>   >  > >> G O << <  <   <')
     
 end
