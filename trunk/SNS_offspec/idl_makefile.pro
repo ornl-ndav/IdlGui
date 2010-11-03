@@ -42,6 +42,7 @@ cd, CurrentFolder
 .run SNS_offspec_QXQZ_from_NEXUS_looper_NEW.pro
 
 .run data_box_eventcb.pro
+.run log_book_eventcb.pro
 
 .run sos.pro
 .run sos_cleanup.pro

@@ -32,60 +32,31 @@
 ;
 ;==============================================================================
 
-PRO main_base_event, Event
-
-  ;get global structure
-  wWidget = Event.top          ;widget id
-  widget_control, wWidget, get_uvalue=global
+;+
+; :Description:
+;    This procedure retrieves the current contain of the log book
+;    and update it with the new message added to it
+;
+; :Params:
+;    event
+;
+; :Keywords:
+;    new_message
+;
+; :Author: j35
+;-
+pro log_book_update, event, new_message=new_message
+  compile_opt idl2
   
-  case (Event.id) of
+  widget_control, event.top, get_uvalue=global
   
-    widget_info(wWidget, find_by_uname='main_base'): BEGIN
-    end
-    
-    ;MENU
-    ;view log book button
-    widget_info(wWidget, find_by_uname='view_log_book_switch'): begin
-    
-      view_log_book_id = (*global).view_log_book_id
-      if (widget_info(view_log_book_id, /valid_id) eq 0) then begin
-        groupID = widget_info(event.top, find_by_uname='main_base')
-        
-        id = widget_info(wWidget, find_by_uname='main_base')
-        geometry = widget_info(id,/geometry)
-        
-        main_base_xoffset = geometry.xoffset
-        main_base_yoffset = geometry.yoffset
-        main_base_xsize = geometry.xsize
-;        main_base_ysize = geometry.ysize
-        
-        xoffset = main_base_xoffset + main_base_xsize
-        yoffset = main_base_yoffset
-
-        text = (*global).view_log_book_id
-        
-        xdisplayfile, 'LogBook', $
-          text=text,$
-          title='Live Log Book',$
-          group = groupID, $
-          wtext=view_log_book_id, $
-          xoffset = xoffset, $
-          yoffset = yoffset
-        (*global).view_log_book_id = view_log_book_id
-
-      endif
-      
-    end
-    
-    ;TAB1
-    ;Data run numbers text field
-    widget_info(wWidget, find_by_uname='data_run_numbers_text_field'): begin
-      parse_data_run_numbers, event
-      log_book_update, event, new_message='new message here'
-    end
-    
-    else:
-  endcase
+  view_log_book_id = (*global).view_log_book_id
+  if (widget_info(view_log_book_id,/valid_id) eq 0) then return
+  
+  widget_control, view_log_book_id, get_value=current_text
+  
+  new_text = [current_text, new_message]
+  widget_control, view_log_book_id, set_value=new_text
+  (*global).log_book_text = new_text
   
 end
-
