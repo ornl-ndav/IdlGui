@@ -79,7 +79,8 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ;id of log book window
     view_log_book_id : 0L, $
 
-    log_book_text: ptr_new(0L), $ 
+    new_log_book_message: ptr_new(0L), $ 
+    full_log_book: ptr_new(0L), $
 
     bFindnexus: 0b, $
 
@@ -89,7 +90,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
   log_book = ['*************************',$
   'Log Book of SNS_offpsec',date]
-  (*(*global).log_book_text) = log_book  
+  (*(*global).full_log_book) = log_book  
     
   MainBaseSize  = [50 , 50]
   MainTitle   = "SNS Off Specular - " + VERSION

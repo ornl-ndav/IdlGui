@@ -73,22 +73,18 @@ pro parse_data_run_numbers, event
   endwhile
   
   (*(*global).list_data_runs) = list_of_runs
-  
-  ;for log book only
-  view_log_book_id = (*global).view_log_book_id
-  if (widget_info(view_log_book_id,/valid_id) eq 0) then return
-  
+  ;message for log book
   message1 = '> Data run numbers input is: ' + run_number_string
   message2 = '-> Parsing data run number:'
-  message = [message1,message2]
+  message = [message1, message2]
   sz = n_elements(list_of_runs)
   index = 0
   while (index lt sz) do begin
     message = [message, '    - ' + list_of_runs[index]]
     index++
   endwhile
-  
-  log_book_update, event, new_message=message
+  (*(*global).new_log_book_message) = message
+  log_book_update, event
   
 end
 
@@ -106,8 +102,9 @@ pro create_list_of_nexus, event
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global
-  
+    
   list_data_runs = (*(*global).list_data_runs)
+  message = ['> Get full NeXus file name: ']
   
   sz = n_elements(list_data_runs)
   
@@ -116,16 +113,24 @@ pro create_list_of_nexus, event
   list_data_nexus = !null
   index = 0
   while (index lt sz) do begin
-  
+
     _nexus_name = get_nexus(event=event, run_number=list_data_runs[index])
     if (_nexus_name ne 'N/A') then begin
       list_data_nexus = [list_data_nexus, _nexus_name]
     endif
+
+    _message = '-> Run number: ' + $
+    strcompress(list_data_runs[index],/remove_all) + ' -> NeXus: ' + $
+    _nexus_name
+    message = [message, _message]
     
     index++
   endwhile
   
   (*(*global).list_data_nexus) = list_data_nexus
+  
+  ;message for log book
+  log_book_update, event, message = message
   
 end
 
@@ -166,6 +171,17 @@ pro browse_data_button_event, event
   if (list_of_nexus[0] ne '') then begin
     widget_control, event.top, get_uvalue=global
     (*(*global).list_data_nexus) = list_of_nexus
+
+  message = ['> Browsing for Data NeXus files: ']
+  sz = n_elements(list_of_nexus)
+  index = 0
+  while (index lt sz) do begin
+  _message = '-> ' + list_of_nexus[index]
+  message = [message, _message]
+  index++
+  endwhile
+log_book_update, event, message=message
+
   endif
   
 end
