@@ -8,8 +8,8 @@ pro run
   ;goto, skip1
 
   ;path = 'C:\Users\Erik\Documents\LIPID MULTILAYERS\PEAKS NEXUS\'
-  path = '~/IDLWorkspace80/SNS_offspec/NeXus/'
-  ;path = '~/results/'
+  ;path = '~/IDLWorkspace80/SNS_offspec/NeXus/'
+  path = '~/results/'
   ;savepath = 'C:\Users\Erik\Documents\LIPID MULTILAYERS\NEXUS\'
   savepath = path
   
