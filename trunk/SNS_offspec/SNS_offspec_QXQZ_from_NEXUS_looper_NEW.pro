@@ -317,6 +317,10 @@ pro run
   wait, 1
   
   contour, smooth(alog(divarray+1),5),Qxvec,Qzvec, /fill,nlev=200, charsi=1.5, xtitle='QX', ytitle='QZ'
+
+  create_ascii_output_file, data=smooth(alog(divarray+1),5),$
+  Qx = Qxvec, $
+  Qz = Qzvec
   
 end
 
