@@ -48,11 +48,13 @@ pro parse_data_run_numbers, event
   run_number_string = strcompress(getValue(event=event, $
   uname='data_run_numbers_text_field'),/remove_all)
   
-  if (run_number_string eq '') then return
-  
   list_of_runs = !null
-  
   widget_control, event.top, get_uvalue=global
+    
+  if (run_number_string eq '') then begin
+  (*(*global).list_data_runs) = list_of_runs
+  return
+  endif
   
   split1 = strsplit(run_number_string,',',/extract,/regex)
   sz1 = n_elements(split1)
@@ -70,11 +72,14 @@ pro parse_data_run_numbers, event
   index1++
   endwhile
   
+  (*(*global).list_data_runs) = list_of_runs
+  
+  ;for log book only
   view_log_book_id = (*global).view_log_book_id
   if (widget_info(view_log_book_id,/valid_id) eq 0) then return
   
   message1 = '> Data run numbers input is: ' + run_number_string
-  message2 = '  parsing data run number:'
+  message2 = '-> Parsing data run number:'
   message = [message1,message2]
   sz = n_elements(list_of_runs)
   index = 0
@@ -83,7 +88,50 @@ pro parse_data_run_numbers, event
   index++
   endwhile
   
-  (*(*global).list_data_runs) = list_of_runs
   log_book_update, event, new_message=message
   
+end
+
+;+
+; :Description:
+;    from the list of data run numbers, create the list of full path
+;    NeXus file names
+;
+; :Params:
+;    event
+
+; :Author: j35
+;-
+pro create_list_of_nexus, event
+compile_opt idl2
+
+widget_control, event.top, get_uvalue=global
+
+list_data_runs = (*(*global).list_data_runs)
+
+sz = n_elements(list_data_runs)
+
+if (list_data_runs eq !null) then return
+
+
+end
+
+;+
+; :Description:
+;    Event reached by the 'Data run numbers:' text field
+;
+; :Params:
+;    event
+
+; :Author: j35
+;-
+pro data_run_numbers_event, event
+compile_opt idl2    
+
+;parse the input text field and create the list of runs      
+parse_data_run_numbers, event
+
+;create list of NeXus
+create_list_of_nexus, event
+
 end
