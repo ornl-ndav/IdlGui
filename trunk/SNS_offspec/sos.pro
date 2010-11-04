@@ -75,6 +75,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
     list_data_runs: ptr_new(0L),$  ;[2000,2010,2011,2013,2020]
     list_data_nexus: ptr_new(0L), $ ;['/SNS/..../REF_L_3454.nxs','/SNS/...']
+    norm_nexus: '',$
     
     ;id of log book window
     view_log_book_id : 0L, $
@@ -88,7 +89,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     output_path: '~/results/',$ ;used in the output tab 
     input_path: '~/results/' })
     
-  log_book = ['*************************',$
+  log_book = ['------------------------------------------------------------',$
   'Log Book of SNS_offpsec',date]
   (*(*global).full_log_book) = log_book  
     

@@ -36,12 +36,12 @@
 ;to 2007y_08m_23d_16h_15mn_23s
 Function GenerateIsoTimeStamp
 
-dateUnformated = SYSTIME()    
-DateArray      = STRSPLIT(dateUnformated,' ',/EXTRACT) 
-DateIso        = STRCOMPRESS(DateArray[4]) + 'y_'
-
-month = 0
-CASE (DateArray[1]) OF
+  dateUnformated = SYSTIME()
+  DateArray      = STRSPLIT(dateUnformated,' ',/EXTRACT)
+  DateIso        = STRCOMPRESS(DateArray[4]) + 'y_'
+  
+  month = 0
+  CASE (DateArray[1]) OF
     'Jan':month='01m'
     'Feb':month='02m'
     'Mar':month='03m'
@@ -54,29 +54,29 @@ CASE (DateArray[1]) OF
     'Oct':month='10m'
     'Nov':month='11m'
     'Dec':month='12m'
-ENDCASE
-
-DateIso += STRCOMPRESS(month,/REMOVE_ALL) + '_'
-DateIso += STRCOMPRESS(DateArray[2],/REMOVE_ALL) + 'd_'
-
-;change format of time
-time     = STRSPLIT(DateArray[3],':',/EXTRACT)
-DateIso += STRCOMPRESS(time[0],/REMOVE_ALL) + 'h_'
-DateIso += STRCOMPRESS(time[1],/REMOVE_ALL) + 'mn_'
-DateIso += STRCOMPRESS(time[2],/REMOVE_ALL) + 's'
-
-RETURN, DateIso
+  ENDCASE
+  
+  DateIso += STRCOMPRESS(month,/REMOVE_ALL) + '_'
+  DateIso += STRCOMPRESS(DateArray[2],/REMOVE_ALL) + 'd_'
+  
+  ;change format of time
+  time     = STRSPLIT(DateArray[3],':',/EXTRACT)
+  DateIso += STRCOMPRESS(time[0],/REMOVE_ALL) + 'h_'
+  DateIso += STRCOMPRESS(time[1],/REMOVE_ALL) + 'mn_'
+  DateIso += STRCOMPRESS(time[2],/REMOVE_ALL) + 's'
+  
+  RETURN, DateIso
 END
 
 ;------------------------------------------------------------------------------
 
 Function GenerateReadableIsoTimeStamp
 
-dateUnformated = SYSTIME()    
-DateArray      = STRSPLIT(dateUnformated,' ',/EXTRACT) 
-
-month = 0
-CASE (DateArray[1]) OF
+  dateUnformated = SYSTIME()
+  DateArray      = STRSPLIT(dateUnformated,' ',/EXTRACT)
+  
+  month = 0
+  CASE (DateArray[1]) OF
     'Jan':month='01'
     'Feb':month='02'
     'Mar':month='03'
@@ -89,19 +89,19 @@ CASE (DateArray[1]) OF
     'Oct':month='10'
     'Nov':month='11'
     'Dec':month='12'
-ENDCASE
-
-DateIso  = STRCOMPRESS(month,/REMOVE_ALL) + '/'
-DateIso += STRCOMPRESS(DateArray[2],/REMOVE_ALL) + '/'
-DateIso += STRCOMPRESS(DateArray[4]) + ' ; '
-
-;change format of time
-time     = STRSPLIT(DateArray[3],':',/EXTRACT)
-DateIso += STRCOMPRESS(time[0],/REMOVE_ALL) + 'h '
-DateIso += STRCOMPRESS(time[1],/REMOVE_ALL) + 'mn '
-DateIso += STRCOMPRESS(time[2],/REMOVE_ALL) + 's'
-
-RETURN, DateIso
+  ENDCASE
+  
+  DateIso  = STRCOMPRESS(month,/REMOVE_ALL) + '/'
+  DateIso += STRCOMPRESS(DateArray[2],/REMOVE_ALL) + '/'
+  DateIso += STRCOMPRESS(DateArray[4]) + ' ; '
+  
+  ;change format of time
+  time     = STRSPLIT(DateArray[3],':',/EXTRACT)
+  DateIso += STRCOMPRESS(time[0],/REMOVE_ALL) + 'h '
+  DateIso += STRCOMPRESS(time[1],/REMOVE_ALL) + 'mn '
+  DateIso += STRCOMPRESS(time[2],/REMOVE_ALL) + 's'
+  
+  RETURN, DateIso
 END
 
 
@@ -116,15 +116,15 @@ END
 ;-
 function get_time
 
-dateUnformated = SYSTIME()    
-DateArray      = STRSPLIT(dateUnformated,' ',/EXTRACT) 
-
-time     = STRSPLIT(DateArray[3],':',/EXTRACT)
-DateIso = STRCOMPRESS(time[0],/REMOVE_ALL) + ':'
-DateIso += STRCOMPRESS(time[1],/REMOVE_ALL) + ':'
-DateIso += STRCOMPRESS(time[2],/REMOVE_ALL)
-
-RETURN, DateIso
+  dateUnformated = SYSTIME()
+  DateArray      = STRSPLIT(dateUnformated,' ',/EXTRACT)
+  
+  time     = STRSPLIT(DateArray[3],':',/EXTRACT)
+  DateIso = STRCOMPRESS(time[0],/REMOVE_ALL) + ':'
+  DateIso += STRCOMPRESS(time[1],/REMOVE_ALL) + ':'
+  DateIso += STRCOMPRESS(time[2],/REMOVE_ALL)
+  
+  RETURN, DateIso
 END
 
 

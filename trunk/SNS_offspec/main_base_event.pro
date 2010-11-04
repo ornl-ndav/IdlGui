@@ -89,6 +89,11 @@ PRO main_base_event, Event
       browse_data_button_event, event
     end
     
+    ;Normalization run number text field
+    widget_info(wWidget, find_by_uname='norm_run_number_text_field'): begin
+    norm_run_number_event, event
+    end
+    
     else:
   endcase
   

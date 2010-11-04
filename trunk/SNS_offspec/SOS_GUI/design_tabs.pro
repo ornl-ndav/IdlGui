@@ -92,11 +92,15 @@ pro design_tabs, MAIN_BASE, global
   ;display those widgets if findnexus is in the path
   if (bFindnexus) then begin
   
-    label = widget_label(norm_box,$
-      value = 'Normalization run number:')
-    text = widget_text(norm_box,$
-      value = 'N/A',$
-      xsize = 10)
+    norm = cw_field(norm_box, $
+    value = '3000',$
+    xsize = 8,$
+    title = 'Normalization run number:',$
+    /row,$
+    uname = 'norm_run_number_text_field',$
+    /return_events,$
+    /integer)
+      
     or_label = widget_label(norm_box,$
       value = '  OR  ')
       

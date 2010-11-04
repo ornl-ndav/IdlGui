@@ -104,7 +104,7 @@ pro create_list_of_nexus, event
   widget_control, event.top, get_uvalue=global
     
   list_data_runs = (*(*global).list_data_runs)
-  message = ['> Get full NeXus file name: ']
+  message = ['> Get full data NeXus file name: ']
   
   sz = n_elements(list_data_runs)
   
