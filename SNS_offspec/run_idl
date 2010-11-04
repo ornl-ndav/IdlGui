@@ -14,4 +14,6 @@ cd,current_path
 .run SNS_extract_specular.pro
 .run SNS_read_NEXUS.pro
 .run SNS_offspec_QXQZ_from_NEXUS_looper_NEW.pro
+.run create_ascii_output_file.pro
+
 run
