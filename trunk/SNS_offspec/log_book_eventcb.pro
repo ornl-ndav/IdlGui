@@ -35,31 +35,38 @@
 ;+
 ; :Description:
 ;    This procedure retrieves the current contain of the log book
-;    and update it with the new message added to it
+;    and update it with the new message fromt the global variable
+;    called 'new_log_book_message' if the keywords message is not passed
 ;
 ; :Params:
 ;    event
-;
+;    
 ; :Keywords:
-;    new_message
+;   message
 ;
 ; :Author: j35
 ;-
-pro log_book_update, event, new_message=new_message
+pro log_book_update, event, message=message
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global
+
+  if (keyword_set(message)) then begin
+  new_message = message
+  endif else begin
+  new_message = (*(*global).new_log_book_message)
+  endelse
   
+  time = get_time()
+  new_message[0] = '['+time+']' + string(new_message[0])
+  full_log_book = (*(*global).full_log_book)
+  
+  full_log_book = [new_message, full_log_book]
+  (*(*global).full_log_book) = full_log_book
+
   view_log_book_id = (*global).view_log_book_id
   if (widget_info(view_log_book_id,/valid_id) eq 0) then return
   
-  widget_control, view_log_book_id, get_value=current_text
-  
-  time = get_time()
-  new_message[0] = '['+time+']'+new_message[0]
-  
-  new_text = [new_message, current_text]
-  widget_control, view_log_book_id, set_value=new_text
-  (*(*global).log_book_text) = new_text
+  widget_control, view_log_book_id, set_value=full_log_book
   
 end

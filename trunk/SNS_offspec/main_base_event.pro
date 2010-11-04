@@ -62,7 +62,7 @@ PRO main_base_event, Event
         xoffset = main_base_xoffset + main_base_xsize
         yoffset = main_base_yoffset
         
-        text = (*(*global).log_book_text)
+        text = (*(*global).full_log_book)
         
         xdisplayfile, 'LogBook', $
           text=text,$
@@ -81,6 +81,7 @@ PRO main_base_event, Event
     ;Data run numbers text field
     widget_info(wWidget, find_by_uname='data_run_numbers_text_field'): begin
       data_run_numbers_event, event
+      clear_text_field, event=event, uname='data_run_numbers_text_field'
     end
     
     ;Browse data button

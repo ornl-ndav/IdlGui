@@ -113,4 +113,21 @@ pro show_error_message, event=event, message=message, title=title
     
 end
 
+;+
+; :Description:
+;    remove contains of text field specified by the uname
+;
+; :Keywords:
+;    event
+;    uname
+;
+; :Author: j35
+;-
+pro clear_text_field, event=event, uname=uname
+  compile_opt idl2
+  
+  id = widget_info(event.top, find_by_uname=uname)
+  widget_control, id, set_value=''
+  
+end
 
