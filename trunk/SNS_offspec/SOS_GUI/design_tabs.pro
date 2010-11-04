@@ -61,7 +61,7 @@ pro design_tabs, MAIN_BASE, global
     label = widget_label(row1,$
       value = 'Data run numbers:')
     text = widget_text(row1,$
-      value = '2000,2010-2015,2040,2042,2050-2055',$
+      value = '',$
       /editable,$
       uname = 'data_run_numbers_text_field',$
       xsize = 100)
@@ -93,7 +93,7 @@ pro design_tabs, MAIN_BASE, global
   if (bFindnexus) then begin
   
     norm = cw_field(norm_box, $
-    value = '3000',$
+    value = '',$
     xsize = 8,$
     title = 'Normalization run number:',$
     /row,$
@@ -130,11 +130,13 @@ pro design_tabs, MAIN_BASE, global
     /integer,$
     xsize = 6,$
     value = '500',$
+    uname = 'bins_qx',$
     title = 'Bins:  Qx')
   field2 = cw_field(row1col1,$
     xsize = 6,$
     /integer,$
     value = '500',$
+    uname = 'bins_qz',$
     title = '       Qz')
     
   space = widget_label(row1,$
@@ -145,17 +147,20 @@ pro design_tabs, MAIN_BASE, global
   field1 = cw_field(row1col2,$
     /floating,$
     xsize = 8,$
+    uname = 'ranges_qx_min',$
     value = '-0.004',$
     title = 'Ranges:  Qx')
   field2 = cw_field(row1col2,$
     xsize = 8,$
     /floating,$
     value = '-0.004',$
+    uname = 'ranges_qz_min',$
     title = '         Qz')
   field3 = cw_field(row1col2,$
     xsize = 8,$
     /floating,$
     value = '9.75',$
+    uname = 'tof_min',$
     title = '   TOF (ms)')
     
   row1col3 = widget_base(row1,$
@@ -163,16 +168,19 @@ pro design_tabs, MAIN_BASE, global
   field1 = cw_field(row1col3,$
     /floating,$
     xsize = 8,$
+    uname = 'ranges_qx_max',$
     value = '0.004',$
     title = 'to  ')
   field2 = cw_field(row1col3,$
     xsize = 8,$
     /floating,$
+    uname = 'ranges_qz_max',$
     value = '0.004',$
     title = 'to  ')
   field3 = cw_field(row1col3,$
     xsize = 8,$
     /floating,$
+    uname = 'tof_max',$
     value = '22.0',$
     title = 'to  ')
     
@@ -185,11 +193,13 @@ pro design_tabs, MAIN_BASE, global
     /floating,$
     xsize = 8,$
     value = '133',$
+    uname = 'center_pixel',$
     title = '   Center pixel')
   field2 = cw_field(row1col4,$
     xsize = 8,$
     /floating,$
     value = '0.7',$
+    uname = 'pixel_size',$
     title = 'Pixel size (mm)')
     
   row2 = widget_base(para_box,$
@@ -202,11 +212,13 @@ pro design_tabs, MAIN_BASE, global
     /integer,$
     xsize = 3,$
     value = '102',$
+    uname = 'pixel_min',$
     title = 'Pixels:   min')
   field2 = cw_field(row2col1,$
     xsize = 3,$
     /integer,$
     value = '165',$
+    uname = 'pixel_max',$
     title = '          max')
     
   space = widget_label(row2,$
@@ -218,11 +230,13 @@ pro design_tabs, MAIN_BASE, global
     /floating,$
     xsize = 10,$
     value = '1430.0',$
+    uname = 'd_sd_uname',$
     title = '   Distance sample to detector (mm) ')
   field2 = cw_field(row2col2,$
     xsize = 10,$
     /floating,$
     value = '14910.',$
+    uname = 'd_md_uname',$
     title = 'Distance moderator to detector (mm) ')
     
   ;progress bar and go button

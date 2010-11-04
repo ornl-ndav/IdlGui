@@ -161,4 +161,76 @@ function getSequence, from=left, to=right
   ENDELSE
 END
 
+function get_bins_qz, event
+compile_opt idl2
+return, getValue(event=event, uname='bins_qz')
+end
+
+function get_bins_qx, event
+compile_opt idl2
+return, getValue(event=event, uname='bins_qx')
+end
+
+function get_ranges_qx_min
+compile_opt idl2
+return, getValue(event=event, uname='ranges_qx_min')
+end
+
+function get_range_qz_min
+compile_opt idl2
+return, getValue(event=event, uname='ranges_gz_min')
+end
+
+function get_tof_min
+compile_opt idl2
+return, getValue(event=event, uname='tof_min')
+end
+
+function get_ranges_qx_max
+compile_opt idl2
+return, getValue(event=event, uname='ranges_qx_max')
+end
+
+function get_range_qz_max
+compile_opt idl2
+return, getValue(event=event, uname='ranges_gz_max')
+end
+
+function get_tof_max
+compile_opt idl2
+return, getValue(event=event, uname='tof_max')
+end
+
+function get_center_pixel
+compile_opt idl2
+return, getValue(event=event, uname='center_pixel')
+end
+
+function get_pixel_size
+compile_opt idl2
+return, getValue(event=event, uname='pixel_size')
+end
+
+function get_pixel_min
+compile_opt idl2
+return, getValue(event=event, uname='pixel_min')
+end
+
+function get_pixel_max
+compile_opt idl2
+return, getValue(event=event, uname='pixel_max')
+end
+
+function get_d_sd
+compile_opt idl2
+return, getValue(event=event, uname='d_sd_uname')
+end
+
+function get_d_md
+compile_opt idl2
+return, getValue(event=event, uname='d_md_uname')
+end
+
+
+
 
