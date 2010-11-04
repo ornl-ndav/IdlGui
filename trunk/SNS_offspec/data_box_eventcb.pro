@@ -102,7 +102,7 @@ pro create_list_of_nexus, event
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global
-    
+  
   list_data_runs = (*(*global).list_data_runs)
   message = ['> Get full data NeXus file name: ']
   
@@ -113,15 +113,15 @@ pro create_list_of_nexus, event
   list_data_nexus = !null
   index = 0
   while (index lt sz) do begin
-
+  
     _nexus_name = get_nexus(event=event, run_number=list_data_runs[index])
     if (_nexus_name ne 'N/A') then begin
       list_data_nexus = [list_data_nexus, _nexus_name]
     endif
-
+    
     _message = '-> Run number: ' + $
-    strcompress(list_data_runs[index],/remove_all) + ' -> NeXus: ' + $
-    _nexus_name
+      strcompress(list_data_runs[index],/remove_all) + ' -> NeXus: ' + $
+      _nexus_name
     message = [message, _message]
     
     index++
@@ -167,21 +167,23 @@ pro browse_data_button_event, event
   compile_opt idl2
   
   title = 'Select the data NeXus files'
-  list_of_nexus = browse_nexus_button(event, title=title)
+  list_of_nexus = browse_nexus_button(event, $
+  title=title,$
+  /multiple_files)
   if (list_of_nexus[0] ne '') then begin
     widget_control, event.top, get_uvalue=global
     (*(*global).list_data_nexus) = list_of_nexus
-
-  message = ['> Browsing for Data NeXus files: ']
-  sz = n_elements(list_of_nexus)
-  index = 0
-  while (index lt sz) do begin
-  _message = '-> ' + list_of_nexus[index]
-  message = [message, _message]
-  index++
-  endwhile
-log_book_update, event, message=message
-
+    
+    message = ['> Browsing for Data NeXus files: ']
+    sz = n_elements(list_of_nexus)
+    index = 0
+    while (index lt sz) do begin
+      _message = '-> ' + list_of_nexus[index]
+      message = [message, _message]
+      index++
+    endwhile
+    log_book_update, event, message=message
+    
   endif
   
 end

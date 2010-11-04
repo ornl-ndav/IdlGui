@@ -107,6 +107,7 @@ pro design_tabs, MAIN_BASE, global
   endif
   
   button = widget_button(norm_box,$
+    uname = 'norm_browse_button',$
     value = 'Browse for a normalization NeXus file ...',$
     scr_xsize = 575)
     

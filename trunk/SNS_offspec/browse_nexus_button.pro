@@ -42,10 +42,11 @@
 ;
 ; :Keywords:
 ;    title
+;    multiple_files
 ;
 ; :Author: j35
 ;-
-function browse_nexus_button, event, title=title
+function browse_nexus_button, event, title=title, multiple_files=multiple_files
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global
@@ -59,7 +60,7 @@ function browse_nexus_button, event, title=title
     get_path=new_path,$
     filter=['*.nxs'],$
     /fix_filter,$
-    /multiple_files,$
+    multiple_files=multiple_files,$
     dialog_parent=id)
     
   if (file_name[0] ne '') then begin
