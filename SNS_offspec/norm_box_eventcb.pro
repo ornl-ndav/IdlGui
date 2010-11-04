@@ -59,3 +59,32 @@ pro norm_run_number_event, event
   endif
   
 end
+
+;+
+; :Description:
+;    routine reached by the browse norm button
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro browse_norm_button_event, event
+  compile_opt idl2
+  
+  title = 'Select the normalization NeXus files'
+  nexus = browse_nexus_button(event, $
+  title=title, $
+  multiple_files=0)
+  if (nexus[0] ne '') then begin
+    widget_control, event.top, get_uvalue=global
+    (*global).norm_nexus = nexus
+    
+    message = ['> Browsing for a Normalization NeXus file: ']
+    _message = '-> ' + nexus
+    message = [message, _message]
+    log_book_update, event, message=message
+    
+  endif
+  
+end
