@@ -80,7 +80,7 @@ PRO main_base_event, Event
     ;TAB1
     ;Data run numbers text field
     widget_info(wWidget, find_by_uname='data_run_numbers_text_field'): begin
-      parse_data_run_numbers, event
+      data_run_numbers_event, event
     end
     
     else:
