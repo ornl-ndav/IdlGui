@@ -43,15 +43,50 @@
 ; :Author: j35
 ;-
 function is_findnexus_there
-compile_opt idl2
+  compile_opt idl2
+  
+  cmd = 'findnexus'
+  spawn, cmd, result, err
+  
+  sz_err = n_elements(err)
+  
+  if (sz_err eq 1) then return, 0
+  return, 1
+  
+end
 
-cmd = 'findnexus'
-spawn, cmd, result, err
-
-sz_err = n_elements(err)
-
-if (sz_err eq 1) then return, 0
-
-return, 1
-
+;+
+; :Description:
+;    retrieve full file path of nexus file
+;
+; :Keywords:
+;    event
+;    run_number
+;
+; :Author: j35
+;-
+function get_nexus, event=event, run_number=run_number
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  instrument = (*global).instrument
+  
+  if (~keyword_set(run_number)) then return, 'N/A'
+  
+  cmd = 'findnexus -i ' + instrument + ' ' + strcompress(run_number,/remove_all)
+  spawn, cmd, full_nexus_name, err
+  
+  ;check if nexus exists
+  sz = n_elements(full_nexus_name)
+  if (sz EQ 1) then begin
+    result = STRMATCH(full_nexus_name[0],"ERROR*")
+    if (result GE 1) then begin
+      return, 'N/A'
+    endif else begin
+      return, full_nexus_name[0]
+    endelse
+  endif else begin
+    return, full_nexus_name[0]
+  endelse
+  
 end

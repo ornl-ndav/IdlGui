@@ -113,6 +113,19 @@ sz = n_elements(list_data_runs)
 
 if (list_data_runs eq !null) then return
 
+list_data_nexus = !null
+index = 0
+while (index lt sz) do begin
+
+  _nexus_name = get_nexus(event=event, run_number=list_data_runs[index])
+  if (_nexus_name ne 'N/A') then begin
+  list_data_nexus = [list_data_nexus, _nexus_name]
+  endif
+
+index++
+endwhile
+
+(*(*global).list_data_nexus) = list_data_nexus
 
 end
 
