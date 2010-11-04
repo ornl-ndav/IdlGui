@@ -32,64 +32,43 @@
 ;
 ;==============================================================================
 
-PRO main_base_event, Event
-
-  ;get global structure
-  wWidget = Event.top          ;widget id
-  widget_control, wWidget, get_uvalue=global
+;+
+; :Description:
+;    using the dialog_pickfile, allows the user to select a set of
+;    NeXus files
+;
+; :Params:
+;    event
+;
+; :Keywords:
+;    title
+;
+; :Author: j35
+;-
+function browse_nexus_button, event, title=title
+  compile_opt idl2
   
-  case (Event.id) of
+  widget_control, event.top, get_uvalue=global
   
-    widget_info(wWidget, find_by_uname='main_base'): BEGIN
-    end
+  path = (*global).input_path
+  id = widget_info(event.top, find_by_uname='main_base')
+  
+  file_name = dialog_pickfile(path=path,$
+    /must_exist,$
+    title=title,$
+    get_path=new_path,$
+    filter=['*.nxs'],$
+    /fix_filter,$
+    /multiple_files,$
+    dialog_parent=id)
     
-    ;MENU
-    ;view log book button
-    widget_info(wWidget, find_by_uname='view_log_book_switch'): begin
+  if (file_name[0] ne '') then begin
+  
+    (*global).input_path = new_path
+    return, file_name
     
-      view_log_book_id = (*global).view_log_book_id
-      if (widget_info(view_log_book_id, /valid_id) eq 0) then begin
-        groupID = widget_info(event.top, find_by_uname='main_base')
-        
-        id = widget_info(wWidget, find_by_uname='main_base')
-        geometry = widget_info(id,/geometry)
-        
-        main_base_xoffset = geometry.xoffset
-        main_base_yoffset = geometry.yoffset
-        main_base_xsize = geometry.xsize
-        ;        main_base_ysize = geometry.ysize
-        
-        xoffset = main_base_xoffset + main_base_xsize
-        yoffset = main_base_yoffset
-        
-        text = (*(*global).log_book_text)
-        
-        xdisplayfile, 'LogBook', $
-          text=text,$
-          title='Live Log Book',$
-          group = groupID, $
-          wtext=view_log_book_id, $
-          xoffset = xoffset, $
-          yoffset = yoffset
-        (*global).view_log_book_id = view_log_book_id
-        
-      endif
-      
-    end
-    
-    ;TAB1
-    ;Data run numbers text field
-    widget_info(wWidget, find_by_uname='data_run_numbers_text_field'): begin
-      data_run_numbers_event, event
-    end
-    
-    ;Browse data button
-    widget_info(wWidget, find_by_uname='data_browse_button'): begin
-      browse_data_button_event, event
-    end
-    
-    else:
-  endcase
+  endif
+  
+  return, ['']
   
 end
-

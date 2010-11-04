@@ -46,14 +46,14 @@ pro parse_data_run_numbers, event
   compile_opt idl2
   
   run_number_string = strcompress(getValue(event=event, $
-  uname='data_run_numbers_text_field'),/remove_all)
-  
+    uname='data_run_numbers_text_field'),/remove_all)
+    
   list_of_runs = !null
   widget_control, event.top, get_uvalue=global
-    
+  
   if (run_number_string eq '') then begin
-  (*(*global).list_data_runs) = list_of_runs
-  return
+    (*(*global).list_data_runs) = list_of_runs
+    return
   endif
   
   split1 = strsplit(run_number_string,',',/extract,/regex)
@@ -61,15 +61,15 @@ pro parse_data_run_numbers, event
   index1 = 0
   while (index1 lt sz1) do begin
   
-  split2 = strsplit(split1[index1],'-',/extract,/regex)
-  sz2 = n_elements(split2)
-  if (sz2 eq 1) then begin
-  list_of_runs = [list_of_runs,strcompress(split2[0],/remove_all)]
-  endif else begin
-  new_runs = getSequence(from=split2[0], to=split2[1])
-  list_of_runs = [list_of_runs, new_runs]
-  endelse
-  index1++
+    split2 = strsplit(split1[index1],'-',/extract,/regex)
+    sz2 = n_elements(split2)
+    if (sz2 eq 1) then begin
+      list_of_runs = [list_of_runs,strcompress(split2[0],/remove_all)]
+    endif else begin
+      new_runs = getSequence(from=split2[0], to=split2[1])
+      list_of_runs = [list_of_runs, new_runs]
+    endelse
+    index1++
   endwhile
   
   (*(*global).list_data_runs) = list_of_runs
@@ -84,8 +84,8 @@ pro parse_data_run_numbers, event
   sz = n_elements(list_of_runs)
   index = 0
   while (index lt sz) do begin
-  message = [message, '    - ' + list_of_runs[index]]
-  index++
+    message = [message, '    - ' + list_of_runs[index]]
+    index++
   endwhile
   
   log_book_update, event, new_message=message
@@ -103,30 +103,30 @@ end
 ; :Author: j35
 ;-
 pro create_list_of_nexus, event
-compile_opt idl2
-
-widget_control, event.top, get_uvalue=global
-
-list_data_runs = (*(*global).list_data_runs)
-
-sz = n_elements(list_data_runs)
-
-if (list_data_runs eq !null) then return
-
-list_data_nexus = !null
-index = 0
-while (index lt sz) do begin
-
-  _nexus_name = get_nexus(event=event, run_number=list_data_runs[index])
-  if (_nexus_name ne 'N/A') then begin
-  list_data_nexus = [list_data_nexus, _nexus_name]
-  endif
-
-index++
-endwhile
-
-(*(*global).list_data_nexus) = list_data_nexus
-
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  list_data_runs = (*(*global).list_data_runs)
+  
+  sz = n_elements(list_data_runs)
+  
+  if (list_data_runs eq !null) then return
+  
+  list_data_nexus = !null
+  index = 0
+  while (index lt sz) do begin
+  
+    _nexus_name = get_nexus(event=event, run_number=list_data_runs[index])
+    if (_nexus_name ne 'N/A') then begin
+      list_data_nexus = [list_data_nexus, _nexus_name]
+    endif
+    
+    index++
+  endwhile
+  
+  (*(*global).list_data_nexus) = list_data_nexus
+  
 end
 
 ;+
@@ -139,12 +139,35 @@ end
 ; :Author: j35
 ;-
 pro data_run_numbers_event, event
-compile_opt idl2    
-
-;parse the input text field and create the list of runs      
-parse_data_run_numbers, event
-
-;create list of NeXus
-create_list_of_nexus, event
-
+  compile_opt idl2
+  
+  ;parse the input text field and create the list of runs
+  parse_data_run_numbers, event
+  
+  ;create list of NeXus
+  create_list_of_nexus, event
+  
 end
+
+;+
+; :Description:
+;    Routine reached by the browse data button
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro browse_data_button_event, event
+  compile_opt idl2
+  
+  title = 'Select the data NeXus files'
+  list_of_nexus = browse_nexus_button(event, title=title)
+  if (list_of_nexus[0] ne '') then begin
+    widget_control, event.top, get_uvalue=global
+    (*(*global).list_data_nexus) = list_of_nexus
+  endif
+  
+end
+
+
