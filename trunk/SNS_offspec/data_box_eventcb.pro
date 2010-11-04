@@ -70,6 +70,20 @@ pro parse_data_run_numbers, event
   index1++
   endwhile
   
+  view_log_book_id = (*global).view_log_book_id
+  if (widget_info(view_log_book_id,/valid_id) eq 0) then return
+  
+  message1 = '> Data run numbers input is: ' + run_number_string
+  message2 = '  parsing data run number:'
+  message = [message1,message2]
+  sz = n_elements(list_of_runs)
+  index = 0
+  while (index lt sz) do begin
+  message = [message, '    - ' + list_of_runs[index]]
+  index++
+  endwhile
+  
   (*(*global).list_data_runs) = list_of_runs
+  log_book_update, event, new_message=message
   
 end

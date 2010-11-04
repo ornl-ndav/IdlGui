@@ -64,6 +64,8 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     auto_cleaning = 0b
   endelse
   
+  date = GenerateReadableIsoTimeStamp()
+  
   global = ptr_new({ $
   
     applicaiton: APPLICATION, $
@@ -74,13 +76,17 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ;id of log book window
     view_log_book_id : 0L, $
 
-    log_book_text: ['',''], $;log book 
+    log_book_text: ptr_new(0L), $ 
 
     bFindnexus: 0b, $
 
    ;input and output files path
     output_path: '~/results/',$ ;used in the output tab 
     input_path: '~/results/' })
+    
+  log_book = ['*************************',$
+  'Log Book of SNS_offpsec',date]
+  (*(*global).log_book_text) = log_book  
     
   MainBaseSize  = [50 , 50]
   MainTitle   = "SNS Off Specular - " + VERSION
@@ -97,7 +103,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
    bFindnexus = is_findnexus_there()
    ;REMOVE_ME
-   ;bFindnexus = 1 
+   bFindnexus = 1 
    (*global).bFindnexus = bFindnexus
     
 ;  design_menu, bar, global
