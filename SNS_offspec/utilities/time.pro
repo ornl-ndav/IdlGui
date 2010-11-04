@@ -105,3 +105,28 @@ RETURN, DateIso
 END
 
 
+;+
+; :Description:
+;    returns the time
+;
+; :Returns:
+;   live time    17:02:39
+;
+; :Author: j35
+;-
+function get_time
+
+dateUnformated = SYSTIME()    
+DateArray      = STRSPLIT(dateUnformated,' ',/EXTRACT) 
+
+time     = STRSPLIT(DateArray[3],':',/EXTRACT)
+DateIso = STRCOMPRESS(time[0],/REMOVE_ALL) + ':'
+DateIso += STRCOMPRESS(time[1],/REMOVE_ALL) + ':'
+DateIso += STRCOMPRESS(time[2],/REMOVE_ALL)
+
+RETURN, DateIso
+END
+
+
+
+

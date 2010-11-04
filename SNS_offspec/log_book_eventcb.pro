@@ -55,8 +55,11 @@ pro log_book_update, event, new_message=new_message
   
   widget_control, view_log_book_id, get_value=current_text
   
-  new_text = [current_text, new_message]
+  time = get_time()
+  new_message[0] = '['+time+']'+new_message[0]
+  
+  new_text = [new_message, current_text]
   widget_control, view_log_book_id, set_value=new_text
-  (*global).log_book_text = new_text
+  (*(*global).log_book_text) = new_text
   
 end
