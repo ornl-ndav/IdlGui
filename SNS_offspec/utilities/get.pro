@@ -64,9 +64,7 @@ end
 ; :Keywords:
 ;   event
 ;   base
-;
-; :Params:
-;    uname
+;   uname
 ;
 ; :Author: j35
 ;-
