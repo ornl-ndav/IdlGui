@@ -75,6 +75,7 @@ pro design_tabs, MAIN_BASE, global
   
   row3 = widget_button(data_box,$
     value = 'Browse for data NeXus files ...',$
+    uname = 'data_browse_button',$
     scr_xsize = 575)
     
   ;SPACE
