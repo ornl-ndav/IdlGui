@@ -176,7 +176,7 @@ compile_opt idl2
 return, getValue(event=event, uname='ranges_qx_min')
 end
 
-function get_range_qz_min
+function get_ranges_qz_min
 compile_opt idl2
 return, getValue(event=event, uname='ranges_gz_min')
 end
@@ -191,7 +191,7 @@ compile_opt idl2
 return, getValue(event=event, uname='ranges_qx_max')
 end
 
-function get_range_qz_max
+function get_ranges_qz_max
 compile_opt idl2
 return, getValue(event=event, uname='ranges_gz_max')
 end
