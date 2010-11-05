@@ -86,18 +86,23 @@ pro run
   ;sort the angles (theta and twoTheta in increasing order)
   list1=sort(file_angles[1,*])
   list2=sort(file_angles[2,*])
-  
 
-
-
+  help, list1
+  help, list2
 
   ;create arrays of increasing uniq list of angles (theat and twotheta)
   theta_angles=reform(file_angles[1,list1[uniq(file_angles[1,list1])]])
   twotheta_angles=reform(file_angles[2,list2[uniq(file_angles[2,list2])]])
   
+  help, theta_angles
+  help, twotheta_angles
+  
+  return
+  
   si1=size(theta_angles,/dim)
   si2=size(twotheta_angles,/dim)
   
+
   ;loop through all theta and twotheta combinations and count those that exist
   count=0
   for loop1=0, si1[0]-1 do begin
