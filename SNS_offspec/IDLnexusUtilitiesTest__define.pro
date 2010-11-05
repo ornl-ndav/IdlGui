@@ -252,7 +252,7 @@ function IDLnexusUtilitiesTest::test_REF_M_new_theta_unit
   myObject = obj_new('IDLnexusUtilities',file_name, spin_state='Off_Off')
   v_u = myObject->get_theta()
   obj_destroy, myObject
-
+  
   assert, v_u.units eq '', 'Wrong theta unit for REF_M_8324 (new format)'
   
   return, 1
@@ -375,7 +375,7 @@ function IDLnexusUtilitiesTest::test_REF_L_full_data
   myObject = obj_new('IDLnexusUtilities',file_name)
   data = myObject->get_full_data()
   obj_destroy, myObject
-
+  
   data_sz = size(data)
   assert, array_equal(data_sz,[3,751,256,304,13,58445824]), $
     'Wrong format of full data retrieved from REF_L_38955'
@@ -397,7 +397,7 @@ function IDLnexusUtilitiesTest::test_REF_M_old_full_data
   myObject = obj_new('IDLnexusUtilities',file_name, spin_state='Off_Off')
   data = myObject->get_full_data()
   obj_destroy, myObject
-
+  
   data_sz = size(data)
   assert, array_equal(data_sz,[3,251,256,304,13,19533824]), $
     'Wrong format of full data retrieved from REF_M_5000 (old format)'
@@ -419,7 +419,7 @@ function IDLnexusUtilitiesTest::test_REF_M_new_full_data
   myObject = obj_new('IDLnexusUtilities',file_name, spin_state='Off_Off')
   data = myObject->get_full_data()
   obj_destroy, myObject
-
+  
   data_sz = size(data)
   assert, array_equal(data_sz,[3,51,256,304,13,3969024]), $
     'Wrong format of full data retrieved from REF_M_8324 (new format)'
@@ -442,14 +442,14 @@ function IDLnexusUtilitiesTest::test_REF_L_tof_counts_data
   myObject = obj_new('IDLnexusUtilities',file_name)
   data = myObject->get_tof_counts_data()
   obj_destroy, myObject
-
+  
   data_sz = size(data)
   assert, array_equal(data_sz,[2,2,751,4,1502]), $
     'Wrong format of tof/counts data retrieved from REF_L_38955'
-  
+    
   assert, array_equal(data[0:9],$
-  [0.0, 0.0, 0.2, 0.0, 0.4, 0.0, 0.6, 0.0, 0.8, 0.0]), $
-  'Wrong first 10 values of tof/counts data retrieved from REF_L_38955'  
+    [0.0, 0.0, 0.2, 0.0, 0.4, 0.0, 0.6, 0.0, 0.8, 0.0]), $
+    'Wrong first 10 values of tof/counts data retrieved from REF_L_38955'
     
   return, 1
 end
@@ -468,14 +468,14 @@ function IDLnexusUtilitiesTest::test_REF_M_old_tof_counts_data
   myObject = obj_new('IDLnexusUtilities',file_name, spin_state='Off_Off')
   data = myObject->get_tof_counts_data()
   obj_destroy, myObject
-
+  
   data_sz = size(data)
   assert, array_equal(data_sz,[2,2,251,4,502]), $
     'Wrong format of tof/counts data retrieved from REF_M_5000 (old format)'
-  
+    
   assert, array_equal(data[0:9],$
-  [0.0, 0.0, 0.4, 0.0, 0.8, 0.0, 1.2, 0.0, 1.6, 0.0]), $
-  'Wrong first 10 values of tof/counts data retrieved from REF_M_5000 (old format)'  
+    [0.0, 0.0, 0.4, 0.0, 0.8, 0.0, 1.2, 0.0, 1.6, 0.0]), $
+    'Wrong first 10 values of tof/counts data retrieved from REF_M_5000 (old format)'
     
   return, 1
 end
@@ -494,15 +494,58 @@ function IDLnexusUtilitiesTest::test_REF_M_new_tof_counts_data
   myObject = obj_new('IDLnexusUtilities',file_name, spin_state='Off_Off')
   data = myObject->get_tof_counts_data()
   obj_destroy, myObject
-
+  
   data_sz = size(data)
   assert, array_equal(data_sz,[2,2,51,4,102]), $
     'Wrong format of tof/counts data retrieved from REF_M_8324 (new format)'
-  
-  assert, array_equal(data[0:9],$
-  [8.0, 0.0, 8.4, 0.0, 8.8, 0.0, 9.2, 0.0, 9.6, 1.0]), $
-  'Wrong first 10 values of tof/counts data retrieved from REF_M_8324 (new format)'  
     
+  assert, array_equal(data[0:9],$
+    [8.0, 0.0, 8.4, 0.0, 8.8, 0.0, 9.2, 0.0, 9.6, 1.0]), $
+    'Wrong first 10 values of tof/counts data retrieved from REF_M_8324 (new format)'
+    
+  return, 1
+end
+
+;+
+; :Description:
+;    Unit test for y_tof_data function for REF_L instrument
+;
+; :Author: j35
+;-
+function IDLnexusUtilitiesTest::test_REF_L_y_tof_data
+  compile_opt idl2
+  
+  file_name = 'unit_test_files/REF_L_38955.nxs'
+  myObject = obj_new('IDLnexusUtilities',file_name)
+  data = myObject->get_y_tof_data()
+  obj_destroy, myObject
+  
+  data_sz = size(data)
+  assert, array_equal(data_sz,[2,751,256,13,192256]), $
+    'Wrong format of y_tof data retrieved from REF_L_38955'
+  
+  return, 1
+end
+
+;+
+; :Description:
+;    Unit test for y_tof_data function for REF_M instrument (off_off)
+;    using the new files
+;
+; :Author: j35
+;-
+function IDLnexusUtilitiesTest::test_REF_M_y_tof_data
+  compile_opt idl2
+  
+  file_name = 'unit_test_files/REF_M_8324.nxs'
+  myObject = obj_new('IDLnexusUtilities',file_name, spin_state='Off_Off')
+  data = myObject->get_y_tof_data()
+  obj_destroy, myObject
+  
+  data_sz = size(data)
+  assert, array_equal(data_sz,[2,51,256,13,13056]), $
+    'Wrong format of y_tof data retrieved from REF_M_8324 (new format)'
+  
   return, 1
 end
 
