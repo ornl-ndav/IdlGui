@@ -82,11 +82,15 @@ PRO main_base_event, Event
     widget_info(wWidget, find_by_uname='data_run_numbers_text_field'): begin
       data_run_numbers_event, event
       clear_text_field, event=event, uname='data_run_numbers_text_field'
+      ;retrieve distances from first data nexus file loaded
+      retrieve_data_nexus_distances, event
     end
     
     ;Browse data button
     widget_info(wWidget, find_by_uname='data_browse_button'): begin
       browse_data_button_event, event
+      ;retrieve distances from first data nexus file loaded
+      retrieve_data_nexus_distances, event
     end
     
     ;Normalization run number text field

@@ -168,8 +168,8 @@ pro browse_data_button_event, event
   
   title = 'Select the data NeXus files'
   list_of_nexus = browse_nexus_button(event, $
-  title=title,$
-  /multiple_files)
+    title=title,$
+    /multiple_files)
   if (list_of_nexus[0] ne '') then begin
     widget_control, event.top, get_uvalue=global
     (*(*global).list_data_nexus) = list_of_nexus
@@ -188,4 +188,44 @@ pro browse_data_button_event, event
   
 end
 
-
+;+
+; :Description:
+;    Using the first data nexus file loaded, this routine
+;    retrieves the distance Sample to Detector and Moderator to Detector
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro retrieve_data_nexus_distances, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  list_data_nexus = (*(*global).list_data_nexus)
+  first_data_nexus = list_data_nexus[0]
+  
+  type = (size(first_data_nexus))[1]
+  ;no nexus loaded yet
+  if (type ne 7) then return
+  
+  iNexus = obj_new('IDLnexusUtilities', first_data_nexus)
+  d_SD = iNexus->get_d_SD()
+  d_MS = iNexus->get_d_MS()
+  obj_destroy, iNexus
+  
+  ;convert into mm
+  d_SD_mm = abs(convert_distance(distance = d_SD.value,$
+    from_unit = d_SD.units, $
+    to_unit = 'mm'))
+  d_MS_mm = abs(convert_distance(distance = d_MS.value,$
+    from_unit = d_MS.units, $
+    to_unit = 'mm'))
+    
+  d_MD_mm = d_MS_mm + d_SD_mm
+  
+  putValue, event=event, 'd_sd_uname', d_SD_mm
+  putValue, event=event, 'd_md_uname', d_MD_mm
+    
+end

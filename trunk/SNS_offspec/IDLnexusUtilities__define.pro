@@ -221,7 +221,7 @@ function _get_d_SD_for_ref_l, fileID=fileID, $
     
   compile_opt idl2
   error = 0
-  ;catch, error
+  catch, error
   if (error ne 0) then begin
     catch,/cancel
     return, ['N/A','N/A']
@@ -244,13 +244,15 @@ end
 ;
 ; :Keywords:
 ;    fileID
+;    configuration_file
 ;
 ; :Returns;
 ;   [distance, units]
 ;
 ; :Author: j35
 ;-
-function _get_d_MS_for_ref_l, fileID=fileID
+function _get_d_MS_for_ref_l, fileID=fileID, $
+configuration_file=configuration_file
   compile_opt idl2
   
   catch, error
@@ -259,7 +261,7 @@ function _get_d_MS_for_ref_l, fileID=fileID
     return, ['N/A','N/A']
   endif else begin
     ;retrieve value from configuration file
-    iCfg = obj_new('idlxmlparser', self.configuration_file)
+    iCfg = obj_new('idlxmlparser', configuration_file)
     value = iCfg->getValue(tag=['config','instruments','REF_L','d_MS'])
     units = iCfg->getValue(tag=['config','instruments','REF_L','d_MS'], $
       attr='units')
@@ -277,6 +279,7 @@ end
 ; :Keywords:
 ;    entry_spin_state
 ;    fileID
+;    configuration_file
 ;
 ; :Returns;
 ;   [distance, units]
@@ -284,7 +287,7 @@ end
 ; :Author: j35
 ;-
 function _get_d_MS_for_ref_m, entry_spin_state = entry_spin_state , $
-    fileID=fileID
+    fileID=fileID, configuration_file=configuration_file
   compile_opt idl2
   
   path_value = entry_spin_state + $
@@ -308,7 +311,7 @@ function _get_d_MS_for_ref_m, entry_spin_state = entry_spin_state , $
         return, ['N/A','N/A']
       endif else begin
         ;retrieve value from configuration file
-        iCfg = obj_new('idlxmlparser', self.configuration_file)
+        iCfg = obj_new('idlxmlparser', configuration_file)
         value = iCfg->getValue(tag=['config','instruments','REF_M','d_MS'])
         units = iCfg->getValue(tag=['config','instruments','REF_M','d_MS'], $
           attr='units')
@@ -456,12 +459,15 @@ function IDLnexusUtilities::get_d_MS
   compile_opt idl2
   
   fileID = h5f_open(self.file_name)
+  configuration_file = self.configuration_file
   
   instrument = self.instrument
   case (strlowcase(self.instrument)) of
-    'ref_l': value_units = _get_d_MS_for_ref_l(fileID=fileID)
+    'ref_l': value_units = _get_d_MS_for_ref_l(fileID=fileID, $
+    configuration_file = configuration_file)
     'ref_m': value_units = _get_d_MS_for_ref_m(entry_spin_state=$
-      self.entry_spin_state, fileID=fileID)
+      self.entry_spin_state, fileID=fileID, $
+      configuration_file = configuration_file)
     else:
   endcase
   

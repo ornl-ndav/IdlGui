@@ -51,6 +51,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   auto_cleaning_data = file->getValue(tag=['configuration','auto_cleaning'])
   ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
   ;============================================================================
+  obj_destroy, file
   
   StrArray      = strsplit(VERSION,'.',/extract)
   VerArray      = StrArray[0]
