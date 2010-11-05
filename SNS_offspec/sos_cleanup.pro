@@ -49,6 +49,10 @@ pro sos_cleanup, tlb
 
   if (n_elements(global) eq 0) then return
   
+    ptr_free, (*global).list_data_runs
+    ptr_free, (*global).list_data_nexus
+    ptr_free, (*global).new_log_book_message
+    ptr_free, (*global).full_log_book
     ptr_free, global
   
 end

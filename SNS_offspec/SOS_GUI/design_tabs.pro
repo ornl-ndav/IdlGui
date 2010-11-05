@@ -229,13 +229,13 @@ pro design_tabs, MAIN_BASE, global
   field1 = cw_field(row2col2,$
     /floating,$
     xsize = 10,$
-    value = '1430.0',$
+    value = '',$
     uname = 'd_sd_uname',$
     title = '   Distance sample to detector (mm) ')
   field2 = cw_field(row2col2,$
     xsize = 10,$
     /floating,$
-    value = '14910.',$
+    value = '',$
     uname = 'd_md_uname',$
     title = 'Distance moderator to detector (mm) ')
     
