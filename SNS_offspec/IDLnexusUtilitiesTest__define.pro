@@ -551,6 +551,49 @@ end
 
 ;+
 ; :Description:
+;    Unit test for y_tof_data function for REF_L instrument
+;
+; :Author: j35
+;-
+function IDLnexusUtilitiesTest::test_REF_L_tof_data
+compile_opt idl2
+
+file_name = 'unit_test_files/REF_L_38955.nxs'
+  myObject = obj_new('IDLnexusUtilities',file_name)
+  data = myObject->get_tof_data()
+  obj_destroy, myObject
+  
+  data_sz = size(data)
+  assert, array_equal(data_sz,[1,752,4,752]), $
+    'Wrong format of tof_data retrieved from REF_L_38955'
+  
+  return, 1
+end
+
+;+
+; :Description:
+;    Unit test for y_tof_data function for REF_M instrument (off_off)
+;    (new format of nexus file)
+;
+; :Author: j35
+;-
+function IDLnexusUtilitiesTest::test_REF_M_tof_data
+compile_opt idl2
+
+file_name = 'unit_test_files/REF_M_8324.nxs'
+  myObject = obj_new('IDLnexusUtilities',file_name, spin_state='Off_Off')
+  data = myObject->get_tof_data()
+  obj_destroy, myObject
+  
+  data_sz = size(data)
+  assert, array_equal(data_sz,[1,52,4,52]), $
+    'Wrong format of tof_data retrieved from REF_M_8324 (new format)'
+  
+  return, 1
+end
+
+;+
+; :Description:
 ;    Test unit for class IDLnexusUtilities__define
 ;
 ; :Author: j35
