@@ -8,8 +8,8 @@ pro run
   ;goto, skip1
 
   ;path = 'C:\Users\Erik\Documents\LIPID MULTILAYERS\PEAKS NEXUS\'
-  ;path = '~/IDLWorkspace80/SNS_offspec/NeXus/'
-  path = '~/results/'
+  path = '~/IDLWorkspace80/SNS_offspec/NeXus/'
+  ;path = '~/results/'
   ;savepath = 'C:\Users\Erik\Documents\LIPID MULTILAYERS\NEXUS\'
   savepath = path
   
@@ -82,11 +82,15 @@ pro run
     file_angles[1,read_loop]=round(DATA.theta*100.0)/100.0
     file_angles[2,read_loop]=round(DATA.twotheta*100.0)/100.0
   endfor
-  
+
   ;sort the angles (theta and twoTheta in increasing order)
   list1=sort(file_angles[1,*])
   list2=sort(file_angles[2,*])
   
+
+
+
+
   ;create arrays of increasing uniq list of angles (theat and twotheta)
   theta_angles=reform(file_angles[1,list1[uniq(file_angles[1,list1])]])
   twotheta_angles=reform(file_angles[2,list2[uniq(file_angles[2,list2])]])

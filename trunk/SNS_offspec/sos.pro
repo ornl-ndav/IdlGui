@@ -121,6 +121,10 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   WIDGET_CONTROL, main_base, /REALIZE
   WIDGET_CONTROL, main_base, SET_UVALUE=global
   xmanager, 'main_base', main_base, /NO_BLOCK, cleanup = 'sos_cleanup'
+
+  if (strlowcase(debugger) eq 'yes') then begin
+  (*global).input_path = '~/IDLWorkspace80/SNS_offspec/NeXus'
+  endif
     
   ;=============================================================================
   ;send message to log current run of application

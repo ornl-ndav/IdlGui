@@ -82,7 +82,6 @@ function getValue, id=id, event=event, base=base, uname=uname
   endif
   widget_control, _id, get_value=value
   return, value
-  
 end
 
 ;+
@@ -171,62 +170,62 @@ compile_opt idl2
 return, getValue(event=event, uname='bins_qx')
 end
 
-function get_ranges_qx_min
+function get_ranges_qx_min, event
 compile_opt idl2
 return, getValue(event=event, uname='ranges_qx_min')
 end
 
-function get_ranges_qz_min
+function get_ranges_qz_min, event
 compile_opt idl2
-return, getValue(event=event, uname='ranges_gz_min')
+return, getValue(event=event, uname='ranges_qz_min')
 end
 
-function get_tof_min
+function get_tof_min, event
 compile_opt idl2
 return, getValue(event=event, uname='tof_min')
 end
 
-function get_ranges_qx_max
+function get_ranges_qx_max, event
 compile_opt idl2
 return, getValue(event=event, uname='ranges_qx_max')
 end
 
-function get_ranges_qz_max
+function get_ranges_qz_max, event
 compile_opt idl2
-return, getValue(event=event, uname='ranges_gz_max')
+return, getValue(event=event, uname='ranges_qz_max')
 end
 
-function get_tof_max
+function get_tof_max, event
 compile_opt idl2
 return, getValue(event=event, uname='tof_max')
 end
 
-function get_center_pixel
+function get_center_pixel, event
 compile_opt idl2
 return, getValue(event=event, uname='center_pixel')
 end
 
-function get_pixel_size
+function get_pixel_size, event
 compile_opt idl2
 return, getValue(event=event, uname='pixel_size')
 end
 
-function get_pixel_min
+function get_pixel_min, event
 compile_opt idl2
 return, getValue(event=event, uname='pixel_min')
 end
 
-function get_pixel_max
+function get_pixel_max, event
 compile_opt idl2
 return, getValue(event=event, uname='pixel_max')
 end
 
-function get_d_sd
+function get_d_sd, event
 compile_opt idl2
 return, getValue(event=event, uname='d_sd_uname')
 end
 
-function get_d_md
+function get_d_md, event
 compile_opt idl2
 return, getValue(event=event, uname='d_md_uname')
 end

@@ -171,7 +171,7 @@ pro design_tabs, MAIN_BASE, global
     uname = 'ranges_qx_max',$
     value = '0.004',$
     title = 'to  ')
-  field2 = cw_field(row1col3,$
+  field21 = cw_field(row1col3,$
     xsize = 8,$
     /floating,$
     uname = 'ranges_qz_max',$
@@ -245,17 +245,19 @@ pro design_tabs, MAIN_BASE, global
     /row)
     
   progress_base = widget_base(bottom_box,$
+    uname = 'progress_bar_base',$
     map = 0)
   progress_bar = widget_draw(progress_base,$
     scr_xsize = 400,$
-    scr_ysize = 25)
+    uname = 'progress_bar_uname',$
+    scr_ysize = 15)
     
   space = widget_label(bottom_box,$
     value = '                     ')
     
   ok = widget_button(bottom_box,$
     uname = 'go_button',$
-    sensitive = 0,$
+    sensitive = 1,$
     value = '>   >  > >> G O << <  <   <')
     
 end
