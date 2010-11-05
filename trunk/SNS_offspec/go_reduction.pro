@@ -57,7 +57,7 @@ function get_normalization_spectrum, event, norm_nexus
   message = ['> Done with retrieving normalization spectrum [tof,counts]']
   sz = size(spectrum)
   message1 = '-> size(spectrum): [' + $
-  strcompress(strjoin(sz,','),/remove_all) + ']'
+    strcompress(strjoin(sz,','),/remove_all) + ']'
   message = [message, message1]
   log_book_update, event, message=message
   
@@ -82,9 +82,9 @@ function trim_spectrum, event, spectrum, TOFrange=TOFrange
   
   _TOFmin = TOFrange[0]
   _TOFmax = TOFrange[1]
-
+  
   message1 = '-> TOFmin: ' + strcompress(_TOFmin,/remove_all)
-  message2 = '-> TOFmax: ' + strcompress(_TOFmax,/remove_all) 
+  message2 = '-> TOFmax: ' + strcompress(_TOFmax,/remove_all)
   log_book_update, event, message = [message, message1, message2]
   
   list = where(spectrum[0,*] ge _TOFmin and spectrum[0,*] le _TOFmax)
@@ -93,7 +93,7 @@ function trim_spectrum, event, spectrum, TOFrange=TOFrange
   
   sz = size(spectrum)
   message3 = '-> size(spectrum): [' + $
-  strcompress(strjoin(sz,','),/remove_all) + ']'
+    strcompress(strjoin(sz,','),/remove_all) + ']'
   log_book_update, event, message = [message, message1, message2, message3]
   
   return, spectrum
@@ -119,7 +119,7 @@ end
 ;-
 function read_nexus, event, filename, TOFmin, TOFmax, PIXmin, PIXmax
   compile_opt idl2
-
+  
   message = strarr(13)
   i=0
   message[i++] = '> Read data from NeXus ' + filename
@@ -130,29 +130,29 @@ function read_nexus, event, filename, TOFmin, TOFmax, PIXmin, PIXmax
   image = iFile->get_y_tof_data()
   sz = size(image)
   message[i++] = '-> retrieved Y vs TOF data [' + $
-  strcompress(strjoin(sz,','),/remove_all) + ']'
-  
+    strcompress(strjoin(sz,','),/remove_all) + ']'
+    
   ;get tof array only
   tof = iFile->get_TOF_data()
   sz = size(tof)
   message[i++] = '-> retrived tof axis data [' + $
-  strcompress(strjoin(sz,','),/remove_all) + ']'
-  
+    strcompress(strjoin(sz,','),/remove_all) + ']'
+    
   ;get angles
   _Theta = iFile->get_theta()
   _TwoTheta = iFile->get_twoTheta()
-
+  
   theta = _theta.value
   twotheta = _twotheta.value
-
+  
   theta_units = _theta.units
   twotheta_units = _twotheta.units
   
   message[i++] = '-> retrieved theta: ' + strcompress(theta,/remove_all) + $
-  ' ' + strcompress(theta_units,/remove_all)
+    ' ' + strcompress(theta_units,/remove_all)
   message[i++] = '-> retrieved twotheta: ' + strcompress(twotheta,/remove_all) + $
-  ' ' + strcompress(twotheta_units,/remove_all)
-
+    ' ' + strcompress(twotheta_units,/remove_all)
+    
   obj_destroy, iFile
   
   Theta=theta+4.0
@@ -160,32 +160,32 @@ function read_nexus, event, filename, TOFmin, TOFmax, PIXmin, PIXmax
   
   message[i++] = '-> Adding 4.0 to theta and twotheta'
   message[i++] = '  -> theta: ' + strcompress(theta,/remove_all) + $
-   ' ' + strcompress(theta_units,/remove_all)
+    ' ' + strcompress(theta_units,/remove_all)
   message[i++] = '  -> twotheta: ' + strcompress(twotheta,/remove_all) + $
     ' ' + strcompress(twotheta_units,/remove_all)
-
+    
   ;Determine where is the first and last tof in the range
   list=where(TOF ge TOFmin and TOF le TOFmax)
   t1=min(where(TOF ge TOFmin))
   t2=max(where(TOF le TOFmax))
-
-  message[i++] = '-> [t1,t2]=[' + strcompress(t1,/remove_all) + $
-  ',' + strcompress(t2,/remove_all) + ']'
   
+  message[i++] = '-> [t1,t2]=[' + strcompress(t1,/remove_all) + $
+    ',' + strcompress(t2,/remove_all) + ']'
+    
   pixels=findgen(256)
   p1=min(where(pixels ge PIXmin))
   p2=max(where(pixels le PIXmax))
   
   message[i++] = '-> [p1,p2]=[' + strcompress(p1,/remove_all) + $
-  ',' + strcompress(p2,/remove_all) + ']'
-
+    ',' + strcompress(p2,/remove_all) + ']'
+    
   TOF=TOF[t1:t2]
   PIXELS=pixels[p1:p2]
   
   image=image[t1:t2,p1:p2]
   
   sz = size(tof)
-  message[i++] = '-> size(TOF): ' + strcompress(strjoin(sz,','),/remove_all)   
+  message[i++] = '-> size(TOF): ' + strcompress(strjoin(sz,','),/remove_all)
   sz = size(pixels)
   message[i++] = '-> size(pixels): ' + strcompress(strjoin(sz,','),/remove_all)
   sz = size(image)
@@ -195,11 +195,33 @@ function read_nexus, event, filename, TOFmin, TOFmax, PIXmin, PIXmax
   ;tof   -> tof axis
   ;pixels -> list of pixels to keep in calculation
   DATA={data:image, theta:theta, twotheta:twotheta, tof:tof, pixels:pixels}
-
+  
   log_book_update, event, message = message
-
+  
   return, DATA
   
+end
+
+;+
+; :Description:
+;     sort the angles (theta and twoTheta in increasing order)
+;     and create arrays of increasing uniq list of angles (theat and twotheta)
+;
+; :Params:
+;    event
+;
+; :Keywords:
+;    file_angle
+;
+; :Author: j35
+;-
+function create_uniq_sort_list_of_angles, event, file_angle = file_angle
+  compile_opt idl2
+  
+  list1 = sort(file_angle)
+  _angles=file_angle[list1[uniq(file_angle[list1])]]
+
+  return, _angles  
 end
 
 ;+
@@ -224,7 +246,7 @@ pro go_reduction, event
   
   message = [message, '-> Retrieving parameters.']
   log_book_update, event, message=message
-
+  
   ;Retrieve variables
   
   list_data_nexus = (*(*global).list_data_nexus)
@@ -258,7 +280,7 @@ pro go_reduction, event
   
   ;create spectrum of normalization file
   spectrum = get_normalization_spectrum(event, norm_nexus)
-
+  
   update_progress_bar_percentage, event, ++processes, total_number_of_processes
   
   ;trip the spectrum to the relevant tof ranges
@@ -274,24 +296,45 @@ pro go_reduction, event
   for read_loop=0,file_num-1 do begin
     ;check to see if the theta value is the same as CE_theta
     DATA = read_nexus(event, $
-    list_data_nexus[read_loop], $
-    TOFmin, $
-    TOFmax, $
-    PIXmin, $
-    PIXmax)
+      list_data_nexus[read_loop], $
+      TOFmin, $
+      TOFmax, $
+      PIXmin, $
+      PIXmax)
     ;round the angles to the nearset 100th of a degree
     file_angles[0,read_loop]=read_loop
     file_angles[1,read_loop]=round(DATA.theta*100.0)/100.0
     file_angles[2,read_loop]=round(DATA.twotheta*100.0)/100.0
     
     update_progress_bar_percentage, event, ++processes, $
-    total_number_of_processes
-    
+      total_number_of_processes
+      
   endfor
   
+  ;create uniq increasing list of angles (theta and twotheat)
+  theta_angles = create_uniq_sort_list_of_angles(event, $
+    file_angle = reform(file_angles[1,*]))
+
+  twoTheta_angles = create_uniq_sort_list_of_angles(event, $
+    file_angle = reform(file_angles[2,*]))
+
+  si1=size(theta_angles,/dim)
+  si2=size(twotheta_angles,/dim)
   
-  
-  
+  update_progress_bar_percentage, event, ++processes, $
+    total_number_of_processes
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
   hide_progress_bar, event
   widget_control, hourglass=0
   
