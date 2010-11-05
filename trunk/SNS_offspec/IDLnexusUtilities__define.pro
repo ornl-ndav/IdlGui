@@ -373,6 +373,20 @@ end
 
 ;+
 ; :Description:
+;    retrieve only the tof axis in ms
+;
+; :Author: j35
+;-
+function IDLnexusUtilities::get_tof_data
+compile_opt idl2
+  count_path = self.entry_spin_state + '/bank1/time_of_flight/'
+  tof_data = retrieve_value(file_name=self.file_name, path=count_path)
+  tof_data /= 1000.0 ;to get the tof in ms
+  return, tof_data
+end
+
+;+
+; :Description:
 ;    Retrieve the data (tof and counts),
 ;    integrate the data over all the pixels and
 ;    produce 2 columns data set with first column
