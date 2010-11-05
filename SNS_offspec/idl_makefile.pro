@@ -46,6 +46,7 @@ cd, CurrentFolder
 .run data_box_eventcb.pro
 .run norm_box_eventcb.pro
 .run log_book_eventcb.pro
+.run go_reduction.pro
 
 .run sos.pro
 .run sos_cleanup.pro

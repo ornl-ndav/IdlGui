@@ -91,12 +91,17 @@ PRO main_base_event, Event
     
     ;Normalization run number text field
     widget_info(wWidget, find_by_uname='norm_run_number_text_field'): begin
-    norm_run_number_event, event
+      norm_run_number_event, event
     end
     
     ;Browse norm button
     widget_info(wWidget, find_by_uname='norm_browse_button'): begin
-    browse_norm_button_event, event
+      browse_norm_button_event, event
+    end
+    
+    ;GO REDUCTION
+    widget_info(wWidget, find_by_uname='go_button'): begin
+      go_reduction, event
     end
     
     else:

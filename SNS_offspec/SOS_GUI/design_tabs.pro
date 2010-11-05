@@ -254,6 +254,8 @@ pro design_tabs, MAIN_BASE, global
     value = '                     ')
     
   ok = widget_button(bottom_box,$
+    uname = 'go_button',$
+    sensitive = 0,$
     value = '>   >  > >> G O << <  <   <')
     
 end
