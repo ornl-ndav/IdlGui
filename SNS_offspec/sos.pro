@@ -91,7 +91,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     input_path: '~/results/' })
     
   log_book = ['------------------------------------------------------------',$
-  'Log Book of SNS_offpsec',date]
+  'Log Book of SNS_offpsec',' Application started at: ' + date]
   (*(*global).full_log_book) = log_book  
     
   MainBaseSize  = [50 , 50]

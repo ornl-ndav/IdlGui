@@ -60,22 +60,44 @@ pro hide_progress_bar, event
   mapBase, event=event, status=0 , uname='progress_bar_base'
 end
 
-pro update_progress_bar_percentage, event, percentage=percentage
+;+
+; :Description:
+;    update the progress bar according to the current process number
+;
+; :Params:
+;    event
+;    process_number
+;    total_number_processes
+;
+; :Author: j35
+;-
+pro update_progress_bar_percentage, event, $
+process_number, $
+total_number_processes
   compile_opt idl2
+  
+  print, process_number
   
   id = widget_info(event.top, find_by_uname='progress_bar_uname')
   geometry = widget_info(id,/geometry)
   
   xsize = geometry.xsize
   ysize = geometry.ysize
+
+  ratio = float(process_number) / float(total_number_processes)
+  _xsize = xsize * (float(ratio))
   
-  _xsize = xsize * (float(percentage)/100.)
-  
+  device, decomposed = 0
+  loadct, 5
   widget_control, id, GET_VALUE = plot_id
   wset, plot_id
   
   x = [0, _xsize, _xsize, 0, 0]
   y = [0, 0, ysize, ysize, 0]
-  polyfill, x, y, color=175, /device
+  polyfill, x, y, color=50, /device
+  
+  ;strangely, this 'print' is required to see the first polyfill of the
+  ;progress bar !!!!
+  print
   
 end
