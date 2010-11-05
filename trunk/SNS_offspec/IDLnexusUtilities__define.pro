@@ -348,14 +348,25 @@ end
 ; :Description:
 ;    Retrieve the 3D data set [tof, pixel_x, pixel_y]
 ;
-; :Keywords:
-;    spin_state
-;
 ; :Author: j35
 ;-
 function IDLnexusUtilities::get_full_data
   compile_opt idl2
   count_path = self.entry_spin_state + '/bank1/data/'
+  count_data = retrieve_value(file_name=self.file_name, path=count_path)
+  return, count_data
+end
+
+;+
+; :Description:
+;    retrieve the [tof,pixel_x] data directly without the need to
+;    get all the data
+;
+; :Author: j35
+;-
+function IDLnexusUtilities::get_y_tof_data
+compile_opt idl2
+  count_path = self.entry_spin_state + '/bank1/data_y_time_of_flight/'
   count_data = retrieve_value(file_name=self.file_name, path=count_path)
   return, count_data
 end
@@ -508,6 +519,7 @@ function IDLnexusUtilities::get_d_SD
   return, {value:value_units[0], units:value_units[1]}
   
 end
+
 ;+
 ; :Description:
 ;    init procedure of the program that check if the
