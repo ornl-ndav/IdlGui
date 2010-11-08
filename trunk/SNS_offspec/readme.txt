@@ -20,7 +20,7 @@ A/ TO RUN THE GUI VERSION
    > idl> .reset
    > idl> @run_gui
    
-B/ TO RUN THE ALGORITHM PART OF IT ONLY
+B/ TO RUN THE ALGORITHM PART ONLY
 1- make sure you have the latest version
    ex:
    > cd ~/SVN/SNS_offpsec/
@@ -40,4 +40,10 @@ C/ TO RUN THE UNIT TESTS
    > idl> .reset
    > idl> @run_test_unit
 
+D/ TO BUILD THE DOCUMENTATION
+1- within the SNS_offspec folder, simply run
+   > idl
+   > idl> .reset
+   > idl> @run_doc
+2- to view the documentation, open with your favorite browser doc/index.html
    
