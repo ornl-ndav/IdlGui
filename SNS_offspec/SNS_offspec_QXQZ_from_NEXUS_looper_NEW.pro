@@ -209,34 +209,6 @@ pro run
 ;    wait,.01
 ;  endfor
 
-  
-return  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
   ;extract the specular reflections
   qxwidth=0.00005
   specular=make_array(num, qxbins)
@@ -260,7 +232,6 @@ return
     cut=list[tnum:si-tnum]
     trim[loop,cut]=specular[loop,cut]
   endfor
-  
   
   specular=trim
   
@@ -333,12 +304,13 @@ return
   
   divarray4=totarray4/countarray
   list=where(finite(divarray4) ne 1)
+  
   divarray4[list]=0
   
   contour, countarray,Qxvec,Qzvec,/fill, nlev=100
   wait, 1
   
-  contour, smooth(alog(divarray+1),5),Qxvec,Qzvec, /fill,nlev=200, charsi=1.5, xtitle='QX', ytitle='QZ'
+ contour, smooth(alog(divarray+1),5),Qxvec,Qzvec, /fill,nlev=200, charsi=1.5, xtitle='QX', ytitle='QZ'
 
   create_ascii_output_file, data=smooth(alog(divarray+1),5),$
   Qx = Qxvec, $
