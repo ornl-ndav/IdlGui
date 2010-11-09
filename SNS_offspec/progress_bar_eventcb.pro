@@ -76,8 +76,6 @@ process_number, $
 total_number_processes
   compile_opt idl2
   
-  print, process_number
-  
   id = widget_info(event.top, find_by_uname='progress_bar_uname')
   geometry = widget_info(id,/geometry)
   
@@ -88,7 +86,7 @@ total_number_processes
   _xsize = xsize * (float(ratio))
   
   device, decomposed = 0
-  loadct, 5
+  loadct, 5, /silent
   widget_control, id, GET_VALUE = plot_id
   wset, plot_id
   
