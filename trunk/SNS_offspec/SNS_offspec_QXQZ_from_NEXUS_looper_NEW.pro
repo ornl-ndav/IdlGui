@@ -94,14 +94,8 @@ pro run
   theta_angles=reform(file_angles[1,list1[uniq(file_angles[1,list1])]])
   twotheta_angles=reform(file_angles[2,list2[uniq(file_angles[2,list2])]])
   
-  help, theta_angles
-  help, twotheta_angles
-  
-  return
-  
   si1=size(theta_angles,/dim)
   si2=size(twotheta_angles,/dim)
-  
 
   ;loop through all theta and twotheta combinations and count those that exist
   count=0
@@ -129,7 +123,6 @@ pro run
   ;the # of tiles
   si=size(angles,/dim)
   num=si[1]
-  
   
   ;INFOS
   ;THLAM is an array containing all the data (for all angle measurements) converted to THETA vs LAMBDA.
@@ -184,6 +177,12 @@ pro run
     endif
     
   endfor
+  
+  
+  
+  
+  
+  
   
   ;/////////////////////////////////
   ;NOW CONVERT TO QXQZ

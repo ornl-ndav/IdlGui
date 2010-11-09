@@ -213,15 +213,153 @@ end
 ; :Keywords:
 ;    file_angle
 ;
-; :Author: j35
 ;-
 function create_uniq_sort_list_of_angles, event, file_angle = file_angle
   compile_opt idl2
   
   list1 = sort(file_angle)
   _angles=file_angle[list1[uniq(file_angle[list1])]]
+  
+  return, _angles
+end
 
-  return, _angles  
+;+
+; :Description:
+;    This function loops through all the theta and twotheta combinations
+;    and count those that exist then make a list of unique angles geometries
+;
+; :Params:
+;    file_angles
+;    theta_angles
+;    twotheta_angles
+;
+; :Returns:
+;    unique list of angles geometries
+;
+;-
+function make_unique_angle_geometries_list, file_angles,$
+    theta_angles, $
+    twotheta_angles
+  compile_opt idl2
+  
+  si1=size(theta_angles,/dim)
+  si2=size(twotheta_angles,/dim)
+  
+  ;loop through all theta and twotheta combinations and count those that exist
+  count=0
+  for loop1=0, si1[0]-1 do begin
+    for loop2=0, si2[0]-1 do begin
+      check=where((file_angles[1,*] eq theta_angles[loop1]) and $
+        (file_angles[2,*] eq twotheta_angles[loop2]))
+      if check[0] ne -1 then count++
+    endfor
+  endfor
+  
+  ;loop through again and make a list of unique angle geometries
+  angles=make_array(4,count)
+  count=0
+  for loop1=0, si1[0]-1 do begin
+    for loop2=0, si2[0]-1 do begin
+      check=where((file_angles[1,*] eq theta_angles[loop1]) and $
+        (file_angles[2,*] eq twotheta_angles[loop2]))
+      if check[0] ne -1 then begin
+        angles[0,count]=theta_angles[loop1]
+        angles[1,count]=twotheta_angles[loop2]
+        count++
+      endif
+    endfor
+  endfor
+  
+  return, angles
+end
+
+;+
+; :Description:
+;   This create 3 arrays that hold the THLAM values
+;
+; INFOS
+;   THLAM is an array containing all the data (for all angle measurements) 
+;   converted to THETA vs LAMBDA.
+;   It is a 3-d array where the 1st dimension is the measurement #, 2nd 
+;   dimension is LAMBDA, and 3rd dimension is THETA.
+;   Also, THLAM_lamvec and THLAM_thvec are 2-d arrays of the vectors to index 
+;   THLAM_array.
+;
+;   So the 5th angle can be plotted using :
+;   'contour, THLAM_array[4,*,*], THLAM_lamvec[4,*], THLAM_thvec[4,*]'
+;
+;   THLAM is later converted to Qx vs Qz and is stored in a similar combination 
+;   of all measurement called QXQZ_array.
+;
+;   SNS_divide_spectrum was my method to normalize the data to the incident 
+;   beam spectrum. I know there already exists a way to do this but it was 
+;   easier for me to write my own quick-and-dirty code than find what already 
+;   exists.
+;   Basically, I created a 2 column LAMBDA vs INTENSITY file for the direct 
+;   beam, load that in and then divide all the data by it.
+;
+; :Keywords:
+;    event
+;    DATA
+;    spectrum
+;    SD_d
+;    MD_d
+;    center_pixel
+;    pixel_size
+;    angles
+;    THLAM_array
+;    THLAM_lamvec
+;    THLAM_thvec
+;
+;-
+pro build_THLAM, event=event, $
+    DATA=DATA, $
+    spectrum = spectrum, $
+    SD_d = SD_d, $
+    MD_d = MD_d, $
+    center_pixel = center_pixel, $
+    pixel_size = pixel_size, $
+    angles = angles, $
+    THLAM_array = THLAM_array, $
+    THLAM_lamvec = THLAM_lamvec, $
+    THLAM_thvec = THLAM_thvec
+  compile_opt idl2
+  
+  file_num = (size(DATA,/dim))[0]
+  
+  for read_loop=0,file_num-1 do begin
+  
+    RAW_DATA= *DATA[read_loop]
+    ;{data, theta, twotheta, tof, pixels}
+    
+    NORM_DATA=SNS_divide_spectrum(RAW_DATA, spectrum)
+    
+    ;SD_d : sample to detector distance
+    ;MD_d : moderator to detector
+    THLAM=SNS_convert_THLAM(NORM_DATA, SD_d, MD_d, center_pixel, pixel_size)
+    ;THLAM is a structure
+    ;{ data, lambda, theta}  with lambda in Angstroms and theta in radians
+    
+    ;round the angles to the nearset 100th of a degree
+    theta_val=round(RAW_DATA.theta*100.0)/100.0
+    twotheta_val=round(RAW_DATA.twotheta*100.0)/100.0
+    theta_val=theta_val[0]
+    twotheta_val=twotheta_val[0]
+    
+    tilenum=where((angles[0,*] eq theta_val) and (angles[1,*] eq twotheta_val))
+    
+    THLAM_array[tilenum,*,*]=THLAM_array[tilenum,*,*]+THLAM.data
+    THLAM_thvec[tilenum,*]=THLAM.theta
+    THLAM_lamvec[tilenum,*]=THLAM.lambda
+    
+;    window,0, title = "Convertion: TOF->Lambda, Pixel->Theta"
+;    shade_surf, smooth(thlam.data,3), thlam.lambda, thlam.theta, ax=70, $
+;      charsi=2, xtitle='LAMBDA (' + string("305B) + ')', ytitle='THETA (rad)'
+;    wait,.1
+;    wshow
+    
+  endfor
+  
 end
 
 ;+
@@ -293,9 +431,12 @@ pro go_reduction, event
   ;determine the Nexus file(s) which include(s) the critical reflection
   ;all other tiles will be normalized to these.
   file_angles=make_array(3,file_num) ;[file_index, theta, twotheta]
+  ;Save big data structure into a array of pointers
+  DATA = ptrarr(file_num, /allocate_heap)
+  
   for read_loop=0,file_num-1 do begin
     ;check to see if the theta value is the same as CE_theta
-    DATA = read_nexus(event, $
+    _DATA = read_nexus(event, $
       list_data_nexus[read_loop], $
       TOFmin, $
       TOFmax, $
@@ -303,8 +444,10 @@ pro go_reduction, event
       PIXmax)
     ;round the angles to the nearset 100th of a degree
     file_angles[0,read_loop]=read_loop
-    file_angles[1,read_loop]=round(DATA.theta*100.0)/100.0
-    file_angles[2,read_loop]=round(DATA.twotheta*100.0)/100.0
+    file_angles[1,read_loop]=round(_DATA.theta*100.0)/100.0
+    file_angles[2,read_loop]=round(_DATA.twotheta*100.0)/100.0
+    
+    *DATA[read_loop] = _DATA
     
     update_progress_bar_percentage, event, ++processes, $
       total_number_of_processes
@@ -314,22 +457,42 @@ pro go_reduction, event
   ;create uniq increasing list of angles (theta and twotheat)
   theta_angles = create_uniq_sort_list_of_angles(event, $
     file_angle = reform(file_angles[1,*]))
-
+    
   twoTheta_angles = create_uniq_sort_list_of_angles(event, $
     file_angle = reform(file_angles[2,*]))
-
+    
   si1=size(theta_angles,/dim)
   si2=size(twotheta_angles,/dim)
   
   update_progress_bar_percentage, event, ++processes, $
     total_number_of_processes
     
+  ;make a list of unique angle geometries
+  angles = make_unique_angle_geometries_list(file_angles,$
+    theta_angles, $
+    twotheta_angles)
     
-    
-    
-    
-    
-    
+  ;The number of tiles
+  si = size(angles,/dim)
+  num = si[1]
+  
+  ;Create an array that wil contain all the data (for all angle measurements)
+  ;converted to THETA vs Lambda
+  THLAM_array = make_array(num,floor((TOFmax-TOFmin)*5)+1,PIXmax-PIXmin+1)
+  THLAM_lamvec= make_array(num,floor((TOFmax-TOFmin)*5)+1)
+  THLAM_thvec = make_array(num,PIXmax-PIXmin+1)
+  
+  build_THLAM, event=event, $
+    DATA=DATA, $
+    spectrum = spectrum, $
+    SD_d = SD_d, $
+    MD_d = MD_d, $
+    center_pixel = center_pixel, $
+    pixel_size = pixel_size, $
+    angles = angles, $
+    THLAM_array = THLAM_array, $
+    THLAM_lamvec = THLAM_lamvec, $
+    THLAM_thvec = THLAM_thvec
     
     
     
