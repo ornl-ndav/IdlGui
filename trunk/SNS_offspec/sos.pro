@@ -74,6 +74,9 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
     instrument: 'REF_L',$
 
+    SD_d: 0., $ ;distance sample detector
+    MD_d: 0., $ ;distance moderator detector
+
     list_data_runs: ptr_new(0L),$  ;[2000,2010,2011,2013,2020]
     list_data_nexus: ptr_new(0L), $ ;['/SNS/..../REF_L_3454.nxs','/SNS/...']
     norm_nexus: '',$

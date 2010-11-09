@@ -27,6 +27,7 @@ cd, CurrentFolder
 .run IDLxmlParser__define.pro
 .run conversion.pro
 .run browse_nexus_button.pro
+.run convert_to_qxqz.pro
 
 ;test
 .run IDLnexusUtilitiesTest__define.pro

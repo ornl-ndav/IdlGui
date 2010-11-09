@@ -87,9 +87,6 @@ pro run
   list1=sort(file_angles[1,*])
   list2=sort(file_angles[2,*])
 
-  help, list1
-  help, list2
-
   ;create arrays of increasing uniq list of angles (theat and twotheta)
   theta_angles=reform(file_angles[1,list1[uniq(file_angles[1,list1])]])
   twotheta_angles=reform(file_angles[2,list2[uniq(file_angles[2,list2])]])
@@ -178,12 +175,6 @@ pro run
     
   endfor
   
-  
-  
-  
-  
-  
-  
   ;/////////////////////////////////
   ;NOW CONVERT TO QXQZ
   ;/////////////////////////////////
@@ -192,7 +183,8 @@ pro run
   
   QXQZ_array=make_array(num, qxbins, qzbins)
   QXQZ_angles=make_array(num,2)
-  
+
+
   ;Initialize the range of steps for x and z axis
   ;will go from -0.004 to 0.004 with 500steps (qxbins)
   qxvec=(findgen(qxbins)/(qxbins-1))*(qxrange[1]-qxrange[0])+qxrange[0]
@@ -211,16 +203,38 @@ pro run
   device, decomposed=0
   loadct, 5
   
-;  a = contour( [[0,0],[100,0]], [qxrange[0],qxrange[1]], [qzrange[0],qzrange[1]],/nodata, charsi=1.5, xtitle='QX', ytitle='QZ')
-  contour, [[0,0],[100,0]], [qxrange[0],qxrange[1]], [qzrange[0],qzrange[1]],/nodata, charsi=1.5, xtitle='QX', ytitle='QZ'
-  for loop=0,num-1 do begin
-;    _QXQZ_array = reform(QXQZ_array[loop,*,*])
-;    b= contour(_QXQZ_array,Qxvec,Qzvec, /fill,nlev=200,/overplot,RGB_TABLE=5)
-    contour, QXQZ_array[loop,*,*],Qxvec,Qzvec, /fill,nlev=200,/overplot
+;  contour, [[0,0],[100,0]], [qxrange[0],qxrange[1]], [qzrange[0],qzrange[1]],/nodata, charsi=1.5, xtitle='QX', ytitle='QZ'
+;  for loop=0,num-1 do begin
+;    contour, QXQZ_array[loop,*,*],Qxvec,Qzvec, /fill,nlev=200,/overplot
+;    wait,.01
+;  endfor
 
-    wait,.01
-  endfor
-
+  
+return  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
 
   ;extract the specular reflections
