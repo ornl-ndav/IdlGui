@@ -153,7 +153,7 @@ pro design_tabs, MAIN_BASE, global
   field2 = cw_field(row1col2,$
     xsize = 8,$
     /floating,$
-    value = '-0.004',$
+    value = '0.00',$
     uname = 'ranges_qz_min',$
     title = '         Qz')
   field3 = cw_field(row1col2,$
@@ -175,7 +175,7 @@ pro design_tabs, MAIN_BASE, global
     xsize = 8,$
     /floating,$
     uname = 'ranges_qz_max',$
-    value = '0.004',$
+    value = '0.3',$
     title = 'to  ')
   field3 = cw_field(row1col3,$
     xsize = 8,$

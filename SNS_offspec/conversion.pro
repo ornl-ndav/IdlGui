@@ -133,7 +133,7 @@ function calculate_lambda, tof_value=tof_value, $
     d_MS_m = d_MS_m, $
     lambda_units=lambda_units
   compile_opt idl2
-  
+    
   _tof_s = convert_to_s(tof_value=tof_value, tof_units=tof_units)
   
   if (n_elements(lambda_units) eq 0) then lambda_units = 'angstroms'
@@ -153,7 +153,7 @@ function calculate_lambda, tof_value=tof_value, $
   
   _v = (double(d_SD_m) + double(d_MS_m)) / double(_tof_s)
   _lambda = double(h) / (double(m_n) * _v) * factor
-  
+
   return, _lambda
 end
 

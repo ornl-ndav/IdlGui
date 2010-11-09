@@ -278,24 +278,24 @@ end
 ;   This create 3 arrays that hold the THLAM values
 ;
 ; INFOS
-;   THLAM is an array containing all the data (for all angle measurements) 
+;   THLAM is an array containing all the data (for all angle measurements)
 ;   converted to THETA vs LAMBDA.
-;   It is a 3-d array where the 1st dimension is the measurement #, 2nd 
+;   It is a 3-d array where the 1st dimension is the measurement #, 2nd
 ;   dimension is LAMBDA, and 3rd dimension is THETA.
-;   Also, THLAM_lamvec and THLAM_thvec are 2-d arrays of the vectors to index 
+;   Also, THLAM_lamvec and THLAM_thvec are 2-d arrays of the vectors to index
 ;   THLAM_array.
 ;
 ;   So the 5th angle can be plotted using :
 ;   'contour, THLAM_array[4,*,*], THLAM_lamvec[4,*], THLAM_thvec[4,*]'
 ;
-;   THLAM is later converted to Qx vs Qz and is stored in a similar combination 
+;   THLAM is later converted to Qx vs Qz and is stored in a similar combination
 ;   of all measurement called QXQZ_array.
 ;
-;   SNS_divide_spectrum was my method to normalize the data to the incident 
-;   beam spectrum. I know there already exists a way to do this but it was 
-;   easier for me to write my own quick-and-dirty code than find what already 
+;   SNS_divide_spectrum was my method to normalize the data to the incident
+;   beam spectrum. I know there already exists a way to do this but it was
+;   easier for me to write my own quick-and-dirty code than find what already
 ;   exists.
-;   Basically, I created a 2 column LAMBDA vs INTENSITY file for the direct 
+;   Basically, I created a 2 column LAMBDA vs INTENSITY file for the direct
 ;   beam, load that in and then divide all the data by it.
 ;
 ; :Keywords:
@@ -310,6 +310,8 @@ end
 ;    THLAM_array
 ;    THLAM_lamvec
 ;    THLAM_thvec
+;    processes
+;    total_number_of_processes
 ;
 ;-
 pro build_THLAM, event=event, $
@@ -322,7 +324,10 @@ pro build_THLAM, event=event, $
     angles = angles, $
     THLAM_array = THLAM_array, $
     THLAM_lamvec = THLAM_lamvec, $
-    THLAM_thvec = THLAM_thvec
+    THLAM_thvec = THLAM_thvec, $
+    processes = processes, $
+    total_number_of_processes = total_number_of_processes
+    
   compile_opt idl2
   
   file_num = (size(DATA,/dim))[0]
@@ -352,14 +357,127 @@ pro build_THLAM, event=event, $
     THLAM_thvec[tilenum,*]=THLAM.theta
     THLAM_lamvec[tilenum,*]=THLAM.lambda
     
-;    window,0, title = "Convertion: TOF->Lambda, Pixel->Theta"
-;    shade_surf, smooth(thlam.data,3), thlam.lambda, thlam.theta, ax=70, $
-;      charsi=2, xtitle='LAMBDA (' + string("305B) + ')', ytitle='THETA (rad)'
-;    wait,.1
-;    wshow
+    ;    window,0, title = "Convertion: TOF->Lambda, Pixel->Theta"
+    ;    shade_surf, smooth(thlam.data,3), thlam.lambda, thlam.theta, ax=70, $
+    ;      charsi=2, xtitle='LAMBDA (' + string("305B) + ')', ytitle='THETA (rad)'
+    ;    wait,.1
+    ;    wshow
     
+    update_progress_bar_percentage, event, ++processes, $
+      total_number_of_processes
+      
   endfor
   
+end
+
+;+
+; :Description:
+;    Convert the tof/pixel array into QxQz
+;
+; :Keywords:
+;    event
+;    num
+;    lambda_step
+;    qxbins
+;    qzbins
+;    qxrange
+;    qzrange
+;    THLAM_array
+;    THLAM_thvec
+;    THLAM_lamvec
+;    angles
+;    qxqz_array
+;
+;-
+pro make_QxQz, event = event, $
+    num = num, $
+    lambda_step = lambda_step, $
+    qxbins = qxbins, $
+    qzbins = qzbins, $
+    qxrange = qxrange, $
+    qzrange = qzrange, $
+    THLAM_array = THLAM_array, $
+    THLAM_thvec = THLAM_thvec, $
+    THLAM_lamvec = THLAM_lamvec, $
+    angles = angles, $
+    qxqz_array = qxqz_array
+  compile_opt idl2
+  
+  
+  ;Initialize the range of steps for x and z axis
+  ;will go from -0.004 to 0.004 with 500steps (qxbins)
+  qxvec=(findgen(qxbins)/(qxbins-1))*(qxrange[1]-qxrange[0])+qxrange[0]
+  ;will go from 0 to 0.3 with 500steps
+  qzvec=(findgen(qzbins)/(qzbins-1))*(qzrange[1]-qzrange[0])+qzrange[0]
+  
+  ;SO FAR SO GOOD
+  
+  ;THLAM_array: 2D vector of data
+  ;THLAM_thvec: theta vector axis
+  ;THLAM_lamvec: lambda vector axis
+  ;angles[theta,twotheta]
+  for loop=0,num-1 do begin
+    QXQZ_array[loop,*,*] = convert_to_QxQz(THLAM_array[loop,*,*], $
+      THLAM_thvec[loop,*], $
+      THLAM_lamvec[loop,*], $
+      angles[0,loop], $
+      QXvec, $
+      QZvec, $
+      lambda_step)
+  endfor
+  
+;  device, decomposed=0
+;  loadct, 5
+;  
+;  window, 0
+;  contour, [[0,0],[100,0]], [qxrange[0],qxrange[1]], $
+;    [qzrange[0],qzrange[1]],$
+;    /nodata, charsi=1.5, $
+;    xtitle='QX', ytitle='QZ'
+;  for loop=0,num-1 do begin
+;    contour, QXQZ_array[loop,*,*],Qxvec,Qzvec, /fill,nlev=200,/overplot
+;    wait,.01
+;  endfor
+
+end
+
+;+
+; :Description:
+;    calculate the lambda step (in angstroms)
+;
+; :Params:
+;    event
+;    tof
+;
+;-
+function get_lambda_step, event, tof
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  d_SD_mm = (*global).SD_d
+  d_MD_mm = (*global).MD_d
+  
+  d_SD_m = convert_distance( distance = d_SD_mm, $
+  from_unit = 'mm', $
+  to_unit = 'm')
+  
+  d_MD_m = convert_distance( distance = d_MD_mm, $
+  from_unit = 'mm', $
+  to_unit = 'm')
+  
+  d_MS_m = d_MD_m - d_SD_m
+  
+  tof0 = tof[0]
+  tof1 = tof[1]
+  tof = tof1 - tof0
+  lambda = calculate_lambda (tof_value=tof, $
+    tof_units = 'ms', $
+    d_SD_m = d_SD_m, $
+    d_MS_m = d_MS_m, $
+    lambda_units = 'angstroms')
+    
+  return, lambda
 end
 
 ;+
@@ -379,15 +497,19 @@ pro go_reduction, event
   
   widget_control, /hourglass
   show_progress_bar, event
-  total_number_of_processes = 10
   processes = 0
   
   message = [message, '-> Retrieving parameters.']
   log_book_update, event, message=message
   
+  ;number of steps is ----> 1
+  
   ;Retrieve variables
   
   list_data_nexus = (*(*global).list_data_nexus)
+  file_num = n_elements(list_data_nexus)
+  total_number_of_processes = 6 + 2*file_num
+  
   norm_nexus      = (*global).norm_nexus
   
   QZmax = get_ranges_qz_max(event)
@@ -411,21 +533,30 @@ pro go_reduction, event
   center_pixel = get_center_pixel(event)
   pixel_size = get_pixel_size(event)
   
-  SD_d = get_d_sd(event)
-  MD_d = get_d_md(event)
+  SD_d = get_d_sd(event) ;mm
+  MD_d = get_d_md(event) ;mm
+  
+  (*global).SD_d = SD_d
+  (*global).MD_d = MD_d
+  
+  ;lambda step used in conversion to QxQz
+  lambda_step = 0
   
   update_progress_bar_percentage, event, ++processes, total_number_of_processes
+  
+  ;number of steps is ----> 1
   
   ;create spectrum of normalization file
   spectrum = get_normalization_spectrum(event, norm_nexus)
   
   update_progress_bar_percentage, event, ++processes, total_number_of_processes
   
+  ;number of steps is ----> 1
+  
   ;trip the spectrum to the relevant tof ranges
   spectrum = trim_spectrum(event, spectrum, TOFrange=TOFrange)
   
   ;prepare array of data coming from the data Nexus files
-  file_num = n_elements(list_data_nexus)
   fdig=make_array(file_num)
   
   ;determine the Nexus file(s) which include(s) the critical reflection
@@ -434,6 +565,9 @@ pro go_reduction, event
   ;Save big data structure into a array of pointers
   DATA = ptrarr(file_num, /allocate_heap)
   
+  update_progress_bar_percentage, event, ++processes, total_number_of_processes
+  
+  ;number of steps is ----> file_num
   for read_loop=0,file_num-1 do begin
     ;check to see if the theta value is the same as CE_theta
     _DATA = read_nexus(event, $
@@ -449,10 +583,17 @@ pro go_reduction, event
     
     *DATA[read_loop] = _DATA
     
+    ;calculate lambda step (using only the first file loaded)
+    if (read_loop eq 0) then begin
+      lambda_step = get_lambda_step(event, _DATA.tof)
+    endif
+    
     update_progress_bar_percentage, event, ++processes, $
       total_number_of_processes
       
   endfor
+  
+  ;number of steps is ----> 1
   
   ;create uniq increasing list of angles (theta and twotheat)
   theta_angles = create_uniq_sort_list_of_angles(event, $
@@ -466,6 +607,8 @@ pro go_reduction, event
   
   update_progress_bar_percentage, event, ++processes, $
     total_number_of_processes
+    
+  ;number of steps is ----> 1
     
   ;make a list of unique angle geometries
   angles = make_unique_angle_geometries_list(file_angles,$
@@ -482,6 +625,7 @@ pro go_reduction, event
   THLAM_lamvec= make_array(num,floor((TOFmax-TOFmin)*5)+1)
   THLAM_thvec = make_array(num,PIXmax-PIXmin+1)
   
+  ;number of steps is ----> file_num
   build_THLAM, event=event, $
     DATA=DATA, $
     spectrum = spectrum, $
@@ -492,11 +636,47 @@ pro go_reduction, event
     angles = angles, $
     THLAM_array = THLAM_array, $
     THLAM_lamvec = THLAM_lamvec, $
-    THLAM_thvec = THLAM_thvec
+    THLAM_thvec = THLAM_thvec, $
+    processes = processes, $
+    total_number_of_processes = total_number_of_processes
+    
+  ;number of steps is ----> 1
+  QXQZ_array=make_array(num, qxbins, qzbins)
+  ;now we need to convert to QxQz
+
+  make_QxQz, event = event, $
+    num = num, $
+    lambda_step = lambda_step, $
+    qxbins = qxbins, $
+    qzbins = qzbins, $
+    qxrange = qxrange, $
+    qzrange = qzrange, $
+    THLAM_array = THLAM_array, $
+    THLAM_thvec = THLAM_thvec, $
+    THLAM_lamvec = THLAM_lamvec, $
+    angles = angles, $
+    qxqz_array = qxqz_array
     
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  update_progress_bar_percentage, event, ++processes, $
+    total_number_of_processes
     
   hide_progress_bar, event
   widget_control, hourglass=0
