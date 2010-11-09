@@ -229,6 +229,7 @@ end
 ;    and count those that exist then make a list of unique angles geometries
 ;
 ; :Params:
+;    event
 ;    file_angles
 ;    theta_angles
 ;    twotheta_angles
@@ -237,7 +238,7 @@ end
 ;    unique list of angles geometries
 ;
 ;-
-function make_unique_angle_geometries_list, file_angles,$
+function make_unique_angle_geometries_list, event, file_angles,$
     theta_angles, $
     twotheta_angles
   compile_opt idl2
@@ -269,6 +270,24 @@ function make_unique_angle_geometries_list, file_angles,$
       endif
     endfor
   endfor
+  
+  message = ['> Create unique angle geometries list:']
+  message1 = '-> size(angles): [4,' + $
+    strcompress((size(angles))[2],/remove_all) + ']'
+  message2 = ['-> angles =']
+  sz1 = (size(angles))[1]
+  index1=0
+  while (index1 lt sz1) do begin
+    _message = '[' + $
+    strcompress(strjoin(reform(angles[index1,*]),','),/remove_all) + $
+    ']'
+    message2 = [message2, _message]
+    index1++
+  endwhile
+  message[1] = '[' + message2[1]
+  message2[-1] = message2[-1] + ']'
+  message = [message, message1, message2]
+  log_book_update, event, message=message
   
   return, angles
 end
@@ -481,6 +500,10 @@ function get_lambda_step, event, tof
     d_MS_m = d_MS_m, $
     lambda_units = 'angstroms')
     
+  message = ['> Calculate the lambda step: ' + $
+    strcompress(lambda,/remove_all) + ' Angstroms']
+  log_book_update, event, message=message
+  
   return, lambda
 end
 
@@ -554,19 +577,19 @@ function get_specular_scale, event=event, $
     trim[loop,cut]=specular[loop,cut]
   endfor
   
-;  specular = trim 
-;  ;autoscale
-;  step=0
-;  
-;  window, 0
-;  plot, QZvec, specular[0,*]*scale[0], $
-;    /ylog, $
-;    yrange=[1e-8,100], $
-;    psym=1, $
-;    charsi=1.5, $
-;    xtitle='QZ', $
-;    ytitle='R'
-;    
+  ;  specular = trim
+  ;  ;autoscale
+  ;  step=0
+  ;
+  ;  window, 0
+  ;  plot, QZvec, specular[0,*]*scale[0], $
+  ;    /ylog, $
+  ;    yrange=[1e-8,100], $
+  ;    psym=1, $
+  ;    charsi=1.5, $
+  ;    xtitle='QZ', $
+  ;    ytitle='R'
+  ;
   for loop=1,num-1 do begin
   
     overlap=where(specular[loop-1,*] ne 0 and specular[loop,*] ne 0)
@@ -575,13 +598,13 @@ function get_specular_scale, event=event, $
     ratio=specular[loop-1,overlap]/specular[loop,overlap]
     r2=total(specular[loop-1,overlap])/total(specular[loop,overlap])
     scale[loop]=(total(ratio)/si)*scale[loop-1]
-
-    ;oplot, QZvec, specular[loop,*]*scale[loop]
+    
+  ;oplot, QZvec, specular[loop,*]*scale[loop]
     
   endfor
-;  wait,1
-;  
-   return, scale 
+  ;  wait,1
+  ;
+  return, scale
 end
 
 ;+
@@ -665,17 +688,17 @@ function create_big_scaled_array, event=event, $
   window, 1
   contour, countarray,Qxvec,Qzvec,/fill, nlev=100
   wait, 1
-;
-;  window, 1
-;  contour, smooth(alog(divarray+1),5), $
-;  Qxvec, $
-;  Qzvec, $
-;  /fill, $
-;  nlev=200, $
-;  charsi=1.5, $
-;  xtitle='QX', $
-;  ytitle='QZ'
-;  
+  ;
+  ;  window, 1
+  ;  contour, smooth(alog(divarray+1),5), $
+  ;  Qxvec, $
+  ;  Qzvec, $
+  ;  /fill, $
+  ;  nlev=200, $
+  ;  charsi=1.5, $
+  ;  xtitle='QX', $
+  ;  ytitle='QZ'
+  ;
   return, divarray
 end
 
@@ -794,7 +817,7 @@ pro go_reduction, event
   
   ;number of steps is ----> 1
   
-  ;create uniq increasing list of angles (theta and twotheat)
+  ;create unique increasing list of angles (theta and twotheat)
   theta_angles = create_uniq_sort_list_of_angles(event, $
     file_angle = reform(file_angles[1,*]))
     
@@ -807,10 +830,21 @@ pro go_reduction, event
   update_progress_bar_percentage, event, ++processes, $
     total_number_of_processes
     
+  message = ['> Create unique list of theta and twotheta angles:']
+  message1 = '->    size(theta_angles) = ' + strcompress(si1,/remove_all)
+  message11 = '--> theta_angles = [' + $
+    strcompress(strjoin(theta_angles,','),/remove_all) + ']'
+  message2 = '-> size(twotheta_angles) = ' + strcompress(si2,/remove_all)
+  message21 = '--> twotheta_angles = [' + $
+    strcompress(strjoin(twotheta_angles,','),/remove_all) + ']'
+  message = [message, message1, message11, message2, message21]
+  log_book_update, event, message=message
+  
   ;number of steps is ----> 1
-    
+  
   ;make a list of unique angle geometries
-  angles = make_unique_angle_geometries_list(file_angles,$
+  angles = make_unique_angle_geometries_list(event, $
+    file_angles,$
     theta_angles, $
     twotheta_angles)
     
@@ -892,14 +926,14 @@ pro go_reduction, event
     
   window, 1
   contour, smooth(alog(divarray+1),5), $
-  Qxvec, $
-  Qzvec, $
-  /fill, $
-  nlev=200, $
-  charsi=1.5, $
-  xtitle='QX', $
-  ytitle='QZ'
-  
+    Qxvec, $
+    Qzvec, $
+    /fill, $
+    nlev=200, $
+    charsi=1.5, $
+    xtitle='QX', $
+    ytitle='QZ'
+    
     
     
   update_progress_bar_percentage, event, ++processes, $
