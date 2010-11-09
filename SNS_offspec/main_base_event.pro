@@ -66,6 +66,7 @@ PRO main_base_event, Event
         
         xdisplayfile, 'LogBook', $
           text=text,$
+          height = 70,$
           title='Live Log Book',$
           group = groupID, $
           wtext=view_log_book_id, $
