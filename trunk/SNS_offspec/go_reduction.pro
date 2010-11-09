@@ -387,6 +387,8 @@ end
 ;    THLAM_lamvec
 ;    angles
 ;    qxqz_array
+;    qxvec
+;    qzvec
 ;
 ;-
 pro make_QxQz, event = event, $
@@ -400,7 +402,9 @@ pro make_QxQz, event = event, $
     THLAM_thvec = THLAM_thvec, $
     THLAM_lamvec = THLAM_lamvec, $
     angles = angles, $
-    qxqz_array = qxqz_array
+    qxqz_array = qxqz_array, $
+    qxvec = qxvec, $
+    qzvec = qzvec
   compile_opt idl2
   
   
@@ -428,7 +432,7 @@ pro make_QxQz, event = event, $
   
 ;  device, decomposed=0
 ;  loadct, 5
-;  
+;
 ;  window, 0
 ;  contour, [[0,0],[100,0]], [qxrange[0],qxrange[1]], $
 ;    [qzrange[0],qzrange[1]],$
@@ -438,7 +442,7 @@ pro make_QxQz, event = event, $
 ;    contour, QXQZ_array[loop,*,*],Qxvec,Qzvec, /fill,nlev=200,/overplot
 ;    wait,.01
 ;  endfor
-
+  
 end
 
 ;+
@@ -459,13 +463,13 @@ function get_lambda_step, event, tof
   d_MD_mm = (*global).MD_d
   
   d_SD_m = convert_distance( distance = d_SD_mm, $
-  from_unit = 'mm', $
-  to_unit = 'm')
-  
+    from_unit = 'mm', $
+    to_unit = 'm')
+    
   d_MD_m = convert_distance( distance = d_MD_mm, $
-  from_unit = 'mm', $
-  to_unit = 'm')
-  
+    from_unit = 'mm', $
+    to_unit = 'm')
+    
   d_MS_m = d_MD_m - d_SD_m
   
   tof0 = tof[0]
@@ -478,6 +482,201 @@ function get_lambda_step, event, tof
     lambda_units = 'angstroms')
     
   return, lambda
+end
+
+;+
+; :Description:
+;    extract the specular peaks
+;
+; :Params:
+;    datafile
+;    qxvec
+;    qxwidth
+;
+; :Author: j35
+;-
+function extract_specular, datafile, qxvec, qxwidth
+  compile_opt idl2
+  
+  si=size(datafile,/dim)
+  specular=make_array(si[1])
+  pos2=max(where(Qxvec le qxwidth))
+  pos1=min(where(Qxvec ge -qxwidth))
+  
+  for loop=pos1,pos2 do begin
+    specular=specular+datafile[loop,*]
+  endfor
+  
+  return, specular
+end
+
+;+
+; :Description:
+;    Create the specular scale
+;
+; :Keywords:
+;    event
+;    num
+;    specular
+;    scale
+;    QxQz_array
+;    qxvec
+;    qzvec
+;    qxwidth
+;
+; :Author: j35
+;-
+function get_specular_scale, event=event, $
+    num = num, $
+    specular = specular, $
+    scale = scale, $
+    QxQz_array = QxQz_array, $
+    qxvec = qxvec, $
+    qzvec = qzvec, $
+    qxwidth = qxwidth
+  compile_opt idl2
+  
+  for loop=0,num-1 do begin
+    data=reform(QXQZ_array[loop,*,*])
+    result=extract_specular(data, qxvec, qxwidth)
+    specular[loop,*]=result
+    if loop eq 0 then scale[0]=1/max(result)
+  endfor
+  
+  ;trimmer
+  tnum=3
+  trim=specular*0.0
+  for loop=0,num-1 do begin
+    list=where(specular[loop,*] ne 0)
+    si=size(list,/dim)
+    si=si[0]
+    cut=list[tnum:si-tnum]
+    trim[loop,cut]=specular[loop,cut]
+  endfor
+  
+;  specular = trim 
+;  ;autoscale
+;  step=0
+;  
+;  window, 0
+;  plot, QZvec, specular[0,*]*scale[0], $
+;    /ylog, $
+;    yrange=[1e-8,100], $
+;    psym=1, $
+;    charsi=1.5, $
+;    xtitle='QZ', $
+;    ytitle='R'
+;    
+  for loop=1,num-1 do begin
+  
+    overlap=where(specular[loop-1,*] ne 0 and specular[loop,*] ne 0)
+    si=size(overlap,/dim)
+    si=si[0]
+    ratio=specular[loop-1,overlap]/specular[loop,overlap]
+    r2=total(specular[loop-1,overlap])/total(specular[loop,overlap])
+    scale[loop]=(total(ratio)/si)*scale[loop-1]
+
+    ;oplot, QZvec, specular[loop,*]*scale[loop]
+    
+  endfor
+;  wait,1
+;  
+   return, scale 
+end
+
+;+
+; :Description:
+;    Create big scaled array
+;
+; :Keywords:
+;    event
+;    scale
+;    QxQz_array
+;    num
+;    qxvec
+;    qzvec
+;    qxbins
+;    qzbins
+;
+; :Author: j35
+;-
+function create_big_scaled_array, event=event, $
+    scale = scale,$
+    QxQz_array = QxQz_array, $
+    num = num, $
+    qxvec = qxvec, $
+    qzvec = qzvec, $
+    qxbins = qxbins, $
+    qzbins = qzbins
+  compile_opt idl2
+  
+  nscale=scale/min(scale)
+  
+  for loop=0,num-1 do begin
+    QXQZ_array[loop,*,*]=QXQZ_array[loop,*,*]*nscale[loop]
+  endfor
+  
+  skip1:print, 'skipped it'
+  
+  qxqz4=qxqz_array
+  for loop1=0,num-1 do begin
+    for loop2=0,qzbins-1 do begin
+      qxqz4[loop1,*,loop2]=qxqz_array[loop1,*,loop2]*qzvec[loop2]^4
+    endfor
+  endfor
+  ;
+  ;contour, [[0,0],[20000,0]], [qxrange[0],qxrange[1]], [qzrange[0],qzrange[1]],/nodata, charsi=1.5, xtitle='QX', ytitle='QZ'
+  ;for loop=0,num-1 do begin
+  ;    contour, QXQZ_array[loop,*,*],Qxvec,Qzvec, /fill,nlev=200,/overplot
+  ;    wait,.05
+  ;endfor
+  
+  countarray=make_array(qxbins,qzbins)
+  ;count where the tiles have data
+  for loop=0,num-1 do begin
+    for xloop=0,qxbins-1 do begin
+      for zloop=0,qzbins-1 do begin
+        if qxqz_array[loop,xloop,zloop] ne 0 then countarray[xloop,zloop]=countarray[xloop,zloop]+1
+      endfor
+    endfor
+  endfor
+  
+  totarray=make_array(qxbins,qzbins)
+  totarray4=make_array(qxbins,qzbins)
+  ;total up the tiles
+  for loop=0,num-1 do begin
+    totarray=QXQZ_array[loop,*,*]+totarray
+    totarray4=QXQZ4[loop,*,*]+totarray4
+  endfor
+  
+  totarray=reform(totarray)
+  countarray=reform(countarray)
+  
+  ;this division leads to nans so clean them up
+  divarray=totarray/countarray
+  list=where(finite(divarray) ne 1)
+  divarray[list]=0
+  
+  divarray4=totarray4/countarray
+  list=where(finite(divarray4) ne 1)
+  
+  divarray4[list]=0
+  
+  window, 1
+  contour, countarray,Qxvec,Qzvec,/fill, nlev=100
+  wait, 1
+;
+;  window, 1
+;  contour, smooth(alog(divarray+1),5), $
+;  Qxvec, $
+;  Qzvec, $
+;  /fill, $
+;  nlev=200, $
+;  charsi=1.5, $
+;  xtitle='QX', $
+;  ytitle='QZ'
+;  
+  return, divarray
 end
 
 ;+
@@ -508,7 +707,7 @@ pro go_reduction, event
   
   list_data_nexus = (*(*global).list_data_nexus)
   file_num = n_elements(list_data_nexus)
-  total_number_of_processes = 6 + 2*file_num
+  total_number_of_processes = 7 + 2*file_num
   
   norm_nexus      = (*global).norm_nexus
   
@@ -643,7 +842,7 @@ pro go_reduction, event
   ;number of steps is ----> 1
   QXQZ_array=make_array(num, qxbins, qzbins)
   ;now we need to convert to QxQz
-
+  
   make_QxQz, event = event, $
     num = num, $
     lambda_step = lambda_step, $
@@ -655,24 +854,52 @@ pro go_reduction, event
     THLAM_thvec = THLAM_thvec, $
     THLAM_lamvec = THLAM_lamvec, $
     angles = angles, $
-    qxqz_array = qxqz_array
+    QxQz_array = QxQz_array, $
+    qxvec = qxvec, $
+    qzvec = qzvec
+    
+  update_progress_bar_percentage, event, ++processes, $
+    total_number_of_processes
+    
+  ;number of steps is ----> 1
+  ;extract specular reflections
+  qxwidth=0.00005
+  specular=make_array(num, qxbins)
+  scale=make_array(num)
+  scale = get_specular_scale(event=event, $
+    num = num, $
+    specular = specular, $
+    scale = scale, $
+    QxQz_array = QxQz_array, $
+    qxvec = qxvec, $
+    qzvec = qzvec, $
+    qxwidth = qxwidth)
+    
+  update_progress_bar_percentage, event, ++processes, $
+    total_number_of_processes
+    
+  ;scale big data
+  divarray = create_big_scaled_array(event=event, $
+    scale = scale,$
+    QxQz_array = QxQz_array, $
+    num = num, $
+    qxvec = qxvec, $
+    qzvec = qzvec, $
+    qxbins = qxbins, $
+    qzbins = qzbins)
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+  window, 1
+  contour, smooth(alog(divarray+1),5), $
+  Qxvec, $
+  Qzvec, $
+  /fill, $
+  nlev=200, $
+  charsi=1.5, $
+  xtitle='QX', $
+  ytitle='QZ'
+  
     
     
   update_progress_bar_percentage, event, ++processes, $
