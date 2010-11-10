@@ -71,32 +71,32 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
     applicaiton: APPLICATION, $
     version: VERSION, $
-
+    
     instrument: 'REF_L',$
-
+    
     SD_d: 0., $ ;distance sample detector
     MD_d: 0., $ ;distance moderator detector
-
+    
     list_data_runs: ptr_new(0L),$  ;[2000,2010,2011,2013,2020]
     list_data_nexus: ptr_new(0L), $ ;['/SNS/..../REF_L_3454.nxs','/SNS/...']
     norm_nexus: '',$
     
     ;id of log book window
     view_log_book_id : 0L, $
-
-    new_log_book_message: ptr_new(0L), $ 
+    
+    new_log_book_message: ptr_new(0L), $
     full_log_book: ptr_new(0L), $
-
+    
     bFindnexus: 0b, $
-
-   ;input and output files path
-    output_path: '~/results/',$ ;used in the output tab 
+    
+    ;input and output files path
+    output_path: '~/results/',$ ;used in the output tab
     input_path: '~/results/' })
     
   log_book = ['------------------------------------------------------------',$
-  'Log Book of SNS_offpsec',' Application started at: ' + date]
-  (*(*global).full_log_book) = log_book  
-    
+    'Log Book of SNS_offpsec',' Application started at: ' + date]
+  (*(*global).full_log_book) = log_book
+  
   MainBaseSize  = [50 , 50]
   MainTitle   = "SNS Off Specular - " + VERSION
   
@@ -105,17 +105,17 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     UNAME        = 'main_base',$
     XOFFSET      = MainBaseSize[0],$
     YOFFSET      = MainBaseSize[1],$
-;    SCR_XSIZE    = MainBaseSize[2], $
-;    SCR_YSIZE    = MainBaseSize[3], $
+    ;    SCR_XSIZE    = MainBaseSize[2], $
+    ;    SCR_YSIZE    = MainBaseSize[3], $
     mbar = bar,$
     TITLE        = MainTitle)
     
-   bFindnexus = is_findnexus_there()
-   ;REMOVE_ME
-   bFindnexus = 1 
-   (*global).bFindnexus = bFindnexus
-    
-;  design_menu, bar, global
+  bFindnexus = is_findnexus_there()
+  ;REMOVE_ME
+  bFindnexus = 1
+  (*global).bFindnexus = bFindnexus
+  
+  ;  design_menu, bar, global
   design_tabs, MAIN_BASE, global
   design_menu, bar, global
   
@@ -124,11 +124,25 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   WIDGET_CONTROL, main_base, /REALIZE
   WIDGET_CONTROL, main_base, SET_UVALUE=global
   xmanager, 'main_base', main_base, /NO_BLOCK, cleanup = 'sos_cleanup'
-
+  
   if (strlowcase(debugger) eq 'yes') then begin
-  (*global).input_path = '~/IDLWorkspace80/SNS_offspec/NeXus'
-  endif
+    input_path = '/Users/j35/IDLWorkspace80/SNS_offspec/NeXus/'
+    (*global).input_path = input_path
     
+    list_data_nexus = input_path + ['REF_L_34432.nxs',$
+      'REF_L_34433.nxs',$
+      'REF_L_34434.nxs',$
+      'REF_L_34435.nxs',$
+      'REF_L_34436.nxs']
+    (*(*global).list_data_nexus) = list_data_nexus
+    
+    norm_nexus = input_path + 'REF_L_34394.nxs'
+    (*global).norm_nexus = norm_nexus
+    
+    retrieve_data_nexus_distances, main_base=main_base
+    
+  endif
+  
   ;=============================================================================
   ;send message to log current run of application
   logger, APPLICATION=application, VERSION=version, UCAMS=ucams
