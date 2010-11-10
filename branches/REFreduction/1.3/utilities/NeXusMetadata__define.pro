@@ -225,6 +225,7 @@ function NeXusMetadata::getDangle
     endif else begin
       pathID_value = h5d_open(self.fileID, path_value)
       dangle_value = strcompress(h5d_read(pathID_value),/remove_all)
+      dangle_value = dangle_value[0]
       
       pathID_units = h5a_open_name(pathID_value,'units')
       dangle_units = strcompress(h5a_read(pathID_units),/remove_all)
@@ -282,6 +283,7 @@ function NeXusMetadata::getDangle0
     endif else begin
       pathID_value = h5d_open(self.fileID, path_value)
       dangle_value = strcompress(h5d_read(pathID_value),/remove_all)
+      dangle_value = dangle_value[0]
       
       pathID_units = h5a_open_name(pathID_value,'units')
       dangle_units = strcompress(h5a_read(pathID_units),/remove_all)
@@ -339,6 +341,7 @@ function NeXusMetadata::getSampleDetDistance
     endif else begin
       pathID_value = h5d_open(self.fileID, path_value)
       dis_value = strcompress(h5d_read(pathID_value),/remove_all)
+      dis_value = dis_value[0]
       
       pathID_units = h5a_open_name(pathID_value,'units')
       dis_units = strcompress(h5a_read(pathID_units),/remove_all)
