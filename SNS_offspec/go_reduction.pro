@@ -601,19 +601,19 @@ function get_specular_scale, event=event, $
     trim[loop,cut]=specular[loop,cut]
   endfor
   
-  ;  specular = trim
-  ;  ;autoscale
-  ;  step=0
-  ;
-  ;  window, 0
-  ;  plot, QZvec, specular[0,*]*scale[0], $
-  ;    /ylog, $
-  ;    yrange=[1e-8,100], $
-  ;    psym=1, $
-  ;    charsi=1.5, $
-  ;    xtitle='QZ', $
-  ;    ytitle='R'
-  ;
+    specular = trim
+    ;autoscale
+    step=0
+  
+;    window, 0
+;    plot, QZvec, specular[0,*]*scale[0], $
+;      /ylog, $
+;      yrange=[1e-8,100], $
+;      psym=1, $
+;      charsi=1.5, $
+;      xtitle='QZ', $
+;      ytitle='R'
+;  
   for loop=1,num-1 do begin
   
     overlap=where(specular[loop-1,*] ne 0 and specular[loop,*] ne 0)
@@ -623,7 +623,7 @@ function get_specular_scale, event=event, $
     r2=total(specular[loop-1,overlap])/total(specular[loop,overlap])
     scale[loop]=(total(ratio)/si)*scale[loop-1]
     
-  ;oplot, QZvec, specular[loop,*]*scale[loop]
+;  oplot, QZvec, specular[loop,*]*scale[loop]
     
   endfor
 
@@ -670,7 +670,8 @@ function create_big_scaled_array, event=event, $
     QXQZ_array[loop,*,*]=QXQZ_array[loop,*,*]*nscale[loop]
   endfor
   
-  skip1:print, 'skipped it'
+  skip1:
+  ;print, 'skipped it'
   
   qxqz4=qxqz_array
   for loop1=0,num-1 do begin
@@ -729,8 +730,7 @@ function create_big_scaled_array, event=event, $
 ;    charsi=1.5, $
 ;    xtitle='QX', $
 ;    ytitle='QZ'
-;  
-
+  
   message1 = '-> divarray has been created'
   message2 = '-> size(divarray) = [' + $
   strcompress(strjoin(size(divarray,/dim),','),/remove_all) + ']'
