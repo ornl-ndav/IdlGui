@@ -279,12 +279,12 @@ function make_unique_angle_geometries_list, event, file_angles,$
   index1=0
   while (index1 lt sz1) do begin
     _message = '[' + $
-    strcompress(strjoin(reform(angles[index1,*]),','),/remove_all) + $
-    ']'
+      strcompress(strjoin(reform(angles[index1,*]),','),/remove_all) + $
+      ']'
     message2 = [message2, _message]
     index1++
   endwhile
-  message[1] = '[' + message2[1]
+  message2[1] = '[' + message2[1]
   message2[-1] = message2[-1] + ']'
   message = [message, message1, message2]
   log_book_update, event, message=message
@@ -351,6 +351,8 @@ pro build_THLAM, event=event, $
   
   file_num = (size(DATA,/dim))[0]
   
+  message = ['> Build THLAM (Theta-Lambda) arrays for all each loaded files']
+  
   for read_loop=0,file_num-1 do begin
   
     RAW_DATA= *DATA[read_loop]
@@ -382,10 +384,20 @@ pro build_THLAM, event=event, $
     ;    wait,.1
     ;    wshow
     
+    message1 = ['-> Created THLAM array of file # ' + $
+      strcompress(read_loop,/remove_all)]
+    message2 = ['   theta: ' + strcompress(theta_val,/remove_all) + $
+    ' degrees']
+    message3 = ['   twotheta: ' + strcompress(twotheta_val,/remove_all) + $
+    ' degrees']
+    message = [message, message1, message2, message3]
+    
     update_progress_bar_percentage, event, ++processes, $
       total_number_of_processes
       
   endfor
+  
+  log_book_update, event, message=message
   
 end
 
@@ -426,6 +438,7 @@ pro make_QxQz, event = event, $
     qzvec = qzvec
   compile_opt idl2
   
+  message = ['> Building QxQz array: ']
   
   ;Initialize the range of steps for x and z axis
   ;will go from -0.004 to 0.004 with 500steps (qxbins)
@@ -448,6 +461,12 @@ pro make_QxQz, event = event, $
       QZvec, $
       lambda_step)
   endfor
+  
+  
+  message1 = '-> size(QXQZ_array) : [' + $
+  strcompress(strjoin(size(QxQz_array,/dim),','),/remove_all) + ']'
+  message = [message, message1]
+  log_book_update, event, message=message
   
 ;  device, decomposed=0
 ;  loadct, 5
@@ -559,12 +578,17 @@ function get_specular_scale, event=event, $
     qxwidth = qxwidth
   compile_opt idl2
   
+  message = ['> Isolate specular region and create scaling array']
+  
   for loop=0,num-1 do begin
     data=reform(QXQZ_array[loop,*,*])
     result=extract_specular(data, qxvec, qxwidth)
     specular[loop,*]=result
     if loop eq 0 then scale[0]=1/max(result)
   endfor
+  
+  message1 = '-> size(specular) = [' + $
+  strcompress(strjoin(size(specular,/dim),','),/remove_all) + ']'
   
   ;trimmer
   tnum=3
@@ -602,8 +626,13 @@ function get_specular_scale, event=event, $
   ;oplot, QZvec, specular[loop,*]*scale[loop]
     
   endfor
-  ;  wait,1
-  ;
+
+  message2 = '-> Number of elements of scale: ' + $
+  strcompress(n_elements(scale),/remove_all)
+  message3 = '-> scale = [' + strcompress(strjoin(scale,','),/remove_all) + ']'
+  message = [message, message1, message2, message3]
+  log_book_update, event, message=message
+
   return, scale
 end
 
@@ -632,6 +661,8 @@ function create_big_scaled_array, event=event, $
     qxbins = qxbins, $
     qzbins = qzbins
   compile_opt idl2
+  
+  message = '> Create big scaled array'
   
   nscale=scale/min(scale)
   
@@ -685,9 +716,9 @@ function create_big_scaled_array, event=event, $
   
   divarray4[list]=0
   
-  window, 1
-  contour, countarray,Qxvec,Qzvec,/fill, nlev=100
-  wait, 1
+;  window, 1
+;  contour, countarray,Qxvec,Qzvec,/fill, nlev=100
+;  wait, 1
   ;
   ;  window, 1
   ;  contour, smooth(alog(divarray+1),5), $
@@ -699,6 +730,13 @@ function create_big_scaled_array, event=event, $
   ;  xtitle='QX', $
   ;  ytitle='QZ'
   ;
+
+  message1 = '-> divarray has been created'
+  message2 = '-> size(divarray) = [' + $
+  strcompress(strjoin(size(divarray,/dim),','),/remove_all) + ']'
+  message = [message, message1, message2]
+  log_book_update, event, message=message
+
   return, divarray
 end
 
@@ -729,6 +767,7 @@ pro go_reduction, event
   ;Retrieve variables
   
   list_data_nexus = (*(*global).list_data_nexus)
+  
   file_num = n_elements(list_data_nexus)
   total_number_of_processes = 7 + 2*file_num
   
@@ -768,8 +807,12 @@ pro go_reduction, event
   
   ;number of steps is ----> 1
   
-  ;create spectrum of normalization file
-  spectrum = get_normalization_spectrum(event, norm_nexus)
+  ;;create spectrum of normalization file
+  ;spectrum = get_normalization_spectrum(event, norm_nexus)
+  
+  ;remove_me
+  norm_file = '/Users/j35/IDLWorkspace80/SNS_offspec/Al_can_spectrum.dat'
+  SPECTRUM=xcr_direct(norm_file, 2)
   
   update_progress_bar_percentage, event, ++processes, total_number_of_processes
   
@@ -831,7 +874,7 @@ pro go_reduction, event
     total_number_of_processes
     
   message = ['> Create unique list of theta and twotheta angles:']
-  message1 = '->    size(theta_angles) = ' + strcompress(si1,/remove_all)
+  message1 = '-> size(theta_angles) = ' + strcompress(si1,/remove_all)
   message11 = '--> theta_angles = [' + $
     strcompress(strjoin(theta_angles,','),/remove_all) + ']'
   message2 = '-> size(twotheta_angles) = ' + strcompress(si2,/remove_all)
