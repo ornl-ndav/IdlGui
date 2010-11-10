@@ -194,15 +194,20 @@ end
 ;    Using the first data nexus file loaded, this routine
 ;    retrieves the distance Sample to Detector and Moderator to Detector
 ;
-; :Params:
+; :Keywords:
 ;    event
+;    main_base
 ;
 ; :Author: j35
 ;-
-pro retrieve_data_nexus_distances, event
+pro retrieve_data_nexus_distances, event=event, main_base=main_base
   compile_opt idl2
   
+  if (keyword_set(event)) then begin
   widget_control, event.top, get_uvalue=global
+  endif else begin
+  widget_control, main_base, get_uvalue=global
+  endelse
   
   list_data_nexus = (*(*global).list_data_nexus)
   first_data_nexus = list_data_nexus[0]
@@ -226,7 +231,7 @@ pro retrieve_data_nexus_distances, event
     
   d_MD_mm = d_MS_mm + d_SD_mm
   
-  putValue, event=event, 'd_sd_uname', d_SD_mm
-  putValue, event=event, 'd_md_uname', d_MD_mm
+  putValue, base=main_base, event=event, 'd_sd_uname', d_SD_mm
+  putValue, base=main_base, event=event, 'd_md_uname', d_MD_mm
     
 end

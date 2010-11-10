@@ -678,12 +678,12 @@ function create_big_scaled_array, event=event, $
       qxqz4[loop1,*,loop2]=qxqz_array[loop1,*,loop2]*qzvec[loop2]^4
     endfor
   endfor
-  ;
-  ;contour, [[0,0],[20000,0]], [qxrange[0],qxrange[1]], [qzrange[0],qzrange[1]],/nodata, charsi=1.5, xtitle='QX', ytitle='QZ'
-  ;for loop=0,num-1 do begin
-  ;    contour, QXQZ_array[loop,*,*],Qxvec,Qzvec, /fill,nlev=200,/overplot
-  ;    wait,.05
-  ;endfor
+  
+;  contour, [[0,0],[20000,0]], [qxrange[0],qxrange[1]], [qzrange[0],qzrange[1]],/nodata, charsi=1.5, xtitle='QX', ytitle='QZ'
+;  for loop=0,num-1 do begin
+;      contour, QXQZ_array[loop,*,*],Qxvec,Qzvec, /fill,nlev=200,/overplot
+;      wait,.05
+;  endfor
   
   countarray=make_array(qxbins,qzbins)
   ;count where the tiles have data
@@ -719,17 +719,17 @@ function create_big_scaled_array, event=event, $
 ;  window, 1
 ;  contour, countarray,Qxvec,Qzvec,/fill, nlev=100
 ;  wait, 1
-  ;
-  ;  window, 1
-  ;  contour, smooth(alog(divarray+1),5), $
-  ;  Qxvec, $
-  ;  Qzvec, $
-  ;  /fill, $
-  ;  nlev=200, $
-  ;  charsi=1.5, $
-  ;  xtitle='QX', $
-  ;  ytitle='QZ'
-  ;
+;  
+;    window, 1
+;    contour, smooth(alog(divarray+1),5), $
+;    Qxvec, $
+;    Qzvec, $
+;    /fill, $
+;    nlev=200, $
+;    charsi=1.5, $
+;    xtitle='QX', $
+;    ytitle='QZ'
+;  
 
   message1 = '-> divarray has been created'
   message2 = '-> size(divarray) = [' + $
@@ -807,12 +807,12 @@ pro go_reduction, event
   
   ;number of steps is ----> 1
   
-  ;;create spectrum of normalization file
-  ;spectrum = get_normalization_spectrum(event, norm_nexus)
+  ;create spectrum of normalization file
+  spectrum = get_normalization_spectrum(event, norm_nexus)
   
   ;remove_me
-  norm_file = '/Users/j35/IDLWorkspace80/SNS_offspec/Al_can_spectrum.dat'
-  SPECTRUM=xcr_direct(norm_file, 2)
+  ;norm_file = '/Users/j35/IDLWorkspace80/SNS_offspec/Al_can_spectrum.dat'
+  ;SPECTRUM=xcr_direct(norm_file, 2)
   
   update_progress_bar_percentage, event, ++processes, total_number_of_processes
   
@@ -964,8 +964,6 @@ pro go_reduction, event
     qzvec = qzvec, $
     qxbins = qxbins, $
     qzbins = qzbins)
-    
-    
     
   window, 1
   contour, smooth(alog(divarray+1),5), $
