@@ -178,7 +178,8 @@ pro browse_data_button_event, event
     sz = n_elements(list_of_nexus)
     index = 0
     while (index lt sz) do begin
-      _message = '-> ' + list_of_nexus[index]
+      _message = '-> #' + strcompress(index,/remove_all) + ': ' + $
+      list_of_nexus[index]
       message = [message, _message]
       index++
     endwhile
