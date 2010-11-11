@@ -976,7 +976,7 @@ pro go_reduction, event
     data = smooth(alog(divarray+1),5),$
     x_axis = [qxvec[0],qxvec[-1]], $
     y_axis = [qzvec[0],qzvec[-1]], $
-;    default_loadct = default_loadct, $
+    default_loadct = 5, $
 ;    default_scale_settings = default_scale_settings, $
     default_plot_size = default_plot_size, $
 ;    current_plot_setting = current_plot_setting, $
@@ -986,15 +986,15 @@ pro go_reduction, event
     main_base_uname = 'main_base'
     
     
-  window, 1
-  contour, smooth(alog(divarray+1),5), $
-    Qxvec, $
-    Qzvec, $
-    /fill, $
-    nlev=200, $
-    charsi=1.5, $
-    xtitle='QX', $
-    ytitle='QZ'
+;  window, 1
+;  contour, smooth(alog(divarray+1),5), $
+;    Qxvec, $
+;    Qzvec, $
+;    /fill, $
+;    nlev=200, $
+;    charsi=1.5, $
+;    xtitle='QX', $
+;    ytitle='QZ'
     
   update_progress_bar_percentage, event, ++processes, $
     total_number_of_processes
