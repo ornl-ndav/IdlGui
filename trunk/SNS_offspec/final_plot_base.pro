@@ -61,9 +61,9 @@ pro final_plot_event, Event
       return
     end
     
-    widget_info(event.top, find_by_uname='px_vs_tof_widget_base'): begin
+    widget_info(event.top, find_by_uname='final_plot_base'): begin
     
-      id = widget_info(event.top, find_by_uname='px_vs_tof_widget_base')
+      id = widget_info(event.top, find_by_uname='final_plot_base')
       ;widget_control, id, /realize
       geometry = widget_info(id,/geometry)
       new_xsize = geometry.scr_xsize
@@ -91,7 +91,7 @@ pro final_plot_event, Event
       widget_control, id, draw_ysize = new_ysize
       widget_control, id, draw_xsize = colorbar_xsize
       
-;      plot_beam_center_scale, event=event
+      plot_beam_center_scale, event=event
       refresh_plot, event, recalculate=1
       refresh_plot_colorbar, event
       
@@ -456,9 +456,9 @@ pro final_plot_gui, wBase, $
   
   ourGroup = WIDGET_BASE()
   
-  title = 'QxQz'
+  title = 'Qx vs Qz'
   wBase = WIDGET_BASE(TITLE = title, $
-    UNAME        = 'px_vs_tof_widget_base', $
+    UNAME        = 'final_plot_base', $
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
     SCR_YSIZE    = ysize,$
@@ -638,12 +638,12 @@ pro plot_beam_center_scale, base=base, event=event
   
   if (n_elements(base) ne 0) then begin
     id = widget_info(base,find_by_Uname='scale')
-    id_base = widget_info(base, find_by_uname='px_vs_tof_widget_base')
+    id_base = widget_info(base, find_by_uname='final_plot_base')
     sys_color = widget_info(base,/system_colors)
     widget_control, base, get_uvalue=global_plot
   endif else begin
     id = widget_info(event.top, find_by_uname='scale')
-    id_base = widget_info(event.top, find_by_uname='px_vs_tof_widget_base')
+    id_base = widget_info(event.top, find_by_uname='final_plot_base')
     sys_color = widget_info(event.top, /system_colors)
     widget_control, event.top, get_uvalue=global_plot
   endelse
@@ -655,22 +655,21 @@ pro plot_beam_center_scale, base=base, event=event
   device, decomposed=1
   sys_color_window_bk = sys_color.window_bk
   
-  tof_axis = (*global_plot).tof_axis
-  
-  min_x = tof_axis[0]
-  max_x = tof_axis[1]
-  
-  ;minimum and maximum pixel
-  nbr_pixel = (*global_plot).nbr_pixel
-  min_y = (*global_plot).start_pixel
-  max_y = min_y + nbr_pixel
+  x_axis = (*global_plot).x_axis
+  min_x = x_axis[0]
+  max_x = x_axis[1]
+ 
+  y_axis = (*global_plot).y_axis
+  min_y = y_axis[0]
+  max_y = y_axis[1]
   
   ;determine the number of xaxis data to show
   geometry = widget_info(id_base,/geometry)
   xsize = geometry.scr_xsize
-  ;ysize = geometry.scr_ysize
-  xticks = fix(xsize / 100)
-  yticks = (max_y - min_y)
+
+;  xticks = fix(xsize / 100)
+;  yticks = (max_y - min_y)
+  xticks = 8
   
   xmargin = 6.6
   ymargin = 4
@@ -698,8 +697,8 @@ pro plot_beam_center_scale, base=base, event=event
     XMINOR      = 2,$
     ;YMINOR      = 2,$
     YTICKS      = yticks,$
-    XTITLE      = 'TOF (!4l!Xs)',$
-    ;    YTITLE      = 'Pixels',$
+    XTITLE      = 'Qx',$
+    YTITLE      = 'Qz',$
     XMARGIN     = [xmargin, xmargin+0.2],$
     YMARGIN     = [ymargin, ymargin],$
     /NODATA
@@ -864,6 +863,9 @@ pro final_plot, main_base=main_base, $
     
   compile_opt idl2
   
+  help, x_axis
+  help, y_axis
+  
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME=main_base_uname)
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
@@ -903,8 +905,8 @@ pro final_plot, main_base=main_base, $
     
     data: ptr_new(0L), $
     data_linear: ptr_new(0L), $
-;    x_axis: x_axis, $ ; [-0.004,-0.003....]
-;    y_axis: y_axis, $ ; [0.0, 0.3]
+    x_axis: x_axis, $ ; [-0.004,0.004]
+    y_axis: y_axis, $ ; [0.0, 0.3]
 
     xsize: default_plot_size[0],$
     ysize: default_plot_size[1],$
@@ -986,7 +988,7 @@ pro final_plot, main_base=main_base, $
 ;  DEVICE, DECOMPOSED = 0
 ;  loadct, default_loadct, /SILENT
 ;  
-;  plot_beam_center_scale, base=wBase
+  plot_beam_center_scale, base=wBase
   
   id = widget_info(wBase,find_by_uname='draw')
   widget_control, id, GET_VALUE = plot_id

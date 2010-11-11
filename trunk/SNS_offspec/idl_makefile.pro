@@ -15,6 +15,7 @@ cd, CurrentFolder + IDLUtilitiesPath
 .run time.pro
 .run xdisplayfile.pro
 .run system.pro
+.run convert.pro
 
 ;build GUI
 cd, CurrentFolder + '/SOS_GUI'
