@@ -53,6 +53,7 @@ cd, CurrentFolder
 .run final_plot_base.pro
 .run save_background.pro
 .run plot_colorbar.pro
+.run final_plot_eventcb.pro
 
 .run sos.pro
 .run sos_cleanup.pro

@@ -968,9 +968,6 @@ pro go_reduction, event
     offset = 50
     default_plot_size = [300,300]
 
-
-
- 
     final_plot, event=event, $
     offset = offset, $
     data = smooth(alog(divarray+1),5),$
