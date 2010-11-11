@@ -434,7 +434,8 @@ pro final_plot_gui, wBase, $
     plot_setting1 = plot_setting1,$
     plot_setting2 = plot_setting2, $
     current_plot_setting = current_plot_setting, $
-    scale_setting = scale_setting
+    scale_setting = scale_setting, $
+    default_plot_size = default_plot_size
     
   compile_opt idl2
   
@@ -442,9 +443,9 @@ pro final_plot_gui, wBase, $
   main_base_yoffset = main_base_geometry.yoffset
   main_base_xsize = main_base_geometry.xsize
   main_base_ysize = main_base_geometry.ysize
-  
-  xsize = 600
-  ysize = 600
+
+  xsize = default_plot_size[0]
+  ysize = default_plot_size[1]
   
   xoffset = (main_base_xsize - xsize) / 2
   xoffset += main_base_xoffset
@@ -478,7 +479,7 @@ pro final_plot_gui, wBase, $
     scr_ysize = ysize-2*border,$
     /button_events,$
     /motion_events,$
-    /tracking_events,$
+    ;/tracking_events,$
     retain=2, $
     event_pro = 'draw_eventcb',$
     uname = 'draw')
@@ -655,13 +656,13 @@ pro plot_beam_center_scale, base=base, event=event
   device, decomposed=1
   sys_color_window_bk = sys_color.window_bk
   
-  x_axis = (*global_plot).x_axis
-  min_x = x_axis[0]
-  max_x = x_axis[1]
+  x_range = (*global_plot).xrange
+  min_x = x_range[0]
+  max_x = x_range[1]
  
-  y_axis = (*global_plot).y_axis
-  min_y = y_axis[0]
-  max_y = y_axis[1]
+  y_range = (*global_plot).yrange
+  min_y = y_range[0]
+  max_y = y_range[1]
   
   ;determine the number of xaxis data to show
   geometry = widget_info(id_base,/geometry)
@@ -801,7 +802,7 @@ pro refresh_px_vs_tof_plots_base, wBase = wBase, $
   border = (*global_plot).border
   colorbar_xsize = (*global_plot).colorbar_xsize
   
-  id = widget_info(wBase, find_by_uname='px_vs_tof_widget_base')
+  id = widget_info(wBase, find_by_uname='final_plot_base')
   geometry = widget_info(id,/geometry)
   _xsize = geometry.scr_xsize
   _ysize = geometry.scr_ysize
@@ -871,6 +872,8 @@ pro final_plot, main_base=main_base, $
   border = 40
   colorbar_xsize = 70
   
+  if (~keyword_set(default_plot_size)) then default_plot_size = [600,600]
+  
   ;build gui
   wBase = ''
   final_plot_gui, wBase, $
@@ -880,16 +883,17 @@ pro final_plot, main_base=main_base, $
     border, $
     colorbar_xsize, $
     current_plot_setting = current_plot_setting, $
-    scale_setting = default_scale_settings
+    scale_setting = default_scale_settings,$
+    default_plot_size = default_plot_size
   ;(*global).auto_scale_plot_base = wBase
   
   WIDGET_CONTROL, wBase, /REALIZE
-  
+
   global_plot = PTR_NEW({ wbase: wbase,$
     global: global, $
     
     ;used to plot selection zoom
-;    default_plot_size: default_plot_size, $
+    default_plot_size: default_plot_size, $
     
     counts_vs_xaxis_yaxis_type: 0,$ ;0 for linear, 1 for log
     counts_vs_yaxis_yaxis_type: 0,$ ;0 for linear, 1 for log
@@ -902,8 +906,11 @@ pro final_plot, main_base=main_base, $
     
     data: ptr_new(0L), $
     data_linear: ptr_new(0L), $
-    x_axis: x_axis, $ ; [-0.004,0.004]
-    y_axis: y_axis, $ ; [0.0, 0.3]
+    x_axis: x_axis, $ ; [-0.004, -0.003, -0.002...]
+    y_axis: y_axis, $ ; [0.0, 0.1, 0.2, 0.3]
+
+;    full_x_axis: full_x_axis, $ [-0.004, -0.003, -0.002...]
+;    full_y_axis: full_y_axis, $ [0.0, 0.1, 0.2, 0.3]
 
     xsize: default_plot_size[0],$
     ysize: default_plot_size[1],$
@@ -920,7 +927,7 @@ pro final_plot, main_base=main_base, $
     
     xrange: fltarr(2),$ ;[qx_left, qx_right]
     zrange: fltarr(2),$
-    yrange: intarr(2),$ ;[qz_bottom qz_top]
+    yrange: fltarr(2),$ ;[qz_bottom qz_top]
     
     background: ptr_new(0L), $ ;background of main plot
     
@@ -937,6 +944,13 @@ pro final_plot, main_base=main_base, $
     main_event: event})
     
     (*(*global_plot).data) = data
+    (*(*global_plot).data_linear) = data
+    
+    xrange = [x_axis[0], x_axis[-1]]
+    (*global_plot).xrange = xrange
+    
+    yrange = [y_axis[0], y_axis[-1]]
+    (*global_plot).yrange = yrange
     
   WIDGET_CONTROL, wBase, SET_UVALUE = global_plot
   
@@ -974,12 +988,17 @@ pro final_plot, main_base=main_base, $
 ;    cData = congrid(Data, ysize, xsize,/interp)
 ;  endelse
   
-;  id = widget_info(wBase, find_by_uname='px_vs_tof_widget_base')
-;  geometry = widget_info(id,/geometry)
-;  _xsize = geometry.scr_xsize
-;  _ysize = geometry.scr_ysize
-;  (*global_plot).congrid_xcoeff = _ysize-2*border
-;  (*global_plot).congrid_ycoeff = _xsize-2*border-colorbar_xsize
+  id = widget_info(wBase, find_by_uname='final_plot_base')
+  geometry = widget_info(id,/geometry)
+  _xsize = geometry.scr_xsize
+  _ysize = geometry.scr_ysize
+
+;  (*global_plot).congrid_xcoeff = _xsize-2*border-colorbar_xsize
+;  (*global_plot).congrid_ycoeff = _ysize-2*border
+
+  (*global_plot).congrid_xcoeff = xsize
+  (*global_plot).congrid_ycoeff = ysize
+
 ;  
 ;  DEVICE, DECOMPOSED = 0
 ;  loadct, default_loadct, /SILENT
@@ -999,8 +1018,8 @@ pro final_plot, main_base=main_base, $
   zrange[0] = zmin
   zrange[1] = zmax
   (*global_plot).zrange = zrange
-  plot_colorbar, base=wBase, zmin, zmax, type=default_scale_settings
   
+  plot_colorbar, base=wBase, zmin, zmax, type=default_scale_settings
 
   pre = '>  > >> '
   post = ' << <  <'

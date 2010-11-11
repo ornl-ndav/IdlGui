@@ -78,11 +78,11 @@ function retrieve_data_x_value, event
   endif
   
   x_device = event.x
-  congrid_xcoeff = (*global_plot).congrid_ycoeff  ;using ycoeff because of transpose
+  congrid_xcoeff = (*global_plot).congrid_xcoeff
   xrange = float((*global_plot).xrange) ;min and max pixels
   
   rat = float(x_device) / float(congrid_xcoeff)
-  x_data = long(rat * (xrange[1] - xrange[0]) + xrange[0])
+  x_data = float(rat * (xrange[1] - xrange[0]) + xrange[0])
   
   return, x_data
   
@@ -109,11 +109,11 @@ function retrieve_data_y_value, event
   endif
   
   y_device = event.y
-  congrid_ycoeff = (*global_plot).congrid_xcoeff  ;using xcoeff because of transpose
+  congrid_ycoeff = (*global_plot).congrid_ycoeff  ;using xcoeff because of transpose
   yrange = float((*global_plot).yrange) ;min and max pixels
   
   rat = float(y_device) / float(congrid_ycoeff)
-  y_data = fix(rat * (yrange[1] - yrange[0]) + yrange[0])
+  y_data = float(rat * (yrange[1] - yrange[0]) + yrange[0])
   
   return, y_data
   
@@ -147,13 +147,13 @@ function retrieve_data_z_value, event
   xdata_max = (size(data))[2]
   ydata_max = (size(data))[1]
   
-  congrid_xcoeff = (*global_plot).congrid_ycoeff  ;using ycoeff because of transpose
-  congrid_ycoeff = (*global_plot).congrid_xcoeff  ;using xcoeff because of transpose
+  congrid_xcoeff = (*global_plot).congrid_xcoeff 
+  congrid_ycoeff = (*global_plot).congrid_ycoeff 
   
   xdata = fix(float(event.x) * float(xdata_max) / congrid_xcoeff)
   ydata = fix(float(event.y) * float(ydata_max) / congrid_ycoeff)
   
-  return, data[ydata,xdata]
+  return, data[xdata,ydata]
   
 end
 
@@ -279,6 +279,202 @@ end
 
 ;+
 ; :Description:
+;    Using the device y0 and y1, this function returns the
+;    data y0 and y1
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+function determine_range_qz_selected, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_plot
+  
+  draw_zoom_selection = (*global_plot).draw_zoom_selection
+  y0_device = float(draw_zoom_selection[1])
+  y1_device = float(draw_zoom_selection[3])
+  
+  congrid_ycoeff = (*global_plot).congrid_ycoeff  ;using xcoeff because of transpose
+  
+  yrange = float((*global_plot).yrange) ;min and max Qz
+
+  ;calculation of y0_data value
+  rat = float(y0_device) / float(congrid_ycoeff)
+  y0_data = float(rat * (yrange[1] - yrange[0]) + yrange[0])
+  
+  ;calculation of y1_data value
+  rat = float(y1_device) / float(congrid_ycoeff)
+  y1_data = float(rat * (yrange[1] - yrange[0]) + yrange[0])
+  
+  return, [y0_data, y1_data]
+  
+end
+
+;+
+; :Description:
+;    Using the device x0 and y=x1, this function returns the
+;    data x0 and x1
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+function determine_range_Qx_selected, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_plot
+  
+  draw_zoom_selection = (*global_plot).draw_zoom_selection
+  x0_device = float(draw_zoom_selection[0])
+  x1_device = float(draw_zoom_selection[2])
+  
+  congrid_xcoeff = (*global_plot).congrid_xcoeff
+  
+  xrange = float((*global_plot).xrange) ;min and max Qx
+  
+  ;calculation of x0_data value
+  rat = float(x0_device) / float(congrid_xcoeff)
+  x0_data = double(rat * (xrange[1] - xrange[0]) + xrange[0])
+  
+  ;calculation of x1_data value
+  rat = float(x1_device) / float(congrid_xcoeff)
+  x1_data = double(rat * (xrange[1] - xrange[0]) + xrange[0])
+  
+  return, [x0_data, x1_data]
+  
+end
+
+;+
+; :Description:
+;   Bring a new window with the zoom of the data
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro zoom_selection, event
+  compile_opt idl2
+  
+  qz_range = determine_range_Qz_selected(event)
+  qz_range = qz_range[sort(qz_range)]
+  qx_range   = determine_range_Qx_selected(event)
+  qx_range = qx_range[sort(qx_range)]
+  
+  ;retrieve selected region from big array
+  widget_control, event.top, get_uvalue=global_plot
+  
+  ;calculate qx and qz index range
+  data_x = (*global_plot).x_axis
+
+  qx_min = qx_range[0]
+  qx_max = qx_range[1]
+  
+  qx_range_index_left = where(qx_min ge data_x)
+  qx_range_index_min = qx_range_index_left[-1]
+  
+  qx_range_index_right = where(data_x ge qx_max)
+  qx_range_index_max = qx_range_index_right[0]
+
+  qx_range_index = fix([qx_range_index_min, qx_range_index_max])
+
+  ;qz
+  data_y = (*global_plot).y_axis
+  
+  qz_min = qz_range[0]
+  qz_max = qz_range[1]
+  
+  qz_range_index_left = where(qz_min ge data_y)
+  qz_range_index_min = qz_range_index_left[-1]
+  
+  qz_range_index_right = where(data_y ge qz_max)
+  qz_range_index_max = qz_range_index_right[0]
+
+  qz_range_index = fix([qz_range_index_min, qz_range_index_max])
+
+  ;create new array of selected region
+  data_z = (*(*global_plot).data_linear) ;Array[qx,qz]
+  
+  zoom_data_x = Data_x[qx_range_index[0]:qx_range_index[1]]
+  zoom_data_y = Data_y[qz_range_index[0]:qz_range_index[1]]
+  
+  zoom_data_z = data_z[qx_range_index[0]:qx_range_index[1],$
+  qz_range_index[0]:qz_range_index[1]]
+
+ final_plot, event=event, $
+    offset = 50, $
+    data = zoom_data_z, $
+;    data = alog(divarray+1),$
+    x_axis = zoom_data_x, $
+    y_axis = zoom_data_y, $
+    default_loadct = (*global_plot).default_loadct, $
+;    default_scale_settings = default_scale_settings, $
+    default_plot_size = (*global_plot).default_plot_size, $
+    main_base_uname = 'final_plot_base'
+;    current_plot_setting = current_plot_setting, $
+;    Data_x = Data_x, $
+;    Data_y = Data_y, $ ;Data_y
+;    start_pixel = start_pixel, $
+
+
+    
+;  px_vs_tof_plots_base, event = event, $
+;    main_base_uname = 'px_vs_tof_widget_base', $
+;    file_name = (*global_plot).file_name, $
+;    offset = 50, $
+;    default_loadct = (*global_plot).default_loadct, $
+;    default_scale_settings = (*global_plot).default_scale_settings, $
+;    default_plot_size = (*global_plot).default_plot_size, $
+;    current_plot_setting = (*global_plot).plot_setting, $
+;    Data_x =  zoom_data_x, $ ;tof
+;    Data_y = zoom_data_y, $ ;Data_y, $
+;    start_pixel = pixel_range[0]
+    
+end
+
+;+
+; :Description:
+;    plot the zoom selection
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro refresh_zoom_selection, event
+  compile_opt idl2
+  
+  refresh_plot, event
+  
+  widget_control, event.top, get_uvalue=global_plot
+  
+  selection = (*global_plot).draw_zoom_selection
+  
+  id = widget_info(event.top,find_by_uname='draw')
+  widget_control, id, GET_VALUE = plot_id
+  wset, plot_id
+  
+  xrange = [selection[0],selection[2]]
+  yrange = [selection[1],selection[3]]
+  
+  xmin = min(xrange, max=xmax)
+  ymin = min(yrange, max=ymax)
+  
+  plots, [xmin, xmin, xmax, xmax, xmin],$
+    [ymin, ymax, ymax, ymin, ymin],$
+    /DEVICE,$
+    LINESTYLE = 3,$
+    COLOR = 200
+    
+end
+
+;+
+; :Description:
 ;    reach when the user interacts with the plot (left click, move mouse
 ;    with left click).
 ;
@@ -292,9 +488,9 @@ pro draw_eventcb, event
   
   widget_control, event.top, get_uvalue=global_plot
   
-  catch, error
-  if (error ne 0) then begin
-    catch,/cancel
+  ;catch, error
+  ;if (error ne 0) then begin
+  ;  catch,/cancel
     
     info_base = (*global_plot).cursor_info_base
     ;if x,y and counts base is on, shows live values of x,y and counts
@@ -304,9 +500,12 @@ pro draw_eventcb, event
       y = retrieve_data_y_value(event)
       z = retrieve_data_z_value(event)
       
-      putValue, base=info_base, 'cursor_info_x_value_uname', strcompress(x,/remove_all)
-      putValue, base=info_base, 'cursor_info_y_value_uname', strcompress(y,/remove_all)
-      putValue, base=info_base, 'cursor_info_z_value_uname', strcompress(z,/remove_all)
+      putValue, base=info_base, 'cursor_info_x_value_uname', $
+      strcompress(x,/remove_all)
+      putValue, base=info_base, 'cursor_info_y_value_uname', $
+      strcompress(y,/remove_all)
+      putValue, base=info_base, 'cursor_info_z_value_uname', $
+      strcompress(z,/remove_all)
       
     endif
     
@@ -401,214 +600,33 @@ pro draw_eventcb, event
       
     endif
     
-  endif else begin ;endif of catch error
-  
-    if (event.enter eq 0) then begin ;leaving plot
-      info_base = (*global_plot).cursor_info_base
-      ;if x,y and counts base is on, shows live values of x,y and counts
-      if (widget_info(info_base, /valid_id) ne 0) then begin
-      
-        na = 'N/A'
-        putValue, base=info_base, 'cursor_info_x_value_uname', na
-        putValue, base=info_base, 'cursor_info_y_value_uname', na
-        putValue, base=info_base, 'cursor_info_z_value_uname', na
-      endif
-      
-      ;counts vs xaxis (tof or lambda)
-      counts_vs_xaxis_plot_id = (*global_plot).counts_vs_xaxis_base
-      if (widget_info(counts_vs_xaxis_plot_id,/valid_id) ne 0) then begin
-        plot_counts_vs_xaxis, event, clear=1
-      endif
-      
-      ;counts vs yaxis (pixel or angle)
-      counts_vs_yaxis_plot_id = (*global_plot).counts_vs_yaxis_base
-      if (widget_info(counts_vs_yaxis_plot_id,/valid_id) ne 0) then begin
-        plot_counts_vs_yaxis, event, clear=1
-      endif
-      
-    endif
-    
-  endelse
-  
-end
-
-;+
-; :Description:
-;    Using the device y0 and y1, this function returns the
-;    data y0 and y1
-;
-; :Params:
-;    event
-;
-; :Author: j35
-;-
-function determine_range_qz_selected, event
-  compile_opt idl2
-  
-  widget_control, event.top, get_uvalue=global_plot
-  
-  draw_zoom_selection = (*global_plot).draw_zoom_selection
-  y0_device = float(draw_zoom_selection[1])
-  y1_device = float(draw_zoom_selection[3])
-  
-  congrid_ycoeff = (*global_plot).congrid_ycoeff  ;using xcoeff because of transpose
-  
-  yrange = float((*global_plot).yrange) ;min and max pixels
-  
-  ;calculation of y0_data value
-  rat = float(y0_device) / float(congrid_ycoeff)
-  y0_data = fix(rat * (yrange[1] - yrange[0]) + yrange[0])
-  
-  ;calculation of y1_data value
-  rat = float(y1_device) / float(congrid_ycoeff)
-  y1_data = fix(rat * (yrange[1] - yrange[0]) + yrange[0])
-  
-  return, [y0_data, y1_data]
+;  endif else begin ;endif of catch error
+;  
+;    if (event.enter eq 0) then begin ;leaving plot
+;      info_base = (*global_plot).cursor_info_base
+;      ;if x,y and counts base is on, shows live values of x,y and counts
+;      if (widget_info(info_base, /valid_id) ne 0) then begin
+;      
+;        na = 'N/A'
+;        putValue, base=info_base, 'cursor_info_x_value_uname', na
+;        putValue, base=info_base, 'cursor_info_y_value_uname', na
+;        putValue, base=info_base, 'cursor_info_z_value_uname', na
+;      endif
+;      
+;      ;counts vs xaxis (tof or lambda)
+;      counts_vs_xaxis_plot_id = (*global_plot).counts_vs_xaxis_base
+;      if (widget_info(counts_vs_xaxis_plot_id,/valid_id) ne 0) then begin
+;        plot_counts_vs_xaxis, event, clear=1
+;      endif
+;      
+;      ;counts vs yaxis (pixel or angle)
+;      counts_vs_yaxis_plot_id = (*global_plot).counts_vs_yaxis_base
+;      if (widget_info(counts_vs_yaxis_plot_id,/valid_id) ne 0) then begin
+;        plot_counts_vs_yaxis, event, clear=1
+;      endif
+;      
+;    endif
+;    
+;  endelse
   
 end
-
-;+
-; :Description:
-;    Using the device x0 and y=x1, this function returns the
-;    data x0 and x1
-;
-; :Params:
-;    event
-;
-; :Author: j35
-;-
-function determine_range_Qx_selected, event
-  compile_opt idl2
-  
-  widget_control, event.top, get_uvalue=global_plot
-  
-  draw_zoom_selection = (*global_plot).draw_zoom_selection
-  x0_device = float(draw_zoom_selection[0])
-  x1_device = float(draw_zoom_selection[2])
-  
-  congrid_xcoeff = (*global_plot).congrid_xcoeff
-  
-  xrange = float((*global_plot).xrange) ;min and max pixels
-  
-  ;calculation of x0_data value
-  rat = float(x0_device) / float(congrid_xcoeff)
-  x0_data = long(rat * (xrange[1] - xrange[0]) + xrange[0])
-  
-  ;calculation of x1_data value
-  rat = float(x1_device) / float(congrid_xcoeff)
-  x1_data = long(rat * (xrange[1] - xrange[0]) + xrange[0])
-  
-  return, [x0_data, x1_data]
-  
-end
-
-;+
-; :Description:
-;   Bring a new window with the zoom of the data
-;
-; :Params:
-;    event
-;
-; :Author: j35
-;-
-pro zoom_selection, event
-  compile_opt idl2
-  
-  qz_range = determine_range_Qz_selected(event)
-  qz_range = qz_range[sort(qz_range)]
-  qx_range   = determine_range_Qx_selected(event)
-  qx_range = qx_range[sort(qx_range)]
-  
-  ;retrieve selected region from big array
-  widget_control, event.top, get_uvalue=global_plot
-  
-  
-  print, 'qz_range: ', qz_range
-  print, 'qx_range: ', qx_range
-  
-  return
-  
-  
-  
-  
-  
-  
-  ;calculate pixel and tof index range
-  
-  ;pixel
-  start_pixel = (*global_plot).start_pixel
-  pixel_range_index = pixel_range - start_pixel
-  pixel_range_index = pixel_range_index[sort(pixel_range_index)]
-  
-  ;tof
-  tof_min = min(tof_range,max=tof_max)
-  Data_x = (*global_plot).Data_x
-  
-  ;left tof
-  tof_range_index_left = where(tof_min ge Data_x)
-  tof_range_index_min = tof_range_index_left[-1]
-  
-  ;right tof
-  tof_range_index_right = where(Data_x ge tof_max)
-  tof_range_index_max = tof_range_index_right[0]
-  
-  tof_range_index = [tof_range_index_min, tof_range_index_max]
-  
-  ;create new array of selected region
-  data_y = (*(*global_plot).data_linear) ;Array[pixel,tof]
-  zoom_data_x = Data_x[tof_range_index[0]:tof_range_index_max]
-  zoom_data_y = data_y[pixel_range_index[0]:pixel_range_index[1],$
-    tof_range_index[0]:tof_range_index[1]]
-    
-  px_vs_tof_plots_base, event = event, $
-    main_base_uname = 'px_vs_tof_widget_base', $
-    file_name = (*global_plot).file_name, $
-    offset = 50, $
-    default_loadct = (*global_plot).default_loadct, $
-    default_scale_settings = (*global_plot).default_scale_settings, $
-    default_plot_size = (*global_plot).default_plot_size, $
-    current_plot_setting = (*global_plot).plot_setting, $
-    Data_x =  zoom_data_x, $ ;tof
-    Data_y = zoom_data_y, $ ;Data_y, $
-    start_pixel = pixel_range[0]
-    
-end
-
-;+
-; :Description:
-;    plot the zoom selection
-;
-; :Params:
-;    event
-;
-;
-;
-; :Author: j35
-;-
-pro refresh_zoom_selection, event
-  compile_opt idl2
-  
-  refresh_plot, event
-  
-  widget_control, event.top, get_uvalue=global_plot
-  
-  selection = (*global_plot).draw_zoom_selection
-  
-  id = widget_info(event.top,find_by_uname='draw')
-  widget_control, id, GET_VALUE = plot_id
-  wset, plot_id
-  
-  xrange = [selection[0],selection[2]]
-  yrange = [selection[1],selection[3]]
-  
-  xmin = min(xrange, max=xmax)
-  ymin = min(yrange, max=ymax)
-  
-  plots, [xmin, xmin, xmax, xmax, xmin],$
-    [ymin, ymax, ymax, ymin, ymin],$
-    /DEVICE,$
-    LINESTYLE = 3,$
-    COLOR = 200
-    
-end
-

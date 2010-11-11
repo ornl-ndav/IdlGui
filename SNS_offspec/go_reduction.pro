@@ -966,22 +966,20 @@ pro go_reduction, event
     qzbins = qzbins)
     
     offset = 50
-    default_plot_size = [300,300]
 
     final_plot, event=event, $
     offset = offset, $
     data = smooth(alog(divarray+1),5),$
-    x_axis = [qxvec[0],qxvec[-1]], $
-    y_axis = [qzvec[0],qzvec[-1]], $
+;    data = alog(divarray+1),$
+    x_axis = qxvec,$
+    y_axis = qzvec,$
     default_loadct = 5, $
 ;    default_scale_settings = default_scale_settings, $
-    default_plot_size = default_plot_size, $
 ;    current_plot_setting = current_plot_setting, $
 ;    Data_x = Data_x, $
 ;    Data_y = Data_y, $ ;Data_y
 ;    start_pixel = start_pixel, $
     main_base_uname = 'main_base'
-    
     
 ;  window, 1
 ;  contour, smooth(alog(divarray+1),5), $
