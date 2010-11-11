@@ -64,22 +64,22 @@ pro plot_colorbar, event=event, base=base, zmin, zmax, type=type
   default_loadct = (*global_plot).default_loadct
   loadct, default_loadct, /silent
   
-;  default_scale_settings = (*global_plot).default_scale_settings
-;  if (default_scale_settings eq 0) then begin ;linear
+  default_scale_setting = (*global_plot).default_scale_setting
+  if (default_scale_setting eq 0) then begin ;linear
   
-;    divisions = 20
-;    perso_format = '(e8.1)'
-;    range = [zmin,zmax]
-;    colorbar, $
-;      NCOLORS      = 255, $
-;      POSITION     = [0.75,0.01,0.95,0.99], $
-;      RANGE        = range,$
-;      DIVISIONS    = divisions,$
-;      PERSO_FORMAT = perso_format,$
-;      /VERTICAL
-;      
-;  endif else begin
-;  
+    divisions = 20
+    perso_format = '(e8.1)'
+    range = [zmin,zmax]
+    colorbar, $
+      NCOLORS      = 255, $
+      POSITION     = [0.75,0.01,0.95,0.99], $
+      RANGE        = range,$
+      DIVISIONS    = divisions,$
+      PERSO_FORMAT = perso_format,$
+      /VERTICAL
+      
+  endif else begin
+  
     divisions = 10
     perso_format = '(e8.1)'
     range = float([zmin,zmax])
@@ -108,8 +108,8 @@ pro plot_colorbar, event=event, base=base, zmin, zmax, type=type
         
     endelse
     
-;  endelse
-;  
+  endelse
+  
 end
 
 ;+
@@ -138,23 +138,23 @@ pro refresh_plot_colorbar, event
   default_loadct = (*global_plot).default_loadct
   loadct, default_loadct, /silent
   
-;  default_scale_settings = (*global_plot).default_scale_settings
-;  if (default_scale_settings eq 0) then begin ;linear
+  default_scale_setting = (*global_plot).default_scale_setting
+  if (default_scale_setting eq 0) then begin ;linear
   
-;    divisions = 20
-;    perso_format = '(e8.1)'
-;    range = [zmin,zmax]
-;    colorbar, $
-;      NCOLORS      = 255, $
-;      POSITION     = [0.75,0.01,0.95,0.99], $
-;      RANGE        = range,$
-;      DIVISIONS    = divisions,$
-;      PERSO_FORMAT = perso_format,$
-;      annotatecolor = 'white',$
-;      /VERTICAL
+    divisions = 20
+    perso_format = '(e8.1)'
+    range = [zmin,zmax]
+    colorbar, $
+      NCOLORS      = 255, $
+      POSITION     = [0.75,0.01,0.95,0.99], $
+      RANGE        = range,$
+      DIVISIONS    = divisions,$
+      PERSO_FORMAT = perso_format,$
+      annotatecolor = 'white',$
+      /VERTICAL
       
-;  endif else begin
-;  
+  endif else begin
+  
     divisions = 10
     perso_format = '(e8.1)'
     range = float([zmin,zmax])
@@ -184,6 +184,6 @@ pro refresh_plot_colorbar, event
         
     endelse
     
-;  endelse
-;  
+  endelse
+  
 end

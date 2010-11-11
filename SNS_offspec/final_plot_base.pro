@@ -138,7 +138,7 @@ pro lin_log_data, event=event, base=base
   endelse
   
   Data = (*(*global_plot).data_linear)
-  scale_setting = (*global_plot).default_scale_settings ;0 for lin, 1 for log
+  scale_setting = (*global_plot).default_scale_setting ;0 for lin, 1 for log
   
   if (scale_setting eq 1) then begin ;log
   
@@ -572,29 +572,28 @@ pro final_plot_gui, wBase, $
       event_pro = 'change_loadct')
   endfor
 
-;  if (scale_setting eq 0) then begin
-;    set1_value = '*  linear'
-;    set2_value = '   logarithmic'
-;  endif else begin
-;    set1_value = '   linear'
-;    set2_value = '*  logarithmic'
-;  endelse
+  if (scale_setting eq 0) then begin
+    set1_value = '*  linear'
+    set2_value = '   logarithmic'
+  endif else begin
+    set1_value = '   linear'
+    set2_value = '*  logarithmic'
+  endelse
   
-;  mPlot = widget_button(bar1, $
-;    value = 'Axes',$
-;    /menu)
-;    
-;  set1 = widget_button(mPlot, $
-;    value = set1_value, $
-;    event_pro = 'local_switch_axes_type',$
-;    uname = 'local_scale_setting_linear')
-;    
-;  set2 = widget_button(mPlot, $
-;    value = set2_value,$
-;    event_pro = 'local_switch_axes_type',$
-;    uname = 'local_scale_setting_log')
-;    
-  
+  mPlot = widget_button(bar1, $
+    value = 'Axes',$
+    /menu)
+    
+  set1 = widget_button(mPlot, $
+    value = set1_value, $
+    event_pro = 'local_switch_axes_type',$
+    uname = 'local_scale_setting_linear')
+    
+  set2 = widget_button(mPlot, $
+    value = set2_value,$
+    event_pro = 'local_switch_axes_type',$
+    uname = 'local_scale_setting_log')
+    
   info = widget_button(bar1, $
     value = 'Infos',$
     /menu)
@@ -853,7 +852,7 @@ pro final_plot, main_base=main_base, $
     event=event, $
     offset = offset, $
     default_loadct = default_loadct, $
-    default_scale_settings = default_scale_settings, $
+    default_scale_setting = default_scale_setting, $
     default_plot_size = default_plot_size, $
     current_plot_setting = current_plot_setting, $
     x_axis = x_axis, $
@@ -872,6 +871,7 @@ pro final_plot, main_base=main_base, $
   colorbar_xsize = 70
   
   if (~keyword_set(default_plot_size)) then default_plot_size = [600,600]
+  if (~keyword_set(default_scale_setting)) then default_scale_setting = 1 ;log by default
   
   ;build gui
   wBase = ''
@@ -882,7 +882,7 @@ pro final_plot, main_base=main_base, $
     border, $
     colorbar_xsize, $
     current_plot_setting = current_plot_setting, $
-    scale_setting = default_scale_settings,$
+    scale_setting = default_scale_setting,$
     default_plot_size = default_plot_size
   ;(*global).auto_scale_plot_base = wBase
   
@@ -918,7 +918,7 @@ pro final_plot, main_base=main_base, $
 
     colorbar_xsize: colorbar_xsize,$
     default_loadct: default_loadct, $ ;prism by default
-;    default_scale_settings: default_scale_settings, $ ;lin or log z-axis
+    default_scale_setting: default_scale_setting, $ ;lin or log z-axis
     border: border, $ ;border of main plot (space reserved for scale)
 
     Qx_axis: fltarr(2),$  ;[start, end]
@@ -971,7 +971,7 @@ pro final_plot, main_base=main_base, $
 ;  ;  Data = *pData_y[file_index, spin_state]
 ;  (*(*global_plot).data_linear) = Data_y
 ;  
-;  lin_log_data, base=wBase
+  lin_log_data, base=wBase
 ;  
 ;  ;number of pixels
 ;  (*global_plot).nbr_pixel = (size(data_y))[1] ;nbr of pixels to plot
@@ -998,7 +998,6 @@ pro final_plot, main_base=main_base, $
   (*global_plot).congrid_xcoeff = xsize
   (*global_plot).congrid_ycoeff = ysize
 
-;  
 ;  DEVICE, DECOMPOSED = 0
 ;  loadct, default_loadct, /SILENT
 ;  
@@ -1012,10 +1011,11 @@ pro final_plot, main_base=main_base, $
   
   ;Scale
   zmin = 0
-  zmax = max(Data)
+  zmax = max((*(*global_plot).data_linear))
   zrange = (*global_plot).zrange
   zrange[0] = zmin
   zrange[1] = zmax
+  
   (*global_plot).zrange = zrange
   
   plot_colorbar, base=wBase, zmin, zmax, type=default_scale_settings

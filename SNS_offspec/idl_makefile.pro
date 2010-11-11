@@ -55,6 +55,7 @@ cd, CurrentFolder
 .run plot_colorbar.pro
 .run final_plot_eventcb.pro
 .run cursor_info_base.pro
+.run menu_eventcb.pro
 
 .run sos.pro
 .run sos_cleanup.pro

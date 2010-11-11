@@ -969,8 +969,8 @@ pro go_reduction, event
 
     final_plot, event=event, $
     offset = offset, $
-    data = smooth(alog(divarray+1),5),$
-;    data = alog(divarray+1),$
+;    data = smooth(alog(divarray+1),5),$
+    data = divarray,$
     x_axis = qxvec,$
     y_axis = qzvec,$
     default_loadct = 5, $
