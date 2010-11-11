@@ -488,9 +488,9 @@ pro draw_eventcb, event
   
   widget_control, event.top, get_uvalue=global_plot
   
-  ;catch, error
-  ;if (error ne 0) then begin
-  ;  catch,/cancel
+  catch, error
+  if (error ne 0) then begin
+    catch,/cancel
     
     info_base = (*global_plot).cursor_info_base
     ;if x,y and counts base is on, shows live values of x,y and counts
@@ -600,33 +600,32 @@ pro draw_eventcb, event
       
     endif
     
-;  endif else begin ;endif of catch error
-;  
-;    if (event.enter eq 0) then begin ;leaving plot
-;      info_base = (*global_plot).cursor_info_base
-;      ;if x,y and counts base is on, shows live values of x,y and counts
-;      if (widget_info(info_base, /valid_id) ne 0) then begin
-;      
-;        na = 'N/A'
-;        putValue, base=info_base, 'cursor_info_x_value_uname', na
-;        putValue, base=info_base, 'cursor_info_y_value_uname', na
-;        putValue, base=info_base, 'cursor_info_z_value_uname', na
-;      endif
-;      
-;      ;counts vs xaxis (tof or lambda)
-;      counts_vs_xaxis_plot_id = (*global_plot).counts_vs_xaxis_base
-;      if (widget_info(counts_vs_xaxis_plot_id,/valid_id) ne 0) then begin
-;        plot_counts_vs_xaxis, event, clear=1
-;      endif
-;      
-;      ;counts vs yaxis (pixel or angle)
-;      counts_vs_yaxis_plot_id = (*global_plot).counts_vs_yaxis_base
-;      if (widget_info(counts_vs_yaxis_plot_id,/valid_id) ne 0) then begin
-;        plot_counts_vs_yaxis, event, clear=1
-;      endif
-;      
-;    endif
-;    
-;  endelse
+  endif else begin ;endif of catch error
+  
+    if (event.enter eq 0) then begin ;leaving plot
+      info_base = (*global_plot).cursor_info_base
+      ;if x,y and counts base is on, shows live values of x,y and counts
+      if (widget_info(info_base, /valid_id) ne 0) then begin
+        na = 'N/A'
+        putValue, base=info_base, 'cursor_info_x_value_uname', na
+        putValue, base=info_base, 'cursor_info_y_value_uname', na
+        putValue, base=info_base, 'cursor_info_z_value_uname', na
+      endif
+      
+      ;counts vs xaxis (tof or lambda)
+      counts_vs_xaxis_plot_id = (*global_plot).counts_vs_xaxis_base
+      if (widget_info(counts_vs_xaxis_plot_id,/valid_id) ne 0) then begin
+        plot_counts_vs_xaxis, event, clear=1
+      endif
+      
+      ;counts vs yaxis (pixel or angle)
+      counts_vs_yaxis_plot_id = (*global_plot).counts_vs_yaxis_base
+      if (widget_info(counts_vs_yaxis_plot_id,/valid_id) ne 0) then begin
+        plot_counts_vs_yaxis, event, clear=1
+      endif
+      
+    endif
+    
+  endelse
   
 end

@@ -479,7 +479,7 @@ pro final_plot_gui, wBase, $
     scr_ysize = ysize-2*border,$
     /button_events,$
     /motion_events,$
-    ;/tracking_events,$
+    /tracking_events,$
     retain=2, $
     event_pro = 'draw_eventcb',$
     uname = 'draw')
