@@ -974,6 +974,8 @@ pro go_reduction, event
     final_plot, event=event, $
     offset = offset, $
     data = smooth(alog(divarray+1),5),$
+    x_axis = [qxvec[0],qxvec[-1]], $
+    y_axis = [qzvec[0],qzvec[-1]], $
 ;    default_loadct = default_loadct, $
 ;    default_scale_settings = default_scale_settings, $
     default_plot_size = default_plot_size, $
