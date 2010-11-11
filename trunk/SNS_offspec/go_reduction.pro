@@ -807,12 +807,12 @@ pro go_reduction, event
   
   ;number of steps is ----> 1
   
-  ;create spectrum of normalization file
-  spectrum = get_normalization_spectrum(event, norm_nexus)
+  ;;create spectrum of normalization file
+  ;spectrum = get_normalization_spectrum(event, norm_nexus)
   
   ;remove_me
-  ;norm_file = '/Users/j35/IDLWorkspace80/SNS_offspec/Al_can_spectrum.dat'
-  ;SPECTRUM=xcr_direct(norm_file, 2)
+  norm_file = '/Users/j35/IDLWorkspace80/SNS_offspec/Al_can_spectrum.dat'
+  SPECTRUM=xcr_direct(norm_file, 2)
   
   update_progress_bar_percentage, event, ++processes, total_number_of_processes
   
@@ -965,6 +965,25 @@ pro go_reduction, event
     qxbins = qxbins, $
     qzbins = qzbins)
     
+    offset = 50
+    default_plot_size = [300,300]
+
+
+
+ 
+    final_plot, event=event, $
+    offset = offset, $
+    data = smooth(alog(divarray+1),5),$
+;    default_loadct = default_loadct, $
+;    default_scale_settings = default_scale_settings, $
+    default_plot_size = default_plot_size, $
+;    current_plot_setting = current_plot_setting, $
+;    Data_x = Data_x, $
+;    Data_y = Data_y, $ ;Data_y
+;    start_pixel = start_pixel, $
+    main_base_uname = 'main_base'
+    
+    
   window, 1
   contour, smooth(alog(divarray+1),5), $
     Qxvec, $
@@ -974,8 +993,6 @@ pro go_reduction, event
     charsi=1.5, $
     xtitle='QX', $
     ytitle='QZ'
-    
-    
     
   update_progress_bar_percentage, event, ++processes, $
     total_number_of_processes

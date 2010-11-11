@@ -285,7 +285,6 @@ pro run
     endfor
   endfor
   
-  
   totarray=make_array(qxbins,qzbins)
   totarray4=make_array(qxbins,qzbins)
   ;total up the tiles

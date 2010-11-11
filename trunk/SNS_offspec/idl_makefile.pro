@@ -49,6 +49,8 @@ cd, CurrentFolder
 .run norm_box_eventcb.pro
 .run log_book_eventcb.pro
 .run go_reduction.pro
+.run final_plot_base.pro
+.run save_background.pro
 
 .run sos.pro
 .run sos_cleanup.pro
