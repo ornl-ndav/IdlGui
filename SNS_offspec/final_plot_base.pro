@@ -361,7 +361,7 @@ pro show_cursor_info, event
   info_base = (*global_plot).cursor_info_base
   
   if (widget_info(info_base, /valid_id) EQ 0) THEN BEGIN
-    parent_base_uname = 'px_vs_tof_widget_base'
+    parent_base_uname = 'final_plot_base'
     cursor_info_base, event=event, $
       parent_base_uname=parent_base_uname
   endif
@@ -385,8 +385,8 @@ pro show_counts_vs_xaxis, event
   counts_vs_xaxis_plot_id = (*global_plot).counts_vs_xaxis_base
   if (obj_valid(counts_vs_xaxis_plot_id) eq 0) then begin ;no plot yet
     counts_vs_axis_base, event=event, $
-      parent_base_uname = 'px_vs_tof_widget_base', $
-      xaxis = 'tof'
+      parent_base_uname = 'final_plot_base', $
+      xaxis = 'Qx'
   endif
   
 end
@@ -408,8 +408,8 @@ pro show_counts_vs_yaxis, event
   counts_vs_yaxis_plot_id = (*global_plot).counts_vs_yaxis_base
   if (obj_valid(counts_vs_yaxis_plot_id) eq 0) then begin ;no plot yet
     counts_vs_axis_base, event=event, $
-      parent_base_uname = 'px_vs_tof_widget_base', $
-      xaxis = 'pixel'
+      parent_base_uname = 'final_plot_base', $
+      xaxis = 'Qz'
   endif
   
 end
@@ -572,30 +572,29 @@ pro final_plot_gui, wBase, $
       event_pro = 'change_loadct')
   endfor
 
-return
+;  if (scale_setting eq 0) then begin
+;    set1_value = '*  linear'
+;    set2_value = '   logarithmic'
+;  endif else begin
+;    set1_value = '   linear'
+;    set2_value = '*  logarithmic'
+;  endelse
   
-  if (scale_setting eq 0) then begin
-    set1_value = '*  linear'
-    set2_value = '   logarithmic'
-  endif else begin
-    set1_value = '   linear'
-    set2_value = '*  logarithmic'
-  endelse
+;  mPlot = widget_button(bar1, $
+;    value = 'Axes',$
+;    /menu)
+;    
+;  set1 = widget_button(mPlot, $
+;    value = set1_value, $
+;    event_pro = 'local_switch_axes_type',$
+;    uname = 'local_scale_setting_linear')
+;    
+;  set2 = widget_button(mPlot, $
+;    value = set2_value,$
+;    event_pro = 'local_switch_axes_type',$
+;    uname = 'local_scale_setting_log')
+;    
   
-  mPlot = widget_button(bar1, $
-    value = 'Axes',$
-    /menu)
-    
-  set1 = widget_button(mPlot, $
-    value = set1_value, $
-    event_pro = 'local_switch_axes_type',$
-    uname = 'local_scale_setting_linear')
-    
-  set2 = widget_button(mPlot, $
-    value = set2_value,$
-    event_pro = 'local_switch_axes_type',$
-    uname = 'local_scale_setting_log')
-    
   info = widget_button(bar1, $
     value = 'Infos',$
     /menu)
