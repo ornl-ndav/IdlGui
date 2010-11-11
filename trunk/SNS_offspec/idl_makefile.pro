@@ -51,6 +51,7 @@ cd, CurrentFolder
 .run go_reduction.pro
 .run final_plot_base.pro
 .run save_background.pro
+.run plot_colorbar.pro
 
 .run sos.pro
 .run sos_cleanup.pro

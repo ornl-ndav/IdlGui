@@ -93,7 +93,7 @@ pro final_plot_event, Event
       
 ;      plot_beam_center_scale, event=event
       refresh_plot, event, recalculate=1
- ;     refresh_plot_colorbar, event
+      refresh_plot_colorbar, event
       
       return
     end
@@ -994,14 +994,15 @@ pro final_plot, main_base=main_base, $
   ;tvscl, transpose(cData)
   tvscl, cData
   
-;  zmin = 0
-;  zmax = max(Data)
-;  zrange = (*global_plot).zrange
-;  zrange[0] = zmin
-;  zrange[1] = zmax
-;  (*global_plot).zrange = zrange
-;  plot_colorbar, base=wBase, zmin, zmax, type=default_scale_settings
-;  
+  ;Scale
+  zmin = 0
+  zmax = max(Data)
+  zrange = (*global_plot).zrange
+  zrange[0] = zmin
+  zrange[1] = zmax
+  (*global_plot).zrange = zrange
+  plot_colorbar, base=wBase, zmin, zmax, type=default_scale_settings
+  
 ;  ;change label of default loadct
 ;  pre = '>  > >> '
 ;  post = ' << <  <'
