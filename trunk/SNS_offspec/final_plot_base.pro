@@ -480,7 +480,7 @@ pro final_plot_gui, wBase, $
     /motion_events,$
     /tracking_events,$
     retain=2, $
-  ;  event_pro = 'draw_eventcb',$
+    event_pro = 'draw_eventcb',$
     uname = 'draw')
     
   scale = widget_draw(wBase,$
@@ -863,9 +863,6 @@ pro final_plot, main_base=main_base, $
     
   compile_opt idl2
   
-  help, x_axis
-  help, y_axis
-  
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME=main_base_uname)
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
@@ -1012,7 +1009,7 @@ pro final_plot, main_base=main_base, $
   new_value = pre + value + post
   setValue, base=wBase, uname, new_value
   
-;  save_background,  main_base=wBase
+  save_background,  main_base=wBase
   
 end
 
