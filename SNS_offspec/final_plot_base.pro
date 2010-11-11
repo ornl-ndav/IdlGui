@@ -267,7 +267,7 @@ pro change_loadct, event
   ;get old loadct
   old_loadct = strcompress((*global_plot).default_loadct,/remove_all)
   old_uname = 'loadct_' + old_loadct
-  label = getValue(event=event,old_uname)
+  label = getValue(event=event,uname=old_uname)
   ;remove keep central part
   raw_label1 = strsplit(label,'>>',/regex,/extract)
   raw_label2 = strsplit(raw_label1[1],'<<',/regex,/extract)
@@ -276,7 +276,7 @@ pro change_loadct, event
   putValue, event=event, old_uname, raw_label
   
   ;change value of new loadct
-  new_label = getValue(event=event, new_uname)
+  new_label = getValue(event=event, uname=new_uname)
   new_label = strcompress(new_label,/remove_all)
   ;add selection string
   new_label = '>  > >> ' + new_label + ' << <  <'
@@ -496,10 +496,10 @@ pro final_plot_gui, wBase, $
     scr_ysize = ysize,$
     retain=2)
     
-;  mPlot = widget_button(bar1, $
-;    value = 'Type ',$
-;    /menu)
-;    
+  mPlot = widget_button(bar1, $
+    value = 'Type ',$
+    /menu)
+    
 ;  if (current_plot_setting eq 'untouched') then begin
 ;    set2_value = '*  ' + plot_setting1
 ;    set1_value = '   ' + plot_setting2
@@ -515,8 +515,6 @@ pro final_plot_gui, wBase, $
 ;  set1 = widget_button(mPlot, $
 ;    value = set1_value,$
 ;    uname = 'plot_setting_interpolated')
-    
-    return
     
   list_loadct = ['B-W Linear',$
     'Blue/White',$
@@ -572,6 +570,8 @@ pro final_plot_gui, wBase, $
       uname = 'loadct_' + strcompress(i,/remove_all),$
       event_pro = 'change_loadct')
   endfor
+
+return
   
   if (scale_setting eq 0) then begin
     set1_value = '*  linear'
@@ -914,8 +914,7 @@ pro final_plot, main_base=main_base, $
     nbr_pixel: 0L,$
 
     colorbar_xsize: colorbar_xsize,$
-;    default_loadct: default_loadct, $ ;prism by default
-  default_loadct: 5,$
+    default_loadct: default_loadct, $ ;prism by default
 ;    default_scale_settings: default_scale_settings, $ ;lin or log z-axis
     border: border, $ ;border of main plot (space reserved for scale)
 
@@ -1005,14 +1004,14 @@ pro final_plot, main_base=main_base, $
   (*global_plot).zrange = zrange
   plot_colorbar, base=wBase, zmin, zmax, type=default_scale_settings
   
-;  ;change label of default loadct
-;  pre = '>  > >> '
-;  post = ' << <  <'
-;  uname = 'loadct_' + strcompress(default_loadct,/remove_all)
-;  value = getValue(base=wBase, uname)
-;  new_value = pre + value + post
-;  setValue, base=wBase, uname, new_value
-;  
+
+  pre = '>  > >> '
+  post = ' << <  <'
+  uname = 'loadct_' + strcompress(default_loadct,/remove_all)
+  value = getValue(base=wBase, uname=uname)
+  new_value = pre + value + post
+  setValue, base=wBase, uname, new_value
+  
 ;  save_background,  main_base=wBase
   
 end
