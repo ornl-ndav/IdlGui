@@ -386,7 +386,7 @@ pro show_counts_vs_xaxis, event
   if (obj_valid(counts_vs_xaxis_plot_id) eq 0) then begin ;no plot yet
     counts_vs_axis_base, event=event, $
       parent_base_uname = 'final_plot_base', $
-      xaxis = 'Qx'
+      xaxis = 'qx'
   endif
   
 end
@@ -409,7 +409,7 @@ pro show_counts_vs_yaxis, event
   if (obj_valid(counts_vs_yaxis_plot_id) eq 0) then begin ;no plot yet
     counts_vs_axis_base, event=event, $
       parent_base_uname = 'final_plot_base', $
-      xaxis = 'Qz'
+      xaxis = 'qz'
   endif
   
 end
