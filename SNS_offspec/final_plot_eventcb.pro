@@ -149,20 +149,20 @@ function retrieve_data_z_value, event
   xdata_max = (size(data))[1]
   ydata_max = (size(data))[2]
   
-  congrid_xcoeff = (*global_plot).congrid_xcoeff 
-  congrid_ycoeff = (*global_plot).congrid_ycoeff 
+  congrid_xcoeff = (*global_plot).congrid_xcoeff
+  congrid_ycoeff = (*global_plot).congrid_ycoeff
   
   xdata = fix(float(event.x) * float(xdata_max) / congrid_xcoeff)
   ydata = fix(float(event.y) * float(ydata_max) / congrid_ycoeff)
-
-;; Debugging code
-;  print, '(congrid_xcoeff,congrid_ycoeff)=(' + strcompress(congrid_xcoeff,/remove_all) + $
-;  ',' + strcompress(congrid_ycoeff,/remove_all) + ')'
-;  print, '(xdata,ydata)=(' + strcompress(xdata,/remove_all) + $
-;  ',' + strcompress(ydata,/remove_all) + ')'
-;  print, '(xdata_max,ydata_max)=(' + strcompress(xdata_max,/remove_all) + $
-;  ',' + strcompress(ydata_max,/remove_all) + ')'
-;  print
+  
+  ;; Debugging code
+  ;  print, '(congrid_xcoeff,congrid_ycoeff)=(' + strcompress(congrid_xcoeff,/remove_all) + $
+  ;  ',' + strcompress(congrid_ycoeff,/remove_all) + ')'
+  ;  print, '(xdata,ydata)=(' + strcompress(xdata,/remove_all) + $
+  ;  ',' + strcompress(ydata,/remove_all) + ')'
+  ;  print, '(xdata_max,ydata_max)=(' + strcompress(xdata_max,/remove_all) + $
+  ;  ',' + strcompress(ydata_max,/remove_all) + ')'
+  ;  print
   
   return, data[xdata,ydata]
   
@@ -170,7 +170,7 @@ end
 
 ;+
 ; :Description:
-;    display the counts vs tof (or lambda) plot
+;    display the counts vs Qx
 ;    in the new widget_base on the right of the main GUI
 ;
 ; :Params:
@@ -194,10 +194,10 @@ pro plot_counts_vs_xaxis, event, clear=clear
     return
   endif
   
-  data = (*(*global_plot).data_linear) ;[51,65] where 51 is #pixels
+  data = (*(*global_plot).data_linear)
   
-  xdata_max = (size(data))[2]
-  ydata_max = (size(data))[1]
+  xdata_max = (size(data))[1]
+  ydata_max = (size(data))[2]
   
   congrid_xcoeff = (*global_plot).congrid_xcoeff  ;using ycoeff because of transpose
   congrid_ycoeff = (*global_plot).congrid_ycoeff  ;using xcoeff because of transpose
@@ -212,22 +212,22 @@ pro plot_counts_vs_xaxis, event, clear=clear
   wset, plot_id
   
   sz_x = (size(data))[1]
-  if (ydata ge sz_x) then begin
+  if (xdata ge sz_x) then begin
     erase
     return
   endif
   
-  nbr_pixel = n_elements(data[ydata,*])
-  tof_axis = (*global_plot).tof_axis
-  start_tof = tof_axis[0]
-  delta_tof = (*global_plot).delta_tof
-  yrange = indgen(nbr_pixel) * delta_tof + start_tof
+  ;nbr_ = n_elements(data[xdata,*])
+  x_axis = (*global_plot).x_axis
   
   yaxis_type = (*global_plot).counts_vs_xaxis_yaxis_type
   if (yaxis_type eq 0) then begin
-  plot, yrange, data[ydata,*], xtitle='TOF (!4l!Xs)', ytitle='Counts'
+    plot, x_axis, data[*,ydata], xtitle='TOF (!4l!Xs)', ytitle='Counts'
   endif else begin
-  plot, yrange, data[ydata,*], xtitle='TOF (!4l!Xs)', ytitle='Counts', /ylog
+    plot, x_axis, data[*,ydata], $
+      xtitle='TOF (!4l!Xs)', $
+      ytitle='Counts', $
+      /ylog
   endelse
   
 end
@@ -281,9 +281,9 @@ pro plot_counts_vs_yaxis, event, clear=clear
   
   yaxis_type = (*global_plot).counts_vs_yaxis_yaxis_type
   if (yaxis_type eq 0) then begin
-  plot, xrange, data[*,xdata], xtitle='Pixel', ytitle='Counts'
+    plot, xrange, data[*,xdata], xtitle='Pixel', ytitle='Counts'
   endif else begin
-  plot, xrange, data[*,xdata], xtitle='Pixel', ytitle='Counts',/ylog
+    plot, xrange, data[*,xdata], xtitle='Pixel', ytitle='Counts',/ylog
   endelse
   
 end
@@ -310,7 +310,7 @@ function determine_range_qz_selected, event
   congrid_ycoeff = (*global_plot).congrid_ycoeff  ;using xcoeff because of transpose
   
   yrange = float((*global_plot).yrange) ;min and max Qz
-
+  
   ;calculation of y0_data value
   rat = float(y0_device) / float(congrid_ycoeff)
   y0_data = float(rat * (yrange[1] - yrange[0]) + yrange[0])
@@ -380,7 +380,7 @@ pro zoom_selection, event
   
   ;calculate qx and qz index range
   data_x = (*global_plot).x_axis
-
+  
   qx_min = qx_range[0]
   qx_max = qx_range[1]
   
@@ -389,9 +389,9 @@ pro zoom_selection, event
   
   qx_range_index_right = where(data_x ge qx_max)
   qx_range_index_max = qx_range_index_right[0]
-
+  
   qx_range_index = fix([qx_range_index_min, qx_range_index_max])
-
+  
   ;qz
   data_y = (*global_plot).y_axis
   
@@ -403,9 +403,9 @@ pro zoom_selection, event
   
   qz_range_index_right = where(data_y ge qz_max)
   qz_range_index_max = qz_range_index_right[0]
-
+  
   qz_range_index = fix([qz_range_index_min, qz_range_index_max])
-
+  
   ;create new array of selected region
   data_z = (*(*global_plot).data_linear) ;Array[qx,qz]
   
@@ -413,24 +413,24 @@ pro zoom_selection, event
   zoom_data_y = Data_y[qz_range_index[0]:qz_range_index[1]]
   
   zoom_data_z = data_z[qx_range_index[0]:qx_range_index[1],$
-  qz_range_index[0]:qz_range_index[1]]
-
- final_plot, event=event, $
+    qz_range_index[0]:qz_range_index[1]]
+    
+  final_plot, event=event, $
     offset = 50, $
     data = zoom_data_z, $
-;    data = alog(divarray+1),$
+    ;    data = alog(divarray+1),$
     x_axis = zoom_data_x, $
     y_axis = zoom_data_y, $
     default_loadct = (*global_plot).default_loadct, $
-;    default_scale_settings = default_scale_settings, $
+    ;    default_scale_settings = default_scale_settings, $
     default_plot_size = (*global_plot).default_plot_size, $
     main_base_uname = 'final_plot_base'
 ;    current_plot_setting = current_plot_setting, $
 ;    Data_x = Data_x, $
 ;    Data_y = Data_y, $ ;Data_y
 ;    start_pixel = start_pixel, $
-
-
+    
+    
     
 ;  px_vs_tof_plots_base, event = event, $
 ;    main_base_uname = 'px_vs_tof_widget_base', $
@@ -512,12 +512,12 @@ pro draw_eventcb, event
       z = retrieve_data_z_value(event)
       
       putValue, base=info_base, 'cursor_info_x_value_uname', $
-      strcompress(x,/remove_all)
+        strcompress(x,/remove_all)
       putValue, base=info_base, 'cursor_info_y_value_uname', $
-      strcompress(y,/remove_all)
+        strcompress(y,/remove_all)
       putValue, base=info_base, 'cursor_info_z_value_uname', $
-      strcompress(z,/remove_all)
-      
+        strcompress(z,/remove_all)
+        
     endif
     
     ;counts vs xaxis (qx)
