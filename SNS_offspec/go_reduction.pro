@@ -387,9 +387,9 @@ pro build_THLAM, event=event, $
     message1 = ['-> Created THLAM array of file # ' + $
       strcompress(read_loop,/remove_all)]
     message2 = ['   theta: ' + strcompress(theta_val,/remove_all) + $
-    ' degrees']
+      ' degrees']
     message3 = ['   twotheta: ' + strcompress(twotheta_val,/remove_all) + $
-    ' degrees']
+      ' degrees']
     message = [message, message1, message2, message3]
     
     update_progress_bar_percentage, event, ++processes, $
@@ -464,7 +464,7 @@ pro make_QxQz, event = event, $
   
   
   message1 = '-> size(QXQZ_array) : [' + $
-  strcompress(strjoin(size(QxQz_array,/dim),','),/remove_all) + ']'
+    strcompress(strjoin(size(QxQz_array,/dim),','),/remove_all) + ']'
   message = [message, message1]
   log_book_update, event, message=message
   
@@ -590,8 +590,8 @@ function get_specular_scale, event=event, $
   endfor
   
   message1 = '-> size(specular) = [' + $
-  strcompress(strjoin(size(specular,/dim),','),/remove_all) + ']'
-  
+    strcompress(strjoin(size(specular,/dim),','),/remove_all) + ']'
+    
   ;trimmer
   ;tnum=3
   trim=specular*0.0
@@ -603,19 +603,22 @@ function get_specular_scale, event=event, $
     trim[loop,cut]=specular[loop,cut]
   endfor
   
-    specular = trim
-    ;autoscale
-    step=0
+  specular = trim
+  ;autoscale
+  step=0
   
-;    window, 0
-;    plot, QZvec, specular[0,*]*scale[0], $
-;      /ylog, $
-;      yrange=[1e-8,100], $
-;      psym=1, $
-;      charsi=1.5, $
-;      xtitle='QZ', $
-;      ytitle='R'
-;  
+  widget_control, event.top, get_uvalue=global
+  style_plot_lines = (*(*global).style_plot_lines)
+  
+  _plot = plot(QZvec, specular[0,*]*scale[0], $
+    /ylog, $
+    yrange=[1e-8,100], $
+    psym=1, $
+    charsi=1.5, $
+    style_plot_lines[0], $
+    xtitle='QZ', $
+    ytitle='R')
+    
   for loop=1,num-1 do begin
   
     overlap=where(specular[loop-1,*] ne 0 and specular[loop,*] ne 0)
@@ -625,16 +628,17 @@ function get_specular_scale, event=event, $
     r2=total(specular[loop-1,overlap])/total(specular[loop,overlap])
     scale[loop]=(total(ratio)/si)*scale[loop-1]
     
-;  oplot, QZvec, specular[loop,*]*scale[loop]
-    
+    _oplot = plot(QZvec, specular[loop,*]*scale[loop],/overplot,$
+      style_plot_lines[loop])
+      
   endfor
-
+  
   message2 = '-> Number of elements of scale: ' + $
-  strcompress(n_elements(scale),/remove_all)
+    strcompress(n_elements(scale),/remove_all)
   message3 = '-> scale = [' + strcompress(strjoin(scale,','),/remove_all) + ']'
   message = [message, message1, message2, message3]
   log_book_update, event, message=message
-
+  
   return, scale
 end
 
@@ -682,11 +686,11 @@ function create_big_scaled_array, event=event, $
     endfor
   endfor
   
-;  contour, [[0,0],[20000,0]], [qxrange[0],qxrange[1]], [qzrange[0],qzrange[1]],/nodata, charsi=1.5, xtitle='QX', ytitle='QZ'
-;  for loop=0,num-1 do begin
-;      contour, QXQZ_array[loop,*,*],Qxvec,Qzvec, /fill,nlev=200,/overplot
-;      wait,.05
-;  endfor
+  ;  contour, [[0,0],[20000,0]], [qxrange[0],qxrange[1]], [qzrange[0],qzrange[1]],/nodata, charsi=1.5, xtitle='QX', ytitle='QZ'
+  ;  for loop=0,num-1 do begin
+  ;      contour, QXQZ_array[loop,*,*],Qxvec,Qzvec, /fill,nlev=200,/overplot
+  ;      wait,.05
+  ;  endfor
   
   countarray=make_array(qxbins,qzbins)
   ;count where the tiles have data
@@ -719,26 +723,26 @@ function create_big_scaled_array, event=event, $
   
   divarray4[list]=0
   
-;  window, 1
-;  contour, countarray,Qxvec,Qzvec,/fill, nlev=100
-;  wait, 1
-;  
-;    window, 1
-;    contour, smooth(alog(divarray+1),5), $
-;    Qxvec, $
-;    Qzvec, $
-;    /fill, $
-;    nlev=200, $
-;    charsi=1.5, $
-;    xtitle='QX', $
-;    ytitle='QZ'
+  ;  window, 1
+  ;  contour, countarray,Qxvec,Qzvec,/fill, nlev=100
+  ;  wait, 1
+  ;
+  ;    window, 1
+  ;    contour, smooth(alog(divarray+1),5), $
+  ;    Qxvec, $
+  ;    Qzvec, $
+  ;    /fill, $
+  ;    nlev=200, $
+  ;    charsi=1.5, $
+  ;    xtitle='QX', $
+  ;    ytitle='QZ'
   
   message1 = '-> divarray has been created'
   message2 = '-> size(divarray) = [' + $
-  strcompress(strjoin(size(divarray,/dim),','),/remove_all) + ']'
+    strcompress(strjoin(size(divarray,/dim),','),/remove_all) + ']'
   message = [message, message1, message2]
   log_book_update, event, message=message
-
+  
   return, divarray
 end
 
@@ -752,7 +756,7 @@ end
 ;-
 pro go_reduction, event
   compile_opt idl2
-  
+    
   widget_control, event.top, get_uvalue=global
   
   message = ['> Running reduction: ']
@@ -799,7 +803,7 @@ pro go_reduction, event
   SD_d = get_d_sd(event) ;mm
   MD_d = get_d_md(event) ;mm
   
-  qxwidth = float(get_qxwidth(event)) 
+  qxwidth = float(get_qxwidth(event))
   tnum = fix(get_tnum(event))
   
   (*global).SD_d = SD_d
@@ -971,31 +975,31 @@ pro go_reduction, event
     qxbins = qxbins, $
     qzbins = qzbins)
     
-    offset = 50
-
-    final_plot, event=event, $
+  offset = 50
+  
+  final_plot, event=event, $
     offset = offset, $
-;    data = smooth(alog(divarray+1),5),$
+    ;    data = smooth(alog(divarray+1),5),$
     data = divarray,$
     x_axis = qxvec,$
     y_axis = qzvec,$
     default_loadct = 5, $
-;    default_scale_settings = default_scale_settings, $
-;    current_plot_setting = current_plot_setting, $
-;    Data_x = Data_x, $
-;    Data_y = Data_y, $ ;Data_y
-;    start_pixel = start_pixel, $
+    ;    default_scale_settings = default_scale_settings, $
+    ;    current_plot_setting = current_plot_setting, $
+    ;    Data_x = Data_x, $
+    ;    Data_y = Data_y, $ ;Data_y
+    ;    start_pixel = start_pixel, $
     main_base_uname = 'main_base'
     
-;  window, 1
-;  contour, smooth(alog(divarray+1),5), $
-;    Qxvec, $
-;    Qzvec, $
-;    /fill, $
-;    nlev=200, $
-;    charsi=1.5, $
-;    xtitle='QX', $
-;    ytitle='QZ'
+  ;  window, 1
+  ;  contour, smooth(alog(divarray+1),5), $
+  ;    Qxvec, $
+  ;    Qzvec, $
+  ;    /fill, $
+  ;    nlev=200, $
+  ;    charsi=1.5, $
+  ;    xtitle='QX', $
+  ;    ytitle='QZ'
     
   update_progress_bar_percentage, event, ++processes, $
     total_number_of_processes

@@ -81,6 +81,8 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     list_data_nexus: ptr_new(0L), $ ;['/SNS/..../REF_L_3454.nxs','/SNS/...']
     norm_nexus: '',$
     
+    style_plot_lines: ptr_new(0L), $
+    
     ;id of log book window
     view_log_book_id : 0L, $
     
@@ -93,6 +95,29 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     output_path: '~/results/',$ ;used in the output tab
     input_path: '~/results/' })
     
+    
+  plot_symbol = ['+','*','.','D','tu','s','X','tu','td','H','S','o']
+  plot_color = ['b','r','g','c','m','y','k']
+  plot_linestyle = ['-',':','--','-.','-:','__']
+  
+  sz1 = n_elements(plot_symbol)
+  sz2 = n_elements(plot_color)
+  sz3 = n_elements(plot_linestyle)
+  
+  style_plot_lines = strarr(sz1*sz2*sz3)
+  index=0
+  for i=0,sz1-1 do begin
+    for j=0,sz3-1 do begin
+      for k=0,sz2-1 do begin
+        style_plot_lines[index] = plot_symbol[i] + $
+          plot_color[k] + $
+          plot_linestyle[j]
+        index++
+      endfor
+    endfor
+  endfor
+  (*(*global).style_plot_lines) = style_plot_lines
+  
   log_book = ['------------------------------------------------------------',$
     'Log Book of SNS_offpsec',' Application started at: ' + date]
   (*(*global).full_log_book) = log_book
