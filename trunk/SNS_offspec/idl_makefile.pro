@@ -56,6 +56,7 @@ cd, CurrentFolder
 .run final_plot_eventcb.pro
 .run cursor_info_base.pro
 .run menu_eventcb.pro
+.run counts_vs_axis_base.pro
 
 .run sos.pro
 .run sos_cleanup.pro

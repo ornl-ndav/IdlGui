@@ -937,9 +937,9 @@ pro final_plot, main_base=main_base, $
     congrid_xcoeff: 0., $ ;x coeff used in the congrid function to plot main data
     congrid_ycoeff: 0., $ ;y coeff used in the congrid function to plot main data
     
-    ;    plot_setting1: plot_setting1,$
-    ;    plot_setting2: plot_setting2,$
-    ;    plot_setting: current_plot_setting,$ ;untouched or interpolated
+    ;plot_setting1: plot_setting1,$
+    ;plot_setting2: plot_setting2,$
+    ;plot_setting: current_plot_setting,$ ;untouched or interpolated
     
     main_event: event})
     
