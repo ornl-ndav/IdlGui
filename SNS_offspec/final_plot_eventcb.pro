@@ -445,7 +445,9 @@ pro zoom_selection, event
     default_loadct = (*global_plot).default_loadct, $
     ;    default_scale_settings = default_scale_settings, $
     default_plot_size = (*global_plot).default_plot_size, $
-    main_base_uname = 'final_plot_base'
+    main_base_uname = 'final_plot_base', $
+    smooth_coefficient = (*global_plot).smooth_coefficient
+    
 ;    current_plot_setting = current_plot_setting, $
 ;    Data_x = Data_x, $
 ;    Data_y = Data_y, $ ;Data_y

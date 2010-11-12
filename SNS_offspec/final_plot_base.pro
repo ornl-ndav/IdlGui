@@ -206,8 +206,8 @@ pro refresh_plot, event, recalculate=recalculate
   
   loadct, (*global_plot).default_loadct, /silent
   
-  ;tvscl, transpose(cData)
-  tvscl, cData
+  smooth_coefficient = (*global_plot).smooth_coefficient
+  tvscl, smooth(cData, smooth_coefficient)
   
   save_background, event=event
   
@@ -434,16 +434,16 @@ compile_opt idl2
   ;get old smooth coefficient
   old_smooth_coefficient = $
   strcompress((*global_plot).smooth_coefficient,/remove_all)   
-  old_uname = 'smooth_coefficient_' + old_smooth
+  old_uname = 'smooth_coefficient_' + old_smooth_coefficient
   label = getValue(event=event, uname=old_uname)
   
   ;remove keep central part
   raw_label1 = strsplit(label,'>',/regex,/extract)
-  raw_label2 = strsplit(raw_label1[1],'<',/regex,/extract)
+  raw_label2 = strsplit(raw_label1[0],'<',/regex,/extract)
   raw_label = strcompress(raw_label2[0],/remove_all)
   
   ;put it back
-  putValue, event=event, old_uname, raw_label
+  putValue, event=event, old_uname, '  ' + raw_label
   
   ;change value of new smooth
   new_label = getValue(event=event, uname=new_uname)
@@ -454,7 +454,7 @@ compile_opt idl2
   
   ;save new smooth
   new_uname_array = strsplit(new_uname,'_',/extract)
-  (*global_plot).smooth_coefficient = fix(new_uname_array[1])
+  (*global_plot).smooth_coefficient = fix(new_uname_array[2])
   
   ;replot
   refresh_plot, event, recalculate=1
@@ -647,8 +647,6 @@ pro final_plot_gui, wBase, $
     value = 'Smooth',$
     /menu)
     
-  if (~keyword_set(smooth_coefficient)) then smooth_coefficient = 1
-  
   for i=1,10 do begin
     
     if (i eq 1) then begin 
@@ -934,7 +932,8 @@ pro final_plot, main_base=main_base, $
     x_axis = x_axis, $
     y_axis = y_axis, $
     data = data, $
-    main_base_uname = main_base_uname
+    main_base_uname = main_base_uname, $
+    smooth_coefficient = smooth_coefficient
     
   compile_opt idl2
   
@@ -948,6 +947,7 @@ pro final_plot, main_base=main_base, $
   
   if (~keyword_set(default_plot_size)) then default_plot_size = [600,600]
   if (~keyword_set(default_scale_setting)) then default_scale_setting = 1 ;log by default
+  if (~keyword_set(smooth_coefficient)) then smooth_coefficient = 1
   
   ;build gui
   wBase = ''
@@ -959,7 +959,8 @@ pro final_plot, main_base=main_base, $
     colorbar_xsize, $
     current_plot_setting = current_plot_setting, $
     scale_setting = default_scale_setting,$
-    default_plot_size = default_plot_size
+    default_plot_size = default_plot_size, $
+    smooth_coefficient = smooth_coefficient
   ;(*global).auto_scale_plot_base = wBase
     
   WIDGET_CONTROL, wBase, /REALIZE
@@ -995,7 +996,7 @@ pro final_plot, main_base=main_base, $
     colorbar_xsize: colorbar_xsize,$
     default_loadct: default_loadct, $ ;prism by default
     default_scale_setting: default_scale_setting, $ ;lin or log z-axis
-    smooth_coefficient: 1,$
+    smooth_coefficient: smooth_coefficient,$
 
     border: border, $ ;border of main plot (space reserved for scale)
     
@@ -1085,7 +1086,7 @@ pro final_plot, main_base=main_base, $
   widget_control, id, GET_VALUE = plot_id
   wset, plot_id
   ;tvscl, transpose(cData)
-  tvscl, cData
+  tvscl, smooth(cData,smooth_coefficient)
   
   ;Scale
   zmin = 0
