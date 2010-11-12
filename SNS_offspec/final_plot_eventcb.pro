@@ -77,6 +77,8 @@ function retrieve_data_x_value, event
     return, 'N/A'
   endif
   
+  
+  
   x_device = event.x
   congrid_xcoeff = (*global_plot).congrid_xcoeff
   xrange = float((*global_plot).xrange) ;min and max pixels
@@ -144,14 +146,23 @@ function retrieve_data_z_value, event
   
   data = (*(*global_plot).data_linear) ;[51,65] where 51 is #pixels
   
-  xdata_max = (size(data))[2]
-  ydata_max = (size(data))[1]
+  xdata_max = (size(data))[1]
+  ydata_max = (size(data))[2]
   
   congrid_xcoeff = (*global_plot).congrid_xcoeff 
   congrid_ycoeff = (*global_plot).congrid_ycoeff 
   
   xdata = fix(float(event.x) * float(xdata_max) / congrid_xcoeff)
   ydata = fix(float(event.y) * float(ydata_max) / congrid_ycoeff)
+
+;; Debugging code
+;  print, '(congrid_xcoeff,congrid_ycoeff)=(' + strcompress(congrid_xcoeff,/remove_all) + $
+;  ',' + strcompress(congrid_ycoeff,/remove_all) + ')'
+;  print, '(xdata,ydata)=(' + strcompress(xdata,/remove_all) + $
+;  ',' + strcompress(ydata,/remove_all) + ')'
+;  print, '(xdata_max,ydata_max)=(' + strcompress(xdata_max,/remove_all) + $
+;  ',' + strcompress(ydata_max,/remove_all) + ')'
+;  print
   
   return, data[xdata,ydata]
   
@@ -575,6 +586,7 @@ pro draw_eventcb, event
       widget_info(counts_vs_yaxis_plot_id,/valid_id) ne 0) then begin
       
       if ((*global_plot).left_click) then begin
+      
       endif else begin
         refresh_plot, event
       endelse
@@ -607,6 +619,7 @@ pro draw_eventcb, event
       ;if x,y and counts base is on, shows live values of x,y and counts
       if (widget_info(info_base, /valid_id) ne 0) then begin
         na = 'N/A'
+        refresh_plot, event
         putValue, base=info_base, 'cursor_info_x_value_uname', na
         putValue, base=info_base, 'cursor_info_y_value_uname', na
         putValue, base=info_base, 'cursor_info_z_value_uname', na
