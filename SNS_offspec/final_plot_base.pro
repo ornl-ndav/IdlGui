@@ -416,6 +416,53 @@ end
 
 ;+
 ; :Description:
+;    This procedure is reached when any of the smooth button has been 
+;    clicked. The main purpose of this procedure is to change the label
+;    of the newly clicked button to '> value <'
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro smooth_coefficient_eventcb, event
+compile_opt idl2
+
+  new_uname = widget_info(event.id, /uname)
+  widget_control,event.top,get_uvalue=global_plot
+  
+  ;get old smooth coefficient
+  old_smooth_coefficient = $
+  strcompress((*global_plot).smooth_coefficient,/remove_all)   
+  old_uname = 'smooth_coefficient_' + old_smooth
+  label = getValue(event=event, uname=old_uname)
+  
+  ;remove keep central part
+  raw_label1 = strsplit(label,'>',/regex,/extract)
+  raw_label2 = strsplit(raw_label1[1],'<',/regex,/extract)
+  raw_label = strcompress(raw_label2[0],/remove_all)
+  
+  ;put it back
+  putValue, event=event, old_uname, raw_label
+  
+  ;change value of new smooth
+  new_label = getValue(event=event, uname=new_uname)
+  new_label = strcompress(new_label,/remove_all)
+  ;add selection string
+  new_label = '> ' + new_label + ' <'
+  putValue, event=event, new_uname, new_label
+  
+  ;save new smooth
+  new_uname_array = strsplit(new_uname,'_',/extract)
+  (*global_plot).smooth_coefficient = fix(new_uname_array[1])
+  
+  ;replot
+  refresh_plot, event, recalculate=1
+
+end
+
+;+
+; :Description:
 ;   create the base
 ;
 ; :Params:
@@ -435,7 +482,8 @@ pro final_plot_gui, wBase, $
     plot_setting2 = plot_setting2, $
     current_plot_setting = current_plot_setting, $
     scale_setting = scale_setting, $
-    default_plot_size = default_plot_size
+    default_plot_size = default_plot_size, $
+    smooth_coefficient = smooth_coefficient
     
   compile_opt idl2
   
@@ -594,6 +642,32 @@ pro final_plot_gui, wBase, $
     event_pro = 'local_switch_axes_type',$
     uname = 'local_scale_setting_log')
     
+  ;smooth
+  smooth = widget_button(bar1,$
+    value = 'Smooth',$
+    /menu)
+    
+  if (~keyword_set(smooth_coefficient)) then smooth_coefficient = 1
+  
+  for i=1,10 do begin
+    
+    if (i eq 1) then begin 
+    _value = 'None'
+    endif else begin
+    _value = strcompress(i,/remove_all)
+    endelse
+    
+    if (i eq smooth_coefficient) then begin
+      value = '> ' + _value + ' <'
+    endif else begin
+      value = '  ' + _value + '  '
+    endelse
+    coeff = widget_button(smooth, $
+      value = value, $
+      event_pro = 'smooth_coefficient_eventcb', $
+      uname = 'smooth_coefficient_' + strcompress(i,/remove_all))
+  endfor
+  
   info = widget_button(bar1, $
     value = 'Infos',$
     /menu)
@@ -619,8 +693,9 @@ pro final_plot_gui, wBase, $
     event_pro = 'show_counts_vs_yaxis',$
     uname = 'show_counts_vs_yaxis_uname')
     
+  
 ;-------- end of menu
-    
+  
 end
 
 ;+
@@ -920,6 +995,8 @@ pro final_plot, main_base=main_base, $
     colorbar_xsize: colorbar_xsize,$
     default_loadct: default_loadct, $ ;prism by default
     default_scale_setting: default_scale_setting, $ ;lin or log z-axis
+    smooth_coefficient: 1,$
+
     border: border, $ ;border of main plot (space reserved for scale)
     
     Qx_axis: fltarr(2),$  ;[start, end]
