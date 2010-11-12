@@ -1,8 +1,0 @@
-cd, current=current_path
-			
-cd,'utilities'
-.run IDLnexusUtilities__define.pro
-.run IDLxmlParser__define.pro
-
-cd,current_path
-.run test.pro
