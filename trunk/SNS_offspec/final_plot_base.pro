@@ -183,19 +183,19 @@ pro refresh_plot, event, recalculate=recalculate
   Data = (*(*global_plot).data)
   new_xsize = (*global_plot).xsize
   new_ysize = (*global_plot).ysize
-;  border = (*global_plot).border
-;  colorbar_xsize = (*global_plot).colorbar_xsize
+  ;  border = (*global_plot).border
+  ;  colorbar_xsize = (*global_plot).colorbar_xsize
   
   id = WIDGET_INFO(event.top, FIND_BY_UNAME='draw')
   draw_geometry = WIDGET_INFO(id,/GEOMETRY)
   xsize = draw_geometry.xsize
   ysize = draw_geometry.ysize
   
-;  if ((*global_plot).plot_setting eq 'untouched') then begin
-    cData = congrid(Data, xsize, ysize)
-;  endif else begin
-;    cData = congrid(Data, ysize, xsize,/interp)
-;  endelse
+  ;  if ((*global_plot).plot_setting eq 'untouched') then begin
+  cData = congrid(Data, xsize, ysize)
+  ;  endif else begin
+  ;    cData = congrid(Data, ysize, xsize,/interp)
+  ;  endelse
   (*global_plot).congrid_xcoeff = xsize
   (*global_plot).congrid_ycoeff = ysize
   
@@ -301,7 +301,7 @@ end
 ;
 ; :Author: j35
 ;-
-pro px_vs_tof_widget_killed, global_plot
+pro final_plot_base_killed, global_plot
   compile_opt idl2
   
   main_event = (*global_plot).main_event
@@ -443,7 +443,7 @@ pro final_plot_gui, wBase, $
   main_base_yoffset = main_base_geometry.yoffset
   main_base_xsize = main_base_geometry.xsize
   main_base_ysize = main_base_geometry.ysize
-
+  
   xsize = default_plot_size[0]
   ysize = default_plot_size[1]
   
@@ -472,7 +472,7 @@ pro final_plot_gui, wBase, $
     mbar = bar1,$
     GROUP_LEADER = ourGroup)
     
-     draw = widget_draw(wbase,$
+  draw = widget_draw(wbase,$
     xoffset = border,$
     yoffset = border,$
     scr_xsize = xsize-2*border,$
@@ -501,21 +501,21 @@ pro final_plot_gui, wBase, $
     value = 'Type ',$
     /menu)
     
-;  if (current_plot_setting eq 'untouched') then begin
-;    set2_value = '*  ' + plot_setting1
-;    set1_value = '   ' + plot_setting2
-;  endif else begin
-;    set2_value = '   ' + plot_setting1
-;    set1_value = '*  ' + plot_setting2
-;  endelse
-;  
-;  set2 = widget_button(mPlot, $
-;    value = set2_value,$
-;    uname = 'plot_setting_untouched')
-;    
-;  set1 = widget_button(mPlot, $
-;    value = set1_value,$
-;    uname = 'plot_setting_interpolated')
+  ;  if (current_plot_setting eq 'untouched') then begin
+  ;    set2_value = '*  ' + plot_setting1
+  ;    set1_value = '   ' + plot_setting2
+  ;  endif else begin
+  ;    set2_value = '   ' + plot_setting1
+  ;    set1_value = '*  ' + plot_setting2
+  ;  endelse
+  ;
+  ;  set2 = widget_button(mPlot, $
+  ;    value = set2_value,$
+  ;    uname = 'plot_setting_untouched')
+  ;
+  ;  set1 = widget_button(mPlot, $
+  ;    value = set1_value,$
+  ;    uname = 'plot_setting_interpolated')
     
   list_loadct = ['B-W Linear',$
     'Blue/White',$
@@ -571,7 +571,7 @@ pro final_plot_gui, wBase, $
       uname = 'loadct_' + strcompress(i,/remove_all),$
       event_pro = 'change_loadct')
   endfor
-
+  
   if (scale_setting eq 0) then begin
     set1_value = '*  linear'
     set2_value = '   logarithmic'
@@ -619,7 +619,7 @@ pro final_plot_gui, wBase, $
     event_pro = 'show_counts_vs_yaxis',$
     uname = 'show_counts_vs_yaxis_uname')
     
-  ;-------- end of menu
+;-------- end of menu
     
 end
 
@@ -657,7 +657,7 @@ pro plot_beam_center_scale, base=base, event=event
   x_range = (*global_plot).xrange
   min_x = x_range[0]
   max_x = x_range[1]
- 
+  
   y_range = (*global_plot).yrange
   min_y = y_range[0]
   max_y = y_range[1]
@@ -665,9 +665,9 @@ pro plot_beam_center_scale, base=base, event=event
   ;determine the number of xaxis data to show
   geometry = widget_info(id_base,/geometry)
   xsize = geometry.scr_xsize
-
-;  xticks = fix(xsize / 100)
-;  yticks = (max_y - min_y)
+  
+  ;  xticks = fix(xsize / 100)
+  ;  yticks = (max_y - min_y)
   xticks = 8
   
   xmargin = 6.6
@@ -724,12 +724,13 @@ pro final_plot_cleanup, tlb
   
   widget_control, tlb, get_uvalue=global_plot, /no_copy
   
-  ;px_vs_tof_widget_killed, global_plot
+  final_plot_base_killed, global_plot
   
   if (n_elements(global_plot) eq 0) then return
   
   ptr_free, (*global_plot).data
   ptr_free, (*global_plot).data_linear
+  ptr_free, (*global_plot).background
   
   ptr_free, global_plot
   
@@ -857,7 +858,7 @@ pro final_plot, main_base=main_base, $
     current_plot_setting = current_plot_setting, $
     x_axis = x_axis, $
     y_axis = y_axis, $
-    data = data, $ 
+    data = data, $
     main_base_uname = main_base_uname
     
   compile_opt idl2
@@ -885,9 +886,9 @@ pro final_plot, main_base=main_base, $
     scale_setting = default_scale_setting,$
     default_plot_size = default_plot_size
   ;(*global).auto_scale_plot_base = wBase
-  
+    
   WIDGET_CONTROL, wBase, /REALIZE
-
+  
   global_plot = PTR_NEW({ wbase: wbase,$
     global: global, $
     
@@ -907,20 +908,20 @@ pro final_plot, main_base=main_base, $
     data_linear: ptr_new(0L), $
     x_axis: x_axis, $ ; [-0.004, -0.003, -0.002...]
     y_axis: y_axis, $ ; [0.0, 0.1, 0.2, 0.3]
-
-;    full_x_axis: full_x_axis, $ [-0.004, -0.003, -0.002...]
-;    full_y_axis: full_y_axis, $ [0.0, 0.1, 0.2, 0.3]
-
+    
+    ;    full_x_axis: full_x_axis, $ [-0.004, -0.003, -0.002...]
+    ;    full_y_axis: full_y_axis, $ [0.0, 0.1, 0.2, 0.3]
+    
     xsize: default_plot_size[0],$
     ysize: default_plot_size[1],$
-
+    
     nbr_pixel: 0L,$
-
+    
     colorbar_xsize: colorbar_xsize,$
     default_loadct: default_loadct, $ ;prism by default
     default_scale_setting: default_scale_setting, $ ;lin or log z-axis
     border: border, $ ;border of main plot (space reserved for scale)
-
+    
     Qx_axis: fltarr(2),$  ;[start, end]
     delta_Qx: 0., $ ;Qx increment
     
@@ -936,71 +937,71 @@ pro final_plot, main_base=main_base, $
     congrid_xcoeff: 0., $ ;x coeff used in the congrid function to plot main data
     congrid_ycoeff: 0., $ ;y coeff used in the congrid function to plot main data
     
-;    plot_setting1: plot_setting1,$
-;    plot_setting2: plot_setting2,$
-;    plot_setting: current_plot_setting,$ ;untouched or interpolated
+    ;    plot_setting1: plot_setting1,$
+    ;    plot_setting2: plot_setting2,$
+    ;    plot_setting: current_plot_setting,$ ;untouched or interpolated
     
     main_event: event})
     
-    (*(*global_plot).data) = data
-    (*(*global_plot).data_linear) = data
-    
-    xrange = [x_axis[0], x_axis[-1]]
-    (*global_plot).xrange = xrange
-    
-    yrange = [y_axis[0], y_axis[-1]]
-    (*global_plot).yrange = yrange
-    
+  (*(*global_plot).data) = data
+  (*(*global_plot).data_linear) = data
+  
+  xrange = [x_axis[0], x_axis[-1]]
+  (*global_plot).xrange = xrange
+  
+  yrange = [y_axis[0], y_axis[-1]]
+  (*global_plot).yrange = yrange
+  
   WIDGET_CONTROL, wBase, SET_UVALUE = global_plot
   
   XMANAGER, "final_plot", wBase, GROUP_LEADER = ourGroup, /NO_BLOCK, $
     cleanup = 'final_plot_cleanup'
     
-;  ;retrieve scale
-;  ;  Data_x = *pData_x[file_index,spin_state]
-;  start_tof = Data_x[0]
-;  end_tof = Data_x[-1]
-;  delta_tof = Data_x[1]-Data_x[0]
-;  (*global_plot).delta_tof = delta_tof
-;  tof_axis = (*global_plot).tof_axis
-;  tof_axis[0] = start_tof
-;  tof_axis[1] = end_tof + delta_tof
-;  (*global_plot).tof_axis = tof_axis
-;  
-;  ;retrieve the data to plot
-;  ;  Data = *pData_y[file_index, spin_state]
-;  (*(*global_plot).data_linear) = Data_y
-;  
+  ;  ;retrieve scale
+  ;  ;  Data_x = *pData_x[file_index,spin_state]
+  ;  start_tof = Data_x[0]
+  ;  end_tof = Data_x[-1]
+  ;  delta_tof = Data_x[1]-Data_x[0]
+  ;  (*global_plot).delta_tof = delta_tof
+  ;  tof_axis = (*global_plot).tof_axis
+  ;  tof_axis[0] = start_tof
+  ;  tof_axis[1] = end_tof + delta_tof
+  ;  (*global_plot).tof_axis = tof_axis
+  ;
+  ;  ;retrieve the data to plot
+  ;  ;  Data = *pData_y[file_index, spin_state]
+  ;  (*(*global_plot).data_linear) = Data_y
+  ;
   lin_log_data, base=wBase
-;  
-;  ;number of pixels
-;  (*global_plot).nbr_pixel = (size(data_y))[1] ;nbr of pixels to plot
-;  
+  ;
+  ;  ;number of pixels
+  ;  (*global_plot).nbr_pixel = (size(data_y))[1] ;nbr of pixels to plot
+  ;
   Data = (*(*global_plot).data)
   id = WIDGET_INFO(wBase, FIND_BY_UNAME='draw')
   draw_geometry = WIDGET_INFO(id,/GEOMETRY)
   xsize = draw_geometry.xsize
   ysize = draw_geometry.ysize
-;  if ((*global_plot).plot_setting eq 'untouched') then begin
-    cData = congrid(Data, xsize, ysize)
-;  endif else begin
-;    cData = congrid(Data, ysize, xsize,/interp)
-;  endelse
+  ;  if ((*global_plot).plot_setting eq 'untouched') then begin
+  cData = congrid(Data, xsize, ysize)
+  ;  endif else begin
+  ;    cData = congrid(Data, ysize, xsize,/interp)
+  ;  endelse
   
   id = widget_info(wBase, find_by_uname='final_plot_base')
   geometry = widget_info(id,/geometry)
   _xsize = geometry.scr_xsize
   _ysize = geometry.scr_ysize
-
-;  (*global_plot).congrid_xcoeff = _xsize-2*border-colorbar_xsize
-;  (*global_plot).congrid_ycoeff = _ysize-2*border
-
+  
+  ;  (*global_plot).congrid_xcoeff = _xsize-2*border-colorbar_xsize
+  ;  (*global_plot).congrid_ycoeff = _ysize-2*border
+  
   (*global_plot).congrid_xcoeff = xsize
   (*global_plot).congrid_ycoeff = ysize
-
-;  DEVICE, DECOMPOSED = 0
-;  loadct, default_loadct, /SILENT
-;  
+  
+  ;  DEVICE, DECOMPOSED = 0
+  ;  loadct, default_loadct, /SILENT
+  ;
   plot_beam_center_scale, base=wBase
   
   id = widget_info(wBase,find_by_uname='draw')
@@ -1019,7 +1020,7 @@ pro final_plot, main_base=main_base, $
   (*global_plot).zrange = zrange
   
   plot_colorbar, base=wBase, zmin, zmax, type=default_scale_settings
-
+  
   pre = '>  > >> '
   post = ' << <  <'
   uname = 'loadct_' + strcompress(default_loadct,/remove_all)
