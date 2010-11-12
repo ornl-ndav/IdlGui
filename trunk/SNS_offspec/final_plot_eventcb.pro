@@ -222,10 +222,22 @@ pro plot_counts_vs_xaxis, event, clear=clear
   
   yaxis_type = (*global_plot).counts_vs_xaxis_yaxis_type
   if (yaxis_type eq 0) then begin
-    plot, x_axis, data[*,ydata], xtitle='TOF (!4l!Xs)', ytitle='Counts'
+    plot, x_axis, data[*,ydata], xtitle='Qx', ytitle='Counts'
   endif else begin
+  
+    catch,error
+    if (error ne 0) then begin
+      catch,/cancel
+      erase
+      return
+    endif
+    
+    ;remove the 0 values
+    nan_array = where(data eq 0)
+    data[nan_array] = !values.f_nan
+    
     plot, x_axis, data[*,ydata], $
-      xtitle='TOF (!4l!Xs)', $
+      xtitle='Qx', $
       ytitle='Counts', $
       /ylog
   endelse
@@ -234,7 +246,7 @@ end
 
 ;+
 ; :Description:
-;    display the counts vs pixel (or angle) plot
+;    display the counts vs Qz
 ;    in the new widget_base on the right of the main GUI
 ;
 ; :Params:
@@ -258,32 +270,41 @@ pro plot_counts_vs_yaxis, event, clear=clear
     return
   endif
   
-  data = (*(*global_plot).data_linear) ;[51,65] where 51 is #pixels
+  data = (*(*global_plot).data_linear)
   
-  xdata_max = (size(data))[2]
-  ydata_max = (size(data))[1]
+  xdata_max = (size(data))[1]
+  ydata_max = (size(data))[2]
   
-  congrid_xcoeff = (*global_plot).congrid_ycoeff  ;using ycoeff because of transpose
-  congrid_ycoeff = (*global_plot).congrid_xcoeff  ;using xcoeff because of transpose
+  congrid_xcoeff = (*global_plot).congrid_xcoeff
+  congrid_ycoeff = (*global_plot).congrid_ycoeff
   
-  xdata = fix(float(event.x) * float(xdata_max) / congrid_xcoeff) ;tof
-  ydata = fix(float(event.y) * float(ydata_max) / congrid_ycoeff) ;pixel
+  xdata = fix(float(event.x) * float(xdata_max) / congrid_xcoeff) ;qx
+  ydata = fix(float(event.y) * float(ydata_max) / congrid_ycoeff) ;qz
   
   sz_y = (size(data))[2]
-  if (xdata ge sz_y) then begin
+  if (ydata ge sz_y) then begin
     erase
     return
   endif
   
-  nbr_pixel = n_elements(data[*,xdata])
-  start_pixel = (*global_plot).start_pixel
-  xrange = indgen(nbr_pixel) + start_pixel
+  xrange = (*global_plot).y_axis
   
   yaxis_type = (*global_plot).counts_vs_yaxis_yaxis_type
   if (yaxis_type eq 0) then begin
-    plot, xrange, data[*,xdata], xtitle='Pixel', ytitle='Counts'
+    plot, xrange, data[xdata,*], xtitle='Qz', ytitle='Counts'
   endif else begin
-    plot, xrange, data[*,xdata], xtitle='Pixel', ytitle='Counts',/ylog
+  
+    catch,error
+    if (error ne 0) then begin
+      catch,/cancel
+      erase
+      return
+    endif
+    
+    ;remove the 0 values
+    nan_array = where(data eq 0)
+    data[nan_array] = !values.f_nan
+    plot, xrange, data[xdata,*], xtitle='Qz', ytitle='Counts',/ylog
   endelse
   
 end
