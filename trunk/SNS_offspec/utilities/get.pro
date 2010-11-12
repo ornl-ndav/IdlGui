@@ -160,76 +160,257 @@ function getSequence, from=left, to=right
   ENDELSE
 END
 
+;+
+; :Description:
+;    gets and returns size of Qz bins
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
 function get_bins_qz, event
-compile_opt idl2
-return, getValue(event=event, uname='bins_qz')
+  compile_opt idl2
+  return, getValue(event=event, uname='bins_qz')
 end
 
+;+
+; :Description:
+;    gets and returns size of Qx bins
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
 function get_bins_qx, event
-compile_opt idl2
-return, getValue(event=event, uname='bins_qx')
+  compile_opt idl2
+  return, getValue(event=event, uname='bins_qx')
 end
 
+;+
+; :Description:
+;    gets and returns Qx min
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
 function get_ranges_qx_min, event
-compile_opt idl2
-return, getValue(event=event, uname='ranges_qx_min')
+  compile_opt idl2
+  return, getValue(event=event, uname='ranges_qx_min')
 end
 
+;+
+; :Description:
+;    gets and returns Qz min
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
 function get_ranges_qz_min, event
-compile_opt idl2
-return, getValue(event=event, uname='ranges_qz_min')
+  compile_opt idl2
+  return, getValue(event=event, uname='ranges_qz_min')
 end
 
+;+
+; :Description:
+;    gets and returns tof min
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
 function get_tof_min, event
-compile_opt idl2
-return, getValue(event=event, uname='tof_min')
+  compile_opt idl2
+  return, getValue(event=event, uname='tof_min')
 end
 
+;+
+; :Description:
+;    gets and returns qx max
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
 function get_ranges_qx_max, event
-compile_opt idl2
-return, getValue(event=event, uname='ranges_qx_max')
+  compile_opt idl2
+  return, getValue(event=event, uname='ranges_qx_max')
 end
 
+;+
+; :Description:
+;    gets and returns Qz max
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
 function get_ranges_qz_max, event
-compile_opt idl2
-return, getValue(event=event, uname='ranges_qz_max')
+  compile_opt idl2
+  return, getValue(event=event, uname='ranges_qz_max')
 end
 
+;+
+; :Description:
+;    gets and returns tof max
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
 function get_tof_max, event
-compile_opt idl2
-return, getValue(event=event, uname='tof_max')
+  compile_opt idl2
+  return, getValue(event=event, uname='tof_max')
 end
 
+;+
+; :Description:
+;    gets and returns center pixel
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
 function get_center_pixel, event
-compile_opt idl2
-return, getValue(event=event, uname='center_pixel')
+  compile_opt idl2
+  return, getValue(event=event, uname='center_pixel')
 end
 
+;+
+; :Description:
+;    gets and returns pixel size
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
 function get_pixel_size, event
-compile_opt idl2
-return, getValue(event=event, uname='pixel_size')
+  compile_opt idl2
+  return, getValue(event=event, uname='pixel_size')
 end
 
+;+
+; :Description:
+;    gets and returns pixel min
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
 function get_pixel_min, event
-compile_opt idl2
-return, getValue(event=event, uname='pixel_min')
+  compile_opt idl2
+  return, getValue(event=event, uname='pixel_min')
 end
 
+;+
+; :Description:
+;    gets and returns pixel max
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
 function get_pixel_max, event
-compile_opt idl2
-return, getValue(event=event, uname='pixel_max')
+  compile_opt idl2
+  return, getValue(event=event, uname='pixel_max')
 end
 
+;+
+; :Description:
+;    gets and returns distance sample detector
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
 function get_d_sd, event
-compile_opt idl2
-return, getValue(event=event, uname='d_sd_uname')
+  compile_opt idl2
+  return, getValue(event=event, uname='d_sd_uname')
 end
 
+;+
+; :Description:
+;    gets and returns distance moderator detector
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
 function get_d_md, event
-compile_opt idl2
-return, getValue(event=event, uname='d_md_uname')
+  compile_opt idl2
+  return, getValue(event=event, uname='d_md_uname')
 end
 
+;+
+; :Description:
+;    gets and returns qx width
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+function get_qxwidth, event
+  compile_opt idl2
+  return, getValue(event=event, uname='qxwidth_uname')
+end
+
+;+
+; :Description:
+;    gets and returns tnum
+;    Number of data points to remove on both side of spectrum when
+;    calculating the scaling factors. 
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+function get_tnum, event
+  compile_opt idl2
+  return, getValue(event=event, uname='tnum_uname')
+end
 
 
 
