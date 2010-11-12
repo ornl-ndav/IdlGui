@@ -126,12 +126,15 @@ pro design_tabs, MAIN_BASE, global
   row1col1 = widget_base(row1,$
     /column)
     
+;  angstrom = '!3' + string(197B) + '!X'  
   field1 = cw_field(row1col1,$
     /integer,$
     xsize = 6,$
     value = '500',$
     uname = 'bins_qx',$
+;    title = 'Bins:  Qx (' + string("305B) + ')')
     title = 'Bins:  Qx')
+;     title = 'Bins:  Qx (' + angstrom + ')')
   field2 = cw_field(row1col1,$
     xsize = 6,$
     /integer,$
@@ -222,7 +225,7 @@ pro design_tabs, MAIN_BASE, global
     title = '          max')
     
   space = widget_label(row2,$
-    value = '              ')
+    value = '     ')
     
   row2col2 = widget_base(row2,$
     /column)
@@ -238,6 +241,22 @@ pro design_tabs, MAIN_BASE, global
     value = '',$
     uname = 'd_md_uname',$
     title = 'Distance moderator to detector (mm) ')
+    
+  ;specular reflexion parameters
+  row2col3 = widget_base(row2,$
+  /column)
+  field1 = cw_field(row2col3,$
+  /floating,$
+  xsize = 10,$
+  value = '0.00005',$
+  uname = 'qxwidth_uname',$
+  title = '       Specular reflexion    QxWidth')
+  field2 = cw_field(row2col3,$
+  /integer,$
+  xsize = 5,$
+  value = '3',$
+  uname = 'tnum_uname',$
+  title = '                                tnum')
     
   ;progress bar and go button
   bottom_box = widget_base(_base1,$

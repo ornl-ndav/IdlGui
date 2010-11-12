@@ -565,6 +565,7 @@ end
 ;    qxvec
 ;    qzvec
 ;    qxwidth
+;    tnum
 ;
 ; :Author: j35
 ;-
@@ -575,7 +576,8 @@ function get_specular_scale, event=event, $
     QxQz_array = QxQz_array, $
     qxvec = qxvec, $
     qzvec = qzvec, $
-    qxwidth = qxwidth
+    qxwidth = qxwidth, $
+    tnum = tnum
   compile_opt idl2
   
   message = ['> Isolate specular region and create scaling array']
@@ -591,7 +593,7 @@ function get_specular_scale, event=event, $
   strcompress(strjoin(size(specular,/dim),','),/remove_all) + ']'
   
   ;trimmer
-  tnum=3
+  ;tnum=3
   trim=specular*0.0
   for loop=0,num-1 do begin
     list=where(specular[loop,*] ne 0)
@@ -797,6 +799,9 @@ pro go_reduction, event
   SD_d = get_d_sd(event) ;mm
   MD_d = get_d_md(event) ;mm
   
+  qxwidth = float(get_qxwidth(event)) 
+  tnum = fix(get_tnum(event))
+  
   (*global).SD_d = SD_d
   (*global).MD_d = MD_d
   
@@ -940,7 +945,7 @@ pro go_reduction, event
     
   ;number of steps is ----> 1
   ;extract specular reflections
-  qxwidth=0.00005
+  ;qxwidth=0.00005
   specular=make_array(num, qxbins)
   scale=make_array(num)
   scale = get_specular_scale(event=event, $
@@ -950,7 +955,8 @@ pro go_reduction, event
     QxQz_array = QxQz_array, $
     qxvec = qxvec, $
     qzvec = qzvec, $
-    qxwidth = qxwidth)
+    qxwidth = qxwidth, $
+    tnum = tnum)
     
   update_progress_bar_percentage, event, ++processes, $
     total_number_of_processes
