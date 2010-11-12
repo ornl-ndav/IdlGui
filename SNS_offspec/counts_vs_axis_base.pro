@@ -107,7 +107,7 @@ pro counts_vs_axis_yaxis_type, event
   
   xaxis_type = (*global_axis_plot).xaxis ;'tof' or 'pixel'
   parent_event = (*global_axis_plot).parent_event
-  if (xaxis_type eq 'tof') then begin
+  if (xaxis_type eq 'qx') then begin
     (*global_plot).counts_vs_xaxis_yaxis_type = default_yscale_settings
   endif else begin
     (*global_plot).counts_vs_yaxis_yaxis_type = default_yscale_settings
@@ -247,13 +247,13 @@ pro counts_vs_axis_base, event=event, $
   parent_base_geometry = WIDGET_INFO(id,/GEOMETRY)
   
   case (xaxis) of
-    'Qx': begin
+    'qx': begin
       yoffset = 20
       title = 'Counts vs Qx'
       plot_uname = 'counts_vs_xaxis_plot_uname'
       (*global_plot).counts_vs_xaxis_plot_uname = plot_uname
     end
-    'Qz': begin
+    'qz': begin
       yoffset = 40
       title = 'Counts vs Qz'
       plot_uname = 'counts_vs_yaxis_plot_uname'
@@ -275,8 +275,8 @@ pro counts_vs_axis_base, event=event, $
     ysize = ysize
     
   case (xaxis) of
-    'Qx': (*global_plot).counts_vs_xaxis_base = _base
-    'Qz': (*global_plot).counts_vs_yaxis_base = _base
+    'qx': (*global_plot).counts_vs_xaxis_base = _base
+    'qz': (*global_plot).counts_vs_yaxis_base = _base
     else:
   endcase
   
