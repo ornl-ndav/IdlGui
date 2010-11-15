@@ -74,6 +74,7 @@ function get_nexus, event=event, run_number=run_number
   if (~keyword_set(run_number)) then return, 'N/A'
   
   cmd = 'findnexus -i ' + instrument + ' ' + strcompress(run_number,/remove_all)
+  print, cmd
   spawn, cmd, full_nexus_name, err
   
   if (full_nexus_name[0] eq '') then return, 'N/A'

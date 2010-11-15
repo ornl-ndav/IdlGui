@@ -151,8 +151,8 @@ function getSequence, from=left, to=right
     return, ['']
   endif else begin
     on_ioerror, done
-    iLeft  = fix(left)
-    iRight = fix(right)
+    iLeft  = long(left)
+    iRight = long(right)
     sequence = indgen(iRight-iLeft+1)+iLeft
     return, strcompress(string(sequence),/remove_all)
     done:

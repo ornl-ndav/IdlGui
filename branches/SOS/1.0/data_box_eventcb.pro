@@ -128,6 +128,7 @@ pro create_list_of_nexus, event
   endwhile
   
   (*(*global).list_data_nexus) = list_data_nexus
+  print, list_data_nexus
   
   ;message for log book
   log_book_update, event, message = message
