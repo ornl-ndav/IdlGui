@@ -37,10 +37,17 @@ compile_opt idl2
 
 widget_control, event.top, get_uvalue=global
 
+message = '> Full reset of session !! ****'
+
 (*(*global).list_data_nexus) = !null
 (*(*global).list_data_runs) = !null
 (*global).norm_nexus = ''
 
 check_go_button, event
+
+putValue, event=event, 'd_sd_uname', ''
+putValue, event=event, 'd_md_uname', ''
+
+log_book_update, event, message=message
 
 end

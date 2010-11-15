@@ -259,14 +259,12 @@ pro design_tabs, MAIN_BASE, global
   row2col2 = widget_base(row2,$
     /column)
   field1 = cw_field(row2col2,$
-    /floating,$
     xsize = 10,$
     value = '',$
     uname = 'd_sd_uname',$
     title = '   Distance sample to detector (mm) ')
   field2 = cw_field(row2col2,$
     xsize = 10,$
-    /floating,$
     value = '',$
     uname = 'd_md_uname',$
     title = 'Distance moderator to detector (mm) ')
