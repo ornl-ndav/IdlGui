@@ -4,7 +4,6 @@ spawn, 'pwd', CurrentFolder
 IdlUtilitiesPath = "/utilities"
 
 cd, CurrentFolder + IDLUtilitiesPath
-.run colorbar.PRO
 .run get_ucams.pro
 .run fsc_color.pro
 .run get.pro
@@ -25,6 +24,7 @@ cd, CurrentFolder + '/SOS_GUI'
 
 ;build main routines and tests
 cd, CurrentFolder
+.run colorbar.pro
 .run IDLnexusUtilities__define.pro
 .run IDLxmlParser__define.pro
 .run conversion.pro
@@ -58,6 +58,10 @@ cd, CurrentFolder
 .run cursor_info_base.pro
 .run menu_eventcb.pro
 .run counts_vs_axis_base.pro
+.run main_base_event.pro
+
+;build all the iProcedures
+itResolve
 
 .run sos.pro
 .run sos_cleanup.pro

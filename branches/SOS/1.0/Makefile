@@ -4,6 +4,7 @@
 # Copy the VM programs in their final location
 
 all:
+	cp SOS.cfg .SOS.cfg
 	idl ./makefile.pro
 
 install:

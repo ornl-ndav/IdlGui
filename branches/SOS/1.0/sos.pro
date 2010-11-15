@@ -170,7 +170,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   ;=============================================================================
   ;send message to log current run of application
-  logger, APPLICATION=application, VERSION=version, UCAMS=ucams
+  ;logger, APPLICATION=application, VERSION=version, UCAMS=ucams
   
 END
 
