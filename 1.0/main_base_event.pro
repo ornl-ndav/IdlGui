@@ -87,6 +87,7 @@ PRO main_base_event, Event
       ;retrieve distances from first data nexus file loaded
       retrieve_data_nexus_distances, event=event
       widget_control, hourglass=0
+      check_go_button, event
     end
     
     ;Browse data button
@@ -94,6 +95,7 @@ PRO main_base_event, Event
       browse_data_button_event, event
       ;retrieve distances from first data nexus file loaded
       retrieve_data_nexus_distances, event=event
+      check_go_button, event
     end
     
     ;Normalization run number text field
@@ -101,11 +103,13 @@ PRO main_base_event, Event
       widget_control, /hourglass
       norm_run_number_event, event
       widget_control, hourglass=0
+      check_go_button, event
     end
     
     ;Browse norm button
     widget_info(wWidget, find_by_uname='norm_browse_button'): begin
       browse_norm_button_event, event
+      check_go_button, event
     end
     
     ;GO REDUCTION

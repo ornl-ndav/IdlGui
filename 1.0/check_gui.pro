@@ -28,114 +28,48 @@
 ;   promote products derived from this software without specific prior written
 ;   permission.
 ;
-; @author : j35 (bilheuxjm@ornl.gov)
+; @author : Erik Watkins
+;           (refashioned by j35@ornl.gov)
 ;
 ;==============================================================================
 
-;+
-; :Description:
-;    resize a widget
-;
-; :Params:
-;    event
-;    uname
-;    str_sz
-;
-; :Author: j35
-;-
-pro resize_widget, event, uname, str_sz
-  compile_opt idl2
-  
-  id = widget_info(event.top, find_by_uname=uname)
-  widget_control, id, xsize=str_sz*3
-  
+pro check_go_button, event
+compile_opt idl2
+
+widget_control, event.top, get_uvalue=global
+
+activate_go_button = 1
+list_data_nexus = (*(*global).list_data_nexus)
+sz = n_elements(list_data_nexus)
+if (sz eq 0) then begin
+activate_go_button = 0
+endif
+
+if (sz gt 1) then begin
+_label_data = ' data files loaded!'
+endif else begin
+_label_data = ' data file loaded!'
+endelse
+_label_data_message = strcompress(sz,/remove_all) + _label_data
+putValue, event=event, 'data_status_label', _label_data_message
+
+help, list_data_nexus
+print, list_data_nexus
+print, 'sz: ' , sz
+print
+
+
+norm_nexus = (*global).norm_nexus
+if (norm_nexus eq '') then begin
+activate_go_button = 0
+_label_norm = '0 norm file loaded!'
+endif else begin
+_label_norm = '1 norm file loaded!'
+endelse
+putValue, event=event, 'norm_status_label', _label_norm
+
+activate_button, event=event, $
+status= activate_go_button, $
+uname= 'go_button'
+
 end
-
-;+
-; :Description:
-;    Map the base given by the uname
-;
-; :Keywords:
-;    event
-;    map
-;    uname
-;
-; :Author: j35
-;-
-pro mapBase, event=event, status=status, uname=uname
-  compile_opt idl2
-  
-  id = widget_info(event.top, find_by_uname=uname)
-  widget_control, id, map=status
-  
-end
-
-;+
-; :Description:
-;    Activate or not a button
-
-; :Keywords:
-;    event
-;    status
-;    uname
-;    main_base
-;
-; :Author: j35
-;-
-pro activate_button, event=event, $
-status=status, $
-uname=uname, $
-main_base=main_base
-  compile_opt idl2
-  
-  if (keyword_set(event)) then begin
-    id = widget_info(event.top, find_by_uname=uname)
-  endif else begin
-    id = widget_info(main_base, find_by_uname=uname)
-  endelse
-  widget_control, id, sensitive=status
-  
-end
-
-;+
-; :Description:
-;    Display a dialog message about a problem defined in the
-;    arguments.
-;
-; :Keywords:
-;    event
-;    message
-;    title
-;
-; :Author: j35
-;-
-pro show_error_message, event=event, message=message, title=title
-  compile_opt idl2
-  
-  id = widget_info(event.top, find_by_uname='main_base')
-  result = dialog_message(message,$
-    title = title, $
-    dialog_parent=id,$
-    /center,$
-    /information)
-    
-end
-
-;+
-; :Description:
-;    remove contains of text field specified by the uname
-;
-; :Keywords:
-;    event
-;    uname
-;
-; :Author: j35
-;-
-pro clear_text_field, event=event, uname=uname
-  compile_opt idl2
-  
-  id = widget_info(event.top, find_by_uname=uname)
-  widget_control, id, set_value=''
-  
-end
-

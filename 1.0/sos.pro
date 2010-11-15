@@ -171,6 +171,9 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
     retrieve_data_nexus_distances, main_base=main_base
     
+    ;activate go button
+    activate_button, main_base=main_base, uname='go_button', status=1
+    
   endif
   
   ;=============================================================================
