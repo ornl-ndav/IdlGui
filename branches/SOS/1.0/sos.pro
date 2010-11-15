@@ -151,7 +151,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   xmanager, 'main_base', main_base, /NO_BLOCK, cleanup = 'sos_cleanup'
   
   if (strlowcase(debugger) eq 'yes') then begin
-    input_path = '/Users/j35/IDLWorkspace80/SNS_offspec/NeXus/'
+      input_path = '/SNS/users/j35/IDLWorkspace80/SNS_offspec/NeXus/'
     (*global).input_path = input_path
     
     list_data_nexus = input_path + ['REF_L_34432.nxs',$

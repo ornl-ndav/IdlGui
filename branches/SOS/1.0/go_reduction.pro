@@ -820,7 +820,8 @@ pro go_reduction, event
   ;spectrum = get_normalization_spectrum(event, norm_nexus)
   
   ;remove_me
-  norm_file = '/Users/j35/IDLWorkspace80/SNS_offspec/Al_can_spectrum.dat'
+;  norm_file = '/Users/j35/IDLWorkspace80/SNS_offspec/Al_can_spectrum.dat'
+  norm_file = '/SNS/users/j35/IDLWorkspace80/SNS_offspec/Al_can_spectrum.dat'
   SPECTRUM=xcr_direct(norm_file, 2)
   
   update_progress_bar_percentage, event, ++processes, total_number_of_processes

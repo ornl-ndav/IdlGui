@@ -4,7 +4,8 @@ spawn, 'pwd', CurrentFolder
 IdlUtilitiesPath = "/utilities"
 
 cd, CurrentFolder + IDLUtilitiesPath
-.run colorbar.pro
+.run colorbar.PRO
+.run get_ucams.pro
 .run fsc_color.pro
 .run get.pro
 .run gui.pro
