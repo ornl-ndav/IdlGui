@@ -292,6 +292,13 @@ pro design_tabs, MAIN_BASE, global
     /align_center,$
     /row)
     
+ full_reset = widget_button(bottom_box,$
+ value = 'FULL RESET',$
+ uname = 'full_reset')
+    
+  space = widget_label(bottom_box,$
+    value = '           ')
+
   progress_base = widget_base(bottom_box,$
     uname = 'progress_bar_base',$
     map = 0)
@@ -301,7 +308,7 @@ pro design_tabs, MAIN_BASE, global
     scr_ysize = 15)
     
   space = widget_label(bottom_box,$
-    value = '                     ')
+    value = '           ')
     
   ok = widget_button(bottom_box,$
     uname = 'go_button',$

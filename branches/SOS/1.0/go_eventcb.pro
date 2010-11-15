@@ -28,42 +28,19 @@
 ;   promote products derived from this software without specific prior written
 ;   permission.
 ;
-; @author : Erik Watkins
-;           (refashioned by j35@ornl.gov)
+; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
 
-pro check_go_button, event
+pro full_reset, event
 compile_opt idl2
 
 widget_control, event.top, get_uvalue=global
 
-activate_go_button = 1
-list_data_nexus = (*(*global).list_data_nexus)
-sz = n_elements(list_data_nexus)
-if (sz eq 0) then begin
-activate_go_button = 0
-endif
+(*(*global).list_data_nexus) = !null
+(*(*global).list_data_runs) = !null
+(*global).norm_nexus = ''
 
-if (sz gt 1) then begin
-_label_data = ' data files loaded!'
-endif else begin
-_label_data = ' data file loaded!'
-endelse
-_label_data_message = strcompress(sz,/remove_all) + _label_data
-putValue, event=event, 'data_status_label', _label_data_message
-
-norm_nexus = (*global).norm_nexus
-if (norm_nexus eq '') then begin
-activate_go_button = 0
-_label_norm = '0 norm file loaded!'
-endif else begin
-_label_norm = '1 norm file loaded!'
-endelse
-putValue, event=event, 'norm_status_label', _label_norm
-
-activate_button, event=event, $
-status= activate_go_button, $
-uname= 'go_button'
+check_go_button, event
 
 end
