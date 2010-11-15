@@ -71,6 +71,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
     applicaiton: APPLICATION, $
     version: VERSION, $
+    debugger: debugger, $
     
     instrument: 'REF_L',$
     
@@ -151,7 +152,11 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   xmanager, 'main_base', main_base, /NO_BLOCK, cleanup = 'sos_cleanup'
   
   if (strlowcase(debugger) eq 'yes') then begin
-      input_path = '/SNS/users/j35/IDLWorkspace80/SNS_offspec/NeXus/'
+     if (!version.os eq 'darwin') then begin
+     input_path = '/Users/j35/IDLWorkspace80/SOS 1.0/NeXus/'
+     endif else begin
+      input_path = '/SNS/users/j35/IDLWorkspace80/SOS 1.0/NeXus/'
+      endelse
     (*global).input_path = input_path
     
     list_data_nexus = input_path + ['REF_L_34432.nxs',$
@@ -170,7 +175,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   ;=============================================================================
   ;send message to log current run of application
-  ;logger, APPLICATION=application, VERSION=version, UCAMS=ucams
+  logger, APPLICATION=application, VERSION=version, UCAMS=ucams
   
 END
 

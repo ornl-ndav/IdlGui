@@ -816,13 +816,18 @@ pro go_reduction, event
   
   ;number of steps is ----> 1
   
-  ;;create spectrum of normalization file
-  ;spectrum = get_normalization_spectrum(event, norm_nexus)
-  
-  ;remove_me
-;  norm_file = '/Users/j35/IDLWorkspace80/SNS_offspec/Al_can_spectrum.dat'
-  norm_file = '/SNS/users/j35/IDLWorkspace80/SNS_offspec/Al_can_spectrum.dat'
-  SPECTRUM=xcr_direct(norm_file, 2)
+  ;create spectrum of normalization file
+  if ((*global).debugger eq 'yes') then begin
+    if (!version.os eq 'darwin') then begin
+      path = '/Users/j35/IDLWorkspace80/SOS 1.0/'
+    endif else begin
+      path = '/SNS/users/j35/IDLWorkspace80/SOS 1.0/'
+    endelse
+    norm_file = path + 'Al_can_spectrum.dat'
+    SPECTRUM=xcr_direct(norm_file, 2)
+  endif else begin
+    spectrum = get_normalization_spectrum(event, norm_nexus)
+  endelse
   
   update_progress_bar_percentage, event, ++processes, total_number_of_processes
   
