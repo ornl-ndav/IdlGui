@@ -78,16 +78,45 @@ pro design_tabs, MAIN_BASE, global
     uname = 'data_browse_button',$
     scr_xsize = 575)
     
+  ;data status  
+  inter_row = widget_base(_base1,$
+  /row,$
+  frame=1,$
+  /align_right)
+  
+  label = widget_label(inter_row,$
+  value = 'Data Status:')
+  value = widget_label(inter_row,$
+  value = '0 data file loaded!',$
+  /align_left,$
+  uname = 'data_status_label',$
+  scr_xsize = 200)
+    
   ;SPACE
   space = widget_label(_base1,$
     value = ' ')
-    
+  
   ;NORMALIZATION
   norm_box = widget_base(_base1,$
     frame = 1,$
     /align_center,$
     /base_align_center,$
     /row)
+  
+    ;norm status  
+  inter_row = widget_base(_base1,$
+  /row,$
+  frame=1,$
+  /align_right)
+  
+  label = widget_label(inter_row,$
+  value = 'Norm Status:')
+  value = widget_label(inter_row,$
+  value = '0 normalization file loaded!',$
+  /align_left,$
+  uname = 'norm_status_label',$
+  scr_xsize = 200)
+  
     
   ;display those widgets if findnexus is in the path
   if (bFindnexus) then begin
@@ -276,7 +305,7 @@ pro design_tabs, MAIN_BASE, global
     
   ok = widget_button(bottom_box,$
     uname = 'go_button',$
-    sensitive = 1,$
+    sensitive = 0,$
     value = '>   >  > >> G O << <  <   <')
     
 end

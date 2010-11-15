@@ -30,6 +30,7 @@ cd, CurrentFolder
 .run conversion.pro
 .run browse_nexus_button.pro
 .run convert_to_qxqz.pro
+.run check_gui.pro
 
 ;test
 .run IDLnexusUtilitiesTest__define.pro
