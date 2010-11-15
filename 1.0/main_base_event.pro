@@ -112,6 +112,11 @@ PRO main_base_event, Event
       check_go_button, event
     end
     
+    ;full reset
+    widget_info(wWidget, find_by_uname='full_reset'): begin
+    full_reset, event
+    end
+    
     ;GO REDUCTION
     widget_info(wWidget, find_by_uname='go_button'): begin
       go_reduction, event
