@@ -81,10 +81,12 @@ PRO main_base_event, Event
     ;TAB1
     ;Data run numbers text field
     widget_info(wWidget, find_by_uname='data_run_numbers_text_field'): begin
+      widget_control, /hourglass
       data_run_numbers_event, event
       clear_text_field, event=event, uname='data_run_numbers_text_field'
       ;retrieve distances from first data nexus file loaded
       retrieve_data_nexus_distances, event=event
+      widget_control, hourglass=0
     end
     
     ;Browse data button
@@ -96,7 +98,9 @@ PRO main_base_event, Event
     
     ;Normalization run number text field
     widget_info(wWidget, find_by_uname='norm_run_number_text_field'): begin
+      widget_control, /hourglass
       norm_run_number_event, event
+      widget_control, hourglass=0
     end
     
     ;Browse norm button
