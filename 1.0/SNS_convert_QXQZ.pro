@@ -20,7 +20,6 @@ function SNS_convert_QXQZ, THLAM, thvec, lamvec, theta_in, qxvec, qzvec
   si=size(qzvec,/dim)
   qz_bins=si[0]
   
-  
   ;*********************************************************
   ; REBIN TOF vs PIX MATRIX into QX vs QZ SPACE
   ;*********************************************************

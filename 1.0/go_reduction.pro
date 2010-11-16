@@ -294,6 +294,44 @@ end
 
 ;+
 ; :Description:
+;    Describe the procedure.
+;
+; :Params:
+;    data
+;    SD_d
+;    MD_d
+;    cpix
+;    pix_size
+;
+;-
+function convert_THLAM, data, SD_d, MD_d, cpix, pix_size
+  compile_opt idl2
+  
+    TOF=data.TOF
+  MD_d = MD_d[0]
+  vel=MD_d/TOF         ;mm/ms = m/s
+
+  h=6.626e-34   ;m^2 kg s^-1
+  m=1.675e-27     ;kg
+  
+  lambda=h/(m*vel)  ;m
+  lambda=lambda*1e10  ;angstroms
+  
+  theta_val=data.twotheta-data.theta
+  
+  ;theta_val=data.theta
+  theta_val=theta_val[0]
+  d_vec=(data.pixels-cpix)*pix_size
+  thetavec=(atan(d_vec/SD_d[0])/!DTOR)+theta_val
+  
+  THLAM={data:data.data, lambda:lambda, theta:thetavec}
+  
+  return, THLAM
+  
+end
+
+;+
+; :Description:
 ;   This create 3 arrays that hold the THLAM values
 ;
 ; INFOS
@@ -362,13 +400,13 @@ pro build_THLAM, event=event, $
     
     ;SD_d : sample to detector distance
     ;MD_d : moderator to detector
-    THLAM=SNS_convert_THLAM(NORM_DATA, SD_d, MD_d, center_pixel, pixel_size)
+    THLAM=convert_THLAM(NORM_DATA, SD_d, MD_d, center_pixel, pixel_size)
     ;THLAM is a structure
     ;{ data, lambda, theta}  with lambda in Angstroms and theta in radians
     
     ;round the angles to the nearset 100th of a degree
-    theta_val=round(RAW_DATA.theta*100.0)/100.0
-    twotheta_val=round(RAW_DATA.twotheta*100.0)/100.0
+    theta_val=round(RAW_DATA.theta[0]*100.0)/100.0
+    twotheta_val=round(RAW_DATA.twotheta[0]*100.0)/100.0
     theta_val=theta_val[0]
     twotheta_val=twotheta_val[0]
     
@@ -453,6 +491,7 @@ pro make_QxQz, event = event, $
   ;THLAM_lamvec: lambda vector axis
   ;angles[theta,twotheta]
   for loop=0,num-1 do begin
+    ;  help, where(thlam_array[loop,*,*] ne 0)
     QXQZ_array[loop,*,*] = convert_to_QxQz(THLAM_array[loop,*,*], $
       THLAM_thvec[loop,*], $
       THLAM_lamvec[loop,*], $
@@ -586,6 +625,7 @@ function get_specular_scale, event=event, $
     data=reform(QXQZ_array[loop,*,*])
     result=extract_specular(data, qxvec, qxwidth)
     specular[loop,*]=result
+    
     if loop eq 0 then scale[0]=1/max(result)
   endfor
   
@@ -593,7 +633,6 @@ function get_specular_scale, event=event, $
     strcompress(strjoin(size(specular,/dim),','),/remove_all) + ']'
     
   ;trimmer
-  ;tnum=3
   trim=specular*0.0
   for loop=0,num-1 do begin
     list=where(specular[loop,*] ne 0)

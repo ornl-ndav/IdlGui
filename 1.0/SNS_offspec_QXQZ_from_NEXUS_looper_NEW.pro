@@ -159,13 +159,13 @@ pro run
     twotheta_val=round(RAW_DATA.twotheta*100.0)/100.0
     theta_val=theta_val[0]
     twotheta_val=twotheta_val[0]
-    
+        
     tilenum=where((angles[0,*] eq theta_val) and (angles[1,*] eq twotheta_val))
     
     THLAM_array[tilenum,*,*]=THLAM_array[tilenum,*,*]+THLAM.data
     THLAM_thvec[tilenum,*]=THLAM.theta
     THLAM_lamvec[tilenum,*]=THLAM.lambda
-    
+  
     if (convertion_tof_lambda_flag) then begin
       window,0, title = "Convertion: TOF->Lambda, Pixel->Theta"
       shade_surf, smooth(thlam.data,3), thlam.lambda, thlam.theta, ax=70, charsi=2, xtitle='LAMBDA (' + string("305B) + ')', ytitle='THETA (rad)'
@@ -175,6 +175,7 @@ pro run
     
   endfor
   
+  ;
   ;/////////////////////////////////
   ;NOW CONVERT TO QXQZ
   ;/////////////////////////////////
@@ -196,9 +197,9 @@ pro run
   ;THLAM_lamvec: lambda vector axis
   ;angles[theta,twotheta]
   for loop=0,num-1 do begin
-    print, 'QXQZ convert loop', loop
-    QXQZ_array[loop,*,*]=SNS_convert_QXQZ(THLAM_array[loop,*,*], THLAM_thvec[loop,*], THLAM_lamvec[loop,*], angles[0,loop], QXvec, QZvec)
-  endfor
+     QXQZ_array[loop,*,*]=SNS_convert_QXQZ(THLAM_array[loop,*,*], THLAM_thvec[loop,*], THLAM_lamvec[loop,*], angles[0,loop], QXvec, QZvec)
+    endfor
+  
   
   device, decomposed=0
   loadct, 5
