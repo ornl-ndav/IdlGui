@@ -33,22 +33,28 @@
 ;==============================================================================
 
 pro check_input, value=value, $
-label=label, $
-full_check_message=full_check_message
-compile_opt idl2
-
-on_ioerror, error
-
-_format = float(value)
-print, 'there'
-print, _format
-return
-
-error: 
-print, 'here'
-_message = label 
-full_check_message = [full_check_message, _message]
-return
-
+    label=label, $
+    full_check_message=full_check_message
+  compile_opt idl2
+  
+  on_ioerror, error
+  
+  ;if string is empty
+  if (strcompress(value,/remove_all) eq '') then begin
+    _message = label
+    full_check_message = [full_check_message, _message]
+    return
+  endif
+  
+  ;convert input into float (to be sure it's a number)
+  _format = float(value)
+  return
+  
+  ;if it's not a non-empty number, comes here
+  error:
+  _message = label
+  full_check_message = [full_check_message, _message]
+  return
+  
 end
 
