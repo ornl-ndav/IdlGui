@@ -307,10 +307,10 @@ end
 function convert_THLAM, data, SD_d, MD_d, cpix, pix_size
   compile_opt idl2
   
-    TOF=data.TOF
+  TOF=data.TOF
   MD_d = MD_d[0]
   vel=MD_d/TOF         ;mm/ms = m/s
-
+  
   h=6.626e-34   ;m^2 kg s^-1
   m=1.675e-27     ;kg
   
@@ -797,6 +797,29 @@ pro go_reduction, event
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global
+  
+  catch,error
+  if (error ne 0) then begin
+    catch,/cancel
+    
+    message = '> Automatic stitching failed! ***'
+    log_book_update, event, message=message
+        
+    title = 'Automatic stitching failed !'
+    message_text = ['Please change the parameters defined',$
+      'and try again.']
+    widget_id = widget_info(event.top, find_by_uname='main_base')
+    result = dialog_message(message_text,$
+      title = title,$
+      /error,$
+      /center,$
+      dialog_parent=widget_id)
+      
+    hide_progress_bar, event
+    widget_control, hourglass=0
+    
+    return
+  endif
   
   message = ['> Running reduction: ']
   
