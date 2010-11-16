@@ -672,13 +672,13 @@ pro final_plot_gui, wBase, $
     /menu)
     
   set = widget_button(info, $
-    value = 'Show all',$
+    value = 'Show all live infos',$
     event_pro = 'show_all_info',$
     uname = 'show_all_info_uname')
     
   set1 = widget_button(info, $
     /separator,$
-    value = 'Show Cursor Infos',$
+    value = 'Show Cursor Informations',$
     event_pro = 'show_cursor_info',$
     uname = 'show_or_hide_cursor_info_uname')
     
@@ -692,6 +692,10 @@ pro final_plot_gui, wBase, $
     event_pro = 'show_counts_vs_yaxis',$
     uname = 'show_counts_vs_yaxis_uname')
     
+    set4 = widget_button(info,$
+    value = 'General informations',$
+    event_pro = 'general_infos',$
+    /separator)
   
 ;-------- end of menu
   
@@ -935,7 +939,8 @@ pro final_plot, main_base=main_base, $
     data = data, $
     main_base_uname = main_base_uname, $
     smooth_coefficient = smooth_coefficient, $
-    time_stamp = time_stamp
+    time_stamp = time_stamp,$
+    metadata = metadata
     
   compile_opt idl2
   
@@ -950,6 +955,7 @@ pro final_plot, main_base=main_base, $
   if (~keyword_set(default_plot_size)) then default_plot_size = [600,600]
   if (~keyword_set(default_scale_setting)) then default_scale_setting = 1 ;log by default
   if (~keyword_set(smooth_coefficient)) then smooth_coefficient = 1
+  if (~keyword_set(metadata)) then metadata = {empty:''}
   
   ;build gui
   wBase = ''
@@ -973,6 +979,8 @@ pro final_plot, main_base=main_base, $
     
     ;used to plot selection zoom
     default_plot_size: default_plot_size, $
+    
+    metadata: metadata, $ ;structure of bins Qx, Qz....etc
     
     counts_vs_xaxis_yaxis_type: 0,$ ;0 for linear, 1 for log
     counts_vs_yaxis_yaxis_type: 0,$ ;0 for linear, 1 for log
