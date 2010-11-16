@@ -383,8 +383,8 @@ pro show_counts_vs_xaxis, event
   widget_control, event.top, get_uvalue=global_plot
   
   counts_vs_xaxis_plot_id = (*global_plot).counts_vs_xaxis_base
-  if (obj_valid(counts_vs_xaxis_plot_id) eq 0) then begin ;no plot yet
-    counts_vs_axis_base, event=event, $
+  if (widget_info(counts_vs_xaxis_plot_id,/valid_id) eq 0) then begin
+     counts_vs_axis_base, event=event, $
       parent_base_uname = 'final_plot_base', $
       xaxis = 'qx'
   endif
@@ -406,7 +406,7 @@ pro show_counts_vs_yaxis, event
   widget_control, event.top, get_uvalue=global_plot
   
   counts_vs_yaxis_plot_id = (*global_plot).counts_vs_yaxis_base
-  if (obj_valid(counts_vs_yaxis_plot_id) eq 0) then begin ;no plot yet
+  if (widget_info(counts_vs_yaxis_plot_id,/valid_id) eq 0) then begin
     counts_vs_axis_base, event=event, $
       parent_base_uname = 'final_plot_base', $
       xaxis = 'qz'
