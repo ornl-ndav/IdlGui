@@ -35,7 +35,6 @@ function convert_to_QXQZ, THLAM, $
   si=size(qzvec,/dim)
   qz_bins=si[0]
   
-  
   ;*********************************************************
   ; REBIN TOF vs PIX MATRIX into QX vs QZ SPACE
   ;*********************************************************
@@ -104,7 +103,7 @@ function convert_to_QXQZ, THLAM, $
     QZ_hi=QXQZ_values[3,count]
     
     int=QXQZ_values[4,count]
-    
+
     ;check where is the last index of data
     
     ;get the last index where QX_lo is smaller or equal to the QX axis
@@ -114,6 +113,7 @@ function convert_to_QXQZ, THLAM, $
     QX_hi_pos=min(where(QX_hi le QXvec, nbr_qx_hi_pos))
     
     QZ_lo_pos=max(where(QZ_lo ge QZvec, nbr_qz_lo_pos))
+
     QZ_hi_pos=min(where(QZ_hi le QZvec, nbr_qz_hi_pos))
     
     ;    if (count eq 0) then begin
