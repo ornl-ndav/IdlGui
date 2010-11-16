@@ -277,7 +277,7 @@ pro design_tabs, MAIN_BASE, global
   xsize = 10,$
   value = '0.00005',$
   uname = 'qxwidth_uname',$
-  title = '       Specular reflexion    QxWidth')
+  title = '       Specular reflection    QxWidth')
   field2 = cw_field(row2col3,$
   /integer,$
   xsize = 5,$

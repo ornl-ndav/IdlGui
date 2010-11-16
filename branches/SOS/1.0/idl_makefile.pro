@@ -25,6 +25,8 @@ cd, CurrentFolder + '/SOS_GUI'
 
 ;build main routines and tests
 cd, CurrentFolder
+
+;main functions
 .run colorbar.pro
 .run IDLnexusUtilities__define.pro
 .run IDLxmlParser__define.pro
@@ -32,6 +34,7 @@ cd, CurrentFolder
 .run browse_nexus_button.pro
 .run convert_to_qxqz.pro
 .run check_gui.pro
+.run produce_metadata_structure.pro
 
 ;test
 .run IDLnexusUtilitiesTest__define.pro

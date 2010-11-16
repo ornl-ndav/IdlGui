@@ -664,7 +664,7 @@ function get_specular_scale, event=event, $
     style_plot_lines[0], $
     xtitle='Qz', $
     ytitle='R')
-  
+    
   for loop=1,num-1 do begin
   
     overlap=where(specular[loop-1,*] ne 0 and specular[loop,*] ne 0)
@@ -811,7 +811,7 @@ pro go_reduction, event
     
     message = '> Automatic stitching failed! ***'
     log_book_update, event, message=message
-        
+    
     title = 'Automatic stitching failed !'
     message_text = ['Please change the parameters defined',$
       'and try again.']
@@ -1128,6 +1128,27 @@ pro go_reduction, event
     qxbins = qxbins, $
     qzbins = qzbins)
     
+  metadata = produce_metadata_structure(event, $
+    time_stamp = time_stamp, $
+    list_data_nexus = list_data_nexus, $
+    norm_nexus = norm_nexus, $
+    qzmax = QZmax,$
+    qzmin = QZmin, $
+    qxbins = QXbins, $
+    qzbins = QZbins, $
+    qxmin = QXmin, $
+    qxmax = QXmax, $
+    tofmin = TOFmin, $
+    tofmax = TOFmax, $
+    pixmin = PIXmin, $
+    pixmax = PIXmax, $
+    center_pixel = center_pixel, $
+    pixel_size = pixel_size, $
+    d_sd = SD_d, $
+    d_md = MD_d, $
+    qxwidth = qxwidth, $
+    tnum = tnum)
+    
   offset = 50
   
   final_plot, event=event, $
@@ -1136,6 +1157,7 @@ pro go_reduction, event
     data = divarray,$
     x_axis = qxvec,$
     y_axis = qzvec,$
+    metadata = metadata, $
     default_loadct = 5, $
     ;    default_scale_settings = default_scale_settings, $
     ;    current_plot_setting = current_plot_setting, $
