@@ -439,11 +439,10 @@ pro zoom_selection, event
   final_plot, event=event, $
     offset = 50, $
     data = zoom_data_z, $
-    ;    data = alog(divarray+1),$
+    time_stamp = (*global_plot).time_stamp, $
     x_axis = zoom_data_x, $
     y_axis = zoom_data_y, $
     default_loadct = (*global_plot).default_loadct, $
-    ;    default_scale_settings = default_scale_settings, $
     default_plot_size = (*global_plot).default_plot_size, $
     main_base_uname = 'final_plot_base', $
     smooth_coefficient = (*global_plot).smooth_coefficient
