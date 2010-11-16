@@ -478,6 +478,7 @@ pro final_plot_gui, wBase, $
     offset, $
     border, $
     colorbar_xsize, $
+    time_stamp = time_stamp, $
     plot_setting1 = plot_setting1,$
     plot_setting2 = plot_setting2, $
     current_plot_setting = current_plot_setting, $
@@ -505,7 +506,7 @@ pro final_plot_gui, wBase, $
   
   ourGroup = WIDGET_BASE()
   
-  title = 'Qx vs Qz'
+  title = 'Qx vs Qz [' + time_stamp + ']'
   wBase = WIDGET_BASE(TITLE = title, $
     UNAME        = 'final_plot_base', $
     XOFFSET      = xoffset,$
@@ -933,7 +934,8 @@ pro final_plot, main_base=main_base, $
     y_axis = y_axis, $
     data = data, $
     main_base_uname = main_base_uname, $
-    smooth_coefficient = smooth_coefficient
+    smooth_coefficient = smooth_coefficient, $
+    time_stamp = time_stamp
     
   compile_opt idl2
   
@@ -957,6 +959,7 @@ pro final_plot, main_base=main_base, $
     offset, $
     border, $
     colorbar_xsize, $
+    time_stamp = time_stamp,$
     current_plot_setting = current_plot_setting, $
     scale_setting = default_scale_setting,$
     default_plot_size = default_plot_size, $
@@ -999,6 +1002,8 @@ pro final_plot, main_base=main_base, $
     smooth_coefficient: smooth_coefficient,$
 
     border: border, $ ;border of main plot (space reserved for scale)
+    
+    time_stamp: time_stamp,$
     
     Qx_axis: fltarr(2),$  ;[start, end]
     delta_Qx: 0., $ ;Qx increment

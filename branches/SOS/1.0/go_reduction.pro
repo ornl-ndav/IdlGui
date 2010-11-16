@@ -605,6 +605,7 @@ end
 ;    qzvec
 ;    qxwidth
 ;    tnum
+;    time_stamp
 ;
 ; :Author: j35
 ;-
@@ -616,7 +617,8 @@ function get_specular_scale, event=event, $
     qxvec = qxvec, $
     qzvec = qzvec, $
     qxwidth = qxwidth, $
-    tnum = tnum
+    tnum = tnum, $
+    time_stamp = time_stamp
   compile_opt idl2
   
   message = ['> Isolate specular region and create scaling array']
@@ -649,15 +651,20 @@ function get_specular_scale, event=event, $
   widget_control, event.top, get_uvalue=global
   style_plot_lines = (*(*global).style_plot_lines)
   
-  _plot = plot(QZvec, specular[0,*]*scale[0], $
+  time_stamp = GenerateReadableIsoTimeStamp()
+  title = 'Specular plots [' + time_stamp + ']'
+  
+  _plot = plot(QZvec, $
+    specular[0,*]*scale[0], $
     /ylog, $
     yrange=[1e-8,100], $
     psym=1, $
+    window_title=title,$
     charsi=1.5, $
     style_plot_lines[0], $
-    xtitle='QZ', $
+    xtitle='Qz', $
     ytitle='R')
-    
+  
   for loop=1,num-1 do begin
   
     overlap=where(specular[loop-1,*] ne 0 and specular[loop,*] ne 0)
@@ -1096,6 +1103,7 @@ pro go_reduction, event
   ;qxwidth=0.00005
   specular=make_array(num, qxbins)
   scale=make_array(num)
+  time_stamp = ''
   scale = get_specular_scale(event=event, $
     num = num, $
     specular = specular, $
@@ -1104,7 +1112,8 @@ pro go_reduction, event
     qxvec = qxvec, $
     qzvec = qzvec, $
     qxwidth = qxwidth, $
-    tnum = tnum)
+    tnum = tnum, $
+    time_stamp = time_stamp)
     
   update_progress_bar_percentage, event, ++processes, $
     total_number_of_processes
@@ -1123,7 +1132,7 @@ pro go_reduction, event
   
   final_plot, event=event, $
     offset = offset, $
-    ;    data = smooth(alog(divarray+1),5),$
+    time_stamp = time_stamp, $
     data = divarray,$
     x_axis = qxvec,$
     y_axis = qzvec,$
