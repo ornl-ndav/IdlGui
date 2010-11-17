@@ -437,7 +437,6 @@ pro px_vs_tof_plots_base_gui, wBase, $
     current_plot_setting = current_plot_setting, $
     scale_setting = scale_setting
     
-    
   compile_opt idl2
   
   main_base_xoffset = main_base_geometry.xoffset
