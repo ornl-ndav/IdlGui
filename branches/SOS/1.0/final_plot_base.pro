@@ -1053,9 +1053,7 @@ pro final_plot, main_base=main_base, $
     
     ;used to plot selection zoom
     default_plot_size: default_plot_size, $
-    
-    metadata: metadata, $ ;structure of bins Qx, Qz....etc
-    
+        
     counts_vs_xaxis_yaxis_type: 0,$ ;0 for linear, 1 for log
     counts_vs_yaxis_yaxis_type: 0,$ ;0 for linear, 1 for log
     
@@ -1064,7 +1062,9 @@ pro final_plot, main_base=main_base, $
     counts_vs_yaxis_base: 0L, $ ;id of info counts vs y
     counts_vs_xaxis_plot_uname: '',$
     counts_vs_yaxis_plot_uname: '',$
+    
     global_infos_base: 0L, $ ;id of global infos base
+    metadata: metadata, $ ;structure of bins Qx, Qz....etc
     
     data: ptr_new(0L), $
     data_linear: ptr_new(0L), $
