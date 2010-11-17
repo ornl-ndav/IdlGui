@@ -49,6 +49,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   VERSION  = file->getValue(tag=['configuration','version'])
   DEBUGGER = file->getValue(tag=['configuration','debugging'])
   auto_cleaning_data = file->getValue(tag=['configuration','auto_cleaning'])
+  scaled_specular = file->getValue(tag=['configuration','plot','scaled_specular'])
   ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
   ;============================================================================
   obj_destroy, file
@@ -72,6 +73,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     applicaiton: APPLICATION, $
     version: VERSION, $
     debugger: debugger, $
+    scaled_specular: scaled_specular, $
     
     instrument: 'REF_L',$
     
