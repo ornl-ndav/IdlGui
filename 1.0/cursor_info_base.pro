@@ -44,10 +44,6 @@
 pro cursor_info_base_event, Event
   compile_opt idl2
   
-  ;get global structure
-  widget_control,event.top,get_uvalue=global_plot
-  main_event = (*global_plot).main_event
-  
   case Event.id of
   
     else:
@@ -56,6 +52,18 @@ pro cursor_info_base_event, Event
   
 end
 
+;+
+; :Description:
+;    Builds the GUI of the info base
+;
+; :Params:
+;    wBase
+;    parent_base_geometry
+;
+;
+;
+; :Author: j35
+;-
 pro cursor_info_base_gui, wBase, $
     parent_base_geometry
   compile_opt idl2

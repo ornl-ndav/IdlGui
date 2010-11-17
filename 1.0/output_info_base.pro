@@ -34,7 +34,7 @@
 
 ;+
 ; :Description:
-;   main base event
+;   main base event. Take care of all the events
 ;
 ; :Params:
 ;   Event
@@ -75,9 +75,14 @@ pro output_info_base_event, Event
     
     ;cancel button
     widget_info(event.top, find_by_uname='cancel_output_info_base'): begin
-          id = widget_info(Event.top, $
+      id = widget_info(Event.top, $
         find_by_uname='output_info_base')
       widget_control, id, /destroy
+    end
+    
+    ;ok button
+    widget_info(event.top, find_by_uname='ok_output_info_base'): begin
+      ok_output_info_event, event
     end
     
     else:
@@ -86,10 +91,157 @@ pro output_info_base_event, Event
   
 end
 
+;+
+; :Description:
+;    Create the Counts vs Qx/Qz ascii files
+;
+; :Keywords:
+;    xaxis
+;    yaxis
+;    output_file_name
+;
+; :Returns:
+;   1 if the file has been created with success
+;   0 if the process failed
+;
+; :Author: j35
+;-
+function create_ascii_file, xaxis=xaxis, $
+    yaxis=yaxis, $
+    output_file_name = output_file_name
+  compile_opt idl2
+  
+  catch, error
+  if (error ne 0) then begin
+    catch, /cancel
+    return, 0
+  endif
+  
+  _xaxis = reform(xaxis)
+  _yaxis = reform(yaxis)
+  
+  openw, 1, output_file_name
+  
+  sz = n_elements(_xaxis)
+  for i=0,(sz-1) do begin
+    _line = strcompress(_xaxis[i],/remove_all)
+    _line += '   ' + strcompress(_yaxis[i],/remove_all)
+    printf, 1, _line
+  endfor
+  
+  close, 1
+  free_lun, 1
+  
+  if (~file_test(output_file_name)) then return, 0
+  
+  return, 1
+end
+
+;+
+; :Description:
+;    This routine creates the jpeg files
+;
+; :Params:
+;    Event
+;
+; :Author: j35
+;-
+function create_jpeg_file, Event, $
+    output_file_name = output_file_name
+  compile_opt idl2
+  
+  widget_control, id_draw, get_value=id_value
+  wset, id_value
+  image = tvread(filename=output_file_name, /jpeg, /nodialog)
+  
+  return, 1
+end
+
+;+
+; :Description:
+;    procedure reached by the OK button
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro ok_output_info_event, event
+  compile_opt idl2
+  
+  _base_file_name = getValue(event=event, uname='base_file_name')
+  _path = getValue(event=event, uname='base_output_folder')
+  _output_file = _path + _base_file_name
+  
+  widget_control, event.top, get_uvalue=global_info
+  global_plot = (*global_info).global_plot
+  
+  ;do we want counts vs qx ascii
+  qx_ascii = isButtonSelected(event=event, uname='qx_ascii_file')
+  validate_qx_base = (*global_info).validate_qx_base
+  
+  if (qx_ascii && validate_qx_base) then begin
+    ext = '_IvsQx.txt'
+    result = create_ascii_file(xaxis=(*(*global_plot).counts_vs_qx_xaxis), $
+      yaxis=(*(*global_plot).counts_vs_qx_data), $
+      output_file_name = _output_file + ext)
+  endif
+  
+  ;do we want counts vs qx jpg
+  qx_jpeg = isButtonSelected(event=event, uname='qx_jpg_file')
+  if (qx_jpeg && validate_qx_base) then begin
+    ext = '_IvsQx'
+    result = create_jpeg_file(Event, $
+      xaxis = (*(*global_plot).counts_vs_qx_xaxis), $
+      yaxis = (*(*global_plot).counts_vs_qx_data), $
+      yaxis_type = (*global).counts_vs_qx_lin, $
+      output_file_name = _output_file + ext)
+  endif
+  
+  ;do we want counts vs qz ascii
+  qz_ascii = isButtonSelected(event=event, uname='qz_ascii_file')
+  validate_qz_base = (*global_info).validate_qz_base
+  if (qz_ascii && validate_qz_base) then begin
+    ext = '_IvsQz.txt'
+    result = create_ascii_file(xaxis=(*(*global_plot).counts_vs_qz_xaxis), $
+      yaxis=(*(*global_plot).counts_vs_qz_data), $
+      output_file_name = _output_file + ext)
+  endif
+  
+  ;do we want counts vs qz jpg
+  qz_jpeg = isButtonSelected(event=event, uname='qz_jpg_file')
+  IF (qz_jpeg && validate_qz_base) then begin
+    ext = '_IvsQz'
+    result = create_jpeg_file(Event, $
+      xaxis = (*(*global_plot).counts_vs_qz_xaxis), $
+      yaxis = (*(*global_plot).counts_vs_qz_data), $
+      yaxis_type = (*global).counts_vs_qz_lin, $
+      output_file_name = _output_file + ext)
+  endif
+  
+end
+
+;+
+; :Description:
+;    Builds the GUI
+;
+; :Params:
+;    wBase
+;    parent_base_geometry
+;
+; :Keywords:
+;    output_folder
+;    default_base_file
+;
+; :Author: j35
+;-
 pro output_info_base_gui, wBase, $
     parent_base_geometry, $
     output_folder = output_folder, $
-    default_base_file = default_base_file
+    default_base_file = default_base_file, $
+    validate_qx_base = validate_qx_base, $
+    validate_qz_base = validate_qz_base
+    
   compile_opt idl2
   
   main_base_xoffset = parent_base_geometry.xoffset
@@ -126,6 +278,7 @@ pro output_info_base_gui, wBase, $
     value = '    ')
     
   part11 = widget_base(part1,$
+    sensitive = validate_qx_base, $
     /column)
     
   row1 = widget_label(part11,$
@@ -147,6 +300,7 @@ pro output_info_base_gui, wBase, $
     value = '    ')
     
   part12 = widget_base(part1,$
+    sensitive = validate_qz_base, $
     /column)
     
   row1 = widget_label(part12,$
@@ -265,7 +419,12 @@ end
 pro output_info_base, event=event, $
     parent_base_uname = parent_base_uname, $
     output_folder = output_folder, $
-    default_base_file = default_base_file
+    default_base_file = default_base_file, $
+    validate_qx_base = validate_qx_base, $
+    validate_qz_base = validate_qz_base, $
+    counts vs_qz_lin = counts_vs_qz_lin, $
+    counts vs_qx_lin = counts_vs_qx_lin
+
   compile_opt idl2
   
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME=parent_base_uname)
@@ -276,14 +435,22 @@ pro output_info_base, event=event, $
   output_info_base_gui, _base, $
     parent_base_geometry, $
     output_folder = output_folder, $
-    default_base_file = default_base_file
+    default_base_file = default_base_file, $
+    validate_qx_base = validate_qx_base, $
+    validate_qz_base = validate_qz_base
     
   WIDGET_CONTROL, _base, /REALIZE
   
   global_info = PTR_NEW({ _base: _base,$
     parent_event: event, $
+    
+    validate_qx_base: validate_qx_base, $ ;1 if sensitive=1
+    validate_qz_base: validate_qz_base, $ ;1 if sensitive=1
+    counts_vs_qz_lin: counts_vs_qz_lin, $ ;1 if linear, 0 if log
+    counts_vs_qx_lin: counts_vs_qx_lin, $
+    
     output_folder: output_folder, $
-    global: global_plot })
+    global_plot: global_plot })
     
   WIDGET_CONTROL, _base, SET_UVALUE = global_info
   
