@@ -1014,7 +1014,8 @@ pro final_plot, main_base=main_base, $
     main_base_uname = main_base_uname, $
     smooth_coefficient = smooth_coefficient, $
     time_stamp = time_stamp,$
-    metadata = metadata
+    metadata = metadata, $
+    output_folder = output_folder
     
   compile_opt idl2
   
@@ -1053,7 +1054,7 @@ pro final_plot, main_base=main_base, $
     
     ;used to plot selection zoom
     default_plot_size: default_plot_size, $
-        
+    
     counts_vs_xaxis_yaxis_type: 0,$ ;0 for linear, 1 for log
     counts_vs_yaxis_yaxis_type: 0,$ ;0 for linear, 1 for log
     
@@ -1071,8 +1072,7 @@ pro final_plot, main_base=main_base, $
     x_axis: x_axis, $ ; [-0.004, -0.003, -0.002...]
     y_axis: y_axis, $ ; [0.0, 0.1, 0.2, 0.3]
     
-    ;    full_x_axis: full_x_axis, $ [-0.004, -0.003, -0.002...]
-    ;    full_y_axis: full_y_axis, $ [0.0, 0.1, 0.2, 0.3]
+    output_folder: output_folder, $
     
     xsize: default_plot_size[0],$
     ysize: default_plot_size[1],$
