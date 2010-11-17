@@ -65,6 +65,7 @@ cd, CurrentFolder
 .run counts_vs_axis_base.pro
 .run main_base_event.pro
 .run sos_eventcb.pro
+.run global_infos_base.pro
 
 .run sos.pro
 .run sos_cleanup.pro

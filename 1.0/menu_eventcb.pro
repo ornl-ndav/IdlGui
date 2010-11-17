@@ -175,19 +175,3 @@ pro local_switch_axes_type, event
   
 end
 
-;+
-; :Description:
-;    this will display all the metadata used to produce this plot
-;
-; :Params:
-;    event
-;
-; :Author: j35
-;-
-pro general_infos, event
-  compile_opt idl2
-
-
-
-end
-
