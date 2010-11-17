@@ -49,6 +49,19 @@ pro output_info_base_event, Event
   
   case Event.id of
   
+    widget_info(event.top, find_by_uname='base_file_name'): begin
+      value = getValue(event=event, uname='base_file_name')
+      if (strcompress(value,/remove_all) eq '') then begin
+        status_go = 0
+      endif else begin
+        status_go = 1
+      endelse
+      activate_button, event=event, $
+        status = status_go, $
+      uname='ok_output_info_base'
+      
+    end
+    
     else:
     
   endcase
@@ -57,7 +70,8 @@ end
 
 pro output_info_base_gui, wBase, $
     parent_base_geometry, $
-    output_folder = output_folder
+    output_folder = output_folder, $
+    default_base_file = default_base_file
   compile_opt idl2
   
   main_base_xoffset = parent_base_geometry.xoffset
@@ -106,7 +120,7 @@ pro output_info_base_gui, wBase, $
   button1 = widget_button(row1col2Base,$
     value = 'ascii file (_IvsQx.txt)',$
     uname = 'qx_ascii_file')
-    widget_control, button1, /set_button
+  widget_control, button1, /set_button
   button2 = widget_button(row1col2Base,$
     value = 'jpeg (_IvsQx.jpg)',$
     uname = 'qx_jpg_file')
@@ -127,7 +141,7 @@ pro output_info_base_gui, wBase, $
   button1 = widget_button(row1col2Base,$
     value = 'ascii file (_IvsQz.txt)',$
     uname = 'qz_ascii_file')
-    widget_control, button1, /set_button
+  widget_control, button1, /set_button
   button2 = widget_button(row1col2Base,$
     value = 'jpeg (_IvsQz.jpg)',$
     uname = 'qz_jpg_file')
@@ -145,7 +159,8 @@ pro output_info_base_gui, wBase, $
   label = widget_label(row1,$
     value = 'Base file name')
   name = widget_text(row1,$
-    value = '',$
+    value = default_base_file,$
+    /all_events, $
     xsize = 54,$
     /editable,$
     uname = 'base_file_name')
@@ -231,7 +246,8 @@ end
 ;-
 pro output_info_base, event=event, $
     parent_base_uname = parent_base_uname, $
-    output_folder = output_folder
+    output_folder = output_folder, $
+    default_base_file = default_base_file
   compile_opt idl2
   
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME=parent_base_uname)
@@ -241,7 +257,8 @@ pro output_info_base, event=event, $
   _base = ''
   output_info_base_gui, _base, $
     parent_base_geometry, $
-    output_folder = output_folder
+    output_folder = output_folder, $
+    default_base_file = default_base_file
     
   WIDGET_CONTROL, _base, /REALIZE
   
