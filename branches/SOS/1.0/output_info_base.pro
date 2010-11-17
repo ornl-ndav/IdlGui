@@ -77,7 +77,8 @@ pro output_info_base_gui, wBase, $
     UNAME        = 'output_info_base', $
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
-    MAP          = 1,$
+    scr_xsize    = 450,$
+    scr_ysize    = 250, $
     kill_notify  = 'output_info_base_killed', $
     /column,$
     /modal, $
@@ -88,12 +89,12 @@ pro output_info_base_gui, wBase, $
   part1 = widget_base(wBase,$
     /row,$
     frame=1)
-
+    
   space = widget_label(part1,$
-  value = '    ')
+    value = '    ')
     
   part11 = widget_base(part1,$
-  /column)  
+    /column)
     
   row1 = widget_label(part11,$
     value = 'Counts vs Qx')
@@ -103,17 +104,18 @@ pro output_info_base_gui, wBase, $
     /column,$
     /nonexclusive)
   button1 = widget_button(row1col2Base,$
-    value = 'ascii file',$
+    value = 'ascii file (_IvsQx.txt)',$
     uname = 'qx_ascii_file')
+    widget_control, button1, /set_button
   button2 = widget_button(row1col2Base,$
-    value = 'jpeg',$
+    value = 'jpeg (_IvsQx.jpg)',$
     uname = 'qx_jpg_file')
     
   space = widget_label(part1,$
-    value = '                       ')
+    value = '    ')
     
   part12 = widget_base(part1,$
-  /column)  
+    /column)
     
   row1 = widget_label(part12,$
     value = 'Counts vs Qz')
@@ -123,52 +125,53 @@ pro output_info_base_gui, wBase, $
     /column,$
     /nonexclusive)
   button1 = widget_button(row1col2Base,$
-    value = 'ascii file',$
+    value = 'ascii file (_IvsQz.txt)',$
     uname = 'qz_ascii_file')
+    widget_control, button1, /set_button
   button2 = widget_button(row1col2Base,$
-    value = 'jpeg',$
+    value = 'jpeg (_IvsQz.jpg)',$
     uname = 'qz_jpg_file')
     
-    space = widget_label(wBase,$
+  space = widget_label(wBase,$
     value = ' ')
     
   ;path and name
   part2 = widget_base(wBase,$
-  /column,$
-  frame=1)
-  
+    /column,$
+    frame=1)
+    
   row1 = widget_base(part2,$
-  /row)
+    /row)
   label = widget_label(row1,$
-  value = 'Base file name')
+    value = 'Base file name')
   name = widget_text(row1,$
-  value = '',$
-  xsize = 53,$
-  /editable,$
-  uname = 'base_file_name')
-  
+    value = '',$
+    xsize = 54,$
+    /editable,$
+    uname = 'base_file_name')
+    
   where = widget_button(part2,$
-  value = output_folder,$
-  uname = 'base_output_folder',$
-  scr_xsize = 440) 
-  
+    value = output_folder,$
+    uname = 'base_output_folder',$
+    scr_xsize = 440)
+    
   space = widget_label(wBase,$
-  value = ' ')
-  
+    value = ' ')
+    
   row3 = widget_base(wBase,$
-  /align_center,$
-  /row)
+    /align_center,$
+    /row)
   cancel = widget_button(row3,$
-  value = 'CANCEL',$
-  scr_xsize = 130,$
-  uname = 'cancel_output_info_base')
+    value = 'CANCEL',$
+    scr_xsize = 130,$
+    uname = 'cancel_output_info_base')
   space = widget_label(row3,$
-  value = '                 ')
+    value = '           ')
   ok = widget_button(row3,$
-  value = 'OK',$
-  scr_xsize = 200,$
-  uname = 'ok_output_info_base')
-  
+    value = 'OK',$
+    scr_xsize = 200,$
+    uname = 'ok_output_info_base')
+    
 end
 
 ;+
@@ -249,7 +252,7 @@ pro output_info_base, event=event, $
     
   WIDGET_CONTROL, _base, SET_UVALUE = global_info
   
-  XMANAGER, "output_info_base", _base, GROUP_LEADER = ourGroup, /NO_BLOCK, $
+  XMANAGER, "output_info_base", _base, GROUP_LEADER = ourGroup, /no_block, $
     cleanup='output_info_base_cleanup'
     
 end
