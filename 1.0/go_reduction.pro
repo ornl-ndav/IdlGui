@@ -654,17 +654,22 @@ function get_specular_scale, event=event, $
   time_stamp = GenerateReadableIsoTimeStamp()
   title = 'Specular plots [' + time_stamp + ']'
   
-  _plot = plot(QZvec, $
-    specular[0,*]*scale[0], $
-    /ylog, $
-    yrange=[1e-8,100], $
-    psym=1, $
-    window_title=title,$
-    charsi=1.5, $
-    style_plot_lines[0], $
-    xtitle='Qz', $
-    ytitle='R')
-    
+  widget_control, event.top, get_uvalue=global
+  _scaled_specular = (*global).scaled_specular
+  
+  if (_scaled_specular eq 'yes') then begin
+    _plot = plot(QZvec, $
+      specular[0,*]*scale[0], $
+      /ylog, $
+      yrange=[1e-8,100], $
+      psym=1, $
+      window_title=title,$
+      charsi=1.5, $
+      style_plot_lines[0], $
+      xtitle='Qz', $
+      ytitle='R')
+  endif
+  
   for loop=1,num-1 do begin
   
     overlap=where(specular[loop-1,*] ne 0 and specular[loop,*] ne 0)
@@ -674,9 +679,11 @@ function get_specular_scale, event=event, $
     r2=total(specular[loop-1,overlap])/total(specular[loop,overlap])
     scale[loop]=(total(ratio)/si)*scale[loop-1]
     
-    _oplot = plot(QZvec, specular[loop,*]*scale[loop],/overplot,$
-      style_plot_lines[loop])
-      
+    if (_scaled_specular eq 'yes') then begin
+      _oplot = plot(QZvec, specular[loop,*]*scale[loop],/overplot,$
+        style_plot_lines[loop])
+    endif
+    
   endfor
   
   message2 = '-> Number of elements of scale: ' + $
