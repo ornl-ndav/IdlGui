@@ -91,6 +91,11 @@ pro final_plot_event, Event
       widget_control, id, draw_ysize = new_ysize
       widget_control, id, draw_xsize = colorbar_xsize
       
+      ;global info
+      id = widget_info(event.top, find_by_uname='global_info_uname')
+      widget_control, id, xoffset = new_xsize-colorbar_xsize-border-25
+      display_global_infos_button, event=event
+      
       plot_beam_center_scale, event=event
       refresh_plot, event, recalculate=1
       refresh_plot_colorbar, event
@@ -384,7 +389,7 @@ pro show_counts_vs_xaxis, event
   
   counts_vs_xaxis_plot_id = (*global_plot).counts_vs_xaxis_base
   if (widget_info(counts_vs_xaxis_plot_id,/valid_id) eq 0) then begin
-     counts_vs_axis_base, event=event, $
+    counts_vs_axis_base, event=event, $
       parent_base_uname = 'final_plot_base', $
       xaxis = 'qx'
   endif
@@ -416,7 +421,7 @@ end
 
 ;+
 ; :Description:
-;    This procedure is reached when any of the smooth button has been 
+;    This procedure is reached when any of the smooth button has been
 ;    clicked. The main purpose of this procedure is to change the label
 ;    of the newly clicked button to '> value <'
 ;
@@ -426,14 +431,14 @@ end
 ; :Author: j35
 ;-
 pro smooth_coefficient_eventcb, event
-compile_opt idl2
-
+  compile_opt idl2
+  
   new_uname = widget_info(event.id, /uname)
   widget_control,event.top,get_uvalue=global_plot
   
   ;get old smooth coefficient
   old_smooth_coefficient = $
-  strcompress((*global_plot).smooth_coefficient,/remove_all)   
+    strcompress((*global_plot).smooth_coefficient,/remove_all)
   old_uname = 'smooth_coefficient_' + old_smooth_coefficient
   label = getValue(event=event, uname=old_uname)
   
@@ -458,7 +463,7 @@ compile_opt idl2
   
   ;replot
   refresh_plot, event, recalculate=1
-
+  
 end
 
 ;+
@@ -520,6 +525,15 @@ pro final_plot_gui, wBase, $
     /tlb_size_events,$
     mbar = bar1,$
     GROUP_LEADER = ourGroup)
+    
+  info_help = widget_draw(wBase,$
+    uname = 'global_info_uname', $
+    xoffset = xsize-border-25,$
+    yoffset = 0,$
+    scr_xsize = 60,$
+    scr_ysize = 20,$
+    event_pro = 'global_info_draw_eventcb',$
+    /tracking_events)
     
   draw = widget_draw(wbase,$
     xoffset = border,$
@@ -649,11 +663,11 @@ pro final_plot_gui, wBase, $
     /menu)
     
   for i=1,10 do begin
-    
-    if (i eq 1) then begin 
-    _value = 'None'
+  
+    if (i eq 1) then begin
+      _value = 'None'
     endif else begin
-    _value = strcompress(i,/remove_all)
+      _value = strcompress(i,/remove_all)
     endelse
     
     if (i eq smooth_coefficient) then begin
@@ -668,7 +682,7 @@ pro final_plot_gui, wBase, $
   endfor
   
   info = widget_button(bar1, $
-    value = 'Infos',$
+    value = 'Live infos',$
     /menu)
     
   set = widget_button(info, $
@@ -692,12 +706,72 @@ pro final_plot_gui, wBase, $
     event_pro = 'show_counts_vs_yaxis',$
     uname = 'show_counts_vs_yaxis_uname')
     
-    set4 = widget_button(info,$
-    value = 'General informations',$
-    event_pro = 'general_infos',$
-    /separator)
-  
+;    set4 = widget_button(info,$
+;    value = 'General informations',$
+;    event_pro = 'general_infos',$
+;    /separator)
+    
 ;-------- end of menu
+    
+end
+
+;+
+; :Description:
+;    This routine display the global info button
+;
+; :Keywords:
+;    event
+;    main_base
+;
+; :Author: j35
+;-
+pro display_global_infos_button, event=event, main_base=main_base
+  compile_opt idl2
+  
+  raw_buttons = read_png('SOS_images/global_infos.png')
+  if (keyword_set(main_base)) then begin
+    mode_id = WIDGET_INFO(main_base, $
+      FIND_BY_UNAME='global_info_uname')
+  endif else begin
+    mode_id = WIDGET_INFO(event.top, $
+      FIND_BY_UNAME='global_info_uname')
+  endelse
+  widget_control, mode_id, get_value=id
+  wset, id
+  tv, raw_buttons, 0, 0, /true
+  
+end
+
+;+
+; :Description:
+;    display the metadata
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro global_info_draw_eventcb, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_plot
+  global_infos_base = (*global_plot).global_infos_base
+  
+  if (event.enter) then begin ;entering the global info widget_draw
+  
+    if (widget_info(global_infos_base, /valid_id) EQ 0) THEN BEGIN
+      global_infos_base, event=event, $
+        parent_base_uname = 'final_plot_base', $
+        time_stamp = (*global_plot).time_stamp
+    endif
+    
+  endif else begin ;leaving the global info widget_draw
+  
+    if (widget_info(global_infos_base, /valid_id)) THEN BEGIN
+      widget_control, global_infos_base, /destroy
+    endif
+    
+  endelse
   
 end
 
@@ -990,6 +1064,7 @@ pro final_plot, main_base=main_base, $
     counts_vs_yaxis_base: 0L, $ ;id of info counts vs y
     counts_vs_xaxis_plot_uname: '',$
     counts_vs_yaxis_plot_uname: '',$
+    global_infos_base: 0L, $ ;id of global infos base
     
     data: ptr_new(0L), $
     data_linear: ptr_new(0L), $
@@ -1008,7 +1083,7 @@ pro final_plot, main_base=main_base, $
     default_loadct: default_loadct, $ ;prism by default
     default_scale_setting: default_scale_setting, $ ;lin or log z-axis
     smooth_coefficient: smooth_coefficient,$
-
+    
     border: border, $ ;border of main plot (space reserved for scale)
     
     time_stamp: time_stamp,$
@@ -1118,6 +1193,9 @@ pro final_plot, main_base=main_base, $
   value = getValue(base=wBase, uname=uname)
   new_value = pre + value + post
   setValue, base=wBase, uname, new_value
+  
+  ;show global info button
+  display_global_infos_button, main_base=wBase
   
   save_background,  main_base=wBase
   
