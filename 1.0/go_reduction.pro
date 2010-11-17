@@ -1166,7 +1166,8 @@ pro go_reduction, event
     ;    Data_x = Data_x, $
     ;    Data_y = Data_y, $ ;Data_y
     ;    start_pixel = start_pixel, $
-    main_base_uname = 'main_base'
+    main_base_uname = 'main_base', $
+    output_folder = (*global).output_path
     
   ;  window, 1
   ;  contour, smooth(alog(divarray+1),5), $
