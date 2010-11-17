@@ -508,6 +508,28 @@ end
 
 ;+
 ; :Description:
+;    Using the date, this will produce a
+;    default file name that will be used when producing the output files
+;
+; :Params:
+;    event
+;
+; :Returns:
+;   default output file name
+;
+; :Author: j35
+;-
+function create_default_base_file_name, event
+  compile_opt idl2
+  
+  _time_stamp = GenerateIsoTimeStamp()
+  _base_file_name = 'SOS_infos_' + _time_stamp
+  
+  return, _base_file_name
+end
+
+;+
+; :Description:
 ;    reach when the user interacts with the plot (left click, move mouse
 ;    with left click).
 ;
@@ -590,10 +612,13 @@ pro draw_eventcb, event
         plots, x+off, y, /device
         plots, xsize, y, /device, /continue, color=fsc_color('white')
         
+        default_base_file_name = create_default_base_file_name(event)
+        
         output_info_base, event=event, $
           parent_base_uname = 'final_plot_base', $
-          output_folder = (*global_plot).output_folder
-          
+          output_folder = (*global_plot).output_folder, $
+        default_base_file = default_base_file_name
+        
         return
       endif
       
