@@ -529,6 +529,10 @@ pro draw_eventcb, event
     ;if x,y and counts base is on, shows live values of x,y and counts
     if (widget_info(info_base, /valid_id) ne 0) then begin
     
+      ;keep the main widget_draw activated
+      id = widget_info(event.top, find_by_uname='draw')
+      widget_control, id, /input_focus
+      
       x = retrieve_data_x_value(event)
       y = retrieve_data_y_value(event)
       z = retrieve_data_z_value(event)
@@ -545,13 +549,33 @@ pro draw_eventcb, event
     ;counts vs xaxis (qx)
     counts_vs_xaxis_plot_id = (*global_plot).counts_vs_xaxis_base
     if (widget_info(counts_vs_xaxis_plot_id,/valid_id) ne 0) then begin
+      ;keep the main widget_draw activated
+      id = widget_info(event.top, find_by_uname='draw')
+      widget_control, id, /input_focus
       plot_counts_vs_xaxis, event
     endif
     
     ;counts vs yaxis (qz)
     counts_vs_yaxis_plot_id = (*global_plot).counts_vs_yaxis_base
     if (widget_info(counts_vs_yaxis_plot_id,/valid_id) ne 0) then begin
+      ;keep the main widget_draw activated
+      id = widget_info(event.top, find_by_uname='draw')
+      widget_control, id, /input_focus
       plot_counts_vs_yaxis, event
+    endif
+    
+    ;right click validated only if there is at least one of the infos base
+    if ((widget_info(counts_vs_xaxis_plot_id,/valid_id) ne 0) or $
+      (widget_info(counts_vs_yaxis_plot_id,/valid_id) ne 0) or $
+      (widget_info(info_base,/valid_id) ne 0)) then begin
+      
+      if (event.press eq 4) then begin ;right click
+        output_info_base, event=event, $
+          parent_base_uname = 'final_plot_base', $
+          output_folder = (*global_plot).output_folder
+        return
+      endif
+      
     endif
     
     draw_zoom_selection = (*global_plot).draw_zoom_selection
