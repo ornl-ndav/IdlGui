@@ -114,13 +114,10 @@ pro global_infos_base_gui, wBase, $
   main_base_xsize = parent_base_geometry.xsize
   main_base_ysize = parent_base_geometry.ysize
   
-  ;  xsize = 300
-  ;  ysize = 100
-  
-  xoffset = main_base_xsize
+  xoffset = main_base_xsize/2
   xoffset += main_base_xoffset
   
-  yoffset = main_base_yoffset
+  yoffset = main_base_yoffset+55
   
   ourGroup = WIDGET_BASE()
   
