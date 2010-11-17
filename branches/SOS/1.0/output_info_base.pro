@@ -45,8 +45,7 @@ pro output_info_base_event, Event
   compile_opt idl2
   
   ;get global structure
-  widget_control,event.top,get_uvalue=global_plot
-  main_event = (*global_plot).main_event
+  widget_control,event.top,get_uvalue=global_info
   
   case Event.id of
   
@@ -57,16 +56,14 @@ pro output_info_base_event, Event
 end
 
 pro output_info_base_gui, wBase, $
-    parent_base_geometry
+    parent_base_geometry, $
+    output_folder = output_folder
   compile_opt idl2
   
   main_base_xoffset = parent_base_geometry.xoffset
   main_base_yoffset = parent_base_geometry.yoffset
   main_base_xsize = parent_base_geometry.xsize
   main_base_ysize = parent_base_geometry.ysize
-  
-;  xsize = 300
-;  ysize = 100
   
   xoffset = main_base_xsize/2
   xoffset += main_base_xoffset
@@ -75,7 +72,7 @@ pro output_info_base_gui, wBase, $
   
   ourGroup = WIDGET_BASE()
   
-  title = 'Output info selection file/plots'
+  title = 'Output of info selections: file/plots'
   wBase = WIDGET_BASE(TITLE = title, $
     UNAME        = 'output_info_base', $
     XOFFSET      = xoffset,$
@@ -87,13 +84,97 @@ pro output_info_base_gui, wBase, $
     /tlb_size_events,$
     GROUP_LEADER = ourGroup)
     
- 
+  ;counts vs Qx and Qz part
+  part1 = widget_base(wBase,$
+    /row,$
+    frame=1)
+
+  space = widget_label(part1,$
+  value = '    ')
+    
+  part11 = widget_base(part1,$
+  /column)  
+    
+  row1 = widget_label(part11,$
+    value = 'Counts vs Qx')
+  row1Base = widget_base(part11,$
+    /row)
+  row1col2Base = widget_base(row1Base,$
+    /column,$
+    /nonexclusive)
+  button1 = widget_button(row1col2Base,$
+    value = 'ascii file',$
+    uname = 'qx_ascii_file')
+  button2 = widget_button(row1col2Base,$
+    value = 'jpeg',$
+    uname = 'qx_jpg_file')
+    
+  space = widget_label(part1,$
+    value = '                       ')
+    
+  part12 = widget_base(part1,$
+  /column)  
+    
+  row1 = widget_label(part12,$
+    value = 'Counts vs Qz')
+  row1Base = widget_base(part12,$
+    /row)
+  row1col2Base = widget_base(row1Base,$
+    /column,$
+    /nonexclusive)
+  button1 = widget_button(row1col2Base,$
+    value = 'ascii file',$
+    uname = 'qz_ascii_file')
+  button2 = widget_button(row1col2Base,$
+    value = 'jpeg',$
+    uname = 'qz_jpg_file')
+    
+    space = widget_label(wBase,$
+    value = ' ')
+    
+  ;path and name
+  part2 = widget_base(wBase,$
+  /column,$
+  frame=1)
+  
+  row1 = widget_base(part2,$
+  /row)
+  label = widget_label(row1,$
+  value = 'Base file name')
+  name = widget_text(row1,$
+  value = '',$
+  xsize = 53,$
+  /editable,$
+  uname = 'base_file_name')
+  
+  where = widget_button(part2,$
+  value = output_folder,$
+  uname = 'base_output_folder',$
+  scr_xsize = 440) 
+  
+  space = widget_label(wBase,$
+  value = ' ')
+  
+  row3 = widget_base(wBase,$
+  /align_center,$
+  /row)
+  cancel = widget_button(row3,$
+  value = 'CANCEL',$
+  scr_xsize = 130,$
+  uname = 'cancel_output_info_base')
+  space = widget_label(row3,$
+  value = '                 ')
+  ok = widget_button(row3,$
+  value = 'OK',$
+  scr_xsize = 200,$
+  uname = 'ok_output_info_base')
+  
 end
 
 ;+
 ; :Description:
 ;    Killed routine
-;    
+;
 ; :Params:
 ;    id
 ;
@@ -106,15 +187,15 @@ pro output_info_base_killed, id
   
   catch, error
   if (error ne 0) then begin
-  catch,/cancel
-  return
+    catch,/cancel
+    return
   endif
   
   ;get global structure
   widget_control,id,get_uvalue=global_info
   event = (*global_info).parent_event
   refresh_plot, event
-
+  
 end
 
 ;+
@@ -126,15 +207,11 @@ end
 ;
 ; :Author: j35
 ;-
-pro counts_info_base_cleanup, tlb
-compile_opt idl2
-
-widget_control, tlb, get_uvalue=global_info, /no_copy
-
+pro output_info_base_cleanup, tlb
+  compile_opt idl2
+  widget_control, tlb, get_uvalue=global_info, /no_copy
   if (n_elements(global_info) eq 0) then return
-  
   ptr_free, global_info
-
 end
 
 ;+
@@ -173,7 +250,7 @@ pro output_info_base, event=event, $
   WIDGET_CONTROL, _base, SET_UVALUE = global_info
   
   XMANAGER, "output_info_base", _base, GROUP_LEADER = ourGroup, /NO_BLOCK, $
-  cleanup='output_info_base_cleanup'
-  
+    cleanup='output_info_base_cleanup'
+    
 end
 
