@@ -73,6 +73,13 @@ pro output_info_base_event, Event
       putValue, event=event, 'base_output_folder', new_path
     end
     
+    ;cancel button
+    widget_info(event.top, find_by_uname='cancel_output_info_base'): begin
+          id = widget_info(Event.top, $
+        find_by_uname='output_info_base')
+      widget_control, id, /destroy
+    end
+    
     else:
     
   endcase
