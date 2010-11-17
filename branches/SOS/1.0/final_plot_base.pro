@@ -883,6 +883,10 @@ pro final_plot_cleanup, tlb
   ptr_free, (*global_plot).data
   ptr_free, (*global_plot).data_linear
   ptr_free, (*global_plot).background
+  ptr_free, (*global_plot).counts_vs_qx_xaxis
+  ptr_free, (*global_plot).counts_vs_qx_data
+  ptr_free, (*global_plot).counts_vs_qz_xaxis
+  ptr_free, (*global_plot).counts_vs_qz_data
   
   ptr_free, global_plot
   
@@ -1071,6 +1075,15 @@ pro final_plot, main_base=main_base, $
     data_linear: ptr_new(0L), $
     x_axis: x_axis, $ ; [-0.004, -0.003, -0.002...]
     y_axis: y_axis, $ ; [0.0, 0.1, 0.2, 0.3]
+    
+    ;pointers used to output the counts vs qx/qz ascii files
+    counts_vs_qx_xaxis: ptr_new(0L), $
+    counts_vs_qx_data: ptr_new(0L), $
+    counts_vs_qz_xaxis: ptr_new(0L), $
+    counts_vs_qz_data: ptr_new(0L), $
+    
+    counts_vs_qx_lin: 0, $ ;0 is plot is linear, 1 if it's log
+    counts vs_qz_lin: 0, $
     
     output_folder: output_folder, $
     

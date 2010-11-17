@@ -186,6 +186,7 @@ pro plot_counts_vs_xaxis, event, clear=clear
   xaxis_plot_uname = (*global_plot).counts_vs_xaxis_plot_uname
   counts_vs_xaxis_base = (*global_plot).counts_vs_xaxis_base
   id = widget_info(counts_vs_xaxis_base, find_by_uname=xaxis_plot_uname)
+  
   widget_control, id, GET_VALUE = plot_id
   wset, plot_id
   
@@ -202,8 +203,8 @@ pro plot_counts_vs_xaxis, event, clear=clear
   congrid_xcoeff = (*global_plot).congrid_xcoeff  ;using ycoeff because of transpose
   congrid_ycoeff = (*global_plot).congrid_ycoeff  ;using xcoeff because of transpose
   
-  xdata = fix(float(event.x) * float(xdata_max) / congrid_xcoeff) ;tof
-  ydata = fix(float(event.y) * float(ydata_max) / congrid_ycoeff) ;pixel
+  xdata = fix(float(event.x) * float(xdata_max) / congrid_xcoeff)
+  ydata = fix(float(event.y) * float(ydata_max) / congrid_ycoeff)
   
   xaxis_plot_uname = (*global_plot).counts_vs_xaxis_plot_uname
   counts_vs_xaxis_base = (*global_plot).counts_vs_xaxis_base
@@ -221,6 +222,7 @@ pro plot_counts_vs_xaxis, event, clear=clear
   x_axis = (*global_plot).x_axis
   
   yaxis_type = (*global_plot).counts_vs_xaxis_yaxis_type
+  is_linear = 1
   if (yaxis_type eq 0) then begin
     plot, x_axis, data[*,ydata], xtitle='Qx', ytitle='Counts'
   endif else begin
@@ -240,7 +242,12 @@ pro plot_counts_vs_xaxis, event, clear=clear
       xtitle='Qx', $
       ytitle='Counts', $
       /ylog
+      is_linear = 0
   endelse
+  
+  (*(*global_plot).counts_vs_qx_xaxis) = x_axis
+  (*(*global_plot).counts_vs_qx_data) = data[*,ydata]
+  (*global_plot).counts_vs_qx_lin = is_linear
   
 end
 
@@ -306,6 +313,9 @@ pro plot_counts_vs_yaxis, event, clear=clear
     data[nan_array] = !values.f_nan
     plot, xrange, data[xdata,*], xtitle='Qz', ytitle='Counts',/ylog
   endelse
+  
+  (*(*global_plot).counts_vs_qz_xaxis) = xrange
+  (*(*global_plot).counts_vs_qz_data) = data[xdata,*]
   
 end
 
@@ -588,9 +598,8 @@ pro draw_eventcb, event
     
     ;right click validated only if there is at least one of the infos base
     if ((widget_info(counts_vs_xaxis_plot_id,/valid_id) ne 0) || $
-      (widget_info(counts_vs_yaxis_plot_id,/valid_id) ne 0) || $
-      (widget_info(info_base,/valid_id) ne 0)) then begin
-      
+      (widget_info(counts_vs_yaxis_plot_id,/valid_id) ne 0)) then begin
+
       if (event.press eq 4) then begin ;right click
       
         x=event.x
@@ -600,25 +609,35 @@ pro draw_eventcb, event
         xsize = geometry.xsize
         ysize = geometry.ysize
         
+        widget_control, id, GET_VALUE = plot_id
+        wset, plot_id
+        
         off = 20
         
         plots, x, 0, /device
-        plots, x, y-off, /device, /continue, color=fsc_color('white')
+        plots, x, y-off, /device, /continue, color=fsc_color('red')
         plots, x, y+off, /device
-        plots, x, ysize, /device, /continue, color=fsc_color('white')
+        plots, x, ysize, /device, /continue, color=fsc_color('red')
         
         plots, 0, y, /device
-        plots, x-off, y, /device, /continue, color=fsc_color('white')
+        plots, x-off, y, /device, /continue, color=fsc_color('red')
         plots, x+off, y, /device
-        plots, xsize, y, /device, /continue, color=fsc_color('white')
+        plots, xsize, y, /device, /continue, color=fsc_color('red')
         
         default_base_file_name = create_default_base_file_name(event)
+        
+        validate_qx_base = widget_info(counts_vs_xaxis_plot_id,/valid_id)
+        validate_qz_base = widget_info(counts_vs_yaxis_plot_id,/valid_id)
         
         output_info_base, event=event, $
           parent_base_uname = 'final_plot_base', $
           output_folder = (*global_plot).output_folder, $
-        default_base_file = default_base_file_name
-        
+          default_base_file = default_base_file_name, $
+          validate_qx_base = validate_qx_base, $
+          validate_qz_base = validate_qz_base, $
+          counts_vs_qz_lin = (*global_plot).counts vs_qz_lin, $
+          counts_vs_qx_lin = (*global_plot).counts vs_qx_lin
+          
         return
       endif
       
@@ -689,6 +708,9 @@ pro draw_eventcb, event
       geometry = widget_info(id,/geometry)
       xsize = geometry.xsize
       ysize = geometry.ysize
+      
+      widget_control, id, GET_VALUE = plot_id
+      wset, plot_id
       
       off = 20
       
