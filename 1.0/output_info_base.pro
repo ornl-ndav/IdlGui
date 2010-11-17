@@ -49,6 +49,7 @@ pro output_info_base_event, Event
   
   case Event.id of
   
+    ;base file name text field
     widget_info(event.top, find_by_uname='base_file_name'): begin
       value = getValue(event=event, uname='base_file_name')
       if (strcompress(value,/remove_all) eq '') then begin
@@ -58,8 +59,18 @@ pro output_info_base_event, Event
       endelse
       activate_button, event=event, $
         status = status_go, $
-      uname='ok_output_info_base'
-      
+        uname='ok_output_info_base'
+    end
+    
+    ;output folder button
+    widget_info(event.top, find_by_uname='base_output_folder'): begin
+      current_path = getValue(event=event, uname='base_output_folder')
+      title = 'Select output folder'
+      new_path = dialog_pickfile(path=current_path,$
+        /must_exist,$
+        /directory,$
+        title = title)
+      putValue, event=event, 'base_output_folder', new_path
     end
     
     else:
