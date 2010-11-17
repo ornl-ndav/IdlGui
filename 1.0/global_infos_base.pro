@@ -56,9 +56,57 @@ pro global_infos_base_event, Event
   
 end
 
+;+
+; :Description:
+;    Create the text that will be displayed in the text field
+;
+; :Keywords:
+;    title
+;    metadata
+;
+; :Returns:
+;    text to display
+;
+; :Author: j35
+;-
+function create_text, title=title, metadata=metadata
+  compile_opt idl2
+  
+  _metadata = metadata
+  _final_text = title
+  nbr_tags = n_tags(_metadata)
+  _index = 0
+  
+  while(_index lt nbr_tags) do begin
+    _text = string(_metadata.(_index).label) + ': ' + $
+      strcompress(_metadata.(_index).value,/remove_all)
+    _final_text = [_final_text, _text]
+    
+    _index++
+  endwhile
+  
+  return, _final_text
+  
+end
+
+;+
+; :Description:
+;    builds the gui
+;
+; :Params:
+;    wBase
+;    parent_base_geometry
+;
+; :Keywords:
+;    time_stamp
+;    metadata
+;
+; :Author: j35
+;-
 pro global_infos_base_gui, wBase, $
     parent_base_geometry, $
-    time_stamp = time_stamp
+    time_stamp = time_stamp, $
+    metadata = metadata
   compile_opt idl2
   
   main_base_xoffset = parent_base_geometry.xoffset
@@ -66,8 +114,8 @@ pro global_infos_base_gui, wBase, $
   main_base_xsize = parent_base_geometry.xsize
   main_base_ysize = parent_base_geometry.ysize
   
-;  xsize = 300
-;  ysize = 100
+  ;  xsize = 300
+  ;  ysize = 100
   
   xoffset = main_base_xsize
   xoffset += main_base_xoffset
@@ -81,19 +129,24 @@ pro global_infos_base_gui, wBase, $
     UNAME        = 'global_infos_base', $
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
-;    SCR_YSIZE    = ysize,$
-;    SCR_XSIZE    = xsize,$
+    ;    SCR_YSIZE    = ysize,$
+    ;    SCR_XSIZE    = xsize,$
     MAP          = 1,$
     /column,$
     /tlb_size_events,$
     GROUP_LEADER = ourGroup)
     
-    text = ['Global Informations','------------------','']
+  title = ['Global Informations','------------------','']
+  text = create_text(title=title, $
+    metadata=metadata)
     
-    text = widget_text(wBase,$
+  ysize = n_elements(text)
+  
+  text = widget_text(wBase,$
     value = text,$
+    ysize = ysize, $
     /scroll)
-        
+    
 end
 
 ;+
@@ -120,10 +173,11 @@ pro global_infos_base, event=event, $
   _base = ''
   global_infos_base_gui, _base, $
     parent_base_geometry, $
-    time_stamp = time_stamp
+    time_stamp = time_stamp, $
+    metadata = (*global_plot).metadata
     
-  (*global_plot).global_infos_base = _base 
-    
+  (*global_plot).global_infos_base = _base
+  
   WIDGET_CONTROL, _base, /REALIZE
   
   global_info = PTR_NEW({ _base: _base,$

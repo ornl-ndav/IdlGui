@@ -445,14 +445,13 @@ pro zoom_selection, event
     default_loadct = (*global_plot).default_loadct, $
     default_plot_size = (*global_plot).default_plot_size, $
     main_base_uname = 'final_plot_base', $
-    smooth_coefficient = (*global_plot).smooth_coefficient
+    smooth_coefficient = (*global_plot).smooth_coefficient, $
+    metadata = (*global_plot).metadata
     
 ;    current_plot_setting = current_plot_setting, $
 ;    Data_x = Data_x, $
 ;    Data_y = Data_y, $ ;Data_y
 ;    start_pixel = start_pixel, $
-    
-    
     
 ;  px_vs_tof_plots_base, event = event, $
 ;    main_base_uname = 'px_vs_tof_widget_base', $

@@ -111,4 +111,7 @@ function produce_metadata_structure, event, $
     tnum: {label:'Number of points to trim for specular reflection calculation', $
     value: tnum}}
     
+    return, metadata
+    
+    
 end
