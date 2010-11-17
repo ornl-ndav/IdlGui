@@ -565,14 +565,35 @@ pro draw_eventcb, event
     endif
     
     ;right click validated only if there is at least one of the infos base
-    if ((widget_info(counts_vs_xaxis_plot_id,/valid_id) ne 0) or $
-      (widget_info(counts_vs_yaxis_plot_id,/valid_id) ne 0) or $
+    if ((widget_info(counts_vs_xaxis_plot_id,/valid_id) ne 0) || $
+      (widget_info(counts_vs_yaxis_plot_id,/valid_id) ne 0) || $
       (widget_info(info_base,/valid_id) ne 0)) then begin
       
       if (event.press eq 4) then begin ;right click
+      
+        x=event.x
+        y=event.y
+        id = widget_info(event.top, find_by_uname='draw')
+        geometry = widget_info(id,/geometry)
+        xsize = geometry.xsize
+        ysize = geometry.ysize
+        
+        off = 20
+        
+        plots, x, 0, /device
+        plots, x, y-off, /device, /continue, color=fsc_color('white')
+        plots, x, y+off, /device
+        plots, x, ysize, /device, /continue, color=fsc_color('white')
+        
+        plots, 0, y, /device
+        plots, x-off, y, /device, /continue, color=fsc_color('white')
+        plots, x+off, y, /device
+        plots, xsize, y, /device, /continue, color=fsc_color('white')
+        
         output_info_base, event=event, $
           parent_base_uname = 'final_plot_base', $
           output_folder = (*global_plot).output_folder
+          
         return
       endif
       
