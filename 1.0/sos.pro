@@ -155,9 +155,9 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   if (strlowcase(debugger) eq 'yes') then begin
      if (!version.os eq 'darwin') then begin
-     input_path = '/Users/j35/IDLWorkspace80/SOS 1.0/NeXus/'
+     input_path = '/Users/j35/IDLWorkspace80/SOS 1.0/Files/'
      endif else begin
-      input_path = '/SNS/users/j35/IDLWorkspace80/SOS 1.0/NeXus/'
+      input_path = '/SNS/users/j35/IDLWorkspace80/SOS 1.0/Files/'
       endelse
     (*global).input_path = input_path
     
