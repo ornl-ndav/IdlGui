@@ -540,9 +540,10 @@ pro final_plot_gui, wBase, $
     yoffset = border,$
     scr_xsize = xsize-2*border,$
     scr_ysize = ysize-2*border,$
-    /button_events,$
-    /motion_events,$
-    /tracking_events,$
+    /button_events, $
+    /motion_events, $
+;    /tracking_events, $
+    keyboard_events=2, $
     retain=2, $
     event_pro = 'draw_eventcb',$
     uname = 'draw')
@@ -1081,6 +1082,10 @@ pro final_plot, main_base=main_base, $
     counts_vs_qx_data: ptr_new(0L), $
     counts_vs_qz_xaxis: ptr_new(0L), $
     counts_vs_qz_data: ptr_new(0L), $
+    
+    shift_key_status: 0b, $ ;when range is selected to produce 2d plots
+    QxQzrange: fltarr(2), $ ; [Qx0, Qz0]
+    EventRangeSelection: intarr(2), $ ;[event.x, event.y] when using first shift left click
     
     counts_vs_qx_lin: 0, $ ;0 is plot is linear, 1 if it's log
     counts_vs_qz_lin: 0, $
