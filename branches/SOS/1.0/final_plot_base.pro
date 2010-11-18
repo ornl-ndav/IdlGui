@@ -1083,7 +1083,7 @@ pro final_plot, main_base=main_base, $
     counts_vs_qz_data: ptr_new(0L), $
     
     counts_vs_qx_lin: 0, $ ;0 is plot is linear, 1 if it's log
-    counts vs_qz_lin: 0, $
+    counts_vs_qz_lin: 0, $
     
     output_folder: output_folder, $
     

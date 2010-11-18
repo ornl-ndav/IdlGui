@@ -146,13 +146,24 @@ end
 ;
 ; :Author: j35
 ;-
-function create_jpeg_file, Event, $
-    output_file_name = output_file_name
+function create_jpeg_file, xaxis = xaxis, $
+      yaxis = yaxis, $
+      xtitle = xtitle, $
+      is_yaxis_type_linear = is_yaxis_type_linear, $
+      output_file_name = output_file_name
   compile_opt idl2
   
-  widget_control, id_draw, get_value=id_value
-  wset, id_value
-  image = tvread(filename=output_file_name, /jpeg, /nodialog)
+  thisDevice = !D.name
+  set_plot, 'PS'
+  device, filename=output_file_name
+  
+  if (is_yaxis_type_linear) then begin
+  plot, xaxis, yaxis, xtitle=xtitle, ytitle='Counts'
+  endif else begin
+  plot, xaxis, yaxis, xtitle=xtitle, ytitle='Counts', /ylog
+  endelse
+  device, /close_file
+  set_plot, thisDevice
   
   return, 1
 end
@@ -174,6 +185,7 @@ pro ok_output_info_event, event
   _output_file = _path + _base_file_name
   
   widget_control, event.top, get_uvalue=global_info
+  
   global_plot = (*global_info).global_plot
   
   ;do we want counts vs qx ascii
@@ -190,11 +202,11 @@ pro ok_output_info_event, event
   ;do we want counts vs qx jpg
   qx_jpeg = isButtonSelected(event=event, uname='qx_jpg_file')
   if (qx_jpeg && validate_qx_base) then begin
-    ext = '_IvsQx'
-    result = create_jpeg_file(Event, $
-      xaxis = (*(*global_plot).counts_vs_qx_xaxis), $
+    ext = '_IvsQx.ps'
+    result = create_jpeg_file(xaxis = (*(*global_plot).counts_vs_qx_xaxis), $
       yaxis = (*(*global_plot).counts_vs_qx_data), $
-      yaxis_type = (*global).counts_vs_qx_lin, $
+      xtitle = 'Qx', $
+      is_yaxis_type_linear = (*global_plot).counts_vs_qx_lin, $
       output_file_name = _output_file + ext)
   endif
   
@@ -211,11 +223,11 @@ pro ok_output_info_event, event
   ;do we want counts vs qz jpg
   qz_jpeg = isButtonSelected(event=event, uname='qz_jpg_file')
   IF (qz_jpeg && validate_qz_base) then begin
-    ext = '_IvsQz'
-    result = create_jpeg_file(Event, $
-      xaxis = (*(*global_plot).counts_vs_qz_xaxis), $
+    ext = '_IvsQz.ps'
+    result = create_jpeg_file(xaxis = (*(*global_plot).counts_vs_qz_xaxis), $
       yaxis = (*(*global_plot).counts_vs_qz_data), $
-      yaxis_type = (*global).counts_vs_qz_lin, $
+      xtitle = 'Qz', $
+      is_yaxis_type_linear = (*global_plot).counts_vs_qz_lin, $
       output_file_name = _output_file + ext)
   endif
   
@@ -422,8 +434,8 @@ pro output_info_base, event=event, $
     default_base_file = default_base_file, $
     validate_qx_base = validate_qx_base, $
     validate_qz_base = validate_qz_base, $
-    counts vs_qz_lin = counts_vs_qz_lin, $
-    counts vs_qx_lin = counts_vs_qx_lin
+    counts_vs_qz_lin = counts_vs_qz_lin, $
+    counts_vs_qx_lin = counts_vs_qx_lin
 
   compile_opt idl2
   
