@@ -75,6 +75,13 @@ pro output_info_base_event, Event
     
     ;cancel button
     widget_info(event.top, find_by_uname='cancel_output_info_base'): begin
+    
+      parent_event = (*global_info).parent_event
+      refresh_plot, parent_event, recalculate=1
+      save_background, event=parent_event
+      (*global_plot).shift_key_status = 0b
+      
+      
       id = widget_info(Event.top, $
         find_by_uname='output_info_base')
       widget_control, id, /destroy
@@ -147,10 +154,10 @@ end
 ; :Author: j35
 ;-
 function create_jpeg_file, xaxis = xaxis, $
-      yaxis = yaxis, $
-      xtitle = xtitle, $
-      is_yaxis_type_linear = is_yaxis_type_linear, $
-      output_file_name = output_file_name
+    yaxis = yaxis, $
+    xtitle = xtitle, $
+    is_yaxis_type_linear = is_yaxis_type_linear, $
+    output_file_name = output_file_name
   compile_opt idl2
   
   thisDevice = !D.name
@@ -158,9 +165,9 @@ function create_jpeg_file, xaxis = xaxis, $
   device, filename=output_file_name
   
   if (is_yaxis_type_linear) then begin
-  plot, xaxis, yaxis, xtitle=xtitle, ytitle='Counts'
+    plot, xaxis, yaxis, xtitle=xtitle, ytitle='Counts'
   endif else begin
-  plot, xaxis, yaxis, xtitle=xtitle, ytitle='Counts', /ylog
+    plot, xaxis, yaxis, xtitle=xtitle, ytitle='Counts', /ylog
   endelse
   device, /close_file
   set_plot, thisDevice
@@ -203,13 +210,13 @@ pro ok_output_info_event, event
       yaxis=(*(*global_plot).counts_vs_qx_data), $
       output_file_name = output_file_name)
       
-      if (result) then begin ;files created with success
+    if (result) then begin ;files created with success
       _message = '---> OK'
-      endif else begin
+    endif else begin
       _message = '---> FAILED'
-      endelse
-      _text = output_file_name + _message
-      list_of_files_produced = [list_of_files_produced, _text]
+    endelse
+    _text = output_file_name + _message
+    list_of_files_produced = [list_of_files_produced, _text]
   endif
   
   ;do we want counts vs qx jpg
@@ -222,14 +229,14 @@ pro ok_output_info_event, event
       xtitle = 'Qx', $
       is_yaxis_type_linear = (*global_plot).counts_vs_qx_lin, $
       output_file_name = output_file_name)
-  
-  if (result) then begin ;files created with success
+      
+    if (result) then begin ;files created with success
       _message = '---> OK'
-      endif else begin
+    endif else begin
       _message = '---> FAILED'
-      endelse
-      _text = output_file_name + _message
-      list_of_files_produced = [list_of_files_produced, _text]
+    endelse
+    _text = output_file_name + _message
+    list_of_files_produced = [list_of_files_produced, _text]
   endif
   
   ;do we want counts vs qz ascii
@@ -241,14 +248,14 @@ pro ok_output_info_event, event
     result = create_ascii_file(xaxis=(*(*global_plot).counts_vs_qz_xaxis), $
       yaxis=(*(*global_plot).counts_vs_qz_data), $
       output_file_name = output_file_name)
-  
-  if (result) then begin ;files created with success
+      
+    if (result) then begin ;files created with success
       _message = '---> OK'
-      endif else begin
+    endif else begin
       _message = '---> FAILED'
-      endelse
-      _text = output_file_name + _message
-      list_of_files_produced = [list_of_files_produced, _text]
+    endelse
+    _text = output_file_name + _message
+    list_of_files_produced = [list_of_files_produced, _text]
   endif
   
   ;do we want counts vs qz jpg
@@ -261,28 +268,34 @@ pro ok_output_info_event, event
       xtitle = 'Qz', $
       is_yaxis_type_linear = (*global_plot).counts_vs_qz_lin, $
       output_file_name = output_file_name)
-  
-  if (result) then begin ;files created with success
+      
+    if (result) then begin ;files created with success
       _message = '---> OK'
-      endif else begin
+    endif else begin
       _message = '---> FAILED'
-      endelse
-      _text = output_file_name + _message
-      list_of_files_produced = [list_of_files_produced, _text]
+    endelse
+    _text = output_file_name + _message
+    list_of_files_produced = [list_of_files_produced, _text]
   endif
   
   title = 'Status of files created'
   id = widget_info(event.top, find_by_uname='output_info_base')
   result = dialog_message(list_of_files_produced, $
-  /information, $
-  title = title, $
-  /center, $
-  dialog_parent = id)
-  
+    /information, $
+    title = title, $
+    /center, $
+    dialog_parent = id)
+    
   if (strlowcase(result) eq 'ok') then begin
-        id = widget_info(Event.top, $
-        find_by_uname='output_info_base')
-      widget_control, id, /destroy
+  
+    parent_event = (*global_info).parent_event
+    refresh_plot, parent_event, recalculate=1
+    save_background, event=parent_event
+    (*global_plot).shift_key_status = 0b
+    
+    id = widget_info(Event.top, $
+      find_by_uname='output_info_base')
+    widget_control, id, /destroy
   endif
   
 end
@@ -490,7 +503,7 @@ pro output_info_base, event=event, $
     validate_qz_base = validate_qz_base, $
     counts_vs_qz_lin = counts_vs_qz_lin, $
     counts_vs_qx_lin = counts_vs_qx_lin
-
+    
   compile_opt idl2
   
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME=parent_base_uname)
