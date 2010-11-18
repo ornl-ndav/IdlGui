@@ -372,7 +372,7 @@ pro output_info_base_gui, wBase, $
     uname = 'qx_ascii_file')
   widget_control, button1, /set_button
   button2 = widget_button(row1col2Base,$
-    value = 'jpeg (_IvsQx.jpg)',$
+    value = 'ps (_IvsQx.ps)',$
     uname = 'qx_jpg_file')
     
   space = widget_label(part1,$
@@ -394,7 +394,7 @@ pro output_info_base_gui, wBase, $
     uname = 'qz_ascii_file')
   widget_control, button1, /set_button
   button2 = widget_button(row1col2Base,$
-    value = 'jpeg (_IvsQz.jpg)',$
+    value = 'ps (_IvsQz.ps)',$
     uname = 'qz_jpg_file')
     
   space = widget_label(wBase,$
