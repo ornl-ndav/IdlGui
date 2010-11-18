@@ -36,7 +36,7 @@ pro design_view_menu, bar, global
   compile_opt idl2
     
   mPlot = widget_button(bar, $
-    value = 'View',$
+    value = 'Log book',$
     /menu)
     
   set2 = widget_button(mPlot, $

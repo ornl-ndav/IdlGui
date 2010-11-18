@@ -136,6 +136,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ;    SCR_XSIZE    = MainBaseSize[2], $
     ;    SCR_YSIZE    = MainBaseSize[3], $
     mbar = bar,$
+    /column, $
     TITLE        = MainTitle)
     
   bFindnexus = is_findnexus_there()

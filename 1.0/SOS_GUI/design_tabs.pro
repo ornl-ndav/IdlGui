@@ -43,7 +43,7 @@ pro design_tabs, MAIN_BASE, global
     
   ;********* tab 1 *****************
   base1 = widget_base(tabs,$
-    title = 'LOAD AND RUN')
+    title = 'Work with NeXus')
     
   _base1 = widget_base(base1,$
     /column)
@@ -284,9 +284,20 @@ pro design_tabs, MAIN_BASE, global
   value = '3',$
   uname = 'tnum_uname',$
   title = '                                tnum')
+
+  ;********* tab 2 *****************
+  base1 = widget_base(tabs,$
+    title = 'Work with rtof')
     
+  _base1 = widget_base(base1,$
+    /column)
+
+
+
+  ;********** bottom part of main gui *********************
+  ;
   ;progress bar and go button
-  bottom_box = widget_base(_base1,$
+  bottom_box = widget_base(main_base,$
     /align_center,$
     /row)
     
