@@ -165,6 +165,8 @@ function create_jpeg_file, xaxis = xaxis, $
   device, /close_file
   set_plot, thisDevice
   
+  if (~file_test(output_file_name)) then return, 0
+  
   return, 1
 end
 
@@ -192,22 +194,42 @@ pro ok_output_info_event, event
   qx_ascii = isButtonSelected(event=event, uname='qx_ascii_file')
   validate_qx_base = (*global_info).validate_qx_base
   
+  list_of_files_produced = !null
+  
   if (qx_ascii && validate_qx_base) then begin
     ext = '_IvsQx.txt'
+    output_file_name = _output_file + ext
     result = create_ascii_file(xaxis=(*(*global_plot).counts_vs_qx_xaxis), $
       yaxis=(*(*global_plot).counts_vs_qx_data), $
-      output_file_name = _output_file + ext)
+      output_file_name = output_file_name)
+      
+      if (result) then begin ;files created with success
+      _message = '---> OK'
+      endif else begin
+      _message = '---> FAILED'
+      endelse
+      _text = output_file_name + _message
+      list_of_files_produced = [list_of_files_produced, _text]
   endif
   
   ;do we want counts vs qx jpg
   qx_jpeg = isButtonSelected(event=event, uname='qx_jpg_file')
   if (qx_jpeg && validate_qx_base) then begin
     ext = '_IvsQx.ps'
+    output_file_name = _output_file + ext
     result = create_jpeg_file(xaxis = (*(*global_plot).counts_vs_qx_xaxis), $
       yaxis = (*(*global_plot).counts_vs_qx_data), $
       xtitle = 'Qx', $
       is_yaxis_type_linear = (*global_plot).counts_vs_qx_lin, $
-      output_file_name = _output_file + ext)
+      output_file_name = output_file_name)
+  
+  if (result) then begin ;files created with success
+      _message = '---> OK'
+      endif else begin
+      _message = '---> FAILED'
+      endelse
+      _text = output_file_name + _message
+      list_of_files_produced = [list_of_files_produced, _text]
   endif
   
   ;do we want counts vs qz ascii
@@ -215,20 +237,52 @@ pro ok_output_info_event, event
   validate_qz_base = (*global_info).validate_qz_base
   if (qz_ascii && validate_qz_base) then begin
     ext = '_IvsQz.txt'
+    output_file_name = _output_file + ext
     result = create_ascii_file(xaxis=(*(*global_plot).counts_vs_qz_xaxis), $
       yaxis=(*(*global_plot).counts_vs_qz_data), $
-      output_file_name = _output_file + ext)
+      output_file_name = output_file_name)
+  
+  if (result) then begin ;files created with success
+      _message = '---> OK'
+      endif else begin
+      _message = '---> FAILED'
+      endelse
+      _text = output_file_name + _message
+      list_of_files_produced = [list_of_files_produced, _text]
   endif
   
   ;do we want counts vs qz jpg
   qz_jpeg = isButtonSelected(event=event, uname='qz_jpg_file')
   IF (qz_jpeg && validate_qz_base) then begin
     ext = '_IvsQz.ps'
+    output_file_name = _output_file + ext
     result = create_jpeg_file(xaxis = (*(*global_plot).counts_vs_qz_xaxis), $
       yaxis = (*(*global_plot).counts_vs_qz_data), $
       xtitle = 'Qz', $
       is_yaxis_type_linear = (*global_plot).counts_vs_qz_lin, $
-      output_file_name = _output_file + ext)
+      output_file_name = output_file_name)
+  
+  if (result) then begin ;files created with success
+      _message = '---> OK'
+      endif else begin
+      _message = '---> FAILED'
+      endelse
+      _text = output_file_name + _message
+      list_of_files_produced = [list_of_files_produced, _text]
+  endif
+  
+  title = 'Status of files created'
+  id = widget_info(event.top, find_by_uname='output_info_base')
+  result = dialog_message(list_of_files_produced, $
+  /information, $
+  title = title, $
+  /center, $
+  dialog_parent = id)
+  
+  if (strlowcase(result) eq 'ok') then begin
+        id = widget_info(Event.top, $
+        find_by_uname='output_info_base')
+      widget_control, id, /destroy
   endif
   
 end
