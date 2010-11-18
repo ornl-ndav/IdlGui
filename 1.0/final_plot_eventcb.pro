@@ -768,6 +768,13 @@ pro draw_eventcb, event
   
   if (event.press eq 1 && $
     event.clicks eq 1) then begin ;user left clicked the mouse
+    
+    if ((*global_plot).shift_key_status) then begin
+          (*global_plot).shift_key_status = 0b
+      refresh_plot, event, recalculate=1
+      save_background, event=event
+    endif
+    
     (*global_plot).left_click = 1b
     x0 = event.x
     y0 = event.y
@@ -777,7 +784,8 @@ pro draw_eventcb, event
   endif
   
   if (event.release eq 1 && $
-    (*global_plot).left_click) then begin ;user release left clicked
+    (*global_plot).left_click && $
+    event.key ne 1) then begin ;user release left clicked
     (*global_plot).left_click = 0b
     x1 = event.x
     y1 = event.y
@@ -843,6 +851,22 @@ pro draw_eventcb, event
     plots, x-off, y, /device, /continue, color=fsc_color('white')
     plots, x+off, y, /device
     plots, xsize, y, /device, /continue, color=fsc_color('white')
+    
+    if ((*global_plot).shift_key_status) then begin ;shift is clicked
+    
+      QxQzrangeEvent = (*global_plot).EventRangeSelection
+      
+      xmin = min([QxQzrangeEvent[0],x],max=xmax)
+      ymin = min([QxQzrangeEvent[1],y],max=ymax)
+      
+      plots, xmin, ymin, /device
+      plots, xmin, ymax, /device, /continue, color=fsc_color('green')
+      plots, xmax, ymax, /device, /continue, color=fsc_color('green')
+      plots, xmax, ymin, /device, /continue, color=fsc_color('green')
+      plots, xmin, ymin, /device, /continue, color=fsc_color('green')
+      
+    endif
+    
     
   endif
   
