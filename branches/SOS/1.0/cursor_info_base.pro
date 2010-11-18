@@ -99,38 +99,32 @@ pro cursor_info_base_gui, wBase, $
      row1 = widget_base(wBase,$
     /row)
     lab = widget_label(row1,$
-    value = 'Qx:',$
-    scr_xsize= 60,$
+    value = 'Qx (' + string("305B) + '): ',$
+;    scr_xsize= 60,$
     /align_right)
     val = widget_label(row1,$
     value = 'N/A',$
     uname = 'cursor_info_x_value_uname',$
-    scr_xsize = 100,$
+    scr_xsize = 200,$
     /align_left)
-    unit = widget_label(row1,$
-    value = string("305B),$
-    /align_left)
-    
+
     row2 = widget_base(wBase,$
     /row)
     lab = widget_label(row2,$
-    value = 'Qz:',$
-    scr_xsize= 60,$
+    value = 'Qz (' + string("305B) + '): ',$
+;    scr_xsize= 60,$
     /align_right)
     val = widget_label(row2,$
     value = 'N/A',$
     uname = 'cursor_info_y_value_uname',$
-    scr_xsize = 100,$
-    /align_left)
-    unit = widget_label(row2,$
-    value = string("305B),$
+    scr_xsize = 200,$
     /align_left)
 
   row3 = widget_base(wBase,$
     /row)
     lab = widget_label(row3,$
-    value = 'Counts:',$
-    scr_xsize= 60,$
+    value = 'Counts: ',$
+;    scr_xsize= 60,$
     /align_right)
     val = widget_label(row3,$
     uname = 'cursor_info_z_value_uname',$
