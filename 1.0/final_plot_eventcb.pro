@@ -224,7 +224,9 @@ pro plot_counts_vs_xaxis, event, clear=clear
   yaxis_type = (*global_plot).counts_vs_xaxis_yaxis_type
   is_linear = 1
   if (yaxis_type eq 0) then begin
+  
     plot, x_axis, data[*,ydata], xtitle='Qx', ytitle='Counts'
+ 
   endif else begin
   
     catch,error
@@ -243,6 +245,7 @@ pro plot_counts_vs_xaxis, event, clear=clear
       ytitle='Counts', $
       /ylog
       is_linear = 0
+ 
   endelse
   
   (*(*global_plot).counts_vs_qx_xaxis) = x_axis
@@ -635,8 +638,8 @@ pro draw_eventcb, event
           default_base_file = default_base_file_name, $
           validate_qx_base = validate_qx_base, $
           validate_qz_base = validate_qz_base, $
-          counts_vs_qz_lin = (*global_plot).counts vs_qz_lin, $
-          counts_vs_qx_lin = (*global_plot).counts vs_qx_lin
+          counts_vs_qz_lin = (*global_plot).counts_vs_qz_lin, $
+          counts_vs_qx_lin = (*global_plot).counts_vs_qx_lin
           
         return
       endif
