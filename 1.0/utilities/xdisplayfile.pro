@@ -243,7 +243,8 @@ PRO XDisplayFile, FILENAME, TITLE = TITLE, GROUP = GROUP, WIDTH = WIDTH, $
   ;			                button align on left, removed padding.
   ;	      19 Nov 2004, GROW_TO_SCREEN and RETURN_ID keywords. Allow for
   ;                     user to resize display. General updating.
-  ;       03 Octo 2010, CENTER, OFFSET, XOFFSET and YOFFSET flags added
+  ;       03 Octo 2010, j35@ornl.gov CENTER, OFFSET, XOFFSET and 
+  ;                     YOFFSET flags added
   ;-
     
   ; Establish defaults if keywords not specified

@@ -303,11 +303,13 @@ pro design_tabs, MAIN_BASE, global
   value = widget_text(row1, $
     value = '', $
     xsize = 110, $
+    /all_events, $
     /editable, $
     uname = 'rtof_file_text_field_uname')
   preview = widget_button(row1, $
     value = 'Preview...', $
     uname = 'rtof_file_preview_button',$
+    event_pro = 'rtof_file_preview_button_eventcb', $
     sensitive = 0, $
     scr_xsize = 80)
     
