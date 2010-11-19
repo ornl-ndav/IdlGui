@@ -297,7 +297,7 @@ pro design_tabs, MAIN_BASE, global
     /row,$
     frame = 1)
   button = widget_button(row1, $
-    value = 'Browse file ...',$
+    value = 'Browse ...',$
     event_pro = 'browse_for_rtof_file_button', $
     scr_xsize = 100)
   value = widget_text(row1, $
@@ -306,6 +306,10 @@ pro design_tabs, MAIN_BASE, global
     /all_events, $
     /editable, $
     uname = 'rtof_file_text_field_uname')
+    load = widget_button(row1,$
+    value = 'Load',$
+    uname = 'load_rtof_file_button',$
+    sensitive = 0)
   preview = widget_button(row1, $
     value = 'Preview...', $
     uname = 'rtof_file_preview_button',$

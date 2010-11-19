@@ -42,7 +42,7 @@ PRO main_base_event, Event
   
     widget_info(wWidget, find_by_uname='main_base'): begin
     end
-      
+    
     ;MENU
     ;view log book button
     widget_info(wWidget, find_by_uname='view_log_book_switch'): begin
@@ -78,18 +78,18 @@ PRO main_base_event, Event
       
     end
     
-      ;tab event
+    ;tab event
     widget_info(wWidget, find_by_uname='tab_uname'): begin
       tab_id = widget_info(event.top,find_by_uname='tab_uname')
       CurrTabSelect = widget_info(tab_id,/tab_current)
       PrevTabSelect = (*global).PrevTabSelect
       if (CurrTabSelect ne PrevTabSelect) then begin
         check_go_button, event
-      (*global).PrevTabSelect = CurrTabSelect
+        (*global).PrevTabSelect = CurrTabSelect
       endif
-    
+      
     end
-  
+    
     ;TAB1
     ;Data run numbers text field
     widget_info(wWidget, find_by_uname='data_run_numbers_text_field'): begin
@@ -128,9 +128,14 @@ PRO main_base_event, Event
     
     ;rtof text field
     widget_info(wWidget, find_by_uname='rtof_file_text_field_uname'): begin
-      check_preview_rtof_button_status, event
+      check_rtof_buttons_status, event
     end
     
+    ;load button
+    widget_info(wWidget, find_by_uname='load_rtof_file_button'): begin
+      file_name = getvalue(event=event, uname='rtof_file_text_field_uname')
+      result = load_rtof_file(event, file_name)
+    end
     
     ;---- bottom part of GUI ----------
     

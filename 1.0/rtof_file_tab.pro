@@ -66,6 +66,10 @@ pro browse_for_rtof_file_button, event
     (*global).input_path = new_path
     message = '-> rtof file loaded: ' + file_name[0]
     putvalue, event=event, 'rtof_file_text_field_uname', file_name
+    
+    ;loading data from rtof file
+    load_rtof_file, event, file_name
+    
   endif else begin
     message = '-> no rtof file loaded (operation canceled)!'
   endelse
@@ -77,21 +81,23 @@ end
 
 ;+
 ; :Description:
-;    Check if the rtof preview button can be enabled or not
+;    Check if the rtof preview and load buttons can be enabled or not
 ;
 ; :Params:
 ;    event
 ;
 ; :Author: j35
 ;-
-pro check_preview_rtof_button_status, event
+pro check_rtof_buttons_status, event
   compile_opt idl2
   
   file_name = getvalue(event=event, uname='rtof_file_text_field_uname')
   if (file_test(file_name) ne 1) then begin
     activate_button, event=event, uname='rtof_file_preview_button', status=0
+    activate_button, event=event, uname='load_rtof_file_button', status=0
   endif else begin
     activate_button, event=event, uname='rtof_file_preview_button', status=1
+    activate_button, event=event, uname='load_rtof_file_button', status=1
   endelse
   
 end
