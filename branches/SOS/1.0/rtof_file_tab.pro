@@ -52,6 +52,9 @@ pro browse_for_rtof_file_button, event
   id = widget_info(event.top, find_by_uname='main_base')
   path = (*global).input_path
   
+  message = '> Browsing for a rtof file...'
+  log_book_update, event, message = message
+  
   file_name = dialog_pickfile(default_extension = default_extension, $
     dialog_parent = id, $
     title = title, $
@@ -61,9 +64,13 @@ pro browse_for_rtof_file_button, event
     
   if (file_name ne '') then begin
     (*global).input_path = new_path
+    message = '-> rtof file loaded: ' + file_name[0]
     putvalue, event=event, 'rtof_file_text_field_uname', file_name
-  endif
+  endif else begin
+    message = '-> no rtof file loaded (operation canceled)!'
+  endelse
   
+  log_book_update, event, message = message
   check_preview_rtof_button_status, event
   
 end
