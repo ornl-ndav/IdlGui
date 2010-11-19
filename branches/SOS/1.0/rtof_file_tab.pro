@@ -78,6 +78,36 @@ end
 ; :Author: j35
 ;-
 pro check_preview_rtof_button_status, event
-compile_opt idl2
+  compile_opt idl2
+  
+  file_name = getvalue(event=event, uname='rtof_file_text_field_uname')
+  if (file_test(file_name) ne 1) then begin
+    activate_button, event=event, uname='rtof_file_preview_button', status=0
+  endif else begin
+    activate_button, event=event, uname='rtof_file_preview_button', status=1
+  endelse
+  
+end
 
+;+
+; :Description:
+;    Button that will display the containt of the rtof file using
+;    xdisplayfile
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro rtof_file_preview_button_eventcb, event
+  compile_opt idl2
+  
+  file_name = getvalue(event=event, uname='rtof_file_text_field_uname')
+  if (file_test(file_name) ne 1) then return
+  
+  id = widget_info(event.top, find_by_uname='main_base')
+  
+  xdisplayfile, file_name[0], title=file_name[0], /center, $
+    group=id
+    
 end

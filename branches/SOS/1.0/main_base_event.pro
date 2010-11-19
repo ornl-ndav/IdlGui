@@ -114,13 +114,22 @@ PRO main_base_event, Event
     
     ;full reset
     widget_info(wWidget, find_by_uname='full_reset'): begin
-    full_reset, event
+      full_reset, event
     end
     
     ;GO REDUCTION
     widget_info(wWidget, find_by_uname='go_button'): begin
       go_reduction, event
     end
+    
+    ;--- tab2 (work with rtof) ----
+    
+    ;rtof text field
+    widget_info(wWidget, find_by_uname='rtof_file_text_field_uname'): begin
+      check_preview_rtof_button_status, event
+    end
+    
+    
     
     else:
   endcase
