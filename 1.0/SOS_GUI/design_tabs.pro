@@ -292,6 +292,28 @@ pro design_tabs, MAIN_BASE, global
   _base1 = widget_base(base1,$
     /column)
 
+ ;input base
+ row1 = widget_base(_base1, $
+ /row,$
+ frame = 1)
+ button = widget_button(row1, $
+ value = 'Browse for rtof file ...',$
+ event_pro = 'browse_for_rtof_file_button', $
+ scr_xsize = 180)
+ value = widget_text(row1, $
+ value = '', $
+ xsize = 100, $
+ /editable, $
+ uname = 'rtof_file_text_field_uname')
+ preview = widget_button(row1, $
+ value = 'Preview...', $
+ uname = 'rtof_file_preview_button',$
+ sensitive = 0, $
+ scr_xsize = 80)
+ 
+ 
+
+
 
 
   ;********** bottom part of main gui *********************
