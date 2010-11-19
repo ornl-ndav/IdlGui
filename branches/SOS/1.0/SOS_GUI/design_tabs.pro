@@ -78,57 +78,57 @@ pro design_tabs, MAIN_BASE, global
     uname = 'data_browse_button',$
     scr_xsize = 575)
     
-  ;data status  
+  ;data status
   inter_row = widget_base(_base1,$
-  /row,$
-  frame=1,$
-  /align_right)
-  
+    /row,$
+    frame=1,$
+    /align_right)
+    
   label = widget_label(inter_row,$
-  value = 'Data Status:')
+    value = 'Data Status:')
   value = widget_label(inter_row,$
-  value = '0 data file loaded!',$
-  /align_left,$
-  uname = 'data_status_label',$
-  scr_xsize = 200)
+    value = '0 data file loaded!',$
+    /align_left,$
+    uname = 'data_status_label',$
+    scr_xsize = 200)
     
   ;SPACE
   space = widget_label(_base1,$
     value = ' ')
-  
+    
   ;NORMALIZATION
   norm_box = widget_base(_base1,$
     frame = 1,$
     /align_center,$
     /base_align_center,$
     /row)
-  
-    ;norm status  
+    
+  ;norm status
   inter_row = widget_base(_base1,$
-  /row,$
-  frame=1,$
-  /align_right)
-  
+    /row,$
+    frame=1,$
+    /align_right)
+    
   label = widget_label(inter_row,$
-  value = 'Norm Status:')
+    value = 'Norm Status:')
   value = widget_label(inter_row,$
-  value = '0 normalization file loaded!',$
-  /align_left,$
-  uname = 'norm_status_label',$
-  scr_xsize = 200)
-  
+    value = '0 normalization file loaded!',$
+    /align_left,$
+    uname = 'norm_status_label',$
+    scr_xsize = 200)
+    
     
   ;display those widgets if findnexus is in the path
   if (bFindnexus) then begin
   
     norm = cw_field(norm_box, $
-    value = '',$
-    xsize = 8,$
-    title = 'Normalization run number:',$
-    /row,$
-    uname = 'norm_run_number_text_field',$
-    /return_events,$
-    /integer)
+      value = '',$
+      xsize = 8,$
+      title = 'Normalization run number:',$
+      /row,$
+      uname = 'norm_run_number_text_field',$
+      /return_events,$
+      /integer)
       
     or_label = widget_label(norm_box,$
       value = '  OR  ')
@@ -155,15 +155,15 @@ pro design_tabs, MAIN_BASE, global
   row1col1 = widget_base(row1,$
     /column)
     
-;  angstrom = '!3' + string(197B) + '!X'  
+  ;  angstrom = '!3' + string(197B) + '!X'
   field1 = cw_field(row1col1,$
     /integer,$
     xsize = 6,$
     value = '500',$
     uname = 'bins_qx',$
-;    title = 'Bins:  Qx (' + string("305B) + ')')
+    ;    title = 'Bins:  Qx (' + string("305B) + ')')
     title = 'Bins:  Qx')
-;     title = 'Bins:  Qx (' + angstrom + ')')
+  ;     title = 'Bins:  Qx (' + angstrom + ')')
   field2 = cw_field(row1col1,$
     xsize = 6,$
     /integer,$
@@ -271,51 +271,46 @@ pro design_tabs, MAIN_BASE, global
     
   ;specular reflexion parameters
   row2col3 = widget_base(row2,$
-  /column)
+    /column)
   field1 = cw_field(row2col3,$
-  /floating,$
-  xsize = 10,$
-  value = '0.00005',$
-  uname = 'qxwidth_uname',$
-  title = '       Specular reflection    QxWidth')
+    /floating,$
+    xsize = 10,$
+    value = '0.00005',$
+    uname = 'qxwidth_uname',$
+    title = '       Specular reflection    QxWidth')
   field2 = cw_field(row2col3,$
-  /integer,$
-  xsize = 5,$
-  value = '3',$
-  uname = 'tnum_uname',$
-  title = '                                tnum')
-
+    /integer,$
+    xsize = 5,$
+    value = '3',$
+    uname = 'tnum_uname',$
+    title = '                                tnum')
+    
   ;********* tab 2 *****************
   base1 = widget_base(tabs,$
     title = 'Work with rtof')
     
   _base1 = widget_base(base1,$
     /column)
-
- ;input base
- row1 = widget_base(_base1, $
- /row,$
- frame = 1)
- button = widget_button(row1, $
- value = 'Browse for rtof file ...',$
- event_pro = 'browse_for_rtof_file_button', $
- scr_xsize = 180)
- value = widget_text(row1, $
- value = '', $
- xsize = 100, $
- /editable, $
- uname = 'rtof_file_text_field_uname')
- preview = widget_button(row1, $
- value = 'Preview...', $
- uname = 'rtof_file_preview_button',$
- sensitive = 0, $
- scr_xsize = 80)
- 
- 
-
-
-
-
+    
+  ;input base
+  row1 = widget_base(_base1, $
+    /row,$
+    frame = 1)
+  button = widget_button(row1, $
+    value = 'Browse file ...',$
+    event_pro = 'browse_for_rtof_file_button', $
+    scr_xsize = 100)
+  value = widget_text(row1, $
+    value = '', $
+    xsize = 110, $
+    /editable, $
+    uname = 'rtof_file_text_field_uname')
+  preview = widget_button(row1, $
+    value = 'Preview...', $
+    uname = 'rtof_file_preview_button',$
+    sensitive = 0, $
+    scr_xsize = 80)
+    
   ;********** bottom part of main gui *********************
   ;
   ;progress bar and go button
@@ -323,13 +318,13 @@ pro design_tabs, MAIN_BASE, global
     /align_center,$
     /row)
     
- full_reset = widget_button(bottom_box,$
- value = 'FULL RESET',$
- uname = 'full_reset')
+  full_reset = widget_button(bottom_box,$
+    value = 'FULL RESET',$
+    uname = 'full_reset')
     
   space = widget_label(bottom_box,$
     value = '           ')
-
+    
   progress_base = widget_base(bottom_box,$
     uname = 'progress_bar_base',$
     map = 0)
