@@ -807,7 +807,7 @@ end
 ;    event
 ;
 ;-
-pro go_reduction, event
+pro go_nexus_reduction, event
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global

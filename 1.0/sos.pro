@@ -76,6 +76,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     scaled_specular: scaled_specular, $
     
     instrument: 'REF_L',$
+    PrevTabSelect: 0, $
     
     SD_d: 0., $ ;distance sample detector
     MD_d: 0., $ ;distance moderator detector
