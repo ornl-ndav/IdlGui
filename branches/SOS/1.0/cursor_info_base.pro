@@ -73,8 +73,8 @@ pro cursor_info_base_gui, wBase, $
   main_base_xsize = parent_base_geometry.xsize
   main_base_ysize = parent_base_geometry.ysize
   
-;  xsize = 300
-;  ysize = 100
+  ;  xsize = 300
+  ;  ysize = 100
   
   xoffset = main_base_xsize
   xoffset += main_base_xoffset
@@ -88,45 +88,45 @@ pro cursor_info_base_gui, wBase, $
     UNAME        = 'cursor_info_base', $
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
-;    SCR_YSIZE    = ysize,$
-;    SCR_XSIZE    = xsize,$
+    ;    SCR_YSIZE    = ysize,$
+    ;    SCR_XSIZE    = xsize,$
     MAP          = 1,$
     kill_notify  = 'cursor_info_base_killed', $
     /column,$
     /tlb_size_events,$
     GROUP_LEADER = ourGroup)
     
-     row1 = widget_base(wBase,$
+  row1 = widget_base(wBase,$
     /row)
-    lab = widget_label(row1,$
+  lab = widget_label(row1,$
     value = 'Qx (' + string("305B) + '): ',$
-;    scr_xsize= 60,$
+    ;    scr_xsize= 60,$
     /align_right)
-    val = widget_label(row1,$
+  val = widget_label(row1,$
     value = 'N/A',$
     uname = 'cursor_info_x_value_uname',$
     scr_xsize = 200,$
     /align_left)
-
-    row2 = widget_base(wBase,$
+    
+  row2 = widget_base(wBase,$
     /row)
-    lab = widget_label(row2,$
+  lab = widget_label(row2,$
     value = 'Qz (' + string("305B) + '): ',$
-;    scr_xsize= 60,$
+    ;    scr_xsize= 60,$
     /align_right)
-    val = widget_label(row2,$
+  val = widget_label(row2,$
     value = 'N/A',$
     uname = 'cursor_info_y_value_uname',$
     scr_xsize = 200,$
     /align_left)
-
+    
   row3 = widget_base(wBase,$
     /row)
-    lab = widget_label(row3,$
+  lab = widget_label(row3,$
     value = 'Counts: ',$
-;    scr_xsize= 60,$
+    ;    scr_xsize= 60,$
     /align_right)
-    val = widget_label(row3,$
+  val = widget_label(row3,$
     uname = 'cursor_info_z_value_uname',$
     value = 'N/A',$
     scr_xsize = 150,$
@@ -137,7 +137,7 @@ end
 ;+
 ; :Description:
 ;    Killed routine
-;    
+;
 ; :Params:
 ;    id
 ;
@@ -150,15 +150,15 @@ pro cursor_info_base_killed, id
   
   catch, error
   if (error ne 0) then begin
-  catch,/cancel
-  return
+    catch,/cancel
+    return
   endif
   
   ;get global structure
   widget_control,id,get_uvalue=global_info
   event = (*global_info).parent_event
   refresh_plot, event
-
+  
 end
 
 ;+
@@ -171,14 +171,14 @@ end
 ; :Author: j35
 ;-
 pro counts_info_base_cleanup, tlb
-compile_opt idl2
-
-widget_control, tlb, get_uvalue=global_info, /no_copy
-
+  compile_opt idl2
+  
+  widget_control, tlb, get_uvalue=global_info, /no_copy
+  
   if (n_elements(global_info) eq 0) then return
   
   ptr_free, global_info
-
+  
 end
 
 ;+
@@ -207,8 +207,8 @@ pro cursor_info_base, event=event, $
   cursor_info_base_gui, _base, $
     parent_base_geometry
     
-  (*global_plot).cursor_info_base = _base 
-    
+  (*global_plot).cursor_info_base = _base
+  
   WIDGET_CONTROL, _base, /REALIZE
   
   global_info = PTR_NEW({ _base: _base,$
@@ -218,7 +218,7 @@ pro cursor_info_base, event=event, $
   WIDGET_CONTROL, _base, SET_UVALUE = global_info
   
   XMANAGER, "cursor_info_base", _base, GROUP_LEADER = ourGroup, /NO_BLOCK, $
-  cleanup='counts_info_base_cleanup'
-  
+    cleanup='counts_info_base_cleanup'
+    
 end
 

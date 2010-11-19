@@ -55,7 +55,7 @@ cd, CurrentFolder
 .run data_box_eventcb.pro
 .run norm_box_eventcb.pro
 .run log_book_eventcb.pro
-.run go_reduction.pro
+.run go_nexus_reduction.pro
 .run final_plot_base.pro
 .run save_background.pro
 .run plot_colorbar.pro

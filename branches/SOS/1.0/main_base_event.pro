@@ -40,9 +40,9 @@ PRO main_base_event, Event
   
   case (Event.id) of
   
-    widget_info(wWidget, find_by_uname='main_base'): BEGIN
+    widget_info(wWidget, find_by_uname='main_base'): begin
     end
-    
+      
     ;MENU
     ;view log book button
     widget_info(wWidget, find_by_uname='view_log_book_switch'): begin
@@ -78,6 +78,18 @@ PRO main_base_event, Event
       
     end
     
+      ;tab event
+    widget_info(wWidget, find_by_uname='tab_uname'): begin
+      tab_id = widget_info(event.top,find_by_uname='tab_uname')
+      CurrTabSelect = widget_info(tab_id,/tab_current)
+      PrevTabSelect = (*global).PrevTabSelect
+      if (CurrTabSelect ne PrevTabSelect) then begin
+        check_go_button, event
+      (*global).PrevTabSelect = CurrTabSelect
+      endif
+    
+    end
+  
     ;TAB1
     ;Data run numbers text field
     widget_info(wWidget, find_by_uname='data_run_numbers_text_field'): begin
@@ -112,16 +124,6 @@ PRO main_base_event, Event
       check_go_button, event
     end
     
-    ;full reset
-    widget_info(wWidget, find_by_uname='full_reset'): begin
-      full_reset, event
-    end
-    
-    ;GO REDUCTION
-    widget_info(wWidget, find_by_uname='go_button'): begin
-      go_reduction, event
-    end
-    
     ;--- tab2 (work with rtof) ----
     
     ;rtof text field
@@ -130,6 +132,27 @@ PRO main_base_event, Event
     end
     
     
+    ;---- bottom part of GUI ----------
+    
+    ;full reset
+    widget_info(wWidget, find_by_uname='full_reset'): begin
+      full_reset, event
+    end
+    
+    ;GO REDUCTION
+    widget_info(wWidget, find_by_uname='go_button'): begin
+      tab_id = widget_info(event.top,find_by_uname='tab_uname')
+      CurrTabSelect = widget_info(tab_id,/tab_current)
+      case (CurrTabSelect) of
+        0: begin ;working with NeXus
+          go_nexus_reduction, event
+        end
+        1: begin ;working with rtof
+        end
+        else:
+      endcase
+      
+    end
     
     else:
   endcase
