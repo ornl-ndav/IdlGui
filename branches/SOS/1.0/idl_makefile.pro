@@ -30,16 +30,19 @@ cd, CurrentFolder
 .run colorbar.pro
 .run IDLnexusUtilities__define.pro
 .run IDLxmlParser__define.pro
+.run IDL3columnsASCIIparser__define.pro
 .run conversion.pro
 .run browse_nexus_button.pro
 .run convert_to_qxqz.pro
 .run check_gui.pro
 .run produce_metadata_structure.pro
+.run load_rtof_file.pro
 
 ;test
 .run IDLnexusUtilitiesTest__define.pro
 .run IDLxmlParserTest__define.pro
 .run IDLsystemTest__define.pro
+
 
 ;main routines	
 .run xcw_direct.pro
