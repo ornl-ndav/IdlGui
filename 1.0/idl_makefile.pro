@@ -68,5 +68,7 @@ cd, CurrentFolder
 .run global_infos_base.pro
 .run output_info_base.pro
 
+.run rtof_file_tab.pro
+
 .run sos.pro
 .run sos_cleanup.pro
