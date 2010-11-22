@@ -50,6 +50,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   DEBUGGER = file->getValue(tag=['configuration','debugging'])
   auto_cleaning_data = file->getValue(tag=['configuration','auto_cleaning'])
   scaled_specular = file->getValue(tag=['configuration','plot','scaled_specular'])
+  hide_tab_2 = file->getValue(tag=['configuration','hide_tab_2'])
   ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
   ;============================================================================
   obj_destroy, file
@@ -74,6 +75,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     version: VERSION, $
     debugger: debugger, $
     scaled_specular: scaled_specular, $
+    hide_tab_2: hide_tab_2, $
     
     instrument: 'REF_L',$
     PrevTabSelect: 0, $
@@ -178,6 +180,8 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ;activate go button
     activate_button, main_base=main_base, uname='go_button', status=1
     
+    if ((*global).hide_tab_2 eq 'no') then begin
+    
     rtof_file = input_path + 'REF_L_33043#8_33044#8_33045#7_33046#7_33047#6_Off_Off_scaled.rtof'
     putvalue, base=main_base, 'rtof_file_text_field_uname', rtof_file
     
@@ -185,6 +189,8 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     tab_to_show = 1
     id = widget_info(main_base, find_by_uname='tab_uname')
     widget_control, id, set_tab_current=tab_to_show
+    
+    endif
     
   endif
   

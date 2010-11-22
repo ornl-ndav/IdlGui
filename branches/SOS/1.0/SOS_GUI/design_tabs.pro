@@ -285,6 +285,8 @@ pro design_tabs, MAIN_BASE, global
     uname = 'tnum_uname',$
     title = '                                tnum')
     
+    if ((*global).hide_tab_2 eq 'no') then begin
+    
   ;********* tab 2 ***********************************************************
   base1 = widget_base(tabs,$
     title = 'Work with rtof')
@@ -347,12 +349,6 @@ pro design_tabs, MAIN_BASE, global
   unit1 = widget_droplist(file_para, $
   value = ['Degrees','radians'])
   
-
-
-
-    
-    
-    
   ;SPACE - User defined parameters
   space = widget_label(_base1,$
     value = ' ')
@@ -497,6 +493,8 @@ value = 'User defined parameters')
     value = '3',$
     uname = 'rtof_tnum_uname',$
     title = '                                tnum')
+    
+    endif
     
   ;********** bottom part of main gui *********************
   ;
