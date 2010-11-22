@@ -306,7 +306,7 @@ pro design_tabs, MAIN_BASE, global
     /all_events, $
     /editable, $
     uname = 'rtof_file_text_field_uname')
-    load = widget_button(row1,$
+  load = widget_button(row1,$
     value = 'Load',$
     uname = 'load_rtof_file_button',$
     sensitive = 0)
@@ -317,11 +317,49 @@ pro design_tabs, MAIN_BASE, global
     sensitive = 0, $
     scr_xsize = 80)
     
-      ;SPACE
+  ;SPACE - Parametrs coming from loaded file
   space = widget_label(_base1,$
     value = ' ')
+  label = widget_label(_base1, $
+  /align_left, $
+  value = 'Loaded file parameters')
     
-  ;PARAMETERS
+  file_para = widget_base(_base1, $
+  frame = 1,$
+  /base_align_center, $
+  /row)
+  ;theta value
+  theta = cw_field(file_para, $
+  value = '',$
+  /floating,$
+  title = '               Theta')
+  unit1 = widget_droplist(file_para, $
+  value = ['Degrees','radians'])
+  
+  space = widget_label(file_para,$
+  value = '                   ')
+  
+  ;dtheta value
+  dtheta = cw_field(file_para, $
+  value = '',$
+  /floating,$
+  title = 'TwoTheta')
+  unit1 = widget_droplist(file_para, $
+  value = ['Degrees','radians'])
+  
+
+
+
+    
+    
+    
+  ;SPACE - User defined parameters
+  space = widget_label(_base1,$
+    value = ' ')
+label = widget_label(_base1, $
+/align_left, $
+value = 'User defined parameters')    
+
   para_box = widget_base(_base1,$
     frame = 1,$
     /base_align_center,$
