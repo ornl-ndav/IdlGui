@@ -48,14 +48,14 @@ cd, CurrentFolder
 .run IDLsystemTest__define.pro
 
 ;main routines	
-.run xcw_direct.pro
-.run xcr_direct.pro
-.run SNS_convert_QXQZ.pro
-.run SNS_convert_THLAM.pro
-.run sns_divide_spectrum.pro
-.run SNS_extract_specular.pro
-.run SNS_read_NEXUS.pro
-.run SNS_offspec_QXQZ_from_NEXUS_looper_NEW.pro
+;.run xcw_direct.pro
+;.run xcr_direct.pro
+;.run SNS_convert_QXQZ.pro
+;.run SNS_convert_THLAM.pro
+;.run sns_divide_spectrum.pro
+;.run SNS_extract_specular.pro
+;.run SNS_read_NEXUS.pro
+;.run SNS_offspec_QXQZ_from_NEXUS_looper_NEW.pro
 .run progress_bar_eventcb.pro
 
 .run data_box_eventcb.pro

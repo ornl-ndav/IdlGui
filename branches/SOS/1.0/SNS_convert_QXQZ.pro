@@ -67,7 +67,8 @@ function SNS_convert_QXQZ, THLAM, thvec, lamvec, theta_in, qxvec, qzvec
   si=size(QXQZ_values,/dim)
   si=si[1]
   
-  QXQZ_ARRAY=make_array(qx_bins,qz_bins,/float)
+  QXQZ_ARRAY = make_array(qx_bins, qz_bins, /float)
+  QxQz_count = make_array(qx_bins, qz_bins, /float)
   
   ;below is the binning method
   ok=0
