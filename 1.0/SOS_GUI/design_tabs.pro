@@ -285,7 +285,7 @@ pro design_tabs, MAIN_BASE, global
     uname = 'tnum_uname',$
     title = '                                tnum')
     
-  ;********* tab 2 *****************
+  ;********* tab 2 ***********************************************************
   base1 = widget_base(tabs,$
     title = 'Work with rtof')
     
@@ -316,6 +316,149 @@ pro design_tabs, MAIN_BASE, global
     event_pro = 'rtof_file_preview_button_eventcb', $
     sensitive = 0, $
     scr_xsize = 80)
+    
+      ;SPACE
+  space = widget_label(_base1,$
+    value = ' ')
+    
+  ;PARAMETERS
+  para_box = widget_base(_base1,$
+    frame = 1,$
+    /base_align_center,$
+    /column)
+    
+  row1 = widget_base(para_box,$
+    /row)
+  row1col1 = widget_base(row1,$
+    /column)
+    
+  ;  angstrom = '!3' + string(197B) + '!X'
+  field1 = cw_field(row1col1,$
+    /integer,$
+    xsize = 6,$
+    value = '500',$
+    uname = 'rtof_bins_qx',$
+    title = 'Bins:  Qx')
+  field2 = cw_field(row1col1,$
+    xsize = 6,$
+    /integer,$
+    value = '500',$
+    uname = 'rtof_bins_qz',$
+    title = '       Qz')
+    
+  space = widget_label(row1,$
+    value = '              ')
+    
+  row1col2 = widget_base(row1,$
+    /column)
+  field1 = cw_field(row1col2,$
+    /floating,$
+    xsize = 8,$
+    uname = 'rtof_ranges_qx_min',$
+    value = '-0.004',$
+    title = 'Ranges:  Qx')
+  field2 = cw_field(row1col2,$
+    xsize = 8,$
+    /floating,$
+    value = '0.00',$
+    uname = 'rtof_ranges_qz_min',$
+    title = '         Qz')
+  field3 = cw_field(row1col2,$
+    xsize = 8,$
+    /floating,$
+    value = '9.75',$
+    uname = 'rtof_tof_min',$
+    title = '   TOF (ms)')
+    
+  row1col3 = widget_base(row1,$
+    /column)
+  field1 = cw_field(row1col3,$
+    /floating,$
+    xsize = 8,$
+    uname = 'rtof_ranges_qx_max',$
+    value = '0.004',$
+    title = 'to  ')
+  field21 = cw_field(row1col3,$
+    xsize = 8,$
+    /floating,$
+    uname = 'rtof_ranges_qz_max',$
+    value = '0.3',$
+    title = 'to  ')
+  field3 = cw_field(row1col3,$
+    xsize = 8,$
+    /floating,$
+    uname = 'rtof_tof_max',$
+    value = '22.0',$
+    title = 'to  ')
+    
+  space = widget_label(row1,$
+    value = '              ')
+    
+  row1col4 = widget_base(row1,$
+    /column)
+  field1 = cw_field(row1col4,$
+    /floating,$
+    xsize = 8,$
+    value = '133',$
+    uname = 'rtof_center_pixel',$
+    title = '   Center pixel')
+  field2 = cw_field(row1col4,$
+    xsize = 8,$
+    /floating,$
+    value = '0.7',$
+    uname = 'rtof_pixel_size',$
+    title = 'Pixel size (mm)')
+    
+  row2 = widget_base(para_box,$
+    /align_left,$
+    /row)
+  row2col1 = widget_base(row2,$
+    /column)
+    
+  field1 = cw_field(row2col1,$
+    /integer,$
+    xsize = 3,$
+    value = '102',$
+    uname = 'rtof_pixel_min',$
+    title = 'Pixels:   min')
+  field2 = cw_field(row2col1,$
+    xsize = 3,$
+    /integer,$
+    value = '165',$
+    uname = 'rtof_pixel_max',$
+    title = '          max')
+    
+  space = widget_label(row2,$
+    value = '     ')
+    
+  row2col2 = widget_base(row2,$
+    /column)
+  field1 = cw_field(row2col2,$
+    xsize = 10,$
+    value = '',$
+    uname = 'rtof_d_sd_uname',$
+    title = '   Distance sample to detector (mm) ')
+  field2 = cw_field(row2col2,$
+    xsize = 10,$
+    value = '',$
+    uname = 'rtof_d_md_uname',$
+    title = 'Distance moderator to detector (mm) ')
+    
+  ;specular reflexion parameters
+  row2col3 = widget_base(row2,$
+    /column)
+  field1 = cw_field(row2col3,$
+    /floating,$
+    xsize = 10,$
+    value = '0.00005',$
+    uname = 'rtof_qxwidth_uname',$
+    title = '       Specular reflection    QxWidth')
+  field2 = cw_field(row2col3,$
+    /integer,$
+    xsize = 5,$
+    value = '3',$
+    uname = 'rtof_tnum_uname',$
+    title = '                                tnum')
     
   ;********** bottom part of main gui *********************
   ;
