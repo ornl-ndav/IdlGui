@@ -134,7 +134,8 @@ PRO main_base_event, Event
     ;load button
     widget_info(wWidget, find_by_uname='load_rtof_file_button'): begin
       file_name = getvalue(event=event, uname='rtof_file_text_field_uname')
-      result = load_rtof_file(event, file_name)
+      ;result = load_rtof_file(event, file_name)
+      ;result = retrieve_theta_values(event, file_name)
     end
     
     ;---- bottom part of GUI ----------
