@@ -101,7 +101,6 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     output_path: '~/results/',$ ;used in the output tab
     input_path: '~/results/' })
     
-    
   plot_symbol = ['+','*','.','D','tu','s','X','tu','td','H','S','o']
   plot_color = ['b','r','g','c','m','y','k']
   plot_linestyle = ['-',':','--','-.','-:','__']

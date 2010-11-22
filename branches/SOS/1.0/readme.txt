@@ -13,9 +13,9 @@ ________________________________________
 A/ TO RUN THE GUI VERSION
 1- make sure you have the latest version
    ex:
-   > cd ~/SVN/SNS_offpsec/
+   > cd ~/SVN/SOS/
    > svn update
-2- within the SNS_offspec folder, to compile and run the application
+2- within the SOS folder, to compile and run the application
    > idl
    > idl> .reset
    > idl> @run_gui
@@ -23,9 +23,9 @@ A/ TO RUN THE GUI VERSION
 B/ TO RUN THE ALGORITHM PART ONLY
 1- make sure you have the latest version
    ex:
-   > cd ~/SVN/SNS_offpsec/
+   > cd ~/SVN/SOS/
    > svn update
-2- within the SNS_offspec folder, to compile and run the application
+2- within the SOS folder, to compile and run the application
    > idl
    > idl> .reset
    > idl> @run_idl
@@ -33,15 +33,15 @@ B/ TO RUN THE ALGORITHM PART ONLY
 C/ TO RUN THE UNIT TESTS
 1- make sure you have the latest version
    ex:
-   > cd ~/SVN/SNS_offpsec/
+   > cd ~/SVN/SOS/
    > svn update
-2- within the SNS_offspec folder, to compile and run the application
+2- within the SOS folder, to compile and run the application
    > idl
    > idl> .reset
    > idl> @run_test_unit
 
 D/ TO BUILD THE DOCUMENTATION
-1- within the SNS_offspec folder, simply run
+1- within the SOS folder, simply run
    > idl
    > idl> .reset
    > idl> @run_doc
