@@ -8,10 +8,10 @@ all:
 	idl ./makefile.pro
 
 install:
-#	cp sans_reduction.sav /SNS/software/idltools/sav/
-#	cp mini_sans_reduction.sav /SNS/software/idltools/sav/
-#	cp SANSreduction /SNS/software/idltools/
-#	cp miniSANSreduction /SNS/software/idltools/
+	cp .SOS.cfg /SNS/software/idltools/sav/
+	cp sos.sav /SNS/software/idltools/sav/
+	cp SOS_images/* /SNS/software/idltools/sav/SOS_images/
+	cp SOS /SNS/software/idltools/
 
 test:
 	idl ./make_and_run_test_unit
