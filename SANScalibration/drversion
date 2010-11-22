@@ -1,9 +1,0 @@
-#!/usr/bin/env python
-
-import common_lib
-import DST
-import utils
-
-print "HLR Version:", common_lib.__version__
-print "DOM Version:", DST.__version__
-print "SCL Version:", utils.__version__
