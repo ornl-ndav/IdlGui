@@ -3,6 +3,10 @@ spawn, 'pwd', CurrentFolder
 
 IdlUtilitiesPath = "/utilities"
 
+;unit test
+cd, CurrentFolder + '/mgunit'
+.run assert.pro
+
 cd, CurrentFolder + IDLUtilitiesPath
 .run get_ucams.pro
 .run fsc_color.pro
@@ -27,6 +31,7 @@ cd, CurrentFolder + '/SOS_GUI'
 cd, CurrentFolder
 
 ;main functions
+.run load_rtof_file.pro
 .run colorbar.pro
 .run IDLnexusUtilities__define.pro
 .run IDLxmlParser__define.pro
@@ -36,13 +41,11 @@ cd, CurrentFolder
 .run convert_to_qxqz.pro
 .run check_gui.pro
 .run produce_metadata_structure.pro
-.run load_rtof_file.pro
 
 ;test
 .run IDLnexusUtilitiesTest__define.pro
 .run IDLxmlParserTest__define.pro
 .run IDLsystemTest__define.pro
-
 
 ;main routines	
 .run xcw_direct.pro

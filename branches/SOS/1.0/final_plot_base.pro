@@ -107,7 +107,7 @@ pro final_plot_event, Event
       find_by_uname='settings_base_close_button'): begin
       
       ;this will allow the settings tab to come back in the same state
-      save_status_of_settings_button, event
+      ;save_status_of_settings_button, event
       
       id = widget_info(Event.top, $
         find_by_uname='settings_widget_base')

@@ -34,30 +34,6 @@
 
 ;+
 ; :Description:
-;    get the total number of files loaded
-;    in all the spin states
-;
-; :Params:
-;    event
-;
-; :Author: j35
-;-
-function get_total_number_of_files_loaded, event
-  compile_opt idl2
-  
-  _number_files = 0
-  
-  ;loop over all the spin states
-  for i=0,3 do begin
-    _number_files += get_number_of_files_loaded(event, spin_state=i)
-  endfor
-  
-  return, _number_files
-  
-end
-
-;+
-; :Description:
 ;    return the value of the widget defined
 ;    by its uname (passed as argument)
 ;

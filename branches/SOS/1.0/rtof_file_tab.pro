@@ -68,14 +68,14 @@ pro browse_for_rtof_file_button, event
     putvalue, event=event, 'rtof_file_text_field_uname', file_name
     
     ;loading data from rtof file
-    load_rtof_file, event, file_name
+    result = load_rtof_file(event, file_name)
     
   endif else begin
     message = '-> no rtof file loaded (operation canceled)!'
   endelse
   
   log_book_update, event, message = message
-  check_preview_rtof_button_status, event
+  ;check_preview_rtof_button_status, event
   
 end
 
