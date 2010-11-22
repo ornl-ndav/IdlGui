@@ -20,8 +20,10 @@ resolve_routine, "get_screen_size", /either
 resolve_routine, "identity",/either
 resolve_routine, "map_proj_init_common", /either
 
+resolve_all
+
 ;build all the iProcedures
-;itResolve
+itResolve
 
 spawn, 'pwd', current_path
 
