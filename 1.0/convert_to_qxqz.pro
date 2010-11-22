@@ -82,6 +82,7 @@ function convert_to_QXQZ, THLAM, $
   si=si[1]
   
   QXQZ_ARRAY=make_array(qx_bins,qz_bins,/float)
+  QxQZ_count=make_array(qx_bins,qz_bins,/float)
   
   ;below is the binning method
   ok=0
@@ -116,15 +117,6 @@ function convert_to_QXQZ, THLAM, $
 
     QZ_hi_pos=min(where(QZ_hi le QZvec, nbr_qz_hi_pos))
     
-    ;    if (count eq 0) then begin
-    ;    help, QXvec
-    ;    print, QXvec[250:260]
-    ;    help, QX_lo
-    ;    print, 'QX_lo_pos: ' , QX_lo_pos
-    ;    print, where(QX_lo ge QXvec)
-    ;    print
-    ;    endif
-    
     if nbr_qz_lo_pos eq 0 then QZ_lo_pos=0
     if nbr_qz_hi_pos eq 0 then QZ_hi_pos=qz_bins-1
     if nbr_qx_lo_pos eq 0 then Qx_lo_pos=0
@@ -137,6 +129,7 @@ function convert_to_QXQZ, THLAM, $
     for loopx=QX_lo_pos,QX_hi_pos do begin
       for loopy=QZ_lo_pos,QZ_hi_pos do begin
         QXQZ_ARRAY[loopx,loopy]=QXQZ_ARRAY[loopx,loopy]+(int/totalbins)
+        QXQZ_count[loopx,loopy]=QXQZ_count[loopx,loopy]+1.0
       endfor
     endfor
     
@@ -144,12 +137,23 @@ function convert_to_QXQZ, THLAM, $
     count++
   endwhile
   
-  ;????? why
   ;multiply *QZ^4
   qxqz4=qxqz_array
   for loop=0,qz_bins-1 do begin
     qxqz4[*,loop]=qxqz_array[*,loop]*qzvec[loop]^4
   endfor
+
+  qxqz_norm = qxqz_count*0.0
   
-  return, qxqz_array
+  for loopx=0, qx_bins-1 do begin
+  for loopz=0, qz_bins-1 do begin
+  qxqz_norm[loopx,loopz] = qxqz_array[loopx,loopz]/qxqz_count[loopx,loopz]
+  endfor
+  endfor
+  
+  norm=qxqz_array/qxqz_count
+  badlist=where(finite(norm) eq 0)
+  norm[badlist]=0.0
+
+  return, norm
 end
