@@ -28,8 +28,7 @@
 ;   promote products derived from this software without specific prior written
 ;   permission.
 ;
-; @author : Erik Watkins
-;           (refashioned by j35@ornl.gov)
+; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
 
@@ -55,41 +54,20 @@ function load_rtof_file, event, file_name
   iClass = obj_new('IDL3columnsASCIIparser', _file_name)
   pData = iClass->getDataQuickly()
   obj_destroy, iClass
+ 
+  nbr_pixels = size(pData,/dim)
+  nbr_points = (size(*pData[0],/dim))[1]
   
-;  help, *pData[10]
-
-  _pData_x       = (*pData[0])[0]
-  help, _pData_x
+  data_pixel_0 = (*pData[0])
+  xaxis = data_pixel_0[0,*] 
+  _pData_y = fltarr(nbr_pixels, nbr_points)
+  _pData_y_error = fltarr(nbr_pixels, nbr_points)
   
-  return, 1
-  _pData_y       = fltarr(n_elements(pData),n_elements(_pData_x))
-  _pData_y_error = fltarr(n_elements(pData),n_elements(_pData_x))
-  
-  ;loop over pixels
-  for j=0,(n_elements(pData)-1) do begin ;retrieve y_array and error_y_array
-    _xarray             = (*pData[j])[0,*] ;retrieve x-array
-    sz = n_elements(_xarray)
-    if (sz ge 2) then begin
-      ;loop over yaxis values
-      for i=0,sz-1 do begin
-        _x = _xarray[i] ;retrieve local x value
-        _x_index = where(_x eq x_axis, nbr) ;find position of x value in global x_axis
-        if (nbr ne 0) then begin
-          _pData_y[j,_x_index[0]] = (*pData[j])[1,i]
-          _pData_y_error[j,_x_index[0]] = (*pData[j])[2,i]
-        endif
-      endfor
-    endif
-  ;Debug
-  ;_pData_y[j,*]       = (*pData[j])[1,*]
-  ;_pData_y_error[j,*] = (*pData[j])[2,*]
+  ;loop over all pixels and retrieve y and sigma_y values
+  for j=0, (nbr_pixels[0]-1) do begin
+  _pData_y[j,*] = (*pData[j])[1,*]
+  _pData_y_error[j,*] = (*pData[j])[2,*]
   endfor
-  
-  (*(*global).tmp_pData_x) = _pData_x ;x_axis -> help, _pData_x => Array[61]
-  (*(*global).tmp_pData_y) = _pData_y ;y_axis -> help, -pData_y => Array[<nbr_pixel>,<nbr_x_axis_data>]
-  (*(*global).tmp_pData_y_error) = _pData_y_error
-  
-  add_data_to_list_of_loaded_data, event
   
   return, 1b
   
