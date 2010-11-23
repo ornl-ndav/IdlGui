@@ -41,6 +41,7 @@ cd, CurrentFolder
 .run convert_to_qxqz.pro
 .run check_gui.pro
 .run produce_metadata_structure.pro
+.run display_images.pro
 
 ;test
 .run IDLnexusUtilitiesTest__define.pro
