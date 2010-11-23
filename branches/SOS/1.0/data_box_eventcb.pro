@@ -234,5 +234,8 @@ pro retrieve_data_nexus_distances, event=event, main_base=main_base
   
   putValue, base=main_base, event=event, 'd_sd_uname', d_SD_mm
   putValue, base=main_base, event=event, 'd_md_uname', d_MD_mm
+  
+  putValue, base=main_base, event=event, 'rtof_d_sd_uname', d_SD_mm
+  putValue, base=main_base, event=event, 'rtof_d_md_uname', d_md_mm
     
 end
