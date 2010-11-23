@@ -77,8 +77,6 @@ function retrieve_data_x_value, event
     return, 'N/A'
   endif
   
-  
-  
   x_device = event.x
   congrid_xcoeff = (*global_plot).congrid_xcoeff
   xrange = float((*global_plot).xrange) ;min and max pixels
@@ -877,7 +875,6 @@ pro draw_eventcb, event
         plots, xmin, ymin, /device, /continue, color=fsc_color('green')
         
       endif
-      
       
     endif
     
