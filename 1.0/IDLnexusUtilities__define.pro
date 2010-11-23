@@ -570,7 +570,7 @@ function IDLnexusUtilities::init, full_nexus_name, spin_state=spin_state
     self.entry_spin_state = 'entry'
   endelse
   
-  self.configuration_file = 'SNS_offspec_instruments.cfg'
+  self.configuration_file = 'SOS_instruments.cfg'
   
   return, 1
 end

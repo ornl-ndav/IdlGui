@@ -9,6 +9,7 @@ all:
 
 install:
 	cp .SOS.cfg /SNS/software/idltools/sav/
+	cp SOS_instruments.cfg /SNS/software/idltools/sav/
 	cp sos.sav /SNS/software/idltools/sav/
 	cp SOS_images/* /SNS/software/idltools/sav/SOS_images/
 	cp SOS /SNS/software/idltools/

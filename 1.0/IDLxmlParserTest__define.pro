@@ -41,7 +41,7 @@
 function IDLxmlParserTest::test_cfg_value
   compile_opt idl2
   
-  file_name= 'SNS_offspec_instruments.cfg'
+  file_name= 'SOS_instruments.cfg'
   myObject = obj_new('IDLxmlParser', file_name)
   value = myObject->getValue(tag=['config','instruments','REF_M','d_MS'])
   obj_destroy, myObject
@@ -59,7 +59,7 @@ end
 function IDLxmlParserTest::test_cfg_attribute
   compile_opt idl2
   
-  file_name= 'SNS_offspec_instruments.cfg'
+  file_name= 'SOS_instruments.cfg'
   myObject = obj_new('IDLxmlParser', file_name)
   value = myObject->getValue(tag=['config','instruments','REF_L','d_SD'], attr='units')
   obj_destroy, myObject
