@@ -32,71 +32,53 @@
 ;
 ;==============================================================================
 
-PRO MakeGuiMainBase, MAIN_BASE, global
-
-MainBaseSize = (*global).MainBaseSize
+PRO make_gui_plot_utility, MAIN_TAB, MainTabSize, TabTitles
 
 ;******************************************************************************
 ;            DEFINE STRUCTURE
 ;******************************************************************************
 
-XYoff = [0,0]
-sMainTabSize = {size : [XYoff[0], $
-                        XYoff[1],$
-                        MainBaseSize[2], $
-                        MainBaseSize[3]],$
-                uname : 'main_tab'}
-; Code change RCW (Dec 29, 2009): get TabTitles from XML config file (via ref_off_spec)
-TabTitles = (*global).TabTitles
-;Tab titles
-;TabTitles = { step1:     ' 1/ REDUCTION',$
-;              step2:     ' 2/ LOADING ',$
-;              step3:     ' 3/ SHIFTING ',$
-;              step4:     ' 4/ SCALING ',$
-;              step5:     ' 5/ RECAP. ',$
-;              step6:     ' 6/ CREATE OUTPUT ',$
-;              options:   ' OPTIONS ',$
-;              log_book:  ' LOG BOOK '}
+;- base -----------------------------------------------------------------------
+sPlotUtilityBase = { size  : MainTabSize,$
+                 title : TabTitles.plot_utility,$
+                 uname : 'base_plot_utility'}
 
+;- plot utility text -----------------------------------------------------------
+sPlotUtility = { size  : [0,0,MainTabSize[2]-10,100],$
+             uname : 'plot_utility_text'} 
+                                                  
 ;******************************************************************************
 ;            BUILD GUI
 ;******************************************************************************
 
-;build widgets
-MAIN_TAB = WIDGET_TAB(MAIN_BASE,$
-                      UNAME     = sMainTabSize.uname,$
-                      LOCATION  = 0,$                      
-                      XOFFSET   = sMainTabSize.size[0],$
-                      YOFFSET   = sMainTabSize.size[1],$
-                      SCR_XSIZE = sMainTabSize.size[2],$
-                      SCR_YSIZE = sMainTabSize.size[3],$
-                      SENSITIVE = 1,$
-                      /TRACKING_EVENTS)
+;- base -----------------------------------------------------------------------
+wPlotUtilityBase = WIDGET_BASE(MAIN_TAB,$
+                           UNAME     = sPlotUtilityBase.uname,$
+                           XOFFSET   = sPlotUtilityBase.size[0],$
+                           YOFFSET   = sPlotUtilityBase.size[1],$
+                           SCR_XSIZE = sPlotUtilityBase.size[2],$
+                           SCR_YSIZE = sPlotUtilityBase.size[3],$
+                           TITLE     = sPlotUtilityBase.title,$
+                           ROW = 3)
 
-;step1
-make_gui_step1, MAIN_TAB, sMainTabSize.size, TabTitles, global
-
-;step2
-make_gui_step2, MAIN_TAB, sMainTabSize.size, TabTitles, global
-
-;step3
-make_gui_step3, MAIN_TAB, sMainTabSize.size, TabTitles, global
-
-;step4
-make_gui_step4, MAIN_TAB, sMainTabSize.size, TabTitles, global
-
-;step5
-make_gui_step5, MAIN_TAB, sMainTabSize.size, TabTitles, global
-
-;step6
-make_gui_step6, MAIN_TAB, sMainTabSize.size, TabTitles, global
-
-;options
-make_gui_options, MAIN_TAB, sMainTabSize.size, TabTitles, global
-
-;Build LogBook
-make_gui_log_book, MAIN_TAB, sMainTabSize.size, TabTitles
-
-;Build PlotUtility
-make_gui_plot_utility, MAIN_TAB, sMainTabSize.size, TabTitles
+;- plot utility text ----------------------------------------------------------
+wPlotUtilityText = WIDGET_TEXT(wPlotUtilityBase,$
+                           UNAME     = sPlotUtility.uname,$
+                           XOFFSET   = sPlotUtility.size[0],$
+                           YOFFSET   = sPlotUtility.size[1],$
+                           SCR_XSIZE = sPlotUtility.size[2],$
+                           SCR_YSIZE = sPlotUtility.size[3],$
+                           /SCROLL,$
+                           /WRAP)
+row1 = WIDGET_BASE(wPlotUtilityBase,/ROW)
+row1col1 = WIDGET_BASE(row1,/COLUMN)
+wPlotUtilityButton1 = WIDGET_BUTTON(row1col1,$
+                          VALUE = ' Plot Resistivity vs Q ',$
+                          UNAME = 'launch_plotRvsQ')
+row2 = WIDGET_BASE(wPlotUtilityBase,/ROW)
+row2col1 = WIDGET_BASE(row2,/COLUMN)
+wPlotUtilityButton1 = WIDGET_BUTTON(row1col1,$
+                          VALUE = 'Plot Scaled 2D Results',$
+                          UNAME = 'launch_plotScaled2D')
+                       
 END

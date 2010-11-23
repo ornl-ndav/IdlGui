@@ -43,6 +43,7 @@ cd, CurrentFolder + '/REFoffSpecGUI/'
 .run MakeGuiStep6.pro
 .run MakeGuiOptions.pro
 .run MakeGuiLogBook.pro
+.run MakeGuiPlotUtility.pro
 
 ;Build all procedures
 cd, CurrentFolder
