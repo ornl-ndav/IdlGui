@@ -65,6 +65,7 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
   STEP6_TITLE = file->getValue(tag=['configuration','MainTabTitles','step6'])
   STEP7_TITLE = file->getValue(tag=['configuration','MainTabTitles','step7'])
   STEP8_TITLE = file->getValue(tag=['configuration','MainTabTitles','step8'])
+  STEP9_TITLE = file->getValue(tag=['configuration','MainTabTitles','step9'])
   RSTEP1_NAME = file->getValue(tag=['configuration','ReduceTabNames','name1'])
   RSTEP2_NAME = file->getValue(tag=['configuration','ReduceTabNames','name2'])
   RSTEP3_NAME = file->getValue(tag=['configuration','ReduceTabNames','name3'])
@@ -161,7 +162,8 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     browser: BROWSER,$
    
     ;Tab titles
-   ; Code change RCW (Dec 29, 2009): get TabTitles from XML config file  
+   ; Code change RCW (Dec 29, 2009): Get TabTitles from XML config file  
+   ; Code Change (RC Ward, 18 Nov 2010): Add Plot Utility as Step 9 Tab on main gui
    TabTitles: {  step1:     STEP1_TITLE,$
                  step2:     STEP2_TITLE,$
                  step3:     STEP3_TITLE,$
@@ -169,7 +171,8 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
                  step5:     STEP5_TITLE,$
                  step6:     STEP6_TITLE,$
                  options:   STEP7_TITLE,$
-                 log_book:  STEP8_TITLE},$
+                 log_book:  STEP8_TITLE,$
+                 plot_utility: STEP9_TITLE},$
     ; Code change RCW (Dec 30, 2009): get ReduceTabNames and ScalingTabNames from XML config file (NOT USING THESE RIGHT NOW)                
     ReduceTabNames: [RSTEP1_NAME,$
                      RSTEP2_NAME,$
@@ -215,11 +218,11 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
 ; Change code (RC Ward, 3 Aug 2010): set up default value of splicing_alternative
 ; [0] is use Max value in overlap range (default); [1] is let the higher Q curve override lower Q
    splicing_alternative: SPLICING_ALTERNATIVE, $
-; Change code (RC Ward, 5 Oct, 2010): queue for reduction code (redref_lp) processing
+; Change code (RC Ward, 5 Oct, 2010): Specify queue for reduction code (redref_lp) processing
    queue: QUEUE, $
     srun_web_page: 'https://neutronsr.us/applications/jobmonitor/squeue.php?view=all',$
 
-; refred_lp is the remote reflectometer reduction code. Here were are setting up the names of the parameters to refred.    
+; refred_lp is the remote reflectometer reduction code. Here were are setting up the names of the parameters to refred_lp.    
 ; Change made (RC Ward, Mar 2, 2010): add time of flight cutoffs (min, max) to the call to refred_lp
     reduce_structure: {driver: 'refred_lp',$
     data_paths: '--data-path',$
@@ -571,7 +574,9 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     w_shifting_plot2d_draw_uname: '',$
     w_scaling_plot2d_draw_uname: '',$
     w_shifting_plot2d_id: 0,$ ;id of shift. plot2D widget_base
-    w_scaling_plot2d_id: 0$ ;id of scaling plot2D widget_base 
+    w_scaling_plot2d_id: 0,$ ;id of scaling plot2D widget_base 
+; Change (RC Ward, 23 Nov 2010): Add window counter and increment this as plots are made in the PlotUtility Tab.    
+    window_counter: 0$
     })
       
   ;initialize variables
@@ -581,6 +586,7 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
  ; Code change RCW (Feb 1, 2010): set up array for RefPixSave, SangleDone  
   (*(*global).RefPixSave) = FLTARR(18)
   (*(*global).SangleDone) = BYTARR(18)
+
 
 ; Build Application Title ====================================================== 
 ; CHANGE CODE (RC WARD, 22 June 2010): Pass MainBaseSize in from MakeGuiInstrumentSelection to control resolution
@@ -696,6 +702,8 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
   message = '>>>>>>  Application started date/time: ' + time_stamp + '  <<<<<<'
   IDLsendToGeek_putLogBookText_fromMainBase, MAIN_BASE, 'log_book_text', $
     message
+  
+  PlotUtility_putText_fromMainBase, MAIN_BASE, 'plot_utility_text', message
     
   IF (CHECKING_PACKAGES EQ 'yes') THEN BEGIN
     packages_required, global, my_package ;packages_required
@@ -717,6 +725,15 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     message = '> Instrument: ' + instrument
     IDLsendToGeek_addLogBookText_fromMainBase, MAIN_BASE, 'log_book_text', $
        message
+    PlotUtility_putText_fromMainBase, MAIN_BASE, 'plot_utility_text', message 
+    message = '> Reduce step path: ' + reduce_step_path
+    PlotUtility_putText_fromMainBase, MAIN_BASE, 'plot_utility_text', message
+    message = '  '
+    PlotUtility_putText_fromMainBase, MAIN_BASE, 'plot_utility_text', message
+    message = '  '
+    PlotUtility_putText_fromMainBase, MAIN_BASE, 'plot_utility_text', message
+    message = '   Select buttons below to plot Resistivity vs Q or Scaled 2D results, each in separate window.'
+    PlotUtility_putText_fromMainBase, MAIN_BASE, 'plot_utility_text', message  
   ;=============================================================================
   ;send message to log current run of application
   logger, APPLICATION=application, VERSION=version, UCAMS=ucams

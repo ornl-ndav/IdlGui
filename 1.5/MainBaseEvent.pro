@@ -2128,6 +2128,8 @@ PRO MAIN_BASE_event, Event
     IF (current_list_OF_files[0] NE '') THEN BEGIN
     
       delta_x = (*global).delta_x
+; Debug (5 Nov 2010): delta_x must be passed to the Plot Tab to replot the results
+;  print, "In step4/Step1 - delta_x: ", delta_x 
       x = Event.x
       x1 = FLOAT(delta_x) * FLOAT(x)
       Xtext = 'X: ' + STRCOMPRESS(x1,/REMOVE_ALL)
@@ -3216,6 +3218,18 @@ END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='send_to_geek_button'): BEGIN
     SendToGeek, Event ;_IDLsendToGeek
   END
+  
+  ;----------------------------------------------------------------------------
+  ;PLOT UTILITY - PLOT UTILITY - PLOT UTILITY - PLOT UTILITY - PLOT UTILITY
+  ;----------------------------------------------------------------------------
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='launch_plotRvsQ'): BEGIN
+    ref_off_spec_plot_rvsq, Event
+    ;, Event ; launch the plot utility which plots R vs Q or R vs lambda perp
+  END  
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='launch_plotScaled2D'): BEGIN
+    ref_off_spec_plot_scaled2d, Event
+    ;, Event ; launch the plot utility which plots Scale 2D results
+  END 
   
   ELSE:
   

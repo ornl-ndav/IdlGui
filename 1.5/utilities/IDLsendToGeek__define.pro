@@ -112,6 +112,13 @@ id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME=LogBookUname)
 WIDGET_CONTROL, id, SET_VALUE=text
 END
 
+; change Code (RC Ward, 19 Nov 2010): Add this here to put text into PlotUtility base window
+;==============================================================================
+PRO PlotUtility_putText_fromMainBase, MAIN_BASE, PlotUtilityUname, text
+id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME=PlotUtilityUname)
+WIDGET_CONTROL, id, SET_VALUE=text, /APPEND
+END
+
 ;------------------------------------------------------------------------------
 PRO IDLsendToGeek_addLogBookText, Event, text
 LogBookUname = IDLsendToGeek_getGlobalVariable(Event,'LogBookUname')

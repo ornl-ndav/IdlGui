@@ -266,6 +266,13 @@ PRO plotAsciiData, Event, TYPE=type, RESCALE=rescale
     
     ind1    = ARRAY_INDICES(local_tfpData,idx1)
     delta_x = xaxis[1]-xaxis[0]
+; Change code (5 Nov 2010) write delta_x to LogBook for use in scaling x axis in PlotTab routine
+;print, "delta_x: ", delta_x
+  LogMessage = '> plotAsciiData: delta_x: ' + $
+    STRCOMPRESS(delta_x,/REMOVE_ALL)
+  addMessageInCreateStatus, Event, LogMessage
+  IDLsendToGeek_addLogBookText, Event, LogMessage 
+
     xmax_array[index] = ind1[0]*delta_x
     ymax_array[index] = ind1[1]/2.
     
@@ -303,7 +310,6 @@ PRO plotAsciiData, Event, TYPE=type, RESCALE=rescale
     ++index
     
   ENDWHILE
-  
   ;rebin by 2 in y-axis final array
   rData = REBIN(base_array,(SIZE(base_array))(1)*x_coeff, $
     (SIZE(base_array))(2)*y_coeff,/SAMPLE)
@@ -381,6 +387,7 @@ PRO contour_plot, Event, xaxis
   ;plot xaxis
   sz    = N_ELEMENTS(xaxis)
   xrange = [0,xaxis[sz-1]]
+
   xticks = (sz/50)
   
   ;print, xrange
