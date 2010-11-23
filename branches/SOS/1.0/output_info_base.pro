@@ -79,8 +79,8 @@ pro output_info_base_event, Event
       parent_event = (*global_info).parent_event
       refresh_plot, parent_event, recalculate=1
       save_background, event=parent_event
+      global_plot = (*global_info).global_plot
       (*global_plot).shift_key_status = 0b
-      
       
       id = widget_info(Event.top, $
         find_by_uname='output_info_base')
@@ -335,7 +335,7 @@ pro output_info_base_gui, wBase, $
   
   ourGroup = WIDGET_BASE()
   
-  title = 'Output of info selections: file/plots'
+  title = 'Outputs of info selection: file/plots'
   wBase = WIDGET_BASE(TITLE = title, $
     UNAME        = 'output_info_base', $
     XOFFSET      = xoffset,$
