@@ -43,7 +43,8 @@ pro design_tabs, MAIN_BASE, global
     
   ;********* tab 1 *****************
   base1 = widget_base(tabs,$
-    title = ' >  > >> WORKING WITH NEXUS << <  < ')
+    uname = 'tab0',$
+    title = '    WORKING WITH NEXUS    ')
     
   _base1 = widget_base(base1,$
     /column)
@@ -140,11 +141,15 @@ pro design_tabs, MAIN_BASE, global
     value = 'Browse for a normalization NeXus file ...',$
     scr_xsize = 575)
     
+  ;SPACE
+  space = widget_label(_base1,$
+    value = ' ')
     
   if ((*global).hide_tab_2 eq 'no') then begin
   
     ;********* tab 2 ***********************************************************
     base1 = widget_base(tabs,$
+      uname = 'tab1',$
       title = '    WORKING WITH RTOF    ')
       
     _base1 = widget_base(base1,$
@@ -160,7 +165,7 @@ pro design_tabs, MAIN_BASE, global
       scr_xsize = 100)
     value = widget_text(row1, $
       value = '', $
-      xsize = 110, $
+      xsize = 102, $
       /all_events, $
       /editable, $
       uname = 'rtof_file_text_field_uname')
@@ -178,32 +183,56 @@ pro design_tabs, MAIN_BASE, global
     ;SPACE - Parametrs coming from loaded file
     space = widget_label(_base1,$
       value = ' ')
-    label = widget_label(_base1, $
-      /align_left, $
-      value = 'Loaded file parameters')
       
-    file_para = widget_base(_base1, $
-      frame = 1,$
-      /base_align_center, $
+;    label = widget_label(_base1, $
+;      /align_left, $
+;      value = 'Loaded file parameters')
+;      
+;    file_para = widget_base(_base1, $
+;      frame = 1,$
+;      /base_align_center, $
+;      /row)
+;    ;theta value
+;    theta = cw_field(file_para, $
+;      value = '',$
+;      /floating,$
+;      title = '               Theta')
+;    unit1 = widget_droplist(file_para, $
+;      value = ['Degrees','radians'])
+;      
+;    space = widget_label(file_para,$
+;      value = '                   ')
+;      
+;    ;dtheta value
+;    dtheta = cw_field(file_para, $
+;      value = '',$
+;      /floating,$
+;      title = 'TwoTheta')
+;    unit1 = widget_droplist(file_para, $
+;      value = ['Degrees','radians'])
+      
+      ;nexus file that will be used
+      row2 = widget_base(_base1,$
+      uname = 'rtof_nexus_base',$
+      map = 0,$
       /row)
-    ;theta value
-    theta = cw_field(file_para, $
-      value = '',$
-      /floating,$
-      title = '               Theta')
-    unit1 = widget_droplist(file_para, $
-      value = ['Degrees','radians'])
       
-    space = widget_label(file_para,$
-      value = '                   ')
-      
-    ;dtheta value
-    dtheta = cw_field(file_para, $
-      value = '',$
-      /floating,$
-      title = 'TwoTheta')
-    unit1 = widget_droplist(file_para, $
-      value = ['Degrees','radians'])
+      label = widget_label(row2, $
+      value = 'NeXus file to use for geometry:')
+      value = widget_text(row2, $
+      value = '', $
+      xsize = 65, $
+      /editable,$
+      uname = 'rtof_nexus_geometry_file')
+      status = widget_draw(row2,$
+      uname = 'rtof_nexus_file_status_uname',$
+      scr_ysize = 30,$
+      scr_xsize = 60)
+      label = widget_label(row2,$
+      value = ' OR ')
+      button = widget_button(row2,$
+      value = 'Browse for NeXus file ...',$
+      uname = 'rtof_nexus_geometry_button')
       
     ;SPACE - User defined parameters
     space = widget_label(_base1,$
