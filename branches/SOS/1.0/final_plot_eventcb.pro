@@ -245,11 +245,18 @@ pro plot_counts_vs_xaxis, event, clear=clear
   
     xyEvent = (*global_plot).EventRangeSelection
     y1event = xyEvent[1]
+    x1event = xyEvent[0]
     
+    x1data = fix(float(x1event) * float(xdata_max) / congrid_xcoeff)
     y1data = fix(float(y1event) * float(ydata_max) / congrid_ycoeff)
+
+    xmin = min([xdata,x1data],max=xmax)
     ymin = min([ydata,y1data],max=ymax)
     if (ymax eq ymin) then return
-    _data = total(data[*,ymin:ymax],2)
+    if (xmax eq xmin) then return
+    
+    _data = total(data[xmin:xmax,ymin:ymax],2)
+    x_axis = x_axis[xmin:xmax]
     
   endif else begin
   
@@ -339,13 +346,18 @@ pro plot_counts_vs_yaxis, event, clear=clear
   
     xyEvent = (*global_plot).EventRangeSelection
     x1event = xyEvent[0]
+    y1event = xyEvent[1]
     
     x1data = fix(float(x1event) * float(xdata_max) / congrid_xcoeff)
-    
+    y1data = fix(float(y1event) * float(ydata_max) / congrid_ycoeff)
+
     xmin = min([xdata,x1data],max=xmax)
+    ymin = min([ydata,y1data],max=ymax)
     
     if (xmax eq xmin) then return
-    _data = total(data[xmin:xmax,*],1)
+    if (ymax eq ymin) then return
+    _data = total(data[xmin:xmax,ymin:ymax],1)
+    xrange = xrange[ymin:ymax]
     
   endif else begin
   
