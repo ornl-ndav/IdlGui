@@ -34,43 +34,22 @@
 
 ;+
 ; :Description:
-;    Describe the procedure.
+;    Browse for a NeXus file
 ;
 ; :Params:
-;    global
-;
-; :Keywords:
-;    main_base
 ;    event
-;    status   ;1 for file found, 0 for not file not found
 ;
 ; :Author: j35
 ;-
-PRO  display_file_found_or_not, main_base=main_base, $
-    event=event, $
-    status=status
-    compile_opt idl2
-          
-  case (status) OF
-    0: BEGIN ;file not found
-      mode1 = read_png('SOS_images/not_found_file.png')
-    END
-    1: BEGIN ;activate previous button
-      mode1 = read_png('SOS_images/found_file.png')
-    END
-  ENDCASE
-  
-  IF (N_ELEMENTS(MAIN_BASE) NE 0) THEN BEGIN
-    mode1_id = WIDGET_INFO(MAIN_BASE, $
-    FIND_BY_UNAME='rtof_nexus_file_status_uname')
-  ENDIF ELSE BEGIN
-    mode1_id = WIDGET_INFO(Event.top, $
-    FIND_BY_UNAME='rtof_nexus_file_status_uname')
-  ENDELSE
-  
-  ;mode1
-  WIDGET_CONTROL, mode1_id, GET_VALUE=id
-  WSET, id
-  TV, mode1, 0,0,/true
-  
-END
+pro browse_for_rtof_nexus_file, event
+compile_opt idl2
+
+title = 'Select a NeXus file to use for the geometry'
+nexus_file = browse_nexus_button( event, title=title, multiple_files=0)
+
+if (nexus_file ne '') then begin
+   putValue, event=event, 'rtof_nexus_geometry_file', nexus_file
+endif
+
+
+end
