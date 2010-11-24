@@ -51,6 +51,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   auto_cleaning_data = file->getValue(tag=['configuration','auto_cleaning'])
   scaled_specular = file->getValue(tag=['configuration','plot','scaled_specular'])
   hide_tab_2 = file->getValue(tag=['configuration','hide_tab_2'])
+  max_nbr_data_nexus = file->getValue(tag=['configuration','max_nbr_data_nexus'])
   ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
   ;============================================================================
   obj_destroy, file
@@ -76,6 +77,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     debugger: debugger, $
     scaled_specular: scaled_specular, $
     hide_tab_2: hide_tab_2, $
+    max_nbr_data_nexus: max_nbr_data_nexus, $
     
     ;where all the parameters are defined
     instrument_config_file: './SOS_instruments.cfg', $

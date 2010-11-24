@@ -124,6 +124,18 @@ PRO main_base_event, Event
       check_go_button, event
     end
     
+    ;interaction with table 
+    widget_info(wWidget, find_by_uname='tab1_table'): begin
+      IF (tag_names(event, /structure_name) EQ 'WIDGET_CONTEXT') THEN BEGIN
+        ;        IF (tab1_table_not_empty(Event) EQ 1b AND $
+        ;          at_last_one_not_empty_selected_cell(Event) EQ 1b) THEN BEGIN
+        id = widget_info(event.top, find_by_uname='context_base')
+        widget_displaycontextmenu, event.id, event.X, event.Y, id
+      ;        ENDIF
+      endif
+    end
+    
+
     ;--- tab2 (work with rtof) ----
     
     ;rtof text field
