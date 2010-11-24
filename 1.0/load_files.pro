@@ -142,8 +142,8 @@ pro load_files, event, ListFullFileName, spin_state=spin_state
       index++
       continue ;make sure file name is not empty string
     endif
-    
-    catch,error
+
+    catch, error
     if (error ne 0) then begin
     
       catch,/cancel
