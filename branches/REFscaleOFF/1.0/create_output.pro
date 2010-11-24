@@ -45,7 +45,7 @@
 ; :Author: j35
 ;-
 pro create_rtof_output_file, event, $
-path_output_file_name = path_output_file_name
+    path_output_file_name = path_output_file_name
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global
@@ -70,7 +70,7 @@ path_output_file_name = path_output_file_name
     if (_nbr_files ge 2) then begin ;create file
     
       full_output_file_name = path_output_file_name + '_' + $
-      spin_state_name[_spin]
+        spin_state_name[_spin]
       full_output_file_name += rtof_ext
       
       _xaxis = *master_xaxis[_spin]
@@ -89,6 +89,15 @@ path_output_file_name = path_output_file_name
         printf, 1, "#F " + files_SF_list[_spin,0,_index_file] + $
           " with SF: " + files_SF_list[_spin,1,_index_file]
         _index_file++
+      endwhile
+      
+      ;add the list of all the data nexus file names
+      list_of_nexus_data_file = (*(*global).list_of_nexus_data_file)
+      _sz = n_elements(list_of_nexus_data_file)
+      _index_data = 0
+      while (_index_data lt _sz) do begin
+        printf, 1, list_of_nexus_data_file[_index_data]
+        _index_data++
       endwhile
       
       _S_1 = "#S 1 Spectrum ID ('bank1', (151, "
@@ -141,7 +150,7 @@ end
 ; :Author: j35
 ;-
 pro create_excel_output_file, event, $
-path_output_file_name = path_output_file_name
+    path_output_file_name = path_output_file_name
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global
@@ -166,7 +175,7 @@ path_output_file_name = path_output_file_name
     if (_nbr_files ge 2) then begin ;create file
     
       full_output_file_name = path_output_file_name + '_' + $
-      spin_state_name[_spin]
+        spin_state_name[_spin]
       full_output_file_name += _ext
       
       _xaxis = *master_xaxis[_spin]
@@ -250,9 +259,9 @@ pro send_by_email, event
   create_tar_folder, tar_file_name, list_of_files_created
   
   send_email, event, email=email, tar_file=tar_file_name, $
-  list_of_files=list_of_files_created
-  
-  
+    list_of_files=list_of_files_created
+    
+    
 end
 
 ;+
@@ -281,25 +290,25 @@ pro create_output, event
   rtof_status = isButtonSelected(event=event, uname='3_columns_ascii_button')
   if (rtof_status) then begin
     create_rtof_output_file, event, $
-    path_output_file_name=output_path + base_file_name
+      path_output_file_name=output_path + base_file_name
   endif
   
   ;is excel ASCII output file selected
   excel_status= isButtonSelected(event=event, uname='2d_table_ascii_button')
   if (excel_status) then begin
     create_excel_output_file, event, $
-    path_output_file_name=output_path + base_file_name
+      path_output_file_name=output_path + base_file_name
   endif
   
   ;send by email or not
   email_status = isButtonSelected(event=event, $
-  uname='send_by_email_button_uname')
+    uname='send_by_email_button_uname')
   if (email_status) then begin
     send_by_email, event
   endif
   
   ;list output files
-;  mapBase, event=event, status=1, uname='files_created_base_uname'
+  ;  mapBase, event=event, status=1, uname='files_created_base_uname'
   list_of_files_created = (*(*global).list_of_files_created)
   sz = n_elements(list_of_files_created)
   index = 0

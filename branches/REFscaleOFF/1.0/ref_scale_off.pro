@@ -100,6 +100,9 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     tmp_pData_y: ptr_new(0L),$
     tmp_pData_y_error: ptr_new(0L),$
     
+    ;List of data nexus files
+    list_of_nexus_data_file: ptr_new(0L),$
+    
     tmp_pData_x_2d: ptr_new(0L),$
     tmp_pData_y_2d: ptr_new(0L),$
     tmp_pData_y_error_2d: ptr_new(0L),$
@@ -140,6 +143,8 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
     output_path: '~/results/',$ ;used in the output tab 
     input_path: '~/results/' })
+    
+    (*(*global).list_of_nexus_data_file) = !null
     
   MainBaseSize  = [50 , 50]
   MainTitle   = "REFLECTOMETER OFF SPECULAR SCALING - " + VERSION
