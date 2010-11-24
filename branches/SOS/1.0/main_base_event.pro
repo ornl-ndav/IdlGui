@@ -100,6 +100,7 @@ PRO main_base_event, Event
       retrieve_data_nexus_distances, event=event
       widget_control, hourglass=0
       check_go_button, event
+      update_big_table_tab1, event
     end
     
     ;Browse data button
@@ -108,6 +109,7 @@ PRO main_base_event, Event
       ;retrieve distances from first data nexus file loaded
       retrieve_data_nexus_distances, event=event
       check_go_button, event
+      update_big_table_tab1, event
     end
     
     ;Normalization run number text field
@@ -134,7 +136,6 @@ PRO main_base_event, Event
       ;        ENDIF
       endif
     end
-    
 
     ;--- tab2 (work with rtof) ----
     

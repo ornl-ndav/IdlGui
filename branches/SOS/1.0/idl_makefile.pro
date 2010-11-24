@@ -59,6 +59,7 @@ cd, CurrentFolder
 ;.run SNS_offspec_QXQZ_from_NEXUS_looper_NEW.pro
 .run progress_bar_eventcb.pro
 
+.run tab1_table_eventcb.pro
 .run data_box_eventcb.pro
 .run norm_box_eventcb.pro
 .run log_book_eventcb.pro

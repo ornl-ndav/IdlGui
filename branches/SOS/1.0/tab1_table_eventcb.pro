@@ -34,28 +34,45 @@
 
 ;+
 ; :Description:
-;   This routine cleanup all the pointers from the main program and is
-;   reached when the application is exited.
+;    refresh the big table
 ;
 ; :Params:
-;    tlb
+;    event
 ;
 ; :Author: j35
 ;-
-pro sos_cleanup, tlb
+pro update_big_table_tab1, event
   compile_opt idl2
   
-  widget_control, tlb, get_uvalue=global, /no_copy
-
-  if (n_elements(global) eq 0) then return
+  widget_control, event.top, get_uvalue=global
   
-    ptr_free, (*global).list_data_runs
-    ptr_free, (*global).list_data_nexus
-    ptr_free, (*global).list_norm_runs
-    ptr_free, (*global).list_norm_nexus
-    ptr_free, (*global).style_plot_lines
-    ptr_free, (*global).new_log_book_message
-    ptr_free, (*global).full_log_book
-    ptr_free, global
-    
+  list_data_nexus = (*(*global).list_data_nexus)
+  max_nbr_data_nexus = (*global).max_nbr_data_nexus
+  list_norm_nexus = (*(*global).list_norm_nexus)
+  
+  ;initialize big array
+  big_table = strarr(2,max_nbr_data_nexus)
+  
+  ;add the data nexus file to big array
+  _sz_data = n_elements(list_data_nexus)
+  if (_sz_data ge max_nbr_data_nexus) then _sz_data = max_nbr_data_nexus
+  _index_data = 0
+  while (_index_data lt _sz_data) do begin
+    big_table[0,_index_data] = list_data_nexus[_index_data]
+    _index_data++
+  endwhile
+  
+  ;add the norm nexus file to big array
+  _sz_norm = n_elements(list_norm_nexus)
+  if (_sz_norm ge max_nbr_data_nexus) then _sz_norm = max_nbr_data_nexus
+  _index_norm = 0
+  while (_index_norm lt _sz_norm) do begin
+    big_table[1,_index_norm] = list_norm_nexus[_index_norm]
+    _index_norm++
+  endwhile
+  
+  putValue, event=event, 'tab1_table', big_table
+  
+  (*global).big_table = big_table
+  
 end
