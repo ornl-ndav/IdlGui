@@ -70,8 +70,18 @@ function load_rtof_file, event, file_name
   
   _file_name = file_name[0]
   iClass = obj_new('IDL3columnsASCIIparser', _file_name)
-  pData = iClass->getDataQuickly()
+  if (~obj_valid(iClass)) then begin
   
+    ;if there is already a rtof file loaded, keep the rtof_nexus_base alive
+    rtof_file = getValue(event=event, uname='rtof_file_text_field_uname')
+    if (~file_test(rtof_file[0])) then begin
+      mapBase, event=event, uname='rtof_nexus_base', status=0
+    endif
+    return, 0b
+  
+  endif
+  
+  pData = iClass->getDataQuickly()
   all_tags = iClass->getAllTag()
   obj_destroy, iClass
   
@@ -82,14 +92,12 @@ function load_rtof_file, event, file_name
     mapBase, event=event, uname='rtof_nexus_base', status=1
     
     ;check that file is where it's supposed to !
-    if (file_test(first_data_nexus)) then begin
-display_file_found_or_not, event=event, status=1
-endif else begin
-display_file_found_or_not, event=event, status=0
-endelse
-    endif
-    
-  return, 1b
+    if (file_test(first_data_nexus,/read)) then begin
+      display_file_found_or_not, event=event, status=1
+    endif else begin
+      display_file_found_or_not, event=event, status=0
+    endelse
+  endif
   
   nbr_pixels = size(pData,/dim)
   nbr_points = (size(*pData[0],/dim))[1]

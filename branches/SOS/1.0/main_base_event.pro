@@ -138,6 +138,11 @@ PRO main_base_event, Event
       ;result = retrieve_theta_values(event, file_name)
     end
     
+    ;browse for nexus file
+    widget_info(wWidget, find_by_uname='rtof_nexus_geometry_button'): begin
+      browse_for_rtof_nexus_file, event
+    end
+    
     ;---- bottom part of GUI ----------
     
     ;full reset
