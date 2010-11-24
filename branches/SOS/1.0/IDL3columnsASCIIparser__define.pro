@@ -63,7 +63,7 @@
 
 ;------------------------------------------------------------------------------
 FUNCTION get_up_to_blank_line, data
-  index_blank = WHERE(data EQ '',nbr)
+  index_blank = WHERE(strcompress(data,/remove_all) EQ '',nbr)
   IF (nbr GT 0) THEN BEGIN
     RETURN, data[0:index_blank[0]-1]
   ENDIF

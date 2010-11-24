@@ -48,8 +48,7 @@
 ;-
 PRO  display_file_found_or_not, main_base=main_base, $
     event=event, $
-    status=status, $
-    global
+    status=status
     compile_opt idl2
           
   case (status) OF
@@ -72,6 +71,7 @@ PRO  display_file_found_or_not, main_base=main_base, $
   ;mode1
   WIDGET_CONTROL, mode1_id, GET_VALUE=id
   WSET, id
+  help, mode1
   TV, mode1, 0,0,/true
   
 END

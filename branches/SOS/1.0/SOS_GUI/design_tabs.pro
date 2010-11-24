@@ -225,6 +225,7 @@ pro design_tabs, MAIN_BASE, global
       /editable,$
       uname = 'rtof_nexus_geometry_file')
       status = widget_draw(row2,$
+      retain = 2,$
       uname = 'rtof_nexus_file_status_uname',$
       scr_ysize = 30,$
       scr_xsize = 60)

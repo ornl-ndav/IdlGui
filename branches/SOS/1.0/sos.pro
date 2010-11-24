@@ -160,8 +160,8 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   xmanager, 'main_base', main_base, /NO_BLOCK, cleanup = 'sos_cleanup'
   
   if (strlowcase(debugger) eq 'yes') then begin
-    
-        if (!version.os eq 'darwin') then begin
+  
+    if (!version.os eq 'darwin') then begin
       input_path = '/Users/j35/IDLWorkspace80/SOS 1.0/Files/'
     endif else begin
       input_path = "/SNS/users/j35/IDLWorkspace80/SOS 1.0/Files/"
@@ -185,18 +185,14 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
     if ((*global).hide_tab_2 eq 'no') then begin
     
-    rtof_file = input_path + 'REF_L_33043#8_33044#8_33045#7_33046#7_33047#6_Off_Off_scaled.rtof'
-    putvalue, base=main_base, 'rtof_file_text_field_uname', rtof_file
-    
-    ;tab to show by default
-    tab_to_show = 1
-    id = widget_info(main_base, find_by_uname='tab_uname')
-    widget_control, id, set_tab_current=tab_to_show
-  
-;  display_file_found_or_not, main_base=main_base, $
-;    status=1, $
-;    global
-    
+      rtof_file = input_path + 'REF_L_33043#8_33044#8_33045#7_33046#7_33047#6_Off_Off_scaled.rtof'
+      putvalue, base=main_base, 'rtof_file_text_field_uname', rtof_file
+      
+      ;tab to show by default
+      tab_to_show = 1
+      id = widget_info(main_base, find_by_uname='tab_uname')
+      widget_control, id, set_tab_current=tab_to_show
+      
     endif
     
   endif
