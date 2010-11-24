@@ -50,10 +50,10 @@ function create_list_of_nexus, event, list_runs=list_runs, type=type
   
   widget_control, event.top, get_uvalue=global
   
-  message = ['> Get full ' + type ' + NeXus file names: ']
+  message = ['> Get full ' + type + ' NeXus file names: ']
   sz = n_elements(list_runs)
   
-  if (list_runs eq !null) then return
+  if (list_runs eq !null) then return, ['']
   
   list_nexus = !null
   index = 0
