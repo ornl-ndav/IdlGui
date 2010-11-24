@@ -32,9 +32,27 @@
 ;
 ;==============================================================================
 
+function get_first_data_nexus, all_tags
+  compile_opt idl2
+  
+  sz = n_elements(all_tags)
+  _index = 0
+  while (_index lt sz) do begin
+    if (strmatch(all_tags[_index],'#F data:*')) then begin
+      part2 = strsplit(all_tags[_index],':',/extract)
+      return, part2[1]
+    endif
+    _index++
+  endwhile
+  return, ''
+  
+end
+
 ;+
 ; :Description:
-;    Loads the rtof data
+;    Loads the rtof data and retrieve the name of the first nexus data
+;    file. This one will be used to get the geometry of the instrument and
+;    perform the conversion pixel/tof -> Qz/Qx
 ;
 ; :Params:
 ;    event
@@ -53,20 +71,38 @@ function load_rtof_file, event, file_name
   _file_name = file_name[0]
   iClass = obj_new('IDL3columnsASCIIparser', _file_name)
   pData = iClass->getDataQuickly()
+  
+  all_tags = iClass->getAllTag()
   obj_destroy, iClass
- 
+  
+  first_data_nexus = get_first_data_nexus(all_tags)
+  first_data_nexus = strtrim(first_data_nexus,2)
+  if (first_data_nexus ne '') then begin
+    putValue, event=event, 'rtof_nexus_geometry_file', first_data_nexus
+    mapBase, event=event, uname='rtof_nexus_base', status=1
+    
+    ;check that file is where it's supposed to !
+    if (file_test(first_data_nexus)) then begin
+display_file_found_or_not, event=event, status=1
+endif else begin
+display_file_found_or_not, event=event, status=0
+endelse
+    endif
+    
+  return, 1b
+  
   nbr_pixels = size(pData,/dim)
   nbr_points = (size(*pData[0],/dim))[1]
   
   data_pixel_0 = (*pData[0])
-  xaxis = data_pixel_0[0,*] 
+  xaxis = data_pixel_0[0,*]
   _pData_y = fltarr(nbr_pixels, nbr_points)
   _pData_y_error = fltarr(nbr_pixels, nbr_points)
   
   ;loop over all pixels and retrieve y and sigma_y values
   for j=0, (nbr_pixels[0]-1) do begin
-  _pData_y[j,*] = (*pData[j])[1,*]
-  _pData_y_error[j,*] = (*pData[j])[2,*]
+    _pData_y[j,*] = (*pData[j])[1,*]
+    _pData_y_error[j,*] = (*pData[j])[2,*]
   endfor
   
   return, 1b
