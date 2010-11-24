@@ -32,6 +32,18 @@
 ;
 ;==============================================================================
 
+;+
+; :Description:
+;    function that returns the name of the first data nexus name
+;
+; :Params:
+;    all_tags
+;
+; :Returns:
+;   first data nexus file name
+;
+; :Author: j35
+;-
 function get_first_data_nexus, all_tags
   compile_opt idl2
   
@@ -78,7 +90,7 @@ function load_rtof_file, event, file_name
       mapBase, event=event, uname='rtof_nexus_base', status=0
     endif
     return, 0b
-  
+    
   endif
   
   pData = iClass->getDataQuickly()

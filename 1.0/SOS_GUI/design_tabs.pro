@@ -222,6 +222,7 @@ pro design_tabs, MAIN_BASE, global
       value = widget_text(row2, $
       value = '', $
       xsize = 65, $
+      /all_events, $
       /editable,$
       uname = 'rtof_nexus_geometry_file')
       status = widget_draw(row2,$

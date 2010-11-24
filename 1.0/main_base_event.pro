@@ -135,7 +135,17 @@ PRO main_base_event, Event
     widget_info(wWidget, find_by_uname='load_rtof_file_button'): begin
       file_name = getvalue(event=event, uname='rtof_file_text_field_uname')
       result = load_rtof_file(event, file_name)
-      ;result = retrieve_theta_values(event, file_name)
+    end
+    
+    ;nexus file to use for geometry
+    widget_info(wWidget, find_by_uname='rtof_nexus_geometry_file'): begin
+      nexus_file = getValue(event=event, uname='rtof_nexus_geometry_file')
+      nexus_file = strtrim(nexus_file,2)
+      if (~file_test(nexus_file[0])) then begin
+        display_file_found_or_not, event=event, status=0
+      endif else begin
+        display_file_found_or_not, event=event, status=1
+      endelse
     end
     
     ;browse for nexus file
