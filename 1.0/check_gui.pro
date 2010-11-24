@@ -53,22 +53,22 @@ pro check_go_button, event
         activate_go_button = 0
       endif
       
-      if (sz gt 1) then begin
-        _label_data = ' data files loaded!'
-      endif else begin
-        _label_data = ' data file loaded!'
-      endelse
-      _label_data_message = strcompress(sz,/remove_all) + _label_data
-      putValue, event=event, 'data_status_label', _label_data_message
-      
-      norm_nexus = (*global).norm_nexus
-      if (norm_nexus eq '') then begin
-        activate_go_button = 0
-        _label_norm = '0 normalization file loaded!'
-      endif else begin
-        _label_norm = '1 normalization file loaded!'
-      endelse
-      putValue, event=event, 'norm_status_label', _label_norm
+;      if (sz gt 1) then begin
+;        _label_data = ' data files loaded!'
+;      endif else begin
+;        _label_data = ' data file loaded!'
+;      endelse
+;      _label_data_message = strcompress(sz,/remove_all) + _label_data
+;      putValue, event=event, 'data_status_label', _label_data_message
+;      
+;      norm_nexus = (*global).norm_nexus
+;      if (norm_nexus eq '') then begin
+;        activate_go_button = 0
+;        _label_norm = '0 normalization file loaded!'
+;      endif else begin
+;        _label_norm = '1 normalization file loaded!'
+;      endelse
+;      putValue, event=event, 'norm_status_label', _label_norm
       
     end
     

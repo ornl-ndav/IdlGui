@@ -189,7 +189,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
       putvalue, base=main_base, 'rtof_file_text_field_uname', rtof_file
       
       ;tab to show by default
-      tab_to_show = 1
+      tab_to_show = 0
       id = widget_info(main_base, find_by_uname='tab_uname')
       widget_control, id, set_tab_current=tab_to_show
       
