@@ -41,7 +41,7 @@ pro design_tabs, MAIN_BASE, global
     /tracking_events, $
     uname = 'tab_uname')
     
-  ;********* tab 1 *****************
+  ;********* tab 1 ***********************************************************
   base1 = widget_base(tabs,$
     uname = 'tab0',$
     title = '    WORKING WITH NEXUS    ')
@@ -49,6 +49,7 @@ pro design_tabs, MAIN_BASE, global
   _base1 = widget_base(base1,$
     /column)
     
+  ;DATA
   data_box = widget_base(_base1,$
     frame = 1,$
     /align_center,$
@@ -60,7 +61,7 @@ pro design_tabs, MAIN_BASE, global
   
     row1 = widget_base(data_box,/row)
     label = widget_label(row1,$
-      value = 'Data run numbers:')
+      value = ' Data run numbers:')
     text = widget_text(row1,$
       value = '',$
       /editable,$
@@ -79,21 +80,6 @@ pro design_tabs, MAIN_BASE, global
     uname = 'data_browse_button',$
     scr_xsize = 575)
     
-  ;data status
-  inter_row = widget_base(_base1,$
-    /row,$
-    frame=1,$
-    /align_right)
-    
-  label = widget_label(inter_row,$
-    value = 'Data Status:')
-  value = widget_label(inter_row,$
-    value = '0 data file loaded!',$
-    /align_left,$
-    uname = 'data_status_label',$
-    scr_xsize = 200)
-    
-  ;SPACE
   space = widget_label(_base1,$
     value = ' ')
     
@@ -102,38 +88,26 @@ pro design_tabs, MAIN_BASE, global
     frame = 1,$
     /align_center,$
     /base_align_center,$
-    /row)
-    
-  ;norm status
-  inter_row = widget_base(_base1,$
-    /row,$
-    frame=1,$
-    /align_right)
-    
-  label = widget_label(inter_row,$
-    value = 'Norm Status:')
-  value = widget_label(inter_row,$
-    value = '0 normalization file loaded!',$
-    /align_left,$
-    uname = 'norm_status_label',$
-    scr_xsize = 200)
-    
+    /column)
     
   ;display those widgets if findnexus is in the path
   if (bFindnexus) then begin
-  
-    norm = cw_field(norm_box, $
-      value = '',$
-      xsize = 8,$
-      title = 'Normalization run number:',$
-      /row,$
-      uname = 'norm_run_number_text_field',$
-      /return_events,$
-      /integer)
+
+    row1 = widget_base(norm_box,/row)
+    label = widget_label(row1,$
+    value = 'Norm. run numbers:')
+    text = widget_text(row1,$
+    value = '',$
+    /editable,$
+    uname = 'norm_run_number_text_field',$
+    xsize = 100)
+    
+    ex = widget_label(row1,$
+      value = '(ex: 200,2004-2006)')
       
-    or_label = widget_label(norm_box,$
-      value = '  OR  ')
-      
+    row2 = widget_label(norm_box,$
+      value = 'OR')
+    
   endif
   
   button = widget_button(norm_box,$
@@ -141,7 +115,6 @@ pro design_tabs, MAIN_BASE, global
     value = 'Browse for a normalization NeXus file ...',$
     scr_xsize = 575)
     
-  ;SPACE
   space = widget_label(_base1,$
     value = ' ')
     
@@ -242,12 +215,14 @@ pro design_tabs, MAIN_BASE, global
  
   endif
   
-  ;********** bottom part of main gui *********************
-  
-  ;  ;SPACE
-  space = widget_label(main_base,$
-    value = ' ')
+  ;********* tab 3 ***********************************************************
+  base3 = widget_base(tabs,$
+    uname = 'tab2',$
+    title = '    CONFIGURATION    ')
     
+  _base = widget_base(base3,$
+    /column)
+  
   ;PARAMETERS
     
   ;read xml instrument config file
@@ -255,7 +230,7 @@ pro design_tabs, MAIN_BASE, global
   file = OBJ_NEW('IDLxmlParser', config_file)
   instrument = (*global).instrument
   
-  para_box = widget_base(main_base,$
+  para_box = widget_base(_base,$
     frame = 1,$
     /base_align_center,$
     /column)
@@ -430,7 +405,10 @@ pro design_tabs, MAIN_BASE, global
     value = tnum,$
     uname = 'tnum_uname',$
     title = '                                tnum')
-  
+
+
+  ;******* bottom part of GUI ************************************************
+
   ;progress bar and go button
   bottom_box = widget_base(main_base,$
     /align_center,$
