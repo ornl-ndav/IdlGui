@@ -90,52 +90,6 @@ end
 
 ;+
 ; :Description:
-;    from the list of data run numbers, create the list of full path
-;    NeXus file names
-;
-; :Params:
-;    event
-
-; :Author: j35
-;-
-pro create_list_of_nexus, event
-  compile_opt idl2
-  
-  widget_control, event.top, get_uvalue=global
-  
-  list_data_runs = (*(*global).list_data_runs)
-  message = ['> Get full data NeXus file name: ']
-  
-  sz = n_elements(list_data_runs)
-  
-  if (list_data_runs eq !null) then return
-  
-  list_data_nexus = !null
-  index = 0
-  while (index lt sz) do begin
-  
-    _nexus_name = get_nexus(event=event, run_number=list_data_runs[index])
-    if (_nexus_name ne 'N/A') then begin
-      list_data_nexus = [list_data_nexus, _nexus_name]
-    endif
-    
-    _message = '-> Run number: ' + $
-      strcompress(list_data_runs[index],/remove_all) + ' -> NeXus: ' + $
-      _nexus_name
-    message = [message, _message]
-    
-    index++
-  endwhile
-  
-  (*(*global).list_data_nexus) = list_data_nexus
-  
-  ;message for log book
-  log_book_update, event, message = message
-  
-end
-
-;+
-; :Description:
 ;    Event reached by the 'Data run numbers:' text field
 ;
 ; :Params:
@@ -146,11 +100,17 @@ end
 pro data_run_numbers_event, event
   compile_opt idl2
   
+  widget_control, event.top, get_uvalue=global
+  
   ;parse the input text field and create the list of runs
-  parse_data_run_numbers, event
+  list_data_runs = parse_run_numbers(event, type='Data')
+  (*(*global).list_data_runs) = list_data_runs
   
   ;create list of NeXus
-  create_list_of_nexus, event
+  list_data_nexus = create_list_of_nexus(event, $
+  list_runs=list_data_runs,$
+  type='data')
+  (*(*global).list_data_nexus) = list_data_nexus
   
 end
 

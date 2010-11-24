@@ -31,6 +31,7 @@ cd, CurrentFolder + '/SOS_GUI'
 cd, CurrentFolder
 
 ;main functions
+.run data_norm_eventcb.pro
 .run load_rtof_file.pro
 .run colorbar.pro
 .run IDLnexusUtilities__define.pro
