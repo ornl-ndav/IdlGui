@@ -118,6 +118,32 @@ pro design_tabs, MAIN_BASE, global
   space = widget_label(_base1,$
     value = ' ')
     
+  ;big table of data and norm files loaded
+  max_nbr_data_nexus = (*global).max_nbr_data_nexus
+  table = widget_table(_base1,$
+    uname = 'tab1_table',$
+    xsize = 2,$
+    ysize = max_nbr_data_nexus,$
+    column_labels = ['Data','Normalization'],$
+    /no_row_headers,$
+    /row_major,$
+    /scroll,$
+    /context_events,$
+    column_widths = [425,425],$
+    /all_events)
+    
+    ;context_menu
+  contextBase = widget_base(table,$
+    /context_menu,$
+    uname = 'context_base')
+  norm = widget_button(contextBase,$
+    value = 'Change normalization file...',$
+    uname = 'change_norm_file')
+  delete = widget_button(contextBase,$
+    value = 'Delete entry',$
+    uname = 'table_delete_entry',$
+    /separator)
+  
   if ((*global).hide_tab_2 eq 'no') then begin
   
     ;********* tab 2 ***********************************************************
@@ -221,6 +247,8 @@ pro design_tabs, MAIN_BASE, global
     title = '    CONFIGURATION    ')
     
   _base = widget_base(base3,$
+  xoffset = 20,$
+  yoffset = 20,$
     /column)
   
   ;PARAMETERS
