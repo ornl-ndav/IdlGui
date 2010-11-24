@@ -99,7 +99,7 @@ pro design_tabs, MAIN_BASE, global
     text = widget_text(row1,$
     value = '',$
     /editable,$
-    uname = 'norm_run_number_text_field',$
+    uname = 'norm_run_numbers_text_field',$
     xsize = 100)
     
     ex = widget_label(row1,$

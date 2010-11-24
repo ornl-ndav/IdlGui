@@ -44,19 +44,17 @@
 pro norm_run_number_event, event
   compile_opt idl2
   
-  run_number = getValue(event=event,uname='norm_run_number_text_field')
-  if (run_number ne '') then begin
-    message = ['> Get full Normalization NeXus file name: ']
-    nexus_name = get_nexus(event=event, run_number=run_number)
-    if (nexus_name ne 'N/A') then begin
-      widget_control, event.top, get_uvalue=global
-      (*global).norm_nexus = nexus_name
-    endif
-    _message = '-> Run number: ' + strcompress(run_number,/remove_all) + $
-      ' -> NeXus: ' + nexus_name
-    message = [message, _message]
-    log_book_update, event, message=message
-  endif
+widget_control, event.top, get_uvalue=global
+  
+  ;parse the input text field and create the list of runs
+  list_runs = parse_run_numbers(event, type='Norm')
+  (*(*global).list_norm_runs) = list_runs
+  
+  ;create list of NeXus
+  list_nexus = create_list_of_nexus(event, $
+  list_runs=list_runs,$
+  type='Norm')
+  (*(*global).list_norm_nexus) = list_nexus
   
 end
 
@@ -73,16 +71,21 @@ pro browse_norm_button_event, event
   compile_opt idl2
   
   title = 'Select the normalization NeXus files'
-  nexus = browse_nexus_button(event, $
-  title=title, $
-  multiple_files=0)
-  if (nexus[0] ne '') then begin
+  list_nexus = browse_nexus_button(event, $
+    title=title, $
+    multiple_files=1)
+  if (list_nexus[0] ne '') then begin
     widget_control, event.top, get_uvalue=global
-    (*global).norm_nexus = nexus
+    (*(*global).list_norm_nexus) = list_nexus
     
-    message = ['> Browsing for a Normalization NeXus file: ']
-    _message = '-> ' + nexus
-    message = [message, _message]
+    message = ['> Browsing for Normalization NeXus files: ']
+    sz = n_elements(list_nexus)
+    index=0
+    while (index lt sz) do begin
+      _message = '-> ' + list_nexus[index]
+      message = [message, _message]
+      index++
+    endwhile
     log_book_update, event, message=message
     
   endif
