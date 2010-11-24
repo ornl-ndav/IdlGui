@@ -79,6 +79,9 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     hide_tab_2: hide_tab_2, $
     max_nbr_data_nexus: max_nbr_data_nexus, $
     
+    ;data and normalization files
+    big_table: strarr(2,max_nbr_data_nexus), $
+    
     ;where all the parameters are defined
     instrument_config_file: './SOS_instruments.cfg', $
     
@@ -90,7 +93,8 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
     list_data_runs: ptr_new(0L),$  ;[2000,2010,2011,2013,2020]
     list_data_nexus: ptr_new(0L), $ ;['/SNS/..../REF_L_3454.nxs','/SNS/...']
-    norm_nexus: '',$
+    list_norm_runs: ptr_new(0L), $
+    list_norm_nexus: ptr_new(0L), $
     
     style_plot_lines: ptr_new(0L), $
     
@@ -178,7 +182,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     (*(*global).list_data_nexus) = list_data_nexus
     
     norm_nexus = input_path + 'REF_L_34394.nxs'
-    (*global).norm_nexus = norm_nexus
+    (*(*global).list_norm_nexus) = [norm_nexus]
     
     retrieve_data_nexus_distances, main_base=main_base
     
