@@ -126,6 +126,10 @@ PRO main_base_event, Event
     
     ;interaction with table 
     widget_info(wWidget, find_by_uname='tab1_table'): begin
+    
+    ;select entire rows of selection
+    select_entire_row, event
+    
       if (tag_names(event, /structure_name) EQ 'WIDGET_CONTEXT') THEN BEGIN
        if (selected_row_data_not_empty(event)) then begin
         id = widget_info(event.top, find_by_uname='context_base')

@@ -32,6 +32,19 @@
 ;
 ;==============================================================================
 
+pro select_entire_row, event
+    compile_opt idl2
+    
+   selection = get_table_lines_selected(event)
+   from_row_selected = selection[1]
+   to_row_selected = selection[3]
+   setTableSelect, event, uname='tab1_table', $
+   from_row=from_row_selected, $
+   to_row = to_row_selected
+    
+    
+    end
+
 ;+
 ; :Description:
 ;    Refresh big table and put new big_table value in table
