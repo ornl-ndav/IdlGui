@@ -41,7 +41,7 @@ message = '> Full reset of session !! ****'
 
 (*(*global).list_data_nexus) = !null
 (*(*global).list_data_runs) = !null
-(*global).norm_nexus = ''
+(*(*global).list_norm_nexus) = !null
 
 check_go_button, event
 
