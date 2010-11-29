@@ -118,12 +118,14 @@ PRO main_base_event, Event
       norm_run_number_event, event
       widget_control, hourglass=0
       check_go_button, event
+      update_big_table_tab1, event
     end
     
     ;Browse norm button
     widget_info(wWidget, find_by_uname='norm_browse_button'): begin
       browse_norm_button_event, event
       check_go_button, event
+      update_big_table_tab1, event
     end
     
     ;interaction with table 

@@ -137,11 +137,11 @@ pro design_tabs, MAIN_BASE, global
     /context_menu,$
     uname = 'context_base')
   norm = widget_button(contextBase,$
-    value = 'Select normalization file...',$
-    uname = 'select_norm_file')
+    value = 'Select a different normalization file...',$
+    uname = 'select_another_norm_file')
   delete = widget_button(contextBase,$
-    value = 'Delete entry',$
-    uname = 'table_delete_entry',$
+    value = 'Delete row',$
+    uname = 'table_delete_row',$
     /separator)
   
   if ((*global).hide_tab_2 eq 'no') then begin

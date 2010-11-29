@@ -64,11 +64,15 @@ pro update_big_table_tab1, event
   
   ;add the norm nexus file to big array
   _sz_norm = n_elements(list_norm_nexus)
-  if (_sz_norm ge max_nbr_data_nexus) then _sz_norm = max_nbr_data_nexus
-  _index_norm = 0
-  while (_index_norm lt _sz_norm) do begin
-    big_table[1,_index_norm] = list_norm_nexus[_index_norm]
-    _index_norm++
+  _index_norm_left = 0
+  _index_norm_right = 0
+  while (_index_norm_left lt _sz_data) do begin
+    if (_index_norm_left ge _sz_norm) then begin
+      _index_norm_right--
+    endif
+    big_table[1,_index_norm_left] = list_norm_nexus[_index_norm_right]
+    _index_norm_left++
+    _index_norm_right++
   endwhile
   
   putValue, event=event, 'tab1_table', big_table
