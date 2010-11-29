@@ -100,16 +100,14 @@ PRO main_base_event, Event
       retrieve_data_nexus_distances, event=event
       widget_control, hourglass=0
       check_go_button, event
-      update_big_table_tab1, event=event
     end
     
     ;Browse data button
     widget_info(wWidget, find_by_uname='data_browse_button'): begin
       browse_data_button_event, event
       ;retrieve distances from first data nexus file loaded
-      retrieve_data_nexus_distances, event=event
+      retrieve_data_nexus_distances, event=event 
       check_go_button, event
-      update_big_table_tab1, event=event
     end
     
     ;Normalization run number text field
@@ -118,14 +116,12 @@ PRO main_base_event, Event
       norm_run_number_event, event
       widget_control, hourglass=0
       check_go_button, event
-      update_big_table_tab1, event=event
     end
     
     ;Browse norm button
     widget_info(wWidget, find_by_uname='norm_browse_button'): begin
       browse_norm_button_event, event
       check_go_button, event
-      update_big_table_tab1, event=event
     end
     
     ;interaction with table 
