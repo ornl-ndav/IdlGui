@@ -49,6 +49,37 @@ end
 
 ;+
 ; :Description:
+;    return the index of the first empty row
+;
+; :Params:
+;    table
+;
+; :Keywords:
+;   type    'data' or 'norm'
+;
+; :Author: j35
+;-
+function get_first_empty_row_index, table, type=type
+compile_opt idl2
+
+dimension = size(table,/dim)
+nbr_row = dimension[1]
+
+case (type) of
+'data': _column_index=0
+'norm': _column_index=1
+endcase
+
+for i=0,(nbr_row-1) do begin
+if (table[_column_index,i] eq '') then return, i
+endfor
+
+return, -1
+
+end
+
+;+
+; :Description:
 ;    return the value of the widget defined
 ;    by its uname (passed as argument)
 ;

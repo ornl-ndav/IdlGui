@@ -201,8 +201,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
       
     endif
     
-    update_big_table_tab1, main_base=main_base
-    
+    create_big_table_tab1, main_base=main_base
     
   endif
   

@@ -110,7 +110,7 @@ pro data_run_numbers_event, event
   list_data_nexus = create_list_of_nexus(event, $
   list_runs=list_data_runs,$
   type='data')
-  (*(*global).list_data_nexus) = list_data_nexus
+  add_list_of_nexus_to_table, event, list_of_nexus, type='data'
   
 end
 
@@ -132,7 +132,8 @@ pro browse_data_button_event, event
     /multiple_files)
   if (list_of_nexus[0] ne '') then begin
     widget_control, event.top, get_uvalue=global
-    (*(*global).list_data_nexus) = list_of_nexus
+    add_list_of_nexus_to_table, event, list_of_nexus, type='data'
+    refresh_big_table, event
     
     message = ['> Browsing for Data NeXus files: ']
     sz = n_elements(list_of_nexus)
@@ -169,12 +170,10 @@ pro retrieve_data_nexus_distances, event=event, main_base=main_base
   widget_control, main_base, get_uvalue=global
   endelse
   
-  list_data_nexus = (*(*global).list_data_nexus)
-  first_data_nexus = list_data_nexus[0]
+  big_table = (*global).big_table
+  first_data_nexus = big_table[0,0]
   
-  type = (size(first_data_nexus))[1]
-  ;no nexus loaded yet
-  if (type ne 7) then return
+  if (first_data_nexus eq '') then return
   
   iNexus = obj_new('IDLnexusUtilities', first_data_nexus)
   d_SD = iNexus->get_d_SD()

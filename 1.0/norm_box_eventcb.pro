@@ -44,7 +44,7 @@
 pro norm_run_number_event, event
   compile_opt idl2
   
-widget_control, event.top, get_uvalue=global
+  widget_control, event.top, get_uvalue=global
   
   ;parse the input text field and create the list of runs
   list_runs = parse_run_numbers(event, type='Norm')
@@ -52,9 +52,9 @@ widget_control, event.top, get_uvalue=global
   
   ;create list of NeXus
   list_nexus = create_list_of_nexus(event, $
-  list_runs=list_runs,$
-  type='Norm')
-  (*(*global).list_norm_nexus) = list_nexus
+    list_runs=list_runs,$
+    type='Norm')
+  add_list_of_nexus_to_table, event, list_of_nexus, type='norm'
   
 end
 
@@ -76,7 +76,8 @@ pro browse_norm_button_event, event
     multiple_files=1)
   if (list_nexus[0] ne '') then begin
     widget_control, event.top, get_uvalue=global
-    (*(*global).list_norm_nexus) = list_nexus
+    add_list_of_nexus_to_table, event, list_nexus, type='norm'
+    refresh_big_table, event
     
     message = ['> Browsing for Normalization NeXus files: ']
     sz = n_elements(list_nexus)

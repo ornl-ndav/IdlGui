@@ -34,6 +34,72 @@
 
 ;+
 ; :Description:
+;    Refresh big table and put new big_table value in table
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro refresh_big_table, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  big_table = (*global).big_table
+  putValue, event=event, base=main_base, 'tab1_table', big_table
+  
+end
+
+;+
+; :Description:
+;    add new listed data nexus to big table
+;
+; :Params:
+;    event
+;    list_of_nexus
+;
+; :Keywords:
+;   type        'data' or 'norm'
+;
+; :Author: j35
+;-
+pro add_list_of_nexus_to_table, event, list_of_nexus, type=type
+  compile_opt idl2
+  
+  case (type) of
+    'data': _index_column=0
+    'norm': _index_column=1
+  endcase
+  
+  widget_control, event.top, get_uvalue=global
+  _big_table = (*global).big_table
+  nbr_row = (size(_big_table,/dim))[1]
+  
+  first_empty_row_index = get_first_empty_row_index(_big_table, type=type)
+  if (first_empty_row_index eq -1) then begin
+    ;display error message (too many files loaded)
+    return
+  endif
+  
+  nbr_nexus_freshly_loaded = n_elements(list_of_nexus)
+  _index = 0
+  while (_index lt nbr_nexus_freshly_loaded) do begin
+    _big_table[_index_column,first_empty_row_index] = list_of_nexus[_index]
+    first_empty_row_index++
+    if (first_empty_row_index eq nbr_row) then begin
+      ;display error message about too many files loaded)
+      break
+    endif
+    _index++
+  endwhile
+  
+  (*global).big_table = _big_table
+  
+end
+
+;+
+; :Description:
 ;    Remove the row selected
 ;
 ; :Params:
@@ -106,7 +172,7 @@ end
 ;
 ; :Author: j35
 ;-
-pro update_big_table_tab1, event=event, main_base=main_base
+pro create_big_table_tab1, event=event, main_base=main_base
   compile_opt idl2
   
   if (keyword_set(event)) then begin
