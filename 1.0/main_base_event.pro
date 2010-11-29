@@ -100,7 +100,7 @@ PRO main_base_event, Event
       retrieve_data_nexus_distances, event=event
       widget_control, hourglass=0
       check_go_button, event
-      update_big_table_tab1, event
+      update_big_table_tab1, event=event
     end
     
     ;Browse data button
@@ -109,7 +109,7 @@ PRO main_base_event, Event
       ;retrieve distances from first data nexus file loaded
       retrieve_data_nexus_distances, event=event
       check_go_button, event
-      update_big_table_tab1, event
+      update_big_table_tab1, event=event
     end
     
     ;Normalization run number text field
@@ -118,14 +118,14 @@ PRO main_base_event, Event
       norm_run_number_event, event
       widget_control, hourglass=0
       check_go_button, event
-      update_big_table_tab1, event
+      update_big_table_tab1, event=event
     end
     
     ;Browse norm button
     widget_info(wWidget, find_by_uname='norm_browse_button'): begin
       browse_norm_button_event, event
       check_go_button, event
-      update_big_table_tab1, event
+      update_big_table_tab1, event=event
     end
     
     ;interaction with table 
@@ -136,6 +136,11 @@ PRO main_base_event, Event
         widget_displaycontextmenu, event.id, event.X, event.Y, id
       endif  
       endif
+    end
+
+    ;delete row
+    widget_info(wWidget, find_by_uname='table_delete_row'): begin
+      delete_row_tab1_table, event
     end
 
     ;--- tab2 (work with rtof) ----
