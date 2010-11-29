@@ -125,7 +125,8 @@ pro delete_row_tab1_table, event
   
   widget_control, event.top, get_uvalue=global
   selection = get_table_lines_selected(event)
-  row_selected = selection[1]
+  from_row = selection[1]
+  to_row   = selection[3]
   
   big_table = (*global).big_table
   
@@ -138,10 +139,12 @@ pro delete_row_tab1_table, event
   _index_old = 0
   _index_new = 0
   while (_index_old lt nbr_row) do begin
-    if (row_selected ne _index_old) then begin
-      _big_table[*,_index_new] = big_table[*,_index_old]
+    if (~(_index_old ge from_row && $
+    _index_old le to_row)) then begin
+      _big_table[0,_index_new] = big_table[0,_index_old]
+      _big_table[1,_index_new] = big_table[1,_index_old]
       _index_new++
-    endif
+      endif
     _index_old++
   endwhile
   
