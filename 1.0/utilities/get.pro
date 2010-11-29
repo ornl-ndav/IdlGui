@@ -34,6 +34,21 @@
 
 ;+
 ; :Description:
+;    get index of line selected
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+function get_table_lines_selected, event
+  id = widget_info(event.top, find_by_uname='tab1_table')
+  selection = widget_info(id, /table_select)
+  return, selection
+end
+
+;+
+; :Description:
 ;    return the value of the widget defined
 ;    by its uname (passed as argument)
 ;

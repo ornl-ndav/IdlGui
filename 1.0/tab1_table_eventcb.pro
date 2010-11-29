@@ -34,6 +34,31 @@
 
 ;+
 ; :Description:
+;    check if the data cell of the current row selected is not empty
+;
+; :Params:
+;    event
+;
+; :Returns:
+;   1 if the data cell is not empty, 0 otherwise
+;
+; :Author: j35
+;-
+function selected_row_data_not_empty, event
+  compile_opt idl2
+  
+  selection = get_table_lines_selected(event)
+  row_selected = selection[1]
+
+  widget_control, event.top, get_uvalue=global
+  big_table = (*global).big_table
+  if (big_table[0,row_selected] ne '') then return, 1
+  return, 0
+  
+end
+
+;+
+; :Description:
 ;    refresh the big table
 ;
 ; :Params:
