@@ -80,3 +80,40 @@ pro setSensitive, id=id, event=event, uname=uname, sensitive=sensitive
   endif
   
 end
+
+;+
+; :Description:
+;    Select the region defined by the keywords
+;
+; :Params:
+;    event
+;
+; :Keywords:
+;    uname
+;    from_row
+;    to_row
+;
+; :Author: j35
+;-
+pro setTableSelect, event, uname=uname, $
+    from_row=from_row, to_row=to_row
+  compile_opt idl2
+  
+  id = widget_info(event.top, find_by_uname=uname)
+
+  ;keep showing the same region of the table
+  table_view = widget_info(id, /table_view)
+  
+  geometry = widget_info(id, /geometry)
+  nbr_column = geometry.xsize
+  from_column = 0
+  to_column = nbr_column-1
+
+  widget_control, id, $
+    set_table_select=[from_column, from_row, to_column, to_row]
+    
+  widget_control, id, set_table_view=table_view
+
+    
+    
+end
