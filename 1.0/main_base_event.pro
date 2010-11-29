@@ -106,7 +106,7 @@ PRO main_base_event, Event
     widget_info(wWidget, find_by_uname='data_browse_button'): begin
       browse_data_button_event, event
       ;retrieve distances from first data nexus file loaded
-      retrieve_data_nexus_distances, event=event 
+      retrieve_data_nexus_distances, event=event
       check_go_button, event
     end
     
@@ -124,25 +124,30 @@ PRO main_base_event, Event
       check_go_button, event
     end
     
-    ;interaction with table 
+    ;interaction with table
     widget_info(wWidget, find_by_uname='tab1_table'): begin
     
-    ;select entire rows of selection
-    select_entire_row, event
-    
+      ;select entire rows of selection
+      select_entire_row, event
+      
       if (tag_names(event, /structure_name) EQ 'WIDGET_CONTEXT') THEN BEGIN
-       if (selected_row_data_not_empty(event)) then begin
-        id = widget_info(event.top, find_by_uname='context_base')
-        widget_displaycontextmenu, event.id, event.X, event.Y, id
-      endif  
+        if (selected_row_data_not_empty(event)) then begin
+          id = widget_info(event.top, find_by_uname='context_base')
+          widget_displaycontextmenu, event.id, event.X, event.Y, id
+        endif
       endif
     end
-
+    
+    ;select another normalization file
+    widget_info(wWidget, find_by_uname='select_another_norm_file'): begin
+      normalization_selection_base, event=event, main_base_uname='main_base'
+    end
+    
     ;delete row
     widget_info(wWidget, find_by_uname='table_delete_row'): begin
       delete_row_tab1_table, event
     end
-
+    
     ;--- tab2 (work with rtof) ----
     
     ;rtof text field
