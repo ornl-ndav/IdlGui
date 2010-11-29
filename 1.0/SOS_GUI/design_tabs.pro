@@ -140,7 +140,7 @@ pro design_tabs, MAIN_BASE, global
     value = 'Select a different normalization file...',$
     uname = 'select_another_norm_file')
   delete = widget_button(contextBase,$
-    value = 'Delete row',$
+    value = 'Delete row(s)',$
     uname = 'table_delete_row',$
     /separator)
   
