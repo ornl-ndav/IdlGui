@@ -76,6 +76,7 @@ cd, CurrentFolder
 .run sos_eventcb.pro
 .run global_infos_base.pro
 .run output_info_base.pro
+.run normalization_selection_base.pro
 
 .run rtof_tab.pro
 .run rtof_file_tab.pro
