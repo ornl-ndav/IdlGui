@@ -57,7 +57,6 @@ PRO main_base_event, Event
         main_base_xoffset = geometry.xoffset
         main_base_yoffset = geometry.yoffset
         main_base_xsize = geometry.xsize
-        ;        main_base_ysize = geometry.ysize
         
         xoffset = main_base_xoffset + main_base_xsize
         yoffset = main_base_yoffset
@@ -84,7 +83,7 @@ PRO main_base_event, Event
       CurrTabSelect = widget_info(tab_id,/tab_current)
       PrevTabSelect = (*global).PrevTabSelect
       if (CurrTabSelect ne PrevTabSelect) then begin
-        check_go_button, event
+        check_go_button, event=event
         (*global).PrevTabSelect = CurrTabSelect
       endif
       
@@ -99,7 +98,7 @@ PRO main_base_event, Event
       ;retrieve distances from first data nexus file loaded
       retrieve_data_nexus_distances, event=event
       widget_control, hourglass=0
-      check_go_button, event
+      check_go_button, event=event
     end
     
     ;Browse data button
@@ -107,7 +106,7 @@ PRO main_base_event, Event
       browse_data_button_event, event
       ;retrieve distances from first data nexus file loaded
       retrieve_data_nexus_distances, event=event
-      check_go_button, event
+      check_go_button, event=event
     end
     
     ;Normalization run number text field
@@ -115,13 +114,13 @@ PRO main_base_event, Event
       widget_control, /hourglass
       norm_run_number_event, event
       widget_control, hourglass=0
-      check_go_button, event
+      check_go_button, event=event
     end
     
     ;Browse norm button
     widget_info(wWidget, find_by_uname='norm_browse_button'): begin
       browse_norm_button_event, event
-      check_go_button, event
+      check_go_button, event=event
     end
     
     ;use same or not normalization files
