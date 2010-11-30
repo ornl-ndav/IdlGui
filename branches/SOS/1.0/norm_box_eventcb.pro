@@ -128,6 +128,40 @@ end
 
 ;+
 ; :Description:
+;    check if any of the data file has no norm file and if there is at least
+;    one, the new norm nexus in the list will go with it
+;
+; :Params:
+;    event
+;    list_nexus
+;
+; :Author: j35
+;-
+pro add_list_nexus_to_end_of_big_table, event, list_nexus
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  big_table = getValue(event=event, uname='tab1_table')
+  first_empty_row = get_first_empty_row_index(big_table, type='data')
+  selected_list_norm_file = (*global).selected_list_norm_file
+
+  index=0
+  index_list_nexus=0
+  while(index lt first_empty_row) do begin
+  if (big_table[1,index] eq '') then begin  
+  selected_list_norm_file[index] = list_nexus[index_list_nexus]
+  index_list_nexus++
+  endif
+  index++
+  endwhile
+  
+  (*global).selected_list_norm_file = selected_list_norm_file
+  
+end
+
+;+
+; :Description:
 ;    routine reached by the browse norm button
 ;
 ; :Params:
@@ -144,27 +178,15 @@ pro browse_norm_button_event, event
     multiple_files=1)
   if (list_nexus[0] ne '') then begin
     widget_control, event.top, get_uvalue=global
+  
     add_list_of_nexus_to_table, event, list_nexus, type='norm'
-    
-    ;1 norm file to use
-    if (isButtonSelected(event=event, base=base, $
-      uname='same_normalization_file_button')) then begin
-      
-      ;switch to 'not use same norm file' if more than 1 norm file is loaded
-      if (n_elements(list_nexus) gt 1) then begin
-        setButton, event=event, uname='not_same_normalization_file_button'
-      endif
-      
-    endif
-    
     add_list_of_norm_nexus_to_selected_list, event, list_nexus
-    (*global).uniq_norm_file = list_nexus[0]
     
+    ;add new browse files at the end of list (is any of the data file
+    ;does not have a norm file
+    ;add_list_nexus_to_end_of_big_table, event, list_nexus
     
     refresh_big_table, event=event
-    
-    
-    
     
     message = ['> Browsing for Normalization NeXus files: ']
     sz = n_elements(list_nexus)
