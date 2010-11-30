@@ -42,10 +42,10 @@ pro check_go_button, event
   CurrTabSelect = widget_info(tab_id,/tab_current)
   
   activate_go_button = 1
-
+  
   case (CurrTabSelect) of
     0: begin ;working with NeXus
-      
+    
       activate_go_button = 1
       list_data_nexus = (*(*global).list_data_nexus)
       sz = n_elements(list_data_nexus)
@@ -53,29 +53,12 @@ pro check_go_button, event
         activate_go_button = 0
       endif
       
-;      if (sz gt 1) then begin
-;        _label_data = ' data files loaded!'
-;      endif else begin
-;        _label_data = ' data file loaded!'
-;      endelse
-;      _label_data_message = strcompress(sz,/remove_all) + _label_data
-;      putValue, event=event, 'data_status_label', _label_data_message
-;      
-;      norm_nexus = (*global).norm_nexus
-;      if (norm_nexus eq '') then begin
-;        activate_go_button = 0
-;        _label_norm = '0 normalization file loaded!'
-;      endif else begin
-;        _label_norm = '1 normalization file loaded!'
-;      endelse
-;      putValue, event=event, 'norm_status_label', _label_norm
-      
     end
     
     1: begin ;working with rtof
     
       activate_go_button = 0
-    
+      
     end
     
     else:
