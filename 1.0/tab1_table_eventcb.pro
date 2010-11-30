@@ -184,8 +184,8 @@ function selected_row_data_not_empty, event
   widget_control, event.top, get_uvalue=global
   big_table = (*global).big_table
   if (big_table[0,row_selected] ne '') then return, 1
+
   return, 0
-  
 end
 
 ;+
