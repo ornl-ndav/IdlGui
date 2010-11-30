@@ -50,6 +50,28 @@ pro normalization_selection_base_event, Event
   
   case Event.id of
   
+    ;table
+    widget_info(event.top, find_by_uname='normalization_table'): begin
+      row_top = event.sel_top
+      row_bottom = event.sel_bottom
+      
+      ;if more than 1 row selected at the same time
+      if (row_top ne row_bottom) then begin
+        activate_button, event=event, status=0, uname='normalization_base_ok'
+        return
+      endif
+      
+      normalization_files = (*global_norm).normalization_files
+      if (normalization_files[row_top] eq '') then begin
+        activate_button, event=event, status=0, uname='normalization_base_ok'
+        return
+      endif
+      
+      activate_button, event=event, status=1, uname='normalization_base_ok'
+      
+    end
+    
+    ;cancel button
     widget_info(event.top, $
       find_by_uname='normalization_base_cancel'): begin
       
@@ -76,7 +98,7 @@ end
 ;    normalization_files
 ;    global
 ;
-; :Keywords:    
+; :Keywords:
 ;    data_file
 ;
 ; :Author: j35
@@ -86,7 +108,7 @@ pro normalization_selection_base_gui, wBase, $
     normalization_files, $
     global, $
     data_file = data_file
-
+    
   compile_opt idl2
   
   main_base_xoffset = main_base_geometry.xoffset
@@ -107,12 +129,12 @@ pro normalization_selection_base_gui, wBase, $
     /modal, $
     /column, $
     GROUP_LEADER = ourGroup)
-
+    
   label = widget_label(wBase,$
-  value = 'Please select the normalization file for the following data file:')
+    value = 'Please select the normalization file for the following data file:')
   label2 = widget_label(wBase,$
-  value = data_file)
-
+    value = data_file)
+    
   normalization_files = reform(normalization_files)
   max_nbr_data_nexus = (*global).max_nbr_data_nexus
   table = widget_table(wBase,$
@@ -122,24 +144,25 @@ pro normalization_selection_base_gui, wBase, $
     ysize = max_nbr_data_nexus,$
     column_labels = ['Normalization files'],$
     /no_row_headers,$
-        column_widths = [625])
-
+    /all_events, $
+    column_widths = [625])
+    
   ;row2
   row2 = widget_base(wBase,$
-  /align_center,$
-  /row)
+    /align_center,$
+    /row)
   cancel = widget_button(row2,$
-  value= 'CANCEL',$
-  xsize = 100,$
-  uname = 'normalization_base_cancel')
+    value= 'CANCEL',$
+    xsize = 100,$
+    uname = 'normalization_base_cancel')
   space = widget_label(row2,$
-  value = '                                             ')
+    value = '                                             ')
   ok = widget_button(row2,$
-  value = 'OK',$
-  xsize = 100,$
-  uname = 'normalization_base_ok')
-
-        
+    value = 'OK',$
+    xsize = 100,$
+    uname = 'normalization_base_ok')
+    
+    
 end
 
 ;+
@@ -189,7 +212,7 @@ pro normalization_selection_base, main_base_uname=main_base_uname, $
   WIDGET_CONTROL, wBase, SET_UVALUE = global_norm
   
   XMANAGER, "normalization_selection_base", wBase, GROUP_LEADER = ourGroup, $
-  /NO_BLOCK
+    /NO_BLOCK
     
 end
 
