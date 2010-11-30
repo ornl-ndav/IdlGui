@@ -116,18 +116,6 @@ pro design_tabs, MAIN_BASE, global
     uname = 'norm_browse_button',$
     value = 'Browse for a normalization NeXus file ...',$
     scr_xsize = 575)
-    label = widget_label(norm_row,$
-    value = '    Use same norm. file:')
-    part2 = widget_base(norm_row,$
-    /row,$
-    /exclusive)
-    button1 = widget_button(part2,$
-    uname = 'same_normalization_file_button',$
-    value = 'Yes')
-    button2 = widget_button(part2,$
-    uname = 'not_same_normalization_file_button',$
-    value = 'No')
-    widget_control, button1, /set_button
     
   space = widget_label(_base1,$
     value = ' ')

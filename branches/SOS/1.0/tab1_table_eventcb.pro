@@ -75,28 +75,9 @@ pro refresh_big_table, event=event, base=base
   
   big_table = (*global).big_table
   
-  ;user wants same normalization file for all the files
-  if (isButtonSelected(event=event, base=base, $
-    uname='same_normalization_file_button')) then begin
-    uniq_norm_file = (*global).uniq_norm_file
+  selected_list_norm_file = (*global).selected_list_norm_file
+  big_table[1,*] = selected_list_norm_file
     
-    first_empty_row = get_first_empty_row_index(big_table, type='data')
-    if (first_empty_row eq -1) then return
-    
-    big_table[1,*] =  ''
-    index = 0
-    while (index lt first_empty_row) do begin
-      big_table[1,index] = uniq_norm_file
-      index++
-    endwhile
-    
-  endif else begin
-    selected_list_norm_file = (*global).selected_list_norm_file
-    
-    big_table[1,*] = selected_list_norm_file
-    
-  endelse
-  
   putValue, event=event, base=base, 'tab1_table', big_table
   
 end

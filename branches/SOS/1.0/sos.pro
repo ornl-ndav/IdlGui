@@ -96,7 +96,6 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     list_norm_runs: ptr_new(0L), $
     list_norm_nexus: ptr_new(0L), $
     
-    uniq_norm_file: '', $ ;name of norm. file to apply to all data NeXus
     ;list of norm files
     selected_list_norm_file: strarr(max_nbr_data_nexus), $
     
@@ -189,7 +188,6 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     'REF_L_38953.nxs',$
     'REF_L_38954.nxs']
     (*(*global).list_norm_nexus) = list_norm_nexus
-    (*global).uniq_norm_file = list_norm_nexus[0]
     selected_list_norm_file = (*global).selected_list_norm_file
     selected_list_norm_file[0:2] = list_norm_nexus
     (*global).selected_list_norm_file = selected_list_norm_file
