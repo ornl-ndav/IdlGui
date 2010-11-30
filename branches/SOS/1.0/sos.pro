@@ -181,8 +181,10 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
       'REF_L_34436.nxs']
     (*(*global).list_data_nexus) = list_data_nexus
     
-    norm_nexus = input_path + 'REF_L_34394.nxs'
-    (*(*global).list_norm_nexus) = [norm_nexus]
+    list_norm_nexus = input_path + ['REF_L_34394.nxs',$
+    'REF_L_38953.nxs',$
+    'REF_L_38954.nxs']
+    (*(*global).list_norm_nexus) = list_norm_nexus
     
     retrieve_data_nexus_distances, main_base=main_base
     
