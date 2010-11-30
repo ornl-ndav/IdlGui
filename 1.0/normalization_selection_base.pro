@@ -45,19 +45,16 @@ pro normalization_selection_base_event, Event
   compile_opt idl2
   
   ;get global structure
-  widget_control,event.top,get_uvalue=global_plot
+  widget_control,event.top,get_uvalue=global_norm
   main_event = (*global_norm).main_event
   
   case Event.id of
   
     widget_info(event.top, $
-      find_by_uname='settings_base_close_button'): begin
-      
-      ;this will allow the settings tab to come back in the same state
-      ;save_status_of_settings_button, event
+      find_by_uname='normalization_base_cancel'): begin
       
       id = widget_info(Event.top, $
-        find_by_uname='settings_widget_base')
+        find_by_uname='normalization_selection_base')
       widget_control, id, /destroy
       
       return
