@@ -39,16 +39,21 @@
 ; :Keywords:
 ;    event
 ;    base
+;    uname    ;by default, uname is for the main table of main gui (tab1)
 ;
 ; :Author: j35
 ;-
-function get_table_lines_selected, event=event, base=base
+function get_table_lines_selected, event=event, base=base, uname=uname
+  
+  if (~keyword_set(uname)) then uname = 'tab1_table'
+  
   if (keyword_set(event)) then begin
-    id = widget_info(event.top, find_by_uname='tab1_table')
+    id = widget_info(event.top, find_by_uname=uname)
   endif else begin
-    id = widget_info(base, find_by_uname='tab1_table')
+    id = widget_info(base, find_by_uname=uname)
   endelse
   selection = widget_info(id, /table_select)
+  
   return, selection
 end
 

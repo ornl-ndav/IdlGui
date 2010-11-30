@@ -34,6 +34,32 @@
 
 ;+
 ; :Description:
+;    Keep record of all the normalization nexus files loaded. This is mostly
+;    used by the widget_base normalization_base that allows the user
+;    to select a different normalization file for a given data nexus file
+;
+; :Params:
+;    event
+;    list_of_nexus
+;
+; :Author: j35
+;-
+pro add_list_of_nexus_to_full_norm_list, event, list_of_nexus
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  list_norm_nexus = (*(*global).list_norm_nexus)
+  
+  list_norm_nexus = [list_norm_nexus, list_of_nexus]
+  list_norm_nexus = list_norm_nexus[uniq(list_norm_nexus)]
+  
+  (*(*global).list_norm_nexus) = list_norm_nexus
+  
+end
+
+;+
+; :Description:
 ;    Procedure reached by the normalization text field
 ;
 ; :Params:
@@ -55,6 +81,7 @@ pro norm_run_number_event, event
     list_runs=list_runs,$
     type='Norm')
   add_list_of_nexus_to_table, event, list_of_nexus, type='norm'
+  add_list_of_nexus_to_full_norm_list, event, list_of_nexus
   
 end
 

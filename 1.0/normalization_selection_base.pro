@@ -82,6 +82,27 @@ pro normalization_selection_base_event, Event
       return
     end
     
+    ;ok button
+    widget_info(event.top, $
+      find_by_uname='normalization_base_ok'): begin
+      
+      selection = get_table_lines_selected(event=event, $
+        uname='normalization_table')
+      row_selected = selection[1]
+      normalization_files = (*global_norm).normalization_files
+      normalization_file_selected = normalization_files[row_selected]
+      
+      row_selected_of_main_table = (*global_norm).row_selected
+      main_table = getValue(event=main_event, uname='tab1_table')
+      main_table[1,row_selected_of_main_table] = normalization_file_selected
+      putValue, event=main_event, 'tab1_table', main_table
+      
+      id = widget_info(Event.top, $
+        find_by_uname='normalization_selection_base')
+      widget_control, id, /destroy
+      
+    end
+    
     else:
     
   endcase
@@ -135,7 +156,6 @@ pro normalization_selection_base_gui, wBase, $
   label2 = widget_label(wBase,$
     value = data_file)
     
-  normalization_files = reform(normalization_files)
   max_nbr_data_nexus = (*global).max_nbr_data_nexus
   table = widget_table(wBase,$
     value = normalization_files, $
@@ -161,7 +181,6 @@ pro normalization_selection_base_gui, wBase, $
     value = 'OK',$
     xsize = 100,$
     uname = 'normalization_base_ok')
-    
     
 end
 
@@ -191,14 +210,22 @@ pro normalization_selection_base, main_base_uname=main_base_uname, $
   colorbar_xsize = 70
   
   table_value = getValue(event=event, uname='tab1_table')
-  normalization_files = table_value[1,*]
+  ;normalization_files = table_value[1,*]
+  normalization_files = (*(*global).list_norm_nexus)
+  
+  ;make normalization table
+  max_nbr_data_nexus = (*global).max_nbr_data_nexus
+  normalization_table = strarr(1,max_nbr_data_nexus)
+  index = where(normalization_files ne '')
+  normalization_table[index] = normalization_files[index]
+
   data_file = table_value[0,row_selected]
   
   ;build gui
   wBase = ''
   normalization_selection_base_gui, wBase, $
     main_base_geometry, $
-    normalization_files, $
+    normalization_table, $
     global, $
     data_file = data_file
     
@@ -206,6 +233,7 @@ pro normalization_selection_base, main_base_uname=main_base_uname, $
   
   global_norm = PTR_NEW({ wbase: wbase,$
     global: global, $
+    row_selected: row_selected, $
     normalization_files: normalization_files, $
     main_event: event})
     
