@@ -139,7 +139,7 @@ function calculate_lambda, tof_value=tof_value, $
   if (n_elements(lambda_units) eq 0) then lambda_units = 'angstroms'
   
   ;retrieve h and m_n values
-  file_name = 'SNS_offspec_instruments.cfg'
+  file_name = 'SOS_instruments.cfg'
   iFile = obj_new('IDLxmlParser', file_name)
   h = iFile->getValue(tag=['constants','h'])
   m_n = iFile->getValue(tag=['constants','m_n'])
