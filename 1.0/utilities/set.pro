@@ -85,21 +85,24 @@ end
 ; :Description:
 ;    Select the region defined by the keywords
 ;
-; :Params:
-;    event
-;
 ; :Keywords:
+;    event
+;    base
 ;    uname
 ;    from_row
 ;    to_row
 ;
 ; :Author: j35
 ;-
-pro setTableSelect, event, uname=uname, $
+pro setTableSelect, event=event, base=base, uname=uname, $
     from_row=from_row, to_row=to_row
   compile_opt idl2
   
+  if (keyword_set(event)) then begin
   id = widget_info(event.top, find_by_uname=uname)
+  endif else begin
+  id = widget_info(base, find_by_uname=uname)
+  endelse
 
   ;keep showing the same region of the table
   table_view = widget_info(id, /table_view)
@@ -114,6 +117,4 @@ pro setTableSelect, event, uname=uname, $
     
   widget_control, id, set_table_view=table_view
 
-    
-    
 end
