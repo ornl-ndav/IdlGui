@@ -76,14 +76,19 @@ end
 ; :Params:
 ;    wBase
 ;    main_base_geometry
+;    normalization_files
 ;    global
+;
+; :Keywords:    
+;    data_file
 ;
 ; :Author: j35
 ;-
 pro normalization_selection_base_gui, wBase, $
     main_base_geometry, $
+    normalization_files, $
     global, $
-    offset
+    data_file = data_file
 
   compile_opt idl2
   
@@ -97,19 +102,46 @@ pro normalization_selection_base_gui, wBase, $
   
   ourGroup = WIDGET_BASE()
   
-  title = ''
+  title = 'Select normalization file!'
   wBase = WIDGET_BASE(TITLE = title, $
     UNAME        = 'normalization_selection_base', $
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
-    MAP          = 1,$
     /modal, $
-    /BASE_ALIGN_CENTER,$
-    /align_center,$
+    /column, $
     GROUP_LEADER = ourGroup)
 
-  draw = widget_draw(wBase)
-  
+  label = widget_label(wBase,$
+  value = 'Please select the normalization file for the following data file:')
+  label2 = widget_label(wBase,$
+  value = data_file)
+
+  normalization_files = reform(normalization_files)
+  max_nbr_data_nexus = (*global).max_nbr_data_nexus
+  table = widget_table(wBase,$
+    value = normalization_files, $
+    uname = 'normalization_table',$
+    xsize = 1,$
+    ysize = max_nbr_data_nexus,$
+    column_labels = ['Normalization files'],$
+    /no_row_headers,$
+        column_widths = [625])
+
+  ;row2
+  row2 = widget_base(wBase,$
+  /align_center,$
+  /row)
+  cancel = widget_button(row2,$
+  value= 'CANCEL',$
+  xsize = 100,$
+  uname = 'normalization_base_cancel')
+  space = widget_label(row2,$
+  value = '                                             ')
+  ok = widget_button(row2,$
+  value = 'OK',$
+  xsize = 100,$
+  uname = 'normalization_base_ok')
+
         
 end
 
@@ -120,11 +152,13 @@ end
 ; :Keywords:
 ;    main_base
 ;    event
+;    row_selected
 ;
 ; :Author: j35
 ;-
 pro normalization_selection_base, main_base_uname=main_base_uname, $
-    event=event
+    event=event, $
+    row_selected = row_selected
     
   compile_opt idl2
   
@@ -136,16 +170,23 @@ pro normalization_selection_base, main_base_uname=main_base_uname, $
   border = 40
   colorbar_xsize = 70
   
+  table_value = getValue(event=event, uname='tab1_table')
+  normalization_files = table_value[1,*]
+  data_file = table_value[0,row_selected]
+  
   ;build gui
   wBase = ''
   normalization_selection_base_gui, wBase, $
     main_base_geometry, $
-    global
+    normalization_files, $
+    global, $
+    data_file = data_file
     
-    widget_control, wBase, /realize
+  widget_control, wBase, /realize
   
   global_norm = PTR_NEW({ wbase: wbase,$
     global: global, $
+    normalization_files: normalization_files, $
     main_event: event})
     
   WIDGET_CONTROL, wBase, SET_UVALUE = global_norm

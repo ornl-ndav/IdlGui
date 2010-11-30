@@ -156,7 +156,11 @@ PRO main_base_event, Event
     
     ;select another normalization file
     widget_info(wWidget, find_by_uname='select_another_norm_file'): begin
-      normalization_selection_base, event=event, main_base_uname='main_base'
+      selection = get_table_lines_selected(event=event)
+      row_selected = selection[1]
+      normalization_selection_base, event=event, $
+      main_base_uname='main_base', $
+      row_selected = row_selected
     end
     
     ;delete row
