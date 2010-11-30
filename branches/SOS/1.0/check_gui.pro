@@ -33,12 +33,16 @@
 ;
 ;==============================================================================
 
-pro check_go_button, event
+pro check_go_button, event=event, base=base
   compile_opt idl2
   
+  if (keyword_set(event)) then begin
   widget_control, event.top, get_uvalue=global
-  
   tab_id = widget_info(event.top,find_by_uname='tab_uname')
+ endif else begin
+  widget_control, base, get_uvalue=global
+  tab_id = widget_info(base,find_by_uname='tab_uname')
+endelse
   CurrTabSelect = widget_info(tab_id,/tab_current)
   
   activate_go_button = 1
@@ -47,12 +51,20 @@ pro check_go_button, event
     0: begin ;working with NeXus
     
       activate_go_button = 1
-      list_data_nexus = (*(*global).list_data_nexus)
-      sz = n_elements(list_data_nexus)
-      if (sz eq 0) then begin
+      big_table = getValue(event=event,base=base,uname='tab1_table')
+      if (big_table[0,0] eq '') then begin
         activate_go_button = 0
-      endif
-      
+      endif else begin
+        first_empty_row = get_first_empty_row_index(big_table, type='data')
+        _index = 0
+        while(_index lt first_empty_row) do begin
+          if (big_table[1,_index] eq '') then begin
+            activate_go_button = 0
+            break
+          endif
+          _index++
+        endwhile
+      endelse
     end
     
     1: begin ;working with rtof
@@ -66,6 +78,7 @@ pro check_go_button, event
   endcase
   
   activate_button, event=event, $
+    main_base=base, $
     status= activate_go_button, $
     uname= 'go_button'
     

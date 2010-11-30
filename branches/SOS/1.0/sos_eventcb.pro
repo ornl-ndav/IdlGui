@@ -45,9 +45,10 @@ message = '> Full reset of session !! ****'
 
 max_nbr_data_nexus = (*global).max_nbr_data_nexus
 big_table = strarr(2,max_nbr_data_nexus)
+(*global).big_table = big_table
 putValue, event=event, base=main_base, 'tab1_table', big_table
 
-check_go_button, event
+check_go_button, event=event
 
 putValue, event=event, 'd_sd_uname', ''
 putValue, event=event, 'd_md_uname', ''

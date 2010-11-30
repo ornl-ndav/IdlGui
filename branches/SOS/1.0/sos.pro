@@ -212,6 +212,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     create_big_table_tab1, main_base=main_base
     select_entire_row, base=main_base
     refresh_big_table, base=main_base
+    check_go_button, base=main_base
     
   endif
   

@@ -133,23 +133,11 @@ pro browse_data_button_event, event
   if (list_of_nexus[0] ne '') then begin
     widget_control, event.top, get_uvalue=global
     
-    ;1 norm file to use
-    if (isButtonSelected(event=event, base=base, $
-      uname='same_normalization_file_button')) then begin
-      
-      ;switch to 'not use same norm file' if more than 1 norm file is loaded
-      if (n_elements(list_of_nexus) gt 1) then begin
-        set_button, event=event, uname='not_same_normalization_file_button'
-      endif
-      
-    endif
-    
     add_list_of_norm_nexus_to_selected_list, event, list_of_nexus
-    (*global).uniq_norm_file = list_of_nexus[0]
     
     add_list_of_nexus_to_table, event, list_of_nexus, type='data'
     
-    refresh_big_table, event
+    refresh_big_table, event=event
     
     message = ['> Browsing for Data NeXus files: ']
     sz = n_elements(list_of_nexus)
