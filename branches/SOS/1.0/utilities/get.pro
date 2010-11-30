@@ -36,13 +36,18 @@
 ; :Description:
 ;    get index of line selected
 ;
-; :Params:
+; :Keywords:
 ;    event
+;    base
 ;
 ; :Author: j35
 ;-
-function get_table_lines_selected, event
-  id = widget_info(event.top, find_by_uname='tab1_table')
+function get_table_lines_selected, event=event, base=base
+  if (keyword_set(event)) then begin
+    id = widget_info(event.top, find_by_uname='tab1_table')
+  endif else begin
+    id = widget_info(base, find_by_uname='tab1_table')
+  endelse
   selection = widget_info(id, /table_select)
   return, selection
 end
@@ -60,22 +65,22 @@ end
 ; :Author: j35
 ;-
 function get_first_empty_row_index, table, type=type
-compile_opt idl2
-
-dimension = size(table,/dim)
-nbr_row = dimension[1]
-
-case (type) of
-'data': _column_index=0
-'norm': _column_index=1
-endcase
-
-for i=0,(nbr_row-1) do begin
-if (table[_column_index,i] eq '') then return, i
-endfor
-
-return, -1
-
+  compile_opt idl2
+  
+  dimension = size(table,/dim)
+  nbr_row = dimension[1]
+  
+  case (type) of
+    'data': _column_index=0
+    'norm': _column_index=1
+  endcase
+  
+  for i=0,(nbr_row-1) do begin
+    if (table[_column_index,i] eq '') then return, i
+  endfor
+  
+  return, -1
+  
 end
 
 ;+
@@ -420,7 +425,7 @@ end
 ; :Description:
 ;    gets and returns tnum
 ;    Number of data points to remove on both side of spectrum when
-;    calculating the scaling factors. 
+;    calculating the scaling factors.
 ;
 ; :Params:
 ;    event

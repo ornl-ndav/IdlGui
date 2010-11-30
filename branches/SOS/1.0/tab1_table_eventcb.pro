@@ -32,18 +32,27 @@
 ;
 ;==============================================================================
 
-pro select_entire_row, event
-    compile_opt idl2
+;+
+; :Description:
+;    This routine selects automatically the entire row of the table
+;
+; :Keywords:
+;    event
+;    base
+;
+; :Author: j35
+;-
+pro select_entire_row, event=event, base=base
+  compile_opt idl2
+  
+  selection = get_table_lines_selected(event=event, base=base)
+  from_row_selected = selection[1]
+  to_row_selected = selection[3]
+  setTableSelect, event=event, base=base, uname='tab1_table', $
+    from_row=from_row_selected, $
+    to_row = to_row_selected
     
-   selection = get_table_lines_selected(event)
-   from_row_selected = selection[1]
-   to_row_selected = selection[3]
-   setTableSelect, event, uname='tab1_table', $
-   from_row=from_row_selected, $
-   to_row = to_row_selected
-    
-    
-    end
+end
 
 ;+
 ; :Description:
@@ -124,7 +133,7 @@ pro delete_row_tab1_table, event
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global
-  selection = get_table_lines_selected(event)
+  selection = get_table_lines_selected(event=event)
   from_row = selection[1]
   to_row   = selection[3]
   
@@ -140,11 +149,11 @@ pro delete_row_tab1_table, event
   _index_new = 0
   while (_index_old lt nbr_row) do begin
     if (~(_index_old ge from_row && $
-    _index_old le to_row)) then begin
+      _index_old le to_row)) then begin
       _big_table[0,_index_new] = big_table[0,_index_old]
       _big_table[1,_index_new] = big_table[1,_index_old]
       _index_new++
-      endif
+    endif
     _index_old++
   endwhile
   
@@ -169,7 +178,7 @@ end
 function selected_row_data_not_empty, event
   compile_opt idl2
   
-  selection = get_table_lines_selected(event)
+  selection = get_table_lines_selected(event=event)
   row_selected = selection[1]
   
   widget_control, event.top, get_uvalue=global

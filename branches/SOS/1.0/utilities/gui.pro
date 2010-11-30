@@ -83,9 +83,9 @@ end
 ; :Author: j35
 ;-
 pro activate_button, event=event, $
-status=status, $
-uname=uname, $
-main_base=main_base
+    status=status, $
+    uname=uname, $
+    main_base=main_base
   compile_opt idl2
   
   if (keyword_set(event)) then begin

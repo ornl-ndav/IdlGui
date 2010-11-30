@@ -128,10 +128,26 @@ PRO main_base_event, Event
     widget_info(wWidget, find_by_uname='tab1_table'): begin
     
       ;select entire rows of selection
-      select_entire_row, event
+      select_entire_row, event=event
       
       if (tag_names(event, /structure_name) EQ 'WIDGET_CONTEXT') THEN BEGIN
         if (selected_row_data_not_empty(event)) then begin
+        
+          selection = get_table_lines_selected(event=event)
+          nbr_row_selected = selection[3]-selection[1]
+          ;only 1 row selected
+          if (nbr_row_selected eq 0) then begin
+            normalization_button_status = 1
+            delete_label = 'Delete selected row'
+          endif else begin
+            normalization_button_status = 0
+            delete_label = 'Delete selected rows'
+          endelse
+          putValue, event=event, 'table_delete_row', delete_label
+          activate_button, event=event, $
+            status=normalization_button_status, $
+            uname='select_another_norm_file'
+            
           id = widget_info(event.top, find_by_uname='context_base')
           widget_displaycontextmenu, event.id, event.X, event.Y, id
         endif
