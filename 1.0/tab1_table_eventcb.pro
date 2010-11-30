@@ -75,9 +75,6 @@ pro refresh_big_table, event=event, base=base
   
   big_table = (*global).big_table
   
-  selected_list_norm_file = (*global).selected_list_norm_file
-  big_table[1,*] = selected_list_norm_file
-    
   putValue, event=event, base=base, 'tab1_table', big_table
   
 end
@@ -107,23 +104,58 @@ pro add_list_of_nexus_to_table, event, list_of_nexus, type=type
   _big_table = (*global).big_table
   nbr_row = (size(_big_table,/dim))[1]
   
-  first_empty_row_index = get_first_empty_row_index(_big_table, type=type)
-  if (first_empty_row_index eq -1) then begin
-    ;display error message (too many files loaded)
-    return
-  endif
+  if (type eq 'data') then begin
   
-  nbr_nexus_freshly_loaded = n_elements(list_of_nexus)
-  _index = 0
-  while (_index lt nbr_nexus_freshly_loaded) do begin
-    _big_table[_index_column,first_empty_row_index] = list_of_nexus[_index]
-    first_empty_row_index++
-    if (first_empty_row_index eq nbr_row) then begin
-      ;display error message about too many files loaded)
-      break
+    first_empty_row_index = get_first_empty_row_index(_big_table, type=type)
+    if (first_empty_row_index eq -1) then begin
+      ;display error message (too many files loaded)
+      return
     endif
-    _index++
-  endwhile
+    
+    nbr_nexus_freshly_loaded = n_elements(list_of_nexus)
+    _index = 0
+    while (_index lt nbr_nexus_freshly_loaded) do begin
+      _big_table[_index_column,first_empty_row_index] = list_of_nexus[_index]
+      first_empty_row_index++
+      if (first_empty_row_index eq nbr_row) then begin
+        ;display error message about too many files loaded)
+        break
+      endif
+      _index++
+    endwhile
+    
+  endif else begin ;norm
+  
+    selection = get_table_lines_selected(event=event, uname='tab1_table')
+    from_row = selection[1]
+    to_row = selection[3]
+    nbr_nexus_freshly_loaded = n_elements(list_of_nexus)
+    
+    index = from_row
+    index_norm_nexus = 0
+    while (index le to_row) do begin
+    
+      if (_big_table[0,index] ne '') then begin
+        _big_table[1,index] = list_of_nexus[index_norm_nexus]
+        index_norm_nexus++
+        ;if only 1 norm file selected, put this one in each selected row
+        if (index_norm_nexus eq nbr_nexus_freshly_loaded) then begin
+          index_norm_nexus--
+        endif else begin
+          ;if more than 1 norm file, put up to the end of norm file
+          if (index_norm_nexus gt (to_row - from_row)) then begin
+          break
+          endif
+        endelse
+      endif else begin
+        break
+      endelse
+      
+      index++
+      
+    endwhile
+    
+  endelse
   
   (*global).big_table = _big_table
   

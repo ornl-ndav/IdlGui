@@ -135,7 +135,7 @@ PRO main_base_event, Event
     
     ;interaction with table
     widget_info(wWidget, find_by_uname='tab1_table'): begin
-        
+    
       ;select entire rows of selection
       select_entire_row, event=event
       
@@ -168,7 +168,7 @@ PRO main_base_event, Event
         from_row = from_row, $
         to_row = to_row
         
-end
+    end
     
     ;delete row
     widget_info(wWidget, find_by_uname='table_delete_row'): begin
