@@ -34,36 +34,6 @@
 
 ;+
 ; :Description:
-;    This routine checks that the conditions between the normalization column
-;    of the big table and the buttons selected in normalization widgets match.
-;    If they don't this routine will change the buttons
-;
-; :Params:
-;    event
-;
-; :Author: j35
-;-
-pro check_use_same_norm_file_widgets, event
-  compile_opt idl2
-  
-    if (isButtonSelected(event=event, base=base, $
-    uname='not_same_normalization_file_button')) then return
-    
-    big_table = getValue(event=event, uname='tab1_table')
-    nbr_norm = get_first_empty_row_index(big_table, type='norm')
-    
-    norm_column = big_table[1,0:nbr_norm-1]
-    uniq_norm = norm_column[uniq(norm_column)]
-    
-    ;at least 2 differents files
-    if (n_elements(uniq_norm) gt 1) then begin
-    setButton, event=event, uname='not_same_normalization_file_button'
-  endif
-  
-end
-
-;+
-; :Description:
 ;    Keep record of all the normalization nexus files loaded. This is mostly
 ;    used by the widget_base normalization_base that allows the user
 ;    to select a different normalization file for a given data nexus file
