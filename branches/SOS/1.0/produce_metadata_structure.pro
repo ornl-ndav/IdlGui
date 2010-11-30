@@ -35,7 +35,7 @@
 function produce_metadata_structure, event, $
     time_stamp = time_stamp, $
     list_data_nexus = list_data_nexus, $
-    norm_nexus = norm_nexus, $
+    list_norm_nexus = list_norm_nexus, $
     qzmax = QZmax,$
     qzmin = QZmin, $
     qxbins = QXbins, $
@@ -57,8 +57,8 @@ function produce_metadata_structure, event, $
   metadata = { list_data_nexus: {label:'List of data NeXus', $
     value:list_data_nexus}, $
     
-    norm_nexus: {label:'Normalization Nexus file', $
-    value: norm_nexus}, $
+    norm_nexus: {label:'List of Normalization Nexus', $
+    value: list_norm_nexus}, $
     
     time_stamp: {label:'Date and time this plot was generated', $
     value: time_stamp}, $

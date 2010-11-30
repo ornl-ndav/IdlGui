@@ -178,21 +178,17 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     (*global).input_path = input_path
     
     list_data_nexus = input_path + ['REF_L_34432.nxs',$
-      'REF_L_34433.nxs',$
-      'REF_L_34434.nxs',$
-      'REF_L_34435.nxs',$
-      'REF_L_34436.nxs']
+      'REF_L_34433.nxs']
     (*(*global).list_data_nexus) = list_data_nexus
     
     list_norm_nexus = input_path + ['REF_L_34394.nxs',$
-    'REF_L_38953.nxs',$
-    'REF_L_38954.nxs']
+    'REF_L_38953.nxs']
+    
     (*(*global).list_norm_nexus) = list_norm_nexus
     selected_list_norm_file = (*global).selected_list_norm_file
-    selected_list_norm_file[0:2] = list_norm_nexus
+    selected_list_norm_file[0:1] = list_norm_nexus
     (*global).selected_list_norm_file = selected_list_norm_file
     
-    retrieve_data_nexus_distances, main_base=main_base
     
     ;activate go button
     activate_button, main_base=main_base, uname='go_button', status=1
@@ -213,6 +209,8 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     select_entire_row, base=main_base
     refresh_big_table, base=main_base
     check_go_button, base=main_base
+
+    retrieve_data_nexus_distances, main_base=main_base
     
   endif
   

@@ -40,26 +40,40 @@
 ;
 ; :Params:
 ;    event
-;    norm_nexus   full path of the normalization nexus file
-;
+;    list_norm_nexus   full path of all the normalization files
+;    proceses
+;    total_number_of_processes
 ;-
-function get_normalization_spectrum, event, norm_nexus
+function get_normalization_spectrum, event, list_norm_nexus, processes, total_number_of_processes
   compile_opt idl2
   
-  message = ['> Start retrieving normalization spectrum [tof,counts] ... ']
-  message = [message, '-> NeXus file name: ' + norm_nexus]
-  log_book_update, event, message=message
+  nbr_files = n_elements(list_norm_nexus)
+  spectrum = ptrarr(nbr_files, /allocate_heap)
   
-  iNorm = obj_new('IDLnexusUtilities', norm_nexus)
-  spectrum = iNorm->get_TOF_counts_data()
-  obj_destroy, iNorm
+  index = 0
+  while (index lt nbr_files) do begin
   
-  message = ['> Done with retrieving normalization spectrum [tof,counts]']
-  sz = size(spectrum)
-  message1 = '-> size(spectrum): [' + $
-    strcompress(strjoin(sz,','),/remove_all) + ']'
-  message = [message, message1]
-  log_book_update, event, message=message
+    message = ['> Start retrieving normalization spectrum [tof,counts] ... ']
+    message = [message, '-> NeXus file name: ' + list_norm_nexus[index]]
+    log_book_update, event, message=message
+    
+    iNorm = obj_new('IDLnexusUtilities', list_norm_nexus[index])
+    _spectrum = iNorm->get_TOF_counts_data()
+    obj_destroy, iNorm
+    
+    message = ['> Done with retrieving normalization spectrum [tof,counts]']
+    sz = size(_spectrum)
+    message1 = '-> size(spectrum): [' + $
+      strcompress(strjoin(sz,','),/remove_all) + ']'
+    message = [message, message1]
+    log_book_update, event, message=message
+    
+    *spectrum[index] = _spectrum
+    
+    update_progress_bar_percentage, event, ++processes, total_number_of_processes
+    
+    index++
+  endwhile
   
   return, spectrum
 end
@@ -87,14 +101,26 @@ function trim_spectrum, event, spectrum, TOFrange=TOFrange
   message2 = '-> TOFmax: ' + strcompress(_TOFmax,/remove_all)
   log_book_update, event, message = [message, message1, message2]
   
-  list = where(spectrum[0,*] ge _TOFmin and spectrum[0,*] le _TOFmax)
-  spectrum = spectrum[*,list]
-  spectrum[1,*] = spectrum[1,*]/max(spectrum[1,*]) ;normalize spectrum to 1
+  sz = (size(spectrum,/dim))[0]
   
-  sz = size(spectrum)
-  message3 = '-> size(spectrum): [' + $
-    strcompress(strjoin(sz,','),/remove_all) + ']'
-  log_book_update, event, message = [message, message1, message2, message3]
+  _index = 0
+  while (_index lt sz[0]) do begin
+  
+    _spectrum = *spectrum[_index]
+    
+    list = where(_spectrum[0,*] ge _TOFmin and _spectrum[0,*] le _TOFmax)
+    _spectrum = _spectrum[*,list]
+    _spectrum[1,*] = _spectrum[1,*]/max(_spectrum[1,*]) ;normalize spectrum to 1
+    
+    *spectrum[_index] = _spectrum
+    
+    sz = size(_spectrum)
+    message3 = '-> size(spectrum): [' + $
+      strcompress(strjoin(sz,','),/remove_all) + ']'
+    log_book_update, event, message = [message, message1, message2, message3]
+    
+    _index++
+  endwhile
   
   return, spectrum
 end
@@ -388,7 +414,7 @@ pro build_THLAM, event=event, $
   compile_opt idl2
   
   file_num = (size(DATA,/dim))[0]
-  
+
   message = ['> Build THLAM (Theta-Lambda) arrays for all each loaded files']
   
   for read_loop=0,file_num-1 do begin
@@ -396,7 +422,7 @@ pro build_THLAM, event=event, $
     RAW_DATA= *DATA[read_loop]
     ;{data, theta, twotheta, tof, pixels}
     
-    NORM_DATA=SNS_divide_spectrum(RAW_DATA, spectrum)
+    NORM_DATA=SNS_divide_spectrum(RAW_DATA, *spectrum[read_loop])
     
     ;SD_d : sample to detector distance
     ;MD_d : moderator to detector
@@ -812,7 +838,8 @@ pro go_nexus_reduction, event
   
   widget_control, event.top, get_uvalue=global
   
-  catch,error
+  error = 0
+  ;catch,error
   if (error ne 0) then begin
     catch,/cancel
     
@@ -847,13 +874,20 @@ pro go_nexus_reduction, event
     ;number of steps is ----> 1
     
     ;Retrieve variables
-    
-    list_data_nexus = (*(*global).list_data_nexus)
-    
+    big_table = getValue(event=event,uname='tab1_table')
+    list_data_nexus = big_table[0,*]
+    list_data_nexus = reform(list_data_nexus)
+    not_empty = where(list_data_nexus ne '')
+    list_data_nexus = list_data_nexus[not_empty]
     file_num = n_elements(list_data_nexus)
-    total_number_of_processes = 7 + 2*file_num
     
-    norm_nexus = (*global).norm_nexus
+    ;file_num -> for each normalization loading
+    total_number_of_processes = 7 + 2*file_num + file_num
+    
+    list_norm_nexus = big_table[1,*]
+    list_norm_nexus = reform(list_norm_nexus)
+    not_empty = where(list_norm_nexus ne '')
+    list_norm_nexus = list_norm_nexus[not_empty]
     
     full_check_message = !null
     QZmax = get_ranges_qz_max(event)
@@ -969,22 +1003,25 @@ pro go_nexus_reduction, event
     ;number of steps is ----> 1
     
     ;create spectrum of normalization file
-    if ((*global).debugger eq 'yes') then begin
-      if (!version.os eq 'darwin') then begin
-        path = '/Users/j35/IDLWorkspace80/SOS 1.0/'
-      endif else begin
-        path = '/SNS/users/j35/IDLWorkspace80/SOS 1.0/'
-      endelse
-      norm_file = path + 'Al_can_spectrum.dat'
-      SPECTRUM=xcr_direct(norm_file, 2)
-    endif else begin
-      spectrum = get_normalization_spectrum(event, norm_nexus)
-    endelse
+    ;    if ((*global).debugger eq 'yes') then begin
+    ;      if (!version.os eq 'darwin') then begin
+    ;        path = '/Users/j35/IDLWorkspace80/SOS 1.0/'
+    ;      endif else begin
+    ;        path = '/SNS/users/j35/IDLWorkspace80/SOS 1.0/'
+    ;      endelse
+    ;      norm_file = path + 'Al_can_spectrum.dat'
+    ;      SPECTRUM=xcr_direct(norm_file, 2)
+    ;    endif else begin
     
+    ;number_of_steps is ----> file_num
+    spectrum = get_normalization_spectrum(event, list_norm_nexus, $
+      processes, $
+      total_number_of_processes)
+    ;    endelse
+      
     update_progress_bar_percentage, event, ++processes, total_number_of_processes
     
     ;number of steps is ----> 1
-    
     ;trip the spectrum to the relevant tof ranges
     spectrum = trim_spectrum(event, spectrum, TOFrange=TOFrange)
     
@@ -1138,7 +1175,7 @@ pro go_nexus_reduction, event
     metadata = produce_metadata_structure(event, $
       time_stamp = time_stamp, $
       list_data_nexus = list_data_nexus, $
-      norm_nexus = norm_nexus, $
+      list_norm_nexus = list_norm_nexus, $
       qzmax = QZmax,$
       qzmin = QZmin, $
       qxbins = QXbins, $
