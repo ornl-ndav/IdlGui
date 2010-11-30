@@ -58,18 +58,46 @@ end
 ; :Description:
 ;    Refresh big table and put new big_table value in table
 ;
-; :Params:
+; :Keywords:
 ;    event
+;    base
 ;
 ; :Author: j35
 ;-
-pro refresh_big_table, event
+pro refresh_big_table, event=event, base=base
   compile_opt idl2
   
-  widget_control, event.top, get_uvalue=global
+  if (keyword_set(event)) then begin
+    widget_control, event.top, get_uvalue=global
+  endif else begin
+    widget_control, base, get_uvalue=global
+  endelse
   
   big_table = (*global).big_table
-  putValue, event=event, base=main_base, 'tab1_table', big_table
+  
+  ;user wants same normalization file for all the files
+  if (isButtonSelected(event=event, base=base, $
+    uname='same_normalization_file_button')) then begin
+    uniq_norm_file = (*global).uniq_norm_file
+    
+    first_empty_row = get_first_empty_row_index(big_table, type='data')
+    if (first_empty_row eq -1) then return
+    
+    big_table[1,*] =  ''
+    index = 0
+    while (index lt first_empty_row) do begin
+      big_table[1,index] = uniq_norm_file
+      index++
+    endwhile
+    
+  endif else begin
+    selected_list_norm_file = (*global).selected_list_norm_file
+    
+    big_table[1,*] = selected_list_norm_file
+    
+  endelse
+  
+  putValue, event=event, base=base, 'tab1_table', big_table
   
 end
 
@@ -184,7 +212,7 @@ function selected_row_data_not_empty, event
   widget_control, event.top, get_uvalue=global
   big_table = (*global).big_table
   if (big_table[0,row_selected] ne '') then return, 1
-
+  
   return, 0
 end
 

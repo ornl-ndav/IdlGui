@@ -32,6 +32,17 @@
 ;
 ;==============================================================================
 
+pro setButton, base=base, event=event, uname=uname
+  compile_opt idl2
+  
+  if (keyword_set(event)) then begin
+    id = widget_info(event.top, find_by_uname=uname)
+  endif else begin
+    id = widget_info(base, find_by_uname=uname)
+  endelse
+  widget_control, id, /set_button
+end
+
 ;+
 ; :Description:
 ;    Change the value of the given widget
@@ -99,11 +110,11 @@ pro setTableSelect, event=event, base=base, uname=uname, $
   compile_opt idl2
   
   if (keyword_set(event)) then begin
-  id = widget_info(event.top, find_by_uname=uname)
+    id = widget_info(event.top, find_by_uname=uname)
   endif else begin
-  id = widget_info(base, find_by_uname=uname)
+    id = widget_info(base, find_by_uname=uname)
   endelse
-
+  
   ;keep showing the same region of the table
   table_view = widget_info(id, /table_view)
   
@@ -111,10 +122,10 @@ pro setTableSelect, event=event, base=base, uname=uname, $
   nbr_column = geometry.xsize
   from_column = 0
   to_column = nbr_column-1
-
+  
   widget_control, id, $
     set_table_select=[from_column, from_row, to_column, to_row]
     
   widget_control, id, set_table_view=table_view
-
+  
 end
