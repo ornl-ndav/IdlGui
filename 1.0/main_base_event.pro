@@ -124,9 +124,18 @@ PRO main_base_event, Event
       check_go_button, event
     end
     
+    ;use same or not normalization files
+    widget_info(wWidget, find_by_uname='same_normalization_file_button'): begin
+      refresh_big_table, event=event
+    end
+    widget_info(wWidget, $
+      find_by_uname='not_same_normalization_file_button'): begin
+      refresh_big_table, event=event
+    end
+    
     ;interaction with table
     widget_info(wWidget, find_by_uname='tab1_table'): begin
-    
+        
       ;select entire rows of selection
       select_entire_row, event=event
       
@@ -137,17 +146,12 @@ PRO main_base_event, Event
           nbr_row_selected = selection[3]-selection[1]
           ;only 1 row selected
           if (nbr_row_selected eq 0) then begin
-            normalization_button_status = 1
             delete_label = 'Delete selected row'
           endif else begin
-            normalization_button_status = 0
             delete_label = 'Delete selected rows'
           endelse
           putValue, event=event, 'table_delete_row', delete_label
-          activate_button, event=event, $
-            status=normalization_button_status, $
-            uname='select_another_norm_file'
-            
+          
           id = widget_info(event.top, find_by_uname='context_base')
           widget_displaycontextmenu, event.id, event.X, event.Y, id
         endif
@@ -157,10 +161,15 @@ PRO main_base_event, Event
     ;select another normalization file
     widget_info(wWidget, find_by_uname='select_another_norm_file'): begin
       selection = get_table_lines_selected(event=event)
-      row_selected = selection[1]
+      from_row = selection[1]
+      to_row = selection[3]
       normalization_selection_base, event=event, $
-      main_base_uname='main_base', $
-      row_selected = row_selected
+        main_base_uname='main_base', $
+        from_row = from_row, $
+        to_row = to_row
+        
+      check_use_same_norm_file_widgets, event
+      
     end
     
     ;delete row

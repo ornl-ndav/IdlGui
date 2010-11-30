@@ -34,6 +34,36 @@
 
 ;+
 ; :Description:
+;    This routine checks that the conditions between the normalization column
+;    of the big table and the buttons selected in normalization widgets match.
+;    If they don't this routine will change the buttons
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro check_use_same_norm_file_widgets, event
+  compile_opt idl2
+  
+    if (isButtonSelected(event=event, base=base, $
+    uname='not_same_normalization_file_button')) then return
+    
+    big_table = getValue(event=event, uname='tab1_table')
+    nbr_norm = get_first_empty_row_index(big_table, type='norm')
+    
+    norm_column = big_table[1,0:nbr_norm-1]
+    uniq_norm = norm_column[uniq(norm_column)]
+    
+    ;at least 2 differents files
+    if (n_elements(uniq_norm) gt 1) then begin
+    setButton, event=event, uname='not_same_normalization_file_button'
+  endif
+  
+end
+
+;+
+; :Description:
 ;    Keep record of all the normalization nexus files loaded. This is mostly
 ;    used by the widget_base normalization_base that allows the user
 ;    to select a different normalization file for a given data nexus file
@@ -87,6 +117,47 @@ end
 
 ;+
 ; :Description:
+;    add new norm nexus files loaded to full list of norm nexus
+;
+; :Params:
+;    event
+;    list_of_nexus
+;
+; :Author: j35
+;-
+pro add_list_of_norm_nexus_to_selected_list, event, list_of_nexus
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  selected_list_norm_file = (*global).selected_list_norm_file
+  sz = n_elements(selected_list_norm_file)
+  index_start = 0
+  for i=0,(sz-1) do begin
+    if (selected_list_norm_file[i] ne '') then begin
+      index_start = i
+      break
+    endif
+  endfor
+  
+  sz_new_list = size(list_of_nexus,/dim)
+  
+  max_index = min(sz_new_list, sz)
+  
+  index = index_start
+  _index = 0
+  while (_index lt max_index) do begin
+    selected_list_norm_file[index] = list_of_nexus[_index]
+    index++
+    _index++
+  endwhile
+  
+  (*global).selected_list_norm_file = selected_list_norm_file
+  
+end
+
+;+
+; :Description:
 ;    routine reached by the browse norm button
 ;
 ; :Params:
@@ -104,7 +175,26 @@ pro browse_norm_button_event, event
   if (list_nexus[0] ne '') then begin
     widget_control, event.top, get_uvalue=global
     add_list_of_nexus_to_table, event, list_nexus, type='norm'
-    refresh_big_table, event
+    
+    ;1 norm file to use
+    if (isButtonSelected(event=event, base=base, $
+      uname='same_normalization_file_button')) then begin
+      
+      ;switch to 'not use same norm file' if more than 1 norm file is loaded
+      if (n_elements(list_nexus) gt 1) then begin
+        setButton, event=event, uname='not_same_normalization_file_button'
+      endif
+      
+    endif
+    
+    add_list_of_norm_nexus_to_selected_list, event, list_nexus
+    (*global).uniq_norm_file = list_nexus[0]
+    
+    
+    refresh_big_table, event=event
+    
+    
+    
     
     message = ['> Browsing for Normalization NeXus files: ']
     sz = n_elements(list_nexus)

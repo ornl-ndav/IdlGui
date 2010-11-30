@@ -108,8 +108,8 @@ pro data_run_numbers_event, event
   
   ;create list of NeXus
   list_data_nexus = create_list_of_nexus(event, $
-  list_runs=list_data_runs,$
-  type='data')
+    list_runs=list_data_runs,$
+    type='data')
   add_list_of_nexus_to_table, event, list_of_nexus, type='data'
   
 end
@@ -132,7 +132,23 @@ pro browse_data_button_event, event
     /multiple_files)
   if (list_of_nexus[0] ne '') then begin
     widget_control, event.top, get_uvalue=global
+    
+    ;1 norm file to use
+    if (isButtonSelected(event=event, base=base, $
+      uname='same_normalization_file_button')) then begin
+      
+      ;switch to 'not use same norm file' if more than 1 norm file is loaded
+      if (n_elements(list_of_nexus) gt 1) then begin
+        set_button, event=event, uname='not_same_normalization_file_button'
+      endif
+      
+    endif
+    
+    add_list_of_norm_nexus_to_selected_list, event, list_of_nexus
+    (*global).uniq_norm_file = list_of_nexus[0]
+    
     add_list_of_nexus_to_table, event, list_of_nexus, type='data'
+    
     refresh_big_table, event
     
     message = ['> Browsing for Data NeXus files: ']
@@ -140,7 +156,7 @@ pro browse_data_button_event, event
     index = 0
     while (index lt sz) do begin
       _message = '-> #' + strcompress(index,/remove_all) + ': ' + $
-      list_of_nexus[index]
+        list_of_nexus[index]
       message = [message, _message]
       index++
     endwhile
@@ -165,9 +181,9 @@ pro retrieve_data_nexus_distances, event=event, main_base=main_base
   compile_opt idl2
   
   if (keyword_set(event)) then begin
-  widget_control, event.top, get_uvalue=global
+    widget_control, event.top, get_uvalue=global
   endif else begin
-  widget_control, main_base, get_uvalue=global
+    widget_control, main_base, get_uvalue=global
   endelse
   
   big_table = (*global).big_table
@@ -195,5 +211,5 @@ pro retrieve_data_nexus_distances, event=event, main_base=main_base
   
 ;  putValue, base=main_base, event=event, 'rtof_d_sd_uname', d_SD_mm
 ;  putValue, base=main_base, event=event, 'rtof_d_md_uname', d_md_mm
-    
+  
 end
