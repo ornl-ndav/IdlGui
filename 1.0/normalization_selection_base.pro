@@ -218,7 +218,7 @@ pro normalization_selection_base, main_base_uname=main_base_uname, $
   normalization_table = strarr(1,max_nbr_data_nexus)
   index = where(normalization_files ne '')
   normalization_table[index] = normalization_files[index]
-
+  
   data_file = table_value[0,row_selected]
   
   ;build gui
