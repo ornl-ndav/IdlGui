@@ -189,6 +189,7 @@ PRO main_base_event, Event
       file_name = strtrim(file_name,2)
       file_name = file_name[0]
       result = load_rtof_file(event, file_name)
+      result = load_geometry_parameters(event)
       check_rtof_buttons_status, event
       check_go_button, event=event
     end

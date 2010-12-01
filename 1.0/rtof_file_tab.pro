@@ -34,6 +34,30 @@
 
 ;+
 ; :Description:
+;    Load the various parameters required from the rtof NeXus geometry
+;    file such as distance sample to detector.....etc
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+function load_geometry_parameters, event
+compile_opt idl2
+
+  geometry_nexus_file = getValue(event=event, uname='rtof_nexus_geometry_file')
+  geometry_nexus_file = strtrim(geometry_nexus_file,2)
+  geometry_nexus_file = geometry_nexus_file[0]
+  if (~file_test(geometry_nexus_file)) then return, 0
+ 
+ 
+ 
+return, 1
+ 
+end
+      
+;+
+; :Description:
 ;    Allow user to pick the rtof file of interest to load
 ;
 ; :Params:
@@ -96,6 +120,7 @@ pro check_rtof_buttons_status, event
   
   widget_control, event.top, get_uvalue=global
   
+  ;check status if rtof file exists or not
   file_name = getvalue(event=event, uname='rtof_file_text_field_uname')
   file_name = strtrim(file_name,2)
   file_name = file_name[0]

@@ -349,10 +349,10 @@ pro design_tabs, MAIN_BASE, global
       /row)
       
     label = widget_label(row2, $
-      value = 'NeXus file to use for geometry:')
+      value = 'Geometry file:')
     value = widget_text(row2, $
       value = '', $
-      xsize = 65, $
+      xsize = 95, $
       /all_events, $
       /editable,$
       uname = 'rtof_nexus_geometry_file')
@@ -364,7 +364,7 @@ pro design_tabs, MAIN_BASE, global
     label = widget_label(row2,$
       value = ' OR ')
     button = widget_button(row2,$
-      value = 'Browse for NeXus file ...',$
+      value = ' Browse ... ',$
       uname = 'rtof_nexus_geometry_button')
       
     ;SPACE - User defined parameters
