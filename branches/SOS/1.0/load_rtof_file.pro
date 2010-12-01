@@ -100,18 +100,11 @@ function load_rtof_file, event, file_name
   first_data_nexus = get_first_data_nexus(all_tags)
   first_data_nexus = strtrim(first_data_nexus,2)
   if (first_data_nexus ne '') then begin
-    putValue, event=event, 'rtof_nexus_geometry_file', first_data_nexus
-    mapBase, event=event, uname='rtof_nexus_base', status=1
-    
-    ;check that file is where it's supposed to !
-    if (file_test(first_data_nexus,/read)) then begin
-      (*global).rtof_nexus_geometry_exist = 1b
-      display_file_found_or_not, event=event, status=1
-    endif else begin
-      (*global).rtof_nexus_geometry_exist = 0b
-      display_file_found_or_not, event=event, status=0
-    endelse
-  endif
+    value = first_data_nexus
+  endif else begin
+    value = ''
+  endelse
+  putValue, event=event, 'rtof_nexus_geometry_file', value
   
   nbr_pixels = size(pData,/dim)
   nbr_points = (size(*pData[0],/dim))[1]

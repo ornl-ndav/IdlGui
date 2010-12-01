@@ -75,13 +75,16 @@ pro browse_for_rtof_file_button, event
   endelse
   
   log_book_update, event, message = message
-  ;check_preview_rtof_button_status, event
+;check_preview_rtof_button_status, event
   
 end
 
 ;+
 ; :Description:
 ;    Check if the rtof preview and load buttons can be enabled or not
+;    check if the geometry base can be shown or not
+;    check the status of the geometry file (found or not)
+;    check if the configuration base can be shown or not
 ;
 ; :Params:
 ;    event
@@ -91,14 +94,33 @@ end
 pro check_rtof_buttons_status, event
   compile_opt idl2
   
+  widget_control, event.top, get_uvalue=global
+  
   file_name = getvalue(event=event, uname='rtof_file_text_field_uname')
+  file_name = strtrim(file_name,2)
+  file_name = file_name[0]
   if (file_test(file_name) ne 1) then begin
     activate_button, event=event, uname='rtof_file_preview_button', status=0
     activate_button, event=event, uname='load_rtof_file_button', status=0
+    mapBase, event=event, uname='rtof_nexus_base', status=0
   endif else begin
     activate_button, event=event, uname='rtof_file_preview_button', status=1
     activate_button, event=event, uname='load_rtof_file_button', status=1
+    mapBase, event=event, uname='rtof_nexus_base', status=1
   endelse
+
+  geometry_nexus_file = getValue(event=event, uname='rtof_nexus_geometry_file')
+  geometry_nexus_file = strtrim(geometry_nexus_file,2)
+  geometry_nexus_file = geometry_nexus_file[0]
+  if (file_test(geometry_nexus_file)) then begin
+    (*global).rtof_nexus_geometry_exist = 1b
+    display_file_found_or_not, event=event, status=1
+    mapBase, event=event, uname='rtof_configuration_base', status=1
+  endif else begin
+    (*global).rtof_nexus_geometry_exist = 0b
+    display_file_found_or_not, event=event, status=0
+    mapBase, event=event, uname='rtof_configuration_base', status=0
+  endelse  
   
 end
 
