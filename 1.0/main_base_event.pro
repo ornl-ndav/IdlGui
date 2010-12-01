@@ -197,16 +197,8 @@ PRO main_base_event, Event
     ;nexus file to use for geometry
     widget_info(wWidget, find_by_uname='rtof_nexus_geometry_file'): begin
       check_rtof_buttons_status, event
-;      nexus_file = getValue(event=event, uname='rtof_nexus_geometry_file')
-;      nexus_file = strtrim(nexus_file,2)
-;      if (~file_test(nexus_file[0])) then begin
-;        (*global).rtof_nexus_geometry_exist = 0b
-;        display_file_found_or_not, event=event, status=0
-;      endif else begin
-;        (*global).rtof_nexus_geometry_exist = 1b
-;        display_file_found_or_not, event=event, status=1
-;      endelse
       check_go_button, event=event
+      result = load_geometry_parameters(event)
     end
     
     ;browse for nexus file
@@ -214,6 +206,7 @@ PRO main_base_event, Event
       browse_for_rtof_nexus_file, event
       check_rtof_buttons_status, event
       check_go_button, event=event
+      result = load_geometry_parameters(event)
     end
     
     ;---- bottom part of GUI ----------
