@@ -93,7 +93,7 @@ PRO main_base_event, Event
     ;Data run numbers text field
     widget_info(wWidget, find_by_uname='data_run_numbers_text_field'): begin
       widget_control, /hourglass
-      data_run_numbers_event, event  
+      data_run_numbers_event, event
       clear_text_field, event=event, uname='data_run_numbers_text_field'
       ;retrieve distances from first data nexus file loaded
       retrieve_data_nexus_distances, event=event
@@ -180,12 +180,14 @@ PRO main_base_event, Event
     ;rtof text field
     widget_info(wWidget, find_by_uname='rtof_file_text_field_uname'): begin
       check_rtof_buttons_status, event
+      check_go_button, event=event
     end
     
     ;load button
     widget_info(wWidget, find_by_uname='load_rtof_file_button'): begin
       file_name = getvalue(event=event, uname='rtof_file_text_field_uname')
       result = load_rtof_file(event, file_name)
+      check_go_button, event=event
     end
     
     ;nexus file to use for geometry
@@ -193,15 +195,19 @@ PRO main_base_event, Event
       nexus_file = getValue(event=event, uname='rtof_nexus_geometry_file')
       nexus_file = strtrim(nexus_file,2)
       if (~file_test(nexus_file[0])) then begin
+        (*global).rtof_nexus_geometry_exist = 0b
         display_file_found_or_not, event=event, status=0
       endif else begin
+        (*global).rtof_nexus_geometry_exist = 1b
         display_file_found_or_not, event=event, status=1
       endelse
+      check_go_button, event=event
     end
     
     ;browse for nexus file
     widget_info(wWidget, find_by_uname='rtof_nexus_geometry_button'): begin
       browse_for_rtof_nexus_file, event
+      check_go_button, event=event
     end
     
     ;---- bottom part of GUI ----------
@@ -220,6 +226,7 @@ PRO main_base_event, Event
           go_nexus_reduction, event
         end
         1: begin ;working with rtof
+          go_rtof_reduction, event
         end
         else:
       endcase

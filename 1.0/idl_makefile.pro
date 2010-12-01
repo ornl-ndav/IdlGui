@@ -80,6 +80,7 @@ cd, CurrentFolder
 
 .run rtof_tab.pro
 .run rtof_file_tab.pro
+.run go_rtof_reduction.pro
 
 .run sos.pro
 .run sos_cleanup.pro

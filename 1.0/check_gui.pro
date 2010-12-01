@@ -37,12 +37,12 @@ pro check_go_button, event=event, base=base
   compile_opt idl2
   
   if (keyword_set(event)) then begin
-  widget_control, event.top, get_uvalue=global
-  tab_id = widget_info(event.top,find_by_uname='tab_uname')
- endif else begin
-  widget_control, base, get_uvalue=global
-  tab_id = widget_info(base,find_by_uname='tab_uname')
-endelse
+    widget_control, event.top, get_uvalue=global
+    tab_id = widget_info(event.top,find_by_uname='tab_uname')
+  endif else begin
+    widget_control, base, get_uvalue=global
+    tab_id = widget_info(base,find_by_uname='tab_uname')
+  endelse
   CurrTabSelect = widget_info(tab_id,/tab_current)
   
   activate_go_button = 1
@@ -69,8 +69,14 @@ endelse
     
     1: begin ;working with rtof
     
-      activate_go_button = 0
-      
+      rtof_nexus_geometry_exist = (*global).rtof_nexus_geometry_exist
+      rtof_file = getValue(event=event,base=base, uname='rtof_file_text_field_uname')
+      rtof_file_status = file_test(rtof_file[0])
+      if (rtof_file_status && rtof_nexus_geometry_exist) then begin
+        activate_go_button = 1
+      endif else begin
+        activate_go_button = 0
+      endelse
     end
     
     else:
