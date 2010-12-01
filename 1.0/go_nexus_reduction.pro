@@ -46,8 +46,7 @@ pro go_nexus_reduction, event
   
   widget_control, event.top, get_uvalue=global
   
-  error = 0
-  ;catch,error
+  catch,error
   if (error ne 0) then begin
     catch,/cancel
     
@@ -70,7 +69,7 @@ pro go_nexus_reduction, event
     return
   endif else begin
   
-    message = ['> Running reduction: ']
+    message = ['> Running NeXus reduction: ']
     
     widget_control, /hourglass
     show_progress_bar, event
