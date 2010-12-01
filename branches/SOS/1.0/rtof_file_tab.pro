@@ -43,19 +43,40 @@
 ; :Author: j35
 ;-
 function load_geometry_parameters, event
-compile_opt idl2
-
+  compile_opt idl2
+  
   geometry_nexus_file = getValue(event=event, uname='rtof_nexus_geometry_file')
   geometry_nexus_file = strtrim(geometry_nexus_file,2)
   geometry_nexus_file = geometry_nexus_file[0]
-  if (~file_test(geometry_nexus_file)) then return, 0
- 
- 
- 
-return, 1
- 
+  if (~file_test(geometry_nexus_file)) then begin
+    MapBase, event=event, status=0, uname='rtof_configuration_base'
+    return, 0
+  endif
+  
+  iNexus = obj_new('IDLnexusUtilities', geometry_nexus_file)
+  d_SD = iNexus->get_d_SD()
+  d_MS = iNexus->get_d_MS()
+  obj_destroy, iNexus
+  
+  ;convert into mm
+  d_SD_mm = abs(convert_distance(distance = d_SD.value,$
+    from_unit = d_SD.units, $
+    to_unit = 'mm'))
+  d_MS_mm = abs(convert_distance(distance = d_MS.value,$
+    from_unit = d_MS.units, $
+    to_unit = 'mm'))
+    
+  d_MD_mm = d_MS_mm + d_SD_mm
+  
+  putValue, base=main_base, event=event, 'rtof_d_sd_uname', d_SD_mm
+  putValue, base=main_base, event=event, 'rtof_d_md_uname', d_MD_mm
+    
+  MapBase, event=event, status=1, uname='rtof_configuration_base'
+  
+  return, 1
+  
 end
-      
+
 ;+
 ; :Description:
 ;    Allow user to pick the rtof file of interest to load
@@ -133,7 +154,7 @@ pro check_rtof_buttons_status, event
     activate_button, event=event, uname='load_rtof_file_button', status=1
     mapBase, event=event, uname='rtof_nexus_base', status=1
   endelse
-
+  
   geometry_nexus_file = getValue(event=event, uname='rtof_nexus_geometry_file')
   geometry_nexus_file = strtrim(geometry_nexus_file,2)
   geometry_nexus_file = geometry_nexus_file[0]
@@ -145,7 +166,7 @@ pro check_rtof_buttons_status, event
     (*global).rtof_nexus_geometry_exist = 0b
     display_file_found_or_not, event=event, status=0
     mapBase, event=event, uname='rtof_configuration_base', status=0
-  endelse  
+  endelse
   
 end
 
