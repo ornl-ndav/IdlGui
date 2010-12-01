@@ -113,5 +113,4 @@ function produce_metadata_structure, event, $
     
     return, metadata
     
-    
 end

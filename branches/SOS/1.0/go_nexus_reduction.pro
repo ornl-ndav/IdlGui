@@ -44,7 +44,8 @@
 ;    proceses
 ;    total_number_of_processes
 ;-
-function get_normalization_spectrum, event, list_norm_nexus, processes, total_number_of_processes
+function get_normalization_spectrum, event, list_norm_nexus, processes, $
+total_number_of_processes
   compile_opt idl2
   
   nbr_files = n_elements(list_norm_nexus)
@@ -57,11 +58,30 @@ function get_normalization_spectrum, event, list_norm_nexus, processes, total_nu
     message = [message, '-> NeXus file name: ' + list_norm_nexus[index]]
     log_book_update, event, message=message
     
-    iNorm = obj_new('IDLnexusUtilities', list_norm_nexus[index])
-    _spectrum = iNorm->get_TOF_counts_data()
-    obj_destroy, iNorm
+    ;check if we already loaded this data set or not
+    already_loaded_flag  = 0b
+    already_loaded_index = 0
+    if (index gt 0) then begin
+      current_file = list_norm_nexus[index]
+      _where_index = where(current_file eq list_norm_nexus)
+      _first_index = _where_index[0]
+      if (_first_index ne index) then begin
+        already_loaded_index = _first_index
+        already_loaded_flag = 1b
+      endif
+    endif
     
-    message = ['> Done with retrieving normalization spectrum [tof,counts]']
+    if (already_loaded_flag) then begin
+      _spectrum = *spectrum[already_loaded_index]
+      message = ['> Copied already retrieved normalization ' + $
+      'spectrum [tof,counts]']
+      endif else begin
+      iNorm = obj_new('IDLnexusUtilities', list_norm_nexus[index])
+      _spectrum = iNorm->get_TOF_counts_data()
+      obj_destroy, iNorm
+      message = ['> Done with retrieving normalization spectrum [tof,counts]']
+    endelse
+    
     sz = size(_spectrum)
     message1 = '-> size(spectrum): [' + $
       strcompress(strjoin(sz,','),/remove_all) + ']'
@@ -70,7 +90,8 @@ function get_normalization_spectrum, event, list_norm_nexus, processes, total_nu
     
     *spectrum[index] = _spectrum
     
-    update_progress_bar_percentage, event, ++processes, total_number_of_processes
+    update_progress_bar_percentage, event, ++processes, $
+    total_number_of_processes
     
     index++
   endwhile
@@ -414,7 +435,7 @@ pro build_THLAM, event=event, $
   compile_opt idl2
   
   file_num = (size(DATA,/dim))[0]
-
+  
   message = ['> Build THLAM (Theta-Lambda) arrays for all each loaded files']
   
   for read_loop=0,file_num-1 do begin
