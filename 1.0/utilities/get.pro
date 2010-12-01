@@ -489,3 +489,42 @@ function get_tnum, event
   compile_opt idl2
   return, getValue(event=event, uname='tnum_uname')
 end
+
+;+
+; :Description:
+;    returns a structure of the angle value and units from the 
+;    rtof text box
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+function get_theta, event
+compile_opt idl2
+value = getValue(event=event, uname='rtof_theta_value')
+units = getValue(event=event, uname='rtof_theta_units')
+return, {value:value, units:units}
+end
+
+;+
+; :Description:
+;    returns the value and units of the twotheta angle from the
+;    rtof text box 
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+function get_twotheta, event
+compile_opt idl2
+value = getValue(event=event, uname='rtof_twotheta_value')
+units = getValue(event=event, uname='rtof_twotheta_units')
+return, {value:value, units:units}
+end
+

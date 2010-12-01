@@ -37,19 +37,37 @@ function trim_data, event, $
     TOFmin, $
     TOFmax, $
     PIXmin, $
-    PIXmax
+    PIXmax, $
+    theta, $
+    twotheta
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global
   
   _DATA = (*(*global).rtof_data)
   
+  nbr_pixel = (size(_data,/dim))[0]
+  
+  ;get tof array only
+  first_spectrum = *_DATA[0]
+  tof = first_spectrum[0,*]
+  nbr_tof = n_elements(tof)
+  
+  ;get image  (y vs tof)
+  image = fltarr(nbr_tof, nbr_pixel)
+  index = 0
+  while (index lt nbr_pixel) do begin
+    _image_index = *_DATA[index]
+    image[*,index] = _image_index[1,*]
+    ++index
+  endwhile
   
   
   
   
   
-  return, _DATA
+  
+  return, ['']
 end
 
 ;+
@@ -158,6 +176,16 @@ pro go_rtof_reduction, event
     label='specular reflexion, tnum', $
     full_check_message = full_check_message
     
+  theta = get_theta(event)
+  twotheta = get_twotheta(event)
+  
+  theta_rad = convert_angle(angle=theta.value, $
+    from_unit=theta.units,$
+    to_unit='degree')
+  twotheta_rad = convert_angle(angle=twotheta.value, $
+    from_unit=twotheta.units, $
+    to_unit='degree')
+    
   message = ['> Retrieved parameters.']
   log_book_update, event, message=message
   
@@ -194,7 +222,9 @@ pro go_rtof_reduction, event
     TOFmin, $
     TOFmax, $
     PIXmin, $
-    PIXmax)
+    PIXmax, $
+    theta, $
+    twotheta)
     
   _DATA = (*(*global).rtof_data)
   
