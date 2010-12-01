@@ -46,7 +46,16 @@ pro design_tabs, MAIN_BASE, global
     uname = 'tab0',$
     title = '    WORKING WITH NEXUS    ')
     
-  _base1 = widget_base(base1,$
+  nexus_tab = widget_tab(base1,$
+    /tracking_events,$
+    uname= 'nexus_tab_uname')
+    
+  ;tab0 of nexus ------------------------------------------------------------
+  nexus_tab0 = widget_base(nexus_tab,$
+    uname='nexus_tab0',$
+    title = '  Input Files  ')
+    
+  _base1 = widget_base(nexus_tab0,$
     /column)
     
   ;DATA
@@ -92,26 +101,26 @@ pro design_tabs, MAIN_BASE, global
     
   ;display those widgets if findnexus is in the path
   if (bFindnexus) then begin
-
+  
     row1 = widget_base(norm_box,/row)
     label = widget_label(row1,$
-    value = 'Norm. run numbers:')
+      value = 'Norm. run numbers:')
     text = widget_text(row1,$
-    value = '',$
-    /editable,$
-    uname = 'norm_run_numbers_text_field',$
-    xsize = 100)
-    
+      value = '',$
+      /editable,$
+      uname = 'norm_run_numbers_text_field',$
+      xsize = 100)
+      
     ex = widget_label(row1,$
       value = '(ex: 200,2004-2006)')
       
     row2 = widget_label(norm_box,$
       value = 'OR')
-    
+      
   endif
   
   norm_row = widget_base(norm_box,$
-  /row)
+    /row)
   button = widget_button(norm_row,$
     uname = 'norm_browse_button',$
     value = 'Browse for a normalization NeXus file ...',$
@@ -134,7 +143,7 @@ pro design_tabs, MAIN_BASE, global
     column_widths = [425,425],$
     /all_events)
     
-    ;context_menu
+  ;context_menu
   contextBase = widget_base(table,$
     /context_menu,$
     uname = 'context_base')
@@ -145,87 +154,17 @@ pro design_tabs, MAIN_BASE, global
     value = 'Delete row(s)',$
     uname = 'table_delete_row',$
     /separator)
-  
-  if ((*global).hide_tab_2 eq 'no') then begin
-  
-    ;********* tab 2 ***********************************************************
-    base1 = widget_base(tabs,$
-      uname = 'tab1',$
-      title = '    WORKING WITH RTOF    ')
-      
-    _base1 = widget_base(base1,$
-      /column)
-      
-    ;input base
-    row1 = widget_base(_base1, $
-      /row,$
-      frame = 1)
-    button = widget_button(row1, $
-      value = 'Browse ...',$
-      event_pro = 'browse_for_rtof_file_button', $
-      scr_xsize = 100)
-    value = widget_text(row1, $
-      value = '', $
-      xsize = 102, $
-      /all_events, $
-      /editable, $
-      uname = 'rtof_file_text_field_uname')
-    load = widget_button(row1,$
-      value = 'Load',$
-      uname = 'load_rtof_file_button',$
-      sensitive = 0)
-    preview = widget_button(row1, $
-      value = 'Preview...', $
-      uname = 'rtof_file_preview_button',$
-      event_pro = 'rtof_file_preview_button_eventcb', $
-      sensitive = 0, $
-      scr_xsize = 80)
-      
-    ;SPACE - Parametrs coming from loaded file
-    space = widget_label(_base1,$
-      value = ' ')
-            
-      ;nexus file that will be used
-      row2 = widget_base(_base1,$
-      uname = 'rtof_nexus_base',$
-      map = 0,$
-      /row)
-      
-      label = widget_label(row2, $
-      value = 'NeXus file to use for geometry:')
-      value = widget_text(row2, $
-      value = '', $
-      xsize = 65, $
-      /all_events, $
-      /editable,$
-      uname = 'rtof_nexus_geometry_file')
-      status = widget_draw(row2,$
-      retain = 2,$
-      uname = 'rtof_nexus_file_status_uname',$
-      scr_ysize = 30,$
-      scr_xsize = 60)
-      label = widget_label(row2,$
-      value = ' OR ')
-      button = widget_button(row2,$
-      value = 'Browse for NeXus file ...',$
-      uname = 'rtof_nexus_geometry_button')
-      
-    ;SPACE - User defined parameters
-    space = widget_label(_base1,$
-      value = ' ')
- 
-  endif
-  
-  ;********* tab 3 ***********************************************************
-  base3 = widget_base(tabs,$
-    uname = 'tab2',$
-    title = '    CONFIGURATION    ')
     
-  _base = widget_base(base3,$
-  xoffset = 20,$
-  yoffset = 20,$
+  ;tab0 of nexus ------------------------------------------------------------
+  nexus_tab1 = widget_base(nexus_tab,$
+    uname='nexus_tab1',$
+    title = '  Configuration  ')
+    
+  _base = widget_base(nexus_tab1,$
+    xoffset = 20,$
+    yoffset = 20,$
     /column)
-  
+    
   ;PARAMETERS
     
   ;read xml instrument config file
@@ -391,27 +330,96 @@ pro design_tabs, MAIN_BASE, global
   row2col3 = widget_base(row2,$
     /column)
     
-   specular_qxwidth = file->getValue(tag=['instruments',instrument,$
-  'specular_reflection','qxwidth'])
+  specular_qxwidth = file->getValue(tag=['instruments',instrument,$
+    'specular_reflection','qxwidth'])
   field1 = cw_field(row2col3,$
     /floating,$
     xsize = 10,$
     value = specular_qxwidth,$
     uname = 'qxwidth_uname',$
     title = '       Specular reflection    QxWidth')
-  
+    
   tnum = file->getValue(tag=['instruments',instrument,$
-  'specular_reflection','tnum'])
+    'specular_reflection','tnum'])
   field2 = cw_field(row2col3,$
     /integer,$
     xsize = 5,$
     value = tnum,$
     uname = 'tnum_uname',$
     title = '                                tnum')
-
-
+    
+  if ((*global).hide_tab_2 eq 'no') then begin
+  
+    ;********* tab 2 ***********************************************************
+    base1 = widget_base(tabs,$
+      uname = 'tab1',$
+      title = '    WORKING WITH RTOF    ')
+      
+    _base1 = widget_base(base1,$
+      /column)
+      
+    ;input base
+    row1 = widget_base(_base1, $
+      /row,$
+      frame = 1)
+    button = widget_button(row1, $
+      value = 'Browse ...',$
+      event_pro = 'browse_for_rtof_file_button', $
+      scr_xsize = 100)
+    value = widget_text(row1, $
+      value = '', $
+      xsize = 102, $
+      /all_events, $
+      /editable, $
+      uname = 'rtof_file_text_field_uname')
+    load = widget_button(row1,$
+      value = 'Load',$
+      uname = 'load_rtof_file_button',$
+      sensitive = 0)
+    preview = widget_button(row1, $
+      value = 'Preview...', $
+      uname = 'rtof_file_preview_button',$
+      event_pro = 'rtof_file_preview_button_eventcb', $
+      sensitive = 0, $
+      scr_xsize = 80)
+      
+    ;SPACE - Parametrs coming from loaded file
+    space = widget_label(_base1,$
+      value = ' ')
+      
+    ;nexus file that will be used
+    row2 = widget_base(_base1,$
+      uname = 'rtof_nexus_base',$
+      map = 0,$
+      /row)
+      
+    label = widget_label(row2, $
+      value = 'NeXus file to use for geometry:')
+    value = widget_text(row2, $
+      value = '', $
+      xsize = 65, $
+      /all_events, $
+      /editable,$
+      uname = 'rtof_nexus_geometry_file')
+    status = widget_draw(row2,$
+      retain = 2,$
+      uname = 'rtof_nexus_file_status_uname',$
+      scr_ysize = 30,$
+      scr_xsize = 60)
+    label = widget_label(row2,$
+      value = ' OR ')
+    button = widget_button(row2,$
+      value = 'Browse for NeXus file ...',$
+      uname = 'rtof_nexus_geometry_button')
+      
+    ;SPACE - User defined parameters
+    space = widget_label(_base1,$
+      value = ' ')
+      
+  endif
+  
   ;******* bottom part of GUI ************************************************
-
+  
   ;progress bar and go button
   bottom_box = widget_base(main_base,$
     /align_center,$
