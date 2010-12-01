@@ -40,80 +40,112 @@ pro go_rtof_reduction, event
   
   ;retrieve variables
   rtof_ascii_file = getValue(event=event,$
-  uname='rtof_file_text_field_uname')
+    uname='rtof_file_text_field_uname')
   rtof_ascii_file = rtof_ascii_file[0]
   
   rtof_nexus_geometry_file = getValue(event=event,$
-  uname='rtof_nexus_geometry_file')
+    uname='rtof_nexus_geometry_file')
+    
+  message = ['> Starting rtof reduction:']
+  message1 = ['  - rtof file: ' + rtof_ascii_file]
+  message2 = ['  - geometry file: ' + rtof_nexus_geometry_file]
+  log_book_update, event, message=[message,message1,message2]
   
-   full_check_message = !null
-    QZmax = get_ranges_qz_max(event)
-    QZmin = get_ranges_qz_min(event)
-    check_input, value=QZmax, $
-      label='Range Q: Qz max', $
-      full_check_message = full_check_message
-    check_input, value=QZmin, $
-      label='Range Q: Qz min', $
-      full_check_message = full_check_message
-    QZrange = [QZmin, QZmax]
-    
-    QXbins = get_bins_qx(event)
-    check_input, value=QXbins, $
-      label='Bins Qx', $
-      full_check_message = full_check_message
-    QZbins = get_bins_qz(event)
-    check_input, value=QZbins, $
-      label='Bins Qz', $
-      full_check_message = full_check_message
-      
-    QXmin = get_ranges_qx_min(event)
-    check_input, value=QXmin, $
-      label='Range Q: Qx min', $
-      full_check_message = full_check_message
-    QXmax = get_ranges_qx_max(event)
-    check_input, value=QXmax, $
-      label='Range Q: Qx max', $
-      full_check_message = full_check_message
-    QXrange = [QXmin, QXmax]
-    
-    TOFmin = get_tof_min(event)
-    check_input, value=TOFmin, $
-      label='from TOF (ms)', $
-      full_check_message = full_check_message
-    TOFmax = get_tof_max(event)
-    check_input, value=TOFmax, $
-      label='to TOF (ms)', $
-      full_check_message = full_check_message
-    TOFrange = [TOFmin, TOFmax]
-    
-    center_pixel = get_center_pixel(event)
-    check_input, value=center_pixel, $
-      label='center pixel', $
-      full_check_message = full_check_message
-    pixel_size = get_pixel_size(event)
-    check_input, value=pixel_size, $
-      label='pixel size', $
-      full_check_message = full_check_message
-      
-    SD_d = get_d_sd(event) ;mm
-    check_input, value=SD_d, $
-      label='distance sample to detector (mm)', $
-      full_check_message = full_check_message
-      
-    MD_d = get_d_md(event) ;mm
-    check_input, value=MD_d, $
-      label='distance moderator to detector (mm)', $
-      full_check_message = full_check_message
-      
-    qxwidth = float(get_qxwidth(event))
-    check_input, value=qxwidth, $
-      label='specular reflexion, QxWidth', $
-      full_check_message = full_check_message
-    tnum = fix(get_tnum(event))
-    check_input, value=tnum, $
-      label='specular reflexion, tnum', $
-      full_check_message = full_check_message
-    
+  full_check_message = !null
+  QZmax = get_ranges_qz_max_rtof(event)
+  QZmin = get_ranges_qz_min_rtof(event)
+  check_input, value=QZmax, $
+    label='Range Q: Qz max', $
+    full_check_message = full_check_message
+  check_input, value=QZmin, $
+    label='Range Q: Qz min', $
+    full_check_message = full_check_message
+  QZrange = [QZmin, QZmax]
   
+  QXbins = get_bins_qx(event)
+  check_input, value=QXbins, $
+    label='Bins Qx', $
+    full_check_message = full_check_message
+  QZbins = get_bins_qz(event)
+  check_input, value=QZbins, $
+    label='Bins Qz', $
+    full_check_message = full_check_message
+    
+  QXmin = get_ranges_qx_min_rtof(event)
+  check_input, value=QXmin, $
+    label='Range Q: Qx min', $
+    full_check_message = full_check_message
+  QXmax = get_ranges_qx_max_rtof(event)
+  check_input, value=QXmax, $
+    label='Range Q: Qx max', $
+    full_check_message = full_check_message
+  QXrange = [QXmin, QXmax]
+  
+  TOFmin = get_tof_min_rtof(event)
+  check_input, value=TOFmin, $
+    label='from TOF (ms)', $
+    full_check_message = full_check_message
+  TOFmax = get_tof_max_rtof(event)
+  check_input, value=TOFmax, $
+    label='to TOF (ms)', $
+    full_check_message = full_check_message
+  TOFrange = [TOFmin, TOFmax]
+  
+  center_pixel = get_center_pixel_rtof(event)
+  check_input, value=center_pixel, $
+    label='center pixel', $
+    full_check_message = full_check_message
+  pixel_size = get_pixel_size_rtof(event)
+  check_input, value=pixel_size, $
+    label='pixel size', $
+    full_check_message = full_check_message
+    
+  SD_d = get_d_sd_rtof(event) ;mm
+  check_input, value=SD_d, $
+    label='distance sample to detector (mm)', $
+    full_check_message = full_check_message
+    
+  MD_d = get_d_md_rtof(event) ;mm
+  check_input, value=MD_d, $
+    label='distance moderator to detector (mm)', $
+    full_check_message = full_check_message
+    
+  qxwidth = float(get_qxwidth(event))
+  check_input, value=qxwidth, $
+    label='specular reflexion, QxWidth', $
+    full_check_message = full_check_message
+  tnum = fix(get_tnum(event))
+  check_input, value=tnum, $
+    label='specular reflexion, tnum', $
+    full_check_message = full_check_message
+    
+   message = ['> Retrieved parameters.']
+   log_book_update, event, message=message
+    
+  ;pop up dialog_message if at least one input is wrong
+  sz = n_elements(full_check_message)
+  if (sz ge 1) then begin
+  
+    widget_control, hourglass=0
+    
+    title = 'Input format error !'
+    id = widget_info(event.top, find_by_uname='main_base')
+    message = 'Check the following input value(s):'
+    _full_check_message = '    * ' + full_check_message
+    message = [message, _full_check_message]
+    result = dialog_message(message, $
+      /ERROR,$
+      dialog_parent = id, $
+      /center, $
+      title = title)
+      
+    _message = ['> Error while retrieving the parameters for the rtof file:']
+    message = [_message, message]
+    log_book_update, event, message=message
+    
+    hide_progress_bar, event
+    
+    return
+  endif
   
 end
