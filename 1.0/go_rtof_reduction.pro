@@ -33,6 +33,25 @@
 ;
 ;==============================================================================
 
+function trim_data, event, $
+    TOFmin, $
+    TOFmax, $
+    PIXmin, $
+    PIXmax
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  _DATA = (*(*global).rtof_data)
+  
+  
+  
+  
+  
+  
+  return, _DATA
+end
+
 ;+
 ; :Description:
 ;    start reduction for rtof file
@@ -171,8 +190,15 @@ pro go_rtof_reduction, event
   (*global).MD_d = MD_d
   
   ;read rtof ascii file
+  _DATA = trim_data(event, $
+    TOFmin, $
+    TOFmax, $
+    PIXmin, $
+    PIXmax)
+    
   _DATA = (*(*global).rtof_data)
   
+;
   
   
   

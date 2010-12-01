@@ -450,7 +450,7 @@ pro design_tabs, MAIN_BASE, global
     title = 'to  ')
     
   space = widget_label(row1,$
-    value = '                             ')
+    value = '       ')
     
   row1col4 = widget_base(row1,$
     /column)
@@ -473,6 +473,37 @@ pro design_tabs, MAIN_BASE, global
     uname = 'rtof_pixel_size',$
     title = 'Pixel size (mm)')
     
+  space = widget_label(row1,$
+    value = '     ')
+    
+  row1col5 = widget_base(row1,$
+    /column)
+    rowa = widget_base(row1col5,$
+    /row)
+field1 = cw_field(rowa,$
+    /floating,$
+    xsize = 10,$
+    value = ' ',$
+    uname = 'rtof_theta_value',$
+    title = '       Theta')
+  label = widget_label(rowa,$
+  value = ' ',$
+  uname = 'rtof_theta_units',$
+  scr_xsize = 50)
+  
+    rowa = widget_base(row1col5,$
+    /row)
+field1 = cw_field(rowa,$
+    /floating,$
+    xsize = 10,$
+    value = ' ',$
+    uname = 'rtof_twotheta_value',$
+    title = '   Two Theta')
+  label = widget_label(rowa,$
+  value = ' ',$
+  uname = 'rtof_twotheta_units',$
+  scr_xsize = 50)
+
   row2 = widget_base(para_box,$
     /align_left,$
     /row)
