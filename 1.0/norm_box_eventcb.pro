@@ -80,8 +80,10 @@ pro norm_run_number_event, event
   list_nexus = create_list_of_nexus(event, $
     list_runs=list_runs,$
     type='Norm')
-  add_list_of_nexus_to_table, event, list_of_nexus, type='norm'
-  add_list_of_nexus_to_full_norm_list, event, list_of_nexus
+  add_list_of_nexus_to_table, event, list_nexus, type='norm'
+  add_list_of_norm_nexus_to_selected_list, event, list_nexus
+  refresh_big_table, event=event
+;add_list_of_nexus_to_full_norm_list, event, list_nexus
   
 end
 
@@ -145,15 +147,15 @@ pro add_list_nexus_to_end_of_big_table, event, list_nexus
   big_table = getValue(event=event, uname='tab1_table')
   first_empty_row = get_first_empty_row_index(big_table, type='data')
   selected_list_norm_file = (*global).selected_list_norm_file
-
+  
   index=0
   index_list_nexus=0
   while(index lt first_empty_row) do begin
-  if (big_table[1,index] eq '') then begin  
-  selected_list_norm_file[index] = list_nexus[index_list_nexus]
-  index_list_nexus++
-  endif
-  index++
+    if (big_table[1,index] eq '') then begin
+      selected_list_norm_file[index] = list_nexus[index_list_nexus]
+      index_list_nexus++
+    endif
+    index++
   endwhile
   
   (*global).selected_list_norm_file = selected_list_norm_file
@@ -178,7 +180,7 @@ pro browse_norm_button_event, event
     multiple_files=1)
   if (list_nexus[0] ne '') then begin
     widget_control, event.top, get_uvalue=global
-  
+    
     add_list_of_nexus_to_table, event, list_nexus, type='norm'
     add_list_of_norm_nexus_to_selected_list, event, list_nexus
     

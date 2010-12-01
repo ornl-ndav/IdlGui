@@ -140,5 +140,7 @@ function parse_run_numbers, event, type=type
   endwhile
   (*(*global).new_log_book_message) = message
   log_book_update, event
+
+  return, list_of_runs
   
 end
