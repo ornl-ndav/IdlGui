@@ -56,6 +56,7 @@ pro sos_cleanup, tlb
     ptr_free, (*global).style_plot_lines
     ptr_free, (*global).new_log_book_message
     ptr_free, (*global).full_log_book
+    ptr_free, (*global).rtof_data
     ptr_free, global
     
 end
