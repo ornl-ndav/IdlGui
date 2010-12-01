@@ -105,8 +105,10 @@ function load_rtof_file, event, file_name
     
     ;check that file is where it's supposed to !
     if (file_test(first_data_nexus,/read)) then begin
+      (*global).rtof_nexus_geometry_exist = 1b
       display_file_found_or_not, event=event, status=1
     endif else begin
+      (*global).rtof_nexus_geometry_exist = 0b
       display_file_found_or_not, event=event, status=0
     endelse
   endif
