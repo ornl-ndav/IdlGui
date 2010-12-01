@@ -60,8 +60,9 @@ function load_geometry_parameters, event
   
   putValue, event=event, 'rtof_pixel_min', $
     strcompress(first_pixel,/remove_all)
+  last_pixel = first_pixel + nbr_pixels - 1
   putValue, event=event, 'rtof_pixel_max', $
-    strcompress(first_pixel+nbr_pixels-1, /remove_all)
+    strcompress(last_pixel, /remove_all)
     
   geometry_nexus_file = getValue(event=event, uname='rtof_nexus_geometry_file')
   geometry_nexus_file = strtrim(geometry_nexus_file,2)
@@ -70,10 +71,15 @@ function load_geometry_parameters, event
     MapBase, event=event, status=0, uname='rtof_configuration_base'
     return, 0
   endif
-  
+
+  ;retrieve distance and angles
   iNexus = obj_new('IDLnexusUtilities', geometry_nexus_file)
   d_SD = iNexus->get_d_SD()
   d_MS = iNexus->get_d_MS()
+  
+  _theta = iNexus->get_theta()
+  _TwoTheta = iNexus->get_twoTheta()
+  
   obj_destroy, iNexus
   
   ;convert into mm
@@ -83,11 +89,23 @@ function load_geometry_parameters, event
   d_MS_mm = abs(convert_distance(distance = d_MS.value,$
     from_unit = d_MS.units, $
     to_unit = 'mm'))
-    
-  d_MD_mm = d_MS_mm + d_SD_mm
-  
+  d_MD_mm = d_MS_mm + d_SD_mm  
   putValue, base=main_base, event=event, 'rtof_d_sd_uname', d_SD_mm
   putValue, base=main_base, event=event, 'rtof_d_md_uname', d_MD_mm
+  
+  theta_value = _theta.value
+  theta_units = _theta.units
+  putValue, base=main_base, event=event, 'rtof_theta_value', $
+  strcompress(theta_value,/remove_all)
+putValue, base=main_base, event=event, 'rtof_theta_units', $
+  strcompress(theta_units,/remove_all)
+
+   twotheta_value = _twotheta.value
+  twotheta_units = _twotheta.units
+  putValue, base=main_base, event=event, 'rtof_twotheta_value', $
+  strcompress(twotheta_value,/remove_all)
+putValue, base=main_base, event=event, 'rtof_twotheta_units', $
+  strcompress(twotheta_units,/remove_all)
   
   MapBase, event=event, status=1, uname='rtof_configuration_base'
   
@@ -95,7 +113,10 @@ function load_geometry_parameters, event
   message1 = ['  - rtof nexus file: ' + geometry_nexus_file ]
   message2 = ['  - d_SD (mm): ' + strcompress(d_SD_mm,/remove_all)]
   message3 = ['  - d_MS (mm): ' + strcompress(d_MS_mm,/remove_all)]
-  log_book_update, event, message=[message, message1, message2, message3]
+  message4 = ['  - pixel_min: ' + strcompress(first_pixel,/remove_all)]
+  message5 = ['  - pixel_max: ' + strcompress(last_pixel,/remove_all)]
+  log_book_update, event, message=[message, message1, message2, message3, $
+  message4, message5]
   
   return, 1
   
