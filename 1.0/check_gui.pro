@@ -79,6 +79,10 @@ pro check_go_button, event=event, base=base
       endelse
     end
     
+    2: begin ;General configuration
+     activate_go_button = 0
+    end
+    
     else:
     
   endcase
