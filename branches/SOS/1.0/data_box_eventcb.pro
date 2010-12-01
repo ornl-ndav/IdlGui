@@ -110,7 +110,9 @@ pro data_run_numbers_event, event
   list_data_nexus = create_list_of_nexus(event, $
     list_runs=list_data_runs,$
     type='data')
-  add_list_of_nexus_to_table, event, list_of_nexus, type='data'
+    
+  add_list_of_nexus_to_table, event, list_data_nexus, type='data'
+  refresh_big_table, event=event
   
 end
 
@@ -133,10 +135,9 @@ pro browse_data_button_event, event
   if (list_of_nexus[0] ne '') then begin
     widget_control, event.top, get_uvalue=global
     
-    add_list_of_norm_nexus_to_selected_list, event, list_of_nexus
+    ;    add_list_of_norm_nexus_to_selected_list, event, list_of_nexus
     
     add_list_of_nexus_to_table, event, list_of_nexus, type='data'
-    
     refresh_big_table, event=event
     
     message = ['> Browsing for Data NeXus files: ']
