@@ -73,6 +73,12 @@ function load_geometry_parameters, event
     
   MapBase, event=event, status=1, uname='rtof_configuration_base'
   
+  message = ['> Loading rtof geometry file: ']
+  message1 = ['  - rtof nexus file: ' + geometry_nexus_file ]
+  message2 = ['  - d_SD (mm): ' + strcompress(d_SD_mm,/remove_all)]
+  message3 = ['  - d_MS (mm): ' + strcompress(d_MS_mm,/remove_all)]
+  log_book_update, event, message=[message, message1, message2, message3]
+  
   return, 1
   
 end
