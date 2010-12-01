@@ -45,6 +45,24 @@
 function load_geometry_parameters, event
   compile_opt idl2
   
+  widget_control, event.top, get_uvalue=global
+  
+  ;read rtof file
+  rtof_ascii_file = getValue(event=event,$
+    uname='rtof_file_text_field_uname')
+  rtof_ascii_file = rtof_ascii_file[0]
+  iData = obj_new('IDL3columnsASCIIparser', rtof_ascii_file)
+  data = iData->getDataQuickly()
+  first_pixel = iData->getStartPixel()
+  obj_destroy, iData
+  nbr_pixels = size(data,/dim)
+  (*(*global).rtof_data) = data
+  
+  putValue, event=event, 'rtof_pixel_min', $
+    strcompress(first_pixel,/remove_all)
+  putValue, event=event, 'rtof_pixel_max', $
+    strcompress(first_pixel+nbr_pixels-1, /remove_all)
+    
   geometry_nexus_file = getValue(event=event, uname='rtof_nexus_geometry_file')
   geometry_nexus_file = strtrim(geometry_nexus_file,2)
   geometry_nexus_file = geometry_nexus_file[0]
@@ -70,7 +88,7 @@ function load_geometry_parameters, event
   
   putValue, base=main_base, event=event, 'rtof_d_sd_uname', d_SD_mm
   putValue, base=main_base, event=event, 'rtof_d_md_uname', d_MD_mm
-    
+  
   MapBase, event=event, status=1, uname='rtof_configuration_base'
   
   message = ['> Loading rtof geometry file: ']

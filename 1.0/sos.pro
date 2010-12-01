@@ -109,6 +109,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
     ;flag that shows if a rtof nexus geometry file exists or not
     rtof_nexus_geometry_exist: 0b, $
+    rtof_data: ptr_new(0L), $
     
     bFindnexus: 0b, $
     
@@ -196,7 +197,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ;activate go button
     activate_button, main_base=main_base, uname='go_button', status=1
     
-    if ((*global).hide_tab_2 eq 'no') then begin
+;    if ((*global).hide_tab_2 eq 'no') then begin
     
       rtof_file = input_path + 'REF_L_33043#8_33044#8_33045#7_33046#7_33047#6_Off_Off_scaled.rtof'
       putvalue, base=main_base, 'rtof_file_text_field_uname', rtof_file
@@ -206,18 +207,19 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
       id = widget_info(main_base, find_by_uname='tab_uname')
       widget_control, id, set_tab_current=tab_to_show
       
-    endif
+;    endif
+ 
+;    create_big_table_tab1, main_base=main_base
+;    select_entire_row, base=main_base
+;    refresh_big_table, base=main_base
+;    retrieve_data_nexus_distances, main_base=main_base
     
-    create_big_table_tab1, main_base=main_base
-    select_entire_row, base=main_base
-    refresh_big_table, base=main_base
+     file_name = input_path + 'REF_L_34435.nxs'
+     putValue, base=main_base, 'rtof_nexus_geometry_file', file_name
+    
     check_go_button, base=main_base
 
-    retrieve_data_nexus_distances, main_base=main_base
-    
   endif
-  
-  
   
   ;=============================================================================
   ;send message to log current run of application

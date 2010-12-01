@@ -33,6 +33,17 @@
 ;
 ;==============================================================================
 
+;+
+; :Description:
+;    start reduction for rtof file
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
 pro go_rtof_reduction, event
   compile_opt idl2
   
@@ -100,6 +111,15 @@ pro go_rtof_reduction, event
     label='pixel size', $
     full_check_message = full_check_message
     
+  PIXmin = get_pixel_min_rtof(event)
+  check_input, value=PIXmin, $
+    label='from pixel', $
+    full_check_message = full_check_message
+  PIXmax = get_pixel_max_rtof(event)
+  check_input, value=PIXmax, $
+    label='to pixel', $
+    full_check_message = full_check_message
+    
   SD_d = get_d_sd_rtof(event) ;mm
   check_input, value=SD_d, $
     label='distance sample to detector (mm)', $
@@ -119,9 +139,9 @@ pro go_rtof_reduction, event
     label='specular reflexion, tnum', $
     full_check_message = full_check_message
     
-   message = ['> Retrieved parameters.']
-   log_book_update, event, message=message
-    
+  message = ['> Retrieved parameters.']
+  log_book_update, event, message=message
+  
   ;pop up dialog_message if at least one input is wrong
   sz = n_elements(full_check_message)
   if (sz ge 1) then begin
@@ -142,10 +162,48 @@ pro go_rtof_reduction, event
     _message = ['> Error while retrieving the parameters for the rtof file:']
     message = [_message, message]
     log_book_update, event, message=message
-    
     hide_progress_bar, event
     
     return
   endif
+  
+  (*global).SD_d = SD_d
+  (*global).MD_d = MD_d
+  
+  ;read rtof ascii file
+  _DATA = (*(*global).rtof_data)
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
 end
