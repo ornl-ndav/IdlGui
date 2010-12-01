@@ -371,10 +371,146 @@ pro design_tabs, MAIN_BASE, global
     space = widget_label(_base1,$
       value = ' ')
       
-      ;geometry infos of rtof geometry nexus file
-      geo_base = widget_base(_base1,$
-      frame=1,$
-      /column)
+  ;PARAMETERS
+    
+  ;read xml instrument config file
+  config_file = (*global).instrument_config_file
+  file = OBJ_NEW('IDLxmlParser', config_file)
+  instrument = (*global).instrument
+  
+  para_box = widget_base(_base1,$
+    frame = 1,$
+    /align_center, $
+    uname = 'rtof_configuration_base',$
+    map = 0,$
+    /base_align_center,$
+    /column)
+    
+  row1 = widget_base(para_box,$
+    /row)
+    
+  row1col2 = widget_base(row1,$
+    /column)
+    
+  ranges_qx_min = file->getValue(tag=['instruments',instrument,$
+    'ranges_qx','minqx'])
+  field1 = cw_field(row1col2,$
+    /floating,$
+    xsize = 8,$
+    uname = 'rtof_ranges_qx_min',$
+    value = ranges_qx_min,$
+    title = 'Ranges:  Qx')
+    
+  ranges_qz_min = file->getValue(tag=['instruments',instrument,$
+    'ranges_qz','minqz'])
+  field2 = cw_field(row1col2,$
+    xsize = 8,$
+    /floating,$
+    value = ranges_qz_min,$
+    uname = 'rtof_ranges_qz_min',$
+    title = '         Qz')
+    
+  tof_min = file->getValue(tag=['instruments',instrument,$
+    'tof','mintof'])
+  field3 = cw_field(row1col2,$
+    xsize = 8,$
+    /floating,$
+    value = tof_min,$
+    uname = 'rtof_tof_min',$
+    title = '   TOF (ms)')
+    
+  row1col3 = widget_base(row1,$
+    /column)
+  ranges_qx_max = file->getValue(tag=['instruments',instrument,$
+    'ranges_qx','maxqx'])
+  field1 = cw_field(row1col3,$
+    /floating,$
+    xsize = 8,$
+    uname = 'rtof_ranges_qx_max',$
+    value = ranges_qx_max,$
+    title = 'to  ')
+    
+  ranges_qz_max = file->getValue(tag=['instruments',instrument,$
+    'ranges_qz','maxqz'])
+  field21 = cw_field(row1col3,$
+    xsize = 8,$
+    /floating,$
+    uname = 'rtof_ranges_qz_max',$
+    value = ranges_qz_max,$
+    title = 'to  ')
+    
+  tof_max = file->getValue(tag=['instruments',instrument,$
+    'tof','maxtof'])
+  field3 = cw_field(row1col3,$
+    xsize = 8,$
+    /floating,$
+    uname = 'rtof_tof_max',$
+    value = tof_max,$
+    title = 'to  ')
+    
+  space = widget_label(row1,$
+    value = '                             ')
+    
+  row1col4 = widget_base(row1,$
+    /column)
+    
+  center_pixel = file->getValue(tag=['instruments',instrument,$
+    'center_pixel'])
+  field1 = cw_field(row1col4,$
+    /floating,$
+    xsize = 8,$
+    value = center_pixel,$
+    uname = 'rtof_center_pixel',$
+    title = '   Center pixel')
+    
+  pixel_size = file->getValue(tag=['instruments',instrument,$
+    'pixel_size'])
+  field2 = cw_field(row1col4,$
+    xsize = 8,$
+    /floating,$
+    value = pixel_size,$
+    uname = 'rtof_pixel_size',$
+    title = 'Pixel size (mm)')
+    
+  row2 = widget_base(para_box,$
+    /align_left,$
+    /row)
+  row2col1 = widget_base(row2,$
+    /column)
+    
+  pixel_min = file->getValue(tag=['instruments',instrument,$
+    'pixel_range','minpx'])
+  field1 = cw_field(row2col1,$
+    /integer,$
+    xsize = 3,$
+    value =  pixel_min,$
+    uname = 'rtof_pixel_min',$
+    title = 'Pixels:   min')
+    
+  pixel_max = file->getValue(tag=['instruments',instrument,$
+    'pixel_range','maxpx'])
+  field2 = cw_field(row2col1,$
+    xsize = 3,$
+    /integer,$
+    value = pixel_max,$
+    uname = 'rtof_pixel_max',$
+    title = '          max')
+    
+  space = widget_label(row2,$
+    value = '                                ')
+    
+  row2col2 = widget_base(row2,$
+    /column)
+  field1 = cw_field(row2col2,$
+    xsize = 10,$
+    value = '',$
+    uname = 'rtof_d_sd_uname',$
+    title = '   Distance sample to detector (mm) ')
+  field2 = cw_field(row2col2,$
+    xsize = 10,$
+    value = '',$
+    uname = 'rtof_d_md_uname',$
+    title = 'Distance moderator to detector (mm) ')
       
   endif
   
