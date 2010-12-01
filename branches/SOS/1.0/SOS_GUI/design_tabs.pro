@@ -184,34 +184,7 @@ pro design_tabs, MAIN_BASE, global
     ;SPACE - Parametrs coming from loaded file
     space = widget_label(_base1,$
       value = ' ')
-      
-;    label = widget_label(_base1, $
-;      /align_left, $
-;      value = 'Loaded file parameters')
-;      
-;    file_para = widget_base(_base1, $
-;      frame = 1,$
-;      /base_align_center, $
-;      /row)
-;    ;theta value
-;    theta = cw_field(file_para, $
-;      value = '',$
-;      /floating,$
-;      title = '               Theta')
-;    unit1 = widget_droplist(file_para, $
-;      value = ['Degrees','radians'])
-;      
-;    space = widget_label(file_para,$
-;      value = '                   ')
-;      
-;    ;dtheta value
-;    dtheta = cw_field(file_para, $
-;      value = '',$
-;      /floating,$
-;      title = 'TwoTheta')
-;    unit1 = widget_droplist(file_para, $
-;      value = ['Degrees','radians'])
-      
+            
       ;nexus file that will be used
       row2 = widget_base(_base1,$
       uname = 'rtof_nexus_base',$
