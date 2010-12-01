@@ -179,29 +179,6 @@ pro design_tabs, MAIN_BASE, global
     
   row1 = widget_base(para_box,$
     /row)
-  row1col1 = widget_base(row1,$
-    /column)
-    
-  bins_qx = file->getValue(tag=['instruments',instrument,'bins_qx'])
-  field1 = cw_field(row1col1,$
-    /integer,$
-    xsize = 6,$
-    value = bins_qx,$
-    uname = 'bins_qx',$
-    ;    title = 'Bins:  Qx (' + string("305B) + ')')
-    title = 'Bins:  Qx')
-  ;     title = 'Bins:  Qx (' + angstrom + ')')
-    
-  bins_qz = file->getValue(tag=['instruments',instrument,'bins_qz'])
-  field2 = cw_field(row1col1,$
-    xsize = 6,$
-    /integer,$
-    value = bins_qz,$
-    uname = 'bins_qz',$
-    title = '       Qz')
-    
-  space = widget_label(row1,$
-    value = '              ')
     
   row1col2 = widget_base(row1,$
     /column)
@@ -325,29 +302,7 @@ pro design_tabs, MAIN_BASE, global
     value = '',$
     uname = 'd_md_uname',$
     title = 'Distance moderator to detector (mm) ')
-    
-  ;specular reflexion parameters
-  row2col3 = widget_base(row2,$
-    /column)
-    
-  specular_qxwidth = file->getValue(tag=['instruments',instrument,$
-    'specular_reflection','qxwidth'])
-  field1 = cw_field(row2col3,$
-    /floating,$
-    xsize = 10,$
-    value = specular_qxwidth,$
-    uname = 'qxwidth_uname',$
-    title = '       Specular reflection    QxWidth')
-    
-  tnum = file->getValue(tag=['instruments',instrument,$
-    'specular_reflection','tnum'])
-  field2 = cw_field(row2col3,$
-    /integer,$
-    xsize = 5,$
-    value = tnum,$
-    uname = 'tnum_uname',$
-    title = '                                tnum')
-    
+        
   if ((*global).hide_tab_2 eq 'no') then begin
   
     ;********* tab 2 ***********************************************************
@@ -416,8 +371,84 @@ pro design_tabs, MAIN_BASE, global
     space = widget_label(_base1,$
       value = ' ')
       
+      ;geometry infos of rtof geometry nexus file
+      geo_base = widget_base(_base1,$
+      frame=1,$
+      /column)
+      
   endif
   
+  ;***** general configuration tab *******************************************
+  
+      base1 = widget_base(tabs,$
+      uname = 'tab2',$
+      title = '    GENERAL CONFIGURATION    ')
+      
+    _base1 = widget_base(base1,$
+      /column)
+  
+    ;read xml instrument config file
+  config_file = (*global).instrument_config_file
+  file = OBJ_NEW('IDLxmlParser', config_file)
+  instrument = (*global).instrument
+  
+  para_box = widget_base(_base1,$
+    frame = 1,$
+    /base_align_center,$
+    /column)
+    
+  row1 = widget_base(para_box,$
+    /row)
+  row1col1 = widget_base(row1,$
+    /column)
+    
+  bins_qx = file->getValue(tag=['instruments',instrument,'bins_qx'])
+  field1 = cw_field(row1col1,$
+    /integer,$
+    xsize = 6,$
+    value = bins_qx,$
+    uname = 'bins_qx',$
+    ;    title = 'Bins:  Qx (' + string("305B) + ')')
+    title = 'Bins:  Qx')
+  ;     title = 'Bins:  Qx (' + angstrom + ')')
+    
+  bins_qz = file->getValue(tag=['instruments',instrument,'bins_qz'])
+  field2 = cw_field(row1col1,$
+    xsize = 6,$
+    /integer,$
+    value = bins_qz,$
+    uname = 'bins_qz',$
+    title = '       Qz')
+    
+  space = widget_label(row1,$
+    value = '              ')
+    
+  row1col2 = widget_base(row1,$
+    /column)
+        
+  ;specular reflexion parameters
+  row1col2 = widget_base(row1,$
+    /column)
+    
+  specular_qxwidth = file->getValue(tag=['instruments',instrument,$
+    'specular_reflection','qxwidth'])
+  field1 = cw_field(row1col2,$
+    /floating,$
+    xsize = 10,$
+    value = specular_qxwidth,$
+    uname = 'qxwidth_uname',$
+    title = '       Specular reflection    QxWidth')
+    
+  tnum = file->getValue(tag=['instruments',instrument,$
+    'specular_reflection','tnum'])
+  field2 = cw_field(row1col2,$
+    /integer,$
+    xsize = 5,$
+    value = tnum,$
+    uname = 'tnum_uname',$
+    title = '                                 tnum')
+  
+
   ;******* bottom part of GUI ************************************************
   
   ;progress bar and go button
