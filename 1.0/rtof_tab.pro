@@ -45,19 +45,12 @@ pro browse_for_rtof_nexus_file, event
   compile_opt idl2
   
   title = 'Select a NeXus file to use for the geometry'
-  nexus_file = browse_nexus_button( event, title=title, multiple_files=0)
+  nexus_file = browse_nexus_button(event, title=title, multiple_files=0)
   
   widget_control, event.top, get_uvalue=global
   
   if (nexus_file ne '') then begin
     putValue, event=event, 'rtof_nexus_geometry_file', nexus_file
-    if (file_test(nexus_file)) then begin
-      (*global).rtof_nexus_geometry_exist = 1b
-      display_file_found_or_not, event=event, status=1
-    endif else begin
-      (*global).rtof_nexus_geometry_exist = 0b
-      display_file_found_or_not, event=event, status=0
-    endelse
   endif
   
 end
