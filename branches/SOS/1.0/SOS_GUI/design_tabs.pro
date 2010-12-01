@@ -161,7 +161,7 @@ pro design_tabs, MAIN_BASE, global
     title = '  Configuration  ')
     
   _base = widget_base(nexus_tab1,$
-    xoffset = 20,$
+    xoffset = 100,$
     yoffset = 20,$
     /column)
     
@@ -174,6 +174,7 @@ pro design_tabs, MAIN_BASE, global
   
   para_box = widget_base(_base,$
     frame = 1,$
+    /align_center,$
     /base_align_center,$
     /column)
     
@@ -240,7 +241,7 @@ pro design_tabs, MAIN_BASE, global
     title = 'to  ')
     
   space = widget_label(row1,$
-    value = '              ')
+    value = '                                   ')
     
   row1col4 = widget_base(row1,$
     /column)
@@ -288,7 +289,7 @@ pro design_tabs, MAIN_BASE, global
     title = '          max')
     
   space = widget_label(row2,$
-    value = '     ')
+    value = '                                 ')
     
   row2col2 = widget_base(row2,$
     /column)
@@ -349,10 +350,10 @@ pro design_tabs, MAIN_BASE, global
       /row)
       
     label = widget_label(row2, $
-      value = 'Geometry file:')
+      value = 'Geometry file:  ')
     value = widget_text(row2, $
       value = '', $
-      xsize = 95, $
+      xsize = 93, $
       /all_events, $
       /editable,$
       uname = 'rtof_nexus_geometry_file')
@@ -521,6 +522,8 @@ pro design_tabs, MAIN_BASE, global
       title = '    GENERAL CONFIGURATION    ')
       
     _base1 = widget_base(base1,$
+    xoffset= 160,$
+    yoffset= 40,$
       /column)
   
     ;read xml instrument config file
