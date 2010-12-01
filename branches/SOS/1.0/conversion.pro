@@ -34,7 +34,46 @@
 
 ;+
 ; :Description:
-;    Convert the distance having the from_unit unit into the unit given 
+;    This function converts the angle given into the unit desired
+;
+; :Keywords:
+;    angle
+;    from_unit   ;'degree' or 'rad'
+;    to_unit     ''degree' or 'rad'
+;    
+; :Returns:
+;   angle in the correct units 
+;
+; :Author: j35
+;-
+function convert_angle, angle=angle, $
+    from_unit=from_unit,$
+    to_unit=to_unit
+  compile_opt idl2
+  
+  if (from_unit eq to_unit) then return, angle
+  
+  ;convert everything into rad
+  case (from_unit) of
+  'rad': from_factor = 1
+  'degree': from_factor = 1/(!dtor)
+  endcase
+  angle_rad = angle * from_factor
+  
+  ;convert into desired unit
+  case (to_unit) of
+  'rad': to_factor = 1
+  'degree': to_factor = !dtor
+  endcase
+  angle_rad *= to_factor
+
+  return, angle_rad
+end
+
+
+;+
+; :Description:
+;    Convert the distance having the from_unit unit into the unit given
 ;    in the keyword to_unit
 
 ; :Keywords:
@@ -57,31 +96,31 @@ function convert_distance, distance=distance, $
   
   ;convert distance into m
   case (strlowcase(from_unit)) of
-  'm': _from_factor = 1.
-  'dm': _from_factor = 1.e-1
-  'cm': _from_factor = 1.e-2
-  'mm': _from_factor = 1.e-3
-  'millimetre': _from_facto = 1.e-3
-  'microm': _from_factor = 1.e-6
-  'nanom': _from_factor = 1.e-9
-  else: return, 'N/A'
+    'm': _from_factor = 1.
+    'dm': _from_factor = 1.e-1
+    'cm': _from_factor = 1.e-2
+    'mm': _from_factor = 1.e-3
+    'millimetre': _from_facto = 1.e-3
+    'microm': _from_factor = 1.e-6
+    'nanom': _from_factor = 1.e-9
+    else: return, 'N/A'
   endcase
   
   _distance *= _from_factor
   
   ;convert into the distance requested
   case (strlowcase(to_unit)) of
-  'm': _to_factor = 1.
-  'dm': _to_factor = 10.
-  'cm': _to_factor = 1.e2
-  'mm': _to_factor = 1.e3
-  'millimetre': _to_factor = 1.e3
-  'microm': _to_factor = 1.e6
-  'nanom': _to_factor = 1.e9
-  else: return, 'N/A'
+    'm': _to_factor = 1.
+    'dm': _to_factor = 10.
+    'cm': _to_factor = 1.e2
+    'mm': _to_factor = 1.e3
+    'millimetre': _to_factor = 1.e3
+    'microm': _to_factor = 1.e6
+    'nanom': _to_factor = 1.e9
+    else: return, 'N/A'
   endcase
   
-  _distance *= _to_factor 
+  _distance *= _to_factor
   
   return, _distance
   
@@ -133,7 +172,7 @@ function calculate_lambda, tof_value=tof_value, $
     d_MS_m = d_MS_m, $
     lambda_units=lambda_units
   compile_opt idl2
-    
+  
   _tof_s = convert_to_s(tof_value=tof_value, tof_units=tof_units)
   
   if (n_elements(lambda_units) eq 0) then lambda_units = 'angstroms'
@@ -153,7 +192,7 @@ function calculate_lambda, tof_value=tof_value, $
   
   _v = (double(d_SD_m) + double(d_MS_m)) / double(_tof_s)
   _lambda = double(h) / (double(m_n) * _v) * factor
-
+  
   return, _lambda
 end
 
