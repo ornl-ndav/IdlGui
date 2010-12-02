@@ -34,10 +34,8 @@
 ;==============================================================================
 
 function trim_data, event, $
-    TOFmin, $
-    TOFmax, $
-    PIXmin, $
-    PIXmax, $
+    pixel_min, $
+    pixel_max, $
     theta, $
     twotheta
   compile_opt idl2
@@ -49,8 +47,8 @@ function trim_data, event, $
   nbr_pixel = (size(_data,/dim))[0]
   
   ;get tof array only
-  first_spectrum = *_DATA[0]
-  tof = first_spectrum[0,*]
+  first_spectrum = *_DATA[0]  
+  tof = float(reform(first_spectrum[0,*]))  ;[263] 
   nbr_tof = n_elements(tof)
   
   ;get image  (y vs tof)
@@ -61,13 +59,13 @@ function trim_data, event, $
     image[*,index] = _image_index[1,*]
     ++index
   endwhile
+  ;help, image   ;[263,51]
   
+  ;create pixel array
+  pixels = indgen(pixel_max - pixel_min + 1) + pixel_min
+  DATA = {data:image, theta:theta, twotheta:twotheta, tof:tof, pixels:pixels} 
   
-  
-  
-  
-  
-  return, ['']
+  return, DATA
 end
 
 ;+
@@ -219,8 +217,6 @@ pro go_rtof_reduction, event
   
   ;read rtof ascii file
   _DATA = trim_data(event, $
-    TOFmin, $
-    TOFmax, $
     PIXmin, $
     PIXmax, $
     theta, $
@@ -228,7 +224,7 @@ pro go_rtof_reduction, event
     
   _DATA = (*(*global).rtof_data)
   
-;
+
   
   
   

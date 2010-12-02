@@ -62,7 +62,7 @@ function load_geometry_parameters, event
     strcompress(first_pixel,/remove_all)
   last_pixel = first_pixel + nbr_pixels - 1
   putValue, event=event, 'rtof_pixel_max', $
-    strcompress(last_pixel, /remove_all)
+    strcompress(last_pixel[0], /remove_all)
     
   geometry_nexus_file = getValue(event=event, uname='rtof_nexus_geometry_file')
   geometry_nexus_file = strtrim(geometry_nexus_file,2)
