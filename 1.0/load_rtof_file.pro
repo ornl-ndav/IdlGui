@@ -110,7 +110,7 @@ function load_rtof_file, event, file_name
   nbr_points = (size(*pData[0],/dim))[1]
   
   data_pixel_0 = (*pData[0])
-  xaxis = data_pixel_0[0,*]
+  xaxis = reform(data_pixel_0[0,*])
   _pData_y = fltarr(nbr_pixels, nbr_points)
   _pData_y_error = fltarr(nbr_pixels, nbr_points)
   
@@ -119,6 +119,22 @@ function load_rtof_file, event, file_name
     _pData_y[j,*] = (*pData[j])[1,*]
     _pData_y_error[j,*] = (*pData[j])[2,*]
   endfor
+  
+  ;retrieve tof min and max
+  tof_min_micros = xaxis[0]
+  tof_max_micros = xaxis[-2]
+  
+  ;because units are in microsecond -> ms
+  tof_min_ms = tof_min_micros / 1000.
+  tof_max_ms = tof_max_micros / 1000.
+  
+  s_tof_min_ms = strcompress(string(format='(f10.2)',tof_min_ms),/remove_all)
+  s_tof_max_ms = strcompress(string(format='(f10.2)',tof_max_ms),/remove_all)
+  
+  putValue, event=event, 'rtof_tof_min', $
+  strcompress(s_tof_min_ms,/remove_all)
+  putValue, event=event, 'rtof_tof_max', $
+  strcompress(s_tof_max_ms,/remove_all)
   
   return, 1b
   

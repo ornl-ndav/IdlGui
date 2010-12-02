@@ -411,15 +411,26 @@ pro design_tabs, MAIN_BASE, global
     uname = 'rtof_ranges_qz_min',$
     title = '         Qz')
     
-  tof_min = file->getValue(tag=['instruments',instrument,$
-    'tof','mintof'])
-  field3 = cw_field(row1col2,$
-    xsize = 8,$
-    /floating,$
-    value = tof_min,$
-    uname = 'rtof_tof_min',$
-    title = '   TOF (ms)')
-    
+  rowc = widget_base(row1col2,$
+  /row)
+  label = widget_label(rowc,$
+  /align_left,$
+  value = '   TOF (ms):')
+  value = widget_label(rowc,$
+  value = 'N/A',$
+  /align_left,$
+  uname = 'rtof_tof_min',$
+  scr_xsize =60)
+  
+;  tof_min = file->getValue(tag=['instruments',instrument,$
+;    'tof','mintof'])
+;  field3 = cw_field(row1col2,$
+;    xsize = 8,$
+;    /floating,$
+;    value = tof_min,$
+;    uname = 'rtof_tof_min',$
+;    title = '   TOF (ms)')
+  
   row1col3 = widget_base(row1,$
     /column)
   ranges_qx_max = file->getValue(tag=['instruments',instrument,$
@@ -440,14 +451,16 @@ pro design_tabs, MAIN_BASE, global
     value = ranges_qz_max,$
     title = 'to  ')
     
-  tof_max = file->getValue(tag=['instruments',instrument,$
-    'tof','maxtof'])
-  field3 = cw_field(row1col3,$
-    xsize = 8,$
-    /floating,$
-    uname = 'rtof_tof_max',$
-    value = tof_max,$
-    title = 'to  ')
+  rowc = widget_base(row1col3,$
+  /row)
+  label = widget_label(rowc,$
+  /align_left,$
+  value = 'to   ')
+  value = widget_label(rowc,$
+  value = 'N/A',$
+  /align_left,$
+  uname = 'rtof_tof_max',$
+  scr_xsize =100)
     
   space = widget_label(row1,$
     value = '       ')
