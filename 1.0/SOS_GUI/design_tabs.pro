@@ -510,24 +510,30 @@ field1 = cw_field(rowa,$
   row2col1 = widget_base(row2,$
     /column)
     
-  pixel_min = file->getValue(tag=['instruments',instrument,$
-    'pixel_range','minpx'])
-  field1 = cw_field(row2col1,$
-    /integer,$
-    xsize = 3,$
-    value =  pixel_min,$
-    uname = 'rtof_pixel_min',$
-    title = 'Pixels:   min')
+;  pixel_min = file->getValue(tag=['instruments',instrument,$
+;    'pixel_range','minpx'])
+  rowa = widget_base(row2col1,$
+  /row)
+  label = widget_label(rowa,$
+  value = 'Pixels:   min: ')
+  label = widget_label(rowa,$
+  value = 'N/A',$
+  /align_left, $
+  scr_xsize = 50,$
+  uname = 'rtof_pixel_min')
     
-  pixel_max = file->getValue(tag=['instruments',instrument,$
-    'pixel_range','maxpx'])
-  field2 = cw_field(row2col1,$
-    xsize = 3,$
-    /integer,$
-    value = pixel_max,$
-    uname = 'rtof_pixel_max',$
-    title = '          max')
-    
+;  pixel_max = file->getValue(tag=['instruments',instrument,$
+;    'pixel_range','maxpx'])
+  rowb = widget_base(row2col1,$
+  /row)
+  label = widget_label(rowb,$
+  value = '          max: ')
+  label = widget_label(rowb,$
+  /align_left, $
+  value = 'N/A',$
+  scr_xsize = 50,$
+  uname = 'rtof_pixel_max')
+
   space = widget_label(row2,$
     value = '                                ')
     
