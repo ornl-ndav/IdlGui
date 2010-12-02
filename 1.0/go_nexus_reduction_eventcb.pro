@@ -341,7 +341,7 @@ end
 
 ;+
 ; :Description:
-;    Describe the procedure.
+;    convert to theta/lambda
 ;
 ; :Params:
 ;    data
@@ -599,7 +599,7 @@ function get_lambda_step, event, tof
   tof0 = tof[0]
   tof1 = tof[1]
   tof = tof1 - tof0
-  lambda = calculate_lambda (tof_value=tof, $
+  lambda = calculate_lambda(tof_value=tof, $
     tof_units = 'ms', $
     d_SD_m = d_SD_m, $
     d_MS_m = d_MS_m, $

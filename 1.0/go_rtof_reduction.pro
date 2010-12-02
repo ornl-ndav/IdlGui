@@ -33,24 +33,141 @@
 ;
 ;==============================================================================
 
+;+
+; :Description:
+;    convert to theta/lambda
+;
+; :Keywords:
+;    event
+;    DATA
+;    SD_d
+;    MD_d
+;    center_pixel
+;    pixel_size
+;    THLAM_array
+;    THLAM_lamvec
+;    THLAM_thvec
+;
+; :Author: j35
+;-
+pro build_rtof_THLAM, event = event, $
+    DATA = DATA,$
+    SD_d = SD_d, $
+    MD_d = MD_d, $
+    center_pixel = center_pixel,$
+    pixel_size = pixel_size, $
+    THLAM_array = THLAM_array, $
+    THLAM_lamvec = THLAM_lamvec, $
+    THLAM_thvec = THLAM_thvec
+  compile_opt idl2
+  
+   THLAM = convert_THLAM(DATA, SD_d, MD_d, center_pixel, pixel_size)
+   
+   ;round the angles to the nearest 100th of a degree
+   theta_val = round(DATA.theta*100.0)/100.0
+   twotheta_val = round(DATA.twotheta*100.0)/100.0
+   
+   THLAM_array[*,*] = THLAM.data
+   THLAM_thvec[*]   = THLAM.theta
+   THLAM_lamvec[*]  = THLAM.lambda
+  
+end
+
+;+
+; :Description:
+;    Calculate the lambda step (in angstroms)
+;
+; :Params:
+;    event
+;    tof
+;
+; :Author: j35
+;-
+function get_rtof_lambda_step, event, tof
+  compile_opt idl2
+  
+  SD_d = get_d_sd_rtof(event) ;mm
+  MD_d = get_d_md_rtof(event) ;mm
+  
+  d_SD_m = convert_distance(distance=SD_d,$
+    from_unit='mm',$
+    to_unit='m')
+    
+  d_MD_m = convert_distance(distance=MD_d,$
+    from_unit='mm',$
+    to_unit='m')
+    
+  d_MS_m = d_MD_m - d_SD_m
+  
+  tof0 = tof[0]
+  tof1 = tof[1]
+  tof = tof1-tof0
+  
+  lambda = calculate_lambda(tof_value=tof,$
+    tof_units='ms',$
+    d_SD_m = d_SD_m, $
+    d_MS_m = d_MS_m , $
+    lambda_units = 'angstroms')
+    
+  message = ['> Calculate the lambda step: ' + $
+    strcompress(lambda,/remove_all) + ' Angstroms']
+  log_book_update, event, message=message
+  
+  return, lambda
+end
+
+;+
+; :Description:
+;    this routine creates the structure of data/angles/tof
+;
+; :Params:
+;    event
+;    theta
+;    twotheta
+;
+; :Author: j35
+;-
 function trim_data, event, $
-    pixel_min, $
-    pixel_max, $
     theta, $
     twotheta
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global
   
+  message = strarr(11)
+  i=0
+  message[i++] = '> Create DATA structure:'
+  
   _DATA = (*(*global).rtof_data)
   
   nbr_pixel = (size(_data,/dim))[0]
+  message[i++] = '-> number of pixels: ' + strcompress(nbr_pixel,/remove_all)
   
   ;get tof array only
-  first_spectrum = *_DATA[0]  
-  tof = float(reform(first_spectrum[0,*]))  ;[263] 
+  first_spectrum = *_DATA[0]
+  tof = float(reform(first_spectrum[0,*]))  ;[263]
   nbr_tof = n_elements(tof)
+  message[i++] = '-> number of tofs: ' + strcompress(nbr_tof,/remove_all)
   
+  ;adding 4 to angles
+  theta += 4.0
+  twotheta += 4.0
+  message[i++] = '-> Adding 4.0 to theta and twotheta:'
+  message[i++]= '  -> theta: ' + strcompress(theta,/remove_all) + ' radians'
+  message[i++] = '  -> twotheta: ' + strcompress(twotheta,/remove_all) + ' radians'
+  
+  ;pixels min and max
+  PIXmin = get_pixel_min_rtof(event)
+  PIXmax = get_pixel_max_rtof(event)
+  message[i++] = '-> [p1,p2]=[' + strcompress(PIXmin,/remove_all) + $
+    ',' + strcompress(PIXmax,/remove_all) + ']'
+    
+  ;tof min and max
+  TOFmin = get_tof_min_rtof(event)
+  TOFmax = get_tof_max_rtof(event)
+  message[i++] = '-> [t1,t2]=[' + strcompress(TOFmin,/remove_all) + $
+    ',' + strcompress(TOFmax,/remove_all) + ']'
+    
   ;get image  (y vs tof)
   image = fltarr(nbr_tof, nbr_pixel)
   index = 0
@@ -62,8 +179,24 @@ function trim_data, event, $
   ;help, image   ;[263,51]
   
   ;create pixel array
+  pixel_max = fix(PIXmax)
+  pixel_min = fix(PIXmin)
   pixels = indgen(pixel_max - pixel_min + 1) + pixel_min
-  DATA = {data:image, theta:theta, twotheta:twotheta, tof:tof, pixels:pixels} 
+  
+  sz = size(pixels,/dim)
+  message[i++] = '-> size(pixels): ' + strcompress(sz,/remove_all)
+  sz = size(tof,/dim)
+  message[i++] = '-> size(tof): ' + strcompress(sz,/remove_all)
+  sz = size(image,/dim)
+  message[i++] = '-> size(image): ' + strcompress(strjoin(sz,','),/remove_all)
+  
+  ;remove last tof (which is empty)
+  image = image[0:-2,*]
+  tof = tof[0:-2]
+  
+  DATA = {data:image, theta:theta, twotheta:twotheta, tof:tof, pixels:pixels}
+  
+  log_book_update, event, message=message
   
   return, DATA
 end
@@ -212,50 +345,66 @@ pro go_rtof_reduction, event
     return
   endif
   
-  (*global).SD_d = SD_d
-  (*global).MD_d = MD_d
+  ;  (*global).SD_d = SD_d
+  ;  (*global).MD_d = MD_d
   
   ;read rtof ascii file
   _DATA = trim_data(event, $
-    PIXmin, $
-    PIXmax, $
-    theta, $
-    twotheta)
+    theta_rad, $
+    twotheta_rad)
     
-  _DATA = (*(*global).rtof_data)
+  ;calculate the lambda step
+  lambda_step = get_rtof_lambda_step(event, _DATA.tof)
   
-
+  fTOFmax = float(TOFmax)
+  fTOFmin = float(TOFmin)
+  iPIXmax = fix(PIXmax)
+  iPIXmin = fix(PIXmin)
   
+  ;Create an array that will contain all the data
+  THLAM_array = make_array(floor((fTOFmax-fTOFmin)*5)+1, iPIXmax-iPIXmin+1)
+  THLAM_lamvec = make_array(floor((fTOFmax-fTOFmin)*5)+1)
+  THLAM_thvec = make_array(iPIXmax-iPIXmin+1)
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+  build_rtof_THLAM, event=event, $
+    DATA=_DATA,$
+    SD_d = SD_d, $
+    MD_d = MD_d, $
+    center_pixel = center_pixel,$
+    pixel_size = pixel_size, $
+    THLAM_array = THLAM_array, $
+    THLAM_lamvec = THLAM_lamvec, $
+    THLAM_thvec = THLAM_thvec
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 end
