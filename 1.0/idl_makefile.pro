@@ -81,6 +81,7 @@ cd, CurrentFolder
 
 .run rtof_tab.pro
 .run rtof_file_tab.pro
+.run go_rtof_reduction_eventcb.pro
 .run go_rtof_reduction.pro
 
 .run main_base_event.pro
