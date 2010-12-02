@@ -400,10 +400,10 @@ pro go_nexus_reduction, event
       qxwidth = qxwidth, $
       tnum = tnum)
       
-    offset = 50
-    
   endelse ;end of catch statement
   
+    offset = 50
+    
   final_plot, event=event, $
     offset = offset, $
     time_stamp = time_stamp, $

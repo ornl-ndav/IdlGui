@@ -531,8 +531,6 @@ pro make_QxQz, event = event, $
   ;will go from 0 to 0.3 with 500steps
   qzvec=(findgen(qzbins)/(qzbins-1))*(qzrange[1]-qzrange[0])+qzrange[0]
   
-  ;SO FAR SO GOOD
-  
   ;THLAM_array: 2D vector of data
   ;THLAM_thvec: theta vector axis
   ;THLAM_lamvec: lambda vector axis
