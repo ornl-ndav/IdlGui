@@ -33,6 +33,207 @@
 ;
 ;==============================================================================
 
+function convert_to_QxQz_rtof, data,$
+    theta_vec, $
+    lambda_vec, $
+    qxvec, $
+    qzvec, $
+    lambda_step, $
+    theta_rad
+  compile_opt idl2
+
+  lambda_bin_vec = lambda_vec
+  data_size = size(data,/dim)
+  si = size(qxvec,/dim)
+  qx_bins = si[0]
+  
+  si = size(qzvec,/dim)
+  qz_bins=si[0]
+  
+  theta_in = theta_rad
+  
+  ;*********************************************************
+  ; REBIN TOF vs PIX MATRIX into QX vs QZ SPACE
+  ;*********************************************************
+  
+  ;Create the map in the Qx and Qz space of the
+  ;lambda and theta map
+  
+  ;QxQz_values[Qx_lo, Qx_hi, Qz_lo, Qz_hi, data]
+  QxQz_values = make_array(5,data_size[0]*data_size[1],/float)
+  
+  index = 0
+  for i=0, data_size[0]-1 do begin ;loop ovefr wavelength values
+    for j=0, data_size[1]-1 do begin ;loop over theta values
+    
+      lambdaval=lambda_vec[i]
+      
+      if data[i,j] gt 0 then begin
+      
+        lambdalo=lambda_bin_vec[i]
+        lambdahi=lambdalo+lambda_step
+        
+        if j ne data_size[1]-1 then theta_step=abs(theta_vec[j+1]-theta_vec[j])
+        thetahi = theta_vec[j]+theta_step/2
+        thetalo = theta_vec[j]-theta_step/2
+        
+        Qx_lo = (2.0*!pi/lambdahi) * (cos(thetahi)-cos(theta_in))
+        Qx_hi = (2.0*!pi/lambdalo) * (cos(thetalo)-cos(theta_in))
+        
+        Qz_lo= (2.0*!pi/lambdahi) * (sin(thetalo)+sin(theta_in))
+        Qz_hi= (2.0*!pi/lambdalo) * (sin(thetahi)+sin(theta_in))
+        
+        QXQZ_values[0,index] = Qx_lo
+        QXQZ_values[1,index] = Qx_hi
+        QXQZ_values[2,index] = Qz_lo
+        QXQZ_values[3,index] = Qz_hi
+        QXQZ_values[4,index] = data[i,j]
+        
+        index++
+        
+      endif
+    endfor
+  endfor
+  
+  si=size(QXQZ_values,/dim)
+  si=si[1]
+  
+  QXQZ_ARRAY=make_array(qx_bins,qz_bins,/float)
+  QxQZ_count=make_array(qx_bins,qz_bins,/float)
+  
+  ;below is the binning method
+  ok=0
+  count=0.0
+  fullcount=0.0
+  tecount=0.0
+  becount=0.0
+  recount=0.0
+  lecount=0.0
+  
+  total_area = 0.0
+  
+  while (ok eq 0) do begin
+  
+    QX_lo=QXQZ_values[0,count]
+    QX_hi=QXQZ_values[1,count]
+    
+    QZ_lo=QXQZ_values[2,count]
+    QZ_hi=QXQZ_values[3,count]
+    
+    int=QXQZ_values[4,count]
+
+    ;check where is the last index of data
+    
+    ;get the last index where QX_lo is smaller or equal to the QX axis
+    QX_lo_pos=max(where(QX_lo ge QXvec, nbr_qx_lo_pos))
+    
+    ;get the first index where QX_hi is bigger or equal to the QX axis
+    QX_hi_pos=min(where(QX_hi le QXvec, nbr_qx_hi_pos))
+    
+    QZ_lo_pos=max(where(QZ_lo ge QZvec, nbr_qz_lo_pos))
+
+    QZ_hi_pos=min(where(QZ_hi le QZvec, nbr_qz_hi_pos))
+    
+    if nbr_qz_lo_pos eq 0 then QZ_lo_pos=0
+    if nbr_qz_hi_pos eq 0 then QZ_hi_pos=qz_bins-1
+    if nbr_qx_lo_pos eq 0 then Qx_lo_pos=0
+    if nbr_qx_hi_pos eq 0 then Qx_hi_pos=qx_bins-1
+    
+    ;below crudely splits the intensity equally among all bins
+    ;calculate the number of bins in each of the new box
+    totalbins=(QX_hi_pos-QX_lo_pos+1)*(QZ_hi_pos-QZ_lo_pos+1)
+
+    for loopx=QX_lo_pos,QX_hi_pos do begin
+      for loopy=QZ_lo_pos,QZ_hi_pos do begin
+        QXQZ_ARRAY[loopx,loopy]=QXQZ_ARRAY[loopx,loopy]+(int/totalbins)
+        QXQZ_count[loopx,loopy]=QXQZ_count[loopx,loopy]+1.0
+      endfor
+    endfor
+    
+    if count eq si-1 then ok=1
+    count++
+  endwhile
+   
+  ;multiply *QZ^4
+  qxqz4=qxqz_array
+  for loop=0,qz_bins-1 do begin
+    qxqz4[*,loop]=qxqz_array[*,loop]*qzvec[loop]^4
+  endfor
+
+  qxqz_norm = qxqz_count*0.0
+  
+  for loopx=0, qx_bins-1 do begin
+  for loopz=0, qz_bins-1 do begin
+  qxqz_norm[loopx,loopz] = qxqz_array[loopx,loopz]/qxqz_count[loopx,loopz]
+  endfor
+  endfor
+  
+  norm=qxqz_array/qxqz_count
+  badlist=where(finite(norm) eq 0)
+  norm[badlist]=0.0
+
+  return, norm
+end
+
+;+
+; :Description:
+;    Convert the tof/pixel array into QxQz
+;
+; :Keywords:
+;    event
+;    lambda_step
+;    qxbins
+;    qzbins
+;    qxrange
+;    qzrange
+;    THLAM_array
+;    THLAM_thvec
+;    THLAM_lamvec
+;    QxQz_array
+;    qxvec
+;    qzvec
+;    theta_rad
+;
+; :Author: j35
+;-
+pro make_QXQZ_rtof, event = event, $
+    lambda_step = lambda_step, $
+    qxbins = qxbins, $
+    qzbins = qzbins, $
+    qxrange = qxrange, $
+    qzrange = qzrange, $
+    THLAM_array = THLAM_array, $
+    THLAM_thvec = THLAM_thvec, $
+    THLAM_lamvec = THLAM_lamvec, $
+    QxQz_array = QxQz_array, $
+    qxvec = qxvec, $
+    qzvec = qzvec, $
+    theta_rad
+  compile_opt idl2
+  
+  message = ['> Building QxQz array: ']
+  
+  ;Initialize the range of steps for x and z axis
+  ;will go from -0.004 to 0.004 with 500steps (qxbins)
+  qxvec=(findgen(qxbins)/(qxbins-1))*(qxrange[1]-qxrange[0])+qxrange[0]
+  ;will go from 0 to 0.3 with 500steps
+  qzvec=(findgen(qzbins)/(qzbins-1))*(qzrange[1]-qzrange[0])+qzrange[0]
+  
+  QxQz_array = convert_to_QxQz_rtof(THLAM_array,$
+    THLAM_thvec, $
+    THLAM_lamvec, $
+    qxvec, $
+    qzvec, $
+    lambda_step, $
+    theta_rad)
+    
+    message1 = '-> size(QxQz_array) : [' + $
+    strcompress(strjoin(size(QxQz_array,/dim),','),/remove_all) + ']'
+    message = [message,message1]
+    log_book_update, event, message=message
+    
+end
+
 ;+
 ; :Description:
 ;    convert to theta/lambda
@@ -61,15 +262,25 @@ pro build_rtof_THLAM, event = event, $
     THLAM_thvec = THLAM_thvec
   compile_opt idl2
   
-   THLAM = convert_THLAM(DATA, SD_d, MD_d, center_pixel, pixel_size)
-   
-   ;round the angles to the nearest 100th of a degree
-   theta_val = round(DATA.theta*100.0)/100.0
-   twotheta_val = round(DATA.twotheta*100.0)/100.0
-   
-   THLAM_array[*,*] = THLAM.data
-   THLAM_thvec[*]   = THLAM.theta
-   THLAM_lamvec[*]  = THLAM.lambda
+  message = ['> Build THLAM (Theta-Lambda) array for loaded data set']
+  
+  THLAM = convert_THLAM(DATA, SD_d, MD_d, center_pixel, pixel_size)
+  
+  ;round the angles to the nearest 100th of a degree
+  theta_val = round(DATA.theta*100.0)/100.0
+  twotheta_val = round(DATA.twotheta*100.0)/100.0
+  
+  THLAM_array[*,*] = THLAM.data
+  THLAM_thvec[*]   = THLAM.theta
+  THLAM_lamvec[*]  = THLAM.lambda
+  
+  message1 = ['-> theta: ' + strcompress(theta_val,/remove_all) + $
+    ' degrees']
+  message2 = ['-> twotheta ' + strcompress(twotheta_val,/remove_all) + $
+    ' degrees']
+  message = [message,message1,message2]
+  
+  log_book_update, event, message=message
   
 end
 
@@ -216,6 +427,7 @@ pro go_rtof_reduction, event
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global
+  widget_control, /hourglass
   
   ;retrieve variables
   rtof_ascii_file = getValue(event=event,$
@@ -376,6 +588,62 @@ pro go_rtof_reduction, event
     THLAM_lamvec = THLAM_lamvec, $
     THLAM_thvec = THLAM_thvec
     
+  QxQz_array = make_array(qxbins, qzbins)
+  
+  make_QXQZ_rtof, event = event, $
+    lambda_step = lambda_step, $
+    qxbins = qxbins, $
+    qzbins = qzbins, $
+    qxrange = qxrange, $
+    qzrange = qzrange, $
+    THLAM_array = THLAM_array, $
+    THLAM_thvec = THLAM_thvec, $
+    THLAM_lamvec = THLAM_lamvec, $
+    QxQz_array = QxQz_array, $
+    qxvec = qxvec, $
+    qzvec = qzvec, $
+    theta_rad
+  
+    ;create metadata
+    time_stamp = GenerateReadableIsoTimeStamp()
+    metadata = produce_rtof_metadata_structure(event, $
+      time_stamp = time_stamp, $
+      rtof_file = rtof_ascii_file, $
+      rtof_nexus_geometry_file = rtof_nexus_geometry_file, $
+      qzmax = QZmax,$
+      qzmin = QZmin, $
+      qxbins = QXbins, $
+      qzbins = QZbins, $
+      qxmin = QXmin, $
+      qxmax = QXmax, $
+      tofmin = TOFmin, $
+      tofmax = TOFmax, $
+      pixmin = PIXmin, $
+      pixmax = PIXmax, $
+      center_pixel = center_pixel, $
+      pixel_size = pixel_size, $
+      d_sd = SD_d, $
+      d_md = MD_d, $
+      qxwidth = qxwidth, $
+      tnum = tnum)
+    
+    offset = 50
+    final_plot, event=event, $
+    offset = offset, $
+    time_stamp = time_stamp, $
+    data = QxQz_array,$
+    x_axis = qxvec,$
+    y_axis = qzvec,$
+    metadata = metadata, $
+    default_loadct = 5, $
+    ;    default_scale_settings = default_scale_settings, $
+    ;    current_plot_setting = current_plot_setting, $
+    ;    Data_x = Data_x, $
+    ;    Data_y = Data_y, $ ;Data_y
+    ;    start_pixel = start_pixel, $
+    main_base_uname = 'main_base', $
+    output_folder = (*global).output_path
+
     
     
     
@@ -400,11 +668,7 @@ pro go_rtof_reduction, event
     
     
     
-    
-    
-    
-    
-    
-    
-    
+  widget_control, hourglass=0
+  
+  
 end
