@@ -92,7 +92,7 @@ PRO browse_ascii_file, Event
   extension = (*global).ascii_extension
   filter    = (*global).ascii_filter
   path      = (*global).ascii_path
-
+;print, "path: ",path
   title     = 'Select an ASCII file'
   ascii_file_name = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
     FILTER            = filter,$

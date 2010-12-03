@@ -32,7 +32,8 @@
 ;
 ;==============================================================================
 
-PRO make_gui_plot_utility, MAIN_TAB, MainTabSize, TabTitles
+PRO make_gui_plot_utility, MAIN_TAB, MainTabSize, TabTitles, global
+  path = (*global).ascii_path
 
 ;******************************************************************************
 ;            DEFINE STRUCTURE
@@ -44,7 +45,7 @@ sPlotUtilityBase = { size  : MainTabSize,$
                  uname : 'base_plot_utility'}
 
 ;- plot utility text -----------------------------------------------------------
-sPlotUtility = { size  : [0,0,MainTabSize[2]-10,100],$
+sPlotUtility = { size  : [0,0,MainTabSize[2]-10,150],$
              uname : 'plot_utility_text'} 
                                                   
 ;******************************************************************************
@@ -70,15 +71,28 @@ wPlotUtilityText = WIDGET_TEXT(wPlotUtilityBase,$
                            SCR_YSIZE = sPlotUtility.size[3],$
                            /SCROLL,$
                            /WRAP)
+
 row1 = WIDGET_BASE(wPlotUtilityBase,/ROW)
 row1col1 = WIDGET_BASE(row1,/COLUMN)
 wPlotUtilityButton1 = WIDGET_BUTTON(row1col1,$
-                          VALUE = ' Plot Resistivity vs Q ',$
+                          VALUE = ' Plot Reflectivity vs Q ',$
                           UNAME = 'launch_plotRvsQ')
-row2 = WIDGET_BASE(wPlotUtilityBase,/ROW)
-row2col1 = WIDGET_BASE(row2,/COLUMN)
-wPlotUtilityButton1 = WIDGET_BUTTON(row1col1,$
+
+wPlotUtilityButton2 = WIDGET_BUTTON(row1col1,$
                           VALUE = 'Plot Scaled 2D Results',$
                           UNAME = 'launch_plotScaled2D')
-                       
+
+new_path = WIDGET_TEXT(row1col1,$
+                    SCR_XSIZE = 220,$
+                    UNAME     = 'reduce_step_path',$
+                    VALUE     = path,$
+                    /EDITABLE,$
+                    /ALIGN_LEFT)
+
+ReduceStepPathGoButton = WIDGET_BUTTON(row1col1,$
+                    SCR_XSIZE = 20,$
+                    SCR_YSIZE = 25,$
+                    VALUE     = 'Submit',$
+                    UNAME     = 'update_reduce_step_path')
+
 END

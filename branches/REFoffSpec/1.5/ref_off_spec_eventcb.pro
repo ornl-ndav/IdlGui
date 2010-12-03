@@ -61,13 +61,12 @@ PRO REFreductionEventcb_InstrumentSelected, Event
 ; desktop resolution 
       MainBaseSize = [30,50,1276,901]
   endif else begin  
-     MainBaseSize = [30,50,1300,770]
+      MainBaseSize = [30,50,1300,770]
   endelse
   
   ;descativate instrument selection base and activate main base
   ISBaseID = widget_info(Event.top,find_by_uname='MAIN_BASE')
   widget_control, ISBaseId, map=0
-
 
 ; CHANGE CODE (RC WARD, 22 June 2010): Pass MainBaseSize from here to control resolution
   if (instrument_selected EQ 0) then begin
@@ -75,11 +74,16 @@ PRO REFreductionEventcb_InstrumentSelected, Event
   endif else begin
     BuildGui, 'REF_M', reduce_step_path, splicing_alternative, MainBaseSize, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   endelse
-  
-  
-  
+   
 END
+PRO Update_Reduce_Step_Path, Event, global
 
+  id = widget_info(Event.top,find_by_uname='reduce_step_path')
+  widget_control, id, get_value=path
+  (*global).ascii_path = path
+  (*global).working_path = path
+;  print, "test: path: ",path
+END
 ;------------------------------------------------------------------------------
 ;Preview of selected ascii file(s)
 PRO  preview_ascii_file, Event ;_eventcb
@@ -320,7 +324,7 @@ PRO tab_event, Event
       END ;end of step4 *******************************************************
 
 ;*** STEP 5 **********************************************************************      
-      4: BEGIN ;recap
+      4: BEGIN ;scaling_2d
         check_step5_gui, Event ;_step5
         LoadBaseStatus  = isBaseMapped(Event,'shifting_base_step5')
         ;ScaleBaseStatus = isBaseMapped(Event,'scaling_base_step5')
