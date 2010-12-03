@@ -98,5 +98,5 @@ make_gui_options, MAIN_TAB, sMainTabSize.size, TabTitles, global
 make_gui_log_book, MAIN_TAB, sMainTabSize.size, TabTitles
 
 ;Build PlotUtility
-make_gui_plot_utility, MAIN_TAB, sMainTabSize.size, TabTitles
+make_gui_plot_utility, MAIN_TAB, sMainTabSize.size, TabTitles, global
 END

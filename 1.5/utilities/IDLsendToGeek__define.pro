@@ -52,6 +52,19 @@ ENDCASE
 RETURN, 'NA'
 END
 
+;Procedure that will return all the global variables for this routine
+FUNCTION PlotUtility_getGlobalVariable, Event, var
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+CASE (var) OF
+    'PlotUtilityUname'    : RETURN, 'plot_utility_text'
+    'path'            : RETURN, (*global).ascii_path
+    ELSE:
+ENDCASE
+RETURN, 'NA'
+END
+
 ;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;Change the format from Thu Aug 23 16:15:23 2007
 ;to 2007y_08m_23d_16h_15mn_23s
@@ -123,6 +136,14 @@ END
 PRO IDLsendToGeek_addLogBookText, Event, text
 LogBookUname = IDLsendToGeek_getGlobalVariable(Event,'LogBookUname')
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME=LogBookUname)
+WIDGET_CONTROL, id, SET_VALUE=text, /APPEND
+END
+
+; change Code (RC Ward, 19 Nov 2010): Add this here to put text into PlotUtility base window
+;==============================================================================
+PRO PlotUtility_addLogBookText, Event, text
+PlotUtilityUname = PlotUtility_getGlobalVariable(Event,'PlotUtilityUname')
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=PlotUtilityUname)
 WIDGET_CONTROL, id, SET_VALUE=text, /APPEND
 END
 

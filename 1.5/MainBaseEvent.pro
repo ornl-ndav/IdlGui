@@ -48,6 +48,16 @@ PRO MAIN_BASE_event, Event
       FIND_BY_UNAME='instrument_selection_validate_button'): begin
       REFreductionEventcb_InstrumentSelected, Event
     end
+
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_step_path'): begin
+      REFreductionEventcb_InstrumentSelected, Event
+    end
+
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='update_reduce_step_path'): begin
+      Update_Reduce_Step_Path, Event, global
+    end
     
     WIDGET_INFO(wWidget, FIND_BY_UNAME='MAIN_BASE'): BEGIN
     END
@@ -2679,6 +2689,10 @@ PRO MAIN_BASE_event, Event
   
   ;path button
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_browse_button_i_vs_q'): BEGIN
+; change code (RC Ward, 30 Nov 2010): Add capability to alter the value of the button.
+    id = WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_browse_button_i_vs_q')
+;print, "test in Step5: working_path: " , (*global).working_path  
+    WIDGET_CONTROL, id, SET_VALUE=(*global).working_path
     step5_browse_path_button, Event ;_step5
   END
   
@@ -2724,11 +2738,7 @@ END
   ;----------------------------------------------------------------------------
   ;draw
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_draw'): BEGIN
-; TRY THIS - NOT SURE IT WILL WORK - APPARENTLY NOT NEEDED ===========================
-;    id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='step5_draw')
-;    WIDGET_CONTROL, id_draw, GET_VALUE=id_value
-;    WSET,id_value
-; ======================================
+
     DEVICE, CURSOR_STANDARD=31
 ; print, "at top of WIDGET INFO in MainBaseEvent - step5_draw"
 
@@ -3223,10 +3233,18 @@ END
   ;PLOT UTILITY - PLOT UTILITY - PLOT UTILITY - PLOT UTILITY - PLOT UTILITY
   ;----------------------------------------------------------------------------
   WIDGET_INFO(wWidget, FIND_BY_UNAME='launch_plotRvsQ'): BEGIN
+;    path = (*global).ascii_path
+;    message = '> Reflectivity vs Q plot for results in location: ' + path    
+;    PlotUtility_addLogBookText, Event,  message 
+
     ref_off_spec_plot_rvsq, Event
     ;, Event ; launch the plot utility which plots R vs Q or R vs lambda perp
   END  
   WIDGET_INFO(wWidget, FIND_BY_UNAME='launch_plotScaled2D'): BEGIN
+;    path = (*global).ascii_path
+;    message = '> Scaled 2D plot for results in location: ' + path    
+;    PlotUtility_addLogBookText, Event,  message 
+
     ref_off_spec_plot_scaled2d, Event
     ;, Event ; launch the plot utility which plots Scale 2D results
   END 

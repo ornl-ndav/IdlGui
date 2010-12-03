@@ -725,15 +725,16 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     message = '> Instrument: ' + instrument
     IDLsendToGeek_addLogBookText_fromMainBase, MAIN_BASE, 'log_book_text', $
        message
-    PlotUtility_putText_fromMainBase, MAIN_BASE, 'plot_utility_text', message 
-    message = '> Reduce step path: ' + reduce_step_path
     PlotUtility_putText_fromMainBase, MAIN_BASE, 'plot_utility_text', message
     message = '  '
     PlotUtility_putText_fromMainBase, MAIN_BASE, 'plot_utility_text', message
-    message = '  '
+    message = '   Select buttons below to plot Reflectivity vs Q or Scaled 2D results, each in separate window.'
     PlotUtility_putText_fromMainBase, MAIN_BASE, 'plot_utility_text', message
-    message = '   Select buttons below to plot Resistivity vs Q or Scaled 2D results, each in separate window.'
+    message = '  '
     PlotUtility_putText_fromMainBase, MAIN_BASE, 'plot_utility_text', message  
+    message = '   Or modify the reduce step path to evalute different results.'
+    message = '  '  
+    PlotUtility_putText_fromMainBase, MAIN_BASE, 'plot_utility_text', message
   ;=============================================================================
   ;send message to log current run of application
   logger, APPLICATION=application, VERSION=version, UCAMS=ucams

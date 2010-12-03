@@ -90,7 +90,6 @@ PRO display_step4_step2_step1_selection, Event
             YTITLE = ytitle,$
             COLOR  = color,$
                 BACKGROUND = FSC_COLOR(PlotBackground),$
-;            BACKGROUND = convert_rgb(PlotBackground),$
             ;YRANGE = [(*global).ymin_log_mode,ymax_value],$
             YRANGE = [ymin_value, ymax_value], $
           XSTYLE = 1,$

@@ -122,8 +122,8 @@ new_path = WIDGET_TEXT(MAIN_BASE,$
                     xoffset=InstrumentSelectioncwbgroupSize[0],$
                     yoffset=InstrumentSelectioncwbgroupSize[1]+210,$
                     SCR_XSIZE = 220,$
-                    UNAME     = 'reduce_step_path',$
-                    VALUE     = path,$
+                    UNAME = 'reduce_step_path',$
+                    VALUE = path,$
                     /EDITABLE,$
                     /ALIGN_LEFT)
 

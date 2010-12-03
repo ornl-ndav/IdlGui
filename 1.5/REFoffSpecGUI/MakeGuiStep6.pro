@@ -663,8 +663,8 @@ PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
     UNAME     = sCreateOutput.uname,$
     SENSITIVE = sCreateOutput.sensitive,$
     VALUE     = sCreateOutput.value)
-    
-  ;------------------------------------------------------------------------------
+
+;------------------------------------------------------------------------------
   ;Status of process (label and text_field)
   wStatusLabel = WIDGET_LABEL(BaseTab,$
     XOFFSET = sStatusLabel.size[0],$

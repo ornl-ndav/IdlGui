@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 
-pro ref_off_spec_plot_scaled2d, Event
+pro ref_off_spec_plot_scaled2dB, Event
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
@@ -58,10 +58,6 @@ unit = 1
   filter='*Scaled2D.txt'
   title='Select Output Directory'
   datafile = PICKFILE(PATH=path,FILTER=filter,TITLE=title)
-
-;    path = (*global).ascii_path
-    message = '> Scaled 2D plot for results: ' + datafile    
-    PlotUtility_addLogBookText, Event,  message 
 
 IF (datafile NE  "") THEN BEGIN
 ; IF datafile EXISTS THEN PROCEED TO MAKE PLOT 

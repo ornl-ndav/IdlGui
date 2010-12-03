@@ -389,7 +389,7 @@ sYMaxBaseField = { size: [sXMaxBaseField.size[0]+XYoff[0],$
     sInsideFrame.size[1]+XYoff[1]],$
     value: 'Select working directory for output: Reflectivity vs Q or Lambda Perpendicular'}
 ;    value: 'Selection: I vs Q'}
-    
+;print, "test in Step5: working_path: " , (*global).working_path  
   XYoff = [5,8] ;folder button
   sFolderButton = { size: [XYoff[0],$
     XYoff[1],$

@@ -201,8 +201,6 @@ PRO display_step4_step1_plot2d, Event
         YTITLE = ytitle,$
         COLOR  = color,$
 ; Code change RCW (Feb 8, 2010): Get Background color from XML file
-;        BACKGROUND = convert_rgb([255,255,255]),$
-;        BACKGROUND = convert_rgb(PlotBackground),$
         BACKGROUND = FSC_COLOR(PlotBackground),$
         YRANGE = [ymin_value,ymax_value],$
         PSYM   = psym,$
