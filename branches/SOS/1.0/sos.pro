@@ -107,6 +107,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     new_log_book_message: ptr_new(0L), $
     full_log_book: ptr_new(0L), $
     
+    ;RTOF section
     ;flag that shows if a rtof nexus geometry file exists or not
     rtof_nexus_geometry_exist: 0b, $
     rtof_data: ptr_new(0L), $

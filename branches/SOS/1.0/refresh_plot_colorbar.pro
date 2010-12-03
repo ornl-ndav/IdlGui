@@ -64,8 +64,8 @@ pro plot_colorbar, event=event, base=base, zmin, zmax, type=type
   default_loadct = (*global_plot).default_loadct
   loadct, default_loadct, /silent
   
-  default_scale_setting = (*global_plot).default_scale_settings
-  if (default_scale_setting eq 0) then begin ;linear
+  default_scale_settings = (*global_plot).default_scale_settings
+  if (default_scale_settings eq 0) then begin ;linear
   
     divisions = 20
     perso_format = '(e8.1)'
@@ -138,8 +138,8 @@ pro refresh_plot_colorbar, event
   default_loadct = (*global_plot).default_loadct
   loadct, default_loadct, /silent
   
-  default_scale_setting = (*global_plot).default_scale_settings
-  if (default_scale_setting eq 0) then begin ;linear
+  default_scale_settings = (*global_plot).default_scale_settings
+  if (default_scale_settings eq 0) then begin ;linear
   
     divisions = 20
     perso_format = '(e8.1)'

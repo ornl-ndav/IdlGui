@@ -245,8 +245,6 @@ pro go_rtof_reduction, event
       qxwidth = qxwidth, $
       tnum = tnum)
     
-    help, QxQz_array
-    
     offset = 50
     final_plot, event=event, $
     offset = offset, $

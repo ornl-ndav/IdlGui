@@ -34,6 +34,51 @@
 
 ;+
 ; :Description:
+;    This routines is going use the rtof file loaded and display it
+;    (just like it's done in REFscaleOFF) with Pixel vs tof
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro rtof_file_plot_button_eventcb, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  file_name = getvalue(event=event, uname='rtof_file_text_field_uname')
+  file_name = strtrim(file_name,2)
+  file_name = file_name[0]
+  
+  ;load rtfo file to get data
+  iClass = obj_new('IDL3columnsASCIIparser', file_name)
+  pData = iClass->getDataQuickly()
+  first_pixel = iClass->getStartPixel()
+  obj_destroy, iClass
+  
+  data_pixel_0 = (*pData[0])
+  xaxis = reform(data_pixel_0[0,*])
+  
+  nbr_pixels = size(pData,/dim)
+    nbr_channels = (size(*pData[0],/dim))[1]
+  _pData_y = fltarr(nbr_pixels, nbr_channels)
+  for j=0, (nbr_pixels[0]-1) do begin
+    _pData_y[j,*] = (*pData[j])[1,*]
+  endfor
+  
+  px_vs_tof_plots_base, main_base_uname='main_base', $
+    event=event, $
+    file_name = file_name, $
+    offset = 100,$
+    start_pixel = fix(first_pixel), $
+    Data_x = float(xaxis), $
+    Data_y = float(_pData_y)
+    
+  end
+  
+;+
+; :Description:
 ;    Load the various parameters required from the rtof NeXus geometry
 ;    file such as distance sample to detector.....etc
 ;
@@ -47,23 +92,23 @@ function load_geometry_parameters, event
   
   widget_control, event.top, get_uvalue=global
   
-  ;read rtof file
-  rtof_ascii_file = getValue(event=event,$
-    uname='rtof_file_text_field_uname')
-  rtof_ascii_file = rtof_ascii_file[0]
-  iData = obj_new('IDL3columnsASCIIparser', rtof_ascii_file)
-  data = iData->getDataQuickly()
-  first_pixel = iData->getStartPixel()
-  obj_destroy, iData
-  nbr_pixels = size(data,/dim)
-  (*(*global).rtof_data) = data
+  ;  ;read rtof file
+  ;  rtof_ascii_file = getValue(event=event,$
+  ;    uname='rtof_file_text_field_uname')
+  ;  rtof_ascii_file = rtof_ascii_file[0]
+  ;  iData = obj_new('IDL3columnsASCIIparser', rtof_ascii_file)
+  ;  data = iData->getDataQuickly()
+  ;  first_pixel = iData->getStartPixel()
+  ;  obj_destroy, iData
+  ;  nbr_pixels = size(data,/dim)
+  ;  (*(*global).rtof_data) = data
+  ;
+  ;  putValue, event=event, 'rtof_pixel_min', $
+  ;    strcompress(first_pixel,/remove_all)
+  ;  last_pixel = first_pixel + nbr_pixels - 1
+  ;  putValue, event=event, 'rtof_pixel_max', $
+  ;    strcompress(last_pixel[0], /remove_all)
   
-  putValue, event=event, 'rtof_pixel_min', $
-    strcompress(first_pixel,/remove_all)
-  last_pixel = first_pixel + nbr_pixels - 1
-  putValue, event=event, 'rtof_pixel_max', $
-    strcompress(last_pixel[0], /remove_all)
-    
   geometry_nexus_file = getValue(event=event, uname='rtof_nexus_geometry_file')
   geometry_nexus_file = strtrim(geometry_nexus_file,2)
   geometry_nexus_file = geometry_nexus_file[0]
@@ -71,7 +116,7 @@ function load_geometry_parameters, event
     MapBase, event=event, status=0, uname='rtof_configuration_base'
     return, 0
   endif
-
+  
   ;retrieve distance and angles
   iNexus = obj_new('IDLnexusUtilities', geometry_nexus_file)
   d_SD = iNexus->get_d_SD()
@@ -89,24 +134,24 @@ function load_geometry_parameters, event
   d_MS_mm = abs(convert_distance(distance = d_MS.value,$
     from_unit = d_MS.units, $
     to_unit = 'mm'))
-  d_MD_mm = d_MS_mm + d_SD_mm  
+  d_MD_mm = d_MS_mm + d_SD_mm
   putValue, base=main_base, event=event, 'rtof_d_sd_uname', d_SD_mm
   putValue, base=main_base, event=event, 'rtof_d_md_uname', d_MD_mm
   
   theta_value = _theta.value
   theta_units = _theta.units
   putValue, base=main_base, event=event, 'rtof_theta_value', $
-  strcompress(theta_value,/remove_all)
-putValue, base=main_base, event=event, 'rtof_theta_units', $
-  strcompress(theta_units,/remove_all)
-
-   twotheta_value = _twotheta.value
+    strcompress(theta_value,/remove_all)
+  putValue, base=main_base, event=event, 'rtof_theta_units', $
+    strcompress(theta_units,/remove_all)
+    
+  twotheta_value = _twotheta.value
   twotheta_units = _twotheta.units
   putValue, base=main_base, event=event, 'rtof_twotheta_value', $
-  strcompress(twotheta_value,/remove_all)
-putValue, base=main_base, event=event, 'rtof_twotheta_units', $
-  strcompress(twotheta_units,/remove_all)
-  
+    strcompress(twotheta_value,/remove_all)
+  putValue, base=main_base, event=event, 'rtof_twotheta_units', $
+    strcompress(twotheta_units,/remove_all)
+    
   MapBase, event=event, status=1, uname='rtof_configuration_base'
   
   message = ['> Loading rtof geometry file: ']
@@ -116,8 +161,8 @@ putValue, base=main_base, event=event, 'rtof_twotheta_units', $
   message4 = ['  - pixel_min: ' + strcompress(first_pixel,/remove_all)]
   message5 = ['  - pixel_max: ' + strcompress(last_pixel,/remove_all)]
   log_book_update, event, message=[message, message1, message2, message3, $
-  message4, message5]
-  
+    message4, message5]
+    
   return, 1
   
 end
@@ -192,10 +237,12 @@ pro check_rtof_buttons_status, event
   file_name = file_name[0]
   if (file_test(file_name) ne 1) then begin
     activate_button, event=event, uname='rtof_file_preview_button', status=0
+    activate_button, event=event, uname='rtof_file_plot_button', status=0
     activate_button, event=event, uname='load_rtof_file_button', status=0
     mapBase, event=event, uname='rtof_nexus_base', status=0
   endif else begin
     activate_button, event=event, uname='rtof_file_preview_button', status=1
+    activate_button, event=event, uname='rtof_file_plot_button', status=1
     activate_button, event=event, uname='load_rtof_file_button', status=1
     mapBase, event=event, uname='rtof_nexus_base', status=1
   endelse
