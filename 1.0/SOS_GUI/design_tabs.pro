@@ -333,11 +333,16 @@ pro design_tabs, MAIN_BASE, global
       uname = 'load_rtof_file_button',$
       sensitive = 0)
     preview = widget_button(row1, $
-      value = 'Preview...', $
+      value = 'Preview', $
       uname = 'rtof_file_preview_button',$
       event_pro = 'rtof_file_preview_button_eventcb', $
-      sensitive = 0, $
-      scr_xsize = 80)
+      sensitive = 0)
+;      scr_xsize = 80)
+      plot = widget_button(row1,$
+      value = 'Plot',$ 
+      uname = 'rtof_file_plot_button',$
+      event_pro = 'rtof_file_plot_button_eventcb',$
+      sensitive = 0)
       
     ;SPACE - Parametrs coming from loaded file
     space = widget_label(_base1,$

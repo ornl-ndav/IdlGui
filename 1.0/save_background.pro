@@ -48,15 +48,17 @@
 ;
 ; :Author: j35
 ;-
-pro save_background,  event=event, main_base=main_base
+pro save_background,  event=event, main_base=main_base, uname=uname
 compile_opt idl2
 
+  if (~keyword_set(uname)) then uname = 'draw'
+
   IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
-    id = WIDGET_INFO(main_base, FIND_BY_UNAME='draw')
+    id = WIDGET_INFO(main_base, FIND_BY_UNAME=uname)
     widget_control, main_base, get_uvalue=global_plot
   ENDIF ELSE BEGIN
     WIDGET_CONTROL, event.top, GET_UVALUE=global_plot
-    id = WIDGET_INFO(Event.top,find_by_uname='draw')
+    id = WIDGET_INFO(Event.top,find_by_uname=uname)
   ENDELSE
   
   WIDGET_CONTROL, id, GET_VALUE=id_value

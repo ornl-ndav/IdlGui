@@ -79,6 +79,13 @@ cd, CurrentFolder
 .run output_info_base.pro
 .run normalization_selection_base.pro
 
+;plot of rtof file
+.run px_vs_tof_plots_base.pro
+.run px_vs_tof_plots_base_eventcb.pro
+.run rtof_plot_colorbar.pro
+.run rtof_menu_eventcb.pro
+.run rtof_cursor_info_base.pro
+
 .run rtof_tab.pro
 .run rtof_file_tab.pro
 .run go_rtof_reduction_eventcb.pro

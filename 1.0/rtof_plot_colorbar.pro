@@ -47,7 +47,7 @@
 ;
 ; :Author: j35
 ;-
-pro plot_colorbar, event=event, base=base, zmin, zmax, type=type
+pro rtof_plot_colorbar, event=event, base=base, zmin, zmax, type=type
   compile_opt idl2
   
   if (n_elements(event) ne 0) then begin
@@ -121,7 +121,7 @@ end
 ;
 ; :Author: j35
 ;-
-pro refresh_plot_colorbar, event
+pro rtof_refresh_plot_colorbar, event
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global_plot

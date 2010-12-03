@@ -95,7 +95,15 @@ function load_rtof_file, event, file_name
   
   pData = iClass->getDataQuickly()
   all_tags = iClass->getAllTag()
+  first_pixel = iClass->getStartPixel()
   obj_destroy, iClass
+  nbr_pixels = size(data,/dim)
+  
+  putValue, event=event, 'rtof_pixel_min', $
+    strcompress(first_pixel,/remove_all)
+  last_pixel = first_pixel + nbr_pixels - 1
+  putValue, event=event, 'rtof_pixel_max', $
+    strcompress(last_pixel[0], /remove_all)
   
   first_data_nexus = get_first_data_nexus(all_tags)
   first_data_nexus = strtrim(first_data_nexus,2)
@@ -113,6 +121,8 @@ function load_rtof_file, event, file_name
   xaxis = reform(data_pixel_0[0,*])
   _pData_y = fltarr(nbr_pixels, nbr_points)
   _pData_y_error = fltarr(nbr_pixels, nbr_points)
+  
+  ;rtof_data = {data: pData, first_pixel
   
   ;loop over all pixels and retrieve y and sigma_y values
   for j=0, (nbr_pixels[0]-1) do begin
@@ -132,10 +142,10 @@ function load_rtof_file, event, file_name
   s_tof_max_ms = strcompress(string(format='(f10.2)',tof_max_ms),/remove_all)
   
   putValue, event=event, 'rtof_tof_min', $
-  strcompress(s_tof_min_ms,/remove_all)
+    strcompress(s_tof_min_ms,/remove_all)
   putValue, event=event, 'rtof_tof_max', $
-  strcompress(s_tof_max_ms,/remove_all)
-  
+    strcompress(s_tof_max_ms,/remove_all)
+    
   return, 1b
   
 END

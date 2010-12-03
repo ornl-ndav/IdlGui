@@ -41,7 +41,7 @@
 ;
 ; :Author: j35
 ;-
-pro final_plot_event, Event
+pro px_vs_tof_plots_base_event, Event
   compile_opt idl2
   
   ;get global structure
@@ -50,20 +50,20 @@ pro final_plot_event, Event
   
   case Event.id of
   
-    widget_info(event.top, find_by_unam='plot_setting_untouched'): begin
-      switch_local_settings_plot_values, event
-      refresh_plot, event, recalculate=1
+    widget_info(event.top, find_by_unam='rtof_plot_setting_untouched'): begin
+      rtof_switch_local_settings_plot_values, event
+      rtof_refresh_plot, event, recalculate=1
       return
     end
-    widget_info(event.top, find_by_unam='plot_setting_interpolated'): begin
-      switch_local_settings_plot_values, event
-      refresh_plot, event, recalculate=1
+    widget_info(event.top, find_by_unam='rtof_plot_setting_interpolated'): begin
+      rtof_switch_local_settings_plot_values, event
+      rtof_refresh_plot, event, recalculate=1
       return
     end
     
-    widget_info(event.top, find_by_uname='final_plot_base'): begin
+    widget_info(event.top, find_by_uname='px_vs_tof_widget_base'): begin
     
-      id = widget_info(event.top, find_by_uname='final_plot_base')
+      id = widget_info(event.top, find_by_uname='px_vs_tof_widget_base')
       ;widget_control, id, /realize
       geometry = widget_info(id,/geometry)
       new_xsize = geometry.scr_xsize
@@ -78,7 +78,7 @@ pro final_plot_event, Event
       border = (*global_plot).border
       colorbar_xsize = (*global_plot).colorbar_xsize
       
-      id = widget_info(event.top, find_by_uname='draw')
+      id = widget_info(event.top, find_by_uname='draw_rtof')
       widget_control, id, draw_xsize = new_xsize-2*border-colorbar_xsize
       widget_control, id, draw_ysize = new_ysize-2*border
       
@@ -91,14 +91,9 @@ pro final_plot_event, Event
       widget_control, id, draw_ysize = new_ysize
       widget_control, id, draw_xsize = colorbar_xsize
       
-      ;global info
-      id = widget_info(event.top, find_by_uname='global_info_uname')
-      widget_control, id, xoffset = new_xsize-colorbar_xsize-border-25
-      display_global_infos_button, event=event
-      
-      plot_beam_center_scale, event=event
-      refresh_plot, event, recalculate=1
-      refresh_plot_colorbar, event
+      rtof_plot_beam_center_scale, event=event
+      rtof_refresh_plot, event, recalculate=1
+      rtof_refresh_plot_colorbar, event
       
       return
     end
@@ -107,7 +102,7 @@ pro final_plot_event, Event
       find_by_uname='settings_base_close_button'): begin
       
       ;this will allow the settings tab to come back in the same state
-      ;save_status_of_settings_button, event
+      save_status_of_settings_button, event
       
       id = widget_info(Event.top, $
         find_by_uname='settings_widget_base')
@@ -132,7 +127,7 @@ end
 ;
 ; :Author: j35
 ;-
-pro lin_log_data, event=event, base=base
+pro rtof_lin_log_data, event=event, base=base
   compile_opt idl2
   
   ;get global structure
@@ -143,7 +138,7 @@ pro lin_log_data, event=event, base=base
   endelse
   
   Data = (*(*global_plot).data_linear)
-  scale_setting = (*global_plot).default_scale_setting ;0 for lin, 1 for log
+  scale_setting = (*global_plot).default_scale_settings ;0 for lin, 1 for log
   
   if (scale_setting eq 1) then begin ;log
   
@@ -171,16 +166,17 @@ end
 ;
 ; :Author: j35
 ;-
-pro refresh_plot, event, recalculate=recalculate
+pro rtof_refresh_plot, event, recalculate=recalculate
   compile_opt idl2
   
   ;get global structure
   widget_control,event.top,get_uvalue=global_plot
   
-  if (n_elements(recalculate) eq 0) then begin
-    id = widget_info(event.top, find_by_uname='draw')
+    id = widget_info(event.top, find_by_uname='draw_rtof')
     widget_control, id, GET_VALUE = plot_id
     wset, plot_id
+
+  if (n_elements(recalculate) eq 0) then begin
     TV, (*(*global_plot).background), true=3
     return
   endif
@@ -188,33 +184,29 @@ pro refresh_plot, event, recalculate=recalculate
   Data = (*(*global_plot).data)
   new_xsize = (*global_plot).xsize
   new_ysize = (*global_plot).ysize
-  ;  border = (*global_plot).border
-  ;  colorbar_xsize = (*global_plot).colorbar_xsize
+  border = (*global_plot).border
+  colorbar_xsize = (*global_plot).colorbar_xsize
   
-  id = WIDGET_INFO(event.top, FIND_BY_UNAME='draw')
   draw_geometry = WIDGET_INFO(id,/GEOMETRY)
   xsize = draw_geometry.xsize
   ysize = draw_geometry.ysize
   
-  ;  if ((*global_plot).plot_setting eq 'untouched') then begin
-  cData = congrid(Data, xsize, ysize)
-  ;  endif else begin
-  ;    cData = congrid(Data, ysize, xsize,/interp)
-  ;  endelse
-  (*global_plot).congrid_xcoeff = xsize
-  (*global_plot).congrid_ycoeff = ysize
+  if ((*global_plot).plot_setting eq 'untouched') then begin
+    cData = congrid(Data, ysize, xsize)
+  endif else begin
+    cData = congrid(Data, ysize, xsize,/interp)
+  ;    cData = congrid(Data, new_ysize-2*border, new_xsize-2*border-colorbar_xsize,/interp)
+  endelse
+  (*global_plot).congrid_xcoeff = ysize
+  (*global_plot).congrid_ycoeff = xsize
   
-  id = widget_info(event.top, find_by_uname='draw')
-  widget_control, id, GET_VALUE = plot_id
-  wset, plot_id
   erase
   
   loadct, (*global_plot).default_loadct, /silent
   
-  smooth_coefficient = (*global_plot).smooth_coefficient
-  tvscl, smooth(cData, smooth_coefficient)
+  tvscl, transpose(cData)
   
-  save_background, event=event
+  save_background, event=event, uname='draw_rtof'
   
 end
 
@@ -229,7 +221,7 @@ end
 ;
 ; :Author: j35
 ;-
-pro switch_local_settings_plot_values, event
+pro rtof_switch_local_settings_plot_values, event
   compile_opt idl2
   
   widget_control,event.top,get_uvalue=global_plot
@@ -237,7 +229,7 @@ pro switch_local_settings_plot_values, event
   plot_setting1 = (*global_plot).plot_setting1
   plot_setting2 = (*global_plot).plot_setting2
   
-  set1_value = getValue(event=event, uname='plot_setting_untouched')
+  set1_value = getValue(event=event, uname='rtof_plot_setting_untouched')
   
   if (set1_value eq ('   ' + plot_setting1)) then begin ;setting1 needs to be checked
     set1_value = '*  ' + plot_setting1
@@ -249,8 +241,8 @@ pro switch_local_settings_plot_values, event
     (*global_plot).plot_setting = 'interpolated'
   endelse
   
-  putValue, event=event, 'plot_setting_untouched', set1_value
-  putValue, event=event, 'plot_setting_interpolated', set2_value
+  putValue, event=event, 'rtof_plot_setting_untouched', set1_value
+  putValue, event=event, 'rtof_plot_setting_interpolated', set2_value
   
 end
 
@@ -263,7 +255,7 @@ end
 ;
 ; :Author: j35
 ;-
-pro change_loadct, event
+pro rtof_change_loadct, event
   compile_opt idl2
   
   new_uname = widget_info(event.id, /uname)
@@ -292,8 +284,8 @@ pro change_loadct, event
   (*global_plot).default_loadct = fix(new_uname_array[1])
   
   ;replot
-  refresh_plot, event, recalculate=1
-  refresh_plot_colorbar, event
+  rtof_refresh_plot, event, recalculate=1
+  rtof_refresh_plot_colorbar, event
   
 end
 
@@ -306,7 +298,7 @@ end
 ;
 ; :Author: j35
 ;-
-pro final_plot_base_killed, global_plot
+pro rtof_px_vs_tof_widget_killed, global_plot
   compile_opt idl2
   
   main_event = (*global_plot).main_event
@@ -340,12 +332,12 @@ end
 ;
 ; :Author: j35
 ;-
-pro show_all_info, event
+pro rtof_show_all_info, event
   compile_opt idl2
   
-  show_cursor_info, event
-  show_counts_vs_xaxis, event
-  show_counts_vs_yaxis, event
+  rtof_show_cursor_info, event
+  rtof_show_counts_vs_xaxis, event
+  rtof_show_counts_vs_yaxis, event
   
 end
 
@@ -358,7 +350,7 @@ end
 ;
 ; :Author: j35
 ;-
-pro show_cursor_info, event
+pro rtof_show_cursor_info, event
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global_plot
@@ -366,8 +358,8 @@ pro show_cursor_info, event
   info_base = (*global_plot).cursor_info_base
   
   if (widget_info(info_base, /valid_id) EQ 0) THEN BEGIN
-    parent_base_uname = 'final_plot_base'
-    cursor_info_base, event=event, $
+    parent_base_uname = 'px_vs_tof_widget_base'
+    rtof_cursor_info_base, event=event, $
       parent_base_uname=parent_base_uname
   endif
   
@@ -382,16 +374,16 @@ end
 ;
 ; :Author: j35
 ;-
-pro show_counts_vs_xaxis, event
+pro rtof_show_counts_vs_xaxis, event
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global_plot
   
   counts_vs_xaxis_plot_id = (*global_plot).counts_vs_xaxis_base
-  if (widget_info(counts_vs_xaxis_plot_id,/valid_id) eq 0) then begin
-    counts_vs_axis_base, event=event, $
-      parent_base_uname = 'final_plot_base', $
-      xaxis = 'qx'
+  if (obj_valid(counts_vs_xaxis_plot_id) eq 0) then begin ;no plot yet
+    rtof_counts_vs_axis_base, event=event, $
+      parent_base_uname = 'px_vs_tof_widget_base', $
+      xaxis = 'tof'
   endif
   
 end
@@ -405,64 +397,17 @@ end
 ;
 ; :Author: j35
 ;-
-pro show_counts_vs_yaxis, event
+pro rtof_show_counts_vs_yaxis, event
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global_plot
   
   counts_vs_yaxis_plot_id = (*global_plot).counts_vs_yaxis_base
-  if (widget_info(counts_vs_yaxis_plot_id,/valid_id) eq 0) then begin
-    counts_vs_axis_base, event=event, $
-      parent_base_uname = 'final_plot_base', $
-      xaxis = 'qz'
+  if (obj_valid(counts_vs_yaxis_plot_id) eq 0) then begin ;no plot yet
+    rtof_counts_vs_axis_base, event=event, $
+      parent_base_uname = 'px_vs_tof_widget_base', $
+      xaxis = 'pixel'
   endif
-  
-end
-
-;+
-; :Description:
-;    This procedure is reached when any of the smooth button has been
-;    clicked. The main purpose of this procedure is to change the label
-;    of the newly clicked button to '> value <'
-;
-; :Params:
-;    event
-;
-; :Author: j35
-;-
-pro smooth_coefficient_eventcb, event
-  compile_opt idl2
-  
-  new_uname = widget_info(event.id, /uname)
-  widget_control,event.top,get_uvalue=global_plot
-  
-  ;get old smooth coefficient
-  old_smooth_coefficient = $
-    strcompress((*global_plot).smooth_coefficient,/remove_all)
-  old_uname = 'smooth_coefficient_' + old_smooth_coefficient
-  label = getValue(event=event, uname=old_uname)
-  
-  ;remove keep central part
-  raw_label1 = strsplit(label,'>',/regex,/extract)
-  raw_label2 = strsplit(raw_label1[0],'<',/regex,/extract)
-  raw_label = strcompress(raw_label2[0],/remove_all)
-  
-  ;put it back
-  putValue, event=event, old_uname, '  ' + raw_label
-  
-  ;change value of new smooth
-  new_label = getValue(event=event, uname=new_uname)
-  new_label = strcompress(new_label,/remove_all)
-  ;add selection string
-  new_label = '> ' + new_label + ' <'
-  putValue, event=event, new_uname, new_label
-  
-  ;save new smooth
-  new_uname_array = strsplit(new_uname,'_',/extract)
-  (*global_plot).smooth_coefficient = fix(new_uname_array[2])
-  
-  ;replot
-  refresh_plot, event, recalculate=1
   
 end
 
@@ -477,19 +422,17 @@ end
 ;
 ; :Author: j35
 ;-
-pro final_plot_gui, wBase, $
+pro px_vs_tof_plots_base_gui, wBase, $
     main_base_geometry, $
     global, $
+    file_name, $
     offset, $
     border, $
     colorbar_xsize, $
-    time_stamp = time_stamp, $
     plot_setting1 = plot_setting1,$
     plot_setting2 = plot_setting2, $
     current_plot_setting = current_plot_setting, $
-    scale_setting = scale_setting, $
-    default_plot_size = default_plot_size, $
-    smooth_coefficient = smooth_coefficient
+    scale_setting = scale_setting
     
   compile_opt idl2
   
@@ -498,8 +441,8 @@ pro final_plot_gui, wBase, $
   main_base_xsize = main_base_geometry.xsize
   main_base_ysize = main_base_geometry.ysize
   
-  xsize = default_plot_size[0]
-  ysize = default_plot_size[1]
+  xsize = 600
+  ysize = 600
   
   xoffset = (main_base_xsize - xsize) / 2
   xoffset += main_base_xoffset
@@ -511,9 +454,9 @@ pro final_plot_gui, wBase, $
   
   ourGroup = WIDGET_BASE()
   
-  title = 'Qx vs Qz [' + time_stamp + ']'
+  title = 'Pixel vs TOF of ' + file_name
   wBase = WIDGET_BASE(TITLE = title, $
-    UNAME        = 'final_plot_base', $
+    UNAME        = 'px_vs_tof_widget_base', $
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
     SCR_YSIZE    = ysize,$
@@ -526,60 +469,25 @@ pro final_plot_gui, wBase, $
     mbar = bar1,$
     GROUP_LEADER = ourGroup)
     
-  info_help = widget_draw(wBase,$
-    uname = 'global_info_uname', $
-    xoffset = xsize-border-25,$
-    yoffset = 0,$
-    scr_xsize = 60,$
-    scr_ysize = 20,$
-    event_pro = 'global_info_draw_eventcb',$
-    /tracking_events)
-    
-  draw = widget_draw(wbase,$
-    xoffset = border,$
-    yoffset = border,$
-    scr_xsize = xsize-2*border,$
-    scr_ysize = ysize-2*border,$
-    /button_events, $
-    /motion_events, $
-    /tracking_events, $
-    keyboard_events=2, $
-    retain=2, $
-    event_pro = 'draw_eventcb',$
-    uname = 'draw')
-    
-  scale = widget_draw(wBase,$
-    uname = 'scale',$
-    scr_xsize = xsize,$
-    scr_ysize = ysize,$
-    retain=2)
-    
-  colorbar =  widget_draw(wBase,$
-    uname = 'colorbar',$
-    xoffset = xsize,$
-    scr_xsize = colorbar_xsize,$
-    scr_ysize = ysize,$
-    retain=2)
-    
   mPlot = widget_button(bar1, $
     value = 'Type ',$
     /menu)
     
-  ;  if (current_plot_setting eq 'untouched') then begin
-  ;    set2_value = '*  ' + plot_setting1
-  ;    set1_value = '   ' + plot_setting2
-  ;  endif else begin
-  ;    set2_value = '   ' + plot_setting1
-  ;    set1_value = '*  ' + plot_setting2
-  ;  endelse
-  ;
-  ;  set2 = widget_button(mPlot, $
-  ;    value = set2_value,$
-  ;    uname = 'plot_setting_untouched')
-  ;
-  ;  set1 = widget_button(mPlot, $
-  ;    value = set1_value,$
-  ;    uname = 'plot_setting_interpolated')
+  if (current_plot_setting eq 'untouched') then begin
+    set2_value = '*  ' + plot_setting1
+    set1_value = '   ' + plot_setting2
+  endif else begin
+    set2_value = '   ' + plot_setting1
+    set1_value = '*  ' + plot_setting2
+  endelse
+  
+  set2 = widget_button(mPlot, $
+    value = set2_value,$
+    uname = 'rtof_plot_setting_untouched')
+    
+  set1 = widget_button(mPlot, $
+    value = set1_value,$
+    uname = 'rtof_plot_setting_interpolated')
     
   list_loadct = ['B-W Linear',$
     'Blue/White',$
@@ -625,7 +533,7 @@ pro final_plot_gui, wBase, $
   set = widget_button(mPlot,$
     value = list_loadct[0],$
     uname = 'loadct_0',$
-    event_pro = 'change_loadct',$
+    event_pro = 'rtof_change_loadct',$
     /separator)
     
   sz = n_elements(list_loadct)
@@ -633,7 +541,7 @@ pro final_plot_gui, wBase, $
     set = widget_button(mPlot,$
       value = list_loadct[i],$
       uname = 'loadct_' + strcompress(i,/remove_all),$
-      event_pro = 'change_loadct')
+      event_pro = 'rtof_change_loadct')
   endfor
   
   if (scale_setting eq 0) then begin
@@ -650,130 +558,66 @@ pro final_plot_gui, wBase, $
     
   set1 = widget_button(mPlot, $
     value = set1_value, $
-    event_pro = 'local_switch_axes_type',$
+    event_pro = 'rtof_local_switch_axes_type',$
     uname = 'local_scale_setting_linear')
     
   set2 = widget_button(mPlot, $
     value = set2_value,$
-    event_pro = 'local_switch_axes_type',$
+    event_pro = 'rtof_local_switch_axes_type',$
     uname = 'local_scale_setting_log')
     
-  ;smooth
-  smooth = widget_button(bar1,$
-    value = 'Smooth',$
-    /menu)
-    
-  for i=1,10 do begin
-  
-    if (i eq 1) then begin
-      _value = 'None'
-    endif else begin
-      _value = strcompress(i,/remove_all)
-    endelse
-    
-    if (i eq smooth_coefficient) then begin
-      value = '> ' + _value + ' <'
-    endif else begin
-      value = '  ' + _value + '  '
-    endelse
-    coeff = widget_button(smooth, $
-      value = value, $
-      event_pro = 'smooth_coefficient_eventcb', $
-      uname = 'smooth_coefficient_' + strcompress(i,/remove_all))
-  endfor
-  
   info = widget_button(bar1, $
-    value = 'Live infos',$
+    value = 'Infos',$
     /menu)
     
   set = widget_button(info, $
-    value = 'Show all live infos',$
-    event_pro = 'show_all_info',$
+    value = 'Show all',$
+    event_pro = 'rtof_show_all_info',$
     uname = 'show_all_info_uname')
     
   set1 = widget_button(info, $
     /separator,$
-    value = 'Show Cursor Informations',$
-    event_pro = 'show_cursor_info',$
+    value = 'Show Cursor Infos',$
+    event_pro = 'rtof_show_cursor_info',$
     uname = 'show_or_hide_cursor_info_uname')
     
   set2 = widget_button(info, $
     value = 'Show Counts vs xaxis at cursor y position',$
-    event_pro = 'show_counts_vs_xaxis',$
+    event_pro = 'rtof_show_counts_vs_xaxis',$
     uname = 'show_counts_vs_xaxis_uname')
     
   set3 = widget_button(info, $
     value = 'Show Counts vs yaxis at cursor x position',$
-    event_pro = 'show_counts_vs_yaxis',$
+    event_pro = 'rtof_show_counts_vs_yaxis',$
     uname = 'show_counts_vs_yaxis_uname')
     
-;    set4 = widget_button(info,$
-;    value = 'General informations',$
-;    event_pro = 'general_infos',$
-;    /separator)
+  ;-------- end of menu
     
-;-------- end of menu
+  draw = widget_draw(wbase,$
+    xoffset = border,$
+    yoffset = border,$
+    scr_xsize = xsize-2*border,$
+    scr_ysize = ysize-2*border,$
+    /button_events,$
+    /motion_events,$
+    /tracking_events,$
+    retain=2, $
+    event_pro = 'draw_rtof_eventcb',$
+    uname = 'draw_rtof')
     
-end
-
-;+
-; :Description:
-;    This routine display the global info button
-;
-; :Keywords:
-;    event
-;    main_base
-;
-; :Author: j35
-;-
-pro display_global_infos_button, event=event, main_base=main_base
-  compile_opt idl2
-  
-  raw_buttons = read_png('SOS_images/global_infos.png')
-  if (keyword_set(main_base)) then begin
-    mode_id = WIDGET_INFO(main_base, $
-      FIND_BY_UNAME='global_info_uname')
-  endif else begin
-    mode_id = WIDGET_INFO(event.top, $
-      FIND_BY_UNAME='global_info_uname')
-  endelse
-  widget_control, mode_id, get_value=id
-  wset, id
-  tv, raw_buttons, 0, 0, /true
-  
-end
-
-;+
-; :Description:
-;    display the metadata
-;
-; :Params:
-;    event
-;
-; :Author: j35
-;-
-pro global_info_draw_eventcb, event
-  compile_opt idl2
-  
-  widget_control, event.top, get_uvalue=global_plot
-  global_infos_base = (*global_plot).global_infos_base
-  
-  if (event.enter) then begin ;entering the global info widget_draw
-  
-    if (widget_info(global_infos_base, /valid_id) EQ 0) THEN BEGIN
-      global_infos_base, event=event, $
-        parent_base_uname = 'final_plot_base', $
-        time_stamp = (*global_plot).time_stamp
-    endif
+  scale = widget_draw(wBase,$
+    uname = 'scale',$
+    scr_xsize = xsize,$
+    scr_ysize = ysize,$
+    retain=2)
     
-  endif else begin ;leaving the global info widget_draw
-  
-    if (widget_info(global_infos_base, /valid_id)) THEN BEGIN
-      widget_control, global_infos_base, /destroy
-    endif
+  colorbar =  widget_draw(wBase,$
+    uname = 'colorbar',$
+    xoffset = xsize,$
+    scr_xsize = colorbar_xsize,$
+    scr_ysize = ysize,$
+    retain=2)
     
-  endelse
-  
 end
 
 ;+
@@ -785,17 +629,17 @@ end
 ;
 ; :Author: j35
 ;-
-pro plot_beam_center_scale, base=base, event=event
+pro rtof_plot_beam_center_scale, base=base, event=event
   compile_opt idl2
   
   if (n_elements(base) ne 0) then begin
     id = widget_info(base,find_by_Uname='scale')
-    id_base = widget_info(base, find_by_uname='final_plot_base')
+    id_base = widget_info(base, find_by_uname='px_vs_tof_widget_base')
     sys_color = widget_info(base,/system_colors)
     widget_control, base, get_uvalue=global_plot
   endif else begin
     id = widget_info(event.top, find_by_uname='scale')
-    id_base = widget_info(event.top, find_by_uname='final_plot_base')
+    id_base = widget_info(event.top, find_by_uname='px_vs_tof_widget_base')
     sys_color = widget_info(event.top, /system_colors)
     widget_control, event.top, get_uvalue=global_plot
   endelse
@@ -807,21 +651,22 @@ pro plot_beam_center_scale, base=base, event=event
   device, decomposed=1
   sys_color_window_bk = sys_color.window_bk
   
-  x_range = (*global_plot).xrange
-  min_x = x_range[0]
-  max_x = x_range[1]
+  tof_axis = (*global_plot).tof_axis
   
-  y_range = (*global_plot).yrange
-  min_y = y_range[0]
-  max_y = y_range[1]
+  min_x = tof_axis[0]
+  max_x = tof_axis[1]
+  
+  ;minimum and maximum pixel
+  nbr_pixel = (*global_plot).nbr_pixel
+  min_y = (*global_plot).start_pixel
+  max_y = min_y + nbr_pixel
   
   ;determine the number of xaxis data to show
   geometry = widget_info(id_base,/geometry)
   xsize = geometry.scr_xsize
-  
-  ;  xticks = fix(xsize / 100)
-  ;  yticks = (max_y - min_y)
-  xticks = 8
+  ;ysize = geometry.scr_ysize
+  xticks = fix(xsize / 100)
+  yticks = (max_y - min_y)
   
   xmargin = 6.6
   ymargin = 4
@@ -849,8 +694,8 @@ pro plot_beam_center_scale, base=base, event=event
     XMINOR      = 2,$
     ;YMINOR      = 2,$
     YTICKS      = yticks,$
-    XTITLE      = 'Qx',$
-    YTITLE      = 'Qz',$
+    XTITLE      = 'TOF (!4l!Xs)',$
+    ;    YTITLE      = 'Pixels',$
     XMARGIN     = [xmargin, xmargin+0.2],$
     YMARGIN     = [ymargin, ymargin],$
     /NODATA
@@ -872,22 +717,17 @@ end
 ;
 ; :Author: j35
 ;-
-pro final_plot_cleanup, tlb
+pro rtof_px_vs_tof_plots_base_cleanup, tlb
   compile_opt idl2
   
   widget_control, tlb, get_uvalue=global_plot, /no_copy
   
-  final_plot_base_killed, global_plot
+  px_vs_tof_widget_killed, global_plot
   
   if (n_elements(global_plot) eq 0) then return
   
   ptr_free, (*global_plot).data
   ptr_free, (*global_plot).data_linear
-  ptr_free, (*global_plot).background
-  ptr_free, (*global_plot).counts_vs_qx_xaxis
-  ptr_free, (*global_plot).counts_vs_qx_data
-  ptr_free, (*global_plot).counts_vs_qz_xaxis
-  ptr_free, (*global_plot).counts_vs_qz_data
   
   ptr_free, global_plot
   
@@ -938,13 +778,13 @@ pro refresh_px_vs_tof_plots_base, wBase = wBase, $
   ;  Data = *pData_y[file_index, spin_state]
   (*(*global_plot).data_linear) = Data_y
   
-  lin_log_data, base=wBase
+  rtof_lin_log_data, base=wBase
   
   ;number of pixels
   (*global_plot).nbr_pixel = (size(data_y))[1] ;nbr of pixels to plot
   
   Data = (*(*global_plot).data)
-  id = WIDGET_INFO(wBase, FIND_BY_UNAME='draw')
+  id = WIDGET_INFO(wBase, FIND_BY_UNAME='draw_rtof')
   draw_geometry = WIDGET_INFO(id,/GEOMETRY)
   xsize = draw_geometry.xsize
   ysize = draw_geometry.ysize
@@ -958,7 +798,7 @@ pro refresh_px_vs_tof_plots_base, wBase = wBase, $
   border = (*global_plot).border
   colorbar_xsize = (*global_plot).colorbar_xsize
   
-  id = widget_info(wBase, find_by_uname='final_plot_base')
+  id = widget_info(wBase, find_by_uname='px_vs_tof_widget_base')
   geometry = widget_info(id,/geometry)
   _xsize = geometry.scr_xsize
   _ysize = geometry.scr_ysize
@@ -968,9 +808,9 @@ pro refresh_px_vs_tof_plots_base, wBase = wBase, $
   DEVICE, DECOMPOSED = 0
   loadct, default_loadct, /SILENT
   
-  plot_beam_center_scale, base=wBase
+  rtof_plot_beam_center_scale, base=wBase
   
-  id = widget_info(wBase,find_by_uname='draw')
+  id = widget_info(wBase,find_by_uname='draw_rtof')
   widget_control, id, GET_VALUE = plot_id
   wset, plot_id
   tvscl, transpose(cData)
@@ -981,7 +821,7 @@ pro refresh_px_vs_tof_plots_base, wBase = wBase, $
   zrange[0] = zmin
   zrange[1] = zmax
   (*global_plot).zrange = zrange
-  plot_colorbar, base=wBase, zmin, zmax, type=default_scale_settings
+  rtof_plot_colorbar, base=wBase, zmin, zmax, type=default_scale_settings
   
   ;change label of default loadct
   pre = '>  > >> '
@@ -991,7 +831,7 @@ pro refresh_px_vs_tof_plots_base, wBase = wBase, $
   new_value = pre + value + post
   setValue, base=wBase, uname, new_value
   
-  save_background,  main_base=wBase
+  save_background,  main_base=wBase, uname='draw_rtof'
   
 end
 
@@ -1006,23 +846,26 @@ end
 ;
 ; :Author: j35
 ;-
-pro final_plot, main_base=main_base, $
+pro px_vs_tof_plots_base, main_base=main_base, $
     event=event, $
+    file_name = file_name, $
     offset = offset, $
     default_loadct = default_loadct, $
-    default_scale_setting = default_scale_setting, $
+    default_scale_settings = default_scale_settings, $
     default_plot_size = default_plot_size, $
     current_plot_setting = current_plot_setting, $
-    x_axis = x_axis, $
-    y_axis = y_axis, $
-    data = data, $
-    main_base_uname = main_base_uname, $
-    smooth_coefficient = smooth_coefficient, $
-    time_stamp = time_stamp,$
-    metadata = metadata, $
-    output_folder = output_folder
+    Data_x = Data_x, $
+    Data_y = Data_y, $ ;Data_y
+    start_pixel = start_pixel, $
+    main_base_uname = main_base_uname
     
   compile_opt idl2
+  
+  if (n_elements(spin_state) eq 0) then spin_state = 0
+  if (~keyword_set(default_scale_settings)) then default_scale_settings=1
+  if (~keyword_set(default_plot_size)) then default_plot_size = [300,300]
+  if (~keyword_set(default_loadct)) then default_loadct=5
+  if (~keyword_set(current_plot_setting)) then current_plot_setting='untouched'
   
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME=main_base_uname)
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
@@ -1032,32 +875,31 @@ pro final_plot, main_base=main_base, $
   border = 40
   colorbar_xsize = 70
   
-  if (~keyword_set(default_plot_size)) then default_plot_size = [600,600]
-  if (~keyword_set(default_scale_setting)) then default_scale_setting = 1 ;log by default
-  if (~keyword_set(smooth_coefficient)) then smooth_coefficient = 1
-  if (~keyword_set(metadata)) then metadata = {empty:''}
+  plot_setting1 = 'Untouched plots'
+  plot_setting2 = 'Interpolated plots'
   
   ;build gui
   wBase = ''
-  final_plot_gui, wBase, $
+  px_vs_tof_plots_base_gui, wBase, $
     main_base_geometry, $
     global, $
+    file_name, $
     offset, $
     border, $
     colorbar_xsize, $
-    time_stamp = time_stamp,$
+    plot_setting1 = plot_setting1,$
+    plot_setting2 = plot_setting2, $
     current_plot_setting = current_plot_setting, $
-    scale_setting = default_scale_setting,$
-    default_plot_size = default_plot_size, $
-    smooth_coefficient = smooth_coefficient
+    scale_setting = default_scale_settings
   ;(*global).auto_scale_plot_base = wBase
-    
+  
   WIDGET_CONTROL, wBase, /REALIZE
   
   global_plot = PTR_NEW({ wbase: wbase,$
     global: global, $
     
     ;used to plot selection zoom
+    file_name: file_name, $
     default_plot_size: default_plot_size, $
     
     counts_vs_xaxis_yaxis_type: 0,$ ;0 for linear, 1 for log
@@ -1069,49 +911,22 @@ pro final_plot, main_base=main_base, $
     counts_vs_xaxis_plot_uname: '',$
     counts_vs_yaxis_plot_uname: '',$
     
-    global_infos_base: 0L, $ ;id of global infos base
-    metadata: metadata, $ ;structure of bins Qx, Qz....etc
-    
     data: ptr_new(0L), $
     data_linear: ptr_new(0L), $
-    x_axis: x_axis, $ ; [-0.004, -0.003, -0.002...]
-    y_axis: y_axis, $ ; [0.0, 0.1, 0.2, 0.3]
-    
-    ;pointers used to output the counts vs qx/qz ascii files
-    counts_vs_qx_xaxis: ptr_new(0L), $
-    counts_vs_qx_data: ptr_new(0L), $
-    counts_vs_qz_xaxis: ptr_new(0L), $
-    counts_vs_qz_data: ptr_new(0L), $
-    
-    shift_key_status: 0b, $ ;when range is selected to produce 2d plots
-    QxQzrange: fltarr(2), $ ; [Qx0, Qz0]
-    EventRangeSelection: intarr(2), $ ;[event.x, event.y] when using first shift left click
-    
-    counts_vs_qx_lin: 0, $ ;0 is plot is linear, 1 if it's log
-    counts_vs_qz_lin: 0, $
-    
-    output_folder: output_folder, $
-    
+    data_x: Data_x, $ ;[0,200,400,600...]
     xsize: default_plot_size[0],$
     ysize: default_plot_size[1],$
-    
+    start_pixel: start_pixel,$
     nbr_pixel: 0L,$
-    
     colorbar_xsize: colorbar_xsize,$
     default_loadct: default_loadct, $ ;prism by default
-    default_scale_setting: default_scale_setting, $ ;lin or log z-axis
-    smooth_coefficient: smooth_coefficient,$
-    
+    default_scale_settings: default_scale_settings, $ ;lin or log z-axis
     border: border, $ ;border of main plot (space reserved for scale)
-    
-    time_stamp: time_stamp,$
-    
-    Qx_axis: fltarr(2),$  ;[start, end]
-    delta_Qx: 0., $ ;Qx increment
-    
-    xrange: fltarr(2),$ ;[qx_left, qx_right]
+    tof_axis: fltarr(2),$  ;[start, end]
+    delta_tof: 0., $ ;tof increment
+    xrange: fltarr(2),$ ;[tof_min, tof_max]
     zrange: fltarr(2),$
-    yrange: fltarr(2),$ ;[qz_bottom qz_top]
+    yrange: intarr(2),$ ;[min_pixel,max_pixel]
     
     background: ptr_new(0L), $ ;background of main plot
     
@@ -1121,90 +936,78 @@ pro final_plot, main_base=main_base, $
     congrid_xcoeff: 0., $ ;x coeff used in the congrid function to plot main data
     congrid_ycoeff: 0., $ ;y coeff used in the congrid function to plot main data
     
-    ;plot_setting1: plot_setting1,$
-    ;plot_setting2: plot_setting2,$
-    ;plot_setting: current_plot_setting,$ ;untouched or interpolated
+    plot_setting1: plot_setting1,$
+    plot_setting2: plot_setting2,$
+    plot_setting: current_plot_setting,$ ;untouched or interpolated
     
     main_event: event})
     
-  (*(*global_plot).data) = data
-  (*(*global_plot).data_linear) = data
-  
-  xrange = [x_axis[0], x_axis[-1]]
-  (*global_plot).xrange = xrange
-  
-  yrange = [y_axis[0], y_axis[-1]]
-  (*global_plot).yrange = yrange
-  
   WIDGET_CONTROL, wBase, SET_UVALUE = global_plot
   
-  XMANAGER, "final_plot", wBase, GROUP_LEADER = ourGroup, /NO_BLOCK, $
-    cleanup = 'final_plot_cleanup'
+  XMANAGER, "px_vs_tof_plots_base", wBase, GROUP_LEADER = ourGroup, /NO_BLOCK, $
+    cleanup = 'px_vs_tof_plots_base_cleanup'
     
-  ;  ;retrieve scale
-  ;  ;  Data_x = *pData_x[file_index,spin_state]
-  ;  start_tof = Data_x[0]
-  ;  end_tof = Data_x[-1]
-  ;  delta_tof = Data_x[1]-Data_x[0]
-  ;  (*global_plot).delta_tof = delta_tof
-  ;  tof_axis = (*global_plot).tof_axis
-  ;  tof_axis[0] = start_tof
-  ;  tof_axis[1] = end_tof + delta_tof
-  ;  (*global_plot).tof_axis = tof_axis
-  ;
-  ;  ;retrieve the data to plot
-  ;  ;  Data = *pData_y[file_index, spin_state]
-  ;  (*(*global_plot).data_linear) = Data_y
-  ;
-  lin_log_data, base=wBase
-  ;
-  ;  ;number of pixels
-  ;  (*global_plot).nbr_pixel = (size(data_y))[1] ;nbr of pixels to plot
-  ;
+  ;retrieve scale
+  ;  Data_x = *pData_x[file_index,spin_state]
+  start_tof = Data_x[0]
+  end_tof = Data_x[-1]
+  delta_tof = Data_x[1]-Data_x[0]
+  (*global_plot).delta_tof = delta_tof
+  ;tof_axis = (*global_plot).tof_axis
+  ;tof_axis = data_x
+  ;tof_axis[0] = start_tof
+  ;tof_axis[1] = end_tof + delta_tof
+  ;(*global_plot).tof_axis = tof_axis
+  (*global_plot).tof_axis = [data_x[0],data_x[-2]]
+  (*global_plot).xrange = [data_x[0],data_x[-2]]
+ 
+  ;retrieve the data to plot
+  ;  Data = *pData_y[file_index, spin_state]
+  (*(*global_plot).data_linear) = Data_y
+  
+  rtof_lin_log_data, base=wBase
+  
+  ;number of pixels
+  (*global_plot).nbr_pixel = (size(data_y))[1] ;nbr of pixels to plot
+  
   Data = (*(*global_plot).data)
-  id = WIDGET_INFO(wBase, FIND_BY_UNAME='draw')
+  id = WIDGET_INFO(wBase, FIND_BY_UNAME='draw_rtof')
   draw_geometry = WIDGET_INFO(id,/GEOMETRY)
   xsize = draw_geometry.xsize
   ysize = draw_geometry.ysize
-  ;  if ((*global_plot).plot_setting eq 'untouched') then begin
-  cData = congrid(Data, xsize, ysize)
-  ;  endif else begin
-  ;    cData = congrid(Data, ysize, xsize,/interp)
-  ;  endelse
+  if ((*global_plot).plot_setting eq 'untouched') then begin
+    ;cData = congrid(Data, default_plot_size[0]-2*border, default_plot_size[1]-2*border-colorbar_xsize)
+    cData = congrid(Data, ysize, xsize)
+  endif else begin
+    cData = congrid(Data, ysize, xsize,/interp)
+  endelse
   
-  id = widget_info(wBase, find_by_uname='final_plot_base')
+  id = widget_info(wBase, find_by_uname='px_vs_tof_widget_base')
   geometry = widget_info(id,/geometry)
   _xsize = geometry.scr_xsize
   _ysize = geometry.scr_ysize
+  (*global_plot).congrid_xcoeff = _ysize-2*border
+  (*global_plot).congrid_ycoeff = _xsize-2*border-colorbar_xsize
   
-  ;  (*global_plot).congrid_xcoeff = _xsize-2*border-colorbar_xsize
-  ;  (*global_plot).congrid_ycoeff = _ysize-2*border
+  DEVICE, DECOMPOSED = 0
+  loadct, default_loadct, /SILENT
   
-  (*global_plot).congrid_xcoeff = xsize
-  (*global_plot).congrid_ycoeff = ysize
+  rtof_plot_beam_center_scale, base=wBase
   
-  ;  DEVICE, DECOMPOSED = 0
-  ;  loadct, default_loadct, /SILENT
-  ;
-  plot_beam_center_scale, base=wBase
-  
-  id = widget_info(wBase,find_by_uname='draw')
+  id = widget_info(wBase,find_by_uname='draw_rtof')
   widget_control, id, GET_VALUE = plot_id
   wset, plot_id
-  ;tvscl, transpose(cData)
-  tvscl, smooth(cData,smooth_coefficient)
+  tvscl, transpose(cData)
   
-  ;Scale
   zmin = 0
-  zmax = max((*(*global_plot).data_linear))
+  zmax = max(Data)
   zrange = (*global_plot).zrange
   zrange[0] = zmin
   zrange[1] = zmax
-  
   (*global_plot).zrange = zrange
+  rtof_plot_colorbar, base=wBase, zmin, zmax, type=default_scale_settings
   
-  plot_colorbar, base=wBase, zmin, zmax, type=default_scale_settings
-  
+  ;change label of default loadct
   pre = '>  > >> '
   post = ' << <  <'
   uname = 'loadct_' + strcompress(default_loadct,/remove_all)
@@ -1212,10 +1015,7 @@ pro final_plot, main_base=main_base, $
   new_value = pre + value + post
   setValue, base=wBase, uname, new_value
   
-  ;show global info button
-  display_global_infos_button, main_base=wBase
-  
-  save_background,  main_base=wBase
+  save_background,  main_base=wBase, uname='draw_rtof'
   
 end
 
