@@ -123,7 +123,7 @@ function trim_spectrum, event, spectrum, TOFrange=TOFrange
   log_book_update, event, message = [message, message1, message2]
   
   sz = (size(spectrum,/dim))[0]
-  
+
   _index = 0
   while (_index lt sz[0]) do begin
   
@@ -135,9 +135,9 @@ function trim_spectrum, event, spectrum, TOFrange=TOFrange
     
     *spectrum[_index] = _spectrum
     
-    sz = size(_spectrum)
+    _sz = size(_spectrum)
     message3 = '-> size(spectrum): [' + $
-      strcompress(strjoin(sz,','),/remove_all) + ']'
+      strcompress(strjoin(_sz,','),/remove_all) + ']'
     log_book_update, event, message = [message, message1, message2, message3]
     
     _index++
