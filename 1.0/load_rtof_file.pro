@@ -97,8 +97,8 @@ function load_rtof_file, event, file_name
   all_tags = iClass->getAllTag()
   first_pixel = iClass->getStartPixel()
   obj_destroy, iClass
-  nbr_pixels = size(data,/dim)
-  
+  nbr_pixels = size(pdata,/dim)
+
   putValue, event=event, 'rtof_pixel_min', $
     strcompress(first_pixel,/remove_all)
   last_pixel = first_pixel + nbr_pixels - 1
