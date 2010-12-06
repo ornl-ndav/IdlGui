@@ -35,12 +35,38 @@
 PRO main_base_event, Event
 
   ;get global structure
-  wWidget = Event.top          ;widget id
+  wWidget = Event.top ;widget id
   widget_control, wWidget, get_uvalue=global
   
   case (Event.id) of
   
     widget_info(wWidget, find_by_uname='main_base'): begin
+    
+      ;get size of widget_table
+    
+      id = event.id
+      id_table = widget_info(event.top, find_by_uname='tab1_table')
+      geometry = widget_info(id,/geometry)
+      new_ysize = geometry.scr_ysize
+      new_xsize = geometry.scr_xsize
+      
+      ;difference of y relative to initial design of application
+      delta_y = new_ysize - (*global).main_base_ysize
+      if (delta_y lt 0) then begin
+        widget_control, id_table, scr_ysize = (*global).table_ysize
+        widget_control, id_table, scr_xsize = (*global).table_xsize
+        widget_control, id, scr_xsize = (*global).main_base_xsize
+      ;redraw same application with same sizes
+      return
+      endif
+      
+      ;no need to increase more
+      if (delta_y ge 270) then delta_y = 270
+      
+      ;increase the ysize of table by the same value
+      widget_control, id_table, scr_ysize = (*global).table_ysize + delta_y
+      return
+      
     end
     
     ;MENU
