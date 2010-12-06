@@ -143,7 +143,7 @@ pro lin_log_data, event=event, base=base
   endelse
   
   Data = (*(*global_plot).data_linear)
-  scale_setting = (*global_plot).default_scale_setting ;0 for lin, 1 for log
+  scale_setting = (*global_plot).default_scale_settings ;0 for lin, 1 for log
   
   if (scale_setting eq 1) then begin ;log
   
@@ -1099,7 +1099,7 @@ pro final_plot, main_base=main_base, $
     
     colorbar_xsize: colorbar_xsize,$
     default_loadct: default_loadct, $ ;prism by default
-    default_scale_setting: default_scale_setting, $ ;lin or log z-axis
+    default_scale_settings: default_scale_setting, $ ;lin or log z-axis
     smooth_coefficient: smooth_coefficient,$
     
     border: border, $ ;border of main plot (space reserved for scale)

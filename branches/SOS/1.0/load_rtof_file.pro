@@ -94,17 +94,18 @@ function load_rtof_file, event, file_name
   endif
   
   pData = iClass->getDataQuickly()
+  (*(*global).rtof_data) = pData
   all_tags = iClass->getAllTag()
   first_pixel = iClass->getStartPixel()
   obj_destroy, iClass
   nbr_pixels = size(pdata,/dim)
-
+  
   putValue, event=event, 'rtof_pixel_min', $
     strcompress(first_pixel,/remove_all)
   last_pixel = first_pixel + nbr_pixels - 1
   putValue, event=event, 'rtof_pixel_max', $
     strcompress(last_pixel[0], /remove_all)
-  
+    
   first_data_nexus = get_first_data_nexus(all_tags)
   first_data_nexus = strtrim(first_data_nexus,2)
   if (first_data_nexus ne '') then begin
