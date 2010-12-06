@@ -717,12 +717,12 @@ end
 ;
 ; :Author: j35
 ;-
-pro rtof_px_vs_tof_plots_base_cleanup, tlb
+pro px_vs_tof_plots_base_cleanup, tlb
   compile_opt idl2
   
   widget_control, tlb, get_uvalue=global_plot, /no_copy
   
-  px_vs_tof_widget_killed, global_plot
+  rtof_px_vs_tof_widget_killed, global_plot
   
   if (n_elements(global_plot) eq 0) then return
   
