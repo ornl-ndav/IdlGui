@@ -46,7 +46,10 @@ pro go_nexus_reduction, event
   
   widget_control, event.top, get_uvalue=global
   
-  catch,error
+  print, 'in nexus reduction'
+  
+  error = 0
+ ; catch,error
   if (error ne 0) then begin
     catch,/cancel
     
@@ -210,22 +213,31 @@ pro go_nexus_reduction, event
     ;number of steps is ----> 1
     
     ;create spectrum of normalization file
-    ;    if ((*global).debugger eq 'yes') then begin
-    ;      if (!version.os eq 'darwin') then begin
-    ;        path = '/Users/j35/IDLWorkspace80/SOS 1.0/'
-    ;      endif else begin
-    ;        path = '/SNS/users/j35/IDLWorkspace80/SOS 1.0/'
-    ;      endelse
-    ;      norm_file = path + 'Al_can_spectrum.dat'
-    ;      SPECTRUM=xcr_direct(norm_file, 2)
-    ;    endif else begin
-    
-    ;number_of_steps is ----> file_num
-    spectrum = get_normalization_spectrum(event, list_norm_nexus, $
-      processes, $
-      total_number_of_processes)
-    ;    endelse
+    if ((*global).debugger eq 'yes') then begin
+      if (!version.os eq 'darwin') then begin
+        path = '/Users/j35/IDLWorkspace80/SOS 1.0/'
+      endif else begin
+        path = '/SNS/users/j35/IDLWorkspace80/SOS 1.0/'
+      endelse
+      norm_file = path + 'Al_can_spectrum.dat'
+      spectrum=xcr_direct(norm_file, 2)
+      _spectrum = ptrarr(file_num,/allocate_heap)
       
+      ;copy the same spectrum for all data set
+      _local_index = 0
+      while (_local_index lt file_num) do begin
+      *_spectrum[_local_index] = spectrum
+      _local_index++
+      endwhile
+      spectrum = _spectrum
+      help, spectrum
+    endif else begin
+      ;number_of_steps is ----> file_num
+      spectrum = get_normalization_spectrum(event, list_norm_nexus, $
+        processes, $
+        total_number_of_processes)
+    endelse
+    
     update_progress_bar_percentage, event, ++processes, total_number_of_processes
     
     ;number of steps is ----> 1
@@ -331,6 +343,13 @@ pro go_nexus_reduction, event
     QXQZ_array=make_array(num, qxbins, qzbins)
     ;now we need to convert to QxQz
     
+    help, QxQz_array
+    
+    print, QxQz_array[0,250,*]
+    
+    return
+    
+    
     make_QxQz, event = event, $
       num = num, $
       lambda_step = lambda_step, $
@@ -402,8 +421,8 @@ pro go_nexus_reduction, event
       
   endelse ;end of catch statement
   
-    offset = 50
-    
+  offset = 50
+  
   final_plot, event=event, $
     offset = offset, $
     time_stamp = time_stamp, $
