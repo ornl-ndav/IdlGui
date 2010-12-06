@@ -533,6 +533,10 @@ pro rtof_zoom_selection, event
   tof_min = min(tof_range,max=tof_max)
   Data_x = (*global_plot).Data_x
   
+  ;I have to do that trick because Data_x looks like
+  ;[0,200,400,800....1000,''] !!!
+  Data_x = Data_x[0:-2]
+  
   ;left tof
   tof_range_index_left = where(tof_min ge Data_x)
   tof_range_index_min = tof_range_index_left[-1]
@@ -545,7 +549,9 @@ pro rtof_zoom_selection, event
   
   ;create new array of selected region
   data_y = (*(*global_plot).data_linear) ;Array[pixel,tof]
-  zoom_data_x = Data_x[tof_range_index[0]:tof_range_index_max]
+
+  zoom_data_x = Data_x[tof_range_index_min:tof_range_index_max]
+  ;zoom_data_x = Data_x[tof_range_index[0]:tof_range_index_max]
   zoom_data_y = data_y[pixel_range_index[0]:pixel_range_index[1],$
     tof_range_index[0]:tof_range_index[1]]
     
