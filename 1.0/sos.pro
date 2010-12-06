@@ -78,6 +78,10 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     scaled_specular: scaled_specular, $
     hide_tab_2: hide_tab_2, $
     max_nbr_data_nexus: max_nbr_data_nexus, $
+    main_base_xsize: 0L, $ ;scr_xsize of application
+    main_base_ysize: 0L, $
+    table_ysize: 0L, $
+    table_xsize: 0L, $
     
     ;data and normalization files
     big_table: strarr(2,max_nbr_data_nexus), $
@@ -152,8 +156,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     UNAME        = 'main_base',$
     XOFFSET      = MainBaseSize[0],$
     YOFFSET      = MainBaseSize[1],$
-    ;    SCR_XSIZE    = MainBaseSize[2], $
-    ;    SCR_YSIZE    = MainBaseSize[3], $
+    /tlb_size_events, $
     mbar = bar,$
     /column, $
     TITLE        = MainTitle)
@@ -225,6 +228,20 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;=============================================================================
   ;send message to log current run of application
   logger, APPLICATION=application, VERSION=version, UCAMS=ucams
+  
+  ;save the current xsize of the main application
+  id = widget_info(main_base, find_by_uname='main_base')
+  geometry = widget_info(id,/geometry)
+  xsize = geometry.scr_xsize
+  ysize = geometry.scr_ysize
+  (*global).main_base_xsize = xsize
+  (*global).main_base_ysize = ysize
+  id = widget_info(main_base,find_by_uname='tab1_table')
+  geometry_table = widget_info(id,/geometry)
+  ysize_table = geometry_table.scr_ysize
+  xsize_table = geometry_table.scr_xsize
+  (*global).table_ysize = ysize_table
+  (*global).table_xsize = xsize_table
   
 END
 
