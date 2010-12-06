@@ -46,10 +46,7 @@ pro go_nexus_reduction, event
   
   widget_control, event.top, get_uvalue=global
   
-  print, 'in nexus reduction'
-  
-  error = 0
- ; catch,error
+  catch,error
   if (error ne 0) then begin
     catch,/cancel
     
@@ -230,7 +227,6 @@ pro go_nexus_reduction, event
       _local_index++
       endwhile
       spectrum = _spectrum
-      help, spectrum
     endif else begin
       ;number_of_steps is ----> file_num
       spectrum = get_normalization_spectrum(event, list_norm_nexus, $
@@ -342,13 +338,6 @@ pro go_nexus_reduction, event
     ;number of steps is ----> 1
     QXQZ_array=make_array(num, qxbins, qzbins)
     ;now we need to convert to QxQz
-    
-    help, QxQz_array
-    
-    print, QxQz_array[0,250,*]
-    
-    return
-    
     
     make_QxQz, event = event, $
       num = num, $

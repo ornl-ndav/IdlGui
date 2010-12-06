@@ -157,11 +157,11 @@ pro local_switch_axes_type, event
   if (uname eq 'local_scale_setting_linear') then begin
     set1_value = '*  ' + 'linear'
     set2_value = '   ' + 'logarithmic'
-    (*global_plot).default_scale_setting = 0
+    (*global_plot).default_scale_settings = 0
   endif else begin
     set1_value = '   ' + 'linear'
     set2_value = '*  ' + 'logarithmic'
-    (*global_plot).default_scale_setting = 1
+    (*global_plot).default_scale_settings = 1
   endelse
   
   putValue, event=event, 'local_scale_setting_linear', set1_value

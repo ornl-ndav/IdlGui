@@ -47,8 +47,6 @@
 pro go_rtof_reduction, event
   compile_opt idl2
 
-  print, 'in rtof reduction'
-  
   widget_control, event.top, get_uvalue=global
   widget_control, /hourglass
   
@@ -210,13 +208,6 @@ pro go_rtof_reduction, event
     
   QxQz_array = make_array(qxbins, qzbins)
   
-  help, QxQz_array
-      print, QxQz_array[250,*]
-  
-  
-  return
-  
-  
   make_QXQZ_rtof, event = event, $
     lambda_step = lambda_step, $
     qxbins = qxbins, $
@@ -253,7 +244,7 @@ pro go_rtof_reduction, event
       d_md = MD_d, $
       qxwidth = qxwidth, $
       tnum = tnum)
-    
+  
     offset = 50
     final_plot, event=event, $
     offset = offset, $
