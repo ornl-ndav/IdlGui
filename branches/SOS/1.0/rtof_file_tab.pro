@@ -92,17 +92,17 @@ function load_geometry_parameters, event
   
   widget_control, event.top, get_uvalue=global
   
-  ;  ;read rtof file
-  ;  rtof_ascii_file = getValue(event=event,$
-  ;    uname='rtof_file_text_field_uname')
-  ;  rtof_ascii_file = rtof_ascii_file[0]
-  ;  iData = obj_new('IDL3columnsASCIIparser', rtof_ascii_file)
-  ;  data = iData->getDataQuickly()
-  ;  first_pixel = iData->getStartPixel()
-  ;  obj_destroy, iData
-  ;  nbr_pixels = size(data,/dim)
-  ;  (*(*global).rtof_data) = data
-  ;
+    ;read rtof file
+    rtof_ascii_file = getValue(event=event,$
+      uname='rtof_file_text_field_uname')
+    rtof_ascii_file = rtof_ascii_file[0]
+    iData = obj_new('IDL3columnsASCIIparser', rtof_ascii_file)
+    data = iData->getDataQuickly()
+    first_pixel = iData->getStartPixel()
+    obj_destroy, iData
+    nbr_pixels = size(data,/dim)
+    last_pixel = first_pixel + nbr_pixels - 1
+
   ;  putValue, event=event, 'rtof_pixel_min', $
   ;    strcompress(first_pixel,/remove_all)
   ;  last_pixel = first_pixel + nbr_pixels - 1
@@ -121,12 +121,10 @@ function load_geometry_parameters, event
   iNexus = obj_new('IDLnexusUtilities', geometry_nexus_file)
   d_SD = iNexus->get_d_SD()
   d_MS = iNexus->get_d_MS()
-  
   _theta = iNexus->get_theta()
   _TwoTheta = iNexus->get_twoTheta()
-  
   obj_destroy, iNexus
-  
+
   ;convert into mm
   d_SD_mm = abs(convert_distance(distance = d_SD.value,$
     from_unit = d_SD.units, $

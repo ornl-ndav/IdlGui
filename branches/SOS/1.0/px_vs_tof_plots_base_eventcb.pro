@@ -109,7 +109,7 @@ function rtof_retrieve_data_y_value, event
   endif
   
   y_device = event.y
-  congrid_ycoeff = (*global_plot).congrid_xcoeff  ;using xcoeff because of transpose
+  congrid_ycoeff = (*global_plot).congrid_ycoeff  ;using xcoeff because of transpose
   yrange = float((*global_plot).yrange) ;min and max pixels
   
   rat = float(y_device) / float(congrid_ycoeff)
@@ -147,9 +147,9 @@ function rtof_retrieve_data_z_value, event
   xdata_max = (size(data))[2]
   ydata_max = (size(data))[1]
   
-  congrid_xcoeff = (*global_plot).congrid_ycoeff  ;using ycoeff because of transpose
-  congrid_ycoeff = (*global_plot).congrid_xcoeff  ;using xcoeff because of transpose
-  
+  congrid_ycoeff = (*global_plot).congrid_xcoeff  ;using ycoeff because of transpose
+  congrid_xcoeff = (*global_plot).congrid_ycoeff  ;using xcoeff because of transpose
+
   xdata = fix(float(event.x) * float(xdata_max) / congrid_xcoeff)
   ydata = fix(float(event.y) * float(ydata_max) / congrid_ycoeff)
   
