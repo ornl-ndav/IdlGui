@@ -320,7 +320,7 @@ pro design_tabs, MAIN_BASE, global
       frame = 1)
     button = widget_button(row1, $
       value = 'Browse ...',$
-      event_pro = 'browse_for_rtof_file_button', $
+      uname = 'rtof_browse_data_file',$
       scr_xsize = 100)
     value = widget_text(row1, $
       value = '', $
