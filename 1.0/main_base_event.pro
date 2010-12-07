@@ -56,8 +56,8 @@ PRO main_base_event, Event
         widget_control, id_table, scr_ysize = (*global).table_ysize
         widget_control, id_table, scr_xsize = (*global).table_xsize
         widget_control, id, scr_xsize = (*global).main_base_xsize
-      ;redraw same application with same sizes
-      return
+        ;redraw same application with same sizes
+        return
       endif
       
       ;no need to increase more
@@ -201,6 +201,18 @@ PRO main_base_event, Event
     end
     
     ;--- tab2 (work with rtof) ----
+    
+    ;browse for rtof file
+    widget_info(wWidget, find_by_uname='rtof_browse_data_file'): begin
+      browse_for_rtof_file_button, event
+      file_name = getvalue(event=event, uname='rtof_file_text_field_uname')
+      file_name = strtrim(file_name,2)
+      file_name = file_name[0]
+      result = load_rtof_file(event, file_name)
+      result = load_geometry_parameters(event)
+      check_rtof_buttons_status, event
+      check_go_button, event=event
+    end
     
     ;rtof text field
     widget_info(wWidget, find_by_uname='rtof_file_text_field_uname'): begin
