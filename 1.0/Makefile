@@ -1,4 +1,4 @@
-# Makefile for SNS_offspec
+# Makefile for SOS program
 # Compile the necessary modules
 # Create the VM programs 
 # Copy the VM programs in their final location
