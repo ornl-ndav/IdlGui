@@ -165,10 +165,11 @@ end
 ;
 ; :Params:
 ;    event
+;    file_name
 ;
 ; :Author: j35
 ;-
-pro browse_for_rtof_file_button, event
+function browse_for_rtof_file_button, event, file_name
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global
@@ -192,17 +193,23 @@ pro browse_for_rtof_file_button, event
   if (file_name ne '') then begin
     (*global).input_path = new_path
     message = '-> rtof file loaded: ' + file_name[0]
-    putvalue, event=event, 'rtof_file_text_field_uname', file_name
     
     ;loading data from rtof file
     result = load_rtof_file(event, file_name)
+
+    if (result) then begin
+    putvalue, event=event, 'rtof_file_text_field_uname', file_name
+endif
     
   endif else begin
     message = '-> no rtof file loaded (operation canceled)!'
+    result = 0
   endelse
   
   log_book_update, event, message = message
 ;check_preview_rtof_button_status, event
+  
+  return, result
   
 end
 

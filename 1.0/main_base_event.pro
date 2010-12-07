@@ -204,11 +204,15 @@ PRO main_base_event, Event
     
     ;browse for rtof file
     widget_info(wWidget, find_by_uname='rtof_browse_data_file'): begin
-      browse_for_rtof_file_button, event
-      file_name = getvalue(event=event, uname='rtof_file_text_field_uname')
-      file_name = strtrim(file_name,2)
-      file_name = file_name[0]
-      result = load_rtof_file(event, file_name)
+      file_name = ''
+      result = browse_for_rtof_file_button(event, file_name)
+      if (result ne 1) then begin ;error while loading the file
+        message_text = ['Invalid format of following file:',file_name]
+        result = error_dialog_message(event, $
+          message_text=message_text,$
+          title = 'Error loading the file')
+        return
+      endif
       result = load_geometry_parameters(event)
       check_rtof_buttons_status, event
       check_go_button, event=event
