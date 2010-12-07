@@ -39,6 +39,7 @@ widget_control, event.top, get_uvalue=global
 
 message = '> Full reset of session !! ****'
 
+;reset of tab1
 (*(*global).list_data_nexus) = !null
 (*(*global).list_data_runs) = !null
 (*(*global).list_norm_nexus) = !null
@@ -48,11 +49,15 @@ big_table = strarr(2,max_nbr_data_nexus)
 (*global).big_table = big_table
 putValue, event=event, base=main_base, 'tab1_table', big_table
 
-check_go_button, event=event
-
 putValue, event=event, 'd_sd_uname', ''
 putValue, event=event, 'd_md_uname', ''
 
+;reset tab2
+putValue, event=event, 'rtof_file_text_field_uname', '' 
+
 log_book_update, event, message=message
+
+check_rtof_buttons_status, event
+check_go_button, event=event
 
 end
