@@ -528,3 +528,31 @@ units = getValue(event=event, uname='rtof_twotheta_units')
 return, {value:value, units:units}
 end
 
+;+
+; :Description:
+;    Returns the name of the instrument according to the name of the file
+;    REF_L_<run_number>.nxs -> REF_L
+;    REF_M_<run
+;
+; :Params:
+;    file_name
+;
+;
+;
+; :Author: j35
+;-
+function get_instrumet_from_file_name, file_name
+compile_opt idl2
+
+;get only file name (without extension)
+base_name = file_basename(file_name[0])
+
+;split according to '_'
+split_array = strsplit(base_name,'_',/extract)
+instrument_array = split_array[0:1]
+
+;instrument (REF_L or REF_M should be the first 2 elements of this array)
+instrument = strjoin(instrument_array,'_')
+
+return, strupcase(instrument)
+end
