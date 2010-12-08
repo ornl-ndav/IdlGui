@@ -186,7 +186,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     (*global).input_path = input_path
     
     list_data_nexus = input_path + ['REF_L_34432.nxs',$
-      'REF_L_34433.nxs']
+      'REF_M_34433.nxs']
     (*(*global).list_data_nexus) = list_data_nexus
     
     list_norm_nexus = input_path + ['REF_L_34394.nxs',$

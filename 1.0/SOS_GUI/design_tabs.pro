@@ -170,7 +170,7 @@ pro design_tabs, MAIN_BASE, global
   on_on = widget_button(contextBase,$
     value = 'Data On_On',$
     uname = 'data_on_on',$
-    sensitive = 0)
+    sensitive = 1)
 
   off_off = widget_button(contextBase,$
     value = 'Norm. Off_Off *',$

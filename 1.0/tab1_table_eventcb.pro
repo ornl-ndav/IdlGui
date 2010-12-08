@@ -32,6 +32,20 @@
 ;
 ;==============================================================================
 
+pro spin_state_widget_action, event=event, button_status=button_status
+  compile_opt idl2
+  
+  spin_states = ['off_off','off_on','on_off','on_on']
+  data_spins = 'data_' + spin_states
+  norm_spins = 'norm_'  + spin_states
+  buttons_uname = [data_spins,norm_spins]
+  sz = n_elements(buttons_uname)
+  for i=0,(sz-1) do begin
+    activate_button, event=event, status=button_status, uname=buttons_uname[i]
+  endfor
+  
+end
+
 ;+
 ; :Description:
 ;    This routine selects automatically the entire row of the table
@@ -144,7 +158,7 @@ pro add_list_of_nexus_to_table, event, list_of_nexus, type=type
         endif else begin
           ;if more than 1 norm file, put up to the end of norm file
           if (index_norm_nexus gt (to_row - from_row)) then begin
-          break
+            break
           endif
         endelse
       endif else begin
