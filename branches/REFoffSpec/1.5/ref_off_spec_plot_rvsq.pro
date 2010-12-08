@@ -57,7 +57,7 @@ ENDELSE
 
 datafile = PICKFILE(PATH=path,FILTER=filter,TITLE=title)
 ;    path = (*global).ascii_path
-    message = '> Reflectivity vs Q plot for results: ' + datafile   
+    message = '> Reflectivity vs Q plot: ' + datafile   
     PlotUtility_addLogBookText, Event,  message 
 
 IF (datafile NE  "") THEN BEGIN

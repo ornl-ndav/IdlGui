@@ -55,6 +55,11 @@ PRO MAIN_BASE_event, Event
     end
 
     WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='new_reduce_step_path'): begin
+      Update_Reduce_Step_Path, Event, global
+    end
+
+    WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='update_reduce_step_path'): begin
       Update_Reduce_Step_Path, Event, global
     end

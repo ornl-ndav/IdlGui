@@ -60,7 +60,7 @@ unit = 1
   datafile = PICKFILE(PATH=path,FILTER=filter,TITLE=title)
 
 ;    path = (*global).ascii_path
-    message = '> Scaled 2D plot for results: ' + datafile    
+    message = '> Scaled 2D plot: ' + datafile    
     PlotUtility_addLogBookText, Event,  message 
 
 IF (datafile NE  "") THEN BEGIN
