@@ -32,20 +32,70 @@
 ;
 ;==============================================================================
 
+;+
+; :Description:
+;    This procedure is reached when the user right click the table and select
+;    any of the new data/norm spin state. Right now, this is reached only if
+;    instrument is REF_M
+;
+; :Keywords:
+;    event
+;    column_index
+;    new_spin
+;
+; :Author: j35
+;-
+pro change_spin_state, event=event, column_index=column_index, new_spin=new_spin
+  compile_opt idl2
+  
+  selection = get_table_lines_selected(event=event)
+  from_row = selection[1]
+  to_row = selection[3]
+  table = getValue(event=event,uname='tab1_table')
+  
+  row_index = from_row
+  while (row_index le to_row) do begin
+    
+    file_name = table[column_index,row_index]
+    ;remove current spin state
+    file_name_spitted = strsplit(file_name[0],'(',/extract)
+    ;add new spin state
+    new_file_name = file_name_spitted[0] + '(' + new_spin + ')'
+    table[column_index, row_index] = new_file_name
+    row_index++
+  endwhile
+  
+  putValue, event=event, 'tab1_table', table
+  
+end
+
+;+
+; :Description:
+;    add spin state label to the end of the file name (data and norm)
+;
+; :Params:
+;    event
+;    list_of_nexus
+;
+; :Returns:
+;   list of nexus with spin state added to it (if instrument is REF_M)
+;
+; :Author: j35
+;-
 function add_spins_to_list, event, list_of_nexus
-compile_opt idl2
-
+  compile_opt idl2
+  
   widget_control, event.top, get_uvalue=global
-
+  
   instrument = (*global).instrument
   if (instrument eq 'REF_L') then return, list_of_nexus
-
+  
   if (instrument eq '') then begin
     instrument = get_instrumet_from_file_name(list_of_nexus[0])
   endif
-
+  
   if (instrument eq 'REF_L') then return, list_of_nexus
-       
+  
   default_spin_state = (*global).default_spin_state
   list_of_nexus += ' (' + default_spin_state + ')'
   return, list_of_nexus

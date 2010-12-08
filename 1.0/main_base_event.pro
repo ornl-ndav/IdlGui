@@ -191,7 +191,7 @@ PRO main_base_event, Event
           endif else begin
             button_status = 1
           endelse
-          spin_state_widget_action, event=event, button_status=button_status          
+          spin_state_widget_action, event=event, button_status=button_status
           id = widget_info(event.top, find_by_uname='context_base')
           widget_displaycontextmenu, event.id, event.X, event.Y, id
         endif
@@ -212,6 +212,49 @@ PRO main_base_event, Event
     ;delete row
     widget_info(wWidget, find_by_uname='table_delete_row'): begin
       delete_row_tab1_table, event
+    end
+    
+    ;change spin states (data and norm)
+    widget_info(wWidget, find_by_uname='data_off_off'): begin
+      column_index = 0
+      new_spin = 'Off_Off'
+      change_spin_state, event=event, column_index=column_index, new_spin=new_spin
+    end
+    widget_info(wWidget, find_by_uname='data_off_on'): begin
+      column_index = 0
+      new_spin = 'Off_On'
+      change_spin_state, event=event, column_index=column_index, new_spin=new_spin
+    end
+    widget_info(wWidget, find_by_uname='data_on_off'): begin
+      column_index = 0
+      new_spin = 'On_Off'
+      change_spin_state, event=event, column_index=column_index, new_spin=new_spin
+    end
+    widget_info(wWidget, find_by_uname='data_on_on'): begin
+      column_index = 0
+      new_spin = 'On_On'
+      change_spin_state, event=event, column_index=column_index, new_spin=new_spin
+    end
+    
+    widget_info(wWidget, find_by_uname='norm_off_off'): begin
+      column_index = 1
+      new_spin = 'Off_Off'
+      change_spin_state, event=event, column_index=column_index, new_spin=new_spin
+    end
+    widget_info(wWidget, find_by_uname='norm_off_on'): begin
+      column_index = 1
+      new_spin = 'Off_On'
+      change_spin_state, event=event, column_index=column_index, new_spin=new_spin
+    end
+    widget_info(wWidget, find_by_uname='norm_on_off'): begin
+      column_index = 1
+      new_spin = 'On_Off'
+      change_spin_state, event=event, column_index=column_index, new_spin=new_spin
+    end
+    widget_info(wWidget, find_by_uname='norm_on_on'): begin
+      column_index = 1
+      new_spin = 'On_On'
+      change_spin_state, event=event, column_index=column_index, new_spin=new_spin
     end
     
     ;--- tab2 (work with rtof) ----

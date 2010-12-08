@@ -155,7 +155,7 @@ pro design_tabs, MAIN_BASE, global
     uname = 'table_delete_row',$
     /separator)
   off_off = widget_button(contextBase,$
-    value = 'Data Off_Off *',$
+    value = 'Data Off_Off',$
     uname = 'data_off_off',$
     /separator,$
     sensitive = 0)
@@ -173,7 +173,7 @@ pro design_tabs, MAIN_BASE, global
     sensitive = 1)
 
   off_off = widget_button(contextBase,$
-    value = 'Norm. Off_Off *',$
+    value = 'Norm. Off_Off',$
     uname = 'norm_off_off',$
     /separator,$
     sensitive = 0)
