@@ -197,10 +197,13 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     (*(*global).list_data_nexus) = list_data_nexus + ' (' + $
     default_spin_state + ')'
     
-    list_norm_nexus = input_path + ['REF_L_34394.nxs',$
-    'REF_L_38953.nxs']
-    
-    (*(*global).list_norm_nexus) = list_norm_nexus
+   ; list_norm_nexus = input_path + ['REF_L_34394.nxs',$
+   ; 'REF_L_38953.nxs']
+     list_norm_nexus = input_path + ['REF_M_8455.nxs',$
+    'REF_M_8455.nxs']
+    (*(*global).list_norm_nexus) = list_norm_nexus + ' (' + $
+    default_spin_state + ')'
+
     selected_list_norm_file = (*global).selected_list_norm_file
     selected_list_norm_file[0:1] = list_norm_nexus
     (*global).selected_list_norm_file = selected_list_norm_file

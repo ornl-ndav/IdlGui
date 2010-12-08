@@ -177,7 +177,7 @@ pro retrieve_data_nexus_distances, event=event, main_base=main_base
   
   instrument = (*global).instrument
   if (instrument eq 'REF_M') then return  ;this will need to be implemented !!!
-
+  
   big_table = (*global).big_table
   first_data_nexus = big_table[0,0]
   
