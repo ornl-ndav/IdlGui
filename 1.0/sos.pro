@@ -52,7 +52,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   scaled_specular = file->getValue(tag=['configuration','plot','scaled_specular'])
   hide_tab_2 = file->getValue(tag=['configuration','hide_tab_2'])
   max_nbr_data_nexus = file->getValue(tag=['configuration','max_nbr_data_nexus'])
-  default_spin_state = file->geValue(tag=['configuration','default_spin_state'])
+  default_spin_state = file->getValue(tag=['configuration','default_spin_state'])
   ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
   ;============================================================================
   obj_destroy, file
@@ -70,6 +70,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   endelse
   
   date = GenerateReadableIsoTimeStamp()
+  instrument = getInstrument()
   
   global = ptr_new({ $
   
@@ -93,7 +94,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ;default spin state to use when just loading a file
     default_spin_state: default_spin_state, $ 
     
-    instrument: '',$ ;name of instrument
+    instrument: instrument,$ ;name of instrument
     PrevTabSelect: 0, $
     
     SD_d: 0., $ ;distance sample detector
@@ -189,9 +190,12 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     endelse
     (*global).input_path = input_path
     
-    list_data_nexus = input_path + ['REF_L_34432.nxs',$
-      'REF_M_34433.nxs']
-    (*(*global).list_data_nexus) = list_data_nexus
+;    list_data_nexus = input_path + ['REF_L_34432.nxs',$
+;      'REF_M_34433.nxs']
+     list_data_nexus = input_path + ['REF_M_8451.nxs',$
+      'REF_M_8452.nxs']
+    (*(*global).list_data_nexus) = list_data_nexus + ' (' + $
+    default_spin_state + ')'
     
     list_norm_nexus = input_path + ['REF_L_34394.nxs',$
     'REF_L_38953.nxs']
@@ -217,6 +221,8 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
       
 ;    endif
  
+    (*global).instrument = 'REF_M'
+
     create_big_table_tab1, main_base=main_base
     select_entire_row, base=main_base
     refresh_big_table, base=main_base
@@ -226,6 +232,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
      putValue, base=main_base, 'rtof_nexus_geometry_file', file_name
     
     check_go_button, base=main_base
+
 
   endif
   
