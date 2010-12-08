@@ -154,6 +154,41 @@ pro design_tabs, MAIN_BASE, global
     value = 'Delete row(s)',$
     uname = 'table_delete_row',$
     /separator)
+  off_off = widget_button(contextBase,$
+    value = 'Data Off_Off *',$
+    uname = 'data_off_off',$
+    /separator,$
+    sensitive = 0)
+  off_on = widget_button(contextBase,$
+    value = 'Data Off_On',$
+    uname = 'data_off_on',$
+    sensitive = 0)
+  on_off = widget_button(contextBase,$
+    value = 'Data On_Off',$
+    uname = 'data_on_off',$
+    sensitive = 0)
+  on_on = widget_button(contextBase,$
+    value = 'Data On_On',$
+    uname = 'data_on_on',$
+    sensitive = 0)
+
+  off_off = widget_button(contextBase,$
+    value = 'Norm. Off_Off *',$
+    uname = 'norm_off_off',$
+    /separator,$
+    sensitive = 0)
+  off_on = widget_button(contextBase,$
+    value = 'Norm. Off_On',$
+    uname = 'norm_off_on',$
+    sensitive = 0)
+  on_off = widget_button(contextBase,$
+    value = 'Norm. On_Off',$
+    uname = 'norm_on_off',$
+    sensitive = 0)
+  on_on = widget_button(contextBase,$
+    value = 'Norm. On_On',$
+    uname = 'norm_on_on',$
+    sensitive = 0)
     
   ;tab0 of nexus ------------------------------------------------------------
   nexus_tab1 = widget_base(nexus_tab,$
@@ -303,7 +338,7 @@ pro design_tabs, MAIN_BASE, global
     value = '',$
     uname = 'd_md_uname',$
     title = 'Distance moderator to detector (mm) ')
-        
+    
   if ((*global).hide_tab_2 eq 'no') then begin
   
     ;********* tab 2 ***********************************************************
@@ -337,9 +372,9 @@ pro design_tabs, MAIN_BASE, global
       uname = 'rtof_file_preview_button',$
       event_pro = 'rtof_file_preview_button_eventcb', $
       sensitive = 0)
-;      scr_xsize = 80)
-      plot = widget_button(row1,$
-      value = 'Plot',$ 
+    ;      scr_xsize = 80)
+    plot = widget_button(row1,$
+      value = 'Plot',$
       uname = 'rtof_file_plot_button',$
       event_pro = 'rtof_file_plot_button_eventcb',$
       sensitive = 0)
@@ -377,211 +412,211 @@ pro design_tabs, MAIN_BASE, global
     space = widget_label(_base1,$
       value = ' ')
       
-  ;PARAMETERS
+    ;PARAMETERS
+      
+    ;read xml instrument config file
+    config_file = (*global).instrument_config_file
+    file = OBJ_NEW('IDLxmlParser', config_file)
+    instrument = (*global).instrument
     
-  ;read xml instrument config file
-  config_file = (*global).instrument_config_file
-  file = OBJ_NEW('IDLxmlParser', config_file)
-  instrument = (*global).instrument
-  
-  para_box = widget_base(_base1,$
-    frame = 1,$
-    /align_center, $
-    uname = 'rtof_configuration_base',$
-    map = 0,$
-    /base_align_center,$
-    /column)
-    
-  row1 = widget_base(para_box,$
-    /row)
-    
-  row1col2 = widget_base(row1,$
-    /column)
-    
-  ranges_qx_min = file->getValue(tag=['instruments',instrument,$
-    'ranges_qx','minqx'])
-  field1 = cw_field(row1col2,$
-    /floating,$
-    xsize = 8,$
-    uname = 'rtof_ranges_qx_min',$
-    value = ranges_qx_min,$
-    title = 'Ranges:  Qx')
-    
-  ranges_qz_min = file->getValue(tag=['instruments',instrument,$
-    'ranges_qz','minqz'])
-  field2 = cw_field(row1col2,$
-    xsize = 8,$
-    /floating,$
-    value = ranges_qz_min,$
-    uname = 'rtof_ranges_qz_min',$
-    title = '         Qz')
-    
-  rowc = widget_base(row1col2,$
-  /row)
-  label = widget_label(rowc,$
-  /align_left,$
-  value = '   TOF (ms):')
-  value = widget_label(rowc,$
-  value = 'N/A',$
-  /align_left,$
-  uname = 'rtof_tof_min',$
-  scr_xsize =60)
-  
-;  tof_min = file->getValue(tag=['instruments',instrument,$
-;    'tof','mintof'])
-;  field3 = cw_field(row1col2,$
-;    xsize = 8,$
-;    /floating,$
-;    value = tof_min,$
-;    uname = 'rtof_tof_min',$
-;    title = '   TOF (ms)')
-  
-  row1col3 = widget_base(row1,$
-    /column)
-  ranges_qx_max = file->getValue(tag=['instruments',instrument,$
-    'ranges_qx','maxqx'])
-  field1 = cw_field(row1col3,$
-    /floating,$
-    xsize = 8,$
-    uname = 'rtof_ranges_qx_max',$
-    value = ranges_qx_max,$
-    title = 'to  ')
-    
-  ranges_qz_max = file->getValue(tag=['instruments',instrument,$
-    'ranges_qz','maxqz'])
-  field21 = cw_field(row1col3,$
-    xsize = 8,$
-    /floating,$
-    uname = 'rtof_ranges_qz_max',$
-    value = ranges_qz_max,$
-    title = 'to  ')
-    
-  rowc = widget_base(row1col3,$
-  /row)
-  label = widget_label(rowc,$
-  /align_left,$
-  value = 'to   ')
-  value = widget_label(rowc,$
-  value = 'N/A',$
-  /align_left,$
-  uname = 'rtof_tof_max',$
-  scr_xsize =100)
-    
-  space = widget_label(row1,$
-    value = '       ')
-    
-  row1col4 = widget_base(row1,$
-    /column)
-    
-  center_pixel = file->getValue(tag=['instruments',instrument,$
-    'center_pixel'])
-  field1 = cw_field(row1col4,$
-    /floating,$
-    xsize = 8,$
-    value = center_pixel,$
-    uname = 'rtof_center_pixel',$
-    title = '   Center pixel')
-    
-  pixel_size = file->getValue(tag=['instruments',instrument,$
-    'pixel_size'])
-  field2 = cw_field(row1col4,$
-    xsize = 8,$
-    /floating,$
-    value = pixel_size,$
-    uname = 'rtof_pixel_size',$
-    title = 'Pixel size (mm)')
-    
-  space = widget_label(row1,$
-    value = '     ')
-    
-  row1col5 = widget_base(row1,$
-    /column)
+    para_box = widget_base(_base1,$
+      frame = 1,$
+      /align_center, $
+      uname = 'rtof_configuration_base',$
+      map = 0,$
+      /base_align_center,$
+      /column)
+      
+    row1 = widget_base(para_box,$
+      /row)
+      
+    row1col2 = widget_base(row1,$
+      /column)
+      
+    ranges_qx_min = file->getValue(tag=['instruments',instrument,$
+      'ranges_qx','minqx'])
+    field1 = cw_field(row1col2,$
+      /floating,$
+      xsize = 8,$
+      uname = 'rtof_ranges_qx_min',$
+      value = ranges_qx_min,$
+      title = 'Ranges:  Qx')
+      
+    ranges_qz_min = file->getValue(tag=['instruments',instrument,$
+      'ranges_qz','minqz'])
+    field2 = cw_field(row1col2,$
+      xsize = 8,$
+      /floating,$
+      value = ranges_qz_min,$
+      uname = 'rtof_ranges_qz_min',$
+      title = '         Qz')
+      
+    rowc = widget_base(row1col2,$
+      /row)
+    label = widget_label(rowc,$
+      /align_left,$
+      value = '   TOF (ms):')
+    value = widget_label(rowc,$
+      value = 'N/A',$
+      /align_left,$
+      uname = 'rtof_tof_min',$
+      scr_xsize =60)
+      
+    ;  tof_min = file->getValue(tag=['instruments',instrument,$
+    ;    'tof','mintof'])
+    ;  field3 = cw_field(row1col2,$
+    ;    xsize = 8,$
+    ;    /floating,$
+    ;    value = tof_min,$
+    ;    uname = 'rtof_tof_min',$
+    ;    title = '   TOF (ms)')
+      
+    row1col3 = widget_base(row1,$
+      /column)
+    ranges_qx_max = file->getValue(tag=['instruments',instrument,$
+      'ranges_qx','maxqx'])
+    field1 = cw_field(row1col3,$
+      /floating,$
+      xsize = 8,$
+      uname = 'rtof_ranges_qx_max',$
+      value = ranges_qx_max,$
+      title = 'to  ')
+      
+    ranges_qz_max = file->getValue(tag=['instruments',instrument,$
+      'ranges_qz','maxqz'])
+    field21 = cw_field(row1col3,$
+      xsize = 8,$
+      /floating,$
+      uname = 'rtof_ranges_qz_max',$
+      value = ranges_qz_max,$
+      title = 'to  ')
+      
+    rowc = widget_base(row1col3,$
+      /row)
+    label = widget_label(rowc,$
+      /align_left,$
+      value = 'to   ')
+    value = widget_label(rowc,$
+      value = 'N/A',$
+      /align_left,$
+      uname = 'rtof_tof_max',$
+      scr_xsize =100)
+      
+    space = widget_label(row1,$
+      value = '       ')
+      
+    row1col4 = widget_base(row1,$
+      /column)
+      
+    center_pixel = file->getValue(tag=['instruments',instrument,$
+      'center_pixel'])
+    field1 = cw_field(row1col4,$
+      /floating,$
+      xsize = 8,$
+      value = center_pixel,$
+      uname = 'rtof_center_pixel',$
+      title = '   Center pixel')
+      
+    pixel_size = file->getValue(tag=['instruments',instrument,$
+      'pixel_size'])
+    field2 = cw_field(row1col4,$
+      xsize = 8,$
+      /floating,$
+      value = pixel_size,$
+      uname = 'rtof_pixel_size',$
+      title = 'Pixel size (mm)')
+      
+    space = widget_label(row1,$
+      value = '     ')
+      
+    row1col5 = widget_base(row1,$
+      /column)
     rowa = widget_base(row1col5,$
-    /row)
-field1 = cw_field(rowa,$
-    /floating,$
-    xsize = 10,$
-    value = ' ',$
-    uname = 'rtof_theta_value',$
-    title = '       Theta')
-  label = widget_label(rowa,$
-  value = ' ',$
-  uname = 'rtof_theta_units',$
-  scr_xsize = 50)
-  
+      /row)
+    field1 = cw_field(rowa,$
+      /floating,$
+      xsize = 10,$
+      value = ' ',$
+      uname = 'rtof_theta_value',$
+      title = '       Theta')
+    label = widget_label(rowa,$
+      value = ' ',$
+      uname = 'rtof_theta_units',$
+      scr_xsize = 50)
+      
     rowa = widget_base(row1col5,$
-    /row)
-field1 = cw_field(rowa,$
-    /floating,$
-    xsize = 10,$
-    value = ' ',$
-    uname = 'rtof_twotheta_value',$
-    title = '   Two Theta')
-  label = widget_label(rowa,$
-  value = ' ',$
-  uname = 'rtof_twotheta_units',$
-  scr_xsize = 50)
-
-  row2 = widget_base(para_box,$
-    /align_left,$
-    /row)
-  row2col1 = widget_base(row2,$
-    /column)
-    
-;  pixel_min = file->getValue(tag=['instruments',instrument,$
-;    'pixel_range','minpx'])
-  rowa = widget_base(row2col1,$
-  /row)
-  label = widget_label(rowa,$
-  value = 'Pixels:   min: ')
-  label = widget_label(rowa,$
-  value = 'N/A',$
-  /align_left, $
-  scr_xsize = 50,$
-  uname = 'rtof_pixel_min')
-    
-;  pixel_max = file->getValue(tag=['instruments',instrument,$
-;    'pixel_range','maxpx'])
-  rowb = widget_base(row2col1,$
-  /row)
-  label = widget_label(rowb,$
-  value = '          max: ')
-  label = widget_label(rowb,$
-  /align_left, $
-  value = 'N/A',$
-  scr_xsize = 50,$
-  uname = 'rtof_pixel_max')
-
-  space = widget_label(row2,$
-    value = '                                ')
-    
-  row2col2 = widget_base(row2,$
-    /column)
-  field1 = cw_field(row2col2,$
-    xsize = 10,$
-    value = '',$
-    uname = 'rtof_d_sd_uname',$
-    title = '   Distance sample to detector (mm) ')
-  field2 = cw_field(row2col2,$
-    xsize = 10,$
-    value = '',$
-    uname = 'rtof_d_md_uname',$
-    title = 'Distance moderator to detector (mm) ')
+      /row)
+    field1 = cw_field(rowa,$
+      /floating,$
+      xsize = 10,$
+      value = ' ',$
+      uname = 'rtof_twotheta_value',$
+      title = '   Two Theta')
+    label = widget_label(rowa,$
+      value = ' ',$
+      uname = 'rtof_twotheta_units',$
+      scr_xsize = 50)
+      
+    row2 = widget_base(para_box,$
+      /align_left,$
+      /row)
+    row2col1 = widget_base(row2,$
+      /column)
+      
+    ;  pixel_min = file->getValue(tag=['instruments',instrument,$
+    ;    'pixel_range','minpx'])
+    rowa = widget_base(row2col1,$
+      /row)
+    label = widget_label(rowa,$
+      value = 'Pixels:   min: ')
+    label = widget_label(rowa,$
+      value = 'N/A',$
+      /align_left, $
+      scr_xsize = 50,$
+      uname = 'rtof_pixel_min')
+      
+    ;  pixel_max = file->getValue(tag=['instruments',instrument,$
+    ;    'pixel_range','maxpx'])
+    rowb = widget_base(row2col1,$
+      /row)
+    label = widget_label(rowb,$
+      value = '          max: ')
+    label = widget_label(rowb,$
+      /align_left, $
+      value = 'N/A',$
+      scr_xsize = 50,$
+      uname = 'rtof_pixel_max')
+      
+    space = widget_label(row2,$
+      value = '                                ')
+      
+    row2col2 = widget_base(row2,$
+      /column)
+    field1 = cw_field(row2col2,$
+      xsize = 10,$
+      value = '',$
+      uname = 'rtof_d_sd_uname',$
+      title = '   Distance sample to detector (mm) ')
+    field2 = cw_field(row2col2,$
+      xsize = 10,$
+      value = '',$
+      uname = 'rtof_d_md_uname',$
+      title = 'Distance moderator to detector (mm) ')
       
   endif
   
   ;***** general configuration tab *******************************************
   
-      base1 = widget_base(tabs,$
-      uname = 'tab2',$
-      title = '    GENERAL CONFIGURATION    ')
-      
-    _base1 = widget_base(base1,$
+  base1 = widget_base(tabs,$
+    uname = 'tab2',$
+    title = '    GENERAL CONFIGURATION    ')
+    
+  _base1 = widget_base(base1,$
     xoffset= 160,$
     yoffset= 40,$
-      /column)
-  
-    ;read xml instrument config file
+    /column)
+    
+  ;read xml instrument config file
   config_file = (*global).instrument_config_file
   file = OBJ_NEW('IDLxmlParser', config_file)
   instrument = (*global).instrument
@@ -619,7 +654,7 @@ field1 = cw_field(rowa,$
     
   row1col2 = widget_base(row1,$
     /column)
-        
+    
   ;specular reflexion parameters
   row1col2 = widget_base(row1,$
     /column)
@@ -641,10 +676,10 @@ field1 = cw_field(rowa,$
     value = tnum,$
     uname = 'tnum_uname',$
     title = '                                 tnum')
-  
-
+    
+    
   ;******* bottom part of GUI ************************************************
-  
+    
   ;progress bar and go button
   bottom_box = widget_base(main_base,$
     /align_center,$
