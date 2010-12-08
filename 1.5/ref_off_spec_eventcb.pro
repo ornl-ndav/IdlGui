@@ -78,11 +78,14 @@ PRO REFreductionEventcb_InstrumentSelected, Event
 END
 PRO Update_Reduce_Step_Path, Event, global
 
-  id = widget_info(Event.top,find_by_uname='reduce_step_path')
+  id = widget_info(Event.top,find_by_uname='new_reduce_step_path')
   widget_control, id, get_value=path
   (*global).ascii_path = path
   (*global).working_path = path
 ;  print, "test: path: ",path
+    message = '> Switch to: ' + path   
+    PlotUtility_addLogBookText, Event,  message 
+
 END
 ;------------------------------------------------------------------------------
 ;Preview of selected ascii file(s)

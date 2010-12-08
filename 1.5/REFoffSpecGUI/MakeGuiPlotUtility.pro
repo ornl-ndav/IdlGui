@@ -45,7 +45,7 @@ sPlotUtilityBase = { size  : MainTabSize,$
                  uname : 'base_plot_utility'}
 
 ;- plot utility text -----------------------------------------------------------
-sPlotUtility = { size  : [0,0,MainTabSize[2]-10,150],$
+sPlotUtility = { size  : [0,0,MainTabSize[2]-10,300],$
              uname : 'plot_utility_text'} 
                                                   
 ;******************************************************************************
@@ -84,7 +84,7 @@ wPlotUtilityButton2 = WIDGET_BUTTON(row1col1,$
 
 new_path = WIDGET_TEXT(row1col1,$
                     SCR_XSIZE = 220,$
-                    UNAME     = 'reduce_step_path',$
+                    UNAME     = 'new_reduce_step_path',$
                     VALUE     = path,$
                     /EDITABLE,$
                     /ALIGN_LEFT)
