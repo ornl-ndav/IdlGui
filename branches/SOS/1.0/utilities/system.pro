@@ -34,6 +34,30 @@
 
 ;+
 ; :Description:
+;    returns the name of the instrument according to the launch point
+;    of the application
+;
+; :Returns:
+;   name of instrument (REF_L or REF_M)
+;
+; :Author: j35
+;-
+function getInstrument
+compile_opt idl2
+
+cmd = 'hostname
+spawn, cmd, hostname
+
+case (hostname[0]) of
+'lrac.sns.gov': return, 'REF_L'
+'mracs.sns.gov': return, 'REF_M'
+else: return, ''
+endcase
+
+end 
+
+;+
+; :Description:
 ;    Checks if findnexus can be found in the path
 ;
 ; :Returns:

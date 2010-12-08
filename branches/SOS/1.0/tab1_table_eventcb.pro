@@ -32,6 +32,36 @@
 ;
 ;==============================================================================
 
+function add_spins_to_list, event, list_of_nexus
+compile_opt idl2
+
+  widget_control, event.top, get_uvalue=global
+
+  instrument = (*global).instrument
+  if (instrument eq 'REF_L') then return, list_of_nexus
+
+  if (instrument eq '') then begin
+    instrument = get_instrumet_from_file_name(list_of_nexus[0])
+  endif
+
+  if (instrument eq 'REF_L') then return, list_of_nexus
+       
+  default_spin_state = (*global).default_spin_state
+  list_of_nexus += ' (' + default_spin_state + ')'
+  return, list_of_nexus
+end
+
+;+
+; :Description:
+;    activate or not the spin states context menu buttons according to
+;    the keywords passed in
+;
+; :Keywords:
+;    event
+;    button_status
+;
+; :Author: j35
+;-
 pro spin_state_widget_action, event=event, button_status=button_status
   compile_opt idl2
   
@@ -113,6 +143,8 @@ pro add_list_of_nexus_to_table, event, list_of_nexus, type=type
     'data': _index_column=0
     'norm': _index_column=1
   endcase
+  
+  list_of_nexus = add_spins_to_list(event, list_of_nexus)
   
   widget_control, event.top, get_uvalue=global
   _big_table = (*global).big_table
