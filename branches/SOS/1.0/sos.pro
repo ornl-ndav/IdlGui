@@ -89,7 +89,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ;where all the parameters are defined
     instrument_config_file: './SOS_instruments.cfg', $
     
-    instrument: 'REF_L',$ ;so far, only REF_L is supported
+    instrument: '',$ ;name of instrument
     PrevTabSelect: 0, $
     
     SD_d: 0., $ ;distance sample detector
