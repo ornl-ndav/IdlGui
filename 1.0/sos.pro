@@ -52,6 +52,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   scaled_specular = file->getValue(tag=['configuration','plot','scaled_specular'])
   hide_tab_2 = file->getValue(tag=['configuration','hide_tab_2'])
   max_nbr_data_nexus = file->getValue(tag=['configuration','max_nbr_data_nexus'])
+  default_spin_state = file->geValue(tag=['configuration','default_spin_state'])
   ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
   ;============================================================================
   obj_destroy, file
@@ -88,6 +89,9 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
     ;where all the parameters are defined
     instrument_config_file: './SOS_instruments.cfg', $
+    
+    ;default spin state to use when just loading a file
+    default_spin_state: default_spin_state, $ 
     
     instrument: '',$ ;name of instrument
     PrevTabSelect: 0, $
