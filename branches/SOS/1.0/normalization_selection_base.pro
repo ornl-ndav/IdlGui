@@ -310,12 +310,22 @@ pro normalization_selection_base, main_base_uname=main_base_uname, $
   ;normalization_files = table_value[1,*]
   normalization_files = (*global).selected_list_norm_file
   
+  ;reject duplicated runs
+  normalization_files = normalization_files[uniq(normalization_files)]
+  
   ;make normalization table
   max_nbr_data_nexus = (*global).max_nbr_data_nexus
   normalization_table = strarr(1,max_nbr_data_nexus)
   index = where(normalization_files ne '')
   normalization_table[index] = normalization_files[index]
   
+  ;remove (spin-state from list of normalization files)
+  sz = n_elements(normalization_files)
+  for i=0,(sz-1) do begin
+    split_array = strsplit(normalization_files[i],'(')
+    normalization_files[i] = split_array[0]
+  endfor  
+
   if (from_row eq to_row) then begin
     data_files = [table_value[0,from_row]]
   endif else begin
