@@ -45,7 +45,7 @@
 ;    total_number_of_processes
 ;-
 function get_normalization_spectrum, event, list_norm_nexus, processes, $
-total_number_of_processes
+    total_number_of_processes
   compile_opt idl2
   
   nbr_files = n_elements(list_norm_nexus)
@@ -74,8 +74,8 @@ total_number_of_processes
     if (already_loaded_flag) then begin
       _spectrum = *spectrum[already_loaded_index]
       message = ['> Copied already retrieved normalization ' + $
-      'spectrum [tof,counts]']
-      endif else begin
+        'spectrum [tof,counts]']
+    endif else begin
       iNorm = obj_new('IDLnexusUtilities', list_norm_nexus[index])
       _spectrum = iNorm->get_TOF_counts_data()
       obj_destroy, iNorm
@@ -91,8 +91,8 @@ total_number_of_processes
     *spectrum[index] = _spectrum
     
     update_progress_bar_percentage, event, ++processes, $
-    total_number_of_processes
-    
+      total_number_of_processes
+      
     index++
   endwhile
   
@@ -123,7 +123,7 @@ function trim_spectrum, event, spectrum, TOFrange=TOFrange
   log_book_update, event, message = [message, message1, message2]
   
   sz = (size(spectrum,/dim))[0]
-
+  
   _index = 0
   while (_index lt sz[0]) do begin
   
@@ -167,12 +167,30 @@ end
 function read_nexus, event, filename, TOFmin, TOFmax, PIXmin, PIXmax
   compile_opt idl2
   
-  message = strarr(13)
+  message = strarr(14)
   i=0
+  
+  ;isolate filename from spinstate
+  filename_array = strsplit(filename,'(',/extract)
+  filename = filename_array[0]
+  if (n_elements(filename_array) gt 1) then begin
+    spin_array = strmid(strsplit(filename_array[1],')',/extract),2)
+    spin_state = spin_array[0]
+  endif else begin
+    spin_state = ''
+  endelse
+  
   message[i++] = '> Read data from NeXus ' + filename
+  if (spin_state eq '') then begin
+    message[i++] = '-> spin state: N/A'
+  endif else begin
+    message[i++] = '-> spin state: ' + spin_state
+  endelse
   
-  iFile = obj_new('IDLnexusUtilities', filename)
-  
+  print, 'filename: ' , filename
+  print, 'spin_state: ' , spin_state
+  iFile = obj_new('IDLnexusUtilities', filename, spin_state=spin_state)
+  help, iFile
   ;get data [tof, pixel_x, pixel_y]
   image = iFile->get_y_tof_data()
   sz = size(image)

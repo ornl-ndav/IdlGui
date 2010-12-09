@@ -46,7 +46,8 @@ pro go_nexus_reduction, event
   
   widget_control, event.top, get_uvalue=global
   
-  catch,error
+  error = 0
+  ;catch,error
   if (error ne 0) then begin
     catch,/cancel
     
