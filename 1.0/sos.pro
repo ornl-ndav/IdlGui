@@ -33,8 +33,8 @@
 ;==============================================================================
 
 pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-compile_opt idl2
-
+  compile_opt idl2
+  
   ;get ucams of user if running on linux
   ;and set ucams to 'j35' if running on darwin
   IF (!VERSION.os EQ 'darwin') THEN BEGIN
@@ -93,7 +93,7 @@ compile_opt idl2
     instrument_config_file: './SOS_instruments.cfg', $
     
     ;default spin state to use when just loading a file
-    default_spin_state: default_spin_state, $ 
+    default_spin_state: default_spin_state, $
     
     instrument: instrument,$ ;name of instrument
     PrevTabSelect: 0, $
@@ -191,52 +191,63 @@ compile_opt idl2
     endelse
     (*global).input_path = input_path
     
-;    list_data_nexus = input_path + ['REF_L_34432.nxs',$
-;      'REF_M_34433.nxs']
-     list_data_nexus = input_path + ['REF_M_8451.nxs',$
-      'REF_M_8452.nxs']
-    (*(*global).list_data_nexus) = list_data_nexus + ' (' + $
-    default_spin_state + ')'
+    instrument = 'REF_L'
+    (*global).instrument = instrument
     
-   ; list_norm_nexus = input_path + ['REF_L_34394.nxs',$
-   ; 'REF_L_38953.nxs']
-     list_norm_nexus = input_path + ['REF_M_8455.nxs',$
-    'REF_M_8455.nxs']
-    (*(*global).list_norm_nexus) = list_norm_nexus + ' (' + $
-    default_spin_state + ')'
-
+    if (instrument EQ 'REF_L') then begin ;REF_L instrument
+      list_data_nexus = input_path + ['REF_L_34432.nxs',$
+        'REF_L_34433.nxs', $
+        'REF_L_34434.nxs', $
+        'REF_L_34435.nxs', $
+        'REF_L_34436.nxs']
+      (*(*global).list_data_nexus) = list_data_nexus
+      list_norm_nexus = input_path + ['REF_L_34394.nxs',$
+        'REF_L_34394.nxs', $
+        'REF_L_34394.nxs', $
+        'REF_L_34394.nxs', $
+        'REF_L_34394.nxs']
+      (*(*global).list_norm_nexus) = list_norm_nexus
+    endif else begin ;REF_M instrument
+      list_data_nexus = input_path + ['REF_M_8451.nxs',$
+        'REF_M_8452.nxs']
+      (*(*global).list_data_nexus) = list_data_nexus + ' (' + $
+        default_spin_state + ')'
+      list_norm_nexus = input_path + ['REF_M_8455.nxs',$
+        'REF_M_8455.nxs']
+      (*(*global).list_norm_nexus) = list_norm_nexus + ' (' + $
+        default_spin_state + ')'
+    endelse
+    
     selected_list_norm_file = (*global).selected_list_norm_file
-    selected_list_norm_file[0:1] = list_norm_nexus
+;    selected_list_norm_file[0:1] = list_norm_nexus
     (*global).selected_list_norm_file = selected_list_norm_file
-    
     
     ;activate go button
     activate_button, main_base=main_base, uname='go_button', status=1
     
-;    if ((*global).hide_tab_2 eq 'no') then begin
+    ;    if ((*global).hide_tab_2 eq 'no') then begin
     
-      rtof_file = input_path + 'REF_L_33043#8_33044#8_33045#7_33046#7_33047#6_Off_Off_scaled.rtof'
-      putvalue, base=main_base, 'rtof_file_text_field_uname', rtof_file
-      
-      ;tab to show by default
-      tab_to_show = 0
-      id = widget_info(main_base, find_by_uname='tab_uname')
-      widget_control, id, set_tab_current=tab_to_show
-      
-;    endif
- 
-    (*global).instrument = 'REF_M'
-
+    rtof_file = input_path + 'REF_L_33043#8_33044#8_33045#7_33046#7_33047#6_Off_Off_scaled.rtof'
+    putvalue, base=main_base, 'rtof_file_text_field_uname', rtof_file
+    
+    ;tab to show by default
+    tab_to_show = 0
+    id = widget_info(main_base, find_by_uname='tab_uname')
+    widget_control, id, set_tab_current=tab_to_show
+    
+    ;    endif
+    
+    
     create_big_table_tab1, main_base=main_base
     select_entire_row, base=main_base
     refresh_big_table, base=main_base
     retrieve_data_nexus_distances, main_base=main_base
     
-     file_name = input_path + 'REF_L_34435.nxs'
-     putValue, base=main_base, 'rtof_nexus_geometry_file', file_name
+    file_name = input_path + 'REF_L_34435.nxs'
+    putValue, base=main_base, 'rtof_nexus_geometry_file', file_name
     
     check_go_button, base=main_base
-
+    
   endif
   
   ;=============================================================================

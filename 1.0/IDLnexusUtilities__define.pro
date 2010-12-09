@@ -252,7 +252,7 @@ end
 ; :Author: j35
 ;-
 function _get_d_MS_for_ref_l, fileID=fileID, $
-configuration_file=configuration_file
+    configuration_file=configuration_file
   compile_opt idl2
   
   catch, error
@@ -365,7 +365,7 @@ end
 ; :Author: j35
 ;-
 function IDLnexusUtilities::get_y_tof_data
-compile_opt idl2
+  compile_opt idl2
   count_path = self.entry_spin_state + '/bank1/data_y_time_of_flight/'
   count_data = retrieve_value(file_name=self.file_name, path=count_path)
   return, count_data
@@ -378,7 +378,7 @@ end
 ; :Author: j35
 ;-
 function IDLnexusUtilities::get_tof_data
-compile_opt idl2
+  compile_opt idl2
   count_path = self.entry_spin_state + '/bank1/time_of_flight/'
   tof_data = retrieve_value(file_name=self.file_name, path=count_path)
   tof_data /= 1000.0 ;to get the tof in ms
@@ -489,7 +489,7 @@ function IDLnexusUtilities::get_d_MS
   instrument = self.instrument
   case (strlowcase(self.instrument)) of
     'ref_l': value_units = _get_d_MS_for_ref_l(fileID=fileID, $
-    configuration_file = configuration_file)
+      configuration_file = configuration_file)
     'ref_m': value_units = _get_d_MS_for_ref_m(entry_spin_state=$
       self.entry_spin_state, fileID=fileID, $
       configuration_file = configuration_file)
@@ -505,7 +505,7 @@ end
 ;+
 ; :Description:
 ;    retrieves the distance Sample - Detector and its units
-;    
+;
 ; :Units:
 ;   structure of {value:value, units:units}
 ;
@@ -557,14 +557,33 @@ function IDLnexusUtilities::init, full_nexus_name, spin_state=spin_state
   if (n_elements(spin_state) ne 0) then begin
     ;make sure the spin_state has the right format
     case (strlowcase(spin_state)) of
-      'off_off' : spin_state = 'Off_Off'
-      'off_on'  : spin_state = 'Off_On'
-      'on_off'  : spin_state = 'On_Off'
-      'on_on'   : spin_state = 'On_On'
+      'off_off': begin
+        spin_state = 'Off_Off'
+        self.entry_spin_state = 'entry-' + spin_state
+        self.instrument = 'REF_M'
+      end
+      'off_on': begin
+        spin_state = 'Off_On'
+        self.entry_spin_state = 'entry-' + spin_state
+        self.instrument = 'REF_M'
+      end
+      'on_off': begin
+        spin_state = 'On_Off'
+        self.entry_spin_state = 'entry-' + spin_state
+        self.instrument = 'REF_M'
+      end
+      'on_on': begin
+        spin_state = 'On_On'
+        self.entry_spin_state = 'entry-' + spin_state
+        self.instrument = 'REF_M'
+      end
+      else: begin
+        spin_state = ''
+        self.entry_spin_state = 'entry'
+        self.instrument = 'REF_L'
+      end
     endcase
     self.spin_state = spin_state
-    self.entry_spin_state = 'entry-' + spin_state
-    self.instrument = 'REF_M'
   endif else begin
     self.instrument = 'REF_L'
     self.entry_spin_state = 'entry'
