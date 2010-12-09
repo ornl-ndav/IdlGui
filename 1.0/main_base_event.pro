@@ -218,43 +218,59 @@ PRO main_base_event, Event
     widget_info(wWidget, find_by_uname='data_off_off'): begin
       column_index = 0
       new_spin = 'Off_Off'
-      change_spin_state, event=event, column_index=column_index, new_spin=new_spin
+      change_spin_state, event=event, $
+        column_index=column_index, $
+        new_spin=new_spin
     end
     widget_info(wWidget, find_by_uname='data_off_on'): begin
       column_index = 0
       new_spin = 'Off_On'
-      change_spin_state, event=event, column_index=column_index, new_spin=new_spin
+      change_spin_state, event=event, $
+        column_index=column_index, $
+        new_spin=new_spin
     end
     widget_info(wWidget, find_by_uname='data_on_off'): begin
       column_index = 0
       new_spin = 'On_Off'
-      change_spin_state, event=event, column_index=column_index, new_spin=new_spin
+      change_spin_state, event=event, $
+        column_index=column_index, $
+        new_spin=new_spin
     end
     widget_info(wWidget, find_by_uname='data_on_on'): begin
       column_index = 0
       new_spin = 'On_On'
-      change_spin_state, event=event, column_index=column_index, new_spin=new_spin
+      change_spin_state, event=event, $
+        column_index=column_index, $
+        new_spin=new_spin
     end
     
     widget_info(wWidget, find_by_uname='norm_off_off'): begin
       column_index = 1
       new_spin = 'Off_Off'
-      change_spin_state, event=event, column_index=column_index, new_spin=new_spin
+      change_spin_state, event=event, $
+        column_index=column_index, $
+        new_spin=new_spin
     end
     widget_info(wWidget, find_by_uname='norm_off_on'): begin
       column_index = 1
       new_spin = 'Off_On'
-      change_spin_state, event=event, column_index=column_index, new_spin=new_spin
+      change_spin_state, event=event, $
+        column_index=column_index, $
+        new_spin=new_spin
     end
     widget_info(wWidget, find_by_uname='norm_on_off'): begin
       column_index = 1
       new_spin = 'On_Off'
-      change_spin_state, event=event, column_index=column_index, new_spin=new_spin
+      change_spin_state, event=event, $
+        column_index=column_index, $
+        new_spin=new_spin
     end
     widget_info(wWidget, find_by_uname='norm_on_on'): begin
       column_index = 1
       new_spin = 'On_On'
-      change_spin_state, event=event, column_index=column_index, new_spin=new_spin
+      change_spin_state, event=event, $
+          column_index=column_index, $
+        new_spin=new_spin
     end
     
     ;--- tab2 (work with rtof) ----

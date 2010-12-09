@@ -33,6 +33,7 @@
 ;==============================================================================
 
 pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+compile_opt idl2
 
   ;get ucams of user if running on linux
   ;and set ucams to 'j35' if running on darwin
@@ -235,7 +236,6 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
      putValue, base=main_base, 'rtof_nexus_geometry_file', file_name
     
     check_go_button, base=main_base
-
 
   endif
   
