@@ -103,10 +103,11 @@ pro add_list_of_norm_nexus_to_selected_list, event, list_of_nexus
   widget_control, event.top, get_uvalue=global
   
   selected_list_norm_file = (*global).selected_list_norm_file
+
   sz = n_elements(selected_list_norm_file)
   index_start = 0
   for i=0,(sz-1) do begin
-    if (selected_list_norm_file[i] ne '') then begin
+    if (selected_list_norm_file[i] eq '') then begin
       index_start = i
       break
     endif
@@ -119,7 +120,10 @@ pro add_list_of_norm_nexus_to_selected_list, event, list_of_nexus
   index = index_start
   _index = 0
   while (_index lt max_index) do begin
-    selected_list_norm_file[index] = list_of_nexus[_index]
+  
+    ;remove the spin state extension (if any)
+    split_array = strtrim(strsplit(list_of_nexus[_index],'(',/extract),2)
+    selected_list_norm_file[index] = split_array[0]
     index++
     _index++
   endwhile
