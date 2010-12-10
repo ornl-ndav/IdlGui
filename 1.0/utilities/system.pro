@@ -101,6 +101,8 @@ function get_nexus, event=event, run_number=run_number
   spawn, cmd, full_nexus_name, err
   
   if (full_nexus_name[0] eq '') then return, 'N/A'
+
+  if (file_test(full_nexus_name[0]) eq 0) then return, 'N/A'
   
   ;check if nexus exists
   sz = n_elements(full_nexus_name)
