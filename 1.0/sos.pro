@@ -191,7 +191,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     endelse
     (*global).input_path = input_path
     
-    instrument = 'REF_L'
+    instrument = 'REF_M'
     (*global).instrument = instrument
     
     if (instrument EQ 'REF_L') then begin ;REF_L instrument
