@@ -54,6 +54,7 @@ putValue, event=event, 'd_md_uname', ''
 
 ;reset tab2
 putValue, event=event, 'rtof_file_text_field_uname', '' 
+putValue, event=event, 'rtof_nexus_geometry_file', ''
 
 log_book_update, event, message=message
 
