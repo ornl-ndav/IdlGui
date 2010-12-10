@@ -32,7 +32,19 @@
 ;
 ;==============================================================================
 
+;+
+; :Description:
+;    This is the main event handler function of the all application.
+;    Most of the event coming from the various widges arrive here and are
+;    redirected to the right routines.
+;
+; :Params:
+;    Event
+;
+; :Author: j35
+;-
 PRO main_base_event, Event
+compile_opt idl2
 
   ;get global structure
   wWidget = Event.top ;widget id

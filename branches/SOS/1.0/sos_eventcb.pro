@@ -32,6 +32,15 @@
 ;
 ;==============================================================================
 
+;+
+; :Description:
+;    Fully reset the application
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
 pro full_reset, event
 compile_opt idl2
 
