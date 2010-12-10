@@ -222,8 +222,6 @@
 ; web site: http://www.opensource.org.
 ;
 ;###########################################################################
-
-
 PRO COLORBAR, BOTTOM        = bottom, $
               CHARSIZE      = charsize, $
               COLOR         = color, $

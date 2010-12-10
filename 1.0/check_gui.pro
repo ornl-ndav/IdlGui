@@ -33,6 +33,17 @@
 ;
 ;==============================================================================
 
+;+
+; :Description:
+;     Check the status of the GO button (can it be enabled or not) according
+;     to the status of the various widgets in the tab shown.
+;
+; :Keywords:
+;    event
+;    base
+;
+; :Author: j35
+;-
 pro check_go_button, event=event, base=base
   compile_opt idl2
   

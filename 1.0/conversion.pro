@@ -196,8 +196,6 @@ function calculate_lambda, tof_value=tof_value, $
   return, _lambda
 end
 
-
-
 ;;test routine
 ;d_SD_m = 1430*1e-3
 ;d_MS_m = 13480*1e-3
