@@ -531,7 +531,6 @@ function IDLnexusUtilities::get_d_SD
   h5f_close, fileID
   
   return, {value:value_units[0], units:value_units[1]}
-  
 end
 
 ;+
