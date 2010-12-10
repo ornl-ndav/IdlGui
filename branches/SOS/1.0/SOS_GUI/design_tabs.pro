@@ -140,7 +140,7 @@ pro design_tabs, MAIN_BASE, global
     /row_major,$
     /scroll,$
     /context_events,$
-    column_widths = [425,425],$
+    column_widths = [525,525],$
     /all_events)
     
   ;context_menu
@@ -359,22 +359,22 @@ pro design_tabs, MAIN_BASE, global
       scr_xsize = 100)
     value = widget_text(row1, $
       value = '', $
-      xsize = 102, $
+      xsize = 132, $
       /all_events, $
       /editable, $
       uname = 'rtof_file_text_field_uname')
     load = widget_button(row1,$
-      value = 'Load',$
+      value = ' Load ',$
       uname = 'load_rtof_file_button',$
       sensitive = 0)
     preview = widget_button(row1, $
-      value = 'Preview', $
+      value = ' Preview ', $
       uname = 'rtof_file_preview_button',$
       event_pro = 'rtof_file_preview_button_eventcb', $
       sensitive = 0)
     ;      scr_xsize = 80)
     plot = widget_button(row1,$
-      value = 'Plot',$
+      value = ' Plot ',$
       uname = 'rtof_file_plot_button',$
       event_pro = 'rtof_file_plot_button_eventcb',$
       sensitive = 0)
@@ -393,7 +393,7 @@ pro design_tabs, MAIN_BASE, global
       value = 'Geometry file:  ')
     value = widget_text(row2, $
       value = '', $
-      xsize = 93, $
+      xsize = 130, $
       /all_events, $
       /editable,$
       uname = 'rtof_nexus_geometry_file')

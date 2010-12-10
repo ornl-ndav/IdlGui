@@ -65,6 +65,8 @@ PRO main_base_event, Event
       
       ;increase the ysize of table by the same value
       widget_control, id_table, scr_ysize = (*global).table_ysize + delta_y
+      widget_control, id_table, scr_xsize = (*global).table_xsize
+      widget_control, id, scr_xsize = (*global).main_base_xsize
       return
       
     end
