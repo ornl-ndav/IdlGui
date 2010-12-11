@@ -732,7 +732,8 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     PlotUtility_putText_fromMainBase, MAIN_BASE, 'plot_utility_text', message
     message = '  '
     PlotUtility_putText_fromMainBase, MAIN_BASE, 'plot_utility_text', message  
-    message = '   Or modify the reduce step path to evalute different results.'
+    message = '   Or modify the reduce step path to evalute other results.'
+    PlotUtility_putText_fromMainBase, MAIN_BASE, 'plot_utility_text', message
     message = '  '  
     PlotUtility_putText_fromMainBase, MAIN_BASE, 'plot_utility_text', message
   ;=============================================================================

@@ -3238,17 +3238,11 @@ END
   ;PLOT UTILITY - PLOT UTILITY - PLOT UTILITY - PLOT UTILITY - PLOT UTILITY
   ;----------------------------------------------------------------------------
   WIDGET_INFO(wWidget, FIND_BY_UNAME='launch_plotRvsQ'): BEGIN
-;    path = (*global).ascii_path
-;    message = '> Reflectivity vs Q plot for results in location: ' + path    
-;    PlotUtility_addLogBookText, Event,  message 
-
+ 
     ref_off_spec_plot_rvsq, Event
     ;, Event ; launch the plot utility which plots R vs Q or R vs lambda perp
   END  
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='launch_plotScaled2D'): BEGIN
-;    path = (*global).ascii_path
-;    message = '> Scaled 2D plot for results in location: ' + path    
-;    PlotUtility_addLogBookText, Event,  message 
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='launch_plotScaled2D'): BEGIN 
 
     ref_off_spec_plot_scaled2d, Event
     ;, Event ; launch the plot utility which plots Scale 2D results
