@@ -92,7 +92,7 @@ new_path = WIDGET_TEXT(row1col1,$
 ReduceStepPathGoButton = WIDGET_BUTTON(row1col1,$
                     SCR_XSIZE = 20,$
                     SCR_YSIZE = 25,$
-                    VALUE     = 'Submit',$
+                    VALUE     = 'Proceed',$
                     UNAME     = 'update_reduce_step_path')
 
 END

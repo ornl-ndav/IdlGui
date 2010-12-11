@@ -49,169 +49,153 @@ bLogPlot = 1
 line = STRARR(1)
 lambda = FLTARR(10000,10000)
 intensity = FLTARR(10000,10000)
-error = FLTARR(10000,10000)
 newarray = FLTARR(10000,y_max+1)
-unit = 1
-; user selecst output directory and Scaled2D datafile
-;  path='/SNS/users/rwd/results/5387'
+
+; zero out newarray
+;FOR i = 0,9999,1 DO BEGIN
+;  FOR j = 0, y_max,1 DO BEGIN
+;    newarray(i,j) = 0.
+;  ENDFOR
+;ENDFOR
+
+  unit = 1
   path = (*global).ascii_path
   filter='*Scaled2D.txt'
   title='Select Output Directory'
   datafile = DIALOG_PICKFILE(PATH=path,FILTER=filter,TITLE=title)
-
-;    path = (*global).ascii_path
-    message = '> Scaled 2D plot: ' + datafile    
-    PlotUtility_addLogBookText, Event,  message 
+  message = '> Scaled 2D plot: ' + datafile    
+  PlotUtility_addLogBookText, Event,  message 
 
 IF (datafile NE  "") THEN BEGIN
 ; IF datafile EXISTS THEN PROCEED TO MAKE PLOT 
 
-title = 'Scaled 2D Plot'
+  title = 'Scaled 2D Plot'
 ; keep increasing window number by 1 from initial value of 0
-window_counter = (*global).window_counter
-WINDOW, window_counter, TITLE=title,XSIZE=900,YSIZE=480, RETAIN = 2
-window_counter = window_counter + 1
+  window_counter = (*global).window_counter
+  WINDOW, window_counter, TITLE=title,XSIZE=900,YSIZE=480, RETAIN = 2
+  window_counter = window_counter + 1
 ; update window number by 1
-(*global).window_counter = window_counter
+  (*global).window_counter = window_counter
 
-;for debug:
-;print, TITLE
+  lines = LONG(FILE_LINES(datafile))
+  openr, unit, datafile
+  form='(e12.6,e12.6)'
 
-lines = LONG(FILE_LINES(datafile))
-;for debug:
-;print, "Reading file: ",datafile
-;print, lines
-
-openr, unit, datafile
-form='(e12.6,e12.6)'
-
-z_min = 10000D
-z_max = 0.0000000001D 
+  z_min = 10000D
+  z_max = 0.0000000001D 
  
-;outfile = 'output.txt'
-;openw, outunit, outfile
-
-i = 0
-j = 0
-l = 0l
+  i = 0
+  j = 0
+  l = 0l
 ; get minimum and maximum z values
-FOR l = 1l,lines,1l DO BEGIN
-   readf, unit, line
-;   print, "line: ",line
-   test1 = STRMID(line, 0, 1)
-   test2 = STRMID(line, 0, 2)
+  FOR l = 1l,lines,1l DO BEGIN
+     readf, unit, line
+     test1 = STRMID(line, 0, 1)
+     test2 = STRMID(line, 0, 2)
 ; skip eveything if a blank line (line of no length) 
 ; if line has # also skip, unles #L, when increment j and rezero i 
-  IF(STRLEN(line) NE 0) THEN BEGIN
+     IF(STRLEN(line) NE 0) THEN BEGIN
 ; if line has # also skip, unless #L, when increment j and rezero i 
-    IF( test1 EQ '#') THEN BEGIN
-       IF( test2 EQ '#L') THEN BEGIN
-         i = 0
-         j = j + 1
-       END
-    ENDIF ELSE BEGIN
-        values = double(STRSPLIT(line, ' ',/extract))
+        IF( test1 EQ '#') THEN BEGIN
+           IF( test2 EQ '#L') THEN BEGIN
+             i = 0
+             j = j + 1
+           END
+        ENDIF ELSE BEGIN
+           values = double(STRSPLIT(line, ' ',/extract))
 ;   print, "line: values[1]: ", l," ",values[1]
-        IF (values[1] GT z_max) THEN BEGIN
+           IF (values[1] GT z_max) THEN BEGIN
                 z_max = values[1]
-;           print,"i,j values[1], z_max: ", i," ", j," ",values[1]," ",z_max
-        ENDIF
-       IF (values[1] NE 0.) THEN BEGIN
-        IF (values[1] LT z_min) THEN BEGIN
-                z_min = values[1]
-;           print,"i,j values[1], z_min: ", i," ", j," ",values[1]," ",z_min
-        ENDIF
-       ENDIF
-        i = i + 1
-    ENDELSE
-  ENDIF
-ENDFOR
-close, unit
+;   print,"i,j values[1], z_max: ", i," ", j," ",values[1]," ",z_max
+           ENDIF
+           IF (values[1] NE 0.) THEN BEGIN
+               IF (values[1] LT z_min) THEN BEGIN
+                   z_min = values[1]
+;   print,"i,j values[1], z_min: ", i," ", j," ",values[1]," ",z_min
+               ENDIF
+           ENDIF
+           i = i + 1
+        ENDELSE
+     ENDIF
+  ENDFOR
+  close, unit
 
-IF (bLogPlot EQ 0) THEN BEGIN
-   z_min = 0.
-ENDIF
+  IF (bLogPlot EQ 0) THEN BEGIN
+     z_min = 0.
+  ENDIF
 ;for debug:
 ;print, "z_min: ", z_min," z_max: ", z_max
 
-openr, unit, datafile
+  openr, unit, datafile
 
 ; set all values of arrays to min value: for linear:0 for log:alog10(z_min) 
-if (bLogPlot EQ 1) then begin
-  intensity[*,*] = ALOG10(z_min)
-endif else begin
-  intensity[*,*] = 0.
-endelse
+  if (bLogPlot EQ 1) then begin
+    intensity[*,*] = ALOG10(z_min)
+  endif else begin
+    intensity[*,*] = 0.
+  endelse
 
-i = 0
-j = 0 
-l = 0l
-FOR l = 1l,lines,1l DO BEGIN
-   readf, unit, line
-;for debug:
-;   print, "line: ",line
-   test1 = STRMID(line, 0, 1)
-   test2 = STRMID(line, 0, 2) 
+  i = 0
+  j = 0 
+  l = 0l
+  FOR l = 1l,lines,1l DO BEGIN
+     readf, unit, line
+     test1 = STRMID(line, 0, 1)
+     test2 = STRMID(line, 0, 2) 
 ; skip eveything if a blank line (line of no length) 
 ; if line has # also skip, unles #L, when increment j and rezero i 
-  IF(STRLEN(line) NE 0) THEN BEGIN
+     IF(STRLEN(line) NE 0) THEN BEGIN
 ; if line has # also skip, unless #L, when increment j and rezero i 
-    IF( test1 EQ '#') THEN BEGIN 
-       IF( test2 EQ '#L') THEN BEGIN
-         i = 0
-         j = j + 1
-       END
-    ENDIF ELSE BEGIN
-        values = double(STRSPLIT(line, ' ',/extract))
+        IF( test1 EQ '#') THEN BEGIN 
+           IF( test2 EQ '#L') THEN BEGIN
+             i = 0
+             j = j + 1
+           END
+        ENDIF ELSE BEGIN
+           values = double(STRSPLIT(line, ' ',/extract))
 ; lambda values all the same for each j, so make this a single dimension array
-        lambda[i] = values[0]
-      IF(bLogPlot) THEN BEGIN
-        IF(values[1] EQ 0.) THEN values[1] = z_min
-        intensity[i,j] = ALOG10(values[1])
-      ENDIF ELSE BEGIN
-        IF(values[1] EQ 0.) THEN values[1] = 0. 
-        intensity[i,j] = values[1]
-      ENDELSE
-      i = i + 1
-    ENDELSE
-  ENDIF
-ENDFOR
+           lambda[i] = values[0]
+           IF(bLogPlot) THEN BEGIN
+              IF(values[1] EQ 0.) THEN values[1] = z_min
+                  intensity[i,j] = ALOG10(values[1])
+              ENDIF ELSE BEGIN
+              IF(values[1] EQ 0.) THEN values[1] = 0. 
+                  intensity[i,j] = values[1]
+              ENDELSE
+              i = i + 1
+        ENDELSE
+     ENDIF
+   ENDFOR
 
-IMAX = i-1
-x_min = lambda[0]
-delta_x = lambda[1]
-y_min = 0
+   IMAX = i-1
+   x_min = lambda[0]
+   delta_x = lambda[1]
+   y_min = 0
 
-;for debug:
-;print, "IMAX: ",IMAX
-;print, "delta-x: ",delta_x
-;print, "x_min: ", x_min, " x_max: ", x_max
-
-
-FOR i = 0, IMAX DO BEGIN
-    FOR j = 0, y_max DO BEGIN
-        newarray[i,j] = intensity[i,j]
+   FOR i = 0, IMAX DO BEGIN
+       FOR j = 0, y_max DO BEGIN
+           newarray[i,j] = intensity[i,j]
 ;for debug:
 ;        print, i, j, newarray[i,j]
-    ENDFOR
-ENDFOR
+       ENDFOR
+   ENDFOR
 
 ; Change code (RC Ward 24 Nov 2010): Pass color_table value for LOADCT from XML configuration file
-  color_table = (*global).color_table
+   color_table = (*global).color_table
 
-  LOADCT, color_table, /SILENT
-  DEVICE, DECOMPOSED=0
+   LOADCT, color_table, /SILENT
+   DEVICE, DECOMPOSED=0
 
 ; now plot the rebinned 2D intensity array = newarray
-TVSCL, newarray, X0, Y0, /DEVICE
+   TVSCL, newarray, X0, Y0, /DEVICE
 
 ; draw colorbar
-perso_format = '(e8.1)'
-range  = FLOAT([z_min,z_max])
+   perso_format = '(e8.1)'
+   range  = FLOAT([z_min,z_max])
 ; For routine colorbar, COLOR is the color of the outline and the labeling
-  IF (bLogPlot) THEN BEGIN
-    divisions = 10
-    colorbar, $
+   IF (bLogPlot) THEN BEGIN
+      divisions = 10
+      colorbar, $
       NCOLORS      = 255, $
       POSITION     = [0.94,0.15,0.96,0.85], $
       RANGE        = range,$
@@ -221,8 +205,8 @@ range  = FLOAT([z_min,z_max])
       COLOR = convert_rgb([255B,255B,255B]), $
       /VERTICAL
   ENDIF ELSE BEGIN
-    divisions = 20
-    colorbar, $
+      divisions = 20
+      colorbar, $
       NCOLORS      = 255, $
       POSITION     = [0.94,0.15,0.96,0.85], $
       RANGE        = range,$
@@ -238,36 +222,34 @@ range  = FLOAT([z_min,z_max])
      Y = [0,1,2,3,4,5,6,7,8,9,10]
 ; set up mapping to the device coordinates [X0,Y0,X1,Y1] 
 ;x_max = 700
-X1 = x_max + X0 
-Y1 = y_max + Y0 
-
+   X1 = x_max + X0 
+   Y1 = y_max + Y0 
 ;for debug:
 ;print, "[X0,Y0,X1,Y1]: ", X0," "," ",Y0," ",X1," ",Y1 
-; remove /SNS/USERS/UID/ from filename in title
-strlen = STRLEN(datafile)
-plottitle = STRMID(datafile,15,strlen)
+   strlen = STRLEN(datafile)
+   plottitle = STRMID(datafile,15,strlen)
 
-  LOADCT, 0, /SILENT
-PLOT,  X, Y, $
-    TITLE = plottitle, $
-    XTITLE = 'Lambda Perp (A)', $
-    YTITLE = 'Pixel', $
-    YRANGE = [y_min,y_max],$
-    XRANGE = [0, delta_x * x_max], $
-    COLOR = convert_rgb([255B,255B,255B]), $
-    BACKGROUND = convert_rgb([0B, 0B, 0B]), $
-    THICK = 1, $
-    TICKLEN = -0.015, $
-    XSTYLE = 1,$
-    YSTYLE = 1,$
-    XTICKINTERVAL = 500,$
-    YTICKINTERVAL = 50,$
-    POSITION = [X0,Y0,X1,Y1],$
+   LOADCT, 0, /SILENT
+   PLOT,  X, Y, $
+      TITLE = plottitle, $
+      XTITLE = 'Lambda Perp (A)', $
+      YTITLE = 'Pixel', $
+      YRANGE = [y_min,y_max],$
+      XRANGE = [0, delta_x * x_max], $
+      COLOR = convert_rgb([255B,255B,255B]), $
+      BACKGROUND = convert_rgb([0B, 0B, 0B]), $
+      THICK = 1, $
+      TICKLEN = -0.015, $
+      XSTYLE = 1,$
+      YSTYLE = 1,$
+      XTICKINTERVAL = 500,$
+      YTICKINTERVAL = 50,$
+      POSITION = [X0,Y0,X1,Y1],$
 ; this should be  POSITION = [60,60,760,363]
-    NOCLIP = 0,$
-    /NOERASE, $
-    /NODATA, $
-    /DEVICE
+      NOCLIP = 0,$
+      /NOERASE, $
+      /NODATA, $
+      /DEVICE
   
 ;=========================================================================
 ;use this section of code to get pixel values from the screen for purposes 
@@ -288,8 +270,8 @@ G = 0
     print, "  "
   ENDWHILE
 ;=========================================================================
-close, unit 
+  close, unit 
 
 ENDIF
 
-end
+END

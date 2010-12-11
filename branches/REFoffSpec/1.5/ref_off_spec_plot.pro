@@ -268,10 +268,10 @@ PRO plotAsciiData, Event, TYPE=type, RESCALE=rescale
     delta_x = xaxis[1]-xaxis[0]
 ; Change code (5 Nov 2010) write delta_x to LogBook for use in scaling x axis in PlotTab routine
 ;print, "delta_x: ", delta_x
-  LogMessage = '> plotAsciiData: delta_x: ' + $
-    STRCOMPRESS(delta_x,/REMOVE_ALL)
-  addMessageInCreateStatus, Event, LogMessage
-  IDLsendToGeek_addLogBookText, Event, LogMessage 
+;  LogMessage = '> plotAsciiData: delta_x: ' + $
+;    STRCOMPRESS(delta_x,/REMOVE_ALL)
+;  addMessageInCreateStatus, Event, LogMessage
+;  IDLsendToGeek_addLogBookText, Event, LogMessage 
 
     xmax_array[index] = ind1[0]*delta_x
     ymax_array[index] = ind1[1]/2.

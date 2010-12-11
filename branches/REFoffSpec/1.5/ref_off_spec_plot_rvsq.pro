@@ -113,7 +113,7 @@ IF (datafile NE  "") THEN BEGIN
   SET_PLOT, 'Z'
   DEVICE, DECOMPOSED=0 
 ; GO BACK AND FIX THIS - NEED TO BE ABLE TO CONTROL COLORS
-;  LOADCT, 0, /SILENT
+  LOADCT, 0, /SILENT
 ; 
 ; Change code (RC Ward 24 Nov 2010): Pass color_table value for LOADCT from XML configuration file
 ;  color_table = (*global).color_table
