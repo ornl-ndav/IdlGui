@@ -49,12 +49,14 @@ bLogPlot = 1
 line = STRARR(1)
 lambda = FLTARR(10000,10000)
 intensity = FLTARR(10000,10000)
-newarray = FLTARR(10000,y_max+1)
+;newarray = FLTARR(10000,y_max+1)
 
 ; zero out newarray
 ;FOR i = 0,9999,1 DO BEGIN
-;  FOR j = 0, y_max,1 DO BEGIN
+;   FOR j = 0.9999,1 DO BEGIN
+;;  FOR j = 0, y_max,1 DO BEGIN
 ;    newarray(i,j) = 0.
+;;    intensity(i,j) = 0.
 ;  ENDFOR
 ;ENDFOR
 
@@ -171,8 +173,9 @@ IF (datafile NE  "") THEN BEGIN
    x_min = lambda[0]
    delta_x = lambda[1]
    y_min = 0
+newarray = FLTARR(x_max+1, y_max+1)
 
-   FOR i = 0, IMAX DO BEGIN
+   FOR i = 0, x_max DO BEGIN
        FOR j = 0, y_max DO BEGIN
            newarray[i,j] = intensity[i,j]
 ;for debug:
