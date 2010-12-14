@@ -702,6 +702,8 @@ pro design_tabs, MAIN_BASE, global
     value = 'File Name:')
   value = widget_text(row2,$
     value = '',$
+    /editable, $
+    /all_events, $
     xsize = 130,$
     uname = 'output_file_name')
   label = widget_label(row2,$
