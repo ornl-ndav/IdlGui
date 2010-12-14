@@ -251,7 +251,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   endif
   
   ;sample button of output tab
-  display_output_sample_butotn, main_base=main_base, status=0
+  display_output_sample_button, main_base=main_base, status=0
   
   ;============================================================================
   ;send message to log current run of application

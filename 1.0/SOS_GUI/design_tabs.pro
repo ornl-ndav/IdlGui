@@ -758,6 +758,7 @@ pro design_tabs, MAIN_BASE, global
  /row,$
  /nonexclusive)
  button = widget_button(button_base,$
+ uname = 'email_switch_uname',$
  value = 'Email file(s)')
  email_base = widget_base(row5,$
  uname = 'email_base',$
