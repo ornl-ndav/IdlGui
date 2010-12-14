@@ -348,6 +348,19 @@ PRO main_base_event, Event
       where_create_output_file, event
     end
     
+    ;file name
+    widget_info(wWidget, find_by_uname='output_file_name'): begin
+      check_create_output_file_button, event
+    end
+    
+    ;create output selection
+    widget_info(wWidget, find_by_uname='output_working_with_nexus_plot'): begin
+      check_create_output_file_button, event
+    end
+    widget_info(wWidget, find_by_uname='output_working_with_rtof_plot'): begin
+      check_create_output_file_button, event
+    end
+    
     ;sample of output
     widget_info(wWidget, find_by_uname='example_of_output_format_draw'): begin
     

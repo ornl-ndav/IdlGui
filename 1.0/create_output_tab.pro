@@ -88,6 +88,7 @@ pro check_creat_output_widgets, event
     status_nexus = 1
     reverse_set_button = 0
   endelse
+  (*global).create_output_status_nexus = status_nexus
   activate_button, event=event, status=status_nexus, $
     uname='output_working_with_nexus_plot'
   setButton, event=event, $
@@ -104,10 +105,52 @@ pro check_creat_output_widgets, event
     status_rtof = 1
     reverse_set_button = 0
   endelse
+  (*global).create_output_status_rtof = status_rtof
   activate_button, event=event, status=status_rtof, $
     uname='output_working_with_rtof_plot'
   setButton, event=event, $
     uname='output_working_with_rtof_plot', $
     reverse_flag=reverse_set_button
+    
+    check_create_output_file_button, event
+end
+
+;+
+; :Description:
+;    This procedure checks the status of the various widgets inside the
+;    tab and enabled or not the CREATE FILE button
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro check_create_output_file_button, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  button_status = 1b
+  
+  ;check output file name
+  output_file_name = getValue(event=event, uname='output_file_name')
+  if (strcompress(output_file_name,/remove_all) eq '') then button_status=0b
+  
+  status_rtof = (*global).create_output_status_rtof
+  status_nexus = (*global).create_output_status_nexus
+  
+  if (status_rtof+status_nexus eq 0) then button_status=0b
+  
+  activate_button, event=event, $
+    status=button_status, $
+    uname='create_output_button'
+    
+    
+    
+    
+    
+    
+    
+    
     
 end

@@ -103,6 +103,9 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     xaxis: ptr_new(0L), $
     yaxis: ptr_new(0L)}), $
     
+    create_output_status_rtof: 0b, $   ;status of rtof button
+    create_output_status_nexus: 0b, $  ;status of nexus button
+    
     ;default spin state to use when just loading a file
     default_spin_state: default_spin_state, $
     
