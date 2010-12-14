@@ -94,6 +94,7 @@ cd, CurrentFolder
 
 ;outut tab
 .run sample_info_base.pro
+.run create_output_tab.pro
 
 .run main_base_event.pro
 .run sos.pro
