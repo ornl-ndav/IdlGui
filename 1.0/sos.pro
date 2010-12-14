@@ -86,6 +86,9 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     table_ysize: 0L, $
     table_xsize: 0L, $
     
+    ;create output tab
+    sample_info_base: 0L, $  ;base that will show the sample output 
+    
     ;data and normalization files
     big_table: strarr(2,max_nbr_data_nexus), $
     

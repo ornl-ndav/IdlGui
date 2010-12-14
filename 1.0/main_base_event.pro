@@ -341,10 +341,25 @@ PRO main_base_event, Event
     
     ;sample of output
     widget_info(wWidget, find_by_uname='example_of_output_format_draw'): begin
+    
+      sample_info_base = (*global).sample_info_base
       if (event.enter) then begin ;mouse enters the sample
         display_output_sample_button, event=event, status=1
+        
+         ;get output format selected
+         index_value =  getDroplistIndexValue(event=event, uname='output_format')
+        
+         if (widget_info(sample_info_base, /valid_id) EQ 0) THEN BEGIN
+         sample_info_base, event=event, file_type=index_value
+    endif 
+
       endif else begin ;leaving the sample
         display_output_sample_button, event=event, status=0
+        
+         if (widget_info(sample_info_base, /valid_id)) THEN BEGIN
+      widget_control, sample_info_base, /destroy
+    endif
+        
       endelse
     end
     
