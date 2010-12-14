@@ -44,8 +44,8 @@
 ; :Author: j35
 ;-
 PRO main_base_event, Event
-compile_opt idl2
-
+  compile_opt idl2
+  
   ;get global structure
   wWidget = Event.top ;widget id
   widget_control, wWidget, get_uvalue=global
@@ -283,7 +283,7 @@ compile_opt idl2
       column_index = 1
       new_spin = 'On_On'
       change_spin_state, event=event, $
-          column_index=column_index, $
+        column_index=column_index, $
         new_spin=new_spin
     end
     
@@ -335,6 +335,17 @@ compile_opt idl2
       check_rtof_buttons_status, event
       check_go_button, event=event
       result = load_geometry_parameters(event)
+    end
+    
+    ;---------- CREATE OUTPUT TAB -------------------------------------------
+    
+    ;sample of output
+    widget_info(wWidget, find_by_uname='example_of_output_format_draw'): begin
+      if (event.enter) then begin ;mouse enters the sample
+        display_output_sample_butotn, event=event, status=1
+      endif else begin ;leaving the sample
+        display_output_sample_butotn, event=event, status=0
+      endelse
     end
     
     ;---- bottom part of GUI ----------

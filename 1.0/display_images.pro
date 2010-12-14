@@ -46,7 +46,7 @@
 ;
 ; :Author: j35
 ;-
-PRO  display_file_found_or_not, main_base=main_base, $
+PRO display_file_found_or_not, main_base=main_base, $
     event=event, $
     status=status
     compile_opt idl2
@@ -74,3 +74,45 @@ PRO  display_file_found_or_not, main_base=main_base, $
   TV, mode1, 0,0,/true
   
 END
+
+;+
+; :Description:
+;    display the Sample widget draw button
+;
+; :Keywords:
+;    main_base
+;    event
+;    status   0:for off and 1: for on
+;
+; :Author: j35
+;-
+pro display_output_sample_butotn, main_base=main_base, $
+event=event, $
+status=status
+compile_opt idl2
+
+  case (status) OF
+    0: BEGIN ;file not found
+      mode1 = read_png('SOS_images/sample_off.png')
+    END
+    1: BEGIN ;activate previous button
+      mode1 = read_png('SOS_images/sample_on.png')
+    END
+  ENDCASE
+  
+  uname = 'example_of_output_format_draw'
+  IF (N_ELEMENTS(MAIN_BASE) NE 0) THEN BEGIN
+    mode1_id = WIDGET_INFO(MAIN_BASE, $
+    FIND_BY_UNAME=uname)
+  ENDIF ELSE BEGIN
+    mode1_id = WIDGET_INFO(Event.top, $
+    FIND_BY_UNAME=uname)
+  ENDELSE
+  
+  ;mode1
+  WIDGET_CONTROL, mode1_id, GET_VALUE=id
+  WSET, id
+  TV, mode1, 0,0,/true
+
+
+end

@@ -191,7 +191,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     endelse
     (*global).input_path = input_path
     
-    instrument = 'REF_M'
+    instrument = 'REF_L'  
     (*global).instrument = instrument
     
     if (instrument EQ 'REF_L') then begin ;REF_L instrument
@@ -227,16 +227,16 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
     ;    if ((*global).hide_tab_2 eq 'no') then begin
     
-    rtof_file = input_path + 'REF_L_33043#8_33044#8_33045#7_33046#7_33047#6_Off_Off_scaled.rtof'
+    rtof_file = input_path + $
+    'REF_L_33043#8_33044#8_33045#7_33046#7_33047#6_Off_Off_scaled.rtof'
     putvalue, base=main_base, 'rtof_file_text_field_uname', rtof_file
     
     ;tab to show by default
-    tab_to_show = 0
+    tab_to_show = 3
     id = widget_info(main_base, find_by_uname='tab_uname')
     widget_control, id, set_tab_current=tab_to_show
     
     ;    endif
-    
     
     create_big_table_tab1, main_base=main_base
     select_entire_row, base=main_base
@@ -250,7 +250,10 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
   endif
   
-  ;=============================================================================
+  ;sample button of output tab
+  display_output_sample_butotn, main_base=main_base, status=0
+  
+  ;============================================================================
   ;send message to log current run of application
   logger, APPLICATION=application, VERSION=version, UCAMS=ucams
   
