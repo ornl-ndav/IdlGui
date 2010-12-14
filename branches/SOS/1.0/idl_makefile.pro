@@ -45,6 +45,7 @@ cd, CurrentFolder
 .run produce_rtof_metadata_structure.pro
 .run display_images.pro
 .run error_dialog_message.pro
+.run create_structure_data.pro
 
 ;test
 .run IDLnexusUtilitiesTest__define.pro

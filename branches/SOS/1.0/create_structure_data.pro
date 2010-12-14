@@ -34,55 +34,27 @@
 
 ;+
 ; :Description:
-;    Fully reset the application
+;    This create the data structure that will contain the data,
+;    xaxis and yaxis
 ;
-; :Params:
+; :Keywords:
 ;    event
+;    structure
+;    data
+;    xaxis
+;    yaxis
 ;
 ; :Author: j35
 ;-
-pro full_reset, event
-  compile_opt idl2
-  
-  widget_control, event.top, get_uvalue=global
-  
-  message = '> Full reset of session !! ****'
-  
-  ;reset of tab1
-  (*(*global).list_data_nexus) = !null
-  (*(*global).list_data_runs) = !null
-  (*(*global).list_norm_nexus) = !null
-  
-  max_nbr_data_nexus = (*global).max_nbr_data_nexus
-  big_table = strarr(2,max_nbr_data_nexus)
-  (*global).big_table = big_table
-  putValue, event=event, base=main_base, 'tab1_table', big_table
-  
-  putValue, event=event, 'd_sd_uname', ''
-  putValue, event=event, 'd_md_uname', ''
-  
-  ;reset tab2
-  putValue, event=event, 'rtof_file_text_field_uname', ''
-  putValue, event=event, 'rtof_nexus_geometry_file', ''
-  
-  log_book_update, event, message=message
-  
-  check_rtof_buttons_status, event
-  check_go_button, event=event
-  
-  ;reset data structure
-  structure = (*global).structure_data_working_with_nexus
-  create_structure_data, structure=structure, $
-    data=!null, $
-    xaxis=!null, $
-    yaxis=!null
-  (*global).structure_data_working_with_nexus = structure
-  
-  structure = (*global).structure_data_working_with_rtof
-  create_structure_data, structure=structure, $
-    data=!null, $
-    xaxis=!null, $
-    yaxis=!null
-  (*global).structure_data_working_with_rtof = structure
+pro create_structure_data, event=event, $
+structure=structure, $
+  data=data, $
+  xaxis=xaxis, $
+  yaxis=yaxis
+compile_opt idl2
+
+  (*(*structure).data) = data
+  (*(*structure).xaxis) = xaxis
+  (*(*structure).yaxis) = yaxis
 
 end

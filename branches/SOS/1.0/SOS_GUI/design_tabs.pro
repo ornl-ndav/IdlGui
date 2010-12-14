@@ -171,7 +171,7 @@ pro design_tabs, MAIN_BASE, global
     value = 'Data On_On',$
     uname = 'data_on_on',$
     sensitive = 1)
-
+    
   off_off = widget_button(contextBase,$
     value = 'Norm. Off_Off',$
     uname = 'norm_off_off',$
@@ -683,116 +683,126 @@ pro design_tabs, MAIN_BASE, global
     title = '    CREATE OUTPUT     ')
     
   base = widget_base(base3,$
-  /column)
-  
+    /column)
+    
   ;where
   row1 = widget_base(base,$
-  /row)
+    /row)
   label = widget_label(row1,$
-  value = 'Where:')
+    value = 'Where:')
   button = widget_button(row1,$
-  value = (*global).output_path, $
-  uname = 'output_path_button',$
-  scr_xsize = 1050)
-  
+    value = (*global).output_path, $
+    uname = 'output_path_button',$
+    scr_xsize = 1050)
+    
   ;file name
   row2 = widget_base(base,$
- /row)
- label = widget_label(row2,$
- value = 'File Name:')
- value = widget_text(row2,$
- value = '',$
- xsize = 150,$
- uname = 'output_file_name')
- preview = widget_button(row2,$
- value = '  PREVIEW...  ',$
- sensitive = 0,$
- uname = 'preview_output_file')
-  
- space = widget_label(base,$
- value = ' ') 
-  
- ;which plot to output
- row3 = widget_base(base,$
- /column,$
- /nonexclusive)
- nexus_button = widget_button(row3,$
- value = 'Plot created in WORKING WITH NEXUS',$
- uname = 'output_working_with_nexus_plot',$
- sensitive = 0)
- rtof_button = widget_button(row3,$
- value = 'Plot created in WORKING WITH RTOF',$
- uname = 'output_working_with_rtof_plot', $
- sensitive = 0)
-
- space = widget_label(base,$
- value = ' ') 
- 
- ;output format
- row4 = widget_base(base,$
- /row)
- label = widget_label(row4,$
- value = 'Output Format:')
- format = widget_droplist(row4,$
- value = [' xy Many z '],$
- uname = 'output_format',$
- scr_xsize = 100)
- space = widget_label(row4,$
- value = '   ')
- draw_base = widget_base(row4)
- example = widget_draw(draw_base,$
- yoffset = 5, $
- scr_xsize = 50,$
- scr_ysize = 25,$
- /tracking_events, $
- retain=2,$
- uname = 'example_of_output_format_draw')
-  
- space = widget_label(base,$
- value = ' ')
- 
- ;send by email
- row5 = widget_base(base,$
- /row)
- button_base = widget_base(row5,$
- /row,$
- /nonexclusive)
- button = widget_button(button_base,$
- uname = 'email_switch_uname',$
- value = 'Email file(s)')
- email_base = widget_base(row5,$
- uname = 'email_base',$
- map=0,$
- /row)
- to = widget_text(email_base,$
- value ='',$
- /editable,$
- uname = 'email_to_uname',$
- xsize = 50)
- label = widget_label(email_base,$
- value = 'Subject:')
- subject = widget_text(email_base,$
- /editable,$
- uname = 'email_subject_uname',$
- value = '',$
- xsize = 90)
-
- space = widget_label(base,$
- value = ' ')
- space = widget_label(base,$
- value = ' ')
- space = widget_label(base,$
- value = ' ')
- 
- ;create output button
- create_base = widget_base(base,$
- /row,$
- /align_center)
- button = widget_button(create_base,$
- uname = 'create_output_button',$
- sensitive = 0,$
- scr_xsize = 300,$
- value = 'Create File')   
+    /row)
+  label = widget_label(row2,$
+    value = 'File Name:')
+  value = widget_text(row2,$
+    value = '',$
+    xsize = 130,$
+    uname = 'output_file_name')
+  label = widget_label(row2,$
+    value = '_<extension>.txt    ')
+  preview = widget_button(row2,$
+    value = '  PREVIEW...  ',$
+    sensitive = 0,$
+    uname = 'preview_output_file')
+    
+  space = widget_label(base,$
+    value = ' ')
+    
+    
+  label_base = widget_base(base,$
+    /row,$
+    /align_left)
+  label = widget_label(label_base,$
+    value = 'Create output(s) of:')
+  ;which plot to output
+  row3 = widget_base(base,$
+    /column,$
+    /nonexclusive)
+  nexus_button = widget_button(row3,$
+    value = 'Last data set created in WORKING WITH NEXUS' + $
+    ' (ext: _fromNexus)', $
+    uname = 'output_working_with_nexus_plot', $
+    sensitive = 0)
+  rtof_button = widget_button(row3,$
+    value = 'Last data set created in WORKING WITH RTOF' + $
+    ' (ext: _fromRTOF)', $
+    uname = 'output_working_with_rtof_plot', $
+    sensitive = 0)
+    
+  space = widget_label(base,$
+    value = ' ')
+    
+  ;output format
+  row4 = widget_base(base,$
+    /row)
+  label = widget_label(row4,$
+    value = 'Output Format:')
+  format = widget_droplist(row4,$
+    value = [' xy Many z '],$
+    uname = 'output_format',$
+    scr_xsize = 100)
+  space = widget_label(row4,$
+    value = '   ')
+  draw_base = widget_base(row4)
+  example = widget_draw(draw_base,$
+    yoffset = 5, $
+    scr_xsize = 50,$
+    scr_ysize = 25,$
+    /tracking_events, $
+    retain=2,$
+    uname = 'example_of_output_format_draw')
+    
+  space = widget_label(base,$
+    value = ' ')
+    
+  ;send by email
+  row5 = widget_base(base,$
+    /row)
+  button_base = widget_base(row5,$
+    /row,$
+    /nonexclusive)
+  button = widget_button(button_base,$
+    uname = 'email_switch_uname',$
+    value = 'Email file(s)')
+  email_base = widget_base(row5,$
+    uname = 'email_base',$
+    map=0,$
+    /row)
+  to = widget_text(email_base,$
+    value ='',$
+    /editable,$
+    uname = 'email_to_uname',$
+    xsize = 50)
+  label = widget_label(email_base,$
+    value = 'Subject:')
+  subject = widget_text(email_base,$
+    /editable,$
+    uname = 'email_subject_uname',$
+    value = '',$
+    xsize = 90)
+    
+  space = widget_label(base,$
+    value = ' ')
+  space = widget_label(base,$
+    value = ' ')
+  space = widget_label(base,$
+    value = ' ')
+    
+  ;create output button
+  create_base = widget_base(base,$
+    /row,$
+    /align_center)
+  button = widget_button(create_base,$
+    uname = 'create_output_button',$
+    sensitive = 0,$
+    scr_xsize = 300,$
+    value = 'Create File')
     
   ;******* bottom part of GUI ************************************************
     

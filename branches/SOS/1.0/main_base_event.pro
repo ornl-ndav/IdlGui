@@ -123,10 +123,14 @@ PRO main_base_event, Event
       CurrTabSelect = widget_info(tab_id,/tab_current)
       PrevTabSelect = (*global).PrevTabSelect
       if (CurrTabSelect ne PrevTabSelect) then begin
-        check_go_button, event=event
+        case (currTabSelect) of
+          0: check_go_button, event=event
+          1: check_go_button, event=event
+          3: check_creat_output_widgets, event
+          else:
+        endcase
         (*global).PrevTabSelect = CurrTabSelect
       endif
-      
     end
     
     ;TAB1
@@ -351,19 +355,19 @@ PRO main_base_event, Event
       if (event.enter) then begin ;mouse enters the sample
         display_output_sample_button, event=event, status=1
         
-         ;get output format selected
-         index_value =  getDroplistIndexValue(event=event, uname='output_format')
+        ;get output format selected
+        index_value =  getDroplistIndexValue(event=event, uname='output_format')
         
-         if (widget_info(sample_info_base, /valid_id) EQ 0) THEN BEGIN
-         sample_info_base, event=event, file_type=index_value
-    endif 
-
+        if (widget_info(sample_info_base, /valid_id) EQ 0) THEN BEGIN
+          sample_info_base, event=event, file_type=index_value
+        endif
+        
       endif else begin ;leaving the sample
         display_output_sample_button, event=event, status=0
         
-         if (widget_info(sample_info_base, /valid_id)) THEN BEGIN
-      widget_control, sample_info_base, /destroy
-    endif
+        if (widget_info(sample_info_base, /valid_id)) THEN BEGIN
+          widget_control, sample_info_base, /destroy
+        endif
         
       endelse
     end
