@@ -87,13 +87,21 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     table_xsize: 0L, $
     
     ;create output tab
-    sample_info_base: 0L, $  ;base that will show the sample output 
+    sample_info_base: 0L, $  ;base that will show the sample output
     
     ;data and normalization files
     big_table: strarr(2,max_nbr_data_nexus), $
     
     ;where all the parameters are defined
     instrument_config_file: './SOS_instruments.cfg', $
+    
+    ;structure of data from NeXus and rtof tabs
+    structure_data_working_with_nexus: ptr_new({ data:ptr_new(0L), $
+    xaxis: ptr_new(0L), $
+    yaxis: ptr_new(0L)}), $
+    structure_data_working_with_rtof: ptr_new({ data:ptr_new(0L), $
+    xaxis: ptr_new(0L), $
+    yaxis: ptr_new(0L)}), $
     
     ;default spin state to use when just loading a file
     default_spin_state: default_spin_state, $
@@ -131,6 +139,14 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     output_path: '~/results/',$ ;used in the output tab
     input_path: '~/results/' })
     
+  ;initialize structure data
+  structure_data_working_with_nexus = $
+    (*global).structure_data_working_with_nexus
+  (*(*structure_data_working_with_nexus).data) = !null
+  structure_data_working_with_rtof = $
+    (*global).structure_data_working_with_rtof
+  (*(*structure_data_working_with_rtof).data) = !null
+  
   plot_symbol = ['+','*','.','D','tu','s','X','tu','td','H','S','o']
   plot_color = ['b','r','g','c','m','y','k']
   plot_linestyle = ['-',':','--','-.','-:','__']
@@ -194,7 +210,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     endelse
     (*global).input_path = input_path
     
-    instrument = 'REF_L'  
+    instrument = 'REF_L'
     (*global).instrument = instrument
     
     if (instrument EQ 'REF_L') then begin ;REF_L instrument
@@ -222,7 +238,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     endelse
     
     selected_list_norm_file = (*global).selected_list_norm_file
-;    selected_list_norm_file[0:1] = list_norm_nexus
+    ;    selected_list_norm_file[0:1] = list_norm_nexus
     (*global).selected_list_norm_file = selected_list_norm_file
     
     ;activate go button
@@ -231,7 +247,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ;    if ((*global).hide_tab_2 eq 'no') then begin
     
     rtof_file = input_path + $
-    'REF_L_33043#8_33044#8_33045#7_33046#7_33047#6_Off_Off_scaled.rtof'
+      'REF_L_33043#8_33044#8_33045#7_33046#7_33047#6_Off_Off_scaled.rtof'
     putvalue, base=main_base, 'rtof_file_text_field_uname', rtof_file
     
     ;tab to show by default

@@ -63,7 +63,15 @@ pro go_nexus_reduction, event
       /error,$
       /center,$
       dialog_parent=widget_id)
-      
+  
+    ;reset structure data
+   structure = (*global).structure_data_working_with_nexus
+  create_structure_data, structure=structure, $
+  data=!null, $
+  xaxis=!null, $
+  yaxis=!null
+  (*global).structure_data_working_with_nexus = structure
+
     hide_progress_bar, event
     widget_control, hourglass=0
     
@@ -412,6 +420,13 @@ pro go_nexus_reduction, event
   endelse ;end of catch statement
   
   offset = 50
+  
+  structure = (*global).structure_data_working_with_nexus
+  create_structure_data, structure=structure, $
+  data=divarray, $
+  xaxis=qxvec, $
+  yaxis=qzvec
+  (*global).structure_data_working_with_nexus = structure
   
   final_plot, event=event, $
     offset = offset, $

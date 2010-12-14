@@ -57,6 +57,15 @@ pro sos_cleanup, tlb
     ptr_free, (*global).new_log_book_message
     ptr_free, (*global).full_log_book
     ptr_free, (*global).rtof_data
+
+    ptr_free, (*(*global).structure_data_working_with_nexus).data
+    ptr_free, (*(*global).structure_data_working_with_nexus).xaxis
+    ptr_free, (*(*global).structure_data_working_with_nexus).yaxis
+
+    ptr_free, (*(*global).structure_data_working_with_rtof).data
+    ptr_free, (*(*global).structure_data_working_with_rtof).xaxis
+    ptr_free, (*(*global).structure_data_working_with_rtof).yaxis
+
     ptr_free, global
     
 end

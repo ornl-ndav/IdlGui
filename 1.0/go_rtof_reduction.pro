@@ -46,7 +46,7 @@
 ;-
 pro go_rtof_reduction, event
   compile_opt idl2
-
+  
   widget_control, event.top, get_uvalue=global
   widget_control, /hourglass
   
@@ -221,32 +221,39 @@ pro go_rtof_reduction, event
     qxvec = qxvec, $
     qzvec = qzvec, $
     theta_rad
+    
+  ;create metadata
+  time_stamp = GenerateReadableIsoTimeStamp()
+  metadata = produce_rtof_metadata_structure(event, $
+    time_stamp = time_stamp, $
+    rtof_file = rtof_ascii_file, $
+    rtof_nexus_geometry_file = rtof_nexus_geometry_file, $
+    qzmax = QZmax,$
+    qzmin = QZmin, $
+    qxbins = QXbins, $
+    qzbins = QZbins, $
+    qxmin = QXmin, $
+    qxmax = QXmax, $
+    tofmin = TOFmin, $
+    tofmax = TOFmax, $
+    pixmin = PIXmin, $
+    pixmax = PIXmax, $
+    center_pixel = center_pixel, $
+    pixel_size = pixel_size, $
+    d_sd = SD_d, $
+    d_md = MD_d, $
+    qxwidth = qxwidth, $
+    tnum = tnum)
+    
+  structure = (*global).structure_data_working_with_rtof
+  create_structure_data, structure=structure, $
+    data=QxQz_array, $
+    xaxis=qxvec, $
+    yaxis=qzvec
+  (*global).structure_data_working_with_rtof = structure
   
-    ;create metadata
-    time_stamp = GenerateReadableIsoTimeStamp()
-    metadata = produce_rtof_metadata_structure(event, $
-      time_stamp = time_stamp, $
-      rtof_file = rtof_ascii_file, $
-      rtof_nexus_geometry_file = rtof_nexus_geometry_file, $
-      qzmax = QZmax,$
-      qzmin = QZmin, $
-      qxbins = QXbins, $
-      qzbins = QZbins, $
-      qxmin = QXmin, $
-      qxmax = QXmax, $
-      tofmin = TOFmin, $
-      tofmax = TOFmax, $
-      pixmin = PIXmin, $
-      pixmax = PIXmax, $
-      center_pixel = center_pixel, $
-      pixel_size = pixel_size, $
-      d_sd = SD_d, $
-      d_md = MD_d, $
-      qxwidth = qxwidth, $
-      tnum = tnum)
-  
-    offset = 50
-    final_plot, event=event, $
+  offset = 50
+  final_plot, event=event, $
     offset = offset, $
     time_stamp = time_stamp, $
     data = QxQz_array,$
@@ -258,5 +265,5 @@ pro go_rtof_reduction, event
     output_folder = (*global).output_path
     
   widget_control, hourglass=0
-    
+  
 end

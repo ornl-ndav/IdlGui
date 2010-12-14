@@ -32,15 +32,21 @@
 ;
 ;==============================================================================
 
-pro setButton, base=base, event=event, uname=uname
+pro setButton, base=base, event=event, uname=uname, reverse_flag=reverse_flag
   compile_opt idl2
+  
+  if (keyword_set(reverse_flag)) then begin
+  set_button_value = 0
+  endif else begin
+  set_button_value = 1
+  endelse
   
   if (keyword_set(event)) then begin
     id = widget_info(event.top, find_by_uname=uname)
   endif else begin
     id = widget_info(base, find_by_uname=uname)
   endelse
-  widget_control, id, /set_button
+  widget_control, id, set_button = set_button_value
 end
 
 ;+

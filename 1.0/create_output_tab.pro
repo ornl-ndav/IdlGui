@@ -42,21 +42,72 @@
 ; :Author: j35
 ;-
 pro where_create_output_file, event
-compile_opt idl2
-
+  compile_opt idl2
+  
   widget_control, event.top, get_uvalue=global
-
+  
   output_path = (*global).output_path
   id = widget_info(event.top, find_by_uname='main_base')
   result = dialog_pickfile(/directory,$
-  dialog_parent=id, $
-  get_path=path, $
-  title = 'Select output folder')
-  
+    dialog_parent=id, $
+    get_path=path, $
+    title = 'Select output folder')
+    
   if (path[0] ne '') then begin
-  (*global).output_path = path[0]
-  putValue, event=event, 'output_path_button', path[0]
+    (*global).output_path = path[0]
+    putValue, event=event, 'output_path_button', path[0]
   endif
   
   return
+end
+
+;+
+; :Description:
+;    This routine checks which buttons/base should be enabled or not, according
+;    to the status of the main application.
+;    ex: Working with NeXus ran with sucess -> enabled "last data set created
+;    in WORKING WITH NEXUS"
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro check_creat_output_widgets, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  ;check "last data set created in working with nexus"
+  structure_data_working_with_nexus = (*global).structure_data_working_with_nexus
+  data = (*(*structure_data_working_with_nexus).data)
+  if (data eq !null) then begin
+    status_nexus = 0
+    reverse_set_button = 1
+  endif else begin
+    status_nexus = 1
+    reverse_set_button = 0
+  endelse
+  activate_button, event=event, status=status_nexus, $
+    uname='output_working_with_nexus_plot'
+  setButton, event=event, $
+    uname='output_working_with_nexus_plot', $
+    reverse_flag=reverse_set_button
+    
+  ;check "last data set created in working with rtof"
+  structure_data_working_with_rtof = (*global).structure_data_working_with_rtof
+  data = (*(*structure_data_working_with_rtof).data)
+  if (data eq !null) then begin
+    status_rtof = 0
+    reverse_set_button = 1
+  endif else begin
+    status_rtof = 1
+    reverse_set_button = 0
+  endelse
+  activate_button, event=event, status=status_rtof, $
+    uname='output_working_with_rtof_plot'
+  setButton, event=event, $
+    uname='output_working_with_rtof_plot', $
+    reverse_flag=reverse_set_button
+    
 end
