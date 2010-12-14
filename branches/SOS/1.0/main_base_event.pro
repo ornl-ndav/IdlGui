@@ -339,6 +339,11 @@ PRO main_base_event, Event
     
     ;---------- CREATE OUTPUT TAB -------------------------------------------
     
+    ;where button
+    widget_info(wWidget, find_by_uname='output_path_button'): begin
+      where_create_output_file, event
+    end
+    
     ;sample of output
     widget_info(wWidget, find_by_uname='example_of_output_format_draw'): begin
     
