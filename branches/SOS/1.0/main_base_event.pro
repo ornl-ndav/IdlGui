@@ -342,10 +342,21 @@ PRO main_base_event, Event
     ;sample of output
     widget_info(wWidget, find_by_uname='example_of_output_format_draw'): begin
       if (event.enter) then begin ;mouse enters the sample
-        display_output_sample_butotn, event=event, status=1
+        display_output_sample_button, event=event, status=1
       endif else begin ;leaving the sample
-        display_output_sample_butotn, event=event, status=0
+        display_output_sample_button, event=event, status=0
       endelse
+    end
+    
+    ;email switch
+    widget_info(wWidget, find_by_uname='email_switch_uname'): begin
+      ;show base
+      if (isButtonSelected(event=event, uname='email_switch_uname')) then begin
+        map_status = 1
+      endif else begin
+        map_status = 0
+      endelse
+      mapbase, event=event, status=map_status, uname='email_base'
     end
     
     ;---- bottom part of GUI ----------

@@ -86,7 +86,7 @@ END
 ;
 ; :Author: j35
 ;-
-pro display_output_sample_butotn, main_base=main_base, $
+pro display_output_sample_button, main_base=main_base, $
 event=event, $
 status=status
 compile_opt idl2
