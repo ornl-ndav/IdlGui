@@ -34,6 +34,48 @@
 
 ;+
 ; :Description:
+;    Return the zero based index of the droplist given by its uname
+;
+; :Keywords:
+;    event
+;    uname
+;
+; :Returns:
+;   index selected
+;
+; :Author: j35
+;-
+function getDroplistIndex, event=event, uname=uname
+  compile_opt idl2
+  
+  id = widget_info(event.top, find_by_uname=uname)
+  index = widget_info(id, /droplist_select)
+  
+  return, index
+end
+
+;+
+; :Description:
+;    Get value (lable) of droplist index selected
+;
+; :Keywords:
+;    event
+;    uname
+;
+; :Author: j35
+;-
+function getDroplistIndexValue, event=event, uname=uname
+  compile_opt idl2
+  
+  index = getDroplistIndex(event=event, uname=uname)
+  id = widget_info(event.top, find_by_uname=uname)
+  widget_control, id, get_value=list
+  
+  return, list[index]
+end
+
+;+
+; :Description:
 ;    get index of line selected
 ;
 ; :Keywords:
@@ -44,7 +86,7 @@
 ; :Author: j35
 ;-
 function get_table_lines_selected, event=event, base=base, uname=uname
-  
+
   if (~keyword_set(uname)) then uname = 'tab1_table'
   
   if (keyword_set(event)) then begin
@@ -492,7 +534,7 @@ end
 
 ;+
 ; :Description:
-;    returns a structure of the angle value and units from the 
+;    returns a structure of the angle value and units from the
 ;    rtof text box
 ;
 ; :Params:
@@ -503,16 +545,16 @@ end
 ; :Author: j35
 ;-
 function get_theta, event
-compile_opt idl2
-value = getValue(event=event, uname='rtof_theta_value')
-units = getValue(event=event, uname='rtof_theta_units')
-return, {value:value, units:units}
+  compile_opt idl2
+  value = getValue(event=event, uname='rtof_theta_value')
+  units = getValue(event=event, uname='rtof_theta_units')
+  return, {value:value, units:units}
 end
 
 ;+
 ; :Description:
 ;    returns the value and units of the twotheta angle from the
-;    rtof text box 
+;    rtof text box
 ;
 ; :Params:
 ;    event
@@ -522,10 +564,10 @@ end
 ; :Author: j35
 ;-
 function get_twotheta, event
-compile_opt idl2
-value = getValue(event=event, uname='rtof_twotheta_value')
-units = getValue(event=event, uname='rtof_twotheta_units')
-return, {value:value, units:units}
+  compile_opt idl2
+  value = getValue(event=event, uname='rtof_twotheta_value')
+  units = getValue(event=event, uname='rtof_twotheta_units')
+  return, {value:value, units:units}
 end
 
 ;+
@@ -542,17 +584,17 @@ end
 ; :Author: j35
 ;-
 function get_instrumet_from_file_name, file_name
-compile_opt idl2
-
-;get only file name (without extension)
-base_name = file_basename(file_name[0])
-
-;split according to '_'
-split_array = strsplit(base_name,'_',/extract)
-instrument_array = split_array[0:1]
-
-;instrument (REF_L or REF_M should be the first 2 elements of this array)
-instrument = strjoin(instrument_array,'_')
-
-return, strupcase(instrument)
+  compile_opt idl2
+  
+  ;get only file name (without extension)
+  base_name = file_basename(file_name[0])
+  
+  ;split according to '_'
+  split_array = strsplit(base_name,'_',/extract)
+  instrument_array = split_array[0:1]
+  
+  ;instrument (REF_L or REF_M should be the first 2 elements of this array)
+  instrument = strjoin(instrument_array,'_')
+  
+  return, strupcase(instrument)
 end

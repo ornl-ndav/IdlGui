@@ -92,6 +92,9 @@ cd, CurrentFolder
 .run go_rtof_reduction_eventcb.pro
 .run go_rtof_reduction.pro
 
+;outut tab
+.run sample_info_base.pro
+
 .run main_base_event.pro
 .run sos.pro
 .run sos_cleanup.pro
