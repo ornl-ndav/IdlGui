@@ -34,6 +34,28 @@
 
 ;+
 ; :Description:
+;    Create a default output file name
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro define_new_default_output_file_name, event
+  compile_opt idl2
+  
+  time_stamp = GenerateIsoTimeStamp()
+  
+  file_name = 'SOS_IvsQxQz_'
+  file_name += time_stamp
+  putValue, event=event, 'output_file_name', file_name
+  
+end
+
+;+
+; :Description:
 ;    where to create the output file button
 ;
 ; :Params:
@@ -112,7 +134,7 @@ pro check_creat_output_widgets, event
     uname='output_working_with_rtof_plot', $
     reverse_flag=reverse_set_button
     
-    check_create_output_file_button, event
+  check_create_output_file_button, event
 end
 
 ;+
