@@ -456,6 +456,9 @@ pro go_nexus_reduction, event
     
   update_progress_bar_percentage, event, ++processes, $
     total_number_of_processes
+
+  ;define a new default output file name in the Create output tab    
+  define_new_default_output_file_name, event  
     
   hide_progress_bar, event
   widget_control, hourglass=0

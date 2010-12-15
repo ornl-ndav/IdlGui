@@ -264,6 +264,9 @@ pro go_rtof_reduction, event
     main_base_uname = 'main_base', $
     output_folder = (*global).output_path
     
+  ;define a new default output file name in the Create output tab    
+  define_new_default_output_file_name, event  
+    
   widget_control, hourglass=0
   
 end
