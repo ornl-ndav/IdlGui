@@ -728,12 +728,12 @@ pro design_tabs, MAIN_BASE, global
     /nonexclusive)
   nexus_button = widget_button(row3,$
     value = 'Last data set created in WORKING WITH NEXUS' + $
-    ' (ext: _fromNexus)', $
+    ' (ext: ' + (*global).nexus_ext + ')', $
     uname = 'output_working_with_nexus_plot', $
     sensitive = 0)
   rtof_button = widget_button(row3,$
     value = 'Last data set created in WORKING WITH RTOF' + $
-    ' (ext: _fromRTOF)', $
+    ' (ext: ' + (*global).rtof_ext + ')', $
     uname = 'output_working_with_rtof_plot', $
     sensitive = 0)
     
@@ -804,7 +804,7 @@ pro design_tabs, MAIN_BASE, global
   button = widget_button(create_base,$
     uname = 'create_output_button',$
     sensitive = 0,$
-    scr_xsize = 600,$
+    scr_xsize = 1000,$
     value = 'Create File')
     
   ;******* bottom part of GUI ************************************************

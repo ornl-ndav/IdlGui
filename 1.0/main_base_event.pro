@@ -123,10 +123,10 @@ PRO main_base_event, Event
       CurrTabSelect = widget_info(tab_id,/tab_current)
       PrevTabSelect = (*global).PrevTabSelect
       if (CurrTabSelect ne PrevTabSelect) then begin
-      check_go_button, event=event
+        check_go_button, event=event
         case (currTabSelect) of
-          0: 
-          1: 
+          0:
+          1:
           2:
           3: begin
             check_creat_output_widgets, event
@@ -415,8 +415,9 @@ PRO main_base_event, Event
     end
     
     ;create file
-    
-    
+    widget_info(wWidget, find_by_uname='create_output_button'): begin
+      create_output_files, event
+    end
     
     ;---- bottom part of GUI ----------
     
