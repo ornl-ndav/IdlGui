@@ -43,8 +43,8 @@ function create_general_file, event=event, $
   
   catch, error
   if (error ne 0) then begin
-  catch,/cancel
-  return, 0
+    catch,/cancel
+    return, 0
   endif
   
   _filename = getValue(event=event, uname='output_file_name')
@@ -52,6 +52,7 @@ function create_general_file, event=event, $
   
   ;full file name
   output_file_name = _path + _filename + file_ext
+  filename = output_file_name ;use by the calling functions
   
   data  = (*(*structure).data)
   Qx = (*(*structure).xaxis)
@@ -100,7 +101,7 @@ function create_general_file, event=event, $
   
   close, 1
   free_lun, 1
-
+  
   return, _status
 end
 
@@ -151,7 +152,7 @@ function create_rtof_output_file, event=event, filename=filename
   
   file_ext = (*global).rtof_ext
   structure = (*global).structure_data_working_with_rtof
- status = create_general_file(event=event, $
+  status = create_general_file(event=event, $
     filename=filename, $
     file_ext=file_ext, $
     structure=structure)
@@ -174,18 +175,42 @@ pro create_output_files, event
   ;nexus output
   nexus_output_status = isButtonSelected(event=event, $
     uname='output_working_with_nexus_plot')
+  status_nexus = 1b
+  message_nexus = ''
   if (nexus_output_status) then begin
     nexus_filename = ''
-    status = create_nexus_output_file(event=event, filename=nexus_filename)
+    status_nexus = create_nexus_output_file(event=event, filename=nexus_filename)
+    message_nexus = 'Created file ' + nexus_filename + ' ... '
+    if (status_nexus) then begin
+      message_nexus += 'OK'
+    endif else begin
+      message_nexus += 'FAILED!'
+    endelse
   endif
   
   ;rtof ouput
   rtof_output_status = isButtonSelected(event=event, $
     uname='output_working_with_rtof_plot')
+  status_rtof = 1b
+  message_rtof = ''
   if (rtof_output_status) then begin
     rtof_filename = ''
-    status = create_rtof_output_file(event=event, filename=rtof_filename)
+    status_rtof = create_rtof_output_file(event=event, filename=rtof_filename)
+    message_rtof = 'Created file ' + rtof_filename + ' ... '
+    if (status_rtof) then begin
+    message_rtof += 'OK'
+    endif else begin
+    message_rtof += 'FAILED!'
+    endelse 
   endif
+  
+  widget_id = widget_info(event.top, find_by_uname='main_base')
+  result = dialog_message([message_nexus,message_rtof], $
+  /information, $
+  dialog_parent=widget_id, $
+  /center, $
+  title = 'Status of file(s) created')
+  
   
 end
 
