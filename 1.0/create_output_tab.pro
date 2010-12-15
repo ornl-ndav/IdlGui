@@ -32,6 +32,56 @@
 ;
 ;==============================================================================
 
+pro update_create_file_button_label, event
+  compile_opt idl2
+  
+  ;get output format selected
+  index_value =  getDroplistIndexValue(event=event, uname='output_format')
+  
+  ;nexus output
+  nexus_output_status = isButtonSelected(event=event, $
+    uname='output_working_with_nexus_plot')
+    
+  ;rtof ouput
+  rtof_output_status = isButtonSelected(event=event, $
+    uname='output_working_with_rtof_plot')
+    
+  label =  ''
+  file = ''
+  case (nexus_output_status + rtof_output_status) of
+    2: begin
+    label = 'Create NeXus and RTOF files '
+    file = 'files '
+    end
+    0: begin
+    label = 'No file to be created '
+    file = 'file '
+    end
+    1: begin
+      if (nexus_output_status) then begin
+        label = 'Create NeXus file '
+      endif else begin
+        label = 'Create RTOF file '
+      endelse
+      file = 'file '
+    end
+    else:
+  endcase
+  
+  ;check email status
+  email_status = isButtonSelected(event=event, $
+  uname='email_switch_uname')
+  if (email_status) then begin
+  email = getValue(event=event, uname='email_to_uname')
+  if (strcompress(email,/remove_all) eq '') then email = 'N/A'
+  label += 'and send ' + file + 'to ' + email + ' '
+  endif
+  
+  label += '(format: ' + index_value + ')'
+  putValue, event=event, 'create_output_button', label[0]
+  
+end
+
 ;+
 ; :Description:
 ;    Create a default output file name

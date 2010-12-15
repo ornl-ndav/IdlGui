@@ -126,7 +126,10 @@ PRO main_base_event, Event
         case (currTabSelect) of
           0: check_go_button, event=event
           1: check_go_button, event=event
-          3: check_creat_output_widgets, event
+          3: begin
+            check_creat_output_widgets, event
+            update_create_file_button_label, event
+          end
           else:
         endcase
         (*global).PrevTabSelect = CurrTabSelect
@@ -356,9 +359,16 @@ PRO main_base_event, Event
     ;create output selection
     widget_info(wWidget, find_by_uname='output_working_with_nexus_plot'): begin
       check_create_output_file_button, event
+      update_create_file_button_label, event
     end
     widget_info(wWidget, find_by_uname='output_working_with_rtof_plot'): begin
       check_create_output_file_button, event
+      update_create_file_button_label, event
+    end
+    
+    ;output format droplist
+    widget_info(wWidget, find_by_uname='output_format'): begin
+      update_create_file_button_label, event
     end
     
     ;sample of output
@@ -394,7 +404,17 @@ PRO main_base_event, Event
         map_status = 0
       endelse
       mapbase, event=event, status=map_status, uname='email_base'
+      update_create_file_button_label, event
     end
+    
+    ;email to
+    widget_info(wWidget, find_by_uname='email_to_uname'): begin
+      update_create_file_button_label, event
+    end
+    
+    ;create file
+    
+    
     
     ;---- bottom part of GUI ----------
     
