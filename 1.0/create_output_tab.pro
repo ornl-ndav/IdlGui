@@ -32,6 +32,65 @@
 ;
 ;==============================================================================
 
+;+
+; :Description:
+;    Send by email the file created
+;
+; :Keywords:
+;    event
+;
+; :Author: j35
+;-
+function send_file_by_email, event=event, $
+    nexus_filename = nexus_filename, $
+    rtof_filename = rtof_filename
+    
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  date = GenerateIsoTimeStamp()
+  
+  email_subject = 'File created with SOS ' + $
+    (*global).version + '; '
+  _subject = getValue(event=event, 'email_subject_uname')
+  email_subject += _subject
+  email = getValue(event=event, 'email_to_uname')
+  
+  ;send email for file created with nexus
+  if (nexus_filename ne '') then begin
+    email_message = 'File attached: ' + nexus_filename
+    cmd_email = 'echo "' + email_message + '" | mutt -s " ' + $
+      email_subject + '"' + ' -a ' + nexus_filename
+    cmd_email += ' ' + email
+    spawn, cmd_email, listening, err_listening
+  endif
+  
+  ;send email for file created with rtof
+  if (rtof_filename ne '') then begin
+    email_message = 'File attached: ' + rtof_filename
+    cmd_email = 'echo "' + email_message + '" | mutt -s " ' + $
+      email_subject + '"' + ' -a ' + rtof_filename
+    cmd_email += ' ' + email
+    spawn, cmd_email, listening, err_listening
+  endif
+  
+  return, 1
+end
+
+
+;+
+; :Description:
+;    Create the output file
+;
+; :Keywords:
+;    event
+;    filename
+;    file_ext
+;    structure
+;
+; :Author: j35
+;-
 function create_general_file, event=event, $
     filename=filename, $
     file_ext=file_ext, $
@@ -177,8 +236,8 @@ pro create_output_files, event
     uname='output_working_with_nexus_plot')
   status_nexus = 1b
   message_nexus = ''
+  nexus_filename = ''
   if (nexus_output_status) then begin
-    nexus_filename = ''
     status_nexus = create_nexus_output_file(event=event, filename=nexus_filename)
     message_nexus = 'Created file ' + nexus_filename + ' ... '
     if (status_nexus) then begin
@@ -194,25 +253,34 @@ pro create_output_files, event
     uname='output_working_with_rtof_plot')
   status_rtof = 1b
   message_rtof = ''
+  rtof_filename = ''
   if (rtof_output_status) then begin
-    rtof_filename = ''
     status_rtof = create_rtof_output_file(event=event, filename=rtof_filename)
     message_rtof = 'Created file ' + rtof_filename + ' ... '
     if (status_rtof) then begin
-    message_rtof += 'OK'
+      message_rtof += 'OK'
     endif else begin
-    message_rtof += 'FAILED!'
-    endelse 
+      message_rtof += 'FAILED!'
+    endelse
     log_book_update, event, message='> ' + message_rtof
+  endif
+  
+  ;send by email
+  email_status = isButtonSelected(event=event, uname='email_switch_uname')
+  if (email_status) then begin
+    status_email = send_file_by_email(event=event, $
+      nexus_filename = nexus_filename, $
+      rtof_filename = rtof_filename)
+      
   endif
   
   widget_id = widget_info(event.top, find_by_uname='main_base')
   result = dialog_message([message_nexus,message_rtof], $
-  /information, $
-  dialog_parent=widget_id, $
-  /center, $
-  title = 'Status of file(s) created')
-
+    /information, $
+    dialog_parent=widget_id, $
+    /center, $
+    title = 'Status of file(s) created')
+    
 end
 
 ;+
