@@ -186,6 +186,7 @@ pro create_output_files, event
     endif else begin
       message_nexus += 'FAILED!'
     endelse
+    log_book_update, event, message='> ' + message_nexus
   endif
   
   ;rtof ouput
@@ -202,6 +203,7 @@ pro create_output_files, event
     endif else begin
     message_rtof += 'FAILED!'
     endelse 
+    log_book_update, event, message='> ' + message_rtof
   endif
   
   widget_id = widget_info(event.top, find_by_uname='main_base')
@@ -210,8 +212,7 @@ pro create_output_files, event
   dialog_parent=widget_id, $
   /center, $
   title = 'Status of file(s) created')
-  
-  
+
 end
 
 ;+
