@@ -779,6 +779,7 @@ pro design_tabs, MAIN_BASE, global
   to = widget_text(email_base,$
     value ='',$
     /editable,$
+    /all_events, $
     uname = 'email_to_uname',$
     xsize = 50)
   label = widget_label(email_base,$
@@ -803,7 +804,7 @@ pro design_tabs, MAIN_BASE, global
   button = widget_button(create_base,$
     uname = 'create_output_button',$
     sensitive = 0,$
-    scr_xsize = 300,$
+    scr_xsize = 600,$
     value = 'Create File')
     
   ;******* bottom part of GUI ************************************************
