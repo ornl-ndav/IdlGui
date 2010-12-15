@@ -53,9 +53,9 @@ function send_file_by_email, event=event, $
   
   email_subject = 'File created with SOS ' + $
     (*global).version + '; '
-  _subject = getValue(event=event, 'email_subject_uname')
+  _subject = getValue(event=event, uname='email_subject_uname')
   email_subject += _subject
-  email = getValue(event=event, 'email_to_uname')
+  email = getValue(event=event, uname='email_to_uname')
   
   ;send email for file created with nexus
   if (nexus_filename ne '') then begin
