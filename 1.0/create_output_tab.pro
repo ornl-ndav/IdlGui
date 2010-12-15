@@ -49,6 +49,12 @@ function send_file_by_email, event=event, $
   
   widget_control, event.top, get_uvalue=global
   
+  catch, error
+  if (error ne 0) then begin
+    catch,/cancel
+    return, 0
+  endif
+  
   date = GenerateIsoTimeStamp()
   
   email_subject = 'File created with SOS ' + $
@@ -64,6 +70,8 @@ function send_file_by_email, event=event, $
       email_subject + '"' + ' -a ' + nexus_filename
     cmd_email += ' ' + email
     spawn, cmd_email, listening, err_listening
+    message = '> Sent ' + nexus_filename + ' to ' + email + ' ... OK'
+    log_book_update, event, message= message
   endif
   
   ;send email for file created with rtof
@@ -73,6 +81,8 @@ function send_file_by_email, event=event, $
       email_subject + '"' + ' -a ' + rtof_filename
     cmd_email += ' ' + email
     spawn, cmd_email, listening, err_listening
+    message = '> Sent ' + rtof_filename + ' to ' + email + ' ... OK'
+    log_book_update, event, message= message
   endif
   
   return, 1
@@ -271,11 +281,17 @@ pro create_output_files, event
     status_email = send_file_by_email(event=event, $
       nexus_filename = nexus_filename, $
       rtof_filename = rtof_filename)
-      
+    email = getValue(event=event, uname='email_to_uname')
+    message_email = 'File sent by email to ' + email + ' ... '
+    if (status_email) then begin
+      message_email += 'OK'
+    endif else begin
+      message_email += 'FAILED!'
+    endelse
   endif
   
   widget_id = widget_info(event.top, find_by_uname='main_base')
-  result = dialog_message([message_nexus,message_rtof], $
+  result = dialog_message([message_nexus,message_rtof,'',message_email], $
     /information, $
     dialog_parent=widget_id, $
     /center, $
