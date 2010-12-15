@@ -123,9 +123,11 @@ PRO main_base_event, Event
       CurrTabSelect = widget_info(tab_id,/tab_current)
       PrevTabSelect = (*global).PrevTabSelect
       if (CurrTabSelect ne PrevTabSelect) then begin
+      check_go_button, event=event
         case (currTabSelect) of
-          0: check_go_button, event=event
-          1: check_go_button, event=event
+          0: 
+          1: 
+          2:
           3: begin
             check_creat_output_widgets, event
             update_create_file_button_label, event
