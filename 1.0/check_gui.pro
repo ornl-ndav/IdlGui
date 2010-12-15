@@ -81,7 +81,8 @@ pro check_go_button, event=event, base=base
     1: begin ;working with rtof
     
       rtof_nexus_geometry_exist = (*global).rtof_nexus_geometry_exist
-      rtof_file = getValue(event=event,base=base, uname='rtof_file_text_field_uname')
+      rtof_file = getValue(event=event,base=base, $
+      uname='rtof_file_text_field_uname')
       rtof_file_status = file_test(rtof_file[0])
       if (rtof_file_status && rtof_nexus_geometry_exist) then begin
         activate_go_button = 1
@@ -91,7 +92,11 @@ pro check_go_button, event=event, base=base
     end
     
     2: begin ;General configuration
-     activate_go_button = 0
+      activate_go_button = 0
+    end
+    
+    3: begin ;Create Output
+      activate_go_button = 0
     end
     
     else:

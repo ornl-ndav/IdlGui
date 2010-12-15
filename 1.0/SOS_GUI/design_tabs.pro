@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,7 +30,7 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
 pro design_tabs, MAIN_BASE, global
   compile_opt idl2
@@ -341,7 +341,7 @@ pro design_tabs, MAIN_BASE, global
     
   if ((*global).hide_tab_2 eq 'no') then begin
   
-    ;********* tab 2 ***********************************************************
+    ;********* tab 2 **********************************************************
     base1 = widget_base(tabs,$
       uname = 'tab1',$
       title = '    WORKING WITH RTOF    ')
