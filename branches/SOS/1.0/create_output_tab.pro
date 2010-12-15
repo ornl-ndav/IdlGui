@@ -32,6 +32,175 @@
 ;
 ;==============================================================================
 
+function create_general_file, event=event, $
+    filename=filename, $
+    file_ext=file_ext, $
+    structure=structure
+  compile_opt idl2
+  _status = 1
+  
+  widget_control, event.top, get_uvalue=global
+  
+  catch, error
+  if (error ne 0) then begin
+  catch,/cancel
+  return, 0
+  endif
+  
+  _filename = getValue(event=event, uname='output_file_name')
+  _path = (*global).output_path
+  
+  ;full file name
+  output_file_name = _path + _filename + file_ext
+  
+  data  = (*(*structure).data)
+  Qx = (*(*structure).xaxis)
+  Qz = (*(*structure).yaxis)
+  
+  sz_x = n_elements(Qx)
+  sz_z = n_elements(Qz)
+  
+  ;create ascii array
+  output_array = strarr(max([sz_x,sz_z]))
+  index = 0
+  while (index lt max([sz_x,sz_z])) do begin
+  
+    if (index ge sz_x) then begin
+      x = ''
+    endif else begin
+      x = strcompress(Qx[index],/remove_all)
+    endelse
+    
+    if (index ge sz_z) then begin
+      z = ''
+    endif else begin
+      z = strcompress(Qz[index],/remove_all)
+    endelse
+    
+    if (index ge sz_x) then begin
+      data_part = ''
+    endif else begin
+      data_part = strjoin(strcompress(reform(data[index,*]),/remove_all),' ')
+    endelse
+    
+    output_array[index] = x + ' ' + z + ' ' + data_part
+    
+    index++
+  endwhile
+  
+  ;prepare file to write in
+  openw, 1, output_file_name
+  
+  sz = n_elements(output_array)
+  _index = 0
+  while (_index lt sz) do begin
+    printf, 1, output_array[_index]
+    _index++
+  endwhile
+  
+  close, 1
+  free_lun, 1
+
+  return, _status
+end
+
+;+
+; :Description:
+;    Create output nexus file
+;
+; :Keywords:
+;    event
+;
+; :Returns:
+;    status of process (1 for success and 0 for failure)
+;
+; :Author: j35
+;-
+function create_nexus_output_file, event=event, filename=filename
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  status = 1
+  file_ext = (*global).nexus_ext
+  structure = (*global).structure_data_working_with_nexus
+  status = create_general_file(event=event, $
+    filename=filename, $
+    file_ext=file_ext, $
+    structure=structure)
+    
+  return, status
+end
+
+;+
+; :Description:
+;    Create output RTOF file
+;
+; :Keywords:
+;    event
+;
+; :Returns:
+;   status of process (1 for success and 0 for failure)
+;
+; :Author: j35
+;-
+function create_rtof_output_file, event=event, filename=filename
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  file_ext = (*global).rtof_ext
+  structure = (*global).structure_data_working_with_rtof
+ status = create_general_file(event=event, $
+    filename=filename, $
+    file_ext=file_ext, $
+    structure=structure)
+    
+  return, status
+end
+
+;+
+; :Description:
+;    Create the output files
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro create_output_files, event
+  compile_opt idl2
+  
+  ;nexus output
+  nexus_output_status = isButtonSelected(event=event, $
+    uname='output_working_with_nexus_plot')
+  if (nexus_output_status) then begin
+    nexus_filename = ''
+    status = create_nexus_output_file(event=event, filename=nexus_filename)
+  endif
+  
+  ;rtof ouput
+  rtof_output_status = isButtonSelected(event=event, $
+    uname='output_working_with_rtof_plot')
+  if (rtof_output_status) then begin
+    rtof_filename = ''
+    status = create_rtof_output_file(event=event, filename=rtof_filename)
+  endif
+  
+end
+
+;+
+; :Description:
+;    Update the label of the create output file button relative to the status
+;    of all the widgets of the same tab.
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
 pro update_create_file_button_label, event
   compile_opt idl2
   
@@ -50,12 +219,12 @@ pro update_create_file_button_label, event
   file = ''
   case (nexus_output_status + rtof_output_status) of
     2: begin
-    label = 'Create NeXus and RTOF files '
-    file = 'files '
+      label = 'Create NeXus and RTOF files '
+      file = 'files '
     end
     0: begin
-    label = 'No file to be created '
-    file = 'file '
+      label = 'No file to be created '
+      file = 'file '
     end
     1: begin
       if (nexus_output_status) then begin
@@ -70,11 +239,11 @@ pro update_create_file_button_label, event
   
   ;check email status
   email_status = isButtonSelected(event=event, $
-  uname='email_switch_uname')
+    uname='email_switch_uname')
   if (email_status) then begin
-  email = getValue(event=event, uname='email_to_uname')
-  if (strcompress(email,/remove_all) eq '') then email = 'N/A'
-  label += 'and send ' + file + 'to ' + email + ' '
+    email = getValue(event=event, uname='email_to_uname')
+    if (strcompress(email,/remove_all) eq '') then email = 'N/A'
+    label += 'and send ' + file + 'to ' + email + ' '
   endif
   
   label += '(format: ' + index_value + ')'
@@ -204,25 +373,18 @@ pro check_create_output_file_button, event
   
   button_status = 1b
   
-  ;check output file name
-  output_file_name = getValue(event=event, uname='output_file_name')
-  if (strcompress(output_file_name,/remove_all) eq '') then button_status=0b
-  
-  status_rtof = (*global).create_output_status_rtof
-  status_nexus = (*global).create_output_status_nexus
-  
+  ;nexus output
+  status_nexus = isButtonSelected(event=event, $
+    uname='output_working_with_nexus_plot')
+    
+  ;rtof ouput
+  status_rtof = isButtonSelected(event=event, $
+    uname='output_working_with_rtof_plot')
+    
   if (status_rtof+status_nexus eq 0) then button_status=0b
   
   activate_button, event=event, $
     status=button_status, $
     uname='create_output_button'
-    
-    
-    
-    
-    
-    
-    
-    
     
 end

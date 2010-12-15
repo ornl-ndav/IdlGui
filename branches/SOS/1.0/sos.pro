@@ -88,6 +88,8 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
     ;create output tab
     sample_info_base: 0L, $  ;base that will show the sample output
+    nexus_ext: '_fromNeXus.txt', $
+    rtof_ext: '_fromRTOF.txt', $
     
     ;data and normalization files
     big_table: strarr(2,max_nbr_data_nexus), $
