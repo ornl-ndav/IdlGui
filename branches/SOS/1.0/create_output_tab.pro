@@ -247,7 +247,8 @@ pro create_output_files, event
   message_nexus = ''
   nexus_filename = ''
   if (nexus_output_status) then begin
-    status_nexus = create_nexus_output_file(event=event, filename=nexus_filename)
+    status_nexus = create_nexus_output_file(event=event, $
+      filename=nexus_filename)
     message_nexus = 'Created file ' + nexus_filename + ' ... '
     if (status_nexus) then begin
       message_nexus += 'OK'
@@ -429,7 +430,8 @@ pro check_creat_output_widgets, event
   widget_control, event.top, get_uvalue=global
   
   ;check "last data set created in working with nexus"
-  structure_data_working_with_nexus = (*global).structure_data_working_with_nexus
+  structure_data_working_with_nexus = $
+    (*global).structure_data_working_with_nexus
   data = (*(*structure_data_working_with_nexus).data)
   if (data eq !null) then begin
     status_nexus = 0
