@@ -2,15 +2,16 @@
 ;#### how to get metadata and data from NeXus files ####
 ;file_name = 'unit_test_files/REF_L_38955.nxs'
 ;myObject = obj_new('IDLnexusUtilities',file_name)
-;file_name= 'unit_test_files/REF_M_8324.nxs' ;new format
-file_name = 'unit_test_files/REF_M_5000.nxs' ;old format
+file_name= 'unit_test_files/REF_M_8324.nxs' ;new format
+;file_name = 'unit_test_files/REF_M_5000.nxs' ;old format
 myObject = obj_new('IDLnexusUtilities',file_name, spin_state='Off_Off')
 ;value = myObject->get_tof_data()
 ;v_u = myObject->get_d_SD()
 ;print, size(value)
 ;help, value
-value_units = myObject->get_Dangle()
+value_units = myObject->get_dangle0()
 help, value_units
+print, value_units
 
 obj_destroy, myObject
 

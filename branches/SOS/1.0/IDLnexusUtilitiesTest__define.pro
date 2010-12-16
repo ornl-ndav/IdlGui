@@ -592,6 +592,8 @@ function IDLnexusUtilitiesTest::test_REF_M_tof_data
   return, 1
 end
 
+;DANGLE
+
 ;+
 ; :Description:
 ;    Unit test for dangle value for REF_M instrument (off_off)
@@ -667,7 +669,131 @@ function IDLnexusUtilitiesTest::test_REF_M_new_dangle_units
   v_u = myObject->get_dangle()
   obj_destroy, myObject
   
-  assert, v_u.units eq 'degree', 'Wrong dangle units for REF_M_8324 (old format)'
+  assert, v_u.units eq 'degree', 'Wrong dangle units for REF_M_5000 (old format)'
+  
+  return, 1
+end
+
+;DANGLE0
+
+;+
+; :Description:
+;    Unit test for dangle0 value for REF_M instrument (off_off)
+;    (new format of nexus file)
+;
+; :Author: j35
+;-
+function IDLnexusUtilitiesTest::test_REF_M_new_dangle0_value
+  compile_opt idl2
+  
+  file_name = 'unit_test_files/REF_M_8324.nxs'
+  myObject = obj_new('IDLnexusUtilities',file_name, spin_state='Off_Off')
+  v_u = myObject->get_dangle0()
+  obj_destroy, myObject
+  
+  assert, v_u.value eq '3.70041', 'Wrong dangle0 value for REF_M_8324 (new format)'
+  
+  return, 1
+end
+
+;+
+; :Description:
+;    Unit test for dangle0 units for REF_M instrument (off_off)
+;    (new format of nexus file)
+;
+; :Author: j35
+;-
+function IDLnexusUtilitiesTest::test_REF_M_new_dangle0_units
+  compile_opt idl2
+  
+  file_name = 'unit_test_files/REF_M_8324.nxs'
+  myObject = obj_new('IDLnexusUtilities',file_name, spin_state='Off_Off')
+  v_u = myObject->get_dangle0()
+  obj_destroy, myObject
+  
+  assert, v_u.units eq 'degree', 'Wrong dangle0 units for REF_M_8324 (new format)'
+  
+  return, 1
+end
+
+;+
+; :Description:
+;    Unit test for dangle0 value for REF_M instrument (off_off)
+;    (old format of nexus file)
+;
+; :Author: j35
+;-
+function IDLnexusUtilitiesTest::test_REF_M_old_dangle0_value
+  compile_opt idl2
+  
+  file_name = 'unit_test_files/REF_M_5000.nxs'
+  myObject = obj_new('IDLnexusUtilities',file_name, spin_state='Off_Off')
+  v_u = myObject->get_dangle0()
+  obj_destroy, myObject
+  
+  assert, v_u.value eq '-999.000', 'Wrong dangle0 value for REF_M_5000 (old format)'
+  
+  return, 1
+end
+
+;+
+; :Description:
+;    Unit test for dangle0 units for REF_M instrument (off_off)
+;    (old format of nexus file)
+;
+; :Author: j35
+;-
+function IDLnexusUtilitiesTest::test_REF_M_new_dangle0_units
+  compile_opt idl2
+  
+  file_name = 'unit_test_files/REF_M_5000.nxs'
+  myObject = obj_new('IDLnexusUtilities',file_name, spin_state='Off_Off')
+  v_u = myObject->get_dangle0()
+  obj_destroy, myObject
+  
+  assert, v_u.units eq 'degree', 'Wrong dangle0 units for REF_M_5000 (old format)'
+  
+  return, 1
+end
+
+;DIRPIX
+
+;+
+; :Description:
+;    Unit test for dirpix value for REF_M instrument (off_off)
+;    (new format of nexus file)
+;
+; :Author: j35
+;-
+function IDLnexusUtilitiesTest::test_REF_M_new_dirpix_value
+compile_opt idl2
+
+  file_name = 'unit_test_files/REF_M_8324.nxs'
+  myObject = obj_new('IDLnexusUtilities',file_name, spin_state='Off_Off')
+  v = myObject->get_dirpix()
+  obj_destroy, myObject
+  
+  assert, v[0] eq '241.000', 'Wrong dirpix value REF_M_8324 (new format)'
+  
+  return, 1
+end
+
+;+
+; :Description:
+;    Unit test for dirpix value for REF_M instrument (off_off)
+;    (old format of nexus file)
+;
+; :Author: j35
+;-
+function IDLnexusUtilitiesTest::test_REF_M_old_dirpix_value
+compile_opt idl2
+
+  file_name = 'unit_test_files/REF_M_5000.nxs'
+  myObject = obj_new('IDLnexusUtilities',file_name, spin_state='Off_Off')
+  v = myObject->get_dirpix()
+  obj_destroy, myObject
+  
+  assert, v[0] eq '-999.000', 'Wrong dirpix value REF_M_5000 (old format)'
   
   return, 1
 end

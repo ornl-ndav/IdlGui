@@ -542,7 +542,7 @@ end
 ;
 ; :Author: j35
 ;-
-function IDLnexusUtilities::get_Dangle
+function IDLnexusUtilities::get_dangle
   compile_opt idl2
   
   new_path_value = self.entry_spin_state + '/instrument/bank1/DANGLE/value'
@@ -571,6 +571,90 @@ function IDLnexusUtilities::get_Dangle
     value_units = retrieve_value_units(file_name=self.file_name, $
       path=new_path_value)
     return, {value:value_units[0], units:value_units[1]}
+    
+  endelse
+  
+end
+
+;+
+; :Description:
+;    retrieves the DANGLE0 value and units
+;
+; :Returns:
+;   structure of {value:value, units:units}
+;
+; :Author: j35
+;-
+function IDLnexusUtilities::get_dangle0
+  compile_opt idl2
+  
+  new_path_value = self.entry_spin_state + '/instrument/bank1/DANGLE0/value'
+  old_path_value = self.entry_spin_state + '/instrument/bank1/DANGLE0/readback'
+  
+  catch, error_value
+  if (error_value ne 0) then begin
+    catch,/cancel
+    ;we are dealing with a new NeXus with odl path_value (value -> readback)
+    
+    catch, error_value_2
+    if (error_value_2 ne 0) then begin
+      catch,/cancel
+      return, {value:'N/A',units:'N/A'}
+      
+    endif else begin
+    
+      value_units = retrieve_value_units(file_name=self.file_name, $
+        path=old_path_value)
+      return, {value:value_units[0], units:value_units[1]}
+      
+    endelse
+    
+  endif else begin
+  
+    value_units = retrieve_value_units(file_name=self.file_name, $
+      path=new_path_value)
+    return, {value:value_units[0], units:value_units[1]}
+    
+  endelse
+  
+end
+
+;+
+; :Description:
+;    retrieves the DIRPIX value
+;
+; :Returns:
+;   value
+;
+; :Author: j35
+;-
+function IDLnexusUtilities::get_dirpix
+  compile_opt idl2
+  
+  new_path = self.entry_spin_state + '/instrument/bank1/DIRPIX/value'
+  old_path = self.entry_spin_state + '/instrument/bank1/DIRPIX/readback'
+  
+  catch, error_value
+  if (error_value ne 0) then begin
+    catch,/cancel
+    ;we are dealing with a new NeXus with odl path_value (value -> readback)
+    
+    catch, error_value_2
+    if (error_value_2 ne 0) then begin
+      catch,/cancel
+      return, 'N/A'
+      
+    endif else begin
+    
+      value = retrieve_value(file_name=self.file_name, path=old_path)
+      return, value
+      
+    endelse
+    
+  endif else begin
+  
+    value = retrieve_value(file_name=self.file_name, path=new_path)
+    return, value
     
   endelse
   
