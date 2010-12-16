@@ -506,7 +506,7 @@ end
 ; :Description:
 ;    retrieves the distance Sample - Detector and its units
 ;
-; :Units:
+; :Returns:
 ;   structure of {value:value, units:units}
 ;
 ; :Author: j35
@@ -531,6 +531,49 @@ function IDLnexusUtilities::get_d_SD
   h5f_close, fileID
   
   return, {value:value_units[0], units:value_units[1]}
+end
+
+;+
+; :Description:
+;    retrieves the DANGLE value and units
+;
+; :Returns:
+;   structure of {value:value, units:units}
+;
+; :Author: j35
+;-
+function IDLnexusUtilities::get_Dangle
+  compile_opt idl2
+  
+  new_path_value = self.entry_spin_state + '/instrument/bank1/DANGLE/value'
+  old_path_value = self.entry_spin_state + '/instrument/bank1/DANGLE/readback'
+  
+  catch, error_value
+  if (error_value ne 0) then begin
+    catch,/cancel
+    ;we are dealing with a new NeXus with odl path_value (value -> readback)
+    
+    catch, error_value_2
+    if (error_value_2 ne 0) then begin
+      catch,/cancel
+      return, {value:'N/A',units:'N/A'}
+      
+    endif else begin
+    
+      value_units = retrieve_value_units(file_name=self.file_name, $
+        path=old_path_value)
+      return, {value:value_units[0], units:value_units[1]}
+      
+    endelse
+    
+  endif else begin
+  
+    value_units = retrieve_value_units(file_name=self.file_name, $
+      path=new_path_value)
+    return, {value:value_units[0], units:value_units[1]}
+    
+  endelse
+  
 end
 
 ;+

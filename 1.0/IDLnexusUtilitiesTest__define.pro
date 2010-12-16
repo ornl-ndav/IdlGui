@@ -523,7 +523,7 @@ function IDLnexusUtilitiesTest::test_REF_L_y_tof_data
   data_sz = size(data)
   assert, array_equal(data_sz,[2,751,256,13,192256]), $
     'Wrong format of y_tof data retrieved from REF_L_38955'
-  
+    
   return, 1
 end
 
@@ -545,7 +545,7 @@ function IDLnexusUtilitiesTest::test_REF_M_y_tof_data
   data_sz = size(data)
   assert, array_equal(data_sz,[2,51,256,13,13056]), $
     'Wrong format of y_tof data retrieved from REF_M_8324 (new format)'
-  
+    
   return, 1
 end
 
@@ -556,9 +556,9 @@ end
 ; :Author: j35
 ;-
 function IDLnexusUtilitiesTest::test_REF_L_tof_data
-compile_opt idl2
-
-file_name = 'unit_test_files/REF_L_38955.nxs'
+  compile_opt idl2
+  
+  file_name = 'unit_test_files/REF_L_38955.nxs'
   myObject = obj_new('IDLnexusUtilities',file_name)
   data = myObject->get_tof_data()
   obj_destroy, myObject
@@ -566,7 +566,7 @@ file_name = 'unit_test_files/REF_L_38955.nxs'
   data_sz = size(data)
   assert, array_equal(data_sz,[1,752,4,752]), $
     'Wrong format of tof_data retrieved from REF_L_38955'
-  
+    
   return, 1
 end
 
@@ -578,9 +578,9 @@ end
 ; :Author: j35
 ;-
 function IDLnexusUtilitiesTest::test_REF_M_tof_data
-compile_opt idl2
-
-file_name = 'unit_test_files/REF_M_8324.nxs'
+  compile_opt idl2
+  
+  file_name = 'unit_test_files/REF_M_8324.nxs'
   myObject = obj_new('IDLnexusUtilities',file_name, spin_state='Off_Off')
   data = myObject->get_tof_data()
   obj_destroy, myObject
@@ -588,6 +588,86 @@ file_name = 'unit_test_files/REF_M_8324.nxs'
   data_sz = size(data)
   assert, array_equal(data_sz,[1,52,4,52]), $
     'Wrong format of tof_data retrieved from REF_M_8324 (new format)'
+    
+  return, 1
+end
+
+;+
+; :Description:
+;    Unit test for dangle value for REF_M instrument (off_off)
+;    (new format of nexus file)
+;
+; :Author: j35
+;-
+function IDLnexusUtilitiesTest::test_REF_M_new_dangle_value
+  compile_opt idl2
+  
+  file_name = 'unit_test_files/REF_M_8324.nxs'
+  myObject = obj_new('IDLnexusUtilities',file_name, spin_state='Off_Off')
+  v_u = myObject->get_dangle()
+  obj_destroy, myObject
+  
+  assert, v_u.value eq '3.70041', 'Wrong dangle value for REF_M_8324 (new format)'
+  
+  return, 1
+end
+
+;+
+; :Description:
+;    Unit test for dangle units for REF_M instrument (off_off)
+;    (new format of nexus file)
+;
+; :Author: j35
+;-
+function IDLnexusUtilitiesTest::test_REF_M_new_dangle_units
+  compile_opt idl2
+  
+  file_name = 'unit_test_files/REF_M_8324.nxs'
+  myObject = obj_new('IDLnexusUtilities',file_name, spin_state='Off_Off')
+  v_u = myObject->get_dangle()
+  obj_destroy, myObject
+  
+  assert, v_u.units eq 'degree', 'Wrong dangle units for REF_M_8324 (new format)'
+  
+  return, 1
+end
+
+;+
+; :Description:
+;    Unit test for dangle value for REF_M instrument (off_off)
+;    (old format of nexus file)
+;
+; :Author: j35
+;-
+function IDLnexusUtilitiesTest::test_REF_M_old_dangle_value
+  compile_opt idl2
+  
+  file_name = 'unit_test_files/REF_M_5000.nxs'
+  myObject = obj_new('IDLnexusUtilities',file_name, spin_state='Off_Off')
+  v_u = myObject->get_dangle()
+  obj_destroy, myObject
+  
+  assert, v_u.value eq '2.91134', 'Wrong dangle value for REF_M_5000 (old format)'
+  
+  return, 1
+end
+
+;+
+; :Description:
+;    Unit test for dangle units for REF_M instrument (off_off)
+;    (old format of nexus file)
+;
+; :Author: j35
+;-
+function IDLnexusUtilitiesTest::test_REF_M_new_dangle_units
+  compile_opt idl2
+  
+  file_name = 'unit_test_files/REF_M_5000.nxs'
+  myObject = obj_new('IDLnexusUtilities',file_name, spin_state='Off_Off')
+  v_u = myObject->get_dangle()
+  obj_destroy, myObject
+  
+  assert, v_u.units eq 'degree', 'Wrong dangle units for REF_M_8324 (old format)'
   
   return, 1
 end
