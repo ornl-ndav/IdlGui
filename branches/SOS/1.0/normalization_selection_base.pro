@@ -149,9 +149,6 @@ pro normalization_selection_base_event, Event
 ;      normalization_files = (*global_norm).normalization_files
       normalization_file_selected = normalization_files[row_selected]
       
-      print, normalization_file_selected
-      print
-      
       from_row = (*global_norm).from_row
       to_row = (*global_norm).to_row
       main_table = getValue(event=main_event, uname='tab1_table')

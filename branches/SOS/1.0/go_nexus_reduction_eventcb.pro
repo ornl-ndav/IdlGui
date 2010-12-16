@@ -187,10 +187,7 @@ function read_nexus, event, filename, TOFmin, TOFmax, PIXmin, PIXmax
     message[i++] = '-> spin state: ' + spin_state
   endelse
   
-  print, 'filename: ' , filename
-  print, 'spin_state: ' , spin_state
   iFile = obj_new('IDLnexusUtilities', filename, spin_state=spin_state)
-  help, iFile
   ;get data [tof, pixel_x, pixel_y]
   image = iFile->get_y_tof_data()
   sz = size(image)
