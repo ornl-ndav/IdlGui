@@ -88,7 +88,6 @@ function send_file_by_email, event=event, $
   return, 1
 end
 
-
 ;+
 ; :Description:
 ;    Create the output file
