@@ -628,10 +628,18 @@ ref_pixel_list[index] = pixel_value
 (*(*global).ref_pixel_list) = ref_pixel_list
 (*(*global).ref_pixel_list_original) = ref_pixel_list
 
+; Change Code (RC WARD, 16Dec2010): Update RefPix values----DISABLE FOR NOW----------
+;RefPixSave = (*(*global).RefPixSave)
+;RefPixSave[index] = RefPixSave[index] + pixel_value - RefPixSave[0]
+;--------------------------------------------------------------------
 ref_x_list              = (*(*global).ref_x_list)
 ref_x_list[index]       = x_value
 (*(*global).ref_x_list) = ref_x_list
-
+; test code change ------------------------------DISABLE FOR NOW --------------------
+;FOR I = 0,2,1 DO BEGIN
+;print, "For: ", i, " RefPix values: ", RefPixSave[i], "ref_x_list: ", ref_x_list[i]
+;ENDFOR
+;--------------------------------------------------------------------
 END
 
 ;------------------------------------------------------------------------------
@@ -717,7 +725,7 @@ IF (nbr GT 1) THEN BEGIN
     index = 1
     WHILE (index LT nbr) DO BEGIN
         pixel_offset = ref_pixel_list[0]-ref_pixel_list[index]
-;;   print, "in shifting: ",index, " ",pixel_offset
+;   print, "in shifting: ",index, " ",pixel_offset
         pixel_offset_array[index] = pixel_offset ;save pixel_offset
         ref_pixel_offset_list[index] += pixel_offset
         
