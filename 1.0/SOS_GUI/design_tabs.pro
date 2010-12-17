@@ -305,7 +305,7 @@ pro design_tabs, MAIN_BASE, global
     
   row1col5 = widget_base(row1,$
     /column)
-
+    
   pixel_min = file->getValue(tag=['instruments',instrument,$
     'pixel_range','minpx'])
   field1 = cw_field(row1col5,$
@@ -323,13 +323,13 @@ pro design_tabs, MAIN_BASE, global
     value = pixel_max,$
     uname = 'pixel_max',$
     title = '          max')
-
+    
   space = widget_label(row1,$
     value = '        ')
     
   row1col6 = widget_base(row1,$
     /column)
-
+    
   field1 = cw_field(row1col6,$
     xsize = 10,$
     value = '',$
@@ -344,26 +344,27 @@ pro design_tabs, MAIN_BASE, global
   ;for REF_M only, metadata table
   if ((*global).instrument eq 'REF_M') then begin
   
-  row2 = widget_base(para_box,$
-    /row)
-    
+    row2 = widget_base(para_box,$
+      /row)
+      
     widths = [250,80,50,50,200,200,200]
-  metadata_table = widget_table(row2,$
-    uname = 'ref_m_metadata_table',$
-    xsize = 7,$
-    ysize = max_nbr_data_nexus, $
-    column_labels=['File','Spin','dirpix','refpix','dangle','dangl0','sangle'],$
-    column_widths=widths,$
-    scr_xsize = 1050,$
-    scr_ysize = 300,$
-    /no_row_headers, $
-    /row_major,$
-    /scroll,$
-    /context_events, $
-    /all_events)
-  
+    metadata_table = widget_table(row2,$
+      uname = 'ref_m_metadata_table',$
+      xsize = 7,$
+      ysize = max_nbr_data_nexus, $
+      column_labels=$
+      ['File','Spin','dirpix','refpix','dangle','dangle0','sangle'],$
+      column_widths=widths,$
+      scr_xsize = 1050,$
+      scr_ysize = 300,$
+      /no_row_headers, $
+      /row_major,$
+      /scroll,$
+      /context_events, $
+      /all_events)
+      
   endif
-    
+  
   if ((*global).hide_tab_2 eq 'no') then begin
   
     ;********* tab 2 **********************************************************
