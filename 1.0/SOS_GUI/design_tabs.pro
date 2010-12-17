@@ -347,13 +347,21 @@ pro design_tabs, MAIN_BASE, global
     row2 = widget_base(para_box,$
       /row)
       
+    row_array = [0,0,1,1,1,1,1]
+    editable_array = intarr(7,max_nbr_data_nexus)
+    for i=0,(max_nbr_data_nexus-1) do begin
+      editable_array[*,i] = row_array
+    endfor
+    
     widths = [250,80,50,50,200,200,200]
     metadata_table = widget_table(row2,$
       uname = 'ref_m_metadata_table',$
+      editable = editable_array, $
       xsize = 7,$
       ysize = max_nbr_data_nexus, $
       column_labels=$
-      ['File','Spin','dirpix','refpix','dangle','dangle0','sangle'],$
+      ['File','Spin','dirpix','refpix','dangle [deg(rad)]',$
+      'dangle0 [deg(rad])','sangle [deg(rad)]'],$
       column_widths=widths,$
       scr_xsize = 1050,$
       scr_ysize = 300,$

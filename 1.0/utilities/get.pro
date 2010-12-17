@@ -598,3 +598,45 @@ function get_instrumet_from_file_name, file_name
   
   return, strupcase(instrument)
 end
+
+;+
+; :Description:
+;    This creates a structure of two elements
+;    angle value in degree or angle value in rad
+;
+; :Params:
+;    angle_value_units
+;
+; :Returns:
+;   {value_degree:0L, value_rad:0L}
+;
+; :Author: j35
+;-
+function getAngleStructure, angle_value_units
+  compile_opt idl2
+  
+  old_angle = angle_value_units.value
+  from_unit = angle_value_units.units
+  case (from_unit) of
+    'degree': to_unit='rad'
+    'rad': to_unit='degree'
+    else:
+  endcase
+  
+  new_angle = convert_angle(angle=old_angle, $
+    from_unit=from_unit,$
+    to_unit=to_unit)
+    
+  if (from_unit eq 'degree') then begin
+    value_degree = old_angle
+    value_rad = new_angle
+  endif else begin
+    value_degree = new_angle
+    value_rad = old_angle
+  endelse
+  
+  return, {value_degree: value_degree, value_rad: value_rad}
+end
+
+
+
