@@ -196,7 +196,7 @@ pro design_tabs, MAIN_BASE, global
     title = '  Configuration  ')
     
   _base = widget_base(nexus_tab1,$
-    xoffset = 100,$
+    xoffset = 10,$
     yoffset = 20,$
     /column)
     
@@ -276,7 +276,7 @@ pro design_tabs, MAIN_BASE, global
     title = 'to  ')
     
   space = widget_label(row1,$
-    value = '                                   ')
+    value = '        ')
     
   row1col4 = widget_base(row1,$
     /column)
@@ -299,15 +299,15 @@ pro design_tabs, MAIN_BASE, global
     uname = 'pixel_size',$
     title = 'Pixel size (mm)')
     
-  row2 = widget_base(para_box,$
-    /align_left,$
-    /row)
-  row2col1 = widget_base(row2,$
-    /column)
+  space = widget_label(row1,$
+    value = '     ')
     
+  row1col5 = widget_base(row1,$
+    /column)
+
   pixel_min = file->getValue(tag=['instruments',instrument,$
     'pixel_range','minpx'])
-  field1 = cw_field(row2col1,$
+  field1 = cw_field(row1col5,$
     /integer,$
     xsize = 3,$
     value =  pixel_min,$
@@ -316,24 +316,25 @@ pro design_tabs, MAIN_BASE, global
     
   pixel_max = file->getValue(tag=['instruments',instrument,$
     'pixel_range','maxpx'])
-  field2 = cw_field(row2col1,$
+  field2 = cw_field(row1col5,$
     xsize = 3,$
     /integer,$
     value = pixel_max,$
     uname = 'pixel_max',$
     title = '          max')
+
+  space = widget_label(row1,$
+    value = '        ')
     
-  space = widget_label(row2,$
-    value = '                                 ')
-    
-  row2col2 = widget_base(row2,$
+  row1col6 = widget_base(row1,$
     /column)
-  field1 = cw_field(row2col2,$
+
+  field1 = cw_field(row1col6,$
     xsize = 10,$
     value = '',$
     uname = 'd_sd_uname',$
     title = '   Distance sample to detector (mm) ')
-  field2 = cw_field(row2col2,$
+  field2 = cw_field(row1col6,$
     xsize = 10,$
     value = '',$
     uname = 'd_md_uname',$
@@ -693,7 +694,7 @@ pro design_tabs, MAIN_BASE, global
   button = widget_button(row1,$
     value = (*global).output_path, $
     uname = 'output_path_button',$
-    scr_xsize = 1050)
+    scr_xsize = 1020)
     
   ;file name
   row2 = widget_base(base,$
@@ -704,7 +705,7 @@ pro design_tabs, MAIN_BASE, global
     value = '',$
     /editable, $
     /all_events, $
-    xsize = 130,$
+    xsize = 125,$
     uname = 'output_file_name')
   label = widget_label(row2,$
     value = '_<extension>.txt    ')
@@ -715,7 +716,6 @@ pro design_tabs, MAIN_BASE, global
     
   space = widget_label(base,$
     value = ' ')
-    
     
   label_base = widget_base(base,$
     /row,$
@@ -804,7 +804,7 @@ pro design_tabs, MAIN_BASE, global
   button = widget_button(create_base,$
     uname = 'create_output_button',$
     sensitive = 0,$
-    scr_xsize = 1000,$
+    scr_xsize = 1020,$
     value = 'Create File')
     
   ;******* bottom part of GUI ************************************************
