@@ -81,6 +81,9 @@ cd, CurrentFolder
 .run output_info_base.pro
 .run normalization_selection_base.pro
 
+;working with nexus
+.run configuration_table_event.pro
+
 ;plot of rtof file
 .run px_vs_tof_plots_base.pro
 .run px_vs_tof_plots_base_eventcb.pro

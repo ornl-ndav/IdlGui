@@ -65,9 +65,9 @@ function convert_angle, angle=angle, $
   'rad': to_factor = 1
   'degree': to_factor = !dtor
   endcase
-  angle_rad *= to_factor
+  angle = angle_rad * to_factor
 
-  return, angle_rad
+  return, angle
 end
 
 
