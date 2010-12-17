@@ -49,6 +49,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   APPLICATION = file->getValue(tag=['configuration','application'])
   VERSION  = file->getValue(tag=['configuration','version'])
   DEBUGGER = file->getValue(tag=['configuration','debugging'])
+  debugging_instrument = file->getValue(tag=['configuration','instrument'])
   auto_cleaning_data = file->getValue(tag=['configuration','auto_cleaning'])
   scaled_specular = file->getValue(tag=['configuration','plot','scaled_specular'])
   hide_tab_2 = file->getValue(tag=['configuration','hide_tab_2'])
@@ -71,7 +72,12 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   endelse
   
   date = GenerateReadableIsoTimeStamp()
-  instrument = getInstrument()
+  
+  if (strlowcase(debugger) eq 'yes') then begin
+    instrument = 'REF_M'
+  endif else begin
+    instrument = getInstrument()
+  endelse
   
   global = ptr_new({ $
   
@@ -214,9 +220,6 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
       input_path = "/SNS/users/j35/IDLWorkspace80/SOS 1.0/Files/"
     endelse
     (*global).input_path = input_path
-    
-    instrument = 'REF_M'
-    (*global).instrument = instrument
     
     if (instrument EQ 'REF_L') then begin ;REF_L instrument
       list_data_nexus = input_path + ['REF_L_34432.nxs',$

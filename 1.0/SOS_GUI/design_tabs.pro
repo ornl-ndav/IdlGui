@@ -135,6 +135,7 @@ pro design_tabs, MAIN_BASE, global
     uname = 'tab1_table',$
     xsize = 2,$
     ysize = max_nbr_data_nexus,$
+    scr_ysize = 220,$
     column_labels = ['Data','Normalization'],$
     /no_row_headers,$
     /row_major,$
@@ -339,6 +340,29 @@ pro design_tabs, MAIN_BASE, global
     value = '',$
     uname = 'd_md_uname',$
     title = 'Distance moderator to detector (mm) ')
+    
+  ;for REF_M only, metadata table
+  if ((*global).instrument eq 'REF_M') then begin
+  
+  row2 = widget_base(para_box,$
+    /row)
+    
+    widths = [250,80,50,50,200,200,200]
+  metadata_table = widget_table(row2,$
+    uname = 'ref_m_metadata_table',$
+    xsize = 7,$
+    ysize = max_nbr_data_nexus, $
+    column_labels=['File','Spin','dirpix','refpix','dangle','dangl0','sangle'],$
+    column_widths=widths,$
+    scr_xsize = 1050,$
+    scr_ysize = 300,$
+    /no_row_headers, $
+    /row_major,$
+    /scroll,$
+    /context_events, $
+    /all_events)
+  
+  endif
     
   if ((*global).hide_tab_2 eq 'no') then begin
   
