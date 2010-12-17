@@ -274,7 +274,7 @@ PRO tab_event, Event
 ; Change code (RC Ward 30 June 2010): STR_SEP is obsolte. Replace with IDL routine STRSPLIT
 ;               parts = STR_SEP(list,'.')
                 parts = STRSPLIT(list,'.',/EXTRACT)
-;print, "test: ", parts[0]," ", parts[1]
+;print, "RefPixLoad: test: ", parts[0]," ", parts[1]
                input_file_name = parts[0] + '_RefPix.txt'
 ;print, "OPEN RefPix file: ", input_file_name
                OPENR, 1, input_file_name, ERROR = err

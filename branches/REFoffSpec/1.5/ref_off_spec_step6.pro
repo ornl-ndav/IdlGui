@@ -513,6 +513,7 @@ PRO run_full_process_with_other_pola, Event, sStructure
   ;retrieve pixel offset
   ref_pixel_list        = (*(*global).ref_pixel_list)
   ref_pixel_offset_list = (*(*global).ref_pixel_offset_list) 
+  scaling_factor_array  = (*(*global).scaling_factor)
   
   PROCESSING = (*global).processing
   OK         = (*global).ok
@@ -635,6 +636,19 @@ PRO run_full_process_with_other_pola, Event, sStructure
       final_error_array
     ReplaceTextInCreateStatus, Event, PROCESSING, OK
   ENDELSE
+
+   index = 0
+   WHILE (index LT nbr_plot) DO BEGIN
+; code addded (RC Ward, 17 Dec 2010): Print scaling to status box
+          sIndex = STRING(index, FORMAT = '(I5)')
+          scaling_factor = scaling_factor_array[index]
+          sScaling_factor = STRING(scaling_factor, FORMAT='(F10.5)')
+          LogMessage = '    Dataset: ' + sIndex + '  Scaling applied: ' + sScaling_factor
+          addMessageInCreateStatus, Event, LogMessage
+          IDLsendToGeek_addLogBookText, Event, LogMessage 
+          index++
+   ENDWHILE
+
   CATCH,/CANCEL
   
   LogMessage = '    Specular Peak Output File ............... ' + PROCESSING
