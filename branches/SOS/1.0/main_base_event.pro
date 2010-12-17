@@ -62,11 +62,18 @@ PRO main_base_event, Event
       new_ysize = geometry.scr_ysize
       new_xsize = geometry.scr_xsize
       
+      id_config_table = widget_info(event.top, $
+        find_by_uname='ref_m_metadata_table')
+        
       ;difference of y relative to initial design of application
       delta_y = new_ysize - (*global).main_base_ysize
       if (delta_y lt 0) then begin
         widget_control, id_table, scr_ysize = (*global).table_ysize
         widget_control, id_table, scr_xsize = (*global).table_xsize
+        widget_control, id_config_table, scr_xsize = $
+          (*global).table_metadata_xsize
+        widget_control, id_config_table, scr_ysize = $
+          (*global).table_metadata_ysize
         widget_control, id, scr_xsize = (*global).main_base_xsize
         ;redraw same application with same sizes
         return
@@ -78,6 +85,8 @@ PRO main_base_event, Event
       ;increase the ysize of table by the same value
       widget_control, id_table, scr_ysize = (*global).table_ysize + delta_y
       widget_control, id_table, scr_xsize = (*global).table_xsize
+      widget_control, id_config_table, scr_ysize = (*global).table_metadata_ysize + delta_y
+      widget_control, id_config_table, scr_xsize = (*global).table_metadata_xsize
       widget_control, id, scr_xsize = (*global).main_base_xsize
       return
       

@@ -89,8 +89,11 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     max_nbr_data_nexus: max_nbr_data_nexus, $
     main_base_xsize: 0L, $ ;scr_xsize of application
     main_base_ysize: 0L, $
+    
     table_ysize: 0L, $
     table_xsize: 0L, $
+    table_metadata_ysize: 0L, $
+    table_metadata_xsize: 0L, $
     
     ;create output tab
     sample_info_base: 0L, $  ;base that will show the sample output
@@ -197,9 +200,11 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     /column, $
     TITLE        = MainTitle)
     
-  bFindnexus = is_findnexus_there()
-  ;REMOVE_ME
-  bFindnexus = 1
+  if (strlowcase(debugger) eq 'yes') then begin
+    bFindnexus = 1
+  endif else begin
+    bFindnexus = is_findnexus_there()
+  endelse
   (*global).bFindnexus = bFindnexus
   
   ;  design_menu, bar, global
@@ -298,6 +303,13 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   (*global).table_ysize = ysize_table
   (*global).table_xsize = xsize_table
   
+  id = widget_info(main_base,find_by_uname='ref_m_metadata_table')
+  geometry_table = widget_info(id,/geometry)
+  ysize_table = geometry_table.scr_ysize
+  xsize_table = geometry_table.scr_xsize
+  (*global).table_metadata_ysize = ysize_table
+  (*global).table_metadata_xsize = xsize_table
+
 END
 
 ;
