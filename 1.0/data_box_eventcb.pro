@@ -112,7 +112,7 @@ pro data_run_numbers_event, event
     type='data')
     
   if (list_data_nexus eq !null) then return
-    
+  
   add_list_of_nexus_to_table, event, list_data_nexus, type='data'
   refresh_big_table, event=event
   
@@ -176,32 +176,46 @@ pro retrieve_data_nexus_distances, event=event, main_base=main_base
   endelse
   
   instrument = (*global).instrument
-  if (instrument eq 'REF_M') then return  ;this will need to be implemented !!!
+  if (instrument eq 'REF_M') then begin
+  
+    big_table = (*global).big_table
+    first_data_nexus_array = strsplit(big_table[0,0],'(',/extract)
+    first_data_nexus = strtrim(first_data_nexus_array[0],2)
+
+    iNexus = obj_new('IDLnexusUtilities', first_data_nexus, $
+    spin_state='Off_Off')
+    d_SD = iNexus->get_d_SD()
+    obj_destroy, iNexus
+    d_SD_mm = abs(convert_distance(distance = d_SD.value,$
+      from_unit = d_SD.units, $
+      to_unit = 'mm'))
+    d_MD_mm = ''
+    
+  endif else begin
   
   big_table = (*global).big_table
   first_data_nexus = big_table[0,0]
   
   if (first_data_nexus eq '') then return
   
-  iNexus = obj_new('IDLnexusUtilities', first_data_nexus)
-  d_SD = iNexus->get_d_SD()
-  d_MS = iNexus->get_d_MS()
-  obj_destroy, iNexus
-  
-  ;convert into mm
-  d_SD_mm = abs(convert_distance(distance = d_SD.value,$
-    from_unit = d_SD.units, $
-    to_unit = 'mm'))
-  d_MS_mm = abs(convert_distance(distance = d_MS.value,$
-    from_unit = d_MS.units, $
-    to_unit = 'mm'))
+    iNexus = obj_new('IDLnexusUtilities', first_data_nexus)
+    d_SD = iNexus->get_d_SD()
+    d_MS = iNexus->get_d_MS()
+    obj_destroy, iNexus
     
-  d_MD_mm = d_MS_mm + d_SD_mm
+    ;convert into mm
+    d_SD_mm = abs(convert_distance(distance = d_SD.value,$
+      from_unit = d_SD.units, $
+      to_unit = 'mm'))
+    d_MS_mm = abs(convert_distance(distance = d_MS.value,$
+      from_unit = d_MS.units, $
+      to_unit = 'mm'))
+      
+    d_MD_mm = d_MS_mm + d_SD_mm
+    
+  endelse
   
   putValue, base=main_base, event=event, 'd_sd_uname', d_SD_mm
   putValue, base=main_base, event=event, 'd_md_uname', d_MD_mm
-  
-;  putValue, base=main_base, event=event, 'rtof_d_sd_uname', d_SD_mm
-;  putValue, base=main_base, event=event, 'rtof_d_md_uname', d_md_mm
   
 end

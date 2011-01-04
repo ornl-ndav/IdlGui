@@ -190,7 +190,7 @@ function _get_d_SD_for_ref_m, entry_spin_state = entry_spin_state , $
   old_file_path_units = '/instrument/bank1/SampleDetDis/units'
   new_file_path_value = '/instrument/bank1/SampleDetDis/value/'
   config_path_array   = ['config','instruments','REF_M','d_SD']
-  
+
   value_units = _get_value_units_from_old_new_cfg (fileID = fileID, $
     entry_spin_state = entry_spin_state, $
     old_file_path_value = old_file_path_value, $
