@@ -51,23 +51,26 @@ function convert_angle, angle=angle, $
     to_unit=to_unit
   compile_opt idl2
   
+  _angle = angle
+  
   if (from_unit eq to_unit) then return, angle
   
   ;convert everything into rad
   case (from_unit) of
   'rad': from_factor = 1
-  'degree': from_factor = 1/(!dtor)
+  ;'degree': from_factor = 1/(!dtor)
+  'degree': from_factor = !dtor
   endcase
-  angle_rad = angle * from_factor
+  angle_rad = _angle * from_factor
   
   ;convert into desired unit
   case (to_unit) of
   'rad': to_factor = 1
-  'degree': to_factor = !dtor
+  'degree': to_factor = 1/!dtor
   endcase
-  angle = angle_rad * to_factor
+  _angle = angle_rad * to_factor
 
-  return, angle
+  return, _angle
 end
 
 
@@ -100,7 +103,7 @@ function convert_distance, distance=distance, $
     'dm': _from_factor = 1.e-1
     'cm': _from_factor = 1.e-2
     'mm': _from_factor = 1.e-3
-    'millimetre': _from_facto = 1.e-3
+    'millimetre': _from_factor = 1.e-3
     'microm': _from_factor = 1.e-6
     'nanom': _from_factor = 1.e-9
     else: return, 'N/A'

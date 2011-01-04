@@ -264,8 +264,9 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     putvalue, base=main_base, 'rtof_file_text_field_uname', rtof_file
     
     ;tab to show by default
-    tab_to_show = 0
-    id = widget_info(main_base, find_by_uname='tab_uname')
+    tab_to_show = 1
+    ;id = widget_info(main_base, find_by_uname='tab_uname')
+    id = widget_info(main_base, find_by_uname='nexus_tab_uname')
     widget_control, id, set_tab_current=tab_to_show
     
     ;    endif
@@ -273,8 +274,8 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     create_big_table_tab1, main_base=main_base
     select_entire_row, base=main_base
     refresh_big_table, base=main_base
-    refresh_configuration_table, base=main_base
     retrieve_data_nexus_distances, main_base=main_base
+    refresh_configuration_table, base=main_base
     
     file_name = input_path + 'REF_L_34435.nxs'
     putValue, base=main_base, 'rtof_nexus_geometry_file', file_name
