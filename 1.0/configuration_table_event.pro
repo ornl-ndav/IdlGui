@@ -190,7 +190,7 @@ pro calculate_configuration_sangle_values, $
   
   szTable = size(config_table,/dim)
   nbr_row = szTable[1]
-
+  
   _pixel_size_mm = float(getValue(event=event, $
     base=base, $
     uname='pixel_size'))
@@ -229,14 +229,19 @@ pro calculate_configuration_sangle_values, $
     _dangle0 = retrieve_angle_in_rad(config_table[5,i])
     if (_dangle0 eq '') then continue
     
-    _sangle = calculate_sangle(_dangle, $
+    _sangle_rad = calculate_sangle(_dangle, $
       _dangle0, $
       dirpix=_dirpix, $
       refpix=_refpix, $
       pixel_size_m=_pixel_size_m, $
       d_SD_m=_d_SD_m)
-    
-    config_table[6,i] = _sangle
+      
+    _sangle_deg = convert_angle(angle=_sangle_rad, $
+      from_unit='rad',$
+      to_unit='degree')
+    _sangle_string = strcompress(_sangle_deg,/remove_all) + $
+      ' (' + strcompress(_sangle_rad,/remove_all) + ')'
+    config_table[6,i] = _sangle_string
     
   endfor
   
