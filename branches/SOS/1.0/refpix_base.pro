@@ -41,12 +41,12 @@
 ;
 ; :Author: j35
 ;-
-pro final_plot_event, Event
+pro refpix_base_event, Event
   compile_opt idl2
   
   ;get global structure
-  widget_control,event.top,get_uvalue=global_plot
-  main_event = (*global_plot).main_event
+  widget_control,event.top,get_uvalue=global_refpix
+  main_event = (*global_refpix).main_event
   
   case Event.id of
   
@@ -786,7 +786,7 @@ pro refpix_base_gui, wBase, $
   
   ourGroup = WIDGET_BASE()
   
-  title = 'Pixel vs tof for ' + file_name
+  title = 'Pixel vs TOF for ' + file_name
   wBase = WIDGET_BASE(TITLE = title, $
     UNAME        = 'refpix_base', $
     XOFFSET      = xoffset,$
@@ -930,6 +930,12 @@ pro refpix_base, main_base=main_base, $
     file_name = file_name
     
   compile_opt idl2
+  
+  help, x_axis
+  help, y_axis
+  help, data
+  
+  
   
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME='main_base')
   WIDGET_CONTROL,Event.top,GET_UVALUE=global

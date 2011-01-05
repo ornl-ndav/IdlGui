@@ -129,17 +129,12 @@ pro refresh_configuration_table, base=base, event=event
     full_file_name_spin = big_table[0,i]
     if (strcompress(full_file_name_spin,/remove_all) eq '') then break
     
-    ;isolate file name from spin state
-    row_array = strsplit(full_file_name_spin,'(',/extract)
+    file_structure = get_file_structure(full_file_name_spin)
+    _short_file_name = file_structure.short_file_name
+    _spin = file_structure.spin
+    _full_file_name = file_structure.full_file_name
     
-    _file_name = row_array[0]
-    _full_file_name = strtrim(_file_name,2)
-    _short_file_name = file_basename(_file_name)
-    _short_file_name = strtrim(_short_file_name,2)
     config_table[0,i] = _short_file_name ;add short file name
-    
-    spin_array = strsplit(row_array[1],')',/extract)
-    _spin = spin_array[0]
     config_table[1,i] = _spin ;spin
     
     iNexus = obj_new('IDLnexusUtilities', _full_file_name, spin_state=_spin)
