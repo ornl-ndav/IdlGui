@@ -34,6 +34,33 @@
 
 ;+
 ; :Description:
+;    Checks if the file name of the row selected is empty or not
+;
+; :Params:
+;    event
+;    
+; :Returns:
+;   1 if file name cell of selected row is not empty
+;   0 if file name cell of selected row is empty
+;
+; :Author: j35
+;-
+function isConfigurationRowNotEmpty, event
+compile_opt idl2
+
+  selection = get_table_lines_selected(event=event, $
+  uname='ref_m_metadata_table')
+  row_selected = selection[1]
+  
+  ;get big table
+  big_table = getValue(event=event,base=base, uname='ref_m_metadata_table')
+  if (big_table[0,row_selected] ne '') then return, 1
+  
+  return, 0
+end
+
+;+
+; :Description:
 ;    Calculate sangle value
 ;
 ; :Parameters:

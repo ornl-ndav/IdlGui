@@ -309,12 +309,21 @@ PRO main_base_event, Event
     end
     
     ;++++ WORKING WITH NEXUS / Configuration ++++
-        
-   ;interaction with table
+    
+    ;interaction with table
     widget_info(wWidget, find_by_uname='ref_m_metadata_table'): begin
-     ;select entire rows of selection
+      ;select entire rows of selection
       select_entire_row, event=event, uname='ref_m_metadata_table'
-   end 
+      
+      if (tag_names(event, /structure_name) EQ 'WIDGET_CONTEXT') THEN BEGIN
+        if (isConfigurationRowNotEmpty(event)) then begin
+          id = widget_info(event.top, $
+            find_by_uname='metadata_context_base')
+          widget_displaycontextmenu, event.id, event.X, event.Y, id
+        endif
+      endif
+      
+    end
     
     ;--- tab2 (work with rtof) ----
     
