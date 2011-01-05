@@ -136,13 +136,13 @@ end
 ;
 ; :Author: j35
 ;-
-pro select_entire_row, event=event, base=base
+pro select_entire_row, event=event, base=base, uname=uname
   compile_opt idl2
   
-  selection = get_table_lines_selected(event=event, base=base)
+  selection = get_table_lines_selected(event=event, base=base, uname=uname)
   from_row_selected = selection[1]
   to_row_selected = selection[3]
-  setTableSelect, event=event, base=base, uname='tab1_table', $
+  setTableSelect, event=event, base=base, uname=uname, $
     from_row=from_row_selected, $
     to_row = to_row_selected
     

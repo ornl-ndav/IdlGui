@@ -272,7 +272,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ;    endif
     
     create_big_table_tab1, main_base=main_base
-    select_entire_row, base=main_base
+    select_entire_row, base=main_base, uname='tab1_table'
     refresh_big_table, base=main_base
     retrieve_data_nexus_distances, main_base=main_base
     refresh_configuration_table, base=main_base

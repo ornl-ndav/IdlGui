@@ -197,7 +197,7 @@ PRO main_base_event, Event
     widget_info(wWidget, find_by_uname='tab1_table'): begin
     
       ;select entire rows of selection
-      select_entire_row, event=event
+      select_entire_row, event=event, uname='tab1_table'
       
       if (tag_names(event, /structure_name) EQ 'WIDGET_CONTEXT') THEN BEGIN
         if (selected_row_data_not_empty(event)) then begin
@@ -307,6 +307,14 @@ PRO main_base_event, Event
         column_index=column_index, $
         new_spin=new_spin
     end
+    
+    ;++++ WORKING WITH NEXUS / Configuration ++++
+        
+   ;interaction with table
+    widget_info(wWidget, find_by_uname='ref_m_metadata_table'): begin
+     ;select entire rows of selection
+      select_entire_row, event=event, uname='ref_m_metadata_table'
+   end 
     
     ;--- tab2 (work with rtof) ----
     
