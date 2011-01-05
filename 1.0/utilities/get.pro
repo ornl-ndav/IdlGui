@@ -638,5 +638,39 @@ function getAngleStructure, angle_value_units
   return, {value_degree: value_degree, value_rad: value_rad}
 end
 
-
+;+
+; :Description:
+;    parse the full file name (ex: /SNS/users/j35/REF_M_2454.nxs (Off_Off))
+;    and creates a structure composed of the full file name, short file name
+;    and spin state
+;
+; :Params:
+;    full_file_name_spin
+;
+; :Returns:
+;   structure : {full_file_name: '',$
+;                short_file_name: '',$
+;                spin: ''}
+;
+; :Author: j35
+;-
+function get_file_structure, full_file_name_spin
+  compile_opt idl2
+  
+  ;isolate file name from spin state
+  row_array = strsplit(full_file_name_spin,'(',/extract)
+  _file_name = row_array[0]
+  _full_file_name = strtrim(_file_name,2)
+  
+  _short_file_name = file_basename(_file_name)
+  _short_file_name = strtrim(_short_file_name,2)
+  
+  spin_array = strsplit(row_array[1],')',/extract)
+  _spin = spin_array[0]
+  
+  return, {full_file_name: _full_file_name, $
+    short_file_name: _short_file_name, $
+    spin: _spin}
+    
+end
 

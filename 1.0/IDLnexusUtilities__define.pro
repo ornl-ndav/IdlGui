@@ -35,7 +35,7 @@
 ;
 ;!!! IMPORTANT !!!
 ;
-; Dependencies: configuration file (.cfg) defined in the heade of this class
+; Dependencies: configuration file (.cfg) defined in the header of this class
 ; This configuration file is used when some of the infos can not be found
 ; in the NeXus file, and provides default values for those.
 ;

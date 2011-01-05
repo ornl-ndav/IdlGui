@@ -45,20 +45,45 @@
 pro set_refpix_base, event=event, base=base
   compile_opt idl2
   
-  x_axis = indgen(10)
-  y_axis = indgen(10)+10
-  data = indgen(10,10)
-  file_name = 'file_name'
+  selection = get_table_lines_selected(event=event, base=base, $
+    uname='ref_m_metadata_table')
+  from_row_selected = selection[1]
+  to_row_selected = selection[3]
+  nbr_file_selected = to_row_selected - from_row_selected + 1
+  index = 0
+  while (index lt nbr_file_selected) do begin
   
-  refpix_base, main_base=base, $
-    event=event, $
-    offset = 10, $
-    x_axis = x_axis, $
-    y_axis = y_axis, $
-    data = data, $
-    file_name = file_name
-
-     
+    table = getValue(event=event,uname='tab1_table')
+    ;get file name of line selected
+    full_file_name_spin = table[0,index]
+    file_structure = get_file_structure(full_file_name_spin)
+    _short_file_name = file_structure.short_file_name
+    _spin = file_structure.spin
+    _full_file_name = file_structure.full_file_name
+    
+    iNexus = obj_new('IDLnexusUtilities', _full_file_name, spin_state=_spin)
+    _data = iNexus->get_full_data()  ;[tof, x, y]
+    _tof_axis = iNexus->get_tof_data() ;tof axis in ms
+    obj_destroy, iNexus
+    
+    sz = size(_data,/dim)
+    _pixel_axis = indgen(sz[2])
+    
+    refpix_base, main_base=base, $
+      event=event, $
+      offset = 10, $
+      x_axis = _tof_axis, $
+      y_axis = _pixel_axis, $
+      data = _data, $
+      file_name = _short_file_name
+      
+    index++
+  endwhile
+  
+  
+  
+  
+  
   
   
   
