@@ -380,7 +380,7 @@ pro design_tabs, MAIN_BASE, global
       uname = 'set_refpix_button')
       
   endif
-  
+    
   if ((*global).hide_tab_2 eq 'no') then begin
   
     ;********* tab 2 **********************************************************
