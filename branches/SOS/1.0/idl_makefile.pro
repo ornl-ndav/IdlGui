@@ -96,6 +96,10 @@ cd, CurrentFolder
 .run go_rtof_reduction_eventcb.pro
 .run go_rtof_reduction.pro
 
+;configuration tab
+.run refpix_eventcb.pro
+.run refpix_base.pro
+
 ;outut tab
 .run sample_info_base.pro
 .run create_output_tab.pro

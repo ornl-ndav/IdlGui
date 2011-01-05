@@ -321,8 +321,12 @@ PRO main_base_event, Event
             find_by_uname='metadata_context_base')
           widget_displaycontextmenu, event.id, event.X, event.Y, id
         endif
-      endif
-      
+      endif  
+    end
+    
+    ;set_refpix_button
+    widget_info(wWidget, find_by_uname='set_refpix_button'): begin
+    set_refpix_base, event=event
     end
     
     ;--- tab2 (work with rtof) ----
