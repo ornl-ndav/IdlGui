@@ -73,7 +73,6 @@ function convert_angle, angle=angle, $
   return, _angle
 end
 
-
 ;+
 ; :Description:
 ;    Convert the distance having the from_unit unit into the unit given

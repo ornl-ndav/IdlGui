@@ -84,5 +84,7 @@ pro full_reset, event
     xaxis=!null, $
     yaxis=!null
   (*global).structure_data_working_with_rtof = structure
+  
+  refresh_configuration_table, event=event
 
 end
