@@ -371,6 +371,14 @@ pro design_tabs, MAIN_BASE, global
       /context_events, $
       /all_events)
       
+    ;context_menu
+    contextBase = widget_base(metadata_table,$
+      /context_menu,$
+      uname = 'metadata_context_base')
+    refpix_button = widget_button(contextBase,$
+      value = 'Set refpix ...',$
+      uname = 'set_refpix_button')
+      
   endif
   
   if ((*global).hide_tab_2 eq 'no') then begin
