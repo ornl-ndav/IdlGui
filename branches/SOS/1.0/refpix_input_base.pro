@@ -194,11 +194,11 @@ top_base=top_base, $
   endelse
   parent_base_geometry = WIDGET_INFO(id,/GEOMETRY)
   
-  _base = ''
+  _base = 0L
   refpix_input_base_gui, _base, $
     parent_base_geometry
     
-  (*global_refpix).cursor_info_base = _base
+  (*global_refpix).refpix_input_base = _base
   
   WIDGET_CONTROL, _base, /REALIZE
   
