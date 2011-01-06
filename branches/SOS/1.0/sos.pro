@@ -75,7 +75,6 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   if (strlowcase(debugger) eq 'yes') then begin
     instrument = 'REF_M'
-    instrument = 'REF_L'
   endif else begin
     instrument = getInstrument()
   endelse
