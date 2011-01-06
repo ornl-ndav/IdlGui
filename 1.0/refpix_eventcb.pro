@@ -80,11 +80,4 @@ pro set_refpix_base, event=event, base=base
     index++
   endwhile
   
-  
-  
-  
-  
-  
-  
-  
 end
