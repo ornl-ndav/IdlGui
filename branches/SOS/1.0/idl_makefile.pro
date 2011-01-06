@@ -99,6 +99,7 @@ cd, CurrentFolder
 ;configuration tab
 .run refpix_eventcb.pro
 .run refpix_base.pro
+.run refpix_colorbar.pro
 
 ;outut tab
 .run sample_info_base.pro

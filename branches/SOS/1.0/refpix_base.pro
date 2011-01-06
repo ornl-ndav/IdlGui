@@ -124,6 +124,50 @@ end
 
 ;+
 ; :Description:
+;    save the background image to be able
+;    to replot it quicker
+;
+;  use the following to display it:
+;   TV, (*(*global).background), true=3
+;
+; :Params:
+;    event
+;
+; :Keywords:
+;    main_base
+;
+; :Author: j35
+;-
+pro save_refpix_background,  event=event, main_base=main_base, uname=uname
+  compile_opt idl2
+  
+  if (~keyword_set(uname)) then uname = 'refpix_draw'
+  
+  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
+    id = WIDGET_INFO(main_base, FIND_BY_UNAME=uname)
+    widget_control, main_base, get_uvalue=global_refpix
+  ENDIF ELSE BEGIN
+    WIDGET_CONTROL, event.top, GET_UVALUE=global_refpix
+    id = WIDGET_INFO(Event.top,find_by_uname=uname)
+  ENDELSE
+  
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  background = TVRD(TRUE=3)
+  geometry = WIDGET_INFO(id,/GEOMETRY)
+  xsize   = geometry.xsize
+  ysize   = geometry.ysize
+  
+  ;DEVICE, copy =[0, 0, xsize, ysize, 0, 0, id_value]
+  DEVICE, copy =[0, 0, xsize, ysize, 0, 0]
+  
+  (*(*global_refpix).background) = background
+  
+END
+
+;+
+; :Description:
 ;    Switch linear/log plot
 ;
 ; :Keywords:
@@ -132,18 +176,18 @@ end
 ;
 ; :Author: j35
 ;-
-pro lin_log_data, event=event, base=base
+pro refpix_lin_log_data, event=event, base=base
   compile_opt idl2
   
   ;get global structure
   if (n_elements(event) ne 0) then begin
-    widget_control,event.top,get_uvalue=global_plot
+    widget_control,event.top,get_uvalue=global_refpix
   endif else begin
-    widget_control, base, get_uvalue=global_plot
+    widget_control, base, get_uvalue=global_refpix
   endelse
   
-  Data = (*(*global_plot).data_linear)
-  scale_setting = (*global_plot).default_scale_settings ;0 for lin, 1 for log
+  Data = (*(*global_refpix).data_linear)
+  scale_setting = (*global_refpix).default_scale_settings ;0 for lin, 1 for log
   
   if (scale_setting eq 1) then begin ;log
   
@@ -158,7 +202,7 @@ pro lin_log_data, event=event, base=base
     
   endif
   
-  (*(*global_plot).data) = Data
+  (*(*global_refpix).data) = Data
   
 end
 
@@ -535,19 +579,19 @@ end
 ;
 ; :Author: j35
 ;-
-pro plot_beam_center_scale, base=base, event=event
+pro plot_refpix_beam_center_scale, base=base, event=event
   compile_opt idl2
   
   if (n_elements(base) ne 0) then begin
-    id = widget_info(base,find_by_Uname='scale')
-    id_base = widget_info(base, find_by_uname='final_plot_base')
+    id = widget_info(base,find_by_Uname='refpix_scale')
+    id_base = widget_info(base, find_by_uname='refpix_base')
     sys_color = widget_info(base,/system_colors)
-    widget_control, base, get_uvalue=global_plot
+    widget_control, base, get_uvalue=global_refpix
   endif else begin
-    id = widget_info(event.top, find_by_uname='scale')
-    id_base = widget_info(event.top, find_by_uname='final_plot_base')
+    id = widget_info(event.top, find_by_uname='refpix_scale')
+    id_base = widget_info(event.top, find_by_uname='refpix_base')
     sys_color = widget_info(event.top, /system_colors)
-    widget_control, event.top, get_uvalue=global_plot
+    widget_control, event.top, get_uvalue=global_refpix
   endelse
   
   widget_control, id, get_value=id_value
@@ -557,11 +601,11 @@ pro plot_beam_center_scale, base=base, event=event
   device, decomposed=1
   sys_color_window_bk = sys_color.window_bk
   
-  x_range = (*global_plot).xrange
+  x_range = (*global_refpix).xrange
   min_x = x_range[0]
   max_x = x_range[1]
   
-  y_range = (*global_plot).yrange
+  y_range = (*global_refpix).yrange
   min_y = y_range[0]
   max_y = y_range[1]
   
@@ -569,18 +613,17 @@ pro plot_beam_center_scale, base=base, event=event
   geometry = widget_info(id_base,/geometry)
   xsize = geometry.scr_xsize
   
-  ;  xticks = fix(xsize / 100)
-  ;  yticks = (max_y - min_y)
   xticks = 8
+  yticks = 304/6
   
   xmargin = 6.6
   ymargin = 4
   
   xrange = [min_x, max_x]
-  (*global_plot).xrange = xrange
+  (*global_refpix).xrange = xrange
   
   yrange = [min_y, max_y]
-  (*global_plot).yrange = yrange
+  (*global_refpix).yrange = yrange
   
   ticklen = -0.0015
   
@@ -599,8 +642,8 @@ pro plot_beam_center_scale, base=base, event=event
     XMINOR      = 2,$
     ;YMINOR      = 2,$
     YTICKS      = yticks,$
-    XTITLE      = 'Qx',$
-    YTITLE      = 'Qz',$
+    XTITLE      = 'TOF (ms)',$
+    YTITLE      = 'Pixels',$
     XMARGIN     = [xmargin, xmargin+0.2],$
     YMARGIN     = [ymargin, ymargin],$
     /NODATA
@@ -907,7 +950,7 @@ pro refpix_base_gui, wBase, $
     value = set2_value,$
     event_pro = 'refpix_local_switch_axes_type',$
     uname = 'refpix_local_scale_setting_log')
-        
+    
 end
 
 ;+
@@ -918,6 +961,11 @@ end
 ; :Keywords:
 ;    main_base
 ;    event
+;    offset
+;    x_axis       (ex:Array of float [52])
+;    y_axis       (ex:Array of int [304])
+;    data         (ex:Array of ulong [51,256,304])
+;    file_name    (ex:REF_M_3454.nxs)
 ;
 ; :Author: j35
 ;-
@@ -931,12 +979,6 @@ pro refpix_base, main_base=main_base, $
     
   compile_opt idl2
   
-  help, x_axis
-  help, y_axis
-  help, data
-  
-  
-  
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME='main_base')
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
@@ -947,7 +989,8 @@ pro refpix_base, main_base=main_base, $
   
   default_plot_size = [600,600]
   default_scale_setting = 1 ;log by default
-
+  default_loadct = 5
+  
   ;build gui
   wBase = ''
   refpix_base_gui, wBase, $
@@ -979,8 +1022,10 @@ pro refpix_base, main_base=main_base, $
     counts_vs_xaxis_plot_uname: '',$
     counts_vs_yaxis_plot_uname: '',$
     
+    full_data: ptr_new(0L), $
     data: ptr_new(0L), $
     data_linear: ptr_new(0L), $
+    
     x_axis: x_axis, $ ; [-0.004, -0.003, -0.002...]
     y_axis: y_axis, $ ; [0.0, 0.1, 0.2, 0.3]
     
@@ -1003,7 +1048,7 @@ pro refpix_base, main_base=main_base, $
     nbr_pixel: 0L,$
     
     colorbar_xsize: colorbar_xsize, $
-    default_loadct: 5, $
+    default_loadct: default_loadct, $
     default_scale_settings: default_scale_setting, $ ;lin or log z-axis
     
     border: border, $ ;border of main plot (space reserved for scale)
@@ -1029,8 +1074,12 @@ pro refpix_base, main_base=main_base, $
     
     main_event: event})
     
-  (*(*global_refpix).data) = data
-  (*(*global_refpix).data_linear) = data
+  (*(*global_refpix).full_data) = data
+  
+  data_2d = total(data,2)
+  
+  (*(*global_refpix).data_linear) = data_2d
+  (*(*global_refpix).data) = data_2d
   
   xrange = [x_axis[0], x_axis[-1]]
   (*global_refpix).xrange = xrange
@@ -1043,16 +1092,15 @@ pro refpix_base, main_base=main_base, $
   XMANAGER, "refpix_base", wBase, GROUP_LEADER = ourGroup, /NO_BLOCK, $
     cleanup = 'refpix_base_cleanup'
     
-    return
-    
-;  lin_log_data, base=wBase
-
+  refpix_lin_log_data, base=wBase
+  
   Data = (*(*global_refpix).data)
   id = WIDGET_INFO(wBase, FIND_BY_UNAME='refpix_draw')
   draw_geometry = WIDGET_INFO(id,/GEOMETRY)
   xsize = draw_geometry.xsize
   ysize = draw_geometry.ysize
   ;  if ((*global_plot).plot_setting eq 'untouched') then begin
+  
   cData = congrid(Data, xsize, ysize)
   ;  endif else begin
   ;    cData = congrid(Data, ysize, xsize,/interp)
@@ -1069,16 +1117,16 @@ pro refpix_base, main_base=main_base, $
   (*global_refpix).congrid_xcoeff = xsize
   (*global_refpix).congrid_ycoeff = ysize
   
-  ;  DEVICE, DECOMPOSED = 0
-  ;  loadct, default_loadct, /SILENT
-  ;
-  plot_beam_center_scale, base=wBase
+  DEVICE, DECOMPOSED = 0
+  loadct, (*global_refpix).default_loadct, /SILENT
+  
+  plot_refpix_beam_center_scale, base=wBase
   
   id = widget_info(wBase,find_by_uname='refpix_draw')
   widget_control, id, GET_VALUE = plot_id
   wset, plot_id
   ;tvscl, transpose(cData)
-  tvscl, smooth(cData,smooth_coefficient)
+  tvscl, cData
   
   ;Scale
   zmin = 0
@@ -1089,19 +1137,16 @@ pro refpix_base, main_base=main_base, $
   
   (*global_refpix).zrange = zrange
   
-  plot_colorbar, base=wBase, zmin, zmax, type=default_scale_settings
+  plot_refpix_colorbar, base=wBase, zmin, zmax, type=default_scale_settings
   
   pre = '>  > >> '
   post = ' << <  <'
-  uname = 'loadct_' + strcompress(default_loadct,/remove_all)
+  uname = 'refpix_loadct_' + strcompress(default_loadct-1,/remove_all)
   value = getValue(base=wBase, uname=uname)
   new_value = pre + value + post
   setValue, base=wBase, uname, new_value
   
-  ;show global info button
-  display_global_infos_button, main_base=wBase
-  
-  save_background,  main_base=wBase
+  save_refpix_background,  main_base=wBase
   
 end
 
