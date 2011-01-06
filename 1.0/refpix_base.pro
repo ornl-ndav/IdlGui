@@ -256,39 +256,40 @@ end
 
 ;+
 ; :Description:
-;    Switch local label of plot settings button
-;    validated.
-;    add * at the beginning of string when button is validated
+;    Switches the selected button in the individual plot bases
 ;
 ; :Params:
 ;    event
 ;
 ; :Author: j35
 ;-
-pro switch_local_settings_plot_values, event
+pro refpix_local_switch_axes_type, event
   compile_opt idl2
   
-  widget_control,event.top,get_uvalue=global_plot
+  uname = widget_info(event.id, /uname)
+  widget_control, event.top, get_uvalue=global_refpix
   
-  plot_setting1 = (*global_plot).plot_setting1
-  plot_setting2 = (*global_plot).plot_setting2
-  
-  set1_value = getValue(event=event, uname='plot_setting_untouched')
-  
-  if (set1_value eq ('   ' + plot_setting1)) then begin ;setting1 needs to be checked
-    set1_value = '*  ' + plot_setting1
-    set2_value = '   ' + plot_setting2
-    (*global_plot).plot_setting = 'untouched'
+  if (uname eq 'refpix_local_scale_setting_linear') then begin
+    set1_value = '*  ' + 'linear'
+    set2_value = '   ' + 'logarithmic'
+    (*global_refpix).default_scale_settings = 0
   endif else begin
-    set1_value = '   ' + plot_setting1
-    set2_value = '*  ' + plot_setting2
-    (*global_plot).plot_setting = 'interpolated'
+    set1_value = '   ' + 'linear'
+    set2_value = '*  ' + 'logarithmic'
+    (*global_refpix).default_scale_settings = 1
   endelse
   
-  putValue, event=event, 'plot_setting_untouched', set1_value
-  putValue, event=event, 'plot_setting_interpolated', set2_value
+  putValue, event=event, 'refpix_local_scale_setting_linear', set1_value
+  putValue, event=event, 'refpix_local_scale_setting_log', set2_value
+  
+  refpix_lin_log_data, event=event
+  refresh_refpix_plot, event, recalculate=1
+  refresh_plot_refpix_colorbar, event
+  
+  save_refpix_background,  event=event
   
 end
+
 
 ;+
 ; :Description:
@@ -319,7 +320,7 @@ pro change_refpix_loadct, event
   
   ;change value of new loadct
   new_label = getValue(event=event, uname=new_uname)
-;  new_label = strcompress(new_label,/remove_all)
+  ;  new_label = strcompress(new_label,/remove_all)
   ;add selection string
   new_label = '>  > >> ' + new_label + ' << <  <'
   putValue, event=event, new_uname, new_label
