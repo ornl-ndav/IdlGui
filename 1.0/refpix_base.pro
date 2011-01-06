@@ -290,7 +290,6 @@ pro refpix_local_switch_axes_type, event
   
 end
 
-
 ;+
 ; :Description:
 ;    this procedure is reached by the loadct menu and change the default loadct
@@ -736,7 +735,6 @@ pro refresh_px_vs_tof_plots_base, wBase = wBase, $
   xsize = draw_geometry.xsize
   ysize = draw_geometry.ysize
   if ((*global_plot).plot_setting eq 'untouched') then begin
-    ;cData = congrid(Data, default_plot_size[0]-2*border, default_plot_size[1]-2*border-colorbar_xsize)
     cData = congrid(Data, ysize, xsize)
   endif else begin
     cData = congrid(Data, ysize, xsize,/interp)
@@ -821,6 +819,8 @@ pro refpix_base_gui, wBase, $
   yoffset += main_base_yoffset
   yoffset += offset
   
+  ysize_refpix_row = 0 ;vertical size of refpix row
+  
   ourGroup = WIDGET_BASE()
   
   title = 'Pixel vs TOF for ' + file_name
@@ -828,7 +828,7 @@ pro refpix_base_gui, wBase, $
     UNAME        = 'refpix_base', $
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
-    SCR_YSIZE    = ysize,$
+    SCR_YSIZE    = ysize+ysize_refpix_row,$
     SCR_XSIZE    = xsize+colorbar_xsize,$
     MAP          = 1,$
     ;    kill_notify  = 'px_vs_tof_widget_killed', $
@@ -864,6 +864,38 @@ pro refpix_base_gui, wBase, $
     scr_ysize = ysize,$
     retain=2)
     
+;  ;refpix selection row
+;  row2 = widget_base(wBase,$
+;  xoffset = 0,$
+;  yoffset = ysize,$
+;  /row)
+;
+;  space = widget_label(row2, $
+;  value = '    ')
+;  pixel1 = cw_field(row2, $ 
+;  title = 'Pixel 1:', $
+;  /integer, $
+;  xsize = 3, $
+;  /return_events, $
+;  /row, $
+;  value = '')
+;
+;  pixel2 = cw_field(row2, $ 
+;  title = '    Pixel 2:', $
+;  /integer, $
+;  xsize = 3, $
+;  /return_events, $
+;  /row, $
+;  value = '')
+;  
+;  label = widget_label(row2,$
+;  value = '     ----->     refpix:')
+;  refpix = widget_label(row2,$
+;  value = 'N/A',$
+;  scr_xsize = 50,$
+;  /align_left,$
+;  uname = 'refpix_value')
+
   mPlot = widget_button(bar1, $
     value = 'Type ',$
     /menu)
@@ -1142,6 +1174,11 @@ pro refpix_base, main_base=main_base, $
   setValue, base=wBase, uname, new_value
   
   save_refpix_background,  main_base=wBase
+  
+  ;bring to life the refpix pixel1 and 2 input base
+  refpix_input_base, parent_base_uname = 'refpix_base', $
+  top_base=wBase
+
   
 end
 

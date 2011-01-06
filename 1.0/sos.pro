@@ -51,10 +51,13 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   DEBUGGER = file->getValue(tag=['configuration','debugging'])
   debugging_instrument = file->getValue(tag=['configuration','instrument'])
   auto_cleaning_data = file->getValue(tag=['configuration','auto_cleaning'])
-  scaled_specular = file->getValue(tag=['configuration','plot','scaled_specular'])
+  scaled_specular = file->getValue(tag=['configuration','plot',$
+    'scaled_specular'])
   hide_tab_2 = file->getValue(tag=['configuration','hide_tab_2'])
-  max_nbr_data_nexus = file->getValue(tag=['configuration','max_nbr_data_nexus'])
-  default_spin_state = file->getValue(tag=['configuration','default_spin_state'])
+  max_nbr_data_nexus = file->getValue(tag=['configuration',$
+    'max_nbr_data_nexus'])
+  default_spin_state = file->getValue(tag=['configuration',$
+    'default_spin_state'])
   ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
   ;============================================================================
   obj_destroy, file

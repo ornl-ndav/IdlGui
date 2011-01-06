@@ -100,6 +100,7 @@ cd, CurrentFolder
 .run refpix_eventcb.pro
 .run refpix_base.pro
 .run refpix_colorbar.pro
+.run refpix_input_base.pro
 
 ;outut tab
 .run sample_info_base.pro
