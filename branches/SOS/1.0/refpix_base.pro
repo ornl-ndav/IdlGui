@@ -299,37 +299,38 @@ end
 ;
 ; :Author: j35
 ;-
-pro change_loadct, event
+pro change_refpix_loadct, event
   compile_opt idl2
   
   new_uname = widget_info(event.id, /uname)
-  widget_control,event.top,get_uvalue=global_plot
+  widget_control,event.top,get_uvalue=global_refpix
   
   ;get old loadct
-  old_loadct = strcompress((*global_plot).default_loadct,/remove_all)
-  old_uname = 'loadct_' + old_loadct
+  old_loadct = strcompress((*global_refpix).default_loadct,/remove_all)
+  old_uname = 'refpix_loadct_' + old_loadct
   label = getValue(event=event,uname=old_uname)
+  
   ;remove keep central part
   raw_label1 = strsplit(label,'>>',/regex,/extract)
   raw_label2 = strsplit(raw_label1[1],'<<',/regex,/extract)
-  raw_label = strcompress(raw_label2[0],/remove_all)
+  ;raw_label = strcompress(raw_label2[0],/remove_all)
   ;put it back
-  putValue, event=event, old_uname, raw_label
+  putValue, event=event, old_uname, strtrim(raw_label2[0],2)
   
   ;change value of new loadct
   new_label = getValue(event=event, uname=new_uname)
-  new_label = strcompress(new_label,/remove_all)
+;  new_label = strcompress(new_label,/remove_all)
   ;add selection string
   new_label = '>  > >> ' + new_label + ' << <  <'
   putValue, event=event, new_uname, new_label
   
   ;save new loadct
   new_uname_array = strsplit(new_uname,'_',/extract)
-  (*global_plot).default_loadct = fix(new_uname_array[1])
+  (*global_refpix).default_loadct = fix(new_uname_array[2])
   
   ;replot
-  refresh_plot, event, recalculate=1
-  refresh_plot_colorbar, event
+  refresh_refpix_plot, event, recalculate=1
+  refresh_plot_refpix_colorbar, event
   
 end
 
@@ -870,6 +871,7 @@ pro refpix_base_gui, wBase, $
     'Blue/White',$
     'Green-Red-Blue-White',$
     'Red temperature',$
+    'Blue/Green/Red/Yellow',$
     'Std Gamma-II',$
     'Prism',$
     'Red-Purple',$
@@ -1133,7 +1135,7 @@ pro refpix_base, main_base=main_base, $
   
   pre = '>  > >> '
   post = ' << <  <'
-  uname = 'refpix_loadct_' + strcompress(default_loadct-1,/remove_all)
+  uname = 'refpix_loadct_' + strcompress(default_loadct,/remove_all)
   value = getValue(base=wBase, uname=uname)
   new_value = pre + value + post
   setValue, base=wBase, uname, new_value
