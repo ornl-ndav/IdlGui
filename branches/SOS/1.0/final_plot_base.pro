@@ -276,13 +276,13 @@ pro change_loadct, event
   ;remove keep central part
   raw_label1 = strsplit(label,'>>',/regex,/extract)
   raw_label2 = strsplit(raw_label1[1],'<<',/regex,/extract)
-  raw_label = strcompress(raw_label2[0],/remove_all)
+  ;raw_label = strcompress(raw_label2[0],/remove_all)
   ;put it back
-  putValue, event=event, old_uname, raw_label
+  putValue, event=event, old_uname, strtrim(raw_label2[0],2)
   
   ;change value of new loadct
   new_label = getValue(event=event, uname=new_uname)
-  new_label = strcompress(new_label,/remove_all)
+  ;new_label = strcompress(new_label,/remove_all)
   ;add selection string
   new_label = '>  > >> ' + new_label + ' << <  <'
   putValue, event=event, new_uname, new_label
@@ -585,6 +585,7 @@ pro final_plot_gui, wBase, $
     'Blue/White',$
     'Green-Red-Blue-White',$
     'Red temperature',$
+    'Blue/Green/Red/Yellow',$
     'Std Gamma-II',$
     'Prism',$
     'Red-Purple',$
