@@ -63,11 +63,32 @@ pro refpix_base_event, Event
     
     widget_info(event.top, find_by_uname='refpix_base'): begin
     
+      print, 'in refpix_base'
+    
       id = widget_info(event.top, find_by_uname='refpix_base')
       ;widget_control, id, /realize
       geometry = widget_info(id,/geometry)
       new_xsize = geometry.scr_xsize
       new_ysize = geometry.scr_ysize
+      xoffset = geometry.xoffset
+      yoffset = geometry.yoffset
+      
+      id_refpix = (*global_refpix).refpix_input_base
+      widget_control, id_refpix, xoffset = xoffset + new_xsize
+      widget_control, id_refpix, yoffset = yoffset 
+      
+      print, 'old xsize: ' , (*global_refpix).xsize
+      print, 'new xsize: ' , new_xsize
+      print, 'old_ysize: ' , (*global_refpix).ysize
+      print, 'new_ysize: ' , new_ysize
+      print
+      print, abs((*global_refpix).xsize - new_xsize)
+      print, abs((*global_refpix).ysize - new_ysize) 
+      print
+      print
+      
+      if ((abs((*global_refpix).xsize - new_xsize) eq 70.0) && $
+      abs((*global_refpix).ysize - new_ysize) eq 33.0) then return 
       
       (*global_refpix).xsize = new_xsize
       (*global_refpix).ysize = new_ysize
@@ -834,6 +855,7 @@ pro refpix_base_gui, wBase, $
     ;    kill_notify  = 'px_vs_tof_widget_killed', $
     /BASE_ALIGN_CENTER,$
     /align_center,$
+    /tlb_move_events, $
     /tlb_size_events,$
     mbar = bar1,$
     GROUP_LEADER = ourGroup)
@@ -1036,6 +1058,8 @@ pro refpix_base, main_base=main_base, $
     global: global, $
     
     file_name: file_name, $
+    
+    refpix_input_base: 0L, $ ;id of refpix_input_base
     
     ;used to plot selection zoom
     default_plot_size: default_plot_size, $
