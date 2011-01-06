@@ -139,6 +139,15 @@ end
 pro select_entire_row, event=event, base=base, uname=uname
   compile_opt idl2
   
+  if (keyword_set(event)) then begin
+  widget_control, event.top, get_uvalue=global
+  endif else begin
+  widget_control, base, get_uvalue=global
+  endelse
+  instrument = (*global).instrument
+  
+  if (instrument eq 'REF_L') then return 
+  
   selection = get_table_lines_selected(event=event, base=base, uname=uname)
   from_row_selected = selection[1]
   to_row_selected = selection[3]

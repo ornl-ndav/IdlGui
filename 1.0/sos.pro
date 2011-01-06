@@ -75,6 +75,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   if (strlowcase(debugger) eq 'yes') then begin
     instrument = 'REF_M'
+    instrument = 'REF_L'
   endif else begin
     instrument = getInstrument()
   endelse
@@ -306,13 +307,15 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   (*global).table_ysize = ysize_table
   (*global).table_xsize = xsize_table
   
-  id = widget_info(main_base,find_by_uname='ref_m_metadata_table')
-  geometry_table = widget_info(id,/geometry)
-  ysize_table = geometry_table.scr_ysize
-  xsize_table = geometry_table.scr_xsize
-  (*global).table_metadata_ysize = ysize_table
-  (*global).table_metadata_xsize = xsize_table
-
+  if (instrument eq 'REF_M') then begin
+    id = widget_info(main_base,find_by_uname='ref_m_metadata_table')
+    geometry_table = widget_info(id,/geometry)
+    ysize_table = geometry_table.scr_ysize
+    xsize_table = geometry_table.scr_xsize
+    (*global).table_metadata_ysize = ysize_table
+    (*global).table_metadata_xsize = xsize_table
+  endif
+  
 END
 
 ;
