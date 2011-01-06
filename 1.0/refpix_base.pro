@@ -61,44 +61,39 @@ pro refpix_base_event, Event
       return
     end
     
-    widget_info(event.top, find_by_uname='final_plot_base'): begin
+    widget_info(event.top, find_by_uname='refpix_base'): begin
     
-      id = widget_info(event.top, find_by_uname='final_plot_base')
+      id = widget_info(event.top, find_by_uname='refpix_base')
       ;widget_control, id, /realize
       geometry = widget_info(id,/geometry)
       new_xsize = geometry.scr_xsize
       new_ysize = geometry.scr_ysize
       
-      (*global_plot).xsize = new_xsize
-      (*global_plot).ysize = new_ysize
+      (*global_refpix).xsize = new_xsize
+      (*global_refpix).ysize = new_ysize
       
       widget_control, id, xsize = new_xsize
       widget_control, id, ysize = new_ysize
       
-      border = (*global_plot).border
-      colorbar_xsize = (*global_plot).colorbar_xsize
+      border = (*global_refpix).border
+      colorbar_xsize = (*global_refpix).colorbar_xsize
       
-      id = widget_info(event.top, find_by_uname='draw')
+      id = widget_info(event.top, find_by_uname='refpix_draw')
       widget_control, id, draw_xsize = new_xsize-2*border-colorbar_xsize
       widget_control, id, draw_ysize = new_ysize-2*border
       
-      id = widget_info(event.top,find_by_Uname='scale')
+      id = widget_info(event.top,find_by_Uname='refpix_scale')
       widget_control, id, draw_xsize = new_xsize-colorbar_xsize
       widget_control, id, draw_ysize = new_ysize
       
-      id = widget_info(event.top, find_by_uname='colorbar')
+      id = widget_info(event.top, find_by_uname='refpix_colorbar')
       widget_control, id, xoffset=new_xsize-colorbar_xsize
       widget_control, id, draw_ysize = new_ysize
       widget_control, id, draw_xsize = colorbar_xsize
       
-      ;global info
-      id = widget_info(event.top, find_by_uname='global_info_uname')
-      widget_control, id, xoffset = new_xsize-colorbar_xsize-border-25
-      display_global_infos_button, event=event
-      
-      plot_beam_center_scale, event=event
-      refresh_plot, event, recalculate=1
-      refresh_plot_colorbar, event
+      plot_refpix_beam_center_scale, event=event
+      refresh_refpix_plot, event, recalculate=1
+      refresh_plot_refpix_colorbar, event
       
       return
     end
@@ -215,27 +210,25 @@ end
 ;
 ; :Author: j35
 ;-
-pro refresh_plot, event, recalculate=recalculate
+pro refresh_refpix_plot, event, recalculate=recalculate
   compile_opt idl2
   
   ;get global structure
-  widget_control,event.top,get_uvalue=global_plot
+  widget_control,event.top,get_uvalue=global_refpix
   
   if (n_elements(recalculate) eq 0) then begin
-    id = widget_info(event.top, find_by_uname='draw')
+    id = widget_info(event.top, find_by_uname='refpix_draw')
     widget_control, id, GET_VALUE = plot_id
     wset, plot_id
-    TV, (*(*global_plot).background), true=3
+    TV, (*(*global_refpix).background), true=3
     return
   endif
   
-  Data = (*(*global_plot).data)
-  new_xsize = (*global_plot).xsize
-  new_ysize = (*global_plot).ysize
-  ;  border = (*global_plot).border
-  ;  colorbar_xsize = (*global_plot).colorbar_xsize
+  Data = (*(*global_refpix).data)
+  new_xsize = (*global_refpix).xsize
+  new_ysize = (*global_refpix).ysize
   
-  id = WIDGET_INFO(event.top, FIND_BY_UNAME='draw')
+  id = WIDGET_INFO(event.top, FIND_BY_UNAME='refpix_draw')
   draw_geometry = WIDGET_INFO(id,/GEOMETRY)
   xsize = draw_geometry.xsize
   ysize = draw_geometry.ysize
@@ -245,20 +238,19 @@ pro refresh_plot, event, recalculate=recalculate
   ;  endif else begin
   ;    cData = congrid(Data, ysize, xsize,/interp)
   ;  endelse
-  (*global_plot).congrid_xcoeff = xsize
-  (*global_plot).congrid_ycoeff = ysize
+  (*global_refpix).congrid_xcoeff = xsize
+  (*global_refpix).congrid_ycoeff = ysize
   
-  id = widget_info(event.top, find_by_uname='draw')
+  id = widget_info(event.top, find_by_uname='refpix_draw')
   widget_control, id, GET_VALUE = plot_id
   wset, plot_id
   erase
   
-  loadct, (*global_plot).default_loadct, /silent
+  loadct, (*global_refpix).default_loadct, /silent
   
-  smooth_coefficient = (*global_plot).smooth_coefficient
-  tvscl, smooth(cData, smooth_coefficient)
+  tvscl, cData
   
-  save_background, event=event
+  save_refpix_background, event=event
   
 end
 
@@ -854,7 +846,7 @@ pro refpix_base_gui, wBase, $
     /tracking_events, $
     keyboard_events=2, $
     retain=2, $
-    event_pro = 'refpix_draw_eventcb',$
+    ;    event_pro = 'refpix_draw_eventcb',$
     uname = 'refpix_draw')
     
   scale = widget_draw(wBase,$
