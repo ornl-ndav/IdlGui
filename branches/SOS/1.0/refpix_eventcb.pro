@@ -50,8 +50,8 @@ pro set_refpix_base, event=event, base=base
   from_row_selected = selection[1]
   to_row_selected = selection[3]
   nbr_file_selected = to_row_selected - from_row_selected + 1
-  index = 0
-  while (index lt nbr_file_selected) do begin
+  index = from_row_selected
+  while (index le to_row_selected) do begin
   
     table = getValue(event=event,uname='tab1_table')
     ;get file name of line selected
@@ -75,7 +75,7 @@ pro set_refpix_base, event=event, base=base
       x_axis = _tof_axis, $
       y_axis = _pixel_axis, $
       data = _data, $
-      file_name = _short_file_name
+      file_name = _short_file_name + ' (' + _spin + ')'
       
     index++
   endwhile
