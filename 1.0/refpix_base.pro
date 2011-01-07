@@ -61,6 +61,39 @@ pro refpix_base_event, Event
       return
     end
     
+    ;main draw
+    widget_info(event.top, find_by_uname='refpix_draw'): begin
+    
+      catch, error
+      if (error ne 0) then begin ;selection
+        catch,/cancel
+      
+;        pixel_base = (*global_refpix).refpix_input_base
+;        if (widget_info(pixel_base, /valid_id) eq 0) then begin
+;          refpix_input_base, parent_base_uname = 'refpix_base_uname', $
+;            event=event
+;        endif
+        
+      endif else begin ;entering or leaving widget_draw
+      
+        if (event.enter eq 0) then begin ;leaving plot
+
+          id_cursor = (*global_refpix).refpix_cursor_info_base
+          widget_control, id_cursor, /destroy
+
+        endif else begin ;entering plot
+
+          id_cursor = (*global_refpix).refpix_cursor_info_base
+          if (widget_info(id_cursor,/valid_id) eq 0) then begin
+            refpix_cursor_info_base, parent_base_uname='refpix_base_uname', $
+              event=event
+          endif
+          
+        endelse
+      endelse
+    end
+    
+    ;main base
     widget_info(event.top, find_by_uname='refpix_base_uname'): begin
     
       id = widget_info(event.top, find_by_uname='refpix_base_uname')
@@ -74,10 +107,14 @@ pro refpix_base_event, Event
       ;only if the refpix input base is there
       id_refpix = (*global_refpix).refpix_input_base
       if (widget_info(id_refpix, /valid_id) ne 0) then begin
-      
         widget_control, id_refpix, xoffset = xoffset + new_xsize
         widget_control, id_refpix, yoffset = yoffset
-        
+      endif
+      
+      id_cursor = (*global_refpix).refpix_cursor_info_base
+      if (widget_info(id_cursor,/valid_id) ne 0) then begin
+        widget_control, id_cursor, xoffset = xoffset + new_xsize
+        widget_control, id_cursor, yoffset = yoffset + 170
       endif
       
       if ((abs((*global_refpix).xsize - new_xsize) eq 70.0) && $
@@ -130,7 +167,6 @@ pro refpix_base_event, Event
     
     widget_info(event.top, $
       find_by_uname='show_pixel_selection_base'): begin
-      
       pixel_base = (*global_refpix).refpix_input_base
       if (widget_info(pixel_base, /valid_id) eq 0) then begin
         refpix_input_base, parent_base_uname = 'refpix_base_uname', $
@@ -377,201 +413,6 @@ pro refpix_base_uname_killed, global_refpix
   if (widget_info(id_refpix, /valid_id) ne 0) then begin
     widget_control, id_refpix, /destroy
   endif
-  
-end
-
-;+
-; :Description:
-;    Shows the cursor, counts vs pixel and counts vs tof bases
-;
-; :Params:
-;    event
-;
-; :Author: j35
-;-
-pro show_all_info, event
-  compile_opt idl2
-  
-  show_cursor_info, event
-  show_counts_vs_xaxis, event
-  show_counts_vs_yaxis, event
-  
-end
-
-;+
-; :Description:
-;    show the cursor info base
-;
-; :Params:
-;    event
-;
-; :Author: j35
-;-
-pro show_cursor_info, event
-  compile_opt idl2
-  
-  widget_control, event.top, get_uvalue=global_plot
-  
-  info_base = (*global_plot).cursor_info_base
-  
-  if (widget_info(info_base, /valid_id) EQ 0) THEN BEGIN
-    parent_base_uname = 'final_plot_base'
-    cursor_info_base, event=event, $
-      parent_base_uname=parent_base_uname
-  endif
-  
-end
-
-;+
-; :Description:
-;    show the counts vs tof (lambda) base
-;
-; :Params:
-;    event
-;
-; :Author: j35
-;-
-pro show_counts_vs_xaxis, event
-  compile_opt idl2
-  
-  widget_control, event.top, get_uvalue=global_plot
-  
-  counts_vs_xaxis_plot_id = (*global_plot).counts_vs_xaxis_base
-  if (widget_info(counts_vs_xaxis_plot_id,/valid_id) eq 0) then begin
-    counts_vs_axis_base, event=event, $
-      parent_base_uname = 'final_plot_base', $
-      xaxis = 'qx'
-  endif
-  
-end
-
-;+
-; :Description:
-;    show the counts vs pixel (angle) base
-;
-; :Params:
-;    event
-;
-; :Author: j35
-;-
-pro show_counts_vs_yaxis, event
-  compile_opt idl2
-  
-  widget_control, event.top, get_uvalue=global_plot
-  
-  counts_vs_yaxis_plot_id = (*global_plot).counts_vs_yaxis_base
-  if (widget_info(counts_vs_yaxis_plot_id,/valid_id) eq 0) then begin
-    counts_vs_axis_base, event=event, $
-      parent_base_uname = 'final_plot_base', $
-      xaxis = 'qz'
-  endif
-  
-end
-
-;+
-; :Description:
-;    This procedure is reached when any of the smooth button has been
-;    clicked. The main purpose of this procedure is to change the label
-;    of the newly clicked button to '> value <'
-;
-; :Params:
-;    event
-;
-; :Author: j35
-;-
-pro smooth_coefficient_eventcb, event
-  compile_opt idl2
-  
-  new_uname = widget_info(event.id, /uname)
-  widget_control,event.top,get_uvalue=global_plot
-  
-  ;get old smooth coefficient
-  old_smooth_coefficient = $
-    strcompress((*global_plot).smooth_coefficient,/remove_all)
-  old_uname = 'smooth_coefficient_' + old_smooth_coefficient
-  label = getValue(event=event, uname=old_uname)
-  
-  ;remove keep central part
-  raw_label1 = strsplit(label,'>',/regex,/extract)
-  raw_label2 = strsplit(raw_label1[0],'<',/regex,/extract)
-  raw_label = strcompress(raw_label2[0],/remove_all)
-  
-  ;put it back
-  putValue, event=event, old_uname, '  ' + raw_label
-  
-  ;change value of new smooth
-  new_label = getValue(event=event, uname=new_uname)
-  new_label = strcompress(new_label,/remove_all)
-  ;add selection string
-  new_label = '> ' + new_label + ' <'
-  putValue, event=event, new_uname, new_label
-  
-  ;save new smooth
-  new_uname_array = strsplit(new_uname,'_',/extract)
-  (*global_plot).smooth_coefficient = fix(new_uname_array[2])
-  
-  ;replot
-  refresh_plot, event, recalculate=1
-  
-end
-
-;+
-; :Description:
-;    This routine display the global info button
-;
-; :Keywords:
-;    event
-;    main_base
-;
-; :Author: j35
-;-
-pro display_global_infos_button, event=event, main_base=main_base
-  compile_opt idl2
-  
-  raw_buttons = read_png('SOS_images/global_infos.png')
-  if (keyword_set(main_base)) then begin
-    mode_id = WIDGET_INFO(main_base, $
-      FIND_BY_UNAME='global_info_uname')
-  endif else begin
-    mode_id = WIDGET_INFO(event.top, $
-      FIND_BY_UNAME='global_info_uname')
-  endelse
-  widget_control, mode_id, get_value=id
-  wset, id
-  tv, raw_buttons, 0, 0, /true
-  
-end
-
-;+
-; :Description:
-;    display the metadata
-;
-; :Params:
-;    event
-;
-; :Author: j35
-;-
-pro global_info_draw_eventcb, event
-  compile_opt idl2
-  
-  widget_control, event.top, get_uvalue=global_plot
-  global_infos_base = (*global_plot).global_infos_base
-  
-  if (event.enter) then begin ;entering the global info widget_draw
-  
-    if (widget_info(global_infos_base, /valid_id) EQ 0) THEN BEGIN
-      global_infos_base, event=event, $
-        parent_base_uname = 'final_plot_base', $
-        time_stamp = (*global_plot).time_stamp
-    endif
-    
-  endif else begin ;leaving the global info widget_draw
-  
-    if (widget_info(global_infos_base, /valid_id)) THEN BEGIN
-      widget_control, global_infos_base, /destroy
-    endif
-    
-  endelse
   
 end
 
@@ -1054,7 +895,8 @@ pro refpix_base, main_base=main_base, $
     file_name = file_name, $
     scale_setting = default_scale_setting,$
     default_plot_size = default_plot_size
-    
+  _wBase = wBase
+  
   WIDGET_CONTROL, wBase, /REALIZE
   
   global_refpix = PTR_NEW({ wbase: wbase,$
@@ -1065,10 +907,11 @@ pro refpix_base, main_base=main_base, $
     file_name: file_name, $
     
     refpix_input_base: 0L, $ ;id of refpix_input_base
+    refpix_cursor_info_base: 0L, $ 'id of refpix_cursor_info_base
     
-    ;used to plot selection zoom
-    default_plot_size: default_plot_size, $
-    
+  ;used to plot selection zoom
+  default_plot_size: default_plot_size, $
+  
     counts_vs_xaxis_yaxis_type: 0,$ ;0 for linear, 1 for log
     counts_vs_yaxis_yaxis_type: 0,$ ;0 for linear, 1 for log
     
@@ -1207,6 +1050,10 @@ pro refpix_base, main_base=main_base, $
   ;bring to life the refpix pixel1 and 2 input base
   refpix_input_base, parent_base_uname = 'refpix_base_uname', $
     top_base=wBase
+
+;  ;bring to life the cursor information
+;  refpix_cursor_info_base, parent_base_uname='refpix_base_uname', $
+;    top_base=_wBase
     
 end
 

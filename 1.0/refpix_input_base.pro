@@ -41,7 +41,7 @@
 ;
 ; :Author: j35
 ;-
-pro cursor_info_base_event, Event
+pro refpix_input_base_event, Event
   compile_opt idl2
   
   case Event.id of
@@ -113,14 +113,12 @@ pro refpix_input_base_gui, wBase, $
     UNAME        = 'pixel_selection_base', $
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
-    ;    SCR_YSIZE    = ysize,$
-    ;    SCR_XSIZE    = xsize,$
     MAP          = 1,$
     kill_notify  = 'pixel_selection_base_killed', $
     /column,$
     /tlb_size_events,$
     GROUP_LEADER = ourGroup)
-    
+        
   row1 = widget_base(wBase,$
     /row)
   pixel1 = cw_field(row1,$
@@ -232,6 +230,7 @@ pro refpix_input_base, event=event, $
   if (keyword_set(event)) then begin
     id = WIDGET_INFO(Event.top, FIND_BY_UNAME=parent_base_uname)
     WIDGET_CONTROL,Event.top,GET_UVALUE=global_refpix
+    top_base = 0L
   endif else begin
     id = widget_info(top_base, find_by_uname=parent_base_uname)
     widget_control, top_base, get_uvalue=global_refpix
@@ -252,7 +251,7 @@ pro refpix_input_base, event=event, $
     
   WIDGET_CONTROL, _base, SET_UVALUE = global_info
   
-  XMANAGER, "cursor_info_base", _base, GROUP_LEADER = ourGroup, /NO_BLOCK, $
+  XMANAGER, "refpix_input_base", _base, GROUP_LEADER = ourGroup, /NO_BLOCK, $
     cleanup='counts_info_base_cleanup'
     
 end
