@@ -61,11 +61,9 @@ pro refpix_base_event, Event
       return
     end
     
-    widget_info(event.top, find_by_uname='refpix_base'): begin
+    widget_info(event.top, find_by_uname='refpix_base_uname'): begin
     
-      print, 'in refpix_base'
-    
-      id = widget_info(event.top, find_by_uname='refpix_base')
+      id = widget_info(event.top, find_by_uname='refpix_base_uname')
       ;widget_control, id, /realize
       geometry = widget_info(id,/geometry)
       new_xsize = geometry.scr_xsize
@@ -73,20 +71,21 @@ pro refpix_base_event, Event
       xoffset = geometry.xoffset
       yoffset = geometry.yoffset
       
+      ;only if the refpix input base is there
       id_refpix = (*global_refpix).refpix_input_base
-      widget_control, id_refpix, xoffset = xoffset + new_xsize
-      widget_control, id_refpix, yoffset = yoffset 
-            
-;      print, 'x diff is: ' , (*global_refpix).xsize - new_xsize
-;      print, 'y diff is: ' , (*global_refpix).ysize - new_ysize
-;      print
+      if (widget_info(id_refpix, /valid_id) ne 0) then begin
+      
+        widget_control, id_refpix, xoffset = xoffset + new_xsize
+        widget_control, id_refpix, yoffset = yoffset
+        
+      endif
       
       if ((abs((*global_refpix).xsize - new_xsize) eq 70.0) && $
-      abs((*global_refpix).ysize - new_ysize) eq 33.0) then return 
-      
+        abs((*global_refpix).ysize - new_ysize) eq 33.0) then return
+        
       if ((abs((*global_refpix).xsize - new_xsize) eq 0.0) && $
-      abs((*global_refpix).ysize - new_ysize) eq 33.0) then return 
-
+        abs((*global_refpix).ysize - new_ysize) eq 33.0) then return
+        
       (*global_refpix).xsize = new_xsize
       (*global_refpix).ysize = new_ysize
       
@@ -127,6 +126,16 @@ pro refpix_base_event, Event
       widget_control, id, /destroy
       
       return
+    end
+    
+    widget_info(event.top, $
+      find_by_uname='show_pixel_selection_base'): begin
+      
+      pixel_base = (*global_refpix).refpix_input_base
+      if (widget_info(pixel_base, /valid_id) eq 0) then begin
+        refpix_input_base, parent_base_uname = 'refpix_base_uname', $
+          event=event
+      endif
     end
     
     else:
@@ -354,34 +363,19 @@ end
 
 ;+
 ; :Description:
-;   Reached when the settings base is killed
+;   Reached when the main base is killed
 ;
 ; :Params:
 ;    global_plot
 ;
 ; :Author: j35
 ;-
-pro final_plot_base_killed, global_plot
+pro refpix_base_uname_killed, global_refpix
   compile_opt idl2
   
-  main_event = (*global_plot).main_event
-  
-  info_base = (*global_plot).cursor_info_base
-  ;if x,y and counts base is on, shows live values of x,y and counts
-  if (widget_info(info_base, /valid_id) ne 0) then begin
-    widget_control, info_base, /destroy
-  endif
-  
-  ;close the xaxis info if openned
-  xaxis_info_base = (*global_plot).counts_vs_xaxis_base
-  if (widget_info(xaxis_info_base, /valid_id) ne 0) then begin
-    widget_control, xaxis_info_base, /destroy
-  endif
-  
-  ;close the yaxis info if openned
-  yaxis_info_base = (*global_plot).counts_vs_yaxis_base
-  if (widget_info(yaxis_info_base, /valid_id) ne 0) then begin
-    widget_control, yaxis_info_base, /destroy
+  id_refpix = (*global_refpix).refpix_input_base
+  if (widget_info(id_refpix, /valid_id) ne 0) then begin
+    widget_control, id_refpix, /destroy
   endif
   
 end
@@ -595,12 +589,12 @@ pro plot_refpix_beam_center_scale, base=base, event=event
   
   if (n_elements(base) ne 0) then begin
     id = widget_info(base,find_by_Uname='refpix_scale')
-    id_base = widget_info(base, find_by_uname='refpix_base')
+    id_base = widget_info(base, find_by_uname='refpix_base_uname')
     sys_color = widget_info(base,/system_colors)
     widget_control, base, get_uvalue=global_refpix
   endif else begin
     id = widget_info(event.top, find_by_uname='refpix_scale')
-    id_base = widget_info(event.top, find_by_uname='refpix_base')
+    id_base = widget_info(event.top, find_by_uname='refpix_base_uname')
     sys_color = widget_info(event.top, /system_colors)
     widget_control, event.top, get_uvalue=global_refpix
   endelse
@@ -681,10 +675,11 @@ pro refpix_base_cleanup, tlb
   
   widget_control, tlb, get_uvalue=global_refpix, /no_copy
   
-  ;final_plot_base_killed, global_refpix
+  refpix_base_uname_killed, global_refpix
   
   if (n_elements(global_refpix) eq 0) then return
   
+  ptr_free, (*global_refpix).full_data
   ptr_free, (*global_refpix).data
   ptr_free, (*global_refpix).data_linear
   ptr_free, (*global_refpix).background
@@ -843,13 +838,14 @@ pro refpix_base_gui, wBase, $
   
   title = 'Pixel vs TOF for ' + file_name
   wBase = WIDGET_BASE(TITLE = title, $
-    UNAME        = 'refpix_base', $
+    UNAME        = 'refpix_base_uname', $
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
     SCR_YSIZE    = ysize+ysize_refpix_row,$
     SCR_XSIZE    = xsize+colorbar_xsize,$
     MAP          = 1,$
-    ;    kill_notify  = 'px_vs_tof_widget_killed', $
+;    /tlb_kill_request_events,$
+;    kill_notify  = 'refpix_base_uname_killed', $
     /BASE_ALIGN_CENTER,$
     /align_center,$
     /tlb_move_events, $
@@ -883,38 +879,38 @@ pro refpix_base_gui, wBase, $
     scr_ysize = ysize,$
     retain=2)
     
-;  ;refpix selection row
-;  row2 = widget_base(wBase,$
-;  xoffset = 0,$
-;  yoffset = ysize,$
-;  /row)
-;
-;  space = widget_label(row2, $
-;  value = '    ')
-;  pixel1 = cw_field(row2, $ 
-;  title = 'Pixel 1:', $
-;  /integer, $
-;  xsize = 3, $
-;  /return_events, $
-;  /row, $
-;  value = '')
-;
-;  pixel2 = cw_field(row2, $ 
-;  title = '    Pixel 2:', $
-;  /integer, $
-;  xsize = 3, $
-;  /return_events, $
-;  /row, $
-;  value = '')
-;  
-;  label = widget_label(row2,$
-;  value = '     ----->     refpix:')
-;  refpix = widget_label(row2,$
-;  value = 'N/A',$
-;  scr_xsize = 50,$
-;  /align_left,$
-;  uname = 'refpix_value')
-
+  ;  ;refpix selection row
+  ;  row2 = widget_base(wBase,$
+  ;  xoffset = 0,$
+  ;  yoffset = ysize,$
+  ;  /row)
+  ;
+  ;  space = widget_label(row2, $
+  ;  value = '    ')
+  ;  pixel1 = cw_field(row2, $
+  ;  title = 'Pixel 1:', $
+  ;  /integer, $
+  ;  xsize = 3, $
+  ;  /return_events, $
+  ;  /row, $
+  ;  value = '')
+  ;
+  ;  pixel2 = cw_field(row2, $
+  ;  title = '    Pixel 2:', $
+  ;  /integer, $
+  ;  xsize = 3, $
+  ;  /return_events, $
+  ;  /row, $
+  ;  value = '')
+  ;
+  ;  label = widget_label(row2,$
+  ;  value = '     ----->     refpix:')
+  ;  refpix = widget_label(row2,$
+  ;  value = 'N/A',$
+  ;  scr_xsize = 50,$
+  ;  /align_left,$
+  ;  uname = 'refpix_value')
+    
   mPlot = widget_button(bar1, $
     value = 'Type ',$
     /menu)
@@ -996,6 +992,14 @@ pro refpix_base_gui, wBase, $
     value = set2_value,$
     event_pro = 'refpix_local_switch_axes_type',$
     uname = 'refpix_local_scale_setting_log')
+    
+  pixel = widget_button(bar1,$
+    value = 'Pixels selection',$
+    /menu)
+    
+  show = widget_button(pixel,$
+    value = 'Show pixel selection window',$
+    uname = 'show_pixel_selection_base')
     
 end
 
@@ -1154,7 +1158,7 @@ pro refpix_base, main_base=main_base, $
   ;    cData = congrid(Data, ysize, xsize,/interp)
   ;  endelse
   
-  id = widget_info(wBase, find_by_uname='refpix_base')
+  id = widget_info(wBase, find_by_uname='refpix_base_uname')
   geometry = widget_info(id,/geometry)
   _xsize = geometry.scr_xsize
   _ysize = geometry.scr_ysize
@@ -1197,9 +1201,8 @@ pro refpix_base, main_base=main_base, $
   save_refpix_background,  main_base=wBase
   
   ;bring to life the refpix pixel1 and 2 input base
-  refpix_input_base, parent_base_uname = 'refpix_base', $
-  top_base=wBase
-
-  
+  refpix_input_base, parent_base_uname = 'refpix_base_uname', $
+    top_base=wBase
+    
 end
 

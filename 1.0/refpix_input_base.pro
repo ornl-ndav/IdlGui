@@ -97,30 +97,30 @@ pro refpix_input_base_gui, wBase, $
     GROUP_LEADER = ourGroup)
     
   row1 = widget_base(wBase,$
-  /row)  
+    /row)
   pixel1 = cw_field(row1,$
-  xsize = 3,$
-  /integer,$
-  title = 'Pixel 1:',$
-  /row,$
-  /return_events,$
-  uname = 'refpix_pixel1_uname')
-  
+    xsize = 3,$
+    /integer,$
+    title = 'Pixel 1:',$
+    /row,$
+    /return_events,$
+    uname = 'refpix_pixel1_uname')
+    
   pixel2 = cw_field(row1,$
-  xsize = 3,$
-  /integer,$
-  title = '      Pixel 2:',$
-  /row,$
-  /return_events,$
-  uname = 'refpix_pixel2_uname')
-
+    xsize = 3,$
+    /integer,$
+    title = '      Pixel 2:',$
+    /row,$
+    /return_events,$
+    uname = 'refpix_pixel2_uname')
+    
   refpix = cw_field(wBase, $
-  xsize = 3,$
-  /integer, $
-  title = '       ===>  Refpix:',$
-  /row,$
-  /return_events,$
-  uname = 'refpix_value_uname')
+    xsize = 3,$
+    /integer, $
+    title = '       ===>  Refpix:',$
+    /row,$
+    /return_events,$
+    uname = 'refpix_value_uname')
     
 end
 
@@ -181,16 +181,16 @@ end
 ; :Author: j35
 ;-
 pro refpix_input_base, event=event, $
-top_base=top_base, $
+    top_base=top_base, $
     parent_base_uname = parent_base_uname
   compile_opt idl2
   
   if (keyword_set(event)) then begin
-  id = WIDGET_INFO(Event.top, FIND_BY_UNAME=parent_base_uname)
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global_refpix
+    id = WIDGET_INFO(Event.top, FIND_BY_UNAME=parent_base_uname)
+    WIDGET_CONTROL,Event.top,GET_UVALUE=global_refpix
   endif else begin
-  id = widget_info(top_base, find_by_uname=parent_base_uname)
-  widget_control, top_base, get_uvalue=global_refpix
+    id = widget_info(top_base, find_by_uname=parent_base_uname)
+    widget_control, top_base, get_uvalue=global_refpix
   endelse
   parent_base_geometry = WIDGET_INFO(id,/GEOMETRY)
   
@@ -203,7 +203,7 @@ top_base=top_base, $
   WIDGET_CONTROL, _base, /REALIZE
   
   global_info = PTR_NEW({ _base: _base,$
-;    parent_event: event, $
+    ;    parent_event: event, $
     global: global_refpix })
     
   WIDGET_CONTROL, _base, SET_UVALUE = global_info
