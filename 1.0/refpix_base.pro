@@ -63,6 +63,8 @@ pro refpix_base_event, Event
     
     widget_info(event.top, find_by_uname='refpix_base'): begin
     
+      print, 'in refpix_base'
+    
       id = widget_info(event.top, find_by_uname='refpix_base')
       ;widget_control, id, /realize
       geometry = widget_info(id,/geometry)
@@ -74,10 +76,17 @@ pro refpix_base_event, Event
       id_refpix = (*global_refpix).refpix_input_base
       widget_control, id_refpix, xoffset = xoffset + new_xsize
       widget_control, id_refpix, yoffset = yoffset 
+            
+;      print, 'x diff is: ' , (*global_refpix).xsize - new_xsize
+;      print, 'y diff is: ' , (*global_refpix).ysize - new_ysize
+;      print
       
       if ((abs((*global_refpix).xsize - new_xsize) eq 70.0) && $
       abs((*global_refpix).ysize - new_ysize) eq 33.0) then return 
       
+      if ((abs((*global_refpix).xsize - new_xsize) eq 0.0) && $
+      abs((*global_refpix).ysize - new_ysize) eq 33.0) then return 
+
       (*global_refpix).xsize = new_xsize
       (*global_refpix).ysize = new_ysize
       
