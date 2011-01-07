@@ -63,8 +63,6 @@ pro refpix_base_event, Event
     
     widget_info(event.top, find_by_uname='refpix_base'): begin
     
-      print, 'in refpix_base'
-    
       id = widget_info(event.top, find_by_uname='refpix_base')
       ;widget_control, id, /realize
       geometry = widget_info(id,/geometry)
@@ -76,16 +74,6 @@ pro refpix_base_event, Event
       id_refpix = (*global_refpix).refpix_input_base
       widget_control, id_refpix, xoffset = xoffset + new_xsize
       widget_control, id_refpix, yoffset = yoffset 
-      
-      print, 'old xsize: ' , (*global_refpix).xsize
-      print, 'new xsize: ' , new_xsize
-      print, 'old_ysize: ' , (*global_refpix).ysize
-      print, 'new_ysize: ' , new_ysize
-      print
-      print, abs((*global_refpix).xsize - new_xsize)
-      print, abs((*global_refpix).ysize - new_ysize) 
-      print
-      print
       
       if ((abs((*global_refpix).xsize - new_xsize) eq 70.0) && $
       abs((*global_refpix).ysize - new_ysize) eq 33.0) then return 
