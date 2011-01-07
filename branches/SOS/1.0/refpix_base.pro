@@ -246,6 +246,48 @@ function retrieve_pixel_value, event
   
 end
 
+
+;+
+; :Description:
+;    returns the exact number of counts of the x and y device position
+;
+; :Params:
+;    event
+;
+; :Returns:
+;    counts
+;
+; :Author: j35
+;-
+function retrieve_counts_value, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_refpix
+  
+  catch, error
+  error = 0
+  if (error ne 0) then begin
+    catch,/cancel
+    return, 'N/A'
+  endif
+  
+  data = (*(*global_refpix).data_linear) ;ex: [51,304] 51->tof, 304->pixels
+  
+  xdata_max = (size(data))[1]
+  ydata_max = (size(data))[2]
+  
+  congrid_xcoeff = (*global_refpix).congrid_xcoeff
+  congrid_ycoeff = (*global_refpix).congrid_ycoeff
+  
+  xdata = fix(float(event.x) * float(xdata_max) / congrid_xcoeff)
+  ydata = fix(float(event.y) * float(ydata_max) / congrid_ycoeff)
+  
+  _data = data[xdata,ydata]
+  
+  return, _data
+  
+end
+
 ;+
 ; :Description:
 ;    This routine will retrieve the x(tof), y(pixel) and z(counts) infos
@@ -270,10 +312,8 @@ pro show_refpix_cursor_info, event
   
   tof_value = retrieve_tof_value(event)
   pixel_value = fix(retrieve_pixel_value(event))
+  counts_value = retrieve_counts_value(event)
   
-
-  counts_value = 'N/A'
-
   cursor_info_base = (*global_refpix).refpix_cursor_info_base
   putValue, base=cursor_info_base, 'refpix_cursor_tof_value', $
     strcompress(tof_value,/remove_all)
