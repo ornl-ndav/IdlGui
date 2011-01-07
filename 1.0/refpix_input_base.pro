@@ -46,6 +46,31 @@ pro cursor_info_base_event, Event
   
   case Event.id of
   
+    widget_info(event.top, find_by_uname='validate_refpix_selected_uname'): begin
+    
+      ;validate refpix selected
+      refpix_value = getValue(event=event, uname='refpix_value_uname')
+      if (refpix_value eq 0) then refpix_value = ''
+      widget_control, event.top, get_uvalue=global_info
+      top_base = (*global_info).top_base
+      ;get row selected in configuration file
+      global_refpix = (*global_info).global_refpix
+      row_selected = (*global_refpix).row_index
+      ;retrieve configuration table, make changes at given row and put it back
+      main_event = (*global_refpix).main_event
+      table = getValue(event=main_event,uname='ref_m_metadata_table')
+      table[3,row_selected] = strcompress(refpix_value,/remove_all)
+      putValue, event=main_event, 'ref_m_metadata_table', table
+      widget_control, top_base, /destroy
+    end
+    
+    ;cancel refpix selected
+    widget_info(event.top, find_by_uname='cancel_refpix_selected_uname'): begin
+      widget_control, event.top, get_uvalue=global_info
+      top_base = (*global_info).top_base
+      widget_control, top_base, /destroy
+    end
+    
     else:
     
   endcase
@@ -121,6 +146,25 @@ pro refpix_input_base_gui, wBase, $
     /row,$
     /return_events,$
     uname = 'refpix_value_uname')
+    
+  space = widget_label(wBase,$
+    value = ' ')
+    
+  row4 = widget_base(wBase,$
+    /row)
+    
+  cancel = widget_button(row4,$
+    value = 'Cancel',$
+    uname = 'cancel_refpix_selected_uname',$
+    scr_xsize = 50)
+    
+  space = widget_label(row4,$
+    value = '     ')
+    
+  row4 = widget_button(row4,$
+    value = 'Use this refpix',$
+    uname = 'validate_refpix_selected_uname',$
+    scr_xsize = 150)
     
 end
 
@@ -203,8 +247,8 @@ pro refpix_input_base, event=event, $
   WIDGET_CONTROL, _base, /REALIZE
   
   global_info = PTR_NEW({ _base: _base,$
-    ;    parent_event: event, $
-    global: global_refpix })
+    top_base: top_base, $
+    global_refpix: global_refpix })
     
   WIDGET_CONTROL, _base, SET_UVALUE = global_info
   

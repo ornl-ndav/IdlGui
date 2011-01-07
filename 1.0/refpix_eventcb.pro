@@ -71,6 +71,7 @@ pro set_refpix_base, event=event, base=base
     
     refpix_base, main_base=base, $
       event=event, $
+      row_index = index, $
       offset = 10, $
       x_axis = _tof_axis, $
       y_axis = _pixel_axis, $
