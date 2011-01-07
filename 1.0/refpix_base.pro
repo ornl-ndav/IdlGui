@@ -67,22 +67,26 @@ pro refpix_base_event, Event
       catch, error
       if (error ne 0) then begin ;selection
         catch,/cancel
-      
-;        pixel_base = (*global_refpix).refpix_input_base
-;        if (widget_info(pixel_base, /valid_id) eq 0) then begin
-;          refpix_input_base, parent_base_uname = 'refpix_base_uname', $
-;            event=event
-;        endif
+        
+        show_refpix_cursor_info, event
+        
+        
+        
+      ;        pixel_base = (*global_refpix).refpix_input_base
+      ;        if (widget_info(pixel_base, /valid_id) eq 0) then begin
+      ;          refpix_input_base, parent_base_uname = 'refpix_base_uname', $
+      ;            event=event
+      ;        endif
         
       endif else begin ;entering or leaving widget_draw
       
         if (event.enter eq 0) then begin ;leaving plot
-
+        
           id_cursor = (*global_refpix).refpix_cursor_info_base
           widget_control, id_cursor, /destroy
-
+          
         endif else begin ;entering plot
-
+        
           id_cursor = (*global_refpix).refpix_cursor_info_base
           if (widget_info(id_cursor,/valid_id) eq 0) then begin
             refpix_cursor_info_base, parent_base_uname='refpix_base_uname', $
@@ -178,6 +182,106 @@ pro refpix_base_event, Event
     
   endcase
   
+end
+
+;+
+; :Description:
+;    calculate the x data from the x device
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+function retrieve_tof_value, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_refpix
+  
+  catch, error
+  if (error ne 0) then begin
+    catch,/cancel
+    return, 'N/A'
+  endif
+  
+  x_device = event.x
+  congrid_xcoeff = (*global_refpix).congrid_xcoeff
+  xrange = float((*global_refpix).xrange) ;min and max tof
+  
+  rat = float(x_device) / float(congrid_xcoeff)
+  x_data = float(rat * (xrange[1] - xrange[0]) + xrange[0])
+  
+  return, x_data
+  
+end
+
+;+
+; :Description:
+;    calculate the y data from the y device
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+function retrieve_pixel_value, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_refpix
+  
+  catch, error
+  if (error ne 0) then begin
+    catch,/cancel
+    return, 'N/A'
+  endif
+  
+  y_device = event.y
+  congrid_ycoeff = (*global_refpix).congrid_ycoeff
+  yrange = float((*global_refpix).yrange) ;min and max pixels
+  
+  rat = float(y_device) / float(congrid_ycoeff)
+  y_data = float(rat * (yrange[1] - yrange[0]) + yrange[0])
+  
+  return, y_data
+  
+end
+
+;+
+; :Description:
+;    This routine will retrieve the x(tof), y(pixel) and z(counts) infos
+;    of the current cursor position and will display them in the cursor base
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro show_refpix_cursor_info, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_refpix
+  
+  data = (*(*global_refpix).full_data)
+  x_axis = (*global_refpix).x_axis
+  y_axis = (*global_refpix).y_axis
+  
+  xcoeff = (*global_refpix).congrid_xcoeff
+  ycoeff = (*global_refpix).congrid_ycoeff
+  
+  tof_value = retrieve_tof_value(event)
+  pixel_value = fix(retrieve_pixel_value(event))
+  
+
+  counts_value = 'N/A'
+
+  cursor_info_base = (*global_refpix).refpix_cursor_info_base
+  putValue, base=cursor_info_base, 'refpix_cursor_tof_value', $
+    strcompress(tof_value,/remove_all)
+  putValue, base=cursor_info_base, 'refpix_cursor_pixel_value', $
+    strcompress(pixel_value,/remove_all)
+  putValue, base=cursor_info_base, 'refpix_cursor_counts_value', $
+    strcompress(counts_value,/remove_all)
+    
 end
 
 ;+
@@ -953,11 +1057,11 @@ pro refpix_base, main_base=main_base, $
     border: border, $ ;border of main plot (space reserved for scale)
     
     Qx_axis: fltarr(2),$  ;[start, end]
-    delta_Qx: 0., $ ;Qx increment
+    ;    delta_Qx: 0., $ ;Qx increment
     
-    xrange: fltarr(2),$ ;[qx_left, qx_right]
+    xrange: fltarr(2),$
     zrange: fltarr(2),$
-    yrange: fltarr(2),$ ;[qz_bottom qz_top]
+    yrange: fltarr(2),$
     
     background: ptr_new(0L), $ ;background of main plot
     
@@ -1001,9 +1105,6 @@ pro refpix_base, main_base=main_base, $
   ;  if ((*global_plot).plot_setting eq 'untouched') then begin
   
   cData = congrid(Data, xsize, ysize)
-  ;  endif else begin
-  ;    cData = congrid(Data, ysize, xsize,/interp)
-  ;  endelse
   
   id = widget_info(wBase, find_by_uname='refpix_base_uname')
   geometry = widget_info(id,/geometry)
@@ -1050,7 +1151,7 @@ pro refpix_base, main_base=main_base, $
   ;bring to life the refpix pixel1 and 2 input base
   refpix_input_base, parent_base_uname = 'refpix_base_uname', $
     top_base=wBase
-
+    
 ;  ;bring to life the cursor information
 ;  refpix_cursor_info_base, parent_base_uname='refpix_base_uname', $
 ;    top_base=_wBase
