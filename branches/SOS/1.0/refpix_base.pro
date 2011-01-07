@@ -844,8 +844,8 @@ pro refpix_base_gui, wBase, $
     SCR_YSIZE    = ysize+ysize_refpix_row,$
     SCR_XSIZE    = xsize+colorbar_xsize,$
     MAP          = 1,$
-;    /tlb_kill_request_events,$
-;    kill_notify  = 'refpix_base_uname_killed', $
+    ;    /tlb_kill_request_events,$
+    ;    kill_notify  = 'refpix_base_uname_killed', $
     /BASE_ALIGN_CENTER,$
     /align_center,$
     /tlb_move_events, $
@@ -1012,6 +1012,7 @@ end
 ;    main_base
 ;    event
 ;    offset
+;    row_index    row used to plot NeXus file
 ;    x_axis       (ex:Array of float [52])
 ;    y_axis       (ex:Array of int [304])
 ;    data         (ex:Array of ulong [51,256,304])
@@ -1021,6 +1022,7 @@ end
 ;-
 pro refpix_base, main_base=main_base, $
     event=event, $
+    row_index = row_index, $
     offset = offset, $
     x_axis = x_axis, $
     y_axis = y_axis, $
@@ -1057,6 +1059,8 @@ pro refpix_base, main_base=main_base, $
   
   global_refpix = PTR_NEW({ wbase: wbase,$
     global: global, $
+    
+    row_index: row_index, $
     
     file_name: file_name, $
     
