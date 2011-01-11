@@ -81,18 +81,7 @@ pro refpix_base_event, Event
       endif else begin ;entering or leaving widget_draw
       
         if (event.enter eq 0) then begin ;leaving plot
-        
-          id_cursor = (*global_refpix).refpix_cursor_info_base
-          widget_control, id_cursor, /destroy
-          
         endif else begin ;entering plot
-        
-          id_cursor = (*global_refpix).refpix_cursor_info_base
-          if (widget_info(id_cursor,/valid_id) eq 0) then begin
-            refpix_cursor_info_base, parent_base_uname='refpix_base_uname', $
-              event=event
-          endif
-          
         endelse
       endelse
     end
@@ -115,12 +104,12 @@ pro refpix_base_event, Event
         widget_control, id_refpix, yoffset = yoffset
       endif
       
-      id_cursor = (*global_refpix).refpix_cursor_info_base
-      if (widget_info(id_cursor,/valid_id) ne 0) then begin
-        widget_control, id_cursor, xoffset = xoffset + new_xsize
-        widget_control, id_cursor, yoffset = yoffset + 170
-      endif
-      
+;      id_cursor = (*global_refpix).refpix_cursor_info_base
+;      if (widget_info(id_cursor,/valid_id) ne 0) then begin
+;        widget_control, id_cursor, xoffset = xoffset + new_xsize
+;        widget_control, id_cursor, yoffset = yoffset + 170
+;      endif
+;      
       if ((abs((*global_refpix).xsize - new_xsize) eq 70.0) && $
         abs((*global_refpix).ysize - new_ysize) eq 33.0) then return
         
@@ -311,16 +300,17 @@ pro show_refpix_cursor_info, event
   ycoeff = (*global_refpix).congrid_ycoeff
   
   tof_value = retrieve_tof_value(event)
-  pixel_value = fix(retrieve_pixel_value(event))
+  pixel_value = retrieve_pixel_value(event)
   counts_value = retrieve_counts_value(event)
   
-  cursor_info_base = (*global_refpix).refpix_cursor_info_base
-  putValue, base=cursor_info_base, 'refpix_cursor_tof_value', $
-    strcompress(tof_value,/remove_all)
-  putValue, base=cursor_info_base, 'refpix_cursor_pixel_value', $
-    strcompress(pixel_value,/remove_all)
-  putValue, base=cursor_info_base, 'refpix_cursor_counts_value', $
-    strcompress(counts_value,/remove_all)
+  
+
+
+
+
+
+
+
     
 end
 
@@ -1051,7 +1041,7 @@ pro refpix_base, main_base=main_base, $
     file_name: file_name, $
     
     refpix_input_base: 0L, $ ;id of refpix_input_base
-    refpix_cursor_info_base: 0L, $ 'id of refpix_cursor_info_base
+;    refpix_cursor_info_base: 0L, $ 'id of refpix_cursor_info_base
     
   ;used to plot selection zoom
   default_plot_size: default_plot_size, $
