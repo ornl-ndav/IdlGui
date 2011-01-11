@@ -79,8 +79,11 @@ pro refpix_base_event, Event
       ;        endif
         
       endif else begin ;entering or leaving widget_draw
-      
         if (event.enter eq 0) then begin ;leaving plot
+          file_name = (*global_refpix).file_name
+          id = widget_info(event.top, find_by_uname='refpix_base_uname')
+          widget_control, id, tlb_set_title=file_name
+          
         endif else begin ;entering plot
         endelse
       endelse
@@ -104,12 +107,12 @@ pro refpix_base_event, Event
         widget_control, id_refpix, yoffset = yoffset
       endif
       
-;      id_cursor = (*global_refpix).refpix_cursor_info_base
-;      if (widget_info(id_cursor,/valid_id) ne 0) then begin
-;        widget_control, id_cursor, xoffset = xoffset + new_xsize
-;        widget_control, id_cursor, yoffset = yoffset + 170
-;      endif
-;      
+      ;      id_cursor = (*global_refpix).refpix_cursor_info_base
+      ;      if (widget_info(id_cursor,/valid_id) ne 0) then begin
+      ;        widget_control, id_cursor, xoffset = xoffset + new_xsize
+      ;        widget_control, id_cursor, yoffset = yoffset + 170
+      ;      endif
+      ;
       if ((abs((*global_refpix).xsize - new_xsize) eq 70.0) && $
         abs((*global_refpix).ysize - new_ysize) eq 33.0) then return
         
@@ -231,7 +234,7 @@ function retrieve_pixel_value, event
   rat = float(y_device) / float(congrid_ycoeff)
   y_data = float(rat * (yrange[1] - yrange[0]) + yrange[0])
   
-  return, y_data
+  return, fix(y_data)
   
 end
 
@@ -273,7 +276,7 @@ function retrieve_counts_value, event
   
   _data = data[xdata,ydata]
   
-  return, _data
+  return, long(_data)
   
 end
 
@@ -299,19 +302,24 @@ pro show_refpix_cursor_info, event
   xcoeff = (*global_refpix).congrid_xcoeff
   ycoeff = (*global_refpix).congrid_ycoeff
   
-  tof_value = retrieve_tof_value(event)
-  pixel_value = retrieve_pixel_value(event)
-  counts_value = retrieve_counts_value(event)
+  tof_value = strcompress(retrieve_tof_value(event),/remove_all)
+  pixel_value = strcompress(retrieve_pixel_value(event),/remove_all)
+  counts_value = strcompress(retrieve_counts_value(event),/remove_all)
   
+  if (tof_value eq 'N/A' || $
+    pixel_value eq 'N/A' || $
+    counts_value eq 'N/A') then begin
+    text = file_name
+  endif else begin
+    file_name = (*global_refpix).file_name
+    text = file_name + ' (cursor is at TOF:'
+    text += strcompress(tof_value,/remove_all) + 'ms ; pixel:'
+    text += strcompress(pixel_value,/remove_all) + '; counts:'
+    text += strcompress(counts_value,/remove_all) + ')'
+  endelse
+  id = widget_info(event.top, find_by_uname='refpix_base_uname')
+  widget_control, id, tlb_set_title=text
   
-
-
-
-
-
-
-
-    
 end
 
 ;+
@@ -811,7 +819,7 @@ pro refpix_base_gui, wBase, $
   
   ourGroup = WIDGET_BASE()
   
-  title = 'Pixel vs TOF for ' + file_name
+  title = file_name
   wBase = WIDGET_BASE(TITLE = title, $
     UNAME        = 'refpix_base_uname', $
     XOFFSET      = xoffset,$
@@ -1041,11 +1049,11 @@ pro refpix_base, main_base=main_base, $
     file_name: file_name, $
     
     refpix_input_base: 0L, $ ;id of refpix_input_base
-;    refpix_cursor_info_base: 0L, $ 'id of refpix_cursor_info_base
+    ;    refpix_cursor_info_base: 0L, $ 'id of refpix_cursor_info_base
     
-  ;used to plot selection zoom
-  default_plot_size: default_plot_size, $
-  
+    ;used to plot selection zoom
+    default_plot_size: default_plot_size, $
+    
     counts_vs_xaxis_yaxis_type: 0,$ ;0 for linear, 1 for log
     counts_vs_yaxis_yaxis_type: 0,$ ;0 for linear, 1 for log
     
