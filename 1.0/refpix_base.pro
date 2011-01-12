@@ -64,8 +64,6 @@ pro refpix_base_event, Event
     ;main draw
     widget_info(event.top, find_by_uname='refpix_draw'): begin
     
-      ;help, event, /structure
-    
       catch, error
       if (error ne 0) then begin ;selection
         catch,/cancel
@@ -74,6 +72,17 @@ pro refpix_base_event, Event
         
         if (event.press eq 1) then begin ;left click
           (*global_refpix).left_click = 1b
+          pixel_value = strcompress(retrieve_pixel_value(event),/remove_all)
+          if ((*global_refpix).pixel1_selected) then begin
+            uname = 'refpix_pixel1_uname'
+          endif else begin
+            uname = 'refpix_pixel2_uname'
+          endelse
+          putValue, base=(*global_refpix).refpix_input_base, uname, pixel_value
+          save_refpixel_pixels, event
+          display_refpixel_pixels, event=event
+          
+          return
         endif
         
         if (event.release eq 1 && $
@@ -86,7 +95,6 @@ pro refpix_base_event, Event
             (*global_refpix).pixel1_selected = 0b
           endif else begin
             (*global_refpix).pixel1_selected = 1b
-            endesle
           endelse
         endif
         
@@ -98,6 +106,8 @@ pro refpix_base_event, Event
             uname = 'refpix_pixel2_uname'
           endelse
           putValue, base=(*global_refpix).refpix_input_base, uname, pixel_value
+          save_refpixel_pixels, event
+          display_refpixel_pixels, event=event
         endif
         
       endif else begin ;entering or leaving widget_draw
@@ -168,6 +178,7 @@ pro refpix_base_event, Event
       plot_refpix_beam_center_scale, event=event
       refresh_refpix_plot, event, recalculate=1
       refresh_plot_refpix_colorbar, event
+      display_refpixel_pixels, event=event
       
       return
     end
@@ -199,6 +210,108 @@ pro refpix_base_event, Event
     
   endcase
   
+end
+
+;+
+; :Description:
+;    Save the pixels1 and 2 in data coordinates
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro save_refpixel_pixels, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_refpix
+  
+  refpix_input_base = (*global_refpix).refpix_input_base
+  
+  pixel1 = getValue(base=refpix_input_base, uname='refpix_pixel1_uname')
+  pixel2 = getValue(base=refpix_input_base, uname='refpix_pixel2_uname')
+  
+  refpix_pixels = [pixel1, pixel2]
+  
+  (*global_refpix).refpix_pixels = refpix_pixels
+  
+end
+
+;+
+; :Description:
+;    Go from device to data coordinates
+;
+; :Params:
+;    data
+;
+; :Author: j35
+;-
+function from_device_to_data, event, ydata
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_refpix
+  
+  ysize = (*global_refpix).ysize
+  yrange = (*global_refpix).yrange
+  border = (*global_refpix).border
+  _ysize = ysize-2*border
+  
+  print, 'ysize: ' , _ysize
+  print, 'yrange[1]: ', yrange[1]
+  print, 'ydata: ' , ydata
+  print
+  
+  ydevice = float(ydata)*float(_ysize)/float(yrange[1])
+  
+  return, ydevice
+  
+end
+
+;+
+; :Description:
+;    refresh the background and display the two pixels
+;
+; :Keywords:
+;    event
+;
+; :Author: j35
+;-
+pro display_refpixel_pixels, event=event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_refpix
+  
+  id = widget_info(event.top, find_by_uname='refpix_draw')
+  widget_control, id, GET_VALUE = plot_id
+  wset, plot_id
+  TV, (*(*global_refpix).background), true=3
+  
+  refpix_pixels = (*global_refpix).refpix_pixels ;in data coordinates
+  
+  pixel1_data = refpix_pixels[0]
+  pixel2_data = refpix_pixels[1]
+  
+  pixel1_device = from_device_to_data(event, pixel1_data)
+  pixel2_device = from_device_to_data(event, pixel2_data)
+  
+  xsize = (*global_refpix).xsize
+  
+  if (pixel1_device gt 0) then begin
+  plots, [0, 0, xsize, xsize, 0],$
+    [pixel1_device, pixel1_device, pixel1_device, pixel1_device, pixel1_device],$
+    /DEVICE,$
+    LINESTYLE = 3,$
+    COLOR = fsc_color("white")
+    endif
+    
+    if (pixel2_device gt 0) then begin
+  plots, [0, 0, xsize, xsize, 0],$
+    [pixel2_device, pixel2_device, pixel2_device, pixel2_device, pixel2_device],$
+    /DEVICE,$
+    LINESTYLE = 3,$
+    COLOR = fsc_color("white")
+    endif
+    
 end
 
 ;+
@@ -330,12 +443,13 @@ pro show_refpix_cursor_info, event
   pixel_value = strcompress(retrieve_pixel_value(event),/remove_all)
   counts_value = strcompress(retrieve_counts_value(event),/remove_all)
   
+  file_name = (*global_refpix).file_name
+  
   if (tof_value eq 'N/A' || $
     pixel_value eq 'N/A' || $
     counts_value eq 'N/A') then begin
     text = file_name
   endif else begin
-    file_name = (*global_refpix).file_name
     text = file_name + ' (cursor is at TOF:'
     text += strcompress(tof_value,/remove_all) + 'ms ; pixel:'
     text += strcompress(pixel_value,/remove_all) + '; counts:'
@@ -625,23 +739,19 @@ pro plot_refpix_beam_center_scale, base=base, event=event
   geometry = widget_info(id_base,/geometry)
   xsize = geometry.scr_xsize
   
+  print, max_y
+  
   xticks = 8
-  yticks = 304/6
+  yticks = max_y/8
   
   xmargin = 6.6
   ymargin = 4
   
-  xrange = [min_x, max_x]
-  (*global_refpix).xrange = xrange
-  
-  yrange = [min_y, max_y]
-  (*global_refpix).yrange = yrange
-  
   ticklen = -0.0015
   
   plot, randomn(s,80), $
-    XRANGE     = xrange,$
-    YRANGE     = yrange,$
+    XRANGE     = x_range,$
+    YRANGE     = y_range,$
     COLOR      = convert_rgb([0B,0B,255B]), $
     BACKGROUND = convert_rgb(sys_color_window_bk),$
     THICK      = 0.5, $
@@ -659,9 +769,9 @@ pro plot_refpix_beam_center_scale, base=base, event=event
     XMARGIN     = [xmargin, xmargin+0.2],$
     YMARGIN     = [ymargin, ymargin],$
     /NODATA
-  axis, yaxis=1, YRANGE=yrange, YTICKS=yticks, YSTYLE=1, $
+  axis, yaxis=1, YRANGE=y_range, YTICKS=yticks, YSTYLE=1, $
     COLOR=convert_rgb([0B,0B,255B]), TICKLEN = ticklen
-  axis, xaxis=1, XRANGE=xrange, XTICKS=xticks, XSTYLE=1, $
+  axis, xaxis=1, XRANGE=x_range, XTICKS=xticks, XSTYLE=1, $
     COLOR=convert_rgb([0B,0B,255B]), TICKLEN = ticklen
     
   device, decomposed=0
@@ -1129,6 +1239,7 @@ pro refpix_base, main_base=main_base, $
     
     left_click: 0b,$ ;by default, left button is not clicked
     pixel1_selected: 1b, $ ;to show pixel1 or pixel2 current selection
+    refpix_pixels: lonarr(2), $ ;pixels 1 and 2 in data coordinates
     
     congrid_xcoeff: 0., $ ;x coeff used in the congrid function to plot main data
     congrid_ycoeff: 0., $ ;y coeff used in the congrid function to plot main data
@@ -1150,7 +1261,7 @@ pro refpix_base, main_base=main_base, $
   xrange = [x_axis[0], x_axis[-1]]
   (*global_refpix).xrange = xrange
   
-  yrange = [y_axis[0], y_axis[-1]]
+  yrange = [y_axis[0], y_axis[-1]+1]
   (*global_refpix).yrange = yrange
   
   WIDGET_CONTROL, wBase, SET_UVALUE = global_refpix
