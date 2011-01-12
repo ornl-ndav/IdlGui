@@ -48,20 +48,22 @@ pro refpix_input_base_event, Event
   
     ;pixel1 and pixel2 input boxes
     widget_info(event.top, find_by_uname='refpix_pixel1_uname'): begin
-       widget_control, event.top, get_uvalue=global_info
-       top_base = (*global_info).top_base
-       save_refpixel_pixels, base=top_base
-       display_refpixel_pixels, base=top_base
+      widget_control, event.top, get_uvalue=global_info
+      top_base = (*global_info).top_base
+      save_refpixel_pixels, base=top_base
+      display_refpixel_pixels, base=top_base
+      calculate_refpix, base=top_base
     end
     widget_info(event.top, find_by_uname='refpix_pixel2_uname'): begin
-       widget_control, event.top, get_uvalue=global_info
-       top_base = (*global_info).top_base
-       save_refpixel_pixels, base=top_base
-       display_refpixel_pixels, base=top_base
+      widget_control, event.top, get_uvalue=global_info
+      top_base = (*global_info).top_base
+      save_refpixel_pixels, base=top_base
+      display_refpixel_pixels, base=top_base
+      calculate_refpix, base=top_base
     end
     
     widget_info(event.top, find_by_uname='validate_refpix_selected_uname'): begin
-        
+    
       ;validate refpix selected
       refpix_value = getValue(event=event, uname='refpix_value_uname')
       if (refpix_value eq 0) then refpix_value = ''
@@ -104,7 +106,8 @@ end
 ; :Author: j35
 ;-
 pro refpix_input_base_gui, wBase, $
-    parent_base_geometry
+    parent_base_geometry, $
+    refpix_pixels = refpix_pixels
   compile_opt idl2
   
   main_base_xoffset = parent_base_geometry.xoffset
@@ -130,27 +133,53 @@ pro refpix_input_base_gui, wBase, $
     /tlb_size_events,$
     GROUP_LEADER = ourGroup)
     
+  pixel1 = refpix_pixels[0]
+  pixel2 = refpix_pixels[1]
+  
   row1 = widget_base(wBase,$
     /row)
-  pixel1 = cw_field(row1,$
-    xsize = 3,$
-    /integer,$
-    title = 'Pixel 1:',$
-    /row,$
-    /return_events,$
-    uname = 'refpix_pixel1_uname')
     
-  pixel2 = cw_field(row1,$
-    xsize = 3,$
-    /integer,$
-    title = '      Pixel 2:',$
-    /row,$
-    /return_events,$
-    uname = 'refpix_pixel2_uname')
-    
+  if (pixel1 eq 0) then begin
+    pixel1 = cw_field(row1,$
+      xsize = 3,$
+      /integer,$
+      title = 'Pixel 1:',$
+      /row,$
+      /return_events,$
+      uname = 'refpix_pixel1_uname')
+  endif else begin
+    pixel1 = cw_field(row1,$
+      xsize = 3,$
+      value = pixel1,$
+      /integer,$
+      title = 'Pixel 1:',$
+      /row,$
+      /return_events,$
+      uname = 'refpix_pixel1_uname')
+  endelse
+  
+  if (pixel2 eq 0) then begin
+    pixel2 = cw_field(row1,$
+      xsize = 3,$
+      /integer,$
+      title = '      Pixel 2:',$
+      /row,$
+      /return_events,$
+      uname = 'refpix_pixel2_uname')
+  endif else begin
+    pixel2 = cw_field(row1,$
+      xsize = 3,$
+      /integer,$
+      value = pixel2, $
+      title = '      Pixel 2:',$
+      /row,$
+      /return_events,$
+      uname = 'refpix_pixel2_uname')
+  endelse
+  
   refpix = cw_field(wBase, $
-    xsize = 3,$
-    /integer, $
+    xsize = 5,$
+;    /integer, $
     title = '       ===>  Refpix:',$
     /row,$
     /return_events,$
@@ -247,9 +276,12 @@ pro refpix_input_base, event=event, $
   endelse
   parent_base_geometry = WIDGET_INFO(id,/GEOMETRY)
   
+  refpix_pixels = (*global_refpix).refpix_pixels
+  
   _base = 0L
   refpix_input_base_gui, _base, $
-    parent_base_geometry
+    parent_base_geometry, $
+    refpix_pixels = refpix_pixels
     
   (*global_refpix).refpix_input_base = _base
   

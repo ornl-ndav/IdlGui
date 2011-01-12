@@ -69,9 +69,12 @@ pro refpix_base_event, Event
         catch,/cancel
         
         show_refpix_cursor_info, event
-        widget_control, (*global_refpix).refpix_input_base, get_uvalue=global_info
+        ;widget_control, (*global_refpix).refpix_input_base, get_uvalue=global_info
         
         if (event.press eq 1) then begin ;left click
+        
+          show_refpix_input_base, event
+          
           (*global_refpix).left_click = 1b
           pixel_value = strcompress(retrieve_pixel_value(event),/remove_all)
           if ((*global_refpix).pixel1_selected) then begin
@@ -80,8 +83,9 @@ pro refpix_base_event, Event
             uname = 'refpix_pixel2_uname'
           endelse
           putValue, base=(*global_refpix).refpix_input_base, uname, pixel_value
-          save_refpixel_pixels, event
+          save_refpixel_pixels, event=event
           display_refpixel_pixels, event=event
+          calculate_refpix, event=event
           return
         endif
         
@@ -91,6 +95,7 @@ pro refpix_base_event, Event
         endif
         
         if (event.press eq 4) then begin ;right click
+          show_refpix_input_base, event
           if ((*global_refpix).pixel1_selected) then begin
             (*global_refpix).pixel1_selected = 0b
           endif else begin
@@ -106,8 +111,9 @@ pro refpix_base_event, Event
             uname = 'refpix_pixel2_uname'
           endelse
           putValue, base=(*global_refpix).refpix_input_base, uname, pixel_value
-          save_refpixel_pixels, event
+          save_refpixel_pixels, event=event
           display_refpixel_pixels, event=event
+          calculate_refpix, event=event
         endif
         
       endif else begin ;entering or leaving widget_draw
@@ -214,6 +220,89 @@ end
 
 ;+
 ; :Description:
+;    calculate the refpix using pixel1 and pixel2
+;
+; :Keywords:
+;    event
+;
+; :Author: j35
+;-
+pro calculate_refpix, event=event, base=base
+compile_opt idl2
+
+  if (keyword_set(event)) then begin
+    widget_control, event.top, get_uvalue=global_refpix
+  endif else begin
+    widget_control, base, get_uvalue=global_refpix
+  endelse
+  
+  refpix_input_base = (*global_refpix).refpix_input_base
+  pixel1 = getValue(base=refpix_input_base, uname='refpix_pixel1_uname')
+  pixel2 = getValue(base=refpix_input_base, uname='refpix_pixel2_uname')
+
+  if (pixel1 eq 0) then return
+  if (pixel2 eq 0) then return
+
+  refpix = (float(pixel1)+float(pixel2))/2.
+  putValue, base=refpix_input_base, 'refpix_value_uname', refpix
+
+end
+
+;+
+; :Description:
+;    Bring to life the refpix input base
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro show_refpix_input_base, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_refpix
+  
+  pixel_base = (*global_refpix).refpix_input_base
+  if (widget_info(pixel_base, /valid_id) eq 0) then begin
+    refpix_input_base, parent_base_uname = 'refpix_base_uname', $
+      top_base = (*global_refpix).top_base, $
+      event=event
+  endif
+  
+end
+
+;+
+; :Description:
+;    Make sure that the data defined is within the range allowed
+;
+; :Keywords:
+;    event
+;    data
+;
+; :Author: j35
+;-
+function y_data_checked, event=event, base=base, data=data
+  compile_opt idl2
+  
+  if (keyword_set(event)) then begin
+    widget_control, event.top, get_uvalue=global_refpix
+  endif else begin
+    widget_control, base, get_uvalue=global_refpix
+  endelse
+  
+  xrange = (*global_refpix).xrange
+  
+  xmin = min(xrange,max=xmax)
+  
+  if (data lt xmin || data gt xmax) then return, 'N/A'
+  return, data
+  
+end
+
+;+
+; :Description:
 ;    Save the pixels1 and 2 in data coordinates
 ;
 ; :Params:
@@ -225,9 +314,9 @@ pro save_refpixel_pixels, event=event, base=base
   compile_opt idl2
   
   if (keyword_set(event)) then begin
-  widget_control, event.top, get_uvalue=global_refpix
+    widget_control, event.top, get_uvalue=global_refpix
   endif else begin
-  widget_control, base, get_uvalue=global_refpix
+    widget_control, base, get_uvalue=global_refpix
   endelse
   
   refpix_input_base = (*global_refpix).refpix_input_base
@@ -291,7 +380,7 @@ pro display_refpixel_pixels, event=event, base=base
     widget_control, id, GET_VALUE = plot_id
   endelse
   
-    widget_control, id, GET_VALUE = plot_id
+  widget_control, id, GET_VALUE = plot_id
   wset, plot_id
   TV, (*(*global_refpix).background), true=3
   
@@ -380,6 +469,7 @@ function retrieve_pixel_value, event
   
   rat = float(y_device) / float(congrid_ycoeff)
   y_data = float(rat * (yrange[1] - yrange[0]) + yrange[0])
+  ;y_data = y_data_checked(event=event, data=y_data)
   
   return, fix(y_data)
   
@@ -747,8 +837,6 @@ pro plot_refpix_beam_center_scale, base=base, event=event
   ;determine the number of xaxis data to show
   geometry = widget_info(id_base,/geometry)
   xsize = geometry.scr_xsize
-  
-  print, max_y
   
   xticks = 8
   yticks = max_y/8
