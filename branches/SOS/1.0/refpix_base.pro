@@ -426,6 +426,44 @@ end
 
 ;+
 ; :Description:
+;    display the refpix line only (reached by the refpix input value)
+;    when the user manually input the refpix
+;
+; :Keywords:
+;    base
+;
+; :Author: j35
+;-
+pro display_refpix_user_input_value, base=base
+compile_opt idl2
+
+ if (keyword_set(event)) then begin
+    widget_control, event.top, get_uvalue=global_refpix
+    id = widget_info(event.top, find_by_uname='refpix_draw')
+  endif else begin
+    widget_control, base, get_uvalue=global_refpix
+    id = widget_info(base, find_by_uname='refpix_draw')
+    widget_control, id, GET_VALUE = plot_id
+  endelse
+  
+  widget_control, id, GET_VALUE = plot_id
+  wset, plot_id
+  TV, (*(*global_refpix).background), true=3
+
+   refpix_input_base = (*global_refpix).refpix_input_base
+   refpix_data = getValue(base=refpix_input_base, uname='refpix_value_uname')
+  refpix_device = from_device_to_data(base=base, refpix_data)
+    xsize = (*global_refpix).xsize
+  plots, [0, 0, xsize, xsize, 0],$
+      [refpix_device, refpix_device, refpix_device, refpix_device, refpix_device],$
+      /DEVICE,$
+      LINESTYLE = 2,$
+      COLOR = fsc_color("purple")
+
+end
+
+;+
+; :Description:
 ;    calculate the x data from the x device
 ;
 ; :Params:
