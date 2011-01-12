@@ -118,7 +118,7 @@ pro refpix_input_base_gui, wBase, $
     /column,$
     /tlb_size_events,$
     GROUP_LEADER = ourGroup)
-        
+    
   row1 = widget_base(wBase,$
     /row)
   pixel1 = cw_field(row1,$
@@ -230,7 +230,6 @@ pro refpix_input_base, event=event, $
   if (keyword_set(event)) then begin
     id = WIDGET_INFO(Event.top, FIND_BY_UNAME=parent_base_uname)
     WIDGET_CONTROL,Event.top,GET_UVALUE=global_refpix
-    top_base = 0L
   endif else begin
     id = widget_info(top_base, find_by_uname=parent_base_uname)
     widget_control, top_base, get_uvalue=global_refpix

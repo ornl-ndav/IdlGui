@@ -64,38 +64,51 @@ pro refpix_base_event, Event
     ;main draw
     widget_info(event.top, find_by_uname='refpix_draw'): begin
     
-        help, event, /structure
-
-
+      ;help, event, /structure
+    
       catch, error
       if (error ne 0) then begin ;selection
         catch,/cancel
         
         show_refpix_cursor_info, event
-
-        help, event, /structure
-
+        
         if (event.press eq 1) then begin ;left click
-        (*global_refpix).left_click = 1b
+          (*global_refpix).left_click = 1b
         endif
         
         if (event.release eq 1 && $
-        (*global_refpix).left_click eq 1b) then begin ;release button
-        (*global_refpix).left_click = 0b
+          (*global_refpix).left_click eq 1b) then begin ;release button
+          (*global_refpix).left_click = 0b
         endif
         
         if (event.press eq 4) then begin ;right click
+          if ((*global_refpix).pixel1_selected) then begin
+            (*global_refpix).pixel1_selected = 0b
+          endif else begin
+            (*global_refpix).pixel1_selected = 1b
+            endesle
+          endelse
         endif
-
+        
+        if ((*global_refpix).left_click) then begin ;moving mouse
+          pixel_value = strcompress(retrieve_pixel_value(event),/remove_all)
+          if ((*global_refpix).pixel1_selected) then begin
+            uname = 'refpix_pixel1_uname'
+          endif else begin
+            uname = 'refpix_pixel2_uname'
+          endelse
+          putValue, base=(*global_refpix).refpix_input_base, uname, pixel_value
+        endif
+        
       endif else begin ;entering or leaving widget_draw
-
+      
         if (event.enter eq 0) then begin ;leaving plot
           file_name = (*global_refpix).file_name
           id = widget_info(event.top, find_by_uname='refpix_base_uname')
           widget_control, id, tlb_set_title=file_name
           
         endif else begin ;entering plot
-
+        
         endelse
       endelse
     end
@@ -177,6 +190,7 @@ pro refpix_base_event, Event
       pixel_base = (*global_refpix).refpix_input_base
       if (widget_info(pixel_base, /valid_id) eq 0) then begin
         refpix_input_base, parent_base_uname = 'refpix_base_uname', $
+          top_base = (*global_refpix).top_biase, $
           event=event
       endif
     end
@@ -312,15 +326,9 @@ pro show_refpix_cursor_info, event
   xcoeff = (*global_refpix).congrid_xcoeff
   ycoeff = (*global_refpix).congrid_ycoeff
   
-<<<<<<< .mine
-  tof_value = retrieve_tof_value(event)
-  pixel_value = fix(retrieve_pixel_value(event))
-  counts_value = long(retrieve_counts_value(event))
-=======
   tof_value = strcompress(retrieve_tof_value(event),/remove_all)
   pixel_value = strcompress(retrieve_pixel_value(event),/remove_all)
   counts_value = strcompress(retrieve_counts_value(event),/remove_all)
->>>>>>> .r8636
   
   if (tof_value eq 'N/A' || $
     pixel_value eq 'N/A' || $
@@ -1120,7 +1128,7 @@ pro refpix_base, main_base=main_base, $
     background: ptr_new(0L), $ ;background of main plot
     
     left_click: 0b,$ ;by default, left button is not clicked
-    draw_zoom_selection: intarr(4),$ ;[x0,y0,x1,y1]
+    pixel1_selected: 1b, $ ;to show pixel1 or pixel2 current selection
     
     congrid_xcoeff: 0., $ ;x coeff used in the congrid function to plot main data
     congrid_ycoeff: 0., $ ;y coeff used in the congrid function to plot main data
@@ -1129,6 +1137,7 @@ pro refpix_base, main_base=main_base, $
     ;plot_setting2: plot_setting2,$
     ;plot_setting: current_plot_setting,$ ;untouched or interpolated
     
+    top_base: wBase, $
     main_event: event})
     
   (*(*global_refpix).full_data) = data
