@@ -46,8 +46,22 @@ pro refpix_input_base_event, Event
   
   case Event.id of
   
-    widget_info(event.top, find_by_uname='validate_refpix_selected_uname'): begin
+    ;pixel1 and pixel2 input boxes
+    widget_info(event.top, find_by_uname='refpix_pixel1_uname'): begin
+       widget_control, event.top, get_uvalue=global_info
+       top_base = (*global_info).top_base
+       save_refpixel_pixels, base=top_base
+       display_refpixel_pixels, base=top_base
+    end
+    widget_info(event.top, find_by_uname='refpix_pixel2_uname'): begin
+       widget_control, event.top, get_uvalue=global_info
+       top_base = (*global_info).top_base
+       save_refpixel_pixels, base=top_base
+       display_refpixel_pixels, base=top_base
+    end
     
+    widget_info(event.top, find_by_uname='validate_refpix_selected_uname'): begin
+        
       ;validate refpix selected
       refpix_value = getValue(event=event, uname='refpix_value_uname')
       if (refpix_value eq 0) then refpix_value = ''
