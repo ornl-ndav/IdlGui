@@ -69,6 +69,7 @@ pro refpix_base_event, Event
         catch,/cancel
         
         show_refpix_cursor_info, event
+        widget_control, (*global_refpix).refpix_input_base, get_uvalue=global_info
         
         if (event.press eq 1) then begin ;left click
           (*global_refpix).left_click = 1b
@@ -81,7 +82,6 @@ pro refpix_base_event, Event
           putValue, base=(*global_refpix).refpix_input_base, uname, pixel_value
           save_refpixel_pixels, event
           display_refpixel_pixels, event=event
-          
           return
         endif
         
@@ -221,10 +221,14 @@ end
 ;
 ; :Author: j35
 ;-
-pro save_refpixel_pixels, event
+pro save_refpixel_pixels, event=event, base=base
   compile_opt idl2
   
+  if (keyword_set(event)) then begin
   widget_control, event.top, get_uvalue=global_refpix
+  endif else begin
+  widget_control, base, get_uvalue=global_refpix
+  endelse
   
   refpix_input_base = (*global_refpix).refpix_input_base
   
@@ -246,20 +250,19 @@ end
 ;
 ; :Author: j35
 ;-
-function from_device_to_data, event, ydata
+function from_device_to_data, event=event, base=base, ydata
   compile_opt idl2
   
-  widget_control, event.top, get_uvalue=global_refpix
+  if (keyword_set(event)) then begin
+    widget_control, event.top, get_uvalue=global_refpix
+  endif else begin
+    widget_control, base, get_uvalue=global_refpix
+  endelse
   
   ysize = (*global_refpix).ysize
   yrange = (*global_refpix).yrange
   border = (*global_refpix).border
   _ysize = ysize-2*border
-  
-  print, 'ysize: ' , _ysize
-  print, 'yrange[1]: ', yrange[1]
-  print, 'ydata: ' , ydata
-  print
   
   ydevice = float(ydata)*float(_ysize)/float(yrange[1])
   
@@ -276,13 +279,19 @@ end
 ;
 ; :Author: j35
 ;-
-pro display_refpixel_pixels, event=event
+pro display_refpixel_pixels, event=event, base=base
   compile_opt idl2
   
-  widget_control, event.top, get_uvalue=global_refpix
+  if (keyword_set(event)) then begin
+    widget_control, event.top, get_uvalue=global_refpix
+    id = widget_info(event.top, find_by_uname='refpix_draw')
+  endif else begin
+    widget_control, base, get_uvalue=global_refpix
+    id = widget_info(base, find_by_uname='refpix_draw')
+    widget_control, id, GET_VALUE = plot_id
+  endelse
   
-  id = widget_info(event.top, find_by_uname='refpix_draw')
-  widget_control, id, GET_VALUE = plot_id
+    widget_control, id, GET_VALUE = plot_id
   wset, plot_id
   TV, (*(*global_refpix).background), true=3
   
@@ -291,27 +300,27 @@ pro display_refpixel_pixels, event=event
   pixel1_data = refpix_pixels[0]
   pixel2_data = refpix_pixels[1]
   
-  pixel1_device = from_device_to_data(event, pixel1_data)
-  pixel2_device = from_device_to_data(event, pixel2_data)
+  pixel1_device = from_device_to_data(event=event, base=base, pixel1_data)
+  pixel2_device = from_device_to_data(event=event, base=base, pixel2_data)
   
   xsize = (*global_refpix).xsize
   
   if (pixel1_device gt 0) then begin
-  plots, [0, 0, xsize, xsize, 0],$
-    [pixel1_device, pixel1_device, pixel1_device, pixel1_device, pixel1_device],$
-    /DEVICE,$
-    LINESTYLE = 3,$
-    COLOR = fsc_color("white")
-    endif
-    
-    if (pixel2_device gt 0) then begin
-  plots, [0, 0, xsize, xsize, 0],$
-    [pixel2_device, pixel2_device, pixel2_device, pixel2_device, pixel2_device],$
-    /DEVICE,$
-    LINESTYLE = 3,$
-    COLOR = fsc_color("white")
-    endif
-    
+    plots, [0, 0, xsize, xsize, 0],$
+      [pixel1_device, pixel1_device, pixel1_device, pixel1_device, pixel1_device],$
+      /DEVICE,$
+      LINESTYLE = 3,$
+      COLOR = fsc_color("white")
+  endif
+  
+  if (pixel2_device gt 0) then begin
+    plots, [0, 0, xsize, xsize, 0],$
+      [pixel2_device, pixel2_device, pixel2_device, pixel2_device, pixel2_device],$
+      /DEVICE,$
+      LINESTYLE = 3,$
+      COLOR = fsc_color("white")
+  endif
+  
 end
 
 ;+
