@@ -64,6 +64,9 @@ pro refpix_base_event, Event
     ;main draw
     widget_info(event.top, find_by_uname='refpix_draw'): begin
     
+        help, event, /structure
+
+
       catch, error
       if (error ne 0) then begin ;selection
         catch,/cancel
@@ -85,12 +88,14 @@ pro refpix_base_event, Event
         endif
 
       endif else begin ;entering or leaving widget_draw
+
         if (event.enter eq 0) then begin ;leaving plot
           file_name = (*global_refpix).file_name
           id = widget_info(event.top, find_by_uname='refpix_base_uname')
           widget_control, id, tlb_set_title=file_name
           
         endif else begin ;entering plot
+
         endelse
       endelse
     end
@@ -263,7 +268,6 @@ function retrieve_counts_value, event
   widget_control, event.top, get_uvalue=global_refpix
   
   catch, error
-  error = 0
   if (error ne 0) then begin
     catch,/cancel
     return, 'N/A'
@@ -308,9 +312,15 @@ pro show_refpix_cursor_info, event
   xcoeff = (*global_refpix).congrid_xcoeff
   ycoeff = (*global_refpix).congrid_ycoeff
   
+<<<<<<< .mine
+  tof_value = retrieve_tof_value(event)
+  pixel_value = fix(retrieve_pixel_value(event))
+  counts_value = long(retrieve_counts_value(event))
+=======
   tof_value = strcompress(retrieve_tof_value(event),/remove_all)
   pixel_value = strcompress(retrieve_pixel_value(event),/remove_all)
   counts_value = strcompress(retrieve_counts_value(event),/remove_all)
+>>>>>>> .r8636
   
   if (tof_value eq 'N/A' || $
     pixel_value eq 'N/A' || $
