@@ -69,15 +69,21 @@ pro refpix_base_event, Event
         catch,/cancel
         
         show_refpix_cursor_info, event
+
+        help, event, /structure
+
+        if (event.press eq 1) then begin ;left click
+        (*global_refpix).left_click = 1b
+        endif
         
+        if (event.release eq 1 && $
+        (*global_refpix).left_click eq 1b) then begin ;release button
+        (*global_refpix).left_click = 0b
+        endif
         
-        
-      ;        pixel_base = (*global_refpix).refpix_input_base
-      ;        if (widget_info(pixel_base, /valid_id) eq 0) then begin
-      ;          refpix_input_base, parent_base_uname = 'refpix_base_uname', $
-      ;            event=event
-      ;        endif
-        
+        if (event.press eq 4) then begin ;right click
+        endif
+
       endif else begin ;entering or leaving widget_draw
         if (event.enter eq 0) then begin ;leaving plot
           file_name = (*global_refpix).file_name
