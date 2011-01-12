@@ -207,7 +207,7 @@ pro refpix_base_event, Event
       pixel_base = (*global_refpix).refpix_input_base
       if (widget_info(pixel_base, /valid_id) eq 0) then begin
         refpix_input_base, parent_base_uname = 'refpix_base_uname', $
-          top_base = (*global_refpix).top_biase, $
+          top_base = (*global_refpix).top_base, $
           event=event
       endif
     end
@@ -409,6 +409,18 @@ pro display_refpixel_pixels, event=event, base=base
       LINESTYLE = 3,$
       COLOR = fsc_color("white")
   endif
+  
+  ;display refpix
+  if (pixel1_data eq 0) then return
+  if (pixel2_data eq 0) then return
+
+  refpix_data = (float(pixel1_data)+float(pixel2_data))/2.
+  refpix_device = from_device_to_data(event=event, base=base, refpix_data)
+  plots, [0, 0, xsize, xsize, 0],$
+      [refpix_device, refpix_device, refpix_device, refpix_device, refpix_device],$
+      /DEVICE,$
+      LINESTYLE = 2,$
+      COLOR = fsc_color("green")
   
 end
 
