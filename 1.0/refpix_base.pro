@@ -50,16 +50,16 @@ pro refpix_base_event, Event
   
   case Event.id of
   
-    widget_info(event.top, find_by_unam='plot_setting_untouched'): begin
-      switch_local_settings_plot_values, event
-      refresh_plot, event, recalculate=1
-      return
-    end
-    widget_info(event.top, find_by_unam='plot_setting_interpolated'): begin
-      switch_local_settings_plot_values, event
-      refresh_plot, event, recalculate=1
-      return
-    end
+;    widget_info(event.top, find_by_unam='plot_setting_untouched'): begin
+;      switch_local_settings_plot_values, event
+;      refresh_plot, event, recalculate=1
+;      return
+;    end
+;    widget_info(event.top, find_by_unam='plot_setting_interpolated'): begin
+;      switch_local_settings_plot_values, event
+;      refresh_plot, event, recalculate=1
+;      return
+;    end
     
     ;main draw
     widget_info(event.top, find_by_uname='refpix_draw'): begin
@@ -710,7 +710,7 @@ pro refpix_lin_log_data, event=event, base=base
   endif
   
   (*(*global_refpix).data) = Data
-  
+ 
 end
 
 ;+
