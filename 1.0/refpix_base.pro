@@ -101,6 +101,7 @@ pro refpix_base_event, Event
           endif else begin
             (*global_refpix).pixel1_selected = 1b
           endelse
+          display_refpixel_pixels, event=event
         endif
         
         if ((*global_refpix).left_click) then begin ;moving mouse
@@ -228,8 +229,8 @@ end
 ; :Author: j35
 ;-
 pro calculate_refpix, event=event, base=base
-compile_opt idl2
-
+  compile_opt idl2
+  
   if (keyword_set(event)) then begin
     widget_control, event.top, get_uvalue=global_refpix
   endif else begin
@@ -239,13 +240,13 @@ compile_opt idl2
   refpix_input_base = (*global_refpix).refpix_input_base
   pixel1 = getValue(base=refpix_input_base, uname='refpix_pixel1_uname')
   pixel2 = getValue(base=refpix_input_base, uname='refpix_pixel2_uname')
-
+  
   if (pixel1 eq 0) then return
   if (pixel2 eq 0) then return
-
+  
   refpix = (float(pixel1)+float(pixel2))/2.
   putValue, base=refpix_input_base, 'refpix_value_uname', refpix
-
+  
 end
 
 ;+
@@ -410,18 +411,37 @@ pro display_refpixel_pixels, event=event, base=base
       COLOR = fsc_color("white")
   endif
   
+  if ((*global_refpix).pixel1_selected) then begin
+    pixel_device = pixel1_device
+  endif else begin
+    pixel_device = pixel2_device
+  endelse
+  
+  ;retrieve geometry of refpix draw
+  geometry = widget_info(id,/geometry)
+  draw_xsize = geometry.scr_xsize
+  from_xsize = draw_xsize - (draw_xsize/100.)*2.
+  from_pixel = pixel_device - 10
+  to_pixel = pixel_device + 10
+  
+  plots, [from_xsize, draw_xsize, draw_xsize, draw_xsize, from_xsize],$
+  [pixel_device, from_pixel, pixel_device, to_pixel, pixel_device],$
+  /device, $
+  linestyle = 0,$
+  color = fsc_color("red")
+
   ;display refpix
   if (pixel1_data eq 0) then return
   if (pixel2_data eq 0) then return
-
+  
   refpix_data = (float(pixel1_data)+float(pixel2_data))/2.
   refpix_device = from_device_to_data(event=event, base=base, refpix_data)
   plots, [0, 0, xsize, xsize, 0],$
-      [refpix_device, refpix_device, refpix_device, refpix_device, refpix_device],$
-      /DEVICE,$
-      LINESTYLE = 2,$
-      COLOR = fsc_color("green")
-  
+    [refpix_device, refpix_device, refpix_device, refpix_device, refpix_device],$
+    /DEVICE,$
+    LINESTYLE = 2,$
+    COLOR = fsc_color("green")
+    
 end
 
 ;+
@@ -435,9 +455,9 @@ end
 ; :Author: j35
 ;-
 pro display_refpix_user_input_value, base=base
-compile_opt idl2
-
- if (keyword_set(event)) then begin
+  compile_opt idl2
+  
+  if (keyword_set(event)) then begin
     widget_control, event.top, get_uvalue=global_refpix
     id = widget_info(event.top, find_by_uname='refpix_draw')
   endif else begin
@@ -449,17 +469,17 @@ compile_opt idl2
   widget_control, id, GET_VALUE = plot_id
   wset, plot_id
   TV, (*(*global_refpix).background), true=3
-
-   refpix_input_base = (*global_refpix).refpix_input_base
-   refpix_data = getValue(base=refpix_input_base, uname='refpix_value_uname')
+  
+  refpix_input_base = (*global_refpix).refpix_input_base
+  refpix_data = getValue(base=refpix_input_base, uname='refpix_value_uname')
   refpix_device = from_device_to_data(base=base, refpix_data)
-    xsize = (*global_refpix).xsize
+  xsize = (*global_refpix).xsize
   plots, [0, 0, xsize, xsize, 0],$
-      [refpix_device, refpix_device, refpix_device, refpix_device, refpix_device],$
-      /DEVICE,$
-      LINESTYLE = 2,$
-      COLOR = fsc_color("purple")
-
+    [refpix_device, refpix_device, refpix_device, refpix_device, refpix_device],$
+    /DEVICE,$
+    LINESTYLE = 2,$
+    COLOR = fsc_color("purple")
+    
 end
 
 ;+
