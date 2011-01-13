@@ -61,13 +61,15 @@ pro refpix_input_base_event, Event
       display_refpixel_pixels, base=top_base
       calculate_refpix, base=top_base
     end
-
+    
     widget_info(event.top, find_by_uname='refpix_value_uname'): begin
       widget_control, event.top, get_uvalue=global_info
       top_base = (*global_info).top_base
       display_refpix_user_input_value, base=top_base
+      putValue, event=event, 'refpix_pixel1_uname', ''
+      putValue, event=event, 'refpix_pixel2_uname', ''
     end
-
+    
     widget_info(event.top, find_by_uname='validate_refpix_selected_uname'): begin
       ;validate refpix selected
       refpix_value = getValue(event=event, uname='refpix_value_uname')
@@ -184,7 +186,6 @@ pro refpix_input_base_gui, wBase, $
   
   refpix = cw_field(wBase, $
     xsize = 5,$
-;    /integer, $
     title = '       ===>  Refpix:',$
     /row,$
     /return_events,$
