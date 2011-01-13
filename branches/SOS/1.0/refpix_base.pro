@@ -425,11 +425,11 @@ pro display_refpixel_pixels, event=event, base=base
   to_pixel = pixel_device + 10
   
   plots, [from_xsize, draw_xsize, draw_xsize, draw_xsize, from_xsize],$
-  [pixel_device, from_pixel, pixel_device, to_pixel, pixel_device],$
-  /device, $
-  linestyle = 0,$
-  color = fsc_color("red")
-
+    [pixel_device, from_pixel, pixel_device, to_pixel, pixel_device],$
+    /device, $
+    linestyle = 0,$
+    color = fsc_color("red")
+    
   ;display refpix
   if (pixel1_data eq 0) then return
   if (pixel2_data eq 0) then return

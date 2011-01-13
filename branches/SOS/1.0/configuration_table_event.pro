@@ -237,7 +237,6 @@ pro calculate_configuration_sangle_values, $
     
     ;refpix value
     _refpix = fix(config_table[3,i])
-    _refpix = 200
     if (_refpix lt 1) then continue
     
     ;dirpix value
