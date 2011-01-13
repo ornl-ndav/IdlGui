@@ -83,6 +83,10 @@ pro refpix_input_base_event, Event
       main_event = (*global_refpix).main_event
       table = getValue(event=main_event,uname='ref_m_metadata_table')
       table[3,row_selected] = strcompress(refpix_value,/remove_all)
+      ;      putValue, event=main_event, 'ref_m_metadata_table', table
+      calculate_configuration_sangle_values, $
+        event=main_event, $
+        config_table=table
       putValue, event=main_event, 'ref_m_metadata_table', table
       widget_control, top_base, /destroy
     end
