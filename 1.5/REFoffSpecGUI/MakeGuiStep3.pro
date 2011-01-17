@@ -228,14 +228,16 @@ sActiveDroplist = { size: [sActiveLabel.size[0]+XYoff[0],$
                     value: ['N/A                                         '],$
                     uname: 'active_file_droplist_shifting'}
 
-XYoff = [350,0]
+; CHANGES MADE HERE 6 JAN 2011 TO ALLOW LARGER TEXT BOX FOR RefPix
+;XYoff = [350,0]
+XYoff = [280,0]
 sRefPixelLabel = { size: [sActiveDroplist.size[0]+$
                           XYoff[0],$
                           sRefLabel.size[1]+$
                           XYoff[1]],$
                    value: 'Reference Pixel:'}
-XYoff = [sRefPixelLabel.size[0]-20,$
-         sRefLabelHelp.size[1]] ;help for REFERENCE PIXEL
+XYoff = [sRefPixelLabel.size[0] - 20,$
+         sRefLabelHelp.size[1] + 2] ;help for REFERENCE PIXEL
 sRefPixelHelp = { size: [XYoff[0],$
                          XYOff[1],$
                          sRefLabelHelp.size[2]],$
@@ -247,7 +249,7 @@ sRefPixelValue = { size: [sRefPixelLabel.size[0]+$
                           XYoff[0],$
                           sRefPixelLabel.size[1]+$
                           XYoff[1],$
-                          40],$
+                          65],$
                    value: '',$
                    uname: 'reference_pixel_value_shifting'}
 XYoff = [20,0]

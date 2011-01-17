@@ -91,7 +91,7 @@ sRefPixelSelection = { list: ['Y  ','X and Y'],$
 sFastSelectionMode = { list: ['YES','NO'],$
                        title: 'Fast Reference Pixel Selection Mode',$
                        uname: 'fast_selection_pixel_selection_mode',$
-                       value: 0.0}
+                       value: 1.0}
 sFastSelectionModeLabel = { value: '-> User is in charge of changing ' + $
                             'the active file.            ',$
                             uname: 'fast_active_file_options_label'}
@@ -137,7 +137,7 @@ sSelectionCoverage = { size: [2,1],$
                        'selection (move/resize) '}
 
 ;Type of plot symbols ---------------------------------------------------------
-sPlotSymbols = { list: ['Plus sign (+)','Asterix (*)','Period (.)','Diamond', $
+sPlotSymbols = { list: ['Plus sign (+)','Asterisk (*)','Period (.)','Diamond', $
                         'Triange','Square','X'],$
                  uname: 'plot_2d_symbol',$
                  value: 0.0,$

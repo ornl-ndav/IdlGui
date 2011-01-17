@@ -616,11 +616,14 @@ END
 ;------------------------------------------------------------------------------
 PRO SavePlotReferencePixel, Event
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
-pixel_value = FIX(FLOAT(Event.y)/2.)
+; 9 Jan 2011: pixel_value is float variable 
+;pixel_value = FIX(FLOAT(Event.y)/2.)
+pixel_value = FLOAT(Event.y)/2.
 x_value     = Event.x
 putTextFieldValue, Event, $
   'reference_pixel_value_shifting', $
   STRCOMPRESS(pixel_value,/REMOVE_ALL)
+
 index = getDropListSelectedIndex(Event, $
                                  'active_file_droplist_shifting')
 ref_pixel_list        = (*(*global).ref_pixel_list)
@@ -628,18 +631,44 @@ ref_pixel_list[index] = pixel_value
 (*(*global).ref_pixel_list) = ref_pixel_list
 (*(*global).ref_pixel_list_original) = ref_pixel_list
 
-; Change Code (RC WARD, 16Dec2010): Update RefPix values----DISABLE FOR NOW----------
-;RefPixSave = (*(*global).RefPixSave)
-;RefPixSave[index] = RefPixSave[index] + pixel_value - RefPixSave[0]
-;--------------------------------------------------------------------
+;==========================================================================
+; Change Code (9 Jan 2011): Add capability to alter RefPix in Shifting step
+ RefPixSave = (*(*global).RefPixSave)
+ PreviousRefPix = (*(*global).PreviousRefPix)
+; DEBUG =====
+; print, " RefPix: ", RefPixSave[index]
+; print, " Previous RefPix: ", PreviousRefPix 
+; DEBUG =====
+ IF (index EQ 0) THEN BEGIN
+; Change Code (RC Ward, 12 Jan 2011): treat reference RefPix differently
+   RefPixSave[index] = pixel_value
+   Delta =   RefPixSave[index] - PreviousRefPix[index]
+ ENDIF ELSE BEGIN
+   RefPixSave[index] = PreviousRefPix[index] + pixel_value - RefPixSave[0] 
+ ENDELSE
+; DEBUG =====
+  print, " new RefPix: ", RefPixSave[index]
+; DEBUG =====
+; update value of RefPix
+  (*(*global).RefPixSave) = RefPixSave 
+;==========================================================================
+
+
 ref_x_list              = (*(*global).ref_x_list)
 ref_x_list[index]       = x_value
 (*(*global).ref_x_list) = ref_x_list
-; test code change ------------------------------DISABLE FOR NOW --------------------
-;FOR I = 0,2,1 DO BEGIN
-;print, "For: ", i, " RefPix values: ", RefPixSave[i], "ref_x_list: ", ref_x_list[i]
-;ENDFOR
-;--------------------------------------------------------------------
+
+;==========================================================================
+; Change Code (9 Jan 2011): Add capability to alter RefPix in Shifting step
+    RefPix_file_name = (*global).input_file_name
+; 9 Jan 2011 - clean up how RefPix file is named
+; DEBUG ========================================
+;    print, "Full RefPix filename: ", RefPix_file_name
+    OPENW, 1, RefPix_file_name
+    PRINTF, 1, RefPixSave
+    CLOSE, 1
+    FREE_LUN, 1
+;==========================================================================
 END
 
 ;------------------------------------------------------------------------------
@@ -711,13 +740,16 @@ tfpData_error = (*(*global).realign_pData_y_error)
 Nbr_array             = (size(tfpData))(1)
 realign_tfpData       = PTRARR(Nbr_array,/ALLOCATE_HEAP)
 realign_tfpData_error = PTRARR(Nbr_array,/ALLOCATE_HEAP)
-pixel_offset_array    = INTARR(Nbr_array)
+;pixel_offset_array    = INTARR(Nbr_array)
+; Change code (29 Dec 2010): Change pixel_offset_array to FLOAT from INT
+pixel_offset_array    = FLTARR(Nbr_array)
 
 ;retrieve pixel offset
 ref_pixel_list        = (*(*global).ref_pixel_list)
 ref_pixel_offset_list = (*(*global).ref_pixel_offset_list)   
 
-nbr = N_ELEMENTS(ref_pixel_list)
+nbr = N_ELEMENTS(ref_pixel_list) 
+
 IF (nbr GT 1) THEN BEGIN
 ;copy the first array
     realign_tfpData[0]       = tfpData[0]
@@ -725,10 +757,17 @@ IF (nbr GT 1) THEN BEGIN
     index = 1
     WHILE (index LT nbr) DO BEGIN
         pixel_offset = ref_pixel_list[0]-ref_pixel_list[index]
+; DEBUG =====
 ;   print, "in shifting: ",index, " ",pixel_offset
+; DEBUG =====
         pixel_offset_array[index] = pixel_offset ;save pixel_offset
-        ref_pixel_offset_list[index] += pixel_offset
-        
+;=================================================================
+; I THINK THIS IS WRONG - IT DOUBLES THE VALUE OF PIXEL OFFSET
+; NOT SURE WHY THIS IS THE WAY IT IS
+;        ref_pixel_offset_list[index] += pixel_offset
+; CHANGED TO
+        ref_pixel_offset_list[index] = pixel_offset
+;=================================================================        
         array        = *tfpData[index]
 ;        array        = array[*,304L:2*304L-1]
         array        = array[*,(*global).detector_pixels_y:2*(*global).detector_pixels_y-1]       
@@ -761,8 +800,8 @@ IF (nbr GT 1) THEN BEGIN
                     array[*,i]       = array[*,i+pixel_offset]
                     array_error[*,i] = array_error[*,i+pixel_offset]
                 ENDFOR
-;               FOR j=(*global).detector_pixels_y-1,(*global).detector_pixels_y-1-pixel_offset,-1 DO BEGIN                
-                FOR j=303,303-pixel_offset,-1 DO BEGIN
+               FOR j=(*global).detector_pixels_y-1,(*global).detector_pixels_y-1-pixel_offset,-1 DO BEGIN                
+;                FOR j=303,303-pixel_offset,-1 DO BEGIN
                     array[*,j]       = 0
                     array_error[*,j] = 0
                 ENDFOR
@@ -784,7 +823,7 @@ IF (nbr GT 1) THEN BEGIN
         big_array_error[*,(*global).detector_pixels_y:2*(*global).detector_pixels_y-1] = local_data_error        
         *realign_tfpData_error[index] = big_array_error
 
-;change reference pixel from old to neatew position
+;change reference pixel from old to new position
         ref_pixel_list[index] = ref_pixel_list[0]
         ++index
     ENDWHILE
@@ -807,9 +846,10 @@ plot_selection_OF_2d_plot_mode, Event
 index = getDropListSelectedIndex(Event,'active_file_droplist_shifting')
 ;display the value of the reference pixel for this file
 ref_pixel_value = ref_pixel_list[index]
-;IF (ref_pixel_value EQ 0) THEN BEGIN    
-;    ref_pixel_value = 'N/A'
-;ENDIF
+
+;;IF (ref_pixel_value EQ 0) THEN BEGIN    
+;;    ref_pixel_value = 'N/A'
+;;ENDIF
 putTextFieldValue, Event, $
   'reference_pixel_value_shifting', $
   STRCOMPRESS(ref_pixel_value,/REMOVE_ALL)
@@ -829,6 +869,10 @@ WIDGET_CONTROL,/HOURGLASS
 (*(*global).realign_pData_y_error) = $
   (*(*global).untouched_realign_pData_y_error)
 
+  PreviousRefPix = (*(*global).PreviousRefPix)
+; DEBUG =====
+;  print, " In cancel_realign_data: previous RefPix: ", PreviousRefPix
+; DEBUG =====
 ;plot realign Data
 plotAsciiData_shifting, Event
 
@@ -839,6 +883,7 @@ ref_pixel_list = (*(*global).ref_pixel_list_original)
 index = getDropListSelectedIndex(Event,'active_file_droplist_shifting')
 ;display the value of the reference pixel for this file
 ref_pixel_value = ref_pixel_list[index]
+
 ;IF (ref_pixel_value EQ 0) THEN BEGIN    
 ;    ref_pixel_value = 'N/A'
 ;ENDIF
@@ -846,6 +891,40 @@ putTextFieldValue, Event, $
   'reference_pixel_value_shifting', $
   STRCOMPRESS(ref_pixel_value,/REMOVE_ALL)
 
+;=====================================================================
+; Change Code (15 Jan 2011, RC Ward): restore original RefPix values
+   (*(*global).RefPixSave) = PreviousRefPix
+   (*(*global).ref_pixel_list) = PreviousRefPix
+    RefPixSave = (*(*global).RefPixSave)
+; Define ref_pixel_list
+   ref_pixel_list = (*(*global).ref_pixel_list)
+; Define ref_pixel_offset_list
+   ref_pixel_offset_list = (*(*global).ref_pixel_offset_list) 
+;get number of files loaded
+   nbr_plot = getNbrFiles(Event)
+   FOR index = 0, nbr_plot-1 DO BEGIN
+      ref_pixel_list[index] = RefPixSave[index]
+      pixel_offset = RefPixSave[0] - RefPixSave[index]
+      ref_pixel_offset_list[index] = pixel_offset
+    ENDFOR
+   (*(*global).ref_pixel_list) = ref_pixel_list
+   (*(*global).ref_pixel_offset_list)= ref_pixel_offset_list
+; DEBUG===============   
+;  print, "CANCEL in Shifting: ref_pixel_list: ", ref_pixel_list
+;  print, "CANCEL in Shifting: ref_pixel_offset_ ist: ", ref_pixel_offset_list
+; DEBUG===============
+; Change Code (9 Jan 2011): Write out previous values to RefPix file
+    RefPix_file_name = (*global).input_file_name
+; 9 Jan 2011 - clean up how RefPix file is named
+; DEBUG ==============
+;     print, "Full RefPix filename: ", RefPix_file_name
+; DEBUG ==============
+    OPENW, 1, RefPix_file_name
+    PRINTF, 1, RefPixSave
+    CLOSE, 1
+    FREE_LUN, 1  
+;=====================================================================
+;   
 ;replot reference pixels
 plotReferencedPixels, Event 
 plot_selection_OF_2d_plot_mode, Event
@@ -935,7 +1014,10 @@ WHILE (big_index LT nbr) DO BEGIN
 ;move up each row by pixel_offset
 ;needs to start from the top when the offset is positive
 ;          FOR i=303,pixel_offset,-1 DO BEGIN
-           FOR i=303,pixel_offset,-1 DO BEGIN
+; DEBUG =====
+; print, "TEST TEST (*global).detector_pixels_y-1: ",(*global).detector_pixels_y-1
+; DEBUG =====
+           FOR i=(*global).detector_pixels_y-1,pixel_offset,-1 DO BEGIN
                 array[*,i]       = array[*,i-pixel_offset]
                 array_error[*,i] = array_error[*,i-pixel_offset]
             ENDFOR

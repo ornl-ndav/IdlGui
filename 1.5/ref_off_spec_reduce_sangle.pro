@@ -502,8 +502,10 @@ PRO plot_sangle_refpix, Event
   ; else use the default, or value entered by user
   ;retrieve RefPix value (from text field)
        RefPix = getTextFieldValue(Event,'reduce_sangle_base_refpix_user_value')
-       fix_RefPix = FIX(RefPix)
-       RefPix_device = getSangleYDeviceValue(Event,fix_RefPix)
+; Change Code (11 Jan 2011): RefPix float not integer
+;       fix_RefPix = FIX(RefPix)
+;       RefPix_device = getSangleYDeviceValue(Event,fix_RefPix)
+        RefPix_device = getSangleYDeviceValue(Event,RefPix)
 ; Change Code (RC Ward, 24 Oct 2010) ====================================================\
 ; if value differs from the default, assume user has entered it and save this value of RefPix
        IF (RefPix NE RefPix_InitialValue) THEN BEGIN
@@ -546,29 +548,22 @@ PRO plot_sangle_refpix, Event
 ; DEBUG ========================================
 ; Change code (RC Ward 30 June 2010): Had to write out a RefPix file for each spins state
 ; Change code (RC Ward, 23 July 2010): Path to reduce step files (ascii_path) now specified by user
-;       output_file_name = (*global).ascii_path + usethis[0]+'_Off_Off_' + 'RefPix.txt'
-        output_file_stub = (*global).ascii_path + usethis[0]
+        RefPix_file_stub = (*global).ascii_path + usethis[0]
     ENDIF ELSE BEGIN
-;    output_file_name = (*global).ascii_path + parts[2]+ '_' + parts[5]+'_Off_Off_' + 'RefPix.txt'
-     output_file_stub = (*global).ascii_path  + parts[1] + '_' + parts[4]
-;   print, "RefPix output_file_stub: ", output_file_stub
+        RefPix_file_stub = (*global).ascii_path  + parts[1] + '_' + parts[4]
+
+;   print, "RefPix RefPix_file_stub: ", RefPix_file_stub
     ENDELSE
-     output_file_name = output_file_stub + '_Off_Off_' + 'RefPix.txt'
+;    RefPix_file_name = RefPix_file_stub + '_Off_Off_' + 'RefPix.txt'
+     RefPix_file_name = RefPix_file_stub + '_RefPix.txt'
+
 ; DEBUG ========================================
-;       print, output_file_name
+;    print, "RefPix filename: ", RefPix_file_name
 ; DEBUG ========================================
-     OPENW, 1, output_file_name
-     PRINTF, 1, RefPixSave
-     CLOSE, 1
-     FREE_LUN, 1
-     output_file_name = output_file_stub + '_On_Off_' + 'RefPix.txt'
-; DEBUG ========================================
-;       print, output_file_name
-; DEBUG ========================================
-     OPENW, 1, output_file_name
-     PRINTF, 1, RefPixSave
-     CLOSE, 1
-     FREE_LUN, 1     
+    OPENW, 1, RefPix_file_name
+    PRINTF, 1, RefPixSave
+    CLOSE, 1
+    FREE_LUN, 1
      
     ENDIF
    ENDIF
@@ -876,36 +871,31 @@ PRO determine_sangle_refpix_data_from_device_value, Event
     ; strip .nxs off parts[5]
 ; Change code (RC Ward 30 June 2010): STR_SEP is obsolte. Replace with IDL routine STRSPLIT
 ;       usethis = STR_SEP(parts[5],'.')
-       usethis = STRSPLIT(parts[5],'.',/EXTRACT)       
+        usethis = STRSPLIT(parts[5],'.',/EXTRACT)       
 ; DEBUG ========================================       
-;       print, "usethis_0: ",usethis[0]
-;       print, "usethis_1: ", usethis[1]
+;        print, "usethis_0: ", usethis[0]
+;        print, "usethis_1: ", usethis[1]
 ; DEBUG ========================================
 ; Change code (RC Ward 30 June 2010): Had to write out a RefPix file for each spins state
 ; Change code (RC Ward, 23 July 2010): Path to reduce step files (ascii_path) now specified by user
-;       output_file_name = (*global).ascii_path + usethis[0]+'_Off_Off_' + 'RefPix.txt'
-        output_file_stub = (*global).ascii_path + usethis[0]
+        RefPix_file_stub = (*global).ascii_path + usethis[0]
+        print, "Case 1: RefPix RefPix_file_stub: ", RefPix_file_stub
     ENDIF ELSE BEGIN
-;    output_file_name = (*global).ascii_path + parts[2]+ '_' + parts[5]+'_Off_Off_' + 'RefPix.txt'
-     output_file_stub = (*global).ascii_path  + parts[1] + '_' + parts[4]
-;   print, "RefPix output_file_stub: ", output_file_stub
+        RefPix_file_stub = (*global).ascii_path  + parts[1] + '_' + parts[4]
+        print, "Case 2: RefPix RefPix_file_stub: ", RefPix_file_stub
     ENDELSE
-     output_file_name = output_file_stub + '_Off_Off_' + 'RefPix.txt'
+
+;    print, "RefPix RefPix_file_stub: ", RefPix_file_stub
+;    RefPix_file_name = RefPix_file_stub + '_Off_Off_' + 'RefPix.txt'
+     RefPix_file_name = RefPix_file_stub + '_RefPix.txt'
 ; DEBUG ========================================
-;       print, output_file_name
+;    print, "RefPix filename: ", RefPix_file_name
 ; DEBUG ========================================
-     OPENW, 1, output_file_name
+
+     OPENW, 1, RefPix_file_name
      PRINTF, 1, RefPixSave
      CLOSE, 1
      FREE_LUN, 1
-     output_file_name = output_file_stub + '_On_Off_' + 'RefPix.txt'
-; DEBUG ========================================
-;       print, output_file_name
-; DEBUG ========================================
-     OPENW, 1, output_file_name
-     PRINTF, 1, RefPixSave
-     CLOSE, 1
-     FREE_LUN, 1     
      
     ENDIF
   ENDIF

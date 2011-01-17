@@ -284,7 +284,7 @@ PRO CheckShiftingGui, Event
 ; Code change (RC Ward, Feb 19, 2010): replaced ref_x_list with ref_pixel_list in this routine
 ; to fix problem that "Realign Data" button was not being activated in the case of entering
 ; text values. Since in that case only ref_pixel_list was being set. Works OK with mouse action.
-; 
+
 ;  ref_x_list = (*(*global).ref_x_list)
 ;  index = WHERE(ref_x_list NE 0,nbr)
   ref_pixel_list = (*(*global).ref_pixel_list)

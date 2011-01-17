@@ -1620,10 +1620,14 @@ PRO MAIN_BASE_event, Event
         delta_x = (*global).delta_x
         x = Event.x
         x1 = FLOAT(delta_x) * FLOAT(x)
+        
+; 6 Jan 2011: Print y as F6.1, keep 1 digit beyond decimal 
         y = Event.y
-        y1 = y / 2
+        y1 = Float(y) / 2
+
         text  = 'x: ' + STRCOMPRESS(x1,/REMOVE_ALL)
-        text += '  |  y: ' + STRCOMPRESS(y1,/REMOVE_ALL)
+        sY1 = STRING(y1,FORMAT='(F6.1)')
+        text += '  |  y: ' + STRCOMPRESS(sy1,/REMOVE_ALL)
         
         total_array = (*(*global).total_array_untouched)
         size_x = (SIZE(total_array,/DIMENSION))[0]
@@ -1834,10 +1838,13 @@ PRO MAIN_BASE_event, Event
       x1 = FLOAT(delta_x) * FLOAT(x)
       Xtext = 'X: ' + STRCOMPRESS(x1,/REMOVE_ALL)
       putTextFieldValue, Event, 'x_value_shifting', Xtext
-      
+
+; 6 Jan 2011: aPrint y as F6.1, keep 1 digit beyond decimal      
       y = Event.y
-      y1 = y / 2
-      Ytext = 'Y: ' + STRCOMPRESS(y1,/REMOVE_ALL)
+      y1 = Float(y) / 2    
+ 
+      sY1 = STRING(y1,FORMAT='(F6.1)')
+      Ytext = 'Y: ' + STRCOMPRESS(sy1,/REMOVE_ALL)
       putTextFieldValue, Event, 'y_value_shifting', Ytext
       
       total_array = (*(*global).total_array_untouched)
@@ -1937,6 +1944,40 @@ PRO MAIN_BASE_event, Event
         'reference_pixel_value_shifting')
       ref_pixel_list[index] = pixel_value
       (*(*global).ref_pixel_list) = ref_pixel_list
+      
+;----------------------------------------------------------------------
+; Change Code (9 Jan 2011): Add capability to alter RefPix in Shifting step
+ RefPixSave = (*(*global).RefPixSave)
+ PreviousRefPix = (*(*global).PreviousRefPix)
+; DEBUG ===========
+;  print, " RefPix: ", RefPixSave[index]
+;  print, " previous RefPix: ", PreviousRefPix
+; DEBUG ===========
+ IF (index EQ 0) THEN BEGIN
+; Change Code (RC Ward, 12 Jan 2011): treat reference RefPix differently
+   RefPixSave[index] = pixel_value
+   Delta =   RefPixSave[index] - PreviousRefPix[index]
+ ENDIF ELSE BEGIN
+   RefPixSave[index] = PreviousRefPix[index] + pixel_value - RefPixSave[0] 
+ ENDELSE
+; DEBUG ===========
+;  print, " new RefPix: ", RefPixSave[index]
+; DEBUG ===========
+; update value of RefPix
+  (*(*global).RefPixSave) = RefPixSave 
+
+; Change Code (9 Jan 2011): Add capability to alter RefPix in Shifting step
+    RefPix_file_name = (*global).input_file_name
+; 9 Jan 2011 - clean up how RefPix file is named
+; DEBUG ===========
+;    print, "Full RefPix filename: ", RefPix_file_name
+; DEBUG ===========
+    OPENW, 1, RefPix_file_name
+    PRINTF, 1, RefPixSave
+    CLOSE, 1
+    FREE_LUN, 1
+;----------------------------------------------------------------------
+
       plotAsciiData_shifting, Event ;_shifting
       plotReferencedPixels, Event ;_shifting
       refresh_plot_selection_OF_2d_plot_mode, Event
@@ -1966,6 +2007,41 @@ PRO MAIN_BASE_event, Event
         STRCOMPRESS(FIX(new_pixel_value),/REMOVE_ALL)
       (*(*global).ref_pixel_list) = ref_pixel_list
       (*(*global).ref_pixel_list_original) = ref_pixel_list
+
+
+;----------------------------------------------------------------------
+; Change Code (9 Jan 2011): Add capability to alter RefPix in Shifting step
+ RefPixSave = (*(*global).RefPixSave)
+ PreviousRefPix = (*(*global).PreviousRefPix)
+; DEBUG ============
+;  print, " RefPix: ", RefPixSave[index]
+;  print, " previous RefPix: ", PreviousRefPix
+; DEBUG ============
+ IF (index EQ 0) THEN BEGIN
+; Change Code (RC Ward, 12 Jan 2011): treat reference RefPix differently
+   RefPixSave[index] = pixel_value
+   Delta =   RefPixSave[index] - PreviousRefPix[index]
+ ENDIF ELSE BEGIN
+   RefPixSave[index] = PreviousRefPix[index] + pixel_value - RefPixSave[0] 
+ ENDELSE
+; DEBUG ===========
+;  print, " new RefPix: ", RefPixSave[index]
+; DEBUG ===========
+; update value of RefPix
+  (*(*global).RefPixSave) = RefPixSave 
+
+; Change Code (9 Jan 2011): Add capability to alter RefPix in Shifting step
+    RefPix_file_name = (*global).input_file_name
+; 9 Jan 2011 - clean up how RefPix file is named
+; DEBUG ===========
+;    print, "Full RefPix filename: ", RefPix_file_name
+; DEBUG ===========
+    OPENW, 1, RefPix_file_name
+    PRINTF, 1, RefPixSave
+    CLOSE, 1
+    FREE_LUN, 1
+;----------------------------------------------------------------------
+
       plotAsciiData_shifting, Event ;_shifting
       plotReferencedPixels, Event ;_shifting
       refresh_plot_selection_OF_2d_plot_mode, Event
@@ -2003,6 +2079,40 @@ PRO MAIN_BASE_event, Event
         STRCOMPRESS(FIX(new_pixel_value),/REMOVE_ALL)
       (*(*global).ref_pixel_list) = ref_pixel_list
       (*(*global).ref_pixel_list_original) = ref_pixel_list
+
+;----------------------------------------------------------------------
+; Change Code (9 Jan 2011): Add capability to alter RefPix in Shifting step
+ RefPixSave = (*(*global).RefPixSave)
+ PreviousRefPix = (*(*global).PreviousRefPix)
+; DEBUG ============
+;  print, " RefPix: ", RefPixSave[index]
+;  print, " previous RefPix: ", PreviousRefPix
+; DEBUG ============
+ IF (index EQ 0) THEN BEGIN
+; Change Code (RC Ward, 12 Jan 2011): treat reference RefPix differently
+   RefPixSave[index] = pixel_value
+   Delta =   RefPixSave[index] - PreviousRefPix[index]
+ ENDIF ELSE BEGIN
+   RefPixSave[index] = PreviousRefPix[index] + pixel_value - RefPixSave[0] 
+ ENDELSE
+; DEBUG ===========
+;  print, " new RefPix: ", RefPixSave[index]
+; DEBUG ===========
+; update value of RefPix
+  (*(*global).RefPixSave) = RefPixSave 
+
+; Change Code (9 Jan 2011): Add capability to alter RefPix in Shifting step
+    RefPix_file_name = (*global).input_file_name
+; 9 Jan 2011 - clean up how RefPix file is named
+; DEBUG ===========
+;    print, "Full RefPix filename: ", RefPix_file_name
+; DEBUG ===========
+    OPENW, 1, RefPix_file_name
+    PRINTF, 1, RefPixSave
+    CLOSE, 1
+    FREE_LUN, 1
+;----------------------------------------------------------------------
+
       plotAsciiData_shifting, Event ;_shifting
       plotReferencedPixels, Event ;_shifting
       refresh_plot_selection_OF_2d_plot_mode, Event
@@ -2516,9 +2626,9 @@ PRO MAIN_BASE_event, Event
     step4_2_3_separate_window, Event  ;scaling_step2_step3
   END
   
-  ;----------------------------------------------------------------------------
-  ; RECAP - RECAP - RECAP - RECAP - RECAP - RECAP - RECAP - RECAP - RECAP -
-  ;----------------------------------------------------------------------------
+;----------------------------------------------------------------------------
+; SCALING_2D - SCALING_2D - SCALING_2D - SCALING_2D - SCALING_2D - SCALING_2D 
+;----------------------------------------------------------------------------
 ; Change Code (RC Ward, 3 Jun 2010): These changes were added to implement the xmin,ymin, xmax,ymax
 ; control of the plot in STEP 5
 ;Selection Info Text Fields for Step 5 Plot -------------------------------------------------
@@ -2602,7 +2712,6 @@ PRO MAIN_BASE_event, Event
     refresh_plotStep5Selection, Event
   END
 
-  
   ;zmax widget_text
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_zmax'): BEGIN
     input_error = 0
@@ -2680,7 +2789,7 @@ PRO MAIN_BASE_event, Event
     scaling_tab_event, Event ;_eventcb
   END
   
-  ;type of selection (none, i vs Q, ...) --------------------------------------
+  ;type of selection (none, R vs Q, ...) --------------------------------------
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_selection_group_uname'): BEGIN
     selection_value = getCWBgroupValue(Event,'step5_selection_group_uname')
     CASE (selection_value) OF
@@ -2725,21 +2834,22 @@ PRO MAIN_BASE_event, Event
   WIDGET_INFO(wWidget, FIND_BY_UNAME='preview_button_i_vs_q'): BEGIN
     step5_preview_button, Event ;step5
   END
-; ========= CHANGE CODE (RC WARD, 15 JUNE 2010): Add action if 'Plot' button is pressed in Step 5 I vs Q plot page
+; ========= CHANGE CODE (RC WARD, 15 JUNE 2010): Add action if 'Plot' button 
+; is pressed in Step 5 I vs Q plot screen
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_selection_info_plot_value'): BEGIN
-; Change Code (RC Ward, 13 June, 2010): Define the default file name - 
-;      this is displayed on the I vs Q plot page
+; Change Code (RC Ward, 13 June, 2010): Define the default file name displayed on the I vs Q plot page
        define_default_recap_output_file, Event 
 ; Change Code (RC Ward, 10 Aug, 2010): No longer need to write mouse event window selections to LogBook
 ;          inform_log_book_step5_selection, Event ;_step5
-          MapBase, Event, 'step5_rescale_base', 1
+       MapBase, Event, 'step5_rescale_base', 1
 ; Change Code (RC Ward, 7 May 2010):  Call  display_step5_rescale_plot  
 ;    rather than display_step5_rescale_plot_first_time 
 ; Change code (RC Ward, 31 May 2010): call routine with with_range set to 1
-          display_step5_rescale_plot, Event, with_range=1
-          define_default_recap_output_file, Event  
+       display_step5_rescale_plot, Event, with_range=1
+       define_default_recap_output_file, Event  
 END  
-; ========= END CHANGE CODE (RC WARD, 15 JUNE 2010): Add action if 'Plot' button is pressed in Step 5 I vs Q plot pa  
+; ========= END CHANGE CODE (RC WARD, 15 JUNE 2010): Add action if 'Plot' button 
+; is pressed in Step 5 R vs Q plot screen  
   ;----------------------------------------------------------------------------
   ;draw
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_draw'): BEGIN

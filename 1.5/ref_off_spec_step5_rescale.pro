@@ -74,7 +74,7 @@ sxmin = STRING(xmin, FORMAT = '(I5)')
 symin = STRING(ymin, FORMAT = '(I5)')
 sxmax = STRING(xmax, FORMAT = '(I5)')
 symax = STRING(ymax, FORMAT = '(I5)')
-LogMessage = '> Step 5 (RECAP): Selection Window  xmin: ' + sxmin + '  xmax: ' + sxmax + '  ymin: ' + symin + '  symax: ' + symax
+LogMessage = '> Step 5 (RECAP): Selection Window  xmin: ' + sxmin + '  xmax: ' + sxmax + '  ymin: ' + symin + '  ymax: ' + symax
 IDLsendToGeek_addLogBookText, Event, LogMessage      
   
   array_selected = base_array_untouched[xmin:xmax,ymin:ymax]
@@ -400,7 +400,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO display_step5_rescale_plot_first_time, Event
-;print, "display_step5_rescale_plot_first_time"
+
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
 ; Code change RCW (Feb 11, 2010): Get Background color from XML file
@@ -416,7 +416,6 @@ PRO display_step5_rescale_plot_first_time, Event
   ENDIF
   
   ;create array of data
-;print, " in display_step5_rescale_plot_first_time - call to create_step5_selection_data"
   create_step5_selection_data, Event
   
   selection_value = getCWBgroupValue(Event,'step5_selection_group_uname')
@@ -764,7 +763,7 @@ PRO redisplay_step5_rescale_plot, Event
       PSYM=1
       
   ENDIF ELSE BEGIN
-  
+
     PLOT, x_axis, $
       array_selected_total, $
       XTITLE=x_axis_label, $
@@ -798,7 +797,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO redisplay_step5_rescale_plot_after_scaling, Event
-;print, "redisplay_step5_rescale_plot_after_scaling"
+
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
 ; Code change RCW (Feb 11, 2010): Get Background color from XML file
@@ -881,7 +880,7 @@ END
 ;------------------------------------------------------------------------------
 ;plot selection for zoom
 PRO plot_recap_rescale_selection, Event
-;print, "plot_recap_rescale_selection"
+
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
 ; Code change RCW (Feb 12, 2010): Get line plot colors from XML file
@@ -912,7 +911,7 @@ END
 ;------------------------------------------------------------------------------
 ;plot selection for zoom
 PRO plot_recap_rescale_CE_selection, Event
-;print, "plot_recap_rescale_CE_selection"
+
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
 ; Code change RCW (Feb 12, 2010): Get line plot colors from XML file
@@ -950,7 +949,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO plot_recap_rescale_other_selection, Event, type=type
-;print, "plot_recap_rescale_other_selection"
+
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
 ; Code change RCW (Feb 12, 2010): Get line plot colors from XML file
@@ -1017,7 +1016,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO plot_selection_after_zoom, Event
-;print, "plot_selection_after_zoom"
+
 ; Change Code (RC Ward, 8 June 2010): This code is now used to plot the selection box in Step 5
 ; It will be called initially to show the original selection box from Step 4
 ; and whenever there is a change in the selection box by the user
@@ -1041,7 +1040,6 @@ PRO plot_selection_after_zoom, Event
   x2 = range[2]
   xmin = MIN([x1,x2],MAX=xmax)
   
-;print, "in plot_selection_after_zoom: selection box is: ", xmin, xmax, ymin, ymax  
 ;  color = ref_plot_zoombox_color
      color = FSC_COLOR(ref_plot_zoombox_color)
   
@@ -1061,7 +1059,6 @@ END
 
 ;------------------------------------------------------------------------------
 ;PRO enabled_or_not_recap_rescale_button, Event
-;print, "enabled_or_not_recap_rescale_button"
 ;  WIDGET_CONTROL, Event.top, GET_UVALUE=global
 ;  
 ;  x1 = (*global).recap_rescale_selection_left
@@ -1078,7 +1075,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO calculate_average_recap_rescale, Event
-;print, "calculate_average_recap_rescale"
+
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
   x1 = (*global).recap_rescale_selection_left
@@ -1115,7 +1112,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO plot_average_recap_rescale, Event
-;print, "plot_average_recap_rescale"
+
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
 ; Code change RCW (Feb 12, 2010): Get line plot colors from XML file
@@ -1156,7 +1153,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO replot_average_recap_rescale, Event
-;print, "replot_average_recap_rescale"
+
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
 ; Code change RCW (Feb 12, 2010): Get line plot colors from XML file
@@ -1208,7 +1205,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO plot_average_1_recap_rescale, Event ;plot the average horizontal value
-;print, "plot_average_1_recap_rescale"
+
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
 ; Code change RCW (Feb 12, 2010): Get line plot colors from XML file
@@ -1235,7 +1232,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO define_default_recap_output_file, Event
-;print, "define_default_recap_output_file"
+
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
     
   list_of_ascii_files = (*(*global).list_of_ascii_files)
@@ -1291,7 +1288,7 @@ PRO define_default_recap_output_file, Event
 END
 PRO step5_rescale_populate_zoom_widgets, Event  ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
-;  print, "inside step5_rescale_populate_zoom_widgets"
+
 ; Change code (RC Ward, 7 June 2010): This routine gets the coordinates of the selection box
 ; in STEP4 and applies it to STEP5, putting xmin, xmax, ymin, ymax into the boxes
 ;  
@@ -1305,8 +1302,7 @@ PRO step5_rescale_populate_zoom_widgets, Event  ;get global structure
      sxmax = STRCOMPRESS(xmax,/REMOVE_ALL)      
      symin = STRCOMPRESS(ymin,/REMOVE_ALL)
      symax = STRCOMPRESS(ymax,/REMOVE_ALL)      
-;
-;print, "step5_rescale_populate_zoom_widgets - sxmin: ", sxmin, " sxmax: ", sxmax, " symin: ", symin, " symax: ",symax   
+;   
       putTextFieldValue, Event, 'step5_selection_info_xmin_value', sxmin
       putTextFieldValue, Event, 'step5_selection_info_xmax_value', sxmax
       putTextFieldValue, Event, 'step5_selection_info_ymin_value', symin

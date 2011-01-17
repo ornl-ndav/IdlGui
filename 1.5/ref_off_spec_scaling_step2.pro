@@ -287,6 +287,10 @@ PRO re_display_step4_step2_step1_selection, Event, MODE=mode
         WHILE (index LT nbr_plot) DO BEGIN
 ; I GOT A ERROR IN THIS ROUTINE - POSSIBLY AT THIS LOCATION - 25 JAN 2010 - RCW 
 ; MODE maybe miss interpretted here. MODE is not set sometimes and set to 'AUTOMATIC' sometimes       
+; Got an error here again on 4 Jan 2011 - IVSLAMBDA_SELECTION with INDEX is out of range at step 292.
+; I was trying to go backwards in code and start a new set of run numbers!
+; this caused the error: Variable is undefined: MODE
+;     print, "at point of error: ", MODE
           IF (N_ELEMENTS(MODE) EQ 0) THEN BEGIN
             t_data_to_plot = *IvsLambda_selection[index]
           ENDIF ELSE BEGIN
