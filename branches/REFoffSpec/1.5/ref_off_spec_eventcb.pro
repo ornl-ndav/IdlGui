@@ -54,6 +54,13 @@ PRO REFreductionEventcb_InstrumentSelected, Event
   id = widget_info(Event.top,find_by_uname='reduce_step_path')
   widget_control, id, get_value=reduce_step_path
 
+; Change Code 6 Jan 2011 - If user does not add / to results dir, then add it
+len = STRLEN(reduce_step_path)
+last = STRMID(reduce_step_path,len-1,1)
+;print, "last character of reduce_step_path: ",last
+IF (last NE '/') THEN BEGIN
+   reduce_step_path = reduce_step_path +'/'
+ENDIF
 ;print, "new_path: ", reduce_step_path
   
 
@@ -82,9 +89,21 @@ PRO Update_Reduce_Step_Path, Event, global
   widget_control, id, get_value=path
   (*global).ascii_path = path
   (*global).working_path = path
-;  print, "test: path: ",path
+
+; Change Code 6 Jan 2011 - If user does not add / to results dir, then add it
+len = STRLEN(path)
+last = STRMID(path,len-1,1)
+;print, "last character of reduce_step_path: ",last
+IF (last NE '/') THEN BEGIN
+   path = path +'/'
+ENDIF
+;print, "new_path: ", path
+
     message = '> Switch to: ' + path   
     PlotUtility_addLogBookText, Event,  message 
+; Change made (29 Dec 2010): add RESTART flag for resetting things in scaling_1D
+; so far this is not implemented - I can't figure out what is going on (RCW)
+    (*global).RESTART = 1
 
 END
 ;------------------------------------------------------------------------------
@@ -268,22 +287,44 @@ PRO tab_event, Event
                box_color = (*global).box_color
                list_OF_files = (*(*global).list_OF_ascii_files)
                sz = N_ELEMENTS(list_OF_files)
-               RefPixSave = INTARR(sz)
+;               RefPixSave = INTARR(sz)
+; CHANGE (RC Ward, 22 Dec 2010): This needs to be float array
+                RefPixSave = FLTARR(sz)
+                PreviousRefPix = FLTARR(sz)
+
 ; Change code (RC Ward Feb 26, 2010): Read file containing RefPix values on clicking the Shifting step tab
                list = list_OF_files[0]
 ; Change code (RC Ward 30 June 2010): STR_SEP is obsolte. Replace with IDL routine STRSPLIT
 ;               parts = STR_SEP(list,'.')
-                parts = STRSPLIT(list,'.',/EXTRACT)
+
+; 9 Jan 2010: CHANGE TO SINGLE REFPIX FILE FOR ALL SPIN STATES
+;                parts = STRSPLIT(list,'.',/EXTRACT)
 ;print, "RefPixLoad: test: ", parts[0]," ", parts[1]
-               input_file_name = parts[0] + '_RefPix.txt'
+;               input_file_name = parts[0] + '_RefPix.txt'
+
+               parts = STRSPLIT(list,'_',/EXTRACT)
+;print, "RefPixLoad: parts[0]: ", parts[0]
+;print, "RefPixLoad: parts[0]: ", parts[1]
+;print, "RefPixLoad: parts[0]: ", parts[2]
+               input_file_name = parts[0] + "_" + parts[1] + "_" + parts[2] + '_RefPix.txt'
+
+               (*global).input_file_name = input_file_name
 ;print, "OPEN RefPix file: ", input_file_name
+
                OPENR, 1, input_file_name, ERROR = err
                IF (ERR EQ 0) THEN BEGIN  ; NO ERROR, FILE EXISTS SO CONTINUE ON
                  READF, 1, RefPixSave
+;print, "RefPix file: ", RefPixSave
                  CLOSE, 1
                  FREE_LUN, 1
                  (*(*global).RefPixSave) = RefPixSave 
                  (*(*global).ref_pixel_list_original) = RefPixSave
+; Change code (15 Jan 11, RC Ward): Save previous value of RefPix 
+                 (*(*global).PreviousRefPix) = RefPixSave                
+    PreviousRefPix = (*(*global).PreviousRefPix)
+; DEBUG =====
+;  print, " previous RefPix: ", PreviousRefPix
+; DEBUG =====  
                   x_value = 400
                  FOR i=0,(sz-1) DO BEGIN
                      IF (RefPixSave[i] NE 0.) THEN BEGIN
@@ -311,13 +352,23 @@ PRO tab_event, Event
       3: BEGIN ;scaling
         tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='scaling_main_tab')
         step4CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
+; Change code (RC Ward, 28 Dec 2010): If user has entered new reference run#
+; RESTART will be set to 1. This is not implemented yet - not sure how to reset things.
+;     RESTART = (*global).RESTART
+; print, "test: RESTART: ", RESTART
+;        if ( RESTART EQ 1) THEN BEGIN
+;            step4CurrTabSelect = 0
+;        ENDIF
         IF((*global).something_to_plot) THEN BEGIN
+; print, "test: step4CurrTabSelect: ", step4CurrTabSelect
           IF (step4CurrTabSelect EQ 0) THEN BEGIN ;scaling_step1
+; print, "in eventcb:scaling at A"
             populate_step4_range_init, Event ;_scaling
             refresh_step4_step1_plot, Event ;_scaling
-            checkScalingGui, Event ;_gui
+            checkScalingGui, Event ;_gui           
           ENDIF ELSE BEGIN    ;scaling_step2
-            (*global).PrevScalingTabSelect = -1 ;this force a refresh
+; print, "in eventcb:scaling at B"
+            (*global).PrevScalingTabSelect = -1 ;this forces a refresh
             scaling_tab_event, Event
           ;display_step4_step2_step2_selection, $
           ;  Event         ;scaling_step2_step1
@@ -517,7 +568,9 @@ PRO initialize_arrays, Event
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   list_OF_files = (*(*global).list_OF_ascii_files)
   sz = N_ELEMENTS(list_OF_files)
-  ref_pixel_list = INTARR(sz)
+; Change (29 Dec 2010): Make ref_pixel_list a FLOAT
+;  ref_pixel_list = INTARR(sz)
+  ref_pixel_list = FLTARR(sz)
   ref_x_list     = INTARR(sz)
   scaling_factor = FLTARR(sz)+1
   (*(*global).ref_pixel_list)        = ref_pixel_list

@@ -168,6 +168,10 @@ PRO PopulateWorkingFileTable, Event
   populate_array, TableArray, ShortFileNameList, COLUMN=0
   ;get shifting parameters found
   ref_pixel_offset_list = (*(*global).ref_pixel_offset_list)
+  
+; DEBUG =====  
+;  print, " in Step 6 PopulateWorkingFileTable  ref_pixel_offset_list: ",ref_pixel_offset_list
+; DEBUG =====
   populate_array, TableArray, ref_pixel_offset_list, COLUMN=1
   ;get scaling paremeters found
   scaling_factor = (*(*global).scaling_factor)
@@ -607,8 +611,11 @@ PRO run_full_process_with_other_pola, Event, sStructure
        index = 1
        WHILE (index LT nbr) DO BEGIN 
           pixel_offset = ref_pixel_offset_list[index]
+; DEBUG =====
+;      print, "test Step6: ref_pixel_offset_list: ", ref_pixel_offset_list[index]
+; DEBUG =====
           sIndex = STRING(index, FORMAT = '(I5)')
-          sPixel_offset = STRING(pixel_offset, FORMAT='(I5)')
+          sPixel_offset = STRING(pixel_offset, FORMAT='(F10.2)')
           LogMessage = '    Dataset: ' + sIndex + '  Shift applied: ' + sPixel_offset
           addMessageInCreateStatus, Event, LogMessage
           IDLsendToGeek_addLogBookText, Event, LogMessage 
@@ -787,13 +794,17 @@ PRO step6_realign_data, Event, tfpData, $
   Nbr_array             = (SIZE(tfpData))(1)
   realign_tfpData       = PTRARR(Nbr_array,/ALLOCATE_HEAP)
   realign_tfpData_error = PTRARR(Nbr_array,/ALLOCATE_HEAP)
-  pixel_offset_array    = INTARR(Nbr_array)
+;  pixel_offset_array    = INTARR(Nbr_array)
+; Change code (29 Dec 2010): Change pixel_offset_array to FLOAT from INT
+   pixel_offset_array    = FLTARR(Nbr_array)
   
   ;retrieve pixel offset
   ref_pixel_list        = (*(*global).ref_pixel_list)
-;   print, "test Step6: ref_pixel_list: ", ref_pixel_list
   ref_pixel_offset_list = (*(*global).ref_pixel_offset_list) 
-;   print, "test Step6: ref_pixel_offset_list: ", ref_pixel_offset_list
+; DEBUG ====
+;   print, "test Step6: RealignData ref_pixel_list: ", ref_pixel_list
+;   print, "test Step6: Realgin Data ref_pixel_offset_list: ", ref_pixel_offset_list
+; DEBUG ====
   detector_pixels_y = (*global).detector_pixels_y
 
   DETPIXY = detector_pixels_y
@@ -812,7 +823,9 @@ PRO step6_realign_data, Event, tfpData, $
 ; datasets. The values of ref_pixel_list are reset to the reference value in the code. They can't be used. 
 ;      pixel_offset = ref_pixel_list[0]-ref_pixel_list[index]
       pixel_offset = ref_pixel_offset_list[index]
+; DEBUG ====
 ;  print, "index: ", index, " pixel_offset: ", pixel_offset
+; DEBUG ====
       pixel_offset_array[index] = pixel_offset ;save pixel_offset
       ref_pixel_offset_list[index] += pixel_offset
 ;      array        = array[*,304L:2*304L-1]

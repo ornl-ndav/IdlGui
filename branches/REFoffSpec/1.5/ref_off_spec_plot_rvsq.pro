@@ -40,7 +40,8 @@ TYPE = 'IvsQ'
 ;TYPE = 'IvsLambda'
 
 ;path='/SNS/users/rwd/results/5387'
-path = (*global).ascii_path
+;path = (*global).ascii_path
+path = (*global).working_path
 
 title='Select Output Directory'
 ytitle = "Reflectivity"

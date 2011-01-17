@@ -247,7 +247,7 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     reduce_input_table_nbr_row: 18,$
     reduce_input_table_nbr_column: 2,$
     reduce_step1_spin_state_mode: 2,$
-    
+
     ;SANGLE BASE
     reduce_run_sangle_table: PTR_NEW(0L), $
     sangle_tData: PTR_NEW(0L), $
@@ -275,7 +275,7 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     sangle_zoom_xy_minmax: FLTARR(4),$ ;corners of zoom sangle help plot box
     sangle_current_zoom_para: FLTARR(4), $ ;para used for current zoom plot
     zoom_left_click_pressed: 0b, $ ;boolean button pressed or not (zoom help)
-
+    input_file_name: '  ', $ ; set up a place holder for RefPix filename
 ; Code change (RC Ward, March 24, 2010): Change images used for setting spin matching for data/norm    
     Spins_Not_Matching_Enable: $
        'REFoffSpec_images/Spins_Not_Matching_Enable.png',$
@@ -494,12 +494,17 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     step4_step1_move_selection_position: INTARR(2),$
     left_mouse_pressed:  0,$
     step4_step1_left_mouse_pressed: 0,$
+; Change code (RC Ward, 28 Dec 2010): Add RESTART flag.
+;  This will be set in Plot Utility when user enters new reference run#   
+    RESTART: 0,$
     
     plot_realign_data:   0,$
     ref_pixel_list:      PTR_NEW(0L),$
     ref_pixel_offset_list: PTR_NEW(0L),$
     ref_pixel_list_original: PTR_NEW(0L),$
     RefPixSave: PTR_NEW(0L), $
+    PreviousRefPix: PTR_NEW(0L), $ ; used to store RefPix for Shifting Step
+
     SangleDone: PTR_NEW(0B), $
     ref_x_list:          PTR_NEW(0L),$
     super_users:         SUPER_USERS,$
@@ -732,7 +737,7 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     PlotUtility_putText_fromMainBase, MAIN_BASE, 'plot_utility_text', message
     message = '  '
     PlotUtility_putText_fromMainBase, MAIN_BASE, 'plot_utility_text', message  
-    message = '   Or modify the reduce step path to evalute other results.'
+    message = '   Or modify the reduce step path to examine other results.'
     PlotUtility_putText_fromMainBase, MAIN_BASE, 'plot_utility_text', message
     message = '  '  
     PlotUtility_putText_fromMainBase, MAIN_BASE, 'plot_utility_text', message

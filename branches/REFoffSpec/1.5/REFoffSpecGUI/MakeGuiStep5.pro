@@ -84,7 +84,7 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
                    uname: 'step5_rescale_draw'}
    
 ;  Code Change (RC Ward, April 10, 2010): Remove these buttons from the screen
-;  Control of scaling will be as in  Step 4 1D plot 
+;  Control of scaling will be as in Step 4 1D plot 
   ;FUll reset of scale
   XYoff = [300,5]
   sFullReset = { size: [XYoff[0],$
@@ -388,8 +388,7 @@ sYMaxBaseField = { size: [sXMaxBaseField.size[0]+XYoff[0],$
   sTitle = { size: [sInsideFrame.size[0]+XYoff[0],$
     sInsideFrame.size[1]+XYoff[1]],$
     value: 'Select working directory for output: Reflectivity vs Q or Lambda Perpendicular'}
-;    value: 'Selection: I vs Q'}
-;print, "test in Step5: working_path: " , (*global).working_path  
+;    value: 'Selection: I vs Q'}  
   XYoff = [5,8] ;folder button
   sFolderButton = { size: [XYoff[0],$
     XYoff[1],$
@@ -532,53 +531,7 @@ sSelectionInfoPlot          = { size: [XYoff[0],$
 
 ;  Code Change (RC Ward, April 10, 2010): Remove these buttons from the screen
 ;  Control of scaling will be as in Step 4 1D plot     
-  ;zoom and selection base ---------------------------------------------------
-;  wZoomSelectionBase = WIDGET_BASE(RescaleBase,$
-;    XOFFSET = sZoomSelectionBase.size[0],$
-;    YOFFSET = sZoomSelectionBase.size[1],$
-;    SCR_XSIZE = sZoomSelectionBase.size[2],$
-;    /EXCLUSIVE,$
-;    /ROW)
-    
-  ;Zoom button
-;  wZoomButton = WIDGET_BUTTON(wZoomSelectionBase,$
-;    VALUE = sZoomButton.value,$
-;    UNAME = sZoomButton.uname)
-    
-  ;Selection button
-;  wSelectionButton = WIDGET_BUTTON(wZoomSelectionBase,$
-;    VALUE = sSelectionButton.value,$
-;    UNAME = sSelectionButton.uname)
-    
-  ;WIDGET_CONTROL, wZoomButton, /SET_BUTTON (was already commented out - RC Ward)
-;  WIDGET_CONTROL, wSelectionButton, /SET_BUTTON
   
-  ;full reset ----------------------------------------------------------------
-;  wButton = WIDGET_BUTTON(RescaleBase,$
-;    XOFFSET = sFullReset.size[0],$
-;    YOFFSET = sFullReset.size[1],$
-;    SCR_XSIZE = sFullReset.size[2],$
-;    UNAME = sFullReset.uname,$
-;    VALUE = sFullReset.value)
-    
-  ;Scale to 1 selection
-;  wScaleButton = WIDGET_BUTTON(RescaleBase,$
-;    XOFFSET = sScaleButton.size[0],$
-;    YOFFSET = sScaleButton.size[1],$
-;    SCR_XSIZE = sScaleButton.size[2],$
-;    UNAME = sScaleButton.uname,$
-;    VALUE = sScaleButton.value,$
-;    SENSITIVE = sScaleButton.sensitive)
-    
-    ;Reset scale to 1
-;    wResetScaleButton = WIDGET_BUTTON(RescaleBase,$
-;    XOFFSET = sResetScaleButton.size[0],$
-;    YOFFSET = sResetScaleButton.size[1],$
-;    SCR_XSIZE = sResetScaleButton.size[2],$
-;    VALUE = sResetScaleButton.value,$
-;    UNAME = sResetScaleButton.uname,$
-;    SENSITIVE = sResetScaleButton.sensitive)
-
 ; for 1D plot lin/log    
     wGroup = CW_BGROUP(RescaleBase,$
     sLinLog1.value,$
@@ -735,22 +688,6 @@ wYmaxValue = CW_FIELD(wYmaxBase,$
     /MOTION_EVENTS,$
     /TRACKING_EVENTS)
     
-;  ;Shifting base ---------------------------------------------------------------
-;  wScalebase = WIDGET_BASE(BaseTab,$
-;    XOFFSET   = sScaleBase.size[0],$
-;    YOFFSET   = sScaleBase.size[1],$
-;    SCR_XSIZE = sScaleBase.size[2],$
-;    SCR_YSIZE = sScaleBase.size[3],$
-;    UNAME     = sScaleBase.uname,$
-;    FRAME     = sScaleBase.frame)
-;    
-;  ;Scaling button --------------------------------------------------------------
-;  wScalingDraw = WIDGET_DRAW(wScalebase,$
-;    XOFFSET   = sScalingDraw.size[0],$
-;    YOFFSET   = sScalingDraw.size[1],$
-;    SCR_XSIZE = sScalingDraw.size[2],$
-;    SCR_YSIZE = sScalingDraw.size[3],$
-;    UNAME     = sScalingDraw.uname)
 ;    
   ;x/y and counts values -------------------------------------------------------
   wXLabel = WIDGET_LABEL(BaseTab,$
@@ -879,7 +816,6 @@ wYmaxValue = CW_FIELD(wYmaxBase,$
 ;======================================================================================
 ; Change code (RC Ward, 12 Aug 2010): Add buttons to control splicing alternative
 ; I need to pick up the values that are set in Config here, not default to 1
-; Also, this does not refresh the screen and I don't know why!
 ; default is set to [1]
    XYoff = [820,0]
 SplicingAlternativecwbgroupTitle = 'Splicing: '

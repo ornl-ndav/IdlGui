@@ -958,10 +958,11 @@ ENDIF
 END
 
 ;------------------------------------------------------------------------------
-PRO populate_step4_range_init, Event
-WIDGET_CONTROL, Event.top, GET_UVALUE=global
+; This code is in here twice - this section commented out on 28 Dec 2010
+;PRO populate_step4_range_init, Event
+;WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
-putTextFieldValue, Event, 'step4_zmax', (*global).zmax_g, FORMAT='(e8.1)'
-putTextFieldValue, Event, 'step4_zmin', (*global).zmin_g, FORMAT='(e8.1)'
+;putTextFieldValue, Event, 'step4_zmax', (*global).zmax_g, FORMAT='(e8.1)'
+;putTextFieldValue, Event, 'step4_zmin', (*global).zmin_g, FORMAT='(e8.1)'
 
-END
+;END

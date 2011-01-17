@@ -61,7 +61,9 @@ intensity = FLTARR(10000,10000)
 ;ENDFOR
 
   unit = 1
-  path = (*global).ascii_path
+;  path = (*global).ascii_path
+  path = (*global).working_path
+  
   filter='*Scaled2D.txt'
   title='Select Output Directory'
   datafile = DIALOG_PICKFILE(PATH=path,FILTER=filter,TITLE=title)
