@@ -710,7 +710,7 @@ pro refpix_lin_log_data, event=event, base=base
   endif
   
   (*(*global_refpix).data) = Data
- 
+  
 end
 
 ;+
@@ -800,6 +800,8 @@ pro refpix_local_switch_axes_type, event
   
   save_refpix_background,  event=event
   
+  display_refpixel_pixels, event=event
+  
 end
 
 ;+
@@ -843,6 +845,7 @@ pro change_refpix_loadct, event
   ;replot
   refresh_refpix_plot, event, recalculate=1
   refresh_plot_refpix_colorbar, event
+  display_refpixel_pixels, event=event
   
 end
 
