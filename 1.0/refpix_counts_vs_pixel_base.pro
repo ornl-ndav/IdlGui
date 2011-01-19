@@ -55,17 +55,59 @@ pro refpix_counts_vs_pixel_base_event, Event
       geometry = widget_info(id, /geometry)
       new_xsize = geometry.scr_xsize
       new_ysize = geometry.scr_ysize
-
+      
       id = widget_info(event.top, find_by_uname='refpix_counts_vs_pixel_draw')
       widget_control, id, draw_xsize = new_xsize
       widget_control, id, draw_ysize = new_ysize
-
+      
       display_counts_vs_pixel, event=event, global_refpix
+    end
+    
+    ;linear scale
+    widget_info(event.top, find_by_uname='refpix_counts_vs_pixel_linear'): begin
+      refpix_counts_switch_axex_type, event
+    end
+    
+    widget_info(event.top, find_by_uname='refpix_counts_vs_pixel_log'): begin
+      refpix_counts_switch_axex_type, event
     end
     
     else:
     
   endcase
+  
+end
+
+;+
+; :Description:
+;    Switches the selected button in the individual plot bases
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro refpix_counts_switch_axex_type, event
+  compile_opt idl2
+  
+  uname = widget_info(event.id, /uname)
+  widget_control, event.top, get_uvalue=global_counts
+  
+  if (uname eq 'refpix_counts_vs_pixel_linear') then begin
+    set1_value = '*  ' + 'linear'
+    set2_value = '   ' + 'logarithmic'
+    (*global_counts).counts_vs_pixel_scale_is_linear = 1b
+  endif else begin
+    set1_value = '   ' + 'linear'
+    set2_value = '*  ' + 'logarithmic'
+    (*global_counts).counts_vs_pixel_scale_is_linear = 0b
+  endelse
+  
+  putValue, event=event, 'refpix_counts_vs_pixel_linear', set1_value
+  putValue, event=event, 'refpix_counts_vs_pixel_log', set2_value
+  
+  global_refpix = (*global_counts).global_refpix
+  display_counts_vs_pixel, event=event, global_refpix
   
 end
 
@@ -87,14 +129,46 @@ pro display_counts_vs_pixel, base=base, event=event, global_refpix
   
   if (keyword_set(event)) then begin
     id = widget_info(event.top, find_by_uname='refpix_counts_vs_pixel_draw')
+    widget_control, event.top, get_uvalue=global_counts
   endif else begin
     id = widget_info(base, find_by_uname='refpix_counts_vs_pixel_draw')
+    widget_control, base, get_uvalue=global_counts
   endelse
   widget_control, id, GET_VALUE = plot_id
   wset, plot_id
   
   counts_vs_pixel = (*(*global_refpix).counts_vs_pixel)
-  plot, counts_vs_pixel
+  
+  ;xrange
+  xrange = [0,303]
+  
+  counts_vs_pixel_scale_is_linear = $
+    (*global_counts).counts_vs_pixel_scale_is_linear
+    
+  ;if linear or log scale
+  if (counts_vs_pixel_scale_is_linear eq 1) then begin ;linear scale
+  
+    plot, counts_vs_pixel, $
+      xrange=xrange, $
+      xstyle=1, $
+      xtitle='Pixel',$
+      ytitle='Counts'
+      
+  endif else begin
+  
+    ;get ymax and ymin
+    ymax = max(counts_vs_pixel,min=ymin)
+    yrange = [1,ymax]
+    
+    plot, counts_vs_pixel, $
+      /ylog, $
+      yrange=yrange, $
+      xrange=xrange, $
+      xstyle=1, $
+      xtitle='Pixel', $
+      ytitle='Counts'
+      
+  endelse
   
 end
 
@@ -132,12 +206,25 @@ pro refpix_counts_vs_pixel_base_gui, wBase, $
     MAP          = 1,$
     /column,$
     /tlb_size_events,$
+    mbar = bar1, $
     GROUP_LEADER = ourGroup)
     
   _plot = widget_draw(wBase,$
     scr_xsize = 500,$
     scr_ysize = 500,$
     uname = 'refpix_counts_vs_pixel_draw')
+    
+  axes = widget_button(bar1,$
+    value = 'Axes',$
+    /menu)
+    
+  lin = widget_button(axes,$
+    value = '  linear',$
+    uname = 'refpix_counts_vs_pixel_linear')
+    
+  log = widget_button(axes,$
+    value = '* logarithmic',$
+    uname = 'refpix_counts_vs_pixel_log')
     
 end
 
@@ -169,8 +256,10 @@ pro refpix_counts_vs_pixel_base, event=event, $
   refpix_counts_vs_pixel_base_gui, _base, $
     parent_base_geometry
     
-  global_counts = ptr_new({ global_refpix: global_refpix})
-  
+  global_counts = ptr_new({ global_refpix: global_refpix, $
+    counts_vs_pixel_scale_is_linear: 0b $
+    })
+    
   (*global_refpix).refpix_counts_vs_pixel_base_id = _base
   
   WIDGET_CONTROL, _base, /REALIZE
