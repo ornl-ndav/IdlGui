@@ -149,12 +149,6 @@ pro refpix_base_event, Event
         widget_control, id_refpix, yoffset = yoffset
       endif
       
-      ;      id_cursor = (*global_refpix).refpix_cursor_info_base
-      ;      if (widget_info(id_cursor,/valid_id) ne 0) then begin
-      ;        widget_control, id_cursor, xoffset = xoffset + new_xsize
-      ;        widget_control, id_cursor, yoffset = yoffset + 170
-      ;      endif
-      ;
       if ((abs((*global_refpix).xsize - new_xsize) eq 70.0) && $
         abs((*global_refpix).ysize - new_ysize) eq 33.0) then return
         
@@ -899,7 +893,7 @@ pro refpix_base_uname_killed, global_refpix
     widget_control, id_refpix, /destroy
   endif
   
-  id_counts = (*global_refpix).refpix_counts_vs_tof_base_id
+  id_counts = (*global_refpix).refpix_counts_vs_pixel_base_id
   if (widget_info(id_counts, /valid_id) ne 0) then begin
     widget_control, id_counts, /destroy
   endif
