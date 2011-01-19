@@ -107,6 +107,9 @@ pro refpix_base_event, Event
             (*global_refpix).pixel1_selected = 1b
           endelse
           display_refpixel_pixels, event=event
+          display_counts_vs_pixel, $
+          base=(*global_refpix).refpix_counts_vs_pixel_base_id, $
+          global_refpix
         endif
         
         if ((*global_refpix).left_click) then begin ;moving mouse
