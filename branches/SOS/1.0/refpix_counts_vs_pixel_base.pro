@@ -41,11 +41,28 @@
 ;
 ; :Author: j35
 ;-
-pro refpix_cursor_info_base_event, Event
+pro refpix_counts_vs_pixel_base_event, Event
   compile_opt idl2
   
   case Event.id of
   
+    ;main base
+    widget_info(event.top, find_by_uname='refpix_counts_vs_pixel_base'): begin
+      widget_control, event.top, get_uvalue=global_counts
+      global_refpix = (*global_counts).global_refpix
+      
+      id = widget_info(event.top, find_by_uname='refpix_counts_vs_pixel_base')
+      geometry = widget_info(id, /geometry)
+      new_xsize = geometry.scr_xsize
+      new_ysize = geometry.scr_ysize
+
+      id = widget_info(event.top, find_by_uname='refpix_counts_vs_pixel_draw')
+      widget_control, id, draw_xsize = new_xsize
+      widget_control, id, draw_ysize = new_ysize
+
+      display_counts_vs_pixel, event=event, global_refpix
+    end
+    
     else:
     
   endcase
@@ -61,23 +78,24 @@ end
 ;
 ; :Keywords:
 ;    base
+;    event
 ;
 ; :Author: j35
 ;-
-pro display_counts_vs_pixel, base=base, global_refpix  
-compile_opt idl2
-
+pro display_counts_vs_pixel, base=base, event=event, global_refpix
+  compile_opt idl2
+  
   if (keyword_set(event)) then begin
- id = widget_info(event.top, find_by_uname='refpix_counts_vs_pixel_draw')
- endif else begin
- id = widget_info(base, find_by_uname='refpix_counts_vs_pixel_draw') 
- endelse
- widget_control, id, GET_VALUE = plot_id
- wset, plot_id
-
-counts_vs_pixel = (*(*global_refpix).counts_vs_pixel)  
+    id = widget_info(event.top, find_by_uname='refpix_counts_vs_pixel_draw')
+  endif else begin
+    id = widget_info(base, find_by_uname='refpix_counts_vs_pixel_draw')
+  endelse
+  widget_control, id, GET_VALUE = plot_id
+  wset, plot_id
+  
+  counts_vs_pixel = (*(*global_refpix).counts_vs_pixel)
   plot, counts_vs_pixel
-
+  
 end
 
 ;+
@@ -87,8 +105,6 @@ end
 ; :Params:
 ;    wBase
 ;    parent_base_geometry
-;
-;
 ;
 ; :Author: j35
 ;-
@@ -118,7 +134,7 @@ pro refpix_counts_vs_pixel_base_gui, wBase, $
     /tlb_size_events,$
     GROUP_LEADER = ourGroup)
     
-    _plot = widget_draw(wBase,$
+  _plot = widget_draw(wBase,$
     scr_xsize = 500,$
     scr_ysize = 500,$
     uname = 'refpix_counts_vs_pixel_draw')
@@ -153,13 +169,18 @@ pro refpix_counts_vs_pixel_base, event=event, $
   refpix_counts_vs_pixel_base_gui, _base, $
     parent_base_geometry
     
+  global_counts = ptr_new({ global_refpix: global_refpix})
+  
   (*global_refpix).refpix_counts_vs_pixel_base_id = _base
   
   WIDGET_CONTROL, _base, /REALIZE
+  widget_control, _base, set_uvalue=global_counts
   
-  XMANAGER, "refpix_counts_vs_pixel_base", _base, GROUP_LEADER = ourGroup, /NO_BLOCK
+  XMANAGER, "refpix_counts_vs_pixel_base", _base, $
+    GROUP_LEADER = ourGroup, $
+    /NO_BLOCK
     
-  display_counts_vs_pixel, base=_base, global_refpix  
-    
+  display_counts_vs_pixel, base=_base, global_refpix
+  
 end
 
