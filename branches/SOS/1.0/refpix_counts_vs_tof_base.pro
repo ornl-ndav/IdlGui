@@ -64,7 +64,7 @@ end
 ;
 ; :Author: j35
 ;-
-pro refpix_cursor_info_base_gui, wBase, $
+pro refpix_counts_vs_tof_base_gui, wBase, $
     parent_base_geometry
   compile_opt idl2
   
@@ -80,9 +80,9 @@ pro refpix_cursor_info_base_gui, wBase, $
   
   ourGroup = WIDGET_BASE()
   
-  title = 'Cursor position'
+  title = 'Counts vs tof'
   wBase = WIDGET_BASE(TITLE = title, $
-    UNAME        = 'refpix_cursor_position_base', $
+    UNAME        = 'refpix_counts_vs_tof_base', $
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
     MAP          = 1,$
@@ -90,43 +90,10 @@ pro refpix_cursor_info_base_gui, wBase, $
     /tlb_size_events,$
     GROUP_LEADER = ourGroup)
     
-  ;cursor_info
-  rowa = widget_base(wBase,$
-    /frame,$
-    /column)
-    
-  rowa_1 = widget_base(rowa,$
-    /row)
-  label = widget_label(rowa_1,$
-    /align_right,$
-    value = 'TOF (ms):')
-  value = widget_label(rowa_1,$
-    value = 'N/A',$
-    scr_xsize = 140,$
-    uname = 'refpix_cursor_tof_value',$
-    /align_left)
-    
-  rowa_2 = widget_base(rowa,$
-    /row)
-  label = widget_label(rowa_2,$
-    /align_right,$
-    value = '   Pixel:')
-  value = widget_label(rowa_2,$
-    value = 'N/A',$
-    scr_xsize = 140,$
-    uname = 'refpix_cursor_pixel_value',$
-    /align_left)
-    
-  rowa_3 = widget_base(rowa,$
-    /row)
-  label = widget_label(rowa_3,$
-    /align_right,$
-    value = '  Counts:')
-  value = widget_label(rowa_3,$
-    value = 'N/A',$
-    scr_xsize = 140,$
-    uname = 'refpix_cursor_counts_value',$
-    /align_left)
+    _plot = widget_draw(wBase,$
+    scr_xsize = 500,$
+    scr_ysize = 500,$
+    uname = 'refpix_counts_vs_tof_draw')
     
 end
 
@@ -139,7 +106,7 @@ end
 ;
 ; :Author: j35
 ;-
-pro refpix_cursor_info_base, event=event, $
+pro refpix_counts_vs_tof_base, event=event, $
     top_base=top_base, $
     parent_base_uname = parent_base_uname
   compile_opt idl2
@@ -155,14 +122,14 @@ pro refpix_cursor_info_base, event=event, $
   parent_base_geometry = WIDGET_INFO(id,/GEOMETRY)
   
   _base = 0L
-  refpix_cursor_info_base_gui, _base, $
+  refpix_counts_vs_tof_base_gui, _base, $
     parent_base_geometry
     
-  (*global_refpix).refpix_cursor_info_base = _base
+  (*global_refpix).refpix_counts_vs_tof_base_id = _base
   
   WIDGET_CONTROL, _base, /REALIZE
   
-  XMANAGER, "refpix_cursor_info_base", _base, GROUP_LEADER = ourGroup, /NO_BLOCK
+  XMANAGER, "refpix_counts_vs_tof_base", _base, GROUP_LEADER = ourGroup, /NO_BLOCK
     
 end
 

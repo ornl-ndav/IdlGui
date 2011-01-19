@@ -50,17 +50,17 @@ pro refpix_base_event, Event
   
   case Event.id of
   
-;    widget_info(event.top, find_by_unam='plot_setting_untouched'): begin
-;      switch_local_settings_plot_values, event
-;      refresh_plot, event, recalculate=1
-;      return
-;    end
-;    widget_info(event.top, find_by_unam='plot_setting_interpolated'): begin
-;      switch_local_settings_plot_values, event
-;      refresh_plot, event, recalculate=1
-;      return
-;    end
-    
+    ;    widget_info(event.top, find_by_unam='plot_setting_untouched'): begin
+    ;      switch_local_settings_plot_values, event
+    ;      refresh_plot, event, recalculate=1
+    ;      return
+    ;    end
+    ;    widget_info(event.top, find_by_unam='plot_setting_interpolated'): begin
+    ;      switch_local_settings_plot_values, event
+    ;      refresh_plot, event, recalculate=1
+    ;      return
+    ;    end
+  
     ;main draw
     widget_info(event.top, find_by_uname='refpix_draw'): begin
     
@@ -74,6 +74,7 @@ pro refpix_base_event, Event
         if (event.press eq 1) then begin ;left click
         
           show_refpix_input_base, event
+          show_refpix_counts_vs_tof_base, event
           
           (*global_refpix).left_click = 1b
           pixel_value = strcompress(retrieve_pixel_value(event),/remove_all)
@@ -213,6 +214,17 @@ pro refpix_base_event, Event
       endif
     end
     
+    ;show counts vs tof base
+    widget_info(event.top, $
+      find_by_uname='show_counts_vs_tof_base'): begin
+      plot_base = (*global_refpix).refpix_counts_vs_tof_base_id
+      if (widget_info(plot_base, /valid_id) eq 0) then begin
+        refpix_counts_vs_tof_base, parent_base_uname = 'refpix_base_uname', $
+          top_base = (*global_refpix).top_base, $
+          event=event
+      endif
+    end
+    
     else:
     
   endcase
@@ -256,8 +268,6 @@ end
 ; :Params:
 ;    event
 ;
-;
-;
 ; :Author: j35
 ;-
 pro show_refpix_input_base, event
@@ -268,6 +278,29 @@ pro show_refpix_input_base, event
   pixel_base = (*global_refpix).refpix_input_base
   if (widget_info(pixel_base, /valid_id) eq 0) then begin
     refpix_input_base, parent_base_uname = 'refpix_base_uname', $
+      top_base = (*global_refpix).top_base, $
+      event=event
+  endif
+  
+end
+
+;+
+; :Description:
+;    Bring to life the refpix counts vs tof base
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro show_refpix_counts_vs_tof_base, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_refpix
+  
+  plot_base = (*global_refpix).refpix_counts_vs_tof_base_id
+  if (widget_info(plot_base, /valid_id) eq 0) then begin
+    refpix_counts_vs_tof_base, parent_base_uname = 'refpix_base_uname', $
       top_base = (*global_refpix).top_base, $
       event=event
   endif
@@ -866,6 +899,11 @@ pro refpix_base_uname_killed, global_refpix
     widget_control, id_refpix, /destroy
   endif
   
+  id_counts = (*global_refpix).refpix_counts_vs_tof_base_id
+  if (widget_info(id_counts, /valid_id) ne 0) then begin
+    widget_control, id_counts, /destroy
+  endif
+  
 end
 
 ;+
@@ -1281,12 +1319,16 @@ pro refpix_base_gui, wBase, $
     uname = 'refpix_local_scale_setting_log')
     
   pixel = widget_button(bar1,$
-    value = 'Pixels selection',$
+    value = 'Extra',$
     /menu)
     
   show = widget_button(pixel,$
     value = 'Show pixel selection window',$
     uname = 'show_pixel_selection_base')
+    
+  _plot = widget_button(pixel,$
+    value = 'Show Counts vs TOF window',$
+    uname = 'show_counts_vs_tof_base')
     
 end
 
@@ -1353,11 +1395,11 @@ pro refpix_base, main_base=main_base, $
     file_name: file_name, $
     
     refpix_input_base: 0L, $ ;id of refpix_input_base
-    ;    refpix_cursor_info_base: 0L, $ 'id of refpix_cursor_info_base
+    refpix_counts_vs_tof_base_id: 0L, $ 'id of refpix_counts_vs_tof_base
     
-    ;used to plot selection zoom
-    default_plot_size: default_plot_size, $
-    
+  ;used to plot selection zoom
+  default_plot_size: default_plot_size, $
+  
     counts_vs_xaxis_yaxis_type: 0,$ ;0 for linear, 1 for log
     counts_vs_yaxis_yaxis_type: 0,$ ;0 for linear, 1 for log
     
@@ -1496,9 +1538,9 @@ pro refpix_base, main_base=main_base, $
   refpix_input_base, parent_base_uname = 'refpix_base_uname', $
     top_base=wBase
     
-;  ;bring to life the cursor information
-;  refpix_cursor_info_base, parent_base_uname='refpix_base_uname', $
-;    top_base=_wBase
+  ;bring to life the base that show counts vs tof
+  refpix_counts_vs_tof_base, parent_base_uname='refpix_base_uname', $
+    top_base=_wBase
     
 end
 

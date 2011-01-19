@@ -101,7 +101,7 @@ cd, CurrentFolder
 .run refpix_base.pro
 .run refpix_colorbar.pro
 .run refpix_input_base.pro
-;.run refpix_cursor_info_base.pro
+.run refpix_counts_vs_tof_base.pro
 
 ;outut tab
 .run sample_info_base.pro
