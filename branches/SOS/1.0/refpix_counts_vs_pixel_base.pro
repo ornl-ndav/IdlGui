@@ -44,13 +44,14 @@
 pro refpix_counts_vs_pixel_base_event, Event
   compile_opt idl2
   
+  widget_control, event.top, get_uvalue=global_counts
+  global_refpix = (*global_counts).global_refpix
+  
   case Event.id of
   
     ;main base
     widget_info(event.top, find_by_uname='refpix_counts_vs_pixel_base'): begin
-      widget_control, event.top, get_uvalue=global_counts
-      global_refpix = (*global_counts).global_refpix
-      
+    
       id = widget_info(event.top, find_by_uname='refpix_counts_vs_pixel_base')
       geometry = widget_info(id, /geometry)
       new_xsize = geometry.scr_xsize
@@ -70,6 +71,65 @@ pro refpix_counts_vs_pixel_base_event, Event
     
     widget_info(event.top, find_by_uname='refpix_counts_vs_pixel_log'): begin
       refpix_counts_switch_axex_type, event
+    end
+    
+    ;plot
+    widget_info(event.top, find_by_uname='refpix_counts_vs_pixel_draw'): begin
+    
+      if (event.press eq 1) then begin ;left click
+        (*global_counts).left_click = 1b
+        
+        refpix_pixels = (*global_refpix).refpix_pixels
+        
+        cursor, x,y, /data
+        ;1b for pixel1, 0b for pixel2
+        pixel1_working = (*global_refpix).pixel1_selected
+        if (pixel1_working) then begin
+          refpix_pixels[0] = x
+        endif else begin
+        refpix_pixels[1] = x
+        endelse
+        (*global_refpix).refpix_pixels = refpix_pixels
+        
+        display_counts_vs_pixel, event=event, global_refpix
+        
+      endif
+      
+      ;switch pixel1 and pixel2 status
+      if (event.press eq 4) then begin ;right click
+        pixel1_working = (*global_refpix).pixel1_selected
+        if (pixel1_working) then begin
+          (*global_refpix).pixel1_selected = 0b
+        endif else begin
+          (*global_refpix).pixel1_selected = 1b
+        endelse
+        display_counts_vs_pixel, event=event, global_refpix
+      endif
+      
+      if (event.release eq 1 && $
+        (*global_counts).left_click eq 1b) then begin ;release button
+        (*global_counts).left_click = 0b
+      endif
+      
+      if ((*global_counts).left_click && $
+        (*global_counts).left_click eq 1b) then begin ;moving mouse with left click
+        
+        refpix_pixels = (*global_refpix).refpix_pixels
+        
+        cursor, x,y, /data, /nowait
+        ;1b for pixel1, 0b for pixel2
+        pixel1_working = (*global_refpix).pixel1_selected
+        if (pixel1_working) then begin
+          refpix_pixels[0] = x
+        endif else begin
+        refpix_pixels[1] = x
+        endelse
+        (*global_refpix).refpix_pixels = refpix_pixels
+        
+        display_counts_vs_pixel, event=event, global_refpix
+
+      endif
+      
     end
     
     else:
@@ -95,12 +155,12 @@ pro refpix_counts_switch_axex_type, event
   global_refpix = (*global_counts).global_refpix
   
   if (uname eq 'refpix_counts_vs_pixel_linear') then begin
-    set1_value = '*  ' + 'linear'
-    set2_value = '   ' + 'logarithmic'
+    set1_value = '* ' + 'linear'
+    set2_value = '  ' + 'logarithmic'
     (*global_refpix).counts_vs_pixel_scale_is_linear = 1b
   endif else begin
-    set1_value = '   ' + 'linear'
-    set2_value = '*  ' + 'logarithmic'
+    set1_value = '  ' + 'linear'
+    set2_value = '* ' + 'logarithmic'
     (*global_refpix).counts_vs_pixel_scale_is_linear = 0b
   endelse
   
@@ -154,14 +214,14 @@ pro display_counts_vs_pixel, base=base, event=event, global_refpix
   pixel2 = refpix_pixels[1]
   
   ;1b for pixel1, 0b for pixel2
-  pixel1_working = (*global_refpix).pixel1_selected 
-    if (pixel1_working) then begin
+  pixel1_working = (*global_refpix).pixel1_selected
+  if (pixel1_working) then begin
     _pixel1_size = 3
     _pixel2_size = 1
-    endif else begin
+  endif else begin
     _pixel1_size = 1
     _pixel2_size = 3
-    endelse
+  endelse
   
   ;if linear or log scale
   if (counts_vs_pixel_scale_is_linear eq 1) then begin ;linear scale
@@ -175,21 +235,21 @@ pro display_counts_vs_pixel, base=base, event=event, global_refpix
     if (pixel1 ne 0) then begin
       plots, pixel1, 0
       plots, pixel1, ymax, /continue, color=fsc_color("red"), $
-      thick=_pixel1_size
+        thick=_pixel1_size
     endif
     
     if (pixel2 ne 0) then begin
       plots, pixel2, 0, /data
       plots, pixel2, ymax, /data, /continue, color=fsc_color("red"), $
-      thick=_pixel2_size
+        thick=_pixel2_size
     endif
     
     if (pixel1 ne 0 && pixel2 ne 0) then begin
-    refpix = (float(pixel1) + float(pixel2))/2.
-    plots, refpix, 0, /data
-    plots, refpix, ymax, /data, /continue, color=fsc_color("blue")
+      refpix = (float(pixel1) + float(pixel2))/2.
+      plots, refpix, 0, /data
+      plots, refpix, ymax, /data, /continue, color=fsc_color("blue")
     endif
-
+    
   endif else begin
   
     plot, counts_vs_pixel, $
@@ -203,21 +263,21 @@ pro display_counts_vs_pixel, base=base, event=event, global_refpix
     if (pixel1 ne 0) then begin
       plots, pixel1, 1, /data
       plots, pixel1, ymax, /data, /continue, color=fsc_color("red"), $
-      thick=_pixel1_size
+        thick=_pixel1_size
     endif
     
     if (pixel2 ne 0) then begin
       plots, pixel2, 1, /data
       plots, pixel2, ymax, /data, /continue, color=fsc_color("red"), $
-      thick=_pixel2_size
+        thick=_pixel2_size
     endif
     
     if (pixel1 ne 0 && pixel2 ne 0) then begin
-    refpix = (float(pixel1) + float(pixel2))/2.
-    plots, refpix, 1, /data
-    plots, refpix, ymax, /data, /continue, color=fsc_color("blue")
+      refpix = (float(pixel1) + float(pixel2))/2.
+      plots, refpix, 1, /data
+      plots, refpix, ymax, /data, /continue, color=fsc_color("blue")
     endif
-
+    
   endelse
   
 end
@@ -262,6 +322,9 @@ pro refpix_counts_vs_pixel_base_gui, wBase, $
   _plot = widget_draw(wBase,$
     scr_xsize = 500,$
     scr_ysize = 500,$
+    /button_events, $
+    /motion_events, $
+    retain = 2,$
     uname = 'refpix_counts_vs_pixel_draw')
     
   axes = widget_button(bar1,$
@@ -306,7 +369,8 @@ pro refpix_counts_vs_pixel_base, event=event, $
   refpix_counts_vs_pixel_base_gui, _base, $
     parent_base_geometry
     
-  global_counts = ptr_new({ global_refpix: global_refpix})
+  global_counts = ptr_new({ global_refpix: global_refpix,$
+    left_click: 0b })
     
   (*global_refpix).refpix_counts_vs_pixel_base_id = _base
   
