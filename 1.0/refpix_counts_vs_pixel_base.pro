@@ -153,6 +153,16 @@ pro display_counts_vs_pixel, base=base, event=event, global_refpix
   pixel1 = refpix_pixels[0]
   pixel2 = refpix_pixels[1]
   
+  ;1b for pixel1, 0b for pixel2
+  pixel1_working = (*global_refpix).pixel1_selected 
+    if (pixel1_working) then begin
+    _pixel1_size = 3
+    _pixel2_size = 1
+    endif else begin
+    _pixel1_size = 1
+    _pixel2_size = 3
+    endelse
+  
   ;if linear or log scale
   if (counts_vs_pixel_scale_is_linear eq 1) then begin ;linear scale
   
@@ -164,12 +174,14 @@ pro display_counts_vs_pixel, base=base, event=event, global_refpix
       
     if (pixel1 ne 0) then begin
       plots, pixel1, 0
-      plots, pixel1, ymax, /continue, color=fsc_color("red")
+      plots, pixel1, ymax, /continue, color=fsc_color("red"), $
+      thick=_pixel1_size
     endif
     
     if (pixel2 ne 0) then begin
       plots, pixel2, 0, /data
-      plots, pixel2, ymax, /data, /continue, color=fsc_color("red")
+      plots, pixel2, ymax, /data, /continue, color=fsc_color("red"), $
+      thick=_pixel2_size
     endif
     
     if (pixel1 ne 0 && pixel2 ne 0) then begin
@@ -177,7 +189,7 @@ pro display_counts_vs_pixel, base=base, event=event, global_refpix
     plots, refpix, 0, /data
     plots, refpix, ymax, /data, /continue, color=fsc_color("blue")
     endif
-    
+
   endif else begin
   
     plot, counts_vs_pixel, $
@@ -190,12 +202,14 @@ pro display_counts_vs_pixel, base=base, event=event, global_refpix
       
     if (pixel1 ne 0) then begin
       plots, pixel1, 1, /data
-      plots, pixel1, ymax, /data, /continue, color=fsc_color("red")
+      plots, pixel1, ymax, /data, /continue, color=fsc_color("red"), $
+      thick=_pixel1_size
     endif
     
     if (pixel2 ne 0) then begin
       plots, pixel2, 1, /data
-      plots, pixel2, ymax, /data, /continue, color=fsc_color("red")
+      plots, pixel2, ymax, /data, /continue, color=fsc_color("red"), $
+      thick=_pixel2_size
     endif
     
     if (pixel1 ne 0 && pixel2 ne 0) then begin
