@@ -54,7 +54,35 @@ end
 
 ;+
 ; :Description:
-;    Builds the GUI of the info base
+;    Show the counts vs tof pixel
+;
+; :Params:
+;    global_refpix
+;
+; :Keywords:
+;    base
+;
+; :Author: j35
+;-
+pro display_counts_vs_pixel, base=base, global_refpix  
+compile_opt idl2
+
+  if (keyword_set(event)) then begin
+ id = widget_info(event.top, find_by_uname='refpix_counts_vs_pixel_draw')
+ endif else begin
+ id = widget_info(base, find_by_uname='refpix_counts_vs_pixel_draw') 
+ endelse
+ widget_control, id, GET_VALUE = plot_id
+ wset, plot_id
+
+counts_vs_pixel = (*(*global_refpix).counts_vs_pixel)  
+  plot, counts_vs_pixel
+
+end
+
+;+
+; :Description:
+;    Builds the GUI of the counts vs pixel
 ;
 ; :Params:
 ;    wBase
@@ -64,7 +92,7 @@ end
 ;
 ; :Author: j35
 ;-
-pro refpix_counts_vs_tof_base_gui, wBase, $
+pro refpix_counts_vs_pixel_base_gui, wBase, $
     parent_base_geometry
   compile_opt idl2
   
@@ -80,9 +108,9 @@ pro refpix_counts_vs_tof_base_gui, wBase, $
   
   ourGroup = WIDGET_BASE()
   
-  title = 'Counts vs tof'
+  title = 'Counts vs Pixel'
   wBase = WIDGET_BASE(TITLE = title, $
-    UNAME        = 'refpix_counts_vs_tof_base', $
+    UNAME        = 'refpix_counts_vs_pixel_base', $
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
     MAP          = 1,$
@@ -93,7 +121,7 @@ pro refpix_counts_vs_tof_base_gui, wBase, $
     _plot = widget_draw(wBase,$
     scr_xsize = 500,$
     scr_ysize = 500,$
-    uname = 'refpix_counts_vs_tof_draw')
+    uname = 'refpix_counts_vs_pixel_draw')
     
 end
 
@@ -106,7 +134,7 @@ end
 ;
 ; :Author: j35
 ;-
-pro refpix_counts_vs_tof_base, event=event, $
+pro refpix_counts_vs_pixel_base, event=event, $
     top_base=top_base, $
     parent_base_uname = parent_base_uname
   compile_opt idl2
@@ -122,14 +150,16 @@ pro refpix_counts_vs_tof_base, event=event, $
   parent_base_geometry = WIDGET_INFO(id,/GEOMETRY)
   
   _base = 0L
-  refpix_counts_vs_tof_base_gui, _base, $
+  refpix_counts_vs_pixel_base_gui, _base, $
     parent_base_geometry
     
-  (*global_refpix).refpix_counts_vs_tof_base_id = _base
+  (*global_refpix).refpix_counts_vs_pixel_base_id = _base
   
   WIDGET_CONTROL, _base, /REALIZE
   
-  XMANAGER, "refpix_counts_vs_tof_base", _base, GROUP_LEADER = ourGroup, /NO_BLOCK
+  XMANAGER, "refpix_counts_vs_pixel_base", _base, GROUP_LEADER = ourGroup, /NO_BLOCK
+    
+  display_counts_vs_pixel, base=_base, global_refpix  
     
 end
 

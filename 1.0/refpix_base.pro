@@ -74,7 +74,7 @@ pro refpix_base_event, Event
         if (event.press eq 1) then begin ;left click
         
           show_refpix_input_base, event
-          show_refpix_counts_vs_tof_base, event
+          show_refpix_counts_vs_pixel_base, event
           
           (*global_refpix).left_click = 1b
           pixel_value = strcompress(retrieve_pixel_value(event),/remove_all)
@@ -217,9 +217,9 @@ pro refpix_base_event, Event
     ;show counts vs tof base
     widget_info(event.top, $
       find_by_uname='show_counts_vs_tof_base'): begin
-      plot_base = (*global_refpix).refpix_counts_vs_tof_base_id
+      plot_base = (*global_refpix).refpix_counts_vs_pixel_base_id
       if (widget_info(plot_base, /valid_id) eq 0) then begin
-        refpix_counts_vs_tof_base, parent_base_uname = 'refpix_base_uname', $
+        refpix_counts_vs_pixel_base, parent_base_uname = 'refpix_base_uname', $
           top_base = (*global_refpix).top_base, $
           event=event
       endif
@@ -286,21 +286,21 @@ end
 
 ;+
 ; :Description:
-;    Bring to life the refpix counts vs tof base
+;    Bring to life the refpix counts vs pixel base
 ;
 ; :Params:
 ;    event
 ;
 ; :Author: j35
 ;-
-pro show_refpix_counts_vs_tof_base, event
+pro show_refpix_counts_vs_pixel_base, event
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global_refpix
   
-  plot_base = (*global_refpix).refpix_counts_vs_tof_base_id
+  plot_base = (*global_refpix).refpix_counts_vs_pixel_base_id
   if (widget_info(plot_base, /valid_id) eq 0) then begin
-    refpix_counts_vs_tof_base, parent_base_uname = 'refpix_base_uname', $
+    refpix_counts_vs_pixel_base, parent_base_uname = 'refpix_base_uname', $
       top_base = (*global_refpix).top_base, $
       event=event
   endif
@@ -1012,6 +1012,7 @@ pro refpix_base_cleanup, tlb
   ptr_free, (*global_refpix).counts_vs_qx_data
   ptr_free, (*global_refpix).counts_vs_qz_xaxis
   ptr_free, (*global_refpix).counts_vs_qz_data
+  ptr_free, (*global_refpix).counts_vs_pixel
   
   ptr_free, global_refpix
   
@@ -1327,8 +1328,8 @@ pro refpix_base_gui, wBase, $
     uname = 'show_pixel_selection_base')
     
   _plot = widget_button(pixel,$
-    value = 'Show Counts vs TOF window',$
-    uname = 'show_counts_vs_tof_base')
+    value = 'Show Counts vs pixel window',$
+    uname = 'show_counts_vs_pixel_base')
     
 end
 
@@ -1395,10 +1396,10 @@ pro refpix_base, main_base=main_base, $
     file_name: file_name, $
     
     refpix_input_base: 0L, $ ;id of refpix_input_base
-    refpix_counts_vs_tof_base_id: 0L, $ 'id of refpix_counts_vs_tof_base
+    refpix_counts_vs_pixel_base_id: 0L, $ 'id of refpix_counts_vs_tof_base
     
-  ;used to plot selection zoom
-  default_plot_size: default_plot_size, $
+    ;used to plot selection zoom
+    default_plot_size: default_plot_size, $
   
     counts_vs_xaxis_yaxis_type: 0,$ ;0 for linear, 1 for log
     counts_vs_yaxis_yaxis_type: 0,$ ;0 for linear, 1 for log
@@ -1412,6 +1413,7 @@ pro refpix_base, main_base=main_base, $
     full_data: ptr_new(0L), $
     data: ptr_new(0L), $
     data_linear: ptr_new(0L), $
+    counts_vs_pixel: ptr_new(0L), $
     
     x_axis: x_axis, $ ; [-0.004, -0.003, -0.002...]
     y_axis: y_axis, $ ; [0.0, 0.1, 0.2, 0.3]
@@ -1466,6 +1468,8 @@ pro refpix_base, main_base=main_base, $
   (*(*global_refpix).full_data) = data
   
   data_2d = total(data,2)
+  counts_vs_pixel = total(data_2d,1)
+  (*(*global_refpix).counts_vs_pixel) = counts_vs_pixel
   
   (*(*global_refpix).data_linear) = data_2d
   (*(*global_refpix).data) = data_2d
@@ -1539,7 +1543,7 @@ pro refpix_base, main_base=main_base, $
     top_base=wBase
     
   ;bring to life the base that show counts vs tof
-  refpix_counts_vs_tof_base, parent_base_uname='refpix_base_uname', $
+  refpix_counts_vs_pixel_base, parent_base_uname='refpix_base_uname', $
     top_base=_wBase
     
 end
