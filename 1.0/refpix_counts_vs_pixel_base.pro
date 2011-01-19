@@ -92,21 +92,21 @@ pro refpix_counts_switch_axex_type, event
   
   uname = widget_info(event.id, /uname)
   widget_control, event.top, get_uvalue=global_counts
+  global_refpix = (*global_counts).global_refpix
   
   if (uname eq 'refpix_counts_vs_pixel_linear') then begin
     set1_value = '*  ' + 'linear'
     set2_value = '   ' + 'logarithmic'
-    (*global_counts).counts_vs_pixel_scale_is_linear = 1b
+    (*global_refpix).counts_vs_pixel_scale_is_linear = 1b
   endif else begin
     set1_value = '   ' + 'linear'
     set2_value = '*  ' + 'logarithmic'
-    (*global_counts).counts_vs_pixel_scale_is_linear = 0b
+    (*global_refpix).counts_vs_pixel_scale_is_linear = 0b
   endelse
   
   putValue, event=event, 'refpix_counts_vs_pixel_linear', set1_value
   putValue, event=event, 'refpix_counts_vs_pixel_log', set2_value
   
-  global_refpix = (*global_counts).global_refpix
   display_counts_vs_pixel, event=event, global_refpix
   
 end
@@ -142,9 +142,17 @@ pro display_counts_vs_pixel, base=base, event=event, global_refpix
   ;xrange
   xrange = [0,303]
   
+  ;get ymax and ymin
+  ymax = max(counts_vs_pixel,min=ymin)
+  yrange = [1,ymax]
+  
   counts_vs_pixel_scale_is_linear = $
-    (*global_counts).counts_vs_pixel_scale_is_linear
+    (*global_refpix).counts_vs_pixel_scale_is_linear
     
+  refpix_pixels = (*global_refpix).refpix_pixels
+  pixel1 = refpix_pixels[0]
+  pixel2 = refpix_pixels[1]
+  
   ;if linear or log scale
   if (counts_vs_pixel_scale_is_linear eq 1) then begin ;linear scale
   
@@ -154,12 +162,24 @@ pro display_counts_vs_pixel, base=base, event=event, global_refpix
       xtitle='Pixel',$
       ytitle='Counts'
       
+    if (pixel1 ne 0) then begin
+      plots, pixel1, 0
+      plots, pixel1, ymax, /continue, color=fsc_color("red")
+    endif
+    
+    if (pixel2 ne 0) then begin
+      plots, pixel2, 0, /data
+      plots, pixel2, ymax, /data, /continue, color=fsc_color("red")
+    endif
+    
+    if (pixel1 ne 0 && pixel2 ne 0) then begin
+    refpix = (float(pixel1) + float(pixel2))/2.
+    plots, refpix, 0, /data
+    plots, refpix, ymax, /data, /continue, color=fsc_color("blue")
+    endif
+    
   endif else begin
   
-    ;get ymax and ymin
-    ymax = max(counts_vs_pixel,min=ymin)
-    yrange = [1,ymax]
-    
     plot, counts_vs_pixel, $
       /ylog, $
       yrange=yrange, $
@@ -168,6 +188,22 @@ pro display_counts_vs_pixel, base=base, event=event, global_refpix
       xtitle='Pixel', $
       ytitle='Counts'
       
+    if (pixel1 ne 0) then begin
+      plots, pixel1, 1, /data
+      plots, pixel1, ymax, /data, /continue, color=fsc_color("red")
+    endif
+    
+    if (pixel2 ne 0) then begin
+      plots, pixel2, 1, /data
+      plots, pixel2, ymax, /data, /continue, color=fsc_color("red")
+    endif
+    
+    if (pixel1 ne 0 && pixel2 ne 0) then begin
+    refpix = (float(pixel1) + float(pixel2))/2.
+    plots, refpix, 1, /data
+    plots, refpix, ymax, /data, /continue, color=fsc_color("blue")
+    endif
+
   endelse
   
 end
@@ -256,9 +292,7 @@ pro refpix_counts_vs_pixel_base, event=event, $
   refpix_counts_vs_pixel_base_gui, _base, $
     parent_base_geometry
     
-  global_counts = ptr_new({ global_refpix: global_refpix, $
-    counts_vs_pixel_scale_is_linear: 0b $
-    })
+  global_counts = ptr_new({ global_refpix: global_refpix})
     
   (*global_refpix).refpix_counts_vs_pixel_base_id = _base
   

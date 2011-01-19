@@ -87,6 +87,10 @@ pro refpix_base_event, Event
           save_refpixel_pixels, event=event
           display_refpixel_pixels, event=event
           calculate_refpix, event=event
+          display_counts_vs_pixel, $
+          base=(*global_refpix).refpix_counts_vs_pixel_base_id, $
+          global_refpix
+           
           return
         endif
         
@@ -116,6 +120,10 @@ pro refpix_base_event, Event
           save_refpixel_pixels, event=event
           display_refpixel_pixels, event=event
           calculate_refpix, event=event
+          display_counts_vs_pixel, $
+          base=(*global_refpix).refpix_counts_vs_pixel_base_id, $
+          global_refpix
+          
         endif
         
       endif else begin ;entering or leaving widget_draw
@@ -1391,6 +1399,7 @@ pro refpix_base, main_base=main_base, $
     
     refpix_input_base: 0L, $ ;id of refpix_input_base
     refpix_counts_vs_pixel_base_id: 0L, $ 'id of refpix_counts_vs_tof_base
+    counts_vs_pixel_scale_is_linear: 0b, $ ;counts vs pixel (linear/log)
     
     ;used to plot selection zoom
     default_plot_size: default_plot_size, $
