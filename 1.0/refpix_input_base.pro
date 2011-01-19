@@ -88,6 +88,10 @@ pro refpix_input_base_event, Event
         event=main_event, $
         config_table=table
       putValue, event=main_event, 'ref_m_metadata_table', table
+      id_counts = (*global_refpix).refpix_counts_vs_tof_base_id
+      if (widget_info(id_counts, /valid_id) ne 0) then begin
+        widget_control, id_counts, /destroy
+      endif
       widget_control, top_base, /destroy
     end
     
@@ -95,7 +99,12 @@ pro refpix_input_base_event, Event
     widget_info(event.top, find_by_uname='cancel_refpix_selected_uname'): begin
       widget_control, event.top, get_uvalue=global_info
       top_base = (*global_info).top_base
+      global_refpix = (*global_info).global_refpix
+      id_counts = (*global_refpix).refpix_counts_vs_tof_base_id
       widget_control, top_base, /destroy
+      if (widget_info(id_counts, /valid_id) ne 0) then begin
+        widget_control, id_counts, /destroy
+      endif
     end
     
     else:
