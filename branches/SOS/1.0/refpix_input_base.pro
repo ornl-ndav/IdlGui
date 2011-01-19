@@ -53,6 +53,10 @@ pro refpix_input_base_event, Event
       save_refpixel_pixels, base=top_base
       display_refpixel_pixels, base=top_base
       calculate_refpix, base=top_base
+          global_refpix = (*global_info).global_refpix
+      display_counts_vs_pixel, $
+          base=(*global_refpix).refpix_counts_vs_pixel_base_id, $
+          global_refpix
     end
     widget_info(event.top, find_by_uname='refpix_pixel2_uname'): begin
       widget_control, event.top, get_uvalue=global_info
@@ -60,6 +64,10 @@ pro refpix_input_base_event, Event
       save_refpixel_pixels, base=top_base
       display_refpixel_pixels, base=top_base
       calculate_refpix, base=top_base
+          global_refpix = (*global_info).global_refpix
+      display_counts_vs_pixel, $
+          base=(*global_refpix).refpix_counts_vs_pixel_base_id, $
+          global_refpix
     end
     
     widget_info(event.top, find_by_uname='refpix_value_uname'): begin
@@ -197,12 +205,21 @@ pro refpix_input_base_gui, wBase, $
       uname = 'refpix_pixel2_uname')
   endelse
   
-  refpix = cw_field(wBase, $
-    xsize = 5,$
-    title = '       ===>  Refpix:',$
-    /row,$
-    /return_events,$
-    uname = 'refpix_value_uname')
+  row2 = widget_base(wBase,$
+  /row)
+  label = widget_label(row2,$
+  value = '     ===>  Refpix:')
+  value = widget_label(row2,$
+  value = 'N/A',$
+  uname = 'refpix_value_uname',$
+  scr_xsize = 100)
+  
+  ;refpix = cw_field(wBase, $
+  ;  xsize = 5,$
+  ;  title = '       ===>  Refpix:',$
+  ;  /row,$
+  ;  /return_events,$
+  ;  uname = 'refpix_value_uname')
     
   space = widget_label(wBase,$
     value = ' ')

@@ -262,7 +262,8 @@ pro calculate_refpix, event=event, base=base
   if (pixel2 eq 0) then return
   
   refpix = (float(pixel1)+float(pixel2))/2.
-  putValue, base=refpix_input_base, 'refpix_value_uname', refpix
+  putValue, base=refpix_input_base, 'refpix_value_uname', $
+  strcompress(refpix,/remove_all)
   
 end
 
