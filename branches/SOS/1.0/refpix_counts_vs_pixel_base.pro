@@ -81,18 +81,28 @@ pro refpix_counts_vs_pixel_base_event, Event
         
         refpix_pixels = (*global_refpix).refpix_pixels
         
+        _id = widget_info(event.top, find_by_uname='refpix_counts_vs_pixel_draw')
+        widget_control, event.top, get_uvalue=global_counts
+        widget_control, _id, GET_VALUE = _plot_id
+        wset, _plot_id
+        
         cursor, x,y, /data
         ;1b for pixel1, 0b for pixel2
         pixel1_working = (*global_refpix).pixel1_selected
         if (pixel1_working) then begin
           refpix_pixels[0] = x
+          uname = 'refpix_pixel1_uname'
         endif else begin
-        refpix_pixels[1] = x
+          refpix_pixels[1] = x
+          uname = 'refpix_pixel2_uname'
         endelse
         (*global_refpix).refpix_pixels = refpix_pixels
-        
+        refpix_input_base = (*global_refpix).refpix_input_base
+        top_base = (*global_refpix).top_base
+        putValue, base=refpix_input_base, uname, strcompress(x,/remove_all)
+        calculate_refpix, base=top_base
         display_counts_vs_pixel, event=event, global_refpix
-        
+        display_refpixel_pixels, base=(*global_refpix).top_base
       endif
       
       ;switch pixel1 and pixel2 status
@@ -116,18 +126,28 @@ pro refpix_counts_vs_pixel_base_event, Event
         
         refpix_pixels = (*global_refpix).refpix_pixels
         
+        _id = widget_info(event.top, find_by_uname='refpix_counts_vs_pixel_draw')
+        widget_control, event.top, get_uvalue=global_counts
+        widget_control, _id, GET_VALUE = _plot_id
+        wset, _plot_id
+        
         cursor, x,y, /data, /nowait
         ;1b for pixel1, 0b for pixel2
         pixel1_working = (*global_refpix).pixel1_selected
         if (pixel1_working) then begin
           refpix_pixels[0] = x
+          uname = 'refpix_pixel1_uname'
         endif else begin
-        refpix_pixels[1] = x
+          refpix_pixels[1] = x
+          uname = 'refpix_pixel2_uname'
         endelse
         (*global_refpix).refpix_pixels = refpix_pixels
-        
+        refpix_input_base = (*global_refpix).refpix_input_base
+        putValue, base=refpix_input_base, uname, strcompress(x,/remove_all)
+        top_base = (*global_refpix).top_base
+        calculate_refpix, base=top_base
         display_counts_vs_pixel, event=event, global_refpix
-
+        display_refpixel_pixels, base=(*global_refpix).top_base
       endif
       
     end
@@ -188,14 +208,14 @@ pro display_counts_vs_pixel, base=base, event=event, global_refpix
   compile_opt idl2
   
   if (keyword_set(event)) then begin
-    id = widget_info(event.top, find_by_uname='refpix_counts_vs_pixel_draw')
+    _id = widget_info(event.top, find_by_uname='refpix_counts_vs_pixel_draw')
     widget_control, event.top, get_uvalue=global_counts
   endif else begin
-    id = widget_info(base, find_by_uname='refpix_counts_vs_pixel_draw')
+    _id = widget_info(base, find_by_uname='refpix_counts_vs_pixel_draw')
     widget_control, base, get_uvalue=global_counts
   endelse
-  widget_control, id, GET_VALUE = plot_id
-  wset, plot_id
+  widget_control, _id, GET_VALUE = _plot_id
+  wset, _plot_id
   
   counts_vs_pixel = (*(*global_refpix).counts_vs_pixel)
   
@@ -370,6 +390,7 @@ pro refpix_counts_vs_pixel_base, event=event, $
     parent_base_geometry
     
   global_counts = ptr_new({ global_refpix: global_refpix,$
+    top_base: top_base, $
     left_click: 0b })
     
   (*global_refpix).refpix_counts_vs_pixel_base_id = _base
