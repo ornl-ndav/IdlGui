@@ -49,18 +49,7 @@ pro refpix_base_event, Event
   main_event = (*global_refpix).main_event
   
   case Event.id of
-  
-    ;    widget_info(event.top, find_by_unam='plot_setting_untouched'): begin
-    ;      switch_local_settings_plot_values, event
-    ;      refresh_plot, event, recalculate=1
-    ;      return
-    ;    end
-    ;    widget_info(event.top, find_by_unam='plot_setting_interpolated'): begin
-    ;      switch_local_settings_plot_values, event
-    ;      refresh_plot, event, recalculate=1
-    ;      return
-    ;    end
-  
+    
     ;main draw
     widget_info(event.top, find_by_uname='refpix_draw'): begin
     
@@ -1209,38 +1198,6 @@ pro refpix_base_gui, wBase, $
     scr_ysize = ysize,$
     retain=2)
     
-  ;  ;refpix selection row
-  ;  row2 = widget_base(wBase,$
-  ;  xoffset = 0,$
-  ;  yoffset = ysize,$
-  ;  /row)
-  ;
-  ;  space = widget_label(row2, $
-  ;  value = '    ')
-  ;  pixel1 = cw_field(row2, $
-  ;  title = 'Pixel 1:', $
-  ;  /integer, $
-  ;  xsize = 3, $
-  ;  /return_events, $
-  ;  /row, $
-  ;  value = '')
-  ;
-  ;  pixel2 = cw_field(row2, $
-  ;  title = '    Pixel 2:', $
-  ;  /integer, $
-  ;  xsize = 3, $
-  ;  /return_events, $
-  ;  /row, $
-  ;  value = '')
-  ;
-  ;  label = widget_label(row2,$
-  ;  value = '     ----->     refpix:')
-  ;  refpix = widget_label(row2,$
-  ;  value = 'N/A',$
-  ;  scr_xsize = 50,$
-  ;  /align_left,$
-  ;  uname = 'refpix_value')
-    
   mPlot = widget_button(bar1, $
     value = 'Type ',$
     /menu)
@@ -1465,10 +1422,6 @@ pro refpix_base, main_base=main_base, $
     congrid_xcoeff: 0., $ ;x coeff used in the congrid function to plot main data
     congrid_ycoeff: 0., $ ;y coeff used in the congrid function to plot main data
     
-    ;plot_setting1: plot_setting1,$
-    ;plot_setting2: plot_setting2,$
-    ;plot_setting: current_plot_setting,$ ;untouched or interpolated
-    
     top_base: wBase, $
     main_event: event})
     
@@ -1507,10 +1460,7 @@ pro refpix_base, main_base=main_base, $
   geometry = widget_info(id,/geometry)
   _xsize = geometry.scr_xsize
   _ysize = geometry.scr_ysize
-  
-  ;  (*global_plot).congrid_xcoeff = _xsize-2*border-colorbar_xsize
-  ;  (*global_plot).congrid_ycoeff = _ysize-2*border
-  
+    
   (*global_refpix).congrid_xcoeff = xsize
   (*global_refpix).congrid_ycoeff = ysize
   
