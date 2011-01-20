@@ -766,8 +766,8 @@ end
 ; :Author: j35
 ;-
 function IDLnexusUtilitiesTest::test_REF_M_new_dirpix_value
-compile_opt idl2
-
+  compile_opt idl2
+  
   file_name = 'unit_test_files/REF_M_8324.nxs'
   myObject = obj_new('IDLnexusUtilities',file_name, spin_state='Off_Off')
   v = myObject->get_dirpix()
@@ -786,8 +786,8 @@ end
 ; :Author: j35
 ;-
 function IDLnexusUtilitiesTest::test_REF_M_old_dirpix_value
-compile_opt idl2
-
+  compile_opt idl2
+  
   file_name = 'unit_test_files/REF_M_5000.nxs'
   myObject = obj_new('IDLnexusUtilities',file_name, spin_state='Off_Off')
   v = myObject->get_dirpix()
@@ -795,6 +795,68 @@ compile_opt idl2
   
   assert, v[0] eq '-999.000', 'Wrong dirpix value REF_M_5000 (old format)'
   
+  return, 1
+end
+
+;+
+; :Description:
+;    Unit test for dimension of detector for REF_L instrument
+;
+; :Author: j35
+;-
+function IDLnexusUtilitiesTest::test_REF_L_detector_dimension
+  compile_opt idl2
+  
+  file_name = 'unit_test_files/REF_L_38955.nxs'
+  myObject = obj_new('IDLnexusUtilities', file_name)
+  dim = myObject->get_detectorDimension()
+  obj_destroy, myObject
+  
+  assert, array_equal(dim,[256,304]), $
+    'Wrong dimension of detector from REF_L_38955'
+    
+  return, 1
+end
+
+;+
+; :Description:
+;    Unit test for dimension of detector for REF_M instrument
+;    (old format of nexus file)
+;
+; :Author: j35
+;-
+function IDLnexusUtilitiesTest::test_REF_M_old_detector_dimension
+  compile_opt idl2
+  
+  file_name = 'unit_test_files/REF_M_5000.nxs'
+  myObject = obj_new('IDLnexusUtilities', file_name, spin_state='Off_Off')
+  dim = myObject->get_detectorDimension()
+  obj_destroy, myObject
+  
+  assert, array_equal(dim,[256,304]), $
+    'Wrong dimension of detector from REF_M_5000 (old format)'
+    
+  return, 1
+end
+
+;+
+; :Description:
+;    Unit test for dimension of detector for REF_M instrument
+;    (new format of nexus file)
+;
+; :Author: j35
+;-
+function IDLnexusUtilitiesTest::test_REF_M_new_detector_dimension
+  compile_opt idl2
+  
+  file_name = 'unit_test_files/REF_M_8324.nxs'
+  myObject = obj_new('IDLnexusUtilities', file_name, spin_state='Off_Off')
+  dim = myObject->get_detectorDimension()
+  obj_destroy, myObject
+  
+  assert, array_equal(dim,[256,304]), $
+    'Wrong dimension of detector from REF_M_8324 (new format)'
+    
   return, 1
 end
 

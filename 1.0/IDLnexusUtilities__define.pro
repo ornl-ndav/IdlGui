@@ -190,7 +190,7 @@ function _get_d_SD_for_ref_m, entry_spin_state = entry_spin_state , $
   old_file_path_units = '/instrument/bank1/SampleDetDis/units'
   new_file_path_value = '/instrument/bank1/SampleDetDis/value/'
   config_path_array   = ['config','instruments','REF_M','d_SD']
-
+  
   value_units = _get_value_units_from_old_new_cfg (fileID = fileID, $
     entry_spin_state = entry_spin_state, $
     old_file_path_value = old_file_path_value, $
@@ -655,6 +655,49 @@ function IDLnexusUtilities::get_dirpix
   
     value = retrieve_value(file_name=self.file_name, path=new_path)
     return, value
+    
+  endelse
+  
+end
+
+;+
+; :Description:
+;    Retrieves the size of the detector (number of pixels in x dimension
+;    and y dimension)
+;
+; :Returns:
+;   [x_dimension, y_dimension]
+;
+; :Author: j35
+;-
+function IDLnexusUtilities::get_detectorDimension
+  compile_opt idl2
+  
+  if (self.instrument eq 'REF_L') then begin ;REF_L
+  
+    path = self.entry_spin_state + '/bank1/data_x_y'
+    data_x_y = retrieve_value(file_name=self.file_name, path=path)
+    return, size(data_x_y,/dim)
+    
+  endif else begin ;REF_M
+  
+    old_path = self.entry_spin_state + '/instrument/bank1/azimuthal_angle'
+    new_path = self.entry_spin_state + '/bank1/data_x_y'
+    
+    ;try first with new format
+    catch, error_format
+    if (error_format ne 0) then begin
+    
+      catch,/cancel
+      azimuthal_angle = retrieve_value(file_name=self.file_name, path=old_path)
+      return, size(azimuthal_angle,/dim)
+      
+    endif else begin
+    
+      data_x_y = retrieve_value(file_name=self.file_name, path=path)
+      return, size(data_x_y,/dim)
+      
+    endelse
     
   endelse
   
