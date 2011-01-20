@@ -87,6 +87,8 @@ pro refpix_counts_vs_pixel_base_event, Event
         wset, _plot_id
         
         cursor, x,y, /data
+        check_pixel_value, x
+        
         ;1b for pixel1, 0b for pixel2
         pixel1_working = (*global_refpix).pixel1_selected
         if (pixel1_working) then begin
@@ -132,6 +134,8 @@ pro refpix_counts_vs_pixel_base_event, Event
         wset, _plot_id
         
         cursor, x,y, /data, /nowait
+        check_pixel_value, x
+        
         ;1b for pixel1, 0b for pixel2
         pixel1_working = (*global_refpix).pixel1_selected
         if (pixel1_working) then begin
@@ -155,6 +159,30 @@ pro refpix_counts_vs_pixel_base_event, Event
     else:
     
   endcase
+  
+end
+
+;+
+; :Description:
+;    Make sure the pixel value is within the following range [0,303]
+;
+; :Params:
+;    x
+;
+; :Author: j35
+;-
+pro check_pixel_value, x
+  compile_opt idl2
+  
+  if (x lt 0) then begin
+    x=0
+    return
+  endif
+  
+  if (x gt 303) then begin
+    x = 303
+    return
+  endif
   
 end
 
