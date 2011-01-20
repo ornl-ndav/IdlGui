@@ -247,14 +247,14 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
         'REF_M_8452.nxs']
       (*(*global).list_data_nexus) = list_data_nexus + ' (' + $
         default_spin_state + ')'
-      list_norm_nexus = input_path + ['REF_M_8455.nxs',$
+      list_norm_nexus = input_path + ['REF_M_8454.nxs',$
         'REF_M_8455.nxs']
       (*(*global).list_norm_nexus) = list_norm_nexus + ' (' + $
         default_spin_state + ')'
     endelse
     
     selected_list_norm_file = (*global).selected_list_norm_file
-    ;    selected_list_norm_file[0:1] = list_norm_nexus
+    selected_list_norm_file[0:1] = list_norm_nexus
     (*global).selected_list_norm_file = selected_list_norm_file
     
     ;activate go button
@@ -278,6 +278,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     select_entire_row, base=main_base, uname='tab1_table'
     refresh_big_table, base=main_base
     retrieve_data_nexus_distances, main_base=main_base
+    retrieve_detector_configuration, main_base=main_base
     refresh_configuration_table, base=main_base
     select_entire_row, base=main_base, uname='ref_m_metadata_table'
     

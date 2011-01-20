@@ -300,6 +300,24 @@ pro design_tabs, MAIN_BASE, global
     uname = 'pixel_size',$
     title = 'Pixel size (mm)')
     
+  ;size of detector
+  _detector_base = widget_base(row1col4,$
+  /row)
+  field3 = widget_label(_detector_base,$
+  value = 'Detector dimension: ')
+  pixel_x = widget_label(_detector_base,$
+  value = 'N/A',$
+  scr_xsize = 30,$
+  /align_left, $
+  uname = 'detector_dimension_x')
+  field4 = widget_label(_detector_base,$
+  value = 'x')
+  pixel_x = widget_label(_detector_base,$
+  value = 'N/A',$
+  scr_xsize = 30,$
+  /align_left, $
+  uname = 'detector_dimension_y')
+    
   space = widget_label(row1,$
     value = '     ')
     

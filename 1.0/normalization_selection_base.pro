@@ -75,6 +75,7 @@ pro normalization_selection_base_event, Event
         click2 = systime(1,/seconds)
         click1 = (*global_norm).click1
         
+        ;double click within the same second
         if ((click2 - click1) lt 1) then begin ;same as hitting OK button
           selection = get_table_lines_selected(event=event, $
             uname='normalization_table')
@@ -90,13 +91,15 @@ pro normalization_selection_base_event, Event
           ;remove all the spin states for each file selected
           list_spins = strarr(to_row - from_row + 1)
           index = from_row
+          
           while (index le to_row) do begin
             split_array = strsplit(main_table[1,index],'(',/extract)
             sz = n_elements(split_array)
             if (sz gt 1) then begin
               list_spins[index-from_row] = split_array[1]
             endif else begin
-              list_spins[index_from_row] = ''
+          global = (*global_norm).global
+          list_spins[index-from_row] = (*global).default_spin_state
             endelse
             index++
           endwhile
@@ -109,9 +112,9 @@ pro normalization_selection_base_event, Event
           
           ;add the old spin states to name of normalization
           if (from_row eq to_row) then begin
-            main_table[1,from_row] += ' (' + list_spins[0]
+            main_table[1,from_row] += ' (' + list_spins[0] + ')'
           endif else begin
-            main_table[1,from_row:to_row] += ' (' + list_spins
+            main_table[1,from_row:to_row] += ' (' + list_spins + ')'
           endelse
           
           putValue, event=main_event, 'tab1_table', main_table
@@ -162,7 +165,8 @@ pro normalization_selection_base_event, Event
         if (sz gt 1) then begin
           list_spins[index-from_row] = split_array[1]
         endif else begin
-          list_spins[index_from_row] = ''
+          global = (*global_norm).global
+          list_spins[index-from_row] = (*global).default_spin_state
         endelse
         index++
       endwhile
@@ -175,9 +179,9 @@ pro normalization_selection_base_event, Event
       
       ;add the old spin states to name of normalization
       if (from_row eq to_row) then begin
-        main_table[1,from_row] += ' (' + list_spins[0]
+        main_table[1,from_row] += ' (' + list_spins[0] + ')'
       endif else begin
-        main_table[1,from_row:to_row] += ' (' + list_spins
+        main_table[1,from_row:to_row] += ' (' + list_spins + ')'
       endelse
       
       putValue, event=main_event, 'tab1_table', main_table
