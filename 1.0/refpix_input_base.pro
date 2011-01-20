@@ -135,6 +135,7 @@ end
 ;-
 pro refpix_input_base_gui, wBase, $
     parent_base_geometry, $
+    default_refpix_value=default_refpix_value, $
     refpix_pixels = refpix_pixels
   compile_opt idl2
   
@@ -205,12 +206,18 @@ pro refpix_input_base_gui, wBase, $
       uname = 'refpix_pixel2_uname')
   endelse
   
+  if (default_refpix_value ne '') then begin
+  _default_refpix_value = strcompress(default_refpix_value,/remove_all)
+  endif else begin
+  _default_refpix_value = 'N/A'
+  endelse
+  
   row2 = widget_base(wBase,$
   /row)
   label = widget_label(row2,$
   value = '     ===>  Refpix:')
   value = widget_label(row2,$
-  value = 'N/A',$
+  value = _default_refpix_value,$
   uname = 'refpix_value_uname',$
   scr_xsize = 100)
   
@@ -300,6 +307,7 @@ end
 ;-
 pro refpix_input_base, event=event, $
     top_base=top_base, $
+    default_refpix_value=default_refpix_value, $
     parent_base_uname = parent_base_uname
   compile_opt idl2
   
@@ -317,6 +325,7 @@ pro refpix_input_base, event=event, $
   _base = 0L
   refpix_input_base_gui, _base, $
     parent_base_geometry, $
+    default_refpix_value=default_refpix_value, $
     refpix_pixels = refpix_pixels
     
   (*global_refpix).refpix_input_base = _base

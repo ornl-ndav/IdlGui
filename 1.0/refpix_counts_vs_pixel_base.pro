@@ -400,6 +400,7 @@ end
 ;-
 pro refpix_counts_vs_pixel_base, event=event, $
     top_base=top_base, $
+    refpix=refpix, $
     parent_base_uname = parent_base_uname
   compile_opt idl2
   
@@ -431,6 +432,24 @@ pro refpix_counts_vs_pixel_base, event=event, $
     /NO_BLOCK
     
   display_counts_vs_pixel, base=_base, global_refpix
+  
+  if (refpix ne '') then begin
+  
+  
+    counts_vs_pixel = (*(*global_refpix).counts_vs_pixel)
+    ymax = max(counts_vs_pixel,min=ymin)
+    
+    _id = widget_info(_base, find_by_uname='refpix_counts_vs_pixel_draw')
+    widget_control, _id, GET_VALUE = _plot_id
+    wset, _plot_id
+    _refpix = float(refpix)
+    plots, _refpix, 1, /data
+    plots, _refpix, ymax, /data, /continue, $
+      color=fsc_color("green"), $
+      thick=2,$
+      linestyle=1
+      
+  endif
   
 end
 
