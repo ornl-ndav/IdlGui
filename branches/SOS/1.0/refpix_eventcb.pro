@@ -61,6 +61,9 @@ pro set_refpix_base, event=event, base=base
     _spin = file_structure.spin
     _full_file_name = file_structure.full_file_name
     
+    config_table = getValue(event=event, uname='ref_m_metadata_table')
+    _refpix = config_table[3,index]
+    
     iNexus = obj_new('IDLnexusUtilities', _full_file_name, spin_state=_spin)
     _data = iNexus->get_full_data()  ;[tof, x, y]
     _tof_axis = iNexus->get_tof_data() ;tof axis in ms
@@ -76,6 +79,7 @@ pro set_refpix_base, event=event, base=base
       x_axis = _tof_axis, $
       y_axis = _pixel_axis, $
       data = _data, $
+      refpix = _refpix, $
       file_name = _short_file_name + ' (' + _spin + ')'
       
     index++

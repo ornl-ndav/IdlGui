@@ -88,9 +88,9 @@ pro refpix_base_event, Event
           display_refpixel_pixels, event=event
           calculate_refpix, event=event
           display_counts_vs_pixel, $
-          base=(*global_refpix).refpix_counts_vs_pixel_base_id, $
-          global_refpix
-           
+            base=(*global_refpix).refpix_counts_vs_pixel_base_id, $
+            global_refpix
+            
           return
         endif
         
@@ -108,8 +108,8 @@ pro refpix_base_event, Event
           endelse
           display_refpixel_pixels, event=event
           display_counts_vs_pixel, $
-          base=(*global_refpix).refpix_counts_vs_pixel_base_id, $
-          global_refpix
+            base=(*global_refpix).refpix_counts_vs_pixel_base_id, $
+            global_refpix
         endif
         
         if ((*global_refpix).left_click) then begin ;moving mouse
@@ -124,9 +124,9 @@ pro refpix_base_event, Event
           display_refpixel_pixels, event=event
           calculate_refpix, event=event
           display_counts_vs_pixel, $
-          base=(*global_refpix).refpix_counts_vs_pixel_base_id, $
-          global_refpix
-          
+            base=(*global_refpix).refpix_counts_vs_pixel_base_id, $
+            global_refpix
+            
         endif
         
       endif else begin ;entering or leaving widget_draw
@@ -263,8 +263,8 @@ pro calculate_refpix, event=event, base=base
   
   refpix = (float(pixel1)+float(pixel2))/2.
   putValue, base=refpix_input_base, 'refpix_value_uname', $
-  strcompress(refpix,/remove_all)
-  
+    strcompress(refpix,/remove_all)
+    
 end
 
 ;+
@@ -372,14 +372,14 @@ end
 
 ;+
 ; :Description:
-;    Go from device to data coordinates
+;    Go from data to device
 ;
 ; :Params:
 ;    data
 ;
 ; :Author: j35
 ;-
-function from_device_to_data, event=event, base=base, ydata
+function from_data_to_device, event=event, base=base, ydata
   compile_opt idl2
   
   if (keyword_set(event)) then begin
@@ -421,14 +421,14 @@ pro display_refpixel_pixels, event=event, base=base
   widget_control, id, GET_VALUE = plot_id
   wset, plot_id
   TV, (*(*global_refpix).background), true=3
-
+  
   refpix_pixels = (*global_refpix).refpix_pixels ;in data coordinates
   
   pixel1_data = refpix_pixels[0]
   pixel2_data = refpix_pixels[1]
   
-  pixel1_device = from_device_to_data(event=event, base=base, pixel1_data)
-  pixel2_device = from_device_to_data(event=event, base=base, pixel2_data)
+  pixel1_device = from_data_to_device(event=event, base=base, pixel1_data)
+  pixel2_device = from_data_to_device(event=event, base=base, pixel2_data)
   
   xsize = (*global_refpix).xsize
   
@@ -472,7 +472,7 @@ pro display_refpixel_pixels, event=event, base=base
   if (pixel2_data eq 0) then return
   
   refpix_data = (float(pixel1_data)+float(pixel2_data))/2.
-  refpix_device = from_device_to_data(event=event, base=base, refpix_data)
+  refpix_device = from_data_to_device(event=event, base=base, refpix_data)
   plots, [0, 0, xsize, xsize, 0],$
     [refpix_device, refpix_device, refpix_device, refpix_device, refpix_device],$
     /DEVICE,$
@@ -1361,6 +1361,7 @@ pro refpix_base, main_base=main_base, $
     x_axis = x_axis, $
     y_axis = y_axis, $
     data = data, $
+    refpix = refpix, $
     file_name = file_name
     
   compile_opt idl2
@@ -1402,11 +1403,11 @@ pro refpix_base, main_base=main_base, $
     
     refpix_input_base: 0L, $ ;id of refpix_input_base
     refpix_counts_vs_pixel_base_id: 0L, $ 'id of refpix_counts_vs_tof_base
-    counts_vs_pixel_scale_is_linear: 0b, $ ;counts vs pixel (linear/log)
-    
+  counts_vs_pixel_scale_is_linear: 0b, $ ;counts vs pixel (linear/log)
+  
     ;used to plot selection zoom
     default_plot_size: default_plot_size, $
-  
+    
     counts_vs_xaxis_yaxis_type: 0,$ ;0 for linear, 1 for log
     counts_vs_yaxis_yaxis_type: 0,$ ;0 for linear, 1 for log
     
@@ -1546,11 +1547,32 @@ pro refpix_base, main_base=main_base, $
   
   ;bring to life the refpix pixel1 and 2 input base
   refpix_input_base, parent_base_uname = 'refpix_base_uname', $
+    default_refpix_value=refpix, $
     top_base=wBase_copy1
     
   ;bring to life the base that show counts vs tof
   refpix_counts_vs_pixel_base, parent_base_uname='refpix_base_uname', $
+    refpix=refpix, $
     top_base=wBase_copy
     
+  ;display the already selected refpix
+  if (refpix ne '') then begin
+  
+    widget_control, wBase_copy, get_uvalue=global_refpix
+    id = widget_info(wBase_copy, find_by_uname='refpix_draw')
+    widget_control, id, GET_VALUE = plot_id
+    wset, plot_id
+    
+    pixel1_device = from_data_to_device(base=wBase_copy, refpix)
+    xsize = (*global_refpix).xsize
+    
+    plots, [0, 0, xsize, xsize, 0],$
+      [pixel1_device, pixel1_device, pixel1_device, pixel1_device, pixel1_device],$
+      /DEVICE,$
+      LINESTYLE = 1,$
+      COLOR = fsc_color("green")
+      
+  endif
+  
 end
 
