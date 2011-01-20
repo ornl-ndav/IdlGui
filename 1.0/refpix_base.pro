@@ -417,13 +417,11 @@ pro display_refpixel_pixels, event=event, base=base
   endif else begin
     widget_control, base, get_uvalue=global_refpix
     id = widget_info(base, find_by_uname='refpix_draw')
-    widget_control, id, GET_VALUE = plot_id
   endelse
-  
   widget_control, id, GET_VALUE = plot_id
   wset, plot_id
   TV, (*(*global_refpix).background), true=3
-  
+
   refpix_pixels = (*global_refpix).refpix_pixels ;in data coordinates
   
   pixel1_data = refpix_pixels[0]
@@ -1390,7 +1388,8 @@ pro refpix_base, main_base=main_base, $
     file_name = file_name, $
     scale_setting = default_scale_setting,$
     default_plot_size = default_plot_size
-  _wBase = wBase
+  wBase_copy = wBase
+  wBase_copy1 = wBase
   
   WIDGET_CONTROL, wBase, /REALIZE
   
@@ -1547,11 +1546,11 @@ pro refpix_base, main_base=main_base, $
   
   ;bring to life the refpix pixel1 and 2 input base
   refpix_input_base, parent_base_uname = 'refpix_base_uname', $
-    top_base=wBase
+    top_base=wBase_copy1
     
   ;bring to life the base that show counts vs tof
   refpix_counts_vs_pixel_base, parent_base_uname='refpix_base_uname', $
-    top_base=_wBase
+    top_base=wBase_copy
     
 end
 
