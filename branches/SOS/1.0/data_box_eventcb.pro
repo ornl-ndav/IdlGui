@@ -157,6 +157,50 @@ end
 
 ;+
 ; :Description:
+;    retrieve the dimension of the detector (ex: 256 by 304)
+;
+; :Keywords:
+;    event
+;    main_base
+;
+; :Author: j35
+;-
+pro retrieve_detector_configuration, event=event, main_base=main_base
+  compile_opt idl2
+  
+  if (keyword_set(event)) then begin
+    widget_control, event.top, get_uvalue=global
+  endif else begin
+    widget_control, main_base, get_uvalue=global
+  endelse
+  
+  big_table = (*global).big_table
+  
+  instrument = (*global).instrument
+  if (instrument eq 'REF_M') then begin
+  
+    first_data_nexus_array = strsplit(big_table[0,0],'(',/extract)
+    first_data_nexus = strtrim(first_data_nexus_array[0],2)
+    iNexus = obj_new('IDLnexusUtilities', first_data_nexus, $
+      spin_state='Off_Off')
+  endif else begin ;REF_L
+    iNexus = obj_new('IDLnexusUtilities', first_data_nexus)
+  endelse
+  if (obj_valid(iNexus)) then begin
+    detector_dimension = iNexus->get_detectorDimension()
+    obj_destroy, iNexus
+  endif
+  
+  _x = strcompress(detector_dimension[0],/remove_all)
+  _y = strcompress(detector_dimension[1],/remove_all)
+  
+  putValue, base=main_base, event=event, 'detector_dimension_x', _x
+  putValue, base=main_base, event=event, 'detector_dimension_y', _y
+  
+end
+
+;+
+; :Description:
 ;    Using the first data nexus file loaded, this routine
 ;    retrieves the distance Sample to Detector and Moderator to Detector
 ;
@@ -175,15 +219,16 @@ pro retrieve_data_nexus_distances, event=event, main_base=main_base
     widget_control, main_base, get_uvalue=global
   endelse
   
+  big_table = (*global).big_table
+  
   instrument = (*global).instrument
   if (instrument eq 'REF_M') then begin
   
-    big_table = (*global).big_table
     first_data_nexus_array = strsplit(big_table[0,0],'(',/extract)
     first_data_nexus = strtrim(first_data_nexus_array[0],2)
-
+    
     iNexus = obj_new('IDLnexusUtilities', first_data_nexus, $
-    spin_state='Off_Off')
+      spin_state='Off_Off')
     d_SD = iNexus->get_d_SD()
     obj_destroy, iNexus
     d_SD_mm = abs(convert_distance(distance = d_SD.value,$
@@ -193,11 +238,10 @@ pro retrieve_data_nexus_distances, event=event, main_base=main_base
     
   endif else begin
   
-  big_table = (*global).big_table
-  first_data_nexus = big_table[0,0]
-  
-  if (first_data_nexus eq '') then return
-  
+    first_data_nexus = big_table[0,0]
+    
+    if (first_data_nexus eq '') then return
+    
     iNexus = obj_new('IDLnexusUtilities', first_data_nexus)
     d_SD = iNexus->get_d_SD()
     d_MS = iNexus->get_d_MS()
