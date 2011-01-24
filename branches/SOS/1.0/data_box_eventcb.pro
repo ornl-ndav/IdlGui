@@ -187,7 +187,6 @@ pro retrieve_detector_configuration, event=event, main_base=main_base
   endif else begin ;REF_L
     
     first_data_nexus = big_table[0,0]
-    print, 'first_data_nexus: ' , first_data_nexus
     
     iNexus = obj_new('IDLnexusUtilities', first_data_nexus)
   endelse
