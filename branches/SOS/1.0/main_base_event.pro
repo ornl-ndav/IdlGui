@@ -244,6 +244,7 @@ PRO main_base_event, Event
         main_base_uname='main_base', $
         from_row = from_row, $
         to_row = to_row
+      check_go_button, event=event
     end
     
     ;delete row
