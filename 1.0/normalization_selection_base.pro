@@ -80,13 +80,16 @@ pro normalization_selection_base_event, Event
           selection = get_table_lines_selected(event=event, $
             uname='normalization_table')
           row_selected = selection[1]
-                normalization_files = getValue(event=event, uname='normalization_table')
+          normalization_files = getValue(event=event, $
+            uname='normalization_table')
           ;normalization_files = (*global_norm).normalization_files
           normalization_file_selected = normalization_files[row_selected]
           
           from_row = (*global_norm).from_row
           to_row = (*global_norm).to_row
           main_table = getValue(event=main_event, uname='tab1_table')
+          
+          global = (*global_norm).global
           
           ;remove all the spin states for each file selected
           list_spins = strarr(to_row - from_row + 1)
@@ -98,8 +101,7 @@ pro normalization_selection_base_event, Event
             if (sz gt 1) then begin
               list_spins[index-from_row] = split_array[1]
             endif else begin
-          global = (*global_norm).global
-          list_spins[index-from_row] = (*global).default_spin_state
+              list_spins[index-from_row] = (*global).default_spin_state
             endelse
             index++
           endwhile
@@ -110,13 +112,15 @@ pro normalization_selection_base_event, Event
             main_table[1,from_row:to_row] = normalization_file_selected
           endelse
           
-          ;add the old spin states to name of normalization
-          if (from_row eq to_row) then begin
-            main_table[1,from_row] += ' (' + list_spins[0] + ')'
-          endif else begin
-            main_table[1,from_row:to_row] += ' (' + list_spins + ')'
-          endelse
-          
+          ;add the old spin states to name of normalization for REF_M only
+          instrument = (*global).instrument
+          if (instrument eq 'REF_M') then begin ;for REF_M only
+            if (from_row eq to_row) then begin
+              main_table[1,from_row] += ' (' + list_spins[0] + ')'
+            endif else begin
+              main_table[1,from_row:to_row] += ' (' + list_spins + ')'
+            endelse
+          endif
           putValue, event=main_event, 'tab1_table', main_table
           
           id = widget_info(Event.top, $
@@ -149,12 +153,14 @@ pro normalization_selection_base_event, Event
       row_selected = selection[1]
       
       normalization_files = getValue(event=event, uname='normalization_table')
-;      normalization_files = (*global_norm).normalization_files
+      ;      normalization_files = (*global_norm).normalization_files
       normalization_file_selected = normalization_files[row_selected]
       
       from_row = (*global_norm).from_row
       to_row = (*global_norm).to_row
       main_table = getValue(event=main_event, uname='tab1_table')
+      
+      global = (*global_norm).global
       
       ;remove all the spin states for each file selected
       list_spins = strarr(to_row - from_row + 1)
@@ -165,7 +171,6 @@ pro normalization_selection_base_event, Event
         if (sz gt 1) then begin
           list_spins[index-from_row] = split_array[1]
         endif else begin
-          global = (*global_norm).global
           list_spins[index-from_row] = (*global).default_spin_state
         endelse
         index++
@@ -177,13 +182,15 @@ pro normalization_selection_base_event, Event
         main_table[1,from_row:to_row] = normalization_file_selected
       endelse
       
-      ;add the old spin states to name of normalization
-      if (from_row eq to_row) then begin
-        main_table[1,from_row] += ' (' + list_spins[0] + ')'
-      endif else begin
-        main_table[1,from_row:to_row] += ' (' + list_spins + ')'
-      endelse
-      
+      ;add the old spin states to name of normalization for REF_M only
+      instrument = (*global).instrument
+      if (instrument eq 'REF_M') then begin
+        if (from_row eq to_row) then begin
+          main_table[1,from_row] += ' (' + list_spins[0] + ')'
+        endif else begin
+          main_table[1,from_row:to_row] += ' (' + list_spins + ')'
+        endelse
+      endif
       putValue, event=main_event, 'tab1_table', main_table
       
       id = widget_info(Event.top, $
@@ -316,7 +323,7 @@ pro normalization_selection_base, main_base_uname=main_base_uname, $
   table_value = getValue(event=event, uname='tab1_table')
   ;normalization_files = table_value[1,*]
   normalization_files = (*global).selected_list_norm_file
-
+  
   ;reject duplicated runs
   normalization_files = normalization_files[uniq(normalization_files)]
   
@@ -331,8 +338,8 @@ pro normalization_selection_base, main_base_uname=main_base_uname, $
   for i=0,(sz-1) do begin
     split_array = strsplit(normalization_files[i],'(',/extract)
     normalization_files[i] = split_array[0]
-  endfor  
-
+  endfor
+  
   if (from_row eq to_row) then begin
     data_files = [table_value[0,from_row]]
   endif else begin
