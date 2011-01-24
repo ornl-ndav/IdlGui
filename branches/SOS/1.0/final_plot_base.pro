@@ -708,10 +708,14 @@ pro final_plot_gui, wBase, $
     event_pro = 'show_counts_vs_yaxis',$
     uname = 'show_counts_vs_yaxis_uname')
     
-;    set4 = widget_button(info,$
-;    value = 'General informations',$
-;    event_pro = 'general_infos',$
-;    /separator)
+  help = widget_button(bar1, $
+  value = 'HELP', $
+  /menu)
+  
+  _help = widget_button(help, $
+  value = 'Manual',$
+  event_pro = 'final_plot_help',$
+  uname = 'final_plot_help_uname')
     
 ;-------- end of menu
     
