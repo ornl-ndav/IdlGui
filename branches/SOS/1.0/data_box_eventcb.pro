@@ -175,6 +175,7 @@ pro retrieve_detector_configuration, event=event, main_base=main_base
   endelse
   
   big_table = (*global).big_table
+  if (big_table[0,0] eq '') then return ;quit if not files loaded
   
   instrument = (*global).instrument
   if (instrument eq 'REF_M') then begin
@@ -184,6 +185,10 @@ pro retrieve_detector_configuration, event=event, main_base=main_base
     iNexus = obj_new('IDLnexusUtilities', first_data_nexus, $
       spin_state='Off_Off')
   endif else begin ;REF_L
+    
+    first_data_nexus = big_table[0,0]
+    print, 'first_data_nexus: ' , first_data_nexus
+    
     iNexus = obj_new('IDLnexusUtilities', first_data_nexus)
   endelse
   if (obj_valid(iNexus)) then begin
