@@ -123,6 +123,8 @@ pro normalization_selection_base_event, Event
           endif
           putValue, event=main_event, 'tab1_table', main_table
           
+          (*global).big_table = main_table
+          
           id = widget_info(Event.top, $
             find_by_uname='normalization_selection_base')
           widget_control, id, /destroy
@@ -192,6 +194,8 @@ pro normalization_selection_base_event, Event
         endelse
       endif
       putValue, event=main_event, 'tab1_table', main_table
+      
+      (*global).big_table = main_table
       
       id = widget_info(Event.top, $
         find_by_uname='normalization_selection_base')
