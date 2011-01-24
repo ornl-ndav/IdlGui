@@ -112,7 +112,9 @@ pro refresh_configuration_table, base=base, event=event
   endelse
   
   instrument = (*global).instrument
+  
   if (instrument eq 'REF_L') then return
+  if (instrument eq '') then return ;no instrument detected
   
   ;get big table
   big_table = getValue(event=event,base=base, uname='tab1_table')
