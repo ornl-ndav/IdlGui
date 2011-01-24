@@ -69,9 +69,16 @@ pro check_go_button, event=event, base=base
         first_empty_row = get_first_empty_row_index(big_table, type='data')
         _index = 0
         while(_index lt first_empty_row) do begin
-          if (big_table[1,_index] eq '') then begin
+        ;check if normalization file is missing or not
+          if (big_table[1,_index] eq '') then begin 
             activate_go_button = 0
             break
+          endif
+          ;check that refpix has been defined as well
+          config_table = getValue(event=event,base=base,uname='ref_m_metadata_table')
+          if (config_table[3,_index] eq '') then begin
+          activate_go_button = 0
+          break
           endif
           _index++
         endwhile
