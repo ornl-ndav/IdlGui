@@ -281,9 +281,13 @@ pro plot_counts_vs_xaxis, event, clear=clear
     nan_array = where(data eq 0)
     data[nan_array] = !values.f_nan
     
+    ymax = max(_data)
+    yrange = [0.01,ymax]
+    
     plot, x_axis, _data, $
       xtitle='Qx', $
       ytitle='Counts', $
+      yrange = yrange, $
       /ylog
     is_linear = 0
     
@@ -378,7 +382,17 @@ pro plot_counts_vs_yaxis, event, clear=clear
     ;remove the 0 values
     nan_array = where(data eq 0)
     data[nan_array] = !values.f_nan
-    plot, xrange, _data, xtitle='Qz', ytitle='Counts',/ylog
+    
+     ymax = max(_data)
+    yrange = [0.01,ymax]
+    
+    plot, xrange, $
+    _data, $
+    xtitle='Qz', $
+    ytitle='Counts',$
+    /ylog, $
+    yrange = yrange
+    
   endelse
   
   (*(*global_plot).counts_vs_qz_xaxis) = xrange
