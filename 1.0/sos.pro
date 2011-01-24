@@ -77,7 +77,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   date = GenerateReadableIsoTimeStamp()
   
   if (strlowcase(debugger) eq 'yes') then begin
-    instrument = 'REF_M'
+    instrument = 'REF_L'
   endif else begin
     instrument = getInstrument()
   endelse
@@ -229,6 +229,8 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     endelse
     (*global).input_path = input_path
     
+    selected_list_norm_file = (*global).selected_list_norm_file
+
     if (instrument EQ 'REF_L') then begin ;REF_L instrument
       list_data_nexus = input_path + ['REF_L_34432.nxs',$
         'REF_L_34433.nxs', $
@@ -251,10 +253,9 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
         'REF_M_8455.nxs']
       (*(*global).list_norm_nexus) = list_norm_nexus + ' (' + $
         default_spin_state + ')'
+    selected_list_norm_file[0:1] = list_norm_nexus
     endelse
     
-    selected_list_norm_file = (*global).selected_list_norm_file
-    selected_list_norm_file[0:1] = list_norm_nexus
     (*global).selected_list_norm_file = selected_list_norm_file
     
     ;activate go button
