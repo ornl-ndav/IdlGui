@@ -78,7 +78,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   date = GenerateReadableIsoTimeStamp()
   
   if (strlowcase(debugger) eq 'yes') then begin
-    instrument = 'REF_L'
+    instrument = 'REF_M'
   endif else begin
     instrument = getInstrument()
   endelse
@@ -130,6 +130,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
     instrument: instrument,$ ;name of instrument
     PrevTabSelect: 0, $
+    NexusPrevTabSelect: 0, $
     
     SD_d: 0., $ ;distance sample detector
     MD_d: 0., $ ;distance moderator detector
@@ -273,10 +274,12 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     putvalue, base=main_base, 'rtof_file_text_field_uname', rtof_file
     
     ;tab to show by default
-    tab_to_show = 0
     ;id = widget_info(main_base, find_by_uname='tab_uname')
+
+    nexus_tab_to_show = 0
     id = widget_info(main_base, find_by_uname='nexus_tab_uname')
-    widget_control, id, set_tab_current=tab_to_show
+    widget_control, id, set_tab_current=nexus_tab_to_show
+    (*global).NexusPrevTabSelect = nexus_tab_to_show
     
     ;    endif
     

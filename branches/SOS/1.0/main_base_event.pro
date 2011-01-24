@@ -86,7 +86,7 @@ PRO main_base_event, Event
       widget_control, id_table, scr_ysize = (*global).table_ysize + delta_y
       widget_control, id_table, scr_xsize = (*global).table_xsize
       widget_control, id_config_table, scr_ysize = $
-      (*global).table_metadata_ysize + delta_y
+        (*global).table_metadata_ysize + delta_y
       widget_control, id_config_table, scr_xsize = (*global).table_metadata_xsize
       widget_control, id, scr_xsize = (*global).main_base_xsize
       return
@@ -148,6 +148,22 @@ PRO main_base_event, Event
       endif
     end
     
+    ;input files and Configuration tabs
+    widget_info(wWidget, find_by_uname='nexus_tab_uname'): begin
+      id = event.id
+      CurrTabSelect = widget_info(id,/tab_current)
+      PrevTabSelect = (*global).NexusPrevTabSelect
+      if (CurrTabSelect ne PrevTabSelect) then begin
+        check_go_button, event=event
+        case (CurrTabSelect) of
+          0:
+          1:
+          else:
+        endcase
+        (*global).NexusPrevTabSelect = CurrTabSelect
+      endif
+    end
+    
     ;TAB1
     ;Data run numbers text field
     widget_info(wWidget, find_by_uname='data_run_numbers_text_field'): begin
@@ -156,7 +172,7 @@ PRO main_base_event, Event
       clear_text_field, event=event, uname='data_run_numbers_text_field'
       ;retrieve distances from first data nexus file loaded
       retrieve_data_nexus_distances, event=event
-      retrieve_detector_configuration, event=event      
+      retrieve_detector_configuration, event=event
       refresh_configuration_table, event=event
       widget_control, hourglass=0
       check_go_button, event=event
@@ -318,7 +334,8 @@ PRO main_base_event, Event
     widget_info(wWidget, find_by_uname='ref_m_metadata_table'): begin
       ;select entire rows of selection
       select_entire_row, event=event, uname='ref_m_metadata_table'
-      
+      check_go_button, event=event
+
       if (tag_names(event, /structure_name) EQ 'WIDGET_CONTEXT') THEN BEGIN
         if (isConfigurationRowNotEmpty(event)) then begin
           id = widget_info(event.top, $
