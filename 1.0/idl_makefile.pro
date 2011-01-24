@@ -70,6 +70,7 @@ cd, CurrentFolder
 .run go_nexus_reduction_eventcb.pro
 .run go_nexus_reduction.pro
 .run final_plot_base.pro
+.run final_plot_help.pro
 .run save_background.pro
 .run plot_colorbar.pro
 .run final_plot_eventcb.pro

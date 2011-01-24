@@ -49,6 +49,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   APPLICATION = file->getValue(tag=['configuration','application'])
   VERSION  = file->getValue(tag=['configuration','version'])
   DEBUGGER = file->getValue(tag=['configuration','debugging'])
+  help = file->getValue(tag=['configuration','help'])
   debugging_instrument = file->getValue(tag=['configuration','instrument'])
   auto_cleaning_data = file->getValue(tag=['configuration','auto_cleaning'])
   scaled_specular = file->getValue(tag=['configuration','plot',$
@@ -83,6 +84,10 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   endelse
   
   global = ptr_new({ $
+  
+    help_to_use: help, $ ;'local' or 'deployed'
+    myHelp: 'help/sos.adp', $
+    Help: '/SNS/software/idltools/help/SOS/sos.adp', $
   
     applicaiton: APPLICATION, $
     version: VERSION, $
@@ -268,7 +273,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     putvalue, base=main_base, 'rtof_file_text_field_uname', rtof_file
     
     ;tab to show by default
-    tab_to_show = 1
+    tab_to_show = 0
     ;id = widget_info(main_base, find_by_uname='tab_uname')
     id = widget_info(main_base, find_by_uname='nexus_tab_uname')
     widget_control, id, set_tab_current=tab_to_show
