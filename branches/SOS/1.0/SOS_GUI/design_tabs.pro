@@ -196,6 +196,34 @@ pro design_tabs, MAIN_BASE, global
     uname='nexus_tab1',$
     title = '  Configuration  ')
     
+  ;for REF_M only, spin state selection and metadata table
+  if ((*global).instrument eq 'REF_M') then begin
+  
+    other_spins = widget_base(nexus_tab1,$
+      xoffset = 700,$
+      yoffset = 115,$
+      /row)
+    label = widget_label(other_spins,$
+      value = 'Spins:')
+    buttons = widget_base(other_spins,$
+      /row,$
+      /nonexclusive)
+    spin1 = widget_button(buttons,$
+      uname = 'config_spin_off_off',$
+      sensitive = 0,$
+      value = 'Off_Off')
+    spin1 = widget_button(buttons,$
+      uname = 'config_spin_off_on',$
+      value = 'Off_On')
+    spin1 = widget_button(buttons,$
+      uname = 'config_spin_on_off',$
+      value = 'On_Off')
+    spin1 = widget_button(buttons,$
+      uname = 'config_spin_on_on',$
+      value = 'On_On')
+      
+  endif
+  
   _base = widget_base(nexus_tab1,$
     xoffset = 10,$
     yoffset = 20,$
@@ -302,21 +330,21 @@ pro design_tabs, MAIN_BASE, global
     
   ;size of detector
   _detector_base = widget_base(row1col4,$
-  /row)
+    /row)
   field3 = widget_label(_detector_base,$
-  value = 'Detector dimension: ')
+    value = 'Detector dimension: ')
   pixel_x = widget_label(_detector_base,$
-  value = 'N/A',$
-  scr_xsize = 30,$
-  /align_left, $
-  uname = 'detector_dimension_x')
+    value = 'N/A',$
+    scr_xsize = 30,$
+    /align_left, $
+    uname = 'detector_dimension_x')
   field4 = widget_label(_detector_base,$
-  value = 'x')
+    value = 'x')
   pixel_x = widget_label(_detector_base,$
-  value = 'N/A',$
-  scr_xsize = 30,$
-  /align_left, $
-  uname = 'detector_dimension_y')
+    value = 'N/A',$
+    scr_xsize = 30,$
+    /align_left, $
+    uname = 'detector_dimension_y')
     
   space = widget_label(row1,$
     value = '     ')
@@ -359,7 +387,8 @@ pro design_tabs, MAIN_BASE, global
     uname = 'd_md_uname',$
     title = 'Distance moderator to detector (mm) ')
     
-  ;for REF_M only, metadata table
+    
+  ;for REF_M only, spin state selection and metadata table
   if ((*global).instrument eq 'REF_M') then begin
   
     row2 = widget_base(para_box,$
@@ -398,7 +427,7 @@ pro design_tabs, MAIN_BASE, global
       uname = 'set_refpix_button')
       
   endif
-    
+  
   if ((*global).hide_tab_2 eq 'no') then begin
   
     ;********* tab 2 **********************************************************

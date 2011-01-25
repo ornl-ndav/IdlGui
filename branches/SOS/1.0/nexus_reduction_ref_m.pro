@@ -77,7 +77,7 @@ pro go_nexus_reduction_ref_m, event
     return
   endif else begin
   
-    message = ['> Running NeXus reduction: ']
+    message = ['> Running NeXus reduction for REF_M: ']
     
     widget_control, /hourglass
     show_progress_bar, event
@@ -96,9 +96,23 @@ pro go_nexus_reduction_ref_m, event
     list_data_nexus = list_data_nexus[not_empty]
     file_num = n_elements(list_data_nexus)
     
+    ;retrieve refpix values
+    config_table = getValue(event=event,uname='ref_m_metadata_table')
+    refpix_list = config_table[3,*]
+    refpix_list = reform(refpix_list)
+    refpix = refpix_list[not_empty]
+    
     ;file_num -> for each normalization loading
     total_number_of_processes = 7 + 2*file_num + file_num
     
+
+
+
+
+
+
+
+
     list_norm_nexus = big_table[1,*]
     list_norm_nexus = reform(list_norm_nexus)
     not_empty = where(list_norm_nexus ne '')
