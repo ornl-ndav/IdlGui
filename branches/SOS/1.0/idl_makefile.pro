@@ -69,6 +69,8 @@ cd, CurrentFolder
 .run log_book_eventcb.pro
 .run go_nexus_reduction_eventcb.pro
 .run go_nexus_reduction.pro
+.run nexus_reduction_ref_l.pro
+.run nexus_reduction_ref_m.pro
 .run final_plot_base.pro
 .run final_plot_help.pro
 .run save_background.pro
