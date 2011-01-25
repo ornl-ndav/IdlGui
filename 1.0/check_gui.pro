@@ -69,16 +69,18 @@ pro check_go_button, event=event, base=base
         first_empty_row = get_first_empty_row_index(big_table, type='data')
         _index = 0
         while(_index lt first_empty_row) do begin
-        ;check if normalization file is missing or not
-          if (big_table[1,_index] eq '') then begin 
+          ;check if normalization file is missing or not
+          if (big_table[1,_index] eq '') then begin
             activate_go_button = 0
             break
           endif
-          ;check that refpix has been defined as well
-          config_table = getValue(event=event,base=base,uname='ref_m_metadata_table')
-          if (config_table[3,_index] eq '') then begin
-          activate_go_button = 0
-          break
+          ;check that refpix has been defined as well for REF_M only
+          if ((*global).instrument eq 'REF_M') then begin
+            config_table = getValue(event=event,base=base,uname='ref_m_metadata_table')
+            if (config_table[3,_index] eq '') then begin
+              activate_go_button = 0
+              break
+            endif
           endif
           _index++
         endwhile
@@ -89,7 +91,7 @@ pro check_go_button, event=event, base=base
     
       rtof_nexus_geometry_exist = (*global).rtof_nexus_geometry_exist
       rtof_file = getValue(event=event,base=base, $
-      uname='rtof_file_text_field_uname')
+        uname='rtof_file_text_field_uname')
       rtof_file_status = file_test(rtof_file[0])
       if (rtof_file_status && rtof_nexus_geometry_exist) then begin
         activate_go_button = 1
