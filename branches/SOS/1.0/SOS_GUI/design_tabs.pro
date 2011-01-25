@@ -156,38 +156,38 @@ pro design_tabs, MAIN_BASE, global
     uname = 'table_delete_row',$
     /separator)
   off_off = widget_button(contextBase,$
-    value = 'Data Off_Off',$
+    value = 'Off_Off for all data files',$
     uname = 'data_off_off',$
     /separator,$
     sensitive = 0)
   off_on = widget_button(contextBase,$
-    value = 'Data Off_On',$
+    value = 'Off_On for all data files',$
     uname = 'data_off_on',$
     sensitive = 0)
   on_off = widget_button(contextBase,$
-    value = 'Data On_Off',$
+    value = 'On_Off for all data files',$
     uname = 'data_on_off',$
     sensitive = 0)
   on_on = widget_button(contextBase,$
-    value = 'Data On_On',$
+    value = 'On_On for all data files',$
     uname = 'data_on_on',$
     sensitive = 1)
     
   off_off = widget_button(contextBase,$
-    value = 'Norm. Off_Off',$
+    value = 'Off_Off for selected normalization file',$
     uname = 'norm_off_off',$
     /separator,$
     sensitive = 0)
   off_on = widget_button(contextBase,$
-    value = 'Norm. Off_On',$
+    value = 'Off_On for selected normalization file',$
     uname = 'norm_off_on',$
     sensitive = 0)
   on_off = widget_button(contextBase,$
-    value = 'Norm. On_Off',$
+    value = 'On_Off for selected normalization file',$
     uname = 'norm_on_off',$
     sensitive = 0)
   on_on = widget_button(contextBase,$
-    value = 'Norm. On_On',$
+    value = 'On_On for selected normalization file',$
     uname = 'norm_on_on',$
     sensitive = 0)
     
