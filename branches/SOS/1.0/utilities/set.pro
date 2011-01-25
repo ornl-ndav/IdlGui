@@ -47,6 +47,7 @@ pro setButton, base=base, event=event, uname=uname, reverse_flag=reverse_flag
     id = widget_info(base, find_by_uname=uname)
   endelse
   widget_control, id, set_button = set_button_value
+
 end
 
 ;+
