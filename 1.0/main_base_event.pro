@@ -276,6 +276,9 @@ PRO main_base_event, Event
       change_spin_state, event=event, $
         column_index=column_index, $
         new_spin=new_spin
+      reset_config_other_spin_states, $
+      event=event, $
+      working_spin_state='Off_Off'
     end
     widget_info(wWidget, find_by_uname='data_off_on'): begin
       column_index = 0
@@ -283,6 +286,9 @@ PRO main_base_event, Event
       change_spin_state, event=event, $
         column_index=column_index, $
         new_spin=new_spin
+    reset_config_other_spin_states, $
+      event=event, $
+      working_spin_state='Off_On'
     end
     widget_info(wWidget, find_by_uname='data_on_off'): begin
       column_index = 0
@@ -290,6 +296,9 @@ PRO main_base_event, Event
       change_spin_state, event=event, $
         column_index=column_index, $
         new_spin=new_spin
+        reset_config_other_spin_states, $
+      event=event, $
+      working_spin_state='On_Off'
     end
     widget_info(wWidget, find_by_uname='data_on_on'): begin
       column_index = 0
@@ -297,6 +306,9 @@ PRO main_base_event, Event
       change_spin_state, event=event, $
         column_index=column_index, $
         new_spin=new_spin
+    reset_config_other_spin_states, $
+      event=event, $
+      working_spin_state='On_On'
     end
     
     widget_info(wWidget, find_by_uname='norm_off_off'): begin

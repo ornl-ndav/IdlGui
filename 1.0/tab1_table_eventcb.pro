@@ -34,6 +34,44 @@
 
 ;+
 ; :Description:
+;    reset the various spin state of the configuration tab for REF_M. This
+;    is reached when the user selects another data spin state.
+;
+; :Keywords:
+;    event
+;    working_spin_state
+;
+; :Author: j35
+;-
+pro reset_config_other_spin_states, $
+    event=event, $
+    working_spin_state=working_spin_state
+  compile_opt idl2
+  
+  _working_spin_state = strlowcase(working_spin_state)
+  
+  ;reset all spin states
+  list_spins = ['off_off',$
+    'off_on',$
+    'on_off',$
+    'on_on']
+  list_unames = 'config_spin_' + list_spins
+  sz = n_elements(list_unames)
+  for i=0,(sz-1) do begin
+    id = widget_info(event.top, find_by_uname=list_unames[i])
+    widget_control, id, set_button=0
+    widget_control, id, sensitive=1
+  endfor
+  
+  index = where(_working_spin_state eq list_spins)
+  id =widget_info(event.top, find_by_uname=list_unames[index])
+  widget_control, id, /set_button
+  widget_control, id, sensitive=0
+  
+end
+
+;+
+; :Description:
 ;    This procedure is reached when the user right click the table and select
 ;    any of the new data/norm spin state. Right now, this is reached only if
 ;    instrument is REF_M
@@ -53,7 +91,7 @@ pro change_spin_state, event=event, column_index=column_index, new_spin=new_spin
   
   case (column_index) of
     0: begin ;data
-
+    
       sz = size(table,/dim)
       nbr_row = sz[1]
       row_index = 0
@@ -67,8 +105,8 @@ pro change_spin_state, event=event, column_index=column_index, new_spin=new_spin
         new_file_name = file_name_spitted[0] + '(' + new_spin + ')'
         table[column_index, row_index] = new_file_name
         row_index++
-      endwhile    
-    
+      endwhile
+      
     end
     1: begin ;normalization
     

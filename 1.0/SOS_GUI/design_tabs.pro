@@ -212,15 +212,19 @@ pro design_tabs, MAIN_BASE, global
       uname = 'config_spin_off_off',$
       sensitive = 0,$
       value = 'Off_Off')
-    spin1 = widget_button(buttons,$
+    spin2 = widget_button(buttons,$
       uname = 'config_spin_off_on',$
       value = 'Off_On')
-    spin1 = widget_button(buttons,$
+    spin3 = widget_button(buttons,$
       uname = 'config_spin_on_off',$
       value = 'On_Off')
-    spin1 = widget_button(buttons,$
+    spin4 = widget_button(buttons,$
       uname = 'config_spin_on_on',$
       value = 'On_On')
+    widget_control, spin1, /set_button
+    ;widget_control, spin2, /set_button
+    widget_control, spin3, /set_button  
+    ;widget_control, spin4, /set_button  
       
   endif
   
