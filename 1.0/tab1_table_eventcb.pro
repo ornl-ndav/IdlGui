@@ -49,21 +49,46 @@ pro change_spin_state, event=event, column_index=column_index, new_spin=new_spin
   compile_opt idl2
   
   selection = get_table_lines_selected(event=event)
-  from_row = selection[1]
-  to_row = selection[3]
   table = getValue(event=event,uname='tab1_table')
   
-  row_index = from_row
-  while (row_index le to_row) do begin
+  case (column_index) of
+    0: begin ;data
+
+      sz = size(table,/dim)
+      nbr_row = sz[1]
+      row_index = 0
+      while (row_index le nbr_row) do begin
+      
+        file_name = table[column_index,row_index]
+        if (file_name eq '') then break
+        ;remove current spin state
+        file_name_spitted = strsplit(file_name[0],'(',/extract)
+        ;add new spin state
+        new_file_name = file_name_spitted[0] + '(' + new_spin + ')'
+        table[column_index, row_index] = new_file_name
+        row_index++
+      endwhile    
     
-    file_name = table[column_index,row_index]
-    ;remove current spin state
-    file_name_spitted = strsplit(file_name[0],'(',/extract)
-    ;add new spin state
-    new_file_name = file_name_spitted[0] + '(' + new_spin + ')'
-    table[column_index, row_index] = new_file_name
-    row_index++
-  endwhile
+    end
+    1: begin ;normalization
+    
+      from_row = selection[1]
+      to_row = selection[3]
+      
+      row_index = from_row
+      while (row_index le to_row) do begin
+      
+        file_name = table[column_index,row_index]
+        ;remove current spin state
+        file_name_spitted = strsplit(file_name[0],'(',/extract)
+        ;add new spin state
+        new_file_name = file_name_spitted[0] + '(' + new_spin + ')'
+        table[column_index, row_index] = new_file_name
+        row_index++
+      endwhile
+      
+    end
+  endcase
   
   putValue, event=event, 'tab1_table', table
   
@@ -140,13 +165,13 @@ pro select_entire_row, event=event, base=base, uname=uname
   compile_opt idl2
   
   if (keyword_set(event)) then begin
-  widget_control, event.top, get_uvalue=global
+    widget_control, event.top, get_uvalue=global
   endif else begin
-  widget_control, base, get_uvalue=global
+    widget_control, base, get_uvalue=global
   endelse
   instrument = (*global).instrument
   
-  if (instrument eq 'REF_L') then return 
+  if (instrument eq 'REF_L') then return
   
   selection = get_table_lines_selected(event=event, base=base, uname=uname)
   from_row_selected = selection[1]
