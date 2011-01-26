@@ -396,23 +396,13 @@ pro go_nexus_reduction_ref_m, event
       ;number of steps is ----> file_num
       for read_loop=0,file_num-1 do begin
         ;check to see if the theta value is the same as CE_theta
-        _DATA = read_nexus(event, $
+        _DATA = read_ref_m_nexus(event, $
           list_data_nexus[read_loop], $
+          read_loop, $
           TOFmin, $
           TOFmax, $
           PIXmin, $
           PIXmax)
-
-
-
-
-
-
-
-
-
-
-
 
         ;round the angles to the nearset 100th of a degree
         file_angles[0,read_loop]=read_loop
@@ -433,7 +423,7 @@ pro go_nexus_reduction_ref_m, event
       
       ;number of steps is ----> 1
       
-      ;create unique increasing list of angles (theta and twotheat)
+      ;create unique increasing list of angles (theta and twotheta)
       theta_angles = create_uniq_sort_list_of_angles(event, $
         file_angle = reform(file_angles[1,*]))
         
