@@ -35,6 +35,76 @@
 
 ;+
 ; :Description:
+;    Generic function that retrieves the angle (dangle and dangle0)
+;
+; :Keywords:
+;    event
+;    angle_index
+;    index
+;
+; :Returns:
+;   {value:'',units:''}   units is either rad or degree
+;
+; :Author: j35
+;-
+function get_angle, event=event, angle_index=angle_index, index=index
+  compile_opt idl2
+  
+  config_table = getValue(event=event, uname='ref_m_metadata_table')
+  dangle = config_table[angle_index,index]
+  
+  ;keep only the rad value
+  if (dangle eq '') then return, {value:'',units:''}
+  dangle_rad_array = strsplit(dangle,'(',/extract)
+  dangle_rad = strsplit(dangle_rad_array[1],')',/extract)
+  
+  return, {value:dangle_rad,units:'rad'}
+end
+
+;+
+; :Description:
+;    creates a strcture value/units of the dangle angle
+;
+; :Keywords:
+;    event
+;    file_index
+;
+; :Returns:
+;   {value:'',units:''}   units is either rad or degree
+;
+; :Author: j35
+;-
+function get_dangle, event=event, file_index=file_index
+  compile_opt idl2
+  
+  _angle_value_units = get_angle(event=event, angle_index=4, index=file_index)
+  
+  return, _angle_value_units
+end
+
+;+
+; :Description:
+;    creates a strcture value/units of the dangle0 angle
+;
+; :Keywords:
+;    event
+;    file_index
+;
+; :Returns:
+;   {value:'',units:''}   units is either rad or degree
+;
+; :Author: j35
+;-
+function get_dangle0, event=event, file_index=file_index
+  compile_opt idl2
+  
+  _angle_value_units = get_angle(event=event, angle_index=5, index=file_index)
+  
+  return, _angle_value_units
+end
+
+;+
+; :Description:
 ;    retrieves the 2D spectrum of the normalization file
 ;    ex: Array[2,751]
 ;
@@ -327,6 +397,127 @@ function read_nexus, event, filename, TOFmin, TOFmax, PIXmin, PIXmax
     ',' + strcompress(t2,/remove_all) + ']'
     
   pixels=findgen(256)
+  p1=min(where(pixels ge PIXmin))
+  p2=max(where(pixels le PIXmax))
+  
+  message[i++] = '-> [p1,p2]=[' + strcompress(p1,/remove_all) + $
+    ',' + strcompress(p2,/remove_all) + ']'
+    
+  TOF=TOF[t1:t2]
+  PIXELS=pixels[p1:p2]
+  
+  image=image[t1:t2,p1:p2]
+  
+  sz = size(tof)
+  message[i++] = '-> size(TOF): ' + strcompress(strjoin(sz,','),/remove_all)
+  sz = size(pixels)
+  message[i++] = '-> size(pixels): ' + strcompress(strjoin(sz,','),/remove_all)
+  sz = size(image)
+  message[i++] = '-> size(image): ' + strcompress(strjoin(sz,','),/remove_all)
+  
+  ;image -> data (counts)
+  ;tof   -> tof axis
+  ;pixels -> list of pixels to keep in calculation
+  DATA={data:image, theta:theta, twotheta:twotheta, tof:tof, pixels:pixels}
+  
+  log_book_update, event, message = message
+  
+  return, DATA
+  
+end
+
+
+;+
+; :Description:
+;    Retrieve all the important information from each data nexus files
+;    for REF_M and keep only the range desired
+;
+; :Params:
+;    event
+;    filename
+;    file_index
+;    TOFmin
+;    TOFmax
+;    PIXmin
+;    PIXmax
+;
+; :Returns:
+;   data    structure {data:image, theta:theta, twotheta:twotheta,$
+;                      tof:tof, pixels:pixel}
+;   data    structure {data:image, dangle:dangle, dangle0:dangle0,$
+;                      tof:tof, pixels:pixel}
+;-
+function read_ref_m_nexus, event, filename, file_index, TOFmin, TOFmax, PIXmin, PIXmax
+  compile_opt idl2
+  
+  message = strarr(14)
+  i=0
+  
+  ;isolate filename from spinstate
+  filename_array = strsplit(filename,'(',/extract)
+  filename = filename_array[0]
+  if (n_elements(filename_array) gt 1) then begin
+    spin_array = strmid(strsplit(filename_array[1],')',/extract),2)
+    spin_state = spin_array[0]
+  endif else begin
+    spin_state = ''
+  endelse
+  
+  message[i++] = '> Read data from NeXus ' + filename
+  if (spin_state eq '') then begin
+    message[i++] = '-> spin state: N/A'
+  endif else begin
+    message[i++] = '-> spin state: ' + spin_state
+  endelse
+  
+  iFile = obj_new('IDLnexusUtilities', filename, spin_state=spin_state)
+  ;get data [tof, pixel_x, pixel_y]
+  image = iFile->get_y_tof_data()
+  sz = size(image)
+  message[i++] = '-> retrieved Y vs TOF data [' + $
+    strcompress(strjoin(sz,','),/remove_all) + ']'
+    
+  ;get tof array only
+  tof = iFile->get_TOF_data()
+  sz = size(tof)
+  message[i++] = '-> retrived tof axis data [' + $
+    strcompress(strjoin(sz,','),/remove_all) + ']'
+    
+  obj_destroy, iFile
+  
+  ;get angles (dangle and dangle0)
+  _dangle = get_dangle(event=event, file_index=file_index)
+  _dangle0 = get_dangle0(event=event, file_index=file_index)
+  
+  dangle  = _dangle.value
+  dangle0 = _dangle0.value
+  
+  dangle_units  = _dangle.units
+  dangle0_units = _dangle0.units
+  
+  message[i++] = '-> retrieved dangle: ' + strcompress(dangle,/remove_all) + $
+    ' ' + strcompress(dangle_units,/remove_all)
+  message[i++] = '-> retrieved dangle0: ' + strcompress(dangle0,/remove_all) + $
+    ' ' + strcompress(dangle0_units,/remove_all)
+    
+;  Theta=theta+4.0
+;  TwoTheta=TwoTheta+4.0
+  
+;  message[i++] = '-> Adding 4.0 to theta and twotheta'
+;  message[i++] = '  -> theta: ' + strcompress(theta,/remove_all) + $
+;    ' ' + strcompress(theta_units,/remove_all)
+;  message[i++] = '  -> twotheta: ' + strcompress(twotheta,/remove_all) + $
+;    ' ' + strcompress(twotheta_units,/remove_all)
+    
+  ;Determine where is the first and last tof in the range
+  list=where(TOF ge TOFmin and TOF le TOFmax)
+  t1=min(where(TOF ge TOFmin))
+  t2=max(where(TOF le TOFmax))
+  
+  message[i++] = '-> [t1,t2]=[' + strcompress(t1,/remove_all) + $
+    ',' + strcompress(t2,/remove_all) + ']'
+    
+  pixels=findgen(304)  ;256 for REF_L
   p1=min(where(pixels ge PIXmin))
   p2=max(where(pixels le PIXmax))
   
