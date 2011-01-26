@@ -88,7 +88,9 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     help_to_use: help, $ ;'local' or 'deployed'
     myHelp: 'help/sos.adp', $
     Help: '/SNS/software/idltools/help/SOS/sos.adp', $
-  
+    
+    list_spins: ['Off_Off','Off_On','On_Off','On_On'], $
+    
     applicaiton: APPLICATION, $
     version: VERSION, $
     debugger: debugger, $
@@ -236,7 +238,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     (*global).input_path = input_path
     
     selected_list_norm_file = (*global).selected_list_norm_file
-
+    
     if (instrument EQ 'REF_L') then begin ;REF_L instrument
       list_data_nexus = input_path + ['REF_L_34432.nxs',$
         'REF_L_34433.nxs', $
@@ -259,7 +261,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
         'REF_M_8455.nxs']
       (*(*global).list_norm_nexus) = list_norm_nexus + ' (' + $
         default_spin_state + ')'
-    selected_list_norm_file[0:1] = list_norm_nexus
+      selected_list_norm_file[0:1] = list_norm_nexus
     endelse
     
     (*global).selected_list_norm_file = selected_list_norm_file
@@ -275,7 +277,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
     ;tab to show by default
     ;id = widget_info(main_base, find_by_uname='tab_uname')
-
+    
     nexus_tab_to_show = 0
     id = widget_info(main_base, find_by_uname='nexus_tab_uname')
     widget_control, id, set_tab_current=nexus_tab_to_show

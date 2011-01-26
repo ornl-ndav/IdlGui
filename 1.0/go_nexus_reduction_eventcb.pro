@@ -44,7 +44,9 @@
 ;    proceses
 ;    total_number_of_processes
 ;-
-function get_normalization_spectrum, event, list_norm_nexus, processes, $
+function get_normalization_spectrum, event, $
+    list_norm_nexus, $
+    processes, $
     total_number_of_processes
   compile_opt idl2
   
@@ -77,6 +79,96 @@ function get_normalization_spectrum, event, list_norm_nexus, processes, $
         'spectrum [tof,counts]']
     endif else begin
       iNorm = obj_new('IDLnexusUtilities', list_norm_nexus[index])
+      _spectrum = iNorm->get_TOF_counts_data()
+      obj_destroy, iNorm
+      message = ['> Done with retrieving normalization spectrum [tof,counts]']
+    endelse
+    
+    sz = size(_spectrum)
+    message1 = '-> size(spectrum): [' + $
+      strcompress(strjoin(sz,','),/remove_all) + ']'
+    message = [message, message1]
+    log_book_update, event, message=message
+    
+    *spectrum[index] = _spectrum
+    
+    update_progress_bar_percentage, event, ++processes, $
+      total_number_of_processes
+      
+    index++
+  endwhile
+  
+  return, spectrum
+end
+
+;+
+; :Description:
+;    retrieves the 2D spectrum of the normalization file for REF_M instrument
+;    ex: Array[2,751]
+;
+; :Keywords:
+;    event
+;    list_norm_nexus   full path of all the normalization files
+;    list_norm_spin    list of spins for the normalization files
+;    proceses
+;    total_number_of_processes
+;-
+function get_ref_m_normalization_spectrum, event=event, $
+    list_norm_nexus=list_norm_nexus, $
+    list_norm_spin=list_norm_spin, $
+    processes=processes, $
+    total_number_of_processes=total_number_of_processes
+  compile_opt idl2
+  
+  nbr_files = n_elements(list_norm_nexus)
+  spectrum = ptrarr(nbr_files, /allocate_heap)
+  
+  index = 0
+  while (index lt nbr_files) do begin
+  
+    message = ['> Start retrieving normalization spectrum [tof,counts] ... ']
+    message = [message, '-> NeXus file name: ' + list_norm_nexus[index] + $
+      ' (' + list_norm_spin[index] + ')']
+    log_book_update, event, message=message
+    
+    ;check if we already loaded this data set or not with the same spin
+    already_loaded_flag  = 0b
+    already_loaded_index = 0
+    current_file = list_norm_nexus[index]
+    current_spin = list_norm_spin[index]
+    if (index gt 0) then begin ;no need to look for first normalization file
+      _where_same_file_index = where(current_file eq list_norm_nexus, nbr_same_file)
+      _where_same_spin_index = where(current_spin eq list_norm_spin, nbr_same_spin)
+      
+      if (nbr_same_file gt 1 && nbr_same_spin gt 1) then begin
+        _same_index = 0
+        while (_same_index lt n_elements(_where_same_file_index)) do begin
+          ;make sure we are not at the same index than the current working index
+          if (_same_index ne index) then begin
+            if (list_norm_nexus[_where_same_file_index[_same_index]] eq $
+              current_file && $
+              list_norm_spin[_where_same_spin_index[_same_index]] eq $
+              current_spin) then begin
+              already_loaded_index = _where_same_file_index[_same_index]
+              already_loaded_flag = 1b
+              break
+            endif
+          endif
+          _same_index++
+        endwhile
+      endif ; no need to check if duplicated spin/files have the same index
+    endif
+    
+    if (already_loaded_flag) then begin
+    
+      _spectrum = *spectrum[already_loaded_index]
+      message = ['> Copied already retrieved normalization ' + $
+        'spectrum [tof,counts]']
+        
+    endif else begin
+    
+      iNorm = obj_new('IDLnexusUtilities', current_file, $
+        spin_state=current_spin )
       _spectrum = iNorm->get_TOF_counts_data()
       obj_destroy, iNorm
       message = ['> Done with retrieving normalization spectrum [tof,counts]']

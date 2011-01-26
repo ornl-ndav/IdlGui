@@ -45,6 +45,8 @@
 pro go_nexus_reduction_ref_l, event
   compile_opt idl2
   
+  widget_control, event.top, get_uvalue=global
+  
   error = 0
   catch,error
   if (error ne 0) then begin

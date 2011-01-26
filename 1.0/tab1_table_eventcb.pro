@@ -48,13 +48,13 @@ pro reset_config_other_spin_states, $
     working_spin_state=working_spin_state
   compile_opt idl2
   
+  widget_control, event.top, get_uvalue=global
+  
+  list_spins = (*global).list_spins
+  
   _working_spin_state = strlowcase(working_spin_state)
   
   ;reset all spin states
-  list_spins = ['off_off',$
-    'off_on',$
-    'on_off',$
-    'on_on']
   list_unames = 'config_spin_' + list_spins
   sz = n_elements(list_unames)
   for i=0,(sz-1) do begin
@@ -178,7 +178,9 @@ end
 pro spin_state_widget_action, event=event, button_status=button_status
   compile_opt idl2
   
-  spin_states = ['off_off','off_on','on_off','on_on']
+  widget_control, event.top, get_uvalue=global
+  spin_states = (*global).list_spins
+  
   data_spins = 'data_' + spin_states
   norm_spins = 'norm_'  + spin_states
   buttons_uname = [data_spins,norm_spins]

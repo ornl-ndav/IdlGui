@@ -38,7 +38,7 @@
 ;
 ; :Params:
 ;    event
-;    
+;
 ; :Returns:
 ;   1 if file name cell of selected row is not empty
 ;   0 if file name cell of selected row is empty
@@ -46,10 +46,10 @@
 ; :Author: j35
 ;-
 function isConfigurationRowNotEmpty, event
-compile_opt idl2
-
+  compile_opt idl2
+  
   selection = get_table_lines_selected(event=event, $
-  uname='ref_m_metadata_table')
+    uname='ref_m_metadata_table')
   row_selected = selection[1]
   
   ;get big table
@@ -142,6 +142,9 @@ pro refresh_configuration_table, base=base, event=event
     iNexus = obj_new('IDLnexusUtilities', _full_file_name, spin_state=_spin)
     _dirpix = fix(iNexus->get_dirpix())
     config_table[2,i] = strcompress(_dirpix,/remove_all) ;dirpix
+    
+    ;REMOVE_ME
+    config_table[3,i] = strcompress(150,/remove_all)
     
     _dangle_value_units = iNexus->get_dangle()
     ;dangle_structure = { value_degree: 0L, value_rad: 0L }
