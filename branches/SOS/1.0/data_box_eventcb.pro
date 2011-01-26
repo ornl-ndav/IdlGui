@@ -185,7 +185,7 @@ pro retrieve_detector_configuration, event=event, main_base=main_base
     iNexus = obj_new('IDLnexusUtilities', first_data_nexus, $
       spin_state='Off_Off')
   endif else begin ;REF_L
-    
+  
     first_data_nexus = big_table[0,0]
     
     iNexus = obj_new('IDLnexusUtilities', first_data_nexus)
@@ -230,38 +230,31 @@ pro retrieve_data_nexus_distances, event=event, main_base=main_base
   
     first_data_nexus_array = strsplit(big_table[0,0],'(',/extract)
     first_data_nexus = strtrim(first_data_nexus_array[0],2)
+    if (first_data_nexus eq '') then return
     
     iNexus = obj_new('IDLnexusUtilities', first_data_nexus, $
       spin_state='Off_Off')
-    d_SD = iNexus->get_d_SD()
-    obj_destroy, iNexus
-    d_SD_mm = abs(convert_distance(distance = d_SD.value,$
-      from_unit = d_SD.units, $
-      to_unit = 'mm'))
-    d_MD_mm = ''
-    
+      
   endif else begin
   
     first_data_nexus = big_table[0,0]
-    
     if (first_data_nexus eq '') then return
     
     iNexus = obj_new('IDLnexusUtilities', first_data_nexus)
-    d_SD = iNexus->get_d_SD()
-    d_MS = iNexus->get_d_MS()
-    obj_destroy, iNexus
-    
-    ;convert into mm
-    d_SD_mm = abs(convert_distance(distance = d_SD.value,$
-      from_unit = d_SD.units, $
-      to_unit = 'mm'))
-    d_MS_mm = abs(convert_distance(distance = d_MS.value,$
-      from_unit = d_MS.units, $
-      to_unit = 'mm'))
-      
-    d_MD_mm = d_MS_mm + d_SD_mm
     
   endelse
+  
+  d_SD = iNexus->get_d_SD()
+  d_MS = iNexus->get_d_MS()
+  obj_destroy, iNexus
+  d_SD_mm = abs(convert_distance(distance = d_SD.value,$
+    from_unit = d_SD.units, $
+    to_unit = 'mm'))
+  d_MS_mm = abs(convert_distance(distance = d_MS.value,$
+    from_unit = d_MS.units, $
+    to_unit = 'mm'))
+    
+  d_MD_mm = d_MS_mm + d_SD_mm
   
   putValue, base=main_base, event=event, 'd_sd_uname', d_SD_mm
   putValue, base=main_base, event=event, 'd_md_uname', d_MD_mm
