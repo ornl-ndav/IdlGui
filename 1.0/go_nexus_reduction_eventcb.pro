@@ -442,8 +442,6 @@ end
 ;    PIXmax
 ;
 ; :Returns:
-;   data    structure {data:image, theta:theta, twotheta:twotheta,$
-;                      tof:tof, pixels:pixel}
 ;   data    structure {data:image, dangle:dangle, dangle0:dangle0,$
 ;                      tof:tof, pixels:pixel}
 ;-
@@ -544,7 +542,6 @@ function read_ref_m_nexus, event, filename, file_index, TOFmin, TOFmax, PIXmin, 
   log_book_update, event, message = message
   
   return, DATA
-  
 end
 
 ;+
@@ -570,7 +567,8 @@ end
 
 ;+
 ; :Description:
-;    This function loops through all the theta and twotheta combinations
+;    This function loops through all the theta and twotheta (for REF_L) or
+;    dangle and dangle0 (for REF_M) combinations
 ;    and count those that exist then make a list of unique angles geometries
 ;
 ; :Params:
@@ -662,6 +660,51 @@ function convert_THLAM, data, SD_d, MD_d, cpix, pix_size
   lambda=h/(m*vel)  ;m
   lambda=lambda*1e10  ;angstroms
   
+  
+  
+  
+  
+  
+  
+  
+  theta_val=data.twotheta-data.theta
+  
+  ;theta_val=data.theta
+  theta_val=theta_val[0]
+  d_vec=(data.pixels-cpix)*pix_size
+  thetavec=(atan(d_vec/SD_d[0])/!DTOR)+theta_val
+  
+  THLAM={data:data.data, lambda:lambda, theta:thetavec}
+  
+  return, THLAM
+  
+end
+
+;+
+; :Description:
+;    convert to theta/lambda for REF_M instrument
+;
+; :Params:
+;    data
+;    SD_d
+;    MD_d
+;    cpix
+;    pix_size
+;
+;-
+function convert_ref_m_THLAM, data, SD_d, MD_d, cpix, pix_size
+  compile_opt idl2
+  
+  TOF=data.TOF
+  MD_d = MD_d[0]
+  vel=MD_d/TOF         ;mm/ms = m/s
+  
+  h=6.626e-34   ;m^2 kg s^-1
+  m=1.675e-27     ;kg
+  
+  lambda=h/(m*vel)  ;m
+  lambda=lambda*1e10  ;angstroms
+  
   theta_val=data.twotheta-data.theta
   
   ;theta_val=data.theta
@@ -735,6 +778,115 @@ pro build_THLAM, event=event, $
   file_num = (size(DATA,/dim))[0]
   
   message = ['> Build THLAM (Theta-Lambda) arrays for all each loaded files']
+  
+  for read_loop=0,file_num-1 do begin
+  
+    RAW_DATA= *DATA[read_loop]
+    ;{data, theta, twotheta, tof, pixels}
+    
+    NORM_DATA=SNS_divide_spectrum(RAW_DATA, *spectrum[read_loop])
+    
+    ;SD_d : sample to detector distance
+    ;MD_d : moderator to detector
+    THLAM=convert_ref_m_THLAM(NORM_DATA, SD_d, MD_d, center_pixel, pixel_size)
+    ;THLAM is a structure
+    ;{ data, lambda, theta}  with lambda in Angstroms and theta in radians
+    
+    ;round the angles to the nearset 100th of a degree
+    theta_val=round(RAW_DATA.theta[0]*100.0)/100.0
+    twotheta_val=round(RAW_DATA.twotheta[0]*100.0)/100.0
+    theta_val=theta_val[0]
+    twotheta_val=twotheta_val[0]
+    
+    tilenum=where((angles[0,*] eq theta_val) and (angles[1,*] eq twotheta_val))
+    
+    THLAM_array[tilenum,*,*]=THLAM_array[tilenum,*,*]+THLAM.data
+    THLAM_thvec[tilenum,*]=THLAM.theta
+    THLAM_lamvec[tilenum,*]=THLAM.lambda
+    
+    ;    window,0, title = "Convertion: TOF->Lambda, Pixel->Theta"
+    ;    shade_surf, smooth(thlam.data,3), thlam.lambda, thlam.theta, ax=70, $
+    ;      charsi=2, xtitle='LAMBDA (' + string("305B) + ')', ytitle='THETA (rad)'
+    ;    wait,.1
+    ;    wshow
+    
+    message1 = ['-> Created THLAM array of file # ' + $
+      strcompress(read_loop,/remove_all)]
+    message2 = ['   theta: ' + strcompress(theta_val,/remove_all) + $
+      ' degrees']
+    message3 = ['   twotheta: ' + strcompress(twotheta_val,/remove_all) + $
+      ' degrees']
+    message = [message, message1, message2, message3]
+    
+    update_progress_bar_percentage, event, ++processes, $
+      total_number_of_processes
+      
+  endfor
+  
+  log_book_update, event, message=message
+  
+end
+
+;+
+; :Description:
+;   This create 3 arrays that hold the THLAM values
+;
+; INFOS
+;   THLAM is an array containing all the data (for all angle measurements)
+;   converted to SANGLE vs LAMBDA.
+;   It is a 3-d array where the 1st dimension is the measurement #, 2nd
+;   dimension is LAMBDA, and 3rd dimension is SANGLE.
+;   Also, THLAM_lamvec and THLAM_thvec are 2-d arrays of the vectors to index
+;   THLAM_array.
+;
+;   So the 5th angle can be plotted using :
+;   'contour, THLAM_array[4,*,*], THLAM_lamvec[4,*], THLAM_thvec[4,*]'
+;
+;   THLAM is later converted to Qx vs Qz and is stored in a similar combination
+;   of all measurement called QXQZ_array.
+;
+;   SNS_divide_spectrum was my method to normalize the data to the incident
+;   beam spectrum. I know there already exists a way to do this but it was
+;   easier for me to write my own quick-and-dirty code than find what already
+;   exists.
+;   Basically, I created a 2 column LAMBDA vs INTENSITY file for the direct
+;   beam, load that in and then divide all the data by it.
+;
+; :Keywords:
+;    event
+;    DATA
+;    spectrum
+;    SD_d
+;    MD_d
+;    center_pixel
+;    pixel_size
+;    angles
+;    THLAM_array
+;    THLAM_lamvec
+;    THLAM_thvec
+;    processes
+;    total_number_of_processes
+;
+;-
+pro build_ref_m_THLAM, event=event, $
+    DATA=DATA, $
+    spectrum = spectrum, $
+    SD_d = SD_d, $
+    MD_d = MD_d, $
+    center_pixel = center_pixel, $
+    pixel_size = pixel_size, $
+    angles = angles, $
+    THLAM_array = THLAM_array, $
+    THLAM_lamvec = THLAM_lamvec, $
+    THLAM_thvec = THLAM_thvec, $
+    processes = processes, $
+    total_number_of_processes = total_number_of_processes
+    
+  compile_opt idl2
+  
+  file_num = (size(DATA,/dim))[0]
+  
+  message = ['> Build THLAM (Sangle-Lambda) arrays for all each loaded files']
   
   for read_loop=0,file_num-1 do begin
   
