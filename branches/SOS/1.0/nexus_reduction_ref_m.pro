@@ -406,8 +406,8 @@ pro go_nexus_reduction_ref_m, event
 
         ;round the angles to the nearset 100th of a degree
         file_angles[0,read_loop]=read_loop
-        file_angles[1,read_loop]=round(_DATA.theta*100.0)/100.0
-        file_angles[2,read_loop]=round(_DATA.twotheta*100.0)/100.0
+        file_angles[1,read_loop]=round(_DATA.dangle*100.0)/100.0
+        file_angles[2,read_loop]=round(_DATA.dangle0*100.0)/100.0
         
         *DATA[read_loop] = _DATA
         
@@ -424,25 +424,25 @@ pro go_nexus_reduction_ref_m, event
       ;number of steps is ----> 1
       
       ;create unique increasing list of angles (theta and twotheta)
-      theta_angles = create_uniq_sort_list_of_angles(event, $
+      dangle_angles = create_uniq_sort_list_of_angles(event, $
         file_angle = reform(file_angles[1,*]))
         
-      twoTheta_angles = create_uniq_sort_list_of_angles(event, $
+      dangle0_angles = create_uniq_sort_list_of_angles(event, $
         file_angle = reform(file_angles[2,*]))
         
-      si1=size(theta_angles,/dim)
-      si2=size(twotheta_angles,/dim)
+      si1=size(dangle,/dim)
+      si2=size(dangle0_angles,/dim)
       
       update_progress_bar_percentage, event, ++processes, $
         total_number_of_processes
         
-      message = ['> Create unique list of theta and twotheta angles:']
-      message1 = '-> size(theta_angles) = ' + strcompress(si1,/remove_all)
-      message11 = '--> theta_angles = [' + $
-        strcompress(strjoin(theta_angles,','),/remove_all) + ']'
-      message2 = '-> size(twotheta_angles) = ' + strcompress(si2,/remove_all)
-      message21 = '--> twotheta_angles = [' + $
-        strcompress(strjoin(twotheta_angles,','),/remove_all) + ']'
+      message = ['> Create unique list of dangle and dangle0 angles:']
+      message1 = '-> size(dangle_angles) = ' + strcompress(si1,/remove_all)
+      message11 = '--> dangle_angles = [' + $
+        strcompress(strjoin(dangle_angles,','),/remove_all) + ']'
+      message2 = '-> size(dangle0_angles) = ' + strcompress(si2,/remove_all)
+      message21 = '--> dangle0_angles = [' + $
+        strcompress(strjoin(dangle0_angles,','),/remove_all) + ']'
       message = [message, message1, message11, message2, message21]
       log_book_update, event, message=message
       
@@ -451,8 +451,8 @@ pro go_nexus_reduction_ref_m, event
       ;make a list of unique angle geometries
       angles = make_unique_angle_geometries_list(event, $
         file_angles,$
-        theta_angles, $
-        twotheta_angles)
+        dangle_angles, $
+        dangle0_angles)
         
       ;The number of tiles
       si = size(angles,/dim)
@@ -465,7 +465,7 @@ pro go_nexus_reduction_ref_m, event
       THLAM_thvec = make_array(num,PIXmax-PIXmin+1)
       
       ;number of steps is ----> file_num
-      build_THLAM, event=event, $
+      build_ref_m_THLAM, event=event, $
         DATA=DATA, $
         spectrum = spectrum, $
         SD_d = SD_d, $
@@ -478,6 +478,18 @@ pro go_nexus_reduction_ref_m, event
         THLAM_thvec = THLAM_thvec, $
         processes = processes, $
         total_number_of_processes = total_number_of_processes
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
       ;number of steps is ----> 1
       QXQZ_array=make_array(num, qxbins, qzbins)
