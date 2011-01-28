@@ -461,11 +461,6 @@ function read_ref_m_nexus, event, filename, spin_state, file_index, TOFmin, TOFm
   
   iFile = obj_new('IDLnexusUtilities', filename, spin_state=spin_state)
   
-  print, 'filename: ' , filename
-  print, spin_state
-  help, iFile
-  print
-  
   ;get data [tof, pixel_x, pixel_y]
   image = iFile->get_y_tof_data()
   sz = size(image)
@@ -534,7 +529,7 @@ function read_ref_m_nexus, event, filename, spin_state, file_index, TOFmin, TOFm
   ;image -> data (counts)
   ;tof   -> tof axis
   ;pixels -> list of pixels to keep in calculation
-  DATA={data:image, theta:theta, twotheta:twotheta, tof:tof, pixels:pixels}
+  DATA={data:image, dangle:dangle, dangle0:dangle0, tof:tof, pixels:pixels}
   
   log_book_update, event, message = message
   
@@ -695,10 +690,7 @@ function convert_ref_m_THLAM, data, SD_d, MD_d, cpix, pix_size
   lambda=h/(m*vel)  ;m
   lambda=lambda*1e10  ;angstroms
   
-  help, cpix
-  
-  stop
-  
+  ;calculate angle
   
   
   
