@@ -55,8 +55,6 @@ pro final_plot_help, event
     _book = (*global).Help
   endelse
   
-  print, _book
-  
   online_help, book=_book
   
   

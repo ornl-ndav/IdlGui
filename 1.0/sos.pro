@@ -86,8 +86,8 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   global = ptr_new({ $
   
     help_to_use: help, $ ;'local' or 'deployed'
-    myHelp: 'help/sos.adp', $
-    Help: '/SNS/software/idltools/help/SOS/sos.adp', $
+    myHelp: '/Users/j35/IDLWorkspace80/SOS 1.0/help/index.html', $
+    Help: '/SNS/software/idltools/help/SOS/index.html', $
     
     list_spins: ['Off_Off','Off_On','On_Off','On_On'], $
     
