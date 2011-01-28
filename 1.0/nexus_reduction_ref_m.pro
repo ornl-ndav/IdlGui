@@ -404,11 +404,15 @@ pro go_nexus_reduction_ref_m, event
           TOFmax, $
           PIXmin, $
           PIXmax)
-
-        ;round the angles to the nearset 100th of a degree
+          
+        print, '_DATA.dangle: ' , _DATA.dangle
+        print, '_DATA.dangle0: ' , _DATA.dangle0
+        print
+        
+        ;round the angles to the nearset 10000th of a degree
         file_angles[0,read_loop]=read_loop
-        file_angles[1,read_loop]=round(_DATA.dangle*100.0)/100.0
-        file_angles[2,read_loop]=round(_DATA.dangle0*100.0)/100.0
+        file_angles[1,read_loop]=round(_DATA.dangle*10000.0)/10000.0
+        file_angles[2,read_loop]=round(_DATA.dangle0*10000.0)/10000.0
         
         *DATA[read_loop] = _DATA
         
@@ -424,14 +428,16 @@ pro go_nexus_reduction_ref_m, event
       
       ;number of steps is ----> 1
       
-      ;create unique increasing list of angles (theta and twotheta)
-      dangle_angles = create_uniq_sort_list_of_angles(event, $
-        file_angle = reform(file_angles[1,*]))
-        
-      dangle0_angles = create_uniq_sort_list_of_angles(event, $
-        file_angle = reform(file_angles[2,*]))
-        
-      si1=size(dangle,/dim)
+      ;      ;create unique increasing list of angles (theta and twotheta)
+      ;      dangle_angles = create_uniq_sort_list_of_angles(event, $
+      ;       file_angle = reform(file_angles[1,*]))
+      dangle_angles = reform(file_angles[1,*])
+      dangle0_angles = reform(file_angles[2,*])
+      
+      ;      dangle0_angles = create_uniq_sort_list_of_angles(event, $
+      ;        file_angle = reform(file_angles[2,*]))
+      
+      si1=size(dangle_angles,/dim)
       si2=size(dangle0_angles,/dim)
       
       update_progress_bar_percentage, event, ++processes, $
@@ -450,11 +456,18 @@ pro go_nexus_reduction_ref_m, event
       ;number of steps is ----> 1
       
       ;make a list of unique angle geometries
-      angles = make_unique_angle_geometries_list(event, $
-        file_angles,$
-        dangle_angles, $
-        dangle0_angles)
-        
+      ;      angles = make_unique_angle_geometries_list(event, $
+      ;        file_angles,$
+      ;        dangle_angles, $
+      ;       dangle0_angles)
+      _angle_index = 0
+      angles = make_array(4,si1)
+      while(_angle_index lt si1) do begin
+        angles[0,_angle_index] = dangle_angles[_angle_index]
+        angles[1,_angle_index] = dangle0_angles[_angle_index]
+        _angle_index++
+      endwhile
+      
       ;The number of tiles
       si = size(angles,/dim)
       num = si[1]
