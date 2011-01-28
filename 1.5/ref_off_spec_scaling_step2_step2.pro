@@ -425,7 +425,7 @@ PRO display_error_message, Event, STEP=step
 END
 
 ;------------------------------------------------------------------------------
-;Reach by the Automatic fitting and scaling of step4/step2/step2
+;Reached by the Automatic fitting and scaling of step4/step2/step2
 PRO step4_2_2_automatic_fitting_scaling, Event
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
@@ -485,10 +485,10 @@ PRO step4_2_2_automatic_fitting_scaling, Event
     ENDELSE
   ENDIF
   
-  IF (fit_scale_status) THEN BEGIN ;populate droplist of step3
+;  IF (fit_scale_status) THEN BEGIN ;populate droplist of step3
     populate_step4_2_3_droplist, Event ;scaling_step2_step3
     
-  ENDIF
+;  ENDIF
   
 END
 

@@ -115,6 +115,11 @@ PRO MAIN_BASE_event, Event
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step1_remove_selection_button'): BEGIN
     remove_selected_run, Event
   END
+ 
+ ; reset flag on SANGLE calculation
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_tab_reset_button'): BEGIN
+    reset_sangle_calculation, Event
+  END
   
   ;Map Sangle base ------------------------------------------------------------
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step1_sangle_button'): BEGIN
@@ -2785,9 +2790,10 @@ PRO MAIN_BASE_event, Event
     (*global).zmin_g_recap_backup = (*global).zmin_g_recap
   END
   
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='scaling_main_tab'): BEGIN
-    scaling_tab_event, Event ;_eventcb
-  END
+; Change Code (24 Jan 2011): This is a duplicate - commented out
+;  WIDGET_INFO(wWidget, FIND_BY_UNAME='scaling_main_tab'): BEGIN
+;    scaling_tab_event, Event ;_eventcb
+;  END
   
   ;type of selection (none, R vs Q, ...) --------------------------------------
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_selection_group_uname'): BEGIN

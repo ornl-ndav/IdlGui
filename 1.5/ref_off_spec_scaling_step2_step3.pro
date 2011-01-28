@@ -85,7 +85,7 @@ PRO step4_2_3_auto_scaling, Event
   IdlSendToGeek_addLogBookText, Event, '> Automatic Scaling :'
   nbr_plot    = getNbrFiles(Event) ;number of files
   ListOfFiles = (*(*global).list_OF_ascii_files)
-  
+;print, "test step4_2_3_auto_scaling: ", ListOfFiles
   IvsLambda_selection       = (*(*global).IvsLambda_selection_step3_backup)
   IvsLambda_selection_error = (*(*global).IvsLambda_selection_error_step3_backup)
   scaling_factor            = (*(*global).scaling_factor)
@@ -244,6 +244,7 @@ PRO step4_2_3_auto_scaling, Event
         (*(*global).new_IvsLambda_selection) = new_IvsLambda_selection
         (*(*global).new_IvsLambda_selection_error) = $
           new_IvsLambda_selection_error       
+;print, "in step4_2_3_auto_scaling: second call to re_dosplay_step4_step1_selection"
         re_display_step4_step2_step1_selection, $
           Event, $
           MODE='AUTOSCALE' ;scaling_step2
@@ -262,6 +263,7 @@ PRO check_step4_2_3_gui, Event
   ;get value of SF from step4_2_2
   sSF = getTextFieldValue(Event,'step2_sf_text_field')
   list_OF_files = getDroplistValue(Event,'step4_2_3_work_on_file_droplist')
+;print, "in check_step4_2_3_gui: list_of_files: ",list_OF_files
   activate_status = 1
   SWITCH (sSF) OF
     '-NaN':
@@ -292,6 +294,7 @@ PRO populate_step4_2_3_droplist, Event
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   ;get list of files
   list_OF_files = (*(*global).short_list_OF_ascii_files)
+;print, "test: list of files in populate_step4_2_3_droplist: ",list_OF_files
   sz = N_ELEMENTS(list_OF_files)
   ;put by default the first file from the list as the reference file
   putTextFieldValue, Event, 'step4_2_3_manual_reference_value', list_OF_files[0]
@@ -468,7 +471,7 @@ PRO step4_2_3_manual_scaling, Event, FACTOR=factor
     (*(*global).new_IvsLambda_selection)       = new_IvsLambda_selection
     (*(*global).new_IvsLambda_selection_error) = $
       new_IvsLambda_selection_error
-    
+;   print, "in step4_2_3_manual_scaling: re_display_step4_step1_selection"    
     re_display_step4_step2_step1_selection, $
       Event, $
       MODE='AUTOSCALE'  ;scaling_step2
@@ -489,6 +492,7 @@ PRO step4_2_3_reset_scaling, Event
     index++
   ENDWHILE
   (*(*global).scaling_factor) = scaling_factor
+;   print, "in step4_2_3_reset_scaling: re_display_step4_step1_selection" 
   re_display_step4_step2_step1_selection, Event ;scaling_step2
 END
 PRO step4_2_3_separate_window, Event

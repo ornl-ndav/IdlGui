@@ -126,9 +126,9 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
   WIDGET_CONTROL, table, SET_TABLE_SELECT=[0,0,1,0]
   
   reset_sangle = WIDGET_BUTTON(row1col1,$
-    VALUE = 'Reset SANGLE value of selected run number',$
+    VALUE = 'Reset SANGLE flag of selected run number',$
     UNAME = 'reduce_sangle_tab_reset_button',$
-    SENSITIVE = 0)
+    SENSITIVE = 1)
     
    ;Counts vs pixel plot
    help_plot = WIDGET_DRAW(row1col1,$

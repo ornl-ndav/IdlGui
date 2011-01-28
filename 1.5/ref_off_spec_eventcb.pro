@@ -352,22 +352,35 @@ PRO tab_event, Event
       3: BEGIN ;scaling
         tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='scaling_main_tab')
         step4CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
+ 
 ; Change code (RC Ward, 28 Dec 2010): If user has entered new reference run#
 ; RESTART will be set to 1. This is not implemented yet - not sure how to reset things.
-;     RESTART = (*global).RESTART
-; print, "test: RESTART: ", RESTART
-;        if ( RESTART EQ 1) THEN BEGIN
-;            step4CurrTabSelect = 0
-;        ENDIF
+     RESTART = (*global).RESTART
+; print, "test: eventcb:scaling RESTART: ", RESTART
+;==================================================================================\
+; make sure this droplist is updated
+;droplist of 'active files' 
+    updateStep3FileNames, Event;_scaling
+     IF ( RESTART EQ 1) THEN BEGIN
+;       if RESTART is 1, force the initial scaling screen
+        WIDGET_CONTROL, tab_id, set_tab_current=0     
+        step4CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
+     ENDIF
+;==================================================================================/     
         IF((*global).something_to_plot) THEN BEGIN
-; print, "test: step4CurrTabSelect: ", step4CurrTabSelect
           IF (step4CurrTabSelect EQ 0) THEN BEGIN ;scaling_step1
-; print, "in eventcb:scaling at A"
             populate_step4_range_init, Event ;_scaling
             refresh_step4_step1_plot, Event ;_scaling
             checkScalingGui, Event ;_gui           
           ENDIF ELSE BEGIN    ;scaling_step2
-; print, "in eventcb:scaling at B"
+;===================================================\
+     IF ( RESTART EQ 1) THEN BEGIN
+; if RESTART is 1, force the first page of scaling step2 
+        tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step4_step2_tab')
+        WIDGET_CONTROL, tab_id, set_tab_current=0     
+        step4CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
+     ENDIF
+;===================================================/
             (*global).PrevScalingTabSelect = -1 ;this forces a refresh
             scaling_tab_event, Event
           ;display_step4_step2_step2_selection, $
@@ -467,6 +480,19 @@ PRO scaling_tab_event, Event
   PrevTabSelect = (*global).PrevScalingTabSelect
   
   IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
+;=======================================
+     RESTART = (*global).RESTART
+     IF ( RESTART EQ 1) THEN BEGIN
+; if RESTART is 1, force the first page of scaling step2 
+        tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step4_step2_tab')
+        WIDGET_CONTROL, tab_id, set_tab_current=0     
+        step4CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
+        (*global).PrevScalingStep2TabSelect = 0
+     ENDIF
+     RESTART = 0
+     (*global).RESTART = RESTART  
+;========================================
+
     CASE (CurrTabSelect) OF
     
       0: BEGIN ;step1 (pixel range selection)
@@ -482,6 +508,8 @@ PRO scaling_tab_event, Event
         
         CASE ((*global).PrevScalingStep2TabSelect) OF
           0: BEGIN                ;all files
+; the following call was added to properly set up the droplist
+            populate_step4_2_3_droplist, Event
             re_display_step4_step2_step1_selection, Event ;scaling_step2
           END
           1: BEGIN                ;CE files
@@ -500,7 +528,8 @@ PRO scaling_tab_event, Event
         IF (error NE 0) THEN BEGIN
           CATCH,/CANCEL
         ENDIF ELSE BEGIN
-          step4_2_3_manual_scaling, Event, FACTOR='manual' ;scaling_step2_step3
+; FIGURE OUT THE PROBLEM HERE - WHY IS MANUAL SCALING CALLED? HOW DO WE GET TO THIS SPLOT?
+;         step4_2_3_manual_scaling, Event, FACTOR='manual' ;scaling_step2_step3
         ENDELSE
         
       ;          0: BEGIN ;all files
@@ -554,7 +583,8 @@ PRO tab_step4_step2_event, Event
     IF (error NE 0) THEN BEGIN
       CATCH,/CANCEL
     ENDIF ELSE BEGIN
-      step4_2_3_manual_scaling, Event, FACTOR='manual' ;scaling_step2_step3
+; FIGURE OUT THE PROBLEM HERE - WHY IS MANUAL SCALING CALLED? HOW DO WE GET TO THIS SPLOT?
+;     step4_2_3_manual_scaling, Event, FACTOR='manual' ;scaling_step2_step3
     ENDELSE
     
     (*global).PrevScalingStep2TabSelect = CurrTabSelect
@@ -578,7 +608,6 @@ PRO initialize_arrays, Event
   (*(*global).ref_x_list)            = ref_x_list
   (*(*global).scaling_factor)        = scaling_factor
 END
-
 
 ;------------------------------------------------------------------------------
 PRO MAIN_REALIZE, wWidget
