@@ -398,6 +398,7 @@ pro go_nexus_reduction_ref_m, event
         ;check to see if the theta value is the same as CE_theta
         _DATA = read_ref_m_nexus(event, $
           list_data_nexus[read_loop], $
+          full_list_of_data_spins[_index_spin], $
           read_loop, $
           TOFmin, $
           TOFmax, $

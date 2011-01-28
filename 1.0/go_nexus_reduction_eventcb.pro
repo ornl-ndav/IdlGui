@@ -435,6 +435,7 @@ end
 ; :Params:
 ;    event
 ;    filename
+;    spin_state       ;data spin
 ;    file_index
 ;    TOFmin
 ;    TOFmax
@@ -445,21 +446,11 @@ end
 ;   data    structure {data:image, dangle:dangle, dangle0:dangle0,$
 ;                      tof:tof, pixels:pixel}
 ;-
-function read_ref_m_nexus, event, filename, file_index, TOFmin, TOFmax, PIXmin, PIXmax
+function read_ref_m_nexus, event, filename, spin_state, file_index, TOFmin, TOFmax, PIXmin, PIXmax
   compile_opt idl2
   
   message = strarr(14)
   i=0
-  
-  ;isolate filename from spinstate
-  filename_array = strsplit(filename,'(',/extract)
-  filename = filename_array[0]
-  if (n_elements(filename_array) gt 1) then begin
-    spin_array = strmid(strsplit(filename_array[1],')',/extract),2)
-    spin_state = spin_array[0]
-  endif else begin
-    spin_state = ''
-  endelse
   
   message[i++] = '> Read data from NeXus ' + filename
   if (spin_state eq '') then begin
@@ -469,6 +460,12 @@ function read_ref_m_nexus, event, filename, file_index, TOFmin, TOFmax, PIXmin, 
   endelse
   
   iFile = obj_new('IDLnexusUtilities', filename, spin_state=spin_state)
+  
+  print, 'filename: ' , filename
+  print, spin_state
+  help, iFile
+  print
+  
   ;get data [tof, pixel_x, pixel_y]
   image = iFile->get_y_tof_data()
   sz = size(image)
@@ -660,13 +657,6 @@ function convert_THLAM, data, SD_d, MD_d, cpix, pix_size
   lambda=h/(m*vel)  ;m
   lambda=lambda*1e10  ;angstroms
   
-  
-  
-  
-  
-  
-  
-  
   theta_val=data.twotheta-data.theta
   
   ;theta_val=data.theta
@@ -704,6 +694,17 @@ function convert_ref_m_THLAM, data, SD_d, MD_d, cpix, pix_size
   
   lambda=h/(m*vel)  ;m
   lambda=lambda*1e10  ;angstroms
+  
+  help, cpix
+  
+  stop
+  
+  
+  
+  
+  
+  
+  
   
   theta_val=data.twotheta-data.theta
   
@@ -897,7 +898,7 @@ pro build_ref_m_THLAM, event=event, $
     
     ;SD_d : sample to detector distance
     ;MD_d : moderator to detector
-    THLAM=convert_THLAM(NORM_DATA, SD_d, MD_d, center_pixel, pixel_size)
+    THLAM=convert_ref_m_THLAM(NORM_DATA, SD_d, MD_d, center_pixel, pixel_size)
     ;THLAM is a structure
     ;{ data, lambda, theta}  with lambda in Angstroms and theta in radians
     
