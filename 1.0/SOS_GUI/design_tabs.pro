@@ -196,11 +196,13 @@ pro design_tabs, MAIN_BASE, global
     uname='nexus_tab1',$
     title = '  Configuration  ')
     
-  ;for REF_M only, spin state selection and metadata table
-  if ((*global).instrument eq 'REF_M') then begin
+;  ;for REF_M only, spin state selection and metadata table
+;  if ((*global).instrument eq 'REF_M') then begin
   
     other_spins = widget_base(nexus_tab1,$
       xoffset = 700,$
+      map = 0,$
+      uname = 'ref_m_list_of_spins',$
       yoffset = 115,$
       /row)
     label = widget_label(other_spins,$
@@ -226,7 +228,7 @@ pro design_tabs, MAIN_BASE, global
     widget_control, spin3, /set_button  
     ;widget_control, spin4, /set_button  
       
-  endif
+;  endif
   
   _base = widget_base(nexus_tab1,$
     xoffset = 10,$
@@ -392,10 +394,12 @@ pro design_tabs, MAIN_BASE, global
     title = 'Distance moderator to detector (mm) ')
     
     
-  ;for REF_M only, spin state selection and metadata table
-  if ((*global).instrument eq 'REF_M') then begin
+;  ;for REF_M only, spin state selection and metadata table
+;  if ((*global).instrument eq 'REF_M') then begin
   
     row2 = widget_base(para_box,$
+    uname = 'ref_m_metadata_table_base',$
+    map = 0,$
       /row)
       
     row_array = [0,0,1,1,1,1,1]
@@ -430,7 +434,7 @@ pro design_tabs, MAIN_BASE, global
       value = 'Set refpix ...',$
       uname = 'set_refpix_button')
       
-  endif
+;  endif
   
   if ((*global).hide_tab_2 eq 'no') then begin
   

@@ -105,6 +105,7 @@ cd, CurrentFolder
 .run refpix_colorbar.pro
 .run refpix_input_base.pro
 .run refpix_counts_vs_pixel_base.pro
+.run update_main_interface.pro
 
 ;outut tab
 .run sample_info_base.pro

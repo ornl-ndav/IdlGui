@@ -330,6 +330,12 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     (*global).table_metadata_xsize = xsize_table
   endif
   
+  
+  ;REMOVE_ME
+        input_path = "~/IDLWorkspace80/SOS 1.0/Files/"
+        (*global).input_path = input_path
+  
+  
 END
 
 ;

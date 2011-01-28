@@ -34,6 +34,28 @@
 
 ;+
 ; :Description:
+;    This function will return the name of the instrument according to the
+;    nexus file name: REF_L_* -> REF_L, REF_M_* -> REF_M
+;
+; :Param:
+;    file_name
+;
+; :Returns:
+;    name of the instrument (REF_L or REF_M)
+;
+; :Author: j35
+;-
+function determine_instrument, file_name
+  compile_opt idl2
+    
+  short_name = file_basename(file_name)
+  name_array = strsplit(short_name,'_',/extract)
+  instrument = strjoin(name_array[0:1],'_')
+  return, strupcase(instrument)
+end
+
+;+
+; :Description:
 ;    returns the name of the instrument according to the launch point
 ;    of the application
 ;
@@ -43,18 +65,18 @@
 ; :Author: j35
 ;-
 function getInstrument
-compile_opt idl2
-
-cmd = 'hostname
-spawn, cmd, hostname
-
-case (hostname[0]) of
-'lrac.sns.gov': return, 'REF_L'
-'mracs.sns.gov': return, 'REF_M'
-else: return, ''
-endcase
-
-end 
+  compile_opt idl2
+  
+  cmd = 'hostname
+  spawn, cmd, hostname
+  
+  case (hostname[0]) of
+    'lrac.sns.gov': return, 'REF_L'
+    'mracs.sns.gov': return, 'REF_M'
+    else: return, ''
+  endcase
+  
+end
 
 ;+
 ; :Description:
@@ -101,7 +123,7 @@ function get_nexus, event=event, run_number=run_number
   spawn, cmd, full_nexus_name, err
   
   if (full_nexus_name[0] eq '') then return, 'N/A'
-
+  
   if (file_test(full_nexus_name[0]) eq 0) then return, 'N/A'
   
   ;check if nexus exists
