@@ -1233,20 +1233,18 @@ PRO reset_sangle_calculation, Event
    SangleDone = (*(*global).SangleDone)
 
 ; get table
-   table = getTableValue(Event, 'reduce_sangle_tab_table_uname')
+  table = getTableValue(Event, 'reduce_sangle_tab_table_uname')
+; get row_selected
+  row_selected = getSangleRowSelected(Event)
   IF ((size(table))(0) EQ 1) THEN BEGIN ;1d array
    len = STRLEN(table[1])
    table[1] = STRMID(table[1],0, len-1)
-   SangleDone[1] = 0
   ENDIF ELSE BEGIN ;2d array
-; get row selected
-   row_selected = getSangleRowSelected(Event)
    len = STRLEN(table[1,row_selected])
    table[1,row_selected] = STRMID(table[1,row_selected],0, len-1)
-;print,    table[1,row_selected]
-; zero our SangleDone
-   SangleDone[row_selected] = 0
   ENDELSE
+; zero our SangleDone  
+   SangleDone[row_selected] = 0
    (*(*global).SangleDone) = SangleDone
 ;print, "SangleDone: ", SangleDone
    putValueInTable, Event, 'reduce_sangle_tab_table_uname', table   
