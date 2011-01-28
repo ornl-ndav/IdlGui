@@ -253,7 +253,7 @@ sResetManualScaling = { size: [sManualScalingButton.size[0]+$
 
 ;**** Lambda shortcut name used ***********************************************
 ; Change code (RC Ward, April 5, 2010): Move this label up on the screen
-XYoff = [-100,-220]
+XYoff = [-200,-220]
 sLambdaShortcut = { size: [tab_size[2]+XYoff[0],$
                            tab_size[3]+XYoff[1]],$
                     value: 'Lda = Lambda',$

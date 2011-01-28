@@ -496,7 +496,7 @@ PRO plot_sangle_refpix, Event
    IF (SangleDone[row_selected] EQ 1) THEN BEGIN
         RefPix_device = 2*RefPixSave[row_selected]
         sRefPixSave = STRCOMPRESS(RefPixSave[row_selected],/REMOVE_ALL)
-;Change Code (RC Ward, 20 Oct 2010): Put RefPix value into text box
+;Change Code (RC Ward, 20 Oct 2010): Put RefPix value into text box       
         putTextFieldValue, Event, 'reduce_sangle_base_refpix_user_value', sRefPixSave
    ENDIF ELSE BEGIN
   ; else use the default, or value entered by user
@@ -546,7 +546,8 @@ PRO plot_sangle_refpix, Event
 ;       print, "usethis_0: ",usethis[0]
 ;       print, "usethis_1: ", usethis[1]
 ; DEBUG ========================================
-; Change code (RC Ward 30 June 2010): Had to write out a RefPix file for each spins state
+; Change code (RC Ward 30 June 2010): Had to write out a RefPix file for each spin state
+; CHANGED THIS Jan 2011 - Only one RefPix file created for all spin states
 ; Change code (RC Ward, 23 July 2010): Path to reduce step files (ascii_path) now specified by user
         RefPix_file_stub = (*global).ascii_path + usethis[0]
     ENDIF ELSE BEGIN
@@ -879,10 +880,10 @@ PRO determine_sangle_refpix_data_from_device_value, Event
 ; Change code (RC Ward 30 June 2010): Had to write out a RefPix file for each spins state
 ; Change code (RC Ward, 23 July 2010): Path to reduce step files (ascii_path) now specified by user
         RefPix_file_stub = (*global).ascii_path + usethis[0]
-        print, "Case 1: RefPix RefPix_file_stub: ", RefPix_file_stub
+;        print, "Case 1: RefPix RefPix_file_stub: ", RefPix_file_stub
     ENDIF ELSE BEGIN
         RefPix_file_stub = (*global).ascii_path  + parts[1] + '_' + parts[4]
-        print, "Case 2: RefPix RefPix_file_stub: ", RefPix_file_stub
+;        print, "Case 2: RefPix RefPix_file_stub: ", RefPix_file_stub
     ENDELSE
 
 ;    print, "RefPix RefPix_file_stub: ", RefPix_file_stub
@@ -1224,5 +1225,32 @@ PRO order_data, sangle_zoom_xy_minmax
   sangle_zoom_xy_minmax[2] = xmax
   sangle_zoom_xy_minmax[3] = ymax
   
+END
+PRO reset_sangle_calculation, Event
+   ;get global structure
+   WIDGET_CONTROL,Event.top,GET_UVALUE=global
+; get SangleDone
+   SangleDone = (*(*global).SangleDone)
+
+; get table
+   table = getTableValue(Event, 'reduce_sangle_tab_table_uname')
+  IF ((size(table))(0) EQ 1) THEN BEGIN ;1d array
+   len = STRLEN(table[1])
+   table[1] = STRMID(table[1],0, len-1)
+   SangleDone[1] = 0
+  ENDIF ELSE BEGIN ;2d array
+; get row selected
+   row_selected = getSangleRowSelected(Event)
+   len = STRLEN(table[1,row_selected])
+   table[1,row_selected] = STRMID(table[1,row_selected],0, len-1)
+;print,    table[1,row_selected]
+; zero our SangleDone
+   SangleDone[row_selected] = 0
+  ENDELSE
+   (*(*global).SangleDone) = SangleDone
+;print, "SangleDone: ", SangleDone
+   putValueInTable, Event, 'reduce_sangle_tab_table_uname', table   
+;   plot_sangle_refpix, Event
+   
 END
 

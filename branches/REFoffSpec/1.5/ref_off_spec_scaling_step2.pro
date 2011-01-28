@@ -164,9 +164,9 @@ PRO re_display_step4_step2_step1_selection, Event, MODE=mode
     WSET,id_value
     
     nbr_plot = getNbrFiles(Event)
-    ;array that will contain the counts vs wavelenghth of each data file
+
+; IvsLambda_selection array that will contain the counts vs wavelenghth of each data file
 ; just checks to see if mode is set to anything, if it is (say 'AUTOSCALE') then use new
-; RC Ward does not understand this - 1 July 2010
     IF (N_ELEMENTS(MODE) EQ 0) THEN BEGIN
       IvsLambda_selection = (*(*global).IvsLambda_selection)
     ENDIF ELSE BEGIN
@@ -177,6 +177,8 @@ PRO re_display_step4_step2_step1_selection, Event, MODE=mode
     xmax = getTextFieldValue(Event,'step4_2_zoom_x_max')
     ymin = getTextFieldValue(Event,'step4_2_zoom_y_min')
     ymax = getTextFieldValue(Event,'step4_2_zoom_y_max')
+
+;print, "scale: ", xmin, xmax, ymin, ymax
     
     (*global).step4_step1_ymax_value = FLOAT(ymax)
     
@@ -187,7 +189,7 @@ PRO re_display_step4_step2_step1_selection, Event, MODE=mode
         index = 0
         box_color     = (*global).box_color
         WHILE (index LT nbr_plot) DO BEGIN
-        
+;        print, "index: ", index
           IF (N_ELEMENTS(MODE) EQ 0) THEN BEGIN
             t_data_to_plot = *IvsLambda_selection[index]
           ENDIF ELSE BEGIN
@@ -206,6 +208,7 @@ PRO re_display_step4_step2_step1_selection, Event, MODE=mode
             ytitle = 'Counts'
             
             IF (isLog) THEN BEGIN
+;print, "doing plot now"
               plot, xrange, $
                 t_data_to_plot, $
                 XTITLE = xtitle, $
@@ -230,6 +233,7 @@ PRO re_display_step4_step2_step1_selection, Event, MODE=mode
                 PSYM   = psym
             ENDELSE
           ENDIF ELSE BEGIN
+;print, " doing overplot"
             oplot, xrange,$
               t_data_to_plot, $
               COLOR  = color,$

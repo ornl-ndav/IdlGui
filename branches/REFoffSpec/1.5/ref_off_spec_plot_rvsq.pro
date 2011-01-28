@@ -44,7 +44,6 @@ TYPE = 'IvsQ'
 path = (*global).working_path
 
 title='Select Output Directory'
-ytitle = "Reflectivity"
 
 IF (TYPE EQ 'IvsQ') THEN BEGIN
   WindowTitle = 'R vs Q'
@@ -72,9 +71,6 @@ IF (datafile NE  "") THEN BEGIN
   ymax = 1.2
 ;for debug:
 ;print, "Reading file: ", datafile
-
-; type of plot - linear = 1 or linear = 0 for log plot
-  linear = 0 
 
 
   line = STRARR(1)
@@ -104,7 +100,7 @@ IF (datafile NE  "") THEN BEGIN
       values = double(STRSPLIT(line, ' ',/extract))
       lambda[j] = values[0]
       intensity[j] = values[1]
-      if (intensity[j] LE 0.) then intensity[j] = ymin 
+      IF (intensity[j] LE 0.) THEN intensity[j] = ymin 
       ALOG10intensity[j] = ALOG10(intensity[j])
       j = j + 1
   ENDWHILE
@@ -129,22 +125,31 @@ IF (datafile NE  "") THEN BEGIN
 ;  ref_plot_data_color = (*global).ref_plot_data_color  
 ;  color = FSC_COLOR(ref_plot_data_color)
 
+; type of plot - linear = 1 or linear = 0 for log plot
+  linear = 0 
 ; linear plot
   IF (linear EQ 1) THEN BEGIN
     yrange = [0.,ymax]
-  
+     ytitle = "Reflectivity"
     PLOT, lambda, intensity, XRANGE=xrange, YRANGE=yrange, TITLE=plottitle, $
-      XTITLE=xtitle, YTITLE=ytitle, BACKGROUND=convert_rgb([255B,250B,205B]), $
+      XTITLE=xtitle, BACKGROUND=convert_rgb([255B,250B,205B]), $
       COLOR=convert_rgb([0B,0B,255B]), THICK = 1, CHARSIZE = 1, PSYM = 1, SYMSIZE = 0.5
+; Change made on 22 Jan 2011: 
+; Correct for fact that YTITLE is plotted the opposite orientation
+    XYOUTS, 0.06, 0.52, ytitle, Alignment=0.5, Orientation= +90.0, COLOR=0, /MORMAL
+
   ENDIF
 
 ; log plot
   IF (linear EQ 0) THEN BEGIN
     yrange = [ALOG10(ymin),ALOG10(ymax)] 
-
+   ytitle = "log Reflectivity"
     PLOT, lambda, ALOG10intensity, XRANGE=xrange, YRANGE=yrange, TITLE=plottitle, $,
-      XTITLE=xtitle, YTITLE=ytitle, BACKGROUND=convert_rgb([255B,250B,205B]), $
+      XTITLE=xtitle, BACKGROUND=convert_rgb([255B,250B,205B]), $
       COLOR=convert_rgb([0B,0B,255B]), THICK = 1, CHARSIZE = 1, PSYM = 1, SYMSIZE = 0.5
+; Change made on 22 Jan 2011: 
+; Correct for fact that YTITLE is plotted the opposite orientation
+    XYOUTS, 0.06, 0.52, ytitle, Alignment=0.5, Orientation = +90.0, COLOR=0, /NORMAL
   ENDIF
 
   IMAGE=TVRD()
