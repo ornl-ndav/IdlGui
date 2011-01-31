@@ -777,7 +777,7 @@ pro build_THLAM, event=event, $
     
     ;SD_d : sample to detector distance
     ;MD_d : moderator to detector
-    THLAM=convert_ref_m_THLAM(NORM_DATA, SD_d, MD_d, center_pixel, pixel_size)
+    THLAM=convert_THLAM(NORM_DATA, SD_d, MD_d, center_pixel, pixel_size)
     ;THLAM is a structure
     ;{ data, lambda, theta}  with lambda in Angstroms and theta in radians
     
