@@ -490,14 +490,14 @@ function read_ref_m_nexus, event, filename, spin_state, file_index, TOFmin, TOFm
   message[i++] = '-> retrieved dangle0: ' + strcompress(dangle0,/remove_all) + $
     ' ' + strcompress(dangle0_units,/remove_all)
     
-;  Theta=theta+4.0
-;  TwoTheta=TwoTheta+4.0
-  
-;  message[i++] = '-> Adding 4.0 to theta and twotheta'
-;  message[i++] = '  -> theta: ' + strcompress(theta,/remove_all) + $
-;    ' ' + strcompress(theta_units,/remove_all)
-;  message[i++] = '  -> twotheta: ' + strcompress(twotheta,/remove_all) + $
-;    ' ' + strcompress(twotheta_units,/remove_all)
+  ;  Theta=theta+4.0
+  ;  TwoTheta=TwoTheta+4.0
+    
+  ;  message[i++] = '-> Adding 4.0 to theta and twotheta'
+  ;  message[i++] = '  -> theta: ' + strcompress(theta,/remove_all) + $
+  ;    ' ' + strcompress(theta_units,/remove_all)
+  ;  message[i++] = '  -> twotheta: ' + strcompress(twotheta,/remove_all) + $
+  ;    ' ' + strcompress(twotheta_units,/remove_all)
     
   ;Determine where is the first and last tof in the range
   list=where(TOF ge TOFmin and TOF le TOFmax)
@@ -691,21 +691,17 @@ function convert_ref_m_THLAM, data, SD_d, MD_d, cpix, pix_size
   lambda=lambda*1e10  ;angstroms
   
   ;calculate angle
+  term1 = (float(data.pixels) - float(cpix)) * float(pix_size)
+  term1 /= 2.*SD_d
   
+  help, data.dangle
+  help, data.dangle0
   
+  term2 = (float(data.dangle) - float(data.dangle0))/2.
   
+  sangle = term1 + term2
   
-  
-  
-  
-  theta_val=data.twotheta-data.theta
-  
-  ;theta_val=data.theta
-  theta_val=theta_val[0]
-  d_vec=(data.pixels-cpix)*pix_size
-  thetavec=(atan(d_vec/SD_d[0])/!DTOR)+theta_val
-  
-  THLAM={data:data.data, lambda:lambda, theta:thetavec}
+  THLAM={data:data.data, lambda:lambda, sangle:sangle}
   
   return, THLAM
   
@@ -890,20 +886,26 @@ pro build_ref_m_THLAM, event=event, $
     
     ;SD_d : sample to detector distance
     ;MD_d : moderator to detector
-    THLAM=convert_ref_m_THLAM(NORM_DATA, SD_d, MD_d, center_pixel, pixel_size)
+    THLAM=convert_ref_m_THLAM(NORM_DATA, $
+      SD_d, $
+      MD_d, $
+      center_pixel[read_loop], $
+      pixel_size)
     ;THLAM is a structure
-    ;{ data, lambda, theta}  with lambda in Angstroms and theta in radians
-    
+    ;{ data, lambda, sangle}  with lambda in Angstroms and theta in radians
+      
     ;round the angles to the nearset 100th of a degree
-    theta_val=round(RAW_DATA.theta[0]*100.0)/100.0
-    twotheta_val=round(RAW_DATA.twotheta[0]*100.0)/100.0
-    theta_val=theta_val[0]
-    twotheta_val=twotheta_val[0]
+    dangle_val=round(RAW_DATA.dangle[0]*10000.0)/10000.0
+    dangle0_val=round(RAW_DATA.dangle0[0]*10000.0)/10000.0
+    dangle_val=dangle_val[0]
+    dangle0_val=dangle0_val[0]
     
-    tilenum=where((angles[0,*] eq theta_val) and (angles[1,*] eq twotheta_val))
+    tilenum=where((angles[0,*] eq dangle_val) and (angles[1,*] eq dangle0_val))
+    
+    tilenum = tilenum[0]
     
     THLAM_array[tilenum,*,*]=THLAM_array[tilenum,*,*]+THLAM.data
-    THLAM_thvec[tilenum,*]=THLAM.theta
+    THLAM_thvec[tilenum,*]=THLAM.sangle
     THLAM_lamvec[tilenum,*]=THLAM.lambda
     
     ;    window,0, title = "Convertion: TOF->Lambda, Pixel->Theta"
@@ -914,9 +916,9 @@ pro build_ref_m_THLAM, event=event, $
     
     message1 = ['-> Created THLAM array of file # ' + $
       strcompress(read_loop,/remove_all)]
-    message2 = ['   theta: ' + strcompress(theta_val,/remove_all) + $
+    message2 = ['   dangle: ' + strcompress(dangle_val,/remove_all) + $
       ' degrees']
-    message3 = ['   twotheta: ' + strcompress(twotheta_val,/remove_all) + $
+    message3 = ['   dangle0: ' + strcompress(dangle0_val,/remove_all) + $
       ' degrees']
     message = [message, message1, message2, message3]
     
