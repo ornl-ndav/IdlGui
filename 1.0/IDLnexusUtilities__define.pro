@@ -432,6 +432,26 @@ end
 
 ;+
 ; :Description:
+;    Retrieves the thi angle for the REF_L instrument
+;
+; :Returns:
+;    structure {value:'thi value', units:'thi units'}
+;
+; :Author: j35
+;-
+function IDLnexusUtilities::get_thi
+compile_opt idl2
+
+if (self.instrument eq 'REF_M') then return, {value:'', units:''}
+
+thi_path = self.entry_spin_state + '/instrument/aperture1/thi/average_value'
+value_units = retrieve_value_units(file_name=self.file_name, path=thi_path)
+
+return, {value:value_units[0], units:value_units[1]}
+end
+
+;+
+; :Description:
 ;    Retrieves the theta angle value and its units
 ;
 ; :Returns:

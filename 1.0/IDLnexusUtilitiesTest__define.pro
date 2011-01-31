@@ -318,6 +318,46 @@ function IDLnexusUtilitiesTest::test_REF_L_twotheta_unit
   return, 1
 end
 
+;************************* REF_L / thi ****************************************
+
+;+
+; :Description:
+;    Test to retrieve thi for REF_L
+;
+; :Author: j35
+;-
+function IDLnexusUtilitiesTest::test_REF_L_thi_value
+  compile_opt idl2
+  
+  file_name= 'unit_test_files/REF_L_38955.nxs'
+  myObject = obj_new('IDLnexusUtilities',file_name)
+  v_u = myObject->get_thi()
+  obj_destroy, myObject
+  
+  assert, v_u.value eq '-4.00000', 'Wrong thi value for REF_L_38955'
+  
+  return, 1
+end
+
+;+
+; :Description:
+;    Test to retrieve thi unit for REF_L
+;
+; :Author: j35
+;-
+function IDLnexusUtilitiesTest::test_REF_L_thi_unit
+  compile_opt idl2
+  
+  file_name= 'unit_test_files/REF_L_38955.nxs'
+  myObject = obj_new('IDLnexusUtilities',file_name)
+  v_u = myObject->get_thi()
+  obj_destroy, myObject
+  
+  assert, v_u.units eq 'degree', 'Wrong thi value for REFL_38955'
+  
+  return, 1
+end
+
 ;************************* REF_M / twotheta ***********************************
 
 ;+
