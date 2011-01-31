@@ -278,10 +278,10 @@ pro go_nexus_reduction_ref_m, event
       label='to pixel', $
       full_check_message = full_check_message
       
-    center_pixel = get_center_pixel(event)
-    check_input, value=center_pixel, $
-      label='center pixel', $
-      full_check_message = full_check_message
+;    center_pixel = get_center_pixel(event)
+;    check_input, value=center_pixel, $
+;      label='center pixel', $
+;      full_check_message = full_check_message
     pixel_size = get_pixel_size(event)
     check_input, value=pixel_size, $
       label='pixel size', $
@@ -395,6 +395,7 @@ pro go_nexus_reduction_ref_m, event
       
       ;number of steps is ----> file_num
       for read_loop=0,file_num-1 do begin
+        
         ;check to see if the theta value is the same as CE_theta
         _DATA = read_ref_m_nexus(event, $
           list_data_nexus[read_loop], $
@@ -484,7 +485,7 @@ pro go_nexus_reduction_ref_m, event
         spectrum = spectrum, $
         SD_d = SD_d, $
         MD_d = MD_d, $
-        center_pixel = center_pixel, $
+        center_pixel = refpix, $
         pixel_size = pixel_size, $
         angles = angles, $
         THLAM_array = THLAM_array, $
@@ -492,16 +493,9 @@ pro go_nexus_reduction_ref_m, event
         THLAM_thvec = THLAM_thvec, $
         processes = processes, $
         total_number_of_processes = total_number_of_processes
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+
+
+stop
         
         
         

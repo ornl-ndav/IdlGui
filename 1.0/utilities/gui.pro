@@ -57,15 +57,20 @@ end
 ;
 ; :Keywords:
 ;    event
+;    main_base
 ;    map
 ;    uname
 ;
 ; :Author: j35
 ;-
-pro mapBase, event=event, status=status, uname=uname
+pro mapBase, event=event, main_base=main_base, status=status, uname=uname
   compile_opt idl2
   
+  if (keyword_set(event)) then begin
   id = widget_info(event.top, find_by_uname=uname)
+  endif else begin
+  id = widget_info(main_base, find_by_uname=uname)
+  endelse
   widget_control, id, map=status
   
 end

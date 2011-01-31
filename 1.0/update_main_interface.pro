@@ -46,34 +46,40 @@
 pro update_main_interface, event=event, main_base=main_base
   compile_opt idl2
   
-  widget_control, event.top, get_uvalue=global
+  if (keyword_set(event)) then begin
+    widget_control, event.top, get_uvalue=global
+  endif else begin
+    widget_control, main_base, get_uvalue=global
+  endelse
   
   instrument = (*global).instrument
   
   case (instrument) of
     'REF_L': begin
-    center_pixels_status = 1
-    config_table_status = 0
-    
+      center_pixels_status = 1
+      config_table_status = 0
+      
     end
     'REF_M': begin
-    center_pixels_status = 1
-    config_table_status = 1
-    
-    
+      center_pixels_status = 1
+      config_table_status = 1
+      
     end
   endcase
   
   activate_button, event=event, $
-  status=center_pixels_status, $
-  uname='center_pixel'
-  
+    main_base=main_base, $
+    status=center_pixels_status, $
+    uname='center_pixel'
+    
   mapBase, event=event, $
-  status=config_table_status, $
-  uname = 'ref_m_metadata_table_base'
-  
+    main_base=main_base, $
+    status=config_table_status, $
+    uname = 'ref_m_metadata_table_base'
+    
   mapBase, event=event, $
-  status=config_table_status, $
-  uname = 'ref_m_list_of_spins'
-  
+    main_base=main_base, $
+    status=config_table_status, $
+    uname = 'ref_m_list_of_spins'
+    
 end

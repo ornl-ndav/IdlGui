@@ -296,6 +296,9 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     file_name = input_path + 'REF_L_34435.nxs'
     putValue, base=main_base, 'rtof_nexus_geometry_file', file_name
     
+    ;add config table for REF_M
+    update_main_interface, main_base=main_base
+    
     check_go_button, base=main_base
     
   endif
@@ -329,12 +332,6 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     (*global).table_metadata_ysize = ysize_table
     (*global).table_metadata_xsize = xsize_table
   endif
-  
-  
-  ;REMOVE_ME
-        input_path = "~/IDLWorkspace80/SOS 1.0/Files/"
-        (*global).input_path = input_path
-  
   
 END
 
