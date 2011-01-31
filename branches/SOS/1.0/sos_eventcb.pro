@@ -58,6 +58,8 @@ pro full_reset, event
   (*global).big_table = big_table
   putValue, event=event, base=main_base, 'tab1_table', big_table
   
+  (*global).selected_list_norm_file = strarr(max_nbr_data_nexus)
+  
   putValue, event=event, 'd_sd_uname', ''
   putValue, event=event, 'd_md_uname', ''
   
