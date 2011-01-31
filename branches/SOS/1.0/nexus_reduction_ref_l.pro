@@ -48,7 +48,7 @@ pro go_nexus_reduction_ref_l, event
   widget_control, event.top, get_uvalue=global
   
   error = 0
-  ;catch,error
+  catch,error
   if (error ne 0) then begin
     catch,/cancel
     
@@ -215,7 +215,8 @@ pro go_nexus_reduction_ref_l, event
     ;lambda step used in conversion to QxQz
     lambda_step = 0
     
-    update_progress_bar_percentage, event, ++processes, total_number_of_processes
+    update_progress_bar_percentage, event, ++processes, $
+    total_number_of_processes
     
     ;number of steps is ----> 1
     
@@ -244,7 +245,8 @@ pro go_nexus_reduction_ref_l, event
         total_number_of_processes)
     endelse
     
-    update_progress_bar_percentage, event, ++processes, total_number_of_processes
+    update_progress_bar_percentage, event, ++processes, $
+    total_number_of_processes
     
     ;number of steps is ----> 1
     ;trip the spectrum to the relevant tof ranges
@@ -259,7 +261,8 @@ pro go_nexus_reduction_ref_l, event
     ;Save big data structure into a array of pointers
     DATA = ptrarr(file_num, /allocate_heap)
     
-    update_progress_bar_percentage, event, ++processes, total_number_of_processes
+    update_progress_bar_percentage, event, ++processes, $
+    total_number_of_processes
     
     ;number of steps is ----> file_num
     for read_loop=0,file_num-1 do begin
