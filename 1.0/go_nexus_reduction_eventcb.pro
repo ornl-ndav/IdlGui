@@ -207,8 +207,10 @@ function get_ref_m_normalization_spectrum, event=event, $
     current_file = list_norm_nexus[index]
     current_spin = list_norm_spin[index]
     if (index gt 0) then begin ;no need to look for first normalization file
-      _where_same_file_index = where(current_file eq list_norm_nexus, nbr_same_file)
-      _where_same_spin_index = where(current_spin eq list_norm_spin, nbr_same_spin)
+      _where_same_file_index = where(current_file eq list_norm_nexus, $
+      nbr_same_file)
+      _where_same_spin_index = where(current_spin eq list_norm_spin, $
+      nbr_same_spin)
       
       if (nbr_same_file gt 1 && nbr_same_spin gt 1) then begin
         _same_index = 0
@@ -329,7 +331,7 @@ end
 function read_nexus, event, filename, TOFmin, TOFmax, PIXmin, PIXmax
   compile_opt idl2
   
-  message = strarr(14)
+  message = strarr(19)
   i=0
   
   ;isolate filename from spinstate
@@ -365,24 +367,50 @@ function read_nexus, event, filename, TOFmin, TOFmax, PIXmin, PIXmax
   ;get angles
   _Theta = iFile->get_theta()
   _TwoTheta = iFile->get_twoTheta()
+  _thi = iFile->get_thi()
+  
+  obj_destroy, iFile
   
   theta = _theta.value
   twotheta = _twotheta.value
+  thi = _thi.value
   
   theta_units = _theta.units
   twotheta_units = _twotheta.units
+  thi_units = _thi.units
   
   message[i++] = '-> retrieved theta: ' + strcompress(theta,/remove_all) + $
     ' ' + strcompress(theta_units,/remove_all)
-  message[i++] = '-> retrieved twotheta: ' + strcompress(twotheta,/remove_all) + $
+  message[i++] = '-> retrieved twotheta: ' + $
+  strcompress(twotheta,/remove_all) + $
     ' ' + strcompress(twotheta_units,/remove_all)
+   message[i++] = '-> retrieved thi: ' + strcompress(thi,/remove_all) + $
+    ' ' + strcompress(thi_units,/remove_all)
     
-  obj_destroy, iFile
+  ;make sure we are in degrees
+  theta_value_degree = convert_angle(angle=theta,$
+    from_unit=theta_units,$
+    to_unit='degree')
+  twotheta_value_degree = convert_angle(angle=twotheta,$
+    from_unit=twotheta_units,$
+    to_unit='degree')
+  thi_value_degree = convert_angle(angle=thi,$
+    from_unit=thi_units,$
+    to_unit='degree')
   
-  Theta=theta+4.0
-  TwoTheta=TwoTheta+4.0
+   message[i++] = '-> Make sure we are in degrees:'
+  message[i++] = '-> theta: ' + strcompress(theta_value_degree,/remove_all) + $
+    ' degrees'
+  message[i++] = '-> twotheta: ' + $
+   strcompress(twotheta_value_degree,/remove_all) + $
+    ' degrees'
+  message[i++] = '-> thi: ' + strcompress(thi_value_degree,/remove_all) + $
+    ' degrees'
+        
+  Theta = float(theta_value_degree) - float(thi_value_degree)
+  TwoTheta = float(TwoTheta_value_degree) - float(thi_value_degree)
   
-  message[i++] = '-> Adding 4.0 to theta and twotheta'
+   message[i++] = '-> Adding thi to theta and twotheta'
   message[i++] = '  -> theta: ' + strcompress(theta,/remove_all) + $
     ' ' + strcompress(theta_units,/remove_all)
   message[i++] = '  -> twotheta: ' + strcompress(twotheta,/remove_all) + $
@@ -426,7 +454,6 @@ function read_nexus, event, filename, TOFmin, TOFmax, PIXmin, PIXmax
   
 end
 
-
 ;+
 ; :Description:
 ;    Retrieve all the important information from each data nexus files
@@ -446,7 +473,14 @@ end
 ;   data    structure {data:image, dangle:dangle, dangle0:dangle0,$
 ;                      tof:tof, pixels:pixel}
 ;-
-function read_ref_m_nexus, event, filename, spin_state, file_index, TOFmin, TOFmax, PIXmin, PIXmax
+function read_ref_m_nexus, event, $
+filename, $
+spin_state, $
+file_index, $
+TOFmin, $
+TOFmax, $
+PIXmin, $
+PIXmax
   compile_opt idl2
   
   message = strarr(14)
@@ -487,7 +521,8 @@ function read_ref_m_nexus, event, filename, spin_state, file_index, TOFmin, TOFm
   
   message[i++] = '-> retrieved dangle: ' + strcompress(dangle,/remove_all) + $
     ' ' + strcompress(dangle_units,/remove_all)
-  message[i++] = '-> retrieved dangle0: ' + strcompress(dangle0,/remove_all) + $
+  message[i++] = '-> retrieved dangle0: ' + $
+  strcompress(dangle0,/remove_all) + $
     ' ' + strcompress(dangle0_units,/remove_all)
     
   ;  Theta=theta+4.0
@@ -793,11 +828,11 @@ pro build_THLAM, event=event, $
     THLAM_thvec[tilenum,*]=THLAM.theta
     THLAM_lamvec[tilenum,*]=THLAM.lambda
     
-    ;    window,0, title = "Convertion: TOF->Lambda, Pixel->Theta"
-    ;    shade_surf, smooth(thlam.data,3), thlam.lambda, thlam.theta, ax=70, $
-    ;      charsi=2, xtitle='LAMBDA (' + string("305B) + ')', ytitle='THETA (rad)'
-    ;    wait,.1
-    ;    wshow
+    ;window,0, title = "Convertion: TOF->Lambda, Pixel->Theta"
+    ;shade_surf, smooth(thlam.data,3), thlam.lambda, thlam.theta, ax=70, $
+    ;charsi=2, xtitle='LAMBDA (' + string("305B) + ')', ytitle='THETA (rad)'
+    ;wait,.1
+    ;wshow
     
     message1 = ['-> Created THLAM array of file # ' + $
       strcompress(read_loop,/remove_all)]
@@ -908,11 +943,11 @@ pro build_ref_m_THLAM, event=event, $
     THLAM_thvec[tilenum,*]=THLAM.sangle
     THLAM_lamvec[tilenum,*]=THLAM.lambda
     
-    ;    window,0, title = "Convertion: TOF->Lambda, Pixel->Theta"
-    ;    shade_surf, smooth(thlam.data,3), thlam.lambda, thlam.theta, ax=70, $
-    ;      charsi=2, xtitle='LAMBDA (' + string("305B) + ')', ytitle='THETA (rad)'
-    ;    wait,.1
-    ;    wshow
+    ;window,0, title = "Convertion: TOF->Lambda, Pixel->Theta"
+    ;shade_surf, smooth(thlam.data,3), thlam.lambda, thlam.theta, ax=70, $
+    ;charsi=2, xtitle='LAMBDA (' + string("305B) + ')', ytitle='THETA (rad)'
+    ;wait,.1
+    ;wshow
     
     message1 = ['-> Created THLAM array of file # ' + $
       strcompress(read_loop,/remove_all)]
@@ -1229,18 +1264,20 @@ function create_big_scaled_array, event=event, $
     endfor
   endfor
   
-  ;  contour, [[0,0],[20000,0]], [qxrange[0],qxrange[1]], [qzrange[0],qzrange[1]],/nodata, charsi=1.5, xtitle='QX', ytitle='QZ'
-  ;  for loop=0,num-1 do begin
-  ;      contour, QXQZ_array[loop,*,*],Qxvec,Qzvec, /fill,nlev=200,/overplot
-  ;      wait,.05
-  ;  endfor
+  ;contour, [[0,0],[20000,0]], [qxrange[0],qxrange[1]], $
+  ; [qzrange[0],qzrange[1]],/nodata, charsi=1.5, xtitle='QX', ytitle='QZ'
+  ;for loop=0,num-1 do begin
+  ;contour, QXQZ_array[loop,*,*],Qxvec,Qzvec, /fill,nlev=200,/overplot
+  ;wait,.05
+  ;endfor
   
   countarray=make_array(qxbins,qzbins)
   ;count where the tiles have data
   for loop=0,num-1 do begin
     for xloop=0,qxbins-1 do begin
       for zloop=0,qzbins-1 do begin
-        if qxqz_array[loop,xloop,zloop] ne 0 then countarray[xloop,zloop]=countarray[xloop,zloop]+1
+        if qxqz_array[loop,xloop,zloop] ne 0 then $
+        countarray[xloop,zloop]=countarray[xloop,zloop]+1
       endfor
     endfor
   endfor
