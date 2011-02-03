@@ -48,7 +48,7 @@ pro go_nexus_reduction_ref_l, event
   widget_control, event.top, get_uvalue=global
   
   error = 0
-  catch,error
+  ;catch,error
   if (error ne 0) then begin
     catch,/cancel
     
@@ -258,6 +258,7 @@ pro go_nexus_reduction_ref_l, event
     ;determine the Nexus file(s) which include(s) the critical reflection
     ;all other tiles will be normalized to these.
     file_angles=make_array(3,file_num) ;[file_index, theta, twotheta]
+    ;file_angles=make_array(2,file_num) ;[file_index, twotheta]
     ;Save big data structure into a array of pointers
     DATA = ptrarr(file_num, /allocate_heap)
     
@@ -292,8 +293,8 @@ pro go_nexus_reduction_ref_l, event
     
     ;number of steps is ----> 1
     
-    ;create unique increasing list of angles (theta and twotheat)
-    theta_angles = create_uniq_sort_list_of_angles(event, $
+    ;create unique increasing list of angles (twotheta)
+   theta_angles = create_uniq_sort_list_of_angles(event, $
       file_angle = reform(file_angles[1,*]))
       
     twoTheta_angles = create_uniq_sort_list_of_angles(event, $
@@ -312,7 +313,7 @@ pro go_nexus_reduction_ref_l, event
     message2 = '-> size(twotheta_angles) = ' + strcompress(si2,/remove_all)
     message21 = '--> twotheta_angles = [' + $
       strcompress(strjoin(twotheta_angles,','),/remove_all) + ']'
-    message = [message, message1, message11, message2, message21]
+    message = [message, message2, message21]
     log_book_update, event, message=message
     
     ;number of steps is ----> 1
