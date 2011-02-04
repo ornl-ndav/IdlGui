@@ -354,6 +354,9 @@ function read_nexus, event, filename, TOFmin, TOFmax, PIXmin, PIXmax
   iFile = obj_new('IDLnexusUtilities', filename, spin_state=spin_state)
   ;get data [tof, pixel_x, pixel_y]
   image = iFile->get_y_tof_data()
+  help, image
+  help, where(image ne 0)
+  
   sz = size(image)
   message[i++] = '-> retrieved Y vs TOF data [' + $
     strcompress(strjoin(sz,','),/remove_all) + ']'
@@ -416,10 +419,14 @@ function read_nexus, event, filename, TOFmin, TOFmax, PIXmin, PIXmax
   message[i++] = '  -> twotheta: ' + strcompress(twotheta,/remove_all) + $
     ' ' + strcompress(twotheta_units,/remove_all)
     
-  ;Determine where is the first and last tof in the range
-  list=where(TOF ge TOFmin and TOF le TOFmax)
+  ;Determine where is the first and last tof in the range  
+  ;list=where(TOF ge TOFmin and TOF le TOFmax)
   t1=min(where(TOF ge TOFmin))
-  t2=max(where(TOF le TOFmax))
+  t2=max(where(TOF lt TOFmax))
+  
+  print, 't1: ' , t1
+  print, 't2: ' , t2
+  print
   
   message[i++] = '-> [t1,t2]=[' + strcompress(t1,/remove_all) + $
     ',' + strcompress(t2,/remove_all) + ']'
@@ -432,9 +439,14 @@ function read_nexus, event, filename, TOFmin, TOFmax, PIXmin, PIXmax
     ',' + strcompress(p2,/remove_all) + ']'
     
   TOF=TOF[t1:t2]
+  help, TOF
   PIXELS=pixels[p1:p2]
+  help, Pixels
   
+  help, image
   image=image[t1:t2,p1:p2]
+  
+  help, image
   
   sz = size(tof)
   message[i++] = '-> size(TOF): ' + strcompress(strjoin(sz,','),/remove_all)
@@ -442,6 +454,9 @@ function read_nexus, event, filename, TOFmin, TOFmax, PIXmin, PIXmax
   message[i++] = '-> size(pixels): ' + strcompress(strjoin(sz,','),/remove_all)
   sz = size(image)
   message[i++] = '-> size(image): ' + strcompress(strjoin(sz,','),/remove_all)
+  
+  print, 'in readnexus'
+  help, where(image ne 0)
   
   ;image -> data (counts)
   ;tof   -> tof axis
@@ -678,6 +693,8 @@ function convert_THLAM, data, SD_d, MD_d, cpix, pix_size
   compile_opt idl2
   
   TOF=data.TOF
+  print, 'in convert_THLAM'
+  help, TOF
   MD_d = MD_d[0]
   vel=MD_d/TOF         ;mm/ms = m/s
   
@@ -1150,6 +1167,10 @@ function get_specular_scale, event=event, $
     result=extract_specular(data, qxvec, qxwidth)
     help, result
     specular[loop,*]=result
+    no_zero_array = where(result ne 0)
+    print, 'for index: ' , loop, ':'
+    help, no_zero_array
+    print
     
     if loop eq 0 then scale[0]=1/max(result)
   endfor

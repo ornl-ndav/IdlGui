@@ -221,29 +221,29 @@ pro go_nexus_reduction_ref_l, event
     ;number of steps is ----> 1
       
     ;create spectrum of normalization file
-    if ((*global).debugger eq 'yes') then begin
-      if (!version.os eq 'darwin') then begin
-        path = '/Users/j35/IDLWorkspace80/SOS 1.0/'
-      endif else begin
-        path = '/SNS/users/j35/IDLWorkspace80/SOS 1.0/'
-      endelse
-      norm_file = path + 'Al_can_spectrum.dat'
-      spectrum=xcr_direct(norm_file, 2)
-      _spectrum = ptrarr(file_num,/allocate_heap)
-      
-      ;copy the same spectrum for all data set
-      _local_index = 0
-      while (_local_index lt file_num) do begin
-        *_spectrum[_local_index] = spectrum
-        _local_index++
-      endwhile
-      spectrum = _spectrum
-    endif else begin
-      ;number_of_steps is ----> file_num
+;    if ((*global).debugger eq 'yes') then begin
+;      if (!version.os eq 'darwin') then begin
+;        path = '/Users/j35/IDLWorkspace80/SOS 1.0/'
+;      endif else begin
+;        path = '/SNS/users/j35/IDLWorkspace80/SOS 1.0/'
+;      endelse
+;      norm_file = path + 'Al_can_spectrum.dat'
+;      spectrum=xcr_direct(norm_file, 2)
+;      _spectrum = ptrarr(file_num,/allocate_heap)
+;      
+;      ;copy the same spectrum for all data set
+;      _local_index = 0
+;      while (_local_index lt file_num) do begin
+;        *_spectrum[_local_index] = spectrum
+;        _local_index++
+;      endwhile
+;      spectrum = _spectrum
+;    endif else begin
+;      ;number_of_steps is ----> file_num
       spectrum = get_normalization_spectrum(event, list_norm_nexus, $
         processes, $
         total_number_of_processes)
-    endelse
+;    endelse
     
     update_progress_bar_percentage, event, ++processes, $
       total_number_of_processes
@@ -331,14 +331,14 @@ pro go_nexus_reduction_ref_l, event
     _data = *data[0]
     _tof = _data.tof
     range_TOFmin = where(_tof le TOFmin, nbr)
-    if (nbr ne -1) then begin
+    if (nbr ne 0) then begin
       index_TOFmin = range_TOFmin[-1]
     endif else begin
       index_TOFmin = 0
     endelse
     
     range_TOFmax = where(_tof ge TOFmax, nbr)
-    if (nbr ne -1) then begin
+    if (nbr ne 0) then begin
       index_TOFmax = range_TOFmax[0]
     endif else begin
       index_TOFmax = n_elements(_tof-1)
@@ -357,6 +357,10 @@ pro go_nexus_reduction_ref_l, event
 ;OLD WAY
 ;    THLAM_array = make_array(num,floor((TOFmax-TOFmin)*5)+1,PIXmax-PIXmin+1)
 ;NEW WAY
+
+    print, 'index_TOFmax: ' , index_TOFmax
+    print, 'index_TOFmin: ' , index_TOFmin
+
     THLAM_array = make_array(num, index_TOFmax - index_TOFmin, PIXmax-PIXmin+1)
 
 ;old way
