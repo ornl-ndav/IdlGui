@@ -78,7 +78,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   date = GenerateReadableIsoTimeStamp()
   
   if (strlowcase(debugger) eq 'yes') then begin
-    instrument = 'REF_M'
+    instrument = 'REF_L'
   endif else begin
     instrument = getInstrument()
   endelse
@@ -231,7 +231,8 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   if (strlowcase(debugger) eq 'yes') then begin
   
     if (!version.os eq 'darwin') then begin
-      input_path = '/Users/j35/IDLWorkspace80/SOS 1.0/Files/'
+      ;input_path = '/Users/j35/IDLWorkspace80/SOS 1.0/Files/'
+      input_path = '/Users/j35/results/'
     endif else begin
       input_path = "/SNS/users/j35/IDLWorkspace80/SOS 1.0/Files/"
     endelse
@@ -240,17 +241,25 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     selected_list_norm_file = (*global).selected_list_norm_file
     
     if (instrument EQ 'REF_L') then begin ;REF_L instrument
-      list_data_nexus = input_path + ['REF_L_34432.nxs',$
-        'REF_L_34433.nxs', $
-        'REF_L_34434.nxs', $
-        'REF_L_34435.nxs', $
-        'REF_L_34436.nxs']
+;      list_data_nexus = input_path + ['REF_L_34432.nxs',$
+;        'REF_L_34433.nxs', $
+;        'REF_L_34434.nxs', $
+;        'REF_L_34435.nxs', $
+;        'REF_L_34436.nxs']
+      list_data_nexus = input_path + ['REF_L_38327.nxs',$
+        'REF_L_38328.nxs', $
+        'REF_L_38329.nxs', $
+        'REF_L_38330.nxs']
       (*(*global).list_data_nexus) = list_data_nexus
-      list_norm_nexus = input_path + ['REF_L_34394.nxs',$
-        'REF_L_34394.nxs', $
-        'REF_L_34394.nxs', $
-        'REF_L_34394.nxs', $
-        'REF_L_34394.nxs']
+;      list_norm_nexus = input_path + ['REF_L_34394.nxs',$
+;        'REF_L_34394.nxs', $
+;        'REF_L_34394.nxs', $
+;        'REF_L_34394.nxs', $
+;        'REF_L_34394.nxs']
+      list_norm_nexus = input_path + ['REF_L_38340.nxs',$
+        'REF_L_38340.nxs', $
+        'REF_L_38340.nxs', $
+        'REF_L_38340.nxs']
       (*(*global).list_norm_nexus) = list_norm_nexus
     endif else begin ;REF_M instrument
       list_data_nexus = input_path + ['REF_M_8451.nxs',$
@@ -274,7 +283,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     rtof_file = input_path + $
       'REF_L_33043#8_33044#8_33045#7_33046#7_33047#6_Off_Off_scaled.rtof'
     putvalue, base=main_base, 'rtof_file_text_field_uname', rtof_file
-    
+      
     ;tab to show by default
     ;id = widget_info(main_base, find_by_uname='tab_uname')
     
