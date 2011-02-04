@@ -98,6 +98,8 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     current_spin_index: -1, $ ;current index of spin state (-1 for REF_L)
     DRfiles: ptr_new(0L), $ ;[spin_states,files]
     
+    cleaning_base_id: 0L, $  ;the id of the cleaning base
+    
     BatchExtension:         '.txt',$
     BatchTable:             PTR_NEW(0L),$
     BatchDefaultPath:       '~/results/',$

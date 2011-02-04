@@ -45,8 +45,13 @@
 pro launch_cleaning_base, event
 compile_opt idl2
 
+  list_files = ['file1','file2','file3']
+  offset = 50
 
-
+cleaning_base, event=event, $
+    list_files = list_files, $
+    offset = offset, $
+    main_base_uname = 'MAIN_BASE_ref_scale'
 
 
 
