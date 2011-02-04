@@ -216,10 +216,10 @@ pro go_nexus_reduction_ref_l, event
     lambda_step = 0
     
     update_progress_bar_percentage, event, ++processes, $
-    total_number_of_processes
-    
+      total_number_of_processes
+      
     ;number of steps is ----> 1
-    
+      
     ;create spectrum of normalization file
     if ((*global).debugger eq 'yes') then begin
       if (!version.os eq 'darwin') then begin
@@ -246,8 +246,8 @@ pro go_nexus_reduction_ref_l, event
     endelse
     
     update_progress_bar_percentage, event, ++processes, $
-    total_number_of_processes
-    
+      total_number_of_processes
+      
     ;number of steps is ----> 1
     ;trip the spectrum to the relevant tof ranges
     spectrum = trim_spectrum(event, spectrum, TOFrange=TOFrange)
@@ -263,8 +263,8 @@ pro go_nexus_reduction_ref_l, event
     DATA = ptrarr(file_num, /allocate_heap)
     
     update_progress_bar_percentage, event, ++processes, $
-    total_number_of_processes
-    
+      total_number_of_processes
+      
     ;number of steps is ----> file_num
     for read_loop=0,file_num-1 do begin
       ;check to see if the theta value is the same as CE_theta
@@ -294,7 +294,7 @@ pro go_nexus_reduction_ref_l, event
     ;number of steps is ----> 1
     
     ;create unique increasing list of angles (twotheta)
-   theta_angles = create_uniq_sort_list_of_angles(event, $
+    theta_angles = create_uniq_sort_list_of_angles(event, $
       file_angle = reform(file_angles[1,*]))
       
     twoTheta_angles = create_uniq_sort_list_of_angles(event, $
@@ -328,10 +328,42 @@ pro go_nexus_reduction_ref_l, event
     si = size(angles,/dim)
     num = si[1]
     
+    _data = *data[0]
+    _tof = _data.tof
+    range_TOFmin = where(_tof le TOFmin, nbr)
+    if (nbr ne -1) then begin
+      index_TOFmin = range_TOFmin[-1]
+    endif else begin
+      index_TOFmin = 0
+    endelse
+    
+    range_TOFmax = where(_tof ge TOFmax, nbr)
+    if (nbr ne -1) then begin
+      index_TOFmax = range_TOFmax[0]
+    endif else begin
+      index_TOFmax = n_elements(_tof-1)
+    endelse
+    
+;    print, 'index_TOFmin: ' , index_TOFmin
+;    print, 'index_TOFmax: ' , index_TOFmax
+;    print, 'index_TOFmax - index_TOFmin: ' , index_TOFmax - index_TOFmin
+;    print, 'TOFmax*5: ', TOFmax*5
+;    print, 'TOFmin*5: ', TOFmin*5
+;    print, 'floor((TOFmax-TOFmin)*5+1): ' , floor((TOFmax-TOFmin)*5+1)
+    
     ;Create an array that wil contain all the data (for all angle measurements)
     ;converted to THETA vs Lambda
-    THLAM_array = make_array(num,floor((TOFmax-TOFmin)*5)+1,PIXmax-PIXmin+1)
-    THLAM_lamvec= make_array(num,floor((TOFmax-TOFmin)*5)+1)
+
+;OLD WAY
+;    THLAM_array = make_array(num,floor((TOFmax-TOFmin)*5)+1,PIXmax-PIXmin+1)
+;NEW WAY
+    THLAM_array = make_array(num, index_TOFmax - index_TOFmin, PIXmax-PIXmin+1)
+
+;old way
+;    THLAM_lamvec= make_array(num,floor((TOFmax-TOFmin)*5)+1)
+;new way
+    THLAM_lamvec= make_array(num,index_TOFmax - index_TOFmin)
+
     THLAM_thvec = make_array(num,PIXmax-PIXmin+1)
     
     ;number of steps is ----> file_num
