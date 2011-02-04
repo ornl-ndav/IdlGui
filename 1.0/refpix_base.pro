@@ -58,7 +58,6 @@ pro refpix_base_event, Event
         catch,/cancel
         
         show_refpix_cursor_info, event
-        ;widget_control, (*global_refpix).refpix_input_base, get_uvalue=global_info
         
         if (event.press eq 1) then begin ;left click
         
@@ -135,7 +134,6 @@ pro refpix_base_event, Event
     widget_info(event.top, find_by_uname='refpix_base_uname'): begin
     
       id = widget_info(event.top, find_by_uname='refpix_base_uname')
-      ;widget_control, id, /realize
       geometry = widget_info(id,/geometry)
       new_xsize = geometry.scr_xsize
       new_ysize = geometry.scr_ysize
@@ -322,7 +320,6 @@ function y_data_checked, event=event, base=base, data=data
   endelse
   
   xrange = (*global_refpix).xrange
-  
   xmin = min(xrange,max=xmax)
   
   if (data lt xmin || data gt xmax) then return, 'N/A'
@@ -423,7 +420,8 @@ pro display_refpixel_pixels, event=event, base=base
   
   if (pixel1_device gt 0) then begin
     plots, [0, 0, xsize, xsize, 0],$
-      [pixel1_device, pixel1_device, pixel1_device, pixel1_device, pixel1_device],$
+      [pixel1_device, pixel1_device, pixel1_device, pixel1_device, $
+      pixel1_device],$
       /DEVICE,$
       LINESTYLE = 3,$
       COLOR = fsc_color("white")
@@ -431,7 +429,8 @@ pro display_refpixel_pixels, event=event, base=base
   
   if (pixel2_device gt 0) then begin
     plots, [0, 0, xsize, xsize, 0],$
-      [pixel2_device, pixel2_device, pixel2_device, pixel2_device, pixel2_device],$
+      [pixel2_device, pixel2_device, pixel2_device, pixel2_device, $
+      pixel2_device],$
       /DEVICE,$
       LINESTYLE = 3,$
       COLOR = fsc_color("white")
@@ -463,7 +462,8 @@ pro display_refpixel_pixels, event=event, base=base
   refpix_data = (float(pixel1_data)+float(pixel2_data))/2.
   refpix_device = from_data_to_device(event=event, base=base, refpix_data)
   plots, [0, 0, xsize, xsize, 0],$
-    [refpix_device, refpix_device, refpix_device, refpix_device, refpix_device],$
+    [refpix_device, refpix_device, refpix_device, refpix_device, $
+    refpix_device],$
     /DEVICE,$
     LINESTYLE = 2,$
     COLOR = fsc_color("green")
@@ -501,7 +501,8 @@ pro display_refpix_user_input_value, base=base
   refpix_device = from_device_to_data(base=base, refpix_data)
   xsize = (*global_refpix).xsize
   plots, [0, 0, xsize, xsize, 0],$
-    [refpix_device, refpix_device, refpix_device, refpix_device, refpix_device],$
+    [refpix_device, refpix_device, refpix_device, refpix_device, $
+    refpix_device],$
     /DEVICE,$
     LINESTYLE = 2,$
     COLOR = fsc_color("purple")
@@ -692,7 +693,6 @@ pro save_refpix_background,  event=event, main_base=main_base, uname=uname
   xsize   = geometry.xsize
   ysize   = geometry.ysize
   
-  ;DEVICE, copy =[0, 0, xsize, ysize, 0, 0, id_value]
   DEVICE, copy =[0, 0, xsize, ysize, 0, 0]
   
   (*(*global_refpix).background) = background
@@ -1390,7 +1390,8 @@ pro refpix_base, main_base=main_base, $
     
     shift_key_status: 0b, $ ;when range is selected to produce 2d plots
     QxQzrange: fltarr(2), $ ; [Qx0, Qz0]
-    EventRangeSelection: intarr(2), $ ;[event.x, event.y] when using first shift left click
+    EventRangeSelection: intarr(2), $ ;[event.x, event.y] 
+    ;when using first shift left click
     
     counts_vs_qx_lin: 0, $ ;0 is plot is linear, 1 if it's log
     counts_vs_qz_lin: 0, $
@@ -1419,8 +1420,10 @@ pro refpix_base, main_base=main_base, $
     pixel1_selected: 1b, $ ;to show pixel1 or pixel2 current selection
     refpix_pixels: lonarr(2), $ ;pixels 1 and 2 in data coordinates
     
-    congrid_xcoeff: 0., $ ;x coeff used in the congrid function to plot main data
-    congrid_ycoeff: 0., $ ;y coeff used in the congrid function to plot main data
+    ;x coeff used in the congrid function to plot main data
+    congrid_xcoeff: 0., $ 
+    ;y coeff used in the congrid function to plot main data
+    congrid_ycoeff: 0., $ 
     
     top_base: wBase, $
     main_event: event})
@@ -1436,7 +1439,7 @@ pro refpix_base, main_base=main_base, $
   
   xrange = [x_axis[0], x_axis[-1]]
   (*global_refpix).xrange = xrange
-  
+
   yrange = [y_axis[0], y_axis[-1]+1]
   (*global_refpix).yrange = yrange
   
@@ -1517,7 +1520,8 @@ pro refpix_base, main_base=main_base, $
     xsize = (*global_refpix).xsize
     
     plots, [0, 0, xsize, xsize, 0],$
-      [pixel1_device, pixel1_device, pixel1_device, pixel1_device, pixel1_device],$
+      [pixel1_device, pixel1_device, pixel1_device, pixel1_device, $
+      pixel1_device],$
       /DEVICE,$
       LINESTYLE = 1,$
       COLOR = fsc_color("green")
