@@ -500,6 +500,9 @@ PIXmax
   sz = size(image)
   message[i++] = '-> retrieved Y vs TOF data [' + $
     strcompress(strjoin(sz,','),/remove_all) + ']'
+  print, 'help, image'
+  help, image  
+    
     
   ;get tof array only
   tof = iFile->get_TOF_data()
@@ -715,6 +718,10 @@ end
 function convert_ref_m_THLAM, data, SD_d, MD_d, cpix, pix_size
   compile_opt idl2
   
+  print, 'in convert_ref_m_thlam'
+  help, data
+  print
+  
   TOF=data.TOF
   MD_d = MD_d[0]
   vel=MD_d/TOF         ;mm/ms = m/s
@@ -728,9 +735,6 @@ function convert_ref_m_THLAM, data, SD_d, MD_d, cpix, pix_size
   ;calculate angle
   term1 = (float(data.pixels) - float(cpix)) * float(pix_size)
   term1 /= 2.*SD_d
-  
-  help, data.dangle
-  help, data.dangle0
   
   term2 = (float(data.dangle) - float(data.dangle0))/2.
   
@@ -822,11 +826,29 @@ pro build_THLAM, event=event, $
     theta_val=theta_val[0]
     twotheta_val=twotheta_val[0]
     
+    print, 'angles[0,*]: ' , angles[0,*]
+    print, 'theta_val: ' , theta_val
+    print, 'where(angles[0,*] eq theta_val: ' , where(angles[0,*] eq theta_val)
+    print
+    print, 'angles[1,*]: ' , angles[1,*]
+    print, 'twotheta_val: ' , twotheta_val
+    print, 'where(angles[1,*] eq twotheta_val: ' , where(angles[1,*] eq twotheta_val)
+    print
+    
     tilenum=where((angles[0,*] eq theta_val) and (angles[1,*] eq twotheta_val))
+    print, tilenum
+    
+    ;tilenum = tilenum[0]
+    
+    help, THLAM_array
+    help, tilenum
+    help, THLAM.data
+    print
     
     THLAM_array[tilenum,*,*]=THLAM_array[tilenum,*,*]+THLAM.data
     THLAM_thvec[tilenum,*]=THLAM.theta
     THLAM_lamvec[tilenum,*]=THLAM.lambda
+    
     
     ;window,0, title = "Convertion: TOF->Lambda, Pixel->Theta"
     ;shade_surf, smooth(thlam.data,3), thlam.lambda, thlam.theta, ax=70, $
@@ -917,6 +939,9 @@ pro build_ref_m_THLAM, event=event, $
     RAW_DATA= *DATA[read_loop]
     ;{data, theta, twotheta, tof, pixels}
     
+    print, 'help, raw_data'
+    help, raw_data
+    
     NORM_DATA=SNS_divide_spectrum(RAW_DATA, *spectrum[read_loop])
     
     ;SD_d : sample to detector distance
@@ -935,9 +960,24 @@ pro build_ref_m_THLAM, event=event, $
     dangle_val=dangle_val[0]
     dangle0_val=dangle0_val[0]
     
-    tilenum=where((angles[0,*] eq dangle_val) and (angles[1,*] eq dangle0_val))
+    print, 'angles[0,*]: ' , angles[0,*]
+    print, 'dangle_val: ' , dangle_val
+    print, 'where(angles[0,*] eq dangle_val: ' , where(angles[0,*] eq dangle_val)
+    print
+    print, 'angles[1,*]: ' , angles[1,*]
+    print, 'dangle0_val: ' , dangle0_val
+    print, 'where(angles[1,*] eq dangle0_val: ' , where(angles[1,*] eq dangle0_val)
+    print
     
-    tilenum = tilenum[0]
+    tilenum=where((angles[0,*] eq dangle_val) and (angles[1,*] eq dangle0_val))
+    print, tilenum
+    
+    ;tilenum = tilenum[0]
+    
+    help, THLAM_array
+    help, tilenum
+    help, THLAM.data
+    print
     
     THLAM_array[tilenum,*,*]=THLAM_array[tilenum,*,*]+THLAM.data
     THLAM_thvec[tilenum,*]=THLAM.sangle
