@@ -162,7 +162,9 @@ end
 
 ;+
 ; :Description:
-;    retrieve the dimension of the detector (ex: 256 by 304)
+;    retrieve the dimension of the detector (ex: 304 by 256 for the new
+;    rotated REF_L detector, 304 being the number of pixels on the  x axis 
+;    and 256 the number of pixels on the y axis)
 ;
 ; :Keywords:
 ;    event
@@ -200,8 +202,8 @@ pro retrieve_detector_configuration, event=event, main_base=main_base
     obj_destroy, iNexus
   endif
   
-  _x = strcompress(detector_dimension[0],/remove_all)
-  _y = strcompress(detector_dimension[1],/remove_all)
+  _y = strcompress(detector_dimension[0],/remove_all)
+  _x = strcompress(detector_dimension[1],/remove_all)
   
   putValue, base=main_base, event=event, 'detector_dimension_x', _x
   putValue, base=main_base, event=event, 'detector_dimension_y', _y

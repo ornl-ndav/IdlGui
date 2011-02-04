@@ -218,8 +218,10 @@ pro plot_counts_vs_xaxis, event, clear=clear
   xdata_max = (size(data))[1]
   ydata_max = (size(data))[2]
   
-  congrid_xcoeff = (*global_plot).congrid_xcoeff  ;using ycoeff because of transpose
-  congrid_ycoeff = (*global_plot).congrid_ycoeff  ;using xcoeff because of transpose
+  ;using ycoeff because of transpose
+  congrid_xcoeff = (*global_plot).congrid_xcoeff  
+  ;using xcoeff because of transpose
+  congrid_ycoeff = (*global_plot).congrid_ycoeff  
   
   xdata = fix(float(event.x) * float(xdata_max) / congrid_xcoeff)
   ydata = fix(float(event.y) * float(ydata_max) / congrid_ycoeff)
@@ -539,23 +541,6 @@ pro zoom_selection, event
     smooth_coefficient = (*global_plot).smooth_coefficient, $
     metadata = (*global_plot).metadata, $
     output_folder = (*global_plot).output_folder
-    
-;    current_plot_setting = current_plot_setting, $
-;    Data_x = Data_x, $
-;    Data_y = Data_y, $ ;Data_y
-;    start_pixel = start_pixel, $
-    
-;  px_vs_tof_plots_base, event = event, $
-;    main_base_uname = 'px_vs_tof_widget_base', $
-;    file_name = (*global_plot).file_name, $
-;    offset = 50, $
-;    default_loadct = (*global_plot).default_loadct, $
-;    default_scale_settings = (*global_plot).default_scale_settings, $
-;    default_plot_size = (*global_plot).default_plot_size, $
-;    current_plot_setting = (*global_plot).plot_setting, $
-;    Data_x =  zoom_data_x, $ ;tof
-;    Data_y = zoom_data_y, $ ;Data_y, $
-;    start_pixel = pixel_range[0]
     
 end
 

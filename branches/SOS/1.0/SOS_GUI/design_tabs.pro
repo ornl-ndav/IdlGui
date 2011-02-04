@@ -338,7 +338,7 @@ pro design_tabs, MAIN_BASE, global
   _detector_base = widget_base(row1col4,$
     /row)
   field3 = widget_label(_detector_base,$
-    value = 'Detector dimension: ')
+    value = 'Detector dimension (X*Y): ')
   pixel_x = widget_label(_detector_base,$
     value = 'N/A',$
     scr_xsize = 30,$
