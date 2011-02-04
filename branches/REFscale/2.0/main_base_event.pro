@@ -237,9 +237,9 @@ PRO MAIN_BASE_ref_scale_event, Event
       steps_tab, Event, 1 ;_Tabs
     end
     
-    ;------------------------------------------------------------------------------
-    ;****** STEP 1 / In the LOAD TOF base *****************************************
-    ;------------------------------------------------------------------------------
+    ;--------------------------------------------------------------------------
+    ;****** STEP 1 / In the LOAD TOF base *************************************
+    ;--------------------------------------------------------------------------
     
     ;Event of <CANCEL> button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='cancel_load_button'): BEGIN
@@ -262,9 +262,9 @@ PRO MAIN_BASE_ref_scale_event, Event
       CheckOpenButtonStatus, Event ;_Gui
     END
     
-    ;------------------------------------------------------------------------------
-    ;***** STEP 2 - [DEFINE CRITICAL EDGE FILE] ***********************************
-    ;------------------------------------------------------------------------------
+    ;--------------------------------------------------------------------------
+    ;***** STEP 2 - [DEFINE CRITICAL EDGE FILE] *******************************
+    ;--------------------------------------------------------------------------
     
     ;Event triggered by <Automatic Fitting/Rescaling of CE>
     WIDGET_INFO(wWidget, FIND_BY_UNAME='step2_button'): BEGIN
@@ -296,14 +296,19 @@ PRO MAIN_BASE_ref_scale_event, Event
       Step2ReleaseClick, Event ;this reorder the Q1 and Q2
     END
     
-    ;------------------------------------------------------------------------------
-    ;***** STEP 3 - [RESCALE FILES] ***********************************************
-    ;------------------------------------------------------------------------------
+    ;-------------------------------------------------------------------------
+    ;***** STEP 3 - [RESCALE FILES] ******************************************
+    ;-------------------------------------------------------------------------
     
     ;Event triggered by widget_droplist
     WIDGET_INFO(wWidget, FIND_BY_UNAME='step3_work_on_file_droplist'): BEGIN
       steps_tab, Event, 1   ;_Tab
     END
+    
+    ;Cleaning data
+    widget_info(wWidget, find_by_uname='start_cleanup_button'): begin
+    launch_cleaning_base, event
+    end
     
     ;Event triggered by [Automatic rescaling]
     WIDGET_INFO(wWidget, FIND_BY_UNAME= $
@@ -403,9 +408,9 @@ PRO MAIN_BASE_ref_scale_event, Event
       ref_scale_save_as_batch_file, Event ;_batch
     END
     
-    ;------------------------------------------------------------------------------
-    ;***** LOG BOOK ***************************************************************
-    ;------------------------------------------------------------------------------
+    ;--------------------------------------------------------------------------
+    ;***** LOG BOOK ***********************************************************
+    ;--------------------------------------------------------------------------
     ;Send To Geek button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='send_to_geek_button'): BEGIN
       SendToGeek, Event ;_IDLsendToGeek__define
