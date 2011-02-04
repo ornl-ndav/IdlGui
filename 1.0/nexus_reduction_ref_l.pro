@@ -473,11 +473,6 @@ pro go_nexus_reduction_ref_l, event
     y_axis = qzvec,$
     metadata = metadata, $
     default_loadct = 5, $
-    ;    default_scale_settings = default_scale_settings, $
-    ;    current_plot_setting = current_plot_setting, $
-    ;    Data_x = Data_x, $
-    ;    Data_y = Data_y, $ ;Data_y
-    ;    start_pixel = start_pixel, $
     main_base_uname = 'main_base', $
     output_folder = (*global).output_path
     
