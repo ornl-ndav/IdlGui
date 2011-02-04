@@ -467,41 +467,41 @@ pro go_nexus_reduction_ref_m, event
       ;  angles[1,_angle_index] = dangle0_angles[_angle_index]
       ;  _angle_index++
       ;endwhile
-      
+        
       ;The number of tiles
       si = size(angles,/dim)
       num = si[1]
       
-          _data = *data[0]
-    _tof = _data.tof
-    range_TOFmin = where(_tof le TOFmin, nbr)
-    if (nbr ne -1) then begin
-      index_TOFmin = range_TOFmin[-1]
-    endif else begin
-      index_TOFmin = 0
-    endelse
-    
-    range_TOFmax = where(_tof ge TOFmax, nbr)
-    if (nbr ne -1) then begin
-      index_TOFmax = range_TOFmax[0]
-    endif else begin
-      index_TOFmax = n_elements(_tof-1)
-    endelse
-    
+      _data = *data[0]
+      _tof = _data.tof
+      range_TOFmin = where(_tof le TOFmin, nbr)
+      if (nbr ne -1) then begin
+        index_TOFmin = range_TOFmin[-1]
+      endif else begin
+        index_TOFmin = 0
+      endelse
+      
+      range_TOFmax = where(_tof ge TOFmax, nbr)
+      if (nbr ne -1) then begin
+        index_TOFmax = range_TOFmax[0]
+      endif else begin
+        index_TOFmax = n_elements(_tof-1)
+      endelse
+      
       
       ;Create an array that wil contain all the data $
       ;(for all angle measurements)
       ;converted to THETA vs Lambda
-;OLD WAY
-;    THLAM_array = make_array(num,floor((TOFmax-TOFmin)*5)+1,PIXmax-PIXmin+1)
-;NEW WAY
-    THLAM_array = make_array(num, index_TOFmax - index_TOFmin, PIXmax-PIXmin+1)
-
-;old way
-;    THLAM_lamvec= make_array(num,floor((TOFmax-TOFmin)*5)+1)
-;new way
-    THLAM_lamvec= make_array(num,index_TOFmax - index_TOFmin)
-    
+      ;OLD WAY
+      ;    THLAM_array = make_array(num,floor((TOFmax-TOFmin)*5)+1,PIXmax-PIXmin+1)
+      ;NEW WAY
+      THLAM_array = make_array(num, index_TOFmax - index_TOFmin, PIXmax-PIXmin+1)
+      
+      ;old way
+      ;    THLAM_lamvec= make_array(num,floor((TOFmax-TOFmin)*5)+1)
+      ;new way
+      THLAM_lamvec= make_array(num,index_TOFmax - index_TOFmin)
+      
       THLAM_thvec = make_array(num,PIXmax-PIXmin+1)
       
       ;number of steps is ----> file_num

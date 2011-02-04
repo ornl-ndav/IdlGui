@@ -208,10 +208,10 @@ function get_ref_m_normalization_spectrum, event=event, $
     current_spin = list_norm_spin[index]
     if (index gt 0) then begin ;no need to look for first normalization file
       _where_same_file_index = where(current_file eq list_norm_nexus, $
-      nbr_same_file)
+        nbr_same_file)
       _where_same_spin_index = where(current_spin eq list_norm_spin, $
-      nbr_same_spin)
-      
+        nbr_same_spin)
+        
       if (nbr_same_file gt 1 && nbr_same_spin gt 1) then begin
         _same_index = 0
         while (_same_index lt n_elements(_where_same_file_index)) do begin
@@ -382,9 +382,9 @@ function read_nexus, event, filename, TOFmin, TOFmax, PIXmin, PIXmax
   message[i++] = '-> retrieved theta: ' + strcompress(theta,/remove_all) + $
     ' ' + strcompress(theta_units,/remove_all)
   message[i++] = '-> retrieved twotheta: ' + $
-  strcompress(twotheta,/remove_all) + $
+    strcompress(twotheta,/remove_all) + $
     ' ' + strcompress(twotheta_units,/remove_all)
-   message[i++] = '-> retrieved thi: ' + strcompress(thi,/remove_all) + $
+  message[i++] = '-> retrieved thi: ' + strcompress(thi,/remove_all) + $
     ' ' + strcompress(thi_units,/remove_all)
     
   ;make sure we are in degrees
@@ -397,20 +397,20 @@ function read_nexus, event, filename, TOFmin, TOFmax, PIXmin, PIXmax
   thi_value_degree = convert_angle(angle=thi,$
     from_unit=thi_units,$
     to_unit='degree')
-  
-   message[i++] = '-> Make sure we are in degrees:'
+    
+  message[i++] = '-> Make sure we are in degrees:'
   message[i++] = '-> theta: ' + strcompress(theta_value_degree,/remove_all) + $
     ' degrees'
   message[i++] = '-> twotheta: ' + $
-   strcompress(twotheta_value_degree,/remove_all) + $
+    strcompress(twotheta_value_degree,/remove_all) + $
     ' degrees'
   message[i++] = '-> thi: ' + strcompress(thi_value_degree,/remove_all) + $
     ' degrees'
-        
+    
   Theta = float(theta_value_degree) - float(thi_value_degree)
   TwoTheta = float(TwoTheta_value_degree) - float(thi_value_degree)
   
-   message[i++] = '-> Adding thi to theta and twotheta'
+  message[i++] = '-> Adding thi to theta and twotheta'
   message[i++] = '  -> theta: ' + strcompress(theta,/remove_all) + $
     ' ' + strcompress(theta_units,/remove_all)
   message[i++] = '  -> twotheta: ' + strcompress(twotheta,/remove_all) + $
@@ -474,13 +474,13 @@ end
 ;                      tof:tof, pixels:pixel}
 ;-
 function read_ref_m_nexus, event, $
-filename, $
-spin_state, $
-file_index, $
-TOFmin, $
-TOFmax, $
-PIXmin, $
-PIXmax
+    filename, $
+    spin_state, $
+    file_index, $
+    TOFmin, $
+    TOFmax, $
+    PIXmin, $
+    PIXmax
   compile_opt idl2
   
   message = strarr(14)
@@ -500,10 +500,7 @@ PIXmax
   sz = size(image)
   message[i++] = '-> retrieved Y vs TOF data [' + $
     strcompress(strjoin(sz,','),/remove_all) + ']'
-  print, 'help, image'
-  help, image  
-    
-    
+  
   ;get tof array only
   tof = iFile->get_TOF_data()
   sz = size(tof)
@@ -525,7 +522,7 @@ PIXmax
   message[i++] = '-> retrieved dangle: ' + strcompress(dangle,/remove_all) + $
     ' ' + strcompress(dangle_units,/remove_all)
   message[i++] = '-> retrieved dangle0: ' + $
-  strcompress(dangle0,/remove_all) + $
+    strcompress(dangle0,/remove_all) + $
     ' ' + strcompress(dangle0_units,/remove_all)
     
   ;  Theta=theta+4.0
@@ -718,10 +715,6 @@ end
 function convert_ref_m_THLAM, data, SD_d, MD_d, cpix, pix_size
   compile_opt idl2
   
-  print, 'in convert_ref_m_thlam'
-  help, data
-  print
-  
   TOF=data.TOF
   MD_d = MD_d[0]
   vel=MD_d/TOF         ;mm/ms = m/s
@@ -826,30 +819,12 @@ pro build_THLAM, event=event, $
     theta_val=theta_val[0]
     twotheta_val=twotheta_val[0]
     
-    print, 'angles[0,*]: ' , angles[0,*]
-    print, 'theta_val: ' , theta_val
-    print, 'where(angles[0,*] eq theta_val: ' , where(angles[0,*] eq theta_val)
-    print
-    print, 'angles[1,*]: ' , angles[1,*]
-    print, 'twotheta_val: ' , twotheta_val
-    print, 'where(angles[1,*] eq twotheta_val: ' , where(angles[1,*] eq twotheta_val)
-    print
-    
     tilenum=where((angles[0,*] eq theta_val) and (angles[1,*] eq twotheta_val))
-    print, tilenum
-    
-    ;tilenum = tilenum[0]
-    
-    help, THLAM_array
-    help, tilenum
-    help, THLAM.data
-    print
-    
+
     THLAM_array[tilenum,*,*]=THLAM_array[tilenum,*,*]+THLAM.data
     THLAM_thvec[tilenum,*]=THLAM.theta
     THLAM_lamvec[tilenum,*]=THLAM.lambda
-    
-    
+        
     ;window,0, title = "Convertion: TOF->Lambda, Pixel->Theta"
     ;shade_surf, smooth(thlam.data,3), thlam.lambda, thlam.theta, ax=70, $
     ;charsi=2, xtitle='LAMBDA (' + string("305B) + ')', ytitle='THETA (rad)'
@@ -939,9 +914,6 @@ pro build_ref_m_THLAM, event=event, $
     RAW_DATA= *DATA[read_loop]
     ;{data, theta, twotheta, tof, pixels}
     
-    print, 'help, raw_data'
-    help, raw_data
-    
     NORM_DATA=SNS_divide_spectrum(RAW_DATA, *spectrum[read_loop])
     
     ;SD_d : sample to detector distance
@@ -960,24 +932,7 @@ pro build_ref_m_THLAM, event=event, $
     dangle_val=dangle_val[0]
     dangle0_val=dangle0_val[0]
     
-    print, 'angles[0,*]: ' , angles[0,*]
-    print, 'dangle_val: ' , dangle_val
-    print, 'where(angles[0,*] eq dangle_val: ' , where(angles[0,*] eq dangle_val)
-    print
-    print, 'angles[1,*]: ' , angles[1,*]
-    print, 'dangle0_val: ' , dangle0_val
-    print, 'where(angles[1,*] eq dangle0_val: ' , where(angles[1,*] eq dangle0_val)
-    print
-    
     tilenum=where((angles[0,*] eq dangle_val) and (angles[1,*] eq dangle0_val))
-    print, tilenum
-    
-    ;tilenum = tilenum[0]
-    
-    help, THLAM_array
-    help, tilenum
-    help, THLAM.data
-    print
     
     THLAM_array[tilenum,*,*]=THLAM_array[tilenum,*,*]+THLAM.data
     THLAM_thvec[tilenum,*]=THLAM.sangle
@@ -1190,7 +1145,10 @@ function get_specular_scale, event=event, $
   
   for loop=0,num-1 do begin
     data=reform(QXQZ_array[loop,*,*])
+    help, data
+    
     result=extract_specular(data, qxvec, qxwidth)
+    help, result
     specular[loop,*]=result
     
     if loop eq 0 then scale[0]=1/max(result)
@@ -1203,6 +1161,7 @@ function get_specular_scale, event=event, $
   trim=specular*0.0
   for loop=0,num-1 do begin
     list=where(specular[loop,*] ne 0)
+    help, list
     si=size(list,/dim)
     si=si[0]
     cut=list[tnum:si-tnum]
@@ -1317,7 +1276,7 @@ function create_big_scaled_array, event=event, $
     for xloop=0,qxbins-1 do begin
       for zloop=0,qzbins-1 do begin
         if qxqz_array[loop,xloop,zloop] ne 0 then $
-        countarray[xloop,zloop]=countarray[xloop,zloop]+1
+          countarray[xloop,zloop]=countarray[xloop,zloop]+1
       endfor
     endfor
   endfor
