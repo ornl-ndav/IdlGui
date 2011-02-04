@@ -43,7 +43,7 @@
 ; :Author: j35
 ;-
 pro launch_cleaning_base, event
-compile_opt, idl2
+compile_opt idl2
 
 
 
