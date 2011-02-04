@@ -87,7 +87,7 @@ pro refpix_counts_vs_pixel_base_event, Event
         wset, _plot_id
         
         cursor, x,y, /data
-        check_pixel_value, x
+        check_pixel_value, x, event
         
         ;1b for pixel1, 0b for pixel2
         pixel1_working = (*global_refpix).pixel1_selected
@@ -134,7 +134,7 @@ pro refpix_counts_vs_pixel_base_event, Event
         wset, _plot_id
         
         cursor, x,y, /data, /nowait
-        check_pixel_value, x
+        check_pixel_value, x, event
         
         ;1b for pixel1, 0b for pixel2
         pixel1_working = (*global_refpix).pixel1_selected
@@ -164,23 +164,28 @@ end
 
 ;+
 ; :Description:
-;    Make sure the pixel value is within the following range [0,303]
+;    Make sure the pixel value is within the following range [0,pixel_max]
 ;
 ; :Params:
 ;    x
 ;
 ; :Author: j35
 ;-
-pro check_pixel_value, x
+pro check_pixel_value, x, event
   compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_counts
+  global_refpix = (*global_counts).global_refpix
   
   if (x lt 0) then begin
     x=0
     return
   endif
   
-  if (x gt 303) then begin
-    x = 303
+  pixel_range = (*global_refpix).yrange
+  xmax = pixel_range[1]
+  if (x gt xmax) then begin
+    x = xmax
     return
   endif
   
@@ -248,7 +253,7 @@ pro display_counts_vs_pixel, base=base, event=event, global_refpix
   counts_vs_pixel = (*(*global_refpix).counts_vs_pixel)
   
   ;xrange
-  xrange = [0,303]
+  xrange = (*global_refpix).yrange
   
   ;get ymax and ymin
   ymax = max(counts_vs_pixel,min=ymin)
@@ -434,7 +439,6 @@ pro refpix_counts_vs_pixel_base, event=event, $
   display_counts_vs_pixel, base=_base, global_refpix
   
   if (refpix ne '') then begin
-  
   
     counts_vs_pixel = (*(*global_refpix).counts_vs_pixel)
     ymax = max(counts_vs_pixel,min=ymin)

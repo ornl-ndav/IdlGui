@@ -78,7 +78,7 @@ pro main_base, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   date = GenerateReadableIsoTimeStamp()
   
   if (strlowcase(debugger) eq 'yes') then begin
-    instrument = 'REF_L'
+    instrument = 'REF_M'
   endif else begin
     instrument = getInstrument()
   endelse
