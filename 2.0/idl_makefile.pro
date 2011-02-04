@@ -102,6 +102,9 @@ cd, CurrentFolder
 .run ref_scale_tabs.pro
 .run settings_base.pro
 
+;cleaning base
+.run launch_cleaning_base.pro
+
 ;Batch
 .run ref_scale_spin_states.pro
 .run idl_load_batch_file__define.pro

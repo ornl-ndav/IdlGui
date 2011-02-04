@@ -838,25 +838,11 @@ pro refresh_px_vs_tof_plots_base, wBase = wBase, $
   
 end
 
-;+
-; :Description:
-;     Creates the base and plot the pixel vs tof of the
-;     given file index
-;
-; :Keywords:
-;    main_base
-;    event
-;
-; :Author: j35
-;-
-pro px_vs_tof_plots_base, main_base=main_base, $
+pro cleaning_base, main_base=main_base, $
     event=event, $
-    file_name = file_name, $
+    list_files = list_files, $
     offset = offset, $
-    default_loadct = default_loadct, $
-    default_scale_settings = default_scale_settings, $
     default_plot_size = default_plot_size, $
-    current_plot_setting = current_plot_setting, $
     Data_x = Data_x, $
     Data_y = Data_y, $ ;Data_y
     start_pixel = start_pixel, $
@@ -864,7 +850,7 @@ pro px_vs_tof_plots_base, main_base=main_base, $
     
   compile_opt idl2
   
-  if (n_elements(spin_state) eq 0) then spin_state = 0
+;  if (n_elements(spin_state) eq 0) then spin_state = 0
   
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME=main_base_uname)
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
@@ -872,17 +858,13 @@ pro px_vs_tof_plots_base, main_base=main_base, $
   
   ;SETUP
   border = 40
-  colorbar_xsize = 70
-  
-  plot_setting1 = 'Untouched plots'
-  plot_setting2 = 'Interpolated plots'
   
   ;build gui
   wBase = ''
-  px_vs_tof_plots_base_gui, wBase, $
+  cleaning_base_gui, wBase, $
     main_base_geometry, $
     global, $
-    file_name, $
+    list_files, $
     offset, $
     border, $
     colorbar_xsize, $
