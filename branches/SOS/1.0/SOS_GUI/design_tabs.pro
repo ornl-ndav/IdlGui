@@ -148,9 +148,14 @@ pro design_tabs, MAIN_BASE, global
   contextBase = widget_base(table,$
     /context_menu,$
     uname = 'context_base')
+  plot2d = widget_button(contextBase,$
+  value = '2D plot: Pixel vs TOF...',$
+  uname = 'display_pixel_vs_tof_of_input_files')
+
   norm = widget_button(contextBase,$
     value = 'Select a different normalization file...',$
-    uname = 'select_another_norm_file')
+    uname = 'select_another_norm_file',$
+    /separator)
   delete = widget_button(contextBase,$
     value = 'Delete row(s)',$
     uname = 'table_delete_row',$

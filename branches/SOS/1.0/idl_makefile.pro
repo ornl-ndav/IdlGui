@@ -88,6 +88,7 @@ cd, CurrentFolder
 .run configuration_table_event.pro
 
 ;plot of rtof file
+.run px_vs_tof_plots_input_files_base.pro
 .run px_vs_tof_plots_base.pro
 .run px_vs_tof_plots_base_eventcb.pro
 .run rtof_plot_colorbar.pro

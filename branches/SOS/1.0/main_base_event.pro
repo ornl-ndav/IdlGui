@@ -240,7 +240,7 @@ PRO main_base_event, Event
           cell1 = table[0,row]
           file_name_split = strsplit(cell1,'(',/extract)
           file_name = file_name_split[0]
-
+          
           instrument = get_instrumet_from_file_name(file_name)
           if (instrument eq 'REF_L') then begin
             button_status = 0
@@ -252,6 +252,11 @@ PRO main_base_event, Event
           widget_displaycontextmenu, event.id, event.X, event.Y, id
         endif
       endif
+    end
+    
+    ;display 2d plot of pixel vs tof integrated over pixel#2
+    widget_info(wWidget, find_by_uname='display_pixel_vs_tof_of_input_files'): begin
+      show_pixel_vs_tof_2d_plot, event
     end
     
     ;select another normalization file
@@ -280,8 +285,8 @@ PRO main_base_event, Event
         column_index=column_index, $
         new_spin=new_spin
       reset_config_other_spin_states, $
-      event=event, $
-      working_spin_state='Off_Off'
+        event=event, $
+        working_spin_state='Off_Off'
     end
     widget_info(wWidget, find_by_uname='data_off_on'): begin
       column_index = 0
@@ -289,9 +294,9 @@ PRO main_base_event, Event
       change_spin_state, event=event, $
         column_index=column_index, $
         new_spin=new_spin
-    reset_config_other_spin_states, $
-      event=event, $
-      working_spin_state='Off_On'
+      reset_config_other_spin_states, $
+        event=event, $
+        working_spin_state='Off_On'
     end
     widget_info(wWidget, find_by_uname='data_on_off'): begin
       column_index = 0
@@ -299,9 +304,9 @@ PRO main_base_event, Event
       change_spin_state, event=event, $
         column_index=column_index, $
         new_spin=new_spin
-        reset_config_other_spin_states, $
-      event=event, $
-      working_spin_state='On_Off'
+      reset_config_other_spin_states, $
+        event=event, $
+        working_spin_state='On_Off'
     end
     widget_info(wWidget, find_by_uname='data_on_on'): begin
       column_index = 0
@@ -309,9 +314,9 @@ PRO main_base_event, Event
       change_spin_state, event=event, $
         column_index=column_index, $
         new_spin=new_spin
-    reset_config_other_spin_states, $
-      event=event, $
-      working_spin_state='On_On'
+      reset_config_other_spin_states, $
+        event=event, $
+        working_spin_state='On_On'
     end
     
     widget_info(wWidget, find_by_uname='norm_off_off'): begin
@@ -350,7 +355,7 @@ PRO main_base_event, Event
       ;select entire rows of selection
       select_entire_row, event=event, uname='ref_m_metadata_table'
       check_go_button, event=event
-
+      
       if (tag_names(event, /structure_name) EQ 'WIDGET_CONTEXT') THEN BEGIN
         if (isConfigurationRowNotEmpty(event)) then begin
           id = widget_info(event.top, $
