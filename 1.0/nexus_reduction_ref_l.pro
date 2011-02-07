@@ -57,7 +57,7 @@ pro go_nexus_reduction_ref_l, event
     
     title = 'Automatic stitching failed !'
     message_text = ['Please change the parameters defined',$
-      'and try again.']
+      'and try again.','','Check log book for more infos!']
     widget_id = widget_info(event.top, find_by_uname='main_base')
     result = dialog_message(message_text,$
       title = title,$
@@ -221,37 +221,56 @@ pro go_nexus_reduction_ref_l, event
     ;number of steps is ----> 1
       
     ;create spectrum of normalization file
-;    if ((*global).debugger eq 'yes') then begin
-;      if (!version.os eq 'darwin') then begin
-;        path = '/Users/j35/IDLWorkspace80/SOS 1.0/'
-;      endif else begin
-;        path = '/SNS/users/j35/IDLWorkspace80/SOS 1.0/'
-;      endelse
-;      norm_file = path + 'Al_can_spectrum.dat'
-;      spectrum=xcr_direct(norm_file, 2)
-;      _spectrum = ptrarr(file_num,/allocate_heap)
-;      
-;      ;copy the same spectrum for all data set
-;      _local_index = 0
-;      while (_local_index lt file_num) do begin
-;        *_spectrum[_local_index] = spectrum
-;        _local_index++
-;      endwhile
-;      spectrum = _spectrum
-;    endif else begin
-;      ;number_of_steps is ----> file_num
-      spectrum = get_normalization_spectrum(event, list_norm_nexus, $
-        processes, $
-        total_number_of_processes)
-;    endelse
+    ;    if ((*global).debugger eq 'yes') then begin
+    ;      if (!version.os eq 'darwin') then begin
+    ;        path = '/Users/j35/IDLWorkspace80/SOS 1.0/'
+    ;      endif else begin
+    ;        path = '/SNS/users/j35/IDLWorkspace80/SOS 1.0/'
+    ;      endelse
+    ;      norm_file = path + 'Al_can_spectrum.dat'
+    ;      spectrum=xcr_direct(norm_file, 2)
+    ;      _spectrum = ptrarr(file_num,/allocate_heap)
+    ;
+    ;      ;copy the same spectrum for all data set
+    ;      _local_index = 0
+    ;      while (_local_index lt file_num) do begin
+    ;        *_spectrum[_local_index] = spectrum
+    ;        _local_index++
+    ;      endwhile
+    ;      spectrum = _spectrum
+    ;    endif else begin
+    ;      ;number_of_steps is ----> file_num
+    error_structure = {error:0b, file_name:''}
+    spectrum = get_normalization_spectrum(event, list_norm_nexus, $
+      processes, $
+      total_number_of_processes, $
+      error_structure=error_structure)
+    if (error_structure.error eq 1b) then begin
+      message = ['> Empty normalization file: ' + $
+        error_structure.file_name]
+      log_book_update, event, message=message
+      message, 'error', level=-1
+    endif
+    
+    ;    endelse
     
     update_progress_bar_percentage, event, ++processes, $
       total_number_of_processes
       
     ;number of steps is ----> 1
     ;trip the spectrum to the relevant tof ranges
-    spectrum = trim_spectrum(event, spectrum, TOFrange=TOFrange)
-    
+    error_trim = {error:0b, index:0}
+    spectrum = trim_spectrum(event, $
+    spectrum, $
+    TOFrange=TOFrange, $
+    error_trim = error_trim)
+    if (error_trim.error eq 1b) then begin
+      message = ['> Empty normalization after trimming:', $
+      '-> file #: ' + strcompress(error_trim.index,/remove_all)]
+      log_book_update, event, message=message
+      message, 'error', level=-1
+    endif
+        
     ;prepare array of data coming from the data Nexus files
     fdig=make_array(file_num)
     
@@ -279,6 +298,17 @@ pro go_nexus_reduction_ref_l, event
       file_angles[1,read_loop]=round(_DATA.theta*100.0)/100.0
       file_angles[2,read_loop]=round(_DATA.twotheta*100.0)/100.0
       
+      ;make sure all the data have at least 1 non zero data
+      _check_data = _data.data
+      _index_check_data = where (_check_data ne 0, count)
+      if (count eq 0) then begin
+        message = ['> Empty data file','-> file #' + $
+          strcompress(read_loop,/remove_all) + ' is empty over the' + $
+          ' range of pixels and tof selected',$
+          '-> Modified the range of pixels and tof']
+        log_book_update, event, message=message
+        message, 'error', level=-1
+      endif
       *DATA[read_loop] = _DATA
       
       ;calculate lambda step (using only the first file loaded)
@@ -344,30 +374,30 @@ pro go_nexus_reduction_ref_l, event
       index_TOFmax = n_elements(_tof-1)
     endelse
     
-;    print, 'index_TOFmin: ' , index_TOFmin
-;    print, 'index_TOFmax: ' , index_TOFmax
-;    print, 'index_TOFmax - index_TOFmin: ' , index_TOFmax - index_TOFmin
-;    print, 'TOFmax*5: ', TOFmax*5
-;    print, 'TOFmin*5: ', TOFmin*5
-;    print, 'floor((TOFmax-TOFmin)*5+1): ' , floor((TOFmax-TOFmin)*5+1)
+    ;    print, 'index_TOFmin: ' , index_TOFmin
+    ;    print, 'index_TOFmax: ' , index_TOFmax
+    ;    print, 'index_TOFmax - index_TOFmin: ' , index_TOFmax - index_TOFmin
+    ;    print, 'TOFmax*5: ', TOFmax*5
+    ;    print, 'TOFmin*5: ', TOFmin*5
+    ;    print, 'floor((TOFmax-TOFmin)*5+1): ' , floor((TOFmax-TOFmin)*5+1)
     
     ;Create an array that wil contain all the data (for all angle measurements)
     ;converted to THETA vs Lambda
-
-;OLD WAY
-;    THLAM_array = make_array(num,floor((TOFmax-TOFmin)*5)+1,PIXmax-PIXmin+1)
-;NEW WAY
-
-    print, 'index_TOFmax: ' , index_TOFmax
+    
+    ;OLD WAY
+    ;    THLAM_array = make_array(num,floor((TOFmax-TOFmin)*5)+1,PIXmax-PIXmin+1)
+    ;NEW WAY
+    
     print, 'index_TOFmin: ' , index_TOFmin
-
+    print, 'index_TOFmax: ' , index_TOFmax
+    
     THLAM_array = make_array(num, index_TOFmax - index_TOFmin, PIXmax-PIXmin+1)
-
-;old way
-;    THLAM_lamvec= make_array(num,floor((TOFmax-TOFmin)*5)+1)
-;new way
+    
+    ;old way
+    ;    THLAM_lamvec= make_array(num,floor((TOFmax-TOFmin)*5)+1)
+    ;new way
     THLAM_lamvec= make_array(num,index_TOFmax - index_TOFmin)
-
+    
     THLAM_thvec = make_array(num,PIXmax-PIXmin+1)
     
     ;number of steps is ----> file_num

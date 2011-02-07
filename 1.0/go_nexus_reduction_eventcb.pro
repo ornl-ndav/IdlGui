@@ -117,7 +117,8 @@ end
 function get_normalization_spectrum, event, $
     list_norm_nexus, $
     processes, $
-    total_number_of_processes
+    total_number_of_processes, $
+    error_structure = error_structure
   compile_opt idl2
   
   nbr_files = n_elements(list_norm_nexus)
@@ -159,6 +160,11 @@ function get_normalization_spectrum, event, $
       strcompress(strjoin(sz,','),/remove_all) + ']'
     message = [message, message1]
     log_book_update, event, message=message
+    
+    index_error =  where(_spectrum[1,*] ne 0, count)
+    if (count eq 0) then begin
+      error_structure = {error:1b, file_name:list_norm_nexus[index]}
+    endif
     
     *spectrum[index] = _spectrum
     
@@ -272,9 +278,13 @@ end
 ;
 ; :Keywords:
 ;    TOFrange    = [TOFmin, TOFmax]
+;    error_trim    {error:0b, index:''}
 ;
 ;-
-function trim_spectrum, event, spectrum, TOFrange=TOFrange
+function trim_spectrum, event, $
+    spectrum, $
+    TOFrange=TOFrange, $
+    error_trim=error_trim
   compile_opt idl2
   
   message = ['> Triming normalization spectrum:']
@@ -295,8 +305,14 @@ function trim_spectrum, event, spectrum, TOFrange=TOFrange
     
     list = where(_spectrum[0,*] ge _TOFmin and _spectrum[0,*] le _TOFmax)
     _spectrum = _spectrum[*,list]
+
+    index_zero = where(_spectrum[1,*] ne 0, count)
+    if (count eq 0) then begin
+      error_trim.error = 1b
+      error_trim.index = _index
+    endif
+
     _spectrum[1,*] = _spectrum[1,*]/max(_spectrum[1,*]) ;normalize spectrum to 1
-    
     *spectrum[_index] = _spectrum
     
     _sz = size(_spectrum)
@@ -354,8 +370,6 @@ function read_nexus, event, filename, TOFmin, TOFmax, PIXmin, PIXmax
   iFile = obj_new('IDLnexusUtilities', filename, spin_state=spin_state)
   ;get data [tof, pixel_x, pixel_y]
   image = iFile->get_y_tof_data()
-  help, image
-  help, where(image ne 0)
   
   sz = size(image)
   message[i++] = '-> retrieved Y vs TOF data [' + $
@@ -419,14 +433,10 @@ function read_nexus, event, filename, TOFmin, TOFmax, PIXmin, PIXmax
   message[i++] = '  -> twotheta: ' + strcompress(twotheta,/remove_all) + $
     ' ' + strcompress(twotheta_units,/remove_all)
     
-  ;Determine where is the first and last tof in the range  
+  ;Determine where is the first and last tof in the range
   ;list=where(TOF ge TOFmin and TOF le TOFmax)
   t1=min(where(TOF ge TOFmin))
   t2=max(where(TOF lt TOFmax))
-  
-  print, 't1: ' , t1
-  print, 't2: ' , t2
-  print
   
   message[i++] = '-> [t1,t2]=[' + strcompress(t1,/remove_all) + $
     ',' + strcompress(t2,/remove_all) + ']'
@@ -439,14 +449,8 @@ function read_nexus, event, filename, TOFmin, TOFmax, PIXmin, PIXmax
     ',' + strcompress(p2,/remove_all) + ']'
     
   TOF=TOF[t1:t2]
-  help, TOF
   PIXELS=pixels[p1:p2]
-  help, Pixels
-  
-  help, image
   image=image[t1:t2,p1:p2]
-  
-  help, image
   
   sz = size(tof)
   message[i++] = '-> size(TOF): ' + strcompress(strjoin(sz,','),/remove_all)
@@ -454,9 +458,6 @@ function read_nexus, event, filename, TOFmin, TOFmax, PIXmin, PIXmax
   message[i++] = '-> size(pixels): ' + strcompress(strjoin(sz,','),/remove_all)
   sz = size(image)
   message[i++] = '-> size(image): ' + strcompress(strjoin(sz,','),/remove_all)
-  
-  print, 'in readnexus'
-  help, where(image ne 0)
   
   ;image -> data (counts)
   ;tof   -> tof axis
@@ -515,7 +516,7 @@ function read_ref_m_nexus, event, $
   sz = size(image)
   message[i++] = '-> retrieved Y vs TOF data [' + $
     strcompress(strjoin(sz,','),/remove_all) + ']'
-  
+    
   ;get tof array only
   tof = iFile->get_TOF_data()
   sz = size(tof)
@@ -693,8 +694,7 @@ function convert_THLAM, data, SD_d, MD_d, cpix, pix_size
   compile_opt idl2
   
   TOF=data.TOF
-  print, 'in convert_THLAM'
-  help, TOF
+  
   MD_d = MD_d[0]
   vel=MD_d/TOF         ;mm/ms = m/s
   
@@ -837,11 +837,17 @@ pro build_THLAM, event=event, $
     twotheta_val=twotheta_val[0]
     
     tilenum=where((angles[0,*] eq theta_val) and (angles[1,*] eq twotheta_val))
-
+    
+    print, '***************'
+    print, 'in build_thlam:'
+    help, where(THLAm.data ne 0)
+    help, where(thlam_array[tilenum,*,*] ne 0)
+    print, '****************'
+    
     THLAM_array[tilenum,*,*]=THLAM_array[tilenum,*,*]+THLAM.data
     THLAM_thvec[tilenum,*]=THLAM.theta
     THLAM_lamvec[tilenum,*]=THLAM.lambda
-        
+    
     ;window,0, title = "Convertion: TOF->Lambda, Pixel->Theta"
     ;shade_surf, smooth(thlam.data,3), thlam.lambda, thlam.theta, ax=70, $
     ;charsi=2, xtitle='LAMBDA (' + string("305B) + ')', ytitle='THETA (rad)'
