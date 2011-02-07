@@ -240,13 +240,14 @@ PRO main_base_event, Event
           cell1 = table[0,row]
           file_name_split = strsplit(cell1,'(',/extract)
           file_name = file_name_split[0]
-;          instrument = get_instrumet_from_file_name(file_name)
-;          if (instrument eq 'REF_L') then begin
-;            button_status = 0
-;          endif else begin
-;            button_status = 1
-;          endelse
-;          spin_state_widget_action, event=event, button_status=button_status
+
+          instrument = get_instrumet_from_file_name(file_name)
+          if (instrument eq 'REF_L') then begin
+            button_status = 0
+          endif else begin
+            button_status = 1
+          endelse
+          spin_state_widget_action, event=event, button_status=button_status
           id = widget_info(event.top, find_by_uname='context_base')
           widget_displaycontextmenu, event.id, event.X, event.Y, id
         endif

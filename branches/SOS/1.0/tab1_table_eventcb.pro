@@ -179,7 +179,7 @@ pro spin_state_widget_action, event=event, button_status=button_status
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global
-  spin_states = (*global).list_spins
+  spin_states = strlowcase((*global).list_spins)
   
   data_spins = 'data_' + spin_states
   norm_spins = 'norm_'  + spin_states
