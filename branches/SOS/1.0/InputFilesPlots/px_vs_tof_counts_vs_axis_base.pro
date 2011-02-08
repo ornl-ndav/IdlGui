@@ -263,7 +263,7 @@ pro px_vs_tof_counts_vs_axis_base, event=event, $
     else:
   endcase
   
-  xsize = 300
+  xsize = 600
   ysize = 300
   
   _base = ''
@@ -274,10 +274,15 @@ pro px_vs_tof_counts_vs_axis_base, event=event, $
     plot_uname = plot_uname, $
     xsize = xsize, $
     ysize = ysize
-    
+
+  data2d_linear = (*(*global_px_vs_tof).data2d_linear)
   case (xaxis) of
-    'tof': (*global_px_vs_tof).counts_vs_xaxis_base = _base
-    'pixel': (*global_px_vs_tof).counts_vs_yaxis_base = _base
+    'tof': begin
+    (*global_px_vs_tof).counts_vs_xaxis_base = _base
+    end
+    'pixel': begin
+    (*global_px_vs_tof).counts_vs_yaxis_base = _base
+    end
     else:
   endcase
   
@@ -299,5 +304,15 @@ pro px_vs_tof_counts_vs_axis_base, event=event, $
     /NO_BLOCK, $
     cleanup='px_vs_tof_counts_vs_axis_base_cleanup'
     
+  case (xaxis) of
+    'tof': begin
+    px_vs_tof_plot_counts_vs_xaxis, base=_base
+    end
+    'pixel': begin
+    px_vs_tof_plot_counts_vs_yaxis, base=_base
+    end
+    else:
+  endcase
+
 end
 
