@@ -659,6 +659,12 @@ function get_file_structure, full_file_name_spin
   
   ;isolate file name from spin state
   row_array = strsplit(full_file_name_spin,'(',/extract)
+  if (n_elements(row_array) eq 1) then begin ;REF_L instrument
+    return, {full_file_name: full_file_name_spin,$
+      short_file_name: strtrim(file_basename(full_file_name_spin),2), $
+      spin: ''}
+  endif
+  
   _file_name = row_array[0]
   _full_file_name = strtrim(_file_name,2)
   
