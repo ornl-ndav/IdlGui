@@ -239,6 +239,8 @@ pro retrieve_data_nexus_distances, event=event, main_base=main_base
     first_data_nexus = strtrim(first_data_nexus_array[0],2)
     if (first_data_nexus eq '') then return
     
+    print, first_data_nexus
+    
     iNexus = obj_new('IDLnexusUtilities', first_data_nexus, $
       spin_state='Off_Off')
       
@@ -251,7 +253,12 @@ pro retrieve_data_nexus_distances, event=event, main_base=main_base
     
   endelse
   
+  help, iNexus
+  
   d_SD = iNexus->get_d_SD()
+  
+  help, d_SD
+  
   d_MS = iNexus->get_d_MS()
   obj_destroy, iNexus
   d_SD_mm = abs(convert_distance(distance = d_SD.value,$
