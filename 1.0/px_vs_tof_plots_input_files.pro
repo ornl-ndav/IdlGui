@@ -42,6 +42,8 @@ pro show_pixel_vs_tof_2d_plot, event
   to_row_selected = selection[3]
   to_column_selected = selection[2]
   
+  widget_control, /hourglass
+  
   nbr_file_selected = (to_row_selected - from_row_selected + 1) * $
     (to_column_selected - from_column_selected + 1)
   index_row = from_row_selected
@@ -59,13 +61,23 @@ pro show_pixel_vs_tof_2d_plot, event
       _spin = file_structure.spin
       _full_file_name = file_structure.full_file_name
       
+      ;create nexus object to retrieve data
+      message = ['> Displaying Pixel vs tof:' , $
+      '-> file name: ' + full_file_name_spin, $
+      '-> column index: ' + strcompress(index_column,/remove_all), $
+      '-> row index: ' + strcompress(index_row,/remove_all)]
+      log_book_update, event, message=message
       iNexus = obj_new('IDLnexusUtilities', _full_file_name, spin_state=_spin)
-      print, 'Starting at (index_column,index_row):(' + strcompress(index_column,/remove_all) + $
-      ',' + strcompress(index_row,/remove_all) + ')'  
+      
+      ;retrieving data set
+      message = '-> Retrieving full data [tof,x,y]'
+      log_book_update, event, message=message
       _data = iNexus->get_full_data()  ;[tof, x, y]
+      
+      ;retrieving tof axis
+      message = ['-> Retrieving tof axis data']
+      log_book_update, event, message=message
       _tof_axis = iNexus->get_tof_data() ;tof axis in ms
-      print, 'ending loading'
-      print
       obj_destroy, iNexus
       
       sz = size(_data,/dim)
@@ -83,5 +95,7 @@ pro show_pixel_vs_tof_2d_plot, event
     
     index_row++
   endwhile
+  
+  widget_control, hourglass=0
   
 end
