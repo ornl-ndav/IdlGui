@@ -52,25 +52,21 @@ cd, CurrentFolder
 .run IDLxmlParserTest__define.pro
 .run IDLsystemTest__define.pro
 
-;main routines	
-;.run xcw_direct.pro
-;.run xcr_direct.pro
-;.run SNS_convert_QXQZ.pro
-;.run SNS_convert_THLAM.pro
-;.run sns_divide_spectrum.pro
-;.run SNS_extract_specular.pro
-;.run SNS_read_NEXUS.pro
-;.run SNS_offspec_QXQZ_from_NEXUS_looper_NEW.pro
 .run progress_bar_eventcb.pro
-
 .run tab1_table_eventcb.pro
 .run data_box_eventcb.pro
 .run norm_box_eventcb.pro
 .run log_book_eventcb.pro
+
+cd, CurrentFolder + '/Reduction'
 .run go_nexus_reduction_eventcb.pro
 .run go_nexus_reduction.pro
 .run nexus_reduction_ref_l.pro
 .run nexus_reduction_ref_m.pro
+.run go_rtof_reduction_eventcb.pro
+.run go_rtof_reduction.pro
+
+cd, CurrentFolder + '/FinalPlot'
 .run final_plot_base.pro
 .run final_plot_help.pro
 .run save_background.pro
@@ -79,9 +75,10 @@ cd, CurrentFolder
 .run cursor_info_base.pro
 .run menu_eventcb.pro
 .run counts_vs_axis_base.pro
+
+cd, CurrentFolder
 .run sos_eventcb.pro
 .run global_infos_base.pro
-.run output_info_base.pro
 .run normalization_selection_base.pro
 
 ;working with nexus
@@ -94,27 +91,34 @@ cd, CurrentFolder + '/InputFilesPlots'
 cd, CurrentFolder
 .run px_vs_tof_plots_base.pro
 .run px_vs_tof_plots_base_eventcb.pro
+
+
+cd, CurrentFolder + '/rtof'
 .run rtof_plot_colorbar.pro
 .run rtof_menu_eventcb.pro
 .run rtof_cursor_info_base.pro
-
 .run rtof_tab.pro
 .run rtof_file_tab.pro
-.run go_rtof_reduction_eventcb.pro
-.run go_rtof_reduction.pro
+
 
 ;configuration tab
+cd, CurrentFolder + '/refpix'
 .run refpix_eventcb.pro
 .run refpix_base.pro
 .run refpix_colorbar.pro
 .run refpix_input_base.pro
 .run refpix_counts_vs_pixel_base.pro
+
+cd, CurrentFolder
 .run update_main_interface.pro
 
 ;outut tab
+cd, CurrentFolder + '/output'
 .run sample_info_base.pro
+.run output_info_base.pro
 .run create_output_tab.pro
 
+cd, CurrentFolder
 .run main_base_event.pro
 .run sos.pro
 .run sos_cleanup.pro
