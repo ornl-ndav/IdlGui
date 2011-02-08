@@ -387,14 +387,14 @@ end
 ;
 ; :Author: j35
 ;-
-pro rtof_change_loadct, event
+pro px_vs_tof_change_loadct, event
   compile_opt idl2
   
   new_uname = widget_info(event.id, /uname)
-  widget_control,event.top,get_uvalue=global_plot
+  widget_control,event.top,get_uvalue=global_px_vs_tof
   
   ;get old loadct
-  old_loadct = strcompress((*global_plot).default_loadct,/remove_all)
+  old_loadct = strcompress((*global_px_vs_tof).default_loadct,/remove_all)
   old_uname = 'loadct_' + old_loadct
   label = getValue(event=event,uname=old_uname)
   ;remove keep central part
@@ -413,11 +413,11 @@ pro rtof_change_loadct, event
   
   ;save new loadct
   new_uname_array = strsplit(new_uname,'_',/extract)
-  (*global_plot).default_loadct = fix(new_uname_array[1])
+  (*global_px_vs_tof).default_loadct = fix(new_uname_array[1])
   
   ;replot
-  rtof_refresh_plot, event, recalculate=1
-  rtof_refresh_plot_colorbar, event
+  px_vs_tof_refresh_plot, event, recalculate=1
+  px_vs_tof_refresh_plot_colorbar, event
   
 end
 
@@ -788,9 +788,6 @@ pro px_vs_tof_plot_beam_center_scale, base=base, event=event
   
   ticklen = -0.0015
   
-  print, xticks
-  print, yticks
-  
   yticks = 304/10
   
   plot, randomn(s,80), $
@@ -808,7 +805,8 @@ pro px_vs_tof_plot_beam_center_scale, base=base, event=event
     XMINOR      = 2,$
     ;YMINOR      = 2,$
     ;    YTICKS      = yticks,$
-    XTITLE      = 'TOF (!4l!Xs)',$
+;    XTITLE      = 'TOF (!4l!Xs)',$
+    xtitle = 'TOF (ms)', $ 
     ;    YTITLE      = 'Pixels',$
     XMARGIN     = [xmargin, xmargin+0.2],$
     YMARGIN     = [ymargin, ymargin],$
