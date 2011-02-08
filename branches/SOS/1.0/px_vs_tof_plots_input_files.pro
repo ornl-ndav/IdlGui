@@ -46,6 +46,8 @@ pro show_pixel_vs_tof_2d_plot, event
   
   nbr_file_selected = (to_row_selected - from_row_selected + 1) * $
     (to_column_selected - from_column_selected + 1)
+  offset = 0
+  _step_offset = 50
   index_row = from_row_selected
   while (index_row le to_row_selected) do begin
   
@@ -83,6 +85,7 @@ pro show_pixel_vs_tof_2d_plot, event
       sz = size(_data,/dim)
       _pixel_axis = indgen(sz[2])
       
+      offset += _step_offset
       px_vs_tof_plots_input_files_base, main_base=base, $
         event=event, $
         file_name = full_file_name_spin, $
