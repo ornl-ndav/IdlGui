@@ -426,29 +426,29 @@ end
 ;   Reached when the settings base is killed
 ;
 ; :Params:
-;    global_plot
+;    global_px_vs_tof
 ;
 ; :Author: j35
 ;-
-pro rtof_px_vs_tof_widget_killed, global_plot
+pro px_vs_tof_widget_killed, global_px_vs_tof
   compile_opt idl2
   
-  main_event = (*global_plot).main_event
+  main_event = (*global_px_vs_tof).main_event
   
-  info_base = (*global_plot).cursor_info_base
+  info_base = (*global_px_vs_tof).cursor_info_base
   ;if x,y and counts base is on, shows live values of x,y and counts
   if (widget_info(info_base, /valid_id) ne 0) then begin
     widget_control, info_base, /destroy
   endif
   
   ;close the xaxis info if openned
-  xaxis_info_base = (*global_plot).counts_vs_xaxis_base
+  xaxis_info_base = (*global_px_vs_tof).counts_vs_xaxis_base
   if (widget_info(xaxis_info_base, /valid_id) ne 0) then begin
     widget_control, xaxis_info_base, /destroy
   endif
   
   ;close the yaxis info if openned
-  yaxis_info_base = (*global_plot).counts_vs_yaxis_base
+  yaxis_info_base = (*global_px_vs_tof).counts_vs_yaxis_base
   if (widget_info(yaxis_info_base, /valid_id) ne 0) then begin
     widget_control, yaxis_info_base, /destroy
   endif
@@ -834,16 +834,17 @@ end
 pro px_vs_tof_plots_input_files_base_cleanup, tlb
   compile_opt idl2
   
-  widget_control, tlb, get_uvalue=global_plot, /no_copy
+  widget_control, tlb, get_uvalue=global_px_vs_tof, /no_copy
   
-  rtof_px_vs_tof_widget_killed, global_plot
+  px_vs_tof_widget_killed, global_px_vs_tof
   
-  if (n_elements(global_plot) eq 0) then return
+  if (n_elements(global_px_vs_tof) eq 0) then return
   
-  ptr_free, (*global_plot).data
-  ptr_free, (*global_plot).data_linear
+  ptr_free, (*global_px_vs_tof).data2d
+  ptr_free, (*global_px_vs_tof).data3d
+  ptr_free, (*global_px_vs_tof).data2d_linear
   
-  ptr_free, global_plot
+  ptr_free, global_px_vs_tof
   
 end
 
