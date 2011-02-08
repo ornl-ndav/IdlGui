@@ -657,7 +657,7 @@ function IDLnexusUtilities::get_dirpix
   catch, error_value
   if (error_value ne 0) then begin
     catch,/cancel
-    ;we are dealing with a new NeXus with odl path_value (value -> readback)
+    ;we are dealing with a new NeXus with old path_value (value -> readback)
     
     catch, error_value_2
     if (error_value_2 ne 0) then begin
