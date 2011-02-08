@@ -89,6 +89,7 @@ cd, CurrentFolder + '/InputFilesPlots'
 .run px_vs_tof_plots_input_files.pro
 .run info_bases.pro
 .run px_vs_tof_cursor_info_base.pro
+.run px_vs_tof_counts_vs_axis_base.pro
 
 cd, CurrentFolder
 .run px_vs_tof_plots_base.pro
