@@ -81,10 +81,11 @@ pro px_vs_tof_plots_input_files_base_event, Event
       (*global_px_vs_tof).xsize = new_xsize
       (*global_px_vs_tof).ysize = new_ysize
       
+      border = (*global_px_vs_tof).border
+
       widget_control, id, xsize = new_xsize
       widget_control, id, ysize = new_ysize
       
-      border = (*global_px_vs_tof).border
       colorbar_xsize = (*global_px_vs_tof).colorbar_xsize
       
       id = widget_info(event.top, $
@@ -625,7 +626,7 @@ pro px_vs_tof_plots_input_files_base_gui, wBase, $
     /motion_events,$
     /tracking_events,$
     retain=2, $
-    ;    event_pro = 'draw_rtof_eventcb',$
+    event_pro = 'px_vs_tof_draw_eventcb',$
     uname = 'draw_px_vs_tof_input_files')
     
   scale = widget_draw(wBase,$
@@ -946,7 +947,7 @@ pro px_vs_tof_plots_input_files_base,  main_base=main_base, $
     draw_zoom_selection: intarr(4),$ ;[x0,y0,x1,y1]
     
     plot_setting1: 0, $
-  plot_setting2: 1, $
+    plot_setting2: 1, $
     
     ;x coeff used in the congrid function to plot main data
     congrid_xcoeff: 0., $ 
@@ -988,12 +989,8 @@ pro px_vs_tof_plots_input_files_base,  main_base=main_base, $
   ysize = draw_geometry.ysize
   cData = congrid(_data, ysize, xsize)
   
-  id = widget_info(wBase, find_by_uname='px_vs_tof_input_files_widget_base')
-  geometry = widget_info(id,/geometry)
-  _xsize = geometry.scr_xsize
-  _ysize = geometry.scr_ysize
-  (*global_px_vs_tof).congrid_xcoeff = _ysize-2*border
-  (*global_px_vs_tof).congrid_ycoeff = _xsize-2*border-colorbar_xsize
+  (*global_px_vs_tof).congrid_ycoeff = ysize
+  (*global_px_vs_tof).congrid_xcoeff = xsize
   
   DEVICE, DECOMPOSED = 0
   loadct, default_loadct, /silent
