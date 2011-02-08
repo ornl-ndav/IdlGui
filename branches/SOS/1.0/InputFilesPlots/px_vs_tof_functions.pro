@@ -85,7 +85,6 @@ function px_vs_tof_retrieve_data_y_value, event
   
   y_device = event.y
   congrid_ycoeff = (*global_px_vs_tof).congrid_ycoeff  ;using xcoeff because of transpose
-  print, congrid_ycoeff
   
   yrange = float((*global_px_vs_tof).yrange) ;min and max pixels
   

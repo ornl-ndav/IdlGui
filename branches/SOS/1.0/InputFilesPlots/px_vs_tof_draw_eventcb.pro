@@ -98,17 +98,17 @@ pro px_vs_tof_draw_eventcb, event
     ;counts vs xaxis (qx)
     if (widget_info(counts_vs_xaxis_plot_id,/valid_id) ne 0) then begin
       ;keep the main widget_draw activated
-      id = widget_info(event.top, find_by_uname='draw')
+      id = widget_info(event.top, find_by_uname='draw_px_vs_tof_input_files')
       widget_control, id, /input_focus
-      plot_counts_vs_xaxis, event
+;      px_vs_tof_plot_counts_vs_xaxis, event=event
     endif
     
     ;counts vs yaxis (qz)
     if (widget_info(counts_vs_yaxis_plot_id,/valid_id) ne 0) then begin
       ;keep the main widget_draw activated
-      id = widget_info(event.top, find_by_uname='draw')
+      id = widget_info(event.top, find_by_uname='draw_px_vs_tof_input_files')
       widget_control, id, /input_focus
-      plot_counts_vs_yaxis, event
+;      px_vs_tof_plot_counts_vs_yaxis, event
     endif
     
     ;right click validated only if there is at least one of the infos base
@@ -119,7 +119,7 @@ pro px_vs_tof_draw_eventcb, event
       
         x=event.x
         y=event.y
-        id = widget_info(event.top, find_by_uname='draw')
+        id = widget_info(event.top, find_by_uname='draw_px_vs_tof_input_files')
         geometry = widget_info(id,/geometry)
         xsize = geometry.xsize
         ysize = geometry.ysize
