@@ -85,12 +85,14 @@ cd, CurrentFolder
 .run configuration_table_event.pro
 
 cd, CurrentFolder + '/InputFilesPlots'
+.run px_vs_tof_functions.pro
 .run info_bases_eventcb.pro
 .run px_vs_tof_plots_input_files_base.pro
 .run px_vs_tof_plots_input_files.pro
 .run info_bases.pro
 .run px_vs_tof_cursor_info_base.pro
 .run px_vs_tof_counts_vs_axis_base.pro
+.run px_vs_tof_draw_eventcb.pro
 
 cd, CurrentFolder
 .run px_vs_tof_plots_base.pro

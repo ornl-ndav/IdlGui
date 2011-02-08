@@ -103,7 +103,7 @@ pro px_vs_tof_cursor_info_base_gui, wBase, $
     /align_right)
   val = widget_label(row1,$
     value = 'N/A',$
-    uname = 'cursor_info_x_value_uname',$
+    uname = 'px_vs_tof_cursor_info_x_value_uname',$
     scr_xsize = 200,$
     /align_left)
     
@@ -115,7 +115,7 @@ pro px_vs_tof_cursor_info_base_gui, wBase, $
     /align_right)
   val = widget_label(row2,$
     value = 'N/A',$
-    uname = 'cursor_info_y_value_uname',$
+    uname = 'px_vs_tof_cursor_info_y_value_uname',$
     scr_xsize = 200,$
     /align_left)
     
@@ -126,7 +126,7 @@ pro px_vs_tof_cursor_info_base_gui, wBase, $
     ;    scr_xsize= 60,$
     /align_right)
   val = widget_label(row3,$
-    uname = 'cursor_info_z_value_uname',$
+    uname = 'px_vs_tof_cursor_info_z_value_uname',$
     value = 'N/A',$
     scr_xsize = 150,$
     /align_left)
