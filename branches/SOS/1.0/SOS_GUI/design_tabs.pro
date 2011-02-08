@@ -149,7 +149,7 @@ pro design_tabs, MAIN_BASE, global
     /context_menu,$
     uname = 'context_base')
   plot2d = widget_button(contextBase,$
-  value = '2D plot: Pixel vs TOF...',$
+  value = 'Display 2D plots (Pixel vs TOF)...',$
   uname = 'display_pixel_vs_tof_of_input_files')
 
   norm = widget_button(contextBase,$

@@ -33,7 +33,55 @@
 ;==============================================================================
 
 pro show_pixel_vs_tof_2d_plot, event
-compile_opt idl2
-
-
+  compile_opt idl2
+  
+  selection = get_table_lines_selected(event=event, base=base, $
+    uname='tab1_table')
+  from_row_selected = selection[1]
+  from_column_selected = selection[0]
+  to_row_selected = selection[3]
+  to_column_selected = selection[2]
+  
+  nbr_file_selected = (to_row_selected - from_row_selected + 1) * $
+    (to_column_selected - from_column_selected + 1)
+  index_row = from_row_selected
+  while (index_row le to_row_selected) do begin
+  
+    index_column = from_column_selected
+    while (index_column le to_column_selected) do begin
+    
+      table = getValue(event=event,uname='tab1_table')
+      ;get file name of line selected
+      full_file_name_spin = table[index_column,index_row]
+      
+      file_structure = get_file_structure(full_file_name_spin)
+      _short_file_name = file_structure.short_file_name
+      _spin = file_structure.spin
+      _full_file_name = file_structure.full_file_name
+      
+      iNexus = obj_new('IDLnexusUtilities', _full_file_name, spin_state=_spin)
+      print, 'Starting at (index_column,index_row):(' + strcompress(index_column,/remove_all) + $
+      ',' + strcompress(index_row,/remove_all) + ')'  
+      _data = iNexus->get_full_data()  ;[tof, x, y]
+      _tof_axis = iNexus->get_tof_data() ;tof axis in ms
+      print, 'ending loading'
+      print
+      obj_destroy, iNexus
+      
+      sz = size(_data,/dim)
+      _pixel_axis = indgen(sz[2])
+      
+      px_vs_tof_plots_input_files_base, main_base=base, $
+        event=event, $
+        file_name = full_file_name_spin, $
+        offset = offset, $
+        data = _data, $
+        tof_axis = _tof_axis
+        
+      index_column++
+    endwhile
+    
+    index_row++
+  endwhile
+  
 end
