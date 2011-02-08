@@ -32,6 +32,40 @@
 ;
 ;==============================================================================
 
+pro px_vs_tof_base_move_info_bases, event
+compile_opt idl2
+
+widget_control, event.top, get_uvalue=global_px_vs_tof
+
+id = widget_info(event.top, $
+      find_by_uname='px_vs_tof_input_files_widget_base')
+      ;widget_control, id, /realize
+      geometry = widget_info(id,/geometry)
+      xoffset = geometry.xoffset
+      yoffset = geometry.yoffset
+      xsize   = geometry.xsize
+
+info_base = (*global_px_vs_tof).cursor_info_base
+ if (widget_info(info_base, /valid_id) ne 0) then begin
+       widget_control, info_base, xoffset=xsize+xoffset
+       widget_control, info_base, yoffset=yoffset
+  endif 
+ 
+ xaxis_id = (*global_px_vs_tof).counts_vs_xaxis_base
+ if (widget_info(xaxis_id,/valid_id) ne 0) then begin
+       widget_control, xaxis_id, xoffset=xsize+xoffset
+       widget_control, xaxis_id, yoffset=yoffset+105
+endif
+
+
+ yaxis_id = (*global_px_vs_tof).counts_vs_yaxis_base
+ if (widget_info(yaxis_id,/valid_id) ne 0) then begin
+       widget_control, yaxis_id, xoffset=xsize+xoffset
+       widget_control, yaxis_id, yoffset=yoffset+465
+endif
+
+end
+     
 ;+
 ; :Description:
 ;    Shows the cursor, counts vs pixel and counts vs tof bases

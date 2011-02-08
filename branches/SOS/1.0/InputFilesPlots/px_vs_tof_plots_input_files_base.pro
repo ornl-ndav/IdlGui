@@ -70,7 +70,7 @@ pro px_vs_tof_plots_input_files_base_event, Event
     
     widget_info(event.top, $
     find_by_uname='px_vs_tof_input_files_widget_base'): begin
-    
+
       id = widget_info(event.top, $
       find_by_uname='px_vs_tof_input_files_widget_base')
       ;widget_control, id, /realize
@@ -78,6 +78,12 @@ pro px_vs_tof_plots_input_files_base_event, Event
       new_xsize = geometry.scr_xsize
       new_ysize = geometry.scr_ysize
       
+      px_vs_tof_base_move_info_bases, event
+      
+      ;we can stop here if all we did is just moving the main base
+      if ((new_xsize eq (*global_px_vs_tof).xsize) && $
+      (new_ysize eq (*global_px_vs_tof).ysize)) then return 
+       
       (*global_px_vs_tof).xsize = new_xsize
       (*global_px_vs_tof).ysize = new_ysize
       
@@ -107,7 +113,7 @@ pro px_vs_tof_plots_input_files_base_event, Event
       px_vs_tof_plot_beam_center_scale, event=event
       px_vs_tof_refresh_plot, event, recalculate=1
       px_vs_tof_refresh_plot_colorbar, event
-      
+    
       return
     end
     
@@ -508,6 +514,7 @@ pro px_vs_tof_plots_input_files_base_gui, wBase, $
     /BASE_ALIGN_CENTER,$
     /align_center,$
     /tlb_size_events,$
+    /tlb_move_events, $
     mbar = bar1,$
     GROUP_LEADER = ourGroup)
     
