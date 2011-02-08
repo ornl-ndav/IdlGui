@@ -788,8 +788,6 @@ pro px_vs_tof_plot_beam_center_scale, base=base, event=event
   
   ticklen = -0.0015
   
-  yticks = 304/10
-  
   plot, randomn(s,80), $
     XRANGE     = xrange,$
     YRANGE     = yrange,$
@@ -804,8 +802,8 @@ pro px_vs_tof_plot_beam_center_scale, base=base, event=event
     XTICKS      = xticks,$
     XMINOR      = 2,$
     ;YMINOR      = 2,$
-    ;    YTICKS      = yticks,$
-;    XTITLE      = 'TOF (!4l!Xs)',$
+    ;YTICKS      = yticks,$
+    ;XTITLE      = 'TOF (!4l!Xs)',$
     xtitle = 'TOF (ms)', $ 
     ;    YTITLE      = 'Pixels',$
     XMARGIN     = [xmargin, xmargin+0.2],$

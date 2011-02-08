@@ -87,9 +87,11 @@ cd, CurrentFolder
 ;working with nexus
 .run configuration_table_event.pro
 
-;plot of rtof file
+cd, CurrentFolder + '/InputFilesPlots'
 .run px_vs_tof_plots_input_files_base.pro
 .run px_vs_tof_plots_input_files.pro
+
+cd, CurrentFolder
 .run px_vs_tof_plots_base.pro
 .run px_vs_tof_plots_base_eventcb.pro
 .run rtof_plot_colorbar.pro
