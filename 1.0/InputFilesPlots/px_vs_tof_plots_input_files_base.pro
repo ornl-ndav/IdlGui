@@ -457,94 +457,6 @@ end
 
 ;+
 ; :Description:
-;    Shows the cursor, counts vs pixel and counts vs tof bases
-;
-; :Params:
-;    event
-;
-; :Author: j35
-;-
-pro rtof_show_all_info, event
-  compile_opt idl2
-  
-  rtof_show_cursor_info, event
-  rtof_show_counts_vs_xaxis, event
-  rtof_show_counts_vs_yaxis, event
-  
-end
-
-;+
-; :Description:
-;    show the cursor info base
-;
-; :Params:
-;    event
-;
-; :Author: j35
-;-
-pro rtof_show_cursor_info, event
-  compile_opt idl2
-  
-  widget_control, event.top, get_uvalue=global_plot
-  
-  info_base = (*global_plot).cursor_info_base
-  
-  if (widget_info(info_base, /valid_id) EQ 0) THEN BEGIN
-    parent_base_uname = 'px_vs_tof_widget_base'
-    rtof_cursor_info_base, event=event, $
-      parent_base_uname=parent_base_uname
-  endif
-  
-end
-
-;+
-; :Description:
-;    show the counts vs tof (lambda) base
-;
-; :Params:
-;    event
-;
-; :Author: j35
-;-
-pro rtof_show_counts_vs_xaxis, event
-  compile_opt idl2
-  
-  widget_control, event.top, get_uvalue=global_plot
-  
-  counts_vs_xaxis_plot_id = (*global_plot).counts_vs_xaxis_base
-  if (obj_valid(counts_vs_xaxis_plot_id) eq 0) then begin ;no plot yet
-    rtof_counts_vs_axis_base, event=event, $
-      parent_base_uname = 'px_vs_tof_widget_base', $
-      xaxis = 'tof'
-  endif
-  
-end
-
-;+
-; :Description:
-;    show the counts vs pixel (angle) base
-;
-; :Params:
-;    event
-;
-; :Author: j35
-;-
-pro rtof_show_counts_vs_yaxis, event
-  compile_opt idl2
-  
-  widget_control, event.top, get_uvalue=global_plot
-  
-  counts_vs_yaxis_plot_id = (*global_plot).counts_vs_yaxis_base
-  if (obj_valid(counts_vs_yaxis_plot_id) eq 0) then begin ;no plot yet
-    rtof_counts_vs_axis_base, event=event, $
-      parent_base_uname = 'px_vs_tof_widget_base', $
-      xaxis = 'pixel'
-  endif
-  
-end
-
-;+
-; :Description:
 ;   create the base
 ;
 ; :Params:
@@ -677,30 +589,30 @@ pro px_vs_tof_plots_input_files_base_gui, wBase, $
     value = set2_value,$
     uname = 'px_vs_tof_local_scale_setting_log')
     
-  ;  info = widget_button(bar1, $
-  ;    value = 'Infos',$
-  ;    /menu)
-  ;
-  ;  set = widget_button(info, $
-  ;    value = 'Show all',$
-  ;    event_pro = 'rtof_show_all_info',$
-  ;    uname = 'show_all_info_uname')
-  ;
-  ;  set1 = widget_button(info, $
-  ;    /separator,$
-  ;    value = 'Show Cursor Infos',$
-  ;    event_pro = 'rtof_show_cursor_info',$
-  ;    uname = 'show_or_hide_cursor_info_uname')
-  ;
-  ;  set2 = widget_button(info, $
-  ;    value = 'Show Counts vs xaxis at cursor y position',$
-  ;    event_pro = 'rtof_show_counts_vs_xaxis',$
-  ;    uname = 'show_counts_vs_xaxis_uname')
-  ;
-  ;  set3 = widget_button(info, $
-  ;    value = 'Show Counts vs yaxis at cursor x position',$
-  ;    event_pro = 'rtof_show_counts_vs_yaxis',$
-  ;    uname = 'show_counts_vs_yaxis_uname')
+    info = widget_button(bar1, $
+      value = 'Infos',$
+      /menu)
+  
+    set = widget_button(info, $
+      value = 'Show all',$
+      event_pro = 'px_vs_tof_show_all_info',$
+      uname = 'show_all_info_uname')
+  
+    set1 = widget_button(info, $
+      /separator,$
+      value = 'Show Cursor Infos',$
+      event_pro = 'px_vs_tof_show_cursor_info',$
+      uname = 'show_or_hide_cursor_info_uname')
+  
+    set2 = widget_button(info, $
+      value = 'Show Counts vs xaxis at cursor y position',$
+      event_pro = 'px_vs_tof_show_counts_vs_xaxis',$
+      uname = 'show_counts_vs_xaxis_uname')
+  
+    set3 = widget_button(info, $
+      value = 'Show Counts vs yaxis at cursor x position',$
+      event_pro = 'px_vs_tof_show_counts_vs_yaxis',$
+      uname = 'show_counts_vs_yaxis_uname')
     
   ;-------- end of menu
     

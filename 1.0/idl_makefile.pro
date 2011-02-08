@@ -87,11 +87,12 @@ cd, CurrentFolder
 cd, CurrentFolder + '/InputFilesPlots'
 .run px_vs_tof_plots_input_files_base.pro
 .run px_vs_tof_plots_input_files.pro
+.run info_bases.pro
+.run px_vs_tof_cursor_info_base.pro
 
 cd, CurrentFolder
 .run px_vs_tof_plots_base.pro
 .run px_vs_tof_plots_base_eventcb.pro
-
 
 cd, CurrentFolder + '/rtof'
 .run rtof_plot_colorbar.pro
