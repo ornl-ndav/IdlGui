@@ -196,7 +196,7 @@ end
 ;
 ; :Author: j35
 ;-
-pro px_vs_tof_plot_counts_vs_xaxis, event=event, base=base, clear=clear
+pro px_vs_tof_plot_counts_vs_xaxis, event=event, base=base
   compile_opt idl2
   
   if (keyword_set(event)) then begin
@@ -212,11 +212,6 @@ pro px_vs_tof_plot_counts_vs_xaxis, event=event, base=base, clear=clear
   
   widget_control, id, GET_VALUE = plot_id
   wset, plot_id
-  
-  if (keyword_set(clear)) then begin
-    erase
-    return
-  endif
   
   ;2d data
   data = (*(*global_px_vs_tof).data2d_linear)
