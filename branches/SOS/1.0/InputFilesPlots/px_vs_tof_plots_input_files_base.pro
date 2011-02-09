@@ -53,16 +53,20 @@ pro px_vs_tof_plots_input_files_base_event, Event
     ;lin and log
     widget_info(event.top, $
       find_by_uname='px_vs_tof_local_scale_setting_log'): begin
-      putValue, event=event, 'px_vs_tof_local_scale_setting_linear', '  linear'
-      putValue, event=event, 'px_vs_tof_local_scale_setting_log',    '* logarithmic'
+      putValue, event=event, 'px_vs_tof_local_scale_setting_linear', $
+      '  linear'
+      putValue, event=event, 'px_vs_tof_local_scale_setting_log',  $
+        '* logarithmic'
       (*global_px_vs_tof).default_scale_settings = 1
       px_vs_tof_lin_log_data, event=event
       px_vs_tof_refresh_plot, event, recalculate=1
     end
     widget_info(event.top, $
       find_by_uname='px_vs_tof_local_scale_setting_linear'): begin
-      putValue, event=event, 'px_vs_tof_local_scale_setting_linear', '* linear'
-      putValue, event=event, 'px_vs_tof_local_scale_setting_log',    '  logarithmic'
+      putValue, event=event, 'px_vs_tof_local_scale_setting_linear', $
+      '* linear'
+      putValue, event=event, 'px_vs_tof_local_scale_setting_log',  $
+        '  logarithmic'
       (*global_px_vs_tof).default_scale_settings = 0
       px_vs_tof_lin_log_data, event=event
       px_vs_tof_refresh_plot, event, recalculate=1
@@ -137,7 +141,6 @@ pro px_vs_tof_plots_input_files_base_event, Event
   endcase
   
 end
-
 
 ;+
 ; :Description:
