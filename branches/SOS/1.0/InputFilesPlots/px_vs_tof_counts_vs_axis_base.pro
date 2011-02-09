@@ -213,7 +213,7 @@ end
 ;
 ; :Author: j35
 ;-
-pro counts_vs_axis_base_cleanup, tlb
+pro px_vs_tof_counts_vs_axis_base_cleanup, tlb
   compile_opt idl2
   
   widget_control, tlb, get_uvalue=global_axis_plot, /no_copy
