@@ -218,7 +218,7 @@ pro display_selection_information, event
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global_px_vs_tof
-      info_base = (*global_px_vs_tof).cursor_info_base
+  info_base = (*global_px_vs_tof).cursor_info_base
   
   ;display information about selection in cursor/selection info base
   draw_zoom_data_selection = (*global_px_vs_tof).draw_zoom_data_selection
@@ -321,8 +321,8 @@ pro px_vs_tof_draw_eventcb, event
       putValue, base=info_base, 'px_vs_tof_cursor_info_y_value_uname', y
       putValue, base=info_base, 'px_vs_tof_cursor_info_z_value_uname', z
       
-display_selection_information, event
-        
+      display_selection_information, event
+      
     endif
     
     ;if counts vs tof 2d plot is available
@@ -357,7 +357,7 @@ display_selection_information, event
       draw_zoom_data_selection[2] = x1_data
       draw_zoom_data_selection[3] = y1_data
       (*global_px_vs_tof).draw_zoom_data_selection = draw_zoom_data_selection
-
+      
       refresh_zoom_px_vs_tof_selection, event
       
     endif
@@ -387,6 +387,18 @@ display_selection_information, event
       
       display_selection_information, event
       
+        ;if counts vs tof 2d plot is available
+    if (widget_info(counts_vs_xaxis_plot_id,/valid_id)) then begin
+         display_cursor_line_on_2d_plot, event=event, xaxis='tof'
+      display_corner_of_selection_in_info_bases, event, xaxis='tof'
+    endif
+    
+    ;if counts vs pixel 2d plot is available
+    if (widget_info(counts_vs_yaxis_plot_id,/valid_id)) then begin
+         display_cursor_line_on_2d_plot, event=event, xaxis='pixel'
+      display_corner_of_selection_in_info_bases, event, xaxis='pixel'
+    endif
+      
     endif
     
     if (event.release eq 1 && $
@@ -398,7 +410,29 @@ display_selection_information, event
       
       ;check that user selected a box,not only 1 pixel
       result = is_real_px_vs_tof_selection(event, x1, y1)
-      if (result eq 0) then return
+      if (result eq 0) then begin
+        ;ok, then we reset the selection
+        draw_zoom_data_selection[0] = -1
+        draw_zoom_data_selection[1] = -1
+        draw_zoom_data_selection[2] = -1
+        draw_zoom_data_selection[3] = -1
+        (*global_px_vs_tof).draw_zoom_data_selection = draw_zoom_data_selection
+        display_selection_information, event
+
+        ;if counts vs tof 2d plot is available
+    if (widget_info(counts_vs_xaxis_plot_id,/valid_id)) then begin
+         display_cursor_line_on_2d_plot, event=event, xaxis='tof'
+      display_corner_of_selection_in_info_bases, event, xaxis='tof'
+    endif
+    
+    ;if counts vs pixel 2d plot is available
+    if (widget_info(counts_vs_yaxis_plot_id,/valid_id)) then begin
+         display_cursor_line_on_2d_plot, event=event, xaxis='pixel'
+      display_corner_of_selection_in_info_bases, event, xaxis='pixel'
+    endif
+
+        return
+      endif
       
       draw_zoom_selection[2] = x1
       draw_zoom_selection[3] = y1
