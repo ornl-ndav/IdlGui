@@ -1,5 +1,53 @@
 ;+
 ; :Description:
+;    Will display a verticale line at the position of the cursor on the
+;    2d plots mapped
+;
+; :Keywords:
+;    event
+;    xaxis      'tof' or 'pixel'
+;
+; :Author: j35
+;-
+pro display_cursor_line_on_2d_plot, event=event, xaxis=xaxis
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_px_vs_tof
+  
+  case (xaxis) of
+    'tof': begin
+      _base = (*global_px_vs_tof).counts_vs_xaxis_base
+      _draw_uname = (*global_px_vs_tof).counts_vs_xaxis_plot_uname
+      px_vs_tof_plot_counts_vs_xaxis, base=_base
+      data = (*(*global_px_vs_tof).data2d_linear)
+      _data = total(data,2)
+      max_y = max(_data)
+      x = px_vs_tof_retrieve_data_x_value(event)
+    end
+    'pixel': begin
+      _base = (*global_px_vs_tof).counts_vs_yaxis_base
+      _draw_uname = (*global_px_vs_tof).counts_vs_yaxis_plot_uname
+      px_vs_tof_plot_counts_vs_yaxis, base=_base
+      data = (*(*global_px_vs_tof).data2d_linear)
+      _data = total(data,1)
+      max_y = max(_data)
+      x = px_vs_tof_retrieve_data_y_value(event)
+    end
+  endcase
+  
+  _id = widget_info(_base, find_by_uname= _draw_uname)
+  widget_control, _id, GET_VALUE = plot_id
+  wset, plot_id
+  
+  plots, x, 0, /data
+  plots, x, max_y, /data, /continue, color=fsc_color('yellow'), $
+    linestyle=1
+    
+end
+
+;
+;+
+; :Description:
 ;    reach when the user interacts with the plot (left click, move mouse
 ;    with left click).
 ;
@@ -48,10 +96,10 @@ pro px_vs_tof_draw_eventcb, event
       endif
       
     endif
-        
+    
     ;if x,y and counts base is on, shows live values of x,y and counts
     if (widget_info(info_base, /valid_id) ne 0) then begin
-   
+    
       ;keep the main widget_draw activated
       id = widget_info(event.top, find_by_uname='draw_px_vs_tof_input_files')
       widget_control, id, /input_focus
@@ -60,29 +108,29 @@ pro px_vs_tof_draw_eventcb, event
       y = px_vs_tof_retrieve_data_y_value(event)
       z = long(px_vs_tof_retrieve_data_z_value(event))
       
-;      if ((*global_px_vs_tof).shift_key_status) then begin ;shift is clicked
-;      
-;        QxQzrange = (*global_plot).QxQzrange
-;        
-;        Qx0 = QxQzrange[0]
-;        Qz0 = QxQzrange[1]
-;        
-;        Qxmin = min([Qx0,x],max=Qxmax)
-;        Qzmin = min([Qz0,y],max=Qzmax)
-;        
-;        x = strcompress(qxmin,/remove_all) + ' --> ' + $
-;          strcompress(qxmax,/remove_all)
-;        y = strcompress(qzmin,/remove_all) + ' --> ' + $
-;          strcompress(qzmax,/remove_all)
-;        z = strcompress(z,/remove_all)
-;        
-;      endif else begin
+      ;      if ((*global_px_vs_tof).shift_key_status) then begin ;shift is clicked
+      ;
+      ;        QxQzrange = (*global_plot).QxQzrange
+      ;
+      ;        Qx0 = QxQzrange[0]
+      ;        Qz0 = QxQzrange[1]
+      ;
+      ;        Qxmin = min([Qx0,x],max=Qxmax)
+      ;        Qzmin = min([Qz0,y],max=Qzmax)
+      ;
+      ;        x = strcompress(qxmin,/remove_all) + ' --> ' + $
+      ;          strcompress(qxmax,/remove_all)
+      ;        y = strcompress(qzmin,/remove_all) + ' --> ' + $
+      ;          strcompress(qzmax,/remove_all)
+      ;        z = strcompress(z,/remove_all)
+      ;
+      ;      endif else begin
       
-        x = strcompress(x,/remove_all)
-        y = strcompress(y,/remove_all)
-        z = strcompress(z,/remove_all)
-        
- ;     endelse
+      x = strcompress(x,/remove_all)
+      y = strcompress(y,/remove_all)
+      z = strcompress(z,/remove_all)
+      
+      ;     endelse
       
       putValue, base=info_base, 'px_vs_tof_cursor_info_x_value_uname', x
       putValue, base=info_base, 'px_vs_tof_cursor_info_y_value_uname', y
@@ -90,25 +138,19 @@ pro px_vs_tof_draw_eventcb, event
       
     endif
     
+    ;if counts vs tof 2d plot is available
+    if (widget_info(counts_vs_xaxis_plot_id,/valid_id)) then begin
+      display_cursor_line_on_2d_plot, event=event, xaxis='tof'
+    endif
+    
+    ;if counts vs pixel 2d plot is available
+    if (widget_info(counts_vs_yaxis_plot_id,/valid_id)) then begin
+      display_cursor_line_on_2d_plot, event=event, xaxis='pixel'
+    endif
+    
     ;save the background to keep the first big Cross as part of the background
     if (event.press eq 1 && event.key eq 1) then begin
       save_background, event=event
-    endif
-    
-    ;counts vs xaxis (qx)
-    if (widget_info(counts_vs_xaxis_plot_id,/valid_id) ne 0) then begin
-      ;keep the main widget_draw activated
-      id = widget_info(event.top, find_by_uname='draw_px_vs_tof_input_files')
-      widget_control, id, /input_focus
-;      px_vs_tof_plot_counts_vs_xaxis, event=event
-    endif
-    
-    ;counts vs yaxis (qz)
-    if (widget_info(counts_vs_yaxis_plot_id,/valid_id) ne 0) then begin
-      ;keep the main widget_draw activated
-      id = widget_info(event.top, find_by_uname='draw_px_vs_tof_input_files')
-      widget_control, id, /input_focus
-;      px_vs_tof_plot_counts_vs_yaxis, event
     endif
     
     ;right click validated only if there is at least one of the infos base
@@ -169,59 +211,59 @@ pro px_vs_tof_draw_eventcb, event
       refresh_zoom_selection, event
     endif
     
-;    if (event.press eq 1 && $
-;      event.clicks eq 1) then begin ;user left clicked the mouse
-;      
-;;      if ((*global_plot).shift_key_status) then begin
-;;        (*global_plot).shift_key_status = 0b
-;;        refresh_plot, event, recalculate=1
-;;        save_background, event=event
-;;      endif
-;      
-;      (*global_plot).left_click = 1b
-;      x0 = event.x
-;      y0 = event.y
-;      draw_zoom_selection[0] = x0
-;      draw_zoom_selection[1] = y0
-;      (*global_plot).draw_zoom_selection = draw_zoom_selection
-;    endif
+    ;    if (event.press eq 1 && $
+    ;      event.clicks eq 1) then begin ;user left clicked the mouse
+    ;
+    ;;      if ((*global_plot).shift_key_status) then begin
+    ;;        (*global_plot).shift_key_status = 0b
+    ;;        refresh_plot, event, recalculate=1
+    ;;        save_background, event=event
+    ;;      endif
+    ;
+    ;      (*global_plot).left_click = 1b
+    ;      x0 = event.x
+    ;      y0 = event.y
+    ;      draw_zoom_selection[0] = x0
+    ;      draw_zoom_selection[1] = y0
+    ;      (*global_plot).draw_zoom_selection = draw_zoom_selection
+    ;    endif
     
-;    if (event.release eq 1 && $
-;      (*global_plot).left_click && $
-;      event.key ne 1) then begin ;user release left clicked
-;      (*global_plot).left_click = 0b
-;      x1 = event.x
-;      y1 = event.y
-;      
-;      ;make sure we stay within the display
-;      id = widget_info(event.top, find_by_uname='draw')
-;      geometry = widget_info(id, /geometry)
-;      xsize = geometry.xsize
-;      ysize = geometry.ysize
-;      
-;      if (x1 gt xsize) then x1 = xsize
-;      if (x1 lt 0) then x1 = 0
-;      if (y1 gt ysize) then y1 = ysize
-;      if (y1 lt 0) then y1 = 0
-;      
-;      ;check that user selected a box,not only 1 pixel
-;      result = is_real_selection(event, x1, y1)
-;      if (result eq 0) then return
-;      
-;      draw_zoom_selection[2] = x1
-;      draw_zoom_selection[3] = y1
-;      
-;      (*global_plot).draw_zoom_selection = draw_zoom_selection
-;      
-;      catch, error
-;      if (error ne 0) then begin
-;        catch,/cancel
-;      endif else begin
-;        zoom_selection, event
-;      endelse
-;      
-;      refresh_plot, event
-;    endif
+    ;    if (event.release eq 1 && $
+    ;      (*global_plot).left_click && $
+    ;      event.key ne 1) then begin ;user release left clicked
+    ;      (*global_plot).left_click = 0b
+    ;      x1 = event.x
+    ;      y1 = event.y
+    ;
+    ;      ;make sure we stay within the display
+    ;      id = widget_info(event.top, find_by_uname='draw')
+    ;      geometry = widget_info(id, /geometry)
+    ;      xsize = geometry.xsize
+    ;      ysize = geometry.ysize
+    ;
+    ;      if (x1 gt xsize) then x1 = xsize
+    ;      if (x1 lt 0) then x1 = 0
+    ;      if (y1 gt ysize) then y1 = ysize
+    ;      if (y1 lt 0) then y1 = 0
+    ;
+    ;      ;check that user selected a box,not only 1 pixel
+    ;      result = is_real_selection(event, x1, y1)
+    ;      if (result eq 0) then return
+    ;
+    ;      draw_zoom_selection[2] = x1
+    ;      draw_zoom_selection[3] = y1
+    ;
+    ;      (*global_plot).draw_zoom_selection = draw_zoom_selection
+    ;
+    ;      catch, error
+    ;      if (error ne 0) then begin
+    ;        catch,/cancel
+    ;      endif else begin
+    ;        zoom_selection, event
+    ;      endelse
+    ;
+    ;      refresh_plot, event
+    ;    endif
     
     ;Draw vertical and horizontal lines when info mode is ON
     if (widget_info(info_base,/valid_id) ne 0 || $
@@ -255,48 +297,48 @@ pro px_vs_tof_draw_eventcb, event
       plots, x+off, y, /device
       plots, xsize, y, /device, /continue, color=fsc_color('white')
       
-;      if ((*global_px_vs_tof).shift_key_status) then begin ;shift is clicked
-;      
-;        QxQzrangeEvent = (*global_px_vs_tof).EventRangeSelection
-;        
-;        xmin = min([QxQzrangeEvent[0],x],max=xmax)
-;        ymin = min([QxQzrangeEvent[1],y],max=ymax)
-;        
-;        plots, xmin, ymin, /device
-;        plots, xmin, ymax, /device, /continue, color=fsc_color('green')
-;        plots, xmax, ymax, /device, /continue, color=fsc_color('green')
-;        plots, xmax, ymin, /device, /continue, color=fsc_color('green')
-;        plots, xmin, ymin, /device, /continue, color=fsc_color('green')
-;        
-;      endif
+    ;      if ((*global_px_vs_tof).shift_key_status) then begin ;shift is clicked
+    ;
+    ;        QxQzrangeEvent = (*global_px_vs_tof).EventRangeSelection
+    ;
+    ;        xmin = min([QxQzrangeEvent[0],x],max=xmax)
+    ;        ymin = min([QxQzrangeEvent[1],y],max=ymax)
+    ;
+    ;        plots, xmin, ymin, /device
+    ;        plots, xmin, ymax, /device, /continue, color=fsc_color('green')
+    ;        plots, xmax, ymax, /device, /continue, color=fsc_color('green')
+    ;        plots, xmax, ymin, /device, /continue, color=fsc_color('green')
+    ;        plots, xmin, ymin, /device, /continue, color=fsc_color('green')
+    ;
+    ;      endif
       
     endif
     
   endif else begin ;endif of catch error
   
     if (event.enter eq 0) then begin ;leaving plot
-;      info_base = (*global_plot).cursor_info_base
-;      ;if x,y and counts base is on, shows live values of x,y and counts
-;      if (widget_info(info_base, /valid_id) ne 0) then begin
-;        na = 'N/A'
-;        refresh_plot, event
-;        putValue, base=info_base, 'cursor_info_x_value_uname', na
-;        putValue, base=info_base, 'cursor_info_y_value_uname', na
-;        putValue, base=info_base, 'cursor_info_z_value_uname', na
-;      endif
-;      
-;      ;counts vs xaxis (tof or lambda)
-;      counts_vs_xaxis_plot_id = (*global_plot).counts_vs_xaxis_base
-;      if (widget_info(counts_vs_xaxis_plot_id,/valid_id) ne 0) then begin
-;        plot_counts_vs_xaxis, event, clear=1
-;      endif
-;      
-;      ;counts vs yaxis (pixel or angle)
-;      counts_vs_yaxis_plot_id = (*global_plot).counts_vs_yaxis_base
-;      if (widget_info(counts_vs_yaxis_plot_id,/valid_id) ne 0) then begin
-;        plot_counts_vs_yaxis, event, clear=1
-;      endif
-;      
+    ;      info_base = (*global_plot).cursor_info_base
+    ;      ;if x,y and counts base is on, shows live values of x,y and counts
+    ;      if (widget_info(info_base, /valid_id) ne 0) then begin
+    ;        na = 'N/A'
+    ;        refresh_plot, event
+    ;        putValue, base=info_base, 'cursor_info_x_value_uname', na
+    ;        putValue, base=info_base, 'cursor_info_y_value_uname', na
+    ;        putValue, base=info_base, 'cursor_info_z_value_uname', na
+    ;      endif
+    ;
+    ;      ;counts vs xaxis (tof or lambda)
+    ;      counts_vs_xaxis_plot_id = (*global_plot).counts_vs_xaxis_base
+    ;      if (widget_info(counts_vs_xaxis_plot_id,/valid_id) ne 0) then begin
+    ;        plot_counts_vs_xaxis, event, clear=1
+    ;      endif
+    ;
+    ;      ;counts vs yaxis (pixel or angle)
+    ;      counts_vs_yaxis_plot_id = (*global_plot).counts_vs_yaxis_base
+    ;      if (widget_info(counts_vs_yaxis_plot_id,/valid_id) ne 0) then begin
+    ;        plot_counts_vs_yaxis, event, clear=1
+    ;      endif
+    ;
     endif
     
   endelse
