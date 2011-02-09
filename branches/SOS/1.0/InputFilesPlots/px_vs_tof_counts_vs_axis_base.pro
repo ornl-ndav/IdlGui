@@ -256,7 +256,7 @@ pro px_vs_tof_counts_vs_axis_base, event=event, $
     end
     'pixel': begin
       yoffset = 465
-      title = 'Counts vs pixel (integrated over all tof)'
+      title = 'Counts vs pixel (integrated over all TOFs)'
       plot_uname = 'px_vs_tof_counts_vs_yaxis_plot_uname'
       (*global_px_vs_tof).counts_vs_yaxis_plot_uname = plot_uname
     end

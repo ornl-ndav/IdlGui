@@ -995,10 +995,14 @@ pro px_vs_tof_plots_input_files_base,  main_base=main_base, $
     background: ptr_new(0L), $ ;background of main plot
     
     left_click: 0b,$ ;by default, left button is not clicked
-    draw_zoom_selection: intarr(4),$ ;[x0,y0,x1,y1] 
+    draw_zoom_selection: intarr(4),$ ;[x0,y0,x1,y1] /device
+    draw_zoom_data_selection: fltarr(4), $ ;[x0,y0,x1,y1] /data
     
     plot_setting1: 0, $
     plot_setting2: 1, $
+    
+    info_base_counts_vs_xaxis_counts_max: 0L, $
+    info_base_counts_vs_yaxis_counts_max: 0L, $
     
     ;x coeff used in the congrid function to plot main data
     congrid_xcoeff: 0., $
@@ -1008,6 +1012,11 @@ pro px_vs_tof_plots_input_files_base,  main_base=main_base, $
     main_event: event})
     
   WIDGET_CONTROL, wBase, SET_UVALUE = global_px_vs_tof
+  
+  ;initialize arrays ==========================================================
+  draw_zoom_data_selection = [-1.,-1.,-1.,-1.]
+  (*global_px_vs_tof).draw_zoom_data_selection = draw_zoom_data_selection
+  ;============================================================================
   
   XMANAGER, "px_vs_tof_plots_input_files_base", wBase, $
     GROUP_LEADER = ourGroup, $
