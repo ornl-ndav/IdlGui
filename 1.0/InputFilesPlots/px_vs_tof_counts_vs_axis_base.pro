@@ -49,6 +49,105 @@ pro px_vs_tof_counts_vs_axis_base_event, Event
   
   case Event.id of
   
+    ;counts vs tof plot
+    widget_info(event.top, $
+      find_by_uname='px_vs_tof_counts_vs_xaxis_plot_uname'): begin
+      
+      catch, error
+      if (error ne 0) then begin
+        catch,/cancel
+        
+        ;refresh the plot
+        base = (*global_axis_plot)._base
+        px_vs_tof_plot_counts_vs_xaxis, base=base
+        
+        cursor, x, y, /data, /nowait
+        xrange = (*global_axis_plot).xrange
+        ymax = (*global_axis_plot).ymax
+        
+        ;make sure we are in the range allowed
+        if (x gt xrange[1]) then return
+        if (x lt xrange[0]) then return
+        
+        plots, x, 0, /data
+        plots, x, ymax, /data,/continue, color=fsc_color('blue'), linestyle=1
+        
+        
+        
+      endif else begin
+      
+        if (event.enter eq 0) then begin ;leaving the plot
+          catch,/cancel ;comment out after debugging
+          
+          ;refresh the plot
+          base = (*global_axis_plot)._base
+          px_vs_tof_plot_counts_vs_xaxis, base=base
+          
+          
+        endif
+        
+      endelse
+      
+      
+    ;refresh the plot
+      
+      
+    ;draw the dashed line
+      
+    end
+    
+    
+    ;counts vs pixel plot
+    widget_info(event.top, $
+      find_by_uname='px_vs_tof_counts_vs_yaxis_plot_uname'): begin
+      
+      catch, error
+      if (error ne 0) then begin
+        catch,/cancel
+        
+        ;refresh the plot
+        base = (*global_axis_plot)._base
+        px_vs_tof_plot_counts_vs_yaxis, base=base
+        
+        cursor, x, y, /data, /nowait
+        xrange = (*global_axis_plot).xrange
+        ymax = (*global_axis_plot).ymax
+        
+        ;make sure we are in the range allowed
+        if (x gt xrange[1]) then return
+        if (x lt xrange[0]) then return
+        
+        plots, x, 0, /data
+        plots, x, ymax, /data,/continue, color=fsc_color('red'), linestyle=1
+        
+        
+        
+      endif else begin
+      
+        if (event.enter eq 0) then begin ;leaving the plot
+          catch,/cancel ;comment out after debugging
+          
+          ;refresh the plot
+          base = (*global_axis_plot)._base
+          px_vs_tof_plot_counts_vs_yaxis, base=base
+          
+          
+        endif
+        
+      endelse
+      
+      
+    ;refresh the plot
+      
+      
+    ;draw the dashed line
+      
+    end
+    
+    
+    
+    
+    
     widget_info(event.top, $
       find_by_uname='px_vs_tof_counts_vs_axis_base'): begin
       
@@ -171,6 +270,9 @@ pro px_vs_tof_counts_vs_axis_base_gui, wBase, $
     scr_xsize = xsize,$
     scr_ysize = ysize,$
     /retain,$
+    /button_events, $
+    /motion_events, $
+    /tracking_events, $
     uname = plot_uname)
     
   yaxis = widget_button(bar1,$
@@ -295,6 +397,8 @@ pro px_vs_tof_counts_vs_axis_base, event=event, $
     xaxis: xaxis, $ ;'tof' or 'pixel'
     plot_uname: plot_uname, $
     ysize: ysize, $
+    xrange: fltarr(2), $  ;ex: 0,20,000   xaxis min and max value
+    ymax: 0L, $       ;max y value (counts)
     global: global_px_vs_tof })
     
   WIDGET_CONTROL, _base, SET_UVALUE = global_axis_plot
