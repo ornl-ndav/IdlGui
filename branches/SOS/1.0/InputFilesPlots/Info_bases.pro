@@ -48,20 +48,20 @@ id = widget_info(event.top, $
 info_base = (*global_px_vs_tof).cursor_info_base
  if (widget_info(info_base, /valid_id) ne 0) then begin
        widget_control, info_base, xoffset=xsize+xoffset
-       widget_control, info_base, yoffset=yoffset
+       widget_control, info_base, yoffset=yoffset-20
   endif 
  
  xaxis_id = (*global_px_vs_tof).counts_vs_xaxis_base
  if (widget_info(xaxis_id,/valid_id) ne 0) then begin
        widget_control, xaxis_id, xoffset=xsize+xoffset
-       widget_control, xaxis_id, yoffset=yoffset+105
+       widget_control, xaxis_id, yoffset=yoffset+130
 endif
 
 
  yaxis_id = (*global_px_vs_tof).counts_vs_yaxis_base
  if (widget_info(yaxis_id,/valid_id) ne 0) then begin
        widget_control, yaxis_id, xoffset=xsize+xoffset
-       widget_control, yaxis_id, yoffset=yoffset+465
+       widget_control, yaxis_id, yoffset=yoffset+500
 endif
 
 end

@@ -79,24 +79,36 @@ pro px_vs_tof_cursor_info_base_gui, wBase, $
   xoffset = main_base_xsize
   xoffset += main_base_xoffset
   
-  yoffset = main_base_yoffset
+  yoffset = main_base_yoffset - 20
   
   ourGroup = WIDGET_BASE()
   
-  title = 'Cursor Info'
+  title = 'Cursor and selection infos'
   wBase = WIDGET_BASE(TITLE = title, $
     UNAME        = 'cursor_info_base', $
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
-    ;    SCR_YSIZE    = ysize,$
-    ;    SCR_XSIZE    = xsize,$
-    MAP          = 1,$
+    map          = 1,$
     kill_notify  = 'cursor_info_base_killed', $
     /column,$
     /tlb_size_events,$
     GROUP_LEADER = ourGroup)
+  
+  MainRow1=widget_base(wBase,$
+  /row)
+  
+  cursor_selection_label = widget_label(MainRow1,$
+  value = '    CURSOR LIVE                                     SELECTION')
+  
+  MainRow2 = widget_base(wBase,$
+  /row)
     
-  row1 = widget_base(wBase,$
+  ;live TOF, pixel and counts infos
+  leftBase = widget_base(MainRow2,$
+  frame=1,$
+  /column)
+    
+  row1 = widget_base(leftBase,$
     /row)
   lab = widget_label(row1,$
     value = 'TOF (ms): ', $
@@ -107,7 +119,7 @@ pro px_vs_tof_cursor_info_base_gui, wBase, $
     scr_xsize = 200,$
     /align_left)
     
-  row2 = widget_base(wBase,$
+  row2 = widget_base(leftBase,$
     /row)
   lab = widget_label(row2,$
     value = '   Pixel: ', $
@@ -119,7 +131,7 @@ pro px_vs_tof_cursor_info_base_gui, wBase, $
     scr_xsize = 200,$
     /align_left)
     
-  row3 = widget_base(wBase,$
+  row3 = widget_base(leftBase,$
     /row)
   lab = widget_label(row3,$
     value = '  Counts: ',$
@@ -129,6 +141,34 @@ pro px_vs_tof_cursor_info_base_gui, wBase, $
     uname = 'px_vs_tof_cursor_info_z_value_uname',$
     value = 'N/A',$
     scr_xsize = 150,$
+    /align_left)
+    
+  ;right part with selection information
+    
+  rightBase = widget_base(MainRow2,$
+    frame = 1,$
+    /column)
+    
+  row1 = widget_base(rightBase,$
+    /row)
+  lab = widget_label(row1,$
+    value = 'TOF (ms): ', $
+    /align_right)
+  val = widget_label(row1,$
+    value = 'N/A',$
+    uname = 'px_vs_tof_cursor_info_x0x1_value_uname',$
+    scr_xsize = 200,$
+    /align_left)
+    
+  row2 = widget_base(rightBase,$
+    /row)
+  lab = widget_label(row2,$
+    value = '   Pixel: ', $
+    /align_right)
+  val = widget_label(row2,$
+    value = 'N/A',$
+    uname = 'px_vs_tof_cursor_info_y0y1_value_uname',$
+    scr_xsize = 200,$
     /align_left)
     
 end
