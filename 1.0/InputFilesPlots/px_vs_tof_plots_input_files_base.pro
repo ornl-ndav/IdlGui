@@ -386,7 +386,7 @@ pro px_vs_tof_refresh_plot, event, recalculate=recalculate
   
   tvscl, cData
   
-  save_background, event=event, uname='draw_px_vs_tof_input_files'
+  save_px_vs_tof_background, event=event, uname='draw_px_vs_tof_input_files'
   
 end
 
@@ -431,6 +431,44 @@ pro px_vs_tof_change_loadct, event
   px_vs_tof_refresh_plot, event, recalculate=1
   px_vs_tof_refresh_plot_colorbar, event
   
+end
+
+;+
+; :Description:
+;    plot the zoom selection
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro refresh_zoom_px_vs_tof_selection, event
+  compile_opt idl2
+  
+  px_vs_tof_refresh_plot, event
+  
+  widget_control, event.top, get_uvalue=global_px_vs_tof
+  
+  selection = (*global_px_vs_tof).draw_zoom_selection
+  
+  id = widget_info(event.top,find_by_uname='draw_px_vs_tof_input_files')
+  widget_control, id, GET_VALUE = plot_id
+  wset, plot_id
+  
+  xrange = [selection[0],selection[2]]
+  yrange = [selection[1],selection[3]]
+  
+  xmin = min(xrange, max=xmax)
+  ymin = min(yrange, max=ymax)
+  
+  plots, [xmin, xmin, xmax, xmax, xmin],$
+    [ymin, ymax, ymax, ymin, ymin],$
+    /DEVICE,$
+    LINESTYLE = 3,$
+    COLOR = 200
+    
 end
 
 ;+
@@ -531,6 +569,7 @@ pro px_vs_tof_plots_input_files_base_gui, wBase, $
     'Blue/White',$
     'Green-Red-Blue-White',$
     'Red temperature',$
+    'Blue/Green/Red/Yellow',$
     'Std Gamma-II',$
     'Prism',$
     'Red-Purple',$
@@ -956,7 +995,7 @@ pro px_vs_tof_plots_input_files_base,  main_base=main_base, $
     background: ptr_new(0L), $ ;background of main plot
     
     left_click: 0b,$ ;by default, left button is not clicked
-    draw_zoom_selection: intarr(4),$ ;[x0,y0,x1,y1]
+    draw_zoom_selection: intarr(4),$ ;[x0,y0,x1,y1] 
     
     plot_setting1: 0, $
     plot_setting2: 1, $
