@@ -202,6 +202,60 @@ pro display_corner_of_selection_in_info_bases, event, xaxis=xaxis
   
 end
 
+;+
+; :Description:
+;    Display on the right of the cursor and selection infos base the
+;    current pixel and tof range of the selection
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro display_selection_information, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_px_vs_tof
+      info_base = (*global_px_vs_tof).cursor_info_base
+  
+  ;display information about selection in cursor/selection info base
+  draw_zoom_data_selection = (*global_px_vs_tof).draw_zoom_data_selection
+  x0 = draw_zoom_data_selection[0]
+  x1 = draw_zoom_data_selection[2]
+  y0 = fix(draw_zoom_data_selection[1])
+  y1 = fix(draw_zoom_data_selection[3])
+  
+  if (x0 ne -1) then begin
+    if (x1 ne -1) then begin
+      xmin = min([x0,x1],max=xmax)
+      label_x = strcompress(xmin,/remove_all) + ' -> ' + $
+        strcompress(xmax,/remove_all)
+    endif else begin
+      label_x = strcompress(x0,/remove_all) + ' -> N/A'
+    endelse
+  endif else begin
+    label_x = 'N/A -> N/A'
+  endelse
+  putValue, base=info_base, 'px_vs_tof_cursor_info_x0x1_value_uname', $
+    label_x
+    
+  if (y0 ne -1) then begin
+    if (y1 ne -1) then begin
+      ymin = min([y0,y1],max=ymax)
+      label_y = strcompress(ymin,/remove_all) + ' -> ' + $
+        strcompress(ymax,/remove_all)
+    endif else begin
+      label_y = strcompress(y0,/remove_all) + ' -> N/A'
+    endelse
+  endif else begin
+    label_y = 'N/A -> N/A'
+  endelse
+  putValue, base=info_base, 'px_vs_tof_cursor_info_y0y1_value_uname', $
+    label_y
+    
+end
 
 ;
 ;+
@@ -256,7 +310,7 @@ pro px_vs_tof_draw_eventcb, event
       widget_control, id, /input_focus
       
       x = px_vs_tof_retrieve_data_x_value(event)
-      y = px_vs_tof_retrieve_data_y_value(event)
+      y = fix(px_vs_tof_retrieve_data_y_value(event))
       z = long(px_vs_tof_retrieve_data_z_value(event))
       
       x = strcompress(x,/remove_all)
@@ -267,6 +321,8 @@ pro px_vs_tof_draw_eventcb, event
       putValue, base=info_base, 'px_vs_tof_cursor_info_y_value_uname', y
       putValue, base=info_base, 'px_vs_tof_cursor_info_z_value_uname', z
       
+display_selection_information, event
+        
     endif
     
     ;if counts vs tof 2d plot is available
@@ -293,7 +349,7 @@ pro px_vs_tof_draw_eventcb, event
       x1 = event.x
       y1 = event.y
       draw_zoom_selection[2] = x1
-      draw_zoom_selection[3] = y1
+      draw_zoom_selection[3] = fix(y1)
       (*global_px_vs_tof).draw_zoom_selection = draw_zoom_selection
       
       x1_data = px_vs_tof_retrieve_data_x_value(event)
@@ -301,8 +357,9 @@ pro px_vs_tof_draw_eventcb, event
       draw_zoom_data_selection[2] = x1_data
       draw_zoom_data_selection[3] = y1_data
       (*global_px_vs_tof).draw_zoom_data_selection = draw_zoom_data_selection
-      
+
       refresh_zoom_px_vs_tof_selection, event
+      
     endif
     
     if (event.press eq 1 && $
@@ -311,17 +368,11 @@ pro px_vs_tof_draw_eventcb, event
       px_vs_tof_refresh_plot, event, recalculate=1
       save_px_vs_tof_background, event=event
       
-      ;;      if ((*global_plot).shift_key_status) then begin
-      ;;        (*global_plot).shift_key_status = 0b
-      ;;        refresh_plot, event, recalculate=1
-      ;;        save_background, event=event
-      ;;      endif
-      ;
       (*global_px_vs_tof).left_click = 1b
       x0 = event.x
       y0 = event.y
       draw_zoom_selection[0] = x0
-      draw_zoom_selection[1] = y0
+      draw_zoom_selection[1] = fix(y0)
       draw_zoom_selection[2] = -1.
       draw_zoom_selection[3] = -1.
       (*global_px_vs_tof).draw_zoom_selection = draw_zoom_selection
@@ -330,7 +381,11 @@ pro px_vs_tof_draw_eventcb, event
       y0_data = px_vs_tof_retrieve_data_y_value(event)
       draw_zoom_data_selection[0] = x0_data
       draw_zoom_data_selection[1] = y0_data
+      draw_zoom_data_selection[2] = -1
+      draw_zoom_data_selection[3] = -1
       (*global_px_vs_tof).draw_zoom_data_selection = draw_zoom_data_selection
+      
+      display_selection_information, event
       
     endif
     
@@ -341,17 +396,6 @@ pro px_vs_tof_draw_eventcb, event
       x1 = event.x
       y1 = event.y
       
-      ;      ;make sure we stay within the display
-      ;      id = widget_info(event.top, find_by_uname='draw')
-      ;      geometry = widget_info(id, /geometry)
-      ;      xsize = geometry.xsize
-      ;      ysize = geometry.ysize
-      ;
-      ;      if (x1 gt xsize) then x1 = xsize
-      ;      if (x1 lt 0) then x1 = 0
-      ;      if (y1 gt ysize) then y1 = ysize
-      ;      if (y1 lt 0) then y1 = 0
-      ;
       ;check that user selected a box,not only 1 pixel
       result = is_real_px_vs_tof_selection(event, x1, y1)
       if (result eq 0) then return
@@ -372,15 +416,6 @@ pro px_vs_tof_draw_eventcb, event
       
       save_px_vs_tof_background, event=event
       
-    ;          ;catch, error
-    ;          error = 0
-    ;          if (error ne 0) then begin
-    ;            catch,/cancel
-    ;          endif else begin
-    ;            zoom_selection, event
-    ;          endelse
-      
-    ;      refresh_plot, event
     endif
     
     ;Draw vertical and horizontal lines when info mode is ON
@@ -420,21 +455,6 @@ pro px_vs_tof_draw_eventcb, event
       plots, x+off, y, /device
       plots, xsize, y, /device, /continue, color=fsc_color('red'), $
         linestyle = 1
-        
-    ;      if ((*global_px_vs_tof).shift_key_status) then begin ;shift is clicked
-    ;
-    ;        QxQzrangeEvent = (*global_px_vs_tof).EventRangeSelection
-    ;
-    ;        xmin = min([QxQzrangeEvent[0],x],max=xmax)
-    ;        ymin = min([QxQzrangeEvent[1],y],max=ymax)
-    ;
-    ;        plots, xmin, ymin, /device
-    ;        plots, xmin, ymax, /device, /continue, color=fsc_color('green')
-    ;        plots, xmax, ymax, /device, /continue, color=fsc_color('green')
-    ;        plots, xmax, ymin, /device, /continue, color=fsc_color('green')
-    ;        plots, xmin, ymin, /device, /continue, color=fsc_color('green')
-    ;
-    ;      endif
         
     endif
     
