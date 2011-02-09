@@ -81,6 +81,7 @@ pro display_cursor_line_on_2d_plot, event=event, xaxis=xaxis
       data = (*(*global_px_vs_tof).data2d_linear)
       _data = total(data,2)
       max_y = max(_data)
+      (*global_px_vs_tof).info_base_counts_vs_xaxis_counts_max = max_y
       x = px_vs_tof_retrieve_data_x_value(event)
       color= 'blue'
     end
@@ -91,6 +92,7 @@ pro display_cursor_line_on_2d_plot, event=event, xaxis=xaxis
       data = (*(*global_px_vs_tof).data2d_linear)
       _data = total(data,1)
       max_y = max(_data)
+      (*global_px_vs_tof).info_base_counts_vs_yaxis_counts_max = max_y
       x = px_vs_tof_retrieve_data_y_value(event)
       color='red'
     end
@@ -105,6 +107,101 @@ pro display_cursor_line_on_2d_plot, event=event, xaxis=xaxis
     linestyle=1
     
 end
+
+;+
+; :Description:
+;    Describe the procedure.
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro display_corner_of_selection_in_info_bases, event, xaxis=xaxis
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_px_vs_tof
+  
+  case (xaxis) of
+    'tof': begin
+    
+      counts_vs_xaxis_plot_id = (*global_px_vs_tof).counts_vs_xaxis_base
+      if (widget_info(counts_vs_xaxis_plot_id,/valid_id) ne 0) then begin
+      
+        draw_zoom_data_selection = (*global_px_vs_tof).draw_zoom_data_selection
+        x0 = draw_zoom_data_selection[0]
+        x1 = draw_zoom_data_selection[2]
+        
+        max_y = (*global_px_vs_tof).info_base_counts_vs_xaxis_counts_max
+        
+        xaxis_plot_uname = (*global_px_vs_tof).counts_vs_xaxis_plot_uname
+        id = widget_info(counts_vs_xaxis_plot_id, find_by_uname=xaxis_plot_uname)
+        widget_control, id, GET_VALUE = plot_id
+        wset, plot_id
+        
+        if (x0 eq -1 && x1 eq -1) then return
+        
+        _base = (*global_px_vs_tof).counts_vs_xaxis_base
+        ;px_vs_tof_plot_counts_vs_xaxis, base=_base
+        
+        if (x0 ne -1) then begin
+          plots, x0, 0, /data
+          plots, x0, max_y, /data, /continue, color=fsc_color('blue'), $
+            linestyle=0
+        endif
+        
+        if (x1 ne -1) then begin
+          plots, x1, 0, /data
+          plots, x1, max_y, /data, /continue, color=fsc_color('blue'), $
+            linestyle=0
+        endif
+      endif
+      
+    end
+    
+    'pixel': begin
+    
+      counts_vs_yaxis_plot_id = (*global_px_vs_tof).counts_vs_yaxis_base
+      if (widget_info(counts_vs_yaxis_plot_id,/valid_id) ne 0) then begin
+      
+        draw_zoom_data_selection = (*global_px_vs_tof).draw_zoom_data_selection
+        x0 = draw_zoom_data_selection[1]
+        x1 = draw_zoom_data_selection[3]
+        
+        max_y = (*global_px_vs_tof).info_base_counts_vs_yaxis_counts_max
+        
+        yaxis_plot_uname = (*global_px_vs_tof).counts_vs_yaxis_plot_uname
+        id = widget_info(counts_vs_yaxis_plot_id, find_by_uname=yaxis_plot_uname)
+        widget_control, id, GET_VALUE = plot_id
+        wset, plot_id
+        
+        if (x0 eq -1 && x1 eq -1) then return
+        
+        _base = (*global_px_vs_tof).counts_vs_yaxis_base
+        ;px_vs_tof_plot_counts_vs_xaxis, base=_base
+        
+        if (x0 ne -1) then begin
+          plots, x0, 0, /data
+          plots, x0, max_y, /data, /continue, color=fsc_color('red'), $
+            linestyle=0
+        endif
+        
+        if (x1 ne -1) then begin
+          plots, x1, 0, /data
+          plots, x1, max_y, /data, /continue, color=fsc_color('red'), $
+            linestyle=0
+        endif
+        
+      endif
+      
+    end
+    
+  endcase
+  
+end
+
 
 ;
 ;+
@@ -149,13 +246,6 @@ pro px_vs_tof_draw_eventcb, event
         
       endif
       
-    ;         ;shift key has been released
-    ;      if (event.key eq 1 && event.press eq 0) then begin
-    ;        (*global_plot).shift_key_status = 0b
-    ;        refresh_plot, event, recalculate=1
-    ;        save_background, event=event
-    ;      endif
-      
     endif
     
     ;if x,y and counts base is on, shows live values of x,y and counts
@@ -169,29 +259,9 @@ pro px_vs_tof_draw_eventcb, event
       y = px_vs_tof_retrieve_data_y_value(event)
       z = long(px_vs_tof_retrieve_data_z_value(event))
       
-      ;      if ((*global_px_vs_tof).shift_key_status) then begin ;shift is clicked
-      ;
-      ;        QxQzrange = (*global_plot).QxQzrange
-      ;
-      ;        Qx0 = QxQzrange[0]
-      ;        Qz0 = QxQzrange[1]
-      ;
-      ;        Qxmin = min([Qx0,x],max=Qxmax)
-      ;        Qzmin = min([Qz0,y],max=Qzmax)
-      ;
-      ;        x = strcompress(qxmin,/remove_all) + ' --> ' + $
-      ;          strcompress(qxmax,/remove_all)
-      ;        y = strcompress(qzmin,/remove_all) + ' --> ' + $
-      ;          strcompress(qzmax,/remove_all)
-      ;        z = strcompress(z,/remove_all)
-      ;
-      ;      endif else begin
-      
       x = strcompress(x,/remove_all)
       y = strcompress(y,/remove_all)
       z = strcompress(z,/remove_all)
-      
-      ;     endelse
       
       putValue, base=info_base, 'px_vs_tof_cursor_info_x_value_uname', x
       putValue, base=info_base, 'px_vs_tof_cursor_info_y_value_uname', y
@@ -202,11 +272,13 @@ pro px_vs_tof_draw_eventcb, event
     ;if counts vs tof 2d plot is available
     if (widget_info(counts_vs_xaxis_plot_id,/valid_id)) then begin
       display_cursor_line_on_2d_plot, event=event, xaxis='tof'
+      display_corner_of_selection_in_info_bases, event, xaxis='tof'
     endif
     
     ;if counts vs pixel 2d plot is available
     if (widget_info(counts_vs_yaxis_plot_id,/valid_id)) then begin
       display_cursor_line_on_2d_plot, event=event, xaxis='pixel'
+      display_corner_of_selection_in_info_bases, event, xaxis='pixel'
     endif
     
     ;save the background to keep the first big Cross as part of the background
@@ -214,54 +286,8 @@ pro px_vs_tof_draw_eventcb, event
       save_background, event=event
     endif
     
-;    ;right click validated only if there is at least one of the infos base
-;    if ((widget_info(counts_vs_xaxis_plot_id,/valid_id) ne 0) || $
-;      (widget_info(counts_vs_yaxis_plot_id,/valid_id) ne 0)) then begin
-;      
-;;      if (event.press eq 4) then begin ;right click
-;;      
-;;        x=event.x
-;;        y=event.y
-;;        id = widget_info(event.top, find_by_uname='draw_px_vs_tof_input_files')
-;;        geometry = widget_info(id,/geometry)
-;;        xsize = geometry.xsize
-;;        ysize = geometry.ysize
-;;        
-;;        widget_control, id, GET_VALUE = plot_id
-;;        wset, plot_id
-;;        
-;;        off = 20
-;;        
-;;        plots, x, 0, /device
-;;        plots, x, y-off, /device, /continue, color=fsc_color('red')
-;;        plots, x, y+off, /device
-;;        plots, x, ysize, /device, /continue, color=fsc_color('red')
-;;        
-;;        plots, 0, y, /device
-;;        plots, x-off, y, /device, /continue, color=fsc_color('red')
-;;        plots, x+off, y, /device
-;;        plots, xsize, y, /device, /continue, color=fsc_color('red')
-;;        
-;;        default_base_file_name = create_default_base_file_name(event)
-;;        
-;;        validate_qx_base = widget_info(counts_vs_xaxis_plot_id,/valid_id)
-;;        validate_qz_base = widget_info(counts_vs_yaxis_plot_id,/valid_id)
-;;        
-;;        output_info_base, event=event, $
-;;          parent_base_uname = 'final_plot_base', $
-;;          output_folder = (*global_plot).output_folder, $
-;;          default_base_file = default_base_file_name, $
-;;          validate_qx_base = validate_qx_base, $
-;;          validate_qz_base = validate_qz_base, $
-;;          counts_vs_qz_lin = (*global_plot).counts_vs_qz_lin, $
-;;          counts_vs_qx_lin = (*global_plot).counts_vs_qx_lin
-;;          
-;;        return
-;;      endif
-;      
-;    endif
-    
     draw_zoom_selection = (*global_px_vs_tof).draw_zoom_selection
+    draw_zoom_data_selection = (*global_px_vs_tof).draw_zoom_data_selection
     
     if ((*global_px_vs_tof).left_click) then begin ;moving mouse with left click
       x1 = event.x
@@ -269,6 +295,13 @@ pro px_vs_tof_draw_eventcb, event
       draw_zoom_selection[2] = x1
       draw_zoom_selection[3] = y1
       (*global_px_vs_tof).draw_zoom_selection = draw_zoom_selection
+      
+      x1_data = px_vs_tof_retrieve_data_x_value(event)
+      y1_data = px_vs_tof_retrieve_data_y_value(event)
+      draw_zoom_data_selection[2] = x1_data
+      draw_zoom_data_selection[3] = y1_data
+      (*global_px_vs_tof).draw_zoom_data_selection = draw_zoom_data_selection
+      
       refresh_zoom_px_vs_tof_selection, event
     endif
     
@@ -289,7 +322,16 @@ pro px_vs_tof_draw_eventcb, event
       y0 = event.y
       draw_zoom_selection[0] = x0
       draw_zoom_selection[1] = y0
+      draw_zoom_selection[2] = -1.
+      draw_zoom_selection[3] = -1.
       (*global_px_vs_tof).draw_zoom_selection = draw_zoom_selection
+      
+      x0_data = px_vs_tof_retrieve_data_x_value(event)
+      y0_data = px_vs_tof_retrieve_data_y_value(event)
+      draw_zoom_data_selection[0] = x0_data
+      draw_zoom_data_selection[1] = y0_data
+      (*global_px_vs_tof).draw_zoom_data_selection = draw_zoom_data_selection
+      
     endif
     
     if (event.release eq 1 && $
@@ -316,7 +358,7 @@ pro px_vs_tof_draw_eventcb, event
       
       draw_zoom_selection[2] = x1
       draw_zoom_selection[3] = y1
-            
+      
       (*global_px_vs_tof).draw_zoom_selection = draw_zoom_selection
       
       xmin = min([draw_zoom_selection[0],x1],max=xmax)
@@ -416,12 +458,14 @@ pro px_vs_tof_draw_eventcb, event
       counts_vs_xaxis_plot_id = (*global_px_vs_tof).counts_vs_xaxis_base
       if (widget_info(counts_vs_xaxis_plot_id,/valid_id) ne 0) then begin
         px_vs_tof_plot_counts_vs_xaxis, base=counts_vs_xaxis_plot_id
+        display_corner_of_selection_in_info_bases, event, xaxis='tof'
       endif
       
       ;counts vs yaxis (pixel or angle)
       counts_vs_yaxis_plot_id = (*global_px_vs_tof).counts_vs_yaxis_base
       if (widget_info(counts_vs_yaxis_plot_id,/valid_id) ne 0) then begin
         px_vs_tof_plot_counts_vs_yaxis, base=counts_vs_yaxis_plot_id
+        display_corner_of_selection_in_info_bases, event, xaxis='pixel'
       endif
       
     endif
