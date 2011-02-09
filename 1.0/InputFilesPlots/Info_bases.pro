@@ -123,7 +123,7 @@ pro px_vs_tof_show_counts_vs_xaxis, event
   widget_control, event.top, get_uvalue=global_px_vs_tof
   
   counts_vs_xaxis_plot_id = (*global_px_vs_tof).counts_vs_xaxis_base
-  if (obj_valid(counts_vs_xaxis_plot_id) eq 0) then begin ;no plot yet
+  if (widget_info(counts_vs_xaxis_plot_id,/valid_id) eq 0) then begin
     px_vs_tof_counts_vs_axis_base, event=event, $
       parent_base_uname = 'px_vs_tof_input_files_widget_base', $
       xaxis = 'tof'
@@ -146,7 +146,7 @@ pro px_vs_tof_show_counts_vs_yaxis, event
   widget_control, event.top, get_uvalue=global_px_vs_tof
   
   counts_vs_yaxis_plot_id = (*global_px_vs_tof).counts_vs_yaxis_base
-  if (obj_valid(counts_vs_yaxis_plot_id) eq 0) then begin ;no plot yet
+  if (widget_info(counts_vs_yaxis_plot_id,/valid_id) eq 0) then begin
     px_vs_tof_counts_vs_axis_base, event=event, $
       parent_base_uname = 'px_vs_tof_input_files_widget_base', $
       xaxis = 'pixel'
