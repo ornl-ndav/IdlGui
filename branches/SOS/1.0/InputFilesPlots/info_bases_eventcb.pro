@@ -242,6 +242,11 @@ pro px_vs_tof_plot_counts_vs_xaxis, event=event, base=base
   
   ;nbr_ = n_elements(data[xdata,*])
   x_axis = (*global_px_vs_tof).tof_axis
+  xrange = fltarr(2)
+  xrange[0] = x_axis[0]
+  xrange[1] = x_axis[-1]
+  (*global_axis_plot).xrange = xrange
+  (*global_axis_plot).ymax = max(_data)
   
   yaxis_type = (*global_px_vs_tof).counts_vs_xaxis_yaxis_type
   is_linear = 1
@@ -340,6 +345,12 @@ pro px_vs_tof_plot_counts_vs_yaxis,event=event, base=base, clear=clear
 
   y_axis = indgen(n_elements(_data))
   
+  xrange = fltarr(2)
+  xrange[0] = y_axis[0]
+  xrange[1] = y_axis[-1]
+  (*global_axis_plot).xrange = xrange
+  (*global_axis_plot).ymax = max(_data)
+    
   yaxis_type = (*global_px_vs_tof).counts_vs_xaxis_yaxis_type
   is_linear = 1
   if (yaxis_type eq 0) then begin
