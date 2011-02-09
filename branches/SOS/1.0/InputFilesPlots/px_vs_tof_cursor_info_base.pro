@@ -93,20 +93,20 @@ pro px_vs_tof_cursor_info_base_gui, wBase, $
     /column,$
     /tlb_size_events,$
     GROUP_LEADER = ourGroup)
-  
+    
   MainRow1=widget_base(wBase,$
-  /row)
-  
+    /row)
+    
   cursor_selection_label = widget_label(MainRow1,$
-  value = '    CURSOR LIVE                                     SELECTION')
-  
+    value = '    CURSOR LIVE                                     SELECTION')
+    
   MainRow2 = widget_base(wBase,$
-  /row)
+    /row)
     
   ;live TOF, pixel and counts infos
   leftBase = widget_base(MainRow2,$
-  frame=1,$
-  /column)
+    frame=1,$
+    /column)
     
   row1 = widget_base(leftBase,$
     /row)
