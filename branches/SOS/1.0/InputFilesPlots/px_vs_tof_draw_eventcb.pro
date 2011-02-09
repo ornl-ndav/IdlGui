@@ -23,6 +23,7 @@ pro display_cursor_line_on_2d_plot, event=event, xaxis=xaxis
       _data = total(data,2)
       max_y = max(_data)
       x = px_vs_tof_retrieve_data_x_value(event)
+      color= 'blue'
     end
     'pixel': begin
       _base = (*global_px_vs_tof).counts_vs_yaxis_base
@@ -32,6 +33,7 @@ pro display_cursor_line_on_2d_plot, event=event, xaxis=xaxis
       _data = total(data,1)
       max_y = max(_data)
       x = px_vs_tof_retrieve_data_y_value(event)
+      color='red'
     end
   endcase
   
@@ -40,7 +42,7 @@ pro display_cursor_line_on_2d_plot, event=event, xaxis=xaxis
   wset, plot_id
   
   plots, x, 0, /data
-  plots, x, max_y, /data, /continue, color=fsc_color('yellow'), $
+  plots, x, max_y, /data, /continue, color=fsc_color(color), $
     linestyle=1
     
 end
@@ -288,14 +290,20 @@ pro px_vs_tof_draw_eventcb, event
       off = 20
       
       plots, x, 0, /device
-      plots, x, y-off, /device, /continue, color=fsc_color('white')
+      plots, x, y-off, /device, /continue, color=fsc_color('blue'), $
+      linestyle=1
+      
       plots, x, y+off, /device
-      plots, x, ysize, /device, /continue, color=fsc_color('white')
+      plots, x, ysize, /device, /continue, color=fsc_color('blue'), $
+      linestyle = 1
+      
       
       plots, 0, y, /device
-      plots, x-off, y, /device, /continue, color=fsc_color('white')
+      plots, x-off, y, /device, /continue, color=fsc_color('red'), $
+      linestyle = 1
       plots, x+off, y, /device
-      plots, xsize, y, /device, /continue, color=fsc_color('white')
+      plots, xsize, y, /device, /continue, color=fsc_color('red'), $
+      linestyle = 1
       
     ;      if ((*global_px_vs_tof).shift_key_status) then begin ;shift is clicked
     ;
@@ -317,28 +325,31 @@ pro px_vs_tof_draw_eventcb, event
   endif else begin ;endif of catch error
   
     if (event.enter eq 0) then begin ;leaving plot
-    ;      info_base = (*global_plot).cursor_info_base
-    ;      ;if x,y and counts base is on, shows live values of x,y and counts
-    ;      if (widget_info(info_base, /valid_id) ne 0) then begin
-    ;        na = 'N/A'
-    ;        refresh_plot, event
-    ;        putValue, base=info_base, 'cursor_info_x_value_uname', na
-    ;        putValue, base=info_base, 'cursor_info_y_value_uname', na
-    ;        putValue, base=info_base, 'cursor_info_z_value_uname', na
-    ;      endif
-    ;
-    ;      ;counts vs xaxis (tof or lambda)
-    ;      counts_vs_xaxis_plot_id = (*global_plot).counts_vs_xaxis_base
-    ;      if (widget_info(counts_vs_xaxis_plot_id,/valid_id) ne 0) then begin
-    ;        plot_counts_vs_xaxis, event, clear=1
-    ;      endif
-    ;
-    ;      ;counts vs yaxis (pixel or angle)
-    ;      counts_vs_yaxis_plot_id = (*global_plot).counts_vs_yaxis_base
-    ;      if (widget_info(counts_vs_yaxis_plot_id,/valid_id) ne 0) then begin
-    ;        plot_counts_vs_yaxis, event, clear=1
-    ;      endif
-    ;
+    
+      catch, /cancel
+    
+      info_base = (*global_px_vs_tof).cursor_info_base
+      ;if x,y and counts base is on, shows live values of x,y and counts
+      if (widget_info(info_base, /valid_id) ne 0) then begin
+        na = 'N/A'
+        px_vs_tof_refresh_plot, event
+        putValue, base=info_base, 'px_vs_tof_cursor_info_x_value_uname', na
+        putValue, base=info_base, 'px_vs_tof_cursor_info_y_value_uname', na
+        putValue, base=info_base, 'px_vs_tof_cursor_info_z_value_uname', na
+      endif
+      
+      ;counts vs xaxis (tof or lambda)
+      counts_vs_xaxis_plot_id = (*global_px_vs_tof).counts_vs_xaxis_base
+      if (widget_info(counts_vs_xaxis_plot_id,/valid_id) ne 0) then begin
+        px_vs_tof_plot_counts_vs_xaxis, base=counts_vs_xaxis_plot_id
+      endif
+      
+      ;counts vs yaxis (pixel or angle)
+      counts_vs_yaxis_plot_id = (*global_px_vs_tof).counts_vs_yaxis_base
+      if (widget_info(counts_vs_yaxis_plot_id,/valid_id) ne 0) then begin
+        px_vs_tof_plot_counts_vs_yaxis, base=counts_vs_yaxis_plot_id
+      endif
+      
     endif
     
   endelse
