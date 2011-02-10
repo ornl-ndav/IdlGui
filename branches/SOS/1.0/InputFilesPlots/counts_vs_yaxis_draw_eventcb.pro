@@ -35,11 +35,12 @@
 pro px_vs_tof_counts_vs_yaxis_draw_eventcb, event
   compile_opt idl2
   
-    widget_control, event.top, get_uvalue=global_axis_plot
+  widget_control, event.top, get_uvalue=global_axis_plot
   
   global_px_vs_tof = (*global_axis_plot).global
   info_base = (*global_px_vs_tof).cursor_info_base
   ymax = (*global_axis_plot).ymax
+  main_event = (*global_axis_plot).main_event
   
   catch, error
   if (error ne 0) then begin
@@ -52,20 +53,25 @@ pro px_vs_tof_counts_vs_yaxis_draw_eventcb, event
     ;if there is already a selection, display the selection
     string_pixel_range_already_selected = getValue(base=info_base, $
       uname='px_vs_tof_cursor_info_y0y1_value_uname')
-    pixel_range_already_selected = strsplit(string_pixel_range_already_selected,'->',/extract)
-    pixel_min_already_selected = strcompress(pixel_range_already_selected[0],/remove_all)
-    pixel_max_already_selected = strcompress(pixel_range_already_selected[1],/remove_all)
-    
+    pixel_range_already_selected = $
+      strsplit(string_pixel_range_already_selected,'->',/extract)
+    pixel_min_already_selected = $
+      strcompress(pixel_range_already_selected[0],/remove_all)
+    pixel_max_already_selected = $
+      strcompress(pixel_range_already_selected[1],/remove_all)
+      
     if (pixel_min_already_selected ne 'N/A') then begin
       pixel_min = fix(pixel_min_already_selected)
       plots, pixel_min, 0, /data
-      plots, pixel_min, ymax, /data, /continue, color=fsc_color('red'), linestyle=0
+      plots, pixel_min, ymax, /data, /continue, color=fsc_color('red'), $
+        linestyle=0
     endif
     
     if (pixel_max_already_selected ne 'N/A') then begin
       pixel_max = fix(pixel_max_already_selected)
       plots, pixel_max, 0, /data
-      plots, pixel_max, ymax, /data, /continue, color=fsc_color('red'), linestyle=0
+      plots, pixel_max, ymax, /data, /continue, color=fsc_color('red'), $
+        linestyle=0
     endif
     
     cursor, x, y, /data, /nowait
@@ -87,6 +93,19 @@ pro px_vs_tof_counts_vs_yaxis_draw_eventcb, event
     putValue, base=info_base, 'px_vs_tof_cursor_info_z_value_uname', $
       'N/A'
       
+      
+      
+    ;display the cursor position in the main plot
+    px_vs_tof_refresh_plot, main_event
+    
+    pixel_data = x
+    pixel_device = px_vs_tof_data_to_device(global_px_vs_tof, pixel=pixel_data)
+    
+    plots, 0, pixel_device, /device
+    xsize = (*global_px_vs_tof).congrid_xcoeff
+    plots, xsize, pixel_device, /device, /continue, color=fsc_color('red'), $
+      linestyle = 1
+      
   endif else begin
   
     if (event.enter eq 0) then begin ;leaving the plot
@@ -106,21 +125,29 @@ pro px_vs_tof_counts_vs_yaxis_draw_eventcb, event
       ;if there is already a selection, display the selection
       string_pixel_range_already_selected = getValue(base=info_base, $
         uname='px_vs_tof_cursor_info_y0y1_value_uname')
-      pixel_range_already_selected = strsplit(string_pixel_range_already_selected,'->',/extract)
-      pixel_min_already_selected = strcompress(pixel_range_already_selected[0],/remove_all)
-      pixel_max_already_selected = strcompress(pixel_range_already_selected[1],/remove_all)
-      
+      pixel_range_already_selected = $
+        strsplit(string_pixel_range_already_selected,'->',/extract)
+      pixel_min_already_selected = $
+        strcompress(pixel_range_already_selected[0],/remove_all)
+      pixel_max_already_selected = $
+        strcompress(pixel_range_already_selected[1],/remove_all)
+        
       if (pixel_min_already_selected ne 'N/A') then begin
         pixel_min = fix(pixel_min_already_selected)
         plots, pixel_min, 0, /data
-        plots, pixel_min, ymax, /data, /continue, color=fsc_color('red'), linestyle=0
+        plots, pixel_min, ymax, /data, /continue, color=fsc_color('red'), $
+          linestyle=0
       endif
       
       if (pixel_max_already_selected ne 'N/A') then begin
         pixel_max = fix(pixel_max_already_selected)
         plots, pixel_max, 0, /data
-        plots, pixel_max, ymax, /data, /continue, color=fsc_color('red'), linestyle=0
+        plots, pixel_max, ymax, /data, /continue, color=fsc_color('red'), $
+          linestyle=0
       endif
+      
+      ;display the cursor position in the main plot
+      px_vs_tof_refresh_plot, main_event
       
     endif
     

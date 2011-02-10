@@ -32,6 +32,27 @@
 ;
 ;==============================================================================
 
+function px_vs_tof_data_to_device, global_px_vs_tof, pixel=pixel, tof=tof
+  compile_opt idl2
+  
+  if (keyword_set(pixel)) then begin
+    range = float((*global_px_vs_tof).yrange)
+    congrid_coeff = (*global_px_vs_tof).congrid_ycoeff
+    data_value = pixel
+  endif else begin
+    range = float((*global_px_vs_tof).xrange)
+    congrid_coeff = (*global_px_vs_tof).congrid_xcoeff
+    data_value = tof
+  endelse
+  
+  ratio = (float(range[1]) - float(data_value))
+  ratio /= (float(range[1]) - float(range[0]))
+  
+  device_value = congrid_coeff * (1 - ratio)
+  
+  return, fix(device_value)  
+end
+
 ;+
 ; :Description:
 ;    calculate the x data from the x device
@@ -54,7 +75,7 @@ function px_vs_tof_retrieve_data_x_value, event
   
   x_device = event.x
   congrid_xcoeff = (*global_px_vs_tof).congrid_xcoeff
-  xrange = float((*global_px_vs_tof).xrange) ;min and max pixels
+  xrange = float((*global_px_vs_tof).xrange) ;min and max tof
   
   rat = float(x_device) / float(congrid_xcoeff)
   x_data = float(rat * (xrange[1] - xrange[0]) + xrange[0])
@@ -129,25 +150,25 @@ function px_vs_tof_retrieve_data_z_value, event
   xdata = fix(float(event.x) * float(xdata_max) / congrid_xcoeff)
   ydata = fix(float(event.y) * float(ydata_max) / congrid_ycoeff)
   
-;  if ((*global_px_vs_tof).shift_key_status) then begin
-;  
-;    xyEvent = (*global_plot).EventRangeSelection
-;    x1event = xyEvent[0]
-;    y1event = xyEvent[1]
-;    
-;    x1data = fix(float(x1event) * float(xdata_max) / congrid_xcoeff)
-;    y1data = fix(float(y1event) * float(ydata_max) / congrid_ycoeff)
-;    
-;    xmin = min([xdata,x1data],max=xmax)
-;    ymin = min([ydata,y1data],max=ymax)
-;    
-;    _data = total(data[xmin:xmax,ymin:ymax])
-;    
-;  endif else begin
+  ;  if ((*global_px_vs_tof).shift_key_status) then begin
+  ;
+  ;    xyEvent = (*global_plot).EventRangeSelection
+  ;    x1event = xyEvent[0]
+  ;    y1event = xyEvent[1]
+  ;
+  ;    x1data = fix(float(x1event) * float(xdata_max) / congrid_xcoeff)
+  ;    y1data = fix(float(y1event) * float(ydata_max) / congrid_ycoeff)
+  ;
+  ;    xmin = min([xdata,x1data],max=xmax)
+  ;    ymin = min([ydata,y1data],max=ymax)
+  ;
+  ;    _data = total(data[xmin:xmax,ymin:ymax])
+  ;
+  ;  endif else begin
   
-    _data = data[xdata,ydata]
-    
-;  endelse
+  _data = data[xdata,ydata]
+  
+  ;  endelse
   
   ;; Debugging code
   ;  print, '(congrid_xcoeff,congrid_ycoeff)=(' + strcompress(congrid_xcoeff,/remove_all) + $
