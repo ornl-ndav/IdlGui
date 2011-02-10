@@ -312,6 +312,7 @@ pro px_vs_tof_counts_vs_axis_base, event=event, $
     ysize: ysize, $
     xrange: fltarr(2), $  ;ex: 0,20,000   xaxis min and max value
     ymax: 0L, $       ;max y value (counts)
+    main_event: event, $
     global: global_px_vs_tof })
     
   WIDGET_CONTROL, _base, SET_UVALUE = global_axis_plot
