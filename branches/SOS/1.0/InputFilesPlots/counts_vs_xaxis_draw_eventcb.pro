@@ -72,14 +72,14 @@ pro px_vs_tof_counts_vs_xaxis_draw_eventcb, event
     tof_data = x
     tof_device = px_vs_tof_data_to_device(global_px_vs_tof, tof=tof_data)
     
-    id = widget_info(event.top, find_by_uname='px_vs_tof_counts_vs_xaxis_plot_uname')
-    widget_control, id, GET_VALUE = plot_id
-    wset, plot_id
-    
     ;Mouse interaction with plot
     if (event.press eq 1 && $
       event.clicks eq 1) then begin ;user left clicked the mouse
       (*global_axis_plot).left_clicked = 1b
+      id = widget_info(event.top, $
+        find_by_uname='px_vs_tof_counts_vs_xaxis_plot_uname')
+      widget_control, id, GET_VALUE = plot_id
+      wset, plot_id
       plots, x, 0, /data
       plots, x, ymax, /data,/continue, color=fsc_color('green'), linestyle=2
       
@@ -104,11 +104,19 @@ pro px_vs_tof_counts_vs_xaxis_draw_eventcb, event
       putValue, base=info_base, 'px_vs_tof_cursor_info_x0x1_value_uname', $
         string_tof_range_already_selected
         
+      ;record new selection corners
+      save_draw_zoom_selection, main_event, tof=[sxmin,sxmax]
+      px_vs_tof_refresh_plot_with_selection, main_event, recalculate=1
+      
     endif
     
     if (event.press eq 4 && $
       event.clicks eq 1) then begin ;user right clicked the mouse
       (*global_axis_plot).right_clicked = 1b
+      id = widget_info(event.top, $
+        find_by_uname='px_vs_tof_counts_vs_xaxis_plot_uname')
+      widget_control, id, GET_VALUE = plot_id
+      wset, plot_id
       plots, x, 0, /data
       plots, x, ymax, /data,/continue, color=fsc_color('green'), linestyle=2
       
@@ -132,6 +140,11 @@ pro px_vs_tof_counts_vs_xaxis_draw_eventcb, event
       string_tof_range_already_selected = sxmin + ' -> ' + sxmax
       putValue, base=info_base, 'px_vs_tof_cursor_info_x0x1_value_uname', $
         string_tof_range_already_selected
+        
+      ;record new selection corners and plot it
+      save_draw_zoom_selection, main_event, tof=[sxmin,sxmax]
+      px_vs_tof_refresh_plot_with_selection, main_event, recalculate=1
+      
     endif
     
     if (event.release eq 1) then begin ;left click button released
@@ -156,6 +169,11 @@ pro px_vs_tof_counts_vs_xaxis_draw_eventcb, event
       string_tof_range_already_selected = sxmin + ' -> ' + sxmax
       putValue, base=info_base, 'px_vs_tof_cursor_info_x0x1_value_uname', $
         string_tof_range_already_selected
+        
+      ;record new selection corners
+      save_draw_zoom_selection, main_event, tof=[sxmin,sxmax]
+      px_vs_tof_refresh_plot_with_selection, main_event, recalculate=1
+      
     endif
     
     if (event.release eq 4) then begin ;right click released
@@ -180,10 +198,19 @@ pro px_vs_tof_counts_vs_xaxis_draw_eventcb, event
       string_tof_range_already_selected = sxmin + ' -> ' + sxmax
       putValue, base=info_base, 'px_vs_tof_cursor_info_x0x1_value_uname', $
         string_tof_range_already_selected
+        
+      ;record new selection corners
+      save_draw_zoom_selection, main_event, tof=[sxmin,sxmax]
+      px_vs_tof_refresh_plot_with_selection, main_event, recalculate=1
+      
     endif
     
     ;moving the mouse with left button clicked
     if ((*global_axis_plot).left_clicked) then begin
+      id = widget_info(event.top, $
+        find_by_uname='px_vs_tof_counts_vs_xaxis_plot_uname')
+      widget_control, id, GET_VALUE = plot_id
+      wset, plot_id
       plots, x, 0, /data
       plots, x, ymax, /data,/continue, color=fsc_color('green'), linestyle=2
       
@@ -199,10 +226,18 @@ pro px_vs_tof_counts_vs_xaxis_draw_eventcb, event
       putValue, base=info_base, 'px_vs_tof_cursor_info_x0x1_value_uname', $
         string_tof_range_already_selected
         
+      ;record new selection corners
+      save_draw_zoom_selection, main_event, tof=[sx,sx1]
+      px_vs_tof_refresh_plot_with_selection, main_event, recalculate=1
+      
     endif
     
     ;moving the mouse with right button clicked
     if ((*global_axis_plot).right_clicked) then begin
+      id = widget_info(event.top, $
+        find_by_uname='px_vs_tof_counts_vs_xaxis_plot_uname')
+      widget_control, id, GET_VALUE = plot_id
+      wset, plot_id
       plots, x, 0, /data
       plots, x, ymax, /data,/continue, color=fsc_color('green'), linestyle=2
       
@@ -218,6 +253,10 @@ pro px_vs_tof_counts_vs_xaxis_draw_eventcb, event
       putValue, base=info_base, 'px_vs_tof_cursor_info_x0x1_value_uname', $
         string_tof_range_already_selected
         
+      ;record new selection corners
+      save_draw_zoom_selection, main_event, tof=[sx0,sx]
+      px_vs_tof_refresh_plot_with_selection, main_event, recalculate=1
+      
     endif
     
     ;if there is already a selection, display the selection
@@ -233,6 +272,10 @@ pro px_vs_tof_counts_vs_xaxis_draw_eventcb, event
     if (tof_min_already_selected ne 'N/A') then begin
       if ((*global_axis_plot).right_clicked) then begin
         tof_min = float(tof_min_already_selected)
+        id = widget_info(event.top, $
+          find_by_uname='px_vs_tof_counts_vs_xaxis_plot_uname')
+        widget_control, id, GET_VALUE = plot_id
+        wset, plot_id
         plots, tof_min, 0, /data
         plots, tof_min, ymax, /data,/continue, color=fsc_color('blue'), $
           linestyle=0
@@ -242,6 +285,10 @@ pro px_vs_tof_counts_vs_xaxis_draw_eventcb, event
     if (tof_min_already_selected ne 'N/A') then begin
       if ((*global_axis_plot).left_clicked eq 0b) then begin
         tof_min = float(tof_min_already_selected)
+        id = widget_info(event.top, $
+          find_by_uname='px_vs_tof_counts_vs_xaxis_plot_uname')
+        widget_control, id, GET_VALUE = plot_id
+        wset, plot_id
         plots, tof_min, 0, /data
         plots, tof_min, ymax, /data,/continue, color=fsc_color('blue'), $
           linestyle=0
@@ -251,6 +298,10 @@ pro px_vs_tof_counts_vs_xaxis_draw_eventcb, event
     if (tof_max_already_selected ne 'N/A') then begin
       if ((*global_axis_plot).left_clicked) then begin
         tof_max = float(tof_max_already_selected)
+        id = widget_info(event.top, $
+          find_by_uname='px_vs_tof_counts_vs_xaxis_plot_uname')
+        widget_control, id, GET_VALUE = plot_id
+        wset, plot_id
         plots, tof_max, 0, /data
         plots, tof_max, ymax, /data,/continue, color=fsc_color('blue'), $
           linestyle=0
@@ -260,6 +311,10 @@ pro px_vs_tof_counts_vs_xaxis_draw_eventcb, event
     if (tof_max_already_selected ne 'N/A') then begin
       if ((*global_axis_plot).right_clicked eq 0b) then begin
         tof_max = float(tof_max_already_selected)
+        id = widget_info(event.top, $
+          find_by_uname='px_vs_tof_counts_vs_xaxis_plot_uname')
+        widget_control, id, GET_VALUE = plot_id
+        wset, plot_id
         plots, tof_max, 0, /data
         plots, tof_max, ymax, /data,/continue, color=fsc_color('blue'), $
           linestyle=0
@@ -302,14 +357,22 @@ pro px_vs_tof_counts_vs_xaxis_draw_eventcb, event
         
       if (tof_min_already_selected ne 'N/A') then begin
         tof_min = float(tof_min_already_selected)
-        plots, tof_min, 0, /data
+       id = widget_info(event.top, $
+        find_by_uname='px_vs_tof_counts_vs_xaxis_plot_uname')
+      widget_control, id, GET_VALUE = plot_id
+      wset, plot_id 
+      plots, tof_min, 0, /data
         plots, tof_min, ymax, /data,/continue, color=fsc_color('blue'), $
           linestyle=0
       endif
       
       if (tof_max_already_selected ne 'N/A') then begin
         tof_max = float(tof_max_already_selected)
-        plots, tof_max, 0, /data
+        id = widget_info(event.top, $
+        find_by_uname='px_vs_tof_counts_vs_xaxis_plot_uname')
+      widget_control, id, GET_VALUE = plot_id
+      wset, plot_id
+      plots, tof_max, 0, /data
         plots, tof_max, ymax, /data,/continue, color=fsc_color('blue'), $
           linestyle=0
       endif
@@ -326,7 +389,7 @@ pro px_vs_tof_counts_vs_xaxis_draw_eventcb, event
         
       selection = (*global_px_vs_tof).draw_zoom_selection
       data_selection = (*global_px_vs_tof).draw_zoom_data_selection
-
+      
       if (tof_min_already_selected eq 'N/A') then begin
         selection[0] = -1
         data_selection[0] = -1
@@ -344,12 +407,14 @@ pro px_vs_tof_counts_vs_xaxis_draw_eventcb, event
         selection[2] = float(tof_max)
         data_selection[2] = float(tof_max_already_selected)
       endelse
-
+      
       (*global_px_vs_tof).draw_zoom_selection = selection
       (*global_px_vs_tof).draw_zoom_data_selection = data_selection
       
       ;display the cursor position in the main plot
       px_vs_tof_refresh_plot, main_event
+      px_vs_tof_refresh_plot_with_selection, main_event, recalculate=1
+      
       
     endif
     
