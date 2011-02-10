@@ -54,7 +54,7 @@ pro px_vs_tof_plots_input_files_base_event, Event
     widget_info(event.top, $
       find_by_uname='px_vs_tof_local_scale_setting_log'): begin
       putValue, event=event, 'px_vs_tof_local_scale_setting_linear', $
-      '  linear'
+        '  linear'
       putValue, event=event, 'px_vs_tof_local_scale_setting_log',  $
         '* logarithmic'
       (*global_px_vs_tof).default_scale_settings = 1
@@ -64,7 +64,7 @@ pro px_vs_tof_plots_input_files_base_event, Event
     widget_info(event.top, $
       find_by_uname='px_vs_tof_local_scale_setting_linear'): begin
       putValue, event=event, 'px_vs_tof_local_scale_setting_linear', $
-      '* linear'
+        '* linear'
       putValue, event=event, 'px_vs_tof_local_scale_setting_log',  $
         '  logarithmic'
       (*global_px_vs_tof).default_scale_settings = 0
@@ -385,6 +385,72 @@ pro px_vs_tof_refresh_plot, event, recalculate=recalculate
   loadct, (*global_px_vs_tof).default_loadct, /silent
   
   tvscl, cData
+  
+  save_px_vs_tof_background, event=event, uname='draw_px_vs_tof_input_files'
+  
+end
+
+;+
+; :Description:
+;    refresh the 2d plot
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro px_vs_tof_refresh_plot_with_selection, event, recalculate=recalculate
+  compile_opt idl2
+  
+  ;get global structure
+  widget_control,event.top,get_uvalue=global_px_vs_tof
+  
+  id = widget_info(event.top, find_by_uname='draw_px_vs_tof_input_files')
+  widget_control, id, GET_VALUE = plot_id
+  wset, plot_id
+  
+  if (n_elements(recalculate) eq 0) then begin
+    TV, (*(*global_px_vs_tof).background), true=3
+    return
+  endif
+  
+  Data = (*(*global_px_vs_tof).data2d)
+  new_xsize = (*global_px_vs_tof).xsize
+  new_ysize = (*global_px_vs_tof).ysize
+  border = (*global_px_vs_tof).border
+  colorbar_xsize = (*global_px_vs_tof).colorbar_xsize
+  
+  draw_geometry = WIDGET_INFO(id,/GEOMETRY)
+  xsize = draw_geometry.xsize
+  ysize = draw_geometry.ysize
+  
+  cData = congrid(Data, xsize, ysize)
+  
+  (*global_px_vs_tof).congrid_xcoeff = xsize
+  (*global_px_vs_tof).congrid_ycoeff = ysize
+  
+  erase
+  
+  loadct, (*global_px_vs_tof).default_loadct, /silent
+  tvscl, cData
+  
+  draw_zoom_selection = (*global_px_vs_tof).draw_zoom_selection
+  
+  xmin = draw_zoom_selection[0]
+  xmax = draw_zoom_selection[2]
+  ymin = draw_zoom_selection[1]
+  ymax = draw_zoom_selection[3]
+  
+  if (xmin eq -1 || $
+    xmax eq -1 || $
+    ymin eq -1 || $
+    ymax eq -1) then return
+    
+  plots, xmin, ymin, /device
+  plots, xmin, ymax, /device, /continue, color=fsc_color('green')
+  plots, xmax, ymax, /device, /continue, color=fsc_color('green')
+  plots, xmax, ymin, /device, /continue, color=fsc_color('green')
+  plots, xmin, ymin, /device, /continue, color=fsc_color('green')
   
   save_px_vs_tof_background, event=event, uname='draw_px_vs_tof_input_files'
   
