@@ -385,7 +385,9 @@ pro px_vs_tof_draw_eventcb, event
       draw_zoom_data_selection[3] = -1
       (*global_px_vs_tof).draw_zoom_data_selection = draw_zoom_data_selection
       
+     if (widget_info(info_base, /valid_id) ne 0) then begin
       display_selection_information, event
+      endif
       
         ;if counts vs tof 2d plot is available
     if (widget_info(counts_vs_xaxis_plot_id,/valid_id)) then begin
