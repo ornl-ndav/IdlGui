@@ -53,10 +53,10 @@ pro refpix_input_base_event, Event
       save_refpixel_pixels, base=top_base
       display_refpixel_pixels, base=top_base
       calculate_refpix, base=top_base
-          global_refpix = (*global_info).global_refpix
+      global_refpix = (*global_info).global_refpix
       display_counts_vs_pixel, $
-          base=(*global_refpix).refpix_counts_vs_pixel_base_id, $
-          global_refpix
+        base=(*global_refpix).refpix_counts_vs_pixel_base_id, $
+        global_refpix
     end
     widget_info(event.top, find_by_uname='refpix_pixel2_uname'): begin
       widget_control, event.top, get_uvalue=global_info
@@ -64,10 +64,10 @@ pro refpix_input_base_event, Event
       save_refpixel_pixels, base=top_base
       display_refpixel_pixels, base=top_base
       calculate_refpix, base=top_base
-          global_refpix = (*global_info).global_refpix
+      global_refpix = (*global_info).global_refpix
       display_counts_vs_pixel, $
-          base=(*global_refpix).refpix_counts_vs_pixel_base_id, $
-          global_refpix
+        base=(*global_refpix).refpix_counts_vs_pixel_base_id, $
+        global_refpix
     end
     
     widget_info(event.top, find_by_uname='refpix_value_uname'): begin
@@ -207,20 +207,20 @@ pro refpix_input_base_gui, wBase, $
   endelse
   
   if (default_refpix_value ne '') then begin
-  _default_refpix_value = strcompress(default_refpix_value,/remove_all)
+    _default_refpix_value = strcompress(default_refpix_value,/remove_all)
   endif else begin
-  _default_refpix_value = 'N/A'
+    _default_refpix_value = 'N/A'
   endelse
   
   row2 = widget_base(wBase,$
-  /row)
+    /row)
   label = widget_label(row2,$
-  value = '     ===>  Refpix:')
+    value = '     ===>  Refpix:')
   value = widget_label(row2,$
-  value = _default_refpix_value,$
-  uname = 'refpix_value_uname',$
-  scr_xsize = 100)
-  
+    value = _default_refpix_value,$
+    uname = 'refpix_value_uname',$
+    scr_xsize = 100)
+    
   ;refpix = cw_field(wBase, $
   ;  xsize = 5,$
   ;  title = '       ===>  Refpix:',$
