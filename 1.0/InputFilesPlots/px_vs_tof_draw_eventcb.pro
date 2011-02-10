@@ -220,6 +220,8 @@ pro display_selection_information, event
   widget_control, event.top, get_uvalue=global_px_vs_tof
   info_base = (*global_px_vs_tof).cursor_info_base
   
+  if (~widget_info(info_base,/valid_id)) then return
+  
   ;display information about selection in cursor/selection info base
   draw_zoom_data_selection = (*global_px_vs_tof).draw_zoom_data_selection
   x0 = draw_zoom_data_selection[0]
