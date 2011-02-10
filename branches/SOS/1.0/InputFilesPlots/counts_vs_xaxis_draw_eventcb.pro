@@ -53,7 +53,6 @@ pro px_vs_tof_counts_vs_xaxis_draw_eventcb, event
     cursor, x, y, /data, /nowait
     xrange = (*global_axis_plot).xrange
     
-    just_refresh = 0b
     ;make sure we are in the range allowed
     if (x gt xrange[1]) then x = xrange[1]
     if (x lt xrange[0]) then x = xrange[0]
