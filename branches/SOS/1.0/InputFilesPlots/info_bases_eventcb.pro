@@ -183,3 +183,51 @@ pro px_vs_tof_plot_counts_vs_yaxis,event=event, base=base, clear=clear
   
 end
 
+;+
+; :Description:
+;    display the selection edges in any of the two counts vs tof|pixel plots
+;
+; :Params:
+;    draw_zoom_data_selection
+;
+; :Keywords:
+;    base
+;    xaxis
+;
+; :Author: j35
+;-
+pro px_vs_tof_plot_counts_vs_axis_selection, base=base, $
+xaxis=xaxis, $
+draw_zoom_data_selection
+  compile_opt idl2
+
+  sum_selection = total(draw_zoom_data_selection)
+  if (sum_selection eq -4) then return ;nothing to plot
+
+  case (xaxis) of
+  'tof': begin
+  xmin = draw_zoom_data_selection[0]
+  xmax = draw_zoom_data_selection[2]
+  color='blue'
+  end
+  'pixel': begin
+  xmin = draw_zoom_data_selection[1]
+  xmax = draw_zoom_data_selection[3]
+  color='red'
+  end
+  endcase
+  
+  widget_control, base, get_uvalue=global_axis_plot
+  ymax = (*global_axis_plot).ymax
+  
+  if (xmin ne -1) then begin
+  plots, xmin, 0, /data
+  plots, xmin, ymax, /data, /continue, color=fsc_color(color)
+  endif 
+
+  if (xmax ne -1) then begin
+  plots, xmax, 0, /data
+  plots, xmax, ymax, /data, /continue, color=fsc_color(color)
+  endif 
+
+end

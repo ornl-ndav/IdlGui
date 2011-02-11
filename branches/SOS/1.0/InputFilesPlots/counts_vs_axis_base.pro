@@ -334,26 +334,10 @@ pro px_vs_tof_counts_vs_axis_base, event=event, $
     else:
   endcase
   
-;  ;display edge of selection if there is already one
-;  draw_zoom_data_selection = (*global_px_vs_tof).draw_zoom_data_selection
-;  
-;  xmin = draw_zoom_data_selection[0]
-;  xmax = draw_zoom_data_selection[2]
-;  ymin = draw_zoom_data_selection[1]
-;  ymax = draw_zoom_data_selection[3]
-;  
-;  if (xmin eq -1 || $
-;    xmax eq -1 || $
-;    ymin eq -1 || $
-;    ymax eq -1) then return
-;    
-;  plots, xmin, ymin, /device
-;  plots, xmin, ymax, /device, /continue, color=fsc_color('green')
-;  plots, xmax, ymax, /device, /continue, color=fsc_color('green')
-;  plots, xmax, ymin, /device, /continue, color=fsc_color('green')
-;  plots, xmin, ymin, /device, /continue, color=fsc_color('green')
-  
-  
-  
+  ;display edge of selection if there is already one
+  px_vs_tof_plot_counts_vs_axis_selection, base=_base, $
+    xaxis=xaxis, $
+    (*global_px_vs_tof).draw_zoom_data_selection
+    
 end
 
