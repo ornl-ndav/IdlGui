@@ -357,11 +357,11 @@ pro px_vs_tof_counts_vs_xaxis_draw_eventcb, event
         
       if (tof_min_already_selected ne 'N/A') then begin
         tof_min = float(tof_min_already_selected)
-       id = widget_info(event.top, $
-        find_by_uname='px_vs_tof_counts_vs_xaxis_plot_uname')
-      widget_control, id, GET_VALUE = plot_id
-      wset, plot_id 
-      plots, tof_min, 0, /data
+        id = widget_info(event.top, $
+          find_by_uname='px_vs_tof_counts_vs_xaxis_plot_uname')
+        widget_control, id, GET_VALUE = plot_id
+        wset, plot_id
+        plots, tof_min, 0, /data
         plots, tof_min, ymax, /data,/continue, color=fsc_color('blue'), $
           linestyle=0
       endif
@@ -369,10 +369,10 @@ pro px_vs_tof_counts_vs_xaxis_draw_eventcb, event
       if (tof_max_already_selected ne 'N/A') then begin
         tof_max = float(tof_max_already_selected)
         id = widget_info(event.top, $
-        find_by_uname='px_vs_tof_counts_vs_xaxis_plot_uname')
-      widget_control, id, GET_VALUE = plot_id
-      wset, plot_id
-      plots, tof_max, 0, /data
+          find_by_uname='px_vs_tof_counts_vs_xaxis_plot_uname')
+        widget_control, id, GET_VALUE = plot_id
+        wset, plot_id
+        plots, tof_max, 0, /data
         plots, tof_max, ymax, /data,/continue, color=fsc_color('blue'), $
           linestyle=0
       endif

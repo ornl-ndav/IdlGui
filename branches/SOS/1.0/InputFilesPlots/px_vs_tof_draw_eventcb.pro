@@ -387,21 +387,21 @@ pro px_vs_tof_draw_eventcb, event
       draw_zoom_data_selection[3] = -1
       (*global_px_vs_tof).draw_zoom_data_selection = draw_zoom_data_selection
       
-     if (widget_info(info_base, /valid_id) ne 0) then begin
-      display_selection_information, event
+      if (widget_info(info_base, /valid_id) ne 0) then begin
+        display_selection_information, event
       endif
       
-        ;if counts vs tof 2d plot is available
-    if (widget_info(counts_vs_xaxis_plot_id,/valid_id)) then begin
-         display_cursor_line_on_2d_plot, event=event, xaxis='tof'
-      display_corner_of_selection_in_info_bases, event, xaxis='tof'
-    endif
-    
-    ;if counts vs pixel 2d plot is available
-    if (widget_info(counts_vs_yaxis_plot_id,/valid_id)) then begin
-         display_cursor_line_on_2d_plot, event=event, xaxis='pixel'
-      display_corner_of_selection_in_info_bases, event, xaxis='pixel'
-    endif
+      ;if counts vs tof 2d plot is available
+      if (widget_info(counts_vs_xaxis_plot_id,/valid_id)) then begin
+        display_cursor_line_on_2d_plot, event=event, xaxis='tof'
+        display_corner_of_selection_in_info_bases, event, xaxis='tof'
+      endif
+      
+      ;if counts vs pixel 2d plot is available
+      if (widget_info(counts_vs_yaxis_plot_id,/valid_id)) then begin
+        display_cursor_line_on_2d_plot, event=event, xaxis='pixel'
+        display_corner_of_selection_in_info_bases, event, xaxis='pixel'
+      endif
       
     endif
     
@@ -422,19 +422,19 @@ pro px_vs_tof_draw_eventcb, event
         draw_zoom_data_selection[3] = -1
         (*global_px_vs_tof).draw_zoom_data_selection = draw_zoom_data_selection
         display_selection_information, event
-
+        
         ;if counts vs tof 2d plot is available
-    if (widget_info(counts_vs_xaxis_plot_id,/valid_id)) then begin
-         display_cursor_line_on_2d_plot, event=event, xaxis='tof'
-      display_corner_of_selection_in_info_bases, event, xaxis='tof'
-    endif
-    
-    ;if counts vs pixel 2d plot is available
-    if (widget_info(counts_vs_yaxis_plot_id,/valid_id)) then begin
-         display_cursor_line_on_2d_plot, event=event, xaxis='pixel'
-      display_corner_of_selection_in_info_bases, event, xaxis='pixel'
-    endif
-
+        if (widget_info(counts_vs_xaxis_plot_id,/valid_id)) then begin
+          display_cursor_line_on_2d_plot, event=event, xaxis='tof'
+          display_corner_of_selection_in_info_bases, event, xaxis='tof'
+        endif
+        
+        ;if counts vs pixel 2d plot is available
+        if (widget_info(counts_vs_yaxis_plot_id,/valid_id)) then begin
+          display_cursor_line_on_2d_plot, event=event, xaxis='pixel'
+          display_corner_of_selection_in_info_bases, event, xaxis='pixel'
+        endif
+        
         return
       endif
       
