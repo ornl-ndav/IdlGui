@@ -41,6 +41,8 @@ pro px_vs_tof_counts_vs_yaxis_draw_eventcb, event
   info_base = (*global_px_vs_tof).cursor_info_base
   ymax = (*global_axis_plot).ymax
   main_event = (*global_axis_plot).main_event
+  yaxis_type = (*global_axis_plot).default_yscale_settings
+  ymin = (yaxis_type eq 0) ? 0 : 1  ;0 for linear, 1 for log
   
   catch, error
   if (error ne 0) then begin
@@ -57,7 +59,7 @@ pro px_vs_tof_counts_vs_yaxis_draw_eventcb, event
     if (x gt xrange[1]) then return
     if (x lt xrange[0]) then return
     
-    plots, x, 0, /data
+    plots, x, ymin, /data
     plots, x, ymax, /data,/continue, color=fsc_color('red'), linestyle=1
     
     ;display the current value in CURSOR LIVE base
@@ -77,10 +79,10 @@ pro px_vs_tof_counts_vs_yaxis_draw_eventcb, event
       event.clicks eq 1) then begin ;user left clicked the mouse
       (*global_axis_plot).left_clicked = 1b
       id = widget_info(event.top, $
-      find_by_uname='px_vs_tof_counts_vs_yaxis_plot_uname')
+        find_by_uname='px_vs_tof_counts_vs_yaxis_plot_uname')
       widget_control, id, get_value=plot_id
       wset, plot_id
-      plots, x, 0, /data
+      plots, x, ymin, /data
       plots, x, ymax, /data, /continue, color=fsc_color('green'), linestyle=2
       
       string_pixel_range_already_selected = getValue(base=info_base, $
@@ -114,10 +116,10 @@ pro px_vs_tof_counts_vs_yaxis_draw_eventcb, event
       event.clicks eq 1) then begin ;user right clicked the mouse
       (*global_axis_plot).right_clicked = 1b
       id = widget_info(event.top, $
-      find_by_uname='px_vs_tof_counts_vs_yaxis_plot_uname')
+        find_by_uname='px_vs_tof_counts_vs_yaxis_plot_uname')
       widget_control, id, get_value=plot_id
       wset, plot_id
-      plots, x, 0, /data
+      plots, x, ymin, /data
       plots, x, ymax, /data,/continue, color=fsc_color('green'), linestyle=2
       
       string_pixel_range_already_selected = getValue(base=info_base,$
@@ -262,7 +264,7 @@ pro px_vs_tof_counts_vs_yaxis_draw_eventcb, event
           find_by_uname='px_vs_tof_counts_vs_yaxis_plot_uname')
         widget_control, id, get_value=plot_id
         wset, plot_id
-        plots, pixel_min, 0, /data
+        plots, pixel_min, ymin, /data
         plots, pixel_min, ymax, /data,/continue, color=fsc_color('red'), $
           linestyle=0
       endif
@@ -272,10 +274,10 @@ pro px_vs_tof_counts_vs_yaxis_draw_eventcb, event
       if ((*global_axis_plot).left_clicked eq 0b) then begin
         pixel_min = float(pixel_min_already_selected)
         id = widget_info(event.top, $
-        find_by_uname='px_vs_tof_counts_vs_yaxis_plot_uname')
+          find_by_uname='px_vs_tof_counts_vs_yaxis_plot_uname')
         widget_control, id, get_value=plot_id
         wset, plot_id
-        plots, pixel_min, 0, /data
+        plots, pixel_min, ymin, /data
         plots, pixel_min, ymax, /data,/continue, color=fsc_color('red'), $
           linestyle=0
       endif
@@ -285,10 +287,10 @@ pro px_vs_tof_counts_vs_yaxis_draw_eventcb, event
       if ((*global_axis_plot).left_clicked) then begin
         pixel_max = float(pixel_max_already_selected)
         id = widget_info(event.top, $
-        find_by_uname='px_vs_tof_counts_vs_yaxis_plot_uname')
+          find_by_uname='px_vs_tof_counts_vs_yaxis_plot_uname')
         widget_control, id, get_value=plot_id
         wset, plot_id
-        plots, pixel_max, 0, /data
+        plots, pixel_max, ymin, /data
         plots, pixel_max, ymax, /data,/continue, color=fsc_color('red'), $
           linestyle=0
       endif
@@ -298,10 +300,10 @@ pro px_vs_tof_counts_vs_yaxis_draw_eventcb, event
       if ((*global_axis_plot).right_clicked eq 0b) then begin
         pixel_max = float(pixel_max_already_selected)
         id = widget_info(event.top, $
-        find_by_uname='px_vs_tof_counts_vs_yaxis_plot_uname')
+          find_by_uname='px_vs_tof_counts_vs_yaxis_plot_uname')
         widget_control, id, get_value=plot_id
         wset, plot_id
-        plots, pixel_max, 0, /data
+        plots, pixel_max, ymin, /data
         plots, pixel_max, ymax, /data,/continue, color=fsc_color('red'), $
           linestyle=0
       endif
@@ -344,10 +346,10 @@ pro px_vs_tof_counts_vs_yaxis_draw_eventcb, event
       if (pixel_min_already_selected ne 'N/A') then begin
         pixel_min = float(pixel_min_already_selected)
         id = widget_info(event.top, $
-        find_by_uname='px_vs_tof_counts_vs_yaxis_plot_uname')
+          find_by_uname='px_vs_tof_counts_vs_yaxis_plot_uname')
         widget_control, id, get_value=plot_id
         wset, plot_id
-        plots, pixel_min, 0, /data
+        plots, pixel_min, ymin, /data
         plots, pixel_min, ymax, /data,/continue, color=fsc_color('red'), $
           linestyle=0
       endif
@@ -355,10 +357,10 @@ pro px_vs_tof_counts_vs_yaxis_draw_eventcb, event
       if (pixel_max_already_selected ne 'N/A') then begin
         pixel_max = float(pixel_max_already_selected)
         id = widget_info(event.top, $
-        find_by_uname='px_vs_tof_counts_vs_yaxis_plot_uname')
+          find_by_uname='px_vs_tof_counts_vs_yaxis_plot_uname')
         widget_control, id, get_value=plot_id
         wset, plot_id
-        plots, pixel_max, 0, /data
+        plots, pixel_max, ymin, /data
         plots, pixel_max, ymax, /data,/continue, color=fsc_color('red'), $
           linestyle=0
       endif

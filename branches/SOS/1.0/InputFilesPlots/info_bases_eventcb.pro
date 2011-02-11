@@ -92,7 +92,7 @@ pro px_vs_tof_plot_counts_vs_xaxis, event=event, base=base
     data[nan_array] = !values.f_nan
     
     ymax = max(_data)
-    yrange = [0.01,ymax]
+    yrange = [1,ymax]
     
     plot, x_axis, _data, $
       xstyle = 1, $
@@ -171,7 +171,7 @@ pro px_vs_tof_plot_counts_vs_yaxis,event=event, base=base, clear=clear
     data[nan_array] = !values.f_nan
     
     ymax = max(_data)
-    yrange = [0.01,ymax]
+    yrange = [1,ymax]
     
     plot, y_axis, _data, $
       xstyle = 1, $
