@@ -99,7 +99,7 @@ pro px_vs_tof_cursor_info_base_gui, wBase, $
     /row)
     
   cursor_selection_label = widget_label(MainRow1,$
-    value = '    CURSOR LIVE                                     SELECTION')
+    value = ' CURSOR LIVE                    SELECTION')
     
   MainRow2 = widget_base(wBase,$
     /row)
@@ -117,7 +117,7 @@ pro px_vs_tof_cursor_info_base_gui, wBase, $
   val = widget_label(row1,$
     value = 'N/A',$
     uname = 'px_vs_tof_cursor_info_x_value_uname',$
-    scr_xsize = 200,$
+    scr_xsize = 100,$
     /align_left)
     
   row2 = widget_base(leftBase,$
@@ -129,7 +129,7 @@ pro px_vs_tof_cursor_info_base_gui, wBase, $
   val = widget_label(row2,$
     value = 'N/A',$
     uname = 'px_vs_tof_cursor_info_y_value_uname',$
-    scr_xsize = 200,$
+    scr_xsize = 100,$
     /align_left)
     
   row3 = widget_base(leftBase,$
@@ -141,7 +141,7 @@ pro px_vs_tof_cursor_info_base_gui, wBase, $
   val = widget_label(row3,$
     uname = 'px_vs_tof_cursor_info_z_value_uname',$
     value = 'N/A',$
-    scr_xsize = 150,$
+    scr_xsize = 100,$
     /align_left)
     
   ;right part with selection information

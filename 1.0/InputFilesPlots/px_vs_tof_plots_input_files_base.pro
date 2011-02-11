@@ -1079,11 +1079,6 @@ pro px_vs_tof_plots_input_files_base,  main_base=main_base, $
     
   WIDGET_CONTROL, wBase, SET_UVALUE = global_px_vs_tof
   
-  ;initialize arrays ==========================================================
-  draw_zoom_data_selection = [-1.,-1.,-1.,-1.]
-  (*global_px_vs_tof).draw_zoom_data_selection = draw_zoom_data_selection
-  ;============================================================================
-  
   XMANAGER, "px_vs_tof_plots_input_files_base", wBase, $
     GROUP_LEADER = ourGroup, $
     /NO_BLOCK, $
@@ -1103,6 +1098,8 @@ pro px_vs_tof_plots_input_files_base,  main_base=main_base, $
   
   data2d_linear = total(data,2)
   (*(*global_px_vs_tof).data2d_linear) = data2d_linear
+  sz = size(data2d_linear,/dim)
+  (*global_px_vs_tof).nbr_pixel = sz[1]
   px_vs_tof_lin_log_data, base=wBase
   _data = (*(*global_px_vs_tof).data2d)
   
@@ -1144,12 +1141,72 @@ pro px_vs_tof_plots_input_files_base,  main_base=main_base, $
   new_value = pre + value + post
   setValue, base=wBase, uname, new_value
   
-  save_background,  main_base=wBase, uname='draw_px_vs_tof_input_files'
-  
   id = widget_info(wBase, find_by_uname='px_vs_tof_input_files_widget_base')
   geometry = widget_info(id,/geometry)
   (*global_px_vs_tof).xsize = geometry.scr_xsize
   (*global_px_vs_tof).ysize = geometry.scr_ysize
+  
+  ;initialize arrays ==========================================================
+  ;  draw_zoom_data_selection = [-1.,-1.,-1.,-1.]
+  ;  (*global_px_vs_tof).draw_zoom_data_selection = draw_zoom_data_selection
+  ;============================================================================
+  
+  tof_min_data = getValue(event=event, uname='tof_min')
+  tof_max_data = getValue(event=event, uname='tof_max')
+  pixel_min_data = getValue(event=event, uname='pixel_min')
+  pixel_max_data = getValue(event=event, uname='pixel_max')
+  
+  ;check here if it's a valid number
+  on_ioerror, not_a_number 
+  tof_min_data = float(tof_min_data)
+  tof_max_data = float(tof_max_data)
+  pixel_min_data = fix(pixel_min_data)
+  pixel_max_data = fix(pixel_max_data)
+  
+  f_tof_min = float(tof_min_data)
+  f_tof_max = float(tof_max_data)
+  f_pixel_min = fix(pixel_min_data)
+  f_pixel_max = fix(pixel_max_data)
+  
+  tof_range = (*global_px_vs_tof).xrange
+  if (f_tof_min lt tof_range[0] || f_tof_min gt tof_range[1]) then f_tof_min=-1
+  if (f_tof_max lt tof_range[0] || f_tof_max gt tof_range[1]) then f_tof_max=-1
+  
+  pixel_range = [0,(*global_px_vs_tof).nbr_pixel]
+  if (f_pixel_min lt pixel_range[0] || f_pixel_min gt pixel_range[1]) then f_pixel_min=-1
+  if (f_pixel_max lt pixel_range[0] || f_pixel_max gt pixel_range[1]) then f_pixel_max=-1
+  
+  tof_min = min([f_tof_min,f_tof_max],max=tof_max)
+  pixel_min = min([f_pixel_min,f_pixel_max], max=pixel_max)
+  
+  draw_zoom_data_selection = [tof_min, pixel_min, tof_max, pixel_max]
+  (*global_px_vs_tof).draw_zoom_data_selection = draw_zoom_data_selection
+  
+  tof_min_device = px_vs_tof_tof_data_to_tof_device(global_px_vs_tof, tof=tof_min)
+  tof_max_device = px_vs_tof_tof_data_to_tof_device(global_px_vs_tof, tof=tof_max)
+  
+  pixel_min_device = px_vs_tof_px_data_to_px_device(global_px_vs_tof, $
+    pixel=pixel_min)
+  pixel_max_device = px_vs_tof_px_data_to_px_device(global_px_vs_tof, $
+    pixel=pixel_max)
+    
+  draw_zoom_selection = (*global_px_vs_tof).draw_zoom_selection
+  draw_zoom_selection = [tof_min_device, pixel_min_device, tof_max_device, pixel_max_device]
+  (*global_px_vs_tof).draw_zoom_selection = draw_zoom_selection
+  
+  id = widget_info(wBase,find_by_uname='draw_px_vs_tof_input_files')
+  widget_control, id, GET_VALUE = plot_id
+  wset, plot_id
+  
+  plots, tof_min_device, pixel_min_device, /device
+  plots, tof_min_device, pixel_max_device, /device, /continue, color=fsc_color('green')
+  plots, tof_max_device, pixel_max_device, /device, /continue, color=fsc_color('green')
+  plots, tof_max_device, pixel_min_device, /device, /continue, color=fsc_color('green')
+  plots, tof_min_device, pixel_min_device, /device, /continue, color=fsc_color('green')
+  
+  not_a_number: ;jump here if numbers are not valid
+  
+  save_background,  main_base=wBase, uname='draw_px_vs_tof_input_files'
   
 end
 
