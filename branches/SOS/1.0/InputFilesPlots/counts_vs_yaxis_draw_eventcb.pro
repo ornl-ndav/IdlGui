@@ -43,6 +43,11 @@ pro px_vs_tof_counts_vs_yaxis_draw_eventcb, event
   main_event = (*global_axis_plot).main_event
   yaxis_type = (*global_axis_plot).default_yscale_settings
   ymin = (yaxis_type eq 0) ? 0 : 1  ;0 for linear, 1 for log
+ 
+  ;make sure the Cursor and selection infos base is displayed
+  if (widget_info(info_base,/valid_id) eq 0) then begin
+  px_vs_tof_show_cursor_info, main_event
+  endif
   
   catch, error
   if (error ne 0) then begin
@@ -206,6 +211,9 @@ pro px_vs_tof_counts_vs_yaxis_draw_eventcb, event
     
     ;moving the mouse with left button clicked
     if ((*global_axis_plot).left_clicked) then begin
+           id = widget_info(event.top, $
+        find_by_uname='px_vs_tof_counts_vs_yaxis_plot_uname')
+      widget_control, id, GET_VALUE = plot_id
       plots, x, 0, /data
       plots, x, ymax, /data,/continue, color=fsc_color('green'), linestyle=2
       
@@ -229,6 +237,9 @@ pro px_vs_tof_counts_vs_yaxis_draw_eventcb, event
     
     ;moving the mouse with right button clicked
     if ((*global_axis_plot).right_clicked) then begin
+           id = widget_info(event.top, $
+        find_by_uname='px_vs_tof_counts_vs_yaxis_plot_uname')
+      widget_control, id, GET_VALUE = plot_id
       plots, x, 0, /data
       plots, x, ymax, /data,/continue, color=fsc_color('green'), linestyle=2
       

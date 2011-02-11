@@ -70,7 +70,6 @@ pro px_vs_tof_base_move_info_bases, event
       xaxis_geometry = widget_info(xaxis_id,/geometry)
       ysize = xaxis_geometry.ysize
       yaxis_yoffset = ysize + 35 + xaxis_geometry.yoffset
-      print, yaxis_yoffset
     endif else begin
       if (widget_info(info_base,/valid_id) ne 0) then begin
         info_geometry = widget_info(info_base,/geometry)
