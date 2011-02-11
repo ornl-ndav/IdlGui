@@ -46,15 +46,17 @@ pro px_vs_tof_plot_counts_vs_xaxis, event=event, base=base
   compile_opt idl2
   
   if (keyword_set(event)) then begin
-  widget_control, event.top, get_uvalue=global_axis_plot
+    widget_control, event.top, get_uvalue=global_axis_plot
+    global_px_vs_tof = (*global_axis_plot).global
+    xaxis_plot_uname = (*global_px_vs_tof).counts_vs_xaxis_plot_uname
+    id = widget_info(event.top, find_by_uname=xaxis_plot_uname)
   endif else begin
-  widget_control, base, get_uvalue=global_axis_plot
+    widget_control, base, get_uvalue=global_axis_plot
+    counts_vs_xaxis_base = base
+    global_px_vs_tof = (*global_axis_plot).global
+    xaxis_plot_uname = (*global_px_vs_tof).counts_vs_xaxis_plot_uname
+    id = widget_info(counts_vs_xaxis_base, find_by_uname=xaxis_plot_uname)
   endelse
-  
-  global_px_vs_tof = (*global_axis_plot).global
-  xaxis_plot_uname = (*global_px_vs_tof).counts_vs_xaxis_plot_uname
-  counts_vs_xaxis_base = base
-  id = widget_info(counts_vs_xaxis_base, find_by_uname=xaxis_plot_uname)
   
   widget_control, id, GET_VALUE = plot_id
   wset, plot_id
@@ -62,7 +64,7 @@ pro px_vs_tof_plot_counts_vs_xaxis, event=event, base=base
   ;2d data
   data = (*(*global_px_vs_tof).data2d_linear)
   _data = total(data,2)
-    
+  
   ;nbr_ = n_elements(data[xdata,*])
   x_axis = (*global_px_vs_tof).tof_axis
   xrange = fltarr(2)
@@ -71,8 +73,7 @@ pro px_vs_tof_plot_counts_vs_xaxis, event=event, base=base
   (*global_axis_plot).xrange = xrange
   (*global_axis_plot).ymax = max(_data)
   
-  yaxis_type = (*global_px_vs_tof).counts_vs_xaxis_yaxis_type
-  is_linear = 1
+  yaxis_type = (*global_axis_plot).default_yscale_settings
   if (yaxis_type eq 0) then begin
   
     plot, x_axis, _data, xtitle='TOF (ms)', ytitle='Counts', xstyle=1
@@ -99,8 +100,8 @@ pro px_vs_tof_plot_counts_vs_xaxis, event=event, base=base
       ytitle='Counts', $
       yrange = yrange, $
       /ylog
-    is_linear = 0
-    
+  ;is_linear = 0
+      
   endelse
   
 end
@@ -119,15 +120,17 @@ pro px_vs_tof_plot_counts_vs_yaxis,event=event, base=base, clear=clear
   compile_opt idl2
   
   if (keyword_set(event)) then begin
-  widget_control, event.top, get_uvalue=global_axis_plot
+    widget_control, event.top, get_uvalue=global_axis_plot
+    global_px_vs_tof = (*global_axis_plot).global
+    yaxis_plot_uname = (*global_px_vs_tof).counts_vs_yaxis_plot_uname
+    id = widget_info(event.top, find_by_uname=yaxis_plot_uname)
   endif else begin
-  widget_control, base, get_uvalue=global_axis_plot
+    widget_control, base, get_uvalue=global_axis_plot
+    counts_vs_xaxis_base = base
+    global_px_vs_tof = (*global_axis_plot).global
+    yaxis_plot_uname = (*global_px_vs_tof).counts_vs_yaxis_plot_uname
+    id = widget_info(counts_vs_xaxis_base, find_by_uname=yaxis_plot_uname)
   endelse
-  
-  global_px_vs_tof = (*global_axis_plot).global
-  yaxis_plot_uname = (*global_px_vs_tof).counts_vs_yaxis_plot_uname
-  counts_vs_xaxis_base = base
-  id = widget_info(counts_vs_xaxis_base, find_by_uname=yaxis_plot_uname)
   
   widget_control, id, GET_VALUE = plot_id
   wset, plot_id
@@ -148,9 +151,8 @@ pro px_vs_tof_plot_counts_vs_yaxis,event=event, base=base, clear=clear
   xrange[1] = y_axis[-1]
   (*global_axis_plot).xrange = xrange
   (*global_axis_plot).ymax = max(_data)
-    
-  yaxis_type = (*global_px_vs_tof).counts_vs_xaxis_yaxis_type
-  is_linear = 1
+  
+  yaxis_type = (*global_axis_plot).default_yscale_settings
   if (yaxis_type eq 0) then begin
   
     plot, y_axis, _data, xtitle='Pixel', ytitle='Counts', xstyle=1
@@ -177,8 +179,7 @@ pro px_vs_tof_plot_counts_vs_yaxis,event=event, base=base, clear=clear
       ytitle='Counts', $
       yrange = yrange, $
       /ylog
-    is_linear = 0
-    
+      
   endelse
   
 end
@@ -197,37 +198,37 @@ end
 ; :Author: j35
 ;-
 pro px_vs_tof_plot_counts_vs_axis_selection, base=base, $
-xaxis=xaxis, $
-draw_zoom_data_selection
+    xaxis=xaxis, $
+    draw_zoom_data_selection
   compile_opt idl2
-
+  
   sum_selection = total(draw_zoom_data_selection)
   if (sum_selection eq -4) then return ;nothing to plot
-
+  
   case (xaxis) of
-  'tof': begin
-  xmin = draw_zoom_data_selection[0]
-  xmax = draw_zoom_data_selection[2]
-  color='blue'
-  end
-  'pixel': begin
-  xmin = draw_zoom_data_selection[1]
-  xmax = draw_zoom_data_selection[3]
-  color='red'
-  end
+    'tof': begin
+      xmin = draw_zoom_data_selection[0]
+      xmax = draw_zoom_data_selection[2]
+      color='blue'
+    end
+    'pixel': begin
+      xmin = draw_zoom_data_selection[1]
+      xmax = draw_zoom_data_selection[3]
+      color='red'
+    end
   endcase
   
   widget_control, base, get_uvalue=global_axis_plot
   ymax = (*global_axis_plot).ymax
   
   if (xmin ne -1) then begin
-  plots, xmin, 0, /data
-  plots, xmin, ymax, /data, /continue, color=fsc_color(color)
-  endif 
-
+    plots, xmin, 0, /data
+    plots, xmin, ymax, /data, /continue, color=fsc_color(color)
+  endif
+  
   if (xmax ne -1) then begin
-  plots, xmax, 0, /data
-  plots, xmax, ymax, /data, /continue, color=fsc_color(color)
-  endif 
-
+    plots, xmax, 0, /data
+    plots, xmax, ymax, /data, /continue, color=fsc_color(color)
+  endif
+  
 end
