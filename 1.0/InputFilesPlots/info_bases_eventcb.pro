@@ -198,6 +198,7 @@ end
 ; :Author: j35
 ;-
 pro px_vs_tof_plot_counts_vs_axis_selection, base=base, $
+    event=event, $
     xaxis=xaxis, $
     draw_zoom_data_selection
   compile_opt idl2
@@ -218,16 +219,24 @@ pro px_vs_tof_plot_counts_vs_axis_selection, base=base, $
     end
   endcase
   
-  widget_control, base, get_uvalue=global_axis_plot
+  if (keyword_set(base)) then begin
+    widget_control, base, get_uvalue=global_axis_plot
+  endif else begin
+    widget_control, event.top, get_uvalue=global_axis_plot
+  endelse
+  
   ymax = (*global_axis_plot).ymax
+  yaxis_type = (*global_axis_plot).default_yscale_settings
+  ymin = (yaxis_type eq 0) ? 0 : 1  ;0 for linear, 1 for log
+  
   
   if (xmin ne -1) then begin
-    plots, xmin, 0, /data
+    plots, xmin, ymin, /data
     plots, xmin, ymax, /data, /continue, color=fsc_color(color)
   endif
   
   if (xmax ne -1) then begin
-    plots, xmax, 0, /data
+    plots, xmax, ymin, /data
     plots, xmax, ymax, /data, /continue, color=fsc_color(color)
   endif
   
