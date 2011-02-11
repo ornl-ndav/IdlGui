@@ -53,15 +53,35 @@ pro px_vs_tof_base_move_info_bases, event
   
   xaxis_id = (*global_px_vs_tof).counts_vs_xaxis_base
   if (widget_info(xaxis_id,/valid_id) ne 0) then begin
+    if (widget_info(info_base,/valid_id) ne 0) then begin
+      info_geometry = widget_info(info_base,/geometry)
+      ysize = info_geometry.ysize
+      xaxis_yoffset = ysize + 5
+    endif else begin
+      xaxis_yoffset = -20
+    endelse
     widget_control, xaxis_id, xoffset=xsize+xoffset
-    widget_control, xaxis_id, yoffset=yoffset+130
+    widget_control, xaxis_id, yoffset=yoffset+xaxis_yoffset
   endif
-  
   
   yaxis_id = (*global_px_vs_tof).counts_vs_yaxis_base
   if (widget_info(yaxis_id,/valid_id) ne 0) then begin
+    if (widget_info(xaxis_id,/valid_id) ne 0) then begin ;there is xaxis
+      xaxis_geometry = widget_info(xaxis_id,/geometry)
+      ysize = xaxis_geometry.ysize
+      yaxis_yoffset = ysize + 35 + xaxis_geometry.yoffset
+      print, yaxis_yoffset
+    endif else begin
+      if (widget_info(info_base,/valid_id) ne 0) then begin
+        info_geometry = widget_info(info_base,/geometry)
+        ysize = info_geometry.ysize
+        yaxis_yoffset = ysize + 15 + info_geometry.yoffset
+      endif else begin
+        yaxis_yoffset = -20 + yoffset
+      endelse
+    endelse
     widget_control, yaxis_id, xoffset=xsize+xoffset
-    widget_control, yaxis_id, yoffset=yoffset+500
+    widget_control, yaxis_id, yoffset=yaxis_yoffset
   endif
   
 end

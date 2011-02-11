@@ -62,6 +62,7 @@ pro px_vs_tof_counts_vs_yaxis_draw_eventcb, event
     plots, x, ymin, /data
     plots, x, ymax, /data,/continue, color=fsc_color('red'), linestyle=1
     
+    if (widget_info(info_base,/valid_id)) then begin
     ;display the current value in CURSOR LIVE base
     live_pixel_value = fix(x)
     putValue, base=info_base, 'px_vs_tof_cursor_info_y_value_uname', $
@@ -70,6 +71,7 @@ pro px_vs_tof_counts_vs_yaxis_draw_eventcb, event
       'N/A'
     putValue, base=info_base, 'px_vs_tof_cursor_info_z_value_uname', $
       'N/A'
+      endif
       
     pixel_data = x
     pixel_device = px_vs_tof_px_data_to_px_device(global_px_vs_tof, $
