@@ -72,7 +72,8 @@ pro px_vs_tof_counts_vs_xaxis_draw_eventcb, event
       'N/A'
       
     tof_data = x
-    tof_device = px_vs_tof_data_to_device(global_px_vs_tof, tof=tof_data)
+    tof_device = px_vs_tof_tof_data_to_tof_device(global_px_vs_tof, $
+    tof=tof_data)
     
     ;Mouse interaction with plot
     if (event.press eq 1 && $
@@ -396,7 +397,7 @@ pro px_vs_tof_counts_vs_xaxis_draw_eventcb, event
         selection[0] = -1
         data_selection[0] = -1
       endif else begin
-        tof_min = px_vs_tof_data_to_device(global_px_vs_tof, tof=tof_min)
+        tof_min = px_vs_tof_tof_data_to_tof_device(global_px_vs_tof, tof=tof_min)
         selection[0] = float(tof_min)
         data_selection[0] = float(tof_min_already_selected)
       endelse
@@ -405,7 +406,7 @@ pro px_vs_tof_counts_vs_xaxis_draw_eventcb, event
         data_selection[2] = -1
         selection[2] = -1
       endif else begin
-        tof_max = px_vs_tof_data_to_device(global_px_vs_tof, tof=tof_max)
+        tof_max = px_vs_tof_tof_data_to_tof_device(global_px_vs_tof, tof=tof_max)
         selection[2] = float(tof_max)
         data_selection[2] = float(tof_max_already_selected)
       endelse

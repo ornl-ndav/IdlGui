@@ -32,19 +32,28 @@
 ;
 ;==============================================================================
 
-function px_vs_tof_data_to_device, global_px_vs_tof, pixel=pixel, tof=tof
+function px_vs_tof_tof_data_to_tof_device, global_px_vs_tof, tof=tof
   compile_opt idl2
   
-  if (keyword_set(pixel)) then begin
-    range = float((*global_px_vs_tof).yrange)
-    congrid_coeff = (*global_px_vs_tof).congrid_ycoeff
-    data_value = pixel
-  endif else begin
     range = float((*global_px_vs_tof).xrange)
     congrid_coeff = (*global_px_vs_tof).congrid_xcoeff
     data_value = tof
-  endelse
   
+  ratio = (float(range[1]) - float(data_value))
+  ratio /= (float(range[1]) - float(range[0]))
+  
+  device_value = congrid_coeff * (1 - ratio)
+  
+  return, fix(device_value)  
+end
+
+function px_vs_tof_px_data_to_px_device, global_px_vs_tof, pixel=pixel
+  compile_opt idl2
+  
+    range = float((*global_px_vs_tof).yrange)
+    congrid_coeff = (*global_px_vs_tof).congrid_ycoeff
+    data_value = pixel
+
   ratio = (float(range[1]) - float(data_value))
   ratio /= (float(range[1]) - float(range[0]))
   
@@ -150,34 +159,7 @@ function px_vs_tof_retrieve_data_z_value, event
   xdata = fix(float(event.x) * float(xdata_max) / congrid_xcoeff)
   ydata = fix(float(event.y) * float(ydata_max) / congrid_ycoeff)
   
-  ;  if ((*global_px_vs_tof).shift_key_status) then begin
-  ;
-  ;    xyEvent = (*global_plot).EventRangeSelection
-  ;    x1event = xyEvent[0]
-  ;    y1event = xyEvent[1]
-  ;
-  ;    x1data = fix(float(x1event) * float(xdata_max) / congrid_xcoeff)
-  ;    y1data = fix(float(y1event) * float(ydata_max) / congrid_ycoeff)
-  ;
-  ;    xmin = min([xdata,x1data],max=xmax)
-  ;    ymin = min([ydata,y1data],max=ymax)
-  ;
-  ;    _data = total(data[xmin:xmax,ymin:ymax])
-  ;
-  ;  endif else begin
-  
   _data = data[xdata,ydata]
-  
-  ;  endelse
-  
-  ;; Debugging code
-  ;  print, '(congrid_xcoeff,congrid_ycoeff)=(' + strcompress(congrid_xcoeff,/remove_all) + $
-  ;  ',' + strcompress(congrid_ycoeff,/remove_all) + ')'
-  ;  print, '(xdata,ydata)=(' + strcompress(xdata,/remove_all) + $
-  ;  ',' + strcompress(ydata,/remove_all) + ')'
-  ;  print, '(xdata_max,ydata_max)=(' + strcompress(xdata_max,/remove_all) + $
-  ;  ',' + strcompress(ydata_max,/remove_all) + ')'
-  ;  print
   
   return, _data
   
