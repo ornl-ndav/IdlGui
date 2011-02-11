@@ -129,7 +129,10 @@ pro px_vs_tof_counts_vs_axis_yaxis_type, event
     end
     else:
   endcase
-  
+  px_vs_tof_plot_counts_vs_axis_selection, event=event, $
+    xaxis=xaxis, $
+    (*global_px_vs_tof).draw_zoom_data_selection
+    
 end
 
 
