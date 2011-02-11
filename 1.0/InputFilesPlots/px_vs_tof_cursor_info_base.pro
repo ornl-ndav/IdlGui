@@ -65,7 +65,8 @@ end
 ; :Author: j35
 ;-
 pro px_vs_tof_cursor_info_base_gui, wBase, $
-    parent_base_geometry
+    parent_base_geometry, $
+    global_px_vs_tof
   compile_opt idl2
   
   main_base_xoffset = parent_base_geometry.xoffset
@@ -149,24 +150,67 @@ pro px_vs_tof_cursor_info_base_gui, wBase, $
     frame = 1,$
     /column)
     
+  draw_zoom_data_selection = (*global_px_vs_tof).draw_zoom_data_selection
+  tof0 = draw_zoom_data_selection[0]
+  tof1 = draw_zoom_data_selection[2]
+  if (tof0 ne -1 && tof1 ne -1) then begin
+    tof0 = min([tof0,tof1],max=tof1)
+    _tof0 = strcompress(tof0,/remove_all)
+    _tof1 = strcompress(tof1,/remove_all)
+  endif
+  if (tof0 eq -1 && tof1 eq -1) then begin
+    _tof0 = 'N/A'
+    _tof1 = 'N/A'
+  endif
+  if (tof1 ne -1 && tof0 eq -1) then begin
+    _tof0 = 'N/A'
+    _tof1 = strcompress(tof1,/remove_all)
+  endif
+  if (tof1 eq -1 && tof0 ne -1) then begin
+    _tof1 = 'N/A'
+    _tof0 = strcompress(tof0,/remove_all)
+  endif
+  tof_label = _tof0 + ' -> ' + _tof1
+  
   row1 = widget_base(rightBase,$
     /row)
   lab = widget_label(row1,$
     value = 'TOF (ms): ', $
     /align_right)
   val = widget_label(row1,$
-    value = 'N/A',$
+    value = tof_label,$
     uname = 'px_vs_tof_cursor_info_x0x1_value_uname',$
     scr_xsize = 200,$
     /align_left)
     
+  pixel0 = draw_zoom_data_selection[1]
+  pixel1 = draw_zoom_data_selection[3]
+  if (pixel0 ne -1 && pixel1 ne -1) then begin
+    pixel0 = min([pixel0,pixel1],max=pixel1)
+    _pixel0 = strcompress(fix(pixel0),/remove_all)
+    _pixel1 = strcompress(fix(pixel1),/remove_all)
+  endif
+  if (pixel0 eq -1 && pixel1 eq -1) then begin
+    _pixel0 = 'N/A'
+    _pixel1 = 'N/A'
+  endif
+  if (pixel0 eq -1 && pixel1 ne -1) then begin
+    _pixel0 = 'N/A'
+    _pixel1 = strcompress(fix(tof1),/remove_all)
+  endif
+  if (pixel1 eq -1 && pixel0 ne -1) then begin
+    _pixel1 = 'N/A'
+    _pixel0 = strcompress(fix(tof0),/remove_all)
+  endif
+  pixel_label = _pixel0 + ' -> ' + _pixel1
+  
   row2 = widget_base(rightBase,$
     /row)
   lab = widget_label(row2,$
     value = '   Pixel: ', $
     /align_right)
   val = widget_label(row2,$
-    value = 'N/A',$
+    value = pixel_label,$
     uname = 'px_vs_tof_cursor_info_y0y1_value_uname',$
     scr_xsize = 200,$
     /align_left)
@@ -244,7 +288,8 @@ pro px_vs_tof_cursor_info_base, event=event, $
   
   _base = ''
   px_vs_tof_cursor_info_base_gui, _base, $
-    parent_base_geometry
+    parent_base_geometry, $
+    global_px_vs_tof
     
   (*global_px_vs_tof).cursor_info_base = _base
   

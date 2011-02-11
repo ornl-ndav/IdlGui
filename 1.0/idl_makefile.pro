@@ -91,7 +91,7 @@ cd, CurrentFolder + '/InputFilesPlots'
 .run px_vs_tof_plots_input_files.pro
 .run info_bases.pro
 .run px_vs_tof_cursor_info_base.pro
-.run px_vs_tof_counts_vs_axis_base.pro
+.run counts_vs_axis_base.pro
 .run px_vs_tof_draw_eventcb.pro
 .run save_px_vs_tof_background.pro
 .run counts_vs_xaxis_draw_eventcb.pro
