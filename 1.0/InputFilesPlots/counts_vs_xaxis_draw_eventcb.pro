@@ -44,6 +44,11 @@ pro px_vs_tof_counts_vs_xaxis_draw_eventcb, event
   yaxis_type = (*global_axis_plot).default_yscale_settings
   ymin = (yaxis_type eq 0) ? 0 : 1 ;0 for linear, 1 for log
   
+    ;make sure the Cursor and selection infos base is displayed
+  if (widget_info(info_base,/valid_id) eq 0) then begin
+  px_vs_tof_show_cursor_info, main_event
+  endif
+  
   catch, error
   if (error ne 0) then begin
     catch,/cancel
