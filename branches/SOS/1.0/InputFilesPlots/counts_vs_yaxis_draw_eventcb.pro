@@ -62,7 +62,6 @@ pro px_vs_tof_counts_vs_yaxis_draw_eventcb, event
     plots, x, ymin, /data
     plots, x, ymax, /data,/continue, color=fsc_color('red'), linestyle=1
     
-    if (widget_info(info_base,/valid_id)) then begin
     ;display the current value in CURSOR LIVE base
     live_pixel_value = fix(x)
     putValue, base=info_base, 'px_vs_tof_cursor_info_y_value_uname', $
@@ -71,7 +70,6 @@ pro px_vs_tof_counts_vs_yaxis_draw_eventcb, event
       'N/A'
     putValue, base=info_base, 'px_vs_tof_cursor_info_z_value_uname', $
       'N/A'
-      endif
       
     pixel_data = x
     pixel_device = px_vs_tof_px_data_to_px_device(global_px_vs_tof, $
@@ -153,6 +151,7 @@ pro px_vs_tof_counts_vs_yaxis_draw_eventcb, event
     
     if (event.release eq 1) then begin ;left click button released
       (*global_axis_plot).left_clicked = 0b
+      
       string_pixel_range_already_selected = getValue(base=info_base,$
         uname='px_vs_tof_cursor_info_y0y1_value_uname')
       pixel_range_already_selected = $
@@ -177,6 +176,7 @@ pro px_vs_tof_counts_vs_yaxis_draw_eventcb, event
     
     if (event.release eq 4) then begin ;right click released
       (*global_axis_plot).right_clicked = 0b
+
       string_pixel_range_already_selected = getValue(base=info_base,$
         uname='px_vs_tof_cursor_info_y0y1_value_uname')
       pixel_range_already_selected = $
@@ -197,7 +197,7 @@ pro px_vs_tof_counts_vs_yaxis_draw_eventcb, event
       string_pixel_range_already_selected = sxmin + ' -> ' + sxmax
       putValue, base=info_base, 'px_vs_tof_cursor_info_y0y1_value_uname', $
         string_pixel_range_already_selected
-        
+
       ;record new selection corners
       save_draw_zoom_selection, main_event, pixel=[sxmin,sxmax]
       px_vs_tof_refresh_plot_with_selection, main_event, recalculate=1
@@ -250,6 +250,7 @@ pro px_vs_tof_counts_vs_yaxis_draw_eventcb, event
       
     endif
     
+    draw_zoom_data_selection = (*global_px_vs_tof).draw_zoom_data_selection
     ;if there is already a selection, display the selection
     string_pixel_range_already_selected = getValue(base=info_base,$
       uname='px_vs_tof_cursor_info_y0y1_value_uname')
@@ -259,7 +260,7 @@ pro px_vs_tof_counts_vs_yaxis_draw_eventcb, event
       strcompress(pixel_range_already_selected[0],/remove_all)
     pixel_max_already_selected = $
       strcompress(pixel_range_already_selected[1],/remove_all)
-      
+    
     if (pixel_min_already_selected ne 'N/A') then begin
       if ((*global_axis_plot).right_clicked) then begin
         pixel_min = float(pixel_min_already_selected)
@@ -329,12 +330,14 @@ pro px_vs_tof_counts_vs_yaxis_draw_eventcb, event
       base = (*global_axis_plot)._base
       px_vs_tof_plot_counts_vs_yaxis, base=base
       
+       if (widget_info(info_base,/valid_id)) then begin
       putValue, base=info_base, 'px_vs_tof_cursor_info_y_value_uname', $
         'N/A'
       putValue, base=info_base, 'px_vs_tof_cursor_info_x_value_uname', $
         'N/A'
       putValue, base=info_base, 'px_vs_tof_cursor_info_z_value_uname', $
         'N/A'
+        endif
         
       ;if there is already a selection, display the selection
       string_pixel_range_already_selected = getValue(base=info_base,$
@@ -345,7 +348,7 @@ pro px_vs_tof_counts_vs_yaxis_draw_eventcb, event
         strcompress(pixel_range_already_selected[0],/remove_all)
       pixel_max_already_selected = $
         strcompress(pixel_range_already_selected[1],/remove_all)
-        
+      
       if (pixel_min_already_selected ne 'N/A') then begin
         pixel_min = float(pixel_min_already_selected)
         id = widget_info(event.top, $
@@ -368,15 +371,15 @@ pro px_vs_tof_counts_vs_yaxis_draw_eventcb, event
           linestyle=0
       endif
       
-      ;save in device units the TOF cursor position
-      string_pixel_range_already_selected = getValue(base=info_base,$
-        uname='px_vs_tof_cursor_info_y0y1_value_uname')
-      pixel_range_already_selected = $
-        strsplit(string_pixel_range_already_selected,'->',/extract)
-      pixel_min_already_selected = $
-        strcompress(pixel_range_already_selected[0],/remove_all)
-      pixel_max_already_selected = $
-        strcompress(pixel_range_already_selected[1],/remove_all)
+;      ;save in device units the TOF cursor position
+;      string_pixel_range_already_selected = getValue(base=info_base,$
+;        uname='px_vs_tof_cursor_info_y0y1_value_uname')
+;      pixel_range_already_selected = $
+;        strsplit(string_pixel_range_already_selected,'->',/extract)
+;      pixel_min_already_selected = $
+;        strcompress(pixel_range_already_selected[0],/remove_all)
+;      pixel_max_already_selected = $
+;        strcompress(pixel_range_already_selected[1],/remove_all)
         
       selection = (*global_px_vs_tof).draw_zoom_selection
       data_selection = (*global_px_vs_tof).draw_zoom_data_selection
