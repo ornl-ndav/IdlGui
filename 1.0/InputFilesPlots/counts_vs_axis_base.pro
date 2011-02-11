@@ -118,13 +118,17 @@ pro px_vs_tof_counts_vs_axis_yaxis_type, event
   putValue, event=event, 'counts_vs_axis_yaxis_lin', set1_value
   putValue, event=event, 'counts_vs_axis_yaxis_log', set2_value
   
-  xaxis_type = (*global_axis_plot).xaxis ;'tof' or 'pixel'
-  parent_event = (*global_axis_plot).parent_event
-  if (xaxis_type eq 'qx') then begin
-    (*global_px_vs_tof).counts_vs_xaxis_yaxis_type = default_yscale_settings
-  endif else begin
-    (*global_px_vs_tof).counts_vs_yaxis_yaxis_type = default_yscale_settings
-  endelse
+  xaxis = (*global_axis_plot).xaxis
+  
+  case (xaxis) of
+    'tof': begin
+      px_vs_tof_plot_counts_vs_xaxis, event=event
+    end
+    'pixel': begin
+      px_vs_tof_plot_counts_vs_yaxis, event=event
+    end
+    else:
+  endcase
   
 end
 
@@ -152,7 +156,8 @@ pro px_vs_tof_counts_vs_axis_base_gui, wBase, $
     title = title, $
     plot_uname = plot_uname, $
     xsize = xsize, $
-    ysize = ysize
+    ysize = ysize, $
+    yaxis_type = yaxis_type
   compile_opt idl2
   
   main_base_xoffset = parent_base_geometry.xoffset
@@ -192,13 +197,21 @@ pro px_vs_tof_counts_vs_axis_base_gui, wBase, $
     value = 'Y-axis',$
     /menu)
     
+  if (yaxis_type eq 0) then begin
+    value_lin = '*  linear'
+    value_log = '   logarithmic'
+  endif else begin
+    value_lin = '   linear'
+    value_log = '*  logarithmic'
+  endelse
+  
   lin = widget_button(yaxis,$
-    value = '*  linear',$
+    value = value_lin, $
     event_pro = 'px_vs_tof_counts_vs_axis_yaxis_type',$
     uname = 'counts_vs_axis_yaxis_lin')
     
   log = widget_button(yaxis,$
-    value = '   logarithmic',$
+    value = value_log, $
     event_pro = 'px_vs_tof_counts_vs_axis_yaxis_type',$
     uname = 'counts_vs_axis_yaxis_log')
     
@@ -268,12 +281,14 @@ pro px_vs_tof_counts_vs_axis_base, event=event, $
       title = 'Counts vs tof (integrated over all pixels)'
       plot_uname = 'px_vs_tof_counts_vs_xaxis_plot_uname'
       (*global_px_vs_tof).counts_vs_xaxis_plot_uname = plot_uname
+      yaxis_type = (*global_px_vs_tof).counts_vs_xaxis_yaxis_type
     end
     'pixel': begin
       yoffset = 500
       title = 'Counts vs pixel (integrated over all TOFs)'
       plot_uname = 'px_vs_tof_counts_vs_yaxis_plot_uname'
       (*global_px_vs_tof).counts_vs_yaxis_plot_uname = plot_uname
+      yaxis_type = (*global_px_vs_tof).counts_vs_yaxis_yaxis_type
     end
     else:
   endcase
@@ -288,7 +303,8 @@ pro px_vs_tof_counts_vs_axis_base, event=event, $
     title = title, $
     plot_uname = plot_uname, $
     xsize = xsize, $
-    ysize = ysize
+    ysize = ysize, $
+    yaxis_type = yaxis_type
     
   data2d_linear = (*(*global_px_vs_tof).data2d_linear)
   case (xaxis) of
@@ -305,7 +321,7 @@ pro px_vs_tof_counts_vs_axis_base, event=event, $
   
   global_axis_plot = PTR_NEW({ _base: _base,$
     xsize: xsize, $
-    default_yscale_settings: 0, $ ;0 for linear, 1 for logarithmic
+    default_yscale_settings: yaxis_type, $ ;0 for linear, 1 for logarithmic
     parent_event: event, $
     xaxis: xaxis, $ ;'tof' or 'pixel'
     plot_uname: plot_uname, $
