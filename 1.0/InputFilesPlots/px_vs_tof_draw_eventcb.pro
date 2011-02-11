@@ -102,7 +102,11 @@ pro display_cursor_line_on_2d_plot, event=event, xaxis=xaxis
   widget_control, _id, GET_VALUE = plot_id
   wset, plot_id
   
-  plots, x, 0, /data
+  widget_control, _base, get_uvalue=global_axis_plot
+  yaxis_type = (*global_axis_plot).default_yscale_settings
+  ymin = (yaxis_type eq 0) ? 0 : 1  ;0 for linear, 1 for log
+  
+  plots, x, ymin, /data
   plots, x, max_y, /data, /continue, color=fsc_color(color), $
     linestyle=1
     
@@ -129,12 +133,14 @@ pro display_corner_of_selection_in_info_bases, event, xaxis=xaxis
     
       counts_vs_xaxis_plot_id = (*global_px_vs_tof).counts_vs_xaxis_base
       if (widget_info(counts_vs_xaxis_plot_id,/valid_id) ne 0) then begin
+      widget_control, counts_vs_xaxis_plot_id, get_uvalue=global_axis_plot
       
         draw_zoom_data_selection = (*global_px_vs_tof).draw_zoom_data_selection
         x0 = draw_zoom_data_selection[0]
         x1 = draw_zoom_data_selection[2]
         
         max_y = (*global_px_vs_tof).info_base_counts_vs_xaxis_counts_max
+        ymin = ((*global_axis_plot).default_yscale_settings eq 0) ? 0: 1
         
         xaxis_plot_uname = (*global_px_vs_tof).counts_vs_xaxis_plot_uname
         id = widget_info(counts_vs_xaxis_plot_id, find_by_uname=xaxis_plot_uname)
@@ -147,13 +153,13 @@ pro display_corner_of_selection_in_info_bases, event, xaxis=xaxis
         ;px_vs_tof_plot_counts_vs_xaxis, base=_base
         
         if (x0 ne -1) then begin
-          plots, x0, 0, /data
+          plots, x0, ymin, /data
           plots, x0, max_y, /data, /continue, color=fsc_color('blue'), $
             linestyle=0
         endif
         
         if (x1 ne -1) then begin
-          plots, x1, 0, /data
+          plots, x1, ymin, /data
           plots, x1, max_y, /data, /continue, color=fsc_color('blue'), $
             linestyle=0
         endif
@@ -165,12 +171,14 @@ pro display_corner_of_selection_in_info_bases, event, xaxis=xaxis
     
       counts_vs_yaxis_plot_id = (*global_px_vs_tof).counts_vs_yaxis_base
       if (widget_info(counts_vs_yaxis_plot_id,/valid_id) ne 0) then begin
+      widget_control, counts_vs_yaxis_plot_id, get_uvalue=global_axis_plot
       
         draw_zoom_data_selection = (*global_px_vs_tof).draw_zoom_data_selection
         x0 = draw_zoom_data_selection[1]
         x1 = draw_zoom_data_selection[3]
         
         max_y = (*global_px_vs_tof).info_base_counts_vs_yaxis_counts_max
+        ymin = ((*global_axis_plot).default_yscale_settings eq 0) ? 0: 1
         
         yaxis_plot_uname = (*global_px_vs_tof).counts_vs_yaxis_plot_uname
         id = widget_info(counts_vs_yaxis_plot_id, find_by_uname=yaxis_plot_uname)
@@ -183,13 +191,13 @@ pro display_corner_of_selection_in_info_bases, event, xaxis=xaxis
         ;px_vs_tof_plot_counts_vs_xaxis, base=_base
         
         if (x0 ne -1) then begin
-          plots, x0, 0, /data
+          plots, x0, ymin, /data
           plots, x0, max_y, /data, /continue, color=fsc_color('red'), $
             linestyle=0
         endif
         
         if (x1 ne -1) then begin
-          plots, x1, 0, /data
+          plots, x1, ymin, /data
           plots, x1, max_y, /data, /continue, color=fsc_color('red'), $
             linestyle=0
         endif

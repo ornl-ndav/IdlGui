@@ -41,6 +41,8 @@ pro px_vs_tof_counts_vs_xaxis_draw_eventcb, event
   info_base = (*global_px_vs_tof).cursor_info_base
   ymax = (*global_axis_plot).ymax
   main_event = (*global_axis_plot).main_event
+  yaxis_type = (*global_axis_plot).default_yscale_settings
+  ymin = (yaxis_type eq 0) ? 0 : 1 ;0 for linear, 1 for log
   
   catch, error
   if (error ne 0) then begin
@@ -57,7 +59,7 @@ pro px_vs_tof_counts_vs_xaxis_draw_eventcb, event
     if (x gt xrange[1]) then x = xrange[1]
     if (x lt xrange[0]) then x = xrange[0]
     
-    plots, x, 0, /data
+    plots, x, ymin, /data
     plots, x, ymax, /data,/continue, color=fsc_color('blue'), linestyle=1
     
     ;display the current value in CURSOR LIVE base
@@ -80,7 +82,7 @@ pro px_vs_tof_counts_vs_xaxis_draw_eventcb, event
         find_by_uname='px_vs_tof_counts_vs_xaxis_plot_uname')
       widget_control, id, GET_VALUE = plot_id
       wset, plot_id
-      plots, x, 0, /data
+      plots, x, ymin, /data
       plots, x, ymax, /data,/continue, color=fsc_color('green'), linestyle=2
       
       string_tof_range_already_selected = getValue(base=info_base,$
@@ -211,7 +213,7 @@ pro px_vs_tof_counts_vs_xaxis_draw_eventcb, event
         find_by_uname='px_vs_tof_counts_vs_xaxis_plot_uname')
       widget_control, id, GET_VALUE = plot_id
       wset, plot_id
-      plots, x, 0, /data
+      plots, x, ymin, /data
       plots, x, ymax, /data,/continue, color=fsc_color('green'), linestyle=2
       
       ;update live the selection infos in 'cursor and selection infos base'
@@ -238,7 +240,7 @@ pro px_vs_tof_counts_vs_xaxis_draw_eventcb, event
         find_by_uname='px_vs_tof_counts_vs_xaxis_plot_uname')
       widget_control, id, GET_VALUE = plot_id
       wset, plot_id
-      plots, x, 0, /data
+      plots, x, ymin, /data
       plots, x, ymax, /data,/continue, color=fsc_color('green'), linestyle=2
       
       ;update live the selection infos in 'cursor and selection infos base'
@@ -276,7 +278,7 @@ pro px_vs_tof_counts_vs_xaxis_draw_eventcb, event
           find_by_uname='px_vs_tof_counts_vs_xaxis_plot_uname')
         widget_control, id, GET_VALUE = plot_id
         wset, plot_id
-        plots, tof_min, 0, /data
+        plots, tof_min, ymin, /data
         plots, tof_min, ymax, /data,/continue, color=fsc_color('blue'), $
           linestyle=0
       endif
@@ -289,7 +291,7 @@ pro px_vs_tof_counts_vs_xaxis_draw_eventcb, event
           find_by_uname='px_vs_tof_counts_vs_xaxis_plot_uname')
         widget_control, id, GET_VALUE = plot_id
         wset, plot_id
-        plots, tof_min, 0, /data
+        plots, tof_min, ymin, /data
         plots, tof_min, ymax, /data,/continue, color=fsc_color('blue'), $
           linestyle=0
       endif
@@ -302,7 +304,7 @@ pro px_vs_tof_counts_vs_xaxis_draw_eventcb, event
           find_by_uname='px_vs_tof_counts_vs_xaxis_plot_uname')
         widget_control, id, GET_VALUE = plot_id
         wset, plot_id
-        plots, tof_max, 0, /data
+        plots, tof_max, ymin, /data
         plots, tof_max, ymax, /data,/continue, color=fsc_color('blue'), $
           linestyle=0
       endif
@@ -315,7 +317,7 @@ pro px_vs_tof_counts_vs_xaxis_draw_eventcb, event
           find_by_uname='px_vs_tof_counts_vs_xaxis_plot_uname')
         widget_control, id, GET_VALUE = plot_id
         wset, plot_id
-        plots, tof_max, 0, /data
+        plots, tof_max, ymin, /data
         plots, tof_max, ymax, /data,/continue, color=fsc_color('blue'), $
           linestyle=0
       endif
@@ -361,7 +363,7 @@ pro px_vs_tof_counts_vs_xaxis_draw_eventcb, event
           find_by_uname='px_vs_tof_counts_vs_xaxis_plot_uname')
         widget_control, id, GET_VALUE = plot_id
         wset, plot_id
-        plots, tof_min, 0, /data
+        plots, tof_min, ymin, /data
         plots, tof_min, ymax, /data,/continue, color=fsc_color('blue'), $
           linestyle=0
       endif
@@ -372,7 +374,7 @@ pro px_vs_tof_counts_vs_xaxis_draw_eventcb, event
           find_by_uname='px_vs_tof_counts_vs_xaxis_plot_uname')
         widget_control, id, GET_VALUE = plot_id
         wset, plot_id
-        plots, tof_max, 0, /data
+        plots, tof_max, ymin, /data
         plots, tof_max, ymax, /data,/continue, color=fsc_color('blue'), $
           linestyle=0
       endif
