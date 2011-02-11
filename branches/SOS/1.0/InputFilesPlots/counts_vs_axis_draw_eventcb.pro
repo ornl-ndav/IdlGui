@@ -58,7 +58,8 @@ pro save_draw_zoom_selection, main_event, tof=tof, pixel=pixel
     
     if (tof0 ne 'N/A') then begin
       _tof0 = tof0
-      _tof0_device = px_vs_tof_data_to_device(global_px_vs_tof, tof=_tof0)
+      _tof0_device = px_vs_tof_tof_data_to_tof_device(global_px_vs_tof, $
+      tof=_tof0)
       data_selection[0] = _tof0
       selection[0] = _tof0_device
     endif else begin
@@ -68,7 +69,7 @@ pro save_draw_zoom_selection, main_event, tof=tof, pixel=pixel
     
     if (tof1 ne 'N/A') then begin
       _tof1 = tof1
-      _tof1_device = px_vs_tof_data_to_device(global_px_vs_tof, tof=_tof1)
+      _tof1_device = px_vs_tof_tof_data_to_tof_device(global_px_vs_tof, tof=_tof1)
       data_selection[2] = _tof1
       selection[2] = _tof1_device
     endif else begin
@@ -97,7 +98,7 @@ pro save_draw_zoom_selection, main_event, tof=tof, pixel=pixel
     
     if (pixel0 ne 'N/A') then begin
       _pixel0 = pixel0
-      _pixel0_device = px_vs_tof_data_to_device(global_px_vs_tof, pixel=_pixel0)
+      _pixel0_device = px_vs_tof_px_data_to_px_device(global_px_vs_tof, pixel=_pixel0)
       data_selection[1] = _pixel0
       selection[1] = _pixel0_device
     endif else begin
@@ -107,7 +108,7 @@ pro save_draw_zoom_selection, main_event, tof=tof, pixel=pixel
     
     if (pixel1 ne 'N/A') then begin
       _pixel1 = pixel1
-      _pixel1_device = px_vs_tof_data_to_device(global_px_vs_tof, pixel=_pixel1)
+      _pixel1_device = px_vs_tof_px_data_to_px_device(global_px_vs_tof, pixel=_pixel1)
       data_selection[3] = _pixel1
       selection[3] = _pixel1_device
     endif else begin

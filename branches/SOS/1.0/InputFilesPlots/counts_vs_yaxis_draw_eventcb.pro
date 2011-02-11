@@ -56,8 +56,8 @@ pro px_vs_tof_counts_vs_yaxis_draw_eventcb, event
     xrange = (*global_axis_plot).xrange
     
     ;make sure we are in the range allowed
-    if (x gt xrange[1]) then return
-    if (x lt xrange[0]) then return
+    if (x gt xrange[1]) then x=xrange[1]
+    if (x lt xrange[0]) then x=xrange[0]
     
     plots, x, ymin, /data
     plots, x, ymax, /data,/continue, color=fsc_color('red'), linestyle=1
@@ -72,7 +72,8 @@ pro px_vs_tof_counts_vs_yaxis_draw_eventcb, event
       'N/A'
       
     pixel_data = x
-    pixel_device = px_vs_tof_data_to_device(global_px_vs_tof, pixel=pixel_data)
+    pixel_device = px_vs_tof_px_data_to_px_device(global_px_vs_tof, $
+    pixel=pixel_data)
     
     ;mouse interaction with plot
     if (event.press eq 1 && $
@@ -382,7 +383,7 @@ pro px_vs_tof_counts_vs_yaxis_draw_eventcb, event
         selection[1] = -1
         data_selection[1] = -1
       endif else begin
-        pixel_min = px_vs_tof_data_to_device(global_px_vs_tof, pixel=pixel_min)
+        pixel_min = px_vs_tof_px_data_to_px_device(global_px_vs_tof, pixel=pixel_min)
         selection[1] = fix(pixel_min)
         data_selection[1] = fix(pixel_min_already_selected)
       endelse
@@ -391,7 +392,7 @@ pro px_vs_tof_counts_vs_yaxis_draw_eventcb, event
         data_selection[3] = -1
         selection[3] = -1
       endif else begin
-        pixel_max = px_vs_tof_data_to_device(global_px_vs_tof, pixel=pixel_max)
+        pixel_max = px_vs_tof_px_data_to_px_device(global_px_vs_tof, pixel=pixel_max)
         selection[3] = fix(pixel_max)
         data_selection[3] = fix(pixel_max_already_selected)
       endelse
