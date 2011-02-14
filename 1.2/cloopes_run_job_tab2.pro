@@ -164,8 +164,53 @@ FUNCTION create_cmd, Event
   
 END
 
-;------------------------------------------------------------------------------
+;+
+; :Description:
+;    this procedure is executed when the thread is done (command executed)
+;
+; :Params:
+;    status
+;    error
+;    oBridge
+;    userdata
+;
+;
+;
+; :Author: j35
+;-
+pro command_ran, status, error, oBridge, userdata
+
+message_text = ['Following files have been created and can get now previewed:',$
+'',' -> ' + userdata.file1, ' -> ' + userdata.file2]
+
+result = dialog_message(message_text, $
+title='Jobs done!', $
+/center, $
+dialog_parent=userdata.topId,$
+/information)
+
+end
+
+
+;+
+; :Description:
+;    This run the job from tab #2
+;
+; :Params:
+;    Event
+;
+; :Author: j35
+;-
 PRO run_job_tab2, Event
+compile_opt idl2
+
+  widget_control, /hourglass
+
+  ;get name of files that will be created
+  path = getTextFieldValue(event,'tab2_output_folder_button_uname')
+  file = getTextFieldValue(event,'tab2_output_file_name_text_field_uname')
+  file1 = path + file + '.txt'
+  file2 = path + file + '_forDave.txt'
 
   cmd = create_cmd(Event)
   
@@ -176,10 +221,27 @@ PRO run_job_tab2, Event
   cmd_text = '-> Launching job: '
   cmd_text += cmd
   IDLsendLogBook_addLogBookText, Event, ALT=alt, cmd_text
-  SPAWN, cmd
+
+  oBridge = obj_new('IDL_IDLBridge', callback='command_ran')
+  oBridge->setvar, 'cmd', cmd
   
-  print, cmd
+  topId = widget_info(event.top,find_by_uname='MAIN_BASE') 
+  state = {oBridge:oBridge, $
+  topId: topId, $
+  file1: file1, $
+  file2: file2}
+  oBridge->SetProperty, userdata=state 
+  
+  oBridge->Execute, 'spawn, cmd',/nowait
+  
+  obj_destroy, oBridge
   
   CD, old_path
+  widget_control, hourglass=0
   
 END
+
+
+
+
+

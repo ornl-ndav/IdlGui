@@ -339,7 +339,7 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     XSIZE = 320,$
     frame = 3,$
     UNAME = 'tab2_run_jobs_uname',$
-    SENSITIVE = 0)
+    SENSITIVE = 1)  ;REMOVE_ME
     
   space = WIDGET_LABEL(row5,$
     VALUE = ' ')
@@ -348,7 +348,7 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
   prev1 = widget_button(row5,$
   value = 'Preview .txt file',$
   uname = 'tab2_preview_txt_file',$
-  sensitive = 0)  
+  sensitive = 1)  
     
   prev1 = widget_button(row5,$
   value = 'Preview .txt file',$
