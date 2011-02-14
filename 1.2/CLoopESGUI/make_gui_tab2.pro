@@ -313,13 +313,13 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
   file_name = WIDGET_TEXT(row44,$
     VALUE = '',$
     UNAME = 'tab2_output_file_name_text_field_uname',$
-    SCR_XSIZE = 350,$
+    SCR_XSIZE = 230,$
     /ALL_EVENTS,$
     /EDITABLE)
     
   ;space
   space = WIDGET_LABEL(row4,$
-    VALUE = '     ')
+    VALUE = '[.txt/_ForDave.txt]')
     
   ;row5 .....................................................................
   row5 = WIDGET_BASE(Base,$
@@ -332,14 +332,29 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     SENSITIVE = 1)
     
   space = WIDGET_LABEL(row5,$
-    VALUE = '  ')
+    VALUE = ' ')
     
   button2 = WIDGET_BUTTON(row5,$
-    VALUE = 'RUN JOBS',$
-    XSIZE = 565,$
+    VALUE = 'R U N   J O B S',$
+    XSIZE = 320,$
+    frame = 3,$
     UNAME = 'tab2_run_jobs_uname',$
     SENSITIVE = 0)
     
+  space = WIDGET_LABEL(row5,$
+    VALUE = ' ')
+
+;  preview
+  prev1 = widget_button(row5,$
+  value = 'Preview .txt file',$
+  uname = 'tab2_preview_txt_file',$
+  sensitive = 0)  
+    
+  prev1 = widget_button(row5,$
+  value = 'Preview .txt file',$
+  uname = 'tab2_preview_txt_file',$
+  sensitive = 0)  
+
 END
 
 
