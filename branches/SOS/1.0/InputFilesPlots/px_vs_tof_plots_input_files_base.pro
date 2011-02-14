@@ -569,6 +569,18 @@ pro px_vs_tof_widget_killed, global_px_vs_tof
     widget_control, yaxis_info_base, /destroy
   endif
   
+  ;ask the user if he wants to save or not the new selection
+   draw_zoom_data_selection = (*global_px_vs_tof).draw_zoom_data_selection
+   tof0 = draw_zoom_data_selection[0]
+   pixel0 = draw_zoom_data_selection[1]
+   tof1 = draw_zoom_data_selection[2]
+   pixel1 = draw_zoom_data_selection[3]
+   print, 'tof0: ' , tof0
+   print, 'pixel0: ' , pixel0
+   print, 'tof1: ' , tof1
+   print, 'pixel1: ' , pixel1
+
+
 end
 
 ;+
