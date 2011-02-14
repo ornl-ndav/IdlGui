@@ -570,17 +570,34 @@ pro px_vs_tof_widget_killed, global_px_vs_tof
   endif
   
   ;ask the user if he wants to save or not the new selection
-   draw_zoom_data_selection = (*global_px_vs_tof).draw_zoom_data_selection
-   tof0 = draw_zoom_data_selection[0]
-   pixel0 = draw_zoom_data_selection[1]
-   tof1 = draw_zoom_data_selection[2]
-   pixel1 = draw_zoom_data_selection[3]
-   print, 'tof0: ' , tof0
-   print, 'pixel0: ' , pixel0
-   print, 'tof1: ' , tof1
-   print, 'pixel1: ' , pixel1
-
-
+  draw_zoom_data_selection = (*global_px_vs_tof).draw_zoom_data_selection
+  tof0 = float(draw_zoom_data_selection[0])
+  pixel0 = fix(draw_zoom_data_selection[1])
+  tof1 = float(draw_zoom_data_selection[2])
+  pixel1 = fix(draw_zoom_data_selection[3])
+  
+  tof0 = min([tof0,tof1],max=tof1)
+  pixel0 = min([pixel0,pixel1],max=pixel1)
+  
+  message_text = ['Do you want to use the following range:',$
+    '',$
+    '   TOF (ms) : ' + strcompress(tof0,/remove_all) + ' -> ' + $
+    strcompress(tof1,/remove_all), $
+    '      Pixel : ' + strcompress(fix(pixel0),/remove_all) + ' -> ' + $
+    strcompress(fix(pixel1),/remove_all)]
+  result = dialog_message(message_text, $
+    /center, $
+    dialog_parent=(*global_px_vs_tof).wBase, $
+    title = 'Selection to use',$
+    /Question)
+    
+  if (strlowcase(result) eq 'yes') then begin
+    putValue, event=main_event, 'tof_min', tof0
+    putValue, event=main_event, 'tof_max', tof1
+    putValue, event=main_event, 'pixel_min', pixel0
+    putValue, event=main_event, 'pixel_max', pixel1
+  endif
+  
 end
 
 ;+
