@@ -180,15 +180,28 @@ END
 ;-
 pro command_ran, status, error, oBridge, userdata
 
-  ;checked that the files have been created with success
+  ;checked that the first file has been created with success
   isFile1 = file_test(userdata.file1)
-  isFile2 = file_test(userdata.file2)
+  
+  ;if the file exists, then we can parsed it to create the second file
+  if (isFile1) then begin
+    
+    create_dave_output_file, input_file=userdata.file1, $
+    output_file = userdata.file2
+    
+    isFile2 = file_test(userdata.file2)
+  endif else begin
+  
+    ;because first file can not be created, the second won't be for sure as well
+    isFile2 = 0
+    
+  endelse
   file1_status = (isFile1 eq 1) ? 'OK' : 'FAILED!'
   file2_status = (isFile2 eq 1) ? 'OK' : 'FAILED!'
-
+  
   message_text = ['Following status of the files created:',$
-    '',' -> ' + userdata.file1 + ' ... ' + file1_status, $ 
-       ' -> ' + userdata.file2 + ' ... ' + file2_status]
+    '',' -> ' + userdata.file1 + ' ... ' + file1_status, $
+    ' -> ' + userdata.file2 + ' ... ' + file2_status]
     
   result = dialog_message(message_text, $
     title='Jobs done!', $
