@@ -21,6 +21,7 @@ cd, IdlUtilitiesPath
 cd , CurrentFolder + '/Classes/'
 .run IDLxmlParser__define.pro
 .run IDLsendLogBook__define.pro
+.run IDLASCIIparser__define.pro
 
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.
