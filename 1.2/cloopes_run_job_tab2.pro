@@ -180,15 +180,22 @@ END
 ;-
 pro command_ran, status, error, oBridge, userdata
 
-message_text = ['Following files have been created and can get now previewed:',$
-'',' -> ' + userdata.file1, ' -> ' + userdata.file2]
+  ;checked that the files have been created with success
+  isFile1 = file_test(userdata.file1)
+  isFile2 = file_test(userdata.file2)
+  file1_status = (isFile1 eq 1) ? 'OK' : 'FAILED!'
+  file2_status = (isFile2 eq 1) ? 'OK' : 'FAILED!'
 
-result = dialog_message(message_text, $
-title='Jobs done!', $
-/center, $
-dialog_parent=userdata.topId,$
-/information)
-
+  message_text = ['Following status of the files created:',$
+    '',' -> ' + userdata.file1 + ' ... ' + file1_status, $ 
+       ' -> ' + userdata.file2 + ' ... ' + file2_status]
+    
+  result = dialog_message(message_text, $
+    title='Jobs done!', $
+    /center, $
+    dialog_parent=userdata.topId,$
+    /information)
+    
 end
 
 
@@ -202,16 +209,16 @@ end
 ; :Author: j35
 ;-
 PRO run_job_tab2, Event
-compile_opt idl2
-
+  compile_opt idl2
+  
   widget_control, /hourglass
-
+  
   ;get name of files that will be created
   path = getTextFieldValue(event,'tab2_output_folder_button_uname')
   file = getTextFieldValue(event,'tab2_output_file_name_text_field_uname')
   file1 = path + file + '.txt'
   file2 = path + file + '_forDave.txt'
-
+  
   cmd = create_cmd(Event)
   
   ;output folder
@@ -221,16 +228,16 @@ compile_opt idl2
   cmd_text = '-> Launching job: '
   cmd_text += cmd
   IDLsendLogBook_addLogBookText, Event, ALT=alt, cmd_text
-
+  
   oBridge = obj_new('IDL_IDLBridge', callback='command_ran')
   oBridge->setvar, 'cmd', cmd
   
-  topId = widget_info(event.top,find_by_uname='MAIN_BASE') 
+  topId = widget_info(event.top,find_by_uname='MAIN_BASE')
   state = {oBridge:oBridge, $
-  topId: topId, $
-  file1: file1, $
-  file2: file2}
-  oBridge->SetProperty, userdata=state 
+    topId: topId, $
+    file1: file1, $
+    file2: file2}
+  oBridge->SetProperty, userdata=state
   
   oBridge->Execute, 'spawn, cmd',/nowait
   

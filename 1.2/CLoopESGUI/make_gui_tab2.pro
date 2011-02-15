@@ -339,22 +339,22 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     XSIZE = 320,$
     frame = 3,$
     UNAME = 'tab2_run_jobs_uname',$
-    SENSITIVE = 1)  ;REMOVE_ME
+    SENSITIVE = 0)
     
   space = WIDGET_LABEL(row5,$
     VALUE = ' ')
-
-;  preview
+    
+  ;  preview
   prev1 = widget_button(row5,$
-  value = 'Preview .txt file',$
-  uname = 'tab2_preview_txt_file',$
-  sensitive = 1)  
+    value = 'Preview .txt file',$
+    uname = 'tab2_preview_txt_file',$
+    sensitive = 0)
     
   prev1 = widget_button(row5,$
-  value = 'Preview .txt file',$
-  uname = 'tab2_preview_txt_file',$
-  sensitive = 0)  
-
+    value = 'Preview .txt file',$
+    uname = 'tab2_preview_txt_file',$
+    sensitive = 0)
+    
 END
 
 

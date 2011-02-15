@@ -46,8 +46,6 @@ PRO MAIN_BASE_event, Event
     
     WIDGET_INFO(wWidget, FIND_BY_UNAME='main_tab'): BEGIN
       cloopes_tab, Event
-          activate_widget, Event, 'tab2_run_jobs_uname', 1 ;REMOVE_ME
-      
     END
     
     ;selection buttons
