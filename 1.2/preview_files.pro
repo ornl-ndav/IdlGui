@@ -66,7 +66,6 @@ pro preview_fordave_txt_file, event
   
 end
 
-
 ;+
 ; :Description:
 ;    This routine display the contain of the file on top and center of the
@@ -79,25 +78,20 @@ end
 ; :Author: j35
 ;-
 pro preview_file, event=event, ext=ext
-  compile_opt, idl2
+  compile_opt idl2
   
   path = getButtonValue(event, 'tab2_output_folder_button_uname')
   file_name = getTextFieldValue(event, $
-    'tab2_output_file_name_text_filed_uname')
+    'tab2_output_file_name_text_field_uname')
   full_file_name = path + file_name + ext
   
   if (~file_test(full_file_name)) then return
   
   group = widget_info(event.top, find_by_uname='MAIN_BASE')
-  xdisplayfile, full_file_name, $
-    title = full_file_name, $
+  
+  xdisplayfile, full_file_name[0], $
+    title = full_file_name[0], $
     group = group, $
     /center
     
-end
-
-
-
-
-
 end
