@@ -61,7 +61,7 @@ end
 pro preview_fordave_txt_file, event
   compile_opt idl2
   
-  ext = '_forDave.txt'
+  ext = '.hscn'
   preview_file, event=event, ext=ext
   
 end
