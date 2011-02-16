@@ -78,7 +78,7 @@ end
 pro create_dave_output_file, input_file=input_file, output_file=output_file
   compile_opt idl2
   
-  input_file = '~/IDLWorkspace80/CLoopES\ 1.2/Files/Dummy02142011.txt'
+;  input_file = '~/IDLWorkspace80/CLoopES\ 1.2/Files/Dummy02142011.txt'
   iFile = obj_new("IDLASCIIparser", input_file)
   if (~obj_valid(iFile)) then return
   
