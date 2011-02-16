@@ -75,6 +75,30 @@ PRO define_output_folder_tab2, Event
   IF (folder NE '') THEN BEGIN
     (*global).ascii_path = folder
     putButtonValue, Event, 'tab2_output_folder_button_uname', folder
+    
+    ;check if file exist already or not (.txt and _forDave.txt)
+    output_file_name = getTextFieldValue(Event,$
+      'tab2_output_file_name_text_field_uname')
+    path = folder
+    full_txt_file_name = path + output_file_name + '.txt'
+    full_fordave_txt_file_name = path + output_file_name + '_forDave.txt'
+    if (file_test(full_txt_file_name)) then begin
+      preview_txt_status = 1
+    endif else begin
+      preview_txt_status = 0
+    endelse
+    if (file_test(full_fordave_txt_file_name)) then begin
+      preview_fordave_txt_status = 1
+    endif else begin
+      preview_fordave_txt_status = 0
+    endelse
+    
+    activate_widget, event, 'tab2_preview_txt_file', $
+      preview_txt_status
+    activate_widget, event, 'tab2_preview_fordave_txt_file', $
+      preview_fordave_txt_status
+      
+      
   ENDIF
   
 END
@@ -514,10 +538,10 @@ PRO check_tab2_run_jobs_button, Event
   
   dim_table = (size(table))(0) ;1 for 1 file, 2 for 2 or more files
   IF (dim_table EQ 2) THEN BEGIN
-    
+  
     ;activate the delete button
     activate_widget, event, 'tab2_delete_row', 1
-  
+    
     sz = (SIZE(table))(2)
     ;check that all the files exist and temperature defined
     index = 0
@@ -568,6 +592,26 @@ PRO check_tab2_run_jobs_button, Event
   activate_widget, Event, 'tab2_run_jobs_uname', 1
   activate_widget, Event, 'tab2_save_command_line', 1
   
+  ;check if file exist already or not (.txt and _forDave.txt)
+  path = getButtonValue(event, 'tab2_output_folder_button_uname')
+  full_txt_file_name = path + output_file_name + '.txt'
+  full_fordave_txt_file_name = path + output_file_name + '_forDave.txt'
+  if (file_test(full_txt_file_name)) then begin
+    preview_txt_status = 1
+  endif else begin
+    preview_txt_status = 0
+  endelse
+  if (file_test(full_fordave_txt_file_name)) then begin
+    preview_fordave_txt_status = 1
+  endif else begin
+    preview_fordave_txt_status = 0
+  endelse
+  
+  activate_widget, event, 'tab2_preview_txt_file', $
+    preview_txt_status
+  activate_widget, event, 'tab2_preview_fordave_txt_file', $
+    preview_fordave_txt_status
+    
 END
 
 ;------------------------------------------------------------------------------
