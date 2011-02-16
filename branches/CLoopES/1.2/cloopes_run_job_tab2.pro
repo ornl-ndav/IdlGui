@@ -294,14 +294,11 @@ PRO run_job_tab2, Event
   oBridge->SetProperty, userdata=state
   
   oBridge->Execute, 'spawn, cmd',/nowait
-  print, 'just launched the command'
-  
+    
   ;obj_destroy, oBridge
   
   cd, old_path
   widget_control, hourglass=0
-  
-  print, 'done with run_job_tab2'
   
 end
 
