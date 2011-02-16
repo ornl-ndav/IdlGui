@@ -595,7 +595,7 @@ PRO check_tab2_run_jobs_button, Event
   ;check if file exist already or not (.txt and _forDave.txt)
   path = getButtonValue(event, 'tab2_output_folder_button_uname')
   full_txt_file_name = path + output_file_name + '.txt'
-  full_fordave_txt_file_name = path + output_file_name + '_forDave.txt'
+  full_fordave_txt_file_name = path + output_file_name + '.hscn'
   if (file_test(full_txt_file_name)) then begin
     preview_txt_status = 1
   endif else begin
