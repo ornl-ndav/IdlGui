@@ -5,6 +5,8 @@ resolve_routine, "XMANAGER", /either
 resolve_routine, "STRSPLIT", /either
 resolve_routine, "XDISPLAYFILE", /either
 
+resolve_all
+
 save,/routines,filename = CurrentFolder + '/cloopes.sav'
 exit
 
