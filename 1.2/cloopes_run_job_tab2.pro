@@ -226,7 +226,6 @@ pro command_ran, status, error, oBridge, userdata
     
 end
 
-
 ;+
 ; :Description:
 ;    This run the job from tab #2
@@ -246,6 +245,9 @@ PRO run_job_tab2, Event
   file = getTextFieldValue(event,'tab2_output_file_name_text_field_uname')
   file1 = path + file + '.txt'
   file2 = path + file + '.hscn'
+  
+  file1 = file1[0]
+  file2 = file2[0]
   
   test_file1 = file_test(file1)
   test_file2 = file_test(file2)
@@ -282,24 +284,53 @@ PRO run_job_tab2, Event
   cmd_text += cmd
   IDLsendLogBook_addLogBookText, Event, ALT=alt, cmd_text
   
-  oBridge = obj_new('IDL_IDLBridge', callback='command_ran')
-  oBridge->setvar, 'cmd', cmd
-  
-  topId = widget_info(event.top,find_by_uname='MAIN_BASE')
-  state = {oBridge:oBridge, $
-    event: event, $
-    topId: topId, $
-    file1: file1[0], $
-    file2: file2[0]}
-  oBridge->SetProperty, userdata=state
-  
-  oBridge->Execute, 'spawn, cmd',/nowait
-    
-  ;obj_destroy, oBridge
-  
+  spawn, cmd, listening, error_listening
   cd, old_path
+
   widget_control, hourglass=0
+
+  ;checked that the first file has been created with success
+  isFile1 = file_test(file1)
   
+  ;if the file exists, then we can parsed it to create the second file
+  if (isFile1) then begin
+  
+    create_dave_output_file, input_file=file1, output_file = file2
+    isFile2 = file_test(file2)
+
+  endif else begin
+  
+    ;because first file can not be created, the second won't be for sure as well
+    isFile2 = 0
+    
+  endelse
+  file1_status = (isFile1 eq 1) ? 'OK' : 'FAILED!'
+  file2_status = (isFile2 eq 1) ? 'OK' : 'FAILED!'
+  
+  message_text = ['Following status of the files created:',$
+    '',' -> ' + file1 + ' ... ' + file1_status, $
+       ' -> ' + file2 + ' ... ' + file2_status]
+    
+  topId = widget_info(event.top,find_by_uname='MAIN_BASE')
+  result = dialog_message(message_text, $
+    title='Jobs done!', $
+    /center, $
+    dialog_parent=topId,$
+    /information)
+    
+  ;activate or not preview buttons
+  if (isFile1) then begin
+    activate_widget, event, 'tab2_preview_txt_file', 1
+  endif else begin
+  activate_widget, event, 'tab2_preview_txt_file', 0
+  endelse
+  
+  if (isFile2) then begin
+  activate_widget, event, 'tab2_preview_fordave_txt_file',1
+  endif else begin
+  activate_widget, event, 'tab2_preview_fordave_txt_file',0
+  endelse
+        
 end
 
 
