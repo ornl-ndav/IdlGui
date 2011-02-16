@@ -39,7 +39,7 @@
 ;
 ; :Params:
 ;    data
-;    
+;
 ; :Keywords:
 ;   scaling_factor    ;scaling factor used to produce new data set
 ;
@@ -54,11 +54,11 @@ function rescale_data, data, scaling_factor=scaling_factor
   minimum_value = min(data)
   new_min_value = 1.
   if (minimum_value ge 1.) then begin
-  return, data
+    return, data
   endif
   
   scaling_factor = 1./float(minimum_value)
-
+  
   return, data*scaling_factor
 end
 
@@ -76,57 +76,64 @@ end
 ; :Author: j35
 ;-
 pro create_dave_output_file, input_file=input_file, output_file=output_file
-    compile_opt idl2
-    
-    input_file = '~/IDLWorkspace80/CLoopES\ 1.2/Files/Dummy02142011.txt'
-    iFile = obj_new("IDL3columnsASCIIparser", input_file)
-    if (~obj_valid(iFile)) then return
-    
-    data = iFile.parseFile()
-    obj_destroy, iFile
-
-    _data = (*(*data).Q_data)
-    data_scaled = rescale_data(_data, scaling_factor=scaling_factor)
-
-    ;create a big array of the data big_arra[nbrT,16]
-    nbr_T = (*data).nbrT
-    T_range = (*(*data).T_range)
-    nbr_Q = (*data).nbrQ    
-    big_array = fltarr(nbr_T,16)
-    
-    no_null_index = where(data_scaled ne 0)
-    big_array[no_null_index] = data_scaled[no_null_index]
-    
-    metadata_array = strarr(6)
-    metadata_array[0] = '#Comments     :'
-    metadata_array[1] = '#User         :'
-    metadata_array[2] = '#Scan Mode    :'
-    metadata_array[3] = '#Start Time   :'
-    metadata_array[4] = '#Time/pt      :'
-    metadata_array[5] = 'TIME  LIVE  WBM   TBM   SETPT   CTEMP    STEMP' + $
-    'DETECTOR01  DETECTOR02  DETECTOR03  DETECTOR04  DETECTOR05  DETECTOR06' + $
+  compile_opt idl2
+  
+  input_file = '~/IDLWorkspace80/CLoopES\ 1.2/Files/Dummy02142011.txt'
+  iFile = obj_new("IDLASCIIparser", input_file)
+  if (~obj_valid(iFile)) then return
+  
+  data = iFile.parseFile()
+  obj_destroy, iFile
+  
+  _data = (*(*data).Q_data)
+  data_scaled = rescale_data(_data, scaling_factor=scaling_factor)
+  
+  ;create a big array of the data big_arra[nbrT,16]
+  nbr_T = (*data).nbrT
+  T_range = (*(*data).T_range)
+  nbr_Q = (*data).nbrQ
+  big_array = fltarr(nbr_T,16)
+  
+  no_null_index = where(data_scaled ne 0)
+  big_array[no_null_index] = data_scaled[no_null_index]
+  
+  metadata_array = strarr(6)
+  metadata_array[0] = '#Comments     :'
+  metadata_array[1] = '#User         :'
+  metadata_array[2] = '#Scan Mode    :'
+  metadata_array[3] = '#Start Time   :'
+  metadata_array[4] = '#Time/pt      :'
+  metadata_array[5] = 'TIME  LIVE  WBM   TBM   SETPT   CTEMP    STEMP' + $
+    '  DETECTOR01  DETECTOR02  DETECTOR03  DETECTOR04  DETECTOR05  ' + $
+    'DETECTOR06' + $
     '  DETECTOR07  DETECTOR08  DETECTOR09  DETECTOR10  DETECTOR11' + $
     '  DETECTOR12  DETECTOR13  DETECTOR14  DETECTOR15  DETECTOR16  MONITORFC'
     
-    file_array_size = 6 + nbr_T
-    file_array = strarr(file_array_size)
-
-    ;save the metadata 
-    file_array[0:5] = metadata_array[*]
-    _row_part1 = "-1 -1 -1 -1 -1 -1 "
-    indexT = 0
-    for i=6,(file_array_size-1) do begin
+  file_array_size = 6 + nbr_T
+  file_array = strarr(file_array_size)
+  
+  ;save the metadata
+  file_array[0:5] = metadata_array[*]
+  _row_part1 = "-1 -1 -1 -1 -1 -1 "
+  indexT = 0
+  for i=6,(file_array_size-1) do begin
     _row = _row_part1 + strcompress(T_range[indexT],/remove_all) + ' '
     _flat_row = reform(strcompress(big_array[indexT,*],/remove_all))
     _big_array_row = strjoin(_flat_row,' ')
     
     _row += _big_array_row + ' -1'
     file_array[i] = _row[0]
-
+    
     ++indexT
-    endfor
-
-
-
-        
+  endfor
+  
+  openw, 1, output_file
+  
+  for i=0, (file_array_size-1) do begin
+    printf, 1, file_array[i]
+  endfor
+  
+  close, 1
+  free_lun, 1
+  
 end
