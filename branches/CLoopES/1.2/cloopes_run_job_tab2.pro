@@ -49,7 +49,7 @@ FUNCTION create_cmd, Event
   ;output file name
   output_file_name = getTextFieldValue(Event, $
     'tab2_output_file_name_text_field_uname')
-  full_output_file_name = output_path + output_file_name
+  full_output_file_name = output_path + output_file_name + '.txt'
   cmd += ' --output=' + full_output_file_name
   
   ;add data files
@@ -209,6 +209,19 @@ pro command_ran, status, error, oBridge, userdata
     dialog_parent=userdata.topId,$
     /information)
     
+  ;activate or not preview buttons
+  if (isFile1) then begin
+  activate_widget, event, 'tab2_preview_txt_file', 1
+  endif else begin
+  activate_widget, event, 'tab2_preview_txt_file', 0
+  endelse
+  
+  if (isFile2) then begin
+  activate_widget, event, 'tab2_preview_fordave_txt_file',1
+  endif else begin
+  activate_widget, event, 'tab2_preview_fordave_txt_file',0
+  endelse
+    
 end
 
 
@@ -272,6 +285,7 @@ PRO run_job_tab2, Event
   
   topId = widget_info(event.top,find_by_uname='MAIN_BASE')
   state = {oBridge:oBridge, $
+    event: event, $
     topId: topId, $
     file1: file1, $
     file2: file2}

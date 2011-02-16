@@ -309,7 +309,12 @@ PRO MAIN_BASE_event, Event
     
     ;preview of .txt file
     widget_info(wWidget, find_by_uname='tab2_preview_txt_file'): begin
+    preview_txt_file, event
+   end
 
+   ;preview of _forDave.txt file
+   widget_info(wWidget, find_by_uname='tab2_preview_fordave_txt_file'): begin
+    preview_fordave_txt_file, event   
    end
     
     ;tab33333333333333333333333333333333333333333333333333333333333333333333333
