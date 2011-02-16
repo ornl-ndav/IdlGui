@@ -58,6 +58,7 @@ cd, CurrentFolder
 .run cloopes_display_images.pro
 .run create_dave_output_file.pro
 .run preview_files.pro
+.run cloopes_cleanup.pro
 
 ;main functions
 .run MainBaseEvent.pro

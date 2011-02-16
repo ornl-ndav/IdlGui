@@ -165,7 +165,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   MakeGuiMainBase, MAIN_BASE, global
   
   WIDGET_CONTROL, /REALIZE, MAIN_BASE
-  XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
+  XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK, cleanup = 'cloopes_cleanup'
   
   ;==============================================================================
   ; Date Information
