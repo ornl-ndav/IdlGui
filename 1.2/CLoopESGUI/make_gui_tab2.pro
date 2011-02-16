@@ -336,7 +336,7 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     
   button2 = WIDGET_BUTTON(row5,$
     VALUE = 'R U N   J O B S',$
-    XSIZE = 320,$
+    XSIZE = 270,$
     frame = 3,$
     UNAME = 'tab2_run_jobs_uname',$
     SENSITIVE = 0)
@@ -351,8 +351,8 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     sensitive = 0)
     
   prev1 = widget_button(row5,$
-    value = 'Preview .txt file',$
-    uname = 'tab2_preview_txt_file',$
+    value = 'Preview _forDave.txt file',$
+    uname = 'tab2_preview_fordave_txt_file',$
     sensitive = 0)
     
 END

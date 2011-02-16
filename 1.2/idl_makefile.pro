@@ -16,6 +16,7 @@ cd, IdlUtilitiesPath
 .run logger.pro
 .run IDLxmlParser__define.pro
 .run checking_packages.pro
+.run xdisplayfile.pro
 
 ;classes
 cd , CurrentFolder + '/Classes/'
@@ -56,6 +57,7 @@ cd, CurrentFolder
 .run cloopes_load_temperature_base.pro
 .run cloopes_display_images.pro
 .run create_dave_output_file.pro
+.run preview_files.pro
 
 ;main functions
 .run MainBaseEvent.pro
