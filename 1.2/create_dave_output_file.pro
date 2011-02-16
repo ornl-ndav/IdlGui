@@ -127,6 +127,8 @@ pro create_dave_output_file, input_file=input_file, output_file=output_file
     ++indexT
   endfor
   
+  print, output_file
+  
   openw, 1, output_file
   
   for i=0, (file_array_size-1) do begin

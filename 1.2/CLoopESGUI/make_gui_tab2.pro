@@ -335,7 +335,7 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     VALUE = ' ')
     
   button2 = WIDGET_BUTTON(row5,$
-    VALUE = 'R U N   J O B S',$
+    VALUE = 'RUN JOBS in BACKGROUND',$
     XSIZE = 270,$
     frame = 3,$
     UNAME = 'tab2_run_jobs_uname',$
