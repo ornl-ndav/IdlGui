@@ -185,10 +185,10 @@ pro command_ran, status, error, oBridge, userdata
   
   ;if the file exists, then we can parsed it to create the second file
   if (isFile1) then begin
-    
+  
     create_dave_output_file, input_file=userdata.file1, $
-    output_file = userdata.file2
-    
+      output_file = userdata.file2
+      
     isFile2 = file_test(userdata.file2)
   endif else begin
   
@@ -232,6 +232,31 @@ PRO run_job_tab2, Event
   file1 = path + file + '.txt'
   file2 = path + file + '_forDave.txt'
   
+  test_file1 = file_test(file1)
+  test_file2 = file_test(file2)
+  if (test_file1 || test_file2) then begin
+    message_text = ['  The following file(s) already exist on your computer:  ']
+    if (test_file1) then begin
+      message_text = [message_text,'    -> ' + file1]
+    endif
+    if (test_file2) then begin
+      message_text = [message_text, '    -> ' + file2]
+    endif
+    message_text = [message_text, ' ', 'Do you want to replace them?']
+    id = widget_info(event.top, find_by_uname='MAIN_BASE')
+    result = dialog_message(message_text, $
+      /center, $
+      dialog_parent = id, $
+      title = 'File(s) with same name(s) found!', $
+      /question)
+      
+    if (result eq 'No') then begin
+      widget_control, hourglass=0
+      return
+    endif
+    
+  endif
+  
   cmd = create_cmd(Event)
   
   ;output folder
@@ -256,10 +281,10 @@ PRO run_job_tab2, Event
   
   obj_destroy, oBridge
   
-  CD, old_path
+  cd, old_path
   widget_control, hourglass=0
   
-END
+end
 
 
 
