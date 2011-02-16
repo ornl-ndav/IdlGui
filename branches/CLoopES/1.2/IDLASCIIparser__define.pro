@@ -11,31 +11,28 @@ FUNCTION READ_DATA, file
 compile_opt idl2
 
   ;Open the data file.
-  OPENR, 1, file
+  openr, 1, file
   
   ;Set up variables
-  line = STRARR(1)
+  line = strarr(1)
   tmp = ''
   i = 0
   
-  WHILE (~EOF(1)) DO BEGIN
-    nbr_lines = FILE_LINES(file)
-    my_array = STRARR(1,nbr_lines)
-    READF,1, my_array
-  ENDWHILE
+  while (~eof(1)) do begin
+    nbr_lines = file_lines(file)
+    my_array = strarr(1,nbr_lines)
+    readf,1, my_array
+  endwhile
           
   close,1
   
-  RETURN, my_array
+  return, my_array
 end
 
 ;+
 ; :Description:
-;    Describe the procedure.
-;
-;
-;
-;
+;    This procedure parse the ascii file and isolates all the data and metadata
+;    needed
 ;
 ; :Author: j35
 ;-
@@ -115,16 +112,9 @@ compile_opt idl2
   return, file_test(location, /READ)
 end
 
-
-
 pro IDLASCIIparser__define
   struct = {IDLASCIIparser,$
             data: ptr_new(),$
             path: ''}
+
 end
-
-
-
-
-
-
