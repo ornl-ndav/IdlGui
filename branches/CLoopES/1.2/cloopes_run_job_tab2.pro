@@ -245,7 +245,7 @@ PRO run_job_tab2, Event
   path = getTextFieldValue(event,'tab2_output_folder_button_uname')
   file = getTextFieldValue(event,'tab2_output_file_name_text_field_uname')
   file1 = path + file + '.txt'
-  file2 = path + file + '_forDave.txt'
+  file2 = path + file + '.hscn'
   
   test_file1 = file_test(file1)
   test_file2 = file_test(file2)

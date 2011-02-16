@@ -313,13 +313,13 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
   file_name = WIDGET_TEXT(row44,$
     VALUE = '',$
     UNAME = 'tab2_output_file_name_text_field_uname',$
-    SCR_XSIZE = 230,$
+    SCR_XSIZE = 265,$
     /ALL_EVENTS,$
     /EDITABLE)
     
   ;space
   space = WIDGET_LABEL(row4,$
-    VALUE = '[.txt/_ForDave.txt]')
+    VALUE = '[.txt/.hscn]')
     
   ;row5 .....................................................................
   row5 = WIDGET_BASE(Base,$
@@ -336,7 +336,7 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     
   button2 = WIDGET_BUTTON(row5,$
     VALUE = 'RUN JOBS in BACKGROUND',$
-    XSIZE = 270,$
+    XSIZE = 310,$
     frame = 3,$
     UNAME = 'tab2_run_jobs_uname',$
     SENSITIVE = 0)
@@ -351,7 +351,7 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     sensitive = 0)
     
   prev1 = widget_button(row5,$
-    value = 'Preview _forDave.txt file',$
+    value = 'Preview .hscn file',$
     uname = 'tab2_preview_fordave_txt_file',$
     sensitive = 0)
     
