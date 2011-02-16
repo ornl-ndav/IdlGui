@@ -121,7 +121,7 @@ pro create_dave_output_file, input_file=input_file, output_file=output_file
     _flat_row = reform(strcompress(big_array[indexT,*],/remove_all))
     _big_array_row = strjoin(_flat_row,' ')
     
-    _row += _big_array_row + ' -1'
+    _row += _big_array_row + ' 1'
     file_array[i] = _row[0]
     
     ++indexT
