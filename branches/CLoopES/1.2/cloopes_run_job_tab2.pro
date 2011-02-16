@@ -38,7 +38,8 @@ FUNCTION create_cmd, Event
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
   ;cmd = 'srun --batch -p bac2q'
-  cmd = 'amrun_dev -p bac2q --batch'
+  ;cmd = 'amrun_dev -p bac2q --batch'
+  cmd = 'amrun_dev -p bac2q'
   
   ;get driver
   driver = (*global).es_driver
@@ -210,6 +211,7 @@ pro command_ran, status, error, oBridge, userdata
     /information)
     
   ;activate or not preview buttons
+  event = userdata.event
   if (isFile1) then begin
   activate_widget, event, 'tab2_preview_txt_file', 1
   endif else begin
@@ -287,16 +289,19 @@ PRO run_job_tab2, Event
   state = {oBridge:oBridge, $
     event: event, $
     topId: topId, $
-    file1: file1, $
-    file2: file2}
+    file1: file1[0], $
+    file2: file2[0]}
   oBridge->SetProperty, userdata=state
   
   oBridge->Execute, 'spawn, cmd',/nowait
+  print, 'just launched the command'
   
-  obj_destroy, oBridge
+  ;obj_destroy, oBridge
   
   cd, old_path
   widget_control, hourglass=0
+  
+  print, 'done with run_job_tab2'
   
 end
 
