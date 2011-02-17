@@ -59,7 +59,6 @@ PRO BSSreduction_CommandLineGenerator, Event
   tab1    = 0
   ;get Raw Sample Data Files
   RSDFiles = getTextFieldValue(Event, 'rsdf_list_of_runs_text')
-  (*global).Configuration.Reduce.tab1.rsdf_list_of_runs_text = RSDFiles
   IF (RSDFiles NE '') THEN BEGIN
     cmd += ' ' + strcompress(RSDFiles,/remove_all)
     IF (StatusMessage EQ 0) THEN BEGIN
@@ -76,28 +75,24 @@ PRO BSSreduction_CommandLineGenerator, Event
   
   ;get Background Data File
   BDFiles = getTextFieldValue(Event,'bdf_list_of_runs_text')
-  (*global).Configuration.Reduce.tab1.bdf_list_of_runs_text = BDFiles
   IF (BDFiles NE '') THEN BEGIN
     cmd += ' --back=' + BDFiles
   ENDIF
   
   ;get Normalization Data File
   NDFiles = getTextFieldValue(Event,'ndf_list_of_runs_text')
-  (*global).Configuration.Reduce.tab1.ndf_list_of_runs_text = NDFiles
   IF (NDFiles NE '') THEN BEGIN
     cmd += ' --norm=' + NDFiles
   ENDIF
   
   ;get Empty Can Data File
   ECDFiles = getTextFieldValue(Event,'ecdf_list_of_runs_text')
-  (*global).Configuration.Reduce.tab1.ecdf_list_of_runs_text= ECDFiles
   IF (ECDFiles NE '') THEN BEGIN
     cmd += ' --ecan=' + ECDFiles
   ENDIF
   
   ;get Direct Scattering Background
   DSBFiles = getTextFieldValue(Event,'dsb_list_of_runs_text')
-  (*global).Configuration.Reduce.tab1.dsb_list_of_runs_text= DSBFiles
   IF (DSBFiles NE '') THEN BEGIN
     cmd += ' --dsback=' + DSBFiles
     na_base_status = 0
@@ -112,7 +107,6 @@ PRO BSSreduction_CommandLineGenerator, Event
   
   ;get Pixel Region of Interest File
   PRoIFile = getTextFieldValue(Event,'proif_text')
-  (*global).Configuration.Reduce.tab2.proif_text= PRoIFIle
   cmd += ' --roi-file='
   IF (PRoIFile NE '') THEN BEGIN
     cmd += strcompress(PRoIFile,/remove_all)
@@ -144,7 +138,6 @@ PRO BSSreduction_CommandLineGenerator, Event
   IF ((*global).lds_mode EQ 1) THEN BEGIN  ;mandatory for live data streaming
     cmd += ' --inst-geom='
     AIGFile = getTextFieldValue(Event,'aig_list_of_runs_text')
-    (*global).Configuration.Reduce.tab2.aig_list_of_runs_text = AIGFile
     IF (FILE_TEST(AIGFile) EQ 0) THEN BEGIN
       AIGFile = '?'
       IF (tab2 EQ 0 AND $
@@ -193,35 +186,24 @@ PRO BSSreduction_CommandLineGenerator, Event
   ;get Run McStas NeXus Files status
   IF (isButtonSelected(Event,'rmcnf_button')) THEN BEGIN
     cmd += ' --mc'
-    (*global).Configuration.Reduce.tab3.rmcnf_button = 1
-  ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab3.rmcnf_button= 0
-  ENDELSE
+  ENDIF
   
   ;get Verbose status
   IF (isButtonSelected(Event,'verbose_button')) THEN BEGIN
     cmd += ' --verbose'
-    (*global).Configuration.Reduce.tab3.verbose_button = 1
-  ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab3.verbose_button= 0
-  ENDELSE
+  ENDIF
   
   ;get Alternate Background Subtraction Method
   IF (isButtonSelected(Event,'absm_button')) THEN BEGIN
     cmd += ' --hwfix'
-    (*global).Configuration.Reduce.tab3.absm_button= 1
-  ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab3.absm_button = 0
-  ENDELSE
+  ENDIF
   
   ;get No Monitor Normalization
   IF (isButtonSelected(Event,'nmn_button')) THEN BEGIN
     na_base_status = 1
     cmd += ' --no-mon-norm'
-    (*global).Configuration.Reduce.tab3.nmn_button = 1
   ENDIF ELSE BEGIN
     na_base_status = 0
-    (*global).Configuration.Reduce.tab3.nmn_button = 0
     
     ;check if the file is using the Translation Service deployed on 03/2010
     ;if yes, the following flag is necessary
@@ -247,10 +229,7 @@ PRO BSSreduction_CommandLineGenerator, Event
   ;get No Monitor Efficiency Correction
   IF (isButtonSelected(Event,'nmec_button')) THEN BEGIN
     cmd += ' --no-mon-effc'
-    (*global).Configuration.Reduce.tab3.nmec_button= 1
-  ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab3.nmec_button = 0
-  ENDELSE
+  ENDIF
   
   ;if --no-mon-norm is not set or
   ;   --no-mon-effc is not set then validate --mon-effc
@@ -263,44 +242,36 @@ PRO BSSreduction_CommandLineGenerator, Event
   activate_base, event, 'na_womesbase', na_base_status
   
   ;get Normalization Integration Wavelength
-  IF (isButtonSelected(Event,'niw_button')) THEN BEGIN
-    (*global).Configuration.Reduce.tab3.niw_button= 1
-  ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab3.niw_button= 0
-  ENDELSE
+;  IF (isButtonSelected(Event,'niw_button')) THEN BEGIN
+;  ENDIF ELSE BEGIN
+;  ENDELSE
   
   IF (isButtonSelected(Event,'niw_button') AND $
     NDFiles NE '') THEN BEGIN
     
     ;get Normalization Integration Start Wavelength
     NISW = getTextFieldValue(Event,'nisw_field')
-    (*global).Configuration.Reduce.tab3.nisw_field = NISW
     IF(NISW NE '') THEN BEGIN
       cmd += ' --norm-start=' + strcompress(NISW,/remove_all)
     ENDIF
     
     ;get Normalization Integration End Wavelength
     NIEW = getTextFieldValue(Event,'niew_field')
-    (*global).Configuration.Reduce.tab3.niew_field = NIEW
     IF(NIEW NE '') THEN BEGIN
       cmd += ' --norm-end=' + strcompress(NIEW,/remove_all)
     ENDIF
   ENDIF
   
-  IF (isButtonSelected(Event,'te_button')) THEN BEGIN
-    (*global).Configuration.Reduce.tab3.te_button = 1
-  ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab3.te_button = 0
-  ENDELSE
+;  IF (isButtonSelected(Event,'te_button')) THEN BEGIN
+;  ENDIF ELSE BEGIN
+;  ENDELSE
   
   IF (isButtonSelected(Event,'te_button') AND $
     DSBFiles NE '') THEN BEGIN
     
     ;sample data file
     TEL = getTextFieldValue(Event,'te_low_field')
-    (*global).Configuration.Reduce.tab3.te_low_field = TEL
     TEH = getTextFieldValue(Event,'te_high_field')
-    (*global).Configuration.Reduce.tab3.te_high_field = TEH
     
     cmd += ' --tof-elastic='
     
@@ -357,11 +328,9 @@ PRO BSSreduction_CommandLineGenerator, Event
   TabName = 'Tab#4 - TIME-INDEPENDENT BACKGROUND'
   tab4    = 0
   
-  IF (isButtonSelected(Event,'tib_tof_button')) THEN BEGIN
-    (*global).Configuration.Reduce.tab4.tib_tof_button = 1
-  ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab4.tib_tof_button = 0
-  ENDELSE
+;  IF (isButtonSelected(Event,'tib_tof_button')) THEN BEGIN
+;  ENDIF ELSE BEGIN
+;  ENDELSE
   
   ;get Time-Independent Background TOF channels
   IF (isButtonSelected(Event,'tib_tof_button')) THEN BEGIN
@@ -415,7 +384,7 @@ PRO BSSreduction_CommandLineGenerator, Event
         StatusMessage NE 0) THEN BEGIN
         putInfoInCommandLineStatus, Event, TabName, 1
       ENDIF
-      putInfoInCommandLineStatus, Event, status_text, 1
+  
       StatusMessage += 1
       ++tab4
     ENDIF ELSE BEGIN
@@ -473,18 +442,15 @@ PRO BSSreduction_CommandLineGenerator, Event
   activate_base, event, 'na_woctibbase', ip_base_activate_status
   
   ;get Time-independent Background Constant for Sample Data
-  IF (isButtonSelected(Event,'tibc_for_sd_button')) THEN BEGIN
-    (*global).Configuration.Reduce.tab4.tibc_for_sd_button = 1
-  ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab4.tibc_for_sd_button = 0
-  ENDELSE
+;  IF (isButtonSelected(Event,'tibc_for_sd_button')) THEN BEGIN
+;  ENDIF ELSE BEGIN
+;  ENDELSE
   
   IF (isButtonSelected(Event,'tibc_for_sd_button')) THEN BEGIN
     cmd += ' --tib-data-const='
     
     TIBCV = getTextFieldValue(Event,'tibc_for_sd_value_text')
-    (*global).Configuration.Reduce.tab4.tibc_for_sd_value_text = TIBCV
-    IF (TIBCV EQ '') THEN BEGIN
+     IF (TIBCV EQ '') THEN BEGIN
       cmd += '?'
       status_text = '   -Please provide a Time Independent Background' + $
         ' Constant Value for'
@@ -509,8 +475,7 @@ PRO BSSreduction_CommandLineGenerator, Event
     ENDELSE
     
     TIBCE = getTextFieldValue(Event,'tibc_for_sd_error_text')
-    (*global).Configuration.Reduce.tab4.tibc_for_sd_error_text = TIBCE
-    IF (TIBCE EQ '') THEN BEGIN
+     IF (TIBCE EQ '') THEN BEGIN
       cmd += ',?'
       status_text = '   -Please provide a Time Independent Background ' + $
         'Constant Error for'
@@ -536,17 +501,14 @@ PRO BSSreduction_CommandLineGenerator, Event
   ENDIF
   
   ;get Time-independent Background Constant for Background Data
-  IF (isButtonSelected(Event,'tibc_for_bd_button')) THEN BEGIN
-    (*global).Configuration.Reduce.tab4.tibc_for_bd_button= 1
-  ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab4.tibc_for_bd_button= 0
-  ENDELSE
+;  IF (isButtonSelected(Event,'tibc_for_bd_button')) THEN BEGIN
+;  ENDIF ELSE BEGIN
+;  ENDELSE
   IF (isButtonSelected(Event,'tibc_for_bd_button')) THEN BEGIN
     cmd += ' --tib-back-const='
     
     TIBCV = getTextFieldValue(Event,'tibc_for_bd_value_text')
-    (*global).Configuration.Reduce.tab4.tibc_for_bd_value_text= TIBCV
-    IF (TIBCV EQ '') THEN BEGIN
+     IF (TIBCV EQ '') THEN BEGIN
       cmd += '?'
       status_text = '   -Please provide a Time Independent Background' + $
         ' Constant Value for'
@@ -571,8 +533,7 @@ PRO BSSreduction_CommandLineGenerator, Event
     ENDELSE
     
     TIBCE = getTextFieldValue(Event,'tibc_for_bd_error_text')
-    (*global).Configuration.Reduce.tab4.tibc_for_bd_error_text= TIBCE
-    IF (TIBCE EQ '') THEN BEGIN
+     IF (TIBCE EQ '') THEN BEGIN
       cmd += ',?'
       status_text = '   -Please provide a Time Independent Background' + $
         ' Constant Error for'
@@ -599,16 +560,13 @@ PRO BSSreduction_CommandLineGenerator, Event
   ENDIF
   
   ;get Time-independent Background Constant for Normalization Data
-  IF (isButtonSelected(Event,'tibc_for_nd_button')) THEN BEGIN
-    (*global).Configuration.Reduce.tab4.tibc_for_nd_button = 1
-  ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab4.tibc_for_nd_button = 0
-  ENDELSE
+;  IF (isButtonSelected(Event,'tibc_for_nd_button')) THEN BEGIN
+;  ENDIF ELSE BEGIN
+;  ENDELSE
   IF (isButtonSelected(Event,'tibc_for_nd_button')) THEN BEGIN
     cmd += ' --tib-norm-const='
     
     TIBCV = getTextFieldValue(Event,'tibc_for_nd_value_text')
-    (*global).Configuration.Reduce.tab4.tibc_for_nd_value_text = TIBCV
     IF (TIBCV EQ '') THEN BEGIN
       cmd += '?'
       status_text = '   -Please provide a Time Independent Background' + $
@@ -634,7 +592,6 @@ PRO BSSreduction_CommandLineGenerator, Event
     ENDELSE
     
     TIBCE = getTextFieldValue(Event,'tibc_for_nd_error_text')
-    (*global).Configuration.Reduce.tab4.tibc_for_nd_error_text = TIBCE
     IF (TIBCE EQ '') THEN BEGIN
       cmd += ',?'
       status_text = '   -Please provide a Time Independent Background' + $
@@ -661,16 +618,13 @@ PRO BSSreduction_CommandLineGenerator, Event
   ENDIF
   
   ;get Time-independent Background Constant for Empty Can Data
-  IF (isButtonSelected(Event,'tibc_for_ecd_button')) THEN BEGIN
-    (*global).Configuration.Reduce.tab4.tibc_for_ecd_button = 1
-  ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab4.tibc_for_ecd_button = 0
-  ENDELSE
+;  IF (isButtonSelected(Event,'tibc_for_ecd_button')) THEN BEGIN
+;  ENDIF ELSE BEGIN
+;  ENDELSE
   IF (isButtonSelected(Event,'tibc_for_ecd_button')) THEN BEGIN
     cmd += ' --tib-ecan-const='
     
     TIBCV = getTextFieldValue(Event,'tibc_for_ecd_value_text')
-    (*global).Configuration.Reduce.tab4.tibc_for_ecd_value_text= TIBCV
     IF (TIBCV EQ '') THEN BEGIN
       cmd += '?'
       status_text = '   -Please provide a Time Independent Background' + $
@@ -696,7 +650,6 @@ PRO BSSreduction_CommandLineGenerator, Event
     ENDELSE
     
     TIBCE = getTextFieldValue(Event,'tibc_for_ecd_error_text')
-    (*global).Configuration.Reduce.tab4.tibc_for_ecd_error_text = TIBCE
     IF (TIBCE EQ '') THEN BEGIN
       cmd += ',?'
       status_text = '   -Please provide a Time Independent Background' + $
@@ -724,17 +677,14 @@ PRO BSSreduction_CommandLineGenerator, Event
   
   
   ;get Time-independent Background Constant for Empty Can Data
-  IF (isButtonSelected(Event,'tibc_for_scatd_button')) THEN BEGIN
-    (*global).Configuration.Reduce.tab4.tibc_for_scatd_button = 1
-  ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab4.tibc_for_scatd_button = 0
-  ENDELSE
+;  IF (isButtonSelected(Event,'tibc_for_scatd_button')) THEN BEGIN
+;  ENDIF ELSE BEGIN
+;  ENDELSE
   IF (isButtonSelected(Event,'tibc_for_scatd_button')) THEN BEGIN
     cmd += ' --tib-dsback-const='
     
     TIBCV = getTextFieldValue(Event,'tibc_for_scatd_value_text')
-    (*global).Configuration.Reduce.tab4.tibc_for_scatd_value_text = TIBCV
-    IF (TIBCV EQ '') THEN BEGIN
+     IF (TIBCV EQ '') THEN BEGIN
       cmd += '?'
       status_text = '   -Please provide a Time Independent Background' + $
         ' Constant Value for'
@@ -759,8 +709,7 @@ PRO BSSreduction_CommandLineGenerator, Event
     ENDELSE
     
     TIBCE = getTextFieldValue(Event,'tibc_for_scatd_error_text')
-    (*global).Configuration.Reduce.tab4.tibc_for_scatd_error_text = TIBCE
-    IF (TIBCE EQ '') THEN BEGIN
+     IF (TIBCE EQ '') THEN BEGIN
       cmd += ',?'
       status_text = '   -Please provide a Time Independent Background' + $
         ' Constant Error for'
@@ -1155,17 +1104,14 @@ PRO BSSreduction_CommandLineGenerator, Event
   
   ;get constant to scale the back. spectra for subtraction from the
   ;sample data spectra
-  IF (isButtonSelected(Event,'csbss_button')) THEN BEGIN
-    (*global).Configuration.Reduce.tab6.csbss_button = 1
-  ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab6.csbss_button = 0
-  ENDELSE
+;  IF (isButtonSelected(Event,'csbss_button')) THEN BEGIN
+;   ENDIF ELSE BEGIN
+;   ENDELSE
   IF (isButtonSelected(Event,'csbss_button')) THEN BEGIN
     cmd += ' --scale-bs='
     
     Value = getTextFieldValue(Event,'csbss_value_text')
-    (*global).Configuration.Reduce.tab6.csbss_value_text = Value
-    IF (Value EQ '') THEN BEGIN
+     IF (Value EQ '') THEN BEGIN
       cmd += '?'
       status_text = '   -Please provide a Constant To Scale Background' + $
         ' for Subtraction from the Sample Data Value'
@@ -1189,8 +1135,7 @@ PRO BSSreduction_CommandLineGenerator, Event
     ENDELSE
     
     Error = getTextFieldValue(Event,'csbss_error_text')
-    (*global).Configuration.Reduce.tab6.csbss_error_text = Error
-    IF (Error EQ '') THEN BEGIN
+     IF (Error EQ '') THEN BEGIN
       cmd += ',?'
       status_text = '   -Please provide a Constant To Scale Background' + $
         ' for Subtraction from the Sample Data Error'
@@ -1216,17 +1161,14 @@ PRO BSSreduction_CommandLineGenerator, Event
   
   ;get constant to scale the back. spectra for subtraction from the
   ;normalization data spectra
-  IF (isButtonSelected(Event,'csn_button')) THEN BEGIN
-    (*global).Configuration.Reduce.tab6.csn_button = 1
-  ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab6.csn_button = 0
-  ENDELSE
+;  IF (isButtonSelected(Event,'csn_button')) THEN BEGIN
+;  ENDIF ELSE BEGIN
+;  ENDELSE
   IF (isButtonSelected(Event,'csn_button')) THEN BEGIN
     cmd += ' --scale-bn='
     
     Value = getTextFieldValue(Event,'csn_value_text')
-    (*global).Configuration.Reduce.tab6.csn_value_text = Value
-    IF (Value EQ '') THEN BEGIN
+     IF (Value EQ '') THEN BEGIN
       cmd += '?'
       status_text = '   -Please provide a Constant To Scale Background' + $
         ' for Subtraction from the normalization Data Value'
@@ -1250,8 +1192,7 @@ PRO BSSreduction_CommandLineGenerator, Event
     ENDELSE
     
     Error = getTextFieldValue(Event,'csn_error_text')
-    (*global).Configuration.Reduce.tab6.csn_error_text = Error
-    IF (Error EQ '') THEN BEGIN
+     IF (Error EQ '') THEN BEGIN
       cmd += ',?'
       status_text = '   -Please provide a Constant To Scale Background' + $
         ' for Subtraction from the Normalization Data Error'
@@ -1279,15 +1220,9 @@ PRO BSSreduction_CommandLineGenerator, Event
   ;get constant to scale the back. spectra for subtraction from the
   ;sample data associated empty container spectra
   IF (isButtonSelected(Event,'bcs_button')) THEN BEGIN
-    (*global).Configuration.Reduce.tab6.bcs_button = 1
-  ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab6.bcs_button = 0
-  ENDELSE
-  IF (isButtonSelected(Event,'bcs_button')) THEN BEGIN
     cmd += ' --scale-bcs='
     
     Value = getTextFieldValue(Event,'bcs_value_text')
-    (*global).Configuration.Reduce.tab6.bcs_value_text = Value
     IF (Value EQ '') THEN BEGIN
       cmd += '?'
       status_text = '   -Please provide a Constant To Scale Background' + $
@@ -1313,7 +1248,6 @@ PRO BSSreduction_CommandLineGenerator, Event
     ENDELSE
     
     Error = getTextFieldValue(Event,'bcs_error_text')
-    (*global).Configuration.Reduce.tab6.bcs_error_text = Error
     IF (Error EQ '') THEN BEGIN
       cmd += ',?'
       status_text = '   -Please provide a Constant To Scale Background ' + $
@@ -1343,15 +1277,9 @@ PRO BSSreduction_CommandLineGenerator, Event
   ;get constant to scale the back. spectra for subtraction from the
   ;normalization data associated empty container spectra
   IF (isButtonSelected(Event,'bcn_button')) THEN BEGIN
-    (*global).Configuration.Reduce.tab6.bcn_button = 1
-  ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab6.bcn_button = 0
-  ENDELSE
-  IF (isButtonSelected(Event,'bcn_button')) THEN BEGIN
     cmd += ' --scale-bcn='
     
     Value = getTextFieldValue(Event,'bcn_value_text')
-    (*global).Configuration.Reduce.tab6.bcn_value_text = Value
     IF (Value EQ '') THEN BEGIN
       cmd += '?'
       status_text = '   -Please provide a Constant To Scale Background' + $
@@ -1377,7 +1305,6 @@ PRO BSSreduction_CommandLineGenerator, Event
     ENDELSE
     
     Error = getTextFieldValue(Event,'bcn_error_text')
-    (*global).Configuration.Reduce.tab6.bcn_error_text = Error
     IF (Error EQ '') THEN BEGIN
       cmd += ',?'
       status_text = '   -Please provide a Constant To Scale Background ' + $
@@ -1407,15 +1334,9 @@ PRO BSSreduction_CommandLineGenerator, Event
   ;get constant to scale the Empty Container for subtraction from
   ;the sample data
   IF (isButtonSelected(Event,'cs_button')) THEN BEGIN
-    (*global).Configuration.Reduce.tab6.cs_button = 1
-  ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab6.cs_button = 0
-  ENDELSE
-  IF (isButtonSelected(Event,'cs_button')) THEN BEGIN
     cmd += ' --scale-cs='
     
     Value = getTextFieldValue(Event,'cs_value_text')
-    (*global).Configuration.Reduce.tab6.cs_value_text = Value
     IF (Value EQ '') THEN BEGIN
       cmd += '?'
       status_text = '   -Please provide a Constant To Scale the Empty' + $
@@ -1440,7 +1361,6 @@ PRO BSSreduction_CommandLineGenerator, Event
     ENDELSE
     
     Error = getTextFieldValue(Event,'cs_error_text')
-    (*global).Configuration.Reduce.tab6.cs_error_text = Error
     IF (Error EQ '') THEN BEGIN
       cmd += ',?'
       status_text = '   -Please provide a Constant To Scale the Empty' + $
@@ -1469,15 +1389,9 @@ PRO BSSreduction_CommandLineGenerator, Event
   ;get constant to scale the Empty Container for subtraction from
   ;the normalization data
   IF (isButtonSelected(Event,'cn_button')) THEN BEGIN
-    (*global).Configuration.Reduce.tab6.cn_button = 1
-  ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab6.cn_button = 0
-  ENDELSE
-  IF (isButtonSelected(Event,'cn_button')) THEN BEGIN
     cmd += ' --scale-cn='
     
     Value = getTextFieldValue(Event,'cn_value_text')
-    (*global).Configuration.Reduce.tab6.cn_value_text = Value
     IF (Value EQ '') THEN BEGIN
       cmd += '?'
       status_text = '   -Please provide a Constant To Scale the Empty' + $
@@ -1502,7 +1416,6 @@ PRO BSSreduction_CommandLineGenerator, Event
     ENDELSE
     
     Error = getTextFieldValue(Event,'cn_error_text')
-    (*global).Configuration.Reduce.tab6.cn_error_text = Error
     IF (Error EQ '') THEN BEGIN
       cmd += ',?'
       status_text = '   -Please provide a Constant To Scale the Empty' + $
@@ -1569,16 +1482,9 @@ PRO BSSreduction_CommandLineGenerator, Event
   
   ;get Time Zero Slope Parameter
   IF (isButtonSelected(Event,'tzsp_button')) THEN BEGIN
-    (*global).Configuration.Reduce.tab7.tzsp_button = 1
-  ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab7.tzsp_button = 0
-  ENDELSE
-  
-  IF (isButtonSelected(Event,'tzsp_button')) THEN BEGIN
     cmd += ' --time-zero-slope='
     
     TIBCV = getTextFieldValue(Event,'tzsp_value_text')
-    (*global).Configuration.Reduce.tab7.tzsp_value_text = TIBCV
     IF (TIBCV EQ '') THEN BEGIN
       cmd += '?'
       status_text = '   -Please provide a Time Zero Slope Parameter Value'
@@ -1602,7 +1508,6 @@ PRO BSSreduction_CommandLineGenerator, Event
     ENDELSE
     
     TIBCE = getTextFieldValue(Event,'tzsp_error_text')
-    (*global).Configuration.Reduce.tab7.tzsp_error_text = TIBCE
     IF (TIBCE EQ '') THEN BEGIN
       cmd += ',?'
       status_text = '   -Please provide a Time Zero Slope Parameter Error'
@@ -1629,15 +1534,9 @@ PRO BSSreduction_CommandLineGenerator, Event
   
   ;get Time Zero Offset Parameter
   IF (isButtonSelected(Event,'tzop_button')) THEN BEGIN
-    (*global).Configuration.Reduce.tab7.tzop_button = 1
-  ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab7.tzop_button = 0
-  ENDELSE
-  IF (isButtonSelected(Event,'tzop_button')) THEN BEGIN
     cmd += ' --time-zero-offset='
     
     TIBCV = getTextFieldValue(Event,'tzop_value_text')
-    (*global).Configuration.Reduce.tab7.tzop_value_text = TIBCV
     IF (TIBCV EQ '') THEN BEGIN
       cmd += '?'
       status_text = '   -Please provide a Time Zero Offset Parameter Value'
@@ -1661,7 +1560,6 @@ PRO BSSreduction_CommandLineGenerator, Event
     ENDELSE
     
     TIBCE = getTextFieldValue(Event,'tzop_error_text')
-    (*global).Configuration.Reduce.tab7.tzop_error_text = TIBCE
     IF (TIBCE EQ '') THEN BEGIN
       cmd += ',?'
       status_text = '   -Please provide a Time Zero Offset Parameter Error'
@@ -1690,7 +1588,6 @@ PRO BSSreduction_CommandLineGenerator, Event
   cmd += ' --energy-bins='
   
   TIBCMin = getTextFieldValue(Event,'eha_min_text')
-  (*global).Configuration.Reduce.tab7.eha_min_text= TIBCMin
   IF (TIBCMin EQ '') THEN BEGIN
     cmd += '?'
     status_text = '   -Please provide a Energy Histogram Axis Min'
@@ -1714,7 +1611,6 @@ PRO BSSreduction_CommandLineGenerator, Event
   ENDELSE
   
   TIBCMax = getTextFieldValue(Event,'eha_max_text')
-  (*global).Configuration.Reduce.tab7.eha_max_text = TIBCMax
   IF (TIBCMax EQ '') THEN BEGIN
     cmd += ',?'
     status_text = '   -Please provide a Energy Histogram Axis Max'
@@ -1738,7 +1634,6 @@ PRO BSSreduction_CommandLineGenerator, Event
   ENDELSE
   
   TIBCBin = getTextFieldValue(Event,'eha_bin_text')
-  (*global).Configuration.Reduce.tab7.eha_bin_text = TIBCBin
   IF (TIBCBin EQ '') THEN BEGIN
     cmd += ',?'
     status_text = '   -Please provide a Energy Histogram Axis Bin'
@@ -1763,15 +1658,9 @@ PRO BSSreduction_CommandLineGenerator, Event
   
   ;get Global Instrument Final Wavelength
   IF (isButtonSelected(Event,'gifw_button')) THEN BEGIN
-    (*global).Configuration.Reduce.tab7.gifw_button = 1
-  ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab7.gifw_button = 0
-  ENDELSE
-  IF (isButtonSelected(Event,'gifw_button')) THEN BEGIN
     cmd += ' --final-wavelength='
     
     TIBCV = getTextFieldValue(Event,'gifw_value_text')
-    (*global).Configuration.Reduce.tab7.gifw_value_text = TIBCV
     IF (TIBCV EQ '') THEN BEGIN
       cmd += '?'
       status_text = '   -Please provide a Global Instrument Final ' + $
@@ -1796,7 +1685,6 @@ PRO BSSreduction_CommandLineGenerator, Event
     ENDELSE
     
     TIBCE = getTextFieldValue(Event,'gifw_error_text')
-    (*global).Configuration.Reduce.tab7.gifw_error_text = TIBCE
     IF (TIBCE EQ '') THEN BEGIN
       cmd += ',?'
       status_text = '   -Please provide a Global Instrument Final ' + $
@@ -1884,7 +1772,6 @@ PRO BSSreduction_CommandLineGenerator, Event
     ENDELSE
     
     TIBCMin = getTextFieldValue(Event,'mtha_min_text')
-    (*global).Configuration.Reduce.tab7.mtha_min_text= TIBCMin
     IF (TIBCMin EQ '') THEN BEGIN
       cmd += '?'
       status_text = '   -Please provide a ' + missing_info_title + $
@@ -1909,7 +1796,6 @@ PRO BSSreduction_CommandLineGenerator, Event
     ENDELSE
     
     TIBCMax = getTextFieldValue(Event,'mtha_max_text')
-    (*global).Configuration.Reduce.tab7.mtha_max_text = TIBCMax
     IF (TIBCMax EQ '') THEN BEGIN
       cmd += ',?'
       status_text = '   -Please provide a ' + missing_info_title + $
@@ -1934,7 +1820,6 @@ PRO BSSreduction_CommandLineGenerator, Event
     ENDELSE
     
     TIBCBin = getTextFieldValue(Event,'mtha_bin_text')
-    (*global).Configuration.Reduce.tab7.mtha_bin_text = TIBCBin
     IF (TIBCBin EQ '') THEN BEGIN
       cmd += ',?'
       status_text = '   -Please provide a ' + missing_info_title + $
@@ -1964,22 +1849,14 @@ PRO BSSreduction_CommandLineGenerator, Event
   
   ;get time of flight range -----------------------------------------------------
   IF (isButtonSelected(Event,'tof_cutting_button')) THEN BEGIN
-    (*global).Configuration.Reduce.tab7.tof_cutting_button = 1
-  ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab7.tof_cutting_button = 0
-  ENDELSE
-  
-  IF (isButtonSelected(Event,'tof_cutting_button')) THEN BEGIN
   
     MinValue = getTextFieldValue(Event,'tof_cutting_min_text')
-    (*global).Configuration.Reduce.tab7.tof_cutting_min_text = MinValue
     IF (MinValue NE '') THEN BEGIN
       cmd += ' --tof-cut-min='
       cmd += STRCOMPRESS(MinValue,/REMOVE_ALL)
     ENDIF
     
     MaxValue = getTextFieldValue(Event,'tof_cutting_max_text')
-    (*global).Configuration.Reduce.tab7.tof_cutting_max_text = MaxValue
     IF (MaxValue NE '') THEN BEGIN
       cmd += ' --tof-cut-max='
       cmd += STRCOMPRESS(MaxValue,/REMOVE_ALL)
@@ -2009,81 +1886,54 @@ PRO BSSreduction_CommandLineGenerator, Event
     ;Write all Intermediate Output
     IF (isButtonSelected(Event,'waio_button')) THEN BEGIN
       cmd += ' --dump-all'
-      (*global).Configuration.Reduce.tab8.waio_button = 1
-    ENDIF ELSE BEGIN
-      (*global).Configuration.Reduce.tab8.waio_button = 0
-    ENDELSE
-    
-    IF ((*global).Configuration.Reduce.tab8.waio_button NE 1) THEN BEGIN
+ENDIF else begin
     
       ;Write out Calculated Time-Independent Background
       IF (isButtonSelected(Event,'woctib_button') AND $
         isButtonSelected(Event,'tib_tof_button')) THEN BEGIN
         cmd += ' --dump-tib'
-        (*global).Configuration.Reduce.tab8.woctib_button = 1
-      ENDIF ELSE BEGIN
-        (*global).Configuration.Reduce.tab8.woctib_button = 0
-      ENDELSE
+endif
       
       ;Write out Pixel Wavelength Spectra
       IF (isButtonSelected(Event,'wopws_button')) THEN BEGIN
         cmd += ' --dump-wave'
-        (*global).Configuration.Reduce.tab8.wopws_button = 1
-      ENDIF ELSE BEGIN
-        (*global).Configuration.Reduce.tab8.wopws_button = 0
-      ENDELSE
+endif
       
       ;Write out Monitor Wavelength Spectrum
       IF (isButtonSelected(Event,'womws_button') AND $
         isButtonUnSelected(Event,'nmn_button')) THEN BEGIN
         cmd += ' --dump-mon-wave'
-        (*global).Configuration.Reduce.tab8.womws_button = 1
-      ENDIF ELSE BEGIN
-        (*global).Configuration.Reduce.tab8.womws_button = 0
-      ENDELSE
+endif
       
       ;Write out Monitor Efficiency Spectrum
       IF (isButtonSelected(Event,'womes_button') AND $
         isButtonUnselected(Event,'nmn_button') AND $
         isButtonUnselected(Event,'nmec_button')) THEN BEGIN
         cmd += ' --dump-mon-effc'
-        (*global).Configuration.Reduce.tab8.womes_button = 1
-      ENDIF ELSE BEGIN
-        (*global).Configuration.Reduce.tab8.womes_button = 0
-      ENDELSE
+endif
       
       ;Write out Rebinned Monitor Spectra
       IF (isButtonSelected(Event,'worms_button') AND $
         isButtonUnSelected(Event,'nmn_button')) THEN BEGIN
         cmd += ' --dump-mon-rebin'
-        (*global).Configuration.Reduce.tab8.worms_button = 1
-      ENDIF ELSE BEGIN
-        (*global).Configuration.Reduce.tab8.worms_button = 0
-      ENDELSE
+endif
       
       ;Write out Combined Pixel Spectrum After Monitor Normalization
       IF (isButtonSelected(Event,'wocpsamn_button') AND $
         isButtonUnSelected(Event,'nmn_button'))  THEN BEGIN
-        (*global).Configuration.Reduce.tab8.wocpsamn_button = 1
-      ENDIF ELSE BEGIN
-        (*global).Configuration.Reduce.tab8.wocpsamn_button = 0
-      ENDELSE
-    ENDIF
+endif
+    endelse
     
     IF (isButtonSelected(Event,'wocpsamn_button') AND $
       isButtonUnSelected(Event,'nmn_button')) THEN BEGIN
-      
-      IF ((*global).Configuration.Reduce.tab8.waio_button NE 1) THEN BEGIN
+
+    IF (~isButtonSelected(Event,'waio_button')) THEN BEGIN
         cmd += ' --dump-wave-mnorm'
-      ENDIF
+      endif
       
       WAmin = getTextFieldValue(Event,'wa_min_text')
       WAmax = getTextFieldValue(Event,'wa_max_text')
       WABwidth = getTextFieldValue(Event,'wa_bin_width_text')
-      
-      (*global).Configuration.Reduce.tab8.wa_min_text = WAmin
-      (*global).Configuration.Reduce.tab8.wa_max_text = WAmax
-      (*global).Configuration.Reduce.tab8.wa_bin_width_text = WABwidth
       
       IF (WAMIN NE '' OR $
         WAMAX NE '' OR $
@@ -2161,27 +2011,21 @@ PRO BSSreduction_CommandLineGenerator, Event
       ENDIF
     ENDIF
     
-    IF ((*global).Configuration.Reduce.tab8.waio_button NE 1) THEN BEGIN
-    
+        IF (~isButtonSelected(Event,'waio_button')) THEN BEGIN
+        
       ;Write out Linearly Interpolated Direct Scattering Back. Info. Summed
       ;over all Pixels
       IF (isButtonSelected(Event,'wolidsb_button')) THEN BEGIN
         cmd += ' --dump-dslin'
-        (*global).Configuration.Reduce.tab8.wolidsb_button = 1
-      ENDIF ELSE BEGIN
-        (*global).Configuration.Reduce.tab8.wolidsb_button = 0
-      ENDELSE
+endif
       
     ENDIF
     
-    IF ((*global).Configuration.Reduce.tab8.waio_button NE 1) THEN BEGIN
+    IF (~isButtonSelected(Event,'waio_button')) THEN BEGIN
       ; Write out Pixel Wavelength Spectra After Vanadium Normalization -------------
       IF (isButtonSelected(Event,'pwsavn_button')) THEN BEGIN
         cmd += ' --dump-norm'
-      ;      (*global).Configuration.Reduce.tab8.wolidsb_button = 1
-      ENDIF ELSE BEGIN
-      ;      (*global).Configuration.Reduce.tab8.wolidsb_button = 0
-      ENDELSE
+endif
     ENDIF
     
     ;check if use iterative background subtraction is active or not
@@ -2190,10 +2034,7 @@ PRO BSSreduction_CommandLineGenerator, Event
     IF (isButtonSelected(Event,'sad') AND $
       ButtonValue EQ 0) THEN BEGIN
       cmd += ' --dump-pix-contrib'
-    ;        (*global).Configuration.Reduce.tab8.woctib_button = 1
-    ENDIF ELSE BEGIN
-    ;        (*global).Configuration.Reduce.tab8.woctib_button = 0
-    ENDELSE
+endif
     
   ENDIF ;end of intermediate tab
   
