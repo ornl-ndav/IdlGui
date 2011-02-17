@@ -1,13 +1,11 @@
 ;define path to dependencies and current folder
 spawn, 'pwd', CurrentFolder
-IdlUtilitiesPath = "/utilities/"
 
-;to compile all the iTools procedures
-itResolve
+IdlUtilitiesPath = CurrentFolder + '/utilities'
 
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.
-cd, CurrentFolder + IdlUtilitiesPath
+cd, IdlUtilitiesPath
 .run system_utilities.pro
 .run time.pro
 .run IDL3columnsASCIIparser__define.pro
