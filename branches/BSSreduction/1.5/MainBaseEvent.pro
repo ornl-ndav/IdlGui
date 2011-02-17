@@ -49,6 +49,16 @@ PRO MAIN_BASE_event, Event
       BSSreduction_TabRefresh, Event
     end
     
+    ;save configuration
+    Widget_info(wWidget, find_by_uname='save_configuration'): begin
+      save_configuration, event
+    end
+    
+    ;Load configuration
+    Widget_info(wWidget, find_by_uname='load_configuration'): begin
+      load_configuration, event
+    end
+    
     ;when changing counts vs tof tab
     Widget_Info(wWidget, FIND_BY_UNAME='counts_vs_tof_tab'): begin
       BSSreduction_CountsVsTofTab, Event

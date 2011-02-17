@@ -312,107 +312,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ;to put the log book
     DefaultPath: '~/',$ ;default path where
     ;to look for the file
-    DefaultFilter: '*.nxs',$ ;default filter for the
+    DefaultFilter: '*.nxs'$ ;default filter for the
     ;nexus file
-    Configuration: { Input: {nexus_run_number: '',$
-    ColorVerticalGrid: 85,$
-    ColorHorizontalGrid: 85,$
-    ColorExcludedPixels: 150,$
-    ColorSelectedPixel: 100,$
-    loadct_droplist: 5,$
-    excluded_pixel_type: 0},$
-    Reduce: $
-    {tab1: { rsdf_list_of_runs_text: '',$
-    rsdf_multiple_runs_button: 0,$
-    bdf_list_of_runs_text: '',$
-    ndf_list_of_runs_text: '',$
-    ecdf_list_of_runs_text: '',$
-    dsb_list_of_runs_text: ''},$
-    tab2: { proif_text: '',$
-    aig_list_of_runs_text: '',$
-    of_list_of_runs_text: ''},$
-    tab3: { rmcnf_button: 0,$
-    verbose_button: 0,$
-    absm_button: 0,$
-    nmn_button: 0,$
-    nmec_button: 0,$
-    niw_button: 0,$
-    nisw_field: '',$
-    niew_field: '',$
-    te_button: 0,$
-    te_low_field: '',$
-    te_high_field: ''},$
-    tab4: { tib_tof_button: 0,$
-    tibtof_channel1_text: '',$
-    tibtof_channel2_text: '',$
-    tibtof_channel3_text: '',$
-    tibtof_channel4_text: '',$
-    tibc_for_sd_button: 0,$
-    tibc_for_sd_value_text: '',$
-    tibc_for_sd_error_text: '',$
-    tibc_for_bd_button: 0,$
-    tibc_for_bd_value_text: '',$
-    tibc_for_bd_error_text: '',$
-    tibc_for_nd_button: 0,$
-    tibc_for_nd_value_text: '',$
-    tibc_for_nd_error_text: '',$
-    tibc_for_ecd_button: 0,$
-    tibc_for_ecd_value_text: '',$
-    tibc_for_ecd_error_text: '',$
-    tibc_for_scatd_button : 0,$
-    tibc_for_scatd_value_text: '',$
-    tibc_for_scatd_error_text: ''},$
-    tab5: {a:0},$
-    tab6: { csbss_button: 0,$
-    csbss_value_text: '',$
-    csbss_error_text: '',$
-    csn_button: 0,$
-    csn_value_text: '',$
-    csn_error_text: '',$
-    bcs_button: 0,$
-    bcs_value_text: '',$
-    bcs_error_text: '',$
-    bcn_button: 0,$
-    bcn_value_text: '',$
-    bcn_error_text: '',$
-    cs_button: 0,$
-    cs_value_text: '',$
-    cs_error_text: '',$
-    cn_button: 0,$
-    cn_value_text: '',$
-    cn_error_text: ''},$
-    tab7: { tzsp_button: 0,$ ;Data Control
-    tzsp_value_text: '',$
-    tzsp_error_text: '',$
-    tzop_button: 0,$
-    tzop_value_text: '',$
-    tzop_error_text: '',$
-    eha_min_text: '',$
-    eha_max_text: '',$
-    eha_bin_text: '',$
-    gifw_button: 0,$
-    gifw_value_text: '',$
-    gifw_error_text: '',$
-    mtha_min_text: '',$
-    mtha_max_text:'',$
-    mtha_bin_text:'',$
-    tof_cutting_button: 0,$
-    tof_cutting_min_text: '',$
-    tof_cutting_max_text: ''},$
-    tab8: { waio_button: 0,$
-    woctib_button: 0,$
-    wopws_button: 0,$
-    womws_button: 0,$
-    womes_button: 0,$
-    worms_button: 0,$
-    wocpsamn_button: 0,$
-    wa_min_text: '',$
-    wa_max_text: '',$
-    wa_bin_width_text: '',$
-    wopies_button: 0,$
-    wopets_button: 0,$
-    wolidsb_button: 0,$
-    wodwsm_button: 0}}}$
     })
     
   file_ok     = (*global).ok_bmp
@@ -430,8 +331,6 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   myIcon2[*,*,1] = myIcon1[1,*,*]
   myIcon2[*,*,2] = myIcon1[0,*,*]
   (*(*global).icon_failed) = myIcon2
-  
-  
   
   ;sub_pkg_version: python program that gives pkg v. of common libraries...etc
   my_package = REPLICATE(PACKAGE_REQUIRED_BASE,4)
@@ -527,7 +426,19 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     TITLE        = MainBaseTitle,$
     SPACE        = 0,$
     XPAD         = 0,$
+    mbar         = bar, $
     YPAD         = 2)
+  
+  ;config menu
+  config = widget_button(bar, $
+  value = 'Configuration',$
+  /menu)
+  load = widget_button(config, $
+  uname = 'load_configuration',$
+  value = 'Load ...')
+  save = widget_button(config, $
+  uname = 'save_configuration',$
+  value = 'Save ...')
     
   ;attach global structure with widget ID of widget main base widget ID
   widget_control, MAIN_BASE, set_uvalue=global
