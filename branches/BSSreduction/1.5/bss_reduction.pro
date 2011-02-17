@@ -219,7 +219,6 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     FullNameOutputPlots: ptr_new(0L),$
     WidgetsToActivate: ptr_new(0L),$
     LoadingConfig: 1,$ ;will be 1 after loading config file
-    DefaultConfigFileName: '~/.bss_reduction.cfg',$
     instrument: 'BSS',$
     nexus_path: '/SNS/BSS/',$
     nexus_geometry_path: '/SNS/BSS/2006_1_2_CAL/' + $
