@@ -154,25 +154,24 @@ s3_7: isButtonSelected(event, 'tzop_button'), $
 tf4_7: getTextFieldValue(event, 'tzop_value_text'), $
 tf5_7: getTextFieldValue(event, 'tzop_error_text'), $
 
-s4_7: isButtonSelected(event, 'eha_button'), $
 tf6_7: getTextFieldValue(event, 'eha_min_text'), $
 tf7_7: getTextFieldValue(event, 'eha_max_text'), $
 tf8_7: getTextFieldValue(event, 'eha_bin_text'), $
 
-s5_7: isButtonSelected(event, 'mtha_button'), $
+s4_7: isButtonSelected(event, 'mtha_button'), $
 tf9_7: getTextFieldValue(event, 'mtha_min_text'), $
 tf10_7: getTextFieldValue(event, 'mtha_max_text'), $
 tf11_7: getTextFieldValue(event, 'mtha_bin_text'), $
 
-s6_7: isButtonSelected(event, 'gifw_button'), $
+s5_7: isButtonSelected(event, 'gifw_button'), $
 tf12_7: getTextFieldValue(event, 'gifw_value_text'), $
 tf13_7: getTextfieldValue(event, 'gifw_error_text'), $
 
-s7_7: isButtonSelected(event, 'tof_cutting_button'), $
+s6_7: isButtonSelected(event, 'tof_cutting_button'), $
 tf14_7: getTextFieldValue(event, 'tof_cutting_min_text'), $
 tf15_7: getTextFieldValue(event, 'tof_cutting_max_text'), $
 
-s8_7: isButtonSelected(event, 'scale_sqe_by_solid_angle_group_uname'), $
+s7_7: isButtonSelected(event, 'scale_sqe_by_solid_angle_group_uname'), $
 
 ;8) Output
 s1_8: isButtonSelected(event, 'waio_button'), $
