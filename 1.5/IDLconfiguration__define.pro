@@ -59,10 +59,12 @@ s2_3: isButtonSelected(event, 'verbose_button'), $
 s3_3: isButtonSelected(event, 'absm_button'), $
 s4_3: isButtonSelected(event, 'nmn_button'), $
 s5_3: isButtonSelected(event, 'nmec_button'), $
-b1_3: isButtonEnabled(event, 'niw_button'), $
+s6_3: isButtonSelected(event, 'niw_button'), $
+e1_3: isButtonEnabled(event, 'niw_button'), $
 tf1_3: getTextFieldValue(event, 'nisw_field'), $
 tf2_3: getTextFieldValue(event, 'niew_field'), $
-b2_3: isButtonEnabled(event, 'te_button'), $
+s7_3: isButtonSelected(event, 'te_button'), $
+e2_3: isButtonEnabled(event, 'te_button'), $
 tf3_3: getTextFieldValue(event, 'te_low_field'), $
 tf4_3: getTextFieldValue(event, 'te_high_field'), $
 

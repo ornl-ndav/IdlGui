@@ -136,6 +136,7 @@ cfg_full_file_name = dialog_pickfile(default_extension='.cfg', $
 dialog_parent=id, $
 path=path, $
 /read, $
+filter = '*.cfg', $
 get_path=new_path, $
 title = 'Load configuration file')
 
@@ -147,3 +148,127 @@ restore, filename=cfg_full_file_name, /relaxed_structure_assignment
 repopulate_gui, event, cfg_structure
 
 end
+
+;+
+; :Description:
+;    repopulate the application using the config structure retrieved
+;
+; :Params:
+;    event
+;    cfg_structure
+;
+;
+;
+; :Author: j35
+;-
+pro repopulate_gui, event, cfg_structure
+compile_opt idl2
+
+;1) Input
+putValue, event, 'rsdf_list_of_runs_text', cfg_structure.tf1_1
+putValue, event, 'bdf_list_of_runs_text', cfg_structure.tf2_1
+putValue, event, 'ndf_list_of_runs_text', cfg_structure.tf3_1
+putValue, event, 'ecdf_list_of_runs_text', cfg_structure.tf4_1
+putValue, event, 'dsb_list_of_runs_text', cfg_structure.tf5_1
+
+;2) Input
+putValue, event, 'proif_text', cfg_structure.tf1_2
+putValue, event, 'aig_list_of_runs_text', cfg_structure.tf2_2
+SetButton, event, 'output_folder_name', cfg_structure.b1_2
+putValue, event, 'of_list_of_runs_text', cfg_structure.tf3_2
+
+;3) Setup
+SetButton, event, 'rmcnf_button', cfg_structure.s1_3
+setButton, event, 'verbose_button', cfg_structure.s2_3
+setButton, event, 'absm_button', cfg_structure.s3_3
+setButton, event, 'nmn_button', cfg_structure.s4_3
+setButton, event, 'nmec_button', cfg_structure.s5_3
+
+setButton, event, 'niw_button', cfg_structure.s6_3
+_status = (cfg_structure.e1_3 eq 1) ? 1 : 0
+activate_button, event, 'niw_button', _status
+activate_button, event, 'nisw_field_label', _status
+activate_button, event, 'nisw_field', _status
+activate_button, event, 'niew_field_label', _status
+activate_button, event, 'niew_field', _status
+putValue, event, 'nisw_field', cfg_structure.tf1_3
+putValue, event, 'niew_field', cfg_structure.tf2_3
+
+setButton, event, 'te_button', cfg_structure.s7_3
+_status = (cfg_structure.e2_3 eq 1) ? 1 : 0
+activate_button, event, 'te_button', _status
+activate_button, event, 'te_low_field_label', _status
+activate_button, event, 'te_low_field', _status
+activate_button, event, 'te_high_field_label', _status
+activate_button, event, 'te_high_field', _status
+putValue, event, 'te_low_field', cfg_structure.tf3_3
+putValue, event, 'te_high_field', cfg_structure.tf4_3
+
+;4) Time-Indep. Back
+SetButton, event, 'tib_tof_button', cfg_structure.s1_4
+_status = (cfg_structure.s1_4 eq 1) ? 1 : 0
+activate_button, event, 'tibtof_channel1_text_label', _status
+activate_button, event, 'tibtof_channel1_text', _status
+activate_button, event, 'tibtof_channel2_text_label', _status
+activate_button, event, 'tibtof_channel2_text', _status
+activate_button, event, 'tibtof_channel3_text_label', _status
+activate_button, event, 'tibtof_channel3_text', _status
+activate_button, event, 'tibtof_channel4_text_label', _status
+activate_button, event, 'tibtof_channel4_text', _status
+putValue, event, 'tibtof_channel1_text', cfg_structure.tf1_4
+putValue, event, 'tibtof_channel2_text', cfg_structure.tf2_4
+putValue, event, 'tibtof_channel3_text', cfg_structure.tf3_4
+putValue, event, 'tibtof_channel4_text', cfg_structure.tf4_4
+
+SetButton, event, 'tibc_for_sd_button', cfg_structure.s2_4
+_status = (cfg_structure.s2_4 eq 1) ? 1 : 0
+activate_button, event, 'tibc_for_sd_value_text_label', _status
+activate_button, event, 'tibc_for_sd_value_text', _status
+activate_button, event, 'tibc_for_sd_error_text_label', _status
+activate_button, event, 'tibc_for_sd_error_text', _status
+putValue, event, 'tibc_for_sd_value_text', cfg_structure.tf5_4
+putValue, event, 'tibc_for_sd_error_text', cfg_structure.tf6_4
+
+SetButton, event, 'tibc_for_bd_button', cfg_structure.s3_4
+_status = (cfg_structure.s3_4 eq 1) ? 1 : 0
+activate_button, event, 'tibc_for_bd_value_text_label', _status
+activate_button, event, 'tibc_for_bd_value_text', _status
+activate_button, event, 'tibc_for_bd_error_text_label', _status
+activate_button, event, 'tibc_for_bd_error_text', _status
+putValue, event, 'tibc_for_bd_value_text', cfg_structure.tf7_4
+putValue, event, 'tibc_for_bd_error_text', cfg_structure.tf8_4
+
+SetButton, event, 'tibc_for_nd_button', cfg_structure.s4_4
+_status = (cfg_structure.s4_4 eq 1) ? 1 : 0
+activate_button, event, 'tibc_for_nd_value_text_label', _status
+activate_button, event, 'tibc_for_nd_value_text', _status
+activate_button, event, 'tibc_for_nd_error_text_label', _status
+activate_button, event, 'tibc_for_nd_error_text', _status
+putValue, event, 'tibc_for_nd_value_text', cfg_structure.tf9_4
+putValue, event, 'tibc_for_nd_error_text', cfg_structure.tf10_4
+
+SetButton, event, 'tibc_for_ecd_button', cfg_structure.s5_4
+_status = (cfg_structure.s5_4 eq 1) ? 1 : 0
+activate_button, event, 'tibc_for_ecd_value_text_label', _status
+activate_button, event, 'tibc_for_ecd_value_text', _status
+activate_button, event, 'tibc_for_ecd_error_text_label', _status
+activate_button, event, 'tibc_for_ecd_error_text', _status
+putValue, event, 'tibc_for_ecd_value_text', cfg_structure.tf11_4
+putValue, event, 'tibc_for_ecd_error_text', cfg_structure.tf12_4
+
+SetButton, event, 'tibc_for_scatd_button', cfg_structure.s6_4
+_status = (cfg_structure.s6_4 eq 1) ? 1 : 0
+activate_button, event, 'tibc_for_scatd_value_text_label', _status
+activate_button, event, 'tibc_for_scatd_value_text', _status
+activate_button, event, 'tibc_for_scatd_error_text_label', _status
+activate_button, event, 'tibc_for_scatd_error_text', _status
+putValue, event, 'tibc_for_scatd_value_text', cfg_structure.tf13_4
+putValue, event, 'tibc_for_scatd_error_text', cfg_structure.tf14_4
+
+
+
+
+
+end
+
+

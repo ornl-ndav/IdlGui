@@ -32,6 +32,11 @@
 ;
 ;==============================================================================
 
+pro putValue, event, uname, text
+id = widget_info(event.top, find_by_uname=uname)
+widget_control, id, set_value=text
+end
+
 PRO PutTextInTextField, Event, uname, text
 id = widget_info(Event.top,find_by_uname=uname)
 widget_control, id, set_value=strcompress(text,/remove_all)
