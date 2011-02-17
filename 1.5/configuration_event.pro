@@ -265,8 +265,95 @@ activate_button, event, 'tibc_for_scatd_error_text', _status
 putValue, event, 'tibc_for_scatd_value_text', cfg_structure.tf13_4
 putValue, event, 'tibc_for_scatd_error_text', cfg_structure.tf14_4
 
+;5) Lambda-Dep. Back.
+SetButton, event, 'use_iterative_background_subtraction_cw_bgroup', $
+cfg_structure.s1_5
+putValue, event, 'scale_constant_lambda_dependent_back_uname', $
+cfg_structure.tf1_5
+putValue, event, 'chopper_frequency_value', cfg_structure.tf2_5
+putValue, event, 'chopper_wavelength_value', cfg_structure.tf3_5
+putValue, event, 'tof_least_background_value', cfg_structure.tf4_5
+
+putValue, event, 'pte_min_text', cfg_structure.tf5_5
+putValue, event, 'pte_max_text', cfg_structure.tf6_5
+putValue, event, 'pte_bin_text', cfg_structure.tf7_5
+
+putValue, event, 'detailed_balance_temperature_value', cfg_structure.tf8_5
+putValue, event, 'ratio_tolerance_value', cfg_structure.tf9_5
+putValue, event, 'number_of_iteration', cfg_structure.tf10_5
+putValue, event, 'min_wave_dependent_back', cfg_structure.tf11_5
+putValue, event, 'max_wave_dependent_back', cfg_structure.tf12_5
+putValue, event, 'small_wave_dependent_back', cfg_structure.tf13_5
+
+activate_button, event, 'amorphous_reduction_verbosity_cw_bgroup', $
+cfg_structure.s2_5
+
+;6) Scaling Cst.
+SetButton, event, 'csbss_button', cfg_structure.s1_6
+putValue, event, 'csbss_value_text', cfg_structure.tf1_6
+putValue, event, 'csbss_error_text', cfg_structure.tf2_6
+
+SetButton, event, 'csn_button', cfg_structure.s2_6
+putValue, event, 'csn_value_text', cfg_structure.tf3_6
+putValue, event, 'csn_error_text', cfg_structure.tf4_6
+
+SetButton, event, 'bcs_button', cfg_structure.s3_6
+putValue, event, 'bcs_value_text', cfg_structure.tf5_6
+putValue, event, 'bcs_error_text', cfg_structure.tf6_6
+
+SetButton, event, 'bcn_button', cfg_structure.s4_6
+putValue, event, 'bcn_value_text', cfg_structure.tf7_6
+putValue, event, 'bcn_value_text', cfg_structure.tf8_6
+
+SetButton, event, 'cs_button', cfg_structure.s5_6
+putValue, event, 'cs_value_text', cfg_structure.tf9_6
+putValue, event, 'cs_error_text', cfg_structure.tf10_6
+
+SetButton, event, 'cn_button', cfg_structure.s6_6
+putValue, event, 'cs_value_text', cfg_structure.tf11_6
+putValue, event, 'cs_error_text', cfg_structure.tf12_6
+
+;7) Data Control
+SetButton, event, 'csfds_button', cfg_structure.s1_7
+putValue, event, 'csfds_value_text', cfg_structure.tf1_7
+
+SetButton, event, 'tzsp_button', cfg_structure.s2_7
+putValue, event, 'tzsp_value_text', cfg_structure.tf2_7
+putValue, event, 'tzsp_error_text', cfg_structure.tf3_7
+
+SetButton, event, 'tzop_button', cfg_structure.s3_7
+putValue, event, 'tzop_value_text', cfg_structure.tf4_7
+putValue, event, 'tzop_error_text', cfg_structure.tf5_7
+
+putValue, event, 'eha_min_text', cfg_structure.tf6_7
+putValue, event, 'eha_max_text', cfg_structure.tf7_7
+putValue, event, 'eha_bin_text', cfg_structure.tf8_7
+
+SetButton, event, 'mtha_button', cfg_structure.s4_7
+putValue, event, 'mtha_min_text', cfg_structure.tf9_7
+putValue, event, 'mtha_max_text', cfg_structure.tf10_7
+putValue, event, 'mtha_bin_text', cfg_structure.tf11_7
+
+SetButton, event, 'gifw_button', cfg_structure.s5_7
+putValue, event, 'gifw_value_text', cfg_structure.tf12_7
+putValue, event, 'gifw_error_text', cfg_structure.tf13_7
+
+SetButton, event, 'tof_cutting_button', cfg_structure.s6_7
+putValue, event, 'tof_cutting_min_text', cfg_structure.tf14_7
+putValue, event, 'tof_cutting_max_text', cfg_structure.tf15_7
+
+SetButton, event, 'scale_sqe_by_solid_angle_group_uname', cfg_structure.s7_7
+
+;8) Output
 
 
+
+
+
+
+
+ BSSreduction_Reduce_use_iterative_back, Event
+ BSSreduction_CommandLineGenerator, Event
 
 
 end
