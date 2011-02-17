@@ -340,11 +340,6 @@ PRO BSSreduction_CommandLineGenerator, Event
     TIBTOF3 = getTextFieldValue(Event,'tibtof_channel3_text')
     TIBTOF4 = getTextFieldValue(Event,'tibtof_channel4_text')
     
-    (*global).Configuration.Reduce.tab4.tibtof_channel1_text = TIBTOF1
-    (*global).Configuration.Reduce.tab4.tibtof_channel2_text = TIBTOF2
-    (*global).Configuration.Reduce.tab4.tibtof_channel3_text = TIBTOF3
-    (*global).Configuration.Reduce.tab4.tibtof_channel4_text = TIBTOF4
-    
     cmd += ' --tib-tofs='
     
     IF (TIBTOF1 EQ '') THEN BEGIN
