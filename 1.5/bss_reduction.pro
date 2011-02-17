@@ -158,6 +158,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     output_plot_path: '~/results/',$
     findlivenexus: '/SNS/software/sbin/findlivenexus',$
     default_output_path: '~/results/',$
+    config_path: '~/', $
     CL_output_path: '~/results/',$
     negative_cosine_polar_array: STRARR(3),$
     momentum_transfer_array:     STRARR(3),$

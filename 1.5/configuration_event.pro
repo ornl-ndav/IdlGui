@@ -47,11 +47,11 @@
 function retrieve_cfg_structure, event
 compile_opt idl2
 
+  iStructure = obj_new("IDLconfiguration")
+  _structure = iStructure.getConfig(event)
+  obj_destroy, iStructure
 
-
-
-
- return, {a:'',b:''}
+ return, _structure
 end
 
 ;+
@@ -71,7 +71,7 @@ compile_opt idl2
 
 widget_control, event.top, get_uvalue=global
 
-path = (*global).default_output_path
+path = (*global).config_path
 id = widget_info(event.top, find_by_uname='MAIN_BASE')
 
 cfg_full_file_name = dialog_pickfile(default_extension='.cfg',$
@@ -82,13 +82,14 @@ path=path, $
 ;file = 'remove_me',$
 /write,$
 get_path=new_path, $
-title='Configuration file name')
+title='Save configuration file')
 
 if (cfg_full_file_name[0] eq '') then return
 
 cfg_structure = retrieve_cfg_structure(event)
+(*global).config_path = new_path
 
-;catch, error
+catch, error
 error = 0
 if (error ne 0) then begin
   catch,/cancel
@@ -126,5 +127,23 @@ end
 pro load_configuration, event
 compile_opt idl2
 
+widget_control, event.top, get_uvalue=global
+
+path = (*global).config_path
+id = widget_info(event.top, find_by_uname='MAIN_BASE')
+
+cfg_full_file_name = dialog_pickfile(default_extension='.cfg', $
+dialog_parent=id, $
+path=path, $
+/read, $
+get_path=new_path, $
+title = 'Load configuration file')
+
+if (cfg_full_file_name[0] eq '') then return
+
+(*global).config_path = new_path
+restore, filename=cfg_full_file_name, /relaxed_structure_assignment
+
+repopulate_gui, event, cfg_structure
 
 end

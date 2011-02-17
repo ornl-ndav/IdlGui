@@ -87,6 +87,7 @@ cd, CurrentFolder
 .run bss_reduction_CreateCommandLineFile.pro
 
 ;configuration
+.run IDLconfiguration__define.pro
 .run configuration_event.pro
 
 ;classes
