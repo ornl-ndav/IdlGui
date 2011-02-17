@@ -32,15 +32,97 @@
 ;
 ;===============================================================================
 
-pro save_configuration, event
+;+
+; :Description:
+;    This function will create a structure of all the settings and parameters
+;    used in the reduction
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+function retrieve_cfg_structure, event
 compile_opt idl2
 
 
 
 
+
+ return, {a:'',b:''}
+end
+
+;+
+; :Description:
+;    This routine is going to ask the user for a configuration file name
+;    and will save the configuration of all the reduce tabs
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro save_configuration, event
+compile_opt idl2
+
+widget_control, event.top, get_uvalue=global
+
+path = (*global).default_output_path
+id = widget_info(event.top, find_by_uname='MAIN_BASE')
+
+cfg_full_file_name = dialog_pickfile(default_extension='.cfg',$
+dialog_parent=id, $
+filter='*.cfg',$
+/overwrite_prompt, $
+path=path, $
+;file = 'remove_me',$
+/write,$
+get_path=new_path, $
+title='Configuration file name')
+
+if (cfg_full_file_name[0] eq '') then return
+
+cfg_structure = retrieve_cfg_structure(event)
+
+;catch, error
+error = 0
+if (error ne 0) then begin
+  catch,/cancel
+  
+  message_text = ['Error while trying to create the configuration',$
+  cfg_full_file_name,'','Please contact j35@ornl.gov to investigate error',$
+  '','Configuration not save !']
+  result = dialog_message(message_text, $
+  /error, $
+  dialog_parent=id,$
+  /center, $
+  title = 'Configuration not saved!')
+
+  endif else begin
+  
+  save, cfg_structure, filename=cfg_full_file_name
+  
+  endelse
+
 end
 
 
+;+
+; :Description:
+;    will load a configuration file and will repopulate all the reduce tabs
+;    with it
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
 pro load_configuration, event
 compile_opt idl2
 
