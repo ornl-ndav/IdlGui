@@ -86,6 +86,9 @@ cd, CurrentFolder
 .run bss_reduction_JobStatus.pro
 .run bss_reduction_CreateCommandLineFile.pro
 
+;configuration
+.run configuration_event.pro
+
 ;classes
 .run IDLoutputFile__define.pro
 .run IDLgetMetadata__define.pro
