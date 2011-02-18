@@ -334,10 +334,10 @@ IF (NexusFullFileName NE '') THEN BEGIN
         ENDIF
     ENDIF
 
-    uname_label = type + '_label'
-    message1  = getLabelValue(event, uname_label)
-    message = ' -> ' + message1 + ' :'
-    AppendLogBookMessage, Event, message
+;    uname_label = type + '_label'
+;    message1  = getLabelValue(event, uname_label)
+;    message = ' -> ' + message1 + ' :'
+;    AppendLogBookMessage, Event, message
 
 ;get current text in text_field
     CurrentText = getTextFieldValue(Event, uname1)
