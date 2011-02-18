@@ -102,7 +102,6 @@ PRO load_live_data_streaming, Event
           iNexus = OBJ_NEW('IDLgetMetadata',LongFileName)
           sRunNumber = STRCOMPRESS(iNexus->getRunNumber())
           (*global).RunNumber = sRunNumber
-          (*global).Configuration.Input.nexus_run_number = sRunNumber
           OBJ_DESTROY, iNexus
           LogBookText = '-> Run Number: ' + sRunNumber
           putTextFieldValue, Event,$

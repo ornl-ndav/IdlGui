@@ -107,7 +107,6 @@ PRO bss_reduction_LoadNexus, Event, config
       ;        (*(*global).pixel_excluded) = (*(*global).default_pixel_excluded)
     
       (*global).RunNumber = RunNumber
-      (*global).Configuration.Input.nexus_run_number = RunNumber
       
       putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
       

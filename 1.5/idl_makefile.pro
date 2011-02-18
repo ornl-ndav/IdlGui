@@ -106,7 +106,6 @@ cd, CurrentFolder
 .run IDLxmlParser__define.pro
 
 .run bss_reduction_Cleanup.pro
-.run bss_reduction_Configuration.pro
 .run bss_reduction_LDS.pro
 
 .run MainBaseEvent.pro
