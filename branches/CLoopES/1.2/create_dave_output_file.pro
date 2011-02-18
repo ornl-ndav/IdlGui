@@ -34,37 +34,6 @@
 
 ;+
 ; :Description:
-;    scale the data. The program looks for the minimum value then brings
-;    this value to 1 and scaled all the other data using the same factor
-;
-; :Params:
-;    data
-;
-; :Keywords:
-;   scaling_factor    ;scaling factor used to produce new data set
-;
-; :Returns:
-;    the scaled data
-;
-; :Author: j35
-;-
-function rescale_data, data, scaling_factor=scaling_factor
-  compile_opt idl2
-  
-  minimum_value = min(data)
-  new_min_value = 1.
-  if (minimum_value ge 1.) then begin
-    return, data
-  endif
-  
-  scaling_factor = 1./float(minimum_value)
-  
-  return, data*scaling_factor
-end
-
-
-;+
-; :Description:
 ;    This procedure parse the output file created by Michael's code, then
 ;    reformat the data, scaled them and output the new file that will
 ;    be used by DAVE
@@ -86,16 +55,18 @@ pro create_dave_output_file, input_file=input_file, output_file=output_file
   obj_destroy, iFile
   
   _data = (*(*data).Q_data)
-  data_scaled = rescale_data(_data, scaling_factor=scaling_factor)
+  _error = (*(*data).Q_data_error)
   
   ;create a big array of the data big_arra[nbrT,16]
   nbr_T = (*data).nbrT
   T_range = (*(*data).T_range)
   nbr_Q = (*data).nbrQ
   big_array = fltarr(nbr_T,16)
+  big_array_error = fltarr(nbr_T,16)
   
-  no_null_index = where(data_scaled ne 0)
-  big_array[no_null_index] = data_scaled[no_null_index]
+  no_null_index = where(_data ne 0)
+  big_array[no_null_index] = _data[no_null_index]
+  big_array_error[no_null_index] = _error[no_null_index]  
   
   metadata_array = strarr(6)
   metadata_array[0] = '#Comments     :'
@@ -112,13 +83,16 @@ pro create_dave_output_file, input_file=input_file, output_file=output_file
   file_array_size = 6 + nbr_T
   file_array = strarr(file_array_size)
   
+  big_data_error_array = strcompress(big_array,/remove_all) + ';' + $
+  strcompress(big_array_error,/remove_all)
+  
   ;save the metadata
   file_array[0:5] = metadata_array[*]
   _row_part1 = "-1 -1 -1 -1 -1 -1 "
   indexT = 0
   for i=6,(file_array_size-1) do begin
     _row = _row_part1 + strcompress(T_range[indexT],/remove_all) + ' '
-    _flat_row = reform(strcompress(big_array[indexT,*],/remove_all))
+    _flat_row = reform(strcompress(big_data_error_array[indexT,*],/remove_all))
     _big_array_row = strjoin(_flat_row,' ')
     
     _row += _big_array_row + ' 1'
