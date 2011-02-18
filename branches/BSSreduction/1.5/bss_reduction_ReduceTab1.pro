@@ -60,26 +60,46 @@ RunNumber = strcompress(getReduceRunNumber(Event, type),/remove_all)
 list_run_numbers = parse_run_numbers(event, RunNumber)
 sz = n_elements(list_run_numbers)
 
+    CASE (type) OF
+        'rsdf': begin
+        uname = 'rsdf_list_of_runs_text'
+        label = 'Raw sample data file'
+        end
+        'bdf' : begin
+        uname = 'bdf_list_of_runs_text'
+        label = 'Background data file'
+        end
+        'ndf' : begin
+        uname = 'ndf_list_of_runs_text'
+        label = 'Normalization data file'
+        end
+        'ecdf': begin
+        uname = 'ecdf_list_of_runs_text'
+        label = 'Empty can Data file'
+        end
+        'dsb' : begin
+        uname = 'dsb_list_of_runs_text'
+        label = 'Direct scattering background file'
+        end
+    ENDCASE
+
+    message = '  -> Input field: ' + label
+    AppendLogBookMessage, event, message
+    message = '  -> Run number input string: ' + RunNumber
+    AppendLogBookMessage, Event, message
+    message = '  -> List of runs: ' + strjoin(list_run_numbers,',')
+    AppendLogBookMessage, event, message
+
+;    message = '  -> Checking if run number exists ... ' + PROCESSING
+;    AppendLogBookMessage, Event, message
+
 index=0
 while (index lt sz) do begin
   RunNumber = list_run_numbers[index]
-
-    CASE (type) OF
-        'rsdf': uname = 'rsdf_list_of_runs_text'
-        'bdf' : uname = 'bdf_list_of_runs_text'
-        'ndf' : uname = 'ndf_list_of_runs_text'
-        'ecdf': uname = 'ecdf_list_of_runs_text'
-        'dsb' : uname = 'dsb_list_of_runs_text'
-    ENDCASE
     
-;name of file from Reduce Gui Tab
-    uname_label = type + '_label'
-    message1  = getLabelValue(event, uname_label)
-    message = ' -> ' + message1 + ' :'
-    AppendLogBookMessage, Event, message
-    message = '    - Searching for run number : ' + RunNumber + ' ... ' + $
-      PROCESSING
-    AppendLogBookMessage, Event, message
+    message = '  -> Looking for run number: ' + $
+    strcompress(RunNumber,/remove_all) + ' ... ' + PROCESSING
+    AppendLogBookMessage, event, message
     
 ;searching for nexus file
     isNeXusExist = 0            ;by default, nexus file does not exist
