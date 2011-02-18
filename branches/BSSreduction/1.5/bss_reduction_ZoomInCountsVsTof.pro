@@ -1,4 +1,4 @@
-PRO BSSselection_ZoomInCountsVsTofPressed, Event
+PRO BSSreduction_ZoomInCountsVsTofPressed, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -29,7 +29,7 @@ END
 
 
 
-PRO BSSselection_ZoomInCountsVsTofReleased, Event
+PRO BSSreduction_ZoomInCountsVsTofReleased, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -93,7 +93,7 @@ END
 
 
 ;reset of plot
-PRO BSSselection_ResetCountsVsTof, Event
+PRO BSSreduction_ResetCountsVsTof, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
