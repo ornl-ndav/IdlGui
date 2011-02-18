@@ -84,6 +84,7 @@ Q_data_error = strarr(nbrT, NbrQ)
 for i_t=0, nbrT-1 do begin
   for j_q=0, nbrQ-1 do begin
     data_error = strsplit(Q_data[i_t,j_q],' ',/extract)
+;    data_error = strjoin(strcompress(data_error,/remove_all),';')
     Q_data[i_t,j_q] = strtrim(data_error[0],2)
     Q_data_error[i_t,j_q] = strtrim(data_error[1],2)
     endfor
