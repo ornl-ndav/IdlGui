@@ -43,6 +43,7 @@ cd, CurrentFolder + '/BSSreductionGUI/'
 
 ;Build main procedures
 cd, CurrentFolder
+.run parse_run_numbers.pro
 .run bss_reduction_time.pro
 .run bss_reduction_put.pro
 .run bss_reduction_get.pro
