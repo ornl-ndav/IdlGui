@@ -57,8 +57,13 @@ FAILED = (*global).failed
 ;run number we want
 RunNumber = strcompress(getReduceRunNumber(Event, type),/remove_all)
 
-IF (RunNumber NE '') THEN BEGIN
-    
+list_run_numbers = parse_run_numbers(event, RunNumber)
+sz = n_elements(list_run_numbers)
+
+index=0
+while (index lt sz) do begin
+  RunNumber = list_run_numbers[index]
+
     CASE (type) OF
         'rsdf': uname = 'rsdf_list_of_runs_text'
         'bdf' : uname = 'bdf_list_of_runs_text'
@@ -122,7 +127,8 @@ IF (RunNumber NE '') THEN BEGIN
     message = '    - List of files is : ' + newText
     AppendLogBookMessage, Event, message
 
-ENDIF  ;end of if(RunNumbr NE '')
+index++
+endwhile
     
 ;turn off hourglass
 widget_control,hourglass=0
