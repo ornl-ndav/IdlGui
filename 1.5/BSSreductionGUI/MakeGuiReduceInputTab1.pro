@@ -72,8 +72,8 @@ PRO MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
     frame=4)
   row1 = widget_base(data_base,/row)
   field1 = cw_field(row1,$
-    /integer,$
     xsize=65,$
+    /return_events,$
     uname='rsdf_run_number_cw_field',$
     title='Run Number:')
   label=widget_label(row1,value=' or ')
@@ -96,8 +96,8 @@ PRO MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
     frame=4)
   row1 = widget_base(data_base,/row)
   field1 = cw_field(row1,$
-    /integer,$
     xsize=65,$
+    /return_events,$
     uname='bdf_run_number_cw_field',$
     title='Run Number:')
   label=widget_label(row1,value=' or ')
@@ -120,8 +120,8 @@ PRO MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
     frame=4)
   row1 = widget_base(data_base,/row)
   field1 = cw_field(row1,$
-    /integer,$
     xsize=65,$
+    /return_events,$
     uname='ndf_run_number_cw_field',$
     title='Run Number:')
   label=widget_label(row1,value=' or ')
@@ -144,8 +144,8 @@ PRO MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
     frame=4)
   row1 = widget_base(data_base,/row)
   field1 = cw_field(row1,$
-    /integer,$
     xsize=65,$
+    /return_events,$
     uname='ecdf_run_number_cw_field',$
     title='Run Number:')
   label=widget_label(row1,value=' or ')
@@ -168,8 +168,8 @@ PRO MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
     frame=4)
   row1 = widget_base(data_base,/row)
   field1 = cw_field(row1,$
-    /integer,$
     xsize=65,$
+    /return_events,$
     uname='dsb_run_number_cw_field',$
     title='Run Number:')
   label=widget_label(row1,value=' or ')

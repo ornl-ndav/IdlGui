@@ -34,6 +34,35 @@
 
 ;+
 ; :Description:
+;    using the left and right values, create the sequence
+;
+; :Keywords:
+;    from   first number of sequence
+;    to     last number of sequence
+;
+; :Author: j35
+;-
+function getSequence, from=left, to=right
+  compile_opt idl2
+  
+  no_error = 0
+  catch, no_error
+  if (no_error ne 0) then begin
+    catch,/cancel
+    return, ['']
+  endif else begin
+    on_ioerror, done
+    iLeft  = long(left)
+    iRight = long(right)
+    sequence = indgen(iRight-iLeft+1)+iLeft
+    return, strcompress(string(sequence),/remove_all)
+    done:
+    return, [strcompress(left,/remove_all)]
+  ENDELSE
+END
+
+;+
+; :Description:
 ;    Parse the run numbers text field and create the list of
 ;    run numbers
 ;
