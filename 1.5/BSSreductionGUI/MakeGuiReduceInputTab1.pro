@@ -39,26 +39,26 @@ PRO MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
     
   yoffset = 107
   data = widget_label(tab1_base,$
-  yoffset = 8,$
-  xoffset = 10,$
-  value = 'Raw Sample Data File')
+    yoffset = 8,$
+    xoffset = 10,$
+    value = 'Raw Sample Data File')
   back = widget_label(tab1_base,$
-  yoffset = 8+yoffset,$
-  xoffset = 10,$
-  value = 'Background Data File')
+    yoffset = 8+yoffset,$
+    xoffset = 10,$
+    value = 'Background Data File')
   norm = widget_label(tab1_base,$
-  yoffset = 8+2*yoffset,$
-  xoffset = 10,$
-  value = 'Normalization Data File')
-ec = widget_label(tab1_base,$
-  yoffset = 8+3*yoffset,$
-  xoffset = 10,$
-  value = 'Empty Can Data File')
-bk = widget_label(tab1_base,$
-  yoffset = 8+4*yoffset,$
-  xoffset = 10,$
-  value = 'Direct Scattering Background (Sample Data at Baseline T) File')
-
+    yoffset = 8+2*yoffset,$
+    xoffset = 10,$
+    value = 'Normalization Data File')
+  ec = widget_label(tab1_base,$
+    yoffset = 8+3*yoffset,$
+    xoffset = 10,$
+    value = 'Empty Can Data File')
+  bk = widget_label(tab1_base,$
+    yoffset = 8+4*yoffset,$
+    xoffset = 10,$
+    value = 'Direct Scattering Background (Sample Data at Baseline T) File')
+    
   col_base = widget_base(tab1_base,$
     /column)
     
@@ -66,13 +66,13 @@ bk = widget_label(tab1_base,$
   ;Raw Sample Data File\
   ;\\\\\\\\\\\\\\\\\\\\\
   space = widget_label(col_base,$
-  value = ' ',scr_ysize=10)
+    value = ' ',scr_ysize=10)
   data_base = widget_base(col_base,$
-  /column,$
-  frame=4)
+    /column,$
+    frame=4)
   row1 = widget_base(data_base,/row)
   field1 = cw_field(row1,$
-  /integer,$
+    /integer,$
     xsize=65,$
     uname='rsdf_run_number_cw_field',$
     title='Run Number:')
@@ -82,20 +82,20 @@ bk = widget_label(tab1_base,$
     uname='rsdf_browse_nexus_button',$
     scr_xsize=200)
   list = widget_text(data_base,$
-  scr_xsize=729,$
-  uname='rsdf_list_of_runs_text')
-  
+    scr_xsize=729,$
+    uname='rsdf_list_of_runs_text')
+    
   space = widget_label(col_base,value=' ',scr_ysize=10)
   
-;/////////////////////
-;Background Data File/
-;/////////////////////
+  ;/////////////////////
+  ;Background Data File/
+  ;/////////////////////
   data_base = widget_base(col_base,$
-  /column,$
-  frame=4)
+    /column,$
+    frame=4)
   row1 = widget_base(data_base,/row)
   field1 = cw_field(row1,$
-  /integer,$
+    /integer,$
     xsize=65,$
     uname='bdf_run_number_cw_field',$
     title='Run Number:')
@@ -105,20 +105,20 @@ bk = widget_label(tab1_base,$
     uname='bdf_browse_nexus_button',$
     scr_xsize=200)
   list = widget_text(data_base,$
-  scr_xsize=729,$
-  uname='bdf_list_of_runs_text')
-  
+    scr_xsize=729,$
+    uname='bdf_list_of_runs_text')
+    
   space = widget_label(col_base,value=' ',scr_ysize=10)
-
+  
   ;////////////////////////
-;Normalization Data File/
-;////////////////////////
+  ;Normalization Data File/
+  ;////////////////////////
   data_base = widget_base(col_base,$
-  /column,$
-  frame=4)
+    /column,$
+    frame=4)
   row1 = widget_base(data_base,/row)
   field1 = cw_field(row1,$
-  /integer,$
+    /integer,$
     xsize=65,$
     uname='ndf_run_number_cw_field',$
     title='Run Number:')
@@ -128,20 +128,20 @@ bk = widget_label(tab1_base,$
     uname='ndf_browse_nexus_button',$
     scr_xsize=200)
   list = widget_text(data_base,$
-  scr_xsize=729,$
-  uname='ndf_list_of_runs_text')
-  
+    scr_xsize=729,$
+    uname='ndf_list_of_runs_text')
+    
   space = widget_label(col_base,value=' ',scr_ysize=10)
-   
+  
   ;////////////////////
-;Empty Can Data File/
-;////////////////////
-   data_base = widget_base(col_base,$
-  /column,$
-  frame=4)
+  ;Empty Can Data File/
+  ;////////////////////
+  data_base = widget_base(col_base,$
+    /column,$
+    frame=4)
   row1 = widget_base(data_base,/row)
   field1 = cw_field(row1,$
-  /integer,$
+    /integer,$
     xsize=65,$
     uname='ecdf_run_number_cw_field',$
     title='Run Number:')
@@ -151,20 +151,20 @@ bk = widget_label(tab1_base,$
     uname='ecdf_browse_nexus_button',$
     scr_xsize=200)
   list = widget_text(data_base,$
-  scr_xsize=729,$
-  uname='ecdf_list_of_runs_text')
-
+    scr_xsize=729,$
+    uname='ecdf_list_of_runs_text')
+    
   space = widget_label(col_base,value=' ',scr_ysize=10)
-
-;/////////////////////////////
-;Direct Scattering background/
-;/////////////////////////////
-   data_base = widget_base(col_base,$
-  /column,$
-  frame=4)
+  
+  ;/////////////////////////////
+  ;Direct Scattering background/
+  ;/////////////////////////////
+  data_base = widget_base(col_base,$
+    /column,$
+    frame=4)
   row1 = widget_base(data_base,/row)
   field1 = cw_field(row1,$
-  /integer,$
+    /integer,$
     xsize=65,$
     uname='dsb_run_number_cw_field',$
     title='Run Number:')
@@ -174,6 +174,6 @@ bk = widget_label(tab1_base,$
     uname='dsb_browse_nexus_button',$
     scr_xsize=200)
   list = widget_text(data_base,$
-  scr_xsize=729,$
-  uname='dsb_list_of_runs_text')
+    scr_xsize=729,$
+    uname='dsb_list_of_runs_text')
 END
