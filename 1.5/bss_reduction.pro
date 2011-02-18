@@ -435,10 +435,10 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   /menu)
   load = widget_button(config, $
   uname = 'load_configuration',$
-  value = 'Load ...')
+  value = ' Load ... ')
   save = widget_button(config, $
   uname = 'save_configuration',$
-  value = 'Save ...')
+  value = ' Save ... ')
     
   ;attach global structure with widget ID of widget main base widget ID
   widget_control, MAIN_BASE, set_uvalue=global
