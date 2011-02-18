@@ -83,6 +83,7 @@ PRO MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
     scr_xsize=200)
   list = widget_text(data_base,$
     scr_xsize=729,$
+    /editable,$
     uname='rsdf_list_of_runs_text')
     
   space = widget_label(col_base,value=' ',scr_ysize=10)
@@ -106,6 +107,7 @@ PRO MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
     scr_xsize=200)
   list = widget_text(data_base,$
     scr_xsize=729,$
+    /editable,$
     uname='bdf_list_of_runs_text')
     
   space = widget_label(col_base,value=' ',scr_ysize=10)
@@ -129,6 +131,7 @@ PRO MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
     scr_xsize=200)
   list = widget_text(data_base,$
     scr_xsize=729,$
+    /editable,$
     uname='ndf_list_of_runs_text')
     
   space = widget_label(col_base,value=' ',scr_ysize=10)
@@ -152,6 +155,7 @@ PRO MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
     scr_xsize=200)
   list = widget_text(data_base,$
     scr_xsize=729,$
+    /editable,$
     uname='ecdf_list_of_runs_text')
     
   space = widget_label(col_base,value=' ',scr_ysize=10)
@@ -175,5 +179,6 @@ PRO MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
     scr_xsize=200)
   list = widget_text(data_base,$
     scr_xsize=729,$
+    /editable,$
     uname='dsb_list_of_runs_text')
 END
