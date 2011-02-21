@@ -440,14 +440,14 @@ end
 ; :Author: j35
 ;-
 function IDLnexusUtilities::get_thi
-compile_opt idl2
-
-if (self.instrument eq 'REF_M') then return, {value:'', units:''}
-
-thi_path = self.entry_spin_state + '/instrument/aperture1/thi/average_value'
-value_units = retrieve_value_units(file_name=self.file_name, path=thi_path)
-
-return, {value:value_units[0], units:value_units[1]}
+  compile_opt idl2
+  
+  if (self.instrument eq 'REF_M') then return, {value:'', units:''}
+  
+  thi_path = self.entry_spin_state + '/instrument/aperture1/thi/average_value'
+  value_units = retrieve_value_units(file_name=self.file_name, path=thi_path)
+  
+  return, {value:value_units[0], units:value_units[1]}
 end
 
 ;+
@@ -695,9 +695,23 @@ function IDLnexusUtilities::get_detectorDimension
   
   if (self.instrument eq 'REF_L') then begin ;REF_L
   
-    path = self.entry_spin_state + '/bank1/data_x_y'
-    data_x_y = retrieve_value(file_name=self.file_name, path=path)
-    return, size(data_x_y,/dim)
+    old_path = self.entry_spin_state + '/bank1/data'
+    new_path = self.entry_spin_state + '/bank1/data_x_y'
+    
+    ;try first with new format
+    catch, error_format
+    if (error_format ne 0) then begin
+    
+      catch,/cancel
+      data_x_y = retrieve_value(file_name=self.file_name, path=new_path)
+      return, size(data_x_y,/dim)
+      
+    endif else begin
+    
+      data_x_y = retrieve_value(file_name=self.file_name, path=old_path)
+      return, size(data_x_y,/dim)
+      
+    endelse
     
   endif else begin ;REF_M
   
