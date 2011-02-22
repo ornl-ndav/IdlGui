@@ -89,6 +89,10 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     yaxis_type: 'Y',$
     left_click: 0b, $
     
+    ;style of plot
+    line_style: 0,$ ;(+)
+    symbol_style: 0, $ ;(solid)
+    
     ;load base
     load_base: 0L, $
     nbr_ascii_files: 50L,$
