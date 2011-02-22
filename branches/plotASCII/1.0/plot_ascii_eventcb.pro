@@ -345,6 +345,9 @@ pro plotAsciiData, event_load=event_load, main_event=main_event
   pYaxis = (*(*global).pYaxis)
   pYaxis_units = (*(*global).pYaxis_units)
   
+  linestyle = (*global).line_style
+  psym = (*global).symbol_style
+  
   nbr_ascii = get_number_of_files_loaded(event_load=event_load, $
     main_event=main_event)
     
@@ -424,11 +427,13 @@ pro plotAsciiData, event_load=event_load, main_event=main_event
             XRANGE = [xmin,xmax],$
             YRANGE = [ymin,ymax],$
             color=FSC_COLOR(color), $
-            PSYM=2, $
+;            PSYM=2, $
             XSTYLE = 1,$
             YSTYLE = 1,$
             XTITLE=xLabel, $
-            YTITLE=yLabel
+            YTITLE=yLabel, $
+            psym=psym,$
+            linestyle=linestyle
         ENDIF ELSE BEGIN
           plot, Xarray, $
             Yarray, $
@@ -437,7 +442,9 @@ pro plotAsciiData, event_load=event_load, main_event=main_event
             XSTYLE = 1,$
             YSTYLE = 1,$
             color=FSC_COLOR(color), $
-            PSYM=2, $
+            psym=psym,$
+            linestyle=linestyle,$
+;            PSYM=2, $
             /YLOG, $
             XTITLE=xLabel, $
             YTITLE=yLabel
@@ -448,12 +455,16 @@ pro plotAsciiData, event_load=event_load, main_event=main_event
           OPLOT, Xarray, $
             Yarray, $
             color=FSC_COLOR(color), $
-            PSYM=2
+            psym=psym,$
+            linestyle=linestyle
+;            PSYM=2
         ENDIF ELSE BEGIN
           oplot, Xarray, $
             Yarray, $
             color=FSC_COLOR(color), $
-            PSYM=2
+             psym=psym,$
+            linestyle=linestyle
+ ;           PSYM=2
         ENDELSE
       ENDELSE
       errplot, Xarray,Yarray-SigmaYarray,Yarray+SigmaYarray,$

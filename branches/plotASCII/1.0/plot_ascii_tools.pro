@@ -135,8 +135,8 @@ PRO plot_ascii_tools_base_gui, wBase, main_base_geometry, $
     UNAME        = 'plot_ascii_tools_base_uname',$
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
-    SCR_YSIZE = 350,$
-    SCR_XSIZE = 325,$
+;    SCR_YSIZE = 350,$
+;    SCR_XSIZE = 325,$
     MAP          = 1,$
     /BASE_ALIGN_CENTER,$
     GROUP_LEADER = ourGroup)
@@ -246,7 +246,63 @@ PRO plot_ascii_tools_base_gui, wBase, main_base_geometry, $
     SCR_XSIZE = 50,$
     UNAME = 'plot_ascii_tools_full_zoom_reset')
     
-    
+  ;line style
+  style_row = widget_base(main_base,$
+  /row)
+  label = widget_label(style_row,$
+  value = 'Line style:')
+  style_base = widget_base(style_row,$
+  /row,$
+  /exclusive)
+  button1= widget_button(style_base,$
+  uname = 'style_solid',$
+  value = 'Solid')
+  button2= widget_button(style_base,$
+  uname = 'style_dotted',$
+  value = 'Dotted')
+  button3= widget_button(style_base,$
+  uname = 'style_dashed',$
+  value = 'Dashed')
+  button4= widget_button(style_base,$
+  uname = 'style_Dash Dot',$
+  value = 'Dash Dot')
+  button5= widget_button(style_base,$
+  uname = 'style_dash_dot_dot',$
+  value = 'Dash Dot Dot')
+button6= widget_button(style_base,$
+  uname = 'style_long_dashes',$
+  value = 'Long Dashes')
+  widget_control, button1, /set_button
+
+  ;symbol style    
+  style_row = widget_base(main_base,$
+  /row)
+  label = widget_label(style_row,$
+  value = 'Symbol style:')
+  style_base = widget_base(style_row,$
+  /row,$
+  /exclusive)
+  button1= widget_button(style_base,$
+  uname = 'symbol_plus',$
+  value = '+')
+  button2= widget_button(style_base,$
+  uname = 'symbol_asterix',$
+  value = '*')
+  button3= widget_button(style_base,$
+  uname = 'symbol_period',$
+  value = '.')
+  button4= widget_button(style_base,$
+  uname = 'symbol_diamond',$
+  value = 'diamond')
+  button5= widget_button(style_base,$
+  uname = 'symbol_triangle',$
+  value = 'triangle')
+  button6= widget_button(style_base,$
+  uname = 'symbol_square',$
+  value = 'square')
+  widget_control, button1, /set_button
+
+
 END
 
 ;------------------------------------------------------------------------------
