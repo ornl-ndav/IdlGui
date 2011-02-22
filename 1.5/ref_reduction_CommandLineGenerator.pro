@@ -540,7 +540,8 @@ cmd += ' --beamdiv-corr'
 center_pixel = strcompress((*global).center_pixel,/remove_all)
 if (center_pixel eq '') then begin
 center_pixel = '?'
-status_text = ' - Specify a center pixel (beam divergence)'
+status_text = '- Specify a center pixel or select a data instrument ' + $
+'geometry (beam divergence)'
 if (statusMessage gt 0) then begin
 append=1
 endif else begin
@@ -554,7 +555,8 @@ cmd += ' --center-pix=' + center_pixel
 resolution = strcompress((*global).detector_resolution)
 if (resolution eq '') then begin
 resolution = '?'
-status_text = ' - Specify the detector resolution (beam divergence)'
+status_text = '- Specify the detector resolution or select a data ' + $
+'instrument(beam divergence)'
 if (statusMessage gt 0) then begin
 append = 1
 endif else begin
