@@ -35,8 +35,8 @@
 PRO miniMakeGuiReduceOther, Event, REDUCE_BASE, IndividualBaseWidth
 
 ;Dimension
-cwbgroup_list  = [' Yes    ',' No    ']
-cwbgroup2_list = [' Yes '   ,' No'    ]
+cwbgroup_list  = ['Y','N']
+cwbgroup2_list = ['Y','N']
 
 ;filtering data
 FDLsize        = [15,455]
@@ -179,6 +179,31 @@ OGbutton = { size      : [BDBFLabel.size[0]+XYoff[0],$
 ;##############################################################################
 ;############################## Create GUI ####################################
 ;##############################################################################
+
+;beam divergence correction
+beamdiv = widget_base(reduce_base,$
+xoffset = 180,$
+yoffset = 450,$
+frame = 1,$
+/column)
+label = widget_label(beamdiv,$
+value = 'Beam divergence correction')
+row2 = widget_base(beamdiv,$
+/row)
+part1 = widget_base(row2,$
+/row,$
+/exclusive)
+button1 = widget_button(part1,$
+value = 'Yes',$
+uname = 'beamdiv_corr_yes')
+button2 = widget_button(part1,$
+value = 'No',$
+uname = 'beamdiv_corr_no')
+widget_control, button2, /set_button
+config = widget_button(row2,$
+value = 'Config...',$
+sensitive = 0,$
+uname = 'beamdiv_settings')
 
 ;filtering data
 FilteringDataLabel = WIDGET_LABEL(REDUCE_BASE,$

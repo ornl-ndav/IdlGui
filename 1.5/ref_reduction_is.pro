@@ -185,6 +185,22 @@ Function isWithDToT, Event
   endelse
 END
 
+;+
+; :Description:
+;    returns the status of the beam divergence
+;    0: NO/OFF
+;    1: Yes/ON
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+function isWithBeamDivergence, event
+id = widget_info(event.top, find_by_uname='beamdiv_corr_yes')
+status = widget_info(id,/button_set)
+return, status
+end
 
 Function isWithDataInstrumentGeometryOverwrite, Event
   id = widget_info(Event.top, $

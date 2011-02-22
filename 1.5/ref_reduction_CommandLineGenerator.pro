@@ -151,37 +151,6 @@ if (isDataWithBackground(Event)) then begin ;with background substraction
     StatusMessage += 1
   ENDELSE
   
-;  ;Be sure that (Ymin_peak=Ymin_back && Ymax_peak=Ymax_back) is wrong
-;  Ymin_peak = data_peak_exclusion_min
-;  Ymax_peak = data_peak_exclusion_max
-;  Ymin_back = $
-;    STRCOMPRESS(getTextFieldValue(Event, $
-;    'data_d_selection_background_ymin_cw_field'), $
-;    /REMOVE_all)
-;  Ymax_back = $
-;    STRCOMPRESS(getTextFieldValue(Event, $
-;    'data_d_selection_background_ymax_' + $
-;    'cw_field'), $
-;    /REMOVE_ALL)
-;  IF (Ymin_peak NE '' AND $
-;    Ymax_peak NE '' AND $
-;    Ymin_back NE '' AND $
-;    Ymax_back NE '') THEN BEGIN
-;    IF ((Ymin_peak EQ Ymin_back) AND $
-;      (Ymax_peak EQ Ymax_back)) THEN BEGIN
-;      StatusMessage += 1
-;      status_text = '- Data Background and Peak have the same ' + $
-;        'Ymin and Ymax values.'
-;      status_text += ' Please changes at least 1 of the data.'
-;      IF (StatusMessage GT 0) THEN BEGIN
-;        append = 1
-;      ENDIF ELSE BEGIN
-;        append = 0
-;      ENDELSE
-;      putInfoInReductionStatus, Event, status_text, append
-;    ENDIF
-;  ENDIF
-  
 ENDIF
 
 ;check if user wants data background or not
@@ -563,6 +532,40 @@ endif
 IF (isWithDToT(Event)) THEN BEGIN ;store deltaT over T
   cmd += ' --store-dtot'
 ENDIF
+
+if (isWithBeamDivergence(event)) then begin
+
+cmd += ' --beamdiv-corr'
+
+center_pixel = strcompress((*global).center_pixel,/remove_all)
+if (center_pixel eq '') then begin
+center_pixel = '?'
+status_text = ' - Specify a center pixel (beam divergence)'
+if (statusMessage gt 0) then begin
+append=1
+endif else begin
+append=0
+endelse
+putInfoInReductionStatus, event, status_text, append
+StatusMessage += 1
+endif
+cmd += ' --center-pix=' + center_pixel
+
+resolution = strcompress((*global).detector_resolution)
+if (resolution eq '') then begin
+resolution = '?'
+status_text = ' - Specify the detector resolution (beam divergence)'
+if (statusMessage gt 0) then begin
+append = 1
+endif else begin
+append = 0
+endelse
+putInfoInReductionStatus, event, status_text, append
+statusMessage += 1
+endif
+cmd += ' --det-spat-res=' + resolution
+
+endif
 
 ;overwrite data instrument geometry file
 if (isWithDataInstrumentGeometryOverwrite(Event)) then BEGIN

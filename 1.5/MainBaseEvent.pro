@@ -1458,6 +1458,24 @@ PRO MAIN_BASE_event, Event
       configure_auto_cleanup, Event=event
     end
     
+    ;beam divergence correction
+    widget_info(wWidget, $
+    find_by_uname='beamdiv_corr_yes'): begin
+    ActivateWidget, Event, 'beamdiv_settings', 1
+     REFreduction_CommandLineGenerator, event
+    end
+    
+    widget_info(wWidget, $
+    find_by_uname='beamdiv_corr_no'): begin
+    ActivateWidget, Event, 'beamdiv_settings', 0
+     REFreduction_CommandLineGenerator, event
+    end
+    
+    widget_info(wWidget, $
+    find_by_uname='beamdiv_settings'): begin
+      beamdiv_settings_base, Event
+    end
+    
     ;**************************************************************************
     ;**PLOTS TAB*
     ;*************************************************************************
