@@ -709,7 +709,8 @@ function IDLnexusUtilities::get_detectorDimension
     endif else begin
     
       data_x_y = retrieve_value(file_name=self.file_name, path=old_path)
-      return, size(data_x_y,/dim)
+      sz = size(data_x_y,/dim) ;[tof,x,y]
+      return, [sz[1],sz[2]]
       
     endelse
     

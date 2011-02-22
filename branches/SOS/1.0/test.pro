@@ -1,8 +1,13 @@
 
 ;#### how to get metadata and data from NeXus files ####
 
-file_name = 'unit_test_files/REF_L_38955.nxs'
+file_name = 'unit_test_files/REF_L_19159.nxs'
 myObject = obj_new('IDLnexusUtilities',file_name)
+
+dim = myObject->get_detectorDimension()
+print, dim
+
+
 
 ;file_name= 'unit_test_files/REF_M_8324.nxs' ;new format
 ;file_name = 'unit_test_files/REF_M_5000.nxs' ;old format
@@ -16,8 +21,8 @@ myObject = obj_new('IDLnexusUtilities',file_name)
 ;help, dimension
 ;print, dimension
 
-sThi = myObject->get_thi()
-print, sThi
+;sThi = myObject->get_thi()
+;print, sThi
 
 obj_destroy, myObject
 

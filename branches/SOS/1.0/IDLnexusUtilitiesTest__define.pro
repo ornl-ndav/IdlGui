@@ -841,6 +841,7 @@ end
 ;+
 ; :Description:
 ;    Unit test for dimension of detector for REF_L instrument
+;    (new format)
 ;
 ; :Author: j35
 ;-
@@ -865,16 +866,16 @@ end
 ;    
 ; :Author: j35
 ;-
-function IDLnexusUtilitiesTest::test_REF_L_new_detector_dimension
+function IDLnexusUtilitiesTest::test_REF_L_old_detector_dimension
   compile_opt idl2
   
-  file_name = 'unit_test_files/REF_L_38955.nxs'
+  file_name = 'unit_test_files/REF_L_19159.nxs'
   myObject = obj_new('IDLnexusUtilities', file_name)
   dim = myObject->get_detectorDimension()
   obj_destroy, myObject
   
-  assert, array_equal(dim,[256,304]), $
-    'Wrong dimension of detector from REF_L_38955 (new format)'
+  assert, array_equal(dim,[304,256]), $
+    'Wrong dimension of detector from REF_L_19159 (old format)'
     
   return, 1
 end
