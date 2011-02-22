@@ -32,26 +32,53 @@
 ;
 ;==============================================================================
 
-spawn, 'pwd', CurrentFolder
+pro retrieve_beamdivergence_settings, event
+compile_opt idl2
 
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-cd, CurrentFolder + '/utilities'
+  widget_control, event.top, get_uvalue=global
+ 
+  ;retrieve geometry file for this run
+  ;if there is no geometry file name used in the reduction, retrieve the 
+  ;name of the geometry file from the /entry/instrument/SNSgeometry_file_name
+  ;tag
+  
+  if (isWithDataInstrumentGeometryOverwrite(Event)) then BEGIN
+  
+    FullGeoFile = (*global).InstrumentDataGeometryFileName
+  
+  endif else begin
+  
+  data_nexus_full_path = (*global).data_nexus_full_path
+  iNexus = obj_new('IDLnexusUtilities', data_nexus_full_path)
+  ShortGeoFile = iNexus.get_GeometryFileName()
+  obj_destroy, iNexus
+  
+  ;retrieve date in name of geometry file
+  stringParsed = strsplit(ShortGeoFile,'_',/extract)
+  date_ext = strjoin(stringParsed[3:5],'-')
+  dateParsed = strsplit(date_ext,'.',/extract)
+  date = dateParsed[0]
+  
+  cmd = 'findcalib -g -i ' + (*global).instrument + ' --date=' + date
+  spawn, cmd, listening, err_listening
 
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-.run nexus_utilities.pro
-.run get.pro
-.run system_utilities.pro
-.run nexus_utilities.pro
-.run math_conversion.pro
-.run time.pro
-.run list_of_proposal.pro
-.run IDLxmlParser__define.pro
-.run xmlParser__define.pro
-.run logger.pro
-.run file_utilities.pro
-.run xdisplayfile.pro
-.run fsc_color.pro
-.run IDL3columnsASCIIparser__define.pro
-.run IDLnexusUtilities__define.pro
+  FullGeoFile = listening[0]
+
+  endelse
+
+  if (~file_test(FullGeoFile)) then begin ;file can not be found
+    (*global).center_pixel = 'N/A'
+    (*global).detector_resolution = 'N/A'
+    return
+  endif
+  
+  file = OBJ_NEW('idlxmlparser', FullGeoFile)
+  center_pixel = file->getValue(tag=['instrumentgeometry',$
+  'math',$
+  'definitions',$
+  
+
+
+
+
+end

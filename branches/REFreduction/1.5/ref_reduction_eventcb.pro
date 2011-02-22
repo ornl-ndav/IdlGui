@@ -38,6 +38,7 @@ PRO REFreductionEventcb_LoadAndPlotDataFile, Event
   REFreduction_LoadDataFile, Event, $ ;LoadDataFile
     isNeXusFound, $
     NbrNexus
+    if (isNexusFound) then retrieve_beamdivergence_settings, event
 END
 
 ;------------------------------------------------------------------------------
