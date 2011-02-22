@@ -109,7 +109,59 @@ PRO plot_ascii_tools_base_event, Event
       get_initial_plot_range, main_event=main_event
       PlotAsciiData, main_event=main_event
     END
-    
+  
+   ;linestyle
+    widget_info(event.top, find_by_uname = 'style_solid'): begin
+    (*global).line_style = 0
+      PlotAsciiData, main_event=main_event
+    end
+    widget_info(event.top, find_by_uname = 'style_dotted'): begin
+    (*global).line_style = 1
+      PlotAsciiData, main_event=main_event
+    end
+    widget_info(event.top, find_by_uname = 'style_dashed'): begin
+    (*global).line_style = 2
+      PlotAsciiData, main_event=main_event
+    end
+    widget_info(event.top, find_by_uname = 'style_dash_dot'): begin
+    (*global).line_style = 3
+      PlotAsciiData, main_event=main_event
+    end
+    widget_info(event.top, find_by_uname = 'style_long_dashes'): begin
+    (*global).line_style = 5
+      PlotAsciiData, main_event=main_event
+    end
+  
+    ;symbol style
+    widget_info(event.top, find_by_uname = 'symbol_none'): begin
+    (*global).symbol_style = 0
+      PlotAsciiData, main_event=main_event
+    end
+    widget_info(event.top, find_by_uname = 'symbol_plus'): begin
+    (*global).symbol_style = 1
+      PlotAsciiData, main_event=main_event
+    end
+    widget_info(event.top, find_by_uname = 'symbol_asterix'): begin
+    (*global).symbol_style = 2
+      PlotAsciiData, main_event=main_event
+    end
+    widget_info(event.top, find_by_uname = 'symbol_period'): begin
+    (*global).symbol_style = 3
+      PlotAsciiData, main_event=main_event
+    end
+    widget_info(event.top, find_by_uname = 'symbol_diamond'): begin
+    (*global).symbol_style = 4
+      PlotAsciiData, main_event=main_event
+    end
+    widget_info(event.top, find_by_uname = 'symbol_triangle'): begin
+    (*global).symbol_style = 5
+      PlotAsciiData, main_event=main_event
+    end
+    widget_info(event.top, find_by_uname = 'symbol_square'): begin
+    (*global).symbol_style = 6
+      PlotAsciiData, main_event=main_event
+    end
+  
     ELSE:
     
   ENDCASE
@@ -264,7 +316,7 @@ PRO plot_ascii_tools_base_gui, wBase, main_base_geometry, $
   uname = 'style_dashed',$
   value = 'Dashed')
   button4= widget_button(style_base,$
-  uname = 'style_Dash Dot',$
+  uname = 'style_dash_dot',$
   value = 'Dash Dot')
   button5= widget_button(style_base,$
   uname = 'style_dash_dot_dot',$
@@ -273,6 +325,13 @@ button6= widget_button(style_base,$
   uname = 'style_long_dashes',$
   value = 'Long Dashes')
   widget_control, button1, /set_button
+
+;or
+or_base = widget_base(main_base,$
+/row,$
+/align_center)
+or_label = widget_label(or_base,$
+value = 'OR')
 
   ;symbol style    
   style_row = widget_base(main_base,$
@@ -283,21 +342,24 @@ button6= widget_button(style_base,$
   /row,$
   /exclusive)
   button1= widget_button(style_base,$
+  uname = 'symbol_none',$
+  value = 'none')
+  button2= widget_button(style_base,$
   uname = 'symbol_plus',$
   value = '+')
-  button2= widget_button(style_base,$
+  button3= widget_button(style_base,$
   uname = 'symbol_asterix',$
   value = '*')
-  button3= widget_button(style_base,$
+  button4= widget_button(style_base,$
   uname = 'symbol_period',$
   value = '.')
-  button4= widget_button(style_base,$
+  button5= widget_button(style_base,$
   uname = 'symbol_diamond',$
   value = 'diamond')
-  button5= widget_button(style_base,$
+  button6= widget_button(style_base,$
   uname = 'symbol_triangle',$
   value = 'triangle')
-  button6= widget_button(style_base,$
+  button7= widget_button(style_base,$
   uname = 'symbol_square',$
   value = 'square')
   widget_control, button1, /set_button
