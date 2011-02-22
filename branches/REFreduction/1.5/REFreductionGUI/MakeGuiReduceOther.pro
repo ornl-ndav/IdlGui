@@ -195,6 +195,34 @@ FilteringDataCWBgroup = CW_BGROUP(REDUCE_BASE,$
                                   UNAME     = 'filtering_data_cwbgroup',$
                                   /EXCLUSIVE)
 
+;beamdivergence correction
+beamdiv = widget_base(reduce_base,$
+  xoffset = 415,$
+  yoffset = 540,$
+  /column,$
+  frame=1)
+  
+  row1 = widget_base(beamdiv,$
+  /row)
+  label = widget_label(row1,$
+  value = 'Beam divergence:')
+  row1b = widget_base(row1,$
+  /exclusive,$
+  /row)
+  yes = widget_button(row1b,$
+  value = 'Yes',$
+  uname = 'beamdiv_corr_yes')
+  no = widget_button(row1b,$
+  value = 'No',$
+  uname = 'beamdiv_corr_no')
+  widget_control, no, /set_button
+  settings = widget_button(row1,$
+  value = 'Settings...',$
+  uname = 'beamdiv_settings',$
+  sensitive = 0)
+  
+  
+  
 ;store deltaT/T
 DeltaToverTLabel = WIDGET_LABEL(REDUCE_BASE,$
                                 XOFFSET = DTTsize[0],$

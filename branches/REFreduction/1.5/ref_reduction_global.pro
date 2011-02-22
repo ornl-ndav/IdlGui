@@ -35,8 +35,8 @@
 FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
 
   file = OBJ_NEW('idlxmlparser', '.REFreduction_v15.cfg')
-  ;==============================================================================
-  ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+  ;============================================================================
+  ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
   APPLICATION = file->getValue(tag=['configuration','application'])+'_low'
   VERSION = file->getValue(tag=['configuration','version'])
   DEBUGGING_VERSION = file->getValue(tag=['configuration','debugging_version'])
@@ -53,8 +53,8 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     
   debugging_structure = getDebuggingStructure()
   
-  ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
-  ;==============================================================================
+  ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+  ;============================================================================
   
   ;get ucams of user if running on linux
   ;and set ucams to 'j35' if running on darwin
@@ -93,6 +93,11 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     tmp_geometry_file: '~/.tmp_ref_reduction_geo_file.nxs',$
     dirpix_geometry: '',$
     cvinfo: '',$
+    
+    ;beam divergence correction
+    beamdiv_settings_base_id: 0L, $
+    center_pixel: 'N/A',$
+    detector_resolution: 'N/A',$
     
     row_selected: 0,$ ;right row selected in batch tab
     

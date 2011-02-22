@@ -120,6 +120,7 @@
 .run ref_reduction_configuration.pro
 .run ref_reduction_display_images.pro
 
+.run beamdiv_settings_base.pro
 .run using_wrong_version_of_ref_reduction.pro
 
 .run ref_reduction_debugging.pro
