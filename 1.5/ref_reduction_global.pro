@@ -47,6 +47,9 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
   DEBUGGING_ON_MAC = file->getValue(tag=['configuration','debugging_on_mac'])
   SIMULATE_ROTATED_DETECTOR = file->getValue(tag=['configuration',$
     'simulate_rotated_detector'])
+  post_driver_name = file->getValue(tag=['configuration','driver_name']) 
+  prefix_driver_name = file->getValue(tag=['configuration','prefix_driver_name'])
+  driver_name = prefix_driver_name + ' ' + post_driver_name 
     
   debugging_structure = getDebuggingStructure()
   
@@ -142,7 +145,9 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     list_pola_state: PTR_NEW(0L),$
     debugging_structure: PTR_NEW(0L),$
     my_package: PTR_NEW(0L),$
-    driver_name: 'reflect_reduction',$
+    driver_name: driver_name, $
+    ;driver_name: 'reflect_reduction',$
+    ;driver_name: '/SNS/users/j35/bin/runenv specmh_reduction',$
     norm_loadct_contrast_changed: 0,$
     data_loadct_contrast_changed: 0,$
     browse_data_path: '~/',$
