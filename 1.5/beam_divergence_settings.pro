@@ -33,52 +33,56 @@
 ;==============================================================================
 
 pro retrieve_beamdivergence_settings, event
-compile_opt idl2
-
+  compile_opt idl2
+  
   widget_control, event.top, get_uvalue=global
- 
+  
   ;retrieve geometry file for this run
-  ;if there is no geometry file name used in the reduction, retrieve the 
+  ;if there is no geometry file name used in the reduction, retrieve the
   ;name of the geometry file from the /entry/instrument/SNSgeometry_file_name
   ;tag
   
   if (isWithDataInstrumentGeometryOverwrite(Event)) then BEGIN
   
     FullGeoFile = (*global).InstrumentDataGeometryFileName
-  
+    
   endif else begin
   
-  data_nexus_full_path = (*global).data_nexus_full_path
-  iNexus = obj_new('IDLnexusUtilities', data_nexus_full_path)
-  ShortGeoFile = iNexus.get_GeometryFileName()
-  obj_destroy, iNexus
-  
-  ;retrieve date in name of geometry file
-  stringParsed = strsplit(ShortGeoFile,'_',/extract)
-  date_ext = strjoin(stringParsed[3:5],'-')
-  dateParsed = strsplit(date_ext,'.',/extract)
-  date = dateParsed[0]
-  
-  cmd = 'findcalib -g -i ' + (*global).instrument + ' --date=' + date
-  spawn, cmd, listening, err_listening
-
-  FullGeoFile = listening[0]
-
+    data_nexus_full_path = (*global).data_nexus_full_path
+    iNexus = obj_new('IDLnexusUtilities', data_nexus_full_path)
+    ShortGeoFile = iNexus.get_GeometryFileName()
+    obj_destroy, iNexus
+    
+    ;retrieve date in name of geometry file
+    stringParsed = strsplit(ShortGeoFile,'_',/extract)
+    date_ext = strjoin(stringParsed[3:5],'-')
+    dateParsed = strsplit(date_ext,'.',/extract)
+    date = dateParsed[0]
+    
+    cmd = 'findcalib -g -i ' + (*global).instrument + ' --date=' + date
+    spawn, cmd, listening, err_listening
+    
+    FullGeoFile = listening[0]
+    
   endelse
-
+  
   if (~file_test(FullGeoFile)) then begin ;file can not be found
     (*global).center_pixel = 'N/A'
     (*global).detector_resolution = 'N/A'
     return
   endif
   
-  file = OBJ_NEW('idlxmlparser', FullGeoFile)
-  center_pixel = file->getValue(tag=['instrumentgeometry',$
-  'math',$
-  'definitions',$
+  file = OBJ_NEW('IDLxmlParserLight', FullGeoFile)
+  spatial_resolution = file->getValue(tag=['instrumentgeometry',$
+    'math','definitions','parameter'], attribute='detectorSpatialResolution')
+  obj_destroy, file
   
-
-
-
-
+  file = OBJ_NEW('IDLxmlParserLight', FullGeoFile)
+  center_pixel = file->getValue(tag=['instrumentgeometry',$
+    'math','definitions','parameter'], attribute='yCenterPixel')
+  obj_destroy, file
+  
+  (*global).center_pixel = center_pixel
+  (*global).detector_resolution = spatial_resolution
+  
 end
