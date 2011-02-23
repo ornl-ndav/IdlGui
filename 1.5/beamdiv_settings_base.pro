@@ -66,8 +66,10 @@ PRO beamdiv_settings_base_event, Event
 END
 
 ;------------------------------------------------------------------------------
-pro beamdiv_settings_base_gui, wBase, main_base_geometry
-
+pro beamdiv_settings_base_gui, wBase, $
+    main_base_geometry, $
+    center_pixel = center_pixel, $
+    spatial_resolution = spatial_resolution
     
   main_base_xoffset = main_base_geometry.xoffset
   main_base_yoffset = main_base_geometry.yoffset
@@ -95,7 +97,7 @@ pro beamdiv_settings_base_gui, wBase, main_base_geometry
   label1 = widget_label(row1,$
   value = '       Center pixel:')
   value1 = widget_text(row1,$
-  value = '',$
+  value = center_pixel,$
   /editable,$
   scr_xsize = 100,$
   uname = 'beamdivergence_center_pixel')
@@ -105,7 +107,7 @@ pro beamdiv_settings_base_gui, wBase, main_base_geometry
   label1 = widget_label(row2,$
   value = 'Detector resolution:')  
   value1 = widget_text(row2,$
-  value = '',$
+  value = spatial_resolution,$
   /editable,$
   scr_xsize = 60,$
   uname = 'beamdivergence_detector_resolution')
@@ -140,7 +142,10 @@ pro beamdiv_settings_base, Event
   ;build gui
   wBase1 = ''
   beamdiv_settings_base_gui, wBase1, $
-    main_base_geometry
+    main_base_geometry, $
+    center_pixel = (*global).center_pixel, $
+    spatial_resolution = (*global).detector_resolution
+    
   (*global).beamdiv_settings_base_id = wBase1
   
   WIDGET_CONTROL, wBase1, /REALIZE
