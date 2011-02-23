@@ -427,6 +427,7 @@ PRO OpenDataNeXusFile_batch, Event, DataRunNumber, full_nexus_name
   
   ;store full path to NeXus
   (*global).data_full_nexus_name = full_nexus_name
+  (*global).data_nexus_full_path = full_nexus_name
   
   IF ((*global).debugging_version EQ 'yes') THEN BEGIN
     PRINT, 'Before NXsummaryBatch'
