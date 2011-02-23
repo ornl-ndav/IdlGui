@@ -48,6 +48,7 @@ cd, CurrentFolder + '/utilities'
 .run time.pro
 .run list_of_proposal.pro
 .run IDLxmlParser__define.pro
+.run IDLmxlParserLight__define.pro
 .run xmlParser__define.pro
 .run logger.pro
 .run file_utilities.pro
