@@ -96,7 +96,7 @@ pro retrieve_beamdivergence_settings, event
 
   text = ' -> center pixel: ' + center_pixel
   putLogBookMessage, event, text, append=1
-  text = ' --> spatial resolution: ' + spatial_resolution
+  text = ' -> spatial resolution: ' + spatial_resolution + ' mm'
   putLogBookMessage, event, text, append=1
   
   (*global).center_pixel = center_pixel
