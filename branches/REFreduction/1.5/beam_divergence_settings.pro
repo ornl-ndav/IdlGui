@@ -42,16 +42,26 @@ pro retrieve_beamdivergence_settings, event
   ;name of the geometry file from the /entry/instrument/SNSgeometry_file_name
   ;tag
   
+  text = 'Retrieving beam divergence settings:'
+  putLogBookMessage, Event, text, Append=1
+  
   if (isWithDataInstrumentGeometryOverwrite(Event)) then BEGIN
   
-    FullGeoFile = (*global).InstrumentDataGeometryFileName
+  FullGeoFile = (*global).InstrumentDataGeometryFileName
+  text = ' -> using overwrite instrument geometry file: ' + FullGeoFile
+  putLogBookMessage, Event, text, Append=1
     
   endif else begin
   
     data_nexus_full_path = (*global).data_nexus_full_path
+  text = ' -> Retrieving name of geometry file from nexus ( ' + $
+  data_nexus_full_path +  ')'
+  putLogBookMessage, Event, text, Append=1
     iNexus = obj_new('IDLnexusUtilities', data_nexus_full_path)
     ShortGeoFile = iNexus.get_GeometryFileName()
     obj_destroy, iNexus
+    text = ' --> geometry file: ' + ShortGeoFile
+    putLogBookMessage, event, text, append=1
     
     ;retrieve date in name of geometry file
     stringParsed = strsplit(ShortGeoFile,'_',/extract)
@@ -63,6 +73,8 @@ pro retrieve_beamdivergence_settings, event
     spawn, cmd, listening, err_listening
     
     FullGeoFile = listening[0]
+    text = ' --> Retrieved full name of geometry file: ' + FullGeoFile
+    putLogBookMessage, event, text, append=1
     
   endelse
   
@@ -81,6 +93,11 @@ pro retrieve_beamdivergence_settings, event
   center_pixel = file->getValue(tag=['instrumentgeometry',$
     'math','definitions','parameter'], attribute='yCenterPixel')
   obj_destroy, file
+
+  text = ' -> center pixel: ' + center_pixel
+  putLogBookMessage, event, text, append=1
+  text = ' --> spatial resolution: ' + spatial_resolution
+  putLogBookMessage, event, text, append=1
   
   (*global).center_pixel = center_pixel
   (*global).detector_resolution = spatial_resolution
