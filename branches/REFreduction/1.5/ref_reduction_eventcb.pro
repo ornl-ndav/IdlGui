@@ -264,6 +264,10 @@ PRO REFreduction_OpenPlotDataNexus, Event, DataRunNumber, currFullDataNexusName
   
   (*global).DataNexusFound  = 1
   
+  if ((*global).DataNexusFound) then begin
+  retrieve_beamdivergence_settings, event
+  endif
+  
   IF ((*global).debugging_version EQ 'yes') THEN BEGIN
     print, 'Just before REFreduction_Plot1D2DDataFile_batch'
   ENDIF

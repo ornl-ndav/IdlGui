@@ -119,7 +119,7 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='load_data_run_number_text_field'): begin
       (*global).data_path = ''
-      REFreductionEventcb_LoadAndPlotDataFile, Event ;_eventcb
+      REFreductionEventcb_LoadAndPlotDataFile, Event ;_eventcb      
       DefineDefaultOutputName, Event
     END
     
