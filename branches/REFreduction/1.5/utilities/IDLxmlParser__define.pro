@@ -45,13 +45,44 @@ PRO IDLXMLParser::startElement, URI, local, strName, attr, value
 
 ;Whenever an elemnt is found check against the given tag and
 ;based on mode check for matching attribute or attribute value
+
+print, 'self.mode: ' , self.mode
+print, 'strName, ' , strName
+print, '  self.count: ', self.count
+help, attr
+help, value
+print, '  (*self.tag)[self.count]): ' , (*self.tag)[self.count]
+print
+
+if (attr eq !null) then return 
+print, 'passed attr.........'
+if (value ne !null) then begin
+print, 'value: ' , value
+endif   
+
+  
+
+
   IF (strName EQ (*self.tag)[self.count]) THEN BEGIN
     self.count++
     CASE (self.mode) OF
-      0:
+      0: begin
+        print, 'attr: ' , attr
+        print, 'self.attr: ' , self.attr
+        print
+        end
       1: BEGIN  ;search defined by tag and attribute
+        print, 'here'
         attrValue = value[WHERE(STRMATCH(attr, self.attr) EQ 1)]
-        IF (attrValue EQ self.attrValue) THEN self.flag = 1
+        print, 'there'
+        print, 'attrValue: ' , attrValue
+        print, 'attr: ' , attr
+        print, 'self.attr: ' , self.attr
+        print
+        IF (attrValue EQ self.attrValue) THEN begin
+        print, 'in match.............'
+        self.flag = 1
+        endif
       END
       2: BEGIN  ;search defined by tag, output is attribute value
         self.output = value[WHERE(STRMATCH(attr, self.attr) EQ 1)]
@@ -79,6 +110,8 @@ PRO IDLXMLParser::endElement, URI, local, strName
       END
       1: BEGIN  ;search defined by tag and attribute
         IF SELF.flag EQ 1 THEN self.output = self.buffer
+        print, 'local: ' , local
+        print, 'strName: ' , strName
       END
       2:
     END
