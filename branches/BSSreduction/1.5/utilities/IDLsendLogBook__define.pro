@@ -210,7 +210,7 @@ If (no_error NE 0) THEN BEGIN
     CATCH,/CANCEL
 ;tell the user that the email has not been sent
     LogBookText = 'An error occured while contacting the GEEK. ' + $
-      'Please email j35@ornl.gov!'
+      'Please email j35@ornl.gov or scu@ornl.gov!'
     IDLsendLogBook_AddLogBookText, Event, LogBookText
 ENDIF ELSE BEGIN
     OPENW, 1, FullFileName
@@ -238,6 +238,8 @@ PRO IDLsendLogBook_EmailLogBook, Event, $
                                  FullFileName, $
                                  FullTarFile, $
                                  LIST_OF_FILES_TO_TAR=list_OF_files_to_tar
+
+if (~keyword_set(list_of_files_to_tar)) then list_of_files_to_tar = ''
 
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 version     = IDLsendLogBook_getGlobalVariable(Event,'version')
@@ -268,7 +270,7 @@ IF (no_error NE 0) THEN BEGIN
     CATCH,/CANCEL
 ;tell the user that the email has not been sent
     LogBookText = 'An error occured while contacting the GEEK. ' + $
-      'Please email j35@ornl.gov!'
+      'Please email j35@ornl.gov or scu@ornl.gov!'
     IDLsendLogBook_putLogBookText, Event, LogBookText
 ENDIF ELSE BEGIN
     application    = IDLsendLogBook_getGlobalVariable(Event,'ApplicationName')
@@ -279,11 +281,11 @@ ENDIF ELSE BEGIN
         subject        = application + " LogBook"
         cmd  =  'echo ' + text + '| mutt -s "' + subject + '" -a ' + $
           FullTarFile
-        cmd += ' j35@ornl.gov'
+        cmd += ' j35@ornl.gov scu@ornl.gov'
     ENDIF ELSE BEGIN
         subject        = application + " LogBook"
         cmd  =  'echo ' + text + '| mutt -s "' + subject 
-        cmd += ' j35@ornl.gov'
+        cmd += ' j35@ornl.gov scu@ornl.gov'
     ENDELSE
     SPAWN, cmd
 

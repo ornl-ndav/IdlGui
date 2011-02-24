@@ -287,7 +287,7 @@ If (no_error NE 0) THEN BEGIN
     CATCH,/CANCEL
 ;tell the user that the email has not been sent
     LogBookText = 'An error occured while contacting the GEEK. ' + $
-      'Please email j35@ornl.gov!'
+      'Please email j35@ornl.gov! or scu@ornl.gov'
     IDLsendToGeek_AddLogBookText, Event, LogBookText
 ENDIF ELSE BEGIN
     OPENW, 1, FullFileName
@@ -332,7 +332,7 @@ ENDELSE
 text += "'"
 
 no_error = 0
-CATCH, no_error
+; CATCH, no_error
 If (no_error NE 0) THEN BEGIN
     CATCH,/CANCEL
 ;tell the user that the email has not been sent
@@ -348,7 +348,8 @@ ENDIF ELSE BEGIN
     cmd  =  'echo ' + text + '| mutt -s "' + subject + '" -a ' + $
       FullTarFile
     cmd += ' j35@ornl.gov'
-    SPAWN, cmd
+    ;SPAWN, cmd
+    print, cmd
 ;tell the user that the email has been sent
     LogBookText = 'LogBook has been sent successfully !'
     IDLsendToGeek_addLogBookText, Event, LogBookText
