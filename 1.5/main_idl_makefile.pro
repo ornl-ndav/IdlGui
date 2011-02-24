@@ -104,6 +104,7 @@
 
 ;plot tab
 .run ref_reduction_plot_tab.pro
+.run center_pixel_counts_vs_pixel_base.pro
 
 .run IDLgetMetadata__define.pro
 .run ref_reduction_BatchTab.pro

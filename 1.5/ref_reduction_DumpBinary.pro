@@ -81,6 +81,11 @@ FUNCTION retrieveBanksData, Event, $
         message, 'wrong nexus file format'
         endif
         (*(*global).bank1_data) = data
+        
+        iNexus = obj_new('IDLnexusUtilities', fullNexusName)
+        tof_axis = iNexus.get_tof_data()
+        obj_destroy, iNexus
+        (*(*global).tof_axis_ms) = tof_axis
       END
       'norm': BEGIN
         data = h5d_read(fieldID)
