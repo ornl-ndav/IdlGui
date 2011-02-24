@@ -172,8 +172,8 @@ PRO calculate_data_dirpix, Event
   
     ON_IOERROR, done_calculation
     
-    ymin = getTextFieldValue(Event,'data_d_selection_roi_ymin_cw_field')
-    ymax = getTextFieldValue(Event,'data_d_selection_roi_ymax_cw_field')
+    ymin = getTextFieldValue(Event,'data_d_selection_peak_ymin_cw_field')
+    ymax = getTextFieldValue(Event,'data_d_selection_peak_ymax_cw_field')
     
     IF (ymin NE 0 AND ymax NE 0) THEN BEGIN
     
@@ -188,14 +188,14 @@ PRO calculate_data_dirpix, Event
       
     ENDELSE
     
-    putTextFieldValue, event, 'data_geometry_dirpix_value_user', $
+    putTextFieldValue, event, 'data_center_pixel_uname', $
       STRCOMPRESS(dirpix,/REMOVE_ALL), 0
       
     RETURN
     
     done_calculation:
     dirpix = 'N/A'
-    putTextFieldValue, event, 'data_geometry_dirpix_value_user', $
+    putTextFieldValue, event, 'data_center_pixel_uname', $
       STRCOMPRESS(dirpix,/REMOVE_ALL), 0
       
   ENDELSE
