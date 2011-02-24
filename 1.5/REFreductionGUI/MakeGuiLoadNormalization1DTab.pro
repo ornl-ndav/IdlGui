@@ -459,7 +459,7 @@ PRO MakeGuiLoadNormalization1DTab, D_DD_Tab, $
     TITLE     = sTab.list[1])
     
   ;PEAK base --------------------------------------------------------------------
-    
+        
   wPeakBase = WIDGET_BASE(wPeakBackBase,$
     XOFFSET   = 0,$
     YOFFSET   = 0,$
