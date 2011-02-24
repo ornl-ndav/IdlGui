@@ -477,6 +477,20 @@ PRO MakeGuiLoadData1DTab, D_DD_Tab, $
     SCR_YSIZE = sPeakBackBase.size[3],$
     TITLE     = sTab.list[1])
     
+       center_pixel_base = widget_base(wPeakBackBase,$
+    xoffset = 420,$
+    yoffset = 38  ,$
+    frame=1,$
+    /row)
+    label = widget_label(center_pixel_base,$
+    value = 'Center pixel:')
+    value = widget_label(center_pixel_base,$
+    value = '',$
+    uname = 'data_center_pixel_uname',$
+    scr_xsize = '50',$
+    /align_left)
+    
+    
   ;Peak/Background CW_BGROUP
   ;wPeakBackGroup = CW_BGROUP(wPeakBackBase,$
   ;                           sPeakBackGroup.list,$

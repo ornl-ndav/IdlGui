@@ -477,14 +477,27 @@ PRO miniMakeGuiLoadData1DTab, D_DD_Tab, $
     VALUE     = sSaveButton.value,$
     UNAME     = sSaveButton.uname)
     
-  ;TAB #1-2 Peak/Back base =======================================================
+  ;TAB #1-2 Peak/Back base ====================================================
   wPeakBackBase = WIDGET_BASE(wRoiTab,$
     XOFFSET   = sPeakBackBase.size[0],$
     YOFFSET   = sPeakBackBase.size[1],$
     SCR_XSIZE = sPeakBackBase.size[2],$
     SCR_YSIZE = sPeakBackBase.size[3],$
     TITLE     = sTab.list[1])
-    
+      
+    center_pixel_base = widget_base(wPeakBackBase,$
+    xoffset = 65,$
+    yoffset = 90,$
+    frame=1,$
+    /row)
+    label = widget_label(center_pixel_base,$
+    value = 'Center pixel:')
+    value = widget_label(center_pixel_base,$
+    value = '',$
+    uname = 'data_center_pixel_uname',$
+    scr_xsize = '50',$
+    /align_left)
+
     wPeakBase = WIDGET_BASE(wPeakBackBase,$
     XOFFSET   = 0,$
     YOFFSET   = 0,$
