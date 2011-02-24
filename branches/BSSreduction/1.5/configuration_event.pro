@@ -142,10 +142,34 @@ pro load_configuration, event
     
   if (cfg_full_file_name[0] eq '') then return
   
+  catch, error
+  if (error ne 0) then begin
+  catch,/cancel
+    
+    message_text = ['Configuration file failed to load!','',$
+    ' File: ' + cfg_full_file_name[0], $
+    'File format is not supported by this application']
+    result = dialog_message (message_text,$
+    /error,$
+    /center,$
+    dialog_parent=id,$
+    title = 'Configuration file failed to load!')
+  
+  text = 'Loading of configuration file failed ! (' + cfg_full_file_name[0] + $
+  ')'
+  AppendLogBookMessage, Event, text
+
+  endif else begin
+  
   (*global).config_path = new_path
   restore, filename=cfg_full_file_name, /relaxed_structure_assignment
   
   repopulate_gui, event, cfg_structure
+
+  text = 'Loaded configuration file: ' + cfg_full_file_name[0]
+  AppendLogBookMessage, Event, text
+  
+  endelse
   
 end
 
