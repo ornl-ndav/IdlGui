@@ -119,7 +119,7 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='load_data_run_number_text_field'): begin
       (*global).data_path = ''
-      REFreductionEventcb_LoadAndPlotDataFile, Event ;_eventcb      
+      REFreductionEventcb_LoadAndPlotDataFile, Event ;_eventcb
       DefineDefaultOutputName, Event
     END
     
@@ -209,27 +209,27 @@ PRO MAIN_BASE_event, Event
             CASE (event.ch) OF ;u and d keys
               117: BEGIN
                 REFreduction_ManuallyMoveDataBackPeakUp, Event
-                  calculate_data_dirpix, Event
-                  plot_average_data_peak_value, Event
+                calculate_data_dirpix, Event
+                plot_average_data_peak_value, Event
               END
               100: BEGIN
                 REFreduction_ManuallyMoveDataBackPeakDown, Event
-                  calculate_data_dirpix, Event
-                  plot_average_data_peak_value, Event
+                calculate_data_dirpix, Event
+                plot_average_data_peak_value, Event
               END
               ELSE:
             ENDCASE
             CASE (event.key) OF ;Up and Down arrow keys
               7: BEGIN
                 REFreduction_ManuallyMoveDataBackPeakUp, Event
-                  calculate_data_dirpix, Event
-                  plot_average_data_peak_value, Event
+                calculate_data_dirpix, Event
+                plot_average_data_peak_value, Event
                 
               END
               8: BEGIN
                 REFreduction_ManuallyMoveDataBackPeakDown, Event
-                  calculate_data_dirpix, Event
-                  plot_average_data_peak_value, Event
+                calculate_data_dirpix, Event
+                plot_average_data_peak_value, Event
               END
               ELSE:
             ENDCASE
@@ -242,15 +242,15 @@ PRO MAIN_BASE_event, Event
           IF( Event.type EQ 0 )THEN BEGIN
             IF (Event.press EQ 1) THEN $
               REFreduction_DataSelectionPressLeft, Event ;left button
-              calculate_data_dirpix, Event
-              plot_average_data_peak_value, Event
+            calculate_data_dirpix, Event
+            plot_average_data_peak_value, Event
             IF (Event.press EQ 4) THEN $
               REFreduction_DataselectionPressRight, Event ;right button
           ENDIF
           IF (Event.type EQ 1) THEN BEGIN ;release
             REFreduction_DataSelectionRelease, Event
-              calculate_data_dirpix, Event
-              plot_average_data_peak_value, Event
+            calculate_data_dirpix, Event
+            plot_average_data_peak_value, Event
           ENDIF
           IF (Event.type EQ 2) THEN BEGIN ;move
             REFreduction_DataSelectionMove, Event
@@ -258,6 +258,16 @@ PRO MAIN_BASE_event, Event
             plot_average_data_peak_value, Event
           ENDIF
         ENDIF
+        
+        if (isDataBackPeakZoomSelected(Event) eq 1) then begin ;peak selection
+          top_base = widget_info(event.top, find_by_uname='MAIN_BASE')
+          center_pixel = (*global).dirpix
+          parent_base_uname = 'MAIN_BASE'
+          center_px_counts_vs_pixel_base, event=event, $
+            top_base=top_base, $
+            center_pixel=center_pixel, $
+            parent_base_uname = parent_base_uname
+        endif
         
       ENDELSE
     END
@@ -1452,19 +1462,19 @@ PRO MAIN_BASE_event, Event
     
     ;beam divergence correction
     widget_info(wWidget, $
-    find_by_uname='beamdiv_corr_yes'): begin
-    ActivateWidget, Event, 'beamdiv_settings', 1
-     REFreduction_CommandLineGenerator, event
+      find_by_uname='beamdiv_corr_yes'): begin
+      ActivateWidget, Event, 'beamdiv_settings', 1
+      REFreduction_CommandLineGenerator, event
     end
     
     widget_info(wWidget, $
-    find_by_uname='beamdiv_corr_no'): begin
-    ActivateWidget, Event, 'beamdiv_settings', 0
-     REFreduction_CommandLineGenerator, event
+      find_by_uname='beamdiv_corr_no'): begin
+      ActivateWidget, Event, 'beamdiv_settings', 0
+      REFreduction_CommandLineGenerator, event
     end
     
     widget_info(wWidget, $
-    find_by_uname='beamdiv_settings'): begin
+      find_by_uname='beamdiv_settings'): begin
       beamdiv_settings_base, Event
     end
     
