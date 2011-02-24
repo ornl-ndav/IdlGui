@@ -485,7 +485,7 @@ PRO MakeGuiLoadData1DTab, D_DD_Tab, $
     label = widget_label(center_pixel_base,$
     value = 'Center pixel:')
     value = widget_label(center_pixel_base,$
-    value = '',$
+    value = ' ',$
     uname = 'data_center_pixel_uname',$
     scr_xsize = '50',$
     /align_left)

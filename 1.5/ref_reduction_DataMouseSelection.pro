@@ -308,6 +308,7 @@ PRO REFreduction_DataSelectionMove, event
     IF ((*global).mouse_debugging EQ 'yes') THEN BEGIN
       PRINT, 'Move mouse_status: ' + STRCOMPRESS(mouse_status)
     ENDIF
+    
     CASE (mouse_status) OF
       0:mouse_status_new = mouse_status
       1: Begin
@@ -365,6 +366,58 @@ PRO REFreduction_DataSelectionMove, event
     
     ;This function replot the other selection
     ReplotOtherSelection, Event, ROIsignalBackZoomStatus
+    
+    ;display live the new values
+    CASE (ROISignalBackZoomStatus) OF
+    0: BEGIN                    ;ROI
+;      (*(*global).data_roi_selection) = y_array
+    END
+    1: BEGIN                    ;signal
+    
+;      (*(*global).data_peak_selection) = y_array
+      ymin = MIN(y_array,max=ymax)
+      ;populate exclusion peak low and high bin
+      putTextFieldValue,$
+        Event,$
+        'data_d_selection_peak_ymin_cw_field',$
+        STRCOMPRESS(ymin/2,/remove_all),$
+        0                     ;do not append
+      putTextFieldValue,$
+        Event,$
+        'data_d_selection_peak_ymax_cw_field',$
+        STRCOMPRESS(ymax/2,/remove_all),$
+        0                     ;do not append
+    END
+    2: BEGIN                    ;back
+;      (*(*global).data_back_selection) = y_array
+    END
+    3: BEGIN
+;      IF ((*global).select_zoom_status) THEN BEGIN
+;        RefReduction_zoom, $
+;          Event, $
+;          MouseX = event.x, $
+;          MouseY = event.y, $
+;          fact   = (*global).DataZoomFactor,$
+;          uname  = 'data_zoom_draw'
+;        (*global).select_zoom_status = 0
+;      ENDIF
+    END
+  ENDCASE
+    
+    CASE (ROISignalBackZoomStatus) OF
+      0: BEGIN                    ;ROI
+        (*(*global).data_roi_selection) = [y1,y2]
+      END
+      1: BEGIN                    ;signal
+        (*(*global).data_peak_selection) = [y1,y2]
+      END
+      2: BEGIN                    ;back
+        (*(*global).data_back_selection) = [y1,y2]
+      END
+      ELSE:
+    ENDCASE
+    
+    putDataBackgroundPeakYMinMaxValueInTextFields, Event
     
   ENDIF ELSE BEGIN                ;Zoom selected
   
@@ -512,10 +565,10 @@ PRO REFreduction_DataSelectionRelease, event
   
   ReplotOtherSelection, Event, ROIsignalBackZoomStatus
   (*global).select_data_status = mouse_status_new
-  ;update Back and Peak Ymin and Ymax cw_fields
-  putDataBackgroundPeakYMinMaxValueInTextFields, Event
+;  ;update Back and Peak Ymin and Ymax cw_fields
+;  putDataBackgroundPeakYMinMaxValueInTextFields, Event
   
-; plot_average_data_peak_value, Event
+ ;plot_average_data_peak_value, Event
   
 END
 
