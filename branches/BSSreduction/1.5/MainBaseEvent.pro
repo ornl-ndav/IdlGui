@@ -59,6 +59,35 @@ PRO MAIN_BASE_event, Event
       load_configuration, event
     end
     
+    ;lin plot
+    widget_info(wWidget, find_by_uname='linear_main_plot'): begin
+      value_lin = '* linear'
+      value_log = '  logarithmic'
+      putValue, event, 'linear_main_plot', value_lin
+      putValue, event, 'log_main_plot', value_log
+      (*global).plot_type = 'lin'
+      IF ((*global).NeXusFound AND $
+        (*global).NeXusFormatWrong EQ 0) THEN BEGIN
+        bss_reduction_PlotBanks, Event
+        PlotExcludedPixels, Event
+      endif
+    end
+    
+    ;log
+    widget_info(wWidget, find_by_uname='log_main_plot'): begin
+      value_lin = '  linear'
+      value_log = '* logarithmic'
+      putValue, event, 'linear_main_plot', value_lin
+      putValue, event, 'log_main_plot', value_log
+      (*global).plot_type = 'log'
+      IF ((*global).NeXusFound AND $
+        (*global).NeXusFormatWrong EQ 0) THEN BEGIN
+        bss_reduction_PlotBanks, Event
+        PlotExcludedPixels, Event
+      endif
+    end
+    
+    
     ;when changing counts vs tof tab
     Widget_Info(wWidget, FIND_BY_UNAME='counts_vs_tof_tab'): begin
       BSSreduction_CountsVsTofTab, Event
@@ -67,11 +96,15 @@ PRO MAIN_BASE_event, Event
     ;cw_field run number
     Widget_Info(wWidget, FIND_BY_UNAME='nexus_run_number'): begin
       bss_reduction_LoadNexus, Event
+      BSSreduction_PlotCountsVsTofOfSelection_light, Event
+      BSSreduction_DisplayLinLogFullCountsVsTof, Event
     end
     
     ;BROWSE button run number
     Widget_Info(wWidget, FIND_BY_UNAME='nexus_run_number_button'): begin
       bss_reduction_BrowseNexus, Event
+      BSSreduction_PlotCountsVsTofOfSelection_light, Event
+      BSSreduction_DisplayLinLogFullCountsVsTof, Event
     end
     
     ;LIVE DATA STREAMING button
