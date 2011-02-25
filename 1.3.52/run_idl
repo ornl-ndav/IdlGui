@@ -1,0 +1,11 @@
+spawn, 'cp REFreduction.cfg .REFreduction.cfg'
+@idl_makefile.pro
+ref_reduction
+
+
+
+
+
+
+
+
