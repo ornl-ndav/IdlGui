@@ -134,7 +134,7 @@ PRO BSSreduction_ReduceUpdateGui, Event
 ;If there is a normalization run then activate in tab3
 ;Normalization Integration Start and End Wavelength (Angstroms)
 widgets = ['niw_button']
-NDFiles = getTextFieldValue(Event,'ndf_list_of_runs_text')
+NDFiles = getTextFieldValue(Event,'ndf_run_number_cw_field')
 IF (NDFiles NE '') THEN BEGIN ;activate widgets
     activate_status = 1
 ENDIF ELSE BEGIN ;desactivate widgets
@@ -151,7 +151,7 @@ ENDIF
 ;If dsback is not null, then activate in tab3
 ;Low and High values that bracket the elastic peak
 widgets = ['te_button']
-DSBFiles = getTextFieldValue(Event,'dsb_list_of_runs_text')
+DSBFiles = getTextFieldValue(Event,'dsb_run_number_cw_field')
 IF (DSBFiles NE '') THEN BEGIN ;activate widgets
     activate_status = 1
 ENDIF ELSE BEGIN ;desactivate widgets

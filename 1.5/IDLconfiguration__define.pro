@@ -41,11 +41,11 @@ function IDLconfiguration::getConfig, event
   ;eb: enabled button
   
   ;1) Input
-  _structure = {tf1_1: getTextFieldValue(event, 'rsdf_list_of_runs_text'), $
-    tf2_1: getTextFieldValue(event, 'bdf_list_of_runs_text'), $
-    tf3_1: getTextFieldValue(event, 'ndf_list_of_runs_text'), $
-    tf4_1: getTextFieldValue(event, 'ecdf_list_of_runs_text'), $
-    tf5_1: getTextFieldValue(event, 'dsb_list_of_runs_text'), $
+  _structure = {tf1_1: getTextFieldValue(event, 'rsdf_run_number_cw_field'), $
+    tf2_1: getTextFieldValue(event, 'bdf_run_number_cw_field'), $
+    tf3_1: getTextFieldValue(event, 'ndf_run_number_cw_field'), $
+    tf4_1: getTextFieldValue(event, 'ecdf_run_number_cw_field'), $
+    tf5_1: getTextFieldValue(event, 'dsb_run_number_cw_field'), $
     
     ;2) Input
     tf1_2: getTextFieldValue(event, 'proif_text'), $

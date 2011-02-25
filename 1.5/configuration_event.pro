@@ -189,11 +189,11 @@ pro repopulate_gui, event, cfg_structure
   compile_opt idl2
   
   ;1) Input
-  putValue, event, 'rsdf_list_of_runs_text', cfg_structure.tf1_1
-  putValue, event, 'bdf_list_of_runs_text', cfg_structure.tf2_1
-  putValue, event, 'ndf_list_of_runs_text', cfg_structure.tf3_1
-  putValue, event, 'ecdf_list_of_runs_text', cfg_structure.tf4_1
-  putValue, event, 'dsb_list_of_runs_text', cfg_structure.tf5_1
+  putValue, event, 'rsdf_run_number_cw_field', cfg_structure.tf1_1
+  putValue, event, 'bdf_run_number_cw_field', cfg_structure.tf2_1
+  putValue, event, 'ndf_run_number_cw_field', cfg_structure.tf3_1
+  putValue, event, 'ecdf_run_number_cw_field', cfg_structure.tf4_1
+  putValue, event, 'dsb_run_number_cw_field', cfg_structure.tf5_1
   
   ;2) Input
   putValue, event, 'proif_text', cfg_structure.tf1_2
