@@ -64,10 +64,7 @@ FUNCTION check_number_polarization_state, Event, $
   RETURN, sz
   
   ;end of remove me once nxdir works again
-  
-  
-  
-  
+
   text = '-> Number of polarization states: '
   cmd = 'nxdir ' + nexus_file_name[0]
   
@@ -148,17 +145,25 @@ FUNCTION find_full_nexus_name, Event,$
   IF (value EQ 1) THEN BEGIN ;get proposal selected
     proposal = getDropListSelectedValue(Event, droplist_uname)
     cmd += ' --proposal=' + STRCOMPRESS(proposal,/REMOVE_ALL)
+    cmd_tmp = cmd
   ENDIF
   
   cmd += " " + STRCOMPRESS(run_number,/remove_all)
   SPAWN, cmd, full_nexus_name, err_listening
   
   if (full_nexus_name[0] ne '') then begin ;make sure it's really a nexus file
+    
+    cmd = "findnexus --nows -i" + instrument + ' ' + strcompress(run_number,/remove_all)
+    spawn, cmd, full_nexus_name, err_listening
     result = strmatch(strlowcase(full_nexus_name[0]), 'failed to fill in *')
     if (result ge 1) then begin
       isNexusExist = 0
       return, ''
-    endif
+    endif else begin
+      isNexusExist = 1
+    return, full_nexus_name[0]
+    endelse
+    
   endif
   
   ;check if nexus exists
@@ -190,11 +195,17 @@ FUNCTION find_list_nexus_name, Event, run_number, instrument, isNexusExist
   SPAWN, cmd, full_nexus_name, err_listening
 
   if (full_nexus_name[0] ne '') then begin ;make sure it's really a nexus file
+    
+    spawn, cmd + ' --nows', full_nexus_name, err_listening
     result = strmatch(strlowcase(full_nexus_name[0]), 'failed to fill in *')
     if (result ge 1) then begin
       isNexusExist = 0
       return, ''
-    endif
+    endif else begin
+    isNexusExist = 1
+    return, full_nexus_name[0]
+    endelse
+
   endif
 
   ;get size of result

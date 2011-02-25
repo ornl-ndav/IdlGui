@@ -174,9 +174,10 @@ PRO REFreduction_LoadDatafile, Event, isNeXusFound, NbrNexus
       
         ;display list of nexus found if list is GT 1 otherwise proceed as
         ;before
+        type = (size(full_list_of_nexus_name))[0]
         sz = (SIZE(full_list_of_nexus_name))(1)
         NrefbrNexus = sz
-        IF (sz GT 1) THEN BEGIN ;more than 1 nexus file found
+        IF (type ne 0 && sz GT 1) THEN BEGIN ;more than 1 nexus file found
         
           WIDGET_CONTROL,HOURGLASS=0
           
