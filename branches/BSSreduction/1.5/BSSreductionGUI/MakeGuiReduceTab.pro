@@ -282,12 +282,19 @@ label = WIDGET_LABEL(ReduceBase,$
 text = WIDGET_TEXT(ReduceBase,$
                    XOFFSET = clg.text.size[0],$
                    YOFFSET = clg.text.size[1],$
-                   SCR_XSIZE = clg.text.size[2],$
+                   SCR_XSIZE = clg.text.size[2]-50,$
                    SCR_YSIZE = clg.text.size[3],$
                    UNAME = clg.text.uname,$
                    /ALIGN_LEFT,$
                    /WRAP,$
                    /SCROLL)
 
+preview = widget_button(ReduceBase,$
+  xoffset = clg.text.size[2]-50,$
+  yoffset = clg.text.size[1],$
+  scr_xsize = 50,$
+  scr_ysize = clg.text.size[3],$
+  value = '>>',$
+  uname = 'preview_command_line')
 
 END
