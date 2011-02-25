@@ -37,6 +37,9 @@ compile_opt idl2
 
 widget_control, event.top, get_uvalue=global
 
-list_of_data_nexus = (*(*global).list_of_data_nexus)
+input = getTextFieldValue(event, 'rsdf_run_number_cw_field')
+
+getListFromSelection, Event, input
+;list_of_data_nexus = (*(*global).list_of_data_nexus)
 
 end
