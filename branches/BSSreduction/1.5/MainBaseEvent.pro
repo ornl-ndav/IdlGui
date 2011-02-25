@@ -57,6 +57,8 @@ PRO MAIN_BASE_event, Event
     ;Load configuration
     Widget_info(wWidget, find_by_uname='load_configuration'): begin
       load_configuration, event
+      BSSreduction_Reduce_rsdf_run_number_cw_field, Event
+      BSSreduction_CommandLineGenerator, Event
     end
     
     ;lin plot
