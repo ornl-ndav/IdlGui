@@ -72,15 +72,15 @@ PRO MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
     frame=4)
   row1 = widget_base(data_base,/row)
   field1 = cw_field(row1,$
-    xsize=65,$
+    xsize=70,$
     /return_events,$
     uname='rsdf_run_number_cw_field',$
     title='Run #')
-  label=widget_label(row1,value='(ex: 1,2,[3,5-8],10) or')
-  button = widget_button(row1,$
-    value='Browse ...',$
-    uname='rsdf_browse_nexus_button',$
-    scr_xsize=120)
+  label=widget_label(row1,value='(ex: 1,2,[3,5-8],10) -> 4 diff. jobs')
+;  button = widget_button(row1,$
+;    value='Browse ...',$
+;    uname='rsdf_browse_nexus_button',$
+;    scr_xsize=120)
   list = widget_text(data_base,$
     scr_xsize=719,$
     /editable,$
