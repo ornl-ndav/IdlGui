@@ -91,6 +91,9 @@ cd, CurrentFolder
 .run IDLconfiguration__define.pro
 .run configuration_event.pro
 
+;sequence of data runs
+.run sequence.pro
+
 ;classes
 .run IDLoutputFile__define.pro
 .run IDLgetMetadata__define.pro
