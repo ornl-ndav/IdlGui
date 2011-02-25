@@ -133,21 +133,21 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
   ;------------------------------------------------------------------------------
     
-  ;HELP MENU in Menu Bar
-  HELP_MENU = WIDGET_BUTTON(WID_BASE_0_MBAR,$
-    UNAME = 'help_menu',$
-    VALUE = 'HELP',$
-    /MENU)
-    
-  HELP_BUTTON = WIDGET_BUTTON(HELP_MENU,$
-    VALUE = 'HELP',$
-    UNAME = 'help_button')
-    
-  IF ((*global).ucams EQ 'j35') THEN BEGIN
-    my_help_button = WIDGET_BUTTON(HELP_MENU,$
-      VALUE = 'MY HELP',$
-      UNAME = 'my_help_button')
-  ENDIF
+;  ;HELP MENU in Menu Bar
+;  HELP_MENU = WIDGET_BUTTON(WID_BASE_0_MBAR,$
+;    UNAME = 'help_menu',$
+;    VALUE = 'HELP',$
+;    /MENU)
+;    
+;  HELP_BUTTON = WIDGET_BUTTON(HELP_MENU,$
+;    VALUE = 'HELP',$
+;    UNAME = 'help_button')
+;    
+;  IF ((*global).ucams EQ 'j35') THEN BEGIN
+;    my_help_button = WIDGET_BUTTON(HELP_MENU,$
+;      VALUE = 'MY HELP',$
+;      UNAME = 'my_help_button')
+;  ENDIF
   
   ;add version to program
   if ((*global).miniVersion) then begin
