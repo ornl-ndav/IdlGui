@@ -20,6 +20,7 @@ install:
 	cp REFreductionHELP/*.* /SNS/software/idltools/help/REFreduction/
 	cp REFreduction_images/*.* /SNS/software/idltools/sav/REFreduction_images/
 	cp .REFreduction.cfg /SNS/software/idltools/sav/
+	cp help/* /SNS/software/idltools/help/SOS/
 
 backup:
 	cp ref_reduction.sav /SNS/software/idltools/sav_backup/
@@ -28,6 +29,7 @@ backup:
 	cp mini_ref_reduction_backup /SNS/software/idltools/
 	cp -rf REFreduction_images /usr/local/SNS/idltools/
 	cp .REFreduction.cfg /SNS/software/idltools/sav_backup/
+	cp help/* /SNS/software/idltools/sav_backup/help/SOS/
 
 test: 
 	cp ref_reduction.sav /SNS/software/idltools/test/sav/
@@ -37,3 +39,5 @@ test:
 	cp REFreductionHELP/*.* /SNS/software/idltools/test/help/REFreduction/
 	cp REFreduction_images/*.* /SNS/software/idltools/test/sav/REFreduction_images/
 	cp .REFreduction.cfg /SNS/software/idltools/test/sav/
+	cp help/* /SNS/software/idltools/test/help/SOS/
+	
