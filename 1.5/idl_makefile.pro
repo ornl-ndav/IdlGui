@@ -14,6 +14,7 @@ cd, IdlUtilitiesPath
 .run logger.pro
 .run CheckPackages.pro
 .run is_monitor_flag_necessary.pro
+.run xdisplayfile.pro
 
 ;Build BSSreduction GUI
 cd, CurrentFolder + '/BSSreductionGUI/'
@@ -94,6 +95,7 @@ cd, CurrentFolder
 ;sequence of data runs
 .run sequence.pro
 .run create_list_of_jobs.pro
+.run preview_command_line.pro
 
 ;classes
 .run IDLoutputFile__define.pro
