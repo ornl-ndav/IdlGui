@@ -37,7 +37,7 @@ PRO MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
   tab1_base = WIDGET_BASE(ReduceInputTab,$
     TITLE     = ReduceInputTabSettings.title[0])
     
-  yoffset = 95
+  yoffset = 94
   data = widget_label(tab1_base,$
     yoffset = 8,$
     xoffset = 10,$
@@ -46,16 +46,18 @@ PRO MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
     yoffset = 8+yoffset,$
     xoffset = 10,$
     value = 'Background Data File')
+    
+    yoffset = 75
   norm = widget_label(tab1_base,$
-    yoffset = 8+2*yoffset,$
+    yoffset = 24+2*yoffset,$
     xoffset = 10,$
     value = 'Normalization Data File')
   ec = widget_label(tab1_base,$
-    yoffset = 8+3*yoffset,$
+    yoffset = 22+3*yoffset,$
     xoffset = 10,$
     value = 'Empty Can Data File')
   bk = widget_label(tab1_base,$
-    yoffset = 8+4*yoffset,$
+    yoffset = 21+4*yoffset,$
     xoffset = 10,$
     value = 'Direct Scattering Background (Sample Data at Baseline T) File')
     
@@ -72,7 +74,7 @@ PRO MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
     frame=4)
   row1 = widget_base(data_base,/row)
   field1 = cw_field(row1,$
-    xsize=90,$
+    xsize=110,$
     /return_events,$
     uname='rsdf_run_number_cw_field',$
     title='Run #')
@@ -96,7 +98,7 @@ PRO MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
     frame=4)
   row1 = widget_base(data_base,/row)
   field1 = cw_field(row1,$
-    xsize=65,$
+    xsize=88,$
     /return_events,$
     uname='bdf_run_number_cw_field',$
     title='Run #')
@@ -120,7 +122,7 @@ PRO MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
     frame=4)
   row1 = widget_base(data_base,/row)
   field1 = cw_field(row1,$
-    xsize=65,$
+    xsize=88,$
     /return_events,$
     uname='ndf_run_number_cw_field',$
     title='Run #')
@@ -144,7 +146,7 @@ PRO MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
     frame=4)
   row1 = widget_base(data_base,/row)
   field1 = cw_field(row1,$
-    xsize=65,$
+    xsize=88,$
     /return_events,$
     uname='ecdf_run_number_cw_field',$
     title='Run #')
@@ -168,7 +170,7 @@ PRO MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
     frame=4)
   row1 = widget_base(data_base,/row)
   field1 = cw_field(row1,$
-    xsize=65,$
+    xsize=88,$
     /return_events,$
     uname='dsb_run_number_cw_field',$
     title='Run #')
