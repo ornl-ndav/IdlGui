@@ -39,26 +39,14 @@ PRO add_seq_number_to_same_seq_number, tmp_seq_number, seq_number
   ENDWHILE
 END
 
-PRO getListFromSelection, Event,SELECTION=selection
+
+
+
+PRO getListFromSelection, Event, input_text
+compile_opt idl2
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
-  
-  ;check that there is something to parse
-  ;(by checking if to_replace is empty or not)
-  uname = ['selection_1_replaced_by',$
-    'selection_2_replaced_by',$
-    'selection_3_replaced_by']
-  input_text = $
-    STRCOMPRESS(getTextFieldValue(Event,uname[selection-1]),/REMOVE_ALL)
-  ;nothing to parse for this selection row
-  IF (input_text EQ '') THEN BEGIN
-    CASE (selection) OF
-      1: (*(*global).sequence_field1) = PTR_NEW(0L)
-      2: (*(*global).sequence_field2) = PTR_NEW(0L)
-      3: (*(*global).sequence_field3) = PTR_NEW(0L)
-    ENDCASE
-  ENDIF
   
   ;create column_sequence_tab2
   ;ex:  10,20-22,[30,35,37]
@@ -161,13 +149,9 @@ PRO getListFromSelection, Event,SELECTION=selection
   
   ;add individuals list to global sequence
   ;ex [1,2,5-7,9] -> will create run [1,2,5-7,9],1,2,5,6,7,9
-  add_bracket_runs_to_sequence, column_seq_number
-  
-  CASE (selection) OF
-    1: (*(*global).sequence_field1) = column_seq_number
-    2: (*(*global).sequence_field2) = column_seq_number
-    3: (*(*global).sequence_field3) = column_seq_number
-  ENDCASE
+  ;add_bracket_runs_to_sequence, column_seq_number
+ 
+  (*(*global).list_of_data_nexus) = column_seq_number
   
 END
 

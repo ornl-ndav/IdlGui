@@ -46,22 +46,28 @@ PRO BSSreduction_CommandLineGenerator, Event
   ;check if use iterative background subtraction is active or not
   ibs_value = getCWBgroupValue(Event, $
     'use_iterative_background_subtraction_cw_bgroup')
-    
-  IF (ibs_value EQ 1) THEN BEGIN ;if Iterative Background Subtraction is OFF
-    cmd = (*global).DriverName + ' ' ;name of function to call
-  ENDIF ELSE BEGIN
-    cmd = (*global).iterative_background_DriverName + ' '
-  ENDELSE
-  
+      
   ;****TAB1****
   
   TabName = 'Tab#1 - INPUT DATA SETUP (1)'
   tab1    = 0
   ;get Raw Sample Data Files
   ;RSDFiles = getTextFieldValue(Event, 'FIXME')  ;FIXME
-  RSDFiles = 'FIXME'
-  IF (RSDFiles NE '') THEN BEGIN
-    cmd += ' ' + strcompress(RSDFiles,/remove_all)
+  RSDFiles = (*(*global).list_of_data_nexus)
+  nbr_individual_runs = n_elements(RSDFiles)
+  cmd_array = strarr(nbr_individual_runs)
+  
+  index_run = 0
+  while (index_run lt nbr_individual_runs) do begin
+  
+    IF (ibs_value EQ 1) THEN BEGIN ;if Iterative Background Subtraction is OFF
+    cmd = (*global).DriverName + ' ' ;name of function to call
+  ENDIF ELSE BEGIN
+    cmd = (*global).iterative_background_DriverName + ' '
+  ENDELSE
+  
+  IF (RSDFiles[0] NE '') THEN BEGIN
+    cmd += ' ' + strcompress(RSDFiles[index_run],/remove_all)
     IF (StatusMessage EQ 0) THEN BEGIN
       putInfoInCommandLineStatus, Event, '', 0
     ENDIF
@@ -2067,8 +2073,13 @@ endif
     ENDIF
   ENDELSE
   
+  cmd_array[index_run] = cmd
+
+  index_run++
+  endwhile
+  
   ;display command line in Reduce text box
-  putTextFieldValue, Event, 'command_line_generator_text', cmd, 0
+  putTextFieldValue, Event, 'command_line_generator_text', cmd_array, 0
   
   ;validate or not Go data reduction button
   IF (StatusMessage NE 0) THEN BEGIN ;do not activate button
