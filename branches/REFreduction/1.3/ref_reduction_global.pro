@@ -167,7 +167,8 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     list_pola_state: PTR_NEW(0L),$
     debugging_structure: PTR_NEW(0L),$
     my_package: PTR_NEW(0L),$
-    driver_name: 'reflect_reduction',$
+    ;driver_name: 'reflect_reduction',$
+    driver_name: '~/bin/runenv specmh_reduction',$
     norm_loadct_contrast_changed: 0,$
     data_loadct_contrast_changed: 0,$
     browse_data_path: '~/',$
