@@ -72,15 +72,15 @@ PRO MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
     frame=4)
   row1 = widget_base(data_base,/row)
   field1 = cw_field(row1,$
-    xsize=45,$
+    xsize=65,$
     /return_events,$
     uname='rsdf_run_number_cw_field',$
-    title='Run Number:')
-  label=widget_label(row1,value='(ex: 1005,1007-1009)   or ')
+    title='Run #')
+  label=widget_label(row1,value='(ex: 1,2,[3,5-8],10) or')
   button = widget_button(row1,$
     value='Browse ...',$
     uname='rsdf_browse_nexus_button',$
-    scr_xsize=185)
+    scr_xsize=120)
   list = widget_text(data_base,$
     scr_xsize=719,$
     /editable,$
@@ -96,15 +96,15 @@ PRO MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
     frame=4)
   row1 = widget_base(data_base,/row)
   field1 = cw_field(row1,$
-    xsize=45,$
+    xsize=65,$
     /return_events,$
     uname='bdf_run_number_cw_field',$
-    title='Run Number:')
-  label=widget_label(row1,value='(ex: 1005,1007-1009)   or ')
+    title='Run #')
+  label=widget_label(row1,value='(ex: 1,2,3,5-8,10) or')
   button = widget_button(row1,$
     value='Browse ...',$
     uname='bdf_browse_nexus_button',$
-    scr_xsize=185)
+    scr_xsize=130)
   list = widget_text(data_base,$
     scr_xsize=719,$
     /editable,$
@@ -120,15 +120,15 @@ PRO MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
     frame=4)
   row1 = widget_base(data_base,/row)
   field1 = cw_field(row1,$
-    xsize=45,$
+    xsize=65,$
     /return_events,$
     uname='ndf_run_number_cw_field',$
-    title='Run Number:')
-  label=widget_label(row1,value='(ex: 1005,1007-1009)   or ')
+    title='Run #')
+  label=widget_label(row1,value='(ex: 1,2,3,5-8,10) or')
   button = widget_button(row1,$
     value='Browse ...',$
     uname='ndf_browse_nexus_button',$
-    scr_xsize=185)
+    scr_xsize=130)
   list = widget_text(data_base,$
     scr_xsize=719,$
     /editable,$
@@ -144,15 +144,15 @@ PRO MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
     frame=4)
   row1 = widget_base(data_base,/row)
   field1 = cw_field(row1,$
-    xsize=45,$
+    xsize=65,$
     /return_events,$
     uname='ecdf_run_number_cw_field',$
-    title='Run Number:')
-  label=widget_label(row1,value='(ex: 1005,1007-1009)   or ')
+    title='Run #')
+  label=widget_label(row1,value='(ex: 1,2,3,5-8,10) or')
   button = widget_button(row1,$
     value='Browse ...',$
     uname='ecdf_browse_nexus_button',$
-    scr_xsize=185)
+    scr_xsize=130)
   list = widget_text(data_base,$
     scr_xsize=719,$
     /editable,$
@@ -168,15 +168,15 @@ PRO MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
     frame=4)
   row1 = widget_base(data_base,/row)
   field1 = cw_field(row1,$
-    xsize=45,$
+    xsize=65,$
     /return_events,$
     uname='dsb_run_number_cw_field',$
-    title='Run Number:')
-  label=widget_label(row1,value='(ex: 1005,1007-1009)   or ')
+    title='Run #')
+  label=widget_label(row1,value='(ex: 1,2,3,5-8,10) or')
   button = widget_button(row1,$
     value='Browse ...',$
     uname='dsb_browse_nexus_button',$
-    scr_xsize=185)
+    scr_xsize=130)
   list = widget_text(data_base,$
     scr_xsize=719,$
     /editable,$
