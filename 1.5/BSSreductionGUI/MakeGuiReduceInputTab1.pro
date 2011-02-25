@@ -37,7 +37,7 @@ PRO MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
   tab1_base = WIDGET_BASE(ReduceInputTab,$
     TITLE     = ReduceInputTabSettings.title[0])
     
-  yoffset = 107
+  yoffset = 95
   data = widget_label(tab1_base,$
     yoffset = 8,$
     xoffset = 10,$
@@ -72,19 +72,19 @@ PRO MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
     frame=4)
   row1 = widget_base(data_base,/row)
   field1 = cw_field(row1,$
-    xsize=70,$
+    xsize=90,$
     /return_events,$
     uname='rsdf_run_number_cw_field',$
     title='Run #')
-  label=widget_label(row1,value='(ex: 1,2,[3,5-8],10) -> 4 diff. jobs')
+  label=widget_label(data_base,value='(ex: 1,2,[3,5-8],10) -> 4 diff. jobs')
 ;  button = widget_button(row1,$
 ;    value='Browse ...',$
 ;    uname='rsdf_browse_nexus_button',$
 ;    scr_xsize=120)
-  list = widget_text(data_base,$
-    scr_xsize=719,$
-    /editable,$
-    uname='rsdf_list_of_runs_text')
+;  list = widget_text(data_base,$
+;    scr_xsize=719,$
+;    /editable,$
+;    uname='rsdf_list_of_runs_text')
     
   space = widget_label(col_base,value=' ',scr_ysize=10)
   
@@ -100,15 +100,15 @@ PRO MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
     /return_events,$
     uname='bdf_run_number_cw_field',$
     title='Run #')
-  label=widget_label(row1,value='(ex: 1,2,3,5-8,10) or')
-  button = widget_button(row1,$
-    value='Browse ...',$
-    uname='bdf_browse_nexus_button',$
-    scr_xsize=130)
-  list = widget_text(data_base,$
-    scr_xsize=719,$
-    /editable,$
-    uname='bdf_list_of_runs_text')
+  label=widget_label(row1,value='(ex: 1,2,3,5-8,10)')
+;  button = widget_button(row1,$
+;    value='Browse ...',$
+;    uname='bdf_browse_nexus_button',$
+;    scr_xsize=130)
+;  list = widget_text(data_base,$
+;    scr_xsize=719,$
+;    /editable,$
+;    uname='bdf_list_of_runs_text')
     
   space = widget_label(col_base,value=' ',scr_ysize=10)
   
@@ -124,15 +124,15 @@ PRO MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
     /return_events,$
     uname='ndf_run_number_cw_field',$
     title='Run #')
-  label=widget_label(row1,value='(ex: 1,2,3,5-8,10) or')
-  button = widget_button(row1,$
-    value='Browse ...',$
-    uname='ndf_browse_nexus_button',$
-    scr_xsize=130)
-  list = widget_text(data_base,$
-    scr_xsize=719,$
-    /editable,$
-    uname='ndf_list_of_runs_text')
+  label=widget_label(row1,value='(ex: 1,2,3,5-8,10)')
+;  button = widget_button(row1,$
+;    value='Browse ...',$
+;    uname='ndf_browse_nexus_button',$
+;    scr_xsize=130)
+;  list = widget_text(data_base,$
+;    scr_xsize=719,$
+;    /editable,$
+;    uname='ndf_list_of_runs_text')
     
   space = widget_label(col_base,value=' ',scr_ysize=10)
   
@@ -148,15 +148,15 @@ PRO MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
     /return_events,$
     uname='ecdf_run_number_cw_field',$
     title='Run #')
-  label=widget_label(row1,value='(ex: 1,2,3,5-8,10) or')
-  button = widget_button(row1,$
-    value='Browse ...',$
-    uname='ecdf_browse_nexus_button',$
-    scr_xsize=130)
-  list = widget_text(data_base,$
-    scr_xsize=719,$
-    /editable,$
-    uname='ecdf_list_of_runs_text')
+  label=widget_label(row1,value='(ex: 1,2,3,5-8,10)')
+;  button = widget_button(row1,$
+;    value='Browse ...',$
+;    uname='ecdf_browse_nexus_button',$
+;    scr_xsize=130)
+;  list = widget_text(data_base,$
+;    scr_xsize=719,$
+;    /editable,$
+;    uname='ecdf_list_of_runs_text')
     
   space = widget_label(col_base,value=' ',scr_ysize=10)
   
@@ -172,13 +172,13 @@ PRO MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
     /return_events,$
     uname='dsb_run_number_cw_field',$
     title='Run #')
-  label=widget_label(row1,value='(ex: 1,2,3,5-8,10) or')
-  button = widget_button(row1,$
-    value='Browse ...',$
-    uname='dsb_browse_nexus_button',$
-    scr_xsize=130)
-  list = widget_text(data_base,$
-    scr_xsize=719,$
-    /editable,$
-    uname='dsb_list_of_runs_text')
+  label=widget_label(row1,value='(ex: 1,2,3,5-8,10)')
+;  button = widget_button(row1,$
+;    value='Browse ...',$
+;    uname='dsb_browse_nexus_button',$
+;    scr_xsize=130)
+;  list = widget_text(data_base,$
+;    scr_xsize=719,$
+;    /editable,$
+;    uname='dsb_list_of_runs_text')
 END

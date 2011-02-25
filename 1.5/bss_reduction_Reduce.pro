@@ -36,7 +36,8 @@
 
 ;This function is reached by the rsdf_run_number_cw_field (tab#1)
 PRO BSSreduction_Reduce_rsdf_run_number_cw_field, Event
-BSSreduction_NeXusFullPath, Event, 'rsdf'
+create_list_of_jobs, event
+;BSSreduction_NeXusFullPath, Event, 'rsdf'
 END
 
 ;This function is reached by the rsdf_nexus_cw_field (tab#1)
