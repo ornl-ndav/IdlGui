@@ -126,6 +126,9 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     srun_web_page: 'https://neutronsr.us/applications/jobmonitor/squeue.php?view=all',$
     first_lds_used: 1,$
     
+    ;type of main plot (first tab) lin or log
+    plot_type: 'log', $
+    
     ;temporary live folder for live data stremaing
     tmp_live_shared_folder: live_shared_folder, $
     
@@ -439,6 +442,17 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   save = widget_button(config, $
   uname = 'save_configuration',$
   value = ' Save ... ')
+    
+  ;lin/log main plot
+  plot = widget_button(bar,$
+  value = 'Plot',$
+  /menu)
+  lin = widget_button(plot,$
+  uname = 'linear_main_plot',$
+  value = '  linear')
+  go = widget_button(plot,$
+  uname = 'log_main_plot',$
+  value = '* logarithmic')  
     
   ;attach global structure with widget ID of widget main base widget ID
   widget_control, MAIN_BASE, set_uvalue=global

@@ -190,6 +190,9 @@ max = max([max1,max2])
 bank1_sum[0,56] = max
 bank2_sum[0,56] = max
 
+lin_log_data, event, bank1_sum
+lin_log_data, event, bank2_sum
+
 ;store banks sum
 (*(*global).bank1_sum) = bank1_sum
 (*(*global).bank2_sum) = bank2_sum
@@ -206,3 +209,26 @@ success = 1
 ;endelse
 
 END
+
+
+
+pro lin_log_data, event, data
+compile_opt idl2
+
+    widget_control,event.top,get_uvalue=global
+plot_type = (*global).plot_type
+  
+  if (plot_type eq 'log') then begin
+  
+    ;remove 0 values and replace with NAN
+    ;and calculate log
+    index = where(Data eq 0, nbr)
+    if (nbr GT 0) then begin
+      Data[index] = !VALUES.D_NAN
+    endif
+    Data = ALOG10(Data)
+    Data = BYTSCL(Data,/NAN)
+    
+  endif
+  
+end
