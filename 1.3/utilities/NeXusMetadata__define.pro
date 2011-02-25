@@ -216,13 +216,43 @@ function NeXusMetadata::getDangle
   catch, error_value
   if (error_value ne 0) then begin
     catch,cancel
-    ;we are dealing with a new NeXus with a new path value (readback -> value)
-    path_value = '/entry-Off_Off/instrument/bank1/DANGLE/value/'
     catch, error_value_2
     if (error_value_2 ne 0) then begin
       catch,/cancel
-      return, ['N/A','N/A']
+      
+      catch, tmp_error_value
+      if (tmp_error_value ne 0) then begin
+        catch,/cancel
+        return, ['N/A','N/A']
+      endif else begin
+      
+        path_value = '/entry-Off_Off/DASlogs/DANGLE/value/'
+        
+        pathID_value = h5d_open(self.fileID, path_value)
+        dangle_value = strcompress(h5d_read(pathID_value),/remove_all)
+        dangle_value = dangle_value[0]
+        
+        pathID_units = h5a_open_name(pathID_value,'units')
+        dangle_units = strcompress(h5a_read(pathID_units),/remove_all)
+        
+        if (dangle_units eq 'degree') then begin
+          dangle_rad = convert_deg_to_rad(dangle_value)
+          dangle_degree = dangle_value
+        endif else begin
+          dangle_degree = convert_rad_to_deg(dangle_value)
+          dangle_rad = dangle_value
+        endelse
+        
+        h5d_close, pathID_value
+        return, [dangle_degree,dangle_rad]
+        
+      endelse
+      
     endif else begin
+    
+      ;we are dealing with a new NeXus with a new path value (readback -> value)
+      path_value = '/entry-Off_Off/instrument/bank1/DANGLE/value/'
+      
       pathID_value = h5d_open(self.fileID, path_value)
       dangle_value = strcompress(h5d_read(pathID_value),/remove_all)
       dangle_value = dangle_value[0]
@@ -279,7 +309,34 @@ function NeXusMetadata::getDangle0
     catch, error_value_2
     if (error_value_2 ne 0) then begin
       catch,/cancel
-      return, ['N/A','N/A']
+      
+      catch, tmp_error_value
+      if (tmp_error_value ne 0) then begin
+        catch,/cancel
+        return, ['N/A','N/A']
+      endif else begin
+      
+        tmp_path_value = '/entry-Off_Off/DASlogs/DANGLE0/value/'
+        pathID_value = h5d_open(self.fileID, tmp_path_value)
+        dangle_value = strcompress(h5d_read(pathID_value),/remove_all)
+        dangle_value = dangle_value[0]
+        
+        pathID_units = h5a_open_name(pathID_value,'units')
+        dangle_units = strcompress(h5a_read(pathID_units),/remove_all)
+        
+        if (dangle_units eq 'degree') then begin
+          dangle_rad = convert_deg_to_rad(dangle_value)
+          dangle_degree = dangle_value
+        endif else begin
+          dangle_degree = convert_rad_to_deg(dangle_value)
+          dangle_rad = dangle_value
+        endelse
+        
+        h5d_close, pathID_value
+        return, [dangle_degree,dangle_rad]
+        
+      endelse
+      
     endif else begin
       pathID_value = h5d_open(self.fileID, path_value)
       dangle_value = strcompress(h5d_read(pathID_value),/remove_all)
@@ -337,7 +394,24 @@ function NeXusMetadata::getSampleDetDistance
     catch, error_value_2
     if (error_value_2 ne 0) then begin
       catch,/cancel
-      return, ['N/A','N/A']
+      
+      tmp_path_value = '/entry-Off_Off/DASlogs/SampleDetDis/value/'
+      catch, tmp_error_value
+      if (tmp_error_value ne 0) then begin
+        catch, /cancel
+        return, ['N/A','N/A']
+      endif else begin
+        pathID_value = h5d_open(self.fileID, tmp_path_value)
+        dis_value = strcompress(h5d_read(pathID_value),/remove_all)
+        dis_value = dis_value[0]
+        
+        pathID_units = h5a_open_name(pathID_value,'units')
+        dis_units = strcompress(h5a_read(pathID_units),/remove_all)
+        
+        h5d_close, pathID_value
+        return, [dis_value,dis_units]
+      endelse
+      
     endif else begin
       pathID_value = h5d_open(self.fileID, path_value)
       dis_value = strcompress(h5d_read(pathID_value),/remove_all)
@@ -371,10 +445,30 @@ function NeXusMetadata::getDetPosition
   compile_opt idl2
   path_value = '/entry-Off_Off/instrument/bank1/DetectorPosition/readback/'
   path_units = '/entry-Off_Off/instrument/bank1/DetectorPosition/units'
+  
   catch, error_value
   if (error_value ne 0) then begin
-    catch,cancel
-    return, ['N/A','N/A']
+    catch,/cancel
+    
+    tmp_path_value = '/entry-Off_Off/DASlogs/DetectorPosition/readback/'
+    ;    tmp_path_units = '/entry-Off_Off/DASlogs/DetectorPosition/units'
+    catch, error_tmp_value
+    if (error_tmp_value ne 0) then begin
+      catch, /cancel
+      return, ['N/A','N/A']
+    endif else begin
+    
+      pathID_value = h5d_open(self.fileID, tmp_path_value)
+      dis_value = strcompress(h5d_read(pathID_value),/remove_all)
+      
+      pathID_units = h5a_open_name(pathID_value,'units')
+      dis_units = strcompress(h5a_read(pathID_units),/remove_all)
+      
+      h5d_close, pathID_value
+      return, [dis_value,dis_units]
+      
+    endelse
+    
   endif else begin
     pathID_value = h5d_open(self.fileID, path_value)
     dis_value = strcompress(h5d_read(pathID_value),/remove_all)
@@ -398,8 +492,20 @@ function NeXusMetadata::getDirpix
   path = '/entry-Off_Off/instrument/bank1/DIRPIX/value/'
   catch, error_value
   if (error_value ne 0) then begin
-    catch,cancel
-    return, 'N/A'
+    catch,/cancel
+    
+    tmp_path = '/entry-Off_Off/DASlogs/DIRPIX/value/'
+    catch, error_tmp_value
+    if (error_tmp_value ne 0) then begin
+      catch,/cancel
+      return, 'N/A'
+    endif else begin
+      pathID = h5d_open(self.fileID, tmp_path)
+      dirpix = h5d_read(pathID)
+      h5d_close, pathID
+      return, strcompress(dirpix,/remove_all)
+    endelse
+    
   endif else begin
     pathID = h5d_open(self.fileID, path)
     dirpix = h5d_read(pathID)
@@ -419,7 +525,7 @@ function NeXusMetadata::getProtonCharge
   path = '/entry-Off_Off/proton_charge/'
   catch, error_value
   if (error_value ne 0) then begin
-    catch,cancel
+    catch,/cancel
     return, 'N/A'
   endif else begin
     pathID = h5d_open(self.fileID, path)
