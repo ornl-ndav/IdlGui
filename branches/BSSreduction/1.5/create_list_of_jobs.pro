@@ -32,42 +32,11 @@
 ;
 ;==============================================================================
 
-PRO BSSreduction_Cleanup, Main_Base
+pro create_list_of_jobs, event
+compile_opt idl2
 
-  Widget_Control, Main_Base, get_uvalue=global
-  
-  ;cleanup temporary live folder
-  cmd = 'rm -rf ' + (*global).tmp_live_shared_folder
-  spawn, cmd, listening, err_listening
-  
-  if (n_elements(global) EQ 0) then return
-  
-  ; Free up the pointers
-  ptr_free, (*global).icon_ok
-  ptr_free, (*global).list_of_data_nexus
-  ptr_free, (*global).icon_failed
-  ptr_free, (*global).pMetadata
-  ptr_free, (*global).pMetadataValue
-  ptr_free, (*global).job_status_uname
-  ptr_free, (*global).leaf_uname_array
-  ptr_free, (*global).job_status_root_id
-  ptr_free, (*global).job_status_root_status
-  ptr_free, (*global).absolute_leaf_index
-  ptr_free, (*global).FullNameOutputPlots
-  ptr_free, (*global).WidgetsToActivate
-  ptr_free, (*global).full_counts_vs_tof_data
-  ptr_free, (*global).PreviewCountsVsTofAsciiArray
-  ptr_free, (*global).bank1
-  ptr_free, (*global).bank1_sum
-  ptr_free, (*global).bank2
-  ptr_free, (*global).bank2_sum
-  ptr_free, (*global).pixel_excluded
-  ptr_free, (*global).pixel_excluded_base
-  ptr_free, (*global).default_pixel_excluded
-  ptr_free, global
+widget_control, event.top, get_uvalue=global
 
-;Create Config File Name
-;BSSreduction_CreateConfigFile, global
-  
-END
+list_of_data_nexus = (*(*global).list_of_data_nexus)
 
+end

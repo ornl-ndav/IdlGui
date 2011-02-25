@@ -93,6 +93,7 @@ cd, CurrentFolder
 
 ;sequence of data runs
 .run sequence.pro
+.run create_list_of_jobs.pro
 
 ;classes
 .run IDLoutputFile__define.pro

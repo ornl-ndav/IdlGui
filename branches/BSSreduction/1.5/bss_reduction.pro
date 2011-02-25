@@ -132,6 +132,9 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ;temporary live folder for live data stremaing
     tmp_live_shared_folder: live_shared_folder, $
     
+    ;list_of_nexus
+    list_of_data_nexus: ptr_new(0L), $
+    
     application: APPLICATION,$
     version: VERSION,$
     ucams: UCAMS,$ ;ucams of user
