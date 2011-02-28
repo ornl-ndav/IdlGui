@@ -2053,7 +2053,14 @@ PRO BSSreduction_CommandLineGenerator, Event
     ;  ENDIF
     ;get output folder name
     output_folder = (*global).default_output_path
-    oFile = RSDFiles[index_run]
+    _run_numbers = RSDFiles[index_run]
+    ;replace ',' by '_' if any
+    run_array = strsplit(_run_numbers,',',/extract)
+    _run_numbers = strjoin(run_array,'_')
+    oFile = 'BSS_' + _run_numbers
+    ;add time stamp
+    ts = GenerateIsoTimeStamp()
+    oFile += '_' + ts
     
     ;check if we have only 1 job to launch or several ones
     IF (job_number GT 1) THEN BEGIN ;create the array of jobs
@@ -2070,7 +2077,7 @@ PRO BSSreduction_CommandLineGenerator, Event
     ENDIF ELSE BEGIN
       cmd += ' --output=' + output_folder
       IF (OFile NE '') THEN BEGIN
-        cmd += OFile
+        cmd += OFile + '.txt'
       ENDIF
     ENDELSE
     

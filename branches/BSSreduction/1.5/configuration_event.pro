@@ -115,7 +115,6 @@ pro save_configuration, event
   
 end
 
-
 ;+
 ; :Description:
 ;    will load a configuration file and will repopulate all the reduce tabs
