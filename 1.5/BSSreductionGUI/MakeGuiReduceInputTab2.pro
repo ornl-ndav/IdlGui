@@ -190,30 +190,35 @@ frame = WIDGET_LABEL(tab2_base,$
 ;\\\\\\\\\\\\\\
 ;Output Folder\
 ;\\\\\\\\\\\\\\
+label = widget_label(tab2_base,$
+  xoffset = sOFbutton.size[0],$
+  yoffset = sOFbutton.size[1]+3,$
+  value = 'Output Folder:')
+
 wOFbutton = WIDGET_BUTTON(tab2_base,$
-                          XOFFSET   = sOFbutton.size[0],$
+                          XOFFSET   = sOFbutton.size[0]+90,$
                           YOFFSET   = sOFbutton.size[1],$
-                          SCR_XSIZE = sOFbutton.size[2],$
+                          SCR_XSIZE = sOFbutton.size[2]-90,$
                           VALUE     = sOFbutton.value,$
                           UNAME     = sOFbutton.uname)
 
 ;\\\\\\\\\\\\\\\\\
 ;Output File Name\
 ;\\\\\\\\\\\\\\\\\
-Label = WIDGET_LABEL(tab2_base,$
-                     XOFFSET = OFlabel.size[0],$
-                     YOFFSET = OFlabel.size[1],$
-                     VALUE   = OFlabel.value,$
-                     UNAME   = OFlabel.uname)
-
-ListOfRuns = WIDGET_TEXT(tab2_base,$
-                         XOFFSET   = OFListOfRuns.size[0],$
-                         YOFFSET   = OFListOfRuns.size[1],$
-                         SCR_XSIZE = OFListOfRuns.size[2],$
-                         SCR_YSIZE = OFListOfRuns.size[3],$
-                         /ALIGN_LEFT,$
-                         /ALL_EVENTS,$
-                         /EDITABLE,$
-                         UNAME     = OFListOfRuns.uname)
+;Label = WIDGET_LABEL(tab2_base,$
+;                     XOFFSET = OFlabel.size[0],$
+;                     YOFFSET = OFlabel.size[1],$
+;                     VALUE   = OFlabel.value,$
+;                     UNAME   = OFlabel.uname)
+;
+;ListOfRuns = WIDGET_TEXT(tab2_base,$
+;                         XOFFSET   = OFListOfRuns.size[0],$
+;                         YOFFSET   = OFListOfRuns.size[1],$
+;                         SCR_XSIZE = OFListOfRuns.size[2],$
+;                         SCR_YSIZE = OFListOfRuns.size[3],$
+;                         /ALIGN_LEFT,$
+;                         /ALL_EVENTS,$
+;                         /EDITABLE,$
+;                         UNAME     = OFListOfRuns.uname)
                        
 END
