@@ -51,7 +51,6 @@ function IDLconfiguration::getConfig, event
     tf1_2: getTextFieldValue(event, 'proif_text'), $
     tf2_2: getTextFieldValue(event, 'aig_list_of_runs_text'), $
     b1_2:  getButtonvalue(event, 'output_folder_name'), $
-    tf3_2: getTextFieldValue(event, 'of_list_of_runs_text'), $
     
     ;3) Setup
     s1_3: isButtonSelected(event, 'rmcnf_button'), $

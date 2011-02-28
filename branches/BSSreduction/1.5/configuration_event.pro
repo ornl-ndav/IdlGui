@@ -102,10 +102,14 @@ pro save_configuration, event
       dialog_parent=id,$
       /center, $
       title = 'Configuration not saved!')
+      text = 'Save configuration file: ' + cfg_full_file_name[0] + ' FAILED!'
+      AppendLogBookMessage, Event, text
       
   endif else begin
   
     save, cfg_structure, filename=cfg_full_file_name
+    text = 'Saved configuration file: ' + cfg_full_file_name[0]
+    AppendLogBookMessage, Event, text
     
   endelse
   
@@ -199,7 +203,6 @@ pro repopulate_gui, event, cfg_structure
   putValue, event, 'proif_text', cfg_structure.tf1_2
   putValue, event, 'aig_list_of_runs_text', cfg_structure.tf2_2
   SetButton, event, 'output_folder_name', cfg_structure.b1_2
-  putValue, event, 'of_list_of_runs_text', cfg_structure.tf3_2
   
   ;3) Setup
   SetButton, event, 'rmcnf_button', cfg_structure.s1_3
