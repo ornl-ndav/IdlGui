@@ -43,21 +43,22 @@ PRO MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
     xoffset = 10,$
     value = 'Raw Sample Data File')
   back = widget_label(tab1_base,$
-    yoffset = 8+yoffset,$
-    xoffset = 10,$
-    value = 'Background Data File')
     
-    yoffset = 75
+    yoffset = 8+yoffset+30  ,$
+    xoffset = 10,$
+    
+    value = 'Background Data File')
+    yoffset = 75+15
   norm = widget_label(tab1_base,$
-    yoffset = 24+2*yoffset,$
+    yoffset = 26+2*yoffset,$
     xoffset = 10,$
     value = 'Normalization Data File')
   ec = widget_label(tab1_base,$
-    yoffset = 22+3*yoffset,$
+    yoffset = 10+3*yoffset,$
     xoffset = 10,$
     value = 'Empty Can Data File')
   bk = widget_label(tab1_base,$
-    yoffset = 21+4*yoffset,$
+    yoffset = 83 + 3*yoffset,$
     xoffset = 10,$
     value = 'Direct Scattering Background (Sample Data at Baseline T) File')
     
@@ -78,7 +79,21 @@ PRO MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
     /return_events,$
     uname='rsdf_run_number_cw_field',$
     title='Run #')
-  label=widget_label(data_base,value='(ex: 1,2,[3,5-8],10) -> 4 diff. jobs')
+  
+  ;use live or not  
+  row2 = widget_base(data_base,/row)
+  live_base = widget_base(row2,/row,sensitive=0,uname='reduce_tab1_live_base')  
+  live = cw_bgroup(live_base,$
+  /no_release, $
+  ['Yes','No'],$
+  /all
+  label_left = 'Use live NeXus loaded:',$
+  uname = 'use_live_nexus_uname',$
+  /row,$
+  set_value=1,$
+  /exclusive)
+  label=widget_label(row2,value='                                        ' + $
+  '   (ex: 1,2,[3,5-8],10) -> 4 diff. jobs')
 ;  button = widget_button(row1,$
 ;    value='Browse ...',$
 ;    uname='rsdf_browse_nexus_button',$

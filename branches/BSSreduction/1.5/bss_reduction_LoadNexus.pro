@@ -119,7 +119,9 @@ PRO bss_reduction_LoadNexus, Event, config
       IF (N_ELEMENTS(config) EQ 0) THEN BEGIN
       
         ;put nexus file name in data text field (Reduce tab#1)
-        putReduceRawSampleDatafile, Event, NexusFullName
+        ;putReduceRawSampleDatafile, Event, NexusFullName
+        putTextFieldValue, event, 'rsdf_run_number_cw_field', $
+        strcompress(RunNumber,/remove_all), 0
         
       ENDIF
       
@@ -176,8 +178,12 @@ PRO load_live_nexus, Event, full_nexus_file_name
   
   IF (N_ELEMENTS(config) EQ 0) THEN BEGIN
   
-    ;put nexus file name in data text field (Reduce tab#1)
-    putReduceRawSampleDatafile, Event, full_nexus_file_name
+      iNexus = OBJ_NEW('IDLgetMetadata', full_nexus_file_name)
+      RunNumber = iNexus->getRunNumber()
+      OBJ_DESTROY, iNexus
+          putRunNumberValue, Event, RunNumber
+;    putValue, event, 'rsdf_run_number_cw_field', $
+;      strcompress(RunNumber,/remove_all)
     
   ENDIF
   
@@ -274,7 +280,7 @@ PRO load_live_nexus_step2, Event, NexusFullName
     putMessageBoxInfo, Event, text
     
     ;define default output file name
-    define_default_output_file_name, Event, TYPE='live' ;_eventcb
+;    define_default_output_file_name, Event, TYPE='live' ;_eventcb
     
     (*global).lds_mode = 1
     

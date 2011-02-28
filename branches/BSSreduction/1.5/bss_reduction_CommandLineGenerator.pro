@@ -51,9 +51,18 @@ PRO BSSreduction_CommandLineGenerator, Event
     
   TabName = 'Tab#1 - INPUT DATA SETUP (1)'
   tab1    = 0
-  ;get Raw Sample Data Files
-  ;RSDFiles = getTextFieldValue(Event, 'FIXME')  ;FIXME
-  RSDFiles = (*(*global).list_of_data_nexus)
+  
+  ;check if user wants to use live nexus or raw sample data files
+  enabled = isButtonEnabled(Event, 'reduce_tab1_live_base')
+  liveNexus = isButtonSelected(event, 'use_live_nexus_uname')
+  if (enabled eq 1 && $
+    liveNexus eq 0 && $
+    (*global).current_live_nexus ne '') then begin
+    RSDFiles = (*global).current_live_nexus
+  endif else begin ;get Raw Sample Data Files
+    RSDFiles = (*(*global).list_of_data_nexus)
+  endelse
+  
   nbr_individual_runs = n_elements(RSDFiles)
   
   ;cmd_array = strarr(nbr_individual_runs)
@@ -2042,21 +2051,20 @@ PRO BSSreduction_CommandLineGenerator, Event
       
     ENDIF ;end of intermediate tab
     
-    ;get Output File Name and folder
-    ;  OFile =  getTextFieldValue(Event,'bdf_run_number_cw_field')
-    ;  IF (nbr GE 1) THEN BEGIN
-    ;    IF (array_split[0] EQ 1) THEN BEGIN ;remove first '/'
-    ;      string_split = STRSPLIT(OFile,'/',/EXTRACT)
-    ;      OFile = STRJOIN(string_split,'/')
-    ;      putTextFieldValue, Event, 'of_list_of_runs_text', OFile, 0
-    ;    ENDIF
-    ;  ENDIF
     ;get output folder name
     output_folder = (*global).default_output_path
-    _run_numbers = RSDFiles[index_run]
-    ;replace ',' by '_' if any
-    run_array = strsplit(_run_numbers,',',/extract)
-    _run_numbers = strjoin(run_array,'_')
+    if (strcompress(RSDFiles[index_run],/remove_all) eq '') then begin
+      _run_numbers = '?'
+    endif else begin
+      if (RSDFiles eq '0') then begin
+      _run_numbers = '?'
+      endif else begin
+      _run_numbers = RSDFiles[index_run]
+      ;replace ',' by '_' if a  ny
+      run_array = strsplit(_run_numbers,',',/extract)
+      _run_numbers = strjoin(run_array,'_')
+      endelse
+    endelse
     oFile = 'BSS_' + _run_numbers
     ;add time stamp
     ts = GenerateIsoTimeStamp()
