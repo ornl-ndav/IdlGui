@@ -114,7 +114,7 @@ ENDIF ELSE BEGIN
     (*global).lds_mode = 0
 
 ;define default output file name
-    define_default_output_file_name, Event, TYPE='archive' ;_eventcb
+;    define_default_output_file_name, Event, TYPE='archive' ;_eventcb
 
 ENDELSE
 

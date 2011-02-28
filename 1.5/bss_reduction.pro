@@ -131,6 +131,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
     ;temporary live folder for live data stremaing
     tmp_live_shared_folder: live_shared_folder, $
+    ;live nexus
+    current_live_nexus: '', $
     
     ;list_of_nexus
     list_of_data_nexus: ptr_new(0L), $
@@ -434,28 +436,28 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     XPAD         = 0,$
     mbar         = bar, $
     YPAD         = 2)
-  
+    
   ;config menu
   config = widget_button(bar, $
-  value = 'Configuration',$
-  /menu)
+    value = 'Configuration',$
+    /menu)
   load = widget_button(config, $
-  uname = 'load_configuration',$
-  value = ' Load ... ')
+    uname = 'load_configuration',$
+    value = ' Load ... ')
   save = widget_button(config, $
-  uname = 'save_configuration',$
-  value = ' Save ... ')
+    uname = 'save_configuration',$
+    value = ' Save ... ')
     
   ;lin/log main plot
   plot = widget_button(bar,$
-  value = 'Plot',$
-  /menu)
+    value = 'Plot',$
+    /menu)
   lin = widget_button(plot,$
-  uname = 'linear_main_plot',$
-  value = '  linear')
+    uname = 'linear_main_plot',$
+    value = '  linear')
   go = widget_button(plot,$
-  uname = 'log_main_plot',$
-  value = '* logarithmic')  
+    uname = 'log_main_plot',$
+    value = '* logarithmic')
     
   ;attach global structure with widget ID of widget main base widget ID
   widget_control, MAIN_BASE, set_uvalue=global

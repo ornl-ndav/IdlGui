@@ -411,20 +411,10 @@ PRO MAIN_BASE_event, Event
       BSSreduction_CommandLineGenerator, Event
     end
     
-    ;    Widget_Info(wWidget, FIND_BY_UNAME='rsdf_nexus_cw_field'): begin
-    ;      BSSreduction_Reduce_rsdf_nexus_cw_field, Event
-    ;      BSSreduction_CommandLineGenerator, Event
-    ;    end
-    
-    ;    Widget_Info(wWidget, FIND_BY_UNAME='rsdf_browse_nexus_button'): begin
-    ;      BSSreduction_ReduceBrowseNexus, Event, 'rsdf'
-    ;      BSSreduction_CommandLineGenerator, Event
-    ;    end
-    
-    ;    Widget_Info(wWidget, FIND_BY_UNAME='rsdf_list_of_runs_text'): begin
-    ;      BSSreduction_Reduce_rsdf_list_of_runs_text, Event
-    ;      BSSreduction_CommandLineGenerator, Event
-    ;    end
+    ;use live nexus or not
+    widget_info(wWidget, find_by_uname='use_live_nexus_uname'): begin
+      BSSReduction_CommandLineGenerator, event
+    end
     
     Widget_Info(wWidget, FIND_BY_UNAME='bdf_run_number_cw_field'): begin
       ;      BSSreduction_Reduce_bdf_run_number_cw_field, Event

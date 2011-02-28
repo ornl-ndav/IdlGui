@@ -34,71 +34,70 @@
 
 PRO bss_reduction_BrowseNexus, Event
 
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-;indicate initialization with hourglass icon
-widget_control,/hourglass
-
-DefaultPath = (*global).DefaultPath
-Filter = (*global).DefaultFilter
-Title = 'Select a NeXus file to load'
-
-;open file
-FullNexusFileName = dialog_pickfile(path              = DefaultPath,$
-                                    get_path          = path,$
-                                    title             = Title,$
-                                    filter            = filter,$
-                                    default_extension ='.nxs',$
-                                    /fix_filter)
-
-IF (FullNexusFileName NE '') THEN BEGIN
+  ;get global structure
+  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  widget_control,id,get_uvalue=global
+  
+  ;indicate initialization with hourglass icon
+  widget_control,/hourglass
+  
+  DefaultPath = (*global).DefaultPath
+  Filter = (*global).DefaultFilter
+  Title = 'Select a NeXus file to load'
+  
+  ;open file
+  FullNexusFileName = dialog_pickfile(path              = DefaultPath,$
+    get_path          = path,$
+    title             = Title,$
+    filter            = filter,$
+    default_extension ='.nxs',$
+    /fix_filter)
     
+  IF (FullNexusFileName NE '') THEN BEGIN
+  
     message = 'Loading NeXus file selected:'
     PutLogBookMessage, Event, message
-
+    
     (*global).NexusFullName = FullNexusFileName
     (*global).DefaultPath = path
-
-;nexus has been found and can be opened
+    
+    ;nexus has been found and can be opened
     BSSreduction_LoadNexus_step2, Event, FullNexusFileName
     (*global).NeXusFound = 1
     
-    IF ((*global).NeXusFound) THEN BEGIN 
-;turn off the NO MONITOR NORMALIZATION switch
-        SetButton, event, 'nmn_button', 0
+    IF ((*global).NeXusFound) THEN BEGIN
+      ;turn off the NO MONITOR NORMALIZATION switch
+      SetButton, event, 'nmn_button', 0
     ENDIF
     
-;get run number from NeXus file itself
+    ;get run number from NeXus file itself
     no_error = 0
     catch, no_error
     IF (no_error NE 0) THEN BEGIN
-        CATCH,/CANCEL
-        RunNumber = 'N/A'
-        
+      CATCH,/CANCEL
+      RunNumber = 'N/A'
+      
     ENDIF ELSE BEGIN
-        iNexus = OBJ_NEW('IDLgetMetadata', FullNexusFileName)
-        RunNumber = iNexus->getRunNumber()
-        OBJ_DESTROY, iNexus
+      iNexus = OBJ_NEW('IDLgetMetadata', FullNexusFileName)
+      RunNumber = iNexus->getRunNumber()
+      OBJ_DESTROY, iNexus
     ENDELSE
     
-;save run number
+    ;save run number
     (*global).RunNumber = RunNumber
     
-;reset NeXus run number cw_field
+    ;reset NeXus run number cw_field
     putRunNumberValue, Event, RunNumber
-
-;put name of file in reduce tab
-    putTextInTextField, Event, 'rsdf_list_of_runs_text', FullNexusFileName
-    
-endif else begin
-    
-;left browse box without doing anything
-    
-endelse
-
-;turn off hourglass
-widget_control,hourglass=0
-
+    putValue, event, 'rsdf_run_number_cw_field', $
+      strcompress(RunNumber,/remove_all)
+      
+  endif else begin
+  
+  ;left browse box without doing anything
+  
+  endelse
+  
+  ;turn off hourglass
+  widget_control,hourglass=0
+  
 END

@@ -62,6 +62,8 @@ PRO load_live_data_streaming, Event
       ' No Live NeXus File Found !!!', 0
     text = 'Loading Live NeXus FAILED!'
     putMessageBoxInfo, Event, text
+    activate_button, event, 'reduce_tab1_live_base', 0
+    (*global).current_live_nexus = ''
   ENDIF ELSE BEGIN
     SPAWN, cmd, listening, err_listening
     IF (listening EQ '') THEN BEGIN ;no file found
@@ -82,12 +84,14 @@ PRO load_live_data_streaming, Event
         putTextAtEndOfLogBookLastLine, Event, FAILED, PROCESSING
         putTextFieldValue, Event, 'nexus_full_path_label', $
           ' Loading of Live NeXus Failed !!!', 0
+        activate_button, event, 'reduce_tab1_live_base', 0
       ENDIF ELSE BEGIN ;loading worked
         spawn, cmd_copy, listening1, err_listening1
         IF (err_listening1[0] NE '') THEN BEGIN ;copy failed
           putTextAtEndOfLogBookLastLine, Event, FAILED, PROCESSING
           putTextFieldValue, Event, 'nexus_full_path_label', $
             ' Loading of Live NeXus Failed !!!', 0
+          (*global).current_live_nexus = ''
         ENDIF ELSE BEGIN ;copy worked
           putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
           ;new long file name
@@ -98,6 +102,7 @@ PRO load_live_data_streaming, Event
           putTextFieldValue, Event, 'nexus_full_path_label', $
             ShortFileName, 0
           LogBookText = '-> Full live NeXus name: ' + LongFileName
+          (*global).current_live_nexus = LongFileName
           AppendLogBookMessage, Event, LogBookText
           iNexus = OBJ_NEW('IDLgetMetadata',LongFileName)
           sRunNumber = STRCOMPRESS(iNexus->getRunNumber())
@@ -120,7 +125,8 @@ PRO load_live_data_streaming, Event
           CATCH, geo_error
           IF (geo_error NE 0) THEN BEGIN
             CATCH,/CANCEL
-            putTextAtEndOfLogBookLastLine, Event, FAILED, PROCESSING
+            activate_button, event, 'reduce_tab1_live_base', 0
+            putTextAtEndOfLogBookLastLine, Event, FAILED, PROCESSING            
           ENDIF ELSE BEGIN
             SPAWN, cmd, geometry_file, err_listening
             putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
@@ -140,6 +146,7 @@ PRO load_live_data_streaming, Event
                 CATCH,/CANCEL
                 putTextAtEndOfLogBookLastLine, Event, FAILED, $
                   PROCESSING
+                activate_button, event, 'reduce_tab1_live_base', 0
               ENDIF ELSE BEGIN
                 spawn, cmd_geo_copy, listening2, err_listening2
                 putTextAtEndOfLogBookLastLine, Event, $
@@ -158,6 +165,11 @@ PRO load_live_data_streaming, Event
                 LogBookText = '-> Live Data Geometry file is: ' + $
                   STRCOMPRESS(FullGeoFileName,/REMOVE_ALL)
                 AppendLogBookMessage, Event, LogBookText
+                
+                ;live data has been loaded with success to enable choice
+                ;of live or run numbers loaded (reduce/tab1)
+                activate_button, event, 'reduce_tab1_live_base', 1
+                
               ENDELSE
             ENDIF ELSE BEGIN
               text = '-> Checking if file exists ... NO'
