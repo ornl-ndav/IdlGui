@@ -34,168 +34,168 @@
 
 PRO BSSreduction_RunCommandLine, Event
 
-activate_button, event, 'submit_button', 0
-activate_button, event, 'submit_batch_button', 0
-
-;get global structure
-WIDGET_CONTROL,Event.top,GET_UVALUE=global
-
-;indicate initialization with hourglass icon
-WIDGET_CONTROL,/HOURGLASS
-
-PROCESSING = (*global).processing
-OK         = (*global).ok
-FAILED     = (*global).failed
-
-;first check that the output folder exist if not, create it
-output_path = (*global).default_output_path
-ok_to_CONTINUE = 1
-IF (FILE_TEST(output_path,/DIRECTORY) EQ 0) THEN BEGIN ;folder does not exist
+  activate_button, event, 'submit_button', 0
+  activate_button, event, 'submit_batch_button', 0
+  
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  ;indicate initialization with hourglass icon
+  WIDGET_CONTROL,/HOURGLASS
+  
+  PROCESSING = (*global).processing
+  OK         = (*global).ok
+  FAILED     = (*global).failed
+  
+  ;first check that the output folder exist if not, create it
+  output_path = (*global).default_output_path
+  ok_to_CONTINUE = 1
+  IF (FILE_TEST(output_path,/DIRECTORY) EQ 0) THEN BEGIN ;folder does not exist
     cmd_text = 'Check if output path (' + output_path + ') exists ... NO'
     AppendLogBookMessage, Event, cmd_text
     cmd_text = '-> Create output path ... ' + PROCESSING
     AppendLogBookMessage, Event, cmd_text
     spawn, 'mkdir ' + output_path, listening, err_listening
     IF (err_listening[0] NE '') THEN BEGIN
-        putTextAtEndOfLogBookLastLine, Event, FAILED, PROCESSING
-        status_text = (*global).DRstatusFAILED
-        putDRstatusInfo, Event, status_text
-        ok_to_CONTINUE = 0
+      putTextAtEndOfLogBookLastLine, Event, FAILED, PROCESSING
+      status_text = (*global).DRstatusFAILED
+      putDRstatusInfo, Event, status_text
+      ok_to_CONTINUE = 0
     ENDIF ELSE BEGIN
-        cmd_text = 'Check if output path (' + output_path + ') exists ... YES'
-        AppendLogBookMessage, Event, cmd_text
+      cmd_text = 'Check if output path (' + output_path + ') exists ... YES'
+      AppendLogBookMessage, Event, cmd_text
     ENDELSE
-ENDIF
-
-IF (ok_to_CONTINUE) THEN BEGIN
-    
+  ENDIF
+  
+  IF (ok_to_CONTINUE) THEN BEGIN
+  
     CD, '~/', CURRENT=old_path
     
-;check if use iterative background subtraction is active or not
+    ;check if use iterative background subtraction is active or not
     ibs_value = $
       getCWBgroupValue(Event, $
-                       'use_iterative_background_subtraction_cw_bgroup')
-    
-;add called to SLURM
-;check instrument here
+      'use_iterative_background_subtraction_cw_bgroup')
+      
+    ;add called to SLURM
+    ;check instrument here
     spawn, 'hostname',listening
     CASE (listening) OF
-        'bac.sns.gov': srun = 'bac1q'
-        'bac2':        srun = 'bac2q'
-        ELSE:          srun = 'bss'
+      'bac.sns.gov': srun = 'bac1q'
+      'bac2':        srun = 'bac2q'
+      ELSE:          srun = 'bss'
     ENDCASE
     
-;get command line to generate
+    ;get command line to generate
     cmd = getTextFieldValue(Event,'command_line_generator_text')
     
     IF (ibs_value EQ 1) THEN BEGIN ;if Iterative Background Subtraction is OFF
+    
+      cmd = 'srun -p ' + srun + ' ' + cmd
+      
+      ;display command line in log-book
+      cmd_text = 'Running Command Line:'
+      AppendLogBookMessage, Event, cmd_text
+      cmd_text = ' -> ' + cmd
+      AppendLogBookMessage, Event, cmd_text
+      cmd_text = ' ... ' + PROCESSING
+      AppendLogBookMessage, Event, cmd_text
+      
+      status_text = 'Data Reduction ... ' + PROCESSING
+      putDRstatusInfo, Event, status_text
+      
+      SPAWN, cmd, listening, err_listening
+      IF (err_listening[0] NE '') THEN BEGIN
+      
+        MessageToAdd    = (*global).FAILED
+        MessageToRemove = PROCESSING
+        putTextAtEndOfLogBookLastLine, Event, MessageToAdd, MessageToRemove
         
-        cmd = 'srun -p ' + srun + ' ' + cmd
+        ;display listening
+        AppendLogBookMessage, Event, listening
         
-;display command line in log-book
-        cmd_text = 'Running Command Line:'
-        AppendLogBookMessage, Event, cmd_text
-        cmd_text = ' -> ' + cmd
-        AppendLogBookMessage, Event, cmd_text
-        cmd_text = ' ... ' + PROCESSING
-        AppendLogBookMessage, Event, cmd_text
+        ;display err_listening
+        AppendLogBookMessage, Event, err_listening
         
-        status_text = 'Data Reduction ... ' + PROCESSING
+        status_text = (*global).DRstatusFAILED
         putDRstatusInfo, Event, status_text
-                
-        SPAWN, cmd, listening, err_listening 
-        IF (err_listening[0] NE '') THEN BEGIN
-            
-            MessageToAdd    = (*global).FAILED
-            MessageToRemove = PROCESSING
-            putTextAtEndOfLogBookLastLine, Event, MessageToAdd, MessageToRemove
-            
-;display listening
-            AppendLogBookMessage, Event, listening
-            
-;display err_listening
-            AppendLogBookMessage, Event, err_listening
-            
-            status_text = (*global).DRstatusFAILED
-            putDRstatusInfo, Event, status_text
-            
-        ENDIF ELSE BEGIN
-            
-            MessageToAdd = 'DONE'
-            MessageToRemove = PROCESSING
-            putTextAtEndOfLogBookLastLine, Event, MessageToAdd, MessageToRemove
-            
-            status_text = (*global).DRstatusOK
-            putDRstatusInfo, Event, status_text
-            
-            IF (isButtonSelected(Event,'verbose_button')) THEN BEGIN
-;display listening
-                AppendLogBookMessage, Event, listening
-            ENDIF
-            
-            LogBookText = '>>>>>>>>>> Data Reduction Information <<<<<<<<<<<'
-            AppendLogBookMessage, Event, LogBookText
-            
-;display xml config file
-            xmlConfigFile = getXmlConfigFileName(Event)
-            LogBookText = '  XML data reduction config file: ' + $
-              strcompress(xmlConfigFile,/remove_all)
-            AppendLogBookMessage, Event, LogBookText
-            
-            BSSreduction_DisplayXmlConfigFile, Event, xmlConfigFile
-            
-;update list of intermediate plots in OUTPUT tab droplist
-            BSSreduction_IntermediatePlotsUpdateDroplist, Event
-            
-        ENDELSE
         
+      ENDIF ELSE BEGIN
+      
+        MessageToAdd = 'DONE'
+        MessageToRemove = PROCESSING
+        putTextAtEndOfLogBookLastLine, Event, MessageToAdd, MessageToRemove
+        
+        status_text = (*global).DRstatusOK
+        putDRstatusInfo, Event, status_text
+        
+        IF (isButtonSelected(Event,'verbose_button')) THEN BEGIN
+          ;display listening
+          AppendLogBookMessage, Event, listening
+        ENDIF
+        
+        LogBookText = '>>>>>>>>>> Data Reduction Information <<<<<<<<<<<'
+        AppendLogBookMessage, Event, LogBookText
+        
+        ;display xml config file
+        xmlConfigFile = getXmlConfigFileName(Event)
+        LogBookText = '  XML data reduction config file: ' + $
+          strcompress(xmlConfigFile,/remove_all)
+        AppendLogBookMessage, Event, LogBookText
+        
+        BSSreduction_DisplayXmlConfigFile, Event, xmlConfigFile
+        
+        ;update list of intermediate plots in OUTPUT tab droplist
+        BSSreduction_IntermediatePlotsUpdateDroplist, Event
+        
+      ENDELSE
+      
     ENDIF ELSE BEGIN ;Iterative background subtraction mode is ON
-        
-        nbr_jobs = N_ELEMENTS(cmd)
-        cmd_text = 'BSSreduction is about to run ' + $
-          STRCOMPRESS(nbr_jobs,/REMOVE_ALL) + ' jobs in the background'
+    
+      nbr_jobs = N_ELEMENTS(cmd)
+      cmd_text = 'BSSreduction is about to run ' + $
+        STRCOMPRESS(nbr_jobs,/REMOVE_ALL) + ' jobs in the background'
+      AppendLogBookMessage, Event, cmd_text
+      index = 0
+      
+      ;create log file
+      iFile = OBJ_NEW('IDLcreateLogFile',Event, cmd)
+      ListOfStdOutFiles = *(iFile->getListofStdOutFiles())
+      ListOfStdErrFiles = *(iFile->getListofStdErrFiles())
+      OBJ_DESTROY, iFile
+      
+      ;add batch statement to all command lines
+      status_text  = 'Launching ' + STRCOMPRESS(nbr_jobs,/REMOVE_ALL)
+      status_text += ' batch jobs ... '
+      putDRstatusInfo, Event, status_text + PROCESSING
+      
+      WHILE (index LT nbr_jobs) DO BEGIN
+        cmd1  = 'srun --batch -p ' + srun
+        cmd1 += ' --output=' + ListOfStdOutFiles[index]
+        cmd1 += ' --error=' + ListOfStdErrFiles[index]
+        cmd2  = cmd1 + ' ' + cmd[index]
+        cmd_text = '-> ' + cmd2
+        spawn, cmd2, listening, err_listening
         AppendLogBookMessage, Event, cmd_text
-        index = 0
-
-;create log file
-        iFile = OBJ_NEW('IDLcreateLogFile',Event, cmd)
-        ListOfStdOutFiles = *(iFile->getListofStdOutFiles())
-        ListOfStdErrFiles = *(iFile->getListofStdErrFiles())
-        OBJ_DESTROY, iFile
-        
-;add batch statement to all command lines
-        status_text  = 'Launching ' + STRCOMPRESS(nbr_jobs,/REMOVE_ALL)
-        status_text += ' batch jobs ... '
-        putDRstatusInfo, Event, status_text + PROCESSING
-
-        WHILE (index LT nbr_jobs) DO BEGIN
-            cmd1  = 'srun --batch -p ' + srun
-            cmd1 += ' --output=' + ListOfStdOutFiles[index]
-            cmd1 += ' --error=' + ListOfStdErrFiles[index]
-            cmd2  = cmd1 + ' ' + cmd[index]
-            cmd_text = '-> ' + cmd2
-            spawn, cmd2, listening, err_listening
-            AppendLogBookMessage, Event, cmd_text
-            index++
-        ENDWHILE
-
-        putDRstatusInfo, Event, status_text + OK
-
+        index++
+      ENDWHILE
+      
+      putDRstatusInfo, Event, status_text + OK
+      
     ENDELSE
     
     CD, old_path
     
-ENDIF ELSE BEGIN 
-
+  ENDIF ELSE BEGIN
+  
     status_text = (*global).DRstatusFAILED
     putDRstatusInfo, Event, status_text
-        
-ENDELSE
-
-;turn off hourglass
-WIDGET_CONTROL,HOURGLASS=0
-
-activate_button, event, 'submit_button', 1
-activate_button, event, 'submit_batch_button', 1
-
+    
+  ENDELSE
+  
+  ;turn off hourglass
+  WIDGET_CONTROL,HOURGLASS=0
+  
+  activate_button, event, 'submit_button', 1
+  activate_button, event, 'submit_batch_button', 1
+  
 END
