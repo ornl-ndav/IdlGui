@@ -111,7 +111,7 @@ PRO bss_reduction_LoadNexus, Event, config
       putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
       
       ;move on to step2 of loading nexus
-      BSSreduction_LoadNexus_step2, Event, NexusFullPath[0]
+      BSSreduction_LoadNexus_step2, Event, NexusFullPath[0], isNexusExist
       
       NexusFullName = strcompress(NexusFullPath[0],/remove_all)
       (*global).NexusFullName = NexusFullName

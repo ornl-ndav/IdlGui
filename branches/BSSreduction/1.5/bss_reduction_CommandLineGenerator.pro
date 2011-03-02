@@ -2220,7 +2220,7 @@ PRO BSSreduction_CommandLineGenerator, Event
   putTextFieldValue, Event, 'command_line_generator_text', cmd_array, 0
   
   ;validate or not Go data reduction button
-  IFs (StatusMessage NE 0) THEN BEGIN ;do not activate button
+  IF (StatusMessage NE 0) THEN BEGIN ;do not activate button
     activate = 0
   ENDIF ELSE BEGIN
     activate = 1
