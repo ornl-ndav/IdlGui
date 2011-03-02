@@ -106,14 +106,14 @@ PRO BSSreduction_RunCommandLine, Event
         _cmd = 'srun -p ' + srun + ' ' + cmd[index]
         
         ;display command line in log-book
-        cmd_text = 'Running Command Line #' + strcompress(index,/remove_all) + ':'
+        cmd_text = 'Running Command Line #' + strcompress(index+1,/remove_all) + ':'
         AppendLogBookMessage, Event, cmd_text
         cmd_text = ' -> ' + _cmd
         AppendLogBookMessage, Event, cmd_text
         cmd_text = ' ... ' + PROCESSING
         AppendLogBookMessage, Event, cmd_text
         
-        status_text = 'Data Reduction #' + strcompress(index,/remove_all) + ' ... ' + PROCESSING
+        status_text = 'Data Reduction #' + strcompress(index+1,/remove_all) + ' ... ' + PROCESSING
         putDRstatusInfo, Event, status_text
         
         SPAWN, _cmd, listening, err_listening
