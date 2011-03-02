@@ -7,11 +7,13 @@
 
 all:
 	idl ./makefile.pro;
+
 install:
 	cp bss_reduction.sav /SNS/software/idltools/sav/
 	cp BSSreduction.cfg /SNS/software/idltools/sav/
 	cp BSSreduction /SNS/software/idltools/
 	cp BSSreduction_images/*.bmp /SNS/software/idltools/sav/BSSreduction_images/
+
 test:
 	cp bss_reduction.sav /SNS/software/idltools/tmp/sav/
 	cp BSSreduction.cfg /SNS/software/idltools/tmp/sav/
