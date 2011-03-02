@@ -1,6 +1,6 @@
 PRO MakeGuiReduceClgXmlTab, ReduceBase, ReduceClgXmlTabSettings
 
-ReduceClgXmlTab = W IDGET_TAB(ReduceBase,$
+ReduceClgXmlTab = WIDGET_TAB(ReduceBase,$
                              UNAME     = 'reduce_clg_xml_tab',$
                              LOCATION  = 0,$
                              XOFFSET   = ReduceClgXmlTabSettings.Size[0],$

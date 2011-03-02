@@ -90,27 +90,38 @@ PRO BSSreduction_RunBatchCommandLine, Event
     
     IF (ibs_value EQ 1) THEN BEGIN ;if Iterative Background Subtraction is OFF
     
-      cmd = 'srun --batch -p ' + srun + ' ' + cmd
-      
-      ;display command line in log-book
-      cmd_text = 'Running Command Line in Background (batch mode):'
-      AppendLogBookMessage, Event, cmd_text
-      cmd_text = ' -> ' + cmd
-      AppendLogBookMessage, Event, cmd_text
-      cmd_text = ' ... ' + PROCESSING
+      nbr_jobs = n_elements(cmd)
+      cmd_text = 'BSSreduction is about to run ' + $
+        STRCOMPRESS(nbr_jobs,/REMOVE_ALL) + ' jobs in the background'
       AppendLogBookMessage, Event, cmd_text
       
-      status_text = 'Batch Data Reduction ... ' + PROCESSING
-      putDRstatusInfo, Event, status_text
+      index=0
+      while (index lt nbr_jobs) do begin
       
-      SPAWN, cmd, listening, err_listening
-      
-      MessageToRemove = PROCESSING
-      MessageToAdd    = OK
-      putTextAtEndOfLogBookLastLine, Event, MessageToAdd, MessageToRemove
-      
-      status_text = (*global).DRstatusOK
-      putDRstatusInfo, Event, status_text
+        _cmd = 'srun --batch -p ' + srun + ' ' + cmd[index]
+        
+        ;display command line in log-book
+        cmd_text = 'Running Command Line in Background (batch mode):'
+        AppendLogBookMessage, Event, cmd_text
+        cmd_text = ' -> ' + _cmd
+        AppendLogBookMessage, Event, cmd_text
+        cmd_text = ' ... ' + PROCESSING
+        AppendLogBookMessage, Event, cmd_text
+        
+        status_text = 'Batch Data Reduction ... ' + PROCESSING
+        putDRstatusInfo, Event, status_text
+        
+        SPAWN, _cmd, listening, err_listening
+        
+        MessageToRemove = PROCESSING
+        MessageToAdd    = OK
+        putTextAtEndOfLogBookLastLine, Event, MessageToAdd, MessageToRemove
+        
+        status_text = (*global).DRstatusOK
+        putDRstatusInfo, Event, status_text
+        
+        index++
+      endwhile
       
     ENDIF ELSE BEGIN ;Iterative background subtraction mode is ON
     
