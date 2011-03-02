@@ -60,8 +60,7 @@ ReduceClgXmlTabSettings = {Size : [ReduceInputTabSettings.Size[0]+$
                                    ReduceInputTabSettings.Size[1], $
                                    440, $
                                    ReduceInputTabSettings.size[3]+yoff-70],$
-                           title : ['Command Line Generator Status', $
-                                    'XML Reduce File']}
+                           title : ['Command Line Generator Status']}
 
 ;Create file of Command Line --------------------------------------------------
 XYoff = [5,10]
