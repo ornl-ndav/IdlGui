@@ -86,7 +86,6 @@ PRO MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
   live = cw_bgroup(live_base,$
   /no_release, $
   ['Yes','No'],$
-  /all
   label_left = 'Use live NeXus loaded:',$
   uname = 'use_live_nexus_uname',$
   /row,$

@@ -2056,7 +2056,7 @@ PRO BSSreduction_CommandLineGenerator, Event
     if (strcompress(RSDFiles[index_run],/remove_all) eq '') then begin
       _run_numbers = '?'
     endif else begin
-      if (RSDFiles eq '0') then begin
+      if (RSDFiles[0]  eq '0') then begin
       _run_numbers = '?'
       endif else begin
       _run_numbers = RSDFiles[index_run]
