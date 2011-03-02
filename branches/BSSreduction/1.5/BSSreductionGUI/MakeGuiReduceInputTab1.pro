@@ -43,12 +43,12 @@ PRO MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
     xoffset = 10,$
     value = 'Raw Sample Data File')
   back = widget_label(tab1_base,$
-    
+  
     yoffset = 8+yoffset+30  ,$
     xoffset = 10,$
     
     value = 'Background Data File')
-    yoffset = 75+15
+  yoffset = 75+15
   norm = widget_label(tab1_base,$
     yoffset = 26+2*yoffset,$
     xoffset = 10,$
@@ -79,28 +79,28 @@ PRO MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
     /return_events,$
     uname='rsdf_run_number_cw_field',$
     title='Run #')
-  
-  ;use live or not  
+    
+  ;use live or not
   row2 = widget_base(data_base,/row)
-  live_base = widget_base(row2,/row,sensitive=0,uname='reduce_tab1_live_base')  
+  live_base = widget_base(row2,/row,sensitive=0,uname='reduce_tab1_live_base')
   live = cw_bgroup(live_base,$
-  /no_release, $
-  ['Yes','No'],$
-  label_left = 'Use live NeXus loaded:',$
-  uname = 'use_live_nexus_uname',$
-  /row,$
-  set_value=1,$
-  /exclusive)
+    /no_release, $
+    ['Yes','No'],$
+    label_left = 'Use live NeXus loaded:',$
+    uname = 'use_live_nexus_uname',$
+    /row,$
+    set_value=1,$
+    /exclusive)
   label=widget_label(row2,value='                                        ' + $
-  '   (ex: 1,2,[3,5-8],10) -> 4 diff. jobs')
-;  button = widget_button(row1,$
-;    value='Browse ...',$
-;    uname='rsdf_browse_nexus_button',$
-;    scr_xsize=120)
-;  list = widget_text(data_base,$
-;    scr_xsize=719,$
-;    /editable,$
-;    uname='rsdf_list_of_runs_text')
+    '   (ex: 1,2,[3,5-8],10) -> 4 diff. jobs')
+  ;  button = widget_button(row1,$
+  ;    value='Browse ...',$
+  ;    uname='rsdf_browse_nexus_button',$
+  ;    scr_xsize=120)
+  ;  list = widget_text(data_base,$
+  ;    scr_xsize=719,$
+  ;    /editable,$
+  ;    uname='rsdf_list_of_runs_text')
     
   space = widget_label(col_base,value=' ',scr_ysize=10)
   
@@ -117,15 +117,15 @@ PRO MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
     uname='bdf_run_number_cw_field',$
     title='Run #')
   label=widget_label(row1,value='(ex: 1,2,3,5-8,10)')
-;  button = widget_button(row1,$
-;    value='Browse ...',$
-;    uname='bdf_browse_nexus_button',$
-;    scr_xsize=130)
-;  list = widget_text(data_base,$
-;    scr_xsize=719,$
-;    /editable,$
-;    uname='bdf_list_of_runs_text')
-    
+  ;  button = widget_button(row1,$
+  ;    value='Browse ...',$
+  ;    uname='bdf_browse_nexus_button',$
+  ;    scr_xsize=130)
+  ;  list = widget_text(data_base,$
+  ;    scr_xsize=719,$
+  ;    /editable,$
+  ;    uname='bdf_list_of_runs_text')
+  
   space = widget_label(col_base,value=' ',scr_ysize=10)
   
   ;////////////////////////
@@ -141,15 +141,15 @@ PRO MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
     uname='ndf_run_number_cw_field',$
     title='Run #')
   label=widget_label(row1,value='(ex: 1,2,3,5-8,10)')
-;  button = widget_button(row1,$
-;    value='Browse ...',$
-;    uname='ndf_browse_nexus_button',$
-;    scr_xsize=130)
-;  list = widget_text(data_base,$
-;    scr_xsize=719,$
-;    /editable,$
-;    uname='ndf_list_of_runs_text')
-    
+  ;  button = widget_button(row1,$
+  ;    value='Browse ...',$
+  ;    uname='ndf_browse_nexus_button',$
+  ;    scr_xsize=130)
+  ;  list = widget_text(data_base,$
+  ;    scr_xsize=719,$
+  ;    /editable,$
+  ;    uname='ndf_list_of_runs_text')
+  
   space = widget_label(col_base,value=' ',scr_ysize=10)
   
   ;////////////////////
@@ -165,15 +165,15 @@ PRO MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
     uname='ecdf_run_number_cw_field',$
     title='Run #')
   label=widget_label(row1,value='(ex: 1,2,3,5-8,10)')
-;  button = widget_button(row1,$
-;    value='Browse ...',$
-;    uname='ecdf_browse_nexus_button',$
-;    scr_xsize=130)
-;  list = widget_text(data_base,$
-;    scr_xsize=719,$
-;    /editable,$
-;    uname='ecdf_list_of_runs_text')
-    
+  ;  button = widget_button(row1,$
+  ;    value='Browse ...',$
+  ;    uname='ecdf_browse_nexus_button',$
+  ;    scr_xsize=130)
+  ;  list = widget_text(data_base,$
+  ;    scr_xsize=719,$
+  ;    /editable,$
+  ;    uname='ecdf_list_of_runs_text')
+  
   space = widget_label(col_base,value=' ',scr_ysize=10)
   
   ;/////////////////////////////

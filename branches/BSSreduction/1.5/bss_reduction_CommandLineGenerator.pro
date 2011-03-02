@@ -79,16 +79,18 @@ PRO BSSreduction_CommandLineGenerator, Event
     
     IF (RSDFiles[0] NE '') THEN BEGIN
       cmd += ' ' + strcompress(RSDFiles[index_run],/remove_all)
-      IF (StatusMessage EQ 0) THEN BEGIN
+      IF (StatusMessage EQ 0 && index_run eq 0) THEN BEGIN
         putInfoInCommandLineStatus, Event, '', 0
       ENDIF
     ENDIF ELSE BEGIN
       cmd += ' ?'
-      putInfoInCommandLineStatus, Event, TabName, 0
-      status_text = '   -Please provide at least one Raw Sample Data File'
-      putInfoInCommandLineStatus, Event, status_text, 1
-      StatusMessage += 1
-      ++tab1
+      if (index_run eq 0) then begin ;display message for only first index run
+        putInfoInCommandLineStatus, Event, TabName, 0
+        status_text = '   -Please provide at least one Raw Sample Data File'
+        putInfoInCommandLineStatus, Event, status_text, 1
+        StatusMessage += 1
+        ++tab1
+      endif
     ENDELSE
     
     ;get Background Data File
@@ -128,27 +130,29 @@ PRO BSSreduction_CommandLineGenerator, Event
     cmd += ' --roi-file='
     IF (PRoIFile NE '') THEN BEGIN
       cmd += strcompress(PRoIFile,/remove_all)
-      IF (StatusMessage EQ 0) THEN BEGIN
+      IF (StatusMessage EQ 0 && index_run eq 0) THEN BEGIN
         putInfoInCommandLineStatus, Event, '', 0
       ENDIF
     ENDIF ELSE BEGIN
       cmd += '?'
-      status_text = '   -Please provide a Pixel Region of Interest File'
-      IF (tab2 EQ 0) THEN BEGIN
-        putInfoInCommandLineStatus, Event, '', 1
-        putInfoInCommandLineStatus, Event, '', 1
-      ENDIF
-      IF (tab2 EQ 0 AND $
-        StatusMessage EQ 0) THEN BEGIN
-        putInfoInCommandLineStatus, Event, TabName, 0
-      ENDIF
-      IF (tab2 EQ 0 AND $
-        StatusMessage NE 0) THEN BEGIN
-        putInfoInCommandLineStatus, Event, TabName, 1
-      ENDIF
-      putInfoInCommandLineStatus, Event, status_text, 1
-      StatusMessage += 1
-      ++tab2
+      if (index_run eq 0) then begin ;display message for only first index run
+        status_text = '   -Please provide a Pixel Region of Interest File'
+        IF (tab2 EQ 0) THEN BEGIN
+          putInfoInCommandLineStatus, Event, '', 1
+          putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab2 EQ 0 AND $
+          StatusMessage EQ 0) THEN BEGIN
+          putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab2 EQ 0 AND $
+          StatusMessage NE 0) THEN BEGIN
+          putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
+        StatusMessage += 1
+        ++tab2
+      endif
     ENDELSE
     
     ;get Alternate Instrument Geometry
@@ -158,31 +162,7 @@ PRO BSSreduction_CommandLineGenerator, Event
       AIGFile = getTextFieldValue(Event,'aig_list_of_runs_text')
       IF (FILE_TEST(AIGFile) EQ 0) THEN BEGIN
         AIGFile = '?'
-        IF (tab2 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        status_text = '   -Please provide a Valid Alternate Instrument' + $
-          ' Geometry'
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab2
-      ENDIF
-      cmd += AIGFile
-    ENDIF ELSE BEGIN
-      AIGFile = getTextFieldValue(Event,'aig_list_of_runs_text')
-      IF (AIGFile NE '') THEN BEGIN
-        cmd += ' --inst-geom='
-        IF (FILE_TEST(AIGFile) EQ 0) THEN BEGIN
-          AIGFile = '?'
-          IF (tab2 EQ 0) THEN BEGIN
-            putInfoInCommandLineStatus, Event, '', 1
-            putInfoInCommandLineStatus, Event, '', 1
-          ENDIF
-          IF (tab2 EQ 0 AND $
-            StatusMessage EQ 0) THEN BEGIN
-            putInfoInCommandLineStatus, Event, TabName, 0
-          ENDIF
+        if (index_run eq 0) then begin ;display message for only first index run
           IF (tab2 EQ 0 AND $
             StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
@@ -192,6 +172,34 @@ PRO BSSreduction_CommandLineGenerator, Event
           putInfoInCommandLineStatus, Event, status_text, 1
           StatusMessage += 1
           ++tab2
+        endif
+      ENDIF
+      cmd += AIGFile
+    ENDIF ELSE BEGIN
+      AIGFile = getTextFieldValue(Event,'aig_list_of_runs_text')
+      IF (AIGFile NE '') THEN BEGIN
+        cmd += ' --inst-geom='
+        IF (FILE_TEST(AIGFile) EQ 0) THEN BEGIN
+          AIGFile = '?'
+          if (index_run eq 0) then begin ;display message for only first index run
+            IF (tab2 EQ 0) THEN BEGIN
+              putInfoInCommandLineStatus, Event, '', 1
+              putInfoInCommandLineStatus, Event, '', 1
+            ENDIF
+            IF (tab2 EQ 0 AND $
+              StatusMessage EQ 0) THEN BEGIN
+              putInfoInCommandLineStatus, Event, TabName, 0
+            ENDIF
+            IF (tab2 EQ 0 AND $
+              StatusMessage NE 0) THEN BEGIN
+              putInfoInCommandLineStatus, Event, TabName, 1
+            ENDIF
+            status_text = '   -Please provide a Valid Alternate Instrument' + $
+              ' Geometry'
+            putInfoInCommandLineStatus, Event, status_text, 1
+            StatusMessage += 1
+            ++tab2
+          endif
         ENDIF
         cmd += AIGFIle
       ENDIF
@@ -295,46 +303,51 @@ PRO BSSreduction_CommandLineGenerator, Event
       
       IF (TEL EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '   -Please provide a Low Value that Bracket the ' + $
-          'Elastic Peak'
-        IF (tab3 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab3 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab3 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab3
+        if (index_run eq 0) then begin ;display message for only first index run
+        
+          status_text = '   -Please provide a Low Value that Bracket the ' + $
+            'Elastic Peak'
+          IF (tab3 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab3 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab3 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab3
+        endif
       ENDIF ELSE BEGIN
         cmd += strcompress(TEL,/remove_all)
       ENDELSE
       
       IF (TEH EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '   -Please provide a High Value that Bracket the ' + $
-          'Elastic Peak'
-        IF (tab3 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab3 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab3 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab3
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a High Value that Bracket the ' + $
+            'Elastic Peak'
+          IF (tab3 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab3 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab3 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab3
+        endif
       ENDIF ELSE BEGIN
         cmd += ',' + strcompress(TEH,/remove_all)
       ENDELSE
@@ -362,88 +375,95 @@ PRO BSSreduction_CommandLineGenerator, Event
       
       IF (TIBTOF1 EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '   -Please provide a TOF Channel #1'
-        IF (tab4 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab4 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab4 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab4
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a TOF Channel #1'
+          IF (tab4 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab4 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab4 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab4
+        endif
       ENDIF ELSE BEGIN
         cmd += strcompress(TIBTOF1,/remove_all)
       ENDELSE
       
       IF (TIBTOF2 EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '   -Please provide a TOF Channel #2'
-        IF (tab4 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab4 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab4 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        
-        StatusMessage += 1
-        ++tab4
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a TOF Channel #2'
+          IF (tab4 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab4 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab4 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          StatusMessage += 1
+          ++tab4
+        endif
       ENDIF ELSE BEGIN
         cmd += ',' + strcompress(TIBTOF2,/remove_all)
       ENDELSE
       
       IF (TIBTOF3 EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '   -Please provide a TOF Channel #3'
-        IF (tab4 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab4 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab4 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab4
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a TOF Channel #3'
+          IF (tab4 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab4 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab4 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab4
+        endif
       ENDIF ELSE BEGIN
         cmd += ',' + strcompress(TIBTOF3,/remove_all)
       ENDELSE
       
       IF (TIBTOF4 EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '   -Please provide a TOF Channel #4'
-        IF (tab4 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab4 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab4 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab4
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a TOF Channel #4'
+          IF (tab4 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab4 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab4 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab4
+        endif
       ENDIF ELSE BEGIN
         cmd += ',' + strcompress(TIBTOF4,/remove_all)
       ENDELSE
@@ -465,24 +485,26 @@ PRO BSSreduction_CommandLineGenerator, Event
       TIBCV = getTextFieldValue(Event,'tibc_for_sd_value_text')
       IF (TIBCV EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '   -Please provide a Time Independent Background' + $
-          ' Constant Value for'
-        status_text += ' Sample Data'
-        IF (tab4 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab4 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab4 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab4
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a Time Independent Background' + $
+            ' Constant Value for'
+          status_text += ' Sample Data'
+          IF (tab4 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab4 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab4 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab4
+        endif
       ENDIF ELSE BEGIN
         cmd += strcompress(TIBCV,/remove_all)
       ENDELSE
@@ -490,24 +512,26 @@ PRO BSSreduction_CommandLineGenerator, Event
       TIBCE = getTextFieldValue(Event,'tibc_for_sd_error_text')
       IF (TIBCE EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '   -Please provide a Time Independent Background ' + $
-          'Constant Error for'
-        status_text += ' Sample Data'
-        IF (tab4 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab4 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab4 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab4
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a Time Independent Background ' + $
+            'Constant Error for'
+          status_text += ' Sample Data'
+          IF (tab4 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab4 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab4 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab4
+        endif
       ENDIF ELSE BEGIN
         cmd += ',' + strcompress(TIBCE,/remove_all)
       ENDELSE
@@ -523,24 +547,26 @@ PRO BSSreduction_CommandLineGenerator, Event
       TIBCV = getTextFieldValue(Event,'tibc_for_bd_value_text')
       IF (TIBCV EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '   -Please provide a Time Independent Background' + $
-          ' Constant Value for'
-        status_text += ' Background Data'
-        IF (tab4 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab4 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab4 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab4
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a Time Independent Background' + $
+            ' Constant Value for'
+          status_text += ' Background Data'
+          IF (tab4 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab4 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab4 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab4
+        endif
       ENDIF ELSE BEGIN
         cmd += strcompress(TIBCV,/remove_all)
       ENDELSE
@@ -548,24 +574,26 @@ PRO BSSreduction_CommandLineGenerator, Event
       TIBCE = getTextFieldValue(Event,'tibc_for_bd_error_text')
       IF (TIBCE EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '   -Please provide a Time Independent Background' + $
-          ' Constant Error for'
-        status_text += ' Background Data'
-        IF (tab4 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab4 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab4 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab4
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a Time Independent Background' + $
+            ' Constant Error for'
+          status_text += ' Background Data'
+          IF (tab4 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab4 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab4 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab4
+        endif
       ENDIF ELSE BEGIN
         cmd += ',' + strcompress(TIBCE,/remove_all)
       ENDELSE
@@ -582,24 +610,26 @@ PRO BSSreduction_CommandLineGenerator, Event
       TIBCV = getTextFieldValue(Event,'tibc_for_nd_value_text')
       IF (TIBCV EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '   -Please provide a Time Independent Background' + $
-          ' Constant Value for'
-        status_text += ' Normalization Data'
-        IF (tab4 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab4 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab4 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab4
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a Time Independent Background' + $
+            ' Constant Value for'
+          status_text += ' Normalization Data'
+          IF (tab4 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab4 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab4 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab4
+        endif
       ENDIF ELSE BEGIN
         cmd += strcompress(TIBCV,/remove_all)
       ENDELSE
@@ -607,24 +637,26 @@ PRO BSSreduction_CommandLineGenerator, Event
       TIBCE = getTextFieldValue(Event,'tibc_for_nd_error_text')
       IF (TIBCE EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '   -Please provide a Time Independent Background' + $
-          ' Constant Error for'
-        status_text += ' Normalization Data'
-        IF (tab4 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab4 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab4 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab4
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a Time Independent Background' + $
+            ' Constant Error for'
+          status_text += ' Normalization Data'
+          IF (tab4 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab4 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab4 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab4
+        endif
       ENDIF ELSE BEGIN
         cmd += ',' + strcompress(TIBCE,/remove_all)
       ENDELSE
@@ -640,24 +672,26 @@ PRO BSSreduction_CommandLineGenerator, Event
       TIBCV = getTextFieldValue(Event,'tibc_for_ecd_value_text')
       IF (TIBCV EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '   -Please provide a Time Independent Background' + $
-          ' Constant Value for'
-        status_text += ' Empty Can Data'
-        IF (tab4 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab4 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab4 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab4
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a Time Independent Background' + $
+            ' Constant Value for'
+          status_text += ' Empty Can Data'
+          IF (tab4 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab4 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab4 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab4
+        endif
       ENDIF ELSE BEGIN
         cmd += strcompress(TIBCV,/remove_all)
       ENDELSE
@@ -665,24 +699,26 @@ PRO BSSreduction_CommandLineGenerator, Event
       TIBCE = getTextFieldValue(Event,'tibc_for_ecd_error_text')
       IF (TIBCE EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '   -Please provide a Time Independent Background' + $
-          ' Constant Error for'
-        status_text += ' Empty Can Data'
-        IF (tab4 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab4 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab4 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab4
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a Time Independent Background' + $
+            ' Constant Error for'
+          status_text += ' Empty Can Data'
+          IF (tab4 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab4 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab4 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab4
+        endif
       ENDIF ELSE BEGIN
         cmd += ',' + strcompress(TIBCE,/remove_all)
       ENDELSE
@@ -699,24 +735,26 @@ PRO BSSreduction_CommandLineGenerator, Event
       TIBCV = getTextFieldValue(Event,'tibc_for_scatd_value_text')
       IF (TIBCV EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '   -Please provide a Time Independent Background' + $
-          ' Constant Value for'
-        status_text += ' Scattering Data'
-        IF (tab4 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab4 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab4 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab4
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a Time Independent Background' + $
+            ' Constant Value for'
+          status_text += ' Scattering Data'
+          IF (tab4 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab4 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab4 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab4
+        endif
       ENDIF ELSE BEGIN
         cmd += strcompress(TIBCV,/remove_all)
       ENDELSE
@@ -724,24 +762,26 @@ PRO BSSreduction_CommandLineGenerator, Event
       TIBCE = getTextFieldValue(Event,'tibc_for_scatd_error_text')
       IF (TIBCE EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '   -Please provide a Time Independent Background' + $
-          ' Constant Error for'
-        status_text += ' Scattering Data'
-        IF (tab4 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab4 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab4 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab4
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a Time Independent Background' + $
+            ' Constant Error for'
+          status_text += ' Scattering Data'
+          IF (tab4 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab4 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab4 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab4
+        endif
       ENDIF ELSE BEGIN
         cmd += ',' + strcompress(TIBCE,/remove_all)
       ENDELSE
@@ -780,6 +820,92 @@ PRO BSSreduction_CommandLineGenerator, Event
         cmd += ' --chopper-freq='
         IF (Value EQ '') THEN BEGIN
           cmd += '?,0.0'
+          if (index_run eq 0) then begin ;display message for only first index run
+            status_text = '   -Please provide a Chopper Frequency'
+            IF (tab5 EQ 0) THEN BEGIN
+              putInfoInCommandLineStatus, Event, '', 1
+              putInfoInCommandLineStatus, Event, '', 1
+            ENDIF
+            IF (tab5 EQ 0 AND $
+              StatusMessage EQ 0) THEN BEGIN
+              putInfoInCommandLineStatus, Event, TabName, 0
+            ENDIF
+            IF (tab5 EQ 0 AND $
+              StatusMessage NE 0) THEN BEGIN
+              putInfoInCommandLineStatus, Event, TabName, 1
+            ENDIF
+            putInfoInCommandLineStatus, Event, status_text, 1
+            StatusMessage += 1
+            ++tab5
+          endif
+        ENDIF ELSE BEGIN
+          cmd += strcompress(Value,/remove_all) + ',0.0'
+        ENDELSE
+        
+        ;Chopper Wavelength Center
+        value = getTextFieldValue(Event,'chopper_wavelength_value')
+        cmd += ' --chopper-lambda-cent='
+        IF (Value EQ '') THEN BEGIN
+          cmd += '?,0.0'
+          if (index_run eq 0) then begin ;display message for only first index run
+            status_text = '   -Please provide a Chopper Wavelength Center'
+            IF (tab5 EQ 0) THEN BEGIN
+              putInfoInCommandLineStatus, Event, '', 1
+              putInfoInCommandLineStatus, Event, '', 1
+            ENDIF
+            IF (tab5 EQ 0 AND $
+              StatusMessage EQ 0) THEN BEGIN
+              putInfoInCommandLineStatus, Event, TabName, 0
+            ENDIF
+            IF (tab5 EQ 0 AND $
+              StatusMessage NE 0) THEN BEGIN
+              putInfoInCommandLineStatus, Event, TabName, 1
+            ENDIF
+            putInfoInCommandLineStatus, Event, status_text, 1
+            StatusMessage += 1
+            ++tab5
+          endif
+        ENDIF ELSE BEGIN
+          cmd += strcompress(Value,/remove_all) + ',0.0'
+        ENDELSE
+        
+        ;TOF Least Background
+        value = getTextFieldValue(Event,'tof_least_background_value')
+        cmd += ' --tof-least-bkg='
+        IF (Value EQ '') THEN BEGIN
+          cmd += '?,0.0'
+          if (index_run eq 0) then begin ;display message for only first index run
+            status_text = '   -Please provide a TOF Least Background'
+            IF (tab5 EQ 0) THEN BEGIN
+              putInfoInCommandLineStatus, Event, '', 1
+              putInfoInCommandLineStatus, Event, '', 1
+            ENDIF
+            IF (tab5 EQ 0 AND $
+              StatusMessage EQ 0) THEN BEGIN
+              putInfoInCommandLineStatus, Event, TabName, 0
+            ENDIF
+            IF (tab5 EQ 0 AND $
+              StatusMessage NE 0) THEN BEGIN
+              putInfoInCommandLineStatus, Event, TabName, 1
+            ENDIF
+            putInfoInCommandLineStatus, Event, status_text, 1
+            StatusMessage += 1
+            ++tab5
+          endif
+        ENDIF ELSE BEGIN
+          cmd += strcompress(Value,/remove_all) + ',0.0'
+        ENDELSE
+        
+      ENDIF
+      
+    ENDIF ELSE BEGIN ;if Iterative Background Subtraction is ON
+    
+      ;Chopper Frequency
+      value = getTextFieldValue(Event,'chopper_frequency_value')
+      cmd += ' --chopper-freq='
+      IF (Value EQ '') THEN BEGIN
+        cmd += '?,0.0'
+        if (index_run eq 0) then begin ;display message for only first index run
           status_text = '   -Please provide a Chopper Frequency'
           IF (tab5 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
@@ -796,15 +922,17 @@ PRO BSSreduction_CommandLineGenerator, Event
           putInfoInCommandLineStatus, Event, status_text, 1
           StatusMessage += 1
           ++tab5
-        ENDIF ELSE BEGIN
-          cmd += strcompress(Value,/remove_all) + ',0.0'
-        ENDELSE
-        
-        ;Chopper Wavelength Center
-        value = getTextFieldValue(Event,'chopper_wavelength_value')
-        cmd += ' --chopper-lambda-cent='
-        IF (Value EQ '') THEN BEGIN
-          cmd += '?,0.0'
+        endif
+      ENDIF ELSE BEGIN
+        cmd += strcompress(Value,/remove_all) + ',0.0'
+      ENDELSE
+      
+      ;Chopper Wavelength Center
+      value = getTextFieldValue(Event,'chopper_wavelength_value')
+      cmd += ' --chopper-lambda-cent='
+      IF (Value EQ '') THEN BEGIN
+        cmd += '?,0.0'
+        if (index_run eq 0) then begin ;display message for only first index run
           status_text = '   -Please provide a Chopper Wavelength Center'
           IF (tab5 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
@@ -821,15 +949,17 @@ PRO BSSreduction_CommandLineGenerator, Event
           putInfoInCommandLineStatus, Event, status_text, 1
           StatusMessage += 1
           ++tab5
-        ENDIF ELSE BEGIN
-          cmd += strcompress(Value,/remove_all) + ',0.0'
-        ENDELSE
-        
-        ;TOF Least Background
-        value = getTextFieldValue(Event,'tof_least_background_value')
-        cmd += ' --tof-least-bkg='
-        IF (Value EQ '') THEN BEGIN
-          cmd += '?,0.0'
+        endif
+      ENDIF ELSE BEGIN
+        cmd += strcompress(Value,/remove_all) + ',0.0'
+      ENDELSE
+      
+      ;TOF Least Background
+      value = getTextFieldValue(Event,'tof_least_background_value')
+      cmd += ' --tof-least-bkg='
+      IF (Value EQ '') THEN BEGIN
+        cmd += '?,0.0'
+        if (index_run eq 0) then begin ;display message for only first index run
           status_text = '   -Please provide a TOF Least Background'
           IF (tab5 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
@@ -846,85 +976,7 @@ PRO BSSreduction_CommandLineGenerator, Event
           putInfoInCommandLineStatus, Event, status_text, 1
           StatusMessage += 1
           ++tab5
-        ENDIF ELSE BEGIN
-          cmd += strcompress(Value,/remove_all) + ',0.0'
-        ENDELSE
-        
-      ENDIF
-      
-    ENDIF ELSE BEGIN ;if Iterative Background Subtraction is ON
-    
-      ;Chopper Frequency
-      value = getTextFieldValue(Event,'chopper_frequency_value')
-      cmd += ' --chopper-freq='
-      IF (Value EQ '') THEN BEGIN
-        cmd += '?,0.0'
-        status_text = '   -Please provide a Chopper Frequency'
-        IF (tab5 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab5 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab5 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab5
-      ENDIF ELSE BEGIN
-        cmd += strcompress(Value,/remove_all) + ',0.0'
-      ENDELSE
-      
-      ;Chopper Wavelength Center
-      value = getTextFieldValue(Event,'chopper_wavelength_value')
-      cmd += ' --chopper-lambda-cent='
-      IF (Value EQ '') THEN BEGIN
-        cmd += '?,0.0'
-        status_text = '   -Please provide a Chopper Wavelength Center'
-        IF (tab5 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab5 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab5 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab5
-      ENDIF ELSE BEGIN
-        cmd += strcompress(Value,/remove_all) + ',0.0'
-      ENDELSE
-      
-      ;TOF Least Background
-      value = getTextFieldValue(Event,'tof_least_background_value')
-      cmd += ' --tof-least-bkg='
-      IF (Value EQ '') THEN BEGIN
-        cmd += '?,0.0'
-        status_text = '   -Please provide a TOF Least Background'
-        IF (tab5 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab5 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab5 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab5
+        endif
       ENDIF ELSE BEGIN
         cmd += strcompress(Value,/remove_all) + ',0.0'
       ENDELSE
@@ -935,23 +987,25 @@ PRO BSSreduction_CommandLineGenerator, Event
       min_value = getTextFieldValue(Event,'pte_min_text')
       IF (min_value EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '   -Please provide a Minimum Transverse Energy' + $
-          ' Integration Value'
-        IF (tab5 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab5 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab5 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab5
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a Minimum Transverse Energy' + $
+            ' Integration Value'
+          IF (tab5 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab5 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab5 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab5
+        endif
       ENDIF ELSE BEGIN
         cmd += strcompress(min_value,/remove_all)
       ENDELSE
@@ -960,23 +1014,25 @@ PRO BSSreduction_CommandLineGenerator, Event
       max_value = getTextFieldValue(Event,'pte_max_text')
       IF (max_value EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '   -Please provide a Maximum Transverse Energy' + $
-          ' Integration Value'
-        IF (tab5 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab5 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab5 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab5
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a Maximum Transverse Energy' + $
+            ' Integration Value'
+          IF (tab5 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab5 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab5 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab5
+        endif
       ENDIF ELSE BEGIN
         cmd += ',' + strcompress(max_value,/remove_all)
       ENDELSE
@@ -985,23 +1041,25 @@ PRO BSSreduction_CommandLineGenerator, Event
       width_value = getTextFieldValue(Event,'pte_bin_text')
       IF (width_value EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '   -Please provide a Width Transverse Energy' + $
-          ' Integration Value'
-        IF (tab5 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab5 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab5 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab5
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a Width Transverse Energy' + $
+            ' Integration Value'
+          IF (tab5 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab5 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab5 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab5
+        endif
       ENDIF ELSE BEGIN
         cmd += ',' + strcompress(width_value,/remove_all)
       ENDELSE
@@ -1013,23 +1071,25 @@ PRO BSSreduction_CommandLineGenerator, Event
       temp_value = getTextFieldValue(Event,'detailed_balance_temperature_value')
       IF (temp_value EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '   -Please provide a Detailed Balance Temperature ' + $
-          'Value'
-        IF (tab5 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab5 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab5 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab5
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a Detailed Balance Temperature ' + $
+            'Value'
+          IF (tab5 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab5 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab5 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab5
+        endif
       ENDIF ELSE BEGIN
         cmd += strcompress(temp_value,/remove_all)
       ENDELSE
@@ -1039,22 +1099,24 @@ PRO BSSreduction_CommandLineGenerator, Event
       ratio_value = getTextFieldValue(Event,'ratio_tolerance_value')
       IF (ratio_value EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '   -Please provide a Ratio Tolerance Value'
-        IF (tab5 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab5 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab5 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab5
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a Ratio Tolerance Value'
+          IF (tab5 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab5 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab5 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab5
+        endif
       ENDIF ELSE BEGIN
         cmd += strcompress(ratio_value,/remove_all)
       ENDELSE
@@ -1076,23 +1138,25 @@ PRO BSSreduction_CommandLineGenerator, Event
       max_value = getTextFieldValue(Event,'max_wave_dependent_back')
       IF (max_value EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '   -Please provide a Maximum Wavelength-Dependent ' + $
-          'Background Constant Value'
-        IF (tab5 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab5 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab5 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab5
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a Maximum Wavelength-Dependent ' + $
+            'Background Constant Value'
+          IF (tab5 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab5 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab5 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab5
+        endif
       ENDIF ELSE BEGIN
         cmd += strcompress(max_value,/remove_all)
       ENDELSE
@@ -1126,23 +1190,25 @@ PRO BSSreduction_CommandLineGenerator, Event
       Value = getTextFieldValue(Event,'csbss_value_text')
       IF (Value EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '   -Please provide a Constant To Scale Background' + $
-          ' for Subtraction from the Sample Data Value'
-        IF (tab6 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab6 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab6 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab6
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a Constant To Scale Background' + $
+            ' for Subtraction from the Sample Data Value'
+          IF (tab6 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab6 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab6 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab6
+        endif
       ENDIF ELSE BEGIN
         cmd += strcompress(Value,/remove_all)
       ENDELSE
@@ -1150,23 +1216,25 @@ PRO BSSreduction_CommandLineGenerator, Event
       Error = getTextFieldValue(Event,'csbss_error_text')
       IF (Error EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '   -Please provide a Constant To Scale Background' + $
-          ' for Subtraction from the Sample Data Error'
-        IF (tab6 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab6 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab6 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab6
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a Constant To Scale Background' + $
+            ' for Subtraction from the Sample Data Error'
+          IF (tab6 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab6 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab6 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab6
+        endif
       ENDIF ELSE BEGIN
         cmd += ',' + strcompress(Error,/remove_all)
       ENDELSE
@@ -1183,23 +1251,25 @@ PRO BSSreduction_CommandLineGenerator, Event
       Value = getTextFieldValue(Event,'csn_value_text')
       IF (Value EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '   -Please provide a Constant To Scale Background' + $
-          ' for Subtraction from the normalization Data Value'
-        IF (tab6 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab6 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab6 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab6
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a Constant To Scale Background' + $
+            ' for Subtraction from the normalization Data Value'
+          IF (tab6 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab6 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab6 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab6
+        endif
       ENDIF ELSE BEGIN
         cmd += strcompress(Value,/remove_all)
       ENDELSE
@@ -1207,23 +1277,25 @@ PRO BSSreduction_CommandLineGenerator, Event
       Error = getTextFieldValue(Event,'csn_error_text')
       IF (Error EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '   -Please provide a Constant To Scale Background' + $
-          ' for Subtraction from the Normalization Data Error'
-        IF (tab6 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab6 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab6 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab6
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a Constant To Scale Background' + $
+            ' for Subtraction from the Normalization Data Error'
+          IF (tab6 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab6 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab6 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab6
+        endif
       ENDIF ELSE BEGIN
         cmd += ',' + strcompress(Error,/remove_all)
       ENDELSE
@@ -1238,24 +1310,26 @@ PRO BSSreduction_CommandLineGenerator, Event
       Value = getTextFieldValue(Event,'bcs_value_text')
       IF (Value EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '   -Please provide a Constant To Scale Background' + $
-          ' for Subtraction from the Sample Data Associated Empty ' + $
-          'Container Value'
-        IF (tab6 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab6 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab6 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab6
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a Constant To Scale Background' + $
+            ' for Subtraction from the Sample Data Associated Empty ' + $
+            'Container Value'
+          IF (tab6 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab6 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab6 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab6
+        endif
       ENDIF ELSE BEGIN
         cmd += strcompress(Value,/remove_all)
       ENDELSE
@@ -1263,24 +1337,26 @@ PRO BSSreduction_CommandLineGenerator, Event
       Error = getTextFieldValue(Event,'bcs_error_text')
       IF (Error EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '   -Please provide a Constant To Scale Background ' + $
-          'for Subtraction from the Sample Data Associated Empty ' + $
-          'Container Error'
-        IF (tab6 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab6 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab6 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab6
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a Constant To Scale Background ' + $
+            'for Subtraction from the Sample Data Associated Empty ' + $
+            'Container Error'
+          IF (tab6 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab6 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab6 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab6
+        endif
       ENDIF ELSE BEGIN
         cmd += ',' + strcompress(Error,/remove_all)
       ENDELSE
@@ -1295,24 +1371,26 @@ PRO BSSreduction_CommandLineGenerator, Event
       Value = getTextFieldValue(Event,'bcn_value_text')
       IF (Value EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '   -Please provide a Constant To Scale Background' + $
-          ' for Subtraction from the Normalization Data Associated Empty ' + $
-          'Container Value'
-        IF (tab6 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab6 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab6 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab6
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a Constant To Scale Background' + $
+            ' for Subtraction from the Normalization Data Associated Empty ' + $
+            'Container Value'
+          IF (tab6 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab6 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab6 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab6
+        endif
       ENDIF ELSE BEGIN
         cmd += strcompress(Value,/remove_all)
       ENDELSE
@@ -1320,24 +1398,26 @@ PRO BSSreduction_CommandLineGenerator, Event
       Error = getTextFieldValue(Event,'bcn_error_text')
       IF (Error EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '   -Please provide a Constant To Scale Background ' + $
-          'for Subtraction from the Normalization Data Associated Empty ' + $
-          'Container Error'
-        IF (tab6 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab6 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab6 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab6
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a Constant To Scale Background ' + $
+            'for Subtraction from the Normalization Data Associated Empty ' + $
+            'Container Error'
+          IF (tab6 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab6 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab6 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab6
+        endif
       ENDIF ELSE BEGIN
         cmd += ',' + strcompress(Error,/remove_all)
       ENDELSE
@@ -1352,23 +1432,25 @@ PRO BSSreduction_CommandLineGenerator, Event
       Value = getTextFieldValue(Event,'cs_value_text')
       IF (Value EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '   -Please provide a Constant To Scale the Empty' + $
-          ' Container for Subtraction from the Sample Data Value'
-        IF (tab6 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab6 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab6 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab6
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a Constant To Scale the Empty' + $
+            ' Container for Subtraction from the Sample Data Value'
+          IF (tab6 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab6 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab6 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab6
+        endif
       ENDIF ELSE BEGIN
         cmd += strcompress(Value,/remove_all)
       ENDELSE
@@ -1376,23 +1458,25 @@ PRO BSSreduction_CommandLineGenerator, Event
       Error = getTextFieldValue(Event,'cs_error_text')
       IF (Error EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '   -Please provide a Constant To Scale the Empty' + $
-          ' Container for Subtraction from the Sample Data Error'
-        IF (tab6 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab6 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab6 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab6
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a Constant To Scale the Empty' + $
+            ' Container for Subtraction from the Sample Data Error'
+          IF (tab6 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab6 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab6 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab6
+        endif
       ENDIF ELSE BEGIN
         cmd += ',' + strcompress(Error,/remove_all)
       ENDELSE
@@ -1407,23 +1491,25 @@ PRO BSSreduction_CommandLineGenerator, Event
       Value = getTextFieldValue(Event,'cn_value_text')
       IF (Value EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '   -Please provide a Constant To Scale the Empty' + $
-          ' Container for Subtraction from the Normalization Data Value'
-        IF (tab6 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab6 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab6 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab6
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a Constant To Scale the Empty' + $
+            ' Container for Subtraction from the Normalization Data Value'
+          IF (tab6 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab6 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab6 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab6
+        endif
       ENDIF ELSE BEGIN
         cmd += strcompress(Value,/remove_all)
       ENDELSE
@@ -1431,23 +1517,25 @@ PRO BSSreduction_CommandLineGenerator, Event
       Error = getTextFieldValue(Event,'cn_error_text')
       IF (Error EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '   -Please provide a Constant To Scale the Empty' + $
-          ' Container for Subtraction from the Normalization Data Error'
-        IF (tab6 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab6 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab6 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab6
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a Constant To Scale the Empty' + $
+            ' Container for Subtraction from the Normalization Data Error'
+          IF (tab6 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab6 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab6 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab6
+        endif
       ENDIF ELSE BEGIN
         cmd += ',' + strcompress(Error,/remove_all)
       ENDELSE
@@ -1469,9 +1557,41 @@ PRO BSSreduction_CommandLineGenerator, Event
         Value = getTextFieldValue(Event,'csfds_value_text')
         IF (Value EQ '') THEN BEGIN
           cmd += '?'
-          status_text = '   -Please provide a Constant for Scaling' + $
-            ' the Final' + $
-            ' Data Spectrum'
+          if (index_run eq 0) then begin ;display message for only first index run
+            status_text = '   -Please provide a Constant for Scaling' + $
+              ' the Final' + $
+              ' Data Spectrum'
+            IF (tab7 EQ 0) THEN BEGIN
+              putInfoInCommandLineStatus, Event, '', 1
+              putInfoInCommandLineStatus, Event, '', 1
+            ENDIF
+            IF (tab7 EQ 0 AND $
+              StatusMessage EQ 0) THEN BEGIN
+              putInfoInCommandLineStatus, Event, TabName, 0
+            ENDIF
+            IF (tab7 EQ 0 AND $
+              StatusMessage NE 0) THEN BEGIN
+              putInfoInCommandLineStatus, Event, TabName, 1
+            ENDIF
+            putInfoInCommandLineStatus, Event, status_text, 1
+            StatusMessage += 1
+            ++tab7
+          endif
+        ENDIF ELSE BEGIN
+          cmd += strcompress(Value,/remove_all)
+        ENDELSE
+      ENDIF
+    ENDIF
+    
+    ;get Time Zero Slope Parameter
+    IF (isButtonSelected(Event,'tzsp_button')) THEN BEGIN
+      cmd += ' --time-zero-slope='
+      
+      TIBCV = getTextFieldValue(Event,'tzsp_value_text')
+      IF (TIBCV EQ '') THEN BEGIN
+        cmd += '?'
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a Time Zero Slope Parameter Value'
           IF (tab7 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1
@@ -1487,35 +1607,7 @@ PRO BSSreduction_CommandLineGenerator, Event
           putInfoInCommandLineStatus, Event, status_text, 1
           StatusMessage += 1
           ++tab7
-        ENDIF ELSE BEGIN
-          cmd += strcompress(Value,/remove_all)
-        ENDELSE
-      ENDIF
-    ENDIF
-    
-    ;get Time Zero Slope Parameter
-    IF (isButtonSelected(Event,'tzsp_button')) THEN BEGIN
-      cmd += ' --time-zero-slope='
-      
-      TIBCV = getTextFieldValue(Event,'tzsp_value_text')
-      IF (TIBCV EQ '') THEN BEGIN
-        cmd += '?'
-        status_text = '   -Please provide a Time Zero Slope Parameter Value'
-        IF (tab7 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab7 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab7 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab7
+        endif
       ENDIF ELSE BEGIN
         cmd += strcompress(TIBCV,/remove_all)
       ENDELSE
@@ -1523,22 +1615,24 @@ PRO BSSreduction_CommandLineGenerator, Event
       TIBCE = getTextFieldValue(Event,'tzsp_error_text')
       IF (TIBCE EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '   -Please provide a Time Zero Slope Parameter Error'
-        IF (tab7 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab7 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab7 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab7
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a Time Zero Slope Parameter Error'
+          IF (tab7 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab7 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab7 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab7
+        endif
       ENDIF ELSE BEGIN
         cmd += ',' + strcompress(TIBCE,/remove_all)
       ENDELSE
@@ -1552,22 +1646,24 @@ PRO BSSreduction_CommandLineGenerator, Event
       TIBCV = getTextFieldValue(Event,'tzop_value_text')
       IF (TIBCV EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '   -Please provide a Time Zero Offset Parameter Value'
-        IF (tab7 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab7 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab7 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab7
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a Time Zero Offset Parameter Value'
+          IF (tab7 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab7 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab7 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab7
+        endif
       ENDIF ELSE BEGIN
         cmd += strcompress(TIBCV,/remove_all)
       ENDELSE
@@ -1575,22 +1671,24 @@ PRO BSSreduction_CommandLineGenerator, Event
       TIBCE = getTextFieldValue(Event,'tzop_error_text')
       IF (TIBCE EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '   -Please provide a Time Zero Offset Parameter Error'
-        IF (tab7 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab7 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab7 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab7
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a Time Zero Offset Parameter Error'
+          IF (tab7 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab7 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab7 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab7
+        endif
       ENDIF ELSE BEGIN
         cmd += ',' + strcompress(TIBCE,/remove_all)
       ENDELSE
@@ -1603,22 +1701,24 @@ PRO BSSreduction_CommandLineGenerator, Event
     TIBCMin = getTextFieldValue(Event,'eha_min_text')
     IF (TIBCMin EQ '') THEN BEGIN
       cmd += '?'
-      status_text = '   -Please provide a Energy Histogram Axis Min'
-      IF (tab7 EQ 0) THEN BEGIN
-        putInfoInCommandLineStatus, Event, '', 1
-        putInfoInCommandLineStatus, Event, '', 1
-      ENDIF
-      IF (tab7 EQ 0 AND $
-        StatusMessage EQ 0) THEN BEGIN
-        putInfoInCommandLineStatus, Event, TabName, 0
-      ENDIF
-      IF (tab7 EQ 0 AND $
-        StatusMessage NE 0) THEN BEGIN
-        putInfoInCommandLineStatus, Event, TabName, 1
-      ENDIF
-      putInfoInCommandLineStatus, Event, status_text, 1
-      StatusMessage += 1
-      ++tab7
+      if (index_run eq 0) then begin ;display message for only first index run
+        status_text = '   -Please provide a Energy Histogram Axis Min'
+        IF (tab7 EQ 0) THEN BEGIN
+          putInfoInCommandLineStatus, Event, '', 1
+          putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab7 EQ 0 AND $
+          StatusMessage EQ 0) THEN BEGIN
+          putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab7 EQ 0 AND $
+          StatusMessage NE 0) THEN BEGIN
+          putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
+        StatusMessage += 1
+        ++tab7
+      endif
     ENDIF ELSE BEGIN
       cmd += strcompress(TIBCMin,/remove_all)
     ENDELSE
@@ -1626,22 +1726,24 @@ PRO BSSreduction_CommandLineGenerator, Event
     TIBCMax = getTextFieldValue(Event,'eha_max_text')
     IF (TIBCMax EQ '') THEN BEGIN
       cmd += ',?'
-      status_text = '   -Please provide a Energy Histogram Axis Max'
-      IF (tab7 EQ 0) THEN BEGIN
-        putInfoInCommandLineStatus, Event, '', 1
-        putInfoInCommandLineStatus, Event, '', 1
-      ENDIF
-      IF (tab7 EQ 0 AND $
-        StatusMessage EQ 0) THEN BEGIN
-        putInfoInCommandLineStatus, Event, TabName, 0
-      ENDIF
-      IF (tab7 EQ 0 AND $
-        StatusMessage NE 0) THEN BEGIN
-        putInfoInCommandLineStatus, Event, TabName, 1
-      ENDIF
-      putInfoInCommandLineStatus, Event, status_text, 1
-      StatusMessage += 1
-      ++tab7
+      if (index_run eq 0) then begin ;display message for only first index run
+        status_text = '   -Please provide a Energy Histogram Axis Max'
+        IF (tab7 EQ 0) THEN BEGIN
+          putInfoInCommandLineStatus, Event, '', 1
+          putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab7 EQ 0 AND $
+          StatusMessage EQ 0) THEN BEGIN
+          putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab7 EQ 0 AND $
+          StatusMessage NE 0) THEN BEGIN
+          putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
+        StatusMessage += 1
+        ++tab7
+      endif
     ENDIF ELSE BEGIN
       cmd += ',' + strcompress(TIBCMax,/remove_all)
     ENDELSE
@@ -1649,22 +1751,24 @@ PRO BSSreduction_CommandLineGenerator, Event
     TIBCBin = getTextFieldValue(Event,'eha_bin_text')
     IF (TIBCBin EQ '') THEN BEGIN
       cmd += ',?'
-      status_text = '   -Please provide a Energy Histogram Axis Bin'
-      IF (tab7 EQ 0) THEN BEGIN
-        putInfoInCommandLineStatus, Event, '', 1
-        putInfoInCommandLineStatus, Event, '', 1
-      ENDIF
-      IF (tab7 EQ 0 AND $
-        StatusMessage EQ 0) THEN BEGIN
-        putInfoInCommandLineStatus, Event, TabName, 0
-      ENDIF
-      IF (tab7 EQ 0 AND $
-        StatusMessage NE 0) THEN BEGIN
-        putInfoInCommandLineStatus, Event, TabName, 1
-      ENDIF
-      putInfoInCommandLineStatus, Event, status_text, 1
-      StatusMessage += 1
-      ++tab7
+      if (index_run eq 0) then begin ;display message for only first index run
+        status_text = '   -Please provide a Energy Histogram Axis Bin'
+        IF (tab7 EQ 0) THEN BEGIN
+          putInfoInCommandLineStatus, Event, '', 1
+          putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab7 EQ 0 AND $
+          StatusMessage EQ 0) THEN BEGIN
+          putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab7 EQ 0 AND $
+          StatusMessage NE 0) THEN BEGIN
+          putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
+        StatusMessage += 1
+        ++tab7
+      endif
     ENDIF ELSE BEGIN
       cmd += ',' + strcompress(TIBCBin,/remove_all)
     ENDELSE
@@ -1676,23 +1780,25 @@ PRO BSSreduction_CommandLineGenerator, Event
       TIBCV = getTextFieldValue(Event,'gifw_value_text')
       IF (TIBCV EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '   -Please provide a Global Instrument Final ' + $
-          'Wavelength Value'
-        IF (tab7 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab7 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab7 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab7
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a Global Instrument Final ' + $
+            'Wavelength Value'
+          IF (tab7 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab7 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab7 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab7
+        endif
       ENDIF ELSE BEGIN
         cmd += strcompress(TIBCV,/remove_all)
       ENDELSE
@@ -1700,23 +1806,25 @@ PRO BSSreduction_CommandLineGenerator, Event
       TIBCE = getTextFieldValue(Event,'gifw_error_text')
       IF (TIBCE EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '   -Please provide a Global Instrument Final ' + $
-          'Wavelength Error'
-        IF (tab7 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab7 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab7 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab7
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a Global Instrument Final ' + $
+            'Wavelength Error'
+          IF (tab7 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab7 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab7 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab7
+        endif
       ENDIF ELSE BEGIN
         cmd += ',' + strcompress(TIBCE,/remove_all)
       ENDELSE
@@ -1741,23 +1849,25 @@ PRO BSSreduction_CommandLineGenerator, Event
         IF (result EQ 1) THEN BEGIN ;success
           job_number = N_ELEMENTS(Qaxis)-1
         ENDIF ELSE BEGIN        ;failed to create the Qaxis
-          status_text = '   -Please Check the format of the ' + $
-            'Momentum Transfer Histogram Axis'
-          IF (tab7 EQ 0) THEN BEGIN
-            putInfoInCommandLineStatus, Event, '', 1
-            putInfoInCommandLineStatus, Event, '', 1
-          ENDIF
-          IF (tab7 EQ 0 AND $
-            StatusMessage EQ 0) THEN BEGIN
-            putInfoInCommandLineStatus, Event, TabName, 0
-          ENDIF
-          IF (tab7 EQ 0 AND $
-            StatusMessage NE 0) THEN BEGIN
-            putInfoInCommandLineStatus, Event, TabName, 1
-          ENDIF
-          putInfoInCommandLineStatus, Event, status_text, 1
-          StatusMessage += 1
-          ++tab7
+          if (index_run eq 0) then begin ;display message for only first index run
+            status_text = '   -Please Check the format of the ' + $
+              'Momentum Transfer Histogram Axis'
+            IF (tab7 EQ 0) THEN BEGIN
+              putInfoInCommandLineStatus, Event, '', 1
+              putInfoInCommandLineStatus, Event, '', 1
+            ENDIF
+            IF (tab7 EQ 0 AND $
+              StatusMessage EQ 0) THEN BEGIN
+              putInfoInCommandLineStatus, Event, TabName, 0
+            ENDIF
+            IF (tab7 EQ 0 AND $
+              StatusMessage NE 0) THEN BEGIN
+              putInfoInCommandLineStatus, Event, TabName, 1
+            ENDIF
+            putInfoInCommandLineStatus, Event, status_text, 1
+            StatusMessage += 1
+            ++tab7
+          endif
           cmd += ' --mom-trans-bin='
           job_number = 1
           cmd += Qmin
@@ -1787,23 +1897,25 @@ PRO BSSreduction_CommandLineGenerator, Event
       TIBCMin = getTextFieldValue(Event,'mtha_min_text')
       IF (TIBCMin EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '   -Please provide a ' + missing_info_title + $
-          ' Axis Min'
-        IF (tab7 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab7 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab7 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab7
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a ' + missing_info_title + $
+            ' Axis Min'
+          IF (tab7 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab7 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab7 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab7
+        endif
       ENDIF ELSE BEGIN
         cmd += strcompress(TIBCMin,/remove_all)
       ENDELSE
@@ -1811,23 +1923,25 @@ PRO BSSreduction_CommandLineGenerator, Event
       TIBCMax = getTextFieldValue(Event,'mtha_max_text')
       IF (TIBCMax EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '   -Please provide a ' + missing_info_title + $
-          ' Axis Max'
-        IF (tab7 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab7 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab7 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab7
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a ' + missing_info_title + $
+            ' Axis Max'
+          IF (tab7 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab7 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab7 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab7
+        endif
       ENDIF ELSE BEGIN
         cmd += ',' + strcompress(TIBCMax,/remove_all)
       ENDELSE
@@ -1835,23 +1949,25 @@ PRO BSSreduction_CommandLineGenerator, Event
       TIBCBin = getTextFieldValue(Event,'mtha_bin_text')
       IF (TIBCBin EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '   -Please provide a ' + missing_info_title + $
-          ' Axis Bin'
-        IF (tab7 EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, '', 1
-          putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab7 EQ 0 AND $
-          StatusMessage EQ 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab7 EQ 0 AND $
-          StatusMessage NE 0) THEN BEGIN
-          putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab7
+        if (index_run eq 0) then begin ;display message for only first index run
+          status_text = '   -Please provide a ' + missing_info_title + $
+            ' Axis Bin'
+          IF (tab7 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+          ENDIF
+          IF (tab7 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+          ENDIF
+          IF (tab7 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+          ENDIF
+          putInfoInCommandLineStatus, Event, status_text, 1
+          StatusMessage += 1
+          ++tab7
+        endif
       ENDIF ELSE BEGIN
         cmd += ',' + strcompress(TIBCBin,/remove_all)
       ENDELSE
@@ -1956,22 +2072,24 @@ PRO BSSreduction_CommandLineGenerator, Event
           
           IF (WAmin EQ '') THEN BEGIN
             cmd += '?'
-            status_text = '   -Please provide a Wavelength Histogram' + $
-              ' Min Value'
-            IF (tab8 EQ 0) THEN BEGIN
-              putInfoInCommandLineStatus, Event, '', 1
-            ENDIF
-            IF (tab8 EQ 0 AND $
-              StatusMessage EQ 0) THEN BEGIN
-              putInfoInCommandLineStatus, Event, TabName, 0
-            ENDIF
-            IF (tab8 EQ 0 AND $
-              StatusMessage NE 0) THEN BEGIN
-              putInfoInCommandLineStatus, Event, TabName, 1
-            ENDIF
-            putInfoInCommandLineStatus, Event, status_text, 1
-            StatusMessage += 1
-            ++tab8
+            if (index_run eq 0) then begin ;display message for only first index run
+              status_text = '   -Please provide a Wavelength Histogram' + $
+                ' Min Value'
+              IF (tab8 EQ 0) THEN BEGIN
+                putInfoInCommandLineStatus, Event, '', 1
+              ENDIF
+              IF (tab8 EQ 0 AND $
+                StatusMessage EQ 0) THEN BEGIN
+                putInfoInCommandLineStatus, Event, TabName, 0
+              ENDIF
+              IF (tab8 EQ 0 AND $
+                StatusMessage NE 0) THEN BEGIN
+                putInfoInCommandLineStatus, Event, TabName, 1
+              ENDIF
+              putInfoInCommandLineStatus, Event, status_text, 1
+              StatusMessage += 1
+              ++tab8
+            endif
           ENDIF ELSE BEGIN
             cmd += strcompress(WAmin,/remove_all)
           ENDELSE
@@ -1979,45 +2097,49 @@ PRO BSSreduction_CommandLineGenerator, Event
           
           IF (WAmax EQ '') THEN BEGIN
             cmd += ',?'
-            status_text = '   -Please provide a Wavelength Histogram' + $
-              ' Max Value'
-            IF (tab8 EQ 0) THEN BEGIN
-              putInfoInCommandLineStatus, Event, '', 1
-            ENDIF
-            IF (tab8 EQ 0 AND $
-              StatusMessage EQ 0) THEN BEGIN
-              putInfoInCommandLineStatus, Event, TabName, 0
-            ENDIF
-            IF (tab8 EQ 0 AND $
-              StatusMessage NE 0) THEN BEGIN
-              putInfoInCommandLineStatus, Event, TabName, 1
-            ENDIF
-            putInfoInCommandLineStatus, Event, status_text, 1
-            StatusMessage += 1
-            ++tab8
+            if (index_run eq 0) then begin ;display message for only first index run
+              status_text = '   -Please provide a Wavelength Histogram' + $
+                ' Max Value'
+              IF (tab8 EQ 0) THEN BEGIN
+                putInfoInCommandLineStatus, Event, '', 1
+              ENDIF
+              IF (tab8 EQ 0 AND $
+                StatusMessage EQ 0) THEN BEGIN
+                putInfoInCommandLineStatus, Event, TabName, 0
+              ENDIF
+              IF (tab8 EQ 0 AND $
+                StatusMessage NE 0) THEN BEGIN
+                putInfoInCommandLineStatus, Event, TabName, 1
+              ENDIF
+              putInfoInCommandLineStatus, Event, status_text, 1
+              StatusMessage += 1
+              ++tab8
+            endif
           ENDIF ELSE BEGIN
             cmd += ',' + strcompress(WAmax,/remove_all)
           ENDELSE
           
           IF (WABwidth EQ '') THEN BEGIN
             cmd += ',?'
-            status_text = '   -Please provide a Wavelength Histogram' + $
-              ' Bin ' + $
-              'Width Value'
-            IF (tab8 EQ 0) THEN BEGIN
-              putInfoInCommandLineStatus, Event, '', 1
-            ENDIF
-            IF (tab8 EQ 0 AND $
-              StatusMessage EQ 0) THEN BEGIN
-              putInfoInCommandLineStatus, Event, TabName, 0
-            ENDIF
-            IF (tab8 EQ 0 AND $
-              StatusMessage NE 0) THEN BEGIN
-              putInfoInCommandLineStatus, Event, TabName, 1
-            ENDIF
-            putInfoInCommandLineStatus, Event, status_text, 1
-            StatusMessage += 1
-            ++tab8
+            if (index_run eq 0) then begin ;display message for only first index run
+              status_text = '   -Please provide a Wavelength Histogram' + $
+                ' Bin ' + $
+                'Width Value'
+              IF (tab8 EQ 0) THEN BEGIN
+                putInfoInCommandLineStatus, Event, '', 1
+              ENDIF
+              IF (tab8 EQ 0 AND $
+                StatusMessage EQ 0) THEN BEGIN
+                putInfoInCommandLineStatus, Event, TabName, 0
+              ENDIF
+              IF (tab8 EQ 0 AND $
+                StatusMessage NE 0) THEN BEGIN
+                putInfoInCommandLineStatus, Event, TabName, 1
+              ENDIF
+              putInfoInCommandLineStatus, Event, status_text, 1
+              StatusMessage += 1
+              ++tab8
+            endif
           ENDIF ELSE BEGIN
             cmd += ',' + strcompress(WABwidth,/remove_all)
           ENDELSE
@@ -2057,12 +2179,12 @@ PRO BSSreduction_CommandLineGenerator, Event
       _run_numbers = '?'
     endif else begin
       if (RSDFiles[0]  eq '0') then begin
-      _run_numbers = '?'
+        _run_numbers = '?'
       endif else begin
-      _run_numbers = RSDFiles[index_run]
-      ;replace ',' by '_' if a  ny
-      run_array = strsplit(_run_numbers,',',/extract)
-      _run_numbers = strjoin(run_array,'_')
+        _run_numbers = RSDFiles[index_run]
+        ;replace ',' by '_' if a  ny
+        run_array = strsplit(_run_numbers,',',/extract)
+        _run_numbers = strjoin(run_array,'_')
       endelse
     endelse
     oFile = 'BSS_' + _run_numbers
@@ -2098,7 +2220,7 @@ PRO BSSreduction_CommandLineGenerator, Event
   putTextFieldValue, Event, 'command_line_generator_text', cmd_array, 0
   
   ;validate or not Go data reduction button
-  IF (StatusMessage NE 0) THEN BEGIN ;do not activate button
+  IFs (StatusMessage NE 0) THEN BEGIN ;do not activate button
     activate = 0
   ENDIF ELSE BEGIN
     activate = 1
