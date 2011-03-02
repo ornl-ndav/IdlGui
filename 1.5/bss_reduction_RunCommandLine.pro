@@ -133,19 +133,19 @@ PRO BSSreduction_RunCommandLine, Event
           AppendLogBookMessage, Event, listening
         ENDIF
         
-        LogBookText = '>>>>>>>>>> Data Reduction Information <<<<<<<<<<<'
-        AppendLogBookMessage, Event, LogBookText
-        
-        ;display xml config file
-        xmlConfigFile = getXmlConfigFileName(Event)
-        LogBookText = '  XML data reduction config file: ' + $
-          strcompress(xmlConfigFile,/remove_all)
-        AppendLogBookMessage, Event, LogBookText
-        
-        BSSreduction_DisplayXmlConfigFile, Event, xmlConfigFile
+;        LogBookText = '>>>>>>>>>> Data Reduction Information <<<<<<<<<<<'
+;        AppendLogBookMessage, Event, LogBookText
+;         
+;        ;display xml config file
+;        xmlConfigFile = getXmlConfigFileName(Event)
+;        LogBookText = '  XML data reduction config file: ' + $
+;          strcompress(xmlConfigFile,/remove_all)
+;        AppendLogBookMessage, Event, LogBookText
+;        
+;        BSSreduction_DisplayXmlConfigFile, Event, xmlConfigFile
         
         ;update list of intermediate plots in OUTPUT tab droplist
-        BSSreduction_IntermediatePlotsUpdateDroplist, Event
+;        BSSreduction_IntermediatePlotsUpdateDroplist, Event
         
       ENDELSE
       
