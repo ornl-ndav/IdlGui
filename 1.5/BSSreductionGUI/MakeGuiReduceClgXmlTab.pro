@@ -8,7 +8,6 @@ PRO MakeGuiReduceClgXmlTab, ReduceBase, ReduceClgXmlTabSettings
     SCR_XSIZE = ReduceClgXmlTabSettings.Size[2],$
     SCR_YSIZE = ReduceClgXmlTabSettings.Size[3])
     
-    
   ;Make CLG status
   MakeGuiReduceClgXmlTab1, ReduceClgXmlTab, ReduceClgXmlTabSettings
   
