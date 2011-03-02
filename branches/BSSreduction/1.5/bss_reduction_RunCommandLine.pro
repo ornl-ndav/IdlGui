@@ -90,64 +90,80 @@ PRO BSSreduction_RunCommandLine, Event
     
     IF (ibs_value EQ 1) THEN BEGIN ;if Iterative Background Subtraction is OFF
     
-      cmd = 'srun -p ' + srun + ' ' + cmd
-      
-      ;display command line in log-book
-      cmd_text = 'Running Command Line:'
-      AppendLogBookMessage, Event, cmd_text
-      cmd_text = ' -> ' + cmd
-      AppendLogBookMessage, Event, cmd_text
-      cmd_text = ' ... ' + PROCESSING
+      nbr_jobs = N_ELEMENTS(cmd)
+      cmd_text = 'BSSreduction is about to run ' + $
+        STRCOMPRESS(nbr_jobs,/REMOVE_ALL) + ' jobs in the background'
       AppendLogBookMessage, Event, cmd_text
       
-      status_text = 'Data Reduction ... ' + PROCESSING
-      putDRstatusInfo, Event, status_text
+;      ;add batch statement to all command lines
+;      status_text  = 'Launching ' + STRCOMPRESS(nbr_jobs,/REMOVE_ALL)
+;      status_text += ' jobs ... '
+;      putDRstatusInfo, Event, status_text + PROCESSING
       
-      SPAWN, cmd, listening, err_listening
-      IF (err_listening[0] NE '') THEN BEGIN
+      index = 0
+      while (index lt nbr_jobs) do begin
       
-        MessageToAdd    = (*global).FAILED
-        MessageToRemove = PROCESSING
-        putTextAtEndOfLogBookLastLine, Event, MessageToAdd, MessageToRemove
+        _cmd = 'srun -p ' + srun + ' ' + cmd[index]
         
-        ;display listening
-        AppendLogBookMessage, Event, listening
+        ;display command line in log-book
+        cmd_text = 'Running Command Line #' + strcompress(index,/remove_all) + ':'
+        AppendLogBookMessage, Event, cmd_text
+        cmd_text = ' -> ' + _cmd
+        AppendLogBookMessage, Event, cmd_text
+        cmd_text = ' ... ' + PROCESSING
+        AppendLogBookMessage, Event, cmd_text
         
-        ;display err_listening
-        AppendLogBookMessage, Event, err_listening
-        
-        status_text = (*global).DRstatusFAILED
+        status_text = 'Data Reduction #' + strcompress(index,/remove_all) + ' ... ' + PROCESSING
         putDRstatusInfo, Event, status_text
         
-      ENDIF ELSE BEGIN
-      
-        MessageToAdd = 'DONE'
-        MessageToRemove = PROCESSING
-        putTextAtEndOfLogBookLastLine, Event, MessageToAdd, MessageToRemove
+        SPAWN, _cmd, listening, err_listening
+        IF (err_listening[0] NE '') THEN BEGIN
         
-        status_text = (*global).DRstatusOK
-        putDRstatusInfo, Event, status_text
-        
-        IF (isButtonSelected(Event,'verbose_button')) THEN BEGIN
+          MessageToAdd    = (*global).FAILED
+          MessageToRemove = PROCESSING
+          putTextAtEndOfLogBookLastLine, Event, MessageToAdd, MessageToRemove
+          
           ;display listening
           AppendLogBookMessage, Event, listening
-        ENDIF
+          
+          ;display err_listening
+          AppendLogBookMessage, Event, err_listening
+          
+          status_text = (*global).DRstatusFAILED
+          putDRstatusInfo, Event, status_text
+          
+        ENDIF ELSE BEGIN
         
-;        LogBookText = '>>>>>>>>>> Data Reduction Information <<<<<<<<<<<'
-;        AppendLogBookMessage, Event, LogBookText
-;         
-;        ;display xml config file
-;        xmlConfigFile = getXmlConfigFileName(Event)
-;        LogBookText = '  XML data reduction config file: ' + $
-;          strcompress(xmlConfigFile,/remove_all)
-;        AppendLogBookMessage, Event, LogBookText
-;        
-;        BSSreduction_DisplayXmlConfigFile, Event, xmlConfigFile
-        
+          MessageToAdd = 'DONE'
+          MessageToRemove = PROCESSING
+          putTextAtEndOfLogBookLastLine, Event, MessageToAdd, MessageToRemove
+          
+          status_text = (*global).DRstatusOK
+          putDRstatusInfo, Event, status_text
+          
+          IF (isButtonSelected(Event,'verbose_button')) THEN BEGIN
+            ;display listening
+            AppendLogBookMessage, Event, listening
+          ENDIF
+          
+        ;        LogBookText = '>>>>>>>>>> Data Reduction Information <<<<<<<<<<<'
+        ;        AppendLogBookMessage, Event, LogBookText
+        ;
+        ;        ;display xml config file
+        ;        xmlConfigFile = getXmlConfigFileName(Event)
+        ;        LogBookText = '  XML data reduction config file: ' + $
+        ;          strcompress(xmlConfigFile,/remove_all)
+        ;        AppendLogBookMessage, Event, LogBookText
+        ;
+        ;        BSSreduction_DisplayXmlConfigFile, Event, xmlConfigFile
+          
         ;update list of intermediate plots in OUTPUT tab droplist
-;        BSSreduction_IntermediatePlotsUpdateDroplist, Event
+        ;        BSSreduction_IntermediatePlotsUpdateDroplist, Event
+          
+        ENDELSE
         
-      ENDELSE
+        index++
+      endwhile
       
     ENDIF ELSE BEGIN ;Iterative background subtraction mode is ON
     
