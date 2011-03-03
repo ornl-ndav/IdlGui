@@ -537,8 +537,8 @@ if (isWithBeamDivergence(event)) then begin
 
 cmd += ' --beamdiv-corr'
 
-center_pixel = strcompress((*global).center_pixel,/remove_all)
-if (center_pixel eq '') then begin
+center_pixel = strcompress((*global).current_center_pixel,/remove_all)
+if (center_pixel eq 'N/A') then begin
 center_pixel = '?'
 status_text = '- Specify a center pixel or select a data instrument ' + $
 'geometry (beam divergence)'
