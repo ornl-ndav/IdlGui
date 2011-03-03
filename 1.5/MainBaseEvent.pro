@@ -240,14 +240,17 @@ PRO MAIN_BASE_event, Event
           ENDELSE
           
           IF( Event.type EQ 0 )THEN BEGIN ;click
-            IF (Event.press EQ 1) THEN $
+            (*global).left_clicked = 1b
+            IF (Event.press EQ 1) THEN begin
               REFreduction_DataSelectionPressLeft, Event ;left button
             calculate_data_dirpix, Event
             plot_average_data_peak_value, Event
+            endif
             IF (Event.press EQ 4) THEN $
               REFreduction_DataselectionPressRight, Event ;right button
           ENDIF
           IF (Event.type EQ 1) THEN BEGIN ;release
+            (*global).left_clicked = 0b
             REFreduction_DataSelectionRelease, Event
             calculate_data_dirpix, Event
             plot_average_data_peak_value, Event
@@ -261,22 +264,29 @@ PRO MAIN_BASE_event, Event
         
         ;2d plot on the side of main application that show counts vs pixel
         if (isDataBackPeakZoomSelected(Event) eq 1) then begin ;peak selection
-          _base = (*global).center_px_counts_vs_pixel_base_id
+        
+          if ((*global).left_clicked) then begin
+            
+            _base = (*global).center_px_counts_vs_pixel_base_id
+            
+            ;create plot/base and plot counts vs pixel
+            if (widget_info(_base, /valid_id) eq 0) then begin
+            
+              top_base = widget_info(event.top, find_by_uname='MAIN_BASE')
+              center_pixel = (*global).dirpix
+              parent_base_uname = 'MAIN_BASE'
+              center_px_counts_vs_pixel_base, event=event, $
+                top_base=top_base, $
+                center_pixel=center_pixel, $
+                parent_base_uname = parent_base_uname
+                
+            endif else begin ;just refresh
+            
+              refresh_counts_vs_pixel, base=_base, global
+              
+            endelse
+          endif
           
-          ;create plot/base and plot counts vs pixel
-          if (widget_info(_base, /valid_id) eq 0) then begin 
-          
-            top_base = widget_info(event.top, find_by_uname='MAIN_BASE')
-            center_pixel = (*global).dirpix
-            parent_base_uname = 'MAIN_BASE'
-            center_px_counts_vs_pixel_base, event=event, $
-              top_base=top_base, $
-              center_pixel=center_pixel, $
-              parent_base_uname = parent_base_uname
-          
-          endif else begin ;just refresh
-          
-          endelse
         endif
         
       ENDELSE

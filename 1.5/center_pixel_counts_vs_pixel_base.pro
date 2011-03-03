@@ -226,7 +226,8 @@ end
 
 ;+
 ; :Description:
-;    Show the counts vs tof pixel
+;    Show the counts vs tof pixel and the ymin, ymax and center pixel
+;    selected in the peak tab of the main base
 ;
 ; :Params:
 ;    global_refpix
@@ -250,81 +251,152 @@ pro display_counts_vs_pixel, base=base, event=event, global
   widget_control, _id, GET_VALUE = _plot_id
   wset, _plot_id
   
-  tof_axis = (*(*global).tof_axis_ms)
   data = (*(*global).bank1_data)  ;[tof,y,x]
   counts_vs_pixel_pixel = total(data,1)
-  counts_vs_pixel = total(counts_vs_pixel_pixel,1)
+  counts_vs_pixel = total(counts_vs_pixel_pixel,2)
   (*(*global).counts_vs_pixel) = counts_vs_pixel
   
-  ;  plot, tof_axis, counts_vs_pixel, $
-  ;    xtitle='TOF (ms)', $
-  ;    ytitle='Counts'
+  ;create yaxis
+  ymax = max(counts_vs_pixel,min=ymin)
+  yrange = [1,ymax]
+  
+  ;create xaxis
+  xrange = [0,256]
+  
+  ;retrieve value of Ymin, Ymax and center pixel
+  main_event = (*global_counts).main_event
+  xmin = fix(getValue(event=main_event,uname='data_d_selection_peak_ymin_cw_field'))
+  xmax = fix(getValue(event=main_event,uname='data_d_selection_peak_ymax_cw_field'))
+  center_pixel = getValue(event=main_event,uname='data_center_pixel_uname')
+  if (center_pixel ne 'N/A') then begin
+    center_pixel = float(center_pixel)
+  endif else begin
+    center_pixel = 0.0
+  endelse
+  
+  ;if linear or log scale
+  if ((*global_counts).counts_vs_pixel_scale_is_linear eq 1) then begin ;linear scale
+  
+    plot, counts_vs_pixel, $
+      xrange=xrange, $
+      xstyle=1, $
+      xtitle='Pixel',$
+      ytitle='Counts'
+      
+  endif else begin
+  
+    plot, counts_vs_pixel, $
+      /ylog, $
+      yrange=yrange, $
+      xrange=xrange, $
+      xstyle=1, $
+      xtitle='Pixel', $
+      ytitle='Counts'
+      
+  endelse
+  
+  if (xmin ne 0) then begin
+    plots, xmin, 1
+    plots, xmin, ymax, /continue, color=fsc_color("red")
+  endif
+  
+  if (xmax ne 0) then begin
+    plots, xmax, 1
+    plots, xmax, ymax, /continue, color=fsc_color("red")
+  endif
+  
+  if (center_pixel ne 0) then begin
+    plots, center_pixel, 1
+    plots, center_pixel, ymax, /continue, color=fsc_color("blue")
+  endif
+end
+
+;+
+; :Description:
+;    Refresh the plot Counts vs Pixel and display the ymin, ymax and
+;    center pixel of the peak selection
+;
+; :Params:
+;    global
+;
+; :Keywords:
+;    base
+;    event
+;
+; :Author: j35
+;-
+pro refresh_counts_vs_pixel, base=base, event=event, global
+  compile_opt idl2
+  
+  if (keyword_set(event)) then begin
+    _id = widget_info(event.top, find_by_uname='center_px_counts_vs_pixel_draw')
+    widget_control, event.top, get_uvalue=global_counts
+  endif else begin
+    _id = widget_info(base, find_by_uname='center_px_counts_vs_pixel_draw')
+    widget_control, base, get_uvalue=global_counts
+  endelse
+  widget_control, _id, GET_VALUE = _plot_id
+  wset, _plot_id
+  
+  counts_vs_pixel = (*(*global).counts_vs_pixel)
   
   ;get ymax and ymin
   ymax = max(counts_vs_pixel,min=ymin)
   yrange = [1,ymax]
   
-  xmax = max(tof_axis,min=xmin)
-  xrange = [xmin,xmax]
+  xrange = [0,256]
+  
+  
+  ;retrieve value of Ymin, Ymax and center pixel
+  main_event = (*global_counts).main_event
+  xmin = fix(getValue(event=main_event,uname='data_d_selection_peak_ymin_cw_field'))
+  xmax = fix(getValue(event=main_event,uname='data_d_selection_peak_ymax_cw_field'))
+  center_pixel = getValue(event=main_event,uname='data_center_pixel_uname')
+  if (center_pixel ne 'N/A') then begin
+    center_pixel = float(center_pixel)
+  endif else begin
+    center_pixel = 0.0
+  endelse
   
   ;if linear or log scale
   if ((*global_counts).counts_vs_pixel_scale_is_linear eq 1) then begin ;linear scale
   
-    plot, tof_axis, counts_vs_pixel, $
-      ;xrange=xrange, $
+    plot, counts_vs_pixel, $
+      xrange=xrange, $
       xstyle=1, $
-      xtitle='TOF (ms)',$
+      xtitle='Pixel',$
       ytitle='Counts'
-      
-  ;    if (pixel1 ne 0) then begin
-  ;      plots, pixel1, 0
-  ;      plots, pixel1, ymax, /continue, color=fsc_color("red"), $
-  ;        thick=_pixel1_size
-  ;    endif
-  ;
-  ;    if (pixel2 ne 0) then begin
-  ;      plots, pixel2, 0, /data
-  ;      plots, pixel2, ymax, /data, /continue, color=fsc_color("red"), $
-  ;        thick=_pixel2_size
-  ;    endif
-  ;
-  ;    if (pixel1 ne 0 && pixel2 ne 0) then begin
-  ;      refpix = (float(pixel1) + float(pixel2))/2.
-  ;      plots, refpix, 0, /data
-  ;      plots, refpix, ymax, /data, /continue, color=fsc_color("blue")
-  ;    endif
-  ;
+     
   endif else begin
   
-    plot, tof_axis, counts_vs_pixel, $
+    plot, counts_vs_pixel, $
       /ylog, $
       yrange=yrange, $
-      ; xrange=xrange, $
+      xrange=xrange, $
       xstyle=1, $
-      xtitle='TOF (ms)', $
+      xtitle='Pixel', $
       ytitle='Counts'
       
-  ;    if (pixel1 ne 0) then begin
-  ;      plots, pixel1, 1, /data
-  ;      plots, pixel1, ymax, /data, /continue, color=fsc_color("red"), $
-  ;        thick=_pixel1_size
-  ;    endif
-  ;
-  ;    if (pixel2 ne 0) then begin
-  ;      plots, pixel2, 1, /data
-  ;      plots, pixel2, ymax, /data, /continue, color=fsc_color("red"), $
-  ;        thick=_pixel2_size
-  ;    endif
-  ;
-  ;    if (pixel1 ne 0 && pixel2 ne 0) then begin
-  ;      refpix = (float(pixel1) + float(pixel2))/2.
-  ;      plots, refpix, 1, /data
-  ;      plots, refpix, ymax, /data, /continue, color=fsc_color("blue")
-  ;    endif
-  ;
   endelse
   
+   if (xmin ne 0) then begin
+    plots, xmin, 1
+    plots, xmin, ymax, /continue, color=fsc_color("red")
+  endif
+  
+  if (xmax ne 0) then begin
+    plots, xmax, 1
+    plots, xmax, ymax, /continue, color=fsc_color("red")
+  endif
+  
+  if (center_pixel ne 0) then begin
+    plots, center_pixel, 1
+    plots, center_pixel, ymax, /continue, color=fsc_color("blue")
+  endif
+
 end
+
+
 
 ;+
 ; :Description:
@@ -416,6 +488,7 @@ pro center_px_counts_vs_pixel_base, event=event, $
     
   global_counts = ptr_new({ global: global,$
     counts_vs_pixel_scale_is_linear: 0b, $
+    main_event: event, $
     top_base: top_base, $
     left_click: 0b })
     
