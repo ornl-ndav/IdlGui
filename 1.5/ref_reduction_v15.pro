@@ -48,6 +48,7 @@ PRO ref_reduction_Cleanup, tlb
   
   ; Free up the pointers
   ptr_free, (*global).substrate_type
+  ptr_free, (*global).counts_vs_pixel
   ptr_free, (*global).tof_axis_ms
   ptr_free, (*global).in_empty_cell_empty_cell_ptr
   ptr_free, (*global).in_empty_cell_data_ptr
