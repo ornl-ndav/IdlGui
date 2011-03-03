@@ -40,13 +40,27 @@ PRO beamdiv_settings_base_event, Event
   main_event = (*global_beamdiv).main_event
   
   CASE Event.id OF
+
+   ;user defined
+   widget_info(event.top, find_by_uname='user_defined_center_pixel'): begin
+   center_pixel = getValue(event=main_event,uname='data_center_pixel_uname')
+   putValue, event=event, 'beamdivergence_center_pixel', center_pixel
+   (*global).center_pixel_default_type = 'user_defined'
+   end
+ 
+   ;geometry defined
+   widget_info(event.top, find_by_uname='geo_defined_center_pixel'): begin
+   center_pixel = (*global).center_pixel
+   putValue, event=event, 'beamdivergence_center_pixel', center_pixel
+   (*global).center_pixel_default_type = 'geometry'
+   end
   
    ;ok
    widget_info(event.top, find_by_uname='beamdivergence_ok'): begin
    center_pixel = getTextFieldValue(Event,'beamdivergence_center_pixel')
    detector_resolution = getTextFieldValue(event,$
    'beamdivergence_detector_resolution')
-   (*global).center_pixel = center_pixel
+   (*global).current_center_pixel = center_pixel
    (*global).detector_resolution = detector_resolution
      id = widget_info(Event.top, find_by_uname='beamdiv_settings_base_uname')
      widget_control, id, /destroy
@@ -58,7 +72,7 @@ PRO beamdiv_settings_base_event, Event
      id = widget_info(Event.top, find_by_uname='beamdiv_settings_base_uname')
      widget_control, id, /destroy
    end
-  
+
     ELSE:
     
   ENDCASE
@@ -69,6 +83,7 @@ END
 pro beamdiv_settings_base_gui, wBase, $
     main_base_geometry, $
     center_pixel = center_pixel, $
+    cpx_default_type = cpx_default_type, $
     spatial_resolution = spatial_resolution
     
   main_base_xoffset = main_base_geometry.xoffset
@@ -101,6 +116,22 @@ pro beamdiv_settings_base_gui, wBase, $
   /editable,$
   scr_xsize = 100,$
   uname = 'beamdivergence_center_pixel')
+
+  ;user or geo center pixel
+  cpx_base = widget_base(row1,$
+  /row,$
+  /exclusive)
+  user = widget_button(cpx_base, $
+  value = 'User defined',$
+  uname = 'user_defined_center_pixel')
+  geo = widget_button(cpx_base, $
+  value = 'Geometry',$
+  uname = 'geo_defined_center_pixel')
+  if (cpx_default_type eq 'geometry') then begin
+  widget_control, geo, /set_button
+  endif else begin
+  widget_control, user, /set_button
+  endelse
   
   row2 = widget_base(main_base,$
   /row)
@@ -124,7 +155,7 @@ pro beamdiv_settings_base_gui, wBase, $
   scr_xsize = 100,$
   uname = 'beamdivergence_cancel')
   space = widget_label(row3,$
-  value = '     ')
+  value = '                                  ')
   ok = widget_button(row3,$
   value = 'OK',$
   scr_xsize = 100,$
@@ -139,11 +170,19 @@ pro beamdiv_settings_base, Event
     WIDGET_CONTROL,Event.top,GET_UVALUE=global
   main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
   
+  center_pixel_default_type = (*global).center_pixel_default_type
+  if (center_pixel_default_type eq 'geometry') then begin
+    center_pixel = (*global).center_pixel
+  endif else begin
+    center_pixel = getValue(event=event,uname='data_center_pixel_uname')
+  endelse
+  
   ;build gui
   wBase1 = ''
   beamdiv_settings_base_gui, wBase1, $
     main_base_geometry, $
-    center_pixel = (*global).center_pixel, $
+    cpx_default_type = center_pixel_default_type, $
+    center_pixel = center_pixel, $
     spatial_resolution = (*global).detector_resolution
     
   (*global).beamdiv_settings_base_id = wBase1
