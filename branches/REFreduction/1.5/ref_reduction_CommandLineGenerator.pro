@@ -533,6 +533,10 @@ IF (isWithDToT(Event)) THEN BEGIN ;store deltaT over T
   cmd += ' --store-dtot'
 ENDIF
 
+;Number of Q bins to cleanup on both sides:
+number_of_q = getTextFieldValue(event,'num_bins_clean')
+cmd += ' --num-bins-clean=' + strcompress(number_of_q,/remove_all)
+
 if (isWithBeamDivergence(event)) then begin
 
 cmd += ' --beamdiv-corr'

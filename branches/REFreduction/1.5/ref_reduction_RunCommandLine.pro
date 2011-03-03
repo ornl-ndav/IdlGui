@@ -84,7 +84,6 @@ PRO RefReduction_RunCommandLine, Event
     ENDIF
   ENDIF
   
-  
   ;display command line in log-book
   cmd_text = 'Running Command Line:'
   putLogBookMessage, Event, cmd_text, Append=1
