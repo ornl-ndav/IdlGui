@@ -53,17 +53,13 @@ pro auto_cleaning_base_gui, Event, REDUCE_BASE
   /row,$
   frame = 1)
   
-  group = cw_bgroup(cleaning_base,$
-  ['yes','no'],$
-  /exclusive,$
+  value = cw_field(cleaning_base, $
   /row,$
-  label_left = 'Automatic clean up of the reduce data: ',$
-  uname = 'auto_cleaning_data_cw_bgroup',$
-  set_value=1)
-  
-  configure = widget_button(cleaning_base,$
-  value = '  Configure...  ',$
-  uname = 'auto_cleaning_data_configure_button',$
-  sensitive = 0)
+  /return_events, $
+  /integer,$
+  xsize = 2,$
+  value = 1,$
+  title = 'Number of Q bins to cleanup on both sides of axis:',$
+  uname = 'num_bins_clean')
   
 end

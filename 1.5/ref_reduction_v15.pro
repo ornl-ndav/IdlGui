@@ -124,7 +124,8 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     MainBaseSize  = [50,50,1200,885]
   ENDELSE
   
-  MainBaseTitle = 'Reflectometer Data Reduction Package (detector rotated) - '
+  MainBaseTitle = 'Reflectometer Data Reduction Package ' + $
+  '(detector rotated - x:304px y:256px) - '
   MainBaseTitle += (*global).VERSION
   IF ((*global).DEBUGGING_VERSION EQ 'yes') THEN BEGIN
     MainBaseTitle += ' (DEBUGGING MODE)'
@@ -145,63 +146,63 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
   (*global).main_base = MAIN_BASE
   
-  ;polarization state base ======================================================
-  pola_base = WIDGET_BASE(MAIN_BASE,$
-    XOFFSET   = 200,$
-    YOFFSET   = 200,$
-    SCR_XSIZE = 200,$
-    SCR_YSIZE = 195,$
-    UNAME     = 'polarization_state',$
-    FRAME     = 10,$
-    MAP       = 0,$
-    /COLUMN,$
-    /BASE_ALIGN_CENTER)
-    
-  label = WIDGET_LABEL(pola_base,$
-    VALUE = 'Select a Polarization State:')
-  label = WIDGET_LABEL(pola_base,$
-    VALUE = '                                             ',$
-    UNAME = 'pola_file_name_uname')
-    
-  button_base = WIDGET_BASE(pola_base,$
-    /COLUMN,$
-    /EXCLUSIVE)
-    
-  button1 = WIDGET_BUTTON(button_base,$
-    VALUE = 'Off_Off',$
-    UNAME = 'pola_state1_uname',$
-    SENSITIVE = 1)
-    
-  button2 = WIDGET_BUTTON(button_base,$
-    VALUE = 'Off_On',$
-    UNAME = 'pola_state2_uname',$
-    SENSITIVE = 1)
-    
-  button3 = WIDGET_BUTTON(button_base,$
-    VALUE = 'On_Off',$
-    UNAME = 'pola_state3_uname',$
-    SENSITIVE = 0)
-    
-  button4 = WIDGET_BUTTON(button_base,$
-    VALUE = 'On_On',$
-    UNAME = 'pola_state4_uname',$
-    SENSITIVE = 0)
-    
-  WIDGET_CONTROL, button1, /SET_BUTTON
-  
-  ok_cancel_base = WIDGET_BASE(pola_base,$ ;....................................
-    /ROW)
-    
-  cancel_button = WIDGET_BUTTON(ok_cancel_base,$
-    VALUE = 'CANCEL',$
-    UNAME = 'cancel_pola_state',$
-    XSIZE = 90)
-    
-  OK_button = WIDGET_BUTTON(ok_cancel_base,$
-    VALUE = 'VALIDATE',$
-    UNAME = 'ok_pola_state',$
-    XSIZE = 90)
-    
+;  ;polarization state base ======================================================
+;  pola_base = WIDGET_BASE(MAIN_BASE,$
+;    XOFFSET   = 200,$
+;    YOFFSET   = 200,$
+;    SCR_XSIZE = 200,$
+;    SCR_YSIZE = 195,$
+;    UNAME     = 'polarization_state',$
+;    FRAME     = 10,$
+;    MAP       = 0,$
+;    /COLUMN,$
+;    /BASE_ALIGN_CENTER)
+;    
+;  label = WIDGET_LABEL(pola_base,$
+;    VALUE = 'Select a Polarization State:')
+;  label = WIDGET_LABEL(pola_base,$
+;    VALUE = '                                             ',$
+;    UNAME = 'pola_file_name_uname')
+;    
+;  button_base = WIDGET_BASE(pola_base,$
+;    /COLUMN,$
+;    /EXCLUSIVE)
+;    
+;  button1 = WIDGET_BUTTON(button_base,$
+;    VALUE = 'Off_Off',$
+;    UNAME = 'pola_state1_uname',$
+;    SENSITIVE = 1)
+;    
+;  button2 = WIDGET_BUTTON(button_base,$
+;    VALUE = 'Off_On',$
+;    UNAME = 'pola_state2_uname',$
+;    SENSITIVE = 1)
+;    
+;  button3 = WIDGET_BUTTON(button_base,$
+;    VALUE = 'On_Off',$
+;    UNAME = 'pola_state3_uname',$
+;    SENSITIVE = 0)
+;    
+;  button4 = WIDGET_BUTTON(button_base,$
+;    VALUE = 'On_On',$
+;    UNAME = 'pola_state4_uname',$
+;    SENSITIVE = 0)
+;    
+;  WIDGET_CONTROL, button1, /SET_BUTTON
+;  
+;  ok_cancel_base = WIDGET_BASE(pola_base,$ ;....................................
+;    /ROW)
+;    
+;  cancel_button = WIDGET_BUTTON(ok_cancel_base,$
+;    VALUE = 'CANCEL',$
+;    UNAME = 'cancel_pola_state',$
+;    XSIZE = 90)
+;    
+;  OK_button = WIDGET_BUTTON(ok_cancel_base,$
+;    VALUE = 'VALIDATE',$
+;    UNAME = 'ok_pola_state',$
+;    XSIZE = 90)
+;    
   ;==============================================================================
     
   ;attach global structure with widget ID of widget main base widget ID

@@ -1480,6 +1480,11 @@ PRO MAIN_BASE_event, Event
       configure_auto_cleanup, Event=event
     end
     
+    ;number of Q bins to cleanup on both side
+    widget_info(wWidget, find_by_uname='num_bins_clean'): begin
+      REFreduction_CommandLineGenerator, event
+    end
+    
     ;beam divergence correction
     widget_info(wWidget, $
       find_by_uname='beamdiv_corr_yes'): begin
@@ -1497,6 +1502,8 @@ PRO MAIN_BASE_event, Event
       find_by_uname='beamdiv_settings'): begin
       beamdiv_settings_base, Event
     end
+    
+    
     
     ;**************************************************************************
     ;**PLOTS TAB*
