@@ -89,25 +89,25 @@ GeneralInfoTextField = widget_text(reduce_tab1_base,$
                                    /scroll,$
                                    uname='reduction_status_text_field')
 
-;tab2
-reduce_tab2_base = widget_base(GeneralInfoTab,$
-                               uname='reduce_tab2_base',$
-                               title=ReduceTab2BaseTitle,$
-                               xoffset=ReduceTab2BaseSize[0],$
-                               yoffset=ReduceTab2BaseSize[1],$
-                               scr_xsize=ReduceTab2BaseSize[2],$
-                               scr_ysize=ReduceTab2BaseSize[3])
-
-
-;Text field
-XmlTextField = widget_text(reduce_tab2_base,$
-                           xoffset=GeneralInfoTextFieldSize[0],$
-                           yoffset=GeneralInfoTextFieldSize[1],$
-                           scr_xsize=GeneralInfoTextFieldSize[2],$
-                           scr_ysize=GeneralInfoTextFieldSize[3],$
-                           /wrap,$
-                           /scroll,$
-                           uname='xml_text_field')
+;;tab2
+;reduce_tab2_base = widget_base(GeneralInfoTab,$
+;                               uname='reduce_tab2_base',$
+;                               title=ReduceTab2BaseTitle,$
+;                               xoffset=ReduceTab2BaseSize[0],$
+;                               yoffset=ReduceTab2BaseSize[1],$
+;                               scr_xsize=ReduceTab2BaseSize[2],$
+;                               scr_ysize=ReduceTab2BaseSize[3])
+;
+;
+;;Text field
+;XmlTextField = widget_text(reduce_tab2_base,$
+;                           xoffset=GeneralInfoTextFieldSize[0],$
+;                           yoffset=GeneralInfoTextFieldSize[1],$
+;                           scr_xsize=GeneralInfoTextFieldSize[2],$
+;                           scr_ysize=GeneralInfoTextFieldSize[3],$
+;                           /wrap,$
+;                           /scroll,$
+;                           uname='xml_text_field')
 
 
 ;Data reduction status label
