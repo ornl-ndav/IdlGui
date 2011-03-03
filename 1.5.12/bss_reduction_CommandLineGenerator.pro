@@ -234,11 +234,11 @@ PRO BSSreduction_CommandLineGenerator, Event
       ;check if the file is using the Translation Service deployed on 03/2010
       ;if yes, the following flag is necessary
       ; --mon-path=/entry/monitor1,1
-      if (is_monitor_named_monitor1(RSDFiles)) then begin
+;      if (is_monitor_named_monitor1(RSDFiles)) then begin
         cmd += ' --mon-path=/entry/monitor1,1'
-      endif else begin
-        cmd += ' --mon-path=/entry/monitor,1'
-      endelse
+;      endif else begin
+;        cmd += ' --mon-path=/entry/monitor,1'
+;      endelse
       
     ENDELSE
     activate_base, event, 'na_womwsbase', na_base_status
