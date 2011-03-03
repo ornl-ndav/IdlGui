@@ -41,5 +41,11 @@ input = getTextFieldValue(event, 'rsdf_run_number_cw_field')
 
 getListFromSelection, Event, input
 ;list_of_data_nexus = (*(*global).list_of_data_nexus)
-
+;
+;nexus_file = find_full_nexus_name(Event, $
+;list_of_data_nexus[0], $
+;isNexusExist)
+;  
+;(*global).full_path_of_first_nexus = nexus_file
+ 
 end

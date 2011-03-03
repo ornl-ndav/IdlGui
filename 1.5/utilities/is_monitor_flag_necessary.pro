@@ -38,16 +38,12 @@
 ;   not. If it's not, it returns 0
 ;
 ; :Params:
-;    list_of_data_files
+;    nexus_file
 ;
 ; :Author: j35
 ;-
-function is_monitor_named_monitor1, list_of_data_files
+function is_monitor_named_monitor1, nexus_file
   compile_opt idl2
-  
-  ;get first the first nexus file only
-  split_list = strsplit(list_of_data_files[0],',',/extract)
-  nexus_file = split_list[0]
   
   ;check that /entry/monitor1 is there
   catch, error
