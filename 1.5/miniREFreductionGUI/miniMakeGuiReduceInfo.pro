@@ -99,25 +99,6 @@ GeneralInfoTextField = WIDGET_TEXT(reduce_tab1_base,$
                                    /WRAP,$
                                    /SCROLL)
 
-;;tab2
-;reduce_tab2_base = WIDGET_BASE(GeneralInfoTab,$
-;                               UNAME     = 'reduce_tab2_base',$
-;                               TITLE     = ReduceTab2BaseTitle,$
-;                               XOFFSET   = ReduceTab2BaseSize[0],$
-;                               YOFFSET   = ReduceTab2BaseSize[1],$
-;                               SCR_XSIZE = ReduceTab2BaseSize[2],$
-;                               SCR_YSIZE = ReduceTab2BaseSize[3])
-;
-;;Text field
-;XmlTextField = WIDGET_TEXT(reduce_tab2_base,$
-;                           XOFFSET   = GeneralInfoTextFieldSize[0],$
-;                           YOFFSET   = GeneralInfoTextFieldSize[1],$
-;                           SCR_XSIZE = GeneralInfoTextFieldSize[2],$
-;                           SCR_YSIZE = GeneralInfoTextFieldSize[3],$
-;                           UNAME     ='xml_text_field',$
-;                           /WRAP,$
-;                           /SCROLL)
-
 ;Data reduction status label
 DataReductionStatusLabel = $
   WIDGET_LABEL(REDUCE_BASE,$

@@ -447,19 +447,6 @@ PRO REFreductionEventcb_ProcessingCommandLine, Event
     output_file_path   = (*global).dr_output_path
     output_file_name   = getOutputFileName(Event)
     FullOutputFileName = output_file_path + output_file_name
-;    FullXmlFileName    = getXmlFileName(FullOutputFileName)
-    
-;    ;get metadata
-;    RefReduction_SaveXmlInfo, Event,  FullXmlFileName
-    
-;    ;Display XML file in Reduce tab
-;    REfReduction_DisplayXmlFile, Event
-    
-;    ;apply auto cleanup of data if switch is on
-;    value = getButtonValue(event,'auto_cleaning_data_cw_bgroup')
-;    if (value eq 0) then begin ;apply auto cleanup
-;      cleanup_reduce_data, event, file_name = FullOutputFileName
-;    endif
   
     ;Load main data reduction File and  plot it
     putTextFieldValue, Event, 'plot_tab_input_file_text_field', FullOutputFileName
@@ -467,12 +454,6 @@ PRO REFreductionEventcb_ProcessingCommandLine, Event
     id1 = WIDGET_INFO(Event.top, FIND_BY_UNAME='main_tab')
     WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;plot tab
     LoadAsciiFile, Event
-
-  ;get flt0, flt1 and flt2 and put them into array
-  ;    RefReduction_LoadMainOutputFile, Event, FullOutputFileName
-    
-  ;;Plot main data reduction plot for the first time
-  ;    RefReduction_PlotMainDataReductionFileFirstTime, Event
     
   ENDIF
   

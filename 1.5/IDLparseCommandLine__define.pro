@@ -99,8 +99,8 @@ END
 ;------------------------------------------------------------------------------
 ;------------------------------------------------------------------------------
 ;------------------------------------------------------------------------------
-FUNCTION getMainDataNexusFileName, cmd
-  result = ValueBetweenArg1Arg2(cmd, 'reflect_reduction', 1, ' ', 0)
+FUNCTION getMainDataNexusFileName, cmd, driver_name
+  result = ValueBetweenArg1Arg2(cmd, driver_name, 1, ' ', 0)
   IF (result EQ '') THEN RETURN, ''
   RETURN, STRCOMPRESS(result,/REMOVE_ALL)
 END
@@ -112,9 +112,9 @@ FUNCTION getMainDataRunNumber, FullNexusName
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getAllDataNexusFileName, cmd
+FUNCTION getAllDataNexusFileName, cmd, driver_name
   result = ValueBetweenArg1Arg2(cmd, $
-    'reflect_reduction ',$
+    driver_name + ' ',$
     1, $
     '--data-roi-file', $
     0)
@@ -588,22 +588,28 @@ END
 
 ;##############################################################################
 ;******  Class constructor ****************************************************
-FUNCTION IDLparseCommandLine::init, cmd
+FUNCTION IDLparseCommandLine::init, cmd, event
 
   general_error = 0
   CATCH, general_error
   IF (general_error NE 0) THEN BEGIN
     RETURN, 0
   ENDIF ELSE BEGIN
+    
+    widget_control, event.top, get_uvalue=global
+    driver_name = (*global).driver_name
+    
     ;Work on Data
-    self.MainDataNexusFileName  = getMainDataNexusFileName(cmd)
+    self.MainDataNexusFileName  = getMainDataNexusFileName(cmd, $
+    driver_name)
     IF (self.MainDataNexusFileName NE '') THEN BEGIN
       self.MainDataRunNUmber      = $
         getMainDataRunNumber(self.MainDataNexusFileName)
     ENDIF ELSE BEGIN
       self.MainDataRunNumber  = ''
     ENDELSE
-    self.AllDataNexusFileName   = getAllDataNexusFileName(cmd)
+    self.AllDataNexusFileName   = getAllDataNexusFileName(cmd, $
+    driver_name)
     self.DataRoiFileName        = getDataRoiFileName(cmd)
     self.DataPeakExclYArray     = getDataPeakExclYArray(cmd)
     self.TOFcuttingMin          = getTOFcuttingMin(cmd)
