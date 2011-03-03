@@ -274,6 +274,12 @@ END
 
 ;this function is reached when the mouse moved into the widget_draw
 PRO REFreduction_DataSelectionMove, event
+  
+  catch, error
+  if (error ne 0) then begin
+  catch,/cancel
+  return
+  endif
 
   ;get global structure
   id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')

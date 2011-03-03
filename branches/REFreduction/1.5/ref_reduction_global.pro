@@ -84,6 +84,7 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     ;center pixel base
     center_px_counts_vs_pixel_base_id: 0L, $
     tof_axis_ms: ptr_new(0L), $
+    counts_vs_pixel: ptr_new(0L), $
     
     congrid_x_coeff: 0., $ ;congrid x coeff for data file
     congrid_norm_x_coeff: 0., $ ;congrid x coeff for normalization file

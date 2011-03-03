@@ -173,7 +173,7 @@ PRO MAIN_BASE_event, Event
     ;1D_2D plot of DATA
     WIDGET_INFO(wWidget, FIND_BY_UNAME='load_data_D_draw'): begin
       error = 0
-      CATCH, error
+      ;CATCH, error
       IF (error NE 0) THEN BEGIN
         CATCH,/CANCEL
       ENDIF ELSE BEGIN
@@ -239,7 +239,7 @@ PRO MAIN_BASE_event, Event
             (*global).first_event = 1
           ENDELSE
           
-          IF( Event.type EQ 0 )THEN BEGIN
+          IF( Event.type EQ 0 )THEN BEGIN ;click
             IF (Event.press EQ 1) THEN $
               REFreduction_DataSelectionPressLeft, Event ;left button
             calculate_data_dirpix, Event
@@ -259,14 +259,24 @@ PRO MAIN_BASE_event, Event
           ENDIF
         ENDIF
         
+        ;2d plot on the side of main application that show counts vs pixel
         if (isDataBackPeakZoomSelected(Event) eq 1) then begin ;peak selection
-          top_base = widget_info(event.top, find_by_uname='MAIN_BASE')
-          center_pixel = (*global).dirpix
-          parent_base_uname = 'MAIN_BASE'
-          center_px_counts_vs_pixel_base, event=event, $
-            top_base=top_base, $
-            center_pixel=center_pixel, $
-            parent_base_uname = parent_base_uname
+          _base = (*global).center_px_counts_vs_pixel_base_id
+          
+          ;create plot/base and plot counts vs pixel
+          if (widget_info(_base, /valid_id) eq 0) then begin 
+          
+            top_base = widget_info(event.top, find_by_uname='MAIN_BASE')
+            center_pixel = (*global).dirpix
+            parent_base_uname = 'MAIN_BASE'
+            center_px_counts_vs_pixel_base, event=event, $
+              top_base=top_base, $
+              center_pixel=center_pixel, $
+              parent_base_uname = parent_base_uname
+          
+          endif else begin ;just refresh
+          
+          endelse
         endif
         
       ENDELSE
