@@ -61,8 +61,9 @@ pro center_px_counts_vs_pixel_base_event, Event
       widget_control, id, draw_xsize = new_xsize
       widget_control, id, draw_ysize = new_ysize
       
-    ;      display_counts_vs_pixel, event=event, global_refpix
-    end
+      refresh_counts_vs_pixel, event=event, global
+
+      end
     
     ;linear scale
     widget_info(event.top, find_by_uname='center_px_counts_vs_pixel_linear'): begin
@@ -506,19 +507,6 @@ pro center_px_counts_vs_pixel_base, event=event, $
   wset, _plot_id
   
   display_counts_vs_pixel, base=_base, global
-  
-;  if (center_pixel ne '') then begin
-;
-;    ymax = max(counts_vs_pixel,min=ymin)
-;
-;    _refpix = float(refpix)
-;    plots, _refpix, 1, /data
-;    plots, _refpix, ymax, /data, /continue, $
-;      color=fsc_color("green"), $
-;      thick=2,$
-;      linestyle=1
-;
-;  endif
   
 end
 
