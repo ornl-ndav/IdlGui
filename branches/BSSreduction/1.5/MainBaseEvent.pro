@@ -101,6 +101,8 @@ PRO MAIN_BASE_event, Event
       if ((*global).NeXusFound) then begin
       BSSreduction_PlotCountsVsTofOfSelection_light, Event
         BSSreduction_DisplayLinLogFullCountsVsTof, Event
+            BSSreduction_Reduce_rsdf_run_number_cw_field, Event
+      BSSreduction_CommandLineGenerator, Event
 endif
       end
     
@@ -109,6 +111,8 @@ endif
       bss_reduction_BrowseNexus, Event
       BSSreduction_PlotCountsVsTofOfSelection_light, Event
       BSSreduction_DisplayLinLogFullCountsVsTof, Event
+            BSSreduction_Reduce_rsdf_run_number_cw_field, Event
+      BSSreduction_CommandLineGenerator, Event      
     end
     
     ;LIVE DATA STREAMING button
