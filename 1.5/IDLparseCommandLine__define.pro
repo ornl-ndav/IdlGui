@@ -99,11 +99,35 @@ END
 ;------------------------------------------------------------------------------
 ;------------------------------------------------------------------------------
 ;------------------------------------------------------------------------------
-FUNCTION getMainDataNexusFileName, cmd, driver_name
-  result = ValueBetweenArg1Arg2(cmd, driver_name, 1, ' ', 0)
-  IF (result EQ '') THEN RETURN, ''
-  RETURN, STRCOMPRESS(result,/REMOVE_ALL)
-END
+;+
+; :Description:
+;    Return the string placed just after the driver name. 
+;
+; :Params:
+;    cmd
+;
+; :Returns:
+;   data file (full name) or empty if any
+;
+; :Author: j35
+;-
+function getMainDataNexusFileName, cmd
+  compile_opt idl2
+  
+  driver_list = ['reflect_reduction',$
+    '/SNS/users/j35/bin/runenv specmh_reduction']
+  index = 0
+  nbr_driver = n_elements(driver_list)
+  while (index lt nbr_driver) do begin
+    driver_name = driver_list[index]
+    result = ValueBetweenArg1Arg2(cmd, driver_name, 1, ' ', 0)
+    if (result[0] ne '') then begin
+    return, strcompress(result,/remove_all)
+    endif
+    index++
+  endwhile
+  return, ''
+end
 
 ;------------------------------------------------------------------------------
 FUNCTION getMainDataRunNumber, FullNexusName
@@ -112,14 +136,23 @@ FUNCTION getMainDataRunNumber, FullNexusName
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getAllDataNexusFileName, cmd, driver_name
+FUNCTION getAllDataNexusFileName, cmd
+  
+  driver_list = ['reflect_reduction', $
+  '/SNS/users/j35/bin/runenv specmh_reduction']
+  index = 0
+  nbr_driver = n_elements(driver_list)
+  while (index lt nbr_driver) do begin
+  driver_name = driver_list[index]
   result = ValueBetweenArg1Arg2(cmd, $
     driver_name + ' ',$
     1, $
     '--data-roi-file', $
     0)
-  IF (result EQ '') THEN RETURN, ''
-  RETURN, result
+  IF (result[0] ne '') THEN return, result
+  index++
+  endwhile
+  RETURN, ''
 END
 
 ;------------------------------------------------------------------------------
@@ -588,28 +621,23 @@ END
 
 ;##############################################################################
 ;******  Class constructor ****************************************************
-FUNCTION IDLparseCommandLine::init, cmd, event
+FUNCTION IDLparseCommandLine::init, cmd
 
   general_error = 0
-  CATCH, general_error
+  ;CATCH, general_error
   IF (general_error NE 0) THEN BEGIN
     RETURN, 0
   ENDIF ELSE BEGIN
-    
-    widget_control, event.top, get_uvalue=global
-    driver_name = (*global).driver_name
-    
+  
     ;Work on Data
-    self.MainDataNexusFileName  = getMainDataNexusFileName(cmd, $
-    driver_name)
+    self.MainDataNexusFileName  = getMainDataNexusFileName(cmd)
     IF (self.MainDataNexusFileName NE '') THEN BEGIN
       self.MainDataRunNUmber      = $
         getMainDataRunNumber(self.MainDataNexusFileName)
     ENDIF ELSE BEGIN
       self.MainDataRunNumber  = ''
     ENDELSE
-    self.AllDataNexusFileName   = getAllDataNexusFileName(cmd, $
-    driver_name)
+    self.AllDataNexusFileName   = getAllDataNexusFileName(cmd)
     self.DataRoiFileName        = getDataRoiFileName(cmd)
     self.DataPeakExclYArray     = getDataPeakExclYArray(cmd)
     self.TOFcuttingMin          = getTOFcuttingMin(cmd)
