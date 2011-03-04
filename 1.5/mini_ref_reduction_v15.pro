@@ -74,82 +74,82 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;attach global structure with widget ID of widget main base widget ID
   WIDGET_CONTROL, MAIN_BASE, SET_UVALUE=global
   
-  ;polarization state base ======================================================
-  pola_base = WIDGET_BASE(MAIN_BASE,$
-    XOFFSET   = 70,$
-    YOFFSET   = 150,$
-    SCR_XSIZE = 200,$
-    SCR_YSIZE = 190,$
-    UNAME     = 'polarization_state',$
-    FRAME     = 10,$
-    MAP       = 0,$
-    /COLUMN,$
-    /BASE_ALIGN_CENTER)
-    
-  (*global).main_base = MAIN_BASE
-  
-  label = WIDGET_LABEL(pola_base,$
-    VALUE = 'Select a Polarization State:')
-  label = WIDGET_LABEL(pola_base,$
-    VALUE = '                                             ',$
-    UNAME = 'pola_file_name_uname')
-    
-  button_base = WIDGET_BASE(pola_base,$
-    /COLUMN,$
-    /EXCLUSIVE)
-    
-  button1 = WIDGET_BUTTON(button_base,$
-    VALUE = 'Off_Off',$
-    UNAME = 'pola_state1_uname',$
-    SENSITIVE = 1)
-    
-  button2 = WIDGET_BUTTON(button_base,$
-    VALUE = 'Off_On',$
-    UNAME = 'pola_state2_uname',$
-    SENSITIVE = 1)
-    
-  button3 = WIDGET_BUTTON(button_base,$
-    VALUE = 'On_Off',$
-    UNAME = 'pola_state3_uname',$
-    SENSITIVE = 0)
-    
-  button4 = WIDGET_BUTTON(button_base,$
-    VALUE = 'On_On',$
-    UNAME = 'pola_state4_uname',$
-    SENSITIVE = 0)
-    
-  WIDGET_CONTROL, button1, /SET_BUTTON
-  
-  ok_cancel_base = WIDGET_BASE(pola_base,$ ;....................................
-    /ROW)
-    
-  cancel_button = WIDGET_BUTTON(ok_cancel_base,$
-    VALUE = 'CANCEL',$
-    UNAME = 'cancel_pola_state',$
-    XSIZE = 90)
-    
-  OK_button = WIDGET_BUTTON(ok_cancel_base,$
-    VALUE = 'VALIDATE',$
-    UNAME = 'ok_pola_state',$
-    XSIZE = 90)
-    
-  ;------------------------------------------------------------------------------
-    
-  ;HELP MENU in Menu Bar
-  HELP_MENU = WIDGET_BUTTON(WID_BASE_0_MBAR,$
-    UNAME = 'help_menu',$
-    VALUE = 'HELP',$
-    /MENU)
-    
-  HELP_BUTTON = WIDGET_BUTTON(HELP_MENU,$
-    VALUE = 'HELP',$
-    UNAME = 'help_button')
-    
-  IF ((*global).ucams EQ 'j35') THEN BEGIN
-    my_help_button = WIDGET_BUTTON(HELP_MENU,$
-      VALUE = 'MY HELP',$
-      UNAME = 'my_help_button')
-  ENDIF
+;  ;polarization state base ======================================================
+;  pola_base = WIDGET_BASE(MAIN_BASE,$
+;    XOFFSET   = 70,$
+;    YOFFSET   = 150,$
+;    SCR_XSIZE = 200,$
+;    SCR_YSIZE = 190,$
+;    UNAME     = 'polarization_state',$
+;    FRAME     = 10,$
+;    MAP       = 0,$
+;    /COLUMN,$
+;    /BASE_ALIGN_CENTER)
+;    
+;  (*global).main_base = MAIN_BASE
+;  
+;  label = WIDGET_LABEL(pola_base,$
+;    VALUE = 'Select a Polarization State:')
+;  label = WIDGET_LABEL(pola_base,$
+;    VALUE = '                                             ',$
+;    UNAME = 'pola_file_name_uname')
+;    
+;  button_base = WIDGET_BASE(pola_base,$
+;    /COLUMN,$
+;    /EXCLUSIVE)
+;    
+;  button1 = WIDGET_BUTTON(button_base,$
+;    VALUE = 'Off_Off',$
+;    UNAME = 'pola_state1_uname',$
+;    SENSITIVE = 1)
+;    
+;  button2 = WIDGET_BUTTON(button_base,$
+;    VALUE = 'Off_On',$
+;    UNAME = 'pola_state2_uname',$
+;    SENSITIVE = 1)
+;    
+;  button3 = WIDGET_BUTTON(button_base,$
+;    VALUE = 'On_Off',$
+;    UNAME = 'pola_state3_uname',$
+;    SENSITIVE = 0)
+;    
+;  button4 = WIDGET_BUTTON(button_base,$
+;    VALUE = 'On_On',$
+;    UNAME = 'pola_state4_uname',$
+;    SENSITIVE = 0)
+;    
+;  WIDGET_CONTROL, button1, /SET_BUTTON
+;  
+;  ok_cancel_base = WIDGET_BASE(pola_base,$ ;....................................
+;    /ROW)
+;    
+;  cancel_button = WIDGET_BUTTON(ok_cancel_base,$
+;    VALUE = 'CANCEL',$
+;    UNAME = 'cancel_pola_state',$
+;    XSIZE = 90)
+;    
+;  OK_button = WIDGET_BUTTON(ok_cancel_base,$
+;    VALUE = 'VALIDATE',$
+;    UNAME = 'ok_pola_state',$
+;    XSIZE = 90)
+;    
+;  ;------------------------------------------------------------------------------
+;    
+;  ;HELP MENU in Menu Bar
+;  HELP_MENU = WIDGET_BUTTON(WID_BASE_0_MBAR,$
+;    UNAME = 'help_menu',$
+;    VALUE = 'HELP',$
+;    /MENU)
+;    
+;  HELP_BUTTON = WIDGET_BUTTON(HELP_MENU,$
+;    VALUE = 'HELP',$
+;    UNAME = 'help_button')
+;    
+;  IF ((*global).ucams EQ 'j35') THEN BEGIN
+;    my_help_button = WIDGET_BUTTON(HELP_MENU,$
+;      VALUE = 'MY HELP',$
+;      UcdNAME = 'my_help_button')
+;  ENDIF
   
   ;add version to program
   if ((*global).miniVersion) then begin
