@@ -640,6 +640,8 @@ FUNCTION IDLparseCommandLine::init, cmd
     self.AllDataNexusFileName   = getAllDataNexusFileName(cmd)
     self.DataRoiFileName        = getDataRoiFileName(cmd)
     self.DataPeakExclYArray     = getDataPeakExclYArray(cmd)
+    self.DataBackgroundFlag     = isWithDataBackgroundFlagOn(cmd)
+
     self.TOFcuttingMin          = getTOFcuttingMin(cmd)
     self.TOFcuttingMax          = getTOFcuttingMax(cmd)
     
@@ -654,11 +656,9 @@ FUNCTION IDLparseCommandLine::init, cmd
     self.AllNormNexusFileName  = getAllNormNexusFileName(cmd)
     self.NormRoiFileName       = getNormRoiFileName(cmd)
     self.NormPeakExclYArray    = getNormPeakExclYArray(cmd)
+    self.NormBackgroundFlag    = isWithNormBackgroundFlagOn(cmd)
     
     ;;Reduce Tab
-    ;Background flags
-    self.DataBackgroundFlag        = isWithDataBackgroundFlagOn(cmd)
-    self.NormBackgroundFlag        = isWithNormBackgroundFlagOn(cmd)
     ;Q [Qmin,Qmax,Qwidth,linear/log]
     self.Qmin                      = getQmin(cmd)
     self.Qmax                      = getQmax(cmd)

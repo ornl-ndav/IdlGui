@@ -94,6 +94,25 @@ PRO UpdateDataPeakExclY, Event, Ymin, Ymax
 END
 
 ;------------------------------------------------------------------------------
+pro UpdateDataBackgroundSwitch, event, DataBackgroundFlag
+
+  if (DataBackgroundFlag eq 'yes') then begin ;no background flag
+    switch_status = 1
+    peak_status = 0
+  endif else begin ;with background
+    switch_status = 0
+    peak_status = 1
+  endelse
+  
+  back_switch_uname = 'data_background_cw_bgroup'
+  data_peak_base_uname = 'data_peak_base'
+  
+  SetCWBgroup, Event, back_switch_uname, switch_status
+  MapBase, Event, data_peak_base_uname, peak_status
+  
+end
+
+;------------------------------------------------------------------------------
 PRO ClearDataBackFields, Event
   putTextFieldValue, Event, $
     'data_d_selection_background_ymin_cw_field',$
@@ -191,6 +210,25 @@ END
 PRO UpdateNormBackFileName, Event, NormBackFileName
   REFreduction_LoadNormBackFile, Event, NormBackFileName
 END
+
+;------------------------------------------------------------------------------
+pro UpdateNormBackgroundSwitch, event, NormBackgroundFlag
+
+  if (NormBackgroundFlag eq 'yes') then begin ;no background flag
+    switch_status = 1
+    peak_status = 0
+  endif else begin ;with background
+    switch_status = 0
+    peak_status = 1
+  endelse
+  
+  back_switch_uname = 'normalization_background_cw_bgroup'
+  norm_peak_base_uname = 'norm_peak_base'
+  
+  SetCWBgroup, Event, back_switch_uname, switch_status
+  MapBase, Event, norm_peak_base_uname, peak_status
+  
+end
 
 ;WORK ON Qmin, Qmax, Qwidth and Qtype ;========================================
 PRO UpdateQ, Event, Qmin, Qmax, Qwidth, Qtype
@@ -525,6 +563,13 @@ FUNCTION IDLupdateGui::init, structure
   ;replot Data (main and selections)
   REFreduction_DataBackgroundPeakSelection, Event, ''
   
+  ;activate or not the data background
+  text = '--> Activate or not data background switch ....................' $
+    + processing
+  putLogBookMessage, event, text, append=1
+  UpdateDataBackgroundSwitch, event, structure.DataBackgroundFlag
+  AppendReplaceLogBookMessage, Event, OK, PROCESSING
+  
   ;TOF cutting
   text = '--> Load TOF cutting min and max ............................. ' $
     + PROCESSING
@@ -625,6 +670,13 @@ FUNCTION IDLupdateGui::init, structure
     
     ;show the norm step within the REUDCE tab
     NormReducePartGuiStatus, Event, 'show'
+    
+    ;activate or not the normalization background
+    text = '--> Activate or not normalization background switch ......' + $
+     '.... ' + processing
+    putLogBookMessage, event, text, append=1
+    UpdateNormBackgroundSwitch, event, structure.NormBackgroundFlag
+    AppendReplaceLogBookMessage, Event, OK, PROCESSING
     
   ENDIF ELSE BEGIN
   
