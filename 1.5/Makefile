@@ -28,5 +28,13 @@ test:
 	cp -rf REFreductionHELP /usr/local/SNS/idltools/
 	cp -rf REFreduction_images /usr/local/SNS/idltools/
 
+beta:
+	cp ref_reduction_v15.sav /SNS/software/idltools/beta/sav/
+	cp REFreduction_v15_beta /SNS/software/idltools/beta/
+	cp miniREFreduction_v15_beta /SNS/software/idltools/beta
+	cp mini_ref_reduction_v15.sav /SNS/software/idltools/beta/sav/
+	cp REFreduction_images/*.* /SNS/software/idltools/beta/sav/REFreduction_images/
+	cp .REFreduction_v15.cfg /SNS/software/idltools/beta/sav/
+
 
 
