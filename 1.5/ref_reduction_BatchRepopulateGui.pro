@@ -98,6 +98,11 @@ PRO RepopulateGui, Event
     '..... ' + DataPeakExclYArray[1]
   putLogBookMessage, Event, text, APPEND=1
   
+  DataBackgroundFlag = ClassInstance->getDataBackgroundFlag()
+  text = '--> Without Data Background (NoDataBackgroundFlag) ? .............' + $
+    '..... ' + DataBackgroundFlag
+  putLogBookMessage, Event, text, APPEND=1
+  
   MainNormNexusFileName = ClassInstance->getMainNormNexusFileName()
   text = '--> Main Normalization File Name (MainNormNexusFileName) .........' + $
     '..... ' + MainNormNexusFileName
@@ -125,10 +130,10 @@ PRO RepopulateGui, Event
   text = '--> Norm Peak Exclusion Ymax (NormPeakExclYArray[1]) .............' + $
     '..... ' + NormPeakExclYArray[1]
   putLogBookMessage, Event, text, APPEND=1
-  
-  DataBackgroundFlag = ClassInstance->getDataBackgroundFlag()
-  text = '--> With Data Background (DataBackgroundFlag) ? ..................' + $
-    '..... ' + DataBackgroundFlag
+    
+  NormBackgroundFlag = ClassInstance->getNormBackgroundFlag()
+  text = '--> Without Normalization Background (NoNormBackgroundFlag) ? ....' + $
+    '..... ' + NormBackgroundFlag
   putLogBookMessage, Event, text, APPEND=1
   
   TOFcuttingMin = ClassInstance->getTofCuttingMin()
@@ -139,11 +144,6 @@ PRO RepopulateGui, Event
   TOFcuttingMax = ClassInstance->getTofCuttingMax()
   text = '--> TOF cutting max ..............................................' + $
     '..... ' + TOFcuttingMax
-  putLogBookMessage, Event, text, APPEND=1
-  
-  NormBackgroundFlag = ClassInstance->getNormBackgroundFlag()
-  text = '--> With Normalization Background (NormBackgroundFlag) ? .........' + $
-    '..... ' + NormBackgroundFlag
   putLogBookMessage, Event, text, APPEND=1
   
   Qmin = ClassInstance->getQmin()
@@ -258,6 +258,7 @@ PRO RepopulateGui, Event
     DataRoiFileName           : DataRoiFileName,$
     DataPeakExclYmin          : DataPeakExclYArray[0],$
     DataPeakExclYmax          : DataPeakExclYArray[1],$
+    DataBackgroundFlag        : DataBackgroundFlag,$
 
     MainNormNexusFileName     : MainNormNexusFileName,$
     MainNormRunNumber         : MainNormRunNumber,$
@@ -265,11 +266,10 @@ PRO RepopulateGui, Event
     NormRoiFileName           : NormRoiFileName,$
     NormPeakExclYmin          : NormPeakExclYArray[0],$
     NormPeakExclYmax          : NormPeakExclYArray[1],$
+    NormBackgroundFlag        : NormBackgroundFlag,$
 
     TOFcuttingMin             : TOFcuttingMin,$
     TOFcuttingMax             : TOFcuttingMax,$
-    DataBackgroundFlag        : DataBackgroundFlag,$
-    NormBackgroundFlag        : NormBackgroundFlag,$
     Qmin                      : Qmin,$
     Qmax                      : Qmax,$
     Qwidth                    : Qwidth,$
@@ -296,7 +296,7 @@ PRO RepopulateGui, Event
   
   populate_error = 0
   IF ((*global).debugging_version EQ 'no') THEN BEGIN
-    CATCH, populate_error
+   ; CATCH, populate_error
   ENDIF
   
   IF (populate_error NE 0) THEN BEGIN
