@@ -188,27 +188,27 @@ PRO MAIN_BASE_event, Event
       ENDIF ELSE BEGIN
         IF ((*global).DataNeXusFound) THEN BEGIN
         
-          ;show x/y and counts ************************************************
-          putLabelValue, Event, $
-            'data_x_info_value', $
-            STRCOMPRESS(Event.x,/REMOVE_ALL)
-          IF ((*global).miniVersion EQ 1) THEN BEGIN
-            coeff = 1
-          ENDIF ELSE BEGIN
-            coeff = 2
-          ENDELSE
-          putLabelValue, $
-            Event, $
-            'data_y_info_value', $
-            STRCOMPRESS(long((Event.y/coeff)+1),/REMOVE_ALL)
-            
-          tvimg = (*(*global).tvimg_data_ptr)
-          
-          putLabelValue, $
-            Event, $
-            'data_counts_info_value', $
-            STRCOMPRESS(long(tvimg[Event.x,Event.y]),/REMOVE_ALL)
-          ;********************************************************************
+;          ;show x/y and counts ************************************************
+;          putLabelValue, Event, $
+;            'data_x_info_value', $
+;            STRCOMPRESS(Event.x,/REMOVE_ALL)
+;          IF ((*global).miniVersion EQ 1) THEN BEGIN
+;            coeff = 1
+;          ENDIF ELSE BEGIN
+;            coeff = 2
+;          ENDELSE
+;          putLabelValue, $
+;            Event, $
+;            'data_y_info_value', $
+;            STRCOMPRESS(long((Event.y/coeff)+1),/REMOVE_ALL)
+;            
+;          tvimg = (*(*global).tvimg_data_ptr)
+;          
+;          putLabelValue, $
+;            Event, $
+;            'data_counts_info_value', $
+;            STRCOMPRESS(long(tvimg[Event.x,Event.y]),/REMOVE_ALL)
+;          ;********************************************************************
             
           IF ((*global).first_event) THEN BEGIN
             ;only if there is a NeXus loaded
