@@ -54,7 +54,7 @@ PRO putTextFieldValue, event, uname, text, append
 END
 
 pro putValue, event=event, uname, value
-putTextFieldValue, event, uname, value
+  putTextFieldValue, event, uname, value
 end
 
 ;------------------------------------------------------------------------------
@@ -392,48 +392,48 @@ ActivateWidget, Event, 'data_roi_selection_file_text_field', $
   
 ;get Peak Ymin and Ymax =======================================================
 PeakSelection = (*(*global).data_peak_selection)
+
 ;check all cases -1,-1 and -1,value value,-1 and value,value
 CASE (PeakSelection[0]) OF
   -1:begin
-  case (PeakSelection[1]) OF
-    -1: ;do nothing
-    else: begin
-      Ymax = PeakSelection[1]
-      if (Ymax LT 1) then Ymax = 0
-      if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
-      putCWFieldValue, event, $
-        'data_d_selection_peak_ymax_cw_field', $
-        Ymax/coeff
-    end
-  endcase
-end
-else: begin
-  case (PeakSelection[1]) OF
-    -1: begin
-      Ymin = PeakSelection[0]
-      if (Ymin LT 1) then Ymin = 0
-      if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
-      putCWFieldValue, event, $
-        'data_d_selection_peak_ymin_cw_field', $
-        Ymin/coeff
-        
-    end
-    else: begin
-      Ymin = Min(PeakSelection,max=Ymax)
-      (*(*global).data_peak_selection) = [Ymin,Ymax]
-      if (Ymin LT 1) then Ymin = 0
-      if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
-      putCWFieldValue, event, $
-        'data_d_selection_peak_ymin_cw_field', $
-        Ymin/coeff
-      if (Ymax LT 1) then Ymax = 0
-      if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
-      putCWFieldValue, event, $
-        'data_d_selection_peak_ymax_cw_field', $
-        Ymax/coeff
-    end
-  endcase
-end
+      case (PeakSelection[1]) OF
+        -1: ;do nothing
+        else: begin
+          Ymax = PeakSelection[1]
+          if (Ymax LT 1) then Ymax = 0
+          if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
+          putCWFieldValue, event, $
+            'data_d_selection_peak_ymax_cw_field', $
+            Ymax/coeff
+          end
+     endcase
+  end
+  else: begin
+    case (PeakSelection[1]) OF
+      -1: begin
+        Ymin = PeakSelection[0]
+        if (Ymin LT 1) then Ymin = 0
+        if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
+        putCWFieldValue, event, $
+          'data_d_selection_peak_ymin_cw_field', $
+          Ymin/coeff
+        end
+      else: begin
+        Ymin = Min(PeakSelection,max=Ymax)
+        (*(*global).data_peak_selection) = [Ymin,Ymax]
+        if (Ymin LT 1) then Ymin = 0
+        if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
+        putCWFieldValue, event, $
+          'data_d_selection_peak_ymin_cw_field', $
+          Ymin/coeff
+        if (Ymax LT 1) then Ymax = 0
+        if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
+        putCWFieldValue, event, $
+          'data_d_selection_peak_ymax_cw_field', $
+          Ymax/coeff
+        end
+     endcase
+  end
 endcase
 
 END

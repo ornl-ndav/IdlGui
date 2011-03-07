@@ -173,7 +173,7 @@ PRO MAIN_BASE_event, Event
     ;1D_2D plot of DATA
     WIDGET_INFO(wWidget, FIND_BY_UNAME='load_data_D_draw'): begin
       error = 0
-      ;CATCH, error
+      CATCH, error
       IF (error NE 0) THEN BEGIN
         CATCH,/CANCEL
       ENDIF ELSE BEGIN
@@ -198,7 +198,12 @@ PRO MAIN_BASE_event, Event
             
           tvimg = (*(*global).tvimg_data_ptr)
           
-          if (event.y gt 255) then return
+          IF ((*global).miniVersion) THEN BEGIN
+            coeff = 1
+          ENDIF ELSE BEGIN
+            coeff = 2
+          ENDELSE
+          if (event.y gt coeff*255) then return
           
           putLabelValue, $
             Event, $
@@ -245,8 +250,8 @@ PRO MAIN_BASE_event, Event
             (*global).left_clicked = 1b
             IF (Event.press EQ 1) THEN begin
               REFreduction_DataSelectionPressLeft, Event ;left button
-            calculate_data_dirpix, Event
-            plot_average_data_peak_value, Event
+              calculate_data_dirpix, Event
+              plot_average_data_peak_value, Event
             endif
             IF (Event.press EQ 4) THEN $
               REFreduction_DataselectionPressRight, Event ;right button
@@ -258,9 +263,11 @@ PRO MAIN_BASE_event, Event
             plot_average_data_peak_value, Event
           ENDIF
           IF (Event.type EQ 2) THEN BEGIN ;move
-            REFreduction_DataSelectionMove, Event
-            calculate_data_dirpix, Event
-            plot_average_data_peak_value, Event
+            if ((*global).left_clicked) then begin
+              REFreduction_DataSelectionMove, Event
+              calculate_data_dirpix, Event
+              plot_average_data_peak_value, Event
+            endif
           ENDIF
         ENDIF
         
@@ -268,7 +275,7 @@ PRO MAIN_BASE_event, Event
         if (isDataBackPeakZoomSelected(Event) eq 1) then begin ;peak selection
         
           if ((*global).left_clicked) then begin
-            
+          
             _base = (*global).center_px_counts_vs_pixel_base_id
             
             ;create plot/base and plot counts vs pixel

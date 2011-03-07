@@ -160,6 +160,9 @@ PRO REFreduction_DataSelectionPressLeft, event
       end
     endcase
     
+    if (y1 eq !null) then y1=!null
+    if (y2 eq !null) then y2=!null
+    
     CASE (ROISignalBackZoomStatus) OF
       0: BEGIN                    ;ROI
         (*(*global).data_roi_selection) = [y1,y2]
@@ -275,11 +278,11 @@ END
 ;this function is reached when the mouse moved into the widget_draw
 PRO REFreduction_DataSelectionMove, event
   
-  catch, error
-  if (error ne 0) then begin
-  catch,/cancel
-  return
-  endif
+   catch, error
+   if (error ne 0) then begin
+     catch,/cancel
+     return
+   endif
 
   ;get global structure
   id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -379,19 +382,27 @@ PRO REFreduction_DataSelectionMove, event
 ;      (*(*global).data_roi_selection) = y_array
     END
     1: BEGIN                    ;signal
-    
 ;      (*(*global).data_peak_selection) = y_array
       ymin = MIN(y_array,max=ymax)
+      
+        IF ((*global).miniVersion) THEN BEGIN
+    coeff = 1
+  ENDIF ELSE BEGIN
+    coeff = 2
+  ENDELSE
+      
+            if (ymin ne -1) then begin
       ;populate exclusion peak low and high bin
       putTextFieldValue,$
         Event,$
         'data_d_selection_peak_ymin_cw_field',$
-        STRCOMPRESS(ymin/2,/remove_all),$
-        0                     ;do not append
+        STRCOMPRESS(ymin/coeff,/remove_all),$
+        0                  
+        endif
       putTextFieldValue,$
         Event,$
         'data_d_selection_peak_ymax_cw_field',$
-        STRCOMPRESS(ymax/2,/remove_all),$
+        STRCOMPRESS(ymax/coeff,/remove_all),$
         0                     ;do not append
     END
     2: BEGIN                    ;back
@@ -541,16 +552,25 @@ PRO REFreduction_DataSelectionRelease, event
     1: BEGIN                    ;signal
       (*(*global).data_peak_selection) = y_array
       ymin = MIN(y_array,max=ymax)
+
+  IF ((*global).miniVersion) THEN BEGIN
+    coeff = 1
+  ENDIF ELSE BEGIN
+    coeff = 2
+  ENDELSE
+      
+      if (ymin ne -1) then begin
       ;populate exclusion peak low and high bin
       putTextFieldValue,$
         Event,$
         'data_d_selection_peak_ymin_cw_field',$
-        STRCOMPRESS(ymin/2,/remove_all),$
-        0                     ;do not append
+        STRCOMPRESS(ymin/coeff,/remove_all),$
+        0                     
+        endif
       putTextFieldValue,$
         Event,$
         'data_d_selection_peak_ymax_cw_field',$
-        STRCOMPRESS(ymax/2,/remove_all),$
+        STRCOMPRESS(ymax/coeff,/remove_all),$
         0                     ;do not append
     END
     2: BEGIN                    ;back
@@ -572,7 +592,7 @@ PRO REFreduction_DataSelectionRelease, event
   ReplotOtherSelection, Event, ROIsignalBackZoomStatus
   (*global).select_data_status = mouse_status_new
 ;  ;update Back and Peak Ymin and Ymax cw_fields
-;  putDataBackgroundPeakYMinMaxValueInTextFields, Event
+  putDataBackgroundPeakYMinMaxValueInTextFields, Event
   
  ;plot_average_data_peak_value, Event
   
