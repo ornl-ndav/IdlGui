@@ -62,8 +62,8 @@ pro center_px_counts_vs_pixel_base_event, Event
       widget_control, id, draw_ysize = new_ysize
       
       refresh_counts_vs_pixel, event=event, global
-
-      end
+      
+    end
     
     ;linear scale
     widget_info(event.top, find_by_uname='center_px_counts_vs_pixel_linear'): begin
@@ -161,6 +161,40 @@ pro center_px_counts_vs_pixel_base_event, Event
     else:
     
   endcase
+  
+end
+
+;+
+; :Description:
+;    This routine bring to life the Counts vs pixel base, or refresh it
+;    if the base is already alive
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro bring_to_life_or_refresh_counts_vs_pixel, event
+  widget_Control, event.top, get_uvalue= global
+  
+  _base = (*global).center_px_counts_vs_pixel_base_id
+  
+  ;create plot/base and plot counts vs pixel
+  if (widget_info(_base, /valid_id) eq 0) then begin
+  
+    top_base = widget_info(event.top, find_by_uname='MAIN_BASE')
+    center_pixel = (*global).dirpix
+    parent_base_uname = 'MAIN_BASE'
+    center_px_counts_vs_pixel_base, event=event, $
+      top_base=top_base, $
+      center_pixel=center_pixel, $
+      parent_base_uname = parent_base_uname
+      
+  endif else begin ;just refresh
+  
+    refresh_counts_vs_pixel, base=_base, global
+    
+  endelse
   
 end
 
@@ -368,7 +402,7 @@ pro refresh_counts_vs_pixel, base=base, event=event, global
       xstyle=1, $
       xtitle='Pixel',$
       ytitle='Counts'
-     
+      
   endif else begin
   
     plot, counts_vs_pixel, $
@@ -381,7 +415,7 @@ pro refresh_counts_vs_pixel, base=base, event=event, global
       
   endelse
   
-   if (xmin ne 0) then begin
+  if (xmin ne 0) then begin
     plots, xmin, 1
     plots, xmin, ymax, /continue, color=fsc_color("red")
   endif
@@ -395,7 +429,7 @@ pro refresh_counts_vs_pixel, base=base, event=event, global
     plots, center_pixel, 1
     plots, center_pixel, ymax, /continue, color=fsc_color("blue")
   endif
-
+  
 end
 
 
