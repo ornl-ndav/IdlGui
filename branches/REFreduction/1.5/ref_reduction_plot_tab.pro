@@ -252,7 +252,7 @@ PRO rePlotAsciiData, Event
   SigmaYarray = (*(*global).SigmaYarray)
   
   plot_error = 0
-  ;CATCH, plot_error
+  CATCH, plot_error
   IF (plot_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     text = ['Error while plotting the ASCII file.', $

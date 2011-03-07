@@ -624,7 +624,7 @@ END
 FUNCTION IDLparseCommandLine::init, cmd
 
   general_error = 0
-  ;CATCH, general_error
+  CATCH, general_error
   IF (general_error NE 0) THEN BEGIN
     RETURN, 0
   ENDIF ELSE BEGIN
