@@ -39,8 +39,6 @@ PRO BuildInstrumentGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   MakeGuiInstrumentSelection, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 END
 
-
-
 ;+
 ; :Description:
 ;    Kill the center pixel base when leaving the main application

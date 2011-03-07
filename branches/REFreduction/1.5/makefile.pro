@@ -15,6 +15,7 @@ resolve_routine, "CW_FIELD",/either
 resolve_routine, "XDISPLAYFILE",/either
 resolve_routine, "TVREAD",/either
 resolve_routine, "CONGRID", /either
+resolve_routine, "mean", /either
 
 save,/routines,filename = 'ref_reduction_v15.sav'
 exit
