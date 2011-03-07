@@ -218,11 +218,13 @@ PRO MAIN_BASE_event, Event
                 REFreduction_ManuallyMoveDataBackPeakUp, Event
                 calculate_data_dirpix, Event
                 plot_average_data_peak_value, Event
+                bring_to_life_or_refresh_counts_vs_pixel, event
               END
               100: BEGIN
                 REFreduction_ManuallyMoveDataBackPeakDown, Event
                 calculate_data_dirpix, Event
                 plot_average_data_peak_value, Event
+                bring_to_life_or_refresh_counts_vs_pixel, event                
               END
               ELSE:
             ENDCASE
@@ -231,12 +233,13 @@ PRO MAIN_BASE_event, Event
                 REFreduction_ManuallyMoveDataBackPeakUp, Event
                 calculate_data_dirpix, Event
                 plot_average_data_peak_value, Event
-                
+                bring_to_life_or_refresh_counts_vs_pixel, event                
               END
               8: BEGIN
                 REFreduction_ManuallyMoveDataBackPeakDown, Event
                 calculate_data_dirpix, Event
                 plot_average_data_peak_value, Event
+                bring_to_life_or_refresh_counts_vs_pixel, event                
               END
               ELSE:
             ENDCASE
@@ -275,25 +278,7 @@ PRO MAIN_BASE_event, Event
         if (isDataBackPeakZoomSelected(Event) eq 1) then begin ;peak selection
         
           if ((*global).left_clicked) then begin
-          
-            _base = (*global).center_px_counts_vs_pixel_base_id
-            
-            ;create plot/base and plot counts vs pixel
-            if (widget_info(_base, /valid_id) eq 0) then begin
-            
-              top_base = widget_info(event.top, find_by_uname='MAIN_BASE')
-              center_pixel = (*global).dirpix
-              parent_base_uname = 'MAIN_BASE'
-              center_px_counts_vs_pixel_base, event=event, $
-                top_base=top_base, $
-                center_pixel=center_pixel, $
-                parent_base_uname = parent_base_uname
-                
-            endif else begin ;just refresh
-            
-              refresh_counts_vs_pixel, base=_base, global
-              
-            endelse
+bring_to_life_or_refresh_counts_vs_pixel, event
           endif
           
         endif
@@ -349,20 +334,30 @@ PRO MAIN_BASE_event, Event
     ;Peak Ymin and Ymax -------------------------------------------------------
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='data_d_selection_peak_ymin_cw_field'): begin
-      print, 'peak ymin'
       REFreduction_DataBackgroundPeakSelection, Event, 'peak_ymin'
+      calculate_data_dirpix, Event
+      plot_average_data_peak_value, Event
+      ;2d plot on the side of main application that show counts vs pixel
+      if (isDataBackPeakZoomSelected(Event) eq 1) then begin ;peak selection
+        bring_to_life_or_refresh_counts_vs_pixel, event
+      endif
     end
     
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='data_d_selection_peak_ymax_cw_field'): begin
       REFreduction_DataBackgroundPeakSelection, Event, 'peak_ymax'
-    end
+      calculate_data_dirpix, Event
+      plot_average_data_peak_value, Event
+ ;2d plot on the side of main application that show counts vs pixel
+      if (isDataBackPeakZoomSelected(Event) eq 1) then begin ;peak selection
+        bring_to_life_or_refresh_counts_vs_pixel, event
+      endif
+     end
     
     ;Background Ymin and Ymax -------------------------------------------------
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME= $
       'data_d_selection_background_ymin_cw_field'): begin
-      print, 'back ymin'
       REFreduction_DataBackgroundPeakSelection, Event, 'back_ymin'
     end
     
