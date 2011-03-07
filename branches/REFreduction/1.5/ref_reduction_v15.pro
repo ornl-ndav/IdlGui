@@ -39,11 +39,35 @@ PRO BuildInstrumentGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   MakeGuiInstrumentSelection, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 END
 
+
+
+;+
+; :Description:
+;    Kill the center pixel base when leaving the main application
+;
+; :Params:
+;    global
+;
+; :Author: j35
+;-
+pro centerpix_base_uname_killed, global
+  compile_opt idl2
+  
+  id = (*global).center_px_counts_vs_pixel_base_id
+  if (widget_info(id, /valid_id) ne 0) then begin
+    widget_control, id, /destroy
+  endif
+  
+end
+
 ;------------------------------------------------------------------------------
 PRO ref_reduction_Cleanup, tlb
 
   WIDGET_CONTROL, tlb, GET_UVALUE=global, /NO_COPY
-  
+
+  ;kill the center pixel base if there
+  centerpix_base_uname_killed, global
+
   IF N_ELEMENTS(global) EQ 0 THEN RETURN
   
   ; Free up the pointers
