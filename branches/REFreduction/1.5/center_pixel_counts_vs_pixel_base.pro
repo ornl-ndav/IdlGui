@@ -200,6 +200,28 @@ end
 
 ;+
 ; :Description:
+;    This routine will update the counts vs pixel plot only if
+;    the base is mapped.
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro refresh_counts_vs_pixel_if_existing, event
+  compile_opt idl2
+  
+  widget_Control, event.top, get_uvalue= global
+  
+  _base = (*global).center_px_counts_vs_pixel_base_id
+  
+  if (widget_info(_base, /valid_id) ne 0) then $
+    refresh_counts_vs_pixel, base=_base, global
+    
+end
+
+;+
+; :Description:
 ;    Make sure the pixel value is within the following range [0,pixel_max]
 ;
 ; :Params:
