@@ -181,7 +181,7 @@ PRO data_plots_tab_event, Event
     
   ENDIF
   
-  MapBase, Event, 'info_data_base', info_base_status
+ ; MapBase, Event, 'info_data_base', info_base_status
   
 END
 
