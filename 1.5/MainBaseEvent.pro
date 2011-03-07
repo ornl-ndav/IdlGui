@@ -224,7 +224,7 @@ PRO MAIN_BASE_event, Event
                 REFreduction_ManuallyMoveDataBackPeakDown, Event
                 calculate_data_dirpix, Event
                 plot_average_data_peak_value, Event
-                bring_to_life_or_refresh_counts_vs_pixel, event                
+                bring_to_life_or_refresh_counts_vs_pixel, event
               END
               ELSE:
             ENDCASE
@@ -233,13 +233,13 @@ PRO MAIN_BASE_event, Event
                 REFreduction_ManuallyMoveDataBackPeakUp, Event
                 calculate_data_dirpix, Event
                 plot_average_data_peak_value, Event
-                bring_to_life_or_refresh_counts_vs_pixel, event                
+                bring_to_life_or_refresh_counts_vs_pixel, event
               END
               8: BEGIN
                 REFreduction_ManuallyMoveDataBackPeakDown, Event
                 calculate_data_dirpix, Event
                 plot_average_data_peak_value, Event
-                bring_to_life_or_refresh_counts_vs_pixel, event                
+                bring_to_life_or_refresh_counts_vs_pixel, event
               END
               ELSE:
             ENDCASE
@@ -278,7 +278,7 @@ PRO MAIN_BASE_event, Event
         if (isDataBackPeakZoomSelected(Event) eq 1) then begin ;peak selection
         
           if ((*global).left_clicked) then begin
-bring_to_life_or_refresh_counts_vs_pixel, event
+            bring_to_life_or_refresh_counts_vs_pixel, event
           endif
           
         endif
@@ -304,12 +304,14 @@ bring_to_life_or_refresh_counts_vs_pixel, event
       FIND_BY_UNAME= $
       'data_d_selection_roi_ymin_cw_field'): begin
       REFreduction_DataBackgroundPeakSelection, Event, 'roi_ymin'
+      refresh_counts_vs_pixel_if_existing, event
     end
     
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME= $
       'data_d_selection_roi_ymax_cw_field'): begin
       REFreduction_DataBackgroundPeakSelection, Event, 'roi_ymax'
+      refresh_counts_vs_pixel_if_existing, event
     end
     
     ;SAVE ROI Selection into a file -------------------------------------------
@@ -348,11 +350,11 @@ bring_to_life_or_refresh_counts_vs_pixel, event
       REFreduction_DataBackgroundPeakSelection, Event, 'peak_ymax'
       calculate_data_dirpix, Event
       plot_average_data_peak_value, Event
- ;2d plot on the side of main application that show counts vs pixel
+      ;2d plot on the side of main application that show counts vs pixel
       if (isDataBackPeakZoomSelected(Event) eq 1) then begin ;peak selection
         bring_to_life_or_refresh_counts_vs_pixel, event
       endif
-     end
+    end
     
     ;Background Ymin and Ymax -------------------------------------------------
     WIDGET_INFO(wWidget, $
