@@ -164,7 +164,7 @@ PRO calculate_data_dirpix, Event
 
   WIDGET_CONTROL,Event.top,get_uvalue=global
   
- ; CATCH, error
+ CATCH, error
  error = 0
   IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
