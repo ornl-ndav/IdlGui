@@ -76,7 +76,8 @@ pro center_px_counts_vs_pixel_base_event, Event
     
     ;plot
     widget_info(event.top, find_by_uname='center_px_counts_vs_pixel_draw'): begin
-    
+      return
+      
       if (event.press eq 1) then begin ;left click
         (*global_counts).left_click = 1b
         
