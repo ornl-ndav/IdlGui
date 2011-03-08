@@ -529,6 +529,7 @@ endif
     end
     
     Widget_Info(wWidget, FIND_BY_UNAME='of_list_of_runs_text'): begin
+      update_output_file_name_sample, event
       BSSreduction_Reduce_of_list_of_runs_text, Event
       BSSreduction_CommandLineGenerator, Event
     end

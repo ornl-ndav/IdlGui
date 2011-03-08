@@ -234,12 +234,12 @@ PRO BSSreduction_CommandLineGenerator, Event
       ;check if the file is using the Translation Service deployed on 03/2010
       ;if yes, the following flag is necessary
       ; --mon-path=/entry/monitor1,1
-
-;      if (is_monitor_named_monitor1((*global).full_path_of_first_nexus)) then begin
-     cmd += ' --mon-path=/entry/monitor1,1'
-;      endif else begin
-;        cmd += ' --mon-path=/entry/monitor,1'
-;      endelse
+      
+      ;      if (is_monitor_named_monitor1((*global).full_path_of_first_nexus)) then begin
+      cmd += ' --mon-path=/entry/monitor1,1'
+    ;      endif else begin
+    ;        cmd += ' --mon-path=/entry/monitor,1'
+    ;      endelse
       
     ENDELSE
     activate_base, event, 'na_womwsbase', na_base_status
@@ -2189,9 +2189,19 @@ PRO BSSreduction_CommandLineGenerator, Event
       endelse
     endelse
     oFile = 'BSS_' + _run_numbers
-    ;add time stamp
-    ts = GenerateIsoTimeStamp()
-    oFile += '_' + ts
+    
+    ;add user defined prefix or auto generated time stamp
+    ;check what the user selected (user defined or auto)
+    id = widget_info(event.top, find_by_uname='user_defined_output_file_name')
+    isUserDefinedSelected = widget_info(id, /button_set)
+    
+    if (isUserDefinedSelected) then begin ;user defined file name
+      _prefix = getTextFieldValue(event,'of_list_of_runs_text')
+      prefix = _prefix[0]
+    endif else begin ;auto defined file name
+      prefix = GenerateIsoTimeStamp()
+    endelse
+    oFile += '_' + prefix
     
     ;check if we have only 1 job to launch or several ones
     IF (job_number GT 1) THEN BEGIN ;create the array of jobs
