@@ -75,6 +75,7 @@ cd, CurrentFolder
 .run bss_reduction_math.pro
 .run bss_reduction_iterative_back.pro
 
+.run output_file_name_eventcb.pro
 .run bss_reduction_Reduce.pro
 .run bss_reduction_ReduceTab1.pro
 .run bss_reduction_ReduceTab2.pro

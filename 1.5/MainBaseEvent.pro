@@ -533,6 +533,22 @@ endif
       BSSreduction_CommandLineGenerator, Event
     end
     
+    ;user defined output file name button
+    widget_info(wWidget, find_by_uname='user_defined_output_file_name'): begin
+    activate_button, event, 'user_defined_output_file_name_base', 1
+    activate_button, event, 'auto_defined_output_file_name_base', 0
+      update_output_file_name_sample, event
+      BSSreduction_CommandLineGenerator, Event
+    end
+
+    ;auto defined output file name button
+    widget_info(wWidget, find_by_uname='auto_defined_output_file_name'): begin
+    activate_button, event, 'user_defined_output_file_name_base', 0
+    activate_button, event, 'auto_defined_output_file_name_base', 1
+      update_output_file_name_sample, event
+      BSSreduction_CommandLineGenerator, Event
+    end
+
     ;tab3
     Widget_Info(wWidget, FIND_BY_UNAME='rmcnf_button'): begin
       BSSreduction_Reduce_rmcnf_button, Event

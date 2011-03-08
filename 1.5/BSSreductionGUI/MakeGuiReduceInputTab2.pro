@@ -234,15 +234,17 @@ PRO MakeGuiReduceInputTab2, ReduceInputTab, ReduceInputTabSettings
 
   user = widget_button(button_base,$
   value = 'User defined name --->',$
+  /no_release,$
   uname = 'user_defined_output_file_name')
   widget_control, user, /set_button
   bss = widget_button(button_base,$
   value = 'Auto defined name --->',$
-  uname = 'bss_reduction_defined_output_file_name')
+  /no_release,$
+  uname = 'auto_defined_output_file_name')
 
   ;second column
   col2a = widget_base(ofn_base,$
-  uname = 'user_defined_output_file_name',$
+  uname = 'user_defined_output_file_name_base',$
   /row,$
   xoffset = 160,$
   yoffset = 2)
