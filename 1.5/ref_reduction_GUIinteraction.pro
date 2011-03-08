@@ -55,6 +55,11 @@ PRO SetButtonValue, Event, uname, text
   widget_control, id, set_value=text
 END
 
+pro setButton, event, uname
+id = widget_info(event.top, find_by_uname=uname)
+widget_control, id, /set_button
+end
+
 ;------------------------------------------------------------------------------
 PRO SetTabCurrent, Event, uname, TabIndex
   id = widget_info(Event.top,find_by_uname=uname)

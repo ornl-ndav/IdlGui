@@ -1642,7 +1642,7 @@ PRO MAIN_BASE_event, Event
       WIDGET_CONTROL, hourglass=0
     end
     
-    ;;Repopulate GUI
+    ;;Repopulate GUI ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     WIDGET_INFO(wWidget, FIND_BY_UNAME='repopulate_gui'): begin
       DataNormFieldInput, Event
       RepopulateGUI, Event    ;_BatchRepopulateGui
@@ -1707,7 +1707,7 @@ PRO MAIN_BASE_event, Event
       BatchTab_RunActiveBackground, Event
     end
     
-    ;;Load Batch File
+    ;;Load Batch file 
     WIDGET_INFO(wWidget, FIND_BY_UNAME='load_batch_button'): begin
       BatchTab_LoadBatchFile, Event
       SaveDataNormInputValues, Event

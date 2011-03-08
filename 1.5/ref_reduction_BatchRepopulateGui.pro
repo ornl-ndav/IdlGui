@@ -210,6 +210,26 @@ PRO RepopulateGui, Event
     '..... ' + NormInstrGeoFileName
   putLogBookMessage, Event, text, APPEND=1
   
+  NumBinsClean = ClassInstance->getNumBinsClean()
+  text = '--> Number of bins to auto. clean up .............................' + $
+    '..... ' + NumBinsClean
+  putLogBookMessage, event, text, append=1
+  
+  BeamDivCorr = ClassInstance->getBeamDivCorr()
+  text = '--> With beam divergence correction ..............................' + $
+    '..... ' + BeamDivCorr
+  putLogBookMessage, event, text, append=1
+
+  CenterPix = ClassInstance->getCenterPix()
+  text = '--> Center pixel value ...........................................' + $
+    '..... ' + CenterPix
+  putLogBookMessage, event, text, append=1
+
+  DetSpatRes = ClassInstance->getDetSpatRes()
+  text = '--> Detector spatial resolution value (mm) .......................' + $
+    '..... ' + DetSpatRes
+  putLogBookMessage, event, text, append=1
+  
   OutputPath = ClassInstance->getOutputPath()
   text = '--> Output Path (OutputPath) .....................................' + $
     '..... ' + OutputPath
@@ -283,6 +303,12 @@ PRO RepopulateGui, Event
     DataInstrGeoFileName      : DataInstrGeoFileName,$
     OverwriteNormInstrGeoFlag : OverwriteNormInstrGeoFlag,$
     NormInstrGeoFileName      : NormInstrGeoFileName,$
+    
+    NumBinsClean              : NumBinsClean,$
+    BeamDivCorr               : BeamDivCorr,$
+    CenterPix                 : CenterPix,$
+    DetSpatRes                : DetSpatRes,$
+    
     OutputPath                : OutputPath,$
     OutputFileName            : OutputFileName,$
     DataNormCombinedSpecFlag  : DataNormCombinedSpecFlag,$

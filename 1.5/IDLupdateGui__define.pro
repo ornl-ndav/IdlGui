@@ -394,6 +394,34 @@ PRO UpdateOverwriteNormInstrGeoFlag, $
   MapBase, Event, 'overwrite_norm_instrument_geometry_base',MapBaseStatus
 END
 
+;work on number of bins to auto. cleaned up
+pro UpdateNumBinsClean, event, NumBinsClean
+  putValue, event=event, 'num_bins_clean', NumBinsClean
+end
+
+;work on beam divergence flag
+pro UpdateBeamDivCorr, event, BeamDivCorr
+  if (BeamDivCorr eq 'yes') then begin
+  setButton, event, 'beamdiv_corr_yes'
+  ActivateWidget, Event, 'beamdiv_settings', 1  
+  endif else begin
+  setButton, event, 'beamdiv_corr_no'
+  ActivateWidget, Event, 'beamdiv_settings', 0
+  endelse
+end
+
+pro UpdateCenterPix, event, CenterPix
+  widget_control, event.top, get_uvalue=global
+  (*global).center_pixel_default_type = 'user_defined'
+  (*global).current_center_pixel = CenterPix
+  putValue, event=event, 'data_center_pixel_uname', CenterPix
+end
+
+pro UpdateDetSpatRes, event, DetSpatRes
+ widget_control, event.top, get_uvalue=global
+ (*global).detector_resolution = DetSpatRes
+end
+
 ;Work on Output Path and output FileName ======================================
 PRO UpdateOutputPath, Event, OutputPath
   setButtonValue, Event, 'of_button', OutputPath
@@ -673,7 +701,7 @@ FUNCTION IDLupdateGui::init, structure
     
     ;activate or not the normalization background
     text = '--> Activate or not normalization background switch ......' + $
-     '.... ' + processing
+      '.... ' + processing
     putLogBookMessage, event, text, append=1
     UpdateNormBackgroundSwitch, event, structure.NormBackgroundFlag
     AppendReplaceLogBookMessage, Event, OK, PROCESSING
@@ -739,6 +767,32 @@ FUNCTION IDLupdateGui::init, structure
     structure.NormInstrGeoFileName
   AppendReplaceLogBookMessage, Event, OK, PROCESSING
   
+  ;work on --num-bins-clean
+  text = '--> Load number of bins to clean ............................. ' $
+    + PROCESSING
+  putLogBookMessage, event, text, append=1
+  UpdateNumBinsClean, event, structure.NumBinsClean
+  AppendReplaceLogBookMessage, event, ok, processing
+  
+  ;work on beam divergence flags
+  text = '--> Working with beam divergence flag ON ? ................... ' $
+    + processing
+  putLogBookMessage, event, text, append=1
+  UpdateBeamDivCorr, event, structure.BeamDivCorr
+  AppendReplaceLogBookMessage, event, ok, processing
+  
+  text = '--> Updating center pixel value .............................. ' $
+   + processing 
+  putLogBookMessage, event, text, append=1
+  UpdateCenterPix, event, structure.CenterPix
+  AppendReplaceLogBookMessage, event, ok, processing
+  
+  text = '--> Updating detector resolution ............................. ' $
+   + processing
+  putLogBookMessage, event, text, append=1
+  UpdateDetSpatRes, event, structure.DetSpatRes
+  AppendReplaceLogBookMessage, event, ok, processing
+    
   ;Work on Output Path and Output File Name
   text = '--> Load Output Path ......................................... ' $
     + PROCESSING
