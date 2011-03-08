@@ -205,44 +205,51 @@ PRO MakeGuiReduceInputTab2, ReduceInputTab, ReduceInputTabSettings
   ;\\\\\\\\\\\\\\\\\
   ;Output File Name\
   ;\\\\\\\\\\\\\\\\\
-  label_base = widget_base(tab2_base,$
-    /row,$
+  ofn_base = widget_base(tab2_base,$
     xoffset = OFlabel.size[0],$
-    yoffset = OFlabel.size[1])
-    
-  
-  button_base = widget_base(label_base,$
+    yoffset = OFlabel.size[1],$
+    scr_xsize = 725,$
+    scr_ysize = 65,$
+    frame=1)
+
+  ;first column
+  button_base = widget_base(ofn_base,$
+  yoffset = 5,$
   /column,$
   /exclusive)
-  
+
   user = widget_button(button_base,$
+  value = 'User defined name --->',$
   uname = 'user_defined_output_file_name')
-  
-  bss = widget_button(button_base,$
-  uname = 'bss_reduction_defined_output_file_name')
-  
   widget_control, user, /set_button
-  
-  
-  part2_base = widget_base(label_base,$
-  /column)
-  row1 = widget_base(part2_base,$
-  /row)
-  Label = WIDGET_LABEL(row1,$
+  bss = widget_button(button_base,$
+  value = 'Auto defined name --->',$
+  uname = 'bss_reduction_defined_output_file_name')
+
+  ;second column
+  col2a = widget_base(ofn_base,$
+  uname = 'user_defined_output_file_name',$
+  /row,$
+  xoffset = 160,$
+  yoffset = 2)
+  Label = WIDGET_LABEL(col2a,$
     VALUE   = 'BSS_<run_number>_')
-  ListOfRuns = WIDGET_TEXT(row1,$
+  ListOfRuns = WIDGET_TEXT(col2a,$
     SCR_XSIZE = 200,$
     /ALIGN_LEFT,$
     /ALL_EVENTS,$
     /EDITABLE,$
-    UNAME     = OFListOfRuns.uname)
+    UNAME = OFListOfRuns.uname)
+  label = widget_label(col2a,$
+    value = '[.txt | _Q##.txt]')
+ 
+  ;second row on the right
+  Label = WIDGET_LABEL(ofn_base,$
+    uname = 'auto_defined_output_file_name_base',$
+    xoffset = 163,$
+    sensitive = 0,$
+    yoffset = 39,$
+   VALUE   = 'BSS_<run_number>_YYYYMMmDD_HHMMSS[.txt | _Q##.txt]')
 
-  row2 = widget_base(part2_base,$
-  /row)
-  Label = WIDGET_LABEL(row2,$
-    VALUE   = 'BSS_<run_number>_YYYYMMmDD_HHMMSS')
-
-  label = widget_label(label_base,$
-    value = '[.txt , _Q##.txt]')
     
 END
