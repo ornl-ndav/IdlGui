@@ -275,7 +275,8 @@ PRO MAIN_BASE_event, Event
         ENDIF
         
         ;2d plot on the side of main application that show counts vs pixel
-        if (isDataBackPeakZoomSelected(Event) eq 1) then begin ;peak selection
+        TabSelected = isDataBackPeakZoomSelected(event)
+        if (TabSelected eq 1 or TabSelected eq 0) then begin ;peak selection
         
           if ((*global).left_clicked) then begin
             bring_to_life_or_refresh_counts_vs_pixel, event

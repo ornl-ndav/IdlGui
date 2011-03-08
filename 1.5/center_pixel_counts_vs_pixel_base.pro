@@ -321,7 +321,7 @@ pro display_counts_vs_pixel, base=base, event=event, global
   ;create xaxis
   xrange = [0,256]
   
-  ;retrieve value of Ymin, Ymax and center pixel
+  ;retrieve peak value of Ymin, Ymax and center pixel
   main_event = (*global_counts).main_event
   xmin = fix(getValue(event=main_event,uname='data_d_selection_peak_ymin_cw_field'))
   xmax = fix(getValue(event=main_event,uname='data_d_selection_peak_ymax_cw_field'))
@@ -367,6 +367,40 @@ pro display_counts_vs_pixel, base=base, event=event, global
     plots, center_pixel, 1
     plots, center_pixel, ymax, /continue, color=fsc_color("blue")
   endif
+  
+  plot_background_selection, event=main_event, ymax=ymax
+
+end
+
+;+
+; :Description:
+;    This plot/refresh the background selection made by the user
+;
+; :Keywords:
+;    event
+;    ymax
+;
+; :Author: j35
+;-
+pro plot_background_selection, event=main_event, ymax=ymax
+compile_opt idl2  
+
+  ;retrieve background values
+  back_ymin = fix(getValue(event=main_event, $
+    uname='data_d_selection_roi_ymin_cw_field'))
+  back_ymax = fix(getValue(event=main_event, $
+    uname='data_d_selection_roi_ymax_cw_field'))
+    
+  if (back_ymin ne 0) then begin
+    plots, back_ymin, 1
+    plots, back_ymin, ymax, /continue, color=fsc_color("green")
+  endif
+  
+  if (back_ymax ne 0) then begin
+    plots, back_ymax, 1
+    plots, back_ymax, ymax, /continue, color=fsc_color("green")
+  endif
+
 end
 
 ;+
@@ -404,7 +438,6 @@ pro refresh_counts_vs_pixel, base=base, event=event, global
   
   xrange = [0,256]
   
-  
   ;retrieve value of Ymin, Ymax and center pixel
   main_event = (*global_counts).main_event
   xmin = fix(getValue(event=main_event,uname='data_d_selection_peak_ymin_cw_field'))
@@ -451,6 +484,8 @@ pro refresh_counts_vs_pixel, base=base, event=event, global
     plots, center_pixel, 1
     plots, center_pixel, ymax, /continue, color=fsc_color("blue")
   endif
+  
+   plot_background_selection, event=main_event, ymax=ymax
   
 end
 
