@@ -334,7 +334,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   IF ((*global).CHECKING_PACKAGES EQ 'yes') THEN BEGIN
     packages_required, global, my_package ;packages_required
     checking_packages_routine, MAIN_BASE, my_package, global
-    update_gui_according_to_package, MAIN_BASE, my_package
+   ; update_gui_according_to_package, MAIN_BASE, my_package
   ENDIF
   ;==============================================================================
   
