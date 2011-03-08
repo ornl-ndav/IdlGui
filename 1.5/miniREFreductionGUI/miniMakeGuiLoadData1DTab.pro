@@ -810,6 +810,7 @@ PRO miniMakeGuiLoadData1DTab, D_DD_Tab, $
     RescaleScaleDroplistSize[1],$
     UNAME     = 'data_rescale_z_droplist',$
     SENSITIVE = 0)
+    widget_control, RescaleZScaleDroplist, set_droplist_select=1
     
   ResetZScaleButton = WIDGET_BUTTON(RescaleZBase,$
     XOFFSET   = ResetScaleButtonSize[0],$

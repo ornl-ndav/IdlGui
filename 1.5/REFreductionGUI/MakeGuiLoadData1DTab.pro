@@ -782,13 +782,13 @@ PRO MakeGuiLoadData1DTab, D_DD_Tab, $
     return_events=1,$
     title=RescaleMaxcwfieldLabel,$
     uname='data_rescale_zmax_cwfield')
-    
-    
+   
   RescaleZScaleDroplist = widget_droplist(RescaleZBase,$
     value=RescaleScaleDroplist,$
     xoffset=RescaleScaleDroplistSize[0],$
     yoffset=RescaleScaleDroplistSize[1],$
     uname='data_rescale_z_droplist')
+    widget_control, RescaleZScaleDroplist, set_droplist_select=1
     
   ResetZScaleButton = widget_button(RescaleZBase,$
     xoffset=ResetScaleButtonSize[0],$

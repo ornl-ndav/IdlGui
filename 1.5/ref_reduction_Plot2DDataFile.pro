@@ -148,6 +148,14 @@ END
 ;Procedure that plots REF_L and REF_M 2D data plots                   *
 ;**********************************************************************
 PRO Plot2DDataFile, Event, Nx, Ny
+  
+  catch, error
+  if (error ne 0) then begin
+  catch,/cancel
+  print, 'verify the contrast editor values!'
+  return
+  endif
+  
   ;get global structure
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
   widget_control,id,get_uvalue=global
