@@ -53,15 +53,13 @@ id = widget_info(event.top, find_by_uname='user_defined_output_file_name')
 isUserDefinedSelected = widget_info(id, /button_set)
 
 if (isUserDefinedSelected) then begin ;user defined file name
-
-
-sample_file_name = ''
+  user_defined_name = getTextFieldValue(event,'of_list_of_runs_text')
+  sample_file_name = 'BSS_1234_' + user_defined_name + '.txt'
 endif else begin ;auto defined file name
-
-
-sample_file_name = ''
+  ts = GenerateIsoTimeStamp()
+  sample_file_name = 'BSS_1234_' + ts + '.txt'
 endelse
 
-putValue, event, 'output_file_name_sample', sample_file_name
+putValue, event, 'output_file_name_sample', sample_file_name[0]
 
 end
