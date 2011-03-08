@@ -169,7 +169,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     structure
     
   WIDGET_CONTROL, /REALIZE, MAIN_BASE
-  XMANAGER, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
+  XMANAGER, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK, cleanup='ref_reduction_cleanup'
   
   ; initialize contrast droplist
   id = WIDGET_INFO(Main_base,Find_by_Uname='data_contrast_droplist')
