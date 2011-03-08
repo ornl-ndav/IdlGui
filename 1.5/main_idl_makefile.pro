@@ -125,6 +125,7 @@
 .run beam_divergence_settings.pro
 .run using_wrong_version_of_ref_reduction.pro
 
+.run cleanup.pro
 .run ref_reduction_debugging.pro
 .run MainBaseEvent.pro
 .run ref_reduction_tab.pro
