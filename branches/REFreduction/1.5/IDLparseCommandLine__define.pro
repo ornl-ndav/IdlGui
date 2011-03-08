@@ -101,7 +101,7 @@ END
 ;------------------------------------------------------------------------------
 ;+
 ; :Description:
-;    Return the string placed just after the driver name. 
+;    Return the string placed just after the driver name.
 ;
 ; :Params:
 ;    cmd
@@ -122,7 +122,7 @@ function getMainDataNexusFileName, cmd
     driver_name = driver_list[index]
     result = ValueBetweenArg1Arg2(cmd, driver_name, 1, ' ', 0)
     if (result[0] ne '') then begin
-    return, strcompress(result,/remove_all)
+      return, strcompress(result,/remove_all)
     endif
     index++
   endwhile
@@ -132,25 +132,26 @@ end
 ;------------------------------------------------------------------------------
 FUNCTION getMainDataRunNumber, FullNexusName
   inst = obj_new('IDLgetMetadata',FullNexusName)
+  if (~obj_valid(inst)) then return, ''
   RETURN, STRCOMPRESS(inst->getRunNumber(),/REMOVE_ALL)
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION getAllDataNexusFileName, cmd
-  
+
   driver_list = ['reflect_reduction', $
-  '/SNS/users/j35/bin/runenv specmh_reduction']
+    '/SNS/users/j35/bin/runenv specmh_reduction']
   index = 0
   nbr_driver = n_elements(driver_list)
   while (index lt nbr_driver) do begin
-  driver_name = driver_list[index]
-  result = ValueBetweenArg1Arg2(cmd, $
-    driver_name + ' ',$
-    1, $
-    '--data-roi-file', $
-    0)
-  IF (result[0] ne '') THEN return, result
-  index++
+    driver_name = driver_list[index]
+    result = ValueBetweenArg1Arg2(cmd, $
+      driver_name + ' ',$
+      1, $
+      '--data-roi-file', $
+      0)
+    IF (result[0] ne '') THEN return, result
+    index++
   endwhile
   RETURN, ''
 END
@@ -205,6 +206,7 @@ END
 ;------------------------------------------------------------------------------
 FUNCTION getMainNormRunNumber, FullNexusName
   inst = obj_new('IDLgetMetadata',FullNexusName)
+  if (~obj_valid(inst)) then return, ''
   RETURN, STRCOMPRESS(inst->getRunNumber(),/REMOVE_ALL)
 END
 
@@ -386,8 +388,50 @@ FUNCTION getNormInstrumentGeoFileName, cmd
     RETURN, STRCOMPRESS(result,/REMOVE_ALL)
   ENDIF ELSE BEGIN
     RETURN, ''
-  END
+  ENDelse
 END
+
+;------------------------------------------------------------------------------
+function getNumBinsClean, cmd
+  if (isStringFound(cmd,'--num-bins-clean=')) then begin
+    result = ValueBetweenArg1Arg2(cmd, '--num-bins-clean=',1,' ', 0)
+    if (result eq '') then return, ''
+    return, strcompress(result, /remove_all)
+  endif else begin
+    return, ''
+  endelse
+end
+
+;------------------------------------------------------------------------------
+function getBeamDivCorr, cmd
+  IF (isStringFound(cmd,'--beamdiv-corr')) THEN BEGIN
+    RETURN, 'yes'
+  ENDIF ELSE BEGIN
+    RETURN, 'no'
+  ENDelse
+END
+
+;------------------------------------------------------------------------------
+function getCenterPix, cmd
+ if (isStringFound(cmd,'--center-pix=')) then begin
+    result = ValueBetweenArg1Arg2(cmd, '--center-pix=',1,' ', 0)
+    if (result eq '') then return, ''
+    return, strcompress(result, /remove_all)
+  endif else begin
+    return, ''
+  endelse
+end
+
+;------------------------------------------------------------------------------
+function getDetSpatRes, cmd
+ if (isStringFound(cmd,'--det-spat-res=')) then begin
+    result = ValueBetweenArg1Arg2(cmd, '--det-spat-res=',1,' ', 0)
+    if (result eq '') then return, ''
+    return, strcompress(result, /remove_all)
+  endif else begin
+    return, ''
+  endelse
+end
 
 ;------------------------------------------------------------------------------
 FUNCTION getOutputPath, cmd
@@ -585,6 +629,26 @@ FUNCTION IDLparseCommandLine::getNormInstrGeoFileName
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+function IDLparseCommandLine::getNumBinsClean
+ return, self.NumBinsClean
+ end
+
+;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+function IDLparseCommandLine::getBeamDivCorr
+ return, self.BeamDivCorr
+ end
+
+;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+function IDLparseCommandLine::getCenterPix
+ return, self.CenterPix
+ end
+
+;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+function IDLparseCommandLine::getDetSpatRes
+ return, self.DetSpatRes
+ end
+
+;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 FUNCTION IDLparseCommandLine::getOutputPath
   RETURN, self.OutputPath
 END
@@ -624,7 +688,7 @@ END
 FUNCTION IDLparseCommandLine::init, cmd
 
   general_error = 0
-  CATCH, general_error
+  ;CATCH, general_error
   IF (general_error NE 0) THEN BEGIN
     RETURN, 0
   ENDIF ELSE BEGIN
@@ -641,7 +705,7 @@ FUNCTION IDLparseCommandLine::init, cmd
     self.DataRoiFileName        = getDataRoiFileName(cmd)
     self.DataPeakExclYArray     = getDataPeakExclYArray(cmd)
     self.DataBackgroundFlag     = isWithDataBackgroundFlagOn(cmd)
-
+    
     self.TOFcuttingMin          = getTOFcuttingMin(cmd)
     self.TOFcuttingMax          = getTOFcuttingMax(cmd)
     
@@ -680,6 +744,16 @@ FUNCTION IDLparseCommandLine::init, cmd
     self.OverwriteNormInstrGeo     = isWithOverwriteNormInstrGeo(cmd)
     ;Norm instrument geometry file name
     self.NormInstrGeoFileName      = getNormInstrumentGeoFileName(cmd)
+    
+    self.NumBinsClean = getNumBinsClean(cmd)
+
+    ;beamdivergence flags
+    self.BeamDivCorr = getBeamDivCorr(cmd)
+    if (self.BeamDivCorr eq 'yes') then begin
+      self.CenterPix = getCenterPix(cmd)
+      self.DetSpatRes = getDetSpatRes(cmd)
+    endif
+    
     ;output path
     self.OutputPath                = getOutputPath(cmd)
     ;output file name
@@ -728,6 +802,12 @@ PRO IDLparseCommandLine__define
     DataInstrGeoFileName      : '',$
     OverwriteNormInstrGeo     : 'no',$
     NormInstrGeoFileName      : '',$
+    
+    BeamDivCorr               : '',$
+    NumBinsClean              : '',$
+    CenterPix                 : '',$
+    DetSpatRes                : '',$
+    
     OutputPath                : '',$
     OutputFileName            : '',$
     DataNormCombinedSpecFlag  : 'no',$
