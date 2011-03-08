@@ -205,6 +205,20 @@ PRO MakeGuiReduceInputTab2, ReduceInputTab, ReduceInputTabSettings
   ;\\\\\\\\\\\\\\\\\
   ;Output File Name\
   ;\\\\\\\\\\\\\\\\\
+  
+  sample_base = widget_base(tab2_base,$
+  xoffset = OFlabel.size[0]+200,$
+  yoffset = OFlabel.size[1]+70,$
+  /row)
+  label = widget_label(sample_base,$
+  value='Sample:')
+  value = widget_label(sample_base,$
+  value = 'N/A',$
+  /align_left,$
+  uname = 'output_file_name_sample',$
+  scr_xsize = 400)
+  
+  xoffset = OFlabel.size[0]
   ofn_base = widget_base(tab2_base,$
     xoffset = OFlabel.size[0],$
     yoffset = OFlabel.size[1],$
