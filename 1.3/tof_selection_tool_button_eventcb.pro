@@ -46,6 +46,14 @@ compile_opt idl2
 
 widget_control, event.top, get_uvalue=global
 
+tof_selection_base, main_base='MAIN_BASE',$
+event=event, $
+offset = 50,$
+x_axis = indgen(11),$
+y_axis = indgen(256),$
+data = indgen(10,256,304),$
+run_number=10
+
 
 
 end
