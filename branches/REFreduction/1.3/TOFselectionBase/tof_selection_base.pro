@@ -841,15 +841,15 @@ end
 ;
 ; :Author: j35
 ;-
-pro change_refpix_loadct, event
+pro change_tof_selection_loadct, event
   compile_opt idl2
   
   new_uname = widget_info(event.id, /uname)
-  widget_control,event.top,get_uvalue=global_refpix
+  widget_control,event.top,get_uvalue=global_tof_selection
   
   ;get old loadct
-  old_loadct = strcompress((*global_refpix).default_loadct,/remove_all)
-  old_uname = 'refpix_loadct_' + old_loadct
+  old_loadct = strcompress((*global_tof_selection).default_loadct,/remove_all)
+  old_uname = 'tof_selection_loadct_' + old_loadct
   label = getValue(event=event,uname=old_uname)
   
   ;remove keep central part
@@ -868,12 +868,16 @@ pro change_refpix_loadct, event
   
   ;save new loadct
   new_uname_array = strsplit(new_uname,'_',/extract)
-  (*global_refpix).default_loadct = fix(new_uname_array[2])
+  
+  help, new_uname_array
+  print, new_uname_array
+  
+  (*global_tof_selection).default_loadct = fix(new_uname_array[3])
   
   ;replot
-  refresh_refpix_plot, event, recalculate=1
-  refresh_plot_refpix_colorbar, event
-  display_refpixel_pixels, event=event
+  refresh_tof_selection_plot, event, recalculate=1
+  refresh_plot_tof_selection_colorbar, event
+  display_tof_selection_pixels, event=event
   
 end
 
