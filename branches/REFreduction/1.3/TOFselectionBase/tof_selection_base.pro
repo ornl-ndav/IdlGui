@@ -180,7 +180,7 @@ pro tof_selection_base_event, Event
       plot_tof_selection_beam_center_scale, event=event
       refresh_tof_selection_plot, event, recalculate=1
       refresh_plot_tof_selection_colorbar, event
-      ;display_tof_selection_pixels, event=event
+      display_tof_selection_tof, event=event
       
       return
     end
@@ -392,14 +392,14 @@ end
 
 ;+
 ; :Description:
-;    refresh the background and display the two pixels
+;    refresh the background and display the two tof min and max
 ;
 ; :Keywords:
 ;    event
 ;
 ; :Author: j35
 ;-
-pro display_tof_selection_pixels, event=event, base=base
+pro display_tof_selection_tof, event=event, base=base
   compile_opt idl2
   
   if (keyword_set(event)) then begin
@@ -413,33 +413,34 @@ pro display_tof_selection_pixels, event=event, base=base
   wset, plot_id
   TV, (*(*global_tof_selection).background), true=3
   
-  tof_selection_pixels = (*global_tof_selection).tof_selection_pixels ;in data coordinates
+  tof_selection_tof = (*global_tof_selection).tof_selection_tof
   
-  pixel1_data = tof_selection_pixels[0]
-  pixel2_data = tof_selection_pixels[1]
+  tof_min = tof_selection_tof[0]
+  tof_max = tof_selection_tof[1]
   
-  pixel1_device = from_data_to_device(event=event, base=base, pixel1_data)
-  pixel2_device = from_data_to_device(event=event, base=base, pixel2_data)
+  tof_min_device = from_data_to_device(event=event, tof_min)
+  tof_max_device = from_data_to_device(event=event, tof_max)
   
-  xsize = (*global_tof_selection).xsize
+  ysize = (*global_tof_selection).ysize
   
-  if (pixel1_device gt 0) then begin
-    plots, [0, 0, xsize, xsize, 0],$
-      [pixel1_device, pixel1_device, pixel1_device, pixel1_device, $
-      pixel1_device],$
-      /DEVICE,$
-      LINESTYLE = 3,$
-      COLOR = fsc_color("white")
+  if (tof_min_device ne -1) then begin
+  
+    plots, tof_min_device, 0, fsc_color("green"),/device
+    plots, tof_min_device, ysize, fsc_color("green"),/continue, linestyle=4,$
+      /device
+      
   endif
   
-  if (pixel2_device gt 0) then begin
-    plots, [0, 0, xsize, xsize, 0],$
-      [pixel2_device, pixel2_device, pixel2_device, pixel2_device, $
-      pixel2_device],$
-      /DEVICE,$
-      LINESTYLE = 3,$
-      COLOR = fsc_color("white")
+  if (tof_max_device ne -1) then begin
+  
+    plots, tof_max_device, 0, fsc_color("green"),/device
+    plots, tof_max_device, ysize, fsc_color("green"),/continue, linestyle=4,$
+      /device
+      
   endif
+  
+  return
+
   
   if ((*global_tof_selection).pixel1_selected) then begin
     pixel_device = pixel1_device
