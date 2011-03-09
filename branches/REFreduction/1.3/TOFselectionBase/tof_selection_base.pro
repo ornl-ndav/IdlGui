@@ -51,7 +51,9 @@ pro tof_selection_base_event, Event
   case Event.id of
   
     ;main draw
-    widget_info(event.top, find_by_uname='refpix_draw'): begin
+    widget_info(event.top, find_by_uname='tof_selection_draw'): begin
+    
+      return
     
       catch, error
       if (error ne 0) then begin ;selection
@@ -131,9 +133,9 @@ pro tof_selection_base_event, Event
     end
     
     ;main base
-    widget_info(event.top, find_by_uname='refpix_base_uname'): begin
+    widget_info(event.top, find_by_uname='tof_selection_base_uname'): begin
     
-      id = widget_info(event.top, find_by_uname='refpix_base_uname')
+      id = widget_info(event.top, find_by_uname='tof_selection_base_uname')
       geometry = widget_info(id,/geometry)
       new_xsize = geometry.scr_xsize
       new_ysize = geometry.scr_ysize
@@ -141,44 +143,44 @@ pro tof_selection_base_event, Event
       yoffset = geometry.yoffset
       
       ;only if the refpix input base is there
-      id_refpix = (*global_refpix).refpix_input_base
-      if (widget_info(id_refpix, /valid_id) ne 0) then begin
-        widget_control, id_refpix, xoffset = xoffset + new_xsize
-        widget_control, id_refpix, yoffset = yoffset
+      id_tof_selection = (*global_tof_selection).tof_selection_input_base
+      if (widget_info(id_tof_selection, /valid_id) ne 0) then begin
+        widget_control, id_tof_selection, xoffset = xoffset + new_xsize
+        widget_control, id_tof_selection, yoffset = yoffset
       endif
       
-      if ((abs((*global_refpix).xsize - new_xsize) eq 70.0) && $
-        abs((*global_refpix).ysize - new_ysize) eq 33.0) then return
+      if ((abs((*global_tof_selection).xsize - new_xsize) eq 70.0) && $
+        abs((*global_tof_selection).ysize - new_ysize) eq 33.0) then return
         
-      if ((abs((*global_refpix).xsize - new_xsize) eq 0.0) && $
-        abs((*global_refpix).ysize - new_ysize) eq 33.0) then return
+      if ((abs((*global_tof_selection).xsize - new_xsize) eq 0.0) && $
+        abs((*global_tof_selection).ysize - new_ysize) eq 33.0) then return
         
-      (*global_refpix).xsize = new_xsize
-      (*global_refpix).ysize = new_ysize
+      (*global_tof_selection).xsize = new_xsize
+      (*global_tof_selection).ysize = new_ysize
       
       widget_control, id, xsize = new_xsize
       widget_control, id, ysize = new_ysize
       
-      border = (*global_refpix).border
-      colorbar_xsize = (*global_refpix).colorbar_xsize
+      border = (*global_tof_selection).border
+      colorbar_xsize = (*global_tof_selection).colorbar_xsize
       
-      id = widget_info(event.top, find_by_uname='refpix_draw')
+      id = widget_info(event.top, find_by_uname='tof_selection_draw')
       widget_control, id, draw_xsize = new_xsize-2*border-colorbar_xsize
       widget_control, id, draw_ysize = new_ysize-2*border
       
-      id = widget_info(event.top,find_by_Uname='refpix_scale')
+      id = widget_info(event.top,find_by_Uname='tof_selection_scale')
       widget_control, id, draw_xsize = new_xsize-colorbar_xsize
       widget_control, id, draw_ysize = new_ysize
       
-      id = widget_info(event.top, find_by_uname='refpix_colorbar')
+      id = widget_info(event.top, find_by_uname='tof_selection_colorbar')
       widget_control, id, xoffset=new_xsize-colorbar_xsize
       widget_control, id, draw_ysize = new_ysize
       widget_control, id, draw_xsize = colorbar_xsize
       
-      plot_refpix_beam_center_scale, event=event
-      refresh_refpix_plot, event, recalculate=1
-      refresh_plot_refpix_colorbar, event
-      display_refpixel_pixels, event=event
+      plot_tof_selection_beam_center_scale, event=event
+      refresh_tof_selection_plot, event, recalculate=1
+      refresh_plot_tof_selection_colorbar, event
+      ;display_tof_selection_pixels, event=event
       
       return
     end
@@ -394,29 +396,29 @@ end
 ;
 ; :Author: j35
 ;-
-pro display_refpixel_pixels, event=event, base=base
+pro display_tof_selection_pixels, event=event, base=base
   compile_opt idl2
   
   if (keyword_set(event)) then begin
-    widget_control, event.top, get_uvalue=global_refpix
-    id = widget_info(event.top, find_by_uname='refpix_draw')
+    widget_control, event.top, get_uvalue=global_tof_selection
+    id = widget_info(event.top, find_by_uname='tof_selection_draw')
   endif else begin
-    widget_control, base, get_uvalue=global_refpix
-    id = widget_info(base, find_by_uname='refpix_draw')
+    widget_control, base, get_uvalue=global_tof_selection
+    id = widget_info(base, find_by_uname='tof_selection_draw')
   endelse
   widget_control, id, GET_VALUE = plot_id
   wset, plot_id
-  TV, (*(*global_refpix).background), true=3
+  TV, (*(*global_tof_selection).background), true=3
   
-  refpix_pixels = (*global_refpix).refpix_pixels ;in data coordinates
+  tof_selection_pixels = (*global_tof_selection).tof_selection_pixels ;in data coordinates
   
-  pixel1_data = refpix_pixels[0]
-  pixel2_data = refpix_pixels[1]
+  pixel1_data = tof_selection_pixels[0]
+  pixel2_data = tof_selection_pixels[1]
   
   pixel1_device = from_data_to_device(event=event, base=base, pixel1_data)
   pixel2_device = from_data_to_device(event=event, base=base, pixel2_data)
   
-  xsize = (*global_refpix).xsize
+  xsize = (*global_tof_selection).xsize
   
   if (pixel1_device gt 0) then begin
     plots, [0, 0, xsize, xsize, 0],$
@@ -436,7 +438,7 @@ pro display_refpixel_pixels, event=event, base=base
       COLOR = fsc_color("white")
   endif
   
-  if ((*global_refpix).pixel1_selected) then begin
+  if ((*global_tof_selection).pixel1_selected) then begin
     pixel_device = pixel1_device
   endif else begin
     pixel_device = pixel2_device
@@ -459,11 +461,11 @@ pro display_refpixel_pixels, event=event, base=base
   if (pixel1_data eq 0) then return
   if (pixel2_data eq 0) then return
   
-  refpix_data = (float(pixel1_data)+float(pixel2_data))/2.
-  refpix_device = from_data_to_device(event=event, base=base, refpix_data)
+  tof_selection_data = (float(pixel1_data)+float(pixel2_data))/2.
+  tof_selection_device = from_data_to_device(event=event, base=base, tof_selection_data)
   plots, [0, 0, xsize, xsize, 0],$
-    [refpix_device, refpix_device, refpix_device, refpix_device, $
-    refpix_device],$
+    [tof_selection_device, tof_selection_device, tof_selection_device, tof_selection_device, $
+    tof_selection_device],$
     /DEVICE,$
     LINESTYLE = 2,$
     COLOR = fsc_color("green")
@@ -748,25 +750,25 @@ end
 ;
 ; :Author: j35
 ;-
-pro refresh_refpix_plot, event, recalculate=recalculate
+pro refresh_tof_selection_plot, event, recalculate=recalculate
   compile_opt idl2
   
   ;get global structure
-  widget_control,event.top,get_uvalue=global_refpix
+  widget_control,event.top,get_uvalue=global_tof_selection
   
   if (n_elements(recalculate) eq 0) then begin
-    id = widget_info(event.top, find_by_uname='refpix_draw')
+    id = widget_info(event.top, find_by_uname='tof_selection_draw')
     widget_control, id, GET_VALUE = plot_id
     wset, plot_id
-    TV, (*(*global_refpix).background), true=3
+    TV, (*(*global_tof_selection).background), true=3
     return
   endif
   
-  Data = (*(*global_refpix).data)
-  new_xsize = (*global_refpix).xsize
-  new_ysize = (*global_refpix).ysize
+  Data = (*(*global_tof_selection).data)
+  new_xsize = (*global_tof_selection).xsize
+  new_ysize = (*global_tof_selection).ysize
   
-  id = WIDGET_INFO(event.top, FIND_BY_UNAME='refpix_draw')
+  id = WIDGET_INFO(event.top, FIND_BY_UNAME='tof_selection_draw')
   draw_geometry = WIDGET_INFO(id,/GEOMETRY)
   xsize = draw_geometry.xsize
   ysize = draw_geometry.ysize
@@ -776,19 +778,19 @@ pro refresh_refpix_plot, event, recalculate=recalculate
   ;  endif else begin
   ;    cData = congrid(Data, ysize, xsize,/interp)
   ;  endelse
-  (*global_refpix).congrid_xcoeff = xsize
-  (*global_refpix).congrid_ycoeff = ysize
+  (*global_tof_selection).congrid_xcoeff = xsize
+  (*global_tof_selection).congrid_ycoeff = ysize
   
-  id = widget_info(event.top, find_by_uname='refpix_draw')
+  id = widget_info(event.top, find_by_uname='tof_selection_draw')
   widget_control, id, GET_VALUE = plot_id
   wset, plot_id
   erase
   
-  loadct, (*global_refpix).default_loadct, /silent
+  loadct, (*global_tof_selection).default_loadct, /silent
   
   tvscl, cData
   
-  save_refpix_background, event=event
+  save_tof_selection_background, event=event
   
 end
 
@@ -1354,9 +1356,9 @@ pro tof_selection_base, main_base=main_base, $
     
     run_number: run_number, $
     
-    refpix_input_base: 0L, $ ;id of refpix_input_base
-    refpix_counts_vs_pixel_base_id: 0L, $ 'id of refpix_counts_vs_tof_base
-  counts_vs_pixel_scale_is_linear: 0b, $ ;counts vs pixel (linear/log)
+    tof_selection_input_base: 0L, $ ;id of refpix_input_base
+    tof_selection_counts_vs_pixel_base_id: 0L, $ 'id of refpix_counts_vs_tof_base
+    counts_vs_pixel_scale_is_linear: 0b, $ ;counts vs pixel (linear/log)
   
     ;used to plot selection zoom
     default_plot_size: default_plot_size, $
@@ -1414,7 +1416,7 @@ pro tof_selection_base, main_base=main_base, $
     
     left_click: 0b,$ ;by default, left button is not clicked
     pixel1_selected: 1b, $ ;to show pixel1 or pixel2 current selection
-    refpix_pixels: lonarr(2), $ ;pixels 1 and 2 in data coordinates
+    tof_selection_pixels: lonarr(2), $ ;pixels 1 and 2 in data coordinates
     
     ;x coeff used in the congrid function to plot main data
     congrid_xcoeff: 0., $
