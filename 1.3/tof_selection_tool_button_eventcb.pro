@@ -32,34 +32,20 @@
 ;
 ;==============================================================================
 
-spawn, 'pwd', CurrentFolder
+;+
+; :Description:
+;    This routine will launch the tof_selection base
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro tof_selection_tool_button_eventcb, event
+compile_opt idl2
 
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-cd, CurrentFolder + '/utilities'
+widget_control, event.top, get_uvalue=global
 
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-.run nexus_utilities.pro
-.run get.pro
-.run system_utilities.pro
-.run nexus_utilities.pro
-.run math_conversion.pro
-.run time.pro
-.run list_of_proposal.pro
-.run IDLxmlParser__define.pro
-.run xmlParser__define.pro
-.run logger.pro
-.run file_utilities.pro
-.run xdisplayfile.pro
-.run fsc_color.pro
-.run IDL3columnsASCIIparser__define.pro
-.run NeXusMetadata__define.pro
-.run is.pro
 
-cd, CurrentFolder + 'TOFselectionBase'
-.run tof_selection_base.pro
-.run tof_selection_colorbar.pro
-.run tof_selection_counts_vs_pixel_base.pro
-.run tof_selection_eventcb.pro
-.run tof_selection_input_base.pro
+
+end

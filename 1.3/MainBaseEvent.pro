@@ -63,7 +63,7 @@ PRO MAIN_BASE_event, Event
   
     ;bring to life the TOF selection base
     widget_info(wWidget, find_by_uname='tof_selection_tool_button'): begin
-    
+    tof_selection_tool_button_eventcb, event
     end
   
     WIDGET_INFO(wWidget, FIND_BY_UNAME='MAIN_BASE'): begin

@@ -137,6 +137,8 @@
 .run ref_reduction_configuration.pro
 .run ref_reduction_display_images.pro
 
+.run tof_selection_tool_button_eventcb.pro
+
 .run ref_reduction_debugging.pro
 .run MainBaseEvent.pro
 .run ref_reduction_tab.pro
