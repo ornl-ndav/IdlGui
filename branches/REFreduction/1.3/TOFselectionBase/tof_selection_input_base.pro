@@ -305,9 +305,8 @@ end
 ;
 ; :Author: j35
 ;-
-pro refpix_input_base, event=event, $
+pro tof_selection_input_base, event=event, $
     top_base=top_base, $
-    default_refpix_value=default_refpix_value, $
     parent_base_uname = parent_base_uname
   compile_opt idl2
   
