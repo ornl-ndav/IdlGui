@@ -47,24 +47,24 @@
 ;
 ; :Author: j35
 ;-
-pro plot_colorbar, event=event, base=base, zmin, zmax, type=type
+pro plot_refpix_colorbar, event=event, base=base, zmin, zmax, type=type
   compile_opt idl2
   
   if (n_elements(event) ne 0) then begin
-    id_draw = widget_info(event.top,find_by_uname='colorbar')
-    widget_control, event.top, get_uvalue=global_plot
+    id_draw = widget_info(event.top,find_by_uname='refpix_colorbar')
+    widget_control, event.top, get_uvalue=global_refpix
   endif else begin
-    id_draw = widget_info(base, find_by_uname='colorbar')
-    widget_control, base, get_uvalue=global_plot
+    id_draw = widget_info(base, find_by_uname='refpix_colorbar')
+    widget_control, base, get_uvalue=global_refpix
   endelse
   widget_control, id_draw, get_value=id_value
   wset,id_value
   erase
   
-  default_loadct = (*global_plot).default_loadct
+  default_loadct = (*global_refpix).default_loadct
   loadct, default_loadct, /silent
   
-  default_scale_settings = (*global_plot).default_scale_settings
+  default_scale_settings = (*global_refpix).default_scale_settings
   if (default_scale_settings eq 0) then begin ;linear
   
     divisions = 20
@@ -121,24 +121,24 @@ end
 ;
 ; :Author: j35
 ;-
-pro refresh_plot_colorbar, event
+pro refresh_plot_refpix_colorbar, event
   compile_opt idl2
   
-  widget_control, event.top, get_uvalue=global_plot
+  widget_control, event.top, get_uvalue=global_refpix
   
-  zrange = (*global_plot).zrange
+  zrange = (*global_refpix).zrange
   zmin = zrange[0]
   zmax = zrange[1]
   
-  id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='colorbar')
+  id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='refpix_colorbar')
   widget_control, id_draw, get_value=id_value
   wset,id_value
   erase
   
-  default_loadct = (*global_plot).default_loadct
+  default_loadct = (*global_refpix).default_loadct
   loadct, default_loadct, /silent
   
-  default_scale_settings = (*global_plot).default_scale_settings
+  default_scale_settings = (*global_refpix).default_scale_settings
   if (default_scale_settings eq 0) then begin ;linear
   
     divisions = 20

@@ -34,44 +34,55 @@
 
 ;+
 ; :Description:
-;    save the background image to be able
-;    to replot it quicker
-;
-;  use the following to display it:
-;   TV, (*(*global).background), true=3
-;
-; :Params:
-;    event
+;    retrieve the parameters necessary to launch the refpix base
 ;
 ; :Keywords:
-;    main_base
+;    event
+;    base
 ;
 ; :Author: j35
 ;-
-pro save_background,  event=event, main_base=main_base, uname=uname
-compile_opt idl2
-
-  if (~keyword_set(uname)) then uname = 'draw'
-
-  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
-    id = WIDGET_INFO(main_base, FIND_BY_UNAME=uname)
-    widget_control, main_base, get_uvalue=global_plot
-  ENDIF ELSE BEGIN
-    WIDGET_CONTROL, event.top, GET_UVALUE=global_plot
-    id = WIDGET_INFO(Event.top,find_by_uname=uname)
-  ENDELSE
+pro set_refpix_base, event=event, base=base
+  compile_opt idl2
   
-  WIDGET_CONTROL, id, GET_VALUE=id_value
-  WSET, id_value
+  selection = get_table_lines_selected(event=event, base=base, $
+    uname='ref_m_metadata_table')
+  from_row_selected = selection[1]
+  to_row_selected = selection[3]
+  nbr_file_selected = to_row_selected - from_row_selected + 1
+  index = from_row_selected
+  while (index le to_row_selected) do begin
   
-  background = TVRD(TRUE=3)
-  geometry = WIDGET_INFO(id,/GEOMETRY)
-  xsize   = geometry.xsize
-  ysize   = geometry.ysize
+    table = getValue(event=event,uname='tab1_table')
+    ;get file name of line selected
+    full_file_name_spin = table[0,index]
+    file_structure = get_file_structure(full_file_name_spin)
+    _short_file_name = file_structure.short_file_name
+    _spin = file_structure.spin
+    _full_file_name = file_structure.full_file_name
+    
+    config_table = getValue(event=event, uname='ref_m_metadata_table')
+    _refpix = config_table[3,index]
+    
+    iNexus = obj_new('IDLnexusUtilities', _full_file_name, spin_state=_spin)
+    _data = iNexus->get_full_data()  ;[tof, x, y]
+    _tof_axis = iNexus->get_tof_data() ;tof axis in ms
+    obj_destroy, iNexus
+    
+    sz = size(_data,/dim)
+    _pixel_axis = indgen(sz[2])
+    
+    refpix_base, main_base=base, $
+      event=event, $
+      row_index = index, $
+      offset = 10, $
+      x_axis = _tof_axis, $
+      y_axis = _pixel_axis, $
+      data = _data, $
+      refpix = _refpix, $
+      file_name = _short_file_name + ' (' + _spin + ')'
+      
+    index++
+  endwhile
   
-  ;DEVICE, copy =[0, 0, xsize, ysize, 0, 0, id_value]
-  DEVICE, copy =[0, 0, xsize, ysize, 0, 0]
-  
-  (*(*global_plot).background) = background
-  
-END
+end
