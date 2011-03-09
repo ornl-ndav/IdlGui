@@ -142,7 +142,7 @@ pro tof_selection_base_event, Event
       xoffset = geometry.xoffset
       yoffset = geometry.yoffset
       
-      ;only if the refpix input base is there
+      ;only if the tof input base is there
       id_tof_selection = (*global_tof_selection).tof_selection_input_base
       if (widget_info(id_tof_selection, /valid_id) ne 0) then begin
         widget_control, id_tof_selection, xoffset = xoffset + new_xsize
@@ -888,15 +888,15 @@ end
 ;
 ; :Author: j35
 ;-
-pro refpix_base_uname_killed, global_refpix
+pro tof_selection_base_uname_killed, global_tof_selection
   compile_opt idl2
   
-  id_refpix = (*global_refpix).refpix_input_base
-  if (widget_info(id_refpix, /valid_id) ne 0) then begin
-    widget_control, id_refpix, /destroy
+  id_input = (*global_tof_selection).tof_selection_input_base
+  if (widget_info(id_input, /valid_id) ne 0) then begin
+    widget_control, id_input, /destroy
   endif
   
-  id_counts = (*global_refpix).refpix_counts_vs_pixel_base_id
+  id_counts = (*global_tof_selection).tof_selection_counts_vs_tof_base_id
   if (widget_info(id_counts, /valid_id) ne 0) then begin
     widget_control, id_counts, /destroy
   endif
@@ -997,21 +997,21 @@ pro tof_selection_base_cleanup, tlb
   
   widget_control, tlb, get_uvalue=global_tof_selection, /no_copy
   
-  ;refpix_base_uname_killed, global_refpix
+  tof_selection_base_uname_killed, global_tof_selection
   
-  if (n_elements(global_refpix) eq 0) then return
+  if (n_elements(global_tof_selection) eq 0) then return
   
-  ptr_free, (*global_refpix).full_data
-  ptr_free, (*global_refpix).data
-  ptr_free, (*global_refpix).data_linear
-  ptr_free, (*global_refpix).background
-  ptr_free, (*global_refpix).counts_vs_qx_xaxis
-  ptr_free, (*global_refpix).counts_vs_qx_data
-  ptr_free, (*global_refpix).counts_vs_qz_xaxis
-  ptr_free, (*global_refpix).counts_vs_qz_data
-  ptr_free, (*global_refpix).counts_vs_pixel
+  ptr_free, (*global_tof_selection).full_data
+  ptr_free, (*global_tof_selection).data
+  ptr_free, (*global_tof_selection).data_linear
+  ptr_free, (*global_tof_selection).background
+  ptr_free, (*global_tof_selection).counts_vs_qx_xaxis
+  ptr_free, (*global_tof_selection).counts_vs_qx_data
+  ptr_free, (*global_tof_selection).counts_vs_qz_xaxis
+  ptr_free, (*global_tof_selection).counts_vs_qz_data
+  ptr_free, (*global_tof_selection).counts_vs_tof
   
-  ptr_free, global_refpix
+  ptr_free, global_tof_selection
   
 end
 
@@ -1155,7 +1155,7 @@ pro tof_selection_base_gui, wBase, $
   yoffset += main_base_yoffset
   yoffset += offset
   
-  ysize_refpix_row = 0 ;vertical size of refpix row
+  ysize_tof_selection_row = 0 ;vertical size of tof row
   
   ourGroup = WIDGET_BASE()
   
@@ -1164,7 +1164,7 @@ pro tof_selection_base_gui, wBase, $
     UNAME        = 'tof_selection_base_uname', $
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
-    SCR_YSIZE    = ysize+ysize_refpix_row,$
+    SCR_YSIZE    = ysize+ysize_tof_selection_row,$
     SCR_XSIZE    = xsize+colorbar_xsize,$
     MAP          = 1,$
     ;    /tlb_kill_request_events,$
