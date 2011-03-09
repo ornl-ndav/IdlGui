@@ -53,13 +53,13 @@ pro tof_selection_base_event, Event
     ;main draw
     widget_info(event.top, find_by_uname='tof_selection_draw'): begin
     
-      return
-    
       catch, error
       if (error ne 0) then begin ;selection
         catch,/cancel
         
-        show_refpix_cursor_info, event
+        show_tof_selection_cursor_info, event
+
+        return
         
         if (event.press eq 1) then begin ;left click
         
@@ -625,23 +625,23 @@ end
 ;
 ; :Author: j35
 ;-
-pro show_refpix_cursor_info, event
+pro show_tof_selection_cursor_info, event
   compile_opt idl2
   
-  widget_control, event.top, get_uvalue=global_refpix
+  widget_control, event.top, get_uvalue=global_tof_selection
   
-  data = (*(*global_refpix).full_data)
-  x_axis = (*global_refpix).x_axis
-  y_axis = (*global_refpix).y_axis
+  data = (*(*global_tof_selection).full_data)
+  x_axis = (*global_tof_selection).x_axis
+  y_axis = (*global_tof_selection).y_axis
   
-  xcoeff = (*global_refpix).congrid_xcoeff
-  ycoeff = (*global_refpix).congrid_ycoeff
+  xcoeff = (*global_tof_selection).congrid_xcoeff
+  ycoeff = (*global_tof_selection).congrid_ycoeff
   
   tof_value = strcompress(retrieve_tof_value(event),/remove_all)
   pixel_value = strcompress(retrieve_pixel_value(event),/remove_all)
   counts_value = strcompress(retrieve_counts_value(event),/remove_all)
   
-  file_name = (*global_refpix).file_name
+  file_name = (*global_tof_selection).short_file_name
   
   if (tof_value eq 'N/A' || $
     pixel_value eq 'N/A' || $
@@ -653,7 +653,7 @@ pro show_refpix_cursor_info, event
     text += strcompress(pixel_value,/remove_all) + '; counts:'
     text += strcompress(counts_value,/remove_all) + ')'
   endelse
-  id = widget_info(event.top, find_by_uname='refpix_base_uname')
+  id = widget_info(event.top, find_by_uname='tof_selection_base_uname')
   widget_control, id, tlb_set_title=text
   
 end
@@ -1320,7 +1320,8 @@ pro tof_selection_base, main_base=main_base, $
     x_axis = x_axis, $
     y_axis = y_axis, $
     data = data, $
-    run_number = run_number
+    run_number = run_number, $
+    file_name = file_name
     
   compile_opt idl2
   
@@ -1352,10 +1353,14 @@ pro tof_selection_base, main_base=main_base, $
   
   WIDGET_CONTROL, wBase, /REALIZE
   
+  short_file_name = file_basename(file_name)
+  
   global_tof_selection = PTR_NEW({ wbase: wbase,$
     global: global, $
     
     run_number: run_number, $
+    file_name: file_name, $
+    short_file_name: short_file_name, $
     
     tof_selection_input_base: 0L, $ ;id of refpix_input_base
     tof_selection_counts_vs_pixel_base_id: 0L, $ 'id of refpix_counts_vs_tof_base

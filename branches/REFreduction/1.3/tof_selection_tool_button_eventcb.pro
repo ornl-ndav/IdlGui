@@ -69,7 +69,8 @@ pro tof_selection_tool_button_eventcb, event
     x_axis = tof_axis,$
     y_axis = y_axis,$
     data = data,$
-    run_number= strcompress(run_number[0],/remove_all)
+    run_number= strcompress(run_number[0],/remove_all), $
+    file_name = full_nexus_name
     
   widget_control, hourglass=0
   
