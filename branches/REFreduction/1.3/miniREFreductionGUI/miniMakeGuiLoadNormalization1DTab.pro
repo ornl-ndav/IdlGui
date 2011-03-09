@@ -849,6 +849,7 @@ RescaleZScaleDroplist = WIDGET_DROPLIST(RescaleZBase,$
                                         UNAME     = $
                                         'normalization_rescale_z_droplist',$
                                         SENSITIVE = 1)
+widget_control, RescaleZScaleDroplist, set_droplist_select=1                                        
 
 ResetZScaleButton = WIDGET_BUTTON(RescaleZBase,$
                                   XOFFSET   = ResetScaleButtonSize[0],$

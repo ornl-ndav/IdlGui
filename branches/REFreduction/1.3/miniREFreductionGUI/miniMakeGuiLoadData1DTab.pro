@@ -844,6 +844,7 @@ RescaleZScaleDroplist = WIDGET_DROPLIST(RescaleZBase,$
                                         YOFFSET   = $
                                         RescaleScaleDroplistSize[1],$
                                         UNAME     = 'data_rescale_z_droplist')
+widget_control, RescaleZScaleDroplist, set_droplist_select=1  
 
 ResetZScaleButton = WIDGET_BUTTON(RescaleZBase,$
                                   XOFFSET   = ResetScaleButtonSize[0],$
