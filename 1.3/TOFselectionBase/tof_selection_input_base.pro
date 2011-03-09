@@ -133,10 +133,9 @@ end
 ;
 ; :Author: j35
 ;-
-pro refpix_input_base_gui, wBase, $
+pro tof_selection_input_base_gui, wBase, $
     parent_base_geometry, $
-    default_refpix_value=default_refpix_value, $
-    refpix_pixels = refpix_pixels
+    tof_selection_tof = tof_selection_tof
   compile_opt idl2
   
   main_base_xoffset = parent_base_geometry.xoffset
@@ -151,83 +150,61 @@ pro refpix_input_base_gui, wBase, $
   
   ourGroup = WIDGET_BASE()
   
-  title = 'Pixel 1 and 2 selection'
+  title = 'TOF 1 and 2 selection'
   wBase = WIDGET_BASE(TITLE = title, $
-    UNAME        = 'pixel_selection_base', $
+    UNAME        = 'tof_selection_base', $
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
     MAP          = 1,$
-    kill_notify  = 'pixel_selection_base_killed', $
+    kill_notify  = 'tof_selection_base_killed', $
     /column,$
     /tlb_size_events,$
     GROUP_LEADER = ourGroup)
     
-  pixel1 = refpix_pixels[0]
-  pixel2 = refpix_pixels[1]
+  tof1 = tof_selection_tof[0]
+  tof2 = tof_selection_tof[1]
   
   row1 = widget_base(wBase,$
     /row)
     
-  if (pixel1 eq 0) then begin
-    pixel1 = cw_field(row1,$
-      xsize = 3,$
-      /integer,$
-      title = 'Pixel 1:',$
+  if (tof1 eq 0) then begin
+    tof1 = cw_field(row1,$
+      xsize = 5,$
+      /float,$
+      title = 'TOF1 (ms)',$
       /row,$
       /return_events,$
-      uname = 'refpix_pixel1_uname')
+      uname = 'tof_selection_tof1_uname')
   endif else begin
-    pixel1 = cw_field(row1,$
-      xsize = 3,$
-      value = pixel1,$
-      /integer,$
-      title = 'Pixel 1:',$
+    tof1 = cw_field(row1,$
+      xsize = 5,$
+      value = tof1,$
+      /float,$
+      title = 'TOF1 (ms)',$
       /row,$
       /return_events,$
-      uname = 'refpix_pixel1_uname')
+      uname = 'tof_selection_tof1_uname')
   endelse
   
-  if (pixel2 eq 0) then begin
-    pixel2 = cw_field(row1,$
-      xsize = 3,$
-      /integer,$
-      title = '      Pixel 2:',$
+  if (tof2 eq 0) then begin
+    tof2 = cw_field(row1,$
+      xsize = 5,$
+      /float,$
+      title = '      TOF2 (ms)',$
       /row,$
       /return_events,$
-      uname = 'refpix_pixel2_uname')
+      uname = 'tof_selection_tof2_uname')
   endif else begin
-    pixel2 = cw_field(row1,$
-      xsize = 3,$
-      /integer,$
-      value = pixel2, $
-      title = '      Pixel 2:',$
+    tof2 = cw_field(row1,$
+      xsize = 5,$
+      /float,$
+      value = tof2, $
+      title = '      TOF2 (ms)',$
       /row,$
       /return_events,$
-      uname = 'refpix_pixel2_uname')
+      uname = 'tof_selection_tof2_uname')
   endelse
   
-  if (default_refpix_value ne '') then begin
-    _default_refpix_value = strcompress(default_refpix_value,/remove_all)
-  endif else begin
-    _default_refpix_value = 'N/A'
-  endelse
-  
-  row2 = widget_base(wBase,$
-    /row)
-  label = widget_label(row2,$
-    value = '     ===>  Refpix:')
-  value = widget_label(row2,$
-    value = _default_refpix_value,$
-    uname = 'refpix_value_uname',$
-    scr_xsize = 100)
-    
-  ;refpix = cw_field(wBase, $
-  ;  xsize = 5,$
-  ;  title = '       ===>  Refpix:',$
-  ;  /row,$
-  ;  /return_events,$
-  ;  uname = 'refpix_value_uname')
-    
   space = widget_label(wBase,$
     value = ' ')
     
@@ -236,15 +213,15 @@ pro refpix_input_base_gui, wBase, $
     
   cancel = widget_button(row4,$
     value = 'Cancel',$
-    uname = 'cancel_refpix_selected_uname',$
+    uname = 'cancel_tof_selection_selected_uname',$
     scr_xsize = 50)
     
   space = widget_label(row4,$
     value = '     ')
     
   row4 = widget_button(row4,$
-    value = 'Use this refpix',$
-    uname = 'validate_refpix_selected_uname',$
+    value = 'Use this TOF range',$
+    uname = 'validate_tof_selection_selected_uname',$
     scr_xsize = 150)
     
 end
@@ -312,32 +289,32 @@ pro tof_selection_input_base, event=event, $
   
   if (keyword_set(event)) then begin
     id = WIDGET_INFO(Event.top, FIND_BY_UNAME=parent_base_uname)
-    WIDGET_CONTROL,Event.top,GET_UVALUE=global_refpix
+    WIDGET_CONTROL,Event.top,GET_UVALUE=global_tof_selection
   endif else begin
     id = widget_info(top_base, find_by_uname=parent_base_uname)
-    widget_control, top_base, get_uvalue=global_refpix
+    widget_control, top_base, get_uvalue=global_tof_selection
   endelse
   parent_base_geometry = WIDGET_INFO(id,/GEOMETRY)
   
-  refpix_pixels = (*global_refpix).refpix_pixels
+  tof_selection_tof = (*global_tof_selection).tof_selection_tof
   
   _base = 0L
-  refpix_input_base_gui, _base, $
+  tof_selection_input_base_gui, _base, $
     parent_base_geometry, $
-    default_refpix_value=default_refpix_value, $
-    refpix_pixels = refpix_pixels
+    tof_selection_tof = tof_selection_tof
     
-  (*global_refpix).refpix_input_base = _base
+  (*global_tof_selection).tof_selection_input_base = _base
   
   WIDGET_CONTROL, _base, /REALIZE
   
   global_info = PTR_NEW({ _base: _base,$
     top_base: top_base, $
-    global_refpix: global_refpix })
+    global_tof_selection: global_tof_selection })
     
   WIDGET_CONTROL, _base, SET_UVALUE = global_info
   
-  XMANAGER, "refpix_input_base", _base, GROUP_LEADER = ourGroup, /NO_BLOCK, $
+  XMANAGER, "tof_selection_input_base", _base, GROUP_LEADER = ourGroup, $
+  /NO_BLOCK, $
     cleanup='counts_info_base_cleanup'
     
 end

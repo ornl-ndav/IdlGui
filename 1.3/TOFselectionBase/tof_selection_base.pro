@@ -200,10 +200,10 @@ pro tof_selection_base_event, Event
     
     widget_info(event.top, $
       find_by_uname='show_pixel_selection_base'): begin
-      pixel_base = (*global_refpix).refpix_input_base
+      pixel_base = (*global_tof_selection).tof_selection_input_base
       if (widget_info(pixel_base, /valid_id) eq 0) then begin
-        refpix_input_base, parent_base_uname = 'refpix_base_uname', $
-          top_base = (*global_refpix).top_base, $
+        tof_selection_input_base, parent_base_uname = 'tof_selection_base_uname', $
+          top_base = (*global_tof_selection).top_base, $
           event=event
       endif
     end
@@ -1421,8 +1421,8 @@ pro tof_selection_base, main_base=main_base, $
     background: ptr_new(0L), $ ;background of main plot
     
     left_click: 0b,$ ;by default, left button is not clicked
-    pixel1_selected: 1b, $ ;to show pixel1 or pixel2 current selection
-    tof_selection_pixels: lonarr(2), $ ;pixels 1 and 2 in data coordinates
+    tof1_selected: 1b, $ ;to show tof1 or tof2 current selection
+    tof_selection_tof: lonarr(2), $ ;tof 1 and 2 in data coordinates
     
     ;x coeff used in the congrid function to plot main data
     congrid_xcoeff: 0., $
