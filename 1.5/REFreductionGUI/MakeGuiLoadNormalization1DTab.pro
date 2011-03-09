@@ -749,6 +749,7 @@ PRO MakeGuiLoadNormalization1DTab, D_DD_Tab, $
     uname= $
     'normalization_rescale_z_droplist',$
     sensitive=1)
+widget_control, RescaleZScaleDroplist, set_droplist_select=1    
     
   ResetZScaleButton = widget_button(RescaleZBase,$
     xoffset=ResetScaleButtonSize[0],$

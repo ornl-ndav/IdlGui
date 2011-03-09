@@ -265,6 +265,20 @@ BottomColorValue = getSliderValue(Event,'normalization_contrast_bottom_slider')
 NumberColorValue = getSliderValue(Event,'normalization_contrast_number_slider')
 loadct,loadctIndex, Bottom=BottomColorValue,NColors=NumberColorValue,/SILENT
 
+  IF (getDropListSelectedIndex(Event,'normalization_rescale_z_droplist') EQ 1) $
+    THEN BEGIN                ;log
+    
+    ;remove 0 values and replace with NAN
+    ;and calculate log
+    index = where(tvimg eq 0, nbr)
+    if (nbr GT 0) then begin
+      tvimg[index] = !VALUES.D_NAN
+    endif
+    tvimg = ALOG10(tvimg)
+    tvimg = BYTSCL(tvimg,/NAN)
+    
+  ENDIF
+
 tvscl, tvimg
 
 END
