@@ -47,24 +47,24 @@
 ;
 ; :Author: j35
 ;-
-pro plot_refpix_colorbar, event=event, base=base, zmin, zmax, type=type
+pro plot_tof_selection_colorbar, event=event, base=base, zmin, zmax, type=type
   compile_opt idl2
   
   if (n_elements(event) ne 0) then begin
-    id_draw = widget_info(event.top,find_by_uname='refpix_colorbar')
-    widget_control, event.top, get_uvalue=global_refpix
+    id_draw = widget_info(event.top,find_by_uname='tof_selection_colorbar')
+    widget_control, event.top, get_uvalue=global_tof_selection
   endif else begin
-    id_draw = widget_info(base, find_by_uname='refpix_colorbar')
-    widget_control, base, get_uvalue=global_refpix
+    id_draw = widget_info(base, find_by_uname='tof_selection_colorbar')
+    widget_control, base, get_uvalue=global_tof_selection
   endelse
   widget_control, id_draw, get_value=id_value
   wset,id_value
   erase
   
-  default_loadct = (*global_refpix).default_loadct
+  default_loadct = (*global_tof_selection).default_loadct
   loadct, default_loadct, /silent
   
-  default_scale_settings = (*global_refpix).default_scale_settings
+  default_scale_settings = (*global_tof_selection).default_scale_settings
   if (default_scale_settings eq 0) then begin ;linear
   
     divisions = 20
@@ -121,24 +121,24 @@ end
 ;
 ; :Author: j35
 ;-
-pro refresh_plot_refpix_colorbar, event
+pro refresh_plot_tof_selection_colorbar, event
   compile_opt idl2
   
-  widget_control, event.top, get_uvalue=global_refpix
+  widget_control, event.top, get_uvalue=global_tof_selection
   
-  zrange = (*global_refpix).zrange
+  zrange = (*global_tof_selection).zrange
   zmin = zrange[0]
   zmax = zrange[1]
   
-  id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='refpix_colorbar')
+  id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='tof_selection_colorbar')
   widget_control, id_draw, get_value=id_value
   wset,id_value
   erase
   
-  default_loadct = (*global_refpix).default_loadct
+  default_loadct = (*global_tof_selection).default_loadct
   loadct, default_loadct, /silent
   
-  default_scale_settings = (*global_refpix).default_scale_settings
+  default_scale_settings = (*global_tof_selection).default_scale_settings
   if (default_scale_settings eq 0) then begin ;linear
   
     divisions = 20
