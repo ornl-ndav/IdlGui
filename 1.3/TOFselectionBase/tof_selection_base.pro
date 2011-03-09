@@ -58,7 +58,7 @@ pro tof_selection_base_event, Event
         catch,/cancel
         
         show_tof_selection_cursor_info, event
-
+        
         return
         
         if (event.press eq 1) then begin ;left click
@@ -214,7 +214,7 @@ pro tof_selection_base_event, Event
       plot_base = (*global_tof_selection).tof_selection_counts_vs_tof_base_id
       if (widget_info(plot_base, /valid_id) eq 0) then begin
         tof_selection_counts_vs_tof_base, $
-        parent_base_uname='tof_selection_base_uname', $
+          parent_base_uname='tof_selection_base_uname', $
           top_base = (*global_tof_selection).top_base, $
           event=event
       endif
@@ -368,23 +368,25 @@ end
 ;
 ; :Author: j35
 ;-
-function from_data_to_device, event=event, base=base, ydata
+function from_data_to_device, event=event, base=base, xdata
   compile_opt idl2
   
   if (keyword_set(event)) then begin
-    widget_control, event.top, get_uvalue=global_refpix
+    widget_control, event.top, get_uvalue=global_tof_selection
+    id = WIDGET_INFO(Event.top, FIND_BY_UNAME='tof_selection_draw')
   endif else begin
-    widget_control, base, get_uvalue=global_refpix
+    widget_control, base, get_uvalue=global_tof_selection
+    id = WIDGET_INFO(base, FIND_BY_UNAME='tof_selection_draw')
   endelse
   
-  ysize = (*global_refpix).ysize
-  yrange = (*global_refpix).yrange
-  border = (*global_refpix).border
-  _ysize = ysize-2*border
+  geometry = WIDGET_INFO(id,/GEOMETRY)
+  xsize = geometry.xsize
+  xrange = (*global_tof_selection).xrange
   
-  ydevice = float(ydata)*float(_ysize)/float(yrange[1])
+  ratio = float(xsize) / (float(xrange[1]) - float(xrange[0]))
+  xdevice = ratio * (float(xdata) - float(xrange[0]))
   
-  return, ydevice
+  return, xdevice
   
 end
 
@@ -1307,6 +1309,7 @@ end
 ;    main_base
 ;    event
 ;    offset
+;    tof_min_max  [tof_min,tof_max] in ms defined by the user (reduce tab)
 ;    row_index    row used to plot NeXus file
 ;    x_axis       (ex:Array of float [52])
 ;    y_axis       (ex:Array of int [304])
@@ -1317,6 +1320,7 @@ end
 ;-
 pro tof_selection_base, main_base=main_base, $
     event=event, $
+    tof_min_max = tof_min_max, $
     offset = offset, $
     x_axis = x_axis, $
     y_axis = y_axis, $
@@ -1365,7 +1369,7 @@ pro tof_selection_base, main_base=main_base, $
     
     tof_selection_input_base: 0L, $ ;id of refpix_input_base
     tof_selection_counts_vs_tof_base_id: 0L, $ 'id of refpix_counts_vs_tof_base
-    counts_vs_tof_scale_is_linear: 0b, $ ;counts vs tof (linear/log)
+  counts_vs_tof_scale_is_linear: 0b, $ ;counts vs tof (linear/log)
   
     ;used to plot selection zoom
     default_plot_size: default_plot_size, $
@@ -1423,7 +1427,7 @@ pro tof_selection_base, main_base=main_base, $
     
     left_click: 0b,$ ;by default, left button is not clicked
     tof1_selected: 1b, $ ;to show tof1 or tof2 current selection
-    tof_selection_tof: lonarr(2), $ ;tof 1 and 2 in data coordinates
+    tof_selection_tof: tof_min_max, $ ;[tof_min,tof_max] in ms
     
     ;x coeff used in the congrid function to plot main data
     congrid_xcoeff: 0., $
@@ -1494,10 +1498,10 @@ pro tof_selection_base, main_base=main_base, $
   (*global_tof_selection).zrange = zrange
   
   plot_tof_selection_colorbar, base=wBase, $
-  zmin, $
-  zmax, $
-  type=default_scale_settings
-  
+    zmin, $
+    zmax, $
+    type=default_scale_settings
+    
   pre = '>  > >> '
   post = ' << <  <'
   uname = 'tof_selection_loadct_' + strcompress(default_loadct,/remove_all)
@@ -1513,29 +1517,42 @@ pro tof_selection_base, main_base=main_base, $
     
   ;bring to life the base that show counts vs tof
   tof_selection_counts_vs_tof_base, $
-  parent_base_uname='tof_selection_base_uname', $
-    tof=tof, $
+    parent_base_uname='tof_selection_base_uname', $
     top_base=wBase_copy
     
-;  ;display the already selected refpix
-;  if (refpix ne '') then begin
-;  
-;    widget_control, wBase_copy, get_uvalue=global_refpix
-;    id = widget_info(wBase_copy, find_by_uname='refpix_draw')
-;    widget_control, id, GET_VALUE = plot_id
-;    wset, plot_id
-;    
-;    pixel1_device = from_data_to_device(base=wBase_copy, refpix)
-;    xsize = (*global_refpix).xsize
-;    
-;    plots, [0, 0, xsize, xsize, 0],$
-;      [pixel1_device, pixel1_device, pixel1_device, pixel1_device, $
-;      pixel1_device],$
-;      /DEVICE,$
-;      LINESTYLE = 1,$
-;      COLOR = fsc_color("green")
-;      
-;  endif
-;  
+  ;display the already selected tof range ------------------------------------
+  tof_min = tof_min_max[0]
+  tof_max = tof_min_max[1]
+  
+  if (tof_min ne -1) then begin
+  
+    widget_control, wBase_copy, get_uvalue=global_tof_selection
+    id = widget_info(wBase_copy, find_by_uname='tof_selection_draw')
+    widget_control, id, GET_VALUE = plot_id
+    wset, plot_id
+    
+    tof_min_device = from_data_to_device(base=wBase_copy, tof_min)
+    
+    plots, tof_min_device, 0, fsc_color("green"),/device
+    plots, tof_min_device, ysize, fsc_color("green"),/continue, linestyle=4,$
+      /device
+      
+  endif
+  
+  if (tof_max ne -1) then begin
+  
+    widget_control, wBase_copy, get_uvalue=global_tof_selection
+    id = widget_info(wBase_copy, find_by_uname='tof_selection_draw')
+    widget_control, id, GET_VALUE = plot_id
+    wset, plot_id
+    
+    tof_max_device = from_data_to_device(base=wBase_copy, tof_max)
+    
+    plots, tof_max_device, 0, fsc_color("green"),/device
+    plots, tof_max_device, ysize, fsc_color("green"),/continue, linestyle=4,$
+      /device
+      
+  endif
+  
 end
 

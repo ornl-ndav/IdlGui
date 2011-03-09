@@ -34,6 +34,62 @@
 
 ;+
 ; :Description:
+;    This returns the min and max TOF values (in ms) defined by the user
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+function get_input_tof_min_max, event
+  compile_opt idl2
+  
+  tof_min = STRCOMPRESS(getTextFieldValue(Event,'tof_cutting_min'),/REMOVE_ALL)
+  IF (tof_min NE '') THEN BEGIN
+  
+    ON_IOERROR, error_min
+    error_status = 1b
+    tof_min = FLOAT(tof_min)
+    
+    IF (isTOFcuttingUnits_microS(Event)) THEN tof_min = 1000
+    
+    error_status = 0b
+    
+    error_min:
+    if (error_status eq 1b) then tof_min = -1
+    
+  endif else begin
+  
+    tof_min = -1
+    
+  endelse
+  
+  
+  tof_max = STRCOMPRESS(getTextFieldValue(Event,'tof_cutting_max'),/REMOVE_ALL)
+  IF (tof_max NE '') THEN BEGIN
+  
+    ON_IOERROR, error_max
+    error_status = 1b
+    tof_max = FLOAT(tof_max)
+    
+    IF (isTOFcuttingUnits_microS(Event)) THEN tof_max /= 1000
+    
+    error_status = 0b
+    
+    error_max:
+    if (error_status eq 1b) then tof_max = -1
+    
+  endif else begin
+  
+    tof_max = -1
+    
+  endelse
+  
+  return, [tof_min,tof_max]
+end
+
+;+
+; :Description:
 ;    This routine will launch the tof_selection base
 ;
 ; :Params:
@@ -63,9 +119,12 @@ pro tof_selection_tool_button_eventcb, event
   endelse
   tof_axis = iNexus->get_tof_data()
   
+  tof_min_max = get_input_tof_min_max(event)
+  
   tof_selection_base, main_base='MAIN_BASE',$
     event=event, $
     offset = 50,$
+    tof_min_max = tof_min_max, $
     x_axis = tof_axis,$
     y_axis = y_axis,$
     data = data,$

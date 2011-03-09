@@ -167,7 +167,7 @@ pro tof_selection_input_base_gui, wBase, $
   row1 = widget_base(wBase,$
     /row)
     
-  if (tof1 eq 0) then begin
+  if (tof1 eq -1) then begin
     tof1 = cw_field(row1,$
       xsize = 5,$
       /float,$
@@ -186,7 +186,7 @@ pro tof_selection_input_base_gui, wBase, $
       uname = 'tof_selection_tof1_uname')
   endelse
   
-  if (tof2 eq 0) then begin
+  if (tof2 eq -1) then begin
     tof2 = cw_field(row1,$
       xsize = 5,$
       /float,$
