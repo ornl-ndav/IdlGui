@@ -59,71 +59,78 @@ pro tof_selection_base_event, Event
         
         show_tof_selection_cursor_info, event
         
-        return
-        
         if (event.press eq 1) then begin ;left click
         
-          show_refpix_input_base, event
-          show_refpix_counts_vs_pixel_base, event
+          show_tof_selection_input_base, event
+          show_tof_selection_counts_vs_tof_base, event
           
-          (*global_refpix).left_click = 1b
-          pixel_value = strcompress(retrieve_pixel_value(event),/remove_all)
-          if ((*global_refpix).pixel1_selected) then begin
-            uname = 'refpix_pixel1_uname'
+          (*global_tof_selection).left_click = 1b
+          tof_value = strcompress(retrieve_tof_value(event),/remove_all)
+          if ((*global_tof_selected).tof1_selected) then begin
+            uname = 'tof_selection_tof1_uname'
           endif else begin
-            uname = 'refpix_pixel2_uname'
+            uname = 'tof_selection_tof2_uname'
           endelse
-          putValue, base=(*global_refpix).refpix_input_base, uname, pixel_value
-          save_refpixel_pixels, event=event
-          display_refpixel_pixels, event=event
-          calculate_refpix, event=event
-          display_counts_vs_pixel, $
-            base=(*global_refpix).refpix_counts_vs_pixel_base_id, $
-            global_refpix
-            
-          return
-        endif
-        
-        if (event.release eq 1 && $
-          (*global_refpix).left_click eq 1b) then begin ;release button
-          (*global_refpix).left_click = 0b
-        endif
-        
-        if (event.press eq 4) then begin ;right click
-          show_refpix_input_base, event
-          if ((*global_refpix).pixel1_selected) then begin
-            (*global_refpix).pixel1_selected = 0b
-          endif else begin
-            (*global_refpix).pixel1_selected = 1b
-          endelse
-          display_refpixel_pixels, event=event
-          display_counts_vs_pixel, $
-            base=(*global_refpix).refpix_counts_vs_pixel_base_id, $
-            global_refpix
-        endif
-        
-        if ((*global_refpix).left_click) then begin ;moving mouse
-          pixel_value = strcompress(retrieve_pixel_value(event),/remove_all)
-          if ((*global_refpix).pixel1_selected) then begin
-            uname = 'refpix_pixel1_uname'
-          endif else begin
-            uname = 'refpix_pixel2_uname'
-          endelse
-          putValue, base=(*global_refpix).refpix_input_base, uname, pixel_value
-          save_refpixel_pixels, event=event
-          display_refpixel_pixels, event=event
-          calculate_refpix, event=event
-          display_counts_vs_pixel, $
-            base=(*global_refpix).refpix_counts_vs_pixel_base_id, $
-            global_refpix
-            
+          putValue, base=(*global_tof_selection).tof_selection_input_base, $
+          uname, $
+          tof_value
+          save_tof_data, event=event
+          display_tof_selection_tof, event=event
+
+
+;FIXME
+
+
+
+
+
+;          display_counts_vs_pixel, $
+;            base=(*global_refpix).refpix_counts_vs_pixel_base_id, $
+;            global_refpix
+;            
+;          return
+;        endif
+;        
+;        if (event.release eq 1 && $
+;          (*global_refpix).left_click eq 1b) then begin ;release button
+;          (*global_refpix).left_click = 0b
+;        endif
+;        
+;        if (event.press eq 4) then begin ;right click
+;          show_refpix_input_base, event
+;          if ((*global_refpix).pixel1_selected) then begin
+;            (*global_refpix).pixel1_selected = 0b
+;          endif else begin
+;            (*global_refpix).pixel1_selected = 1b
+;          endelse
+;          display_refpixel_pixels, event=event
+;          display_counts_vs_pixel, $
+;            base=(*global_refpix).refpix_counts_vs_pixel_base_id, $
+;            global_refpix
+;        endif
+;        
+;        if ((*global_tof_selection).left_click) then begin ;moving mouse
+;          tof_value = strcompress(retrieve_tof_value(event),/remove_all)
+;          if ((*global_tof_selection).tof1_selected) then begin
+;            uname = 'refpix_pixel1_uname'
+;          endif else begin
+;            uname = 'refpix_pixel2_uname'
+;          endelse
+;          putValue, base=(*global_refpix).refpix_input_base, uname, pixel_value
+;          save_refpixel_pixels, event=event
+;          display_refpixel_pixels, event=event
+;          calculate_refpix, event=event
+;          display_counts_vs_pixel, $
+;            base=(*global_refpix).refpix_counts_vs_pixel_base_id, $
+;            global_refpix
+;            
         endif
         
       endif else begin ;entering or leaving widget_draw
       
         if (event.enter eq 0) then begin ;leaving plot
-          file_name = (*global_refpix).file_name
-          id = widget_info(event.top, find_by_uname='refpix_base_uname')
+          file_name = (*global_tof_selection).file_name
+          id = widget_info(event.top, find_by_uname='tof_selection_base_uname')
           widget_control, id, tlb_set_title=file_name
           
         endif else begin ;entering plot
@@ -228,37 +235,6 @@ end
 
 ;+
 ; :Description:
-;    calculate the refpix using pixel1 and pixel2
-;
-; :Keywords:
-;    event
-;
-; :Author: j35
-;-
-pro calculate_refpix, event=event, base=base
-  compile_opt idl2
-  
-  if (keyword_set(event)) then begin
-    widget_control, event.top, get_uvalue=global_refpix
-  endif else begin
-    widget_control, base, get_uvalue=global_refpix
-  endelse
-  
-  refpix_input_base = (*global_refpix).refpix_input_base
-  pixel1 = getValue(base=refpix_input_base, uname='refpix_pixel1_uname')
-  pixel2 = getValue(base=refpix_input_base, uname='refpix_pixel2_uname')
-  
-  if (pixel1 eq 0) then return
-  if (pixel2 eq 0) then return
-  
-  refpix = (float(pixel1)+float(pixel2))/2.
-  putValue, base=refpix_input_base, 'refpix_value_uname', $
-    strcompress(refpix,/remove_all)
-    
-end
-
-;+
-; :Description:
 ;    Bring to life the refpix input base
 ;
 ; :Params:
@@ -266,15 +242,15 @@ end
 ;
 ; :Author: j35
 ;-
-pro show_refpix_input_base, event
+pro show_tof_selection_input_base, event
   compile_opt idl2
   
-  widget_control, event.top, get_uvalue=global_refpix
+  widget_control, event.top, get_uvalue=global_tof_selection
   
-  pixel_base = (*global_refpix).refpix_input_base
-  if (widget_info(pixel_base, /valid_id) eq 0) then begin
-    refpix_input_base, parent_base_uname = 'refpix_base_uname', $
-      top_base = (*global_refpix).top_base, $
+  _base = (*global_tof_selection).tof_selection_input_base
+  if (widget_info(_base, /valid_id) eq 0) then begin
+    tof_selection_input_base, parent_base_uname = 'tof_selection_base_uname', $
+      top_base = (*global_tof_selection).top_base, $
       event=event
   endif
   
@@ -292,12 +268,12 @@ end
 pro show_tof_selection_counts_vs_tof_base, event
   compile_opt idl2
   
-  widget_control, event.top, get_uvalue=global_refpix
+  widget_control, event.top, get_uvalue=global_tof_selection
   
-  plot_base = (*global_refpix).refpix_counts_vs_pixel_base_id
+  plot_base = (*global_tof_selection).tof_selection_counts_vs_tof_base_id
   if (widget_info(plot_base, /valid_id) eq 0) then begin
-    refpix_counts_vs_pixel_base, parent_base_uname = 'refpix_base_uname', $
-      top_base = (*global_refpix).top_base, $
+    tof_selection_counts_vs_tof_base, parent_base_uname = 'tof_selection_base_uname', $
+      top_base = (*global_tof_selection).top_base, $
       event=event
   endif
   
@@ -332,30 +308,30 @@ end
 
 ;+
 ; :Description:
-;    Save the pixels1 and 2 in data coordinates
+;    Save the tof1 and 2 in data coordinates
 ;
 ; :Params:
 ;    event
 ;
 ; :Author: j35
 ;-
-pro save_refpixel_pixels, event=event, base=base
+pro save_tof_data, event=event, base=base
   compile_opt idl2
   
   if (keyword_set(event)) then begin
-    widget_control, event.top, get_uvalue=global_refpix
+    widget_control, event.top, get_uvalue=global_tof_selection
   endif else begin
-    widget_control, base, get_uvalue=global_refpix
+    widget_control, base, get_uvalue=global_selection
   endelse
   
-  refpix_input_base = (*global_refpix).refpix_input_base
+  tof_selection_input_base = (*global_tof_selection).tof_selection_input_base
   
-  pixel1 = getValue(base=refpix_input_base, uname='refpix_pixel1_uname')
-  pixel2 = getValue(base=refpix_input_base, uname='refpix_pixel2_uname')
+  tof1 = getValue(base=tof_selection_input_base, uname='tof_selection_tof1_uname')
+  tof2 = getValue(base=tof_selection_input_base, uname='tof_selection_tof2_uname')
   
-  refpix_pixels = [pixel1, pixel2]
+  tof_min_max = [tof1, tof2]
   
-  (*global_refpix).refpix_pixels = refpix_pixels
+  (*global_tof_selection).tof_selection_tof = tof_min_max 
   
 end
 
@@ -548,17 +524,17 @@ end
 
 ;+
 ; :Description:
-;    calculate the y data from the y device
+;    calculate the x data from the x device
 ;
 ; :Params:
 ;    event
 ;
 ; :Author: j35
 ;-
-function retrieve_pixel_value, event
+function retrieve_tof_value, event
   compile_opt idl2
   
-  widget_control, event.top, get_uvalue=global_refpix
+  widget_control, event.top, get_uvalue=global_tof_selection
   
   catch, error
   if (error ne 0) then begin
@@ -566,15 +542,14 @@ function retrieve_pixel_value, event
     return, 'N/A'
   endif
   
-  y_device = event.y
-  congrid_ycoeff = (*global_refpix).congrid_ycoeff
-  yrange = float((*global_refpix).yrange) ;min and max pixels
+  x_device = event.x
+  congrid_xcoeff = (*global_tof_selection).congrid_xcoeff
+  xrange = float((*global_tof_selection).xrange) ;min and max pixels
   
-  rat = float(y_device) / float(congrid_ycoeff)
-  y_data = float(rat * (yrange[1] - yrange[0]) + yrange[0])
-  ;y_data = y_data_checked(event=event, data=y_data)
-  
-  return, fix(y_data)
+  rat = float(x_device) / float(congrid_xcoeff)
+  x_data = float(rat * (xrange[1] - xrange[0]) + xrange[0])
+    
+  return, fix(x_data)
   
 end
 
