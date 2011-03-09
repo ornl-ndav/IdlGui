@@ -127,24 +127,25 @@ if ((*global).DataNexusFound) then begin
     zmin = getTextFieldValue(Event,'data_rescale_zmin_cwfield')
     zmax = getTextFieldValue(Event,'data_rescale_zmax_cwfield')
     new_tvimg = fltarr(sz[1],sz[2])
-    index = where(tvimg GE zmin AND tvimg LE zmax,Nbr)
+    index = where(tvimg Gt zmin AND tvimg Le (zmax+1),Nbr)
     if (Nbr GT 0) then begin
         new_tvimg(index) = tvimg(index)
         tvimg = new_tvimg
     endif
     
-;if z-axis is linear
-    IF (getDropListSelectedIndex(Event,'data_rescale_z_droplist') EQ 1) $
-      THEN BEGIN                ;log
-        tvimg = alog(tvimg)
-        index = WHERE(tvimg GE 0, nbr)
-        sz = size(tvimg)
-        new_tvimg = INTARR(sz[1],sz[2])
-        IF (nbr GT 0) THEN BEGIN
-            new_tvimg(index) = tvimg(index)
-        ENDIF
-        tvimg = new_tvimg
-    ENDIF
+IF (getDropListSelectedIndex(Event,'data_rescale_z_droplist') EQ 1) $
+    THEN BEGIN                ;log
+    
+    ;remove 0 values and replace with NAN
+    ;and calculate log
+    index = where(tvimg eq 0, nbr)
+    if (nbr GT 0) then begin
+      tvimg[index] = !VALUES.D_NAN
+    endif
+    tvimg = ALOG10(tvimg)
+    tvimg = BYTSCL(tvimg,/NAN)
+    
+  ENDIF
 
     REFreduction_Rescale_PlotData, Event, tvimg
 

@@ -285,6 +285,7 @@ PRO BrowseNormNexus, Event
     TITLE             = title, $
     dialog_parent     = widget_id,$
     GET_PATH          = new_path,$
+    path = path, $
     /FIX_FILTER,$
     /READ)
     
