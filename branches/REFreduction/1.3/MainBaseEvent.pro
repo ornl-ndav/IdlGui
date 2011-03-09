@@ -61,6 +61,11 @@ PRO MAIN_BASE_event, Event
   
   CASE Event.id OF
   
+    ;bring to life the TOF selection base
+    widget_info(wWidget, find_by_uname='tof_selection_tool_button'): begin
+    
+    end
+  
     WIDGET_INFO(wWidget, FIND_BY_UNAME='MAIN_BASE'): begin
     end
     
