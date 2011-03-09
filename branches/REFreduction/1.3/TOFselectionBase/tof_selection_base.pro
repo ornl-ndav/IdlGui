@@ -672,16 +672,16 @@ end
 ;
 ; :Author: j35
 ;-
-pro save_refpix_background,  event=event, main_base=main_base, uname=uname
+pro save_tof_selection_background,  event=event, main_base=main_base, uname=uname
   compile_opt idl2
   
-  if (~keyword_set(uname)) then uname = 'refpix_draw'
+  if (~keyword_set(uname)) then uname = 'tof_selection_draw'
   
   IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
     id = WIDGET_INFO(main_base, FIND_BY_UNAME=uname)
-    widget_control, main_base, get_uvalue=global_refpix
+    widget_control, main_base, get_uvalue=global_tof_selection
   ENDIF ELSE BEGIN
-    WIDGET_CONTROL, event.top, GET_UVALUE=global_refpix
+    WIDGET_CONTROL, event.top, GET_UVALUE=global_tof_selection
     id = WIDGET_INFO(Event.top,find_by_uname=uname)
   ENDELSE
   
@@ -695,7 +695,7 @@ pro save_refpix_background,  event=event, main_base=main_base, uname=uname
   
   DEVICE, copy =[0, 0, xsize, ysize, 0, 0]
   
-  (*(*global_refpix).background) = background
+  (*(*global_tof_selection).background) = background
   
 END
 
@@ -709,18 +709,18 @@ END
 ;
 ; :Author: j35
 ;-
-pro refpix_lin_log_data, event=event, base=base
+pro tof_selection_lin_log_data, event=event, base=base
   compile_opt idl2
   
   ;get global structure
   if (n_elements(event) ne 0) then begin
-    widget_control,event.top,get_uvalue=global_refpix
+    widget_control,event.top,get_uvalue=global_tof_selection
   endif else begin
-    widget_control, base, get_uvalue=global_refpix
+    widget_control, base, get_uvalue=global_tof_selection
   endelse
   
-  Data = (*(*global_refpix).data_linear)
-  scale_setting = (*global_refpix).default_scale_settings ;0 for lin, 1 for log
+  Data = (*(*global_tof_selection).data_linear)
+  scale_setting = (*global_tof_selection).default_scale_settings ;0 for lin, 1 for log
   
   if (scale_setting eq 1) then begin ;log
   
@@ -735,7 +735,7 @@ pro refpix_lin_log_data, event=event, base=base
     
   endif
   
-  (*(*global_refpix).data) = Data
+  (*(*global_tof_selection).data) = Data
   
 end
 
@@ -908,19 +908,19 @@ end
 ;
 ; :Author: j35
 ;-
-pro plot_refpix_beam_center_scale, base=base, event=event
+pro plot_tof_selection_beam_center_scale, base=base, event=event
   compile_opt idl2
   
   if (n_elements(base) ne 0) then begin
-    id = widget_info(base,find_by_Uname='refpix_scale')
-    id_base = widget_info(base, find_by_uname='refpix_base_uname')
+    id = widget_info(base,find_by_Uname='tof_selection_scale')
+    id_base = widget_info(base, find_by_uname='tof_selection_base_uname')
     sys_color = widget_info(base,/system_colors)
-    widget_control, base, get_uvalue=global_refpix
+    widget_control, base, get_uvalue=global_tof_selection
   endif else begin
-    id = widget_info(event.top, find_by_uname='refpix_scale')
-    id_base = widget_info(event.top, find_by_uname='refpix_base_uname')
+    id = widget_info(event.top, find_by_uname='tof_selection_scale')
+    id_base = widget_info(event.top, find_by_uname='tof_selection_base_uname')
     sys_color = widget_info(event.top, /system_colors)
-    widget_control, event.top, get_uvalue=global_refpix
+    widget_control, event.top, get_uvalue=global_tof_selection
   endelse
   
   widget_control, id, get_value=id_value
@@ -930,11 +930,11 @@ pro plot_refpix_beam_center_scale, base=base, event=event
   device, decomposed=1
   sys_color_window_bk = sys_color.window_bk
   
-  x_range = (*global_refpix).xrange
+  x_range = (*global_tof_selection).xrange
   min_x = x_range[0]
   max_x = x_range[1]
   
-  y_range = (*global_refpix).yrange
+  y_range = (*global_tof_selection).yrange
   min_y = y_range[0]
   max_y = y_range[1]
   
@@ -1183,16 +1183,16 @@ pro tof_selection_base_gui, wBase, $
     keyboard_events=2, $
     retain=2, $
     ;    event_pro = 'refpix_draw_eventcb',$
-    uname = 'refpix_draw')
+    uname = 'tof_selection_draw')
     
   scale = widget_draw(wBase,$
-    uname = 'refpix_scale',$
+    uname = 'tof_selection_scale',$
     scr_xsize = xsize,$
     scr_ysize = ysize,$
     retain=2)
     
   colorbar =  widget_draw(wBase,$
-    uname = 'refpix_colorbar',$
+    uname = 'tof_selection_colorbar',$
     xoffset = xsize,$
     scr_xsize = colorbar_xsize,$
     scr_ysize = ysize,$
@@ -1246,16 +1246,16 @@ pro tof_selection_base_gui, wBase, $
     
   set = widget_button(mPlot,$
     value = list_loadct[0],$
-    uname = 'refpix_loadct_0',$
-    event_pro = 'change_refpix_loadct',$
+    uname = 'tof_selection_loadct_0',$
+    event_pro = 'change_tof_selection_loadct',$
     /separator)
     
   sz = n_elements(list_loadct)
   for i=1L,(sz-1) do begin
     set = widget_button(mPlot,$
       value = list_loadct[i],$
-      uname = 'refpix_loadct_' + strcompress(i,/remove_all),$
-      event_pro = 'change_refpix_loadct')
+      uname = 'tof_selection_loadct_' + strcompress(i,/remove_all),$
+      event_pro = 'change_tof_selection_loadct')
   endfor
   
   if (scale_setting eq 0) then begin
@@ -1272,13 +1272,13 @@ pro tof_selection_base_gui, wBase, $
     
   set1 = widget_button(mPlot, $
     value = set1_value, $
-    event_pro = 'refpix_local_switch_axes_type',$
-    uname = 'refpix_local_scale_setting_linear')
+    event_pro = 'tof_selection_local_switch_axes_type',$
+    uname = 'tof_selection_local_scale_setting_linear')
     
   set2 = widget_button(mPlot, $
     value = set2_value,$
-    event_pro = 'refpix_local_switch_axes_type',$
-    uname = 'refpix_local_scale_setting_log')
+    event_pro = 'tof_selection_local_switch_axes_type',$
+    uname = 'tof_selection_local_scale_setting_log')
     
   pixel = widget_button(bar1,$
     value = 'Extra',$
@@ -1446,34 +1446,30 @@ pro tof_selection_base, main_base=main_base, $
     /NO_BLOCK, $
     cleanup = 'tof_selection_base_cleanup'
     
-  return
+  tof_selection_lin_log_data, base=wBase
   
-  
-  refpix_lin_log_data, base=wBase
-  
-  Data = (*(*global_refpix).data)
-  id = WIDGET_INFO(wBase, FIND_BY_UNAME='refpix_draw')
+  Data = (*(*global_tof_selection).data)
+  id = WIDGET_INFO(wBase, FIND_BY_UNAME='tof_selection_draw')
   draw_geometry = WIDGET_INFO(id,/GEOMETRY)
   xsize = draw_geometry.xsize
   ysize = draw_geometry.ysize
-  ;  if ((*global_plot).plot_setting eq 'untouched') then begin
   
   cData = congrid(Data, xsize, ysize)
   
-  id = widget_info(wBase, find_by_uname='refpix_base_uname')
+  id = widget_info(wBase, find_by_uname='tof_selection_base_uname')
   geometry = widget_info(id,/geometry)
   _xsize = geometry.scr_xsize
   _ysize = geometry.scr_ysize
   
-  (*global_refpix).congrid_xcoeff = xsize
-  (*global_refpix).congrid_ycoeff = ysize
+  (*global_tof_selection).congrid_xcoeff = xsize
+  (*global_tof_selection).congrid_ycoeff = ysize
   
   DEVICE, DECOMPOSED = 0
-  loadct, (*global_refpix).default_loadct, /SILENT
+  loadct, (*global_tof_selection).default_loadct, /SILENT
   
-  plot_refpix_beam_center_scale, base=wBase
+  plot_tof_selection_beam_center_scale, base=wBase
   
-  id = widget_info(wBase,find_by_uname='refpix_draw')
+  id = widget_info(wBase,find_by_uname='tof_selection_draw')
   widget_control, id, GET_VALUE = plot_id
   wset, plot_id
   ;tvscl, transpose(cData)
@@ -1481,23 +1477,28 @@ pro tof_selection_base, main_base=main_base, $
   
   ;Scale
   zmin = 0
-  zmax = max((*(*global_refpix).data_linear))
-  zrange = (*global_refpix).zrange
+  zmax = max((*(*global_tof_selection).data_linear))
+  zrange = (*global_tof_selection).zrange
   zrange[0] = zmin
   zrange[1] = zmax
   
-  (*global_refpix).zrange = zrange
+  (*global_tof_selection).zrange = zrange
   
-  plot_refpix_colorbar, base=wBase, zmin, zmax, type=default_scale_settings
+  plot_tof_selection_colorbar, base=wBase, $
+  zmin, $
+  zmax, $
+  type=default_scale_settings
   
   pre = '>  > >> '
   post = ' << <  <'
-  uname = 'refpix_loadct_' + strcompress(default_loadct,/remove_all)
+  uname = 'tof_selection_loadct_' + strcompress(default_loadct,/remove_all)
   value = getValue(base=wBase, uname=uname)
   new_value = pre + value + post
   setValue, base=wBase, uname, new_value
   
-  save_refpix_background,  main_base=wBase
+  save_tof_selection_background,  main_base=wBase
+  
+  return
   
   ;bring to life the refpix pixel1 and 2 input base
   refpix_input_base, parent_base_uname = 'refpix_base_uname', $

@@ -56,8 +56,12 @@ cd, CurrentFolder + '/utilities'
 .run IDL3columnsASCIIparser__define.pro
 .run NeXusMetadata__define.pro
 .run is.pro
+.run set.pro
+.run convert.pro
+.run colorbar.pro
+.run IDLnexusUtilities__define.pro
 
-cd, CurrentFolder + 'TOFselectionBase'
+cd, CurrentFolder + '/TOFselectionBase'
 .run tof_selection_input_base.pro
 .run tof_selection_colorbar.pro
 .run tof_selection_counts_vs_pixel_base.pro
