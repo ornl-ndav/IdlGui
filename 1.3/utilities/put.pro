@@ -32,39 +32,18 @@
 ;
 ;==============================================================================
 
-spawn, 'pwd', CurrentFolder
-
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-cd, CurrentFolder + '/utilities'
-
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-.run nexus_utilities.pro
-.run get.pro
-.run system_utilities.pro
-.run nexus_utilities.pro
-.run math_conversion.pro
-.run time.pro
-.run list_of_proposal.pro
-.run IDLxmlParser__define.pro
-.run xmlParser__define.pro
-.run logger.pro
-.run file_utilities.pro
-.run xdisplayfile.pro
-.run fsc_color.pro
-.run IDL3columnsASCIIparser__define.pro
-.run NeXusMetadata__define.pro
-.run is.pro
-.run set.pro
-.run put.pro
-.run convert.pro
-.run colorbar.pro
-.run IDLnexusUtilities__define.pro
-
-cd, CurrentFolder + '/TOFselectionBase'
-.run tof_selection_input_base.pro
-.run tof_selection_colorbar.pro
-.run tof_selection_counts_vs_pixel_base.pro
-.run tof_selection_eventcb.pro
-.run tof_selection_base.pro
+pro putValue, event=event, base=base, uname, value, append=append
+  compile_opt idl2
+  
+  if (n_elements(event) ne 0) then begin
+    uname_id = widget_info(event.top,find_by_uname=uname)
+  endif else begin
+    uname_id = widget_info(base,find_by_uname=uname)
+  endelse
+  if (n_elements(append) eq 0) then begin
+    widget_control, uname_id, set_value=value
+  endif else begin
+    widget_control, uname_id, set_value=value, /append
+  endelse
+  
+end
