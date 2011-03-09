@@ -287,6 +287,42 @@ pro display_counts_vs_tof, base=base, event=event, global_tof_selection
       xtitle='TOF (ms)',$
       ytitle='Counts'
       
+    endif else begin
+  
+    plot, x_axis, $
+      counts_vs_tof, $
+      /ylog, $
+      yrange=yrange, $
+      xstyle=1, $
+      xtitle='TOF (ms)', $
+      ytitle='Counts'
+      
+  endelse
+  
+  tof_selection = (*global_tof_selection).tof_selection_tof
+  
+  tof_min = tof_selection[0]
+  tof_max = tof_selection[1]
+  if (tof_min ne -1 or tof_max ne -1) then begin
+  
+    if (tof_min ne -1) then begin
+      plots, tof_min, 1, /data
+      plots, tof_min, ymax, /data, /continue, $
+        color=fsc_color("green"), $
+        thick=2,$
+        linestyle=1
+    endif
+    
+    if (tof_max ne -1) then begin
+      plots, tof_max, 1, /data
+      plots, tof_max, ymax, /data, /continue, $
+        color=fsc_color("green"), $
+        thick=2,$
+        linestyle=1
+    endif
+    
+  endif
+  
   ;    if (pixel1 ne 0) then begin
   ;      plots, pixel1, 0
   ;      plots, pixel1, ymax, /continue, color=fsc_color("red"), $
@@ -304,36 +340,6 @@ pro display_counts_vs_tof, base=base, event=event, global_tof_selection
   ;      plots, refpix, 0, /data
   ;      plots, refpix, ymax, /data, /continue, color=fsc_color("blue")
   ;    endif
-      
-  endif else begin
-  
-    plot, x_axis, $
-      counts_vs_tof, $
-      /ylog, $
-      yrange=yrange, $
-      xstyle=1, $
-      xtitle='TOF (ms)', $
-      ytitle='Counts'
-      
-  ;    if (pixel1 ne 0) then begin
-  ;      plots, pixel1, 1, /data
-  ;      plots, pixel1, ymax, /data, /continue, color=fsc_color("red"), $
-  ;        thick=_pixel1_size
-  ;    endif
-  ;
-  ;    if (pixel2 ne 0) then begin
-  ;      plots, pixel2, 1, /data
-  ;      plots, pixel2, ymax, /data, /continue, color=fsc_color("red"), $
-  ;        thick=_pixel2_size
-  ;    endif
-  ;
-  ;    if (pixel1 ne 0 && pixel2 ne 0) then begin
-  ;      refpix = (float(pixel1) + float(pixel2))/2.
-  ;      plots, refpix, 1, /data
-  ;      plots, refpix, ymax, /data, /continue, color=fsc_color("blue")
-  ;    endif
-      
-  endelse
   
 end
 
