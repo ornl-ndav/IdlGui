@@ -440,22 +440,36 @@ pro tof_selection_counts_vs_tof_base, event=event, $
     
   display_counts_vs_tof, base=_base, global_tof_selection
   
-;  if (keyword_set(tof)) then begin
-;
-;    counts_vs_tof = (*(*global_tof_selecton).counts_vs_tof)
-;    ymax = max(counts_vs_tof,min=ymin)
-;
-;    _id = widget_info(_base, find_by_uname='tof_selection_counts_vs_tof_draw')
-;    widget_control, _id, GET_VALUE = _plot_id
-;    wset, _plot_id
-;    _refpix = float(refpix)
-;    plots, _refpix, 1, /data
-;    plots, _refpix, ymax, /data, /continue, $
-;      color=fsc_color("green"), $
-;      thick=2,$
-;      linestyle=1
-;
-;  endif
-;
+  tof_selection = (*global_tof_selection).tof_selection_tof
+  
+  tof_min = tof_selection[0]
+  tof_max = tof_selection[1]
+  if (tof_min ne -1 or tof_max ne -1) then begin
+  
+    counts_vs_tof = (*(*global_tof_selection).counts_vs_tof)
+    ymax = max(counts_vs_tof,min=ymin)
+    
+    _id = widget_info(_base, find_by_uname='tof_selection_counts_vs_tof_draw')
+    widget_control, _id, GET_VALUE = _plot_id
+    wset, _plot_id
+    
+    if (tof_min ne -1) then begin
+      plots, tof_min, 1, /data
+      plots, tof_min, ymax, /data, /continue, $
+        color=fsc_color("green"), $
+        thick=2,$
+        linestyle=1
+    endif
+    
+    if (tof_max ne -1) then begin
+      plots, tof_max, 1, /data
+      plots, tof_max, ymax, /data, /continue, $
+        color=fsc_color("green"), $
+        thick=2,$
+        linestyle=1
+    endif
+    
+  endif
+  
 end
 
