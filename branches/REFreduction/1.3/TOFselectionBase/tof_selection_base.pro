@@ -199,7 +199,7 @@ pro tof_selection_base_event, Event
     end
     
     widget_info(event.top, $
-      find_by_uname='show_pixel_selection_base'): begin
+      find_by_uname='show_tof_selection_base'): begin
       pixel_base = (*global_tof_selection).tof_selection_input_base
       if (widget_info(pixel_base, /valid_id) eq 0) then begin
         tof_selection_input_base, parent_base_uname = 'tof_selection_base_uname', $
@@ -211,10 +211,11 @@ pro tof_selection_base_event, Event
     ;show counts vs tof base
     widget_info(event.top, $
       find_by_uname='show_counts_vs_tof_base'): begin
-      plot_base = (*global_refpix).refpix_counts_vs_pixel_base_id
+      plot_base = (*global_tof_selection).tof_selection_counts_vs_tof_base_id
       if (widget_info(plot_base, /valid_id) eq 0) then begin
-        refpix_counts_vs_pixel_base, parent_base_uname = 'refpix_base_uname', $
-          top_base = (*global_refpix).top_base, $
+        tof_selection_counts_vs_tof_base, $
+        parent_base_uname='tof_selection_base_uname', $
+          top_base = (*global_tof_selection).top_base, $
           event=event
       endif
     end
@@ -288,7 +289,7 @@ end
 ;
 ; :Author: j35
 ;-
-pro show_refpix_counts_vs_pixel_base, event
+pro show_tof_selection_counts_vs_tof_base, event
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global_refpix
@@ -1288,12 +1289,12 @@ pro tof_selection_base_gui, wBase, $
     /menu)
     
   show = widget_button(pixel,$
-    value = 'Show pixel selection window',$
-    uname = 'show_pixel_selection_base')
+    value = 'Show TOF selection window',$
+    uname = 'show_tof_selection_base')
     
   _plot = widget_button(pixel,$
-    value = 'Show Counts vs pixel window',$
-    uname = 'show_counts_vs_pixel_base')
+    value = 'Show Counts vs TOF window',$
+    uname = 'show_counts_vs_tof_base')
     
 end
 
@@ -1363,8 +1364,8 @@ pro tof_selection_base, main_base=main_base, $
     short_file_name: short_file_name, $
     
     tof_selection_input_base: 0L, $ ;id of refpix_input_base
-    tof_selection_counts_vs_pixel_base_id: 0L, $ 'id of refpix_counts_vs_tof_base
-    counts_vs_pixel_scale_is_linear: 0b, $ ;counts vs pixel (linear/log)
+    tof_selection_counts_vs_tof_base_id: 0L, $ 'id of refpix_counts_vs_tof_base
+    counts_vs_tof_scale_is_linear: 0b, $ ;counts vs tof (linear/log)
   
     ;used to plot selection zoom
     default_plot_size: default_plot_size, $
@@ -1381,7 +1382,7 @@ pro tof_selection_base, main_base=main_base, $
     full_data: ptr_new(0L), $
     data: ptr_new(0L), $
     data_linear: ptr_new(0L), $
-    counts_vs_pixel: ptr_new(0L), $
+    counts_vs_tof: ptr_new(0L), $
     
     x_axis: x_axis, $ ; [-0.004, -0.003, -0.002...]
     y_axis: y_axis, $ ; [0.0, 0.1, 0.2, 0.3]
@@ -1435,8 +1436,8 @@ pro tof_selection_base, main_base=main_base, $
   (*(*global_tof_selection).full_data) = data
   
   data_2d = total(data,2)
-  counts_vs_pixel = total(data_2d,1)
-  (*(*global_tof_selection).counts_vs_pixel) = counts_vs_pixel
+  counts_vs_tof = total(data_2d,2)
+  (*(*global_tof_selection).counts_vs_tof) = counts_vs_tof
   
   (*(*global_tof_selection).data_linear) = data_2d
   (*(*global_tof_selection).data) = data_2d
@@ -1506,37 +1507,35 @@ pro tof_selection_base, main_base=main_base, $
   
   save_tof_selection_background,  main_base=wBase
   
-  return
-  
   ;bring to life the refpix pixel1 and 2 input base
-  refpix_input_base, parent_base_uname = 'refpix_base_uname', $
-    default_refpix_value=refpix, $
+  tof_selection_input_base, parent_base_uname = 'tof_selection_base_uname', $
     top_base=wBase_copy1
     
   ;bring to life the base that show counts vs tof
-  refpix_counts_vs_pixel_base, parent_base_uname='refpix_base_uname', $
-    refpix=refpix, $
+  tof_selection_counts_vs_tof_base, $
+  parent_base_uname='tof_selection_base_uname', $
+    tof=tof, $
     top_base=wBase_copy
     
-  ;display the already selected refpix
-  if (refpix ne '') then begin
-  
-    widget_control, wBase_copy, get_uvalue=global_refpix
-    id = widget_info(wBase_copy, find_by_uname='refpix_draw')
-    widget_control, id, GET_VALUE = plot_id
-    wset, plot_id
-    
-    pixel1_device = from_data_to_device(base=wBase_copy, refpix)
-    xsize = (*global_refpix).xsize
-    
-    plots, [0, 0, xsize, xsize, 0],$
-      [pixel1_device, pixel1_device, pixel1_device, pixel1_device, $
-      pixel1_device],$
-      /DEVICE,$
-      LINESTYLE = 1,$
-      COLOR = fsc_color("green")
-      
-  endif
-  
+;  ;display the already selected refpix
+;  if (refpix ne '') then begin
+;  
+;    widget_control, wBase_copy, get_uvalue=global_refpix
+;    id = widget_info(wBase_copy, find_by_uname='refpix_draw')
+;    widget_control, id, GET_VALUE = plot_id
+;    wset, plot_id
+;    
+;    pixel1_device = from_data_to_device(base=wBase_copy, refpix)
+;    xsize = (*global_refpix).xsize
+;    
+;    plots, [0, 0, xsize, xsize, 0],$
+;      [pixel1_device, pixel1_device, pixel1_device, pixel1_device, $
+;      pixel1_device],$
+;      /DEVICE,$
+;      LINESTYLE = 1,$
+;      COLOR = fsc_color("green")
+;      
+;  endif
+;  
 end
 
