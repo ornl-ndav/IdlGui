@@ -803,32 +803,32 @@ end
 ;
 ; :Author: j35
 ;-
-pro refpix_local_switch_axes_type, event
+pro tof_selection_local_switch_axes_type, event
   compile_opt idl2
   
   uname = widget_info(event.id, /uname)
-  widget_control, event.top, get_uvalue=global_refpix
+  widget_control, event.top, get_uvalue=global_tof_selection
   
-  if (uname eq 'refpix_local_scale_setting_linear') then begin
+  if (uname eq 'tof_selection_local_scale_setting_linear') then begin
     set1_value = '*  ' + 'linear'
     set2_value = '   ' + 'logarithmic'
-    (*global_refpix).default_scale_settings = 0
+    (*global_tof_selection).default_scale_settings = 0
   endif else begin
     set1_value = '   ' + 'linear'
     set2_value = '*  ' + 'logarithmic'
-    (*global_refpix).default_scale_settings = 1
+    (*global_tof_selection).default_scale_settings = 1
   endelse
   
-  putValue, event=event, 'refpix_local_scale_setting_linear', set1_value
-  putValue, event=event, 'refpix_local_scale_setting_log', set2_value
+  putValue, event=event, 'tof_selection_local_scale_setting_linear', set1_value
+  putValue, event=event, 'tof_selection_local_scale_setting_log', set2_value
   
-  refpix_lin_log_data, event=event
-  refresh_refpix_plot, event, recalculate=1
-  refresh_plot_refpix_colorbar, event
+  tof_selection_lin_log_data, event=event
+  refresh_tof_selection_plot, event, recalculate=1
+  refresh_plot_tof_selection_colorbar, event
   
-  save_refpix_background,  event=event
+  save_tof_selection_background,  event=event
   
-  display_refpixel_pixels, event=event
+  display_tof_selection_pixels, event=event
   
 end
 
@@ -868,9 +868,6 @@ pro change_tof_selection_loadct, event
   
   ;save new loadct
   new_uname_array = strsplit(new_uname,'_',/extract)
-  
-  help, new_uname_array
-  print, new_uname_array
   
   (*global_tof_selection).default_loadct = fix(new_uname_array[3])
   
