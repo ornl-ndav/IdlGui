@@ -237,99 +237,101 @@ end
 ;
 ; :Author: j35
 ;-
-pro display_counts_vs_pixel, base=base, event=event, global_refpix
+pro display_counts_vs_tof, base=base, event=event, global_tof_selection
   compile_opt idl2
   
   if (keyword_set(event)) then begin
-    _id = widget_info(event.top, find_by_uname='refpix_counts_vs_pixel_draw')
+    _id = widget_info(event.top, find_by_uname='tof_selection_counts_vs_tof_draw')
     widget_control, event.top, get_uvalue=global_counts
   endif else begin
-    _id = widget_info(base, find_by_uname='refpix_counts_vs_pixel_draw')
+    _id = widget_info(base, find_by_uname='tof_selection_counts_vs_tof_draw')
     widget_control, base, get_uvalue=global_counts
   endelse
   widget_control, _id, GET_VALUE = _plot_id
   wset, _plot_id
-  
-  counts_vs_pixel = (*(*global_refpix).counts_vs_pixel)
+
+  counts_vs_tof = (*(*global_tof_selection).counts_vs_tof)
+  x_axis = (*global_tof_selection).x_axis
+  x_axis = x_axis[0:-2]
   
   ;xrange
-  xrange = (*global_refpix).yrange
+  xrange = (*global_tof_selection).xrange
   
   ;get ymax and ymin
-  ymax = max(counts_vs_pixel,min=ymin)
+  ymax = max(counts_vs_tof,min=ymin)
   yrange = [1,ymax]
   
-  counts_vs_pixel_scale_is_linear = $
-    (*global_refpix).counts_vs_pixel_scale_is_linear
+  counts_vs_tof_scale_is_linear = $
+    (*global_tof_selection).counts_vs_tof_scale_is_linear
     
-  refpix_pixels = (*global_refpix).refpix_pixels
-  pixel1 = refpix_pixels[0]
-  pixel2 = refpix_pixels[1]
-  
-  ;1b for pixel1, 0b for pixel2
-  pixel1_working = (*global_refpix).pixel1_selected
-  if (pixel1_working) then begin
-    _pixel1_size = 3
-    _pixel2_size = 1
-  endif else begin
-    _pixel1_size = 1
-    _pixel2_size = 3
-  endelse
+;  refpix_pixels = (*global_refpix).refpix_pixels
+;  pixel1 = refpix_pixels[0]
+;  pixel2 = refpix_pixels[1]
+;  
+;  ;1b for pixel1, 0b for pixel2
+;  pixel1_working = (*global_refpix).pixel1_selected
+;  if (pixel1_working) then begin
+;    _pixel1_size = 3
+;    _pixel2_size = 1
+;  endif else begin
+;    _pixel1_size = 1
+;    _pixel2_size = 3
+;  endelse
   
   ;if linear or log scale
-  if (counts_vs_pixel_scale_is_linear eq 1) then begin ;linear scale
+  if (counts_vs_tof_scale_is_linear eq 1) then begin ;linear scale
   
-    plot, counts_vs_pixel, $
-      xrange=xrange, $
+    plot, x_axis, $
+      counts_vs_tof, $
       xstyle=1, $
-      xtitle='Pixel',$
+      xtitle='TOF (ms)',$
       ytitle='Counts'
       
-    if (pixel1 ne 0) then begin
-      plots, pixel1, 0
-      plots, pixel1, ymax, /continue, color=fsc_color("red"), $
-        thick=_pixel1_size
-    endif
-    
-    if (pixel2 ne 0) then begin
-      plots, pixel2, 0, /data
-      plots, pixel2, ymax, /data, /continue, color=fsc_color("red"), $
-        thick=_pixel2_size
-    endif
-    
-    if (pixel1 ne 0 && pixel2 ne 0) then begin
-      refpix = (float(pixel1) + float(pixel2))/2.
-      plots, refpix, 0, /data
-      plots, refpix, ymax, /data, /continue, color=fsc_color("blue")
-    endif
+;    if (pixel1 ne 0) then begin
+;      plots, pixel1, 0
+;      plots, pixel1, ymax, /continue, color=fsc_color("red"), $
+;        thick=_pixel1_size
+;    endif
+;    
+;    if (pixel2 ne 0) then begin
+;      plots, pixel2, 0, /data
+;      plots, pixel2, ymax, /data, /continue, color=fsc_color("red"), $
+;        thick=_pixel2_size
+;    endif
+;    
+;    if (pixel1 ne 0 && pixel2 ne 0) then begin
+;      refpix = (float(pixel1) + float(pixel2))/2.
+;      plots, refpix, 0, /data
+;      plots, refpix, ymax, /data, /continue, color=fsc_color("blue")
+;    endif
     
   endif else begin
-  
-    plot, counts_vs_pixel, $
+
+    plot, x_axis, $
+    counts_vs_tof, $
       /ylog, $
       yrange=yrange, $
-      xrange=xrange, $
       xstyle=1, $
-      xtitle='Pixel', $
+      xtitle='TOF (ms)', $
       ytitle='Counts'
       
-    if (pixel1 ne 0) then begin
-      plots, pixel1, 1, /data
-      plots, pixel1, ymax, /data, /continue, color=fsc_color("red"), $
-        thick=_pixel1_size
-    endif
-    
-    if (pixel2 ne 0) then begin
-      plots, pixel2, 1, /data
-      plots, pixel2, ymax, /data, /continue, color=fsc_color("red"), $
-        thick=_pixel2_size
-    endif
-    
-    if (pixel1 ne 0 && pixel2 ne 0) then begin
-      refpix = (float(pixel1) + float(pixel2))/2.
-      plots, refpix, 1, /data
-      plots, refpix, ymax, /data, /continue, color=fsc_color("blue")
-    endif
+;    if (pixel1 ne 0) then begin
+;      plots, pixel1, 1, /data
+;      plots, pixel1, ymax, /data, /continue, color=fsc_color("red"), $
+;        thick=_pixel1_size
+;    endif
+;    
+;    if (pixel2 ne 0) then begin
+;      plots, pixel2, 1, /data
+;      plots, pixel2, ymax, /data, /continue, color=fsc_color("red"), $
+;        thick=_pixel2_size
+;    endif
+;    
+;    if (pixel1 ne 0 && pixel2 ne 0) then begin
+;      refpix = (float(pixel1) + float(pixel2))/2.
+;      plots, refpix, 1, /data
+;      plots, refpix, ymax, /data, /continue, color=fsc_color("blue")
+;    endif
     
   endelse
   
@@ -337,7 +339,7 @@ end
 
 ;+
 ; :Description:
-;    Builds the GUI of the counts vs pixel
+;    Builds the GUI of the counts vs tof
 ;
 ; :Params:
 ;    wBase
@@ -345,7 +347,7 @@ end
 ;
 ; :Author: j35
 ;-
-pro refpix_counts_vs_pixel_base_gui, wBase, $
+pro tof_selection_counts_vs_tof_base_gui, wBase, $
     parent_base_geometry
   compile_opt idl2
   
@@ -361,9 +363,9 @@ pro refpix_counts_vs_pixel_base_gui, wBase, $
   
   ourGroup = WIDGET_BASE()
   
-  title = 'Counts vs Pixel'
+  title = 'Counts vs TOF'
   wBase = WIDGET_BASE(TITLE = title, $
-    UNAME        = 'refpix_counts_vs_pixel_base', $
+    UNAME        = 'tof_selection_counts_vs_tof_base', $
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
     MAP          = 1,$
@@ -378,7 +380,7 @@ pro refpix_counts_vs_pixel_base_gui, wBase, $
     /button_events, $
     /motion_events, $
     retain = 2,$
-    uname = 'refpix_counts_vs_pixel_draw')
+    uname = 'tof_selection_counts_vs_tof_draw')
     
   axes = widget_button(bar1,$
     value = 'Axes',$
@@ -386,11 +388,11 @@ pro refpix_counts_vs_pixel_base_gui, wBase, $
     
   lin = widget_button(axes,$
     value = '  linear',$
-    uname = 'refpix_counts_vs_pixel_linear')
+    uname = 'tof_selection_counts_vs_tof_linear')
     
   log = widget_button(axes,$
     value = '* logarithmic',$
-    uname = 'refpix_counts_vs_pixel_log')
+    uname = 'tof_selection_counts_vs_tof_log')
     
 end
 
@@ -403,57 +405,57 @@ end
 ;
 ; :Author: j35
 ;-
-pro refpix_counts_vs_pixel_base, event=event, $
+pro tof_selection_counts_vs_tof_base, event=event, $
     top_base=top_base, $
-    refpix=refpix, $
+    tof=tof, $
     parent_base_uname = parent_base_uname
   compile_opt idl2
   
   if (keyword_set(event)) then begin
     id = WIDGET_INFO(Event.top, FIND_BY_UNAME=parent_base_uname)
-    WIDGET_CONTROL,Event.top,GET_UVALUE=global_refpix
+    WIDGET_CONTROL,Event.top,GET_UVALUE=global_tof_selection
     top_base = 0L
   endif else begin
     id = widget_info(top_base, find_by_uname=parent_base_uname)
-    widget_control, top_base, get_uvalue=global_refpix
+    widget_control, top_base, get_uvalue=global_tof_selection
   endelse
   parent_base_geometry = WIDGET_INFO(id,/GEOMETRY)
   
   _base = 0L
-  refpix_counts_vs_pixel_base_gui, _base, $
+  tof_selection_counts_vs_tof_base_gui, _base, $
     parent_base_geometry
     
-  global_counts = ptr_new({ global_refpix: global_refpix,$
+  global_counts = ptr_new({ global_tof_selection: global_tof_selection,$
     top_base: top_base, $
     left_click: 0b })
     
-  (*global_refpix).refpix_counts_vs_pixel_base_id = _base
+  (*global_tof_selection).tof_selection_counts_vs_tof_base_id = _base
   
   WIDGET_CONTROL, _base, /REALIZE
   widget_control, _base, set_uvalue=global_counts
   
-  XMANAGER, "refpix_counts_vs_pixel_base", _base, $
+  XMANAGER, "tof_selection_counts_vs_tof_base", _base, $
     GROUP_LEADER = ourGroup, $
     /NO_BLOCK
     
-  display_counts_vs_pixel, base=_base, global_refpix
+  display_counts_vs_tof, base=_base, global_tof_selection
   
-  if (refpix ne '') then begin
-  
-    counts_vs_pixel = (*(*global_refpix).counts_vs_pixel)
-    ymax = max(counts_vs_pixel,min=ymin)
-    
-    _id = widget_info(_base, find_by_uname='refpix_counts_vs_pixel_draw')
-    widget_control, _id, GET_VALUE = _plot_id
-    wset, _plot_id
-    _refpix = float(refpix)
-    plots, _refpix, 1, /data
-    plots, _refpix, ymax, /data, /continue, $
-      color=fsc_color("green"), $
-      thick=2,$
-      linestyle=1
-      
-  endif
-  
+;  if (keyword_set(tof)) then begin
+;  
+;    counts_vs_tof = (*(*global_tof_selecton).counts_vs_tof)
+;    ymax = max(counts_vs_tof,min=ymin)
+;    
+;    _id = widget_info(_base, find_by_uname='tof_selection_counts_vs_tof_draw')
+;    widget_control, _id, GET_VALUE = _plot_id
+;    wset, _plot_id
+;    _refpix = float(refpix)
+;    plots, _refpix, 1, /data
+;    plots, _refpix, ymax, /data, /continue, $
+;      color=fsc_color("green"), $
+;      thick=2,$
+;      linestyle=1
+;      
+;  endif
+;  
 end
 
