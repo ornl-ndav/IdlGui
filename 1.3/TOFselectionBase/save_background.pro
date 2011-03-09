@@ -32,36 +32,46 @@
 ;
 ;==============================================================================
 
-spawn, 'pwd', CurrentFolder
+;+
+; :Description:
+;    save the background image to be able
+;    to replot it quicker
+;
+;  use the following to display it:
+;   TV, (*(*global).background), true=3
+;
+; :Params:
+;    event
+;
+; :Keywords:
+;    main_base
+;
+; :Author: j35
+;-
+pro save_background,  event=event, main_base=main_base, uname=uname
+compile_opt idl2
 
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-cd, CurrentFolder + '/utilities'
+  if (~keyword_set(uname)) then uname = 'draw'
 
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-.run nexus_utilities.pro
-.run get.pro
-.run system_utilities.pro
-.run nexus_utilities.pro
-.run math_conversion.pro
-.run time.pro
-.run list_of_proposal.pro
-.run IDLxmlParser__define.pro
-.run xmlParser__define.pro
-.run logger.pro
-.run file_utilities.pro
-.run xdisplayfile.pro
-.run fsc_color.pro
-.run IDL3columnsASCIIparser__define.pro
-.run NeXusMetadata__define.pro
-.run is.pro
-
-cd, CurrentFolder + 'TOFselectionBase'
-.run counts_vs_axis_base.pro
-.run cursor_info_base.pro
-.run tof_selection_base.pro
-.run tof_selection_base_eventcb.pro
-.run menu_eventcb.pro
-.run plot_colorbar.pro
-.run save_background.pro
+  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
+    id = WIDGET_INFO(main_base, FIND_BY_UNAME=uname)
+    widget_control, main_base, get_uvalue=global_plot
+  ENDIF ELSE BEGIN
+    WIDGET_CONTROL, event.top, GET_UVALUE=global_plot
+    id = WIDGET_INFO(Event.top,find_by_uname=uname)
+  ENDELSE
+  
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  background = TVRD(TRUE=3)
+  geometry = WIDGET_INFO(id,/GEOMETRY)
+  xsize   = geometry.xsize
+  ysize   = geometry.ysize
+  
+  ;DEVICE, copy =[0, 0, xsize, ysize, 0, 0, id_value]
+  DEVICE, copy =[0, 0, xsize, ysize, 0, 0]
+  
+  (*(*global_plot).background) = background
+  
+END
