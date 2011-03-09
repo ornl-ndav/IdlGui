@@ -202,6 +202,21 @@ ENDELSE
 tvimg = CONGRID(img,file_Ntof * coeff_congrid_tof, new_N)
 ;tvimg = rebin(img, new_Ntof, new_N,/sample)
 (*(*global).tvimg_norm_ptr) = tvimg
+
+  IF (getDropListSelectedIndex(Event,'normalization_rescale_z_droplist') EQ 1) $
+    THEN BEGIN                ;log
+    
+    ;remove 0 values and replace with NAN
+    ;and calculate log
+    index = where(tvimg eq 0, nbr)
+    if (nbr GT 0) then begin
+      tvimg[index] = !VALUES.D_NAN
+    endif
+    tvimg = ALOG10(tvimg)
+    tvimg = BYTSCL(tvimg,/NAN)
+    
+  ENDIF
+
 tvscl, tvimg, /device
 ;remove PROCESSING_message from logbook and say ok
 LogBookText = getLogBookText(Event)
@@ -260,6 +275,21 @@ ENDELSE
 tvimg = CONGRID(img,file_Ntof * coeff_congrid_tof, new_N)
 
 (*(*global).tvimg_norm_ptr) = tvimg
+
+  IF (getDropListSelectedIndex(Event,'normalization_rescale_z_droplist') EQ 1) $
+    THEN BEGIN                ;log
+    
+    ;remove 0 values and replace with NAN
+    ;and calculate log
+    index = where(tvimg eq 0, nbr)
+    if (nbr GT 0) then begin
+      tvimg[index] = !VALUES.D_NAN
+    endif
+    tvimg = ALOG10(tvimg)
+    tvimg = BYTSCL(tvimg,/NAN)
+    
+  ENDIF
+  
 tvscl, tvimg, /device
 END
 
