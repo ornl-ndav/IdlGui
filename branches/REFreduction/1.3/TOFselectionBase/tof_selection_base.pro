@@ -1155,7 +1155,7 @@ pro tof_selection_base_gui, wBase, $
   
   ourGroup = WIDGET_BASE()
   
-  title = 'Run number: ' + run_number[0]
+  title = 'Run number: ' + strcompress(run_number[0],/remove_all)
   wBase = WIDGET_BASE(TITLE = title, $
     UNAME        = 'tof_selection_base_uname', $
     XOFFSET      = xoffset,$
