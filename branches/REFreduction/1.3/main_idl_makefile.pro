@@ -136,6 +136,7 @@
 .run packages_required.pro
 .run ref_reduction_configuration.pro
 .run ref_reduction_display_images.pro
+.run new_rescaled_tvimg.pro
 
 .run tof_selection_tool_button_eventcb.pro
 
