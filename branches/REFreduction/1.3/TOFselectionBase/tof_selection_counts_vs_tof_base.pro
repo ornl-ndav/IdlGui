@@ -264,20 +264,15 @@ pro display_counts_vs_tof, base=base, event=event, global_tof_selection
   counts_vs_tof_scale_is_linear = $
     (*global_tof_selection).counts_vs_tof_scale_is_linear
     
-  ;  refpix_pixels = (*global_refpix).refpix_pixels
-  ;  pixel1 = refpix_pixels[0]
-  ;  pixel2 = refpix_pixels[1]
-  ;
-  ;  ;1b for pixel1, 0b for pixel2
-  ;  pixel1_working = (*global_refpix).pixel1_selected
-  ;  if (pixel1_working) then begin
-  ;    _pixel1_size = 3
-  ;    _pixel2_size = 1
-  ;  endif else begin
-  ;    _pixel1_size = 1
-  ;    _pixel2_size = 3
-  ;  endelse
-    
+  tof1_selected = (*global_tof_selection).tof1_selected
+  if (tof1_selected) then begin
+    _tofmin_size = 3
+    _tofmax_size = 1
+  endif else begin
+    _tofmin_size = 1
+    _tofmax_size = 3
+  endelse
+  
   ;if linear or log scale
   if (counts_vs_tof_scale_is_linear eq 1) then begin ;linear scale
   
@@ -287,7 +282,7 @@ pro display_counts_vs_tof, base=base, event=event, global_tof_selection
       xtitle='TOF (ms)',$
       ytitle='Counts'
       
-    endif else begin
+  endif else begin
   
     plot, x_axis, $
       counts_vs_tof, $
@@ -309,37 +304,37 @@ pro display_counts_vs_tof, base=base, event=event, global_tof_selection
       plots, tof_min, 1, /data
       plots, tof_min, ymax, /data, /continue, $
         color=fsc_color("green"), $
-        thick=2,$
-        linestyle=1
+        thick=_tofmin_size,$
+        linestyle=2
     endif
     
     if (tof_max ne -1) then begin
       plots, tof_max, 1, /data
       plots, tof_max, ymax, /data, /continue, $
         color=fsc_color("green"), $
-        thick=2,$
-        linestyle=1
+        thick=_tofmax_size,$
+        linestyle=2
     endif
     
   endif
   
-  ;    if (pixel1 ne 0) then begin
-  ;      plots, pixel1, 0
-  ;      plots, pixel1, ymax, /continue, color=fsc_color("red"), $
-  ;        thick=_pixel1_size
-  ;    endif
-  ;
-  ;    if (pixel2 ne 0) then begin
-  ;      plots, pixel2, 0, /data
-  ;      plots, pixel2, ymax, /data, /continue, color=fsc_color("red"), $
-  ;        thick=_pixel2_size
-  ;    endif
-  ;
-  ;    if (pixel1 ne 0 && pixel2 ne 0) then begin
-  ;      refpix = (float(pixel1) + float(pixel2))/2.
-  ;      plots, refpix, 0, /data
-  ;      plots, refpix, ymax, /data, /continue, color=fsc_color("blue")
-  ;    endif
+;    if (pixel1 ne 0) then begin
+;      plots, pixel1, 0
+;      plots, pixel1, ymax, /continue, color=fsc_color("red"), $
+;        thick=_pixel1_size
+;    endif
+;
+;    if (pixel2 ne 0) then begin
+;      plots, pixel2, 0, /data
+;      plots, pixel2, ymax, /data, /continue, color=fsc_color("red"), $
+;        thick=_pixel2_size
+;    endif
+;
+;    if (pixel1 ne 0 && pixel2 ne 0) then begin
+;      refpix = (float(pixel1) + float(pixel2))/2.
+;      plots, refpix, 0, /data
+;      plots, refpix, ymax, /data, /continue, color=fsc_color("blue")
+;    endif
   
 end
 
