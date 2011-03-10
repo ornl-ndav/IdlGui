@@ -53,105 +53,104 @@ pro tof_selection_base_event, Event
     ;main draw
     widget_info(event.top, find_by_uname='tof_selection_draw'): begin
     
-      ;      catch, error
-      ;      if (error ne 0) then begin ;selection
-      ;        catch,/cancel
-    
-      show_tof_selection_cursor_info, event
-      
-      if (event.press eq 1) then begin ;left click
-      
-        show_tof_selection_input_base, event
-        show_tof_selection_counts_vs_tof_base, event
+      catch, error
+      if (error ne 0) then begin ;selection
+        catch,/cancel
         
-        ;left click activated
-        (*global_tof_selection).left_click = 1b
+        show_tof_selection_cursor_info, event
         
-        tof_value = strcompress(retrieve_tof_value(event),/remove_all)
-        if ((*global_tof_selection).tof1_selected) then begin
-          uname = 'tof_selection_tof1_uname'
-        endif else begin
-          uname = 'tof_selection_tof2_uname'
-        endelse
-        putValue, base=(*global_tof_selection).tof_selection_input_base, $
-          uname, $
-          tof_value
-        save_tof_data, event=event
-        display_tof_selection_tof, event=event
+        if (event.press eq 1) then begin ;left click
         
-        ;display counts_vs_tof with selection
-        plot_base = (*global_tof_selection).tof_selection_counts_vs_tof_base_id
-        if (widget_info(plot_base, /valid_id) ne 0) then begin
-          display_counts_vs_tof, $
-            base=(*global_tof_selection).tof_selection_counts_vs_tof_base_id, $
-            global_tof_selection
+          show_tof_selection_input_base, event
+          show_tof_selection_counts_vs_tof_base, event
+          
+          ;left click activated
+          (*global_tof_selection).left_click = 1b
+          
+          tof_value = strcompress(retrieve_tof_value(event),/remove_all)
+          if ((*global_tof_selection).tof1_selected) then begin
+            uname = 'tof_selection_tof1_uname'
+          endif else begin
+            uname = 'tof_selection_tof2_uname'
+          endelse
+          putValue, base=(*global_tof_selection).tof_selection_input_base, $
+            uname, $
+            tof_value
+          save_tof_data, event=event
+          display_tof_selection_tof, event=event
+          
+          ;display counts_vs_tof with selection
+          plot_base = (*global_tof_selection).tof_selection_counts_vs_tof_base_id
+          if (widget_info(plot_base, /valid_id) ne 0) then begin
+            display_counts_vs_tof, $
+              base=(*global_tof_selection).tof_selection_counts_vs_tof_base_id, $
+              global_tof_selection
+          endif
+          
         endif
         
-      endif
-      
-      
-      ;release button
-      if (event.release eq 1 && $
-        (*global_tof_selection).left_click eq 1b) then begin
-        (*global_tof_selection).left_click = 0b
-      endif
-      
-      ;right click
-      if (event.press eq 4) then begin
-        ;          show_refpix_input_base, event
-        if ((*global_tof_selection).tof1_selected) then begin
-          (*global_tof_selection).tof1_selected = 0b
-        endif else begin
-          (*global_tof_selection).tof1_selected = 1b
-        endelse
-        display_tof_selection_tof, event=event
         
-        ;display counts_vs_tof with selection
-        plot_base = (*global_tof_selection).tof_selection_counts_vs_tof_base_id
-        if (widget_info(plot_base, /valid_id) ne 0) then begin
-          display_counts_vs_tof, $
-            base=(*global_tof_selection).tof_selection_counts_vs_tof_base_id, $
-            global_tof_selection
+        ;release button
+        if (event.release eq 1 && $
+          (*global_tof_selection).left_click eq 1b) then begin
+          (*global_tof_selection).left_click = 0b
         endif
         
-      endif
-      
-      ;moving mouse with left click pressed
-      if ((*global_tof_selection).left_click) then begin
-        tof_value = strcompress(retrieve_tof_value(event),/remove_all)
-        if ((*global_tof_selection).tof1_selected) then begin
-          uname = 'tof_selection_tof1_uname'
-        endif else begin
-          uname = 'tof_selection_tof2_uname'
-        endelse
-        putValue, $
-          base=(*global_tof_selection).tof_selection_input_base, uname, $
-          tof_value
-        save_tof_data, event=event
-        display_tof_selection_tof, event=event
-        
-        ;display counts_vs_tof with selection
-        plot_base = (*global_tof_selection).tof_selection_counts_vs_tof_base_id
-        if (widget_info(plot_base, /valid_id) ne 0) then begin
-          display_counts_vs_tof, $
-            base=(*global_tof_selection).tof_selection_counts_vs_tof_base_id, $
-            global_tof_selection
+        ;right click
+        if (event.press eq 4) then begin
+          ;          show_refpix_input_base, event
+          if ((*global_tof_selection).tof1_selected) then begin
+            (*global_tof_selection).tof1_selected = 0b
+          endif else begin
+            (*global_tof_selection).tof1_selected = 1b
+          endelse
+          display_tof_selection_tof, event=event
+          
+          ;display counts_vs_tof with selection
+          plot_base = (*global_tof_selection).tof_selection_counts_vs_tof_base_id
+          if (widget_info(plot_base, /valid_id) ne 0) then begin
+            display_counts_vs_tof, $
+              base=(*global_tof_selection).tof_selection_counts_vs_tof_base_id, $
+              global_tof_selection
+          endif
+          
         endif
         
-      endif
+        ;moving mouse with left click pressed
+        if ((*global_tof_selection).left_click) then begin
+          tof_value = strcompress(retrieve_tof_value(event),/remove_all)
+          if ((*global_tof_selection).tof1_selected) then begin
+            uname = 'tof_selection_tof1_uname'
+          endif else begin
+            uname = 'tof_selection_tof2_uname'
+          endelse
+          putValue, $
+            base=(*global_tof_selection).tof_selection_input_base, uname, $
+            tof_value
+          save_tof_data, event=event
+          display_tof_selection_tof, event=event
+          
+          ;display counts_vs_tof with selection
+          plot_base = (*global_tof_selection).tof_selection_counts_vs_tof_base_id
+          if (widget_info(plot_base, /valid_id) ne 0) then begin
+            display_counts_vs_tof, $
+              base=(*global_tof_selection).tof_selection_counts_vs_tof_base_id, $
+              global_tof_selection
+          endif
+          
+        endif
+        
+      endif else begin ;entering or leaving widget_draw
       
-    ;      endif else begin ;entering or leaving widget_draw
-      
-    ;      print, 'here'
-    ;        if (event.enter eq 0) then begin ;leaving plot
-    ;          file_name = (*global_tof_selection).file_name
-    ;          id = widget_info(event.top, find_by_uname='tof_selection_base_uname')
-    ;          widget_control, id, tlb_set_title=file_name
-    ;
-    ;        endif else begin ;entering plot
-    ;
-    ;        endelse
-    ;      endelse
+        if (event.enter eq 0) then begin ;leaving plot
+          file_name = (*global_tof_selection).file_name
+          id = widget_info(event.top, find_by_uname='tof_selection_base_uname')
+          widget_control, id, tlb_set_title=file_name
+          
+        endif else begin ;entering plot
+        
+        endelse
+      endelse
       
     end
     
@@ -342,9 +341,11 @@ pro save_tof_data, event=event, base=base
   
   tof_selection_input_base = (*global_tof_selection).tof_selection_input_base
   
-  tof1 = getValue(base=tof_selection_input_base, uname='tof_selection_tof1_uname')
-  tof2 = getValue(base=tof_selection_input_base, uname='tof_selection_tof2_uname')
-  
+  tof1 = getValue(base=tof_selection_input_base, $
+    uname='tof_selection_tof1_uname')
+  tof2 = getValue(base=tof_selection_input_base, $
+    uname='tof_selection_tof2_uname')
+    
   tof_min_max = [tof1, tof2]
   
   (*global_tof_selection).tof_selection_tof = tof_min_max
@@ -410,8 +411,8 @@ pro display_tof_selection_tof, event=event, base=base
   tof_min = tof_selection_tof[0]
   tof_max = tof_selection_tof[1]
   
-  tof_min_device = from_data_to_device(event=event, tof_min)
-  tof_max_device = from_data_to_device(event=event, tof_max)
+  tof_min_device = from_data_to_device(event=event, base=base, tof_min)
+  tof_max_device = from_data_to_device(event=event, base=base, tof_max)
   
   ysize = (*global_tof_selection).ysize
   
@@ -1161,7 +1162,7 @@ pro tof_selection_base_gui, wBase, $
     scr_ysize = ysize-2*border,$
     /button_events, $
     /motion_events, $
-    ;    /tracking_events, $
+    /tracking_events, $
     keyboard_events=2, $
     retain=2, $
     ;    event_pro = 'refpix_draw_eventcb',$
@@ -1345,7 +1346,7 @@ pro tof_selection_base, main_base=main_base, $
     
     tof_selection_input_base: 0L, $ ;id of refpix_input_base
     tof_selection_counts_vs_tof_base_id: 0L, $ 'id of refpix_counts_vs_tof_base
-  counts_vs_tof_scale_is_linear: 0b, $ ;counts vs tof (linear/log)
+    counts_vs_tof_scale_is_linear: 0b, $ ;counts vs tof (linear/log)
   
     ;used to plot selection zoom
     default_plot_size: default_plot_size, $
