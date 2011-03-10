@@ -78,6 +78,9 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     instrument:        STRCOMPRESS(INSTRUMENT,/remove_all),$
     with_launch_switch: WITH_LAUNCH_SWITCH,$
     
+    ;equivalent index of tof range selected in 'TOF selection tool' base
+    index_of_tof_range: [-1,-1], $ 
+    
     ;REFreduction calculate itself the I(Q) output file
     overwrite_q_output_file: OVERWRITE_Q_OUTPUT_FILE,$
     

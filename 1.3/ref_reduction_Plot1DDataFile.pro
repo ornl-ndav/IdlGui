@@ -356,5 +356,8 @@ PRO RePlot1DDataFile, Event
   id_draw = widget_info(Event.top, find_by_uname='load_data_D_draw')
   widget_control, id_draw, get_value=id_value
   wset,id_value
+  
+  tvimg = new_rescaled_tvimg(event)
+  
   tvscl, tvimg, /device
 END

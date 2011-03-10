@@ -34,6 +34,48 @@
 
 ;+
 ; :Description:
+;    Makes the conversion from tof_range value to tof_range index
+;
+; :Params:
+;    tof_range
+;    tof_axis
+;
+; :Author: j35
+;-
+function get_index_tof_range, tof_range, tof_axis
+  compile_opt idl2
+  
+  tof_min = tof_range[0]
+  case (tof_min) of
+    -1: tof_axis_min = 0
+    else: begin
+      _index = where(tof_min ge tof_axis, nbr)
+      if (nbr eq 0) then begin
+        tof_axis_min = 0
+      endif else begin
+        tof_axis_min = _index[-1]+1
+      endelse
+    end
+  endcase
+  
+  tof_max = tof_range[1]
+  case (tof_max) of
+    -1: tof_axis_max = -1
+    else: begin
+      _index = where(tof_axis le tof_max, nbr)
+      if (nbr eq 0) then begin
+        tof_axis_max = -1
+      endif else begin
+        tof_axis_max = _index[-1]
+      endelse
+    end
+  endcase
+  
+  return, [tof_axis_min, tof_axis_max]
+end
+
+;+
+; :Description:
 ;   main base event
 ;
 ; :Params:
@@ -110,6 +152,13 @@ pro tof_selection_input_base_event, Event
         global_tof_selection = (*global_info).global_tof_selection
         main_event = (*global_tof_selection).main_event
         
+        tof_axis = (*global_tof_selection).x_axis
+        index_tof_range = get_index_tof_range([tof_min, tof_max], $
+          tof_axis)
+          
+        global = (*global_tof_selection).global
+        (*global).index_of_tof_range = index_tof_range
+        
         if (isTOFcuttingUnits_microS(main_event)) then begin
           tof_min *= 1000.
           tof_max *= 1000.
@@ -121,6 +170,9 @@ pro tof_selection_input_base_event, Event
         putValue, event=main_event, $
           'tof_cutting_max', $
           strcompress(tof_max,/remove_all)
+        
+        ;refresh main plot
+        REFreduction_DataBackgroundPeakSelection, main_event
           
         top_base = (*global_info).top_base
         widget_control, top_base, /destroy
