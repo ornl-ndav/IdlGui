@@ -41,7 +41,7 @@
 ;
 ; :Author: j35
 ;-
-pro refpix_input_base_event, Event
+pro tof_selection_input_base_event, Event
   compile_opt idl2
   
   case Event.id of
@@ -78,41 +78,71 @@ pro refpix_input_base_event, Event
       putValue, event=event, 'refpix_pixel2_uname', ''
     end
     
-    widget_info(event.top, find_by_uname='validate_refpix_selected_uname'): begin
-      ;validate refpix selected
-      refpix_value = getValue(event=event, uname='refpix_value_uname')
-      if (refpix_value eq 0) then refpix_value = ''
-      widget_control, event.top, get_uvalue=global_info
-      top_base = (*global_info).top_base
-      ;get row selected in configuration file
-      global_refpix = (*global_info).global_refpix
-      row_selected = (*global_refpix).row_index
-      ;retrieve configuration table, make changes at given row and put it back
-      main_event = (*global_refpix).main_event
-      table = getValue(event=main_event,uname='ref_m_metadata_table')
-      table[3,row_selected] = strcompress(refpix_value,/remove_all)
-      ;      putValue, event=main_event, 'ref_m_metadata_table', table
-      calculate_configuration_sangle_values, $
-        event=main_event, $
-        config_table=table
-      putValue, event=main_event, 'ref_m_metadata_table', table
-      id_counts = (*global_refpix).refpix_counts_vs_pixel_base_id
-      if (widget_info(id_counts, /valid_id) ne 0) then begin
-        widget_control, id_counts, /destroy
+    ;validate tof selected
+    widget_info(event.top, find_by_uname=$
+    'validate_tof_selection_selected_uname'): begin
+      tof1_value = getValue(event=event, uname='tof_selection_tof1_uname')
+      tof2_value = getValue(event=event, uname='tof_selection_tof2_uname')
+      
+      ;pop up an error dialog message if tof1 and 2 have the same values
+      if (tof1_value eq tof2_value) then begin
+        id = widget_info(event.top, find_by_uname='tof_selection_base')
+        message_text = ['TOF 1 and 2 have the same valuee!',$
+          '',$
+          'TOF1 (ms): ' + strcompress(tof1_value,/remove_all), $
+          'TOF2 (ms): ' + strcompress(tof2_value,/remove_all)]
+        result = dialog_message(message_text, $
+          title = 'Error in the range of TOF selected',$
+          dialog_parent=id, $
+          /ERROR)
+        return
       endif
+      
+      ;make sure tof1 is smaller than tof2
+
+      if (tof1_value eq 0.) then begin
+      tof_min = 0.
+      tof_max = tof2_value
+      endif
+      
+      if (tof2_value eq 0.) then begin
+      tof_min = tof1_value
+      tof_max = 0.
+      endif
+      
+      ;when none of them is equal to 0.
+      if (tof1_value * tof2_value ne 0) then begin
+      tof_min = min([tof1_value,tof2_value],max=tof_max)
+      endif
+      
+      ;put tof values in main GUI
+      widget_control, event.top, get_uvalue=global_info
+      global_tof_selection = (*global_info).global_tof_selection
+      main_event = (*global_tof_selection).main_event
+      
+      if (isTOFcuttingUnits_microS(main_event)) then begin
+      tof_min *= 1000.
+      tof_max *= 1000.
+      endif
+      
+      putValue, event=main_event, $
+      'tof_cutting_min', $
+       strcompress(tof_min,/remove_all)
+      putValue, event=main_event, $
+      'tof_cutting_max', $
+       strcompress(tof_max,/remove_all)
+      
+      top_base = (*global_info).top_base
       widget_control, top_base, /destroy
+      
     end
     
-    ;cancel refpix selected
-    widget_info(event.top, find_by_uname='cancel_refpix_selected_uname'): begin
+    ;cancel tof selected
+    widget_info(event.top, find_by_uname=$
+    'cancel_tof_selection_selected_uname'): begin
       widget_control, event.top, get_uvalue=global_info
       top_base = (*global_info).top_base
-      global_refpix = (*global_info).global_refpix
-      id_counts = (*global_refpix).refpix_counts_vs_pixel_base_id
       widget_control, top_base, /destroy
-      if (widget_info(id_counts, /valid_id) ne 0) then begin
-        widget_control, id_counts, /destroy
-      endif
     end
     
     else:
@@ -217,12 +247,12 @@ pro tof_selection_input_base_gui, wBase, $
     scr_xsize = 50)
     
   space = widget_label(row4,$
-    value = '     ')
+    value = '  ')
     
   row4 = widget_button(row4,$
-    value = 'Use this TOF range',$
+    value = 'Use this TOF range and EXIT',$
     uname = 'validate_tof_selection_selected_uname',$
-    scr_xsize = 150)
+    scr_xsize = 200)
     
 end
 
@@ -314,7 +344,7 @@ pro tof_selection_input_base, event=event, $
   WIDGET_CONTROL, _base, SET_UVALUE = global_info
   
   XMANAGER, "tof_selection_input_base", _base, GROUP_LEADER = ourGroup, $
-  /NO_BLOCK, $
+    /NO_BLOCK, $
     cleanup='counts_info_base_cleanup'
     
 end
