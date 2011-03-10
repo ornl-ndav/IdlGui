@@ -215,13 +215,15 @@ pro check_tof_value, x, event
   widget_control, event.top, get_uvalue=global_counts
   global_tof_selection = (*global_counts).global_tof_selection
   
-  if (x lt 0) then begin
+  tof_range = (*global_tof_selection).xrange
+  xmin = tof_range[0]
+  xmax = tof_range[1]
+
+  if (x lt xmin) then begin
     x=0
     return
   endif
   
-  tof_range = (*global_tof_selection).xrange
-  xmax = tof_range[1]
   if (x gt xmax) then begin
     x = xmax
     return
