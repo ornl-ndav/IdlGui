@@ -53,9 +53,9 @@ pro tof_selection_base_event, Event
     ;main draw
     widget_info(event.top, find_by_uname='tof_selection_draw'): begin
     
-      catch, error
-      if (error ne 0) then begin ;selection
-        catch,/cancel
+;      catch, error
+;      if (error ne 0) then begin ;selection
+;        catch,/cancel
         
         show_tof_selection_cursor_info, event
         
@@ -76,7 +76,6 @@ pro tof_selection_base_event, Event
           tof_value
           save_tof_data, event=event
           display_tof_selection_tof, event=event
-
 
 ;FIXME
 
@@ -126,17 +125,19 @@ pro tof_selection_base_event, Event
 ;            
         endif
         
-      endif else begin ;entering or leaving widget_draw
+;      endif else begin ;entering or leaving widget_draw
       
-        if (event.enter eq 0) then begin ;leaving plot
-          file_name = (*global_tof_selection).file_name
-          id = widget_info(event.top, find_by_uname='tof_selection_base_uname')
-          widget_control, id, tlb_set_title=file_name
-          
-        endif else begin ;entering plot
-        
-        endelse
-      endelse
+;      print, 'here'
+;        if (event.enter eq 0) then begin ;leaving plot
+;          file_name = (*global_tof_selection).file_name
+;          id = widget_info(event.top, find_by_uname='tof_selection_base_uname')
+;          widget_control, id, tlb_set_title=file_name
+;          
+;        endif else begin ;entering plot
+;        
+;        endelse
+;      endelse
+
     end
     
     ;main base
@@ -524,14 +525,14 @@ end
 
 ;+
 ; :Description:
-;    calculate the x data from the x device
+;    calculate the y data from the y device
 ;
 ; :Params:
 ;    event
 ;
 ; :Author: j35
 ;-
-function retrieve_tof_value, event
+function retrieve_pixel_value, event
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global_tof_selection
@@ -542,14 +543,14 @@ function retrieve_tof_value, event
     return, 'N/A'
   endif
   
-  x_device = event.x
-  congrid_xcoeff = (*global_tof_selection).congrid_xcoeff
-  xrange = float((*global_tof_selection).xrange) ;min and max pixels
+  y_device = event.y
+  congrid_ycoeff = (*global_tof_selection).congrid_ycoeff
+  yrange = float((*global_tof_selection).yrange) ;min and max pixels
   
-  rat = float(x_device) / float(congrid_xcoeff)
-  x_data = float(rat * (xrange[1] - xrange[0]) + xrange[0])
+  rat = float(y_device) / float(congrid_ycoeff)
+  y_data = float(rat * (yrange[1] - yrange[0]) + yrange[0])
     
-  return, fix(x_data)
+  return, fix(y_data)
   
 end
 
@@ -1161,7 +1162,7 @@ pro tof_selection_base_gui, wBase, $
     scr_ysize = ysize-2*border,$
     /button_events, $
     /motion_events, $
-    /tracking_events, $
+;    /tracking_events, $
     keyboard_events=2, $
     retain=2, $
     ;    event_pro = 'refpix_draw_eventcb',$
