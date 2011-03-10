@@ -79,14 +79,16 @@ pro tof_selection_base_event, Event
         save_tof_data, event=event
         display_tof_selection_tof, event=event
         
+        ;display counts_vs_tof with selection
+        plot_base = (*global_tof_selection).tof_selection_counts_vs_tof_base_id
+        if (widget_info(plot_base, /valid_id) ne 0) then begin
+          display_counts_vs_tof, $
+            base=(*global_tof_selection).tof_selection_counts_vs_tof_base_id, $
+            global_tof_selection
+        endif
+        
       endif
       
-      ;          display_counts_vs_pixel, $
-      ;            base=(*global_refpix).refpix_counts_vs_pixel_base_id, $
-      ;            global_refpix
-      ;
-      ;          return
-      ;        endif
       
       ;release button
       if (event.release eq 1 && $
@@ -103,11 +105,15 @@ pro tof_selection_base_event, Event
           (*global_tof_selection).tof1_selected = 1b
         endelse
         display_tof_selection_tof, event=event
-      ;          
-      ;          display_refpixel_pixels, event=event
-      ;          display_counts_vs_pixel, $
-      ;            base=(*global_refpix).refpix_counts_vs_pixel_base_id, $
-      ;            global_refpix
+        
+        ;display counts_vs_tof with selection
+        plot_base = (*global_tof_selection).tof_selection_counts_vs_tof_base_id
+        if (widget_info(plot_base, /valid_id) ne 0) then begin
+          display_counts_vs_tof, $
+            base=(*global_tof_selection).tof_selection_counts_vs_tof_base_id, $
+            global_tof_selection
+        endif
+        
       endif
       
       ;moving mouse with left click pressed
@@ -123,10 +129,15 @@ pro tof_selection_base_event, Event
           tof_value
         save_tof_data, event=event
         display_tof_selection_tof, event=event
-      ;          display_counts_vs_pixel, $
-      ;            base=(*global_refpix).refpix_counts_vs_pixel_base_id, $
-      ;            global_refpix
-      ;
+        
+        ;display counts_vs_tof with selection
+        plot_base = (*global_tof_selection).tof_selection_counts_vs_tof_base_id
+        if (widget_info(plot_base, /valid_id) ne 0) then begin
+          display_counts_vs_tof, $
+            base=(*global_tof_selection).tof_selection_counts_vs_tof_base_id, $
+            global_tof_selection
+        endif
+        
       endif
       
     ;      endif else begin ;entering or leaving widget_draw
@@ -434,7 +445,7 @@ pro display_tof_selection_tof, event=event, base=base
   to_tof = tof_device + 10
   
   plots, [from_tof, tof_device, to_tof, tof_device, from_tof], $
-  [0, 0, 0, to_ysize, 0], $
+    [0, 0, 0, to_ysize, 0], $
     /device, $
     linestyle = 0,$
     color = fsc_color("red")
@@ -1401,7 +1412,7 @@ pro tof_selection_base, main_base=main_base, $
     
     top_base: wBase, $
     main_event: event})
-
+    
   (*(*global_tof_selection).full_data) = data
   
   data_2d = total(data,2)
