@@ -51,7 +51,7 @@ function get_input_tof_min_max, event
     error_status = 1b
     tof_min = FLOAT(tof_min)
     
-    IF (isTOFcuttingUnits_microS(Event)) THEN tof_min = 1000.
+    IF (isTOFcuttingUnits_microS(Event)) THEN tof_min /= 1000.
     
     error_status = 0b
     
