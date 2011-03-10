@@ -808,7 +808,7 @@ pro tof_selection_local_switch_axes_type, event
   
   save_tof_selection_background,  event=event
   
-  display_tof_selection_pixels, event=event
+  display_tof_selection_tof, event=event
   
 end
 
@@ -854,7 +854,7 @@ pro change_tof_selection_loadct, event
   ;replot
   refresh_tof_selection_plot, event, recalculate=1
   refresh_plot_tof_selection_colorbar, event
-  display_tof_selection_pixels, event=event
+  display_tof_selection_tof, event=event
   
 end
 
