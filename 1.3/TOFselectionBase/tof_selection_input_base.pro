@@ -270,11 +270,11 @@ pro tof_selection_input_base_event, Event
       xmin = tof_range[0]
       xmax = tof_range[1]
       
-      tof1 = (tof1 gt xmax) ? xmax : tof1
-      tof2 = (tof2 gt xmax) ? xmax : tof2
+      tof1 = (tof1 gt xmax) ? -1 : tof1
+      tof2 = (tof2 gt xmax) ? -1 : tof2
       
-      tof1 = (tof1 lt xmin) ? xmin : tof1
-      tof2 = (tof2 lt xmin) ? xmin : tof2
+      tof1 = (tof1 lt xmin) ? -1 : tof1
+      tof2 = (tof2 lt xmin) ? -1 : tof2
       
       tof_selection_tof = [tof1,tof2]
       (*global_tof_selection).tof_selection_tof = tof_selection_tof

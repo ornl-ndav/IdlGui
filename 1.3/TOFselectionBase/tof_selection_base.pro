@@ -73,6 +73,9 @@ pro tof_selection_base_event, Event
           endif else begin
             uname = 'tof_selection_tof2_uname'
           endelse
+          
+          check_tof_value, tof_value, global_tof_selection
+          if (tof_value eq -1) then tof_value = ''
           putValue, base=(*global_tof_selection).tof_selection_input_base, $
             uname, $
             tof_value
@@ -124,8 +127,10 @@ pro tof_selection_base_event, Event
           endif else begin
             uname = 'tof_selection_tof2_uname'
           endelse
-          putValue, $
-            base=(*global_tof_selection).tof_selection_input_base, uname, $
+          check_tof_value, tof_value, global_tof_selection
+          if (tof_value eq -1) then tof_value = ''
+          putValue, base=(*global_tof_selection).tof_selection_input_base, $
+            uname, $
             tof_value
           save_tof_data, event=event
           display_tof_selection_tof, event=event
@@ -346,6 +351,9 @@ pro save_tof_data, event=event, base=base
   tof2 = getValue(base=tof_selection_input_base, $
     uname='tof_selection_tof2_uname')
     
+  tof1 = (tof1 eq '') ? -1 : tof1
+  tof2 = (tof2 eq '') ? -1 : tof2
+  
   tof_min_max = [tof1, tof2]
   
   (*global_tof_selection).tof_selection_tof = tof_min_max
@@ -1346,7 +1354,7 @@ pro tof_selection_base, main_base=main_base, $
     
     tof_selection_input_base: 0L, $ ;id of refpix_input_base
     tof_selection_counts_vs_tof_base_id: 0L, $ 'id of refpix_counts_vs_tof_base
-    counts_vs_tof_scale_is_linear: 0b, $ ;counts vs tof (linear/log)
+  counts_vs_tof_scale_is_linear: 0b, $ ;counts vs tof (linear/log)
   
     ;used to plot selection zoom
     default_plot_size: default_plot_size, $

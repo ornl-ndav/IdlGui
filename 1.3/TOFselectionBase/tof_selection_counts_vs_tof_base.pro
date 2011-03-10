@@ -92,7 +92,7 @@ pro tof_selection_counts_vs_tof_base_event, Event
         wset, _plot_id
         
         cursor, x,y, /data
-        check_tof_value, x, event
+        check_tof_value, x, global_tof_selection
         
         tof_selection_tof = (*global_tof_selection).tof_selection_tof
         tof1_selected = (*global_tof_selection).tof1_selected
@@ -104,6 +104,8 @@ pro tof_selection_counts_vs_tof_base_event, Event
         tof_selection_tof[1] = x
         endelse
         (*global_tof_selection).tof_selection_tof = tof_selection_tof
+        
+        x = (x eq -1) ? !values.F_nan : x
         
         putValue, base=(*global_tof_selection).tof_selection_input_base, $
         uname, strcompress(x,/remove_all)
@@ -142,7 +144,7 @@ pro tof_selection_counts_vs_tof_base_event, Event
         wset, _plot_id
         
         cursor, x,y, /data
-        check_tof_value, x, event
+        check_tof_value, x, global_tof_selection
         
         tof_selection_tof = (*global_tof_selection).tof_selection_tof
         tof1_selected = (*global_tof_selection).tof1_selected
@@ -155,6 +157,8 @@ pro tof_selection_counts_vs_tof_base_event, Event
         endelse
         (*global_tof_selection).tof_selection_tof = tof_selection_tof
         
+                x = (x eq -1) ? !values.F_nan : x
+                
         putValue, base=(*global_tof_selection).tof_selection_input_base, $
         uname, strcompress(x,/remove_all)
         
@@ -162,35 +166,6 @@ pro tof_selection_counts_vs_tof_base_event, Event
         display_tof_selection_tof, base=(*global_counts).top_base
         
         endif
-        
-;        refpix_pixels = (*global_refpix).refpix_pixels
-;        
-;        _id = widget_info(event.top, find_by_uname=$
-;        'refpix_counts_vs_pixel_draw')
-;        widget_control, event.top, get_uvalue=global_counts
-;        widget_control, _id, GET_VALUE = _plot_id
-;        wset, _plot_id
-;        
-;        cursor, x,y, /data, /nowait
-;        check_pixel_value, x, event
-;        
-;        ;1b for pixel1, 0b for pixel2
-;        pixel1_working = (*global_refpix).pixel1_selected
-;        if (pixel1_working) then begin
-;          refpix_pixels[0] = x
-;          uname = 'refpix_pixel1_uname'
-;        endif else begin
-;          refpix_pixels[1] = x
-;          uname = 'refpix_pixel2_uname'
-;        endelse
-;        (*global_refpix).refpix_pixels = refpix_pixels
-;        refpix_input_base = (*global_refpix).refpix_input_base
-;        putValue, base=refpix_input_base, uname, strcompress(x,/remove_all)
-;        top_base = (*global_refpix).top_base
-;        calculate_refpix, base=top_base
-;        display_counts_vs_pixel, event=event, global_refpix
-;        display_refpixel_pixels, base=(*global_refpix).top_base
-;      endif
       
     end
     
@@ -209,23 +184,20 @@ end
 ;
 ; :Author: j35
 ;-
-pro check_tof_value, x, event
+pro check_tof_value, x, global_tof_selection
   compile_opt idl2
-  
-  widget_control, event.top, get_uvalue=global_counts
-  global_tof_selection = (*global_counts).global_tof_selection
   
   tof_range = (*global_tof_selection).xrange
   xmin = tof_range[0]
   xmax = tof_range[1]
 
   if (x lt xmin) then begin
-    x=0
+    x=-1
     return
   endif
   
   if (x gt xmax) then begin
-    x = xmax
+    x = -1
     return
   endif
   
