@@ -53,91 +53,95 @@ pro tof_selection_base_event, Event
     ;main draw
     widget_info(event.top, find_by_uname='tof_selection_draw'): begin
     
-;      catch, error
-;      if (error ne 0) then begin ;selection
-;        catch,/cancel
+      ;      catch, error
+      ;      if (error ne 0) then begin ;selection
+      ;        catch,/cancel
+    
+      show_tof_selection_cursor_info, event
+      
+      if (event.press eq 1) then begin ;left click
+      
+        show_tof_selection_input_base, event
+        show_tof_selection_counts_vs_tof_base, event
         
-        show_tof_selection_cursor_info, event
+        ;left click activated
+        (*global_tof_selection).left_click = 1b
         
-        if (event.press eq 1) then begin ;left click
-        
-          show_tof_selection_input_base, event
-          show_tof_selection_counts_vs_tof_base, event
-          
-          (*global_tof_selection).left_click = 1b
-          tof_value = strcompress(retrieve_tof_value(event),/remove_all)
-          if ((*global_tof_selected).tof1_selected) then begin
-            uname = 'tof_selection_tof1_uname'
-          endif else begin
-            uname = 'tof_selection_tof2_uname'
-          endelse
-          putValue, base=(*global_tof_selection).tof_selection_input_base, $
+        tof_value = strcompress(retrieve_tof_value(event),/remove_all)
+        if ((*global_tof_selection).tof1_selected) then begin
+          uname = 'tof_selection_tof1_uname'
+        endif else begin
+          uname = 'tof_selection_tof2_uname'
+        endelse
+        putValue, base=(*global_tof_selection).tof_selection_input_base, $
           uname, $
           tof_value
-          save_tof_data, event=event
-          display_tof_selection_tof, event=event
-
-;FIXME
-
-
-
-
-
-;          display_counts_vs_pixel, $
-;            base=(*global_refpix).refpix_counts_vs_pixel_base_id, $
-;            global_refpix
-;            
-;          return
-;        endif
-;        
-;        if (event.release eq 1 && $
-;          (*global_refpix).left_click eq 1b) then begin ;release button
-;          (*global_refpix).left_click = 0b
-;        endif
-;        
-;        if (event.press eq 4) then begin ;right click
-;          show_refpix_input_base, event
-;          if ((*global_refpix).pixel1_selected) then begin
-;            (*global_refpix).pixel1_selected = 0b
-;          endif else begin
-;            (*global_refpix).pixel1_selected = 1b
-;          endelse
-;          display_refpixel_pixels, event=event
-;          display_counts_vs_pixel, $
-;            base=(*global_refpix).refpix_counts_vs_pixel_base_id, $
-;            global_refpix
-;        endif
-;        
-;        if ((*global_tof_selection).left_click) then begin ;moving mouse
-;          tof_value = strcompress(retrieve_tof_value(event),/remove_all)
-;          if ((*global_tof_selection).tof1_selected) then begin
-;            uname = 'refpix_pixel1_uname'
-;          endif else begin
-;            uname = 'refpix_pixel2_uname'
-;          endelse
-;          putValue, base=(*global_refpix).refpix_input_base, uname, pixel_value
-;          save_refpixel_pixels, event=event
-;          display_refpixel_pixels, event=event
-;          calculate_refpix, event=event
-;          display_counts_vs_pixel, $
-;            base=(*global_refpix).refpix_counts_vs_pixel_base_id, $
-;            global_refpix
-;            
-        endif
+        save_tof_data, event=event
+        display_tof_selection_tof, event=event
         
-;      endif else begin ;entering or leaving widget_draw
+      endif
       
-;      print, 'here'
-;        if (event.enter eq 0) then begin ;leaving plot
-;          file_name = (*global_tof_selection).file_name
-;          id = widget_info(event.top, find_by_uname='tof_selection_base_uname')
-;          widget_control, id, tlb_set_title=file_name
-;          
-;        endif else begin ;entering plot
-;        
-;        endelse
-;      endelse
-
+      ;          display_counts_vs_pixel, $
+      ;            base=(*global_refpix).refpix_counts_vs_pixel_base_id, $
+      ;            global_refpix
+      ;
+      ;          return
+      ;        endif
+      
+      ;release button
+      if (event.release eq 1 && $
+        (*global_tof_selection).left_click eq 1b) then begin
+        (*global_tof_selection).left_click = 0b
+      endif
+      
+      ;right click
+      if (event.press eq 4) then begin
+        ;          show_refpix_input_base, event
+        if ((*global_tof_selection).tof1_selected) then begin
+          (*global_tof_selection).tof1_selected = 0b
+        endif else begin
+          (*global_tof_selection).tof1_selected = 1b
+        endelse
+        display_tof_selection_tof, event=event
+      ;          
+      ;          display_refpixel_pixels, event=event
+      ;          display_counts_vs_pixel, $
+      ;            base=(*global_refpix).refpix_counts_vs_pixel_base_id, $
+      ;            global_refpix
+      endif
+      
+      ;moving mouse with left click pressed
+      if ((*global_tof_selection).left_click) then begin
+        tof_value = strcompress(retrieve_tof_value(event),/remove_all)
+        if ((*global_tof_selection).tof1_selected) then begin
+          uname = 'tof_selection_tof1_uname'
+        endif else begin
+          uname = 'tof_selection_tof2_uname'
+        endelse
+        putValue, $
+          base=(*global_tof_selection).tof_selection_input_base, uname, $
+          tof_value
+        save_tof_data, event=event
+        display_tof_selection_tof, event=event
+      ;          display_counts_vs_pixel, $
+      ;            base=(*global_refpix).refpix_counts_vs_pixel_base_id, $
+      ;            global_refpix
+      ;
+      endif
+      
+    ;      endif else begin ;entering or leaving widget_draw
+      
+    ;      print, 'here'
+    ;        if (event.enter eq 0) then begin ;leaving plot
+    ;          file_name = (*global_tof_selection).file_name
+    ;          id = widget_info(event.top, find_by_uname='tof_selection_base_uname')
+    ;          widget_control, id, tlb_set_title=file_name
+    ;
+    ;        endif else begin ;entering plot
+    ;
+    ;        endelse
+    ;      endelse
+      
     end
     
     ;main base
@@ -332,7 +336,7 @@ pro save_tof_data, event=event, base=base
   
   tof_min_max = [tof1, tof2]
   
-  (*global_tof_selection).tof_selection_tof = tof_min_max 
+  (*global_tof_selection).tof_selection_tof = tof_min_max
   
 end
 
@@ -416,40 +420,24 @@ pro display_tof_selection_tof, event=event, base=base
       
   endif
   
-  return
-
-  
-  if ((*global_tof_selection).pixel1_selected) then begin
-    pixel_device = pixel1_device
+  if ((*global_tof_selection).tof1_selected) then begin
+    tof_device = tof_min_device
   endif else begin
-    pixel_device = pixel2_device
+    tof_device = tof_max_device
   endelse
   
   ;retrieve geometry of refpix draw
   geometry = widget_info(id,/geometry)
-  draw_xsize = geometry.scr_xsize
-  from_xsize = draw_xsize - (draw_xsize/100.)*2.
-  from_pixel = pixel_device - 10
-  to_pixel = pixel_device + 10
+  draw_ysize = geometry.scr_ysize
+  to_ysize = (draw_ysize/100.)*2.
+  from_tof = tof_device - 10
+  to_tof = tof_device + 10
   
-  plots, [from_xsize, draw_xsize, draw_xsize, draw_xsize, from_xsize],$
-    [pixel_device, from_pixel, pixel_device, to_pixel, pixel_device],$
+  plots, [from_tof, tof_device, to_tof, tof_device, from_tof], $
+  [0, 0, 0, to_ysize, 0], $
     /device, $
     linestyle = 0,$
     color = fsc_color("red")
-    
-  ;display refpix
-  if (pixel1_data eq 0) then return
-  if (pixel2_data eq 0) then return
-  
-  tof_selection_data = (float(pixel1_data)+float(pixel2_data))/2.
-  tof_selection_device = from_data_to_device(event=event, base=base, tof_selection_data)
-  plots, [0, 0, xsize, xsize, 0],$
-    [tof_selection_device, tof_selection_device, tof_selection_device, tof_selection_device, $
-    tof_selection_device],$
-    /DEVICE,$
-    LINESTYLE = 2,$
-    COLOR = fsc_color("green")
     
 end
 
@@ -549,7 +537,7 @@ function retrieve_pixel_value, event
   
   rat = float(y_device) / float(congrid_ycoeff)
   y_data = float(rat * (yrange[1] - yrange[0]) + yrange[0])
-    
+  
   return, fix(y_data)
   
 end
@@ -1162,7 +1150,7 @@ pro tof_selection_base_gui, wBase, $
     scr_ysize = ysize-2*border,$
     /button_events, $
     /motion_events, $
-;    /tracking_events, $
+    ;    /tracking_events, $
     keyboard_events=2, $
     retain=2, $
     ;    event_pro = 'refpix_draw_eventcb',$
@@ -1413,7 +1401,7 @@ pro tof_selection_base, main_base=main_base, $
     
     top_base: wBase, $
     main_event: event})
-    
+
   (*(*global_tof_selection).full_data) = data
   
   data_2d = total(data,2)
