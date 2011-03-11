@@ -47,10 +47,10 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
   DEBUGGING_ON_MAC = file->getValue(tag=['configuration','debugging_on_mac'])
   SIMULATE_ROTATED_DETECTOR = file->getValue(tag=['configuration',$
     'simulate_rotated_detector'])
-  post_driver_name = file->getValue(tag=['configuration','driver_name']) 
+  post_driver_name = file->getValue(tag=['configuration','driver_name'])
   prefix_driver_name = file->getValue(tag=['configuration','prefix_driver_name'])
-  driver_name = prefix_driver_name + ' ' + post_driver_name 
-    
+  driver_name = prefix_driver_name + ' ' + post_driver_name
+  
   debugging_structure = getDebuggingStructure()
   
   ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
@@ -80,6 +80,9 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     instrument:        STRCOMPRESS(INSTRUMENT,/remove_all),$
     with_launch_switch: WITH_LAUNCH_SWITCH,$
     simulate_rotated_detector: SIMULATE_ROTATED_DETECTOR, $
+    
+    ;equivalent index of tof range selected in 'TOF selection tool' base
+    index_of_tof_range: [-1,-1], $
     
     ;center pixel base
     center_px_counts_vs_pixel_base_id: 0L, $

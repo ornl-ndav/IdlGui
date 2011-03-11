@@ -151,55 +151,62 @@ PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
     GlobalLoadDataGraphs,$
     LoadctList
     
-  ;base about X, Y and counts value --------------------------------------------
-  info_base = WIDGET_BASE(LOAD_DATA_BASE,$
-    XOFFSET   = 510,$
-    YOFFSET   = 35,$
-    SCR_XSIZE = 275,$
-    SCR_YSIZE = 20,$
-    UNAME     = 'info_data_base',$
-    MAP       = 0,$
-    FRAME     = 1)
+  ;TOF selection tool
+  tof_button = widget_button(load_data_base,$
+    value = '  T O F   selection  tool    ',$
+    xoffset = 563,$
+    yoffset = 37,$
+    uname = 'tof_selection_tool_button')    
     
-  ;X label/value
-  y_off = 0
-  x_label = WIDGET_LABEL(info_base,$
-    XOFFSET = 0,$
-    YOFFSET = y_off,$
-    VALUE   = 'X:')
-  x_value = WIDGET_LABEL(info_base,$
-    XOFFSET   = 15,$
-    YOFFSET   = y_off,$
-    SCR_XSIZE = 50,$
-    VALUE     = 'N/A',$
-    UNAME     = 'data_x_info_value',$
-    /ALIGN_LEFT)
-    
-  ;Y label/value
-  y_label = WIDGET_LABEL(info_base,$
-    XOFFSET = 70,$
-    YOFFSET = y_off,$
-    VALUE   = 'Y:')
-  y_value = WIDGET_LABEL(info_base,$
-    XOFFSET   = 85,$
-    YOFFSET   = y_off,$
-    SCR_XSIZE = 50,$
-    VALUE     = 'N/A',$
-    UNAME     = 'data_y_info_value',$
-    /ALIGN_LEFT)
-    
-  ;COUNTS label/value
-  counts_label = WIDGET_LABEL(info_base,$
-    XOFFSET = 140,$
-    YOFFSET = y_off,$
-    VALUE   = 'COUNTS:')
-  counts_value = WIDGET_LABEL(info_base,$
-    XOFFSET   = 185,$
-    YOFFSET   = y_off,$
-    SCR_XSIZE = 50,$
-    VALUE     = 'N/A',$
-    UNAME     = 'data_counts_info_value',$
-    /ALIGN_LEFT)
+;  ;base about X, Y and counts value --------------------------------------------
+;  info_base = WIDGET_BASE(LOAD_DATA_BASE,$
+;    XOFFSET   = 510,$
+;    YOFFSET   = 35,$
+;    SCR_XSIZE = 275,$
+;    SCR_YSIZE = 20,$
+;    UNAME     = 'info_data_base',$
+;    MAP       = 0,$
+;    FRAME     = 1)
+;    
+;  ;X label/value
+;  y_off = 0
+;  x_label = WIDGET_LABEL(info_base,$
+;    XOFFSET = 0,$
+;    YOFFSET = y_off,$
+;    VALUE   = 'X:')
+;  x_value = WIDGET_LABEL(info_base,$
+;    XOFFSET   = 15,$
+;    YOFFSET   = y_off,$
+;    SCR_XSIZE = 50,$
+;    VALUE     = 'N/A',$
+;    UNAME     = 'data_x_info_value',$
+;    /ALIGN_LEFT)
+;    
+;  ;Y label/value
+;  y_label = WIDGET_LABEL(info_base,$
+;    XOFFSET = 70,$
+;    YOFFSET = y_off,$
+;    VALUE   = 'Y:')
+;  y_value = WIDGET_LABEL(info_base,$
+;    XOFFSET   = 85,$
+;    YOFFSET   = y_off,$
+;    SCR_XSIZE = 50,$
+;    VALUE     = 'N/A',$
+;    UNAME     = 'data_y_info_value',$
+;    /ALIGN_LEFT)
+;    
+;  ;COUNTS label/value
+;  counts_label = WIDGET_LABEL(info_base,$
+;    XOFFSET = 140,$
+;    YOFFSET = y_off,$
+;    VALUE   = 'COUNTS:')
+;  counts_value = WIDGET_LABEL(info_base,$
+;    XOFFSET   = 185,$
+;    YOFFSET   = y_off,$
+;    SCR_XSIZE = 50,$
+;    VALUE     = 'N/A',$
+;    UNAME     = 'data_counts_info_value',$
+;    /ALIGN_LEFT)
     
   ;------------------------------------------------------------------------------
     

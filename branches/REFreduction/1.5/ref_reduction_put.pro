@@ -53,9 +53,9 @@ PRO putTextFieldValue, event, uname, text, append
   ENDELSE
 END
 
-pro putValue, event=event, uname, value
-  putTextFieldValue, event, uname, value
-end
+;pro putValue, event=event, uname, value
+;  putTextFieldValue, event, uname, value
+;end
 
 ;------------------------------------------------------------------------------
 ;Put the contain of the string array in the specified text field

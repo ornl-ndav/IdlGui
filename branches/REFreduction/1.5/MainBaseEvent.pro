@@ -57,6 +57,11 @@ PRO MAIN_BASE_event, Event
   
   CASE Event.id OF
   
+   ;bring to life the TOF selection base
+    widget_info(wWidget, find_by_uname='tof_selection_tool_button'): begin
+    tof_selection_tool_button_eventcb, event
+    end
+    
     WIDGET_INFO(wWidget, FIND_BY_UNAME='MAIN_BASE'): begin
     end
     
@@ -179,37 +184,37 @@ PRO MAIN_BASE_event, Event
       ENDIF ELSE BEGIN
         IF ((*global).DataNeXusFound) THEN BEGIN
         
-          ;show x/y and counts ************************************************
-          x = Event.x
-          ;          coeff_congrid_tof = (*global).congrid_x_coeff
-          ;          new_x = FIX(FLOAT(x) / FLOAT(coeff_congrid_tof))
-          putLabelValue, Event, $
-            'data_x_info_value', $
-            STRCOMPRESS(x,/REMOVE_ALL)
-          IF ((*global).miniVersion EQ 1) THEN BEGIN
-            coeff = 1
-          ENDIF ELSE BEGIN
-            coeff = 2
-          ENDELSE
-          putLabelValue, $
-            Event, $
-            'data_y_info_value', $
-            STRCOMPRESS(FIX((Event.y/coeff)),/REMOVE_ALL)
-            
-          tvimg = (*(*global).tvimg_data_ptr)
-          
-          IF ((*global).miniVersion) THEN BEGIN
-            coeff = 1
-          ENDIF ELSE BEGIN
-            coeff = 2
-          ENDELSE
-          if (event.y gt coeff*255) then return
-          
-          putLabelValue, $
-            Event, $
-            'data_counts_info_value', $
-            STRCOMPRESS(FIX(tvimg[Event.x,Event.y]),/REMOVE_ALL)
-          ;********************************************************************
+;          ;show x/y and counts ************************************************
+;          x = Event.x
+;          ;          coeff_congrid_tof = (*global).congrid_x_coeff
+;          ;          new_x = FIX(FLOAT(x) / FLOAT(coeff_congrid_tof))
+;          putLabelValue, Event, $
+;            'data_x_info_value', $
+;            STRCOMPRESS(x,/REMOVE_ALL)
+;          IF ((*global).miniVersion EQ 1) THEN BEGIN
+;            coeff = 1
+;          ENDIF ELSE BEGIN
+;            coeff = 2
+;          ENDELSE
+;          putLabelValue, $
+;            Event, $
+;            'data_y_info_value', $
+;            STRCOMPRESS(FIX((Event.y/coeff)),/REMOVE_ALL)
+;            
+;          tvimg = (*(*global).tvimg_data_ptr)
+;          
+;          IF ((*global).miniVersion) THEN BEGIN
+;            coeff = 1
+;          ENDIF ELSE BEGIN
+;            coeff = 2
+;          ENDELSE
+;          if (event.y gt coeff*255) then return
+;          
+;          putLabelValue, $
+;            Event, $
+;            'data_counts_info_value', $
+;            STRCOMPRESS(FIX(tvimg[Event.x,Event.y]),/REMOVE_ALL)
+;          ;********************************************************************
             
           IF ((*global).first_event) THEN BEGIN
             ;only if there is a NeXus loaded

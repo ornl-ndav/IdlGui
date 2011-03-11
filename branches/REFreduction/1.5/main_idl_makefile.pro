@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 
-.run simulate_ref_l_rotated.pro
+.run simulate_ref_l_rotated_angle.pro
 
 .run ref_reduction_string.pro
 .run ref_reduction_put.pro
@@ -124,6 +124,9 @@
 .run beamdiv_settings_base.pro
 .run beam_divergence_settings.pro
 .run using_wrong_version_of_ref_reduction.pro
+
+.run tof_selection_tool_button_eventcb.pro
+.run new_rescaled_tvimg.pro
 
 .run cleanup.pro
 .run ref_reduction_debugging.pro
