@@ -33,9 +33,9 @@ backup:
 
 beta: 
 	cp ref_reduction.sav /SNS/software/idltools/beta/sav/
-	cp REFreduction_v13_beta /SNS/software/idltools/sav/
+	cp REFreduction_v13_beta /SNS/software/idltools/beta/
 	cp mini_ref_reduction.sav /SNS/software/idltools/beta/sav/
 	cp miniREFreduction_v13_beta /SNS/software/idltools/beta/
 	cp REFreduction_images/*.* /SNS/software/idltools/beta/sav/REFreduction_images/
 	cp .REFreduction.cfg /SNS/software/idltools/beta/sav/
-	
+
