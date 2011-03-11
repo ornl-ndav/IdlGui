@@ -453,8 +453,8 @@ PRO PopulateStep2BigTabe, Event
           STRCOMPRESS(index,/REMOVE_ALL)
         MapBase, Event, uname, status
         
-        ;populate data spin state widget_tab of all spin states
-        populate_reduce_step2_data_spin_state, Event
+        ;;populate data spin state widget_tab of all spin states
+        ;populate_reduce_step2_data_spin_state, Event
         
       ENDIF
       

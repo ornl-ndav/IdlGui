@@ -663,8 +663,11 @@ PRO   add_widgets_reduce_step2_tab, $
     SCR_YSIZE = 430+15)
     
   XYoff = [30,5]
-  title = 'NORM. Spin State                 R e g i o n   O f  ' + $
-    ' I n t e r e s t   ( R O I ) '
+  ;title = 'NORM. Spin State                 R e g i o n   O f  ' + $
+  ;  ' I n t e r e s t   ( R O I ) '
+  title = 'NORM. Spin State             Peak ROI                   ' + $
+  '           Background ROI                                ' + $
+  '    Selection of ROIs'
   label = WIDGET_LABEL(base_id,$
     VALUE = title,$
     xoffset = XYoff[0],$
@@ -709,43 +712,75 @@ PRO   add_widgets_reduce_step2_tab, $
       /align_left,$
       uname = uname)
       
-    ;roi widgets
+    ;peak ROI widgets
     ;Browse button
     uname = 'reduce_tab2_roi_browse_button_' + base_name + iS
     browse = WIDGET_BUTTON(row_base,$
       Xoffset = xyoff[0]+130,$
       yoffset = 2,$
-      scr_xsize = 150,$
-      value = 'Browse ROI file ...',$
+;      scr_xsize = 150,$
+      value = 'Browse peak ROI ...',$
       uname = uname)
+    label = widget_label(row_base,$
+    value='File:',$
+    yoffset=7,$
+    xoffset=xyoff[0]+260)
+    uname = 'reduce_tab2_roi_peak_status_' + base_name + iS
+    result = widget_label(row_base,$
+    value='N/A',$
+    /align_left,$
+    yoffset=7,$
+    xoffset=xyoff[0]+295,$
+    scr_xsize = 40,$
+    uname=uname)
+    
+    ;background ROI widgets
+    uname = 'reduce_tab2_back_roi_browse_button_' + base_name + iS
+    browse = WIDGET_BUTTON(row_base,$
+      Xoffset = xyoff[0]+370,$
+      yoffset = 2,$
+      value = 'Browse back. ROI ...',$
+      uname = uname)
+    label = widget_label(row_base,$
+    value='File:',$
+    yoffset=7,$
+    xoffset=xyoff[0]+505)
+    uname = 'reduce_tab2_roi_back_status_' + base_name + iS
+    result = widget_label(row_base,$
+    value='N/A',$
+    /align_left,$
+    yoffset=7,$
+    xoffset=xyoff[0]+540,$
+    scr_xsize = 40,$
+    uname=uname)
       
     ;Create/modify ROI
     uname = 'reduce_tab2_roi_modify_button_' + base_name + iS
     modify = WIDGET_BUTTON(row_base,$
-      xoffset = xyoff[0]+280,$
+      xoffset = xyoff[0]+620,$
       yoffset = 2,$
       uname = uname,$
-      scr_xsize = 230,$
-      value = 'Create/Modify/Visualize ROI file')
+      scr_xsize = 330,$
+      value = 'Create/Modify/Visualize Peak/Back ROI files')
       
-    uname = 'reduce_tab2_roi_label_' + base_name + iS
-    roi = WIDGET_LABEL(row_Base,$
-      XOFFSET = XYoff[0]+515,$
-      YOFFSET = 7,$
-      /ALIGN_LEFT,$
-      frame=0,$
-      value = 'File:',$
-      uname = uname)
-      
-    uname = 'reduce_tab2_roi_value_' + base_name + iS
-    roi = WIDGET_LABEL(row_Base,$
-      XOFFSET = XYoff[0]+550,$
-      YOFFSET = 7,$
-      SCR_XSIZE = 400,$
-      /ALIGN_LEFT,$
-      frame=0,$
-      value = 'N/A',$
-      uname = uname)
+;    uname = 'reduce_tab2_roi_label_' + base_name + iS
+;    roi = WIDGET_LABEL(row_Base,$
+;      XOFFSET = XYoff[0]+815,$
+;      YOFFSET = 7,$
+;      /ALIGN_LEFT,$
+;      frame=0,$
+;      value = 'File:',$
+;      uname = uname)
+;      
+;    uname = 'reduce_tab2_roi_value_' + base_name + iS
+;    roi = WIDGET_LABEL(row_Base,$
+;      XOFFSET = XYoff[0]+550,$
+;      YOFFSET = 7,$
+;      SCR_XSIZE = 400,$
+;      /ALIGN_LEFT,$
+;      frame=0,$
+;      value = 'N/A',$
+;      uname = uname)
       
     yoffset += 35
     

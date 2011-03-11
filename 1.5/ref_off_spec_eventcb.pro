@@ -156,7 +156,7 @@ PRO reduce_tab_event, Event
           IF ((*global).instrument EQ 'REF_M') THEN BEGIN
             refresh_reduce_step2_data_spin_state_table, Event
           ENDIF
-          refresh_roi_file_name, Event
+;          refresh_roi_file_name, Event
         ENDIF
       END
       2: BEGIN ;step3: recapitulation tab
@@ -199,7 +199,12 @@ PRO reduce_step2_data_tab, Event
       ELSE:
     ENDCASE
     (*global).PrevReduceStep2TabSelect = CurrTabSelect
-    refresh_roi_file_name, Event
+    
+    ;refresh_roi_file_name, Event  
+    ;;MESSAGE
+    ;;not required anymore as the file name label
+    ;;are not there anymore in the DIRECT tab
+  
   ENDIF
   
 END

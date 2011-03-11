@@ -240,7 +240,8 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     '/entry-On_Off/',$
     '/entry-On_On/'],$
     reduce_tab1_table_left_click: 1,$
-    browsing_path: '~/results/',$
+    ;browsing_path: '~/results/',$
+    browsing_path: '~/',$  ;REMOVE_ME
     reduce_tab1_table: PTR_NEW(0L),$
     reduce_tab1_working_pola_state: '',$
     reduce_tab1_nexus_file_list: PTR_NEW(0L),$
@@ -407,7 +408,8 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     PrevReduceStep2TabSelect: 0,$
     nexus_spin_state_roi_table: PTR_NEW(0L),$
     
-    working_path: '~/results/',$
+    ;working_path: '~/results/',$
+    working_path: '~/',$
     step5_scaling_factor: 1.0D, $
     
     step5_x0: 0,$ ;event.x initial
