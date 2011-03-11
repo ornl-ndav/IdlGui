@@ -31,13 +31,11 @@ backup:
 	cp .REFreduction.cfg /SNS/software/idltools/sav_backup/
 	cp REFreductionHELP/* /SNS/software/idltools/sav_backup/help/REFreduction/
 
-test: 
-	cp ref_reduction.sav /SNS/software/idltools/test/sav/
-	cp ref_reduction_test /SNS/software/idltools/test/
-	cp mini_ref_reduction.sav /SNS/software/idltools/test/sav/
-	cp mini_ref_reduction /SNS/software/idltools/test/
-	cp REFreductionHELP/*.* /SNS/software/idltools/test/help/REFreduction/
-	cp REFreduction_images/*.* /SNS/software/idltools/test/sav/REFreduction_images/
-	cp .REFreduction.cfg /SNS/software/idltools/test/sav/
-	cp REFreductionHELP/* /SNS/software/idltools/test/help/REFreduction
+beta: 
+	cp ref_reduction.sav /SNS/software/idltools/beta/sav/
+	cp REFreduction_v13_beta /SNS/software/idltools/sav/
+	cp mini_ref_reduction.sav /SNS/software/idltools/beta/sav/
+	cp miniREFreduction_v13_beta /SNS/software/idltools/beta/
+	cp REFreduction_images/*.* /SNS/software/idltools/beta/sav/REFreduction_images/
+	cp .REFreduction.cfg /SNS/software/idltools/beta/sav/
 	
