@@ -56,3 +56,15 @@ cd, CurrentFolder + '/utilities'
 .run fsc_color.pro
 .run IDL3columnsASCIIparser__define.pro
 .run IDLnexusUtilities__define.pro
+.run convert.pro
+.run colorbar.pro
+.run is.pro
+.run set.pro
+.run put.pro
+
+cd, CurrentFolder + '/TOFselectionBase'
+.run tof_selection_base.pro
+.run tof_selection_colorbar.pro
+.run tof_selection_counts_vs_tof_base.pro
+.run tof_selection_eventcb.pro
+.run tof_selection_input_base.pro
