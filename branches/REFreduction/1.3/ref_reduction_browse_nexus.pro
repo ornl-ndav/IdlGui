@@ -50,14 +50,16 @@ PRO ok_polarization_state, Event
   text = '> User selected polarization state #' + $
     STRCOMPRESS(value_selected+1,/REMOVE_ALL)
   list_pola_state = (*(*global).list_pola_state)
-  text += ' (' + list_pola_state[value_selected] + ')'
+  spin_state_array  = strsplit(list_pola_state[value_selected],'-',/extract)
+  spin_state = spin_state_array[1]
+  text += ' (' + strcompress(spin_state,/remove_all) + ')'
   putLogBookMessage, Event, Text, Append=1
   CASE ((*global).pola_type) OF
     'data_browse': BEGIN
       (*global).data_path = list_pola_state[value_selected]
       nexus_file_name = (*global).data_nexus_full_path
       load_data_browse_nexus, Event, nexus_file_name, POLA_STATE=value_selected
-      populate_data_geometry_info, Event, nexus_file_name
+      populate_data_geometry_info, Event, nexus_file_name, spin_state=spin_state
       calculate_sangle, event
     END
     'norm_browse': BEGIN
@@ -76,7 +78,7 @@ PRO ok_polarization_state, Event
       (*global).data_path = list_pola_state[value_selected]
       nexus_file_name = (*global).data_nexus_full_path
       load_data_browse_nexus, Event, nexus_file_name, POLA_STATE=value_selected
-      populate_data_geometry_info, Event, nexus_file_name
+      populate_data_geometry_info, Event, nexus_file_name, spin_state=spin_state
       calculate_sangle, event
     END
     'norm_load': BEGIN
@@ -164,10 +166,10 @@ PRO BrowseDataNexus, Event
     putTextfieldvalue, event, 'load_data_run_number_text_field', $
       strcompress(DataRunNumber,/remove_all)
       
-    IF ((*global).instrument EQ 'REF_M') THEN BEGIN
-      populate_data_geometry_info, Event, nexus_file_name
-      calculate_sangle, event
-    ENDIF
+;    IF ((*global).instrument EQ 'REF_M') THEN BEGIN
+;      populate_data_geometry_info, Event, nexus_file_name
+;      calculate_sangle, event
+;    ENDIF
     
     ;turn off hourglass
     WIDGET_CONTROL,HOURGLASS=0

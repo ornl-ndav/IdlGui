@@ -104,7 +104,7 @@ end
 ;-
 function NeXusMetadata::getBinSize
   compile_opt idl2
-  path_value = 'entry-Off_Off/SNSHistoTool/command1/'
+  path_value = self.path_prefix + 'SNSHistoTool/command1/'
   catch, error_value
   if (error_value ne 0) then begin
     catch,/cancel
@@ -130,7 +130,7 @@ end
 ;-
 function NeXusMetadata::getMinBin
   compile_opt idl2
-  path_value = 'entry-Off_Off/SNSHistoTool/command1/'
+  path_value = self.path_prefix + 'SNSHistoTool/command1/'
   catch, error_value
   if (error_value ne 0) then begin
     catch,/cancel
@@ -154,7 +154,7 @@ end
 ;-
 function NeXusMetadata::getMaxBin
   compile_opt idl2
-  path_value = 'entry-Off_Off/SNSHistoTool/command1/'
+  path_value = self.path_prefix + 'SNSHistoTool/command1/'
   catch, error_value
   if (error_value ne 0) then begin
     catch,/cancel
@@ -182,7 +182,7 @@ end
 ;-
 function NeXusMetadata::getBinType
   compile_opt idl2
-  path_value = 'entry-Off_Off/SNSHistoTool/command1/'
+  path_value = self.path_prefix + 'ySNSHistoTool/command1/'
   catch, error_value
   if (error_value ne 0) then begin
     catch,/cancel
@@ -211,8 +211,8 @@ end
 ;-
 function NeXusMetadata::getDangle
   compile_opt idl2
-  path_value = '/entry-Off_Off/instrument/bank1/DANGLE/readback/'
-  path_units = '/entry-Off_Off/instrument/bank1/DANGLE/units/'
+  path_value = self.path_prefix + 'instrument/bank1/DANGLE/readback/'
+  path_units = self.path_prefix + 'instrument/bank1/DANGLE/units/'
   catch, error_value
   if (error_value ne 0) then begin
     catch,cancel
@@ -226,7 +226,7 @@ function NeXusMetadata::getDangle
         return, ['N/A','N/A']
       endif else begin
       
-        path_value = '/entry-Off_Off/DASlogs/DANGLE/value/'
+        path_value = self.path_prefix + 'DASlogs/DANGLE/value/'
         
         pathID_value = h5d_open(self.fileID, path_value)
         dangle_value = strcompress(h5d_read(pathID_value),/remove_all)
@@ -251,7 +251,7 @@ function NeXusMetadata::getDangle
     endif else begin
     
       ;we are dealing with a new NeXus with a new path value (readback -> value)
-      path_value = '/entry-Off_Off/instrument/bank1/DANGLE/value/'
+      path_value = self.path_prefix + 'instrument/bank1/DANGLE/value/'
       
       pathID_value = h5d_open(self.fileID, path_value)
       dangle_value = strcompress(h5d_read(pathID_value),/remove_all)
@@ -299,13 +299,13 @@ end
 ;-
 function NeXusMetadata::getDangle0
   compile_opt idl2
-  path_value = '/entry-Off_Off/instrument/bank1/DANGLE0/readback/'
-  path_units = '/entry-Off_Off/instrument/bank1/DANGLE0/units/'
+  path_value = self.path_prefix + 'instrument/bank1/DANGLE0/readback/'
+  path_units = self.path_prefix + 'instrument/bank1/DANGLE0/units/'
   catch, error_value
   if (error_value ne 0) then begin
     catch,/cancel
     ;we are dealing with a new NeXus with new path value (readback-> value)
-    path_value = '/entry-Off_Off/instrument/bank1/DANGLE0/value/'
+    path_value = self.path_prefix + 'instrument/bank1/DANGLE0/value/'
     catch, error_value_2
     if (error_value_2 ne 0) then begin
       catch,/cancel
@@ -316,7 +316,7 @@ function NeXusMetadata::getDangle0
         return, ['N/A','N/A']
       endif else begin
       
-        tmp_path_value = '/entry-Off_Off/DASlogs/DANGLE0/value/'
+        tmp_path_value = self.path_prefix + 'DASlogs/DANGLE0/value/'
         pathID_value = h5d_open(self.fileID, tmp_path_value)
         dangle_value = strcompress(h5d_read(pathID_value),/remove_all)
         dangle_value = dangle_value[0]
@@ -384,18 +384,18 @@ end
 ;-
 function NeXusMetadata::getSampleDetDistance
   compile_opt idl2
-  path_value = '/entry-Off_Off/instrument/bank1/SampleDetDis/readback/'
-  path_units = '/entry-Off_Off/instrument/bank1/SampleDetDis/units'
+  path_value = self.path_prefix + 'instrument/bank1/SampleDetDis/readback/'
+  path_units = self.path_prefix + 'instrument/bank1/SampleDetDis/units'
   catch, error_value
   if (error_value ne 0) then begin
     catch,/cancel
     ;we are dealing with a new NeXus with new path_value (readback -> value)
-    path_value = '/entry-Off_Off/instrument/bank1/SampleDetDis/value/'
+    path_value = self.path_prefix + 'instrument/bank1/SampleDetDis/value/'
     catch, error_value_2
     if (error_value_2 ne 0) then begin
       catch,/cancel
       
-      tmp_path_value = '/entry-Off_Off/DASlogs/SampleDetDis/value/'
+      tmp_path_value = self.path_prefix + 'DASlogs/SampleDetDis/value/'
       catch, tmp_error_value
       if (tmp_error_value ne 0) then begin
         catch, /cancel
@@ -443,14 +443,14 @@ end
 ;-
 function NeXusMetadata::getDetPosition
   compile_opt idl2
-  path_value = '/entry-Off_Off/instrument/bank1/DetectorPosition/readback/'
-  path_units = '/entry-Off_Off/instrument/bank1/DetectorPosition/units'
+  path_value = self.path_prefix + 'instrument/bank1/DetectorPosition/readback/'
+  path_units = self.path_prefix + 'instrument/bank1/DetectorPosition/units'
   
   catch, error_value
   if (error_value ne 0) then begin
     catch,/cancel
     
-    tmp_path_value = '/entry-Off_Off/DASlogs/DetectorPosition/readback/'
+    tmp_path_value = self.path_prefix + 'DASlogs/DetectorPosition/readback/'
     ;    tmp_path_units = '/entry-Off_Off/DASlogs/DetectorPosition/units'
     catch, error_tmp_value
     if (error_tmp_value ne 0) then begin
@@ -489,12 +489,12 @@ end
 ;-
 function NeXusMetadata::getDirpix
   compile_opt idl2
-  path = '/entry-Off_Off/instrument/bank1/DIRPIX/value/'
+  path = self.path_prefix + 'instrument/bank1/DIRPIX/value/'
   catch, error_value
   if (error_value ne 0) then begin
     catch,/cancel
     
-    tmp_path = '/entry-Off_Off/DASlogs/DIRPIX/value/'
+    tmp_path = self.path_prefix + 'DASlogs/DIRPIX/value/'
     catch, error_tmp_value
     if (error_tmp_value ne 0) then begin
       catch,/cancel
@@ -522,7 +522,7 @@ end
 ;-
 function NeXusMetadata::getProtonCharge
   compile_opt idl2
-  path = '/entry-Off_Off/proton_charge/'
+  path = self.path_prefix + 'proton_charge/'
   catch, error_value
   if (error_value ne 0) then begin
     catch,/cancel
@@ -544,7 +544,7 @@ end
 ;-
 function NeXusMetadata::getDuration
   compile_opt idl2
-  path = '/entry-Off_Off/duration/'
+  path = self.path_prefix + 'duration/'
   catch, error_value
   if (error_value ne 0) then begin
     catch,cancel
@@ -566,7 +566,7 @@ end
 ;-
 function NeXusMetadata::getEnd
   compile_opt idl2
-  path = '/entry-Off_Off/end_time/'
+  path = self.path_prefix + 'end_time/'
   catch, error_value
   if (error_value ne 0) then begin
     catch,cancel
@@ -591,7 +591,7 @@ end
 ;-
 function NeXusMetadata::getStart
   compile_opt idl2
-  path = '/entry-Off_Off/start_time/'
+  path = self.path_prefix + 'start_time/'
   catch, error_value
   if (error_value ne 0) then begin
     catch,cancel
@@ -616,7 +616,7 @@ end
 ;-
 function NeXusMetadata::getDate
   compile_opt idl2
-  path = '/entry-Off_Off/start_time/'
+  path = self.path_prefix + 'start_time/'
   catch, error_value
   if (error_value NE 0) then begin
     catch,/cancel
@@ -651,7 +651,7 @@ end
 ;
 ; :Author: j35
 ;-
-function NeXusMetadata::init, nexus_full_path
+function NeXusMetadata::init, nexus_full_path, spin_state=spin_state
   compile_opt idl2
   
   ;open hdf5 nexus file
@@ -662,6 +662,8 @@ function NeXusMetadata::init, nexus_full_path
     return,0
   endif else begin
     self.fileID = h5f_open(nexus_full_path)
+;    self.spin_state = spin_state
+    self.path_prefix = '/entry-' + spin_state + '/'
   endelse
   
   return, 1
@@ -675,5 +677,6 @@ end
 ;-
 pro NeXusMetadata__define
   struct = {NeXusMetadata,$
+    path_prefix: '',$
     fileID: 0L}
 end

@@ -32,13 +32,13 @@
 ;
 ;==============================================================================
 
-PRO populate_data_geometry_info, Event, nexus_file_name
+PRO populate_data_geometry_info, Event, nexus_file_name, spin_state=spin_state
 
   if (nexus_file_name eq '') then return
   
   WIDGET_CONTROL,Event.top,get_uvalue=global
   
-  iNexus = obj_new('NeXusMetadata', nexus_file_name)
+  iNexus = obj_new('NeXusMetadata', nexus_file_name, spin_state=spin_state)
   
   ;get date and put it in place
   date = iNexus->getDate()
