@@ -866,16 +866,25 @@ PRO reduce_step2_create_roi, Event, $
     nexus_spin_state_roi_table = (*(*global).nexus_spin_state_roi_table)
     roi_file_name = getNormRoiFileOfIndex(Event, row=sRow,$
       base_name=spin_state)
-      
     IF (roi_file_name eq '') THEN roi_file_name = 'N/A'
     uname = 'reduce_step2_create_roi_file_name_label'
     putTextFieldValue, Event, uname, roi_file_name
-  ENDIF ELSE BEGIN
+
+    nexus_spin_state_back_roi_table = (*(*global).nexus_spin_state_back_roi_table)
+    back_roi_file_name = getNormBackRoiFileOfIndex(event, row=sRow, $
+    base_name = spin_sate)
+    if (back_roi_file_name eq '') then back_roi_file_name = 'N/A'
+    uname = 'reduce_step2_create_back_roi_file_name_label'
+    putTextFieldValue, event, uname, back_roi_file_name
+  
+  ENDIF ELSE BEGIN ;REF_L
+  
     uname = 'reduce_tab2_roi_value' + sRow
     roi_file_name = getTextFieldValue(Event,uname)
     uname = 'reduce_step2_create_roi_file_name_label'
     IF (roi_file_name eq '') THEN roi_file_name = 'N/A'
     putTextFieldValue, Event, uname, roi_file_name
+
   ENDELSE
   
   MapBase, Event, 'reduce_step2_create_roi_base', 1
