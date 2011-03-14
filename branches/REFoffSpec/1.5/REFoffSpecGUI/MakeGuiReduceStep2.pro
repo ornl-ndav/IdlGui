@@ -590,9 +590,9 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
       
     ;title of big data spin states table
     label = WIDGET_LABEL(Table_base,$
-      XOFFSET = 850-230,$
+      XOFFSET = 850-280,$
       YOFFSET = 2,$
-      VALUE = '  -- D A T A   S p i n   S t a t e s --',$
+      VALUE = '<<-- D A T A   S p i n   S t a t e s',$
       FRAME = 0,$
       FONT = '15x13',$
       UNAME = 'reduce_step2_d-ata_spin_states_table_title')

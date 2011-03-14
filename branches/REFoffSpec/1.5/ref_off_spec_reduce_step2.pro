@@ -1076,36 +1076,60 @@ PRO refresh_roi_file_name, Event
         column = getReduceStep2SpinStateColumn(Event, Row=sIndex, $
           data_spin_state=base_name)
         roi_file = nexus_spin_state_roi_table[column,norm_table[index]]
-        IF (roi_file EQ '') THEN roi_file = 'N/A'
+        IF (roi_file EQ '') THEN begin
+        roi_file = 'N/A'
+        endif else begin
+        roi_file = 'Loaded!'
+        endelse
 ;        roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
 ;        putTextFieldValue, Event, roi_label_uname, roi_file
-        
+        roi_label_uname = 'reduce_tab2_roi_peak_status_' + base_name + sIndex
+        putTextFieldValue, Event, roi_label_uname, roi_file
+ 
         ;off_on
         base_name = 'off_on'
         column = getReduceStep2SpinStateColumn(Event, Row=sIndex, $
           data_spin_state=base_name)
         roi_file = nexus_spin_state_roi_table[column,norm_table[index]]
-        IF (roi_file EQ '') THEN roi_file = 'N/A'
+        IF (roi_file EQ '') THEN begin
+        roi_file = 'N/A'
+        endif else begin
+        roi_file = 'Loaded!'
+        endelse
 ;        roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
 ;        putTextFieldValue, Event, roi_label_uname, roi_file
+        roi_label_uname = 'reduce_tab2_roi_peak_status_' + base_name + sIndex
+        putTextFieldValue, Event, roi_label_uname, roi_file
                 
         ;on_off
         base_name = 'on_off'
         column = getReduceStep2SpinStateColumn(Event, Row=sIndex, $
           data_spin_state=base_name)
         roi_file = nexus_spin_state_roi_table[column,norm_table[index]]
-        IF (roi_file EQ '') THEN roi_file = 'N/A'
+        IF (roi_file EQ '') THEN begin
+        roi_file = 'N/A'
+        endif else begin
+        roi_file = 'Loaded!'
+        endelse
 ;        roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
 ;        putTextFieldValue, Event, roi_label_uname, roi_file
+        roi_label_uname = 'reduce_tab2_roi_peak_status_' + base_name + sIndex
+        putTextFieldValue, Event, roi_label_uname, roi_file
         
         ;on_on
         base_name = 'on_on'
         column = getReduceStep2SpinStateColumn(Event, Row=sIndex, $
           data_spin_state=base_name)
         roi_file = nexus_spin_state_roi_table[column,norm_table[index]]
-        IF (roi_file EQ '') THEN roi_file = 'N/A'
+        IF (roi_file EQ '') THEN begin
+        roi_file = 'N/A'
+        endif else begin
+        roi_file = 'Loaded!'
+        endelse
 ;        roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
 ;        putTextFieldValue, Event, roi_label_uname, roi_file
+        roi_label_uname = 'reduce_tab2_roi_peak_status_' + base_name + sIndex
+        putTextFieldValue, Event, roi_label_uname, roi_file
         
       ENDIF ELSE BEGIN ;REF_L
       
