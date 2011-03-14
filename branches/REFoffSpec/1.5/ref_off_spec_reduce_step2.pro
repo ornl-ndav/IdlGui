@@ -777,7 +777,7 @@ pro reduce_step2_browse_back_roi, Event, $
     refresh_reduce_step2_big_table, Event
     
     ;this update the name of the roi files
-    refresh_roi_file_name, Event
+    refresh_back_roi_file_name, Event
     
   ENDIF ELSE BEGIN
     LogText = '-> User canceled Browsing for a ROI file.'
@@ -1217,6 +1217,105 @@ PRO refresh_roi_file_name, Event
         ;        roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
         ;        putTextFieldValue, Event, roi_label_uname, roi_file
         roi_label_uname = 'reduce_tab2_roi_peak_status_' + base_name + sIndex
+        putTextFieldValue, Event, roi_label_uname, roi_file
+        
+      ENDIF ELSE BEGIN ;REF_L
+      
+        column = 1
+        roi_file = nexus_spin_state_roi_table[column,norm_table[index]]
+        IF (roi_file EQ '') THEN roi_file = 'N/A'
+        roi_label_uname = 'reduce_tab2_roi_value' + sIndex
+        putTextFieldValue, Event, roi_label_uname, roi_file
+        
+      ENDELSE
+      
+    ENDIF
+    
+    index++
+  ENDWHILE
+  
+END
+
+;------------------------------------------------------------------------------
+;Refresh name of all the roi files
+PRO refresh_back_roi_file_name, Event
+compile_opt idl2
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  nexus_spin_state_back_roi_table = (*(*global).nexus_spin_state_back_roi_table)
+  norm_table = (*global).reduce_step2_big_table_norm_index
+  
+  index=0
+  WHILE (index LT 11) DO BEGIN
+  
+    sIndex = STRCOMPRESS(index,/REMOVE_ALL)
+    data_base_uname = 'reduce_tab2_data_recap_base_#' + sIndex
+    id = WIDGET_INFO(Event.top,FIND_BY_UNAME=data_base_uname)
+    IF (WIDGET_INFO(id,/MAP)) THEN BEGIN ;row is displayed
+    
+      IF ((*global).instrument EQ 'REF_M') THEN BEGIN
+      
+        ;off_off
+        base_name = 'off_off'
+        column = getReduceStep2SpinStateColumn(Event, Row=sIndex, $
+          data_spin_state=base_name)
+        roi_file = nexus_spin_state_back_roi_table[column,norm_table[index]]
+        IF (roi_file EQ '') THEN begin
+          roi_file = 'N/A'
+        endif else begin
+          roi_file = 'Loaded!'
+        endelse
+        ;        roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
+        ;        putTextFieldValue, Event, roi_label_uname, roi_file
+        roi_label_uname = 'reduce_tab2_back_roi_status_' + base_name + $
+        sIndex
+        putTextFieldValue, Event, roi_label_uname, roi_file
+        
+        ;off_on
+        base_name = 'off_on'
+        column = getReduceStep2SpinStateColumn(Event, Row=sIndex, $
+          data_spin_state=base_name)
+        roi_file = nexus_spin_state_back_roi_table[column,norm_table[index]]
+        IF (roi_file EQ '') THEN begin
+          roi_file = 'N/A'
+        endif else begin
+          roi_file = 'Loaded!'
+        endelse
+        ;        roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
+        ;        putTextFieldValue, Event, roi_label_uname, roi_file
+        roi_label_uname = 'reduce_tab2_back_roi_status_' + base_name + sIndex
+        putTextFieldValue, Event, roi_label_uname, roi_file
+        
+        ;on_off
+        base_name = 'on_off'
+        column = getReduceStep2SpinStateColumn(Event, Row=sIndex, $
+          data_spin_state=base_name)
+        roi_file = nexus_spin_state_back_roi_table[column,norm_table[index]]
+        IF (roi_file EQ '') THEN begin
+          roi_file = 'N/A'
+        endif else begin
+          roi_file = 'Loaded!'
+        endelse
+        ;        roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
+        ;        putTextFieldValue, Event, roi_label_uname, roi_file
+        roi_label_uname = 'reduce_tab2_back_roi_status_' + base_name + sIndex
+        putTextFieldValue, Event, roi_label_uname, roi_file
+        
+        ;on_on
+        base_name = 'on_on'
+        column = getReduceStep2SpinStateColumn(Event, Row=sIndex, $
+          data_spin_state=base_name)
+        roi_file = nexus_spin_state_back_roi_table[column,norm_table[index]]
+        IF (roi_file EQ '') THEN begin
+          roi_file = 'N/A'
+        endif else begin
+          roi_file = 'Loaded!'
+        endelse
+        ;        roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
+        ;        putTextFieldValue, Event, roi_label_uname, roi_file
+        roi_label_uname = 'reduce_tab2_back_roi_status_' + base_name + sIndex
         putTextFieldValue, Event, roi_label_uname, roi_file
         
       ENDIF ELSE BEGIN ;REF_L

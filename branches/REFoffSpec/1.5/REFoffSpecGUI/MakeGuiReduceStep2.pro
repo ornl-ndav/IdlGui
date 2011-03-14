@@ -745,7 +745,7 @@ PRO   add_widgets_reduce_step2_tab, $
     value='File:',$
     yoffset=7,$
     xoffset=xyoff[0]+505)
-    uname = 'reduce_tab2_roi_back_status_' + base_name + iS
+    uname = 'reduce_tab2_back_roi_status_' + base_name + iS
     result = widget_label(row_base,$
     value='None!',$
     /align_left,$
