@@ -120,6 +120,17 @@ PRO refresh_reduce_step3_table, Event
               run_job_status = 0
             ENDIF
             
+            back_roi_file     = getNormBackRoiFileOfIndex(Event, $
+            row=data_index,$
+              base_name=d_spin_state)
+            IF (STRCOMPRESS(back_roi_file,/REMOVE_ALL) EQ '') THEN BEGIN
+              back_roi_file = 'N/A'
+              run_job_status = 0
+            ENDIF
+            
+;            IF (roi_file EQ 'N/A') THEN BEGIN
+;              run_job_status = 0
+ ;           ENDIF
 
 
 
@@ -137,7 +148,7 @@ PRO refresh_reduce_step3_table, Event
           step3_big_table[table_index,5] = norm_nexus
           step3_big_table[table_index,6] = n_spin_state
           step3_big_table[table_index,7] = roi_file
-;          step3_big_table[table_index,8] = back_file
+          step3_big_table[table_index,8] = back_roi_file
           
           ;define the output file name
           output_file_name = 'REF_M_' + data_run

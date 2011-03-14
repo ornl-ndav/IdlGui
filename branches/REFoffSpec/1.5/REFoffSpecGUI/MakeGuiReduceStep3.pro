@@ -77,8 +77,8 @@ PRO make_gui_Reduce_step3, REDUCE_TAB, sTab, TabTitles, global
       'NORM. NeXus',$
       'N. Spin State',$
       'Norm. Peak ROI',$
-      'Data Background ROI', $
       'Norm. Background ROI', $
+      'Data Background ROI', $
       'Output File Name']
     xsize = 11
     column_widths = [55,300,140,90,70,300,90,300,300,300,300]
