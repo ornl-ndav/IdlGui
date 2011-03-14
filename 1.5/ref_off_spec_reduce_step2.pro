@@ -89,7 +89,7 @@ PRO reduce_step2_run_number_normalization, Event
   
   ;list of runs after parsing
   LogText = '-> Run or List of Normalization Runs after Parsing: ' + $
-  STRJOIN(ListOfRuns,',')
+    STRJOIN(ListOfRuns,',')
   IDLsendToGeek_addLogBookText, Event, LogText
   
   ;get full nexus file name for the runs loaded
@@ -371,10 +371,10 @@ PRO addNormNexusToList, Event, new_nexus_file_list
   nexus_spin_state_roi_table = STRARR(5,11)
   nexus_spin_state_roi_table[0,*] = nexus_norm_list_run_number
   (*(*global).nexus_spin_state_roi_table) = nexus_spin_state_roi_table
-
+  
   nexus_spin_state_back_roi_table = strarr(5,11)
   (*(*global).nexus_spin_state_back_roi_table) = nexus_spin_state_back_roi_table
-  ;nexus_spin_state_back_roi_table[0,*] = nexus_spin_state_roi_tabe
+;nexus_spin_state_back_roi_table[0,*] = nexus_spin_state_roi_tabe
   
 ;  PRINT, 'leaving addNormNexusToList'
   
@@ -457,8 +457,8 @@ PRO PopulateStep2BigTabe, Event
           STRCOMPRESS(index,/REMOVE_ALL)
         MapBase, Event, uname, status
         
-        ;;populate data spin state widget_tab of all spin states
-        ;populate_reduce_step2_data_spin_state, Event
+      ;;populate data spin state widget_tab of all spin states
+      ;populate_reduce_step2_data_spin_state, Event
         
       ENDIF
       
@@ -564,28 +564,28 @@ PRO populate_reduce_step2_data_spin_state, Event
       base_name = 'off_off'
       uname = 'reduce_tab2_roi_value_' + base_name + sIndex
       value = table[1,index]
-      IF (value EQ '') THEN value = 'N/A'
+      IF (value EQ '') THEN value = 'None!'
       putTextFieldValue, Event, uname, value
       
       ;off_on
       base_name = 'off_on'
       uname = 'reduce_tab2_roi_value_' + base_name + sIndex
       value = table[2,index]
-      IF (value EQ '') THEN value = 'N/A'
+      IF (value EQ '') THEN value = 'None!'
       putTextFieldValue, Event, uname, value
       
       ;on_off
       base_name = 'on_off'
       uname = 'reduce_tab2_roi_value_' + base_name + sIndex
       value = table[3,index]
-      IF (value EQ '') THEN value = 'N/A'
+      IF (value EQ '') THEN value = 'None!'
       putTextFieldValue, Event, uname, value
       
       ;on_on
       base_name = 'on_on'
       uname = 'reduce_tab2_roi_value_' + base_name + sIndex
       value = table[4,index]
-      IF (value EQ '') THEN value = 'N/A'
+      IF (value EQ '') THEN value = 'None!'
       putTextFieldValue, Event, uname, value
       
     ENDIF
@@ -631,18 +631,18 @@ PRO reduce_step2_browse_roi, Event, row=row, data_spin_state=data_spin_state
   OK         = (*global).ok
   FAILED     = (*global).failed
   
-; Change code (RC Ward, 24 July 2010): ROI files will always be loacted with reduction step files
-; that is the path ias ascii_path  
-;  path  = (*global).ROI_path
-   path = (*global).ascii_path  
-;print, "in reduce_step2  path: ",path   
-  data_run = getTextFieldValue(Event,'reduce_tab2_data_value' + $
-    STRCOMPRESS(row,/REMOVE_ALL))
-  title = 'Select Region Of Interest File for Data Run # ' + data_run + $
-    ': '
+  ; Change code (RC Ward, 24 July 2010): ROI files will always be loacted with reduction step files
+  ; that is the path ias ascii_path
+  ;  path  = (*global).ROI_path
+  path = (*global).ascii_path
+  ;  data_run = getTextFieldValue(Event,'reduce_tab2_data_value' + $
+  ;    STRCOMPRESS(row,/REMOVE_ALL))
+  norm_run = getReduceStep2NormOfRow(Event, row=row)
+  title = 'Select Region Of Interest File for Normalization Run # ' + $
+    norm_run + ': '
   default_extenstion = '.dat'
   
-  LogText = '> Browsing for 1 ROI file for data run # ' + data_run + $
+  LogText = '> Browsing for 1 ROI file for normalization run # ' + norm_run + $
     ': '
   IDLsendToGeek_addLogBookText, Event, LogText
   
@@ -656,6 +656,7 @@ PRO reduce_step2_browse_roi, Event, row=row, data_spin_state=data_spin_state
   IF (roi_file[0] NE '') THEN BEGIN
   
     nexus_spin_state_roi_table = (*(*global).nexus_spin_state_roi_table)
+    
     IF (N_ELEMENTS(data_spin_state) NE 0) THEN BEGIN
       CASE (data_spin_state) OF
         'Off_Off': BEGIN
@@ -698,6 +699,93 @@ PRO reduce_step2_browse_roi, Event, row=row, data_spin_state=data_spin_state
   ENDELSE
   
 END
+
+;------------------------------------------------------------------------------
+pro reduce_step2_browse_back_roi, Event, $
+    row=row, $
+    data_spin_state=data_spin_state
+  compile_opt idl2
+  
+  iRow = row
+  row = STRCOMPRESS(row)
+  
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  PROCESSING = (*global).processing
+  OK         = (*global).ok
+  FAILED     = (*global).failed
+  
+  ; Change code (RC Ward, 24 July 2010): ROI files will always be loacted with reduction step files
+  ; that is the path ias ascii_path
+  ;  path  = (*global).ROI_path
+  path = (*global).ascii_path
+  ;print, "in reduce_step2  path: ",path
+  norm_run = getReduceStep2NormOfRow(Event, row=row)
+  title = 'Select Region Of Interest File for Normalization Run # ' + $
+    norm_run + ': '
+  default_extenstion = '.dat'
+  
+  LogText = '> Browsing for 1 background ROI file for normalization run # ' + $
+    norm_run + ': '
+    
+  IDLsendToGeek_addLogBookText, Event, LogText
+  
+  roi_file = DIALOG_PICKFILE(DEFAULT_EXTENSION = default_extension,$
+    FILTER = ['*_back_ROI.dat'],$
+    GET_PATH = new_path,$
+    /MUST_EXIST,$
+    PATH = path,$
+    TITLE = title)
+    
+  IF (roi_file[0] NE '') THEN BEGIN
+  
+    nexus_spin_state_back_roi_table = $
+    (*(*global).nexus_spin_state_back_roi_table)
+    IF (N_ELEMENTS(data_spin_state) NE 0) THEN BEGIN
+      CASE (data_spin_state) OF
+        'Off_Off': BEGIN
+          column = 1
+        END
+        'Off_On': BEGIN
+          column = 2
+        END
+        'On_Off': BEGIN
+          column = 3
+        END
+        'On_On': BEGIN
+          column = 4
+        END
+      ENDCASE
+    ENDIF ELSE BEGIN
+      column = 1
+    ENDELSE
+    
+    ;get Norm file selected
+    norm_table = (*global).reduce_step2_big_table_norm_index
+    ;    norm_run_number = (*global).nexus_norm_list_run_number
+    
+    nexus_spin_state_back_roi_table[column,norm_table[row]] = roi_file
+    (*(*global).nexus_spin_state_back_roi_table) = $
+    nexus_spin_state_back_roi_table
+    
+    IF (new_path NE path) THEN BEGIN
+      (*global).ROI_path = new_path
+      LogText = '-> New ROI browsing_path is: ' + new_path
+    ENDIF
+    
+    refresh_reduce_step2_big_table, Event
+    
+    ;this update the name of the roi files
+    refresh_roi_file_name, Event
+    
+  ENDIF ELSE BEGIN
+    LogText = '-> User canceled Browsing for a ROI file.'
+    IDLsendToGeek_addLogBookText, Event, LogText
+  ENDELSE
+  
+END
+
 
 ;------------------------------------------------------------------------------
 FUNCTION display_reduce_step2_create_roi_plot, Event, Row=row,$
@@ -1060,7 +1148,7 @@ PRO refresh_roi_file_name, Event
   
   nexus_spin_state_roi_table = (*(*global).nexus_spin_state_roi_table)
   norm_table = (*global).reduce_step2_big_table_norm_index
-    
+  
   index=0
   WHILE (index LT 11) DO BEGIN
   
@@ -1077,42 +1165,42 @@ PRO refresh_roi_file_name, Event
           data_spin_state=base_name)
         roi_file = nexus_spin_state_roi_table[column,norm_table[index]]
         IF (roi_file EQ '') THEN begin
-        roi_file = 'N/A'
+          roi_file = 'N/A'
         endif else begin
-        roi_file = 'Loaded!'
+          roi_file = 'Loaded!'
         endelse
-;        roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
-;        putTextFieldValue, Event, roi_label_uname, roi_file
+        ;        roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
+        ;        putTextFieldValue, Event, roi_label_uname, roi_file
         roi_label_uname = 'reduce_tab2_roi_peak_status_' + base_name + sIndex
         putTextFieldValue, Event, roi_label_uname, roi_file
- 
+        
         ;off_on
         base_name = 'off_on'
         column = getReduceStep2SpinStateColumn(Event, Row=sIndex, $
           data_spin_state=base_name)
         roi_file = nexus_spin_state_roi_table[column,norm_table[index]]
         IF (roi_file EQ '') THEN begin
-        roi_file = 'N/A'
+          roi_file = 'N/A'
         endif else begin
-        roi_file = 'Loaded!'
+          roi_file = 'Loaded!'
         endelse
-;        roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
-;        putTextFieldValue, Event, roi_label_uname, roi_file
+        ;        roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
+        ;        putTextFieldValue, Event, roi_label_uname, roi_file
         roi_label_uname = 'reduce_tab2_roi_peak_status_' + base_name + sIndex
         putTextFieldValue, Event, roi_label_uname, roi_file
-                
+        
         ;on_off
         base_name = 'on_off'
         column = getReduceStep2SpinStateColumn(Event, Row=sIndex, $
           data_spin_state=base_name)
         roi_file = nexus_spin_state_roi_table[column,norm_table[index]]
         IF (roi_file EQ '') THEN begin
-        roi_file = 'N/A'
+          roi_file = 'N/A'
         endif else begin
-        roi_file = 'Loaded!'
+          roi_file = 'Loaded!'
         endelse
-;        roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
-;        putTextFieldValue, Event, roi_label_uname, roi_file
+        ;        roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
+        ;        putTextFieldValue, Event, roi_label_uname, roi_file
         roi_label_uname = 'reduce_tab2_roi_peak_status_' + base_name + sIndex
         putTextFieldValue, Event, roi_label_uname, roi_file
         
@@ -1122,12 +1210,12 @@ PRO refresh_roi_file_name, Event
           data_spin_state=base_name)
         roi_file = nexus_spin_state_roi_table[column,norm_table[index]]
         IF (roi_file EQ '') THEN begin
-        roi_file = 'N/A'
+          roi_file = 'N/A'
         endif else begin
-        roi_file = 'Loaded!'
+          roi_file = 'Loaded!'
         endelse
-;        roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
-;        putTextFieldValue, Event, roi_label_uname, roi_file
+        ;        roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
+        ;        putTextFieldValue, Event, roi_label_uname, roi_file
         roi_label_uname = 'reduce_tab2_roi_peak_status_' + base_name + sIndex
         putTextFieldValue, Event, roi_label_uname, roi_file
         
@@ -1142,7 +1230,7 @@ PRO refresh_roi_file_name, Event
       ENDELSE
       
     ENDIF
-        
+    
     index++
   ENDWHILE
   

@@ -546,6 +546,24 @@ FUNCTION getNormRoiFileOfIndex, Event, row_data=row_data, base_name=base_name
 END
 
 ;------------------------------------------------------------------------------
+FUNCTION getNormBackRoiFileOfIndex, Event, row_data=row_data, base_name=base_name
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  nexus_spin_state_back_roi_table = (*(*global).nexus_spin_state_back_roi_table)
+  norm_table = (*global).reduce_step2_big_table_norm_index
+  
+  sIndex = STRCOMPRESS(row_data,/REMOVE_ALL)
+  data_base_uname = 'reduce_tab2_data_recap_base_#' + sIndex
+  column = getReduceStep2SpinStateColumn(Event, Row=sIndex, $
+    data_spin_state=base_name)
+  roi_file = nexus_spin_state_back_roi_table[column,norm_table[row_data]]
+  RETURN, roi_file
+  
+END
+
+;------------------------------------------------------------------------------
 FUNCTION getRunNumbersFromAscii, list_of_ascii_files
 
   sz = N_ELEMENTS(list_of_ascii_files)
