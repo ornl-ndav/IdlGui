@@ -106,9 +106,9 @@ PRO browse_reduce_step2_roi_file, Event
     (*global).norm_roi_y_selected = 'all'
     reduce_step2_manual_move, Event
     
-    putTextFieldValue, Event, $
-      'reduce_step2_create_roi_file_name_label',$
-      file_name
+;    putTextFieldValue, Event, $
+;      'reduce_step2_create_roi_file_name_label',$
+;      file_name
       
     nexus_spin_state_roi_table = (*(*global).nexus_spin_state_roi_table)
     data_spin_state = (*global).tmp_reduce_step2_data_spin_state

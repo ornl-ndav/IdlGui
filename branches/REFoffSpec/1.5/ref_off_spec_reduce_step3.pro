@@ -41,7 +41,7 @@ PRO refresh_reduce_step3_table, Event
   instrument = (*global).instrument
   
   IF (instrument EQ 'REF_M') THEN BEGIN
-    ysize = 9
+    ysize = 10
   ENDIF ELSE BEGIN
     ysize = 6
   ENDELSE
@@ -98,6 +98,7 @@ PRO refresh_reduce_step3_table, Event
             norm_nexus   = 'N/A'
             n_spin_state = 'N/A'
             roi_file     = 'N/A'
+            back_file    = 'N/A'
             run_job_status = 0
           ENDIF ELSE BEGIN
             norm_run     = getReduceStep2NormOfRow(Event, row=data_index)
@@ -119,6 +120,12 @@ PRO refresh_reduce_step3_table, Event
               run_job_status = 0
             ENDIF
             
+
+
+
+
+
+            
           ENDELSE
           
           ;populate Recap. Big table
@@ -130,11 +137,12 @@ PRO refresh_reduce_step3_table, Event
           step3_big_table[table_index,5] = norm_nexus
           step3_big_table[table_index,6] = n_spin_state
           step3_big_table[table_index,7] = roi_file
+;          step3_big_table[table_index,8] = back_file
           
           ;define the output file name
           output_file_name = 'REF_M_' + data_run
           output_file_name += '_' + d_spin_state + '.txt'
-          step3_big_table[table_index,8] = output_file_name
+          step3_big_table[table_index,10] = output_file_name
           
           data_index++
           table_index++

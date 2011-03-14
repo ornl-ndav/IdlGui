@@ -76,10 +76,12 @@ PRO make_gui_Reduce_step3, REDUCE_TAB, sTab, TabTitles, global
       'NORM. Run',$
       'NORM. NeXus',$
       'N. Spin State',$
-      'ROI',$
+      'Peak ROI',$
+      'Data Background ROI', $
+      'Norm. Background ROI', $
       'Output File Name']
-    xsize = 9
-    column_widths = [55,300,140,90,70,300,90,300,300]
+    xsize = 11
+    column_widths = [55,300,140,90,70,300,90,300,300,300,300]
     scr_xsize = 1260
   ENDIF ELSE BEGIN
     COLUMN_LABELS = ['DATA Run',$
