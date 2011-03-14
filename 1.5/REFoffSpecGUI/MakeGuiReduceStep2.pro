@@ -727,7 +727,7 @@ PRO   add_widgets_reduce_step2_tab, $
     xoffset=xyoff[0]+260)
     uname = 'reduce_tab2_roi_peak_status_' + base_name + iS
     result = widget_label(row_base,$
-    value='N/A',$
+    value='None!',$
     /align_left,$
     yoffset=7,$
     xoffset=xyoff[0]+295,$
@@ -747,7 +747,7 @@ PRO   add_widgets_reduce_step2_tab, $
     xoffset=xyoff[0]+505)
     uname = 'reduce_tab2_roi_back_status_' + base_name + iS
     result = widget_label(row_base,$
-    value='N/A',$
+    value='None!',$
     /align_left,$
     yoffset=7,$
     xoffset=xyoff[0]+540,$

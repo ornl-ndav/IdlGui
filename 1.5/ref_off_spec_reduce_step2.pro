@@ -371,6 +371,10 @@ PRO addNormNexusToList, Event, new_nexus_file_list
   nexus_spin_state_roi_table = STRARR(5,11)
   nexus_spin_state_roi_table[0,*] = nexus_norm_list_run_number
   (*(*global).nexus_spin_state_roi_table) = nexus_spin_state_roi_table
+
+  nexus_spin_state_back_roi_table = strarr(5,11)
+  (*(*global).nexus_spin_state_back_roi_table) = nexus_spin_state_back_roi_table
+  ;nexus_spin_state_back_roi_table[0,*] = nexus_spin_state_roi_tabe
   
 ;  PRINT, 'leaving addNormNexusToList'
   
@@ -1056,7 +1060,7 @@ PRO refresh_roi_file_name, Event
   
   nexus_spin_state_roi_table = (*(*global).nexus_spin_state_roi_table)
   norm_table = (*global).reduce_step2_big_table_norm_index
-  
+    
   index=0
   WHILE (index LT 11) DO BEGIN
   
@@ -1073,8 +1077,8 @@ PRO refresh_roi_file_name, Event
           data_spin_state=base_name)
         roi_file = nexus_spin_state_roi_table[column,norm_table[index]]
         IF (roi_file EQ '') THEN roi_file = 'N/A'
-        roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
-        putTextFieldValue, Event, roi_label_uname, roi_file
+;        roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
+;        putTextFieldValue, Event, roi_label_uname, roi_file
         
         ;off_on
         base_name = 'off_on'
@@ -1082,17 +1086,17 @@ PRO refresh_roi_file_name, Event
           data_spin_state=base_name)
         roi_file = nexus_spin_state_roi_table[column,norm_table[index]]
         IF (roi_file EQ '') THEN roi_file = 'N/A'
-        roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
-        putTextFieldValue, Event, roi_label_uname, roi_file
-        
+;        roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
+;        putTextFieldValue, Event, roi_label_uname, roi_file
+                
         ;on_off
         base_name = 'on_off'
         column = getReduceStep2SpinStateColumn(Event, Row=sIndex, $
           data_spin_state=base_name)
         roi_file = nexus_spin_state_roi_table[column,norm_table[index]]
         IF (roi_file EQ '') THEN roi_file = 'N/A'
-        roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
-        putTextFieldValue, Event, roi_label_uname, roi_file
+;        roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
+;        putTextFieldValue, Event, roi_label_uname, roi_file
         
         ;on_on
         base_name = 'on_on'
@@ -1100,8 +1104,8 @@ PRO refresh_roi_file_name, Event
           data_spin_state=base_name)
         roi_file = nexus_spin_state_roi_table[column,norm_table[index]]
         IF (roi_file EQ '') THEN roi_file = 'N/A'
-        roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
-        putTextFieldValue, Event, roi_label_uname, roi_file
+;        roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
+;        putTextFieldValue, Event, roi_label_uname, roi_file
         
       ENDIF ELSE BEGIN ;REF_L
       
@@ -1114,7 +1118,7 @@ PRO refresh_roi_file_name, Event
       ENDELSE
       
     ENDIF
-    
+        
     index++
   ENDWHILE
   

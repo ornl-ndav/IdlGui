@@ -43,7 +43,7 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
 
   ;get the current folder
   CD, CURRENT = current_folder
- 
+  
   file = OBJ_NEW('idlxmlparser', '.REFoffSpec.cfg')
   ;============================================================================
   ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
@@ -106,12 +106,12 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
   TOF_CUTOFF_MAX = file->getValue(tag=['configuration','TOFCuttoffs','TOFCutoffMax'])
   SPLICING_ALTERNATIVE = file->getValue(tag=['configuration','Recap','SplicingAlternative'])
   QUEUE = file->getValue(tag=['configuration','Reduction','Queue'])
- ; Note: YSIZE_DRAW and Pixels_XValue are not presently used in the code 
+  ; Note: YSIZE_DRAW and Pixels_XValue are not presently used in the code
   SUPER_USERS = ['rwd']
-
-;print, "reduce_step_path: ", reduce_step_path
-;print, "splicing_alternative: ", splicing_alternative
-; Change code (RC Ward, 7 Aug 2010): Change the splash screen for:  Job_Mananger_on_the_way.png
+  
+  ;print, "reduce_step_path: ", reduce_step_path
+  ;print, "splicing_alternative: ", splicing_alternative
+  ; Change code (RC Ward, 7 Aug 2010): Change the splash screen for:  Job_Mananger_on_the_way.png
   ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
   ;============================================================================
   
@@ -148,7 +148,7 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
   ENDIF ELSE BEGIN
     ucams = GET_UCAMS()
   ENDELSE
-    
+  
   ;define global variables
   global = ptr_new ({ ucams: ucams,$
     instrument: instrument,$
@@ -158,35 +158,35 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     
     left_right_cursor: 96, $
     standard: 31, $
-   ; Code change RCW (Dec 28, 2009): firefox replaced by browser obtained from XML config file entry BROWSER   
+    ; Code change RCW (Dec 28, 2009): firefox replaced by browser obtained from XML config file entry BROWSER
     browser: BROWSER,$
-   
+    
     ;Tab titles
-   ; Code change RCW (Dec 29, 2009): Get TabTitles from XML config file  
-   ; Code Change (RC Ward, 18 Nov 2010): Add Plot Utility as Step 9 Tab on main gui
-   TabTitles: {  step1:     STEP1_TITLE,$
-                 step2:     STEP2_TITLE,$
-                 step3:     STEP3_TITLE,$
-                 step4:     STEP4_TITLE,$
-                 step5:     STEP5_TITLE,$
-                 step6:     STEP6_TITLE,$
-                 options:   STEP7_TITLE,$
-                 log_book:  STEP8_TITLE,$
-                 plot_utility: STEP9_TITLE},$
-    ; Code change RCW (Dec 30, 2009): get ReduceTabNames and ScalingTabNames from XML config file (NOT USING THESE RIGHT NOW)                
+    ; Code change RCW (Dec 29, 2009): Get TabTitles from XML config file
+    ; Code Change (RC Ward, 18 Nov 2010): Add Plot Utility as Step 9 Tab on main gui
+    TabTitles: {  step1:     STEP1_TITLE,$
+    step2:     STEP2_TITLE,$
+    step3:     STEP3_TITLE,$
+    step4:     STEP4_TITLE,$
+    step5:     STEP5_TITLE,$
+    step6:     STEP6_TITLE,$
+    options:   STEP7_TITLE,$
+    log_book:  STEP8_TITLE,$
+    plot_utility: STEP9_TITLE},$
+    ; Code change RCW (Dec 30, 2009): get ReduceTabNames and ScalingTabNames from XML config file (NOT USING THESE RIGHT NOW)
     ReduceTabNames: [RSTEP1_NAME,$
-                     RSTEP2_NAME,$
-                     RSTEP3_NAME],$
-                     
+    RSTEP2_NAME,$
+    RSTEP3_NAME],$
+    
     ScalingTabNames: [SSTEP1_NAME,$
-                     SSTEP2_NAME],$
+    SSTEP2_NAME],$
     
     ScalingLevel3TabNames: [SL3STEP1_NAME,$
-                            SL3STEP2_NAME,$
-                            SL3STEP3_NAME],$
-    ; Code change (RC Ward Feb 1, 2010): get intial value of RefPix from XML config file                        
-    RefPix_InitialValue: REFPIX_INITIAL,$   
-    ; Code change (RC Ward Feb 8, 2010): get ascii data 2D-plot background color from XML config file                     
+    SL3STEP2_NAME,$
+    SL3STEP3_NAME],$
+    ; Code change (RC Ward Feb 1, 2010): get intial value of RefPix from XML config file
+    RefPix_InitialValue: REFPIX_INITIAL,$
+    ; Code change (RC Ward Feb 8, 2010): get ascii data 2D-plot background color from XML config file
     BackgroundCurvePlot: BACKGROUND_COLOR,$
     ; Code change (RC Ward Feb 26, 2010): use color names for lines in curve plots
     ceselect_vertical_line_color: CESELECT_VERTLINE_COLOR,$
@@ -197,7 +197,7 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     ref_plot_vertical_color: VERTICAL_COLOR,$
     ref_plot_horizontal_color: HORIZONTAL_COLOR,$
     ref_plot_average_color: AVERAGE_COLOR,$
-                    
+    
     ; Code change RCW (Feb 10, 2010): get detector pixels in X and Y directions from XML config file
     detector_pixels_x: LONG(PIXELS_XNUMBER),$
     detector_pixels_y: LONG(PIXELS_YNUMBER),$
@@ -205,25 +205,25 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     detector_pixels_size_y: PIXELS_YSIZE, $
     number_of_sangle: NUMBER_OF_SANGLE, $
     
-   ; Code change (RC Ward Feb 18,2010): Get flag to automatically load RefPix values for Shifting step
+    ; Code change (RC Ward Feb 18,2010): Get flag to automatically load RefPix values for Shifting step
     RefPixLoad: REFPIX_LOAD, $
     
-   ; Code change (RC Ward Feb 22, 2010): Get Color Table value for LOADCT from XML config file
-    color_table: COLOR_TABLE,$  
+    ; Code change (RC Ward Feb 22, 2010): Get Color Table value for LOADCT from XML config file
+    color_table: COLOR_TABLE,$
     
-   ; Code change (RC Ward, Mar 2, 2010): Get tof_cutoff_min and tof_cutoff_max values from the XML config file
-   apply_tof_cutoffs: APPLY_TOF_CUTOFFS, $
-   tof_cutoff_min: TOF_CUTOFF_MIN, $
-   tof_cutoff_max: TOF_CUTOFF_MAX, $
-; Change code (RC Ward, 3 Aug 2010): set up default value of splicing_alternative
-; [0] is use Max value in overlap range (default); [1] is let the higher Q curve override lower Q
-   splicing_alternative: SPLICING_ALTERNATIVE, $
-; Change code (RC Ward, 5 Oct, 2010): Specify queue for reduction code (redref_lp) processing
-   queue: QUEUE, $
+    ; Code change (RC Ward, Mar 2, 2010): Get tof_cutoff_min and tof_cutoff_max values from the XML config file
+    apply_tof_cutoffs: APPLY_TOF_CUTOFFS, $
+    tof_cutoff_min: TOF_CUTOFF_MIN, $
+    tof_cutoff_max: TOF_CUTOFF_MAX, $
+    ; Change code (RC Ward, 3 Aug 2010): set up default value of splicing_alternative
+    ; [0] is use Max value in overlap range (default); [1] is let the higher Q curve override lower Q
+    splicing_alternative: SPLICING_ALTERNATIVE, $
+    ; Change code (RC Ward, 5 Oct, 2010): Specify queue for reduction code (redref_lp) processing
+    queue: QUEUE, $
     srun_web_page: 'https://neutronsr.us/applications/jobmonitor/squeue.php?view=all',$
-
-; refred_lp is the remote reflectometer reduction code. Here were are setting up the names of the parameters to refred_lp.    
-; Change made (RC Ward, Mar 2, 2010): add time of flight cutoffs (min, max) to the call to refred_lp
+    
+    ; refred_lp is the remote reflectometer reduction code. Here were are setting up the names of the parameters to refred_lp.
+    ; Change made (RC Ward, Mar 2, 2010): add time of flight cutoffs (min, max) to the call to refred_lp
     reduce_structure: {driver: 'refred_lp',$
     data_paths: '--data-path',$
     data: '--data',$
@@ -232,7 +232,7 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     norm_paths: '--norm-data-paths',$
     norm_roi: '--norm-roi-file',$
     tof_cut_min: '--tof-cut-min',$
-    tof_cut_max: '--tof-cut-max',$    
+    tof_cut_max: '--tof-cut-max',$
     output: '--output'},$
     
     nexus_list_OF_pola_state: ['/entry-Off_Off/',$
@@ -248,18 +248,18 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     reduce_input_table_nbr_row: 18,$
     reduce_input_table_nbr_column: 2,$
     reduce_step1_spin_state_mode: 2,$
-
+    
     ;SANGLE BASE
     reduce_run_sangle_table: PTR_NEW(0L), $
     sangle_tData: PTR_NEW(0L), $
     sangle_tof: PTR_NEW(0L), $
     sangle_background_plot: PTR_NEW(0L), $
     sangle_table_press_click: 1,$
-; Code change RCW (Feb 8, 2010): get value of xsize_draw from XML config file  
-;    sangle_xsize_draw: 845., $
+    ; Code change RCW (Feb 8, 2010): get value of xsize_draw from XML config file
+    ;    sangle_xsize_draw: 845., $
     sangle_xsize_draw: XSIZE_DRAW, $
-; Code change RCW (Feb 10, 2010): gset xsize_draw to 2*PIXELS_YNUMBER from XML config file  
-;    sangle_ysize_draw: 608., $
+    ; Code change RCW (Feb 10, 2010): gset xsize_draw to 2*PIXELS_YNUMBER from XML config file
+    ;    sangle_ysize_draw: 608., $
     sangle_ysize_draw: 2*PIXELS_YNUMBER, $
     sangle_help_xsize_draw: 255, $
     sangle_help_ysize_draw: 215, $
@@ -277,32 +277,32 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     sangle_current_zoom_para: FLTARR(4), $ ;para used for current zoom plot
     zoom_left_click_pressed: 0b, $ ;boolean button pressed or not (zoom help)
     input_file_name: '  ', $ ; set up a place holder for RefPix filename
-; Code change (RC Ward, March 24, 2010): Change images used for setting spin matching for data/norm    
+    ; Code change (RC Ward, March 24, 2010): Change images used for setting spin matching for data/norm
     Spins_Not_Matching_Enable: $
-       'REFoffSpec_images/Spins_Not_Matching_Enable.png',$
+    'REFoffSpec_images/Spins_Not_Matching_Enable.png',$
     Spins_Not_Matching_Disable: $
-       'REFoffSpec_images/Spins_Not_Matching_Disable.png',$     
+    'REFoffSpec_images/Spins_Not_Matching_Disable.png',$
     Spins_Matching_Enable: $
-       'REFoffSpec_images/Spins_Matching_Enable.png',$
+    'REFoffSpec_images/Spins_Matching_Enable.png',$
     Spins_Matching_Disable: $
-       'REFoffSpec_images/Spins_Matching_Disable.png',$
+    'REFoffSpec_images/Spins_Matching_Disable.png',$
     User_Defined_Spins_Matching_Enable: $
-       'REFoffSpec_images/User_Defined_Spins_Matching_Enable.png', $
+    'REFoffSpec_images/User_Defined_Spins_Matching_Enable.png', $
     User_Defined_Spins_Matching_Disable: $
-       'REFoffSpec_images/User_Defined_Spins_Matching_Disable.png', $
-; These are the old images used for setting spin matching for data/norm
-;    reduce_step1_spin_match_disable: $
-;    'REFoffSpec_images/spin_states_match_button_unselected.png',$
-;    reduce_step1_spin_match_enable: $
-;    'REFoffSpec_images/spin_states_match_button_selected.png',$
-;    reduce_step1_spin_do_not_match_fixed_disable: $
-;    'REFoffSpec_images/spin_states_do_not_match_fixed_unselected.png',$
-;    reduce_step1_spin_do_not_match_fixed_enable: $
-;    'REFoffSpec_images/spin_states_do_not_match_fixed_selected.png',$
-;    reduce_step1_spin_do_not_match_user_defined_disable: $
-;    'REFoffSpec_images/spin_states_do_not_match_user_defined_unselected.png',$
-;    reduce_step1_spin_do_not_match_user_defined_enable: $
-;    'REFoffSpec_images/spin_states_do_not_match_user_defined_selected.png',$
+    'REFoffSpec_images/User_Defined_Spins_Matching_Disable.png', $
+    ; These are the old images used for setting spin matching for data/norm
+    ;    reduce_step1_spin_match_disable: $
+    ;    'REFoffSpec_images/spin_states_match_button_unselected.png',$
+    ;    reduce_step1_spin_match_enable: $
+    ;    'REFoffSpec_images/spin_states_match_button_selected.png',$
+    ;    reduce_step1_spin_do_not_match_fixed_disable: $
+    ;    'REFoffSpec_images/spin_states_do_not_match_fixed_unselected.png',$
+    ;    reduce_step1_spin_do_not_match_fixed_enable: $
+    ;    'REFoffSpec_images/spin_states_do_not_match_fixed_selected.png',$
+    ;    reduce_step1_spin_do_not_match_user_defined_disable: $
+    ;    'REFoffSpec_images/spin_states_do_not_match_user_defined_unselected.png',$
+    ;    reduce_step1_spin_do_not_match_user_defined_enable: $
+    ;    'REFoffSpec_images/spin_states_do_not_match_user_defined_selected.png',$
     
     reduce_step1_sangle_equation: $
     'REFoffSpec_images/sangle_equation.png', $
@@ -311,12 +311,12 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     tmp_reduce_step2_data_spin_state: '',$
     
     list_of_data_spin: ['Off_Off',$
-                        'Off_On',$
-                        'On_Off',$
-                        'On_On'],$
+    'Off_On',$
+    'On_Off',$
+    'On_On'],$
     
     ;step3
-; test - add this to see how it looks - fix up later
+    ; test - add this to see how it looks - fix up later
     reduce_step3_spin_off_off_unavailable: $
     'REFoffSpec_images/Off_Off_Disabled_Cropped.PNG',$
     reduce_step3_spin_off_off_disable: $
@@ -344,36 +344,36 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     'REFoffSpec_images/On_On_Inactive_Cropped.PNG',$
     reduce_step3_spin_on_on_enable: $
     'REFoffSpec_images/On_On_Active_Cropped.PNG',$
-
-; here is the original code
-;    reduce_step3_spin_off_off_unavailable: $
-;    'REFoffSpec_images/off_off_disable.png',$
-;    reduce_step3_spin_off_off_disable: $
-;    'REFoffSpec_images/off_off_unselected.png',$
-;    reduce_step3_spin_off_off_enable: $
-;    'REFoffSpec_images/off_off_selected.png',$
     
-;    reduce_step3_spin_off_on_unavailable: $
-;    'REFoffSpec_images/off_on_disable.png',$
-;    reduce_step3_spin_off_on_disable: $
-;    'REFoffSpec_images/off_on_unselected.png',$
-;    reduce_step3_spin_off_on_enable: $
-;    'REFoffSpec_images/off_on_selected.png',$
+    ; here is the original code
+    ;    reduce_step3_spin_off_off_unavailable: $
+    ;    'REFoffSpec_images/off_off_disable.png',$
+    ;    reduce_step3_spin_off_off_disable: $
+    ;    'REFoffSpec_images/off_off_unselected.png',$
+    ;    reduce_step3_spin_off_off_enable: $
+    ;    'REFoffSpec_images/off_off_selected.png',$
     
-;    reduce_step3_spin_on_off_unavailable: $
-;    'REFoffSpec_images/on_off_disable.png',$
-;    reduce_step3_spin_on_off_disable: $
-;    'REFoffSpec_images/on_off_unselected.png',$
-;    reduce_step3_spin_on_off_enable: $
-;    'REFoffSpec_images/on_off_selected.png',$
+    ;    reduce_step3_spin_off_on_unavailable: $
+    ;    'REFoffSpec_images/off_on_disable.png',$
+    ;    reduce_step3_spin_off_on_disable: $
+    ;    'REFoffSpec_images/off_on_unselected.png',$
+    ;    reduce_step3_spin_off_on_enable: $
+    ;    'REFoffSpec_images/off_on_selected.png',$
     
-;    reduce_step3_spin_on_on_unavailable: $
-;    'REFoffSpec_images/on_on_disable.png',$
-;    reduce_step3_spin_on_on_disable: $
-;    'REFoffSpec_images/on_on_unselected.png',$
-;    reduce_step3_spin_on_on_enable: $
-;    'REFoffSpec_images/on_on_selected.png',$
-   
+    ;    reduce_step3_spin_on_off_unavailable: $
+    ;    'REFoffSpec_images/on_off_disable.png',$
+    ;    reduce_step3_spin_on_off_disable: $
+    ;    'REFoffSpec_images/on_off_unselected.png',$
+    ;    reduce_step3_spin_on_off_enable: $
+    ;    'REFoffSpec_images/on_off_selected.png',$
+    
+    ;    reduce_step3_spin_on_on_unavailable: $
+    ;    'REFoffSpec_images/on_on_disable.png',$
+    ;    reduce_step3_spin_on_on_disable: $
+    ;    'REFoffSpec_images/on_on_unselected.png',$
+    ;    reduce_step3_spin_on_on_enable: $
+    ;    'REFoffSpec_images/on_on_selected.png',$
+    
     step3_working_spin: '',$
     job_manager_splash_draw: $
     'REFoffSpec_images/Job_Mananger_on_the_way.png',$
@@ -406,7 +406,10 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     reduce_step2_spin_state_not_selected: $
     'REFoffSpec_images/spin_state_not_selected.png',$
     PrevReduceStep2TabSelect: 0,$
+    
+    ;both are strarr(5,11) where [0] is for the name of the norm file
     nexus_spin_state_roi_table: PTR_NEW(0L),$
+    nexus_spin_state_back_roi_table: ptr_new(0L), $
     
     ;working_path: '~/results/',$
     working_path: '~/',$
@@ -456,7 +459,7 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     step5_selection_x_array: PTR_NEW(0L),$
     step5_selection_y_array: PTR_NEW(0L),$
     step5_selection_y_error_array: PTR_NEW(0L),$
-    step5_selection_savefrom_step4: [0,0,0,0], $ 
+    step5_selection_savefrom_step4: [0,0,0,0], $
     recap_rescale_left_mouse: 0, $
     recap_rescale_working_with: 'left',$
     recap_rescale_x0: 0,$
@@ -496,8 +499,8 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     step4_step1_move_selection_position: INTARR(2),$
     left_mouse_pressed:  0,$
     step4_step1_left_mouse_pressed: 0,$
-; Change code (RC Ward, 28 Dec 2010): Add RESTART flag.
-;  This will be set in Plot Utility when user enters new reference run#   
+    ; Change code (RC Ward, 28 Dec 2010): Add RESTART flag.
+    ;  This will be set in Plot Utility when user enters new reference run#
     RESTART: 0,$
     
     plot_realign_data:   0,$
@@ -506,7 +509,7 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     ref_pixel_list_original: PTR_NEW(0L),$
     RefPixSave: PTR_NEW(0L), $
     PreviousRefPix: PTR_NEW(0L), $ ; used to store RefPix for Shifting Step
-
+    
     SangleDone: PTR_NEW(0B), $
     ref_x_list:          PTR_NEW(0L),$
     super_users:         SUPER_USERS,$
@@ -515,15 +518,15 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     first_load:          0,$
     congrid_coeff_array: PTR_NEW(0L),$
     application:         APPLICATION,$
-;    box_color:           [50,75,100,125,150,175,200,225,250],$
-; Change code (RC Ward, Feb 25, 2010): Read box_colors in from XML configuration file so they can be changed easily
+    ;    box_color:           [50,75,100,125,150,175,200,225,250],$
+    ; Change code (RC Ward, Feb 25, 2010): Read box_colors in from XML configuration file so they can be changed easily
     box_color:           [BOX_COLOR0, BOX_COLOR1, BOX_COLOR2, BOX_COLOR3, BOX_COLOR4, BOX_COLOR5, BOX_COLOR6, BOX_COLOR7, BOX_COLOR8],$
     processing:          '(PROCESSING)',$
     ok:                  'OK',$
     failed:              'FAILED',$
     version:             VERSION,$
-; Change code (RC Ward, March 27, 2010): Decrease size of all windows in vertical direction    
-;  MainBaseSize:        [30,50,1300,770],$
+    ; Change code (RC Ward, March 27, 2010): Decrease size of all windows in vertical direction
+    ;  MainBaseSize:        [30,50,1300,770],$
     MainBaseSize:        [30,50,1276,901],$
     ascii_extension:     'txt',$
     ascii_filter:        '*.txt',$
@@ -547,7 +550,7 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     first_realign:       1,$
     manual_ref_pixel:    0,$
     pData_x:             PTR_NEW(0L),$
-
+    
     x_axis:              PTR_NEW(0L),$
     x_axis_max_values:   PTR_NEW(0L), $
     
@@ -563,7 +566,7 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     PrevScalingStep2TabSelect: 0,$
     step4_step1_selection: [0,0,0,0],$ ;[xmin, ymin, xmax, ymax]
     step4_2_2_lambda_value_array: [0,0], $ [Qmin, Qmax] data value (not device)
-    plot2d_x_left:       0,$
+  plot2d_x_left:       0,$
     plot2d_y_left:       0,$
     plot2d_x_right:      0,$
     plot2d_y_right:      0,$
@@ -581,25 +584,24 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     w_shifting_plot2d_draw_uname: '',$
     w_scaling_plot2d_draw_uname: '',$
     w_shifting_plot2d_id: 0,$ ;id of shift. plot2D widget_base
-    w_scaling_plot2d_id: 0,$ ;id of scaling plot2D widget_base 
-; Change (RC Ward, 23 Nov 2010): Add window counter and increment this as plots are made in the PlotUtility Tab.    
+    w_scaling_plot2d_id: 0,$ ;id of scaling plot2D widget_base
+    ; Change (RC Ward, 23 Nov 2010): Add window counter and increment this as plots are made in the PlotUtility Tab.
     window_counter: 0$
     })
-      
+    
   ;initialize variables
   (*(*global).list_OF_ascii_files) = STRARR(1)
   (*(*global).reduce_tab1_table) = STRARR(2,1)
   (*(*global).reduce_run_sangle_table) = STRARR(2,1)
- ; Code change RCW (Feb 1, 2010): set up array for RefPixSave, SangleDone  
+  ; Code change RCW (Feb 1, 2010): set up array for RefPixSave, SangleDone
   (*(*global).RefPixSave) = FLTARR(18)
   (*(*global).SangleDone) = BYTARR(18)
-
-
-; Build Application Title ====================================================== 
-; CHANGE CODE (RC WARD, 22 June 2010): Pass MainBaseSize in from MakeGuiInstrumentSelection to control resolution
-;  MainBaseSize   = (*global).MainBaseSize
-   (*global).MainBaseSize = MainBaseSize
-;  MainBaseTitle  = 'Reflectometer Off Specular Application'
+  
+  ; Build Application Title ======================================================
+  ; CHANGE CODE (RC WARD, 22 June 2010): Pass MainBaseSize in from MakeGuiInstrumentSelection to control resolution
+  ;  MainBaseSize   = (*global).MainBaseSize
+  (*global).MainBaseSize = MainBaseSize
+  ;  MainBaseTitle  = 'Reflectometer Off Specular Application'
   IF (instrument EQ 'REF_L') THEN BEGIN
     MainBaseTitle += '_for_REF_L'
   ENDIF ELSE BEGIN
@@ -610,7 +612,7 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
   IF (DEBUGGING EQ 'yes') THEN BEGIN
     MainBaseTitle += ' (DEBUGGING MODE)'
   ENDIF
- ;===============================================================================
+  ;===============================================================================
   ;Build Main Base
   MAIN_BASE = WIDGET_BASE( GROUP_LEADER = wGroup,$
     UNAME        = 'MAIN_BASE',$
@@ -622,11 +624,11 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     SPACE        = 0,$
     XPAD         = 0,$
     YPAD         = 2)
- ; Change code (RC Ward, 23 July 2010): Load the users value for reduce step path
+  ; Change code (RC Ward, 23 July 2010): Load the users value for reduce step path
   (*global).ascii_path = reduce_step_path
   (*global).working_path = reduce_step_path
- ;===============================================================================
- 
+  ;===============================================================================
+  
   ;get the color of the GUI to hide the widget_draw that will draw the label
   sys_color = WIDGET_INFO(MAIN_BASE,/SYSTEM_COLORS)
   (*global).sys_color_face_3d = sys_color.face_3d
@@ -709,9 +711,9 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
   message = '>>>>>>  Application started date/time: ' + time_stamp + '  <<<<<<'
   IDLsendToGeek_putLogBookText_fromMainBase, MAIN_BASE, 'log_book_text', $
     message
-  
-  PlotUtility_putText_fromMainBase, MAIN_BASE, 'plot_utility_text', message
     
+  PlotUtility_putText_fromMainBase, MAIN_BASE, 'plot_utility_text', message
+  
   IF (CHECKING_PACKAGES EQ 'yes') THEN BEGIN
     packages_required, global, my_package ;packages_required
     CheckPackages, MAIN_BASE, global, my_package;_CheckPackages
@@ -722,27 +724,27 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
       ACTIVATE=(*global).reduce_step1_spin_state_mode, global
   ENDIF
   
-;  display_reduce_step1_sangle_buttons, MAIN_BASE=main_base, global
-;  display_reduce_step1_sangle_scale, MAIN_BASE=main_base, global
+  ;  display_reduce_step1_sangle_buttons, MAIN_BASE=main_base, global
+  ;  display_reduce_step1_sangle_scale, MAIN_BASE=main_base, global
   
-  ;============================================================================= 
-    message = '> Browser: ' + BROWSER
-    IDLsendToGeek_addLogBookText_fromMainBase, MAIN_BASE, 'log_book_text', $
-       message
-    message = '> Instrument: ' + instrument
-    IDLsendToGeek_addLogBookText_fromMainBase, MAIN_BASE, 'log_book_text', $
-       message
-    PlotUtility_putText_fromMainBase, MAIN_BASE, 'plot_utility_text', message
-    message = '  '
-    PlotUtility_putText_fromMainBase, MAIN_BASE, 'plot_utility_text', message
-    message = '   Select buttons below to plot Reflectivity vs Q or Scaled 2D results, each in separate window.'
-    PlotUtility_putText_fromMainBase, MAIN_BASE, 'plot_utility_text', message
-    message = '  '
-    PlotUtility_putText_fromMainBase, MAIN_BASE, 'plot_utility_text', message  
-    message = '   Or modify the reduce step path to examine other results.'
-    PlotUtility_putText_fromMainBase, MAIN_BASE, 'plot_utility_text', message
-    message = '  '  
-    PlotUtility_putText_fromMainBase, MAIN_BASE, 'plot_utility_text', message
+  ;=============================================================================
+  message = '> Browser: ' + BROWSER
+  IDLsendToGeek_addLogBookText_fromMainBase, MAIN_BASE, 'log_book_text', $
+    message
+  message = '> Instrument: ' + instrument
+  IDLsendToGeek_addLogBookText_fromMainBase, MAIN_BASE, 'log_book_text', $
+    message
+  PlotUtility_putText_fromMainBase, MAIN_BASE, 'plot_utility_text', message
+  message = '  '
+  PlotUtility_putText_fromMainBase, MAIN_BASE, 'plot_utility_text', message
+  message = '   Select buttons below to plot Reflectivity vs Q or Scaled 2D results, each in separate window.'
+  PlotUtility_putText_fromMainBase, MAIN_BASE, 'plot_utility_text', message
+  message = '  '
+  PlotUtility_putText_fromMainBase, MAIN_BASE, 'plot_utility_text', message
+  message = '   Or modify the reduce step path to examine other results.'
+  PlotUtility_putText_fromMainBase, MAIN_BASE, 'plot_utility_text', message
+  message = '  '
+  PlotUtility_putText_fromMainBase, MAIN_BASE, 'plot_utility_text', message
   ;=============================================================================
   ;send message to log current run of application
   logger, APPLICATION=application, VERSION=version, UCAMS=ucams
@@ -752,17 +754,17 @@ END
 ; Empty stub procedure used for autoloading.
 PRO ref_off_spec, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-; Check hostname (lrac or mrac) to determine instrument =========================
- ; Code change RCW (Jan 12, 2010): hostname returns full name (mrac.sns.gov or lrac.sns.gov)
+  ; Check hostname (lrac or mrac) to determine instrument =========================
+  ; Code change RCW (Jan 12, 2010): hostname returns full name (mrac.sns.gov or lrac.sns.gov)
   SPAWN, 'hostname',listening
   CASE (listening) OF
     'lrac.sns.gov': instrument = 'REF_L'
     'mrac.sns.gov': instrument = 'REF_M'
     ELSE: instrument = 'UNDEFINED'
   ENDCASE
-; For debugging, force BuildInstrumentGui to run so instrument must be selected - RCW 30 Dec 2009
-     instrument = 'UNDEFINED'
-; If instrument is UNDEFINED call BuildInstrumentGui, else call BuildGui =========================  
+  ; For debugging, force BuildInstrumentGui to run so instrument must be selected - RCW 30 Dec 2009
+  instrument = 'UNDEFINED'
+  ; If instrument is UNDEFINED call BuildInstrumentGui, else call BuildGui =========================
   IF (instrument EQ 'UNDEFINED') THEN BEGIN
     BuildInstrumentGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ENDIF ELSE BEGIN
