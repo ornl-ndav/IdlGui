@@ -68,7 +68,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     SCR_XSIZE = sBase.size[2],$
     SCR_YSIZE = sbase.size[3],$
     UNAME     = 'reduce_step2_create_roi_base',$
-    MAP       = 0)
+    MAP       = 1)  ;REMOVE_ME
     
   big_base = WIDGET_BASE(ModifyBase,$
     /COLUMN)
@@ -123,7 +123,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
   ENDELSE
   
   roi_label = WIDGET_LABEL(row1_base,$
-    VALUE = '     ROI File Name:')
+    VALUE = '     Peak ROI File Name:')
     
   roi_value = WIDGET_LABEL(row1_base,$
     VALUE = 'N/A',$
@@ -131,6 +131,25 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     SCR_XSIZE = xsize,$
     UNAME = 'reduce_step2_create_roi_file_name_label',$
     FRAME = 1)
+    
+  row1b_base = widget_base(big_base,/row)
+  space = widget_label(row1b_base,$
+  value = ' ',$
+  scr_xsize = 593)
+  
+  back_roi_label = widget_label(row1b_base,$
+  value = ' Back. ROI File Name:')
+  back_roi_value = widget_label(row1b_base,$
+  value = 'N/A',$
+  /align_left,$
+  scr_xsize = xsize, $
+  uname = 'reduce_step2_create_back_roi_file_name_label',$
+  frame=1)
+    
+    
+   ;space
+   space = widget_label(big_base,$
+   value = ' ') 
     
   ;second row --------------------------
   row2_base = WIDGET_BASE(big_base,$

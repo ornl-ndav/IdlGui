@@ -741,7 +741,7 @@ pro reduce_step2_browse_back_roi, Event, $
   IF (roi_file[0] NE '') THEN BEGIN
   
     nexus_spin_state_back_roi_table = $
-    (*(*global).nexus_spin_state_back_roi_table)
+      (*(*global).nexus_spin_state_back_roi_table)
     IF (N_ELEMENTS(data_spin_state) NE 0) THEN BEGIN
       CASE (data_spin_state) OF
         'Off_Off': BEGIN
@@ -767,8 +767,8 @@ pro reduce_step2_browse_back_roi, Event, $
     
     nexus_spin_state_back_roi_table[column,norm_table[row]] = roi_file
     (*(*global).nexus_spin_state_back_roi_table) = $
-    nexus_spin_state_back_roi_table
-    
+      nexus_spin_state_back_roi_table
+      
     IF (new_path NE path) THEN BEGIN
       (*global).ROI_path = new_path
       LogText = '-> New ROI browsing_path is: ' + new_path
@@ -862,18 +862,21 @@ PRO reduce_step2_create_roi, Event, $
       data_spin_state=data_spin_state)
     putTextFieldValue, Event, 'reduce_step2_create_roi_pola_value', $
       spin_state
-  ENDIF
-  
-  ;get ROI file name
-  IF (instrument EQ 'REF_M') THEN BEGIN
-    uname = 'reduce_tab2_roi_value_' + l_data_spin_state + sRow
+      
+    nexus_spin_state_roi_table = (*(*global).nexus_spin_state_roi_table)
+    roi_file_name = getNormRoiFileOfIndex(Event, row=sRow,$
+      base_name=spin_state)
+      
+    IF (roi_file_name eq '') THEN roi_file_name = 'N/A'
+    uname = 'reduce_step2_create_roi_file_name_label'
+    putTextFieldValue, Event, uname, roi_file_name
   ENDIF ELSE BEGIN
     uname = 'reduce_tab2_roi_value' + sRow
+    roi_file_name = getTextFieldValue(Event,uname)
+    uname = 'reduce_step2_create_roi_file_name_label'
+    IF (roi_file_name eq '') THEN roi_file_name = 'N/A'
+    putTextFieldValue, Event, uname, roi_file_name
   ENDELSE
-  roi_file_name = getTextFieldValue(Event,uname)
-  uname = 'reduce_step2_create_roi_file_name_label'
-  IF (roi_file_name eq '') THEN roi_file_name = 'N/A'
-  putTextFieldValue, Event, uname, roi_file_name
   
   MapBase, Event, 'reduce_step2_create_roi_base', 1
   (*global).reduce_step2_create_roi_base = 1
@@ -1239,8 +1242,8 @@ END
 ;------------------------------------------------------------------------------
 ;Refresh name of all the roi files
 PRO refresh_back_roi_file_name, Event
-compile_opt idl2
-
+  compile_opt idl2
+  
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
@@ -1270,7 +1273,7 @@ compile_opt idl2
         ;        roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
         ;        putTextFieldValue, Event, roi_label_uname, roi_file
         roi_label_uname = 'reduce_tab2_back_roi_status_' + base_name + $
-        sIndex
+          sIndex
         putTextFieldValue, Event, roi_label_uname, roi_file
         
         ;off_on
