@@ -68,7 +68,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     SCR_XSIZE = sBase.size[2],$
     SCR_YSIZE = sbase.size[3],$
     UNAME     = 'reduce_step2_create_roi_base',$
-    MAP       = 1)  ;REMOVE_ME
+    MAP       = 0)
     
   big_base = WIDGET_BASE(ModifyBase,$
     /COLUMN)
