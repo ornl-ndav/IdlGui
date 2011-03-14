@@ -899,6 +899,10 @@ PRO reduce_step2_create_roi, Event, $
     load_and_plot_roi_file, Event, roi_file_name
   ENDIF
   
+  if (bacK_roi_file_name ne 'N/A') then begin
+  load_and_plot_back_roi_file, event, back_roi_file_name
+  endif
+  
   WIDGET_CONTROL, HOURGLASS=0
   
   IF (~success) THEN BEGIN

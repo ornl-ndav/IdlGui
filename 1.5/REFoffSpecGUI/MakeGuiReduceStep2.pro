@@ -189,10 +189,13 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     SPACE = 5,$
     UNAME = 'reduce_step2_create_roi_lin_log',$
     /EXCLUSIVE)
+
+space = widget_label(row2col2,$
+value = ' ')
  
 ;first inside row (browse button)
   browse_button = WIDGET_BUTTON(row2col2,$
-    VALUE = 'B R O W S E   F O R   A   R O I . . .',$
+    VALUE = 'B R O W S E   F O R   A   P E A K  R O I . . .',$
     SCR_XSIZE = 320,$
     TOOLTIP = 'Click to browse for a ROI file and plot it',$
     UNAME = 'reduce_step2_create_roi_browse_roi_button')
@@ -237,6 +240,60 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     VALUE = ' ',$
     UNAME = 'reduce_step2_create_roi_y2_r_status')
     
+      space = WIDGET_LABEL(row2col2,$
+    value = '    ')
+      space = WIDGET_LABEL(row2col2,$
+    value = '    ')
+    
+    
+;first inside row (browse button)
+  browse_button = WIDGET_BUTTON(row2col2,$
+    VALUE = 'B R O W S E   F O R   A   B A C K.  R O I . . .',$
+    SCR_XSIZE = 320,$
+    TOOLTIP = 'Click to browse for a background ROI file and plot it',$
+    UNAME = 'reduce_step2_create_back_roi_browse_roi_button')
+
+   row3col2_base2 = WIDGET_BASE(row2col2,$
+    /ROW)
+    
+  y1_working = WIDGET_LABEL(row3col2_base2,$
+    VALUE = '>>',$
+    /ALIGN_LEFT, $  
+    UNAME = 'reduce_step2_create_back_roi_y1_l_status')
+  y1_label = WIDGET_LABEL(row3col2_base2,$
+    /ALIGN_LEFT, $  
+    VALUE = 'Y1:')
+  y1_value = WIDGET_TEXT(row3col2_base2,$
+    VALUE = ' ',$
+    XSIZE = 3,$
+    /EDITABLE,$
+    /ALIGN_LEFT,$
+    UNAME = 'reduce_step2_create_back_roi_y1_value')
+  y1_working = WIDGET_LABEL(row3col2_base2,$
+    VALUE = '<<',$
+    /ALIGN_LEFT, $  
+    UNAME = 'reduce_step2_create_back_roi_y1_r_status')
+       
+  space = WIDGET_LABEL(row3col2_base2,$
+    value = '  ')
+  
+    
+  y2_working = WIDGET_LABEL(row3col2_base2,$
+    VALUE = ' ',$
+    UNAME = 'reduce_step2_create_back_roi_y2_l_status')
+  y2_label = WIDGET_LABEL(row3col2_base2,$
+    VALUE = 'Y2:')
+  y2_value = WIDGET_TEXT(row3col2_base2,$
+    VALUE = ' ',$
+    XSIZE = 3,$
+    /EDITABLE,$
+    /ALIGN_LEFT,$
+    UNAME = 'reduce_step2_create_back_roi_y2_value')
+  y2_working = WIDGET_LABEL(row3col2_base2,$
+    VALUE = ' ',$
+    UNAME = 'reduce_step2_create_back_roi_y2_r_status')
+
+
   space = WIDGET_LABEL(row2col2,$
     value = '    ')
     
@@ -249,15 +306,15 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     
   ;third row (save button)
   save_roi = WIDGET_BUTTON(row2col2,$
-    VALUE = 'S A V E   R O I',$
+    VALUE = 'S A V E   P E A K and B A C K.  R O Is',$
     SCR_XSIZE = 320,$
-    TOOLTIP = 'Click to Save the ROI you created',$
+    TOOLTIP = 'Click to Save the peak and background ROI you created',$
     UNAME = 'reduce_step2_create_roi_save_roi',$
     SENSITIVE = 0)
     
   ;save and quit base
   save_quit_roi = WIDGET_BUTTON(row2col2,$
-    VALUE = 'SAVE ROI and RETURN TO TABLE',$
+    VALUE = 'SAVE PEAK & BACK. ROIs and RETURN TO TABLE',$
     SCR_XSIZE = 320,$
 ;    TOOLTIP = 'Click to Save the ROI and Return to the table',$
     uname = 'reduce_step2_create_roi_save_roi_quit',$
