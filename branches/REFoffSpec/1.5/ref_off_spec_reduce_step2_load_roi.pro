@@ -147,9 +147,31 @@ PRO load_and_plot_roi_file, Event, file_name
   putTextFieldValue, Event, 'reduce_step2_create_roi_y2_value', $
     STRCOMPRESS(Y2,/REMOVE_ALL)
     
-  plot_reduce_step2_norm, Event ;refresh plot
+;  plot_reduce_step2_norm, Event ;refresh plot
   (*global).norm_roi_y_selected = 'all'
   reduce_step2_manual_move, Event
   
 END
+
+pro load_and_plot_back_roi_file, event, file_name
+compile_opt idl2
+
+
+  ;get global structure
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  Yarray = retrieveYminMaxFromFile(event,file_name)
+  Y1 = Yarray[0]
+  Y2 = Yarray[1]
+;  putTextFieldValue, Event, 'reduce_step2_create_roi_y1_value', $
+;    STRCOMPRESS(Y1,/REMOVE_ALL)
+;  putTextFieldValue, Event, 'reduce_step2_create_roi_y2_value', $
+;    STRCOMPRESS(Y2,/REMOVE_ALL)
+    
+;  plot_reduce_step2_norm, Event ;refresh plot
+;  (*global).norm_roi_y_selected = 'all'
+;  reduce_step2_manual_move, Event
+
+
+end
 
