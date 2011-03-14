@@ -76,7 +76,7 @@ PRO make_gui_Reduce_step3, REDUCE_TAB, sTab, TabTitles, global
       'NORM. Run',$
       'NORM. NeXus',$
       'N. Spin State',$
-      'Peak ROI',$
+      'Norm. Peak ROI',$
       'Data Background ROI', $
       'Norm. Background ROI', $
       'Output File Name']

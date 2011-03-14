@@ -41,7 +41,7 @@ PRO refresh_reduce_step3_table, Event
   instrument = (*global).instrument
   
   IF (instrument EQ 'REF_M') THEN BEGIN
-    ysize = 10
+    ysize = 11
   ENDIF ELSE BEGIN
     ysize = 6
   ENDELSE

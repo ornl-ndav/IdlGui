@@ -685,52 +685,52 @@ PRO MAIN_BASE_event, Event
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_norm_combo0'): BEGIN
     save_new_reduce_tab2_norm_combobox, Event, row=0
     ;this update the name of the roi files
-;    refresh_roi_file_name, Event
+    refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_norm_combo1'): BEGIN
     save_new_reduce_tab2_norm_combobox, Event, row=1
     ;this update the name of the roi files
-;    refresh_roi_file_name, Event
+    refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_norm_combo2'): BEGIN
     save_new_reduce_tab2_norm_combobox, Event, row=2
     ;this update the name of the roi files
-;    refresh_roi_file_name, Event
+    refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_norm_combo3'): BEGIN
     save_new_reduce_tab2_norm_combobox, Event, row=3
     ;this update the name of the roi files
-;    refresh_roi_file_name, Event
+    refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_norm_combo4'): BEGIN
     save_new_reduce_tab2_norm_combobox, Event, row=4
     ;this update the name of the roi files
-;    refresh_roi_file_name, Event
+    refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_norm_combo5'): BEGIN
     save_new_reduce_tab2_norm_combobox, Event, row=5
     ;this update the name of the roi files
-;    refresh_roi_file_name, Event
+    refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_norm_combo6'): BEGIN
     save_new_reduce_tab2_norm_combobox, Event, row=6
     ;this update the name of the roi files
-;    refresh_roi_file_name, Event
+    refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_norm_combo7'): BEGIN
     save_new_reduce_tab2_norm_combobox, Event, row=7
     ;this update the name of the roi files
-;    refresh_roi_file_name, Event
+    refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_norm_combo8'): BEGIN
     save_new_reduce_tab2_norm_combobox, Event, row=8
     ;this update the name of the roi files
-;    refresh_roi_file_name, Event
+    refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_norm_combo9'): BEGIN
     save_new_reduce_tab2_norm_combobox, Event, row=9
     ;this update the name of the roi files
-;    refresh_roi_file_name, Event
+    refresh_roi_file_name, Event
   END
   
   ;============================================================================
@@ -738,7 +738,7 @@ PRO MAIN_BASE_event, Event
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_off0'): BEGIN
     ;    save_new_reduce_tab2_norm_combobox, Event, row=0
     ;this update the name of the roi files
- ;   refresh_roi_file_name, Event
+;    refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_off1'): BEGIN
     ;    save_new_reduce_tab2_norm_combobox, Event, row=1
