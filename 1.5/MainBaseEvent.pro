@@ -1685,21 +1685,31 @@ PRO MAIN_BASE_event, Event
       ENDIF
       
     ENDELSE
-    check_reduce_step2_save_roi_validity, Event
+  ;  check_reduce_step2_save_roi_validity, Event
   END
   
-  ;y1 and y2 text field (for manual input of y1 and y2
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_create_roi_y1_value'): BEGIN
+  ;y1 and y2 peak roi text fields (for manual input of y1 and y2)
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='reduce_step2_create_roi_y1_value'): BEGIN
     plot_reduce_step2_norm, Event
-    plot_reduce_step2_y, event, uname='reduce_step2_create_roi_y2_value'
-    plot_reduce_step2_y, event, uname='reduce_step2_create_roi_y1_value'
-    check_reduce_step2_save_roi_validity, Event
+    reduce_step2_plot_rois, event
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_create_roi_y2_value'): BEGIN
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='reduce_step2_create_roi_y2_value'): BEGIN
     plot_reduce_step2_norm, Event
-    plot_reduce_step2_y, event, uname='reduce_step2_create_roi_y2_value'
-    plot_reduce_step2_y, event, uname='reduce_step2_create_roi_y1_value'
-    check_reduce_step2_save_roi_validity, Event
+    reduce_step2_plot_rois, event
+  END
+  
+  ;y1 and y2 back roi text fields (for manual input of y1 and y2)
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='reduce_step2_create_back_roi_y1_value'): BEGIN
+    plot_reduce_step2_norm, Event
+    reduce_step2_plot_rois, event
+  END
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='reduce_step2_create_back_roi_y2_value'): BEGIN
+    plot_reduce_step2_norm, Event
+    reduce_step2_plot_rois, event
   END
   
   ;lin/log cw_bgroup

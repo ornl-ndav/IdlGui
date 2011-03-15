@@ -70,8 +70,6 @@ PRO plot_reduce_step2_roi, Event
   y_rebin_value = (*global).reduce_rebin_roi_rebin_y
   y_roi_status = (*global).norm_roi_y_selected
   
-  print, y_roi_status
-  
   bPeakSelected = isPeakSelected(event)
   if (bPeakSelected) then begin
   
