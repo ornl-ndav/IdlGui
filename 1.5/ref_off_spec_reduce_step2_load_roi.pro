@@ -103,7 +103,7 @@ PRO browse_reduce_step2_roi_file, Event
       STRCOMPRESS(Y2,/REMOVE_ALL)
       
     plot_reduce_step2_norm, Event ;refresh plot
-    (*global).norm_roi_y_selected = 'all'
+;    (*global).norm_roi_y_selected = 'all'
     reduce_step2_manual_move, Event
     
 ;    putTextFieldValue, Event, $

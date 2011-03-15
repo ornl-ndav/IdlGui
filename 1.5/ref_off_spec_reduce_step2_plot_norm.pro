@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 
-PRO plot_reduce_step2_norm, Event
+PRO plot_reduce_step2_norm, Event, recalculate=recalculate
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
@@ -47,17 +47,55 @@ PRO plot_reduce_step2_norm, Event
   WIDGET_CONTROL, id_draw, GET_VALUE=id_value
   WSET,id_value
   
-  ;check if user wants lin or log
-  uname = 'reduce_step2_create_roi_lin_log'
-  lin_log_status = getCWBgroupValue(Event, uname) ;0:lin, 1:log
-  IF (lin_log_status EQ 0) THEN BEGIN ;linear
-    rtData = (*(*global).norm_rtData)
-  ENDIF ELSE BEGIN
-    rtData = (*(*global).norm_rtData_log)
-  ENDELSE
+  if (keyword_set(recalculate)) then begin
   
-  ;plot main plot
-  TVSCL, rtData, /DEVICE
+    ;check if user wants lin or log
+    uname = 'reduce_step2_create_roi_lin_log'
+    lin_log_status = getCWBgroupValue(Event, uname) ;0:lin, 1:log
+    IF (lin_log_status EQ 0) THEN BEGIN ;linear
+      rtData = (*(*global).norm_rtData)
+    ENDIF ELSE BEGIN
+      rtData = (*(*global).norm_rtData_log)
+    ENDELSE
+    
+    ;plot main plot
+    TVSCL, rtData, /DEVICE
+    
+    save_roi_base_background,  event=event
+    
+  endif else begin
+  
+    TV, (*(*global).roi_base_background), true=3
+    
+    
+  endelse
   
 END
 
+
+pro save_roi_base_background,  event=event, main_base=main_base, uname=uname
+  compile_opt idl2
+  
+  if (~keyword_set(uname)) then uname = 'reduce_step2_create_roi_draw_uname'
+  
+  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
+    id = WIDGET_INFO(main_base, FIND_BY_UNAME=uname)
+    widget_control, main_base, get_uvalue=global
+  ENDIF ELSE BEGIN
+    WIDGET_CONTROL, event.top, GET_UVALUE=global
+    id = WIDGET_INFO(Event.top,find_by_uname=uname)
+  ENDELSE
+  
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  background = TVRD(TRUE=3)
+  geometry = WIDGET_INFO(id,/GEOMETRY)
+  xsize   = geometry.xsize
+  ysize   = geometry.ysize
+  
+  DEVICE, copy =[0, 0, xsize, ysize, 0, 0]
+  
+  (*(*global).roi_base_background) = background
+  
+END
