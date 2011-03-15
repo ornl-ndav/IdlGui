@@ -70,44 +70,89 @@ PRO plot_reduce_step2_roi, Event
   y_rebin_value = (*global).reduce_rebin_roi_rebin_y
   y_roi_status = (*global).norm_roi_y_selected
   
-  case (y_roi_status) OF
-    'left': BEGIN ;changing Y1 and replot Y2 (if any)
-      Y1 = EVENT.y
-      IF (y1 GE 0 AND $
-        ;        y1 LE 303L*y_rebin_value) THEN BEGIN
-        y1 LE ((*global).detector_pixels_y-1)*y_rebin_value) THEN BEGIN
-        plot_reduce_step2_roi_y, Event, Y1
-        y1 = FIX(DOUBLE(Y1)/DOUBLE(y_rebin_value))
-        putTextFieldValue, Event, 'reduce_step2_create_roi_y1_value', $
-          STRCOMPRESS(y1,/REMOVE_ALL)
-      ENDIF
-      
-      plot_reduce_step2_y, event, uname='reduce_step2_create_roi_y2_value'
-      
-    END
-    'right': BEGIN ;changing Y2 and replot Y1 (if any)
-      Y2 = EVENT.y
-      plot_reduce_step2_roi_y, Event, Y2
-      IF (y2 GE 0 AND $
-        ;        y2 LE 303*y_rebin_value) THEN BEGIN
-        y2 LE ((*global).detector_pixels_y-1)*y_rebin_value) THEN BEGIN
-        y2 = FIX(DOUBLE(Y2)/DOUBLE(y_rebin_value))
-        putTextFieldValue, Event, 'reduce_step2_create_roi_y2_value', $
-          STRCOMPRESS(y2,/REMOVE_ALL)
-      ENDIF
-      
-      plot_reduce_step2_y, event, uname='reduce_step2_create_roi_y1_value'
-      
-    END
-    ELSE:
-  ENDCASE
+  print, y_roi_status
+  
+  bPeakSelected = isPeakSelected(event)
+  if (bPeakSelected) then begin
+  
+    case (y_roi_status) OF ;peak roi selected
+    
+      'left': BEGIN ;changing Y1 and replot Y2 (if any)
+        Y1 = EVENT.y
+        IF (y1 GE 0 AND $
+          ;        y1 LE 303L*y_rebin_value) THEN BEGIN
+          y1 LE ((*global).detector_pixels_y-1)*y_rebin_value) THEN BEGIN
+          ;        plot_reduce_step2_roi_y, Event, Y1
+          y1 = FIX(DOUBLE(Y1)/DOUBLE(y_rebin_value))
+          putTextFieldValue, Event, 'reduce_step2_create_roi_y1_value', $
+            STRCOMPRESS(y1,/REMOVE_ALL)
+        ENDIF
+        
+      ;    plot_reduce_step2_y, event, uname='reduce_step2_create_roi_y2_value'
+        
+      END
+      'right': BEGIN ;changing Y2 and replot Y1 (if any)
+        Y2 = EVENT.y
+        ;      plot_reduce_step2_roi_y, Event, Y2
+        IF (y2 GE 0 AND $
+          ;        y2 LE 303*y_rebin_value) THEN BEGIN
+          y2 LE ((*global).detector_pixels_y-1)*y_rebin_value) THEN BEGIN
+          y2 = FIX(DOUBLE(Y2)/DOUBLE(y_rebin_value))
+          putTextFieldValue, Event, 'reduce_step2_create_roi_y2_value', $
+            STRCOMPRESS(y2,/REMOVE_ALL)
+        ENDIF
+        
+      ;    plot_reduce_step2_y, event, uname='reduce_step2_create_roi_y1_value'
+        
+      END
+      ELSE:
+    ENDCASE
+    
+  endif else begin ;background roi selected
+  
+    case (y_roi_status) of
+    
+      'left': BEGIN ;changing Y1 and replot Y2 (if any)
+        Y1 = EVENT.y
+        IF (y1 GE 0 AND $
+          ;        y1 LE 303L*y_rebin_value) THEN BEGIN
+          y1 LE ((*global).detector_pixels_y-1)*y_rebin_value) THEN BEGIN
+          ;       plot_reduce_step2_roi_y, Event, Y1
+          y1 = FIX(DOUBLE(Y1)/DOUBLE(y_rebin_value))
+          putTextFieldValue, Event, 'reduce_step2_create_back_roi_y1_value', $
+            STRCOMPRESS(y1,/REMOVE_ALL)
+        ENDIF
+        
+      ;      plot_reduce_step2_y, event, uname='reduce_step2_create_roi_y2_value'
+        
+      END
+      'right': BEGIN ;changing Y2 and replot Y1 (if any)
+        Y2 = EVENT.y
+        ;    plot_reduce_step2_roi_y, Event, Y2
+        IF (y2 GE 0 AND $
+          ;        y2 LE 303*y_rebin_value) THEN BEGIN
+          y2 LE ((*global).detector_pixels_y-1)*y_rebin_value) THEN BEGIN
+          y2 = FIX(DOUBLE(Y2)/DOUBLE(y_rebin_value))
+          putTextFieldValue, Event, 'reduce_step2_create_back_roi_y2_value', $
+            STRCOMPRESS(y2,/REMOVE_ALL)
+        ENDIF
+        
+      ;      plot_reduce_step2_y, event, uname='reduce_step2_create_roi_y1_value'
+        
+      END
+      ELSE:
+    ENDCASE
+    
+  endelse
   
   error:
+  
+  reduce_step2_plot_rois, event
   
 END
 
 ;------------------------------------------------------------------------------
-PRO plot_reduce_step2_roi_y, Event, rY
+PRO plot_reduce_step2_roi_y, Event, ry
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
@@ -225,17 +270,11 @@ pro reduce_step2_plot_rois, event
   ymax = (*global).detector_pixels_y-1
   y_rebin_value = (*global).reduce_rebin_roi_rebin_y
   
-  
-  if (strcompress(peak_y1,/remove_all) ne '' && $
-  strcompress(peak_y2,/remove_all) ne '') then begin
+  if (strcompress(peak_y1,/remove_all) ne '') then begin
   
     peak_y1 = fix(peak_y1)
-    peak_y2 = fix(peak_y2)
-    
     peak_y1 = (peak_y1 gt ymax) ? ymax : peak_y1
-    peak_y2 = (peak_y2 gt ymax) ? ymax : peak_y2
     peak_y1 = (peak_y1 lt ymin) ? ymin : peak_y1
-    peak_y2 = (peak_y2 lt ymin) ? ymin : peak_y2
     
     ;peak
     PLOTS, 0, y_rebin_value * peak_y1, /device, color=color
@@ -243,6 +282,14 @@ pro reduce_step2_plot_rois, event
       /device, $
       /continue, color=fsc_color('white')
       
+  endif
+  
+  if (strcompress(peak_y2,/remove_all) ne '') then begin
+  
+    peak_y2 = fix(peak_y2)
+    peak_y2 = (peak_y2 gt ymax) ? ymax : peak_y2
+    peak_y2 = (peak_y2 lt ymin) ? ymin : peak_y2
+    
     PLOTS, 0, y_rebin_value * peak_y2, /device, color=color
     PLOTS, ((*global).reduce_step2_norm_tof-1), y_rebin_value * peak_y2, $
       /device, $
@@ -250,16 +297,11 @@ pro reduce_step2_plot_rois, event
       
   endif
   
-  if (strcompress(back_y1,/remove_all) ne '' and $
-  strcompress(back_y2,/remove_all) ne '') then begin
+  if (strcompress(back_y1,/remove_all) ne '') then begin
   
     back_y1 = fix(back_y1)
-    back_y2 = fix(back_y2)
-    
     back_y1 = (back_y1 gt ymax) ? ymax : back_y1
-    back_y2 = (back_y2 gt ymax) ? ymax : back_y2
     back_y1 = (back_y1 lt ymin) ? ymin : back_y1
-    back_y2 = (back_y2 lt ymin) ? ymin : back_y2
     
     ;back
     PLOTS, 0, y_rebin_value * back_y1, /device, color=color
@@ -267,6 +309,14 @@ pro reduce_step2_plot_rois, event
       /device, $
       /continue, color=fsc_color('red')
       
+  endif
+  
+  if (strcompress(back_y2,/remove_all) ne '') then begin
+  
+    back_y2 = fix(back_y2)
+    back_y2 = (back_y2 gt ymax) ? ymax : back_y2
+    back_y2 = (back_y2 lt ymin) ? ymin : back_y2
+    
     PLOTS, 0, y_rebin_value * back_y2, /device, color=color
     PLOTS, ((*global).reduce_step2_norm_tof-1), y_rebin_value * back_y2, $
       /device, $

@@ -33,103 +33,116 @@
 ;==============================================================================
 
 FUNCTION isLogZaxisSelected, Event
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME='z_axis_linear_log')
-WIDGET_CONTROL, id, GET_VALUE=isLogSelected
-RETURN, isLogSelected
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='z_axis_linear_log')
+  WIDGET_CONTROL, id, GET_VALUE=isLogSelected
+  RETURN, isLogSelected
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION isLogZaxisShiftingSelected, Event
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME='z_axis_linear_log_shifting')
-WIDGET_CONTROL, id, GET_VALUE=isLogSelected
-RETURN, isLogSelected
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='z_axis_linear_log_shifting')
+  WIDGET_CONTROL, id, GET_VALUE=isLogSelected
+  RETURN, isLogSelected
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION isLogZaxisScalingStep1Selected, Event
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME='z_axis_linear_log_scaling_step1')
-WIDGET_CONTROL, id, GET_VALUE=isLogSelected
-RETURN, isLogSelected
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='z_axis_linear_log_scaling_step1')
+  WIDGET_CONTROL, id, GET_VALUE=isLogSelected
+  RETURN, isLogSelected
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION isLogZaxisStep5Selected, Event
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME='z_axis_linear_log_step5')
-WIDGET_CONTROL, id, GET_VALUE=isLogSelected
-RETURN, isLogSelected
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='z_axis_linear_log_step5')
+  WIDGET_CONTROL, id, GET_VALUE=isLogSelected
+  RETURN, isLogSelected
 END
 ;======================================================================================
 ; Change code (RC Ward, 13 Aug 2010): check to see if the Max Value splicing alternative is selected
 ;------------------------------------------------------------------------------
 FUNCTION isMaxValueStep5Selected, Event
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME='splicing_alternative_step5')
-WIDGET_CONTROL, id, GET_VALUE=isMaxValueSelected
-RETURN, isMaxValueSelected
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='splicing_alternative_step5')
+  WIDGET_CONTROL, id, GET_VALUE=isMaxValueSelected
+  RETURN, isMaxValueSelected
 END
 ;======================================================================================
 ;------------------------------------------------------------------------------
 FUNCTION isThisIndexSelected, Event, index_selected, this_index
-bFoundList = WHERE(index_selected EQ this_index,nbr)
-IF (nbr GT 0) THEN RETURN, 1
-RETURN, 0
+  bFoundList = WHERE(index_selected EQ this_index,nbr)
+  IF (nbr GT 0) THEN RETURN, 1
+  RETURN, 0
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION is_YandX_RefPixelSelected, Event
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME='reference_pixel_shifting_options')
-WIDGET_CONTROL, id, GET_VALUE=isYandXselected
-RETURN, isYandXselected
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='reference_pixel_shifting_options')
+  WIDGET_CONTROL, id, GET_VALUE=isYandXselected
+  RETURN, isYandXselected
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION isWithAttenuatorCoeff, Event
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME= $
-                 'transparency_attenuator_shifting_options')
-WIDGET_CONTROL, id, GET_VALUE=index
-RETURN, index
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME= $
+    'transparency_attenuator_shifting_options')
+  WIDGET_CONTROL, id, GET_VALUE=index
+  RETURN, index
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION isPlot2DModeSelected, Event
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME='two_d_selection_plot_mode')
-value = WIDGET_INFO(id, /BUTTON_SET)
-RETURN, value
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='two_d_selection_plot_mode')
+  value = WIDGET_INFO(id, /BUTTON_SET)
+  RETURN, value
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION isWithScalingErrorBars, Event
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME='plot_error_scaling_options')
-WIDGET_CONTROL, id, GET_VALUE=value
-IF (value EQ 0) THEN RETURN, 1
-RETURN, 0
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='plot_error_scaling_options')
+  WIDGET_CONTROL, id, GET_VALUE=value
+  IF (value EQ 0) THEN RETURN, 1
+  RETURN, 0
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION isBaseMapped, Event, uname
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-RETURN, WIDGET_INFO(id,/MAP)
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+  RETURN, WIDGET_INFO(id,/MAP)
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION isRecapScaleZoomSelected, Event
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step5_rescale_zoom_button')
-return, WIDGET_INFO(id,/BUTTON_SET)
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step5_rescale_zoom_button')
+  return, WIDGET_INFO(id,/BUTTON_SET)
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION isButtonSensitive, Event, uname
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-RETURN, WIDGET_INFO(id,/SENSITIVE)
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+  RETURN, WIDGET_INFO(id,/SENSITIVE)
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION isButtonSelected, Event, uname
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-RETURN, WIDGET_INFO(id,/BUTTON_SET)
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+  RETURN, WIDGET_INFO(id,/BUTTON_SET)
 END
 
 
-
+;+
+; :Description:
+;    Returns the status of the SELECTED PEAK ROI button in reduce/tab2
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+function isPeakSelected, event
+  compile_opt idl2
+  bPeakSelected = isButtonSelected(event,'working_with_peak')
+  return, bPeakSelected
+end
 
 
 
