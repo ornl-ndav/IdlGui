@@ -67,7 +67,7 @@ PRO browse_reduce_step2_roi_file, Event
   
   ;retrieve infos
   extension  = 'dat'
-  filter     = ['*.dat','*.txt']
+  filter     = ['*_ROI.dat','*_ROI.txt']
 ; Change code (RC Ward, 24 July 2010): ROI files will always be loacted with reduction step files
 ; that is the path ias ascii_path
 ;  path       = (*global).roi_path
@@ -152,7 +152,7 @@ compile_opt idl2
   
   ;retrieve infos
   extension  = 'dat'
-  filter     = ['*_back.dat','*_back.txt']
+  filter     = ['*_back_ROI.dat','*_back_ROI.txt']
 ; Change code (RC Ward, 24 July 2010): ROI files will always be loacted with reduction step files
 ; that is the path ias ascii_path
 ;  path       = (*global).roi_path

@@ -226,7 +226,8 @@ pro reduce_step2_plot_rois, event
   y_rebin_value = (*global).reduce_rebin_roi_rebin_y
   
   
-  if (peak_y1 ne '' && peak_y2 ne '') then begin
+  if (strcompress(peak_y1,/remove_all) ne '' && $
+  strcompress(peak_y2,/remove_all) ne '') then begin
   
     peak_y1 = fix(peak_y1)
     peak_y2 = fix(peak_y2)
@@ -248,11 +249,6 @@ pro reduce_step2_plot_rois, event
       /continue, color=fsc_color('white')
       
   endif
-  
-  help, back_y1
-  help, back_y2
-  print, back_y1
-  print, back_y2
   
   if (strcompress(back_y1,/remove_all) ne '' and $
   strcompress(back_y2,/remove_all) ne '') then begin

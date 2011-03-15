@@ -273,7 +273,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     VALUE = 'B R O W S E   F O R   A   B A C K.  R O I . . .',$
     SCR_XSIZE = 320,$
     TOOLTIP = 'Click to browse for a background ROI file and plot it',$
-    UNAME = 'reduce_step2_create_back_roi_browse_roi_button')
+    UNAME = 'reduce_step2_create_roi_browse_back_roi_button')
     
   row3col2_base2 = WIDGET_BASE(row2col2,$
     /ROW)

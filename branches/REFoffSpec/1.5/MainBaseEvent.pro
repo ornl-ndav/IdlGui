@@ -1726,7 +1726,7 @@ PRO MAIN_BASE_event, Event
   
   ;browse/load back ROI
   WIDGET_INFO(wWidget, $
-    FIND_BY_UNAME='reduce_step2_create_roi_browse_roi_button'): BEGIN
+    FIND_BY_UNAME='reduce_step2_create_roi_browse_back_roi_button'): BEGIN
     browse_reduce_step2_back_roi_file, Event
   END
   
