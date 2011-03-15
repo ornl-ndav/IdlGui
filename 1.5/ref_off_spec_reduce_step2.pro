@@ -810,6 +810,7 @@ FUNCTION display_reduce_step2_create_roi_plot, Event, Row=row,$
   
   IF (success) THEN BEGIN
     plot_reduce_step2_norm, Event,recalculate=1
+    plot_reduce_tab2_scale, event=event ;display the scale
     RETURN, 1
   ENDIF
   

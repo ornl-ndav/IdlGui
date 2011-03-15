@@ -53,12 +53,23 @@ FUNCTION retrieve_Data, Event, $
     fileID    = H5F_OPEN(FullNexusName)
     IF (instrument EQ 'REF_M') THEN BEGIN
       data_path = '/entry-' + spin_state + '/bank1/data'
+      tof_path  = '/entry-' + spin_state + '/bank1/time_of_flight' 
     ENDIF ELSE BEGIN
       data_path = '/entry/bank1/data'
+      tof_path = '/entry/bank1/time_of_flight'
     ENDELSE
     fieldID = H5D_OPEN(fileID,data_path)
     data = H5D_READ(fieldID)
     (*(*global).norm_data) = data
+    h5d_close, fieldID
+    
+    ;retrieve tof
+    tofID = h5d_open(fileID, tof_path)
+    tof = h5d_read(tofID)
+    (*(*global).norm_tof) = tof
+    h5d_close, tofID
+    
+    h5f_close, fileID
     
     IF (instrument EQ 'REF_M') THEN BEGIN
       tData = TOTAL(data,2)

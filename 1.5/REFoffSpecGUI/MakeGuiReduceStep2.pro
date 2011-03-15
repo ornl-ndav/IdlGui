@@ -146,35 +146,40 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     uname = 'reduce_step2_create_back_roi_file_name_label',$
     frame=1)
     
-    
   ;space
   space = widget_label(big_base,$
     value = ' ')
     
   ;second row --------------------------
-  row2_base = WIDGET_BASE(big_base,$
-    /ROW)
+  row2_base = WIDGET_BASE(big_base)
+
   ; column 1
-  row2col1 = WIDGET_BASE(row2_base,$ ;...................................
-    /COLUMN)
+  row2col1 = WIDGET_BASE(row2_base)
     
-  space = WIDGET_LABEL(row2col1,$
-    value = '                  ')
+  xoffset = 40
+  yoffset = 40
     
   draw = WIDGET_DRAW(row2col1,$
-    ;    SCR_XSIZE = 2*500,$
+    xoffset = xoffset,$
+    yoffset = yoffset, $
     SCR_XSIZE = (*global).sangle_xsize_draw, $
-    ; Change made: Replace 304 with detector_pixels_y obtained from XML fole (RCW, Feb 10, 2010)
-    SCR_YSIZE = 2 * (*global).detector_pixels_y + 30,$
-    ;    SCR_YSIZE = 2*304,$
+    SCR_YSIZE = 2 * (*global).detector_pixels_y,$
     UNAME = 'reduce_step2_create_roi_draw_uname',$
     ;/tracking_events,$
     /motion_events,$
     /button_events,$
+    retain=2,$
     /KEYBOARD_EVENT)
-    
+
+  scales = widget_draw(row2col1,$
+    scr_xsize = (*global).sangle_xsize_draw + 2*xoffset,$
+    scr_ysize = 2*(*global).detector_pixels_y + 2*yoffset,$
+    retain=2,$
+    uname = 'reduce_step2_scale_uname')
+
   ; column 2
   row2col2 = WIDGET_BASE(row2_base,$ ;...................................
+    xoffset = 700,$
     /COLUMN)
     
   ;lin/log cwbgroup
