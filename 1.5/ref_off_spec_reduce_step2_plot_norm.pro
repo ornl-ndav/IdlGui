@@ -58,8 +58,16 @@ PRO plot_reduce_step2_norm, Event, recalculate=recalculate
       rtData = (*(*global).norm_rtData_log)
     ENDELSE
     
+    geometry = widget_info(id_draw,/geometry)
+    xsize = geometry.xsize
+    (*global).reduce_rebin_roi_rebin_x = xsize
+    size = size(rtdata,/dim)
+    ysize = size[1]
+    
+    crtData = congrid(rtDAta, xsize, ysize, /interp)
+    
     ;plot main plot
-    TVSCL, rtData, /DEVICE
+    TVSCL, crtData, /DEVICE
     
     save_roi_base_background,  event=event
     

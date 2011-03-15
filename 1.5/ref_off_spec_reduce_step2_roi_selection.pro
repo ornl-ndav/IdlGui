@@ -318,7 +318,7 @@ pro reduce_step2_plot_rois, event
     
     ;peak
     PLOTS, 0, y_rebin_value * peak_y1, /device, color=color
-    PLOTS, ((*global).reduce_step2_norm_tof-1), y_rebin_value * peak_y1, $
+    PLOTS, (*global).reduce_rebin_roi_rebin_x, y_rebin_value * peak_y1, $
       /device, $
       /continue, color=fsc_color('white')
       
@@ -331,7 +331,7 @@ pro reduce_step2_plot_rois, event
     peak_y2 = (peak_y2 lt ymin) ? ymin : peak_y2
     
     PLOTS, 0, y_rebin_value * peak_y2, /device, color=color
-    PLOTS, ((*global).reduce_step2_norm_tof-1), y_rebin_value * peak_y2, $
+    PLOTS, (*global).reduce_rebin_roi_rebin_x, y_rebin_value * peak_y2, $
       /device, $
       /continue, color=fsc_color('white')
       
@@ -345,7 +345,7 @@ pro reduce_step2_plot_rois, event
     
     ;back
     PLOTS, 0, y_rebin_value * back_y1, /device, color=color
-    PLOTS, ((*global).reduce_step2_norm_tof-1), y_rebin_value * back_y1, $
+    PLOTS, (*global).reduce_rebin_roi_rebin_x, y_rebin_value * back_y1, $
       /device, $
       /continue, color=fsc_color('red')
       
@@ -358,7 +358,7 @@ pro reduce_step2_plot_rois, event
     back_y2 = (back_y2 lt ymin) ? ymin : back_y2
     
     PLOTS, 0, y_rebin_value * back_y2, /device, color=color
-    PLOTS, ((*global).reduce_step2_norm_tof-1), y_rebin_value * back_y2, $
+    PLOTS, (*global).reduce_rebin_roi_rebin_x, y_rebin_value * back_y2, $
       /device, $
       /continue, color=fsc_color('red')
       

@@ -397,7 +397,8 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     norm_roi_y_selected: 'left',$
     mouse_left_pressed: 0,$
     mouse_right_pressed: 0,$
-    reduce_rebin_roi_rebin_y: 2,$
+    reduce_rebin_roi_rebin_y: 2,$  ;y rebin for reduce/tab2
+    reduce_rebin_roi_rebin_x: 1, $ ;x rebin for reduce/tab2
     reduce_step2_roi_color: 150,$
     reduce_step2_norm_tof: 0,$
     reduce_step2_UD_keys_pressed: 0,$
