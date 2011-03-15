@@ -177,6 +177,13 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     retain=2,$
     uname = 'reduce_step2_scale_uname')
 
+ _colorbar = widget_draw(row2col1,$
+ xoffset =  xoffset , $
+ yoffset = 2*(*global).detector_pixels_y + 2*yoffset, $
+ scr_xsize = (*global).sangle_xsize_draw, $
+ scr_ysize = 70, $
+ uname = 'reduce_step2_colorbar_uname')
+
   ; column 2
   row2col2 = WIDGET_BASE(row2_base,$ ;...................................
     xoffset = 700,$

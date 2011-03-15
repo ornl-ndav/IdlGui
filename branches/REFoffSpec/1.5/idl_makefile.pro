@@ -96,6 +96,7 @@ cd, CurrentFolder
 .run ref_off_spec_display_buttons.pro
 .run packages_required.pro
 .run reduce_tab2_scale.pro
+.run reduce_tab2_colorbar.pro
 
 ;main functions
 .run MainBaseEvent.pro
