@@ -1664,7 +1664,7 @@ PRO MAIN_BASE_event, Event
           plot_reduce_step2_norm, Event
           plot_reduce_step2_roi, Event
         ENDIF ELSE BEGIN ;right pressed
-          inverse_y_selection, Event
+            inverse_selection_or_roi, Event, inverse_roi = 1b
           (*global).mouse_right_pressed = 1
         ENDELSE
       ENDIF
@@ -1690,10 +1690,10 @@ PRO MAIN_BASE_event, Event
   
   ;peak/back selection tool
   widget_info(wWidget, find_by_uname='working_with_peak'): begin
-  inverse_y_selection, event
+  inverse_selection_or_roi, Event
   end
   widget_info(wWidget, find_by_uname='working_with_back'): begin
-  inverse_y_selection, event
+  inverse_selection_or_roi, Event
   end
   
   ;y1 and y2 peak roi text fields (for manual input of y1 and y2)
