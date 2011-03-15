@@ -32,39 +32,18 @@
 ;
 ;==============================================================================
 
-PRO inverse_y_selection, Event
+pro inverse_selection_or_roi, Event, inverse_roi=inverse_roi
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
-  
+
+  bInverseRoi = keyword_set(inverse_roi) ? 1 : 0
   bPeakSelected = isPeakSelected(event)
   y_roi_status = (*global).norm_roi_y_selected
   IF (y_roi_status EQ 'left') THEN BEGIN
-    (*global).norm_roi_y_selected = 'right'
+
+    if (bInverseRoi) then (*global).norm_roi_y_selected = 'right'
     
-    if (bPeakSelected) then begin
-      peak_y1_l = '  '
-      peak_y1_r = '  '
-      peak_y2_l = '>>'
-      peak_y2_r = '<<'
-      back_y1_l = '  '
-      back_y1_r = '  '
-      back_y2_l = '  '
-      back_y2_r = '  '
-    endif else begin
-      peak_y1_l = '  '
-      peak_y1_r = '  '
-      peak_y2_l = '  '
-      peak_y2_r = '  '
-      back_y1_l = '  '
-      back_y1_r = '  '
-      back_y2_l = '>>'
-      back_y2_r = '<<'
-    endelse
-    
-  ENDIF ElSE BEGIN
-  
-    (*global).norm_roi_y_selected = 'left'
     if (bPeakSelected) then begin
       peak_y1_l = '>>'
       peak_y1_r = '<<'
@@ -85,12 +64,40 @@ PRO inverse_y_selection, Event
       back_y2_r = '  '
     endelse
     
+  ENDIF ElSE BEGIN
+  
+  if (bInverseRoi) then (*global).norm_roi_y_selected = 'left'
+  
+    if (bPeakSelected) then begin
+      peak_y1_l = '  '
+      peak_y1_r = '  '
+      peak_y2_l = '>>'
+      peak_y2_r = '<<'
+      back_y1_l = '  '
+      back_y1_r = '  '
+      back_y2_l = '  '
+      back_y2_r = '  '
+    endif else begin
+      peak_y1_l = '  '
+      peak_y1_r = '  '
+      peak_y2_l = '  '
+      peak_y2_r = '  '
+      back_y1_l = '  '
+      back_y1_r = '  '
+      back_y2_l = '>>'
+      back_y2_r = '<<'
+    endelse
+    
   ENDELSE
   
-  putTextFieldValue, event, 'reduce_step2_create_roi_y1_l_status', y1_l
-  putTextFieldValue, event, 'reduce_step2_create_roi_y1_r_status', y1_r
-  putTextFieldValue, event, 'reduce_step2_create_roi_y2_l_status', y2_l
-  putTextFieldValue, event, 'reduce_step2_create_roi_y2_r_status', y2_r
+  putTextFieldValue, event, 'reduce_step2_create_roi_y1_l_status', peak_y1_l
+  putTextFieldValue, event, 'reduce_step2_create_roi_y1_r_status', peak_y1_r
+  putTextFieldValue, event, 'reduce_step2_create_roi_y2_l_status', peak_y2_l
+  putTextFieldValue, event, 'reduce_step2_create_roi_y2_r_status', peak_y2_r
+  putTextFieldValue, event, 'reduce_step2_create_back_roi_y1_l_status', back_y1_l
+  putTextFieldValue, event, 'reduce_step2_create_back_roi_y1_r_status', back_y1_r
+  putTextFieldValue, event, 'reduce_step2_create_back_roi_y2_l_status', back_y2_l
+  putTextFieldValue, event, 'reduce_step2_create_back_roi_y2_r_status', back_y2_r
   
 END
 
