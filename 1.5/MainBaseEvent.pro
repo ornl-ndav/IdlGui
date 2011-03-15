@@ -1722,11 +1722,10 @@ PRO MAIN_BASE_event, Event
   ;lin/log cw_bgroup
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='reduce_step2_create_roi_lin_log'): BEGIN
+    widget_control, /hourglass
     plot_reduce_step2_norm, Event, recalculate=1
-    tmp = (*global).norm_roi_y_selected ;save old y_selected value
-    (*global).norm_roi_y_selected = 'all'
-    reduce_step2_manual_move, Event
-    (*global).norm_roi_y_selected = tmp ;put back old y_selected value
+    reduce_step2_plot_rois, event
+    widget_control, hourglass=0
   END
   
   ;browse/load ROI

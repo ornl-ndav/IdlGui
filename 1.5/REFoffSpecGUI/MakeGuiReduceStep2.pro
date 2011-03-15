@@ -339,7 +339,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     SCR_XSIZE = 320,$
     TOOLTIP = 'Click to Save the peak and background ROI you created',$
     UNAME = 'reduce_step2_create_roi_save_roi',$
-    SENSITIVE = 0)
+    SENSITIVE = 1)
     
   ;save and quit base
   save_quit_roi = WIDGET_BUTTON(row2col2,$
@@ -347,7 +347,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     SCR_XSIZE = 320,$
     ;    TOOLTIP = 'Click to Save the ROI and Return to the table',$
     uname = 'reduce_step2_create_roi_save_roi_quit',$
-    SENSITIVE = 0)
+    SENSITIVE = 1)
     
   space = WIDGET_LABEL(row2col2,$
     value = '    ')
