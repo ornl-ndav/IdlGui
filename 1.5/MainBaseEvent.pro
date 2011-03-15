@@ -1630,7 +1630,7 @@ PRO MAIN_BASE_event, Event
     FIND_BY_UNAME='reduce_step2_create_roi_draw_uname'): BEGIN
     
     error = 0
-    ;   CATCH, error
+    ;CATCH, error
     IF (error NE 0) THEN BEGIN
       CATCH,/CANCEL
       check_reduce_step2_save_roi_validity, Event
@@ -1685,7 +1685,6 @@ PRO MAIN_BASE_event, Event
       ENDIF
       
     ENDELSE
-  ;  check_reduce_step2_save_roi_validity, Event
   END
   
   ;peak/back selection tool
