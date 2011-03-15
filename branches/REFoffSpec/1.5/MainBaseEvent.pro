@@ -1722,6 +1722,8 @@ PRO MAIN_BASE_event, Event
   widget_info(wWidget, find_by_uname='reset_peak_roi_inputs'): begin
     putTextFieldValue, Event, 'reduce_step2_create_roi_y1_value', ''
     putTextFieldValue, Event, 'reduce_step2_create_roi_y2_value', ''
+    plot_reduce_step2_norm, Event ;refresh plot
+    reduce_step2_plot_rois, event
   end
   
   ;browse/load back ROI
@@ -1734,24 +1736,9 @@ PRO MAIN_BASE_event, Event
   widget_info(wWidget, find_by_uname='reset_back_roi_inputs'): begin
     putTextFieldValue, Event, 'reduce_step2_create_back_roi_y1_value', ''
     putTextFieldValue, Event, 'reduce_step2_create_back_roi_y2_value', ''
+    plot_reduce_step2_norm, Event ;refresh plot
+    reduce_step2_plot_rois, event
   end
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
   
   ;SAVE ROI
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_create_roi_save_roi'): BEGIN
