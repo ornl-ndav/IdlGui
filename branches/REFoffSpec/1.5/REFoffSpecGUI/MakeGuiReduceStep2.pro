@@ -34,13 +34,13 @@
 
 PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
 
-; Define variable instrument (RCW, Feb 1, 2010)
+  ; Define variable instrument (RCW, Feb 1, 2010)
   instrument = (*global).instrument
   
   ;****************************************************************************
   ;            DEFINE STRUCTURE
   ;****************************************************************************
-
+  
   tab_title = TabTitles.step2
   sBase = { size:  stab.size,$
     uname: 'reduce_step2_tab_base',$
@@ -49,8 +49,8 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
   ;****************************************************************************
   ;            BUILD GUI
   ;****************************************************************************
-; Code Change (RC Ward, 27 March 2010): Extensive redsign of the GUI was implemented
-; Shrink vertical screen size for viewing on laptop or reduced resolution monitor
+  ; Code Change (RC Ward, 27 March 2010): Extensive redsign of the GUI was implemented
+  ; Shrink vertical screen size for viewing on laptop or reduced resolution monitor
     
   Base = WIDGET_BASE(REDUCE_TAB,$
     UNAME     = sBase.uname,$
@@ -99,7 +99,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     UNAME = 'reduce_step2_create_roi_norm_value',$
     FRAME = 1,$
     SCR_XSIZE = 100)
-; use predefined instrument (RWD, Feb 1, 2010)    
+  ; use predefined instrument (RWD, Feb 1, 2010)
   IF (instrument EQ 'REF_M') THEN BEGIN
   
     spin_label = WIDGET_LABEL(row1_base,$
@@ -134,27 +134,27 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     
   row1b_base = widget_base(big_base,/row)
   space = widget_label(row1b_base,$
-  value = ' ',$
-  scr_xsize = 593)
-  
+    value = ' ',$
+    scr_xsize = 593)
+    
   back_roi_label = widget_label(row1b_base,$
-  value = ' Back. ROI File Name:')
+    value = ' Back. ROI File Name:')
   back_roi_value = widget_label(row1b_base,$
-  value = 'N/A',$
-  /align_left,$
-  scr_xsize = xsize, $
-  uname = 'reduce_step2_create_back_roi_file_name_label',$
-  frame=1)
+    value = 'N/A',$
+    /align_left,$
+    scr_xsize = xsize, $
+    uname = 'reduce_step2_create_back_roi_file_name_label',$
+    frame=1)
     
     
-   ;space
-   space = widget_label(big_base,$
-   value = ' ') 
+  ;space
+  space = widget_label(big_base,$
+    value = ' ')
     
   ;second row --------------------------
   row2_base = WIDGET_BASE(big_base,$
     /ROW)
-; column 1
+  ; column 1
   row2col1 = WIDGET_BASE(row2_base,$ ;...................................
     /COLUMN)
     
@@ -162,22 +162,22 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     value = '                  ')
     
   draw = WIDGET_DRAW(row2col1,$
-;    SCR_XSIZE = 2*500,$
+    ;    SCR_XSIZE = 2*500,$
     SCR_XSIZE = (*global).sangle_xsize_draw, $
-; Change made: Replace 304 with detector_pixels_y obtained from XML fole (RCW, Feb 10, 2010)
+    ; Change made: Replace 304 with detector_pixels_y obtained from XML fole (RCW, Feb 10, 2010)
     SCR_YSIZE = 2 * (*global).detector_pixels_y + 30,$
-;    SCR_YSIZE = 2*304,$
+    ;    SCR_YSIZE = 2*304,$
     UNAME = 'reduce_step2_create_roi_draw_uname',$
-    /tracking_events,$
+    ;/tracking_events,$
     /motion_events,$
     /button_events,$
     /KEYBOARD_EVENT)
-
-; column 2
+    
+  ; column 2
   row2col2 = WIDGET_BASE(row2_base,$ ;...................................
-    /COLUMN)   
-        
-;lin/log cwbgroup
+    /COLUMN)
+    
+  ;lin/log cwbgroup
   value = ['Lin ','Log ']
   group = CW_BGROUP(row2col2,$
     value,$
@@ -189,26 +189,43 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     SPACE = 5,$
     UNAME = 'reduce_step2_create_roi_lin_log',$
     /EXCLUSIVE)
-
-space = widget_label(row2col2,$
-value = ' ')
- 
-;first inside row (browse button)
+    
+  space = widget_label(row2col2,$
+    value = ' ')
+  space = widget_label(row2col2,$
+    value = ' ')
+    
+  peak_back_base = widget_base(row2col2,$
+    /exclusive,$
+    frame=5,$
+    /row)
+  peak = widget_button(peak_back_base,$
+    value = 'Select PEAK ROI',$
+    uname = 'working_with_peak')
+  back = widget_button(peak_back_base,$
+    value = 'Select BACKGROUND ROI',$
+    uname = 'working_with_back')
+  widget_control, peak,/set_button
+  
+  space = widget_label(row2col2,$
+    value = ' ')
+    
+  ;first inside row (browse button)
   browse_button = WIDGET_BUTTON(row2col2,$
     VALUE = 'B R O W S E   F O R   A   P E A K  R O I . . .',$
     SCR_XSIZE = 320,$
     TOOLTIP = 'Click to browse for a ROI file and plot it',$
     UNAME = 'reduce_step2_create_roi_browse_roi_button')
-
-   row3col2_base2 = WIDGET_BASE(row2col2,$
+    
+  row3col2_base2 = WIDGET_BASE(row2col2,$
     /ROW)
     
   y1_working = WIDGET_LABEL(row3col2_base2,$
     VALUE = '>>',$
-    /ALIGN_LEFT, $  
+    /ALIGN_LEFT, $
     UNAME = 'reduce_step2_create_roi_y1_l_status')
   y1_label = WIDGET_LABEL(row3col2_base2,$
-    /ALIGN_LEFT, $  
+    /ALIGN_LEFT, $
     VALUE = 'Y1:')
   y1_value = WIDGET_TEXT(row3col2_base2,$
     VALUE = ' ',$
@@ -218,12 +235,12 @@ value = ' ')
     UNAME = 'reduce_step2_create_roi_y1_value')
   y1_working = WIDGET_LABEL(row3col2_base2,$
     VALUE = '<<',$
-    /ALIGN_LEFT, $  
+    /ALIGN_LEFT, $
     UNAME = 'reduce_step2_create_roi_y1_r_status')
-       
+    
   space = WIDGET_LABEL(row3col2_base2,$
     value = '  ')
-  
+    
     
   y2_working = WIDGET_LABEL(row3col2_base2,$
     VALUE = ' ',$
@@ -240,28 +257,28 @@ value = ' ')
     VALUE = ' ',$
     UNAME = 'reduce_step2_create_roi_y2_r_status')
     
-      space = WIDGET_LABEL(row2col2,$
+  space = WIDGET_LABEL(row2col2,$
     value = '    ')
-      space = WIDGET_LABEL(row2col2,$
+  space = WIDGET_LABEL(row2col2,$
     value = '    ')
     
     
-;first inside row (browse button)
+  ;first inside row (browse button)
   browse_button = WIDGET_BUTTON(row2col2,$
     VALUE = 'B R O W S E   F O R   A   B A C K.  R O I . . .',$
     SCR_XSIZE = 320,$
     TOOLTIP = 'Click to browse for a background ROI file and plot it',$
     UNAME = 'reduce_step2_create_back_roi_browse_roi_button')
-
-   row3col2_base2 = WIDGET_BASE(row2col2,$
+    
+  row3col2_base2 = WIDGET_BASE(row2col2,$
     /ROW)
     
   y1_working = WIDGET_LABEL(row3col2_base2,$
-    VALUE = '>>',$
-    /ALIGN_LEFT, $  
+    VALUE = '  ',$
+    /ALIGN_LEFT, $
     UNAME = 'reduce_step2_create_back_roi_y1_l_status')
   y1_label = WIDGET_LABEL(row3col2_base2,$
-    /ALIGN_LEFT, $  
+    /ALIGN_LEFT, $
     VALUE = 'Y1:')
   y1_value = WIDGET_TEXT(row3col2_base2,$
     VALUE = ' ',$
@@ -270,13 +287,13 @@ value = ' ')
     /ALIGN_LEFT,$
     UNAME = 'reduce_step2_create_back_roi_y1_value')
   y1_working = WIDGET_LABEL(row3col2_base2,$
-    VALUE = '<<',$
-    /ALIGN_LEFT, $  
+    VALUE = '  ',$
+    /ALIGN_LEFT, $
     UNAME = 'reduce_step2_create_back_roi_y1_r_status')
-       
+    
   space = WIDGET_LABEL(row3col2_base2,$
     value = '  ')
-  
+    
     
   y2_working = WIDGET_LABEL(row3col2_base2,$
     VALUE = ' ',$
@@ -292,17 +309,17 @@ value = ' ')
   y2_working = WIDGET_LABEL(row3col2_base2,$
     VALUE = ' ',$
     UNAME = 'reduce_step2_create_back_roi_y2_r_status')
-
-
+    
+    
   space = WIDGET_LABEL(row2col2,$
     value = '    ')
     
   info = WIDGET_LABEL(row2col2,$
     VALUE = ' HELP: Left click on the plot to select first Y, right ')
   info = WIDGET_LABEL(row2col2,$
-    VALUE = 'click to switch to next Y, or manually input Y1 and Y2 ')
-  info = WIDGET_LABEL(row2col2,$
-    VALUE = 'or use up and down arrows to move selection.')
+    VALUE = 'click to switch to next Y, or manually input Y1 and Y2. ')
+;  info = WIDGET_LABEL(row2col2,$
+;    VALUE = 'or use up and down arrows to move selection.')
     
   ;third row (save button)
   save_roi = WIDGET_BUTTON(row2col2,$
@@ -316,30 +333,30 @@ value = ' ')
   save_quit_roi = WIDGET_BUTTON(row2col2,$
     VALUE = 'SAVE PEAK & BACK. ROIs and RETURN TO TABLE',$
     SCR_XSIZE = 320,$
-;    TOOLTIP = 'Click to Save the ROI and Return to the table',$
+    ;    TOOLTIP = 'Click to Save the ROI and Return to the table',$
     uname = 'reduce_step2_create_roi_save_roi_quit',$
     SENSITIVE = 0)
-
-   space = WIDGET_LABEL(row2col2,$
+    
+  space = WIDGET_LABEL(row2col2,$
     value = '    ')
-   space = WIDGET_LABEL(row2col2,$
+  space = WIDGET_LABEL(row2col2,$
     value = '    ')
-   space = WIDGET_LABEL(row2col2,$
+  space = WIDGET_LABEL(row2col2,$
     value = '    ')
-   space = WIDGET_LABEL(row2col2,$
+  space = WIDGET_LABEL(row2col2,$
     value = '    ')
-   space = WIDGET_LABEL(row2col2,$
-    value = '    ')   
-
-    ReturnButton = WIDGET_BUTTON(row2col2,$
+  space = WIDGET_LABEL(row2col2,$
+    value = '    ')
+    
+  ReturnButton = WIDGET_BUTTON(row2col2,$
     SCR_XSIZE = 120,$
     SCR_YSIZE = 30,$
     VALUE = '  RETURN TO TABLE  ',$
     UNAME = 'reduce_step2_return_to_table_button')
     
-;end of Create/modify/visualize base =========================================
-
-;Main base --------------------------------------------------------------------    
+  ;end of Create/modify/visualize base =========================================
+    
+  ;Main base --------------------------------------------------------------------
   xoff = 30
   
   ;title of normalization input frame
@@ -417,34 +434,34 @@ value = ' ')
     VALUE = 'OR')
     
   value = WIDGET_LABEL(col1,$idl
-    VALUE = '')
-    
+  VALUE = '')
+  
   row2 = WIDGET_BASE(col1,$
     /ROW)
     
   value = WIDGET_LABEL(row2,$
     VALUE = 'Run(s) #:')
-  
+    
   IF ((*global).DEBUGGING EQ 'yes') THEN BEGIN
     value = (*global).sDebugging.reduce_tab2_cw_field
   ENDIF ELSE BEGIN
     value = ''
   ENDELSE
   
-; For debugging, set the value to desired run numbers (RCW, Dec 31, 2009, Modified Feb 1, 2010)
-; Commented out for release of Ver 1.5.0 on 16 June 2010
-; IF (instrument EQ 'REF_L') THEN BEGIN
-;    value = '24580' 
-;  ENDIF ELSE BEGIN
-;    value = '5392-5394' 
-;  ENDELSE 
+  ; For debugging, set the value to desired run numbers (RCW, Dec 31, 2009, Modified Feb 1, 2010)
+  ; Commented out for release of Ver 1.5.0 on 16 June 2010
+  ; IF (instrument EQ 'REF_L') THEN BEGIN
+  ;    value = '24580'
+  ;  ENDIF ELSE BEGIN
+  ;    value = '5392-5394'
+  ;  ENDELSE
   
   text = WIDGET_TEXT(row2,$
     VALUE = value,$
     UNAME = 'reduce_step2_normalization_text_field',$
     /EDITABLE,$
     XSIZE = 40)
- 
+    
     
   value = WIDGET_LABEL(row2,$
     VALUE = '(ex: 1245,1345-1347,1349)')
@@ -485,7 +502,7 @@ value = ' ')
     
     
   ;-------------- second part of tab ------------------------------------------
-; use predefined instrument (RCW, Feb 1, 2010)
+  ; use predefined instrument (RCW, Feb 1, 2010)
   IF (instrument EQ 'REF_M') THEN BEGIN
     value = 'Data Run#     Normalization Run#'
     xsize = 200
@@ -742,8 +759,8 @@ PRO   add_widgets_reduce_step2_tab, $
   ;title = 'NORM. Spin State                 R e g i o n   O f  ' + $
   ;  ' I n t e r e s t   ( R O I ) '
   title = 'NORM. Spin State             Peak ROI                   ' + $
-  '           Background ROI                                ' + $
-  '    Selection of ROIs'
+    '           Background ROI                                ' + $
+    '    Selection of ROIs'
   label = WIDGET_LABEL(base_id,$
     VALUE = title,$
     xoffset = XYoff[0],$
@@ -794,22 +811,22 @@ PRO   add_widgets_reduce_step2_tab, $
     browse = WIDGET_BUTTON(row_base,$
       Xoffset = xyoff[0]+130,$
       yoffset = 2,$
-;      scr_xsize = 150,$
+      ;      scr_xsize = 150,$
       value = 'Browse peak ROI ...',$
       uname = uname)
     label = widget_label(row_base,$
-    value='File:',$
-    yoffset=7,$
-    xoffset=xyoff[0]+260)
+      value='File:',$
+      yoffset=7,$
+      xoffset=xyoff[0]+260)
     uname = 'reduce_tab2_roi_peak_status_' + base_name + iS
     result = widget_label(row_base,$
-    value='None!',$
-    /align_left,$
-    yoffset=7,$
-    xoffset=xyoff[0]+295,$
-    scr_xsize = 40,$
-    uname=uname)
-    
+      value='None!',$
+      /align_left,$
+      yoffset=7,$
+      xoffset=xyoff[0]+295,$
+      scr_xsize = 40,$
+      uname=uname)
+      
     ;background ROI widgets
     uname = 'reduce_tab2_back_roi_browse_button_' + base_name + iS
     browse = WIDGET_BUTTON(row_base,$
@@ -818,17 +835,17 @@ PRO   add_widgets_reduce_step2_tab, $
       value = 'Browse back. ROI ...',$
       uname = uname)
     label = widget_label(row_base,$
-    value='File:',$
-    yoffset=7,$
-    xoffset=xyoff[0]+505)
+      value='File:',$
+      yoffset=7,$
+      xoffset=xyoff[0]+505)
     uname = 'reduce_tab2_back_roi_status_' + base_name + iS
     result = widget_label(row_base,$
-    value='None!',$
-    /align_left,$
-    yoffset=7,$
-    xoffset=xyoff[0]+540,$
-    scr_xsize = 40,$
-    uname=uname)
+      value='None!',$
+      /align_left,$
+      yoffset=7,$
+      xoffset=xyoff[0]+540,$
+      scr_xsize = 40,$
+      uname=uname)
       
     ;Create/modify ROI
     uname = 'reduce_tab2_roi_modify_button_' + base_name + iS
@@ -839,24 +856,24 @@ PRO   add_widgets_reduce_step2_tab, $
       scr_xsize = 330,$
       value = 'Create/Modify/Visualize Peak/Back ROI files')
       
-;    uname = 'reduce_tab2_roi_label_' + base_name + iS
-;    roi = WIDGET_LABEL(row_Base,$
-;      XOFFSET = XYoff[0]+815,$
-;      YOFFSET = 7,$
-;      /ALIGN_LEFT,$
-;      frame=0,$
-;      value = 'File:',$
-;      uname = uname)
-;      
-;    uname = 'reduce_tab2_roi_value_' + base_name + iS
-;    roi = WIDGET_LABEL(row_Base,$
-;      XOFFSET = XYoff[0]+550,$
-;      YOFFSET = 7,$
-;      SCR_XSIZE = 400,$
-;      /ALIGN_LEFT,$
-;      frame=0,$
-;      value = 'N/A',$
-;      uname = uname)
+    ;    uname = 'reduce_tab2_roi_label_' + base_name + iS
+    ;    roi = WIDGET_LABEL(row_Base,$
+    ;      XOFFSET = XYoff[0]+815,$
+    ;      YOFFSET = 7,$
+    ;      /ALIGN_LEFT,$
+    ;      frame=0,$
+    ;      value = 'File:',$
+    ;      uname = uname)
+    ;
+    ;    uname = 'reduce_tab2_roi_value_' + base_name + iS
+    ;    roi = WIDGET_LABEL(row_Base,$
+    ;      XOFFSET = XYoff[0]+550,$
+    ;      YOFFSET = 7,$
+    ;      SCR_XSIZE = 400,$
+    ;      /ALIGN_LEFT,$
+    ;      frame=0,$
+    ;      value = 'N/A',$
+    ;      uname = uname)
       
     yoffset += 35
     

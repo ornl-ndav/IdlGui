@@ -809,7 +809,7 @@ FUNCTION display_reduce_step2_create_roi_plot, Event, Row=row,$
   ENDELSE
   
   IF (success) THEN BEGIN
-    plot_reduce_step2_norm, Event
+    plot_reduce_step2_norm, Event,recalculate=1
     RETURN, 1
   ENDIF
   

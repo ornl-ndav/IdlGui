@@ -1630,33 +1630,33 @@ PRO MAIN_BASE_event, Event
     FIND_BY_UNAME='reduce_step2_create_roi_draw_uname'): BEGIN
     
     error = 0
-    CATCH, error
+ ;   CATCH, error
     IF (error NE 0) THEN BEGIN
       CATCH,/CANCEL
       check_reduce_step2_save_roi_validity, Event
     ENDIF ELSE BEGIN
     
-      CASE (event.key) OF ;Up and Down arrow keys
-        7: BEGIN
-          IF ((*global).reduce_step2_UD_keys_pressed) THEN BEGIN
-            (*global).reduce_step2_UD_keys_pressed = 0
-          ENDIF ELSE BEGIN
-            plot_reduce_step2_norm, Event
-            reduce_step2_manual_move, Event, key='up'
-            (*global).reduce_step2_UD_keys_pressed = 1
-          ENDELSE
-        END
-        8: BEGIN
-          IF ((*global).reduce_step2_UD_keys_pressed) THEN BEGIN
-            (*global).reduce_step2_UD_keys_pressed = 0
-          ENDIF ELSE BEGIN
-            plot_reduce_step2_norm, Event
-            reduce_step2_manual_move, Event, key='down'
-            (*global).reduce_step2_UD_keys_pressed = 1
-          ENDELSE
-        END
-        ELSE:
-      ENDCASE
+;      CASE (event.key) OF ;Up and Down arrow keys
+;        7: BEGIN
+;          IF ((*global).reduce_step2_UD_keys_pressed) THEN BEGIN
+;            (*global).reduce_step2_UD_keys_pressed = 0
+;          ENDIF ELSE BEGIN
+;            plot_reduce_step2_norm, Event
+;            reduce_step2_manual_move, Event, key='up'
+;            (*global).reduce_step2_UD_keys_pressed = 1
+;          ENDELSE
+;        END
+;        8: BEGIN
+;          IF ((*global).reduce_step2_UD_keys_pressed) THEN BEGIN
+;            (*global).reduce_step2_UD_keys_pressed = 0
+;          ENDIF ELSE BEGIN
+;            plot_reduce_step2_norm, Event
+;            reduce_step2_manual_move, Event, key='down'
+;            (*global).reduce_step2_UD_keys_pressed = 1
+;          ENDELSE
+;        END
+;        ELSE:
+;      ENDCASE
       
       IF( Event.type EQ 0 )THEN BEGIN
         IF (Event.press EQ 1) THEN BEGIN ;left pressed
@@ -1705,7 +1705,7 @@ PRO MAIN_BASE_event, Event
   ;lin/log cw_bgroup
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='reduce_step2_create_roi_lin_log'): BEGIN
-    plot_reduce_step2_norm, Event
+    plot_reduce_step2_norm, Event, recalculate=1
     tmp = (*global).norm_roi_y_selected ;save old y_selected value
     (*global).norm_roi_y_selected = 'all'
     reduce_step2_manual_move, Event

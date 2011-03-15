@@ -152,11 +152,11 @@ PRO reduce_step2_manual_move, Event, key=key
     'left': BEGIN
       Y1 = getTextFieldValue(Event,'reduce_step2_create_roi_y1_value')
       y1 = FIX(Y1)
-      IF (key EQ 'up') THEN BEGIN
-        y1++
-      ENDIF ELSE BEGIN
-        y1--
-      ENDELSE
+;      IF (key EQ 'up') THEN BEGIN
+;        y1++
+;      ENDIF ELSE BEGIN
+;        y1--
+;      ENDELSE
       IF (y1 GE 0 AND $
 ;        y1 LE 303) THEN BEGIN
         y1 LE (*global).detector_pixels_y-1) THEN BEGIN
@@ -170,11 +170,11 @@ PRO reduce_step2_manual_move, Event, key=key
     'right': BEGIN
       Y2 = getTextFieldValue(Event,'reduce_step2_create_roi_y2_value')
       y2 = FIX(Y2)
-      IF (key EQ 'up') THEN BEGIN
-        y2++
-      ENDIF ELSE BEGIN
-        y2--
-      ENDELSE
+;      IF (key EQ 'up') THEN BEGIN
+;        y2++
+;      ENDIF ELSE BEGIN
+;        y2--
+;      ENDELSE
       IF (y2 GE 0 AND $
 ;        y2 LE 303) THEN BEGIN
         y2 LE (*global).detector_pixels_y-1) THEN BEGIN        
