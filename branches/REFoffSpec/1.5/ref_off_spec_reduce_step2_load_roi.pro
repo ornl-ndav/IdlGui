@@ -104,7 +104,9 @@ PRO browse_reduce_step2_roi_file, Event
       
     plot_reduce_step2_norm, Event ;refresh plot
 ;    (*global).norm_roi_y_selected = 'all'
-    reduce_step2_manual_move, Event
+  
+  reduce_step2_plot_rois, event
+    ;reduce_step2_manual_move, Event
     
 ;    putTextFieldValue, Event, $
 ;      'reduce_step2_create_roi_file_name_label',$
@@ -129,6 +131,90 @@ PRO browse_reduce_step2_roi_file, Event
   ENDELSE
   
 END
+
+
+;+
+; :Description:
+;    Browse for a background roi file in the reduce/tab2
+;
+; :Params:
+;    Event
+;
+;
+;
+; :Author: j35
+;-
+PRO browse_reduce_step2_back_roi_file, Event
+compile_opt idl2
+
+  ;get global structure
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  ;retrieve infos
+  extension  = 'dat'
+  filter     = ['*_back.dat','*_back.txt']
+; Change code (RC Ward, 24 July 2010): ROI files will always be loacted with reduction step files
+; that is the path ias ascii_path
+;  path       = (*global).roi_path
+   path = (*global).ascii_path
+  title      = 'Browsing for a background ROI file'
+  
+  file_name = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
+    FILTER            = filter,$
+    GET_PATH          = new_path,$
+    PATH              = path,$
+    TITLE             = title,$
+    /READ,$
+    /MUST_EXIST)
+    
+  IF (file_name NE '') THEN BEGIN
+  
+    ;indicate initialization with hourglass icon
+    WIDGET_CONTROL,/hourglass
+    
+    (*global).roi_path = new_path
+; Change code (RC Ward, 17 July 2010): See if this updates the location of output files    
+    (*global).ascii_path = new_path
+    
+    ;    ;Load ROI button (Load, extract and plot)
+    ;    load_roi_selection, Event, file_name
+    
+    Yarray = retrieveYminMaxFromFile(event,file_name)
+    Y1 = Yarray[0]
+    Y2 = Yarray[1]
+    putTextFieldValue, Event, 'reduce_step2_create_back_roi_y1_value', $
+      STRCOMPRESS(Y1,/REMOVE_ALL)
+    putTextFieldValue, Event, 'reduce_step2_create_back_roi_y2_value', $
+      STRCOMPRESS(Y2,/REMOVE_ALL)
+      
+    plot_reduce_step2_norm, Event ;refresh plot
+    reduce_step2_plot_rois, event
+    ;reduce_step2_manual_move, Event
+    
+;    putTextFieldValue, Event, $
+;      'reduce_step2_create_roi_file_name_label',$
+;      file_name
+      
+    nexus_spin_state_roi_table = (*(*global).nexus_spin_state_roi_table)
+    data_spin_state = (*global).tmp_reduce_step2_data_spin_state
+    row = (*global).tmp_reduce_step2_row
+    column = getReduceStep2SpinStateColumn(Event, row=row,$
+      data_spin_state=data_spin_state)
+      
+    ;get Norm file selected
+    norm_table = (*global).reduce_step2_big_table_norm_index
+    nexus_spin_state_roi_table[column,norm_table[row]] = file_name
+    (*(*global).nexus_spin_state_roi_table) = nexus_spin_state_roi_table
+    
+    ;turn off hourglass
+    WIDGET_CONTROL,hourglass=0
+    
+  ENDIF ELSE BEGIN
+  ;    IDLsendToGeek_addLogBookText, Event, '-> Operation CANCELED'
+  ENDELSE
+  
+END
+
 
 ;- LOAD ROI -------------------------------------------------------------------
 PRO load_and_plot_roi_file, Event, file_name

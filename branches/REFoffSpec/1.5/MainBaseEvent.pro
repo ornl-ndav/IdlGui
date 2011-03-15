@@ -48,17 +48,17 @@ PRO MAIN_BASE_event, Event
       FIND_BY_UNAME='instrument_selection_validate_button'): begin
       REFreductionEventcb_InstrumentSelected, Event
     end
-
+    
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='reduce_step_path'): begin
       REFreductionEventcb_InstrumentSelected, Event
     end
-
+    
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='new_reduce_step_path'): begin
       Update_Reduce_Step_Path, Event, global
     end
-
+    
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='update_reduce_step_path'): begin
       Update_Reduce_Step_Path, Event, global
@@ -74,11 +74,11 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='step4_step2_tab'): BEGIN
       tab_step4_step2_event, Event ;_eventcb
     END
- ;----------------------------------------------------------------------------  
- ; REDUCE - REDUCE - REDUCE  
- ;----------------------------------------------------------------------------    
- ; REDUCE TAB 1 - REDUCE TAB 1 - REDUCE TAB 1
- ;----------------------------------------------------------------------------    
+    ;----------------------------------------------------------------------------
+    ; REDUCE - REDUCE - REDUCE
+    ;----------------------------------------------------------------------------
+    ; REDUCE TAB 1 - REDUCE TAB 1 - REDUCE TAB 1
+    ;----------------------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab'): BEGIN
       reduce_tab_event, Event ;_eventcb
     END
@@ -115,8 +115,8 @@ PRO MAIN_BASE_event, Event
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step1_remove_selection_button'): BEGIN
     remove_selected_run, Event
   END
- 
- ; reset flag on SANGLE calculation
+  
+  ; reset flag on SANGLE calculation
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_tab_reset_button'): BEGIN
     reset_sangle_calculation, Event
   END
@@ -127,9 +127,9 @@ PRO MAIN_BASE_event, Event
     check_sangle_spin_state_buttons, Event
     MapBase, Event, 'reduce_step1_sangle_base', 1
     MapBase, Event, 'reduce_step1_sangle_base_label', 1
-; Change code (RC Ward, March 22, 2010): Remove the graphic with the equation for Sangle.
-;    MapBase, Event, 'reduce_step1_sangle_base_equation', 1
-;    display_reduce_step1_sangle_buttons, Event=event, global
+    ; Change code (RC Ward, March 22, 2010): Remove the graphic with the equation for Sangle.
+    ;    MapBase, Event, 'reduce_step1_sangle_base_equation', 1
+    ;    display_reduce_step1_sangle_buttons, Event=event, global
     select_sangle_first_run_number_by_default, Event
     display_metatada_of_sangle_selected_row, Event
     retrieve_tof_array_from_nexus, Event, result
@@ -485,7 +485,7 @@ PRO MAIN_BASE_event, Event
     FIND_BY_UNAME='reduce_sangle_base_refpix_user_value'): BEGIN
     replot_selected_data_in_sangle_base, Event
     plot_tof_range_on_main_plot, Event
-;    print, "sangle_mode 1: ", (*global).sangle_mode
+    ;    print, "sangle_mode 1: ", (*global).sangle_mode
     IF ((*global).sangle_mode EQ 'refpix') THEN BEGIN ;refpix mode
       plot_sangle_dirpix, Event
       saving_background, Event
@@ -503,7 +503,7 @@ PRO MAIN_BASE_event, Event
     FIND_BY_UNAME='reduce_sangle_base_dirpix_user_value'): BEGIN
     replot_selected_data_in_sangle_base, Event
     plot_tof_range_on_main_plot, Event
-;    print, "sangle_mode 2: ", (*global).sangle_mode
+    ;    print, "sangle_mode 2: ", (*global).sangle_mode
     IF ((*global).sangle_mode EQ 'refpix') THEN BEGIN ;refpix mode
       plot_sangle_dirpix, Event
       saving_background, Event
@@ -521,8 +521,8 @@ PRO MAIN_BASE_event, Event
     save_sangle_table, Event
     MapBase, Event, 'reduce_step1_sangle_base', 0
     MapBase, Event, 'reduce_step1_sangle_base_label', 0
-; Change code (RC Ward, March 22, 2010): Remove the graphic with the equation for Sangle.   
-;    MapBase, Event, 'reduce_step1_sangle_base_equation', 0
+    ; Change code (RC Ward, March 22, 2010): Remove the graphic with the equation for Sangle.
+    ;    MapBase, Event, 'reduce_step1_sangle_base_equation', 0
     display_reduce_step1_buttons, EVENT=EVENT,$
       ACTIVATE=(*global).reduce_step1_spin_state_mode, $
       global
@@ -612,9 +612,9 @@ PRO MAIN_BASE_event, Event
       DEVICE, CURSOR_STANDARD=standard
     ENDELSE
   END
- ;---------------------------------------------------------------------------- 
- ; REDUCE TAB 2 - REDUCE TAB 2 - REDUCE TAB 2
- ;---------------------------------------------------------------------------- 
+  ;----------------------------------------------------------------------------
+  ; REDUCE TAB 2 - REDUCE TAB 2 - REDUCE TAB 2
+  ;----------------------------------------------------------------------------
   ;data spin states tab
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='reduce_step2_data_spin_state_tab_uname'): BEGIN
@@ -741,215 +741,215 @@ PRO MAIN_BASE_event, Event
     ;this update the name of the roi files
     refresh_roi_file_name, Event
     refresh_back_roi_file_name, event
-   END
+  END
   
   ;============================================================================
   ;Norm spin state combobox of data spin state off_off
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_off0'): BEGIN
-    ;    save_new_reduce_tab2_norm_combobox, Event, row=0
-    ;this update the name of the roi files
-;    refresh_roi_file_name, Event
+  ;    save_new_reduce_tab2_norm_combobox, Event, row=0
+  ;this update the name of the roi files
+  ;    refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_off1'): BEGIN
-    ;    save_new_reduce_tab2_norm_combobox, Event, row=1
-    ;this update the name of the roi files
- ;   refresh_roi_file_name, Event
+  ;    save_new_reduce_tab2_norm_combobox, Event, row=1
+  ;this update the name of the roi files
+  ;   refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_off2'): BEGIN
-    ;    save_new_reduce_tab2_norm_combobox, Event, row=2
-    ;this update the name of the roi files
- ;   refresh_roi_file_name, Event
+  ;    save_new_reduce_tab2_norm_combobox, Event, row=2
+  ;this update the name of the roi files
+  ;   refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_off3'): BEGIN
-    ;   save_new_reduce_tab2_norm_combobox, Event, row=3
-    ;this update the name of the roi files
- ;   refresh_roi_file_name, Event
+  ;   save_new_reduce_tab2_norm_combobox, Event, row=3
+  ;this update the name of the roi files
+  ;   refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_off4'): BEGIN
-    ;   save_new_reduce_tab2_norm_combobox, Event, row=4
-    ;this update the name of the roi files
- ;   refresh_roi_file_name, Event
+  ;   save_new_reduce_tab2_norm_combobox, Event, row=4
+  ;this update the name of the roi files
+  ;   refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_off5'): BEGIN
-    ;   save_new_reduce_tab2_norm_combobox, Event, row=5
-    ;this update the name of the roi files
- ;   refresh_roi_file_name, Event
+  ;   save_new_reduce_tab2_norm_combobox, Event, row=5
+  ;this update the name of the roi files
+  ;   refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_off6'): BEGIN
-    ;   save_new_reduce_tab2_norm_combobox, Event, row=6
-    ;this update the name of the roi files
- ;   refresh_roi_file_name, Event
+  ;   save_new_reduce_tab2_norm_combobox, Event, row=6
+  ;this update the name of the roi files
+  ;   refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_off7'): BEGIN
-    ;   save_new_reduce_tab2_norm_combobox, Event, row=7
-    ;this update the name of the roi files
- ;   refresh_roi_file_name, Event
+  ;   save_new_reduce_tab2_norm_combobox, Event, row=7
+  ;this update the name of the roi files
+  ;   refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_off8'): BEGIN
-    ;   save_new_reduce_tab2_norm_combobox, Event, row=8
-    ;this update the name of the roi files
- ;   refresh_roi_file_name, Event
+  ;   save_new_reduce_tab2_norm_combobox, Event, row=8
+  ;this update the name of the roi files
+  ;   refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_off9'): BEGIN
-    ;  save_new_reduce_tab2_norm_combobox, Event, row=9
-    ;this update the name of the roi files
- ;   refresh_roi_file_name, Event
+  ;  save_new_reduce_tab2_norm_combobox, Event, row=9
+  ;this update the name of the roi files
+  ;   refresh_roi_file_name, Event
   END
   
   ;Norm spin state combobox of data spin state off_on
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_on0'): BEGIN
-    ;   save_new_reduce_tab2_norm_combobox, Event, row=0
-    ;this update the name of the roi files
- ;   refresh_roi_file_name, Event
+  ;   save_new_reduce_tab2_norm_combobox, Event, row=0
+  ;this update the name of the roi files
+  ;   refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_on1'): BEGIN
-    ;   save_new_reduce_tab2_norm_combobox, Event, row=1
-    ;this update the name of the roi files
- ;   refresh_roi_file_name, Event
+  ;   save_new_reduce_tab2_norm_combobox, Event, row=1
+  ;this update the name of the roi files
+  ;   refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_on2'): BEGIN
-    ;  save_new_reduce_tab2_norm_combobox, Event, row=2
-    ;this update the name of the roi files
- ;   refresh_roi_file_name, Event
+  ;  save_new_reduce_tab2_norm_combobox, Event, row=2
+  ;this update the name of the roi files
+  ;   refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_on3'): BEGIN
-    ;  save_new_reduce_tab2_norm_combobox, Event, row=3
-    ;this update the name of the roi files
- ;   refresh_roi_file_name, Event
+  ;  save_new_reduce_tab2_norm_combobox, Event, row=3
+  ;this update the name of the roi files
+  ;   refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_on4'): BEGIN
-    ;  save_new_reduce_tab2_norm_combobox, Event, row=4
-    ;this update the name of the roi files
- ;   refresh_roi_file_name, Event
+  ;  save_new_reduce_tab2_norm_combobox, Event, row=4
+  ;this update the name of the roi files
+  ;   refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_on5'): BEGIN
-    ;  save_new_reduce_tab2_norm_combobox, Event, row=5
-    ;this update the name of the roi files
- ;   refresh_roi_file_name, Event
+  ;  save_new_reduce_tab2_norm_combobox, Event, row=5
+  ;this update the name of the roi files
+  ;   refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_on6'): BEGIN
-    ;  save_new_reduce_tab2_norm_combobox, Event, row=6
-    ;this update the name of the roi files
- ;   refresh_roi_file_name, Event
+  ;  save_new_reduce_tab2_norm_combobox, Event, row=6
+  ;this update the name of the roi files
+  ;   refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_on7'): BEGIN
-    ;  save_new_reduce_tab2_norm_combobox, Event, row=7
-    ;this update the name of the roi files
- ;   refresh_roi_file_name, Event
+  ;  save_new_reduce_tab2_norm_combobox, Event, row=7
+  ;this update the name of the roi files
+  ;   refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_on8'): BEGIN
-    ;  save_new_reduce_tab2_norm_combobox, Event, row=8
-    ;this update the name of the roi files
- ;   refresh_roi_file_name, Event
+  ;  save_new_reduce_tab2_norm_combobox, Event, row=8
+  ;this update the name of the roi files
+  ;   refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_on9'): BEGIN
-    ;  save_new_reduce_tab2_norm_combobox, Event, row=9
-    ;this update the name of the roi files
- ;   refresh_roi_file_name, Event
+  ;  save_new_reduce_tab2_norm_combobox, Event, row=9
+  ;this update the name of the roi files
+  ;   refresh_roi_file_name, Event
   END
   
   ;Norm spin state combobox of data spin state on_off
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_on_off0'): BEGIN
-    ;  save_new_reduce_tab2_norm_combobox, Event, row=0
-    ;this update the name of the roi files
- ;   refresh_roi_file_name, Event
+  ;  save_new_reduce_tab2_norm_combobox, Event, row=0
+  ;this update the name of the roi files
+  ;   refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_on_off1'): BEGIN
-    ;  save_new_reduce_tab2_norm_combobox, Event, row=1
-    ;this update the name of the roi files
- ;   refresh_roi_file_name, Event
+  ;  save_new_reduce_tab2_norm_combobox, Event, row=1
+  ;this update the name of the roi files
+  ;   refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_on_off2'): BEGIN
-    ;  save_new_reduce_tab2_norm_combobox, Event, row=2
-    ;this update the name of the roi files
- ;   refresh_roi_file_name, Event
+  ;  save_new_reduce_tab2_norm_combobox, Event, row=2
+  ;this update the name of the roi files
+  ;   refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_on_off3'): BEGIN
-    ;  save_new_reduce_tab2_norm_combobox, Event, row=3
-    ;this update the name of the roi files
- ;   refresh_roi_file_name, Event
+  ;  save_new_reduce_tab2_norm_combobox, Event, row=3
+  ;this update the name of the roi files
+  ;   refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_on_off4'): BEGIN
-    ;  save_new_reduce_tab2_norm_combobox, Event, row=4
-    ;this update the name of the roi files
- ;   refresh_roi_file_name, Event
+  ;  save_new_reduce_tab2_norm_combobox, Event, row=4
+  ;this update the name of the roi files
+  ;   refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_on_off5'): BEGIN
-    ;  save_new_reduce_tab2_norm_combobox, Event, row=5
-    ;this update the name of the roi files
- ;   refresh_roi_file_name, Event
+  ;  save_new_reduce_tab2_norm_combobox, Event, row=5
+  ;this update the name of the roi files
+  ;   refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_on_off6'): BEGIN
-    ;  save_new_reduce_tab2_norm_combobox, Event, row=6
-    ;this update the name of the roi files
- ;   refresh_roi_file_name, Event
+  ;  save_new_reduce_tab2_norm_combobox, Event, row=6
+  ;this update the name of the roi files
+  ;   refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_on_off7'): BEGIN
-    ;  save_new_reduce_tab2_norm_combobox, Event, row=7
-    ;this update the name of the roi files
- ;   refresh_roi_file_name, Event
+  ;  save_new_reduce_tab2_norm_combobox, Event, row=7
+  ;this update the name of the roi files
+  ;   refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_on_off8'): BEGIN
-    ;  save_new_reduce_tab2_norm_combobox, Event, row=8
-    ;this update the name of the roi files
- ;   refresh_roi_file_name, Event
+  ;  save_new_reduce_tab2_norm_combobox, Event, row=8
+  ;this update the name of the roi files
+  ;   refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_on_off9'): BEGIN
-    ;  save_new_reduce_tab2_norm_combobox, Event, row=9
-    ;this update the name of the roi files
+  ;  save_new_reduce_tab2_norm_combobox, Event, row=9
+  ;this update the name of the roi files
   ;  refresh_roi_file_name, Event
   END
   
   ;Norm spin state combobox of data spin state on_on
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_on_on0'): BEGIN
-    ;  save_new_reduce_tab2_norm_combobox, Event, row=0
-    ;this update the name of the roi files
- ;   refresh_roi_file_name, Event
+  ;  save_new_reduce_tab2_norm_combobox, Event, row=0
+  ;this update the name of the roi files
+  ;   refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_on_on1'): BEGIN
-    ;  save_new_reduce_tab2_norm_combobox, Event, row=1
-    ;this update the name of the roi files
- ;   refresh_roi_file_name, Event
+  ;  save_new_reduce_tab2_norm_combobox, Event, row=1
+  ;this update the name of the roi files
+  ;   refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_on_on2'): BEGIN
-    ;  save_new_reduce_tab2_norm_combobox, Event, row=2
-    ;this update the name of the roi files
+  ;  save_new_reduce_tab2_norm_combobox, Event, row=2
+  ;this update the name of the roi files
   ;  refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_on_on3'): BEGIN
-    ;  save_new_reduce_tab2_norm_combobox, Event, row=3
-    ;this update the name of the roi files
+  ;  save_new_reduce_tab2_norm_combobox, Event, row=3
+  ;this update the name of the roi files
   ;  refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_on_on4'): BEGIN
-    ;  save_new_reduce_tab2_norm_combobox, Event, row=4
-    ;this update the name of the roi files
+  ;  save_new_reduce_tab2_norm_combobox, Event, row=4
+  ;this update the name of the roi files
   ;  refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_on_on5'): BEGIN
-    ;  save_new_reduce_tab2_norm_combobox, Event, row=5
-    ;this update the name of the roi files
- ;   refresh_roi_file_name, Event
+  ;  save_new_reduce_tab2_norm_combobox, Event, row=5
+  ;this update the name of the roi files
+  ;   refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_on_on6'): BEGIN
-    ;  save_new_reduce_tab2_norm_combobox, Event, row=6
-    ;this update the name of the roi files
- ;   refresh_roi_file_name, Event
+  ;  save_new_reduce_tab2_norm_combobox, Event, row=6
+  ;this update the name of the roi files
+  ;   refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_on_on7'): BEGIN
-    ;  save_new_reduce_tab2_norm_combobox, Event, row=7
-    ;this update the name of the roi files
- ;   refresh_roi_file_name, Event
+  ;  save_new_reduce_tab2_norm_combobox, Event, row=7
+  ;this update the name of the roi files
+  ;   refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_on_on8'): BEGIN
-    ;  save_new_reduce_tab2_norm_combobox, Event, row=8
-    ;this update the name of the roi files
- ;   refresh_roi_file_name, Event
+  ;  save_new_reduce_tab2_norm_combobox, Event, row=8
+  ;this update the name of the roi files
+  ;   refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_on_on9'): BEGIN
-    ;  save_new_reduce_tab2_norm_combobox, Event, row=9
-    ;this update the name of the roi files
- ;   refresh_roi_file_name, Event
+  ;  save_new_reduce_tab2_norm_combobox, Event, row=9
+  ;this update the name of the roi files
+  ;   refresh_roi_file_name, Event
   END
   
   ;..........................................................................
@@ -1154,7 +1154,7 @@ PRO MAIN_BASE_event, Event
     reduce_step2_browse_roi, Event, row=9, data_spin_state='On_On'
   END
   
-  ;============================================================================     
+  ;============================================================================
   ;Browse for a background ROI file buttons (0->9) data spin state off_off
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='reduce_tab2_back_roi_browse_button_off_off0'): BEGIN
@@ -1322,7 +1322,7 @@ PRO MAIN_BASE_event, Event
     FIND_BY_UNAME='reduce_tab2_back_roi_browse_button_on_on9'): BEGIN
     reduce_step2_browse_back_roi, Event, row=9, data_spin_state='On_On'
   END
-
+  
   ;----------------------------------------------------------------------------
   ;Create/Modify/Visualize ROI file (0->9) for REF_L
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button0'): BEGIN
@@ -1630,34 +1630,34 @@ PRO MAIN_BASE_event, Event
     FIND_BY_UNAME='reduce_step2_create_roi_draw_uname'): BEGIN
     
     error = 0
- ;   CATCH, error
+    ;   CATCH, error
     IF (error NE 0) THEN BEGIN
       CATCH,/CANCEL
       check_reduce_step2_save_roi_validity, Event
     ENDIF ELSE BEGIN
     
-;      CASE (event.key) OF ;Up and Down arrow keys
-;        7: BEGIN
-;          IF ((*global).reduce_step2_UD_keys_pressed) THEN BEGIN
-;            (*global).reduce_step2_UD_keys_pressed = 0
-;          ENDIF ELSE BEGIN
-;            plot_reduce_step2_norm, Event
-;            reduce_step2_manual_move, Event, key='up'
-;            (*global).reduce_step2_UD_keys_pressed = 1
-;          ENDELSE
-;        END
-;        8: BEGIN
-;          IF ((*global).reduce_step2_UD_keys_pressed) THEN BEGIN
-;            (*global).reduce_step2_UD_keys_pressed = 0
-;          ENDIF ELSE BEGIN
-;            plot_reduce_step2_norm, Event
-;            reduce_step2_manual_move, Event, key='down'
-;            (*global).reduce_step2_UD_keys_pressed = 1
-;          ENDELSE
-;        END
-;        ELSE:
-;      ENDCASE
-      
+      ;      CASE (event.key) OF ;Up and Down arrow keys
+      ;        7: BEGIN
+      ;          IF ((*global).reduce_step2_UD_keys_pressed) THEN BEGIN
+      ;            (*global).reduce_step2_UD_keys_pressed = 0
+      ;          ENDIF ELSE BEGIN
+      ;            plot_reduce_step2_norm, Event
+      ;            reduce_step2_manual_move, Event, key='up'
+      ;            (*global).reduce_step2_UD_keys_pressed = 1
+      ;          ENDELSE
+      ;        END
+      ;        8: BEGIN
+      ;          IF ((*global).reduce_step2_UD_keys_pressed) THEN BEGIN
+      ;            (*global).reduce_step2_UD_keys_pressed = 0
+      ;          ENDIF ELSE BEGIN
+      ;            plot_reduce_step2_norm, Event
+      ;            reduce_step2_manual_move, Event, key='down'
+      ;            (*global).reduce_step2_UD_keys_pressed = 1
+      ;          ENDELSE
+      ;        END
+      ;        ELSE:
+      ;      ENDCASE
+    
       IF( Event.type EQ 0 )THEN BEGIN
         IF (Event.press EQ 1) THEN BEGIN ;left pressed
           (*global).mouse_left_pressed = 1
@@ -1718,6 +1718,41 @@ PRO MAIN_BASE_event, Event
     browse_reduce_step2_roi_file, Event
   END
   
+  ;reset peak inputs
+  widget_info(wWidget, find_by_uname='reset_peak_roi_inputs'): begin
+    putTextFieldValue, Event, 'reduce_step2_create_roi_y1_value', ''
+    putTextFieldValue, Event, 'reduce_step2_create_roi_y2_value', ''
+  end
+  
+  ;browse/load back ROI
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='reduce_step2_create_roi_browse_roi_button'): BEGIN
+    browse_reduce_step2_back_roi_file, Event
+  END
+  
+  ;reset back inputs
+  widget_info(wWidget, find_by_uname='reset_back_roi_inputs'): begin
+    putTextFieldValue, Event, 'reduce_step2_create_back_roi_y1_value', ''
+    putTextFieldValue, Event, 'reduce_step2_create_back_roi_y2_value', ''
+  end
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   ;SAVE ROI
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_create_roi_save_roi'): BEGIN
     reduce_step2_save_roi, Event, quit_flag='off'
@@ -1740,7 +1775,7 @@ PRO MAIN_BASE_event, Event
     refresh_roi_file_name, Event
   END
   
- ; REDUCE TAB 3 - REDUCE TAB 3 - REDUCE TAB 3
+  ; REDUCE TAB 3 - REDUCE TAB 3 - REDUCE TAB 3
   
   ;big table
   WIDGET_INFO(wWidget, $
@@ -1774,7 +1809,7 @@ PRO MAIN_BASE_event, Event
     
   END
   
-; LOADING - LOADING - LOADING
+  ; LOADING - LOADING - LOADING
   
   ;Browse ASCII file button
   WIDGET_INFO(wWidget, FIND_BY_UNAME='browse_ascii_file_button'): BEGIN
@@ -1806,10 +1841,10 @@ PRO MAIN_BASE_event, Event
         x = Event.x
         x1 = FLOAT(delta_x) * FLOAT(x)
         
-; 6 Jan 2011: Print y as F6.1, keep 1 digit beyond decimal 
+        ; 6 Jan 2011: Print y as F6.1, keep 1 digit beyond decimal
         y = Event.y
         y1 = Float(y) / 2
-
+        
         text  = 'x: ' + STRCOMPRESS(x1,/REMOVE_ALL)
         sY1 = STRING(y1,FORMAT='(F6.1)')
         text += '  |  y: ' + STRCOMPRESS(sy1,/REMOVE_ALL)
@@ -1820,7 +1855,7 @@ PRO MAIN_BASE_event, Event
         IF (x LT size_x AND $
           y LT size_y) THEN BEGIN
           counts = total_array(x,y)
-; CHANGE MADE (RC WARD, 22 June 2010): Change format for printing Counts
+          ; CHANGE MADE (RC WARD, 22 June 2010): Change format for printing Counts
           sIntensity = STRING(counts,FORMAT='(e8.2)')
           intensity = STRCOMPRESS(sIntensity,/REMOVE_ALL)
         ENDIF ELSE BEGIN
@@ -1931,9 +1966,9 @@ PRO MAIN_BASE_event, Event
     change_xaxis_ticks, Event, type='more' ;_plot
   END
   
-; SHIFTING - SHIFTING - SHIFTING
-
-
+  ; SHIFTING - SHIFTING - SHIFTING
+  
+  
   ;zmax widget_text
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step3_zmax'): BEGIN
     input_error = 0
@@ -2023,11 +2058,11 @@ PRO MAIN_BASE_event, Event
       x1 = FLOAT(delta_x) * FLOAT(x)
       Xtext = 'X: ' + STRCOMPRESS(x1,/REMOVE_ALL)
       putTextFieldValue, Event, 'x_value_shifting', Xtext
-
-; 6 Jan 2011: aPrint y as F6.1, keep 1 digit beyond decimal      
+      
+      ; 6 Jan 2011: aPrint y as F6.1, keep 1 digit beyond decimal
       y = Event.y
-      y1 = Float(y) / 2    
- 
+      y1 = Float(y) / 2
+      
       sY1 = STRING(y1,FORMAT='(F6.1)')
       Ytext = 'Y: ' + STRCOMPRESS(sy1,/REMOVE_ALL)
       putTextFieldValue, Event, 'y_value_shifting', Ytext
@@ -2038,7 +2073,7 @@ PRO MAIN_BASE_event, Event
       IF (x LT size_x AND $
         y LT size_y) THEN BEGIN
         counts = total_array(x,y)
-; CHANGE MADE (RC WARD, 22 June 2010): Change format for printing Counts        
+        ; CHANGE MADE (RC WARD, 22 June 2010): Change format for printing Counts
         sIntensity = STRING(counts,FORMAT='(e8.2)')
         intensity = STRCOMPRESS(sIntensity,/REMOVE_ALL)
       ENDIF ELSE BEGIN
@@ -2130,39 +2165,39 @@ PRO MAIN_BASE_event, Event
       ref_pixel_list[index] = pixel_value
       (*(*global).ref_pixel_list) = ref_pixel_list
       
-;----------------------------------------------------------------------
-; Change Code (9 Jan 2011): Add capability to alter RefPix in Shifting step
- RefPixSave = (*(*global).RefPixSave)
- PreviousRefPix = (*(*global).PreviousRefPix)
-; DEBUG ===========
-;  print, " RefPix: ", RefPixSave[index]
-;  print, " previous RefPix: ", PreviousRefPix
-; DEBUG ===========
- IF (index EQ 0) THEN BEGIN
-; Change Code (RC Ward, 12 Jan 2011): treat reference RefPix differently
-   RefPixSave[index] = pixel_value
-   Delta =   RefPixSave[index] - PreviousRefPix[index]
- ENDIF ELSE BEGIN
-   RefPixSave[index] = PreviousRefPix[index] + pixel_value - RefPixSave[0] 
- ENDELSE
-; DEBUG ===========
-;  print, " new RefPix: ", RefPixSave[index]
-; DEBUG ===========
-; update value of RefPix
-  (*(*global).RefPixSave) = RefPixSave 
-
-; Change Code (9 Jan 2011): Add capability to alter RefPix in Shifting step
-    RefPix_file_name = (*global).input_file_name
-; 9 Jan 2011 - clean up how RefPix file is named
-; DEBUG ===========
-;    print, "Full RefPix filename: ", RefPix_file_name
-; DEBUG ===========
-    OPENW, 1, RefPix_file_name
-    PRINTF, 1, RefPixSave
-    CLOSE, 1
-    FREE_LUN, 1
-;----------------------------------------------------------------------
-
+      ;----------------------------------------------------------------------
+      ; Change Code (9 Jan 2011): Add capability to alter RefPix in Shifting step
+      RefPixSave = (*(*global).RefPixSave)
+      PreviousRefPix = (*(*global).PreviousRefPix)
+      ; DEBUG ===========
+      ;  print, " RefPix: ", RefPixSave[index]
+      ;  print, " previous RefPix: ", PreviousRefPix
+      ; DEBUG ===========
+      IF (index EQ 0) THEN BEGIN
+        ; Change Code (RC Ward, 12 Jan 2011): treat reference RefPix differently
+        RefPixSave[index] = pixel_value
+        Delta =   RefPixSave[index] - PreviousRefPix[index]
+      ENDIF ELSE BEGIN
+        RefPixSave[index] = PreviousRefPix[index] + pixel_value - RefPixSave[0]
+      ENDELSE
+      ; DEBUG ===========
+      ;  print, " new RefPix: ", RefPixSave[index]
+      ; DEBUG ===========
+      ; update value of RefPix
+      (*(*global).RefPixSave) = RefPixSave
+      
+      ; Change Code (9 Jan 2011): Add capability to alter RefPix in Shifting step
+      RefPix_file_name = (*global).input_file_name
+      ; 9 Jan 2011 - clean up how RefPix file is named
+      ; DEBUG ===========
+      ;    print, "Full RefPix filename: ", RefPix_file_name
+      ; DEBUG ===========
+      OPENW, 1, RefPix_file_name
+      PRINTF, 1, RefPixSave
+      CLOSE, 1
+      FREE_LUN, 1
+      ;----------------------------------------------------------------------
+      
       plotAsciiData_shifting, Event ;_shifting
       plotReferencedPixels, Event ;_shifting
       refresh_plot_selection_OF_2d_plot_mode, Event
@@ -2192,41 +2227,41 @@ PRO MAIN_BASE_event, Event
         STRCOMPRESS(FIX(new_pixel_value),/REMOVE_ALL)
       (*(*global).ref_pixel_list) = ref_pixel_list
       (*(*global).ref_pixel_list_original) = ref_pixel_list
-
-
-;----------------------------------------------------------------------
-; Change Code (9 Jan 2011): Add capability to alter RefPix in Shifting step
- RefPixSave = (*(*global).RefPixSave)
- PreviousRefPix = (*(*global).PreviousRefPix)
-; DEBUG ============
-;  print, " RefPix: ", RefPixSave[index]
-;  print, " previous RefPix: ", PreviousRefPix
-; DEBUG ============
- IF (index EQ 0) THEN BEGIN
-; Change Code (RC Ward, 12 Jan 2011): treat reference RefPix differently
-   RefPixSave[index] = pixel_value
-   Delta =   RefPixSave[index] - PreviousRefPix[index]
- ENDIF ELSE BEGIN
-   RefPixSave[index] = PreviousRefPix[index] + pixel_value - RefPixSave[0] 
- ENDELSE
-; DEBUG ===========
-;  print, " new RefPix: ", RefPixSave[index]
-; DEBUG ===========
-; update value of RefPix
-  (*(*global).RefPixSave) = RefPixSave 
-
-; Change Code (9 Jan 2011): Add capability to alter RefPix in Shifting step
-    RefPix_file_name = (*global).input_file_name
-; 9 Jan 2011 - clean up how RefPix file is named
-; DEBUG ===========
-;    print, "Full RefPix filename: ", RefPix_file_name
-; DEBUG ===========
-    OPENW, 1, RefPix_file_name
-    PRINTF, 1, RefPixSave
-    CLOSE, 1
-    FREE_LUN, 1
-;----------------------------------------------------------------------
-
+      
+      
+      ;----------------------------------------------------------------------
+      ; Change Code (9 Jan 2011): Add capability to alter RefPix in Shifting step
+      RefPixSave = (*(*global).RefPixSave)
+      PreviousRefPix = (*(*global).PreviousRefPix)
+      ; DEBUG ============
+      ;  print, " RefPix: ", RefPixSave[index]
+      ;  print, " previous RefPix: ", PreviousRefPix
+      ; DEBUG ============
+      IF (index EQ 0) THEN BEGIN
+        ; Change Code (RC Ward, 12 Jan 2011): treat reference RefPix differently
+        RefPixSave[index] = pixel_value
+        Delta =   RefPixSave[index] - PreviousRefPix[index]
+      ENDIF ELSE BEGIN
+        RefPixSave[index] = PreviousRefPix[index] + pixel_value - RefPixSave[0]
+      ENDELSE
+      ; DEBUG ===========
+      ;  print, " new RefPix: ", RefPixSave[index]
+      ; DEBUG ===========
+      ; update value of RefPix
+      (*(*global).RefPixSave) = RefPixSave
+      
+      ; Change Code (9 Jan 2011): Add capability to alter RefPix in Shifting step
+      RefPix_file_name = (*global).input_file_name
+      ; 9 Jan 2011 - clean up how RefPix file is named
+      ; DEBUG ===========
+      ;    print, "Full RefPix filename: ", RefPix_file_name
+      ; DEBUG ===========
+      OPENW, 1, RefPix_file_name
+      PRINTF, 1, RefPixSave
+      CLOSE, 1
+      FREE_LUN, 1
+      ;----------------------------------------------------------------------
+      
       plotAsciiData_shifting, Event ;_shifting
       plotReferencedPixels, Event ;_shifting
       refresh_plot_selection_OF_2d_plot_mode, Event
@@ -2248,56 +2283,56 @@ PRO MAIN_BASE_event, Event
         'reference_pixel_value_shifting')
       delta_x = getTextFieldValue(Event,'move_by_x_pixel_value_shifting')
       new_pixel_value = FLOAT(pixel_value) + FLOAT(delta_x)
-     
-; Change code: replace 303 by detector_pixels_y-1, Check later (RC Ward, Feb 15, 2010)
-
+      
+      ; Change code: replace 303 by detector_pixels_y-1, Check later (RC Ward, Feb 15, 2010)
+      
       IF (new_pixel_value GT (*global).detector_pixels_y-1) THEN BEGIN
         new_pixel_value = (*global).detector_pixels_y-1
       ENDIF
-;      IF (new_pixel_value GT 303) THEN BEGIN
-;        new_pixel_value = 303
-;      ENDIF
-
+      ;      IF (new_pixel_value GT 303) THEN BEGIN
+      ;        new_pixel_value = 303
+      ;      ENDIF
+      
       ref_pixel_list[index] = new_pixel_value
       putTextFieldValue, Event, $
         'reference_pixel_value_shifting', $
         STRCOMPRESS(FIX(new_pixel_value),/REMOVE_ALL)
       (*(*global).ref_pixel_list) = ref_pixel_list
       (*(*global).ref_pixel_list_original) = ref_pixel_list
-
-;----------------------------------------------------------------------
-; Change Code (9 Jan 2011): Add capability to alter RefPix in Shifting step
- RefPixSave = (*(*global).RefPixSave)
- PreviousRefPix = (*(*global).PreviousRefPix)
-; DEBUG ============
-;  print, " RefPix: ", RefPixSave[index]
-;  print, " previous RefPix: ", PreviousRefPix
-; DEBUG ============
- IF (index EQ 0) THEN BEGIN
-; Change Code (RC Ward, 12 Jan 2011): treat reference RefPix differently
-   RefPixSave[index] = pixel_value
-   Delta =   RefPixSave[index] - PreviousRefPix[index]
- ENDIF ELSE BEGIN
-   RefPixSave[index] = PreviousRefPix[index] + pixel_value - RefPixSave[0] 
- ENDELSE
-; DEBUG ===========
-;  print, " new RefPix: ", RefPixSave[index]
-; DEBUG ===========
-; update value of RefPix
-  (*(*global).RefPixSave) = RefPixSave 
-
-; Change Code (9 Jan 2011): Add capability to alter RefPix in Shifting step
-    RefPix_file_name = (*global).input_file_name
-; 9 Jan 2011 - clean up how RefPix file is named
-; DEBUG ===========
-;    print, "Full RefPix filename: ", RefPix_file_name
-; DEBUG ===========
-    OPENW, 1, RefPix_file_name
-    PRINTF, 1, RefPixSave
-    CLOSE, 1
-    FREE_LUN, 1
-;----------------------------------------------------------------------
-
+      
+      ;----------------------------------------------------------------------
+      ; Change Code (9 Jan 2011): Add capability to alter RefPix in Shifting step
+      RefPixSave = (*(*global).RefPixSave)
+      PreviousRefPix = (*(*global).PreviousRefPix)
+      ; DEBUG ============
+      ;  print, " RefPix: ", RefPixSave[index]
+      ;  print, " previous RefPix: ", PreviousRefPix
+      ; DEBUG ============
+      IF (index EQ 0) THEN BEGIN
+        ; Change Code (RC Ward, 12 Jan 2011): treat reference RefPix differently
+        RefPixSave[index] = pixel_value
+        Delta =   RefPixSave[index] - PreviousRefPix[index]
+      ENDIF ELSE BEGIN
+        RefPixSave[index] = PreviousRefPix[index] + pixel_value - RefPixSave[0]
+      ENDELSE
+      ; DEBUG ===========
+      ;  print, " new RefPix: ", RefPixSave[index]
+      ; DEBUG ===========
+      ; update value of RefPix
+      (*(*global).RefPixSave) = RefPixSave
+      
+      ; Change Code (9 Jan 2011): Add capability to alter RefPix in Shifting step
+      RefPix_file_name = (*global).input_file_name
+      ; 9 Jan 2011 - clean up how RefPix file is named
+      ; DEBUG ===========
+      ;    print, "Full RefPix filename: ", RefPix_file_name
+      ; DEBUG ===========
+      OPENW, 1, RefPix_file_name
+      PRINTF, 1, RefPixSave
+      CLOSE, 1
+      FREE_LUN, 1
+      ;----------------------------------------------------------------------
+      
       plotAsciiData_shifting, Event ;_shifting
       plotReferencedPixels, Event ;_shifting
       refresh_plot_selection_OF_2d_plot_mode, Event
@@ -2353,11 +2388,11 @@ PRO MAIN_BASE_event, Event
     FIND_BY_UNAME='data_down_shifting'): BEGIN
     manual_move_mode_shifting, Event, DIRECTION='down' ;_shifting
   END
-;---------------------------------------------------------------------------- 
-; SCALING - SCALING - SCALING
-;---------------------------------------------------------------------------- 
-; SCALING - TAB1 - SCALING - TAB1 - SCALING - TAB1
-;---------------------------------------------------------------------------- 
+  ;----------------------------------------------------------------------------
+  ; SCALING - SCALING - SCALING
+  ;----------------------------------------------------------------------------
+  ; SCALING - TAB1 - SCALING - TAB1 - SCALING - TAB1
+  ;----------------------------------------------------------------------------
   ;zmax widget_text
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step4_zmax'): BEGIN
     input_error = 0
@@ -2438,8 +2473,8 @@ PRO MAIN_BASE_event, Event
     IF (current_list_OF_files[0] NE '') THEN BEGIN
     
       delta_x = (*global).delta_x
-; Debug (5 Nov 2010): delta_x must be passed to the Plot Tab to replot the results
-;  print, "In step4/Step1 - delta_x: ", delta_x 
+      ; Debug (5 Nov 2010): delta_x must be passed to the Plot Tab to replot the results
+      ;  print, "In step4/Step1 - delta_x: ", delta_x
       x = Event.x
       x1 = FLOAT(delta_x) * FLOAT(x)
       Xtext = 'X: ' + STRCOMPRESS(x1,/REMOVE_ALL)
@@ -2458,7 +2493,7 @@ PRO MAIN_BASE_event, Event
         x GE 0 AND $
         y GE 0) THEN BEGIN
         counts = total_array(x,y)
-; CHANGE MADE (RC WARD, 22 June 2010): Change format for printing Counts
+        ; CHANGE MADE (RC WARD, 22 June 2010): Change format for printing Counts
         sIntensity = STRING(counts,FORMAT='(e8.2)')
         intensity = STRCOMPRESS(sIntensity,/REMOVE_ALL)
       ENDIF ELSE BEGIN
@@ -2467,8 +2502,8 @@ PRO MAIN_BASE_event, Event
       ENDELSE
       CountsText = 'Counts: ' + STRCOMPRESS(intensity,/REMOVE_ALL)
       putTextFieldValue, Event, 'counts_value_scaling_step1', CountsText
-
-; Mouse actions on creating selection window for scaling step      
+      
+      ; Mouse actions on creating selection window for scaling step
       ;left click -------------------------------------------------------
       IF (Event.press EQ 1) THEN BEGIN ;left click
         bClick = $
@@ -2477,12 +2512,12 @@ PRO MAIN_BASE_event, Event
         (*global).step4_step1_left_mouse_pressed = 1
         (*global).ResizeOrMove = $
           check_IF_resize_OR_move_situation(Event)
-;        IF (bClick) THEN BEGIN ;left click (no resize)
-          save_selection_left_position_step4_step1,  Event     ;_scaling_step1
-          display_x_y_min_max_step4_step1, Event, TYPE='left_click'
-;        ENDIF ELSE BEGIN ;resize or move
-;          save_fix_corner, Event ;scaling_step1
-;        ENDELSE
+        ;        IF (bClick) THEN BEGIN ;left click (no resize)
+        save_selection_left_position_step4_step1,  Event     ;_scaling_step1
+        display_x_y_min_max_step4_step1, Event, TYPE='left_click'
+        ;        ENDIF ELSE BEGIN ;resize or move
+        ;          save_fix_corner, Event ;scaling_step1
+        ;        ENDELSE
         reset_step4_2_2_selection, Event ;scaling_step2_step2
       ENDIF               ;end of left click
       
@@ -2491,12 +2526,12 @@ PRO MAIN_BASE_event, Event
         (*global).step4_step1_left_mouse_pressed) THEN BEGIN
         bClick = (*global).bClick_step4_step1
         replotAsciiData_scaling_step1, Event ;scaling_step1
-;        IF (bClick) THEN BEGIN
-          plotStep4Step1Selection, Event ;scaling_step1
-;        ENDIF ELSE BEGIN ;move region
-;          move_selection_step4_step1, Event ;scaling_step1
-;;          refresh_plotStep4Step1Selection, Event
-;        ENDELSE
+        ;        IF (bClick) THEN BEGIN
+        plotStep4Step1Selection, Event ;scaling_step1
+        ;        ENDIF ELSE BEGIN ;move region
+        ;          move_selection_step4_step1, Event ;scaling_step1
+        ;;          refresh_plotStep4Step1Selection, Event
+        ;        ENDELSE
         display_x_y_min_max_step4_step1, Event, TYPE='move'
         display_step4_step1_plot2d, Event
       ENDIF
@@ -2507,11 +2542,11 @@ PRO MAIN_BASE_event, Event
         bClick = (*global).bClick_step4_step1
         (*global).step4_step1_left_mouse_pressed = 0
         replotAsciiData_scaling_step1, Event ;scaling_step1
-;        IF (bClick) THEN BEGIN
-          plotStep4Step1Selection, Event ;scaling_step1
-;        ENDIF ELSE BEGIN
-;          refresh_plotStep4Step1Selection, Event
-;        ENDELSE
+        ;        IF (bClick) THEN BEGIN
+        plotStep4Step1Selection, Event ;scaling_step1
+        ;        ENDIF ELSE BEGIN
+        ;          refresh_plotStep4Step1Selection, Event
+        ;        ENDELSE
         save_y_error_step4_step1_plot2d, Event ;scaling_step1_plot2d
       ENDIF
     ENDIF
@@ -2591,7 +2626,7 @@ PRO MAIN_BASE_event, Event
     ENDIF
   END
   
-; SCALING - TAB2 - SCALING - TAB2 - SCALING - TAB2
+  ; SCALING - TAB2 - SCALING - TAB2 - SCALING - TAB2
   
   ;lin/log
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step4_step2_z_axis_linear_log'): BEGIN
@@ -2661,9 +2696,9 @@ PRO MAIN_BASE_event, Event
       re_plot_fitting, Event ;scaling_step2_step2
     ENDIF
   END
-;----------------------------------------------------------------------------  
-; SCALING - TAB2 - CRITICAL EDGE - SCALING - TAB2 - CRITIAL EDGE
-;----------------------------------------------------------------------------  
+  ;----------------------------------------------------------------------------
+  ; SCALING - TAB2 - CRITICAL EDGE - SCALING - TAB2 - CRITIAL EDGE
+  ;----------------------------------------------------------------------------
   ;if mouse is over plot
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME= $
@@ -2743,7 +2778,7 @@ PRO MAIN_BASE_event, Event
     step4_2_2_reset_scaling, Event ;scaling_step2_step2
   END
   
-; SCALING - TAB2 - OTHER FILES - SCALING - TAB2 - OTHER FILES
+  ; SCALING - TAB2 - OTHER FILES - SCALING - TAB2 - OTHER FILES
   ;Scaling of Other Files
   
   ;Automatic Rescaling button -------------------------------------------------
@@ -2811,12 +2846,12 @@ PRO MAIN_BASE_event, Event
     step4_2_3_separate_window, Event  ;scaling_step2_step3
   END
   
-;----------------------------------------------------------------------------
-; SCALING_2D - SCALING_2D - SCALING_2D - SCALING_2D - SCALING_2D - SCALING_2D 
-;----------------------------------------------------------------------------
-; Change Code (RC Ward, 3 Jun 2010): These changes were added to implement the xmin,ymin, xmax,ymax
-; control of the plot in STEP 5
-;Selection Info Text Fields for Step 5 Plot -------------------------------------------------
+  ;----------------------------------------------------------------------------
+  ; SCALING_2D - SCALING_2D - SCALING_2D - SCALING_2D - SCALING_2D - SCALING_2D
+  ;----------------------------------------------------------------------------
+  ; Change Code (RC Ward, 3 Jun 2010): These changes were added to implement the xmin,ymin, xmax,ymax
+  ; control of the plot in STEP 5
+  ;Selection Info Text Fields for Step 5 Plot -------------------------------------------------
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='step5_selection_info_xmin_value'): BEGIN
     current_list_OF_files = (*(*global).list_OF_ascii_files)
@@ -2848,55 +2883,55 @@ PRO MAIN_BASE_event, Event
       move_selection_manually_step5, Event ;step5
     ENDIF
   END
-; ====== END CHANGE  3 June 2010 ==============================================================  
-
-;***********************************************************************************************
-; Change Code (RC Ward, 29 April 2010): ADD THE FOLLOWING WIDGET_INFO for controlling plot scale
-; Note the with_range is set to 1 for all these calls on 31 May 2010 as a test -might cause proble
-; these are not presently used it think?  
+  ; ====== END CHANGE  3 June 2010 ==============================================================
+  
+  ;***********************************************************************************************
+  ; Change Code (RC Ward, 29 April 2010): ADD THE FOLLOWING WIDGET_INFO for controlling plot scale
+  ; Note the with_range is set to 1 for all these calls on 31 May 2010 as a test -might cause proble
+  ; these are not presently used it think?
   ;X/Y/Min/Max
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_new_zoom_x_min'): BEGIN
-      re_plot_lambda_selected, Event ;step 5
-      display_step5_rescale_plot_from_zoom, Event, with_range=1
+    re_plot_lambda_selected, Event ;step 5
+    display_step5_rescale_plot_from_zoom, Event, with_range=1
   END
   
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_new_zoom_x_max'): BEGIN
-      re_plot_lambda_selected, Event ;step 5
-      display_step5_rescale_plot_from_zoom, Event, with_range=1
+    re_plot_lambda_selected, Event ;step 5
+    display_step5_rescale_plot_from_zoom, Event, with_range=1
   END
   
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_new_zoom_reset_axis'): BEGIN
-      reset_zoom_widgets, Event ;step 5
-      plotLambdaSelected, Event ; step5
-      display_step5_rescale_plot, Event, with_range=1
+    reset_zoom_widgets, Event ;step 5
+    plotLambdaSelected, Event ; step5
+    display_step5_rescale_plot, Event, with_range=1
   END
   
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_new_zoom_y_min'): BEGIN
-      re_plot_lambda_selected, Event ;step 5
-      display_step5_rescale_plot_from_zoom, Event, with_range=1
+    re_plot_lambda_selected, Event ;step 5
+    display_step5_rescale_plot_from_zoom, Event, with_range=1
   END
   
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_new_zoom_y_max'): BEGIN
-      re_plot_lambda_selected, Event ;step 5
-      display_step5_rescale_plot_from_zoom, Event, with_range=1
+    re_plot_lambda_selected, Event ;step 5
+    display_step5_rescale_plot_from_zoom, Event, with_range=1
   END
-; Code Change (RC Ward, 29 April 2010): The above WIDGET_INFOs were added to control plot scale
-;***********************************************************************************************
-
+  ; Code Change (RC Ward, 29 April 2010): The above WIDGET_INFOs were added to control plot scale
+  ;***********************************************************************************************
+  
   ;lin/log --------------------------------------------------------------------
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='z_axis_linear_log_step5'): BEGIN
     refresh_recap_plot, Event ;_step5
     refresh_plotStep5Selection, Event
   END
-
-; Code Change (RC Ward, 13 Aug 2010): Do this if toggling between splicing alternatives
+  
+  ; Code Change (RC Ward, 13 Aug 2010): Do this if toggling between splicing alternatives
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='slicing_alternative_step5'): BEGIN
     refresh_recap_plot, Event ;_step5
     refresh_plotStep5Selection, Event
   END
-
+  
   ;zmax widget_text
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_zmax'): BEGIN
     input_error = 0
@@ -2957,23 +2992,23 @@ PRO MAIN_BASE_event, Event
   
   ;Reset zmin and zmax
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_z_reset'): BEGIN
- ; refresh plot
+    ; refresh plot
     refresh_recap_plot, Event
- ; Change code (RC Ward, 13 June, 2010): When resetting, also reset xmin,ymin,xmax,ymax
- ; and draw selection box
- ; pick up the xmin,ymin,xmax,ymax from Step 4 
-              step5_rescale_populate_zoom_widgets, Event
- ; draw the selection box
-              refresh_plotStep5Selection, Event
-
+    ; Change code (RC Ward, 13 June, 2010): When resetting, also reset xmin,ymin,xmax,ymax
+    ; and draw selection box
+    ; pick up the xmin,ymin,xmax,ymax from Step 4
+    step5_rescale_populate_zoom_widgets, Event
+    ; draw the selection box
+    refresh_plotStep5Selection, Event
+    
     (*global).zmax_g_recap_backup = (*global).zmax_g_recap
     (*global).zmin_g_recap_backup = (*global).zmin_g_recap
   END
   
-; Change Code (24 Jan 2011): This is a duplicate - commented out
-;  WIDGET_INFO(wWidget, FIND_BY_UNAME='scaling_main_tab'): BEGIN
-;    scaling_tab_event, Event ;_eventcb
-;  END
+  ; Change Code (24 Jan 2011): This is a duplicate - commented out
+  ;  WIDGET_INFO(wWidget, FIND_BY_UNAME='scaling_main_tab'): BEGIN
+  ;    scaling_tab_event, Event ;_eventcb
+  ;  END
   
   ;type of selection (none, R vs Q, ...) --------------------------------------
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_selection_group_uname'): BEGIN
@@ -2989,9 +3024,9 @@ PRO MAIN_BASE_event, Event
   
   ;path button
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_browse_button_i_vs_q'): BEGIN
-; change code (RC Ward, 30 Nov 2010): Add capability to alter the value of the button.
+    ; change code (RC Ward, 30 Nov 2010): Add capability to alter the value of the button.
     id = WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_browse_button_i_vs_q')
-;print, "test in Step5: working_path: " , (*global).working_path  
+    ;print, "test in Step5: working_path: " , (*global).working_path
     WIDGET_CONTROL, id, SET_VALUE=(*global).working_path
     step5_browse_path_button, Event ;_step5
   END
@@ -3020,32 +3055,32 @@ PRO MAIN_BASE_event, Event
   WIDGET_INFO(wWidget, FIND_BY_UNAME='preview_button_i_vs_q'): BEGIN
     step5_preview_button, Event ;step5
   END
-; ========= CHANGE CODE (RC WARD, 15 JUNE 2010): Add action if 'Plot' button 
-; is pressed in Step 5 I vs Q plot screen
+  ; ========= CHANGE CODE (RC WARD, 15 JUNE 2010): Add action if 'Plot' button
+  ; is pressed in Step 5 I vs Q plot screen
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_selection_info_plot_value'): BEGIN
-; Change Code (RC Ward, 13 June, 2010): Define the default file name displayed on the I vs Q plot page
-       define_default_recap_output_file, Event 
-; Change Code (RC Ward, 10 Aug, 2010): No longer need to write mouse event window selections to LogBook
-;          inform_log_book_step5_selection, Event ;_step5
-       MapBase, Event, 'step5_rescale_base', 1
-; Change Code (RC Ward, 7 May 2010):  Call  display_step5_rescale_plot  
-;    rather than display_step5_rescale_plot_first_time 
-; Change code (RC Ward, 31 May 2010): call routine with with_range set to 1
-       display_step5_rescale_plot, Event, with_range=1
-       define_default_recap_output_file, Event  
-END  
-; ========= END CHANGE CODE (RC WARD, 15 JUNE 2010): Add action if 'Plot' button 
-; is pressed in Step 5 R vs Q plot screen  
+    ; Change Code (RC Ward, 13 June, 2010): Define the default file name displayed on the I vs Q plot page
+    define_default_recap_output_file, Event
+    ; Change Code (RC Ward, 10 Aug, 2010): No longer need to write mouse event window selections to LogBook
+    ;          inform_log_book_step5_selection, Event ;_step5
+    MapBase, Event, 'step5_rescale_base', 1
+    ; Change Code (RC Ward, 7 May 2010):  Call  display_step5_rescale_plot
+    ;    rather than display_step5_rescale_plot_first_time
+    ; Change code (RC Ward, 31 May 2010): call routine with with_range set to 1
+    display_step5_rescale_plot, Event, with_range=1
+    define_default_recap_output_file, Event
+  END
+  ; ========= END CHANGE CODE (RC WARD, 15 JUNE 2010): Add action if 'Plot' button
+  ; is pressed in Step 5 R vs Q plot screen
   ;----------------------------------------------------------------------------
   ;draw
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_draw'): BEGIN
-
+  
     DEVICE, CURSOR_STANDARD=31
-; print, "at top of WIDGET INFO in MainBaseEvent - step5_draw"
-
+    ; print, "at top of WIDGET INFO in MainBaseEvent - step5_draw"
+    
     LoadBaseStatus  = isBaseMapped(Event,'shifting_base_step5')
     ;ScaleBaseStatus = isBaseMapped(Event,'scaling_base_step5')
-
+    
     IF (LoadBaseStatus EQ 0) THEN BEGIN
       delta_x = (*global).delta_x
       x = Event.x
@@ -3068,45 +3103,45 @@ END
         x GE 0 AND $
         y GE 0) THEN BEGIN
         counts = total_array(x,y1)
-; CHANGE MADE (RC WARD, 22 June 2010): Change format for printing Counts        
+        ; CHANGE MADE (RC WARD, 22 June 2010): Change format for printing Counts
         sIntensity = STRING(counts,FORMAT='(e8.2)')
         intensity = STRCOMPRESS(sIntensity,/REMOVE_ALL)
-
-;       plot_selection_after_zoom, Event
+        
+      ;       plot_selection_after_zoom, Event
       ENDIF ELSE BEGIN
         intensity = 'N/A'
       ENDELSE
       CountsText = 'Counts: ' + STRCOMPRESS(intensity,/REMOVE_ALL)
       putTextFieldValue, Event, 'counts_value_step5', CountsText
-     
+      
       selection_value = $
         getCWBgroupValue(Event,'step5_selection_group_uname')
-; print, 'In MainBaseEvent for Step 5 - selection_value: ', selection_value    
+      ; print, 'In MainBaseEvent for Step 5 - selection_value: ', selection_value
         
       IF (selection_value NE 0) THEN BEGIN
-; Change Code (RC Ward, 13 June, 2010):
-; Define the default file name - this is displayed on the I vs Q plot page
-;       define_default_recap_output_file, Event 
-    
-; Change Code (RC Ward, 13 June, 2010): Code now uses the selection window from Step 4 
-;    as modified by user and the action is left click the mouse in the screen
-; Mouse actions on creating selection window for step5
-      ;left click mouse ----------------------------------------------------      
+        ; Change Code (RC Ward, 13 June, 2010):
+        ; Define the default file name - this is displayed on the I vs Q plot page
+        ;       define_default_recap_output_file, Event
+      
+        ; Change Code (RC Ward, 13 June, 2010): Code now uses the selection window from Step 4
+        ;    as modified by user and the action is left click the mouse in the screen
+        ; Mouse actions on creating selection window for step5
+        ;left click mouse ----------------------------------------------------
         IF (event.press EQ 1) THEN BEGIN ;press left
-; Change Code (RC Ward, 13 June, 2010): Define the default file name - 
-;      this is displayed on the I vs Q plot page
-       define_default_recap_output_file, Event 
-; Change Code (RC Ward, 10 Aug, 2010): No longer need to write mouse event window selections to LogBook
-;          inform_log_book_step5_selection, Event ;_step5
+          ; Change Code (RC Ward, 13 June, 2010): Define the default file name -
+          ;      this is displayed on the I vs Q plot page
+          define_default_recap_output_file, Event
+          ; Change Code (RC Ward, 10 Aug, 2010): No longer need to write mouse event window selections to LogBook
+          ;          inform_log_book_step5_selection, Event ;_step5
           MapBase, Event, 'step5_rescale_base', 1
-; Change Code (RC Ward, 7 May 2010):  Call  display_step5_rescale_plot  
-;    rather than display_step5_rescale_plot_first_time 
-; Change code (RC Ward, 31 May 2010): call routine with with_range set to 1
+          ; Change Code (RC Ward, 7 May 2010):  Call  display_step5_rescale_plot
+          ;    rather than display_step5_rescale_plot_first_time
+          ; Change code (RC Ward, 31 May 2010): call routine with with_range set to 1
           display_step5_rescale_plot, Event, with_range=1
           define_default_recap_output_file, Event
-
+          
         ENDIF
-                
+        
       ENDIF ;end of 'if (selection_value NE 0)'
       
     ENDIF; end of 'if (LoadBaseStatus EQ 0)'
@@ -3142,7 +3177,7 @@ END
   
   ;lin/log cw_bgroup
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_rescale_lin_log_plot'): BEGIN
-    
+  
     redisplay_step5_rescale_plot, Event
     plot_recap_rescale_other_selection, Event, type='all'
     replot_average_recap_rescale, Event
@@ -3152,114 +3187,114 @@ END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_rescale_draw'): BEGIN
     DEVICE, CURSOR_STANDARD=31
     ;zoom or selection
-;    isZoomSelected = isRecapScaleZoomSelected(Event)
-; Change code (RC Ward, 11 May 2010): Branch around the "zoom" portion here. It is no longer used.
+    ;    isZoomSelected = isRecapScaleZoomSelected(Event)
+    ; Change code (RC Ward, 11 May 2010): Branch around the "zoom" portion here. It is no longer used.
     isZoomSelected = 0
     IF (isZoomSelected) THEN BEGIN ;using zoom
-;    
-;      IF (event.press EQ 1) THEN BEGIN ;press left
-;        (*global).recap_rescale_x0 = Event.x
-;        (*global).recap_rescale_y0 = Event.y
-;        CURSOR, x,y,/data,/nowait
-;        x0y0x1y1 = (*global).x0y0x1y1
-;        
-;        x0y0x1y1_graph = (*global).x0y0x1y1_graph
-;        x0_graph = x0y0x1y1_graph[0]
-;        y0_graph = x0y0x1y1_graph[1]
-;        x1_graph = x0y0x1y1_graph[2]
-;        y1_graph = x0y0x1y1_graph[3]
-;        
-;        IF (x LT x0y0x1y1_graph[0]) THEN x=x0y0x1y1_graph[0]
-;        IF (x GT x0y0x1y1_graph[2]) THEN x=x0y0x1y1_graph[2]
-;        IF (y LT x0y0x1y1_graph[1]) THEN y=x0y0x1y1_graph[1]
-;        IF (y GT x0y0x1y1_graph[3]) THEN y=x0y0x1y1_graph[3]
-;        
-;        x0y0x1y1[0] = x
-;        x0y0x1y1[1] = y
-;        
-;        (*global).x0y0x1y1 = x0y0x1y1
-;        (*global).recap_rescale_left_mouse = 1
-;        
-;        plot_recap_rescale_other_selection, Event, type='all'
-;        
-;      ENDIF
-;      
-;      IF (event.type EQ 2 AND $ ;move mouse with left pressed
-;        (*global).recap_rescale_left_mouse EQ 1) THEN BEGIN
-;        
-;        ;make sure the event.x stays within 5 and 1267
-;        ;make sure the event.y stays within 5 and 696
-;        IF (Event.x GT 5 AND $
-;          Event.x LT 1267 AND $
-;          Event.y GT 5 AND $
-;          Event.y LT 696) THEN BEGIN
-;          
-;          CURSOR, x,y, /DATA, /NOWAIT
-;          (*global).last_valid_x = x
-;          (*global).last_valid_y = y
-;          
-          ;replot main plot
-;          display_step5_rescale_plot_from_zoom, Event, with_range=1
-;          
-          ;display_step5_rescale_after_rescale_during_zoom_selection, Event
-          ;plot selection
-;          (*global).recap_rescale_x1 = Event.x
-;          (*global).recap_rescale_y1 = Event.y
-;          plot_recap_rescale_selection, Event
-          
-;          plot_recap_rescale_other_selection, Event, type='all'
-          
-;        ENDIF
-        
-;      ENDIF
-      
-;      IF (event.release EQ 1) THEN BEGIN ;release mouse
-      
-        ;make sure the event.x stays within 5 and 1267
-        ;make sure the event.y stays within 5 and 696
-;       IF (Event.x GT 5 AND $
-;          Event.x LT 1267 AND $
-;          Event.y GT 5 AND $
-;          Event.y LT 696) THEN BEGIN
-          
-;          CURSOR,x,y,/data,/nowait
-          
-;        ENDIF ELSE BEGIN
-        
-;          x = (*global).last_valid_x
-;          y = (*global).last_valid_y
-          
-;        ENDELSE
-        
-;        (*global).recap_rescale_left_mouse = 0
-;        x0y0x1y1 = (*global).x0y0x1y1
-        
-;        x0y0x1y1_graph = (*global).x0y0x1y1_graph
-;        x0_graph = x0y0x1y1_graph[0]
-;        y0_graph = x0y0x1y1_graph[1]
-;        x1_graph = x0y0x1y1_graph[2]
-;        y1_graph = x0y0x1y1_graph[3]
-;        xmin = MIN([x0_graph,x1_graph],MAX=xmax)
-;        ymin = MIN([y0_graph,y1_graph],MAX=ymax)
-        
-;        IF (x LT 0) THEN x = xmax
-;        IF (y LT 0) THEN y = ymax
-        
-;        x0y0x1y1[2] = x
-;        x0y0x1y1[3] = y
-;        (*global).x0y0x1y1 = x0y0x1y1
-;        (*global).x0y0x1y1_graph = x0y0x1y1
-        
-;        redisplay_step5_rescale_plot, Event
-;        (*global).first_recap_rescale_plot = 0
-        
-;        plot_selection_after_zoom, Event
-;      ENDIF
-     
-;      replot_average_recap_rescale, Event
-     
+    ;
+    ;      IF (event.press EQ 1) THEN BEGIN ;press left
+    ;        (*global).recap_rescale_x0 = Event.x
+    ;        (*global).recap_rescale_y0 = Event.y
+    ;        CURSOR, x,y,/data,/nowait
+    ;        x0y0x1y1 = (*global).x0y0x1y1
+    ;
+    ;        x0y0x1y1_graph = (*global).x0y0x1y1_graph
+    ;        x0_graph = x0y0x1y1_graph[0]
+    ;        y0_graph = x0y0x1y1_graph[1]
+    ;        x1_graph = x0y0x1y1_graph[2]
+    ;        y1_graph = x0y0x1y1_graph[3]
+    ;
+    ;        IF (x LT x0y0x1y1_graph[0]) THEN x=x0y0x1y1_graph[0]
+    ;        IF (x GT x0y0x1y1_graph[2]) THEN x=x0y0x1y1_graph[2]
+    ;        IF (y LT x0y0x1y1_graph[1]) THEN y=x0y0x1y1_graph[1]
+    ;        IF (y GT x0y0x1y1_graph[3]) THEN y=x0y0x1y1_graph[3]
+    ;
+    ;        x0y0x1y1[0] = x
+    ;        x0y0x1y1[1] = y
+    ;
+    ;        (*global).x0y0x1y1 = x0y0x1y1
+    ;        (*global).recap_rescale_left_mouse = 1
+    ;
+    ;        plot_recap_rescale_other_selection, Event, type='all'
+    ;
+    ;      ENDIF
+    ;
+    ;      IF (event.type EQ 2 AND $ ;move mouse with left pressed
+    ;        (*global).recap_rescale_left_mouse EQ 1) THEN BEGIN
+    ;
+    ;        ;make sure the event.x stays within 5 and 1267
+    ;        ;make sure the event.y stays within 5 and 696
+    ;        IF (Event.x GT 5 AND $
+    ;          Event.x LT 1267 AND $
+    ;          Event.y GT 5 AND $
+    ;          Event.y LT 696) THEN BEGIN
+    ;
+    ;          CURSOR, x,y, /DATA, /NOWAIT
+    ;          (*global).last_valid_x = x
+    ;          (*global).last_valid_y = y
+    ;
+    ;replot main plot
+    ;          display_step5_rescale_plot_from_zoom, Event, with_range=1
+    ;
+    ;display_step5_rescale_after_rescale_during_zoom_selection, Event
+    ;plot selection
+    ;          (*global).recap_rescale_x1 = Event.x
+    ;          (*global).recap_rescale_y1 = Event.y
+    ;          plot_recap_rescale_selection, Event
+    
+    ;          plot_recap_rescale_other_selection, Event, type='all'
+    
+    ;        ENDIF
+    
+    ;      ENDIF
+    
+    ;      IF (event.release EQ 1) THEN BEGIN ;release mouse
+    
+    ;make sure the event.x stays within 5 and 1267
+    ;make sure the event.y stays within 5 and 696
+    ;       IF (Event.x GT 5 AND $
+    ;          Event.x LT 1267 AND $
+    ;          Event.y GT 5 AND $
+    ;          Event.y LT 696) THEN BEGIN
+    
+    ;          CURSOR,x,y,/data,/nowait
+    
+    ;        ENDIF ELSE BEGIN
+    
+    ;          x = (*global).last_valid_x
+    ;          y = (*global).last_valid_y
+    
+    ;        ENDELSE
+    
+    ;        (*global).recap_rescale_left_mouse = 0
+    ;        x0y0x1y1 = (*global).x0y0x1y1
+    
+    ;        x0y0x1y1_graph = (*global).x0y0x1y1_graph
+    ;        x0_graph = x0y0x1y1_graph[0]
+    ;        y0_graph = x0y0x1y1_graph[1]
+    ;        x1_graph = x0y0x1y1_graph[2]
+    ;        y1_graph = x0y0x1y1_graph[3]
+    ;        xmin = MIN([x0_graph,x1_graph],MAX=xmax)
+    ;        ymin = MIN([y0_graph,y1_graph],MAX=ymax)
+    
+    ;        IF (x LT 0) THEN x = xmax
+    ;        IF (y LT 0) THEN y = ymax
+    
+    ;        x0y0x1y1[2] = x
+    ;        x0y0x1y1[3] = y
+    ;        (*global).x0y0x1y1 = x0y0x1y1
+    ;        (*global).x0y0x1y1_graph = x0y0x1y1
+    
+    ;        redisplay_step5_rescale_plot, Event
+    ;        (*global).first_recap_rescale_plot = 0
+    
+    ;        plot_selection_after_zoom, Event
+    ;      ENDIF
+    
+    ;      replot_average_recap_rescale, Event
+    
     ENDIF ELSE BEGIN ;selection selected
-   
+    
       IF (event.press EQ 1) THEN BEGIN ;press left
         IF ((*global).first_recap_rescale_plot) THEN BEGIN
           display_step5_rescale_plot, Event, with_range=1
@@ -3293,7 +3328,7 @@ END
         IF ((*global).first_recap_rescale_plot) THEN BEGIN
           display_step5_rescale_plot, Event, with_range=1
         ENDIF ELSE BEGIN
-
+        
           redisplay_step5_rescale_plot, Event
         ENDELSE
         ;plot selection
@@ -3317,7 +3352,7 @@ END
         ENDELSE
         ;check if we can enabled rescale button
         IF ((*global).recap_rescale_left_mouse) THEN BEGIN
-;           enabled_or_not_recap_rescale_button, Event
+          ;           enabled_or_not_recap_rescale_button, Event
           plot_average_recap_rescale, Event
         ENDIF
         (*global).recap_rescale_left_mouse = 0
@@ -3342,7 +3377,7 @@ END
   ;reset scale button
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='step5_rescale_scale_to_1_reset'): BEGIN
-; Change code (RC Ward, 31 May 2010); add check of range (xmin, xmax, ymin, ymax)
+    ; Change code (RC Ward, 31 May 2010); add check of range (xmin, xmax, ymin, ymax)
     display_step5_rescale_plot_first_time, Event, with_range=1
     activate_widget, Event, 'step5_rescale_scale_to_1_reset', 0
     (*global).recap_rescale_selection_left = 0
@@ -3489,7 +3524,7 @@ END
   
   ;----------------------------------------------------------------------------
   ;- OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS ------
-  ;----------------------------------------------------------------------------  
+  ;----------------------------------------------------------------------------
   ;cw_bgroup of 'Use non active file attenuator'
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME= $
@@ -3534,15 +3569,15 @@ END
   ;PLOT UTILITY - PLOT UTILITY - PLOT UTILITY - PLOT UTILITY - PLOT UTILITY
   ;----------------------------------------------------------------------------
   WIDGET_INFO(wWidget, FIND_BY_UNAME='launch_plotRvsQ'): BEGIN
- 
+  
     ref_off_spec_plot_rvsq, Event
-    ;, Event ; launch the plot utility which plots R vs Q or R vs lambda perp
-  END  
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='launch_plotScaled2D'): BEGIN 
-
+  ;, Event ; launch the plot utility which plots R vs Q or R vs lambda perp
+  END
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='launch_plotScaled2D'): BEGIN
+  
     ref_off_spec_plot_scaled2d, Event
-    ;, Event ; launch the plot utility which plots Scale 2D results
-  END 
+  ;, Event ; launch the plot utility which plots Scale 2D results
+  END
   
   ELSE:
   
