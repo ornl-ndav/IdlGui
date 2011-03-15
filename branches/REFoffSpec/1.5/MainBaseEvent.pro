@@ -1688,6 +1688,14 @@ PRO MAIN_BASE_event, Event
   ;  check_reduce_step2_save_roi_validity, Event
   END
   
+  ;peak/back selection tool
+  widget_info(wWidget, find_by_uname='working_with_peak'): begin
+  inverse_y_selection, event
+  end
+  widget_info(wWidget, find_by_uname='working_with_back'): begin
+  inverse_y_selection, event
+  end
+  
   ;y1 and y2 peak roi text fields (for manual input of y1 and y2)
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='reduce_step2_create_roi_y1_value'): BEGIN

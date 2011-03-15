@@ -37,19 +37,54 @@ PRO inverse_y_selection, Event
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
+  bPeakSelected = isPeakSelected(event)
   y_roi_status = (*global).norm_roi_y_selected
   IF (y_roi_status EQ 'left') THEN BEGIN
     (*global).norm_roi_y_selected = 'right'
-    y1_l = '  '
-    y1_r = '  '
-    y2_l = '>>'
-    y2_r = '<<'
+    
+    if (bPeakSelected) then begin
+      peak_y1_l = '  '
+      peak_y1_r = '  '
+      peak_y2_l = '>>'
+      peak_y2_r = '<<'
+      back_y1_l = '  '
+      back_y1_r = '  '
+      back_y2_l = '  '
+      back_y2_r = '  '
+    endif else begin
+      peak_y1_l = '  '
+      peak_y1_r = '  '
+      peak_y2_l = '  '
+      peak_y2_r = '  '
+      back_y1_l = '  '
+      back_y1_r = '  '
+      back_y2_l = '>>'
+      back_y2_r = '<<'
+    endelse
+    
   ENDIF ElSE BEGIN
+  
     (*global).norm_roi_y_selected = 'left'
-    y2_l = '  '
-    y2_r = '  '
-    y1_l = '>>'
-    y1_r = '<<'
+    if (bPeakSelected) then begin
+      peak_y1_l = '>>'
+      peak_y1_r = '<<'
+      peak_y2_l = '  '
+      peak_y2_r = '  '
+      back_y1_l = '  '
+      back_y1_r = '  '
+      back_y2_l = '  '
+      back_y2_r = '  '
+    endif else begin
+      peak_y1_l = '  '
+      peak_y1_r = '  '
+      peak_y2_l = '  '
+      peak_y2_r = '  '
+      back_y1_l = '>>'
+      back_y1_r = '<<'
+      back_y2_l = '  '
+      back_y2_r = '  '
+    endelse
+    
   ENDELSE
   
   putTextFieldValue, event, 'reduce_step2_create_roi_y1_l_status', y1_l

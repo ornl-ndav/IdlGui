@@ -201,9 +201,11 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     /row)
   peak = widget_button(peak_back_base,$
     value = 'Select PEAK ROI',$
+    /no_release,$
     uname = 'working_with_peak')
   back = widget_button(peak_back_base,$
     value = 'Select BACKGROUND ROI',$
+    /no_release,$
     uname = 'working_with_back')
   widget_control, peak,/set_button
   
