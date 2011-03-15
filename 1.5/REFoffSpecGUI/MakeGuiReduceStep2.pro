@@ -256,7 +256,12 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
   y2_working = WIDGET_LABEL(row3col2_base2,$
     VALUE = ' ',$
     UNAME = 'reduce_step2_create_roi_y2_r_status')
-    
+  space = widget_label(row3col2_base2,$
+  value = '   ')
+  reset = widget_button(row3col2_base2,$
+  value = 'Reset',$
+  uname = 'reset_peak_roi_inputs')  
+        
   space = WIDGET_LABEL(row2col2,$
     value = '    ')
   space = WIDGET_LABEL(row2col2,$
@@ -309,6 +314,11 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
   y2_working = WIDGET_LABEL(row3col2_base2,$
     VALUE = ' ',$
     UNAME = 'reduce_step2_create_back_roi_y2_r_status')
+  space = widget_label(row3col2_base2,$
+  value = '   ')
+  reset = widget_button(row3col2_base2,$
+  value = 'Reset',$
+  uname = 'reset_back_roi_inputs')  
     
     
   space = WIDGET_LABEL(row2col2,$
@@ -323,7 +333,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     
   ;third row (save button)
   save_roi = WIDGET_BUTTON(row2col2,$
-    VALUE = 'S A V E   P E A K and B A C K.  R O Is',$
+    VALUE = 'S A V E   P E A K  and  B A C K.  R O Is',$
     SCR_XSIZE = 320,$
     TOOLTIP = 'Click to Save the peak and background ROI you created',$
     UNAME = 'reduce_step2_create_roi_save_roi',$
@@ -331,7 +341,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     
   ;save and quit base
   save_quit_roi = WIDGET_BUTTON(row2col2,$
-    VALUE = 'SAVE PEAK & BACK. ROIs and RETURN TO TABLE',$
+    VALUE = 'SAVE PEAK and BACK. ROIs and RETURN TO TABLE',$
     SCR_XSIZE = 320,$
     ;    TOOLTIP = 'Click to Save the ROI and Return to the table',$
     uname = 'reduce_step2_create_roi_save_roi_quit',$
