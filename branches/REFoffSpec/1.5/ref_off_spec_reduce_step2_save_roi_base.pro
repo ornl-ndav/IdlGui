@@ -48,12 +48,6 @@ PRO save_roi_base_event, event
       change_path, Event
     END
     
-    ;browse for file name
-    WIDGET_INFO(wWidget, $
-      FIND_BY_UNAME='reduce_step2_roi_file_name_browse'): BEGIN
-      change_file_name, Event
-    END
-    
     ;cancel
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='reduce_step2_roi_cancel_button'): BEGIN
@@ -68,6 +62,8 @@ PRO save_roi_base_event, event
         getButtonValue(Event,'reduce_step2_roi_path_button')
       (*global).reduce_step2_roi_file_name = $
         getTextfieldValue(Event,'reduce_step2_roi_file_name_text')
+      (*global).reduce_step2_back_roi_file_name = $
+      getTextFieldValue(event,'reduce_step2_back_roi_file_name_text')
       WIDGET_CONTROL, global_roi.ourGroup,/DESTROY
       event = global_roi.event
       quit_flag = global_roi.quit_flag
@@ -83,6 +79,7 @@ END
 ;------------------------------------------------------------------------------
 PRO save_roi_base, Event, path=path, $
     FILE_NAME=file_name, $
+    back_file_name=back_file_name,$
     quit_flag=quit_flag
     
   id = WIDGET_INFO(Event.top,FIND_BY_UNAME='MAIN_BASE')
@@ -95,7 +92,7 @@ PRO save_roi_base, Event, path=path, $
     /COLUMN,$
     SCR_XSIZE = 400,$
     frame = 5,$
-    title = 'Enter name of ROI file or use deafult')
+    title = 'Enter names of ROI files or use deafults')
     
   ;*****************************************
   ;
@@ -115,7 +112,7 @@ PRO save_roi_base, Event, path=path, $
     /ROW)
     
   title = WIDGET_LABEL(row2_base,$
-    VALUE = 'File Name:')
+    VALUE = ' Peak ROI:')
     
   ;file name text field
   name = WIDGET_TEXT(row2_base,$
@@ -125,24 +122,25 @@ PRO save_roi_base, Event, path=path, $
     /ALIGN_LEFT,$
     UNAME = 'reduce_step2_roi_file_name_text')
     
+  ;row_base .................second row ............................
+  row2_base = WIDGET_BASE(roi_base,$
+    /ROW)
+    
+  title = WIDGET_LABEL(row2_base,$
+    VALUE = 'Back. ROI:')
+    
+  ;file name text field
+  name = WIDGET_TEXT(row2_base,$
+    VALUE = back_file_name,$
+    SCR_XSIZE = 300,$
+    /EDITABLE,$
+    /ALIGN_LEFT,$
+    UNAME = 'reduce_step2_back_roi_file_name_text')
+
   ;vertical space ...........third row...........................
   space = WIDGET_LABEL(roi_base,$
     VALUE = ' ')
-    
-  ;label .................fourth row ............................
-  label = WIDGET_LABEL(roi_base,$
-    VALUE = ' or Browse for a file')
-    
-  ;browse file name button ............fifth row
-  browse = WIDGET_BUTTON(roi_base,$
-    VALUE = 'B R O W S E  . . . ',$
-    SCR_XSIZE = 390,$
-    UNAME = 'reduce_step2_roi_file_name_browse')
-    
-  ;vertical space ...........6th row...........................
-  space = WIDGET_LABEL(roi_base,$
-    VALUE = ' ')
-    
+
   ;cancel and ok buttons .............. 7th row ................
   row3 = WIDGET_BASE(roi_base,$
     /ROW)
@@ -156,7 +154,7 @@ PRO save_roi_base, Event, path=path, $
     VALUE = '                        ')
     
   ok = WIDGET_BUTTON(row3,$
-    VALUE = 'SAVE ROI',$
+    VALUE = 'SAVE ROIs',$
     SCR_XSIZE = 120,$
     UNAME = 'reduce_step2_roi_save_roi_ok_button')
     
@@ -183,7 +181,7 @@ PRO change_path, Event
   path = getButtonValue(Event,'reduce_step2_roi_path_button')
   
   result = DIALOG_PICKFILE(/DIRECTORY,$
-    TITLE = 'Select where to write the ROI file',$
+    TITLE = 'Select where to write the ROI files',$
     path = path,$
     get_path = new_path,$
     /must_exist)

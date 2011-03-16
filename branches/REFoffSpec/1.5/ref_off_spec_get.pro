@@ -502,6 +502,26 @@ FUNCTION getDefaultReduceStep2RoiFileName, event
   RETURN, file
 END
 
+
+;------------------------------------------------------------------------------
+FUNCTION getDefaultReduceStep2BackRoiFileName, event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  instrument = (*global).instrument
+  
+  ;get norm run number
+  norm_run = getTextFieldValue(Event,'reduce_step2_create_roi_norm_value')
+  IF (instrument EQ 'REF_M') THEN BEGIN
+    file = 'REF_M_' + norm_run + '_back_ROI.dat'
+  ENDIF ELSE BEGIN
+    file = 'REF_L_' + norm_run + '_back_ROI.dat'
+  ENDELSE
+  
+  RETURN, file
+END
+
+
 ;------------------------------------------------------------------------------
 FUNCTION getListOfDataSpinStates, Event
   button_value=INTARR(4)
