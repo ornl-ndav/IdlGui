@@ -1672,6 +1672,10 @@ PRO MAIN_BASE_event, Event
           (*global).mouse_left_pressed = 1
           plot_reduce_step2_norm, Event
           plot_reduce_step2_roi, Event
+          display_counts_vs_pixel, $
+          base=(*global).roi_selection_counts_vs_pixel_base_id, $
+          refresh=1b,$
+          global
         ENDIF ELSE BEGIN ;right pressed
           inverse_selection_or_roi, Event, inverse_roi = 1b
           (*global).mouse_right_pressed = 1
@@ -1690,6 +1694,10 @@ PRO MAIN_BASE_event, Event
         IF ((*global).mouse_left_pressed) THEN BEGIN
           plot_reduce_step2_norm, Event
           plot_reduce_step2_roi, Event
+          display_counts_vs_pixel, $
+          base=(*global).roi_selection_counts_vs_pixel_base_id, $
+          refresh=1b,$
+          global
         ENDIF
       ENDIF
       
@@ -1709,11 +1717,19 @@ PRO MAIN_BASE_event, Event
     FIND_BY_UNAME='reduce_step2_create_roi_y1_value'): BEGIN
     plot_reduce_step2_norm, Event
     reduce_step2_plot_rois, event
+              display_counts_vs_pixel, $
+          base=(*global).roi_selection_counts_vs_pixel_base_id, $
+          refresh=1b,$
+          global
   END
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='reduce_step2_create_roi_y2_value'): BEGIN
     plot_reduce_step2_norm, Event
     reduce_step2_plot_rois, event
+              display_counts_vs_pixel, $
+          base=(*global).roi_selection_counts_vs_pixel_base_id, $
+          refresh=1b,$
+          global
   END
   
   ;y1 and y2 back roi text fields (for manual input of y1 and y2)
@@ -1721,11 +1737,19 @@ PRO MAIN_BASE_event, Event
     FIND_BY_UNAME='reduce_step2_create_back_roi_y1_value'): BEGIN
     plot_reduce_step2_norm, Event
     reduce_step2_plot_rois, event
+              display_counts_vs_pixel, $
+          base=(*global).roi_selection_counts_vs_pixel_base_id, $
+          refresh=1b,$
+          global
   END
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='reduce_step2_create_back_roi_y2_value'): BEGIN
     plot_reduce_step2_norm, Event
     reduce_step2_plot_rois, event
+              display_counts_vs_pixel, $
+          base=(*global).roi_selection_counts_vs_pixel_base_id, $
+          refresh=1b,$
+          global
   END
   
   ;lin/log cw_bgroup
@@ -1742,6 +1766,10 @@ PRO MAIN_BASE_event, Event
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='reduce_step2_create_roi_browse_roi_button'): BEGIN
     browse_reduce_step2_roi_file, Event
+              display_counts_vs_pixel, $
+          base=(*global).roi_selection_counts_vs_pixel_base_id, $
+          refresh=1b,$
+          global
   END
   
   ;reset peak inputs
@@ -1750,12 +1778,20 @@ PRO MAIN_BASE_event, Event
     putTextFieldValue, Event, 'reduce_step2_create_roi_y2_value', ''
     plot_reduce_step2_norm, Event ;refresh plot
     reduce_step2_plot_rois, event
+              display_counts_vs_pixel, $
+          base=(*global).roi_selection_counts_vs_pixel_base_id, $
+          refresh=1b,$
+          global
   end
   
   ;browse/load back ROI
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='reduce_step2_create_roi_browse_back_roi_button'): BEGIN
     browse_reduce_step2_back_roi_file, Event
+              display_counts_vs_pixel, $
+          base=(*global).roi_selection_counts_vs_pixel_base_id, $
+          refresh=1b,$
+          global
   END
   
   ;reset back inputs
@@ -1764,6 +1800,10 @@ PRO MAIN_BASE_event, Event
     putTextFieldValue, Event, 'reduce_step2_create_back_roi_y2_value', ''
     plot_reduce_step2_norm, Event ;refresh plot
     reduce_step2_plot_rois, event
+              display_counts_vs_pixel, $
+          base=(*global).roi_selection_counts_vs_pixel_base_id, $
+          refresh=1b,$
+          global
   end
   
   ;SAVE ROI
