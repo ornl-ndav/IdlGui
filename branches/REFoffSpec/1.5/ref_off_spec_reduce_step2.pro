@@ -895,6 +895,10 @@ PRO reduce_step2_create_roi, Event, $
   ;display normalization plot (counts vs tof) of reduce_step2 plot
   success = display_reduce_step2_create_roi_plot(Event, Row=row, $
     data_spin_state = data_spin_state)
+  
+  ;display the counts vs pixel 1d plot
+  roi_selection_counts_vs_pixel_base, event=event, $
+    parent_base_uname = 'MAIN_BASE'
     
   ;display ROI file name if any
   IF (roi_file_name NE 'N/A') THEN BEGIN

@@ -97,6 +97,7 @@ cd, CurrentFolder
 .run packages_required.pro
 .run reduce_tab2_scale.pro
 .run reduce_tab2_colorbar.pro
+.run roi_selection_counts_vs_pixel_base.pro
 
 ;main functions
 .run MainBaseEvent.pro

@@ -159,6 +159,9 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     roi_base_background: ptr_new(0L), $ ;2d plot of roi selection (reduce/tab2)
     norm_tof: ptr_new(0L), $ ;tof array of normalization file loaded in reduce/tab2
     
+    ;id of roi_selection_counts_vs_pixel base in reduce/step2
+    roi_selection_counts_vs_pixel_base_id: 0L, $
+    
     left_right_cursor: 96, $
     standard: 31, $
     ; Code change RCW (Dec 28, 2009): firefox replaced by browser obtained from XML config file entry BROWSER

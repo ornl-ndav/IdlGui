@@ -164,6 +164,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
  xoffset =  0, $
  yoffset = yoffset, $
  scr_xsize = colorbar_xsize, $
+ retain=2,$
  scr_ysize = 2*(*global).detector_pixels_y, $
  uname = 'reduce_step2_colorbar_uname')
 
@@ -282,7 +283,6 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     value = '    ')
   space = WIDGET_LABEL(row2col2,$
     value = '    ')
-    
     
   ;first inside row (browse button)
   browse_button = WIDGET_BUTTON(row2col2,$
