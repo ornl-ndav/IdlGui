@@ -70,6 +70,12 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     UNAME     = 'reduce_step2_create_roi_base',$
     MAP       = 0)
     
+  show_plot = widget_button(ModifyBase,$
+  xoffset = 980,$
+  yoffset = 120,$
+  value = 'Show counts vs pixel plot',$
+  uname = 'reduce_step2_show_counts_vs_pixel_plot')  
+    
   big_base = WIDGET_BASE(ModifyBase,$
     /COLUMN)
     
