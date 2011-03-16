@@ -44,29 +44,45 @@ PRO reduce_step2_save_roi, Event, quit_flag=quit_flag
   path = (*global).ascii_path
 ; print, "In reduce_step2_save_roi_step2 - path: ",path  
   
-  title   = 'ROI file name'
+  title   = 'ROIs files names'
   file    = getDefaultReduceStep2RoiFileName(event)
+  back_file = getDefaultReduceStep2BackRoiFileName(event)
+  
+;get Norm file selected
+  full_file_name = STRCOMPRESS(path,/REMOVE_ALL) + $
+    STRCOMPRESS(file,/REMOVE_ALL)
+  back_full_file_name = strcompress(path,/remove_all) + $
+  strcompress(back_file,/remove_all)
+    
+  (*global).reduce_step2_roi_file_name = file
+  (*global).reduce_step2_back_roi_file_name = back_file  
   
   LogText = '> Save ROI (default file name: ' + file + ')'
   IDLsendToGeek_addLogBookText, Event, LogText
   LogText = '-> Bring to life ROI file name base.'
   IDLsendToGeek_addLogBookText, Event, LogText
   
-  save_roi_base, Event, PATH=path, FILE_NAME=file, quit_flag=quit_flag
+  save_roi_base, Event, PATH=path, FILE_NAME=file, $
+  back_file_name = back_file, $
+  quit_flag=quit_flag
+  
+  print, 'here'
   
   nexus_spin_state_roi_table = (*(*global).nexus_spin_state_roi_table)
+  nexus_spin_state_back_roi_table = (*(*global).nexus_spin_state_back_roi_table)
+  
   data_spin_state = (*global).tmp_reduce_step2_data_spin_state
   row = (*global).tmp_reduce_step2_row
   column = getReduceStep2SpinStateColumn(Event, row=row,$
     data_spin_state=data_spin_state)
-    
-  ;get Norm file selected
   norm_table = (*global).reduce_step2_big_table_norm_index
-  full_file_name = STRCOMPRESS(path,/REMOVE_ALL) + $
-    STRCOMPRESS(file,/REMOVE_ALL)
     
+  
+  ;save rois files
   nexus_spin_state_roi_table[column,norm_table[row]] = full_file_name
+  nexus_spin_state_back_roi_table[column,norm_table[row]] = back_full_file_name
   (*(*global).nexus_spin_state_roi_table) = nexus_spin_state_roi_table
+  (*(*global).nexus_spin_state_back_roi_table) = nexus_spin_state_back_roi_table
   
 END
 
@@ -81,11 +97,15 @@ PRO reduce_step2_save_roi_step2, Event, quit_flag=quit_flag
 ;  path = (*global).reduce_step2_roi_path
   path = (*global).ascii_path
 ; print, "In reduce_step2_save_roi_step2 - path: ",path
-  file = (*global).reduce_step2_roi_file_name
+  peak_file = (*global).reduce_step2_roi_file_name
+  back_file = (*global).reduce_step2_back_roi_file_name
   
-  file_name = path + file
+  peak_file_name = path + peak_file
+  back_file_name = path + back_file
   
-  create_roi_file, Event, file_name, quit_flag=quit_flag
+  create_roi_file, Event, peak_file=peak_file_name, $
+  back_file=back_file_name, $
+  quit_flag=quit_flag
   
 END
 
@@ -115,20 +135,43 @@ PRO check_reduce_step2_save_roi_validity, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO create_roi_file, Event, roi_file_name, quit_flag=quit_flag
+PRO create_roi_file, Event, peak_file=peak_name, $
+back_file=back_file, $
+quit_flag=quit_flag
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   instrument = (*global).instrument
   
-  ;ON_IOERROR, error
-  
+  ;work with peak
   ;get Y1 and Y2
   Y1 = getTextFieldValue(Event,'reduce_step2_create_roi_y1_value')
   Y2 = getTextFieldValue(Event,'reduce_step2_create_roi_y2_value')
+  create_roi, event, roi_file_name=peak_file, y1=y1, y2=y2
+   putTextFieldValue, Event, $
+    'reduce_step2_create_roi_file_name_label',$
+    peak_file
   
-  ;get integer values
+  ;work with back
+  ;get Y1 and Y2
+  Y1 = getTextFieldValue(Event,'reduce_step2_create_back_roi_y1_value')
+  Y2 = getTextFieldValue(Event,'reduce_step2_create_back_roi_y2_value')
+  create_roi, event, roi_file_name=back_file, y1=y1, y2=y2
+ putTextFieldValue, Event, $
+    'reduce_step2_create_back_roi_file_name_label',$
+    back_file    
+  
+  end
+  
+  
+  
+  pro create_roi, event, roi_file_name=roi_file_name, y1=y1, y2=y2
+  compile_opt idl2
+  
+  ;ON_IOERROR, error
+  
+    ;get integer values
   Y1 = FIX(Y1)
   Y2 = FIX(Y2)
   
@@ -178,10 +221,6 @@ PRO create_roi_file, Event, roi_file_name, quit_flag=quit_flag
     FREE_LUN, 1
   ENDELSE ;end of (Ynbr LE 1)
   
-  putTextFieldValue, Event, $
-    'reduce_step2_create_roi_file_name_label',$
-    roi_file_name
-    
   ERROR:
   
   IF (quit_flag EQ 'on') THEN BEGIN ;close
