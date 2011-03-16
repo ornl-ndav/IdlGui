@@ -49,6 +49,16 @@ FUNCTION getTextFieldValue, Event, uname
   RETURN, value[0]
 END
 
+function getValue, event=event, base=base, uname=uname
+if (keyword_set(event)) then begin
+return, getTextFieldValue(event, uname)
+endif else begin
+id = widget_info(base, find_by_uname=uname)
+widget_control, id, get_value=value
+return, value
+endelse
+end
+
 ;------------------------------------------------------------------------------
 ;This function gives the value of the index selected
 FUNCTION getDropListSelectedValue, Event, uname
