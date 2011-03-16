@@ -33,7 +33,23 @@
 ;==============================================================================
 ;- GENERAL ROUTINES - GENERAL ROUTINES - GENERAL ROUTINES - GENERAL ROUTINES
 ;------------------------------------------------------------------------------
-;General routine to add a list to a widget_list
+
+pro putValue, event=event, base=base, uname, value, append=append
+  compile_opt idl2
+  
+  if (n_elements(event) ne 0) then begin
+    uname_id = widget_info(event.top,find_by_uname=uname)
+  endif else begin
+    uname_id = widget_info(base,find_by_uname=uname)
+  endelse
+  if (n_elements(append) eq 0) then begin
+    widget_control, uname_id, set_value=value
+  endif else begin
+    widget_control, uname_id, set_value=value, /append
+  endelse
+  
+end
+
 PRO putList, Event, uname, value
   id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
   WIDGET_CONTROL, id, SET_VALUE=value
