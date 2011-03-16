@@ -1625,6 +1625,15 @@ PRO MAIN_BASE_event, Event
     (*global).working_reduce_step2_row = 9
   END
   
+  widget_info(wWidget, $
+    find_by_uname='reduce_step2_show_counts_vs_pixel_plot'): begin
+    id_base = (*global).roi_selection_counts_vs_pixel_base_id
+    if (widget_info(id_base, /valid_id) eq 0) then begin
+      roi_selection_counts_vs_pixel_base, event=event, $
+        parent_base_uname = 'MAIN_BASE'
+    endif
+  end
+  
   ;reduce step2 roi/norm draw
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='reduce_step2_create_roi_draw_uname'): BEGIN
@@ -1664,7 +1673,7 @@ PRO MAIN_BASE_event, Event
           plot_reduce_step2_norm, Event
           plot_reduce_step2_roi, Event
         ENDIF ELSE BEGIN ;right pressed
-            inverse_selection_or_roi, Event, inverse_roi = 1b
+          inverse_selection_or_roi, Event, inverse_roi = 1b
           (*global).mouse_right_pressed = 1
         ENDELSE
       ENDIF
@@ -1689,10 +1698,10 @@ PRO MAIN_BASE_event, Event
   
   ;peak/back selection tool
   widget_info(wWidget, find_by_uname='working_with_peak'): begin
-  inverse_selection_or_roi, Event
+    inverse_selection_or_roi, Event
   end
   widget_info(wWidget, find_by_uname='working_with_back'): begin
-  inverse_selection_or_roi, Event
+    inverse_selection_or_roi, Event
   end
   
   ;y1 and y2 peak roi text fields (for manual input of y1 and y2)
