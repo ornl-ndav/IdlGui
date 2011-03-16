@@ -135,19 +135,18 @@ pro refresh_reduce_step2_colorbar, event
   default_loadct = 5
   loadct, default_loadct, /silent
   
-  ;  IF (lin_log_status EQ 0) THEN BEGIN ;linear
+  uname = 'reduce_step2_create_roi_lin_log'
+  lin_log_status = getCWBgroupValue(Event, uname) ;0:lin, 1:log
   rtData = (*(*global).norm_rtData)
   zmin = min(rtData,max=zmax)
   
-  uname = 'reduce_step2_create_roi_lin_log'
-  lin_log_status = getCWBgroupValue(Event, uname) ;0:lin, 1:log
-  
-  position = [0.02,0.5,0.98,0.95]
+  position = [0.02,0.5,0.95,0.9]
   
   if (lin_log_status eq 0) then begin ;linear
   
     divisions = 20
-    perso_format = '(e8.1)'
+    perso_format = '(e8.2)'
+    perso_format = '(i0)'
     range = [zmin,zmax]
     colorbar, $
       NCOLORS      = 255, $
@@ -155,27 +154,15 @@ pro refresh_reduce_step2_colorbar, event
       RANGE        = range,$
       DIVISIONS    = divisions,$
       PERSO_FORMAT = perso_format,$
-      annotatecolor = 'white'
+      annotatecolor = 'white',$
+      /vertical
       
   endif else begin
   
     divisions = 10
     perso_format = '(e8.1)'
     range = float([zmin,zmax])
-    
-    ;    if (default_loadct eq 6) then begin
-    ;
-    ;      colorbar, $
-    ;        AnnotateColor = 'white',$
-    ;        NCOLORS      = 255, $
-    ;        POSITION     = [0.75,0.01,0.95,0.99], $
-    ;        RANGE        = range,$
-    ;        DIVISIONS    = divisions,$
-    ;        PERSO_FORMAT = perso_format,$
-    ;        /VERTICAL,$
-    ;        ylog = 1
-    ;
-    ;    endif else begin
+    range = [1,zmax]
     
     colorbar, $
       NCOLORS      = 255, $
@@ -183,12 +170,11 @@ pro refresh_reduce_step2_colorbar, event
       RANGE        = range,$
       DIVISIONS    = divisions,$
       PERSO_FORMAT = perso_format,$
-      ylog = 1
-      
-  ;    endelse
+      ylog = 1,$
+      /vertical
       
   endelse
   
-  xyouts, 0.4, 0.4, 'Counts', /device, color='white'
+  xyouts, 0.5, 0.97 , 'COUNTS',/normal, charsize=10, alignment=0.5
   
 end

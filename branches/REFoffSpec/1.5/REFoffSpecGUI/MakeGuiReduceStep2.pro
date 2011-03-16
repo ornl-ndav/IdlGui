@@ -156,11 +156,19 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
   ; column 1
   row2col1 = WIDGET_BASE(row2_base)
     
+  colorbar_xsize = 100
   xoffset = 40
   yoffset = 40
     
+ _colorbar = widget_draw(row2col1,$
+ xoffset =  0, $
+ yoffset = yoffset, $
+ scr_xsize = colorbar_xsize, $
+ scr_ysize = 2*(*global).detector_pixels_y, $
+ uname = 'reduce_step2_colorbar_uname')
+
   draw = WIDGET_DRAW(row2col1,$
-    xoffset = xoffset,$
+    xoffset = xoffset + colorbar_xsize,$
     yoffset = yoffset, $
     SCR_XSIZE = (*global).sangle_xsize_draw, $
     SCR_YSIZE = 2 * (*global).detector_pixels_y,$
@@ -172,21 +180,15 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     /KEYBOARD_EVENT)
 
   scales = widget_draw(row2col1,$
+    xoffset = colorbar_xsize, $
     scr_xsize = (*global).sangle_xsize_draw + 2*xoffset,$
     scr_ysize = 2*(*global).detector_pixels_y + 2*yoffset,$
     retain=2,$
     uname = 'reduce_step2_scale_uname')
 
- _colorbar = widget_draw(row2col1,$
- xoffset =  xoffset , $
- yoffset = 2*(*global).detector_pixels_y + 2*yoffset, $
- scr_xsize = (*global).sangle_xsize_draw, $
- scr_ysize = 70, $
- uname = 'reduce_step2_colorbar_uname')
-
   ; column 2
   row2col2 = WIDGET_BASE(row2_base,$ ;...................................
-    xoffset = 700,$
+    xoffset = 700 + colorbar_xsize,$
     /COLUMN)
     
   ;lin/log cwbgroup
