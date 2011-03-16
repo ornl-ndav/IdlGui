@@ -272,6 +272,8 @@ pro display_counts_vs_pixel, base=base, event=event, global
   ymax = max(counts_vs_pixel,min=ymin)
   yrange = [1,ymax]
   
+  (*global_counts).counts_vs_pixel_ymax = ymax
+  
   counts_vs_pixel_scale_is_linear = $
     (*global_counts).counts_vs_pixel_scale_is_linear
     
@@ -291,7 +293,8 @@ pro display_counts_vs_pixel, base=base, event=event, global
       counts_vs_pixel, $
       xstyle=1, $
       xtitle='Pixel',$
-      ytitle='Counts'
+      ytitle='Counts',$
+      color=fsc_color('white')
       
   endif else begin
   
@@ -301,7 +304,8 @@ pro display_counts_vs_pixel, base=base, event=event, global
       yrange=yrange, $
       xstyle=1, $
       xtitle='Pixel', $
-      ytitle='Counts'
+      ytitle='Counts',$
+      color=fsc_color('white')
 
   endelse
 
@@ -421,6 +425,7 @@ pro roi_selection_counts_vs_pixel_base, event=event, $
     parent_base_geometry
     
   global_counts = ptr_new({ global: global,$
+    counts_vs_pixel_ymax: 0L, $
     counts_vs_pixel_scale_is_linear: 0b, $
     left_click: 0b })
     
@@ -435,38 +440,59 @@ pro roi_selection_counts_vs_pixel_base, event=event, $
     
   display_counts_vs_pixel, base=_base, global
   
-  return
-  
-  tof_selection = (*global_tof_selection).tof_selection_tof
-  
-  tof_min = tof_selection[0]
-  tof_max = tof_selection[1]
-  if (tof_min ne -1 or tof_max ne -1) then begin
-  
-    counts_vs_tof = (*(*global_tof_selection).counts_vs_tof)
-    ymax = max(counts_vs_tof,min=ymin)
-    
-    _id = widget_info(_base, find_by_uname='tof_selection_counts_vs_tof_draw')
+  ;get roi selected (peak)
+  peak_y1 = strcompress(getTextFieldValue(event, $
+  'reduce_step2_create_roi_y1_value'),/remove_all)
+  peak_y2 = strcompress(getTextFieldValue(event, $
+ 'reduce_step2_create_roi_y2_value'),/remove_all)
+
+  ymax = (*global_counts).counts_vs_pixel_ymax
+
+    _id = widget_info(_base, find_by_uname='roi_selection_counts_vs_pixel_draw')
     widget_control, _id, GET_VALUE = _plot_id
     wset, _plot_id
-    
-    if (tof_min ne -1) then begin
-      plots, tof_min, 1, /data
-      plots, tof_min, ymax, /data, /continue, $
-        color=fsc_color("green"), $
+  
+  if (peak_y1 ne '') then begin
+    peak_y1 = fix(peak_y1)
+      plots, peak_y1, 1, /data
+      plots, peak_y1, ymax, /data, /continue, $
+        color=fsc_color("white"), $
         thick=2,$
-        linestyle=1
-    endif
-    
-    if (tof_max ne -1) then begin
-      plots, tof_max, 1, /data
-      plots, tof_max, ymax, /data, /continue, $
-        color=fsc_color("green"), $
-        thick=2,$
-        linestyle=1
-    endif
-    
+        linestyle=0
   endif
   
+  if (peak_y2 ne '') then begin
+    peak_y2 = fix(peak_y2)
+      plots, peak_y2, 1, /data
+      plots, peak_y2, ymax, /data, /continue, $
+        color=fsc_color("white"), $
+        thick=2,$
+        linestyle=0
+  endif
+  
+  ;get roi selected (back)
+  back_y1 = strcompress(getTextFieldValue(event, $
+  'reduce_step2_create_back_roi_y1_value'),/remove_all)
+  back_y2 = strcompress(getTextFieldValue(event, $
+  'reduce_step2_create_back_roi_y2_value'),/remove_all)
+
+  if (back_y1 ne '') then begin
+    back_y1 = fix(back_y1)
+      plots, back_y1, 1, /data
+      plots, back_y1, ymax, /data, /continue, $
+        color=fsc_color("red"), $
+        thick=2,$
+        linestyle=0
+  endif
+  
+  if (back_y2 ne '') then begin
+    back_y2 = fix(back_y2)
+      plots, back_y2, 1, /data
+      plots, back_y2, ymax, /data, /continue, $
+        color=fsc_color("red"), $
+        thick=2,$
+        linestyle=0
+  endif
+   
 end
 
