@@ -229,8 +229,8 @@ pro roi_selection_counts_switch_axes_type, event
     (*global_counts).counts_vs_pixel_scale_is_linear = 0b
   endelse
   
-  putValue, event=event, 'counts_selection_counts_vs_pixel_linear', set1_value
-  putValue, event=event, 'counts_selection_counts_vs_pixel_log', set2_value
+  putValue, event=event, 'roi_selection_counts_vs_pixel_linear', set1_value
+  putValue, event=event, 'roi_selection_counts_vs_pixel_log', set2_value
   
   display_counts_vs_pixel, event=event, global
   
