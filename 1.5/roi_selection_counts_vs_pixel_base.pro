@@ -41,26 +41,26 @@
 ;
 ; :Author: j35
 ;-
-pro tof_selection_counts_vs_tof_base_event, Event
+pro roi_selection_counts_vs_pixel_base_event, Event
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global_counts
-  global_tof_selection = (*global_counts).global_tof_selection
+  global = (*global_counts).global
   
   case Event.id of
   
     ;main base
-    widget_info(event.top, find_by_uname=$
-    'tof_selection_counts_vs_tof_base'): begin
-    
-      id = widget_info(event.top, find_by_uname=$
-      'tof_selection_counts_vs_tof_base')
+    widget_info(event.top, $
+      find_by_uname='tof_selection_counts_vs_tof_base'): begin
+      
+      id = widget_info(event.top, $
+        find_by_uname='tof_selection_counts_vs_tof_base')
       geometry = widget_info(id, /geometry)
       new_xsize = geometry.scr_xsize
       new_ysize = geometry.scr_ysize
       
-     id = widget_info(event.top, find_by_uname=$
-     'tof_selection_counts_vs_tof_draw')
+      id = widget_info(event.top, $
+        find_by_uname='tof_selection_counts_vs_tof_draw')
       widget_control, id, draw_xsize = new_xsize
       widget_control, id, draw_ysize = new_ysize
       
@@ -68,25 +68,25 @@ pro tof_selection_counts_vs_tof_base_event, Event
     end
     
     ;linear scale
-    widget_info(event.top, find_by_uname=$
-    'tof_selection_counts_vs_tof_linear'): begin
+    widget_info(event.top, $
+      find_by_uname='tof_selection_counts_vs_tof_linear'): begin
       tof_selection_counts_switch_axex_type, event
     end
     
-    widget_info(event.top, find_by_uname=$
-    'tof_selection_counts_vs_tof_log'): begin
+    widget_info(event.top, $
+      find_by_uname='tof_selection_counts_vs_tof_log'): begin
       tof_selection_counts_switch_axex_type, event
     end
     
     ;plot
-    widget_info(event.top, find_by_uname=$
-    'tof_selection_counts_vs_tof_draw'): begin
-    
+    widget_info(event.top, $
+      find_by_uname='tof_selection_counts_vs_tof_draw'): begin
+      
       if (event.press eq 1) then begin ;left click
         (*global_counts).left_click = 1b
         
-        _id = widget_info(event.top, find_by_uname=$
-        'tof_selection_counts_vs_tof_draw')
+        _id = widget_info(event.top, $
+          find_by_uname='tof_selection_counts_vs_tof_draw')
         widget_control, event.top, get_uvalue=global_counts
         widget_control, _id, GET_VALUE = _plot_id
         wset, _plot_id
@@ -97,31 +97,31 @@ pro tof_selection_counts_vs_tof_base_event, Event
         tof_selection_tof = (*global_tof_selection).tof_selection_tof
         tof1_selected = (*global_tof_selection).tof1_selected
         if (tof1_selected) then begin
-        uname = 'tof_selection_tof1_uname'
-        tof_selection_tof[0] = x
+          uname = 'tof_selection_tof1_uname'
+          tof_selection_tof[0] = x
         endif else begin
-        uname = 'tof_selection_tof2_uname'
-        tof_selection_tof[1] = x
+          uname = 'tof_selection_tof2_uname'
+          tof_selection_tof[1] = x
         endelse
         (*global_tof_selection).tof_selection_tof = tof_selection_tof
         
         x = (x eq -1) ? !values.F_nan : x
         
         putValue, base=(*global_tof_selection).tof_selection_input_base, $
-        uname, strcompress(x,/remove_all)
-        
+          uname, strcompress(x,/remove_all)
+          
         display_counts_vs_tof, event=event, global_tof_selection
         display_tof_selection_tof, base=(*global_counts).top_base
-
+        
       endif
       
       ;switch pixel1 and pixel2 status
       if (event.press eq 4) then begin ;right click
         tof1_selected = (*global_tof_selection).tof1_selected
         if (tof1_selected) then begin
-        (*global_tof_selection).tof1_selected = 0b
+          (*global_tof_selection).tof1_selected = 0b
         endif else begin
-        (*global_tof_selection).tof1_selected = 1b
+          (*global_tof_selection).tof1_selected = 1b
         endelse
         display_counts_vs_tof, event=event, global_tof_selection
         display_tof_selection_tof, base=(*global_counts).top_base
@@ -135,10 +135,10 @@ pro tof_selection_counts_vs_tof_base_event, Event
       
       ;moving mouse with left click
       if ((*global_counts).left_click && $
-        (*global_counts).left_click eq 1b) then begin 
+        (*global_counts).left_click eq 1b) then begin
         
-         _id = widget_info(event.top, find_by_uname=$
-        'tof_selection_counts_vs_tof_draw')
+        _id = widget_info(event.top, $
+          find_by_uname='tof_selection_counts_vs_tof_draw')
         widget_control, event.top, get_uvalue=global_counts
         widget_control, _id, GET_VALUE = _plot_id
         wset, _plot_id
@@ -149,23 +149,23 @@ pro tof_selection_counts_vs_tof_base_event, Event
         tof_selection_tof = (*global_tof_selection).tof_selection_tof
         tof1_selected = (*global_tof_selection).tof1_selected
         if (tof1_selected) then begin
-        uname = 'tof_selection_tof1_uname'
-        tof_selection_tof[0] = x
+          uname = 'tof_selection_tof1_uname'
+          tof_selection_tof[0] = x
         endif else begin
-        uname = 'tof_selection_tof2_uname'
-        tof_selection_tof[1] = x
+          uname = 'tof_selection_tof2_uname'
+          tof_selection_tof[1] = x
         endelse
         (*global_tof_selection).tof_selection_tof = tof_selection_tof
         
-                x = (x eq -1) ? !values.F_nan : x
-                
-        putValue, base=(*global_tof_selection).tof_selection_input_base, $
-        uname, strcompress(x,/remove_all)
+        x = (x eq -1) ? !values.F_nan : x
         
+        putValue, base=(*global_tof_selection).tof_selection_input_base, $
+          uname, strcompress(x,/remove_all)
+          
         display_counts_vs_tof, event=event, global_tof_selection
         display_tof_selection_tof, base=(*global_counts).top_base
         
-        endif
+      endif
       
     end
     
@@ -190,7 +190,7 @@ pro check_tof_value, x, global_tof_selection
   tof_range = (*global_tof_selection).xrange
   xmin = tof_range[0]
   xmax = tof_range[1]
-
+  
   if (x lt xmin) then begin
     x=-1
     return
@@ -262,51 +262,50 @@ pro display_counts_vs_pixel, base=base, event=event, global
   endelse
   widget_control, _id, GET_VALUE = _plot_id
   wset, _plot_id
- 
- return 
-;  counts_vs_tof = (*(*global_tof_selection).counts_vs_tof)
-;  x_axis = (*global_tof_selection).x_axis
-;  x_axis = x_axis[0:-2]
   
-  ;xrange
-  xrange = (*global_tof_selection).xrange
+  x_axis = indgen((*global).detector_pixels_y)
+  data_tof_px_px = (*(*global).norm_data)
+  data_px_px = total(data_tof_px_px,1)
+  counts_vs_pixel = total(data_px_px,1)
   
   ;get ymax and ymin
-  ymax = max(counts_vs_tof,min=ymin)
+  ymax = max(counts_vs_pixel,min=ymin)
   yrange = [1,ymax]
   
-  counts_vs_tof_scale_is_linear = $
-    (*global_tof_selection).counts_vs_tof_scale_is_linear
+  counts_vs_pixel_scale_is_linear = $
+    (*global_counts).counts_vs_pixel_scale_is_linear
     
-  tof1_selected = (*global_tof_selection).tof1_selected
-  if (tof1_selected) then begin
-    _tofmin_size = 3
-    _tofmax_size = 1
-  endif else begin
-    _tofmin_size = 1
-    _tofmax_size = 3
-  endelse
-  
+  ;  tof1_selected = (*global_tof_selection).tof1_selected
+  ;  if (tof1_selected) then begin
+  ;    _tofmin_size = 3
+  ;    _tofmax_size = 1
+  ;  endif else begin
+  ;    _tofmin_size = 1
+  ;    _tofmax_size = 3
+  ;  endelse
+    
   ;if linear or log scale
-  if (counts_vs_tof_scale_is_linear eq 1) then begin ;linear scale
+  if (counts_vs_pixel_scale_is_linear eq 1) then begin ;linear scale
   
     plot, x_axis, $
-      counts_vs_tof, $
+      counts_vs_pixel, $
       xstyle=1, $
-      xtitle='TOF (ms)',$
+      xtitle='Pixel',$
       ytitle='Counts'
       
   endif else begin
   
     plot, x_axis, $
-      counts_vs_tof, $
+      counts_vs_pixel, $
       /ylog, $
       yrange=yrange, $
       xstyle=1, $
-      xtitle='TOF (ms)', $
+      xtitle='Pixel', $
       ytitle='Counts'
-      
+
   endelse
+
+  return
   
   tof_selection = (*global_tof_selection).tof_selection_tof
   
@@ -331,7 +330,7 @@ pro display_counts_vs_pixel, base=base, event=event, global
     endif
     
   endif
-    
+  
 end
 
 ;+
@@ -407,14 +406,14 @@ pro roi_selection_counts_vs_pixel_base, event=event, $
     parent_base_uname = parent_base_uname
   compile_opt idl2
   
-;  if (keyword_set(event)) then begin
-    id = WIDGET_INFO(Event.top, FIND_BY_UNAME=parent_base_uname)
-    WIDGET_CONTROL,Event.top,GET_UVALUE=global
-    top_base = 0L
-;  endif else begin
-;    id = widget_info(top_base, find_by_uname=parent_base_uname)
-;    widget_control, top_base, get_uvalue=global_tof_selection
-;  endelse
+  ;  if (keyword_set(event)) then begin
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME=parent_base_uname)
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  top_base = 0L
+  ;  endif else begin
+  ;    id = widget_info(top_base, find_by_uname=parent_base_uname)
+  ;    widget_control, top_base, get_uvalue=global_tof_selection
+  ;  endelse
   parent_base_geometry = WIDGET_INFO(id,/GEOMETRY)
   
   _base = 0L
@@ -422,7 +421,7 @@ pro roi_selection_counts_vs_pixel_base, event=event, $
     parent_base_geometry
     
   global_counts = ptr_new({ global: global,$
-;    top_base: top_base, $
+    counts_vs_pixel_scale_is_linear: 0b, $
     left_click: 0b })
     
   (*global).roi_selection_counts_vs_pixel_base_id = _base
