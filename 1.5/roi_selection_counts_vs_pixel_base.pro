@@ -255,6 +255,9 @@ pro display_counts_vs_pixel, base=base, event=event, refresh=refresh, global
   
   draw_uname = 'roi_selection_counts_vs_pixel_draw'
   if (keyword_set(event)) then begin
+  
+  
+  
     _id = widget_info(event.top, find_by_uname=draw_uname)
     widget_control, event.top, get_uvalue=global_counts
   endif else begin
@@ -291,9 +294,9 @@ pro display_counts_vs_pixel, base=base, event=event, refresh=refresh, global
     plot, x_axis, $
       counts_vs_pixel, $
       xstyle=1, $
-      xtitle='Pixel',$
+      xtitle='Pixels',$
       ytitle='Counts',$
-      color=fsc_color('white')
+      color=fsc_color('yellow')
       
   endif else begin
   
@@ -302,9 +305,9 @@ pro display_counts_vs_pixel, base=base, event=event, refresh=refresh, global
       /ylog, $
       yrange=yrange, $
       xstyle=1, $
-      xtitle='Pixel', $
+      xtitle='Pixels', $
       ytitle='Counts',$
-      color=fsc_color('white')
+      color=fsc_color('yellow')
 
   endelse
 
@@ -423,6 +426,28 @@ pro roi_selection_counts_vs_pixel_base_gui, wBase, $
     value = '* logarithmic',$
     uname = 'roi_selection_counts_vs_pixel_log')
     
+end
+
+;+
+; :Description:
+;    display the selection only if the base is there
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro display_roi_on_roi_selection_counts_vs_pixel_base, event 
+
+  widget_control, event.top, get_uvalue=global
+
+   id_base = (*global).roi_selection_counts_vs_pixel_base_id
+    if (widget_info(id_base, /valid_id) ne 0) then begin
+      display_counts_vs_pixel, base=id_base, refresh=1b, global
+    endif
+ 
 end
 
 ;+
