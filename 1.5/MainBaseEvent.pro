@@ -1725,6 +1725,7 @@ PRO MAIN_BASE_event, Event
     widget_control, /hourglass
     plot_reduce_step2_norm, Event, recalculate=1
     reduce_step2_plot_rois, event
+    refresh_reduce_step2_colorbar, event
     widget_control, hourglass=0
   END
   
