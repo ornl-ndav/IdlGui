@@ -62,20 +62,20 @@ PRO reduce_step2_save_roi, Event, quit_flag=quit_flag
   LogText = '-> Bring to life ROI file name base.'
   IDLsendToGeek_addLogBookText, Event, LogText
   
-   ;make sure there is something to save !!!!
-    peak_Y1 = strcompress(getTextFieldValue(Event,$
-      'reduce_step2_create_roi_y1_value'),/remove_all)
-    peak_Y2 = strcompress(getTextFieldValue(Event,$
-      'reduce_step2_create_roi_y2_value'),/remove_all)
-    peak_status = 1b
-    if (peak_Y1 eq '' or peak_y2 eq '') then peak_status = 0b
-    
-    back_Y1 = strcompress(getTextFieldValue(Event,$
-      'reduce_step2_create_back_roi_y1_value'),/remove_all)
-    back_Y2 = strcompress(getTextFieldValue(Event,$
-      'reduce_step2_create_back_roi_y2_value'),/remove_all)
-    back_status = 1b
-      if (back_y1 eq '' or back_y2 eq '') then back_status = 0b
+  ;make sure there is something to save !!!!
+  peak_Y1 = strcompress(getTextFieldValue(Event,$
+    'reduce_step2_create_roi_y1_value'),/remove_all)
+  peak_Y2 = strcompress(getTextFieldValue(Event,$
+    'reduce_step2_create_roi_y2_value'),/remove_all)
+  peak_status = 1b
+  if (peak_Y1 eq '' or peak_y2 eq '') then peak_status = 0b
+  
+  back_Y1 = strcompress(getTextFieldValue(Event,$
+    'reduce_step2_create_back_roi_y1_value'),/remove_all)
+  back_Y2 = strcompress(getTextFieldValue(Event,$
+    'reduce_step2_create_back_roi_y2_value'),/remove_all)
+  back_status = 1b
+  if (back_y1 eq '' or back_y2 eq '') then back_status = 0b
   
   save_roi_base, Event, PATH=path, FILE_NAME=file, $
     back_file_name = back_file, $
@@ -95,14 +95,22 @@ PRO reduce_step2_save_roi, Event, quit_flag=quit_flag
   ;save rois files
   nexus_spin_state_roi_table[column,norm_table[row]] = full_file_name
   nexus_spin_state_back_roi_table[column,norm_table[row]] = back_full_file_name
-  (*(*global).nexus_spin_state_roi_table) = nexus_spin_state_roi_table
-  (*(*global).nexus_spin_state_back_roi_table) = nexus_spin_state_back_roi_table
+  
+  if (peak_status) then begin
+    (*(*global).nexus_spin_state_roi_table) = nexus_spin_state_roi_table
+  endif
+  
+  if (back_status) then begin
+    (*(*global).nexus_spin_state_back_roi_table) = nexus_spin_state_back_roi_table
+  endif
   
 END
 
 ;..............................................................................
-PRO reduce_step2_save_roi_step2, Event, quit_flag=quit_flag
-
+PRO reduce_step2_save_roi_step2, Event, $
+    quit_flag=quit_flag, $
+    global_roi=global_roi
+    
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
@@ -111,11 +119,18 @@ PRO reduce_step2_save_roi_step2, Event, quit_flag=quit_flag
   ;  path = (*global).reduce_step2_roi_path
   path = (*global).ascii_path
   ; print, "In reduce_step2_save_roi_step2 - path: ",path
-  peak_file = (*global).reduce_step2_roi_file_name
-  back_file = (*global).reduce_step2_back_roi_file_name
   
-  peak_file_name = path + peak_file
-  back_file_name = path + back_file
+  peak_status = global_roi.peak_status
+  if (peak_status) then begin
+    peak_file = (*global).reduce_step2_roi_file_name
+    peak_file_name = path + peak_file
+  endif
+  
+  back_status = global_roi.back_status
+  if (back_status) then begin
+    back_file = (*global).reduce_step2_back_roi_file_name
+    back_file_name = path + back_file
+  endif
   
   create_roi_file, Event, peak_file=peak_file_name, $
     back_file=back_file_name, $
@@ -155,25 +170,29 @@ PRO create_roi_file, Event, peak_file=peak_file, $
     
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
-   
-  ;work with peak
-  ;get Y1 and Y2
-  Y1 = getTextFieldValue(Event,'reduce_step2_create_roi_y1_value')
-  Y2 = getTextFieldValue(Event,'reduce_step2_create_roi_y2_value')
-  create_roi, event, roi_file_name=peak_file, y1=y1, y2=y2, quit_flag=quit_flag
-  putTextFieldValue, Event, $
-    'reduce_step2_create_roi_file_name_label',$
-    peak_file
-    
-  ;work with back
-  ;get Y1 and Y2
-  Y1 = getTextFieldValue(Event,'reduce_step2_create_back_roi_y1_value')
-  Y2 = getTextFieldValue(Event,'reduce_step2_create_back_roi_y2_value')
-  create_roi, event, roi_file_name=back_file, y1=y1, y2=y2, quit_flag=quit_flag
-  putTextFieldValue, Event, $
-    'reduce_step2_create_back_roi_file_name_label',$
-    back_file
-    
+  
+  if (keyword_set(peak_file)) then begin
+    ;work with peak
+    ;get Y1 and Y2
+    Y1 = getTextFieldValue(Event,'reduce_step2_create_roi_y1_value')
+    Y2 = getTextFieldValue(Event,'reduce_step2_create_roi_y2_value')
+    create_roi, event, roi_file_name=peak_file, y1=y1, y2=y2, quit_flag=quit_flag
+    putTextFieldValue, Event, $
+      'reduce_step2_create_roi_file_name_label',$
+      peak_file
+  endif
+  
+  if (keyword_set(back_file)) then begin
+    ;work with back
+    ;get Y1 and Y2
+    Y1 = getTextFieldValue(Event,'reduce_step2_create_back_roi_y1_value')
+    Y2 = getTextFieldValue(Event,'reduce_step2_create_back_roi_y2_value')
+    create_roi, event, roi_file_name=back_file, y1=y1, y2=y2, quit_flag=quit_flag
+    putTextFieldValue, Event, $
+      'reduce_step2_create_back_roi_file_name_label',$
+      back_file
+  endif
+  
 end
 
 ;+
@@ -191,7 +210,7 @@ end
 ; :Author: j35
 ;-
 pro create_roi, event, roi_file_name=roi_file_name, y1=y1, y2=y2, $
-quit_flag=quit_flag
+    quit_flag=quit_flag
   compile_opt idl2
   
   ;ON_IOERROR, error
