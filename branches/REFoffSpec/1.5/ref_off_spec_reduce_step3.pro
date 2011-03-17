@@ -89,7 +89,7 @@ PRO refresh_reduce_step3_table, Event
         WHILE (data_index LT nbr_data) DO BEGIN
         
           data_run     = short_data_run_number[data_index]
-          sangle       = STRCOMPRESS(run_sangle_table[1,data_index],/REMOVE_ALL) 
+          sangle       = STRCOMPRESS(run_sangle_table[1,data_index],/REMOVE_ALL)
           data_nexus   = short_data_nexus_file_name[data_index]
           d_spin_state = list_data_spin[pola_index]
           
@@ -121,21 +121,21 @@ PRO refresh_reduce_step3_table, Event
             ENDIF
             
             back_roi_file     = getNormBackRoiFileOfIndex(Event, $
-            row=data_index,$
+              row=data_index,$
               base_name=d_spin_state)
             IF (STRCOMPRESS(back_roi_file,/REMOVE_ALL) EQ '') THEN BEGIN
               back_roi_file = 'N/A'
               run_job_status = 0
             ENDIF
             
-;            IF (roi_file EQ 'N/A') THEN BEGIN
-;              run_job_status = 0
- ;           ENDIF
-
-
-
-
-
+          ;            IF (roi_file EQ 'N/A') THEN BEGIN
+          ;              run_job_status = 0
+          ;           ENDIF
+            
+            
+            
+            
+            
             
           ENDELSE
           
@@ -262,8 +262,8 @@ PRO reduce_step3_job_manager, Event
   cmd = browser + ' ' + srun_web_page + ' &'
   SPAWN, cmd
   message = '> Reduce - Step3: Spawn ' + cmd
-    IDLsendToGeek_addLogBookText, Event, $
-       message
+  IDLsendToGeek_addLogBookText, Event, $
+    message
   WIDGET_CONTROL,HOURGLASS=0
   
 END

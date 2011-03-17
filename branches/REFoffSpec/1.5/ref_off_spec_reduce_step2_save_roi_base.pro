@@ -63,11 +63,11 @@ PRO save_roi_base_event, event
       (*global).reduce_step2_roi_file_name = $
         getTextfieldValue(Event,'reduce_step2_roi_file_name_text')
       (*global).reduce_step2_back_roi_file_name = $
-      getTextFieldValue(event,'reduce_step2_back_roi_file_name_text')
+        getTextFieldValue(event,'reduce_step2_back_roi_file_name_text')
       WIDGET_CONTROL, global_roi.ourGroup,/DESTROY
-      event = global_roi.event
+      main_event = global_roi.event
       quit_flag = global_roi.quit_flag
-      reduce_step2_save_roi_step2, Event, quit_flag=quit_flag
+      reduce_step2_save_roi_step2, main_event, quit_flag=quit_flag
     END
     
     ELSE:
@@ -78,7 +78,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO save_roi_base, Event, path=path, $
-    FILE_NAME=file_name, $
+    file_name=file_name, $
     back_file_name=back_file_name,$
     quit_flag=quit_flag
     
@@ -96,8 +96,8 @@ PRO save_roi_base, Event, path=path, $
     
   ;*****************************************
   ;
-; Change code (24 July 2010): User can no longer select location for roi file.
-; those files are saved to the ascii_path where all the reduction files are.
+  ; Change code (24 July 2010): User can no longer select location for roi file.
+  ; those files are saved to the ascii_path where all the reduction files are.
   ;path label
   label = WIDGET_LABEL(roi_base,$
     VALUE = 'PATH')
@@ -136,11 +136,11 @@ PRO save_roi_base, Event, path=path, $
     /EDITABLE,$
     /ALIGN_LEFT,$
     UNAME = 'reduce_step2_back_roi_file_name_text')
-
+    
   ;vertical space ...........third row...........................
   space = WIDGET_LABEL(roi_base,$
     VALUE = ' ')
-
+    
   ;cancel and ok buttons .............. 7th row ................
   row3 = WIDGET_BASE(roi_base,$
     /ROW)
@@ -188,13 +188,13 @@ PRO change_path, Event
     
   IF (result NE '') THEN BEGIN
     global = global_roi.global
-;    (*global).ROI_path = result
-; Change code (RC Ward, 17 July 2010): See if this updates the location of output files
+    ;    (*global).ROI_path = result
+    ; Change code (RC Ward, 17 July 2010): See if this updates the location of output files
     (*global).ascii_path = result
-; print, "test: output folder set to: ", result   
+    ; print, "test: output folder set to: ", result
     putButtonValue, Event, 'reduce_step2_roi_path_button', result
-
-  ENDIF   
+    
+  ENDIF
   
 END
 
@@ -217,9 +217,9 @@ PRO change_file_name, Event
     file_name = FILE_BASENAME(file)
     
     global = global_roi.global
-;    (*global).ROI_path = new_path
-; Change code (RC Ward, 17 July 2010): See if this updates the location of output files
-    (*global).ascii_path = new_path    
+    ;    (*global).ROI_path = new_path
+    ; Change code (RC Ward, 17 July 2010): See if this updates the location of output files
+    (*global).ascii_path = new_path
     putButtonValue, Event, 'reduce_step2_roi_path_button', new_path
     putButtonValue, Event, 'reduce_step2_roi_file_name_text', file_name
   ENDIF
