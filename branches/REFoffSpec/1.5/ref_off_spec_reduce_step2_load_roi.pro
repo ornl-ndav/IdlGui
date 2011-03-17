@@ -267,8 +267,15 @@ PRO load_and_plot_roi_file, Event, file_name
     STRCOMPRESS(Y2,/REMOVE_ALL)
     
   ;  plot_reduce_step2_norm, Event ;refresh plot
-  (*global).norm_roi_y_selected = 'all'
-  reduce_step2_manual_move, Event
+  ;(*global).norm_roi_y_selected = 'all'
+  ;reduce_step2_manual_move, Event
+            
+            
+            reduce_step2_plot_rois, event
+          display_roi_on_roi_selection_counts_vs_pixel_base, event
+  
+  ;          plot_reduce_step2_roi, Event
+  ;        display_roi_on_roi_selection_counts_vs_pixel_base, event
   
 END
 
@@ -282,14 +289,17 @@ pro load_and_plot_back_roi_file, event, file_name
   Yarray = retrieveYminMaxFromFile(event,file_name)
   Y1 = Yarray[0]
   Y2 = Yarray[1]
-;  putTextFieldValue, Event, 'reduce_step2_create_roi_y1_value', $
-;    STRCOMPRESS(Y1,/REMOVE_ALL)
-;  putTextFieldValue, Event, 'reduce_step2_create_roi_y2_value', $
-;    STRCOMPRESS(Y2,/REMOVE_ALL)
+  putTextFieldValue, Event, 'reduce_step2_create_back_roi_y1_value', $
+    STRCOMPRESS(Y1,/REMOVE_ALL)
+  putTextFieldValue, Event, 'reduce_step2_create_back_roi_y2_value', $
+    STRCOMPRESS(Y2,/REMOVE_ALL)
   
 ;  plot_reduce_step2_norm, Event ;refresh plot
 ;  (*global).norm_roi_y_selected = 'all'
 ;  reduce_step2_manual_move, Event
+  
+        reduce_step2_plot_rois, event
+          display_roi_on_roi_selection_counts_vs_pixel_base, event
   
   
 end

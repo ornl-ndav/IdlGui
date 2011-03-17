@@ -353,6 +353,10 @@ pro reduce_step2_plot_rois, event
   
   widget_control, event.top, get_uvalue=global
   
+    id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='reduce_step2_create_roi_draw_uname')
+  WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+  WSET,id_value
+  
   ;peak
   peak_y1 = getTextFieldValue(event,'reduce_step2_create_roi_y1_value')
   peak_y2 = getTextFieldValue(event,'reduce_step2_create_roi_y2_value')
