@@ -68,10 +68,10 @@ PRO browse_reduce_step2_roi_file, Event
   ;retrieve infos
   extension  = 'dat'
   filter     = ['*_ROI.dat','*_ROI.txt']
-; Change code (RC Ward, 24 July 2010): ROI files will always be loacted with reduction step files
-; that is the path ias ascii_path
-;  path       = (*global).roi_path
-   path = (*global).ascii_path
+  ; Change code (RC Ward, 24 July 2010): ROI files will always be loacted with reduction step files
+  ; that is the path ias ascii_path
+  ;  path       = (*global).roi_path
+  path = (*global).ascii_path
   title      = 'Browsing for a ROI file'
   
   file_name = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
@@ -87,8 +87,25 @@ PRO browse_reduce_step2_roi_file, Event
     ;indicate initialization with hourglass icon
     WIDGET_CONTROL,/hourglass
     
+    catch,error
+    if (error ne 0) then begin
+      catch,/cancel
+      widget_control, hourglass=0
+      LogText = '> Loading peak ROI ' + file_name + ' FAILED!'
+      IDLsendToGeek_addLogBookText, Event, LogText
+      
+      message_text = 'Problem loading ROI file name: ' + file_name
+      id = widget_info(event.top, find_by_uname='MAIN_BASE')
+      result = dialog_message(message_text,$
+        /center, $
+        dialog_parent=id,$
+        /ERROR, $
+        title = 'Problem loading peak ROI!')
+      return
+    endif
+    
     (*global).roi_path = new_path
-; Change code (RC Ward, 17 July 2010): See if this updates the location of output files    
+    ; Change code (RC Ward, 17 July 2010): See if this updates the location of output files
     (*global).ascii_path = new_path
     
     ;    ;Load ROI button (Load, extract and plot)
@@ -103,14 +120,14 @@ PRO browse_reduce_step2_roi_file, Event
       STRCOMPRESS(Y2,/REMOVE_ALL)
       
     plot_reduce_step2_norm, Event ;refresh plot
-;    (*global).norm_roi_y_selected = 'all'
-  
-  reduce_step2_plot_rois, event
+    ;    (*global).norm_roi_y_selected = 'all'
+    
+    reduce_step2_plot_rois, event
     ;reduce_step2_manual_move, Event
     
-;    putTextFieldValue, Event, $
-;      'reduce_step2_create_roi_file_name_label',$
-;      file_name
+    putTextFieldValue, Event, $
+      'reduce_step2_create_roi_file_name_label',$
+      file_name
       
     nexus_spin_state_roi_table = (*(*global).nexus_spin_state_roi_table)
     data_spin_state = (*global).tmp_reduce_step2_data_spin_state
@@ -132,7 +149,6 @@ PRO browse_reduce_step2_roi_file, Event
   
 END
 
-
 ;+
 ; :Description:
 ;    Browse for a background roi file in the reduce/tab2
@@ -145,18 +161,18 @@ END
 ; :Author: j35
 ;-
 PRO browse_reduce_step2_back_roi_file, Event
-compile_opt idl2
-
+  compile_opt idl2
+  
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
   ;retrieve infos
   extension  = 'dat'
   filter     = ['*_back_ROI.dat','*_back_ROI.txt']
-; Change code (RC Ward, 24 July 2010): ROI files will always be loacted with reduction step files
-; that is the path ias ascii_path
-;  path       = (*global).roi_path
-   path = (*global).ascii_path
+  ; Change code (RC Ward, 24 July 2010): ROI files will always be loacted with reduction step files
+  ; that is the path ias ascii_path
+  ;  path       = (*global).roi_path
+  path = (*global).ascii_path
   title      = 'Browsing for a background ROI file'
   
   file_name = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
@@ -172,8 +188,26 @@ compile_opt idl2
     ;indicate initialization with hourglass icon
     WIDGET_CONTROL,/hourglass
     
+    catch,error
+    if (error ne 0) then begin
+      catch,/cancel
+      widget_control, hourglass=0
+      LogText = '> Loading Back. ROI ' + file_name + ' FAILED!'
+      IDLsendToGeek_addLogBookText, Event, LogText
+      
+      message_text = 'Problem loading Back. ROI file name: ' + file_name
+      id = widget_info(event.top, find_by_uname='MAIN_BASE')
+      result = dialog_message(message_text,$
+        /center, $
+        dialog_parent=id,$
+        /ERROR, $
+        title = 'Problem loading back ROI!')
+        
+      return
+    endif
+    
     (*global).roi_path = new_path
-; Change code (RC Ward, 17 July 2010): See if this updates the location of output files    
+    ; Change code (RC Ward, 17 July 2010): See if this updates the location of output files
     (*global).ascii_path = new_path
     
     ;    ;Load ROI button (Load, extract and plot)
@@ -189,11 +223,10 @@ compile_opt idl2
       
     plot_reduce_step2_norm, Event ;refresh plot
     reduce_step2_plot_rois, event
-    ;reduce_step2_manual_move, Event
     
-;    putTextFieldValue, Event, $
-;      'reduce_step2_create_roi_file_name_label',$
-;      file_name
+    putTextFieldValue, Event, $
+      'reduce_step2_create_back_roi_file_name_label',$
+      file_name
       
     nexus_spin_state_roi_table = (*(*global).nexus_spin_state_roi_table)
     data_spin_state = (*global).tmp_reduce_step2_data_spin_state
@@ -233,16 +266,16 @@ PRO load_and_plot_roi_file, Event, file_name
   putTextFieldValue, Event, 'reduce_step2_create_roi_y2_value', $
     STRCOMPRESS(Y2,/REMOVE_ALL)
     
-;  plot_reduce_step2_norm, Event ;refresh plot
+  ;  plot_reduce_step2_norm, Event ;refresh plot
   (*global).norm_roi_y_selected = 'all'
   reduce_step2_manual_move, Event
   
 END
 
 pro load_and_plot_back_roi_file, event, file_name
-compile_opt idl2
-
-
+  compile_opt idl2
+  
+  
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
@@ -253,11 +286,11 @@ compile_opt idl2
 ;    STRCOMPRESS(Y1,/REMOVE_ALL)
 ;  putTextFieldValue, Event, 'reduce_step2_create_roi_y2_value', $
 ;    STRCOMPRESS(Y2,/REMOVE_ALL)
-    
+  
 ;  plot_reduce_step2_norm, Event ;refresh plot
 ;  (*global).norm_roi_y_selected = 'all'
 ;  reduce_step2_manual_move, Event
-
-
+  
+  
 end
 

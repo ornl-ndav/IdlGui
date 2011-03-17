@@ -138,9 +138,7 @@ PRO create_roi_file, Event, peak_file=peak_file, $
     
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
-  
-  ;instrument = (*global).instrument
-  
+   
   ;work with peak
   ;get Y1 and Y2
   Y1 = getTextFieldValue(Event,'reduce_step2_create_roi_y1_value')
@@ -160,8 +158,6 @@ PRO create_roi_file, Event, peak_file=peak_file, $
     back_file
     
 end
-
-
 
 ;+
 ; :Description:
@@ -183,6 +179,9 @@ quit_flag=quit_flag
   
   ;ON_IOERROR, error
   
+  widget_control, event.top, get_uvalue=global
+  instrument = (*global).instrument
+  
   ;get integer values
   Y1 = FIX(Y1)
   Y2 = FIX(Y2)
@@ -195,8 +194,7 @@ quit_flag=quit_flag
   CATCH, no_error
   IF (no_error NE 0) THEN BEGIN
     CATCH,/CANCEL
-    message = 'ERROR: The ROI file can not be saved at this location ('
-    message += roi_file_name + ')'
+    message = 'ERROR: Error creating the ROI ' + roi_file_name
     IDLsendToGeek_addLogBookText, Event, message
   ENDIF ELSE BEGIN
     OPENW, 1, roi_file_name
