@@ -68,7 +68,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     SCR_XSIZE = sBase.size[2],$
     SCR_YSIZE = sbase.size[3],$
     UNAME     = 'reduce_step2_create_roi_base',$
-    MAP       = 1)
+    MAP       = 0)
     
   ;show_plot = widget_button(ModifyBase,$
   ;xoffset = 980,$
@@ -88,37 +88,42 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     
   ;select range of tof base
   tof_range = widget_base(ModifyBase,$
-    /row,$
+    /column,$
     frame=5,$
     xoffset = 160,$
-    yoffset = 780)
-  tof1 = widget_label(tof_range,$
-    value = 'TOF1(ms):')
-  tof1_value = widget_text(tof_range,$
+    yoffset = 770)
+    tof_row1 = widget_base(tof_range,$
+    /row)
+  tof1 = widget_label(tof_row1,$
+    value = 'Plot from TOF1 (ms):')
+  tof1_value = widget_text(tof_row1,$
     value = 'N/A',$
     xsize=8,$
     /editable,$
     uname = 'reduce_step2_tof1')
-  tof1 = widget_label(tof_range,$
-    value = '        TOF2(ms):')
-  tof1_value = widget_text(tof_range,$
+  tof1 = widget_label(tof_row1,$
+    value = ' to TOF2 (ms):')
+  tof1_value = widget_text(tof_row1,$
     value = 'N/A',$
     /editable,$
     xsize = 8,$
     uname = 'reduce_step2_tof2')
-    space = widget_label(tof_range,$
+    space = widget_label(tof_row1,$
     value = '             ')
-    full_range = widget_button(tof_range,$
+    full_range = widget_button(tof_row1,$
     value = 'Reset Range',$
     scr_xsize = 150,$
     uname = 'reduce_step2_tof_reset_range')
+   tof_row2 = widget_label(tof_range,$
+   value = 'Left click TOF range to select TOF1, right' + $
+   ' click to switch to TOF2.') 
     
   big_base = WIDGET_BASE(ModifyBase,$
     /COLUMN)
     
   ;first row --------------------------------
   row1_base = WIDGET_BASE(big_base,$
-    /ROW)
+    /row)
     
   space = WIDGET_LABEL(row1_base,$
     VALUE = ' ')
