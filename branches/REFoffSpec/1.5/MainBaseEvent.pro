@@ -1751,10 +1751,12 @@ PRO MAIN_BASE_event, Event
   ;return to reduce step2 table
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='reduce_step2_return_to_table_button'): BEGIN
-    ;this update the name of the roi files
-    reduce_step2_return_to_table, Event
+    reduce_step2_save_roi, Event, quit_flag='on'
     refresh_roi_file_name, Event
      refresh_back_roi_file_name, Event
+;    reduce_step2_return_to_table, Event
+;    refresh_roi_file_name, Event
+;     refresh_back_roi_file_name, Event
   END
   
   ; REDUCE TAB 3 - REDUCE TAB 3 - REDUCE TAB 3

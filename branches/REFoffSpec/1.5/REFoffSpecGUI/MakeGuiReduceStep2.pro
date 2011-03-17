@@ -353,21 +353,21 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
 ;  info = WIDGET_LABEL(row2col2,$
 ;    VALUE = 'or use up and down arrows to move selection.')
     
-  ;third row (save button)
-  save_roi = WIDGET_BUTTON(row2col2,$
-    VALUE = 'S A V E   P E A K  and  B A C K.  R O Is',$
-    SCR_XSIZE = 320,$
-    TOOLTIP = 'Click to Save the peak and background ROI you created',$
-    UNAME = 'reduce_step2_create_roi_save_roi',$
-    SENSITIVE = 1)
-    
-  ;save and quit base
-  save_quit_roi = WIDGET_BUTTON(row2col2,$
-    VALUE = 'SAVE PEAK and BACK. ROIs and RETURN TO TABLE',$
-    SCR_XSIZE = 320,$
-    ;    TOOLTIP = 'Click to Save the ROI and Return to the table',$
-    uname = 'reduce_step2_create_roi_save_roi_quit',$
-    SENSITIVE = 1)
+;  ;third row (save button)
+;  save_roi = WIDGET_BUTTON(row2col2,$
+;    VALUE = 'S A V E   P E A K  and  B A C K.  R O Is',$
+;    SCR_XSIZE = 320,$
+;    TOOLTIP = 'Click to Save the peak and background ROI you created',$
+;    UNAME = 'reduce_step2_create_roi_save_roi',$
+;    SENSITIVE = 1)
+;    
+;  ;save and quit base
+;  save_quit_roi = WIDGET_BUTTON(row2col2,$
+;    VALUE = 'SAVE PEAK and BACK. ROIs and RETURN TO TABLE',$
+;    SCR_XSIZE = 320,$
+;    ;    TOOLTIP = 'Click to Save the ROI and Return to the table',$
+;    uname = 'reduce_step2_create_roi_save_roi_quit',$
+;    SENSITIVE = 1)
     
   space = WIDGET_LABEL(row2col2,$
     value = '    ')
@@ -383,7 +383,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
   ReturnButton = WIDGET_BUTTON(row2col2,$
     SCR_XSIZE = 120,$
     SCR_YSIZE = 30,$
-    VALUE = '  RETURN TO TABLE  ',$
+    VALUE = '  SAVE CHANGES AND RETURN TO TABLE  ',$
     UNAME = 'reduce_step2_return_to_table_button')
     
   ;end of Create/modify/visualize base =========================================
