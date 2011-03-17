@@ -80,7 +80,13 @@ END
 PRO save_roi_base, Event, path=path, $
     file_name=file_name, $
     back_file_name=back_file_name,$
-    quit_flag=quit_flag
+    quit_flag=quit_flag, $
+    peak_status=peak_status, $
+    back_status=back_status
+    
+    print, 'peak_status: ' , peak_status
+    print, 'back_status: ' , back_status
+    print
     
   id = WIDGET_INFO(Event.top,FIND_BY_UNAME='MAIN_BASE')
   ;get global structure
@@ -92,7 +98,7 @@ PRO save_roi_base, Event, path=path, $
     /COLUMN,$
     SCR_XSIZE = 400,$
     frame = 5,$
-    title = 'Enter names of ROI files or use deafults')
+    title = 'Name(s) of ROI file(s)')
     
   ;*****************************************
   ;
@@ -107,36 +113,39 @@ PRO save_roi_base, Event, path=path, $
     VALUE = path,$
     UNAME = 'reduce_step2_roi_path_button')
     
-  ;row_base .................second row ............................
-  row2_base = WIDGET_BASE(roi_base,$
-    /ROW)
-    
-  title = WIDGET_LABEL(row2_base,$
-    VALUE = ' Peak ROI:')
-    
-  ;file name text field
-  name = WIDGET_TEXT(row2_base,$
-    VALUE = file_name,$
-    SCR_XSIZE = 300,$
-    /EDITABLE,$
-    /ALIGN_LEFT,$
-    UNAME = 'reduce_step2_roi_file_name_text')
-    
-  ;row_base .................second row ............................
-  row2_base = WIDGET_BASE(roi_base,$
-    /ROW)
-    
-  title = WIDGET_LABEL(row2_base,$
-    VALUE = 'Back. ROI:')
-    
-  ;file name text field
-  name = WIDGET_TEXT(row2_base,$
-    VALUE = back_file_name,$
-    SCR_XSIZE = 300,$
-    /EDITABLE,$
-    /ALIGN_LEFT,$
-    UNAME = 'reduce_step2_back_roi_file_name_text')
-    
+  if (peak_status) then begin
+    ;row_base .................second row ............................
+    row2_base = WIDGET_BASE(roi_base,$
+      /ROW)
+      
+    title = WIDGET_LABEL(row2_base,$
+      VALUE = ' Peak ROI:')
+      
+    ;file name text field
+    name = WIDGET_TEXT(row2_base,$
+      VALUE = file_name,$
+      SCR_XSIZE = 300,$
+      /EDITABLE,$
+      /ALIGN_LEFT,$
+      UNAME = 'reduce_step2_roi_file_name_text')
+  endif
+  
+  if (back_status) then begin
+    row2_base = WIDGET_BASE(roi_base,$
+      /ROW)
+      
+    title = WIDGET_LABEL(row2_base,$
+      VALUE = 'Back. ROI:')
+      
+    ;file name text field
+    name = WIDGET_TEXT(row2_base,$
+      VALUE = back_file_name,$
+      SCR_XSIZE = 300,$
+      /EDITABLE,$
+      /ALIGN_LEFT,$
+      UNAME = 'reduce_step2_back_roi_file_name_text')
+  endif
+  
   ;vertical space ...........third row...........................
   space = WIDGET_LABEL(roi_base,$
     VALUE = ' ')
