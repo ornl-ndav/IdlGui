@@ -383,7 +383,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
   ReturnButton = WIDGET_BUTTON(row2col2,$
     SCR_XSIZE = 120,$
     SCR_YSIZE = 30,$
-    VALUE = '  SAVE CHANGES AND RETURN TO TABLE  ',$
+    VALUE = '  RETURN TO TABLE  ',$
     UNAME = 'reduce_step2_return_to_table_button')
     
   ;end of Create/modify/visualize base =========================================

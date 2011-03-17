@@ -62,9 +62,26 @@ PRO reduce_step2_save_roi, Event, quit_flag=quit_flag
   LogText = '-> Bring to life ROI file name base.'
   IDLsendToGeek_addLogBookText, Event, LogText
   
+   ;make sure there is something to save !!!!
+    peak_Y1 = strcompress(getTextFieldValue(Event,$
+      'reduce_step2_create_roi_y1_value'),/remove_all)
+    peak_Y2 = strcompress(getTextFieldValue(Event,$
+      'reduce_step2_create_roi_y2_value'),/remove_all)
+    peak_status = 1b
+    if (peak_Y1 eq '' or peak_y2 eq '') then peak_status = 0b
+    
+    back_Y1 = strcompress(getTextFieldValue(Event,$
+      'reduce_step2_create_back_roi_y1_value'),/remove_all)
+    back_Y2 = strcompress(getTextFieldValue(Event,$
+      'reduce_step2_create_back_roi_y2_value'),/remove_all)
+    back_status = 1b
+      if (back_y1 eq '' or back_y2 eq '') then back_status = 0b
+  
   save_roi_base, Event, PATH=path, FILE_NAME=file, $
     back_file_name = back_file, $
-    quit_flag=quit_flag
+    quit_flag=quit_flag, $
+    peak_status=peak_status, $
+    back_status=back_status
     
   nexus_spin_state_roi_table = (*(*global).nexus_spin_state_roi_table)
   nexus_spin_state_back_roi_table = (*(*global).nexus_spin_state_back_roi_table)

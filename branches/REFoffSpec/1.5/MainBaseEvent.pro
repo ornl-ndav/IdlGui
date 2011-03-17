@@ -1732,31 +1732,48 @@ PRO MAIN_BASE_event, Event
       global
   end
   
-  ;SAVE ROI
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_create_roi_save_roi'): BEGIN
-    reduce_step2_save_roi, Event, quit_flag='off'
-    refresh_roi_file_name, Event
-     refresh_back_roi_file_name, Event
-  END
-  
-  ;SAVE ROI and QUIT
-  WIDGET_INFO(wWidget, $
-    FIND_BY_UNAME='reduce_step2_create_roi_save_roi_quit'): BEGIN
-    ;this update the name of the roi files
-    reduce_step2_save_roi, Event, quit_flag='on'
-    refresh_roi_file_name, Event
-     refresh_back_roi_file_name, Event
-  END
+  ;  ;SAVE ROI
+  ;  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_create_roi_save_roi'): BEGIN
+  ;    reduce_step2_save_roi, Event, quit_flag='off'
+  ;    refresh_roi_file_name, Event
+  ;     refresh_back_roi_file_name, Event
+  ;  END
+  ;
+  ;  ;SAVE ROI and QUIT
+  ;  WIDGET_INFO(wWidget, $
+  ;    FIND_BY_UNAME='reduce_step2_create_roi_save_roi_quit'): BEGIN
+  ;    ;this update the name of the roi files
+  ;    reduce_step2_save_roi, Event, quit_flag='on'
+  ;    refresh_roi_file_name, Event
+  ;     refresh_back_roi_file_name, Event
+  ;  END
   
   ;return to reduce step2 table
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='reduce_step2_return_to_table_button'): BEGIN
-    reduce_step2_save_roi, Event, quit_flag='on'
-    refresh_roi_file_name, Event
-     refresh_back_roi_file_name, Event
-;    reduce_step2_return_to_table, Event
-;    refresh_roi_file_name, Event
-;     refresh_back_roi_file_name, Event
+    
+    ;make sure there is something to save !!!!
+    peak_Y1 = strcompress(getTextFieldValue(Event,$
+      'reduce_step2_create_roi_y1_value'),/remove_all)
+    peak_Y2 = strcompress(getTextFieldValue(Event,$
+      'reduce_step2_create_roi_y2_value'),/remove_all)
+    peak_status = 1b
+    if (peak_Y1 eq '' or peak_y2 eq '') then peak_status = 0b
+    
+    back_Y1 = strcompress(getTextFieldValue(Event,$
+      'reduce_step2_create_back_roi_y1_value'),/remove_all)
+    back_Y2 = strcompress(getTextFieldValue(Event,$
+      'reduce_step2_create_back_roi_y2_value'),/remove_all)
+    back_status = 1b
+    if (back_y1 eq '' or back_y2 eq '') then back_status = 0b
+    
+    if (peak_status eq 1b or back_status eq 1b) then begin
+      reduce_step2_save_roi, Event, quit_flag='on'
+      refresh_roi_file_name, Event
+      refresh_back_roi_file_name, Event
+    endif else begin
+      reduce_step2_return_to_table, event
+    endelse
   END
   
   ; REDUCE TAB 3 - REDUCE TAB 3 - REDUCE TAB 3
