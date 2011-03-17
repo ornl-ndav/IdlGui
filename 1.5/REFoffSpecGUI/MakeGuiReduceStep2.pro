@@ -68,23 +68,50 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     SCR_XSIZE = sBase.size[2],$
     SCR_YSIZE = sbase.size[3],$
     UNAME     = 'reduce_step2_create_roi_base',$
-    MAP       = 0)
+    MAP       = 1)
     
   ;show_plot = widget_button(ModifyBase,$
   ;xoffset = 980,$
   ;yoffset = 120,$
   ;value = 'Show counts vs pixel plot',$
-  ;uname = 'reduce_step2_show_counts_vs_pixel_plot')  
+  ;uname = 'reduce_step2_show_counts_vs_pixel_plot')
   show_plot = widget_draw(ModifyBase,$
-  xoffset = 980,$
-  yoffset = 80,$
-  scr_xsize = 160,$
-  scr_ysize = 110,$
-  retain=2,$
-  /button_events,$
-  /tracking_events, $
-  frame=1,$
-  uname = 'reduce_step2_show_counts_vs_pixel_plot') 
+    xoffset = 980,$
+    yoffset = 80,$
+    scr_xsize = 160,$
+    scr_ysize = 110,$
+    retain=2,$
+    /button_events,$
+    /tracking_events, $
+    frame=1,$
+    uname = 'reduce_step2_show_counts_vs_pixel_plot')
+    
+  ;select range of tof base
+  tof_range = widget_base(ModifyBase,$
+    /row,$
+    frame=5,$
+    xoffset = 160,$
+    yoffset = 780)
+  tof1 = widget_label(tof_range,$
+    value = 'TOF1(ms):')
+  tof1_value = widget_text(tof_range,$
+    value = 'N/A',$
+    xsize=8,$
+    /editable,$
+    uname = 'reduce_step2_tof1')
+  tof1 = widget_label(tof_range,$
+    value = '        TOF2(ms):')
+  tof1_value = widget_text(tof_range,$
+    value = 'N/A',$
+    /editable,$
+    xsize = 8,$
+    uname = 'reduce_step2_tof2')
+    space = widget_label(tof_range,$
+    value = '             ')
+    full_range = widget_button(tof_range,$
+    value = 'Reset Range',$
+    scr_xsize = 150,$
+    uname = 'reduce_step2_tof_reset_range')
     
   big_base = WIDGET_BASE(ModifyBase,$
     /COLUMN)
@@ -168,22 +195,22 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     
   ;second row --------------------------
   row2_base = WIDGET_BASE(big_base)
-
+  
   ; column 1
   row2col1 = WIDGET_BASE(row2_base)
-    
+  
   colorbar_xsize = 100
   xoffset = 40
   yoffset = 40
+  
+  _colorbar = widget_draw(row2col1,$
+    xoffset =  0, $
+    yoffset = yoffset, $
+    scr_xsize = colorbar_xsize, $
+    retain=2,$
+    scr_ysize = 2*(*global).detector_pixels_y, $
+    uname = 'reduce_step2_colorbar_uname')
     
- _colorbar = widget_draw(row2col1,$
- xoffset =  0, $
- yoffset = yoffset, $
- scr_xsize = colorbar_xsize, $
- retain=2,$
- scr_ysize = 2*(*global).detector_pixels_y, $
- uname = 'reduce_step2_colorbar_uname')
-
   draw = WIDGET_DRAW(row2col1,$
     xoffset = xoffset + colorbar_xsize,$
     yoffset = yoffset, $
@@ -195,14 +222,14 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     /button_events,$
     retain=2,$
     /KEYBOARD_EVENT)
-
+    
   scales = widget_draw(row2col1,$
     xoffset = colorbar_xsize, $
     scr_xsize = (*global).sangle_xsize_draw + 2*xoffset,$
     scr_ysize = 2*(*global).detector_pixels_y + 2*yoffset,$
     retain=2,$
     uname = 'reduce_step2_scale_uname')
-
+    
   ; column 2
   row2col2 = WIDGET_BASE(row2_base,$ ;...................................
     xoffset = 700 + colorbar_xsize,$
@@ -290,11 +317,11 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     VALUE = ' ',$
     UNAME = 'reduce_step2_create_roi_y2_r_status')
   space = widget_label(row3col2_base2,$
-  value = '   ')
+    value = '   ')
   reset = widget_button(row3col2_base2,$
-  value = 'Reset',$
-  uname = 'reset_peak_roi_inputs')  
-        
+    value = 'Reset',$
+    uname = 'reset_peak_roi_inputs')
+    
   space = WIDGET_LABEL(row2col2,$
     value = '    ')
   space = WIDGET_LABEL(row2col2,$
@@ -347,10 +374,10 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     VALUE = ' ',$
     UNAME = 'reduce_step2_create_back_roi_y2_r_status')
   space = widget_label(row3col2_base2,$
-  value = '   ')
+    value = '   ')
   reset = widget_button(row3col2_base2,$
-  value = 'Reset',$
-  uname = 'reset_back_roi_inputs')  
+    value = 'Reset',$
+    uname = 'reset_back_roi_inputs')
     
     
   space = WIDGET_LABEL(row2col2,$
@@ -360,24 +387,24 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     VALUE = ' HELP: Left click on the plot to select first Y, right ')
   info = WIDGET_LABEL(row2col2,$
     VALUE = 'click to switch to next Y, or manually input Y1 and Y2. ')
-;  info = WIDGET_LABEL(row2col2,$
-;    VALUE = 'or use up and down arrows to move selection.')
+  ;  info = WIDGET_LABEL(row2col2,$
+  ;    VALUE = 'or use up and down arrows to move selection.')
     
-;  ;third row (save button)
-;  save_roi = WIDGET_BUTTON(row2col2,$
-;    VALUE = 'S A V E   P E A K  and  B A C K.  R O Is',$
-;    SCR_XSIZE = 320,$
-;    TOOLTIP = 'Click to Save the peak and background ROI you created',$
-;    UNAME = 'reduce_step2_create_roi_save_roi',$
-;    SENSITIVE = 1)
-;    
-;  ;save and quit base
-;  save_quit_roi = WIDGET_BUTTON(row2col2,$
-;    VALUE = 'SAVE PEAK and BACK. ROIs and RETURN TO TABLE',$
-;    SCR_XSIZE = 320,$
-;    ;    TOOLTIP = 'Click to Save the ROI and Return to the table',$
-;    uname = 'reduce_step2_create_roi_save_roi_quit',$
-;    SENSITIVE = 1)
+  ;  ;third row (save button)
+  ;  save_roi = WIDGET_BUTTON(row2col2,$
+  ;    VALUE = 'S A V E   P E A K  and  B A C K.  R O Is',$
+  ;    SCR_XSIZE = 320,$
+  ;    TOOLTIP = 'Click to Save the peak and background ROI you created',$
+  ;    UNAME = 'reduce_step2_create_roi_save_roi',$
+  ;    SENSITIVE = 1)
+  ;
+  ;  ;save and quit base
+  ;  save_quit_roi = WIDGET_BUTTON(row2col2,$
+  ;    VALUE = 'SAVE PEAK and BACK. ROIs and RETURN TO TABLE',$
+  ;    SCR_XSIZE = 320,$
+  ;    ;    TOOLTIP = 'Click to Save the ROI and Return to the table',$
+  ;    uname = 'reduce_step2_create_roi_save_roi_quit',$
+  ;    SENSITIVE = 1)
     
   space = WIDGET_LABEL(row2col2,$
     value = '    ')
