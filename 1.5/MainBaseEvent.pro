@@ -1774,6 +1774,13 @@ PRO MAIN_BASE_event, Event
     endif else begin
       reduce_step2_return_to_table, event
     endelse
+    
+    ;kill 1d plot base
+        id_base = (*global).roi_selection_counts_vs_pixel_base_id
+    if (widget_info(id_base, /valid_id) ne 0) then begin
+          WIDGET_CONTROL, id_base,/DESTROY
+    endif
+
   END
   
   ; REDUCE TAB 3 - REDUCE TAB 3 - REDUCE TAB 3
