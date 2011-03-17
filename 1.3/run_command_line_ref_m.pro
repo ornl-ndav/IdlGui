@@ -64,8 +64,8 @@ pro run_command_line_ref_m, event
   
   PROCESSING = (*global).processing_message ;processing message
   
-  status_text = 'Create temp. geometry .... ' + PROCESSING
-  putTextFieldValue, event, 'data_reduction_status_text_field', status_text, 0
+  ;status_text = 'Create temp. geometry .... ' + PROCESSING
+  ;putTextFieldValue, event, 'data_reduction_status_text_field', status_text, 0
   
   ;check the run numbers and replace them by full nexus path
   ;check first DATA run numbers
