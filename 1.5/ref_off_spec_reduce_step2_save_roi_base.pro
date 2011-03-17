@@ -60,14 +60,23 @@ PRO save_roi_base_event, event
       global = global_roi.global
       (*global).reduce_step2_roi_path = $
         getButtonValue(Event,'reduce_step2_roi_path_button')
-      (*global).reduce_step2_roi_file_name = $
-        getTextfieldValue(Event,'reduce_step2_roi_file_name_text')
-      (*global).reduce_step2_back_roi_file_name = $
-        getTextFieldValue(event,'reduce_step2_back_roi_file_name_text')
+        
+      peak_status = global_roi.peak_status
+      if (peak_status) then begin
+        (*global).reduce_step2_roi_file_name = $
+          getTextfieldValue(Event,'reduce_step2_roi_file_name_text')
+      endif
+      
+      back_status = global_roi.back_status
+      if (back_status) then begin
+        (*global).reduce_step2_back_roi_file_name = $
+          getTextFieldValue(event,'reduce_step2_back_roi_file_name_text')
+      endif
+      
       WIDGET_CONTROL, global_roi.ourGroup,/DESTROY
       main_event = global_roi.event
       quit_flag = global_roi.quit_flag
-      reduce_step2_save_roi_step2, main_event, quit_flag=quit_flag
+      reduce_step2_save_roi_step2, main_event, quit_flag=quit_flag, global_roi=global_roi
     END
     
     ELSE:
@@ -83,10 +92,6 @@ PRO save_roi_base, Event, path=path, $
     quit_flag=quit_flag, $
     peak_status=peak_status, $
     back_status=back_status
-    
-    print, 'peak_status: ' , peak_status
-    print, 'back_status: ' , back_status
-    print
     
   id = WIDGET_INFO(Event.top,FIND_BY_UNAME='MAIN_BASE')
   ;get global structure
@@ -171,6 +176,8 @@ PRO save_roi_base, Event, path=path, $
   
   global_roi = { global: global,$
     event: event,$
+    back_status: back_status, $
+    peak_status: peak_status, $
     quit_flag: quit_flag,$
     ourGroup: roi_base }
     
