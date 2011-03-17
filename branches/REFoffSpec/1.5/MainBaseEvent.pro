@@ -1577,11 +1577,29 @@ PRO MAIN_BASE_event, Event
   
   widget_info(wWidget, $
     find_by_uname='reduce_step2_show_counts_vs_pixel_plot'): begin
-    id_base = (*global).roi_selection_counts_vs_pixel_base_id
-    if (widget_info(id_base, /valid_id) eq 0) then begin
-      roi_selection_counts_vs_pixel_base, event=event, $
-        parent_base_uname = 'MAIN_BASE'
-    endif
+    catch, error
+    if (error ne 0) then begin
+      catch,/cancel
+      if (event.press eq 1) then begin
+        id_base = (*global).roi_selection_counts_vs_pixel_base_id
+        if (widget_info(id_base, /valid_id) eq 0) then begin
+          roi_selection_counts_vs_pixel_base, event=event, $
+            parent_base_uname = 'MAIN_BASE'
+        endif
+      endif
+    endif else begin
+      if (event.enter eq 1) then begin
+        standard = 58
+      endif else begin
+        standard = 31
+      endelse
+      id = WIDGET_INFO(Event.top,$
+        find_by_uname='reduce_step2_show_counts_vs_pixel_plot')
+      WIDGET_CONTROL, id, GET_VALUE=id_value
+      WSET, id_value
+      DEVICE, CURSOR_STANDARD=standard
+    endelse
+    
   end
   
   ;reduce step2 roi/norm draw
@@ -1776,11 +1794,11 @@ PRO MAIN_BASE_event, Event
     endelse
     
     ;kill 1d plot base
-        id_base = (*global).roi_selection_counts_vs_pixel_base_id
+    id_base = (*global).roi_selection_counts_vs_pixel_base_id
     if (widget_info(id_base, /valid_id) ne 0) then begin
-          WIDGET_CONTROL, id_base,/DESTROY
+      WIDGET_CONTROL, id_base,/DESTROY
     endif
-
+    
   END
   
   ; REDUCE TAB 3 - REDUCE TAB 3 - REDUCE TAB 3

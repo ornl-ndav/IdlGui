@@ -983,6 +983,12 @@ PRO reduce_step2_create_roi, Event, $
       
   endif
   
+   ;display the Show counts vs pixel button
+   mode1 = READ_PNG('REFoffSpec_images/CountsVsPixel.png')
+   mode1_id = WIDGET_INFO(event.top, find_by_uname='reduce_step2_show_counts_vs_pixel_plot')
+     WIDGET_CONTROL, mode1_id, GET_VALUE=id
+  WSET, id
+  TV, mode1, 0,0,/true  
   
   WIDGET_CONTROL, HOURGLASS=0
   
