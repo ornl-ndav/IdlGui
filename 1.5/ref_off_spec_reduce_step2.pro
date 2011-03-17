@@ -819,6 +819,44 @@ FUNCTION display_reduce_step2_create_roi_plot, Event, Row=row,$
   
 END
 
+;+
+; :Description:
+;    This routine reset all the widgets of the reduce/step2 Create ROI base
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro reduce_step2_cleanup_roi_widgets, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  instrument = (*global).instrument
+  
+  uname_array = ['reduce_step2_create_roi_data_value',$
+    'reduce_step2_create_roi_norm_value',$
+    'reduce_step2_create_roi_file_name_label',$
+    'reduce_step2_create_back_roi_file_name_label',$
+    'reduce_step2_create_roi_y1_value',$
+    'reduce_step2_create_roi_y2_value',$
+    'reduce_step2_create_back_roi_y1_value',$
+    'reduce_step2_create_back_roi_y2_value']
+    
+  if (instrument eq 'REF_M') then begin
+    uname_array = [uname_array, 'reduce_step2_create_roi_pola_value']
+  endif
+  
+  sz = n_elements(uname_array)
+  for i=0,(sz-1) do begin
+    putTextFieldValue, event, uname_array[i], ''
+  endfor
+  
+end
+
 ;------------------------------------------------------------------------------
 ;Reach by any of the Create/Modify/Visualize ROI file
 PRO reduce_step2_create_roi, Event, $
@@ -846,6 +884,9 @@ PRO reduce_step2_create_roi, Event, $
   WIDGET_CONTROL, id_draw, GET_VALUE=id_value
   WSET,id_value
   ERASE
+  
+  ;cleanup widgets (text_fields)
+  reduce_step2_cleanup_roi_widgets, event
   
   ;get data run number
   uname = 'reduce_tab2_data_value' + sRow
