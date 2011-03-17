@@ -1736,6 +1736,7 @@ PRO MAIN_BASE_event, Event
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_create_roi_save_roi'): BEGIN
     reduce_step2_save_roi, Event, quit_flag='off'
     refresh_roi_file_name, Event
+     refresh_back_roi_file_name, Event
   END
   
   ;SAVE ROI and QUIT
@@ -1744,6 +1745,7 @@ PRO MAIN_BASE_event, Event
     ;this update the name of the roi files
     reduce_step2_save_roi, Event, quit_flag='on'
     refresh_roi_file_name, Event
+     refresh_back_roi_file_name, Event
   END
   
   ;return to reduce step2 table
@@ -1752,6 +1754,7 @@ PRO MAIN_BASE_event, Event
     ;this update the name of the roi files
     reduce_step2_return_to_table, Event
     refresh_roi_file_name, Event
+     refresh_back_roi_file_name, Event
   END
   
   ; REDUCE TAB 3 - REDUCE TAB 3 - REDUCE TAB 3
