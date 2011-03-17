@@ -228,7 +228,7 @@ PRO browse_reduce_step2_back_roi_file, Event
       'reduce_step2_create_back_roi_file_name_label',$
       file_name
       
-    nexus_spin_state_roi_table = (*(*global).nexus_spin_state_roi_table)
+    nexus_spin_state_back_roi_table = (*(*global).nexus_spin_state_back_roi_table)
     data_spin_state = (*global).tmp_reduce_step2_data_spin_state
     row = (*global).tmp_reduce_step2_row
     column = getReduceStep2SpinStateColumn(Event, row=row,$
@@ -236,8 +236,8 @@ PRO browse_reduce_step2_back_roi_file, Event
       
     ;get Norm file selected
     norm_table = (*global).reduce_step2_big_table_norm_index
-    nexus_spin_state_roi_table[column,norm_table[row]] = file_name
-    (*(*global).nexus_spin_state_roi_table) = nexus_spin_state_roi_table
+    nexus_spin_state_back_roi_table[column,norm_table[row]] = file_name
+    (*(*global).nexus_spin_state_back_roi_table) = nexus_spin_state_back_roi_table
     
     ;turn off hourglass
     WIDGET_CONTROL,hourglass=0
