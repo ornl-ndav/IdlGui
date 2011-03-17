@@ -871,14 +871,14 @@ PRO reduce_step2_create_roi, Event, $
     IF (roi_file_name eq '') THEN roi_file_name = 'N/A'
     uname = 'reduce_step2_create_roi_file_name_label'
     putTextFieldValue, Event, uname, roi_file_name
-
+    
     nexus_spin_state_back_roi_table = (*(*global).nexus_spin_state_back_roi_table)
     back_roi_file_name = getNormBackRoiFileOfIndex(event, row=sRow, $
-    base_name = spin_sate)
+      base_name = spin_sate)
     if (back_roi_file_name eq '') then back_roi_file_name = 'N/A'
     uname = 'reduce_step2_create_back_roi_file_name_label'
     putTextFieldValue, event, uname, back_roi_file_name
-  
+    
   ENDIF ELSE BEGIN ;REF_L
   
     uname = 'reduce_tab2_roi_value' + sRow
@@ -886,7 +886,7 @@ PRO reduce_step2_create_roi, Event, $
     uname = 'reduce_step2_create_roi_file_name_label'
     IF (roi_file_name eq '') THEN roi_file_name = 'N/A'
     putTextFieldValue, Event, uname, roi_file_name
-
+    
   ENDELSE
   
   MapBase, Event, 'reduce_step2_create_roi_base', 1
@@ -895,19 +895,53 @@ PRO reduce_step2_create_roi, Event, $
   ;display normalization plot (counts vs tof) of reduce_step2 plot
   success = display_reduce_step2_create_roi_plot(Event, Row=row, $
     data_spin_state = data_spin_state)
-  
+    
   ;display the counts vs pixel 1d plot
   roi_selection_counts_vs_pixel_base, event=event, $
     parent_base_uname = 'MAIN_BASE'
     
+  peak_roi_load_error = 0b
   ;display ROI file name if any
   IF (roi_file_name NE 'N/A') THEN BEGIN
-    load_and_plot_roi_file, Event, roi_file_name
+    catch,error
+    if (error ne 0) then begin
+      catch,/cancel
+      peak_roi_load_error = 1b
+    endif else begin
+      load_and_plot_roi_file, Event, roi_file_name
+    endelse
   ENDIF
   
+  back_roi_load_error = 0b
   if (bacK_roi_file_name ne 'N/A') then begin
-  load_and_plot_back_roi_file, event, back_roi_file_name
+    catch,error
+    if (error ne 0) then begin
+      catch,/cancel
+      peak_roi_load_error = 1b
+    endif else begin
+      load_and_plot_back_roi_file, event, back_roi_file_name
+    endelse
   endif
+  
+  if (back_roi_load_error eq 1b or peak_roi_load_error eq 1b) then begin
+  
+    message_text = ['Error loading:','']
+    if (peak_roi_load_error) then begin
+      message_text = [message_text,' -> ' + roi_file_name]
+    endif
+    if (back_roi_load_error) then begin
+      message_text = [message_text,' -> ' + back_roi_file_name]
+    endif
+    
+    id = widget_info(event.top, find_by_uname='MAIN_BASE')
+    result = dialog_message(message_text, $
+      /error, $
+      /center, $
+      dialog_parent=id,$
+      title = 'Problem loading ROI file!')
+      
+  endif
+  
   
   WIDGET_CONTROL, HOURGLASS=0
   
