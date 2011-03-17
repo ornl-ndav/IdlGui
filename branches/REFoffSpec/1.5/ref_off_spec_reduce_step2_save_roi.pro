@@ -38,7 +38,8 @@ PRO reduce_step2_save_roi, Event, quit_flag=quit_flag
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
-  ; Change code (RC Ward, 24 July 2010): ROI files written to the ascii_path location
+  ; Change code (RC Ward, 24 July 2010): ROI files
+  ;written to the ascii_path location
   ; Now user cannot change this.
   ;  path    = (*global).ROI_path
   path = (*global).ascii_path
@@ -84,8 +85,9 @@ PRO reduce_step2_save_roi, Event, quit_flag=quit_flag
     back_status=back_status
     
   nexus_spin_state_roi_table = (*(*global).nexus_spin_state_roi_table)
-  nexus_spin_state_back_roi_table = (*(*global).nexus_spin_state_back_roi_table)
-  
+  nexus_spin_state_back_roi_table = $
+    (*(*global).nexus_spin_state_back_roi_table)
+    
   data_spin_state = (*global).tmp_reduce_step2_data_spin_state
   row = (*global).tmp_reduce_step2_row
   column = getReduceStep2SpinStateColumn(Event, row=row,$
@@ -94,14 +96,16 @@ PRO reduce_step2_save_roi, Event, quit_flag=quit_flag
   
   ;save rois files
   nexus_spin_state_roi_table[column,norm_table[row]] = full_file_name
-  nexus_spin_state_back_roi_table[column,norm_table[row]] = back_full_file_name
-  
+  nexus_spin_state_back_roi_table[column,norm_table[row]] = $
+    back_full_file_name
+    
   if (peak_status) then begin
     (*(*global).nexus_spin_state_roi_table) = nexus_spin_state_roi_table
   endif
   
   if (back_status) then begin
-    (*(*global).nexus_spin_state_back_roi_table) = nexus_spin_state_back_roi_table
+    (*(*global).nexus_spin_state_back_roi_table) = $
+      nexus_spin_state_back_roi_table
   endif
   
 END
@@ -114,7 +118,8 @@ PRO reduce_step2_save_roi_step2, Event, $
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
-  ; Change code (RC Ward, 24 July 2010): ROI files written to the ascii_path location
+  ; Change code (RC Ward, 24 July 2010): ROI files
+  ; written to the ascii_path location
   ; Now user cannot change this.
   ;  path = (*global).reduce_step2_roi_path
   path = (*global).ascii_path
@@ -176,7 +181,8 @@ PRO create_roi_file, Event, peak_file=peak_file, $
     ;get Y1 and Y2
     Y1 = getTextFieldValue(Event,'reduce_step2_create_roi_y1_value')
     Y2 = getTextFieldValue(Event,'reduce_step2_create_roi_y2_value')
-    create_roi, event, roi_file_name=peak_file, y1=y1, y2=y2, quit_flag=quit_flag
+    create_roi, event, roi_file_name=peak_file, y1=y1, y2=y2, $
+      quit_flag=quit_flag
     putTextFieldValue, Event, $
       'reduce_step2_create_roi_file_name_label',$
       peak_file
@@ -187,7 +193,8 @@ PRO create_roi_file, Event, peak_file=peak_file, $
     ;get Y1 and Y2
     Y1 = getTextFieldValue(Event,'reduce_step2_create_back_roi_y1_value')
     Y2 = getTextFieldValue(Event,'reduce_step2_create_back_roi_y2_value')
-    create_roi, event, roi_file_name=back_file, y1=y1, y2=y2, quit_flag=quit_flag
+    create_roi, event, roi_file_name=back_file, y1=y1, y2=y2, $
+      quit_flag=quit_flag
     putTextFieldValue, Event, $
       'reduce_step2_create_back_roi_file_name_label',$
       back_file
@@ -275,4 +282,3 @@ pro create_roi, event, roi_file_name=roi_file_name, y1=y1, y2=y2, $
   ENDIF
   
 END
-

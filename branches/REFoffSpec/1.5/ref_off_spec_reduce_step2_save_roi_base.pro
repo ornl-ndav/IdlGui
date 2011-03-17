@@ -76,7 +76,8 @@ PRO save_roi_base_event, event
       WIDGET_CONTROL, global_roi.ourGroup,/DESTROY
       main_event = global_roi.event
       quit_flag = global_roi.quit_flag
-      reduce_step2_save_roi_step2, main_event, quit_flag=quit_flag, global_roi=global_roi
+      reduce_step2_save_roi_step2, main_event, quit_flag=quit_flag, $
+      global_roi=global_roi
     END
     
     ELSE:
@@ -205,7 +206,8 @@ PRO change_path, Event
   IF (result NE '') THEN BEGIN
     global = global_roi.global
     ;    (*global).ROI_path = result
-    ; Change code (RC Ward, 17 July 2010): See if this updates the location of output files
+    ; Change code (RC Ward, 17 July 2010): See if this updates
+    ;the location of output files
     (*global).ascii_path = result
     ; print, "test: output folder set to: ", result
     putButtonValue, Event, 'reduce_step2_roi_path_button', result
@@ -234,26 +236,12 @@ PRO change_file_name, Event
     
     global = global_roi.global
     ;    (*global).ROI_path = new_path
-    ; Change code (RC Ward, 17 July 2010): See if this updates the location of output files
+    ; Change code (RC Ward, 17 July 2010): See if this updates 
+    ;the location of output files
     (*global).ascii_path = new_path
     putButtonValue, Event, 'reduce_step2_roi_path_button', new_path
     putButtonValue, Event, 'reduce_step2_roi_file_name_text', file_name
   ENDIF
   
 END
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
