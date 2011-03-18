@@ -187,10 +187,16 @@ end
 ;
 ; :Author: j35
 ;-
-pro display_scale_tof_range, event
+pro display_scale_tof_range, event, full_range=full_range
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global
+  
+  if (keyword_set(full_range)) then begin
+  plot_reduce_tab2_scale, event=event
+   display_full_tof_range_marker, event
+   return
+   endif
   
   tof_device_data = (*global).tof_device_data
   tof_range_status = (*global).tof_range_status

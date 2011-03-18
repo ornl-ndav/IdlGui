@@ -1656,14 +1656,12 @@ PRO MAIN_BASE_event, Event
   widget_info(wWidget, $
     find_by_uname='reduce_step2_tof_plot_full_range'): begin
     plot_reduce_step2_norm, Event,recalculate=1
-    display_scale_tof_range, event
+    display_scale_tof_range, event, full_range=1
     ;plot_reduce_tab2_scale, event=event ;display the scale
     init_scale_device_data_array, event=event
     refresh_reduce_step2_colorbar, event
     display_tof_range, event
     reduce_step2_plot_rois, event
-    ;display the tof selection around the new range selected
-    display_full_tof_range_marker, event
   end
   
   ;reduce step2 roi/norm draw
@@ -1671,7 +1669,7 @@ PRO MAIN_BASE_event, Event
     FIND_BY_UNAME='reduce_step2_create_roi_draw_uname'): BEGIN
     
     error = 0
-    ;CATCH, error
+    CATCH, error
     IF (error NE 0) THEN BEGIN
       CATCH,/CANCEL
       check_reduce_step2_save_roi_validity, Event
@@ -1770,9 +1768,12 @@ PRO MAIN_BASE_event, Event
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='reduce_step2_create_roi_lin_log'): BEGIN
     widget_control, /hourglass
-    plot_reduce_step2_norm, Event, recalculate=1
+      plot_reduce_step2_norm, Event, recalculate=1, plot_range=1
+    plot_reduce_tab2_scale, event=event, plot_range=1
+    refresh_reduce_step2_colorbar, event, plot_range=1
     reduce_step2_plot_rois, event
-    refresh_reduce_step2_colorbar, event
+    ;display the tof selection around the new range selected
+    display_full_tof_range_marker, event
     widget_control, hourglass=0
   END
   
