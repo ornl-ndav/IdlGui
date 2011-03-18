@@ -716,7 +716,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     
   IF ((*global).instrument EQ 'REF_M') THEN BEGIN
     sangle_button = WIDGET_BUTTON(Row3,$
-      VALUE = ' VIEW / EDIT SANGLE ',$
+      VALUE = 'BACKGROUND ROI and SANGLE selections',$
       UNAME = 'reduce_step1_sangle_button', $
       SENSITIVE = 0)
   ENDIF
