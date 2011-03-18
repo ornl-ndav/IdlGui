@@ -1602,6 +1602,45 @@ PRO MAIN_BASE_event, Event
     
   end
   
+  ;TOF scale draw
+  widget_info(wWidget, find_by_uname='reduce_step2_scale_uname'): begin
+  
+    if (event.type eq 0) then begin
+      if (event.press eq 1) then begin;left button pressed
+        (*global).scale_mouse_left_pressed = 1b
+        save_scale_device_values, event
+        display_scale_tof_range, event
+      endif
+      if (event.press eq 4) then begin ;right button pressed
+        (*global).scale_mouse_right_pressed = 1b
+        ;switch working tof
+        if ((*global).tof_range_status eq 'left') then begin
+          (*global).tof_range_status = 'right'
+        endif else begin
+          (*global).tof_range_status = 'left'
+        endelse
+      endif
+    endif ;end of button pressed
+    
+    if (event.type eq 1) then begin ;button released
+      if ((*global).scale_mouse_left_pressed) then begin ;left
+        (*global).scale_mouse_left_pressed = 0b
+        save_scale_device_values, event
+        display_scale_tof_range, event
+      endif else begin
+        (*global).scale_mouse_right_pressed = 0b
+      endelse
+    endif
+    
+    if (event.type eq 2) then begin ;moving mouse
+      if ((*global).scale_mouse_left_pressed) then begin
+        save_scale_device_values, event
+        display_scale_tof_range, event
+      endif
+    endif
+    
+  end
+  
   ;reduce step2 roi/norm draw
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='reduce_step2_create_roi_draw_uname'): BEGIN

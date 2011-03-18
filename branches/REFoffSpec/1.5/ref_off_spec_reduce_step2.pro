@@ -811,7 +811,9 @@ FUNCTION display_reduce_step2_create_roi_plot, Event, Row=row,$
   IF (success) THEN BEGIN
     plot_reduce_step2_norm, Event,recalculate=1
     plot_reduce_tab2_scale, event=event ;display the scale
+    init_scale_device_data_array, event=event
     refresh_reduce_step2_colorbar, event
+    display_tof_range, event
     RETURN, 1
   ENDIF
   
