@@ -90,7 +90,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
   tof_range = widget_base(ModifyBase,$
     /column,$
     frame=5,$
-    xoffset = 160,$
+    xoffset = 115,$
     yoffset = 770)
     tof_row1 = widget_base(tof_range,$
     /row)
@@ -109,11 +109,17 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     xsize = 8,$
     uname = 'reduce_step2_tof2')
     space = widget_label(tof_row1,$
-    value = '             ')
+    value = '  ')
     full_range = widget_button(tof_row1,$
-    value = 'Reset Range',$
-    scr_xsize = 150,$
-    uname = 'reduce_step2_tof_reset_range')
+    value = 'Plot range',$
+    scr_xsize = 110,$
+    uname = 'reduce_step2_tof_plot_only_range')
+    space = widget_label(tof_row1,$
+    value = '     ')
+    full_range = widget_button(tof_row1,$
+    value = 'Plot full',$
+    scr_xsize = 110,$
+    uname = 'reduce_step2_tof_plot_full_range')
    tof_row2 = widget_label(tof_range,$
    value = 'Left click TOF range to select TOF1, right' + $
    ' click to switch to TOF2.') 
@@ -233,6 +239,8 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     scr_xsize = (*global).sangle_xsize_draw + 2*xoffset,$
     scr_ysize = 2*(*global).detector_pixels_y + 2*yoffset,$
     retain=2,$
+    /button_events, $
+    /motion_events, $
     uname = 'reduce_step2_scale_uname')
     
   ; column 2

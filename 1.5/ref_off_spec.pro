@@ -161,6 +161,12 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     
     ;id of roi_selection_counts_vs_pixel base in reduce/step2
     roi_selection_counts_vs_pixel_base_id: 0L, $
+
+    ;status of mouse clicked on scale of reduce/step2/roi base
+    scale_mouse_left_pressed: 0b,$
+    scale_mouse_right_pressed: 0b, $
+    tof_device_data: fltarr(2,2), $   [[x1device,x2device],[x1data,x2data]]
+    tof_range_status: 'left',$  ;left|right
     
     left_right_cursor: 96, $
     standard: 31, $
