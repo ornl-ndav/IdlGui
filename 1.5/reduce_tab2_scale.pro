@@ -7,7 +7,7 @@
 ;
 ; :Author: j35
 ;-
-pro plot_reduce_tab2_scale, base=base, event=event
+pro plot_reduce_tab2_scale, base=base, event=event, plot_range=plot_range
   compile_opt idl2
   
   if (n_elements(base) ne 0) then begin
@@ -35,7 +35,31 @@ pro plot_reduce_tab2_scale, base=base, event=event
   
   ;tof axis
   tof = (*(*global).norm_tof)
+  
+   if (keyword_set(plot_range)) then begin
+    
+      tof1 = getTextFieldValue(event,'reduce_step2_tof1')
+      tof2 = getTextFieldValue(event,'reduce_step2_tof2')
+      
+      _tof1 = float(tof1)
+      _tof2 = float(tof2)
+      
+      tof = (*(*global).norm_tof)
+      
+      index_tof1 = getIndexOfValueInArray(array=tof, value=_tof1*1000, from=1)
+      index_tof2 = getIndexOfValueInArray(array=tof, value=_tof2*1000, to=1)
+      
+      index_tof_min = min([index_tof1,index_tof2],max=index_tof_max)
+      _tof_min = tof[index_tof_min]
+      _tof_max = tof[index_tof_max]
+      
+      x_range = [_tof_min, _tof_max] /1000
+      
+    endif else begin
+
   x_range = [tof[0],tof[-1]]/1000.
+  
+  endelse
   
   ;determine the number of xaxis data to show
   geometry = widget_info(id_base,/geometry)
