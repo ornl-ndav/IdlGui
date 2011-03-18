@@ -814,6 +814,7 @@ FUNCTION display_reduce_step2_create_roi_plot, Event, Row=row,$
     init_scale_device_data_array, event=event
     refresh_reduce_step2_colorbar, event
     display_tof_range, event
+    display_scale_tof_range, event
     RETURN, 1
   ENDIF
   

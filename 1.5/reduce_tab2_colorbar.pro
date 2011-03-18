@@ -119,9 +119,12 @@ end
 ; :Params:
 ;    event
 ;
+; :keywords:
+;   plot_range
+;
 ; :Author: j35
 ;-
-pro refresh_reduce_step2_colorbar, event
+pro refresh_reduce_step2_colorbar, event, plot_range=plot_range
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global
@@ -138,6 +141,25 @@ pro refresh_reduce_step2_colorbar, event
   uname = 'reduce_step2_create_roi_lin_log'
   lin_log_status = getCWBgroupValue(Event, uname) ;0:lin, 1:log
   rtData = (*(*global).norm_rtData)
+  
+   if (keyword_set(plot_range)) then begin
+    
+      tof1 = getTextFieldValue(event,'reduce_step2_tof1')
+      tof2 = getTextFieldValue(event,'reduce_step2_tof2')
+      
+      _tof1 = float(tof1)
+      _tof2 = float(tof2)
+      
+      tof = (*(*global).norm_tof)
+      
+      index_tof1 = getIndexOfValueInArray(array=tof, value=_tof1*1000, from=1)
+      index_tof2 = getIndexOfValueInArray(array=tof, value=_tof2*1000, to=1)
+
+      index_tof_min = min([index_tof1,index_tof2],max=index_tof_max)
+      rtdata = rtdata[index_tof_min:index_tof_max,*]
+      
+    endif
+
   zmin = min(rtData,max=zmax)
   
   position = [0.02,0.5,0.95,0.9]

@@ -158,6 +158,7 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     
     roi_base_background: ptr_new(0L), $ ;2d plot of roi selection (reduce/tab2)
     norm_tof: ptr_new(0L), $ ;tof array of normalization file loaded in reduce/tab2
+    tmp_norm_tof: ptr_new(0L), $ ;rescale tof array
     
     ;id of roi_selection_counts_vs_pixel base in reduce/step2
     roi_selection_counts_vs_pixel_base_id: 0L, $

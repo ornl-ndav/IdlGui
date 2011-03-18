@@ -54,7 +54,8 @@ function getTOFDataFromDevice, event, x_device
   xsize = geometry.xsize
   xoffset = 40.
   
-  tof = (*(*global).norm_tof)
+  ;tof = (*(*global).norm_tof)
+  tof = (*(*global).tmp_norm_tof)
   x_range = [tof[0],tof[-1]]/1000.
   tof1 = x_range[0]
   tof2 = x_range[1]
@@ -90,7 +91,8 @@ function getTOFdeviceFromData, event, x_data
   xsize = geometry.xsize
   xoffset = 40.
   
-  tof = (*(*global).norm_tof)
+  ;tof = (*(*global).norm_tof)
+  tof = (*(*global).tmp_norm_tof)
   x_range = [tof[0],tof[-1]]/1000.
   tof1 = x_range[0]
   tof2 = x_range[1]
@@ -201,7 +203,6 @@ pro display_scale_tof_range, event
     tof_data = tof_device_data[1,1]
   endelse
   putValue, event=event, uname, strcompress(tof_data,/remove_all)
-  ;print, 'tof_data is: ' , tof_data
   
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME='reduce_step2_scale_uname')
   geometry = WIDGET_INFO(id,/GEOMETRY)
@@ -213,22 +214,20 @@ pro display_scale_tof_range, event
   tof1_device = tof_device_data[0,0]
   tof2_device = tof_device_data[0,1]
   
-  plot_reduce_tab2_scale, event=event ;display the scale
+  plot_reduce_tab2_scale, event=event
   
   xoffset = 40
-  if (tof1_device gt xoffset and $
-    tof1_device lt (xsize-xoffset)) then begin
+  if (tof1_device lt xoffset) then tof1_device = xoffset
+  if (tof1_device gt (xsize-xoffset)) then tof1_device = (xsize-xoffset)
     plots, tof1_device, 0, color=fsc_color('yellow'),/device
     plots, tof1_device, ysize, color=fsc_color('yellow'), /continue,/device,$
     thick=3
-  endif
-  
-  if (tof2_device gt xoffset and $
-    tof2_device lt (xsize-xoffset)) then begin
+
+  if (tof2_device lt xoffset) then tof2_device = xoffset
+  if (tof2_device gt (xsize-xoffset)) then tof2_device = (xsize-xoffset)
     plots, tof2_device, 0, color=fsc_color('yellow'),/device
     plots, tof2_device, ysize, color=fsc_color('yellow'), /continue,/device, $
     thick=3
-  endif
   
 end
 
@@ -249,6 +248,7 @@ compile_opt idl2
 
   tof_device_data = (*global).tof_device_data
   tof = (*(*global).norm_tof)
+  (*(*global).tmp_norm_tof) = tof
   x_range = [tof[0],tof[-1]]/1000.
   
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME='reduce_step2_scale_uname')
@@ -266,5 +266,46 @@ compile_opt idl2
   tof_device_data[0,1] = tof_device2
   
   (*global).tof_device_data = tof_device_data
+
+end
+
+;+
+; :Description:
+;    This routine display the ticks showing the current range selection around
+;    the full set of data (always like that when nothing has been selected
+;    yet)
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro  display_full_tof_range_marker, event
+compile_opt idl2
+
+ id = WIDGET_INFO(Event.top, FIND_BY_UNAME='reduce_step2_scale_uname')
+  geometry = WIDGET_INFO(id,/GEOMETRY)
+  ysize = geometry.ysize
+  xsize = geometry.xsize
+  widget_control, id, get_value=id_value
+  wset, id_value
+  
+  xoffset = 40
+  tof1_device = xoffset
+  tof2_device = xsize-xoffset
+
+  if (tof1_device lt xoffset) then tof1_device = xoffset
+  if (tof1_device gt (xsize-xoffset)) then tof1_device = (xsize-xoffset)
+    plots, tof1_device, 0, color=fsc_color('yellow'),/device
+    plots, tof1_device, ysize, color=fsc_color('yellow'), /continue,/device,$
+    thick=3
+
+  if (tof2_device lt xoffset) then tof2_device = xoffset
+  if (tof2_device gt (xsize-xoffset)) then tof2_device = (xsize-xoffset)
+    plots, tof2_device, 0, color=fsc_color('yellow'),/device
+    plots, tof2_device, ysize, color=fsc_color('yellow'), /continue,/device, $
+    thick=3
 
 end
