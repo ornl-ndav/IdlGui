@@ -99,6 +99,7 @@ cd, CurrentFolder
 .run reduce_tab2_colorbar.pro
 .run roi_selection_counts_vs_pixel_base.pro
 .run reduce_step2_tof_range_selection.pro
+.run ref_off_spec_cleanup.pro
 
 ;main functions
 .run MainBaseEvent.pro

@@ -660,7 +660,7 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
   MakeGuiMainBase, MAIN_BASE, global
   
   WIDGET_CONTROL, /REALIZE, MAIN_BASE
-  XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
+  XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK,cleanup='ref_off_spec_cleanup'
   
   ;change color of background
   id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='scale_draw_step2')
