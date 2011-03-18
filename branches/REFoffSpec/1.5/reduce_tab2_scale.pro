@@ -34,7 +34,7 @@ pro plot_reduce_tab2_scale, base=base, event=event, plot_range=plot_range
   max_y = y_range[1]
   
   ;tof axis
-  tof = (*(*global).norm_tof)
+  tof = (*(*global).tmp_norm_tof)
   
    if (keyword_set(plot_range)) then begin
     
