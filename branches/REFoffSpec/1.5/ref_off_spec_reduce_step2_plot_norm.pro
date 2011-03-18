@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 
-PRO plot_reduce_step2_norm, Event, recalculate=recalculate
+PRO plot_reduce_step2_norm, Event, recalculate=recalculate, plot_range=plot_range
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
@@ -61,6 +61,25 @@ PRO plot_reduce_step2_norm, Event, recalculate=recalculate
     geometry = widget_info(id_draw,/geometry)
     xsize = geometry.xsize
     (*global).reduce_rebin_roi_rebin_x = xsize
+    
+    if (keyword_set(plot_range)) then begin
+    
+      tof1 = getTextFieldValue(event,'reduce_step2_tof1')
+      tof2 = getTextFieldValue(event,'reduce_step2_tof2')
+      
+      _tof1 = float(tof1)
+      _tof2 = float(tof2)
+      
+      tof = (*(*global).norm_tof)
+      
+      index_tof1 = getIndexOfValueInArray(array=tof, value=_tof1*1000, from=1)
+      index_tof2 = getIndexOfValueInArray(array=tof, value=_tof2*1000, to=1)
+
+      index_tof_min = min([index_tof1,index_tof2],max=index_tof_max)
+      rtdata = rtdata[index_tof_min:index_tof_max,*]
+      
+    endif
+    
     size = size(rtdata,/dim)
     ysize = size[1]
     

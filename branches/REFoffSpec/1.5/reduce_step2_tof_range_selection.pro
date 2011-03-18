@@ -245,6 +245,8 @@ end
 pro init_scale_device_data_array, event=event
 compile_opt idl2
 
+  widget_control, event.top, get_uvalue=global
+
   tof_device_data = (*global).tof_device_data
   tof = (*(*global).norm_tof)
   x_range = [tof[0],tof[-1]]/1000.

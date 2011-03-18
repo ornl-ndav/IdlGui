@@ -1641,6 +1641,23 @@ PRO MAIN_BASE_event, Event
     
   end
   
+  ;plot range selected only
+  widget_info(wWidget, $
+    find_by_uname='reduce_step2_tof_plot_only_range'): begin
+    plot_reduce_step2_norm, Event, recalculate=1, plot_range=1
+    plot_reduce_tab2_scale, event=event, plot_range=1
+  end
+  
+  ;plot full
+  widget_info(wWidget, $
+    find_by_uname='reduce_step2_tof_plot_full_range'): begin
+    plot_reduce_step2_norm, Event,recalculate=1
+    plot_reduce_tab2_scale, event=event ;display the scale
+    init_scale_device_data_array, event=event
+    refresh_reduce_step2_colorbar, event
+    display_tof_range, event
+  end
+  
   ;reduce step2 roi/norm draw
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='reduce_step2_create_roi_draw_uname'): BEGIN

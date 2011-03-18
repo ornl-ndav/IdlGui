@@ -50,13 +50,13 @@ FUNCTION getTextFieldValue, Event, uname
 END
 
 function getValue, event=event, base=base, uname=uname
-if (keyword_set(event)) then begin
-return, getTextFieldValue(event, uname)
-endif else begin
-id = widget_info(base, find_by_uname=uname)
-widget_control, id, get_value=value
-return, value
-endelse
+  if (keyword_set(event)) then begin
+    return, getTextFieldValue(event, uname)
+  endif else begin
+    id = widget_info(base, find_by_uname=uname)
+    widget_control, id, get_value=value
+    return, value
+  endelse
 end
 
 ;------------------------------------------------------------------------------
@@ -382,52 +382,52 @@ FUNCTION getReduceStep2SpinStateRow, Event, Row=row, $
   
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
-
-; Begin CHANGE ===May 29, 2010 ========================================================= 
-; Change code (RC Ward, May 29, 2010): test to see if we can capture the spin states
+  
+  ; Begin CHANGE ===May 29, 2010 =========================================================
+  ; Change code (RC Ward, May 29, 2010): test to see if we can capture the spin states
   list_of_data_spin = (*global).list_of_data_spin
-
-    reflect_spin_state_to_check = ['reduce_tab1_pola_1', $
+  
+  reflect_spin_state_to_check = ['reduce_tab1_pola_1', $
     'reduce_tab1_pola_2',$
     'reduce_tab1_pola_3',$
     'reduce_tab1_pola_4']
-    direct_spin_state_to_check = ['reduce_tab1_direct_pola_1', $
+  direct_spin_state_to_check = ['reduce_tab1_direct_pola_1', $
     'reduce_tab1_direct_pola_2',$
     'reduce_tab1_direct_pola_3',$
-    'reduce_tab1_direct_pola_4']    
-   nbr_spin_states = N_ELEMENTS(reflect_spin_state_to_check)
-   count_direct = 0
-   FOR i=0,(nbr_spin_states-1) DO BEGIN
-      reflect_enabled_status = 0
-      direct_enabled_status = 0
-      IF (isButtonSelected(Event, reflect_spin_state_to_check[i])) THEN BEGIN
-         reflect_enabled_status = 1   
-      ENDIF
-      IF (isButtonSelected(Event, direct_spin_state_to_check[i])) THEN BEGIN
-         direct_enabled_status = 1   
-         count_direct = count_direct + 1
-         index_direct = i
-      ENDIF
-;      print, "Spin States- Reflect: ", i, " status: ", reflect_enabled_status, $
-;        "   Direct: ", i, " status: ", direct_enabled_status  
-   ENDFOR
-;   print, " "
-; test to see if there is a single direct (or normalization) spin state
-;      print, count_direct
-      IF (count_direct eq 1) then begin
-; always use the single spin state selected by the user 
-; similar to old spin_mode = 2, but allows for all spin state possibilities
-         data_spin = list_of_data_spin[index_direct]
-;         print, "data_spin: ", data_spin
-         RETURN, data_spin
-      ENDIF ELSE BEGIN
-; if not a single direct (normalization spin state), then match data spin state
-; equivalent of old spin_mode = 1
-         RETURN, data_spin_state        
-      ENDELSE
-;   
-; END CHANGE ===May 29, 2010 =========================================================   
-
+    'reduce_tab1_direct_pola_4']
+  nbr_spin_states = N_ELEMENTS(reflect_spin_state_to_check)
+  count_direct = 0
+  FOR i=0,(nbr_spin_states-1) DO BEGIN
+    reflect_enabled_status = 0
+    direct_enabled_status = 0
+    IF (isButtonSelected(Event, reflect_spin_state_to_check[i])) THEN BEGIN
+      reflect_enabled_status = 1
+    ENDIF
+    IF (isButtonSelected(Event, direct_spin_state_to_check[i])) THEN BEGIN
+      direct_enabled_status = 1
+      count_direct = count_direct + 1
+      index_direct = i
+    ENDIF
+  ;      print, "Spin States- Reflect: ", i, " status: ", reflect_enabled_status, $
+  ;        "   Direct: ", i, " status: ", direct_enabled_status
+  ENDFOR
+  ;   print, " "
+  ; test to see if there is a single direct (or normalization) spin state
+  ;      print, count_direct
+  IF (count_direct eq 1) then begin
+    ; always use the single spin state selected by the user
+    ; similar to old spin_mode = 2, but allows for all spin state possibilities
+    data_spin = list_of_data_spin[index_direct]
+    ;         print, "data_spin: ", data_spin
+    RETURN, data_spin
+  ENDIF ELSE BEGIN
+    ; if not a single direct (normalization spin state), then match data spin state
+    ; equivalent of old spin_mode = 1
+    RETURN, data_spin_state
+  ENDELSE
+;
+; END CHANGE ===May 29, 2010 =========================================================
+  
 ; This is the old way to comput the spin_mode - comment out as os May 30, 2010
 ;  spin_mode = (*global).reduce_step1_spin_state_mode
   
@@ -659,19 +659,19 @@ END
 ;------------------------------------------------------------------------------
 ;This function returns the pixel value of the cursor in the sangle main plot
 FUNCTION getSanglePixel, Event
-; Change code: add to get the global structure (RC Ward Feb 15, 2010)
+  ; Change code: add to get the global structure (RC Ward Feb 15, 2010)
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
-
+  
   y_coeff = 2.
   Y = Event.y
   pixel = FIX(Y/y_coeff)
   
-;    IF (pixel GE 304L) THEN RETURN, 'N/A'
+  ;    IF (pixel GE 304L) THEN RETURN, 'N/A'
   IF (pixel GE (*global).detector_pixels_y) THEN RETURN, 'N/A'
   IF (pixel LT 0) THEN RETURN, 'N/A'
   RETURN, pixel
-
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -682,8 +682,8 @@ FUNCTION getSangleYDeviceValue, Event, data_value
   
   sangle_ysize_draw = (*global).sangle_ysize_draw
   y_coeff = (*global).sangle_main_plot_congrid_y_coeff
-
-;  device = FLOAT(sangle_ysize_draw) * FLOAT(data_value) / FLOAT(*304L)  
+  
+  ;  device = FLOAT(sangle_ysize_draw) * FLOAT(data_value) / FLOAT(*304L)
   device = FLOAT(sangle_ysize_draw) * FLOAT(data_value) / FLOAT((*global).detector_pixels_y)
   
   RETURN, device
@@ -699,9 +699,53 @@ FUNCTION getSangleYDataValue, Event, device_value
   sangle_ysize_draw = (*global).sangle_ysize_draw
   y_coeff = (*global).sangle_main_plot_congrid_y_coeff
   
-;  data = (FLOAT(device_value) * FLOAT(304L) ) / FLOAT(sangle_ysize_draw)
-  data = (FLOAT(device_value) * FLOAT((*global).detector_pixels_y) ) / FLOAT(sangle_ysize_draw)  
+  ;  data = (FLOAT(device_value) * FLOAT(304L) ) / FLOAT(sangle_ysize_draw)
+  data = (FLOAT(device_value) * FLOAT((*global).detector_pixels_y) ) / FLOAT(sangle_ysize_draw)
   
   RETURN, data
   
 END
+
+
+
+;+
+; :Description:
+;    returns the index where the value has been found for the first time, or
+;    last time, according to the flag, 'from' or 'to'
+;
+; :Keywords:
+;    array
+;    value
+;    from
+;    to
+;
+; :Author: j35
+;-
+function getIndexOfValueInArray, array=array, value=value, from=from, to=to
+  compile_opt idl2
+  
+  if (keyword_set(from)) then begin
+  
+    _list_index = where(value ge array, nbr)
+    if (nbr eq 0) then begin
+      return, 0
+    endif else begin
+      return, (_list_index[-1])
+    endelse
+    
+  endif
+  
+  if (keyword_set(to)) then begin
+  
+    _list_index = where(array le value, nbr)
+    if (nbr eq 0) then begin
+      return, -1
+    endif else begin
+      return, (_list_index[-1]-1)
+    endelse
+    
+  endif
+  
+end
+
+
