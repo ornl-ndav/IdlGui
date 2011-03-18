@@ -32,7 +32,8 @@
 ;
 ;==============================================================================
 
-PRO plot_reduce_step2_norm, Event, recalculate=recalculate, plot_range=plot_range
+PRO plot_reduce_step2_norm, Event, recalculate=recalculate, $
+plot_range=plot_range
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
@@ -43,7 +44,8 @@ PRO plot_reduce_step2_norm, Event, recalculate=recalculate, plot_range=plot_rang
   LOADCT, color_table, /SILENT
   
   ;select plot
-  id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='reduce_step2_create_roi_draw_uname')
+  id_draw = WIDGET_INFO(Event.top,$
+  FIND_BY_UNAME='reduce_step2_create_roi_draw_uname')
   WIDGET_CONTROL, id_draw, GET_VALUE=id_value
   WSET,id_value
   

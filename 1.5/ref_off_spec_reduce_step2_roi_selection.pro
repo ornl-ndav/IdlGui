@@ -147,11 +147,15 @@ pro inverse_selection_or_roi, Event, inverse_roi=inverse_roi
   putTextFieldValue, event, 'reduce_step2_create_roi_y1_r_status', peak_y1_r
   putTextFieldValue, event, 'reduce_step2_create_roi_y2_l_status', peak_y2_l
   putTextFieldValue, event, 'reduce_step2_create_roi_y2_r_status', peak_y2_r
-  putTextFieldValue, event, 'reduce_step2_create_back_roi_y1_l_status', back_y1_l
-  putTextFieldValue, event, 'reduce_step2_create_back_roi_y1_r_status', back_y1_r
-  putTextFieldValue, event, 'reduce_step2_create_back_roi_y2_l_status', back_y2_l
-  putTextFieldValue, event, 'reduce_step2_create_back_roi_y2_r_status', back_y2_r
-  
+  putTextFieldValue, event, 'reduce_step2_create_back_roi_y1_l_status', $
+    back_y1_l
+  putTextFieldValue, event, 'reduce_step2_create_back_roi_y1_r_status', $
+    back_y1_r
+  putTextFieldValue, event, 'reduce_step2_create_back_roi_y2_l_status', $
+    back_y2_l
+  putTextFieldValue, event, 'reduce_step2_create_back_roi_y2_r_status', $
+    back_y2_r
+    
 END
 
 ;------------------------------------------------------------------------------
@@ -253,8 +257,9 @@ PRO plot_reduce_step2_roi_y, Event, ry
   color = (*global).reduce_step2_roi_color
   
   PLOTS, 0, ry, /device, color=color
-  PLOTS, ((*global).reduce_step2_norm_tof-1), ry, /device, /continue, color=color
-  
+  PLOTS, ((*global).reduce_step2_norm_tof-1), ry, /device, /continue, $
+    color=color
+    
 END
 
 ;------------------------------------------------------------------------------
@@ -353,7 +358,8 @@ pro reduce_step2_plot_rois, event
   
   widget_control, event.top, get_uvalue=global
   
-    id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='reduce_step2_create_roi_draw_uname')
+  id_draw = WIDGET_INFO(Event.top, $
+    FIND_BY_UNAME='reduce_step2_create_roi_draw_uname')
   WIDGET_CONTROL, id_draw, GET_VALUE=id_value
   WSET,id_value
   
