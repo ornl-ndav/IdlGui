@@ -253,9 +253,13 @@ end
 pro display_counts_vs_pixel, base=base, event=event, refresh=refresh, global
   compile_opt idl2
   
+  roi_selection_counts_vs_pixel_base_id = $
+    (*global).roi_selection_counts_vs_pixel_base_id
+  if (widget_info(roi_selection_counts_vs_pixel_base_id, $
+    /valid_id) eq 0) then return
+    
   draw_uname = 'roi_selection_counts_vs_pixel_draw'
   if (keyword_set(event)) then begin
-
     _id = widget_info(event.top, find_by_uname=draw_uname)
     widget_control, event.top, get_uvalue=global_counts
   endif else begin
@@ -268,17 +272,17 @@ pro display_counts_vs_pixel, base=base, event=event, refresh=refresh, global
   
   x_axis = indgen((*global).detector_pixels_y)
   
-  if (keyword_set(refresh)) then begin 
-  counts_vs_pixel = (*(*global_counts).counts_vs_pixel)
-  ;get ymax and ymin
-  ymax = (*global_counts).counts_vs_pixel_ymax
+  if (keyword_set(refresh)) then begin
+    counts_vs_pixel = (*(*global_counts).counts_vs_pixel)
+    ;get ymax and ymin
+    ymax = (*global_counts).counts_vs_pixel_ymax
   endif else begin
-  data_tof_px_px = (*(*global).norm_data)
-  data_px_px = total(data_tof_px_px,1)
-  counts_vs_pixel = total(data_px_px,1)
-  (*(*global_counts).counts_vs_pixel) = counts_vs_pixel
-  ymax = max(counts_vs_pixel,min=ymin)
-  (*global_counts).counts_vs_pixel_ymax = ymax
+    data_tof_px_px = (*(*global).norm_data)
+    data_px_px = total(data_tof_px_px,1)
+    counts_vs_pixel = total(data_px_px,1)
+    (*(*global_counts).counts_vs_pixel) = counts_vs_pixel
+    ymax = max(counts_vs_pixel,min=ymin)
+    (*global_counts).counts_vs_pixel_ymax = ymax
   endelse
   
   yrange = [1,ymax]
@@ -306,63 +310,63 @@ pro display_counts_vs_pixel, base=base, event=event, refresh=refresh, global
       xtitle='Pixels', $
       ytitle='Counts',$
       color=fsc_color('yellow')
-
+      
   endelse
-
-
+  
+  
   ;get roi selected (peak)
   peak_y1 = strcompress(getTextFieldValue(main_event, $
-  'reduce_step2_create_roi_y1_value'),/remove_all)
+    'reduce_step2_create_roi_y1_value'),/remove_all)
   peak_y2 = strcompress(getTextFieldValue(main_event, $
- 'reduce_step2_create_roi_y2_value'),/remove_all)
-
+    'reduce_step2_create_roi_y2_value'),/remove_all)
+    
   ymax = (*global_counts).counts_vs_pixel_ymax
   _base = (*global).roi_selection_counts_vs_pixel_base_id
-
-    _id = widget_info(_base, find_by_uname='roi_selection_counts_vs_pixel_draw')
-    widget_control, _id, GET_VALUE = _plot_id
-    wset, _plot_id
+  
+  _id = widget_info(_base, find_by_uname='roi_selection_counts_vs_pixel_draw')
+  widget_control, _id, GET_VALUE = _plot_id
+  wset, _plot_id
   
   if (peak_y1 ne '') then begin
     peak_y1 = fix(peak_y1)
-      plots, peak_y1, 1, /data
-      plots, peak_y1, ymax, /data, /continue, $
-        color=fsc_color("white"), $
-        thick=2,$
-        linestyle=0
+    plots, peak_y1, 1, /data
+    plots, peak_y1, ymax, /data, /continue, $
+      color=fsc_color("white"), $
+      thick=2,$
+      linestyle=0
   endif
   
   if (peak_y2 ne '') then begin
     peak_y2 = fix(peak_y2)
-      plots, peak_y2, 1, /data
-      plots, peak_y2, ymax, /data, /continue, $
-        color=fsc_color("white"), $
-        thick=2,$
-        linestyle=0
+    plots, peak_y2, 1, /data
+    plots, peak_y2, ymax, /data, /continue, $
+      color=fsc_color("white"), $
+      thick=2,$
+      linestyle=0
   endif
   
   ;get roi selected (back)
   back_y1 = strcompress(getTextFieldValue(main_event, $
-  'reduce_step2_create_back_roi_y1_value'),/remove_all)
+    'reduce_step2_create_back_roi_y1_value'),/remove_all)
   back_y2 = strcompress(getTextFieldValue(main_event, $
-  'reduce_step2_create_back_roi_y2_value'),/remove_all)
-
+    'reduce_step2_create_back_roi_y2_value'),/remove_all)
+    
   if (back_y1 ne '') then begin
     back_y1 = fix(back_y1)
-      plots, back_y1, 1, /data
-      plots, back_y1, ymax, /data, /continue, $
-        color=fsc_color("red"), $
-        thick=2,$
-        linestyle=0
+    plots, back_y1, 1, /data
+    plots, back_y1, ymax, /data, /continue, $
+      color=fsc_color("red"), $
+      thick=2,$
+      linestyle=0
   endif
   
   if (back_y2 ne '') then begin
     back_y2 = fix(back_y2)
-      plots, back_y2, 1, /data
-      plots, back_y2, ymax, /data, /continue, $
-        color=fsc_color("red"), $
-        thick=2,$
-        linestyle=0
+    plots, back_y2, 1, /data
+    plots, back_y2, ymax, /data, /continue, $
+      color=fsc_color("red"), $
+      thick=2,$
+      linestyle=0
   endif
   
 end
@@ -437,15 +441,15 @@ end
 ;
 ; :Author: j35
 ;-
-pro display_roi_on_roi_selection_counts_vs_pixel_base, event 
+pro display_roi_on_roi_selection_counts_vs_pixel_base, event
 
   widget_control, event.top, get_uvalue=global
-
-   id_base = (*global).roi_selection_counts_vs_pixel_base_id
-    if (widget_info(id_base, /valid_id) ne 0) then begin
-      display_counts_vs_pixel, base=id_base, refresh=1b, global
-    endif
- 
+  
+  id_base = (*global).roi_selection_counts_vs_pixel_base_id
+  if (widget_info(id_base, /valid_id) ne 0) then begin
+    display_counts_vs_pixel, base=id_base, refresh=1b, global
+  endif
+  
 end
 
 ;+
@@ -493,6 +497,6 @@ pro roi_selection_counts_vs_pixel_base, event=event, $
     /NO_BLOCK
     
   display_counts_vs_pixel, base=_base, global
-   
+  
 end
 
