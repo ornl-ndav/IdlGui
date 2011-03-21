@@ -247,24 +247,25 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
 ;================================
 ; Table of values from the nexus header
 ;================================
+
+  ;row #1
   row1col3c = WIDGET_BASE(row1col3Main,$ ;..................................
     /COLUMN, $
-    FRAME = 1)
+    FRAME = 5)
    base3c = WIDGET_BASE(row1col3c,$
     /ROW)
-    
-  value = WIDGET_LABEL(base3c,$
+   value = WIDGET_LABEL(base3c,$
     /ALIGN_LEFT, $
     VALUE = 'File: N/A',$
     SCR_XSIZE = 300,$
     UNAME = 'reduce_sangle_base_full_file_name') 
 
+  ;row #2
   row1col3d = WIDGET_BASE(row1col3Main,$ ;..................................
     /ROW,$
     FRAME=1)  
   base3d = WIDGET_BASE(row1col3d,$
     /ROW)  
-
   label = WIDGET_LABEL(base3d,$
     /ALIGN_LEFT, $
     VALUE = '      Dangle [rad (deg)]: ')
@@ -274,12 +275,12 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     /ALIGN_LEFT, $
     UNAME = 'reduce_sangle_base_dangle_value')
  
+  ;Row #3
   row1col3e = WIDGET_BASE(row1col3Main,$ ;..................................
     /ROW,$
     FRAME=1)
   base3e = WIDGET_BASE(row1col3e,$
     /ROW) 
-    
   label = WIDGET_LABEL(base3e,$
     /ALIGN_LEFT, $
     VALUE = '     Dangle0 [rad (deg)]: ')
@@ -288,7 +289,8 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     SCR_XSIZE = 140,$
     /ALIGN_LEFT, $
     UNAME = 'reduce_sangle_base_dangle0_value')
-    
+
+  ;Row #4    
   row1col3f = WIDGET_BASE(row1col3Main,$ ;..................................
     /ROW,$
     FRAME=1)
@@ -304,13 +306,13 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     /ALIGN_LEFT, $
     UNAME = 'reduce_sangle_base_sangle_value')
     
+   ;Row #5
    row1col3g = WIDGET_BASE(row1col3Main,$ ;..................................
     /ROW,$
     FRAME=1)
-
+    ;left part
      base3g = WIDGET_BASE(row1col3g,$
     /ROW)    
-    
   label = WIDGET_LABEL(base3g,$
     /ALIGN_LEFT, $
     VALUE = '     DirPix: ')
@@ -320,10 +322,6 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     /ALIGN_LEFT, $
     UNAME = 'reduce_sangle_base_dirpix_value')
     
-  row1col3h = WIDGET_BASE(row1col3Main,$ ;..................................
-    /ROW,$
-    FRAME=1)
-
   space = WIDGET_LABEL(base3g,$
     VALUE = '  ')  
     
