@@ -427,7 +427,6 @@ pro reduce_step2_plot_rois, event
       
   endif
   
-  
 end
 
 
