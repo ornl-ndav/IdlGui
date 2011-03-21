@@ -89,6 +89,12 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     SCR_XSIZE = 150,$
     UNAME = 'reduce_sangle_info_title_base')
     
+    
+    
+    
+    
+    
+    
   ;SANGLE base
   SangleBase = WIDGET_BASE(TabBase,$
     UNAME     = 'reduce_step1_sangle_base',$
@@ -537,20 +543,94 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     UNAME = 'reduce_sangle_base_sangle_user_value',$
     SCR_XSIZE = 200,$
     /ALIGN_LEFT)
-;=================================
-; DONE button
+    
+   ;row2 of SANGLE BASE
+   row2 = WIDGET_BASE(SangleBase,$ ;.................................
+    /ROW)
 
-  row1col3p = WIDGET_BASE(row1col3Main,$ ;..................................
-    /COLUMN, $
-     FRAME = 0) 
-   base3o = WIDGET_BASE(row1col3p,$
+  row2a = widget_base(row2,$
+  /column)
+  ;first inside row (browse button)
+  browse_button = WIDGET_BUTTON(row2a,$
+    VALUE = 'B R O W S E   F O R   A   B A C K.  R O I . . .',$
+    SCR_XSIZE = 320,$
+    TOOLTIP = 'Click to browse for a background ROI file and plot it',$
+    UNAME = 'reduce_step2_create_roi_browse_back_roi_button')
+    
+  row3col2_base2 = WIDGET_BASE(row2a,$
     /ROW)
     
-  done = WIDGET_BUTTON(row1col3p,$
-    VALUE = 'DONE WITH SANGLE CALCULATION',$
-    UNAME = 'reduce_sangle_done_button',$
-    SCR_XSIZE = 320) 
+  y1_working = WIDGET_LABEL(row3col2_base2,$
+    VALUE = '  ',$
+    /ALIGN_LEFT, $
+    UNAME = 'reduce_step2_create_back_roi_y1_l_status')
+  y1_label = WIDGET_LABEL(row3col2_base2,$
+    /ALIGN_LEFT, $
+    VALUE = 'Y1:')
+  y1_value = WIDGET_TEXT(row3col2_base2,$
+    VALUE = ' ',$
+    XSIZE = 3,$
+    /EDITABLE,$
+    /ALIGN_LEFT,$
+    UNAME = 'reduce_step2_create_back_roi_y1_value')
+  y1_working = WIDGET_LABEL(row3col2_base2,$
+    VALUE = '  ',$
+    /ALIGN_LEFT, $
+    UNAME = 'reduce_step2_create_back_roi_y1_r_status')
     
+  space = WIDGET_LABEL(row3col2_base2,$
+    value = '  ')
+    
+    
+  y2_working = WIDGET_LABEL(row3col2_base2,$
+    VALUE = ' ',$
+    UNAME = 'reduce_step2_create_back_roi_y2_l_status')
+  y2_label = WIDGET_LABEL(row3col2_base2,$
+    VALUE = 'Y2:')
+  y2_value = WIDGET_TEXT(row3col2_base2,$
+    VALUE = ' ',$
+    XSIZE = 3,$
+    /EDITABLE,$
+    /ALIGN_LEFT,$
+    UNAME = 'reduce_step2_create_back_roi_y2_value')
+  y2_working = WIDGET_LABEL(row3col2_base2,$
+    VALUE = ' ',$
+    UNAME = 'reduce_step2_create_back_roi_y2_r_status')
+  space = widget_label(row3col2_base2,$
+    value = '   ')
+  reset = widget_button(row3col2_base2,$
+    value = 'Reset',$
+    uname = 'reset_back_roi_inputs')
+ 
+ space = widget_label(row2,$
+ value = '                            ')
+ 
+ ;Select background | select dirpix/refpix
+ DirRef_back_base = widget_base(row2,$
+    /exclusive,$
+    frame=5,$
+    /column)
+  DirRef = widget_button(DirRef_back_base,$
+    value = 'Select DIRPIX/REFPIX',$
+    /no_release,$
+    uname = 'working_with_data_dirpix_refpix')
+  back = widget_button(DirRef_back_base,$
+    value = 'Select BACKGROUND ROI',$
+    /no_release,$
+    uname = 'working_with_data_back')
+  widget_control, DirRef,/set_button
+
+
+; DONE button
+
+space = widget_label(row2,$
+value = '                                         ')
+  done = WIDGET_BUTTON(row2,$
+    VALUE = 'SAVE CHANGES and RETURN TO MAIN BASE',$
+    UNAME = 'reduce_sangle_done_button',$
+    frame=5,$
+    SCR_XSIZE = 320) 
+
 
   ;****************************************************************************
   ; ====== INITIAL PAGE ======  

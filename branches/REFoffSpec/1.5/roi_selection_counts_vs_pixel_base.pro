@@ -255,9 +255,7 @@ pro display_counts_vs_pixel, base=base, event=event, refresh=refresh, global
   
   draw_uname = 'roi_selection_counts_vs_pixel_draw'
   if (keyword_set(event)) then begin
-  
-  
-  
+
     _id = widget_info(event.top, find_by_uname=draw_uname)
     widget_control, event.top, get_uvalue=global_counts
   endif else begin
