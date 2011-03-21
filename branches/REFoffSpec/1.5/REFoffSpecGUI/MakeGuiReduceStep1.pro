@@ -48,7 +48,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
   ;****************************************************************************
   ;            BUILD GUI
   ;****************************************************************************
-  ; ====== SECOND PAGE ======   
+  ; ====== SECOND PAGE ======
   TabBase = WIDGET_BASE(REDUCE_TAB,$
     UNAME     = 'reduce_step1_top_base',$
     XOFFSET   = sBase.size[0],$
@@ -59,23 +59,23 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     map = 1)
     
   ;****************************************************************************
-; Change code (RC Ward, March 22, 2010): Remove the graphic with the equation for Sangle.    
-;  SangleBaseEquation = WIDGET_BASE(TabBase, $
-;    UNAME = 'reduce_step1_sangle_base_equation', $
-;    XOFFSET   = 450, $
-;    YOFFSET   = 695, $
-;    SCR_XSIZE = 350, $
-;    SCR_YSIZE = 100, $
-;    map = 0)
+  ; Change code (RC Ward, March 22, 2010): Remove the graphic with the equation for Sangle.
+  ;  SangleBaseEquation = WIDGET_BASE(TabBase, $
+  ;    UNAME = 'reduce_step1_sangle_base_equation', $
+  ;    XOFFSET   = 450, $
+  ;    YOFFSET   = 695, $
+  ;    SCR_XSIZE = 350, $
+  ;    SCR_YSIZE = 100, $
+  ;    map = 0)
     
   ;equation
-;  equation = WIDGET_DRAW(SangleBaseEquation,$
-;    UNAME = 'reduce_step1_sangle_equation',$
-;    XSIZE = 350,$
-;    YSIZE = 100)
-
-; Code Change (RC Ward, 27 March 2010): Extensive redsign of the GUI was implemented
-; Allowed shrinking the vertical screen size for viewing on laptop    
+  ;  equation = WIDGET_DRAW(SangleBaseEquation,$
+  ;    UNAME = 'reduce_step1_sangle_equation',$
+  ;    XSIZE = 350,$
+  ;    YSIZE = 100)
+    
+  ; Code Change (RC Ward, 27 March 2010): Extensive redsign of the GUI was implemented
+  ; Allowed shrinking the vertical screen size for viewing on laptop
   SangleBaseLabel = WIDGET_BASE(TabBase, $
     UNAME = 'reduce_step1_sangle_base_label', $
     XOFFSET = 45, $
@@ -111,8 +111,8 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     
   row1col1 = WIDGET_BASE(row1,$ ;...................................
     /COLUMN)
-
-; column 1    
+    
+  ; column 1
   table = WIDGET_TABLE(row1col1,$
     COLUMN_LABELS = ['Data Run #',$
     'Sangle [rad (deg)]'],$
@@ -121,8 +121,8 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     ;    /RESIZEABLE_COLUMNS,$
     ALIGNMENT = 0,$
     XSIZE = 2,$
-; Code change (RC Ward, April 7, 2010): use variable to specify the number of scattering angles    
-;   YSIZE = 18,$
+    ; Code change (RC Ward, April 7, 2010): use variable to specify the number of scattering angles
+    ;   YSIZE = 18,$
     YSIZE = number_of_sangle,$
     SCR_XSIZE = 232,$
     SCR_YSIZE = 380,$
@@ -136,23 +136,23 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     UNAME = 'reduce_sangle_tab_reset_button',$
     SENSITIVE = 1)
     
-   ;Counts vs pixel plot
-   help_plot = WIDGET_DRAW(row1col1,$
-   SCR_XSIZE = (*global).sangle_help_xsize_draw,$
-   SCR_YSIZE = (*global).sangle_help_ysize_draw,$
-   /BUTTON_EVENTS,$
-   /MOTION_EVENTS,$
-   /TRACKING_EVENTS,$
-   UNAME = 'sangle_help_draw') 
-
-; column 2    
+  ;Counts vs pixel plot
+  help_plot = WIDGET_DRAW(row1col1,$
+    SCR_XSIZE = (*global).sangle_help_xsize_draw,$
+    SCR_YSIZE = (*global).sangle_help_ysize_draw,$
+    /BUTTON_EVENTS,$
+    /MOTION_EVENTS,$
+    /TRACKING_EVENTS,$
+    UNAME = 'sangle_help_draw')
+    
+  ; column 2
   row1col2 = WIDGET_BASE(row1,$ ;............................
     UNAME = 'reduce_sangle_plot_base')
     
   label = WIDGET_LABEL(row1col2,$
     VALUE = 'Pixel vs TOF (microsS)', $
     UNAME = 'reduce_sangle_plot_title',$
-;    XOFFSET = 720,$
+    ;    XOFFSET = 720,$
     XOFFSET = (*global).sangle_xsize_draw - 125,$
     YOFFSET = 35)
     
@@ -165,26 +165,26 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     /BUTTON_EVENTS, $
     XSIZE = (*global).sangle_xsize_draw,$
     YSIZE = 2 * (*global).detector_pixels_y)
-
+    
   ;scale
   scale = WIDGET_DRAW(row1col2, $
     UNAME = 'reduce_sangle_y_scale', $
     XSIZE = (*global).sangle_xsize_draw + 55,$
-; Change made: Replace 304 with detector_pixels_y obtained from XML fole (RCW, Feb 10, 2010)
+    ; Change made: Replace 304 with detector_pixels_y obtained from XML fole (RCW, Feb 10, 2010)
     YSIZE = 2 * (*global).detector_pixels_y + 30,$
-;    YSIZE = 2*304+30,$
+    ;    YSIZE = 2*304+30,$
     YOFFSET = 0)
- ; Change code (RC Ward, 7 Aug 2010): Add label on x-axis, namely "TOF (micro seconds)".  
-    label = WIDGET_LABEL(row1col2, $
-         VALUE = 'TOF (micro seconds)',$
-         XOFFSET= 300,$
-         YOFFSET= 635)
-; Change code (RC Ward, 7 Aug 2010): Move log/linear toggle to lower right, underneath the plot
+  ; Change code (RC Ward, 7 Aug 2010): Add label on x-axis, namely "TOF (micro seconds)".
+  label = WIDGET_LABEL(row1col2, $
+    VALUE = 'TOF (micro seconds)',$
+    XOFFSET= 300,$
+    YOFFSET= 635)
+  ; Change code (RC Ward, 7 Aug 2010): Move log/linear toggle to lower right, underneath the plot
   row1col2a = WIDGET_BASE(row1col2, $
-         /ROW,$
-         XOFFSET = 500,$
-         YOFFSET = 635,$
-         /EXCLUSIVE)
+    /ROW,$
+    XOFFSET = 500,$
+    YOFFSET = 635,$
+    /EXCLUSIVE)
     
   button1 = WIDGET_BUTTON(row1col2a, $
     VALUE = 'Linear',$
@@ -198,15 +198,15 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     SENSITIVE = 1)
     
   WIDGET_CONTROL, button2, /SET_BUTTON
-
-; column 3    
+  
+  ; column 3
   row1col3Main = WIDGET_BASE(row1,$ ;---------------------------------------
     /COLUMN)
     
   row1col3 = WIDGET_BASE(row1col3Main,$ ;..................................
     /COLUMN, $
     /EXCLUSIVE)
-        
+    
   button1 = WIDGET_BUTTON(row1col3,$
     VALUE = 'Off_Off',$
     UNAME = 'reduce_sangle_1',$
@@ -229,49 +229,49 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     SENSITIVE = 0)
     
   WIDGET_CONTROL, button1, /SET_BUTTON
-
-; Change code (RC Ward, 7 Aug 2010): Remove log/linear toggle from this location and move (see above)  
-;  space = WIDGET_LABEL(row1col3Main, $
-;    VALUE = ' ')
-    
-;  row1col3b = WIDGET_BASE(row1col3Main,$ ;..................................
-;    /COLUMN, $
-;    /EXCLUSIVE)
-    
-;  button1 = WIDGET_BUTTON(row1col3b,$
-;    VALUE = 'Linear',$
-;    /NO_RELEASE, $
-;    UNAME = 'reduce_sangle_lin',$
-;    SENSITIVE = 1)
-;  button2 = WIDGET_BUTTON(row1col3b,$
-;    VALUE = 'Log',$
-;    /NO_RELEASE, $
-;    UNAME = 'reduce_sangle_log', $
-;    SENSITIVE = 1)
-    
-;  WIDGET_CONTROL, button2, /SET_BUTTON
-;================================
-; Table of values from the nexus header
-;================================
-
+  
+  ; Change code (RC Ward, 7 Aug 2010): Remove log/linear toggle from this location and move (see above)
+  ;  space = WIDGET_LABEL(row1col3Main, $
+  ;    VALUE = ' ')
+  
+  ;  row1col3b = WIDGET_BASE(row1col3Main,$ ;..................................
+  ;    /COLUMN, $
+  ;    /EXCLUSIVE)
+  
+  ;  button1 = WIDGET_BUTTON(row1col3b,$
+  ;    VALUE = 'Linear',$
+  ;    /NO_RELEASE, $
+  ;    UNAME = 'reduce_sangle_lin',$
+  ;    SENSITIVE = 1)
+  ;  button2 = WIDGET_BUTTON(row1col3b,$
+  ;    VALUE = 'Log',$
+  ;    /NO_RELEASE, $
+  ;    UNAME = 'reduce_sangle_log', $
+  ;    SENSITIVE = 1)
+  
+  ;  WIDGET_CONTROL, button2, /SET_BUTTON
+  ;================================
+  ; Table of values from the nexus header
+  ;================================
+  
   ;row #1
   row1col3c = WIDGET_BASE(row1col3Main,$ ;..................................
     /COLUMN, $
     FRAME = 5)
-   base3c = WIDGET_BASE(row1col3c,$
+  base3c = WIDGET_BASE(row1col3c,$
     /ROW)
-   value = WIDGET_LABEL(base3c,$
+  value = WIDGET_LABEL(base3c,$
     /ALIGN_LEFT, $
     VALUE = 'File: N/A',$
     SCR_XSIZE = 300,$
-    UNAME = 'reduce_sangle_base_full_file_name') 
-
+    UNAME = 'reduce_sangle_base_full_file_name')
+    
   ;row #2
   row1col3d = WIDGET_BASE(row1col3Main,$ ;..................................
     /ROW,$
-    FRAME=1)  
+    FRAME=1)
   base3d = WIDGET_BASE(row1col3d,$
-    /ROW)  
+    /ROW)
   label = WIDGET_LABEL(base3d,$
     /ALIGN_LEFT, $
     VALUE = '      Dangle [rad (deg)]: ')
@@ -280,13 +280,13 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     SCR_XSIZE = 140,$
     /ALIGN_LEFT, $
     UNAME = 'reduce_sangle_base_dangle_value')
- 
+    
   ;Row #3
   row1col3e = WIDGET_BASE(row1col3Main,$ ;..................................
     /ROW,$
     FRAME=1)
   base3e = WIDGET_BASE(row1col3e,$
-    /ROW) 
+    /ROW)
   label = WIDGET_LABEL(base3e,$
     /ALIGN_LEFT, $
     VALUE = '     Dangle0 [rad (deg)]: ')
@@ -295,14 +295,14 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     SCR_XSIZE = 140,$
     /ALIGN_LEFT, $
     UNAME = 'reduce_sangle_base_dangle0_value')
-
-  ;Row #4    
+    
+  ;Row #4
   row1col3f = WIDGET_BASE(row1col3Main,$ ;..................................
     /ROW,$
     FRAME=1)
   base3f = WIDGET_BASE(row1col3f,$
     /ROW)
-
+    
   label = WIDGET_LABEL(base3f,$
     /ALIGN_LEFT, $
     VALUE = '      Sangle [rad (deg)]: ')
@@ -312,13 +312,13 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     /ALIGN_LEFT, $
     UNAME = 'reduce_sangle_base_sangle_value')
     
-   ;Row #5
-   row1col3g = WIDGET_BASE(row1col3Main,$ ;..................................
+  ;Row #5
+  row1col3g = WIDGET_BASE(row1col3Main,$ ;..................................
     /ROW,$
     FRAME=1)
-    ;left part
-     base3g = WIDGET_BASE(row1col3g,$
-    /ROW)    
+  ;left part
+  base3g = WIDGET_BASE(row1col3g,$
+    /ROW)
   label = WIDGET_LABEL(base3g,$
     /ALIGN_LEFT, $
     VALUE = '     DirPix: ')
@@ -329,7 +329,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     UNAME = 'reduce_sangle_base_dirpix_value')
     
   space = WIDGET_LABEL(base3g,$
-    VALUE = '  ')  
+    VALUE = '  ')
     
   label = WIDGET_LABEL(base3g,$
     /ALIGN_LEFT, $
@@ -339,14 +339,14 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     SCR_XSIZE = 80,$
     /ALIGN_LEFT, $
     UNAME = 'reduce_sangle_base_refpix_value')
-
+    
   row1col3h = WIDGET_BASE(row1col3Main,$ ;..................................
     /ROW,$
     FRAME=1)
-
+    
   base3h = WIDGET_BASE(row1col3h,$
-    /ROW)    
-      
+    /ROW)
+    
   label = WIDGET_LABEL(base3h,$
     /ALIGN_LEFT, $
     VALUE = 'Sample-Detector Distance [m]: ')
@@ -355,29 +355,29 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     SCR_XSIZE = 140,$
     /ALIGN_LEFT, $
     UNAME = 'reduce_sangle_base_sampledetdis_value')
-;================================
-; Cursor Position
-;================================              
+  ;================================
+  ; Cursor Position
+  ;================================
   ;live cursor info
-;  row1col3j = WIDGET_BASE(row1col3Main,$ ;..................................
-;    /COLUMN,$
-;    FRAME=2)
-
-;   base3j = WIDGET_BASE(row1col3j,$
-;    /ROW)
+  ;  row1col3j = WIDGET_BASE(row1col3Main,$ ;..................................
+  ;    /COLUMN,$
+  ;    FRAME=2)
     
-; Code change (RC Ward, 25 Jan 2010): Change text here
-;  title1 = WIDGET_LABEL(base3j,$
-;     VALUE = 'Cursor Position:',$
-;     /ALIGN_CENTER);
-
+  ;   base3j = WIDGET_BASE(row1col3j,$
+  ;    /ROW)
+    
+  ; Code change (RC Ward, 25 Jan 2010): Change text here
+  ;  title1 = WIDGET_LABEL(base3j,$
+  ;     VALUE = 'Cursor Position:',$
+  ;     /ALIGN_CENTER);
+    
   row1col3i = WIDGET_BASE(row1col3Main,$ ;..................................
     /COLUMN,$
     FRAME=1)
-
-   base3i = WIDGET_BASE(row1col3i,$
+    
+  base3i = WIDGET_BASE(row1col3i,$
     /ROW)
-
+    
   tof = WIDGET_LABEL(base3i,$
     VALUE = 'Cursor: TOF (microS):',$
     /ALIGN_LEFT)
@@ -386,7 +386,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     SCR_XSIZE = 80,$
     UNAME = 'reduce_sangle_live_info_tof',$
     /ALIGN_LEFT)
-
+    
   tof = WIDGET_LABEL(base3i,$
     VALUE = 'Pixel:',$
     /ALIGN_LEFT)
@@ -395,36 +395,36 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     SCR_XSIZE = 80,$
     UNAME = 'reduce_sangle_live_info_pixel',$
     /ALIGN_LEFT)
-;================================ 
-; Change code (RC Ward, 13 July 2010): display default apply_tof_cutoffs and allow user to change that
+  ;================================
+  ; Change code (RC Ward, 13 July 2010): display default apply_tof_cutoffs and allow user to change that
   row1col3j = WIDGET_BASE(row1col3Main,$ ;..................................
     /COLUMN,$
     FRAME=1)
-
-   base3j = WIDGET_BASE(row1col3j,$
+    
+  base3j = WIDGET_BASE(row1col3j,$
     /ROW)
     
   label = WIDGET_LABEL(base3j,$
     /ALIGN_LEFT,$
-    VALUE = 'Apply TOF Cutoffs: (yes/no):')    
+    VALUE = 'Apply TOF Cutoffs: (yes/no):')
   value = WIDGET_TEXT(base3j,$
     VALUE = 'N/A',$
     UNAME = 'reduce_sangle_base_apply_tof_cutoffs_value',$
     /EDITABLE, $
     XSIZE = 6)
-; 
-; Change code (RC Ward, 16 June 2010): display default tof_cutoffs and allow user to change them
-;TOF cutoffs    
+  ;
+  ; Change code (RC Ward, 16 June 2010): display default tof_cutoffs and allow user to change them
+  ;TOF cutoffs
   row1col3k = WIDGET_BASE(row1col3Main,$ ;..................................
     /COLUMN,$
     FRAME=1)
-
-   base3k = WIDGET_BASE(row1col3k,$
+    
+  base3k = WIDGET_BASE(row1col3k,$
     /ROW)
     
   label = WIDGET_LABEL(base3k,$
     /ALIGN_LEFT,$
-    VALUE = 'TOF Cutoffs: Min:')    
+    VALUE = 'TOF Cutoffs: Min:')
   value = WIDGET_TEXT(base3k,$
     VALUE = 'N/A',$
     UNAME = 'reduce_sangle_base_tof_cutoff_min_value',$
@@ -435,7 +435,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     
   label = WIDGET_LABEL(base3k,$
     /ALIGN_LEFT,$
-    VALUE = 'Max:')    
+    VALUE = 'Max:')
   value = WIDGET_TEXT(base3k,$
     VALUE = 'N/A',$
     UNAME = 'reduce_sangle_base_tof_cutoff_max_value',$
@@ -443,21 +443,21 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     XSIZE = 10)
   space = WIDGET_LABEL(base3k,$
     VALUE = '  ')
-;================================ 
-;Dangle0
+  ;================================
+  ;Dangle0
   row1col3m = WIDGET_BASE(row1col3Main,$ ;..................................
     /COLUMN, $
-     FRAME = 2) 
+    FRAME = 2)
   base3m = WIDGET_BASE(row1col3m,$
-;    XOFFSET = 155,$
-;    YOFFSET = 40,$
+    ;    XOFFSET = 155,$
+    ;    YOFFSET = 40,$
     /ROW)
-
-; Change code (RC Ward, 6 Sept 2010): Add entry box for Dangle.
-
+    
+  ; Change code (RC Ward, 6 Sept 2010): Add entry box for Dangle.
+    
   label = WIDGET_LABEL(base3m,$
     /ALIGN_LEFT,$
-    VALUE = 'Dangle:')    
+    VALUE = 'Dangle:')
   value = WIDGET_TEXT(base3m,$
     VALUE = 'N/A',$
     UNAME = 'reduce_sangle_base_dangle_user_value',$
@@ -465,10 +465,10 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     XSIZE = 10)
   space = WIDGET_LABEL(base3m,$
     VALUE = '  ')
-
+    
   label = WIDGET_LABEL(base3m,$
     /ALIGN_LEFT,$
-    VALUE = 'Dangle0:')    
+    VALUE = 'Dangle0:')
   value = WIDGET_TEXT(base3m,$
     VALUE = 'N/A',$
     UNAME = 'reduce_sangle_base_dangle0_user_value',$
@@ -476,20 +476,20 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     XSIZE = 10)
   space = WIDGET_LABEL(base3m,$
     VALUE = '  ')
-
-; Change code (RC Ward, 6 Sept 2010): Move Sample-Detector distance down to separate line
     
-     row1col3mm = WIDGET_BASE(row1col3Main,$ ;..................................
+  ; Change code (RC Ward, 6 Sept 2010): Move Sample-Detector distance down to separate line
+    
+  row1col3mm = WIDGET_BASE(row1col3Main,$ ;..................................
     /COLUMN, $
-     FRAME = 2) 
+    FRAME = 2)
   base3mm = WIDGET_BASE(row1col3mm,$
-;    XOFFSET = 155,$
-;    YOFFSET = 40,$
+    ;    XOFFSET = 155,$
+    ;    YOFFSET = 40,$
     /ROW)
     
   label = WIDGET_LABEL(base3mm,$
     /ALIGN_LEFT,$
-    VALUE = 'Sample-Detector Distance (m):')    
+    VALUE = 'Sample-Detector Distance (m):')
   value = WIDGET_TEXT(base3mm,$
     VALUE = 'N/A',$
     UNAME = 'reduce_sangle_base_sampledetdis_user_value',$
@@ -497,19 +497,19 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     XSIZE = 10)
   space = WIDGET_LABEL(base3m,$
     VALUE = '  ')
-;================================ 
-;RefPix and DirPix
+  ;================================
+  ;RefPix and DirPix
   row1col3n = WIDGET_BASE(row1col3Main,$ ;..................................
     /COLUMN, $
-     FRAME = 2) 
+    FRAME = 2)
   base3n = WIDGET_BASE(row1col3n,$
-;    XOFFSET = 155,$
-;    YOFFSET = 40,$
+    ;    XOFFSET = 155,$
+    ;    YOFFSET = 40,$
     /ROW)
-
+    
   label = WIDGET_LABEL(base3n,$
     /ALIGN_LEFT,$
-    VALUE = 'RefPix:')    
+    VALUE = 'RefPix:')
   value = WIDGET_TEXT(base3n,$
     VALUE = 'N/A',$
     UNAME = 'reduce_sangle_base_refpix_user_value',$
@@ -526,30 +526,33 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     UNAME = 'reduce_sangle_base_dirpix_user_value',$
     /EDITABLE, $
     XSIZE = 10)
-;=================================
-; Sangle
+  ;=================================
+  ; Sangle
   row1col3o = WIDGET_BASE(row1col3Main,$ ;..................................
     /COLUMN, $
-     FRAME = 2) 
+    FRAME = 2)
   base3o = WIDGET_BASE(row1col3o,$
     FRAME = 1,$
     /ROW)
-
+    
   label = WIDGET_LABEL(base3o,$
     /ALIGN_LEFT,$
-    VALUE = 'Sangle [rad (deg)]: ')    
+    VALUE = 'Sangle [rad (deg)]: ')
   value = WIDGET_LABEL(base3o,$
     VALUE = 'N/A (N/A)',$
     UNAME = 'reduce_sangle_base_sangle_user_value',$
     SCR_XSIZE = 200,$
     /ALIGN_LEFT)
     
-   ;row2 of SANGLE BASE
-   row2 = WIDGET_BASE(SangleBase,$ ;.................................
+  ;row2 of SANGLE BASE
+  row2 = WIDGET_BASE(SangleBase,$ ;.................................
     /ROW)
-
+    
+  space = widget_label(row2,$
+    value = '                                                                    ')
+    
   row2a = widget_base(row2,$
-  /column)
+    /column)
   ;first inside row (browse button)
   browse_button = WIDGET_BUTTON(row2a,$
     VALUE = 'B R O W S E   F O R   A   B A C K.  R O I . . .',$
@@ -601,39 +604,35 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
   reset = widget_button(row3col2_base2,$
     value = 'Reset',$
     uname = 'reset_step1_back_roi_inputs')
- 
- space = widget_label(row2,$
- value = '                            ')
- 
- ;Select background | select dirpix/refpix
- DirRef_back_base = widget_base(row2,$
-    /exclusive,$
-    frame=5,$
-    /column)
-  DirRef = widget_button(DirRef_back_base,$
-    value = 'Select DIRPIX/REFPIX',$
-    /no_release,$
-    uname = 'working_with_data_dirpix_refpix')
-  back = widget_button(DirRef_back_base,$
-    value = 'Select BACKGROUND ROI',$
-    /no_release,$
-    uname = 'working_with_data_back')
-  widget_control, DirRef,/set_button
-
-
-; DONE button
-
-space = widget_label(row2,$
-value = '                                         ')
+    
+  ; ;Select background | select dirpix/refpix
+  ; DirRef_back_base = widget_base(row2,$
+  ;    /exclusive,$
+  ;    frame=5,$
+  ;    /column)
+  ;  DirRef = widget_button(DirRef_back_base,$
+  ;    value = 'Select DIRPIX/REFPIX',$
+  ;    /no_release,$
+  ;    uname = 'working_with_data_dirpix_refpix')
+  ;  back = widget_button(DirRef_back_base,$
+  ;    value = 'Select BACKGROUND ROI',$
+  ;    /no_release,$
+  ;    uname = 'working_with_data_back')
+  ;  widget_control, DirRef,/set_button
+    
+    
+  ; DONE button
+    
+  space = widget_label(row2,$
+    value = '                            ')
   done = WIDGET_BUTTON(row2,$
     VALUE = 'SAVE CHANGES and RETURN TO MAIN BASE',$
     UNAME = 'reduce_sangle_done_button',$
     frame=5,$
-    SCR_XSIZE = 320) 
-
-
+    SCR_XSIZE = 320)
+    
   ;****************************************************************************
-  ; ====== INITIAL PAGE ======  
+  ; ====== INITIAL PAGE ======
   TopBase = WIDGET_BASE(TabBase,$
     UNAME     = 'reduce_step1_top_base',$
     XOFFSET   = sBase.size[0],$
@@ -722,17 +721,17 @@ value = '                                         ')
   ENDIF ELSE BEGIN
     value = ''
   ENDELSE
-    
-;=================== COMMENT OUT LATTER =============================================================
-; For debugging, set the value to desired run numbers (RCW, Dec 31, 2009, Modified Feb 1, 2010)
-; Commented out for release of Ver 1.5.0 on 16 June 2010
-; IF (instrument EQ 'REF_L') THEN BEGIN
-;    value = '24586-24591' 
-;  ENDIF ELSE BEGIN
-;    value = '5387-5389' 
-;  ENDELSE  
-;=================== COMMENT OUT LATTER =============================================================    
-
+  
+  ;=================== COMMENT OUT LATTER =============================================================
+  ; For debugging, set the value to desired run numbers (RCW, Dec 31, 2009, Modified Feb 1, 2010)
+  ; Commented out for release of Ver 1.5.0 on 16 June 2010
+  ; IF (instrument EQ 'REF_L') THEN BEGIN
+  ;    value = '24586-24591'
+  ;  ENDIF ELSE BEGIN
+  ;    value = '5387-5389'
+  ;  ENDELSE
+  ;=================== COMMENT OUT LATTER =============================================================
+  
   tRun = CW_FIELD(Row1,$
     XSIZE = 40,$
     UNAME = 'reduce_tab1_run_cw_field',$
@@ -758,17 +757,17 @@ value = '                                         ')
     /RESIZEABLE_COLUMNS,$
     ALIGNMENT = 0,$
     XSIZE = 2,$
-
-; Code change (RC Ward, April 7, 2010): use variable to specify the number of scattering angles    
-;    YSIZE = 18,$
-     YSIZE = number_of_sangle,$
-;    SCR_XSIZE = 1230,$
-;    SCR_YSIZE = 400,$
-; Code change (RC Ward, April 7, 2010): Change size of table - make it more realistic
+    
+    ; Code change (RC Ward, April 7, 2010): use variable to specify the number of scattering angles
+    ;    YSIZE = 18,$
+    YSIZE = number_of_sangle,$
+    ;    SCR_XSIZE = 1230,$
+    ;    SCR_YSIZE = 400,$
+    ; Code change (RC Ward, April 7, 2010): Change size of table - make it more realistic
     SCR_XSIZE = 800, $
     SCR_YSIZE = 300, $
     COLUMN_WIDTHS = [100,700],$
-;    /SCROLL,$
+    ;    /SCROLL,$
     /ALL_EVENTS)
     
   WIDGET_CONTROL, table, SET_TABLE_SELECT=[0,0,1,0]
@@ -798,15 +797,15 @@ value = '                                         ')
       UNAME = 'reduce_step1_sangle_button', $
       SENSITIVE = 0)
   ENDIF
-    
-;Repeat work for other polarization states (Row #4) ---------------------------
+  
+  ;Repeat work for other polarization states (Row #4) ---------------------------
   Row4_row = WIDGET_BASE(Base,$
     UNAME = 'reduce_tab1_row4_base',$
     /ROW)
-; shift the buttons over a bit          
+  ; shift the buttons over a bit
   space = WIDGET_LABEL(Row4_row, $
     VALUE='                          ')
-                     
+    
   IF (instrument EQ 'REF_L') THEN BEGIN
     map = 0
   ENDIF ELSE BEGIN
@@ -814,10 +813,10 @@ value = '                                         ')
   ENDELSE
   
   Row4 = WIDGET_BASE(Row4_row,$
-     FRAME = 1,$
-     MAP = map,$
-     /ROW)
-       
+    FRAME = 1,$
+    MAP = map,$
+    /ROW)
+    
   label = WIDGET_LABEL(Row4,$
     VALUE = 'Reflected Data Polarization States: ')
     
@@ -845,30 +844,30 @@ value = '                                         ')
     UNAME = 'reduce_tab1_pola_4',$
     /NO_RELEASE,$
     SENSITIVE = 1)
-       
-; NOTE (RC Ward, May 29, 2010) - These defaults are imbedded into the program
-;WIDGET_CONTROL, Row4Base, SET_BUTTON=1 ;all spin states are selected by default
+    
+  ; NOTE (RC Ward, May 29, 2010) - These defaults are imbedded into the program
+  ;WIDGET_CONTROL, Row4Base, SET_BUTTON=1 ;all spin states are selected by default
   WIDGET_CONTROL, button1, /SET_BUTTON
   WIDGET_CONTROL, button3, /SET_BUTTON
-    
-; Buttons for selecting the direct beam polarization states (Row #5) ---------------------------  
-; Change code (RC WARD, May 28, 2010): Modify the way that the direct beam polarization states are specied.
-
+  
+  ; Buttons for selecting the direct beam polarization states (Row #5) ---------------------------
+  ; Change code (RC WARD, May 28, 2010): Modify the way that the direct beam polarization states are specied.
+  
   ;new row
-;  Row5 = WIDGET_BASE(Base,$
-;    /COLUMN,$
-;    /BASE_ALIGN_CENTER,$
-;    MAP = map)
-;  Row5_row1 = WIDGET_BASE(Row5,$
-;    /ROW)
-;        
+  ;  Row5 = WIDGET_BASE(Base,$
+  ;    /COLUMN,$
+  ;    /BASE_ALIGN_CENTER,$
+  ;    MAP = map)
+  ;  Row5_row1 = WIDGET_BASE(Row5,$
+  ;    /ROW)
+  ;
   Row5_row = WIDGET_BASE(Base,$
     UNAME = 'reduce_tab1_row5_base',$
     /ROW)
-; shift the buttons over a bit          
+  ; shift the buttons over a bit
   space = WIDGET_LABEL(Row5_row, $
     VALUE='                          ')
-
+    
   IF (instrument EQ 'REF_L') THEN BEGIN
     map = 0
   ENDIF ELSE BEGIN
@@ -876,17 +875,17 @@ value = '                                         ')
   ENDELSE
   
   Row5 = WIDGET_BASE(Row5_row,$
-     FRAME = 1,$
-     MAP = map,$
-     /ROW)
-
+    FRAME = 1,$
+    MAP = map,$
+    /ROW)
+    
   label = WIDGET_LABEL(Row5,$
     VALUE = '  Direct Beam Polarization States: ')
-
+    
   Row5Base = WIDGET_BASE(Row5,$
     /ROW, $
     /NONEXCLUSIVE)
-        
+    
   button5 = WIDGET_BUTTON(Row5Base,$
     VALUE = 'Off_Off  ',$
     UNAME = 'reduce_tab1_direct_pola_1',$
@@ -907,27 +906,27 @@ value = '                                         ')
     UNAME = 'reduce_tab1_direct_pola_4',$
     /NO_RELEASE,$
     SENSITIVE = 1)
-; NOTE (RC Ward, May 29, 2010) - These defaults are imbedded into the program
-;WIDGET_CONTROL, Row5Base, SET_BUTTON=1 ;all direct beam spin states are selected by default
+  ; NOTE (RC Ward, May 29, 2010) - These defaults are imbedded into the program
+  ;WIDGET_CONTROL, Row5Base, SET_BUTTON=1 ;all direct beam spin states are selected by default
   WIDGET_CONTROL, button5, /SET_BUTTON
-    
+  
 ;  space = WIDGET_LABEL(Row5_row1,$
 ;    VALUE = '                                           ')
-    
+  
 ;  label = WIDGET_LABEL(Row5_row1,$
 ;    FONT = "8X13",$
 ;    VALUE = 'Select the way you want to match the Data and Normalization' + $
 ;    ' Spin States')
-    
+  
 ;  Row5_row2 = WIDGET_BASE(Row5,$
 ;    /ROW,$
 ;    /BASE_ALIGN_CENTER)
-    
+  
 ;  big_space = WIDGET_LABEL(Row5_row2,$
 ;    VALUE = '                                               ')
-    
-; Code change (RC Ward, March 27, 2010): Images used for the buttons were simplified.    
-  ;match button
+  
+; Code change (RC Ward, March 27, 2010): Images used for the buttons were simplified.
+;match button
 ;  tooltip = 'Spin States of the Data and Normalization files are identical.'
 ;  match = WIDGET_DRAW(Row5_row2,$
 ;    SCR_XSIZE = 243,$
@@ -937,12 +936,12 @@ value = '                                         ')
 ;    /TRACKING_EVENTS,$
 ;    TOOLTIP = tooltip,$
 ;    UNAME = 'reduce_step1_spin_match')
-    
+  
 ;  space_value = '   '
 ;  space = WIDGET_LABEL(Row5_row2,$
 ;    VALUE = space_value)
-   ; Code change RCW (Dec 31, 2009): fix typos below   
-  ;do not match and fixed
+; Code change RCW (Dec 31, 2009): fix typos below
+;do not match and fixed
 ;  tooltip = 'Spin State of Normalization files is fixed (Off_Off), no ' + $
 ;    'matter the spin state of the Data file.'
 ;  not_match = WIDGET_DRAW(Row5_row2,$
@@ -953,11 +952,11 @@ value = '                                         ')
 ;    /TRACKING_EVENTS,$
 ;    TOOLTIP = tooltip,$
 ;    UNAME = 'reduce_step1_spin_do_not_match_fixed')
-    
+  
 ;  space = WIDGET_LABEL(Row5_row2,$
 ;    VALUE = space_value)
-;    
-  ;do not match and user defined
+;
+;do not match and user defined
 ;  tooltip = 'Spin States of Data and Normalization files do not match and ' + $
 ;    'must be manually defined by the user.'
 ;  match = WIDGET_DRAW(Row5_row2,$
@@ -968,5 +967,5 @@ value = '                                         ')
 ;    /TRACKING_EVENTS,$
 ;    TOOLTIP = tooltip,$
 ;    UNAME = 'reduce_step1_spin_do_not_match_user_defined')
-;    
+;
 END
