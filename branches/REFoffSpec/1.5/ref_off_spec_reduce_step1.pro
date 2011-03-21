@@ -298,7 +298,7 @@ PRO AddNexusToReduceTab1Table, Event
       sangle_rad    = iNexus->getSangle()
       sangle_deg    = convert_to_deg(sangle_rad)
       sangle = STRCOMPRESS(sangle_rad,/REMOVE_ALL) + ' (' + $
-      STRCOMPRESS(sangle_deg,/REMOVE_ALL) + ')'
+        STRCOMPRESS(sangle_deg,/REMOVE_ALL) + ')'
     ENDIF
     OBJ_DESTROY, iNexus
     
@@ -557,22 +557,22 @@ PRO reduce_tab1_run_cw_field, Event ;_reduce_step1
   index    = 0
   nexus_file_list = STRARR(nbr_runs)
   WHILE (index LT nbr_runs) DO BEGIN
- RUN_NUMBER = ListOfRuns[index]
- INSTRUMENT = (*global).instrument
-
-     full_nexus_name = findnexus(Event,$
+    RUN_NUMBER = ListOfRuns[index]
+    INSTRUMENT = (*global).instrument
+    
+    full_nexus_name = findnexus(Event,$
       RUN_NUMBER = ListOfRuns[index],$
       INSTRUMENT = (*global).instrument,$
       ;        PROPOSAL   = proposalSelected,$
       isNexusExist)
-    LogText = '-> Run #: ' + ListOfRuns[index]  
+    LogText = '-> Run #: ' + ListOfRuns[index]
     IF (isNexusExist) THEN BEGIN
       LogText += ' => ' + full_nexus_name
       nexus_file_list[index] = full_nexus_name
     ENDIF ELSE BEGIN
       LogText += ' => NeXus file not FOUND !'
     ENDELSE
- ;print,"Run #: ", RUN_NUMBER, "  Instrument: ", INSTRUMENT, " Status: ",LogText
+    ;print,"Run #: ", RUN_NUMBER, "  Instrument: ", INSTRUMENT, " Status: ",LogText
     IDLsendToGeek_addLogBookText, Event, LogText
     index++
   ENDWHILE
@@ -627,14 +627,34 @@ FUNCTION remove_row_selected_from_array, Event, TABLE=table, ROW=row
 END
 
 ;----------------------------------------------------------------------------
+;+
+; :Description:
+;    This routines removes the selected row from the reduce/step1/table
+;
+; :Params:
+;    Event
+;
+; :Keywords:
+;    TABLE
+;    ROW
+;
+; :Author: j35
+;-
 FUNCTION remove_row_selected_from_array_general, Event, TABLE=table, ROW=row
+compile_opt idl2
 
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
-  sz = size(table)
-  nbr_row = sz[2]
-  nbr_column = sz[1]
+  sz = size(table,/dim)
+  
+  if (n_elements(sz) eq 2) then begin
+    nbr_row = sz[1]
+  endif else begin
+    nbr_row = 1
+  endelse
+  nbr_column = sz[0]
   
   new_table = STRARR(nbr_column, nbr_row)
+  
   index = 0
   for i=0,(nbr_row-1) do begin
     if (i NE (row)) THEN BEGIN
@@ -658,13 +678,13 @@ PRO remove_selected_run, Event
   new_table = remove_row_selected_from_array(Event, $
     TABLE=reduce_tab1_table, $
     ROW=row_selected)
-  
+    
   run_sangle_table = (*(*global).reduce_run_sangle_table)
   new_run_sangle_table = remove_row_selected_from_array_general(Event, $
-  TABLE=run_sangle_table, $
-  ROW=row_selected)
-  (*(*global).reduce_run_sangle_table) = new_run_sangle_table  
-    
+    TABLE=run_sangle_table, $
+    ROW=row_selected)
+  (*(*global).reduce_run_sangle_table) = new_run_sangle_table
+  
   IF (new_table[0,0] EQ '') THEN BEGIN
     (*global).reduce_tab1_working_pola_state = ''
   ENDIF
