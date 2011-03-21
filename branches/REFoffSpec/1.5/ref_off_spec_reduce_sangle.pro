@@ -1259,3 +1259,104 @@ PRO reset_sangle_calculation, Event
    
 END
 
+;+
+; :Description:
+;    Browse for a background roi file in the reduce/tab1
+;
+; :Params:
+;    Event
+;
+;
+;
+; :Author: j35
+;-
+PRO browse_reduce_step1_back_roi_file, Event
+  compile_opt idl2
+  
+  ;get global structure
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  ;retrieve infos
+  extension  = 'dat'
+  filter     = ['*_back_ROI.dat','*_back_ROI.txt']
+   path = (*global).ascii_path
+  title      = 'Browsing for a background ROI file'
+  id = widget_info(event.top, find_by_uname='MAIN_BASE')
+  
+  file_name = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
+    FILTER            = filter,$
+    GET_PATH          = new_path,$
+    PATH              = path,$
+    dialog_parent = id, $
+    TITLE             = title,$
+    /READ,$
+    /MUST_EXIST)
+    
+  IF (file_name NE '') THEN BEGIN
+  
+    ;indicate initialization with hourglass icon
+    WIDGET_CONTROL,/hourglass
+    
+    catch,error
+    if (error ne 0) then begin
+      catch,/cancel
+      widget_control, hourglass=0
+      LogText = '> Loading data Back. ROI ' + file_name + ' FAILED!'
+      IDLsendToGeek_addLogBookText, Event, LogText
+      
+      message_text = 'Problem loading data Back. ROI file name: ' + file_name
+      id = widget_info(event.top, find_by_uname='MAIN_BASE')
+      result = dialog_message(message_text,$
+        /center, $
+        dialog_parent=id,$
+        /ERROR, $
+        title = 'Problem loading data back ROI!')
+        
+      return
+    endif
+    
+    (*global).roi_path = new_path
+    ; Change code (RC Ward, 17 July 2010): See if this updates the location of output files
+    (*global).ascii_path = new_path
+    
+    ;    ;Load ROI button (Load, extract and plot)
+    ;    load_roi_selection, Event, file_name
+    
+    Yarray = retrieveYminMaxFromFile(event,file_name)
+    Y1 = Yarray[0]
+    Y2 = Yarray[1]
+    putTextFieldValue, Event, 'reduce_step1_create_back_roi_y1_value', $
+      STRCOMPRESS(Y1,/REMOVE_ALL)
+    putTextFieldValue, Event, 'reduce_step1_create_back_roi_y2_value', $
+      STRCOMPRESS(Y2,/REMOVE_ALL)
+      
+      return
+
+
+    plot_reduce_step2_norm, Event ;refresh plot
+    reduce_step2_plot_rois, event
+    
+    putTextFieldValue, Event, $
+      'reduce_step2_create_back_roi_file_name_label',$
+      file_name
+      
+    nexus_spin_state_back_roi_table = (*(*global).nexus_spin_state_back_roi_table)
+    data_spin_state = (*global).tmp_reduce_step2_data_spin_state
+    row = (*global).tmp_reduce_step2_row
+    column = getReduceStep2SpinStateColumn(Event, row=row,$
+      data_spin_state=data_spin_state)
+      
+    ;get Norm file selected
+    norm_table = (*global).reduce_step2_big_table_norm_index
+    nexus_spin_state_back_roi_table[column,norm_table[row]] = file_name
+    (*(*global).nexus_spin_state_back_roi_table) = nexus_spin_state_back_roi_table
+    
+    ;turn off hourglass
+    WIDGET_CONTROL,hourglass=0
+    
+  ENDIF ELSE BEGIN
+  ;    IDLsendToGeek_addLogBookText, Event, '-> Operation CANCELED'
+  ENDELSE
+  
+END
+
