@@ -845,6 +845,8 @@ PRO determine_sangle_refpix_data_from_device_value, Event
   RefPixSave[row_selected] = sRefPix_data
   (*(*global).RefPixSave) = RefPixSave
   
+  return
+  
 ; Code change RCW (Feb 15, 2010): Write values of RefPix to a file named for the first dataset
 ; Note this Rule: User should do SANGLE for first item on the list (lowest number also called Reference File)
 ; This is only to be used by magetism reflectometer data reduction process, so check for REF_M
@@ -859,6 +861,11 @@ PRO determine_sangle_refpix_data_from_device_value, Event
 ; Change code (RC Ward 30 June 2010): STR_SEP is obsolete. Replace with IDL routine STRSPLIT
 ;     parts = STR_SEP(full_nexus_file_name,'/')
      parts = STRSPLIT(full_nexus_file_name,'/',/EXTRACT)
+     
+     help, parts
+     print, full_nexus_file_name
+     print
+     
 ; DEBUG ========================================
 ; debug RefPix output filename
 ;    print, " parts_0: ",parts[0]
