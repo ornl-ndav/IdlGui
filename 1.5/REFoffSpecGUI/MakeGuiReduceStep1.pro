@@ -176,7 +176,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     YOFFSET = 0)
   ; Change code (RC Ward, 7 Aug 2010): Add label on x-axis, namely "TOF (micro seconds)".
   label = WIDGET_LABEL(row1col2, $
-    VALUE = 'TOF (micro seconds)',$
+    VALUE = 'TOF (ms)',$
     XOFFSET= 300,$
     YOFFSET= 635)
   ; Change code (RC Ward, 7 Aug 2010): Move log/linear toggle to lower right, underneath the plot
@@ -379,7 +379,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     /ROW)
     
   tof = WIDGET_LABEL(base3i,$
-    VALUE = 'Cursor: TOF (microS):',$
+    VALUE = 'Cursor: TOF (ms):',$
     /ALIGN_LEFT)
   value = WIDGET_LABEL(base3i,$
     VALUE = 'N/A',$

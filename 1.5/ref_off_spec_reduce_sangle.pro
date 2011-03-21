@@ -439,7 +439,7 @@ PRO retrieve_tof_array_from_nexus, Event, result
   IF (result EQ 0) THEN RETURN
   sz = N_ELEMENTS(tof)
   tof = tof[0:sz-2] ;remove last element
-  (*(*global).sangle_tof) = tof
+  (*(*global).sangle_tof) = tof/1000. ;to be in ms
   
   result = 1
   
