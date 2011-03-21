@@ -137,6 +137,7 @@ PRO MAIN_BASE_event, Event
     IF (result EQ 1) THEN BEGIN
       display_reduce_step1_sangle_scale, EVENT=event
       plot_sangle_dirpix, Event
+      reduce_step1_plot_rois, event        
       plot_tof_range_on_main_plot, Event
       saving_background, Event
       plot_sangle_refpix, Event
@@ -158,6 +159,7 @@ PRO MAIN_BASE_event, Event
         saving_background, Event
         plot_sangle_refpix, Event
         plot_sangle_dirpix, Event
+        reduce_step1_plot_rois, event        
         plot_counts_vs_pixel_help, Event
       ENDIF
       (*global).sangle_table_press_click = 0
@@ -260,6 +262,7 @@ PRO MAIN_BASE_event, Event
           plot_sangle_dirpix, Event
           plot_sangle_refpix, Event
           plot_tof_max_range_on_main_plot, Event
+          reduce_step1_plot_rois, event
           saving_background, Event
           plot_tof_min_range_on_main_plot, Event
           ;x offset between the tof vertical line and the cursor click
@@ -275,6 +278,7 @@ PRO MAIN_BASE_event, Event
           replot_selected_data_in_sangle_base, Event
           plot_sangle_dirpix, Event
           plot_sangle_refpix, Event
+          reduce_step1_plot_rois, event
           plot_tof_min_range_on_main_plot, Event
           saving_background, Event
           plot_tof_max_range_on_main_plot, Event
@@ -309,6 +313,7 @@ PRO MAIN_BASE_event, Event
             (*global).sangle_mode = 'dirpix'
             (*global).old_sangle_mode = 'dirpix'
             plot_sangle_refpix, Event
+            reduce_step1_plot_rois, event
             plot_tof_range_on_main_plot, Event
             saving_background, Event
             plot_sangle_dirpix, Event
@@ -317,6 +322,7 @@ PRO MAIN_BASE_event, Event
             (*global).sangle_mode = 'refpix'
             (*global).old_sangle_mode = 'refpix'
             plot_sangle_dirpix, Event
+            reduce_step1_plot_rois, event
             plot_tof_range_on_main_plot, Event
             saving_background, Event
             plot_sangle_refpix, Event
@@ -383,12 +389,14 @@ PRO MAIN_BASE_event, Event
         CASE ((*global).sangle_mode) OF
           'refpix': BEGIN
             plot_sangle_dirpix, Event
+            reduce_step1_plot_rois, event
             plot_tof_range_on_main_plot, Event
             saving_background, Event
             plot_sangle_refpix, Event
           END
           'dirpix': BEGIN
             plot_sangle_refpix, Event
+            reduce_step1_plot_rois, event
             plot_tof_range_on_main_plot, Event
             saving_background, Event
             plot_sangle_dirpix, Event
@@ -423,6 +431,7 @@ PRO MAIN_BASE_event, Event
     saving_background, Event
     plot_sangle_refpix, Event
     plot_sangle_dirpix, Event
+    reduce_step1_plot_rois, event
     plot_counts_vs_pixel_help, Event
     WIDGET_CONTROL, HOURGLASS=0
   END
@@ -433,6 +442,7 @@ PRO MAIN_BASE_event, Event
     saving_background, Event
     plot_sangle_refpix, Event
     plot_sangle_dirpix, Event
+    reduce_step1_plot_rois, event
     plot_counts_vs_pixel_help, Event
     WIDGET_CONTROL, HOURGLASS=0
   END
@@ -443,6 +453,7 @@ PRO MAIN_BASE_event, Event
     saving_background, Event
     plot_sangle_refpix, Event
     plot_sangle_dirpix, Event
+    reduce_step1_plot_rois, event
     plot_counts_vs_pixel_help, Event
     WIDGET_CONTROL, HOURGLASS=0
   END
@@ -453,6 +464,7 @@ PRO MAIN_BASE_event, Event
     saving_background, Event
     plot_sangle_refpix, Event
     plot_sangle_dirpix, Event
+    reduce_step1_plot_rois, event
     plot_counts_vs_pixel_help, Event
     WIDGET_CONTROL, HOURGLASS=0
   END
@@ -465,6 +477,7 @@ PRO MAIN_BASE_event, Event
     saving_background, Event
     plot_sangle_refpix, Event
     plot_sangle_dirpix, Event
+    reduce_step1_plot_rois, event
     plot_counts_vs_pixel_help, Event
     WIDGET_CONTROL, HOURGLASS=0
   END
@@ -476,6 +489,7 @@ PRO MAIN_BASE_event, Event
     saving_background, Event
     plot_sangle_refpix, Event
     plot_sangle_dirpix, Event
+    reduce_step1_plot_rois, event
     plot_counts_vs_pixel_help, Event
     WIDGET_CONTROL, HOURGLASS=0
   END
@@ -534,10 +548,16 @@ PRO MAIN_BASE_event, Event
     browse_reduce_step1_back_roi_file, Event
     replot_selected_data_in_sangle_base, Event
     plot_tof_range_on_main_plot, Event
+    reduce_step1_plot_rois, event
+        IF ((*global).sangle_mode EQ 'refpix') THEN BEGIN
+    plot_sangle_dirpix, Event
     saving_background, Event
     plot_sangle_refpix, Event
+        ENDIF ELSE BEGIN
+    plot_sangle_refpix, Event
+    saving_background, Event
     plot_sangle_dirpix, Event
-    reduce_step1_plot_rois, event
+        ENDELSE
     plot_counts_vs_pixel_help, Event
   END
   
@@ -548,61 +568,52 @@ PRO MAIN_BASE_event, Event
     putTextFieldValue, Event, 'reduce_step1_create_back_roi_y2_value', ''
     replot_selected_data_in_sangle_base, Event
     plot_tof_range_on_main_plot, Event
+    reduce_step1_plot_rois, event
+        IF ((*global).sangle_mode EQ 'refpix') THEN BEGIN
+    plot_sangle_dirpix, Event
     saving_background, Event
     plot_sangle_refpix, Event
+        ENDIF ELSE BEGIN
+    plot_sangle_refpix, Event
+    saving_background, Event
     plot_sangle_dirpix, Event
-    reduce_step1_plot_rois, event
+        ENDELSE
     plot_counts_vs_pixel_help, Event
   end
   
   ;y1 and y2
   widget_info(wWidget, $
-  find_by_uname='reduce_step1_create_back_roi_y1_value'): begin
+    find_by_uname='reduce_step1_create_back_roi_y1_value'): begin
     replot_selected_data_in_sangle_base, Event
     plot_tof_range_on_main_plot, Event
+    reduce_step1_plot_rois, event
+        IF ((*global).sangle_mode EQ 'refpix') THEN BEGIN
+    plot_sangle_dirpix, Event
     saving_background, Event
     plot_sangle_refpix, Event
+        ENDIF ELSE BEGIN
+    plot_sangle_refpix, Event
+    saving_background, Event
     plot_sangle_dirpix, Event
-    reduce_step1_plot_rois, event
+        ENDELSE
     plot_counts_vs_pixel_help, Event
   end
   widget_info(wWidget, $
-  find_by_uname='reduce_step1_create_back_roi_y2_value'): begin
+    find_by_uname='reduce_step1_create_back_roi_y2_value'): begin
     replot_selected_data_in_sangle_base, Event
     plot_tof_range_on_main_plot, Event
+    reduce_step1_plot_rois, event
+        IF ((*global).sangle_mode EQ 'refpix') THEN BEGIN
+    plot_sangle_dirpix, Event
     saving_background, Event
     plot_sangle_refpix, Event
+        ENDIF ELSE BEGIN
+    plot_sangle_refpix, Event
+    saving_background, Event
     plot_sangle_dirpix, Event
-    reduce_step1_plot_rois, event
+        ENDELSE
     plot_counts_vs_pixel_help, Event
   end
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
   
   ;----------------------------------------------------------------------------
   
