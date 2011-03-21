@@ -528,6 +528,42 @@ PRO MAIN_BASE_event, Event
       global
   END
   
+ ;browse/load back ROI in reduce/step1
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='reduce_step1_create_roi_browse_back_roi_button'): BEGIN
+    browse_reduce_step1_back_roi_file, Event
+  END
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   ;----------------------------------------------------------------------------
   
   ;  ;"work with the following Polarization states"
