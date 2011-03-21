@@ -600,7 +600,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     value = '   ')
   reset = widget_button(row3col2_base2,$
     value = 'Reset',$
-    uname = 'reset_step2_back_roi_inputs')
+    uname = 'reset_step1_back_roi_inputs')
  
  space = widget_label(row2,$
  value = '                            ')

@@ -528,14 +528,54 @@ PRO MAIN_BASE_event, Event
       global
   END
   
- ;browse/load back ROI in reduce/step1
+  ;browse/load back ROI in reduce/step1
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='reduce_step1_create_roi_browse_back_roi_button'): BEGIN
     browse_reduce_step1_back_roi_file, Event
+    replot_selected_data_in_sangle_base, Event
+    plot_tof_range_on_main_plot, Event
+    saving_background, Event
+    plot_sangle_refpix, Event
+    plot_sangle_dirpix, Event
+    reduce_step1_plot_rois, event
+    plot_counts_vs_pixel_help, Event
   END
   
+  ;reset reduce/step1/background fields
+  widget_info(wWidget, $
+    find_by_uname='reset_step1_back_roi_inputs'): begin
+    putTextFieldValue, Event, 'reduce_step1_create_back_roi_y1_value', ''
+    putTextFieldValue, Event, 'reduce_step1_create_back_roi_y2_value', ''
+    replot_selected_data_in_sangle_base, Event
+    plot_tof_range_on_main_plot, Event
+    saving_background, Event
+    plot_sangle_refpix, Event
+    plot_sangle_dirpix, Event
+    reduce_step1_plot_rois, event
+    plot_counts_vs_pixel_help, Event
+  end
   
-  
+  ;y1 and y2
+  widget_info(wWidget, $
+  find_by_uname='reduce_step1_create_back_roi_y1_value'): begin
+    replot_selected_data_in_sangle_base, Event
+    plot_tof_range_on_main_plot, Event
+    saving_background, Event
+    plot_sangle_refpix, Event
+    plot_sangle_dirpix, Event
+    reduce_step1_plot_rois, event
+    plot_counts_vs_pixel_help, Event
+  end
+  widget_info(wWidget, $
+  find_by_uname='reduce_step1_create_back_roi_y2_value'): begin
+    replot_selected_data_in_sangle_base, Event
+    plot_tof_range_on_main_plot, Event
+    saving_background, Event
+    plot_sangle_refpix, Event
+    plot_sangle_dirpix, Event
+    reduce_step1_plot_rois, event
+    plot_counts_vs_pixel_help, Event
+  end
   
   
   
@@ -1804,7 +1844,7 @@ PRO MAIN_BASE_event, Event
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='reduce_step2_create_roi_lin_log'): BEGIN
     widget_control, /hourglass
-      plot_reduce_step2_norm, Event, recalculate=1, plot_range=1
+    plot_reduce_step2_norm, Event, recalculate=1, plot_range=1
     plot_reduce_tab2_scale, event=event, plot_range=1
     refresh_reduce_step2_colorbar, event, plot_range=1
     reduce_step2_plot_rois, event

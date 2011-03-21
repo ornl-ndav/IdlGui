@@ -1360,3 +1360,66 @@ PRO browse_reduce_step1_back_roi_file, Event
   
 END
 
+
+;+
+; :Description:
+;    plot the y1 and y2 of background selected
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro reduce_step1_plot_rois, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  id_draw = WIDGET_INFO(Event.top, $
+    FIND_BY_UNAME='reduce_sangle_plot')
+  WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+    geometry = WIDGET_INFO(id_draw,/GEOMETRY)
+  WSET,id_value
+  
+  xsize = geometry.xsize
+  ysize = geometry.ysize
+  
+  back_y1 = getTextFieldValue(event,'reduce_step1_create_back_roi_y1_value')
+  back_y2 = getTextFieldValue(event,'reduce_step1_create_back_roi_y2_value')
+  
+  ymin = 0
+  ;ymax = (*global).sangle_ysize_draw
+  ymax = ysize
+  y_rebin_value = (*global).sangle_main_plot_congrid_y_coeff  
+  xmax = xsize
+  
+  if (strcompress(back_y1,/remove_all) ne '') then begin
+  
+    back_y1 = fix(back_y1)
+    back_y1 = (back_y1 gt ymax) ? ymax : back_y1
+    back_y1 = (back_y1 lt ymin) ? ymin : back_y1
+    
+    ;back
+    PLOTS, 0, y_rebin_value * back_y1, /device, color=color
+    PLOTS, xmax, y_rebin_value * back_y1, $
+      /device, $
+      /continue, color=fsc_color('pink')
+      
+  endif
+  
+  if (strcompress(back_y2,/remove_all) ne '') then begin
+  
+    back_y2 = fix(back_y2)
+    back_y2 = (back_y2 gt ymax) ? ymax : back_y2
+    back_y2 = (back_y2 lt ymin) ? ymin : back_y2
+    
+    PLOTS, 0, y_rebin_value * back_y2, /device, color=color
+    PLOTS, xmax, y_rebin_value * back_y2, $
+      /device, $
+      /continue, color=fsc_color('pink')
+      
+  endif
+  
+end
