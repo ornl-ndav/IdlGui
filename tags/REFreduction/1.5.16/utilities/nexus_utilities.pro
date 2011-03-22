@@ -142,7 +142,7 @@ FUNCTION find_full_nexus_name, Event,$
     END
   ENDCASE
   
-  cmd = "findnexus --archive -i" + instrument
+  cmd = "findnexus -i" + instrument
   
   value = isButtonSelected(Event, button_uname)
   IF (value EQ 1) THEN BEGIN ;get proposal selected
