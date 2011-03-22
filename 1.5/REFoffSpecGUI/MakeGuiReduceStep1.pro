@@ -794,7 +794,17 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
       UNAME = 'reduce_step1_sangle_button', $
       scr_ysize = 30,$
       SENSITIVE = 0)
-  ENDIF
+  ENDIF else begin
+  
+    space = widget_label(row3,$
+    value = '                            ')
+    back_roi_button = widget_button(row3,$
+    value ='  BACKGROUND selection tool  ',$
+    uname = 'reduce_step1_back_button',$
+    scr_ysize = 30,$
+    sensitive = 1)
+  
+  endelse
   
   ;Repeat work for other polarization states (Row #4) ---------------------------
   Row4_row = WIDGET_BASE(Base,$
