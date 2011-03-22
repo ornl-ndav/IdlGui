@@ -1005,17 +1005,17 @@ PRO plot_counts_vs_pixel_help, Event
     PLOTS, RefPix, ymin, /DATA, COLOR=FSC_COLOR('red')
     PLOTS, RefPix, ymax, /DATA, COLOR=FSC_COLOR('red'), /CONTINUE
     
-    ;plot background 
+    ;plot background
     y1 = fix(getTextFieldvalue(event,'reduce_step1_create_back_roi_y1_value'))
     if (y1 ne 0) then begin
-    plots, y1, ymin, /data, color=fsc_color('pink')
-    plots, y1, ymax, /data, color=fsc_color('pink'), /continue
+      plots, y1, ymin, /data, color=fsc_color('pink')
+      plots, y1, ymax, /data, color=fsc_color('pink'), /continue
     endif
     
     y2 = fix(getTextFieldvalue(event,'reduce_step1_create_back_roi_y2_value'))
     if (y2 ne 0) then begin
-    plots, y2, ymin, /data, color=fsc_color('pink')
-    plots, y2, ymax, /data, color=fsc_color('pink'), /continue
+      plots, y2, ymin, /data, color=fsc_color('pink')
+      plots, y2, ymax, /data, color=fsc_color('pink'), /continue
     endif
     
   ENDIF ELSE BEGIN ;no zoom applied yet
@@ -1056,21 +1056,29 @@ PRO plot_counts_vs_pixel_help, Event
     PLOTS, RefPix, min_counts, /DATA, COLOR=FSC_COLOR('red')
     PLOTS, RefPix, max_counts, /DATA, COLOR=FSC_COLOR('red'), /CONTINUE
     
-    ;plot background 
-    y1 = fix(getTextFieldvalue(event,'reduce_step1_create_back_roi_y1_value'))
-    if (y1 ne 0) then begin
-    plots, y1, min_counts, /data, color=fsc_color('pink')
-    plots, y1, max_counts, /data, color=fsc_color('pink'), /continue
+    _y1 = strcompress(getTextFieldValue(event, $
+      'reduce_step1_create_back_roi_y1_value'),/remove_all)
+    if (_y1 ne '') then begin
+      ;plot background
+      y1 = fix(_y1)
+      if (y1 ne 0) then begin
+        plots, y1, min_counts, /data, color=fsc_color('pink')
+        plots, y1, max_counts, /data, color=fsc_color('pink'), /continue
+      endif
     endif
     
-    y2 = fix(getTextFieldvalue(event,'reduce_step1_create_back_roi_y2_value'))
-    if (y2 ne 0) then begin
-    plots, y2, min_counts, /data, color=fsc_color('pink')
-    plots, y2, max_counts, /data, color=fsc_color('pink'), /continue
+    _y2 = strcompress(getTextFieldValue(event, $
+      'reduce_step1_create_back_roi_y2_value'),/remove_all)
+    if (_y2 ne '') then begin
+      y2 = fix(_y2)
+      if (y2 ne 0) then begin
+        plots, y2, min_counts, /data, color=fsc_color('pink')
+        plots, y2, max_counts, /data, color=fsc_color('pink'), /continue
+      endif
     endif
     
   ENDELSE
-
+  
   device, decomposed=0
   
 END
@@ -1449,3 +1457,141 @@ pro reduce_step1_plot_rois, event
   endif
   
 end
+
+;+
+; :Description:
+;    Create the data background ROI file in reduce/step1
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro create_data_background_roi_file, event
+  compile_opt idl2
+  
+  back_y1 = getTextFieldValue(event,'reduce_step1_create_back_roi_y1_value')
+  back_y2 = getTextFieldValue(event,'reduce_step1_create_back_roi_y2_value')
+  
+  ;continue only if there is something to create
+  if (strcompress(back_y1,/remove_all) eq '' or $
+    strcompress(back_y2,/remove_all) eq '') then return
+    
+  back_file_name = getDefaultReduceStep1BackRoiFileName(event)
+  
+  widget_control, event.top, get_uvalue=global
+  
+  save_data_roi_base, event, $
+    path = (*global).ascii_path, $
+    back_file_name = back_file_name
+    
+end
+
+
+;+
+; :Description:
+;    create the background ROI file for the data nexus file
+;
+; :Params:
+;    event
+;
+; :Keywords:
+;    roi_file_name
+;    y1
+;    y2
+;
+; :Author: j35
+;-
+pro create_data_back_roi, event, $
+    roi_file_name=roi_file_name, $
+    y1=y1, $
+    y2=y2
+  compile_opt idl2
+  
+  ;ON_IOERROR, error
+  
+  widget_control, event.top, get_uvalue=global
+  instrument = (*global).instrument
+  
+  ;get integer values
+  Y1 = FIX(Y1)
+  Y2 = FIX(Y2)
+  
+  ;get min and max values
+  Ymin = MIN([Y1,Y2],MAX=Ymax)
+  nbr_y = (Ymax-Ymin+1)
+  
+  ;open output file
+  no_error = 0
+  CATCH, no_error
+  IF (no_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    message = 'ERROR: Error creating the data back. ROI ' + roi_file_name
+    IDLsendToGeek_addLogBookText, Event, message
+  ENDIF ELSE BEGIN
+    OPENW, 1, roi_file_name
+    i     = 0L
+    NyMax = 256L
+    OutputArray = STRARR((NyMax)*nbr_y)
+    
+    IF (instrument EQ 'REF_M') THEN BEGIN
+    
+      FOR y=(Ymin),(Ymax) DO BEGIN
+        FOR x=0,(NyMax-1) DO BEGIN
+          text  = 'bank1_' + STRCOMPRESS(y,/REMOVE_ALL)
+          text += '_' + STRCOMPRESS(x,/REMOVE_ALL)
+          PRINTF,1,text
+          OutputArray[i] = text
+          i++
+        ENDFOR
+      ENDFOR
+      
+    ENDIF ELSE BEGIN
+    
+      FOR x=0,(NyMax-1) DO BEGIN
+        FOR y=(Ymin),(Ymax) DO BEGIN
+          text  = 'bank1_' + STRCOMPRESS(x,/REMOVE_ALL)
+          text += '_' + STRCOMPRESS(y,/REMOVE_ALL)
+          PRINTF,1,text
+          OutputArray[i] = text
+          i++
+        ENDFOR
+      ENDFOR
+    ENDELSE
+    
+    CLOSE, 1
+    FREE_LUN, 1
+  ENDELSE ;end of (Ynbr LE 1)
+  
+  ERROR:
+  
+END
+
+PRO reduce_step1_save_back_roi, Event, $
+    global_roi=global_roi
+compile_opt idl2
+    
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  ; Change code (RC Ward, 24 July 2010): ROI files
+  ; written to the ascii_path location
+  ; Now user cannot change this.
+  ;  path = (*global).reduce_step2_roi_path
+  path = (*global).ascii_path
+  ; print, "In reduce_step2_save_roi_step2 - path: ",path
+  
+    back_file = (*global).reduce_step1_back_roi_file_name
+    back_file_name = path + back_file
+  
+    y1 = fix(getTextFieldValue(event,'reduce_step1_create_back_roi_y1_value'))
+    y2 = fix(getTextFieldValue(event,'reduce_step1_create_back_roi_y2_value'))
+  
+  create_data_back_roi, Event, $
+    roi_file_name=back_file_name, $
+    y1=y1, $
+    y2=y2
+    
+END

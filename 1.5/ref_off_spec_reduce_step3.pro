@@ -132,11 +132,6 @@ PRO refresh_reduce_step3_table, Event
           ;              run_job_status = 0
           ;           ENDIF
             
-            
-            
-            
-            
-            
           ENDELSE
           
           ;populate Recap. Big table

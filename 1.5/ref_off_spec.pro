@@ -413,6 +413,10 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     reduce_step2_roi_color: 150,$
     reduce_step2_norm_tof: 0,$
     reduce_step2_UD_keys_pressed: 0,$
+    
+    reduce_step1_roi_path: '',$
+    reduce_step1_back_roi_file_name: '', $
+    
     reduce_step2_roi_path: '',$
     reduce_step2_roi_file_name: '',$
     reduce_step2_back_roi_file_name: '',$

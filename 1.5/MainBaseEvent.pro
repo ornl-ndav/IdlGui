@@ -532,6 +532,7 @@ PRO MAIN_BASE_event, Event
   
   ;Done with SANGLE base
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_done_button'): BEGIN
+    create_data_background_roi_file, event
     save_sangle_table, Event
     MapBase, Event, 'reduce_step1_sangle_base', 0
     MapBase, Event, 'reduce_step1_sangle_base_label', 0
