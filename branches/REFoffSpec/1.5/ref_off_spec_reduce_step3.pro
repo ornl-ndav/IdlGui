@@ -125,16 +125,14 @@ PRO refresh_reduce_step3_table, Event
               base_name=d_spin_state)
             IF (STRCOMPRESS(back_roi_file,/REMOVE_ALL) EQ '') THEN BEGIN
               back_roi_file = 'N/A'
-            ;              run_job_status = 0
             ENDIF
-            
-            print, 'pola_index: ' , pola_index
-            print, 'data_index: ' , data_index
-            print
             
             data_back_roi_file = $
               nexus_spin_state_data_back_roi_table[pola_index,data_index]
-              
+            if (strcompress(data_back_roi_file,/remove_all) eq '') then begin
+              data_back_roi_file = 'N/A'
+            endif
+            
           ENDELSE
           
           ;populate Recap. Big table
