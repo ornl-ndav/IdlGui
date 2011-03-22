@@ -89,12 +89,6 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     SCR_XSIZE = 150,$
     UNAME = 'reduce_sangle_info_title_base')
     
-    
-    
-    
-    
-    
-    
   ;SANGLE base
   SangleBase = WIDGET_BASE(TabBase,$
     UNAME     = 'reduce_step1_sangle_base',$

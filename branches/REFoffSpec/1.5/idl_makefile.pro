@@ -70,8 +70,10 @@ cd, CurrentFolder
 .run ref_off_spec_reduce_step2.pro
 .run ref_off_spec_reduce_step2_plot_norm.pro
 .run ref_off_spec_reduce_step2_roi_selection.pro
+.run ref_off_sepc_reduce_step1_save_roi.pro
 .run ref_off_spec_reduce_step2_save_roi.pro
 .run ref_off_spec_reduce_step2_save_roi_base.pro
+.run ref_off_spec_reduce_step1_save_roi_base.pro
 .run ref_off_spec_reduce_step2_load_roi.pro
 .run ref_off_spec_reduce_step3.pro
 .run ref_off_spec_reduce_step3_command_line.pro

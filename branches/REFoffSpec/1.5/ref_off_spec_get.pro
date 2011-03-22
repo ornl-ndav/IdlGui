@@ -522,6 +522,40 @@ FUNCTION getDefaultReduceStep2BackRoiFileName, event
 END
 
 
+;+
+; :Description:
+;    This routine returns the default Background roi file name
+;    for the data nexus file (reduce/step1)
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+function getDefaultReduceStep1BackRoiFileName, event
+compile_opt idl2
+
+widget_control, event.top, get_uvalue=global
+instrument = (*global).instrument
+
+  ;reduce_run_sangle_table = (*(*global).reduce_run_sangle_table)
+  reduce_tab1_table = (*(*global).reduce_tab1_table)
+  ;get sangle row selected
+  row_selected = getSangleRowSelected(Event)
+  
+  run_number = reduce_tab1_table[0,row_selected]
+
+  IF (instrument EQ 'REF_M') THEN BEGIN
+    file = 'REF_M_' + run_number + '_back_ROI.dat'
+  ENDIF ELSE BEGIN
+    file = 'REF_L_' + run_number + '_back_ROI.dat'
+  ENDELSE
+  
+return, file
+end
+
 ;------------------------------------------------------------------------------
 FUNCTION getListOfDataSpinStates, Event
   button_value=INTARR(4)
