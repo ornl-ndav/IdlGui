@@ -163,6 +163,7 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     ;id of roi_selection_counts_vs_pixel base in reduce/step2
     roi_selection_counts_vs_pixel_base_id: 0L, $
 nexus_spin_state_data_back_roi_table: ptr_new(0L), $
+last_sangle_tab_table_row_selected: 0, $
 
     ;status of mouse clicked on scale of reduce/step2/roi base
     scale_mouse_left_pressed: 0b,$

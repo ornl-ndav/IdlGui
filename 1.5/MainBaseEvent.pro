@@ -121,6 +121,9 @@ PRO MAIN_BASE_event, Event
     reset_sangle_calculation, Event
   END
   
+  ;----------------------------------------------------------------------------
+  
+  ;bring to life the SANGLE selection tool base
   ;Map Sangle base ------------------------------------------------------------
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step1_sangle_button'): BEGIN
     WIDGET_CONTROL, /HOURGLASS
@@ -135,8 +138,10 @@ PRO MAIN_BASE_event, Event
     retrieve_tof_array_from_nexus, Event, result
     IF (result EQ 1) THEN plot_selected_data_in_sangle_base, Event, result
     IF (result EQ 1) THEN BEGIN
+     load_step1_data_back_roi, event
       display_reduce_step1_sangle_scale, EVENT=event
       plot_sangle_dirpix, Event
+      load_step1_data_back_roi, event
       reduce_step1_plot_rois, event        
       plot_tof_range_on_main_plot, Event
       saving_background, Event
@@ -159,6 +164,7 @@ PRO MAIN_BASE_event, Event
       display_metatada_of_sangle_selected_row, Event
       plot_selected_data_in_sangle_base, Event, result
       IF (result EQ 1) THEN BEGIN
+        load_step1_data_back_roi, event
         plot_tof_range_on_main_plot, Event
         saving_background, Event
         plot_sangle_refpix, Event
@@ -171,6 +177,7 @@ PRO MAIN_BASE_event, Event
       (*global).sangle_table_press_click = 1
     ENDELSE
     WIDGET_CONTROL, HOURGLASS=0
+    (*global).last_sangle_tab_table_row_selected = getSangleRowSelected(event)
   END
   
   ;Counts vs Pixel Help plot

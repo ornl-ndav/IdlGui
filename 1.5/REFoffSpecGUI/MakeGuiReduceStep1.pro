@@ -786,9 +786,13 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
   ;    SENSITIVE = 0)
     
   IF ((*global).instrument EQ 'REF_M') THEN BEGIN
+    space = widget_label(Row3,$
+    value = '                          ')
+    
     sangle_button = WIDGET_BUTTON(Row3,$
-      VALUE = 'BACKGROUND ROI and SANGLE selections',$
+      VALUE = '  BACKGROUND ROI and SANGLE selection tool  ',$
       UNAME = 'reduce_step1_sangle_button', $
+      scr_ysize = 30,$
       SENSITIVE = 0)
   ENDIF
   
