@@ -1569,29 +1569,59 @@ pro create_data_back_roi, event, $
   
 END
 
-PRO reduce_step1_save_back_roi, Event, $
-    global_roi=global_roi
-compile_opt idl2
-    
+;+
+; :Description:
+;    Create the roi file each time the user change the data/spin state or the 
+;    roi y1 and/or y2
+;
+; :Params:
+;    Event
+;
+; :Author: j35
+;-
+PRO reduce_step1_save_back_roi, event
+  compile_opt idl2
+  
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
-  ; Change code (RC Ward, 24 July 2010): ROI files
-  ; written to the ascii_path location
-  ; Now user cannot change this.
-  ;  path = (*global).reduce_step2_roi_path
+  _y1 = strcompress(getTextFieldValue(event,$
+  'reduce_step1_create_back_roi_y1_value'),/remove_all)
+  
+  _y2 = strcompress(getTextFieldValue(event,$
+  'reduce_step1_create_back_roi_y2_value'),/remove_all)
+  
+  if (_y1 eq '' or _y2 eq '') then return
+  
+  y1 = fix(_y1)
+  y2 = fix(_y2)
+
   path = (*global).ascii_path
   ; print, "In reduce_step2_save_roi_step2 - path: ",path
   
-    back_file = (*global).reduce_step1_back_roi_file_name
-    back_file_name = path + back_file
-  
-    y1 = fix(getTextFieldValue(event,'reduce_step1_create_back_roi_y1_value'))
-    y2 = fix(getTextFieldValue(event,'reduce_step1_create_back_roi_y2_value'))
+  back_file = getDefaultReduceStep1BackRoiFileName(event)
+  back_file_name = path + back_file
   
   create_data_back_roi, Event, $
     roi_file_name=back_file_name, $
     y1=y1, $
     y2=y2
     
+  ;save data back roi file name in table
+  nexus_spin_state_data_back_roi_table = $
+    (*(*global).nexus_spin_state_data_back_roi_table)
+    
+  row = getSangleRowSelected(Event)
+  index_spin = 0
+  case (strlowcase(getSangleSpinStateSelected(Event))) of
+    'off_off': index_spin=0
+    'off_on': index_spin=1
+    'on_off': index_spin=2
+    'on_on': index_spin=3
+  endcase
+  
+  nexus_spin_state_data_back_roi_table[index_spin,row] = back_file_name  
+  (*(*global).nexus_spin_state_data_back_roi_table) = $
+  nexus_spin_state_data_back_roi_table
+  
 END

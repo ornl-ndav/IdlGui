@@ -162,6 +162,7 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     
     ;id of roi_selection_counts_vs_pixel base in reduce/step2
     roi_selection_counts_vs_pixel_base_id: 0L, $
+nexus_spin_state_data_back_roi_table: ptr_new(0L), $
 
     ;status of mouse clicked on scale of reduce/step2/roi base
     scale_mouse_left_pressed: 0b,$
@@ -585,7 +586,7 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     PrevScalingStep2TabSelect: 0,$
     step4_step1_selection: [0,0,0,0],$ ;[xmin, ymin, xmax, ymax]
     step4_2_2_lambda_value_array: [0,0], $ [Qmin, Qmax] data value (not device)
-  plot2d_x_left:       0,$
+    plot2d_x_left:       0,$
     plot2d_y_left:       0,$
     plot2d_x_right:      0,$
     plot2d_y_right:      0,$
@@ -609,6 +610,7 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     })
     
   ;initialize variables
+  (*(*global).nexus_spin_state_data_back_roi_table) = strarr(4,11)
   (*(*global).list_OF_ascii_files) = STRARR(1)
   (*(*global).reduce_tab1_table) = STRARR(2,1)
   (*(*global).reduce_run_sangle_table) = STRARR(2,1)

@@ -110,6 +110,7 @@ pro ref_off_spec_cleanup, tlb
   ptr_free, (*global).ivslambda_selection_error_backup
   ptr_free, (*global).ivslambda_selection_step3_backup
   ptr_free, (*global).ivslambda_selection_error_step3_backup
+  ptr_free, (*global).nexus_spin_state_data_back_roi_table
   
   ptr_free, global
   

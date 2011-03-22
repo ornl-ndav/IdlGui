@@ -73,7 +73,9 @@ PRO refresh_reduce_step3_table, Event
   short_norm_file_list = (*(*global).reduce_tab2_nexus_file_list)
   norm_run_number = (*global).nexus_norm_list_run_number
   short_norm_run_number = RemoveEmptyElement(norm_run_number[0,*])
-  
+  nexus_spin_state_data_back_roi_table = $
+    (*(*global).nexus_spin_state_data_back_roi_table)
+    
   IF (instrument EQ 'REF_M') THEN BEGIN ;REF_M
   
     run_sangle_table = (*(*global).reduce_run_sangle_table)
@@ -94,12 +96,14 @@ PRO refresh_reduce_step3_table, Event
           d_spin_state = list_data_spin[pola_index]
           
           IF ((SIZE(short_norm_file_list))(0) EQ 0) THEN BEGIN
-            norm_run     = 'N/A'
-            norm_nexus   = 'N/A'
-            n_spin_state = 'N/A'
-            roi_file     = 'N/A'
-            back_file    = 'N/A'
-            run_job_status = 0
+            norm_run           = 'N/A'
+            norm_nexus         = 'N/A'
+            n_spin_state       = 'N/A'
+            data_back_roi_file = 'N/A'
+            roi_file           = 'N/A'
+            back_file          = 'N/A'
+            back_roi_file      = 'N/A'
+            run_job_status     = 0
           ENDIF ELSE BEGIN
             norm_run     = getReduceStep2NormOfRow(Event, row=data_index)
             norm_nexus   = getNormNexusOfIndex(Event, $
@@ -116,22 +120,21 @@ PRO refresh_reduce_step3_table, Event
               run_job_status = 0
             ENDIF
             
-            IF (roi_file EQ 'N/A') THEN BEGIN
-              run_job_status = 0
-            ENDIF
-            
-            back_roi_file     = getNormBackRoiFileOfIndex(Event, $
+            back_roi_file = getNormBackRoiFileOfIndex(Event, $
               row=data_index,$
               base_name=d_spin_state)
             IF (STRCOMPRESS(back_roi_file,/REMOVE_ALL) EQ '') THEN BEGIN
               back_roi_file = 'N/A'
-              run_job_status = 0
+            ;              run_job_status = 0
             ENDIF
             
-          ;            IF (roi_file EQ 'N/A') THEN BEGIN
-          ;              run_job_status = 0
-          ;           ENDIF
+            print, 'pola_index: ' , pola_index
+            print, 'data_index: ' , data_index
+            print
             
+            data_back_roi_file = $
+              nexus_spin_state_data_back_roi_table[pola_index,data_index]
+              
           ENDELSE
           
           ;populate Recap. Big table
@@ -144,6 +147,7 @@ PRO refresh_reduce_step3_table, Event
           step3_big_table[table_index,6] = n_spin_state
           step3_big_table[table_index,7] = roi_file
           step3_big_table[table_index,8] = back_roi_file
+          step3_big_table[table_index,9] = data_back_roi_file
           
           ;define the output file name
           output_file_name = 'REF_M_' + data_run
