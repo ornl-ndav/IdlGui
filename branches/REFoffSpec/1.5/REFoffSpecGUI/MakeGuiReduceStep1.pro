@@ -620,7 +620,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
   space = widget_label(row2,$
     value = '                            ')
   done = WIDGET_BUTTON(row2,$
-    VALUE = 'SAVE CHANGES and RETURN TO MAIN BASE',$
+    VALUE = 'RETURN TO DATA TAB',$
     UNAME = 'reduce_sangle_done_button',$
     frame=5,$
     SCR_XSIZE = 320)

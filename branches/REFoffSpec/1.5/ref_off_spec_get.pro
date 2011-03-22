@@ -548,7 +548,8 @@ instrument = (*global).instrument
   run_number = reduce_tab1_table[0,row_selected]
 
   IF (instrument EQ 'REF_M') THEN BEGIN
-    file = 'REF_M_' + run_number + '_back_ROI.dat'
+    data_spin_state = getSangleSpinStateSelected(event)
+    file = 'REF_M_' + run_number + '_' + data_spin_state + '_back_ROI.dat'
   ENDIF ELSE BEGIN
     file = 'REF_L_' + run_number + '_back_ROI.dat'
   ENDELSE
@@ -610,7 +611,9 @@ FUNCTION getNormRoiFileOfIndex, Event, row_data=row_data, base_name=base_name
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getNormBackRoiFileOfIndex, Event, row_data=row_data, base_name=base_name
+FUNCTION getNormBackRoiFileOfIndex, Event, $
+row_data=row_data, $
+base_name=base_name
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global

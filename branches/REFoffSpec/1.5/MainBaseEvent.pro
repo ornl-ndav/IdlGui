@@ -149,6 +149,10 @@ PRO MAIN_BASE_event, Event
   ;SANGLE table
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_tab_table_uname'): BEGIN
     WIDGET_CONTROL, /HOURGLASS
+    
+    ;first save the current roi selected
+    reduce_step1_save_back_roi, Event 
+    
     ;if sangle_table_press_click eq 1 = user click (no release)
     IF ((*global).sangle_table_press_click EQ 1) THEN BEGIN
       select_full_line_of_selected_row, Event
@@ -426,6 +430,9 @@ PRO MAIN_BASE_event, Event
   ;spin state selection
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_1'): BEGIN ;Off_Off
     WIDGET_CONTROL, /HOURGLASS
+        ;first save the current roi selected
+    reduce_step1_save_back_roi, Event 
+    
     plot_selected_data_in_sangle_base, Event
     plot_tof_range_on_main_plot, Event
     saving_background, Event
@@ -437,6 +444,9 @@ PRO MAIN_BASE_event, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_2'): BEGIN ;Off_On
     WIDGET_CONTROL, /HOURGLASS
+        ;first save the current roi selected
+    reduce_step1_save_back_roi, Event 
+    
     plot_selected_data_in_sangle_base, Event
     plot_tof_range_on_main_plot, Event
     saving_background, Event
@@ -448,6 +458,9 @@ PRO MAIN_BASE_event, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_3'): BEGIN ;On_Off
     WIDGET_CONTROL, /HOURGLASS
+        ;first save the current roi selected
+    reduce_step1_save_back_roi, Event 
+    
     plot_selected_data_in_sangle_base, Event
     plot_tof_range_on_main_plot, Event
     saving_background, Event
@@ -459,6 +472,9 @@ PRO MAIN_BASE_event, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_4'): BEGIN ;On_On
     WIDGET_CONTROL, /HOURGLASS
+        ;first save the current roi selected
+    reduce_step1_save_back_roi, Event 
+    
     plot_selected_data_in_sangle_base, Event
     plot_tof_range_on_main_plot, Event
     saving_background, Event
@@ -532,7 +548,9 @@ PRO MAIN_BASE_event, Event
   
   ;Done with SANGLE base
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_done_button'): BEGIN
-    create_data_background_roi_file, event
+      ;first save the current roi selected
+    reduce_step1_save_back_roi, Event 
+  
     save_sangle_table, Event
     MapBase, Event, 'reduce_step1_sangle_base', 0
     MapBase, Event, 'reduce_step1_sangle_base_label', 0
@@ -560,6 +578,8 @@ PRO MAIN_BASE_event, Event
     plot_sangle_dirpix, Event
         ENDELSE
     plot_counts_vs_pixel_help, Event
+      ;first save the current roi selected
+    reduce_step1_save_back_roi, Event 
   END
   
   ;reset reduce/step1/background fields
@@ -580,6 +600,9 @@ PRO MAIN_BASE_event, Event
     plot_sangle_dirpix, Event
         ENDELSE
     plot_counts_vs_pixel_help, Event
+  
+      ;first save the current roi selected
+    reduce_step1_save_back_roi, Event 
   end
   
   ;y1 and y2
@@ -598,6 +621,9 @@ PRO MAIN_BASE_event, Event
     plot_sangle_dirpix, Event
         ENDELSE
     plot_counts_vs_pixel_help, Event
+  
+      ;first save the current roi selected
+    reduce_step1_save_back_roi, Event 
   end
   widget_info(wWidget, $
     find_by_uname='reduce_step1_create_back_roi_y2_value'): begin
@@ -614,6 +640,9 @@ PRO MAIN_BASE_event, Event
     plot_sangle_dirpix, Event
         ENDELSE
     plot_counts_vs_pixel_help, Event
+  
+      ;first save the current roi selected
+    reduce_step1_save_back_roi, Event 
   end
   
   ;----------------------------------------------------------------------------
