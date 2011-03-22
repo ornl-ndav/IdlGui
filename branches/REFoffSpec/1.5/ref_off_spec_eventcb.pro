@@ -142,11 +142,11 @@ PRO reduce_tab_event, Event
       0: BEGIN
         ;sangle base
         IF (isBaseMapped(Event, 'reduce_step1_sangle_base')) THEN BEGIN
-        display_reduce_step1_sangle_buttons, Event=event, global
+;        display_reduce_step1_sangle_buttons, Event=event, global
         ENDIF ELSE BEGIN
-          display_reduce_step1_buttons, EVENT=EVENT,$
-            ACTIVATE=(*global).reduce_step1_spin_state_mode, $
-            global
+;          display_reduce_step1_buttons, EVENT=EVENT,$
+;            ACTIVATE=(*global).reduce_step1_spin_state_mode, $
+;            global
         ENDELSE
       END
       1: BEGIN

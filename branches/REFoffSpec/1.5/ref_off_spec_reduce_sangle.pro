@@ -74,6 +74,11 @@ FUNCTION getSangleRowSelected, Event
   RETURN, selection[1]
 END
 
+function getPreviousSangleRowSelected, event
+widget_control, event.top, get_uvalue=global
+return, (*global).last_sangle_tab_table_row_selected
+end
+
 ;------------------------------------------------------------------------------
 FUNCTION isClickInTofMinBox, Event
 
@@ -1366,7 +1371,6 @@ PRO browse_reduce_step1_back_roi_file, Event
       
     return
     
-    
     plot_reduce_step2_norm, Event ;refresh plot
     reduce_step2_plot_rois, event
     
@@ -1571,7 +1575,7 @@ END
 
 ;+
 ; :Description:
-;    Create the roi file each time the user change the data/spin state or the 
+;    Create the roi file each time the user change the data/spin state or the
 ;    roi y1 and/or y2
 ;
 ; :Params:
@@ -1586,16 +1590,16 @@ PRO reduce_step1_save_back_roi, event
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   _y1 = strcompress(getTextFieldValue(event,$
-  'reduce_step1_create_back_roi_y1_value'),/remove_all)
-  
+    'reduce_step1_create_back_roi_y1_value'),/remove_all)
+    
   _y2 = strcompress(getTextFieldValue(event,$
-  'reduce_step1_create_back_roi_y2_value'),/remove_all)
-  
+    'reduce_step1_create_back_roi_y2_value'),/remove_all)
+    
   if (_y1 eq '' or _y2 eq '') then return
   
   y1 = fix(_y1)
   y2 = fix(_y2)
-
+  
   path = (*global).ascii_path
   ; print, "In reduce_step2_save_roi_step2 - path: ",path
   
@@ -1611,7 +1615,7 @@ PRO reduce_step1_save_back_roi, event
   nexus_spin_state_data_back_roi_table = $
     (*(*global).nexus_spin_state_data_back_roi_table)
     
-  row = getSangleRowSelected(Event)
+  row = getPreviousSangleRowSelected(Event)
   index_spin = 0
   case (strlowcase(getSangleSpinStateSelected(Event))) of
     'off_off': index_spin=0
@@ -1620,8 +1624,62 @@ PRO reduce_step1_save_back_roi, event
     'on_on': index_spin=3
   endcase
   
-  nexus_spin_state_data_back_roi_table[index_spin,row] = back_file_name  
+  nexus_spin_state_data_back_roi_table[index_spin,row] = back_file_name
   (*(*global).nexus_spin_state_data_back_roi_table) = $
-  nexus_spin_state_data_back_roi_table
-  
+    nexus_spin_state_data_back_roi_table
+    
 END
+
+
+;+
+; :Description:
+;    This populate the y1 and y2 data back widgets with the values
+;    reported in the data background file loaded for that particular
+;    data run / spin state
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro load_step1_data_back_roi, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  ;save data back roi file name in table
+  nexus_spin_state_data_back_roi_table = $
+    (*(*global).nexus_spin_state_data_back_roi_table)
+    
+  row = getSangleRowSelected(Event)
+  print, 'row selected is : ' , row
+  index_spin = 0
+  case (strlowcase(getSangleSpinStateSelected(Event))) of
+    'off_off': index_spin=0
+    'off_on': index_spin=1
+    'on_off': index_spin=2
+    'on_on': index_spin=3
+  endcase
+  
+  back_file_name = nexus_spin_state_data_back_roi_table[index_spin,row]
+
+  if (file_test(back_file_name)) then begin
+  
+    Yarray = retrieveYminMaxFromFile(event,back_file_name)
+    Y1 = Yarray[0]
+    Y2 = Yarray[1]
+    
+  endif else begin
+  
+    Y1 = ''
+    Y2 = ''
+    
+  endelse
+  
+  putTextFieldValue, Event, 'reduce_step1_create_back_roi_y1_value', $
+    STRCOMPRESS(Y1,/REMOVE_ALL)
+  putTextFieldValue, Event, 'reduce_step1_create_back_roi_y2_value', $
+    STRCOMPRESS(Y2,/REMOVE_ALL)
+    
+end
+
