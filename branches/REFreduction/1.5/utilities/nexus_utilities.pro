@@ -65,9 +65,6 @@ FUNCTION check_number_polarization_state, Event, $
   
   ;end of remove me once nxdir works again
   
-  
-  
-  
   text = '-> Number of polarization states: '
   cmd = 'nxdir ' + nexus_file_name[0]
   
@@ -142,7 +139,7 @@ FUNCTION find_full_nexus_name, Event,$
     END
   ENDCASE
   
-  cmd = "findnexus --archive -i" + instrument
+  cmd = "findnexus -i" + instrument
   
   value = isButtonSelected(Event, button_uname)
   IF (value EQ 1) THEN BEGIN ;get proposal selected
