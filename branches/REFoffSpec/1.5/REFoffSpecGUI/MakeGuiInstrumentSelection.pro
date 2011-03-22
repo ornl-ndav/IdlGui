@@ -78,7 +78,7 @@ InstrumentCWBgroup = cw_bgroup(MAIN_BASE,$
                                /exclusive,$
                                xoffset=InstrumentSelectioncwbgroupSize[0],$
                                yoffset=InstrumentSelectioncwbgroupSize[1],$
-                               set_value=1,$
+                               set_value=0,$
                                uname='instrument_selection_cw_bgroup',$
                                column=1,$
                                label_top=InstrumentSelectioncwbgroupTitle)
