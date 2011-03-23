@@ -32,45 +32,57 @@
 ;
 ;==============================================================================
 
-FUNCTION job_manager_info_base, event
-compile_opt idl2
-
-  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='MAIN_BASE')
-  ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+;+
+; :Description:
+;    retrieve the parameters necessary to launch the refpix base
+;
+; :Keywords:
+;    event
+;    base
+;
+; :Author: j35
+;-
+pro set_refpix_base, event=event, base=base
+  compile_opt idl2
   
-  ;our_group = widget_base(
-  job_base = WIDGET_BASE(GROUP_LEADER=id,$
-    /MODAL,$
-    /COLUMN,$
-    /BASE_ALIGN_CENTER,$
-    frame = 10,$
-    title = 'LOADING JOB MANAGER PAGE ...')
+  selection = get_table_lines_selected(event=event, base=base, $
+    uname='ref_m_metadata_table')
+  from_row_selected = selection[1]
+  to_row_selected = selection[3]
+  nbr_file_selected = to_row_selected - from_row_selected + 1
+  index = from_row_selected
+  while (index le to_row_selected) do begin
+  
+    table = getValue(event=event,uname='tab1_table')
+    ;get file name of line selected
+    full_file_name_spin = table[0,index]
+    file_structure = get_file_structure(full_file_name_spin)
+    _short_file_name = file_structure.short_file_name
+    _spin = file_structure.spin
+    _full_file_name = file_structure.full_file_name
     
-  draw = WIDGET_DRAW(job_base,$
-    SCR_XSIZE = 265,$
-    SCR_YSIZE = 30,$
-    UNAME = 'job_manager_splash_draw')
+    config_table = getValue(event=event, uname='ref_m_metadata_table')
+    _refpix = config_table[3,index]
     
-  ;    space = WIDGET_LABEL(job_base,$
-  ;    VALUE = ' ')
-  ;    label = WIDGET_LABEL(job_base,$
-  ;;    FONT = '9x15bold',$
-  ;    value = 'This message may disapear before seeing the Job Manager Page!')
-  ;    space = WIDGET_LABEL(job_base,$
-  ;    VALUE = ' ')
+    iNexus = obj_new('IDLnexusUtilities', _full_file_name, spin_state=_spin)
+    _data = iNexus->get_full_data()  ;[tof, x, y]
+    _tof_axis = iNexus->get_tof_data() ;tof axis in ms
+    obj_destroy, iNexus
     
-  WIDGET_CONTROL, job_base, /realize
-  WIDGET_CONTROL, job_base, /SHOW
+    sz = size(_data,/dim)
+    _pixel_axis = indgen(sz[2])
+    
+    refpix_base, main_base=base, $
+      event=event, $
+      row_index = index, $
+      offset = 10, $
+      x_axis = _tof_axis, $
+      y_axis = _pixel_axis, $
+      data = _data, $
+      refpix = _refpix, $
+      file_name = _short_file_name + ' (' + _spin + ')'
+      
+    index++
+  endwhile
   
-  splash = READ_PNG((*global).job_manager_splash_draw)
-  mode_id = WIDGET_INFO(job_base, FIND_BY_UNAME='job_manager_splash_draw')
-  
-  ;mode
-  WIDGET_CONTROL, mode_id, GET_VALUE=id
-  WSET, id
-  TV, splash, 0,0,/true
-  
-  RETURN, job_base
-  
-END
+end

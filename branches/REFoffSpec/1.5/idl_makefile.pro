@@ -45,6 +45,14 @@ cd, CurrentFolder + '/REFoffSpecGUI/'
 .run MakeGuiLogBook.pro
 .run MakeGuiPlotUtility.pro
 
+;Build Data background ROI selection
+cd, CurrentFolder + '/data_background_selection/'
+.run data_background_selection_base.pro
+.run data_background_selection_counts_vs_pixel_base.pro
+.run data_background_selection_input_base.pro
+.run refresh_plot_data_background_selection_colorbar.pro
+.run set_data_background_selection_base.pro
+
 ;Build all procedures
 cd, CurrentFolder
 
@@ -70,7 +78,7 @@ cd, CurrentFolder
 .run ref_off_spec_reduce_step2.pro
 .run ref_off_spec_reduce_step2_plot_norm.pro
 .run ref_off_spec_reduce_step2_roi_selection.pro
-.run ref_off_sepc_reduce_step1_save_roi.pro
+;.run ref_off_spec_reduce_step1_save_roi.pro
 .run ref_off_spec_reduce_step2_save_roi.pro
 .run ref_off_spec_reduce_step2_save_roi_base.pro
 .run ref_off_spec_reduce_step1_save_roi_base.pro
