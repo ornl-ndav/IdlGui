@@ -706,7 +706,7 @@ END
 ;
 ; :Author: j35
 ;-
-pro data_background_selection_lin_log_data, event=event, base=base
+pro pixel_selection_lin_log_data, event=event, base=base
   compile_opt idl2
   
   ;get global structure
@@ -798,32 +798,32 @@ end
 ;
 ; :Author: j35
 ;-
-pro tof_selection_local_switch_axes_type, event
+pro pixel_selection_local_switch_axes_type, event
   compile_opt idl2
   
   uname = widget_info(event.id, /uname)
-  widget_control, event.top, get_uvalue=global_tof_selection
+  widget_control, event.top, get_uvalue=global_pixel_selection
   
-  if (uname eq 'tof_selection_local_scale_setting_linear') then begin
+  if (uname eq 'pixel_selection_local_scale_setting_linear') then begin
     set1_value = '*  ' + 'linear'
     set2_value = '   ' + 'logarithmic'
-    (*global_tof_selection).default_scale_settings = 0
+    (*global_pixel_selection).default_scale_settings = 0
   endif else begin
     set1_value = '   ' + 'linear'
     set2_value = '*  ' + 'logarithmic'
-    (*global_tof_selection).default_scale_settings = 1
+    (*global_pixel_selection).default_scale_settings = 1
   endelse
   
-  putValue, event=event, 'tof_selection_local_scale_setting_linear', set1_value
-  putValue, event=event, 'tof_selection_local_scale_setting_log', set2_value
+  putValue, event=event, 'pixel_selection_local_scale_setting_linear', set1_value
+  putValue, event=event, 'pixel_selection_local_scale_setting_log', set2_value
   
-  tof_selection_lin_log_data, event=event
-  refresh_tof_selection_plot, event, recalculate=1
-  refresh_plot_tof_selection_colorbar, event
+  pixel_selection_lin_log_data, event=event
+  refresh_pixel_selection_plot, event, recalculate=1
+  refresh_plot_pixel_selection_colorbar, event
   
-  save_tof_selection_background,  event=event
+  save_pixel_selection_background,  event=event
   
-  display_tof_selection_tof, event=event
+  display_pixel_selection_tof, event=event
   
 end
 
@@ -836,27 +836,25 @@ end
 ;
 ; :Author: j35
 ;-
-pro change_tof_selection_loadct, event
+pro change_pixel_selection_loadct, event
   compile_opt idl2
   
   new_uname = widget_info(event.id, /uname)
-  widget_control,event.top,get_uvalue=global_tof_selection
+  widget_control,event.top,get_uvalue=global_pixel_selection
   
   ;get old loadct
-  old_loadct = strcompress((*global_tof_selection).default_loadct,/remove_all)
-  old_uname = 'tof_selection_loadct_' + old_loadct
+  old_loadct = strcompress((*global_pixel_selection).default_loadct,/remove_all)
+  old_uname = 'pixel_selection_loadct_' + old_loadct
   label = getValue(event=event,uname=old_uname)
   
   ;remove keep central part
   raw_label1 = strsplit(label,'>>',/regex,/extract)
   raw_label2 = strsplit(raw_label1[1],'<<',/regex,/extract)
-  ;raw_label = strcompress(raw_label2[0],/remove_all)
   ;put it back
   putValue, event=event, old_uname, strtrim(raw_label2[0],2)
   
   ;change value of new loadct
   new_label = getValue(event=event, uname=new_uname)
-  ;  new_label = strcompress(new_label,/remove_all)
   ;add selection string
   new_label = '>  > >> ' + new_label + ' << <  <'
   putValue, event=event, new_uname, new_label
@@ -864,12 +862,12 @@ pro change_tof_selection_loadct, event
   ;save new loadct
   new_uname_array = strsplit(new_uname,'_',/extract)
   
-  (*global_tof_selection).default_loadct = fix(new_uname_array[3])
+  (*global_pixel_selection).default_loadct = fix(new_uname_array[3])
   
   ;replot
-  refresh_tof_selection_plot, event, recalculate=1
-  refresh_plot_tof_selection_colorbar, event
-  display_tof_selection_tof, event=event
+  refresh_pixel_selection_plot, event, recalculate=1
+  refresh_plot_pixel_selection_colorbar, event
+  display_pixel_selection_tof, event=event
   
 end
 
@@ -1450,7 +1448,7 @@ pro data_background_selection_base, main_base=main_base, $
     /NO_BLOCK, $
     cleanup = 'pixel_selection_base_cleanup'
     
-  data_background_selection_lin_log_data, base=wBase
+  pixel_selection_lin_log_data, base=wBase
   
   Data = (*(*global_pixel_selection).data)
   id = WIDGET_INFO(wBase, FIND_BY_UNAME='pixel_selection_draw')
