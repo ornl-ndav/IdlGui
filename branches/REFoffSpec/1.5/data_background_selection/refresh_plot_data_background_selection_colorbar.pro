@@ -47,29 +47,29 @@
 ;
 ; :Author: j35
 ;-
-pro plot_tof_selection_colorbar, event=event, base=base, zmin, zmax, type=type
+pro plot_pixel_selection_colorbar, event=event, base=base, zmin, zmax, type=type
   compile_opt idl2
   
   if (n_elements(event) ne 0) then begin
-    id_draw = widget_info(event.top,find_by_uname='tof_selection_colorbar')
-    widget_control, event.top, get_uvalue=global_tof_selection
+    id_draw = widget_info(event.top,find_by_uname='pixel_selection_colorbar')
+    widget_control, event.top, get_uvalue=global_pixel_selection
   endif else begin
-    id_draw = widget_info(base, find_by_uname='tof_selection_colorbar')
-    widget_control, base, get_uvalue=global_tof_selection
+    id_draw = widget_info(base, find_by_uname='pixel_selection_colorbar')
+    widget_control, base, get_uvalue=global_pixel_selection
   endelse
   widget_control, id_draw, get_value=id_value
   wset,id_value
   erase
   
-  default_loadct = (*global_tof_selection).default_loadct
+  default_loadct = (*global_pixel_selection).default_loadct
   loadct, default_loadct, /silent
   
-  default_scale_settings = (*global_tof_selection).default_scale_settings
+  default_scale_settings = (*global_pixel_selection).default_scale_settings
   if (default_scale_settings eq 0) then begin ;linear
   
     divisions = 20
     perso_format = '(e8.1)'
-    range = [zmin,zmax]
+    range = [1,zmax]
     colorbar, $
       NCOLORS      = 255, $
       POSITION     = [0.75,0.01,0.95,0.99], $
@@ -82,7 +82,7 @@ pro plot_tof_selection_colorbar, event=event, base=base, zmin, zmax, type=type
   
     divisions = 10
     perso_format = '(e8.1)'
-    range = float([zmin,zmax])
+    range = float([1,zmax])
     
     if (default_loadct eq 6) then begin
       colorbar, $
@@ -121,24 +121,25 @@ end
 ;
 ; :Author: j35
 ;-
-pro refresh_plot_tof_selection_colorbar, event
+pro refresh_plot_pixel_selection_colorbar, event
   compile_opt idl2
   
-  widget_control, event.top, get_uvalue=global_tof_selection
+  widget_control, event.top, get_uvalue=global_pixel_selection
   
-  zrange = (*global_tof_selection).zrange
+  zrange = (*global_pixel_selection).zrange
   zmin = zrange[0]
+  zmin = 1
   zmax = zrange[1]
   
-  id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='tof_selection_colorbar')
+  id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='pixel_selection_colorbar')
   widget_control, id_draw, get_value=id_value
   wset,id_value
   erase
   
-  default_loadct = (*global_tof_selection).default_loadct
+  default_loadct = (*global_pixel_selection).default_loadct
   loadct, default_loadct, /silent
   
-  default_scale_settings = (*global_tof_selection).default_scale_settings
+  default_scale_settings = (*global_pixel_selection).default_scale_settings
   if (default_scale_settings eq 0) then begin ;linear
   
     divisions = 20

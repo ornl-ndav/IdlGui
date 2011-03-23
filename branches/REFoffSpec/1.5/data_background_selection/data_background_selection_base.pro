@@ -53,6 +53,10 @@ pro data_background_selection_base_event, Event
     ;main draw
     widget_info(event.top, find_by_uname='pixel_selection_draw'): begin
     
+    
+      return
+      
+      
       catch, error
       if (error ne 0) then begin ;selection
         catch,/cancel
@@ -160,9 +164,9 @@ pro data_background_selection_base_event, Event
     end
     
     ;main base
-    widget_info(event.top, find_by_uname='tof_selection_base_uname'): begin
+    widget_info(event.top, find_by_uname='pixel_selection_base_uname'): begin
     
-      id = widget_info(event.top, find_by_uname='tof_selection_base_uname')
+      id = widget_info(event.top, find_by_uname='pixel_selection_base_uname')
       geometry = widget_info(id,/geometry)
       new_xsize = geometry.scr_xsize
       new_ysize = geometry.scr_ysize
@@ -170,44 +174,44 @@ pro data_background_selection_base_event, Event
       yoffset = geometry.yoffset
       
       ;only if the tof input base is there
-      id_tof_selection = (*global_tof_selection).tof_selection_input_base
-      if (widget_info(id_tof_selection, /valid_id) ne 0) then begin
-        widget_control, id_tof_selection, xoffset = xoffset + new_xsize
-        widget_control, id_tof_selection, yoffset = yoffset
+      id_pixel_selection = (*global_pixel_selection).pixel_selection_input_base
+      if (widget_info(id_pixel_selection, /valid_id) ne 0) then begin
+        widget_control, id_pixel_selection, xoffset = xoffset + new_xsize
+        widget_control, id_pixel_selection, yoffset = yoffset
       endif
       
-      if ((abs((*global_tof_selection).xsize - new_xsize) eq 70.0) && $
-        abs((*global_tof_selection).ysize - new_ysize) eq 33.0) then return
+      if ((abs((*global_pixel_selection).xsize - new_xsize) eq 70.0) && $
+        abs((*global_pixel_selection).ysize - new_ysize) eq 33.0) then return
         
-      if ((abs((*global_tof_selection).xsize - new_xsize) eq 0.0) && $
-        abs((*global_tof_selection).ysize - new_ysize) eq 33.0) then return
+      if ((abs((*global_pixel_selection).xsize - new_xsize) eq 0.0) && $
+        abs((*global_pixel_selection).ysize - new_ysize) eq 33.0) then return
         
-      (*global_tof_selection).xsize = new_xsize
-      (*global_tof_selection).ysize = new_ysize
+      (*global_pixel_selection).xsize = new_xsize
+      (*global_pixel_selection).ysize = new_ysize
       
       widget_control, id, xsize = new_xsize
       widget_control, id, ysize = new_ysize
       
-      border = (*global_tof_selection).border
-      colorbar_xsize = (*global_tof_selection).colorbar_xsize
+      border = (*global_pixel_selection).border
+      colorbar_xsize = (*global_pixel_selection).colorbar_xsize
       
-      id = widget_info(event.top, find_by_uname='tof_selection_draw')
+      id = widget_info(event.top, find_by_uname='pixel_selection_draw')
       widget_control, id, draw_xsize = new_xsize-2*border-colorbar_xsize
       widget_control, id, draw_ysize = new_ysize-2*border
       
-      id = widget_info(event.top,find_by_Uname='tof_selection_scale')
+      id = widget_info(event.top,find_by_Uname='pixel_selection_scale')
       widget_control, id, draw_xsize = new_xsize-colorbar_xsize
       widget_control, id, draw_ysize = new_ysize
       
-      id = widget_info(event.top, find_by_uname='tof_selection_colorbar')
+      id = widget_info(event.top, find_by_uname='pixel_selection_colorbar')
       widget_control, id, xoffset=new_xsize-colorbar_xsize
       widget_control, id, draw_ysize = new_ysize
       widget_control, id, draw_xsize = colorbar_xsize
       
-      plot_tof_selection_beam_center_scale, event=event
-      refresh_tof_selection_plot, event, recalculate=1
-      refresh_plot_tof_selection_colorbar, event
-      display_tof_selection_tof, event=event
+      plot_pixel_selection_beam_center_scale, event=event
+      refresh_pixel_selection_plot, event, recalculate=1
+      refresh_plot_pixel_selection_colorbar, event
+      display_pixel_selection_tof, event=event
       
       return
     end
@@ -400,21 +404,23 @@ end
 ;
 ; :Author: j35
 ;-
-pro display_tof_selection_tof, event=event, base=base
+pro display_pixel_selection_tof, event=event, base=base
   compile_opt idl2
   
+  return
+  
   if (keyword_set(event)) then begin
-    widget_control, event.top, get_uvalue=global_tof_selection
-    id = widget_info(event.top, find_by_uname='tof_selection_draw')
+    widget_control, event.top, get_uvalue=global_pixel_selection
+    id = widget_info(event.top, find_by_uname='pixel_selection_draw')
   endif else begin
-    widget_control, base, get_uvalue=global_tof_selection
-    id = widget_info(base, find_by_uname='tof_selection_draw')
+    widget_control, base, get_uvalue=global_pixel_selection
+    id = widget_info(base, find_by_uname='pixel_selection_draw')
   endelse
   widget_control, id, GET_VALUE = plot_id
   wset, plot_id
-  TV, (*(*global_tof_selection).background), true=3
+  TV, (*(*global_pixel_selection).background), true=3
   
-  tof_selection_tof = (*global_tof_selection).tof_selection_tof
+  tof_selection_tof = (*global_pixel_selection).pixel_selection_pixel
   
   tof_min = tof_selection_tof[0]
   tof_max = tof_selection_tof[1]
@@ -662,16 +668,17 @@ end
 ;
 ; :Author: j35
 ;-
-pro save_tof_selection_background,  event=event, main_base=main_base, uname=uname
+pro save_pixel_selection_background,  event=event, main_base=main_base, $
+uname=uname
   compile_opt idl2
   
-  if (~keyword_set(uname)) then uname = 'tof_selection_draw'
+  if (~keyword_set(uname)) then uname = 'pixel_selection_draw'
   
   IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
     id = WIDGET_INFO(main_base, FIND_BY_UNAME=uname)
-    widget_control, main_base, get_uvalue=global_tof_selection
+    widget_control, main_base, get_uvalue=global_pixel_selection
   ENDIF ELSE BEGIN
-    WIDGET_CONTROL, event.top, GET_UVALUE=global_tof_selection
+    WIDGET_CONTROL, event.top, GET_UVALUE=global_pixel_selection
     id = WIDGET_INFO(Event.top,find_by_uname=uname)
   ENDELSE
   
@@ -685,7 +692,7 @@ pro save_tof_selection_background,  event=event, main_base=main_base, uname=unam
   
   DEVICE, copy =[0, 0, xsize, ysize, 0, 0]
   
-  (*(*global_tof_selection).background) = background
+  (*(*global_pixel_selection).background) = background
   
 END
 
@@ -738,25 +745,25 @@ end
 ;
 ; :Author: j35
 ;-
-pro refresh_tof_selection_plot, event, recalculate=recalculate
+pro refresh_pixel_selection_plot, event, recalculate=recalculate
   compile_opt idl2
   
   ;get global structure
-  widget_control,event.top,get_uvalue=global_tof_selection
+  widget_control,event.top,get_uvalue=global_pixel_selection
   
   if (n_elements(recalculate) eq 0) then begin
-    id = widget_info(event.top, find_by_uname='tof_selection_draw')
+    id = widget_info(event.top, find_by_uname='pixel_selection_draw')
     widget_control, id, GET_VALUE = plot_id
     wset, plot_id
-    TV, (*(*global_tof_selection).background), true=3
+    TV, (*(*global_pixel_selection).background), true=3
     return
   endif
   
-  Data = (*(*global_tof_selection).data)
-  new_xsize = (*global_tof_selection).xsize
-  new_ysize = (*global_tof_selection).ysize
+  Data = (*(*global_pixel_selection).data)
+  new_xsize = (*global_pixel_selection).xsize
+  new_ysize = (*global_pixel_selection).ysize
   
-  id = WIDGET_INFO(event.top, FIND_BY_UNAME='tof_selection_draw')
+  id = WIDGET_INFO(event.top, FIND_BY_UNAME='pixel_selection_draw')
   draw_geometry = WIDGET_INFO(id,/GEOMETRY)
   xsize = draw_geometry.xsize
   ysize = draw_geometry.ysize
@@ -766,19 +773,19 @@ pro refresh_tof_selection_plot, event, recalculate=recalculate
   ;  endif else begin
   ;    cData = congrid(Data, ysize, xsize,/interp)
   ;  endelse
-  (*global_tof_selection).congrid_xcoeff = xsize
-  (*global_tof_selection).congrid_ycoeff = ysize
+  (*global_pixel_selection).congrid_xcoeff = xsize
+  (*global_pixel_selection).congrid_ycoeff = ysize
   
-  id = widget_info(event.top, find_by_uname='tof_selection_draw')
+  id = widget_info(event.top, find_by_uname='pixel_selection_draw')
   widget_control, id, GET_VALUE = plot_id
   wset, plot_id
   erase
   
-  loadct, (*global_tof_selection).default_loadct, /silent
+  loadct, (*global_pixel_selection).default_loadct, /silent
   
   tvscl, cData
   
-  save_tof_selection_background, event=event
+  save_pixel_selection_background, event=event
   
 end
 
@@ -1351,8 +1358,8 @@ pro data_background_selection_base, main_base=main_base, $
     file_name: file_name, $
     short_file_name: short_file_name, $
     
-    tof_selection_input_base: 0L, $ ;id of refpix_input_base
-    tof_selection_counts_vs_tof_base_id: 0L, $ 'id of refpix_counts_vs_tof_base
+    pixel_selection_input_base: 0L, $ ;id of refpix_input_base
+    pixel_selection_counts_vs_pixel_base_id: 0L, $ 'id of refpix_counts_vs_tof_base
     counts_vs_tof_scale_is_linear: 0b, $ ;counts vs tof (linear/log)
   
     ;used to plot selection zoom
@@ -1472,16 +1479,14 @@ pro data_background_selection_base, main_base=main_base, $
   ;tvscl, transpose(cData)
   tvscl, cData
   
-  return
-  
   ;Scale
   zmin = 0
-  zmax = max((*(*global_tof_selection).data_linear))
-  zrange = (*global_tof_selection).zrange
+  zmax = max((*(*global_pixel_selection).data_linear))
+  zrange = (*global_pixel_selection).zrange
   zrange[0] = zmin
   zrange[1] = zmax
   
-  (*global_tof_selection).zrange = zrange
+  (*global_pixel_selection).zrange = zrange
   
   plot_pixel_selection_colorbar, base=wBase, $
     zmin, $
@@ -1490,14 +1495,16 @@ pro data_background_selection_base, main_base=main_base, $
     
   pre = '>  > >> '
   post = ' << <  <'
-  uname = 'tof_selection_loadct_' + strcompress(default_loadct,/remove_all)
+  uname = 'pixel_selection_loadct_' + strcompress(default_loadct,/remove_all)
   value = getValue(base=wBase, uname=uname)
   new_value = pre + value + post
   setValue, base=wBase, uname, new_value
   
-  save_tof_selection_background,  main_base=wBase
+  save_pixel_selection_background,  main_base=wBase
   
-  ;bring to life the refpix pixel1 and 2 input base
+  return
+
+  ;bring to life the ROI pixel1 and 2 input base
   tof_selection_input_base, parent_base_uname = 'tof_selection_base_uname', $
     top_base=wBase_copy1
     
