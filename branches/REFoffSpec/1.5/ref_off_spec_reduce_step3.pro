@@ -43,7 +43,7 @@ PRO refresh_reduce_step3_table, Event
   IF (instrument EQ 'REF_M') THEN BEGIN
     ysize = 11
   ENDIF ELSE BEGIN
-    ysize = 6
+    ysize = 8
   ENDELSE
   step3_big_table = STRARR(40,ysize)
   
@@ -173,22 +173,35 @@ PRO refresh_reduce_step3_table, Event
         norm_run     = 'N/A'
         norm_nexus   = 'N/A'
         roi_file     = 'N/A'
+        data_back_roi_file = 'N/A'
+        roi_file           = 'N/A'
+        back_roi_file      = 'N/A'
+        
         run_job_status = 0
       ENDIF ELSE BEGIN
         norm_run     = getReduceStep2NormOfRow(Event, row=table_index)
         norm_nexus   = getNormNexusOfIndex(Event, $
           table_index,$
           short_norm_file_list)
-        roi_file     = getNormRoiFileOfIndex(Event, row=table_index)
+;        roi_file     = getNormRoiFileOfIndex(Event, row=table_index)
         
-        IF (STRCOMPRESS(roi_file,/REMOVE_ALL) EQ '') THEN BEGIN
-          roi_file = 'N/A'
-          run_job_status = 0
-        ENDIF
-        
-        IF (roi_file EQ 'N/A') THEN BEGIN
-          run_job_status = 0
-        ENDIF
+            roi_file = getNormRoiFileOfIndex(Event, row=table_index)
+            IF (STRCOMPRESS(roi_file,/REMOVE_ALL) EQ '') THEN BEGIN
+              roi_file = 'N/A'
+              run_job_status = 0
+            ENDIF
+            
+            back_roi_file = getNormBackRoiFileOfIndex(Event, $
+              row=table_index)
+            IF (STRCOMPRESS(back_roi_file,/REMOVE_ALL) EQ '') THEN BEGIN
+              back_roi_file = 'N/A'
+            ENDIF
+            
+            data_back_roi_file = $
+              nexus_spin_state_data_back_roi_table[1,table_index]
+            if (strcompress(data_back_roi_file,/remove_all) eq '') then begin
+              data_back_roi_file = 'N/A'
+            endif
         
       ENDELSE
       
@@ -198,11 +211,13 @@ PRO refresh_reduce_step3_table, Event
       step3_big_table[table_index,2] = norm_run
       step3_big_table[table_index,3] = norm_nexus
       step3_big_table[table_index,4] = roi_file
+      step3_big_table[table_index,5] = back_roi_file
+      step3_big_table[table_index,6] = data_back_roi_file
       
       ;define the output file name
       output_file_name = 'REF_L_' + data_run
       output_file_name += '.txt'
-      step3_big_table[table_index,5] = output_file_name
+      step3_big_table[table_index,7] = output_file_name
       
       table_index++
       
