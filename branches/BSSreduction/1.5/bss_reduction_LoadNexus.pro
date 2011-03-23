@@ -52,6 +52,12 @@ PRO retrieveBanksData, Event, FullNexusName
   (*(*global).bank1) = bank1
   (*(*global).bank2) = bank2
   
+  _bank1 = total(bank1,1)
+  _bank2 = total(bank2,1)
+  
+  (*(*global).bank1_raw_value) = _bank1
+  (*(*global).bank2_raw_value) = _bank2
+  
   h5d_close, fieldID
   h5f_close, fileID
   
