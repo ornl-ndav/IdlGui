@@ -51,7 +51,7 @@ cd, CurrentFolder + '/data_background_selection/'
 .run data_background_selection_counts_vs_pixel_base.pro
 .run data_background_selection_input_base.pro
 .run refresh_plot_data_background_selection_colorbar.pro
-.run set_data_background_selection_base.pro
+.run data_background_selection_tool_button_eventcb.pro
 
 ;Build all procedures
 cd, CurrentFolder

@@ -41,17 +41,17 @@
 ;
 ; :Author: j35
 ;-
-pro tof_selection_base_event, Event
+pro data_background_selection_base_event, Event
   compile_opt idl2
   
   ;get global structure
-  widget_control,event.top,get_uvalue=global_tof_selection
-  main_event = (*global_tof_selection).main_event
+  widget_control,event.top,get_uvalue=global_pixel_selection
+  main_event = (*global_pixel_selection).main_event
   
   case Event.id of
   
     ;main draw
-    widget_info(event.top, find_by_uname='tof_selection_draw'): begin
+    widget_info(event.top, find_by_uname='pixel_selection_draw'): begin
     
       catch, error
       if (error ne 0) then begin ;selection
@@ -699,18 +699,18 @@ END
 ;
 ; :Author: j35
 ;-
-pro tof_selection_lin_log_data, event=event, base=base
+pro data_background_selection_lin_log_data, event=event, base=base
   compile_opt idl2
   
   ;get global structure
   if (n_elements(event) ne 0) then begin
-    widget_control,event.top,get_uvalue=global_tof_selection
+    widget_control,event.top,get_uvalue=global_pixel_selection
   endif else begin
-    widget_control, base, get_uvalue=global_tof_selection
+    widget_control, base, get_uvalue=global_pixel_selection
   endelse
   
-  Data = (*(*global_tof_selection).data_linear)
-  scale_setting = (*global_tof_selection).default_scale_settings ;0 for lin, 1 for log
+  Data = (*(*global_pixel_selection).data_linear)
+  scale_setting = (*global_pixel_selection).default_scale_settings ;0 for lin, 1 for log
   
   if (scale_setting eq 1) then begin ;log
   
@@ -725,7 +725,7 @@ pro tof_selection_lin_log_data, event=event, base=base
     
   endif
   
-  (*(*global_tof_selection).data) = Data
+  (*(*global_pixel_selection).data) = Data
   
 end
 
@@ -899,19 +899,19 @@ end
 ;
 ; :Author: j35
 ;-
-pro plot_tof_selection_beam_center_scale, base=base, event=event
+pro plot_pixel_selection_beam_center_scale, base=base, event=event
   compile_opt idl2
   
   if (n_elements(base) ne 0) then begin
-    id = widget_info(base,find_by_Uname='tof_selection_scale')
-    id_base = widget_info(base, find_by_uname='tof_selection_base_uname')
+    id = widget_info(base,find_by_Uname='pixel_selection_scale')
+    id_base = widget_info(base, find_by_uname='pixel_selection_base_uname')
     sys_color = widget_info(base,/system_colors)
-    widget_control, base, get_uvalue=global_tof_selection
+    widget_control, base, get_uvalue=global_pixel_selection
   endif else begin
-    id = widget_info(event.top, find_by_uname='tof_selection_scale')
-    id_base = widget_info(event.top, find_by_uname='tof_selection_base_uname')
+    id = widget_info(event.top, find_by_uname='pixel_selection_scale')
+    id_base = widget_info(event.top, find_by_uname='pixel_selection_base_uname')
     sys_color = widget_info(event.top, /system_colors)
-    widget_control, event.top, get_uvalue=global_tof_selection
+    widget_control, event.top, get_uvalue=global_pixel_selection
   endelse
   
   widget_control, id, get_value=id_value
@@ -921,11 +921,11 @@ pro plot_tof_selection_beam_center_scale, base=base, event=event
   device, decomposed=1
   sys_color_window_bk = sys_color.window_bk
   
-  x_range = (*global_tof_selection).xrange
+  x_range = (*global_pixel_selection).xrange
   min_x = x_range[0]
   max_x = x_range[1]
   
-  y_range = (*global_tof_selection).yrange
+  y_range = (*global_pixel_selection).yrange
   min_y = y_range[0]
   max_y = y_range[1]
   
@@ -1114,7 +1114,7 @@ end
 ;
 ; :Author: j35
 ;-
-pro tof_selection_base_gui, wBase, $
+pro data_background_selection_base_gui, wBase, $
     main_base_geometry, $
     global, $
     offset, $
@@ -1148,7 +1148,7 @@ pro tof_selection_base_gui, wBase, $
   
   title = 'Run number: ' + strcompress(run_number[0],/remove_all)
   wBase = WIDGET_BASE(TITLE = title, $
-    UNAME        = 'tof_selection_base_uname', $
+    UNAME        = 'pixel_selection_base_uname', $
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
     SCR_YSIZE    = ysize+ysize_tof_selection_row,$
@@ -1174,16 +1174,16 @@ pro tof_selection_base_gui, wBase, $
     keyboard_events=2, $
     retain=2, $
     ;    event_pro = 'refpix_draw_eventcb',$
-    uname = 'tof_selection_draw')
+    uname = 'pixel_selection_draw')
     
   scale = widget_draw(wBase,$
-    uname = 'tof_selection_scale',$
+    uname = 'pixel_selection_scale',$
     scr_xsize = xsize,$
     scr_ysize = ysize,$
     retain=2)
     
   colorbar =  widget_draw(wBase,$
-    uname = 'tof_selection_colorbar',$
+    uname = 'pixel_selection_colorbar',$
     xoffset = xsize,$
     scr_xsize = colorbar_xsize,$
     scr_ysize = ysize,$
@@ -1237,16 +1237,16 @@ pro tof_selection_base_gui, wBase, $
     
   set = widget_button(mPlot,$
     value = list_loadct[0],$
-    uname = 'tof_selection_loadct_0',$
-    event_pro = 'change_tof_selection_loadct',$
+    uname = 'pixel_selection_loadct_0',$
+    event_pro = 'change_pixel_selection_loadct',$
     /separator)
     
   sz = n_elements(list_loadct)
   for i=1L,(sz-1) do begin
     set = widget_button(mPlot,$
       value = list_loadct[i],$
-      uname = 'tof_selection_loadct_' + strcompress(i,/remove_all),$
-      event_pro = 'change_tof_selection_loadct')
+      uname = 'pixel_selection_loadct_' + strcompress(i,/remove_all),$
+      event_pro = 'change_pixel_selection_loadct')
   endfor
   
   if (scale_setting eq 0) then begin
@@ -1263,31 +1263,31 @@ pro tof_selection_base_gui, wBase, $
     
   set1 = widget_button(mPlot, $
     value = set1_value, $
-    event_pro = 'tof_selection_local_switch_axes_type',$
-    uname = 'tof_selection_local_scale_setting_linear')
+    event_pro = 'pixel_selection_local_switch_axes_type',$
+    uname = 'pixel_selection_local_scale_setting_linear')
     
   set2 = widget_button(mPlot, $
     value = set2_value,$
-    event_pro = 'tof_selection_local_switch_axes_type',$
-    uname = 'tof_selection_local_scale_setting_log')
+    event_pro = 'pixel_selection_local_switch_axes_type',$
+    uname = 'pixel_selection_local_scale_setting_log')
     
   pixel = widget_button(bar1,$
     value = 'Extra',$
     /menu)
     
   show = widget_button(pixel,$
-    value = 'Show TOF selection window',$
-    uname = 'show_tof_selection_base')
+    value = 'Show pixel selection window',$
+    uname = 'show_pixel_selection_base')
     
   _plot = widget_button(pixel,$
-    value = 'Show Counts vs TOF window',$
-    uname = 'show_counts_vs_tof_base')
+    value = 'Show Counts vs pixel window',$
+    uname = 'show_counts_vs_pixel_base')
     
 end
 
 ;+
 ; :Description:
-;     Creates the base and plot the pixel vs tof of the
+;     Creates the base and plot the pixel vs pixel of the
 ;     given file index
 ;
 ; :Keywords:
@@ -1303,9 +1303,8 @@ end
 ;
 ; :Author: j35
 ;-
-pro tof_selection_base, main_base=main_base, $
+pro data_background_selection_base, main_base=main_base, $
     event=event, $
-    tof_min_max = tof_min_max, $
     offset = offset, $
     x_axis = x_axis, $
     y_axis = y_axis, $
@@ -1329,7 +1328,7 @@ pro tof_selection_base, main_base=main_base, $
   
   ;build gui
   wBase = ''
-  tof_selection_base_gui, wBase, $
+  data_background_selection_base_gui, wBase, $
     main_base_geometry, $
     global, $
     offset, $
@@ -1345,7 +1344,7 @@ pro tof_selection_base, main_base=main_base, $
   
   short_file_name = file_basename(file_name)
   
-  global_tof_selection = PTR_NEW({ wbase: wbase,$
+  global_pixel_selection = PTR_NEW({ wbase: wbase,$
     global: global, $
     
     run_number: run_number, $
@@ -1354,7 +1353,7 @@ pro tof_selection_base, main_base=main_base, $
     
     tof_selection_input_base: 0L, $ ;id of refpix_input_base
     tof_selection_counts_vs_tof_base_id: 0L, $ 'id of refpix_counts_vs_tof_base
-  counts_vs_tof_scale_is_linear: 0b, $ ;counts vs tof (linear/log)
+    counts_vs_tof_scale_is_linear: 0b, $ ;counts vs tof (linear/log)
   
     ;used to plot selection zoom
     default_plot_size: default_plot_size, $
@@ -1371,7 +1370,7 @@ pro tof_selection_base, main_base=main_base, $
     full_data: ptr_new(0L), $
     data: ptr_new(0L), $
     data_linear: ptr_new(0L), $
-    counts_vs_tof: ptr_new(0L), $
+    counts_vs_pixel: ptr_new(0L), $
     
     x_axis: x_axis, $ ; [-0.004, -0.003, -0.002...]
     y_axis: y_axis, $ ; [0.0, 0.1, 0.2, 0.3]
@@ -1412,7 +1411,6 @@ pro tof_selection_base, main_base=main_base, $
     
     left_click: 0b,$ ;by default, left button is not clicked
     tof1_selected: 1b, $ ;to show tof1 or tof2 current selection
-    tof_selection_tof: tof_min_max, $ ;[tof_min,tof_max] in ms
     
     ;x coeff used in the congrid function to plot main data
     congrid_xcoeff: 0., $
@@ -1422,56 +1420,59 @@ pro tof_selection_base, main_base=main_base, $
     top_base: wBase, $
     main_event: event})
     
-  (*(*global_tof_selection).full_data) = data
+  (*(*global_pixel_selection).full_data) = data
   
-  data_2d = total(data,2)
-  counts_vs_tof = total(data_2d,2)
-  (*(*global_tof_selection).counts_vs_tof) = counts_vs_tof
+  data_2d = total(data,3)
   
-  (*(*global_tof_selection).data_linear) = data_2d
-  (*(*global_tof_selection).data) = data_2d
+  counts_vs_pixel = total(data_2d,1)
+  (*(*global_pixel_selection).counts_vs_pixel) = counts_vs_pixel
+  
+  (*(*global_pixel_selection).data_linear) = data_2d
+  (*(*global_pixel_selection).data) = data_2d
   
   xrange = [x_axis[0], x_axis[-1]]
-  (*global_tof_selection).xrange = xrange
+  (*global_pixel_selection).xrange = xrange
   
   yrange = [y_axis[0], y_axis[-1]+1]
-  (*global_tof_selection).yrange = yrange
+  (*global_pixel_selection).yrange = yrange
   
-  WIDGET_CONTROL, wBase, SET_UVALUE = global_tof_selection
+  WIDGET_CONTROL, wBase, SET_UVALUE = global_pixel_selection
   
-  XMANAGER, "tof_selection_base", wBase, $
+  XMANAGER, "data_background_selection_base", wBase, $
     GROUP_LEADER = ourGroup, $
     /NO_BLOCK, $
-    cleanup = 'tof_selection_base_cleanup'
+    cleanup = 'data_background_selection_base_cleanup'
     
-  tof_selection_lin_log_data, base=wBase
+  data_background_selection_lin_log_data, base=wBase
   
-  Data = (*(*global_tof_selection).data)
-  id = WIDGET_INFO(wBase, FIND_BY_UNAME='tof_selection_draw')
+  Data = (*(*global_pixel_selection).data)
+  id = WIDGET_INFO(wBase, FIND_BY_UNAME='pixel_selection_draw')
   draw_geometry = WIDGET_INFO(id,/GEOMETRY)
   xsize = draw_geometry.xsize
   ysize = draw_geometry.ysize
   
   cData = congrid(Data, xsize, ysize)
   
-  id = widget_info(wBase, find_by_uname='tof_selection_base_uname')
+  id = widget_info(wBase, find_by_uname='pixel_selection_base_uname')
   geometry = widget_info(id,/geometry)
   _xsize = geometry.scr_xsize
   _ysize = geometry.scr_ysize
   
-  (*global_tof_selection).congrid_xcoeff = xsize
-  (*global_tof_selection).congrid_ycoeff = ysize
+  (*global_pixel_selection).congrid_xcoeff = xsize
+  (*global_pixel_selection).congrid_ycoeff = ysize
   
   DEVICE, DECOMPOSED = 0
-  loadct, (*global_tof_selection).default_loadct, /SILENT
+  loadct, (*global_pixel_selection).default_loadct, /SILENT
   
-  plot_tof_selection_beam_center_scale, base=wBase
+  plot_pixel_selection_beam_center_scale, base=wBase
   
-  id = widget_info(wBase,find_by_uname='tof_selection_draw')
+  id = widget_info(wBase,find_by_uname='pixel_selection_draw')
   widget_control, id, GET_VALUE = plot_id
   wset, plot_id
   ;tvscl, transpose(cData)
   tvscl, cData
+  
+  return
   
   ;Scale
   zmin = 0
@@ -1482,7 +1483,7 @@ pro tof_selection_base, main_base=main_base, $
   
   (*global_tof_selection).zrange = zrange
   
-  plot_tof_selection_colorbar, base=wBase, $
+  plot_pixel_selection_colorbar, base=wBase, $
     zmin, $
     zmax, $
     type=default_scale_settings

@@ -34,55 +34,72 @@
 
 ;+
 ; :Description:
-;    retrieve the parameters necessary to launch the refpix base
+;    This routine will launch the tof_selection base
 ;
-; :Keywords:
+; :Params:
 ;    event
-;    base
 ;
 ; :Author: j35
 ;-
-pro set_refpix_base, event=event, base=base
+pro data_background_selection_tool_button_eventcb, event
   compile_opt idl2
   
-  selection = get_table_lines_selected(event=event, base=base, $
-    uname='ref_m_metadata_table')
-  from_row_selected = selection[1]
-  to_row_selected = selection[3]
-  nbr_file_selected = to_row_selected - from_row_selected + 1
-  index = from_row_selected
-  while (index le to_row_selected) do begin
+  widget_control, event.top, get_uvalue=global
+  widget_control, /hourglass
   
-    table = getValue(event=event,uname='tab1_table')
-    ;get file name of line selected
-    full_file_name_spin = table[0,index]
-    file_structure = get_file_structure(full_file_name_spin)
-    _short_file_name = file_structure.short_file_name
-    _spin = file_structure.spin
-    _full_file_name = file_structure.full_file_name
+  row_selected = getTableRowSelected(Event,'reduce_tab1_table_uname')
+  reduce_tab1_table = (*(*global).reduce_tab1_table)
+  run_number = reduce_tab1_table[0,row_selected[0]]
+  full_nexus_name = reduce_tab1_table[1,row_selected[0]]
+  
+  retrieve_2dData_and_tof, event, full_nexus_name, data=data, tof_axis=tof_axis
+  
+  data_background_selection_base, main_base='MAIN_BASE',$
+    event=event, $
+    offset = 50,$
+    x_axis = tof_axis,$
+    y_axis = indgen(256),$
+    data = data,$
+    run_number= strcompress(run_number[0],/remove_all), $
+    file_name = full_nexus_name
     
-    config_table = getValue(event=event, uname='ref_m_metadata_table')
-    _refpix = config_table[3,index]
-    
-    iNexus = obj_new('IDLnexusUtilities', _full_file_name, spin_state=_spin)
-    _data = iNexus->get_full_data()  ;[tof, x, y]
-    _tof_axis = iNexus->get_tof_data() ;tof axis in ms
-    obj_destroy, iNexus
-    
-    sz = size(_data,/dim)
-    _pixel_axis = indgen(sz[2])
-    
-    refpix_base, main_base=base, $
-      event=event, $
-      row_index = index, $
-      offset = 10, $
-      x_axis = _tof_axis, $
-      y_axis = _pixel_axis, $
-      data = _data, $
-      refpix = _refpix, $
-      file_name = _short_file_name + ' (' + _spin + ')'
-      
-    index++
-  endwhile
+  widget_control, hourglass=0
   
 end
+
+
+;+
+; :Description:
+;    retrieves the tof_axis and data array
+;
+; :Params:
+;    event
+;    full_nexus_name
+;
+; :Keywords:
+;    data
+;    tof_axis
+;
+; :Author: j35
+;-
+pro retrieve_2dData_and_tof, event, full_nexus_name, data=data, tof_axis=tof_axis
+compile_opt idl2
+
+fileID = h5f_open(full_nexus_name)
+data_path = '/entry/bank1/data'
+tof_path = '/entry/bank1/time_of_flight'
+
+;data
+dataID = h5d_open(fileID, data_path)
+data = h5d_read(dataID)
+h5d_close, dataID
+
+;tof
+tofID = h5d_open(fileID, tof_path)
+tof_axis = h5d_read(tofID)/1000.  ;to be in ms
+h5d_close, tofID
+
+h5f_close, fileID
+
+end
+
