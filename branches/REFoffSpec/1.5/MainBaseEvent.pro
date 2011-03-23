@@ -138,11 +138,11 @@ PRO MAIN_BASE_event, Event
     retrieve_tof_array_from_nexus, Event, result
     IF (result EQ 1) THEN plot_selected_data_in_sangle_base, Event, result
     IF (result EQ 1) THEN BEGIN
-     load_step1_data_back_roi, event
+      load_step1_data_back_roi, event
       display_reduce_step1_sangle_scale, EVENT=event
       plot_sangle_dirpix, Event
       load_step1_data_back_roi, event
-      reduce_step1_plot_rois, event        
+      reduce_step1_plot_rois, event
       plot_tof_range_on_main_plot, Event
       saving_background, Event
       plot_sangle_refpix, Event
@@ -156,7 +156,7 @@ PRO MAIN_BASE_event, Event
     WIDGET_CONTROL, /HOURGLASS
     
     ;first save the current roi selected
-    reduce_step1_save_back_roi, Event 
+    reduce_step1_save_back_roi, Event
     
     ;if sangle_table_press_click eq 1 = user click (no release)
     IF ((*global).sangle_table_press_click EQ 1) THEN BEGIN
@@ -169,7 +169,7 @@ PRO MAIN_BASE_event, Event
         saving_background, Event
         plot_sangle_refpix, Event
         plot_sangle_dirpix, Event
-        reduce_step1_plot_rois, event        
+        reduce_step1_plot_rois, event
         plot_counts_vs_pixel_help, Event
       ENDIF
       (*global).sangle_table_press_click = 0
@@ -437,8 +437,8 @@ PRO MAIN_BASE_event, Event
   ;spin state selection
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_1'): BEGIN ;Off_Off
     WIDGET_CONTROL, /HOURGLASS
-        ;first save the current roi selected
-    reduce_step1_save_back_roi, Event 
+    ;first save the current roi selected
+    reduce_step1_save_back_roi, Event
     
     plot_selected_data_in_sangle_base, Event
     plot_tof_range_on_main_plot, Event
@@ -451,8 +451,8 @@ PRO MAIN_BASE_event, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_2'): BEGIN ;Off_On
     WIDGET_CONTROL, /HOURGLASS
-        ;first save the current roi selected
-    reduce_step1_save_back_roi, Event 
+    ;first save the current roi selected
+    reduce_step1_save_back_roi, Event
     
     plot_selected_data_in_sangle_base, Event
     plot_tof_range_on_main_plot, Event
@@ -465,8 +465,8 @@ PRO MAIN_BASE_event, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_3'): BEGIN ;On_Off
     WIDGET_CONTROL, /HOURGLASS
-        ;first save the current roi selected
-    reduce_step1_save_back_roi, Event 
+    ;first save the current roi selected
+    reduce_step1_save_back_roi, Event
     
     plot_selected_data_in_sangle_base, Event
     plot_tof_range_on_main_plot, Event
@@ -479,8 +479,8 @@ PRO MAIN_BASE_event, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_4'): BEGIN ;On_On
     WIDGET_CONTROL, /HOURGLASS
-        ;first save the current roi selected
-    reduce_step1_save_back_roi, Event 
+    ;first save the current roi selected
+    reduce_step1_save_back_roi, Event
     
     plot_selected_data_in_sangle_base, Event
     plot_tof_range_on_main_plot, Event
@@ -555,9 +555,9 @@ PRO MAIN_BASE_event, Event
   
   ;Done with SANGLE base
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_done_button'): BEGIN
-      ;first save the current roi selected
-    reduce_step1_save_back_roi, Event 
-  
+    ;first save the current roi selected
+    reduce_step1_save_back_roi, Event
+    
     save_sangle_table, Event
     MapBase, Event, 'reduce_step1_sangle_base', 0
     MapBase, Event, 'reduce_step1_sangle_base_label', 0
@@ -575,18 +575,18 @@ PRO MAIN_BASE_event, Event
     replot_selected_data_in_sangle_base, Event
     plot_tof_range_on_main_plot, Event
     reduce_step1_plot_rois, event
-        IF ((*global).sangle_mode EQ 'refpix') THEN BEGIN
-    plot_sangle_dirpix, Event
-    saving_background, Event
-    plot_sangle_refpix, Event
-        ENDIF ELSE BEGIN
-    plot_sangle_refpix, Event
-    saving_background, Event
-    plot_sangle_dirpix, Event
-        ENDELSE
+    IF ((*global).sangle_mode EQ 'refpix') THEN BEGIN
+      plot_sangle_dirpix, Event
+      saving_background, Event
+      plot_sangle_refpix, Event
+    ENDIF ELSE BEGIN
+      plot_sangle_refpix, Event
+      saving_background, Event
+      plot_sangle_dirpix, Event
+    ENDELSE
     plot_counts_vs_pixel_help, Event
-      ;first save the current roi selected
-    reduce_step1_save_back_roi, Event 
+    ;first save the current roi selected
+    reduce_step1_save_back_roi, Event
   END
   
   ;reset reduce/step1/background fields
@@ -597,19 +597,19 @@ PRO MAIN_BASE_event, Event
     replot_selected_data_in_sangle_base, Event
     plot_tof_range_on_main_plot, Event
     reduce_step1_plot_rois, event
-        IF ((*global).sangle_mode EQ 'refpix') THEN BEGIN
-    plot_sangle_dirpix, Event
-    saving_background, Event
-    plot_sangle_refpix, Event
-        ENDIF ELSE BEGIN
-    plot_sangle_refpix, Event
-    saving_background, Event
-    plot_sangle_dirpix, Event
-        ENDELSE
+    IF ((*global).sangle_mode EQ 'refpix') THEN BEGIN
+      plot_sangle_dirpix, Event
+      saving_background, Event
+      plot_sangle_refpix, Event
+    ENDIF ELSE BEGIN
+      plot_sangle_refpix, Event
+      saving_background, Event
+      plot_sangle_dirpix, Event
+    ENDELSE
     plot_counts_vs_pixel_help, Event
-  
-      ;first save the current roi selected
-    reduce_step1_save_back_roi, Event 
+    
+    ;first save the current roi selected
+    reduce_step1_save_back_roi, Event
   end
   
   ;y1 and y2
@@ -618,38 +618,38 @@ PRO MAIN_BASE_event, Event
     replot_selected_data_in_sangle_base, Event
     plot_tof_range_on_main_plot, Event
     reduce_step1_plot_rois, event
-        IF ((*global).sangle_mode EQ 'refpix') THEN BEGIN
-    plot_sangle_dirpix, Event
-    saving_background, Event
-    plot_sangle_refpix, Event
-        ENDIF ELSE BEGIN
-    plot_sangle_refpix, Event
-    saving_background, Event
-    plot_sangle_dirpix, Event
-        ENDELSE
+    IF ((*global).sangle_mode EQ 'refpix') THEN BEGIN
+      plot_sangle_dirpix, Event
+      saving_background, Event
+      plot_sangle_refpix, Event
+    ENDIF ELSE BEGIN
+      plot_sangle_refpix, Event
+      saving_background, Event
+      plot_sangle_dirpix, Event
+    ENDELSE
     plot_counts_vs_pixel_help, Event
-  
-      ;first save the current roi selected
-    reduce_step1_save_back_roi, Event 
+    
+    ;first save the current roi selected
+    reduce_step1_save_back_roi, Event
   end
   widget_info(wWidget, $
     find_by_uname='reduce_step1_create_back_roi_y2_value'): begin
     replot_selected_data_in_sangle_base, Event
     plot_tof_range_on_main_plot, Event
     reduce_step1_plot_rois, event
-        IF ((*global).sangle_mode EQ 'refpix') THEN BEGIN
-    plot_sangle_dirpix, Event
-    saving_background, Event
-    plot_sangle_refpix, Event
-        ENDIF ELSE BEGIN
-    plot_sangle_refpix, Event
-    saving_background, Event
-    plot_sangle_dirpix, Event
-        ENDELSE
+    IF ((*global).sangle_mode EQ 'refpix') THEN BEGIN
+      plot_sangle_dirpix, Event
+      saving_background, Event
+      plot_sangle_refpix, Event
+    ENDIF ELSE BEGIN
+      plot_sangle_refpix, Event
+      saving_background, Event
+      plot_sangle_dirpix, Event
+    ENDELSE
     plot_counts_vs_pixel_help, Event
-  
-      ;first save the current roi selected
-    reduce_step1_save_back_roi, Event 
+    
+    ;first save the current roi selected
+    reduce_step1_save_back_roi, Event
   end
   
   ;----------------------------------------------------------------------------
@@ -1077,7 +1077,7 @@ PRO MAIN_BASE_event, Event
   END
   
   ;..........................................................................
-  ;Browse for a ROI file button (0->9) for REF_L instrument
+  ;Browse for a peak norm ROI file button (0->9) for REF_L instrument
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button0'): BEGIN
     reduce_step2_browse_roi, Event, row=0
   END
@@ -1107,6 +1107,49 @@ PRO MAIN_BASE_event, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button9'): BEGIN
     reduce_step2_browse_roi, Event, row=9
+  END
+  
+  ;..........................................................................
+  ;Browse for a back norm ROI file button (0->9) for REF_L instrument
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='reduce_tab2_back_roi_browse_button0'): BEGIN
+    reduce_step2_browse_back_roi, Event, row=0
+  END
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='reduce_tab2_back_roi_browse_button1'): BEGIN
+    reduce_step2_browse_back_roi, Event, row=1
+  END
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='reduce_tab2_back_roi_browse_button2'): BEGIN
+    reduce_step2_browse_back_roi, Event, row=2
+  END
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='reduce_tab2_back_roi_browse_button3'): BEGIN
+    reduce_step2_browse_back_roi, Event, row=3
+  END
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='reduce_tab2_back_roi_browse_button4'): BEGIN
+    reduce_step2_browse_back_roi, Event, row=4
+  END
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='reduce_tab2_back_roi_browse_button5'): BEGIN
+    reduce_step2_browse_back_roi, Event, row=5
+  END
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='reduce_tab2_back_roi_browse_button6'): BEGIN
+    reduce_step2_browse_back_roi, Event, row=6
+  END
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='reduce_tab2_back_roi_browse_button7'): BEGIN
+    reduce_step2_browse_back_roi, Event, row=7
+  END
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='reduce_tab2_back_roi_browse_button8'): BEGIN
+    reduce_step2_browse_back_roi, Event, row=8
+  END
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='reduce_tab2_back_roi_browse_button9'): BEGIN
+    reduce_step2_browse_back_roi, Event, row=9
   END
   
   ;REF_M instrument

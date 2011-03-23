@@ -647,7 +647,7 @@ PRO reduce_step2_browse_roi, Event, row=row, data_spin_state=data_spin_state
   IDLsendToGeek_addLogBookText, Event, LogText
   
   roi_file = DIALOG_PICKFILE(DEFAULT_EXTENSION = default_extension,$
-    FILTER = ['*_ROI.dat'],$
+    FILTER = ['*_ROI.dat','*_ROI.txt'],$
     GET_PATH = new_path,$
     /MUST_EXIST,$
     PATH = path,$
@@ -925,11 +925,18 @@ PRO reduce_step2_create_roi, Event, $
     
   ENDIF ELSE BEGIN ;REF_L
   
-    uname = 'reduce_tab2_roi_value' + sRow
-    roi_file_name = getTextFieldValue(Event,uname)
+    nexus_spin_state_roi_table = (*(*global).nexus_spin_state_roi_table)
+    roi_file_name = getNormRoiFileOfIndex(event, row=sRow)
     uname = 'reduce_step2_create_roi_file_name_label'
     IF (roi_file_name eq '') THEN roi_file_name = 'N/A'
     putTextFieldValue, Event, uname, roi_file_name
+
+    nexus_spin_state_back_roi_table = (*(*global).nexus_spin_state_back_roi_table)
+    back_roi_file_name = getNormBackRoiFileOfIndex(event, row=sRow, $
+      base_name = spin_sate)
+    if (back_roi_file_name eq '') then back_roi_file_name = 'N/A'
+    uname = 'reduce_step2_create_back_roi_file_name_label'
+    putTextFieldValue, event, uname, back_roi_file_name
     
   ENDELSE
   
@@ -1329,8 +1336,12 @@ PRO refresh_roi_file_name, Event
       
         column = 1
         roi_file = nexus_spin_state_roi_table[column,norm_table[index]]
-        IF (roi_file EQ '') THEN roi_file = 'N/A'
-        roi_label_uname = 'reduce_tab2_roi_value' + sIndex
+        IF (roi_file EQ '') THEN begin
+        roi_file = 'N/A'
+        endif else begin
+        roi_file = 'Loaded!'
+        endelse
+        roi_label_uname = 'reduce_tab2_roi_peak_status' + sIndex
         putTextFieldValue, Event, roi_label_uname, roi_file
         
       ENDELSE
@@ -1427,11 +1438,15 @@ PRO refresh_back_roi_file_name, Event
       ENDIF ELSE BEGIN ;REF_L
       
         column = 1
-        roi_file = nexus_spin_state_roi_table[column,norm_table[index]]
-        IF (roi_file EQ '') THEN roi_file = 'N/A'
-        roi_label_uname = 'reduce_tab2_roi_value' + sIndex
+        roi_file = nexus_spin_state_back_roi_table[column,norm_table[index]]
+        IF (roi_file EQ '') THEN begin
+        roi_file = 'N/A'
+        endif else begin
+        roi_file = 'Loaded!'
+        endelse
+        roi_label_uname = 'reduce_tab2_back_roi_status' + sIndex
         putTextFieldValue, Event, roi_label_uname, roi_file
-        
+               
       ENDELSE
       
     ENDIF
