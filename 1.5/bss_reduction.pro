@@ -137,6 +137,9 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ;list_of_nexus
     list_of_data_nexus: ptr_new(0L), $
     
+    bank1_raw_value: ptr_new(0L), $
+    bank2_raw_value: ptr_new(0L), $
+    
     application: APPLICATION,$
     version: VERSION,$
     ucams: UCAMS,$ ;ucams of user

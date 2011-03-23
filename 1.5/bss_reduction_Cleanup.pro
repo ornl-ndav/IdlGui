@@ -64,6 +64,9 @@ PRO BSSreduction_Cleanup, Main_Base
   ptr_free, (*global).pixel_excluded
   ptr_free, (*global).pixel_excluded_base
   ptr_free, (*global).default_pixel_excluded
+  ptr_free, (*global).bank1_raw_value
+  ptr_free, (*global).bank2_raw_value
+  
   ptr_free, global
 
 ;Create Config File Name
