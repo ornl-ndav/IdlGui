@@ -597,18 +597,23 @@ FUNCTION getNormRoiFileOfIndex, Event, row_data=row_data, base_name=base_name
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
-  
   nexus_spin_state_roi_table = (*(*global).nexus_spin_state_roi_table)
+    
   norm_table = (*global).reduce_step2_big_table_norm_index
   
   sIndex = STRCOMPRESS(row_data,/REMOVE_ALL)
-  data_base_uname = 'reduce_tab2_data_recap_base_#' + sIndex
-  column = getReduceStep2SpinStateColumn(Event, Row=sIndex, $
+  ;data_base_uname = 'reduce_tab2_data_recap_base_#' + sIndex
+    if ((*global).instrument eq 'REF_M') then begin
+    column = getReduceStep2SpinStateColumn(Event, $
+    Row=sIndex, $
     data_spin_state=base_name)
+    endif else begin
+    column = 1
+    endelse
   roi_file = nexus_spin_state_roi_table[column,norm_table[row_data]]
   RETURN, roi_file
   
-END
+  END
 
 ;------------------------------------------------------------------------------
 FUNCTION getNormBackRoiFileOfIndex, Event, $
