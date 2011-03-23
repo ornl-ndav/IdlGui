@@ -882,15 +882,15 @@ end
 ;
 ; :Author: j35
 ;-
-pro tof_selection_base_uname_killed, global_tof_selection
+pro pixel_selection_base_uname_killed, global_pixel_selection
   compile_opt idl2
   
-  id_input = (*global_tof_selection).tof_selection_input_base
+  id_input = (*global_pixel_selection).pixel_selection_input_base
   if (widget_info(id_input, /valid_id) ne 0) then begin
     widget_control, id_input, /destroy
   endif
   
-  id_counts = (*global_tof_selection).tof_selection_counts_vs_tof_base_id
+  id_counts = (*global_pixel_selection).pixel_selection_counts_vs_pixel_base_id
   if (widget_info(id_counts, /valid_id) ne 0) then begin
     widget_control, id_counts, /destroy
   endif
@@ -986,26 +986,26 @@ end
 ;
 ; :Author: j35
 ;-
-pro tof_selection_base_cleanup, tlb
+pro pixel_selection_base_cleanup, tlb
   compile_opt idl2
   
-  widget_control, tlb, get_uvalue=global_tof_selection, /no_copy
+  widget_control, tlb, get_uvalue=global_pixel_selection, /no_copy
   
-  tof_selection_base_uname_killed, global_tof_selection
+  pixel_selection_base_uname_killed, global_pixel_selection
   
-  if (n_elements(global_tof_selection) eq 0) then return
+  if (n_elements(global_pixel_selection) eq 0) then return
   
-  ptr_free, (*global_tof_selection).full_data
-  ptr_free, (*global_tof_selection).data
-  ptr_free, (*global_tof_selection).data_linear
-  ptr_free, (*global_tof_selection).background
-  ptr_free, (*global_tof_selection).counts_vs_qx_xaxis
-  ptr_free, (*global_tof_selection).counts_vs_qx_data
-  ptr_free, (*global_tof_selection).counts_vs_qz_xaxis
-  ptr_free, (*global_tof_selection).counts_vs_qz_data
-  ptr_free, (*global_tof_selection).counts_vs_tof
+  ptr_free, (*global_pixel_selection).full_data
+  ptr_free, (*global_pixel_selection).data
+  ptr_free, (*global_pixel_selection).data_linear
+  ptr_free, (*global_pixel_selection).background
+  ptr_free, (*global_pixel_selection).counts_vs_qx_xaxis
+  ptr_free, (*global_pixel_selection).counts_vs_qx_data
+  ptr_free, (*global_pixel_selection).counts_vs_qz_xaxis
+  ptr_free, (*global_pixel_selection).counts_vs_qz_data
+  ptr_free, (*global_pixel_selection).counts_vs_pixel
   
-  ptr_free, global_tof_selection
+  ptr_free, global_pixel_selection
   
 end
 
@@ -1448,7 +1448,7 @@ pro data_background_selection_base, main_base=main_base, $
   XMANAGER, "data_background_selection_base", wBase, $
     GROUP_LEADER = ourGroup, $
     /NO_BLOCK, $
-    cleanup = 'data_background_selection_base_cleanup'
+    cleanup = 'pixel_selection_base_cleanup'
     
   data_background_selection_lin_log_data, base=wBase
   
