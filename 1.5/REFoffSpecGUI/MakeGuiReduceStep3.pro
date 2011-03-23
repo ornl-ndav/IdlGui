@@ -88,10 +88,12 @@ PRO make_gui_Reduce_step3, REDUCE_TAB, sTab, TabTitles, global
       'DATA NeXus',$
       'NORM. Run',$
       'NORM. NeXus',$
-      'ROI',$
+      'Norm. Peak ROI',$
+      'Norm. Background ROI', $
+      'Data Background ROI',$
       'Output File Name']
-    xsize = 6
-    column_widths = [55,340,70,340,360,360]
+    xsize = 8
+    column_widths = [55,340,70,340,300,300,300,360]
     scr_xsize = 1260
   ENDELSE
   

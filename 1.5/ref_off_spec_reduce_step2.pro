@@ -1072,6 +1072,7 @@ PRO cleanup_reduce_step2_list, nexus_norm_list_run_number, nexus_file_list
   index = 0
   new_index = 0
   ;  print, '------while loop ----------'
+  new_nexus_file_list = ''
   WHILE (index LT sz) DO BEGIN
     ;    print, nexus_norm_list_run_number[0,index]
   
