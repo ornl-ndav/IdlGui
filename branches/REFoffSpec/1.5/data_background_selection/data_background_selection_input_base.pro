@@ -205,9 +205,9 @@ end
 ;
 ; :Author: j35
 ;-
-pro tof_selection_input_base_gui, wBase, $
+pro pixel_selection_input_base_gui, wBase, $
     parent_base_geometry, $
-    tof_selection_tof = tof_selection_tof
+    pixel_selection = pixel_selection
   compile_opt idl2
   
   main_base_xoffset = parent_base_geometry.xoffset
@@ -222,79 +222,96 @@ pro tof_selection_input_base_gui, wBase, $
   
   ourGroup = WIDGET_BASE()
   
-  title = 'TOF 1 and 2 selection'
+  title = 'Pixel 1 and 2 selection'
   wBase = WIDGET_BASE(TITLE = title, $
-    UNAME        = 'tof_selection_base', $
+    UNAME        = 'pixel_selection_base', $
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
     MAP          = 1,$
-    kill_notify  = 'tof_selection_base_killed', $
+    kill_notify  = 'pixel_selection_base_killed', $
     /column,$
     /tlb_size_events,$
     GROUP_LEADER = ourGroup)
     
-  tof1 = tof_selection_tof[0]
-  tof2 = tof_selection_tof[1]
+  pixel1 = pixel_selection[0]
+  pixel2 = pixel_selection[1]
   
   row1 = widget_base(wBase,$
     /row)
     
-  if (tof1 eq -1) then begin
-    tof1 = cw_field(row1,$
+  if (pixel1 eq -1) then begin
+    px1 = cw_field(row1,$
       xsize = 5,$
       /float,$
-      title = 'TOF1 (ms)',$
+      title = '         Pixel1',$
       /row,$
       /return_events,$
-      uname = 'tof_selection_tof1_uname')
+      uname = 'pixel_selection_pixel1_uname')
   endif else begin
-    tof1 = cw_field(row1,$
+    px1 = cw_field(row1,$
       xsize = 5,$
       value = tof1,$
       /float,$
-      title = 'TOF1 (ms)',$
+      title = 'Pixel2',$
       /row,$
       /return_events,$
-      uname = 'tof_selection_tof1_uname')
+      uname = 'pixel_selection_pixel1_uname')
   endelse
   
-  if (tof2 eq -1) then begin
-    tof2 = cw_field(row1,$
+  if (pixel2 eq -1) then begin
+    px2 = cw_field(row1,$
       xsize = 5,$
       /float,$
-      title = '      TOF2 (ms)',$
+      title = '                    Pixel2',$
       /row,$
       /return_events,$
-      uname = 'tof_selection_tof2_uname')
+      uname = 'pixel_selection_pixel2_uname')
   endif else begin
-    tof2 = cw_field(row1,$
+    px2 = cw_field(row1,$
       xsize = 5,$
       /float,$
       value = tof2, $
-      title = '      TOF2 (ms)',$
+      title = '      Pixel2',$
       /row,$
       /return_events,$
-      uname = 'tof_selection_tof2_uname')
+      uname = 'pixel_selection_pixel2_uname')
   endelse
   
   space = widget_label(wBase,$
-    value = ' ')
+    value = 'or')
     
+  browse = widget_button(wBase,$
+  value = 'Browse...',$
+  uname = 'pixel_selection_browse')  
+  roi_base = widget_base(wBase,/row)
+  label = widget_label(roi_base,$
+  value = 'Data Back. Loaded:')
+  value = widget_label(roi_base,$
+  value = 'N/A',$
+  /align_left, $
+  uname = 'pixel_selection_roi_file_name_loaded',$
+  scr_xsize = 300)  
+    
+  space = widget_label(wBase,$
+  value = ' ')
+  space = widget_label(wBase,$
+  value = ' ')
+      
   row4 = widget_base(wBase,$
     /row)
     
   cancel = widget_button(row4,$
-    value = 'Cancel',$
-    uname = 'cancel_tof_selection_selected_uname',$
-    scr_xsize = 50)
+    value = 'EXIT Background selection',$
+    uname = 'cancel_pixel_selection_selected_uname',$
+    scr_xsize = 160)
     
   space = widget_label(row4,$
-    value = '  ')
+    value = '      ')
     
   row4 = widget_button(row4,$
-    value = 'Use this TOF range and EXIT',$
-    uname = 'validate_tof_selection_selected_uname',$
-    scr_xsize = 200)
+    value = 'Create Data Background ROI and EXIT',$
+    uname = 'validate_pixel_selection_selected_uname',$
+    scr_xsize = 300)
     
 end
 
@@ -389,38 +406,38 @@ end
 ;
 ; :Author: j35
 ;-
-pro tof_selection_input_base, event=event, $
+pro pixel_selection_input_base, event=event, $
     top_base=top_base, $
     parent_base_uname = parent_base_uname
   compile_opt idl2
   
   if (keyword_set(event)) then begin
     id = WIDGET_INFO(Event.top, FIND_BY_UNAME=parent_base_uname)
-    WIDGET_CONTROL,Event.top,GET_UVALUE=global_tof_selection
+    WIDGET_CONTROL,Event.top,GET_UVALUE=global_pixel_selection
   endif else begin
     id = widget_info(top_base, find_by_uname=parent_base_uname)
-    widget_control, top_base, get_uvalue=global_tof_selection
+    widget_control, top_base, get_uvalue=global_pixel_selection
   endelse
   parent_base_geometry = WIDGET_INFO(id,/GEOMETRY)
   
-  tof_selection_tof = (*global_tof_selection).tof_selection_tof
+  pixel_selection = (*global_pixel_selection).pixel_selection
   
   _base = 0L
-  tof_selection_input_base_gui, _base, $
+  pixel_selection_input_base_gui, _base, $
     parent_base_geometry, $
-    tof_selection_tof = tof_selection_tof
+    pixel_selection = pixel_selection
     
-  (*global_tof_selection).tof_selection_input_base = _base
+  (*global_pixel_selection).pixel_selection_input_base = _base
   
   WIDGET_CONTROL, _base, /REALIZE
   
   global_info = PTR_NEW({ _base: _base,$
     top_base: top_base, $
-    global_tof_selection: global_tof_selection })
+    global_pixel_selection: global_pixel_selection })
     
   WIDGET_CONTROL, _base, SET_UVALUE = global_info
   
-  XMANAGER, "tof_selection_input_base", _base, GROUP_LEADER = ourGroup, $
+  XMANAGER, "pixel_selection_input_base", _base, GROUP_LEADER = ourGroup, $
     /NO_BLOCK, $
     cleanup='counts_info_base_cleanup'
     
