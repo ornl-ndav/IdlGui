@@ -53,15 +53,13 @@ pro data_background_selection_base_event, Event
     ;main draw
     widget_info(event.top, find_by_uname='pixel_selection_draw'): begin
     
-    
-      return
-      
-      
       catch, error
       if (error ne 0) then begin ;selection
         catch,/cancel
         
-        show_tof_selection_cursor_info, event
+        show_pixel_selection_cursor_info, event
+        
+        return
         
         if (event.press eq 1) then begin ;left click
         
@@ -124,7 +122,7 @@ pro data_background_selection_base_event, Event
         endif
         
         ;moving mouse with left click pressed
-        if ((*global_tof_selection).left_click) then begin
+        if ((*global_pixel_selection).left_click) then begin
           tof_value = strcompress(retrieve_tof_value(event),/remove_all)
           if ((*global_tof_selection).tof1_selected) then begin
             uname = 'tof_selection_tof1_uname'
@@ -152,8 +150,9 @@ pro data_background_selection_base_event, Event
       endif else begin ;entering or leaving widget_draw
       
         if (event.enter eq 0) then begin ;leaving plot
-          file_name = (*global_tof_selection).file_name
-          id = widget_info(event.top, find_by_uname='tof_selection_base_uname')
+          file_name = (*global_pixel_selection).file_name
+          id = widget_info(event.top, $
+          find_by_uname='pixel_selection_base_uname')
           widget_control, id, tlb_set_title=file_name
           
         endif else begin ;entering plot
@@ -619,23 +618,23 @@ end
 ;
 ; :Author: j35
 ;-
-pro show_tof_selection_cursor_info, event
+pro show_pixel_selection_cursor_info, event
   compile_opt idl2
   
-  widget_control, event.top, get_uvalue=global_tof_selection
+  widget_control, event.top, get_uvalue=global_pixel_selection
   
-  data = (*(*global_tof_selection).full_data)
-  x_axis = (*global_tof_selection).x_axis
-  y_axis = (*global_tof_selection).y_axis
+  data = (*(*global_pixel_selection).full_data)
+  x_axis = (*global_pixel_selection).x_axis
+  y_axis = (*global_pixel_selection).y_axis
   
-  xcoeff = (*global_tof_selection).congrid_xcoeff
-  ycoeff = (*global_tof_selection).congrid_ycoeff
+  xcoeff = (*global_pixel_selection).congrid_xcoeff
+  ycoeff = (*global_pixel_selection).congrid_ycoeff
   
   tof_value = strcompress(retrieve_tof_value(event),/remove_all)
   pixel_value = strcompress(retrieve_pixel_value(event),/remove_all)
   counts_value = strcompress(retrieve_counts_value(event),/remove_all)
   
-  file_name = (*global_tof_selection).short_file_name
+  file_name = (*global_pixel_selection).short_file_name
   
   if (tof_value eq 'N/A' || $
     pixel_value eq 'N/A' || $
@@ -647,7 +646,7 @@ pro show_tof_selection_cursor_info, event
     text += strcompress(pixel_value,/remove_all) + '; counts:'
     text += strcompress(counts_value,/remove_all) + ')'
   endelse
-  id = widget_info(event.top, find_by_uname='tof_selection_base_uname')
+  id = widget_info(event.top, find_by_uname='pixel_selection_base_uname')
   widget_control, id, tlb_set_title=text
   
 end
