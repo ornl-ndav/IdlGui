@@ -59,90 +59,86 @@ pro data_background_selection_base_event, Event
         
         show_pixel_selection_cursor_info, event
         
-        return
-        
         if (event.press eq 1) then begin ;left click
         
-          show_tof_selection_input_base, event
-          show_tof_selection_counts_vs_tof_base, event
+          show_pixel_selection_input_base, event
+          show_pixel_selection_counts_vs_pixel_base, event
           
           ;left click activated
-          (*global_tof_selection).left_click = 1b
+          (*global_pixel_selection).left_click = 1b
           
-          tof_value = strcompress(retrieve_tof_value(event),/remove_all)
-          if ((*global_tof_selection).tof1_selected) then begin
-            uname = 'tof_selection_tof1_uname'
+          pixel_value = strcompress(retrieve_pixel_value(event),/remove_all)
+          if ((*global_pixel_selection).pixel1_selected) then begin
+            uname = 'pixel_selection_pixel1_uname'
           endif else begin
-            uname = 'tof_selection_tof2_uname'
+            uname = 'pixel_selection_pixel2_uname'
           endelse
           
-          check_tof_value, tof_value, global_tof_selection
-          if (tof_value eq -1) then tof_value = ''
-          putValue, base=(*global_tof_selection).tof_selection_input_base, $
+          check_pixel_value, pixel_value, global_pixel_selection
+          if (pixel_value eq -1) then pixel_value = ''
+          putValue, base=(*global_pixel_selection).pixel_selection_input_base, $
             uname, $
-            tof_value
-          save_tof_data, event=event
-          display_tof_selection_tof, event=event
+            pixel_value
+          save_pixel_data, event=event
+          display_pixel_selection, event=event
           
-          ;display counts_vs_tof with selection
-          plot_base = (*global_tof_selection).tof_selection_counts_vs_tof_base_id
+          ;display counts_vs_pixel with selection
+          plot_base = (*global_pixel_selection).roi_selection_counts_vs_pixel_base_id
           if (widget_info(plot_base, /valid_id) ne 0) then begin
-            display_counts_vs_tof, $
-              base=(*global_tof_selection).tof_selection_counts_vs_tof_base_id, $
-              global_tof_selection
+            data_background_display_counts_vs_pixel, $
+              base=(*global_pixel_selection).roi_selection_counts_vs_pixel_base_id, $
+              global_pixel_selection
           endif
           
         endif
         
-        
         ;release button
         if (event.release eq 1 && $
-          (*global_tof_selection).left_click eq 1b) then begin
-          (*global_tof_selection).left_click = 0b
+          (*global_pixel_selection).left_click eq 1b) then begin
+          (*global_pixel_selection).left_click = 0b
         endif
         
         ;right click
         if (event.press eq 4) then begin
-          ;          show_refpix_input_base, event
-          if ((*global_tof_selection).tof1_selected) then begin
-            (*global_tof_selection).tof1_selected = 0b
+          if ((*global_pixel_selection).pixel1_selected) then begin
+            (*global_pixel_selection).pixel1_selected = 0b
           endif else begin
-            (*global_tof_selection).tof1_selected = 1b
+            (*global_pixel_selection).pixel1_selected = 1b
           endelse
-          display_tof_selection_tof, event=event
+          display_pixel_selection, event=event
           
-          ;display counts_vs_tof with selection
-          plot_base = (*global_tof_selection).tof_selection_counts_vs_tof_base_id
+          ;display counts_vs_pixel with selection
+          plot_base = (*global_pixel_selection).roi_selection_counts_vs_pixel_base_id
           if (widget_info(plot_base, /valid_id) ne 0) then begin
-            display_counts_vs_tof, $
-              base=(*global_tof_selection).tof_selection_counts_vs_tof_base_id, $
-              global_tof_selection
+            data_background_display_counts_vs_pixel, $
+              base=(*global_pixel_selection).roi_selection_counts_vs_pixel_base_id, $
+              global_pixel_selection
           endif
           
         endif
         
         ;moving mouse with left click pressed
         if ((*global_pixel_selection).left_click) then begin
-          tof_value = strcompress(retrieve_tof_value(event),/remove_all)
-          if ((*global_tof_selection).tof1_selected) then begin
-            uname = 'tof_selection_tof1_uname'
+          pixel_value = strcompress(retrieve_pixel_value(event),/remove_all)
+          if ((*global_pixel_selection).pixel1_selected) then begin
+            uname = 'pixel_selection_pixel1_uname'
           endif else begin
-            uname = 'tof_selection_tof2_uname'
+            uname = 'pixel_selection_pixel2_uname'
           endelse
-          check_tof_value, tof_value, global_tof_selection
-          if (tof_value eq -1) then tof_value = ''
-          putValue, base=(*global_tof_selection).tof_selection_input_base, $
+          check_pixel_value, pixel_value, global_pixel_selection
+          if (pixel_value eq -1) then pixel_value = ''
+          putValue, base=(*global_pixel_selection).pixel_selection_input_base, $
             uname, $
-            tof_value
-          save_tof_data, event=event
-          display_tof_selection_tof, event=event
+            pixel_value
+          save_pixel_data, event=event
+          display_pixel_selection, event=event
           
           ;display counts_vs_tof with selection
-          plot_base = (*global_tof_selection).tof_selection_counts_vs_tof_base_id
+          plot_base = (*global_pixel_selection).roi_selection_counts_vs_pixel_base_id
           if (widget_info(plot_base, /valid_id) ne 0) then begin
-            display_counts_vs_tof, $
-              base=(*global_tof_selection).tof_selection_counts_vs_tof_base_id, $
-              global_tof_selection
+            data_background_display_counts_vs_pixel, $
+              base=plot_base, $
+              global_pixel_selection
           endif
           
         endif
@@ -258,22 +254,22 @@ end
 
 ;+
 ; :Description:
-;    Bring to life the refpix input base
+;    Bring to life the pixel input base
 ;
 ; :Params:
 ;    event
 ;
 ; :Author: j35
 ;-
-pro show_tof_selection_input_base, event
+pro show_pixel_selection_input_base, event
   compile_opt idl2
   
-  widget_control, event.top, get_uvalue=global_tof_selection
+  widget_control, event.top, get_uvalue=global_pixel_selection
   
-  _base = (*global_tof_selection).tof_selection_input_base
+  _base = (*global_pixel_selection).pixel_selection_input_base
   if (widget_info(_base, /valid_id) eq 0) then begin
-    tof_selection_input_base, parent_base_uname = 'tof_selection_base_uname', $
-      top_base = (*global_tof_selection).top_base, $
+    pixel_selection_input_base, parent_base_uname = 'pixel_selection_base_uname', $
+      top_base = (*global_pixel_selection).top_base, $
       event=event
   endif
   
@@ -281,22 +277,23 @@ end
 
 ;+
 ; :Description:
-;    Bring to life the refpix counts vs pixel base
+;    Bring to life the counts vs pixel base
 ;
 ; :Params:
 ;    event
 ;
 ; :Author: j35
 ;-
-pro show_tof_selection_counts_vs_tof_base, event
+pro show_pixel_selection_counts_vs_pixel_base, event
   compile_opt idl2
   
-  widget_control, event.top, get_uvalue=global_tof_selection
+  widget_control, event.top, get_uvalue=global_pixel_selection
   
-  plot_base = (*global_tof_selection).tof_selection_counts_vs_tof_base_id
+  plot_base = (*global_pixel_selection).roi_selection_counts_vs_pixel_base_id
   if (widget_info(plot_base, /valid_id) eq 0) then begin
-    tof_selection_counts_vs_tof_base, parent_base_uname = 'tof_selection_base_uname', $
-      top_base = (*global_tof_selection).top_base, $
+    data_background_counts_vs_pixel_base, $
+    parent_base_uname='pixel_selection_base_uname', $
+      top_base = (*global_pixel_selection).top_base, $
       event=event
   endif
   
@@ -331,35 +328,35 @@ end
 
 ;+
 ; :Description:
-;    Save the tof1 and 2 in data coordinates
+;    Save the pixel1 and 2 in data coordinates
 ;
 ; :Params:
 ;    event
 ;
 ; :Author: j35
 ;-
-pro save_tof_data, event=event, base=base
+pro save_pixel_data, event=event, base=base
   compile_opt idl2
   
   if (keyword_set(event)) then begin
-    widget_control, event.top, get_uvalue=global_tof_selection
+    widget_control, event.top, get_uvalue=global_pixel_selection
   endif else begin
-    widget_control, base, get_uvalue=global_selection
+    widget_control, base, get_uvalue=global_pixel_selection
   endelse
   
-  tof_selection_input_base = (*global_tof_selection).tof_selection_input_base
+  pixel_selection_input_base = (*global_pixel_selection).pixel_selection_input_base
   
-  tof1 = getValue(base=tof_selection_input_base, $
-    uname='tof_selection_tof1_uname')
-  tof2 = getValue(base=tof_selection_input_base, $
-    uname='tof_selection_tof2_uname')
+  pixel1 = getValue(base=pixel_selection_input_base, $
+    uname='pixel_selection_pixel1_uname')
+  pixel2 = getValue(base=pixel_selection_input_base, $
+    uname='pixel_selection_pixel2_uname')
     
-  tof1 = (tof1 eq '') ? -1 : tof1
-  tof2 = (tof2 eq '') ? -1 : tof2
+  pixel1 = (pixel1 eq '') ? -1 : pixel1
+  pixel2 = (pixel2 eq '') ? -1 : pixel2
   
-  tof_min_max = [tof1, tof2]
+  pixel_min_max = [pixel1, pixel2]
   
-  (*global_tof_selection).tof_selection_tof = tof_min_max
+  (*global_pixel_selection).pixel_selection = pixel_min_max
   
 end
 
