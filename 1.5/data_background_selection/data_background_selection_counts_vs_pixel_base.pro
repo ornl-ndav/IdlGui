@@ -358,7 +358,7 @@ pro counts_vs_pixel_base_gui, wBase, $
   xoffset = main_base_xsize
   xoffset += main_base_xoffset
   
-  yoffset = main_base_yoffset + 170
+  yoffset = main_base_yoffset + 220
   
   ourGroup = WIDGET_BASE()
   
@@ -404,7 +404,7 @@ end
 ;
 ; :Author: j35
 ;-
-pro counts_vs_pixel_base, event=event, $
+pro data_background_counts_vs_pixel_base, event=event, $
     top_base=top_base, $
     pixel=pixel, $
     parent_base_uname = parent_base_uname
