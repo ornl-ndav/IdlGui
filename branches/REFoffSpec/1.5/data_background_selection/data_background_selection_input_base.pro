@@ -83,7 +83,7 @@ end
 ;
 ; :Author: j35
 ;-
-pro tof_selection_input_base_event, Event
+pro pixel_selection_input_base_event, Event
   compile_opt idl2
   
   case Event.id of
@@ -108,6 +108,12 @@ pro tof_selection_input_base_event, Event
       display_counts_vs_tof, $
         base=(*global_tof_selection).tof_selection_counts_vs_tof_base_id, $
         global_tof_selection
+    end
+    
+    ;browse ROI
+    widget_info(event.top, $
+    find_by_uname='pixel_selection_browse'): begin
+    data_background_selection_browse_roi, event    
     end
     
     ;validate tof selected
@@ -191,6 +197,64 @@ pro tof_selection_input_base_event, Event
     
   endcase
   
+end
+
+;+
+; :Description:
+;    Browse for a ROI file, retrieve the Pixel 1 and 2 and 
+;    display their values in Pixel1 & Pixel2. Also refresh the main plot
+;    with the selection and the counts vs pixel.
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro data_background_selection_browse_roi, event
+compile_opt idl2
+
+widget_control, event.top, get_uvalue=global_info
+global_pixel_selection = (*global_info).global_pixel_selection
+global = (*global_pixel_selection).global
+
+;retrieve infos
+extension = 'dat'
+filter = ['*_back_ROI.dat','*_back_ROI.txt']
+path = (*global).ascii_path
+title = 'Browsing for a Background ROI file'
+widget_id = widget_info(event.top, find_by_uname='pixel_selection_base')
+
+file_name = dialog_pickfile(default_extension=extension, $
+filter=filter, $
+get_path = new_path, $
+path = path, $
+dialog_parent = widget_id, $
+title = title,$
+/read,$
+/must_exist)
+
+if (file_name[0] ne '') then begin ;retrieve pixel1 and pixel2
+
+  widget_control, /hourglass
+  
+  (*global).roi_path = new_path
+  (*global).ascii_path = new_path
+  
+  main_event = (*global_pixel_selection).main_event
+  Yarray = retrieveYminMaxFromFile(main_event, file_name[0])
+  Y1 = Yarray[0]
+  Y2 = Yarray[1]
+  putTextFieldValue, event, 'pixel_selection_pixel1_uname', $
+  strcompress(Y1,/remove_all)
+  putTextFieldValue, event, 'pixel_selection_pixel2_uname', $
+  strcompress(Y2,/remove_all)
+  
+  endif
+  
+
+
+
+
 end
 
 ;+
