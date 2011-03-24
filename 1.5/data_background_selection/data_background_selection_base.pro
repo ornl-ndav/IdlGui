@@ -229,11 +229,11 @@ pro data_background_selection_base_event, Event
     end
     
     widget_info(event.top, $
-      find_by_uname='show_tof_selection_base'): begin
-      pixel_base = (*global_tof_selection).tof_selection_input_base
+      find_by_uname='show_pixel_selection_base'): begin
+      pixel_base = (*global_pixel_selection).pixel_selection_input_base
       if (widget_info(pixel_base, /valid_id) eq 0) then begin
-        tof_selection_input_base, parent_base_uname = 'tof_selection_base_uname', $
-          top_base = (*global_tof_selection).top_base, $
+        pixel_selection_input_base, parent_base_uname = 'pixle_selection_base_uname', $
+          top_base = (*global_pixel_selection).top_base, $
           event=event
       endif
     end
@@ -1358,6 +1358,7 @@ pro data_background_selection_base, main_base=main_base, $
     pixel_selection_input_base: 0L, $ ;id of refpix_input_base
     pixel_selection_counts_vs_pixel_base_id: 0L, $ 'id of refpix_counts_vs_tof_base
     counts_vs_tof_scale_is_linear: 0b, $ ;counts vs tof (linear/log)
+    pixel_selection: [-1,-1], $
   
     ;used to plot selection zoom
     default_plot_size: default_plot_size, $
@@ -1499,11 +1500,11 @@ pro data_background_selection_base, main_base=main_base, $
   
   save_pixel_selection_background,  main_base=wBase
   
-  return
-
   ;bring to life the ROI pixel1 and 2 input base
-  tof_selection_input_base, parent_base_uname = 'tof_selection_base_uname', $
+  pixel_selection_input_base, parent_base_uname='pixel_selection_base_uname', $
     top_base=wBase_copy1
+    
+    return
     
   ;bring to life the base that show counts vs tof
   tof_selection_counts_vs_tof_base, $
