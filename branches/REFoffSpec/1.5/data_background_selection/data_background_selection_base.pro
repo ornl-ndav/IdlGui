@@ -1357,7 +1357,7 @@ pro data_background_selection_base, main_base=main_base, $
     
     pixel_selection_input_base: 0L, $ ;id of refpix_input_base
     pixel_selection_counts_vs_pixel_base_id: 0L, $ 'id of refpix_counts_vs_tof_base
-    counts_vs_tof_scale_is_linear: 0b, $ ;counts vs tof (linear/log)
+    counts_vs_pixel_scale_is_linear: 0b, $ ;counts vs tof (linear/log)
     pixel_selection: [-1,-1], $
   
     ;used to plot selection zoom
@@ -1415,7 +1415,7 @@ pro data_background_selection_base, main_base=main_base, $
     background: ptr_new(0L), $ ;background of main plot
     
     left_click: 0b,$ ;by default, left button is not clicked
-    tof1_selected: 1b, $ ;to show tof1 or tof2 current selection
+    pixel1_selected: 1b, $ ;to show pixel1 or pixel2 current selection
     
     ;x coeff used in the congrid function to plot main data
     congrid_xcoeff: 0., $
@@ -1504,12 +1504,12 @@ pro data_background_selection_base, main_base=main_base, $
   pixel_selection_input_base, parent_base_uname='pixel_selection_base_uname', $
     top_base=wBase_copy1
     
-    return
-    
   ;bring to life the base that show counts vs tof
-  tof_selection_counts_vs_tof_base, $
-    parent_base_uname='tof_selection_base_uname', $
+   counts_vs_pixel_base, $
+    parent_base_uname='pixel_selection_base_uname', $
     top_base=wBase_copy
+    
+    return
     
   ;display the already selected tof range ------------------------------------
   tof_min = tof_min_max[0]
