@@ -1356,7 +1356,7 @@ pro data_background_selection_base, main_base=main_base, $
     short_file_name: short_file_name, $
     
     pixel_selection_input_base: 0L, $ ;id of refpix_input_base
-    pixel_selection_counts_vs_pixel_base_id: 0L, $ 'id of refpix_counts_vs_tof_base
+    roi_selection_counts_vs_pixel_base_id: 0L, $ 'id of refpix_counts_vs_tof_base
     counts_vs_pixel_scale_is_linear: 0b, $ ;counts vs tof (linear/log)
     pixel_selection: [-1,-1], $
   

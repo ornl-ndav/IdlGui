@@ -41,30 +41,31 @@
 ;
 ; :Author: j35
 ;-
-pro tof_selection_counts_vs_tof_base_event, Event
+pro counts_vs_pixel_base_event, Event
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global_counts
-  global_tof_selection = (*global_counts).global_tof_selection
+  global_pixel_selection = (*global_counts).global_pixel_selection
   
   case Event.id of
   
     ;main base
     widget_info(event.top, find_by_uname=$
-    'tof_selection_counts_vs_tof_base'): begin
+    'counts_vs_pixel_base'): begin
     
       id = widget_info(event.top, find_by_uname=$
-      'tof_selection_counts_vs_tof_base')
+      'counts_vs_pixel_base')
       geometry = widget_info(id, /geometry)
       new_xsize = geometry.scr_xsize
       new_ysize = geometry.scr_ysize
       
      id = widget_info(event.top, find_by_uname=$
-     'tof_selection_counts_vs_tof_draw')
+     'counts_vs_pixel_draw')
       widget_control, id, draw_xsize = new_xsize
       widget_control, id, draw_ysize = new_ysize
       
-      display_counts_vs_tof, event=event, global_tof_selection
+      data_background_display_counts_vs_pixel, event=event, $
+      global_pixel_selection
     end
     
     ;linear scale
@@ -286,9 +287,6 @@ pro data_background_display_counts_vs_pixel, base=base, event=event, global_pixe
     _pixelmax_size = 3
   endelse
   
-  print, x_axis
-  help, x_axis
-  
   ;if linear or log scale
   if (counts_vs_pixel_scale_is_linear eq 1) then begin ;linear scale
   
@@ -430,7 +428,7 @@ pro counts_vs_pixel_base, event=event, $
     top_base: top_base, $
     left_click: 0b })
     
-  (*global_pixel_selection).pixel_selection_counts_vs_pixel_base_id = _base
+  (*global_pixel_selection).roi_selection_counts_vs_pixel_base_id = _base
   
   WIDGET_CONTROL, _base, /REALIZE
   widget_control, _base, set_uvalue=global_counts
