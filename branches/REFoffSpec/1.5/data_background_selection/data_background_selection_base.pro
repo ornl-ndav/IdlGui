@@ -152,7 +152,7 @@ pro data_background_selection_base_event, Event
         if (event.enter eq 0) then begin ;leaving plot
           file_name = (*global_pixel_selection).file_name
           id = widget_info(event.top, $
-          find_by_uname='pixel_selection_base_uname')
+            find_by_uname='pixel_selection_base_uname')
           widget_control, id, tlb_set_title=file_name
           
         endif else begin ;entering plot
@@ -372,41 +372,39 @@ end
 ;
 ; :Author: j35
 ;-
-function from_data_to_device, event=event, base=base, xdata
+function from_data_to_device, event=event, base=base, ydata
   compile_opt idl2
   
   if (keyword_set(event)) then begin
-    widget_control, event.top, get_uvalue=global_tof_selection
-    id = WIDGET_INFO(Event.top, FIND_BY_UNAME='tof_selection_draw')
+    widget_control, event.top, get_uvalue=global_pixel_selection
+    id = WIDGET_INFO(Event.top, FIND_BY_UNAME='pixel_selection_draw')
   endif else begin
-    widget_control, base, get_uvalue=global_tof_selection
-    id = WIDGET_INFO(base, FIND_BY_UNAME='tof_selection_draw')
+    widget_control, base, get_uvalue=global_pixel_selection
+    id = WIDGET_INFO(base, FIND_BY_UNAME='pixel_selection_draw')
   endelse
   
   geometry = WIDGET_INFO(id,/GEOMETRY)
-  xsize = geometry.xsize
-  xrange = (*global_tof_selection).xrange
+  ysize = geometry.ysize
+  yrange = (*global_pixel_selection).yrange
   
-  ratio = float(xsize) / (float(xrange[1]) - float(xrange[0]))
-  xdevice = ratio * (float(xdata) - float(xrange[0]))
+  ratio = float(ysize) / (float(yrange[1]) - float(yrange[0]))
+  ydevice = ratio * (float(ydata) - float(yrange[0]))
   
-  return, xdevice
+  return, ydevice
   
 end
 
 ;+
 ; :Description:
-;    refresh the background and display the two tof min and max
+;    refresh the background and display the two pixels min and max
 ;
 ; :Keywords:
 ;    event
 ;
 ; :Author: j35
 ;-
-pro display_pixel_selection_tof, event=event, base=base
+pro display_pixel_selection, event=event, base=base
   compile_opt idl2
-  
-  return
   
   if (keyword_set(event)) then begin
     widget_control, event.top, get_uvalue=global_pixel_selection
@@ -419,47 +417,47 @@ pro display_pixel_selection_tof, event=event, base=base
   wset, plot_id
   TV, (*(*global_pixel_selection).background), true=3
   
-  tof_selection_tof = (*global_pixel_selection).pixel_selection_pixel
+  pixel_selection = (*global_pixel_selection).pixel_selection
   
-  tof_min = tof_selection_tof[0]
-  tof_max = tof_selection_tof[1]
+  pixel_min = pixel_selection[0]
+  pixel_max = pixel_selection[1]
   
-  tof_min_device = from_data_to_device(event=event, base=base, tof_min)
-  tof_max_device = from_data_to_device(event=event, base=base, tof_max)
+  pixel_min_device = from_data_to_device(event=event, base=base, pixel_min)
+  pixel_max_device = from_data_to_device(event=event, base=base, pixel_max)
   
-  ysize = (*global_tof_selection).ysize
+  xsize = (*global_pixel_selection).xsize
   
-  if (tof_min_device ne -1) then begin
+  if (pixel_min_device ne -1) then begin
   
-    plots, tof_min_device, 0, fsc_color("green"),/device
-    plots, tof_min_device, ysize, fsc_color("green"),/continue, linestyle=4,$
+    plots, 0, pixel_min_device, fsc_color("green"),/device
+    plots, xsize, pixel_min_device, fsc_color("green"),/continue, linestyle=4,$
       /device
       
   endif
   
-  if (tof_max_device ne -1) then begin
+  if (pixel_max_device ne -1) then begin
   
-    plots, tof_max_device, 0, fsc_color("green"),/device
-    plots, tof_max_device, ysize, fsc_color("green"),/continue, linestyle=4,$
+    plots, 0, pixel_max_device, fsc_color("green"),/device
+    plots, xsize, pixel_max_device, fsc_color("green"),/continue, linestyle=4,$
       /device
       
   endif
   
-  if ((*global_tof_selection).tof1_selected) then begin
-    tof_device = tof_min_device
+  if ((*global_pixel_selection).pixel1_selected) then begin
+    pixel_device = pixel_min_device
   endif else begin
-    tof_device = tof_max_device
+    pixel_device = pixel_max_device
   endelse
   
   ;retrieve geometry of refpix draw
   geometry = widget_info(id,/geometry)
   draw_ysize = geometry.scr_ysize
   to_ysize = (draw_ysize/100.)*2.
-  from_tof = tof_device - 10
-  to_tof = tof_device + 10
+  from_pixel = pixel_device - 10
+  to_pixel = pixel_device + 10
   
-  plots, [from_tof, tof_device, to_tof, tof_device, from_tof], $
-    [0, 0, 0, to_ysize, 0], $
+  plots,    [0, 0, 0, to_ysize, 0], $
+    [from_pixel, pixel_device, to_pixel, pixel_device, from_pixel], $
     /device, $
     linestyle = 0,$
     color = fsc_color("red")
@@ -668,7 +666,7 @@ end
 ; :Author: j35
 ;-
 pro save_pixel_selection_background,  event=event, main_base=main_base, $
-uname=uname
+    uname=uname
   compile_opt idl2
   
   if (~keyword_set(uname)) then uname = 'pixel_selection_draw'
@@ -1359,7 +1357,7 @@ pro data_background_selection_base, main_base=main_base, $
     roi_selection_counts_vs_pixel_base_id: 0L, $ 'id of refpix_counts_vs_tof_base
     counts_vs_pixel_scale_is_linear: 0b, $ ;counts vs tof (linear/log)
     pixel_selection: [-1,-1], $
-  
+    
     ;used to plot selection zoom
     default_plot_size: default_plot_size, $
     
@@ -1377,8 +1375,8 @@ pro data_background_selection_base, main_base=main_base, $
     data_linear: ptr_new(0L), $
     counts_vs_pixel: ptr_new(0L), $
     
-    x_axis: x_axis, $ ; [-0.004, -0.003, -0.002...]
-    y_axis: y_axis, $ ; [0.0, 0.1, 0.2, 0.3]
+    x_axis: x_axis, $ ; [0.2, 0.4....] tof
+    y_axis: y_axis, $ ; pixel range
     
     ;pointers used to output the counts vs qx/qz ascii files
     counts_vs_qx_xaxis: ptr_new(0L), $
@@ -1509,8 +1507,8 @@ pro data_background_selection_base, main_base=main_base, $
     parent_base_uname='pixel_selection_base_uname', $
     top_base=wBase_copy
     
-    return
-    
+  return
+  
   ;display the already selected tof range ------------------------------------
   tof_min = tof_min_max[0]
   tof_max = tof_min_max[1]

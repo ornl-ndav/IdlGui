@@ -85,12 +85,13 @@ end
 ;-
 pro pixel_selection_input_base_event, Event
   compile_opt idl2
+
+      widget_control, event.top, get_uvalue=global_info
   
   case Event.id of
   
     ;pixel1 and pixel2 input boxes
     widget_info(event.top, find_by_uname='tof_selection_tof1_uname'): begin
-      widget_control, event.top, get_uvalue=global_info
       top_base = (*global_info).top_base
       global_tof_selection = (*global_info).global_tof_selection
       save_tof_selection_tofs, event=event
@@ -100,7 +101,6 @@ pro pixel_selection_input_base_event, Event
         global_tof_selection
     end
     widget_info(event.top, find_by_uname='tof_selection_tof2_uname'): begin
-      widget_control, event.top, get_uvalue=global_info
       top_base = (*global_info).top_base
       global_tof_selection = (*global_info).global_tof_selection
       save_tof_selection_tofs, event=event
@@ -112,8 +112,14 @@ pro pixel_selection_input_base_event, Event
     
     ;browse ROI
     widget_info(event.top, $
-    find_by_uname='pixel_selection_browse'): begin
-    data_background_selection_browse_roi, event    
+      find_by_uname='pixel_selection_browse'): begin
+      data_background_selection_browse_roi, event
+       save_pixel_selection_pixels, event=event
+       top_base = (*global_info).top_base
+       display_pixel_selection, base=top_base ;display selection on main plot
+       global_pixel_selection = (*global_info).global_pixel_selection
+       base = (*global_pixel_selection).roi_selection_counts_vs_pixel_base_id
+       data_background_display_counts_vs_pixel, base=base, global_pixel_selection
     end
     
     ;validate tof selected
@@ -201,7 +207,7 @@ end
 
 ;+
 ; :Description:
-;    Browse for a ROI file, retrieve the Pixel 1 and 2 and 
+;    Browse for a ROI file, retrieve the Pixel 1 and 2 and
 ;    display their values in Pixel1 & Pixel2. Also refresh the main plot
 ;    with the selection and the counts vs pixel.
 ;
@@ -211,50 +217,46 @@ end
 ; :Author: j35
 ;-
 pro data_background_selection_browse_roi, event
-compile_opt idl2
-
-widget_control, event.top, get_uvalue=global_info
-global_pixel_selection = (*global_info).global_pixel_selection
-global = (*global_pixel_selection).global
-
-;retrieve infos
-extension = 'dat'
-filter = ['*_back_ROI.dat','*_back_ROI.txt']
-path = (*global).ascii_path
-title = 'Browsing for a Background ROI file'
-widget_id = widget_info(event.top, find_by_uname='pixel_selection_base')
-
-file_name = dialog_pickfile(default_extension=extension, $
-filter=filter, $
-get_path = new_path, $
-path = path, $
-dialog_parent = widget_id, $
-title = title,$
-/read,$
-/must_exist)
-
-if (file_name[0] ne '') then begin ;retrieve pixel1 and pixel2
-
-  widget_control, /hourglass
+  compile_opt idl2
   
-  (*global).roi_path = new_path
-  (*global).ascii_path = new_path
+  widget_control, event.top, get_uvalue=global_info
+  global_pixel_selection = (*global_info).global_pixel_selection
+  global = (*global_pixel_selection).global
   
-  main_event = (*global_pixel_selection).main_event
-  Yarray = retrieveYminMaxFromFile(main_event, file_name[0])
-  Y1 = Yarray[0]
-  Y2 = Yarray[1]
-  putTextFieldValue, event, 'pixel_selection_pixel1_uname', $
-  strcompress(Y1,/remove_all)
-  putTextFieldValue, event, 'pixel_selection_pixel2_uname', $
-  strcompress(Y2,/remove_all)
+  ;retrieve infos
+  extension = 'dat'
+  filter = ['*_back_ROI.dat','*_back_ROI.txt']
+  path = (*global).ascii_path
+  title = 'Browsing for a Background ROI file'
+  widget_id = widget_info(event.top, find_by_uname='pixel_selection_base')
   
+  file_name = dialog_pickfile(default_extension=extension, $
+    filter=filter, $
+    get_path = new_path, $
+    path = path, $
+    dialog_parent = widget_id, $
+    title = title,$
+    /read,$
+    /must_exist)
+    
+  if (file_name[0] ne '') then begin ;retrieve pixel1 and pixel2
+  
+    widget_control, /hourglass
+    
+    (*global).roi_path = new_path
+    (*global).ascii_path = new_path
+    
+    main_event = (*global_pixel_selection).main_event
+    Yarray = retrieveYminMaxFromFile(main_event, file_name[0])
+    Y1 = Yarray[0]
+    Y2 = Yarray[1]
+    putTextFieldValue, event, 'pixel_selection_pixel1_uname', $
+      strcompress(Y1,/remove_all)
+    putTextFieldValue, event, 'pixel_selection_pixel2_uname', $
+      strcompress(Y2,/remove_all)
+      
   endif
   
-
-
-
-
 end
 
 ;+
@@ -345,22 +347,22 @@ pro pixel_selection_input_base_gui, wBase, $
     value = 'or')
     
   browse = widget_button(wBase,$
-  value = 'Browse...',$
-  uname = 'pixel_selection_browse')  
+    value = 'Browse...',$
+    uname = 'pixel_selection_browse')
   roi_base = widget_base(wBase,/row)
   label = widget_label(roi_base,$
-  value = 'Data Back. Loaded:')
+    value = 'Data Back. Loaded:')
   value = widget_label(roi_base,$
-  value = 'N/A',$
-  /align_left, $
-  uname = 'pixel_selection_roi_file_name_loaded',$
-  scr_xsize = 300)  
+    value = 'N/A',$
+    /align_left, $
+    uname = 'pixel_selection_roi_file_name_loaded',$
+    scr_xsize = 300)
     
   space = widget_label(wBase,$
-  value = ' ')
+    value = ' ')
   space = widget_label(wBase,$
-  value = ' ')
-      
+    value = ' ')
+    
   row4 = widget_base(wBase,$
     /row)
     
@@ -381,36 +383,36 @@ end
 
 ;+
 ; :Description:
-;    Save the tof defined in the tof input boxes
+;    Save the pixel defined in the pixel input boxes
 ;
 ; :Keywords:
 ;    base
 ;
 ; :Author: j35
 ;-
-pro save_tof_selection_tofs, event=event
+pro save_pixel_selection_pixels, event=event
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global_info
-  global_tof_selection = (*global_info).global_tof_selection
+  global_pixel_selection = (*global_info).global_pixel_selection
   
-  tof_selection_tof = (*global_tof_selection).tof_selection_tof
+  pixel_selection = (*global_pixel_selection).pixel_selection
   
-  tof1 = getValue(event=event, uname='tof_selection_tof1_uname')
-  tof2 = getValue(event=event, uname='tof_selection_tof2_uname')
+  pixel1 = getValue(event=event, uname='pixel_selection_pixel1_uname')
+  pixel2 = getValue(event=event, uname='pixel_selection_pixel2_uname')
   
-  tof_range = (*global_tof_selection).xrange
-  xmin = tof_range[0]
-  xmax = tof_range[1]
+  pixel_range = (*global_pixel_selection).yrange
+  ymin = pixel_range[0]
+  ymax = pixel_range[1]
   
-  tof1 = (tof1 gt xmax) ? -1 : tof1
-  tof2 = (tof2 gt xmax) ? -1 : tof2
+  pixel1 = (pixel1 gt ymax) ? -1 : pixel1
+  pixel2 = (pixel2 gt ymax) ? -1 : pixel2
   
-  tof1 = (tof1 lt xmin) ? -1 : tof1
-  tof2 = (tof2 lt xmin) ? -1 : tof2
+  pixel1 = (pixel1 lt ymin) ? -1 : pixel1
+  pixel2 = (pixel2 lt ymin) ? -1 : pixel2
   
-  tof_selection_tof = [tof1,tof2]
-  (*global_tof_selection).tof_selection_tof = tof_selection_tof
+  pixel_selection = [pixel1,pixel2]
+  (*global_pixel_selection).pixel_selection = pixel_selection
   
 end
 
