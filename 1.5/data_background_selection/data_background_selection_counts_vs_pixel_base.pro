@@ -308,32 +308,37 @@ pro data_background_display_counts_vs_pixel, base=base, event=event, global_pixe
       
   endelse
   
-  return
+  pixel_selection = (*global_pixel_selection).pixel_selection
   
-  tof_selection = (*global_tof_selection).tof_selection_tof
+  pixel_min = pixel_selection[0]
+  pixel_max = pixel_selection[1]
+  if (pixel_min ne -1 or pixel_max ne -1) then begin
   
-  tof_min = tof_selection[0]
-  tof_max = tof_selection[1]
-  if (tof_min ne -1 or tof_max ne -1) then begin
-  
-    if (tof_min ne -1) then begin
-      plots, tof_min, 1, /data
-      plots, tof_min, ymax, /data, /continue, $
+    counts_vs_pixel = (*(*global_pixel_selection).counts_vs_pixel)
+    ymax = max(counts_vs_pixel,min=ymin)
+    
+    _id = widget_info(base, find_by_uname='counts_vs_pixel_draw')
+    widget_control, _id, GET_VALUE = _plot_id
+    wset, _plot_id
+    
+    if (pixel_min ne -1) then begin
+      plots, pixel_min, 1, /data
+      plots, pixel_min, ymax, /data, /continue, $
         color=fsc_color("green"), $
-        thick=_tofmin_size,$
-        linestyle=2
+        thick=2,$
+        linestyle=1
     endif
     
-    if (tof_max ne -1) then begin
-      plots, tof_max, 1, /data
-      plots, tof_max, ymax, /data, /continue, $
+    if (pixel_max ne -1) then begin
+      plots, pixel_max, 1, /data
+      plots, pixel_max, ymax, /data, /continue, $
         color=fsc_color("green"), $
-        thick=_tofmax_size,$
-        linestyle=2
+        thick=2,$
+        linestyle=1
     endif
     
   endif
-    
+  
 end
 
 ;+
@@ -438,39 +443,6 @@ pro data_background_counts_vs_pixel_base, event=event, $
     /NO_BLOCK
     
   data_background_display_counts_vs_pixel, base=_base, global_pixel_selection
-  
-  return
-  
-  pixel_selection = (*global_pixel_selection).pixel_selection
-  
-  tof_min = tof_selection[0]
-  tof_max = tof_selection[1]
-  if (tof_min ne -1 or tof_max ne -1) then begin
-  
-    counts_vs_tof = (*(*global_tof_selection).counts_vs_tof)
-    ymax = max(counts_vs_tof,min=ymin)
-    
-    _id = widget_info(_base, find_by_uname='tof_selection_counts_vs_tof_draw')
-    widget_control, _id, GET_VALUE = _plot_id
-    wset, _plot_id
-    
-    if (tof_min ne -1) then begin
-      plots, tof_min, 1, /data
-      plots, tof_min, ymax, /data, /continue, $
-        color=fsc_color("green"), $
-        thick=2,$
-        linestyle=1
-    endif
-    
-    if (tof_max ne -1) then begin
-      plots, tof_max, 1, /data
-      plots, tof_max, ymax, /data, /continue, $
-        color=fsc_color("green"), $
-        thick=2,$
-        linestyle=1
-    endif
-    
-  endif
   
 end
 
