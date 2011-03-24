@@ -91,23 +91,23 @@ pro pixel_selection_input_base_event, Event
   case Event.id of
   
     ;pixel1 and pixel2 input boxes
-    widget_info(event.top, find_by_uname='tof_selection_tof1_uname'): begin
+    widget_info(event.top, find_by_uname='pixel_selection_pixel1_uname'): begin
       top_base = (*global_info).top_base
-      global_tof_selection = (*global_info).global_tof_selection
-      save_tof_selection_tofs, event=event
-      display_tof_selection_tof, base=top_base
-      display_counts_vs_tof, $
-        base=(*global_tof_selection).tof_selection_counts_vs_tof_base_id, $
-        global_tof_selection
+      global_pixel_selection = (*global_info).global_pixel_selection
+      save_pixel_selection_pixels, event=event
+      display_pixel_selection, base=top_base
+      data_background_display_counts_vs_pixel, $
+        base=(*global_pixel_selection).roi_selection_counts_vs_pixel_base_id, $
+        global_pixel_selection
     end
-    widget_info(event.top, find_by_uname='tof_selection_tof2_uname'): begin
+    widget_info(event.top, find_by_uname='pixel_selection_pixel2_uname'): begin
       top_base = (*global_info).top_base
-      global_tof_selection = (*global_info).global_tof_selection
-      save_tof_selection_tofs, event=event
-      display_tof_selection_tof, base=top_base
-      display_counts_vs_tof, $
-        base=(*global_tof_selection).tof_selection_counts_vs_tof_base_id, $
-        global_tof_selection
+      global_pixel_selection = (*global_info).global_pixel_selection
+      save_pixel_selection_pixels, event=event
+      display_pixel_selection, base=top_base
+      data_background_display_counts_vs_pixel, $
+        base=(*global_pixel_selection).roi_selection_counts_vs_pixel_base_id, $
+        global_pixel_selection
     end
     
     ;browse ROI
