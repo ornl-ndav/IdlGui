@@ -232,7 +232,7 @@ pro data_background_selection_base_event, Event
       find_by_uname='show_pixel_selection_base'): begin
       pixel_base = (*global_pixel_selection).pixel_selection_input_base
       if (widget_info(pixel_base, /valid_id) eq 0) then begin
-        pixel_selection_input_base, parent_base_uname = 'pixle_selection_base_uname', $
+        pixel_selection_input_base, parent_base_uname = 'pixel_selection_base_uname', $
           top_base = (*global_pixel_selection).top_base, $
           event=event
       endif
@@ -240,12 +240,12 @@ pro data_background_selection_base_event, Event
     
     ;show counts vs tof base
     widget_info(event.top, $
-      find_by_uname='show_counts_vs_tof_base'): begin
-      plot_base = (*global_tof_selection).tof_selection_counts_vs_tof_base_id
+      find_by_uname='show_counts_vs_pixel_base'): begin
+      plot_base = (*global_pixel_selection).roi_selection_counts_vs_pixel_base_id
       if (widget_info(plot_base, /valid_id) eq 0) then begin
-        tof_selection_counts_vs_tof_base, $
-          parent_base_uname='tof_selection_base_uname', $
-          top_base = (*global_tof_selection).top_base, $
+        data_background_counts_vs_pixel_base, $
+          parent_base_uname='pixel_selection_base_uname', $
+          top_base = (*global_pixel_selection).top_base, $
           event=event
       endif
     end
@@ -887,7 +887,7 @@ pro pixel_selection_base_uname_killed, global_pixel_selection
     widget_control, id_input, /destroy
   endif
   
-  id_counts = (*global_pixel_selection).pixel_selection_counts_vs_pixel_base_id
+  id_counts = (*global_pixel_selection).roi_selection_counts_vs_pixel_base_id
   if (widget_info(id_counts, /valid_id) ne 0) then begin
     widget_control, id_counts, /destroy
   endif
@@ -1505,7 +1505,7 @@ pro data_background_selection_base, main_base=main_base, $
     top_base=wBase_copy1
     
   ;bring to life the base that show counts vs tof
-   counts_vs_pixel_base, $
+  data_background_counts_vs_pixel_base, $
     parent_base_uname='pixel_selection_base_uname', $
     top_base=wBase_copy
     
