@@ -57,7 +57,10 @@ pro data_background_selection_base_event, Event
       if (error ne 0) then begin ;selection
         catch,/cancel
         
-        ;show_pixel_selection_cursor_info, event
+      cursor_info_base = (*global_pixel_selection).cursor_info_base
+      if (widget_info(cursor_info_base,/valid_id) ne 0) then begin
+        show_pixel_selection_cursor_info, event
+        endif
         
         if (event.press eq 1) then begin ;left click
         
@@ -224,6 +227,18 @@ pro data_background_selection_base_event, Event
       return
     end
     
+    ;show the cursor info base
+    widget_info(event.top, $
+      find_by_uname='show_pixel_cursor_base'): begin
+      cursor_info_base = (*global_pixel_selection).cursor_info_base
+      if (widget_info(cursor_info_base,/valid_id) eq 0) then begin
+        cursor_info_base, top_base=(*global_pixel_selection).top_base, $
+          parent_base_uname = 'pixel_selection_base_uname', $
+          event=event
+      endif
+      
+    end
+    
     widget_info(event.top, $
       find_by_uname='show_pixel_selection_base'): begin
       pixel_base = (*global_pixel_selection).pixel_selection_input_base
@@ -292,7 +307,7 @@ pro show_pixel_selection_counts_vs_pixel_base, event
   plot_base = (*global_pixel_selection).roi_selection_counts_vs_pixel_base_id
   if (widget_info(plot_base, /valid_id) eq 0) then begin
     data_background_counts_vs_pixel_base, $
-    parent_base_uname='pixel_selection_base_uname', $
+      parent_base_uname='pixel_selection_base_uname', $
       top_base = (*global_pixel_selection).top_base, $
       event=event
   endif
@@ -628,21 +643,11 @@ pro show_pixel_selection_cursor_info, event
   tof_value = strcompress(retrieve_tof_value(event),/remove_all)
   pixel_value = strcompress(retrieve_pixel_value(event),/remove_all)
   counts_value = strcompress(retrieve_counts_value(event),/remove_all)
-  
-  file_name = (*global_pixel_selection).short_file_name
-  
-  if (tof_value eq 'N/A' || $
-    pixel_value eq 'N/A' || $
-    counts_value eq 'N/A') then begin
-    text = file_name
-  endif else begin
-    text = file_name + ' (cursor is at TOF:'
-    text += strcompress(tof_value,/remove_all) + 'ms ; pixel:'
-    text += strcompress(pixel_value,/remove_all) + '; counts:'
-    text += strcompress(counts_value,/remove_all) + ')'
-  endelse
-  id = widget_info(event.top, find_by_uname='pixel_selection_base_uname')
-  widget_control, id, tlb_set_title=text
+
+  base = (*global_pixel_selection).cursor_info_base
+  putValue, base=base, 'cursor_info_tof', tof_value
+  putValue, base=base, 'cursor_info_pixel', pixel_value
+  putValue, base=base, 'cursor_info_counts', counts_value
   
 end
 
@@ -861,7 +866,7 @@ pro change_pixel_selection_loadct, event
   ;replot
   refresh_pixel_selection_plot, event, recalculate=1
   refresh_plot_pixel_selection_colorbar, event
-  display_pixel_selection_tof, event=event
+  display_pixel_selection, event=event
   
 end
 
@@ -876,6 +881,11 @@ end
 ;-
 pro pixel_selection_base_uname_killed, global_pixel_selection
   compile_opt idl2
+  
+  id_info = (*global_pixel_selection).cursor_info_base
+  if (widget_info(id_info,/valid_id) ne 0) then begin
+    widget_control, id_info, /destroy
+  endif
   
   id_input = (*global_pixel_selection).pixel_selection_input_base
   if (widget_info(id_input, /valid_id) ne 0) then begin
@@ -1271,8 +1281,12 @@ pro data_background_selection_base_gui, wBase, $
     uname = 'pixel_selection_local_scale_setting_log')
     
   pixel = widget_button(bar1,$
-    value = 'Extra',$
+    value = 'Window',$
     /menu)
+    
+  info = widget_button(pixel,$
+    value = 'Show cursor infos',$
+    uname = 'show_pixel_cursor_base')
     
   show = widget_button(pixel,$
     value = 'Show pixel selection window',$
@@ -1350,8 +1364,9 @@ pro data_background_selection_base, main_base=main_base, $
     file_name: file_name, $
     short_file_name: short_file_name, $
     
+    cursor_info_base: 0L, $
     pixel_selection_input_base: 0L, $ ;id of refpix_input_base
-    roi_selection_counts_vs_pixel_base_id: 0L, $ 'id of refpix_counts_vs_tof_base
+    roi_selection_counts_vs_pixel_base_id: 0L, $ ;'id of refpix_counts_vs_tof_base
     counts_vs_pixel_scale_is_linear: 0b, $ ;counts vs tof (linear/log)
     pixel_selection: [-1,-1], $
     
@@ -1361,7 +1376,6 @@ pro data_background_selection_base, main_base=main_base, $
     counts_vs_xaxis_yaxis_type: 0,$ ;0 for linear, 1 for log
     counts_vs_yaxis_yaxis_type: 0,$ ;0 for linear, 1 for log
     
-    cursor_info_base: 0L, $ ;id of info base
     counts_vs_xaxis_base: 0L, $ ;id of info counts vs x
     counts_vs_yaxis_base: 0L, $ ;id of info counts vs y
     counts_vs_xaxis_plot_uname: '',$
