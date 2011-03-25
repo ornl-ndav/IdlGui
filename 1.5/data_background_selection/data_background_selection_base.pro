@@ -57,7 +57,7 @@ pro data_background_selection_base_event, Event
       if (error ne 0) then begin ;selection
         catch,/cancel
         
-        show_pixel_selection_cursor_info, event
+        ;show_pixel_selection_cursor_info, event
         
         if (event.press eq 1) then begin ;left click
         
@@ -817,7 +817,7 @@ pro pixel_selection_local_switch_axes_type, event
   
   save_pixel_selection_background,  event=event
   
-  display_pixel_selection_tof, event=event
+  display_pixel_selection, event=event
   
 end
 
