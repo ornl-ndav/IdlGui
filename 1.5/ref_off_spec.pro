@@ -90,7 +90,11 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
   BACKGROUND_COLOR = file->getValue(tag=['configuration','CurvePlot','BackgroundColor'])
   CESELECT_VERTLINE_COLOR = file->getValue(tag=['configuration','CurvePlot','CESelect','VerticalLineColor'])
   SELECT_COLOR = file->getValue(tag=['configuration','CurvePlot','CESelect','SelectColor'])
-  PIXELS_YNUMBER = file->getValue(tag=['configuration','Detector','Pixels_YNumber'])
+  if (instrument eq 'REF_L') then begin
+    PIXELS_YNUMBER = file->getValue(tag=['configuration','Detector','Pixels_XNumber'])
+  endif else begin
+    PIXELS_YNUMBER = file->getValue(tag=['configuration','Detector','Pixels_YNumber'])
+  endelse
   PIXELS_XNUMBER = file->getValue(tag=['configuration','Detector','Pixels_XNumber'])
   PIXELS_YSIZE = file->getValue(tag=['configuration','Detector','Pixels_YSize'])
   NUMBER_OF_SANGLE = file->getValue(tag=['configuration','Detector','Number_of_Sangle'])
@@ -162,15 +166,15 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     
     ;id of roi_selection_counts_vs_pixel base in reduce/step2
     roi_selection_counts_vs_pixel_base_id: 0L, $
-nexus_spin_state_data_back_roi_table: ptr_new(0L), $
-last_sangle_tab_table_row_selected: 0, $
-
+    nexus_spin_state_data_back_roi_table: ptr_new(0L), $
+    last_sangle_tab_table_row_selected: 0, $
+    
     ;status of mouse clicked on scale of reduce/step2/roi base
     scale_mouse_left_pressed: 0b,$
     scale_mouse_right_pressed: 0b, $
     tof_device_data: fltarr(2,2), $   [[x1device,x2device],[x1data,x2data]]
-    tof_range_status: 'left',$  ;left|right
-    
+  tof_range_status: 'left',$  ;left|right
+  
     left_right_cursor: 96, $
     standard: 31, $
     ; Code change RCW (Dec 28, 2009): firefox replaced by browser obtained from XML config file entry BROWSER
@@ -587,7 +591,7 @@ last_sangle_tab_table_row_selected: 0, $
     PrevScalingStep2TabSelect: 0,$
     step4_step1_selection: [0,0,0,0],$ ;[xmin, ymin, xmax, ymax]
     step4_2_2_lambda_value_array: [0,0], $ [Qmin, Qmax] data value (not device)
-    plot2d_x_left:       0,$
+  plot2d_x_left:       0,$
     plot2d_y_left:       0,$
     plot2d_x_right:      0,$
     plot2d_y_right:      0,$
