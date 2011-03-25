@@ -783,7 +783,7 @@ function getIndexOfValueInArray, array=array, value=value, from=from, to=to
     if (nbr eq 0) then begin
       return, -1
     endif else begin
-      return, (_list_index[-1]-1)
+      return, (_list_index[-1])
     endelse
     
   endif

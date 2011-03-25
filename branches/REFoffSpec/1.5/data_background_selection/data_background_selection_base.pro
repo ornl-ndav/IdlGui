@@ -86,10 +86,12 @@ pro data_background_selection_base_event, Event
           display_pixel_selection, event=event
           
           ;display counts_vs_pixel with selection
-          plot_base = (*global_pixel_selection).roi_selection_counts_vs_pixel_base_id
+          plot_base = $
+            (*global_pixel_selection).roi_selection_counts_vs_pixel_base_id
           if (widget_info(plot_base, /valid_id) ne 0) then begin
             data_background_display_counts_vs_pixel, $
-              base=(*global_pixel_selection).roi_selection_counts_vs_pixel_base_id, $
+              base=4
+            (*global_pixel_selection).roi_selection_counts_vs_pixel_base_id, $
               global_pixel_selection
           endif
           
@@ -111,10 +113,12 @@ pro data_background_selection_base_event, Event
           display_pixel_selection, event=event
           
           ;display counts_vs_pixel with selection
-          plot_base = (*global_pixel_selection).roi_selection_counts_vs_pixel_base_id
+          plot_base = $
+            (*global_pixel_selection).roi_selection_counts_vs_pixel_base_id
           if (widget_info(plot_base, /valid_id) ne 0) then begin
             data_background_display_counts_vs_pixel, $
-              base=(*global_pixel_selection).roi_selection_counts_vs_pixel_base_id, $
+              base=$
+              (*global_pixel_selection).roi_selection_counts_vs_pixel_base_id, $
               global_pixel_selection
           endif
           
@@ -137,7 +141,8 @@ pro data_background_selection_base_event, Event
           display_pixel_selection, event=event
           
           ;display counts_vs_tof with selection
-          plot_base = (*global_pixel_selection).roi_selection_counts_vs_pixel_base_id
+          plot_base = $
+            (*global_pixel_selection).roi_selection_counts_vs_pixel_base_id
           if (widget_info(plot_base, /valid_id) ne 0) then begin
             data_background_display_counts_vs_pixel, $
               base=plot_base, $
@@ -160,6 +165,41 @@ pro data_background_selection_base_event, Event
         
         endelse
       endelse
+      
+    end
+    
+    ;TOF scale
+    widget_info(event.top, find_by_uname='pixel_selection_scale'): begin
+    
+      if (event.type eq 0) then begin
+        if (event.press eq 1) then begin ;left button pressed
+          (*global_pixel_selection).scale_mouse_left_pressed = 1b
+        endif
+        if (event.press eq 4) then begin ;rigth button pressed
+          (*global_pixel_selection).scale_mouse_right_pressed = 1b
+          ;switch working tof
+          if ((*global_pixel_selection).tof_range_status eq 'left') then begin
+            (*global_pixel_selection).tof_range_status='right'
+          endif else begin
+            (*global_pixel_selection).tof_range_status='left'
+          endelse
+        endif
+      endif ;end of button pressed
+      
+      if (event.type eq 1) then begin ;button released
+        if ((*global_pixel_selection).scale_mouse_left_pressed) then begin ;left
+          (*global_pixel_selection).scale_mouse_left_pressed = 0b
+          
+        endif else begin
+          (*global_pixel_selection).scale_mouse_right_pressed = 0b
+        endelse
+      endif
+      
+      if (event.type eq 2) then begin ;moving mouse
+        if ((*global_pixel_selection).scale_mouse_left_pressed) then begin
+        
+        endif
+      endif
       
     end
     
@@ -245,7 +285,8 @@ pro data_background_selection_base_event, Event
       find_by_uname='show_pixel_selection_base'): begin
       pixel_base = (*global_pixel_selection).pixel_selection_input_base
       if (widget_info(pixel_base, /valid_id) eq 0) then begin
-        pixel_selection_input_base, parent_base_uname = 'pixel_selection_base_uname', $
+        pixel_selection_input_base, $
+          parent_base_uname='pixel_selection_base_uname', $
           top_base = (*global_pixel_selection).top_base, $
           event=event
       endif
@@ -254,7 +295,8 @@ pro data_background_selection_base_event, Event
     ;show counts vs tof base
     widget_info(event.top, $
       find_by_uname='show_counts_vs_pixel_base'): begin
-      plot_base = (*global_pixel_selection).roi_selection_counts_vs_pixel_base_id
+      plot_base = $
+        (*global_pixel_selection).roi_selection_counts_vs_pixel_base_id
       if (widget_info(plot_base, /valid_id) eq 0) then begin
         data_background_counts_vs_pixel_base, $
           parent_base_uname='pixel_selection_base_uname', $
@@ -285,7 +327,8 @@ pro show_pixel_selection_input_base, event
   
   _base = (*global_pixel_selection).pixel_selection_input_base
   if (widget_info(_base, /valid_id) eq 0) then begin
-    pixel_selection_input_base, parent_base_uname = 'pixel_selection_base_uname', $
+    pixel_selection_input_base, $
+      parent_base_uname='pixel_selection_base_uname', $
       top_base = (*global_pixel_selection).top_base, $
       event=event
   endif
@@ -361,8 +404,9 @@ pro save_pixel_data, event=event, base=base
     widget_control, base, get_uvalue=global_pixel_selection
   endelse
   
-  pixel_selection_input_base = (*global_pixel_selection).pixel_selection_input_base
-  
+  pixel_selection_input_base = $
+    (*global_pixel_selection).pixel_selection_input_base
+    
   pixel1 = getValue(base=pixel_selection_input_base, $
     uname='pixel_selection_pixel1_uname')
   pixel2 = getValue(base=pixel_selection_input_base, $
@@ -711,7 +755,8 @@ pro pixel_selection_lin_log_data, event=event, base=base
   endelse
   
   Data = (*(*global_pixel_selection).data_linear)
-  scale_setting = (*global_pixel_selection).default_scale_settings ;0 for lin, 1 for log
+  ;0 for lin, 1 for log
+  scale_setting = (*global_pixel_selection).default_scale_settings
   
   if (scale_setting eq 1) then begin ;log
   
@@ -808,9 +853,11 @@ pro pixel_selection_local_switch_axes_type, event
     (*global_pixel_selection).default_scale_settings = 1
   endelse
   
-  putValue, event=event, 'pixel_selection_local_scale_setting_linear', set1_value
-  putValue, event=event, 'pixel_selection_local_scale_setting_log', set2_value
-  
+  putValue, event=event, 'pixel_selection_local_scale_setting_linear', $
+    set1_value
+  putValue, event=event, 'pixel_selection_local_scale_setting_log', $
+    set2_value
+    
   pixel_selection_lin_log_data, event=event
   refresh_pixel_selection_plot, event, recalculate=1
   refresh_plot_pixel_selection_colorbar, event
@@ -903,7 +950,10 @@ end
 ;
 ; :Author: j35
 ;-
-pro plot_pixel_selection_beam_center_scale, base=base, event=event
+pro plot_pixel_selection_beam_center_scale, base=base, $
+    event=event, $
+    plot_range=plot_range
+    
   compile_opt idl2
   
   if (n_elements(base) ne 0) then begin
@@ -925,14 +975,31 @@ pro plot_pixel_selection_beam_center_scale, base=base, event=event
   device, decomposed=1
   sys_color_window_bk = sys_color.window_bk
   
-  x_range = (*global_pixel_selection).xrange
-  min_x = x_range[0]
-  max_x = x_range[1]
-  
   y_range = (*global_pixel_selection).yrange
   min_y = y_range[0]
   max_y = y_range[1]
   
+  x_range = (*global_pixel_selection).xrange  
+  if (keyword_set(plot_range)) then begin
+  
+    tof = (*(*global_pixel_selection).x_axis)
+    tof_range_selected = (*global_pixel_selection).tof_range_selected
+    
+    tof1 = min(tof_range_selected,max=tof1)
+    
+    ;if no tof range selected on any of the two sides, select full range
+    if (tof1 eq -1) then tof1 = x_range[0]
+    if (tof2 eq -1) then tof2 = x_range[1]
+    
+    index_tof1 = getIndexOfValueInArray(array=tof, value=tof1, from=1)
+    index_tof2 = getIndexOfValueInArray(array=tof, value=tof2, to=1)
+    
+    _tof_min = tof[index_tof1]
+    _tof_max = tof[index_tof2]
+    x_range = [_tof_min, _tof_max]
+    
+  endif
+
   ;determine the number of xaxis data to show
   geometry = widget_info(id_base,/geometry)
   xsize = geometry.scr_xsize
@@ -972,6 +1039,121 @@ pro plot_pixel_selection_beam_center_scale, base=base, event=event
     
   device, decomposed=0
   
+end
+
+;+
+; :Description:
+;    This routine display the selection of TOF made in the data background 
+;    selection base tool for REF_L
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro data_background_display_scale_tof_range, event=event, base=base, $
+full_range=full_range
+  compile_opt idl2
+  
+  if (keyword_set(event)) then begin
+  widget_control, event.top, get_uvalue=global_pixel_selection
+  endif else begin
+  widget_control, base, get_uvalue=global_pixel_selection
+  endelse
+  
+  if (keyword_set(full_range)) then begin
+   plot_pixel_selection_beam_center_scale, event=event, base=base
+   data_background_display_full_tof_range_marker, event=event, base=base
+   return
+   endif
+  
+  tof_device_data = (*global_pixel_selection).tof_device_data
+  tof_range_status = (*global_pixel_selection).tof_range_status
+;  
+;  if (tof_range_status eq 'left') then begin
+;    uname = 'reduce_step2_tof1'
+;    tof_data = tof_device_data[1,0]
+;  endif else begin
+;    uname = 'reduce_step2_tof2'
+;    tof_data = tof_device_data[1,1]
+;  endelse
+;  putValue, event=event, uname, strcompress(tof_data,/remove_all)
+  
+  if (keyword_set(event)) then begin
+  id = WIDGET_INFO(Event.top, FIND_By_UNAME='pixel_selection_scale')
+  endif else begin
+  id = WIDGET_INFO(base, FIND_By_UNAME='pixel_selection_scale')
+  endelse
+  geometry = WIDGET_INFO(id,/GEOMETRY)
+  ysize = geometry.ysize
+  xsize = geometry.xsize
+  widget_control, id, get_value=id_value
+  wset, id_value
+  
+  tof1_device = tof_device_data[0,0]
+  tof2_device = tof_device_data[0,1]
+  
+  plot_pixel_selection_beam_center_scale, event=event, base=base
+  
+  xoffset = 40
+  if (tof1_device lt xoffset) then tof1_device = xoffset
+  if (tof1_device gt (xsize-xoffset)) then tof1_device = (xsize-xoffset)
+    plots, tof1_device, 0, color=fsc_color('yellow'),/device
+    plots, tof1_device, ysize, color=fsc_color('yellow'), /continue,/device,$
+    thick=3
+
+  if (tof2_device lt xoffset) then tof2_device = xoffset
+  if (tof2_device gt (xsize-xoffset)) then tof2_device = (xsize-xoffset)
+    plots, tof2_device, 0, color=fsc_color('yellow'),/device
+    plots, tof2_device, ysize, color=fsc_color('yellow'), /continue,/device, $
+    thick=3
+  
+end
+
+;+
+; :Description:
+;    This routine display the ticks showing the current range selection around
+;    the full set of data (always like that when nothing has been selected
+;    yet)
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro data_background_display_full_tof_range_marker, event=event, base=base
+compile_opt idl2
+
+  if (keyword_set(event)) then begin
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='pixel_selection_scale')
+  endif else begin
+  id = WIDGET_INFO(base, FIND_BY_UNAME='pixel_selection_scale')
+  endelse
+  
+  geometry = WIDGET_INFO(id,/GEOMETRY)
+  ysize = geometry.ysize
+  xsize = geometry.xsize
+  widget_control, id, get_value=id_value
+  wset, id_value
+  
+  xoffset = 40
+  tof1_device = xoffset
+  tof2_device = xsize-xoffset
+
+  if (tof1_device lt xoffset) then tof1_device = xoffset
+  if (tof1_device gt (xsize-xoffset)) then tof1_device = (xsize-xoffset)
+    plots, tof1_device, 0, color=fsc_color('yellow'),/device
+    plots, tof1_device, ysize, color=fsc_color('yellow'), /continue,/device,$
+    thick=3
+
+  if (tof2_device lt xoffset) then tof2_device = xoffset
+  if (tof2_device gt (xsize-xoffset)) then tof2_device = (xsize-xoffset)
+    plots, tof2_device, 0, color=fsc_color('yellow'),/device
+    plots, tof2_device, ysize, color=fsc_color('yellow'), /continue,/device, $
+    thick=3
+
 end
 
 ;+
@@ -1158,8 +1340,6 @@ pro data_background_selection_base_gui, wBase, $
     SCR_YSIZE    = ysize+ysize_tof_selection_row,$
     SCR_XSIZE    = xsize+colorbar_xsize,$
     MAP          = 1,$
-    ;    /tlb_kill_request_events,$
-    ;    kill_notify  = 'refpix_base_uname_killed', $
     /BASE_ALIGN_CENTER,$
     /align_center,$
     /tlb_move_events, $
@@ -1177,13 +1357,14 @@ pro data_background_selection_base_gui, wBase, $
     /tracking_events, $
     keyboard_events=2, $
     retain=2, $
-    ;    event_pro = 'refpix_draw_eventcb',$
     uname = 'pixel_selection_draw')
     
   scale = widget_draw(wBase,$
     uname = 'pixel_selection_scale',$
     scr_xsize = xsize,$
     scr_ysize = ysize,$
+    /button_events, $
+    /motion_events, $
     retain=2)
     
   colorbar =  widget_draw(wBase,$
@@ -1361,9 +1542,18 @@ pro data_background_selection_base, main_base=main_base, $
     
     cursor_info_base: 0L, $
     pixel_selection_input_base: 0L, $ ;id of refpix_input_base
-    roi_selection_counts_vs_pixel_base_id: 0L, $ ;'id of refpix_counts_vs_tof_base
+    ;'id of refpix_counts_vs_tof_base
+    roi_selection_counts_vs_pixel_base_id: 0L, $
     counts_vs_pixel_scale_is_linear: 0b, $ ;counts vs tof (linear/log)
     pixel_selection: [-1,-1], $
+    
+    tof_range_selected: [-1.,-1.], $
+    tof_device_data: fltarr(2,2), $
+    
+    ;tof scale
+    scale_mouse_left_pressed: 0b, $
+    scale_mouse_right_pressed: 0b, $
+    tof_range_status: 'left', $
     
     ;used to plot selection zoom
     default_plot_size: default_plot_size, $
@@ -1473,12 +1663,13 @@ pro data_background_selection_base, main_base=main_base, $
   DEVICE, DECOMPOSED = 0
   loadct, (*global_pixel_selection).default_loadct, /SILENT
   
-  plot_pixel_selection_beam_center_scale, base=wBase
+  ;initialize scale with marker showing full range
+  data_background_display_scale_tof_range, base=wBase,/full_range
+  ;plot_pixel_selection_beam_center_scale, base=wBase
   
   id = widget_info(wBase,find_by_uname='pixel_selection_draw')
   widget_control, id, GET_VALUE = plot_id
   wset, plot_id
-  ;tvscl, transpose(cData)
   tvscl, cData
   
   ;Scale
@@ -1513,41 +1704,5 @@ pro data_background_selection_base, main_base=main_base, $
     parent_base_uname='pixel_selection_base_uname', $
     top_base=wBase_copy
     
-  return
-  
-  ;display the already selected tof range ------------------------------------
-  tof_min = tof_min_max[0]
-  tof_max = tof_min_max[1]
-  
-  if (tof_min ne -1) then begin
-  
-    widget_control, wBase_copy, get_uvalue=global_tof_selection
-    id = widget_info(wBase_copy, find_by_uname='tof_selection_draw')
-    widget_control, id, GET_VALUE = plot_id
-    wset, plot_id
-    
-    tof_min_device = from_data_to_device(base=wBase_copy, tof_min)
-    
-    plots, tof_min_device, 0, fsc_color("green"),/device
-    plots, tof_min_device, ysize, fsc_color("green"),/continue, linestyle=4,$
-      /device
-      
-  endif
-  
-  if (tof_max ne -1) then begin
-  
-    widget_control, wBase_copy, get_uvalue=global_tof_selection
-    id = widget_info(wBase_copy, find_by_uname='tof_selection_draw')
-    widget_control, id, GET_VALUE = plot_id
-    wset, plot_id
-    
-    tof_max_device = from_data_to_device(base=wBase_copy, tof_max)
-    
-    plots, tof_max_device, 0, fsc_color("green"),/device
-    plots, tof_max_device, ysize, fsc_color("green"),/continue, linestyle=4,$
-      /device
-      
-  endif
-  
 end
 
