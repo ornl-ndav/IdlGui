@@ -193,7 +193,7 @@ pro pixel_selection_input_base_event, Event
     
     ;cancel tof selected
     widget_info(event.top, $
-      find_by_uname='cancel_tof_selection_selected_uname'): begin
+      find_by_uname='cancel_pixel_selection_selected_uname'): begin
       widget_control, event.top, get_uvalue=global_info
       top_base = (*global_info).top_base
       widget_control, top_base, /destroy
