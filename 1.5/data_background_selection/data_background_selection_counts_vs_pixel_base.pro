@@ -70,13 +70,13 @@ pro counts_vs_pixel_base_event, Event
     
     ;linear scale
     widget_info(event.top, $
-      find_by_uname='tof_selection_counts_vs_tof_linear'): begin
-      tof_selection_counts_switch_axex_type, event
+      find_by_uname='counts_vs_pixel_linear'): begin
+      data_background_switch_axes_type, event
     end
     
     widget_info(event.top, $
-      find_by_uname='tof_selection_counts_vs_tof_log'): begin
-      tof_selection_counts_switch_axex_type, event
+      find_by_uname='counts_vs_pixel_log'): begin
+      data_background_switch_axes_type, event
     end
     
     ;plot
@@ -212,27 +212,27 @@ end
 ;
 ; :Author: j35
 ;-
-pro tof_selection_counts_switch_axex_type, event
+pro data_background_switch_axes_type, event
   compile_opt idl2
   
   uname = widget_info(event.id, /uname)
   widget_control, event.top, get_uvalue=global_counts
-  global_tof_selection = (*global_counts).global_tof_selection
+  global_pixel_selection = (*global_counts).global_pixel_selection
   
-  if (uname eq 'tof_selection_counts_vs_tof_linear') then begin
+  if (uname eq 'counts_vs_pixel_linear') then begin
     set1_value = '* ' + 'linear'
     set2_value = '  ' + 'logarithmic'
-    (*global_tof_selection).counts_vs_tof_scale_is_linear = 1b
+    (*global_pixel_selection).counts_vs_pixel_scale_is_linear = 1b
   endif else begin
     set1_value = '  ' + 'linear'
     set2_value = '* ' + 'logarithmic'
-    (*global_tof_selection).counts_vs_tof_scale_is_linear = 0b
+    (*global_pixel_selection).counts_vs_pixel_scale_is_linear = 0b
   endelse
   
-  putValue, event=event, 'tof_selection_counts_vs_tof_linear', set1_value
-  putValue, event=event, 'tof_selection_counts_vs_tof_log', set2_value
+  putValue, event=event, 'counts_vs_pixel_linear', set1_value
+  putValue, event=event, 'counts_vs_pixel_log', set2_value
   
-  display_counts_vs_tof, event=event, global_tof_selection
+  data_background_display_counts_vs_pixel, event=event, global_pixel_selection
   
 end
 
