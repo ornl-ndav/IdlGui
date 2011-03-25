@@ -57,9 +57,9 @@ pro data_background_selection_base_event, Event
       if (error ne 0) then begin ;selection
         catch,/cancel
         
-      cursor_info_base = (*global_pixel_selection).cursor_info_base
-      if (widget_info(cursor_info_base,/valid_id) ne 0) then begin
-        show_pixel_selection_cursor_info, event
+        cursor_info_base = (*global_pixel_selection).cursor_info_base
+        if (widget_info(cursor_info_base,/valid_id) ne 0) then begin
+          show_pixel_selection_cursor_info, event
         endif
         
         if (event.press eq 1) then begin ;left click
@@ -149,11 +149,13 @@ pro data_background_selection_base_event, Event
       endif else begin ;entering or leaving widget_draw
       
         if (event.enter eq 0) then begin ;leaving plot
-          file_name = (*global_pixel_selection).file_name
-          id = widget_info(event.top, $
-            find_by_uname='pixel_selection_base_uname')
-          widget_control, id, tlb_set_title=file_name
-          
+          cursor_info_base = (*global_pixel_selection).cursor_info_base
+          if (widget_info(cursor_info_base,/valid_id) ne 0) then begin
+            base = (*global_pixel_selection).cursor_info_base
+            putValue, base=base, 'cursor_info_tof', 'N/A'
+            putValue, base=base, 'cursor_info_pixel', 'N/A'
+            putValue, base=base, 'cursor_info_counts', 'N/A'
+          endif
         endif else begin ;entering plot
         
         endelse
@@ -633,17 +635,10 @@ pro show_pixel_selection_cursor_info, event
   
   widget_control, event.top, get_uvalue=global_pixel_selection
   
-  data = (*(*global_pixel_selection).full_data)
-  x_axis = (*global_pixel_selection).x_axis
-  y_axis = (*global_pixel_selection).y_axis
-  
-  xcoeff = (*global_pixel_selection).congrid_xcoeff
-  ycoeff = (*global_pixel_selection).congrid_ycoeff
-  
   tof_value = strcompress(retrieve_tof_value(event),/remove_all)
   pixel_value = strcompress(retrieve_pixel_value(event),/remove_all)
   counts_value = strcompress(retrieve_counts_value(event),/remove_all)
-
+  
   base = (*global_pixel_selection).cursor_info_base
   putValue, base=base, 'cursor_info_tof', tof_value
   putValue, base=base, 'cursor_info_pixel', pixel_value
