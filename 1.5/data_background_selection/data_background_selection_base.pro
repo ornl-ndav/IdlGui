@@ -90,8 +90,8 @@ pro data_background_selection_base_event, Event
             (*global_pixel_selection).roi_selection_counts_vs_pixel_base_id
           if (widget_info(plot_base, /valid_id) ne 0) then begin
             data_background_display_counts_vs_pixel, $
-              base=4
-            (*global_pixel_selection).roi_selection_counts_vs_pixel_base_id, $
+              base=$
+              (*global_pixel_selection).roi_selection_counts_vs_pixel_base_id, $
               global_pixel_selection
           endif
           
@@ -251,7 +251,7 @@ pro data_background_selection_base_event, Event
       plot_pixel_selection_beam_center_scale, event=event
       refresh_pixel_selection_plot, event, recalculate=1
       refresh_plot_pixel_selection_colorbar, event
-      display_pixel_selection_tof, event=event
+      display_pixel_selection, event=event
       
       return
     end

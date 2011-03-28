@@ -249,7 +249,8 @@ end
 ;
 ; :Author: j35
 ;-
-pro data_background_display_counts_vs_pixel, base=base, event=event, global_pixel_selection
+pro data_background_display_counts_vs_pixel, base=base, event=event, $
+global_pixel_selection
   compile_opt idl2
   
   if (keyword_set(event)) then begin
