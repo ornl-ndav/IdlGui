@@ -53,7 +53,7 @@ FUNCTION retrieve_Data, Event, $
     fileID    = H5F_OPEN(FullNexusName)
     IF (instrument EQ 'REF_M') THEN BEGIN
       data_path = '/entry-' + spin_state + '/bank1/data'
-      tof_path  = '/entry-' + spin_state + '/bank1/time_of_flight' 
+      tof_path  = '/entry-' + spin_state + '/bank1/time_of_flight'
     ENDIF ELSE BEGIN
       data_path = '/entry/bank1/data'
       tof_path = '/entry/bank1/time_of_flight'
@@ -76,7 +76,7 @@ FUNCTION retrieve_Data, Event, $
     ENDIF ELSE BEGIN
       tData = TOTAL(data,3)
     ENDELSE
-
+    
     (*(*global).norm_tData) = tData
     
     x = (size(tData))(1)

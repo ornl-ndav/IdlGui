@@ -44,7 +44,7 @@ sLogBookBase = { size  : MainTabSize,$
                  uname : 'base_log_book'}
 
 ;- log book text --------------------------------------------------------------
-sLogBook = { size  : [0,0,MainTabSize[2]-10,800],$
+sLogBook = { size  : [0,0,MainTabSize[2]-10,700],$
              uname : 'log_book_text'} 
 
 ;- Log Book instance ----------------------------------------------------------

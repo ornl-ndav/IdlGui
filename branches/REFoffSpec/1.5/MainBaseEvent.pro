@@ -1829,11 +1829,10 @@ PRO MAIN_BASE_event, Event
   widget_info(wWidget, $
     find_by_uname='reduce_step2_tof_plot_full_range'): begin
     plot_reduce_step2_norm, Event,recalculate=1
-    display_scale_tof_range, event, full_range=1
-    ;plot_reduce_tab2_scale, event=event ;display the scale
     init_scale_device_data_array, event=event
     refresh_reduce_step2_colorbar, event
     display_tof_range, event
+    display_scale_tof_range, event, full_range=1
     reduce_step2_plot_rois, event
   end
   

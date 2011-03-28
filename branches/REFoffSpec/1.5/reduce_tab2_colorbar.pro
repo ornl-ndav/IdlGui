@@ -156,6 +156,9 @@ pro refresh_reduce_step2_colorbar, event, plot_range=plot_range
       index_tof2 = getIndexOfValueInArray(array=tof, value=_tof2*1000, to=1)
 
       index_tof_min = min([index_tof1,index_tof2],max=index_tof_max)
+
+      sz_rtdata = size(rtdata,/dim)
+      if (index_tof_max eq sz_rtdata[0]) then index_tof_max--
       rtdata = rtdata[index_tof_min:index_tof_max,*]
       
     endif
