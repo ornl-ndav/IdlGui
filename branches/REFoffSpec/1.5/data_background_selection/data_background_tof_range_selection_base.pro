@@ -45,7 +45,7 @@
 ; :Author: j35
 ;-
 pro data_background_tof_range_selection_base_gui, wBase, $
-    parent_base_geometry
+    parent_base_geometry, global_pixel_selection
   compile_opt idl2
   
   main_base_xoffset = parent_base_geometry.xoffset
@@ -53,7 +53,7 @@ pro data_background_tof_range_selection_base_gui, wBase, $
   main_base_xsize = parent_base_geometry.xsize
   main_base_ysize = parent_base_geometry.ysize
   
-  xoffset = main_base_xoffset  
+  xoffset = main_base_xoffset
   yoffset = main_base_yoffset + main_base_ysize + 35
   
   ourGroup = WIDGET_BASE()
@@ -67,20 +67,24 @@ pro data_background_tof_range_selection_base_gui, wBase, $
     /column,$
     /tlb_size_events,$
     GROUP_LEADER = ourGroup)
-
+    
+  tof_device_data = (*global_pixel_selection).tof_device_data
+  tof1_data = tof_device_data[1,0]
+  tof2_data = tof_device_data[1,1]
+  
   tof_row1 = widget_base(wBase,$
     /row)
   tof1 = widget_label(tof_row1,$
     value = 'Plot from TOF1 (ms):')
   tof1_value = widget_text(tof_row1,$
-    value = 'N/A',$
+    value = strcompress(tof1_data,/remove_all),$
     xsize=8,$
     /editable,$
     uname = 'reduce_step2_tof1')
   tof1 = widget_label(tof_row1,$
     value = ' to TOF2 (ms):')
   tof1_value = widget_text(tof_row1,$
-    value = 'N/A',$
+    value = strcompress(tof2_data,/remove_all),$
     /editable,$
     xsize = 8,$
     uname = 'reduce_step2_tof2')
@@ -112,10 +116,10 @@ end
 ;
 ; :Author: j35
 ;-
-pro cursor_info_base_killed, id
-  compile_opt idl2
-
-return
+pro data_background_tof_range_selection_base_killed, main_event
+   compile_opt idl2
+ 
+  return
   
 end
 
@@ -131,12 +135,15 @@ end
 pro data_background_tof_range_selection_base_cleanup, tlb
   compile_opt idl2
   
-  widget_control, tlb, get_uvalue=global_info, /no_copy
+  widget_control, tlb, get_uvalue=global_info
+  
+  main_event = (*global_info).main_event
+  data_background_display_scale_tof_range, event=main_event, /no_range
   
   if (n_elements(global_info) eq 0) then return
   
   ptr_free, global_info
-  
+    
 end
 
 ;+
@@ -164,7 +171,7 @@ pro data_background_tof_range_selection_base, event=event, $
   
   _base = 0L
   data_background_tof_range_selection_base_gui, _base, $
-    parent_base_geometry
+    parent_base_geometry, global_pixel_selection
     
   (*global_pixel_selection).tof_range_selection_base = _base
   
@@ -172,12 +179,13 @@ pro data_background_tof_range_selection_base, event=event, $
   
   global_info = PTR_NEW({ _base: _base,$
     top_base: top_base, $
+    main_event: event, $
     global_pixel_selection: global_pixel_selection })
     
   WIDGET_CONTROL, _base, SET_UVALUE = global_info
   
   XMANAGER, "data_background_tof_range_selection_base", _base, $
-  GROUP_LEADER = ourGroup, $
+    GROUP_LEADER = ourGroup, $
     /NO_BLOCK, $
     cleanup='data_background_tof_range_selection_base_cleanup'
     

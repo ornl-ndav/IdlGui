@@ -248,7 +248,8 @@ pro data_background_selection_base_event, Event
       widget_control, id, draw_ysize = new_ysize
       widget_control, id, draw_xsize = colorbar_xsize
       
-      plot_pixel_selection_beam_center_scale, event=event
+      ;plot_pixel_selection_beam_center_scale, event=event
+      data_background_display_scale_tof_range, event=event
       refresh_pixel_selection_plot, event, recalculate=1
       refresh_plot_pixel_selection_colorbar, event
       display_pixel_selection, event=event
@@ -313,6 +314,7 @@ pro data_background_selection_base_event, Event
         data_background_tof_range_selection_base, event=event, $
           top_base=(*global_pixel_selection).top_base, $
           parent_base_uname = 'pixel_selection_base_uname'
+        data_background_display_scale_tof_range, event=event
       endif
     end
     
@@ -1062,13 +1064,16 @@ end
 ;    This routine display the selection of TOF made in the data background
 ;    selection base tool for REF_L
 ;
-; :Params:
+; :Keywords:
 ;    event
-;
+;    base
+;    full_range
+;    no_range     if we don't want to display the from_tof and to_tof
+;    
 ; :Author: j35
 ;-
 pro data_background_display_scale_tof_range, event=event, base=base, $
-    full_range=full_range
+    full_range=full_range, no_range=no_range
   compile_opt idl2
   
   if (keyword_set(event)) then begin
@@ -1079,51 +1084,57 @@ pro data_background_display_scale_tof_range, event=event, base=base, $
   
   if (keyword_set(full_range)) then begin
     plot_pixel_selection_beam_center_scale, event=event, base=base
-    data_background_display_full_tof_range_marker, event=event, base=base
+    id_tof = (*global_pixel_selection).tof_range_selection_base
+    if (widget_info(id_tof,/valid_id) ne 0) then begin
+      data_background_display_full_tof_range_marker, event=event, base=base
+    endif
     return
   endif
   
-  tof_device_data = (*global_pixel_selection).tof_device_data
-  tof_range_status = (*global_pixel_selection).tof_range_status
-  ;
-  ;  if (tof_range_status eq 'left') then begin
-  ;    uname = 'reduce_step2_tof1'
-  ;    tof_data = tof_device_data[1,0]
-  ;  endif else begin
-  ;    uname = 'reduce_step2_tof2'
-  ;    tof_data = tof_device_data[1,1]
-  ;  endelse
-  ;  putValue, event=event, uname, strcompress(tof_data,/remove_all)
-  
-  if (keyword_set(event)) then begin
-    id = WIDGET_INFO(Event.top, FIND_By_UNAME='pixel_selection_scale')
-  endif else begin
-    id = WIDGET_INFO(base, FIND_By_UNAME='pixel_selection_scale')
-  endelse
-  geometry = WIDGET_INFO(id,/GEOMETRY)
-  ysize = geometry.ysize
-  xsize = geometry.xsize
-  widget_control, id, get_value=id_value
-  wset, id_value
-  
-  tof1_device = tof_device_data[0,0]
-  tof2_device = tof_device_data[0,1]
-  
   plot_pixel_selection_beam_center_scale, event=event, base=base
   
-  xoffset = 40
-  if (tof1_device lt xoffset) then tof1_device = xoffset
-  if (tof1_device gt (xsize-xoffset)) then tof1_device = (xsize-xoffset)
-  plots, tof1_device, 0, color=fsc_color('yellow'),/device
-  plots, tof1_device, ysize, color=fsc_color('yellow'), /continue,/device,$
-    thick=3
+  if (keyword_set(no_range)) then return
+  
+  id_tof = (*global_pixel_selection).tof_range_selection_base
+  if (widget_info(id_tof,/valid_id) ne 0) then begin
+  
+    print, 'here'
+  
+    if (keyword_set(event)) then begin
+      id = WIDGET_INFO(Event.top, FIND_By_UNAME='pixel_selection_scale')
+    endif else begin
+      id = WIDGET_INFO(base, FIND_By_UNAME='pixel_selection_scale')
+    endelse
+    geometry = WIDGET_INFO(id,/GEOMETRY)
+    ysize = geometry.ysize
+    xsize = geometry.xsize
+    widget_control, id, get_value=id_value
+    wset, id_value
     
-  if (tof2_device lt xoffset) then tof2_device = xoffset
-  if (tof2_device gt (xsize-xoffset)) then tof2_device = (xsize-xoffset)
-  plots, tof2_device, 0, color=fsc_color('yellow'),/device
-  plots, tof2_device, ysize, color=fsc_color('yellow'), /continue,/device, $
-    thick=3
+    tof_device_data = (*global_pixel_selection).tof_device_data
     
+    tof1_device = tof_device_data[0,0]
+    tof2_device = tof_device_data[0,1]
+    
+    print, 'tof1_device: ', tof1_device
+    print, 'tof2_device: ', tof2_device
+    print
+    
+    xoffset = 40
+    if (tof1_device lt xoffset) then tof1_device = xoffset
+    if (tof1_device gt (xsize-xoffset)) then tof1_device = (xsize-xoffset)
+    plots, tof1_device, 0, color=fsc_color('yellow'),/device
+    plots, tof1_device, ysize, color=fsc_color('yellow'), /continue,/device,$
+      thick=3
+      
+    if (tof2_device lt xoffset) then tof2_device = xoffset
+    if (tof2_device gt (xsize-xoffset)) then tof2_device = (xsize-xoffset)
+    plots, tof2_device, 0, color=fsc_color('yellow'),/device
+    plots, tof2_device, ysize, color=fsc_color('yellow'), /continue,/device, $
+      thick=3
+      
+  endif
+  
 end
 
 ;+
@@ -1643,7 +1654,7 @@ pro data_background_selection_base, main_base=main_base, $
   (*(*global_pixel_selection).full_data) = data
   
   data_2d = total(data,3)
-  
+ 
   counts_vs_pixel = total(data_2d,1)
   (*(*global_pixel_selection).counts_vs_pixel) = counts_vs_pixel
   
@@ -1652,6 +1663,20 @@ pro data_background_selection_base, main_base=main_base, $
   
   xrange = [x_axis[0], x_axis[-1]]
   (*global_pixel_selection).xrange = xrange
+  (*global_pixel_selection).tof_range_selected = [x_axis[0],x_axis[-1]]
+  
+  id = WIDGET_INFO(wBase, FIND_BY_UNAME='pixel_selection_draw')
+  draw_geometry = WIDGET_INFO(id,/GEOMETRY)
+  xsize = draw_geometry.xsize
+  ysize = draw_geometry.ysize
+  xoffset = draw_geometry.xoffset
+  
+  tof_device_data = (*global_pixel_selection).tof_device_data
+  tof_device_data[0,0] = xoffset
+  tof_device_data[0,1] = xsize+xoffset
+  tof_device_data[1,0] = x_axis[0]
+  tof_device_data[1,1] = x_axis[-1]
+  (*global_pixel_selection).tof_device_data = tof_device_data
   
   yrange = [y_axis[0], y_axis[-1]+1]
   (*global_pixel_selection).yrange = yrange
@@ -1666,10 +1691,6 @@ pro data_background_selection_base, main_base=main_base, $
   pixel_selection_lin_log_data, base=wBase
   
   Data = (*(*global_pixel_selection).data)
-  id = WIDGET_INFO(wBase, FIND_BY_UNAME='pixel_selection_draw')
-  draw_geometry = WIDGET_INFO(id,/GEOMETRY)
-  xsize = draw_geometry.xsize
-  ysize = draw_geometry.ysize
   
   cData = congrid(Data, xsize, ysize)
   
@@ -1684,7 +1705,7 @@ pro data_background_selection_base, main_base=main_base, $
   DEVICE, DECOMPOSED = 0
   loadct, (*global_pixel_selection).default_loadct, /SILENT
   
-  ;initialize scale with marker showing full range
+  ;initialize scale
   data_background_display_scale_tof_range, base=wBase,/full_range
   ;plot_pixel_selection_beam_center_scale, base=wBase
   
