@@ -78,14 +78,14 @@ pro data_background_selection_base_event, Event
             (*global_pixel_selection).scale_mouse_left_pressed = 0b
             data_background_save_scale_device_value, event
             data_background_display_scale_tof_range, event=event
-          endif else begin
+          endif else begin ;right
             (*global_pixel_selection).scale_mouse_right_pressed = 0b
           endelse
         endif
         
         if (event.type eq 2) then begin ;moving mouse
           if ((*global_pixel_selection).scale_mouse_left_pressed) then begin
-            data_background_save_scale_device_value, event          
+            data_background_save_scale_device_value, event
             data_background_display_scale_tof_range, event=event
           endif
         endif
@@ -369,9 +369,9 @@ pro data_background_selection_base_event, Event
 end
 
 pro data_background_save_scale_device_value, event
-compile_opt idl2
-
- widget_control, event.top, get_uvalue=global_pixel_selection
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_pixel_selection
   
   tof_device_data = (*global_pixel_selection).tof_device_data
   tof_range_status = (*global_pixel_selection).tof_range_status
@@ -386,20 +386,22 @@ compile_opt idl2
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME='pixel_selection_scale')
   geometry = WIDGET_INFO(id,/GEOMETRY)
   xsize = geometry.xsize
+    id_draw = WIDGET_INFO(Event.top, FIND_BY_UNAME='pixel_selection_draw')
+  geometry = WIDGET_INFO(id_draw,/GEOMETRY)
   xoffset = geometry.xoffset
-  
+    
   ;make sure we stay in the range of tof
   if (x_device le xoffset) then x_device=xoffset
   if (x_device ge xsize-xoffset) then x_device=xsize-xoffset
   
   tof_device_data[0,index] = x_device
   x_data = data_background_getTOFDataFromDevice(event,$
-  x_device,$
-  (*global_pixel_selection).tof_range_status)
+    x_device,$
+    (*global_pixel_selection).tof_range_status)
   tof_device_data[1,index] = x_data
   
   (*global_pixel_selection).tof_device_data = tof_device_data
-
+  
 end
 
 ;+
@@ -1176,6 +1178,18 @@ pro data_background_display_scale_tof_range, event=event, base=base, $
   id_tof = (*global_pixel_selection).tof_range_selection_base
   if (widget_info(id_tof,/valid_id) ne 0) then begin
   
+    tof_range_status = (*global_pixel_selection).tof_range_status
+    tof_device_data = (*global_pixel_selection).tof_device_data
+    if (tof_range_status eq 'left') then begin
+      uname = 'data_background_tof1'
+      tof_data = tof_device_data[1,0]
+    endif else begin
+      uname = 'data_background_tof2'
+      tof_data = tof_device_data[1,1]
+    endelse
+    _tof_base = (*global_pixel_selection).tof_range_selection_base
+    putValue, base=_tof_base, uname, strcompress(tof_data,/remove_all)
+    
     if (keyword_set(event)) then begin
       id = WIDGET_INFO(Event.top, FIND_By_UNAME='pixel_selection_scale')
     endif else begin
@@ -1186,8 +1200,6 @@ pro data_background_display_scale_tof_range, event=event, base=base, $
     xsize = geometry.xsize
     widget_control, id, get_value=id_value
     wset, id_value
-    
-    tof_device_data = (*global_pixel_selection).tof_device_data
     
     tof1_device = tof_device_data[0,0]
     tof2_device = tof_device_data[0,1]
@@ -1658,7 +1670,7 @@ pro data_background_selection_base, main_base=main_base, $
     scale_mouse_left_pressed: 0b, $
     scale_mouse_right_pressed: 0b, $
     tof_range_status: 'left', $
-
+    
     ;used to plot selection zoom
     default_plot_size: default_plot_size, $
     
@@ -1779,9 +1791,9 @@ pro data_background_selection_base, main_base=main_base, $
   loadct, (*global_pixel_selection).default_loadct, /SILENT
   
   data_background_tof_range_selection_base, $
-  top_base=(*global_pixel_selection).top_base, $
-  parent_base_uname = 'pixel_selection_base_uname'
-  
+    top_base=(*global_pixel_selection).top_base, $
+    parent_base_uname = 'pixel_selection_base_uname'
+    
   ;initialize scale
   data_background_display_scale_tof_range, base=wBase,/full_range
   ;plot_pixel_selection_beam_center_scale, base=wBase

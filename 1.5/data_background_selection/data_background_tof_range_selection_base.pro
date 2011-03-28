@@ -80,14 +80,14 @@ pro data_background_tof_range_selection_base_gui, wBase, $
     value = strcompress(tof1_data,/remove_all),$
     xsize=8,$
     /editable,$
-    uname = 'reduce_step2_tof1')
+    uname = 'data_background_tof1')
   tof1 = widget_label(tof_row1,$
     value = ' to TOF2 (ms):')
   tof1_value = widget_text(tof_row1,$
     value = strcompress(tof2_data,/remove_all),$
     /editable,$
     xsize = 8,$
-    uname = 'reduce_step2_tof2')
+    uname = 'data_background_tof2')
   space = widget_label(tof_row1,$
     value = '   ')
   full_range = widget_button(tof_row1,$

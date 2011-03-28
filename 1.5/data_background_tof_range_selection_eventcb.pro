@@ -52,10 +52,13 @@ function data_background_getTOFDataFromDevice, event, x_device, tof_range_status
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME='pixel_selection_scale')
   geometry = WIDGET_INFO(id,/GEOMETRY)
   xsize = geometry.xsize
+  
+  id_draw = WIDGET_INFO(Event.top, FIND_BY_UNAME='pixel_selection_draw')
+  geometry = WIDGET_INFO(id_draw,/GEOMETRY)
   xoffset = geometry.xoffset
   
   tof = (*global_pixel_selection).tmp_x_axis
-  x_range = [tof[0],tof[-1]]/1000.
+  x_range = [tof[0],tof[-1]]
   tof1 = x_range[0]
   tof2 = x_range[1]
   
@@ -65,7 +68,7 @@ function data_background_getTOFDataFromDevice, event, x_device, tof_range_status
   ratio = (tof2-tof1)/(float(xsize)-2.*xoffset)
   x_data = (float(x_device)-xoffset)*ratio + tof1
   
-  tof = ((*global_pixel_selection).x_axis)/1000.
+  tof = ((*global_pixel_selection).x_axis)
   sz_tof = n_elements(tof)
   if (tof_range_status eq 'left') then begin
     ;we want the real tof value smaller or equal to x_data
