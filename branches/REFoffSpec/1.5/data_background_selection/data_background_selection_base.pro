@@ -60,6 +60,8 @@ pro data_background_selection_base_event, Event
         if (event.type eq 0) then begin
           if (event.press eq 1) then begin ;left button pressed
             (*global_pixel_selection).scale_mouse_left_pressed = 1b
+            data_background_save_scale_device_value, event
+            data_background_display_scale_tof_range, event=event
           endif
           if (event.press eq 4) then begin ;right button pressed
             (*global_pixel_selection).scale_mouse_right_pressed = 1b
@@ -74,6 +76,8 @@ pro data_background_selection_base_event, Event
         if (event.type eq 1) then begin ;button released
           if ((*global_pixel_selection).scale_mouse_left_pressed) then begin ;left
             (*global_pixel_selection).scale_mouse_left_pressed = 0b
+            data_background_save_scale_device_value, event
+            data_background_display_scale_tof_range, event=event
           endif else begin
             (*global_pixel_selection).scale_mouse_right_pressed = 0b
           endelse
@@ -81,7 +85,8 @@ pro data_background_selection_base_event, Event
         
         if (event.type eq 2) then begin ;moving mouse
           if ((*global_pixel_selection).scale_mouse_left_pressed) then begin
-          
+            data_background_save_scale_device_value, event          
+            data_background_display_scale_tof_range, event=event
           endif
         endif
         
@@ -361,6 +366,40 @@ pro data_background_selection_base_event, Event
     
   endcase
   
+end
+
+pro data_background_save_scale_device_value, event
+compile_opt idl2
+
+ widget_control, event.top, get_uvalue=global_pixel_selection
+  
+  tof_device_data = (*global_pixel_selection).tof_device_data
+  tof_range_status = (*global_pixel_selection).tof_range_status
+  
+  x_device = event.x
+  if ((*global_pixel_selection).tof_range_status eq 'left') then begin
+    index = 0
+  endif else begin
+    index = 1
+  endelse
+  
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='pixel_selection_scale')
+  geometry = WIDGET_INFO(id,/GEOMETRY)
+  xsize = geometry.xsize
+  xoffset = geometry.xoffset
+  
+  ;make sure we stay in the range of tof
+  if (x_device le xoffset) then x_device=xoffset
+  if (x_device ge xsize-xoffset) then x_device=xsize-xoffset
+  
+  tof_device_data[0,index] = x_device
+  x_data = data_background_getTOFDataFromDevice(event,$
+  x_device,$
+  (*global_pixel_selection).tof_range_status)
+  tof_device_data[1,index] = x_data
+  
+  (*global_pixel_selection).tof_device_data = tof_device_data
+
 end
 
 ;+
@@ -1637,6 +1676,7 @@ pro data_background_selection_base, main_base=main_base, $
     counts_vs_pixel: ptr_new(0L), $
     
     x_axis: x_axis, $ ; [0.2, 0.4....] tof
+    tmp_x_axis: x_axis, $
     y_axis: y_axis, $ ; pixel range
     
     ;pointers used to output the counts vs qx/qz ascii files
