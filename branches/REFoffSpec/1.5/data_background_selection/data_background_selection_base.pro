@@ -305,6 +305,17 @@ pro data_background_selection_base_event, Event
       endif
     end
     
+    ;show TOF range selection base
+    widget_info(event.top, $
+      find_by_uname='show_tof_range_selection_base'): begin
+      tof_base = (*global_pixel_selection).tof_range_selection_base
+      if (widget_info(tof_base,/valid_id) eq 0) then begin
+        data_background_tof_range_selection_base, event=event, $
+          top_base=(*global_pixel_selection).top_base, $
+          parent_base_uname = 'pixel_selection_base_uname'
+      endif
+    end
+    
     else:
     
   endcase
@@ -979,7 +990,7 @@ pro plot_pixel_selection_beam_center_scale, base=base, $
   min_y = y_range[0]
   max_y = y_range[1]
   
-  x_range = (*global_pixel_selection).xrange  
+  x_range = (*global_pixel_selection).xrange
   if (keyword_set(plot_range)) then begin
   
     tof = (*(*global_pixel_selection).x_axis)
@@ -999,7 +1010,7 @@ pro plot_pixel_selection_beam_center_scale, base=base, $
     x_range = [_tof_min, _tof_max]
     
   endif
-
+  
   ;determine the number of xaxis data to show
   geometry = widget_info(id_base,/geometry)
   xsize = geometry.scr_xsize
@@ -1043,7 +1054,7 @@ end
 
 ;+
 ; :Description:
-;    This routine display the selection of TOF made in the data background 
+;    This routine display the selection of TOF made in the data background
 ;    selection base tool for REF_L
 ;
 ; :Params:
@@ -1052,37 +1063,37 @@ end
 ; :Author: j35
 ;-
 pro data_background_display_scale_tof_range, event=event, base=base, $
-full_range=full_range
+    full_range=full_range
   compile_opt idl2
   
   if (keyword_set(event)) then begin
-  widget_control, event.top, get_uvalue=global_pixel_selection
+    widget_control, event.top, get_uvalue=global_pixel_selection
   endif else begin
-  widget_control, base, get_uvalue=global_pixel_selection
+    widget_control, base, get_uvalue=global_pixel_selection
   endelse
   
   if (keyword_set(full_range)) then begin
-   plot_pixel_selection_beam_center_scale, event=event, base=base
-   data_background_display_full_tof_range_marker, event=event, base=base
-   return
-   endif
+    plot_pixel_selection_beam_center_scale, event=event, base=base
+    data_background_display_full_tof_range_marker, event=event, base=base
+    return
+  endif
   
   tof_device_data = (*global_pixel_selection).tof_device_data
   tof_range_status = (*global_pixel_selection).tof_range_status
-;  
-;  if (tof_range_status eq 'left') then begin
-;    uname = 'reduce_step2_tof1'
-;    tof_data = tof_device_data[1,0]
-;  endif else begin
-;    uname = 'reduce_step2_tof2'
-;    tof_data = tof_device_data[1,1]
-;  endelse
-;  putValue, event=event, uname, strcompress(tof_data,/remove_all)
+  ;
+  ;  if (tof_range_status eq 'left') then begin
+  ;    uname = 'reduce_step2_tof1'
+  ;    tof_data = tof_device_data[1,0]
+  ;  endif else begin
+  ;    uname = 'reduce_step2_tof2'
+  ;    tof_data = tof_device_data[1,1]
+  ;  endelse
+  ;  putValue, event=event, uname, strcompress(tof_data,/remove_all)
   
   if (keyword_set(event)) then begin
-  id = WIDGET_INFO(Event.top, FIND_By_UNAME='pixel_selection_scale')
+    id = WIDGET_INFO(Event.top, FIND_By_UNAME='pixel_selection_scale')
   endif else begin
-  id = WIDGET_INFO(base, FIND_By_UNAME='pixel_selection_scale')
+    id = WIDGET_INFO(base, FIND_By_UNAME='pixel_selection_scale')
   endelse
   geometry = WIDGET_INFO(id,/GEOMETRY)
   ysize = geometry.ysize
@@ -1098,16 +1109,16 @@ full_range=full_range
   xoffset = 40
   if (tof1_device lt xoffset) then tof1_device = xoffset
   if (tof1_device gt (xsize-xoffset)) then tof1_device = (xsize-xoffset)
-    plots, tof1_device, 0, color=fsc_color('yellow'),/device
-    plots, tof1_device, ysize, color=fsc_color('yellow'), /continue,/device,$
+  plots, tof1_device, 0, color=fsc_color('yellow'),/device
+  plots, tof1_device, ysize, color=fsc_color('yellow'), /continue,/device,$
     thick=3
-
+    
   if (tof2_device lt xoffset) then tof2_device = xoffset
   if (tof2_device gt (xsize-xoffset)) then tof2_device = (xsize-xoffset)
-    plots, tof2_device, 0, color=fsc_color('yellow'),/device
-    plots, tof2_device, ysize, color=fsc_color('yellow'), /continue,/device, $
+  plots, tof2_device, 0, color=fsc_color('yellow'),/device
+  plots, tof2_device, ysize, color=fsc_color('yellow'), /continue,/device, $
     thick=3
-  
+    
 end
 
 ;+
@@ -1124,12 +1135,12 @@ end
 ; :Author: j35
 ;-
 pro data_background_display_full_tof_range_marker, event=event, base=base
-compile_opt idl2
-
+  compile_opt idl2
+  
   if (keyword_set(event)) then begin
-  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='pixel_selection_scale')
+    id = WIDGET_INFO(Event.top, FIND_BY_UNAME='pixel_selection_scale')
   endif else begin
-  id = WIDGET_INFO(base, FIND_BY_UNAME='pixel_selection_scale')
+    id = WIDGET_INFO(base, FIND_BY_UNAME='pixel_selection_scale')
   endelse
   
   geometry = WIDGET_INFO(id,/GEOMETRY)
@@ -1141,19 +1152,19 @@ compile_opt idl2
   xoffset = 40
   tof1_device = xoffset
   tof2_device = xsize-xoffset
-
+  
   if (tof1_device lt xoffset) then tof1_device = xoffset
   if (tof1_device gt (xsize-xoffset)) then tof1_device = (xsize-xoffset)
-    plots, tof1_device, 0, color=fsc_color('yellow'),/device
-    plots, tof1_device, ysize, color=fsc_color('yellow'), /continue,/device,$
+  plots, tof1_device, 0, color=fsc_color('yellow'),/device
+  plots, tof1_device, ysize, color=fsc_color('yellow'), /continue,/device,$
     thick=3
-
+    
   if (tof2_device lt xoffset) then tof2_device = xoffset
   if (tof2_device gt (xsize-xoffset)) then tof2_device = (xsize-xoffset)
-    plots, tof2_device, 0, color=fsc_color('yellow'),/device
-    plots, tof2_device, ysize, color=fsc_color('yellow'), /continue,/device, $
+  plots, tof2_device, 0, color=fsc_color('yellow'),/device
+  plots, tof2_device, ysize, color=fsc_color('yellow'), /continue,/device, $
     thick=3
-
+    
 end
 
 ;+
@@ -1472,6 +1483,10 @@ pro data_background_selection_base_gui, wBase, $
     value = 'Show Counts vs pixel window',$
     uname = 'show_counts_vs_pixel_base')
     
+  tof = widget_button(pixel,$
+    value = 'Show TOF range selection window',$
+    uname = 'show_tof_range_selection_base')
+    
 end
 
 ;+
@@ -1540,6 +1555,7 @@ pro data_background_selection_base, main_base=main_base, $
     file_name: file_name, $
     short_file_name: short_file_name, $
     
+    tof_range_selection_base: 0L, $
     cursor_info_base: 0L, $
     pixel_selection_input_base: 0L, $ ;id of refpix_input_base
     ;'id of refpix_counts_vs_tof_base

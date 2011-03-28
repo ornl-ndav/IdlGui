@@ -44,7 +44,7 @@
 ;
 ; :Author: j35
 ;-
-pro cursor_info_base_gui, wBase, $
+pro data_background_tof_range_selection_base_gui, wBase, $
     parent_base_geometry
   compile_opt idl2
   
@@ -53,16 +53,14 @@ pro cursor_info_base_gui, wBase, $
   main_base_xsize = parent_base_geometry.xsize
   main_base_ysize = parent_base_geometry.ysize
   
-  xoffset = main_base_xsize
-  xoffset += main_base_xoffset
-  
-  yoffset = main_base_yoffset - 105
+  xoffset = main_base_xoffset  
+  yoffset = main_base_yoffset + main_base_ysize + 35
   
   ourGroup = WIDGET_BASE()
   
-  title = 'Cursor Live Infos'
+  title = 'TOF range selection'
   wBase = WIDGET_BASE(TITLE = title, $
-    UNAME        = 'cursor_info_base', $
+    UNAME        = 'tof_range_base', $
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
     MAP          = 1,$
@@ -70,44 +68,38 @@ pro cursor_info_base_gui, wBase, $
     /tlb_size_events,$
     GROUP_LEADER = ourGroup)
 
-  row1 = widget_base(wBase,$
-  /row)
-  label = widget_label(row1,$
-  value = 'TOF (ms): ',$
-  /align_right,$
-  scr_xsize = 80)
-  value = widget_label(row1,$
-  value = 'N/A',$
-  /align_left, $
-  scr_xsize = 200,$
-  uname = 'cursor_info_tof')
-  
-row2 = widget_base(wBase,$
-  /row)
-  label = widget_label(row2,$
-  value = 'Pixel: ',$
-  /align_right,$
-  scr_xsize = 80)
-  value = widget_label(row2,$
-  value = 'N/A',$
-  /align_left, $
-  scr_xsize = 200,$
-  uname = 'cursor_info_pixel')
-  
-  row3 = widget_base(wBase,$
-  /row)
-  label = widget_label(row3,$
-  value = 'Counts: ',$
-  /align_right,$
-  scr_xsize = 80)
-  value = widget_label(row3,$
-  value = 'N/A',$
-  /align_left, $
-  scr_xsize = 200,$
-  uname = 'cursor_info_counts')
-
+  tof_row1 = widget_base(wBase,$
+    /row)
+  tof1 = widget_label(tof_row1,$
+    value = 'Plot from TOF1 (ms):')
+  tof1_value = widget_text(tof_row1,$
+    value = 'N/A',$
+    xsize=8,$
+    /editable,$
+    uname = 'reduce_step2_tof1')
+  tof1 = widget_label(tof_row1,$
+    value = ' to TOF2 (ms):')
+  tof1_value = widget_text(tof_row1,$
+    value = 'N/A',$
+    /editable,$
+    xsize = 8,$
+    uname = 'reduce_step2_tof2')
+  space = widget_label(tof_row1,$
+    value = '   ')
+  full_range = widget_button(tof_row1,$
+    value = 'Plot range',$
+    scr_xsize = 110,$
+    uname = 'reduce_step2_tof_plot_only_range')
+  space = widget_label(tof_row1,$
+    value = '      ')
+  full_range = widget_button(tof_row1,$
+    value = 'Plot full',$
+    scr_xsize = 110,$
+    uname = 'reduce_step2_tof_plot_full_range')
+  tof_row2 = widget_label(wBase,$
+    value = 'Left click TOF range to select TOF1, right' + $
+    ' click to switch to TOF2.')
 end
-
 
 ;+
 ; :Description:
@@ -136,7 +128,7 @@ end
 ;
 ; :Author: j35
 ;-
-pro cursor_info_base_cleanup, tlb
+pro data_background_tof_range_selection_base_cleanup, tlb
   compile_opt idl2
   
   widget_control, tlb, get_uvalue=global_info, /no_copy
@@ -156,7 +148,7 @@ end
 ;
 ; :Author: j35
 ;-
-pro cursor_info_base, event=event, $
+pro data_background_tof_range_selection_base, event=event, $
     top_base=top_base, $
     parent_base_uname = parent_base_uname
   compile_opt idl2
@@ -171,10 +163,10 @@ pro cursor_info_base, event=event, $
   parent_base_geometry = WIDGET_INFO(id,/GEOMETRY)
   
   _base = 0L
-  cursor_info_base_gui, _base, $
+  data_background_tof_range_selection_base_gui, _base, $
     parent_base_geometry
     
-  (*global_pixel_selection).cursor_info_base = _base
+  (*global_pixel_selection).tof_range_selection_base = _base
   
   WIDGET_CONTROL, _base, /REALIZE
   
@@ -184,9 +176,10 @@ pro cursor_info_base, event=event, $
     
   WIDGET_CONTROL, _base, SET_UVALUE = global_info
   
-  XMANAGER, "pixel_selection_input_base", _base, GROUP_LEADER = ourGroup, $
+  XMANAGER, "data_background_tof_range_selection_base", _base, $
+  GROUP_LEADER = ourGroup, $
     /NO_BLOCK, $
-    cleanup='cursor_info_base_cleanup'
+    cleanup='data_background_tof_range_selection_base_cleanup'
     
 end
 

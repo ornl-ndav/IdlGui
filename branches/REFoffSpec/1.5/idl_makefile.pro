@@ -54,6 +54,7 @@ cd, CurrentFolder + '/data_background_selection/'
 .run refresh_plot_data_background_selection_colorbar.pro
 .run data_background_selection_tool_button_eventcb.pro
 .run cursor_info_base.pro
+.run data_background_tof_range_selection_base.pro
 
 ;Build all procedures
 cd, CurrentFolder
