@@ -279,7 +279,11 @@ pro display_counts_vs_pixel, base=base, event=event, refresh=refresh, global
   endif else begin
     data_tof_px_px = (*(*global).norm_data)
     data_px_px = total(data_tof_px_px,1)
-    counts_vs_pixel = total(data_px_px,1)
+    if ((*global).instrument eq 'REF_M') then begin
+      counts_vs_pixel = total(data_px_px,1)
+    endif else begin
+      counts_vs_pixel = total(data_px_px,2)
+    endelse
     (*(*global_counts).counts_vs_pixel) = counts_vs_pixel
     ymax = max(counts_vs_pixel,min=ymin)
     (*global_counts).counts_vs_pixel_ymax = ymax
