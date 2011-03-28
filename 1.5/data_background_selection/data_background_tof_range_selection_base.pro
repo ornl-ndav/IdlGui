@@ -137,8 +137,8 @@ pro data_background_tof_range_selection_base_cleanup, tlb
   
   widget_control, tlb, get_uvalue=global_info
   
-  main_event = (*global_info).main_event
-  data_background_display_scale_tof_range, event=main_event, /no_range
+  base = (*global_info).top_base
+  data_background_display_scale_tof_range, base=base, /no_range
   
   if (n_elements(global_info) eq 0) then return
   
@@ -179,7 +179,6 @@ pro data_background_tof_range_selection_base, event=event, $
   
   global_info = PTR_NEW({ _base: _base,$
     top_base: top_base, $
-    main_event: event, $
     global_pixel_selection: global_pixel_selection })
     
   WIDGET_CONTROL, _base, SET_UVALUE = global_info
