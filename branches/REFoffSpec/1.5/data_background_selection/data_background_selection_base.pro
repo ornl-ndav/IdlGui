@@ -50,6 +50,45 @@ pro data_background_selection_base_event, Event
   
   case Event.id of
   
+    ;scale draw
+    widget_info(event.top, find_by_uname='pixel_selection_scale'): begin
+    
+      ;interact with plot only if tof range tool base is mapped
+      id_tof = (*global_pixel_selection).tof_range_selection_base
+      if (widget_info(id_tof,/valid_id) ne 0) then begin
+      
+        if (event.type eq 0) then begin
+          if (event.press eq 1) then begin ;left button pressed
+            (*global_pixel_selection).scale_mouse_left_pressed = 1b
+          endif
+          if (event.press eq 4) then begin ;right button pressed
+            (*global_pixel_selection).scale_mouse_right_pressed = 1b
+            if ((*global_pixel_selection).tof_range_status eq 'left') then begin
+              (*global_pixel_selection).tof_range_status = 'right'
+            endif else begin
+              (*global_pixel_selection).tof_range_status = 'left'
+            endelse
+          endif
+        endif ;end of button pressed
+        
+        if (event.type eq 1) then begin ;button released
+          if ((*global_pixel_selection).scale_mouse_left_pressed) then begin ;left
+            (*global_pixel_selection).scale_mouse_left_pressed = 0b
+          endif else begin
+            (*global_pixel_selection).scale_mouse_right_pressed = 0b
+          endelse
+        endif
+        
+        if (event.type eq 2) then begin ;moving mouse
+          if ((*global_pixel_selection).scale_mouse_left_pressed) then begin
+          
+          endif
+        endif
+        
+      endif
+      
+    end
+    
     ;main draw
     widget_info(event.top, find_by_uname='pixel_selection_draw'): begin
     
@@ -1068,8 +1107,8 @@ end
 ;    event
 ;    base
 ;    full_range
-;    no_range     if we don't want to display the from_tof and to_tof
-;    
+;    no_range: if we don't want to display the from_tof and to_tof
+;
 ; :Author: j35
 ;-
 pro data_background_display_scale_tof_range, event=event, base=base, $
@@ -1098,8 +1137,6 @@ pro data_background_display_scale_tof_range, event=event, base=base, $
   id_tof = (*global_pixel_selection).tof_range_selection_base
   if (widget_info(id_tof,/valid_id) ne 0) then begin
   
-    print, 'here'
-  
     if (keyword_set(event)) then begin
       id = WIDGET_INFO(Event.top, FIND_By_UNAME='pixel_selection_scale')
     endif else begin
@@ -1115,10 +1152,6 @@ pro data_background_display_scale_tof_range, event=event, base=base, $
     
     tof1_device = tof_device_data[0,0]
     tof2_device = tof_device_data[0,1]
-    
-    print, 'tof1_device: ', tof1_device
-    print, 'tof2_device: ', tof2_device
-    print
     
     xoffset = 40
     if (tof1_device lt xoffset) then tof1_device = xoffset
@@ -1582,11 +1615,11 @@ pro data_background_selection_base, main_base=main_base, $
     tof_range_selected: [-1.,-1.], $
     tof_device_data: fltarr(2,2), $
     
-    ;tof scale
+    ;mouse interaction with tof axis of main scale plot
     scale_mouse_left_pressed: 0b, $
     scale_mouse_right_pressed: 0b, $
     tof_range_status: 'left', $
-    
+
     ;used to plot selection zoom
     default_plot_size: default_plot_size, $
     
@@ -1654,7 +1687,7 @@ pro data_background_selection_base, main_base=main_base, $
   (*(*global_pixel_selection).full_data) = data
   
   data_2d = total(data,3)
- 
+  
   counts_vs_pixel = total(data_2d,1)
   (*(*global_pixel_selection).counts_vs_pixel) = counts_vs_pixel
   
@@ -1704,6 +1737,10 @@ pro data_background_selection_base, main_base=main_base, $
   
   DEVICE, DECOMPOSED = 0
   loadct, (*global_pixel_selection).default_loadct, /SILENT
+  
+  data_background_tof_range_selection_base, $
+  top_base=(*global_pixel_selection).top_base, $
+  parent_base_uname = 'pixel_selection_base_uname'
   
   ;initialize scale
   data_background_display_scale_tof_range, base=wBase,/full_range
