@@ -138,10 +138,14 @@ pro data_background_tof_range_selection_base_cleanup, tlb
   widget_control, tlb, get_uvalue=global_info
   
   base = (*global_info).top_base
+  catch, error
+  if (error ne 0) then begin
+  catch,/cancel
+  endif else begin
   data_background_display_scale_tof_range, base=base, /no_range
+  endelse
   
   if (n_elements(global_info) eq 0) then return
-  
   ptr_free, global_info
     
 end
