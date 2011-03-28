@@ -950,6 +950,11 @@ pro pixel_selection_base_uname_killed, global_pixel_selection
     widget_control, id_counts, /destroy
   endif
   
+  id_tof = (*global_pixel_selection).tof_range_selection_base
+  if (widget_info(id_tof,/valid_id) ne 0) then begin
+    widget_control, id_tof, /destroy
+  endif
+  
 end
 
 ;+
