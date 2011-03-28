@@ -91,7 +91,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     /column,$
     frame=5,$
     xoffset = 115,$
-    yoffset = 770)
+    yoffset = 690)
   tof_row1 = widget_base(tof_range,$
     /row)
   tof1 = widget_label(tof_row1,$
