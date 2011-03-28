@@ -48,6 +48,7 @@ cd, CurrentFolder + '/REFoffSpecGUI/'
 
 ;Build Data background ROI selection
 cd, CurrentFolder + '/data_background_selection/'
+.run data_background_tof_range_selection_eventcb.pro
 .run data_background_selection_base.pro
 .run data_background_selection_counts_vs_pixel_base.pro
 .run data_background_selection_input_base.pro
