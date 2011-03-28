@@ -1016,7 +1016,7 @@ end
 ;-
 pro pixel_selection_base_uname_killed, global_pixel_selection
   compile_opt idl2
-  
+    
   id_info = (*global_pixel_selection).cursor_info_base
   if (widget_info(id_info,/valid_id) ne 0) then begin
     widget_control, id_info, /destroy
@@ -1036,7 +1036,7 @@ pro pixel_selection_base_uname_killed, global_pixel_selection
   if (widget_info(id_tof,/valid_id) ne 0) then begin
     widget_control, id_tof, /destroy
   endif
-  
+    
 end
 
 ;+
