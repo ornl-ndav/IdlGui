@@ -892,7 +892,7 @@ pro pixel_selection_lin_log_data, event=event, base=base, init=init
     (*(*global_pixel_selection).data_log) = data
     
   endif
-
+  
   if (scale_setting eq 1) then begin ;log
     data = (*(*global_pixel_selection).data_log)
   endif
@@ -907,7 +907,7 @@ end
 ;
 ; :Params:
 ;    event
-;    
+;
 ; :Keywords:
 ;   base
 ;   recalculate
@@ -919,10 +919,10 @@ pro refresh_pixel_selection_plot, event, base=base, recalculate=recalculate
   
   ;get global structure
   if (~keyword_set(base)) then begin
-  widget_control,event.top,get_uvalue=global_pixel_selection
+    widget_control,event.top,get_uvalue=global_pixel_selection
     id = widget_info(event.top, find_by_uname='pixel_selection_draw')
   endif else begin
-  widget_control,base,get_uvalue=global_pixel_selection
+    widget_control,base,get_uvalue=global_pixel_selection
     id = widget_info(base, find_by_uname='pixel_selection_draw')
   endelse
   
@@ -1141,25 +1141,28 @@ pro plot_pixel_selection_beam_center_scale, base=base, $
   max_y = y_range[1]
   
   x_range = (*global_pixel_selection).xrange
+  
   if (keyword_set(plot_range)) then begin
   
-    tof = (*(*global_pixel_selection).x_axis)
-  ;  tof_range_selected = (*global_pixel_selection).tof_range_selected
-    tof_device_data = (*(*global_pixel_selection).tof_device_data)
+    tof = (*global_pixel_selection).x_axis
+    ;  tof_range_selected = (*global_pixel_selection).tof_range_selected
+    tof_device_data = (*global_pixel_selection).tof_device_data
     tof_range_selected = [tof_device_data[1,0],tof_device_data[1,1]]
     
-    tof1 = min(tof_range_selected,max=tof1)
+    tof1 = min(tof_range_selected,max=tof2)
     
     ;if no tof range selected on any of the two sides, select full range
     if (tof1 eq -1) then tof1 = x_range[0]
     if (tof2 eq -1) then tof2 = x_range[1]
     
-    index_tof1 = getIndexOfValueInArray(array=tof, value=tof1, from=1)
-    index_tof2 = getIndexOfValueInArray(array=tof, value=tof2, to=1)
+    index_tof1 = getIndexOfValueInArray(array=tof, value=tof1, /from)
+    index_tof2 = getIndexOfValueInArray(array=tof, value=tof2, /to)
     
     _tof_min = tof[index_tof1]
     _tof_max = tof[index_tof2]
     x_range = [_tof_min, _tof_max]
+    
+    (*global_pixel_selection).xrange = x_range
     
   endif
   
@@ -1804,8 +1807,8 @@ pro data_background_selection_base, main_base=main_base, $
     top_base: wBase, $
     main_event: event})
     
-  (*(*global_pixel_selection).tmp_x_axis) = x_axis  
-    
+  (*(*global_pixel_selection).tmp_x_axis) = x_axis
+  
   (*(*global_pixel_selection).full_data) = data
   
   data_2d = total(data,3)
