@@ -578,15 +578,6 @@ pro display_pixel_selection, event=event, base=base, recalculate=recalculate
   
   if (keyword_set(recalculate)) then begin
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
   endif else begin
   
     TV, (*(*global_pixel_selection).background), true=3
@@ -952,11 +943,6 @@ pro refresh_pixel_selection_plot, event, base=base, recalculate=recalculate
   
   sz_data = size(data,/dim)
   if (index_tof2 eq sz_data[0]) then index_tof2--
-  
-  help, data
-  print, 'index_tof1: ' , index_tof1
-  print, 'index_tof2: ', index_tof2
-  print
   
   data = data[index_tof1:index_tof2,*]
   
