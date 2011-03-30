@@ -57,6 +57,7 @@ pro data_background_tof_range_selection_base_event, event
       refresh_pixel_selection_plot, base=base, /recalculate
       plot_pixel_selection_beam_center_scale, base=base, /plot_range
       data_background_display_full_tof_range_marker, base=base
+      display_pixel_selection, base=base
     end
 
 
