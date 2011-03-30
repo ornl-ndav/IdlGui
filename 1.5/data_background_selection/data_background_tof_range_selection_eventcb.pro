@@ -57,7 +57,7 @@ function data_background_getTOFDataFromDevice, event, x_device, tof_range_status
   geometry = WIDGET_INFO(id_draw,/GEOMETRY)
   xoffset = geometry.xoffset
   
-  tof = (*global_pixel_selection).tmp_x_axis
+  tof = (*(*global_pixel_selection).tmp_x_axis)
   x_range = [tof[0],tof[-1]]
   tof1 = x_range[0]
   tof2 = x_range[1]

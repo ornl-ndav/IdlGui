@@ -34,6 +34,40 @@
 
 ;+
 ; :Description:
+;    event of data background tof range selection
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro data_background_tof_range_selection_base_event, event
+  widget_control, event.top, get_uvalue=global_info
+  global_pixel_selection = (*global_info).global_pixel_selection
+  
+  case Event.id  of
+  
+    ;plot range
+    widget_info(event.top, $
+      find_by_uname='data_background_tof_plot_only_range'): begin
+      
+      base = (*global_info).top_base
+      refresh_pixel_selection_plot, base=base, /recalculate
+      data_background_display_scale_tof_range, base=base, /no_range
+      data_background_display_full_tof_range_marker, base=base
+
+      
+    end
+    
+    else:
+  endcase
+  
+end
+
+;+
+; :Description:
 ;    Builds the GUI of the info base
 ;
 ; :Params:
@@ -93,13 +127,13 @@ pro data_background_tof_range_selection_base_gui, wBase, $
   full_range = widget_button(tof_row1,$
     value = 'Plot range',$
     scr_xsize = 110,$
-    uname = 'reduce_step2_tof_plot_only_range')
+    uname = 'data_background_tof_plot_only_range')
   space = widget_label(tof_row1,$
     value = '      ')
   full_range = widget_button(tof_row1,$
     value = 'Plot full',$
     scr_xsize = 110,$
-    uname = 'reduce_step2_tof_plot_full_range')
+    uname = 'data_background_tof_plot_full_range')
   tof_row2 = widget_label(wBase,$
     value = 'Left click TOF range to select TOF1, right' + $
     ' click to switch to TOF2.')
@@ -117,8 +151,8 @@ end
 ; :Author: j35
 ;-
 pro data_background_tof_range_selection_base_killed, main_event
-   compile_opt idl2
- 
+  compile_opt idl2
+  
   return
   
 end
@@ -140,14 +174,14 @@ pro data_background_tof_range_selection_base_cleanup, tlb
   base = (*global_info).top_base
   catch, error
   if (error ne 0) then begin
-  catch,/cancel
+    catch,/cancel
   endif else begin
-  data_background_display_scale_tof_range, base=base, /no_range
+    data_background_display_scale_tof_range, base=base, /no_range
   endelse
   
   if (n_elements(global_info) eq 0) then return
   ptr_free, global_info
-    
+  
 end
 
 ;+
@@ -170,6 +204,7 @@ pro data_background_tof_range_selection_base, event=event, $
   endif else begin
     id = widget_info(top_base, find_by_uname=parent_base_uname)
     widget_control, top_base, get_uvalue=global_pixel_selection
+    event=0
   endelse
   parent_base_geometry = WIDGET_INFO(id,/GEOMETRY)
   
@@ -183,6 +218,7 @@ pro data_background_tof_range_selection_base, event=event, $
   
   global_info = PTR_NEW({ _base: _base,$
     top_base: top_base, $
+    main_event: event, $
     global_pixel_selection: global_pixel_selection })
     
   WIDGET_CONTROL, _base, SET_UVALUE = global_info
