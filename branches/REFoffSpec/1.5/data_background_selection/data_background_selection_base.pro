@@ -264,6 +264,13 @@ pro data_background_selection_base_event, Event
         widget_control, id_pixel_selection, yoffset = yoffset
       endif
       
+      ;only if the TOF range selection base is there
+      id_tof_selection = (*global_pixel_selection).tof_range_selection_base
+      if (widget_info(id_tof_selection,/valid_id) ne 0) then begin
+      widget_control, id_tof_selection, xoffset = xoffset
+      widget_control, id_tof_selection, yoffset = yoffset + new_ysize
+      endif 
+      
       if ((abs((*global_pixel_selection).xsize - new_xsize) eq 70.0) && $
         abs((*global_pixel_selection).ysize - new_ysize) eq 33.0) then return
         
