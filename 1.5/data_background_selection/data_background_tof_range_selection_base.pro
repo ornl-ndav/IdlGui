@@ -55,11 +55,11 @@ pro data_background_tof_range_selection_base_event, event
       
       base = (*global_info).top_base
       refresh_pixel_selection_plot, base=base, /recalculate
-      data_background_display_scale_tof_range, base=base, /no_range
+      plot_pixel_selection_beam_center_scale, base=base, /plot_range
       data_background_display_full_tof_range_marker, base=base
-
-      
     end
+
+
     
     else:
   endcase
