@@ -118,14 +118,14 @@ end
 ;
 ; :Params:
 ;    event
-;
+;    
 ; :Author: j35
 ;-
 pro refresh_plot_pixel_selection_colorbar, event
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global_pixel_selection
-  
+ 
   zrange = (*global_pixel_selection).zrange
   zmin = zrange[0]
   zmin = 1

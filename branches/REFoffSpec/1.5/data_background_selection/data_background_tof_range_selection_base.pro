@@ -52,18 +52,106 @@ pro data_background_tof_range_selection_base_event, event
     ;plot range
     widget_info(event.top, $
       find_by_uname='data_background_tof_plot_only_range'): begin
-      
       base = (*global_info).top_base
       refresh_pixel_selection_plot, base=base, /recalculate
       plot_pixel_selection_beam_center_scale, base=base, /plot_range
       data_background_display_full_tof_range_marker, base=base
       display_pixel_selection, base=base
     end
-
-
     
+    ;plot full range
+    widget_info(event.top, $
+    find_by_uname='data_background_tof_plot_full_range'): begin
+      base = (*global_info).top_base
+    data_background_init_scale_device_data_array, base=base
+    refresh_pixel_selection_plot, base=base, /recalculate
+    plot_pixel_selection_beam_center_scale, base=base, /plot_range
+    data_background_display_scale_tof_range, base=base, /full_range
+    data_background_display_full_tof_range_marker, base=base
+    display_pixel_selection, base=base 
+    data_background_display_tof_range, event=event
+    end
+
     else:
   endcase
+  
+end
+
+;+
+; :Description:
+;    This routine displays the TOF range (tof1 and tof2)
+;
+; :keywords:
+;    event
+;    base
+;    
+; :Author: j35
+;-
+pro data_background_display_tof_range, event=event, base=base
+  compile_opt idl2
+  
+  if (keyword_set(event)) then begin
+  widget_control, event.top, get_uvalue=global_info
+  endif else begin
+  widget_control, base, get_uvalue=global_info
+  endelse
+  global_pixel_selection = (*global_info).global_pixel_selection
+  
+  tof = (*global_pixel_selection).x_axis
+  x_range = [tof[0],tof[-1]]
+  
+  tof1 = x_range[0]
+  tof2 = x_range[1]
+  
+   putValue, event=event, base=base, 'data_background_tof1', $
+   strcompress(tof1,/remove_all)
+   putValue, event=event, base=base, 'data_background_tof2', $
+   strcompress(tof2,/remove_all)
+   
+end
+
+;+
+; :Description:
+;    This initialize the device_data array of TOF when using PLOT FULL tof
+;    range
+;
+; :Keywords:
+;    event
+;    base
+;
+; :Author: j35
+;-
+pro data_background_init_scale_device_data_array, event=event, base=base
+  compile_opt idl2
+  
+  if (keyword_set(base)) then begin
+  widget_control, base, get_uvalue=global_pixel_selection
+  id = WIDGET_INFO(base, FIND_BY_UNAME='pixel_selection_scale')
+  endif else begin
+  widget_control, event.top, get_uvalue=global_info
+  global_pixel_selection = (*global_info).global_pixel_selection
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='pixel_selection_scale')
+  endelse
+  
+  tof_device_data = (*global_pixel_selection).tof_device_data
+  tof = (*global_pixel_selection).x_axis
+  (*(*global_pixel_selection).tmp_x_axis) = tof
+  x_range = [tof[0],tof[-1]]
+  
+  geometry = WIDGET_INFO(id,/GEOMETRY)
+  xsize = geometry.xsize
+  
+  tof_device_data[1,0] = x_range[0]
+  tof_device_data[1,1] = x_range[1]
+  
+  xoffset = 40
+  tof_device1 = xoffset
+  tof_device2 = xsize-xoffset
+  
+  tof_device_data[0,0] = tof_device1
+  tof_device_data[0,1] = tof_device2
+  
+  (*global_pixel_selection).tof_device_data = tof_device_data
   
 end
 
