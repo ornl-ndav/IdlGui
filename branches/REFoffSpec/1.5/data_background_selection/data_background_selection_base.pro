@@ -267,9 +267,9 @@ pro data_background_selection_base_event, Event
       ;only if the TOF range selection base is there
       id_tof_selection = (*global_pixel_selection).tof_range_selection_base
       if (widget_info(id_tof_selection,/valid_id) ne 0) then begin
-      widget_control, id_tof_selection, xoffset = xoffset
-      widget_control, id_tof_selection, yoffset = yoffset + new_ysize
-      endif 
+        widget_control, id_tof_selection, xoffset = xoffset
+        widget_control, id_tof_selection, yoffset = yoffset + new_ysize
+      endif
       
       if ((abs((*global_pixel_selection).xsize - new_xsize) eq 70.0) && $
         abs((*global_pixel_selection).ysize - new_ysize) eq 33.0) then return
@@ -393,10 +393,10 @@ pro data_background_save_scale_device_value, event
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME='pixel_selection_scale')
   geometry = WIDGET_INFO(id,/GEOMETRY)
   xsize = geometry.xsize
-    id_draw = WIDGET_INFO(Event.top, FIND_BY_UNAME='pixel_selection_draw')
+  id_draw = WIDGET_INFO(Event.top, FIND_BY_UNAME='pixel_selection_draw')
   geometry = WIDGET_INFO(id_draw,/GEOMETRY)
   xoffset = geometry.xoffset
-    
+  
   ;make sure we stay in the range of tof
   if (x_device le xoffset) then x_device=xoffset
   if (x_device ge xsize-xoffset) then x_device=xsize-xoffset
@@ -558,10 +558,12 @@ end
 ;
 ; :Keywords:
 ;    event
+;    base
+;    recalculate
 ;
 ; :Author: j35
 ;-
-pro display_pixel_selection, event=event, base=base
+pro display_pixel_selection, event=event, base=base, recalculate=recalculate
   compile_opt idl2
   
   if (keyword_set(event)) then begin
@@ -573,7 +575,23 @@ pro display_pixel_selection, event=event, base=base
   endelse
   widget_control, id, GET_VALUE = plot_id
   wset, plot_id
-  TV, (*(*global_pixel_selection).background), true=3
+  
+  if (keyword_set(recalculate)) then begin
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  endif else begin
+  
+    TV, (*(*global_pixel_selection).background), true=3
+    
+  endelse
   
   pixel_selection = (*global_pixel_selection).pixel_selection
   
@@ -841,10 +859,11 @@ END
 ; :Keywords:
 ;    event
 ;    base
+;    init
 ;
 ; :Author: j35
 ;-
-pro pixel_selection_lin_log_data, event=event, base=base
+pro pixel_selection_lin_log_data, event=event, base=base, init=init
   compile_opt idl2
   
   ;get global structure
@@ -858,8 +877,9 @@ pro pixel_selection_lin_log_data, event=event, base=base
   ;0 for lin, 1 for log
   scale_setting = (*global_pixel_selection).default_scale_settings
   
-  if (scale_setting eq 1) then begin ;log
+  if (keyword_set(init)) then begin
   
+    Data = (*(*global_pixel_selection).data_linear)
     ;remove 0 values and replace with NAN
     ;and calculate log
     index = where(Data eq 0, nbr)
@@ -869,6 +889,12 @@ pro pixel_selection_lin_log_data, event=event, base=base
     Data = ALOG10(Data)
     Data = BYTSCL(Data,/NAN)
     
+    (*(*global_pixel_selection).data_log) = data
+    
+  endif
+
+  if (scale_setting eq 1) then begin ;log
+    data = (*(*global_pixel_selection).data_log)
   endif
   
   (*(*global_pixel_selection).data) = Data
@@ -881,17 +907,26 @@ end
 ;
 ; :Params:
 ;    event
+;    
+; :Keywords:
+;   base
+;   recalculate
 ;
 ; :Author: j35
 ;-
-pro refresh_pixel_selection_plot, event, recalculate=recalculate
+pro refresh_pixel_selection_plot, event, base=base, recalculate=recalculate
   compile_opt idl2
   
   ;get global structure
+  if (~keyword_set(base)) then begin
   widget_control,event.top,get_uvalue=global_pixel_selection
+    id = widget_info(event.top, find_by_uname='pixel_selection_draw')
+  endif else begin
+  widget_control,base,get_uvalue=global_pixel_selection
+    id = widget_info(base, find_by_uname='pixel_selection_draw')
+  endelse
   
   if (n_elements(recalculate) eq 0) then begin
-    id = widget_info(event.top, find_by_uname='pixel_selection_draw')
     widget_control, id, GET_VALUE = plot_id
     wset, plot_id
     TV, (*(*global_pixel_selection).background), true=3
@@ -902,7 +937,29 @@ pro refresh_pixel_selection_plot, event, recalculate=recalculate
   new_xsize = (*global_pixel_selection).xsize
   new_ysize = (*global_pixel_selection).ysize
   
-  id = WIDGET_INFO(event.top, FIND_BY_UNAME='pixel_selection_draw')
+  ;retrieve range to plot
+  tof_device_data = (*global_pixel_selection).tof_device_data
+  tof1 = tof_device_data[1,0]
+  tof2 = tof_device_data[1,1]
+  tof_min = min([tof1,tof2],max=tof_max)
+  
+  x_axis = (*global_pixel_selection).x_axis
+  index_tof1 = getIndexOfValueInArray(array=x_axis, value=tof_min, /from)
+  index_tof2 = getIndexOfValueInArray(array=x_axis, value=tof_max, /to)
+  
+  tmp_x_axis = x_axis[index_tof1:index_tof2]
+  (*(*global_pixel_selection).tmp_x_axis) = tmp_x_axis
+  
+  sz_data = size(data,/dim)
+  if (index_tof2 eq sz_data[0]) then index_tof2--
+  
+  help, data
+  print, 'index_tof1: ' , index_tof1
+  print, 'index_tof2: ', index_tof2
+  print
+  
+  data = data[index_tof1:index_tof2,*]
+  
   draw_geometry = WIDGET_INFO(id,/GEOMETRY)
   xsize = draw_geometry.xsize
   ysize = draw_geometry.ysize
@@ -915,7 +972,6 @@ pro refresh_pixel_selection_plot, event, recalculate=recalculate
   (*global_pixel_selection).congrid_xcoeff = xsize
   (*global_pixel_selection).congrid_ycoeff = ysize
   
-  id = widget_info(event.top, find_by_uname='pixel_selection_draw')
   widget_control, id, GET_VALUE = plot_id
   wset, plot_id
   erase
@@ -924,7 +980,7 @@ pro refresh_pixel_selection_plot, event, recalculate=recalculate
   
   tvscl, cData
   
-  save_pixel_selection_background, event=event
+  save_pixel_selection_background, event=event, main_base=base
   
 end
 
@@ -1023,7 +1079,7 @@ end
 ;-
 pro pixel_selection_base_uname_killed, global_pixel_selection
   compile_opt idl2
-    
+  
   id_info = (*global_pixel_selection).cursor_info_base
   if (widget_info(id_info,/valid_id) ne 0) then begin
     widget_control, id_info, /destroy
@@ -1043,7 +1099,7 @@ pro pixel_selection_base_uname_killed, global_pixel_selection
   if (widget_info(id_tof,/valid_id) ne 0) then begin
     widget_control, id_tof, /destroy
   endif
-    
+  
 end
 
 ;+
@@ -1088,7 +1144,9 @@ pro plot_pixel_selection_beam_center_scale, base=base, $
   if (keyword_set(plot_range)) then begin
   
     tof = (*(*global_pixel_selection).x_axis)
-    tof_range_selected = (*global_pixel_selection).tof_range_selected
+  ;  tof_range_selected = (*global_pixel_selection).tof_range_selected
+    tof_device_data = (*(*global_pixel_selection).tof_device_data)
+    tof_range_selected = [tof_device_data[1,0],tof_device_data[1,1]]
     
     tof1 = min(tof_range_selected,max=tof1)
     
@@ -1295,6 +1353,8 @@ pro pixel_selection_base_cleanup, tlb
   ptr_free, (*global_pixel_selection).full_data
   ptr_free, (*global_pixel_selection).data
   ptr_free, (*global_pixel_selection).data_linear
+  ptr_free, (*global_pixel_selection).data_log
+  ptr_free, (*global_pixel_selection).tmp_x_axis
   ptr_free, (*global_pixel_selection).background
   ptr_free, (*global_pixel_selection).counts_vs_qx_xaxis
   ptr_free, (*global_pixel_selection).counts_vs_qx_data
@@ -1692,10 +1752,11 @@ pro data_background_selection_base, main_base=main_base, $
     full_data: ptr_new(0L), $
     data: ptr_new(0L), $
     data_linear: ptr_new(0L), $
+    data_log: ptr_new(0L), $
     counts_vs_pixel: ptr_new(0L), $
     
     x_axis: x_axis, $ ; [0.2, 0.4....] tof
-    tmp_x_axis: x_axis, $
+    tmp_x_axis: ptr_new(0L), $
     y_axis: y_axis, $ ; pixel range
     
     ;pointers used to output the counts vs qx/qz ascii files
@@ -1743,6 +1804,8 @@ pro data_background_selection_base, main_base=main_base, $
     top_base: wBase, $
     main_event: event})
     
+  (*(*global_pixel_selection).tmp_x_axis) = x_axis  
+    
   (*(*global_pixel_selection).full_data) = data
   
   data_2d = total(data,3)
@@ -1780,7 +1843,7 @@ pro data_background_selection_base, main_base=main_base, $
     /NO_BLOCK, $
     cleanup = 'pixel_selection_base_cleanup'
     
-  pixel_selection_lin_log_data, base=wBase
+  pixel_selection_lin_log_data, base=wBase, /init
   
   Data = (*(*global_pixel_selection).data)
   
