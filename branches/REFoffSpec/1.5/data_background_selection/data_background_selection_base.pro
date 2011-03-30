@@ -375,6 +375,17 @@ pro data_background_selection_base_event, Event
   
 end
 
+;+
+; :Description:
+;    Describe the procedure.
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
 pro data_background_save_scale_device_value, event
   compile_opt idl2
   
@@ -406,6 +417,40 @@ pro data_background_save_scale_device_value, event
     x_device,$
     (*global_pixel_selection).tof_range_status)
   tof_device_data[1,index] = x_data
+  
+  (*global_pixel_selection).tof_device_data = tof_device_data
+  
+end
+
+
+;+
+; :Description:
+;    Reached by the tof1 and tof2 input boxes of TOF range selection
+;    base.
+;
+; :Keywords:
+;    event
+;    base
+;
+; :Author: j35
+;-
+pro data_background_save_scale_data_value, event=event, base=base
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_info
+  global_pixel_selection = (*global_info).global_pixel_selection
+  
+  tof1 = float(getTextFieldValue(event, 'data_background_tof1'))
+  tof2 = float(getTextFieldValue(event, 'data_background_tof2'))
+  
+  tof_device_data = (*global_pixel_selection).tof_device_data
+  tof_device_data[1,0] = tof1
+  tof_device_data[1,1] = tof2
+  
+  tof1_device = data_background_getTOFdeviceFromData(base=base, tof1)
+  tof2_device = data_background_getTOFdeviceFromData(base=base, tof2)
+  tof_device_data[0,0] = tof1_device
+  tof_device_data[0,1] = tof2_device
   
   (*global_pixel_selection).tof_device_data = tof_device_data
   

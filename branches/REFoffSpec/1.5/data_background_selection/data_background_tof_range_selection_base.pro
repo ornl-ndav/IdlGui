@@ -61,17 +61,32 @@ pro data_background_tof_range_selection_base_event, event
     
     ;plot full range
     widget_info(event.top, $
-    find_by_uname='data_background_tof_plot_full_range'): begin
+      find_by_uname='data_background_tof_plot_full_range'): begin
       base = (*global_info).top_base
-    data_background_init_scale_device_data_array, base=base
-    refresh_pixel_selection_plot, base=base, /recalculate
-    plot_pixel_selection_beam_center_scale, base=base, /plot_range
-    data_background_display_scale_tof_range, base=base, /full_range
-    data_background_display_full_tof_range_marker, base=base
-    display_pixel_selection, base=base 
-    data_background_display_tof_range, event=event
+      data_background_init_scale_device_data_array, base=base
+      refresh_pixel_selection_plot, base=base, /recalculate
+      plot_pixel_selection_beam_center_scale, base=base, /plot_range
+      data_background_display_scale_tof_range, base=base, /full_range
+      data_background_display_full_tof_range_marker, base=base
+      display_pixel_selection, base=base
+      data_background_display_tof_range, event=event
     end
-
+    
+    ;tof1 and tof2 boxes
+    widget_info(event.top, $
+      find_by_uname='data_background_tof1'): begin
+      base = (*global_info).top_base
+      data_background_save_scale_data_value, event=event, base=base
+      data_background_display_scale_tof_range, base=base
+    end
+    widget_info(event.top, $
+      find_by_uname='data_background_tof2'): begin
+      base = (*global_info).top_base
+      data_background_save_scale_data_value, event=event, base=base
+      data_background_display_scale_tof_range, base=base
+    end
+    
+    
     else:
   endcase
   
@@ -84,16 +99,16 @@ end
 ; :keywords:
 ;    event
 ;    base
-;    
+;
 ; :Author: j35
 ;-
 pro data_background_display_tof_range, event=event, base=base
   compile_opt idl2
   
   if (keyword_set(event)) then begin
-  widget_control, event.top, get_uvalue=global_info
+    widget_control, event.top, get_uvalue=global_info
   endif else begin
-  widget_control, base, get_uvalue=global_info
+    widget_control, base, get_uvalue=global_info
   endelse
   global_pixel_selection = (*global_info).global_pixel_selection
   
@@ -103,11 +118,11 @@ pro data_background_display_tof_range, event=event, base=base
   tof1 = x_range[0]
   tof2 = x_range[1]
   
-   putValue, event=event, base=base, 'data_background_tof1', $
-   strcompress(tof1,/remove_all)
-   putValue, event=event, base=base, 'data_background_tof2', $
-   strcompress(tof2,/remove_all)
-   
+  putValue, event=event, base=base, 'data_background_tof1', $
+    strcompress(tof1,/remove_all)
+  putValue, event=event, base=base, 'data_background_tof2', $
+    strcompress(tof2,/remove_all)
+    
 end
 
 ;+
@@ -125,12 +140,12 @@ pro data_background_init_scale_device_data_array, event=event, base=base
   compile_opt idl2
   
   if (keyword_set(base)) then begin
-  widget_control, base, get_uvalue=global_pixel_selection
-  id = WIDGET_INFO(base, FIND_BY_UNAME='pixel_selection_scale')
+    widget_control, base, get_uvalue=global_pixel_selection
+    id = WIDGET_INFO(base, FIND_BY_UNAME='pixel_selection_scale')
   endif else begin
-  widget_control, event.top, get_uvalue=global_info
-  global_pixel_selection = (*global_info).global_pixel_selection
-  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='pixel_selection_scale')
+    widget_control, event.top, get_uvalue=global_info
+    global_pixel_selection = (*global_info).global_pixel_selection
+    id = WIDGET_INFO(Event.top, FIND_BY_UNAME='pixel_selection_scale')
   endelse
   
   tof_device_data = (*global_pixel_selection).tof_device_data
