@@ -86,12 +86,18 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     frame=1,$
     uname = 'reduce_step2_show_counts_vs_pixel_plot')
     
+    if ((*global).instrument eq 'REF_M') then begin
+    yoffset = 770
+    endif else begin
+    yoffset = 690
+    endelse
+    
   ;select range of tof base
   tof_range = widget_base(ModifyBase,$
     /column,$
     frame=5,$
     xoffset = 115,$
-    yoffset = 690)
+    yoffset = yoffset)
   tof_row1 = widget_base(tof_range,$
     /row)
   tof1 = widget_label(tof_row1,$

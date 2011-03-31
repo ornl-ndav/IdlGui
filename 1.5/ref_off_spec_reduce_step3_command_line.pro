@@ -37,21 +37,21 @@ PRO  reduce_step3_run_jobs, Event
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   instrument = (*global).instrument
-; Code change (RC Ward, Oct 5, 2010): Pass queue for submitting reduction code (refred_lp) from config file
+  ; Code change (RC Ward, Oct 5, 2010): Pass queue for submitting reduction code (refred_lp) from config file
   queue = (*global).queue
-; print, "test: queue: ",queue
-; Code change (RC Ward, Mar 2, 2010): pass TOF Cutoff min and max through global variable
-; Code change (RC Ward, Mar 17, 2010): apply TOF cutoffs only if switch is yes
+  ; print, "test: queue: ",queue
+  ; Code change (RC Ward, Mar 2, 2010): pass TOF Cutoff min and max through global variable
+  ; Code change (RC Ward, Mar 17, 2010): apply TOF cutoffs only if switch is yes
   apply_tof_cutoffs = (*global).apply_tof_cutoffs
   tof_cutoff_min = (*global).tof_cutoff_min
-  tof_cutoff_max = (*global).tof_cutoff_max  
-; DEBUG ========================================
-;  print, "Apply Cutoffs: ", apply_tof_cutoffs
-;  if (apply_tof_cutoffs EQ "yes") THEN BEGIN
-;    print, "TOF Cutoff Min: ", tof_cutoff_min
-;    print, "TOF Cutoff Max: ", tof_cutoff_max
-;  ENDIF  
-; DEBUG ========================================  
+  tof_cutoff_max = (*global).tof_cutoff_max
+  ; DEBUG ========================================
+  ;  print, "Apply Cutoffs: ", apply_tof_cutoffs
+  ;  if (apply_tof_cutoffs EQ "yes") THEN BEGIN
+  ;    print, "TOF Cutoff Min: ", tof_cutoff_min
+  ;    print, "TOF Cutoff Max: ", tof_cutoff_max
+  ;  ENDIF
+  ; DEBUG ========================================
   ;get big table of step3
   big_table = getTableValue(Event, 'reduce_tab3_main_spin_state_table_uname')
   nbr_row = (SIZE(big_table))(2)
@@ -64,8 +64,8 @@ PRO  reduce_step3_run_jobs, Event
         'lrac' : cmd_srun = 'sbatch -p lracq '
         'mrac' : cmd_srun = 'sbatch -p mracq '
         ELSE: BEGIN
-;          cmd_srun = 'sbatch -p heaterq '
-           cmd_srun = 'sbatch -p ' + queue + ' '
+          ;          cmd_srun = 'sbatch -p heaterq '
+          cmd_srun = 'sbatch -p ' + queue + ' '
         END
       ENDCASE
     END
@@ -142,44 +142,62 @@ PRO  reduce_step3_run_jobs, Event
     ENDELSE
     norm_roi = big_table[col_index,row]
     cmd += ' ' + reduce_structure.norm_roi + '=' + norm_roi
-
+    
     ;tof_cutoff_min file
     IF (apply_tof_cutoffs EQ 'yes') THEN BEGIN
-; apply TOF cutoffs only if apply_tof_cutoffs is yes (RC Ward, Mar 17, 2010)
-     cmd += ' ' + reduce_structure.tof_cut_min + '=' + tof_cutoff_min
-     cmd += ' ' + reduce_structure.tof_cut_max + '=' + tof_cutoff_max
+      ; apply TOF cutoffs only if apply_tof_cutoffs is yes (RC Ward, Mar 17, 2010)
+      cmd += ' ' + reduce_structure.tof_cut_min + '=' + tof_cutoff_min
+      cmd += ' ' + reduce_structure.tof_cut_max + '=' + tof_cutoff_max
     ENDIF
-    print, 'cmd: ', cmd
-
+    
+    ;data background
+    if (instrument eq 'REF_M') then begin
+      col_index = 9
+    endif else begin
+      col_index = 6
+    endelse
+    data_back_roi = big_table[col_index,row]
+    if (data_back_roi ne 'N/A') then begin
+      cmd += ' --dbkg-roi-file=' + data_back_roi
+    endif
+    
+    ;norm background
+    if (instrument eq 'REF_M') then begin
+      col_index = 8
+    endif else begin
+      col_index = 5
+    endelse
+    norm_back_roi = big_table[col_index,row]
+    if (norm_back_roi ne 'N/A') then begin
+      cmd += ' --nbkg-roi-file=' + norm_back_roi
+    endif
     
     ;output_path
     IF (instrument EQ 'REF_M') THEN BEGIN
-      col_index = 8
+      col_index = 10
     ENDIF ELSE BEGIN
-      col_index = 5
+      col_index = 7
     ENDELSE
-
+    
     output_file_name = output_path + big_table[col_index,row]
-; Change code (RC Ward, 6 Aug 2010): create rmd file name
+    ; Change code (RC Ward, 6 Aug 2010): create rmd file name
     file_parts = STRSPLIT(output_file_name,'.',/EXTRACT)
     file = file_parts[0]
-    print, "test: ", file
     rmd_file_name = file + '.rmd'
-    print, "test: ", rmd_file_name
-;
-;======================================    
-; Change Code (RC Ward, 13 July, 2010): Delete the output file (ASCII file) before running batch job.
-; This forces the code to wait until new files are written before putting up the message that user can proceed
+    ;
+    ;======================================
+    ; Change Code (RC Ward, 13 July, 2010): Delete the output file (ASCII file) before running batch job.
+    ; This forces the code to wait until new files are written before putting up the message that user can proceed
     remove_output_file = 'rm ' + output_file_name
-    print, "remove old output file ", remove_output_file
+    ;    print, "remove old output file ", remove_output_file
     SPAWN, remove_output_file
     remove_rmd_file = 'rm ' + rmd_file_name
-    print, "remove old rmd file ", remove_rmd_file
+    ;    print, "remove old rmd file ", remove_rmd_file
     SPAWN, remove_rmd_file
-    print, " "
-;    list_output_file_name = 'ls -al ' + output_file_name
-;    SPAWN, list_output_file_name
-;======================================
+    ;    print, " "
+    ;    list_output_file_name = 'ls -al ' + output_file_name
+    ;    SPAWN, list_output_file_name
+    ;======================================
     cmd += ' ' + reduce_structure.output + '=' + output_file_name
     
     cl_table[row] = cmd
