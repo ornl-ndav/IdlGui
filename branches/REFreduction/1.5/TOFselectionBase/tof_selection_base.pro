@@ -1424,7 +1424,12 @@ pro tof_selection_base, main_base=main_base, $
     
   (*(*global_tof_selection).full_data) = data
   
-  data_2d = total(data,2)
+  if ((*global).instrument eq 'REF_M') then begin
+    data_2d = total(data,2)
+  endif else begin
+    data_2d = total(data,3)
+  endelse
+  
   counts_vs_tof = total(data_2d,2)
   (*(*global_tof_selection).counts_vs_tof) = counts_vs_tof
   
