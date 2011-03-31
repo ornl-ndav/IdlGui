@@ -661,6 +661,12 @@ pro display_pixel_selection, event=event, base=base, recalculate=recalculate
     pixel_device = pixel_max_device
   endelse
   
+  if ((*global_pixel_selection).pixel1_selected) then begin
+    if (pixel_min eq -1) then return
+  endif else begin
+    if (pixel_max eq -1) then return
+  endelse
+  
   ;retrieve geometry of refpix draw
   geometry = widget_info(id,/geometry)
   draw_ysize = geometry.scr_ysize
@@ -824,7 +830,7 @@ function retrieve_counts_value, event
   ydata = fix(float(event.y) * float(ydata_max) / congrid_ycoeff)
   
   _data = data[xdata,ydata]
-   
+  
   return, long(_data)
   
 end
