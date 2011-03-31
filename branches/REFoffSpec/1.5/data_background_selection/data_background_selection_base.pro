@@ -1750,7 +1750,8 @@ pro data_background_selection_base, main_base=main_base, $
     y_axis = y_axis, $
     data = data, $
     run_number = run_number, $
-    file_name = file_name
+    file_name = file_name, $
+    row_selected = row_selected
     
   compile_opt idl2
   
@@ -1786,7 +1787,8 @@ pro data_background_selection_base, main_base=main_base, $
   
   global_pixel_selection = PTR_NEW({ wbase: wbase,$
     global: global, $
-    
+    row_selected: row_selected, $
+
     run_number: run_number, $
     file_name: file_name, $
     short_file_name: short_file_name, $

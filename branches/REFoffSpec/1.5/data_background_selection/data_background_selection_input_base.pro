@@ -85,8 +85,8 @@ end
 ;-
 pro pixel_selection_input_base_event, Event
   compile_opt idl2
-
-      widget_control, event.top, get_uvalue=global_info
+  
+  widget_control, event.top, get_uvalue=global_info
   
   case Event.id of
   
@@ -114,81 +114,12 @@ pro pixel_selection_input_base_event, Event
     widget_info(event.top, $
       find_by_uname='pixel_selection_browse'): begin
       data_background_selection_browse_roi, event
-       save_pixel_selection_pixels, event=event
-       top_base = (*global_info).top_base
-       display_pixel_selection, base=top_base ;display selection on main plot
-       global_pixel_selection = (*global_info).global_pixel_selection
-       base = (*global_pixel_selection).roi_selection_counts_vs_pixel_base_id
-       data_background_display_counts_vs_pixel, base=base, global_pixel_selection
-    end
-    
-    ;validate tof selected
-    widget_info(event.top, $
-      find_by_uname='validate_tof_selection_selected_uname'): begin
-      tof1_value = getValue(event=event, uname='tof_selection_tof1_uname')
-      tof2_value = getValue(event=event, uname='tof_selection_tof2_uname')
-      
-      ;pop up an error dialog message if tof1 and 2 have the same values
-      if (tof1_value eq tof2_value) then begin
-        id = widget_info(event.top, find_by_uname='tof_selection_base')
-        message_text = ['TOF 1 and 2 have the same valuee!',$
-          '',$
-          'TOF1 (ms): ' + strcompress(tof1_value,/remove_all), $
-          'TOF2 (ms): ' + strcompress(tof2_value,/remove_all)]
-        result = dialog_message(message_text, $
-          title = 'Error in the range of TOF selected',$
-          dialog_parent=id, $
-          /ERROR)
-        return
-      endif
-      
-      ;make sure tof1 is smaller than tof2
-      
-      if (tof1_value eq 0.) then begin
-        tof_min = 0.
-        tof_max = tof2_value
-      endif
-      
-      if (tof2_value eq 0.) then begin
-        tof_min = tof1_value
-        tof_max = 0.
-      endif
-      
-      ;when none of them is equal to 0.
-      if (tof1_value * tof2_value ne 0) then begin
-        tof_min = min([tof1_value,tof2_value],max=tof_max)
-      endif
-      
-      ;put tof values in main GUI
-      widget_control, event.top, get_uvalue=global_info
-      global_tof_selection = (*global_info).global_tof_selection
-      main_event = (*global_tof_selection).main_event
-      
-      tof_axis = (*global_tof_selection).x_axis
-      index_tof_range = get_index_tof_range([tof_min, tof_max], $
-        tof_axis)
-        
-      global = (*global_tof_selection).global
-      (*global).index_of_tof_range = index_tof_range
-      
-      if (isTOFcuttingUnits_microS(main_event)) then begin
-        tof_min *= 1000.
-        tof_max *= 1000.
-      endif
-      
-      putValue, event=main_event, $
-        'tof_cutting_min', $
-        strcompress(tof_min,/remove_all)
-      putValue, event=main_event, $
-        'tof_cutting_max', $
-        strcompress(tof_max,/remove_all)
-        
-      ;refresh main plot
-      REFreduction_DataBackgroundPeakSelection, main_event
-      
+      save_pixel_selection_pixels, event=event
       top_base = (*global_info).top_base
-      widget_control, top_base, /destroy
-      
+      display_pixel_selection, base=top_base ;display selection on main plot
+      global_pixel_selection = (*global_info).global_pixel_selection
+      base = (*global_pixel_selection).roi_selection_counts_vs_pixel_base_id
+      data_background_display_counts_vs_pixel, base=base, global_pixel_selection
     end
     
     ;cancel tof selected
@@ -199,9 +130,94 @@ pro pixel_selection_input_base_event, Event
       widget_control, top_base, /destroy
     end
     
+    ;ok validate ROI selection
+    widget_info(event.top, $
+      find_by_uname='validate_pixel_selection_selected_uname'): begin
+      data_background_create_save_roi, event
+    end
+    
     else:
     
   endcase
+  
+end
+
+;+
+; :Description:
+;    Create and save ROI file
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro data_background_create_save_roi, event
+  compile_opt idl2
+  
+  pixel1 = getTextFieldValue(event, 'pixel_selection_pixel1_uname')
+  pixel2 = getTextFieldValue(event, 'pixel_selection_pixel2_uname')
+  
+  if (pixel1 eq 0.0 or pixel2 eq 0.0) then begin
+
+    Message_text = 'Check the values of Pixel1 and Pixel2!'
+    title = 'Data Background ROI not created!'
+    widget_id = widget_info(event.top, find_by_uname='pixel_selection_base')
+    _result = dialog_message(message_text, $
+      /information, $
+      /center, $
+      dialog_parent=widget_id, $
+      title = title)
+      return
+  endif
+  
+  widget_control, event.top, get_uvalue=global_info
+  global_pixel_selection = (*global_info).global_pixel_selection
+  global = (*global_pixel_selection).global
+  
+  run_number = (*global_pixel_selection).run_number
+  instrument = (*global).instrument
+  
+  ;make roi file name
+  roi_file_name = instrument + '_' + strcompress(run_number,/remove_all)
+  roi_file_name += '_back.dat'
+  
+  data_background_create_roi, roi_file_name = roi_file_name, $
+    pixel1 = pixel1, $
+    pixel2 = pixel2, $
+    instrument = instrument, $
+    result = result
+    
+  if (result eq 0) then begin ;error while creating the roi file
+  
+    message_text = ['Program failed creating the Data Background ROI file',$
+      '','Roi file ' + roi_file_name + ' FAILED']
+    title = 'Data Background ROI FAILED!'
+    widget_id = widget_info(event.top, find_by_uname='pixel_selection_base')
+    _result = dialog_message(message_text, $
+      /error, $
+      /center, $
+      dialog_parent=widget_id, $
+      title = title)
+      
+  endif else begin
+  
+    ;save data back roi file name in table
+  nexus_spin_state_data_back_roi_table = $
+    (*(*global).nexus_spin_state_data_back_roi_table)
+    
+  row = (*global_pixel_selection).row_selected
+  index_spin = 1
+  nexus_spin_state_data_back_roi_table[index_spin,row] = roi_file_name
+  (*(*global).nexus_spin_state_data_back_roi_table) = $
+    nexus_spin_state_data_back_roi_table
+  
+    widget_control, event.top, get_uvalue=global_info
+    top_base = (*global_info).top_base
+    widget_control, top_base, /destroy
+    
+  endelse
   
 end
 
@@ -458,7 +474,6 @@ pro counts_info_base_cleanup, tlb
   widget_control, tlb, get_uvalue=global_info, /no_copy
   
   if (n_elements(global_info) eq 0) then return
-  
   ptr_free, global_info
   
 end

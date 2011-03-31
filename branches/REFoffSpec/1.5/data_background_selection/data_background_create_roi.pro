@@ -34,73 +34,85 @@
 
 ;+
 ; :Description:
-;    This routine will launch the tof_selection base
+;    Routine that creates the ROI
 ;
 ; :Params:
 ;    event
-;
-; :Author: j35
-;-
-pro data_background_selection_tool_button_eventcb, event
-  compile_opt idl2
-  
-  widget_control, event.top, get_uvalue=global
-  widget_control, /hourglass
-  
-  row_selected = getTableRowSelected(Event,'reduce_tab1_table_uname')
-  reduce_tab1_table = (*(*global).reduce_tab1_table)
-  run_number = reduce_tab1_table[0,row_selected[0]]
-  full_nexus_name = reduce_tab1_table[1,row_selected[0]]
-  
-  retrieve_2dData_and_tof, event, full_nexus_name, data=data, tof_axis=tof_axis
-  
-  data_background_selection_base, main_base='MAIN_BASE',$
-    event=event, $
-    offset = 50,$
-    x_axis = tof_axis,$
-    y_axis = indgen(256),$
-    data = data,$
-    run_number= strcompress(run_number[0],/remove_all), $
-    file_name = full_nexus_name, $
-    row_selected = row_selected
-    
-  widget_control, hourglass=0
-  
-end
-
-
-;+
-; :Description:
-;    retrieves the tof_axis and data array
-;
-; :Params:
-;    event
-;    full_nexus_name
 ;
 ; :Keywords:
-;    data
-;    tof_axis
+;   roi_file_name
+;   pixel1
+;   pixel2
+;   instrument
+;   result
 ;
 ; :Author: j35
 ;-
-pro retrieve_2dData_and_tof, event, full_nexus_name, data=data, tof_axis=tof_axis
-compile_opt idl2
+pro data_background_create_roi, roi_file_name=roi_file_name, $
+  pixel1=pixel1, $
+  pixel2=pixel2, $
+  instrument = instrument, $
+  result = result
+  compile_opt idl2
+  
+  ON_IOERROR, error
+  
+  ;get integer values
+  Y1 = FIX(pixel1)
+  Y2 = FIX(pixel2)
+  
+  ;get min and max values
+  Ymin = MIN([Y1,Y2],MAX=Ymax)
+  nbr_y = (Ymax-Ymin+1)
+  
+  ;open output file
+  no_error = 0
+  CATCH, no_error
+  IF (no_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    result = 0
+    return
+  ENDIF ELSE BEGIN
+    OPENW, 1, roi_file_name
 
-fileID = h5f_open(full_nexus_name)
-data_path = '/entry/bank1/data'
-tof_path = '/entry/bank1/time_of_flight'
+    i     = 0L
+    IF (instrument EQ 'REF_M') THEN BEGIN
 
-;data
-dataID = h5d_open(fileID, data_path)
-data = h5d_read(dataID)
-h5d_close, dataID
+    NyMax = 256L
+    OutputArray = STRARR((NyMax)*nbr_y)
+      FOR y=(Ymin),(Ymax) DO BEGIN
+        FOR x=0,(NyMax-1) DO BEGIN
+          text  = 'bank1_' + STRCOMPRESS(y,/REMOVE_ALL)
+          text += '_' + STRCOMPRESS(x,/REMOVE_ALL)
+          PRINTF,1,text
+          OutputArray[i] = text
+          i++
+        ENDFOR
+      ENDFOR
+      
+    ENDIF ELSE BEGIN ;REF_L
+    
+    NyMax = 304L
+    OutputArray = STRARR((NyMax)*nbr_y)
+      FOR x=0,(NyMax-1) DO BEGIN
+        FOR y=(Ymin),(Ymax) DO BEGIN
+          text  = 'bank1_' + STRCOMPRESS(x,/REMOVE_ALL)
+          text += '_' + STRCOMPRESS(y,/REMOVE_ALL)
+          PRINTF,1,text
+          OutputArray[i] = text
+          i++
+        ENDFOR
+      ENDFOR
+    ENDELSE
+    
+    CLOSE, 1
+    FREE_LUN, 1
+  ENDELSE ;end of (Ynbr LE 1)
 
-;tof
-tofID = h5d_open(fileID, tof_path)
-tof_axis = h5d_read(tofID)/1000.  ;to be in ms
-h5d_close, tofID
+  result = 1
+  return
+  
+  ERROR:
+  result = 0
 
-h5f_close, fileID
-
-end
-
+END
