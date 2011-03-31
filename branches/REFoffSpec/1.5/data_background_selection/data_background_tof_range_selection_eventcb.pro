@@ -55,15 +55,15 @@ function data_background_getTOFDataFromDevice, event, x_device, tof_range_status
   
   id_draw = WIDGET_INFO(Event.top, FIND_BY_UNAME='pixel_selection_draw')
   geometry = WIDGET_INFO(id_draw,/GEOMETRY)
-  xoffset = geometry.xoffset
+  xoffset = float(geometry.xoffset)
   
   tof = (*(*global_pixel_selection).tmp_x_axis)
   x_range = [tof[0],tof[-1]]
-  tof1 = x_range[0]
-  tof2 = x_range[1]
+  tof1 = float(x_range[0])
+  tof2 = float(x_range[1])
   
-  if (x_device lt xoffset) then return, tof1
-  if (x_device gt xsize-xoffset) then return, tof2
+  if (x_device le xoffset) then return, tof1
+  if (x_device ge xsize-xoffset) then return, tof2
   
   ratio = (tof2-tof1)/(float(xsize)-2.*xoffset)
   x_data = (float(x_device)-xoffset)*ratio + tof1
@@ -103,20 +103,20 @@ end
 ; :Author: j35
 ;-
 function data_background_getTOFdeviceFromData, event=event, $
-base=base, $
-x_data
+    base=base, $
+    x_data
   compile_opt idl2
   
   if (keyword_set(event)) then begin
-  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='pixel_selection_scale')
+    id = WIDGET_INFO(Event.top, FIND_BY_UNAME='pixel_selection_scale')
     widget_control, event.top, get_uvalue=global_pixel_selection
   endif else begin
-  id = widget_info(base, find_by_uname='pixel_selection_scale')
+    id = widget_info(base, find_by_uname='pixel_selection_scale')
     widget_control, base, get_uvalue=global_pixel_selection
   endelse
   geometry = WIDGET_INFO(id,/GEOMETRY)
   xsize = geometry.xsize
-  xoffset = 40. 
+  xoffset = 40.
   
   ;tof = (*(*global).norm_tof)
   tof = (*(*global_pixel_selection).tmp_x_axis)
