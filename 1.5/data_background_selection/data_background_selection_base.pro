@@ -737,12 +737,20 @@ function retrieve_tof_value, event
   
   x_device = event.x
   congrid_xcoeff = (*global_refpix).congrid_xcoeff
-  xrange = float((*global_refpix).xrange) ;min and max tof
+  
+  tof_device_data = (*global_refpix).tof_device_data
+  tof1 = tof_device_data[1,0]
+  tof2 = tof_device_data[1,1]
+  
+  ;xrange = float((*global_refpix).xrange) ;min and max tof
   
   rat = float(x_device) / float(congrid_xcoeff)
-  x_data = float(rat * (xrange[1] - xrange[0]) + xrange[0])
+  x_data = float(rat * (tof2 - tof1) + tof1)
   
-  return, x_data
+  x_axis = (*global_refpix).x_axis
+  index_tof1 = getIndexOfValueInArray(array=x_axis, value=x_data, /from)
+  
+  return, x_axis[index_tof1+1]
   
 end
 
@@ -793,27 +801,30 @@ end
 function retrieve_counts_value, event
   compile_opt idl2
   
-  widget_control, event.top, get_uvalue=global_refpix
+  widget_control, event.top, get_uvalue=global_pixel_selection
   
-  catch, error
+  error = 0
+  ;catch, error
   if (error ne 0) then begin
     catch,/cancel
     return, 'N/A'
   endif
   
-  data = (*(*global_refpix).data_linear) ;ex: [51,304] 51->tof, 304->pixels
-  
+  ;data = (*(*global_refpix).data_linear) ;ex: [51,304] 51->tof, 304->pixels
+  data= (*(*global_pixel_selection).tmp_data)
   xdata_max = (size(data))[1]
   ydata_max = (size(data))[2]
   
-  congrid_xcoeff = (*global_refpix).congrid_xcoeff
-  congrid_ycoeff = (*global_refpix).congrid_ycoeff
+  congrid_xcoeff = (*global_pixel_selection).congrid_xcoeff
+  congrid_ycoeff = (*global_pixel_selection).congrid_ycoeff
+  
+  _data = congrid(data, congrid_xcoeff, congrid_ycoeff)
   
   xdata = fix(float(event.x) * float(xdata_max) / congrid_xcoeff)
   ydata = fix(float(event.y) * float(ydata_max) / congrid_ycoeff)
   
   _data = data[xdata,ydata]
-  
+   
   return, long(_data)
   
 end
@@ -970,6 +981,7 @@ pro refresh_pixel_selection_plot, event, base=base, recalculate=recalculate
   endif
   
   Data = (*(*global_pixel_selection).data)
+  tmp_data = (*(*global_pixel_selection).data_linear)
   new_xsize = (*global_pixel_selection).xsize
   new_ysize = (*global_pixel_selection).ysize
   
@@ -990,6 +1002,8 @@ pro refresh_pixel_selection_plot, event, base=base, recalculate=recalculate
   if (index_tof2 eq sz_data[0]) then index_tof2--
   
   data = data[index_tof1:index_tof2,*]
+  tmp_data = tmp_data[index_tof1:index_tof2,*]
+  (*(*global_pixel_selection).tmp_data) = tmp_data
   
   draw_geometry = WIDGET_INFO(id,/GEOMETRY)
   xsize = draw_geometry.xsize
@@ -1386,6 +1400,7 @@ pro pixel_selection_base_cleanup, tlb
   
   ptr_free, (*global_pixel_selection).full_data
   ptr_free, (*global_pixel_selection).data
+  ptr_free, (*global_pixel_selection).tmp_data
   ptr_free, (*global_pixel_selection).data_linear
   ptr_free, (*global_pixel_selection).data_log
   ptr_free, (*global_pixel_selection).tmp_x_axis
@@ -1785,6 +1800,7 @@ pro data_background_selection_base, main_base=main_base, $
     
     full_data: ptr_new(0L), $
     data: ptr_new(0L), $
+    tmp_data: ptr_new(0L), $
     data_linear: ptr_new(0L), $
     data_log: ptr_new(0L), $
     counts_vs_pixel: ptr_new(0L), $
@@ -1849,6 +1865,7 @@ pro data_background_selection_base, main_base=main_base, $
   
   (*(*global_pixel_selection).data_linear) = data_2d
   (*(*global_pixel_selection).data) = data_2d
+  (*(*global_pixel_selection).tmp_data) = data_2d ;used by cursor counts info
   
   xrange = [x_axis[0], x_axis[-1]]
   (*global_pixel_selection).xrange = xrange
