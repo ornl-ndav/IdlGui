@@ -242,11 +242,11 @@ pro create_roi, event, roi_file_name=roi_file_name, y1=y1, y2=y2, $
   ENDIF ELSE BEGIN
     OPENW, 1, roi_file_name
     i     = 0L
-    NyMax = 256L
     OutputArray = STRARR((NyMax)*nbr_y)
     
     IF (instrument EQ 'REF_M') THEN BEGIN
     
+    NyMax = 256L
       FOR y=(Ymin),(Ymax) DO BEGIN
         FOR x=0,(NyMax-1) DO BEGIN
           text  = 'bank1_' + STRCOMPRESS(y,/REMOVE_ALL)
@@ -259,6 +259,7 @@ pro create_roi, event, roi_file_name=roi_file_name, y1=y1, y2=y2, $
       
     ENDIF ELSE BEGIN
     
+    NyMax = 304L
       FOR x=0,(NyMax-1) DO BEGIN
         FOR y=(Ymin),(Ymax) DO BEGIN
           text  = 'bank1_' + STRCOMPRESS(x,/REMOVE_ALL)

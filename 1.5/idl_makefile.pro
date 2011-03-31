@@ -56,6 +56,7 @@ cd, CurrentFolder + '/data_background_selection/'
 .run data_background_selection_tool_button_eventcb.pro
 .run cursor_info_base.pro
 .run data_background_tof_range_selection_base.pro
+.run data_background_create_roi.pro
 
 ;Build all procedures
 cd, CurrentFolder
