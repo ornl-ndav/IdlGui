@@ -257,11 +257,25 @@ pro data_background_selection_base_event, Event
       xoffset = geometry.xoffset
       yoffset = geometry.yoffset
       
+      ;only if the cursor base is there
+      id_cursor_info_base = (*global_pixel_selection).cursor_info_base
+      if (widget_info(id_cursor_info_base,/valid_id) ne 0) then begin
+        widget_control, id_cursor_info_base, xoffset = xoffset + new_xsize
+        widget_control, id_cursor_info_base, yoffset = yoffset - 105
+      endif
+      
       ;only if the tof input base is there
       id_pixel_selection = (*global_pixel_selection).pixel_selection_input_base
       if (widget_info(id_pixel_selection, /valid_id) ne 0) then begin
         widget_control, id_pixel_selection, xoffset = xoffset + new_xsize
         widget_control, id_pixel_selection, yoffset = yoffset
+      endif
+      
+      ;only if the counts vs pixel is there
+      plot_id = (*global_pixel_selection).roi_selection_counts_vs_pixel_base_id
+      if (widget_info(plot_id,/valid_id) ne 0) then begin
+        widget_control, plot_id, xoffset = xoffset + new_xsize
+        widget_control, plot_id, yoffset = yoffset + 220
       endif
       
       ;only if the TOF range selection base is there
