@@ -222,7 +222,7 @@ PRO command_line_generator_for_ref_m, event
           ENDIF
         endif
         
-      ENDIF ELSE BEGIN            ;background file
+      ENDIF ELSE BEGIN ;background file
       
         ;get value of back file from data base
         BackFile = getTextFieldValue(Event,'data_back_selection_file_value')
@@ -467,7 +467,7 @@ PRO command_line_generator_for_ref_m, event
         endif
       ENDELSE
       
-      if (~isNormWithBackground(Event)) then begin ;without background
+      if (isNormWithBackground(Event)) then begin ;without background
       
         ;get Peak or Background
         PeakBaseStatus = isNormPeakBaseMap(Event)
