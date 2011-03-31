@@ -38,8 +38,15 @@ pro new_rescaled_tvimg, event, tvimg
   widget_control, event.top, get_uvalue=global
   
   data = (*(*global).bank1_data) ;[tof, 256, 304]
+help, data
+  if ((*global).instrument eq 'REF_L') then begin
+  _data = total(data,3)
+  endif else begin
   _data = total(data,2)
-  
+  endelse
+    
+    help, _data
+    
   index_of_tof_range = (*global).index_of_tof_range
   index_tof_min = index_of_tof_range[0]
   index_tof_max = index_of_tof_range[1]
@@ -54,5 +61,7 @@ pro new_rescaled_tvimg, event, tvimg
       new_ysize = geometry.scr_ysize
    
    tvimg = congrid(_tvimg, new_xsize, new_ysize)
+  
+  help, tvimg
   
 end

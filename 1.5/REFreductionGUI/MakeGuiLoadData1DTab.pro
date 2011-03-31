@@ -318,8 +318,8 @@ PRO MakeGuiLoadData1DTab, D_DD_Tab, $
   load_data_D_draw = WIDGET_DRAW(load_data_D_tab_base,$
     XOFFSET       = 0,$
     YOFFSET       = 0,$
-    X_SCROLL_SIZE = GlobalLoadGraphs[2]-20,$
-    Y_SCROLL_SIZE = GlobalLoadGraphs[3],$
+    ;X_SCROLL_SIZE = GlobalLoadGraphs[2]-20,$
+    ;Y_SCROLL_SIZE = GlobalLoadGraphs[3],$
     ;Y_SCROLL_SIZE = GlobalLoadGraphs[3]-24,$
     XSIZE         = GlobalLoadGraphs[2]-20,$
     ;YSIZE         = GlobalLoadGraphs[3]-24,$
@@ -328,7 +328,7 @@ PRO MakeGuiLoadData1DTab, D_DD_Tab, $
     RETAIN        = 2,$
     /KEYBOARD_EVENT,$
     /BUTTON_EVENTS,$
-    /SCROLL,$
+    ;/SCROLL,$
     /MOTION_EVENTS)
     
   ;create the back/peak and rescale tab
