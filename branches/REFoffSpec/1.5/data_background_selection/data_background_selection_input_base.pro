@@ -160,7 +160,7 @@ pro data_background_create_save_roi, event
   pixel2 = getTextFieldValue(event, 'pixel_selection_pixel2_uname')
   
   if (pixel1 eq 0.0 or pixel2 eq 0.0) then begin
-
+  
     Message_text = 'Check the values of Pixel1 and Pixel2!'
     title = 'Data Background ROI not created!'
     widget_id = widget_info(event.top, find_by_uname='pixel_selection_base')
@@ -169,7 +169,7 @@ pro data_background_create_save_roi, event
       /center, $
       dialog_parent=widget_id, $
       title = title)
-      return
+    return
   endif
   
   widget_control, event.top, get_uvalue=global_info
@@ -180,8 +180,10 @@ pro data_background_create_save_roi, event
   instrument = (*global).instrument
   
   ;make roi file name
+  path = (*global).ascii_path
   roi_file_name = instrument + '_' + strcompress(run_number,/remove_all)
-  roi_file_name += '_back.dat'
+  roi_file_name += '_back_ROI.dat'
+  roi_file_name = path + roi_file_name
   
   data_background_create_roi, roi_file_name = roi_file_name, $
     pixel1 = pixel1, $
@@ -204,15 +206,15 @@ pro data_background_create_save_roi, event
   endif else begin
   
     ;save data back roi file name in table
-  nexus_spin_state_data_back_roi_table = $
-    (*(*global).nexus_spin_state_data_back_roi_table)
-    
-  row = (*global_pixel_selection).row_selected
-  index_spin = 1
-  nexus_spin_state_data_back_roi_table[index_spin,row] = roi_file_name
-  (*(*global).nexus_spin_state_data_back_roi_table) = $
-    nexus_spin_state_data_back_roi_table
-  
+    nexus_spin_state_data_back_roi_table = $
+      (*(*global).nexus_spin_state_data_back_roi_table)
+      
+    row = (*global_pixel_selection).row_selected
+    index_spin = 1
+    nexus_spin_state_data_back_roi_table[index_spin,row] = roi_file_name
+    (*(*global).nexus_spin_state_data_back_roi_table) = $
+      nexus_spin_state_data_back_roi_table
+      
     widget_control, event.top, get_uvalue=global_info
     top_base = (*global_info).top_base
     widget_control, top_base, /destroy

@@ -176,32 +176,31 @@ PRO refresh_reduce_step3_table, Event
         data_back_roi_file = 'N/A'
         roi_file           = 'N/A'
         back_roi_file      = 'N/A'
-        
         run_job_status = 0
       ENDIF ELSE BEGIN
         norm_run     = getReduceStep2NormOfRow(Event, row=table_index)
         norm_nexus   = getNormNexusOfIndex(Event, $
           table_index,$
           short_norm_file_list)
-;        roi_file     = getNormRoiFileOfIndex(Event, row=table_index)
+        ;        roi_file     = getNormRoiFileOfIndex(Event, row=table_index)
+          
+        roi_file = getNormRoiFileOfIndex(Event, row=table_index)
+        IF (STRCOMPRESS(roi_file,/REMOVE_ALL) EQ '') THEN BEGIN
+          roi_file = 'N/A'
+          run_job_status = 0
+        ENDIF
         
-            roi_file = getNormRoiFileOfIndex(Event, row=table_index)
-            IF (STRCOMPRESS(roi_file,/REMOVE_ALL) EQ '') THEN BEGIN
-              roi_file = 'N/A'
-              run_job_status = 0
-            ENDIF
-            
-            back_roi_file = getNormBackRoiFileOfIndex(Event, $
-              row=table_index)
-            IF (STRCOMPRESS(back_roi_file,/REMOVE_ALL) EQ '') THEN BEGIN
-              back_roi_file = 'N/A'
-            ENDIF
-            
-            data_back_roi_file = $
-              nexus_spin_state_data_back_roi_table[1,table_index]
-            if (strcompress(data_back_roi_file,/remove_all) eq '') then begin
-              data_back_roi_file = 'N/A'
-            endif
+        back_roi_file = getNormBackRoiFileOfIndex(Event, $
+          row=table_index)
+        IF (STRCOMPRESS(back_roi_file,/REMOVE_ALL) EQ '') THEN BEGIN
+          back_roi_file = 'N/A'
+        ENDIF
+        
+        data_back_roi_file = $
+          nexus_spin_state_data_back_roi_table[1,table_index]
+        if (strcompress(data_back_roi_file,/remove_all) eq '') then begin
+          data_back_roi_file = 'N/A'
+        endif
         
       ENDELSE
       
