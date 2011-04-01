@@ -45,11 +45,11 @@ REFReduction_RescaleNormalizationPlot,Event
 
 if ((*global).NormNeXusFound) then begin ;only if there is a NeXus loaded
 
-    if ((*global).miniVersion) then begin
-        coeff = 1
-    endif else begin
-        coeff = 2
-    endelse
+;    if ((*global).miniVersion) then begin
+;        coeff = 1
+;    endif else begin
+;        coeff = 2
+;    endelse
     
 ;get ROI Ymin, Ymax
     ROIYmin = getTextFieldValue(Event, $
@@ -60,13 +60,13 @@ if ((*global).NormNeXusFound) then begin ;only if there is a NeXus loaded
     IF (ROIYmin EQ '') THEN BEGIN
         ROIYmin = -1
     ENDIF ELSE BEGIN
-        ROIYmin *= coeff
+        ROIYmin = getYDeviceFromData(event=event, type='norm', data_value=ROIYmin)
     ENDELSE
 
     IF (ROIYmax EQ '') THEN BEGIN
         ROIYmax = -1
     ENDIF ELSE BEGIN
-        ROIYmax *= coeff
+        ROIYmax = getYDeviceFromData(event=event, type='norm', data_value=ROIYmax)
     ENDELSE
 
     ROISelection = [ROIYmin,ROIYmax]
@@ -83,13 +83,13 @@ if ((*global).NormNeXusFound) then begin ;only if there is a NeXus loaded
     if (PeakYmin EQ '') then begin
         PeakYmin = -1
     endif else begin
-        PeakYmin *= coeff
+      PeakYmin = getYDeviceFromData(event=event, type='norm', data_value=PeakYmin)
     endelse
 
     if (PeakYmax EQ '') then begin
         PeakYmax = -1
     endif else begin
-        PeakYmax *= coeff
+      PeakYmax = getYDeviceFromData(event=event, type='norm', data_value=PeakYmax)
     endelse
 
     PeakSelection = [PeakYmin,PeakYmax]
