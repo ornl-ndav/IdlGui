@@ -1630,7 +1630,6 @@ PRO reduce_step1_save_back_roi, event
     
 END
 
-
 ;+
 ; :Description:
 ;    This populate the y1 and y2 data back widgets with the values
@@ -1652,7 +1651,6 @@ pro load_step1_data_back_roi, event
     (*(*global).nexus_spin_state_data_back_roi_table)
     
   row = getSangleRowSelected(Event)
-  print, 'row selected is : ' , row
   index_spin = 0
   case (strlowcase(getSangleSpinStateSelected(Event))) of
     'off_off': index_spin=0

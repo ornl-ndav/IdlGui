@@ -91,8 +91,24 @@ PRO MAIN_BASE_event, Event
     
     ;Browse button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab1_browse_button'): BEGIN
-      reduce_tab1_browse_button, Event ;_reduce_step1
-      check_status_of_reduce_step1_buttons, Event
+      catch, error
+      if (error ne 0) then begin
+        catch,/cancel
+        
+        message_text = 'Please check the file you are trying to load!'
+        title = 'Error loading a NeXus file!'
+        id = widget_info(event.top, find_by_uname='MAIN_BASE')
+        
+        result = dialog_message(message_text, $
+          /center, $
+          dialog_parent=id, $
+          /error,$
+          title=title)
+          
+      endif else begin
+        reduce_tab1_browse_button, Event ;_reduce_step1
+        check_status_of_reduce_step1_buttons, Event
+      endelse
     END
     
     ;Run number cw_field
