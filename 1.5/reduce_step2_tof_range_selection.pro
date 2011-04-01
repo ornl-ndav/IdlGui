@@ -59,8 +59,8 @@ function getTOFDataFromDevice, event, x_device, tof_range_status
   tof1 = x_range[0]
   tof2 = x_range[1]
   
-  if (x_device lt xoffset) then return, tof1
-  if (x_device gt xsize-xoffset) then return, tof2
+  if (x_device le xoffset) then return, tof1
+  if (x_device ge xsize-xoffset) then return, tof2
   
   ratio = (tof2-tof1)/(float(xsize)-2.*xoffset)
   x_data = (float(x_device)-xoffset)*ratio + tof1
