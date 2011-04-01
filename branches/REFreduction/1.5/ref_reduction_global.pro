@@ -81,6 +81,9 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     with_launch_switch: WITH_LAUNCH_SWITCH,$
     simulate_rotated_detector: SIMULATE_ROTATED_DETECTOR, $
     
+    ;the rescaled in TOF range of the tvimg
+    new_rescale_tvimg: ptr_new(0L), $
+    
     ;equivalent index of tof range selected in 'TOF selection tool' base
     index_of_tof_range: [-1,-1], $
     
