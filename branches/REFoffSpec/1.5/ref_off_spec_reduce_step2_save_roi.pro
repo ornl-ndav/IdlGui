@@ -220,7 +220,7 @@ pro create_roi, event, roi_file_name=roi_file_name, y1=y1, y2=y2, $
     quit_flag=quit_flag
   compile_opt idl2
   
-  ;ON_IOERROR, error
+  ON_IOERROR, error
   
   widget_control, event.top, get_uvalue=global
   instrument = (*global).instrument
@@ -234,7 +234,7 @@ pro create_roi, event, roi_file_name=roi_file_name, y1=y1, y2=y2, $
   nbr_y = (Ymax-Ymin+1)
   ;open output file
   no_error = 0
-  CATCH, no_error
+ ; CATCH, no_error
   IF (no_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     message = 'ERROR: Error creating the ROI ' + roi_file_name
@@ -242,11 +242,11 @@ pro create_roi, event, roi_file_name=roi_file_name, y1=y1, y2=y2, $
   ENDIF ELSE BEGIN
     OPENW, 1, roi_file_name
     i     = 0L
-    OutputArray = STRARR((NyMax)*nbr_y)
     
     IF (instrument EQ 'REF_M') THEN BEGIN
     
     NyMax = 256L
+    OutputArray = STRARR((NyMax)*nbr_y)
       FOR y=(Ymin),(Ymax) DO BEGIN
         FOR x=0,(NyMax-1) DO BEGIN
           text  = 'bank1_' + STRCOMPRESS(y,/REMOVE_ALL)
@@ -260,6 +260,7 @@ pro create_roi, event, roi_file_name=roi_file_name, y1=y1, y2=y2, $
     ENDIF ELSE BEGIN
     
     NyMax = 304L
+    OutputArray = STRARR((NyMax)*nbr_y)
       FOR x=0,(NyMax-1) DO BEGIN
         FOR y=(Ymin),(Ymax) DO BEGIN
           text  = 'bank1_' + STRCOMPRESS(x,/REMOVE_ALL)
