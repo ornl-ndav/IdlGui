@@ -62,13 +62,15 @@ PRO REFreduction_DataBackgroundPeakSelection, Event, TYPE
     IF (ROIYmin EQ '') THEN BEGIN
       ROIYmin = -1
     ENDIF ELSE BEGIN
-      ROIYmin *= coeff
+;      ROIYmin *= coeff
+      ROIYmin = getYDeviceFromData(event=event, type='data', data_value=ROIYmin)
     ENDELSE
     
     IF (ROIYmax EQ '') THEN BEGIN
       ROIYmax = -1
     ENDIF ELSE BEGIN
-      ROIYmax *= coeff
+      ROIYmax = getYDeviceFromData(event=event, type='data', data_value=ROIYmax)
+;      ROIYmax *= coeff
     ENDELSE
     
     ROISelection = [ROIYmin,ROIYmax]
@@ -81,13 +83,15 @@ PRO REFreduction_DataBackgroundPeakSelection, Event, TYPE
     IF (PeakYmin EQ '') THEN BEGIN
       PeakYmin = -1
     ENDIF ELSE BEGIN
-      PeakYmin *= coeff
+      PeakYmin = getYDeviceFromData(event=event, type='data', data_value=PeakYmin)
+;      PeakYmin *= coeff
     ENDELSE
     
     IF (PeakYmax EQ '') THEN BEGIN
       PeakYmax = -1
     ENDIF ELSE BEGIN
-      PeakYmax *= coeff
+      PeakYmax = getYDeviceFromData(event=event, type='data', data_value=PeakYmax)
+;      PeakYmax *= coeff
     ENDELSE
     
     PeakSelection = [PeakYmin,PeakYmax]

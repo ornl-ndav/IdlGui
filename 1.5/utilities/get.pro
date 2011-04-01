@@ -32,6 +32,46 @@
 ;
 ;==============================================================================
 
+function getYDataFromDevice, event=event, type=type, device_value=device_value
+compile_opt idl2
+
+  if (type eq 'data') then begin
+  uname = 'load_data_D_draw'
+  endif else begin
+  uname = 'load_normalization_D_draw'
+  endelse
+
+ id = widget_info(event.top, find_by_uname=uname)
+  geometry = widget_info(id,/geometry)
+  xsize = geometry.scr_xsize
+  ysize = geometry.scr_ysize
+
+  YdataMax = 256.
+  
+  return, fix((YdataMax * float(device_value)) / float(ysize))
+
+end
+
+function getYDeviceFromData, event=event, type=type, data_value=data_value
+compile_opt idl2
+
+  if (type eq 'data') then begin
+  uname = 'load_data_D_draw'
+  endif else begin
+  uname = 'load_normalization_D_draw'
+  endelse
+
+  id = widget_info(event.top, find_by_uname=uname)
+  geometry = widget_info(id,/geometry)
+  xsize = geometry.scr_xsize
+  ysize = geometry.scr_ysize
+
+  YdataMax = 256.
+
+  return, fix((float(data_value) * float(ysize))/ YdataMax)+1
+
+end
+
 ;+
 ; :Description:
 ;    This return the value of the specified (by uname) widget

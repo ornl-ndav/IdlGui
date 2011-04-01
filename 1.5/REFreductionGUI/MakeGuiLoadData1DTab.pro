@@ -321,9 +321,9 @@ PRO MakeGuiLoadData1DTab, D_DD_Tab, $
     ;X_SCROLL_SIZE = GlobalLoadGraphs[2]-20,$
     ;Y_SCROLL_SIZE = GlobalLoadGraphs[3],$
     ;Y_SCROLL_SIZE = GlobalLoadGraphs[3]-24,$
-    XSIZE         = GlobalLoadGraphs[2]-20,$
+    XSIZE         = GlobalLoadGraphs[2],$
     ;YSIZE         = GlobalLoadGraphs[3]-24,$
-    YSIZE         = GlobalLoadGraphs[3],$
+    YSIZE         = GlobalLoadGraphs[3]+90,$
     UNAME         = 'load_data_D_draw',$
     RETAIN        = 2,$
     /KEYBOARD_EVENT,$

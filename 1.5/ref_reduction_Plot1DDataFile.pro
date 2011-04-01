@@ -193,7 +193,6 @@ PRO Plot1DDataFile, Event, img, N
   
   ;print, ' -> coeff_congrid_tof: ' + strtrim(coeff_contrid_tof)
   
-  (*global).congrid_x_coeff = coeff_congrid_tof
   
   ;change the size of the data draw true plotting area
   ;widget_control, id_draw, DRAW_XSIZE=file_Ntof
@@ -203,6 +202,8 @@ PRO Plot1DDataFile, Event, img, N
   geometry = widget_info(id,/geometry)
   new_xsize = geometry.scr_xsize
   new_ysize = geometry.scr_ysize
+  (*global).congrid_x_coeff = new_xsize
+  ;(*globla).congrid_y_coeff = new_ysize
   
   tvimg = congrid(img, new_xsize, new_ysize)
   
@@ -276,8 +277,6 @@ PRO Plot1DDataFile_batch, Event, img, N
     coeff_congrid_tof = 1
   ENDELSE
   
-  (*global).congrid_x_coeff = coeff_congrid_tof
-  
   ;change the size of the data draw true plotting area
   ;widget_control, id_draw, DRAW_XSIZE=file_Ntof
   ;tvimg = rebin(img, file_Ntof, new_N,/sample)
@@ -285,6 +284,8 @@ PRO Plot1DDataFile_batch, Event, img, N
   geometry = widget_info(id,/geometry)
   new_xsize = geometry.scr_xsize
   new_ysize = geometry.scr_ysize
+  (*global).congrid_x_coeff = new_xsize
+  ;(*globla).congrid_y_coeff = new_ysize
   
   tvimg = congrid(img, new_xsize, new_ysize)
   
