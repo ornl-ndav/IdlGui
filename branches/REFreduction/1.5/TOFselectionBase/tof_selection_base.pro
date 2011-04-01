@@ -176,6 +176,13 @@ pro tof_selection_base_event, Event
         widget_control, id_tof_selection, yoffset = yoffset
       endif
       
+      ;only if the counts vs tof base is there
+      id_plot = (*global_tof_selection).tof_selection_counts_vs_tof_base_id
+      if (widget_info(id_plot,/valid_id) ne 0) then begin
+        widget_control, id_plot, xoffset = xoffset + new_xsize
+        widget_control, id_plot, yoffset = yoffset + 170
+      endif
+      
       if ((abs((*global_tof_selection).xsize - new_xsize) eq 70.0) && $
         abs((*global_tof_selection).ysize - new_ysize) eq 33.0) then return
         
@@ -1353,7 +1360,7 @@ pro tof_selection_base, main_base=main_base, $
     short_file_name: short_file_name, $
     
     tof_selection_input_base: 0L, $ ;id of refpix_input_base
-    tof_selection_counts_vs_tof_base_id: 0L, $ 'id of refpix_counts_vs_tof_base
+    tof_selection_counts_vs_tof_base_id: 0L, $ ;'id of refpix_counts_vs_tof_base
   counts_vs_tof_scale_is_linear: 0b, $ ;counts vs tof (linear/log)
   
     ;used to plot selection zoom
