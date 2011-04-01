@@ -294,6 +294,11 @@ PRO AddNexusToReduceTab1Table, Event
       CONTINUE
     ENDIF
     RunNumber = iNexus->getRunNumber()
+    
+    if (strcompress(RunNumber,/remove_all) eq '') then begin
+      Message, 'Error Loading'
+    endif
+    
     IF (instrument EQ 'REF_M') THEN BEGIN
       sangle_rad    = iNexus->getSangle()
       sangle_deg    = convert_to_deg(sangle_rad)
@@ -451,14 +456,6 @@ PRO reduce_tab1_browse_button, Event
     ENDIF
     IDLsendToGeek_addLogBookText, Event, LogText
     display_message_about_files_browsed, Event, nexus_file_list
-    
-    ;      IF ((*global).reduce_tab1_working_pola_state EQ '') THEN BEGIN
-    ;        ;get list of polarization state available and display list_of_pola base
-    ;        nexus_file_name = nexus_file_list[0]
-    ;        status = retrieve_list_OF_polarization_state(Event, $
-    ;          nexus_file_name, $
-    ;          list_OF_pola_state)
-    ;        IF (status EQ 0) THEN RETURN
     
     ;update the table
     AddNexusToReduceTab1Table, Event
@@ -641,8 +638,8 @@ END
 ; :Author: j35
 ;-
 FUNCTION remove_row_selected_from_array_general, Event, TABLE=table, ROW=row
-compile_opt idl2
-
+  compile_opt idl2
+  
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   sz = size(table,/dim)
   
