@@ -103,34 +103,51 @@ pro tof_selection_tool_button_eventcb, event
   widget_control, event.top, get_uvalue=global
   widget_control, /hourglass
   
-  run_number = getTextFieldValue(event, 'load_data_run_number_text_field')
-  
-  ;data
-  data = (*(*global).bank1_data)
-  ;retrieve tof
-  full_nexus_name = (*global).data_full_nexus_name
-  if ((*global).instrument eq 'REF_M') then begin
-    spin_state = 'Off_Off'
-    iNexus = obj_new('IDLnexusUtilities', full_nexus_name, spin_state=spin_state)
-    y_axis = indgen(304)
-  endif else begin
-    iNexus = obj_new('IDLnexusUtilities', full_nexus_name)
-    y_axis = indgen(256)
-  endelse
-  tof_axis = iNexus->get_tof_data()
-  
-  tof_min_max = get_input_tof_min_max(event)
-  
-  tof_selection_base, main_base='MAIN_BASE',$
-    event=event, $
-    offset = 50,$
-    tof_min_max = tof_min_max, $
-    x_axis = tof_axis,$
-    y_axis = y_axis,$
-    data = data,$
-    run_number= strcompress(run_number[0],/remove_all), $
-    file_name = full_nexus_name
+  catch, error
+  if (error ne 0) then begin
+    catch,/cancel
+    widget_control, hourglass=0
     
-  widget_control, hourglass=0
+    message_text = ' No data to display!                   '
+    title = 'Please load a NeXus file first'
+    id = widget_info(event.top, find_by_uname='MAIN_BASE')
+    result = dialog_message(message_text, $
+      /center, $
+      dialog_parent=id, $
+      /information,$
+      title=title)
+  endif else begin
+  
+    run_number = getTextFieldValue(event, 'load_data_run_number_text_field')
+    
+    ;data
+    data = (*(*global).bank1_data)
+    ;retrieve tof
+    full_nexus_name = (*global).data_full_nexus_name
+    if ((*global).instrument eq 'REF_M') then begin
+      spin_state = 'Off_Off'
+      iNexus = obj_new('IDLnexusUtilities', full_nexus_name, spin_state=spin_state)
+      y_axis = indgen(304)
+    endif else begin
+      iNexus = obj_new('IDLnexusUtilities', full_nexus_name)
+      y_axis = indgen(256)
+    endelse
+    tof_axis = iNexus->get_tof_data()
+    
+    tof_min_max = get_input_tof_min_max(event)
+    
+    tof_selection_base, main_base='MAIN_BASE',$
+      event=event, $
+      offset = 50,$
+      tof_min_max = tof_min_max, $
+      x_axis = tof_axis,$
+      y_axis = y_axis,$
+      data = data,$
+      run_number= strcompress(run_number[0],/remove_all), $
+      file_name = full_nexus_name
+      
+    widget_control, hourglass=0
+    
+  endelse
   
 end
