@@ -69,7 +69,11 @@ PRO REFreduction_DataSelectionPressLeft, event
     ;where to stop the plot of the lines
     ;  xsize_1d_draw = (*global).Ntof_DATA-1
   
-    xsize_1d_draw = 608L
+  id = widget_info(event.top, find_by_uname='load_data_D_draw')
+  geometry = widget_info(id,/geometry)
+  ;new_xsize = geometry.scr_xsize
+  xsize_1d_draw = geometry.scr_xsize
+    ;xsize_1d_draw = 608L
     ;xsize_1d_draw = 256*2L ;detector rotated
     
     mouse_status = (*global).select_data_status
@@ -238,10 +242,6 @@ PRO REFreduction_DataSelectionPressRight, event
     REFReduction_RescaleDataPlot, Event
     ;    RePlot1DDataFile, Event
     
-    ;where to stop the plot of the lines
-    ;xsize_1d_draw = (*global).Ntof_DATA-1
-    xsize_1d_draw = 608L
-    
     mouse_status = (*global).select_data_status
     IF ((*global).mouse_debugging EQ 'yes') THEN BEGIN
       PRINT, 'PressRight mouse_status: ' + STRCOMPRESS(mouse_status)
@@ -311,7 +311,11 @@ PRO REFreduction_DataSelectionMove, event
   
     ;where to stop the plot of the lines
     ;xsize_1d_draw = (*global).Ntof_DATA-1
-    xsize_1d_draw = 608L
+      id = widget_info(event.top, find_by_uname='load_data_D_draw')
+  geometry = widget_info(id,/geometry)
+  ;new_xsize = geometry.scr_xsize
+  xsize_1d_draw = geometry.scr_xsize
+    ;xsize_1d_draw = 608L
     
     mouse_status = (*global).select_data_status
     IF ((*global).mouse_debugging EQ 'yes') THEN BEGIN
@@ -493,7 +497,11 @@ PRO REFreduction_DataSelectionRelease, event
   
     ;where to stop the plot of the lines
     ;xsize_1d_draw = (*global).Ntof_DATA-1
-    xsize_1d_draw = 608L
+  id = widget_info(event.top, find_by_uname='load_data_D_draw')
+  geometry = widget_info(id,/geometry)
+  ;new_xsize = geometry.scr_xsize
+  xsize_1d_draw = geometry.scr_xsize
+    ;xsize_1d_draw = 608L
     
     IF ((*global).mouse_debugging EQ 'yes') THEN BEGIN
       PRINT, 'Release mouse_status: ' + STRCOMPRESS(mouse_status)
@@ -608,7 +616,11 @@ PRO ReplotOtherSelection, Event, ROIsignalBackZoomStatus
   
   ;where to stop the plot of the lines
   ;xsize_1d_draw = (*global).Ntof_DATA-1
-  xsize_1d_draw = 608L
+    id = widget_info(event.top, find_by_uname='load_data_D_draw')
+  geometry = widget_info(id,/geometry)
+  ;new_xsize = geometry.scr_xsize
+  xsize_1d_draw = geometry.scr_xsize
+  ;xsize_1d_draw = 608L
   
   ;check if user wants peak or background
   isPeakSelected = 1b
@@ -734,7 +746,11 @@ PRO ReplotAllSelection, Event
   
   ;where to stop the plot of the lines
   ;xsize_1d_draw = (*global).Ntof_DATA-1
-  xsize_1d_draw = 608L
+    id = widget_info(event.top, find_by_uname='load_data_D_draw')
+  geometry = widget_info(id,/geometry)
+  ;new_xsize = geometry.scr_xsize
+  xsize_1d_draw = geometry.scr_xsize
+  ;xsize_1d_draw = 608L
   
   ;check if user wants peak or background
   isPeakSelected = 1b
@@ -823,7 +839,11 @@ PRO plot_average_data_peak_value, Event
   
   ;where to stop the plot of the lines
   ;xsize_1d_draw = (*global).Ntof_DATA-1
-  xsize_1d_draw = 608L
+    id = widget_info(event.top, find_by_uname='load_data_D_draw')
+  geometry = widget_info(id,/geometry)
+  ;new_xsize = geometry.scr_xsize
+  xsize_1d_draw = geometry.scr_xsize
+  ;xsize_1d_draw = 608L
   
   id_draw = WIDGET_INFO(Event.top, FIND_BY_UNAME='load_data_D_draw')
   WIDGET_CONTROL, id_draw, GET_VALUE=id_value

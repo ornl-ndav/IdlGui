@@ -326,6 +326,10 @@ pro display_counts_vs_pixel, base=base, event=event, global
   xmin = fix(getValue(event=main_event,uname='data_d_selection_peak_ymin_cw_field'))
   xmax = fix(getValue(event=main_event,uname='data_d_selection_peak_ymax_cw_field'))
   center_pixel = getValue(event=main_event,uname='data_center_pixel_uname')
+  
+  print, 'center_pixel: ' , center_pixel
+  help, center_pixel
+  
   if (center_pixel ne 'N/A') then begin
     center_pixel = float(center_pixel)
   endif else begin

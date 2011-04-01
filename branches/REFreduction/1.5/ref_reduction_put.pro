@@ -280,7 +280,11 @@ PRO putDataBackgroundPeakYMinMaxValueInTextFields, Event
   id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
   WIDGET_CONTROL,id,GET_UVALUE=global
   
-  xsize_1d_draw = (*global).xsize_1d_draw
+  ;  xsize_1d_draw = (*global).xsize_1d_draw
+  id = widget_info(event.top, find_by_uname='load_data_D_draw')
+  geometry = widget_info(id,/geometry)
+  ;new_xsize = geometry.scr_xsize
+  xsize_1d_draw = geometry.scr_ysize
   
   IF ((*global).miniVersion) THEN BEGIN
     coeff = 1
@@ -300,8 +304,12 @@ PRO putDataBackgroundPeakYMinMaxValueInTextFields, Event
         Ymax = ROISelection[1]
         if (Ymax LT 1) then Ymax = 0
         if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
+        
+        
+        Ydata = getYDataFromDevice(event=event, type='data', device_value=ymax)
+        
         putCWFieldValue, event, $
-          'data_d_selection_roi_ymax_cw_field', Ymax/coeff
+          'data_d_selection_roi_ymax_cw_field', Ydata
       end
     endcase
   end
@@ -311,24 +319,35 @@ PRO putDataBackgroundPeakYMinMaxValueInTextFields, Event
         Ymin = ROISelection[0]
         if (Ymin LT 1) then Ymin = 0
         if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
+
+        Ydata = getYDataFromDevice(event=event, type='data', device_value=Ymin)
+        
         putCWFieldValue, event, $
-          'data_d_selection_roi_ymin_cw_field', Ymin/coeff
+          'data_d_selection_roi_ymin_cw_field', Ydata
       end
       else: begin
         Ymin = Min(ROISelection,max=Ymax)
         (*(*global).data_roi_selection) = [Ymin,Ymax]
         if (Ymin LT 1) then Ymin = 0
         if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
+        
+        Ydata = getYDataFromDevice(event=event, type='data', device_value=ymin)
+        
         putCWFieldValue, $
           event, $
           'data_d_selection_roi_ymin_cw_field', $
-          Ymin/coeff
+          Ydata
+          
         if (Ymax LT 1) then Ymax = 0
         if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
+        
+        Ydata = getYDataFromDevice(event=event, type='data', device_value=ymax)
+        
         putCWFieldValue, $
           event, $
           'data_d_selection_roi_ymax_cw_field', $
-          Ymax/coeff
+          Ydata
+          
         ValidateSaveButton = 1 ;enable SAVE button
       end
     endcase
@@ -396,44 +415,53 @@ PeakSelection = (*(*global).data_peak_selection)
 ;check all cases -1,-1 and -1,value value,-1 and value,value
 CASE (PeakSelection[0]) OF
   -1:begin
-      case (PeakSelection[1]) OF
-        -1: ;do nothing
-        else: begin
-          Ymax = PeakSelection[1]
-          if (Ymax LT 1) then Ymax = 0
-          if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
-          putCWFieldValue, event, $
-            'data_d_selection_peak_ymax_cw_field', $
-            Ymax/coeff
-          end
-     endcase
-  end
-  else: begin
-    case (PeakSelection[1]) OF
-      -1: begin
-        Ymin = PeakSelection[0]
-        if (Ymin LT 1) then Ymin = 0
-        if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
-        putCWFieldValue, event, $
-          'data_d_selection_peak_ymin_cw_field', $
-          Ymin/coeff
-        end
-      else: begin
-        Ymin = Min(PeakSelection,max=Ymax)
-        (*(*global).data_peak_selection) = [Ymin,Ymax]
-        if (Ymin LT 1) then Ymin = 0
-        if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
-        putCWFieldValue, event, $
-          'data_d_selection_peak_ymin_cw_field', $
-          Ymin/coeff
-        if (Ymax LT 1) then Ymax = 0
-        if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
-        putCWFieldValue, event, $
-          'data_d_selection_peak_ymax_cw_field', $
-          Ymax/coeff
-        end
-     endcase
-  end
+  case (PeakSelection[1]) OF
+    -1: ;do nothing
+    else: begin
+      Ymax = PeakSelection[1]
+      if (Ymax LT 1) then Ymax = 0
+      if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
+      
+      Ydata = getYDataFromDevice(event=event, type='data', device_value=ymax)
+      
+      putCWFieldValue, event, 'data_d_selection_peak_ymax_cw_field', Ydata
+    end
+  endcase
+end
+else: begin
+  case (PeakSelection[1]) OF
+    -1: begin
+      Ymin = PeakSelection[0]
+      if (Ymin LT 1) then Ymin = 0
+      if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
+      
+      Ydata = getYDataFromDevice(event=event, type='data', device_value=ymin)
+      
+      putCWFieldValue, event, $
+        'data_d_selection_peak_ymin_cw_field', $
+        Ydata
+        
+    end
+    else: begin
+      Ymin = Min(PeakSelection,max=Ymax)
+      (*(*global).data_peak_selection) = [Ymin,Ymax]
+      if (Ymin LT 1) then Ymin = 0
+      if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
+      Ydata = getYDataFromDevice(event=event, type='data', device_value=ymin)
+      
+      putCWFieldValue, event, $
+        'data_d_selection_peak_ymin_cw_field', $
+        Ydata
+      if (Ymax LT 1) then Ymax = 0
+      if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
+      Ydata = getYDataFromDevice(event=event, type='data', device_value=ymax)
+      
+      putCWFieldValue, event, $
+        'data_d_selection_peak_ymax_cw_field', $
+        Ydata
+    end
+  endcase
+end
 endcase
 
 END
@@ -467,8 +495,11 @@ PRO putNormBackgroundPeakYMinMaxValueInTextFields, Event
           Ymax = ROISelection[1]
           if (Ymax LT 1) then Ymax = 0
           if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
+          
+          Ydata = getYDataFromDevice(event=event, type='norm', device_value=ymax)
+          
           putCWFieldValue, event, $
-            'norm_d_selection_roi_ymax_cw_field', Ymax/coeff
+            'norm_d_selection_roi_ymax_cw_field', Ydata
         end
       endcase
     end
@@ -478,24 +509,30 @@ PRO putNormBackgroundPeakYMinMaxValueInTextFields, Event
           Ymin = ROISelection[0]
           if (Ymin LT 1) then Ymin = 0
           if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
+          Ydata = getYDataFromDevice(event=event, type='norm', device_value=ymin)
+          
           putCWFieldValue, event, $
-            'norm_d_selection_roi_ymin_cw_field', Ymin/coeff
+            'norm_d_selection_roi_ymin_cw_field', Ydata
         end
         else: begin
           Ymin = Min(ROISelection,max=Ymax)
           (*(*global).norm_roi_selection) = [Ymin,Ymax]
           if (Ymin LT 1) then Ymin = 0
           if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
+          Ydata = getYDataFromDevice(event=event, type='norm', device_value=ymin)
+          
           putCWFieldValue, $
             event, $
             'norm_d_selection_roi_ymin_cw_field', $
-            Ymin/coeff
+            Ydata
           if (Ymax LT 1) then Ymax = 0
           if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
+          Ydata = getYDataFromDevice(event=event, type='norm', device_value=ymax)
+          
           putCWFieldValue, $
             event, $
             'norm_d_selection_roi_ymax_cw_field', $
-            Ymax/coeff
+            Ydata
           ValidateSaveButton = 1 ;enable SAVE button
         end
       endcase
@@ -570,10 +607,12 @@ PRO putNormBackgroundPeakYMinMaxValueInTextFields, Event
           Ymax = PeakSelection[1]
           if (Ymax LT 1) then Ymax = 0
           if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
+          Ydata = getYDataFromDevice(event=event, type='norm', device_value=ymax)
+          
           putCWFieldValue, $
             event, $
             'norm_d_selection_peak_ymax_cw_field', $
-            Ymax/coeff
+            Ydata
         end
       endcase
     end
@@ -583,26 +622,31 @@ PRO putNormBackgroundPeakYMinMaxValueInTextFields, Event
           Ymin = PeakSelection[0]
           if (Ymin LT 1) then Ymin = 0
           if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
+          Ydata = getYDataFromDevice(event=event, type='norm', device_value=ymin)
+          
           putCWFieldValue, $
             event, $
             'norm_d_selection_peak_ymin_cw_field', $
-            Ymin/coeff
+            Ydata
         end
         else: begin
           Ymin = Min(PeakSelection,max=Ymax)
           (*(*global).norm_peak_selection) = [Ymin,Ymax]
           if (Ymin LT 1) then Ymin = 0
           if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
+          Ydata = getYDataFromDevice(event=event, type='norm', device_value=ymin)
+          
           putCWFieldValue, $
             event, $
             'norm_d_selection_peak_ymin_cw_field', $
-            Ymin/coeff
+            Ydata
           if (Ymax LT 1) then Ymax = 0
           if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
+          Ydata = getYDataFromDevice(event=event, type='norm', device_value=ymax)
           putCWFieldValue, $
             event, $
             'norm_d_selection_peak_ymax_cw_field', $
-            Ymax/coeff
+            Ydata
         END
       ENDCASE
     END

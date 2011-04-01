@@ -178,7 +178,7 @@ PRO MAIN_BASE_event, Event
     ;1D_2D plot of DATA
     WIDGET_INFO(wWidget, FIND_BY_UNAME='load_data_D_draw'): begin
       error = 0
-      CATCH, error
+     CATCH, error
       IF (error NE 0) THEN BEGIN
         CATCH,/CANCEL
       ENDIF ELSE BEGIN
@@ -215,44 +215,44 @@ PRO MAIN_BASE_event, Event
 ;            'data_counts_info_value', $
 ;            STRCOMPRESS(FIX(tvimg[Event.x,Event.y]),/REMOVE_ALL)
 ;          ;********************************************************************
-            
-          IF ((*global).first_event) THEN BEGIN
-            ;only if there is a NeXus loaded
-            CASE (event.ch) OF ;u and d keys
-              117: BEGIN
-                REFreduction_ManuallyMoveDataBackPeakUp, Event
-                calculate_data_dirpix, Event
-                plot_average_data_peak_value, Event
-                bring_to_life_or_refresh_counts_vs_pixel, event
-              END
-              100: BEGIN
-                REFreduction_ManuallyMoveDataBackPeakDown, Event
-                calculate_data_dirpix, Event
-                plot_average_data_peak_value, Event
-                bring_to_life_or_refresh_counts_vs_pixel, event
-              END
-              ELSE:
-            ENDCASE
-            CASE (event.key) OF ;Up and Down arrow keys
-              7: BEGIN
-                REFreduction_ManuallyMoveDataBackPeakUp, Event
-                calculate_data_dirpix, Event
-                plot_average_data_peak_value, Event
-                bring_to_life_or_refresh_counts_vs_pixel, event
-              END
-              8: BEGIN
-                REFreduction_ManuallyMoveDataBackPeakDown, Event
-                calculate_data_dirpix, Event
-                plot_average_data_peak_value, Event
-                bring_to_life_or_refresh_counts_vs_pixel, event
-              END
-              ELSE:
-            ENDCASE
-            (*global).first_event = 0
-            
-          ENDIF ELSE BEGIN
-            (*global).first_event = 1
-          ENDELSE
+;            
+;          IF ((*global).first_event) THEN BEGIN
+;            ;only if there is a NeXus loaded
+;            CASE (event.ch) OF ;u and d keys
+;              117: BEGIN
+;                REFreduction_ManuallyMoveDataBackPeakUp, Event
+;                calculate_data_dirpix, Event
+;                plot_average_data_peak_value, Event
+;                bring_to_life_or_refresh_counts_vs_pixel, event
+;              END
+;              100: BEGIN
+;                REFreduction_ManuallyMoveDataBackPeakDown, Event
+;                calculate_data_dirpix, Event
+;                plot_average_data_peak_value, Event
+;                bring_to_life_or_refresh_counts_vs_pixel, event
+;              END
+;              ELSE:
+;            ENDCASE
+;            CASE (event.key) OF ;Up and Down arrow keys
+;              7: BEGIN
+;                REFreduction_ManuallyMoveDataBackPeakUp, Event
+;                calculate_data_dirpix, Event
+;                plot_average_data_peak_value, Event
+;                bring_to_life_or_refresh_counts_vs_pixel, event
+;              END
+;              8: BEGIN
+;                REFreduction_ManuallyMoveDataBackPeakDown, Event
+;                calculate_data_dirpix, Event
+;                plot_average_data_peak_value, Event
+;                bring_to_life_or_refresh_counts_vs_pixel, event
+;              END
+;              ELSE:
+;            ENDCASE
+;            (*global).first_event = 0
+;            
+;          ENDIF ELSE BEGIN
+;            (*global).first_event = 1
+;          ENDELSE
           
           IF( Event.type EQ 0 )THEN BEGIN ;click
             (*global).left_clicked = 1b
@@ -777,21 +777,21 @@ PRO MAIN_BASE_event, Event
             STRCOMPRESS(FIX(tvimg[Event.x,Event.y]),/REMOVE_ALL)
           ;********************************************************************
             
-          IF ((*global).first_event) THEN BEGIN
-            CASE (event.ch) OF ;u and d keys
-              117: REFreduction_ManuallyMoveNormBackPeakUp, Event
-              100: REFreduction_ManuallyMoveNormBackPeakDown, Event
-              ELSE:
-            ENDCASE
-            CASE (event.key) OF ;Up and Down arrow keys
-              7: REFreduction_ManuallyMoveNormBackPeakUp, Event
-              8: REFreduction_ManuallyMoveNormBackPeakDown, Event
-              ELSE:
-            ENDCASE
-            (*global).first_event = 0
-          ENDIF ELSE BEGIN
-            (*global).first_event = 1
-          ENDELSE
+;          IF ((*global).first_event) THEN BEGIN
+;            CASE (event.ch) OF ;u and d keys
+;              117: REFreduction_ManuallyMoveNormBackPeakUp, Event
+;              100: REFreduction_ManuallyMoveNormBackPeakDown, Event
+;              ELSE:
+;            ENDCASE
+;            CASE (event.key) OF ;Up and Down arrow keys
+;              7: REFreduction_ManuallyMoveNormBackPeakUp, Event
+;              8: REFreduction_ManuallyMoveNormBackPeakDown, Event
+;              ELSE:
+;            ENDCASE
+;            (*global).first_event = 0
+;          ENDIF ELSE BEGIN
+;            (*global).first_event = 1
+;          ENDELSE
           IF( Event.type EQ 0 )THEN BEGIN
             IF (Event.press EQ 1) THEN $
               REFreduction_NormSelectionPressLeft, Event ;left button

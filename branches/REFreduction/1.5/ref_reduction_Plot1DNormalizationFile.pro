@@ -195,7 +195,7 @@ PRO Plot1DNormalizationFile, Event, img, N
     coeff_congrid_tof = 1
   ENDELSE
   
-  (*global).congrid_norm_x_coeff = coeff_congrid_tof
+  ;(*global).congrid_norm_x_coeff = coeff_congrid_tof
   
   ;change the size of the data draw true plotting area
   ;widget_control, id_draw, DRAW_XSIZE=file_Ntof
@@ -204,6 +204,8 @@ PRO Plot1DNormalizationFile, Event, img, N
   geometry = widget_info(id,/geometry)
   new_xsize = geometry.scr_xsize
   new_ysize = geometry.scr_ysize
+  
+      (*global).congrid_norm_x_coeff = new_xsize
   
   tvimg = congrid(img, new_xsize, new_ysize)
   
@@ -275,15 +277,15 @@ PRO Plot1DNormalizationFile_batch, Event, img, N
   ENDIF ELSE BEGIN
     coeff_congrid_tof = 1
   ENDELSE
-  
-  (*global).congrid_norm_x_coeff = coeff_congrid_tof
-  
+    
   ;change the size of the data draw true plotting area
   ;widget_control, id_draw, DRAW_XSIZE=file_Ntof
   id = widget_info(event.top, find_by_uname='load_normalization_D_draw')
   geometry = widget_info(id,/geometry)
   new_xsize = geometry.scr_xsize
   new_ysize = geometry.scr_ysize
+  
+    (*global).congrid_norm_x_coeff = new_xsize
   
   tvimg = congrid(img, new_xsize, new_ysize)
   ;  tvimg = CONGRID(img,file_Ntof * coeff_congrid_tof, new_N)
