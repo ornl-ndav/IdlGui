@@ -300,9 +300,9 @@ PRO MakeGuiLoadNormalization1DTab, D_DD_Tab, $
 ;    Y_SCROLL_SIZE = $
 ;    GlobalLoadGraphs[3],$
     XSIZE         = $
-    GlobalLoadGraphs[2]-20,$
+    GlobalLoadGraphs[2],$
     YSIZE         = $
-    GlobalLoadGraphs[3],$
+    GlobalLoadGraphs[3]+90,$
     UNAME         = $
     'load_normalization_D_draw',$
     RETAIN        = 2,$
