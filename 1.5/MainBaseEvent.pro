@@ -178,7 +178,7 @@ PRO MAIN_BASE_event, Event
     ;1D_2D plot of DATA
     WIDGET_INFO(wWidget, FIND_BY_UNAME='load_data_D_draw'): begin
       error = 0
-     CATCH, error
+   ;  CATCH, error
       IF (error NE 0) THEN BEGIN
         CATCH,/CANCEL
       ENDIF ELSE BEGIN
@@ -274,7 +274,7 @@ PRO MAIN_BASE_event, Event
             if ((*global).left_clicked) then begin
               REFreduction_DataSelectionMove, Event
               calculate_data_dirpix, Event
-              plot_average_data_peak_value, Event
+             plot_average_data_peak_value, Event
             endif
           ENDIF
         ENDIF

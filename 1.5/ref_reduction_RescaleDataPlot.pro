@@ -42,12 +42,12 @@ PRO REFReduction_RescaleDataPlot, Event
   
     coeff_congrid_tof = (*global).congrid_x_coeff
     DataXYZminmaxArray = (*(*global).DataXYZminmaxArray)
-    
+        
+    ;plot only the range of tof selected
+    new_rescaled_tvimg, event
+
     tvimg = (*(*global).tvimg_data_ptr)
     sz=size(tvimg)
-    
-    ;plot only the range of tof selected
-    new_rescaled_tvimg, event, tvimg
     
     IF (getDropListSelectedIndex(Event,'data_rescale_z_droplist') EQ 1) $
       THEN BEGIN                ;log

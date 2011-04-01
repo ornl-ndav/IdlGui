@@ -77,10 +77,12 @@ FUNCTION retrieveBanksData, Event, $
         ENDIF
         x = (size(data))(2)
         if (x ne 256) then begin
-        using_wrong_version_of_ref_reduction, Event
-        message, 'wrong nexus file format'
+          using_wrong_version_of_ref_reduction, Event
+          message, 'wrong nexus file format'
         endif
         (*(*global).bank1_data) = data
+        
+        (*(*global).new_rescale_tvimg) = data
         
         iNexus = obj_new('IDLnexusUtilities', fullNexusName)
         tof_axis = iNexus.get_tof_data()
@@ -94,8 +96,8 @@ FUNCTION retrieveBanksData, Event, $
         ENDIF
         x = (size(data))(2)
         if (x ne 256) then begin
-        using_wrong_version_of_ref_reduction, Event
-        message, 'wrong nexus file format'
+          using_wrong_version_of_ref_reduction, Event
+          message, 'wrong nexus file format'
         endif
         (*(*global).bank1_norm) = data
       END
@@ -106,8 +108,8 @@ FUNCTION retrieveBanksData, Event, $
         ENDIF
         x = (size(data))(2)
         if (x ne 256) then begin
-        using_wrong_version_of_ref_reduction, Event
-        message, 'wrong nexus file format'
+          using_wrong_version_of_ref_reduction, Event
+          message, 'wrong nexus file format'
         endif
         (*(*global).bank1_empty_cell) = data
       END

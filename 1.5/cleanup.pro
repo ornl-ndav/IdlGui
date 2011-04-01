@@ -96,6 +96,7 @@ compile_opt idl2
   ptr_free, (*global).SigmaYarray
   ptr_free, (*global).Xarray_untouched
   ptr_free, (*global).bank1_data
+  ptr_free, (*global).new_rescaled_tvimg
   ptr_free, (*global).bank1_norm
   ptr_free, (*global).bank1_empty_cell
   ptr_free, (*global).FilesToPlotList

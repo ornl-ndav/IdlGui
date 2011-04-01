@@ -66,15 +66,9 @@ PRO REFreduction_DataSelectionPressLeft, event
   
   IF (ROISignalBackZoomStatus NE 3) THEN BEGIN
   
-    ;where to stop the plot of the lines
-    ;  xsize_1d_draw = (*global).Ntof_DATA-1
-  
   id = widget_info(event.top, find_by_uname='load_data_D_draw')
   geometry = widget_info(id,/geometry)
-  ;new_xsize = geometry.scr_xsize
   xsize_1d_draw = geometry.scr_xsize
-    ;xsize_1d_draw = 608L
-    ;xsize_1d_draw = 256*2L ;detector rotated
     
     mouse_status = (*global).select_data_status
     IF ((*global).mouse_debugging EQ 'yes') THEN BEGIN

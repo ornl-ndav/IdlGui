@@ -32,10 +32,12 @@
 ;
 ;==============================================================================
 
-pro new_rescaled_tvimg, event, tvimg
+pro new_rescaled_tvimg, event, recalculate=recalculate
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global
+  
+  if (keyword_set(recalculate)) then begin
   
   data = (*(*global).bank1_data) ;[tof, 256, 304]
 
@@ -59,5 +61,10 @@ pro new_rescaled_tvimg, event, tvimg
       new_ysize = geometry.scr_ysize
    
    tvimg = congrid(_tvimg, new_xsize, new_ysize)
+   (*(*global).tvimg_data_ptr) = tvimg
+   
+   endif 
+   
+   return 
   
 end

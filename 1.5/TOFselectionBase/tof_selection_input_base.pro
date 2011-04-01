@@ -159,6 +159,9 @@ pro tof_selection_input_base_event, Event
       global = (*global_tof_selection).global
       (*global).index_of_tof_range = index_tof_range
       
+      ;force to recalculate the new range of tof
+      new_rescaled_tvimg, main_event, /recalculate
+      
       if (isTOFcuttingUnits_microS(main_event)) then begin
         tof_min *= 1000.
         tof_max *= 1000.
