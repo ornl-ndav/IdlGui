@@ -47,42 +47,42 @@ PRO REFReduction_RescaleDataPlot, Event
     tvimg = (*(*global).tvimg_data_ptr)
     sz=size(tvimg)
     
-    ;####X-axis
-    xmin = getTextFieldValue(Event,'data_rescale_xmin_cwfield')
-    xmax = getTextfieldValue(Event,'data_rescale_xmax_cwfield')
-    new_tvimg = fltarr(sz[1],sz[2])
-    Xupdate = [0,0]
-    if (xmin GT xmax) then begin
-      tmp = xmax
-      xmax = xmin
-      xmin = tmp
-      Xupdate[0]=1
-      Xupdate[1]=1
-    endif
+;    ;####X-axis
+;    xmin = getTextFieldValue(Event,'data_rescale_xmin_cwfield')
+;    xmax = getTextfieldValue(Event,'data_rescale_xmax_cwfield')
+;    new_tvimg = fltarr(sz[1],sz[2])
+;    Xupdate = [0,0]
+;    if (xmin GT xmax) then begin
+;      tmp = xmax
+;      xmax = xmin
+;      xmin = tmp
+;      Xupdate[0]=1
+;      Xupdate[1]=1
+;    endif
+;    
+;    if (xmin LT DataXYZminmaxArray[0]) then begin
+;      xmin = DataXYZminmaxArray[0]
+;      Xupdate[0]=1
+;    endif
+;    
+;    if (xmax GT DataXYZminmaxArray[1]) then begin
+;      xmax = DataXYZminmaxArray[1]
+;      Xupdate[1]=1
+;    endif
+;    
+;    if (Xupdate[0] EQ 1) then begin
+;      putTextFieldValue, Event, 'data_rescale_xmin_cwfield', xmin, 0
+;    endif
+;    
+;    if (Xupdate[1] EQ 1) then begin
+;      putTextFieldValue, Event, 'data_rescale_xmax_cwfield', xmax, 0
+;    endif
     
-    if (xmin LT DataXYZminmaxArray[0]) then begin
-      xmin = DataXYZminmaxArray[0]
-      Xupdate[0]=1
-    endif
+;    xmin *= coeff_congrid_tof
+;    xmax *= coeff_congrid_tof
     
-    if (xmax GT DataXYZminmaxArray[1]) then begin
-      xmax = DataXYZminmaxArray[1]
-      Xupdate[1]=1
-    endif
-    
-    if (Xupdate[0] EQ 1) then begin
-      putTextFieldValue, Event, 'data_rescale_xmin_cwfield', xmin, 0
-    endif
-    
-    if (Xupdate[1] EQ 1) then begin
-      putTextFieldValue, Event, 'data_rescale_xmax_cwfield', xmax, 0
-    endif
-    
-    xmin *= coeff_congrid_tof
-    xmax *= coeff_congrid_tof
-    
-    new_tvimg(xmin:xmax,*) = tvimg(xmin:xmax,*)
-    tvimg=new_tvimg
+;    new_tvimg(xmin:xmax,*) = tvimg(xmin:xmax,*)
+;    tvimg=new_tvimg
     
     ;####Y-axis
     ymin = getTextFieldValue(Event,'data_rescale_ymin_cwfield')

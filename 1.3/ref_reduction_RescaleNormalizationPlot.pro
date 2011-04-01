@@ -75,11 +75,11 @@ PRO REFReduction_RescaleNormalizationPlot,Event
       putTextFieldValue, Event, 'normalization_rescale_xmax_cwfield', xmax, 0
     endif
     
-    xmin *= (*global).congrid_norm_x_coeff
-    xmax *= (*global).congrid_norm_x_coeff
+;    xmin *= (*global).congrid_norm_x_coeff
+;    xmax *= (*global).congrid_norm_x_coeff
     
-    new_tvimg(xmin:xmax,*) = tvimg(xmin:xmax,*)
-    tvimg=new_tvimg
+;    new_tvimg(xmin:xmax,*) = tvimg(xmin:xmax,*)
+;    tvimg=new_tvimg
     
     ;####Y-axis
     ymin = getTextFieldValue(Event,'normalization_rescale_ymin_cwfield')
