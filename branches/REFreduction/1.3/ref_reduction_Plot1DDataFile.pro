@@ -195,7 +195,15 @@ PRO Plot1DDataFile, Event, img, N
   ;change the size of the data draw true plotting area
   ;widget_control, id_draw, DRAW_XSIZE=file_Ntof
   ;tvimg = rebin(img, file_Ntof, new_N,/sample)
-  tvimg = CONGRID(img,file_Ntof * coeff_congrid_tof, new_N)
+;  tvimg = CONGRID(img,file_Ntof * coeff_congrid_tof, new_N)
+  
+   id = widget_info(event.top, find_by_uname='load_data_D_draw')
+  geometry = widget_info(id,/geometry)
+  new_xsize = geometry.scr_xsize
+  new_ysize = geometry.scr_ysize
+  
+  tvimg = congrid(img, new_xsize, new_ysize)
+    
   (*(*global).tvimg_data_ptr) = tvimg
   
   IF (getDropListSelectedIndex(Event,'data_rescale_z_droplist') EQ 1) $
@@ -269,9 +277,16 @@ PRO Plot1DDataFile_batch, Event, img, N
   ;change the size of the data draw true plotting area
   ;widget_control, id_draw, DRAW_XSIZE=file_Ntof
   ;tvimg = rebin(img, file_Ntof, new_N,/sample)
-  tvimg = CONGRID(img,file_Ntof * coeff_congrid_tof, new_N)
+ id = widget_info(event.top, find_by_uname='load_data_D_draw')
+  geometry = widget_info(id,/geometry)
+  new_xsize = geometry.scr_xsize
+  new_ysize = geometry.scr_ysize
   
+  tvimg = congrid(img, new_xsize, new_ysize)
+    
   (*(*global).tvimg_data_ptr) = tvimg
+  
+  ; tvimg = CONGRID(img,file_Ntof * coeff_congrid_tof, new_N)
   
   IF (getDropListSelectedIndex(Event,'data_rescale_z_droplist') EQ 1) $
     THEN BEGIN                ;log
