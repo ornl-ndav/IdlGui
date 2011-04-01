@@ -136,6 +136,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     SCR_YSIZE = (*global).sangle_help_ysize_draw,$
     /BUTTON_EVENTS,$
     /MOTION_EVENTS,$
+    retain=2,$
     /TRACKING_EVENTS,$
     UNAME = 'sangle_help_draw')
     
@@ -157,6 +158,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     /TRACKING_EVENTS, $
     /MOTION_EVENTS, $
     /BUTTON_EVENTS, $
+    retain=2,$
     XSIZE = (*global).sangle_xsize_draw,$
     YSIZE = 2 * (*global).detector_pixels_y)
     
@@ -167,6 +169,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     ; Change made: Replace 304 with detector_pixels_y obtained from XML fole (RCW, Feb 10, 2010)
     YSIZE = 2 * (*global).detector_pixels_y + 30,$
     ;    YSIZE = 2*304+30,$
+    retain=2,$
     YOFFSET = 0)
   ; Change code (RC Ward, 7 Aug 2010): Add label on x-axis, namely "TOF (micro seconds)".
   label = WIDGET_LABEL(row1col2, $
