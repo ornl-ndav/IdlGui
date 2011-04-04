@@ -227,9 +227,9 @@ PRO populate_checking_spin_state_table, Event, $
   table = getTableValue(Event, 'reduce_tab3_main_spin_state_table_uname')
   IF (instrument EQ 'REF_M') THEN BEGIN
     d_spin_state = table[3,*]
-    list_of_output_files = table[8,*]
+    list_of_output_files = table[10,*]
   ENDIF ELSE BEGIN
-    list_of_output_files = table[5,*]
+    list_of_output_files = table[7,*]
   ENDELSE
   
   IF (instrument EQ 'REF_M') THEN BEGIN

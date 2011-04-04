@@ -47,7 +47,7 @@ compile_opt idl2
 
   ;get big table of step3
   big_table = getTableValue(Event, 'reduce_tab3_main_spin_state_table_uname')
-  nbr_row = (SIZE(big_table))(2)
+  nbr_row = (SIZE(big_table))[2]
   cl_table = STRARR(nbr_row)
   
   CASE ((*global).am) OF
