@@ -172,8 +172,8 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     ;status of mouse clicked on scale of reduce/step2/roi base
     scale_mouse_left_pressed: 0b,$
     scale_mouse_right_pressed: 0b, $
-    tof_device_data: fltarr(2,2), $   [[x1device,x2device],[x1data,x2data]]
-  tof_range_status: 'left',$  ;left|right
+    tof_device_data: fltarr(2,2), $ ;  [[x1device,x2device],[x1data,x2data]]
+    tof_range_status: 'right',$  ;left|right   of reduce/step2
   
     left_right_cursor: 96, $
     standard: 31, $

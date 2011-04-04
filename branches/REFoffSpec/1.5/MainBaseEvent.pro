@@ -1909,29 +1909,7 @@ PRO MAIN_BASE_event, Event
       CATCH,/CANCEL
       check_reduce_step2_save_roi_validity, Event
     ENDIF ELSE BEGIN
-    
-      ;      CASE (event.key) OF ;Up and Down arrow keys
-      ;        7: BEGIN
-      ;          IF ((*global).reduce_step2_UD_keys_pressed) THEN BEGIN
-      ;            (*global).reduce_step2_UD_keys_pressed = 0
-      ;          ENDIF ELSE BEGIN
-      ;            plot_reduce_step2_norm, Event
-      ;            reduce_step2_manual_move, Event, key='up'
-      ;            (*global).reduce_step2_UD_keys_pressed = 1
-      ;          ENDELSE
-      ;        END
-      ;        8: BEGIN
-      ;          IF ((*global).reduce_step2_UD_keys_pressed) THEN BEGIN
-      ;            (*global).reduce_step2_UD_keys_pressed = 0
-      ;          ENDIF ELSE BEGIN
-      ;            plot_reduce_step2_norm, Event
-      ;            reduce_step2_manual_move, Event, key='down'
-      ;            (*global).reduce_step2_UD_keys_pressed = 1
-      ;          ENDELSE
-      ;        END
-      ;        ELSE:
-      ;      ENDCASE
-    
+        
       IF( Event.type EQ 0 )THEN BEGIN
         IF (Event.press EQ 1) THEN BEGIN ;left pressed
           (*global).mouse_left_pressed = 1
