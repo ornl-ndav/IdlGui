@@ -32,26 +32,19 @@
 ;
 ;==============================================================================
 
-PRO  reduce_step3_run_jobs, Event
+PRO reduce_step3_run_jobs, Event
+compile_opt idl2
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   instrument = (*global).instrument
   ; Code change (RC Ward, Oct 5, 2010): Pass queue for submitting reduction code (refred_lp) from config file
   queue = (*global).queue
-  ; print, "test: queue: ",queue
-  ; Code change (RC Ward, Mar 2, 2010): pass TOF Cutoff min and max through global variable
-  ; Code change (RC Ward, Mar 17, 2010): apply TOF cutoffs only if switch is yes
+
   apply_tof_cutoffs = (*global).apply_tof_cutoffs
   tof_cutoff_min = (*global).tof_cutoff_min
   tof_cutoff_max = (*global).tof_cutoff_max
-  ; DEBUG ========================================
-  ;  print, "Apply Cutoffs: ", apply_tof_cutoffs
-  ;  if (apply_tof_cutoffs EQ "yes") THEN BEGIN
-  ;    print, "TOF Cutoff Min: ", tof_cutoff_min
-  ;    print, "TOF Cutoff Max: ", tof_cutoff_max
-  ;  ENDIF
-  ; DEBUG ========================================
+
   ;get big table of step3
   big_table = getTableValue(Event, 'reduce_tab3_main_spin_state_table_uname')
   nbr_row = (SIZE(big_table))(2)
