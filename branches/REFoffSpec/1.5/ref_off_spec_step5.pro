@@ -438,9 +438,11 @@ PRO step5_browse_path_button, Event
   
   path  = (*global).working_path
   title = 'Select a directory for output files'
+    id = widget_info(event.top, find_by_uname='MAIN_BASE')
   
   path = DIALOG_PICKFILE(PATH = path,$
     TITLE = title, $
+    dialog_parent=id, $
     /MUST_EXIST,$
     /DIRECTORY)
     

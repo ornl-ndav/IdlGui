@@ -147,8 +147,11 @@ PRO OutputFilePathButton, Event
   ;get path (label of this button)
   path = getTextFieldValue(Event,'create_output_file_path_button')
   title = 'Select a directory for output files'
+    id = widget_info(event.top, find_by_uname='MAIN_BASE')
+  
   new_path = DIALOG_PICKFILE(/DIRECTORY,$
     PATH     = path,$
+    dialog_parent=id, $
     TITLE = title, $
     GET_PATH = new_path,$
     /MUST_EXIST)

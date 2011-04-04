@@ -73,12 +73,14 @@ PRO browse_reduce_step2_roi_file, Event
   ;  path       = (*global).roi_path
   path = (*global).ascii_path
   title      = 'Browsing for a ROI file'
+  id = widget_info(event.top, find_by_uname='MAIN_BASE')
   
   file_name = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
     FILTER            = filter,$
     GET_PATH          = new_path,$
     PATH              = path,$
     TITLE             = title,$
+    dialog_parent     = id, $
     /READ,$
     /MUST_EXIST)
     
@@ -174,12 +176,14 @@ PRO browse_reduce_step2_back_roi_file, Event
   ;  path       = (*global).roi_path
   path = (*global).ascii_path
   title      = 'Browsing for a background ROI file'
+  id = widget_info(event.top, find_by_uname='MAIN_BASE')
   
   file_name = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
     FILTER            = filter,$
     GET_PATH          = new_path,$
     PATH              = path,$
     TITLE             = title,$
+    dialog_parent     = id, $
     /READ,$
     /MUST_EXIST)
     
@@ -269,13 +273,13 @@ PRO load_and_plot_roi_file, Event, file_name
   ;  plot_reduce_step2_norm, Event ;refresh plot
   ;(*global).norm_roi_y_selected = 'all'
   ;reduce_step2_manual_move, Event
-            
-            
-            reduce_step2_plot_rois, event
-          display_roi_on_roi_selection_counts_vs_pixel_base, event
+    
+    
+  reduce_step2_plot_rois, event
+  display_roi_on_roi_selection_counts_vs_pixel_base, event
   
-  ;          plot_reduce_step2_roi, Event
-  ;        display_roi_on_roi_selection_counts_vs_pixel_base, event
+;          plot_reduce_step2_roi, Event
+;        display_roi_on_roi_selection_counts_vs_pixel_base, event
   
 END
 
@@ -293,13 +297,13 @@ pro load_and_plot_back_roi_file, event, file_name
     STRCOMPRESS(Y1,/REMOVE_ALL)
   putTextFieldValue, Event, 'reduce_step2_create_back_roi_y2_value', $
     STRCOMPRESS(Y2,/REMOVE_ALL)
-  
-;  plot_reduce_step2_norm, Event ;refresh plot
-;  (*global).norm_roi_y_selected = 'all'
-;  reduce_step2_manual_move, Event
-  
-        reduce_step2_plot_rois, event
-          display_roi_on_roi_selection_counts_vs_pixel_base, event
+    
+  ;  plot_reduce_step2_norm, Event ;refresh plot
+  ;  (*global).norm_roi_y_selected = 'all'
+  ;  reduce_step2_manual_move, Event
+    
+  reduce_step2_plot_rois, event
+  display_roi_on_roi_selection_counts_vs_pixel_base, event
   
   
 end

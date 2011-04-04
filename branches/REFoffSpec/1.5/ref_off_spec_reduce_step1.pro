@@ -437,10 +437,12 @@ PRO reduce_tab1_browse_button, Event
   
   LogText = '> Browsing for NeXus file in Reduce/step1:'
   IDLsendToGeek_addLogBookText, Event, LogText
+  id = widget_info(event.top, find_by_uname='MAIN_BASE')
   
   nexus_file_list = DIALOG_PICKFILE(DEFAULT_EXTENSION = default_extension,$
     FILTER = ['*.nxs'],$
     GET_PATH = new_path,$
+    dialog_parent=id, $
     /MULTIPLE_FILES,$
     /MUST_EXIST,$
     PATH = path,$

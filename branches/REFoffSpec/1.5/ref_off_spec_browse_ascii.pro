@@ -93,9 +93,11 @@ PRO browse_ascii_file, Event
   filter    = (*global).ascii_filter
   path      = (*global).ascii_path
 ;print, "path: ",path
+  id = widget_info(event.top, find_by_uname='MAIN_BASE')
   title     = 'Select an ASCII file'
   ascii_file_name = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
     FILTER            = filter,$
+    dialog_parent     = id, $
     GET_PATH          = new_path,$
     TITLE             = title,$
     PATH              = path,$
