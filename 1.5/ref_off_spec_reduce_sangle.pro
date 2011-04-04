@@ -1614,17 +1614,18 @@ PRO reduce_step1_save_back_roi, event
   ;save data back roi file name in table
   nexus_spin_state_data_back_roi_table = $
     (*(*global).nexus_spin_state_data_back_roi_table)
-    
+
+  ;automatically save the back for all the spin states    
   row = getPreviousSangleRowSelected(Event)
-  index_spin = 0
-  case (strlowcase(getSangleSpinStateSelected(Event))) of
-    'off_off': index_spin=0
-    'off_on': index_spin=1
-    'on_off': index_spin=2
-    'on_on': index_spin=3
-  endcase
+;  index_spin = 0
+;  case (strlowcase(getSangleSpinStateSelected(Event))) of
+;    'off_off': index_spin=0
+;    'off_on': index_spin=1
+;    'on_off': index_spin=2
+;    'on_on': index_spin=3
+;  endcase
   
-  nexus_spin_state_data_back_roi_table[index_spin,row] = back_file_name
+  nexus_spin_state_data_back_roi_table[*,row] = back_file_name
   (*(*global).nexus_spin_state_data_back_roi_table) = $
     nexus_spin_state_data_back_roi_table
     
