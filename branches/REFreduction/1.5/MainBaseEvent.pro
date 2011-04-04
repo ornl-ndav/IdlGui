@@ -59,7 +59,12 @@ PRO MAIN_BASE_event, Event
   
    ;bring to life the TOF selection base
     widget_info(wWidget, find_by_uname='tof_selection_tool_button'): begin
-    tof_selection_tool_button_eventcb, event
+    tof_selection_tool_button_eventcb, event, source='data'
+    end
+    
+    ;bring to life the Normalization TOF selection base
+    widget_info(wWidget, find_by_uname='norm_tof_selection_tool_button'): begin
+    tof_selection_tool_button_eventcb, event, source='norm'    
     end
     
     WIDGET_INFO(wWidget, FIND_BY_UNAME='MAIN_BASE'): begin
@@ -755,27 +760,27 @@ PRO MAIN_BASE_event, Event
         IF ((*global).NormNeXusFound) THEN BEGIN
           ;only if there is a NeXus loaded
         
-          ;show x/y and counts ************************************************
-          putLabelValue, Event, $
-            'norm_x_info_value', $
-            STRCOMPRESS(Event.x,/REMOVE_ALL)
-          IF ((*global).miniVersion EQ 1) THEN BEGIN
-            coeff = 1
-          ENDIF ELSE BEGIN
-            coeff = 2
-          ENDELSE
-          putLabelValue, $
-            Event, $
-            'norm_y_info_value', $
-            STRCOMPRESS(FIX((Event.y/coeff)),/REMOVE_ALL)
-            
-          tvimg = (*(*global).tvimg_norm_ptr)
-          
-          putLabelValue, $
-            Event, $
-            'norm_counts_info_value', $
-            STRCOMPRESS(FIX(tvimg[Event.x,Event.y]),/REMOVE_ALL)
-          ;********************************************************************
+;          ;show x/y and counts ************************************************
+;          putLabelValue, Event, $
+;            'norm_x_info_value', $
+;            STRCOMPRESS(Event.x,/REMOVE_ALL)
+;          IF ((*global).miniVersion EQ 1) THEN BEGIN
+;            coeff = 1
+;          ENDIF ELSE BEGIN
+;            coeff = 2
+;          ENDELSE
+;          putLabelValue, $
+;            Event, $
+;            'norm_y_info_value', $
+;            STRCOMPRESS(FIX((Event.y/coeff)),/REMOVE_ALL)
+;            
+;          tvimg = (*(*global).tvimg_norm_ptr)
+;          
+;          putLabelValue, $
+;            Event, $
+;            'norm_counts_info_value', $
+;            STRCOMPRESS(FIX(tvimg[Event.x,Event.y]),/REMOVE_ALL)
+;          ;********************************************************************
             
 ;          IF ((*global).first_event) THEN BEGIN
 ;            CASE (event.ch) OF ;u and d keys

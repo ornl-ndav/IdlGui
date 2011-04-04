@@ -95,9 +95,12 @@ end
 ; :Params:
 ;    event
 ;
+; :Params:
+;   source      ['data','norm']
+;
 ; :Author: j35
 ;-
-pro tof_selection_tool_button_eventcb, event
+pro tof_selection_tool_button_eventcb, event, source=source
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global
@@ -108,7 +111,7 @@ pro tof_selection_tool_button_eventcb, event
     catch,/cancel
     widget_control, hourglass=0
     
-    message_text = ' No data to display!                   '
+    message_text = ' No ' + source + ' to display!                   '
     title = 'Please load a NeXus file first'
     id = widget_info(event.top, find_by_uname='MAIN_BASE')
     result = dialog_message(message_text, $
@@ -118,22 +121,27 @@ pro tof_selection_tool_button_eventcb, event
       title=title)
   endif else begin
   
-    run_number = getTextFieldValue(event, 'load_data_run_number_text_field')
-    
-    ;data
+    if (source eq 'data') then begin
+      uname = 'load_data_run_number_text_field'
     data = (*(*global).bank1_data)
-    ;retrieve tof
     full_nexus_name = (*global).data_full_nexus_name
+    endif else begin
+      uname = 'load_normalization_run_number_text_field'
+      data = (*(*global).bank1_norm)
+      full_nexus_name = (*global).norm_nexus_full_path
+    endelse
+    run_number = getTextFieldValue(event,uname)
+    
     if ((*global).instrument eq 'REF_M') then begin
       spin_state = 'Off_Off'
-      iNexus = obj_new('IDLnexusUtilities', full_nexus_name, spin_state=spin_state)
+      iNexus = obj_new('IDLnexusUtilities', full_nexus_name, $
+      spin_state=spin_state)
       y_axis = indgen(304)
     endif else begin
       iNexus = obj_new('IDLnexusUtilities', full_nexus_name)
       y_axis = indgen(256)
     endelse
     tof_axis = iNexus->get_tof_data()
-    
     tof_min_max = get_input_tof_min_max(event)
     
     tof_selection_base, main_base='MAIN_BASE',$
@@ -144,7 +152,8 @@ pro tof_selection_tool_button_eventcb, event
       y_axis = y_axis,$
       data = data,$
       run_number= strcompress(run_number[0],/remove_all), $
-      file_name = full_nexus_name
+      file_name = full_nexus_name, $
+      source=source
       
     widget_control, hourglass=0
     

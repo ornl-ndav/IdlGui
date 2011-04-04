@@ -39,10 +39,25 @@ PRO REFReduction_RescaleNormalizationPlot,Event
   
   if ((*global).NormNexusFound) then begin
   
-    NormXYZminmaxArray = (*(*global).NormXYZminmaxArray)
+    ;plot only the range of tof selected
+    new_rescaled_norm_tvimg, event
     
     tvimg = (*(*global).tvimg_norm_ptr)
     sz=size(tvimg)
+    
+    if (getDroplistSelectedIndex(event,'normalization_rescale_z_droplist') eq 1) $
+    then begin ;log
+    
+     ;remove 0 values and replace with NAN
+      ;and calculate log
+      index = where(tvimg eq 0, nbr)
+      if (nbr GT 0) then begin
+        tvimg[index] = !VALUES.D_NAN
+      endif
+      tvimg = ALOG10(tvimg)
+      tvimg = BYTSCL(tvimg,/NAN)
+      
+    ENDIF
     
     REFreduction_Rescale_PlotNorm, Event, tvimg
     
@@ -166,20 +181,6 @@ PRO REFreduction_Rescale_PlotNorm, Event, tvimg
   ;get number of color
   NumberColorValue = getSliderValue(Event,'normalization_contrast_number_slider')
   loadct,loadctIndex, Bottom=BottomColorValue,NColors=NumberColorValue,/SILENT
-  
-  IF (getDropListSelectedIndex(Event,'normalization_rescale_z_droplist') EQ 1) $
-    THEN BEGIN                ;log
-    
-    ;remove 0 values and replace with NAN
-    ;and calculate log
-    index = where(tvimg eq 0, nbr)
-    if (nbr GT 0) then begin
-      tvimg[index] = !VALUES.D_NAN
-    endif
-    tvimg = ALOG10(tvimg)
-    tvimg = BYTSCL(tvimg,/NAN)
-    
-  ENDIF
   
   tvscl, tvimg
   

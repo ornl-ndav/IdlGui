@@ -96,13 +96,14 @@ compile_opt idl2
   ptr_free, (*global).SigmaYarray
   ptr_free, (*global).Xarray_untouched
   ptr_free, (*global).bank1_data
-  ptr_free, (*global).new_rescaled_tvimg
   ptr_free, (*global).bank1_norm
   ptr_free, (*global).bank1_empty_cell
   ptr_free, (*global).FilesToPlotList
   ptr_free, (*global).PlotsTitle
   ptr_free, (*global).CurrentPlotsFullFileName
   ptr_free, (*global).ExtOfAllPlots
+  ptr_free, (*global).new_rescale_tvimg
+  ptr_free, (*global).new_rescale_norm_tvimg
   ptr_free, (*global).data_dd_ptr
   ptr_free, (*global).data_d_ptr
   ptr_free, (*global).empty_cell_dd_ptr
