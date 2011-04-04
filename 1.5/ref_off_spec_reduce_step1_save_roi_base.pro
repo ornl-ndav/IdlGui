@@ -61,9 +61,9 @@ PRO save_data_roi_base_event, event
       (*global).reduce_step1_roi_path = $
         getButtonValue(Event,'reduce_step1_roi_path_button')
         
-        (*global).reduce_step1_back_roi_file_name = $
-          getTextFieldValue(event,'reduce_step1_back_roi_file_name_text')
-      
+      (*global).reduce_step1_back_roi_file_name = $
+        getTextFieldValue(event,'reduce_step1_back_roi_file_name_text')
+        
       WIDGET_CONTROL, global_roi.ourGroup,/DESTROY
       main_event = global_roi.event
       reduce_step1_save_back_roi, main_event, global_roi=global_roi
@@ -78,7 +78,7 @@ END
 ;------------------------------------------------------------------------------
 PRO save_data_roi_base, Event, path=path, $
     back_file_name=back_file_name
-        
+    
   id = WIDGET_INFO(Event.top,FIND_BY_UNAME='MAIN_BASE')
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
@@ -103,20 +103,20 @@ PRO save_data_roi_base, Event, path=path, $
     VALUE = path,$
     UNAME = 'reduce_step1_roi_path_button')
     
-    row2_base = WIDGET_BASE(roi_base,$
-      /ROW)
-      
-    title = WIDGET_LABEL(row2_base,$
-      VALUE = 'Back. ROI:')
-      
-    ;file name text field
-    name = WIDGET_TEXT(row2_base,$
-      VALUE = back_file_name,$
-      SCR_XSIZE = 300,$
-      /EDITABLE,$
-      /ALIGN_LEFT,$
-      UNAME = 'reduce_step1_back_roi_file_name_text')
-  
+  row2_base = WIDGET_BASE(roi_base,$
+    /ROW)
+    
+  title = WIDGET_LABEL(row2_base,$
+    VALUE = 'Back. ROI:')
+    
+  ;file name text field
+  name = WIDGET_TEXT(row2_base,$
+    VALUE = back_file_name,$
+    SCR_XSIZE = 300,$
+    /EDITABLE,$
+    /ALIGN_LEFT,$
+    UNAME = 'reduce_step1_back_roi_file_name_text')
+    
   ;vertical space ...........third row...........................
   space = WIDGET_LABEL(roi_base,$
     VALUE = ' ')
@@ -159,9 +159,12 @@ PRO change_data_path, Event
   ;get path
   path = getButtonValue(Event,'reduce_step1_roi_path_button')
   
+  id = widget_info(event.top, find_by_uname='MAIN_BASE')
+  
   result = DIALOG_PICKFILE(/DIRECTORY,$
     TITLE = 'Select where to write the ROI file',$
     path = path,$
+    dialog_parent=id,$
     get_path = new_path,$
     /must_exist)
     
@@ -183,8 +186,11 @@ PRO change_data_file_name, Event
   ;get path
   path = getButtonValue(Event,'reduce_step1_roi_path_button')
   
+  id = widget_info(event.top, find_by_uname='MAIN_BASE')
+  
   file = DIALOG_PICKFILE(TITLE = 'Select where to write the ROI file',$
     path = path,$
+    dialog_parent=id, $
     get_path = new_path,$
     /must_exist)
     

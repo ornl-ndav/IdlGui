@@ -196,9 +196,11 @@ PRO change_path, Event
   
   ;get path
   path = getButtonValue(Event,'reduce_step2_roi_path_button')
+    id = widget_info(event.top, find_by_uname='MAIN_BASE')
   
   result = DIALOG_PICKFILE(/DIRECTORY,$
     TITLE = 'Select where to write the ROI files',$
+    dialog_parent=id, $
     path = path,$
     get_path = new_path,$
     /must_exist)
@@ -224,9 +226,11 @@ PRO change_file_name, Event
   
   ;get path
   path = getButtonValue(Event,'reduce_step2_roi_path_button')
+    id = widget_info(event.top, find_by_uname='MAIN_BASE')
   
   file = DIALOG_PICKFILE(TITLE = 'Select where to write the ROI file',$
     path = path,$
+    dialog_parent = id, $
     get_path = new_path,$
     /must_exist)
     

@@ -145,9 +145,11 @@ PRO reduce_step2_browse_normalization, Event
   LogText = '> Browsing for 1 or more Normalization NeXus file(s)' + $
     ' in Reduce/step2:'
   IDLsendToGeek_addLogBookText, Event, LogText
+    id = widget_info(event.top, find_by_uname='MAIN_BASE')
   
   nexus_file_list = DIALOG_PICKFILE(DEFAULT_EXTENSION = default_extension,$
     FILTER = ['*.nxs'],$
+    dialog_parent=id, $
     GET_PATH = new_path,$
     /MULTIPLE_FILES,$
     /MUST_EXIST,$
@@ -646,8 +648,11 @@ PRO reduce_step2_browse_roi, Event, row=row, data_spin_state=data_spin_state
     ': '
   IDLsendToGeek_addLogBookText, Event, LogText
   
+  id = widget_info(event.top, find_by_uname='MAIN_BASE')
+  
   roi_file = DIALOG_PICKFILE(DEFAULT_EXTENSION = default_extension,$
     FILTER = ['*_ROI.dat','*_ROI.txt'],$
+    dialog_parent=id, $
     GET_PATH = new_path,$
     /MUST_EXIST,$
     PATH = path,$
@@ -731,8 +736,10 @@ pro reduce_step2_browse_back_roi, Event, $
     
   IDLsendToGeek_addLogBookText, Event, LogText
   
+  id = widget_info(event.top, find_by_uname='MAIN_BASE')
   roi_file = DIALOG_PICKFILE(DEFAULT_EXTENSION = default_extension,$
     FILTER = ['*_back_ROI.dat'],$
+    dialog_parent=id, $
     GET_PATH = new_path,$
     /MUST_EXIST,$
     PATH = path,$
