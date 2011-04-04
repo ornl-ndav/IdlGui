@@ -83,6 +83,7 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     
     ;the rescaled in TOF range of the tvimg
     new_rescale_tvimg: ptr_new(0L), $
+    new_rescale_norm_tvimg: ptr_new(0L), $
     
     ;equivalent index of tof range selected in 'TOF selection tool' base
     index_of_tof_range: [-1,-1], $

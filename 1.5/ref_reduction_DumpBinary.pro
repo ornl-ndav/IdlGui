@@ -81,7 +81,6 @@ FUNCTION retrieveBanksData, Event, $
           message, 'wrong nexus file format'
         endif
         (*(*global).bank1_data) = data
-        
         (*(*global).new_rescale_tvimg) = data
         
         iNexus = obj_new('IDLnexusUtilities', fullNexusName)
@@ -100,6 +99,8 @@ FUNCTION retrieveBanksData, Event, $
           message, 'wrong nexus file format'
         endif
         (*(*global).bank1_norm) = data
+        (*(*global).new_rescale_norm_tvimg) = data
+
       END
       'empty_cell': BEGIN
         data = h5d_read(fieldID)

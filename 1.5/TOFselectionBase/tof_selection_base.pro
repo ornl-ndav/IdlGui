@@ -1307,6 +1307,7 @@ end
 ;    y_axis       (ex:Array of int [304])
 ;    data         (ex:Array of ulong [51,256,304])
 ;    file_name    (ex:REF_M_3454.nxs)
+;    source       (is either 'data' or 'norm')
 ;
 ; :Author: j35
 ;-
@@ -1318,7 +1319,8 @@ pro tof_selection_base, main_base=main_base, $
     y_axis = y_axis, $
     data = data, $
     run_number = run_number, $
-    file_name = file_name
+    file_name = file_name, $
+    source = source
     
   compile_opt idl2
   
@@ -1354,6 +1356,7 @@ pro tof_selection_base, main_base=main_base, $
   
   global_tof_selection = PTR_NEW({ wbase: wbase,$
     global: global, $
+    source: source, $   ;'data' or 'norm'
     
     run_number: run_number, $
     file_name: file_name, $
@@ -1361,8 +1364,8 @@ pro tof_selection_base, main_base=main_base, $
     
     tof_selection_input_base: 0L, $ ;id of refpix_input_base
     tof_selection_counts_vs_tof_base_id: 0L, $ ;'id of refpix_counts_vs_tof_base
-  counts_vs_tof_scale_is_linear: 0b, $ ;counts vs tof (linear/log)
-  
+    counts_vs_tof_scale_is_linear: 0b, $ ;counts vs tof (linear/log)
+    
     ;used to plot selection zoom
     default_plot_size: default_plot_size, $
     

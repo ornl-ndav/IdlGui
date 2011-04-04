@@ -40,9 +40,6 @@ PRO REFReduction_RescaleDataPlot, Event
   
   if ((*global).DataNexusFound) then begin
   
-    coeff_congrid_tof = (*global).congrid_x_coeff
-    DataXYZminmaxArray = (*(*global).DataXYZminmaxArray)
-        
     ;plot only the range of tof selected
     new_rescaled_tvimg, event
 
@@ -64,8 +61,6 @@ PRO REFReduction_RescaleDataPlot, Event
     ENDIF
     
     REFreduction_Rescale_PlotData, Event, tvimg
-    
-  ;if Zoom window visible update zoom drawing
     
   endif ;end of if(DataNexusFound)
   

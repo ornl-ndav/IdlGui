@@ -156,57 +156,57 @@ PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
     value = '  T O F   selection  tool    ',$
     xoffset = 563,$
     yoffset = 37,$
-    uname = 'tof_selection_tool_button')    
+    uname = 'tof_selection_tool_button')
     
-;  ;base about X, Y and counts value --------------------------------------------
-;  info_base = WIDGET_BASE(LOAD_DATA_BASE,$
-;    XOFFSET   = 510,$
-;    YOFFSET   = 35,$
-;    SCR_XSIZE = 275,$
-;    SCR_YSIZE = 20,$
-;    UNAME     = 'info_data_base',$
-;    MAP       = 0,$
-;    FRAME     = 1)
-;    
-;  ;X label/value
-;  y_off = 0
-;  x_label = WIDGET_LABEL(info_base,$
-;    XOFFSET = 0,$
-;    YOFFSET = y_off,$
-;    VALUE   = 'X:')
-;  x_value = WIDGET_LABEL(info_base,$
-;    XOFFSET   = 15,$
-;    YOFFSET   = y_off,$
-;    SCR_XSIZE = 50,$
-;    VALUE     = 'N/A',$
-;    UNAME     = 'data_x_info_value',$
-;    /ALIGN_LEFT)
-;    
-;  ;Y label/value
-;  y_label = WIDGET_LABEL(info_base,$
-;    XOFFSET = 70,$
-;    YOFFSET = y_off,$
-;    VALUE   = 'Y:')
-;  y_value = WIDGET_LABEL(info_base,$
-;    XOFFSET   = 85,$
-;    YOFFSET   = y_off,$
-;    SCR_XSIZE = 50,$
-;    VALUE     = 'N/A',$
-;    UNAME     = 'data_y_info_value',$
-;    /ALIGN_LEFT)
-;    
-;  ;COUNTS label/value
-;  counts_label = WIDGET_LABEL(info_base,$
-;    XOFFSET = 140,$
-;    YOFFSET = y_off,$
-;    VALUE   = 'COUNTS:')
-;  counts_value = WIDGET_LABEL(info_base,$
-;    XOFFSET   = 185,$
-;    YOFFSET   = y_off,$
-;    SCR_XSIZE = 50,$
-;    VALUE     = 'N/A',$
-;    UNAME     = 'data_counts_info_value',$
-;    /ALIGN_LEFT)
+  ;  ;base about X, Y and counts value --------------------------------------------
+  ;  info_base = WIDGET_BASE(LOAD_DATA_BASE,$
+  ;    XOFFSET   = 510,$
+  ;    YOFFSET   = 35,$
+  ;    SCR_XSIZE = 275,$
+  ;    SCR_YSIZE = 20,$
+  ;    UNAME     = 'info_data_base',$
+  ;    MAP       = 0,$
+  ;    FRAME     = 1)
+  ;
+  ;  ;X label/value
+  ;  y_off = 0
+  ;  x_label = WIDGET_LABEL(info_base,$
+  ;    XOFFSET = 0,$
+  ;    YOFFSET = y_off,$
+  ;    VALUE   = 'X:')
+  ;  x_value = WIDGET_LABEL(info_base,$
+  ;    XOFFSET   = 15,$
+  ;    YOFFSET   = y_off,$
+  ;    SCR_XSIZE = 50,$
+  ;    VALUE     = 'N/A',$
+  ;    UNAME     = 'data_x_info_value',$
+  ;    /ALIGN_LEFT)
+  ;
+  ;  ;Y label/value
+  ;  y_label = WIDGET_LABEL(info_base,$
+  ;    XOFFSET = 70,$
+  ;    YOFFSET = y_off,$
+  ;    VALUE   = 'Y:')
+  ;  y_value = WIDGET_LABEL(info_base,$
+  ;    XOFFSET   = 85,$
+  ;    YOFFSET   = y_off,$
+  ;    SCR_XSIZE = 50,$
+  ;    VALUE     = 'N/A',$
+  ;    UNAME     = 'data_y_info_value',$
+  ;    /ALIGN_LEFT)
+  ;
+  ;  ;COUNTS label/value
+  ;  counts_label = WIDGET_LABEL(info_base,$
+  ;    XOFFSET = 140,$
+  ;    YOFFSET = y_off,$
+  ;    VALUE   = 'COUNTS:')
+  ;  counts_value = WIDGET_LABEL(info_base,$
+  ;    XOFFSET   = 185,$
+  ;    YOFFSET   = y_off,$
+  ;    SCR_XSIZE = 50,$
+  ;    VALUE     = 'N/A',$
+  ;    UNAME     = 'data_counts_info_value',$
+  ;    /ALIGN_LEFT)
     
   ;------------------------------------------------------------------------------
     
@@ -281,12 +281,12 @@ PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
     UNAME = 'data_geometry_info_base',$
     FRAME = 1,$
     /COLUMN)
-   
-   title = widget_label(GeoBase,$
-   value = 'Geometry Information')
+    
+  title = widget_label(GeoBase,$
+    value = 'Geometry Information')
     
   row1 = WIDGET_BASE(GeoBase,$
-  xpad = 0,$
+    xpad = 0,$
     /row)
   label1 = WIDGET_LABEL(row1,$
     value = 'DANGLE0 :')
@@ -295,7 +295,7 @@ PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
     scr_xsize = 70,$
     /align_left,$
     uname = 'data_geometry_dangle_value')
-    label3 = widget_label(row1,$
+  label3 = widget_label(row1,$
     value = ' ',$
     scr_xsize = 50,$
     /align_left,$
@@ -307,20 +307,20 @@ PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
   label1 = WIDGET_LABEL(row2,$
     value = 'DIRPIX')
   label = widget_label(row2,$
-  value = '(N/A) :',$
-  scr_xsize = 75,$
-  /align_left,$
-  uname = 'data_geometry_dirpix_value')
+    value = '(N/A) :',$
+    scr_xsize = 75,$
+    /align_left,$
+    uname = 'data_geometry_dirpix_value')
   label2 = WIDGET_TEXT(row2,$
     value = 'N/A',$
     scr_xsize = 82,$
     /EDITABLE,$
     /align_left,$
     uname = 'data_geometry_dirpix_value_user')
-  
+    
   row3 = WIDGET_BASE(GeoBase,$
-      xpad = 0,$
-      /row)
+    xpad = 0,$
+    /row)
   label1 = WIDGET_LABEL(row3,$
     value = 'REFPIX :')
   label2 = WIDGET_LABEL(row3,$
@@ -328,7 +328,7 @@ PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
     scr_xsize = 70,$
     /align_left,$
     uname = 'data_geometry_refpix_value')
-
+    
   ;----------------------------------------------------------------------------
     
   ;Help base and text field that will show what is going on in the

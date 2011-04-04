@@ -68,3 +68,41 @@ pro new_rescaled_tvimg, event, recalculate=recalculate
    return 
   
 end
+
+
+pro new_rescaled_norm_tvimg, event, recalculate=recalculate
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  if (keyword_set(recalculate)) then begin
+  
+  data = (*(*global).bank1_norm) ;[tof, 256, 304]
+
+  if ((*global).instrument eq 'REF_L') then begin
+  _data = total(data,3)
+  endif else begin
+  _data = total(data,2)
+  endelse
+    
+  index_of_tof_range = (*global).index_of_tof_range
+  index_tof_min = index_of_tof_range[0]
+  index_tof_max = index_of_tof_range[1]
+  
+  if (index_tof_min eq -1) then index_tof_min = 0
+  
+  _tvimg = _data[index_tof_min:index_tof_max,*]
+  
+   id = widget_info(event.top, find_by_uname='load_normalization_D_draw')
+      geometry = widget_info(id,/geometry)
+      new_xsize = geometry.scr_xsize
+      new_ysize = geometry.scr_ysize
+   
+   tvimg = congrid(_tvimg, new_xsize, new_ysize)
+   (*(*global).tvimg_norm_ptr) = tvimg
+   
+   endif 
+   
+   return 
+  
+end
