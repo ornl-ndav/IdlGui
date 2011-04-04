@@ -172,9 +172,6 @@ PRO PopulateWorkingFileTable, Event
   ;get shifting parameters found
   ref_pixel_offset_list = (*(*global).ref_pixel_offset_list)
   
-; DEBUG =====  
-;  print, " in Step 6 PopulateWorkingFileTable  ref_pixel_offset_list: ",ref_pixel_offset_list
-; DEBUG =====
   populate_array, TableArray, ref_pixel_offset_list, COLUMN=1
   ;get scaling paremeters found
   scaling_factor = (*(*global).scaling_factor)
