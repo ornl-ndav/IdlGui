@@ -205,7 +205,7 @@ PRO checking_spin_state, Event, working_spin_state = working_spin_state
     event: event,$
     output_path: (*global).ascii_path,$
     ourGroup: checking_spin_base }
-   
+    
   ;this will populate the table
   populate_checking_spin_state_table, Event, $
     table_uname, $
@@ -231,6 +231,10 @@ PRO populate_checking_spin_state_table, Event, $
   ENDIF ELSE BEGIN
     list_of_output_files = table[7,*]
   ENDELSE
+  
+  ;add path
+  path = (*global).ascii_path
+  list_of_output_files = path + list_of_output_files
   
   IF (instrument EQ 'REF_M') THEN BEGIN
     sz = N_ELEMENTS(d_spin_state)
