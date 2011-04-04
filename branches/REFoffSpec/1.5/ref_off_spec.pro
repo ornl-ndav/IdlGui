@@ -242,9 +242,6 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     srun_web_page: 'https://neutronsr.us/applications/jobmonitor/squeue.php?view=all',$
     
     
-    
-    
-    
     ; refred_lp is the remote reflectometer reduction code. Here were are setting up the names of the parameters to refred_lp.
     ; Change made (RC Ward, Mar 2, 2010): add time of flight cutoffs (min, max) to the call to refred_lp
     reduce_structure: {$
@@ -259,8 +256,6 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     tof_cut_min: '--tof-cut-min',$
     tof_cut_max: '--tof-cut-max',$
     output: '--output'},$
-    
-    
     
     
     
