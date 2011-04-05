@@ -132,6 +132,47 @@ end
 
 ;+
 ; :Description:
+;    This routine is reached by the list of files button and update the
+;    name of the file display (at the top of the base) and the plot itself
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro cleaning_file_list, event
+  compile_opt  idl2
+  
+  ;display new data set
+  widget_control, event.top, get_uvalue=global_plot
+
+  ;retrieve index and full file name of file
+  button_value = getValue(id=event.id)
+  split_array = strsplit(button_value,': ',/extract)
+  index = fix(strcompress(split_array[0],/remove_all))-1
+  
+  file_name = split_array[1]
+  
+  ;display name of files at the top of the base
+  id = widget_info(event.top, find_by_uname='cleaning_widget_base')
+  widget_control, event.top, base_set_title=file_name
+  
+  global = (*global_plot).global
+  
+  flt0_ptr = (*global).flt0_rescale_ptr
+  flt1_ptr = (*global).flt1_rescale_ptr
+    
+  id = WIDGET_INFO(event.top, FIND_BY_UNAME='cleaning_draw')    
+  widget_control, id, GET_VALUE = plot_id
+  wset, plot_id
+  plot, *flt0_ptr[index], *flt1_ptr[index]
+  
+end
+
+;+
+; :Description:
 ;    Cleanup routine
 ;
 ; :Params:
@@ -215,9 +256,11 @@ pro cleaning_base_gui, wBase, $
     value = 'Files',$
     /menu)
   while (index lt nbr_files) do begin
+    value = strcompress(index+1,/remove_all) + ': ' + list_files[index]
+    
     __file = widget_button(_file,$
-      value = list_files[index],$
-      uname = uname_raw + strcompress(index,/remove_all))
+      value = value,$
+      event_pro = 'cleaning_file_list')
     index++
   endwhile
   
@@ -325,10 +368,10 @@ pro cleaning_base, event=event, $
   
   ;retrieve data of first file by default
   
-    flt0_ptr = (*global).flt0_rescale_ptr
-    flt1_ptr = (*global).flt1_rescale_ptr
-    flt2_ptr = (*global).flt2_rescale_ptr
-   
+  flt0_ptr = (*global).flt0_rescale_ptr
+  flt1_ptr = (*global).flt1_rescale_ptr
+  flt2_ptr = (*global).flt2_rescale_ptr
+  
   widget_control, id, GET_VALUE = plot_id
   wset, plot_id
   plot, *flt0_ptr[0], *flt1_ptr[0]

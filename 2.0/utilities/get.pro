@@ -32,6 +32,37 @@
 ;
 ;==============================================================================
 
+;+
+; :Description:
+;    return the value of the widget defined
+;    by its uname (passed as argument)
+;
+; :Keywords:
+;   event
+;   base
+;   uname
+;
+; :Author: j35
+;-
+function getValue, id=id, event=event, base=base, uname=uname
+  compile_opt idl2
+  
+  if (n_elements(event) ne 0) then begin
+    _id = widget_info(event.top, find_by_uname=uname)
+  endif
+  if (n_elements(base) ne 0) then begin
+    _id = widget_info(base, find_by_uname=uname)
+  endif
+  if (n_elements(id) ne 0) then begin
+    _id = id
+  endif
+  widget_control, _id, get_value=value
+  return, value
+end
+
+
+
+
 ;This function returns the contain of the Text Field
 FUNCTION getTextFieldValue, Event, uname
   TextFieldID = WIDGET_INFO(Event.top,find_by_uname=uname)
