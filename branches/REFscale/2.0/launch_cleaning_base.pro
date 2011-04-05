@@ -34,7 +34,7 @@
 
 ;+
 ; :Description:
-;    This procedure will launch the cleaning base that will provide the 
+;    This procedure will launch the cleaning base that will provide the
 ;    possibility to the user to remove data points
 ;
 ; :Params:
@@ -43,16 +43,16 @@
 ; :Author: j35
 ;-
 pro launch_cleaning_base, event
-compile_opt idl2
-
+  compile_opt idl2
+  
   list_files = ['file1','file2','file3']
   offset = 50
-
-cleaning_base, event=event, $
+  
+  cleaning_base, event=event, $
     list_files = list_files, $
     offset = offset, $
     main_base_uname = 'MAIN_BASE_ref_scale'
-
-
-
+    
+    
+    
 end
