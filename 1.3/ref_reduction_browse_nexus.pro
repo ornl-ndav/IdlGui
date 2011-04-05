@@ -61,18 +61,13 @@ PRO ok_polarization_state, Event
       load_data_browse_nexus, Event, nexus_file_name, POLA_STATE=value_selected
       populate_data_geometry_info, Event, nexus_file_name, spin_state=spin_state
       calculate_sangle, event
+      (*global).data_pola_state = value_selected
     END
     'norm_browse': BEGIN
       (*global).norm_path = list_pola_state[value_selected]
       nexus_file_name = (*global).norm_nexus_full_path
       load_norm_browse_nexus, Event, nexus_file_name, POLA_STATE=value_selected
-    END
-    'empty_cell_browse': BEGIN
-      (*global).empty_cell_path = list_pola_state[value_selected]
-      nexus_file_name = (*global).empty_cell_nexus_full_path
-      load_empty_cell_browse_nexus, Event, $
-        nexus_file_name, $
-        POLA_STATE=value_selected
+      (*global).norm_pola_state = value_selected
     END
     'data_load': BEGIN
       (*global).data_path = list_pola_state[value_selected]
@@ -80,19 +75,13 @@ PRO ok_polarization_state, Event
       load_data_browse_nexus, Event, nexus_file_name, POLA_STATE=value_selected
       populate_data_geometry_info, Event, nexus_file_name, spin_state=spin_state
       calculate_sangle, event
+      (*global).data_pola_state = value_selected
     END
     'norm_load': BEGIN
       (*global).norm_path = list_pola_state[value_selected]
       nexus_file_name = (*global).norm_nexus_full_path
       load_norm_browse_nexus, Event, nexus_file_name, POLA_STATE=value_selected
-    END
-    'empty_cell_load': BEGIN
-      (*global).empty_cell_path = list_pola_state[value_selected]
-      nexus_file_name = (*global).empty_cell_nexus_full_path
-      load_empty_cell_browse_nexus, $
-        Event, $
-        nexus_file_name, $
-        POLA_STATE=value_selected
+      (*global).norm_pola_state = value_selected
     END
   ENDCASE
   
