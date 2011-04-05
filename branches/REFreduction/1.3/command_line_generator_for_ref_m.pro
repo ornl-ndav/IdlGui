@@ -61,18 +61,50 @@ PRO command_line_generator_for_ref_m, event
   
   cmd += (*global).driver_name ;name of function to call
   
-  ;create arrays of data path
-  spin_state_config = (*global).spin_state_config
-  spin_state_selected_index = where(spin_state_config eq 1)
-  list_data_path = ['entry-Off_Off',$
-    'entry-Off_On',$
-    'entry-On_Off',$
-    'entry-On_On']
-  spin_state = ['Off_Off',$
-    'Off_On','On_Off','On_On']
-  data_spin_state_path = list_data_path[spin_state_selected_index]
-  data_spin_state      = spin_state[spin_state_selected_index]
+  ;repeat or not reduction for other spin states
+  value = getButtonValue(event,'other_spin_states') ;0 for yes, 1 for no
+  if (value eq 1) then begin
   
+        norm_pola_state = (*global).norm_pola_state  
+        CASE (norm_pola_state) of
+          0: norm_path = 'Off_Off'
+          1: norm_path = 'Off_On'
+          2: norm_path = 'On_Off'
+          3: norm_path = 'On_On'
+          else: norm_path = '_?'
+        ENDCASE
+        norm_spin_state_path = ['entry_' + norm_path]
+        norm_spin_state = [norm_path]
+
+        data_pola_state = (*global).data_pola_state  
+        CASE (data_pola_state) of
+          0: data_path = 'Off_Off'
+          1: data_path = 'Off_On'
+          2: data_path = 'On_Off'
+          3: data_path = 'On_On'
+          else: data_path = '_?'
+        ENDCASE
+        data_spin_state_path = ['entry_' + data_path]
+        data_spin_state = [data_path]
+        
+        nbr_spin_states = 1
+
+  endif else begin
+  
+    ;create arrays of data path
+    spin_state_config = (*global).spin_state_config
+    spin_state_selected_index = where(spin_state_config eq 1)
+    list_data_path = ['entry-Off_Off',$
+      'entry-Off_On',$
+      'entry-On_Off',$
+      'entry-On_On']
+    spin_state = ['Off_Off',$
+      'Off_On','On_Off','On_On']
+    data_spin_state_path = list_data_path[spin_state_selected_index]
+    data_spin_state      = spin_state[spin_state_selected_index]
+    
+  endelse
+
   index_spin_state = 0
   while (index_spin_state lt nbr_spin_states) do begin
   
@@ -91,16 +123,16 @@ PRO command_line_generator_for_ref_m, event
       endif
     endelse
     
-    value = getButtonValue(event,'other_spin_states')
-    if (value eq 1) then begin
-      cmd[index_spin_state] += ' ' + (*global).data_path_flag
-      cmd[index_spin_state] += '=/' + (*global).data_path + '/'
-      cmd[index_spin_state] += (*global).data_path_flag_suffix
-    endif else begin
+;    value = getButtonValue(event,'other_spin_states')
+;    if (value eq 1) then begin
+;      cmd[index_spin_state] += ' ' + (*global).data_path_flag
+;      cmd[index_spin_state] += '=/' + (*global).data_path + '/'
+;      cmd[index_spin_state] += (*global).data_path_flag_suffix
+;    endif else begin
       cmd[index_spin_state] += ' ' + (*global).data_path_flag
       cmd[index_spin_state] += '=/' + data_spin_state_path[index_spin_state] + '/'
       cmd[index_spin_state] += (*global).data_path_flag_suffix
-    endelse
+;    endelse
     
     ;get data ROI file
     data_roi_file = getTextFieldValue(Event, $
@@ -421,25 +453,25 @@ PRO command_line_generator_for_ref_m, event
       endelse
       
       ;normalization path
-      IF ((*global).norm_path NE '') THEN BEGIN
-        norm_pola_sensitive = 1
-        pola_state = getCWBgroupValue(Event, 'normalization_pola_state')
-        IF (pola_state EQ 1) THEN BEGIN
-          cmd[index_spin_state] += ' ' + (*global).norm_path_flag
-        ENDIF else begin
+;      IF ((*global).norm_path NE '') THEN BEGIN
+        ;norm_pola_sensitive = 1
+        ;pola_state = getCWBgroupValue(Event, 'normalization_pola_state')
+        ;IF (pola_state EQ 1) THEN BEGIN
+        ;  cmd[index_spin_state] += ' ' + (*global).norm_path_flag
+        ;ENDIF else begin
           value = getButtonValue(event,'other_spin_states')
           cmd[index_spin_state] += ' --norm-data-paths'
           if (value eq 1) then begin
-            cmd[index_spin_state] += '=/' + (*global).data_path + '/'
+            cmd[index_spin_state] += '=/' + norm_spin_state_path[index_spin_state] + '/'
             cmd[index_spin_state] += (*global).data_path_flag_suffix
           endif else begin
             cmd[index_spin_state] += '=/' + data_spin_state_path[index_spin_state] + '/'
             cmd[index_spin_state] += (*global).data_path_flag_suffix
           endelse
-        endelse
-      ENDIF ELSE BEGIN
-        norm_pola_sensitive = 0
-      ENDELSE
+        ;endelse
+;      ENDIF ELSE BEGIN
+;        norm_pola_sensitive = 0
+ ;     ENDELSE
       ActivateWidget, Event, 'norm_pola_base', norm_pola_sensitive
       
       ;get normalization ROI file
@@ -616,168 +648,6 @@ PRO command_line_generator_for_ref_m, event
     ;get name of instrument
     cmd[index_spin_state] += ' --inst=' + (*global).instrument
     
-    ;    ;*****EMPTY CELL*************************************************************
-    ;    substrateValue = getCWBgroupValue(Event,'empty_cell_substrate_group')
-    ;    IF (substrateValue EQ 0) THEN BEGIN
-    ;
-    ;      cmd[index_spin_state] += ' --subtrans-coeff='
-    ;
-    ;      A = getTextFieldValue(Event, 'empty_cell_substrate_a')
-    ;      IF (A EQ '' OR A EQ 0) THEN BEGIN
-    ;        cmd[index_spin_state]  += '?'
-    ;        if (index_spin_state eq 0) then begin
-    ;          status_text = '- Please provide a valid Coefficient A to' + $
-    ;            ' the Substrate Transmission Equation (tab -> LOAD/EMPTY_CELL)'
-    ;          IF (StatusMessage GT 0) THEN BEGIN
-    ;            append = 1
-    ;          ENDIF ELSE BEGIN
-    ;            append = 0
-    ;          ENDELSE
-    ;          putInfoInReductionStatus, Event, status_text, append
-    ;          StatusMessage += 1
-    ;        endif
-    ;      ENDIF ELSE BEGIN
-    ;        cmd[index_spin_state] += A
-    ;      ENDELSE
-    ;
-    ;      cmd[index_spin_state] += ' '
-    ;
-    ;      B = getTextFieldValue(Event, 'empty_cell_substrate_b')
-    ;      IF (B EQ '' OR B EQ 0) THEN BEGIN
-    ;        cmd[index_spin_state]  += '?'
-    ;        if (index_spin_state eq 0) then begin
-    ;          status_text = '- Please provide a valid Coefficient B to' + $
-    ;            ' the Substrate Transmission Equation (tab -> LOAD/EMPTY_CELL)'
-    ;          IF (StatusMessage GT 0) THEN BEGIN
-    ;            append = 1
-    ;          ENDIF ELSE BEGIN
-    ;            append = 0
-    ;          ENDELSE
-    ;          putInfoInReductionStatus, Event, status_text, append
-    ;          StatusMessage += 1
-    ;        endif
-    ;      ENDIF ELSE BEGIN
-    ;        cmd[index_spin_state] += B
-    ;      ENDELSE
-    ;
-    ;      cmd[index_spin_state] += ' --substrate-diam='
-    ;      D = getTextFieldValue(Event, 'empty_cell_diameter')
-    ;      IF (D EQ '' OR D EQ 0) THEN BEGIN
-    ;        cmd[index_spin_state]  += '?'
-    ;        if (index_spin_state eq 0) then begin
-    ;          status_text = '- Please provide a valid Substrate Diameter D to' + $
-    ;            ' the Substrate Transmission Equation (tab -> LOAD/EMPTY_CELL)'
-    ;          IF (StatusMessage GT 0) THEN BEGIN
-    ;            append = 1
-    ;          ENDIF ELSE BEGIN
-    ;            append = 0
-    ;          ENDELSE
-    ;          putInfoInReductionStatus, Event, status_text, append
-    ;          StatusMessage += 1
-    ;        endif
-    ;      ENDIF ELSE BEGIN
-    ;        cmd[index_spin_state] += D
-    ;      ENDELSE
-    ;
-    ;      SF = getTextFieldValue(Event,'empty_cell_scaling_factor')
-    ;      IF (SF NE '') THEN BEGIN
-    ;        cmd[index_spin_state] += ' --scale-ecell=' + SF
-    ;      ENDIF
-    ;
-    ;      ;NeXus file
-    ;      cmd[index_spin_state] += ' --ecell='
-    ;      empty_cell_nexus_file = (*global).empty_cell_full_nexus_name
-    ;      IF (empty_cell_nexus_file EQ '') THEN BEGIN
-    ;        cmd[index_spin_state]  += '?'
-    ;        if (index_spin_state eq 0) then begin
-    ;          status_text = '- Please provide a valid Empty Cell NeXus File'
-    ;          status_text += ' (tab-> LOAD/EMPTY_CELL)'
-    ;          IF (StatusMessage GT 0) THEN BEGIN
-    ;            append = 1
-    ;          ENDIF ELSE BEGIN
-    ;            append = 0
-    ;          ENDELSE
-    ;          putInfoInReductionStatus, Event, status_text, append
-    ;          StatusMessage += 1
-    ;        endif
-    ;      ENDIF ELSE BEGIN
-    ;        cmd[index_spin_state] += empty_cell_nexus_file
-    ;      ENDELSE
-    ;
-    ;      ;remove Empty Cell Intermediate Plots
-    ;      MapBase, Event, 'reduce_plot8_base', 0
-    ;
-    ;    ENDIF ELSE BEGIN
-    ;
-    ;      ;remove Empty Cell Intermediate Plots
-    ;      MapBase, Event, 'reduce_plot8_base', 1
-    ;
-    ;    ENDELSE
-    
-    ;*****Q VALUES***************************************************************
-    
-;    ;Q values -------------------------------------------------------------------
-;    ;check if Mode is auto or not
-;    AutoModeStatus = getCWBgroupValue(Event,'q_mode_group')
-;    IF (AutoModeStatus EQ 1) THEN BEGIN ;manual mode
-;      ;get Q infos
-;      Q_min = getTextFieldValue(Event, 'q_min_text_field')
-;      Q_max = getTextFieldValue(Event, 'q_max_text_field')
-;      Q_width = getTextfieldValue(Event, 'q_width_text_field')
-;      Q_scale = getQSCale(Event)
-;      cmd[index_spin_state] += ' --mom-trans-bins='
-;      
-;      if (Q_min NE '') then begin ;Q_min
-;        cmd[index_spin_state] += STRCOMPRESS(Q_min,/remove_all)
-;      endif else begin
-;        cmd[index_spin_state] += '?'
-;        if (index_spin_state eq 0) then begin
-;          status_text = '- Please provide a Q minimum value'
-;          if (StatusMessage GT 0) then begin
-;            append = 1
-;          endif else begin
-;            append = 0
-;          endelse
-;          putInfoInReductionStatus, Event, status_text, append
-;          StatusMessage += 1
-;        endif
-;      endelse
-;      
-;      if (Q_max NE '') then begin ;Q_max
-;        cmd[index_spin_state] += ',' + STRCOMPRESS(Q_max,/remove_all)
-;      endif else begin
-;        cmd[index_spin_state] += ',?'
-;        if (index_spin_state eq 0) then begin
-;          status_text = '- Please provide a Q maximum value'
-;          if (StatusMessage GT 0) then begin
-;            append = 1
-;          endif else begin
-;            append = 0
-;          endelse
-;          putInfoInReductionStatus, Event, status_text, append
-;          StatusMessage += 1
-;        endif
-;      endelse
-;      
-;      if (Q_width NE '') then begin ;Q_width
-;        cmd[index_spin_state] += ',' + STRCOMPRESS(Q_width,/remove_all)
-;      endif else begin
-;        cmd[index_spin_state] += ',?'
-;        if (index_spin_state eq 0) then begin
-;          status_text = '- Please provide a Q width value'
-;          if (StatusMessage GT 0) then begin
-;            append = 1
-;          endif else begin
-;            append = 0
-;          endelse
-;          putInfoInReductionStatus, Event, status_text, append
-;          StatusMessage += 1
-;        endif
-;      endelse
-;      cmd[index_spin_state] += ',' + Q_scale        ;Q_scale (lin or log)
-;      
-;    ENDIF
-    
     ;get info about detector angle
     angle_value = getTextFieldValue(Event,'detector_value_text_field')
     angle_err   = getTextFieldValue(Event,'detector_error_text_field')
@@ -827,9 +697,6 @@ PRO command_line_generator_for_ref_m, event
       
     endif else begin
     
-    ;    GuiLabelStatus   = 0
-    ;    NexusLabelStatus = 1
-    
     endelse
     
     ;ActivateWidget, Event, 'nexus_data_used_label', NexusLabelStatus
@@ -876,12 +743,12 @@ PRO command_line_generator_for_ref_m, event
         button_value
     ENDIF
     
-;    IF ((*global).instrument EQ 'REF_M') THEN BEGIN
-;      IF (~isWithDataInstrumentGeometryOverwrite(Event)) then BEGIN
-;        create_name_of_tmp_geometry_file, event
-;        cmd[index_spin_state] += ' --data-inst-geom=' + (*global).tmp_geometry_file
-;      ENDIF
-;    ENDIF
+    ;    IF ((*global).instrument EQ 'REF_M') THEN BEGIN
+    ;      IF (~isWithDataInstrumentGeometryOverwrite(Event)) then BEGIN
+    ;        create_name_of_tmp_geometry_file, event
+    ;        cmd[index_spin_state] += ' --data-inst-geom=' + (*global).tmp_geometry_file
+    ;      ENDIF
+    ;    ENDIF
     
     ;overwrite norm instrument geometry file
     if (isWithNormInstrumentGeometryOverwrite(Event)) then BEGIN
