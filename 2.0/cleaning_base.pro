@@ -50,13 +50,13 @@ pro cleaning_base_event, Event
   
   case Event.id of
   
-    widget_info(event.top, find_by_uname='cleaning_base'): begin
+    widget_info(event.top, find_by_uname='cleaning_widget_base'): begin
     
-      id = widget_info(event.top, find_by_uname='cleaning_base')
+      id = widget_info(event.top, find_by_uname='cleaning_widget_base')
       ;widget_control, id, /realize
       geometry = widget_info(id,/geometry)
       new_xsize = geometry.scr_xsize
-      new_ysize = geometry.scr_ysize
+      new_ysize = geometry.scr_ysize - 33
       
       (*global_plot).xsize = new_xsize
       (*global_plot).ysize = new_ysize
@@ -64,12 +64,12 @@ pro cleaning_base_event, Event
       widget_control, id, xsize = new_xsize
       widget_control, id, ysize = new_ysize
       
-      border = (*global_plot).border
-      colorbar_xsize = (*global_plot).colorbar_xsize
+;      border = (*global_plot).border
+;      colorbar_xsize = (*global_plot).colorbar_xsize
       
-      id = widget_info(event.top, find_by_uname='draw')
-      widget_control, id, draw_xsize = new_xsize-2*border-colorbar_xsize
-      widget_control, id, draw_ysize = new_ysize-2*border
+      id = widget_info(event.top, find_by_uname='cleaning_draw')
+      widget_control, id, draw_xsize = new_xsize
+      widget_control, id, draw_ysize = new_ysize
       
 ;      plot_beam_center_scale, event=event
 ;      refresh_plot, event, recalculate=1
@@ -327,7 +327,6 @@ pro cleaning_base, event=event, $
   draw_geometry = WIDGET_INFO(id,/GEOMETRY)
   xsize = draw_geometry.xsize
   ysize = draw_geometry.ysize
-  
   
   widget_control, id, GET_VALUE = plot_id
   wset, plot_id
