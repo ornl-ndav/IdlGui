@@ -475,8 +475,8 @@ PRO Step2ReleaseClick, Event
   Q_selection = (*global).Q_selection
   
   ;order Q1 and Q2
-  Q1 = FLOAT(getValue(Event,'step2_q1_text_field'))
-  Q2 = FLOAT(getValue(Event,'step2_q2_text_field'))
+  Q1 = FLOAT(getValue(event=event,uname='step2_q1_text_field'))
+  Q2 = FLOAT(getValue(event=event,uname='step2_q2_text_field'))
   
   IF (Q1 GT 0 AND Q2 GT 0) THEN BEGIN
   
@@ -647,8 +647,8 @@ PRO ManualNewQ, Event
   (*global).replot_me = 1
   replot_main_plot, Event         ;_Plot
   ;retrieve values of Qmin and Qmax from the cw-fields
-  Q1 = getValue(Event,'step2_q1_text_field')
-  Q2 = getValue(Event,'step2_q2_text_field')
+  Q1 = getValue(event=event,uname='step2_q1_text_field')
+  Q2 = getValue(event=event,uname='step2_q2_text_field')
   ;save new value of Q1 and Q2
   (*global).Q1 = Q1
   (*global).Q2 = Q2
@@ -690,8 +690,8 @@ END
 ;Q1,Q2 and replaces Qmax by the max of Q1,Q2
 PRO SortQs, Event
   ;retrieve values of Qmin and Qmax from the cw-fields
-  Q1 = getValue(Event,'step2_q1_text_field')
-  Q2 = getValue(Event,'step2_q2_text_field')
+  Q1 = getValue(event=event,uname='step2_q1_text_field')
+  Q2 = getValue(event=event,uname='step2_q2_text_field')
   IF (Q1 NE 0 AND Q2 NE 0) THEN BEGIN
     Qmin = MIN([Q1,Q2],MAX=Qmax)
     putValueInTextField, Event, 'step2_q1_text_field', $

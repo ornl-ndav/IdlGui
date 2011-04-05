@@ -242,7 +242,7 @@ PRO CLEAR_FILE, Event
   ;get the selected index of the list of file droplist
   TextBoxIndex = getSelectedIndex(Event, 'list_of_files_droplist') ;_get
   ;get the list of files
-  ListOfFiles  = getValue(Event,'list_of_files_droplist')
+  ListOfFiles  = getValue(event=event,uname='list_of_files_droplist')
   ;inform user of file that is going to be removed
   idl_send_to_geek_addLogBookText, Event, '> Removing File : ' + $
     ListOfFiles[TextBoxIndex]

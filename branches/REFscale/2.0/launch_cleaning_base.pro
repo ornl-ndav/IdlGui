@@ -45,7 +45,7 @@
 pro launch_cleaning_base, event
   compile_opt idl2
   
-  ListOfFiles = getValue(Event,'list_of_files_droplist')
+  ListOfFiles = getValue(Event=event,uname='list_of_files_droplist')
   offset = 50
   
   cleaning_base, event=event, $
