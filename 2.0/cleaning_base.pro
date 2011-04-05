@@ -64,15 +64,15 @@ pro cleaning_base_event, Event
       widget_control, id, xsize = new_xsize
       widget_control, id, ysize = new_ysize
       
-;      border = (*global_plot).border
-;      colorbar_xsize = (*global_plot).colorbar_xsize
+      ;      border = (*global_plot).border
+      ;      colorbar_xsize = (*global_plot).colorbar_xsize
       
       id = widget_info(event.top, find_by_uname='cleaning_draw')
       widget_control, id, draw_xsize = new_xsize
       widget_control, id, draw_ysize = new_ysize
       
-;      plot_beam_center_scale, event=event
-;      refresh_plot, event, recalculate=1
+      ;      plot_beam_center_scale, event=event
+      ;      refresh_plot, event, recalculate=1
       
       return
     end
@@ -167,7 +167,7 @@ end
 ; :Author: j35
 ;-
 pro cleaning_base_gui, wBase, $
-   main_base_geometry, $
+    main_base_geometry, $
     global, $
     list_files, $
     offset, $
@@ -212,17 +212,17 @@ pro cleaning_base_gui, wBase, $
   index=0
   uname_raw = 'file_index_'
   _file = widget_button(bar1,$
-  value = 'Files',$
-  /menu)
+    value = 'Files',$
+    /menu)
   while (index lt nbr_files) do begin
     __file = widget_button(_file,$
-    value = list_files[index],$
-    uname = uname_raw + strcompress(index,/remove_all))
+      value = list_files[index],$
+      uname = uname_raw + strcompress(index,/remove_all))
     index++
-  endwhile  
-    
-    set1_value = '   linear'
-    set2_value = '*  logarithmic'
+  endwhile
+  
+  set1_value = '   linear'
+  set2_value = '*  logarithmic'
   
   mPlot = widget_button(bar1, $
     value = 'Axes',$
@@ -242,9 +242,9 @@ pro cleaning_base_gui, wBase, $
   draw = widget_draw(wbase,$
     scr_xsize = xsize,$
     scr_ysize = ysize,$
-;    /button_events,$
-;    /motion_events,$
-;    /tracking_events,$
+    ;    /button_events,$
+    ;    /motion_events,$
+    ;    /tracking_events,$
     retain=2, $
     event_pro = 'cleaning_draw_eventcb',$
     uname = 'cleaning_draw')
@@ -257,13 +257,13 @@ end
 pro cleaning_base, event=event, $
     list_files = list_files, $
     offset = offset, $
-;    Data_x = Data_x, $
-;    Data_y = Data_y, $ ;Data_y
+    ;    Data_x = Data_x, $
+    ;    Data_y = Data_y, $ ;Data_y
     main_base_uname = main_base_uname
     
   compile_opt idl2
   
-;  if (n_elements(spin_state) eq 0) then spin_state = 0
+  ;  if (n_elements(spin_state) eq 0) then spin_state = 0
   
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME=main_base_uname)
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
@@ -295,18 +295,16 @@ pro cleaning_base, event=event, $
     list_files: list_files, $
     default_plot_size: 600, $
     
-    scale_setting: 1, $  ;1 for log, 0 for linear 
+    scale_setting: 1, $  ;1 for log, 0 for linear
     
     data: ptr_new(0L), $
     data_linear: ptr_new(0L), $
-
-;    data_x: Data_x, $
-
+    
     xsize: default_plot_size[0],$
     ysize: default_plot_size[1],$
-
+    
     border: border, $ ;border of main plot (space reserved for scale)
-
+    
     xrange: fltarr(2),$ ;[tof_min, tof_max]
     zrange: fltarr(2),$
     yrange: intarr(2),$ ;[min_pixel,max_pixel]
@@ -320,17 +318,20 @@ pro cleaning_base, event=event, $
   XMANAGER, "cleaning_base", wBase, GROUP_LEADER = ourGroup, /NO_BLOCK, $
     cleanup = 'cleaning_base_cleanup'
     
-;  lin_log_data, base=wBase
-  
- ;  Data = (*(*global_plot).data)
   id = WIDGET_INFO(wBase, FIND_BY_UNAME='cleaning_draw')
   draw_geometry = WIDGET_INFO(id,/GEOMETRY)
   xsize = draw_geometry.xsize
   ysize = draw_geometry.ysize
   
+  ;retrieve data of first file by default
+  
+    flt0_ptr = (*global).flt0_rescale_ptr
+    flt1_ptr = (*global).flt1_rescale_ptr
+    flt2_ptr = (*global).flt2_rescale_ptr
+   
   widget_control, id, GET_VALUE = plot_id
   wset, plot_id
-  plot, indgen(10), indgen(10)+20
+  plot, *flt0_ptr[0], *flt1_ptr[0]
   
 end
 

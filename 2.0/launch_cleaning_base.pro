@@ -45,14 +45,12 @@
 pro launch_cleaning_base, event
   compile_opt idl2
   
-  list_files = ['file1','file2','file3']
+  ListOfFiles = getValue(Event,'list_of_files_droplist')
   offset = 50
   
   cleaning_base, event=event, $
-    list_files = list_files, $
+    list_files = listOfFiles, $
     offset = offset, $
     main_base_uname = 'MAIN_BASE_ref_scale'
-    
-    
     
 end
