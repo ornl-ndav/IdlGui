@@ -33,18 +33,18 @@
 ;==============================================================================
 
 PRO reduce_step3_run_jobs, Event
-compile_opt idl2
-
+  compile_opt idl2
+  
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   instrument = (*global).instrument
   ; Code change (RC Ward, Oct 5, 2010): Pass queue for submitting reduction code (refred_lp) from config file
   queue = (*global).queue
-
+  
   apply_tof_cutoffs = (*global).apply_tof_cutoffs
   tof_cutoff_min = (*global).tof_cutoff_min
   tof_cutoff_max = (*global).tof_cutoff_max
-
+  
   ;get big table of step3
   big_table = getTableValue(Event, 'reduce_tab3_main_spin_state_table_uname')
   nbr_row = (SIZE(big_table))[2]
@@ -152,7 +152,9 @@ compile_opt idl2
     data_back_roi = big_table[col_index,row]
     if (data_back_roi ne 'N/A') then begin
       cmd += ' --dbkg-roi-file=' + data_back_roi
-    endif
+    endif else begin
+      cmd += ' --no-bkg'
+    endelse
     
     ;norm background
     if (instrument eq 'REF_M') then begin
@@ -163,7 +165,9 @@ compile_opt idl2
     norm_back_roi = big_table[col_index,row]
     if (norm_back_roi ne 'N/A') then begin
       cmd += ' --nbkg-roi-file=' + norm_back_roi
-    endif
+    endif else begin
+      cmd += ' --no-norm-bkg'
+    endelse
     
     ;output_path
     IF (instrument EQ 'REF_M') THEN BEGIN
