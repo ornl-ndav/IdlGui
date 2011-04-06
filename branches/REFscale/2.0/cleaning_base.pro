@@ -94,6 +94,38 @@ end
 
 ;+
 ; :Description:
+;    This routine is reached when the user click the With or without Y
+;    error bar in the menu
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro error_bar_menu_eventcb, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_plot
+  uname = widget_info(event.id,/uname)
+  value = getValue(id=event.id)
+  
+  if (value eq '* Show Y error bars') then begin ;we need to hide the error bars
+    (*global_plot).show_y_error_bar = 0b
+    value = '  Show Y error bars'
+  endif else begin
+    (*global_plot).show_y_error_bar = 1b
+    value = '* Show Y error bars'
+  endelse
+  putValue, event=event, uname=uname, value=value
+  
+  refresh_plot, event=event
+  
+end
+
+;+
+; :Description:
 ;    Switches from lin to log
 ;
 ; :Params:
@@ -160,6 +192,14 @@ pro refresh_plot, event=event, base=base
   endif else begin
     plot, *flt0_ptr[index], *flt1_ptr[index], psym=2
   endelse
+  
+  if ((*global_plot).show_y_error_bar) then begin ;show error bars
+    flt2_ptr = (*global).flt2_rescale_ptr
+    errplot, *flt0_ptr[index], $
+      *flt1_ptr[index]+*flt2_ptr[index],$
+      *flt1_ptr[index]-*flt2_ptr[index]
+  endif
+  
   
 end
 
@@ -341,6 +381,15 @@ pro cleaning_base_gui, wBase, $
     event_pro = 'switch_yaxes_type',$
     uname = 'local_scale_setting_log')
     
+  ;error bars
+  error = widget_button(bar1,$
+    value = 'Error Bars',$
+    /menu)
+  _Error = widget_button(error,$
+    value = '* Show Y error bars',$
+    uname = 'show_or_not_error_bars',$
+    event_pro = 'error_bar_menu_eventcb')
+    
   ;main plot
   draw = widget_draw(wbase,$
     scr_xsize = xsize,$
@@ -398,6 +447,8 @@ pro cleaning_base, event=event, $
     list_files: list_files, $
     default_plot_size: 600, $
     default_scale_settings: 1, $ ;1 for log, 0 for linear
+    
+    show_y_error_bar: 1b, $ ;show or not the Y error bars (yes by default)
     
     scale_setting: 1, $  ;1 for log, 0 for linear
     current_index_plotted: 0, $
