@@ -38,7 +38,8 @@ PRO reduce_step3_run_jobs, Event
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   instrument = (*global).instrument
-  ; Code change (RC Ward, Oct 5, 2010): Pass queue for submitting reduction code (refred_lp) from config file
+  ; Code change (RC Ward, Oct 5, 2010): Pass queue for submitting reduction
+  ;acode (refred_lp) from config file
   queue = (*global).queue
   
   apply_tof_cutoffs = (*global).apply_tof_cutoffs
