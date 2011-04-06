@@ -64,9 +64,6 @@ pro cleaning_base_event, Event
       widget_control, id, xsize = new_xsize
       widget_control, id, ysize = new_ysize
       
-      ;      border = (*global_plot).border
-      ;      colorbar_xsize = (*global_plot).colorbar_xsize
-      
       id = widget_info(event.top, find_by_uname='cleaning_draw')
       widget_control, id, draw_xsize = new_xsize
       widget_control, id, draw_ysize = new_ysize
@@ -92,6 +89,38 @@ pro cleaning_base_event, Event
     else:
     
   endcase
+  
+end
+
+;+
+; :Description:
+;    Switches from lin to log
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro switch_yaxes_type, event
+  compile_opt idl2
+  
+  uname = widget_info(event.id, /uname)
+  widget_control, event.top, get_uvalue=global_plot
+  
+  if (uname eq 'local_scale_setting_linear') then begin
+    set1_value = '*  ' + 'linear'
+    set2_value = '   ' + 'logarithmic'
+    (*global_plot).default_scale_settings = 0
+  endif else begin
+    set1_value = '   ' + 'linear'
+    set2_value = '*  ' + 'logarithmic'
+    (*global_plot).default_scale_settings = 1
+  endelse
+  
+  putValue, event=event, uname='local_scale_setting_linear', value=set1_value
+  putValue, event=event, uname='local_scale_setting_log', value=set2_value
+  
+  refresh_plot, event=event
   
 end
 
@@ -126,7 +155,11 @@ pro refresh_plot, event=event, base=base
   widget_control, id, GET_VALUE = plot_id
   wset, plot_id
   
-  plot, *flt0_ptr[index], *flt1_ptr[index], psym=2
+  if ((*global_plot).default_scale_settings) then begin ;log
+    plot, *flt0_ptr[index], *flt1_ptr[index], psym=2, /ylog
+  endif else begin
+    plot, *flt0_ptr[index], *flt1_ptr[index], psym=2
+  endelse
   
 end
 
@@ -195,7 +228,7 @@ pro cleaning_file_list, event
   widget_control, event.top, base_set_title=file_name
   
   refresh_plot, event=event
-
+  
 end
 
 ;+
@@ -295,17 +328,17 @@ pro cleaning_base_gui, wBase, $
   set2_value = '*  logarithmic'
   
   mPlot = widget_button(bar1, $
-    value = 'Axes',$
+    value = 'Y axes',$
     /menu)
     
   set1 = widget_button(mPlot, $
     value = set1_value, $
-    event_pro = 'local_switch_axes_type',$
+    event_pro = 'switch_yaxes_type',$
     uname = 'local_scale_setting_linear')
     
   set2 = widget_button(mPlot, $
     value = set2_value,$
-    event_pro = 'local_switch_axes_type',$
+    event_pro = 'switch_yaxes_type',$
     uname = 'local_scale_setting_log')
     
   ;main plot
@@ -364,6 +397,7 @@ pro cleaning_base, event=event, $
     ;used to plot selection zoom
     list_files: list_files, $
     default_plot_size: 600, $
+    default_scale_settings: 1, $ ;1 for log, 0 for linear
     
     scale_setting: 1, $  ;1 for log, 0 for linear
     current_index_plotted: 0, $
@@ -390,6 +424,6 @@ pro cleaning_base, event=event, $
     cleanup = 'cleaning_base_cleanup'
     
   refresh_plot, base=wBase
-    
+  
 end
 
