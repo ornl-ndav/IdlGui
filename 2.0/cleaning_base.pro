@@ -179,39 +179,72 @@ pro refresh_plot, event=event, base=base
   endelse
   
   global = (*global_plot).global
-  index = (*global_plot).current_index_plotted
+  index  = (*global_plot).current_index_plotted
+  
+  status_of_list_of_files_plotted = $
+    (*(*global_plot).status_of_list_of_files_plotted)
+  list_files = (*global_plot).list_files
   
   flt0_ptr = (*global).flt0_rescale_ptr
   flt1_ptr = (*global).flt1_rescale_ptr
   
+  ;get index of the files to plot
+  _index_to_plot = where(status_of_list_of_files_plotted eq 1, nbr)
+  
   widget_control, id, GET_VALUE = plot_id
   wset, plot_id
-  
-  if ((*global_plot).default_scale_settings) then begin ;log
-    plot, *flt0_ptr[index], *flt1_ptr[index], $
-;    psym=2, $
-    /ylog, $
-    color=fsc_color('black'), $
-    /nodata
-    oplot, *flt0_ptr[index], *flt1_ptr[index], $
-    color=fsc_color('red'), $
-    psym=2
-  endif else begin
-    plot, *flt0_ptr[index], *flt1_ptr[index], $
-    psym=2, $
-    color=fsc_color('black'), $
-    /nodata
-    oplot, *flt0_ptr[index], *flt1_ptr[index], psym=2, color=fsc_color('red')
-  endelse
-  
-  if ((*global_plot).show_y_error_bar) then begin ;show error bars
-    flt2_ptr = (*global).flt2_rescale_ptr
-    errplot, *flt0_ptr[index], $
-      *flt1_ptr[index]+*flt2_ptr[index],$
-      *flt1_ptr[index]-*flt2_ptr[index],$
-      color=fsc_color('pink')
+  if (nbr eq 0) then begin
+    erase
+    return
   endif
   
+  ;determine the full xaxis by retrieving the min and max x value
+  _index = 0
+  min_value = 10
+  max_value = 0
+  while (_index lt nbr) do begin
+    _min_value = min(*flt0_ptr[_index_to_plot[_index]],max=_max_value)
+    
+    min_value = (_min_value lt min_value) ? _min_value : min_value
+    max_value = (_max_value gt max_value) ? _max_value : max_value
+    
+    _index++
+  endwhile
+  
+  _index = 0
+  while (_index lt nbr) do begin
+  
+    flt0 = *flt0_ptr[_index_to_plot[_index]]
+    flt1 = *flt1_ptr[_index_to_plot[_index]]
+    
+    if ((*global_plot).default_scale_settings) then begin ;log
+      plot, [min_value,max_value], flt1, $
+        /ylog, $
+        color=fsc_color('black'), $
+        /nodata
+      oplot, flt0, flt1, $
+        color=fsc_color('red'), $
+        psym=2
+    endif else begin
+      plot, [min_value, max_value], flt1, $
+        color=fsc_color('black'), $
+        /nodata
+      oplot, flt0, flt1, psym=2, color=fsc_color('red')
+    endelse
+    
+    if ((*global_plot).show_y_error_bar) then begin ;show error bars
+    
+      flt2_ptr = (*global).flt2_rescale_ptr
+      flt2 = *flt2_ptr[_index_to_plot[_index]]
+      
+      errplot, flt0, $
+        flt1+flt2,$
+        flt1-flt2,$
+        color=fsc_color('pink')
+    endif
+    
+    _index++
+  endwhile
   
 end
 
@@ -269,16 +302,25 @@ pro cleaning_file_list, event
   
   ;retrieve index and full file name of file
   button_value = getValue(id=event.id)
-  split_array = strsplit(button_value,': ',/extract)
-  index = fix(strcompress(split_array[0],/remove_all))-1
+  split_array = strsplit(button_value,':',/extract)
+  
+  ;split for '*'
+  index_array = strsplit(split_array[0],'*',/extract,count=nbr)
+  if (nbr eq 0) then begin
+    index = fix(strcompress(split_array[0],/remove_all))-1
+  endif else begin
+    index = fix(strcompress(index_array[-1],/remove_all))-1
+  endelse
   (*global_plot).current_index_plotted = index
   
-  file_name = split_array[1]
-  
-  ;display name of files at the top of the base
-  id = widget_info(event.top, find_by_uname='cleaning_widget_base')
-  widget_control, event.top, base_set_title=file_name
-  
+  status_of_list_of_files_plotted = $
+    (*(*global_plot).status_of_list_of_files_plotted)
+  _value = status_of_list_of_files_plotted[index]
+  _value = (_value eq 0) ? 1 : 0
+  status_of_list_of_files_plotted[index] = _value
+  (*(*global_plot).status_of_list_of_files_plotted) = $
+    status_of_list_of_files_plotted
+    
   refresh_plot, event=event
   
 end
@@ -297,12 +339,11 @@ pro cleaning_base_cleanup, tlb
   
   widget_control, tlb, get_uvalue=global_plot, /no_copy
   
-  ;px_vs_tof_widget_killed, global_plot
-  
   if (n_elements(global_plot) eq 0) then return
   
   ptr_free, (*global_plot).data
   ptr_free, (*global_plot).data_linear
+  ptr_free, (*global_plot).status_of_list_of_files_plotted
   
   ptr_free, global_plot
   
@@ -346,7 +387,7 @@ pro cleaning_base_gui, wBase, $
   
   ourGroup = WIDGET_BASE()
   
-  title = list_files[0]
+  title = 'Cleaning application'
   wBase = WIDGET_BASE(TITLE = title, $
     UNAME        = 'cleaning_widget_base', $
     XOFFSET      = xoffset,$
@@ -369,7 +410,11 @@ pro cleaning_base_gui, wBase, $
     /menu)
   while (index lt nbr_files) do begin
     value = strcompress(index+1,/remove_all) + ': ' + list_files[index]
-    
+    if (index eq 0) then begin
+      value = '* ' + value
+    endif else begin
+      value = '  ' + value
+    endelse
     __file = widget_button(_file,$
       value = value,$
       event_pro = 'cleaning_file_list')
@@ -415,14 +460,21 @@ pro cleaning_base_gui, wBase, $
     
 end
 
-
-
-
+;+
+; :Description:
+;    Main procedure of the cleaning base
+;
+; :Keywords:
+;    event
+;    list_files
+;    offset
+;    main_base_uname
+;
+; :Author: j35
+;-
 pro cleaning_base, event=event, $
     list_files = list_files, $
     offset = offset, $
-    ;    Data_x = Data_x, $
-    ;    Data_y = Data_y, $ ;Data_y
     main_base_uname = main_base_uname
     
   compile_opt idl2
@@ -465,6 +517,8 @@ pro cleaning_base, event=event, $
     scale_setting: 1, $  ;1 for log, 0 for linear
     current_index_plotted: 0, $
     
+    status_of_list_of_files_plotted: ptr_new(0L), $
+    
     data: ptr_new(0L), $
     data_linear: ptr_new(0L), $
     
@@ -480,6 +534,12 @@ pro cleaning_base, event=event, $
     left_click: 0b,$ ;by default, left button is not clicked
     
     main_event: event})
+    
+  ;[1,1,0,1] for example means the first 2 and the last file loaded are plotted.
+  sz = n_elements(list_files)
+  status_of_list_of_files_plotted = intarr(sz)
+  (*(*global_plot).status_of_list_of_files_plotted) = $
+    status_of_list_of_files_plotted
     
   WIDGET_CONTROL, wBase, SET_UVALUE = global_plot
   
