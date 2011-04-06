@@ -48,6 +48,7 @@ cd, CurrentFolder + IdlUtilitiesPath
 .run time.pro
 .run get_ucams.pro
 .run idl3columnsasciiparser__define.pro
+.run fsc_color.pro
 
 ;Build REFscale GUI
 cd, CurrentFolder + '/REFscaleGUI/'
