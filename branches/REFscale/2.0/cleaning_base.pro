@@ -71,8 +71,7 @@ pro cleaning_base_event, Event
       widget_control, id, draw_xsize = new_xsize
       widget_control, id, draw_ysize = new_ysize
       
-      ;      plot_beam_center_scale, event=event
-      ;      refresh_plot, event, recalculate=1
+      refresh_plot, event=event
       
       return
     end
@@ -93,6 +92,41 @@ pro cleaning_base_event, Event
     else:
     
   endcase
+  
+end
+
+;+
+; :Description:
+;    Refresh the plot when resizing for example
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro refresh_plot, event=event, base=base
+  compile_opt idl2
+  
+  if (keyword_set(event)) then begin
+    widget_control, event.top, get_uvalue=global_plot
+    id = WIDGET_INFO(event.top, FIND_BY_UNAME='cleaning_draw')
+  endif else begin
+    widget_control, base, get_uvalue=global_plot
+    id = WIDGET_INFO(base, FIND_BY_UNAME='cleaning_draw')
+  endelse
+  
+  global = (*global_plot).global
+  index = (*global_plot).current_index_plotted
+  
+  flt0_ptr = (*global).flt0_rescale_ptr
+  flt1_ptr = (*global).flt1_rescale_ptr
+  
+  widget_control, id, GET_VALUE = plot_id
+  wset, plot_id
+  
+  plot, *flt0_ptr[index], *flt1_ptr[index], psym=2
   
 end
 
@@ -147,11 +181,12 @@ pro cleaning_file_list, event
   
   ;display new data set
   widget_control, event.top, get_uvalue=global_plot
-
+  
   ;retrieve index and full file name of file
   button_value = getValue(id=event.id)
   split_array = strsplit(button_value,': ',/extract)
   index = fix(strcompress(split_array[0],/remove_all))-1
+  (*global_plot).current_index_plotted = index
   
   file_name = split_array[1]
   
@@ -159,16 +194,8 @@ pro cleaning_file_list, event
   id = widget_info(event.top, find_by_uname='cleaning_widget_base')
   widget_control, event.top, base_set_title=file_name
   
-  global = (*global_plot).global
-  
-  flt0_ptr = (*global).flt0_rescale_ptr
-  flt1_ptr = (*global).flt1_rescale_ptr
-    
-  id = WIDGET_INFO(event.top, FIND_BY_UNAME='cleaning_draw')    
-  widget_control, id, GET_VALUE = plot_id
-  wset, plot_id
-  plot, *flt0_ptr[index], *flt1_ptr[index]
-  
+  refresh_plot, event=event
+
 end
 
 ;+
@@ -339,6 +366,7 @@ pro cleaning_base, event=event, $
     default_plot_size: 600, $
     
     scale_setting: 1, $  ;1 for log, 0 for linear
+    current_index_plotted: 0, $
     
     data: ptr_new(0L), $
     data_linear: ptr_new(0L), $
@@ -361,20 +389,7 @@ pro cleaning_base, event=event, $
   XMANAGER, "cleaning_base", wBase, GROUP_LEADER = ourGroup, /NO_BLOCK, $
     cleanup = 'cleaning_base_cleanup'
     
-  id = WIDGET_INFO(wBase, FIND_BY_UNAME='cleaning_draw')
-  draw_geometry = WIDGET_INFO(id,/GEOMETRY)
-  xsize = draw_geometry.xsize
-  ysize = draw_geometry.ysize
-  
-  ;retrieve data of first file by default
-  
-  flt0_ptr = (*global).flt0_rescale_ptr
-  flt1_ptr = (*global).flt1_rescale_ptr
-  flt2_ptr = (*global).flt2_rescale_ptr
-  
-  widget_control, id, GET_VALUE = plot_id
-  wset, plot_id
-  plot, *flt0_ptr[0], *flt1_ptr[0]
-  
+  refresh_plot, base=wBase
+    
 end
 
