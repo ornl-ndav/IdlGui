@@ -71,9 +71,9 @@ PRO command_line_generator_for_ref_m, event
           1: norm_path = 'Off_On'
           2: norm_path = 'On_Off'
           3: norm_path = 'On_On'
-          else: norm_path = '_?'
+          else: norm_path = '-?'
         ENDCASE
-        norm_spin_state_path = ['entry_' + norm_path]
+        norm_spin_state_path = ['entry-' + norm_path]
         norm_spin_state = [norm_path]
 
         data_pola_state = (*global).data_pola_state  
@@ -82,9 +82,9 @@ PRO command_line_generator_for_ref_m, event
           1: data_path = 'Off_On'
           2: data_path = 'On_Off'
           3: data_path = 'On_On'
-          else: data_path = '_?'
+          else: data_path = '-?'
         ENDCASE
-        data_spin_state_path = ['entry_' + data_path]
+        data_spin_state_path = ['entry-' + data_path]
         data_spin_state = [data_path]
         
         nbr_spin_states = 1
