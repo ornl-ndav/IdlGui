@@ -32,8 +32,13 @@
 ;
 ;==============================================================================
 
-pro putValue, event=event, base=base, uname=uname, value=value
+pro putValue, event=event, base=base, uname=uname, value=value, id=id
   compile_opt idl2
+  
+  if (keyword_set(id)) then begin
+  widget_control, id, set_value=value
+  return
+  endif
   
   if (keyword_set(event)) then begin
     uname_id = widget_info(event.top,find_by_uname=uname)

@@ -211,6 +211,8 @@ pro refresh_plot, event=event, base=base
     _index++
   endwhile
   
+  list_color = (*global_plot).list_color
+  
   _index = 0
   while (_index lt nbr) do begin
   
@@ -218,18 +220,27 @@ pro refresh_plot, event=event, base=base
     flt1 = *flt1_ptr[_index_to_plot[_index]]
     
     if ((*global_plot).default_scale_settings) then begin ;log
-      plot, [min_value,max_value], flt1, $
-        /ylog, $
-        color=fsc_color('black'), $
-        /nodata
+    
+      if (_index eq 0) then begin
+        plot, [min_value,max_value], flt1, $
+          /ylog, $
+          xtitle = 'Q (' + string("305B) + '!E-1!N)', $
+          ytitle = 'Intensity',$
+          color=fsc_color('black'), $
+          /nodata
+      endif
       oplot, flt0, flt1, $
-        color=fsc_color('red'), $
+        color=fsc_color(list_color[_index]), $
         psym=2
     endif else begin
-      plot, [min_value, max_value], flt1, $
-        color=fsc_color('black'), $
-        /nodata
-      oplot, flt0, flt1, psym=2, color=fsc_color('red')
+      if (_index eq 0) then begin
+        plot, [min_value, max_value], flt1, $
+          xtitle = 'Q (' + string("305B) + '!E-1!N)', $
+          ytitle = 'Intensity',$
+          color=fsc_color('black'), $
+          /nodata
+      endif
+      oplot, flt0, flt1, psym=2, color=fsc_color(list_color[_index])
     endelse
     
     if ((*global_plot).show_y_error_bar) then begin ;show error bars
@@ -240,7 +251,7 @@ pro refresh_plot, event=event, base=base
       errplot, flt0, $
         flt1+flt2,$
         flt1-flt2,$
-        color=fsc_color('pink')
+        color=fsc_color(list_color[_index])
     endif
     
     _index++
@@ -321,6 +332,17 @@ pro cleaning_file_list, event
   (*(*global_plot).status_of_list_of_files_plotted) = $
     status_of_list_of_files_plotted
     
+  ;refresh label of button
+  list_files = (*global_plot).list_files
+  _file_name = list_files[index_array]
+  if (_value eq 1) then begin
+    _new_label = '* '
+  endif else begin
+    _new_label = '  '
+  endelse
+  _new_label += strcompress(index+1,/remove_all) + ': ' + _file_name
+  putValue, id=event.id, value=_new_label[0]
+  
   refresh_plot, event=event
   
 end
@@ -410,11 +432,7 @@ pro cleaning_base_gui, wBase, $
     /menu)
   while (index lt nbr_files) do begin
     value = strcompress(index+1,/remove_all) + ': ' + list_files[index]
-    if (index eq 0) then begin
-      value = '* ' + value
-    endif else begin
-      value = '  ' + value
-    endelse
+    value = '* ' + value
     __file = widget_button(_file,$
       value = value,$
       event_pro = 'cleaning_file_list')
@@ -517,6 +535,8 @@ pro cleaning_base, event=event, $
     scale_setting: 1, $  ;1 for log, 0 for linear
     current_index_plotted: 0, $
     
+    list_color: ['red','pink','orange','green','blue','black'],$
+    
     status_of_list_of_files_plotted: ptr_new(0L), $
     
     data: ptr_new(0L), $
@@ -537,7 +557,7 @@ pro cleaning_base, event=event, $
     
   ;[1,1,0,1] for example means the first 2 and the last file loaded are plotted.
   sz = n_elements(list_files)
-  status_of_list_of_files_plotted = intarr(sz)
+  status_of_list_of_files_plotted = intarr(sz) + 1 ;plot all the files by default
   (*(*global_plot).status_of_list_of_files_plotted) = $
     status_of_list_of_files_plotted
     
