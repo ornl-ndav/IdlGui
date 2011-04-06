@@ -45,12 +45,19 @@
 pro launch_cleaning_base, event
   compile_opt idl2
   
+  widget_control, event.top, get_uvalue=global
+  
   ListOfFiles = getValue(Event=event,uname='list_of_files_droplist')
   offset = 50
   
-  cleaning_base, event=event, $
-    list_files = listOfFiles, $
-    offset = offset, $
-    main_base_uname = 'MAIN_BASE_ref_scale'
-    
+  cleaning_base_id = (*global).cleaning_base_id
+  if (widget_info(cleaning_base_id,/valid_id) eq 0) then begin
+  
+    cleaning_base, event=event, $
+      list_files = listOfFiles, $
+      offset = offset, $
+      main_base_uname = 'MAIN_BASE_ref_scale'
+      
+  endif
+  
 end

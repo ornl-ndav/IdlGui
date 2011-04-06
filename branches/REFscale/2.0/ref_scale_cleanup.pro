@@ -46,7 +46,12 @@ pro ref_scale_cleanup, tlb
   compile_opt idl2
   
   widget_control, tlb, get_uvalue=global, /no_copy
-
+  
+  cleaning_base_id = (*global).cleaning_base_id
+  if (widget_info(cleaning_base_id,/valid_id) ne 0) then begin
+    widget_control, cleaning_base_id,/destroy
+  endif
+  
   if (n_elements(global) eq 0) then return
   
   ;free up the pointers of the global pointer

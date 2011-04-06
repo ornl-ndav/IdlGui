@@ -94,6 +94,27 @@ end
 
 ;+
 ; :Description:
+;    This routine reached by the 'X and Y axis button' will bring to life, if
+;    not already mapped, the X_Y_range_base_selection
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro switch_xyaxes_range, event
+compile_opt idl2
+
+
+
+
+
+end
+
+;+
+; :Description:
 ;    This routine is reached when the user click the With or without Y
 ;    error bar in the menu
 ;
@@ -439,11 +460,11 @@ pro cleaning_base_gui, wBase, $
     index++
   endwhile
   
-  set1_value = '   linear'
-  set2_value = '*  logarithmic'
+  set1_value = '   Y: linear'
+  set2_value = '*  Y: logarithmic'
   
   mPlot = widget_button(bar1, $
-    value = 'Y axes',$
+    value = 'Axes',$
     /menu)
     
   set1 = widget_button(mPlot, $
@@ -455,10 +476,15 @@ pro cleaning_base_gui, wBase, $
     value = set2_value,$
     event_pro = 'switch_yaxes_type',$
     uname = 'local_scale_setting_log')
+  
+  xyaxes = widget_button(mPlot, $
+  /separator, $
+  value = 'Select X and Y axes range...',$
+  event_pro = 'switch_xyaxes_range')
     
   ;error bars
   error = widget_button(bar1,$
-    value = 'Error Bars',$
+    value = 'Error',$
     /menu)
   _Error = widget_button(error,$
     value = '* Show Y error bars',$
