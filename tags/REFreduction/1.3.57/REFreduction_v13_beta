@@ -1,0 +1,4 @@
+export IDL_DIR='/SNS/software/itt/idl8'
+idl -vm="/SNS/software/idltools/beta/sav/ref_reduction.sav"
+export IDL_DIR=''
+
