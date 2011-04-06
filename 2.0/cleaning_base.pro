@@ -188,16 +188,28 @@ pro refresh_plot, event=event, base=base
   wset, plot_id
   
   if ((*global_plot).default_scale_settings) then begin ;log
-    plot, *flt0_ptr[index], *flt1_ptr[index], psym=2, /ylog
+    plot, *flt0_ptr[index], *flt1_ptr[index], $
+;    psym=2, $
+    /ylog, $
+    color=fsc_color('black'), $
+    /nodata
+    oplot, *flt0_ptr[index], *flt1_ptr[index], $
+    color=fsc_color('red'), $
+    psym=2
   endif else begin
-    plot, *flt0_ptr[index], *flt1_ptr[index], psym=2
+    plot, *flt0_ptr[index], *flt1_ptr[index], $
+    psym=2, $
+    color=fsc_color('black'), $
+    /nodata
+    oplot, *flt0_ptr[index], *flt1_ptr[index], psym=2, color=fsc_color('red')
   endelse
   
   if ((*global_plot).show_y_error_bar) then begin ;show error bars
     flt2_ptr = (*global).flt2_rescale_ptr
     errplot, *flt0_ptr[index], $
       *flt1_ptr[index]+*flt2_ptr[index],$
-      *flt1_ptr[index]-*flt2_ptr[index]
+      *flt1_ptr[index]-*flt2_ptr[index],$
+      color=fsc_color('pink')
   endif
   
   
@@ -423,7 +435,7 @@ pro cleaning_base, event=event, $
   
   ;SETUP
   border = 40
-  !P.BACKGROUND=0
+  !P.BACKGROUND=255
   
   ;build gui
   wBase = ''
