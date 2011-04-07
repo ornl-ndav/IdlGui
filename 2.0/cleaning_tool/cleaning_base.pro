@@ -81,19 +81,6 @@ pro cleaning_base_event, Event
       return
     end
     
-    widget_info(event.top, $
-      find_by_uname='settings_base_close_button'): begin
-      
-      ;this will allow the settings tab to come back in the same state
-      save_status_of_settings_button, event
-      
-      id = widget_info(Event.top, $
-        find_by_uname='settings_widget_base')
-      widget_control, id, /destroy
-      
-      return
-    end
-    
     else:
     
   endcase
@@ -338,22 +325,10 @@ pro cleaning_base_killed, global_plot
   
   main_event = (*global_plot).main_event
   
-  info_base = (*global_plot).cursor_info_base
-  ;if x,y and counts base is on, shows live values of x,y and counts
-  if (widget_info(info_base, /valid_id) ne 0) then begin
-    widget_control, info_base, /destroy
-  endif
-  
-  ;close the xaxis info if openned
-  xaxis_info_base = (*global_plot).counts_vs_xaxis_base
-  if (widget_info(xaxis_info_base, /valid_id) ne 0) then begin
-    widget_control, xaxis_info_base, /destroy
-  endif
-  
-  ;close the yaxis info if openned
-  yaxis_info_base = (*global_plot).counts_vs_yaxis_base
-  if (widget_info(yaxis_info_base, /valid_id) ne 0) then begin
-    widget_control, yaxis_info_base, /destroy
+  ;x and y range input base
+  base_id = (*global_plot).xy_range_input_base_id
+  if (widget_info(base_id, /valid_id) ne 0) then begin
+    widget_control, base_id, /destroy
   endif
   
 end
@@ -425,8 +400,10 @@ pro cleaning_base_cleanup, tlb
   compile_opt idl2
   
   widget_control, tlb, get_uvalue=global_plot, /no_copy
-  
+    
   if (n_elements(global_plot) eq 0) then return
+  
+    cleaning_base_killed, global_plot
   
   ptr_free, (*global_plot).data
   ptr_free, (*global_plot).data_linear
@@ -482,6 +459,7 @@ pro cleaning_base_gui, wBase, $
     SCR_YSIZE    = ysize,$
     SCR_XSIZE    = xsize,$
     MAP          = 1,$
+    kill_notify  = 'cleaning_base_killed', $
     /BASE_ALIGN_CENTER,$
     /align_center,$
     /tlb_move_events, $
