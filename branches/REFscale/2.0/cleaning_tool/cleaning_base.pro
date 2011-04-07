@@ -57,6 +57,14 @@ pro cleaning_base_event, Event
       geometry = widget_info(id,/geometry)
       new_xsize = geometry.scr_xsize
       new_ysize = geometry.scr_ysize - 33
+      xoffset = geometry.xoffset
+      yoffset = geometry.yoffset
+      
+      range_id = (*global_plot).xy_range_input_base_id
+      if (widget_info(range_id,/valid_id)) then begin
+        widget_control, range_id, xoffset=xoffset + new_xsize
+        widget_control, range_id, yoffset=yoffset
+      endif
       
       (*global_plot).xsize = new_xsize
       (*global_plot).ysize = new_ysize
@@ -111,12 +119,12 @@ pro switch_xyaxes_range, event
   range_id = (*global_plot).xy_range_input_base_id
   if (widget_info(range_id,/valid_id) eq 0) then begin
   
-  top_base_id = widget_info(event.top, find_by_uname='cleaning_widget_base')
-  parent_base_uname = 'cleaning_widget_base
-  
-  xy_range_input_base, event=event, $
-    parent_base_uname = parent_base_uname
-  
+    top_base_id = widget_info(event.top, find_by_uname='cleaning_widget_base')
+    parent_base_uname = 'cleaning_widget_base
+    
+    xy_range_input_base, event=event, $
+      parent_base_uname = parent_base_uname
+      
   endif
   
 end
@@ -476,6 +484,7 @@ pro cleaning_base_gui, wBase, $
     MAP          = 1,$
     /BASE_ALIGN_CENTER,$
     /align_center,$
+    /tlb_move_events, $
     /tlb_size_events,$
     mbar = bar1,$
     GROUP_LEADER = ourGroup)
