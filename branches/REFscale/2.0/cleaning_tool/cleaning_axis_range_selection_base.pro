@@ -45,33 +45,33 @@ pro xy_range_input_base_event, Event
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global_info
-  main_event = (*global_info).main_event
+  main_base_id = (*global_info).main_base_id
   global_plot = (*global_info).global_plot
   
   case Event.id of
   
     ;full reset
     widget_info(event.top, find_by_uname='xy_range_full_reset_uname'): begin
-      refresh_plot, event=main_event, /init
+      refresh_plot, base=main_base_id, /init
       refresh_xy_range_input_fields, event=event, global_plot=global_plot
     end
     
     ;xmin, xmax, ymin and ymax
     widget_info(event.top, find_by_uname='xy_range_xmin_uname'): begin
       save_new_xy_range_input_fields, event
-      refresh_plot, event=main_event
+      refresh_plot, base=main_base_id
     end
     widget_info(event.top, find_by_uname='xy_range_xmax_uname'): begin
       save_new_xy_range_input_fields, event
-      refresh_plot, event=main_event
+      refresh_plot, base=main_base_id
     end
     widget_info(event.top, find_by_uname='xy_range_ymin_uname'): begin
       save_new_xy_range_input_fields, event
-      refresh_plot, event=main_event
+      refresh_plot, base=main_base_id
     end
     widget_info(event.top, find_by_uname='xy_range_ymax_uname'): begin
       save_new_xy_range_input_fields, event
-      refresh_plot, event=main_event
+      refresh_plot, base=main_base_id
     end
     
     else:
@@ -201,7 +201,6 @@ pro xy_range_input_base_gui, wBase, $
     YOFFSET      = yoffset,$
     MAP          = 1,$
     kill_notify  = 'xy_range_base_killed', $
-    /column,$
     /tlb_size_events,$
     GROUP_LEADER = ourGroup)
     
@@ -211,64 +210,72 @@ pro xy_range_input_base_gui, wBase, $
   max_y_value = yrange[1]
   
   ;xrange
-  row1 = widget_base(wBase,$
+  xminbase = widget_base(wBase,$
+    xoffset = 130,$
+    yoffset = 255,$
     /row)
-    
-  xmin = cw_field(row1,$
+  xmin = cw_field(xminbase,$
     xsize = 10,$
     /float,$
-    title = 'Xmin:',$
     /row,$
+    title='',$
     value = min_x_value,$
     /return_events, $
     uname = 'xy_range_xmin_uname')
     
-  space = widget_label(row1,$
-    value = '     ')
-    
-  xmax = cw_field(row1,$
+  xmaxbase = widget_base(wBase,$
+    xoffset = 285,$
+    yoffset = 255,$
+    /row)
+  xmax = cw_field(xmaxbase,$
     xsize = 10,$
     /float,$
-    title = 'Xmax:',$
     /row,$
+    title='',$
     value = max_x_value,$
     /return_events, $
     uname = 'xy_range_xmax_uname')
     
   ;yrange
-  row2 = widget_base(wBase,$
+  yminbase = widget_base(wBase,$
+    xoffset = 20,$
+    yoffset = 180,$
     /row)
-    
-  ymin = cw_field(row2,$
+  ymin = cw_field(yminbase,$
     xsize = 10,$
     /float,$
-    title = 'Ymin:',$
     /row,$
+    title='',$
     value = min_y_value,$
     /return_events, $
     uname = 'xy_range_ymin_uname')
     
-  space = widget_label(row2,$
-    value = '     ')
-    
-  ymax = cw_field(row2,$
+  ymaxbase = widget_base(wBase,$
+    xoffset = 20,$
+    yoffset = 10,$
+    /row)
+  ymax = cw_field(ymaxbase,$
     xsize = 10,$
     /float,$
-    title = 'Ymax:',$
     /row,$
+    title='',$
     value = max_y_value,$
     /return_events, $
     uname = 'xy_range_ymax_uname')
     
-  ;full reset
-  row3 = widget_base(wBase,$
-    /align_center, $
-    /row)
-    
-  reset = widget_button(row3,$
-    value = 'Full reset',$
+  reset = widget_button(wBase,$
+    xoffset = 200,$
+    yoffset = 80,$
+    value = 'range full reset',$
     uname = 'xy_range_full_reset_uname',$
-    scr_xsize = 100)
+    scr_xsize = 150,$
+    scr_ysize = 35)
+    
+  draw = widget_draw(wBase,$
+    xsize  = 385,$
+    ysize  = 322,$
+    retain = 2,$
+    uname  = 'xy_range_draw')
     
 end
 
@@ -328,11 +335,17 @@ end
 ; :Author: j35
 ;-
 pro xy_range_input_base, event=event, $
+    main_base_id=main_base_id, $
     parent_base_uname = parent_base_uname
   compile_opt idl2
   
-  id = WIDGET_INFO(Event.top, FIND_BY_UNAME=parent_base_uname)
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global_plot
+  if (keyword_set(event)) then begin
+    id = WIDGET_INFO(Event.top, FIND_BY_UNAME=parent_base_uname)
+    WIDGET_CONTROL,Event.top,GET_UVALUE=global_plot
+  endif else begin
+    widget_control, main_base_id, get_uvalue=global_plot
+    id = main_base_id
+  endelse
   parent_base_geometry = WIDGET_INFO(id,/GEOMETRY)
   
   xrange = (*global_plot).xrange
@@ -349,7 +362,8 @@ pro xy_range_input_base, event=event, $
   WIDGET_CONTROL, _base, /REALIZE
   
   global_info = PTR_NEW({ _base: _base,$
-    main_event: event, $
+    main_base_id: id, $
+    ;    main_event: event, $
     global_plot: global_plot })
     
   WIDGET_CONTROL, _base, SET_UVALUE = global_info
@@ -358,5 +372,13 @@ pro xy_range_input_base, event=event, $
     /NO_BLOCK, $
     cleanup='xy_range_base_cleanup'
     
+  mode = read_png('REFscale_images/RangePlot.png')
+  uname = 'xy_range_draw'
+  mode_id = WIDGET_INFO(_base, FIND_BY_UNAME=uname)
+  ;mode
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, mode, 0,0,/true
+  
 end
 
