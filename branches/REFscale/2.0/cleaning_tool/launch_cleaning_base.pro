@@ -53,6 +53,10 @@ pro launch_cleaning_base, event
   cleaning_base_id = (*global).cleaning_base_id
   if (widget_info(cleaning_base_id,/valid_id) eq 0) then begin
   
+    sz = n_elements(ListOfFiles)
+    if (sz eq 1 and $
+    strcompress(ListOfFiles[0],/remove_all) eq '') then return
+
     cleaning_base, event=event, $
       list_files = listOfFiles, $
       offset = offset, $
