@@ -626,5 +626,8 @@ pro cleaning_base, event=event, $
     
   refresh_plot, base=wBase, /init
   
+  xy_range_input_base, main_base_id=wBase, $
+   parent_base_uname='cleaning_widget_base'
+  
 end
 
