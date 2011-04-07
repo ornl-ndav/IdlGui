@@ -44,12 +44,124 @@
 pro xy_range_input_base_event, Event
   compile_opt idl2
   
+  widget_control, event.top, get_uvalue=global_info
+  main_event = (*global_info).main_event
+  global_plot = (*global_info).global_plot
+  
   case Event.id of
-      
+  
+    ;full reset
+    widget_info(event.top, find_by_uname='xy_range_full_reset_uname'): begin
+      refresh_plot, event=main_event, /init
+      refresh_xy_range_input_fields, event=event, global_plot=global_plot
+    end
+    
+    ;xmin, xmax, ymin and ymax
+    widget_info(event.top, find_by_uname='xy_range_xmin_uname'): begin
+      save_new_xy_range_input_fields, event
+      refresh_plot, event=main_event
+    end
+    widget_info(event.top, find_by_uname='xy_range_xmax_uname'): begin
+      save_new_xy_range_input_fields, event
+      refresh_plot, event=main_event
+    end
+    widget_info(event.top, find_by_uname='xy_range_ymin_uname'): begin
+      save_new_xy_range_input_fields, event
+      refresh_plot, event=main_event
+    end
+    widget_info(event.top, find_by_uname='xy_range_ymax_uname'): begin
+      save_new_xy_range_input_fields, event
+      refresh_plot, event=main_event
+    end
+    
     else:
     
   endcase
   
+end
+
+;+
+; :Description:
+;    Retrieves the various xmin, xmax, ymin and ymax values from the
+;    range input base and reorder them, save them in xrange and yrange
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro save_new_xy_range_input_fields, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_info
+  global_plot = (*global_info).global_plot
+  
+  x1 = float(getValue(event=event, uname='xy_range_xmin_uname'))
+  x2 = float(getValue(event=event, uname='xy_range_xmax_uname'))
+  
+  y1 = float(getValue(event=event, uname='xy_range_ymin_uname'))
+  y2 = float(getValue(event=event, uname='xy_range_ymax_uname'))
+  
+  xmin = min([x1,x2],max=xmax)
+  ymin = min([y1,y2],max=ymax)
+  
+  putValue, event=event, uname='xy_range_xmin_uname', value=xmin
+  putValue, event=event, uname='xy_range_xmax_uname', value=xmax
+  
+  putValue, event=event, uname='xy_range_ymin_uname', value=ymin
+  putValue, event=event, uname='xy_range_ymax_uname', value=ymax
+  
+  xrange = fltarr(2)
+  yrange = fltarr(2)
+  
+  xrange[0] = xmin
+  xrange[1] = xmax
+  
+  yrange[0] = ymin
+  yrange[1] = ymax
+  
+  (*global_plot).xrange = xrange
+  (*global_plot).yrange = yrange
+  
+end
+
+;+
+; :Description:
+;    This routine refresh the contains (xmin, xmax, ymin and ymax) of the
+;    'X and Y range selection tool' input base with the full x and y range
+;    (full reset of axes)
+;
+;
+;
+; :Keywords:
+;    event
+;    global_plot
+;
+; :Author: j35
+;-
+pro refresh_xy_range_input_fields, event=event, global_plot=global_plot
+  compile_opt idl2
+  
+  xrange = (*global_plot).xrange
+  yrange = (*global_plot).yrange
+  
+  xmin = xrange[0]
+  xmax = xrange[1]
+  ymin = yrange[0]
+  ymax = yrange[1]
+  
+  putValue, event=event, uname='xy_range_xmin_uname', $
+    value=strcompress(xmin,/remove_all)
+  putValue, event=event, uname='xy_range_xmax_uname', $
+    value=strcompress(xmax,/remove_all)
+    
+  putValue, event=event, uname='xy_range_ymin_uname', $
+    value=strcompress(ymin,/remove_all)
+  putValue, event=event, uname='xy_range_ymax_uname', $
+    value=strcompress(ymax,/remove_all)
+    
 end
 
 ;+
@@ -101,62 +213,62 @@ pro xy_range_input_base_gui, wBase, $
   ;xrange
   row1 = widget_base(wBase,$
     /row)
-
+    
   xmin = cw_field(row1,$
-  xsize = 10,$
-  /float,$
-  title = 'Xmin:',$
-  /row,$
-  value = min_x_value,$
-  /return_events, $
-  uname = 'xy_range_xmin_uname')
-  
+    xsize = 10,$
+    /float,$
+    title = 'Xmin:',$
+    /row,$
+    value = min_x_value,$
+    /return_events, $
+    uname = 'xy_range_xmin_uname')
+    
   space = widget_label(row1,$
-  value = '     ')
-  
+    value = '     ')
+    
   xmax = cw_field(row1,$
-  xsize = 10,$
-  /float,$
-  title = 'Xmax:',$
-  /row,$
-  value = max_x_value,$
-  /return_events, $
-  uname = 'xy_range_xmax_uname')
-  
+    xsize = 10,$
+    /float,$
+    title = 'Xmax:',$
+    /row,$
+    value = max_x_value,$
+    /return_events, $
+    uname = 'xy_range_xmax_uname')
+    
   ;yrange
   row2 = widget_base(wBase,$
     /row)
-
+    
   ymin = cw_field(row2,$
-  xsize = 10,$
-  /float,$
-  title = 'Ymin:',$
-  /row,$
-  value = min_y_value,$
-  /return_events, $
-  uname = 'xy_range_ymin_uname')
-  
+    xsize = 10,$
+    /float,$
+    title = 'Ymin:',$
+    /row,$
+    value = min_y_value,$
+    /return_events, $
+    uname = 'xy_range_ymin_uname')
+    
   space = widget_label(row2,$
-  value = '     ')
-  
+    value = '     ')
+    
   ymax = cw_field(row2,$
-  xsize = 10,$
-  /float,$
-  title = 'Ymax:',$
-  /row,$
-  value = max_y_value,$
-  /return_events, $
-  uname = 'xy_range_ymax_uname')
-
+    xsize = 10,$
+    /float,$
+    title = 'Ymax:',$
+    /row,$
+    value = max_y_value,$
+    /return_events, $
+    uname = 'xy_range_ymax_uname')
+    
   ;full reset
   row3 = widget_base(wBase,$
-  /align_center, $
-  /row)
-  
+    /align_center, $
+    /row)
+    
   reset = widget_button(row3,$
-  value = 'Full reset',$
-  uname = 'xy_range_full_reset_uname',$
-  scr_xsize = 100)
+    value = 'Full reset',$
+    uname = 'xy_range_full_reset_uname',$
+    scr_xsize = 100)
     
 end
 
@@ -174,11 +286,11 @@ end
 pro xy_range_base_killed, id
   compile_opt idl2
   
-;  catch, error
-;  if (error ne 0) then begin
-;    catch,/cancel
-;    return
-;  endif
+  ;  catch, error
+  ;  if (error ne 0) then begin
+  ;    catch,/cancel
+  ;    return
+  ;  endif
   
   ;get global structure
   widget_control,id,get_uvalue=global_info
@@ -219,9 +331,9 @@ pro xy_range_input_base, event=event, $
     parent_base_uname = parent_base_uname
   compile_opt idl2
   
-    id = WIDGET_INFO(Event.top, FIND_BY_UNAME=parent_base_uname)
-    WIDGET_CONTROL,Event.top,GET_UVALUE=global_plot
-    parent_base_geometry = WIDGET_INFO(id,/GEOMETRY)
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME=parent_base_uname)
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global_plot
+  parent_base_geometry = WIDGET_INFO(id,/GEOMETRY)
   
   xrange = (*global_plot).xrange
   yrange = (*global_plot).yrange

@@ -260,6 +260,10 @@ pro refresh_plot, event=event, base=base, init=init
     max_y_value = yrange[1]
     
   endelse
+
+;1:exact range
+    xstyle=0
+    ystyle=0
   
   list_color = (*global_plot).list_color
   
@@ -276,7 +280,9 @@ pro refresh_plot, event=event, base=base, init=init
           [min_y_value,max_y_value], $
           /ylog, $
           xtitle = 'Q (' + string("305B) + '!E-1!N)', $
+          xstyle=xstyle,$
           ytitle = 'Intensity',$
+          ystyle=ystyle,$
           color=fsc_color('black'), $
           /nodata
       endif
@@ -288,7 +294,9 @@ pro refresh_plot, event=event, base=base, init=init
         plot, [min_x_value, max_x_value], $
           [min_y_value,max_y_value], $
           xtitle = 'Q (' + string("305B) + '!E-1!N)', $
+          xstyle=xstyle,$
           ytitle = 'Intensity',$
+          ystyle=ystyle,$
           color=fsc_color('black'), $
           /nodata
       endif
@@ -400,10 +408,10 @@ pro cleaning_base_cleanup, tlb
   compile_opt idl2
   
   widget_control, tlb, get_uvalue=global_plot, /no_copy
-    
+  
   if (n_elements(global_plot) eq 0) then return
   
-    cleaning_base_killed, global_plot
+  cleaning_base_killed, global_plot
   
   ptr_free, (*global_plot).data
   ptr_free, (*global_plot).data_linear
