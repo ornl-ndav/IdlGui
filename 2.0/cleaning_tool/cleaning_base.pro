@@ -301,8 +301,8 @@ pro refresh_plot, event=event, base=base, init=init
       flt2 = *flt2_ptr[_index_to_plot[_index]]
       
       errplot, flt0, $
-        flt1+flt2,$
         flt1-flt2,$
+        flt1+flt2,$
         color=fsc_color(list_color[_index])
     endif
     
