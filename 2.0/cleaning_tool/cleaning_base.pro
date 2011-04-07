@@ -105,12 +105,20 @@ end
 ; :Author: j35
 ;-
 pro switch_xyaxes_range, event
-compile_opt idl2
-
-
-
-
-
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_plot
+  range_id = (*global_plot).xy_range_input_base_id
+  if (widget_info(range_id,/valid_id) eq 0) then begin
+  
+  top_base_id = widget_info(event.top, find_by_uname='cleaning_widget_base')
+  parent_base_uname = 'cleaning_widget_base
+  
+  xy_range_input_base, event=event, $
+    parent_base_uname = parent_base_uname
+  
+  endif
+  
 end
 
 ;+
@@ -181,14 +189,14 @@ end
 ; :Description:
 ;    Refresh the plot when resizing for example
 ;
-; :Params:
+; :keywords:
 ;    event
-;
-;
+;    base
+;    init   ;when we want to reset the x and y axis (min and max values)
 ;
 ; :Author: j35
 ;-
-pro refresh_plot, event=event, base=base
+pro refresh_plot, event=event, base=base, init=init
   compile_opt idl2
   
   if (keyword_set(event)) then begin
@@ -219,18 +227,44 @@ pro refresh_plot, event=event, base=base
     return
   endif
   
-  ;determine the full xaxis by retrieving the min and max x value
-  _index = 0
-  min_value = 10
-  max_value = 0
-  while (_index lt nbr) do begin
-    _min_value = min(*flt0_ptr[_index_to_plot[_index]],max=_max_value)
+  if (keyword_set(init)) then begin
+  
+    ;determine the full xaxis by retrieving the min and max x value
+    _index = 0
+    min_x_value = 10
+    max_x_value = 0
+    min_y_value = 10
+    max_y_value = 0
+    while (_index lt nbr) do begin
     
-    min_value = (_min_value lt min_value) ? _min_value : min_value
-    max_value = (_max_value gt max_value) ? _max_value : max_value
+      _min_x_value = min(*flt0_ptr[_index_to_plot[_index]],max=_max_x_value)
+      min_x_value = (_min_x_value lt min_x_value) ? _min_x_value : min_x_value
+      max_x_value = (_max_x_value gt max_x_value) ? _max_x_value : max_x_value
+      
+      _min_y_value = min(*flt1_ptr[_index_to_plot[_index]],max=_max_y_value)
+      min_y_value = (_min_y_value lt min_y_value) ? _min_y_value : min_y_value
+      max_y_value = (_max_y_value gt max_y_value) ? _max_y_value : max_y_value
+      
+      _index++
+    endwhile
     
-    _index++
-  endwhile
+    xrange = [min_x_value, max_x_value]
+    yrange = [min_y_value, max_y_value]
+    (*global_plot).xrange = xrange
+    (*global_plot).yrange = yrange
+    
+  endif else begin
+  
+    xrange = (*global_plot).xrange
+    yrange = (*global_plot).yrange
+    
+    min_x_value = xrange[0]
+    max_x_value = xrange[1]
+    
+    min_y_value = yrange[0]
+    max_y_value = yrange[1]
+    
+  endelse
   
   list_color = (*global_plot).list_color
   
@@ -243,7 +277,8 @@ pro refresh_plot, event=event, base=base
     if ((*global_plot).default_scale_settings) then begin ;log
     
       if (_index eq 0) then begin
-        plot, [min_value,max_value], flt1, $
+        plot, [min_x_value,max_x_value], $
+          [min_y_value,max_y_value], $
           /ylog, $
           xtitle = 'Q (' + string("305B) + '!E-1!N)', $
           ytitle = 'Intensity',$
@@ -255,7 +290,8 @@ pro refresh_plot, event=event, base=base
         psym=2
     endif else begin
       if (_index eq 0) then begin
-        plot, [min_value, max_value], flt1, $
+        plot, [min_x_value, max_x_value], $
+          [min_y_value,max_y_value], $
           xtitle = 'Q (' + string("305B) + '!E-1!N)', $
           ytitle = 'Intensity',$
           color=fsc_color('black'), $
@@ -476,11 +512,11 @@ pro cleaning_base_gui, wBase, $
     value = set2_value,$
     event_pro = 'switch_yaxes_type',$
     uname = 'local_scale_setting_log')
-  
+    
   xyaxes = widget_button(mPlot, $
-  /separator, $
-  value = 'Select X and Y axes range...',$
-  event_pro = 'switch_xyaxes_range')
+    /separator, $
+    value = 'Select X and Y ranges ...',$
+    event_pro = 'switch_xyaxes_range')
     
   ;error bars
   error = widget_button(bar1,$
@@ -558,6 +594,8 @@ pro cleaning_base, event=event, $
     
     show_y_error_bar: 1b, $ ;show or not the Y error bars (yes by default)
     
+    xy_range_input_base_id: 0, $ ;id of x & y range input base
+    
     scale_setting: 1, $  ;1 for log, 0 for linear
     current_index_plotted: 0, $
     
@@ -573,9 +611,8 @@ pro cleaning_base, event=event, $
     
     border: border, $ ;border of main plot (space reserved for scale)
     
-    xrange: fltarr(2),$ ;[tof_min, tof_max]
-    zrange: fltarr(2),$
-    yrange: intarr(2),$ ;[min_pixel,max_pixel]
+    xrange: fltarr(2),$ ;[Qmin, Qmax]
+    yrange: fltarr(2),$ ;[IntensityMin, IntensityMax]
     
     left_click: 0b,$ ;by default, left button is not clicked
     
@@ -592,7 +629,7 @@ pro cleaning_base, event=event, $
   XMANAGER, "cleaning_base", wBase, GROUP_LEADER = ourGroup, /NO_BLOCK, $
     cleanup = 'cleaning_base_cleanup'
     
-  refresh_plot, base=wBase
+  refresh_plot, base=wBase, /init
   
 end
 

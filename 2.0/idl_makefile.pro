@@ -60,6 +60,12 @@ cd, CurrentFolder + '/REFscaleGUI/'
 .run make_gui_main_base_components.pro
 .run make_gui_log_book.pro
 
+;cleaning tool
+cd, CurrentFolder + '/cleaning_tool'
+.run launch_cleaning_base.pro
+.run cleaning_base.pro
+.run cleaning_axis_range_selection_base.pro
+
 ;Build main procedures
 cd, CurrentFolder
 .run send_files_by_email.pro
@@ -102,9 +108,6 @@ cd, CurrentFolder
 .run ref_scale_produce_output_ref_m.pro
 .run ref_scale_tabs.pro
 .run settings_base.pro
-
-;cleaning base
-.run launch_cleaning_base.pro
 
 ;Batch
 .run ref_scale_spin_states.pro
