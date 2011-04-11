@@ -164,7 +164,7 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     data_path_flag_suffix: 'bank1,1',$
     data_path: '',$ ;for example  '/entry_Off-Off/'
     empty_cell_path: '',$ ;for example  '/entry_Off-Off/'
-    norm_path_flag: '--norm-data-paths=/entry-Off_Off/' + $
+    norm_path_flag: ' --norm-data-paths=/entry-Off_Off/' + $
     'bank1,1',$
     norm_path: '',$
     data_nexus_full_path: '',$
