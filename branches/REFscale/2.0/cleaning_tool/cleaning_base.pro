@@ -192,7 +192,7 @@ pro create_array_of_points_selected, event
     
     _index++
   endwhile
-  
+
   (*(*global_plot).flt0_to_removed) = flt0_intersection
   (*(*global_plot).flt1_to_removed) = flt1_intersection
   

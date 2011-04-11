@@ -254,12 +254,20 @@ function getIntersectionOfArrays, array1=array1, array2=array2
   sz2 = n_elements(_array2)
   sz_min = min([sz1,sz2])
   
+  if (sz_min eq sz1) then begin
+    _array_a = _array1
+    _array_b = _array2
+    endif else begin
+    _array_a = _array2
+    _array_b = _array1
+endelse
+
   _index1 = 0
   while (_index1 lt sz_min) do begin
   
-    val1 = _array1[_index1]
-    _result = where(val1 eq _array2,nbr)
-    if (nbr ne -1) then begin
+    val1 = _array_a[_index1]
+    _result = where(val1 eq _array_b,nbr)
+    if (nbr ne 0) then begin
       intersection_array = [intersection_array,val1]
     endif
     
