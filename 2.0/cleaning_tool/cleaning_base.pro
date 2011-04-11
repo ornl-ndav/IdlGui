@@ -50,6 +50,39 @@ pro cleaning_base_event, Event
   
   case Event.id of
   
+    ;draw
+    widget_info(event.top, find_by_uname='cleaning_draw'): begin
+    
+      id = WIDGET_INFO(event.top, FIND_BY_UNAME='cleaning_draw')
+      widget_control, id, GET_VALUE = plot_id
+      wset, plot_id
+      
+      ;moving mouse with left click pressed
+      if ((*global_plot).left_click_pressed) then begin
+        x1y1x2y2 = (*global_plot).x1y1x2y2
+        cursor, x,y, /nowait, /data
+        x1y1x2y2[2] = x
+        x1y1x2y2[3] = y
+        (*global_plot).x1y1x2y2 = x1y1x2y2
+        refresh_plot, event=event
+      endif
+      
+      if (event.press eq 1) then begin ;left button pressed
+        (*global_plot).left_click_pressed = 1b
+        cursor, x,y, /nowait, /data
+        x1y1x2y2 = [-1.,-1.,-1.,-1.]
+        x1y1x2y2[0] = x
+        x1y1x2y2[1] = y
+        (*global_plot).x1y1x2y2 = x1y1x2y2
+      endif
+      
+      if (event.release eq 1) then begin ;release button
+        (*global_plot).left_click_pressed = 0b
+      endif
+      
+    end
+    
+    ;main base
     widget_info(event.top, find_by_uname='cleaning_widget_base'): begin
     
       id = widget_info(event.top, find_by_uname='cleaning_widget_base')
@@ -260,10 +293,10 @@ pro refresh_plot, event=event, base=base, init=init
     max_y_value = yrange[1]
     
   endelse
-
-;1:exact range
-    xstyle=0
-    ystyle=0
+  
+  ;1:exact range
+  xstyle=0
+  ystyle=0
   
   list_color = (*global_plot).list_color
   
@@ -316,6 +349,17 @@ pro refresh_plot, event=event, base=base, init=init
     
     _index++
   endwhile
+  
+  x1y1x2y2 = (*global_plot).x1y1x2y2
+  x1 = x1y1x2y2[0]
+  y1 = x1y1x2y2[1]
+  x2 = x1y1x2y2[2]
+  y2 = x1y1x2y2[3]
+  if (x1 eq -1) then return
+  if (x1 eq x2) then return
+  if (y1 eq y2) then return
+  
+  oplot, [x1,x2,x2,x1,x1],[y1,y1,y2,y2,y1],color=fsc_color('black')
   
 end
 
@@ -526,11 +570,10 @@ pro cleaning_base_gui, wBase, $
   draw = widget_draw(wbase,$
     scr_xsize = xsize,$
     scr_ysize = ysize,$
-    ;    /button_events,$
-    ;    /motion_events,$
+    /button_events,$
+    /motion_events,$
     ;    /tracking_events,$
     retain=2, $
-    event_pro = 'cleaning_draw_eventcb',$
     uname = 'cleaning_draw')
     
 end
@@ -588,6 +631,7 @@ pro cleaning_base, event=event, $
     default_scale_settings: 1, $ ;1 for log, 0 for linear
     
     show_y_error_bar: 1b, $ ;show or not the Y error bars (yes by default)
+    left_click_pressed: 0b, $
     
     xy_range_input_base_id: 0, $ ;id of x & y range input base
     
@@ -603,6 +647,7 @@ pro cleaning_base, event=event, $
     
     xsize: default_plot_size[0],$
     ysize: default_plot_size[1],$
+    x1y1x2y2: [-1.,-1.,-1.,-1.], $
     
     border: border, $ ;border of main plot (space reserved for scale)
     
@@ -627,7 +672,7 @@ pro cleaning_base, event=event, $
   refresh_plot, base=wBase, /init
   
   xy_range_input_base, main_base_id=wBase, $
-   parent_base_uname='cleaning_widget_base'
-  
+    parent_base_uname='cleaning_widget_base'
+    
 end
 
