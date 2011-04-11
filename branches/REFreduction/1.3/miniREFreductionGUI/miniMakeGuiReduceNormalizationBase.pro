@@ -257,6 +257,7 @@ PRO miniMakeGuiReduceNormalizationBase, Event, REDUCE_BASE, IndividualBaseWidth
     UNAME     = sPolaCWBgroup.uname,$
     SET_VALUE = sPolaCWBgroup.value,$
     /ROW,$
+    /no_release, $
     /EXCLUSIVE)
     
   ;Peak exlusion Base -----------------------------------------------------------

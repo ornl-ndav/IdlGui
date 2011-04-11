@@ -459,12 +459,11 @@ PRO command_line_generator_for_ref_m, event
         ;IF (pola_state EQ 1) THEN BEGIN
         ;  cmd[index_spin_state] += ' ' + (*global).norm_path_flag
         ;ENDIF else begin
-          value = getButtonValue(event,'other_spin_states')
-          cmd[index_spin_state] += ' --norm-data-paths'
+          value = getButtonValue(event,'normalization_pola_state')
           if (value eq 1) then begin
-            cmd[index_spin_state] += '=/' + norm_spin_state_path[index_spin_state] + '/'
-            cmd[index_spin_state] += (*global).data_path_flag_suffix
+            cmd[index_spin_state] += (*global).norm_path_flag
           endif else begin
+          cmd[index_spin_state] += ' --norm-data-paths'
             cmd[index_spin_state] += '=/' + data_spin_state_path[index_spin_state] + '/'
             cmd[index_spin_state] += (*global).data_path_flag_suffix
           endelse
