@@ -79,6 +79,9 @@ pro cleaning_base_event, Event
       if (event.release eq 1) then begin ;release button
         (*global_plot).left_click_pressed = 0b
         create_array_of_points_selected, event
+        (*global_plot).x1y1x2y2 = [-1,-1,-1,-1] ;reset selection
+        refresh_plot, event=event
+        plot_data_point_to_remove, event
       endif
       
     end
@@ -111,6 +114,7 @@ pro cleaning_base_event, Event
       widget_control, id, draw_ysize = new_ysize
       
       refresh_plot, event=event
+      plot_data_point_to_remove, event
       
       return
     end
@@ -188,6 +192,9 @@ pro create_array_of_points_selected, event
     
     _index++
   endwhile
+  
+  (*(*global_plot).flt0_to_removed) = flt0_intersection
+  (*(*global_plot).flt1_to_removed) = flt1_intersection
   
 end
 
@@ -282,6 +289,41 @@ pro switch_yaxes_type, event
   
   refresh_plot, event=event
   
+end
+
+;+
+; :Description:
+;    Plot (highlight) the data points that have been selected and that
+;    will be removed.
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro plot_data_point_to_remove, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_plot
+  
+  catch,error
+  if (error ne 0) then begin
+    catch,/cancel
+    return
+  endif
+  
+  flt0_intersection = (*(*global_plot).flt0_to_removed)
+  flt1_intersection = (*(*global_plot).flt1_to_removed)
+  
+  id = WIDGET_INFO(event.top, FIND_BY_UNAME='cleaning_draw')
+  widget_control, id, GET_VALUE = plot_id
+  wset, plot_id
+  
+  oplot, flt0_intersection, flt1_intersection, $
+    color=fsc_color('blue'), $
+    symsize=2,$
+    psym=6
+    
 end
 
 ;+
@@ -531,6 +573,8 @@ pro cleaning_base_cleanup, tlb
   ptr_free, (*global_plot).data
   ptr_free, (*global_plot).data_linear
   ptr_free, (*global_plot).status_of_list_of_files_plotted
+  ptr_free, (*global_plot).flt0_to_removed
+  ptr_free, (*global_plot).flt1_to_removed
   
   ptr_free, global_plot
   
@@ -715,6 +759,9 @@ pro cleaning_base, event=event, $
     
     data: ptr_new(0L), $
     data_linear: ptr_new(0L), $
+    
+    flt0_to_removed: ptr_new(0L), $
+    flt1_to_removed: ptr_new(0L), $
     
     xsize: default_plot_size[0],$
     ysize: default_plot_size[1],$
