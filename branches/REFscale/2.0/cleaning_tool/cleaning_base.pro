@@ -64,7 +64,6 @@ pro cleaning_base_event, Event
         x1y1x2y2[2] = x
         x1y1x2y2[3] = y
         (*global_plot).x1y1x2y2 = x1y1x2y2
-        create_array_of_points_selected, event
         refresh_plot, event=event
       endif
       
@@ -79,6 +78,7 @@ pro cleaning_base_event, Event
       
       if (event.release eq 1) then begin ;release button
         (*global_plot).left_click_pressed = 0b
+        create_array_of_points_selected, event
       endif
       
     end
@@ -135,6 +135,7 @@ pro create_array_of_points_selected, event
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global_plot
+  global = (*global_plot).global
   
   ;selection
   x1y1x2y2 = (*global_plot).x1y1x2y2
@@ -157,32 +158,37 @@ pro create_array_of_points_selected, event
   ymin = min([y1,y2],max=ymax)
   
   ;initialize array of points selected
-  list_of_points_selected = !null
+  flt0_intersection = !null
+  flt1_intersection = !null
   
   _index=0
   while (_index lt nbr) do begin
+  
+    xaxis = *flt0_ptr[_index_to_plot[_index]]
+    yaxis = *flt1_ptr[_index_to_plot[_index]]
     
-  xaxis = *flt0_ptr[_index_to_plot[_index]]  
-  yaxis = *flt1_ptr[_index_to_plot[_index]]
-  
-  _xaxis_index_selected = where((xaxis ge xmin) and (xaxis le xmax),/null)
-  _yaxis_index_selected = where((yaxis ge ymin) and (yaxis le ymax),/null)
-  
-  if (_xaxis_index_selected eq !null) then continue
-  if (_yaxis_index_selected eq !null) then continue
-  
-  _xyaxis_index_intersection = $
-  getIntersectionOfArrays(array1=_xaxis_index_selected, $
-  array2=_yaxis_index_selected)
-  
-  
-  
-  
-  
-  _index++
-  endwhile
+    _xaxis_index_selected = where((xaxis ge xmin) and (xaxis le xmax),/null)
+    _yaxis_index_selected = where((yaxis ge ymin) and (yaxis le ymax),/null)
+    
+    if (_xaxis_index_selected eq !null) then begin
+      _index++
+      continue
+    endif
+    if (_yaxis_index_selected eq !null) then begin
+      _index++
+      continue
+    endif
+    
+    _xyaxis_index_intersection = $
+      getIntersectionOfArrays(array1=_xaxis_index_selected, $
+      array2=_yaxis_index_selected)
       
-
+    flt0_intersection = [flt0_intersection, xaxis[_xyaxis_index_intersection]]
+    flt1_intersection = [flt1_intersection, yaxis[_xyaxis_index_intersection]]
+    
+    _index++
+  endwhile
+  
 end
 
 ;+
