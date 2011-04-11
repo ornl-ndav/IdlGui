@@ -64,6 +64,7 @@ pro cleaning_base_event, Event
         x1y1x2y2[2] = x
         x1y1x2y2[3] = y
         (*global_plot).x1y1x2y2 = x1y1x2y2
+        create_array_of_points_selected, event
         refresh_plot, event=event
       endif
       
@@ -118,6 +119,70 @@ pro cleaning_base_event, Event
     
   endcase
   
+end
+
+;+
+; :Description:
+;    Using the selection made, this procedures will go through all the data
+;    loaded and displayed and retrieve the data points inside the selection.
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro create_array_of_points_selected, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_plot
+  
+  ;selection
+  x1y1x2y2 = (*global_plot).x1y1x2y2
+  
+  status_of_list_of_files_plotted = $
+    (*(*global_plot).status_of_list_of_files_plotted)
+    
+  flt0_ptr = (*global).flt0_rescale_ptr
+  flt1_ptr = (*global).flt1_rescale_ptr
+  
+  ;get index of the files to plot
+  _index_to_plot = where(status_of_list_of_files_plotted eq 1, nbr)
+  
+  x1 = x1y1x2y2[0]
+  y1 = x1y1x2y2[1]
+  x2 = x1y1x2y2[2]
+  y2 = x1y1x2y2[3]
+  
+  xmin = min([x1,x2],max=xmax)
+  ymin = min([y1,y2],max=ymax)
+  
+  ;initialize array of points selected
+  list_of_points_selected = !null
+  
+  _index=0
+  while (_index lt nbr) do begin
+    
+  xaxis = *flt0_ptr[_index_to_plot[_index]]  
+  yaxis = *flt1_ptr[_index_to_plot[_index]]
+  
+  _xaxis_index_selected = where((xaxis ge xmin) and (xaxis le xmax),/null)
+  _yaxis_index_selected = where((yaxis ge ymin) and (yaxis le ymax),/null)
+  
+  if (_xaxis_index_selected eq !null) then continue
+  if (_yaxis_index_selected eq !null) then continue
+  
+  _xyaxis_index_intersection = $
+  getIntersectionOfArrays(array1=_xaxis_index_selected, $
+  array2=_yaxis_index_selected)
+  
+  
+  
+  
+  
+  _index++
+  endwhile
+      
+
 end
 
 ;+

@@ -224,3 +224,48 @@ function get_nbr_spin_states, event
   return, nbr_spins
   
 end
+
+
+;+
+; :Description:
+;    This function returns the intersection of two arrays
+;    ex:
+;     array1=[0,1,2,3,4,5,6]
+;     array2=[3,4,5,6,7,8,9]
+;     will return
+;     [3,4,5,6]
+;
+; :Keywords:
+;    array1
+;    array2
+;
+; :Author: j35
+;-
+function getIntersectionOfArrays, array1=array1, array2=array2
+  compile_opt idl2
+  
+  ;sort the array first
+  _array1 = _array1[sort(array1)]
+  _array2 = _array2[sort(array2)]
+  
+  intersection_array = !null
+  
+  sz1 = n_elements(_array1)
+  _index1 = 0
+  while (_index1 lt sz1) do begin
+  
+    val1 = _array1[_index]
+    _result = where(val1 eq _array2,nbr)
+    if (nbr ne -1) then begin
+      intersection_array = [intersection_array,val1]
+    endif
+    
+    _index1++
+  endwhile
+  
+  return, intersection_array
+  
+end
+
+
+
