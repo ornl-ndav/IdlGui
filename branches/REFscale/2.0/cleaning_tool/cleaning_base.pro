@@ -57,6 +57,16 @@ pro cleaning_base_event, Event
       widget_control, id, GET_VALUE = plot_id
       wset, plot_id
       
+      if (event.key eq 1 and event.press eq 1) then begin
+        (*global_plot).shift_key_pressed = 1b
+        return
+      endif
+      
+      if (event.key eq 1 and event.release eq 1) then begin
+        (*global_plot).shift_key_pressed = 0b
+        return
+      endif
+      
       ;moving mouse with left click pressed
       if ((*global_plot).left_click_pressed) then begin
         x1y1x2y2 = (*global_plot).x1y1x2y2
@@ -65,6 +75,7 @@ pro cleaning_base_event, Event
         x1y1x2y2[3] = y
         (*global_plot).x1y1x2y2 = x1y1x2y2
         refresh_plot, event=event
+        plot_data_point_to_remove, event
       endif
       
       if (event.press eq 1) then begin ;left button pressed
@@ -161,9 +172,14 @@ pro create_array_of_points_selected, event
   xmin = min([x1,x2],max=xmax)
   ymin = min([y1,y2],max=ymax)
   
-  ;initialize array of points selected
-  flt0_intersection = !null
-  flt1_intersection = !null
+  if ((*global_plot).shift_key_pressed) then begin
+    flt0_intersection = (*(*global_plot).flt0_to_removed)
+    flt1_intersection = (*(*global_plot).flt1_to_removed)
+  endif else begin
+    ;initialize array of points selected
+    flt0_intersection = !null
+    flt1_intersection = !null
+  endelse
   
   _index=0
   while (_index lt nbr) do begin
@@ -192,7 +208,7 @@ pro create_array_of_points_selected, event
     
     _index++
   endwhile
-
+  
   (*(*global_plot).flt0_to_removed) = flt0_intersection
   (*(*global_plot).flt1_to_removed) = flt1_intersection
   
@@ -687,8 +703,8 @@ pro cleaning_base_gui, wBase, $
     scr_ysize = ysize,$
     /button_events,$
     /motion_events,$
-    ;    /tracking_events,$
     retain=2, $
+    keyboard_events=2,$
     uname = 'cleaning_draw')
     
 end
@@ -747,6 +763,7 @@ pro cleaning_base, event=event, $
     
     show_y_error_bar: 1b, $ ;show or not the Y error bars (yes by default)
     left_click_pressed: 0b, $
+    shift_key_pressed: 0b, $
     
     xy_range_input_base_id: 0, $ ;id of x & y range input base
     
