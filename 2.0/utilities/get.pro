@@ -245,16 +245,19 @@ function getIntersectionOfArrays, array1=array1, array2=array2
   compile_opt idl2
   
   ;sort the array first
-  _array1 = _array1[sort(array1)]
-  _array2 = _array2[sort(array2)]
+  _array1 = array1[sort(array1)]
+  _array2 = array2[sort(array2)]
   
   intersection_array = !null
   
   sz1 = n_elements(_array1)
-  _index1 = 0
-  while (_index1 lt sz1) do begin
+  sz2 = n_elements(_array2)
+  sz_min = min([sz1,sz2])
   
-    val1 = _array1[_index]
+  _index1 = 0
+  while (_index1 lt sz_min) do begin
+  
+    val1 = _array1[_index1]
     _result = where(val1 eq _array2,nbr)
     if (nbr ne -1) then begin
       intersection_array = [intersection_array,val1]
