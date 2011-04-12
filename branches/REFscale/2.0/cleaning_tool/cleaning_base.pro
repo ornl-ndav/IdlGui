@@ -142,8 +142,8 @@ pro cleaning_base_event, Event
       
       button_id = (*global_plot).cleaning_buttons_base_id
       if (widget_info(button_id,/valid_id)) then begin
-      widget_control, button_id, xoffset=xoffset + new_xsize
-      widget_control, button_id, yoffset=yoffset + 350
+        widget_control, button_id, xoffset=xoffset + new_xsize
+        widget_control, button_id, yoffset=yoffset + 350
       endif
       
       (*global_plot).xsize = new_xsize
@@ -595,6 +595,12 @@ pro cleaning_base_killed, global_plot
   base_id = (*global_plot).xy_range_input_base_id
   if (widget_info(base_id, /valid_id) ne 0) then begin
     widget_control, base_id, /destroy
+  endif
+  
+  ;buttons base
+  buttons_id = (*global_plot).cleaning_buttons_base_id
+  if (widget_info(buttons_id, /valid_id) ne 0) then begin
+    widget_control, buttons_id, /destroy
   endif
   
 end
