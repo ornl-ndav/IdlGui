@@ -279,4 +279,37 @@ endelse
 end
 
 
+;+
+; :Description:
+;    This function returns the index relative to the first array of the 
+;    value also found in the second array
+;
+; :Keywords:
+;    array1
+;    array2
+;
+; :Author: j35
+;-
+function getIndexOfIntersectionOfArrays, array1=array1, array2=array2
+compile_opt idl2
+
+_index_of_value_found = !null
+sz = n_elements(array1)
+
+_i = 0
+while (_i lt sz) do begin
+
+_val = array1[_i]
+_result = where(_val eq array2,nbr)
+if (nbr ne 0) then begin
+_index_of_value_found = [_index_of_value_found, _result]
+endif
+
+_i++
+endwhile
+
+return, _index_of_value_found
+
+end
+
 
