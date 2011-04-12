@@ -55,6 +55,11 @@ pro cleaning_buttons_base_event, Event
       widget_control, main_base_id, /destroy
     end
     
+    ;remove selected points
+    widget_info(event.top, find_by_uname='remove_selected_points_button'): begin
+      remove_selected_points, base=main_base_id 
+    end
+    
     else:
     
   endcase

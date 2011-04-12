@@ -55,11 +55,18 @@ pro launch_cleaning_base, event
   
     sz = n_elements(ListOfFiles)
     if (sz eq 1 and $
-    strcompress(ListOfFiles[0],/remove_all) eq '') then return
-
+      strcompress(ListOfFiles[0],/remove_all) eq '') then return
+      
+    if ((*global).instrument eq 'REF_L') then begin
+      spin = 0
+    endif else begin
+      spin = get_current_spin_index(event)
+    endelse
+    
     cleaning_base, event=event, $
       list_files = listOfFiles, $
       offset = offset, $
+      spin = spin, $
       main_base_uname = 'MAIN_BASE_ref_scale'
       
   endif
