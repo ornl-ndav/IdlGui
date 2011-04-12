@@ -34,6 +34,25 @@
 
 ;+
 ; :Description:
+;    This function checks if the cursor is still inside the cleaning
+;    application main widget_draw. 
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+function stillInsidePlot, event
+  compile_opt idl2
+  
+  cursor, x, y, /nowait, /device
+  if (x eq -1 or y eq -1) then return, 0
+  return, 1
+  
+end
+
+;+
+; :Description:
 ;   main base event
 ;
 ; :Params:
@@ -70,12 +89,19 @@ pro cleaning_base_event, Event
       ;moving mouse with left click pressed
       if ((*global_plot).left_click_pressed) then begin
         x1y1x2y2 = (*global_plot).x1y1x2y2
-        cursor, x,y, /nowait, /data
-        x1y1x2y2[2] = x
-        x1y1x2y2[3] = y
-        (*global_plot).x1y1x2y2 = x1y1x2y2
-        refresh_plot, event=event
-        plot_data_point_to_remove, event
+        
+        ;make sure we don't go outside the plot area
+        if (stillInsidePlot(event)) then begin
+        
+          cursor, x,y, /nowait, /data
+          
+          x1y1x2y2[2] = x
+          x1y1x2y2[3] = y
+          (*global_plot).x1y1x2y2 = x1y1x2y2
+          refresh_plot, event=event
+          plot_data_point_to_remove, event
+          
+        endif ;still inside plot
       endif
       
       if (event.press eq 1) then begin ;left button pressed
