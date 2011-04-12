@@ -140,6 +140,12 @@ pro cleaning_base_event, Event
         widget_control, range_id, yoffset=yoffset
       endif
       
+      button_id = (*global_plot).cleaning_buttons_base_id
+      if (widget_info(button_id,/valid_id)) then begin
+      widget_control, button_id, xoffset=xoffset + new_xsize
+      widget_control, button_id, yoffset=yoffset + 350
+      endif
+      
       (*global_plot).xsize = new_xsize
       (*global_plot).ysize = new_ysize
       
@@ -363,7 +369,7 @@ pro plot_data_point_to_remove, event=event, base=base
     catch,/cancel
     return
   endif
-
+  
   flt0_intersection = (*(*global_plot).flt0_to_removed)
   flt1_intersection = (*(*global_plot).flt1_to_removed)
   
@@ -371,7 +377,7 @@ pro plot_data_point_to_remove, event=event, base=base
   if (flt0_intersection eq !null) then return
   
   ;keep only the flt0_intersection and flt1_intersection of files displayed
-
+  
   ;get index of the files to plot
   status_of_list_of_files_plotted = $
     (*(*global_plot).status_of_list_of_files_plotted)
@@ -387,16 +393,16 @@ pro plot_data_point_to_remove, event=event, base=base
   
     xaxis = *flt0_ptr[_index_to_plot[_index]]
     yaxis = *flt1_ptr[_index_to_plot[_index]]
-
-    _list_x = getIndexOfIntersectionOfArrays(array2=flt0_intersection, $
-    array1=xaxis)
-    _list_y = getIndexOfIntersectionOfArrays(array2=flt1_intersection, $
-    array1=yaxis)
     
+    _list_x = getIndexOfIntersectionOfArrays(array2=flt0_intersection, $
+      array1=xaxis)
+    _list_y = getIndexOfIntersectionOfArrays(array2=flt1_intersection, $
+      array1=yaxis)
+      
     _final_list_x = [_final_list_x, _list_x]
     _final_list_y = [_final_list_y, _list_y]
     
-  _index++
+    _index++
   endwhile
   
   if (_final_list_x eq !null) then return
@@ -404,11 +410,11 @@ pro plot_data_point_to_remove, event=event, base=base
   
   ;find the indexes that are in both lists (_final_list_x and _final_list_y)
   _final_list = getIntersectionOfArrays(array1=_final_list_x, $
-  array2=_final_list_y)
+    array2=_final_list_y)
     
   final_flt0_intersection = flt0_intersection[_final_list]
   final_flt1_intersection = flt1_intersection[_final_list]
-
+  
   widget_control, id, GET_VALUE = plot_id
   wset, plot_id
   
@@ -418,7 +424,7 @@ pro plot_data_point_to_remove, event=event, base=base
     color=fsc_color('blue'), $
     symsize=2,$
     psym=6
-
+    
 end
 
 ;+
@@ -846,6 +852,7 @@ pro cleaning_base, event=event, $
     shift_key_pressed: 0b, $
     
     xy_range_input_base_id: 0, $ ;id of x & y range input base
+    cleaning_buttons_base_id: 0, $ ;id of cleaning buttons base
     
     scale_setting: 1, $  ;1 for log, 0 for linear
     current_index_plotted: 0, $
@@ -887,6 +894,9 @@ pro cleaning_base, event=event, $
   refresh_plot, base=wBase, /init
   
   xy_range_input_base, main_base_id=wBase, $
+    parent_base_uname='cleaning_widget_base'
+    
+  cleaning_buttons_base, main_base_id=wBase, $
     parent_base_uname='cleaning_widget_base'
     
 end

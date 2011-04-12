@@ -65,6 +65,7 @@ cd, CurrentFolder + '/cleaning_tool'
 .run launch_cleaning_base.pro
 .run cleaning_base.pro
 .run cleaning_axis_range_selection_base.pro
+.run cleaning_buttons_base.pro
 
 ;Build main procedures
 cd, CurrentFolder
