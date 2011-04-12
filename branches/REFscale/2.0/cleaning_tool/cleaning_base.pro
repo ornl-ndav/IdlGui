@@ -362,7 +362,6 @@ pro plot_data_point_to_remove, event=event, base=base
     widget_control, base, get_uvalue=global_plot
     id = WIDGET_INFO(base, FIND_BY_UNAME='cleaning_draw')
   endelse
-  global = (*global_plot).global
   
   catch,error
   if (error ne 0) then begin
@@ -382,8 +381,8 @@ pro plot_data_point_to_remove, event=event, base=base
   status_of_list_of_files_plotted = $
     (*(*global_plot).status_of_list_of_files_plotted)
   _index_to_plot = where(status_of_list_of_files_plotted eq 1, nbr)
-  flt0_ptr = (*global).flt0_rescale_ptr
-  flt1_ptr = (*global).flt1_rescale_ptr
+  flt0_ptr = (*global_plot).local_flt0_rescale_ptr
+  flt1_ptr = (*global_plot).local_flt1_rescale_ptr
   
   _final_list_x = !null
   _final_list_y = !null
@@ -429,6 +428,79 @@ end
 
 ;+
 ; :Description:
+;    This procedure will remove from the local ptr0, ptr1 and ptr2 arrays
+;    the data points selected
+;
+; :Keywords:
+;    base
+;
+; :Author: j35
+;-
+pro remove_selected_points, base=base
+  compile_opt idl2
+  
+  widget_control, base, get_uvalue=global_plot
+  
+  flt0_ptr = (*global_plot).local_flt0_rescale_ptr
+  flt1_ptr = (*global_plot).local_flt1_rescale_ptr
+  flt2_ptr = (*global_plot).local_flt2_rescale_ptr
+  
+  new_flt0_ptr = ptrarr(50,/allocate_heap)
+  new_flt1_ptr = ptrarr(50,/allocate_heap)
+  new_flt2_ptr = ptrarr(50,/allocate_heap)
+  
+  flt0_intersection = (*(*global_plot).flt0_to_removed)
+  flt1_intersection = (*(*global_plot).flt1_to_removed)
+  
+  list_files = (*global_plot).list_files
+  nbr_files = n_elements(list_files)
+  
+  ;find the list of points to remove
+  _index=0
+  _index_new=0
+  while (_index lt nbr_files) do begin ;loop through all the files
+  
+    _new_flt0_ptr = ptr_new(0L)
+    _new_flt1_ptr = ptr_new(0L)
+    _new_flt2_ptr = ptr_new(0L)
+    
+    _flt0 = *flt0_ptr[_index]
+    _flt1 = *flt1_ptr[_index]
+    _flt2 = *flt2_ptr[_index]
+    
+    _index_intersection = 0
+    ;loop through all the x and y values of the various files
+    while (_index_intersection lt n_elements(flt0_intersection)) do begin
+    
+      ;for each, check if they are in the _index_intersection and with the
+      ;same index for both x and y -> that will mean that's a point we need
+      ;to remove and not copy into the final _new_flt0_ptr, _new_flt1_ptr...
+    
+    
+    
+    
+    
+      _index_intersection++
+    endwhile
+    
+    *new_flt0_ptr[_index] = _new_flt0_ptr
+    *new_flt1_ptr[_index] = _new_flt1_ptr
+    *new_flt2_ptr[_index] = _new_flt2_ptr
+    
+    _index++
+  endwhile
+  
+  (*global_plot).local_flt0_rescale_ptr = new_flt0_ptr
+  (*global_plot).local_flt1_rescale_ptr = new_flt1_ptr
+  (*global_plot).local_flt2_rescale_ptr = new_flt2_ptr
+  
+  ;refresh the plot
+  refresh_plot, base=base
+  
+end
+
+;+
+; :Description:
 ;    Refresh the plot when resizing for example
 ;
 ; :keywords:
@@ -449,15 +521,14 @@ pro refresh_plot, event=event, base=base, init=init
     id = WIDGET_INFO(base, FIND_BY_UNAME='cleaning_draw')
   endelse
   
-  global = (*global_plot).global
   index  = (*global_plot).current_index_plotted
   
   status_of_list_of_files_plotted = $
     (*(*global_plot).status_of_list_of_files_plotted)
   list_files = (*global_plot).list_files
   
-  flt0_ptr = (*global).flt0_rescale_ptr
-  flt1_ptr = (*global).flt1_rescale_ptr
+  flt0_ptr = (*global_plot).local_flt0_rescale_ptr
+  flt1_ptr = (*global_plot).local_flt1_rescale_ptr
   
   ;get index of the files to plot
   _index_to_plot = where(status_of_list_of_files_plotted eq 1, nbr)
@@ -552,7 +623,7 @@ pro refresh_plot, event=event, base=base, init=init
     
     if ((*global_plot).show_y_error_bar) then begin ;show error bars
     
-      flt2_ptr = (*global).flt2_rescale_ptr
+      flt2_ptr = (*global_plot).local_flt2_rescale_ptr
       flt2 = *flt2_ptr[_index_to_plot[_index]]
       
       errplot, flt0, $
@@ -683,6 +754,9 @@ pro cleaning_base_cleanup, tlb
   ptr_free, (*global_plot).status_of_list_of_files_plotted
   ptr_free, (*global_plot).flt0_to_removed
   ptr_free, (*global_plot).flt1_to_removed
+  ptr_free, (*global_plot).local_flt0_rescale_ptr
+  ptr_free, (*global_plot).local_flt1_rescale_ptr
+  ptr_free, (*global_plot).local_flt2_rescale_ptr
   
   ptr_free, global_plot
   
@@ -809,6 +883,8 @@ end
 ;    event
 ;    list_files
 ;    offset
+;    spin
+;
 ;    main_base_uname
 ;
 ; :Author: j35
@@ -816,6 +892,7 @@ end
 pro cleaning_base, event=event, $
     list_files = list_files, $
     offset = offset, $
+    spin=spin, $
     main_base_uname = main_base_uname
     
   compile_opt idl2
@@ -860,6 +937,8 @@ pro cleaning_base, event=event, $
     xy_range_input_base_id: 0, $ ;id of x & y range input base
     cleaning_buttons_base_id: 0, $ ;id of cleaning buttons base
     
+    spin: spin, $ ;spin selected
+    
     scale_setting: 1, $  ;1 for log, 0 for linear
     current_index_plotted: 0, $
     
@@ -869,6 +948,10 @@ pro cleaning_base, event=event, $
     
     data: ptr_new(0L), $
     data_linear: ptr_new(0L), $
+    
+    local_flt0_rescale_ptr: ptrarr(50,/allocate_heap), $
+    local_flt1_rescale_ptr: ptrarr(50,/allocate_heap), $
+    local_flt2_rescale_ptr: ptrarr(50,/allocate_heap), $
     
     flt0_to_removed: ptr_new(0L), $
     flt1_to_removed: ptr_new(0L), $
@@ -886,6 +969,31 @@ pro cleaning_base, event=event, $
     
     main_event: event})
     
+  local_flt0_rescale_ptr = (*global_plot).local_flt0_rescale_ptr
+  local_flt1_rescale_ptr = (*global_plot).local_flt1_rescale_ptr
+  local_flt2_rescale_ptr = (*global_plot).local_flt2_rescale_ptr
+  
+  flt0_rescale_ptr = (*global).flt0_rescale_ptr
+  flt1_rescale_ptr = (*global).flt1_rescale_ptr
+  flt2_rescale_ptr = (*global).flt2_rescale_ptr
+  
+  _spin = spin
+  for i=0,49 do begin
+  
+    *local_flt0_rescale_ptr[i] = ptr_new(0L)
+    *local_flt1_rescale_ptr[i] = ptr_new(0L)
+    *local_flt2_rescale_ptr[i] = ptr_new(0L)
+    
+    *local_flt0_rescale_ptr[i] = *flt0_rescale_ptr[i,_spin]
+    *local_flt1_rescale_ptr[i] = *flt1_rescale_ptr[i,_spin]
+    *local_flt2_rescale_ptr[i] = *flt2_rescale_ptr[i,_spin]
+    
+  endfor
+  
+  (*global_plot).local_flt0_rescale_ptr = local_flt0_rescale_ptr
+  (*global_plot).local_flt1_rescale_ptr = local_flt1_rescale_ptr
+  (*global_plot).local_flt2_rescale_ptr = local_flt2_rescale_ptr
+  
   ;[1,1,0,1] for example means the first 2 and the last file loaded are plotted.
   sz = n_elements(list_files)
   status_of_list_of_files_plotted = intarr(sz) + 1 ;plot all the files by default
