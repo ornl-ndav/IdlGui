@@ -53,6 +53,7 @@ pro xy_range_input_base_event, Event
     ;full reset
     widget_info(event.top, find_by_uname='xy_range_full_reset_uname'): begin
       refresh_plot, base=main_base_id, /init
+      plot_data_point_to_remove, base=main_base_id
       refresh_xy_range_input_fields, event=event, global_plot=global_plot
     end
     
@@ -60,18 +61,22 @@ pro xy_range_input_base_event, Event
     widget_info(event.top, find_by_uname='xy_range_xmin_uname'): begin
       save_new_xy_range_input_fields, event
       refresh_plot, base=main_base_id
+      plot_data_point_to_remove, base=main_base_id
     end
     widget_info(event.top, find_by_uname='xy_range_xmax_uname'): begin
       save_new_xy_range_input_fields, event
       refresh_plot, base=main_base_id
+      plot_data_point_to_remove, base=main_base_id
     end
     widget_info(event.top, find_by_uname='xy_range_ymin_uname'): begin
       save_new_xy_range_input_fields, event
       refresh_plot, base=main_base_id
+      plot_data_point_to_remove, base=main_base_id
     end
     widget_info(event.top, find_by_uname='xy_range_ymax_uname'): begin
       save_new_xy_range_input_fields, event
       refresh_plot, base=main_base_id
+      plot_data_point_to_remove, base=main_base_id
     end
     
     else:

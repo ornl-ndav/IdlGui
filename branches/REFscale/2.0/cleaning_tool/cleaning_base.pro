@@ -35,7 +35,7 @@
 ;+
 ; :Description:
 ;    This function checks if the cursor is still inside the cleaning
-;    application main widget_draw. 
+;    application main widget_draw.
 ;
 ; :Params:
 ;    event
@@ -99,7 +99,7 @@ pro cleaning_base_event, Event
           x1y1x2y2[3] = y
           (*global_plot).x1y1x2y2 = x1y1x2y2
           refresh_plot, event=event
-          plot_data_point_to_remove, event
+          plot_data_point_to_remove, event=event
           
         endif ;still inside plot
       endif
@@ -118,7 +118,7 @@ pro cleaning_base_event, Event
         create_array_of_points_selected, event
         (*global_plot).x1y1x2y2 = [-1,-1,-1,-1] ;reset selection
         refresh_plot, event=event
-        plot_data_point_to_remove, event
+        plot_data_point_to_remove, event=event
       endif
       
     end
@@ -151,7 +151,7 @@ pro cleaning_base_event, Event
       widget_control, id, draw_ysize = new_ysize
       
       refresh_plot, event=event
-      plot_data_point_to_remove, event
+      plot_data_point_to_remove, event=event
       
       return
     end
@@ -298,6 +298,7 @@ pro error_bar_menu_eventcb, event
   putValue, event=event, uname=uname, value=value
   
   refresh_plot, event=event
+  plot_data_point_to_remove, event=event
   
 end
 
@@ -330,6 +331,7 @@ pro switch_yaxes_type, event
   putValue, event=event, uname='local_scale_setting_log', value=set2_value
   
   refresh_plot, event=event
+  plot_data_point_to_remove, event=event
   
 end
 
@@ -338,34 +340,85 @@ end
 ;    Plot (highlight) the data points that have been selected and that
 ;    will be removed.
 ;
-; :Params:
+; :Keywords:
 ;    event
+;    base
 ;
 ; :Author: j35
 ;-
-pro plot_data_point_to_remove, event
+pro plot_data_point_to_remove, event=event, base=base
   compile_opt idl2
   
-  widget_control, event.top, get_uvalue=global_plot
+  if (keyword_set(event)) then begin
+    widget_control, event.top, get_uvalue=global_plot
+    id = WIDGET_INFO(event.top, FIND_BY_UNAME='cleaning_draw')
+  endif else begin
+    widget_control, base, get_uvalue=global_plot
+    id = WIDGET_INFO(base, FIND_BY_UNAME='cleaning_draw')
+  endelse
+  global = (*global_plot).global
   
   catch,error
   if (error ne 0) then begin
     catch,/cancel
     return
   endif
-  
+
   flt0_intersection = (*(*global_plot).flt0_to_removed)
   flt1_intersection = (*(*global_plot).flt1_to_removed)
   
-  id = WIDGET_INFO(event.top, FIND_BY_UNAME='cleaning_draw')
+  ;stop if there is no valid selection
+  if (flt0_intersection eq !null) then return
+  
+  ;keep only the flt0_intersection and flt1_intersection of files displayed
+
+  ;get index of the files to plot
+  status_of_list_of_files_plotted = $
+    (*(*global_plot).status_of_list_of_files_plotted)
+  _index_to_plot = where(status_of_list_of_files_plotted eq 1, nbr)
+  flt0_ptr = (*global).flt0_rescale_ptr
+  flt1_ptr = (*global).flt1_rescale_ptr
+  
+  _final_list_x = !null
+  _final_list_y = !null
+  
+  _index=0
+  while (_index lt nbr) do begin
+  
+    xaxis = *flt0_ptr[_index_to_plot[_index]]
+    yaxis = *flt1_ptr[_index_to_plot[_index]]
+
+    _list_x = getIndexOfIntersectionOfArrays(array2=flt0_intersection, $
+    array1=xaxis)
+    _list_y = getIndexOfIntersectionOfArrays(array2=flt1_intersection, $
+    array1=yaxis)
+    
+    _final_list_x = [_final_list_x, _list_x]
+    _final_list_y = [_final_list_y, _list_y]
+    
+  _index++
+  endwhile
+  
+  if (_final_list_x eq !null) then return
+  if (_final_list_y eq !null) then return
+  
+  ;find the indexes that are in both lists (_final_list_x and _final_list_y)
+  _final_list = getIntersectionOfArrays(array1=_final_list_x, $
+  array2=_final_list_y)
+    
+  final_flt0_intersection = flt0_intersection[_final_list]
+  final_flt1_intersection = flt1_intersection[_final_list]
+
   widget_control, id, GET_VALUE = plot_id
   wset, plot_id
   
-  oplot, flt0_intersection, flt1_intersection, $
+  if (final_flt0_intersection eq !null) then return
+  
+  oplot, final_flt0_intersection, final_flt1_intersection, $
     color=fsc_color('blue'), $
     symsize=2,$
     psym=6
-    
+
 end
 
 ;+
@@ -591,6 +644,7 @@ pro cleaning_file_list, event
   putValue, id=event.id, value=_new_label[0]
   
   refresh_plot, event=event
+  plot_data_point_to_remove, event=event
   
 end
 
