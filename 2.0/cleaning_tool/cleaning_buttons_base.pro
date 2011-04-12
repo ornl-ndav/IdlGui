@@ -50,6 +50,11 @@ pro cleaning_buttons_base_event, Event
   
   case Event.id of
   
+    ;cancel button will kill the main cleaning base
+    widget_info(event.top, find_by_uname='cancel_cleaning_button'): begin
+      widget_control, main_base_id, /destroy
+    end
+    
     else:
     
   endcase
@@ -93,28 +98,28 @@ pro cleaning_buttons_base_gui, wBase, $
     /tlb_size_events,$
     GROUP_LEADER = ourGroup)
     
-    validate = widget_button(wBase,$
+  validate = widget_button(wBase,$
     value = 'REMOVE SELECTED POINTS',$
     uname = 'remove_selected_points_button')
-    validate = widget_button(wBase,$
+  validate = widget_button(wBase,$
     value = 'VALIDATE CLEANING and RETURN TO MAIN APPLICATION',$
     uname = 'validate_cleaning_and_return_button')
-
-      space = widget_label(wBase,$
+    
+  space = widget_label(wBase,$
     value =  ' ')
-    last_row = widget_base(wBase,$
+  last_row = widget_base(wBase,$
     /row)
-    full_reset = widget_button(last_row,$
+  full_reset = widget_button(last_row,$
     value = 'FULL RESET',$
     scr_xsize = 100,$
     uname = 'full_reset_cleaning_button')
-    space = widget_label(last_row,$
+  space = widget_label(last_row,$
     value = '            ')
-    cancel = widget_button(last_row,$
+  cancel = widget_button(last_row,$
     value = 'CANCEL',$
     scr_xsize = 100,$
     uname = 'cancel_cleaning_button')
-
+    
     
 end
 
