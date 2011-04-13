@@ -343,26 +343,17 @@ END
 ;##############################################################################
 ;******************************************************************************
 
-;This function returns the value found in the text field given
-FUNCTION getValue, Event, uname
-  unameId = widget_info(Event.top,find_by_uname=uname)
-  widget_control,unameId,get_value=value
-  RETURN, value
-END
-
-;^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*
-
 ;This function returns Q1, Q2 and SF of the current selected tab
 FUNCTION getQ1Q2SF, Event, TAB
 
   IF (TAB EQ 'STEP2') then begin
-    Q1 = getValue(Event, 'step2_q1_text_field')
-    Q2 = getValue(Event, 'step2_q2_text_field')
-    SF = getValue(Event, 'step2_sf_text_field')
+    Q1 = getValue(Event=event, uname='step2_q1_text_field')
+    Q2 = getValue(Event=event, uname='step2_q2_text_field')
+    SF = getValue(Event=event, uname='step2_sf_text_field')
   ENDIF ELSE BEGIN
-    Q1 = getValue(Event, 'step3_q1_text_field')
-    Q2 = getValue(Event, 'step3_q2_text_field')
-    SF = getValue(Event, 'step3_sf_text_field')
+    Q1 = getValue(Event=event, uname='step3_q1_text_field')
+    Q2 = getValue(Event=event, uname='step3_q2_text_field')
+    SF = getValue(Event=event, uname='step3_sf_text_field')
   ENDELSE
   Q1Q2SF = [float(Q1),float(Q2),float(SF)]
   RETURN, Q1Q2SF

@@ -48,6 +48,7 @@ cd, CurrentFolder + IdlUtilitiesPath
 .run time.pro
 .run get_ucams.pro
 .run idl3columnsasciiparser__define.pro
+.run fsc_color.pro
 
 ;Build REFscale GUI
 cd, CurrentFolder + '/REFscaleGUI/'
@@ -58,6 +59,13 @@ cd, CurrentFolder + '/REFscaleGUI/'
 .run make_gui_batch.pro
 .run make_gui_main_base_components.pro
 .run make_gui_log_book.pro
+
+;cleaning tool
+cd, CurrentFolder + '/cleaning_tool'
+.run launch_cleaning_base.pro
+.run cleaning_base.pro
+.run cleaning_axis_range_selection_base.pro
+.run cleaning_buttons_base.pro
 
 ;Build main procedures
 cd, CurrentFolder

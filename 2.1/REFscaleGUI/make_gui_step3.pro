@@ -210,16 +210,7 @@ wAutoRescaleButton = WIDGET_BUTTON(wMainBase,$
                                    SCR_YSIZE = sAutoRescaleButton.size[3],$
                                    VALUE     = sAutoRescaleButton.value,$
                                    SENSITIVE = sAutoRescaleButton.sensitive)
-
-wCleanup = widget_button(wMainBase,$
-    uname='start_cleanup_button',$
-    xoffset = sAutoRescaleButton.size[2]+5,$
-    yoffset = sAutoRescaleButton.size[1],$
-    scr_xsize = 150,$
-    scr_ysize = sAutoRescaleButton.size[3],$
-    value = 'CLEANING DATA...',$
-    sensitive = 1)
-    
+                                       
 ;------------------------------------------------------------------------------
 ;***** Manual Mode Label ******************************************************
 wStep3ManualLabel = WIDGET_LABEL(wMainBase,$

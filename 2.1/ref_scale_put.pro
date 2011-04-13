@@ -32,8 +32,31 @@
 ;
 ;==============================================================================
 
-;##############################################################################
-;******************************************************************************
+pro putValue, event=event, base=base, uname=uname, value=value, id=id
+  compile_opt idl2
+  
+  if (keyword_set(id)) then begin
+  widget_control, id, set_value=value
+  return
+  endif
+  
+  if (keyword_set(event)) then begin
+    uname_id = widget_info(event.top,find_by_uname=uname)
+  endif else begin
+    uname_id = widget_info(base,find_by_uname=uname)
+  endelse
+  widget_control, uname_id, set_value=value
+  
+end
+
+PRO putValueInTextField, Event, uname, value
+  uname_id = widget_info(Event.top,find_by_uname=uname)
+  widget_control, uname_id, set_value=value
+END
+
+pro putTextFieldValue, event, uname, value
+  putValueInTextField, event, uname, value
+end
 
 PRO putValueInTextField, Event, uname, value
   uname_id = widget_info(Event.top,find_by_uname=uname)

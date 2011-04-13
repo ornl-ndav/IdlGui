@@ -57,8 +57,8 @@ FUNCTION CheckStep2Status, Event
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
   widget_control,id,get_uvalue=global
   ;retrieve values of fitting equation (a and b)
-  a = getValue(Event,'step2_fitting_equation_a_text_field')
-  b = getValue(Event,'step2_fitting_equation_b_text_field')
+  a = getValue(Event=event,uname='step2_fitting_equation_a_text_field')
+  b = getValue(Event=event,uname='step2_fitting_equation_b_text_field')
   ;check a and b values
   IF ((*global).force_activation_step2) THEN BEGIN
     activate_status = 1
@@ -766,8 +766,8 @@ END
 ;******************************************************************************
 ;Check if Automatic Button can be validated or not
 PRO CheckAutoModeStep2Button, Event
-  Q1 = getValue(Event,'step2_q1_text_field')
-  Q2 = getValue(Event,'step2_q2_text_field')
+  Q1 = getValue(Event=event, uname='step2_q1_text_field')
+  Q2 = getValue(Event=event, uname='step2_q2_text_field')
   IF (Q1 NE 0 AND Q2 NE 0) THEN BEGIN
     activate_status = 1
   ENDIF ELSE BEGIN
