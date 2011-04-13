@@ -58,11 +58,22 @@ pro cleaning_buttons_base_event, Event
     ;remove selected points
     widget_info(event.top, find_by_uname='remove_selected_points_button'): begin
       remove_selected_points, base=main_base_id
+      refresh_plot, base=main_base_id
     end
     
     ;full reset
     widget_info(event.top, find_by_uname='full_reset_cleaning_button'): begin
       full_reset_removed_points, base=main_base_id
+    end
+    
+    ;validate cleaning and go back to main application
+    widget_info(event.top, $
+      find_by_uname='validate_cleaning_and_return_button'): begin
+      remove_selected_points, base=main_base_id
+      validate_cleaning, base=main_base_id
+      main_event = (*global_plot).main_event
+      steps_tab, main_event, 1
+      widget_control, main_base_id, /destroy
     end
     
     else:
@@ -111,6 +122,8 @@ pro cleaning_buttons_base_gui, wBase, $
   validate = widget_button(wBase,$
     value = 'REMOVE SELECTED POINTS',$
     uname = 'remove_selected_points_button')
+  space = widget_label(wBase,$
+    value = ' ')
   validate = widget_button(wBase,$
     value = 'VALIDATE CLEANING and RETURN TO MAIN APPLICATION',$
     uname = 'validate_cleaning_and_return_button')
