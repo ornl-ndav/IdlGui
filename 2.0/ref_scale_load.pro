@@ -92,60 +92,60 @@ PRO LoadFile_Q, Event
   sz = n_elements(LongFileNames)
   index = 0
   while (index lt sz) do begin
- 
-  LongFileName = LongFileNames[index]
-
-  ;apply auto cleanup of data if switch is on
-  if ((*global).settings_auto_cleaning_flag) then begin
-    cleanup_reduce_data, event, file_name = LongFileName
-  endif
+  
+    LongFileName = LongFileNames[index]
     
-  file_error   = 0
-  CATCH, file_error
-  
-  IF (file_error NE 0) THEN BEGIN
-    CATCH,/cancel
-    ;move Back the colorIndex slidebar
-    MoveColorIndexBack,Event ;_Gui
-  ENDIF ELSE BEGIN
-    ;continue only if a file has been selected
-    IF (LongfileName NE '') then begin
-      idl_send_to_geek_addLogBookText, Event, '-> Long File Name  : ' + $
-        LongFileName
-      ;get only the file name (without path) of file
-      ShortFileName = get_file_name_only(LongFileName)
-      idl_send_to_geek_addLogBookText, Event, '-> Short File Name : ' + $
-        ShortFileName
-      ;MoveColorIndex to new position
-      MoveColorIndex,Event ;_Gui
-      ;store flt0(x-axis), flt1(y-axis) and flt2(y_error-axis) of new files
-      index = (*global).NbrFilesLoaded
-      idl_send_to_geek_addLogBookText, Event, '-> Store data ... ' + $
-        PROCESSING
-      SuccessStatus = StoreFlts(Event, LongFileName, index) ;_OpenFile
-      IF (SuccessStatus) THEN BEGIN
-        idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, OK
-        ;add all files to step1 and step3 droplist
-        AddNewFileToDroplist, Event, ShortFileName, LongFileName ;_Gui
-        display_info_about_selected_file, Event, LongFileName ;_Gui
-        ;retrieve angle value from First data nexus file listed
-;        SaveAngleValueFromNexus, Event, index ;_get
-        populateColorLabel, Event, LongFileName ;_Gui
-        ;plot all loaded files
-        PlotLoadedFiles, Event ;_Plot
-      ENDIF ELSE BEGIN
-        idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, FAILED
+    ;apply auto cleanup of data if switch is on
+    if ((*global).settings_auto_cleaning_flag) then begin
+      cleanup_reduce_data, event, file_name = LongFileName
+    endif
+    
+    file_error   = 0
+    CATCH, file_error
+    
+    IF (file_error NE 0) THEN BEGIN
+      CATCH,/cancel
+      ;move Back the colorIndex slidebar
+      MoveColorIndexBack,Event ;_Gui
+    ENDIF ELSE BEGIN
+      ;continue only if a file has been selected
+      IF (LongfileName NE '') then begin
+        idl_send_to_geek_addLogBookText, Event, '-> Long File Name  : ' + $
+          LongFileName
+        ;get only the file name (without path) of file
+        ShortFileName = get_file_name_only(LongFileName)
+        idl_send_to_geek_addLogBookText, Event, '-> Short File Name : ' + $
+          ShortFileName
+        ;MoveColorIndex to new position
+        MoveColorIndex,Event ;_Gui
+        ;store flt0(x-axis), flt1(y-axis) and flt2(y_error-axis) of new files
+        index = (*global).NbrFilesLoaded
+        idl_send_to_geek_addLogBookText, Event, '-> Store data ... ' + $
+          PROCESSING
+        SuccessStatus = StoreFlts(Event, LongFileName, index) ;_OpenFile
+        IF (SuccessStatus) THEN BEGIN
+          idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, OK
+          ;add all files to step1 and step3 droplist
+          AddNewFileToDroplist, Event, ShortFileName, LongFileName ;_Gui
+          display_info_about_selected_file, Event, LongFileName ;_Gui
+          ;retrieve angle value from First data nexus file listed
+          ;        SaveAngleValueFromNexus, Event, index ;_get
+          populateColorLabel, Event, LongFileName ;_Gui
+          ;plot all loaded files
+          PlotLoadedFiles, Event ;_Plot
+        ENDIF ELSE BEGIN
+          idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, FAILED
+        ENDELSE
+      ENDIF ELSE BEGIN ;no file has been selected
+        idl_send_to_geek_addLogBookText, Event, '-> Operation Canceled ' + $
+          '(no file loaded)'
       ENDELSE
-    ENDIF ELSE BEGIN ;no file has been selected
-      idl_send_to_geek_addLogBookText, Event, '-> Operation Canceled ' + $
-        '(no file loaded)'
     ENDELSE
-  ENDELSE
-  ;Update GUi
-  StepsUpdateGui, Event ;_Gui
-  idl_send_to_geek_showLastLineLogBook, Event
-  
-  index++
+    ;Update GUi
+    StepsUpdateGui, Event ;_Gui
+    idl_send_to_geek_showLastLineLogBook, Event
+    
+    index++
   endwhile
   
   
@@ -173,52 +173,52 @@ PRO LoadTOFFile, Event
   index = 0
   while (index lt sz) do begin
   
-  LongFileName = LongFileNames[index]
-  
-  file_error = 0
-  CATCH, file_error
-  IF (file_error NE 0) THEN BEGIN
-    CATCH,/cancel
-    idl_send_to_geek_addLogBookText, Event, '> Loading a TOF file .... FAILED '
-    ;move Back the colorIndex slidebar
-    MoveColorIndexBack,Event    ;_Gui
-  ENDIF ELSE BEGIN
-    ;continue only if a file has been selected
-    IF (LongfileName NE '') THEN BEGIN
-      idl_send_to_geek_addLogBookText, Event, '-> Long File Name  : ' + $
-        LongFileName
-      ;get only the file name (without path) of file
-      ShortFileName = get_file_name_only(LongFileName)
-      idl_send_to_geek_addLogBookText, Event, '-> Short File Name : ' + $
-        ShortFileName
-      ;MoveColorIndex to new position
-      MoveColorIndex,Event ;_Gui
-      ;get the value of the angle (in degree)
-      angleValue = getCurrentAngleValue(Event) ;_get
-      (*global).angleValue = angleValue
-      get_angle_value_and_do_conversion, Event, angleValue ;_math
-      ;store flt0, flt1 and flt2 of new files
-      index = (*global).NbrFilesLoaded
-      idl_send_to_geek_addLogBookText, Event, '-> Store data ... ' + $
-        PROCESSING
-      SuccessStatus = Storeflts(Event, LongFileName, index) ;_OpenFile
-      IF (SuccessStatus) THEN BEGIN
-        idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, OK
-        ;add all files to step1 and step3 droplist
-        AddNewFileToDroplist, Event, ShortFileName, LongFileName ;_Gui
-        display_info_about_selected_file, Event, LongFileName
-        populateColorLabel, Event, LongFileName
-        ;plot all loaded files
-        PlotLoadedFiles, Event
-      ENDIF ELSE BEGIN
-        idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, FAILED
-      ENDELSE
-    ENDIF
-    idl_send_to_geek_addLogBookText, Event, '> Loading a TOF file .... DONE'
-  ENDELSE
-  idl_send_to_geek_showLastLineLogBook, Event
-  
-  index++
+    LongFileName = LongFileNames[index]
+    
+    file_error = 0
+    CATCH, file_error
+    IF (file_error NE 0) THEN BEGIN
+      CATCH,/cancel
+      idl_send_to_geek_addLogBookText, Event, '> Loading a TOF file .... FAILED '
+      ;move Back the colorIndex slidebar
+      MoveColorIndexBack,Event    ;_Gui
+    ENDIF ELSE BEGIN
+      ;continue only if a file has been selected
+      IF (LongfileName NE '') THEN BEGIN
+        idl_send_to_geek_addLogBookText, Event, '-> Long File Name  : ' + $
+          LongFileName
+        ;get only the file name (without path) of file
+        ShortFileName = get_file_name_only(LongFileName)
+        idl_send_to_geek_addLogBookText, Event, '-> Short File Name : ' + $
+          ShortFileName
+        ;MoveColorIndex to new position
+        MoveColorIndex,Event ;_Gui
+        ;get the value of the angle (in degree)
+        angleValue = getCurrentAngleValue(Event) ;_get
+        (*global).angleValue = angleValue
+        get_angle_value_and_do_conversion, Event, angleValue ;_math
+        ;store flt0, flt1 and flt2 of new files
+        index = (*global).NbrFilesLoaded
+        idl_send_to_geek_addLogBookText, Event, '-> Store data ... ' + $
+          PROCESSING
+        SuccessStatus = Storeflts(Event, LongFileName, index) ;_OpenFile
+        IF (SuccessStatus) THEN BEGIN
+          idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, OK
+          ;add all files to step1 and step3 droplist
+          AddNewFileToDroplist, Event, ShortFileName, LongFileName ;_Gui
+          display_info_about_selected_file, Event, LongFileName
+          populateColorLabel, Event, LongFileName
+          ;plot all loaded files
+          PlotLoadedFiles, Event
+        ENDIF ELSE BEGIN
+          idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, FAILED
+        ENDELSE
+      ENDIF
+      idl_send_to_geek_addLogBookText, Event, '> Loading a TOF file .... DONE'
+    ENDELSE
+    idl_send_to_geek_showLastLineLogBook, Event
+    
+    index++
   endwhile
   
 END
