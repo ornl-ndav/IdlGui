@@ -34,7 +34,8 @@
 
 ;+
 ; :Description:
-;   This procedures will average the values with the same x value using the
+;   This procedures will average the values with the same x value, or
+;   with x within a given range of relative difference, using the
 ;   following formula
 ;   value1 : x1, y1, yerror1
 ;   value2 : x1, y2, yerror2
@@ -42,15 +43,25 @@
 ;   newy = [x1/yerror1^2)+(x2/yerror2^2)] / [1/yerror1^2 + 1/yerrror2^2]
 ;   newyerror = sqrt(1/(1/yerror1^2 + 1/yerror2^2))
 ;
+;   relative difference is calculated as such:
+;       (x1 - x2) / (x1+x2) < 0.1 %
+;
 ; :Params:
+;    event
 ;    full_flt0_sorted
 ;    full_ftl1_sorted
 ;    full_flt2_sorted
 ;
 ; :Author: j35
 ;-
-pro average_overlap, full_flt0_sorted, full_flt1_sorted, full_flt2_sorted
+pro average_overlap, event, $
+    full_flt0_sorted, $
+    full_flt1_sorted, $
+    full_flt2_sorted
   compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  relative_diff = (*global).relative_diff
   
   n_row = n_elements(full_flt0_sorted)
   
@@ -63,13 +74,18 @@ pro average_overlap, full_flt0_sorted, full_flt1_sorted, full_flt2_sorted
     value_left = full_flt0_sorted[i]
     value_right = full_flt0_sorted[i+1]
     
-    if (value_left ne value_right) then begin ;no need to average
+    bAverage = 0b
+    if (value_left eq value_right) then bAverage=1b
+    if (bAverage eq 0b) then begin
+      abs_value_left = abs(value_left)
+      abs_value_right = abs(value_right)
+      _relative_diff = $
+        (abs_value_left-abs_value_right)/(abs_value_left+abs_value_right)
+      if (_relative_diff le (*global).relative_diff) then bAverage=1b
+    endif
     
-      new_xValue = full_flt0_sorted[i]
-      new_yValue = full_flt1_sorted[i]
-      new_yerrorValue = full_flt2_sorted[i]
-      
-    endif else begin ;needs to average values
+    ;treated as same value on right and left
+    if (bAverage) then begin
     
       ;new xaxis value
       new_xValue = mean([value_left, value_right])
@@ -90,6 +106,12 @@ pro average_overlap, full_flt0_sorted, full_flt1_sorted, full_flt2_sorted
       new_yerrorValue = sqrt(1/new_y2)
       
       i++
+    endif else begin
+    
+      new_xValue = full_flt0_sorted[i]
+      new_yValue = full_flt1_sorted[i]
+      new_yerrorValue = full_flt2_sorted[i]
+      
     endelse
     
     new_full_flt0_sorted = [new_full_flt0_sorted, new_xValue]
