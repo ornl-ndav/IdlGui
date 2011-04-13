@@ -32,6 +32,36 @@
 ;
 ;==============================================================================
 
+
+;+
+; :Description:
+;    return the value of the widget defined
+;    by its uname (passed as argument)
+;
+; :Keywords:
+;   event
+;   base
+;   uname
+;
+; :Author: j35
+;-
+function getValue, id=id, event=event, base=base, uname=uname
+  compile_opt idl2
+  
+  if (n_elements(event) ne 0) then begin
+    _id = widget_info(event.top, find_by_uname=uname)
+  endif
+  if (n_elements(base) ne 0) then begin
+    _id = widget_info(base, find_by_uname=uname)
+  endif
+  if (n_elements(id) ne 0) then begin
+    _id = id
+  endif
+  widget_control, _id, get_value=value
+  return, value
+end
+
+
 ;This function returns the contain of the Text Field
 FUNCTION getTextFieldValue, Event, uname
   TextFieldID = WIDGET_INFO(Event.top,find_by_uname=uname)
@@ -193,3 +223,102 @@ function get_nbr_spin_states, event
   return, nbr_spins
   
 end
+
+
+
+;+
+; :Description:
+;    This function returns the intersection of two arrays
+;    ex:
+;     array1=[0,1,2,3,4,5,6]
+;     array2=[3,4,5,6,7,8,9]
+;     will return
+;     [3,4,5,6]
+;
+; :Keywords:
+;    array1
+;    array2
+;
+; :Author: j35
+;-
+function getIntersectionOfArrays, array1=array1, array2=array2
+  compile_opt idl2
+  
+  ;sort the array first
+  _array1 = array1[sort(array1)]
+  _array2 = array2[sort(array2)]
+  
+  intersection_array = !null
+  
+  sz1 = n_elements(_array1)
+  sz2 = n_elements(_array2)
+  sz_min = min([sz1,sz2])
+  
+  if (sz_min eq sz1) then begin
+    _array_a = _array1
+    _array_b = _array2
+    endif else begin
+    _array_a = _array2
+    _array_b = _array1
+endelse
+
+  _index1 = 0
+  while (_index1 lt sz_min) do begin
+  
+    val1 = _array_a[_index1]
+    _result = where(val1 eq _array_b,nbr)
+    if (nbr ne 0) then begin
+      intersection_array = [intersection_array,val1]
+    endif
+    
+    _index1++
+  endwhile
+  
+  return, intersection_array
+  
+end
+
+
+;+
+; :Description:
+;    This function returns the index relative to the first array of the 
+;    value also found in the second array
+;
+; :Keywords:
+;    array1
+;    array2
+;
+; :Author: j35
+;-
+function getIndexOfIntersectionOfArrays, array1=array1, array2=array2
+compile_opt idl2
+
+_index_of_value_found = !null
+sz = n_elements(array1)
+
+_i = 0
+while (_i lt sz) do begin
+
+_val = array1[_i]
+_result = where(_val eq array2,nbr)
+if (nbr ne 0) then begin
+_index_of_value_found = [_index_of_value_found, _result]
+endif
+
+_i++
+endwhile
+
+return, _index_of_value_found
+
+end
+
+
+
+
+
+
+
+
+
+
+
