@@ -49,6 +49,11 @@ PRO MAIN_BASE_ref_scale_event, Event
     ;***** GENERAL FUNCTION ***************************************************
     ;--------------------------------------------------------------------------
     
+    ;Cleaning data
+    widget_info(wWidget, find_by_uname='start_cleanup_button'): begin
+      launch_cleaning_base, event
+    end
+    
     ;Event triggered by 'X-axis  min:' widget_text
     WIDGET_INFO(wWidget, FIND_BY_UNAME='XaxisMinTextField'): BEGIN
       (*global).replot_me = 1
@@ -281,7 +286,7 @@ PRO MAIN_BASE_ref_scale_event, Event
     ;Event trigerred when editing the SF text field
     WIDGET_INFO(wWidget, FIND_BY_UNAME='step2_sf_text_field'): BEGIN
       manual_ce_scaling, event
-      ;manual_sf_editing, Event ;_Step2
+    ;manual_sf_editing, Event ;_Step2
     END
     
     ;Event trigerred by Qmin cw_field
@@ -305,11 +310,6 @@ PRO MAIN_BASE_ref_scale_event, Event
       steps_tab, Event, 1   ;_Tab
     END
     
-    ;Cleaning data
-    widget_info(wWidget, find_by_uname='start_cleanup_button'): begin
-    launch_cleaning_base, event
-    end
-    
     ;Event triggered by [Automatic rescaling]
     WIDGET_INFO(wWidget, FIND_BY_UNAME= $
       'Step3_automatic_rescale_button'): BEGIN
@@ -320,7 +320,7 @@ PRO MAIN_BASE_ref_scale_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='Step3SFTextField'): BEGIN
       step = FLOAT(getTextFieldValue(Event,'Step3SFTextField'))
       Step3RescaleFile, Event, 'manual'
-      ;Step3RescaleFile2, Event, step ;_Step3
+    ;Step3RescaleFile2, Event, step ;_Step3
     END
     
     ;Event triggered by [+++]
