@@ -428,6 +428,54 @@ end
 
 ;+
 ; :Description:
+;    This routine bring to life all the points previously removed
+;
+; :Keywords:
+;    base
+;
+; :Author: j35
+;-
+pro full_reset_removed_points, base=base
+  compile_opt idl2
+  
+  widget_control, base, get_uvalue=global_plot
+  global = (*global_plot).global
+  
+  local_flt0_rescale_ptr = (*global_plot).local_flt0_rescale_ptr
+  local_flt1_rescale_ptr = (*global_plot).local_flt1_rescale_ptr
+  local_flt2_rescale_ptr = (*global_plot).local_flt2_rescale_ptr
+  
+  flt0_rescale_ptr = (*global).flt0_rescale_ptr
+  flt1_rescale_ptr = (*global).flt1_rescale_ptr
+  flt2_rescale_ptr = (*global).flt2_rescale_ptr
+  
+  _spin = (*global_plot).spin
+  for i=0,49 do begin
+  
+    *local_flt0_rescale_ptr[i] = ptr_new(0L)
+    *local_flt1_rescale_ptr[i] = ptr_new(0L)
+    *local_flt2_rescale_ptr[i] = ptr_new(0L)
+    
+    *local_flt0_rescale_ptr[i] = *flt0_rescale_ptr[i,_spin]
+    *local_flt1_rescale_ptr[i] = *flt1_rescale_ptr[i,_spin]
+    *local_flt2_rescale_ptr[i] = *flt2_rescale_ptr[i,_spin]
+    
+  endfor
+  
+  (*global_plot).local_flt0_rescale_ptr = local_flt0_rescale_ptr
+  (*global_plot).local_flt1_rescale_ptr = local_flt1_rescale_ptr
+  (*global_plot).local_flt2_rescale_ptr = local_flt2_rescale_ptr
+  
+  (*(*global_plot).flt0_to_removed) = ptr_new(0L)
+  (*(*global_plot).flt1_to_removed) = ptr_new(0L)
+  
+  ;refresh the plot
+  refresh_plot, base=base
+  
+end
+
+;+
+; :Description:
 ;    This procedure will remove from the local ptr0, ptr1 and ptr2 arrays
 ;    the data points selected
 ;
