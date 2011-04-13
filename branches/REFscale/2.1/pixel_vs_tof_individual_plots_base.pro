@@ -232,7 +232,7 @@ pro switch_local_settings_plot_values, event
   plot_setting1 = (*global_plot).plot_setting1
   plot_setting2 = (*global_plot).plot_setting2
   
-  set1_value = getValue(event=event, 'plot_setting_untouched')
+  set1_value = getValue(event=event, uname='plot_setting_untouched')
   
   if (set1_value eq ('   ' + plot_setting1)) then begin ;setting1 needs to be checked
     set1_value = '*  ' + plot_setting1
@@ -267,7 +267,7 @@ pro change_loadct, event
   ;get old loadct
   old_loadct = strcompress((*global_plot).default_loadct,/remove_all)
   old_uname = 'loadct_' + old_loadct
-  label = getValue(event=event,old_uname)
+  label = getValue(event=event,uname=old_uname)
   ;remove keep central part
   raw_label1 = strsplit(label,'>>',/regex,/extract)
   raw_label2 = strsplit(raw_label1[1],'<<',/regex,/extract)
@@ -276,7 +276,7 @@ pro change_loadct, event
   putValue, event=event, old_uname, raw_label
   
   ;change value of new loadct
-  new_label = getValue(event=event, new_uname)
+  new_label = getValue(event=event, uname=new_uname)
   new_label = strcompress(new_label,/remove_all)
   ;add selection string
   new_label = '>  > >> ' + new_label + ' << <  <'
@@ -830,7 +830,7 @@ pro refresh_px_vs_tof_plots_base, wBase = wBase, $
   pre = '>  > >> '
   post = ' << <  <'
   uname = 'loadct_' + strcompress(default_loadct,/remove_all)
-  value = getValue(base=wBase, uname)
+  value = getValue(base=wBase, uname=uname)
   new_value = pre + value + post
   setValue, base=wBase, uname, new_value
   
@@ -1007,7 +1007,7 @@ pro px_vs_tof_plots_base, main_base=main_base, $
   pre = '>  > >> '
   post = ' << <  <'
   uname = 'loadct_' + strcompress(default_loadct,/remove_all)
-  value = getValue(base=wBase, uname)
+  value = getValue(base=wBase, uname=uname)
   new_value = pre + value + post
   setValue, base=wBase, uname, new_value
   

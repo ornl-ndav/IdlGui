@@ -87,58 +87,69 @@ PRO LoadFile_Q, Event
   FAILED     = (*global).failed
   
   ;launch the program that open the dialog_pickfile
-  LongFileName = OpenFile(Event)
-
-  ;apply auto cleanup of data if switch is on
-  if ((*global).settings_auto_cleaning_flag) then begin
-    cleanup_reduce_data, event, file_name = LongFileName
-  endif
-    
-  file_error   = 0
-  CATCH, file_error
+  LongFileNames = OpenFile(Event)
+  if (LongFileNames[0] eq '') then return
+  sz = n_elements(LongFileNames)
+  index = 0
+  while (index lt sz) do begin
   
-  IF (file_error NE 0) THEN BEGIN
-    CATCH,/cancel
-    ;move Back the colorIndex slidebar
-    MoveColorIndexBack,Event ;_Gui
-  ENDIF ELSE BEGIN
-    ;continue only if a file has been selected
-    IF (LongfileName NE '') then begin
-      idl_send_to_geek_addLogBookText, Event, '-> Long File Name  : ' + $
-        LongFileName
-      ;get only the file name (without path) of file
-      ShortFileName = get_file_name_only(LongFileName)
-      idl_send_to_geek_addLogBookText, Event, '-> Short File Name : ' + $
-        ShortFileName
-      ;MoveColorIndex to new position
-      MoveColorIndex,Event ;_Gui
-      ;store flt0(x-axis), flt1(y-axis) and flt2(y_error-axis) of new files
-      index = (*global).NbrFilesLoaded
-      idl_send_to_geek_addLogBookText, Event, '-> Store data ... ' + $
-        PROCESSING
-      SuccessStatus = StoreFlts(Event, LongFileName, index) ;_OpenFile
-      IF (SuccessStatus) THEN BEGIN
-        idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, OK
-        ;add all files to step1 and step3 droplist
-        AddNewFileToDroplist, Event, ShortFileName, LongFileName ;_Gui
-        display_info_about_selected_file, Event, LongFileName ;_Gui
-        ;retrieve angle value from First data nexus file listed
-;        SaveAngleValueFromNexus, Event, index ;_get
-        populateColorLabel, Event, LongFileName ;_Gui
-        ;plot all loaded files
-        PlotLoadedFiles, Event ;_Plot
-      ENDIF ELSE BEGIN
-        idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, FAILED
+    LongFileName = LongFileNames[index]
+    
+    ;apply auto cleanup of data if switch is on
+    if ((*global).settings_auto_cleaning_flag) then begin
+      cleanup_reduce_data, event, file_name = LongFileName
+    endif
+    
+    file_error   = 0
+    CATCH, file_error
+    
+    IF (file_error NE 0) THEN BEGIN
+      CATCH,/cancel
+      ;move Back the colorIndex slidebar
+      MoveColorIndexBack,Event ;_Gui
+    ENDIF ELSE BEGIN
+      ;continue only if a file has been selected
+      IF (LongfileName NE '') then begin
+        idl_send_to_geek_addLogBookText, Event, '-> Long File Name  : ' + $
+          LongFileName
+        ;get only the file name (without path) of file
+        ShortFileName = get_file_name_only(LongFileName)
+        idl_send_to_geek_addLogBookText, Event, '-> Short File Name : ' + $
+          ShortFileName
+        ;MoveColorIndex to new position
+        MoveColorIndex,Event ;_Gui
+        ;store flt0(x-axis), flt1(y-axis) and flt2(y_error-axis) of new files
+        index = (*global).NbrFilesLoaded
+        idl_send_to_geek_addLogBookText, Event, '-> Store data ... ' + $
+          PROCESSING
+        SuccessStatus = StoreFlts(Event, LongFileName, index) ;_OpenFile
+        IF (SuccessStatus) THEN BEGIN
+          idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, OK
+          ;add all files to step1 and step3 droplist
+          AddNewFileToDroplist, Event, ShortFileName, LongFileName ;_Gui
+          display_info_about_selected_file, Event, LongFileName ;_Gui
+          ;retrieve angle value from First data nexus file listed
+          ;        SaveAngleValueFromNexus, Event, index ;_get
+          populateColorLabel, Event, LongFileName ;_Gui
+          ;plot all loaded files
+          PlotLoadedFiles, Event ;_Plot
+        ENDIF ELSE BEGIN
+          idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, FAILED
+        ENDELSE
+      ENDIF ELSE BEGIN ;no file has been selected
+        idl_send_to_geek_addLogBookText, Event, '-> Operation Canceled ' + $
+          '(no file loaded)'
       ENDELSE
-    ENDIF ELSE BEGIN ;no file has been selected
-      idl_send_to_geek_addLogBookText, Event, '-> Operation Canceled ' + $
-        '(no file loaded)'
     ENDELSE
-  ENDELSE
-  ;Update GUi
-  StepsUpdateGui, Event ;_Gui
-  idl_send_to_geek_showLastLineLogBook, Event
+    ;Update GUi
+    StepsUpdateGui, Event ;_Gui
+    idl_send_to_geek_showLastLineLogBook, Event
+    
+    index++
+  endwhile
+    
 END
+
 
 ;##############################################################################
 ;******************************************************************************
@@ -220,7 +231,7 @@ PRO CLEAR_FILE, Event
   ;get the selected index of the list of file droplist
   TextBoxIndex = getSelectedIndex(Event, 'list_of_files_droplist') ;_get
   ;get the list of files
-  ListOfFiles  = getValue(Event,'list_of_files_droplist')
+  ListOfFiles  = getValue(Event=event, uname='list_of_files_droplist')
   ;inform user of file that is going to be removed
   idl_send_to_geek_addLogBookText, Event, '> Removing File : ' + $
     ListOfFiles[TextBoxIndex]

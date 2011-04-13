@@ -49,6 +49,11 @@ PRO MAIN_BASE_ref_scale_event, Event
     ;***** GENERAL FUNCTION *******************************************************
     ;------------------------------------------------------------------------------
     
+    ;Cleaning data
+    widget_info(wWidget, find_by_uname='start_cleanup_button'): begin
+      launch_cleaning_base, event
+    end
+    
     ;Event triggered by 'X-axis  min:' widget_text
     WIDGET_INFO(wWidget, FIND_BY_UNAME='XaxisMinTextField'): BEGIN
       (*global).replot_me = 1
@@ -313,7 +318,7 @@ PRO MAIN_BASE_ref_scale_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='Step3SFTextField'): BEGIN
       step = FLOAT(getTextFieldValue(Event,'Step3SFTextField'))
       Step3RescaleFile, Event, 'manual'
-      ;Step3RescaleFile2, Event, step ;_Step3
+    ;Step3RescaleFile2, Event, step ;_Step3
     END
     
     ;Event triggered by [+++]

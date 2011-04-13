@@ -52,15 +52,16 @@ FUNCTION OpenFile, Event
   FullFileName = dialog_pickfile(PATH = pid_path,$
     GET_PATH = path,$
     dialog_parent = dialog_id, $
+    /multiple_files,$
     TITLE    = title,$
     FILTER   = filter)
-
-  IF (FullFileName NE '') THEN BEGIN
+    
+  IF (FullFileName[0] NE '') THEN BEGIN
   
     (*global).input_path = path
-  
-    ;;redefine the working path
-    ;path = define_new_default_working_path(Event,FullFileName)
+    
+  ;;redefine the working path
+  ;path = define_new_default_working_path(Event,FullFileName)
     
   ENDIF
   
@@ -74,7 +75,7 @@ END
 FUNCTION StoreFlts, Event, LongFileName, index, spin_state_nbr=spin_state_nbr
 
   widget_control, event.top, get_uvalue=global
-
+  
   IF (index EQ 0) THEN BEGIN
     global_metadata_CE_file = (*global).metadata_CE_file
     metadata_CE_file = strarr(1)
@@ -217,7 +218,7 @@ FUNCTION StoreFlts, Event, LongFileName, index, spin_state_nbr=spin_state_nbr
     ;store metadata_CE_file for index 0 only
     IF (index EQ 0) THEN BEGIN
       if (n_elements(spin_state_nbr) eq 0) then begin
-      spin_state_nbr = 0
+        spin_state_nbr = 0
       endif
       size = (size(metadata_CE_file))(1)
       metadata_CE_file = metadata_CE_file[0:size-5]
@@ -238,7 +239,7 @@ FUNCTION StoreFlts, Event, LongFileName, index, spin_state_nbr=spin_state_nbr
     *flt1_rescale_ptr[index,spin_state_nbr] = flt1
     (*global).flt1_ptr = flt1_ptr
     (*global).flt1_rescale_ptr = flt1_rescale_ptr
-
+    
     flt2_ptr = (*global).flt2_ptr
     flt2_rescale_ptr = (*global).flt2_rescale_ptr
     *flt2_ptr[index,spin_state_nbr] = flt2

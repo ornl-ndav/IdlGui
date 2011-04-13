@@ -323,11 +323,18 @@ PRO MakeGuiMainBaseComponents, MAIN_BASE, StepsTabSize
     /no_release,$
     uname = 'on_on')
     
+  ;cleaning data button
+  cleaning = widget_button(main_base, $
+    xoffset = sSettingsBase.size[0]+300,$
+    yoffset = sSettingsBase.size[1]+35,$
+    value = 'Data cleaning ...',$
+    uname='start_cleanup_button')
+    
   ;settings button
   settings = widget_button(MAIN_BASE,$
-    xoffset = sSettingsBase.size[0]+330,$
+    xoffset = sSettingsBase.size[0]+430,$
     yoffset = sSettingsBase.size[1]+35,$
-    xsize = 200,$
+    xsize = 100,$
     value = 'Settings ...',$
     uname = 'open_settings_base')
     
