@@ -69,11 +69,23 @@ pro cleaning_buttons_base_event, Event
     ;validate cleaning and go back to main application
     widget_info(event.top, $
       find_by_uname='validate_cleaning_and_return_button'): begin
-      remove_selected_points, base=main_base_id
-      validate_cleaning, base=main_base_id
-      main_event = (*global_plot).main_event
-      steps_tab, main_event, 1
-      widget_control, main_base_id, /destroy
+    remove_selected_points, base=main_base_id
+      validate_cleaning, base=main_base_id, ok=ok
+      if (ok) then begin
+        main_event = (*global_plot).main_event
+        steps_tab, main_event, 1
+        widget_control, main_base_id, /destroy
+      endif else begin
+        ;inform user than he removed a full data set !!
+        message_text = ['Make sure you do not select all the data points of' + $
+          ' a same file!']
+        title = 'Program is unable to validate your selection!'
+        result = dialog_message(message_text, $
+          /information,$
+          title=title,$
+          dialog_parent=main_base_id,$
+          /center)
+       full_reset_removed_points, base=main_base_id
     end
     
     else:

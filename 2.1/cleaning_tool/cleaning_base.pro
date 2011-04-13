@@ -483,8 +483,10 @@ end
 ;
 ; :Author: j35
 ;-
-pro validate_cleaning, base=base
+pro validate_cleaning, base=base, ok=ok
   compile_opt idl2
+  
+  ok=1b
   
   widget_control, base, get_uvalue=global_plot
   global = (*global_plot).global
@@ -497,12 +499,31 @@ pro validate_cleaning, base=base
   flt1_rescale_ptr = (*global).flt1_rescale_ptr
   flt2_rescale_ptr = (*global).flt2_rescale_ptr
   
+  list_files = (*global_plot).list_files
+  sz = n_elements(list_files)
+
+  ;check first that we don't have an empty data file
   _spin = (*global_plot).spin
-  for i=0,49 do begin
+  for i=0,(sz-1) do begin
+  
+    if (*local_flt0_rescale_ptr[i] eq !null) then begin
+      ok=0b
+      return
+    endif
+    
+  endfor
+
+  _spin = (*global_plot).spin
+  for i=0,(sz-1) do begin
   
     *flt0_rescale_ptr[i] = ptr_new(0L)
     *flt1_rescale_ptr[i] = ptr_new(0L)
     *flt2_rescale_ptr[i] = ptr_new(0L)
+    
+    if (*local_flt0_rescale_ptr[i] eq !null) then begin
+      ok=0b
+      return
+    endif
     
     *flt0_rescale_ptr[i,_spin] = *local_flt0_rescale_ptr[i]
     *flt1_rescale_ptr[i,_spin] = *local_flt1_rescale_ptr[i]
