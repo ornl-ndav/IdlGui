@@ -1069,7 +1069,10 @@ pro cleaning_base, event=event, $
     scale_setting: 1, $  ;1 for log, 0 for linear
     current_index_plotted: 0, $
     
-    list_color: ['red','pink','orange','green','blue','black'],$
+    list_color: ['red','pink','orange','green','blue','black',$
+    'red','pink','orange','green','blue','black',$
+    'red','pink','orange','green','blue','black',$
+    'red','pink','orange','green','blue','black'],$
     
     status_of_list_of_files_plotted: ptr_new(0L), $
     
