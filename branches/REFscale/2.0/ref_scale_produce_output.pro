@@ -442,7 +442,7 @@ PRO ProduceOutputFile, Event
     full_flt2_sorted = full_flt2[flt0_sorted_index]
     
     ;average overlap data values
-    average_overlap, full_flt0_sorted, full_flt1_sorted, full_flt2_sorted
+    average_overlap, event, full_flt0_sorted, full_flt1_sorted, full_flt2_sorted
     
     sz = n_elements(full_flt0_sorted)
     data_text = strarr(1)

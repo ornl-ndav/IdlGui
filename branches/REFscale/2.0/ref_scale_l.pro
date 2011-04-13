@@ -56,6 +56,7 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   VERSION  = file->getValue(tag=['configuration','version'])
   DEBUGGER = file->getValue(tag=['configuration','debugging'])
   auto_cleaning_data = file->getValue(tag=['configuration','auto_cleaning'])
+  relative_diff = file->getValue(tag=['configuration','relative_diff'])
   ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
   ;============================================================================
   
@@ -78,6 +79,9 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ;performing setp3
     
     instrument: 'REF_L', $ ;by default, REF_L instrument
+    
+    ;Q relative within which the Qs are treated as identical
+    relative_diff: float(relative_diff), $
     
     ;settings base
     settings_show_error_bar_flag: 1b,$
