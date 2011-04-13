@@ -460,32 +460,65 @@ pro remove_selected_points, base=base
   _index_new=0
   while (_index lt nbr_files) do begin ;loop through all the files
   
-    _new_flt0_ptr = ptr_new(0L)
-    _new_flt1_ptr = ptr_new(0L)
-    _new_flt2_ptr = ptr_new(0L)
+    _new_flt0 = !null
+    _new_flt1 = !null
+    _new_flt2 = !null
     
     _flt0 = *flt0_ptr[_index]
     _flt1 = *flt1_ptr[_index]
     _flt2 = *flt2_ptr[_index]
     
-    _index_intersection = 0
+    ;method
+    ;for each, check if they are in the _index_intersection and with the
+    ;same index for both x and y -> that will mean that's a point we need
+    ;to remove and not copy into the final _new_flt0_ptr, _new_flt1_ptr...
+    
+    _index_val = 0
     ;loop through all the x and y values of the various files
-    while (_index_intersection lt n_elements(flt0_intersection)) do begin
+    while (_index_val lt n_elements(_flt0)) do begin
     
-      ;for each, check if they are in the _index_intersection and with the
-      ;same index for both x and y -> that will mean that's a point we need
-      ;to remove and not copy into the final _new_flt0_ptr, _new_flt1_ptr...
-    
-    
-    
-    
-    
-      _index_intersection++
+      ;retrieve current x and y value to test (is this (x,y) points is in the
+      ;list of points to remove
+      _x_val_tested = _flt0[_index_val]
+      _y_val_tested = _flt1[_index_val]
+      
+      ;is _x_val_tested in list of x to remove ?
+      _result_x = where(_x_val_tested eq flt0_intersection, nbr)
+      if (nbr eq 0) then begin
+        _new_flt0 = [_new_flt0, _x_val_tested]
+        _new_flt1 = [_new_flt1, _y_val_tested]
+        _new_flt2 = [_new_flt2, _flt2[_index_val]]
+        _index_val++
+        continue
+      endif
+      
+      ;is _y_val_tested
+      _result_y = where(_y_val_tested eq flt1_intersection, nbr)
+      if (nbr eq 0) then begin
+        _new_flt0 = [_new_flt0, _x_val_tested]
+        _new_flt1 = [_new_flt1, _y_val_tested]
+        _new_flt2 = [_new_flt2, _flt2[_index_val]]
+        _index_val++
+        continue
+      endif
+      
+      ;we found _x_val_tested and _y_val_tested in the list of x and y points
+      ;to remove. Now we need to check that they have been found at the
+      ;same index in the flt0_intersection and flt1_intersection
+      _same_index = getIntersectionOfArrays(array1=_result_x, $
+        array2=_result_y)
+      if (_same_index eq !null) then begin
+        _new_flt0 = [_new_flt0, _x_val_tested]
+        _new_flt1 = [_new_flt1, _y_val_tested]
+        _new_flt2 = [_new_flt2, _flt2[_index_val]]
+      endif
+      
+      _index_val++
     endwhile
     
-    *new_flt0_ptr[_index] = _new_flt0_ptr
-    *new_flt1_ptr[_index] = _new_flt1_ptr
-    *new_flt2_ptr[_index] = _new_flt2_ptr
+    *new_flt0_ptr[_index] = _new_flt0
+    *new_flt1_ptr[_index] = _new_flt1
+    *new_flt2_ptr[_index] = _new_flt2
     
     _index++
   endwhile
@@ -604,9 +637,11 @@ pro refresh_plot, event=event, base=base, init=init
           color=fsc_color('black'), $
           /nodata
       endif
-      oplot, flt0, flt1, $
-        color=fsc_color(list_color[_index]), $
-        psym=2
+      if (flt0 ne !null) then begin
+        oplot, flt0, flt1, $
+          color=fsc_color(list_color[_index]), $
+          psym=2
+      endif
     endif else begin
       if (_index eq 0) then begin
         plot, [min_x_value, max_x_value], $
@@ -618,7 +653,9 @@ pro refresh_plot, event=event, base=base, init=init
           color=fsc_color('black'), $
           /nodata
       endif
-      oplot, flt0, flt1, psym=2, color=fsc_color(list_color[_index])
+      if (flt0 ne !null) then begin
+        oplot, flt0, flt1, psym=2, color=fsc_color(list_color[_index])
+      endif
     endelse
     
     if ((*global_plot).show_y_error_bar) then begin ;show error bars
@@ -626,10 +663,13 @@ pro refresh_plot, event=event, base=base, init=init
       flt2_ptr = (*global_plot).local_flt2_rescale_ptr
       flt2 = *flt2_ptr[_index_to_plot[_index]]
       
-      errplot, flt0, $
-        flt1-flt2,$
-        flt1+flt2,$
-        color=fsc_color(list_color[_index])
+      if (flt0 ne !null) then begin
+        errplot, flt0, $
+          flt1-flt2,$
+          flt1+flt2,$
+          color=fsc_color(list_color[_index])
+      endif
+      
     endif
     
     _index++
