@@ -479,25 +479,47 @@ pro full_reset_removed_points, base=base
   flt1_rescale_ptr = (*global).flt1_rescale_ptr
   flt2_rescale_ptr = (*global).flt2_rescale_ptr
   
-  _spin = (*global_plot).spin
-  for i=0,49 do begin
+  bRepeatOtherSpin = (*global_plot).bRepeatOtherSpin
+  if (bRepeatOtherSpin) then begin
   
-    *local_flt0_rescale_ptr[i] = ptr_new(0L)
-    *local_flt1_rescale_ptr[i] = ptr_new(0L)
-    *local_flt2_rescale_ptr[i] = ptr_new(0L)
+    for spin=0,3 do begin ;loop over all spins
+      for i=0,49 do begin
+      
+        *local_flt0_rescale_ptr[i,spin] = ptr_new(0L)
+        *local_flt1_rescale_ptr[i,spin] = ptr_new(0L)
+        *local_flt2_rescale_ptr[i,spin] = ptr_new(0L)
+        
+        *local_flt0_rescale_ptr[i,spin] = *flt0_rescale_ptr[i,spin]
+        *local_flt1_rescale_ptr[i,spin] = *flt1_rescale_ptr[i,spin]
+        *local_flt2_rescale_ptr[i,spin] = *flt2_rescale_ptr[i,spin]
+        
+      endfor
+    endfor
     
-    *local_flt0_rescale_ptr[i] = *flt0_rescale_ptr[i,_spin]
-    *local_flt1_rescale_ptr[i] = *flt1_rescale_ptr[i,_spin]
-    *local_flt2_rescale_ptr[i] = *flt2_rescale_ptr[i,_spin]
     
-  endfor
+  endif else begin
+  
+    _spin = (*global_plot).spin
+    for i=0,49 do begin
+    
+      *local_flt0_rescale_ptr[i,_spin] = ptr_new(0L)
+      *local_flt1_rescale_ptr[i,_spin] = ptr_new(0L)
+      *local_flt2_rescale_ptr[i,_spin] = ptr_new(0L)
+      
+      *local_flt0_rescale_ptr[i,_spin] = *flt0_rescale_ptr[i,_spin]
+      *local_flt1_rescale_ptr[i,_spin] = *flt1_rescale_ptr[i,_spin]
+      *local_flt2_rescale_ptr[i,_spin] = *flt2_rescale_ptr[i,_spin]
+      
+    endfor
+    
+  endelse
   
   (*global_plot).local_flt0_rescale_ptr = local_flt0_rescale_ptr
   (*global_plot).local_flt1_rescale_ptr = local_flt1_rescale_ptr
   (*global_plot).local_flt2_rescale_ptr = local_flt2_rescale_ptr
   
-  (*(*global_plot).flt0_to_removed) = ptr_new(0L)
-  (*(*global_plot).flt1_to_removed) = ptr_new(0L)
+  (*(*global_plot).flt0_to_removed) = !null
+  (*(*global_plot).flt1_to_removed) = !null
   
   ;refresh the plot
   refresh_plot, base=base
