@@ -87,7 +87,8 @@ pro cleaning_buttons_base_event, Event
           /center)
         full_reset_removed_points, base=main_base_id
       endelse
-    end
+   endelse
+end
     
     else:
     
