@@ -277,6 +277,35 @@ end
 
 ;+
 ; :Description:
+;    this routine is directly reached by the 'Show interface validation'
+;    button and bring to life (if not there yet) this interface
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro show_interface_validation, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_plot
+  cleaning_buttons_base_id = (*global_plot).cleaning_buttons_base_id
+  if (widget_info(cleaning_buttons_base_id,/valid_id) eq 0) then begin
+  
+    top_base_id = widget_info(event.top, find_by_uname='cleaning_widget_base')
+    parent_base_uname = 'cleaning_widget_base
+    
+    cleaning_buttons_base, event=event, $
+      parent_base_uname = parent_base_uname
+      
+  endif
+  
+end
+
+;+
+; :Description:
 ;    This routine is reached when the user click the With or without Y
 ;    error bar in the menu
 ;
@@ -502,7 +531,7 @@ pro validate_cleaning, base=base, ok=ok
   
   list_files = (*global_plot).list_files
   sz = n_elements(list_files)
-
+  
   ;check first that we don't have an empty data file
   _spin = (*global_plot).spin
   for i=0,(sz-1) do begin
@@ -513,7 +542,7 @@ pro validate_cleaning, base=base, ok=ok
     endif
     
   endfor
-
+  
   _spin = (*global_plot).spin
   for i=0,(sz-1) do begin
   
@@ -1011,6 +1040,14 @@ pro cleaning_base_gui, wBase, $
     value = '* Show Y error bars',$
     uname = 'show_or_not_error_bars',$
     event_pro = 'error_bar_menu_eventcb')
+    
+  ;validate base
+  valid = widget_button(bar1,$
+    value='Validation',$
+    /menu)
+  _valid = widget_button(valid,$
+    value = 'Show interface for validation of changes',$
+    event_pro = 'show_interface_validation')
     
   ;main plot
   draw = widget_draw(wbase,$
