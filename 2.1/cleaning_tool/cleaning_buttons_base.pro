@@ -69,7 +69,7 @@ pro cleaning_buttons_base_event, Event
     ;validate cleaning and go back to main application
     widget_info(event.top, $
       find_by_uname='validate_cleaning_and_return_button'): begin
-    remove_selected_points, base=main_base_id
+      remove_selected_points, base=main_base_id
       validate_cleaning, base=main_base_id, ok=ok
       if (ok) then begin
         main_event = (*global_plot).main_event
@@ -85,7 +85,8 @@ pro cleaning_buttons_base_event, Event
           title=title,$
           dialog_parent=main_base_id,$
           /center)
-       full_reset_removed_points, base=main_base_id
+        full_reset_removed_points, base=main_base_id
+      endelse
     end
     
     else:
