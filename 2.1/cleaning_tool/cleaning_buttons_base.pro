@@ -90,6 +90,17 @@ pro cleaning_buttons_base_event, Event
    endelse
 end
     
+    ;cw_bgroup of spin states repetition
+    widget_info(event.top, $
+      find_by_uname='validate_cleaning_for_other_spin_states'): begin
+      widget_control, event.id, get_value=value
+      if (value eq 0) then begin
+        (*global_plot). bRepeatOtherSpin = 1b
+      endif else begin
+        (*global_plot). bRepeatOtherSpin = 0b
+      endelse
+    end
+    
     else:
     
   endcase
@@ -136,8 +147,19 @@ pro cleaning_buttons_base_gui, wBase, $
   validate = widget_button(wBase,$
     value = 'REMOVE SELECTED POINTS',$
     uname = 'remove_selected_points_button')
-  space = widget_label(wBase,$
-    value = ' ')
+  ;space = widget_label(wBase,$
+  ;  value = ' ')
+    
+  repeat_process = cw_bgroup(wBase,$
+    ['Yes','No'],$
+    /row,$
+    /no_release, $
+    /exclusive,$
+    uname = 'validate_cleaning_for_other_spin_states',$
+    set_value=0,$
+    label_left='Perform same cleaning for other spin states:')
+    
+    
   validate = widget_button(wBase,$
     value = 'VALIDATE CLEANING and RETURN TO MAIN APPLICATION',$
     uname = 'validate_cleaning_and_return_button')
@@ -151,7 +173,7 @@ pro cleaning_buttons_base_gui, wBase, $
     scr_xsize = 100,$
     uname = 'full_reset_cleaning_button')
   space = widget_label(last_row,$
-    value = '            ')
+    value = '                         ')
   cancel = widget_button(last_row,$
     value = 'CANCEL',$
     scr_xsize = 100,$

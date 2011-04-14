@@ -182,7 +182,6 @@ pro create_array_of_points_selected, event
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global_plot
-  global = (*global_plot).global
   
   ;selection
   x1y1x2y2 = (*global_plot).x1y1x2y2
@@ -190,8 +189,9 @@ pro create_array_of_points_selected, event
   status_of_list_of_files_plotted = $
     (*(*global_plot).status_of_list_of_files_plotted)
     
-  flt0_ptr = (*global).flt0_rescale_ptr
-  flt1_ptr = (*global).flt1_rescale_ptr
+  flt0_ptr = (*global_plot).local_flt0_rescale_ptr
+  flt1_ptr = (*global_plot).local_flt1_rescale_ptr
+  spin = (*global_plot).spin
   
   ;get index of the files to plot
   _index_to_plot = where(status_of_list_of_files_plotted eq 1, nbr)
@@ -216,8 +216,8 @@ pro create_array_of_points_selected, event
   _index=0
   while (_index lt nbr) do begin
   
-    xaxis = *flt0_ptr[_index_to_plot[_index]]
-    yaxis = *flt1_ptr[_index_to_plot[_index]]
+    xaxis = *flt0_ptr[_index_to_plot[_index],spin]
+    yaxis = *flt1_ptr[_index_to_plot[_index],spin]
     
     _xaxis_index_selected = where((xaxis ge xmin) and (xaxis le xmax),/null)
     _yaxis_index_selected = where((yaxis ge ymin) and (yaxis le ymax),/null)
@@ -392,14 +392,15 @@ pro plot_data_point_to_remove, event=event, base=base
     id = WIDGET_INFO(base, FIND_BY_UNAME='cleaning_draw')
   endelse
   
-  catch,error
-  if (error ne 0) then begin
-    catch,/cancel
-    return
-  endif
-  
+;  catch,error
+;  if (error ne 0) then begin
+;    catch,/cancel
+;    return
+;  endif
+;  
   flt0_intersection = (*(*global_plot).flt0_to_removed)
   flt1_intersection = (*(*global_plot).flt1_to_removed)
+  spin = (*global_plot).spin
   
   ;stop if there is no valid selection
   if (flt0_intersection eq !null) then return
@@ -419,8 +420,8 @@ pro plot_data_point_to_remove, event=event, base=base
   _index=0
   while (_index lt nbr) do begin
   
-    xaxis = *flt0_ptr[_index_to_plot[_index]]
-    yaxis = *flt1_ptr[_index_to_plot[_index]]
+    xaxis = *flt0_ptr[_index_to_plot[_index],spin]
+    yaxis = *flt1_ptr[_index_to_plot[_index],spin]
     
     _list_x = getIndexOfIntersectionOfArrays(array2=flt0_intersection, $
       array1=xaxis)
@@ -530,7 +531,7 @@ pro validate_cleaning, base=base, ok=ok
   
   list_files = (*global_plot).list_files
   sz = n_elements(list_files)
-
+  
   ;check first that we don't have an empty data file
   _spin = (*global_plot).spin
   for i=0,(sz-1) do begin
@@ -541,7 +542,7 @@ pro validate_cleaning, base=base, ok=ok
     endif
     
   endfor
-
+  
   _spin = (*global_plot).spin
   for i=0,(sz-1) do begin
   
@@ -581,13 +582,16 @@ pro remove_selected_points, base=base
   
   widget_control, base, get_uvalue=global_plot
   
+  bRepeatOtherSpin = (*global_plot).bRepeatOtherSpin
+  _spin = (*global_plot).spin
+  
   flt0_ptr = (*global_plot).local_flt0_rescale_ptr
   flt1_ptr = (*global_plot).local_flt1_rescale_ptr
   flt2_ptr = (*global_plot).local_flt2_rescale_ptr
   
-  new_flt0_ptr = ptrarr(50,/allocate_heap)
-  new_flt1_ptr = ptrarr(50,/allocate_heap)
-  new_flt2_ptr = ptrarr(50,/allocate_heap)
+  new_flt0_ptr = ptrarr(50,4,/allocate_heap)
+  new_flt1_ptr = ptrarr(50,4,/allocate_heap)
+  new_flt2_ptr = ptrarr(50,4,/allocate_heap)
   
   flt0_intersection = (*(*global_plot).flt0_to_removed)
   flt1_intersection = (*(*global_plot).flt1_to_removed)
@@ -595,18 +599,57 @@ pro remove_selected_points, base=base
   list_files = (*global_plot).list_files
   nbr_files = n_elements(list_files)
   
+  list_other_spins = intarr(3)
+  case (_spin) of
+    0: list_other_spins=[1,2,3]
+    1: list_other_spins=[0,2,3]
+    2: list_other_spins=[0,1,3]
+    3: list_other_spins=[0,1,2]
+  endcase
+  
   ;find the list of points to remove
   _index=0
   _index_new=0
   while (_index lt nbr_files) do begin ;loop through all the files
   
+    if (bRepeatOtherSpin) then begin
+    
+      _new_flt0_spin2 = !null
+      _new_flt1_spin2 = !null
+      _new_flt2_spin2 = !null
+      
+      _new_flt0_spin3 = !null
+      _new_flt1_spin3 = !null
+      _new_flt2_spin3 = !null
+      
+      _new_flt0_spin4 = !null
+      _new_flt1_spin4 = !null
+      _new_flt2_spin4 = !null
+      
+      spin2 = list_other_spins[0]
+      _flt0_spin2 = *flt0_ptr[_index,spin2]
+      _flt1_spin2 = *flt1_ptr[_index,spin2]
+      _flt2_spin2 = *flt2_ptr[_index,spin2]
+      
+      spin3 = list_other_spins[1]
+      _flt0_spin2 = *flt0_ptr[_index,spin3]
+      _flt1_spin2 = *flt1_ptr[_index,spin3]
+      _flt2_spin2 = *flt2_ptr[_index,spin3]
+      
+      spin4 = list_other_spins[2]
+      _flt0_spin2 = *flt0_ptr[_index,spin4]
+      _flt1_spin2 = *flt1_ptr[_index,spin4]
+      _flt2_spin2 = *flt2_ptr[_index,spin4]
+      
+    endif
+    
     _new_flt0 = !null
     _new_flt1 = !null
     _new_flt2 = !null
     
-    _flt0 = *flt0_ptr[_index]
-    _flt1 = *flt1_ptr[_index]
-    _flt2 = *flt2_ptr[_index]
+    _flt0 = *flt0_ptr[_index,_spin]
+    _flt1 = *flt1_ptr[_index,_spin]
+    _flt2 = *flt2_ptr[_index,_spin]
     
     ;method
     ;for each, check if they are in the _index_intersection and with the
@@ -625,9 +668,27 @@ pro remove_selected_points, base=base
       ;is _x_val_tested in list of x to remove ?
       _result_x = where(_x_val_tested eq flt0_intersection, nbr)
       if (nbr eq 0) then begin
+      
         _new_flt0 = [_new_flt0, _x_val_tested]
         _new_flt1 = [_new_flt1, _y_val_tested]
         _new_flt2 = [_new_flt2, _flt2[_index_val]]
+        
+        if (bRepeatOtherSpin) then begin
+        
+          _new_flt0_spin2 = [_new_flt0_spin2, _flt0_spin2[_index_val]]
+          _new_flt1_spin2 = [_new_flt1_spin2, _flt1_spin2[_index_val]]
+          _new_flt2_spin2 = [_new_flt2_spin2, _flt2_spin2[_index_val]]
+          
+          _new_flt0_spin3 = [_new_flt0_spin3, _flt0_spin3[_index_val]]
+          _new_flt1_spin3 = [_new_flt1_spin3, _flt1_spin3[_index_val]]
+          _new_flt2_spin3 = [_new_flt2_spin3, _flt2_spin3[_index_val]]
+          
+          _new_flt0_spin4 = [_new_flt0_spin4, _flt0_spin4[_index_val]]
+          _new_flt1_spin4 = [_new_flt1_spin4, _flt1_spin4[_index_val]]
+          _new_flt2_spin4 = [_new_flt2_spin4, _flt2_spin4[_index_val]]
+          
+        endif
+        
         _index_val++
         continue
       endif
@@ -638,6 +699,23 @@ pro remove_selected_points, base=base
         _new_flt0 = [_new_flt0, _x_val_tested]
         _new_flt1 = [_new_flt1, _y_val_tested]
         _new_flt2 = [_new_flt2, _flt2[_index_val]]
+        
+        if (bRepeatOtherSpin) then begin
+        
+          _new_flt0_spin2 = [_new_flt0_spin2, _flt0_spin2[_index_val]]
+          _new_flt1_spin2 = [_new_flt1_spin2, _flt1_spin2[_index_val]]
+          _new_flt2_spin2 = [_new_flt2_spin2, _flt2_spin2[_index_val]]
+          
+          _new_flt0_spin3 = [_new_flt0_spin3, _flt0_spin3[_index_val]]
+          _new_flt1_spin3 = [_new_flt1_spin3, _flt1_spin3[_index_val]]
+          _new_flt2_spin3 = [_new_flt2_spin3, _flt2_spin3[_index_val]]
+          
+          _new_flt0_spin4 = [_new_flt0_spin4, _flt0_spin4[_index_val]]
+          _new_flt1_spin4 = [_new_flt1_spin4, _flt1_spin4[_index_val]]
+          _new_flt2_spin4 = [_new_flt2_spin4, _flt2_spin4[_index_val]]
+          
+        endif
+        
         _index_val++
         continue
       endif
@@ -651,14 +729,47 @@ pro remove_selected_points, base=base
         _new_flt0 = [_new_flt0, _x_val_tested]
         _new_flt1 = [_new_flt1, _y_val_tested]
         _new_flt2 = [_new_flt2, _flt2[_index_val]]
+        
+        if (bRepeatOtherSpin) then begin
+        
+          _new_flt0_spin2 = [_new_flt0_spin2, _flt0_spin2[_index_val]]
+          _new_flt1_spin2 = [_new_flt1_spin2, _flt1_spin2[_index_val]]
+          _new_flt2_spin2 = [_new_flt2_spin2, _flt2_spin2[_index_val]]
+          
+          _new_flt0_spin3 = [_new_flt0_spin3, _flt0_spin3[_index_val]]
+          _new_flt1_spin3 = [_new_flt1_spin3, _flt1_spin3[_index_val]]
+          _new_flt2_spin3 = [_new_flt2_spin3, _flt2_spin3[_index_val]]
+          
+          _new_flt0_spin4 = [_new_flt0_spin4, _flt0_spin4[_index_val]]
+          _new_flt1_spin4 = [_new_flt1_spin4, _flt1_spin4[_index_val]]
+          _new_flt2_spin4 = [_new_flt2_spin4, _flt2_spin4[_index_val]]
+          
+        endif
+        
       endif
       
       _index_val++
     endwhile
     
-    *new_flt0_ptr[_index] = _new_flt0
-    *new_flt1_ptr[_index] = _new_flt1
-    *new_flt2_ptr[_index] = _new_flt2
+    *new_flt0_ptr[_index,_spin] = _new_flt0
+    *new_flt1_ptr[_index,_spin] = _new_flt1
+    *new_flt2_ptr[_index,_spin] = _new_flt2
+    
+    if (bRepeatOtherSpin) then begin
+    
+      *new_flt0_ptr[_index,list_other_spins[0]] = _new_flt0_spin2
+      *new_flt1_ptr[_index,list_other_spins[0]] = _new_flt1_spin2
+      *new_flt2_ptr[_index,list_other_spins[0]] = _new_flt2_spin2
+      
+      *new_flt0_ptr[_index,list_other_spins[1]] = _new_flt0_spin3
+      *new_flt1_ptr[_index,list_other_spins[1]] = _new_flt1_spin3
+      *new_flt2_ptr[_index,list_other_spins[1]] = _new_flt2_spin3
+      
+      *new_flt0_ptr[_index,list_other_spins[2]] = _new_flt0_spin4
+      *new_flt1_ptr[_index,list_other_spins[2]] = _new_flt1_spin4
+      *new_flt2_ptr[_index,list_other_spins[2]] = _new_flt2_spin4
+      
+    endif
     
     _index++
   endwhile
@@ -700,6 +811,8 @@ pro refresh_plot, event=event, base=base, init=init
   flt0_ptr = (*global_plot).local_flt0_rescale_ptr
   flt1_ptr = (*global_plot).local_flt1_rescale_ptr
   
+  _spin = (*global_plot).spin
+  
   ;get index of the files to plot
   _index_to_plot = where(status_of_list_of_files_plotted eq 1, nbr)
   
@@ -720,11 +833,11 @@ pro refresh_plot, event=event, base=base, init=init
     max_y_value = 0
     while (_index lt nbr) do begin
     
-      _min_x_value = min(*flt0_ptr[_index_to_plot[_index]],max=_max_x_value)
+      _min_x_value = min(*flt0_ptr[_index_to_plot[_index],_spin],max=_max_x_value)
       min_x_value = (_min_x_value lt min_x_value) ? _min_x_value : min_x_value
       max_x_value = (_max_x_value gt max_x_value) ? _max_x_value : max_x_value
       
-      _min_y_value = min(*flt1_ptr[_index_to_plot[_index]],max=_max_y_value)
+      _min_y_value = min(*flt1_ptr[_index_to_plot[_index],_spin],max=_max_y_value)
       min_y_value = (_min_y_value lt min_y_value) ? _min_y_value : min_y_value
       max_y_value = (_max_y_value gt max_y_value) ? _max_y_value : max_y_value
       
@@ -758,8 +871,8 @@ pro refresh_plot, event=event, base=base, init=init
   _index = 0
   while (_index lt nbr) do begin
   
-    flt0 = *flt0_ptr[_index_to_plot[_index]]
-    flt1 = *flt1_ptr[_index_to_plot[_index]]
+    flt0 = *flt0_ptr[_index_to_plot[_index],_spin]
+    flt1 = *flt1_ptr[_index_to_plot[_index],_spin]
     
     if ((*global_plot).default_scale_settings) then begin ;log
     
@@ -798,7 +911,7 @@ pro refresh_plot, event=event, base=base, init=init
     if ((*global_plot).show_y_error_bar) then begin ;show error bars
     
       flt2_ptr = (*global_plot).local_flt2_rescale_ptr
-      flt2 = *flt2_ptr[_index_to_plot[_index]]
+      flt2 = *flt2_ptr[_index_to_plot[_index],_spin]
       
       if (flt0 ne !null) then begin
         errplot, flt0, $
@@ -1047,7 +1160,7 @@ pro cleaning_base_gui, wBase, $
   _valid = widget_button(valid,$
     value = 'Show interface for validation of changes',$
     event_pro = 'show_interface_validation')
-
+    
   ;main plot
   draw = widget_draw(wbase,$
     scr_xsize = xsize,$
@@ -1110,6 +1223,9 @@ pro cleaning_base, event=event, $
   global_plot = PTR_NEW({ wbase: wbase,$
     global: global, $
     
+    ;should we repeat the process for the other spin states
+    bRepeatOtherSpin: 1b, $
+    
     ;used to plot selection zoom
     list_files: list_files, $
     default_plot_size: 600, $
@@ -1136,9 +1252,9 @@ pro cleaning_base, event=event, $
     data: ptr_new(0L), $
     data_linear: ptr_new(0L), $
     
-    local_flt0_rescale_ptr: ptrarr(50,/allocate_heap), $
-    local_flt1_rescale_ptr: ptrarr(50,/allocate_heap), $
-    local_flt2_rescale_ptr: ptrarr(50,/allocate_heap), $
+    local_flt0_rescale_ptr: ptrarr(50,4,/allocate_heap), $
+    local_flt1_rescale_ptr: ptrarr(50,4,/allocate_heap), $
+    local_flt2_rescale_ptr: ptrarr(50,4,/allocate_heap), $
     
     flt0_to_removed: ptr_new(0L), $
     flt1_to_removed: ptr_new(0L), $
@@ -1164,16 +1280,20 @@ pro cleaning_base, event=event, $
   flt1_rescale_ptr = (*global).flt1_rescale_ptr
   flt2_rescale_ptr = (*global).flt2_rescale_ptr
   
-  _spin = spin
+  ;_spin = spin
   for i=0,49 do begin
   
     *local_flt0_rescale_ptr[i] = ptr_new(0L)
     *local_flt1_rescale_ptr[i] = ptr_new(0L)
     *local_flt2_rescale_ptr[i] = ptr_new(0L)
     
-    *local_flt0_rescale_ptr[i] = *flt0_rescale_ptr[i,_spin]
-    *local_flt1_rescale_ptr[i] = *flt1_rescale_ptr[i,_spin]
-    *local_flt2_rescale_ptr[i] = *flt2_rescale_ptr[i,_spin]
+    for j=0,3 do begin ;loop over all spin states
+    
+      *local_flt0_rescale_ptr[i,j] = *flt0_rescale_ptr[i,j]
+      *local_flt1_rescale_ptr[i,j] = *flt1_rescale_ptr[i,j]
+      *local_flt2_rescale_ptr[i,j] = *flt2_rescale_ptr[i,j]
+      
+    endfor
     
   endfor
   
