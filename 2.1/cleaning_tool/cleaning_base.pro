@@ -392,12 +392,12 @@ pro plot_data_point_to_remove, event=event, base=base
     id = WIDGET_INFO(base, FIND_BY_UNAME='cleaning_draw')
   endelse
   
-;  catch,error
-;  if (error ne 0) then begin
-;    catch,/cancel
-;    return
-;  endif
-;  
+  catch,error
+  if (error ne 0) then begin
+    catch,/cancel
+    return
+  endif
+  
   flt0_intersection = (*(*global_plot).flt0_to_removed)
   flt1_intersection = (*(*global_plot).flt1_to_removed)
   spin = (*global_plot).spin
@@ -532,34 +532,50 @@ pro validate_cleaning, base=base, ok=ok
   list_files = (*global_plot).list_files
   sz = n_elements(list_files)
   
-  ;check first that we don't have an empty data file
-  _spin = (*global_plot).spin
-  for i=0,(sz-1) do begin
+  bRepeatOtherSpin = (*global_plot).bRepeatOtherSpin
   
-    if (*local_flt0_rescale_ptr[i] eq !null) then begin
-      ok=0b
-      return
-    endif
-    
-  endfor
+  if (bRepeatOtherSpin) then begin
   
-  _spin = (*global_plot).spin
-  for i=0,(sz-1) do begin
+    for j=0,3 do begin ;loop over all spin states
+      for i=0,(sz-1) do begin
+      
+        *flt0_rescale_ptr[i,j] = ptr_new(0L)
+        *flt1_rescale_ptr[i,j] = ptr_new(0L)
+        *flt2_rescale_ptr[i,j] = ptr_new(0L)
+        
+        *flt0_rescale_ptr[i,j] = *local_flt0_rescale_ptr[i,j]
+        *flt1_rescale_ptr[i,j] = *local_flt1_rescale_ptr[i,j]
+        *flt2_rescale_ptr[i,j] = *local_flt2_rescale_ptr[i,j]
+        
+      endfor
+    endfor
+    
+  endif else begin
   
-    *flt0_rescale_ptr[i] = ptr_new(0L)
-    *flt1_rescale_ptr[i] = ptr_new(0L)
-    *flt2_rescale_ptr[i] = ptr_new(0L)
+    ;check first that we don't have an empty data file
+    _spin = (*global_plot).spin
+    for i=0,(sz-1) do begin
     
-    if (*local_flt0_rescale_ptr[i] eq !null) then begin
-      ok=0b
-      return
-    endif
+      if (*local_flt0_rescale_ptr[i,_spin] eq !null) then begin
+        ok=0b
+        return
+      endif
+      
+    endfor
     
-    *flt0_rescale_ptr[i,_spin] = *local_flt0_rescale_ptr[i]
-    *flt1_rescale_ptr[i,_spin] = *local_flt1_rescale_ptr[i]
-    *flt2_rescale_ptr[i,_spin] = *local_flt2_rescale_ptr[i]
+    for i=0,(sz-1) do begin
     
-  endfor
+      *flt0_rescale_ptr[i] = ptr_new(0L)
+      *flt1_rescale_ptr[i] = ptr_new(0L)
+      *flt2_rescale_ptr[i] = ptr_new(0L)
+      
+      *flt0_rescale_ptr[i,_spin] = *local_flt0_rescale_ptr[i]
+      *flt1_rescale_ptr[i,_spin] = *local_flt1_rescale_ptr[i]
+      *flt2_rescale_ptr[i,_spin] = *local_flt2_rescale_ptr[i]
+      
+    endfor
+    
+  endelse
   
   (*global).flt0_rescale_ptr = flt0_rescale_ptr
   (*global).flt1_rescale_ptr = flt1_rescale_ptr
@@ -607,6 +623,19 @@ pro remove_selected_points, base=base
     3: list_other_spins=[0,1,2]
   endcase
   
+  ;init name of variables
+  _flt0_spin2 = !null
+  _flt1_spin2 = !null
+  _flt2_spin2 = !null
+  
+  _flt0_spin3 = !null
+  _flt1_spin3 = !null
+  _flt2_spin3 = !null
+  
+  _flt0_spin4 = !null
+  _flt1_spin4 = !null
+  _flt2_spin4 = !null
+  
   ;find the list of points to remove
   _index=0
   _index_new=0
@@ -614,34 +643,34 @@ pro remove_selected_points, base=base
   
     if (bRepeatOtherSpin) then begin
     
-      _new_flt0_spin2 = !null
-      _new_flt1_spin2 = !null
-      _new_flt2_spin2 = !null
-      
-      _new_flt0_spin3 = !null
-      _new_flt1_spin3 = !null
-      _new_flt2_spin3 = !null
-      
-      _new_flt0_spin4 = !null
-      _new_flt1_spin4 = !null
-      _new_flt2_spin4 = !null
-      
       spin2 = list_other_spins[0]
       _flt0_spin2 = *flt0_ptr[_index,spin2]
       _flt1_spin2 = *flt1_ptr[_index,spin2]
       _flt2_spin2 = *flt2_ptr[_index,spin2]
       
       spin3 = list_other_spins[1]
-      _flt0_spin2 = *flt0_ptr[_index,spin3]
-      _flt1_spin2 = *flt1_ptr[_index,spin3]
-      _flt2_spin2 = *flt2_ptr[_index,spin3]
+      _flt0_spin3 = *flt0_ptr[_index,spin3]
+      _flt1_spin3 = *flt1_ptr[_index,spin3]
+      _flt2_spin3 = *flt2_ptr[_index,spin3]
       
       spin4 = list_other_spins[2]
-      _flt0_spin2 = *flt0_ptr[_index,spin4]
-      _flt1_spin2 = *flt1_ptr[_index,spin4]
-      _flt2_spin2 = *flt2_ptr[_index,spin4]
+      _flt0_spin4 = *flt0_ptr[_index,spin4]
+      _flt1_spin4 = *flt1_ptr[_index,spin4]
+      _flt2_spin4 = *flt2_ptr[_index,spin4]
       
     endif
+    
+    _new_flt0_spin2 = !null
+    _new_flt1_spin2 = !null
+    _new_flt2_spin2 = !null
+    
+    _new_flt0_spin3 = !null
+    _new_flt1_spin3 = !null
+    _new_flt2_spin3 = !null
+    
+    _new_flt0_spin4 = !null
+    _new_flt1_spin4 = !null
+    _new_flt2_spin4 = !null
     
     _new_flt0 = !null
     _new_flt1 = !null
@@ -675,17 +704,23 @@ pro remove_selected_points, base=base
         
         if (bRepeatOtherSpin) then begin
         
-          _new_flt0_spin2 = [_new_flt0_spin2, _flt0_spin2[_index_val]]
-          _new_flt1_spin2 = [_new_flt1_spin2, _flt1_spin2[_index_val]]
-          _new_flt2_spin2 = [_new_flt2_spin2, _flt2_spin2[_index_val]]
+          if (_flt0_spin2 ne !null) then begin
+            _new_flt0_spin2 = [_new_flt0_spin2, _flt0_spin2[_index_val]]
+            _new_flt1_spin2 = [_new_flt1_spin2, _flt1_spin2[_index_val]]
+            _new_flt2_spin2 = [_new_flt2_spin2, _flt2_spin2[_index_val]]
+          endif
           
-          _new_flt0_spin3 = [_new_flt0_spin3, _flt0_spin3[_index_val]]
-          _new_flt1_spin3 = [_new_flt1_spin3, _flt1_spin3[_index_val]]
-          _new_flt2_spin3 = [_new_flt2_spin3, _flt2_spin3[_index_val]]
+          if (_flt0_spin3 ne !null) then begin
+            _new_flt0_spin3 = [_new_flt0_spin3, _flt0_spin3[_index_val]]
+            _new_flt1_spin3 = [_new_flt1_spin3, _flt1_spin3[_index_val]]
+            _new_flt2_spin3 = [_new_flt2_spin3, _flt2_spin3[_index_val]]
+          endif
           
-          _new_flt0_spin4 = [_new_flt0_spin4, _flt0_spin4[_index_val]]
-          _new_flt1_spin4 = [_new_flt1_spin4, _flt1_spin4[_index_val]]
-          _new_flt2_spin4 = [_new_flt2_spin4, _flt2_spin4[_index_val]]
+          if (_flt0_spin4 ne !null) then begin
+            _new_flt0_spin4 = [_new_flt0_spin4, _flt0_spin4[_index_val]]
+            _new_flt1_spin4 = [_new_flt1_spin4, _flt1_spin4[_index_val]]
+            _new_flt2_spin4 = [_new_flt2_spin4, _flt2_spin4[_index_val]]
+          endif
           
         endif
         
@@ -702,17 +737,23 @@ pro remove_selected_points, base=base
         
         if (bRepeatOtherSpin) then begin
         
-          _new_flt0_spin2 = [_new_flt0_spin2, _flt0_spin2[_index_val]]
-          _new_flt1_spin2 = [_new_flt1_spin2, _flt1_spin2[_index_val]]
-          _new_flt2_spin2 = [_new_flt2_spin2, _flt2_spin2[_index_val]]
+          if (_flt0_spin2 ne !null) then begin
+            _new_flt0_spin2 = [_new_flt0_spin2, _flt0_spin2[_index_val]]
+            _new_flt1_spin2 = [_new_flt1_spin2, _flt1_spin2[_index_val]]
+            _new_flt2_spin2 = [_new_flt2_spin2, _flt2_spin2[_index_val]]
+          endif
           
-          _new_flt0_spin3 = [_new_flt0_spin3, _flt0_spin3[_index_val]]
-          _new_flt1_spin3 = [_new_flt1_spin3, _flt1_spin3[_index_val]]
-          _new_flt2_spin3 = [_new_flt2_spin3, _flt2_spin3[_index_val]]
+          if (_flt0_spin3 ne !null) then begin
+            _new_flt0_spin3 = [_new_flt0_spin3, _flt0_spin3[_index_val]]
+            _new_flt1_spin3 = [_new_flt1_spin3, _flt1_spin3[_index_val]]
+            _new_flt2_spin3 = [_new_flt2_spin3, _flt2_spin3[_index_val]]
+          endif
           
-          _new_flt0_spin4 = [_new_flt0_spin4, _flt0_spin4[_index_val]]
-          _new_flt1_spin4 = [_new_flt1_spin4, _flt1_spin4[_index_val]]
-          _new_flt2_spin4 = [_new_flt2_spin4, _flt2_spin4[_index_val]]
+          if (_flt0_spin4 ne !null) then begin
+            _new_flt0_spin4 = [_new_flt0_spin4, _flt0_spin4[_index_val]]
+            _new_flt1_spin4 = [_new_flt1_spin4, _flt1_spin4[_index_val]]
+            _new_flt2_spin4 = [_new_flt2_spin4, _flt2_spin4[_index_val]]
+          endif
           
         endif
         
@@ -732,17 +773,23 @@ pro remove_selected_points, base=base
         
         if (bRepeatOtherSpin) then begin
         
-          _new_flt0_spin2 = [_new_flt0_spin2, _flt0_spin2[_index_val]]
-          _new_flt1_spin2 = [_new_flt1_spin2, _flt1_spin2[_index_val]]
-          _new_flt2_spin2 = [_new_flt2_spin2, _flt2_spin2[_index_val]]
+          if (_flt0_spin2 ne !null) then begin
+            _new_flt0_spin2 = [_new_flt0_spin2, _flt0_spin2[_index_val]]
+            _new_flt1_spin2 = [_new_flt1_spin2, _flt1_spin2[_index_val]]
+            _new_flt2_spin2 = [_new_flt2_spin2, _flt2_spin2[_index_val]]
+          endif
           
-          _new_flt0_spin3 = [_new_flt0_spin3, _flt0_spin3[_index_val]]
-          _new_flt1_spin3 = [_new_flt1_spin3, _flt1_spin3[_index_val]]
-          _new_flt2_spin3 = [_new_flt2_spin3, _flt2_spin3[_index_val]]
+          if (_flt0_spin3 ne !null) then begin
+            _new_flt0_spin3 = [_new_flt0_spin3, _flt0_spin3[_index_val]]
+            _new_flt1_spin3 = [_new_flt1_spin3, _flt1_spin3[_index_val]]
+            _new_flt2_spin3 = [_new_flt2_spin3, _flt2_spin3[_index_val]]
+          endif
           
-          _new_flt0_spin4 = [_new_flt0_spin4, _flt0_spin4[_index_val]]
-          _new_flt1_spin4 = [_new_flt1_spin4, _flt1_spin4[_index_val]]
-          _new_flt2_spin4 = [_new_flt2_spin4, _flt2_spin4[_index_val]]
+          if (_flt0_spin4 ne !null) then begin
+            _new_flt0_spin4 = [_new_flt0_spin4, _flt0_spin4[_index_val]]
+            _new_flt1_spin4 = [_new_flt1_spin4, _flt1_spin4[_index_val]]
+            _new_flt2_spin4 = [_new_flt2_spin4, _flt2_spin4[_index_val]]
+          endif
           
         endif
         
