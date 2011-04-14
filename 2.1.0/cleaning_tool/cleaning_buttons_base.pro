@@ -86,7 +86,6 @@ pro cleaning_buttons_base_event, Event
           dialog_parent=main_base_id,$
           /center)
         full_reset_removed_points, base=main_base_id
-      endelse
    endelse
 end
     
