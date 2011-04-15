@@ -33,10 +33,15 @@
 ;==============================================================================
 
 PRO BuildInstrumentGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-  ;  RESOLVE_ROUTINE, 'ref__eventcb',$
-  ;    /COMPILE_FULL_FILE            ; Load event callback routines
-  ;build the Instrument Selection base
-  MakeGuiInstrumentSelection, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+    
+  file = OBJ_NEW('idlxmlparser', '.REFoffSpec.cfg')
+  VERSION = file->getValue(tag=['configuration','version'])
+  obj_destroy, file
+  
+  MakeGuiInstrumentSelection, version=version, $
+  GROUP_LEADER=wGroup, $
+  _EXTRA=_VWBExtra_
+
 END
 
 PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
@@ -112,6 +117,7 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
   QUEUE = file->getValue(tag=['configuration','Reduction','Queue'])
   ; Note: YSIZE_DRAW and Pixels_XValue are not presently used in the code
   SUPER_USERS = ['rwd']
+  obj_destroy, file
   
   ;print, "reduce_step_path: ", reduce_step_path
   ;print, "splicing_alternative: ", splicing_alternative
