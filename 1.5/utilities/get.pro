@@ -32,6 +32,19 @@
 ;
 ;==============================================================================
 
+;+
+; :Description:
+;    This function returns the data value from the device value
+;
+;
+;
+; :Keywords:
+;    event
+;    type
+;    device_value
+;
+; :Author: j35
+;-
 function getYDataFromDevice, event=event, type=type, device_value=device_value
 compile_opt idl2
 
@@ -52,6 +65,19 @@ compile_opt idl2
 
 end
 
+;+
+; :Description:
+;    This function returns the device value from the data value
+;
+;
+;
+; :Keywords:
+;    event
+;    type
+;    data_value
+;
+; :Author: j35
+;-
 function getYDeviceFromData, event=event, type=type, data_value=data_value
 compile_opt idl2
 
