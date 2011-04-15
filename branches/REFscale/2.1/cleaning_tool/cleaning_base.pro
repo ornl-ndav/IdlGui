@@ -587,13 +587,13 @@ pro validate_cleaning, base=base, ok=ok
     
     for i=0,(sz-1) do begin
     
-      *flt0_rescale_ptr[i] = ptr_new(0L)
-      *flt1_rescale_ptr[i] = ptr_new(0L)
-      *flt2_rescale_ptr[i] = ptr_new(0L)
+      *flt0_rescale_ptr[i,_spin] = ptr_new(0L)
+      *flt1_rescale_ptr[i,_spin] = ptr_new(0L)
+      *flt2_rescale_ptr[i,_spin] = ptr_new(0L)
       
-      *flt0_rescale_ptr[i,_spin] = *local_flt0_rescale_ptr[i]
-      *flt1_rescale_ptr[i,_spin] = *local_flt1_rescale_ptr[i]
-      *flt2_rescale_ptr[i,_spin] = *local_flt2_rescale_ptr[i]
+      *flt0_rescale_ptr[i,_spin] = *local_flt0_rescale_ptr[i,_spin]
+      *flt1_rescale_ptr[i,_spin] = *local_flt1_rescale_ptr[i,_spin]
+      *flt2_rescale_ptr[i,_spin] = *local_flt2_rescale_ptr[i,_spin]
       
     endfor
     
