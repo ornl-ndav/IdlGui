@@ -587,6 +587,19 @@ PRO ref_scale_LoadBatchFile, Event
     
     if ((*global).working_with_ref_m_batch) then begin ;ref_m batch file
     
+      ;stop program here because we are trying to load a REF_M batch file
+      ;in the REF_L side of the application
+      message_text = ['Please check the batch file you are trying to load',$
+        '','Looks like you tried to load a batch file with several spin states!']
+      title = 'Error while trying to load the batch file!'
+      result = dialog_message(message_text,$
+        title=title,$
+        dialog_parent=dialog_id,$
+        /error,$
+        /center)
+      reset_all_button, Event ;full reset of the session
+      return
+      
       DRfiles = retrieveDRfiles_ref_m(event, BatchTable)
       (*(*global).DRfiles) = DRfiles
       
@@ -680,6 +693,7 @@ PRO ref_scale_LoadBatchFile, Event
       
     endif else begin ;ref_l batch file
     
+    (*global).instrument = 'REF_L'
       ;Retrieve List of Data Reduction files
       DRfiles = retrieveDRfiles(Event, BatchTable)
       ;Check that all the files exist
