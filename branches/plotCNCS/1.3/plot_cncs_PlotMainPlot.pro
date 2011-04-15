@@ -50,11 +50,12 @@ FUNCTION retrieveBottomBankData, NexusFileName, $
     progressBarCancel
     
   fileID  = H5F_OPEN(NexusFileName)
-  result  = LONARR(Ntof,128,50*8)
+  result  = lonarr(Ntof,128,50*8)
   FOR i=0,49 DO BEGIN
     path          = '/entry/bank' + STRCOMPRESS(i+1,/REMOVE_ALL) + '/data'
     fieldID       = H5D_OPEN(fileID, path)
     data          = H5D_READ(fieldID)
+    h5d_close, fieldID
     result[0,0,i*8] = data
     IF (UpdateProgressBar(progressBar,(FLOAT(++step)/Nstep)*100)) THEN BEGIN
       progressBarCancel = 1
@@ -232,7 +233,7 @@ END
 PRO plotDASviewFullInstrument, Event, global1
 
   ;retrieve values from inside structure
-  img     = (*(*global1).img)
+  ;img     = (*(*global1).img)
   Xfactor = (*global1).Xfactor
   Yfactor = (*global1).Yfactor
   Xcoeff  = (*global1).Xcoeff
@@ -242,7 +243,7 @@ PRO plotDASviewFullInstrument, Event, global1
   wbase   = (*global1).wBase
   
   ;main data array
-  tvimg = TOTAL(img,1)
+  tvimg = TOTAL((*(*global1).img),1)
   tvimg = TRANSPOSE(tvimg)
   
   ;change title
