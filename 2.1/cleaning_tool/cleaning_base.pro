@@ -620,6 +620,25 @@ pro remove_selected_points, base=base
   
   widget_control, base, get_uvalue=global_plot
   
+  catch, error
+  if (error ne 0) then begin
+    catch,/cancel
+    id = widget_info(base,find_by_uname='cleaning_widget_base')
+    message_text = ['It is technically impossible to perform a global ' + $
+      ' cleaning of all the spin ', $
+      'states on a data set that already have been individually cleaned ' + $
+      '(arrays do not match!)','',$
+      'The solution is to reload your data set and perform the global' + $
+      ' cleaning first!']
+    title = 'Cleaning error!'
+    result = dialog_message(message_text,$
+      /error,$
+      title=title,$
+      dialog_parent=id,$
+      /center)
+    return
+  endif
+  
   bRepeatOtherSpin = (*global_plot).bRepeatOtherSpin
   _spin = (*global_plot).spin
   
