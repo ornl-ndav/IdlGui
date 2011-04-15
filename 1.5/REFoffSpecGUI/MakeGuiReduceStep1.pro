@@ -183,24 +183,14 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     YOFFSET = 635,$
     /EXCLUSIVE)
     
-  button1 = WIDGET_BUTTON(row1col2a, $
-    VALUE = 'Linear',$
-    /NO_RELEASE, $
-    UNAME = 'reduce_sangle_lin',$
-    SENSITIVE = 1)
-  button2 = WIDGET_BUTTON(row1col2a, $
-    VALUE = 'Log',$
-    /NO_RELEASE, $
-    UNAME = 'reduce_sangle_log', $
-    SENSITIVE = 1)
-    
-  WIDGET_CONTROL, button2, /SET_BUTTON
-  
   ; column 3
   row1col3Main = WIDGET_BASE(row1,$ ;---------------------------------------
     /COLUMN)
     
-  row1col3 = WIDGET_BASE(row1col3Main,$ ;..................................
+  row = widget_base(row1col3Main,$
+  /row)  
+    
+  row1col3 = WIDGET_BASE(row,$ ;..................................
     /COLUMN, $
     /EXCLUSIVE)
     
@@ -227,24 +217,23 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     
   WIDGET_CONTROL, button1, /SET_BUTTON
   
-  ; Change code (RC Ward, 7 Aug 2010): Remove log/linear toggle from this location and move (see above)
-  ;  space = WIDGET_LABEL(row1col3Main, $
-  ;    VALUE = ' ')
+    space = WIDGET_LABEL(row, $
+      VALUE = '           ')
   
-  ;  row1col3b = WIDGET_BASE(row1col3Main,$ ;..................................
-  ;    /COLUMN, $
-  ;    /EXCLUSIVE)
+    row1col3b = WIDGET_BASE(row,$ ;..................................
+      /COLUMN, $
+      /EXCLUSIVE)
   
-  ;  button1 = WIDGET_BUTTON(row1col3b,$
-  ;    VALUE = 'Linear',$
-  ;    /NO_RELEASE, $
-  ;    UNAME = 'reduce_sangle_lin',$
-  ;    SENSITIVE = 1)
-  ;  button2 = WIDGET_BUTTON(row1col3b,$
-  ;    VALUE = 'Log',$
-  ;    /NO_RELEASE, $
-  ;    UNAME = 'reduce_sangle_log', $
-  ;    SENSITIVE = 1)
+    button1 = WIDGET_BUTTON(row1col3b,$
+      VALUE = 'Linear',$
+      /NO_RELEASE, $
+      UNAME = 'reduce_sangle_lin',$
+      SENSITIVE = 1)
+    button2 = WIDGET_BUTTON(row1col3b,$
+      VALUE = 'Log',$
+      /NO_RELEASE, $
+      UNAME = 'reduce_sangle_log', $
+      SENSITIVE = 1)
   
   ;  WIDGET_CONTROL, button2, /SET_BUTTON
   ;================================
@@ -546,18 +535,65 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     /ROW)
     
   space = widget_label(row2,$
+    value = '                                            ')
+
+  ;*************************
+  ;select range of tof base*
+  ;*************************
+  tof_range = widget_base(row2,$
+    /column,$
+    frame=5,$
+    xoffset = 115,$
+    yoffset = yoffset)
+  tof_row1 = widget_base(tof_range,$
+    /row)
+  tof1 = widget_label(tof_row1,$
+    value = 'Plot from TOF1 (ms):')
+  tof1_value = widget_text(tof_row1,$
+    value = 'N/A',$
+    xsize=8,$
+    /editable,$
+    uname = 'reduce_step1_tof1')
+  tof1 = widget_label(tof_row1,$
+    value = ' to TOF2 (ms):')
+  tof1_value = widget_text(tof_row1,$
+    value = 'N/A',$
+    /editable,$
+    xsize = 8,$
+    uname = 'reduce_step1_tof2')
+  space = widget_label(tof_row1,$
+    value = '  ')
+  full_range = widget_button(tof_row1,$
+    value = 'Plot range',$
+    scr_xsize = 110,$
+    uname = 'reduce_step1_tof_plot_only_range')
+  space = widget_label(tof_row1,$
+    value = '     ')
+  full_range = widget_button(tof_row1,$
+    value = 'Plot full',$
+    scr_xsize = 110,$
+    uname = 'reduce_step1_tof_plot_full_range')
+  tof_row2 = widget_label(tof_range,$
+    value = 'Left click TOF range to select TOF1, right' + $
+    ' click to switch to TOF2.')
+
+  ;row2 of SANGLE BASE
+  row3 = WIDGET_BASE(SangleBase,$ ;.................................
+    /ROW)
+    
+  space = widget_label(row3,$
     value = '                                                                    ')
     
-  row2a = widget_base(row2,$
+  row3a = widget_base(row3,$
     /column)
   ;first inside row (browse button)
-  browse_button = WIDGET_BUTTON(row2a,$
+  browse_button = WIDGET_BUTTON(row3a,$
     VALUE = 'B R O W S E   F O R   A   B A C K.  R O I . . .',$
     SCR_XSIZE = 320,$
     TOOLTIP = 'Click to browse for a background ROI file and plot it',$
     UNAME = 'reduce_step1_create_roi_browse_back_roi_button')
     
-  row3col2_base2 = WIDGET_BASE(row2a,$
+  row3col2_base2 = WIDGET_BASE(row3a,$
     /ROW)
     
   y1_working = WIDGET_LABEL(row3col2_base2,$
@@ -620,9 +656,9 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     
   ; DONE button
     
-  space = widget_label(row2,$
+  space = widget_label(row3,$
     value = '                            ')
-  done = WIDGET_BUTTON(row2,$
+  done = WIDGET_BUTTON(row3,$
     VALUE = 'RETURN TO DATA TAB',$
     UNAME = 'reduce_sangle_done_button',$
     frame=5,$
