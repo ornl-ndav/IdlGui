@@ -32,10 +32,27 @@
 ;
 ;==============================================================================
 
-PRO MakeGuiInstrumentSelection, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+;+
+; :Description:
+;    GUI builder of portal base of main application, where the user
+;    select the version (desktop/laptop) and the instrument (REF_L/REF_M)
+;
+;
+;
+; :Keywords:
+;    version
+;    GROUP_LEADER
+;    _EXTRA
+;
+; :Author: j35
+;-
+PRO MakeGuiInstrumentSelection, version=version, $
+GROUP_LEADER=wGroup, $
+_EXTRA=_VWBExtra_
+compile_opt idl2
 
 ; Change code (RC Ward, 3 Aug 2010): Change title of this front GUI
-MainBaseTitle = 'REFoffSpec 1.5.4'
+MainBaseTitle = 'REFoffSpec ' + version
 
 InstrumentSelectionBaseSize = [400,300,240,300]
 InstrumentSelectioncwbgroupSize = [10,5]
