@@ -1099,6 +1099,34 @@ PRO save_sangle_table, Event
   
 END
 
+;+
+; :Description:
+;    Display the tof range values
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro display_reduce_step1_tof_range, event
+compile_opt idl2
+
+widget_control, event.top, get_uvalue=global
+
+  tof = (*(*global).sangle_tof)
+  tof1 = strcompress(tof[0],/remove_all)
+  tof2 = strcompress(tof[-1],/remove_all)
+
+  uname1 = 'reduce_step1_tof1'
+  uname2 = 'reduce_step1_tof2'
+  
+  putValue, event=event, uname1, tof1
+  putValue, event=event, uname2, tof2
+
+end
+
 ;------------------------------------------------------------------------------
 PRO plot_tof_range_on_main_plot, Event
 

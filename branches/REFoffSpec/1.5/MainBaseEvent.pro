@@ -181,6 +181,7 @@ PRO MAIN_BASE_event, Event
       load_step1_data_back_roi, event
       reduce_step1_plot_rois, event
       plot_tof_range_on_main_plot, Event
+      display_reduce_step1_tof_range, event
       saving_background, Event
       plot_sangle_refpix, Event
       plot_counts_vs_pixel_help, Event
