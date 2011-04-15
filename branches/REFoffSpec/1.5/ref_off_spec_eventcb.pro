@@ -40,8 +40,9 @@ PRO REFreductionEventcb_InstrumentSelected, Event
   widget_control, id, get_value=instrument_selected
 
 ; CHANGE CODE (RC WARD, 22 June 2010): Add selection for resolution so code can run on laptop or desktop
-  id = widget_info(Event.top,find_by_uname='resolution_selection_cw_bgroup')
-  widget_control, id, get_value=resolution_selected
+  ;id = widget_info(Event.top,find_by_uname='resolution_selection_cw_bgroup')
+  ;widget_control, id, get_value=resolution_selected
+  resolution_selected = 0
 
 ; Change Code (RC Ward, 13 Aug 2010); This was removed from the front screen on this day
 ; CHANGE CODE (RC WARD, 3 August 2010): Add choice of splicing alternative
