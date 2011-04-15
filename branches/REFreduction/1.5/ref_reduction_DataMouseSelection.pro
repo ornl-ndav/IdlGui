@@ -52,10 +52,10 @@ PRO REFreduction_DataSelectionPressLeft, event
       color   = (*global).peak_selection_color
       y_array = (*(*global).data_peak_selection)
     END
-;    2: BEGIN                    ;back
-;      color   = (*global).back_selection_color
-;      y_array = (*(*global).data_back_selection)
-;    END
+    ;    2: BEGIN                    ;back
+    ;      color   = (*global).back_selection_color
+    ;      y_array = (*(*global).data_back_selection)
+    ;    END
     3: BEGIN                    ;zoom
       ;be sure the data draw has been selected
       id_draw = WIDGET_INFO(Event.top, FIND_BY_UNAME='load_data_D_draw')
@@ -66,9 +66,9 @@ PRO REFreduction_DataSelectionPressLeft, event
   
   IF (ROISignalBackZoomStatus NE 3) THEN BEGIN
   
-  id = widget_info(event.top, find_by_uname='load_data_D_draw')
-  geometry = widget_info(id,/geometry)
-  xsize_1d_draw = geometry.scr_xsize
+    id = widget_info(event.top, find_by_uname='load_data_D_draw')
+    geometry = widget_info(id,/geometry)
+    xsize_1d_draw = geometry.scr_xsize
     
     mouse_status = (*global).select_data_status
     IF ((*global).mouse_debugging EQ 'yes') THEN BEGIN
@@ -158,8 +158,8 @@ PRO REFreduction_DataSelectionPressLeft, event
       end
     endcase
     
-    if (y1 eq !null) then y1=!null
-    if (y2 eq !null) then y2=!null
+    ;    if (y1 eq !null) then y1=!null
+    ;    if (y2 eq !null) then y2=!null
     
     CASE (ROISignalBackZoomStatus) OF
       0: BEGIN                    ;ROI
@@ -271,13 +271,13 @@ END
 
 ;this function is reached when the mouse moved into the widget_draw
 PRO REFreduction_DataSelectionMove, event
-  
-   catch, error
-   if (error ne 0) then begin
-     catch,/cancel
-     return
-   endif
 
+  catch, error
+  if (error ne 0) then begin
+    catch,/cancel
+    return
+  endif
+  
   ;get global structure
   id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
   WIDGET_CONTROL,id,GET_UVALUE=global
@@ -293,10 +293,10 @@ PRO REFreduction_DataSelectionMove, event
       color   = (*global).peak_selection_color
       y_array = (*(*global).data_peak_selection)
     END
-;    2: BEGIN                    ;back
-;      color   = (*global).back_selection_color
-;      y_array = (*(*global).data_back_selection)
-;    END
+    ;    2: BEGIN                    ;back
+    ;      color   = (*global).back_selection_color
+    ;      y_array = (*(*global).data_back_selection)
+    ;    END
     3: BEGIN                    ;zoom
     END
   ENDCASE
@@ -305,10 +305,10 @@ PRO REFreduction_DataSelectionMove, event
   
     ;where to stop the plot of the lines
     ;xsize_1d_draw = (*global).Ntof_DATA-1
-      id = widget_info(event.top, find_by_uname='load_data_D_draw')
-  geometry = widget_info(id,/geometry)
-  ;new_xsize = geometry.scr_xsize
-  xsize_1d_draw = geometry.scr_xsize
+    id = widget_info(event.top, find_by_uname='load_data_D_draw')
+    geometry = widget_info(id,/geometry)
+    ;new_xsize = geometry.scr_xsize
+    xsize_1d_draw = geometry.scr_xsize
     ;xsize_1d_draw = 608L
     
     mouse_status = (*global).select_data_status
@@ -376,48 +376,47 @@ PRO REFreduction_DataSelectionMove, event
     
     ;display live the new values
     CASE (ROISignalBackZoomStatus) OF
-    0: BEGIN                    ;ROI
-;      (*(*global).data_roi_selection) = y_array
-    END
-    1: BEGIN                    ;signal
-;      (*(*global).data_peak_selection) = y_array
-      ymin = MIN(y_array,max=ymax)
-      
-        IF ((*global).miniVersion) THEN BEGIN
-    coeff = 1
-  ENDIF ELSE BEGIN
-    coeff = 2
-  ENDELSE
-      
-            if (ymin ne -1) then begin
-      ;populate exclusion peak low and high bin
-      putTextFieldValue,$
-        Event,$
-        'data_d_selection_peak_ymin_cw_field',$
-        STRCOMPRESS(ymin/coeff,/remove_all),$
-        0                  
+      0: BEGIN                    ;ROI
+      ;      (*(*global).data_roi_selection) = y_array
+      END
+      1: BEGIN                    ;signal
+        ;      (*(*global).data_peak_selection) = y_array
+        ymin = MIN(y_array,max=ymax)
+        
+        ;        IF ((*global).miniVersion) THEN BEGIN
+        ;    coeff = 1
+        ;  ENDIF ELSE BEGIN
+        ;    coeff = 2
+        ; ENDELSE
+        
+        Ydata = getYDataFromDevice(event=event, type='data', device_value=ymin)
+        if (ymin ne -1) then begin
+          putCWFieldValue, event, $
+            'data_d_selection_roi_ymin_cw_field', Ydata
         endif
-      putTextFieldValue,$
-        Event,$
-        'data_d_selection_peak_ymax_cw_field',$
-        STRCOMPRESS(ymax/coeff,/remove_all),$
-        0                     ;do not append
-    END
-    2: BEGIN                    ;back
-;      (*(*global).data_back_selection) = y_array
-    END
-    3: BEGIN
-;      IF ((*global).select_zoom_status) THEN BEGIN
-;        RefReduction_zoom, $
-;          Event, $
-;          MouseX = event.x, $
-;          MouseY = event.y, $
-;          fact   = (*global).DataZoomFactor,$
-;          uname  = 'data_zoom_draw'
-;        (*global).select_zoom_status = 0
-;      ENDIF
-    END
-  ENDCASE
+        
+        Ydata = getYDataFromDevice(event=event, type='data', device_value=ymax)
+        if (ymax ne -1) then begin
+          putCWFieldValue, event, $
+            'data_d_selection_roi_ymax_cw_field', Ydata
+        endif
+        
+      END
+      2: BEGIN                    ;back
+      ;      (*(*global).data_back_selection) = y_array
+      END
+      3: BEGIN
+      ;      IF ((*global).select_zoom_status) THEN BEGIN
+      ;        RefReduction_zoom, $
+      ;          Event, $
+      ;          MouseX = event.x, $
+      ;          MouseY = event.y, $
+      ;          fact   = (*global).DataZoomFactor,$
+      ;          uname  = 'data_zoom_draw'
+      ;        (*global).select_zoom_status = 0
+      ;      ENDIF
+      END
+    ENDCASE
     
     CASE (ROISignalBackZoomStatus) OF
       0: BEGIN                    ;ROI
@@ -491,10 +490,10 @@ PRO REFreduction_DataSelectionRelease, event
   
     ;where to stop the plot of the lines
     ;xsize_1d_draw = (*global).Ntof_DATA-1
-  id = widget_info(event.top, find_by_uname='load_data_D_draw')
-  geometry = widget_info(id,/geometry)
-  ;new_xsize = geometry.scr_xsize
-  xsize_1d_draw = geometry.scr_xsize
+    id = widget_info(event.top, find_by_uname='load_data_D_draw')
+    geometry = widget_info(id,/geometry)
+    ;new_xsize = geometry.scr_xsize
+    xsize_1d_draw = geometry.scr_xsize
     ;xsize_1d_draw = 608L
     
     IF ((*global).mouse_debugging EQ 'yes') THEN BEGIN
@@ -554,26 +553,19 @@ PRO REFreduction_DataSelectionRelease, event
     1: BEGIN                    ;signal
       (*(*global).data_peak_selection) = y_array
       ymin = MIN(y_array,max=ymax)
-
-  IF ((*global).miniVersion) THEN BEGIN
-    coeff = 1
-  ENDIF ELSE BEGIN
-    coeff = 2
-  ENDELSE
       
+      Ydata = getYDataFromDevice(event=event, type='data', device_value=ymin)
       if (ymin ne -1) then begin
-      ;populate exclusion peak low and high bin
-      putTextFieldValue,$
-        Event,$
-        'data_d_selection_peak_ymin_cw_field',$
-        STRCOMPRESS(ymin/coeff,/remove_all),$
-        0                     
-        endif
-      putTextFieldValue,$
-        Event,$
-        'data_d_selection_peak_ymax_cw_field',$
-        STRCOMPRESS(ymax/coeff,/remove_all),$
-        0                     ;do not append
+        putCWFieldValue, event, $
+          'data_d_selection_roi_ymin_cw_field', Ydata
+      endif
+      
+      Ydata = getYDataFromDevice(event=event, type='data', device_value=ymax)
+      if (ymax ne -1) then begin
+        putCWFieldValue, event, $
+          'data_d_selection_roi_ymax_cw_field', Ydata
+      endif
+      
     END
     2: BEGIN                    ;back
       (*(*global).data_back_selection) = y_array
@@ -593,10 +585,10 @@ PRO REFreduction_DataSelectionRelease, event
   
   ReplotOtherSelection, Event, ROIsignalBackZoomStatus
   (*global).select_data_status = mouse_status_new
-;  ;update Back and Peak Ymin and Ymax cw_fields
+  ;  ;update Back and Peak Ymin and Ymax cw_fields
   putDataBackgroundPeakYMinMaxValueInTextFields, Event
   
- ;plot_average_data_peak_value, Event
+;plot_average_data_peak_value, Event
   
 END
 
@@ -610,7 +602,7 @@ PRO ReplotOtherSelection, Event, ROIsignalBackZoomStatus
   
   ;where to stop the plot of the lines
   ;xsize_1d_draw = (*global).Ntof_DATA-1
-    id = widget_info(event.top, find_by_uname='load_data_D_draw')
+  id = widget_info(event.top, find_by_uname='load_data_D_draw')
   geometry = widget_info(id,/geometry)
   ;new_xsize = geometry.scr_xsize
   xsize_1d_draw = geometry.scr_xsize
@@ -740,7 +732,7 @@ PRO ReplotAllSelection, Event
   
   ;where to stop the plot of the lines
   ;xsize_1d_draw = (*global).Ntof_DATA-1
-    id = widget_info(event.top, find_by_uname='load_data_D_draw')
+  id = widget_info(event.top, find_by_uname='load_data_D_draw')
   geometry = widget_info(id,/geometry)
   ;new_xsize = geometry.scr_xsize
   xsize_1d_draw = geometry.scr_xsize
@@ -827,13 +819,13 @@ PRO plot_average_data_peak_value, Event
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
-  coefficient = getUDCoefficient(Event) ;1 for low, 2 for high
+;  coefficient = getUDCoefficient(Event) ;1 for low, 2 for high
   dirpix = (*global).dirpix
-  geo_dirpix = coefficient * dirpix
+  geo_dirpix = getYDeviceFromData(event=event, type='data', data_value=dirpix)
   
   ;where to stop the plot of the lines
   ;xsize_1d_draw = (*global).Ntof_DATA-1
-    id = widget_info(event.top, find_by_uname='load_data_D_draw')
+  id = widget_info(event.top, find_by_uname='load_data_D_draw')
   geometry = widget_info(id,/geometry)
   ;new_xsize = geometry.scr_xsize
   xsize_1d_draw = geometry.scr_xsize
