@@ -173,7 +173,9 @@ PRO MAIN_BASE_event, Event
     select_sangle_first_run_number_by_default, Event
     display_metatada_of_sangle_selected_row, Event
     retrieve_tof_array_from_nexus, Event, result
-    IF (result EQ 1) THEN plot_selected_data_in_sangle_base, Event, result
+    IF (result EQ 1) THEN plot_selected_data_in_sangle_base, Event, $
+      result,$
+      /recalculate
     IF (result EQ 1) THEN BEGIN
       load_step1_data_back_roi, event
       display_reduce_step1_sangle_scale, EVENT=event
@@ -185,6 +187,7 @@ PRO MAIN_BASE_event, Event
       saving_background, Event
       plot_sangle_refpix, Event
       plot_counts_vs_pixel_help, Event
+      display_full_sangle_tof_range_marker, event
     ENDIF
     WIDGET_CONTROL, HOURGLASS=0
   END
@@ -218,6 +221,69 @@ PRO MAIN_BASE_event, Event
     (*global).last_sangle_tab_table_row_selected = getSangleRowSelected(event)
   END
   
+  ;============================================================================
+  ;sangle scale widget_draw
+  widget_info(wWidget, find_by_uname='reduce_sangle_y_scale'): begin
+  
+    if (event.press eq 1) then begin ;click left button
+      (*global).sangle_scale_left_button_pressed = 1b
+      sangle_save_scale_device_values, event
+      display_sangle_scale_tof_range, event
+    endif
+    
+    if (event.release eq 1 and $ ;release left button
+      (*global).sangle_scale_left_button_pressed eq 1b) then begin
+      (*global).sangle_scale_left_button_pressed = 0b
+      sangle_save_scale_device_values, event
+      display_sangle_scale_tof_range, event
+      return
+    endif
+    
+    if (event.press eq 4) then begin ;right click
+      if ((*global).sangle_tof_range_status eq 'left') then begin
+        (*global).sangle_tof_range_status = 'right'
+      endif else begin
+        (*global).sangle_tof_range_status = 'left'
+      endelse
+    endif
+    
+    ;moving with left button pressed
+    if ((*global).sangle_scale_left_button_pressed) then begin
+      sangle_save_scale_device_values, event
+      display_sangle_scale_tof_range, event
+    endif
+    
+  end
+  
+  ;plot range of sangle base
+  widget_info(wWidget, find_by_uname='reduce_step1_tof_plot_only_range'): begin
+    ;replot the main sangle plot with the new tof range
+    plot_selected_data_in_sangle_base, Event, $
+      result, $
+      /recalculate, $
+      /plot_range
+    saving_background, Event
+    display_sangle_scale_tof_range, event, /full_range
+    display_reduce_step1_sangle_scale, event=event, /plot_range
+    display_full_sangle_tof_range_marker, event
+    plot_sangle_refpix, Event
+    plot_sangle_dirpix, Event
+  end
+  
+  ;plot full
+  widget_info(wWidget, find_by_uname='reduce_step1_tof_plot_full_range'): begin
+    plot_selected_data_in_sangle_base, Event, $
+      result, $
+      /recalculate
+    saving_background, Event
+    init_sangle_scale_device_data_array, event=event
+    display_sangle_scale_tof_range, event, /full_range
+    plot_sangle_refpix, Event
+    plot_sangle_dirpix, Event
+    
+  end
+  
+  ;============================================================================
   ;Counts vs Pixel Help plot
   WIDGET_INFO(wWidget, FIND_BY_UNAME='sangle_help_draw'): BEGIN
   
@@ -472,15 +538,18 @@ PRO MAIN_BASE_event, Event
     putTextFieldValue, Event, 'reduce_sangle_live_info_pixel', pixel_value
   END
   
+  ;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ;spin state selection
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_1'): BEGIN ;Off_Off
     WIDGET_CONTROL, /HOURGLASS
     ;first save the current roi selected
     reduce_step1_save_back_roi, Event
     
-    plot_selected_data_in_sangle_base, Event
+    plot_selected_data_in_sangle_base, Event, /recalculate
     plot_tof_range_on_main_plot, Event
     saving_background, Event
+    init_sangle_scale_device_data_array, event=event
+    display_sangle_scale_tof_range, event, /full_range
     plot_sangle_refpix, Event
     plot_sangle_dirpix, Event
     reduce_step1_plot_rois, event
@@ -492,9 +561,11 @@ PRO MAIN_BASE_event, Event
     ;first save the current roi selected
     reduce_step1_save_back_roi, Event
     
-    plot_selected_data_in_sangle_base, Event
+    plot_selected_data_in_sangle_base, Event, /recalculate
     plot_tof_range_on_main_plot, Event
     saving_background, Event
+    init_sangle_scale_device_data_array, event=event
+    display_sangle_scale_tof_range, event, /full_range
     plot_sangle_refpix, Event
     plot_sangle_dirpix, Event
     reduce_step1_plot_rois, event
@@ -506,9 +577,11 @@ PRO MAIN_BASE_event, Event
     ;first save the current roi selected
     reduce_step1_save_back_roi, Event
     
-    plot_selected_data_in_sangle_base, Event
+    plot_selected_data_in_sangle_base, Event, /recalculate
     plot_tof_range_on_main_plot, Event
     saving_background, Event
+    init_sangle_scale_device_data_array, event=event
+    display_sangle_scale_tof_range, event, /full_range
     plot_sangle_refpix, Event
     plot_sangle_dirpix, Event
     reduce_step1_plot_rois, event
@@ -520,9 +593,11 @@ PRO MAIN_BASE_event, Event
     ;first save the current roi selected
     reduce_step1_save_back_roi, Event
     
-    plot_selected_data_in_sangle_base, Event
+    plot_selected_data_in_sangle_base, Event, /recalculate
     plot_tof_range_on_main_plot, Event
     saving_background, Event
+    init_sangle_scale_device_data_array, event=event
+    display_sangle_scale_tof_range, event, /full_range
     plot_sangle_refpix, Event
     plot_sangle_dirpix, Event
     reduce_step1_plot_rois, event
@@ -533,7 +608,7 @@ PRO MAIN_BASE_event, Event
   ;linear/log sangle plot
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_lin'): BEGIN
     WIDGET_CONTROL, /HOURGLASS
-    replot_selected_data_in_sangle_base, Event
+    replot_selected_data_in_sangle_base, Event, /plot_range
     plot_tof_range_on_main_plot, Event
     saving_background, Event
     plot_sangle_refpix, Event
@@ -545,7 +620,7 @@ PRO MAIN_BASE_event, Event
   
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_log'): BEGIN
     WIDGET_CONTROL, /HOURGLASS
-    replot_selected_data_in_sangle_base, Event
+    replot_selected_data_in_sangle_base, Event, /plot_range
     plot_tof_range_on_main_plot, Event
     saving_background, Event
     plot_sangle_refpix, Event
@@ -1910,7 +1985,7 @@ PRO MAIN_BASE_event, Event
       CATCH,/CANCEL
       check_reduce_step2_save_roi_validity, Event
     ENDIF ELSE BEGIN
-        
+    
       IF( Event.type EQ 0 )THEN BEGIN
         IF (Event.press EQ 1) THEN BEGIN ;left pressed
           (*global).mouse_left_pressed = 1

@@ -170,6 +170,11 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     norm_tof: ptr_new(0L), $ ;tof array of normalization file loaded in reduce/tab2
     tmp_norm_tof: ptr_new(0L), $ ;rescale tof array
     
+    sangle_scale_left_button_pressed: 0b, $ ;status of sangle scale left button
+    sangle_tof_range_status: 'right', $ ;max tof is the working slider by default
+    sangle_tof_device_data: fltarr(2,2), $ ;[[x1device,x2device],[x1data,x2data]]
+    tmp_sangle_tof: ptr_new(0L), $
+    
     ;id of roi_selection_counts_vs_pixel base in reduce/step2
     roi_selection_counts_vs_pixel_base_id: 0L, $
     nexus_spin_state_data_back_roi_table: ptr_new(0L), $
@@ -179,6 +184,9 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     scale_mouse_left_pressed: 0b,$
     scale_mouse_right_pressed: 0b, $
     tof_device_data: fltarr(2,2), $ ;  [[x1device,x2device],[x1data,x2data]]
+    tof_sangle_device_range: LONARR(2), $ ;device value of tof selection (inside sangle plot)
+    tof_sangle_index_range: INTARR(2), $ ;index of tof range inside sangle plot
+    
     tof_range_status: 'right',$  ;left|right   of reduce/step2
   
     left_right_cursor: 96, $
@@ -300,9 +308,8 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     sangle_refpix_arrow_yoffset: 10, $ ;yoffset for arrow
     sangle_mode: 'refpix', $ ;either 'refpix','dirpix','tof_min','tof_max'
     old_sangle_mode: 'refpix', $ ;either 'refpix' or 'dirpix'
-    tof_sangle_device_range: LONARR(2), $
+    
     tof_sangle_offset: 0,$
-    tof_sangle_index_range: INTARR(2), $
     sangle_zoom_xy_minmax: FLTARR(4),$ ;corners of zoom sangle help plot box
     sangle_current_zoom_para: FLTARR(4), $ ;para used for current zoom plot
     zoom_left_click_pressed: 0b, $ ;boolean button pressed or not (zoom help)
@@ -602,7 +609,7 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     PrevScalingStep2TabSelect: 0,$
     step4_step1_selection: [0,0,0,0],$ ;[xmin, ymin, xmax, ymax]
     step4_2_2_lambda_value_array: [0,0], $ ;[Qmin, Qmax] data value (not device)
-  plot2d_x_left:       0,$
+    plot2d_x_left:       0,$
     plot2d_y_left:       0,$
     plot2d_x_right:      0,$
     plot2d_y_right:      0,$

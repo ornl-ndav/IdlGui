@@ -75,8 +75,8 @@ FUNCTION getSangleRowSelected, Event
 END
 
 function getPreviousSangleRowSelected, event
-widget_control, event.top, get_uvalue=global
-return, (*global).last_sangle_tab_table_row_selected
+  widget_control, event.top, get_uvalue=global
+  return, (*global).last_sangle_tab_table_row_selected
 end
 
 ;------------------------------------------------------------------------------
@@ -277,7 +277,8 @@ END
 ;------------------------------------------------------------------------------
 PRO display_reduce_step1_sangle_scale, $
     MAIN_BASE=main_base, $
-    EVENT=event
+    EVENT=event, $
+    plot_range=plot_range
     
   uname = 'reduce_sangle_y_scale'
   IF (N_ELEMENTS(EVENT) NE 0) THEN BEGIN
@@ -292,14 +293,45 @@ PRO display_reduce_step1_sangle_scale, $
   
   LOADCT, 0,/SILENT
   
+  tof = (*(*global).tmp_sangle_tof)
+  delta_tof = tof[1]-tof[0]
+  sz = N_ELEMENTS(tof)
+  
+  if (keyword_set(plot_range)) then begin
+  
+    tof1 = getTextFieldValue(event,'reduce_step1_tof1')
+    tof2 = getTextFieldValue(event,'reduce_step1_tof2')
+    
+    _tof1 = float(tof1)
+    _tof2 = float(tof2)
+    
+    index_tof1 = getIndexOfValueInArray(array=tof, value=_tof1, /from)
+    index_tof2 = getIndexOfValueInArray(array=tof, value=_tof2, /to)
+    
+    index_tof_min = min([index_tof1,index_tof2],max=index_tof_max)
+    _tof_min = tof[index_tof_min]
+    _tof_max = tof[index_tof_max]
+    
+    ;put the new real tof min and max values
+    putValue, event=event, 'reduce_step1_tof1', $
+      strcompress(_tof_min,/remove_all)
+    putValue, event=event, 'reduce_step1_tof2', $
+      strcompress(_tof_max,/remove_all)
+      
+    xrange = [_tof_min, _tof_max]
+    
+    tmp_tof = tof[index_tof_min:index_tof_max]
+    (*(*global).tmp_norm_tof) = tmp_tof
+    
+  endif else begin
+  
+    XRANGE = [tof[0], tof[sz-1]]
+    
+  endelse
+  
   position = [40,26,(*global).sangle_xsize_draw+40,$
     (*global).sangle_ysize_draw+25]
     
-  tof = (*(*global).sangle_tof)
-  delta_tof = tof[1]-tof[0]
-  sz = N_ELEMENTS(tof)
-  XRANGE = [tof[0], tof[sz-1]+delta_tof]
-  
   PLOT, RANDOMN(s,(*global).detector_pixels_y), $
     XRANGE        = xrange, $
     YRANGE        = [0L,(*global).detector_pixels_y],$
@@ -322,78 +354,129 @@ PRO display_reduce_step1_sangle_scale, $
 END
 
 ;-----------------------------------------------------------------------------
-PRO plot_selected_data_in_sangle_base, Event, result
-
+;+
+; :Description:
+;    plot the main plot of the sangle/reduce/step1 base
+;
+; :Params:
+;    Event
+;    result
+;
+; :Keywords:
+;    recalculate
+;    plot_range
+;
+; :Author: j35
+;-
+PRO plot_selected_data_in_sangle_base, Event, result, $
+    recalculate=recalculate, $
+    plot_range=plot_range
+  compile_opt idl2
+  
   result = 0
   
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
-  reduce_tab1_table = (*(*global).reduce_tab1_table)
+  if (keyword_set(recalculate)) then begin
   
-  ;get sangle row selected
-  row_selected = getSangleRowSelected(Event)
-  
-  ;retrieve full nexus name of run selected
-  full_nexus_file_name = reduce_tab1_table[1,row_selected]
-  s_full_nexus_file_name = STRCOMPRESS(full_nexus_file_name,/REMOVE_ALL)
-  IF (s_full_nexus_file_name EQ '') THEN RETURN
-  
-  ;get spin state selected
-  sangle_spin_state_selected = getSangleSpinStateSelected(Event)
-  IF (sangle_spin_state_selected EQ '') THEN RETURN
-  
-  ;retrieve data of run and spin state selected
-  result = retrieve_nexus_data(s_full_nexus_file_name, $
-    sangle_spin_state_selected, $
-    data)
+    reduce_tab1_table = (*(*global).reduce_tab1_table)
     
-  IF (result EQ 0) THEN RETURN
-  
-  tData = TOTAL(data,2)
-  (*(*global).sangle_tData) = tData
-  x = (size(tdata))(1)
-  y = (size(tdata))(2)
-  
-  IF (isButtonSelected(Event, 'reduce_sangle_log')) THEN BEGIN ;log
-    index = WHERE(tData EQ 0, nbr)
-    IF (nbr GT 0) THEN BEGIN
-      tData[index] = !VALUES.D_NAN
+    ;get sangle row selected
+    row_selected = getSangleRowSelected(Event)
+    
+    ;retrieve full nexus name of run selected
+    full_nexus_file_name = reduce_tab1_table[1,row_selected]
+    s_full_nexus_file_name = STRCOMPRESS(full_nexus_file_name,/REMOVE_ALL)
+    IF (s_full_nexus_file_name EQ '') THEN RETURN
+    
+    ;get spin state selected
+    sangle_spin_state_selected = getSangleSpinStateSelected(Event)
+    
+    IF (sangle_spin_state_selected EQ '') THEN RETURN
+    
+    ;retrieve data of run and spin state selected
+    result = retrieve_nexus_data(s_full_nexus_file_name, $
+      sangle_spin_state_selected, $
+      data)
+      
+    IF (result EQ 0) THEN RETURN
+    
+    tData = TOTAL(data,2)
+    (*(*global).sangle_tData) = tData
+    x = (size(tdata))[1]
+    y = (size(tdata))[2]
+    
+    IF (isButtonSelected(Event, 'reduce_sangle_log')) THEN BEGIN ;log
+      index = WHERE(tData EQ 0, nbr)
+      IF (nbr GT 0) THEN BEGIN
+        tData[index] = !VALUES.D_NAN
+      ENDIF
+      tData = ALOG10(tData)
+      tData = BYTSCL(tData,/NAN)
     ENDIF
-    tData = ALOG10(tData)
-    tData = BYTSCL(tData,/NAN)
-  ENDIF
+    
+    if (keyword_set(plot_range)) then begin
+    
+      tof = (*(*global).sangle_tof)
+      
+      tof1 = getTextFieldValue(event,'reduce_step1_tof1')
+      tof2 = getTextFieldValue(event,'reduce_step1_tof2')
+      
+      _tof1 = float(tof1)
+      _tof2 = float(tof2)
+      
+      index_tof1 = getIndexOfValueInArray(array=tof, value=_tof1, /from)
+      index_tof2 = getIndexOfValueInArray(array=tof, value=_tof2, /to)
+      
+      index_tof_min = min([index_tof1,index_tof2],max=index_tof_max)
+      
+      new_tof = tof[index_tof_min:index_tof_max]
+      (*(*global).tmp_sangle_tof) = new_tof
+      
+      sz_tdata = size(tdata,/dim)
+      if (index_tof_max eq sz_tdata[0]) then index_tof_max--
+      tdata = tdata[index_tof_min:index_tof_max,*]
+      
+    endif
+    
+    x_coeff = FLOAT((*global).sangle_xsize_draw / FLOAT(x))
+    (*global).sangle_main_plot_congrid_x_coeff = x_coeff
+    ; Code change RCW (Feb 1, 2010): define y_coeff variable and set to 2.
+    y_coeff = 2.
+    ;  rtData = CONGRID(tData, x_coeff*x, 2*y)
+    rtData = CONGRID(tData, x_coeff*x, y_coeff*y)
+    
+    id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='reduce_sangle_plot')
+    WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+    WSET,id_value
+    
+    DEVICE, DECOMPOSED=0
+    ; Change code (RC Ward Feb 22, 2010): Pass color_table value for LOADCT from XML configuration file
+    color_table = (*global).color_table
+    LOADCT, color_table, /SILENT
+    TVSCL, rtData, /DEVICE
+    
+  endif else begin
   
-  x_coeff = FLOAT((*global).sangle_xsize_draw / FLOAT(x))
-  (*global).sangle_main_plot_congrid_x_coeff = x_coeff
-  ; Code change RCW (Feb 1, 2010): define y_coeff variable and set to 2.
-  y_coeff = 2.
-  ;  rtData = CONGRID(tData, x_coeff*x, 2*y)
-  rtData = CONGRID(tData, x_coeff*x, y_coeff*y)
-  
-  id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='reduce_sangle_plot')
-  WIDGET_CONTROL, id_draw, GET_VALUE=id_value
-  WSET,id_value
-  
-  DEVICE, DECOMPOSED=0
-  ; Change code (RC Ward Feb 22, 2010): Pass color_table value for LOADCT from XML configuration file
-  color_table = (*global).color_table
-  LOADCT, color_table, /SILENT
-  TVSCL, rtData, /DEVICE
+    TV, (*(*global).sangle_background_plot), true=3
+    
+  endelse
   
   result = 1
   
 END
 
 ;-----------------------------------------------------------------------------
-PRO replot_selected_data_in_sangle_base, Event
-
+PRO replot_selected_data_in_sangle_base, Event, plot_range=plot_range
+  compile_opt idl2
+  
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   tData = (*(*global).sangle_tData)
-  x = (size(tdata))(1)
-  y = (size(tdata))(2)
+  x = (size(tdata))[1]
+  y = (size(tdata))[2]
   
   IF (isButtonSelected(Event, 'reduce_sangle_log')) THEN BEGIN ;log
     index = WHERE(tData EQ 0, nbr)
@@ -403,6 +486,30 @@ PRO replot_selected_data_in_sangle_base, Event
     tData = ALOG10(tData)
     tData = BYTSCL(tData,/NAN)
   ENDIF
+  
+  if (keyword_set(plot_range)) then begin
+  
+    tof = (*(*global).sangle_tof)
+    
+    tof1 = getTextFieldValue(event,'reduce_step1_tof1')
+    tof2 = getTextFieldValue(event,'reduce_step1_tof2')
+    
+    _tof1 = float(tof1)
+    _tof2 = float(tof2)
+    
+    index_tof1 = getIndexOfValueInArray(array=tof, value=_tof1, /from)
+    index_tof2 = getIndexOfValueInArray(array=tof, value=_tof2, /to)
+    
+    index_tof_min = min([index_tof1,index_tof2],max=index_tof_max)
+    
+    new_tof = tof[index_tof_min:index_tof_max]
+    (*(*global).tmp_sangle_tof) = new_tof
+    
+    sz_tdata = size(tdata,/dim)
+    if (index_tof_max eq sz_tdata[0]) then index_tof_max--
+    tdata = tdata[index_tof_min:index_tof_max,*]
+    
+  endif
   
   x_coeff = FLOAT((*global).sangle_xsize_draw / FLOAT(x))
   rtData = CONGRID(tData, x_coeff*x, 2*y)
@@ -412,7 +519,6 @@ PRO replot_selected_data_in_sangle_base, Event
   WSET,id_value
   
   DEVICE, DECOMPOSED=0
-  ; Change code (RC Ward Feb 22, 2010): Pass color_table value for LOADCT from XML configuration file
   color_table = (*global).color_table
   LOADCT, color_table, /SILENT
   TVSCL, rtData, /DEVICE
@@ -443,8 +549,14 @@ PRO retrieve_tof_array_from_nexus, Event, result
     tof)
   IF (result EQ 0) THEN RETURN
   sz = N_ELEMENTS(tof)
-  tof = tof[0:sz-2] ;remove last element
-  (*(*global).sangle_tof) = tof/1000. ;to be in ms
+  _tof = tof[0:sz-1]
+  (*(*global).sangle_tof) = _tof/1000. ;to be in ms
+  (*(*global).tmp_sangle_tof) = _tof/1000.
+  
+  sangle_tof_device_range = (*global).sangle_tof_device_data
+  sangle_tof_device_range[1,0] = tof[0]/1000.
+  sangle_tof_device_range[1,1] = tof[-1]/1000.
+  (*global).sangle_tof_device_data = sangle_tof_device_range
   
   result = 1
   
@@ -1111,20 +1223,20 @@ END
 ; :Author: j35
 ;-
 pro display_reduce_step1_tof_range, event
-compile_opt idl2
-
-widget_control, event.top, get_uvalue=global
-
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
   tof = (*(*global).sangle_tof)
   tof1 = strcompress(tof[0],/remove_all)
   tof2 = strcompress(tof[-1],/remove_all)
-
+  
   uname1 = 'reduce_step1_tof1'
   uname2 = 'reduce_step1_tof2'
   
   putValue, event=event, uname1, tof1
   putValue, event=event, uname2, tof2
-
+  
 end
 
 ;------------------------------------------------------------------------------
@@ -1135,8 +1247,10 @@ PRO plot_tof_range_on_main_plot, Event
   
 END
 
-PRO plot_tof_min_range_on_main_plot, Event
 
+PRO plot_tof_min_range_on_main_plot, Event
+  compile_opt idl2
+  
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
@@ -1165,7 +1279,7 @@ PRO plot_tof_min_range_on_main_plot, Event
   PLOTS, tof_min_device, 0, /DEVICE, COLOR=FSC_COLOR('green')
   PLOTS, tof_min_device, (*global).sangle_ysize_draw, /DEVICE, $
     COLOR=FSC_COLOR('green'), /CONTINUE
-  XYOUTS, tof_min_device+5,11, 'TOF min',/DEVICE
+  XYOUTS, tof_min_device+5, 11, 'TOF min',/DEVICE
   PLOTS, tof_min_device-50, 0, /DEVICE, COLOR=FSC_COLOR('green')
   PLOTS, tof_min_device+50, 0, /DEVICE, COLOR=FSC_COLOR('green'), $
     /CONTINUE
@@ -1181,7 +1295,8 @@ PRO plot_tof_min_range_on_main_plot, Event
 END
 
 PRO plot_tof_max_range_on_main_plot, Event
-
+  compile_opt idl2
+  
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
@@ -1249,6 +1364,22 @@ PRO retrieve_tof_data_range_from_device_values, Event
   tof2_index = FIX(tof2/xcoeff)
   
   (*global).tof_sangle_index_range = [tof1_index, tof2_index]
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
 END
 
@@ -1642,16 +1773,16 @@ PRO reduce_step1_save_back_roi, event
   ;save data back roi file name in table
   nexus_spin_state_data_back_roi_table = $
     (*(*global).nexus_spin_state_data_back_roi_table)
-
-  ;automatically save the back for all the spin states    
+    
+  ;automatically save the back for all the spin states
   row = getPreviousSangleRowSelected(Event)
-;  index_spin = 0
-;  case (strlowcase(getSangleSpinStateSelected(Event))) of
-;    'off_off': index_spin=0
-;    'off_on': index_spin=1
-;    'on_off': index_spin=2
-;    'on_on': index_spin=3
-;  endcase
+  ;  index_spin = 0
+  ;  case (strlowcase(getSangleSpinStateSelected(Event))) of
+  ;    'off_off': index_spin=0
+  ;    'off_on': index_spin=1
+  ;    'on_off': index_spin=2
+  ;    'on_on': index_spin=3
+  ;  endcase
   
   nexus_spin_state_data_back_roi_table[*,row] = back_file_name
   (*(*global).nexus_spin_state_data_back_roi_table) = $
@@ -1689,7 +1820,7 @@ pro load_step1_data_back_roi, event
   endcase
   
   back_file_name = nexus_spin_state_data_back_roi_table[index_spin,row]
-
+  
   if (file_test(back_file_name)) then begin
   
     Yarray = retrieveYminMaxFromFile(event,back_file_name)

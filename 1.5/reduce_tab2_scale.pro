@@ -52,7 +52,7 @@ pro plot_reduce_tab2_scale, base=base, event=event, plot_range=plot_range
     index_tof_min = min([index_tof1,index_tof2],max=index_tof_max)
     _tof_min = tof[index_tof_min]
     _tof_max = tof[index_tof_max]
-    
+       
     x_range = [_tof_min, _tof_max] /1000
     
   endif else begin

@@ -32,141 +32,364 @@
 ;
 ;==============================================================================
 
-FUNCTION get_sangle, fileID
-; Change code (RC Ward, 15 Sept 2010): Get run_number to determine how to read metadata.
-run_number_path = '/entry-Off_Off/run_number/'
-pathID = h5d_open(fileID, run_number_path)
-run_number = h5d_read(pathID)
-;print, "in get_sangle - run_number: ", run_number
-if (run_number LE 6682) then begin
-  sangle_value_path = '/entry-Off_Off/sample/SANGLE/readback/'
-  sangle_units_path = '/entry-Off_Off/sample/SANGLE/readback/units/'
-endif else begin
-  sangle_value_path = '/entry-Off_Off/sample/SANGLE/value/'
-  sangle_units_path = '/entry-Off_Off/sample/SANGLE/value/units/'
-endelse
-  error_value = 0
-  CATCH, error_value
-  IF (error_value NE 0) THEN BEGIN
-    CATCH,/CANCEL
-    RETURN, ['','']
-  ENDIF ELSE BEGIN
+;+
+; :Description:
+;    This routine retrieves the sangle value and units for 3 different
+;    architectures of the NeXus files. If all three fail, a empty 2 elements
+;    array is returned.
+;
+; :Params:
+;    fileID
+;
+; :Returns:
+;   [strcompress(value),strcompress(units)]
+;
+; :Author: j35
+;-
+function get_sangle, fileID
+  compile_opt idl2
+  
+  catch, error_try1
+  if (error_try1 ne 0) then begin
+    catch,/cancel
+    
+    catch, error_try2
+    if (error_try2 ne 0) then begin
+      catch,/cancel
+      
+      catch, error_try3
+      if (error_try3 ne 0) then begin
+        catch,/cancel
+        
+        return, ['','']
+        
+      endif else begin ;try3
+      
+        sangle_value_path = '/entry-Off_Off/sample/SANGLE/readback/'
+        sangle_units_path = '/entry-Off_Off/sample/SANGLE/readback/units/'
+        pathID = h5d_open(fileID, sangle_value_path)
+        sangle = h5d_read(pathID)
+        unitID = h5a_open_name(pathID,'units')
+        units  = h5a_read(unitID)
+        h5d_close, pathID
+        RETURN, [STRCOMPRESS(sangle,/REMOVE_ALL), $
+          STRCOMPRESS(units,/REMOVE_ALL)]
+          
+      endelse
+      
+    endif else begin ;try2
+    
+      sangle_value_path = '/entry-Off_Off/sample/SANGLE/value/'
+      sangle_units_path = '/entry-Off_Off/sample/SANGLE/value/units/'
+      pathID = h5d_open(fileID, sangle_value_path)
+      sangle = h5d_read(pathID)
+      unitID = h5a_open_name(pathID,'units')
+      units  = h5a_read(unitID)
+      h5d_close, pathID
+      RETURN, [STRCOMPRESS(sangle,/REMOVE_ALL), STRCOMPRESS(units,/REMOVE_ALL)]
+      
+    endelse
+    
+  endif else begin ;try1
+  
+    ;new NeXus architecture
+    sangle_value_path = '/entry-Off_Off/DASlogs/SANGLE/value/'
+    sangle_units_path = '/entry-Off_Off/DASlogs/SANGLE/value/units/'
     pathID = h5d_open(fileID, sangle_value_path)
     sangle = h5d_read(pathID)
     unitID = h5a_open_name(pathID,'units')
     units  = h5a_read(unitID)
     h5d_close, pathID
     RETURN, [STRCOMPRESS(sangle,/REMOVE_ALL), STRCOMPRESS(units,/REMOVE_ALL)]
-  ENDELSE
-END
+    
+  endelse
+  
+end
 
-;-------------------------------------------------------------------------------
-FUNCTION get_dangle, fileID
-; Change code (RC Ward, 15 Sept 2010): Get run_number to determine how to read metadata.
-run_number_path = '/entry-Off_Off/run_number/'
-pathID = h5d_open(fileID, run_number_path)
-run_number = h5d_read(pathID)
-if (run_number LE 6682) then begin
-  dangle_value_path = '/entry-Off_Off/instrument/bank1/DANGLE/readback/'
-  dangle_units_path = '/entry-Off_Off/instrument/bank1/DANGLE/readback/units/'
-endif else begin
-  dangle_value_path = '/entry-Off_Off/instrument/bank1/DANGLE/value/'
-  dangle_units_path = '/entry-Off_Off/instrument/bank1/DANGLE/value/units/'
-endelse
-  error_value = 0
-  CATCH, error_value
-  IF (error_value NE 0) THEN BEGIN
-    CATCH,/CANCEL
-    RETURN, ['','']
-  ENDIF ELSE BEGIN
+;+
+; :Description:
+;    This routine retrieves the dangle value and units for 3 different
+;    architectures of the NeXus files. If all three fail, a empty 2 elements
+;    array is returned.
+;
+; :Params:
+;    fileID
+;
+; :Returns:
+;   [strcompress(value),strcompress(units)]
+;
+; :Author: j35
+;-
+function get_dangle, fileID
+  compile_opt idl2
+  
+  catch, error_try1
+  if (error_try1 ne 0) then begin
+    catch,/cancel
+    
+    catch, error_try2
+    if (error_try2 ne 0) then begin
+      catch,/cancel
+      
+      catch, error_try3
+      if (error_try3 ne 0) then begin
+        catch,/cancel
+        
+        return, ['','']
+        
+      endif else begin ;try3
+      
+        dangle_value_path = '/entry-Off_Off/instrument/bank1/DANGLE/readback/'
+        dangle_units_path = $
+          '/entry-Off_Off/instrument/bank1/DANGLE/readback/units/'
+        pathID = h5d_open(fileID, dangle_value_path)
+        dangle = h5d_read(pathID)
+        unitID = h5a_open_name(pathID,'units')
+        units  = h5a_read(unitID)
+        h5d_close, pathID
+        return, [STRCOMPRESS(dangle,/REMOVE_ALL), $
+          STRCOMPRESS(units,/REMOVE_ALL)]
+          
+      endelse
+      
+    endif else begin ;try2
+    
+      dangle_value_path = '/entry-Off_Off/instrument/bank1/DANGLE/value/'
+      dangle_units_path = '/entry-Off_Off/instrument/bank1/DANGLE/value/units/'
+      pathID = h5d_open(fileID, dangle_value_path)
+      dangle = h5d_read(pathID)
+      unitID = h5a_open_name(pathID,'units')
+      units  = h5a_read(unitID)
+      h5d_close, pathID
+      return, [STRCOMPRESS(dangle,/REMOVE_ALL), STRCOMPRESS(units,/REMOVE_ALL)]
+      
+    endelse
+    
+  endif else begin ;try1
+  
+    dangle_value_path = '/entry-Off_Off/DASlogs/DANGLE/value/'
+    dangle_units_path = '/entry-Off_Off/DASlogs/DANGLE/value/units/'
+    pathID = h5d_open(fileID, dangle_value_path)
+    dangle = h5d_read(pathID)
+    unitID = h5a_open_name(pathID,'units')
+    units  = h5a_read(unitID)
+    h5d_close, pathID
+    return, [STRCOMPRESS(dangle,/REMOVE_ALL), STRCOMPRESS(units,/REMOVE_ALL)]
+    
+  endelse
+  
+end
+
+;+
+; :Description:
+;    This routine retrieves the dangle0 value and units for 3 different
+;    architectures of the NeXus files. If all three fail, a empty 2 elements
+;    array is returned.
+;
+; :Params:
+;    fileID
+;
+; :Returns:
+;   [strcompress(value),strcompress(units)]
+;
+; :Author: j35
+;-
+function get_dangle0, fileID
+  compile_opt idl2
+  
+  catch, error_try1
+  if (error_try1 ne 0) then begin
+    catch,/cancel
+    
+    catch, error_try2
+    if (error_try2 ne 0) then begin
+      catch,/cancel
+      
+      catch, error_try3
+      if (error_try3 ne 0) then begin
+        catch,/cancel
+        
+        return, ['','']
+        
+      endif else begin
+      
+        dangle_value_path = '/entry-Off_Off/instrument/bank1/DANGLE0/readback/'
+        dangle_units_path = $
+          '/entry-Off_Off/instrument/bank1/DANGLE0/readback/units/'
+        pathID = h5d_open(fileID, dangle_value_path)
+        dangle = h5d_read(pathID)
+        unitID = h5a_open_name(pathID,'units')
+        units  = h5a_read(unitID)
+        h5d_close, pathID
+        RETURN, [STRCOMPRESS(dangle,/REMOVE_ALL), $
+          STRCOMPRESS(units,/REMOVE_ALL)]
+          
+      endelse
+      
+    endif else begin ;try2
+    
+      dangle_value_path = '/entry-Off_Off/instrument/bank1/DANGLE0/value/'
+      dangle_units_path = '/entry-Off_Off/instrument/bank1/DANGLE0/value/units/'
+      pathID = h5d_open(fileID, dangle_value_path)
+      dangle = h5d_read(pathID)
+      unitID = h5a_open_name(pathID,'units')
+      units  = h5a_read(unitID)
+      h5d_close, pathID
+      RETURN, [STRCOMPRESS(dangle,/REMOVE_ALL), STRCOMPRESS(units,/REMOVE_ALL)]
+      
+    endelse
+    
+  endif else begin ;try1
+  
+    dangle_value_path = '/entry-Off_Off/DASlogs/DANGLE0/value/'
+    dangle_units_path = '/entry-Off_Off/DASlogs/DANGLE0/value/units/'
     pathID = h5d_open(fileID, dangle_value_path)
     dangle = h5d_read(pathID)
     unitID = h5a_open_name(pathID,'units')
     units  = h5a_read(unitID)
     h5d_close, pathID
     RETURN, [STRCOMPRESS(dangle,/REMOVE_ALL), STRCOMPRESS(units,/REMOVE_ALL)]
-  ENDELSE
-END
+    
+  endelse
+  
+end
 
-;-------------------------------------------------------------------------------
-FUNCTION get_dangle0, fileID
-; Change code (RC Ward, 15 Sept 2010): Get run_number to determine how to read metadata.
-run_number_path = '/entry-Off_Off/run_number/'
-pathID = h5d_open(fileID, run_number_path)
-run_number = h5d_read(pathID)
-if (run_number LE 6682) then begin
-  dangle_value_path = '/entry-Off_Off/instrument/bank1/DANGLE0/readback/'
-  dangle_units_path = '/entry-Off_Off/instrument/bank1/DANGLE0/readback/units/'
-endif else begin
-  dangle_value_path = '/entry-Off_Off/instrument/bank1/DANGLE0/value/'
-  dangle_units_path = '/entry-Off_Off/instrument/bank1/DANGLE0/value/units/'
-endelse  
-  error_value = 0
-  CATCH, error_value
-  IF (error_value NE 0) THEN BEGIN
-    CATCH,/CANCEL
-    RETURN, ['','']
-  ENDIF ELSE BEGIN
-    pathID = h5d_open(fileID, dangle_value_path)
-    dangle = h5d_read(pathID)
-    unitID = h5a_open_name(pathID,'units')
-    units  = h5a_read(unitID)
-    h5d_close, pathID
-    RETURN, [STRCOMPRESS(dangle,/REMOVE_ALL), STRCOMPRESS(units,/REMOVE_ALL)]
-  ENDELSE
-END
-
-;------------------------------------------------------------------------------
-FUNCTION get_dirpix, fileID
-; Change code (RC Ward, 15 Sept 2010): Get run_number to determine how to read metadata.
-run_number_path = '/entry-Off_Off/run_number/'
-pathID = h5d_open(fileID, run_number_path)
-run_number = h5d_read(pathID)
-if (run_number LE 6682) then begin
-  dirpix_path = '/entry-Off_Off/instrument/bank1/DIRPIX/readback/'
-endif else begin
-  dirpix_path = '/entry-Off_Off/instrument/bank1/DIRPIX/value/'
-endelse
-  error_value = 0
-  CATCH, error_value
-  IF (error_value NE 0) THEN BEGIN
-    CATCH,/CANCEL
-    RETURN, ''
-  ENDIF ELSE BEGIN
+;+
+; :Description:
+;    This routine retrieves the dirpix value for 3 differents
+;    architectures of the NeXus files. If all three fail, a empty string
+;    is returned.
+;
+; :Params:
+;    fileID
+;
+; :Returns:
+;   strcompress(value)
+;
+; :Author: j35
+;-
+function get_dirpix, fileID
+  compile_opt idl2
+  
+  catch, error_try1
+  if (error_try1 ne 0) then begin
+    catch,/cancel
+    
+    catch, error_try2
+    if (error_try2 ne 0) then begin
+      catch,/cancel
+      
+      catch, error_try3
+      if (error_try3 ne 0) then begin
+        catch,/cancel
+        
+        return, ''
+        
+      endif else begin ;try3
+      
+        dirpix_path = '/entry-Off_Off/instrument/bank1/DIRPIX/value/'
+        pathID = h5d_open(fileID, dirpix_path)
+        dirpix = h5d_read(pathID)
+        h5d_close, pathID
+        RETURN, STRCOMPRESS(dirpix,/REMOVE_ALL)
+        
+      endelse
+      
+    endif else begin ;try2
+    
+      dirpix_path = '/entry-Off_Off/instrument/bank1/DIRPIX/readback/'
+      pathID = h5d_open(fileID, dirpix_path)
+      dirpix = h5d_read(pathID)
+      h5d_close, pathID
+      RETURN, STRCOMPRESS(dirpix,/REMOVE_ALL)
+      
+    endelse
+    
+  endif else begin ;try1
+  
+    dirpix_path = '/entry-Off_Off/DASlogs/DIRPIX/value/'
     pathID = h5d_open(fileID, dirpix_path)
     dirpix = h5d_read(pathID)
     h5d_close, pathID
     RETURN, STRCOMPRESS(dirpix,/REMOVE_ALL)
-  ENDELSE
-END
+    
+  endelse
+  
+end
 
-;------------------------------------------------------------------------------
-FUNCTION get_sample_det_distance, fileID
-; Change code (RC Ward, 15 Sept 2010): Get run_number to determine how to read metadata.
-run_number_path = '/entry-Off_Off/run_number/'
-pathID = h5d_open(fileID, run_number_path)
-run_number = h5d_read(pathID)
-if (run_number LE 6682) then begin
-  dist_value_path = '/entry-Off_Off/instrument/bank1/SampleDetDis/readback/'
-  dist_units_path = '/entry-Off_Off/instrument/bank1/SampleDetDis/readback/units/'
-endif else begin
-  dist_value_path = '/entry-Off_Off/instrument/bank1/SampleDetDis/value/'
-  dist_units_path = '/entry-Off_Off/instrument/bank1/SampleDetDis/value/units/'
-endelse
-  error_value = 0
-  CATCH, error_value
-  IF (error_value NE 0) THEN BEGIN
-    CATCH,/CANCEL
-    RETURN, ['','']
-  ENDIF ELSE BEGIN
+;+
+; :Description:
+;    This routine retrieves the distance Sample-Detector value and units
+;    for 3 differents architectures of the NeXus files.
+;    If all three fail, a empty 2 elements array is returned.
+;
+; :Params:
+;    fileID
+;
+; :Returns:
+;   [strcompress(value),strcompress(units)]
+;
+; :Author: j35
+;-
+function get_sample_det_distance, fileID
+  compile_opt idl2
+  
+  catch, error_try1
+  if (error_try1 ne 0) then begin
+    catch, /cancel
+    
+    catch, error_try2
+    if (error_try2 ne 0) then begin
+      catch, /cancel
+      
+      catch, error_try3
+      if (error_try3 ne 0) then begin
+        catch, /cancel
+        
+        return, ['','']
+        
+      endif else begin ;try3
+      
+        dist_value_path = '/entry-Off_Off/instrument/bank1/SampleDetDis/value/'
+        dist_units_path = $
+          '/entry-Off_Off/instrument/bank1/SampleDetDis/value/units/'
+        pathID = h5d_open(fileID, dist_value_path)
+        dist   = h5d_read(pathID)
+        unitID = h5a_open_name(pathID,'units')
+        units  = h5a_read(unitID)
+        h5d_close, pathID
+        return, [STRCOMPRESS(dist,/REMOVE_ALL), STRCOMPRESS(units,/REMOVE_ALL)]
+        
+      endelse
+      
+    endif else begin ;try2
+    
+      dist_value_path = '/entry-Off_Off/instrument/bank1/SampleDetDis/readback/'
+      dist_units_path = $
+        '/entry-Off_Off/instrument/bank1/SampleDetDis/readback/units/'
+      pathID = h5d_open(fileID, dist_value_path)
+      dist   = h5d_read(pathID)
+      unitID = h5a_open_name(pathID,'units')
+      units  = h5a_read(unitID)
+      h5d_close, pathID
+      return, [STRCOMPRESS(dist,/REMOVE_ALL), STRCOMPRESS(units,/REMOVE_ALL)]
+      
+    endelse
+    
+  endif else begin ;try1
+  
+    dist_value_path = '/entry-Off_Off/DASlogs/SampleDetDis/value/'
+    dist_units_path = '/entry-Off_Off/DASlogs/SampleDetDis/value/units/'
     pathID = h5d_open(fileID, dist_value_path)
     dist   = h5d_read(pathID)
     unitID = h5a_open_name(pathID,'units')
     units  = h5a_read(unitID)
     h5d_close, pathID
-    RETURN, [STRCOMPRESS(dist,/REMOVE_ALL), STRCOMPRESS(units,/REMOVE_ALL)]
-  ENDELSE
-END
+    return, [STRCOMPRESS(dist,/REMOVE_ALL), STRCOMPRESS(units,/REMOVE_ALL)]
+    
+  endelse
+  
+end
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 FUNCTION IDLgetMetadata_REF_M::getSangle
@@ -218,10 +441,33 @@ FUNCTION IDLgetMetadata_REF_M::getSampleDetDist
   RETURN, distance
 END
 
-;******************************************************************************
-;***** Class constructor ******************************************************
-FUNCTION IDLgetMetadata_REF_M::init, nexus_full_path
+;+
+; :Description:
+;    Cleanup routine of the class
+;
+; :Author: j35
+;-
+function IDLgetMetadata_REF_M::cleanup
+  compile_opt idl2
+  
+  h5f_close, self.fileID
+  
+end
 
+;+
+; :Description:
+;    init method of the class
+;
+; :Params:
+;    nexus_full_path
+;
+;
+;
+; :Author: j35
+;-
+function IDLgetMetadata_REF_M::init, nexus_full_path
+  compile_opt idl2
+  
   ;open hdf5 nexus file
   error_file = 0
   CATCH, error_file
