@@ -256,7 +256,7 @@ PRO MAIN_BASE_event, Event
   
   ;plot range of sangle base
   widget_info(wWidget, find_by_uname='reduce_step1_tof_plot_only_range'): begin
-    ;replot the main sangle plot with the new tof range
+    widget_control, /hourglass
     plot_selected_data_in_sangle_base, Event, $
       result, $
       /recalculate, $
@@ -267,10 +267,12 @@ PRO MAIN_BASE_event, Event
     display_full_sangle_tof_range_marker, event
     plot_sangle_refpix, Event
     plot_sangle_dirpix, Event
+    widget_control, hourglass=0    
   end
   
   ;plot full
   widget_info(wWidget, find_by_uname='reduce_step1_tof_plot_full_range'): begin
+    widget_control, /hourglass
     plot_selected_data_in_sangle_base, Event, $
       result, $
       /recalculate
@@ -279,7 +281,7 @@ PRO MAIN_BASE_event, Event
     display_sangle_scale_tof_range, event, /full_range
     plot_sangle_refpix, Event
     plot_sangle_dirpix, Event
-    
+    widget_control, hourglass=0    
   end
   
   ;============================================================================
