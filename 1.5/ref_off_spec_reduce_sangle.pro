@@ -365,12 +365,14 @@ END
 ; :Keywords:
 ;    recalculate
 ;    plot_range
+;    full_reload
 ;
 ; :Author: j35
 ;-
 PRO plot_selected_data_in_sangle_base, Event, result, $
-    recalculate=recalculate, $
-    plot_range=plot_range
+    recalculate = recalculate, $
+    plot_range = plot_range, $
+    full_reload = full_reload
   compile_opt idl2
   
   result = 0
@@ -395,15 +397,26 @@ PRO plot_selected_data_in_sangle_base, Event, result, $
     
     IF (sangle_spin_state_selected EQ '') THEN RETURN
     
-    ;retrieve data of run and spin state selected
-    result = retrieve_nexus_data(s_full_nexus_file_name, $
-      sangle_spin_state_selected, $
-      data)
+    if (keyword_set(full_reload)) then begin
+      ;retrieve data of run and spin state selected
+      result = retrieve_nexus_data(s_full_nexus_file_name, $
+        sangle_spin_state_selected, $
+        data)
+        
+      IF (result EQ 0) THEN RETURN
       
-    IF (result EQ 0) THEN RETURN
+      tData = TOTAL(data,2)
+      (*(*global).sangle_tData) = tData
+      
+      retrieve_tof_array_from_nexus, Event
+      
+      
+    endif else begin
     
-    tData = TOTAL(data,2)
-    (*(*global).sangle_tData) = tData
+      tData = (*(*global).sangle_tData)
+      
+    endelse
+    
     x = (size(tdata))[1]
     y = (size(tdata))[2]
     
@@ -526,10 +539,8 @@ PRO replot_selected_data_in_sangle_base, Event, plot_range=plot_range
 END
 
 ;------------------------------------------------------------------------------
-PRO retrieve_tof_array_from_nexus, Event, result
+PRO retrieve_tof_array_from_nexus, Event
 
-  result = 0
-  
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
@@ -557,8 +568,6 @@ PRO retrieve_tof_array_from_nexus, Event, result
   sangle_tof_device_range[1,0] = tof[0]/1000.
   sangle_tof_device_range[1,1] = tof[-1]/1000.
   (*global).sangle_tof_device_data = sangle_tof_device_range
-  
-  result = 1
   
 END
 

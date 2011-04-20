@@ -135,7 +135,7 @@ PRO MAIN_BASE_event, Event
   
   ;OK button of the polarization state base
   WIDGET_INFO(wWidget, $
-  FIND_BY_UNAME= 'reduce_tab1_pola_base_valid_button'): BEGIN
+    FIND_BY_UNAME= 'reduce_tab1_pola_base_valid_button'): BEGIN
     update_polarization_states_widgets, Event ;reduce_step1
     MapBase, Event, 'reduce_tab1_polarization_base', 0
     activate_widget, Event, 'reduce_step1_tab_base', 1
@@ -151,7 +151,7 @@ PRO MAIN_BASE_event, Event
   
   ;Remove selected Run
   WIDGET_INFO(wWidget, $
-  FIND_BY_UNAME='reduce_step1_remove_selection_button'): BEGIN
+    FIND_BY_UNAME='reduce_step1_remove_selection_button'): BEGIN
     remove_selected_run, Event
   END
   
@@ -171,10 +171,10 @@ PRO MAIN_BASE_event, Event
     MapBase, Event, 'reduce_step1_sangle_base_label', 1
     select_sangle_first_run_number_by_default, Event
     display_metatada_of_sangle_selected_row, Event
-    retrieve_tof_array_from_nexus, Event, result
-    IF (result EQ 1) THEN plot_selected_data_in_sangle_base, Event, $
+    plot_selected_data_in_sangle_base, Event, $
       result,$
-      /recalculate
+      /recalculate,$
+      /full_reload
     IF (result EQ 1) THEN BEGIN
       load_step1_data_back_roi, event
       display_reduce_step1_sangle_scale, EVENT=event
@@ -202,7 +202,10 @@ PRO MAIN_BASE_event, Event
     IF ((*global).sangle_table_press_click EQ 1) THEN BEGIN
       select_full_line_of_selected_row, Event
       display_metatada_of_sangle_selected_row, Event
-      plot_selected_data_in_sangle_base, Event, result
+      plot_selected_data_in_sangle_base, Event, $
+        result, $
+        /recalculate, $
+        /full_reload
       IF (result EQ 1) THEN BEGIN
         load_step1_data_back_roi, event
         plot_tof_range_on_main_plot, Event
@@ -211,6 +214,8 @@ PRO MAIN_BASE_event, Event
         plot_sangle_dirpix, Event
         reduce_step1_plot_rois, event
         plot_counts_vs_pixel_help, Event
+        init_sangle_scale_device_data_array, event=event
+        display_sangle_scale_tof_range, event, /full_range
       ENDIF
       (*global).sangle_table_press_click = 0
     ENDIF ELSE BEGIN
@@ -267,7 +272,7 @@ PRO MAIN_BASE_event, Event
     display_full_sangle_tof_range_marker, event
     plot_sangle_refpix, Event
     plot_sangle_dirpix, Event
-    widget_control, hourglass=0    
+    widget_control, hourglass=0
   end
   
   ;plot full
@@ -281,7 +286,7 @@ PRO MAIN_BASE_event, Event
     display_sangle_scale_tof_range, event, /full_range
     plot_sangle_refpix, Event
     plot_sangle_dirpix, Event
-    widget_control, hourglass=0    
+    widget_control, hourglass=0
   end
   
   ;============================================================================
@@ -294,7 +299,7 @@ PRO MAIN_BASE_event, Event
       CATCH, /CANCEL
       
       ;moving mouse with button
-      IF ((*global).zoom_left_click_pressed) THEN BEGIN 
+      IF ((*global).zoom_left_click_pressed) THEN BEGIN
         ;pressed
         CURSOR, X, Y, /DATA, /NOWAIT
         ;make sure we didn't move outside of the plotting region
@@ -471,7 +476,7 @@ PRO MAIN_BASE_event, Event
             tof_sangle_device_range = (*global).tof_sangle_device_range
             tof_sangle_device_range[0] = event.x + (*global).tof_sangle_offset
             IF (tof_sangle_device_range[0] LT $
-            tof_sangle_device_range[1]) THEN BEGIN
+              tof_sangle_device_range[1]) THEN BEGIN
               (*global).tof_sangle_device_range = tof_sangle_device_range
             ENDIF
             IF (tof_sangle_device_range[0] LT 0) THEN BEGIN
@@ -485,11 +490,11 @@ PRO MAIN_BASE_event, Event
             tof_sangle_device_range = (*global).tof_sangle_device_range
             tof_sangle_device_range[1] = event.x + (*global).tof_sangle_offset
             IF (tof_sangle_device_range[0] LT $
-            tof_sangle_device_range[1]) THEN BEGIN
+              tof_sangle_device_range[1]) THEN BEGIN
               (*global).tof_sangle_device_range = tof_sangle_device_range
             ENDIF
             IF (tof_sangle_device_range[1] GT $
-            (*global).sangle_xsize_draw) THEN BEGIN
+              (*global).sangle_xsize_draw) THEN BEGIN
               tof_sangle_device_range[1] = (*global).sangle_xsize_draw
               (*global).tof_sangle_device_range = tof_sangle_device_range
             ENDIF
@@ -507,7 +512,11 @@ PRO MAIN_BASE_event, Event
           (*global).sangle_mode EQ 'tof_max') THEN BEGIN
           (*global).sangle_mode = (*global).old_sangle_mode
         ENDIF
-        replot_selected_data_in_sangle_base, Event, /plot_range
+        id = WIDGET_INFO(Event.top,find_by_uname='reduce_sangle_plot')
+        WIDGET_CONTROL, id, GET_VALUE=id_value
+        WSET, id_value
+        TV, (*(*global).sangle_background_plot), true=3
+;        replot_selected_data_in_sangle_base, Event, /plot_range
         CASE ((*global).sangle_mode) OF
           'refpix': BEGIN
             plot_sangle_dirpix, Event
@@ -551,8 +560,7 @@ PRO MAIN_BASE_event, Event
     WIDGET_CONTROL, /HOURGLASS
     ;first save the current roi selected
     reduce_step1_save_back_roi, Event
-    
-    plot_selected_data_in_sangle_base, Event, /recalculate
+    plot_selected_data_in_sangle_base, Event, /recalculate, /full_reload
     plot_tof_range_on_main_plot, Event
     saving_background, Event
     init_sangle_scale_device_data_array, event=event
@@ -567,8 +575,7 @@ PRO MAIN_BASE_event, Event
     WIDGET_CONTROL, /HOURGLASS
     ;first save the current roi selected
     reduce_step1_save_back_roi, Event
-    
-    plot_selected_data_in_sangle_base, Event, /recalculate
+    plot_selected_data_in_sangle_base, Event, /recalculate, /full_reload
     plot_tof_range_on_main_plot, Event
     saving_background, Event
     init_sangle_scale_device_data_array, event=event
@@ -582,9 +589,8 @@ PRO MAIN_BASE_event, Event
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_3'): BEGIN ;On_Off
     WIDGET_CONTROL, /HOURGLASS
     ;first save the current roi selected
-    reduce_step1_save_back_roi, Event
-    
-    plot_selected_data_in_sangle_base, Event, /recalculate
+    reduce_step1_save_back_roi, Event    
+    plot_selected_data_in_sangle_base, Event, /recalculate, /full_reload
     plot_tof_range_on_main_plot, Event
     saving_background, Event
     init_sangle_scale_device_data_array, event=event
@@ -599,8 +605,7 @@ PRO MAIN_BASE_event, Event
     WIDGET_CONTROL, /HOURGLASS
     ;first save the current roi selected
     reduce_step1_save_back_roi, Event
-    
-    plot_selected_data_in_sangle_base, Event, /recalculate
+    plot_selected_data_in_sangle_base, Event, /recalculate, /full_reload
     plot_tof_range_on_main_plot, Event
     saving_background, Event
     init_sangle_scale_device_data_array, event=event
@@ -934,19 +939,19 @@ PRO MAIN_BASE_event, Event
         CASE (currTabSelect) OF
           0: BEGIN ;off_off
             check_status_of_reduce_step2_data_spin_state_hidden_base, Event, $
-            tab=1
+              tab=1
           END
           1: BEGIN ;off_on
             check_status_of_reduce_step2_data_spin_state_hidden_base, Event, $
-            tab=2
+              tab=2
           END
           2: BEGIN ;on_off
             check_status_of_reduce_step2_data_spin_state_hidden_base, Event, $
-            tab=3
+              tab=3
           END
           3: BEGIN ;on_on
             check_status_of_reduce_step2_data_spin_state_hidden_base, Event, $
-            tab=4
+              tab=4
           END
         ENDCASE
       ENDIF
@@ -3163,7 +3168,7 @@ PRO MAIN_BASE_event, Event
   ;----------------------------------------------------------------------------
   ; SCALING_2D - SCALING_2D - SCALING_2D - SCALING_2D - SCALING_2D - SCALING_2D
   ;----------------------------------------------------------------------------
-
+  
   ;Selection Info Text Fields for Step 5 Plot ---------------------------------
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='step5_selection_info_xmin_value'): BEGIN
@@ -3196,7 +3201,7 @@ PRO MAIN_BASE_event, Event
       move_selection_manually_step5, Event ;step5
     ENDIF
   END
-
+  
   ;X/Y/Min/Max
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_new_zoom_x_min'): BEGIN
     re_plot_lambda_selected, Event ;step 5
@@ -3367,7 +3372,7 @@ PRO MAIN_BASE_event, Event
     display_step5_rescale_plot, Event, with_range=1
     define_default_recap_output_file, Event
   END
-
+  
   ;draw
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_draw'): BEGIN
   
@@ -3414,11 +3419,11 @@ PRO MAIN_BASE_event, Event
         getCWBgroupValue(Event,'step5_selection_group_uname')
         
       IF (selection_value NE 0) THEN BEGIN
-        ; Define the default file name - this is displayed on the I vs 
+        ; Define the default file name - this is displayed on the I vs
         ; Q plot page define_default_recap_output_file, Event
       
         ; Code now uses the selection window from Step 4
-        ; as modified by user and the action is left click the mouse in 
+        ; as modified by user and the action is left click the mouse in
         ; the screen Mouse actions on creating selection window for step5
         ;left click mouse ----------------------------------------------------
         IF (event.press EQ 1) THEN BEGIN ;press left
