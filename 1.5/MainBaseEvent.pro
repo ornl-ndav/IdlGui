@@ -429,7 +429,8 @@ PRO MAIN_BASE_event, Event
       ENDIF ;end of if button pressed
       
       IF (event.press EQ 4) THEN BEGIN ;right click, switch mode
-        replot_selected_data_in_sangle_base, Event, /plot_range
+        id = WIDGET_INFO(Event.top,find_by_uname='reduce_sangle_plot')
+        plot_selected_data_in_sangle_base, Event, /plot_range, /recalculate
         CASE ((*global).sangle_mode) OF
           'refpix': BEGIN
             (*global).sangle_mode = 'dirpix'
@@ -516,7 +517,7 @@ PRO MAIN_BASE_event, Event
         WIDGET_CONTROL, id, GET_VALUE=id_value
         WSET, id_value
         TV, (*(*global).sangle_background_plot), true=3
-;        replot_selected_data_in_sangle_base, Event, /plot_range
+        ;        replot_selected_data_in_sangle_base, Event, /plot_range
         CASE ((*global).sangle_mode) OF
           'refpix': BEGIN
             plot_sangle_dirpix, Event
@@ -589,7 +590,7 @@ PRO MAIN_BASE_event, Event
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_3'): BEGIN ;On_Off
     WIDGET_CONTROL, /HOURGLASS
     ;first save the current roi selected
-    reduce_step1_save_back_roi, Event    
+    reduce_step1_save_back_roi, Event
     plot_selected_data_in_sangle_base, Event, /recalculate, /full_reload
     plot_tof_range_on_main_plot, Event
     saving_background, Event
