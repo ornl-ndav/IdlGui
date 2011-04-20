@@ -80,11 +80,11 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='step4_step2_tab'): BEGIN
       tab_step4_step2_event, Event ;_eventcb
     END
-    ;----------------------------------------------------------------------------
+    ;--------------------------------------------------------------------------
     ; REDUCE - REDUCE - REDUCE
-    ;----------------------------------------------------------------------------
+    ;--------------------------------------------------------------------------
     ; REDUCE TAB 1 - REDUCE TAB 1 - REDUCE TAB 1
-    ;----------------------------------------------------------------------------
+    ;--------------------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab'): BEGIN
       reduce_tab_event, Event ;_eventcb
     END
@@ -134,7 +134,8 @@ PRO MAIN_BASE_event, Event
   END
   
   ;OK button of the polarization state base
-  WIDGET_INFO(wWidget, FIND_BY_UNAME= 'reduce_tab1_pola_base_valid_button'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME= 'reduce_tab1_pola_base_valid_button'): BEGIN
     update_polarization_states_widgets, Event ;reduce_step1
     MapBase, Event, 'reduce_tab1_polarization_base', 0
     activate_widget, Event, 'reduce_step1_tab_base', 1
@@ -149,7 +150,8 @@ PRO MAIN_BASE_event, Event
   END
   
   ;Remove selected Run
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step1_remove_selection_button'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_step1_remove_selection_button'): BEGIN
     remove_selected_run, Event
   END
   
@@ -167,9 +169,6 @@ PRO MAIN_BASE_event, Event
     check_sangle_spin_state_buttons, Event
     MapBase, Event, 'reduce_step1_sangle_base', 1
     MapBase, Event, 'reduce_step1_sangle_base_label', 1
-    ; Change code (RC Ward, March 22, 2010): Remove the graphic with the equation for Sangle.
-    ;    MapBase, Event, 'reduce_step1_sangle_base_equation', 1
-    ;    display_reduce_step1_sangle_buttons, Event=event, global
     select_sangle_first_run_number_by_default, Event
     display_metatada_of_sangle_selected_row, Event
     retrieve_tof_array_from_nexus, Event, result
@@ -292,7 +291,8 @@ PRO MAIN_BASE_event, Event
     IF (enter_error NE 0) THEN BEGIN ;moving inside draw
       CATCH, /CANCEL
       
-      IF ((*global).zoom_left_click_pressed) THEN BEGIN ;moving mouse with button
+      ;moving mouse with button
+      IF ((*global).zoom_left_click_pressed) THEN BEGIN 
         ;pressed
         CURSOR, X, Y, /DATA, /NOWAIT
         ;make sure we didn't move outside of the plotting region
@@ -466,7 +466,8 @@ PRO MAIN_BASE_event, Event
           'tof_min': BEGIN
             tof_sangle_device_range = (*global).tof_sangle_device_range
             tof_sangle_device_range[0] = event.x + (*global).tof_sangle_offset
-            IF (tof_sangle_device_range[0] LT tof_sangle_device_range[1]) THEN BEGIN
+            IF (tof_sangle_device_range[0] LT $
+            tof_sangle_device_range[1]) THEN BEGIN
               (*global).tof_sangle_device_range = tof_sangle_device_range
             ENDIF
             IF (tof_sangle_device_range[0] LT 0) THEN BEGIN
@@ -479,10 +480,12 @@ PRO MAIN_BASE_event, Event
           'tof_max': BEGIN
             tof_sangle_device_range = (*global).tof_sangle_device_range
             tof_sangle_device_range[1] = event.x + (*global).tof_sangle_offset
-            IF (tof_sangle_device_range[0] LT tof_sangle_device_range[1]) THEN BEGIN
+            IF (tof_sangle_device_range[0] LT $
+            tof_sangle_device_range[1]) THEN BEGIN
               (*global).tof_sangle_device_range = tof_sangle_device_range
             ENDIF
-            IF (tof_sangle_device_range[1] GT (*global).sangle_xsize_draw) THEN BEGIN
+            IF (tof_sangle_device_range[1] GT $
+            (*global).sangle_xsize_draw) THEN BEGIN
               tof_sangle_device_range[1] = (*global).sangle_xsize_draw
               (*global).tof_sangle_device_range = tof_sangle_device_range
             ENDIF
@@ -674,8 +677,6 @@ PRO MAIN_BASE_event, Event
     save_sangle_table, Event
     MapBase, Event, 'reduce_step1_sangle_base', 0
     MapBase, Event, 'reduce_step1_sangle_base_label', 0
-    ; Change code (RC Ward, March 22, 2010): Remove the graphic with the equation for Sangle.
-    ;    MapBase, Event, 'reduce_step1_sangle_base_equation', 0
     display_reduce_step1_buttons, EVENT=EVENT,$
       ACTIVATE=(*global).reduce_step1_spin_state_mode, $
       global
@@ -928,16 +929,20 @@ PRO MAIN_BASE_event, Event
         CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
         CASE (currTabSelect) OF
           0: BEGIN ;off_off
-            check_status_of_reduce_step2_data_spin_state_hidden_base, Event, tab=1
+            check_status_of_reduce_step2_data_spin_state_hidden_base, Event, $
+            tab=1
           END
           1: BEGIN ;off_on
-            check_status_of_reduce_step2_data_spin_state_hidden_base, Event, tab=2
+            check_status_of_reduce_step2_data_spin_state_hidden_base, Event, $
+            tab=2
           END
           2: BEGIN ;on_off
-            check_status_of_reduce_step2_data_spin_state_hidden_base, Event, tab=3
+            check_status_of_reduce_step2_data_spin_state_hidden_base, Event, $
+            tab=3
           END
           3: BEGIN ;on_on
-            check_status_of_reduce_step2_data_spin_state_hidden_base, Event, tab=4
+            check_status_of_reduce_step2_data_spin_state_hidden_base, Event, $
+            tab=4
           END
         ENDCASE
       ENDIF
@@ -2219,7 +2224,6 @@ PRO MAIN_BASE_event, Event
         IF (x LT size_x AND $
           y LT size_y) THEN BEGIN
           counts = total_array(x,y)
-          ; CHANGE MADE (RC WARD, 22 June 2010): Change format for printing Counts
           sIntensity = STRING(counts,FORMAT='(e8.2)')
           intensity = STRCOMPRESS(sIntensity,/REMOVE_ALL)
         ENDIF ELSE BEGIN
@@ -2437,7 +2441,6 @@ PRO MAIN_BASE_event, Event
       IF (x LT size_x AND $
         y LT size_y) THEN BEGIN
         counts = total_array(x,y)
-        ; CHANGE MADE (RC WARD, 22 June 2010): Change format for printing Counts
         sIntensity = STRING(counts,FORMAT='(e8.2)')
         intensity = STRCOMPRESS(sIntensity,/REMOVE_ALL)
       ENDIF ELSE BEGIN
@@ -2529,33 +2532,17 @@ PRO MAIN_BASE_event, Event
       ref_pixel_list[index] = pixel_value
       (*(*global).ref_pixel_list) = ref_pixel_list
       
-      ;----------------------------------------------------------------------
-      ; Change Code (9 Jan 2011): Add capability to alter RefPix in Shifting step
       RefPixSave = (*(*global).RefPixSave)
       PreviousRefPix = (*(*global).PreviousRefPix)
-      ; DEBUG ===========
-      ;  print, " RefPix: ", RefPixSave[index]
-      ;  print, " previous RefPix: ", PreviousRefPix
-      ; DEBUG ===========
       IF (index EQ 0) THEN BEGIN
-        ; Change Code (RC Ward, 12 Jan 2011): treat reference RefPix differently
         RefPixSave[index] = pixel_value
         Delta =   RefPixSave[index] - PreviousRefPix[index]
       ENDIF ELSE BEGIN
         RefPixSave[index] = PreviousRefPix[index] + pixel_value - RefPixSave[0]
       ENDELSE
-      ; DEBUG ===========
-      ;  print, " new RefPix: ", RefPixSave[index]
-      ; DEBUG ===========
-      ; update value of RefPix
       (*(*global).RefPixSave) = RefPixSave
       
-      ; Change Code (9 Jan 2011): Add capability to alter RefPix in Shifting step
       RefPix_file_name = (*global).input_file_name
-      ; 9 Jan 2011 - clean up how RefPix file is named
-      ; DEBUG ===========
-      ;    print, "Full RefPix filename: ", RefPix_file_name
-      ; DEBUG ===========
       OPENW, 1, RefPix_file_name
       PRINTF, 1, RefPixSave
       CLOSE, 1
@@ -2593,33 +2580,17 @@ PRO MAIN_BASE_event, Event
       (*(*global).ref_pixel_list_original) = ref_pixel_list
       
       
-      ;----------------------------------------------------------------------
-      ; Change Code (9 Jan 2011): Add capability to alter RefPix in Shifting step
       RefPixSave = (*(*global).RefPixSave)
       PreviousRefPix = (*(*global).PreviousRefPix)
-      ; DEBUG ============
-      ;  print, " RefPix: ", RefPixSave[index]
-      ;  print, " previous RefPix: ", PreviousRefPix
-      ; DEBUG ============
       IF (index EQ 0) THEN BEGIN
-        ; Change Code (RC Ward, 12 Jan 2011): treat reference RefPix differently
         RefPixSave[index] = pixel_value
         Delta =   RefPixSave[index] - PreviousRefPix[index]
       ENDIF ELSE BEGIN
         RefPixSave[index] = PreviousRefPix[index] + pixel_value - RefPixSave[0]
       ENDELSE
-      ; DEBUG ===========
-      ;  print, " new RefPix: ", RefPixSave[index]
-      ; DEBUG ===========
-      ; update value of RefPix
       (*(*global).RefPixSave) = RefPixSave
       
-      ; Change Code (9 Jan 2011): Add capability to alter RefPix in Shifting step
       RefPix_file_name = (*global).input_file_name
-      ; 9 Jan 2011 - clean up how RefPix file is named
-      ; DEBUG ===========
-      ;    print, "Full RefPix filename: ", RefPix_file_name
-      ; DEBUG ===========
       OPENW, 1, RefPix_file_name
       PRINTF, 1, RefPixSave
       CLOSE, 1
@@ -2648,14 +2619,9 @@ PRO MAIN_BASE_event, Event
       delta_x = getTextFieldValue(Event,'move_by_x_pixel_value_shifting')
       new_pixel_value = FLOAT(pixel_value) + FLOAT(delta_x)
       
-      ; Change code: replace 303 by detector_pixels_y-1, Check later (RC Ward, Feb 15, 2010)
-      
       IF (new_pixel_value GT (*global).detector_pixels_y-1) THEN BEGIN
         new_pixel_value = (*global).detector_pixels_y-1
       ENDIF
-      ;      IF (new_pixel_value GT 303) THEN BEGIN
-      ;        new_pixel_value = 303
-      ;      ENDIF
       
       ref_pixel_list[index] = new_pixel_value
       putTextFieldValue, Event, $
@@ -2664,38 +2630,21 @@ PRO MAIN_BASE_event, Event
       (*(*global).ref_pixel_list) = ref_pixel_list
       (*(*global).ref_pixel_list_original) = ref_pixel_list
       
-      ;----------------------------------------------------------------------
-      ; Change Code (9 Jan 2011): Add capability to alter RefPix in Shifting step
       RefPixSave = (*(*global).RefPixSave)
       PreviousRefPix = (*(*global).PreviousRefPix)
-      ; DEBUG ============
-      ;  print, " RefPix: ", RefPixSave[index]
-      ;  print, " previous RefPix: ", PreviousRefPix
-      ; DEBUG ============
       IF (index EQ 0) THEN BEGIN
-        ; Change Code (RC Ward, 12 Jan 2011): treat reference RefPix differently
         RefPixSave[index] = pixel_value
         Delta =   RefPixSave[index] - PreviousRefPix[index]
       ENDIF ELSE BEGIN
         RefPixSave[index] = PreviousRefPix[index] + pixel_value - RefPixSave[0]
       ENDELSE
-      ; DEBUG ===========
-      ;  print, " new RefPix: ", RefPixSave[index]
-      ; DEBUG ===========
-      ; update value of RefPix
       (*(*global).RefPixSave) = RefPixSave
       
-      ; Change Code (9 Jan 2011): Add capability to alter RefPix in Shifting step
       RefPix_file_name = (*global).input_file_name
-      ; 9 Jan 2011 - clean up how RefPix file is named
-      ; DEBUG ===========
-      ;    print, "Full RefPix filename: ", RefPix_file_name
-      ; DEBUG ===========
       OPENW, 1, RefPix_file_name
       PRINTF, 1, RefPixSave
       CLOSE, 1
       FREE_LUN, 1
-      ;----------------------------------------------------------------------
       
       plotAsciiData_shifting, Event ;_shifting
       plotReferencedPixels, Event ;_shifting
@@ -2837,8 +2786,6 @@ PRO MAIN_BASE_event, Event
     IF (current_list_OF_files[0] NE '') THEN BEGIN
     
       delta_x = (*global).delta_x
-      ; Debug (5 Nov 2010): delta_x must be passed to the Plot Tab to replot the results
-      ;  print, "In step4/Step1 - delta_x: ", delta_x
       x = Event.x
       x1 = FLOAT(delta_x) * FLOAT(x)
       Xtext = 'X: ' + STRCOMPRESS(x1,/REMOVE_ALL)
@@ -2857,7 +2804,6 @@ PRO MAIN_BASE_event, Event
         x GE 0 AND $
         y GE 0) THEN BEGIN
         counts = total_array(x,y)
-        ; CHANGE MADE (RC WARD, 22 June 2010): Change format for printing Counts
         sIntensity = STRING(counts,FORMAT='(e8.2)')
         intensity = STRCOMPRESS(sIntensity,/REMOVE_ALL)
       ENDIF ELSE BEGIN
@@ -3213,9 +3159,8 @@ PRO MAIN_BASE_event, Event
   ;----------------------------------------------------------------------------
   ; SCALING_2D - SCALING_2D - SCALING_2D - SCALING_2D - SCALING_2D - SCALING_2D
   ;----------------------------------------------------------------------------
-  ; Change Code (RC Ward, 3 Jun 2010): These changes were added to implement the xmin,ymin, xmax,ymax
-  ; control of the plot in STEP 5
-  ;Selection Info Text Fields for Step 5 Plot -------------------------------------------------
+
+  ;Selection Info Text Fields for Step 5 Plot ---------------------------------
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='step5_selection_info_xmin_value'): BEGIN
     current_list_OF_files = (*(*global).list_OF_ascii_files)
@@ -3247,12 +3192,7 @@ PRO MAIN_BASE_event, Event
       move_selection_manually_step5, Event ;step5
     ENDIF
   END
-  ; ====== END CHANGE  3 June 2010 ==============================================================
-  
-  ;***********************************************************************************************
-  ; Change Code (RC Ward, 29 April 2010): ADD THE FOLLOWING WIDGET_INFO for controlling plot scale
-  ; Note the with_range is set to 1 for all these calls on 31 May 2010 as a test -might cause proble
-  ; these are not presently used it think?
+
   ;X/Y/Min/Max
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_new_zoom_x_min'): BEGIN
     re_plot_lambda_selected, Event ;step 5
@@ -3279,8 +3219,6 @@ PRO MAIN_BASE_event, Event
     re_plot_lambda_selected, Event ;step 5
     display_step5_rescale_plot_from_zoom, Event, with_range=1
   END
-  ; Code Change (RC Ward, 29 April 2010): The above WIDGET_INFOs were added to control plot scale
-  ;***********************************************************************************************
   
   ;lin/log --------------------------------------------------------------------
   WIDGET_INFO(wWidget, $
@@ -3289,7 +3227,6 @@ PRO MAIN_BASE_event, Event
     refresh_plotStep5Selection, Event
   END
   
-  ; Code Change (RC Ward, 13 Aug 2010): Do this if toggling between splicing alternatives
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='slicing_alternative_step5'): BEGIN
     refresh_recap_plot, Event ;_step5
@@ -3358,8 +3295,6 @@ PRO MAIN_BASE_event, Event
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_z_reset'): BEGIN
     ; refresh plot
     refresh_recap_plot, Event
-    ; Change code (RC Ward, 13 June, 2010): When resetting, also reset xmin,ymin,xmax,ymax
-    ; and draw selection box
     ; pick up the xmin,ymin,xmax,ymax from Step 4
     step5_rescale_populate_zoom_widgets, Event
     ; draw the selection box
@@ -3388,9 +3323,7 @@ PRO MAIN_BASE_event, Event
   
   ;path button
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_browse_button_i_vs_q'): BEGIN
-    ; change code (RC Ward, 30 Nov 2010): Add capability to alter the value of the button.
     id = WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_browse_button_i_vs_q')
-    ;print, "test in Step5: working_path: " , (*global).working_path
     WIDGET_CONTROL, id, SET_VALUE=(*global).working_path
     step5_browse_path_button, Event ;_step5
   END
@@ -3419,23 +3352,18 @@ PRO MAIN_BASE_event, Event
   WIDGET_INFO(wWidget, FIND_BY_UNAME='preview_button_i_vs_q'): BEGIN
     step5_preview_button, Event ;step5
   END
-  ; ========= CHANGE CODE (RC WARD, 15 JUNE 2010): Add action if 'Plot' button
   ; is pressed in Step 5 I vs Q plot screen
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_selection_info_plot_value'): BEGIN
-    ; Change Code (RC Ward, 13 June, 2010): Define the default file name displayed on the I vs Q plot page
     define_default_recap_output_file, Event
-    ; Change Code (RC Ward, 10 Aug, 2010): No longer need to write mouse event window selections to LogBook
-    ;          inform_log_book_step5_selection, Event ;_step5
+    ;inform_log_book_step5_selection, Event ;_step5
     MapBase, Event, 'step5_rescale_base', 1
-    ; Change Code (RC Ward, 7 May 2010):  Call  display_step5_rescale_plot
-    ;    rather than display_step5_rescale_plot_first_time
+    ; Call  display_step5_rescale_plot
+    ; rather than display_step5_rescale_plot_first_time
     ; Change code (RC Ward, 31 May 2010): call routine with with_range set to 1
     display_step5_rescale_plot, Event, with_range=1
     define_default_recap_output_file, Event
   END
-  ; ========= END CHANGE CODE (RC WARD, 15 JUNE 2010): Add action if 'Plot' button
-  ; is pressed in Step 5 R vs Q plot screen
-  ;----------------------------------------------------------------------------
+
   ;draw
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_draw'): BEGIN
   
@@ -3480,27 +3408,25 @@ PRO MAIN_BASE_event, Event
       
       selection_value = $
         getCWBgroupValue(Event,'step5_selection_group_uname')
-      ; print, 'In MainBaseEvent for Step 5 - selection_value: ', selection_value
         
       IF (selection_value NE 0) THEN BEGIN
-        ; Change Code (RC Ward, 13 June, 2010):
-        ; Define the default file name - this is displayed on the I vs Q plot page
-        ;       define_default_recap_output_file, Event
+        ; Define the default file name - this is displayed on the I vs 
+        ; Q plot page define_default_recap_output_file, Event
       
-        ; Change Code (RC Ward, 13 June, 2010): Code now uses the selection window from Step 4
-        ;    as modified by user and the action is left click the mouse in the screen
-        ; Mouse actions on creating selection window for step5
+        ; Code now uses the selection window from Step 4
+        ; as modified by user and the action is left click the mouse in 
+        ; the screen Mouse actions on creating selection window for step5
         ;left click mouse ----------------------------------------------------
         IF (event.press EQ 1) THEN BEGIN ;press left
-          ; Change Code (RC Ward, 13 June, 2010): Define the default file name -
-          ;      this is displayed on the I vs Q plot page
+          ; Define the default file name -
+          ; this is displayed on the I vs Q plot page
           define_default_recap_output_file, Event
-          ; Change Code (RC Ward, 10 Aug, 2010): No longer need to write mouse event window selections to LogBook
+          ;No longer need to write mouse event window selections to LogBook
           ;          inform_log_book_step5_selection, Event ;_step5
           MapBase, Event, 'step5_rescale_base', 1
-          ; Change Code (RC Ward, 7 May 2010):  Call  display_step5_rescale_plot
+          ; Call display_step5_rescale_plot
           ;    rather than display_step5_rescale_plot_first_time
-          ; Change code (RC Ward, 31 May 2010): call routine with with_range set to 1
+          ; call routine with with_range set to 1
           display_step5_rescale_plot, Event, with_range=1
           define_default_recap_output_file, Event
           
@@ -3552,7 +3478,7 @@ PRO MAIN_BASE_event, Event
     DEVICE, CURSOR_STANDARD=31
     ;zoom or selection
     ;    isZoomSelected = isRecapScaleZoomSelected(Event)
-    ; Change code (RC Ward, 11 May 2010): Branch around the "zoom" portion here. It is no longer used.
+    ;Branch around the "zoom" portion here. It is no longer used.
     isZoomSelected = 0
     IF (isZoomSelected) THEN BEGIN ;using zoom
     ;
@@ -3741,7 +3667,7 @@ PRO MAIN_BASE_event, Event
   ;reset scale button
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='step5_rescale_scale_to_1_reset'): BEGIN
-    ; Change code (RC Ward, 31 May 2010); add check of range (xmin, xmax, ymin, ymax)
+    ;add check of range (xmin, xmax, ymin, ymax)
     display_step5_rescale_plot_first_time, Event, with_range=1
     activate_widget, Event, 'step5_rescale_scale_to_1_reset', 0
     (*global).recap_rescale_selection_left = 0
