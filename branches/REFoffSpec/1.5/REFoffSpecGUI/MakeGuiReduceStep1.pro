@@ -145,7 +145,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     UNAME = 'reduce_sangle_plot_base')
     
   label = WIDGET_LABEL(row1col2,$
-    VALUE = 'Pixel vs TOF (microsS)', $
+    VALUE = 'Pixel vs TOF (ms)', $
     UNAME = 'reduce_sangle_plot_title',$
     ;    XOFFSET = 720,$
     XOFFSET = (*global).sangle_xsize_draw - 125,$
@@ -170,6 +170,8 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     YSIZE = 2 * (*global).detector_pixels_y + 30,$
     ;    YSIZE = 2*304+30,$
     retain=2,$
+    /button_events, $
+    /motion_events, $
     YOFFSET = 0)
   ; Change code (RC Ward, 7 Aug 2010): Add label on x-axis, namely "TOF (micro seconds)".
   label = WIDGET_LABEL(row1col2, $
@@ -188,7 +190,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     /COLUMN)
     
   row = widget_base(row1col3Main,$
-  /row)  
+    /row)
     
   row1col3 = WIDGET_BASE(row,$ ;..................................
     /COLUMN, $
@@ -217,29 +219,28 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     
   WIDGET_CONTROL, button1, /SET_BUTTON
   
-    space = WIDGET_LABEL(row, $
-      VALUE = '           ')
-  
-    row1col3b = WIDGET_BASE(row,$ ;..................................
-      /COLUMN, $
-      /EXCLUSIVE)
-  
-    button1 = WIDGET_BUTTON(row1col3b,$
-      VALUE = 'Linear',$
-      /NO_RELEASE, $
-      UNAME = 'reduce_sangle_lin',$
-      SENSITIVE = 1)
-    button2 = WIDGET_BUTTON(row1col3b,$
-      VALUE = 'Log',$
-      /NO_RELEASE, $
-      UNAME = 'reduce_sangle_log', $
-      SENSITIVE = 1)
-  
-  ;  WIDGET_CONTROL, button2, /SET_BUTTON
+  space = WIDGET_LABEL(row, $
+    VALUE = '           ')
+    
+  row1col3b = WIDGET_BASE(row,$ ;..................................
+    /COLUMN, $
+    /EXCLUSIVE)
+    
+  button1 = WIDGET_BUTTON(row1col3b,$
+    VALUE = 'Linear',$
+    /NO_RELEASE, $
+    UNAME = 'reduce_sangle_lin',$
+    SENSITIVE = 1)
+  button2 = WIDGET_BUTTON(row1col3b,$
+    VALUE = 'Log',$
+    /NO_RELEASE, $
+    UNAME = 'reduce_sangle_log', $
+    SENSITIVE = 1)
+  WIDGET_CONTROL, button2, /SET_BUTTON
   ;================================
   ; Table of values from the nexus header
   ;================================
-  
+    
   ;row #1
   row1col3c = WIDGET_BASE(row1col3Main,$ ;..................................
     /COLUMN, $
@@ -536,7 +537,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     
   space = widget_label(row2,$
     value = '                                            ')
-
+    
   ;*************************
   ;select range of tof base*
   ;*************************
@@ -576,7 +577,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
   tof_row2 = widget_label(tof_range,$
     value = 'Left click TOF range to select TOF1, right' + $
     ' click to switch to TOF2.')
-
+    
   ;row2 of SANGLE BASE
   row3 = WIDGET_BASE(SangleBase,$ ;.................................
     /ROW)
@@ -826,8 +827,8 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     
   IF ((*global).instrument EQ 'REF_M') THEN BEGIN
     space = widget_label(Row3,$
-    value = '                          ')
-    
+      value = '                          ')
+      
     sangle_button = WIDGET_BUTTON(Row3,$
       VALUE = '  BACKGROUND ROI and SANGLE selection tool  ',$
       UNAME = 'reduce_step1_sangle_button', $
@@ -836,13 +837,13 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
   ENDIF else begin
   
     space = widget_label(row3,$
-    value = '                            ')
+      value = '                            ')
     back_roi_button = widget_button(row3,$
-    value ='  BACKGROUND selection tool  ',$
-    uname = 'reduce_step1_back_button',$
-    scr_ysize = 30,$
-    sensitive = 1)
-  
+      value ='  BACKGROUND selection tool  ',$
+      uname = 'reduce_step1_back_button',$
+      scr_ysize = 30,$
+      sensitive = 1)
+      
   endelse
   
   ;Repeat work for other polarization states (Row #4) ---------------------------

@@ -274,7 +274,6 @@ PRO load_and_plot_roi_file, Event, file_name
   ;(*global).norm_roi_y_selected = 'all'
   ;reduce_step2_manual_move, Event
     
-    
   reduce_step2_plot_rois, event
   display_roi_on_roi_selection_counts_vs_pixel_base, event
   
