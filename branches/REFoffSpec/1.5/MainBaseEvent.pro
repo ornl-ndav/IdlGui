@@ -375,7 +375,7 @@ PRO MAIN_BASE_event, Event
         IF (isClickInTofMinBox(Event)) THEN BEGIN ;user click the tof min slide
           DEVICE, CURSOR_STANDARD=(*global).left_right_cursor
           (*global).sangle_mode = 'tof_min'
-          replot_selected_data_in_sangle_base, Event
+          replot_selected_data_in_sangle_base, Event, /plot_range
           plot_sangle_dirpix, Event
           plot_sangle_refpix, Event
           plot_tof_max_range_on_main_plot, Event
@@ -392,7 +392,7 @@ PRO MAIN_BASE_event, Event
         IF (isClickInTofMaxBox(Event)) THEN BEGIN
           DEVICE, CURSOR_STANDARD=(*global).left_right_cursor
           (*global).sangle_mode = 'tof_max'
-          replot_selected_data_in_sangle_base, Event
+          replot_selected_data_in_sangle_base, Event, /plot_range
           plot_sangle_dirpix, Event
           plot_sangle_refpix, Event
           reduce_step1_plot_rois, event
@@ -424,7 +424,7 @@ PRO MAIN_BASE_event, Event
       ENDIF ;end of if button pressed
       
       IF (event.press EQ 4) THEN BEGIN ;right click, switch mode
-        replot_selected_data_in_sangle_base, Event
+        replot_selected_data_in_sangle_base, Event, /plot_range
         CASE ((*global).sangle_mode) OF
           'refpix': BEGIN
             (*global).sangle_mode = 'dirpix'
@@ -457,11 +457,13 @@ PRO MAIN_BASE_event, Event
         CASE ((*global).sangle_mode) OF
           'refpix': BEGIN
             plot_sangle_refpix_live, Event
+            plot_sangle_dirpix, event
             determine_sangle_refpix_data_from_device_value, Event
             calculate_new_sangle_value, Event
           END
           'dirpix': BEGIN
             plot_sangle_dirpix_live, Event
+            plot_sangle_refpix, event
             determine_sangle_dirpix_data_from_device_value, Event
             calculate_new_sangle_value, Event
           END
@@ -505,7 +507,7 @@ PRO MAIN_BASE_event, Event
           (*global).sangle_mode EQ 'tof_max') THEN BEGIN
           (*global).sangle_mode = (*global).old_sangle_mode
         ENDIF
-        replot_selected_data_in_sangle_base, Event
+        replot_selected_data_in_sangle_base, Event, /plot_range
         CASE ((*global).sangle_mode) OF
           'refpix': BEGIN
             plot_sangle_dirpix, Event
