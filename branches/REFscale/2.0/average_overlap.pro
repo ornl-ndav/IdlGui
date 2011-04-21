@@ -65,9 +65,11 @@ pro average_overlap, event, $
   
   n_row = n_elements(full_flt0_sorted)
   
-  new_full_flt0_sorted = fltarr(1)
-  new_full_flt1_sorted = fltarr(1)
-  new_full_flt2_sorted = fltarr(1)
+  new_full_flt0_sorted = !null
+  new_full_flt1_sorted = !null
+  new_full_flt2_sorted = !null
+  
+  _previous_flt0_value = -1
   
   for i=0L, n_row-2 do begin
   
@@ -97,15 +99,26 @@ pro average_overlap, event, $
       yerrorR = full_flt2_sorted[i+1]
       yerrorR2 = yerrorR * yerrorR
       
-      ;new yaxis value
-      new_y1 = yL/yerrorL2 + yR/yerrorR2
-      new_y2 = 1./yerrorL2 + 1./yerrorR2
-      new_yValue = new_y1 / new_y2
+      if (yerrorL2 eq 0 or $
+        yerrorR2 eq 0) then begin
+        
+        new_yValue = 0
+        new_yerrorValue = 0
+        
+      endif else begin
       
-      ;new yaxis error value
-      new_yerrorValue = sqrt(1/new_y2)
-      
+        ;new yaxis value
+        new_y1 = yL/yerrorL2 + yR/yerrorR2
+        new_y2 = 1./yerrorL2 + 1./yerrorR2
+        new_yValue = new_y1 / new_y2
+        
+        ;new yaxis error value
+        new_yerrorValue = sqrt(1/new_y2)
+        
+      endelse
+  
       i++
+
     endif else begin
     
       new_xValue = full_flt0_sorted[i]
@@ -120,8 +133,8 @@ pro average_overlap, event, $
     
   endfor
   
-  full_flt0_sorted = new_full_flt0_sorted[1:*]
-  full_flt1_sorted = new_full_flt1_sorted[1:*]
-  full_flt2_sorted = new_full_flt2_sorted[1:*]
+  full_flt0_sorted = new_full_flt0_sorted
+  full_flt1_sorted = new_full_flt1_sorted
+  full_flt2_sorted = new_full_flt2_sorted
   
 end
