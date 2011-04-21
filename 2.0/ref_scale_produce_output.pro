@@ -441,6 +441,7 @@ PRO ProduceOutputFile, Event
     full_flt1_sorted = full_flt1[flt0_sorted_index]
     full_flt2_sorted = full_flt2[flt0_sorted_index]
     
+    ;FIXME
     ;average overlap data values
     average_overlap, event, full_flt0_sorted, full_flt1_sorted, full_flt2_sorted
     
