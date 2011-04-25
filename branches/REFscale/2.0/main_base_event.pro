@@ -105,24 +105,20 @@ PRO MAIN_BASE_ref_scale_event, Event
                 0 : BEGIN
                   CASE (Event.press) OF ;left or right click
                     1 : BEGIN ;left click
-                      ;print, 'left click'
                       Step2LeftClick, $
                         Event, $
                         XMinMax ;left click
                     END
                     4 : BEGIN ;right click
-                      ;print, 'right click'
                       Step2RightClick, Event ;right click
                     END
                     ELSE:
                   ENDCASE
                 END
                 1 : BEGIN ;release click
-                  ;print, 'entering release click'
                   Step2ReleaseClick, Event;button released
                 END
                 2 : BEGIN ;move click
-                  ;print, '-> move click'
                   Step2MoveClick, $
                     Event, $
                     XMinMax ;mouse is moving
