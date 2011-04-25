@@ -696,9 +696,15 @@ PRO ref_scale_LoadBatchFile, Event
     (*global).instrument = 'REF_L'
       ;Retrieve List of Data Reduction files
       DRfiles = retrieveDRfiles(Event, BatchTable)
+      
       ;Check that all the files exist
       FileStatus = CheckFilesExist(Event, DRfiles)
       IF (FileStatus EQ 1) THEN BEGIN ;continue loading process
+
+        ;Update the Output File path button label
+        path = (*global).BatchDefaultPath
+        putValue, event=event, uname='output_path_button', value=path
+
         ;Repopulate GUI
         result = batch_repopulate_gui(Event, DRfiles)
         IF (result EQ 1) THEN BEGIN
