@@ -288,41 +288,31 @@ PRO MAIN_BASE_event, Event
   ;plot full
   widget_info(wWidget, find_by_uname='reduce_step1_tof_plot_full_range'): begin
     widget_control, /hourglass
-     plot_selected_data_in_sangle_base, Event, $
-        result, $
-        /recalculate, $
-        /full_reload
-      IF (result EQ 1) THEN BEGIN
-        load_step1_data_back_roi, event
-        display_reduce_step1_sangle_scale, EVENT=event
-        load_step1_data_back_roi, event
-        reduce_step1_plot_rois, event
-        plot_tof_range_on_main_plot, Event
-        display_reduce_step1_tof_range, event
-        if ((*global).sangle_mode eq 'refpix') then begin
-          plot_sangle_dirpix, Event
-        endif else begin
-          plot_sangle_refpix, event
-        endelse
-        saving_background, Event
-        if ((*global).sangle_mode eq 'refpix') then begin
-          plot_sangle_refpix, event
-        endif else begin
-          plot_sangle_dirpix, Event
-        endelse
-        plot_counts_vs_pixel_help, Event
-        display_full_sangle_tof_range_marker, event
-      ENDIF
-    
-    
-;    plot_selected_data_in_sangle_base, Event, $
-;      result, $
-;      /recalculate
-;    saving_background, Event
-;    init_sangle_scale_device_data_array, event=event
-;    display_sangle_scale_tof_range, event, /full_range
-;    plot_sangle_refpix, Event
-;    plot_sangle_dirpix, Event
+    plot_selected_data_in_sangle_base, Event, $
+      result, $
+      /recalculate, $
+      /full_reload
+    IF (result EQ 1) THEN BEGIN
+      load_step1_data_back_roi, event
+      display_reduce_step1_sangle_scale, EVENT=event
+      load_step1_data_back_roi, event
+      reduce_step1_plot_rois, event
+      plot_tof_range_on_main_plot, Event
+      display_reduce_step1_tof_range, event
+      if ((*global).sangle_mode eq 'refpix') then begin
+        plot_sangle_dirpix, Event
+      endif else begin
+        plot_sangle_refpix, event
+      endelse
+      saving_background, Event
+      if ((*global).sangle_mode eq 'refpix') then begin
+        plot_sangle_refpix, event
+      endif else begin
+        plot_sangle_dirpix, Event
+      endelse
+      plot_counts_vs_pixel_help, Event
+      display_full_sangle_tof_range_marker, event
+    ENDIF
     widget_control, hourglass=0
   end
   
