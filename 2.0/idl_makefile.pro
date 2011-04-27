@@ -95,6 +95,9 @@ cd, CurrentFolder
 .run auto_cleaning_data_cw_bgroup.pro
 .run configure_auto_cleanup.pro
 
+;resolution function
+.run configure_resolution_function.pro
+
 ;email output configure base
 .run email_configure_base.pro
 .run average_overlap.pro
