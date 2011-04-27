@@ -124,8 +124,8 @@ pro output_file_name_value, event
     index++
   endwhile
   
-;this routine will check if we can enabled or not the preview buttons
- check_previews_button, event
+  ;this routine will check if we can enabled or not the preview buttons
+  check_previews_button, event
   
 end
 
@@ -207,7 +207,7 @@ pro preview_of_combined_scaled_data_file, event, index
   
   index = strcompress(index,/remove_all)
   file_name = getTextFieldValue(event, $
-  'combined_scaled_data_file_name_value_' + index)
+    'combined_scaled_data_file_name_value_' + index)
   preview_of_file, event, file_name[0]
   
 end
@@ -278,6 +278,8 @@ END
 
 ;Main function that will produce and display the output file.
 PRO ProduceOutputFile, Event
+  compile_opt idl2
+  
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
   widget_control, id, get_uvalue=global
   
@@ -341,11 +343,22 @@ PRO ProduceOutputFile, Event
     flt1_ptr = (*global).flt1_rescale_ptr
     flt2_ptr = (*global).flt2_rescale_ptr
     
+    ;resolution function
+    resolution_function_flag = (*global).resolution_function_switch_flag
+    dq_over_q = (*global).dq_over_q
+    dq0 = (*global).dq0
+    
     ;calculate in first loop how many data point total we have
     nbr_data_point = 0
     full_flt0 = fltarr(1)
     full_flt1 = fltarr(1)
     full_flt2 = fltarr(1)
+    
+    _axis_label = '#Q(Angstroms^-1) R SigmaR '
+    if (resolution_function_flag) then begin
+      _axis_label += 'Resolution_function'
+    endif
+    masterText = [masterText, _axis_label]
     full_master_text = [MasterText,'']
     
     ;loop over all the files to get output
@@ -378,15 +391,15 @@ PRO ProduceOutputFile, Event
       
       ;remove INF, -INF and NAN values from arrays
       index = getArrayRangeOfNotNanValues(flt1) ;_get
-      flt0  = flt0(index)
-      flt1  = flt1(index)
-      flt2  = flt2(index)
+      flt0  = flt0[index]
+      flt1  = flt1[index]
+      flt2  = flt2[index]
       
       ;remove data where DeltaR>R
       index = GEvalue(flt1, flt2) ;_get
-      flt0  = flt0(index)
-      flt1  = flt1(index)
-      flt2  = flt2(index)
+      flt0  = flt0[index]
+      flt1  = flt1[index]
+      flt2  = flt2[index]
       
       if (i eq 0) then begin
         full_flt0 = flt0
@@ -398,7 +411,7 @@ PRO ProduceOutputFile, Event
         full_flt2 = [full_flt2,flt2]
       endelse
       
-      flt0Size = (size(flt0))(1)
+      flt0Size = (size(flt0))[1]
       nbr_data_point += flt0Size
       FOR j=0,(flt0Size-1) DO BEGIN
         TextData = strcompress(flt0[j])
@@ -406,6 +419,13 @@ PRO ProduceOutputFile, Event
         TextData += strcompress(flt1[j])
         TextData += ' '
         TextData += strcompress(flt2[j])
+        
+        ;add a 4th column with resolution function term
+        if (resolution_function_flag) then begin
+          _value = dq0 + dq_over_q * float(flt0[j])
+          TextData += ' ' + strcompress(_value,/remove_all)
+        endif
+        
         MasterText = [MasterText,TextData]
       ENDFOR
       
@@ -443,17 +463,24 @@ PRO ProduceOutputFile, Event
     
     ;average overlap data values
     run_average_overlap, event, $
-    full_flt0_sorted, $
-    full_flt1_sorted, $
-    full_flt2_sorted, $
-    method='new'
-    
+      full_flt0_sorted, $
+      full_flt1_sorted, $
+      full_flt2_sorted, $
+      method='new'
+      
     sz = n_elements(full_flt0_sorted)
     data_text = strarr(1)
     for i=0l,(sz-1) do begin
       local_data_text = strcompress(full_flt0_sorted[i],/remove_all)
       local_data_text += ' ' + strcompress(full_flt1_sorted[i],/remove_all)
       local_data_text += ' ' + strcompress(full_flt2_sorted[i],/remove_all)
+      
+      ;add a 4th column with resolution function term
+      if (resolution_function_flag) then begin
+        _value = dq0 + dq_over_q * float(full_flt0_sorted[i])
+        local_data_text += ' ' + strcompress(_value,/remove_all)
+      endif
+      
       data_text = [data_text,local_data_text]
     endfor
     MasterText = [full_master_text, data_text]
