@@ -59,9 +59,24 @@ pro settings_base_event, Event
       steps_tab, main_event, 1
     end
     
+    ;4th column resolution function cw_bgroup
+    widget_info(event.top, $
+    find_by_uname='resolution_function_switch_uname'): begin
+    flag = (value=event.value eq 0b) ? 1b : 0b
+    ActivateWidget, Event, 'configure_resolution_function_uname', flag
+    (*global).resolution_function_switch_flag = flag
+    end
+    
+    ;configure button of 4th column resolution function
+    widget_info(event.top, $
+    find_by_uname='configure_resolution_function_uname'): begin
+      configure_resolution_function, Event=main_event, global=global    
+    end
+    
+    ;save and close button
     widget_info(event.top, $
       find_by_uname='settings_base_close_button'): begin
-
+      
       ;this will allow the settings tab to come back in the same state
       save_status_of_settings_button, event
       
@@ -115,9 +130,9 @@ pro save_status_of_settings_button, event
   
   ;color of background
   case (getButtonValidated(event,'background_color_uname')) of
-  0: status = 0
-  1: status = 1
-  2: status = 2
+    0: status = 0
+    1: status = 1
+    2: status = 2
   endcase
   (*global).settings_white_background_color = status
   
@@ -156,7 +171,7 @@ PRO settings_base_gui, wBase, main_base_geometry, global
   main_base_ysize = main_base_geometry.ysize
   
   xsize = 350
-  ysize = 195
+  ysize = 220
   
   xoffset = (main_base_xsize - xsize) / 2
   xoffset += main_base_xoffset
@@ -170,18 +185,13 @@ PRO settings_base_gui, wBase, main_base_geometry, global
     UNAME        = 'settings_widget_base',$
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
-    SCR_YSIZE    = ysize,$
-    SCR_XSIZE    = xsize,$
     MAP          = 1,$
     kill_notify  = 'settings_killed', $
-    /BASE_ALIGN_CENTER,$
-    /align_center,$
     /column,$
     GROUP_LEADER = ourGroup)
     
   auto_clean_base = widget_base(wBase,$
-    /row,$
-    /align_center)
+    /row)
     
   auto_cleaning_flag = (*global).settings_auto_cleaning_flag
   if (auto_cleaning_flag eq 1b) then begin
@@ -243,6 +253,23 @@ PRO settings_base_gui, wBase, main_base_geometry, global
     label_left = 'Color of background:',$
     set_value = background_color,$
     uname = 'background_color_uname')
+    
+  ;4th column parameters (resolution function)
+  rf_row = widget_base(wBase,/row)
+  switch_flag = (*global).resolution_function_switch_flag
+  status = (switch_flag eq 1b) ? 0 : 1 
+  resol_function = cw_bgroup(rf_row,$
+    ['Yes','No '],$
+    /exclusive,$
+    set_value=status,$
+    row=1,$
+    /no_release, $
+    label_left='Add Output 4th column (Resolution Function):',$
+    uname='resolution_function_switch_uname')
+  config = widget_button(rf_row,$
+    value = 'Configure...',$
+    uname = 'configure_resolution_function_uname',$
+    sensitive=switch_flag)
     
   close = widget_button(wBase,$
     value = 'SAVE and CLOSE',$

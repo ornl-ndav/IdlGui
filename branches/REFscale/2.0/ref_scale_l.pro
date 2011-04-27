@@ -104,6 +104,11 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
     cleaning_base_id: 0L, $  ;the id of the cleaning base
     
+    ;Resolution function: output 4th column
+    resolution_function_switch_flag: 1b, $ ;'1b for yes, 0b for no 4th column
+    dq_over_q: 0.02, $
+    dq0: 0.0125, $
+    
     BatchExtension:         '.txt',$
     BatchTable:             PTR_NEW(0L),$
     BatchDefaultPath:       '~/results/',$
