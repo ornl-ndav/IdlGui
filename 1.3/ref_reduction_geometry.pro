@@ -112,7 +112,7 @@ PRO calculate_data_refpix, Event
 
   WIDGET_CONTROL,Event.top,get_uvalue=global
   
-  ;CATCH, error
+  CATCH, error
   error = 0
   IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
@@ -160,10 +160,15 @@ END
 ;
 ; :Params:
 ;    event
+;    
+; :keywords:
+;   refpix
+;   sangle
+; 
 ;
 ; :Author: j35
 ;-
-pro calculate_sangle, event
+pro calculate_sangle, event, refpix=refpix, sangle=sangle
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global
@@ -175,7 +180,9 @@ pro calculate_sangle, event
   f_dirpix = float(dirpix[0])
   ;print, 'f_dirpix: ' , f_dirpix
   
+  if (~keyword_set(refpix)) then begin
   refpix = getTextFieldValue(event,'info_refpix')
+  endif
   f_refpix = float(refpix[0])
   ;print, 'f_refpix: ' , f_refpix
   
@@ -214,16 +221,28 @@ pro calculate_sangle, event
   
   rad_sangle = part1 + (part2/part3)
   (*global).rad_sangle = rad_sangle
+
+  if (keyword_set(sangle)) then begin
+  sangle = rad_sangle
+  return
+  endif
+
   deg_sangle = convert_rad_to_deg(rad_sangle)
   
-;  sangle = strcompress(deg_sangle,/remove_all) + ' degrees (' + $
-;    strcompress(rad_sangle,/remove_all) + ' rad)'
-  putTextFieldValue, event, 'info_sangle_deg', strcompress(deg_sangle,/remove_all)
-  putTextfieldValue, event, 'info_sangle_rad', strcompress(rad_sangle,/remove_all)
+  putTextFieldValue, event, 'info_sangle_deg', $
+  strcompress(deg_sangle,/remove_all)
+  putTextfieldValue, event, 'info_sangle_rad', $
+  strcompress(rad_sangle,/remove_all)
   
   return
   
   error:
+  
+  if (keyword_set(sangle)) then begin
+  sangle = -1
+  return
+  endif
+  
   sangle = 'N/A'
   putTextFieldValue, event, 'info_sangle_deg', sangle
   putTextFieldValue, event, 'info_sangle_rad', sangle

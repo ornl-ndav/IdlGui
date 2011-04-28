@@ -74,6 +74,7 @@
 .run ref_reduction_CommandLineIntermediatePlotsGenerator.pro
 .run ref_reduction_CommandLineGenerator.pro
 .run command_line_generator_for_ref_m.pro
+.run command_line_generator_for_ref_m_broad_peak.pro
 .run command_line_generator_for_ref_l.pro
 .run ref_reduction_ReplaceRunNumber.pro
 .run run_command_line_ref_l.pro

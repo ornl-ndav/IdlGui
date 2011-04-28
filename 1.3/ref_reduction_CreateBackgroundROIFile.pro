@@ -136,6 +136,7 @@ PRO REFreduction_CreateDataBackgroundROIFile, Event, type
         NyMax = (*global).Ny_REF_M
         YNbr  = YNbr+1
         OutputArray = STRARR((NyMax)*YNbr)
+        (*global).broad_peak_pixel_range = [Ymin,Ymax]
         FOR y=(Ymin),(Ymax) DO BEGIN
           FOR x=0,(NyMax-1) DO BEGIN
             text  = 'bank1_' + STRCOMPRESS(y,/REMOVE_ALL)
