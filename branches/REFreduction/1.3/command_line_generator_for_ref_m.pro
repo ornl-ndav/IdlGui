@@ -50,7 +50,7 @@ PRO command_line_generator_for_ref_m, event
   cmd = strarr(nbr_spin_states)
   
   ;add called to SLURM if hostname is not heater,lrac or mrac
-  SPAWN, 'hostname', listening
+  spawn, 'hostname', listening
   CASE (listening[0]) OF
     'lrac.sns.gov' : cmd += 'srun -Q -p lracq '
     'mrac.sns.gov' : cmd += 'srun -Q -p mracq '
