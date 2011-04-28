@@ -138,6 +138,9 @@
 .run ref_reduction_display_images.pro
 .run new_rescaled_tvimg.pro
 
+;1 reduction per selection and 1 reduction per px selected
+.run reduction_mode_selection_pixel.pro
+
 .run tof_selection_tool_button_eventcb.pro
 
 .run ref_reduction_debugging.pro
