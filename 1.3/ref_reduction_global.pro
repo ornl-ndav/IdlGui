@@ -80,6 +80,9 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     
     ;equivalent index of tof range selected in 'TOF selection tool' base
     index_of_tof_range: [-1,-1], $ 
+
+    ;reduction mode: 'one_per_selection' or 'one_per_pixel'
+    reduction_mode: 'one_per_selection', $
     
     norm_pola_state: '',$
     data_pola_state: '',$

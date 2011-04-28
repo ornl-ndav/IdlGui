@@ -65,30 +65,30 @@ PRO command_line_generator_for_ref_m, event
   value = getButtonValue(event,'other_spin_states') ;0 for yes, 1 for no
   if (value eq 1) then begin
   
-        norm_pola_state = (*global).norm_pola_state  
-        CASE (norm_pola_state) of
-          0: norm_path = 'Off_Off'
-          1: norm_path = 'Off_On'
-          2: norm_path = 'On_Off'
-          3: norm_path = 'On_On'
-          else: norm_path = '-?'
-        ENDCASE
-        norm_spin_state_path = ['entry-' + norm_path]
-        norm_spin_state = [norm_path]
-
-        data_pola_state = (*global).data_pola_state  
-        CASE (data_pola_state) of
-          0: data_path = 'Off_Off'
-          1: data_path = 'Off_On'
-          2: data_path = 'On_Off'
-          3: data_path = 'On_On'
-          else: data_path = '-?'
-        ENDCASE
-        data_spin_state_path = ['entry-' + data_path]
-        data_spin_state = [data_path]
-        
-        nbr_spin_states = 1
-
+    norm_pola_state = (*global).norm_pola_state
+    CASE (norm_pola_state) of
+      0: norm_path = 'Off_Off'
+      1: norm_path = 'Off_On'
+      2: norm_path = 'On_Off'
+      3: norm_path = 'On_On'
+      else: norm_path = '-?'
+    ENDCASE
+    norm_spin_state_path = ['entry-' + norm_path]
+    norm_spin_state = [norm_path]
+    
+    data_pola_state = (*global).data_pola_state
+    CASE (data_pola_state) of
+      0: data_path = 'Off_Off'
+      1: data_path = 'Off_On'
+      2: data_path = 'On_Off'
+      3: data_path = 'On_On'
+      else: data_path = '-?'
+    ENDCASE
+    data_spin_state_path = ['entry-' + data_path]
+    data_spin_state = [data_path]
+    
+    nbr_spin_states = 1
+    
   endif else begin
   
     ;create arrays of data path
@@ -104,7 +104,7 @@ PRO command_line_generator_for_ref_m, event
     data_spin_state      = spin_state[spin_state_selected_index]
     
   endelse
-
+  
   index_spin_state = 0
   while (index_spin_state lt nbr_spin_states) do begin
   
@@ -123,16 +123,16 @@ PRO command_line_generator_for_ref_m, event
       endif
     endelse
     
-;    value = getButtonValue(event,'other_spin_states')
-;    if (value eq 1) then begin
-;      cmd[index_spin_state] += ' ' + (*global).data_path_flag
-;      cmd[index_spin_state] += '=/' + (*global).data_path + '/'
-;      cmd[index_spin_state] += (*global).data_path_flag_suffix
-;    endif else begin
-      cmd[index_spin_state] += ' ' + (*global).data_path_flag
-      cmd[index_spin_state] += '=/' + data_spin_state_path[index_spin_state] + '/'
-      cmd[index_spin_state] += (*global).data_path_flag_suffix
-;    endelse
+    ;    value = getButtonValue(event,'other_spin_states')
+    ;    if (value eq 1) then begin
+    ;      cmd[index_spin_state] += ' ' + (*global).data_path_flag
+    ;      cmd[index_spin_state] += '=/' + (*global).data_path + '/'
+    ;      cmd[index_spin_state] += (*global).data_path_flag_suffix
+    ;    endif else begin
+    cmd[index_spin_state] += ' ' + (*global).data_path_flag
+    cmd[index_spin_state] += '=/' + data_spin_state_path[index_spin_state] + '/'
+    cmd[index_spin_state] += (*global).data_path_flag_suffix
+    ;    endelse
     
     ;get data ROI file
     data_roi_file = getTextFieldValue(Event, $
@@ -145,8 +145,8 @@ PRO command_line_generator_for_ref_m, event
     ENDIF ELSE BEGIN
       cmd[index_spin_state]        += '?'
       if (index_spin_state eq 0) then begin
-        status_text = '- Please provide a data region of interest file. Go to ' + $
-          'DATA, '
+        status_text = '- Please provide a data region of interest file. ' + $
+          'Go to DATA, '
         status_text += 'select a ROI and save it.'
         IF (StatusMessage GT 0) THEN BEGIN
           append = 1
@@ -180,7 +180,8 @@ PRO command_line_generator_for_ref_m, event
           STRCOMPRESS(getTextFieldValue(Event,'data_exclusion_low_bin_text'), $
           /remove_all)
         IF (data_peak_exclusion_min NE '') THEN BEGIN
-          cmd[index_spin_state] += STRCOMPRESS(data_peak_exclusion_min,/REMOVE_ALL)
+          cmd[index_spin_state] += $
+            STRCOMPRESS(data_peak_exclusion_min,/REMOVE_ALL)
         ENDIF ELSE BEGIN
           cmd[index_spin_state]         += '?'
           if (index_spin_state eq 0) then begin
@@ -203,7 +204,8 @@ PRO command_line_generator_for_ref_m, event
           'data_exclusion_high_bin_text'),$ $
           /REMOVE_ALL)
         IF (data_peak_exclusion_max NE '') THEN BEGIN
-          cmd[index_spin_state] += ' ' + STRCOMPRESS(data_peak_exclusion_max,/REMOVE_ALL)
+          cmd[index_spin_state] += ' ' + $
+            STRCOMPRESS(data_peak_exclusion_max,/REMOVE_ALL)
         ENDIF ELSE BEGIN
           cmd[index_spin_state]         += ' ?'
           if (index_spin_state eq 0) then begin
@@ -293,18 +295,19 @@ PRO command_line_generator_for_ref_m, event
     ;      MapBase, Event, 'reduce_plot3_base', 0
     ENDIF ELSE BEGIN
       cmd[index_spin_state] += ' --no-bkg'
-      ;      ;desactivate DATA Intermediate Plots
-      ;      substrateValue = getCWBgroupValue(Event,'empty_cell_substrate_group')
-      ;      IF (substrateValue EQ 0) THEN BEGIN
-      ;        MapBase, Event, 'reduce_plot3_base', 0
-      ;      ENDIF ELSE BEGIN
-      ;        MapBase, Event, 'reduce_plot3_base', 1
-      ;      ENDELSE
+      ;;desactivate DATA Intermediate Plots
+      ;substrateValue = getCWBgroupValue(Event,'empty_cell_substrate_group')
+      ;IF (substrateValue EQ 0) THEN BEGIN
+      ;MapBase, Event, 'reduce_plot3_base', 0
+      ;ENDIF ELSE BEGIN
+      ;MapBase, Event, 'reduce_plot3_base', 1
+      ;ENDELSE
       MapBase, Event, 'reduce_plot2_base', 1
     END
     
     ;tof cutting
-    tof_min = STRCOMPRESS(getTextFieldValue(Event,'tof_cutting_min'),/REMOVE_ALL)
+    tof_min = STRCOMPRESS(getTextFieldValue(Event,'tof_cutting_min'),$
+      /REMOVE_ALL)
     IF (tof_min NE '') THEN BEGIN
     
       IF (isTOFcuttingUnits_microS(Event)) THEN BEGIN ;microS
@@ -359,7 +362,8 @@ PRO command_line_generator_for_ref_m, event
       
     ENDIF
     
-    tof_max = STRCOMPRESS(getTextFieldValue(Event,'tof_cutting_max'),/REMOVE_ALL)
+    tof_max = STRCOMPRESS(getTextFieldValue(Event,'tof_cutting_max'),$
+      /REMOVE_ALL)
     IF (tof_max NE '') THEN BEGIN
     
       IF (isTOFcuttingUnits_microS(Event)) THEN BEGIN ;microS
@@ -453,24 +457,25 @@ PRO command_line_generator_for_ref_m, event
       endelse
       
       ;normalization path
-;      IF ((*global).norm_path NE '') THEN BEGIN
-        ;norm_pola_sensitive = 1
-        ;pola_state = getCWBgroupValue(Event, 'normalization_pola_state')
-        ;IF (pola_state EQ 1) THEN BEGIN
-        ;  cmd[index_spin_state] += ' ' + (*global).norm_path_flag
-        ;ENDIF else begin
-          value = getButtonValue(event,'normalization_pola_state')
-          if (value eq 1) then begin
-            cmd[index_spin_state] += (*global).norm_path_flag
-          endif else begin
-          cmd[index_spin_state] += ' --norm-data-paths'
-            cmd[index_spin_state] += '=/' + data_spin_state_path[index_spin_state] + '/'
-            cmd[index_spin_state] += (*global).data_path_flag_suffix
-          endelse
-        ;endelse
-;      ENDIF ELSE BEGIN
-;        norm_pola_sensitive = 0
- ;     ENDELSE
+      ;      IF ((*global).norm_path NE '') THEN BEGIN
+      ;norm_pola_sensitive = 1
+      ;pola_state = getCWBgroupValue(Event, 'normalization_pola_state')
+      ;IF (pola_state EQ 1) THEN BEGIN
+      ;  cmd[index_spin_state] += ' ' + (*global).norm_path_flag
+      ;ENDIF else begin
+      value = getButtonValue(event,'normalization_pola_state')
+      if (value eq 1) then begin
+        cmd[index_spin_state] += (*global).norm_path_flag
+      endif else begin
+        cmd[index_spin_state] += ' --norm-data-paths'
+        cmd[index_spin_state] += '=/' + $
+          data_spin_state_path[index_spin_state] + '/'
+        cmd[index_spin_state] += (*global).data_path_flag_suffix
+      endelse
+      ;endelse
+      ;      ENDIF ELSE BEGIN
+      ;        norm_pola_sensitive = 0
+      ;     ENDELSE
       ActivateWidget, Event, 'norm_pola_base', norm_pola_sensitive
       
       ;get normalization ROI file
@@ -484,10 +489,10 @@ PRO command_line_generator_for_ref_m, event
       ENDIF ELSE BEGIN
         cmd[index_spin_state] += '?'
         if (index_spin_state eq 0) then begin
-          status_text = '- Please provide a normalization region of interest' + $
-            ' file.'
-          status_text += ' Go to NORMALIZATION, select a background ROI and' + $
-            ' save it.'
+          status_text = '- Please provide a normalization region of ' + $
+            'interest file.'
+          status_text += ' Go to NORMALIZATION, select a background ' + $
+            'ROI and save it.'
           IF (StatusMessage GT 0) THEN BEGIN
             append = 1
           ENDIF ELSE BEGIN
@@ -517,10 +522,12 @@ PRO command_line_generator_for_ref_m, event
           cmd[index_spin_state] += ' --norm-peak-excl='
           ;get norm peak exclusion
           norm_peak_exclusion_min = $
-            STRCOMPRESS(getTextFieldValue(Event,'norm_exclusion_low_bin_text'), $
+            STRCOMPRESS(getTextFieldValue(Event,$
+            'norm_exclusion_low_bin_text'), $
             /REMOVE_ALL)
           IF (norm_peak_exclusion_min NE '') THEN BEGIN
-            cmd[index_spin_state] += STRCOMPRESS(norm_peak_exclusion_min,/REMOVE_ALL)
+            cmd[index_spin_state] += STRCOMPRESS(norm_peak_exclusion_min,$
+              /REMOVE_ALL)
           ENDIF ELSE BEGIN
             cmd[index_spin_state]         += '?'
             if (index_spin_state eq 0) then begin
@@ -543,7 +550,8 @@ PRO command_line_generator_for_ref_m, event
             'norm_exclusion_high_bin_text'),$ $
             /REMOVE_ALL)
           IF (norm_peak_exclusion_max NE '') THEN BEGIN
-            cmd[index_spin_state] += ' ' + STRCOMPRESS(norm_peak_exclusion_max,/REMOVE_ALL)
+            cmd[index_spin_state] += ' ' + $
+              STRCOMPRESS(norm_peak_exclusion_max,/REMOVE_ALL)
           ENDIF ELSE BEGIN
             cmd[index_spin_state]         += ' ?'
             if (index_spin_state eq 0) then begin
@@ -647,6 +655,60 @@ PRO command_line_generator_for_ref_m, event
     ;get name of instrument
     cmd[index_spin_state] += ' --inst=' + (*global).instrument
     
+    ;reduction mode (per selection or per pixel selected)
+    if ((*global).reduction_mode = 'one_per_pixel') then begin
+    
+      Q_min = getTextFieldValue(Event, 'q_min_text_field')
+      Q_max = getTextFieldValue(Event, 'q_max_text_field')
+      Q_width = getTextfieldValue(Event, 'q_width_text_field')
+      Q_scale = getQSCale(Event)
+      cmd[index_spin_state] += ' --mom-trans-bins='
+      
+      if (Q_min NE '') then begin ;Q_min
+        cmd[index_spin_state] += STRCOMPRESS(Q_min,/remove_all)
+      endif else begin
+        cmd[index_spin_state] += '?'
+        status_text = '- Please provide a Q minimum value'
+        if (StatusMessage GT 0) then begin
+          append = 1
+        endif else begin
+          append = 0
+        endelse
+        putInfoInReductionStatus, Event, status_text, append
+        StatusMessage += 1
+      endelse
+      
+      if (Q_max NE '') then begin ;Q_max
+        cmd[index_spin_state] += ',' + STRCOMPRESS(Q_max,/remove_all)
+      endif else begin
+        cmd[index_spin_state] += ',?'
+        status_text = '- Please provide a Q maximum value'
+        if (StatusMessage GT 0) then begin
+          append = 1
+        endif else begin
+          append = 0
+        endelse
+        putInfoInReductionStatus, Event, status_text, append
+        StatusMessage += 1
+      endelse
+      
+      if (Q_width NE '') then begin ;Q_width
+        cmd[index_spin_state] += ',' + STRCOMPRESS(Q_width,/remove_all)
+      endif else begin
+        cmd[index_spin_state] += ',?'
+        status_text = '- Please provide a Q width value'
+        if (StatusMessage GT 0) then begin
+          append = 1
+        endif else begin
+          append = 0
+        endelse
+        putInfoInReductionStatus, Event, status_text, append
+        StatusMessage += 1
+      endelse
+      cmd[index_spin_state] += ',' + Q_scale        ;Q_scale (lin or log)
+      
+    endif
+    
     ;get info about detector angle
     angle_value = getTextFieldValue(Event,'detector_value_text_field')
     angle_err   = getTextFieldValue(Event,'detector_error_text_field')
@@ -742,12 +804,12 @@ PRO command_line_generator_for_ref_m, event
         button_value
     ENDIF
     
-    ;    IF ((*global).instrument EQ 'REF_M') THEN BEGIN
-    ;      IF (~isWithDataInstrumentGeometryOverwrite(Event)) then BEGIN
-    ;        create_name_of_tmp_geometry_file, event
-    ;        cmd[index_spin_state] += ' --data-inst-geom=' + (*global).tmp_geometry_file
-    ;      ENDIF
-    ;    ENDIF
+    ;IF ((*global).instrument EQ 'REF_M') THEN BEGIN
+    ;IF (~isWithDataInstrumentGeometryOverwrite(Event)) then BEGIN
+    ;create_name_of_tmp_geometry_file, event
+    ;cmd[index_spin_state] += ' --data-inst-geom=' + (*global).tmp_geometry_file
+    ;ENDIF
+    ;ENDIF
     
     ;overwrite norm instrument geometry file
     if (isWithNormInstrumentGeometryOverwrite(Event)) then BEGIN
