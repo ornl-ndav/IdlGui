@@ -149,12 +149,6 @@ pro command_line_generator_for_ref_m_broad_peak, event
         cmd[_index] += ' ' + data_run_numbers
       endif else begin
         cmd[_index] += ' ?'
-        if (index_spin_state eq 0) then begin
-          status_text = '- Please provide at least one data run number'
-          status_text += ' (Format example: 1345,1455-1458,1500)'
-          putInfoInReductionStatus, Event, status_text, 0
-          StatusMessage += 1
-        endif
       endelse
       
       cmd[_index] += ' ' + (*global).data_path_flag
@@ -171,18 +165,6 @@ pro command_line_generator_for_ref_m_broad_peak, event
         cmd[_index] += data_roi_file
       ENDIF ELSE BEGIN
         cmd[_index]        += '?'
-        if (_index_spin_state eq 0) then begin
-          status_text = '- Please provide a data region of interest file. ' + $
-            'Go to DATA, '
-          status_text += 'select a ROI and save it.'
-          IF (StatusMessage GT 0) THEN BEGIN
-            append = 1
-          ENDIF ELSE BEGIN
-            append = 0
-          ENDELSE
-          putInfoInReductionStatus, Event, status_text, append
-          StatusMessage += 1
-        endif
       ENDELSE
       
       if (isDataWithBackground(Event)) then begin ;with background substraction
@@ -211,19 +193,6 @@ pro command_line_generator_for_ref_m_broad_peak, event
               STRCOMPRESS(data_peak_exclusion_min,/REMOVE_ALL)
           ENDIF ELSE BEGIN
             cmd[_index]         += '?'
-            if (_index_spin_state eq 0) then begin
-              status_text  = '- Please provide a data low range ' + $
-                'Peak of Exclusion.'
-              status_text += ' Go to DATA, and select a low value for ' + $
-                'the data peak exclusion.'
-              IF (StatusMessage GT 0) THEN BEGIN
-                append = 1
-              ENDIF ELSE BEGIN
-                append = 0
-              ENDELSE
-              putInfoInReductionStatus, Event, status_text, append
-              StatusMessage += 1
-            endif
           ENDELSE
           
           data_peak_exclusion_max = $
@@ -235,22 +204,10 @@ pro command_line_generator_for_ref_m_broad_peak, event
               STRCOMPRESS(data_peak_exclusion_max,/REMOVE_ALL)
           ENDIF ELSE BEGIN
             cmd[_index]         += ' ?'
-            if (_index_spin_state eq 0) then begin
-              status_text  = '- Please provide a data high ' + $
-                'range Peak of Exclusion.'
-              status_text += ' Go to DATA, and select a high value for ' + $
-                'the data peak exclusion.'
-              IF (StatusMessage GT 0) THEN BEGIN
-                append = 1
-              ENDIF ELSE BEGIN
-                append = 0
-              ENDELSE
-              putInfoInReductionStatus, Event, status_text, append
-              StatusMessage += 1
-            endif
           ENDELSE
           
-          ;Be sure that (Ymin_peak=Ymin_back && Ymax_peak=Ymax_back) is wrong
+          ;Be sure that the following statement
+          ;(Ymin_peak=Ymin_back && Ymax_peak=Ymax_back) is wrong
           Ymin_peak = data_peak_exclusion_min
           Ymax_peak = data_peak_exclusion_max
           Ymin_back = $
@@ -262,27 +219,7 @@ pro command_line_generator_for_ref_m_broad_peak, event
             'data_d_selection_background_ymax_' + $
             'cw_field'), $
             /REMOVE_ALL)
-          if (_index_spin_state eq 0) then begin
-            IF (Ymin_peak NE '' AND $
-              Ymax_peak NE '' AND $
-              Ymin_back NE '' AND $
-              Ymax_back NE '') THEN BEGIN
-              IF ((Ymin_peak EQ Ymin_back) AND $
-                (Ymax_peak EQ Ymax_back)) THEN BEGIN
-                StatusMessage += 1
-                status_text = '- Data Background and Peak have the same ' + $
-                  'Ymin and Ymax values.'
-                status_text += ' Please changes at least 1 of the data.'
-                IF (StatusMessage GT 0) THEN BEGIN
-                  append = 1
-                ENDIF ELSE BEGIN
-                  append = 0
-                ENDELSE
-                putInfoInReductionStatus, Event, status_text, append
-              ENDIF
-            ENDIF
-          endif
-          
+            
         ENDIF ELSE BEGIN ;background file
         
           ;get value of back file from data base
@@ -297,18 +234,6 @@ pro command_line_generator_for_ref_m_broad_peak, event
             cmd[_index] += data_roi_file
           ENDIF ELSE BEGIN
             cmd[_index]        += '?'
-            if (_index_spin_state eq 0) then begin
-              status_text = '- Please provide a data background file. Go to ' + $
-                'DATA, Peak/Background and '
-              status_text += 'select a ROI and save it.'
-              IF (StatusMessage GT 0) THEN BEGIN
-                append = 1
-              ENDIF ELSE BEGIN
-                append = 0
-              ENDELSE
-              putInfoInReductionStatus, Event, status_text, append
-              StatusMessage += 1
-            endif
           ENDELSE
           
         ENDELSE
@@ -339,16 +264,6 @@ pro command_line_generator_for_ref_m_broad_peak, event
           error_min1:
           IF (error_status) THEN BEGIN
             tof_min = '?'
-            if (_index_spin_state eq 0) then begin
-              status_text = '- Please check the TOF cut min value'
-              IF (StatusMessage GT 0) THEN BEGIN
-                append = 1
-              ENDIF ELSE BEGIN
-                append = 0
-              ENDELSE
-              putInfoInReductionStatus, Event, status_text, append
-              StatusMessage += 1
-            endif
           ENDIF
           
         ENDIF ELSE BEGIN
@@ -363,16 +278,6 @@ pro command_line_generator_for_ref_m_broad_peak, event
           error_min:
           IF (error_status) THEN BEGIN
             tof_min = '?'
-            if (_index_spin_state eq 0) then begin
-              status_text = '- Please check the TOF cut min value'
-              IF (StatusMessage GT 0) THEN BEGIN
-                append = 1
-              ENDIF ELSE BEGIN
-                append = 0
-              ENDELSE
-              putInfoInReductionStatus, Event, status_text, append
-              StatusMessage += 1
-            endif
           ENDIF
           
         ENDELSE
@@ -395,16 +300,6 @@ pro command_line_generator_for_ref_m_broad_peak, event
           error_max1:
           IF (error_status) THEN BEGIN
             tof_max = '?'
-            if (_index_spin_state eq 0) then begin
-              status_text = '- Please check the TOF cut max value'
-              IF (StatusMessage GT 0) THEN BEGIN
-                append = 1
-              ENDIF ELSE BEGIN
-                append = 0
-              ENDELSE
-              putInfoInReductionStatus, Event, status_text, append
-              StatusMessage += 1
-            endif
           endif
           
         ENDIF ELSE BEGIN
@@ -419,16 +314,6 @@ pro command_line_generator_for_ref_m_broad_peak, event
           error_max:
           IF (error_status) THEN BEGIN
             tof_max = '?'
-            if (_index_spin_state eq 0) then begin
-              status_text = '- Please check the TOF cut max value'
-              IF (StatusMessage GT 0) THEN BEGIN
-                append = 1
-              ENDIF ELSE BEGIN
-                append = 0
-              ENDELSE
-              putInfoInReductionStatus, Event, status_text, append
-              StatusMessage += 1
-            endif
           ENDIF
           
         ENDELSE
@@ -467,17 +352,6 @@ pro command_line_generator_for_ref_m_broad_peak, event
           cmd[_index] += norm_run_numbers
         endif else begin
           cmd[_index] += '?'
-          if (_index_spin_state eq 0) then begin
-            status_text = '- Please provide at least one normalization run number'
-            status_text += '(Format example: 1345,1455-1458,1500)'
-            if (StatusMessage GT 0) then begin
-              append = 1
-            endif else begin
-              append = 0
-            endelse
-            putInfoInReductionStatus, Event, status_text, append
-            StatusMessage += 1
-          endif
         endelse
         
         ;normalization path
@@ -502,19 +376,6 @@ pro command_line_generator_for_ref_m_broad_peak, event
           cmd[_index] += STRCOMPRESS(norm_roi_file,/remove_all)
         ENDIF ELSE BEGIN
           cmd[_index] += '?'
-          if (_index_spin_state eq 0) then begin
-            status_text = '- Please provide a normalization region of ' + $
-              'interest file.'
-            status_text += ' Go to NORMALIZATION, select a background ' + $
-              'ROI and save it.'
-            IF (StatusMessage GT 0) THEN BEGIN
-              append = 1
-            ENDIF ELSE BEGIN
-              append = 0
-            ENDELSE
-            putInfoInReductionStatus, Event, status_text, append
-            StatusMessage += 1
-          endif
         ENDELSE
         
         if (isNormWithBackground(Event)) then begin ;without background
@@ -544,19 +405,6 @@ pro command_line_generator_for_ref_m_broad_peak, event
                 /REMOVE_ALL)
             ENDIF ELSE BEGIN
               cmd[_index]         += '?'
-              if (_index_spin_state eq 0) then begin
-                status_text  = '- Please provide a normalization low range ' + $
-                  'Peak of Exclusion.'
-                status_text += ' Go to NORMALIZATION, and select a low ' + $
-                  'value for the normalization peak exclusion.'
-                IF (StatusMessage GT 0) THEN BEGIN
-                  append = 1
-                ENDIF ELSE BEGIN
-                  append = 0
-                ENDELSE
-                putInfoInReductionStatus, Event, status_text, append
-                StatusMessage += 1
-              endif
             ENDELSE
             
             norm_peak_exclusion_max = $
@@ -568,19 +416,6 @@ pro command_line_generator_for_ref_m_broad_peak, event
                 STRCOMPRESS(norm_peak_exclusion_max,/REMOVE_ALL)
             ENDIF ELSE BEGIN
               cmd[_index]         += ' ?'
-              if (_index_spin_state eq 0) then begin
-                status_text  = '- Please provide a normalization high ' + $
-                  'range Peak of Exclusion.'
-                status_text += ' Go to NORMALIZATION, and select a high ' + $
-                  'value for the normalization peak exclusion.'
-                IF (StatusMessage GT 0) THEN BEGIN
-                  append = 1
-                ENDIF ELSE BEGIN
-                  append = 0
-                ENDELSE
-                putInfoInReductionStatus, Event, status_text, append
-                StatusMessage += 1
-              endif
             ENDELSE
             
             ;Be sure that (Ymin_peak=Ymin_back && Ymax_peak=Ymax_back) is wrong
@@ -596,26 +431,6 @@ pro command_line_generator_for_ref_m_broad_peak, event
               'norm_d_selection_background_ymax_' + $
               'cw_field'), $
               /REMOVE_ALL)
-            IF (Ymin_peak NE '' AND $
-              Ymax_peak NE '' AND $
-              Ymin_back NE '' AND $
-              Ymax_back NE '') THEN BEGIN
-              IF ((Ymin_peak EQ Ymin_back) AND $
-                (Ymax_peak EQ Ymax_back)) THEN BEGIN
-                if (_index_spin_state eq 0) then begin
-                  StatusMessage += 1
-                  status_text = '- Normalization Background and Peak ' + $
-                    'have the same Ymin and Ymax values.'
-                  status_text += ' Please changes at least 1 of the selection!'
-                  IF (StatusMessage GT 0) THEN BEGIN
-                    append = 1
-                  ENDIF ELSE BEGIN
-                    append = 0
-                  ENDELSE
-                  putInfoInReductionStatus, Event, status_text, append
-                endif
-              ENDIF
-            ENDIF
             
           ENDIF ELSE BEGIN            ;background file
           
@@ -631,18 +446,6 @@ pro command_line_generator_for_ref_m_broad_peak, event
               cmd[_index] += norm_roi_file
             ENDIF ELSE BEGIN
               cmd[_index]        += '?'
-              if (_index_spin_state eq 0) then begin
-                status_text = '- Please provide a normalization background ' + $
-                  'file. Go to NORMALIZATION, Peak/Background and '
-                status_text += 'select a ROI and save it.'
-                IF (StatusMessage GT 0) THEN BEGIN
-                  append = 1
-                ENDIF ELSE BEGIN
-                  append = 0
-                ENDELSE
-                putInfoInReductionStatus, Event, status_text, append
-                StatusMessage += 1
-              endif
             ENDELSE
             
           ENDELSE
@@ -682,42 +485,18 @@ pro command_line_generator_for_ref_m_broad_peak, event
           cmd[_index] += STRCOMPRESS(Q_min,/remove_all)
         endif else begin
           cmd[_index] += '?'
-          status_text = '- Please provide a Q minimum value'
-          if (StatusMessage GT 0) then begin
-            append = 1
-          endif else begin
-            append = 0
-          endelse
-          putInfoInReductionStatus, Event, status_text, append
-          StatusMessage += 1
         endelse
         
         if (Q_max NE '') then begin ;Q_max
           cmd[_index] += ',' + STRCOMPRESS(Q_max,/remove_all)
         endif else begin
           cmd[_index] += ',?'
-          status_text = '- Please provide a Q maximum value'
-          if (StatusMessage GT 0) then begin
-            append = 1
-          endif else begin
-            append = 0
-          endelse
-          putInfoInReductionStatus, Event, status_text, append
-          StatusMessage += 1
         endelse
         
         if (Q_width NE '') then begin ;Q_width
           cmd[_index] += ',' + STRCOMPRESS(Q_width,/remove_all)
         endif else begin
           cmd[_index] += ',?'
-          status_text = '- Please provide a Q width value'
-          if (StatusMessage GT 0) then begin
-            append = 1
-          endif else begin
-            append = 0
-          endelse
-          putInfoInReductionStatus, Event, status_text, append
-          StatusMessage += 1
         endelse
         cmd[_index] += ',' + Q_scale        ;Q_scale (lin or log)
         
@@ -737,32 +516,12 @@ pro command_line_generator_for_ref_m_broad_peak, event
           cmd[_index] += STRCOMPRESS(angle_value,/remove_all)
         endif else begin
           cmd[_index] += '?'
-          if (_index_spin_state eq 0) then begin
-            status_text = '- Please provide a detector angle value'
-            if (StatusMessage GT 0) then begin
-              append = 1
-            endif else begin
-              append = 0
-            endelse
-            putInfoInReductionStatus, Event, status_text, append
-            StatusMessage += 1
-          endif
         endelse
         
         if (angle_err NE '') then begin ;angle_err
           cmd[_index] += ',' + STRCOMPRESS(angle_err,/remove_all)
         endif else begin
           cmd[_index] += ',?'
-          if (_index_spin_state eq 0) then begin
-            status_text = '- Please provide a detector angle error value'
-            if (StatusMessage GT 0) then begin
-              append = 1
-            endif else begin
-              append = 0
-            endelse
-            putInfoInReductionStatus, Event, status_text, append
-            StatusMessage += 1
-          endif
         endelse
         
         cmd[_index] += ',units=' + STRCOMPRESS(angle_units,/remove_all)
@@ -788,36 +547,10 @@ pro command_line_generator_for_ref_m_broad_peak, event
         IGFile = (*global).InstrumentDataGeometryFileName
         if (IGFile NE '') then begin ;instrument geometry file is not empty
           cmd[_index] += IGFile
-          ;display last part of file name in button
-          button_value = getFileNameOnly(IGFIle)
         endif else begin
           cmd[_index] += '?'
-          if (_index_spin_state eq 0) then begin
-            status_text = '- Please select a Data instrument geometry'
-            if (StatusMessage GT 0) then begin
-              append = 1
-            endif else begin
-              append = 0
-            endelse
-            putInfoInReductionStatus, Event, status_text, append
-            StatusMessage += 1
-          endif
-          if ((*global).miniVersion EQ 0) then begin
-            button_value = 'Select a Data Instrument Geometry File'
-          endif else begin
-            button_value = 'Select a Data Instr. Geometry File'
-          endelse
         endelse
-        setButtonValue, Event, 'overwrite_data_intrument_geometry_button', $
-          button_value
       ENDIF
-      
-      ;IF ((*global).instrument EQ 'REF_M') THEN BEGIN
-      ;IF (~isWithDataInstrumentGeometryOverwrite(Event)) then BEGIN
-      ;create_name_of_tmp_geometry_file, event
-      ;cmd[index_spin_state] += ' --data-inst-geom=' + (*global).tmp_geometry_file
-      ;ENDIF
-      ;ENDIF
       
       ;overwrite norm instrument geometry file
       if (isWithNormInstrumentGeometryOverwrite(Event)) then BEGIN
@@ -830,45 +563,12 @@ pro command_line_generator_for_ref_m_broad_peak, event
           button_value = getFileNameOnly(IGFIle)
         endif else begin
           cmd[_index] += '?'
-          if (_index_spin_state eq 0) then begin
-            status_text = '- Please select a Normalization instrument geometry'
-            if (StatusMessage GT 0) then begin
-              append = 1
-            endif else begin
-              append = 0
-            endelse
-            putInfoInReductionStatus, Event, status_text, append
-            StatusMessage += 1
-          endif
-          if ((*global).miniVersion EQ 0) then begin
-            button_value = 'Select a Normalization Instrument Geometry File'
-          endif else begin
-            button_value = 'Select a Norm. Instr. Geometry File'
-          endelse
         endelse
-        setButtonValue, Event, 'overwrite_norm_instrument_geometry_button', $
-          button_value
           
       endif
       
       ;get name from output path and name
       outputPath = (*global).dr_output_path
-      ;check that user have access to that folder
-      IF (FILE_TEST(outputPath,/WRITE) EQ 0) THEN BEGIN
-        SPAWN, 'mkdir ' + outputPath, listening, err_listening
-        IF (err_listening[0] NE '') THEN BEGIN
-          status_text    = '- PERMISSION ERROR : you do not have ' + $
-            'the permission to '
-          status_text   += 'write in this folder. Please select another folder !'
-          IF (StatusMessage GT 0) THEN BEGIN
-            append = 1
-          ENDIF ELSE BEGIN
-            append = 0
-          ENDELSE
-          StatusMessage += 1
-          putInfoInReductionStatus, Event, status_text, append
-        ENDIF
-      ENDIF
       outputFileName = getOutputFileName(Event)
       outputFileName = add_spin_state_to_outputFileName(Event,$
         outputFileName,$
@@ -877,8 +577,8 @@ pro command_line_generator_for_ref_m_broad_peak, event
       cmd[_index] += ' --output=' + NewOutputFileName
       
       list_of_output_file_name[_index_spin_state, _index_pixel_range] = $
-      NewOutputFileName
-      
+        NewOutputFileName
+        
       _index_pixel_range++
     endwhile
     
@@ -894,7 +594,7 @@ pro command_line_generator_for_ref_m_broad_peak, event
   
   ;save the big command line table generated
   (*(*global).cmd_broad_mode) = cmd
-
+  
   print, cmd
   
 END
