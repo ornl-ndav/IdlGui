@@ -31,11 +31,22 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
-PRO command_line_generator_for_ref_m, event
+
+;+
+; :Description:
+;    this procedure builds the command line for the REF_M instrument
+;    when the 'narrow reflective peak' has been selected
+;
+; :Params:
+;    event
+;
+; :Author: j35
+;-
+pro command_line_generator_for_ref_m, event
+
 
   ;get global structure
-  id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
-  WIDGET_CONTROL,id,get_uvalue=global
+  WIDGET_CONTROL,event.top,get_uvalue=global
   
   StatusMessage = 0 ;will increase by 1 each time a field is missing
   

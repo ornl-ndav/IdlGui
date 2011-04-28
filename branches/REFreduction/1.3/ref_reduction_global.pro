@@ -83,6 +83,9 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
 
     ;reduction mode: 'one_per_selection' or 'one_per_pixel'
     reduction_mode: 'one_per_selection', $
+    broad_peak_pixel_range: [-1,-1], $
+    list_of_output_file_name_for_broad_mode: ptr_new(0L), $
+    cmd_broad_mode: ptr_new(0L), $
     
     norm_pola_state: '',$
     data_pola_state: '',$

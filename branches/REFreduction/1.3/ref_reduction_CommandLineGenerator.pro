@@ -52,7 +52,12 @@ pro REFreduction_CommandLineGenerator, Event
   if (instrument eq 'REF_L') then begin
     command_line_generator_for_ref_l, event
   endif else begin
+  if ((*global).reduction_mode eq 'one_per_selection') then begin
     command_line_generator_for_ref_m, event
+    endif else begin
+    command_line_generator_for_ref_m_broad_peak, event    
+    command_line_generator_for_ref_m, event
+    endelse
   endelse
   
 end
