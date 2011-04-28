@@ -221,13 +221,34 @@ PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
     /TRACKING_EVENTS)
     
   ;Info tab #1
-  info_base = WIDGET_BASE(NxsummaryZoomTab,$
+   main_info_base = WIDGET_BASE(NxsummaryZoomTab,$
+    xoffset=0,$
+    yoffset=0,$
+    scr_xsize=NXsummaryZoomTabSize[2],$
+    title='Nexus Information')
+    
+     if ((*global).instrument eq 'REF_M') then begin
+  
+    _base = widget_base(main_info_base,$
+      xoffset = 270,$
+      yoffset = 30,$
+      /exclusive,$
+      frame=1,$
+      /column)
+    button1 = widget_button(_base,$
+      value = '1 reduction per selection',$
+      uname = 'one_reduction_per_selection_uname')
+    button2 = widget_button(_base,$
+      value = '1 reduction per px selected',$
+      uname = 'one_reduction_per_pixel_uname')
+    widget_control, button1, /set_button
+    
+  endif
+    info_base = WIDGET_BASE(main_info_base,$
     uname='data_info_base',$
     xoffset=0,$
     yoffset=0,$
     scr_xsize=NXsummaryZoomTabSize[2],$
-    ;scr_ysize=NXsummaryZoomTabSize[3],$
-    title='Nexus Information',$
     /column)
     
   if ((*global).instrument eq 'REF_M') then begin
@@ -242,7 +263,7 @@ PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
         /row)
       label = widget_label(row,$
         /align_right,$
-        scr_xsize = 150,$
+        scr_xsize = 100,$
         value = label_array[i])
       value = widget_label(row,$
         value = 'N/A',$
@@ -291,9 +312,6 @@ PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
       scr_xsize= 100,$
       /align_left,$
       uname = 'info_bin_type')
-      
-    space = widget_label(info_base,$
-      value = ' ')
       
     ;dangle
     row = widget_base(info_base,$
