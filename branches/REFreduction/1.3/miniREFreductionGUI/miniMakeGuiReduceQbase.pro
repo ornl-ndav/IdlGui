@@ -102,14 +102,16 @@ PRO miniMakeGuiReduceQBase, Event, REDUCE_BASE, IndividualBaseWidth, global
   ;############################## Create GUI ####################################
   ;##############################################################################
     
+  map_status = 1
   if ((*global).instrument eq 'REF_M') then begin
   
     label = widget_label(REDUCE_BASE,$
       xoffset = QBaseSize[0]+20,$
       yoffset = QBaseSize[1]+15,$
       value = 'Q axis: AUTOMATIC !')
-      
-  endif else begin
+    map_status = 0
+    
+  endif
   
     ;base
     Q_base = WIDGET_BASE(REDUCE_BASE,$
@@ -117,19 +119,31 @@ PRO miniMakeGuiReduceQBase, Event, REDUCE_BASE, IndividualBaseWidth, global
       YOFFSET   = QBaseSize[1],$
       SCR_XSIZE = QBaseSize[2],$
       SCR_YSIZE = QBaseSize[3],$
+      map=map_status, $
       UNAME     = 'reduce_q_base')
-      
+
     ;label that goes on top of frame
     QLabel = WIDGET_LABEL(Q_base,$
       XOFFSET = QLabelSize[0],$
       YOFFSET = QLabelSize[1],$
       VALUE   = QLabelTitle)
       
+    if ((*global).instrument eq 'REF_M') then begin
+      set_value = 1
+      sensitive = 0
+    endif else  begin
+      set_value = sModeGroup.value
+      sensitive = 1
+    endelse
+    
     ;Auto/Manual mode
-    wPeakBackGroup = CW_BGROUP(Q_base,$
+    _base = widget_base(Q_base,$
+      xoffset=sModeGroup.size[0],$
+      yoffset=sModeGroup.size[1],$
+      uname = 'q_range_selection_base',$
+      map=map_status)
+    wPeakBackGroup = CW_BGROUP(_base,$
       sModeGroup.list,$
-      XOFFSET   = sModeGroup.size[0],$
-      YOFFSET   = sModeGroup.size[1],$
       UNAME     = sModeGroup.uname,$
       SET_VALUE = sModeGroup.value,$
       ROW       = 1,$
@@ -138,6 +152,7 @@ PRO miniMakeGuiReduceQBase, Event, REDUCE_BASE, IndividualBaseWidth, global
       /NO_RELEASE)
       
     ;sQmanual base
+      
     wBase = WIDGET_BASE(Q_base,$
       XOFFSET   = sQmanualBase.size[0],$
       YOFFSET   = sQmanualBase.size[1],$
@@ -217,6 +232,4 @@ PRO miniMakeGuiReduceQBase, Event, REDUCE_BASE, IndividualBaseWidth, global
       FRAME     = 1,$
       VALUE     = '')
       
-  endelse
-  
 END

@@ -237,9 +237,11 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
       /column)
     button1 = widget_button(_base,$
       value = '1 reduction per selection',$
+      /no_release,$
       uname = 'one_reduction_per_selection_uname')
     button2 = widget_button(_base,$
       value = '1 reduction per px selected',$
+      /no_release,$
       uname = 'one_reduction_per_pixel_uname')
     widget_control, button1, /set_button
     
@@ -372,6 +374,7 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
     ;refpix
     label = widget_label(row,$
       /align_right,$
+      uname = 'info_refpix_label',$
       value = 'Refpix:')
     value = widget_text(row,$
       /align_left,$
@@ -399,6 +402,7 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
     label = widget_label(row,$
       /align_right,$
       scr_xsize = 100,$
+      uname='info_sangle_deg_label',$
       value = 'Sangle:')
     value = widget_text(row,$
       /editable,$
@@ -407,6 +411,7 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
       uname = 'info_sangle_deg',$
       xsize = 15)
     units = widget_label(row,$
+      uname = 'info_sangle_rad_label',$
       value = 'deg   or  ')
     value = widget_text(row,$
       /editable,$
@@ -415,6 +420,7 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
       uname = 'info_sangle_rad',$
       xsize = 15)
     units = widget_label(row,$
+      uname='info_sangle_rad_units',$
       value = 'rad')
       
   endif

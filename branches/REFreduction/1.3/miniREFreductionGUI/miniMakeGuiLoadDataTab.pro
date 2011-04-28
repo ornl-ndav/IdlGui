@@ -151,62 +151,62 @@ PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
     GlobalLoadDataGraphs,$
     LoadctList
     
-      ;TOF selection tool
+  ;TOF selection tool
   tof_button = widget_button(load_data_base,$
     value = '  T O F   selection  tool    ',$
     xoffset = 563,$
     yoffset = 37,$
     uname = 'tof_selection_tool_button')
     
-;  ;base about X, Y and counts value --------------------------------------------
-;  info_base = WIDGET_BASE(LOAD_DATA_BASE,$
-;    XOFFSET   = 510,$
-;    YOFFSET   = 35,$
-;    SCR_XSIZE = 275,$
-;    SCR_YSIZE = 20,$
-;    UNAME     = 'info_data_base',$
-;    MAP       = 0,$
-;    FRAME     = 1)
-;    
-;  ;X label/value
-;  y_off = 0
-;  x_label = WIDGET_LABEL(info_base,$
-;    XOFFSET = 0,$
-;    YOFFSET = y_off,$
-;    VALUE   = 'X:')
-;  x_value = WIDGET_LABEL(info_base,$
-;    XOFFSET   = 15,$
-;    YOFFSET   = y_off,$
-;    SCR_XSIZE = 50,$
-;    VALUE     = 'N/A',$
-;    UNAME     = 'data_x_info_value',$
-;    /ALIGN_LEFT)
-;    
-;  ;Y label/value
-;  y_label = WIDGET_LABEL(info_base,$
-;    XOFFSET = 70,$
-;    YOFFSET = y_off,$
-;    VALUE   = 'Y:')
-;  y_value = WIDGET_LABEL(info_base,$
-;    XOFFSET   = 85,$
-;    YOFFSET   = y_off,$
-;    SCR_XSIZE = 50,$
-;    VALUE     = 'N/A',$
-;    UNAME     = 'data_y_info_value',$
-;    /ALIGN_LEFT)
-;    
-;  ;COUNTS label/value
-;  counts_label = WIDGET_LABEL(info_base,$
-;    XOFFSET = 140,$
-;    YOFFSET = y_off,$
-;    VALUE   = 'COUNTS:')
-;  counts_value = WIDGET_LABEL(info_base,$
-;    XOFFSET   = 185,$
-;    YOFFSET   = y_off,$
-;    SCR_XSIZE = 50,$
-;    VALUE     = 'N/A',$
-;    UNAME     = 'data_counts_info_value',$
-;    /ALIGN_LEFT)
+  ;  ;base about X, Y and counts value --------------------------------------------
+  ;  info_base = WIDGET_BASE(LOAD_DATA_BASE,$
+  ;    XOFFSET   = 510,$
+  ;    YOFFSET   = 35,$
+  ;    SCR_XSIZE = 275,$
+  ;    SCR_YSIZE = 20,$
+  ;    UNAME     = 'info_data_base',$
+  ;    MAP       = 0,$
+  ;    FRAME     = 1)
+  ;
+  ;  ;X label/value
+  ;  y_off = 0
+  ;  x_label = WIDGET_LABEL(info_base,$
+  ;    XOFFSET = 0,$
+  ;    YOFFSET = y_off,$
+  ;    VALUE   = 'X:')
+  ;  x_value = WIDGET_LABEL(info_base,$
+  ;    XOFFSET   = 15,$
+  ;    YOFFSET   = y_off,$
+  ;    SCR_XSIZE = 50,$
+  ;    VALUE     = 'N/A',$
+  ;    UNAME     = 'data_x_info_value',$
+  ;    /ALIGN_LEFT)
+  ;
+  ;  ;Y label/value
+  ;  y_label = WIDGET_LABEL(info_base,$
+  ;    XOFFSET = 70,$
+  ;    YOFFSET = y_off,$
+  ;    VALUE   = 'Y:')
+  ;  y_value = WIDGET_LABEL(info_base,$
+  ;    XOFFSET   = 85,$
+  ;    YOFFSET   = y_off,$
+  ;    SCR_XSIZE = 50,$
+  ;    VALUE     = 'N/A',$
+  ;    UNAME     = 'data_y_info_value',$
+  ;    /ALIGN_LEFT)
+  ;
+  ;  ;COUNTS label/value
+  ;  counts_label = WIDGET_LABEL(info_base,$
+  ;    XOFFSET = 140,$
+  ;    YOFFSET = y_off,$
+  ;    VALUE   = 'COUNTS:')
+  ;  counts_value = WIDGET_LABEL(info_base,$
+  ;    XOFFSET   = 185,$
+  ;    YOFFSET   = y_off,$
+  ;    SCR_XSIZE = 50,$
+  ;    VALUE     = 'N/A',$
+  ;    UNAME     = 'data_counts_info_value',$
+  ;    /ALIGN_LEFT)
     
   ;------------------------------------------------------------------------------
     
@@ -221,13 +221,13 @@ PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
     /TRACKING_EVENTS)
     
   ;Info tab #1
-   main_info_base = WIDGET_BASE(NxsummaryZoomTab,$
+  main_info_base = WIDGET_BASE(NxsummaryZoomTab,$
     xoffset=0,$
     yoffset=0,$
     scr_xsize=NXsummaryZoomTabSize[2],$
     title='Nexus Information')
     
-     if ((*global).instrument eq 'REF_M') then begin
+  if ((*global).instrument eq 'REF_M') then begin
   
     _base = widget_base(main_info_base,$
       xoffset = 270,$
@@ -244,7 +244,7 @@ PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
     widget_control, button1, /set_button
     
   endif
-    info_base = WIDGET_BASE(main_info_base,$
+  info_base = WIDGET_BASE(main_info_base,$
     uname='data_info_base',$
     xoffset=0,$
     yoffset=0,$
@@ -371,6 +371,7 @@ PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
     ;refpix
     label = widget_label(row,$
       /align_right,$
+      uname='info_refpix_label',$
       value = 'Refpix:')
     value = widget_text(row,$
       /align_left,$
@@ -392,28 +393,31 @@ PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
       uname = 'info_detector_sample_distance',$
       scr_xsize = 200)
       
-          ;sangle
+    ;sangle
     row = widget_base(info_base,$
       /row)
     label = widget_label(row,$
       /align_right,$
       scr_xsize = 100,$
+      uname='info_sangle_deg_label',$
       value = 'Sangle:')
     value = widget_text(row,$
-    /editable,$
+      /editable,$
       value = 'N/A',$
       /all_events,$
       uname = 'info_sangle_deg',$
       xsize = 15)
-      units = widget_label(row,$
+    units = widget_label(row,$
+      uname = 'info_sangle_rad_label',$
       value = 'deg   or  ')
     value = widget_text(row,$
-    /editable,$
+      /editable,$
       value = 'N/A',$
       /all_events,$
       uname = 'info_sangle_rad',$
       xsize = 15)
-      units = widget_label(row,$
+    units = widget_label(row,$
+      uname='info_sangle_rad_units',$    
       value = 'rad')
       
   endif
