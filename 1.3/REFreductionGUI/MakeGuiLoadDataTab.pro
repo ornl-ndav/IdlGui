@@ -236,11 +236,11 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
       frame=1,$
       /column)
     button1 = widget_button(_base,$
-      value = '1 reduction per selection',$
+      value = 'Narrow reflective peak',$
       /no_release,$
       uname = 'one_reduction_per_selection_uname')
     button2 = widget_button(_base,$
-      value = '1 reduction per px selected',$
+      value = 'Broad reflective peak',$
       /no_release,$
       uname = 'one_reduction_per_pixel_uname')
     widget_control, button1, /set_button
