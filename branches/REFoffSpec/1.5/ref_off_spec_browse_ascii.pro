@@ -149,8 +149,8 @@ PRO load_step2_files_from_reduce_step3, Event, list_of_files
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
-  path = (*global).ascii_path
-  ascii_file_name = path + list_of_files
+  ;path = (*global).ascii_path
+  ascii_file_name = list_of_files
   
   ;indicate initialization with hourglass icon
   WIDGET_CONTROL,/HOURGLASS
