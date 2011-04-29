@@ -179,7 +179,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   (*global).NormHiddenWidgetTextUname = 'norm_hidden_widget_text'
   
   WIDGET_CONTROL, /REALIZE, MAIN_BASE
-  XMANAGER, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
+  XMANAGER, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK, CLEANUP='ref_reduction_Cleanup'
   
   ;initialize contrast droplist
   id = WIDGET_INFO(Main_base,Find_by_Uname='data_contrast_droplist')
@@ -223,7 +223,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   IF ((*global).DEBUGGING_VERSION EQ 'yes') THEN debugging, MAIN_BASE, global
   
   ;display empty cell images ----------------------------------------------------
-  display_images, MAIN_BASE, global
+;  display_images, MAIN_BASE, global
   
   ;------------------------------------------------------------------------------
   ;populate the list of proposal droplist (data, normalization,empty_cell)
