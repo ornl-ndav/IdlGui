@@ -64,7 +64,6 @@ PRO checking_spin_base_event, event
   
     ;check job manager
     WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab3_check_jobs'): BEGIN
-      ; Code change RCW (Dec 28, 2009): Typo corrected (mamager replaced by manager in called routine name)
       reduce_step3_job_manager, main_event
       ;show base that inform the user that the job manager is going to show up
       job_base = job_manager_info_base(main_event)
@@ -101,7 +100,8 @@ PRO checking_spin_base_event, event
         ENDIF ELSE BEGIN
           standard = 31
         ENDELSE
-        draw_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='reduce_step3_working_spin_state_go_shift_scale')
+        draw_id = WIDGET_INFO(Event.top, $
+        FIND_BY_UNAME='reduce_step3_working_spin_state_go_shift_scale')
         WIDGET_CONTROL, draw_id, GET_VALUE=id
         WSET, id
         DEVICE, CURSOR_STANDARD=standard
@@ -279,7 +279,7 @@ PRO refresh_checking_spin_table, Event, global
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global_spin
   
-  path = global_spin.output_path
+  ;path = global_spin.output_path
   
   ;get table value
   table = getTableValue(Event,'reduce_step3_working_spin_state_files')
@@ -290,7 +290,7 @@ PRO refresh_checking_spin_table, Event, global
   FOR i=0,(sz-1) DO BEGIN
     file_name = list_of_files[i]
     IF (file_name NE '') THEN BEGIN
-      full_file_name = path + file_name
+      full_file_name = file_name
       IF (FILE_TEST(full_file_name)) THEN BEGIN
         table[1,i] = 'READY'
       ENDIF ELSE BEGIN
