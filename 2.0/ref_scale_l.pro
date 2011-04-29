@@ -57,6 +57,10 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   DEBUGGER = file->getValue(tag=['configuration','debugging'])
   auto_cleaning_data = file->getValue(tag=['configuration','auto_cleaning'])
   relative_diff = file->getValue(tag=['configuration','relative_diff'])
+  dq0 = file->getValue(tag=['configuration','resolution_function','dq0'])
+  dq_over_q = file->getValue(tag=['configuration','resolution_function',$
+  'dq_over_q'])
+  
   ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
   ;============================================================================
   
@@ -106,8 +110,8 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
     ;Resolution function: output 4th column
     resolution_function_switch_flag: 1b, $ ;'1b for yes, 0b for no 4th column
-    dq_over_q: 0.02, $
-    dq0: 0.0125, $
+    dq_over_q: float(dq_over_q), $
+    dq0: float(dq0), $
     
     BatchExtension:         '.txt',$
     BatchTable:             PTR_NEW(0L),$
