@@ -144,6 +144,7 @@
 
 .run tof_selection_tool_button_eventcb.pro
 
+.run cleanup.pro
 .run ref_reduction_debugging.pro
 .run MainBaseEvent.pro
 .run ref_reduction_tab.pro

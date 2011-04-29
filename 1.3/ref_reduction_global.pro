@@ -35,8 +35,8 @@
 FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
 
   file = OBJ_NEW('idlxmlparser', '.REFreduction.cfg')
-  ;==============================================================================
-  ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+  ;===========================================================================
+  ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
   APPLICATION = file->getValue(tag=['configuration','application'])+'_low'
   VERSION = file->getValue(tag=['configuration','version'])
   DEBUGGING_VERSION = file->getValue(tag=['configuration','debugging_version'])
@@ -51,8 +51,8 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     
   debugging_structure = getDebuggingStructure()
   
-  ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
-  ;==============================================================================
+  ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+  ;===========================================================================
   
   ;get ucams of user if running on linux
   ;and set ucams to 'j35' if running on darwin
@@ -133,21 +133,21 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     dirpix_geometry: '',$
     cvinfo: '',$
     
-    in_empty_cell_empty_cell_ptr: PTR_NEW(0L),$
-    in_empty_cell_data_ptr: PTR_NEW(0L),$
-    empty_cell_draw_xsize_mini_version: 450.,$
-    empty_cell_draw_xsize_big_version: 575., $
-    empty_cell_d_tvimg: PTR_NEW(0L), $
-    empty_cell_ec_tvimg: PTR_NEW(0L), $
-    
-    empty_cell_images: PTR_NEW(0L),$
+;    in_empty_cell_empty_cell_ptr: PTR_NEW(0L),$
+;    in_empty_cell_data_ptr: PTR_NEW(0L),$
+;    empty_cell_draw_xsize_mini_version: 450.,$
+;    empty_cell_draw_xsize_big_version: 575., $
+;    empty_cell_d_tvimg: PTR_NEW(0L), $
+;    empty_cell_ec_tvimg: PTR_NEW(0L), $
+;    empty_cell_images: PTR_NEW(0L),$
+ 
     sf_equation_file_array: ['REFreduction_images/miniSFequation.png',$
     'REFreduction_images/SFequation.png'],$
     sf_equation_file: '',$
     PrevDNECtabSelect: 0,$
     nexus_tof_path: '/entry/bank1/time_of_flight/',$
     sf_data_tof: PTR_NEW(0L),$
-    sf_empty_cell_tof: PTR_NEW(0L),$
+    ;sf_empty_cell_tof: PTR_NEW(0L),$
     ec_left_click: 0,$
     sf_x0: 0,$
     sf_y0: 0,$
@@ -255,7 +255,7 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     nexus_bank1_path_pola3: '/entry-On_On/bank1/data',$
     bank1_data : PTR_NEW(0L),$ ;
     bank1_norm : PTR_NEW(0L),$ ;
-    bank1_empty_cell: PTR_NEW(0L),$
+    ;bank1_empty_cell: PTR_NEW(0L),$
     miniVersion : miniVersion,$
     ;1 if this is the miniVersion and 0 if it's not
     FilesToPlotList : PTR_NEW(0L),$
@@ -346,15 +346,15 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     ;detector view of DATA (2D)
     DATA_D_ptr : PTR_NEW(0L),$
     ;(ntot,Ny,Nx) array of DATA
-    empty_cell_DD_ptr: PTR_NEW(0L),$
+  ;  empty_cell_DD_ptr: PTR_NEW(0L),$
     ;detector view of empty cell (2D)
     DATA_D_Total_ptr : PTR_NEW(0L),$
     ;img=total(img,x) x=2 for REF_M and x=3 for REF_L
     NORM_D_Total_ptr : PTR_NEW(0L),$
     ;img=total(img,x) x=2 for REF_M and x=3 for REF_L
-    empty_cell_D_ptr: PTR_NEW(0L),$
+  ;  empty_cell_D_ptr: PTR_NEW(0L),$
     ;(ntot,Ny,Nx) array of empty_cell
-    empty_cell_D_Total_ptr: PTR_NEW(0L),$
+  ;  empty_cell_D_Total_ptr: PTR_NEW(0L),$
     ;img=total(img,x) x=2 for REF_M and x=3 for REF_L
     NORM_DD_ptr : PTR_NEW(0L),$
     ;detector view of NORMALIZATION (2D)
@@ -362,7 +362,7 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     ;(Ntof,Ny,Nx) array of NORMALIZATION
     tvimg_data_ptr : PTR_NEW(0L),$
     ;rebin data img
-    tvimg_empty_cell_ptr: PTR_NEW(0L),$
+  ;  tvimg_empty_cell_ptr: PTR_NEW(0L),$
     ;rebin empty cell img
     tvimg_norm_ptr : PTR_NEW(0L),$
     ;rebin norm img
@@ -558,7 +558,7 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
   ;define initial global values - these could be input via external file
   ;or other means
   
-  (*(*global).empty_cell_images) = getEmptyCellImages()
+;   (*(*global).empty_cell_images) = getEmptyCellImages()
   (*(*global).substrate_type)    = getSubstrateType()
   
   (*(*global).BatchTable) = STRARR(10,20)
