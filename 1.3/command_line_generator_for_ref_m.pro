@@ -667,7 +667,7 @@ pro command_line_generator_for_ref_m, event
     cmd[index_spin_state] += ' --inst=' + (*global).instrument
     
     ;reduction mode (per selection or per pixel selected)
-    if ((*global).reduction_mode = 'one_per_pixel') then begin
+    if ((*global).reduction_mode eq 'one_per_pixel') then begin
     
       Q_min = getTextFieldValue(Event, 'q_min_text_field')
       Q_max = getTextFieldValue(Event, 'q_max_text_field')
@@ -679,42 +679,48 @@ pro command_line_generator_for_ref_m, event
         cmd[index_spin_state] += STRCOMPRESS(Q_min,/remove_all)
       endif else begin
         cmd[index_spin_state] += '?'
-        status_text = '- Please provide a Q minimum value'
-        if (StatusMessage GT 0) then begin
-          append = 1
-        endif else begin
-          append = 0
-        endelse
-        putInfoInReductionStatus, Event, status_text, append
-        StatusMessage += 1
+        if (index_spin_state eq 0) then begin
+          status_text = '- Please provide a Q minimum value'
+          if (StatusMessage GT 0) then begin
+            append = 1
+          endif else begin
+            append = 0
+          endelse
+          putInfoInReductionStatus, Event, status_text, append
+          StatusMessage += 1
+        endif
       endelse
       
       if (Q_max NE '') then begin ;Q_max
         cmd[index_spin_state] += ',' + STRCOMPRESS(Q_max,/remove_all)
       endif else begin
         cmd[index_spin_state] += ',?'
-        status_text = '- Please provide a Q maximum value'
-        if (StatusMessage GT 0) then begin
-          append = 1
-        endif else begin
-          append = 0
-        endelse
-        putInfoInReductionStatus, Event, status_text, append
-        StatusMessage += 1
+        if (index_spin_state eq 0) then begin
+          status_text = '- Please provide a Q maximum value'
+          if (StatusMessage GT 0) then begin
+            append = 1
+          endif else begin
+            append = 0
+          endelse
+          putInfoInReductionStatus, Event, status_text, append
+          StatusMessage += 1
+        endif
       endelse
       
       if (Q_width NE '') then begin ;Q_width
         cmd[index_spin_state] += ',' + STRCOMPRESS(Q_width,/remove_all)
       endif else begin
         cmd[index_spin_state] += ',?'
-        status_text = '- Please provide a Q width value'
-        if (StatusMessage GT 0) then begin
-          append = 1
-        endif else begin
-          append = 0
-        endelse
-        putInfoInReductionStatus, Event, status_text, append
-        StatusMessage += 1
+        if (index_spin_state eq 0) then begin
+          status_text = '- Please provide a Q width value'
+          if (StatusMessage GT 0) then begin
+            append = 1
+          endif else begin
+            append = 0
+          endelse
+          putInfoInReductionStatus, Event, status_text, append
+          StatusMessage += 1
+        endif
       endelse
       cmd[index_spin_state] += ',' + Q_scale        ;Q_scale (lin or log)
       
