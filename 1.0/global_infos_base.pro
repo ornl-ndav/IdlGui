@@ -69,7 +69,7 @@ end
 ;
 ; :Author: j35
 ;-
-function create_text, title=title, metadata=metadata
+function create_metadata_text, title=title, metadata=metadata
   compile_opt idl2
   
   _metadata = metadata
@@ -134,7 +134,7 @@ pro global_infos_base_gui, wBase, $
     GROUP_LEADER = ourGroup)
     
   title = ['Global Informations','------------------','']
-  text = create_text(title=title, $
+  text = create_metadata_text(title=title, $
     metadata=metadata)
     
   ysize = n_elements(text)
