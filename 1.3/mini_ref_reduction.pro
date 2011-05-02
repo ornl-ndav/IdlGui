@@ -85,7 +85,12 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   value = 'Save as...',$
   uname = 'save_configuration')
   
-  ;polarization state base ======================================================
+    clean = widget_button(config_menu,$
+  /separator,$
+  value = 'No config file for next restart !',$
+  uname = 'remove_configuration_file')
+
+  ;polarization state base ====================================================
   pola_base = WIDGET_BASE(MAIN_BASE,$
     XOFFSET   = 70,$
     YOFFSET   = 150,$
@@ -144,24 +149,6 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     UNAME = 'ok_pola_state',$
     XSIZE = 90)
     
-  ;------------------------------------------------------------------------------
-    
-;  ;HELP MENU in Menu Bar
-;  HELP_MENU = WIDGET_BUTTON(WID_BASE_0_MBAR,$
-;    UNAME = 'help_menu',$
-;    VALUE = 'HELP',$
-;    /MENU)
-;    
-;  HELP_BUTTON = WIDGET_BUTTON(HELP_MENU,$
-;    VALUE = 'HELP',$
-;    UNAME = 'help_button')
-;    
-;  IF ((*global).ucams EQ 'j35') THEN BEGIN
-;    my_help_button = WIDGET_BUTTON(HELP_MENU,$
-;      VALUE = 'MY HELP',$
-;      UNAME = 'my_help_button')
-;  ENDIF
-  
   ;add version to program
   if ((*global).miniVersion) then begin
     xoff = 715
@@ -223,15 +210,6 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ENDIF
   
   IF ((*global).DEBUGGING_VERSION EQ 'yes') THEN debugging, MAIN_BASE, global
-  
-  ;display empty cell images ----------------------------------------------------
-;  display_images, MAIN_BASE, global
-  
-    ;desactivate DANGLE0, DIRPIX, REFPIX
-;  IF ((*global).instrument EQ 'REF_L') THEN BEGIN
-;    id = WIDGET_INFO(MAIN_BASE,find_by_uname='data_geometry_info_base')
-;    WIDGET_CONTROL, id, SENSITIVE=0
-;  ENDIF
   
   ;==============================================================================
   ;checking packages

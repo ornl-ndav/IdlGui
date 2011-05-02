@@ -48,6 +48,7 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
   detector_size_m = file->getValue(tag=['configuration','detector_size_m'])
   OVERWRITE_Q_OUTPUT_FILE = file->getValue(tag=['configuration',$
     'overwrite_q_output_file'])
+  obj_destroy, file
     
   debugging_structure = getDebuggingStructure()
   
@@ -68,6 +69,10 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
   
   ;define global variables
   global = ptr_new ({ first_event: 1,$
+  
+    current_tof_config_file_name: '', $
+    tof_config_path: '~/',$
+  
     mouse_debugging:   MOUSE_DEBUGGING,$
     debugging_version: DEBUGGING_VERSION,$
     debugging_on_mac:  DEBUGGING_ON_MAC,$

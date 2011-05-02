@@ -138,7 +138,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   ;load configuration
   config_menu = widget_button(wid_base_0_mbar, $
-  value = 'Configuration',$
+  value = 'TOF Configuration',$
   /menu)
   
   load = widget_button(config_menu,$
@@ -148,6 +148,12 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   save = widget_button(config_menu,$
   value = 'Save as...',$
   uname = 'save_configuration')
+  
+  clean = widget_button(config_menu,$
+  /separator,$
+ value = 'No config file for next restart !',$
+  uname = 'remove_configuration_file')
+ 
 
   structure = {with_launch_button: (*global).with_launch_switch}
   

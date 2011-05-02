@@ -32,6 +32,8 @@
 ;
 ;==============================================================================
 
+.run configuration.pro
+
 .run ref_reduction_string.pro
 .run ref_reduction_put.pro
 .run ref_reduction_time.pro
