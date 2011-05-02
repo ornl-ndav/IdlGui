@@ -50,6 +50,7 @@ compile_opt idl2
   
   ; Free up the pointers
   ptr_free, (*global).list_of_output_file_name
+  ptr_free, (*global).list_of_output_file_name_for_broad_mode
   ptr_free, (*global).list_of_norm_spins
   ptr_free, (*global).list_of_data_spins
   ptr_free, (*global).substrate_type

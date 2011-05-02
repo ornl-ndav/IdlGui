@@ -69,6 +69,9 @@ pro command_line_generator_for_ref_m_broad_peak, event
   endif else begin
     nbr_spin_states = get_nbr_spin_states(event)
   endelse
+  
+  ;this array will store for each spin state and each pixel the name
+  ;of the output file name
   list_of_output_file_name = strarr(nbr_spin_states, nbr_pixels)
   
   ;size of the command line array
@@ -132,7 +135,7 @@ pro command_line_generator_for_ref_m_broad_peak, event
     data_spin_state      = spin_state[spin_state_selected_index]
     
   endelse
-  
+    
   _index_spin_state = 0  ;up to nbr_spin_states
   ;while (index_spin_state lt nbr_spin_states) do begin
   while (_index_spin_state lt nbr_spin_states) do begin
@@ -431,7 +434,7 @@ pro command_line_generator_for_ref_m_broad_peak, event
               'norm_d_selection_background_ymax_' + $
               'cw_field'), $
               /REMOVE_ALL)
-            
+              
           ENDIF ELSE BEGIN            ;background file
           
             ;get value of back file from norm base
@@ -564,15 +567,16 @@ pro command_line_generator_for_ref_m_broad_peak, event
         endif else begin
           cmd[_index] += '?'
         endelse
-          
+        
       endif
       
       ;get name from output path and name
       outputPath = (*global).dr_output_path
       outputFileName = getOutputFileName(Event)
-      outputFileName = add_spin_state_to_outputFileName(Event,$
+      outputFileName = add_spin_state_and_pixel_to_outputFileName(Event,$
         outputFileName,$
-        data_spin_state[_index_spin_state])
+        data_spin_state[_index_spin_state],$
+        pixel_range[_index_pixel_range])
       NewOutputFileName = outputPath + outputFileName
       cmd[_index] += ' --output=' + NewOutputFileName
       
@@ -586,7 +590,12 @@ pro command_line_generator_for_ref_m_broad_peak, event
   endwhile
   
   ;record the name of all the output files
-  (*(*global).list_of_output_file_name_for_broad_mode) = list_of_output_file_name
+  (*(*global).list_of_output_file_name_for_broad_mode) = $
+  list_of_output_file_name
+  
+  help, list_of_output_file_name
+  print, list_of_output_file_name
+  print
   
   ;generate intermediate plots command line
   IP_cmd = RefReduction_CommandLineIntermediatePlotsGenerator(Event)
@@ -594,7 +603,5 @@ pro command_line_generator_for_ref_m_broad_peak, event
   
   ;save the big command line table generated
   (*(*global).cmd_broad_mode) = cmd
-  
-  print, cmd
   
 END
