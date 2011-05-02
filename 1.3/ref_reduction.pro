@@ -136,22 +136,19 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;attach global structure with widget ID of widget main base widget ID
   WIDGET_CONTROL, MAIN_BASE, set_uvalue=global
   
-;  ;HELP MENU in Menu Bar --------------------------------------------------------
-;  HELP_MENU = WIDGET_BUTTON(WID_BASE_0_MBAR,$
-;    UNAME = 'help_menu',$
-;    VALUE = 'HELP',$
-;    /MENU)
-;    
-;  HELP_BUTTON = WIDGET_BUTTON(HELP_MENU,$
-;    VALUE = 'HELP',$
-;    UNAME = 'help_button')
-;    
-;  IF ((*global).ucams EQ 'j35') THEN BEGIN
-;    my_help_button = WIDGET_BUTTON(HELP_MENU,$
-;      VALUE = 'MY HELP',$
-;      UNAME = 'my_help_button')
-;  ENDIF
+  ;load configuration
+  config_menu = widget_button(wid_base_0_mbar, $
+  value = 'Configuration',$
+  /menu)
   
+  load = widget_button(config_menu,$
+  value = 'Load...',$
+  uname = 'load_configuration')
+  
+  save = widget_button(config_menu,$
+  value = 'Save as...',$
+  uname = 'save_configuration')
+
   structure = {with_launch_button: (*global).with_launch_switch}
   
   MakeGuiMainTab, $

@@ -149,15 +149,5 @@ miniMakeGuiLoadNormalizationTab,$
   NexusListSizeGlobal,$
   NexusListLabelGlobal,$
   loadctList
-
-;build empty cell tab
-miniMakeGuiEmptyCellTab,$
-  DataNormalizationTab,$
-  DataNormalizationTabSize,$
-  EmptyCellTitle,$
-  D_DD_TabSize,$
-  NexusListSizeGlobal,$
-  NexusListLabelGlobal,$
-  MAIN_BASE
-
+  
 END

@@ -72,6 +72,19 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;attach global structure with widget ID of widget main base widget ID
   WIDGET_CONTROL, MAIN_BASE, SET_UVALUE=global
   
+   ;load configuration
+  config_menu = widget_button(wid_base_0_mbar, $
+  value = 'Configuration',$
+  /menu)
+  
+  load = widget_button(config_menu,$
+  value = 'Load...',$
+  uname = 'load_configuration')
+  
+  save = widget_button(config_menu,$
+  value = 'Save as...',$
+  uname = 'save_configuration')
+  
   ;polarization state base ======================================================
   pola_base = WIDGET_BASE(MAIN_BASE,$
     XOFFSET   = 70,$
@@ -212,7 +225,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   IF ((*global).DEBUGGING_VERSION EQ 'yes') THEN debugging, MAIN_BASE, global
   
   ;display empty cell images ----------------------------------------------------
-  display_images, MAIN_BASE, global
+;  display_images, MAIN_BASE, global
   
     ;desactivate DANGLE0, DIRPIX, REFPIX
 ;  IF ((*global).instrument EQ 'REF_L') THEN BEGIN
@@ -229,7 +242,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   IF ((*global).CHECKING_PACKAGES EQ 'yes') THEN BEGIN
     packages_required, global, my_package
     checking_packages_routine, MAIN_BASE, my_package, global
-    update_gui_according_to_package, MAIN_BASE, my_package
+    ;update_gui_according_to_package, MAIN_BASE, my_package
   ENDIF
   
   ;==============================================================================
