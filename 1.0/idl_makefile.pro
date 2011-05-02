@@ -108,7 +108,7 @@ cd, CurrentFolder + '/rtof'
 .run rtof_cursor_info_base.pro
 .run rtof_tab.pro
 .run rtof_file_tab.pro
-
+.run rtof_counts_vs_axis_base.pro
 
 ;configuration tab
 cd, CurrentFolder + '/refpix'
