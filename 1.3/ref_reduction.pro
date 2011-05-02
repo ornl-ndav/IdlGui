@@ -74,7 +74,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
   (*global).main_base = MAIN_BASE
   
-  ;polarization state base ======================================================
+  ;polarization state base ====================================================
   pola_base = WIDGET_BASE(MAIN_BASE,$
     XOFFSET   = 200,$
     YOFFSET   = 200,$
@@ -131,7 +131,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     UNAME = 'ok_pola_state',$
     XSIZE = 90)
     
-  ;==============================================================================
+  ;============================================================================
     
   ;attach global structure with widget ID of widget main base widget ID
   WIDGET_CONTROL, MAIN_BASE, set_uvalue=global
@@ -194,13 +194,15 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   id = WIDGET_INFO(Main_base,Find_by_Uname='data_loadct_1d_3d_droplist')
   WIDGET_CONTROL, id, set_droplist_select= $
     (*global).InitialData1d3DContrastDropList
-  id = WIDGET_INFO(Main_base,Find_by_Uname='normalization_loadct_1d_3d_droplist')
+  id = WIDGET_INFO(Main_base,$
+  Find_by_Uname='normalization_loadct_1d_3d_droplist')
   WIDGET_CONTROL, id, set_droplist_select= $
     (*global).InitialNorm1d3DContrastDropList
   id = WIDGET_INFO(Main_base,Find_by_Uname='data_loadct_2d_3d_droplist')
   WIDGET_CONTROL, id, set_droplist_select= $
     (*global).InitialData2d3DContrastDropList
-  id = WIDGET_INFO(Main_base,Find_by_Uname='normalization_loadct_2d_3d_droplist')
+  id = WIDGET_INFO(Main_base,$
+  Find_by_Uname='normalization_loadct_2d_3d_droplist')
   WIDGET_CONTROL, id, set_droplist_select= $
     (*global).InitialNorm2d3DContrastDropList
     
@@ -225,14 +227,14 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   IF ((*global).DEBUGGING_VERSION EQ 'yes') THEN debugging, MAIN_BASE, global
   
-  ;display empty cell images ----------------------------------------------------
+  ;display empty cell images --------------------------------------------------
 ;  display_images, MAIN_BASE, global
   
-  ;------------------------------------------------------------------------------
+  ;----------------------------------------------------------------------------
   ;populate the list of proposal droplist (data, normalization,empty_cell)
   populate_list_of_proposal, MAIN_BASE, (*global).instrument
   
-  ;==============================================================================
+  ;============================================================================
   
   ;  ;checking packages
   ;  IF ((*global).DEBUGGING_VERSION EQ 'yes') THEN BEGIN
@@ -245,7 +247,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     checking_packages_routine, MAIN_BASE, my_package, global
     ;update_gui_according_to_package, MAIN_BASE, my_package
   ENDIF
-  ;==============================================================================
+  ;============================================================================
   
   ;send message to log current run of application
   logger, global

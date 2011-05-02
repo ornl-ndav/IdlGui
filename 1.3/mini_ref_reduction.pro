@@ -177,13 +177,15 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   id = WIDGET_INFO(Main_base,Find_by_Uname='data_loadct_1d_3d_droplist')
   WIDGET_CONTROL, id, set_droplist_select= $
     (*global).InitialData1d3DContrastDropList
-  id = WIDGET_INFO(Main_base,Find_by_Uname='normalization_loadct_1d_3d_droplist')
+  id = WIDGET_INFO(Main_base,$
+  Find_by_Uname='normalization_loadct_1d_3d_droplist')
   WIDGET_CONTROL, id, set_droplist_select= $
     (*global).InitialNorm1d3DContrastDropList
   id = WIDGET_INFO(Main_base,Find_by_Uname='data_loadct_2d_3d_droplist')
   WIDGET_CONTROL, id, set_droplist_select= $
     (*global).InitialData2d3DContrastDropList
-  id = WIDGET_INFO(Main_base,Find_by_Uname='normalization_loadct_2d_3d_droplist')
+  id = WIDGET_INFO(Main_base,$
+  Find_by_Uname='normalization_loadct_2d_3d_droplist')
   WIDGET_CONTROL, id, set_droplist_select= $
     (*global).InitialNorm2d3DContrastDropList
     
@@ -195,7 +197,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   id = WIDGET_INFO(Main_Base, find_by_uname='cl_file_text')
   WIDGET_CONTROL, id, set_value=file_name
   
-  ;------------------------------------------------------------------------------
+  ;----------------------------------------------------------------------------
   
   IF ((*global).ucams EQ 'j35' OR $
     (*global).ucams EQ '2zr') THEN BEGIN
@@ -211,7 +213,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   IF ((*global).DEBUGGING_VERSION EQ 'yes') THEN debugging, MAIN_BASE, global
   
-  ;==============================================================================
+  ;============================================================================
   ;checking packages
   IF ((*global).DEBUGGING_VERSION EQ 'yes') THEN BEGIN
     packages_required, global, my_package
@@ -223,7 +225,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ;update_gui_according_to_package, MAIN_BASE, my_package
   ENDIF
   
-  ;==============================================================================
+  ;============================================================================
   ;populate the list of proposal droplist (data, normalization,empty_cell)
   populate_list_of_proposal, MAIN_BASE, (*global).instrument
   

@@ -34,6 +34,28 @@
 
 ;+
 ; :Description:
+;    This routine will load the structure stores in the hidden config file
+;    of this application
+;
+; :Keywords:
+;   config_file_name: configuration file name of the main application
+;   tof_config_file_name: last tof config file name saved/loaded
+;
+; :Author: j35
+;-
+pro save_config_file_name, config_file_name = config_file_name, $
+    tof_config_file_name= tof_config_file_name
+  compile_opt idl2
+  
+  cfg_structure = {tof_config_file_name: tof_config_file_name}
+  save, cfg_structure, filename=config_file_name
+  
+  
+  
+end
+
+;+
+; :Description:
 ;    This routine is ran just before the main program exit.
 ;
 ; :Params:
@@ -42,10 +64,13 @@
 ; :Author: j35
 ;-
 pro ref_reduction_Cleanup, tlb
-compile_opt idl2
-
+  compile_opt idl2
+  
   WIDGET_CONTROL, tlb, GET_UVALUE=global, /NO_COPY
-
+  
+  save_config_file_name, config_file_name=config_file_name, $
+    tof_config_file_name = (*global).current_tof_config_file_name
+    
   IF N_ELEMENTS(global) EQ 0 THEN RETURN
   
   ; Free up the pointers
