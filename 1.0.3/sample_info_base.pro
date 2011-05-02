@@ -68,7 +68,7 @@ end
 ;
 ; :Author: j35
 ;-
-function create_text, file_type=file_type
+function create_sample_text, file_type=file_type
   compile_opt idl2
   
   if (strlowcase(strcompress(file_type,/remove_all)) eq 'xymanyz') then begin
@@ -166,7 +166,7 @@ pro sample_info_base, event=event, file_type=file_type
   parent_base_geometry = WIDGET_INFO(id,/GEOMETRY)
   
   _base = ''
-  text = create_text(file_type=file_type)
+  text = create_sample_text(file_type=file_type)
   sample_info_base_gui, _base, $
     parent_base_geometry, $
     text=text,$
