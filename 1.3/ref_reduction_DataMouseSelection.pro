@@ -431,7 +431,6 @@ PRO REFreduction_DataSelectionRelease, event
       1: Begin
         ;refresh plot
         REFReduction_RescaleDataPlot, Event
-        ;            RePlot1DDataFile, Event
         mouse_status_new = 0
         ;get y mouse
         y=event.y
@@ -451,7 +450,6 @@ PRO REFreduction_DataSelectionRelease, event
       3: mouse_status_new = mouse_status
       4: Begin
         REFReduction_RescaleDataPlot, Event
-        ;           RePlot1DDataFile, Event
         
         ;check if y1 is not -1
         y1 = y_array[0]
@@ -745,6 +743,9 @@ PRO plot_average_data_peak_value, Event
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+  if ((*global).reduction_mode eq 'one_per_pixel') then return
+
   coefficient = getUDCoefficient(Event) ;1 for low, 2 for high
   refpix = (*global).refpix
   geo_refpix = coefficient * refpix
