@@ -734,9 +734,6 @@ pro command_line_generator_for_ref_m, event
     if (angle_value NE '' OR $    ;user wants to input the angle value and err
       angle_err NE '') then begin
       
-      ;    GuiLabelStatus   = 1
-      ;    NexusLabelStatus = 0
-      
       cmd[index_spin_state] += ' --angle-offset='
       
       if (angle_value NE '') then begin ;angle_value
