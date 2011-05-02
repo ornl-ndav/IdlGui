@@ -61,6 +61,21 @@ PRO MAIN_BASE_event, Event
   
   CASE Event.id OF
   
+    ;load configuration;
+    widget_info(wWidget, find_by_uname='load_configuration'): begin
+    load_configuration_function, event
+    end
+    
+    ;save configuration
+    widget_info(wWidget, find_by_uname='save_configuration'): begin
+    save_configuration_function, event
+    end
+    
+    ;reset configuration file
+    widget_info(wWidget, find_by_uname='remove_configuration_file'): begin
+    (*global).current_tof_config_file_name = ''
+    end
+  
     ;1 reduction per selection or 1 reduction per pixel selected
     widget_info(wWidget, $
       find_by_uname='one_reduction_per_selection_uname'): begin
