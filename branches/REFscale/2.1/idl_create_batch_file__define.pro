@@ -120,6 +120,14 @@ FUNCTION CreateBatchFile, Event, FullFileName, BatchTable
       endif else begin
         cmd = 'srun --batch -o none ' + cmd_array[0]
       endelse
+      
+      ;if only 1 spin state has been loaded, load only the first part of the
+      ;command line
+      if (n_elements(data_spin_states) eq 1) then begin
+        cmd_array = strsplit(cmd,';',/extract,/regex)
+        cmd=cmd_array[0]
+      endif
+      
       text      = [text, FP+cmd]
       text      = [text, '']
     ENDIF

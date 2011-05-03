@@ -218,6 +218,7 @@ PRO MAIN_BASE_ref_scale_event, Event
     ;Event of <Load File> button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='load_button'): BEGIN
       LoadFileButton, Event ;_Load
+      (*global).bBatchMode=0b
     END
     
     ;Event of 'List of Files:' droplist
@@ -389,6 +390,7 @@ PRO MAIN_BASE_ref_scale_event, Event
     ;Load Batch File Button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='load_batch_file_button'): BEGIN
       ref_scale_LoadBatchFile, Event ;_batch
+      (*global).bBatchMode=1b
     END
     
     ;Preview Batch File Button

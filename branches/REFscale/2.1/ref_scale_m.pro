@@ -76,7 +76,7 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     nbr_data_to_exclude: 0,$  ;number of data to remove on both side when
     ;performing setp3
     
-    instrument: 'REF_L', $ ;by default, REF_L instrument
+    instrument: 'REF_M', $ ;by default, REF_L instrument
     
     ;settings base
     settings_show_error_bar_flag: 1b,$
@@ -98,6 +98,8 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     DRfiles: ptr_new(0L), $ ;[spin_states,files]
     
     cleaning_base_id: 0L, $
+    
+    bBatchMode: 1b, $
     
     BatchExtension:         '.txt',$
     BatchTable:             PTR_NEW(0L),$
