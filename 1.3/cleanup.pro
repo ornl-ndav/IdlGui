@@ -48,9 +48,43 @@ pro save_config_file_name, config_file_name = config_file_name, $
   compile_opt idl2
   
   cfg_structure = {tof_config_file_name: tof_config_file_name}
+  
+  catch, error
+  if (error ne 0) then begin
+    catch, /cancel
+    return
+  endif
+  
   save, cfg_structure, filename=config_file_name
   
+end
+
+;+
+; :Description:
+;    This procedure will retrieve the name of the TOF config file and
+;    will load it if this one is not an empty string
+;
+; :Keywords:
+;    config_file_name
+;    base
+;
+; :Author: j35
+;-
+pro restore_config_file_name, base=base, $
+    config_file_name=config_file_name
+  compile_opt idl2
   
+  restore, filename=config_file_name, /relaxed_structure_assignment
+  
+  tof_config_file_name = cfg_structure.tof_config_file_name
+  
+  if (tof_config_file_name ne '') then begin
+  
+    load_configuration_file, base=base, $
+      file_name=tof_config_file_name, $
+      new_path=file_dirname(config_file_name)
+      
+  endif
   
 end
 
@@ -68,7 +102,7 @@ pro ref_reduction_Cleanup, tlb
   
   WIDGET_CONTROL, tlb, GET_UVALUE=global, /NO_COPY
   
-  save_config_file_name, config_file_name=config_file_name, $
+  save_config_file_name, config_file_name=(*global).config_file_name, $
     tof_config_file_name = (*global).current_tof_config_file_name
     
   IF N_ELEMENTS(global) EQ 0 THEN RETURN

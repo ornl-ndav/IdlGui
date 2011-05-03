@@ -50,9 +50,9 @@ pro load_configuration_function, event
   title = 'Select the TOF configuration file you want to load!'
   tof_config_path = (*global).tof_config_path
   
-  file_name = dialog_pickfile(default_extension='cfg',$
+  file_name = dialog_pickfile(default_extension='config',$
     /must_exist, $
-    filter=['*.cfg'],$
+    filter=['*.config'],$
     dialog_parent=id,$
     title=title,$
     path=tof_config_path,$
@@ -60,32 +60,68 @@ pro load_configuration_function, event
     
   if (file_name[0] ne '') then begin
   
-    (*global).tof_config_path = new_path
-    (*global).current_tof_config_file_name = file_name[0]
-    
-    file = obj_new('idlxmlparser',file_name[0])
-    min_tof = file->getValue(tag=['configuration','tof','min'])
-    max_tof = file->getValue(tag=['configuration','tof','max'])
-    units_tof = file->getValue(tag=['configuration','tof','units'])
-    obj_destroy, file
-    
-    if (min_tof eq 'N/A') then min_tof = ''
-    if (max_tof eq 'N/A') then max_tof = ''
-    if (units_tof eq 'microS') then begin
-      uname = 'reduce_data_tof_units_micros'
-    endif else begin
-      uname = 'reduce_data_tof_units_ms'
-    endelse
-    id = widget_info(event.top, find_by_uname=uname)
-    widget_control, id, /set_button
-    
-    putValue, event=event, 'tof_cutting_min', $
-      strcompress(min_tof[0],/remove_all)
-    putValue, event=event, 'tof_cutting_max', $
-      strcompress(max_tof[0],/remove_all)
+    load_configuration_file, event=event, $
+      file_name=file_name[0], $
+      new_path=new_path
       
   endif
   
+end
+
+;+
+; :Description:
+;    This procedures takes the config file name given as argument and
+;    load the tof config. file
+;
+; :Keywords:
+;    event
+;    base
+;    file_name
+;    new_path
+;
+; :Author: j35
+;-
+pro load_configuration_file, event=event, $
+    base=base, $
+    file_name=file_name, $
+    new_path=new_path
+  compile_opt idl2
+  
+  if (keyword_set(event)) then begin
+    widget_control, event.top, get_uvalue=global
+  endif else begin
+    widget_control, base, get_uvalue=global
+  endelse
+  
+  (*global).tof_config_path = new_path
+  (*global).current_tof_config_file_name = file_name[0]
+  
+  file = obj_new('idlxmlparser',file_name[0])
+  min_tof = file->getValue(tag=['configuration','tof','min'])
+  max_tof = file->getValue(tag=['configuration','tof','max'])
+  units_tof = file->getValue(tag=['configuration','tof','units'])
+  obj_destroy, file
+  
+  if (min_tof eq 'N/A') then min_tof = ''
+  if (max_tof eq 'N/A') then max_tof = ''
+  if (units_tof eq 'microS') then begin
+    uname = 'reduce_data_tof_units_micros'
+  endif else begin
+    uname = 'reduce_data_tof_units_ms'
+  endelse
+  
+  if (keyword_set(event)) then begin
+    id = widget_info(event.top, find_by_uname=uname)
+  endif else begin
+    id = widget_info(base, find_by_uname=uname)
+  endelse
+  widget_control, id, /set_button
+  
+  putValue, base=base, event=event, 'tof_cutting_min', $
+    strcompress(min_tof[0],/remove_all)
+  putValue, base=base, event=event, 'tof_cutting_max', $
+    strcompress(max_tof[0],/remove_all)
+    
 end
 
 ;+
@@ -108,11 +144,11 @@ pro save_configuration_function, event
   title = 'Define or pick a TOF configuration file!'
   tof_config_path = (*global).tof_config_path
   
-  file_name = dialog_pickfile(default_extension='cfg',$
-    /must_exist, $
-    filter=['*.cfg'],$
+  file_name = dialog_pickfile(default_extension='config',$
+    filter=['*.config'],$
     dialog_parent=id,$
     title=title,$
+    /write, $
     path=tof_config_path,$
     get_path=new_path)
     
