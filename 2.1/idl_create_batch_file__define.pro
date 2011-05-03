@@ -70,8 +70,6 @@ FUNCTION CreateBatchFile, Event, FullFileName, BatchTable
   data_spin_states = (*(*global).data_spin_state)
   norm_spin_states = (*(*global).norm_spin_state)
   
-  
-  
   FOR i=0,(NbrRow-1) DO BEGIN
     ;add information only if row is not blank
     IF (BatchTable[0,i] NE '') THEN BEGIN
