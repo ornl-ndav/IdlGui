@@ -66,9 +66,11 @@ FUNCTION CreateBatchFile, Event, FullFileName, BatchTable
   text      = [text,'#Date : ' + idl_send_to_geek_GenerateIsoTimeStamp()]
   text      = [text,'#Ucams : ' + (*global).ucams]
   text      = [text,'']
-
+  
   data_spin_states = (*(*global).data_spin_state)
   norm_spin_states = (*(*global).norm_spin_state)
+  
+  
   
   FOR i=0,(NbrRow-1) DO BEGIN
     ;add information only if row is not blank
@@ -86,9 +88,22 @@ FUNCTION CreateBatchFile, Event, FullFileName, BatchTable
       text    = [text,'#Active : ' + active]
       k=1
       text    = [text,'#Data_Runs : '  + BatchTable[k++,i]]
-      text    = [text,'#Data_Spin_States : ' + data_spin_states[i]]
+      
+      if (n_elements(data_spin_states) eq 1) then begin
+        data_spin = 'Off_Off'
+      endif else begin
+        data_spin = data_spin_states[i]
+      endelse
+      text    = [text,'#Data_Spin_States : ' + data_spin]
+      
       text    = [text,'#Norm_Runs : '  + BatchTable[k++,i]]
-      text    = [text,'#Norm_Spin_States : ' + norm_spin_states[i]]
+      if (n_elements(norm_spin_states) eq 1) then begin
+        norm_spin = 'Off_Off'
+      endif else begin
+        norm_spin = norm_spin_states[i]
+      endelse
+      text    = [text,'#Norm_Spin_States : ' + norm_spin]
+      
       text    = [text,'#EC_Runs : '    + BatchTable[k++,i]]
       text    = [text,'#Angle(deg) : ' + BatchTable[k++,i]]
       text    = [text,'#S1(mm) : '     + BatchTable[k++,i]]

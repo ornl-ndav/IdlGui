@@ -244,7 +244,6 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     SCR_XSIZE    = MainBaseSize[2], $
     SCR_YSIZE    = MainBaseSize[3], $
     TITLE        = MainTitle)
-  ;                        MBAR      = WID_BASE_0_MBAR)
     
   PLOT_WINDOW = WIDGET_DRAW(MAIN_BASE_ref_scale,$
     UNAME     = 'plot_window',$
@@ -310,8 +309,8 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   XMANAGER, 'MAIN_BASE_ref_scale', MAIN_BASE_ref_scale, /NO_BLOCK, $
     cleanup = 'ref_scale_cleanup'
     
-  ;------------------------------------------------------------------------------
-  ;- BATCH MODE ONLY ------------------------------------------------------------
+  ;----------------------------------------------------------------------------
+  ;- BATCH MODE ONLY ----------------------------------------------------------
   ;Show BATCH Tab if Batch Mode is used
   IF (BatchMode NE '') THEN BEGIN
     IF (BatchFile NE '') THEN BEGIN
@@ -323,12 +322,12 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     id1 = WIDGET_INFO(MAIN_BASE_ref_scale, FIND_BY_UNAME='steps_tab')
     WIDGET_CONTROL, id1, SET_TAB_CURRENT = 3 ;batch tab
   ENDIF
-  ;- END OF BATCH MODE ONLY -----------------------------------------------------
-  ;------------------------------------------------------------------------------
+  ;- END OF BATCH MODE ONLY ---------------------------------------------------
+  ;----------------------------------------------------------------------------
   
   
-  ;------------------------------------------------------------------------------
-  ;- DEBUGGER MODE ONLY ---------------------------------------------------------
+  ;----------------------------------------------------------------------------
+  ;- DEBUGGER MODE ONLY -------------------------------------------------------
   IF (DEBUGGER EQ 'yes') THEN BEGIN
     ;default tab
     id1 = WIDGET_INFO(MAIN_BASE_ref_scale, FIND_BY_UNAME='steps_tab')
@@ -340,10 +339,10 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     (*global).input_path       = '/SNS/REF_L/shared/'
     (*global).input_path =     '~/results/'
   ENDIF
-  ;- END OF DEBUGGER MODE ONLY --------------------------------------------------
-  ;------------------------------------------------------------------------------
+  ;- END OF DEBUGGER MODE ONLY ------------------------------------------------
+  ;----------------------------------------------------------------------------
   
-  ;=============================================================================
+  ;============================================================================
   ;send message to log current run of application
   logger, APPLICATION=application, VERSION=version, UCAMS=ucams
   
