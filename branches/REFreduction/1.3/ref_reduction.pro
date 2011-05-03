@@ -227,27 +227,18 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   IF ((*global).DEBUGGING_VERSION EQ 'yes') THEN debugging, MAIN_BASE, global
   
-  ;display empty cell images --------------------------------------------------
-;  display_images, MAIN_BASE, global
-  
-  ;----------------------------------------------------------------------------
   ;populate the list of proposal droplist (data, normalization,empty_cell)
   populate_list_of_proposal, MAIN_BASE, (*global).instrument
-  
-  ;============================================================================
-  
-  ;  ;checking packages
-  ;  IF ((*global).DEBUGGING_VERSION EQ 'yes') THEN BEGIN
-  ;    packages_required, global, my_package ;packages_required
-  ;    (*(*global).my_package) = my_package
-  ;  ENDIF
-  
+
   IF ((*global).CHECKING_PACKAGES EQ 'yes') THEN BEGIN
     packages_required, global, my_package ;packages_required
     checking_packages_routine, MAIN_BASE, my_package, global
     ;update_gui_according_to_package, MAIN_BASE, my_package
   ENDIF
-  ;============================================================================
+  
+  ;load TOF config file name
+  restore_config_file_name, base=MAIN_BASE, $
+    config_file_name=(*global).config_file_name
   
   ;send message to log current run of application
   logger, global
