@@ -40,9 +40,9 @@
 FUNCTION isValueFloat, textString
   result = getNumeric(textString)
   IF (result EQ '') THEN BEGIN
-     RETURN, 0
+    RETURN, 0
   ENDIF ELSE BEGIN
-     RETURN, 1
+    RETURN, 1
   ENDELSE
 END
 
@@ -53,9 +53,9 @@ END
 ;into a value or not
 ;1 means yes, and 0 means no
 FUNCTION isNumeric, textString
-;float
-result = isValueFloat(textString)
-RETURN, result
+  ;float
+  result = isValueFloat(textString)
+  RETURN, result
 END
 
 ;##############################################################################
@@ -64,14 +64,14 @@ END
 ;This function checks if the newly loaded file has alredy
 ;been loaded. Return 1 if yes and 0 if not
 FUNCTION isFileAlreadyInList, ListOfFiles, file
-sizeArray = size(ListOfFiles)
-size = sizeArray[1]
-FOR i=0, (size-1) DO BEGIN
+  sizeArray = size(ListOfFiles)
+  size = sizeArray[1]
+  FOR i=0, (size-1) DO BEGIN
     IF (ListOfFiles[i] EQ file) THEN BEGIN
-        RETURN, 1
+      RETURN, 1
     ENDIF
-ENDFOR
-RETURN, 0
+  ENDFOR
+  RETURN, 0
 END
 
 ;##############################################################################
@@ -80,18 +80,18 @@ END
 ;this function return 1 if the ListOfFiles is empty (first load)
 ;otherwise it returns 0
 FUNCTION isListOfFilesSize0, ListOfFiles
-         
-sz = (size(ListOfFiles))(1)
-IF (sz EQ 1) THEN BEGIN
-;check if argument is empty string
+
+  sz = (size(ListOfFiles))(1)
+  IF (sz EQ 1) THEN BEGIN
+    ;check if argument is empty string
     IF (ListOfFiles[0] EQ '') THEN BEGIN
-        RETURN, 1
+      RETURN, 1
     ENDIF ELSE BEGIN
-        RETURN, 0
+      RETURN, 0
     ENDELSE
-ENDIF ELSE BEGIN
+  ENDIF ELSE BEGIN
     RETURN, 0
-ENDELSE
+  ENDELSE
 END
 
 ;##############################################################################
@@ -100,8 +100,7 @@ END
 ;This function returns 1(true) if there is a batch file loaded in the
 ;batch table
 FUNCTION isBatchFileLoaded, Event
-return, 1
-batch_file_name = getBatchFileName(Event)
-IF (batch_file_name EQ '') THEN RETURN, 0
-RETURN, 1
+  compile_opt idl2
+  widget_control, event.top, get_uvalue=global
+  return, (*global).bBatchMode
 END

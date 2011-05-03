@@ -167,12 +167,12 @@ END
 ;==============================================================================
 PRO UpdateBatchTable, Event, BatchTable
 
-catch, error
-if (error ne 0) then begin
-catch,/cancel
-return
-endif
-
+  catch, error
+  if (error ne 0) then begin
+    catch,/cancel
+    return
+  endif
+  
   ;display information from column 2/3/8/7 (in this order)
   NewTable = STRARR(5,20)
   NewTable[0,*] = BatchTable[0,*]

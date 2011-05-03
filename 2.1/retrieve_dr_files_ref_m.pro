@@ -65,6 +65,8 @@ function retrieveDRfiles_ref_m, event, BatchTable
       outputFileName= iRow->getOutputFileName()
       outputFileName_array = strsplit(outputFileName,' ',/extract)
       
+      print, outputFileName_array
+      
       index_spin = 0
       while (index_spin lt n_elements(outputFileName_array)) do begin
         DRfiles[index_spin,i] = outputPath + '/' + outputFileName_array[index_spin]
