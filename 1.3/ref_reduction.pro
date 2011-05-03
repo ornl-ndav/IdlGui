@@ -243,6 +243,12 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;send message to log current run of application
   logger, global
   
+  ;REMOVE_ME
+  progress_bar, top_base=MAIN_BASE, $
+  parent_base_uname='MAIN_BASE'
+  
+  
+  
 END
 
 ;+

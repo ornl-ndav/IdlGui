@@ -68,3 +68,6 @@ cd, CurrentFolder + '/TOFselectionBase'
 .run tof_selection_counts_vs_tof_base.pro
 .run tof_selection_eventcb.pro
 .run tof_selection_base.pro
+
+cd, CurrentFolder + '/ProgressBar'
+.run progress_bar.pro
