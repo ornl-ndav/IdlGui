@@ -86,9 +86,6 @@ PRO Step3AutomaticRescaling, Event
   
   idl_send_to_geek_addLogBookText, Event, '> Automatic Rescaling :'
   
-  ;  flt0_rescale_ptr = (*global).flt0_rescale_ptr
-  ;  flt1_rescale_ptr = (*global).flt1_rescale_ptr
-  ;  flt2_rescale_ptr = (*global).flt2_rescale_ptr
   flt0_ptr = (*global).flt0_ptr
   flt1_ptr = (*global).flt1_ptr
   flt2_ptr = (*global).flt2_ptr
@@ -101,13 +98,6 @@ PRO Step3AutomaticRescaling, Event
   
   idl_send_to_geek_addLogBookText, Event, '-> Number of files loaded : ' + $
     STRCOMPRESS(nbrFile,/REMOVE_ALL)
-    
-  ;  PRINT, 'in checking flt0, flt1 and flt2 rescale ptr'
-  ;  for i=0,(nbrFile-1) do begin
-  ;    HELP, *flt0_rescale_ptr[i]
-  ;    HELP, *flt1_rescale_ptr[i]
-  ;    HELP, *flt2_rescale_ptr[i]
-  ;  ENDFOR
     
   IF (isBatchFileLoaded(Event)) THEN BEGIN
     ;Get BatchTable

@@ -100,6 +100,7 @@ END
 ;This function returns 1(true) if there is a batch file loaded in the
 ;batch table
 FUNCTION isBatchFileLoaded, Event
+return, 1
 batch_file_name = getBatchFileName(Event)
 IF (batch_file_name EQ '') THEN RETURN, 0
 RETURN, 1
