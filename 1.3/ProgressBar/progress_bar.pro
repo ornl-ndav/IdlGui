@@ -62,18 +62,144 @@ end
 
 ;+
 ; :Description:
+;    This routine update the various progress bars (spin states and
+;    post processing)
+;
+; :Keywords:
+;    event
+;    base
+;    spin_state      = 'Off_Off'|'Off_On'|'On_Off'|'On_On'
+;    post_processing = 1b|0b
+;    increment       = 1b|ob
+;
+; :Author: j35
+;-
+pro update_progress_bar, event=event, $
+    base=base, $
+    spin_state=spin_state, $
+    post_processing=post_processing, $
+    increment=increment
+  compile_opt idl2
+  
+  if (keyword_set(spin_state)) then begin
+    draw_uname = 'progress_bar_of_spin_state_' + spin_state
+  endif else begin
+    draw_uname = 'post_processing_uname'
+  endelse
+  
+  if (keyword_set(event)) then begin
+    widget_control, event.top, get_uvalue=global_progress
+    draw1 = WIDGET_INFO(event,FIND_BY_UNAME=draw_uname)
+  endif else begin
+    widget_control, base, get_uvalue=global_progress
+    draw1 = WIDGET_INFO(base,FIND_BY_UNAME=draw_uname)
+  endelse
+  
+  WIDGET_CONTROL, draw1, GET_VALUE=id
+  WSET, id
+  
+  geometry = WIDGET_INFO(draw1,/GEOMETRY)
+  xsize = geometry.xsize
+  ysize = geometry.ysize
+  
+  if (keyword_set(spin_state)) then begin
+  
+    spin_state_nbr_steps = (*global_progress).spin_state_nbr_steps
+    step = (*global_progress).current_step
+    
+    x1=0
+    x2=(float(xsize)/float(spin_state_nbr_steps))*float(step)
+    y1=0
+    y2=ysize
+    
+    color=fsc_color("red")
+    Polyfill, [x1, x1, x2, x2, x1], [y1, y2, y2, y1, y1], /Device, Color=color
+    
+    ;get percentage
+    percent = (float(step) / float(spin_state_nbr_steps)) * 100.
+    text = strcompress(fix(percent),/remove_all) + '%'
+    XYouts, x2, y2/2., text, color=fsc_color("blue"), /device
+    
+    if (step eq spin_state_nbr_steps) then begin
+      step=1
+    endif else begin
+      step++
+    endelse
+    (*global_progress).current_step = step
+    
+    global_current_step = (*global_progress).global_current_step
+    global_current_step++
+    (*global_progress).global_current_step = global_current_step
+    
+    previous_time = (*global_progress).time_init_s
+    current_time = systime(/seconds)
+    (*global_progress).time_init_s = current_time
+    
+    delta_time = current_time - previous_time
+    global_current_step = (*global_progress).global_current_step
+    total_number_steps = (*global_progress).total_number_steps
+    
+    _steps_left = total_number_steps - global_current_step
+    _time_left = (_steps_left * delta_time)
+    
+    if (_time_left gt 60) then begin
+      putValue, base=base, 'time_left_units_uname', $
+        'mn  (recalculated after each step)'
+      putValue, base=base, 'time_left_value_uname', $
+        strcompress(_time_left/60.,/remove_all)
+    endif else begin
+      putValue, base=base, 'time_left_units_uname', $
+        's  (recalculated after each step)'
+      putValue, base=base, 'time_left_value_uname', $
+        strcompress(_time_left,/remove_all)
+    endelse
+    
+  endif else begin
+ 
+    map_base, base=base, uname='time_left_base_uname', status=0
+    
+    post_processing_nbr_steps = (*global_progress).post_processing_nbr_steps
+    step = (*global_progress).current_step
+    
+    x1=0
+    x2=(float(xsize)/float(post_processing_nbr_steps))*float(step)
+    y1=0
+    y2=ysize
+    
+    color=fsc_color("red")
+    Polyfill, [x1, x1, x2, x2, x1], [y1, y2, y2, y1, y1], /Device, Color=color
+    
+    ;get percentage
+    percent = (float(step) / float(post_processing_nbr_steps)) * 100.
+    text = strcompress(fix(percent),/remove_all) + '%'
+    XYouts, x2, y2/2., text, color=fsc_color("blue"), /device
+    
+    if (step eq post_processing_nbr_steps) then begin
+      step=0
+    endif else begin
+      step++
+    endelse
+    (*global_progress).current_step = step
+    
+  endelse
+  
+end
+
+;+
+; :Description:
 ;    Builds the GUI
 ;
 ; :Params:
 ;    wBase
 ;    parent_base_geometry
-;
+;    list_working_spin_states     ex: ['Off_Off','Off_On']
 ;
 ;
 ; :Author: j35
 ;-
 pro progress_bar_gui, wBase, $
-    parent_base_geometry
+    parent_base_geometry, $
+    list_working_spin_states
   compile_opt idl2
   
   main_base_xoffset = parent_base_geometry.xoffset
@@ -102,19 +228,20 @@ pro progress_bar_gui, wBase, $
   top_base = widget_base(wBase,$
     /column)
     
-  row1 = widget_base(top_base,$
-    /row)
-  label1 = widget_label(row1,$
-    value = 'Spin States')
-  space = widget_label(row1,$
-    value = '                       ')
-  label2 = widget_label(row1,$
-    value = 'Progress')
+  ;  row1 = widget_base(top_base,$
+  ;    /row)
+  ;  label1 = widget_label(row1,$
+  ;    value = 'Spin States')
+  ;  space = widget_label(row1,$
+  ;    value = '                       ')
+  ;  label2 = widget_label(row1,$
+  ;    value = 'Progress')
     
   ;1 row for each spin state
-  spin_list = ['Off_Off',$
-    'Off_On','On_Off','On_On']
-  for i=0,3 do begin
+  spin_list = list_working_spin_states
+  sz = n_elements(spin_list)
+  i=0
+  while (i lt sz) do begin
     row2 = widget_base(top_base,$
       uname = 'progress_bar_base_of_spin_state_' + spin_list[i],$
       /row)
@@ -128,7 +255,8 @@ pro progress_bar_gui, wBase, $
       scr_xsize = 300,$
       scr_ysize = 35,$
       uname = 'progress_bar_of_spin_state_' + spin_list[i])
-  endfor
+    i++
+  endwhile
   
   space = widget_label(top_base,$
     value = ' ')
@@ -148,6 +276,7 @@ pro progress_bar_gui, wBase, $
     value = ' ')
     
   row4 = widget_base(top_base,$
+    uname = 'time_left_base_uname',$
     /row)
   label = widget_label(row4,$
     value = 'Estimated time left:')
@@ -156,6 +285,8 @@ pro progress_bar_gui, wBase, $
     frame=1,$
     uname = 'time_left_value_uname')
   units = widget_label(row4,$
+    uname = 'time_left_units_uname',$
+    /align_left, $
     value = 'mn (recalculated after each step)')
     
 end
@@ -196,13 +327,12 @@ end
 ;
 ; :Author: j35
 ;-
-pro counts_info_base_cleanup, tlb
+pro progress_bar_cleanup, tlb
   compile_opt idl2
   
   widget_control, tlb, get_uvalue=global_progress, /no_copy
   
   if (n_elements(global_progress) eq 0) then return
-  
   ptr_free, global_progress
   
 end
@@ -213,12 +343,16 @@ end
 ; :Keywords:
 ;    main_base
 ;    event
+;    spin_state_nbr_steps  ; represents the number of pixels for each spin state
+;    list_working_spin_states ; ex: ['Off_Off','Off_On']
 ;
 ; :Author: j35
 ;-
 pro progress_bar, event=event, $
     top_base=top_base, $
-    parent_base_uname = parent_base_uname
+    parent_base_uname = parent_base_uname, $
+    spin_state_nbr_steps = spin_state_nbr_steps, $
+    list_working_spin_states = list_working_spin_states
   compile_opt idl2
   
   if (keyword_set(event)) then begin
@@ -232,12 +366,24 @@ pro progress_bar, event=event, $
   
   _base = 0L
   progress_bar_gui, _base, $
-    parent_base_geometry
-    
+    parent_base_geometry, $
+    list_working_spin_states
+  (*global).progress_bar_base = _base
+  
   WIDGET_CONTROL, _base, /REALIZE
+  
+  time_init_s = systime(/seconds)
   
   global_progress = PTR_NEW({ _base: _base,$
     top_base: top_base, $
+    time_init_s: systime(/seconds), $
+    current_step: 1, $  ;0,1,2.... spin_state_nbr_steps
+    spin_state_nbr_steps: spin_state_nbr_steps, $
+    global_current_step: 1, $
+    post_processing_nbr_steps: n_elements(list_working_spin_states), $
+    list_working_spin_states: list_working_spin_states, $
+    total_number_steps: spin_state_nbr_steps * $
+    n_elements(list_working_spin_states), $
     global: global})
     
   WIDGET_CONTROL, _base, SET_UVALUE = global_progress

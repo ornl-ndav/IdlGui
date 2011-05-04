@@ -138,23 +138,23 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   ;load configuration
   config_menu = widget_button(wid_base_0_mbar, $
-  value = 'TOF Configuration',$
-  /menu)
-  
+    value = 'TOF Configuration',$
+    /menu)
+    
   load = widget_button(config_menu,$
-  value = 'Load...',$
-  uname = 'load_configuration')
-  
+    value = 'Load...',$
+    uname = 'load_configuration')
+    
   save = widget_button(config_menu,$
-  value = 'Save as...',$
-  uname = 'save_configuration')
-  
+    value = 'Save as...',$
+    uname = 'save_configuration')
+    
   clean = widget_button(config_menu,$
-  /separator,$
- value = 'No config file for next restart !',$
-  uname = 'remove_configuration_file')
- 
-
+    /separator,$
+    value = 'No config file for next restart !',$
+    uname = 'remove_configuration_file')
+    
+    
   structure = {with_launch_button: (*global).with_launch_switch}
   
   MakeGuiMainTab, $
@@ -195,14 +195,14 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   WIDGET_CONTROL, id, set_droplist_select= $
     (*global).InitialData1d3DContrastDropList
   id = WIDGET_INFO(Main_base,$
-  Find_by_Uname='normalization_loadct_1d_3d_droplist')
+    Find_by_Uname='normalization_loadct_1d_3d_droplist')
   WIDGET_CONTROL, id, set_droplist_select= $
     (*global).InitialNorm1d3DContrastDropList
   id = WIDGET_INFO(Main_base,Find_by_Uname='data_loadct_2d_3d_droplist')
   WIDGET_CONTROL, id, set_droplist_select= $
     (*global).InitialData2d3DContrastDropList
   id = WIDGET_INFO(Main_base,$
-  Find_by_Uname='normalization_loadct_2d_3d_droplist')
+    Find_by_Uname='normalization_loadct_2d_3d_droplist')
   WIDGET_CONTROL, id, set_droplist_select= $
     (*global).InitialNorm2d3DContrastDropList
     
@@ -215,7 +215,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   WIDGET_CONTROL, id, set_value=file_name
   
   IF ((*global).ucams EQ 'j35') THEN BEGIN
-      id = WIDGET_INFO(MAIN_BASE,find_by_uname='reduce_cmd_line_preview')
+    id = WIDGET_INFO(MAIN_BASE,find_by_uname='reduce_cmd_line_preview')
     WIDGET_CONTROL, id, /editable
     WIDGET_CONTROL, /CONTEXT_EVENTS
   ENDIF
@@ -229,26 +229,62 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   ;populate the list of proposal droplist (data, normalization,empty_cell)
   populate_list_of_proposal, MAIN_BASE, (*global).instrument
-
+  
   IF ((*global).CHECKING_PACKAGES EQ 'yes') THEN BEGIN
     packages_required, global, my_package ;packages_required
     checking_packages_routine, MAIN_BASE, my_package, global
-    ;update_gui_according_to_package, MAIN_BASE, my_package
+  ;update_gui_according_to_package, MAIN_BASE, my_package
   ENDIF
   
   ;load TOF config file name
   restore_config_file_name, base=MAIN_BASE, $
     config_file_name=(*global).config_file_name
-  
+    
   ;send message to log current run of application
   logger, global
   
   ;REMOVE_ME
   progress_bar, top_base=MAIN_BASE, $
-  parent_base_uname='MAIN_BASE'
+    parent_base_uname='MAIN_BASE', $
+    spin_state_nbr_steps = 4, $
+    list_working_spin_states = ['Off_Off','Off_On']
+    
+  wait, 1
   
+  update_progress_bar, base=(*global).progress_bar_base, $
+    spin_state='Off_Off', $
+    /increment
+    
+  wait, 1
   
+  update_progress_bar, base=(*global).progress_bar_base, $
+    spin_state='Off_Off', $
+    /increment
+    
+  wait, 1
   
+  update_progress_bar, base=(*global).progress_bar_base, $
+    spin_state='Off_Off', $
+    /increment
+    
+  wait, 1
+  
+  update_progress_bar, base=(*global).progress_bar_base, $
+    spin_state='Off_Off', $
+    /increment
+    
+  wait, 1
+  
+  update_progress_bar, base=(*global).progress_bar_base, $
+    /post_processing, $
+    /increment
+    
+  wait, 1
+  
+  update_progress_bar, base=(*global).progress_bar_base, $
+    /post_processing, $
+    /increment
+    
 END
 
 ;+
@@ -262,7 +298,7 @@ END
 ; :Author: j35
 ;-
 pro ref_reduction, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-  
+
   ;check instrument here
   SPAWN, 'hostname',listening
   CASE (listening) OF

@@ -43,6 +43,18 @@ PRO MapBase, Event, uname, MapStatus
   widget_control, id, map=MapStatus
 END
 
+pro map_base, event=event, base=base, uname=uname, status=status
+  compile_opt idl2
+  
+  if (keyword_set(event)) then begin
+    id = widget_info(Event.top,find_by_uname=uname)
+  endif else begin
+    id = widget_info(base,find_by_uname=uname)
+  endelse
+  widget_control, id, map=status
+  
+end
+
 ;------------------------------------------------------------------------------
 PRO SetCWBgroup, Event, uname, value
   id = widget_info(Event.top,find_by_uname=uname)
