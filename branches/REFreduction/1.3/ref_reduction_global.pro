@@ -74,6 +74,8 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     current_tof_config_file_name: '', $
     tof_config_path: '~/',$
   
+    progress_bar_base: 0L, $
+  
     mouse_debugging:   MOUSE_DEBUGGING,$
     debugging_version: DEBUGGING_VERSION,$
     debugging_on_mac:  DEBUGGING_ON_MAC,$
