@@ -48,7 +48,16 @@ pro command_line_generator_for_ref_m_broad_peak, event
   ;get global structure
   WIDGET_CONTROL,event.top,get_uvalue=global
   
-  pixel_min_max = (*global).broad_peak_pixel_range
+  ;pixel_min_max = (*global).broad_peak_pixel_range
+  pixel_min = fix(getValue(event=event, $
+  uname='data_d_selection_roi_ymin_cw_field'))
+  pixel_max = fix(getValue(event=event, $
+  uname='data_d_selection_roi_ymax_cw_field'))
+  
+  _pixel_min = min([pixel_min, pixel_max], max=_pixel_max) 
+  
+  pixel_min_max = [_pixel_min, _pixel_max]
+  (*global).broad_peak_pixel_range = pixel_min_max
   
   ;stop right now if the user did not select a data peak ROI
   if (pixel_min_max[0] eq -1) then begin
