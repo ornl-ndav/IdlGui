@@ -56,7 +56,19 @@ pro create_name_of_tmp_geometry_file, event
   
 end
 
+;+
+; :Description:
+;    Run the command line for REF_M instrument
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
 pro run_command_line_ref_m, event
+compile_opt idl2
 
   ;get global structure
   id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -87,33 +99,6 @@ pro run_command_line_ref_m, event
   ;indicate initialization with hourglass icon
   WIDGET_CONTROL,/hourglass
   
-;  IF (~isWithDataInstrumentGeometryOverwrite(Event)) then begin
-;  
-;    geo_cmd = (*global).ts_geom
-;    
-;    geometry_file = getgeometry_file(event)
-;    geo_cmd += ' ' + geometry_file
-;    
-;    cvinfo_file = getcvinfo_file(event)
-;    geo_cmd += ' -m ' + cvinfo_file
-;    
-;    ;get dirpix and refpix values
-;    dirpix = float(getTextFieldValue(event,'info_dirpix'))
-;    refpix = float(getTextFieldValue(event,'info_refpix'))
-;    
-;    geo_cmd += ' -D DIRPIX=' + strcompress(dirpix,/remove_all)
-;    geo_cmd += ' -D REFPIX=' + strcompress(refpix,/remove_all)
-;    geo_cmd += ' -o ' + (*global).tmp_geometry_file
-;    cmd_text = 'Running geometry generator:'
-;    putLogBookMessage, Event, cmd_text, Append=1
-;    cmd_text = '-> ' + geo_cmd
-;    putLogBookMessage, Event, cmd_text, Append=1
-;    SPAWN, geo_cmd, listening, err_listening
-;    status_text = 'Create temp. geometry .... DONE'
-;    putTextFieldValue, event, 'data_reduction_status_text_field', status_text, 0
-;    
-;  endif
-
   sz = N_ELEMENTS(cmd)
   bash_cmd_array = cmd
   first_ref_m_file_to_plot = -1
@@ -209,3 +194,35 @@ pro run_command_line_ref_m, event
   (*global).first_ref_m_file_to_plot = first_ref_m_file_to_plot
   
 END
+
+;+
+; :Description:
+;    Run the reduction for each pixel of the selection when using the
+;    mode "Broad reflective peak" mode
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro run_command_line_ref_m_broad_peak, event
+compile_opt idl2
+
+widget_control, event.top, get_uvalue=global
+
+cmd = (*(*global).cmd_broad_mode)
+data_spin_state = (*(*global).data_spin_state_broad_mode)
+spin_state_nbr_steps = n_elements(data_spin_state)    
+    
+help, cmd
+
+progress_bar, event=event, $
+    parent_base_uname='MAIN_BASE', $
+    spin_state_nbr_steps = spin_state_nbr_steps, $
+    list_working_spin_states = data_spin_state
+
+end
+
+

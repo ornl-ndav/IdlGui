@@ -75,7 +75,7 @@ pro command_line_generator_for_ref_m_broad_peak, event
   list_of_output_file_name = strarr(nbr_spin_states, nbr_pixels)
   
   ;size of the command line array
-  cmd = strarr(nbr_spin_states * nbr_pixels)
+  cmd = strarr(nbr_spin_states, nbr_pixels)
   
   ;now that we have a Data peak ROI selected, we can build the command line
   StatusMessage = 0 ;will increase by 1 each time a field is missing
@@ -133,9 +133,10 @@ pro command_line_generator_for_ref_m_broad_peak, event
       'Off_On','On_Off','On_On']
     data_spin_state_path = list_data_path[spin_state_selected_index]
     data_spin_state      = spin_state[spin_state_selected_index]
+    (*(*global).data_spin_state_broad_mode) = data_spin_state
     
   endelse
-    
+  
   _index_spin_state = 0  ;up to nbr_spin_states
   ;while (index_spin_state lt nbr_spin_states) do begin
   while (_index_spin_state lt nbr_spin_states) do begin
@@ -145,29 +146,32 @@ pro command_line_generator_for_ref_m_broad_peak, event
     
       _index = _index_spin_state * nbr_pixels + _index_pixel_range
       
-      ;*****DATA*****************************************************************
+      ;*****DATA***************************************************************
       ;get Data run numbers text field
       data_run_numbers = getTextFieldValue(Event, 'reduce_data_runs_text_field')
       if (data_run_numbers NE '') then begin
-        cmd[_index] += ' ' + data_run_numbers
+        cmd[_index_spin_state, _index_pixel_range] += ' ' + data_run_numbers
       endif else begin
-        cmd[_index] += ' ?'
+        cmd[_index_spin_state, _index_pixel_range] += ' ?'
       endelse
       
-      cmd[_index] += ' ' + (*global).data_path_flag
-      cmd[_index] += '=/' + data_spin_state_path[_index_spin_state] + '/'
-      cmd[_index] += (*global).data_path_flag_suffix
-      
+      cmd[_index_spin_state, _index_pixel_range] += ' ' + $
+        (*global).data_path_flag
+      cmd[_index_spin_state, _index_pixel_range] += '=/' + $
+        data_spin_state_path[_index_spin_state] + '/'
+      cmd[_index_spin_state, _index_pixel_range] += $
+        (*global).data_path_flag_suffix
+        
       ;get data ROI file
       data_roi_file = getTextFieldValue(Event, $
         'reduce_data_region_of_interest_file_name')
       data_roi_file = data_roi_file[0]
       
-      cmd[_index] += ' --data-roi-file='
+      cmd[_index_spin_state, _index_pixel_range] += ' --data-roi-file='
       IF (data_roi_file NE '') THEN BEGIN
-        cmd[_index] += data_roi_file
+        cmd[_index_spin_state, _index_pixel_range] += data_roi_file
       ENDIF ELSE BEGIN
-        cmd[_index]        += '?'
+        cmd[_index_spin_state, _index_pixel_range]        += '?'
       ENDELSE
       
       if (isDataWithBackground(Event)) then begin ;with background substraction
@@ -186,16 +190,17 @@ pro command_line_generator_for_ref_m_broad_peak, event
             'data_exclusion_high_bin_text', $
             STRCOMPRESS(ymax[0],/REMOVE_ALL), 0
             
-          cmd[_index] += ' --data-peak-excl='
+          cmd[_index_spin_state, _index_pixel_range] += ' --data-peak-excl='
           ;get data peak exclusion
           data_peak_exclusion_min = $
-            STRCOMPRESS(getTextFieldValue(Event,'data_exclusion_low_bin_text'), $
+            STRCOMPRESS(getTextFieldValue(Event, $
+            'data_exclusion_low_bin_text'), $
             /remove_all)
           IF (data_peak_exclusion_min NE '') THEN BEGIN
-            cmd[_index] += $
+            cmd[_index_spin_state, _index_pixel_range] += $
               STRCOMPRESS(data_peak_exclusion_min,/REMOVE_ALL)
           ENDIF ELSE BEGIN
-            cmd[_index]         += '?'
+            cmd[_index_spin_state, _index_pixel_range]         += '?'
           ENDELSE
           
           data_peak_exclusion_max = $
@@ -203,10 +208,10 @@ pro command_line_generator_for_ref_m_broad_peak, event
             'data_exclusion_high_bin_text'),$ $
             /REMOVE_ALL)
           IF (data_peak_exclusion_max NE '') THEN BEGIN
-            cmd[_index] += ' ' + $
+            cmd[_index_spin_state, _index_pixel_range] += ' ' + $
               STRCOMPRESS(data_peak_exclusion_max,/REMOVE_ALL)
           ENDIF ELSE BEGIN
-            cmd[_index]         += ' ?'
+            cmd[_index_spin_state, _index_pixel_range]         += ' ?'
           ENDELSE
           
           ;Be sure that the following statement
@@ -228,15 +233,15 @@ pro command_line_generator_for_ref_m_broad_peak, event
           ;get value of back file from data base
           BackFile = getTextFieldValue(Event,'data_back_selection_file_value')
           BackFile = BackFile[0]
-          cmd[_index] += ' --dbkg-roi-file='
+          cmd[_index_spin_state, _index_pixel_range] += ' --dbkg-roi-file='
           ;get data ROI file
           data_roi_file = $
             getTextFieldValue(Event, $
             'data_back_selection_file_value')
           IF (data_roi_file NE '') THEN BEGIN
-            cmd[_index] += data_roi_file
+            cmd[_index_spin_state, _index_pixel_range] += data_roi_file
           ENDIF ELSE BEGIN
-            cmd[_index]        += '?'
+            cmd[_index_spin_state, _index_pixel_range]        += '?'
           ENDELSE
           
         ENDELSE
@@ -248,7 +253,7 @@ pro command_line_generator_for_ref_m_broad_peak, event
         ;activate DATA Intermediate Plots
         MapBase, Event, 'reduce_plot2_base', 0
       ENDIF ELSE BEGIN
-        cmd[_index] += ' --no-bkg'
+        cmd[_index_spin_state, _index_pixel_range] += ' --no-bkg'
         MapBase, Event, 'reduce_plot2_base', 1
       END
       
@@ -285,8 +290,9 @@ pro command_line_generator_for_ref_m_broad_peak, event
           
         ENDELSE
         
-        cmd[_index] += ' --tof-cut-min=' + tof_min
-        
+        cmd[_index_spin_state, _index_pixel_range] += ' --tof-cut-min=' + $
+          tof_min
+          
       ENDIF
       
       tof_max = STRCOMPRESS(getTextFieldValue(Event,'tof_cutting_max'),$
@@ -321,7 +327,8 @@ pro command_line_generator_for_ref_m_broad_peak, event
           
         ENDELSE
         
-        cmd[_index] += ' --tof-cut-max=' + tof_max
+        cmd[_index_spin_state, _index_pixel_range] += ' --tof-cut-max=' + $
+          tof_max
       ENDIF
       
       ;calculate sangle according to the current pixel used
@@ -330,15 +337,15 @@ pro command_line_generator_for_ref_m_broad_peak, event
       calculate_sangle, event, refpix=_pixel, sangle=sangle
       
       ;scattering angle flag
-      cmd[_index] += ' --scatt-angle='
+      cmd[_index_spin_state, _index_pixel_range] += ' --scatt-angle='
       rad_sangle = sangle
       rad_sangle_x2 = strcompress(2. * float(rad_sangle),/remove_all)
       rad_sangle_error = strcompress(0.,/remove_all)
       rad_sangle_units = 'units=radians'
-      cmd[_index] += rad_sangle_x2 + ',' + $
+      cmd[_index_spin_state, _index_pixel_range] += rad_sangle_x2 + ',' + $
         rad_sangle_error + ',' + rad_sangle_units
         
-      ;*****NORMALIZATION********************************************************
+      ;*****NORMALIZATION******************************************************
       ;check if user wants to use normalization or not
       if (isReductionWithNormalization(Event)) then begin
       
@@ -350,22 +357,24 @@ pro command_line_generator_for_ref_m_broad_peak, event
         norm_run_numbers = $
           getTextFieldValue(Event, $
           'reduce_normalization_runs_text_field')
-        cmd[_index] += ' --norm='
+        cmd[_index_spin_state, _index_pixel_range] += ' --norm='
         if (norm_run_numbers NE '') then begin
-          cmd[_index] += norm_run_numbers
+          cmd[_index_spin_state, _index_pixel_range] += norm_run_numbers
         endif else begin
-          cmd[_index] += '?'
+          cmd[_index_spin_state, _index_pixel_range] += '?'
         endelse
         
         ;normalization path
         value = getButtonValue(event,'normalization_pola_state')
         if (value eq 1) then begin
-          cmd[_index] += (*global).norm_path_flag
+          cmd[_index_spin_state, _index_pixel_range] += $
+            (*global).norm_path_flag
         endif else begin
-          cmd[_index] += ' --norm-data-paths'
-          cmd[_index] += '=/' + $
+          cmd[_index_spin_state, _index_pixel_range] += ' --norm-data-paths'
+          cmd[_index_spin_state, _index_pixel_range] += '=/' + $
             data_spin_state_path[_index] + '/'
-          cmd[_index] += (*global).data_path_flag_suffix
+          cmd[_index_spin_state, _index_pixel_range] += $
+            (*global).data_path_flag_suffix
         endelse
         ActivateWidget, Event, 'norm_pola_base', norm_pola_sensitive
         
@@ -374,11 +383,12 @@ pro command_line_generator_for_ref_m_broad_peak, event
           getTextFieldValue(Event,$
           'reduce_normalization_region_of_interest_file_name')
         norm_roi_file = norm_roi_file[0]
-        cmd[_index] += '  --norm-roi-file='
+        cmd[_index_spin_state, _index_pixel_range] += '  --norm-roi-file='
         IF (norm_roi_file NE '') THEN BEGIN
-          cmd[_index] += STRCOMPRESS(norm_roi_file,/remove_all)
+          cmd[_index_spin_state, _index_pixel_range] += $
+            STRCOMPRESS(norm_roi_file,/remove_all)
         ENDIF ELSE BEGIN
-          cmd[_index] += '?'
+          cmd[_index_spin_state, _index_pixel_range] += '?'
         ENDELSE
         
         if (isNormWithBackground(Event)) then begin ;without background
@@ -388,8 +398,10 @@ pro command_line_generator_for_ref_m_broad_peak, event
           IF (PeakBaseStatus EQ 1) THEN BEGIN ;exclusion peak
           
             ;bring values of ymin and ymax from norm base
-            ymin = getTextFieldValue(Event,'norm_d_selection_peak_ymin_cw_field')
-            ymax = getTextFieldValue(Event,'norm_d_selection_peak_ymax_cw_field')
+            ymin = getTextFieldValue(Event, $
+              'norm_d_selection_peak_ymin_cw_field')
+            ymax = getTextFieldValue(Event, $
+              'norm_d_selection_peak_ymax_cw_field')
             putTextFieldValue, Event, $
               'norm_exclusion_low_bin_text', $
               STRCOMPRESS(ymin[0],/REMOVE_ALL), 0
@@ -397,17 +409,18 @@ pro command_line_generator_for_ref_m_broad_peak, event
               'norm_exclusion_high_bin_text', $
               STRCOMPRESS(ymax[0],/REMOVE_ALL), 0
               
-            cmd[_index] += ' --norm-peak-excl='
+            cmd[_index_spin_state, _index_pixel_range] += ' --norm-peak-excl='
             ;get norm peak exclusion
             norm_peak_exclusion_min = $
               STRCOMPRESS(getTextFieldValue(Event,$
               'norm_exclusion_low_bin_text'), $
               /REMOVE_ALL)
             IF (norm_peak_exclusion_min NE '') THEN BEGIN
-              cmd[_index] += STRCOMPRESS(norm_peak_exclusion_min,$
+              cmd[_index_spin_state, _index_pixel_range] += $
+                STRCOMPRESS(norm_peak_exclusion_min,$
                 /REMOVE_ALL)
             ENDIF ELSE BEGIN
-              cmd[_index]         += '?'
+              cmd[_index_spin_state, _index_pixel_range]         += '?'
             ENDELSE
             
             norm_peak_exclusion_max = $
@@ -415,10 +428,10 @@ pro command_line_generator_for_ref_m_broad_peak, event
               'norm_exclusion_high_bin_text'),$ $
               /REMOVE_ALL)
             IF (norm_peak_exclusion_max NE '') THEN BEGIN
-              cmd[_index] += ' ' + $
+              cmd[_index_spin_state, _index_pixel_range] += ' ' + $
                 STRCOMPRESS(norm_peak_exclusion_max,/REMOVE_ALL)
             ENDIF ELSE BEGIN
-              cmd[_index]         += ' ?'
+              cmd[_index_spin_state, _index_pixel_range]         += ' ?'
             ENDELSE
             
             ;Be sure that (Ymin_peak=Ymin_back && Ymax_peak=Ymax_back) is wrong
@@ -440,15 +453,15 @@ pro command_line_generator_for_ref_m_broad_peak, event
             ;get value of back file from norm base
             BackFile = getTextFieldValue(Event,'norm_back_selection_file_value')
             BackFile = BackFile[0]
-            cmd[_index] += ' --nbkg-roi-file='
+            cmd[_index_spin_state, _index_pixel_range] += ' --nbkg-roi-file='
             ;get norm ROI file
             norm_roi_file = $
               getTextFieldValue(Event, $
               'norm_back_selection_file_value')
             IF (norm_roi_file NE '') THEN BEGIN
-              cmd[_index] += norm_roi_file
+              cmd[_index_spin_state, _index_pixel_range] += norm_roi_file
             ENDIF ELSE BEGIN
-              cmd[_index]        += '?'
+              cmd[_index_spin_state, _index_pixel_range]        += '?'
             ENDELSE
             
           ENDELSE
@@ -459,7 +472,7 @@ pro command_line_generator_for_ref_m_broad_peak, event
         if (isNormWithBackground(Event)) then begin ;yes, with background
           MapBase, Event, 'reduce_plot5_base', 0 ;back. norm. plot is available
         endif else begin
-          cmd[_index] += ' --no-norm-bkg'
+          cmd[_index_spin_state, _index_pixel_range] += ' --no-norm-bkg'
           MapBase, Event, 'reduce_plot5_base', 1 ;back. norm. is not available
         endelse
         
@@ -473,8 +486,9 @@ pro command_line_generator_for_ref_m_broad_peak, event
       endelse                         ;end of (~isWithoutNormalization)
       
       ;get name of instrument
-      cmd[_index] += ' --inst=' + (*global).instrument
-      
+      cmd[_index_spin_state, _index_pixel_range] += ' --inst=' + $
+        (*global).instrument
+        
       ;reduction mode (per selection or per pixel selected)
       if ((*global).reduction_mode = 'one_per_pixel') then begin
       
@@ -482,26 +496,30 @@ pro command_line_generator_for_ref_m_broad_peak, event
         Q_max = getTextFieldValue(Event, 'q_max_text_field')
         Q_width = getTextfieldValue(Event, 'q_width_text_field')
         Q_scale = getQSCale(Event)
-        cmd[_index] += ' --mom-trans-bins='
+        cmd[_index_spin_state, _index_pixel_range] += ' --mom-trans-bins='
         
         if (Q_min NE '') then begin ;Q_min
-          cmd[_index] += STRCOMPRESS(Q_min,/remove_all)
+          cmd[_index_spin_state, _index_pixel_range] += $
+            STRCOMPRESS(Q_min,/remove_all)
         endif else begin
-          cmd[_index] += '?'
+          cmd[_index_spin_state, _index_pixel_range] += '?'
         endelse
         
         if (Q_max NE '') then begin ;Q_max
-          cmd[_index] += ',' + STRCOMPRESS(Q_max,/remove_all)
+          cmd[_index_spin_state, _index_pixel_range] += ',' + $
+            STRCOMPRESS(Q_max,/remove_all)
         endif else begin
-          cmd[_index] += ',?'
+          cmd[_index_spin_state, _index_pixel_range] += ',?'
         endelse
         
         if (Q_width NE '') then begin ;Q_width
-          cmd[_index] += ',' + STRCOMPRESS(Q_width,/remove_all)
+          cmd[_index_spin_state, _index_pixel_range] += ',' + $
+            STRCOMPRESS(Q_width,/remove_all)
         endif else begin
-          cmd[_index] += ',?'
+          cmd[_index_spin_state, _index_pixel_range] += ',?'
         endelse
-        cmd[_index] += ',' + Q_scale        ;Q_scale (lin or log)
+        ;Q_scale (lin or log)
+        cmd[_index_spin_state, _index_pixel_range] += ',' + Q_scale
         
       endif
       
@@ -513,59 +531,62 @@ pro command_line_generator_for_ref_m_broad_peak, event
       if (angle_value NE '' OR $    ;user wants to input the angle value and err
         angle_err NE '') then begin
         
-        cmd[_index] += ' --angle-offset='
+        cmd[_index_spin_state, _index_pixel_range] += ' --angle-offset='
         
         if (angle_value NE '') then begin ;angle_value
-          cmd[_index] += STRCOMPRESS(angle_value,/remove_all)
+          cmd[_index_spin_state, _index_pixel_range] += $
+            STRCOMPRESS(angle_value,/remove_all)
         endif else begin
-          cmd[_index] += '?'
+          cmd[_index_spin_state, _index_pixel_range] += '?'
         endelse
         
         if (angle_err NE '') then begin ;angle_err
-          cmd[_index] += ',' + STRCOMPRESS(angle_err,/remove_all)
+          cmd[_index_spin_state, _index_pixel_range] += ',' + $
+            STRCOMPRESS(angle_err,/remove_all)
         endif else begin
-          cmd[_index] += ',?'
+          cmd[_index_spin_state, _index_pixel_range] += ',?'
         endelse
         
-        cmd[_index] += ',units=' + STRCOMPRESS(angle_units,/remove_all)
-        
+        cmd[_index_spin_state, _index_pixel_range] += ',units=' + $
+          STRCOMPRESS(angle_units,/remove_all)
+          
       endif else begin
       
       endelse
       
       ;get info about filter or not
       if (~isWithFiltering(Event)) then begin ;no filtering
-        cmd[_index] += ' --no-filter'
+        cmd[_index_spin_state, _index_pixel_range] += ' --no-filter'
       endif
       
       ;get info about deltaT/T
       IF (isWithDToT(Event)) THEN BEGIN ;store deltaT over T
-        cmd[_index] += ' --store-dtot'
+        cmd[_index_spin_state, _index_pixel_range] += ' --store-dtot'
       ENDIF
       
       ;overwrite data instrument geometry file
       if (isWithDataInstrumentGeometryOverwrite(Event)) then BEGIN
-        cmd[_index] += ' --data-inst-geom='
+        cmd[_index_spin_state, _index_pixel_range] += ' --data-inst-geom='
         ;with instrument geometry
         IGFile = (*global).InstrumentDataGeometryFileName
         if (IGFile NE '') then begin ;instrument geometry file is not empty
-          cmd[_index] += IGFile
+          cmd[_index_spin_state, _index_pixel_range] += IGFile
         endif else begin
-          cmd[_index] += '?'
+          cmd[_index_spin_state, _index_pixel_range] += '?'
         endelse
       ENDIF
       
       ;overwrite norm instrument geometry file
       if (isWithNormInstrumentGeometryOverwrite(Event)) then BEGIN
         ;with instrument geometry
-        cmd[_index] += ' --norm-inst-geom='
+        cmd[_index_spin_state, _index_pixel_range] += ' --norm-inst-geom='
         IGFile = (*global).InstrumentNormGeometryFileName
         if (IGFile NE '') then begin ;instrument geometry file is not empty
-          cmd[_index] += IGFile
+          cmd[_index_spin_state, _index_pixel_range] += IGFile
           ;display last part of file name in button
           button_value = getFileNameOnly(IGFIle)
         endif else begin
-          cmd[_index] += '?'
+          cmd[_index_spin_state, _index_pixel_range] += '?'
         endelse
         
       endif
@@ -578,8 +599,9 @@ pro command_line_generator_for_ref_m_broad_peak, event
         data_spin_state[_index_spin_state],$
         pixel_range[_index_pixel_range])
       NewOutputFileName = outputPath + outputFileName
-      cmd[_index] += ' --output=' + NewOutputFileName
-      
+      cmd[_index_spin_state, _index_pixel_range] += ' --output=' + $
+        NewOutputFileName
+        
       list_of_output_file_name[_index_spin_state, _index_pixel_range] = $
         NewOutputFileName
         
@@ -591,12 +613,8 @@ pro command_line_generator_for_ref_m_broad_peak, event
   
   ;record the name of all the output files
   (*(*global).list_of_output_file_name_for_broad_mode) = $
-  list_of_output_file_name
-  
-  help, list_of_output_file_name
-  print, list_of_output_file_name
-  print
-  
+    list_of_output_file_name
+    
   ;generate intermediate plots command line
   IP_cmd = RefReduction_CommandLineIntermediatePlotsGenerator(Event)
   cmd += IP_cmd
