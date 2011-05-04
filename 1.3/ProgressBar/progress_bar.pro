@@ -112,7 +112,7 @@ pro update_progress_bar, event=event, $
   
   if (keyword_set(spin_state)) then begin
   
-    spin_state_nbr_steps = (*global_progress).spin_state_nbr_steps
+    spin_state_nbr_steps = (*global_progress).pixel_nbr_steps
     step = (*global_progress).current_step
     
     x1=0
@@ -303,10 +303,11 @@ pro progress_bar_gui, wBase, $
   button_row = widget_base(top_base,$
     /row)
     
-  cancel = widget_button(button_row,$
-    value = 'CANCEL',$
-    scr_xsize = 50,$
-    uname = 'cancel_broad_reflective_peak_mode_reduction')
+;  cancel = widget_button(button_row,$
+;    value = 'CANCEL',$
+;    sensitive=0,$
+;    scr_xsize = 50,$
+;    uname = 'cancel_broad_reflective_peak_mode_reduction')
     
   space = widget_label(button_row,$
     value = '                                             ')
@@ -371,7 +372,7 @@ end
 ; :Keywords:
 ;    main_base
 ;    event
-;    spin_state_nbr_steps  ; represents the number of pixels for each spin state
+;    pixel_nbr_steps  ; represents the number of pixels for each spin state
 ;    list_working_spin_states ; ex: ['Off_Off','Off_On']
 ;
 ; :Author: j35
@@ -379,7 +380,7 @@ end
 pro progress_bar, event=event, $
     top_base=top_base, $
     parent_base_uname = parent_base_uname, $
-    spin_state_nbr_steps = spin_state_nbr_steps, $
+    pixel_nbr_steps = pixel_nbr_steps, $
     list_working_spin_states = list_working_spin_states
   compile_opt idl2
   
@@ -407,11 +408,11 @@ pro progress_bar, event=event, $
     top_base: top_base, $
     time_init_s: systime(/seconds), $
     current_step: 1, $  ;0,1,2.... spin_state_nbr_steps
-    spin_state_nbr_steps: spin_state_nbr_steps, $
+    pixel_nbr_steps: pixel_nbr_steps, $
     global_current_step: 1, $
     post_processing_nbr_steps: n_elements(list_working_spin_states), $
     list_working_spin_states: list_working_spin_states, $
-    total_number_steps: spin_state_nbr_steps * $
+    total_number_steps: pixel_nbr_steps * $
     n_elements(list_working_spin_states), $
     global: global})
     

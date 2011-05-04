@@ -50,7 +50,7 @@ pro create_name_of_tmp_geometry_file, event
   data_run_number = strcompress((*global).data_run_number,/remove_all)
   geo_file_name = (*global).instrument + '_' + data_run_number
   geo_file_name += '_geometry.nxs'
-
+  
   tmp_geometry_file = output_path + geo_file_name
   (*global).tmp_geometry_file = tmp_geometry_file
   
@@ -68,8 +68,8 @@ end
 ; :Author: j35
 ;-
 pro run_command_line_ref_m, event
-compile_opt idl2
-
+  compile_opt idl2
+  
   ;get global structure
   id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
   WIDGET_CONTROL,id,get_uvalue=global
@@ -208,21 +208,62 @@ END
 ; :Author: j35
 ;-
 pro run_command_line_ref_m_broad_peak, event
-compile_opt idl2
-
-widget_control, event.top, get_uvalue=global
-
-cmd = (*(*global).cmd_broad_mode)
-data_spin_state = (*(*global).data_spin_state_broad_mode)
-spin_state_nbr_steps = n_elements(data_spin_state)    
-    
-help, cmd
-
-progress_bar, event=event, $
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  cmd = (*(*global).cmd_broad_mode)
+  data_spin_state = (*(*global).data_spin_state_broad_mode)
+  spin_state_nbr_steps = n_elements(data_spin_state)
+  
+  sz = size(cmd, /dim)
+  
+  nbr_spins = sz[0]
+  nbr_pixels = sz[1]
+  
+  progress_bar, event=event, $
     parent_base_uname='MAIN_BASE', $
-    spin_state_nbr_steps = spin_state_nbr_steps, $
+    pixel_nbr_steps = nbr_pixels, $
     list_working_spin_states = data_spin_state
+        
+  _index_spin=0
+  while (_index_spin lt nbr_spins) do begin
+  
+     _current_spin_state = data_spin_state[_index_spin]
+  
+    _index_pixel=0
+    while(_index_pixel lt nbr_pixels) do begin
+    
+    wait, 0.2
+    
+    update_progress_bar, base=(*global).progress_bar_base, $
+    spin_state=_current_spin_state, $
+    /increment
+    
+    if ((*global).stop_broad_reduction) then return
+    
+      _index_pixel++
+    endwhile
+    
+    _index_spin++
+  endwhile
 
+  _index_spin=0
+  while (_index_spin lt nbr_spins) do begin
+ 
+    wait, 0.2
+
+  update_progress_bar, base=(*global).progress_bar_base, $
+    /post_processing, $
+    /increment
+
+    if ((*global).stop_broad_reduction) then return
+  
+  _index_spin++
+  endwhile
+  
+  
+  
 end
 
 
