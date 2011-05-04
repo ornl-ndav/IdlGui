@@ -159,7 +159,7 @@ pro update_progress_bar, event=event, $
       putValue, base=base, 'time_left_units_uname', $
         's  (recalculated after each step)'
       putValue, base=base, 'time_left_value_uname', $
-        strcompress(_time_left,/remove_all)
+        strcompress(fix(_time_left),/remove_all)
     endelse
     
   endif else begin
@@ -386,6 +386,7 @@ pro progress_bar, event=event, $
   if (keyword_set(event)) then begin
     id = WIDGET_INFO(Event.top, FIND_BY_UNAME=parent_base_uname)
     WIDGET_CONTROL,Event.top,GET_UVALUE=global
+    top_base = 0L
   endif else begin
     id = widget_info(top_base, find_by_uname=parent_base_uname)
     widget_control, top_base, get_uvalue=global

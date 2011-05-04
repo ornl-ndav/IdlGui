@@ -243,48 +243,16 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;send message to log current run of application
   logger, global
   
-  ;REMOVE_ME
-  progress_bar, top_base=MAIN_BASE, $
-    parent_base_uname='MAIN_BASE', $
-    spin_state_nbr_steps = 4, $
-    list_working_spin_states = ['Off_Off','Off_On']
-    
-  wait, 1
-  
-  update_progress_bar, base=(*global).progress_bar_base, $
-    spin_state='Off_Off', $
-    /increment
-    
-  wait, 1
-  
-  update_progress_bar, base=(*global).progress_bar_base, $
-    spin_state='Off_Off', $
-    /increment
-    
-  wait, 1
-  
-  update_progress_bar, base=(*global).progress_bar_base, $
-    spin_state='Off_Off', $
-    /increment
-    
-  wait, 1
-  
-  update_progress_bar, base=(*global).progress_bar_base, $
-    spin_state='Off_Off', $
-    /increment
-    
-  wait, 1
-  
-  update_progress_bar, base=(*global).progress_bar_base, $
-    /post_processing, $
-    /increment
-    
-  wait, 1
-  
-  update_progress_bar, base=(*global).progress_bar_base, $
-    /post_processing, $
-    /increment
-    
+;  ;REMOVE_ME
+;  progress_bar, top_base=MAIN_BASE, $
+;    parent_base_uname='MAIN_BASE', $
+;    spin_state_nbr_steps = 4, $
+;    list_working_spin_states = ['Off_Off','Off_On']
+;    
+;  update_progress_bar, base=(*global).progress_bar_base, $
+;    spin_state='Off_Off', $
+;    /increment
+
 END
 
 ;+

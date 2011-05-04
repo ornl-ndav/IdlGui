@@ -76,6 +76,7 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
   
     progress_bar_base: 0L, $
     stop_broad_reduction: 0b, $ ;can be changed to 1b in progress bar base
+    data_spin_state_broad_mode: ptr_new(0L), $ ['Off_Off','Off_On'] for ex.
   
     mouse_debugging:   MOUSE_DEBUGGING,$
     debugging_version: DEBUGGING_VERSION,$
