@@ -44,14 +44,22 @@
 pro progress_bar_event, Event
   compile_opt idl2
   
+  widget_control, event.top, get_uvalue=global_progress
+  global = (*global_progress).global
+  
   case Event.id of
   
-    ;cancel tof selected
+    ;cancel broad reduction
     widget_info(event.top, $
-      find_by_uname='cancel_tof_selection_selected_uname'): begin
-      widget_control, event.top, get_uvalue=global_info
-      top_base = (*global_info).top_base
-      widget_control, top_base, /destroy
+      find_by_uname='cancel_broad_reflective_peak_mode_reduction'): begin
+      (*global).stop_broad_reduction = 1b
+    end
+    
+    ;done button (will close the base)
+    widget_info(event.top, $
+    find_by_uname='close_progress_bar_base_uname'): begin
+      id = widget_info(event.top, find_by_uname='broad_mode_progress_bar_base')
+      widget_control, id, /destroy
     end
     
     else:
@@ -155,7 +163,7 @@ pro update_progress_bar, event=event, $
     endelse
     
   endif else begin
- 
+  
     map_base, base=base, uname='time_left_base_uname', status=0
     
     post_processing_nbr_steps = (*global_progress).post_processing_nbr_steps
@@ -288,6 +296,26 @@ pro progress_bar_gui, wBase, $
     uname = 'time_left_units_uname',$
     /align_left, $
     value = 'mn (recalculated after each step)')
+    
+  space = widget_label(top_base,$
+    value = ' ')
+    
+  button_row = widget_base(top_base,$
+    /row)
+    
+  cancel = widget_button(button_row,$
+    value = 'CANCEL',$
+    scr_xsize = 50,$
+    uname = 'cancel_broad_reflective_peak_mode_reduction')
+    
+  space = widget_label(button_row,$
+    value = '                                             ')
+    
+  done = widget_button(button_row,$
+    value = 'CLOSE',$
+    scr_xsize = 100,$
+    uname = 'close_progress_bar_base_uname',$
+    sensitive=1)
     
 end
 
