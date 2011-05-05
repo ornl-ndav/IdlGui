@@ -259,7 +259,9 @@ pro run_command_line_ref_m_broad_peak, event
     while(_index_pixel lt nbr_pixels) do begin
     
       print, cmd[_index_spin, _index_pixel]
-      wait, 0.2
+      spawn, cmd, result, error_result
+      help, result
+      help, error_resut
       print
       
       update_progress_bar, base=(*global).progress_bar_base, $
