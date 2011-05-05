@@ -249,6 +249,8 @@ pro run_command_line_ref_m_broad_peak, event
     _index_pixel++
   endwhile
   
+  return
+  
   ;main part of reduction
   _index_spin=0
   while (_index_spin lt nbr_spins) do begin
@@ -261,7 +263,7 @@ pro run_command_line_ref_m_broad_peak, event
       print, cmd[_index_spin, _index_pixel]
       spawn, cmd, result, error_result
       help, result
-      help, error_resut
+      help, error_result
       print
       
       update_progress_bar, base=(*global).progress_bar_base, $
