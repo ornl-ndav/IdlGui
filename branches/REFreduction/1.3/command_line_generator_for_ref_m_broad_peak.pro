@@ -50,11 +50,11 @@ pro command_line_generator_for_ref_m_broad_peak, event
   
   ;pixel_min_max = (*global).broad_peak_pixel_range
   pixel_min = fix(getValue(event=event, $
-  uname='data_d_selection_roi_ymin_cw_field'))
+    uname='data_d_selection_roi_ymin_cw_field'))
   pixel_max = fix(getValue(event=event, $
-  uname='data_d_selection_roi_ymax_cw_field'))
-  
-  _pixel_min = min([pixel_min, pixel_max], max=_pixel_max) 
+    uname='data_d_selection_roi_ymax_cw_field'))
+    
+  _pixel_min = min([pixel_min, pixel_max], max=_pixel_max)
   
   pixel_min_max = [_pixel_min, _pixel_max]
   (*global).broad_peak_pixel_range = pixel_min_max
@@ -82,6 +82,7 @@ pro command_line_generator_for_ref_m_broad_peak, event
   ;this array will store for each spin state and each pixel the name
   ;of the output file name
   list_of_output_file_name = strarr(nbr_spin_states, nbr_pixels)
+  list_of_tmp_data_roi_file_name_for_broad_mode = strarr(nbr_pixels)
   
   ;size of the command line array
   cmd = strarr(nbr_spin_states, nbr_pixels)
@@ -171,17 +172,20 @@ pro command_line_generator_for_ref_m_broad_peak, event
       cmd[_index_spin_state, _index_pixel_range] += $
         (*global).data_path_flag_suffix
         
-      ;get data ROI file
-      data_roi_file = getTextFieldValue(Event, $
-        'reduce_data_region_of_interest_file_name')
-      data_roi_file = data_roi_file[0]
-      
       cmd[_index_spin_state, _index_pixel_range] += ' --data-roi-file='
-      IF (data_roi_file NE '') THEN BEGIN
-        cmd[_index_spin_state, _index_pixel_range] += data_roi_file
-      ENDIF ELSE BEGIN
-        cmd[_index_spin_state, _index_pixel_range]        += '?'
-      ENDELSE
+      if (_index_spin_state eq 0) then begin
+        ;get data ROI file (must create 1 temporary ROI file for each pixel).
+        ;Those temporary files will be created only at the beginning of the
+        ;reduction but the names of those ROI will be created here.
+        data_roi_file = '~/tmp_data_roi_for_pixel_' + $
+          strcompress(pixel_range[_index_pixel_range],/remove_all) + '.dat'
+        list_of_tmp_data_roi_file_name_for_broad_mode[_index_pixel_range] = $
+          data_roi_file
+      endif else begin
+        data_roi_file = $
+          list_of_tmp_data_roi_file_name_for_broad_mode[_index_pixel_range]
+      endelse
+      cmd[_index_spin_state, _index_pixel_range] += data_roi_file
       
       if (isDataWithBackground(Event)) then begin ;with background substraction
       
@@ -623,6 +627,9 @@ pro command_line_generator_for_ref_m_broad_peak, event
   ;record the name of all the output files
   (*(*global).list_of_output_file_name_for_broad_mode) = $
     list_of_output_file_name
+    
+  (*(*global).list_of_tmp_data_roi_file_name_for_broad_mode) = $
+    list_of_tmp_data_roi_file_name_for_broad_mode
     
   ;generate intermediate plots command line
   IP_cmd = RefReduction_CommandLineIntermediatePlotsGenerator(Event)
