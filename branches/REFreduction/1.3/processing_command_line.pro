@@ -64,7 +64,8 @@ PRO REFreductionEventcb_ProcessingCommandLine, Event
       endif
       
       ;Load main data reduction File and  plot it
-      putTextFieldValue, Event, 'plot_tab_input_file_text_field', FullOutputFileName
+      putTextFieldValue, Event, 'plot_tab_input_file_text_field', $
+      FullOutputFileName
       ;move to new tab
       id1 = WIDGET_INFO(Event.top, FIND_BY_UNAME='main_tab')
       WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;plot tab
@@ -94,14 +95,16 @@ PRO REFreductionEventcb_ProcessingCommandLine, Event
           sz = n_elements(list_of_output_file_name)
           index = 0
           while (index lt sz) do begin
-            cleanup_reduce_data, event, file_name = list_of_output_file_name[index]
+            cleanup_reduce_data, event, file_name = $
+            list_of_output_file_name[index]
             index++
           endwhile
         endif
         
         FullOutputFileName = list_of_output_file_name[first_ref_m_file_to_plot]
         ;Load main data reduction File and  plot it
-        putTextFieldValue, Event, 'plot_tab_input_file_text_field', FullOutputFileName
+        putTextFieldValue, Event, 'plot_tab_input_file_text_field', $
+        FullOutputFileName
         ;move to new tab
         id1 = WIDGET_INFO(Event.top, FIND_BY_UNAME='main_tab')
         WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;plot tab
@@ -111,11 +114,7 @@ PRO REFreductionEventcb_ProcessingCommandLine, Event
       
     endif else begin ;if 'one_per_pixel'
     
-    
     run_command_line_ref_m_broad_peak, event
-    
-    
-    
     
     endelse
     
