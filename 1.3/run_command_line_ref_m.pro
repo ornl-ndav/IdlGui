@@ -289,13 +289,19 @@ pro run_command_line_ref_m_broad_peak, event
   
   ;phase 2 of post-processing
   ;removing the temporary data ROI files
-  print, 'Cleaning temporary data ROI files'
-  wait, 0.2
+   _index_pixel=0
+  while (_index_pixel lt nbr_pixels) do begin
+  
+      _cmd = 'rm ' + list_of_tmp_data_roi_file_name[_index_pixel]
+      spawn, _cmd
+      
+    _index_pixel++
+  endwhile
+  
   update_progress_bar, base=(*global).progress_bar_base, $
     /post_processing, $
     /increment
-    
-    
+        
 end
 
 
