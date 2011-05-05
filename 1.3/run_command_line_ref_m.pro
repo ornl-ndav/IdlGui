@@ -234,7 +234,9 @@ pro run_command_line_ref_m_broad_peak, event
     _index_pixel=0
     while(_index_pixel lt nbr_pixels) do begin
     
+    print, cmd[_index_spin, _index_pixel]
     wait, 0.2
+    print
     
     update_progress_bar, base=(*global).progress_bar_base, $
     spin_state=_current_spin_state, $
@@ -251,6 +253,7 @@ pro run_command_line_ref_m_broad_peak, event
   _index_spin=0
   while (_index_spin lt nbr_spins) do begin
  
+    print, 'Merging files for spin state: ' , data_spin_state[_index_spin]
     wait, 0.2
 
   update_progress_bar, base=(*global).progress_bar_base, $
@@ -261,8 +264,6 @@ pro run_command_line_ref_m_broad_peak, event
   
   _index_spin++
   endwhile
-  
-  
   
 end
 

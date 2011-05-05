@@ -311,7 +311,7 @@ pro progress_bar_gui, wBase, $
 ;    uname = 'cancel_broad_reflective_peak_mode_reduction')
     
   space = widget_label(button_row,$
-    value = '                                             ')
+    value = '                        ')
     
   done = widget_button(button_row,$
     value = 'CLOSE',$
