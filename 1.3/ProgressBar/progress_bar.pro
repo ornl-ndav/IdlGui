@@ -57,7 +57,7 @@ pro progress_bar_event, Event
     
     ;done button (will close the base)
     widget_info(event.top, $
-    find_by_uname='close_progress_bar_base_uname'): begin
+      find_by_uname='close_progress_bar_base_uname'): begin
       id = widget_info(event.top, find_by_uname='broad_mode_progress_bar_base')
       widget_control, id, /destroy
     end
@@ -78,6 +78,7 @@ end
 ;    base
 ;    spin_state      = 'Off_Off'|'Off_On'|'On_Off'|'On_On'
 ;    post_processing = 1b|0b
+;    pre_processing  = 1b|0b
 ;    increment       = 1b|ob
 ;
 ; :Author: j35
@@ -86,14 +87,21 @@ pro update_progress_bar, event=event, $
     base=base, $
     spin_state=spin_state, $
     post_processing=post_processing, $
+    pre_processing=pre_processing, $
     increment=increment
   compile_opt idl2
   
   if (keyword_set(spin_state)) then begin
     draw_uname = 'progress_bar_of_spin_state_' + spin_state
-  endif else begin
+  endif
+  
+  if (keyword_set(post_processing)) then begin
     draw_uname = 'post_processing_uname'
-  endelse
+  endif
+  
+  if (keyword_set(pre_processing)) then begin
+    draw_uname = 'pre_processing_uname'
+  endif
   
   if (keyword_set(event)) then begin
     widget_control, event.top, get_uvalue=global_progress
@@ -111,8 +119,11 @@ pro update_progress_bar, event=event, $
   xsize = geometry.xsize
   ysize = geometry.ysize
   
+  ;spin state processing ******************************************************
   if (keyword_set(spin_state)) then begin
   
+    map_base, base=base, uname='time_left_base_uname', status=1
+    
     spin_state_nbr_steps = (*global_progress).pixel_nbr_steps
     step = (*global_progress).current_step
     
@@ -163,7 +174,11 @@ pro update_progress_bar, event=event, $
         strcompress(fix(_time_left),/remove_all)
     endelse
     
-  endif else begin
+  endif
+  
+  
+  ;post processing ************************************************************
+  if (keyword_set(post_processing)) then begin
   
     map_base, base=base, uname='time_left_base_uname', status=0
     
@@ -175,7 +190,7 @@ pro update_progress_bar, event=event, $
     y1=0
     y2=ysize
     
-    color=fsc_color("red")
+    color=fsc_color("pink")
     Polyfill, [x1, x1, x2, x2, x1], [y1, y2, y2, y1, y1], /Device, Color=color
     
     ;get percentage
@@ -190,7 +205,38 @@ pro update_progress_bar, event=event, $
     endelse
     (*global_progress).current_step = step
     
-  endelse
+  endif
+  
+  
+  ;pre processing ************************************************************
+  if (keyword_set(pre_processing)) then begin
+  
+    map_base, base=base, uname='time_left_base_uname', status=0
+    
+    pre_processing_nbr_steps = (*global_progress).pre_processing_nbr_steps
+    step = (*global_progress).current_pre_step
+    
+    x1=0
+    x2=(float(xsize)/float(pre_processing_nbr_steps))*float(step)
+    y1=0
+    y2=ysize
+    
+    color=fsc_color("pink")
+    Polyfill, [x1, x1, x2, x2, x1], [y1, y2, y2, y1, y1], /Device, Color=color
+    
+    ;get percentage
+    percent = (float(step) / float(pre_processing_nbr_steps)) * 100.
+    text = strcompress(fix(percent),/remove_all) + '%'
+    XYouts, x2, y2/2., text, color=fsc_color("blue"), /device
+    
+    if (step eq pre_processing_nbr_steps) then begin
+      step=0
+    endif else begin
+      step++
+    endelse
+    (*global_progress).current_pre_step = step
+    
+  endif
   
 end
 
@@ -237,14 +283,19 @@ pro progress_bar_gui, wBase, $
   top_base = widget_base(wBase,$
     /column)
     
-  ;  row1 = widget_base(top_base,$
-  ;    /row)
-  ;  label1 = widget_label(row1,$
-  ;    value = 'Spin States')
-  ;  space = widget_label(row1,$
-  ;    value = '                       ')
-  ;  label2 = widget_label(row1,$
-  ;    value = 'Progress')
+  row1 = widget_base(top_base,$
+    /row)
+  label = widget_label(row1,$
+    value = 'Pre Processing')
+  space = widget_label(row1,$
+    value = '   ')
+  post_processing = widget_draw(row1,$
+    scr_xsize = 250,$
+    scr_ysize = 35,$
+    uname = 'pre_processing_uname')
+    
+  space = widget_label(top_base,$
+    value = ' ')
     
   ;1 row for each spin state
   spin_list = list_working_spin_states
@@ -286,6 +337,7 @@ pro progress_bar_gui, wBase, $
     
   row4 = widget_base(top_base,$
     uname = 'time_left_base_uname',$
+    map=0,$
     /row)
   label = widget_label(row4,$
     value = 'Estimated time left:')
@@ -304,11 +356,11 @@ pro progress_bar_gui, wBase, $
   button_row = widget_base(top_base,$
     /row)
     
-;  cancel = widget_button(button_row,$
-;    value = 'CANCEL',$
-;    sensitive=0,$
-;    scr_xsize = 50,$
-;    uname = 'cancel_broad_reflective_peak_mode_reduction')
+  ;  cancel = widget_button(button_row,$
+  ;    value = 'CANCEL',$
+  ;    sensitive=0,$
+  ;    scr_xsize = 50,$
+  ;    uname = 'cancel_broad_reflective_peak_mode_reduction')
     
   space = widget_label(button_row,$
     value = '                        ')
@@ -408,10 +460,19 @@ pro progress_bar, event=event, $
   global_progress = PTR_NEW({ _base: _base,$
     top_base: top_base, $
     time_init_s: systime(/seconds), $
+    
     current_step: 1, $  ;0,1,2.... spin_state_nbr_steps
+    current_pre_step: 1, $
+    
     pixel_nbr_steps: pixel_nbr_steps, $
     global_current_step: 1, $
-    post_processing_nbr_steps: n_elements(list_working_spin_states), $
+    
+    ;+1 is for the cleaning of the temporary ROI files
+    post_processing_nbr_steps: n_elements(list_working_spin_states)+1, $
+    
+    ;this is where all the temporary ROI files will be created
+    pre_processing_nbr_steps: pixel_nbr_steps, $
+    
     list_working_spin_states: list_working_spin_states, $
     total_number_steps: pixel_nbr_steps * $
     n_elements(list_working_spin_states), $
