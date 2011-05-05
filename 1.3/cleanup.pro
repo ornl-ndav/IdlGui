@@ -74,6 +74,8 @@ pro restore_config_file_name, base=base, $
     config_file_name=config_file_name
   compile_opt idl2
   
+  if (~file_test(config_file_name)) then return
+
   restore, filename=config_file_name, /relaxed_structure_assignment
   
   tof_config_file_name = cfg_structure.tof_config_file_name

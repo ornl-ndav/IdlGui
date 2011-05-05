@@ -1,0 +1,671 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGSEGV (0xb) at pc=0xa7bc7be8, pid=3638, tid=2940976016
+#
+# JRE version: 6.0_17-b04
+# Java VM: Java HotSpot(TM) Server VM (14.3-b01 mixed mode linux-x86 )
+# Problematic frame:
+# C  [libGL.so.1+0x7ebe8]
+#
+# If you would like to submit a bug report, please visit:
+#   http://java.sun.com/webapps/bugreport/crash.jsp
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0xaf3d3800):  VMThread [stack: 0xaf43b000,0xaf4bc000] [id=3649]
+
+siginfo:si_signo=SIGSEGV: si_errno=0, si_code=1 (SEGV_MAPERR), si_addr=0x00000000
+
+Registers:
+EAX=0x00000000, EBX=0xae0d98c8, ECX=0xaf300010, EDX=0x00000000
+ESP=0xaf4babe0, EBP=0xaf4bae78, ESI=0xa7124bc0, EDI=0xade8a780
+EIP=0xa7bc7be8, CR2=0x00000000, EFLAGS=0x00010246
+
+Top of Stack: (sp=0xaf4babe0)
+0xaf4babe0:   adad7700 00000000 00000000 00000e36
+0xaf4babf0:   a7124bc0 00000e36 a7124bc0 a7bb46c5
+0xaf4bac00:   af4bbb90 00000e36 00000001 a7c733fc
+0xaf4bac10:   ac45c598 f7f45fc0 f7f46240 f7f3889e
+0xaf4bac20:   f7f46240 00000000 f7f38ab9 a7a93cc7
+0xaf4bac30:   f7f46670 f7f46958 0879a150 088660e0
+0xaf4bac40:   088649d8 08711f20 08711b10 0870f800
+0xaf4bac50:   0883c120 08a10298 093cc130 ae912a00 
+
+Instructions: (pc=0xa7bc7be8)
+0xa7bc7bd8:   be a7 8b 10 85 d2 74 48 8b 42 08 8b 5a 04 31 d2
+0xa7bc7be8:   8b 30 89 54 24 08 89 1c 24 89 74 24 04 e8 f6 fc 
+
+Stack: [0xaf43b000,0xaf4bc000],  sp=0xaf4babe0,  free space=510k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+C  [libGL.so.1+0x7ebe8]
+C  [libc.so.6+0x2bec9]  exit+0xe9
+V  [libjvm.so+0x36ab5c]
+V  [libjvm.so+0x65f597]
+V  [libjvm.so+0x65e6c6]
+V  [libjvm.so+0x65db73]
+V  [libjvm.so+0x65ddef]
+V  [libjvm.so+0x65d8d0]
+V  [libjvm.so+0x531cce]
+C  [libpthread.so.0+0x5832]
+
+VM_Operation (0xf721fe80): Exit, mode: safepoint, requested by thread 0x08720000
+
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+  0xa4f73400 JavaThread "Timer-16" daemon [_thread_blocked, id=9246, stack(0xac54b000,0xac59c000)]
+  0xa4bc9000 JavaThread "Thread-18" daemon [_thread_blocked, id=9221, stack(0xa50ae000,0xa50ff000)]
+  0xa6869000 JavaThread "IDLDT DOM Worker-7" [_thread_blocked, id=3748, stack(0xa4c78000,0xa4cc9000)]
+  0xa6882c00 JavaThread "IDLDT DOM Worker-6" [_thread_blocked, id=3747, stack(0xa4cc9000,0xa4d1a000)]
+  0x09435000 JavaThread "IDLDT DOM Worker-5" [_thread_blocked, id=3746, stack(0xa4d1a000,0xa4d6b000)]
+  0x09433800 JavaThread "IDLDT DOM Worker-4" [_thread_blocked, id=3745, stack(0xa4d6b000,0xa4dbc000)]
+  0x08f54000 JavaThread "IDLDT DOM Worker-3" [_thread_blocked, id=3744, stack(0xa4dbc000,0xa4e0d000)]
+  0x08f53000 JavaThread "IDLDT DOM Worker-2" [_thread_blocked, id=3743, stack(0xa4e0d000,0xa4e5e000)]
+  0x093da800 JavaThread "IDLDT DOM Worker-1" [_thread_blocked, id=3742, stack(0xa4e5e000,0xa4eaf000)]
+  0x08f57c00 JavaThread "IDLDT DOM Worker-0" [_thread_blocked, id=3741, stack(0xa4eaf000,0xa4f00000)]
+  0x09442800 JavaThread "Timer-0" daemon [_thread_blocked, id=3740, stack(0xa5006000,0xa5057000)]
+  0xadaccc00 JavaThread "IDL" [_thread_in_native, id=3670, stack(0xad32d000,0xad42e000)]
+  0xadc71400 JavaThread "IDLToJava Broker" daemon [_thread_blocked, id=3669, stack(0xad42e000,0xad47f000)]
+  0x087aac00 JavaThread "Low Memory Detector" daemon [_thread_blocked, id=3655, stack(0xaed24000,0xaed75000)]
+  0xaf3eb400 JavaThread "CompilerThread1" daemon [_thread_blocked, id=3654, stack(0xaed75000,0xaedf6000)]
+  0xaf3e9c00 JavaThread "CompilerThread0" daemon [_thread_blocked, id=3653, stack(0xaedf6000,0xaee77000)]
+  0xaf3e8400 JavaThread "Signal Dispatcher" daemon [_thread_blocked, id=3652, stack(0xaee77000,0xaeec8000)]
+  0xaf3d9000 JavaThread "Finalizer" daemon [_thread_blocked, id=3651, stack(0xaf0c8000,0xaf119000)]
+  0xaf3d7800 JavaThread "Reference Handler" daemon [_thread_blocked, id=3650, stack(0xaf119000,0xaf16a000)]
+  0x08720000 JavaThread "main" [_thread_blocked, id=3639, stack(0xf71d0000,0xf7221000)]
+
+Other Threads:
+=>0xaf3d3800 VMThread [stack: 0xaf43b000,0xaf4bc000] [id=3649]
+
+VM state:at safepoint (shutting down)
+
+VM Mutex/Monitor currently owned by a thread:  ([mutex/lock_event])
+[0x08713ec0] Threads_lock - owner thread: 0xaf3d3800
+
+Heap
+ PSYoungGen      total 105728K, used 16552K [0xecb40000, 0xf3b40000, 0xf3d00000)
+  eden space 96448K, 17% used [0xecb40000,0xedb6a1f0,0xf2970000)
+  from space 9280K, 0% used [0xf3230000,0xf3230000,0xf3b40000)
+  to   space 8960K, 0% used [0xf2970000,0xf2970000,0xf3230000)
+ PSOldGen        total 917696K, used 26724K [0xb3d00000, 0xebd30000, 0xecb40000)
+  object space 917696K, 2% used [0xb3d00000,0xb5719320,0xebd30000)
+ PSPermGen       total 60672K, used 42565K [0xafd00000, 0xb3840000, 0xb3d00000)
+  object space 60672K, 70% used [0xafd00000,0xb2691430,0xb3840000)
+
+Dynamic libraries:
+08048000-08052000 r-xp 00000000 00:18 458602                             /SNS/software/itt/idl80/idlde/bin.linux.x86/jre/bin/java
+08052000-08053000 rwxp 00009000 00:18 458602                             /SNS/software/itt/idl80/idlde/bin.linux.x86/jre/bin/java
+0870f000-094e9000 rwxp 0870f000 00:00 0                                  [heap]
+a0100000-a01f3000 rwxp a0100000 00:00 0 
+a01f3000-a0200000 ---p a01f3000 00:00 0 
+a0200000-a02f4000 rwxp a0200000 00:00 0 
+a02f4000-a0300000 ---p a02f4000 00:00 0 
+a0300000-a03fd000 rwxp a0300000 00:00 0 
+a03fd000-a0400000 ---p a03fd000 00:00 0 
+a0400000-a04f9000 rwxp a0400000 00:00 0 
+a04f9000-a0500000 ---p a04f9000 00:00 0 
+a0500000-a05fa000 rwxp a0500000 00:00 0 
+a05fa000-a0600000 ---p a05fa000 00:00 0 
+a0600000-a06f9000 rwxp a0600000 00:00 0 
+a06f9000-a0700000 ---p a06f9000 00:00 0 
+a0700000-a0800000 rwxp a0700000 00:00 0 
+a083e000-a093f000 rwxp a083e000 00:00 0 
+a093f000-a0bfa000 r-xp 00000000 00:18 458298                             /SNS/software/itt/idl80/bin/bin.linux.x86/idl_hdf5.so
+a0bfa000-a0bff000 rwxp 002bb000 00:18 458298                             /SNS/software/itt/idl80/bin/bin.linux.x86/idl_hdf5.so
+a0bff000-a0cf9000 rwxp a0bff000 00:00 0 
+a0cf9000-a0d00000 ---p a0cf9000 00:00 0 
+a0d00000-a0df0000 rwxp a0d00000 00:00 0 
+a0df0000-a0e00000 ---p a0df0000 00:00 0 
+a0e00000-a0ef9000 rwxp a0e00000 00:00 0 
+a0ef9000-a0f00000 ---p a0ef9000 00:00 0 
+a0f08000-a1091000 rwxp a0f08000 00:00 0 
+a1091000-a13ab000 r-xp 00000000 00:18 458258                             /SNS/software/itt/idl80/bin/bin.linux.x86/libxerces-c2_6_0.so.26.0
+a13ab000-a13dc000 rwxp 00319000 00:18 458258                             /SNS/software/itt/idl80/bin/bin.linux.x86/libxerces-c2_6_0.so.26.0
+a13dc000-a13fd000 r-xp 00000000 00:18 458332                             /SNS/software/itt/idl80/bin/bin.linux.x86/idl_xml.so
+a13fd000-a1400000 rwxp 00021000 00:18 458332                             /SNS/software/itt/idl80/bin/bin.linux.x86/idl_xml.so
+a1400000-a14ff000 rwxp a1400000 00:00 0 
+a14ff000-a1500000 ---p a14ff000 00:00 0 
+a155e000-a1561000 rwxp a155e000 00:00 0 
+a1561000-a15af000 rwxp a1561000 00:00 0 
+a15af000-a15b5000 r-xp 00000000 fd:06 1046855                            /usr/lib/libfam.so.0.0.0
+a15b5000-a15b6000 rwxp 00006000 fd:06 1046855                            /usr/lib/libfam.so.0.0.0
+a15d6000-a15de000 r-xp 00000000 fd:06 1047037                            /usr/lib/libkrb5support.so.0.1
+a15de000-a15df000 rwxp 00007000 fd:06 1047037                            /usr/lib/libkrb5support.so.0.1
+a15df000-a16b9000 r-xp 00000000 fd:00 262916                             /lib/libasound.so.2.0.0
+a16b9000-a16be000 rwxp 000d9000 fd:00 262916                             /lib/libasound.so.2.0.0
+a16be000-a16c2000 r-xp 00000000 fd:06 1046883                            /usr/lib/libORBitCosNaming-2.so.0.1.0
+a16c2000-a16c3000 rwxp 00004000 fd:06 1046883                            /usr/lib/libORBitCosNaming-2.so.0.1.0
+a16c3000-a16e9000 r-xp 00000000 fd:06 1047025                            /usr/lib/libk5crypto.so.3.1
+a16e9000-a16ea000 rwxp 00025000 fd:06 1047025                            /usr/lib/libk5crypto.so.3.1
+a16ea000-a177e000 r-xp 00000000 fd:06 1047035                            /usr/lib/libkrb5.so.3.3
+a177e000-a1781000 rwxp 00093000 fd:06 1047035                            /usr/lib/libkrb5.so.3.3
+a1781000-a17ad000 r-xp 00000000 fd:06 1047361                            /usr/lib/libgssapi_krb5.so.2.2
+a17ad000-a17ae000 rwxp 0002c000 fd:06 1047361                            /usr/lib/libgssapi_krb5.so.2.2
+a17ae000-a17cf000 r-xp 00000000 fd:06 1046793                            /usr/lib/libjpeg.so.62.0.0
+a17cf000-a17d0000 rwxp 00020000 fd:06 1046793                            /usr/lib/libjpeg.so.62.0.0
+a17d0000-a17dc000 r-xp 00000000 fd:06 1047137                            /usr/lib/libgnome-keyring.so.0.0.1
+a17dc000-a17dd000 rwxp 0000b000 fd:06 1047137                            /usr/lib/libgnome-keyring.so.0.0.1
+a17dd000-a17f3000 r-xp 00000000 fd:06 1046861                            /usr/lib/libart_lgpl_2.so.2.3.17
+a17f3000-a17f4000 rwxp 00016000 fd:06 1046861                            /usr/lib/libart_lgpl_2.so.2.3.17
+a17f4000-a1820000 r-xp 00000000 fd:06 1047129                            /usr/lib/libgnomecanvas-2.so.0.1400.0
+a1820000-a1821000 rwxp 0002b000 fd:06 1047129                            /usr/lib/libgnomecanvas-2.so.0.1400.0
+a1821000-a1885000 r-xp 00000000 fd:06 1047227                            /usr/lib/libbonoboui-2.so.0.0.0
+a1885000-a1888000 rwxp 00063000 fd:06 1047227                            /usr/lib/libbonoboui-2.so.0.0.0
+a1888000-a18af000 r-xp 00000000 fd:06 1046859                            /usr/lib/libaudiofile.so.0.0.2
+a18af000-a18b2000 rwxp 00026000 fd:06 1046859                            /usr/lib/libaudiofile.so.0.0.2
+a18b2000-a18bb000 r-xp 00000000 fd:06 1047084                            /usr/lib/libesd.so.0.2.36
+a18bb000-a18bc000 rwxp 00009000 fd:06 1047084                            /usr/lib/libesd.so.0.2.36
+a18bc000-a18d0000 r-xp 00000000 fd:06 1046908                            /usr/lib/libbonobo-activation.so.4.0.0
+a18d0000-a18d2000 rwxp 00014000 fd:06 1046908                            /usr/lib/libbonobo-activation.so.4.0.0
+a18d2000-a192c000 r-xp 00000000 fd:06 1046906                            /usr/lib/libbonobo-2.so.0.0.0
+a192c000-a1936000 rwxp 0005a000 fd:06 1046906                            /usr/lib/libbonobo-2.so.0.0.0
+a1936000-a1945000 r-xp 00000000 fd:06 1047213                            /usr/lib/libavahi-client.so.3.2.1
+a1945000-a1946000 rwxp 0000e000 fd:06 1047213                            /usr/lib/libavahi-client.so.3.2.1
+a1946000-a1951000 r-xp 00000000 fd:06 1047154                            /usr/lib/libavahi-common.so.3.4.3
+a1951000-a1952000 rwxp 0000a000 fd:06 1047154                            /usr/lib/libavahi-common.so.3.4.3
+a1952000-a1a7c000 r-xp 00000000 fd:00 262847                             /lib/libcrypto.so.0.9.8e
+a1a7c000-a1a8f000 rwxp 00129000 fd:00 262847                             /lib/libcrypto.so.0.9.8e
+a1a8f000-a1a93000 rwxp a1a8f000 00:00 0 
+a1a93000-a1ad7000 r-xp 00000000 fd:00 262849                             /lib/libssl.so.0.9.8e
+a1ad7000-a1adb000 rwxp 00043000 fd:00 262849                             /lib/libssl.so.0.9.8e
+a1adb000-a1b18000 r-xp 00000000 fd:00 262933                             /lib/libdbus-1.so.3.4.0
+a1b18000-a1b1a000 rwxp 0003c000 fd:00 262933                             /lib/libdbus-1.so.3.4.0
+a1b1a000-a1b37000 r-xp 00000000 fd:06 1047142                            /usr/lib/libdbus-glib-1.so.2.1.0
+a1b37000-a1b38000 rwxp 0001d000 fd:06 1047142                            /usr/lib/libdbus-glib-1.so.2.1.0
+a1b38000-a1c64000 r-xp 00000000 fd:06 1046766                            /usr/lib/libxml2.so.2.6.26
+a1c64000-a1c69000 rwxp 0012c000 fd:06 1046766                            /usr/lib/libxml2.so.2.6.26
+a1c69000-a1c6a000 rwxp a1c69000 00:00 0 
+a1c6a000-a1cb8000 r-xp 00000000 fd:06 1046879                            /usr/lib/libORBit-2.so.0.1.0
+a1cb8000-a1cc2000 rwxp 0004d000 fd:06 1046879                            /usr/lib/libORBit-2.so.0.1.0
+a1cc2000-a1e7d000 r-xp 00000000 fd:06 4963259                            /usr/share/icons/hicolor/icon-theme.cache
+a1e7d000-a246e000 r-xp 00000000 fd:06 4999694                            /usr/share/icons/gnome/icon-theme.cache
+a246e000-a3200000 r-xp 00000000 fd:06 74204                              /usr/share/icons/Bluecurve/icon-theme.cache
+a3200000-a32f6000 rwxp a3200000 00:00 0 
+a32f6000-a3300000 ---p a32f6000 00:00 0 
+a3300000-a3400000 rwxp a3300000 00:00 0 
+a3400000-a34f9000 rwxp a3400000 00:00 0 
+a34f9000-a3500000 ---p a34f9000 00:00 0 
+a3500000-a3600000 rwxp a3500000 00:00 0 
+a3600000-a36f8000 rwxp a3600000 00:00 0 
+a36f8000-a3700000 ---p a36f8000 00:00 0 
+a3700000-a37f9000 rwxp a3700000 00:00 0 
+a37f9000-a3800000 ---p a37f9000 00:00 0 
+a3800000-a38fa000 rwxp a3800000 00:00 0 
+a38fa000-a3900000 ---p a38fa000 00:00 0 
+a3900000-a39ec000 rwxp a3900000 00:00 0 
+a39ec000-a3a00000 ---p a39ec000 00:00 0 
+a3a00000-a3af8000 rwxp a3a00000 00:00 0 
+a3af8000-a3b00000 ---p a3af8000 00:00 0 
+a3b00000-a3bfb000 rwxp a3b00000 00:00 0 
+a3bfb000-a3c00000 ---p a3bfb000 00:00 0 
+a3c00000-a3cf7000 rwxp a3c00000 00:00 0 
+a3cf7000-a3d00000 ---p a3cf7000 00:00 0 
+a3d01000-a3d08000 r-xp 00000000 fd:06 1046775                            /usr/lib/libpopt.so.0.0.0
+a3d08000-a3d09000 rwxp 00006000 fd:06 1046775                            /usr/lib/libpopt.so.0.0.0
+a3d09000-a3d99000 r-xp 00000000 fd:06 1047229                            /usr/lib/libgnomeui-2.so.0.1600.0
+a3d99000-a3d9c000 rwxp 0008f000 fd:06 1047229                            /usr/lib/libgnomeui-2.so.0.1600.0
+a3d9c000-a3d9d000 rwxp a3d9c000 00:00 0 
+a3d9d000-a3dfd000 r-xp 00000000 fd:06 1047222                            /usr/lib/libgnomevfs-2.so.0.1600.2
+a3dfd000-a3e00000 rwxp 0005f000 fd:06 1047222                            /usr/lib/libgnomevfs-2.so.0.1600.2
+a3e00000-a3ef2000 rwxp a3e00000 00:00 0 
+a3ef2000-a3f00000 ---p a3ef2000 00:00 0 
+a3f00000-a3ff1000 rwxp a3f00000 00:00 0 
+a3ff1000-a4000000 ---p a3ff1000 00:00 0 
+a4000000-a4100000 rwxp a4000000 00:00 0 
+a4100000-a41fd000 rwxp a4100000 00:00 0 
+a41fd000-a4200000 ---p a41fd000 00:00 0 
+a4204000-a4237000 r-xp 00000000 fd:06 1047131                            /usr/lib/libgconf-2.so.4.1.0
+a4237000-a423a000 rwxp 00032000 fd:06 1047131                            /usr/lib/libgconf-2.so.4.1.0
+a423a000-a424f000 r-xp 00000000 fd:06 1047225                            /usr/lib/libgnome-2.so.0.1600.0
+a424f000-a4250000 rwxp 00014000 fd:06 1047225                            /usr/lib/libgnome-2.so.0.1600.0
+a4255000-a425b000 r-xp 00000000 fd:00 262238                             /lib/libacl.so.1.1.0
+a425b000-a425c000 rwxp 00005000 fd:00 262238                             /lib/libacl.so.1.1.0
+a425c000-a4260000 r-xp 00000000 fd:00 262227                             /lib/libattr.so.1.1.0
+a4260000-a4261000 rwxp 00003000 fd:00 262227                             /lib/libattr.so.1.1.0
+a4261000-a426f000 r-xp 00000000 fd:06 1143626                            /usr/lib/gnome-vfs-2.0/modules/libfile.so
+a426f000-a4270000 rwxp 0000d000 fd:06 1143626                            /usr/lib/gnome-vfs-2.0/modules/libfile.so
+a4270000-a427e000 r-xp 00000000 fd:06 101306                             /usr/share/icons/Clearlooks/icon-theme.cache
+a428c000-a429f000 r-xp 00000000 fd:02 98377                              /tmp/jna8161959049270960903.tmp (deleted)
+a429f000-a42a0000 rwxp 00013000 fd:02 98377                              /tmp/jna8161959049270960903.tmp (deleted)
+a42af000-a42b2000 rwxp a42af000 00:00 0 
+a42b2000-a43ef000 rwxp a42b2000 00:00 0 
+a43ef000-a4400000 ---p a43ef000 00:00 0 
+a4400000-a44f6000 rwxp a4400000 00:00 0 
+a44f6000-a4500000 ---p a44f6000 00:00 0 
+a4500000-a45bd000 rwxp a4500000 00:00 0 
+a45bd000-a4600000 ---p a45bd000 00:00 0 
+a4600000-a46f6000 rwxp a4600000 00:00 0 
+a46f6000-a4700000 ---p a46f6000 00:00 0 
+a4700000-a47fc000 rwxp a4700000 00:00 0 
+a47fc000-a4800000 ---p a47fc000 00:00 0 
+a4800000-a48ff000 rwxp a4800000 00:00 0 
+a48ff000-a4900000 ---p a48ff000 00:00 0 
+a4900000-a4aee000 rwxp a4900000 00:00 0 
+a4aee000-a4b00000 ---p a4aee000 00:00 0 
+a4b00000-a4bfa000 rwxp a4b00000 00:00 0 
+a4bfa000-a4c00000 ---p a4bfa000 00:00 0 
+a4c02000-a4c09000 r-xs 00091000 00:18 458685                             /SNS/software/itt/idl80/idlde/bin.linux.x86/jre/lib/jsse.jar
+a4c27000-a4c2a000 rwxp a4c27000 00:00 0 
+a4c2a000-a4c78000 rwxp a4c2a000 00:00 0 
+a4c78000-a4c7b000 ---p a4c78000 00:00 0 
+a4c7b000-a4cc9000 rwxp a4c7b000 00:00 0 
+a4cc9000-a4ccc000 ---p a4cc9000 00:00 0 
+a4ccc000-a4d1a000 rwxp a4ccc000 00:00 0 
+a4d1a000-a4d1d000 ---p a4d1a000 00:00 0 
+a4d1d000-a4d6b000 rwxp a4d1d000 00:00 0 
+a4d6b000-a4d6e000 ---p a4d6b000 00:00 0 
+a4d6e000-a4dbc000 rwxp a4d6e000 00:00 0 
+a4dbc000-a4dbf000 ---p a4dbc000 00:00 0 
+a4dbf000-a4e0d000 rwxp a4dbf000 00:00 0 
+a4e0d000-a4e10000 ---p a4e0d000 00:00 0 
+a4e10000-a4e5e000 rwxp a4e10000 00:00 0 
+a4e5e000-a4e61000 ---p a4e5e000 00:00 0 
+a4e61000-a4eaf000 rwxp a4e61000 00:00 0 
+a4eaf000-a4eb2000 ---p a4eaf000 00:00 0 
+a4eb2000-a4ff7000 rwxp a4eb2000 00:00 0 
+a4ff7000-a5000000 ---p a4ff7000 00:00 0 
+a5000000-a5004000 r-xp 00000000 fd:00 262178                             /lib/libnss_dns-2.5.so
+a5004000-a5005000 r-xp 00003000 fd:00 262178                             /lib/libnss_dns-2.5.so
+a5005000-a5006000 rwxp 00004000 fd:00 262178                             /lib/libnss_dns-2.5.so
+a5006000-a5009000 ---p a5006000 00:00 0 
+a5009000-a5057000 rwxp a5009000 00:00 0 
+a505d000-a5060000 rwxp a505d000 00:00 0 
+a5060000-a50ae000 rwxp a5060000 00:00 0 
+a50ae000-a50b1000 ---p a50ae000 00:00 0 
+a50b1000-a50ff000 rwxp a50b1000 00:00 0 
+a50ff000-a5102000 rwxp a50ff000 00:00 0 
+a5102000-a5150000 rwxp a5102000 00:00 0 
+a5150000-a5153000 rwxp a5150000 00:00 0 
+a5153000-a51a1000 rwxp a5153000 00:00 0 
+a51a1000-a51cd000 r-xp 00000000 fd:06 34215                              /usr/share/fonts/dejavu-lgc/DejaVuLGCSansMono-BoldOblique.ttf
+a51cd000-a51fb000 r-xp 00000000 fd:06 34216                              /usr/share/fonts/dejavu-lgc/DejaVuLGCSansMono-Oblique.ttf
+a51fb000-a5234000 r-xp 00000000 fd:06 34214                              /usr/share/fonts/dejavu-lgc/DejaVuLGCSansMono-Bold.ttf
+a5234000-a526e000 r-xp 00000000 fd:06 34217                              /usr/share/fonts/dejavu-lgc/DejaVuLGCSansMono.ttf
+a526e000-a52d8000 r-xp 00000000 fd:06 34206                              /usr/share/fonts/dejavu-lgc/DejaVuLGCSans-BoldOblique.ttf
+a52d8000-a533f000 r-xp 00000000 fd:06 34208                              /usr/share/fonts/dejavu-lgc/DejaVuLGCSans-Oblique.ttf
+a533f000-a53a8000 r-xp 00000000 fd:06 34205                              /usr/share/fonts/dejavu-lgc/DejaVuLGCSans-Bold.ttf
+a53fe000-a5401000 rwxp a53fe000 00:00 0 
+a5401000-a5dff000 rwxp a5401000 00:00 0 
+a5dff000-a5e00000 ---p a5dff000 00:00 0 
+a5e00000-a68fa000 rwxp a5e00000 00:00 0 
+a68fa000-a6900000 ---p a68fa000 00:00 0 
+a6900000-a6903000 r-xp 00000000 fd:00 262229                             /lib/libcap.so.1.10
+a6903000-a6904000 rwxp 00002000 fd:00 262229                             /lib/libcap.so.1.10
+a6904000-a6907000 rwxp a6904000 00:00 0 
+a6907000-a6955000 rwxp a6907000 00:00 0 
+a6955000-a6957000 r-xp 00000000 fd:06 1143268                            /usr/lib/pango/1.5.0/modules/pango-basic-fc.so
+a6957000-a6958000 rwxp 00001000 fd:06 1143268                            /usr/lib/pango/1.5.0/modules/pango-basic-fc.so
+a6958000-a69c5000 r-xp 00000000 fd:06 34209                              /usr/share/fonts/dejavu-lgc/DejaVuLGCSans.ttf
+a69c5000-a7a0c000 r-xp 00000000 fd:06 1047005                            /usr/lib/libGLcore.so.190.53
+a7a0c000-a7a52000 rwxp 01046000 fd:06 1047005                            /usr/lib/libGLcore.so.190.53
+a7a52000-a7a60000 rwxp a7a52000 00:00 0 
+a7a60000-a7b3e000 r-xp 00000000 fd:06 1046779                            /usr/lib/libstdc++.so.6.0.8
+a7b3e000-a7b41000 r-xp 000dd000 fd:06 1046779                            /usr/lib/libstdc++.so.6.0.8
+a7b41000-a7b43000 rwxp 000e0000 fd:06 1046779                            /usr/lib/libstdc++.so.6.0.8
+a7b43000-a7b49000 rwxp a7b43000 00:00 0 
+a7b49000-a7be0000 r-xp 00000000 fd:06 1046953                            /usr/lib/libGL.so.190.53
+a7be0000-a7bf9000 rwxp 00097000 fd:06 1046953                            /usr/lib/libGL.so.190.53
+a7bf9000-a7c08000 rwxp a7bf9000 00:00 0 
+a7c08000-a7c87000 r-xp 00000000 fd:06 1047013                            /usr/lib/libGLU.so.1.3.060501
+a7c87000-a7c88000 rwxp 0007f000 fd:06 1047013                            /usr/lib/libGLU.so.1.3.060501
+a7ca8000-a7ca9000 ---p a7ca8000 00:00 0 
+a7ca9000-a86a9000 rwxp a7ca9000 00:00 0 
+a86a9000-a86aa000 ---p a86a9000 00:00 0 
+a86aa000-a90aa000 rwxp a86aa000 00:00 0 
+a90aa000-a90ab000 ---p a90aa000 00:00 0 
+a90ab000-a9aab000 rwxp a90ab000 00:00 0 
+a9aab000-a9aac000 ---p a9aab000 00:00 0 
+a9aac000-aa4ac000 rwxp a9aac000 00:00 0 
+aa4ac000-aa4ad000 ---p aa4ac000 00:00 0 
+aa4ad000-aaead000 rwxp aa4ad000 00:00 0 
+aaead000-aaeae000 ---p aaead000 00:00 0 
+aaeae000-ab8ae000 rwxp aaeae000 00:00 0 
+ab8ae000-ab8af000 ---p ab8ae000 00:00 0 
+ab8af000-ac2af000 rwxp ab8af000 00:00 0 
+ac2af000-ac2b2000 rwxp ac2af000 00:00 0 
+ac2b2000-ac3f1000 rwxp ac2b2000 00:00 0 
+ac3f1000-ac400000 ---p ac3f1000 00:00 0 
+ac410000-ac412000 r-xp 00000000 fd:00 262196                             /lib/libutil-2.5.so
+ac412000-ac413000 r-xp 00001000 fd:00 262196                             /lib/libutil-2.5.so
+ac413000-ac414000 rwxp 00002000 fd:00 262196                             /lib/libutil-2.5.so
+ac452000-ac45c000 r-xp 00000000 00:25 512202                             /SNS/users/j35/.idl/itt/idlworkbench-config-idl8.0.0/org.eclipse.osgi/bundles/230/1/.cp/libswt-cairo-gtk-3557.so
+ac45c000-ac45d000 rwxp 00009000 00:25 512202                             /SNS/users/j35/.idl/itt/idlworkbench-config-idl8.0.0/org.eclipse.osgi/bundles/230/1/.cp/libswt-cairo-gtk-3557.so
+ac45d000-ac463000 r-xp 00000000 00:25 512195                             /SNS/users/j35/.idl/itt/idlworkbench-config-idl8.0.0/org.eclipse.osgi/bundles/230/1/.cp/libswt-atk-gtk-3557.so
+ac463000-ac464000 rwxp 00005000 00:25 512195                             /SNS/users/j35/.idl/itt/idlworkbench-config-idl8.0.0/org.eclipse.osgi/bundles/230/1/.cp/libswt-atk-gtk-3557.so
+ac464000-ac469000 r-xp 00000000 fd:06 1175307                            /usr/lib/gtk-2.0/2.10.0/loaders/libpixbufloader-gif.so
+ac469000-ac46a000 rwxp 00005000 fd:06 1175307                            /usr/lib/gtk-2.0/2.10.0/loaders/libpixbufloader-gif.so
+ac46a000-ac46b000 rwxp ac46a000 00:00 0 
+ac46b000-ac46d000 rwxp 00000000 00:11 4248                               /dev/zero
+ac46d000-ac46e000 r-xp 00000000 fd:06 1305794                            /usr/lib/tls/libnvidia-tls.so.190.53
+ac46e000-ac46f000 rwxp 00000000 fd:06 1305794                            /usr/lib/tls/libnvidia-tls.so.190.53
+ac46f000-ac4a6000 r-xp 00000000 00:18 458256                             /SNS/software/itt/idl80/bin/bin.linux.x86/gl_driver.so.8.0
+ac4a6000-ac4a7000 rwxp 00037000 00:18 458256                             /SNS/software/itt/idl80/bin/bin.linux.x86/gl_driver.so.8.0
+ac4a7000-ac4aa000 rwxp ac4a7000 00:00 0 
+ac4aa000-ac4f8000 rwxp ac4aa000 00:00 0 
+ac4f8000-ac4fa000 r-xs 00000000 00:25 366165                             /SNS/users/j35/.fontconfig/87f5e051180a7a75f16eb6fe7dbd3749-x86.cache-2
+ac4fa000-ac500000 r-xs 00000000 00:25 366163                             /SNS/users/j35/.fontconfig/b79f3aaa7d385a141ab53ec885cc22a8-x86.cache-2
+ac500000-ac503000 r-xs 00000000 00:25 366161                             /SNS/users/j35/.fontconfig/b67b32625a2bb51b023d3814a918f351-x86.cache-2
+ac503000-ac509000 r-xs 00000000 00:25 366159                             /SNS/users/j35/.fontconfig/7ddba6133ef499da58de5e8c586d3b75-x86.cache-2
+ac509000-ac50b000 r-xs 00000000 00:25 366155                             /SNS/users/j35/.fontconfig/e3ead4b767b8819993a6fa3ae306afa9-x86.cache-2
+ac50b000-ac513000 r-xs 00000000 00:25 366153                             /SNS/users/j35/.fontconfig/e19de935dec46bbf3ed114ee4965548a-x86.cache-2
+ac513000-ac518000 r-xs 00000000 00:25 366151                             /SNS/users/j35/.fontconfig/beeeeb3dfe132a8a0633a017c99ce0c0-x86.cache-2
+ac53a000-ac53d000 r-xs 00013000 00:18 458694                             /SNS/software/itt/idl80/idlde/bin.linux.x86/jre/lib/jce.jar
+ac54b000-ac54e000 ---p ac54b000 00:00 0 
+ac54e000-ac59c000 rwxp ac54e000 00:00 0 
+ac59c000-ac5b3000 r-xp 00000000 fd:06 1046791                            /usr/lib/libICE.so.6.3.0
+ac5b3000-ac5b4000 rwxp 00016000 fd:06 1046791                            /usr/lib/libICE.so.6.3.0
+ac5b4000-ac5b6000 rwxp ac5b4000 00:00 0 
+ac5b6000-ac5be000 r-xp 00000000 fd:06 1046795                            /usr/lib/libSM.so.6.0.0
+ac5be000-ac5bf000 rwxp 00007000 fd:06 1046795                            /usr/lib/libSM.so.6.0.0
+ac5bf000-ac612000 r-xp 00000000 fd:06 1046952                            /usr/lib/libXt.so.6.0.0
+ac612000-ac615000 rwxp 00053000 fd:06 1046952                            /usr/lib/libXt.so.6.0.0
+ac615000-ac616000 rwxp ac615000 00:00 0 
+ac616000-ac62c000 r-xp 00000000 fd:06 1046959                            /usr/lib/libXmu.so.6.2.0
+ac62c000-ac62d000 rwxp 00016000 fd:06 1046959                            /usr/lib/libXmu.so.6.2.0
+ac62d000-ac63d000 r-xp 00000000 fd:06 1046957                            /usr/lib/libXpm.so.4.11.0
+ac63d000-ac63e000 rwxp 00010000 fd:06 1046957                            /usr/lib/libXpm.so.4.11.0
+ac63e000-ac645000 r-xp 00000000 00:18 458266                             /SNS/software/itt/idl80/bin/bin.linux.x86/libXp.so.6.2
+ac645000-ac646000 rwxp 00006000 00:18 458266                             /SNS/software/itt/idl80/bin/bin.linux.x86/libXp.so.6.2
+ac646000-ac6aa000 r-xp 00000000 00:18 458261                             /SNS/software/itt/idl80/bin/bin.linux.x86/libfreetype2_3_6.so.6.3.17
+ac6aa000-ac6ae000 rwxp 00064000 00:18 458261                             /SNS/software/itt/idl80/bin/bin.linux.x86/libfreetype2_3_6.so.6.3.17
+ac6b2000-ad128000 r-xp 00000000 00:18 458240                             /SNS/software/itt/idl80/bin/bin.linux.x86/libidl.so.8.0
+ad128000-ad1cf000 rwxp 00a76000 00:18 458240                             /SNS/software/itt/idl80/bin/bin.linux.x86/libidl.so.8.0
+ad1cf000-ad2dd000 rwxp ad1cf000 00:00 0 
+ad2df000-ad2ea000 r-xp 00000000 fd:00 262205                             /lib/libgcc_s-4.1.2-20080825.so.1
+ad2ea000-ad2eb000 rwxp 0000a000 fd:00 262205                             /lib/libgcc_s-4.1.2-20080825.so.1
+ad2f0000-ad2f3000 r-xs 00027000 00:18 458619                             /SNS/software/itt/idl80/idlde/bin.linux.x86/jre/lib/ext/sunjce_provider.jar
+ad301000-ad308000 r-xs 00111000 00:18 458740                             /SNS/software/itt/idl80/idlde/bin.linux.x86/jre/lib/resources.jar
+ad30b000-ad31d000 r-xp 00000000 00:18 458264                             /SNS/software/itt/idl80/bin/bin.linux.x86/libidl_ips.so.8.0
+ad31d000-ad31e000 rwxp 00011000 00:18 458264                             /SNS/software/itt/idl80/bin/bin.linux.x86/libidl_ips.so.8.0
+ad31e000-ad32d000 rwxp ad31e000 00:00 0 
+ad32d000-ad330000 ---p ad32d000 00:00 0 
+ad330000-ad42e000 rwxp ad330000 00:00 0 
+ad42e000-ad431000 ---p ad42e000 00:00 0 
+ad431000-ad47f000 rwxp ad431000 00:00 0 
+ad484000-ad486000 r-xp 00000000 fd:06 1047094                            /usr/lib/libavahi-glib.so.1.0.1
+ad486000-ad487000 rwxp 00002000 fd:06 1047094                            /usr/lib/libavahi-glib.so.1.0.1
+ad497000-ad49a000 rwxp ad497000 00:00 0 
+ad49a000-ad4e8000 rwxp ad49a000 00:00 0 
+ad52a000-ad52d000 rwxp ad52a000 00:00 0 
+ad52d000-ad57b000 rwxp ad52d000 00:00 0 
+ad57b000-ad57d000 r-xp 00000000 00:25 512292                             /SNS/users/j35/.idl/itt/idlworkbench-config-idl8.0.0/org.eclipse.osgi/bundles/217/1/.cp/os/linux/x86/liblocalfile_1_0_0.so
+ad57d000-ad57e000 rwxp 00001000 00:25 512292                             /SNS/users/j35/.idl/itt/idlworkbench-config-idl8.0.0/org.eclipse.osgi/bundles/217/1/.cp/os/linux/x86/liblocalfile_1_0_0.so
+ad5a8000-ad5fd000 r-xp 00000000 00:25 512133                             /SNS/users/j35/.idl/itt/idlworkbench-config-idl8.0.0/org.eclipse.osgi/bundles/230/1/.cp/libswt-pi-gtk-3557.so
+ad5fd000-ad600000 rwxp 00054000 00:25 512133                             /SNS/users/j35/.idl/itt/idlworkbench-config-idl8.0.0/org.eclipse.osgi/bundles/230/1/.cp/libswt-pi-gtk-3557.so
+ad600000-ad6fb000 rwxp ad600000 00:00 0 
+ad6fb000-ad700000 ---p ad6fb000 00:00 0 
+ad700000-ad701000 rwxp ad700000 00:00 0 
+ad701000-ad706000 r-xp 00000000 fd:06 1046995                            /usr/lib/libXtst.so.6.1.0
+ad706000-ad707000 rwxp 00004000 fd:06 1046995                            /usr/lib/libXtst.so.6.1.0
+ad709000-ad70c000 r-xp 00000000 00:25 512870                             /SNS/users/j35/.idl/itt/idlworkbench-config-idl8.0.0/org.eclipse.osgi/bundles/230/1/.cp/libswt-gnome-gtk-3557.so
+ad70c000-ad70d000 rwxp 00002000 00:25 512870                             /SNS/users/j35/.idl/itt/idlworkbench-config-idl8.0.0/org.eclipse.osgi/bundles/230/1/.cp/libswt-gnome-gtk-3557.so
+ad71e000-ad722000 r-xp 00000000 fd:06 1175311                            /usr/lib/gtk-2.0/2.10.0/loaders/libpixbufloader-png.so
+ad722000-ad723000 rwxp 00003000 fd:06 1175311                            /usr/lib/gtk-2.0/2.10.0/loaders/libpixbufloader-png.so
+ad723000-ad727000 rwxp ad723000 00:00 0 
+ad727000-ad72a000 r-xp 00000000 00:25 512132                             /SNS/users/j35/.idl/itt/idlworkbench-config-idl8.0.0/org.eclipse.osgi/bundles/230/1/.cp/libswt-gtk-3557.so
+ad72a000-ad72b000 rwxp 00002000 00:25 512132                             /SNS/users/j35/.idl/itt/idlworkbench-config-idl8.0.0/org.eclipse.osgi/bundles/230/1/.cp/libswt-gtk-3557.so
+ad72b000-ad72c000 rwxp ad72b000 00:00 0 
+ad7af000-ad7b2000 rwxp ad7af000 00:00 0 
+ad7b2000-ad8f6000 rwxp ad7b2000 00:00 0 
+ad8f6000-ad900000 ---p ad8f6000 00:00 0 
+ad900000-ad9fb000 rwxp ad900000 00:00 0 
+ad9fb000-ada00000 ---p ad9fb000 00:00 0 
+ada00000-adafc000 rwxp ada00000 00:00 0 
+adafc000-adb00000 ---p adafc000 00:00 0 
+adb00000-adbf3000 rwxp adb00000 00:00 0 
+adbf3000-adc00000 ---p adbf3000 00:00 0 
+adc00000-adcf6000 rwxp adc00000 00:00 0 
+adcf6000-add00000 ---p adcf6000 00:00 0 
+add02000-add06000 r-xp 00000000 fd:00 262217                             /lib/libgthread-2.0.so.0.1200.3
+add06000-add07000 rwxp 00003000 fd:00 262217                             /lib/libgthread-2.0.so.0.1200.3
+add1a000-add1b000 r-xp add1a000 00:00 0 
+add1f000-adefd000 rwxp add1f000 00:00 0 
+adefd000-adf00000 ---p adefd000 00:00 0 
+adf00000-ae000000 rwxp adf00000 00:00 0 
+ae000000-ae0fb000 rwxp ae000000 00:00 0 
+ae0fb000-ae100000 ---p ae0fb000 00:00 0 
+ae122000-ae125000 rwxp ae122000 00:00 0 
+ae125000-ae173000 rwxp ae125000 00:00 0 
+ae173000-ae176000 rwxp ae173000 00:00 0 
+ae176000-ae1c4000 rwxp ae176000 00:00 0 
+ae1c4000-ae1cb000 r-xp 00000000 00:18 458650                             /SNS/software/itt/idl80/idlde/bin.linux.x86/jre/lib/i386/libnio.so
+ae1cb000-ae1cc000 rwxp 00006000 00:18 458650                             /SNS/software/itt/idl80/idlde/bin.linux.x86/jre/lib/i386/libnio.so
+ae1cc000-ae1df000 r-xp 00000000 00:18 458649                             /SNS/software/itt/idl80/idlde/bin.linux.x86/jre/lib/i386/libnet.so
+ae1df000-ae1e0000 rwxp 00013000 00:18 458649                             /SNS/software/itt/idl80/idlde/bin.linux.x86/jre/lib/i386/libnet.so
+ae1e0000-ae1f1000 r-xs 00103000 00:18 449471                             /SNS/software/itt/idl80/idlde/plugins/org.eclipse.osgi_3.5.2.R35x_v20100126.jar
+ae1f1000-ae259000 rwxp ae1f1000 00:00 0 
+ae259000-ae273000 r-xp 00000000 fd:06 1046769                            /usr/lib/libatk-1.0.so.0.1212.0
+ae273000-ae275000 rwxp 0001a000 fd:06 1046769                            /usr/lib/libatk-1.0.so.0.1212.0
+ae275000-ae607000 r-xp 00000000 fd:06 1047124                            /usr/lib/libgtk-x11-2.0.so.0.1000.4
+ae607000-ae60d000 rwxp 00391000 fd:06 1047124                            /usr/lib/libgtk-x11-2.0.so.0.1000.4
+ae60d000-ae60e000 rwxp ae60d000 00:00 0 
+ae60e000-ae62d000 r-xp 00000000 fd:00 262208                             /lib/libexpat.so.0.5.0
+ae62d000-ae62f000 rwxp 0001e000 fd:00 262208                             /lib/libexpat.so.0.5.0
+ae62f000-ae654000 r-xp 00000000 fd:06 1046798                            /usr/lib/libpng12.so.0.10.0
+ae654000-ae655000 rwxp 00024000 fd:06 1046798                            /usr/lib/libpng12.so.0.10.0
+ae655000-ae6d2000 r-xp 00000000 fd:06 1046863                            /usr/lib/libfreetype.so.6.3.10
+ae6d2000-ae6d5000 rwxp 0007d000 fd:06 1046863                            /usr/lib/libfreetype.so.6.3.10
+ae6d5000-ae701000 r-xp 00000000 fd:06 1047059                            /usr/lib/libpangoft2-1.0.so.0.1400.9
+ae701000-ae702000 rwxp 0002c000 fd:06 1047059                            /usr/lib/libpangoft2-1.0.so.0.1400.9
+ae702000-ae801000 r-xp 00000000 fd:06 1046947                            /usr/lib/libX11.so.6.2.0
+ae801000-ae805000 rwxp 000ff000 fd:06 1046947                            /usr/lib/libX11.so.6.2.0
+ae805000-ae871000 r-xp 00000000 fd:06 1047045                            /usr/lib/libcairo.so.2.9.2
+ae871000-ae873000 rwxp 0006b000 fd:06 1047045                            /usr/lib/libcairo.so.2.9.2
+ae873000-ae8fd000 r-xp 00000000 fd:06 1047118                            /usr/lib/libgdk-x11-2.0.so.0.1000.4
+ae8fd000-ae900000 rwxp 0008a000 fd:06 1047118                            /usr/lib/libgdk-x11-2.0.so.0.1000.4
+ae900000-ae9fb000 rwxp ae900000 00:00 0 
+ae9fb000-aea00000 ---p ae9fb000 00:00 0 
+aea00000-aea05000 r-xp 00000000 fd:06 1046897                            /usr/lib/libXdmcp.so.6.0.0
+aea05000-aea06000 rwxp 00004000 fd:06 1046897                            /usr/lib/libXdmcp.so.6.0.0
+aea06000-aea08000 r-xp 00000000 fd:06 1046865                            /usr/lib/libXau.so.6.0.0
+aea08000-aea09000 rwxp 00001000 fd:06 1046865                            /usr/lib/libXau.so.6.0.0
+aea09000-aea1b000 r-xp 00000000 fd:06 1046765                            /usr/lib/libz.so.1.2.3
+aea1b000-aea1c000 rwxp 00011000 fd:06 1046765                            /usr/lib/libz.so.1.2.3
+aea1c000-aea32000 r-xp 00000000 fd:06 1047120                            /usr/lib/libgdk_pixbuf-2.0.so.0.1000.4
+aea32000-aea33000 rwxp 00016000 fd:06 1047120                            /usr/lib/libgdk_pixbuf-2.0.so.0.1000.4
+aea33000-aea5a000 r-xp 00000000 fd:06 1047043                            /usr/lib/libfontconfig.so.1.1.0
+aea5a000-aea62000 rwxp 00027000 fd:06 1047043                            /usr/lib/libfontconfig.so.1.1.0
+aea62000-aeaff000 r-xp 00000000 fd:00 262211                             /lib/libglib-2.0.so.0.1200.3
+aeaff000-aeb00000 rwxp 0009c000 fd:00 262211                             /lib/libglib-2.0.so.0.1200.3
+aeb00000-aebed000 rwxp aeb00000 00:00 0 
+aebed000-aec00000 ---p aebed000 00:00 0 
+aec01000-aec05000 r-xp 00000000 fd:06 1046955                            /usr/lib/libXfixes.so.3.1.0
+aec05000-aec06000 rwxp 00003000 fd:06 1046955                            /usr/lib/libXfixes.so.3.1.0
+aec06000-aec0f000 r-xp 00000000 fd:06 1046969                            /usr/lib/libXcursor.so.1.0.2
+aec0f000-aec10000 rwxp 00008000 fd:06 1046969                            /usr/lib/libXcursor.so.1.0.2
+aec10000-aec13000 r-xp 00000000 fd:06 1046970                            /usr/lib/libXrandr.so.2.0.0
+aec13000-aec14000 rwxp 00002000 fd:06 1046970                            /usr/lib/libXrandr.so.2.0.0
+aec14000-aec1b000 r-xp 00000000 fd:06 1046962                            /usr/lib/libXi.so.6.0.0
+aec1b000-aec1c000 rwxp 00006000 fd:06 1046962                            /usr/lib/libXi.so.6.0.0
+aec1c000-aec24000 r-xp 00000000 fd:06 1046951                            /usr/lib/libXrender.so.1.3.0
+aec24000-aec25000 rwxp 00007000 fd:06 1046951                            /usr/lib/libXrender.so.1.3.0
+aec25000-aec62000 r-xp 00000000 fd:06 1046759                            /usr/lib/libpango-1.0.so.0.1400.9
+aec62000-aec64000 rwxp 0003c000 fd:06 1046759                            /usr/lib/libpango-1.0.so.0.1400.9
+aec64000-aeca2000 r-xp 00000000 fd:00 262215                             /lib/libgobject-2.0.so.0.1200.3
+aeca2000-aeca3000 rwxp 0003e000 fd:00 262215                             /lib/libgobject-2.0.so.0.1200.3
+aeca3000-aeca4000 ---p aeca3000 00:00 0 
+aeca4000-aed24000 rwxp aeca4000 00:00 0 
+aed24000-aed27000 ---p aed24000 00:00 0 
+aed27000-aed75000 rwxp aed27000 00:00 0 
+aed75000-aed78000 ---p aed75000 00:00 0 
+aed78000-aedf6000 rwxp aed78000 00:00 0 
+aedf6000-aedf9000 ---p aedf6000 00:00 0 
+aedf9000-aee77000 rwxp aedf9000 00:00 0 
+aee77000-aee7a000 ---p aee77000 00:00 0 
+aee7a000-aeec8000 rwxp aee7a000 00:00 0 
+aeec8000-af0c8000 r-xp 00000000 fd:06 5031244                            /usr/lib/locale/locale-archive
+af0c8000-af0cb000 ---p af0c8000 00:00 0 
+af0cb000-af119000 rwxp af0cb000 00:00 0 
+af119000-af11c000 ---p af119000 00:00 0 
+af11c000-af16a000 rwxp af11c000 00:00 0 
+af16a000-af300000 r-xs 02fb6000 00:18 459379                             /SNS/software/itt/idl80/idlde/bin.linux.x86/jre/lib/rt.jar
+af300000-af3ff000 rwxp af300000 00:00 0 
+af3ff000-af400000 ---p af3ff000 00:00 0 
+af402000-af411000 r-xp 00000000 fd:06 1046949                            /usr/lib/libXext.so.6.4.0
+af411000-af412000 rwxp 0000e000 fd:06 1046949                            /usr/lib/libXext.so.6.4.0
+af412000-af41a000 r-xp 00000000 fd:06 1047057                            /usr/lib/libpangocairo-1.0.so.0.1400.9
+af41a000-af41b000 rwxp 00007000 fd:06 1047057                            /usr/lib/libpangocairo-1.0.so.0.1400.9
+af41b000-af41e000 r-xp 00000000 fd:06 1175306                            /usr/lib/gtk-2.0/2.10.0/loaders/libpixbufloader-bmp.so
+af41e000-af41f000 rwxp 00002000 fd:06 1175306                            /usr/lib/gtk-2.0/2.10.0/loaders/libpixbufloader-bmp.so
+af41f000-af430000 r-xp 00000000 fd:06 1175456                            /usr/lib/gtk-2.0/2.10.0/engines/libclearlooks.so
+af430000-af431000 rwxp 00011000 fd:06 1175456                            /usr/lib/gtk-2.0/2.10.0/engines/libclearlooks.so
+af431000-af432000 r-xp 00000000 fd:06 1078486                            /usr/lib/gconv/ISO8859-1.so
+af432000-af434000 rwxp 00000000 fd:06 1078486                            /usr/lib/gconv/ISO8859-1.so
+af434000-af43b000 r-xs 00000000 fd:06 1077328                            /usr/lib/gconv/gconv-modules.cache
+af43b000-af43c000 ---p af43b000 00:00 0 
+af43c000-af4ef000 rwxp af43c000 00:00 0 
+af4ef000-af4f0000 ---p af4ef000 00:00 0 
+af4f0000-af570000 rwxp af4f0000 00:00 0 
+af570000-af571000 ---p af570000 00:00 0 
+af571000-af5f1000 rwxp af571000 00:00 0 
+af5f1000-af5f2000 ---p af5f1000 00:00 0 
+af5f2000-af672000 rwxp af5f2000 00:00 0 
+af672000-af673000 ---p af672000 00:00 0 
+af673000-af6f3000 rwxp af673000 00:00 0 
+af6f3000-af6f4000 ---p af6f3000 00:00 0 
+af6f4000-af774000 rwxp af6f4000 00:00 0 
+af774000-af775000 ---p af774000 00:00 0 
+af775000-af7f5000 rwxp af775000 00:00 0 
+af7f5000-af7f6000 ---p af7f5000 00:00 0 
+af7f6000-af876000 rwxp af7f6000 00:00 0 
+af876000-af877000 ---p af876000 00:00 0 
+af877000-af915000 rwxp af877000 00:00 0 
+af915000-af917000 rwxp af915000 00:00 0 
+af917000-afad8000 rwxp af917000 00:00 0 
+afad8000-afadf000 rwxp afad8000 00:00 0 
+afadf000-afafd000 rwxp afadf000 00:00 0 
+afafd000-afaff000 rwxp afafd000 00:00 0 
+afaff000-afcc0000 rwxp afaff000 00:00 0 
+afcc0000-afcc6000 rwxp afcc0000 00:00 0 
+afcc6000-b3840000 rwxp afcc6000 00:00 0 
+b3840000-b3d00000 rwxp b3840000 00:00 0 
+b3d00000-ebd30000 rwxp b3d00000 00:00 0 
+ebd30000-ecb40000 rwxp ebd30000 00:00 0 
+ecb40000-f3b40000 rwxp ecb40000 00:00 0 
+f3b40000-f3d00000 rwxp f3b40000 00:00 0 
+f3d02000-f3d0d000 r-xp 00000000 00:18 460517                             /SNS/software/itt/idl80/idlde/plugins/org.eclipse.equinox.launcher.gtk.linux.x86_1.0.200.v20090520/eclipse_1206.so
+f3d0d000-f3d0e000 rwxp 0000a000 00:18 460517                             /SNS/software/itt/idl80/idlde/plugins/org.eclipse.equinox.launcher.gtk.linux.x86_1.0.200.v20090520/eclipse_1206.so
+f3d0e000-f3d24000 rwxp f3d0e000 00:00 0 
+f3d24000-f3dce000 rwxp f3d24000 00:00 0 
+f3dce000-f4336000 rwxp f3dce000 00:00 0 
+f4336000-f6dce000 rwxp f4336000 00:00 0 
+f6dce000-f6e09000 r-xp 00000000 fd:00 262852                             /lib/libsepol.so.1
+f6e09000-f6e0a000 rwxp 0003b000 fd:00 262852                             /lib/libsepol.so.1
+f6e0a000-f6e14000 rwxp f6e0a000 00:00 0 
+f6e14000-f6e24000 r-xp 00000000 fd:00 262190                             /lib/libresolv-2.5.so
+f6e24000-f6e25000 r-xp 0000f000 fd:00 262190                             /lib/libresolv-2.5.so
+f6e25000-f6e26000 rwxp 00010000 fd:00 262190                             /lib/libresolv-2.5.so
+f6e26000-f6e28000 rwxp f6e26000 00:00 0 
+f6e28000-f6e3e000 r-xp 00000000 fd:00 262931                             /lib/libselinux.so.1
+f6e3e000-f6e40000 rwxp 00015000 fd:00 262931                             /lib/libselinux.so.1
+f6e40000-f7136000 r-xp 00000000 fd:00 262913                             /lib/libnss_ldap-2.5.so
+f7136000-f714e000 rwxp 002f6000 fd:00 262913                             /lib/libnss_ldap-2.5.so
+f714e000-f715d000 rwxp f714e000 00:00 0 
+f715d000-f7167000 r-xp 00000000 fd:00 262180                             /lib/libnss_files-2.5.so
+f7167000-f7168000 r-xp 00009000 fd:00 262180                             /lib/libnss_files-2.5.so
+f7168000-f7169000 rwxp 0000a000 fd:00 262180                             /lib/libnss_files-2.5.so
+f7169000-f717e000 r-xp 00000000 fd:00 262174                             /lib/libnsl-2.5.so
+f717e000-f717f000 r-xp 00014000 fd:00 262174                             /lib/libnsl-2.5.so
+f717f000-f7180000 rwxp 00015000 fd:00 262174                             /lib/libnsl-2.5.so
+f7180000-f7182000 rwxp f7180000 00:00 0 
+f7182000-f7184000 r-xp 00000000 fd:06 1046975                            /usr/lib/libXinerama.so.1.0.0
+f7184000-f7185000 rwxp 00001000 fd:06 1046975                            /usr/lib/libXinerama.so.1.0.0
+f7189000-f7198000 r-xp 00000000 00:18 458645                             /SNS/software/itt/idl80/idlde/bin.linux.x86/jre/lib/i386/libzip.so
+f7198000-f719a000 rwxp 0000e000 00:18 458645                             /SNS/software/itt/idl80/idlde/bin.linux.x86/jre/lib/i386/libzip.so
+f719a000-f71a2000 rwxs 00000000 fd:02 753690                             /tmp/hsperfdata_j35/3638 (deleted)
+f71a2000-f71c5000 r-xp 00000000 00:18 458641                             /SNS/software/itt/idl80/idlde/bin.linux.x86/jre/lib/i386/libjava.so
+f71c5000-f71c7000 rwxp 00023000 00:18 458641                             /SNS/software/itt/idl80/idlde/bin.linux.x86/jre/lib/i386/libjava.so
+f71c7000-f71ce000 r-xp 00000000 fd:00 262192                             /lib/librt-2.5.so
+f71ce000-f71cf000 r-xp 00007000 fd:00 262192                             /lib/librt-2.5.so
+f71cf000-f71d0000 rwxp 00008000 fd:00 262192                             /lib/librt-2.5.so
+f71d0000-f71d3000 ---p f71d0000 00:00 0 
+f71d3000-f7221000 rwxp f71d3000 00:00 0 
+f7221000-f7248000 r-xp 00000000 fd:00 262172                             /lib/libm-2.5.so
+f7248000-f7249000 r-xp 00026000 fd:00 262172                             /lib/libm-2.5.so
+f7249000-f724a000 rwxp 00027000 fd:00 262172                             /lib/libm-2.5.so
+f724a000-f7917000 r-xp 00000000 00:18 458628                             /SNS/software/itt/idl80/idlde/bin.linux.x86/jre/lib/i386/server/libjvm.so
+f7917000-f7965000 rwxp 006cc000 00:18 458628                             /SNS/software/itt/idl80/idlde/bin.linux.x86/jre/lib/i386/server/libjvm.so
+f7965000-f7d88000 rwxp f7965000 00:00 0 
+f7d88000-f7edb000 r-xp 00000000 fd:00 262164                             /lib/libc-2.5.so
+f7edb000-f7edd000 r-xp 00153000 fd:00 262164                             /lib/libc-2.5.so
+f7edd000-f7ede000 rwxp 00155000 fd:00 262164                             /lib/libc-2.5.so
+f7ede000-f7ee1000 rwxp f7ede000 00:00 0 
+f7ee1000-f7ee4000 r-xp 00000000 fd:00 262170                             /lib/libdl-2.5.so
+f7ee4000-f7ee5000 r-xp 00002000 fd:00 262170                             /lib/libdl-2.5.so
+f7ee5000-f7ee6000 rwxp 00003000 fd:00 262170                             /lib/libdl-2.5.so
+f7ee6000-f7ee7000 rwxp f7ee6000 00:00 0 
+f7ee7000-f7eee000 r-xp 00000000 00:18 458643                             /SNS/software/itt/idl80/idlde/bin.linux.x86/jre/lib/i386/jli/libjli.so
+f7eee000-f7ef0000 rwxp 00006000 00:18 458643                             /SNS/software/itt/idl80/idlde/bin.linux.x86/jre/lib/i386/jli/libjli.so
+f7ef0000-f7f05000 r-xp 00000000 fd:00 262188                             /lib/libpthread-2.5.so
+f7f05000-f7f06000 r-xp 00015000 fd:00 262188                             /lib/libpthread-2.5.so
+f7f06000-f7f07000 rwxp 00016000 fd:00 262188                             /lib/libpthread-2.5.so
+f7f07000-f7f09000 rwxp f7f07000 00:00 0 
+f7f09000-f7f0b000 r-xp 00000000 fd:00 262213                             /lib/libgmodule-2.0.so.0.1200.3
+f7f0b000-f7f0c000 rwxp 00002000 fd:00 262213                             /lib/libgmodule-2.0.so.0.1200.3
+f7f0c000-f7f0e000 r-xs 0000a000 00:18 449488                             /SNS/software/itt/idl80/idlde/plugins/org.eclipse.equinox.launcher_1.0.201.R35x_v20090715.jar
+f7f0e000-f7f10000 r-xp 00000000 fd:00 262230                             /lib/libkeyutils-1.2.so
+f7f10000-f7f11000 rwxp 00001000 fd:00 262230                             /lib/libkeyutils-1.2.so
+f7f11000-f7f13000 r-xp 00000000 fd:00 262255                             /lib/libcom_err.so.2.1
+f7f13000-f7f14000 rwxp 00001000 fd:00 262255                             /lib/libcom_err.so.2.1
+f7f14000-f7f1a000 r-xp 00000000 00:18 458626                             /SNS/software/itt/idl80/idlde/bin.linux.x86/jre/lib/i386/native_threads/libhpi.so
+f7f1a000-f7f1b000 rwxp 00006000 00:18 458626                             /SNS/software/itt/idl80/idlde/bin.linux.x86/jre/lib/i386/native_threads/libhpi.so
+f7f1b000-f7f1c000 rwxp f7f1b000 00:00 0 
+f7f1c000-f7f1d000 ---p f7f1c000 00:00 0 
+f7f1d000-f7f28000 r-xp 00000000 00:18 458640                             /SNS/software/itt/idl80/idlde/bin.linux.x86/jre/lib/i386/libverify.so
+f7f28000-f7f29000 rwxp 0000b000 00:18 458640                             /SNS/software/itt/idl80/idlde/bin.linux.x86/jre/lib/i386/libverify.so
+f7f29000-f7f2a000 rwxp f7f29000 00:00 0 
+f7f2a000-f7f45000 r-xp 00000000 fd:00 262157                             /lib/ld-2.5.so
+f7f45000-f7f46000 r-xp 0001a000 fd:00 262157                             /lib/ld-2.5.so
+f7f46000-f7f47000 rwxp 0001b000 fd:00 262157                             /lib/ld-2.5.so
+ffea7000-ffebc000 rwxp 7ffffffe9000 00:00 0                              [stack]
+ffffe000-fffff000 r-xp ffffe000 00:00 0 
+
+VM Arguments:
+jvm_args: -Dorg.eclipse.swt.browser.XULRunnerPath=/SNS/software/itt/idl8/idlde/bin.linux.x86/xulrunner-1.9.0.6 
+java_command: /SNS/software/itt/idl80/idlde/plugins/org.eclipse.equinox.launcher_1.0.201.R35x_v20090715.jar -os linux -ws gtk -arch x86 -showsplash -launcher /SNS/software/itt/idl80/idlde/idlde.linux.x86 -name Idlde.linux.x86 --launcher.library /SNS/software/itt/idl80/idlde/plugins/org.eclipse.equinox.launcher.gtk.linux.x86_1.0.200.v20090520/eclipse_1206.so -startup /SNS/software/itt/idl80/idlde/plugins/org.eclipse.equinox.launcher_1.0.201.R35x_v20090715.jar -exitdata 638025 -vm /SNS/software/itt/idl8/idlde/bin.linux.x86/jre/bin/java -vmargs -Dorg.eclipse.swt.browser.XULRunnerPath=/SNS/software/itt/idl8/idlde/bin.linux.x86/xulrunner-1.9.0.6 -jar /SNS/software/itt/idl80/idlde/plugins/org.eclipse.equinox.launcher_1.0.201.R35x_v20090715.jar
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+JAVA_HOME=/usr/java/current
+CLASSPATH=.:/SNS/software/itt/idl8/resource/bridges/export/java/javaidlb.jar
+PATH=/SNS/software/itt/idl8/bin:/SNS/software/bin:/usr/local/SNS/bin:/usr/kerberos/bin:/usr/java/current/bin:/usr/FullProf_Suite:/usr/gsas:/usr/local/bin:/bin:/usr/bin:/usr/root/bin:/SNS/users/j35/bin
+LD_LIBRARY_PATH=/SNS/software/itt/idl80/idlde/bin.linux.x86/jre/lib/i386/server:/SNS/software/itt/idl80/idlde/bin.linux.x86/jre/lib/i386:/SNS/software/itt/idl80/idlde/bin.linux.x86/jre/../lib/i386:/SNS/software/itt/idl8/idlde/bin.linux.x86:/SNS/software/itt/idl8/bin/bin.linux.x86:/SNS/software/itt/idl8/bin/bin.linux.x86_64/dm/lib:/usr/local/lib64:/usr/local/lib:/SNS/software/lib64:/SNS/software/lib:/SNS/software/lib/vtk-5.4:/usr/java/current/lib::/usr/root/lib/root:/SNS/software/itt/idl8/idlde/bin.linux.x86_64/jre/lib/amd64/server:/SNS/software/itt/idl8/idlde/bin.linux.x86_64/jre/lib/amd64/server/..:/SNS/software/itt/idl8/idlde/bin.linux.x86_64/jre/lib/amd64/server/../native_threads:/usr/lib/xulrunner-1.9.2
+SHELL=/bin/bash
+DISPLAY=localhost:10.0
+
+Signal Handlers:
+SIGSEGV: [libjvm.so+0x650710], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGBUS: [libjvm.so+0x650710], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGFPE: [libjvm.so+0x52f600], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGPIPE: SIG_IGN, sa_mask[0]=0x00001000, sa_flags=0x10000000
+SIGXFSZ: [libjvm.so+0x52f600], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGILL: [libjvm.so+0x52f600], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGUSR1: SIG_DFL, sa_mask[0]=0x00000000, sa_flags=0x00000000
+SIGUSR2: [libjvm.so+0x5321f0], sa_mask[0]=0x00000000, sa_flags=0x10000004
+SIGHUP: [libjvm.so+0x531f20], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGINT: [libidl.so.8.0+0x1c93cf], sa_mask[0]=0x00000000, sa_flags=0x10000000
+SIGTERM: [libjvm.so+0x531f20], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGQUIT: [libjvm.so+0x531f20], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+
+
+---------------  S Y S T E M  ---------------
+
+OS:Red Hat Enterprise Linux Client release 5.6 (Tikanga)
+
+uname:Linux 2.6.18-238.9.1.el5 #1 SMP Fri Mar 18 12:42:39 EDT 2011 x86_64
+libc:glibc 2.5 NPTL 2.5 
+rlimit: STACK 10240k, CORE 0k, NPROC 532480, NOFILE 32768, AS infinity
+load average:1.25 1.41 1.26
+
+CPU:total 8 (2 cores per cpu, 1 threads per core) family 15 model 65 stepping 3, cmov, cx8, fxsr, mmx, sse, sse2, sse3, mmxext, 3dnow, 3dnowext
+
+Memory: 4k page, physical 66071004k(46154904k free), swap 33816568k(33816568k free)
+
+vm_info: Java HotSpot(TM) Server VM (14.3-b01) for linux-x86 JRE (1.6.0_17-b04), built on Oct 11 2009 01:01:36 by "java_re" with gcc 3.2.1-7a (J2SE release)
+
+time: Thu May  5 16:27:15 2011
+elapsed time: 1848 seconds
+
