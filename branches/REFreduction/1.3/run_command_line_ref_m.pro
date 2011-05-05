@@ -225,7 +225,21 @@ pro run_command_line_ref_m_broad_peak, event
     parent_base_uname='MAIN_BASE', $
     pixel_nbr_steps = nbr_pixels, $
     list_working_spin_states = data_spin_state
-        
+  
+  ;pre processing 
+  ;this is where the temporary data ROI file will be created
+  _index_pixel=0
+  while (_index_pixel lt nbr_pixels) do begin
+  
+  wait, 0.1
+    update_progress_bar, base=(*global).progress_bar_base, $
+    /pre_processing, $
+    /increment
+  
+  _index_pixel++
+  endwhile
+
+  ;main part of reduction
   _index_spin=0
   while (_index_spin lt nbr_spins) do begin
   
@@ -242,14 +256,14 @@ pro run_command_line_ref_m_broad_peak, event
     spin_state=_current_spin_state, $
     /increment
     
-    if ((*global).stop_broad_reduction) then return
-    
       _index_pixel++
     endwhile
     
     _index_spin++
   endwhile
 
+  ;phase 1 of post-processing
+  ;merging the output files of the various spin states
   _index_spin=0
   while (_index_spin lt nbr_spins) do begin
  
@@ -260,10 +274,17 @@ pro run_command_line_ref_m_broad_peak, event
     /post_processing, $
     /increment
 
-    if ((*global).stop_broad_reduction) then return
-  
   _index_spin++
   endwhile
+  
+  ;phase 2 of post-processing
+  ;removing the temporary data ROI files
+  print, 'Cleaning temporary data ROI files'
+  wait, 0.2
+  update_progress_bar, base=(*global).progress_bar_base, $
+    /post_processing, $
+    /increment
+
   
 end
 
