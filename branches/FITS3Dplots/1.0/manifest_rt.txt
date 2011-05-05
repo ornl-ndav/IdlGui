@@ -1,5 +1,5 @@
 ;-------------------------------------------------
-; Windows 32-bit
+; Windows 64-bit
 ;-------------------------------------------------
 ;Windows 32-bit (required binaries)
 bin/bin.x86/idl.dll
@@ -15,16 +15,6 @@ bin/bin.x86/freetype2_3_6.dll
 bin/bin.x86/gl_driver.dll
 bin/bin.x86/idloledragdrop.dll
 bin/bin.x86/xerces-c_2_6_0.dll
-bin/bin.x86/idl_vdal.dll
-bin/bin.x86/idl_vdal.dlm
-bin/bin.x86/ittcdf_cdf.dll
-bin/bin.x86/ittcdf_gdal.dll
-bin/bin.x86/ittcdf_gdb.dll
-bin/bin.x86/ittcoreglobal.dll
-bin/bin.x86/ittprj_pe.dll
-bin/bin.x86/ITTVISHelp.exe
-bin/bin.x86/tbb.dll
-bin/bin.x86/tbbmalloc.dll
 
 ;Windows 32-bit (optional binaries)
 ;IDL Library
@@ -32,11 +22,12 @@ bin/bin.x86/idl.lib
 ;HDF
 bin/bin.x86/hd423m.dll
 bin/bin.x86/hm423m.dll
+;IDL Assistant
+bin/bin.x86/idl_assistant.exe
 ;Optional dlms
 bin/bin.x86/anpolygon2d.dll
 bin/bin.x86/anpolygon2d.dlm
-bin/bin.x86/IAS_Client_22021.dll
-bin/bin.x86/gdal16.dll
+bin/bin.x86/ias_client_22021.dll
 bin/bin.x86/idl_cdf.dll
 bin/bin.x86/idl_cdf.dlm
 bin/bin.x86/idl_dataminer.dll
@@ -54,7 +45,6 @@ bin/bin.x86/idl_hdf.dll
 bin/bin.x86/idl_hdf.dlm
 bin/bin.x86/idl_hdf5.dll
 bin/bin.x86/idl_hdf5.dlm
-bin/bin.x86/idl_ips.dll
 bin/bin.x86/idl_jpeg.dll
 bin/bin.x86/idl_jpeg.dlm
 bin/bin.x86/idl_jpeg2000.dll
@@ -209,13 +199,13 @@ bin/bin.x86_64/gl_driver.dll
 bin/bin.x86_64/osmesa6_2.dll
 bin/bin.x86_64/ug3220.dll
 bin/bin.x86_64/xerces-c_2_6_0.dll
-bin/bin.x86_64/ITTVISHelp.exe
-bin/bin.x86_64/tbb.dll
-bin/bin.x86_64/tbbmalloc.dll
 
 ; Windows 64-bit (optional binaries)
 ;IDL Library
 bin/bin.x86_64/idl.lib
+
+;IDL Assistant
+bin/bin.x86_64/idl_assistant.exe
 
 ;HDF
 bin/bin.x86_64/hd423m.dll
@@ -265,7 +255,6 @@ bin/bin.x86_64/PICX6920.SSM
 ;Optional DLMs
 bin/bin.x86_64/anpolygon2d.dll
 bin/bin.x86_64/anpolygon2d.dlm
-bin/bin.x86_64/gdal16.dll
 bin/bin.x86_64/idl_cdf.dll
 bin/bin.x86_64/idl_cdf.dlm
 bin/bin.x86_64/idl_dataminer.dll
@@ -287,7 +276,6 @@ bin/bin.x86_64/idl_hdf.dll
 bin/bin.x86_64/idl_hdf.dlm
 bin/bin.x86_64/idl_hdf5.dll
 bin/bin.x86_64/idl_hdf5.dlm
-bin/bin.x86_64/idl_ips.dll
 bin/bin.x86_64/idl_jpeg.dll
 bin/bin.x86_64/idl_jpeg.dlm
 bin/bin.x86_64/idl_jpeg2000.dll
@@ -352,16 +340,23 @@ bin/bin.x86_64/dm/Drivers/qesqlext.h
 
 
 ;----------------------------------------------
+; Mac OS X 
+;----------------------------------------------
+; Mac Applescripts
+Utils_applescripts.scpt
+LicenseWizard.app
+
+
+;----------------------------------------------
 ; Mac OS X Intel
 ;----------------------------------------------
-bin/bin.darwin.i386/DESCRIP
-bin/bin.darwin.i386/Makefile
 bin/bin.darwin.i386/anpolygon2d.dlm
 bin/bin.darwin.i386/anpolygon2d.so
 bin/bin.darwin.i386/ca-bundle.crt
 bin/bin.darwin.i386/genver
 bin/bin.darwin.i386/gl_driver.so
 bin/bin.darwin.i386/idl
+bin/bin.darwin.i386/idl_assistant.app
 bin/bin.darwin.i386/idl_cdf.dlm
 bin/bin.darwin.i386/idl_cdf.so
 bin/bin.darwin.i386/idl_dataminer.dlm
@@ -426,7 +421,6 @@ bin/bin.darwin.i386/idl_wavelet.so
 bin/bin.darwin.i386/idl_xml.dlm
 bin/bin.darwin.i386/idl_xml.so
 bin/bin.darwin.i386/idlrpc
-bin/bin.darwin.i386/ITTVISHelp.app
 bin/bin.darwin.i386/libMesaGL6_2.dylib
 bin/bin.darwin.i386/libMesaGLU6_2.dylib
 bin/bin.darwin.i386/libOSMesa6_2.dylib
@@ -436,27 +430,22 @@ bin/bin.darwin.i386/libXm.dylib
 bin/bin.darwin.i386/libcurl.4.0.1.dylib
 bin/bin.darwin.i386/libcurl.4.dylib
 bin/bin.darwin.i386/libcurl.dylib
-bin/bin.darwin.i386/libgdal.1.dylib
 bin/bin.darwin.i386/libfreetype2_3_6.6.3.17.dylib
 bin/bin.darwin.i386/libfreetype2_3_6.6.dylib
 bin/bin.darwin.i386/libfreetype2_3_6.dylib
 bin/bin.darwin.i386/libias_client_22021.dylib
-bin/bin.darwin.i386/libidl.8.0.dylib
+bin/bin.darwin.i386/libidl.7.1.dylib
 bin/bin.darwin.i386/libidl.dylib
 bin/bin.darwin.i386/libidl_bml.dylib
 bin/bin.darwin.i386/libidl_gmem.dylib
-bin/bin.darwin.i386/libidl_ipcclient.8.0.dylib
+bin/bin.darwin.i386/libidl_ipcclient.7.1.dylib
 bin/bin.darwin.i386/libidl_ipcclient.dylib
-bin/bin.darwin.i386/libidl_ips.8.0.dylib
-bin/bin.darwin.i386/libidl_ips.dylib
-bin/bin.darwin.i386/libidl_ops.8.0.dylib
+bin/bin.darwin.i386/libidl_ops.7.1.dylib
 bin/bin.darwin.i386/libidl_ops.dylib
-bin/bin.darwin.i386/libidl_rpc.8.0.dylib
+bin/bin.darwin.i386/libidl_rpc.7.1.dylib
 bin/bin.darwin.i386/libidl_rpc.dylib
 bin/bin.darwin.i386/libjavab.dylib
 bin/bin.darwin.i386/libjavaidlb.jnilib
-bin/bin.darwin.i386/libtbb.dylib
-bin/bin.darwin.i386/libtbbmalloc.dylib
 bin/bin.darwin.i386/libxerces-c2_6_0.26.0.dylib
 bin/bin.darwin.i386/libxerces-c2_6_0.26.dylib
 bin/bin.darwin.i386/libxerces-c2_6_0.dylib
@@ -472,17 +461,23 @@ bin/bin.darwin.i386/lmstat
 bin/bin.darwin.i386/lmutil
 bin/bin.darwin.i386/main.o
 
+
+; IDL Assistant
+bin/bin.darwin.i386/idl_assistant.app/Contents/Info.plist
+bin/bin.darwin.i386/idl_assistant.app/Contents/PkgInfo
+bin/bin.darwin.i386/idl_assistant.app/Contents/MacOS/idl_assistant
+bin/bin.darwin.i386/idl_assistant.app/Contents/Resources/application.icns
+
 ;----------------------------------------------
 ; Mac OS X Intel - x86_64
 ;----------------------------------------------
-bin/bin.darwin.x86_64/DESCRIP
-bin/bin.darwin.x86_64/Makefile
 bin/bin.darwin.x86_64/anpolygon2d.dlm
 bin/bin.darwin.x86_64/anpolygon2d.so
 bin/bin.darwin.x86_64/ca-bundle.crt
 bin/bin.darwin.x86_64/genver
 bin/bin.darwin.x86_64/gl_driver.so
 bin/bin.darwin.x86_64/idl
+bin/bin.darwin.x86_64/idl_assistant.app
 bin/bin.darwin.x86_64/idl_cdf.dlm
 bin/bin.darwin.x86_64/idl_cdf.so
 bin/bin.darwin.x86_64/idl_dataminer.dlm
@@ -547,8 +542,6 @@ bin/bin.darwin.x86_64/idl_wavelet.so
 bin/bin.darwin.x86_64/idl_xml.dlm
 bin/bin.darwin.x86_64/idl_xml.so
 bin/bin.darwin.x86_64/idlrpc
-bin/bin.darwin.x86_64/ITTVISHelp.app
-bin/bin.darwin.x86_64/libgdal.1.dylib
 bin/bin.darwin.x86_64/libMesaGL6_2.dylib
 bin/bin.darwin.x86_64/libMesaGLU6_2.dylib
 bin/bin.darwin.x86_64/libOSMesa6_2.dylib
@@ -559,22 +552,18 @@ bin/bin.darwin.x86_64/libcurl.4.0.1.dylib
 bin/bin.darwin.x86_64/libcurl.4.dylib
 bin/bin.darwin.x86_64/libcurl.dylib
 bin/bin.darwin.x86_64/libias_client_22021.dylib
-bin/bin.darwin.x86_64/libidl.8.0.dylib
+bin/bin.darwin.x86_64/libidl.7.1.dylib
 bin/bin.darwin.x86_64/libidl.dylib
 bin/bin.darwin.x86_64/libidl_bml.dylib
 bin/bin.darwin.x86_64/libidl_gmem.dylib
-bin/bin.darwin.x86_64/libidl_ipcclient.8.0.dylib
+bin/bin.darwin.x86_64/libidl_ipcclient.7.1.dylib
 bin/bin.darwin.x86_64/libidl_ipcclient.dylib
-bin/bin.darwin.x86_64/libidl_ips.8.0.dylib
-bin/bin.darwin.x86_64/libidl_ips.dylib
-bin/bin.darwin.x86_64/libidl_ops.8.0.dylib
+bin/bin.darwin.x86_64/libidl_ops.7.1.dylib
 bin/bin.darwin.x86_64/libidl_ops.dylib
-bin/bin.darwin.x86_64/libidl_rpc.8.0.dylib
+bin/bin.darwin.x86_64/libidl_rpc.7.1.dylib
 bin/bin.darwin.x86_64/libidl_rpc.dylib
 bin/bin.darwin.x86_64/libjavab.dylib
 bin/bin.darwin.x86_64/libjavaidlb.jnilib
-bin/bin.darwin.x86_64/libtbb.dylib
-bin/bin.darwin.x86_64/libtbbmalloc.dylib
 bin/bin.darwin.x86_64/libxerces-c2_6_0.26.0.dylib
 bin/bin.darwin.x86_64/libxerces-c2_6_0.26.dylib
 bin/bin.darwin.x86_64/libxerces-c2_6_0.dylib
@@ -590,6 +579,13 @@ bin/bin.darwin.x86_64/lmstat
 bin/bin.darwin.x86_64/lmutil
 bin/bin.darwin.x86_64/main.o
 
+
+; IDL Assistant
+bin/bin.darwin.x86_64/idl_assistant.app/Contents/Info.plist
+bin/bin.darwin.x86_64/idl_assistant.app/Contents/PkgInfo
+bin/bin.darwin.x86_64/idl_assistant.app/Contents/MacOS/idl_assistant
+bin/bin.darwin.x86_64/idl_assistant.app/Contents/Resources/application.icns
+
 ;----------------------------------------------
 ; Mac OS X PowerPC
 ;----------------------------------------------
@@ -599,6 +595,7 @@ bin/bin.darwin.ppc/ca-bundle.crt
 bin/bin.darwin.ppc/genver
 bin/bin.darwin.ppc/gl_driver.so
 bin/bin.darwin.ppc/idl
+bin/bin.darwin.ppc/idl_assistant.app
 bin/bin.darwin.ppc/idl_cdf.dlm
 bin/bin.darwin.ppc/idl_cdf.so
 bin/bin.darwin.ppc/idl_dataminer.dlm
@@ -677,15 +674,15 @@ bin/bin.darwin.ppc/libfreetype2_3_6.6.3.17.dylib
 bin/bin.darwin.ppc/libfreetype2_3_6.6.dylib
 bin/bin.darwin.ppc/libfreetype2_3_6.dylib
 bin/bin.darwin.ppc/libias_client_22021.dylib
-bin/bin.darwin.ppc/libidl.8.0.dylib
+bin/bin.darwin.ppc/libidl.7.1.dylib
 bin/bin.darwin.ppc/libidl.dylib
 bin/bin.darwin.ppc/libidl_bml.dylib
 bin/bin.darwin.ppc/libidl_gmem.dylib
-bin/bin.darwin.ppc/libidl_ipcclient.8.0.dylib
+bin/bin.darwin.ppc/libidl_ipcclient.7.1.dylib
 bin/bin.darwin.ppc/libidl_ipcclient.dylib
-bin/bin.darwin.ppc/libidl_ops.8.0.dylib
+bin/bin.darwin.ppc/libidl_ops.7.1.dylib
 bin/bin.darwin.ppc/libidl_ops.dylib
-bin/bin.darwin.ppc/libidl_rpc.8.0.dylib
+bin/bin.darwin.ppc/libidl_rpc.7.1.dylib
 bin/bin.darwin.ppc/libidl_rpc.dylib
 bin/bin.darwin.ppc/libjavab.dylib
 bin/bin.darwin.ppc/libjavaidlb.jnilib
@@ -713,19 +710,24 @@ bin/bin.darwin.ppc/dicomex/mergecom.srv
 bin/bin.darwin.ppc/dicomex/mrgcom3.dct
 bin/bin.darwin.ppc/dicomex/mrgcom3.msg
 
+;IDL Assistant
+bin/bin.darwin.ppc/idl_assistant.app/Contents/Info.plist
+bin/bin.darwin.ppc/idl_assistant.app/Contents/PkgInfo
+bin/bin.darwin.ppc/idl_assistant.app/Contents/MacOS/idl_assistant
+bin/bin.darwin.ppc/idl_assistant.app/Contents/Resources/application.icns
+
 ;----------------------------------------------
 ; Linux 32-bit
 ;----------------------------------------------
-bin/bin.linux.x86/DESCRIP
-bin/bin.linux.x86/Makefile
 bin/bin.linux.x86/adinit.dat
 bin/bin.linux.x86/anpolygon2d.dlm
 bin/bin.linux.x86/anpolygon2d.so
 bin/bin.linux.x86/ca-bundle.crt
 bin/bin.linux.x86/genver
 bin/bin.linux.x86/gl_driver.so
-bin/bin.linux.x86/gl_driver.so.8.0
+bin/bin.linux.x86/gl_driver.so.7.1
 bin/bin.linux.x86/idl
+bin/bin.linux.x86/idl_assistant
 bin/bin.linux.x86/idl_cdf.dlm
 bin/bin.linux.x86/idl_cdf.so
 bin/bin.linux.x86/idl_dataminer.dlm
@@ -796,35 +798,26 @@ bin/bin.linux.x86/libXp.so.6
 bin/bin.linux.x86/libXp.so.6.2
 bin/bin.linux.x86/libcurl.so
 bin/bin.linux.x86/libcurl.so.3
-bin/bin.linux.x86/libgdal.so
-bin/bin.linux.x86/libgdal.so.1
-bin/bin.linux.x86/libgdal.so.1.13.1
 bin/bin.linux.x86/libfreetype2_3_6.so
 bin/bin.linux.x86/libfreetype2_3_6.so.6
 bin/bin.linux.x86/libfreetype2_3_6.so.6.3.17
 bin/bin.linux.x86/libias_client_22021.so
 bin/bin.linux.x86/libidl.so
-bin/bin.linux.x86/libidl.so.8.0
+bin/bin.linux.x86/libidl.so.7.1
 bin/bin.linux.x86/libidl_bml.so
 bin/bin.linux.x86/libidl_gmem.so
 bin/bin.linux.x86/libidl_ipcclient.so
-bin/bin.linux.x86/libidl_ipcclient.so.8.0
-bin/bin.linux.x86/libidl_ips.so
-bin/bin.linux.x86/libidl_ips.so.8.0
+bin/bin.linux.x86/libidl_ipcclient.so.7.1
 bin/bin.linux.x86/libidl_ops.so
-bin/bin.linux.x86/libidl_ops.so.8.0
+bin/bin.linux.x86/libidl_ops.so.7.1
 bin/bin.linux.x86/libidl_rpc.so
-bin/bin.linux.x86/libidl_rpc.so.8.0
+bin/bin.linux.x86/libidl_rpc.so.7.1
 bin/bin.linux.x86/libjavab.so
 bin/bin.linux.x86/libjavaidlb.so
 bin/bin.linux.x86/libpicl20.so
 bin/bin.linux.x86/libxerces-c2_6_0.so
 bin/bin.linux.x86/libxerces-c2_6_0.so.26
 bin/bin.linux.x86/libxerces-c2_6_0.so.26.0
-bin/bin.linux.x86/libtbbmalloc.so
-bin/bin.linux.x86/libtbbmalloc.so.2
-bin/bin.linux.x86/libtbb.so
-bin/bin.linux.x86/libtbb.so.2
 bin/bin.linux.x86/lmcksum
 bin/bin.linux.x86/lmdiag
 bin/bin.linux.x86/lmdown
@@ -913,15 +906,14 @@ bin/bin.linux.x86/dm/locale/en_US/LC_MESSAGES/odbc.m
 ;----------------------------------------------
 ; Linux 64-bit
 ;----------------------------------------------
-bin/bin.linux.x86_64/DESCRIP
-bin/bin.linux.x86_64/Makefile
 bin/bin.linux.x86_64/anpolygon2d.dlm
 bin/bin.linux.x86_64/anpolygon2d.so
 bin/bin.linux.x86_64/ca-bundle.crt
 bin/bin.linux.x86_64/genver
 bin/bin.linux.x86_64/gl_driver.so
-bin/bin.linux.x86_64/gl_driver.so.8.0
+bin/bin.linux.x86_64/gl_driver.so.7.1
 bin/bin.linux.x86_64/idl
+bin/bin.linux.x86_64/idl_assistant
 bin/bin.linux.x86_64/idl_cdf.dlm
 bin/bin.linux.x86_64/idl_cdf.so
 bin/bin.linux.x86_64/idl_dataminer.dlm
@@ -991,31 +983,22 @@ bin/bin.linux.x86_64/libcurl.so.3
 bin/bin.linux.x86_64/libfreetype2_3_6.so
 bin/bin.linux.x86_64/libfreetype2_3_6.so.6
 bin/bin.linux.x86_64/libfreetype2_3_6.so.6.3.17
-bin/bin.linux.x86_64/libgdal.so
-bin/bin.linux.x86_64/libgdal.so.1
-bin/bin.linux.x86_64/libgdal.so.1.13.1
 bin/bin.linux.x86_64/libias_client_22021.so
 bin/bin.linux.x86_64/libidl.so
-bin/bin.linux.x86_64/libidl.so.8.0
+bin/bin.linux.x86_64/libidl.so.7.1
 bin/bin.linux.x86_64/libidl_bml.so
 bin/bin.linux.x86_64/libidl_gmem.so
 bin/bin.linux.x86_64/libidl_ipcclient.so
-bin/bin.linux.x86_64/libidl_ipcclient.so.8.0
-bin/bin.linux.x86_64/libidl_ips.so
-bin/bin.linux.x86_64/libidl_ips.so.8.0
+bin/bin.linux.x86_64/libidl_ipcclient.so.7.1
 bin/bin.linux.x86_64/libidl_ops.so
-bin/bin.linux.x86_64/libidl_ops.so.8.0
+bin/bin.linux.x86_64/libidl_ops.so.7.1
 bin/bin.linux.x86_64/libidl_rpc.so
-bin/bin.linux.x86_64/libidl_rpc.so.8.0
+bin/bin.linux.x86_64/libidl_rpc.so.7.1
 bin/bin.linux.x86_64/libjavab.so
 bin/bin.linux.x86_64/libjavaidlb.so
 bin/bin.linux.x86_64/libxerces-c2_6_0.so
 bin/bin.linux.x86_64/libxerces-c2_6_0.so.26
 bin/bin.linux.x86_64/libxerces-c2_6_0.so.26.0
-bin/bin.linux.x86_64/libtbbmalloc.so
-bin/bin.linux.x86_64/libtbbmalloc.so.2
-bin/bin.linux.x86_64/libtbb.so
-bin/bin.linux.x86_64/libtbb.so.2
 bin/bin.linux.x86_64/lmcksum
 bin/bin.linux.x86_64/lmdiag
 bin/bin.linux.x86_64/lmdown
@@ -1086,8 +1069,6 @@ bin/bin.linux.x86_64/dm/locale/en_US/LC_MESSAGES/odbc.m
 ;----------------------------------------------
 ;Solaris 32-bit
 ;----------------------------------------------
-bin/bin.solaris2.sparc/DESCRIP
-bin/bin.solaris2.sparc/Makefile
 bin/bin.solaris2.sparc/adinit.dat
 bin/bin.solaris2.sparc/anpolygon2d.dlm
 bin/bin.solaris2.sparc/anpolygon2d.so
@@ -1095,6 +1076,7 @@ bin/bin.solaris2.sparc/ca-bundle.crt
 bin/bin.solaris2.sparc/genver
 bin/bin.solaris2.sparc/gl_driver.so
 bin/bin.solaris2.sparc/idl
+bin/bin.solaris2.sparc/idl_assistant
 bin/bin.solaris2.sparc/idl_cdf.dlm
 bin/bin.solaris2.sparc/idl_cdf.so
 bin/bin.solaris2.sparc/idl_dataminer.dlm
@@ -1160,9 +1142,6 @@ bin/bin.solaris2.sparc/idl_wavelet.so
 bin/bin.solaris2.sparc/idl_xml.dlm
 bin/bin.solaris2.sparc/idl_xml.so
 bin/bin.solaris2.sparc/idlrpc
-bin/bin.solaris2.sparc/libgdal.so
-bin/bin.solaris2.sparc/libgdal.so.1
-bin/bin.solaris2.sparc/libgdal.so.1.13.1
 bin/bin.solaris2.sparc/libMesaGL6_2.so
 bin/bin.solaris2.sparc/libMesaGLU6_2.so
 bin/bin.solaris2.sparc/libOSMesa6_2.so
@@ -1172,17 +1151,15 @@ bin/bin.solaris2.sparc/libfreetype2_3_6.so
 bin/bin.solaris2.sparc/libfreetype2_3_6.so.6
 bin/bin.solaris2.sparc/libfreetype2_3_6.so.6.3.17
 bin/bin.solaris2.sparc/libidl.so
-bin/bin.solaris2.sparc/libidl.so.8
+bin/bin.solaris2.sparc/libidl.so.7
 bin/bin.solaris2.sparc/libidl_bml.so
 bin/bin.solaris2.sparc/libidl_gmem.so
 bin/bin.solaris2.sparc/libidl_ipcclient.so
-bin/bin.solaris2.sparc/libidl_ipcclient.so.8
-bin/bin.solaris2.sparc/libidl_ips.so
-bin/bin.solaris2.sparc/libidl_ips.so.8
+bin/bin.solaris2.sparc/libidl_ipcclient.so.7
 bin/bin.solaris2.sparc/libidl_ops.so
-bin/bin.solaris2.sparc/libidl_ops.so.8
+bin/bin.solaris2.sparc/libidl_ops.so.7
 bin/bin.solaris2.sparc/libidl_rpc.so
-bin/bin.solaris2.sparc/libidl_rpc.so.8
+bin/bin.solaris2.sparc/libidl_rpc.so.7
 bin/bin.solaris2.sparc/libjavab.so
 bin/bin.solaris2.sparc/libjavaidlb.so
 bin/bin.solaris2.sparc/libpicu20.so
@@ -1268,14 +1245,13 @@ bin/bin.solaris2.sparc/dm/locale/en_US/LC_MESSAGES/odbc.m
 ;----------------------------------------------
 ;Solaris 64-bit
 ;----------------------------------------------
-bin/bin.solaris2.sparc64/DESCRIP
-bin/bin.solaris2.sparc64/Makefile
 bin/bin.solaris2.sparc64/anpolygon2d.dlm
 bin/bin.solaris2.sparc64/anpolygon2d.so
 bin/bin.solaris2.sparc64/ca-bundle.crt
 bin/bin.solaris2.sparc64/genver
 bin/bin.solaris2.sparc64/gl_driver.so
 bin/bin.solaris2.sparc64/idl
+bin/bin.solaris2.sparc64/idl_assistant
 bin/bin.solaris2.sparc64/idl_cdf.dlm
 bin/bin.solaris2.sparc64/idl_cdf.so
 bin/bin.solaris2.sparc64/idl_dataminer.dlm
@@ -1340,9 +1316,6 @@ bin/bin.solaris2.sparc64/idl_wavelet.so
 bin/bin.solaris2.sparc64/idl_xml.dlm
 bin/bin.solaris2.sparc64/idl_xml.so
 bin/bin.solaris2.sparc64/idlrpc
-bin/bin.solaris2.sparc64/libgdal.so
-bin/bin.solaris2.sparc64/libgdal.so.1
-bin/bin.solaris2.sparc64/libgdal.so.1.13.1
 bin/bin.solaris2.sparc64/libMesaGL6_2.so
 bin/bin.solaris2.sparc64/libMesaGLU6_2.so
 bin/bin.solaris2.sparc64/libOSMesa6_2.so
@@ -1353,17 +1326,15 @@ bin/bin.solaris2.sparc64/libfreetype2_3_6.so.6
 bin/bin.solaris2.sparc64/libfreetype2_3_6.so.6.3.17
 bin/bin.solaris2.sparc64/libias_client_22021.so
 bin/bin.solaris2.sparc64/libidl.so
-bin/bin.solaris2.sparc64/libidl.so.8
+bin/bin.solaris2.sparc64/libidl.so.7
 bin/bin.solaris2.sparc64/libidl_bml.so
 bin/bin.solaris2.sparc64/libidl_gmem.so
 bin/bin.solaris2.sparc64/libidl_ipcclient.so
-bin/bin.solaris2.sparc64/libidl_ipcclient.so.8
-bin/bin.solaris2.sparc64/libidl_ips.so
-bin/bin.solaris2.sparc64/libidl_ips.so.8
+bin/bin.solaris2.sparc64/libidl_ipcclient.so.7
 bin/bin.solaris2.sparc64/libidl_ops.so
-bin/bin.solaris2.sparc64/libidl_ops.so.8
+bin/bin.solaris2.sparc64/libidl_ops.so.7
 bin/bin.solaris2.sparc64/libidl_rpc.so
-bin/bin.solaris2.sparc64/libidl_rpc.so.8
+bin/bin.solaris2.sparc64/libidl_rpc.so.7
 bin/bin.solaris2.sparc64/libjavab.so
 bin/bin.solaris2.sparc64/libjavaidlb.so
 bin/bin.solaris2.sparc64/libxerces-c2_6_0.so
@@ -1428,8 +1399,6 @@ bin/bin.solaris2.sparc64/dm/locale/en_US/LC_MESSAGES/odbc.m
 ;----------------------------------------------
 ;Solaris x86 64-bit
 ;----------------------------------------------
-bin/bin.solaris2.x86_64/DESCRIP
-bin/bin.solaris2.x86_64/Makefile
 bin/bin.solaris2.x86_64/anpolygon2d.dlm
 bin/bin.solaris2.x86_64/anpolygon2d.so
 bin/bin.solaris2.x86_64/ca-bundle.crt
@@ -1510,17 +1479,15 @@ bin/bin.solaris2.x86_64/libfreetype2_3_6.so.6
 bin/bin.solaris2.x86_64/libfreetype2_3_6.so.6.3.17
 bin/bin.solaris2.x86_64/libias_client_22021.so
 bin/bin.solaris2.x86_64/libidl.so
-bin/bin.solaris2.x86_64/libidl.so.8
+bin/bin.solaris2.x86_64/libidl.so.7
 bin/bin.solaris2.x86_64/libidl_bml.so
 bin/bin.solaris2.x86_64/libidl_gmem.so
 bin/bin.solaris2.x86_64/libidl_ipcclient.so
-bin/bin.solaris2.x86_64/libidl_ipcclient.so.8
-bin/bin.solaris2.x86_64/libidl_ips.so
-bin/bin.solaris2.x86_64/libidl_ips.so.8
+bin/bin.solaris2.x86_64/libidl_ipcclient.so.7
 bin/bin.solaris2.x86_64/libidl_ops.so
-bin/bin.solaris2.x86_64/libidl_ops.so.8
+bin/bin.solaris2.x86_64/libidl_ops.so.7
 bin/bin.solaris2.x86_64/libidl_rpc.so
-bin/bin.solaris2.x86_64/libidl_rpc.so.8
+bin/bin.solaris2.x86_64/libidl_rpc.so.7
 bin/bin.solaris2.x86_64/libjavab.so
 bin/bin.solaris2.x86_64/libjavaidlb.so
 bin/bin.solaris2.x86_64/libxerces-c2_6_0.so
@@ -1540,6 +1507,7 @@ bin/bin.solaris2.x86_64/main.o
 help/idl_catalog.xml
 help/idlithelp.xml
 help/itools.xsd
+help/idl_release_notes.html
 help/template_help.xml
 
 ;Copyrights
@@ -1552,6 +1520,7 @@ help/copyrights/Galileo.txt
 help/copyrights/Merge.txt
 help/copyrights/Microline.txt
 help/copyrights/Modtran.txt
+help/copyrights/README.TXT
 help/copyrights/antlr.txt
 help/copyrights/bmp.txt
 help/copyrights/bsd.txt
@@ -1560,7 +1529,7 @@ help/copyrights/dicom_ctn.txt
 help/copyrights/ecw.txt
 help/copyrights/fft.txt
 help/copyrights/geotiff.txt
-help/copyrights/haru.txt
+help/copyrights/gnu_library_license.txt
 help/copyrights/hdf.txt
 help/copyrights/hdf5.txt
 help/copyrights/hdf_eos.txt
@@ -1568,6 +1537,7 @@ help/copyrights/heap_mgr.txt
 help/copyrights/jpeg.txt
 help/copyrights/kakadu.txt
 help/copyrights/lapack.txt
+help/copyrights/lgpl.txt
 help/copyrights/libcurl.txt
 help/copyrights/libsvm.txt
 help/copyrights/license.txt
@@ -1646,20 +1616,17 @@ help/widget/xpalette.txt
 lib/hdf_browser.sav
 lib/hdf_map.sav
 lib/hdf_read.sav
+lib/README.TXT
 lib/imsl/imslerr.bin
 lib/imsl/imsls_e.bin
 lib/itools/components/idlextensions.xml
-lib/datatypes/hash__define.sav
-lib/datatypes/hash.sav
-lib/datatypes/idl_hashcode.sav
-lib/datatypes/list.sav
-lib/datatypes/list__define.sav
 
 
 ;Dicomex
 lib/dicomex/dicomex_net_startup.sav
 
 ;Hook directory
+lib/hook/README.TXT
 lib/hook/idlrtmain.sav
 lib/hook/ittlicense.sav  ; License Wizard
 
@@ -1670,6 +1637,8 @@ lib/bridges/idlexbr_assistant.sav
 lib/bridges/idlitdirectwindow__define.sav
 
 ; IDL Wavelet Toolkit
+lib/wavelet/README.TXT
+lib/wavelet/relnotes.txt
 lib/wavelet/bitmaps/del_data.bmp
 lib/wavelet/bitmaps/help_wv.bmp
 lib/wavelet/bitmaps/imp_asc.bmp
@@ -1685,6 +1654,7 @@ lib/wavelet/bitmaps/plot_3d.bmp
 lib/wavelet/bitmaps/plot_wps.bmp
 lib/wavelet/bitmaps/print_wv.bmp
 lib/wavelet/bitmaps/save_wv.bmp
+lib/wavelet/bitmaps/splash.png
 lib/wavelet/bitmaps/viewdata.bmp
 lib/wavelet/bitmaps/viewwvlt.bmp
 lib/wavelet/data/el_nino.txt
@@ -1695,6 +1665,9 @@ lib/wavelet/data/wv_sample.sav
 
 
 ;Resource Directory
+resource/README.TXT
+
+
 ;X11 resources (UNIX only)
 resource/X11/lib/app-defaults
 resource/X11/lib/C
@@ -1808,7 +1781,6 @@ resource/X11/lib/X11/app-defaults/bitmaps/printvar.xbm
 resource/X11/lib/X11/app-defaults/bitmaps/printvar.xpm
 
 ; Bitmaps
-resource/bitmaps/advanced.bmp
 resource/bitmaps/arc.bmp
 resource/bitmaps/arrow.bmp
 resource/bitmaps/arrow_active.bmp
@@ -1821,7 +1793,6 @@ resource/bitmaps/back.bmp
 resource/bitmaps/binary.bmp
 resource/bitmaps/binary3d.bmp
 resource/bitmaps/bld.bmp
-resource/bitmaps/bringtofront24.bmp
 resource/bitmaps/bulb.bmp
 resource/bitmaps/button.bmp
 resource/bitmaps/camera.bmp
@@ -1831,7 +1802,6 @@ resource/bitmaps/colorbar.bmp
 resource/bitmaps/commandline.bmp
 resource/bitmaps/contour.bmp
 resource/bitmaps/copy.bmp
-resource/bitmaps/copy_24.bmp
 resource/bitmaps/crop.bmp
 resource/bitmaps/ctr.bmp
 resource/bitmaps/cut.bmp
@@ -1858,6 +1828,7 @@ resource/bitmaps/eba_prop_noex_cm.bmp
 resource/bitmaps/eba_prop_noex_nocm.bmp
 resource/bitmaps/ellipse.bmp
 resource/bitmaps/ellipse_active.bmp
+resource/bitmaps/envi.ico
 resource/bitmaps/export.bmp
 resource/bitmaps/eye_closed.bmp
 resource/bitmaps/find.bmp
@@ -1866,7 +1837,6 @@ resource/bitmaps/fliphoriz.bmp
 resource/bitmaps/flipvert.bmp
 resource/bitmaps/freeform.bmp
 resource/bitmaps/freehand.bmp
-resource/bitmaps/freehand24.bmp
 resource/bitmaps/freepoly.bmp
 resource/bitmaps/freepoly_active.bmp
 resource/bitmaps/front.bmp
@@ -1879,25 +1849,28 @@ resource/bitmaps/help2.bmp
 resource/bitmaps/help3.bmp
 resource/bitmaps/hist.bmp
 resource/bitmaps/hourglass.bmp
+resource/bitmaps/ias.ico
+resource/bitmaps/idl.ico
 resource/bitmaps/image.bmp
 resource/bitmaps/importd.bmp
 resource/bitmaps/importf.bmp
 resource/bitmaps/itl.bmp
-resource/bitmaps/ittlicense_itt.bmp
-resource/bitmaps/ittlicense_itt.ico
+resource/bitmaps/itools_about.png
+resource/bitmaps/itools_splash.png
+resource/bitmaps/ittlicense_envi.bmp
+resource/bitmaps/ittlicense_ias.bmp
+resource/bitmaps/ittlicense_idl.bmp
 resource/bitmaps/jst.bmp
 resource/bitmaps/layer.bmp
 resource/bitmaps/legend.bmp
 resource/bitmaps/lft.bmp
 resource/bitmaps/line.bmp
-resource/bitmaps/line24.bmp
 resource/bitmaps/linestyl.bmp
 resource/bitmaps/mapnet.bmp
 resource/bitmaps/mcr.bmp
 resource/bitmaps/minus.bmp
 resource/bitmaps/new.bmp
 resource/bitmaps/open.bmp
-resource/bitmaps/oval24.bmp
 resource/bitmaps/palette.bmp
 resource/bitmaps/pan.bmp
 resource/bitmaps/pan_active.bmp
@@ -1908,22 +1881,16 @@ resource/bitmaps/plot.bmp
 resource/bitmaps/plus.bmp
 resource/bitmaps/pointer.bmp
 resource/bitmaps/polar.bmp
-resource/bitmaps/polygon24.bmp
 resource/bitmaps/print.bmp
-resource/bitmaps/print_24.bmp
 resource/bitmaps/print1.bmp
 resource/bitmaps/profile.bmp
 resource/bitmaps/prop.bmp
-resource/bitmaps/Properties_24.bmp
 resource/bitmaps/propsheet.bmp
 resource/bitmaps/range_reset.bmp
 resource/bitmaps/rectangl.bmp
 resource/bitmaps/rectangl_active.bmp
-resource/bitmaps/rectangle24.bmp
 resource/bitmaps/redo.bmp
-resource/bitmaps/Redo_24.bmp
 resource/bitmaps/reset.bmp
-resource/bitmaps/ResetRange_24.bmp
 resource/bitmaps/rgba.bmp
 resource/bitmaps/roi.bmp
 resource/bitmaps/roi_active.bmp
@@ -1931,7 +1898,6 @@ resource/bitmaps/rotate.bmp
 resource/bitmaps/rotate_active.bmp
 resource/bitmaps/rt.bmp
 resource/bitmaps/save.bmp
-resource/bitmaps/Save_24.bmp
 resource/bitmaps/scale.bmp
 resource/bitmaps/scale_active.bmp
 resource/bitmaps/scatter.bmp
@@ -1939,7 +1905,6 @@ resource/bitmaps/segpoly.bmp
 resource/bitmaps/segpoly_active.bmp
 resource/bitmaps/select.bmp
 resource/bitmaps/select_active.bmp
-resource/bitmaps/sendtoback24.bmp
 resource/bitmaps/shift_down.bmp
 resource/bitmaps/shift_left.bmp
 resource/bitmaps/shift_right.bmp
@@ -1967,9 +1932,7 @@ resource/bitmaps/tab-dec.bmp
 resource/bitmaps/tab-left.bmp
 resource/bitmaps/tab-rht.bmp
 resource/bitmaps/text.bmp
-resource/bitmaps/text24.bmp
 resource/bitmaps/undo.bmp
-resource/bitmaps/Undo_24.bmp
 resource/bitmaps/undrln.bmp
 resource/bitmaps/ungroup.bmp
 resource/bitmaps/up1lvl.bmp
@@ -2002,6 +1965,7 @@ resource/bridges/export/COM/COM_IDL_connect_x86_64.tlb
 
 
 ; Import Bridges
+resource/bridges/import/java/README.TXT
 resource/bridges/import/java/idljavab.jar
 resource/bridges/import/java/jbexamples.jar
 resource/bridges/import/java/idljavabrcorig  ; Windows only
@@ -2009,8 +1973,10 @@ resource/bridges/import/java/.idljavabrc.orig     ; Unix only
 
 ; Color Table
 resource/colors/colors1.tbl
+resource/colors/README.TXT
 
 ;DataMiner ini files
+resource/dm/README.TXT
 resource/dm/linux.x86/odbc.ini
 resource/dm/linux.x86_64/odbc.ini
 resource/dm/solaris2.sparc/odbc.ini
@@ -2046,6 +2012,7 @@ resource/fonts/ps/PalBo.afm
 resource/fonts/ps/PalBoI.afm
 resource/fonts/ps/PalI.afm
 resource/fonts/ps/PalRo.afm
+resource/fonts/ps/README.TXT
 resource/fonts/ps/Symbol.afm
 resource/fonts/ps/TimesBo.afm
 resource/fonts/ps/TimesBoI.afm
@@ -2059,6 +2026,7 @@ resource/fonts/ps/prheader.ps
 resource/fonts/ps/prolog.ps
 
 ; TrueType Fonts
+resource/fonts/tt/README.TXT
 resource/fonts/tt/envisym_.ttf
 resource/fonts/tt/tt0003m_.ttf
 resource/fonts/tt/tt0004m_.ttf
@@ -2076,41 +2044,6 @@ resource/fonts/tt/tt9830z_.ttf
 resource/fonts/tt/tt9831z_.ttf
 resource/fonts/tt/ttfont.map
 
-; GDAL
-resource/gdaldata/coordinate_axis.csv
-resource/gdaldata/cubewerx_extra.wkt
-resource/gdaldata/ecw_cs.wkt
-resource/gdaldata/ellipsoid.csv
-resource/gdaldata/epsg.wkt
-resource/gdaldata/esri_extra.wkt
-resource/gdaldata/gcs.csv
-resource/gdaldata/gcs.override.csv
-resource/gdaldata/gdalicon.png
-resource/gdaldata/GDALLogoBW.svg
-resource/gdaldata/GDALLogoColor.svg
-resource/gdaldata/GDALLogoGS.svg
-resource/gdaldata/gdal_datum.csv
-resource/gdaldata/gt_datum.csv
-resource/gdaldata/gt_ellips.csv
-resource/gdaldata/LICENSE.TXT
-resource/gdaldata/pcs.csv
-resource/gdaldata/pcs.override.csv
-resource/gdaldata/prime_meridian.csv
-resource/gdaldata/projop_wparm.csv
-resource/gdaldata/proj_replace.csv
-resource/gdaldata/s57agencies.csv
-resource/gdaldata/s57attributes.csv
-resource/gdaldata/s57attributes_aml.csv
-resource/gdaldata/s57attributes_iw.csv
-resource/gdaldata/s57expectedinput.csv
-resource/gdaldata/s57objectclasses.csv
-resource/gdaldata/s57objectclasses_aml.csv
-resource/gdaldata/s57objectclasses_iw.csv
-resource/gdaldata/seed_2d.dgn
-resource/gdaldata/seed_3d.dgn
-resource/gdaldata/stateplane.csv
-resource/gdaldata/unit_of_measure.csv
-
 
 ; Styles
 resource/itools/styles/idl_classic_style.sav
@@ -2127,6 +2060,7 @@ resource/langcat/ittlicense/ittlicense.cat
 resource/langcat/ittlicense/langcat.dtd
 
 ;Maps
+resource/maps/README.TXT
 resource/maps/supmap.dat
 
 ;High Resolution Maps
@@ -2150,6 +2084,7 @@ resource/maps/low/rlow.dat
 resource/maps/low/rlow.ndx
 
 ;Maps - Shape files
+resource/maps/shape/README.TXT
 resource/maps/shape/canadaprovince.dbf
 resource/maps/shape/canadaprovince.shp
 resource/maps/shape/canadaprovince.shx
@@ -2177,6 +2112,7 @@ resource/maps/shape/states.shp
 resource/maps/shape/states.shx
 
 ; Preferences
+resource/pref/README.TXT
 resource/pref/idl.pref
 
 ; Xprinter
@@ -2585,6 +2521,7 @@ bin/bridge_post_unpack
 bin/dicomexstorscp_install
 bin/gen_odbc_ini
 bin/genver
+bin/idl_assistant
 bin/idl_dicomexstorscp
 bin/idl_lmgrd
 bin/idlhelp
@@ -2603,5 +2540,10 @@ bin/lmutil
 bin/make_link
 bin/online_help_html
 bin/online_help_pdf
+bin/sys5_idl_dicomexstorscp
+bin/sys5_idl_dicomexstorscp.orig
+bin/sys5_idl_lmgrd
+bin/sys5_idl_lmgrd.orig
 bin/yesno
-
+bin/README.TXT
+help/README.TXT
