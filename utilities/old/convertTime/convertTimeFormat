@@ -1,1 +1,0 @@
-idl -vm="convert_time_format.sav" -args $1 $2
