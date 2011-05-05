@@ -105,6 +105,7 @@ pro update_progress_bar, event=event, $
   
   WIDGET_CONTROL, draw1, GET_VALUE=id
   WSET, id
+  erase
   
   geometry = WIDGET_INFO(draw1,/GEOMETRY)
   xsize = geometry.xsize
