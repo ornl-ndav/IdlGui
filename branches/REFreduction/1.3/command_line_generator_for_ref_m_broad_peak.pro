@@ -69,6 +69,7 @@ pro command_line_generator_for_ref_m_broad_peak, event
   pixel_max = pixel_min_max[1]
   _pixels = pixel_max - pixel_min
   pixel_range = indgen(_pixels) + pixel_min
+  (*(*global).pixel_range_broad_mode) = pixel_range
   nbr_pixels = n_elements(pixel_range)
   
   ;determine the spin states to use
