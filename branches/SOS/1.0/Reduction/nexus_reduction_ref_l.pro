@@ -388,8 +388,8 @@ pro go_nexus_reduction_ref_l, event
     ;    THLAM_array = make_array(num,floor((TOFmax-TOFmin)*5)+1,PIXmax-PIXmin+1)
     ;NEW WAY
     
-    print, 'index_TOFmin: ' , index_TOFmin
-    print, 'index_TOFmax: ' , index_TOFmax
+    ;print, 'index_TOFmin: ' , index_TOFmin
+    ;print, 'index_TOFmax: ' , index_TOFmax
     
     THLAM_array = make_array(num, index_TOFmax - index_TOFmin, PIXmax-PIXmin+1)
     
