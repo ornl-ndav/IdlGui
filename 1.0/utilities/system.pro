@@ -49,11 +49,8 @@ function determine_instrument, file_name
   compile_opt idl2
     
   short_name = file_basename(file_name)
-  print, short_name
   name_array = strsplit(short_name,'_',/extract)
-  print, name_array
   instrument = strjoin(name_array[0:1],'_')
-  print, instrument
   return, strupcase(instrument)
 end
 
@@ -76,7 +73,7 @@ function getInstrument
   case (hostname[0]) of
     'lrac.sns.gov': return, 'REF_L'
     'mrac.sns.gov': return, 'REF_M'
-    else: return, 'REF_L'cd 
+    else: return, 'REF_L'
   endcase
   
 end
