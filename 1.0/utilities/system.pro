@@ -76,7 +76,7 @@ function getInstrument
   case (hostname[0]) of
     'lrac.sns.gov': return, 'REF_L'
     'mrac.sns.gov': return, 'REF_M'
-    else: return, 'REF_L'
+    else: return, 'REF_L'cd 
   endcase
   
 end
