@@ -498,7 +498,7 @@ pro display_refpix_user_input_value, base=base
   
   refpix_input_base = (*global_refpix).refpix_input_base
   refpix_data = getValue(base=refpix_input_base, uname='refpix_value_uname')
-  refpix_device = from_device_to_data(base=base, refpix_data)
+  ;refpix_device = from_device_to_data(base=base, refpix_data)
   xsize = (*global_refpix).xsize
   plots, [0, 0, xsize, xsize, 0],$
     [refpix_device, refpix_device, refpix_device, refpix_device, $
