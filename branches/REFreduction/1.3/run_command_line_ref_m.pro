@@ -241,27 +241,26 @@ pro run_command_line_ref_m_broad_peak, event, status=status
   ;this is where the temporary data ROI file will be created
   catch, error
   if (error ne 0) then begin
-  catch,/cancel
-  error=1b
-  return
+    catch,/cancel
+    error=1b
+    return
   endif else begin
   
-  _index_pixel=0
-  while (_index_pixel lt nbr_pixels) do begin
-  
-    create_tmp_data_roi_file, event=event, $
-      pixel=pixel_range[_index_pixel], $
-      output_file_name=list_of_tmp_data_roi_file_name[_index_pixel]
-      
-    update_progress_bar, base=(*global).progress_bar_base, $
-      /pre_processing, $
-      /increment
-      
-    _index_pixel++
-  endwhile
-  
+    _index_pixel=0
+    while (_index_pixel lt nbr_pixels) do begin
+    
+      create_tmp_data_roi_file, event=event, $
+        pixel=pixel_range[_index_pixel], $
+        output_file_name=list_of_tmp_data_roi_file_name[_index_pixel]
+        
+      update_progress_bar, base=(*global).progress_bar_base, $
+        /pre_processing, $
+        /increment
+        
+      _index_pixel++
+    endwhile
+    
   endelse
-  
   
   ;main part of reduction
   _index_spin=0
