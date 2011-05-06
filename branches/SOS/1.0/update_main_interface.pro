@@ -54,6 +54,8 @@ pro update_main_interface, event=event, main_base=main_base
   
   instrument = (*global).instrument
   
+  print, 'instrument: ' , instrument  
+  
   case (instrument) of
     'REF_L': begin
       center_pixels_status = 1
