@@ -203,14 +203,18 @@ END
 ; :Params:
 ;    event
 ;
+; :Keywords:
+;   error ;will return 1b if any of the reduction failed
 ;
 ;
 ; :Author: j35
 ;-
-pro run_command_line_ref_m_broad_peak, event
+pro run_command_line_ref_m_broad_peak, event, status=status
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global
+  
+  error=0b ;by default, we suppose that it's going to work
   
   cmd = (*(*global).cmd_broad_mode)
   data_spin_state = (*(*global).data_spin_state_broad_mode)
@@ -235,6 +239,13 @@ pro run_command_line_ref_m_broad_peak, event
   
   ;pre processing
   ;this is where the temporary data ROI file will be created
+  catch, error
+  if (error ne 0) then begin
+  catch,/cancel
+  error=1b
+  return
+  endif else begin
+  
   _index_pixel=0
   while (_index_pixel lt nbr_pixels) do begin
   
@@ -249,7 +260,8 @@ pro run_command_line_ref_m_broad_peak, event
     _index_pixel++
   endwhile
   
-  return
+  endelse
+  
   
   ;main part of reduction
   _index_spin=0
@@ -262,9 +274,10 @@ pro run_command_line_ref_m_broad_peak, event
     
       print, cmd[_index_spin, _index_pixel]
       spawn, cmd, result, error_result
-      help, result
-      help, error_result
-      print
+      if (error_result[0] ne '') then begin
+        error = 1b
+        return
+      endif
       
       update_progress_bar, base=(*global).progress_bar_base, $
         spin_state=_current_spin_state, $
@@ -293,19 +306,19 @@ pro run_command_line_ref_m_broad_peak, event
   
   ;phase 2 of post-processing
   ;removing the temporary data ROI files
-   _index_pixel=0
+  _index_pixel=0
   while (_index_pixel lt nbr_pixels) do begin
   
-      _cmd = 'rm ' + list_of_tmp_data_roi_file_name[_index_pixel]
-      spawn, _cmd
-      
+    _cmd = 'rm ' + list_of_tmp_data_roi_file_name[_index_pixel]
+    spawn, _cmd
+    
     _index_pixel++
   endwhile
   
   update_progress_bar, base=(*global).progress_bar_base, $
     /post_processing, $
     /increment
-        
+    
 end
 
 
