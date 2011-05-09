@@ -155,6 +155,8 @@ PRO BrowseDataNexus, Event
       populate_data_geometry_info, Event
     ENDIF
     
+    bring_to_life_or_refresh_counts_vs_pixel, event
+
     ;turn off hourglass
     WIDGET_CONTROL,HOURGLASS=0
   ENDIF ELSE BEGIN
