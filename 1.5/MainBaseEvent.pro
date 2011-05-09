@@ -121,7 +121,8 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='browse_data_nexus_button'): begin
       (*global).data_path = ''
-      BrowseDataNexus, Event
+      kill_center_pixel_counts_vs_pixel_base, event
+      BrowseDataNexus, event
       DefineDefaultOutputName, Event
     END
     
@@ -129,6 +130,7 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='load_data_run_number_text_field'): begin
       (*global).data_path = ''
+      kill_center_pixel_counts_vs_pixel_base, event
       REFreductionEventcb_LoadAndPlotDataFile, Event ;_eventcb
       DefineDefaultOutputName, Event
     END

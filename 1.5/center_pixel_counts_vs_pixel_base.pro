@@ -166,6 +166,27 @@ end
 
 ;+
 ; :Description:
+;    Kill the base
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro kill_center_pixel_counts_vs_pixel_base, event
+  widget_Control, event.top, get_uvalue= global
+  
+  _base = (*global).center_px_counts_vs_pixel_base_id
+  if (widget_info(_base, /valid_id)) then begin
+    widget_control, _base, /destroy
+  endif
+  
+end
+
+;+
+; :Description:
 ;    This routine bring to life the Counts vs pixel base, or refresh it
 ;    if the base is already alive
 ;
@@ -178,14 +199,14 @@ pro bring_to_life_or_refresh_counts_vs_pixel, event
   widget_Control, event.top, get_uvalue= global
   
   _base = (*global).center_px_counts_vs_pixel_base_id
-
+  
   catch, error
   if (error ne 0) then begin
-  catch,/cancel
-  if (widget_info(_base, /valid_id) eq 0) then begin
-  widget_control, _base, /destroy
-  endif
-  return
+    catch,/cancel
+    if (widget_info(_base, /valid_id) ne 0) then begin
+      widget_control, _base, /destroy
+    endif
+    return
   endif
   
   ;create plot/base and plot counts vs pixel
@@ -337,7 +358,7 @@ pro display_counts_vs_pixel, base=base, event=event, global
   center_pixel = getValue(event=main_event,uname='data_center_pixel_uname')
   
   if (center_pixel ne 'N/A' and $
-  strcompress(center_pixel,/remove_all) ne '') then begin
+    strcompress(center_pixel,/remove_all) ne '') then begin
     center_pixel = float(center_pixel)
   endif else begin
     center_pixel = 0.0
@@ -380,7 +401,7 @@ pro display_counts_vs_pixel, base=base, event=event, global
   endif
   
   plot_background_selection, event=main_event, ymax=ymax
-
+  
 end
 
 ;+
@@ -394,8 +415,8 @@ end
 ; :Author: j35
 ;-
 pro plot_background_selection, event=main_event, ymax=ymax
-compile_opt idl2  
-
+  compile_opt idl2
+  
   ;retrieve background values
   back_ymin = fix(getValue(event=main_event, $
     uname='data_d_selection_roi_ymin_cw_field'))
@@ -411,7 +432,7 @@ compile_opt idl2
     plots, back_ymax, 1
     plots, back_ymax, ymax, /continue, color=fsc_color("green")
   endif
-
+  
 end
 
 ;+
@@ -454,6 +475,8 @@ pro refresh_counts_vs_pixel, base=base, event=event, global
   xmin = fix(getValue(event=main_event,uname='data_d_selection_peak_ymin_cw_field'))
   xmax = fix(getValue(event=main_event,uname='data_d_selection_peak_ymax_cw_field'))
   center_pixel = getValue(event=main_event,uname='data_center_pixel_uname')
+  
+  if (strcompress(center_pixel,/remove_all) eq '') then center_pixel='N/A' 
   if (center_pixel ne 'N/A') then begin
     center_pixel = float(center_pixel)
   endif else begin
@@ -496,7 +519,7 @@ pro refresh_counts_vs_pixel, base=base, event=event, global
     plots, center_pixel, ymax, /continue, color=fsc_color("blue")
   endif
   
-   plot_background_selection, event=main_event, ymax=ymax
+  plot_background_selection, event=main_event, ymax=ymax
   
 end
 
