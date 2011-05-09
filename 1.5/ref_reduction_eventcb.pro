@@ -38,6 +38,7 @@ PRO REFreductionEventcb_LoadAndPlotDataFile, Event
   REFreduction_LoadDataFile, Event, $ ;LoadDataFile
     isNeXusFound, $
     NbrNexus
+    if (isNexusFound) then bring_to_life_or_refresh_counts_vs_pixel, event
     if (isNexusFound) then retrieve_beamdivergence_settings, event
 END
 
@@ -286,6 +287,7 @@ PRO REFreduction_OpenPlotDataNexus, Event, DataRunNumber, currFullDataNexusName
   putDataLogBookMessage, Event, text, Append=1
   ;to see the last line of the data log book
   showLastDataLogBookLine, Event
+  
 END
 
 ;------------------------------------------------------------------------------

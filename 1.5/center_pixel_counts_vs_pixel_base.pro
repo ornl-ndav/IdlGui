@@ -178,6 +178,15 @@ pro bring_to_life_or_refresh_counts_vs_pixel, event
   widget_Control, event.top, get_uvalue= global
   
   _base = (*global).center_px_counts_vs_pixel_base_id
+
+  catch, error
+  if (error ne 0) then begin
+  catch,/cancel
+  if (widget_info(_base, /valid_id) eq 0) then begin
+  widget_control, _base, /destroy
+  endif
+  return
+  endif
   
   ;create plot/base and plot counts vs pixel
   if (widget_info(_base, /valid_id) eq 0) then begin
