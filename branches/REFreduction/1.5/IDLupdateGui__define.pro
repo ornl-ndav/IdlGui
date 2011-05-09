@@ -607,6 +607,8 @@ FUNCTION IDLupdateGui::init, structure
     structure.TOFcuttingMax
   AppendReplaceLogBookMessage, Event, OK, PROCESSING
   
+  bring_to_life_or_refresh_counts_vs_pixel, event
+  
   ;Work on Normalization data files
   IF (structure.MainNormRunNumber NE '') THEN BEGIN
   
