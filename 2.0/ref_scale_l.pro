@@ -55,7 +55,10 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   APPLICATION = file->getValue(tag=['configuration','application'])
   VERSION  = file->getValue(tag=['configuration','version'])
   DEBUGGER = file->getValue(tag=['configuration','debugging'])
-  auto_cleaning_data = file->getValue(tag=['configuration','auto_cleaning'])
+  auto_cleaning_data = file->getValue(tag=['configuration','auto_cleaning',$
+  'switch'])
+  auto_cleaning_percentage = file->getvalue(tag=['configuration',$
+  'auto_cleaning','value'])
   relative_diff = file->getValue(tag=['configuration','relative_diff'])
   dq0 = file->getValue(tag=['configuration','resolution_function','dq0'])
   dq_over_q = file->getValue(tag=['configuration','resolution_function',$
@@ -92,7 +95,7 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     settings_number_of_data_to_display: 100L,$
     settings_auto_cleaning_flag: auto_cleaning,$
     settings_white_background_color: 2,$ ;[white,black,dark grey]s
-    percentage_of_q_to_remove_value: 10,$ ;percentage of data to remove when
+    percentage_of_q_to_remove_value: fix(auto_cleaning_percentage),$ ;percentage of data to remove when
     ;using auto cleanup
     
     ;email where to send the output files
