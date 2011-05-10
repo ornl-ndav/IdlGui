@@ -107,7 +107,7 @@ pro output_file_name_value, event
         local_scaled[0]
       putTextFieldValue, event, 'scaled_data_spin_state_' + $
         strcompress(index,/remove_all), spins[index] + ':'
-      local_combined_scaled = combined_scaled + '_combined_' + spins[index] + ext
+      local_combined_scaled = combined_scaled + '_combined' + spins[index] + ext
       putTextFieldValue, event, combined_scaled_uname + $
         strcompress(index,/remove_all), local_combined_scaled[0]
       putTextFieldValue, event, 'combined_scaled_data_spin_state_' + $
@@ -116,7 +116,7 @@ pro output_file_name_value, event
       local_scaled = scaled + ext
       putTextFieldValue, event, scaled_uname + strcompress(index,/remove_all), $
         local_scaled[0]
-      local_combined_scaled = combined_scaled + '_combined_' + ext
+      local_combined_scaled = combined_scaled + '_combined' + ext
       putTextFieldValue, event, combined_scaled_uname + $
         strcompress(index,/remove_all), local_combined_scaled[0]
     endelse
@@ -243,14 +243,24 @@ FUNCTION createOuputFileName, Event
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
   widget_control,id,get_uvalue=global
   
-  full_CE_name = (*global).full_CE_name
-  base_name = file_basename(full_CE_name)
+  ;full_CE_name = (*global).full_CE_name
+  ;dir_name = file_dirname(full_CE_name,/mark_directory)
   
-  ;remove the .txt extension
-  full_ce_name_1 = strsplit(base_name,'.txt',/regex,/extract)
+  instrument = (*global).instrument
   
-  ;add '_CE_scalling.txt'
-  output_file_name = full_ce_name_1[0] + '_scaled
+  table = getValue(event=event, uname='ref_scale_batch_table_widget')
+  CE = table[1,0]
+  
+  time_stamp = RefScale_GenerateIsoTimeStamp()
+  
+  output_file_name = instrument + '_' + CE + '_' + $
+  time_stamp + '_scaled'
+
+;  ;remove the .txt extension
+;  full_ce_name_1 = strsplit(base_name,'.txt',/regex,/extract)
+  
+;  ;add '_CE_scalling.txt'
+;  output_file_name = full_ce_name_1[0] + '_scaled
   
   RETURN, output_file_name
 END
