@@ -114,7 +114,8 @@ END
 function getMainDataNexusFileName, cmd
   compile_opt idl2
   
-  driver_list = ['reflect_reduction',$
+  driver_list = ['specmh_reduction',$
+    'reflect_reduction',$
     '/SNS/users/j35/bin/runenv specmh_reduction']
   index = 0
   nbr_driver = n_elements(driver_list)
@@ -413,7 +414,7 @@ END
 
 ;------------------------------------------------------------------------------
 function getCenterPix, cmd
- if (isStringFound(cmd,'--center-pix=')) then begin
+  if (isStringFound(cmd,'--center-pix=')) then begin
     result = ValueBetweenArg1Arg2(cmd, '--center-pix=',1,' ', 0)
     if (result eq '') then return, ''
     return, strcompress(result, /remove_all)
@@ -424,7 +425,7 @@ end
 
 ;------------------------------------------------------------------------------
 function getDetSpatRes, cmd
- if (isStringFound(cmd,'--det-spat-res=')) then begin
+  if (isStringFound(cmd,'--det-spat-res=')) then begin
     result = ValueBetweenArg1Arg2(cmd, '--det-spat-res=',1,' ', 0)
     if (result eq '') then return, ''
     return, strcompress(result, /remove_all)
@@ -630,23 +631,23 @@ END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 function IDLparseCommandLine::getNumBinsClean
- return, self.NumBinsClean
- end
+  return, self.NumBinsClean
+end
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 function IDLparseCommandLine::getBeamDivCorr
- return, self.BeamDivCorr
- end
+  return, self.BeamDivCorr
+end
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 function IDLparseCommandLine::getCenterPix
- return, self.CenterPix
- end
+  return, self.CenterPix
+end
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 function IDLparseCommandLine::getDetSpatRes
- return, self.DetSpatRes
- end
+  return, self.DetSpatRes
+end
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 FUNCTION IDLparseCommandLine::getOutputPath
@@ -746,7 +747,7 @@ FUNCTION IDLparseCommandLine::init, cmd
     self.NormInstrGeoFileName      = getNormInstrumentGeoFileName(cmd)
     
     self.NumBinsClean = getNumBinsClean(cmd)
-
+    
     ;beamdivergence flags
     self.BeamDivCorr = getBeamDivCorr(cmd)
     if (self.BeamDivCorr eq 'yes') then begin
