@@ -32,64 +32,24 @@
 ;
 ;==============================================================================
 
-;+
-; :Description:
-;    Main routine of application. Will build and start the application
-;
-; :Keywords:
-;    GROUP_LEADER
-;    _EXTRA
-;
-; :Author: j35
-;-
-pro BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-compile_opt idl2
+FUNCTION getGlobal
 
-  ;retrieve the global structure
-  global = getGlobal()
+  file = OBJ_NEW('idlxmlparser', '.iMars.cfg')
+  APPLICATION = file->getValue(tag=['configuration','application'])
+  VERSION = file->getValue(tag=['configuration','version'])
+  
+  ;get ucams of user if running on linux
+  ;and set ucams to 'j35' if running on darwin
+  IF (!VERSION.os EQ 'darwin') THEN BEGIN
+    ucams = 'j35'
+  ENDIF ELSE BEGIN
+    ucams = get_ucams()
+  ENDELSE
+  
+  ;define global variables
+  global = ptr_new ({ $
+    version:           VERSION,$
+    application:       APPLICATION })
     
-  MainBaseTitle  = 'iMAging Reduction Software (iMars)'
-  MainBaseTitle += ' - ' + (*global).version
-  MainBaseSize = [500,500]
-
-  ;Build Main Base
-  MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
-    UNAME        = 'MAIN_BASE',$
-    SCR_XSIZE    = MainBaseSize[0],$
-    SCR_YSIZE    = MainBaseSize[1],$
-    TITLE        = MainBaseTitle,$
-    SPACE        = 0,$
-    XPAD         = 0,$
-    YPAD         = 2)
-    
-  ;attach global structure with widget ID of widget main base widget ID
-  WIDGET_CONTROL, MAIN_BASE, SET_UVALUE=global
-  
-  Widget_Control, /REALIZE, MAIN_BASE
-  XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK, CLEANUP='iMars_cleanup'
-  
-;  logger, APPLICATION=application, VERSION=version, UCAMS=ucams
-  
-end
-
-;+
-; :Description:
-;    Application __main__ function
-;
-;
-;
-; :Keywords:
-;    GROUP_LEADER
-;    _EXTRA
-;
-; :Author: j35
-;-
-pro iMars, GROUP_LEADER=wGroup,_EXTRA=_VWBExtra_
-compile_opt idl2
-  BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-end
-
-
-
-
-
+  return, global
+END
