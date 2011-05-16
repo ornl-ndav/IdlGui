@@ -69,7 +69,7 @@ PRO BatchTab_ChangeDataNormRunNumber, Event
     ;cmd string is
     cmd = BatchTable[9,RowSelected]
     ;get first part of cmd ex: srun -Q -p lracq reflect_reduction
-    split1      = 'reflect_reduction'
+    split1      = (*global).driver_name
     part1_array = strsplit(cmd,split1,/extract,/regex)
     part1       = part1_array[0]
     ;get second part (after data runs)
