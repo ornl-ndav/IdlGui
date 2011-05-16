@@ -5,14 +5,16 @@ IdlUtilitiesPath = CurrentFolder + '/utilities'
 cd, IdlUtilitiesPath
 
 ;functions
+.run check.pro
+.run colorbar.pro
+.run convert.pro
+.run fsc_color.pro
+.run get_ucams.pro
 .run get.pro
-;procedures
-.run put.pro
 .run gui.pro
-.run system_utilities.pro
-.run time_utilities.pro
+.run is.pro
+.run system.pro
 .run time.pro
-.run logger.pro
 .run xdisplayfile.pro
 
 ;Makefile that automatically compile the necessary modules
@@ -25,6 +27,6 @@ cd, CurrentFolder + '/iMarsGUI/'
 cd, CurrentFolder
 
 ;main functions
+.run global.pro
 .run MainBaseEvent.pro
-.run iMars_eventcb.pro
 .run iMars.pro
