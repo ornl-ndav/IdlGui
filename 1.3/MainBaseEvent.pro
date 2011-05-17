@@ -92,6 +92,14 @@ PRO MAIN_BASE_event, Event
       ReplotAllSelection, Event
     end
     
+    widget_info(wWidget, $
+    find_by_uname='one_reduction_per_discrete_uname'): begin
+      update_reduction_mode_widgets, event=event, status='one_per_discrete'
+      (*global).reduction_mode = 'one_per_discrete'
+      REFReduction_RescaleDataPlot, Event
+      ReplotAllSelection, Event
+    end
+
     ;bring to life the TOF selection base
     widget_info(wWidget, find_by_uname='tof_selection_tool_button'): begin
       tof_selection_tool_button_eventcb, event

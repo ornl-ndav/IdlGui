@@ -92,7 +92,7 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     ;equivalent index of tof range selected in 'TOF selection tool' base
     index_of_tof_range: [-1,-1], $ 
 
-    ;reduction mode: 'one_per_selection' or 'one_per_pixel'
+    ;reduction mode: 'one_per_selection', 'one_per_pixel', 'one_per_discrete'
     reduction_mode: 'one_per_selection', $
     broad_peak_pixel_range: [-1,-1], $
     list_of_output_file_name_for_broad_mode: ptr_new(0L), $

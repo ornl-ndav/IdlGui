@@ -745,6 +745,7 @@ PRO plot_average_data_peak_value, Event
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
   if ((*global).reduction_mode eq 'one_per_pixel') then return
+  if ((*global).reduction_mode eq 'one_per_discrete') then return
 
   coefficient = getUDCoefficient(Event) ;1 for low, 2 for high
   refpix = (*global).refpix

@@ -231,7 +231,7 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
   
     _base = widget_base(main_info_base,$
       xoffset = 270,$
-      yoffset = 30,$
+      yoffset = 25,$
       /exclusive,$
       frame=1,$
       /column)
@@ -243,6 +243,9 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
       value = 'Broad reflective peak',$
       /no_release,$
       uname = 'one_reduction_per_pixel_uname')
+    button3 = widget_button(_base,$
+      value = 'Discrete reflective peaks', $
+      uname = 'one_reduction_per_discrete_uname')
     widget_control, button1, /set_button
     
   endif
