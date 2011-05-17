@@ -43,30 +43,31 @@
 ; :Author: j35
 ;-
 pro BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-compile_opt idl2
-
+  compile_opt idl2
+  
   ;retrieve the global structure
   global = getGlobal()
-    
+  
   MainBaseTitle  = 'iMAging Reduction Software (iMars)'
   MainBaseTitle += ' - ' + (*global).version
-  MainBaseSize = [500,500]
-
+  
   ;Build Main Base
-  MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
+  main_base = Widget_Base( GROUP_LEADER = wGroup,$
     UNAME        = 'MAIN_BASE',$
-    SCR_XSIZE    = MainBaseSize[0],$
-    SCR_YSIZE    = MainBaseSize[1],$
     TITLE        = MainBaseTitle,$
     SPACE        = 0,$
     XPAD         = 0,$
-    YPAD         = 2)
+    YPAD         = 2,$
+    MBAR         = top_base_menu)
     
-  ;attach global structure with widget ID of widget main base widget ID
-  WIDGET_CONTROL, MAIN_BASE, SET_UVALUE=global
+  build_menu, top_base_menu
+  build_gui, main_base
   
-  Widget_Control, /REALIZE, MAIN_BASE
-  XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK, CLEANUP='iMars_cleanup'
+  ;attach global structure with widget ID of widget main base widget ID
+  WIDGET_CONTROL, main_base, SET_UVALUE=global
+  
+  Widget_Control, /REALIZE, main_base
+  XManager, 'MAIN_BASE', main_base, /NO_BLOCK, CLEANUP='iMars_cleanup'
   
 ;  logger, APPLICATION=application, VERSION=version, UCAMS=ucams
   
@@ -85,7 +86,7 @@ end
 ; :Author: j35
 ;-
 pro iMars, GROUP_LEADER=wGroup,_EXTRA=_VWBExtra_
-compile_opt idl2
+  compile_opt idl2
   BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 end
 
