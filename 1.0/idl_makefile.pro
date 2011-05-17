@@ -22,6 +22,8 @@ cd, IdlUtilitiesPath
 
 ;Build CLoop GUI
 cd, CurrentFolder + '/iMarsGUI/'
+.run build_menu.pro
+.run build_gui.pro
 
 ;Build all procedures
 cd, CurrentFolder

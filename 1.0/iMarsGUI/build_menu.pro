@@ -34,24 +34,49 @@
 
 ;+
 ; :Description:
-;   This routine cleanup all the pointers from the main program and is
-;   reached when the application is exited.
+;    This routine builds the top menu of the main base
 ;
 ; :Params:
-;    tlb
+;    top_base_menu
+;
+;
 ;
 ; :Author: j35
 ;-
-pro iMars_cleanup, tlb
+pro build_menu, top_base_menu
   compile_opt idl2
   
-  widget_control, tlb, get_uvalue=global, /no_copy
-  
-  if (n_elements(global) eq 0) then return
-  
-  ;    ptr_free, (*global).list_data_runs
-  ;    ptr_free, (*(*global).structure_data_working_with_rtof).yaxis
-  
-  ptr_free, global
-  
+  ;configuration menu
+  configuration = widget_button(top_base_menu,$
+    value = 'Configuration',$
+    /menu)
+  load = widget_button(configuration,$
+    value = 'Load...',$
+    uname = 'load_configuration_uname')
+  save = widget_button(configuration,$
+    value = 'Save...',$
+    uname = 'save_configuration_uname')
+  settings = widget_button(configuration,$
+    value = 'Settings...',$
+    uname = 'settings_configuration_uname',$
+    /separator)
+    
+  ;Help
+  help = widget_button(top_base_menu,$
+    value = 'Help',$
+    /menu)
+  log_book = widget_button(help,$
+    value = 'Log book',$
+    uname = 'log_book_uname')
+  about = widget_button(help,$
+    value = 'About iMARS',$
+    /separator,$
+    uname = 'about_imars_uname')
+    help_button = widget_button(help,$
+    value = 'Help...',$
+    uname = 'help_uname')
+    
 end
+
+
+
