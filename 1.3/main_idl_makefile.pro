@@ -145,6 +145,7 @@
 .run reduction_mode_selection_pixel.pro
 
 .run tof_selection_tool_button_eventcb.pro
+.run populate_q_widgets.pro
 
 .run cleanup.pro
 .run ref_reduction_debugging.pro

@@ -98,6 +98,12 @@ PRO miniMakeGuiReduceQBase, Event, REDUCE_BASE, IndividualBaseWidth, global
   QScaleBGroupSize = [QwidthTextFieldSize[0]+QwidthTextFieldSize[2]+XYoff[0],$
     QminTextFieldSize[1]]
     
+        if ((*global).Q_scale_type eq 'linear') then begin
+  qscale_type =0
+  endif else begin
+  qscale_type = 1
+  endelse
+    
   ;##############################################################################
   ;############################## Create GUI ####################################
   ;##############################################################################
@@ -176,6 +182,7 @@ PRO miniMakeGuiReduceQBase, Event, REDUCE_BASE, IndividualBaseWidth, global
   ;value
   Nbins = widget_text(wBase,$
   /align_left, $
+  value = (*global).q_number_bins, $
   xsize=4,$
   /editable,$
   /all_events, $
@@ -189,7 +196,7 @@ PRO miniMakeGuiReduceQBase, Event, REDUCE_BASE, IndividualBaseWidth, global
     QScaleBGroupList,$
     /exclusive,$
     /row,$
-    set_value=0,$
+    set_value=qscale_type,$
     uname='q_scale_b_group')
     
   ;frame
@@ -304,7 +311,7 @@ PRO miniMakeGuiReduceQBase, Event, REDUCE_BASE, IndividualBaseWidth, global
       /exclusive,$
       xoffset=QScaleBGroupSize[0],$
       yoffset=QScaleBGroupSize[1],$
-      set_value=0,$
+      set_value=qscale_type,$
       uname='q_scale_b_group',$
       row=1)
       
@@ -319,4 +326,4 @@ PRO miniMakeGuiReduceQBase, Event, REDUCE_BASE, IndividualBaseWidth, global
       
       endelse
       
-END
+end

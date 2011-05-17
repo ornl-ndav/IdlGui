@@ -97,6 +97,19 @@ PRO populate_data_geometry_info, Event, nexus_file_name, spin_state=spin_state
   dist = dist_units[0] + ' ' + dist_units[1]
   putTextFieldValue, event, 'info_detector_sample_distance', dist
   
+  distance_sd_m = convert_distance(distance=dist_units[0],$
+  from_unit=dist_units[1],$
+  to_unit='m')
+  
+  ;moderator sample distance
+  dMS_units = iNexus->getSampleModeratorDistance()
+  distance = abs(dMS_units[0])
+  distance_ms_m = convert_distance(distance=distance,$
+  from_unit=dMS_units[1],$
+  to_unit='m')
+  
+  (*global).distance_moderator_sample = distance_sd_m + distance_ms_m
+  
   ;  ;detector position
   ;  detPosition_units = iNexus->getDetPosition()
   ;  detPosition_m = convert_to_m(strcompress(detPosition_units[0],/remove_all), $

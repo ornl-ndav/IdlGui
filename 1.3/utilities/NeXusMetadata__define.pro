@@ -437,6 +437,35 @@ end
 
 ;+
 ; :Description:
+;    Returns the distance Sample-Moderator with its units
+;
+; :Author: j35
+;-
+function NeXusMetadata::getSampleModeratorDistance
+  compile_opt idl2
+  
+  path_value = self.path_prefix + 'instrument/moderator/ModeratorSamDis/value'
+  catch, error_value
+  if (error_value ne 0) then begin
+    catch,/cancel
+    return, ['N/A','N/A']
+  endif else begin
+  
+    pathID_value = h5d_open(self.fileID, path_value)
+    dis_value = strcompress(h5d_read(pathID_value),/remove_all)
+    dis_value = dis_value[0]
+    
+    pathID_units = h5a_open_name(pathID_value,'units')
+    dis_units = strcompress(h5a_read(pathID_units),/remove_all)
+    
+    h5d_close, pathID_value
+    return, [dis_value,dis_units]
+    
+  endelse
+end
+
+;+
+; :Description:
 ;   Returns the detector-Position distance with its units
 
 ; :Author: j35
@@ -662,7 +691,7 @@ function NeXusMetadata::init, nexus_full_path, spin_state=spin_state
     return,0
   endif else begin
     self.fileID = h5f_open(nexus_full_path)
-;    self.spin_state = spin_state
+    ;    self.spin_state = spin_state
     self.path_prefix = '/entry-' + spin_state + '/'
   endelse
   
