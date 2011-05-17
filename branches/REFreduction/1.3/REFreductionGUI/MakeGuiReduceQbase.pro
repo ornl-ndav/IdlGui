@@ -38,7 +38,8 @@ PRO MakeGuiReduceQBase, Event, REDUCE_BASE, IndividualBaseWidth, global
   QBaseSize   = [0,400,IndividualBaseWidth, 55]
   
   QLabelSize  = [20,2]
-  QLabelTitle = 'Q'
+  ;QLabelTitle = 'Q ' 
+  QLabelTitle = 'Q (1/' + string("305B) + ')'
   QFrameSize  = [10,10,IndividualBaseWidth-30,40]
   
   ;Auto/manual mode
@@ -98,6 +99,11 @@ PRO MakeGuiReduceQBase, Event, REDUCE_BASE, IndividualBaseWidth, global
   QScaleBGroupSize = [QwidthTextFieldSize[0]+QwidthTextFieldSize[2]+XYoff[0],$
     QminTextFieldSize[1]]
     
+    if ((*global).Q_scale_type eq 'linear') then begin
+  qscale_type =0
+  endif else begin
+  qscale_type = 1
+  endelse
     
   ;*********************************************************
   ;Create GUI
@@ -144,21 +150,33 @@ PRO MakeGuiReduceQBase, Event, REDUCE_BASE, IndividualBaseWidth, global
     ;qmin label
     qminlabel = widget_label(wBase,$
     value = QMinLabelTitle)
-    qminvalue = widget_text(wBase,$
+;    qminvalue = widget_text(wBase,$
+;    /align_left,$
+;    /all_events, $
+;    /editable,$
+;    uname='q_min_text_field',$
+;    scr_xsize = QMinTextFieldSize[2])
+    qminvalue = widget_label(wBase,$
     /align_left,$
-    /all_events, $
-    /editable,$
+    value=' ',$
     uname='q_min_text_field',$
+    frame=1,$
     scr_xsize = QMinTextFieldSize[2])
     
     ;qmax label
     qmaxlabel = widget_label(wBase,$
     value = '   ' + QMaxLabelTitle)
-    qmaxvalue = widget_text(wBase,$
+;    qmaxvalue = widget_text(wBase,$
+;    /align_left,$
+;    /all_events, $
+;    /editable,$
+;    uname='q_max_text_field',$
+;    scr_xsize = QMaxTextFieldSize[2])
+    qmaxvalue = widget_label(wBase,$
     /align_left,$
-    /all_events, $
-    /editable,$
     uname='q_max_text_field',$
+    value=' ',$
+    frame=1,$
     scr_xsize = QMaxTextFieldSize[2])
     
     ;qwidth label
@@ -178,6 +196,7 @@ PRO MakeGuiReduceQBase, Event, REDUCE_BASE, IndividualBaseWidth, global
   Nbins = widget_text(wBase,$
   /align_left, $
   xsize=4,$
+    value = (*global).q_number_bins, $
   /editable,$
   /all_events, $
   uname = 'q_nbins_text_field')
@@ -190,7 +209,7 @@ PRO MakeGuiReduceQBase, Event, REDUCE_BASE, IndividualBaseWidth, global
     QScaleBGroupList,$
     /exclusive,$
     /row,$
-    set_value=0,$
+    set_value=qscale_type,$
     uname='q_scale_b_group')
     
   ;frame
@@ -303,7 +322,7 @@ PRO MakeGuiReduceQBase, Event, REDUCE_BASE, IndividualBaseWidth, global
     /exclusive,$
     xoffset=QScaleBGroupSize[0],$
     yoffset=QScaleBGroupSize[1],$
-    set_value=0,$
+    set_value=qscale_type,$
     uname='q_scale_b_group',$
     row=1)
     

@@ -668,6 +668,8 @@ pro command_line_generator_for_ref_m, event
     
     ;reduction mode (per selection or per pixel selected)
     if ((*global).reduction_mode eq 'one_per_pixel') then begin
+      
+      populate_Q_widgets, event=event
     
       Q_min = getTextFieldValue(Event, 'q_min_text_field')
       Q_max = getTextFieldValue(Event, 'q_max_text_field')

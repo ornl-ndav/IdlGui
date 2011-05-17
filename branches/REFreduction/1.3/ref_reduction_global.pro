@@ -48,6 +48,12 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
   detector_size_m = file->getValue(tag=['configuration','detector_size_m'])
   OVERWRITE_Q_OUTPUT_FILE = file->getValue(tag=['configuration',$
     'overwrite_q_output_file'])
+  
+  q_scale_type = file->getValue(tag=['configuration','reduction','Q',$
+  'scale_type'])
+  q_number_bins = file->getValue(tag=['configuration','reduction','Q',$
+  'number_bins'])
+  
   obj_destroy, file
     
   debugging_structure = getDebuggingStructure()
@@ -89,6 +95,12 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     instrument:        STRCOMPRESS(INSTRUMENT,/remove_all),$
     with_launch_switch: WITH_LAUNCH_SWITCH,$
     
+    ;used by the 'broad and discrete reflective peak' modes
+    q_scale_type: q_scale_type, $ ;linear or log (reduction tab)
+    q_number_bins: q_number_bins, $ ;default number of bins for Q binning
+    distance_moderator_sample: 0., $ 
+    sangle_min_max: fltarr(2), $ ;min and max sangles values of selection
+  
     ;equivalent index of tof range selected in 'TOF selection tool' base
     index_of_tof_range: [-1,-1], $ 
 
@@ -168,8 +180,6 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     nexus_proton_charge_path: '/entry/proton_charge/',$
     data_proton_charge: '',$
     empty_cell_proton_charge: '',$
-    distance_moderator_sample: $
-    '/entry/instrument/moderator/distance/',$
     empty_cell_distance_moderator_sample: '',$
     distance_sample_pixel_path: $
     '/entry/instrument/bank1/distance/',$

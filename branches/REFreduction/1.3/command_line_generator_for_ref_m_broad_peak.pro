@@ -61,7 +61,7 @@ pro command_line_generator_for_ref_m_broad_peak, event
   
   ;stop right now if the user did not select a data peak ROI
   if (pixel_min_max[0] eq -1 or $
-  pixel_min_max[0] eq 0) then begin
+    pixel_min_max[0] eq 0) then begin
     return
   endif
   
@@ -148,6 +148,9 @@ pro command_line_generator_for_ref_m_broad_peak, event
     (*(*global).data_spin_state_broad_mode) = data_spin_state
     
   endelse
+  
+  ;used to calculate the Qrange
+  sangle_min_max = fltarr(2)
   
   _index_spin_state = 0  ;up to nbr_spin_states
   ;while (index_spin_state lt nbr_spin_states) do begin
@@ -350,6 +353,10 @@ pro command_line_generator_for_ref_m_broad_peak, event
       _pixel = pixel_range[_index_pixel_range]
       sangle = -10
       calculate_sangle, event, refpix=_pixel, sangle=sangle
+      
+      ;save first and last sangle of selection
+      if (_index_pixel_range eq 0) then sangle_min_max[0] = sangle
+      if (_index_pixel_range eq (nbr_pixels-1)) then sangle_min_max[1] = sangle
       
       ;scattering angle flag
       cmd[_index_spin_state, _index_pixel_range] += ' --scatt-angle='
@@ -625,6 +632,9 @@ pro command_line_generator_for_ref_m_broad_peak, event
     
     _index_spin_state++
   endwhile
+  
+  ;record the min and max sangles values
+  (*global).sangle_min_max = sangle_min_max
   
   ;record the name of all the output files
   (*(*global).list_of_output_file_name_for_broad_mode) = $
