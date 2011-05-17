@@ -60,7 +60,8 @@ pro command_line_generator_for_ref_m_broad_peak, event
   (*global).broad_peak_pixel_range = pixel_min_max
   
   ;stop right now if the user did not select a data peak ROI
-  if (pixel_min_max[0] eq -1) then begin
+  if (pixel_min_max[0] eq -1 or $
+  pixel_min_max[0] eq 0) then begin
     return
   endif
   

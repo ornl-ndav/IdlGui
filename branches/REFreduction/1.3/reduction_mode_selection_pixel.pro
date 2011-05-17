@@ -52,9 +52,21 @@
 pro update_reduction_mode_widgets, event=event, status=status
   compile_opt idl2
   
-  sensitive_status = (status eq 'one_per_selection') ? 1 : 0
-  map_status = (status eq 'one_per_selection') ? 0 : 1
-  
+  case (status) of
+  'one_per_selection': begin
+  sensitive_status=1
+  map_status = 0
+  end
+  'one_per_pixel': begin
+  sensitive_status=0
+  map_status= 1
+  end
+  'one_per_discrete': begin
+  sensitive_status=0
+  map_status=1
+  end
+  endcase    
+
   ;data tab
   list_uname = ['info_refpix',$
     'info_refpix_label',$
