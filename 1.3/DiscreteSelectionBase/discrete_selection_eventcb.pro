@@ -32,50 +32,57 @@
 ;
 ;==============================================================================
 
-spawn, 'pwd', CurrentFolder
-
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-cd, CurrentFolder + '/utilities'
-
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-.run nexus_utilities.pro
-.run get.pro
-.run system_utilities.pro
-.run nexus_utilities.pro
-.run math_conversion.pro
-.run time.pro
-.run list_of_proposal.pro
-.run IDLxmlParser__define.pro
-.run xmlParser__define.pro
-.run logger.pro
-.run file_utilities.pro
-.run xdisplayfile.pro
-.run fsc_color.pro
-.run IDL3columnsASCIIparser__define.pro
-.run NeXusMetadata__define.pro
-.run is.pro
-.run set.pro
-.run put.pro
-.run convert.pro
-.run colorbar.pro
-.run IDLnexusUtilities__define.pro
-
-cd, CurrentFolder + '/TOFselectionBase'
-.run tof_selection_input_base.pro
-.run tof_selection_colorbar.pro
-.run tof_selection_counts_vs_tof_base.pro
-.run tof_selection_eventcb.pro
-.run tof_selection_base.pro
-
-cd, CurrentFolder + '/DiscreteSelectionBase'
-.run discrete_selection_launcher.pro
-.run discrete_selection_base.pro
-.run discrete_selection_colorbar.pro
-.run discrete_selection_counts_vs_tof_base.pro
-.run discrete_selection_eventcb.pro
-.run discrete_selection_input_base.pro
-
-cd, CurrentFolder + '/ProgressBar'
-.run progress_bar.pro
+;+
+; :Description:
+;    retrieve the parameters necessary to launch the refpix base
+;
+; :Keywords:
+;    event
+;    base
+;
+; :Author: j35
+;-
+pro set_refpix_base, event=event, base=base
+  compile_opt idl2
+  
+  selection = get_table_lines_selected(event=event, base=base, $
+    uname='ref_m_metadata_table')
+  from_row_selected = selection[1]
+  to_row_selected = selection[3]
+  nbr_file_selected = to_row_selected - from_row_selected + 1
+  index = from_row_selected
+  while (index le to_row_selected) do begin
+  
+    table = getValue(event=event,uname='tab1_table')
+    ;get file name of line selected
+    full_file_name_spin = table[0,index]
+    file_structure = get_file_structure(full_file_name_spin)
+    _short_file_name = file_structure.short_file_name
+    _spin = file_structure.spin
+    _full_file_name = file_structure.full_file_name
+    
+    config_table = getValue(event=event, uname='ref_m_metadata_table')
+    _refpix = config_table[3,index]
+    
+    iNexus = obj_new('IDLnexusUtilities', _full_file_name, spin_state=_spin)
+    _data = iNexus->get_full_data()  ;[tof, x, y]
+    _tof_axis = iNexus->get_tof_data() ;tof axis in ms
+    obj_destroy, iNexus
+    
+    sz = size(_data,/dim)
+    _pixel_axis = indgen(sz[2])
+    
+    refpix_base, main_base=base, $
+      event=event, $
+      row_index = index, $
+      offset = 10, $
+      x_axis = _tof_axis, $
+      y_axis = _pixel_axis, $
+      data = _data, $
+      refpix = _refpix, $
+      file_name = _short_file_name + ' (' + _spin + ')'
+      
+    index++
+  endwhile
+  
+end
