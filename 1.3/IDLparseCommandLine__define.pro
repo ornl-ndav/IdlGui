@@ -104,6 +104,7 @@ FUNCTION ref_l_getMainDataNexusFileName, cmd
   IF (result EQ '') THEN begin
     result = ref_l_ValueBetweenArg1Arg2(cmd, 'reflect_reduction', 1, ' ', 0)
     if (result eq '') then return, ''
+    return, strcompress(result,/remove_all)
   endif else begin
     RETURN, STRCOMPRESS(result,/REMOVE_ALL)
   endelse

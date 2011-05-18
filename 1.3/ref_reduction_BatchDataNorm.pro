@@ -34,9 +34,9 @@
 
 ;Start working with DATA field
 PRO BatchTab_ChangeDataNormRunNumber, Event
-  
+
   ;print, 'Entering BatchTab_ChangeDataNormRunNumber'
-  
+
   ;indicate initialization with hourglass icon
   ;widget_control,/hourglass
   ;get global structure
@@ -56,7 +56,7 @@ PRO BatchTab_ChangeDataNormRunNumber, Event
     value = 'PROCESSING  NEW  DATA  INPUT  . . .  ( P L E A S E   W A I T ) '
     putLabelValue, Event, 'pro_top_label', value
     (*global).batch_process = 'data'
-    ;turn off hourglass
+  ;turn off hourglass
   ENDIF ELSE BEGIN
     ;Display processing base
     MapBase, Event, 'processing_base', 1
@@ -70,8 +70,8 @@ PRO BatchTab_ChangeDataNormRunNumber, Event
     split1      = 'specmh_reduction'
     part1_array = strsplit(cmd,split1,/extract,/regex)
     if (n_elements(part1_array) eq 1) then begin
-    split1      = 'reflect_reduction'
-    part1_array = strsplit(cmd,split1,/extract,/regex)
+      split1      = 'reflect_reduction'
+      part1_array = strsplit(cmd,split1,/extract,/regex)
     endif
     part1       = part1_array[0]
     ;get second part (after data runs)
@@ -142,7 +142,7 @@ PRO BatchTab_ChangeDataNormRunNumber, Event
             'OR NOT ? '
           putLabelValue, Event, 'pro_top_label', value
         ENDIF ELSE BEGIN
-   ;       widget_control,hourglass=0
+          ;       widget_control,hourglass=0
           Continue_ChangeDataRunNumber, Event, $
             RowSelected,$
             data_runs, $
@@ -172,7 +172,7 @@ PRO BatchTab_ChangeDataNormRunNumber, Event
       ;generate a new batch file name
       GenerateBatchFileName, Event
       ;turn off hourglass
-  ;    widget_control,hourglass=0
+      ;    widget_control,hourglass=0
       value = 'PROCESSING  NEW  DATA  INPUT  . . .  ( P L E A S E  ' + $
         ' W A I T ) '
       putLabelValue, Event, 'pro_top_label', value
@@ -180,9 +180,9 @@ PRO BatchTab_ChangeDataNormRunNumber, Event
     ENDELSE
   ENDELSE ;end of CATCH statement
   
-  ;print, 'Leaving BatchTab_ChangeDataNormRunNumber'
+;print, 'Leaving BatchTab_ChangeDataNormRunNumber'
   
- ; widget_control, hourglass=0
+; widget_control, hourglass=0
   
 END
 
@@ -197,7 +197,7 @@ PRO  Continue_ChangeDataRunNumberForOneRun, Event, $
     BatchTable,$
     new_cmd
     
-   ; print, 'Entering Continue_ChangeDataRunNumberForOneRun'
+  ; print, 'Entering Continue_ChangeDataRunNumberForOneRun'
     
   ;get global structure
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -250,7 +250,7 @@ PRO  Continue_ChangeDataRunNumberForOneRun, Event, $
   ;continue with normalization
   ChangeNormRunNumber, Event
   
-  ;print, 'Leaving Continue_ChangeDataRunNumberForOneRun'
+;print, 'Leaving Continue_ChangeDataRunNumberForOneRun'
   
 END
 
@@ -265,7 +265,7 @@ PRO  Continue_ChangeDataRunNumber, Event, $
     BatchTable,$
     new_cmd
     
-   ; print, 'Entering Continue_ChangeDataRunNumber'
+  ; print, 'Entering Continue_ChangeDataRunNumber'
     
   ;get global structure
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -304,7 +304,7 @@ PRO  Continue_ChangeDataRunNumber, Event, $
   ;continue with normalization
   ChangeNormRunNumber, Event
   
-  ;print, 'Leaving Continue_ChangeDataRunNumber'
+;print, 'Leaving Continue_ChangeDataRunNumber'
   
 END
 
@@ -405,7 +405,7 @@ pro ChangeNormRunNumber, Event
         value += 'CONTINUE OR NOT ? '
         putLabelValue, Event, 'pro_top_label', value
       ENDIF ELSE BEGIN
-   ;     widget_control,hourglass=0
+        ;     widget_control,hourglass=0
         Continue_ChangeNormRunNumber, Event, $
           RowSelected,$
           norm_runs, $
@@ -416,7 +416,7 @@ pro ChangeNormRunNumber, Event
           new_cmd
       ENDELSE
     ENDIF ELSE BEGIN
-    ;  widget_control,hourglass=0
+      ;  widget_control,hourglass=0
       Continue_ChangeNormRunNumber, Event, $
         RowSelected,$
         norm_runs, $
@@ -433,17 +433,17 @@ pro ChangeNormRunNumber, Event
     ;generate a new batch file name
     GenerateBatchFileName, Event
     ;turn off hourglass
-  ;  widget_control,hourglass=0
+    ;  widget_control,hourglass=0
     value = 'PROCESSING  NEW  DATA  INPUT  . . .  ( P L E A S E   W A I T ) '
     putLabelValue, Event, 'pro_top_label', value
     (*global).batch_process = 'data'
     BatchTab_WidgetTable, Event ;in ref_reduction_BatchTab.pro
-
+    
   ENDELSE
-
+  
 ;print, 'leaving changNormRunNumber' ;remove_me
   
-  ;widget_control,hourglass=0
+;widget_control,hourglass=0
   
 END
 
@@ -457,16 +457,16 @@ PRO Continue_ChangeNormRunNumber, Event,$
     part2,$
     BatchTable,$
     new_cmd
-  
- ; print, 'Entering Continue_ChangeNormRunNumber' ;remove_me
-  
+    
+  ; print, 'Entering Continue_ChangeNormRunNumber' ;remove_me
+    
   ;get global structure
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
   widget_control,id,get_uvalue=global
   
- ; widget_control, /hourglass
+  ; widget_control, /hourglass
   
- ; print, '-> #1'
+  ; print, '-> #1'
   
   NormRunsJoined = strjoin(norm_runs,',')
   BatchTable[2,RowSelected] = NormRunsJoined
@@ -481,7 +481,7 @@ PRO Continue_ChangeNormRunNumber, Event,$
     ENDFOR
   ENDIF
   
- ; print, '-> #2'
+  ; print, '-> #2'
   
   new_cmd += ' ' + split2 + part2
   ;change the --output flag in the cmd
@@ -503,7 +503,7 @@ PRO Continue_ChangeNormRunNumber, Event,$
   ;Update info of selected row
   DisplayInfoOfSelectedRow, Event, RowSelected
   
- ; print, '-> #5'
+  ; print, '-> #5'
   
   ;Hide processing base
   MapBase, Event, 'processing_base', 0
@@ -523,21 +523,21 @@ PRO Continue_ChangeNormRunNumber, Event,$
   
   BatchTab_WidgetTable, Event     ;in ref_reduction_BatchTab.pro
   
- ; print, 'Leaving Continue_ChangeNormRunNumber' ;remove_me
+; print, 'Leaving Continue_ChangeNormRunNumber' ;remove_me
   
 END
 
 ;******************************************************************************
 
 PRO BatchTab_ContinueProcessing, Event
-  
+
   ;print, 'Entering BatchTab_ContinueProcessing'
-  
+
   ;get global structure
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
   widget_control,id,get_uvalue=global
   
- ; WIDGET_CONTROL, /HOURGLASS
+  ; WIDGET_CONTROL, /HOURGLASS
   
   CurrentProcess = (*global).batch_process
   IF (CurrentProcess eq 'data') THEN BEGIN
@@ -554,7 +554,7 @@ PRO BatchTab_ContinueProcessing, Event
     BatchTable  = (*(*global).BatchTable)
     new_cmd     = (*global).batch_new_cmd
     
-   ; widget_control,hourglass=0
+    ; widget_control,hourglass=0
     
     Continue_ChangeDataRunNumber, Event, $
       RowSelected,$
@@ -580,7 +580,7 @@ PRO BatchTab_ContinueProcessing, Event
     BatchTable  = (*(*global).BatchTable)
     new_cmd     = (*global).batch_new_cmd
     
-  ;  widget_control,hourglass=0
+    ;  widget_control,hourglass=0
     
     Continue_ChangeNormRunNumber, Event, $
       RowSelected,$
@@ -592,18 +592,18 @@ PRO BatchTab_ContinueProcessing, Event
       new_cmd
   ENDELSE
   
- ; print, 'Leaving BatchTab_ContinueProcessing'
+; print, 'Leaving BatchTab_ContinueProcessing'
   
- ; widget_control,hourglass=0
+; widget_control,hourglass=0
   
 END
 
 ;******************************************************************************
 
 PRO BatchTab_StopProcessing, Event
-  
- ; print, 'Entgering BatchTab_stopProcessing'
-  
+
+  ; print, 'Entgering BatchTab_stopProcessing'
+
   ;get global structure
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
   widget_control,id,get_uvalue=global
@@ -624,7 +624,7 @@ PRO BatchTab_StopProcessing, Event
     (*global).batch_process = 'data'
   ENDELSE
   
-  ;print, 'Leaginv BatchTab_StopProcessing'
+;print, 'Leaginv BatchTab_StopProcessing'
   
 END
 
@@ -632,7 +632,7 @@ END
 
 PRO SaveDataNormInputValues, Event
 
- ; print, 'Entering SaveDataNormInputValues'
+  ; print, 'Entering SaveDataNormInputValues'
 
   ;get global structure
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -643,15 +643,15 @@ PRO SaveDataNormInputValues, Event
   (*global).CurrentBatchDataInput = DataInputField
   (*global).CurrentBatchNormInput = NormInputField
   
-  ;print, 'Leaving SaveDataNormInputValues'
+;print, 'Leaving SaveDataNormInputValues'
   
 END
 
 ;******************************************************************************
 
 PRO DataNormFieldInput, Event, status
-  
- ; print, 'Entering DataNormFieldInput'
+
+  ; print, 'Entering DataNormFieldInput'
 
   ;get global structure
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -680,7 +680,7 @@ PRO DataNormFieldInput, Event, status
     status = 1
   ENDELSE
   
-  ;print, 'Leaving DataNormFieldInput'
+;print, 'Leaving DataNormFieldInput'
   
 END
 

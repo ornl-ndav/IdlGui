@@ -38,7 +38,7 @@ PRO populate_data_geometry_info, Event, nexus_file_name, spin_state=spin_state
   
   WIDGET_CONTROL,Event.top,get_uvalue=global
   
-  iNexus = obj_new('NeXusMetadata', nexus_file_name, spin_state=spin_state)
+  iNexus = obj_new('NeXusMetadata', nexus_file_name, spin_state='Off_Off')
   
   ;get date and put it in place
   date = iNexus->getDate()
