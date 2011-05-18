@@ -237,12 +237,15 @@ PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
       /column)
     button1 = widget_button(_base,$
       value = 'Narrow reflective peak',$
+      /no_release,$
       uname = 'one_reduction_per_selection_uname')
     button2 = widget_button(_base,$
       value = 'Broad reflective peak',$
+      /no_release,$
       uname = 'one_reduction_per_pixel_uname')
     button3 = widget_button(_base,$
       value = 'Discrete reflective peaks', $
+      /no_release,$
       uname = 'one_reduction_per_discrete_uname')
     widget_control, button1, /set_button
     

@@ -83,6 +83,7 @@ PRO MAIN_BASE_event, Event
       (*global).reduction_mode = 'one_per_selection'
       REFReduction_RescaleDataPlot, Event
       ReplotAllSelection, Event
+      print, '#1'
     end
     widget_info(wWidget, $
       find_by_uname='one_reduction_per_pixel_uname'): begin
@@ -90,6 +91,8 @@ PRO MAIN_BASE_event, Event
       (*global).reduction_mode = 'one_per_pixel'
       REFReduction_RescaleDataPlot, Event
       ReplotAllSelection, Event
+      print, '#2'
+      
     end
     
     widget_info(wWidget, $
@@ -99,6 +102,8 @@ PRO MAIN_BASE_event, Event
       REFReduction_RescaleDataPlot, Event
       ReplotAllSelection, Event
       discrete_selection_launcher, event
+            print, '#3'
+      
     end
     
     ;bring to life the TOF selection base
