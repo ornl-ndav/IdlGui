@@ -146,6 +146,7 @@
 
 .run tof_selection_tool_button_eventcb.pro
 .run populate_q_widgets.pro
+.run refresh_data_plot_tof_range.pro
 
 .run cleanup.pro
 .run ref_reduction_debugging.pro

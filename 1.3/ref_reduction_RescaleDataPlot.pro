@@ -265,7 +265,7 @@ PRO REFreduction_Rescale_PlotData, Event, tvimg
   ;get number of color
   NumberColorValue = getSliderValue(Event,'data_contrast_number_slider')
   loadct,loadctIndex, Bottom=BottomColorValue,NColors=NumberColorValue,/SILENT
-  
+  erase
   tvscl, tvimg
   
 END

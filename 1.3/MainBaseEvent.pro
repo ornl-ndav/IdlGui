@@ -63,19 +63,19 @@ PRO MAIN_BASE_event, Event
   
     ;load configuration;
     widget_info(wWidget, find_by_uname='load_configuration'): begin
-    load_configuration_function, event
+      load_configuration_function, event
     end
     
     ;save configuration
     widget_info(wWidget, find_by_uname='save_configuration'): begin
-    save_configuration_function, event
+      save_configuration_function, event
     end
     
     ;reset configuration file
     widget_info(wWidget, find_by_uname='remove_configuration_file'): begin
-    (*global).current_tof_config_file_name = ''
+      (*global).current_tof_config_file_name = ''
     end
-  
+    
     ;1 reduction per selection or 1 reduction per pixel selected
     widget_info(wWidget, $
       find_by_uname='one_reduction_per_selection_uname'): begin
@@ -93,13 +93,13 @@ PRO MAIN_BASE_event, Event
     end
     
     widget_info(wWidget, $
-    find_by_uname='one_reduction_per_discrete_uname'): begin
+      find_by_uname='one_reduction_per_discrete_uname'): begin
       update_reduction_mode_widgets, event=event, status='one_per_discrete'
       (*global).reduction_mode = 'one_per_discrete'
       REFReduction_RescaleDataPlot, Event
       ReplotAllSelection, Event
     end
-
+    
     ;bring to life the TOF selection base
     widget_info(wWidget, find_by_uname='tof_selection_tool_button'): begin
       tof_selection_tool_button_eventcb, event
@@ -1673,6 +1673,34 @@ PRO MAIN_BASE_event, Event
       REFreduction_CommandLineGenerator, Event
     end
     
+    ;q width
+    widget_info(wWidget, $
+      find_by_uname='q_width_text_field'): begin
+      value = getValue(id=event.id)
+      if (strcompress(value,/remove_all) eq '') then begin
+        putValue, event=event,'q_nbins_text_field', (*global).q_number_bins
+      endif else begin
+        putValue, event=event,'q_nbins_text_field', ''
+      endelse
+      REFreduction_CommandLineGenerator, Event
+    end
+    
+    ;number of bins
+    widget_info(wWidget, $
+      find_by_uname='q_nbins_text_field'): begin
+      nbr_bins = getValue(id=event.id)
+      (*global).q_number_bins = fix(nbr_bins)
+      putValue, event=event,'q_width_text_field', ''
+      REFreduction_CommandLineGenerator, Event
+    end
+    
+    ;q scale (lin or log)
+    widget_info(wWidget, $
+    find_by_uname='q_scale_b_group'): begin
+      putValue, event=event,'q_width_text_field', ''
+      REFreduction_CommandLineGenerator, Event
+    end
+
     ;output path/file
     WIDGET_INFO(wWidget, FIND_BY_UNAME='of_button'): begin
       REFreduction_DefineOutputPath, Event ;in ref_reduction_OutputPath.pro
@@ -2046,8 +2074,6 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_data_tof_units_micros'):
     WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_data_tof_units_ms'):
     WIDGET_INFO(wWidget, FIND_BY_UNAME='q_max_text_field'):
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='q_width_text_field'):
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='q_scale_b_group'):
     WIDGET_INFO(wWidget, FIND_BY_UNAME='filtering_data_cwbgroup'):
     WIDGET_INFO(wWidget, FIND_BY_UNAME='delta_t_over_t_cwbgroup'):
     WIDGET_INFO(wWidget, $

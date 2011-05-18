@@ -148,18 +148,14 @@ PRO BrowseDataNexus, Event
     ENDELSE
     
     ;get run number
-    iNexus = OBJ_NEW('IDLgetMetadata', nexus_file_name, POLA_STATE_NAME='entry-Off_Off')
+    iNexus = OBJ_NEW('IDLgetMetadata', nexus_file_name, $
+    POLA_STATE_NAME='entry-Off_Off')
     DataRunNumber = iNexus->getRunNumber()
     OBJ_DESTROY, iNexus
     (*global).data_run_number = DataRunNumber
     putTextfieldvalue, event, 'load_data_run_number_text_field', $
       strcompress(DataRunNumber,/remove_all)
       
-;    IF ((*global).instrument EQ 'REF_M') THEN BEGIN
-;      populate_data_geometry_info, Event, nexus_file_name
-;      calculate_sangle, event
-;    ENDIF
-    
     ;turn off hourglass
     WIDGET_CONTROL,HOURGLASS=0
   ENDIF ELSE BEGIN

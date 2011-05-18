@@ -98,16 +98,16 @@ PRO miniMakeGuiReduceQBase, Event, REDUCE_BASE, IndividualBaseWidth, global
   QScaleBGroupSize = [QwidthTextFieldSize[0]+QwidthTextFieldSize[2]+XYoff[0],$
     QminTextFieldSize[1]]
     
-        if ((*global).Q_scale_type eq 'linear') then begin
-  qscale_type =0
+  if ((*global).Q_scale_type eq 'linear') then begin
+    qscale_type =0
   endif else begin
-  qscale_type = 1
+    qscale_type = 1
   endelse
-    
+  
   ;##############################################################################
   ;############################## Create GUI ####################################
   ;##############################################################################
-    
+  
   map_status = 1
   if ((*global).instrument eq 'REF_M') then begin
   
@@ -117,99 +117,6 @@ PRO miniMakeGuiReduceQBase, Event, REDUCE_BASE, IndividualBaseWidth, global
       value = 'Q axis: AUTOMATIC !')
     map_status = 0
     
-       ;base
-    Q_base = WIDGET_BASE(REDUCE_BASE,$
-      XOFFSET   = QBaseSize[0],$
-      YOFFSET   = QBaseSize[1],$
-      SCR_XSIZE = QBaseSize[2],$
-      SCR_YSIZE = QBaseSize[3],$
-      map=map_status, $
-      UNAME     = 'reduce_q_base')
-
-    ;label that goes on top of frame
-    QLabel = WIDGET_LABEL(Q_base,$
-      XOFFSET = QLabelSize[0],$
-      YOFFSET = QLabelSize[1],$
-      VALUE   = QLabelTitle)
-      
-      set_value = 1
-      sensitive = 0
-     
-  ;sQmanual base
-  wBase = WIDGET_BASE(Q_base,$
-  ;  XOFFSET   = sQmanualBase.size[0],$
-  xoffset = 15,$
-    YOFFSET   = sQmanualBase.size[1]-2,$
-    ;SCR_XSIZE = sQmanualBase.size[2],$
-    SCR_YSIZE = sQmanualBase.size[3]-3,$
-    UNAME     = sQmanualBase.uname,$
-    /row,$
-    FRAME     = 0)
-
-    ;qmin label
-    qminlabel = widget_label(wBase,$
-    value = QMinLabelTitle)
-    qminvalue = widget_text(wBase,$
-    /align_left,$
-    /all_events, $
-    /editable,$
-    uname='q_min_text_field',$
-    scr_xsize = QMinTextFieldSize[2])
-    
-    ;qmax label
-    qmaxlabel = widget_label(wBase,$
-    value = '  ' + QMaxLabelTitle)
-    qmaxvalue = widget_text(wBase,$
-    /align_left,$
-    /all_events, $
-    /editable,$
-    uname='q_max_text_field',$
-    scr_xsize = QMaxTextFieldSize[2])
-    
-    ;qwidth label
-    qwidthlabel = widget_label(wBase,$
-    value = '  ' + QWidthLabelTitle)
-    qwidthvalue = widget_text(wBase,$
-    /align_left,$
-    /all_events, $
-    /editable,$
-    uname='q_width_text_field',$
-    scr_xsize = QwidthTextFieldSize[2])
-    
-;'or Nbins'
-  or_label = widget_label(wBase,$
-  value = 'or Nbins:')
-  ;value
-  Nbins = widget_text(wBase,$
-  /align_left, $
-  value = (*global).q_number_bins, $
-  xsize=4,$
-  /editable,$
-  /all_events, $
-  uname = 'q_nbins_text_field')
-    
-    space = widget_label(wBase,$
-    value =  '  ')
-    
-  ;QScale label
-  QScaleBGroup = cw_bgroup(wBase,$
-    QScaleBGroupList,$
-    /exclusive,$
-    /row,$
-    set_value=qscale_type,$
-    uname='q_scale_b_group')
-    
-  ;frame
-  QFrame = widget_label(q_base,$
-    xoffset=QFrameSize[0],$
-    yoffset=QFrameSize[1],$
-    scr_xsize=QFrameSize[2],$
-    scr_ysize=QFrameSize[3],$
-    frame=1,$
-    value='')
-    
-  endif else begin
-
     ;base
     Q_base = WIDGET_BASE(REDUCE_BASE,$
       XOFFSET   = QBaseSize[0],$
@@ -218,15 +125,107 @@ PRO miniMakeGuiReduceQBase, Event, REDUCE_BASE, IndividualBaseWidth, global
       SCR_YSIZE = QBaseSize[3],$
       map=map_status, $
       UNAME     = 'reduce_q_base')
-
+      
     ;label that goes on top of frame
     QLabel = WIDGET_LABEL(Q_base,$
       XOFFSET = QLabelSize[0],$
       YOFFSET = QLabelSize[1],$
       VALUE   = QLabelTitle)
       
-      set_value = sModeGroup.value
-      sensitive = 1
+    set_value = 1
+    sensitive = 0
+    
+    ;sQmanual base
+    wBase = WIDGET_BASE(Q_base,$
+      ;  XOFFSET   = sQmanualBase.size[0],$
+      xoffset = 15,$
+      YOFFSET   = sQmanualBase.size[1]-2,$
+      ;SCR_XSIZE = sQmanualBase.size[2],$
+      SCR_YSIZE = sQmanualBase.size[3]-3,$
+      UNAME     = sQmanualBase.uname,$
+      /row,$
+      FRAME     = 0)
+      
+    ;qmin label
+    qminlabel = widget_label(wBase,$
+      value = QMinLabelTitle)
+    qminvalue = widget_text(wBase,$
+      /align_left,$
+      /all_events, $
+      /editable,$
+      uname='q_min_text_field',$
+      scr_xsize = QMinTextFieldSize[2])
+      
+    ;qmax label
+    qmaxlabel = widget_label(wBase,$
+      value = '  ' + QMaxLabelTitle)
+    qmaxvalue = widget_text(wBase,$
+      /align_left,$
+      /all_events, $
+      /editable,$
+      uname='q_max_text_field',$
+      scr_xsize = QMaxTextFieldSize[2])
+      
+    ;qwidth label
+    qwidthlabel = widget_label(wBase,$
+      value = '  ' + QWidthLabelTitle)
+    qwidthvalue = widget_text(wBase,$
+      /align_left,$
+      /editable,$
+      uname='q_width_text_field',$
+      scr_xsize = QwidthTextFieldSize[2])
+      
+    ;'or Nbins'
+    or_label = widget_label(wBase,$
+      value = 'or Nbins:')
+    ;value
+    Nbins = widget_text(wBase,$
+      /align_left, $
+      value = (*global).q_number_bins, $
+      xsize=4,$
+      /editable,$
+      uname = 'q_nbins_text_field')
+      
+    space = widget_label(wBase,$
+      value =  '  ')
+      
+    ;QScale label
+    QScaleBGroup = cw_bgroup(wBase,$
+      QScaleBGroupList,$
+      /exclusive,$
+      /row,$
+      /no_release, $
+      set_value=qscale_type,$
+      uname='q_scale_b_group')
+      
+    ;frame
+    QFrame = widget_label(q_base,$
+      xoffset=QFrameSize[0],$
+      yoffset=QFrameSize[1],$
+      scr_xsize=QFrameSize[2],$
+      scr_ysize=QFrameSize[3],$
+      frame=1,$
+      value='')
+      
+  endif else begin
+  
+    ;base
+    Q_base = WIDGET_BASE(REDUCE_BASE,$
+      XOFFSET   = QBaseSize[0],$
+      YOFFSET   = QBaseSize[1],$
+      SCR_XSIZE = QBaseSize[2],$
+      SCR_YSIZE = QBaseSize[3],$
+      map=map_status, $
+      UNAME     = 'reduce_q_base')
+      
+    ;label that goes on top of frame
+    QLabel = WIDGET_LABEL(Q_base,$
+      XOFFSET = QLabelSize[0],$
+      YOFFSET = QLabelSize[1],$
+      VALUE   = QLabelTitle)
+      
+    set_value = sModeGroup.value
+    sensitive = 1
     
     ;Auto/Manual mode
     _base = widget_base(Q_base,$
@@ -324,6 +323,6 @@ PRO miniMakeGuiReduceQBase, Event, REDUCE_BASE, IndividualBaseWidth, global
       FRAME     = 1,$
       VALUE     = '')
       
-      endelse
-      
+  endelse
+  
 end
