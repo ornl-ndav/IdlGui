@@ -104,8 +104,13 @@ pro change_batch_data_norm_run_number_ref_m, event
   
     ;WORK ON DATA runs
     ;get first part of cmd ex: srun -Q -p lracq reflect_reduction
-    split1      = 'reflect_reduction'
+    split1      = 'specmh_reduction'
     part1_array = strsplit(cmd_split[index],split1,/extract,/regex)
+    if (n_elements(part1_array) eq 1) then begin
+    split1 = 'reflect_reduction'
+    part1_array = strsplit(cmd_split[index],split1,/extract,/regex)
+endif    
+    
     part1       = part1_array[0]
     ;get second part (after data runs)
     split2                  = '--data-paths='

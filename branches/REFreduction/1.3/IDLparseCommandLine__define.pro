@@ -100,9 +100,13 @@ END
 ;------------------------------------------------------------------------------
 ;------------------------------------------------------------------------------
 FUNCTION ref_l_getMainDataNexusFileName, cmd
-  result = ref_l_ValueBetweenArg1Arg2(cmd, 'reflect_reduction', 1, ' ', 0)
-  IF (result EQ '') THEN RETURN, ''
-  RETURN, STRCOMPRESS(result,/REMOVE_ALL)
+  result = ref_l_ValueBetweenArg1Arg2(cmd, 'specmh_reduction', 1, ' ', 0)
+  IF (result EQ '') THEN begin
+    result = ref_l_ValueBetweenArg1Arg2(cmd, 'reflect_reduction', 1, ' ', 0)
+    if (result eq '') then return, ''
+  endif else begin
+    RETURN, STRCOMPRESS(result,/REMOVE_ALL)
+  endelse
 END
 
 ;------------------------------------------------------------------------------
@@ -114,15 +118,20 @@ END
 ;------------------------------------------------------------------------------
 FUNCTION ref_l_getAllDataNexusFileName, cmd
   result = ref_l_ValueBetweenArg1Arg2(cmd, $
-    'reflect_reduction ',$
+    'specmh_reduction ',$
     1, $
     '--data-roi-file', $
     0)
-  
-  print, result
-  
-  IF (result EQ '') THEN RETURN, ''
-  RETURN, result
+  IF (result EQ '') THEN begin
+    result = ref_l_ValueBetweenArg1Arg2(cmd, $
+      'reflect_reduction ',$
+      1, $
+      '--data-roi-file', $
+      0)
+    if (result eq '') then RETURN, ''
+  endif else begin
+    RETURN, result
+  endelse
 END
 
 ;------------------------------------------------------------------------------
@@ -150,14 +159,14 @@ END
 
 ;------------------------------------------------------------------------------
 FUNCTION ref_l_getTOFcuttingMin, cmd
- result = ref_l_ValueBetweenArg1Arg2(cmd, '--tof-cut-min=', 1, ' ', 0)
+  result = ref_l_ValueBetweenArg1Arg2(cmd, '--tof-cut-min=', 1, ' ', 0)
   IF (result EQ '') THEN RETURN, ''
   RETURN, STRCOMPRESS(result,/REMOVE_ALL)
 END
- 
+
 ;------------------------------------------------------------------------------
 FUNCTION ref_l_getTOFcuttingMax, cmd
- result = ref_l_ValueBetweenArg1Arg2(cmd, '--tof-cut-max=', 1, ' ', 0)
+  result = ref_l_ValueBetweenArg1Arg2(cmd, '--tof-cut-max=', 1, ' ', 0)
   IF (result EQ '') THEN RETURN, ''
   RETURN, STRCOMPRESS(result,/REMOVE_ALL)
 END
