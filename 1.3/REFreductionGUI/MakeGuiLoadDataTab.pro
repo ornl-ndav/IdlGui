@@ -245,6 +245,7 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
       uname = 'one_reduction_per_pixel_uname')
     button3 = widget_button(_base,$
       value = 'Discrete reflective peaks', $
+      /no_release,$
       uname = 'one_reduction_per_discrete_uname')
     widget_control, button1, /set_button
     

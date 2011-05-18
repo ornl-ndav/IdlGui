@@ -13,6 +13,9 @@ pro discrete_selection_launcher, event
   widget_control, event.top, get_uvalue=global
   widget_control, /hourglass
   
+  wBase = (*global).discrete_selection_base_id
+  if (widget_info(wBase, /valid_id) ne 0) then return
+  
   run_number = getTextFieldValue(event, 'load_data_run_number_text_field')
   
   ;data
@@ -27,13 +30,20 @@ pro discrete_selection_launcher, event
     iNexus = obj_new('IDLnexusUtilities', full_nexus_name)
     y_axis = indgen(256)
   endelse
-  tof_axis = iNexus->get_tof_data()
+  
+  catch, error
+  if (error ne 0) then begin
+    catch,/cancel
+    return
+  endif else begin
+    tof_axis = iNexus->get_tof_data()
+  endelse
   
   tof_min_max = get_input_tof_min_max(event)
   
   discrete_selection_base, main_base='MAIN_BASE',$
     event=event, $
-    offset = 50,$
+    offset = 120,$
     tof_min_max = tof_min_max, $
     x_axis = tof_axis,$
     y_axis = y_axis,$

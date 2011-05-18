@@ -1341,6 +1341,7 @@ pro discrete_selection_base, main_base=main_base, $
     default_plot_size = default_plot_size
   wBase_copy = wBase
   wBase_copy1 = wBase
+  (*global).discrete_selection_base_id = wBase
   
   WIDGET_CONTROL, wBase, /REALIZE
   
@@ -1500,10 +1501,10 @@ pro discrete_selection_base, main_base=main_base, $
   ;bring to life the refpix pixel1 and 2 input base
   discrete_selection_input_base, parent_base_uname = 'discrete_selection_base_uname', $
     top_base=wBase_copy1
-  
-  
-  return
     
+    
+  return
+  
   ;bring to life the base that show counts vs tof
   discrete_selection_counts_vs_tof_base, $
     parent_base_uname='discrete_selection_base_uname', $
