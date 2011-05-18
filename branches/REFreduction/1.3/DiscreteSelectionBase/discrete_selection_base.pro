@@ -57,7 +57,8 @@ pro discrete_selection_base_event, Event
       if (error ne 0) then begin ;selection
         catch,/cancel
         
-        show_tof_selection_cursor_info, event
+        show_discrete_selection_cursor_info, event
+        return
         
         if (event.press eq 1) then begin ;left click
         
@@ -204,10 +205,10 @@ pro discrete_selection_base_event, Event
       widget_control, id, draw_ysize = new_ysize
       widget_control, id, draw_xsize = colorbar_xsize
       
-      plot_tof_selection_beam_center_scale, event=event
-      refresh_tof_selection_plot, event, recalculate=1
-      refresh_plot_tof_selection_colorbar, event
-      display_tof_selection_tof, event=event
+      plot_discrete_selection_beam_center_scale, event=event
+      refresh_discrete_selection_plot, event, recalculate=1
+      refresh_plot_discrete_selection_colorbar, event
+      display_discrete_selection_tof, event=event
       
       return
     end
@@ -419,8 +420,8 @@ pro display_discrete_selection_tof, event=event, base=base
   tof_min = tof_selection_tof[0]
   tof_max = tof_selection_tof[1]
   
-  tof_min_device = from_data_to_device(event=event, base=base, tof_min)
-  tof_max_device = from_data_to_device(event=event, base=base, tof_max)
+  tof_min_device = discrete_from_data_to_device(event=event, base=base, tof_min)
+  tof_max_device = discrete_from_data_to_device(event=event, base=base, tof_max)
   
   ysize = (*global_tof_selection).ysize
   
@@ -778,7 +779,7 @@ pro refresh_discrete_selection_plot, event, recalculate=recalculate
   
   tvscl, cData
   
-  save_tof_selection_background, event=event
+  save_discrete_selection_background, event=event
   
 end
 
@@ -810,13 +811,13 @@ pro discrete_selection_local_switch_axes_type, event
   putValue, event=event, 'discrete_selection_local_scale_setting_linear', set1_value
   putValue, event=event, 'discrete_selection_local_scale_setting_log', set2_value
   
-  tof_selection_lin_log_data, event=event
-  refresh_tof_selection_plot, event, recalculate=1
-  refresh_plot_tof_selection_colorbar, event
+  discrete_selection_lin_log_data, event=event
+  refresh_discrete_selection_plot, event, recalculate=1
+  refresh_plot_discrete_selection_colorbar, event
   
-  save_tof_selection_background,  event=event
+  save_discrete_selection_background,  event=event
   
-  display_tof_selection_tof, event=event
+  display_discrete_selection_tof, event=event
   
 end
 
@@ -860,9 +861,9 @@ pro change_discrete_selection_loadct, event
   (*global_tof_selection).default_loadct = fix(new_uname_array[3])
   
   ;replot
-  refresh_tof_selection_plot, event, recalculate=1
-  refresh_plot_tof_selection_colorbar, event
-  display_tof_selection_tof, event=event
+  refresh_discrete_selection_plot, event, recalculate=1
+  refresh_plot_discrete_selection_colorbar, event
+  display_discrete_selection_tof, event=event
   
 end
 
@@ -1279,9 +1280,9 @@ pro discrete_selection_base_gui, wBase, $
     value = 'Show TOF selection window',$
     uname = 'show_tof_selection_base')
     
-  _plot = widget_button(pixel,$
-    value = 'Show Counts vs TOF window',$
-    uname = 'show_counts_vs_tof_base')
+;  _plot = widget_button(pixel,$
+;    value = 'Show Counts vs TOF window',$
+;    uname = 'show_counts_vs_tof_base')
     
 end
 
@@ -1499,6 +1500,9 @@ pro discrete_selection_base, main_base=main_base, $
   ;bring to life the refpix pixel1 and 2 input base
   discrete_selection_input_base, parent_base_uname = 'discrete_selection_base_uname', $
     top_base=wBase_copy1
+  
+  
+  return
     
   ;bring to life the base that show counts vs tof
   discrete_selection_counts_vs_tof_base, $
