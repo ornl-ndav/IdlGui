@@ -130,7 +130,7 @@ pro refresh_plot_discrete_selection_colorbar, event
   zmin = zrange[0]
   zmax = zrange[1]
   
-  id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='tof_selection_colorbar')
+  id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='discrete_selection_colorbar')
   widget_control, id_draw, get_value=id_value
   wset,id_value
   erase
