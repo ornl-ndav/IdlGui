@@ -98,6 +98,7 @@ PRO MAIN_BASE_event, Event
       (*global).reduction_mode = 'one_per_discrete'
       REFReduction_RescaleDataPlot, Event
       ReplotAllSelection, Event
+      discrete_selection_launcher, event
     end
     
     ;bring to life the TOF selection base
