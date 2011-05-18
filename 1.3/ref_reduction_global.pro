@@ -79,6 +79,7 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     config_file_name: '~/.user_ref_reduction.cfg', $
     current_tof_config_file_name: '', $
     tof_config_path: '~/',$
+    tof_selection_base_id: 0L, $
   
     progress_bar_base: 0L, $
     stop_broad_reduction: 0b, $ ;can be changed to 1b in progress bar base

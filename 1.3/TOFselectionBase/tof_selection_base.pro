@@ -1340,6 +1340,7 @@ pro tof_selection_base, main_base=main_base, $
     default_plot_size = default_plot_size
   wBase_copy = wBase
   wBase_copy1 = wBase
+  (*global).tof_selection_base_id = wBase
   
   WIDGET_CONTROL, wBase, /REALIZE
   

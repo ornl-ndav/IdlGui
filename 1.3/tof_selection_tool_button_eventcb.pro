@@ -103,6 +103,9 @@ pro tof_selection_tool_button_eventcb, event
   widget_control, event.top, get_uvalue=global
   widget_control, /hourglass
   
+  wBase = (*global).tof_selection_base_id
+  if (widget_info(wBase, /valid_id) ne 0) then return
+  
   run_number = getTextFieldValue(event, 'load_data_run_number_text_field')
   
   ;data
