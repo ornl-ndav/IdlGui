@@ -667,15 +667,17 @@ pro command_line_generator_for_ref_m, event
     cmd[index_spin_state] += ' --inst=' + (*global).instrument
     
     ;reduction mode (per selection or per pixel selected)
-    if ((*global).reduction_mode eq 'one_per_pixel') then begin
-      
-      populate_Q_widgets, event=event
+    if ((*global).reduction_mode ne 'one_per_selection') then begin
     
+;      populate_Q_widgets, event=event
+      
       Q_min = getTextFieldValue(Event, 'q_min_text_field')
       Q_max = getTextFieldValue(Event, 'q_max_text_field')
+      
       Q_width = getTextfieldValue(Event, 'q_width_text_field')
       Q_scale = getQSCale(Event)
-      cmd[index_spin_state] += ' --mom-trans-bins='
+      
+        cmd[index_spin_state] += ' --mom-trans-bins='
       
       if (Q_min NE '') then begin ;Q_min
         cmd[index_spin_state] += STRCOMPRESS(Q_min,/remove_all)

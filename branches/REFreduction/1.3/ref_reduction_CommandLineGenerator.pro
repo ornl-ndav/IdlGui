@@ -43,6 +43,8 @@
 ;-
 pro REFreduction_CommandLineGenerator, Event
 
+  widget_control, /hourglass
+
   ;get global structure
   id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
   WIDGET_CONTROL,id,get_uvalue=global
@@ -62,5 +64,7 @@ pro REFreduction_CommandLineGenerator, Event
       end
     endcase
   endelse
+  
+  widget_control, hourglass=0
   
 end

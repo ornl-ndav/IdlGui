@@ -151,6 +151,13 @@ pro command_line_generator_for_ref_m_broad_peak, event
   
   ;used to calculate the Qrange
   sangle_min_max = fltarr(2)
+  sangle=-10
+  calculate_sangle, event, refpix=pixel_range[0], sangle=sangle
+  sangle_min_max[0] = sangle
+  calculate_sangle, event, refpix=pixel_range[-1], sangle=sangle
+  sangle_min_max[1] = sangle
+  ;record the min and max sangles values
+  (*global).sangle_min_max = sangle_min_max
   
   _index_spin_state = 0  ;up to nbr_spin_states
   ;while (index_spin_state lt nbr_spin_states) do begin
@@ -354,10 +361,6 @@ pro command_line_generator_for_ref_m_broad_peak, event
       sangle = -10
       calculate_sangle, event, refpix=_pixel, sangle=sangle
       
-      ;save first and last sangle of selection
-      if (_index_pixel_range eq 0) then sangle_min_max[0] = sangle
-      if (_index_pixel_range eq (nbr_pixels-1)) then sangle_min_max[1] = sangle
-      
       ;scattering angle flag
       cmd[_index_spin_state, _index_pixel_range] += ' --scatt-angle='
       rad_sangle = sangle
@@ -394,7 +397,7 @@ pro command_line_generator_for_ref_m_broad_peak, event
         endif else begin
           cmd[_index_spin_state, _index_pixel_range] += ' --norm-data-paths'
           cmd[_index_spin_state, _index_pixel_range] += '=/' + $
-            data_spin_state_path[_index] + '/'
+            data_spin_state_path[_index_spin_state] + '/'
           cmd[_index_spin_state, _index_pixel_range] += $
             (*global).data_path_flag_suffix
         endelse
@@ -512,12 +515,39 @@ pro command_line_generator_for_ref_m_broad_peak, event
         (*global).instrument
         
       ;reduction mode (per selection or per pixel selected)
-      if ((*global).reduction_mode = 'one_per_pixel') then begin
+      if ((*global).reduction_mode ne 'one_per_selection') then begin
       
-        Q_min = getTextFieldValue(Event, 'q_min_text_field')
-        Q_max = getTextFieldValue(Event, 'q_max_text_field')
-        Q_width = getTextfieldValue(Event, 'q_width_text_field')
-        Q_scale = getQSCale(Event)
+        if (_index_pixel_range eq 0 && _index_spin_state eq 0) then begin
+          populate_Q_widgets, event=event
+          
+          Q_min = getTextFieldValue(Event, 'q_min_text_field')
+          Q_max = getTextFieldValue(Event, 'q_max_text_field')
+          Q_width = getTextfieldValue(Event, 'q_width_text_field')
+          Q_scale = getQSCale(Event)
+          
+          ;if Q_width is not empty, used this one
+          ;if Q_width is empty, calculate Q_width according to Number bins needed
+          if (Q_width eq '') then begin
+            nbr_bins = getTextFieldValue(Event, 'q_nbins_text_field')
+            if (Q_scale eq 'lin') then begin
+              Q_width = (float(Q_max) - float(Q_min)) / float(nbr_bins)
+            endif else begin
+              Q_width = (float(Q_max)/float(Q_min))^(1./nbr_bins)-1.
+            endelse
+            putValue, event=event, 'q_width_text_field', $
+              strcompress(Q_width,/remove_all)
+          endif
+          
+        endif else begin
+        
+          Q_min = getTextFieldValue(Event, 'q_min_text_field')
+          Q_max = getTextFieldValue(Event, 'q_max_text_field')
+          
+          Q_width = getTextfieldValue(Event, 'q_width_text_field')
+          Q_scale = getQSCale(Event)
+          
+        endelse
+        
         cmd[_index_spin_state, _index_pixel_range] += ' --mom-trans-bins='
         
         if (Q_min NE '') then begin ;Q_min
@@ -632,9 +662,6 @@ pro command_line_generator_for_ref_m_broad_peak, event
     
     _index_spin_state++
   endwhile
-  
-  ;record the min and max sangles values
-  (*global).sangle_min_max = sangle_min_max
   
   ;record the name of all the output files
   (*(*global).list_of_output_file_name_for_broad_mode) = $

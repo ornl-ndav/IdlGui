@@ -113,7 +113,7 @@ pro populate_Q_widgets, event=event
   
   putValue, event=event, 'q_min_text_field', strcompress(Qmin,/remove_all)
   putValue, event=event, 'q_max_text_field', strcompress(Qmax,/remove_all)
-  
+
   return
   
   float_error:
