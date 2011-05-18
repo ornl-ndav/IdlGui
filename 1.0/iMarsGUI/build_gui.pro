@@ -56,7 +56,7 @@ pro build_gui, main_base
     /column)
     
   space_value = '                                                         ' + $
-  '                 '  
+    '                 '
     
   ;first row
   row1 = widget_base(col1,$
@@ -126,7 +126,7 @@ pro build_gui, main_base
     /no_column_headers,$
     /no_row_headers)
     
- ;space
+  ;space
   space = widget_label(col1,$
     value = ' ')
     
@@ -162,12 +162,76 @@ pro build_gui, main_base
     /no_column_headers,$
     /no_row_headers)
     
-     ;col2 - col2 - col2 - col2 - col2 - col2 - col2 - col2 - col2 - col2 - col2
-  col1 = widget_draw(row,$
-  scr_xsize = 5,$
-  scr_ysize = 600)
+  ;col2 - col2 - col2 - col2 - col2 - col2 - col2 - col2 - col2 - col2 - col2
+  col2 = widget_draw(row,$
+    scr_xsize = 5,$
+    scr_ysize = 600)
+    
+  ;col3 - col3 - col3 - col3 - col3 - col3 - col3 - col3 - col3 - col3 - col3
+  col3 = widget_base(row,$
+  /column)  
+    
+  row1 = widget_base(col3,$
+  /row)
+  
+  preview_base = widget_base(row1)
+
+  label = widget_label(preview_base,$
+  xoffset = 10,$
+  yoffset = 6,$
+  value = 'Preview')
+
+  in_preview_base = widget_base(preview_base,$
+  xoffset = 5,$
+  yoffset = 15,$
+  frame=1,$
+  /column)
+    
+  file = widget_label(in_preview_base,$
+  value = 'N/A',$
+  /align_left,$
+  scr_xsize = 300)  
+    
+  draw = widget_draw(in_preview_base,$
+  scr_xsize = 300,$
+  scr_ysize = 250,$
+  uname = 'preview_draw_uname')  
+    
+  bottom_base = widget_base(in_preview_base,$
+  /row)
+  gamma_base = widget_base(bottom_base,$
+  /nonexclusive)
+  button = widget_button(gamma_base,$
+  value = 'With gamma filtering',$
+  uname = 'with_gamma_filtering_uname')  
+  space = widget_label(bottom_base,$
+  value = '                  ')
+  enlarge = widget_draw(bottom_base,$
+  scr_xsize=25,$
+  scr_ysize=25)  
+    
+  roi_base = widget_base(row1,$
+  /column)
+  label = widget_label(roi_base,$
+  value='Selection: xmin,ymin,xmax,ymax')
+  _row = widget_base(roi_base,$
+  /row)
+  roi = widget_text(_row,$
+  xsize = 20,$
+  ysize = 8)
+  _col = widget_base(_row,$
+  /column)
+  load = widget_button(_col,$
+  value = 'Load...',$
+  uname = 'roi_load')
+  for i=0,5 do begin
+  space = widget_label(_col,$
+  value = ' ')
+  endfor
+  save = widget_button(_col,$
+  value = 'Save...',$
+  uname='roi_save')  
     
     
     
-    
-    end
+end
