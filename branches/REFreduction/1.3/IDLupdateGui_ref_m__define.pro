@@ -217,20 +217,21 @@ PRO UpdateQ, Event, Qmin, Qmax, Qwidth, Qtype
     ENDELSE
     SetCWBgroup, Event, 'q_scale_b_group', group_value
   endif else begin
-        SetCWBgroup, event,'q_mode_group', 0
-        ActivateOrNotAutoQmode, Event ;_GUI
+    SetCWBgroup, event,'q_mode_group', 0
+    ActivateOrNotAutoQmode, Event ;_GUI
   endelse
 END
 
 ;WORK on TOF cutting ----------------------------------------------------------
 PRO UpdateTOFcutting, Event, TOFmin, TOFmax
   ;check status of tof units
+
   if(isTOFcuttingUnits_microS(Event)) then begin
     putTextFieldValue, Event, 'tof_cutting_min', STRCOMPRESS(TOFmin,/REMOVE_ALL)
     putTextFieldValue, Event, 'tof_cutting_max', STRCOMPRESS(TOFmax,/REMOVE_ALL)
   endif else begin
-    TOFmin = FLOAT(temporary(TOFmin))/1000.
-    TOFmax = FLOAT(temporary(TOFmax))/1000.
+    if (tofmin ne '') then TOFmin = FLOAT(temporary(TOFmin))/1000.
+    if (tofmax ne '') then TOFmax = FLOAT(temporary(TOFmax))/1000.
     putTextFieldValue, Event, 'tof_cutting_min', STRCOMPRESS(TOFmin,/REMOVE_ALL)
     putTextFieldValue, Event, 'tof_cutting_max', STRCOMPRESS(TOFmax,/REMOVE_ALL)
   endelse
@@ -725,16 +726,16 @@ FUNCTION IDLupdateGui_ref_m::init, structure
     
   ENDELSE
   
-;  ;Work on Qmin, Qmax, Qwidth and Qtype
-;  text = '--> Load Qmin, Qmax, Qwidth and Qtype ........................ ' $
-;    + PROCESSING
-;  putLogBookMessage, Event, text, APPEND=1
-;  UpdateQ, Event, $
-;    structure.Qmin, $
-;    structure.Qmax, $
-;    structure.Qwidth, $
-;    structure.Qtype
-;  AppendReplaceLogBookMessage, Event, OK, PROCESSING
+  ;  ;Work on Qmin, Qmax, Qwidth and Qtype
+  ;  text = '--> Load Qmin, Qmax, Qwidth and Qtype ........................ ' $
+  ;    + PROCESSING
+  ;  putLogBookMessage, Event, text, APPEND=1
+  ;  UpdateQ, Event, $
+  ;    structure.Qmin, $
+  ;    structure.Qmax, $
+  ;    structure.Qwidth, $
+  ;    structure.Qtype
+  ;  AppendReplaceLogBookMessage, Event, OK, PROCESSING
   
   ;Work on filtering flag
   text = '--> Load on Filtering Data Flag .............................. ' $

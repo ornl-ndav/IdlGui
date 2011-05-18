@@ -107,9 +107,9 @@ pro change_batch_data_norm_run_number_ref_m, event
     split1      = 'specmh_reduction'
     part1_array = strsplit(cmd_split[index],split1,/extract,/regex)
     if (n_elements(part1_array) eq 1) then begin
-    split1 = 'reflect_reduction'
-    part1_array = strsplit(cmd_split[index],split1,/extract,/regex)
-endif    
+      split1 = 'reflect_reduction'
+      part1_array = strsplit(cmd_split[index],split1,/extract,/regex)
+    endif
     
     part1       = part1_array[0]
     ;get second part (after data runs)
@@ -141,10 +141,10 @@ endif
     
     ;change the --output flag in the cmd
     new_cmd = UpdateOutputFlag_ref_m(Event, $
-    new_cmd, $
-    data_runs[0], $
-    data_spin_array[index])
-    
+      new_cmd, $
+      data_runs[0], $
+      data_spin_array[index])
+      
     new_main_cmd[index] = new_cmd
     
     index++
@@ -179,7 +179,7 @@ endif
     sz = n_elements(NormNexusFullPathList)
     BatchTable[3,RowSelected] = strjoin(norm_runs,',')
     
-    ;! do not autorize add of more than 1 norm 
+    ;! do not autorize add of more than 1 norm
     ;
     ;if (sz gt 1) then begin
     ;  for i=0,(sz-1) do begin

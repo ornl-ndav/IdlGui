@@ -101,9 +101,10 @@ END
 ;------------------------------------------------------------------------------
 FUNCTION getMainDataNexusFileName, cmd
   result = ValueBetweenArg1Arg2(cmd, 'specmh_reduction', 1, ' ', 0)
-  IF (result EQ '') THEN begin
+  IF (result EQ '') then begin
     result = ValueBetweenArg1Arg2(cmd, 'reflect_reduction', 1, ' ', 0)
-    if (result eq '') then return ''
+    if (result eq '') then return, ''
+    return, strcompress(result,/remove_all)
   endif else begin
     RETURN, STRCOMPRESS(result,/REMOVE_ALL)
   endelse
@@ -133,6 +134,7 @@ FUNCTION getAllDataNexusFileName, cmd
     '--data-paths', $
     0)
   if (result eq '') then RETURN, ''
+  return, result
   endif else begin
   RETURN, result
   endelse
