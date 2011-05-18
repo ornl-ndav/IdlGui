@@ -518,6 +518,7 @@ pro command_line_generator_for_ref_m_broad_peak, event
       if ((*global).reduction_mode ne 'one_per_selection') then begin
       
         if (_index_pixel_range eq 0 && _index_spin_state eq 0) then begin
+         
           populate_Q_widgets, event=event
           
           Q_min = getTextFieldValue(Event, 'q_min_text_field')
