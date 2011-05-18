@@ -100,9 +100,13 @@ END
 ;------------------------------------------------------------------------------
 ;------------------------------------------------------------------------------
 FUNCTION getMainDataNexusFileName, cmd
-  result = ValueBetweenArg1Arg2(cmd, 'reflect_reduction', 1, ' ', 0)
-  IF (result EQ '') THEN RETURN, ''
-  RETURN, STRCOMPRESS(result,/REMOVE_ALL)
+  result = ValueBetweenArg1Arg2(cmd, 'specmh_reduction', 1, ' ', 0)
+  IF (result EQ '') THEN begin
+    result = ValueBetweenArg1Arg2(cmd, 'reflect_reduction', 1, ' ', 0)
+    if (result eq '') then return ''
+  endif else begin
+    RETURN, STRCOMPRESS(result,/REMOVE_ALL)
+  endelse
 END
 
 ;------------------------------------------------------------------------------
@@ -118,12 +122,20 @@ END
 ;------------------------------------------------------------------------------
 FUNCTION getAllDataNexusFileName, cmd
   result = ValueBetweenArg1Arg2(cmd, $
+    'specmh_reduction ',$
+    1, $
+    '--data-paths', $
+    0)
+  IF (result EQ '') THEN begin
+    result = ValueBetweenArg1Arg2(cmd, $
     'reflect_reduction ',$
     1, $
     '--data-paths', $
     0)
-  IF (result EQ '') THEN RETURN, ''
+  if (result eq '') then RETURN, ''
+  endif else begin
   RETURN, result
+  endelse
 END
 
 ;------------------------------------------------------------------------------
@@ -800,13 +812,13 @@ FUNCTION IDLparseCommandLine_ref_m::init, cmd_array
           ;Background flags
           self.DataBackgroundFlag        = isWithDataBackgroundFlagOn(cmd)
           self.NormBackgroundFlag        = isWithNormBackgroundFlagOn(cmd)
-
-;          ;Q [Qmin,Qmax,Qwidth,linear/log]
-;          self.Qmin                      = getQmin(cmd)
-;          self.Qmax                      = getQmax(cmd)
-;          self.Qwidth                    = getQwidth(cmd)
-;          self.Qtype                     = getQtype(cmd)
-
+          
+          ;          ;Q [Qmin,Qmax,Qwidth,linear/log]
+          ;          self.Qmin                      = getQmin(cmd)
+          ;          self.Qmax                      = getQmax(cmd)
+          ;          self.Qwidth                    = getQwidth(cmd)
+          ;          self.Qtype                     = getQtype(cmd)
+          
           ;Angle Offset
           self.SangleValue                = getSangleValue(cmd)
           ;self.AngleError                = getAngleError(cmd)
@@ -892,10 +904,10 @@ PRO IDLparseCommandLine_ref_m__define
     
     DataBackgroundFlag        : 'yes',$
     NormBackgroundFlag        : 'yes',$
-;    Qmin                      : '',$
-;    Qmax                      : '',$
-;    Qwidth                    : '',$
-;    Qtype                     : '',$
+    ;    Qmin                      : '',$
+    ;    Qmax                      : '',$
+    ;    Qwidth                    : '',$
+    ;    Qtype                     : '',$
     SangleValue                : '',$
     AngleError                : '',$
     AngleUnits                : '',$
