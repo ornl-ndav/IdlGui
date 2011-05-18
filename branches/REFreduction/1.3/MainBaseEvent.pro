@@ -83,7 +83,6 @@ PRO MAIN_BASE_event, Event
       (*global).reduction_mode = 'one_per_selection'
       REFReduction_RescaleDataPlot, Event
       ReplotAllSelection, Event
-      print, '#1'
     end
     widget_info(wWidget, $
       find_by_uname='one_reduction_per_pixel_uname'): begin
@@ -91,8 +90,6 @@ PRO MAIN_BASE_event, Event
       (*global).reduction_mode = 'one_per_pixel'
       REFReduction_RescaleDataPlot, Event
       ReplotAllSelection, Event
-      print, '#2'
-      
     end
     
     widget_info(wWidget, $
@@ -102,8 +99,6 @@ PRO MAIN_BASE_event, Event
       REFReduction_RescaleDataPlot, Event
       ReplotAllSelection, Event
       discrete_selection_launcher, event
-            print, '#3'
-      
     end
     
     ;bring to life the TOF selection base
@@ -1702,11 +1697,11 @@ PRO MAIN_BASE_event, Event
     
     ;q scale (lin or log)
     widget_info(wWidget, $
-    find_by_uname='q_scale_b_group'): begin
+      find_by_uname='q_scale_b_group'): begin
       putValue, event=event,'q_width_text_field', ''
       REFreduction_CommandLineGenerator, Event
     end
-
+    
     ;output path/file
     WIDGET_INFO(wWidget, FIND_BY_UNAME='of_button'): begin
       REFreduction_DefineOutputPath, Event ;in ref_reduction_OutputPath.pro

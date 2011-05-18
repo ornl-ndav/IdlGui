@@ -24,7 +24,8 @@ pro discrete_selection_launcher, event
   full_nexus_name = (*global).data_full_nexus_name
   if ((*global).instrument eq 'REF_M') then begin
     spin_state = 'Off_Off'
-    iNexus = obj_new('IDLnexusUtilities', full_nexus_name, spin_state=spin_state)
+    iNexus = obj_new('IDLnexusUtilities', full_nexus_name, $
+      spin_state=spin_state)
     y_axis = indgen(304)
   endif else begin
     iNexus = obj_new('IDLnexusUtilities', full_nexus_name)
@@ -38,6 +39,7 @@ pro discrete_selection_launcher, event
   endif else begin
     tof_axis = iNexus->get_tof_data()
   endelse
+  catch,/cancel
   
   tof_min_max = get_input_tof_min_max(event)
   
