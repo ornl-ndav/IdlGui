@@ -88,91 +88,9 @@ pro discrete_selection_input_base_event, Event
   
   case Event.id of
   
-    ;pixel1 and pixel2 input boxes
-    widget_info(event.top, find_by_uname='tof_selection_tof1_uname'): begin
-      widget_control, event.top, get_uvalue=global_info
-      top_base = (*global_info).top_base
-      global_tof_selection = (*global_info).global_tof_selection
-      save_tof_selection_tofs, event=event
-      display_tof_selection_tof, base=top_base
-      display_counts_vs_tof, $
-        base=(*global_tof_selection).tof_selection_counts_vs_tof_base_id, $
-        global_tof_selection
-    end
-    widget_info(event.top, find_by_uname='tof_selection_tof2_uname'): begin
-      widget_control, event.top, get_uvalue=global_info
-      top_base = (*global_info).top_base
-      global_tof_selection = (*global_info).global_tof_selection
-      save_tof_selection_tofs, event=event
-      display_tof_selection_tof, base=top_base
-      display_counts_vs_tof, $
-        base=(*global_tof_selection).tof_selection_counts_vs_tof_base_id, $
-        global_tof_selection
-    end
-    
-    ;validate tof selected
+    ;validate ROIs selected
     widget_info(event.top, $
-      find_by_uname='validate_tof_selection_selected_uname'): begin
-      tof1_value = getValue(event=event, uname='tof_selection_tof1_uname')
-      tof2_value = getValue(event=event, uname='tof_selection_tof2_uname')
-      
-      ;pop up an error dialog message if tof1 and 2 have the same values
-      if (tof1_value eq tof2_value) then begin
-        id = widget_info(event.top, find_by_uname='tof_selection_base')
-        message_text = ['TOF 1 and 2 have the same valuee!',$
-          '',$
-          'TOF1 (ms): ' + strcompress(tof1_value,/remove_all), $
-          'TOF2 (ms): ' + strcompress(tof2_value,/remove_all)]
-        result = dialog_message(message_text, $
-          title = 'Error in the range of TOF selected',$
-          dialog_parent=id, $
-          /ERROR)
-        return
-      endif
-      
-      ;make sure tof1 is smaller than tof2
-      
-      if (tof1_value eq 0.) then begin
-        tof_min = 0.
-        tof_max = tof2_value
-      endif
-      
-      if (tof2_value eq 0.) then begin
-        tof_min = tof1_value
-        tof_max = 0.
-      endif
-      
-      ;when none of them is equal to 0.
-      if (tof1_value * tof2_value ne 0) then begin
-        tof_min = min([tof1_value,tof2_value],max=tof_max)
-      endif
-      
-      ;put tof values in main GUI
-      widget_control, event.top, get_uvalue=global_info
-      global_tof_selection = (*global_info).global_tof_selection
-      main_event = (*global_tof_selection).main_event
-      
-      tof_axis = (*global_tof_selection).x_axis
-      index_tof_range = get_index_tof_range([tof_min, tof_max], $
-        tof_axis)
-        
-      global = (*global_tof_selection).global
-      (*global).index_of_tof_range = index_tof_range
-      
-      if (isTOFcuttingUnits_microS(main_event)) then begin
-        tof_min *= 1000.
-        tof_max *= 1000.
-      endif
-      
-      putValue, event=main_event, $
-        'tof_cutting_min', $
-        strcompress(tof_min,/remove_all)
-      putValue, event=main_event, $
-        'tof_cutting_max', $
-        strcompress(tof_max,/remove_all)
-        
-      ;refresh main plot
-      REFreduction_DataBackgroundPeakSelection, main_event
+      find_by_uname='validate_discrete_selection_selected_uname'): begin
       
       top_base = (*global_info).top_base
       widget_control, top_base, /destroy
@@ -181,7 +99,7 @@ pro discrete_selection_input_base_event, Event
     
     ;cancel tof selected
     widget_info(event.top, $
-      find_by_uname='cancel_tof_selection_selected_uname'): begin
+      find_by_uname='cancel_discrete_selection_selected_uname'): begin
       widget_control, event.top, get_uvalue=global_info
       top_base = (*global_info).top_base
       widget_control, top_base, /destroy
@@ -206,8 +124,7 @@ end
 ; :Author: j35
 ;-
 pro discrete_selection_input_base_gui, wBase, $
-    parent_base_geometry, $
-    tof_selection_tof = tof_selection_tof
+    parent_base_geometry
   compile_opt idl2
   
   main_base_xoffset = parent_base_geometry.xoffset
@@ -222,79 +139,78 @@ pro discrete_selection_input_base_gui, wBase, $
   
   ourGroup = WIDGET_BASE()
   
-  title = 'TOF 1 and 2 selection'
+  title = 'Discrete peaks selection'
   wBase = WIDGET_BASE(TITLE = title, $
-    UNAME        = 'tof_selection_base', $
+    UNAME        = 'discrete_peak_selection_base', $
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
     MAP          = 1,$
-    kill_notify  = 'tof_selection_base_killed', $
+    kill_notify  = 'discrete_peak_selection_base_killed', $
     /column,$
     /tlb_size_events,$
     GROUP_LEADER = ourGroup)
     
-  tof1 = tof_selection_tof[0]
-  tof2 = tof_selection_tof[1]
-  
-  row1 = widget_base(wBase,$
+  row = widget_base(wBase,$
     /row)
     
-  if (tof1 eq -1) then begin
-    tof1 = cw_field(row1,$
-      xsize = 5,$
-      /float,$
-      title = 'TOF1 (ms)',$
-      /row,$
-      /return_events,$
-      uname = 'tof_selection_tof1_uname')
-  endif else begin
-    tof1 = cw_field(row1,$
-      xsize = 5,$
-      value = tof1,$
-      /float,$
-      title = 'TOF1 (ms)',$
-      /row,$
-      /return_events,$
-      uname = 'tof_selection_tof1_uname')
-  endelse
+  col1 =  widget_base(row,$
+    /column)
+  label = widget_label(col1,$
+    value = 'ROIs (ex: Pxmin,Pxmax)')
+  rois = widget_text(col1,$
+    /editable,$
+    xsize=10,$
+    ysize=20,$
+    uname = 'discrete_roi_selection_text_field')
+    
+  col2 = widget_base(row,$
+    /column)
+  load = widget_button(col2,$
+    scr_xsize=100,$
+    value = 'Load...')
+  save = widget_button(col2,$
+    scr_xsize=100,$
+    value = 'Save...')
+    
+  for i=0,1 do begin
+    space = widget_label(col2,$
+      value = ' ')
+  endfor
   
-  if (tof2 eq -1) then begin
-    tof2 = cw_field(row1,$
-      xsize = 5,$
-      /float,$
-      title = '      TOF2 (ms)',$
-      /row,$
-      /return_events,$
-      uname = 'tof_selection_tof2_uname')
-  endif else begin
-    tof2 = cw_field(row1,$
-      xsize = 5,$
-      /float,$
-      value = tof2, $
-      title = '      TOF2 (ms)',$
-      /row,$
-      /return_events,$
-      uname = 'tof_selection_tof2_uname')
-  endelse
-  
-  space = widget_label(wBase,$
-    value = ' ')
+  row2=widget_base(col2,$
+    /row)
+  label = widget_label(row2,$
+    value = 'From Px')
+  value = widget_text(row2,$
+    value = 'N/A',$
+    xsize=3,$
+    uname='discrete_roi_selection_from_px')
+    
+  row2=widget_base(col2,$
+    /row)
+  label = widget_label(row2,$
+    value = '  to Px')
+  value = widget_text(row2,$
+    value = 'N/A',$
+    xsize=3,$
+    uname='discrete_roi_selection_to_px')
+    
+  plus = widget_button(col2,$
+    value = '+',$
+    scr_xsize=50,$
+    uname='discrete_roi_selection_plus')
     
   row4 = widget_base(wBase,$
     /row)
-    
   cancel = widget_button(row4,$
     value = 'Cancel',$
-    uname = 'cancel_tof_selection_selected_uname',$
+    uname = 'cancel_discrete_selection_selected_uname',$
     scr_xsize = 50)
-    
   space = widget_label(row4,$
     value = '  ')
-    
   row4 = widget_button(row4,$
-    value = 'Use this TOF range and EXIT',$
-    uname = 'validate_tof_selection_selected_uname',$
-    scr_xsize = 200)
+    value = 'Use these ROIs and EXIT',$
+    uname = 'validate_discrete_selection_selected_uname')
     
 end
 
@@ -407,8 +323,7 @@ pro discrete_selection_input_base, event=event, $
   
   _base = 0L
   discrete_selection_input_base_gui, _base, $
-    parent_base_geometry, $
-    tof_selection_tof = tof_selection_tof
+    parent_base_geometry
     
   (*global_tof_selection).tof_selection_input_base = _base
   
