@@ -184,6 +184,7 @@ pro discrete_selection_input_base_gui, wBase, $
   value = widget_text(row2,$
     value = 'N/A',$
     xsize=3,$
+    /editable,$
     uname='discrete_roi_selection_from_px')
     
   row2=widget_base(col2,$
@@ -193,6 +194,7 @@ pro discrete_selection_input_base_gui, wBase, $
   value = widget_text(row2,$
     value = 'N/A',$
     xsize=3,$
+    /editable,$
     uname='discrete_roi_selection_to_px')
     
   plus = widget_button(col2,$
