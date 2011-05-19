@@ -59,94 +59,101 @@ pro discrete_selection_base_event, Event
         
         show_discrete_selection_cursor_info, event
         
-        if (event.press eq 1) then begin ;left click
-        
-          print, 'left pressed'
-
-          show_discrete_selection_input_base, event
-          
-          ;left click activated
-          (*global_tof_selection).left_click = 1b
-          
-return
-
-          tof_value = strcompress(retrieve_tof_value(event),/remove_all)
-          if ((*global_tof_selection).tof1_selected) then begin
-            uname = 'discrete_selection_tof1_uname'
-          endif else begin
-            uname = 'discrete_selection_tof2_uname'
-          endelse
-          
-          check_tof_value, tof_value, global_tof_selection
-          if (tof_value eq -1) then tof_value = ''
-          putValue, base=(*global_tof_selection).tof_selection_input_base, $
-            uname, $
-            tof_value
-          save_tof_data, event=event
-          display_tof_selection_tof, event=event
-          
-          ;display counts_vs_tof with selection
-          plot_base = (*global_tof_selection).tof_selection_counts_vs_tof_base_id
-          if (widget_info(plot_base, /valid_id) ne 0) then begin
-            display_counts_vs_tof, $
-              base=(*global_tof_selection).tof_selection_counts_vs_tof_base_id, $
-              global_tof_selection
-          endif
-          
-        endif
-        
-        
         ;release button
         if (event.release eq 1) then begin
           (*global_tof_selection).left_click = 0b
-          (*global_tof_selection).right_click = 0b
+          return
         endif
         
-        ;right click
-        if (event.press eq 4) then begin
-
-          print, 'left pressed'
-
-          show_discrete_selection_input_base, event
-          
-          ;left click activated
-          (*global_tof_selection).right_click = 1b
-          
-return
-
+        if (event.release eq 4) then begin
+          (*global_tof_selection).right_click = 0b
+          return
         endif
         
         ;moving mouse with left click pressed
         if ((*global_tof_selection).left_click) then begin
-          tof_value = strcompress(retrieve_tof_value(event),/remove_all)
-          if ((*global_tof_selection).tof1_selected) then begin
-            uname = 'discrete_selection_tof1_uname'
-          endif else begin
-            uname = 'discrete_selection_tof2_uname'
-          endelse
-          check_tof_value, tof_value, global_tof_selection
-          if (tof_value eq -1) then tof_value = ''
-          putValue, base=(*global_tof_selection).tof_selection_input_base, $
-            uname, $
-            tof_value
-          save_tof_data, event=event
-          display_tof_selection_tof, event=event
-          
-          ;display counts_vs_tof with selection
-          plot_base = (*global_tof_selection).tof_selection_counts_vs_tof_base_id
-          if (widget_info(plot_base, /valid_id) ne 0) then begin
-            display_counts_vs_tof, $
-              base=(*global_tof_selection).tof_selection_counts_vs_tof_base_id, $
-              global_tof_selection
-          endif
-          
+          record_pixel_value, event=event, button='left'
+          return
         endif
+        
+        if ((*global_tof_selection).right_click) then begin
+          record_pixel_value, event=event, button='right'
+          return
+        endif
+        
+        if (event.press eq 1) then begin ;left click
+          show_discrete_selection_input_base, event
+          ;left click activated
+          (*global_tof_selection).left_click = 1b
+          record_pixel_value, event=event, button='left'
+          
+          ;          if ((*global_tof_selection).tof1_selected) then begin
+          ;            uname = 'discrete_selection_tof1_uname'
+          ;          endif else begin
+          ;            uname = 'discrete_selection_tof2_uname'
+          ;          endelse
+          ;
+          ;          check_tof_value, tof_value, global_tof_selection
+          ;          if (tof_value eq -1) then tof_value = ''
+          ;          putValue, base=(*global_tof_selection).tof_selection_input_base, $
+          ;            uname, $
+          ;            tof_value
+          ;          save_tof_data, event=event
+          ;          display_tof_selection_tof, event=event
+          ;
+          ;          ;display counts_vs_tof with selection
+          ;          plot_base = (*global_tof_selection).tof_selection_counts_vs_tof_base_id
+          ;          if (widget_info(plot_base, /valid_id) ne 0) then begin
+          ;            display_counts_vs_tof, $
+          ;              base=(*global_tof_selection).tof_selection_counts_vs_tof_base_id, $
+          ;              global_tof_selection
+          ;          endif
+          
+          return
+        endif
+        
+        ;right click
+        if (event.press eq 4) then begin
+          show_discrete_selection_input_base, event
+          ;left click activated
+          (*global_tof_selection).right_click = 1b
+          record_pixel_value, event=event, button='right'
+          
+          return
+        endif
+        
+        
+      ;          tof_value = strcompress(retrieve_tof_value(event),/remove_all)
+      ;          if ((*global_tof_selection).tof1_selected) then begin
+      ;            uname = 'discrete_selection_tof1_uname'
+      ;          endif else begin
+      ;            uname = 'discrete_selection_tof2_uname'
+      ;          endelse
+      ;          check_tof_value, tof_value, global_tof_selection
+      ;          if (tof_value eq -1) then tof_value = ''
+      ;          putValue, base=(*global_tof_selection).tof_selection_input_base, $
+      ;            uname, $
+      ;            tof_value
+      ;          save_tof_data, event=event
+      ;          display_tof_selection_tof, event=event
+      ;
+      ;          ;display counts_vs_tof with selection
+      ;          plot_base = (*global_tof_selection).tof_selection_counts_vs_tof_base_id
+      ;          if (widget_info(plot_base, /valid_id) ne 0) then begin
+      ;            display_counts_vs_tof, $
+      ;              base=(*global_tof_selection).tof_selection_counts_vs_tof_base_id, $
+      ;              global_tof_selection
+      ;          endif
+      ;
+      ;        endif
         
       endif else begin ;entering or leaving widget_draw
       
         if (event.enter eq 0) then begin ;leaving plot
+        
           file_name = (*global_tof_selection).file_name
-          id = widget_info(event.top, find_by_uname='discrete_selection_base_uname')
+          id = widget_info(event.top, $
+            find_by_uname='discrete_selection_base_uname')
           widget_control, id, tlb_set_title=file_name
           
         endif else begin ;entering plot
@@ -157,9 +164,11 @@ return
     end
     
     ;main base
-    widget_info(event.top, find_by_uname='discrete_selection_base_uname'): begin
-    
-      id = widget_info(event.top, find_by_uname='discrete_selection_base_uname')
+    widget_info(event.top, $
+      find_by_uname='discrete_selection_base_uname'): begin
+      
+      id = widget_info(event.top, $
+        find_by_uname='discrete_selection_base_uname')
       geometry = widget_info(id,/geometry)
       new_xsize = geometry.scr_xsize
       new_ysize = geometry.scr_ysize
@@ -167,7 +176,7 @@ return
       yoffset = geometry.yoffset
       
       ;only if the tof input base is there
-      id_tof_selection = (*global_tof_selection).tof_selection_input_base
+      id_tof_selection = (*global_tof_selection).discrete_selection_input_base
       if (widget_info(id_tof_selection, /valid_id) ne 0) then begin
         widget_control, id_tof_selection, xoffset = xoffset + new_xsize
         widget_control, id_tof_selection, yoffset = yoffset
@@ -226,7 +235,8 @@ return
       find_by_uname='show_discrete_selection_base'): begin
       pixel_base = (*global_tof_selection).tof_selection_input_base
       if (widget_info(pixel_base, /valid_id) eq 0) then begin
-        tof_selection_input_base, parent_base_uname = 'discrete_selection_base_uname', $
+        tof_selection_input_base, $
+          parent_base_uname='discrete_selection_base_uname', $
           top_base = (*global_tof_selection).top_base, $
           event=event
       endif
@@ -252,6 +262,35 @@ end
 
 ;+
 ; :Description:
+;    Describe the procedure.
+;
+;
+;
+; :Keywords:
+;    event
+;    button
+;
+; :Author: j35
+;-
+pro record_pixel_value, event=event, button=button
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_tof_selection
+  
+  pixel_value = strcompress(discrete_retrieve_pixel_value(event),/remove_all)
+  input_base = (*global_tof_selection).discrete_selection_input_base
+  
+  case (button) of
+  'left': uname='discrete_roi_selection_from_px'
+  'right': uname='discrete_roi_selection_to_px'
+  endcase
+  
+  putValue, base=input_base, uname, pixel_value
+  
+end
+
+;+
+; :Description:
 ;    Bring to life the refpix input base
 ;
 ; :Params:
@@ -264,10 +303,10 @@ pro show_discrete_selection_input_base, event
   
   widget_control, event.top, get_uvalue=global_tof_selection
   
-  _base = (*global_tof_selection).tof_selection_input_base
+  _base = (*global_tof_selection).discrete_selection_input_base
   if (widget_info(_base, /valid_id) eq 0) then begin
     discrete_selection_input_base, parent_base_uname = $
-    'discrete_selection_base_uname', $
+      'discrete_selection_base_uname', $
       top_base = (*global_tof_selection).top_base, $
       event=event
   endif
@@ -290,7 +329,8 @@ pro show_discrete_selection_counts_vs_tof_base, event
   
   plot_base = (*global_tof_selection).tof_selection_counts_vs_tof_base_id
   if (widget_info(plot_base, /valid_id) eq 0) then begin
-    tof_selection_counts_vs_tof_base, parent_base_uname = 'tof_selection_base_uname', $
+    tof_selection_counts_vs_tof_base, $
+      parent_base_uname='tof_selection_base_uname', $
       top_base = (*global_tof_selection).top_base, $
       event=event
   endif
@@ -660,7 +700,9 @@ end
 ;
 ; :Author: j35
 ;-
-pro save_discrete_selection_background,  event=event, main_base=main_base, uname=uname
+pro save_discrete_selection_background,  event=event, $
+    main_base=main_base, $
+    uname=uname
   compile_opt idl2
   
   if (~keyword_set(uname)) then uname = 'discrete_selection_draw'
@@ -708,8 +750,9 @@ pro discrete_selection_lin_log_data, event=event, base=base
   endelse
   
   Data = (*(*global_tof_selection).data_linear)
-  scale_setting = (*global_tof_selection).default_scale_settings ;0 for lin, 1 for log
-  
+  scale_setting = $
+    (*global_tof_selection).default_scale_settings ;0 for lin, 1 for log
+    
   if (scale_setting eq 1) then begin ;log
   
     ;remove 0 values and replace with NAN
@@ -805,9 +848,11 @@ pro discrete_selection_local_switch_axes_type, event
     (*global_tof_selection).default_scale_settings = 1
   endelse
   
-  putValue, event=event, 'discrete_selection_local_scale_setting_linear', set1_value
-  putValue, event=event, 'discrete_selection_local_scale_setting_log', set2_value
-  
+  putValue, event=event, 'discrete_selection_local_scale_setting_linear', $
+    set1_value
+  putValue, event=event, 'discrete_selection_local_scale_setting_log', $
+    set2_value
+    
   discrete_selection_lin_log_data, event=event
   refresh_discrete_selection_plot, event, recalculate=1
   refresh_plot_discrete_selection_colorbar, event
@@ -907,7 +952,8 @@ pro plot_discrete_selection_beam_center_scale, base=base, event=event
     widget_control, base, get_uvalue=global_tof_selection
   endif else begin
     id = widget_info(event.top, find_by_uname='discrete_selection_scale')
-    id_base = widget_info(event.top, find_by_uname='discrete_selection_base_uname')
+    id_base = widget_info(event.top, $
+      find_by_uname='discrete_selection_base_uname')
     sys_color = widget_info(event.top, /system_colors)
     widget_control, event.top, get_uvalue=global_tof_selection
   endelse
@@ -1351,9 +1397,9 @@ pro discrete_selection_base, main_base=main_base, $
     file_name: file_name, $
     short_file_name: short_file_name, $
     
-    tof_selection_input_base: 0L, $ ;id of refpix_input_base
+    discrete_selection_input_base: 0L, $ ;id of refpix_input_base
     tof_selection_counts_vs_tof_base_id: 0L, $ 'id of refpix_counts_vs_tof_base
-    counts_vs_tof_scale_is_linear: 0b, $ ;counts vs tof (linear/log)
+  counts_vs_tof_scale_is_linear: 0b, $ ;counts vs tof (linear/log)
   
     ;used to plot selection zoom
     default_plot_size: default_plot_size, $
@@ -1498,7 +1544,8 @@ pro discrete_selection_base, main_base=main_base, $
   save_discrete_selection_background,  main_base=wBase
   
   ;bring to life the refpix pixel1 and 2 input base
-  discrete_selection_input_base, parent_base_uname = 'discrete_selection_base_uname', $
+  discrete_selection_input_base, $
+    parent_base_uname='discrete_selection_base_uname', $
     top_base=wBase_copy1
     
     

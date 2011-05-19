@@ -327,7 +327,7 @@ pro discrete_selection_input_base, event=event, $
   discrete_selection_input_base_gui, _base, $
     parent_base_geometry
     
-  (*global_tof_selection).tof_selection_input_base = _base
+  (*global_tof_selection).discrete_selection_input_base = _base
   
   WIDGET_CONTROL, _base, /REALIZE
   
