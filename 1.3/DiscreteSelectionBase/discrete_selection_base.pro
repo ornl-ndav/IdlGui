@@ -77,6 +77,7 @@ pro discrete_selection_base_event, Event
           return
         endif
         
+        ;moving mouse with right click pressed
         if ((*global_tof_selection).right_click) then begin
           record_pixel_value, event=event, button='right'
           display_discrete_selection_pixel_list, event=event
@@ -407,16 +408,48 @@ pro display_discrete_selection_pixel_list, event=event, base=base
   wset, plot_id
   TV, (*(*global_tof_selection).background), true=3
   
+  device, decomposed=0
+  
   ;retrieve list of pixels from ROIs
   roi_base = (*global_tof_selection).discrete_selection_input_base
   pixel_list = getValue(base=roi_base,$
     uname='discrete_roi_selection_text_field')
     
-  if (pixel_list[0] eq '') then return
+    on_ioerror, format_error
   
+  ;display the currently live pixels
+  from_px = fix(getValue(base=roi_base, $
+    uname='discrete_roi_selection_from_px'))
+
+  a=getValue(base=roi_base,$
+  uname='discrete_roi_selection_to_px')
+  
+  to_px = fix(getValue(base=roi_base, $
+    uname='discrete_roi_selection_to_px'))
+    
   draw_geometry = WIDGET_INFO(id,/GEOMETRY)
   xsize = draw_geometry.xsize
   ;ysize = draw_geometry.ysize
+  
+  if (from_px ne 0) then begin
+    _from_px_device = discrete_from_px_data_to_device(event=event, $
+      base=base, from_px)
+    plots, 0, _from_px_device, fsc_color("blue"),/device
+    plots, xsize, _from_px_device, fsc_color("blue"),/continue, linestyle=4,$
+      /device
+  endif
+  
+  if (to_px ne 0) then begin
+    _to_px_device = discrete_from_px_data_to_device(event=event, $
+      base=base, to_px)
+    plots, 0, _to_px_device, fsc_color("blue"),/device
+    plots, xsize, _to_px_device, fsc_color("blue"),/continue, linestyle=4,$
+      /device
+  endif
+  
+  format_error:
+  
+  if (pixel_list[0] eq '') then return
   
   sz = n_elements(pixel_list)
   index=0
@@ -430,58 +463,18 @@ pro display_discrete_selection_pixel_list, event=event, base=base
     _from_px_device = discrete_from_px_data_to_device(event=event, $
       base=base, _from_px)
     plots, 0, _from_px_device, fsc_color("white"),/device
-    plots, xsize, _from_px_device, fsc_color("white"),/continue, linestyle=4,$
+    plots, xsize, _from_px_device, fsc_color("white"),/continue, linestyle=0,$
       /device
       
     _to_px_device = discrete_from_px_data_to_device(event=event, $
       base=base, _to_px)
     plots, 0, _to_px_device, fsc_color("white"),/device
-    plots, xsize, _to_px_device, fsc_color("white"),/continue, linestyle=4,$
+    plots, xsize, _to_px_device, fsc_color("white"),/continue, linestyle=0,$
       /device
       
     index++
   endwhile
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  return
-  
-  tof_selection_tof = (*global_tof_selection).tof_selection_tof
-  
-  tof_min = tof_selection_tof[0]
-  tof_max = tof_selection_tof[1]
-  
-  tof_min_device = discrete_from_data_to_device(event=event, base=base, tof_min)
-  tof_max_device = discrete_from_data_to_device(event=event, base=base, tof_max)
-  
-  ysize = (*global_tof_selection).ysize
-  
-  if (tof_min_device ne -1) then begin
-  
-    plots, tof_min_device, 0, fsc_color("green"),/device
-    plots, tof_min_device, ysize, fsc_color("green"),/continue, linestyle=4,$
-      /device
-      
-  endif
-  
-  if (tof_max_device ne -1) then begin
-  
-    plots, tof_max_device, 0, fsc_color("green"),/device
-    plots, tof_max_device, ysize, fsc_color("green"),/continue, linestyle=4,$
-      /device
-      
-  endif
-  
-  
+    
 end
 
 ;+

@@ -91,13 +91,37 @@ pro discrete_selection_input_base_event, Event
   
   case Event.id of
   
+    ;roi text field
+    widget_info(event.top, $
+      find_by_uname='discrete_roi_selection_from_px'): begin
+      ;refresh main plot
+      base = (*global_tof_selection).wBase
+      display_discrete_selection_pixel_list, base=base
+    end
+    
+    ;from text field
+    widget_info(event.top, $
+      find_by_uname='discrete_roi_selection_from_px'): begin
+      ;refresh main plot
+      base = (*global_tof_selection).wBase
+      display_discrete_selection_pixel_list, base=base
+    end
+    
+    ;to text field
+    widget_info(event.top, $
+      find_by_uname='discrete_roi_selection_to_px'): begin
+      ;refresh main plot
+      base = (*global_tof_selection).wBase
+      display_discrete_selection_pixel_list, base=base
+    end
+    
     ;+
     widget_info(event.top, $
       find_by_uname='discrete_roi_selection_plus'): begin
       add_pixel_to_list, event=event
       
       ;refresh main plot
-      base = (*global_tof_selection).wBase 
+      base = (*global_tof_selection).wBase
       display_discrete_selection_pixel_list, base=base
     end
     
@@ -150,7 +174,10 @@ pro add_pixel_to_list, event=event
   on_ioerror, wrong_format
   
   fix_from_px = fix(from_px)
-  to_px = fix(to_px)
+  fix_to_px = fix(to_px)
+  
+  if (fix_to_px eq 0) then return
+  if (fix_from_px eq 0) then return
   
   new_selection = strcompress(from_px,/remove_all) + ' -> ' + $
     strcompress(to_px,/remove_all)
@@ -238,7 +265,7 @@ pro discrete_selection_input_base_gui, wBase, $
   label = widget_label(row2,$
     value = 'From Px')
   value = widget_text(row2,$
-    value = 'N/A',$
+    value = '',$
     xsize=3,$
     /editable,$
     uname='discrete_roi_selection_from_px')
@@ -248,7 +275,7 @@ pro discrete_selection_input_base_gui, wBase, $
   label = widget_label(row2,$
     value = '  to Px')
   value = widget_text(row2,$
-    value = 'N/A',$
+    value = '',$
     xsize=3,$
     /editable,$
     uname='discrete_roi_selection_to_px')
