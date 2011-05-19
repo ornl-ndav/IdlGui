@@ -42,6 +42,17 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(event.top, FIND_BY_UNAME='MAIN_BASE'): BEGIN
     END
     
+    ;browse buttons
+    widget_info(event.top, find_by_uname='browse_data_files'): begin
+      browse_files, event=event, file_type='data_file'
+    end
+    widget_info(event.top, find_by_uname='browse_open_beam'): begin
+      browse_files, event=event, file_type='open_beam'
+    end
+    widget_info(event.top, find_by_uname='browse_dark_field'): begin
+      browse_files, event=event, file_type='dark_field'
+    end
+    
     ELSE:
     
   ENDCASE

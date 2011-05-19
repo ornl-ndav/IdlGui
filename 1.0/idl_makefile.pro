@@ -28,6 +28,8 @@ cd, CurrentFolder + '/iMarsGUI/'
 ;Build all procedures
 cd, CurrentFolder
 
+.run browse_files.pro
+
 ;main functions
 .run global.pro
 .run MainBaseEvent.pro

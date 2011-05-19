@@ -169,69 +169,119 @@ pro build_gui, main_base
     
   ;col3 - col3 - col3 - col3 - col3 - col3 - col3 - col3 - col3 - col3 - col3
   col3 = widget_base(row,$
-  /column)  
+    /column)
     
   row1 = widget_base(col3,$
-  /row)
-  
+    /row)
+    
   preview_base = widget_base(row1)
-
+  
   label = widget_label(preview_base,$
-  xoffset = 10,$
-  yoffset = 6,$
-  value = 'Preview')
-
+    xoffset = 10,$
+    yoffset = 6,$
+    value = 'Preview')
+    
   in_preview_base = widget_base(preview_base,$
-  xoffset = 5,$
-  yoffset = 15,$
-  frame=1,$
-  /column)
+    xoffset = 5,$
+    yoffset = 15,$
+    frame=1,$
+    /column)
     
   file = widget_label(in_preview_base,$
-  value = 'N/A',$
-  /align_left,$
-  scr_xsize = 300)  
+    value = 'N/A',$
+    /align_left,$
+    scr_xsize = 300)
     
   draw = widget_draw(in_preview_base,$
-  scr_xsize = 300,$
-  scr_ysize = 250,$
-  uname = 'preview_draw_uname')  
+    scr_xsize = 300,$
+    scr_ysize = 250,$
+    uname = 'preview_draw_uname')
     
   bottom_base = widget_base(in_preview_base,$
-  /row)
+    /row)
   gamma_base = widget_base(bottom_base,$
-  /nonexclusive)
+    /nonexclusive)
   button = widget_button(gamma_base,$
-  value = 'With gamma filtering',$
-  uname = 'with_gamma_filtering_uname')  
+    value = 'With gamma filtering',$
+    uname = 'with_gamma_filtering_uname')
   space = widget_label(bottom_base,$
-  value = '                  ')
+    value = '                  ')
   enlarge = widget_draw(bottom_base,$
-  scr_xsize=25,$
-  scr_ysize=25)  
+    scr_xsize=25,$
+    scr_ysize=25)
     
   roi_base = widget_base(row1,$
-  /column)
+    /column)
   label = widget_label(roi_base,$
-  value='Selection: xmin,ymin,xmax,ymax')
+    value='Selection: xmin,ymin,xmax,ymax')
   _row = widget_base(roi_base,$
-  /row)
+    /row)
   roi = widget_text(_row,$
-  xsize = 20,$
-  ysize = 8)
+    xsize = 20,$
+    ysize = 8)
   _col = widget_base(_row,$
-  /column)
+    /column)
   load = widget_button(_col,$
-  value = 'Load...',$
-  uname = 'roi_load')
+    value = 'Load...',$
+    uname = 'roi_load')
   for i=0,5 do begin
-  space = widget_label(_col,$
-  value = ' ')
+    space = widget_label(_col,$
+      value = ' ')
   endfor
   save = widget_button(_col,$
-  value = 'Save...',$
-  uname='roi_save')  
+    value = 'Save...',$
+    uname='roi_save')
     
+  ;space in col3
+  for i=0,3 do begin
+    space = widget_label(col3,$
+      value = ' ')
+  endfor
+  
+  ;output folder row
+  of_row = widget_base(col3,$
+    /row)
+  label = widget_label(of_row,$
+    value = 'Output folder:')
+  button = widget_button(of_row,$
+    value = '~/',$
+    scr_xsize = 440,$
+    uname = 'output_folder_button')
     
+  ;format row
+  f_row = widget_base(col3,$
+    /row)
+  label = widget_label(f_row,$
+    value = 'Format(s):    ')
+  format_base = widget_base(f_row,$
+    /row,$
+    /nonexclusive)
+  b1 = widget_button(format_base,$
+    value ='TIFF (.tif)',$
+    uname = 'format_tiff_button')
+  b2 = widget_button(format_base,$
+    value = 'FITS (.fits)',$
+    uname = 'format_fits_button')
+  b3 = widget_button(format_base,$
+    value = 'PNG (.png)',$
+    uname = 'format_png_button')
+  widget_control, b2, /set_button
+  
+  ;space
+  space = widget_label(col3,$
+    value = ' ')
+    
+  ;run reduction button
+  reduction = widget_button(col3,$
+    value = 'Run normalization',$
+    uname = 'run_normalization_button')
+    
+  ;progress bar
+  pro_base = widget_base(col3,$
+    /row)
+  draw = widget_draw(pro_base,$
+    scr_xsize = 535,$
+    scr_ysize = 25,$
+    uname = 'progress_bar')
     
 end
