@@ -86,8 +86,21 @@ end
 pro discrete_selection_input_base_event, Event
   compile_opt idl2
   
+  widget_control, event.top, get_uvalue=global_info
+  global_tof_selection = (*global_info).global_tof_selection
+  
   case Event.id of
   
+    ;+
+    widget_info(event.top, $
+      find_by_uname='discrete_roi_selection_plus'): begin
+      add_pixel_to_list, event=event
+      
+      ;refresh main plot
+      base = (*global_tof_selection).wBase 
+      display_discrete_selection_pixel_list, base=base
+    end
+    
     ;validate ROIs selected
     widget_info(event.top, $
       find_by_uname='validate_discrete_selection_selected_uname'): begin
@@ -108,6 +121,49 @@ pro discrete_selection_input_base_event, Event
     else:
     
   endcase
+  
+end
+
+;+
+; :Description:
+;    Add 'from Px' and 'to Px' to list of pixels
+;
+; :Keywords:
+;    event
+;
+; :Author: j35
+;-
+pro add_pixel_to_list, event=event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_info
+  
+  roi_list = string(getValue(event=event, $
+    uname='discrete_roi_selection_text_field'))
+  if (roi_list[0] eq '') then roi_list = !null
+  
+  from_px = strcompress(getValue(event=event, $
+    uname='discrete_roi_selection_from_px'),/remove_all)
+  to_px = strcompress(getValue(event=event, $
+    uname='discrete_roi_selection_to_px'),/remove_all)
+    
+  on_ioerror, wrong_format
+  
+  fix_from_px = fix(from_px)
+  to_px = fix(to_px)
+  
+  new_selection = strcompress(from_px,/remove_all) + ' -> ' + $
+    strcompress(to_px,/remove_all)
+  roi_list = [roi_list,new_selection]
+  
+  putValue, event=event, 'discrete_roi_selection_text_field', roi_list
+  
+  ;clear 'from Px' and 'to Px'
+  putValue, event=event, 'discrete_roi_selection_from_px', ''
+  putValue, event=event, 'discrete_roi_selection_to_px', ''
+  
+  wrong_format:
+  return
   
 end
 
