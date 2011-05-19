@@ -32,32 +32,57 @@
 ;
 ;==============================================================================
 
-FUNCTION getGlobal
+;+
+; :Description:
+;    browse for the files
+;
+;
+;
+; :Keywords:
+;    event
+;    file_type     data_file, open_beam or dark_field
+;
+; :Author: j35
+;-
+pro browse_files, event=event, file_type=file_type
+compile_opt idl2
 
-  file = OBJ_NEW('idlxmlparser', '.iMars.cfg')
-  APPLICATION = file->getValue(tag=['configuration','application'])
-  VERSION = file->getValue(tag=['configuration','version'])
-  
-  ;get ucams of user if running on linux
-  ;and set ucams to 'j35' if running on darwin
-  IF (!VERSION.os EQ 'darwin') THEN BEGIN
-    ucams = 'j35'
-  ENDIF ELSE BEGIN
-    ucams = get_ucams()
-  ENDELSE
-  
-  ;define global variables
-  global = ptr_new ({ $
-    version:           VERSION,$
-    application:       APPLICATION, $
-    
-    path: '~/', $
-    file_extension: 'fits',$
-    file_filter: '*fits',$
-    
-    
-    last_term: 0L$
-     })
-    
-  return, global
-END
+widget_control, event.top, get_uvalue=global
+
+path = (*global).path
+
+case (file_type) of
+'data_file': begin
+_title = 'data files'
+end
+'open_beam': begin
+_title = 'open beam files'
+end
+'dark_field': begin
+_title = 'dark field files'
+end
+endcase
+title = 'Select 1 or more ' + _title
+
+extension = (*global).file_extension
+id = widget_info(event.top, find_by_uname='MAIN_BASE')
+filter = (*global).file_filter
+
+list_file = dialog_pickfile(default_extension=extension,$
+dialog_parent=id,$
+filter=filter,$
+get_path=new_path,$
+path=path,$
+title=title,$
+/multiple_files,$
+/must_exist)
+
+help, list_file
+
+
+
+
+
+
+
+end
