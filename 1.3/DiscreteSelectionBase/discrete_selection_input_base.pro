@@ -93,7 +93,7 @@ pro discrete_selection_input_base_event, Event
   
     ;roi text field
     widget_info(event.top, $
-      find_by_uname='discrete_roi_selection_from_px'): begin
+      find_by_uname='discrete_roi_selection_text_field'): begin
       ;refresh main plot
       base = (*global_tof_selection).wBase
       display_discrete_selection_pixel_list, base=base
