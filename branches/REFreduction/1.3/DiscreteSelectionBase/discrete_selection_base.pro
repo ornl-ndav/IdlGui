@@ -437,7 +437,7 @@ pro display_discrete_selection_pixel_list, event=event, base=base
     plots, 0, _from_px_device, fsc_color("blue"),/device
     plots, xsize, _from_px_device, fsc_color("blue"),/continue, linestyle=4,$
       /device
-  endif
+    endif
   
   if (to_px ne 0) then begin
     _to_px_device = discrete_from_px_data_to_device(event=event, $
@@ -446,6 +446,17 @@ pro display_discrete_selection_pixel_list, event=event, base=base
     plots, xsize, _to_px_device, fsc_color("blue"),/continue, linestyle=4,$
       /device
   endif
+
+;  if (from_px ne 0 && to_px ne 0) then begin
+;  ;left vertical line
+;    plots, 0, _from_px_device, fsc_color("blue"),/device
+;    plots, 0, _to_px_device, fsc_color("blue"),/continue, linestyle=4,$
+;      /device, thick=4
+;  ;right vertical line
+;    plots, xsize, _from_px_device, fsc_color("blue"),/device
+;    plots, xsize, _to_px_device, fsc_color("blue"),/continue, linestyle=4,$
+;      /device, thick=4
+;  endif
   
   format_error:
   
@@ -456,6 +467,7 @@ pro display_discrete_selection_pixel_list, event=event, base=base
   while (index lt sz) do begin
   
     _line = pixel_list[index]
+    if (_line eq '') then return
     _line_parsed = strsplit(_line,'->',/extract,/regex)
     _from_px = fix(_line_parsed[0])
     _to_px   = fix(_line_parsed[1])
@@ -472,6 +484,15 @@ pro display_discrete_selection_pixel_list, event=event, base=base
     plots, xsize, _to_px_device, fsc_color("white"),/continue, linestyle=0,$
       /device
       
+  ;left vertical line
+    plots, 0, _from_px_device, fsc_color("white"),/device
+    plots, 0, _to_px_device, fsc_color("white"),/continue, linestyle=0,$
+      /device, thick=4
+  ;right vertical line
+    plots, xsize, _from_px_device, fsc_color("white"),/device
+    plots, xsize, _to_px_device, fsc_color("white"),/continue, linestyle=0,$
+      /device, thick=4
+
     index++
   endwhile
     
