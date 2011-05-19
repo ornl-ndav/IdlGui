@@ -73,11 +73,13 @@ pro discrete_selection_base_event, Event
         ;moving mouse with left click pressed
         if ((*global_tof_selection).left_click) then begin
           record_pixel_value, event=event, button='left'
+          display_discrete_selection_pixel_list, event=event
           return
         endif
         
         if ((*global_tof_selection).right_click) then begin
           record_pixel_value, event=event, button='right'
+          display_discrete_selection_pixel_list, event=event
           return
         endif
         
@@ -86,29 +88,7 @@ pro discrete_selection_base_event, Event
           ;left click activated
           (*global_tof_selection).left_click = 1b
           record_pixel_value, event=event, button='left'
-          
-          ;          if ((*global_tof_selection).tof1_selected) then begin
-          ;            uname = 'discrete_selection_tof1_uname'
-          ;          endif else begin
-          ;            uname = 'discrete_selection_tof2_uname'
-          ;          endelse
-          ;
-          ;          check_tof_value, tof_value, global_tof_selection
-          ;          if (tof_value eq -1) then tof_value = ''
-          ;          putValue, base=(*global_tof_selection).tof_selection_input_base, $
-          ;            uname, $
-          ;            tof_value
-          ;          save_tof_data, event=event
-          ;          display_tof_selection_tof, event=event
-          ;
-          ;          ;display counts_vs_tof with selection
-          ;          plot_base = (*global_tof_selection).tof_selection_counts_vs_tof_base_id
-          ;          if (widget_info(plot_base, /valid_id) ne 0) then begin
-          ;            display_counts_vs_tof, $
-          ;              base=(*global_tof_selection).tof_selection_counts_vs_tof_base_id, $
-          ;              global_tof_selection
-          ;          endif
-          
+          display_discrete_selection_pixel_list, event=event
           return
         endif
         
@@ -118,34 +98,9 @@ pro discrete_selection_base_event, Event
           ;left click activated
           (*global_tof_selection).right_click = 1b
           record_pixel_value, event=event, button='right'
-          
+          display_discrete_selection_pixel_list, event=event
           return
         endif
-        
-        
-      ;          tof_value = strcompress(retrieve_tof_value(event),/remove_all)
-      ;          if ((*global_tof_selection).tof1_selected) then begin
-      ;            uname = 'discrete_selection_tof1_uname'
-      ;          endif else begin
-      ;            uname = 'discrete_selection_tof2_uname'
-      ;          endelse
-      ;          check_tof_value, tof_value, global_tof_selection
-      ;          if (tof_value eq -1) then tof_value = ''
-      ;          putValue, base=(*global_tof_selection).tof_selection_input_base, $
-      ;            uname, $
-      ;            tof_value
-      ;          save_tof_data, event=event
-      ;          display_tof_selection_tof, event=event
-      ;
-      ;          ;display counts_vs_tof with selection
-      ;          plot_base = (*global_tof_selection).tof_selection_counts_vs_tof_base_id
-      ;          if (widget_info(plot_base, /valid_id) ne 0) then begin
-      ;            display_counts_vs_tof, $
-      ;              base=(*global_tof_selection).tof_selection_counts_vs_tof_base_id, $
-      ;              global_tof_selection
-      ;          endif
-      ;
-      ;        endif
         
       endif else begin ;entering or leaving widget_draw
       
@@ -213,7 +168,7 @@ pro discrete_selection_base_event, Event
       plot_discrete_selection_beam_center_scale, event=event
       refresh_discrete_selection_plot, event, recalculate=1
       refresh_plot_discrete_selection_colorbar, event
-      display_discrete_selection_tof, event=event
+      display_discrete_selection_pixel_list, event=event
       
       return
     end
@@ -281,8 +236,8 @@ pro record_pixel_value, event=event, button=button
   input_base = (*global_tof_selection).discrete_selection_input_base
   
   case (button) of
-  'left': uname='discrete_roi_selection_from_px'
-  'right': uname='discrete_roi_selection_to_px'
+    'left': uname='discrete_roi_selection_from_px'
+    'right': uname='discrete_roi_selection_to_px'
   endcase
   
   putValue, base=input_base, uname, pixel_value
@@ -400,14 +355,14 @@ end
 
 ;+
 ; :Description:
-;    Go from data to device
+;    Go from px data to device
 ;
 ; :Params:
 ;    data
 ;
 ; :Author: j35
 ;-
-function discrete_from_data_to_device, event=event, base=base, xdata
+function discrete_from_px_data_to_device, event=event, base=base, ydata
   compile_opt idl2
   
   if (keyword_set(event)) then begin
@@ -419,26 +374,26 @@ function discrete_from_data_to_device, event=event, base=base, xdata
   endelse
   
   geometry = WIDGET_INFO(id,/GEOMETRY)
-  xsize = geometry.xsize
-  xrange = (*global_tof_selection).xrange
+  ysize = geometry.ysize
+  yrange = (*global_tof_selection).yrange
   
-  ratio = float(xsize) / (float(xrange[1]) - float(xrange[0]))
-  xdevice = ratio * (float(xdata) - float(xrange[0]))
+  ratio = float(ysize) / (float(yrange[1]) - float(yrange[0]))
+  ydevice = ratio * (float(ydata) - float(yrange[0]))
   
-  return, xdevice
+  return, ydevice
   
 end
 
 ;+
 ; :Description:
-;    refresh the background and display the two tof min and max
+;    refresh the background and display the pixels already selected
 ;
 ; :Keywords:
 ;    event
 ;
 ; :Author: j35
 ;-
-pro display_discrete_selection_tof, event=event, base=base
+pro display_discrete_selection_pixel_list, event=event, base=base
   compile_opt idl2
   
   if (keyword_set(event)) then begin
@@ -451,6 +406,54 @@ pro display_discrete_selection_tof, event=event, base=base
   widget_control, id, GET_VALUE = plot_id
   wset, plot_id
   TV, (*(*global_tof_selection).background), true=3
+  
+  ;retrieve list of pixels from ROIs
+  roi_base = (*global_tof_selection).discrete_selection_input_base
+  pixel_list = getValue(base=roi_base,$
+    uname='discrete_roi_selection_text_field')
+    
+  if (pixel_list[0] eq '') then return
+  
+  draw_geometry = WIDGET_INFO(id,/GEOMETRY)
+  xsize = draw_geometry.xsize
+  ;ysize = draw_geometry.ysize
+  
+  sz = n_elements(pixel_list)
+  index=0
+  while (index lt sz) do begin
+  
+    _line = pixel_list[index]
+    _line_parsed = strsplit(_line,'->',/extract,/regex)
+    _from_px = fix(_line_parsed[0])
+    _to_px   = fix(_line_parsed[1])
+    
+    _from_px_device = discrete_from_px_data_to_device(event=event, $
+      base=base, _from_px)
+    plots, 0, _from_px_device, fsc_color("white"),/device
+    plots, xsize, _from_px_device, fsc_color("white"),/continue, linestyle=4,$
+      /device
+      
+    _to_px_device = discrete_from_px_data_to_device(event=event, $
+      base=base, _to_px)
+    plots, 0, _to_px_device, fsc_color("white"),/device
+    plots, xsize, _to_px_device, fsc_color("white"),/continue, linestyle=4,$
+      /device
+      
+    index++
+  endwhile
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  return
   
   tof_selection_tof = (*global_tof_selection).tof_selection_tof
   
@@ -478,25 +481,7 @@ pro display_discrete_selection_tof, event=event, base=base
       
   endif
   
-  if ((*global_tof_selection).tof1_selected) then begin
-    tof_device = tof_min_device
-  endif else begin
-    tof_device = tof_max_device
-  endelse
   
-  ;retrieve geometry of refpix draw
-  geometry = widget_info(id,/geometry)
-  draw_ysize = geometry.scr_ysize
-  to_ysize = (draw_ysize/100.)*2.
-  from_tof = tof_device - 10
-  to_tof = tof_device + 10
-  
-  plots, [from_tof, tof_device, to_tof, tof_device, from_tof], $
-    [0, 0, 0, to_ysize, 0], $
-    /device, $
-    linestyle = 0,$
-    color = fsc_color("red")
-    
 end
 
 ;+
@@ -1398,9 +1383,9 @@ pro discrete_selection_base, main_base=main_base, $
     short_file_name: short_file_name, $
     
     discrete_selection_input_base: 0L, $ ;id of refpix_input_base
-    tof_selection_counts_vs_tof_base_id: 0L, $ 'id of refpix_counts_vs_tof_base
-  counts_vs_tof_scale_is_linear: 0b, $ ;counts vs tof (linear/log)
-  
+    tof_selection_counts_vs_tof_base_id: 0L, $ ;'id of refpix_counts_vs_tof_base
+    counts_vs_tof_scale_is_linear: 0b, $ ;counts vs tof (linear/log)
+    
     ;used to plot selection zoom
     default_plot_size: default_plot_size, $
     
