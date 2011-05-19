@@ -878,7 +878,7 @@ end
 pro tof_selection_base_uname_killed, global_tof_selection
   compile_opt idl2
   
-  id_input = (*global_tof_selection).tof_selection_input_base
+  id_input = (*global_tof_selection).discrete_selection_input_base
   if (widget_info(id_input, /valid_id) ne 0) then begin
     widget_control, id_input, /destroy
   endif
