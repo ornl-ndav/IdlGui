@@ -146,10 +146,10 @@ pro discrete_selection_input_base_event, Event
     ;validate ROIs selected
     widget_info(event.top, $
       find_by_uname='validate_discrete_selection_selected_uname'): begin
-
+      
       roi_base = (*global_tof_selection).discrete_selection_input_base
       pixel_list = getValue(base=roi_base,$
-      uname='discrete_roi_selection_text_field')
+        uname='discrete_roi_selection_text_field')
       global = (*global_tof_selection).global
       (*(*global).discrete_roi_selection) = pixel_list
       
@@ -181,20 +181,27 @@ end
 ;
 ; :Author: j35
 ;-
-pro check_status_of_save_discrete_list, event=event
+pro check_status_of_save_discrete_list, event=event, base=base
   compile_opt idl2
   
-  pixel_list = getValue(event=event, $
-    uname='discrete_roi_selection_text_field')
-    
+  uname='discrete_roi_selection_text_field'
+  if (keyword_set(event)) then begin
+    pixel_list = getValue(event=event, $
+      uname=uname)
+  endif else begin
+    pixel_list = getValue(base=base, $
+      uname=uname)
+  endelse
+  
   if (pixel_list[0] ne '') then begin
     status = 1
   endif else begin
     status = 0
   endelse
   
-  ActivateWidget, Event, 'discrete_roi_selection_save_button', status
-  
+  activate_widget, event=event, base=base, $
+    uname='discrete_roi_selection_save_button', status=status
+    
 end
 
 ;+
@@ -414,9 +421,9 @@ pro discrete_selection_input_base_gui, wBase, $
     sensitive = 0,$
     uname = 'discrete_roi_selection_save_button')
     
-    space = widget_label(col2,$
-      value = ' ')
-  
+  space = widget_label(col2,$
+    value = ' ')
+    
   row2=widget_base(col2,$
     /row)
   label = widget_label(row2,$
@@ -441,16 +448,16 @@ pro discrete_selection_input_base_gui, wBase, $
     value = '+',$
     scr_xsize=50,$
     uname='discrete_roi_selection_plus')
-  
+    
   row3b = widget_label(wBase,$
-  /align_left,$
-  value = "Left click main plot to select 'From Px'")
+    /align_left,$
+    value = "Left click main plot to select 'From Px'")
   row3b = widget_label(wBase,$
-  /align_left,$
-  value = "and right click to select 'to Px'")
+    /align_left,$
+    value = "and right click to select 'to Px'")
     
   space = widget_label(wBase,$
-  value = ' ')  
+    value = ' ')
     
   row4 = widget_base(wBase,$
     /row)
@@ -592,5 +599,23 @@ pro discrete_selection_input_base, event=event, $
     /NO_BLOCK, $
     cleanup='discrete_counts_info_base_cleanup'
     
+  last_discrete_selection_roi_saved = $
+    (*global_tof_selection).last_discrete_selection_roi_saved
+    
+  sz = size(last_discrete_selection_roi_saved)
+  
+  if (sz[0] eq 1) then begin
+    putValue, base=_base, 'discrete_roi_selection_text_field', $
+    last_discrete_selection_roi_saved
+    
+    ;refresh main plot
+    base = (*global_tof_selection).wBase
+    display_discrete_selection_pixel_list, base=base
+    
+    ;can we enabled or not the save ROI button
+    check_status_of_save_discrete_list, base=_base
+    
+  endif
+  
 end
 
