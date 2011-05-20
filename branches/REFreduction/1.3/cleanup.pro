@@ -159,6 +159,7 @@ pro ref_reduction_Cleanup, tlb
   ptr_free, (*global).Normalization_1d_3d_min_max
   ptr_free, (*global).Normalization_2d_3d_min_max
   ptr_free, (*global).data_spin_state_broad_mode
+  ptr_free, (*global).discrete_roi_selection
   
   ptr_free, global
   
