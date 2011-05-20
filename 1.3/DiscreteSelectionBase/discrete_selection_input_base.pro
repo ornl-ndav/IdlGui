@@ -91,6 +91,12 @@ pro discrete_selection_input_base_event, Event
   
   case Event.id of
   
+    ;load roi
+    widget_info(event.top, $
+      find_by_uname='discrete_roi_selection_load_button'): begin
+      load_discrete_roi_selection, event=event
+    end
+    
     ;save roi
     widget_info(event.top, $
       find_by_uname='discrete_roi_selection_save_button'): begin
@@ -103,7 +109,7 @@ pro discrete_selection_input_base_event, Event
       ;refresh main plot
       base = (*global_tof_selection).wBase
       display_discrete_selection_pixel_list, base=base
-
+      
       ;can we enabled or not the save ROI button
       check_status_of_save_discrete_list, event=event
     end
@@ -187,6 +193,61 @@ end
 
 ;+
 ; :Description:
+;    This routine will load the .
+;
+;
+;
+; :Keywords:
+;    event
+;
+; :Author: j35
+;-
+pro load_discrete_roi_selection, event=event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_info
+  global_tof_selection = (*global_info).global_tof_selection
+  global = (*global_tof_selection).global
+  
+  path = (*global).tof_config_path
+  id = widget_info(event.top, find_by_uname='discrete_peak_selection_base')
+  title = 'Load discrete ROI selection'
+  default_extension = 'txt'
+  
+  file_name = dialog_pickfile(default_extension=default_extension,$
+    dialog_parent=id,$
+    filter=['*discrete_roi.txt'],$
+    get_path=new_path,$
+    path=path,$
+    title=title,$
+    /must_exist,$
+    /read)
+    
+  file_name = file_name[0]
+  if (file_name ne '') then begin
+    (*global).tof_config_path = new_path
+    
+    openr, 1, file_name
+    nbr_lines = file_lines(file_name)
+    pixel_list = strarr(nbr_lines)
+    readf, 1, pixel_list
+    close,1
+    free_lun, 1
+    
+    putValue, event=event, 'discrete_roi_selection_text_field', pixel_list
+    
+    base = (*global_tof_selection).wBase
+    display_discrete_selection_pixel_list, base=base
+    
+    ;can we enabled or not the save ROI button
+    check_status_of_save_discrete_list, event=event
+    
+  endif
+  
+end
+
+;+
+; :Description:
 ;    This routine saves the ROI selection made
 ;
 ; :Keywords:
@@ -234,7 +295,6 @@ pro save_discrete_roi_selection, event=event
     free_lun, 1
     
   endif
-  
   
 end
 
@@ -340,6 +400,7 @@ pro discrete_selection_input_base_gui, wBase, $
     /column)
   load = widget_button(col2,$
     scr_xsize=100,$
+    uname = 'discrete_roi_selection_load_button',$
     value = 'Load...')
   save = widget_button(col2,$
     scr_xsize=100,$
