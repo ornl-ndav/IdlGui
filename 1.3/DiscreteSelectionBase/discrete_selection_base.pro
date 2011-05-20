@@ -187,28 +187,30 @@ pro discrete_selection_base_event, Event
       return
     end
     
+    ;bring to life the input interface
     widget_info(event.top, $
-      find_by_uname='show_discrete_selection_base'): begin
-      pixel_base = (*global_tof_selection).tof_selection_input_base
-      if (widget_info(pixel_base, /valid_id) eq 0) then begin
-        tof_selection_input_base, $
-          parent_base_uname='discrete_selection_base_uname', $
-          top_base = (*global_tof_selection).top_base, $
-          event=event
-      endif
+      find_by_uname='show_discrete_selection_input_window_uname'): begin
+
+ _base = (*global_tof_selection).discrete_selection_input_base
+ if (widget_info(_base, /valid_id) eq 0) then begin
+  discrete_selection_input_base, $
+    parent_base_uname='discrete_selection_base_uname', $
+   event=event
+   endif
     end
     
-    ;show counts vs tof base
-    widget_info(event.top, $
-      find_by_uname='show_counts_vs_tof_base'): begin
-      plot_base = (*global_tof_selection).tof_selection_counts_vs_tof_base_id
-      if (widget_info(plot_base, /valid_id) eq 0) then begin
-        tof_selection_counts_vs_tof_base, $
-          parent_base_uname='tof_selection_base_uname', $
-          top_base = (*global_tof_selection).top_base, $
-          event=event
-      endif
-    end
+    
+;    ;show counts vs tof base
+;    widget_info(event.top, $
+;      find_by_uname='show_counts_vs_tof_base'): begin
+;      plot_base = (*global_tof_selection).tof_selection_counts_vs_tof_base_id
+;      if (widget_info(plot_base, /valid_id) eq 0) then begin
+;        tof_selection_counts_vs_tof_base, $
+;          parent_base_uname='tof_selection_base_uname', $
+;          top_base = (*global_tof_selection).top_base, $
+;          event=event
+;      endif
+;    end
     
     else:
     
@@ -1319,8 +1321,8 @@ pro discrete_selection_base_gui, wBase, $
     /menu)
     
   show = widget_button(pixel,$
-    value = 'Show TOF selection window',$
-    uname = 'show_tof_selection_base')
+    value = 'Show discrete selection input window',$
+    uname = 'show_discrete_selection_input_window_uname')
     
 ;  _plot = widget_button(pixel,$
 ;    value = 'Show Counts vs TOF window',$

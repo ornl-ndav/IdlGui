@@ -146,6 +146,12 @@ pro discrete_selection_input_base_event, Event
     ;validate ROIs selected
     widget_info(event.top, $
       find_by_uname='validate_discrete_selection_selected_uname'): begin
+
+      roi_base = (*global_tof_selection).discrete_selection_input_base
+      pixel_list = getValue(base=roi_base,$
+      uname='discrete_roi_selection_text_field')
+      global = (*global_tof_selection).global
+      (*(*global).discrete_roi_selection) = pixel_list
       
       top_base = (*global_info).top_base
       widget_control, top_base, /destroy
@@ -559,6 +565,7 @@ pro discrete_selection_input_base, event=event, $
   if (keyword_set(event)) then begin
     id = WIDGET_INFO(Event.top, FIND_BY_UNAME=parent_base_uname)
     WIDGET_CONTROL,Event.top,GET_UVALUE=global_tof_selection
+    top_base = (*global_tof_selection).wBase
   endif else begin
     id = widget_info(top_base, find_by_uname=parent_base_uname)
     widget_control, top_base, get_uvalue=global_tof_selection

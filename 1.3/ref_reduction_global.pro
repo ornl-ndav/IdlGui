@@ -81,6 +81,7 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     tof_config_path: '~/',$
     tof_selection_base_id: 0L, $
     discrete_selection_base_id: 0L, $
+    discrete_roi_selection: ptr_new(0L), $  ;ex: ['125->134','145->150']
   
     progress_bar_base: 0L, $
     stop_broad_reduction: 0b, $ ;can be changed to 1b in progress bar base
