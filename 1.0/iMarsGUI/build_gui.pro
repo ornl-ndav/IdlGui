@@ -84,7 +84,7 @@ pro build_gui, main_base
     scr_xsize = 600,$
     scr_ysize = 200,$
     xsize = 1,$
-    ysize = 30,$
+    ysize = 1,$
     column_widths = 595,$
     uname = 'data_files_table',$
     /no_column_headers,$
@@ -120,7 +120,7 @@ pro build_gui, main_base
     scr_xsize = 600,$
     scr_ysize = 100,$
     xsize = 1,$
-    ysize = 10,$
+    ysize = 1,$
     column_widths = 595,$
     uname = 'open_beam_table',$
     /no_column_headers,$
@@ -156,7 +156,7 @@ pro build_gui, main_base
     scr_xsize = 600,$
     scr_ysize = 100,$
     xsize = 1,$
-    ysize = 10,$
+    ysize = 1,$
     column_widths = 595,$
     uname = 'dark_field_table',$
     /no_column_headers,$
@@ -274,10 +274,12 @@ pro build_gui, main_base
   ;run reduction button
   reduction = widget_button(col3,$
     value = 'Run normalization',$
+    sensitive = 0,$
     uname = 'run_normalization_button')
     
   ;progress bar
   pro_base = widget_base(col3,$
+  map=0,$
     /row)
   draw = widget_draw(pro_base,$
     scr_xsize = 535,$
