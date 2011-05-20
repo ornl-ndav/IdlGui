@@ -61,6 +61,21 @@ pro build_menu, top_base_menu
     uname = 'settings_configuration_uname',$
     /separator)
     
+  ;session
+  session = widget_button(top_base_menu,$
+  value = 'Session',$
+  /menu)
+  data = widget_button(session,$
+  value = 'Reset data files')
+  ob = widget_button(session,$
+  value = 'Reset open beam')
+  df = widget_button(session,$
+  value = 'Reset dark field')
+  full_reset = widget_button(session,$
+  value = 'Full reset',$
+  /separator,$
+  uname = 'full_reset_of_session_uname')  
+    
   ;Help
   help = widget_button(top_base_menu,$
     value = 'Help',$

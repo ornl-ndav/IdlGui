@@ -32,82 +32,18 @@
 ;
 ;==============================================================================
 
-;+
-; :Description:
-;    browse for the files
-;
-;
-;
-; :Keywords:
-;    event
-;    file_type     data_file, open_beam or dark_field
-;
-; :Author: j35
-;-
-pro browse_files, event=event, file_type=file_type
+pro putValue, event=event, base=base, uname, value, append=append
   compile_opt idl2
   
-  widget_control, event.top, get_uvalue=global
-  
-  path = (*global).path
-  
-  case (file_type) of
-    'data_file': begin
-      _title = 'data files'
-      _table_uname = 'data_files_table'
-    end
-    'open_beam': begin
-      _title = 'open beam files'
-      _table_uname = 'open_beam_table'
-    end
-    'dark_field': begin
-      _title = 'dark field files'
-      _table_uname = 'dark_field_uname'
-    end
-  endcase
-  title = 'Select 1 or more ' + _title
-  
-  extension = (*global).file_extension
-  id = widget_info(event.top, find_by_uname='MAIN_BASE')
-  filter = (*global).file_filter
-  
-  list_file = dialog_pickfile(default_extension=extension,$
-    dialog_parent=id,$
-    filter=filter,$
-    get_path=new_path,$
-    path=path,$
-    title=title,$
-    /multiple_files,$
-    /must_exist)
-
-  if (list_file[0] ne '') then begin
-    (*global).path = new_path
-    
-    ;get list of files 
-    table = getValue(event=event,uname=_table_uname)
-    
-    table = reform(table)
-    
-    id = widget_info(event.top, find_by_uname=_table_uname)
-    widget_control, id, insert_rows=n_elements(list_file)-1
-
-    if (table[0] eq '') then begin
-    new_table = [list_file]
-    endif else begin
-    new_table = [table, list_file]
-    endelse
-    
-    table = reform(new_table,1,n_elements(new_table))
-
-    ;replace table with new list
-    putValue, event=event, _table_uname, table
-
-  endif
-  
-  
-  
-  
-  
-  
+  if (n_elements(event) ne 0) then begin
+    uname_id = widget_info(event.top,find_by_uname=uname)
+  endif else begin
+    uname_id = widget_info(base,find_by_uname=uname)
+  endelse
+  if (n_elements(append) eq 0) then begin
+    widget_control, uname_id, set_value=value
+  endif else begin
+    widget_control, uname_id, set_value=value, /append
+  endelse
   
 end

@@ -13,6 +13,7 @@ cd, IdlUtilitiesPath
 .run get.pro
 .run gui.pro
 .run is.pro
+.run put.pro
 .run system.pro
 .run time.pro
 .run xdisplayfile.pro
