@@ -229,6 +229,13 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
     
   if ((*global).instrument eq 'REF_M') then begin
   
+    gui_button = widget_button(main_info_base,$
+    value = 'GUI',$
+    uname = 'discrete_reflective_peak_gui',$
+    xoffset = 455,$
+    sensitive = 0,$
+    yoffset = 85)
+  
     _base = widget_base(main_info_base,$
       xoffset = 270,$
       yoffset = 25,$
@@ -244,7 +251,7 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
       /no_release,$
       uname = 'one_reduction_per_pixel_uname')
     button3 = widget_button(_base,$
-      value = 'Discrete reflective peaks', $
+      value = 'Discrete reflective peaks      ', $
       /no_release,$
       uname = 'one_reduction_per_discrete_uname')
     widget_control, button1, /set_button

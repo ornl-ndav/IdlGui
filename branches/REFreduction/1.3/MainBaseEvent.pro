@@ -83,6 +83,7 @@ PRO MAIN_BASE_event, Event
       (*global).reduction_mode = 'one_per_selection'
       REFReduction_RescaleDataPlot, Event
       ReplotAllSelection, Event
+      activateWidget, event, 'discrete_reflective_peak_gui', 0
     end
     widget_info(wWidget, $
       find_by_uname='one_reduction_per_pixel_uname'): begin
@@ -90,10 +91,21 @@ PRO MAIN_BASE_event, Event
       (*global).reduction_mode = 'one_per_pixel'
       REFReduction_RescaleDataPlot, Event
       ReplotAllSelection, Event
+      activateWidget, event, 'discrete_reflective_peak_gui', 0
     end
-    
     widget_info(wWidget, $
       find_by_uname='one_reduction_per_discrete_uname'): begin
+      update_reduction_mode_widgets, event=event, status='one_per_discrete'
+      (*global).reduction_mode = 'one_per_discrete'
+      REFReduction_RescaleDataPlot, Event
+      ReplotAllSelection, Event
+      discrete_selection_launcher, event
+      ActivateWidget, event, 'discrete_reflective_peak_gui', 1
+    end
+    
+    ;gui to bring to life the discrete selection tool base
+    widget_info(wWidget, $
+      find_by_uname='discrete_reflective_peak_gui'): begin
       update_reduction_mode_widgets, event=event, status='one_per_discrete'
       (*global).reduction_mode = 'one_per_discrete'
       REFReduction_RescaleDataPlot, Event
