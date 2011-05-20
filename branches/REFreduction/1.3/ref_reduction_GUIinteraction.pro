@@ -37,6 +37,30 @@ PRO ActivateWidget, Event, uname, ActivateStatus
   widget_control, id, sensitive=ActivateStatus
 END
 
+;+
+; :Description:
+;    this routines works with either event or base keywords. Set the
+;    sensitivity of a widget using the status keyword
+;
+;
+;
+; :Keywords:
+;    event
+;    base
+;    uname
+;    status
+;
+; :Author: j35
+;-
+pro activate_widget, event=event, base=base, uname=uname, status=status
+  if (keyword_set(event)) then begin
+    ActivateWidget, event, uname, status
+  endif else begin
+    id = widget_info(base, find_by_uname=uname)
+    widget_control, id, sensitive=status
+  endelse
+end
+
 ;------------------------------------------------------------------------------
 PRO MapBase, Event, uname, MapStatus
   id = widget_info(Event.top,find_by_uname=uname)

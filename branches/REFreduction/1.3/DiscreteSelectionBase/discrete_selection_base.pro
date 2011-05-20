@@ -1397,6 +1397,7 @@ pro discrete_selection_base, main_base=main_base, $
     run_number: run_number, $
     file_name: file_name, $
     short_file_name: short_file_name, $
+    last_discrete_selection_roi_saved: (*(*global).discrete_roi_selection), $ 
     
     discrete_selection_input_base: 0L, $ ;id of refpix_input_base
     tof_selection_counts_vs_tof_base_id: 0L, $ ;'id of refpix_counts_vs_tof_base
@@ -1548,7 +1549,6 @@ pro discrete_selection_base, main_base=main_base, $
   discrete_selection_input_base, $
     parent_base_uname='discrete_selection_base_uname', $
     top_base=wBase_copy1
-    
     
   return
   
