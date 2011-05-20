@@ -91,12 +91,21 @@ pro discrete_selection_input_base_event, Event
   
   case Event.id of
   
+    ;save roi
+    widget_info(event.top, $
+      find_by_uname='discrete_roi_selection_save_button'): begin
+      save_discrete_roi_selection, event=event
+    end
+    
     ;roi text field
     widget_info(event.top, $
       find_by_uname='discrete_roi_selection_text_field'): begin
       ;refresh main plot
       base = (*global_tof_selection).wBase
       display_discrete_selection_pixel_list, base=base
+
+      ;can we enabled or not the save ROI button
+      check_status_of_save_discrete_list, event=event
     end
     
     ;from text field
@@ -123,6 +132,9 @@ pro discrete_selection_input_base_event, Event
       ;refresh main plot
       base = (*global_tof_selection).wBase
       display_discrete_selection_pixel_list, base=base
+      
+      ;can we enabled or not the save ROI button
+      check_status_of_save_discrete_list, event=event
     end
     
     ;validate ROIs selected
@@ -145,6 +157,84 @@ pro discrete_selection_input_base_event, Event
     else:
     
   endcase
+  
+end
+
+;+
+; :Description:
+;    Check if the save button can be enabled or not
+;
+; :Keywords:
+;    event
+;
+; :Author: j35
+;-
+pro check_status_of_save_discrete_list, event=event
+  compile_opt idl2
+  
+  pixel_list = getValue(event=event, $
+    uname='discrete_roi_selection_text_field')
+    
+  if (pixel_list[0] ne '') then begin
+    status = 1
+  endif else begin
+    status = 0
+  endelse
+  
+  ActivateWidget, Event, 'discrete_roi_selection_save_button', status
+  
+end
+
+;+
+; :Description:
+;    This routine saves the ROI selection made
+;
+; :Keywords:
+;    event
+;
+; :Author: j35
+;-
+pro save_discrete_roi_selection, event=event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_info
+  global_tof_selection = (*global_info).global_tof_selection
+  global = (*global_tof_selection).global
+  
+  path = (*global).tof_config_path
+  id = widget_info(event.top, find_by_uname='discrete_peak_selection_base')
+  title = 'Save discrete ROI selection'
+  default_extension = 'txt'
+  
+  file_name = dialog_pickfile(default_extension=default_extension,$
+    dialog_parent=id,$
+    filter=['*discrete_roi.txt'],$
+    get_path=new_path,$
+    path=path,$
+    title=title,$
+    /overwrite_prompt,$
+    /write)
+    
+  if (file_name[0] ne '') then begin
+    (*global).tof_config_path = new_path
+    
+    file_name = file_name[0]
+    
+    pixel_list = getValue(event=event, $
+      uname='discrete_roi_selection_text_field')
+      
+    openw, 1 , file_name
+    sz = n_elements(pixel_list)
+    index=0
+    while (index lt sz) do begin
+      printf, 1, pixel_list[index]
+      index++
+    endwhile
+    close, 1
+    free_lun, 1
+    
+  endif
+  
   
 end
 
@@ -239,7 +329,7 @@ pro discrete_selection_input_base_gui, wBase, $
   col1 =  widget_base(row,$
     /column)
   label = widget_label(col1,$
-    value = 'ROIs (ex: Pxmin,Pxmax)')
+    value = 'ROIs (ex: Px1 -> Px2)')
   rois = widget_text(col1,$
     /editable,$
     xsize=10,$
@@ -253,7 +343,9 @@ pro discrete_selection_input_base_gui, wBase, $
     value = 'Load...')
   save = widget_button(col2,$
     scr_xsize=100,$
-    value = 'Save...')
+    value = 'Save...',$
+    sensitive = 0,$
+    uname = 'discrete_roi_selection_save_button')
     
   for i=0,1 do begin
     space = widget_label(col2,$
