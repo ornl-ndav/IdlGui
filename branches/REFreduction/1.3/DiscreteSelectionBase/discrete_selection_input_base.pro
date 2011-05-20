@@ -153,6 +153,9 @@ pro discrete_selection_input_base_event, Event
       global = (*global_tof_selection).global
       (*(*global).discrete_roi_selection) = pixel_list
       
+      main_event = (*global_tof_selection).main_event
+      ReplotAllSelection, main_event
+
       top_base = (*global_info).top_base
       widget_control, top_base, /destroy
       
