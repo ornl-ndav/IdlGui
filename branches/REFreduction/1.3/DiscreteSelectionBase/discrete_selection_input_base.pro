@@ -393,7 +393,7 @@ pro discrete_selection_input_base_gui, wBase, $
   rois = widget_text(col1,$
     /editable,$
     xsize=10,$
-    ysize=20,$
+    ysize=11,$
     uname = 'discrete_roi_selection_text_field')
     
   col2 = widget_base(row,$
@@ -408,10 +408,8 @@ pro discrete_selection_input_base_gui, wBase, $
     sensitive = 0,$
     uname = 'discrete_roi_selection_save_button')
     
-  for i=0,1 do begin
     space = widget_label(col2,$
       value = ' ')
-  endfor
   
   row2=widget_base(col2,$
     /row)
@@ -437,6 +435,16 @@ pro discrete_selection_input_base_gui, wBase, $
     value = '+',$
     scr_xsize=50,$
     uname='discrete_roi_selection_plus')
+  
+  row3b = widget_label(wBase,$
+  /align_left,$
+  value = "Left click main plot to select 'From Px'")
+  row3b = widget_label(wBase,$
+  /align_left,$
+  value = "and right click to select 'to Px'")
+    
+  space = widget_label(wBase,$
+  value = ' ')  
     
   row4 = widget_base(wBase,$
     /row)
