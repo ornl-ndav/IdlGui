@@ -51,6 +51,9 @@ FUNCTION getGlobal
     version:           VERSION,$
     application:       APPLICATION, $
     
+    log_book: ptr_new(0L), $
+    log_book_id: 0L, $
+    
     path: '~/', $
     file_extension: 'fits',$
     file_filter: '*fits',$

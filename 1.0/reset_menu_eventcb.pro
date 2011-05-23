@@ -34,62 +34,29 @@
 
 ;+
 ; :Description:
-;    Main routine of application. Will build and start the application
-;
-; :Keywords:
-;    GROUP_LEADER
-;    _EXTRA
-;
-; :Author: j35
-;-
-pro BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-  compile_opt idl2
-  
-  ;retrieve the global structure
-  global = getGlobal()
-  
-  MainBaseTitle  = 'iMAging Reduction Software (iMars)'
-  
-  ;Build Main Base
-  main_base = Widget_Base( GROUP_LEADER = wGroup,$
-    UNAME        = 'MAIN_BASE',$
-    TITLE        = MainBaseTitle,$
-    SPACE        = 0,$
-    XPAD         = 0,$
-    YPAD         = 2,$
-    MBAR         = top_base_menu)
-    
-  build_menu, top_base_menu
-  build_gui, main_base
-  
-  ;attach global structure with widget ID of widget main base widget ID
-  WIDGET_CONTROL, main_base, SET_UVALUE=global
-  
-  Widget_Control, /REALIZE, main_base
-  XManager, 'MAIN_BASE', main_base, /NO_BLOCK, CLEANUP='iMars_cleanup'
-  
-;  logger, APPLICATION=application, VERSION=version, UCAMS=ucams
-  
-end
-
-;+
-; :Description:
-;    Application __main__ function
+;    reset the contain of the tables
 ;
 ;
 ;
 ; :Keywords:
-;    GROUP_LEADER
-;    _EXTRA
+;    event
+;    uname
 ;
 ; :Author: j35
 ;-
-pro iMars, GROUP_LEADER=wGroup,_EXTRA=_VWBExtra_
+pro reset_table, event=event, uname=uname
   compile_opt idl2
-  BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+  
+  table = getValue(event=event,uname=uname)
+  sz = n_elements(table)
+  id = widget_info(event.top, find_by_uname=uname)
+  index=1
+  while (index lt sz) do begin
+   print, 'index is: ' , index
+    widget_control, id, delete_rows=0
+    index++
+  endwhile
+  
+  putValue, event=event, uname, strarr(1,1)
+  
 end
-
-
-
-
-

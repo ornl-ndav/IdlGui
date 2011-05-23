@@ -156,6 +156,7 @@ function getValue, id=id, event=event, base=base, uname=uname
   endif
   widget_control, _id, get_value=value
   return, value
+  
 end
 
 ;+

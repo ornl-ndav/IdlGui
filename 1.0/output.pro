@@ -34,62 +34,43 @@
 
 ;+
 ; :Description:
-;    Main routine of application. Will build and start the application
-;
-; :Keywords:
-;    GROUP_LEADER
-;    _EXTRA
-;
-; :Author: j35
-;-
-pro BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-  compile_opt idl2
-  
-  ;retrieve the global structure
-  global = getGlobal()
-  
-  MainBaseTitle  = 'iMAging Reduction Software (iMars)'
-  
-  ;Build Main Base
-  main_base = Widget_Base( GROUP_LEADER = wGroup,$
-    UNAME        = 'MAIN_BASE',$
-    TITLE        = MainBaseTitle,$
-    SPACE        = 0,$
-    XPAD         = 0,$
-    YPAD         = 2,$
-    MBAR         = top_base_menu)
-    
-  build_menu, top_base_menu
-  build_gui, main_base
-  
-  ;attach global structure with widget ID of widget main base widget ID
-  WIDGET_CONTROL, main_base, SET_UVALUE=global
-  
-  Widget_Control, /REALIZE, main_base
-  XManager, 'MAIN_BASE', main_base, /NO_BLOCK, CLEANUP='iMars_cleanup'
-  
-;  logger, APPLICATION=application, VERSION=version, UCAMS=ucams
-  
-end
-
-;+
-; :Description:
-;    Application __main__ function
+;    This routine will allow the user to change the output directory
 ;
 ;
 ;
 ; :Keywords:
-;    GROUP_LEADER
-;    _EXTRA
+;    event
 ;
 ; :Author: j35
 ;-
-pro iMars, GROUP_LEADER=wGroup,_EXTRA=_VWBExtra_
-  compile_opt idl2
-  BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+pro define_output_folder, event=event
+compile_opt idl2
+
+widget_control, event.top, get_uvalue=global
+
+path = (*global).path
+title = 'Select the output folder'
+id = widget_info(event.top, find_by_uname='MAIN_BASE')
+
+result = dialog_pickfile(/directory,$
+dialog_parent=id,$
+get_path=new_path,$
+path=path,$
+/must_exist,$
+/write,$
+title=title)
+
+if (result ne '') then begin
+
+(*global).path = result
+ putValue, event=event, 'output_folder_button', result
+ 
+ endif
+
+
+
+
+
+
+
 end
-
-
-
-
-
