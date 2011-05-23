@@ -679,142 +679,149 @@ PRO ReplotAllSelection, Event
       index = 0
       while (index lt _sz) do begin
       
-        _line_parsed = strsplit(discrete_roi_selection[index],'->', /regex, /extract)
-        _from_data = fix(strcompress(_line_parsed[0],/remove_all))
-        _to_data = fix(strcompress(_line_parsed[1],/remove_all))
+        ;if line is empty string, jump this index
+        if (strcompress(discrete_roi_selection[index],$
+          /remove_all) eq '') then begin
+            index++
+            continue
+          endif
+          
+          _line_parsed = strsplit(discrete_roi_selection[index],'->', /regex, /extract)
+          _from_data = fix(strcompress(_line_parsed[0],/remove_all))
+          _to_data = fix(strcompress(_line_parsed[1],/remove_all))
+          
+          _from_device = coeff * _from_data
+          _to_device = coeff * _to_data
+          
+          plots, 0, _from_device, /device, color=fsc_color('white')
+          plots, xsize_1d_draw, _from_device, /device, color=fsc_color('white'), $
+            /continue
+            
+          plots, 0, _to_device, /device, color=fsc_color('white')
+          plots, xsize_1d_draw, _to_device, /device, color=fsc_color('white'), $
+            /continue
+            
+          plots, 0, _from_device, /device, color=fsc_color('pink'), thick=2
+          plots, 0, _to_device, /device, color=fsc_color('pink') , thick=2,$
+            /continue
+            
+          plots, xsize_1d_draw, _from_device, /device, color=fsc_color('pink'), $
+            thick=2
+          plots, xsize_1d_draw, _to_device, /device, color=fsc_color('pink') , $
+            thick=2, /continue
+            
+          index++
+        endwhile
         
-        _from_device = coeff * _from_data
-        _to_device = coeff * _to_data
-        
-        plots, 0, _from_device, /device, color=fsc_color('white')
-        plots, xsize_1d_draw, _from_device, /device, color=fsc_color('white'), $
-          /continue
-          
-        plots, 0, _to_device, /device, color=fsc_color('white')
-        plots, xsize_1d_draw, _to_device, /device, color=fsc_color('white'), $
-          /continue
-          
-        plots, 0, _from_device, /device, color=fsc_color('pink'), thick=2
-        plots, 0, _to_device, /device, color=fsc_color('pink') , thick=2,$
-          /continue
-          
-        plots, xsize_1d_draw, _from_device, /device, color=fsc_color('pink'), $
-          thick=2
-        plots, xsize_1d_draw, _to_device, /device, color=fsc_color('pink') , $
-          thick=2, /continue
-          
-        index++
-      endwhile
+      endif
       
-    endif
+    endif else begin ;for 'one_per_selection' and 'one_per_pixel'
     
-  endif else begin ;for 'one_per_selection' and 'one_per_pixel'
-  
-    IF (y_array[0] NE -1) THEN BEGIN
-      PLOTS, 0, y_array[0], /DEVICE, COLOR=color
-      PLOTS, xsize_1d_draw, y_array[0], $
-        /DEVICE, $
-        /CONTINUE, $
-        COLOR=color
-    ENDIF
-    IF (y_array[1] NE -1) THEN BEGIN
-      PLOTS, 0, y_array[1], /DEVICE, COLOR=color
-      PLOTS, xsize_1d_draw, y_array[1], $
-        /DEVICE, $
-        /CONTINUE, $
-        COLOR=color
+      IF (y_array[0] NE -1) THEN BEGIN
+        PLOTS, 0, y_array[0], /DEVICE, COLOR=color
+        PLOTS, xsize_1d_draw, y_array[0], $
+          /DEVICE, $
+          /CONTINUE, $
+          COLOR=color
+      ENDIF
+      IF (y_array[1] NE -1) THEN BEGIN
+        PLOTS, 0, y_array[1], /DEVICE, COLOR=color
+        PLOTS, xsize_1d_draw, y_array[1], $
+          /DEVICE, $
+          /CONTINUE, $
+          COLOR=color
+      ENDIF
+      
+    endelse
+    
+    
+    
+    IF (isPeakSelected) THEN BEGIN
+      color = (*global).peak_selection_color
+      y_array = (*(*global).data_peak_selection)
+      IF (y_array[0] NE -1) THEN BEGIN
+        PLOTS, 0, y_array[0], /DEVICE, COLOR=color
+        PLOTS, xsize_1d_draw, y_array[0], $
+          /DEVICE, $
+          /CONTINUE, $
+          COLOR=color
+      ENDIF
+      IF (y_array[1] NE -1) THEN BEGIN
+        PLOTS, 0, y_array[1], /DEVICE, COLOR=color
+        PLOTS, xsize_1d_draw, y_array[1], $
+          /DEVICE, $
+          /CONTINUE, $
+          COLOR=color
+      ENDIF
+    ENDIF ELSE BEGIN
+      color = (*global).back_selection_color
+      y_array = (*(*global).data_back_selection)
+      IF (y_array[0] NE -1) THEN BEGIN
+        PLOTS, 0, y_array[0], /DEVICE, COLOR=color
+        PLOTS, xsize_1d_draw, y_array[0], $
+          /DEVICE, $
+          /CONTINUE, $
+          COLOR=color
+      ENDIF
+      IF (y_array[1] NE -1) THEN BEGIN
+        PLOTS, 0, y_array[1], /DEVICE, COLOR=color
+        PLOTS, xsize_1d_draw, y_array[1], $
+          /DEVICE, $
+          /CONTINUE, $
+          COLOR=color
+      ENDIF
+    ENDELSE
+    
+    ROISignalBackZoomStatus = isDataBackPeakZoomSelected(Event)
+    ;plot zoom if zoom tab is selected
+    IF (isDataZoomTabSelected(Event) AND $
+      ROIsignalBackZoomStatus NE 3 AND $
+      (*global).select_zoom_status) THEN BEGIN
+      RefReduction_zoom, $
+        Event, $
+        MouseX = event.x, $
+        MouseY = event.y, $
+        fact   = (*global).DataZoomFactor,$
+        uname  = 'data_zoom_draw'
     ENDIF
     
-  endelse
-  
-  
-  
-  IF (isPeakSelected) THEN BEGIN
-    color = (*global).peak_selection_color
-    y_array = (*(*global).data_peak_selection)
-    IF (y_array[0] NE -1) THEN BEGIN
-      PLOTS, 0, y_array[0], /DEVICE, COLOR=color
-      PLOTS, xsize_1d_draw, y_array[0], $
-        /DEVICE, $
-        /CONTINUE, $
-        COLOR=color
-    ENDIF
-    IF (y_array[1] NE -1) THEN BEGIN
-      PLOTS, 0, y_array[1], /DEVICE, COLOR=color
-      PLOTS, xsize_1d_draw, y_array[1], $
-        /DEVICE, $
-        /CONTINUE, $
-        COLOR=color
-    ENDIF
-  ENDIF ELSE BEGIN
-    color = (*global).back_selection_color
-    y_array = (*(*global).data_back_selection)
-    IF (y_array[0] NE -1) THEN BEGIN
-      PLOTS, 0, y_array[0], /DEVICE, COLOR=color
-      PLOTS, xsize_1d_draw, y_array[0], $
-        /DEVICE, $
-        /CONTINUE, $
-        COLOR=color
-    ENDIF
-    IF (y_array[1] NE -1) THEN BEGIN
-      PLOTS, 0, y_array[1], /DEVICE, COLOR=color
-      PLOTS, xsize_1d_draw, y_array[1], $
-        /DEVICE, $
-        /CONTINUE, $
-        COLOR=color
-    ENDIF
-  ENDELSE
-  
-  ROISignalBackZoomStatus = isDataBackPeakZoomSelected(Event)
-  ;plot zoom if zoom tab is selected
-  IF (isDataZoomTabSelected(Event) AND $
-    ROIsignalBackZoomStatus NE 3 AND $
-    (*global).select_zoom_status) THEN BEGIN
-    RefReduction_zoom, $
-      Event, $
-      MouseX = event.x, $
-      MouseY = event.y, $
-      fact   = (*global).DataZoomFactor,$
-      uname  = 'data_zoom_draw'
-  ENDIF
-  
-  ON_IOERROR, input_error
-  
-  IF ((*global).instrument EQ 'REF_M') THEN BEGIN
-    refpix = getTextFieldValue(Event,'info_refpix')
-    (*global).refpix = FLOAT(refpix)
-    plot_average_data_peak_value, Event
-  ENDIF
-  
-  input_error:
-  
-END
-
-;------------------------------------------------------------------------------
-PRO plot_average_data_peak_value, Event
-
-  ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
-  
-  if ((*global).reduction_mode eq 'one_per_pixel') then return
-  if ((*global).reduction_mode eq 'one_per_discrete') then return
-  
-  coefficient = getUDCoefficient(Event) ;1 for low, 2 for high
-  refpix = (*global).refpix
-  geo_refpix = coefficient * refpix
-  
-  ;where to stop the plot of the lines
-  ;xsize_1d_draw = (*global).Ntof_DATA-1
-  xsize_1d_draw = 608L
-  
-  id_draw = WIDGET_INFO(Event.top, FIND_BY_UNAME='load_data_D_draw')
-  WIDGET_CONTROL, id_draw, GET_VALUE=id_value
-  WSET,id_value
-  
-  color = 50
-  
-  PLOTS, 0, geo_refpix, /device, color=color
-  PLOTS, xsize_1d_draw, geo_refpix, /device, /continue, color=color, $
-    LINESTYLE = 2
+    ON_IOERROR, input_error
     
-END
+    IF ((*global).instrument EQ 'REF_M') THEN BEGIN
+      refpix = getTextFieldValue(Event,'info_refpix')
+      (*global).refpix = FLOAT(refpix)
+      plot_average_data_peak_value, Event
+    ENDIF
+    
+    input_error:
+    
+  END
+  
+  ;------------------------------------------------------------------------------
+  PRO plot_average_data_peak_value, Event
+  
+    ;get global structure
+    WIDGET_CONTROL,Event.top,GET_UVALUE=global
+    
+    if ((*global).reduction_mode eq 'one_per_pixel') then return
+    if ((*global).reduction_mode eq 'one_per_discrete') then return
+    
+    coefficient = getUDCoefficient(Event) ;1 for low, 2 for high
+    refpix = (*global).refpix
+    geo_refpix = coefficient * refpix
+    
+    ;where to stop the plot of the lines
+    ;xsize_1d_draw = (*global).Ntof_DATA-1
+    xsize_1d_draw = 608L
+    
+    id_draw = WIDGET_INFO(Event.top, FIND_BY_UNAME='load_data_D_draw')
+    WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+    WSET,id_value
+    
+    color = 50
+    
+    PLOTS, 0, geo_refpix, /device, color=color
+    PLOTS, xsize_1d_draw, geo_refpix, /device, /continue, color=color, $
+      LINESTYLE = 2
+      
+  END
