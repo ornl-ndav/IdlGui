@@ -44,7 +44,7 @@
 pro REFreduction_CommandLineGenerator, Event
 
   widget_control, /hourglass
-
+  
   ;get global structure
   id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
   WIDGET_CONTROL,id,get_uvalue=global
@@ -55,14 +55,15 @@ pro REFreduction_CommandLineGenerator, Event
     command_line_generator_for_ref_l, event
   endif else begin
     case ((*global).reduction_mode) of
-      'one_per_selection': command_line_generator_for_ref_m, event
+      'one_per_selection':
       'one_per_pixel': begin
         command_line_generator_for_ref_m_broad_peak, event
-        command_line_generator_for_ref_m, event
       end
       'one_per_discrete': begin
+        command_line_generator_for_ref_m_discrete_peak, event
       end
     endcase
+    command_line_generator_for_ref_m, event
   endelse
   
   widget_control, hourglass=0
