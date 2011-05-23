@@ -304,7 +304,8 @@ pro save_discrete_roi_selection, event=event
     sz = n_elements(pixel_list)
     index=0
     while (index lt sz) do begin
-      printf, 1, pixel_list[index]
+      _line = pixel_list[index]
+      if (strcompress(_line,/remove_all) ne '') then printf, 1, _line
       index++
     endwhile
     close, 1
