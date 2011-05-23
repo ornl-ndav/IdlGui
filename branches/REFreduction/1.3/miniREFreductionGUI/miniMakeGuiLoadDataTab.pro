@@ -230,7 +230,7 @@ PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
   if ((*global).instrument eq 'REF_M') then begin
   
       gui_button = widget_button(main_info_base,$
-    value = 'GUI',$
+    value = 'ROIs',$
     uname = 'discrete_reflective_peak_gui',$
     xoffset = 455,$
     sensitive = 0,$
