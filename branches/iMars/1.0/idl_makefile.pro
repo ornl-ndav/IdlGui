@@ -30,6 +30,11 @@ cd, CurrentFolder + '/iMarsGUI/'
 cd, CurrentFolder
 
 .run browse_files.pro
+.run reset_menu_eventcb.pro
+.run roi_eventcb.pro
+.run output.pro
+.run help_menu_eventcb.pro
+.run log_book.pro
 
 ;main functions
 .run global.pro

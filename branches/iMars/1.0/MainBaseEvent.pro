@@ -42,6 +42,36 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(event.top, FIND_BY_UNAME='MAIN_BASE'): BEGIN
     END
     
+    ;reset menu
+    ;reset data files
+    widget_info(event.top, find_by_uname='reset_data_files_uname'): begin
+      reset_table, event=event, uname = 'data_files_table'
+    end
+    ;reset open beam files
+    widget_info(event.top, find_by_uname='reset_open_beam_files_uname'): begin
+      reset_table, event=event, uname = 'open_beam_table'
+    end
+    ;reset dark field files
+    widget_info(event.top, find_by_uname='reset_dark_field_files_uname'): begin
+      reset_table, event=event, uname = 'dark_field_table'
+    end
+    ;reset full session
+    widget_info(event.top, find_by_uname='full_reset_of_session_uname'): begin
+      reset_table, event=event, uname = 'data_files_table'
+      reset_table, event=event, uname = 'open_beam_table'
+      reset_table, event=event, uname = 'dark_field_table'
+    end
+    
+    ;help menu
+    ;log book
+    widget_info(event.top, find_by_uname='log_book_uname'): begin
+    display_log_book, event
+    end
+    ;about iMars
+    widget_info(event.top, find_by_uname='about_imars_uname'): begin
+    about_imars, event
+    end
+    
     ;browse buttons
     widget_info(event.top, find_by_uname='browse_data_files'): begin
       browse_files, event=event, file_type='data_file'
@@ -51,6 +81,21 @@ PRO MAIN_BASE_event, Event
     end
     widget_info(event.top, find_by_uname='browse_dark_field'): begin
       browse_files, event=event, file_type='dark_field'
+    end
+    
+    ;roi
+    ;load roi
+    widget_info(event.top, find_by_uname='roi_load'): begin 
+    load_roi, event=event
+    end
+    ;save roi
+    widget_info(event.top, find_by_uname='roi_save'): begin
+    save_roi, event=event
+    end
+    
+    ;output folder
+    widget_info(event.top, find_by_uname='output_folder_button'): begin
+    define_output_folder, event=event
     end
     
     ELSE:

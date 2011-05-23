@@ -216,7 +216,13 @@ pro build_gui, main_base
     value='Selection: xmin,ymin,xmax,ymax')
   _row = widget_base(roi_base,$
     /row)
+  
+  value = ['1,2,3,4','10,11,12,13','20,21,22,23']
+  
   roi = widget_text(_row,$
+  /editable,$
+  value=value,$
+  uname='roi_text_field_uname',$
     xsize = 20,$
     ysize = 8)
   _col = widget_base(_row,$

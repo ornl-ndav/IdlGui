@@ -34,101 +34,34 @@
 
 ;+
 ; :Description:
-;    browse for the files
+;    Pop up a dialog message giving some information about the application
 ;
-;
-;
-; :Keywords:
+; :Params:
 ;    event
-;    file_type     data_file, open_beam or dark_field
+;
+;
 ;
 ; :Author: j35
 ;-
-pro browse_files, event=event, file_type=file_type
+pro about_imars, event
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global
   
-  path = (*global).path
+  version = (*global).version
+  application = (*global).application
+  message_text = [application,$
+  'iMAging Reduction Software',$
+  '','version: ' + version,$
+    '','contact: j35@ornl.gov                 ']
+  title = 'About ' + application
   
-  case (file_type) of
-    'data_file': begin
-      _title = 'data files'
-      _table_uname = 'data_files_table'
-    end
-    'open_beam': begin
-      _title = 'open beam files'
-      _table_uname = 'open_beam_table'
-    end
-    'dark_field': begin
-      _title = 'dark field files'
-      _table_uname = 'dark_field_table'
-    end
-  endcase
-  title = 'Select 1 or more ' + _title
-  
-  extension = (*global).file_extension
   id = widget_info(event.top, find_by_uname='MAIN_BASE')
-  filter = (*global).file_filter
   
-  list_file = dialog_pickfile(default_extension=extension,$
-    dialog_parent=id,$
-    filter=filter,$
-    get_path=new_path,$
-    path=path,$
+  result = dialog_message(message_text, $
+    /information,$
     title=title,$
-    /multiple_files,$
-    /must_exist)
+    dialog_parent=id,$
+    /center)
     
-  if (list_file[0] ne '') then begin
-    (*global).path = new_path
-    
-    ;get list of files
-    table = getValue(event=event,uname=_table_uname)
-    help, table
-    
-    table = reform(table)
-    
-    id = widget_info(event.top, find_by_uname=_table_uname)
-    
-    if (table[0] eq '') then begin
-      new_table = [list_file]
-    widget_control, id, insert_rows=n_elements(list_file)-1
-    endif else begin
-      new_table = [table, list_file]
-          widget_control, id, insert_rows=n_elements(list_file)
-    endelse
-    
-    help, new_table
-    print, new_table
-    print
-    
-    _new_table = new_table
-    table = reform(new_table,1,n_elements(_new_table))
-    
-    sz = size(table,/dim)
-    i=sz[0]
-    j=sz[1]
-    _i =0
-    _j=0
-    while(_i lt i) do begin
-    while(_j lt j) do begin
-    print, 'table[',strcompress(_i),',',strcompress(_j),']=' , table[_i,_j]
-    _j++
-    endwhile
-    _i++
-    endwhile
-    
-    
-    ;replace table with new list
-    putValue, event=event, _table_uname, table
-    
-  endif
-  
-  
-  
-  
-  
-  
-  
 end

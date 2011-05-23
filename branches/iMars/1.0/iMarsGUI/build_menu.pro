@@ -63,16 +63,19 @@ pro build_menu, top_base_menu
     
   ;session
   session = widget_button(top_base_menu,$
-  value = 'Session',$
+  value = 'Reset',$
   /menu)
   data = widget_button(session,$
-  value = 'Reset data files')
+  uname='reset_data_files_uname',$
+  value = 'Data files')
   ob = widget_button(session,$
-  value = 'Reset open beam')
+  uname = 'reset_open_beam_files_uname',$
+  value = 'Open beam')
   df = widget_button(session,$
-  value = 'Reset dark field')
+  uname = 'reset_dark_field_files_uname',$
+  value = 'Dark field')
   full_reset = widget_button(session,$
-  value = 'Full reset',$
+  value = 'Full session',$
   /separator,$
   uname = 'full_reset_of_session_uname')  
     
