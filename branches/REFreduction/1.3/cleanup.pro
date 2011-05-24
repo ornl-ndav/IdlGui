@@ -113,6 +113,7 @@ pro ref_reduction_Cleanup, tlb
   ptr_free, (*global).list_of_output_file_name
   ptr_free, (*global).list_of_output_file_name_for_broad_mode
   ptr_free, (*global).list_of_tmp_data_roi_file_name_for_broad_mode
+  ptr_free, (*global).list_of_tmp_data_roi_file_name_for_discrete_mode
   ptr_free, (*global).pixel_range_broad_mode
   ptr_free, (*global).list_of_norm_spins
   ptr_free, (*global).list_of_data_spins

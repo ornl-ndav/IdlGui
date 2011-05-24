@@ -112,6 +112,7 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     broad_peak_pixel_range: [-1,-1], $
     list_of_output_file_name_for_broad_mode: ptr_new(0L), $
     list_of_tmp_data_roi_file_name_for_broad_mode: ptr_new(0L), $
+    list_of_tmp_data_roi_file_name_for_discrete_mode: ptr_new(0L), $
     cmd_broad_mode: ptr_new(0L), $
     
     norm_pola_state: '',$
