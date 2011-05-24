@@ -922,15 +922,15 @@ end
 pro discrete_selection_base_uname_killed, global_tof_selection
   compile_opt idl2
   
-  id_input = (*global_tof_selection).tof_selection_input_base
+  id_input = (*global_tof_selection).discrete_selection_input_base
   if (widget_info(id_input, /valid_id) ne 0) then begin
     widget_control, id_input, /destroy
   endif
   
-  id_counts = (*global_tof_selection).tof_selection_counts_vs_tof_base_id
-  if (widget_info(id_counts, /valid_id) ne 0) then begin
-    widget_control, id_counts, /destroy
-  endif
+;  id_counts = (*global_tof_selection).tof_selection_counts_vs_tof_base_id
+;  if (widget_info(id_counts, /valid_id) ne 0) then begin
+;    widget_control, id_counts, /destroy
+;  endif
   
 end
 
@@ -1029,7 +1029,7 @@ pro discrete_selection_base_cleanup, tlb
   
   widget_control, tlb, get_uvalue=global_tof_selection, /no_copy
   
-  tof_selection_base_uname_killed, global_tof_selection
+  discrete_selection_base_uname_killed, global_tof_selection
   
   if (n_elements(global_tof_selection) eq 0) then return
   
@@ -1185,7 +1185,7 @@ pro discrete_selection_base_gui, wBase, $
   
   yoffset = (main_base_ysize - ysize) / 2
   yoffset += main_base_yoffset
-  yoffset += offset
+  yoffset += offset-60
   
   ysize_tof_selection_row = 0 ;vertical size of tof row
   
@@ -1400,7 +1400,7 @@ pro discrete_selection_base, main_base=main_base, $
     last_discrete_selection_roi_saved: (*(*global).discrete_roi_selection), $ 
     
     discrete_selection_input_base: 0L, $ ;id of refpix_input_base
-    tof_selection_counts_vs_tof_base_id: 0L, $ ;'id of refpix_counts_vs_tof_base
+;    tof_selection_counts_vs_tof_base_id: 0L, $ ;'id of refpix_counts_vs_tof_base
     counts_vs_tof_scale_is_linear: 0b, $ ;counts vs tof (linear/log)
     
     ;used to plot selection zoom

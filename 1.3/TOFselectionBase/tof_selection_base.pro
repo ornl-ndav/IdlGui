@@ -878,7 +878,7 @@ end
 pro tof_selection_base_uname_killed, global_tof_selection
   compile_opt idl2
   
-  id_input = (*global_tof_selection).discrete_selection_input_base
+  id_input = (*global_tof_selection).tof_selection_input_base
   if (widget_info(id_input, /valid_id) ne 0) then begin
     widget_control, id_input, /destroy
   endif
@@ -1354,7 +1354,7 @@ pro tof_selection_base, main_base=main_base, $
     short_file_name: short_file_name, $
     
     tof_selection_input_base: 0L, $ ;id of refpix_input_base
-    tof_selection_counts_vs_tof_base_id: 0L, $ 'id of refpix_counts_vs_tof_base
+    tof_selection_counts_vs_tof_base_id: 0L, $ ;'id of refpix_counts_vs_tof_base
   counts_vs_tof_scale_is_linear: 0b, $ ;counts vs tof (linear/log)
   
     ;used to plot selection zoom
