@@ -42,6 +42,16 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(event.top, FIND_BY_UNAME='MAIN_BASE'): BEGIN
     END
     
+    ;configuration
+    ;load configuration
+    widget_info(event.top, find_by_uname='load_configuration_uname'): begin
+    load_configuration, event=event
+    end
+    ;save configuration
+    widget_info(event.top, find_by_uname='save_configuration_uname'): begin
+    save_configuration, event=event
+    end
+    
     ;reset menu
     ;reset data files
     widget_info(event.top, find_by_uname='reset_data_files_uname'): begin
@@ -70,6 +80,20 @@ PRO MAIN_BASE_event, Event
     ;about iMars
     widget_info(event.top, find_by_uname='about_imars_uname'): begin
     about_imars, event
+    end
+    
+    ;data, open beam and dark field files
+    ;data file
+    widget_info(event.top, find_by_uname='data_files_table'): begin
+    preview_currently_selected_file, event=event, type='data_file'
+    end
+    ;open beam
+    widget_info(event.top, find_by_uname='open_beam_table'): begin
+    preview_currently_selected_file, event=event, type='open_beam'
+    end
+    ;dark field
+    widget_info(event.top, find_by_uname='dark_field_table'): begin
+    preview_currently_selected_file, event=event, type='dark_field'
     end
     
     ;browse buttons

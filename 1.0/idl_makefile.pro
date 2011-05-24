@@ -18,6 +18,12 @@ cd, IdlUtilitiesPath
 .run time.pro
 .run xdisplayfile.pro
 
+cd, CurrentFolder + 'FitsPlot'
+.run fits_plot_base.pro
+.run fits_plot_colorbar.pro
+.run fits_plot_launcher.pro
+.run fits_plot_roi_input_base.pro
+
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.
 
@@ -35,6 +41,9 @@ cd, CurrentFolder
 .run output.pro
 .run help_menu_eventcb.pro
 .run log_book.pro
+.run configuration.pro
+.run IDLconfiguration__define.pro
+.run preview.pro
 
 ;main functions
 .run global.pro

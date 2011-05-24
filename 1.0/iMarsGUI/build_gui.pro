@@ -85,6 +85,7 @@ pro build_gui, main_base
     scr_ysize = 200,$
     xsize = 1,$
     ysize = 1,$
+    /all_events, $
     column_widths = 595,$
     uname = 'data_files_table',$
     /no_column_headers,$
@@ -189,6 +190,7 @@ pro build_gui, main_base
     
   file = widget_label(in_preview_base,$
     value = 'N/A',$
+    uname = 'preview_file_name_label',$
     /align_left,$
     scr_xsize = 300)
     
@@ -217,11 +219,9 @@ pro build_gui, main_base
   _row = widget_base(roi_base,$
     /row)
   
-  value = ['1,2,3,4','10,11,12,13','20,21,22,23']
-  
   roi = widget_text(_row,$
   /editable,$
-  value=value,$
+  value='',$
   uname='roi_text_field_uname',$
     xsize = 20,$
     ysize = 8)
@@ -237,7 +237,14 @@ pro build_gui, main_base
   save = widget_button(_col,$
     value = 'Save...',$
     uname='roi_save')
-    
+
+  label = widget_label(roi_base,$
+  /align_left, $
+  value = 'These ROIs will be used for the')
+  label = widget_label(roi_base,$
+  /align_left,$
+  value = 'normalization.')
+
   ;space in col3
   for i=0,3 do begin
     space = widget_label(col3,$
