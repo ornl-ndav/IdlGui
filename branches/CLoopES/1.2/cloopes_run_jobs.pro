@@ -49,6 +49,10 @@ PRO launch_jobs, Event
   ;output folder
   CD, (*global).step1_output_path, CURRENT=old_path
 
+  ;create file of jobs to submit and run file
+  cl_file_name = (*global).step1_output_path + '/cl_jobs.txt'
+  openw, 1, cl_file_name
+
   index = 0
   WHILE (index LT sz) DO BEGIN
   
@@ -56,7 +60,10 @@ PRO launch_jobs, Event
     cmd_text = '-> Job #' + STRCOMPRESS(index,/REMOVE_ALL)
     cmd_text += ': ' + cmd
     IDLsendLogBook_addLogBookText, Event, ALT=alt, cmd_text
-    SPAWN, cmd
+    
+    printf, 1, cmd
+
+;    SPAWN, cmd
     
     ;get output file
     parse_array = split_string(cl_array[index], PATTERN='--output=')
@@ -70,6 +77,13 @@ PRO launch_jobs, Event
     
     index++
   ENDWHILE
+
+  close, 1
+  free_lun, 1
+  
+  ;run job
+  spawn, 'chmod 700 ' + cl_file_name
+  spawn, cl_file_name
 
   CD, old_path
   (*(*global).tab2_table) = tab2_table
