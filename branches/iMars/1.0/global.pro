@@ -55,6 +55,8 @@ FUNCTION getGlobal
     log_book_id: 0L, $
     
     path: '~/', $
+    config_path: '~/', $
+    
     file_extension: 'fits',$
     file_filter: '*fits',$
     

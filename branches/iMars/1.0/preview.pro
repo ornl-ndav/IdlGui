@@ -34,100 +34,68 @@
 
 ;+
 ; :Description:
-;    This routine save the ROI
+;    Preview the file currently selected
 ;
 ;
 ;
 ; :Keywords:
 ;    event
+;    type  -> ['data_file','open_beam','dark_field']
 ;
 ; :Author: j35
 ;-
-pro save_roi, event=event
-compile_opt idl2
-
- widget_control, event.top, get_uvalue=global
+pro preview_currently_selected_file, event=event, type=type
+  compile_opt idl2
   
-  path = (*global).path
-  id = widget_info(event.top, find_by_uname='MAIN_BASE')
-  title = 'Save ROIs selection'
-  default_extension = 'txt'
+  case (type) of
+    'data_file': begin
+      uname='data_files_table'
+      label='Data: '
+    end
+    'open_beam': begin
+      uname='open_beam_table'
+      label='Open Beam: '
+    end
+    'dark_field': begin
+      uname='dark_field_table'
+      label='Dark Field: '
+    end
+  endcase
   
-  file_name = dialog_pickfile(default_extension=default_extension,$
-    dialog_parent=id,$
-    filter=['*_ROI.txt'],$
-    get_path=new_path,$
-    path=path,$
-    title=title,$
-    /overwrite_prompt,$
-    /write)
-    
-  if (file_name[0] ne '') then begin
-    (*global).path = new_path
-    
-    file_name = file_name[0]
-    
-    pixel_list = getValue(event=event, uname='roi_text_field_uname')
-      
-    openw, 1 , file_name
-    sz = n_elements(pixel_list)
-    index=0
-    while (index lt sz) do begin
-      _line = pixel_list[index]
-      if (strcompress(_line,/remove_all) ne '') then printf, 1, _line
-      index++
-    endwhile
-    close, 1
-    free_lun, 1
-    
-  endif
+  file_name_selected = get_file_selected(event=event, uname=uname)
+  file_base_name = file_basename(file_name_selected)
+  
+  if (strcompress(file_base_name,/remove_all) eq '') then file_base_name='N/A'
+  putValue, event=event, 'preview_file_name_label', label + file_base_name
+  
+  display_preview_of_file, event=event, file_name=file_name_selected
   
 end
 
 ;+
 ; :Description:
-;    This routine load the ROI
-;
-;
+;    Plot the currently selected fits file
 ;
 ; :Keywords:
 ;    event
+;    file_name
 ;
 ; :Author: j35
 ;-
-pro load_roi, event=event
-compile_opt idl2
-
- widget_control, event.top, get_uvalue=global
+pro display_preview_of_file, event=event, file_name=file_name
+  compile_opt idl2
   
-  path = (*global).path
-  id = widget_info(event.top, find_by_uname='MAIN_BASE')
-  title = 'Load ROIs selection'
-  default_extension = 'txt'
+  DEVICE, DECOMPOSED = 0
+  loadct, 5
+  id_draw = widget_info(Event.top, find_by_uname='preview_draw_uname')
+  widget_control, id_draw, get_value=id_value
+  wset,id_value
   
-  file_name = dialog_pickfile(default_extension=default_extension,$
-    dialog_parent=id,$
-    filter=['*_ROI.txt'],$
-    get_path=new_path,$
-    path=path,$
-    title=title,$
-    /must_exist,$
-    /read)
+  is_with_gamma_filtering = $
+    isButtonSelected(event=event,uname='with_gamma_filtering_uname')
     
-  file_name = file_name[0]
-  if (file_name ne '') then begin
-    (*global).path = new_path
     
-    openr, 1, file_name
-    nbr_lines = file_lines(file_name)
-    pixel_list = strarr(nbr_lines)
-    readf, 1, pixel_list
-    close,1
-    free_lun, 1
     
-    putValue, event=event, 'roi_text_field_uname', pixel_list
     
-  endif
-
+    
 end
-
