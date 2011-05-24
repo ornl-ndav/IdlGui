@@ -79,6 +79,44 @@ end
 
 ;+
 ; :Description:
+;    This function will return the min and max pixel values from the
+;    pixel_list
+;
+; :Params:
+;    pixel_list
+;
+; :Returns:
+;    [pixel_min, pixel_max]
+;
+;
+; :Author: j35
+;-
+function calculate_pixel_range, pixel_list
+compile_opt idl2
+
+nbr_pixels = (size(pixel_list,/dim))[1]
+
+_pixel_min = 500
+_pixel_max = 0
+
+_index = 0
+while (_index lt nbr_pixels) do begin
+
+_local_pixel_min = pixel_list[0,_index]
+_local_pixel_max = pixel_list[1,_index]
+
+_pixel_min = (_local_pixel_min lt _pixel_min) ? _local_pixel_min : _pixel_min
+_pixel_max = (_local_pixel_max gt _pixel_max) ? _local_pixel_max : _pixel_max
+
+_index++
+endwhile
+
+return, [_pixel_min, _pixel_max]
+
+end
+
+;+
+; :Description:
 ;    this procedure builds the command line for the REF_M instrument
 ;    when the 'discrete reflective peak' has been selected
 ;
@@ -100,37 +138,26 @@ pro command_line_generator_for_ref_m_discrete_peak, event
   
   if (pixel_list[0] eq '') then return
   
-  help, pixel_list
-  print, pixel_list
+;  ;pixel_min_max = (*global).broad_peak_pixel_range
+;  pixel_min = fix(getValue(event=event, $
+;    uname='data_d_selection_roi_ymin_cw_field'))
+;  pixel_max = fix(getValue(event=event, $
+;    uname='data_d_selection_roi_ymax_cw_field'))
+;    
+;  _pixel_min = min([pixel_min, pixel_max], max=_pixel_max)
+;  
+;  pixel_min_max = [_pixel_min, _pixel_max]
+;  (*global).broad_peak_pixel_range = pixel_min_max
   
-  
-  
-  return
-  
-  ;pixel_min_max = (*global).broad_peak_pixel_range
-  pixel_min = fix(getValue(event=event, $
-    uname='data_d_selection_roi_ymin_cw_field'))
-  pixel_max = fix(getValue(event=event, $
-    uname='data_d_selection_roi_ymax_cw_field'))
-    
-  _pixel_min = min([pixel_min, pixel_max], max=_pixel_max)
-  
-  pixel_min_max = [_pixel_min, _pixel_max]
-  (*global).broad_peak_pixel_range = pixel_min_max
-  
-  ;stop right now if the user did not select a data peak ROI
-  if (pixel_min_max[0] eq -1 or $
-    pixel_min_max[0] eq 0) then begin
-    return
-  endif
-  
-  ;determine the range of pixels
-  pixel_min = pixel_min_max[0]
-  pixel_max = pixel_min_max[1]
-  _pixels = pixel_max - pixel_min
-  pixel_range = indgen(_pixels) + pixel_min
-  (*(*global).pixel_range_broad_mode) = pixel_range
-  nbr_pixels = n_elements(pixel_range)
+  ;determine the number of discrete selection
+  nbr_rois = (size(pixel_list,/dim))[1]
+
+;  pixel_min = pixel_min_max[0]
+;  pixel_max = pixel_min_max[1]
+;  _pixels = pixel_max - pixel_min
+;  pixel_range = indgen(_pixels) + pixel_min
+;  (*(*global).pixel_range_broad_mode) = pixel_range
+;  nbr_pixels = n_elements(pixel_range)
   
   ;determine the spin states to use
   value = getButtonValue(event,'other_spin_states')
@@ -142,11 +169,11 @@ pro command_line_generator_for_ref_m_discrete_peak, event
   
   ;this array will store for each spin state and each pixel the name
   ;of the output file name
-  list_of_output_file_name = strarr(nbr_spin_states, nbr_pixels)
-  list_of_tmp_data_roi_file_name_for_broad_mode = strarr(nbr_pixels)
+  list_of_output_file_name = strarr(nbr_spin_states, nbr_rois)
+  list_of_tmp_data_roi_file_name_for_discrete_mode = strarr(nbr_rois)
   
   ;size of the command line array
-  cmd = strarr(nbr_spin_states, nbr_pixels)
+  cmd = strarr(nbr_spin_states, nbr_rois)
   
   ;now that we have a Data peak ROI selected, we can build the command line
   StatusMessage = 0 ;will increase by 1 each time a field is missing
@@ -211,12 +238,22 @@ pro command_line_generator_for_ref_m_discrete_peak, event
   ;used to calculate the Qrange
   sangle_min_max = fltarr(2)
   sangle=-10
+  
+  ;determine pixel min and max
+  pixel_range = calculate_pixel_range(pixel_list)
+  
+  print, 'pixel_range: ' 
+  print, pixel_range
+  print
+  
   calculate_sangle, event, refpix=pixel_range[0], sangle=sangle
   sangle_min_max[0] = sangle
   calculate_sangle, event, refpix=pixel_range[-1], sangle=sangle
   sangle_min_max[1] = sangle
   ;record the min and max sangles values
   (*global).sangle_min_max = sangle_min_max
+  
+  return
   
   _index_spin_state = 0  ;up to nbr_spin_states
   ;while (index_spin_state lt nbr_spin_states) do begin
