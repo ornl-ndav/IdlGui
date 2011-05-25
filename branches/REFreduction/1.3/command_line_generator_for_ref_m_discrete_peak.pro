@@ -240,8 +240,11 @@ pro command_line_generator_for_ref_m_discrete_peak, event
         ;get data ROI file (must create 1 temporary ROI file for each pixel).
         ;Those temporary files will be created only at the beginning of the
         ;reduction but the names of those ROI will be created here.
-        data_roi_file = '~/tmp_data_roi_for_pixel_' + $
-          strcompress(pixel_range[_index_pixel_range],/remove_all) + '.dat'
+        from_px = strcompress(pixel_list[0,_index_pixel_range],/remove_all)
+        to_px   = strcompress(pixel_list[1,_index_pixel_range],/remove_all)
+        
+        data_roi_file = '~/tmp_data_roi_for_pixel_' + from_px + '_to_' + $
+        to_px + '.dat'
         list_of_tmp_data_roi_file_name_for_discrete_mode[_index_pixel_range] = $
           data_roi_file
       endif else begin
@@ -704,10 +707,10 @@ pro command_line_generator_for_ref_m_discrete_peak, event
       ;get name from output path and name
       outputPath = (*global).dr_output_path
       outputFileName = getOutputFileName(Event)
-      outputFileName = add_spin_state_and_pixel_to_outputFileName(Event,$
+      outputFileName = add_spin_state_and_pixel_range_to_outputFileName(Event,$
         outputFileName,$
         data_spin_state[_index_spin_state],$
-        pixel_range[_index_pixel_range])
+        pixel_list[*,_index_pixel_range])
       NewOutputFileName = outputPath + outputFileName
       cmd[_index_spin_state, _index_pixel_range] += ' --output=' + $
         NewOutputFileName
@@ -734,5 +737,8 @@ pro command_line_generator_for_ref_m_discrete_peak, event
   
   ;save the big command line table generated
   (*(*global).cmd_discrete_mode) = cmd
+  
+  print, cmd
+  help, cmd
   
 END
