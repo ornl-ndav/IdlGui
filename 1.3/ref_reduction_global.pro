@@ -86,7 +86,9 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     progress_bar_base: 0L, $
     stop_broad_reduction: 0b, $ ;can be changed to 1b in progress bar base
     data_spin_state_broad_mode: ptr_new(0L), $ ;['Off_Off','Off_On'] for ex.
+    data_spin_state_discrete_mode: ptr_new(0L), $ ;['Off_Off','Off_On'] for ex.
     pixel_range_broad_mode: ptr_new(0L), $ ;ex: [125,126,127,128]
+    pixel_range_discrete_mode: ptr_new(0L), $ ;ex[[125,130],[140,145]]
   
     mouse_debugging:   MOUSE_DEBUGGING,$
     debugging_version: DEBUGGING_VERSION,$
@@ -111,6 +113,7 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     reduction_mode: 'one_per_selection', $
     broad_peak_pixel_range: [-1,-1], $
     list_of_output_file_name_for_broad_mode: ptr_new(0L), $
+    list_of_output_file_name_for_discrete_mode: ptr_new(0L), $
     list_of_tmp_data_roi_file_name_for_broad_mode: ptr_new(0L), $
     list_of_tmp_data_roi_file_name_for_discrete_mode: ptr_new(0L), $
     cmd_broad_mode: ptr_new(0L), $

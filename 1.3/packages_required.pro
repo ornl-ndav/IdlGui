@@ -40,7 +40,7 @@ PACKAGE_REQUIRED_BASE = { driver:           '',$
                           sub_pkg_version:   ''}
 
 ;sub_pkg_version: python program that gives pkg v. of common libraries...etc
-my_package = REPLICATE(PACKAGE_REQUIRED_BASE,5)
+my_package = REPLICATE(PACKAGE_REQUIRED_BASE,6)
 ;number of packages we need to check
 my_package[0].driver           = 'findnexus'
 my_package[0].version_required = ''
@@ -52,7 +52,7 @@ my_package[2].version_required = ''
 my_package[3].driver           = 'nxsummary'
 my_package[3].version_required = ''
 my_package[4].driver           = 'findcalib'
-;my_package[5].driver           = 'TS_geom_calc.sh'
+my_package[5].driver           = 'agg_dr_files'
 
 END
 

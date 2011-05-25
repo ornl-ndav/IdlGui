@@ -321,3 +321,171 @@ pro run_command_line_ref_m_broad_peak, event, status=status
 end
 
 
+
+; :Description:
+;    Run the reduction for each rois  when using the
+;    mode "discrete reflective peak" mode
+;
+; :Params:
+;    event
+;
+; :Keywords:
+;   error ;will return 1b if any of the reduction failed
+;
+;
+; :Author: j35
+;-
+pro run_command_line_ref_m_discrete_peak, event, status=status
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  error=0b ;by default, we suppose that it's going to work
+  
+  cmd = (*(*global).cmd_discrete_mode)
+  data_spin_state = (*(*global).data_spin_state_discrete_mode)
+  spin_state_nbr_steps = n_elements(data_spin_state)
+  
+  sz = size(cmd, /dim)
+  
+  nbr_spins = sz[0]
+  nbr_pixels = sz[1]
+  
+  progress_bar, event=event, $
+    parent_base_uname='MAIN_BASE', $
+    pixel_nbr_steps = nbr_pixels, $
+    list_working_spin_states = data_spin_state
+    
+  ;list of name of data tmp roi file name
+  list_of_tmp_data_roi_file_name = $
+    (*(*global).list_of_tmp_data_roi_file_name_for_discrete_mode)
+    
+  ;list of pixels
+  pixel_range = (*(*global).pixel_range_discrete_mode)
+  
+  ;pre processing
+  ;this is where the temporary data ROI file will be created
+  ;catch, error
+  error =0 ;FIXME - REMOVE_ME
+  if (error ne 0) then begin
+    catch,/cancel
+    error=1b
+    return
+  endif else begin
+  
+    _index_pixel=0
+    while (_index_pixel lt nbr_pixels) do begin
+    
+      create_tmp_discrete_data_roi_file, event=event, $
+        from_px = fix(pixel_range[0,_index_pixel]),$
+        to_px = fix(pixel_range[1,_index_pixel]), $
+        output_file_name=list_of_tmp_data_roi_file_name[_index_pixel]
+        
+      update_progress_bar, base=(*global).progress_bar_base, $
+        /pre_processing, $
+        /increment
+        
+      _index_pixel++
+    endwhile
+    
+  endelse
+  
+  ;main part of reduction
+  _index_spin=0
+  while (_index_spin lt nbr_spins) do begin
+  
+    _current_spin_state = data_spin_state[_index_spin]
+    
+    _index_pixel=0
+    while(_index_pixel lt nbr_pixels) do begin
+    
+      print, cmd[_index_spin, _index_pixel]
+      ;spawn, cmd, result, error_result
+      error_result = ['']  ;FIXME - REMOVE_ME
+      if (error_result[0] ne '') then begin
+        error = 1b
+        return
+      endif
+      
+      update_progress_bar, base=(*global).progress_bar_base, $
+        spin_state=_current_spin_state, $
+        /increment
+        
+      _index_pixel++
+    endwhile
+    
+    _index_spin++
+  endwhile
+  
+  ;phase 1 of post-processing
+  ;merging the output files of the various spin states
+list_of_discrete_output_file_name = $
+(*(*global).list_of_output_file_name_for_discrete_mode)
+list_of_output_file_name = (*(*global).list_of_output_file_name)
+  _index_spin=0
+  while (_index_spin lt nbr_spins) do begin
+  
+    _final_output = list_of_output_file_name[_index_spin]
+    _list_tmp_output = reform(list_of_discrete_output_file_name[_index_spin,*])
+
+    merge_files, list_files_to_merge=_list_tmp_output, $
+    final_file_name = _final_output, $
+    result=result
+
+    update_progress_bar, base=(*global).progress_bar_base, $
+      /post_processing, $
+      /increment
+      
+    _index_spin++
+  endwhile
+  
+  ;phase 2 of post-processing
+  ;removing the temporary data ROI files
+  _index_pixel=0
+  while (_index_pixel lt nbr_pixels) do begin
+  
+    _cmd = 'rm ' + list_of_tmp_data_roi_file_name[_index_pixel]
+    spawn, _cmd
+    
+    _index_pixel++
+  endwhile
+  
+  update_progress_bar, base=(*global).progress_bar_base, $
+    /post_processing, $
+    /increment
+    
+end
+
+
+
+;+
+; :Description:
+;    This routine will use the agg_dr_files driver to merge the various
+;    tmp_output_file_name into just one ascii file
+;
+; :Keywords:
+;    list_files_to_merge
+;    final_file_name
+;    result
+;
+; :Author: j35
+;-
+pro merge_files, list_files_to_merge=list_files_to_merge, $
+    final_file_name = final_file_name, $
+    result=result
+    compile_opt idl2
+    
+    
+   driver_name = 'agg_dr_files'
+   cmd = driver_name + ' ' + strjoin(list_files_to_merge,' ')
+   cmd += ' --output=' + final_file_name
+   
+   ;run command
+   spawn, cmd, result, error_result
+   
+   help, result
+   help, error_result 
+    
+    
+    end
+

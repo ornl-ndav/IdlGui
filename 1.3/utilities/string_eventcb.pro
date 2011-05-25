@@ -66,6 +66,9 @@ function parse_discrete_roi_selection, roi_selection
     _line_parsed = strsplit(_line,'->',/extract,/regex)
     _from_px = fix(_line_parsed[0])
     _to_px   = fix(_line_parsed[1])
+    
+    _from_px = min([_from_px,_to_px],max=_to_px)
+    
     _pixel_list[0,_index_final] = _from_px
     _pixel_list[1,_index_final] = _to_px
     

@@ -79,9 +79,11 @@ PRO REFreductionEventcb_ProcessingCommandLine, Event
       
     ENDIF
     
-  endif else begin
+  endif else begin ;REF_M instrument
   
-    if ((*global).reduction_mode eq 'one_per_selection') then begin
+    case ((*global).reduction_mode) of
+    
+    'one_per_selection': begin
     
       run_command_line_ref_m, event
       
@@ -112,11 +114,13 @@ PRO REFreductionEventcb_ProcessingCommandLine, Event
         
       endif
       
-    endif else begin ;if 'one_per_pixel'
+    end
     
-    run_command_line_ref_m_broad_peak, event
+    'one_per_pixel': run_command_line_ref_m_broad_peak, event
     
-    endelse
+    'one_per_discrete': run_command_line_ref_m_discrete_peak, event
+    
+    end
     
   endelse
   

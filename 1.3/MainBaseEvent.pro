@@ -363,12 +363,6 @@ PRO MAIN_BASE_event, Event
     
     ;SAVE ROI Selection into a file -------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='data_roi_save_button'): begin
-      ;      file_name = $
-      ;        getTextFieldValue(Event,$
-      ;        'data_roi_selection_file_text_field')
-      ;      file_name = file_name[0]
-      ;      path = FILE_DIRNAME(file_name)
-      ;      check_create_output_folder, Event, PATH=path
       REFreduction_CreateDataBackgroundROIFile, Event, 'roi'
     end
     
