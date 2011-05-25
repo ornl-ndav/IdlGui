@@ -75,6 +75,7 @@
 .run ref_reduction_UpdatePlotsTabGui.pro
 .run ref_reduction_CommandLineIntermediatePlotsGenerator.pro
 .run ref_reduction_CommandLineGenerator.pro
+.run create_tmp_data_roi_file.pro
 .run command_line_generator_for_ref_m.pro
 .run command_line_generator_for_ref_m_broad_peak.pro
 .run command_line_generator_for_ref_m_discrete_peak.pro

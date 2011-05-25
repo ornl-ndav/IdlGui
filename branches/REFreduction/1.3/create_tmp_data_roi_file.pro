@@ -64,3 +64,42 @@ pro create_tmp_data_roi_file, event=event, $
   free_lun, 1
   
 end
+
+;+
+; :Description:
+;    This routine creates a tmp roi file for only the range of pixel
+;    selected
+;
+; :Keywords:
+;    event
+;    from_px
+;    to_px
+;    output_file_name
+;
+; :Author: j35
+;-
+pro create_tmp_discrete_data_roi_file, event=event, $
+    from_px = from_px,$
+    to_px = to_px, $
+    output_file_name=output_file_name
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  openw, 1, output_file_name
+  
+  NyMax = (*global).Ny_REF_M
+  NxMax = (to_px - from_px ) + 1
+  
+  for y=from_px, to_px do begin
+    for x=0,(NyMax-1) DO BEGIN
+      text  = 'bank1_' + strcompress(y,/remove_all)
+      text += '_' + strcompress(x,/remove_all)
+      printf,1,text
+    endfor
+  endfor
+  
+  close, 1
+  free_lun, 1
+  
+end

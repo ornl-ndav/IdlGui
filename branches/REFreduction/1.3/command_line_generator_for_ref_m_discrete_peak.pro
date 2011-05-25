@@ -95,6 +95,7 @@ pro command_line_generator_for_ref_m_discrete_peak, event
   
   ;determine the list of pixels = strarr(2,nbr_discrete_rois)
   pixel_list = parse_discrete_roi_selection(discrete_roi_selection)
+  (*(*global).pixel_range_discrete_mode) = pixel_list
   nbr_pixels = (size(pixel_list,/dim))[1] ;how many discrete rois
   
   if (pixel_list[0] eq '') then return
@@ -192,7 +193,7 @@ pro command_line_generator_for_ref_m_discrete_peak, event
       'Off_On','On_Off','On_On']
     data_spin_state_path = list_data_path[spin_state_selected_index]
     data_spin_state      = spin_state[spin_state_selected_index]
-    (*(*global).data_spin_state_broad_mode) = data_spin_state
+    (*(*global).data_spin_state_discrete_mode) = data_spin_state
     
   endelse
   
@@ -725,7 +726,7 @@ pro command_line_generator_for_ref_m_discrete_peak, event
   endwhile
   
   ;record the name of all the output files
-  (*(*global).list_of_output_file_name_for_broad_mode) = $
+  (*(*global).list_of_output_file_name_for_discrete_mode) = $
     list_of_output_file_name
     
   (*(*global).list_of_tmp_data_roi_file_name_for_discrete_mode) = $
@@ -737,8 +738,5 @@ pro command_line_generator_for_ref_m_discrete_peak, event
   
   ;save the big command line table generated
   (*(*global).cmd_discrete_mode) = cmd
-  
-  print, cmd
-  help, cmd
   
 END

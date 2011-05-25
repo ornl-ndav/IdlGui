@@ -118,7 +118,7 @@ pro ref_reduction_Cleanup, tlb
   ptr_free, (*global).list_of_tmp_data_roi_file_name_for_broad_mode
   ptr_free, (*global).list_of_tmp_data_roi_file_name_for_discrete_mode
   ptr_free, (*global).pixel_range_broad_mode
-  ptr_free, (*global).list_of_norm_spins
+  ptr_free, (*global).pixel_range_discrete_mode
   ptr_free, (*global).list_of_data_spins
   ptr_free, (*global).substrate_type
   ptr_free, (*global).sf_data_tof
@@ -163,6 +163,7 @@ pro ref_reduction_Cleanup, tlb
   ptr_free, (*global).Normalization_1d_3d_min_max
   ptr_free, (*global).Normalization_2d_3d_min_max
   ptr_free, (*global).data_spin_state_broad_mode
+  ptr_free, (*global).data_spin_state_discrete_mode
   ptr_free, (*global).discrete_roi_selection
   
   ptr_free, global
