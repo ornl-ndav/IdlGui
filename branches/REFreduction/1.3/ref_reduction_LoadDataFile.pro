@@ -394,6 +394,7 @@ PRO REFreduction_LoadDatafile, Event, isNeXusFound, NbrNexus
           IF ((*global).instrument EQ 'REF_M') THEN BEGIN
             populate_data_geometry_info, Event
             calculate_sangle, event
+            populate_tof_range, event      
           ENDIF
           
         ENDIF ELSE BEGIN

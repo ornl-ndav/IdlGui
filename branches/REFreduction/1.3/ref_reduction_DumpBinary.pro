@@ -70,7 +70,7 @@ FUNCTION retrieveBanksData, Event, $
     fieldID = h5d_open(fileID,data_path)
     data = h5d_read(fieldID)
     x = (size(data))(2)
-
+    
     if ((*global).instrument eq 'REF_L') then begin
       if (x ne 304) then begin
         using_wrong_version_of_ref_reduction, Event
@@ -83,7 +83,17 @@ FUNCTION retrieveBanksData, Event, $
       endif
     endelse
     CASE (type) OF
-      'data': (*(*global).bank1_data) = data
+      'data': begin
+        (*(*global).bank1_data) = data
+        
+        iNexus = obj_new('IDLnexusUtilities', fullNexusName, $
+        spin_state='Off_Off')
+        tof_axis = iNexus.get_tof_data()
+        
+        obj_destroy, iNexus
+        (*(*global).tof_axis_ms) = tof_axis
+        
+      end
       'norm': (*(*global).bank1_norm) = data
       'empty_cell': (*(*global).bank1_empty_cell) = data
       ELSE: RETURN, 0

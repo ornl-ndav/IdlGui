@@ -400,8 +400,7 @@ pro run_command_line_ref_m_discrete_peak, event, status=status
     while(_index_pixel lt nbr_pixels) do begin
     
       print, cmd[_index_spin, _index_pixel]
-      ;spawn, cmd, result, error_result
-      error_result = ['']  ;FIXME - REMOVE_ME
+      spawn, cmd, result, error_result
       if (error_result[0] ne '') then begin
         error = 1b
         return
@@ -419,25 +418,27 @@ pro run_command_line_ref_m_discrete_peak, event, status=status
   
   ;phase 1 of post-processing
   ;merging the output files of the various spin states
-list_of_discrete_output_file_name = $
-(*(*global).list_of_output_file_name_for_discrete_mode)
-list_of_output_file_name = (*(*global).list_of_output_file_name)
+  list_of_discrete_output_file_name = $
+    (*(*global).list_of_output_file_name_for_discrete_mode)
+  list_of_output_file_name = (*(*global).list_of_output_file_name)
   _index_spin=0
   while (_index_spin lt nbr_spins) do begin
   
     _final_output = list_of_output_file_name[_index_spin]
     _list_tmp_output = reform(list_of_discrete_output_file_name[_index_spin,*])
-
+    
     merge_files, list_files_to_merge=_list_tmp_output, $
-    final_file_name = _final_output, $
-    result=result
-
+      final_file_name = _final_output, $
+      result=result
+      
     update_progress_bar, base=(*global).progress_bar_base, $
       /post_processing, $
       /increment
       
     _index_spin++
   endwhile
+ 
+ return 
   
   ;phase 2 of post-processing
   ;removing the temporary data ROI files
@@ -473,19 +474,20 @@ end
 pro merge_files, list_files_to_merge=list_files_to_merge, $
     final_file_name = final_file_name, $
     result=result
-    compile_opt idl2
-    
-    
-   driver_name = 'agg_dr_files'
-   cmd = driver_name + ' ' + strjoin(list_files_to_merge,' ')
-   cmd += ' --output=' + final_file_name
-   
-   ;run command
-   spawn, cmd, result, error_result
-   
-   help, result
-   help, error_result 
-    
-    
-    end
+  compile_opt idl2
+  
+  
+  driver_name = 'agg_dr_files'
+  cmd = driver_name + ' ' + strjoin(list_files_to_merge,' ')
+  cmd += ' --output=' + final_file_name
+  
+  ;run command
+  spawn, cmd, result, error_result
+
+  print, cmd
+  help, result
+  help, error_result
+  print
+  
+end
 

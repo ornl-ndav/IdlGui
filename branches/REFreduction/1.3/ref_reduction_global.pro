@@ -83,6 +83,8 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     discrete_selection_base_id: 0L, $
     discrete_roi_selection: ptr_new(0L), $  ;ex: ['125->134','145->150']
   
+    tof_axis_ms: ptr_new(0L), $
+  
     progress_bar_base: 0L, $
     stop_broad_reduction: 0b, $ ;can be changed to 1b in progress bar base
     data_spin_state_broad_mode: ptr_new(0L), $ ;['Off_Off','Off_On'] for ex.

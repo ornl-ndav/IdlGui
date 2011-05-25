@@ -61,6 +61,7 @@ PRO ok_polarization_state, Event
       load_data_browse_nexus, Event, nexus_file_name, POLA_STATE=value_selected
       populate_data_geometry_info, Event, nexus_file_name, spin_state=spin_state
       calculate_sangle, event
+      populate_tof_range, event      
       (*global).data_pola_state = value_selected
     END
     'norm_browse': BEGIN
@@ -75,6 +76,7 @@ PRO ok_polarization_state, Event
       load_data_browse_nexus, Event, nexus_file_name, POLA_STATE=value_selected
       populate_data_geometry_info, Event, nexus_file_name, spin_state=spin_state
       calculate_sangle, event
+        populate_tof_range, event      
       (*global).data_pola_state = value_selected
     END
     'norm_load': BEGIN
@@ -155,6 +157,8 @@ PRO BrowseDataNexus, Event
     (*global).data_run_number = DataRunNumber
     putTextfieldvalue, event, 'load_data_run_number_text_field', $
       strcompress(DataRunNumber,/remove_all)
+      
+    populate_tof_range, event      
       
     ;turn off hourglass
     WIDGET_CONTROL,HOURGLASS=0
