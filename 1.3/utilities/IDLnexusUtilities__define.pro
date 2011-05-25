@@ -380,7 +380,9 @@ end
 function IDLnexusUtilities::get_tof_data
   compile_opt idl2
   count_path = self.entry_spin_state + '/bank1/time_of_flight/'
+  print, count_path
   tof_data = retrieve_value(file_name=self.file_name, path=count_path)
+  print, tof_data
   tof_data /= 1000.0 ;to get the tof in ms
   return, tof_data
 end

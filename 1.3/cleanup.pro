@@ -112,6 +112,7 @@ pro ref_reduction_Cleanup, tlb
   ; Free up the pointers
   
   ptr_free, (*global).cmd_discrete_mode
+  ptr_free, (*global).tof_axis_ms
   ptr_free, (*global).cmd_broad_mode
   ptr_free, (*global).list_of_output_file_name
   ptr_free, (*global).list_of_output_file_name_for_broad_mode
