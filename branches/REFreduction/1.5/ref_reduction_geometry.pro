@@ -165,22 +165,45 @@ PRO calculate_data_dirpix, Event
   WIDGET_CONTROL,Event.top,get_uvalue=global
   
  CATCH, error
- error = 0
   IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
     dirpix = 'N/A'
+        putTextFieldValue, event, 'data_center_pixel_uname', $
+      STRCOMPRESS(dirpix,/REMOVE_ALL), 0
+    return
   ENDIF ELSE BEGIN
   
-    ON_IOERROR, done_calculation
+;    ON_IOERROR, done_calculation
     
-    ymin = getTextFieldValue(Event,'data_d_selection_peak_ymin_cw_field')
-    ymax = getTextFieldValue(Event,'data_d_selection_peak_ymax_cw_field')
+    ymin = strcompress(getTextFieldValue(Event,$
+    'data_d_selection_peak_ymin_cw_field'),/remove_all)
+    ymax = strcompress(getTextFieldValue(Event,$
+    'data_d_selection_peak_ymax_cw_field'),/remove_all)
     
-    IF (ymin NE 0 AND ymax NE 0) THEN BEGIN
+    ymin = ymin[0]
+    ymax = ymax[0]
+    
+    if (ymin eq '') then begin
+    dirpix = 'N/A'
+    putTextFieldValue, event, 'data_center_pixel_uname', $
+      STRCOMPRESS(dirpix,/REMOVE_ALL), 0
+      return
+    endif
+    
+    if (ymax eq '') then begin
+    dirpix = 'N/A'
+    putTextFieldValue, event, 'data_center_pixel_uname', $
+      STRCOMPRESS(dirpix,/REMOVE_ALL), 0
+      return
+      endif    
+    
+    IF (ymin NE '' AND ymax NE '') THEN BEGIN
     
       ymin = FLOAT(ymin)
       ymax = FLOAT(ymax)
-      dirpix = MEAN([ymin,ymax])
+
+      dirpix = (ymin + ymax) / 2.
+      
       (*global).dirpix = dirpix
       
     ENDIF ELSE BEGIN
@@ -190,15 +213,10 @@ PRO calculate_data_dirpix, Event
     ENDELSE
     
     putTextFieldValue, event, 'data_center_pixel_uname', $
-      STRCOMPRESS(dirpix,/REMOVE_ALL), 0
+      STRCOMPRESS(dirpix,/REMOVE_ALL)
       
     RETURN
     
-    done_calculation:
-    dirpix = 'N/A'
-    putTextFieldValue, event, 'data_center_pixel_uname', $
-      STRCOMPRESS(dirpix,/REMOVE_ALL), 0
-      
   ENDELSE
   
 END
