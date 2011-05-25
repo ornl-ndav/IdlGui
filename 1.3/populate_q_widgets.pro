@@ -56,9 +56,6 @@ pro populate_Q_widgets, event=event
   tof_max = strcompress(getTextFieldValue(event,'tof_cutting_max'),$
     /remove_all)
     
-  print, 'tof_min: ' , tof_min
-  print, 'tof_max: ' , tof_max  
-    
   ;no need to go further because one of the tof field is empty
   if (tof_min eq '' or tof_max eq '') then begin
     reset_Q_widgets, event=event

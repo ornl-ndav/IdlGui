@@ -110,6 +110,9 @@ pro ref_reduction_Cleanup, tlb
   IF N_ELEMENTS(global) EQ 0 THEN RETURN
   
   ; Free up the pointers
+  
+  ptr_free, (*global).cmd_discrete_mode
+  ptr_free, (*global).cmd_broad_mode
   ptr_free, (*global).list_of_output_file_name
   ptr_free, (*global).list_of_output_file_name_for_broad_mode
   ptr_free, (*global).list_of_tmp_data_roi_file_name_for_broad_mode

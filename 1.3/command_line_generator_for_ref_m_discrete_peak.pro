@@ -34,51 +34,6 @@
 
 ;+
 ; :Description:
-;    Parse the ROI selection and make a strarr(2,n) of pixel_from and
-;    pixel_to
-;
-; :Params:
-;    roi_selection
-;
-; :Returns:
-;    strarr(2,n) where   [0,*] are the from pixels and [1,*] are the to pixels
-;
-; :Author: j35
-;-
-function parse_discrete_roi_selection, roi_selection
-  compile_opt idl2
-  
-  sz = size(roi_selection)
-  if (sz[0] eq 0) then return, ['',''] ;no selection
-  
-  nbr_lines = sz[1]
-  _pixel_list = strarr(2,nbr_lines)
-  
-  _index_source=0
-  _index_final=0
-  while (_index_source lt nbr_lines) do begin
-  
-    _line = roi_selection[_index_source]
-    if (strcompress(_line,/remove_all) eq '') then begin
-      _index_source++
-      continue
-    endif
-    _line_parsed = strsplit(_line,'->',/extract,/regex)
-    _from_px = fix(_line_parsed[0])
-    _to_px   = fix(_line_parsed[1])
-    _pixel_list[0,_index_final] = _from_px
-    _pixel_list[1,_index_final] = _to_px
-    
-    _index_source++
-    _index_final++
-  endwhile
-  
-  return, _pixel_list
-  
-end
-
-;+
-; :Description:
 ;    This function will return the min and max pixel values from the
 ;    pixel_list
 ;
@@ -259,14 +214,8 @@ pro command_line_generator_for_ref_m_discrete_peak, event
   ;while (index_spin_state lt nbr_spin_states) do begin
   while (_index_spin_state lt nbr_spin_states) do begin
   
-    print
-    print, '_index_spin_state: ' , _index_spin_state
-    
     _index_pixel_range = 0 ;up to nbr_pixels
     while (_index_pixel_range lt nbr_pixels) do begin
-    
-      print, '_index_pixel_range: ' , _index_pixel_range
-      
       
       _index = _index_spin_state * nbr_pixels + _index_pixel_range
       
@@ -300,8 +249,6 @@ pro command_line_generator_for_ref_m_discrete_peak, event
           list_of_tmp_data_roi_file_name_for_discrete_mode[_index_pixel_range]
       endelse
       cmd[_index_spin_state, _index_pixel_range] += data_roi_file
-      
-      print, '#1'
       
       if (isDataWithBackground(Event)) then begin ;with background substraction
       
@@ -376,9 +323,6 @@ pro command_line_generator_for_ref_m_discrete_peak, event
         ENDELSE
         
       endif
-      
-      print, '#2'
-      
       
       ;check if user wants data background or not
       IF (isDataWithBackground(Event)) THEN BEGIN ;yes, with background
@@ -463,17 +407,11 @@ pro command_line_generator_for_ref_m_discrete_peak, event
           tof_max
       ENDIF
       
-      print, '#3'
-      
-      
       ;calculate sangle according to the current pixel used
       _pixel = float(mean(float([pixel_list[0,_index_pixel_range],$
         pixel_list[1,_index_pixel_range]])))
       sangle = -10
       calculate_sangle, event, refpix=_pixel, sangle=sangle
-      
-      print, '#4'
-      
       
       ;scattering angle flag
       cmd[_index_spin_state, _index_pixel_range] += ' --scatt-angle='
@@ -484,9 +422,6 @@ pro command_line_generator_for_ref_m_discrete_peak, event
       cmd[_index_spin_state, _index_pixel_range] += rad_sangle_x2 + ',' + $
         rad_sangle_error + ',' + rad_sangle_units
         
-      print, '#5'
-      
-      
       ;*****NORMALIZATION******************************************************
       ;check if user wants to use normalization or not
       if (isReductionWithNormalization(Event)) then begin
@@ -610,9 +545,6 @@ pro command_line_generator_for_ref_m_discrete_peak, event
           
         endif
         
-        print, '#6'
-        
-        
         ;check if user wants normalization background or not
         if (isNormWithBackground(Event)) then begin ;yes, with background
           MapBase, Event, 'reduce_plot5_base', 0 ;back. norm. plot is available
@@ -634,9 +566,6 @@ pro command_line_generator_for_ref_m_discrete_peak, event
       cmd[_index_spin_state, _index_pixel_range] += ' --inst=' + $
         (*global).instrument
         
-      print, '#7'
-      
-      
       ;reduction mode (per selection or per pixel selected)
       if ((*global).reduction_mode ne 'one_per_selection') then begin
       
@@ -649,14 +578,8 @@ pro command_line_generator_for_ref_m_discrete_peak, event
           Q_width = getTextfieldValue(Event, 'q_width_text_field')
           Q_scale = getQSCale(Event)
           
-          help, Q_min
-          help, Q_max
-          help, Q_width
-
           if (strcompress(Q_min,/remove_all) eq '') then return
           if (strcompress(Q_max,/remove_all) eq '') then return
-          
-          stop
           
           ;if Q_width is not empty, used this one
           ;if Q_width is empty, calculate Q_width according to Number bins needed
@@ -710,9 +633,6 @@ pro command_line_generator_for_ref_m_discrete_peak, event
         
       endif
       
-      print, '#8'
-      
-      
       ;get info about detector angle
       angle_value = getTextFieldValue(Event,'detector_value_text_field')
       angle_err   = getTextFieldValue(Event,'detector_error_text_field')
@@ -743,9 +663,6 @@ pro command_line_generator_for_ref_m_discrete_peak, event
       endif else begin
       
       endelse
-      
-      print, '#9'
-      
       
       ;get info about filter or not
       if (~isWithFiltering(Event)) then begin ;no filtering
@@ -798,8 +715,6 @@ pro command_line_generator_for_ref_m_discrete_peak, event
       list_of_output_file_name[_index_spin_state, _index_pixel_range] = $
         NewOutputFileName
         
-      print, 'at the end, _index_pixel_range: ' , _index_pixel_range
-      
       _index_pixel_range++
     endwhile
     
@@ -818,6 +733,6 @@ pro command_line_generator_for_ref_m_discrete_peak, event
   cmd += IP_cmd
   
   ;save the big command line table generated
-  (*(*global).cmd_broad_mode) = cmd
+  (*(*global).cmd_discrete_mode) = cmd
   
 END
