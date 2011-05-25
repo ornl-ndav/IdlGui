@@ -196,6 +196,7 @@ pro populate_main_base_with_pixel_range, event=event, $
     pixel_list=pixel_list
   compile_opt idl2
   
+  widget_control, event.top, get_uvalue=global
   
   ;go from ['123 -> 145','111 -> 250']
   ;to [[123,145],[111,250]]
@@ -211,6 +212,19 @@ pro populate_main_base_with_pixel_range, event=event, $
     strcompress(pixel_min,/remove_all)
   putValue, event=event, 'data_d_selection_roi_ymax_cw_field', $
     strcompress(pixel_max,/remove_all)
+   
+  ;go from data values to device values 
+   ymin_device = from_px_data_to_device(event=event, $
+   draw_uname='load_data_D_draw',$
+   ydata=pixel_min)
+   
+   ymax_device = from_px_data_to_device(event=event, $
+   draw_uname='load_data_D_draw',$
+   ydata=pixel_max)
+   
+   y_range_device = [ymin_device, ymax_device]
+   (*(*global).data_roi_selection) = y_range_device
+   
     
 end
 

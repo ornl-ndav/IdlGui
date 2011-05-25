@@ -99,7 +99,7 @@ PRO MAIN_BASE_event, Event
       (*global).reduction_mode = 'one_per_discrete'
       REFReduction_RescaleDataPlot, Event
       ReplotAllSelection, Event
-      discrete_selection_launcher, event
+;      discrete_selection_launcher, event
       ActivateWidget, event, 'discrete_reflective_peak_gui', 1
     end
     
@@ -110,7 +110,7 @@ PRO MAIN_BASE_event, Event
       (*global).reduction_mode = 'one_per_discrete'
       REFReduction_RescaleDataPlot, Event
       ReplotAllSelection, Event
-      discrete_selection_launcher, event
+    discrete_selection_launcher, event
     end
     
     ;bring to life the TOF selection base
@@ -292,6 +292,8 @@ PRO MAIN_BASE_event, Event
           IF( Event.type EQ 0 )THEN BEGIN
             IF (Event.press EQ 1) THEN $
               REFreduction_DataSelectionPressLeft, Event ;left button
+;            ;replot other selections
+;            ReplotAllSelection, Event
             IF (Event.press EQ 4) THEN $
               REFreduction_DataselectionPressRight, Event ;right button
           ENDIF
@@ -300,6 +302,8 @@ PRO MAIN_BASE_event, Event
             IF ((*global).instrument EQ 'REF_M') THEN BEGIN
               calculate_data_refpix, Event
               plot_average_data_peak_value, Event
+              ;replot other selections
+              ReplotAllSelection, Event
             ENDIF
           ENDIF
           IF (Event.type EQ 2) THEN BEGIN ;move

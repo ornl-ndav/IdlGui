@@ -32,52 +32,41 @@
 ;
 ;==============================================================================
 
-spawn, 'pwd', CurrentFolder
-
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-cd, CurrentFolder + '/utilities'
-
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-.run nexus_utilities.pro
-.run get.pro
-.run system_utilities.pro
-.run nexus_utilities.pro
-.run math_conversion.pro
-.run time.pro
-.run list_of_proposal.pro
-.run IDLxmlParser__define.pro
-.run xmlParser__define.pro
-.run logger.pro
-.run file_utilities.pro
-.run xdisplayfile.pro
-.run fsc_color.pro
-.run IDL3columnsASCIIparser__define.pro
-.run NeXusMetadata__define.pro
-.run is.pro
-.run set.pro
-.run put.pro
-.run convert.pro
-.run colorbar.pro
-.run IDLnexusUtilities__define.pro
-.run string_eventcb.pro
-.run general.pro
-
-cd, CurrentFolder + '/TOFselectionBase'
-.run tof_selection_input_base.pro
-.run tof_selection_colorbar.pro
-.run tof_selection_counts_vs_tof_base.pro
-.run tof_selection_eventcb.pro
-.run tof_selection_base.pro
-
-cd, CurrentFolder + '/DiscreteSelectionBase'
-.run discrete_selection_launcher.pro
-.run discrete_selection_base.pro
-.run discrete_selection_colorbar.pro
-.run discrete_selection_counts_vs_tof_base.pro
-.run discrete_selection_eventcb.pro
-.run discrete_selection_input_base.pro
-
-cd, CurrentFolder + '/ProgressBar'
-.run progress_bar.pro
+;+
+; :Description:
+;    Go from px data to device in main plot
+;
+; :Params:
+;    data
+;
+; :Keywords:
+;   event
+;   base
+;   draw_uname
+;   ydata
+;
+; :Author: j35
+;-
+function from_px_data_to_device, event=event, $
+    base=base, $
+    draw_uname=draw_uname, $
+    ydata=ydata
+    
+  compile_opt idl2
+  
+  if (keyword_set(event)) then begin
+    id = WIDGET_INFO(Event.top, FIND_BY_UNAME=draw_uname)
+  endif else begin
+    id = WIDGET_INFO(base, FIND_BY_UNAME=draw_uname)
+  endelse
+  
+  geometry = WIDGET_INFO(id,/GEOMETRY)
+  ysize = geometry.ysize
+  yrange = [0,303]
+  
+  ratio = float(ysize) / (float(yrange[1]) - float(yrange[0]))
+  ydevice = ratio * (float(ydata) - float(yrange[0]))
+  
+  return, ydevice
+  
+end
