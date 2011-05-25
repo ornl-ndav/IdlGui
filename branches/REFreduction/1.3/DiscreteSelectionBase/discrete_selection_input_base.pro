@@ -155,7 +155,11 @@ pro discrete_selection_input_base_event, Event
       
       main_event = (*global_tof_selection).main_event
       ReplotAllSelection, main_event
-
+      
+      ;populate application with min and max pixel selected
+      populate_main_base_with_pixel_range, event=main_event, $
+        pixel_list=pixel_list
+        
       top_base = (*global_info).top_base
       widget_control, top_base, /destroy
       
@@ -173,6 +177,41 @@ pro discrete_selection_input_base_event, Event
     
   endcase
   
+end
+
+;+
+; :Description:
+;    This procedure retrieves the min and max pixels of the various selection
+;    and populate the peak min and max fields with these values
+;
+;
+;
+; :Keywords:
+;    event
+;    pixel_list
+;
+; :Author: j35
+;-
+pro populate_main_base_with_pixel_range, event=event, $
+    pixel_list=pixel_list
+  compile_opt idl2
+  
+  
+  ;go from ['123 -> 145','111 -> 250']
+  ;to [[123,145],[111,250]]
+  _pixel_list = parse_discrete_roi_selection(pixel_list)
+  
+  ;get min and max pixels [111,250]
+  pixel_range = calculate_pixel_range(_pixel_list)
+  
+  pixel_min = pixel_range[0]
+  pixel_max = pixel_range[1]
+  
+  putValue, event=event, 'data_d_selection_roi_ymin_cw_field', $
+    strcompress(pixel_min,/remove_all)
+  putValue, event=event, 'data_d_selection_roi_ymax_cw_field', $
+    strcompress(pixel_max,/remove_all)
+    
 end
 
 ;+
@@ -610,8 +649,8 @@ pro discrete_selection_input_base, event=event, $
   
   if (sz[0] eq 1) then begin
     putValue, base=_base, 'discrete_roi_selection_text_field', $
-    last_discrete_selection_roi_saved
-    
+      last_discrete_selection_roi_saved
+      
     ;refresh main plot
     base = (*global_tof_selection).wBase
     display_discrete_selection_pixel_list, base=base

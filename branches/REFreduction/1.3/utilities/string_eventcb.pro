@@ -32,51 +32,47 @@
 ;
 ;==============================================================================
 
-spawn, 'pwd', CurrentFolder
-
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-cd, CurrentFolder + '/utilities'
-
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-.run nexus_utilities.pro
-.run get.pro
-.run system_utilities.pro
-.run nexus_utilities.pro
-.run math_conversion.pro
-.run time.pro
-.run list_of_proposal.pro
-.run IDLxmlParser__define.pro
-.run xmlParser__define.pro
-.run logger.pro
-.run file_utilities.pro
-.run xdisplayfile.pro
-.run fsc_color.pro
-.run IDL3columnsASCIIparser__define.pro
-.run NeXusMetadata__define.pro
-.run is.pro
-.run set.pro
-.run put.pro
-.run convert.pro
-.run colorbar.pro
-.run IDLnexusUtilities__define.pro
-.run string_eventcb.pro
-
-cd, CurrentFolder + '/TOFselectionBase'
-.run tof_selection_input_base.pro
-.run tof_selection_colorbar.pro
-.run tof_selection_counts_vs_tof_base.pro
-.run tof_selection_eventcb.pro
-.run tof_selection_base.pro
-
-cd, CurrentFolder + '/DiscreteSelectionBase'
-.run discrete_selection_launcher.pro
-.run discrete_selection_base.pro
-.run discrete_selection_colorbar.pro
-.run discrete_selection_counts_vs_tof_base.pro
-.run discrete_selection_eventcb.pro
-.run discrete_selection_input_base.pro
-
-cd, CurrentFolder + '/ProgressBar'
-.run progress_bar.pro
+;+
+; :Description:
+;    Parse the ROI selection and make a strarr(2,n) of pixel_from and
+;    pixel_to
+;
+; :Params:
+;    roi_selection
+;
+; :Returns:
+;    strarr(2,n) where   [0,*] are the from pixels and [1,*] are the to pixels
+;
+; :Author: j35
+;-
+function parse_discrete_roi_selection, roi_selection
+  compile_opt idl2
+  
+  sz = size(roi_selection)
+  if (sz[0] eq 0) then return, ['',''] ;no selection
+  
+  nbr_lines = sz[1]
+  _pixel_list = strarr(2,nbr_lines)
+  
+  _index_source=0
+  _index_final=0
+  while (_index_source lt nbr_lines) do begin
+  
+    _line = roi_selection[_index_source]
+    if (strcompress(_line,/remove_all) eq '') then begin
+      _index_source++
+      continue
+    endif
+    _line_parsed = strsplit(_line,'->',/extract,/regex)
+    _from_px = fix(_line_parsed[0])
+    _to_px   = fix(_line_parsed[1])
+    _pixel_list[0,_index_final] = _from_px
+    _pixel_list[1,_index_final] = _to_px
+    
+    _index_source++
+    _index_final++
+  endwhile
+  
+  return, _pixel_list
+  
+end

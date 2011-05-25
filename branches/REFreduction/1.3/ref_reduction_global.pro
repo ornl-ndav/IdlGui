@@ -114,6 +114,7 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     list_of_tmp_data_roi_file_name_for_broad_mode: ptr_new(0L), $
     list_of_tmp_data_roi_file_name_for_discrete_mode: ptr_new(0L), $
     cmd_broad_mode: ptr_new(0L), $
+    cmd_discrete_mode: ptr_new(0L), $
     
     norm_pola_state: '',$
     data_pola_state: '',$
