@@ -363,10 +363,12 @@ PRO MAIN_BASE_event, Event
       REFreduction_DataBackgroundPeakSelection, Event, 'peak_ymax'
       calculate_data_dirpix, Event
       plot_average_data_peak_value, Event
+      
       ;2d plot on the side of main application that show counts vs pixel
       if (isDataBackPeakZoomSelected(Event) eq 1) then begin ;peak selection
         bring_to_life_or_refresh_counts_vs_pixel, event
       endif
+    
     end
     
     ;Background Ymin and Ymax -------------------------------------------------
