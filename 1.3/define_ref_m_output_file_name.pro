@@ -107,3 +107,48 @@ function add_spin_state_and_pixel_to_outputFileName, Event,$
   endif
   
 end
+
+;+
+; :Description:
+;   This function takes the file name defined by the program/user and
+;   add for the ref_m instrument the spin state and the current pixel range
+;   in the name
+;
+;   This function is reached when the "broad reflective peak" has been selected
+;
+; :Params:
+;    Event
+;    outputFileName
+;    spin_state
+;    pixel_range [min,max]
+;
+; :Author: j35
+;-
+function add_spin_state_and_pixel_range_to_outputFileName, Event,$
+    outputFileName, $
+    spin_state, $
+    pixel_range
+    
+  _pixel_min = strcompress(pixel_range[0],/remove_all)
+  _pixel_max = strcompress(pixel_range[1],/remove_all)
+    
+  output_array = strsplit(outputFileName,'.',/extract, count=nbr)
+  if (nbr lt 2) then begin
+    output_file_name = output_array[0] + '_' + spin_state + '_' $
+    + _pixel_min + '_' + _pixel_max 
+    return, output_file_name
+  endif
+  if (nbr eq 2) then begin
+    output_file_name = output_array[0] + '_' + spin_state + '_' + $
+    _pixel_min + '_' + _pixel_max + $
+    '.' + output_array[1]
+    return, output_file_name
+  endif
+  if (nbr gt 2) then begin
+    output_file_name = strjoin(output_array[0:nbr-2],'.') + '_' + spin_state + $
+    '_' + _pixel_min + '_' + _pixel_max
+    output_file_name += '.' + output_array[nbr-1]
+    return, output_file_name
+  endif
+  
+end

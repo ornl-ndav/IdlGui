@@ -225,6 +225,7 @@ pro populate_main_base_with_pixel_range, event=event, $
    y_range_device = [ymin_device, ymax_device]
    (*(*global).data_roi_selection) = y_range_device
    
+   REFreduction_CreateDataBackgroundROIFile, Event, 'roi'
     
 end
 
