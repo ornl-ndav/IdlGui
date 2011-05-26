@@ -304,23 +304,22 @@ function NeXusMetadata::getDangle0
   catch, error_value
   if (error_value ne 0) then begin
     catch,/cancel
-    ;we are dealing with a new NeXus with new path value (readback-> value)
-    path_value = self.path_prefix + 'instrument/bank1/DANGLE0/value/'
     catch, error_value_2
     if (error_value_2 ne 0) then begin
-      catch,/cancel
+      catch, /cancel
       
       catch, tmp_error_value
       if (tmp_error_value ne 0) then begin
-        catch,/cancel
+        catch, /cancel
         return, ['N/A','N/A']
       endif else begin
       
         tmp_path_value = self.path_prefix + 'DASlogs/DANGLE0/value/'
         pathID_value = h5d_open(self.fileID, tmp_path_value)
         dangle_value = strcompress(h5d_read(pathID_value),/remove_all)
+        help, dangle_value
         dangle_value = dangle_value[0]
-        
+
         pathID_units = h5a_open_name(pathID_value,'units')
         dangle_units = strcompress(h5a_read(pathID_units),/remove_all)
         
@@ -338,6 +337,9 @@ function NeXusMetadata::getDangle0
       endelse
       
     endif else begin
+    
+      path_value = self.path_prefix + 'instrument/bank1/DANGLE0/value/'
+      
       pathID_value = h5d_open(self.fileID, path_value)
       dangle_value = strcompress(h5d_read(pathID_value),/remove_all)
       dangle_value = dangle_value[0]

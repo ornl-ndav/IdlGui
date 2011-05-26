@@ -62,8 +62,8 @@ pro populate_tof_range, event
   tof_cutting_max = tof_axis[-1]
   
   if (isTOFcuttingUnits_microS(Event)) then begin
-    _tof_cutting_min = float(tof_cutting_min) / 1000.
-    _tof_cutting_max = float(tof_cutting_max) / 1000.
+    _tof_cutting_min = float(tof_cutting_min) * 1000.
+    _tof_cutting_max = float(tof_cutting_max) * 1000.
   endif else begin
     _tof_cutting_min = tof_cutting_min
     _tof_cutting_max = tof_cutting_max
