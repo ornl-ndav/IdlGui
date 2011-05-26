@@ -851,7 +851,6 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME= $
       'norm_d_selection_roi_ymax_cw_field'): begin
-      print, 'there'
       REFreduction_NormBackgroundPeakSelection, Event, 'roi_ymax'
     end
     

@@ -118,7 +118,7 @@ pro run_command_line_ref_m, event
     cmd_text = '......... ' + PROCESSING
     putLogBookMessage, Event, cmd_text, Append=1
     
-    spawn, cmd[index], listening, err_listening ;REMOVE_ME
+    spawn, cmd[index], listening, err_listening
     
     IF (err_listening[0] NE '') THEN BEGIN
     
@@ -320,8 +320,6 @@ pro run_command_line_ref_m_broad_peak, event, status=status
     
 end
 
-
-
 ; :Description:
 ;    Run the reduction for each rois  when using the
 ;    mode "discrete reflective peak" mode
@@ -365,8 +363,7 @@ pro run_command_line_ref_m_discrete_peak, event, status=status
   
   ;pre processing
   ;this is where the temporary data ROI file will be created
-  ;catch, error
-  error =0 ;FIXME - REMOVE_ME
+  catch, error
   if (error ne 0) then begin
     catch,/cancel
     error=1b
@@ -399,17 +396,17 @@ pro run_command_line_ref_m_discrete_peak, event, status=status
     _index_pixel=0
     while(_index_pixel lt nbr_pixels) do begin
     
-      print, cmd[_index_spin, _index_pixel]
-      spawn, cmd, result, error_result
+      update_progress_bar, base=(*global).progress_bar_base, $
+        spin_state=_current_spin_state, $
+        /increment
+      
+      ;print, cmd[_index_spin, _index_pixel]
+      spawn, cmd[_index_spin, _index_pixel], result, error_result
       if (error_result[0] ne '') then begin
         error = 1b
         return
       endif
-      
-      update_progress_bar, base=(*global).progress_bar_base, $
-        spin_state=_current_spin_state, $
-        /increment
-        
+              
       _index_pixel++
     endwhile
     
@@ -437,8 +434,6 @@ pro run_command_line_ref_m_discrete_peak, event, status=status
       
     _index_spin++
   endwhile
- 
- return 
   
   ;phase 2 of post-processing
   ;removing the temporary data ROI files
@@ -483,11 +478,6 @@ pro merge_files, list_files_to_merge=list_files_to_merge, $
   
   ;run command
   spawn, cmd, result, error_result
-
-  print, cmd
-  help, result
-  help, error_result
-  print
   
 end
 

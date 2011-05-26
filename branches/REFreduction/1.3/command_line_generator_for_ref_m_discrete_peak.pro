@@ -95,10 +95,10 @@ pro command_line_generator_for_ref_m_discrete_peak, event
   
   ;determine the list of pixels = strarr(2,nbr_discrete_rois)
   pixel_list = parse_discrete_roi_selection(discrete_roi_selection)
+  if (pixel_list[0] eq '') then return
+      
   (*(*global).pixel_range_discrete_mode) = pixel_list
   nbr_pixels = (size(pixel_list,/dim))[1] ;how many discrete rois
-  
-  if (pixel_list[0] eq '') then return
   
   ;  ;pixel_min_max = (*global).broad_peak_pixel_range
   ;  pixel_min = fix(getValue(event=event, $

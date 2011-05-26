@@ -98,17 +98,37 @@ PRO populate_data_geometry_info, Event, nexus_file_name, spin_state=spin_state
   putTextFieldValue, event, 'info_detector_sample_distance', dist
   
   distance_sd_m = convert_distance(distance=dist_units[0],$
-  from_unit=dist_units[1],$
-  to_unit='m')
-  
+    from_unit=dist_units[1],$
+    to_unit='m')
+    
   ;moderator sample distance
   dMS_units = iNexus->getSampleModeratorDistance()
-  distance = abs(dMS_units[0])
-  distance_ms_m = convert_distance(distance=distance,$
-  from_unit=dMS_units[1],$
-  to_unit='m')
+  if (dMS_units[0] ne 'N/A') then begin
+    distance = abs(dMS_units[0])
+    distance_ms_m = convert_distance(distance=distance,$
+      from_unit=dMS_units[1],$
+      to_unit='m')
+      
+    (*global).distance_moderator_sample = distance_sd_m + distance_ms_m
+  endif
   
-  (*global).distance_moderator_sample = distance_sd_m + distance_ms_m
+  ;populate tof values (if they are empty)
+  _tof_min = STRCOMPRESS(getTextFieldValue(Event,'tof_cutting_min'),$
+    /REMOVE_ALL)
+  _tof_max = STRCOMPRESS(getTextFieldValue(Event,'tof_cutting_max'),$
+    /REMOVE_ALL)
+    
+  if (_tof_min eq '' || _tof_max eq '') then begin
+    tof_axis = (*(*global).tof_axis_ms)
+    tof_min = tof_axis[0]
+    tof_max = tof_axis[-1]
+    if (isTOFcuttingUnits_microS(Event)) then begin ;microS
+      tof_min *= 1000.
+      tof_max *= 1000.
+    endif
+    putValue, event=event, 'tof_cutting_min', strcompress(tof_min,/remove_all)
+    putValue, event=event, 'tof_cutting_max', strcompress(tof_max,/remove_all)
+  endif
   
   ;  ;detector position
   ;  detPosition_units = iNexus->getDetPosition()
@@ -173,16 +193,19 @@ END
 ;
 ; :Params:
 ;    event
-;    
+;
 ; :keywords:
 ;   refpix
 ;   sangle
-; 
+;
 ;
 ; :Author: j35
 ;-
 pro calculate_sangle, event, refpix=refpix, sangle=sangle
   compile_opt idl2
+  
+  debug = 0b
+  if (debug) then print, '********entering calculate_sangle *********'
   
   widget_control, event.top, get_uvalue=global
   
@@ -190,14 +213,21 @@ pro calculate_sangle, event, refpix=refpix, sangle=sangle
   
   ;retrieve dirpix and refpix
   dirpix = getTextFieldValue(event,'info_dirpix')
+  if (debug) then help, dirpix
+  if (debug) then print, 'dirpix: ' , dirpix[0]
+  if (dirpix[0] eq 'N/A') then begin
+    on_ioerror, null
+    sangle = -1
+    return
+  endif
   f_dirpix = float(dirpix[0])
-  ;print, 'f_dirpix: ' , f_dirpix
+  if (debug) then print, 'f_dirpix: ' , f_dirpix
   
   if (~keyword_set(refpix)) then begin
-  refpix = getTextFieldValue(event,'info_refpix')
+    refpix = getTextFieldValue(event,'info_refpix')
   endif
   f_refpix = float(refpix[0])
-  ;print, 'f_refpix: ' , f_refpix
+  if (debug) then print, 'f_refpix: ' , f_refpix
   
   ;get distance into metre
   detector_sample_distance = getTextFieldValue(event,$
@@ -209,23 +239,23 @@ pro calculate_sangle, event, refpix=refpix, sangle=sangle
   ;detector_position_m = (*global).detector_position_m
   ;detTransOffset_m    = (*global).detTransOffset_m
   ;f_det_sample_distance += detector_position_m - detTransOffset_m
-  ;print, 'f_det_sample_distance: ' , f_det_sample_distance
+  if (debug) then print, 'f_det_sample_distance: ' , f_det_sample_distance
   
   ;get dangle and dangle0 in radians
   dangle_rad = getTextFieldValue(event,'info_dangle_rad')
   f_dangle_rad = FLOAT(dangle_rad[0])
   ;  dangle_rad = get_value_between_arg1_arg2(dangle[0], '\(', 'rad)')
   ;  f_dangle_rad = float(dangle_rad)
-  ;print, 'f_dangle_rad: ' , f_dangle_rad
+  if (debug) then print, 'f_dangle_rad: ' , f_dangle_rad
   
   dangle0 = getTextFieldValue(event,'info_dangle0')
   dangle0_rad = get_value_between_arg1_arg2(dangle0[0], '\(', 'rad)')
   f_dangle0_rad = float(dangle0_rad)
-  ;print, 'f_dangle0_rad: ' , f_dangle0_rad
+  if (debug) then print, 'f_dangle0_rad: ' , f_dangle0_rad
   
   ;get size of detectors
   det_size_m = float((*global).detector_size_m)
-  ;print, 'det_size_m: ' , det_size_m
+  if (debug) then print, 'det_size_m: ' , det_size_m
   
   ;do the calculation
   part1 = (f_dangle_rad - f_dangle0_rad)/2.
@@ -234,31 +264,38 @@ pro calculate_sangle, event, refpix=refpix, sangle=sangle
   
   rad_sangle = part1 + (part2/part3)
   (*global).rad_sangle = rad_sangle
-
+  
   if (keyword_set(sangle)) then begin
-  sangle = rad_sangle
-  return
+    sangle = rad_sangle
+    return
   endif
-
+  
   deg_sangle = convert_rad_to_deg(rad_sangle)
   
   putTextFieldValue, event, 'info_sangle_deg', $
-  strcompress(deg_sangle,/remove_all)
+    strcompress(deg_sangle,/remove_all)
   putTextfieldValue, event, 'info_sangle_rad', $
-  strcompress(rad_sangle,/remove_all)
+    strcompress(rad_sangle,/remove_all)
+    
+  sangle = deg_sangle
+  
+  print
   
   return
   
   error:
   
   if (keyword_set(sangle)) then begin
-  sangle = -1
-  return
+    sangle = -1
+    on_ioerror, null
+    return
   endif
   
-  sangle = 'N/A'
-  putTextFieldValue, event, 'info_sangle_deg', sangle
-  putTextFieldValue, event, 'info_sangle_rad', sangle
+  putTextFieldValue, event, 'info_sangle_deg', 'N/A'
+  putTextFieldValue, event, 'info_sangle_rad', 'N/A'
+  
+  on_ioerror, null
+  return
   
 end
 
@@ -305,20 +342,20 @@ end
 pro convert_sangle_units, event, from=from
   compile_opt idl2
   
-    widget_control, event.top, get_uvalue=global
+  widget_control, event.top, get_uvalue=global
   
   if (from eq 'deg') then begin
     sangle_deg = float(getTextFieldValue(event,'info_sangle_deg'))
     sangle_rad = convert_deg_to_rad(sangle_deg)
     putTextFieldValue, event, 'info_sangle_rad', $
-    strcompress(sangle_rad,/remove_all)
+      strcompress(sangle_rad,/remove_all)
   endif else begin
     sangle_rad = float(getTextFieldValue(event,'info_sangle_rad'))
     sangle_deg = convert_rad_to_deg(sangle_rad)
     putTextFieldValue, event, 'info_sangle_deg', $
-     strcompress(sangle_deg,/remove_all)
+      strcompress(sangle_deg,/remove_all)
   endelse
-
-    (*global).rad_sangle = sangle_rad
-
-  end
+  
+  (*global).rad_sangle = sangle_rad
+  
+end

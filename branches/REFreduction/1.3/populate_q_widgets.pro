@@ -47,6 +47,8 @@
 pro populate_Q_widgets, event=event
   compile_opt idl2
   
+  debug = 0b
+  
   Qmin_value=''
   Qmax_value=''
   
@@ -70,12 +72,18 @@ pro populate_Q_widgets, event=event
   tof_min_s = float(tof_min) * coeff
   tof_max_s = float(tof_max) * coeff
   
+  if (debug) then print, 'tof_min_s: ' , tof_min_s
+  if (debug) then print, 'tof_max_s: ' , tof_max_s
+  
   ;Pixel range
   pixel_min = strcompress(getTextFieldValue(event, $
     'data_d_selection_roi_ymin_cw_field'),/remove_all)
   pixel_max = strcompress(getTextFieldValue(event, $
     'data_d_selection_roi_ymax_cw_field'),/remove_all)
     
+  if (debug) then print, 'pixel_min: ' , pixel_min
+  if (debug) then print, 'pixel_max: ' , pixel_max
+  
   ;no need to go further if we are missing a pixel values (min or max)
   if (pixel_min eq '' or pixel_max eq '') then begin
     reset_Q_widgets, event=event
@@ -84,12 +92,25 @@ pro populate_Q_widgets, event=event
   
   ;distance Moderator-detector in meters
   widget_control, event.top, get_uvalue=global
-  on_ioerror, float_error
+;  on_ioerror, float_error
   distance_moderator_sample = float((*global).distance_moderator_sample)
   
+  if (debug) then print, 'distance_moderator_sample: ' , distance_moderator_sample
+  
   ;sangle = polar_angle/2 of pixel min and pixel max positions
-  sangle_min_max = (*global).sangle_min_max
-  sangle_min = min(sangle_min_max,max=sangle_max)
+  ;sangle_min_max = (*global).sangle_min_max
+  ;sangle_min = min(sangle_min_max,max=sangle_max)
+  
+  calculate_sangle, event, refpix=pixel_min, sangle=sangle_min
+  calculate_sangle, event, refpix=pixel_max, sangle=sangle_max
+  
+  if (sangle_min eq '-1' || sangle_max eq '-1') then begin
+    reset_Q_widgets, event=event
+    return
+  endif
+  
+  if (debug) then print, 'sangle_min: ' , sangle_min
+  if (debug) then print, 'sangle_max: ' , sangle_max
   
   ;global constants
   m_n = 1.67495e-27
@@ -98,25 +119,30 @@ pro populate_Q_widgets, event=event
   
   ;factor = (4*pi*m_n*distance_moderator_detector
   factor = (4.*pi*m_n*distance_moderator_sample)/h
+  if (debug) then print, 'factor: ' , factor
   
   ;Qmin
   Qmin = factor * (sin(sangle_min))
   Qmin /= tof_max_s
+  if (debug) then print, 'Qmin: ' , Qmin
   
   ;Qmax
   Qmax = factor * (sin(sangle_max))
   Qmax /= tof_min_s
+  if (debug) then print, 'Qmax: ' , Qmax
   
   ;Angstroms
   Qmin = Qmin[0] * 1e-10
   Qmax = Qmax[0] * 1e-10
   
-  putValue, event=event, 'q_min_text_field', strcompress(Qmin,/remove_all)
-  putValue, event=event, 'q_max_text_field', strcompress(Qmax,/remove_all)
-
+  _Qmin = min([Qmin,Qmax],max=_Qmax)
+  
+  putValue, event=event, 'q_min_text_field', strcompress(_Qmin,/remove_all)
+  putValue, event=event, 'q_max_text_field', strcompress(_Qmax,/remove_all)
+  
   return
   
-  print, 'after return statment in populate_q_widgets'
+  if (debug) then print, 'after return statment in populate_q_widgets'
   
   float_error:
   reset_Q_widgets, event=event
