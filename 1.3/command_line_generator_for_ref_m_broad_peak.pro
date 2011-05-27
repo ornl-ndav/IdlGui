@@ -331,6 +331,7 @@ pro command_line_generator_for_ref_m_broad_peak, event
           tof_max = FLOAT(tof_max)
           error_status = 0
           tof_max = STRCOMPRESS(tof_max,/REMOVE_ALL)
+
           error_max1:
           IF (error_status) THEN BEGIN
             tof_max = '?'
@@ -526,9 +527,13 @@ pro command_line_generator_for_ref_m_broad_peak, event
           Q_width = getTextfieldValue(Event, 'q_width_text_field')
           Q_scale = getQSCale(Event)
           
+          if (strcompress(Q_min,/remove_all) eq '') then return
+          if (strcompress(Q_max,/remove_all) eq '') then return
+          
           ;if Q_width is not empty, used this one
           ;if Q_width is empty, calculate Q_width according to Number bins needed
-          if (Q_width eq '') then begin
+          if (strcompress(Q_width,/remove_all) eq '') then begin
+            
             nbr_bins = getTextFieldValue(Event, 'q_nbins_text_field')
             if (Q_scale eq 'lin') then begin
               Q_width = (float(Q_max) - float(Q_min)) / float(nbr_bins)
@@ -537,6 +542,7 @@ pro command_line_generator_for_ref_m_broad_peak, event
             endelse
             putValue, event=event, 'q_width_text_field', $
               strcompress(Q_width,/remove_all)
+          
           endif
           
         endif else begin

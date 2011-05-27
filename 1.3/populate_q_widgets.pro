@@ -37,8 +37,6 @@
 ;    Using the TOF provided (if any), the pixel selection (if any),
 ;    the program will calculate the Qmin and Qmax
 ;
-;
-;
 ; :Keywords:
 ;    event
 ;
@@ -69,6 +67,7 @@ pro populate_Q_widgets, event=event
   endif else begin
     coeff = 1e-3
   endelse
+  tof_min = (float(tof_min) eq 0.) ? 1 : tof_min
   tof_min_s = float(tof_min) * coeff
   tof_max_s = float(tof_max) * coeff
   
@@ -95,7 +94,8 @@ pro populate_Q_widgets, event=event
 ;  on_ioerror, float_error
   distance_moderator_sample = float((*global).distance_moderator_sample)
   
-  if (debug) then print, 'distance_moderator_sample: ' , distance_moderator_sample
+  if (debug) then print, 'distance_moderator_sample: ' , $
+  distance_moderator_sample
   
   ;sangle = polar_angle/2 of pixel min and pixel max positions
   ;sangle_min_max = (*global).sangle_min_max
