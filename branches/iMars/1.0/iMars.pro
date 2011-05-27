@@ -50,6 +50,12 @@ pro BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   MainBaseTitle  = 'iMAging Reduction Software (iMars)'
   
+  ;initialize log book message
+  date = GenerateReadableIsoTimeStamp()
+  log_book = ['------------------------------------------------------------',$
+    'Log Book of iMars',' Application started at: ' + date]
+  (*(*global).log_book) = log_book
+  
   ;Build Main Base
   main_base = Widget_Base( GROUP_LEADER = wGroup,$
     UNAME        = 'MAIN_BASE',$

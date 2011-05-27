@@ -54,6 +54,9 @@ FUNCTION getGlobal
     log_book: ptr_new(0L), $
     log_book_id: 0L, $
     
+    full_log_book: ptr_new(0L), $
+    new_log_book_message: ptr_new(0L), $
+    
     path: '~/', $
     config_path: '~/', $
     

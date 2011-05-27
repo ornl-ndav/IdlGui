@@ -65,38 +65,48 @@ pro display_log_book, event
     yoffset = yoffset,$
     group=id,$
     text=log_book,$
-    return_id=log_book_id
+    wtext = log_book_id
+  ;    return_id=log_book_id
     
-  (*global).log_book_id = log_book_id  
-    
+  (*global).log_book_id = log_book_id
+  
 end
 
 ;+
 ; :Description:
-;    This procedure adds the message given to the log book and display it
-;    if the log book is enabled
+;    This procedure retrieves the current contain of the log book
+;    and update it with the new message fromt the global variable
+;    called 'new_log_book_message' if the keywords message is not passed
+;
+; :Params:
+;    event
 ;
 ; :Keywords:
-;    event
-;    message
+;   message
 ;
 ; :Author: j35
 ;-
-pro add_to_log_book, event=event, message=message
-compile_opt idl2
-
-widget_control, event.top, get_uvalue=global
-
-log_book = (*(*global).log_book)
-
-;;steal code from SOS here
-
-if (widget_info((*global).log_book_id, /valid_id)) then begin
-display_log_book, event
-endif 
-
-
-
-
-
+pro log_book_update, event, message=message
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  if (keyword_set(message)) then begin
+    new_message = message
+  endif else begin
+    new_message = (*(*global).new_log_book_message)
+  endelse
+  
+  time = get_time()
+  new_message[0] = '['+time+']' + string(new_message[0])
+  log_book = (*(*global).log_book)
+  
+  log_book = [new_message, log_book]
+  (*(*global).log_book) = log_book
+  
+  log_book_id = (*global).log_book_id
+  if (widget_info(log_book_id,/valid_id) eq 0) then return
+  
+  widget_control, log_book_id, set_value=log_book
+  
 end
