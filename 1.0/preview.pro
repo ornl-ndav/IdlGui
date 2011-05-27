@@ -67,7 +67,6 @@ pro preview_currently_selected_file, event=event, type=type
   
   if (strcompress(file_base_name,/remove_all) eq '') then file_base_name='N/A'
   putValue, event=event, 'preview_file_name_label', label + file_base_name
-  
   display_preview_of_file, event=event, file_name=file_name_selected
   
 end
@@ -104,5 +103,4 @@ pro display_preview_of_file, event=event, file_name=file_name
   new_data = congrid(data, xsize, ysize)
   tvscl, new_data
   
-
 end

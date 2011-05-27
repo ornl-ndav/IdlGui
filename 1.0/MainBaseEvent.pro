@@ -45,11 +45,11 @@ PRO MAIN_BASE_event, Event
     ;configuration
     ;load configuration
     widget_info(event.top, find_by_uname='load_configuration_uname'): begin
-    load_configuration, event=event
+      load_configuration, event=event
     end
     ;save configuration
     widget_info(event.top, find_by_uname='save_configuration_uname'): begin
-    save_configuration, event=event
+      save_configuration, event=event
     end
     
     ;reset menu
@@ -75,51 +75,54 @@ PRO MAIN_BASE_event, Event
     ;help menu
     ;log book
     widget_info(event.top, find_by_uname='log_book_uname'): begin
-    display_log_book, event
+      display_log_book, event
     end
     ;about iMars
     widget_info(event.top, find_by_uname='about_imars_uname'): begin
-    about_imars, event
+      about_imars, event
     end
     
     ;data, open beam and dark field files
     ;data file
     widget_info(event.top, find_by_uname='data_files_table'): begin
-    preview_currently_selected_file, event=event, type='data_file'
+      preview_currently_selected_file, event=event, type='data_file'
     end
     ;open beam
     widget_info(event.top, find_by_uname='open_beam_table'): begin
-    preview_currently_selected_file, event=event, type='open_beam'
+      preview_currently_selected_file, event=event, type='open_beam'
     end
     ;dark field
     widget_info(event.top, find_by_uname='dark_field_table'): begin
-    preview_currently_selected_file, event=event, type='dark_field'
+      preview_currently_selected_file, event=event, type='dark_field'
     end
     
     ;browse buttons
     widget_info(event.top, find_by_uname='browse_data_files'): begin
       browse_files, event=event, file_type='data_file'
+      preview_currently_selected_file, event=event, type='data_file'
     end
     widget_info(event.top, find_by_uname='browse_open_beam'): begin
       browse_files, event=event, file_type='open_beam'
+      preview_currently_selected_file, event=event, type='open_beam'
     end
     widget_info(event.top, find_by_uname='browse_dark_field'): begin
       browse_files, event=event, file_type='dark_field'
+      preview_currently_selected_file, event=event, type='dark_field'
     end
     
     ;roi
     ;load roi
-    widget_info(event.top, find_by_uname='roi_load'): begin 
-    load_roi, event=event
+    widget_info(event.top, find_by_uname='roi_load'): begin
+      load_roi, event=event
     end
     ;save roi
     widget_info(event.top, find_by_uname='roi_save'): begin
-    save_roi, event=event
+      save_roi, event=event
     end
     
     ;output folder
     widget_info(event.top, find_by_uname='output_folder_button'): begin
-    define_output_folder, event=event
+      define_output_folder, event=event
     end
     
     ELSE:
