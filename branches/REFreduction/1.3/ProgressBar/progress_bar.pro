@@ -291,6 +291,7 @@ pro progress_bar_gui, wBase, $
   post_processing = widget_draw(row1,$
     scr_xsize = 250,$
     scr_ysize = 35,$
+    retain=2,$
     uname = 'pre_processing_uname')
     
   space = widget_label(top_base,$
@@ -313,6 +314,7 @@ pro progress_bar_gui, wBase, $
     progress_bar_draw = widget_draw(row2,$
       scr_xsize = 300,$
       scr_ysize = 35,$
+      retain=2,$
       uname = 'progress_bar_of_spin_state_' + spin_list[i])
     i++
   endwhile
@@ -329,6 +331,7 @@ pro progress_bar_gui, wBase, $
   post_processing = widget_draw(row3,$
     scr_xsize = 250,$
     scr_ysize = 35,$
+    retain=2,$
     uname = 'post_processing_uname')
     
   space = widget_label(top_base,$

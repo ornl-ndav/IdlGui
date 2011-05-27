@@ -214,6 +214,13 @@ pro run_command_line_ref_m_broad_peak, event, status=status
   
   widget_control, event.top, get_uvalue=global
   
+  ;by default, we presume that it's not going to work
+  status=0b
+  
+  processing = (*global).processing_message
+  text = '> Launching the hidden jobs of the broad mode:'
+  IDLsendLogBook_addLogBookText, Event, text
+  
   error=0b ;by default, we suppose that it's going to work
   
   cmd = (*(*global).cmd_broad_mode)
@@ -237,12 +244,19 @@ pro run_command_line_ref_m_broad_peak, event, status=status
   ;list of pixels
   pixel_range = (*(*global).pixel_range_broad_mode)
   
+  text = '-> preprocessing ... ' +  PROCESSING
+  IDLsendLogBook_addLogBookText, Event, text
+  
   ;pre processing
   ;this is where the temporary data ROI file will be created
   catch, error
   if (error ne 0) then begin
     catch,/cancel
     error=1b
+    
+    message = 'FAILED!'
+    IDLsendLogBook_ReplaceLogBookText, Event, PROCESSING, Message
+    
     return
   endif else begin
   
@@ -261,6 +275,10 @@ pro run_command_line_ref_m_broad_peak, event, status=status
     endwhile
     
   endelse
+  IDLsendLogBook_ReplaceLogBookText, Event, PROCESSING, 'OK'
+  
+  text = '-> Running jobs: '
+  IDLsendLogBook_addLogBookText, Event, text
   
   ;main part of reduction
   _index_spin=0
@@ -271,17 +289,33 @@ pro run_command_line_ref_m_broad_peak, event, status=status
     _index_pixel=0
     while(_index_pixel lt nbr_pixels) do begin
     
-      print, cmd[_index_spin, _index_pixel]
-      spawn, cmd, result, error_result
-      if (error_result[0] ne '') then begin
-        error = 1b
-        return
-      endif
-      
+      text = '--> [index_spin,pixel_index]:[' + $
+        strcompress(_index_spin,/remove_all) + ',' + $
+        strcompress(_index_pixel,/remove_all) + ']'
+      IDLsendLogBook_addLogBookText, Event, text
+      text = '---> cmd: ' + cmd[_index_spin,_index_pixel] + ' ... ' + $
+        processing
+      IDLsendLogBook_addLogBookText, event, text
       update_progress_bar, base=(*global).progress_bar_base, $
         spin_state=_current_spin_state, $
         /increment
         
+      spawn, cmd[_index_spin,_index_pixel], result, error_result
+      if (error_result[0] ne '') then begin
+        error = 1b
+        message = 'FAILED!'
+        IDLsendLogBook_ReplaceLogBookText, event, processing, message
+        
+        IDLsendLogBook_addLogBookText, event, '---> Result: '
+        IDLsendLogBook_addLogBookText, event, result
+        IDLsendLogBook_addLogBookText, event, '---> Error_Result: '
+        IDLsendLogBook_addLogBookText, event, error_result
+        
+        return
+      endif
+      message = 'OK'
+      IDLsendLogBook_ReplaceLogBookText, event, processing, message
+      
       _index_pixel++
     endwhile
     
@@ -290,12 +324,19 @@ pro run_command_line_ref_m_broad_peak, event, status=status
   
   ;phase 1 of post-processing
   ;merging the output files of the various spin states
+  list_of_broad_output_file_name = $
+    (*(*global).list_of_output_file_name_for_broad_mode)
+  list_of_output_file_name = (*(*global).list_of_output_file_name)
   _index_spin=0
   while (_index_spin lt nbr_spins) do begin
   
-    print, 'Merging files for spin state: ' , data_spin_state[_index_spin]
-    wait, 0.2
+    _final_output = list_of_output_file_name[_index_spin]
+    _list_tmp_output = reform(list_of_broad_output_file_name[_index_spin,*])
     
+    merge_files, list_files_to_merge=_list_tmp_output, $
+      final_file_name = _final_output, $
+      result=result
+      
     update_progress_bar, base=(*global).progress_bar_base, $
       /post_processing, $
       /increment
@@ -305,6 +346,9 @@ pro run_command_line_ref_m_broad_peak, event, status=status
   
   ;phase 2 of post-processing
   ;removing the temporary data ROI files
+  text = '-> postprocessing ... ' +  PROCESSING
+  IDLsendLogBook_addLogBookText, Event, text
+  
   _index_pixel=0
   while (_index_pixel lt nbr_pixels) do begin
   
@@ -313,11 +357,19 @@ pro run_command_line_ref_m_broad_peak, event, status=status
     
     _index_pixel++
   endwhile
+  IDLsendLogBook_ReplaceLogBookText, Event, PROCESSING, 'OK'
   
   update_progress_bar, base=(*global).progress_bar_base, $
     /post_processing, $
     /increment
     
+  ;kill the progress bar
+  id = (*global).progress_bar_base
+  widget_control, id, /destroy
+  
+  ;if we reached that point, we know that it ran with success
+  status= 1b
+  
 end
 
 ; :Description:
@@ -488,18 +540,18 @@ pro run_command_line_ref_m_discrete_peak, event, status=status
     _index_pixel++
   endwhile
   IDLsendLogBook_ReplaceLogBookText, Event, PROCESSING, 'OK'
-   
+  
   update_progress_bar, base=(*global).progress_bar_base, $
     /post_processing, $
     /increment
     
-  ;kill the progress bar  
+  ;kill the progress bar
   id = (*global).progress_bar_base
   widget_control, id, /destroy
-    
+  
   ;if we reached that point, we know that it ran with success
   status= 1b
-    
+  
 end
 
 
