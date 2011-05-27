@@ -64,6 +64,7 @@ pro BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     XPAD         = 0,$
     YPAD         = 2,$
     MBAR         = top_base_menu)
+  (*global).top_base = main_base
     
   build_menu, top_base_menu
   build_gui, main_base

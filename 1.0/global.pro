@@ -51,8 +51,12 @@ FUNCTION getGlobal
     version:           VERSION,$
     application:       APPLICATION, $
     
+    top_base: 0L, $
+    
     log_book: ptr_new(0L), $
     log_book_id: 0L, $
+    
+    preview_display_base_id: 0L, $
     
     full_log_book: ptr_new(0L), $
     new_log_book_message: ptr_new(0L), $
@@ -62,7 +66,6 @@ FUNCTION getGlobal
     
     file_extension: 'fits',$
     file_filter: '*fits',$
-    
     
     last_term: 0L$
      })

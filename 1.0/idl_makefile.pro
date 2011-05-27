@@ -51,6 +51,9 @@ cd, CurrentFolder + '/FitsPlot'
 .run fits_plot_launcher.pro
 .run fits_plot_roi_input_base.pro
 
+cd, CurrentFolder + '/PreviewBase'
+.run preview_display_base.pro
+
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.
 
