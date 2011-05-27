@@ -338,6 +338,9 @@ pro run_command_line_ref_m_discrete_peak, event, status=status
   
   widget_control, event.top, get_uvalue=global
   
+  ;by default, we presume that it's not going to work
+  status=0b
+  
   PROCESSING = (*global).processing_message ;processing message
   text = '> Launching the hidden jobs of the discrete mode:'
   IDLsendLogBook_addLogBookText, Event, text
@@ -490,7 +493,12 @@ pro run_command_line_ref_m_discrete_peak, event, status=status
     /post_processing, $
     /increment
     
+  ;kill the progress bar  
+  id = (*global).progress_bar_base
+  widget_control, id, /destroy
     
+  ;if we reached that point, we know that it ran with success
+  status= 1b
     
 end
 
@@ -512,7 +520,6 @@ pro merge_files, list_files_to_merge=list_files_to_merge, $
     final_file_name = final_file_name, $
     result=result
   compile_opt idl2
-  
   
   driver_name = 'agg_dr_files'
   cmd = driver_name + ' ' + strjoin(list_files_to_merge,' ')
