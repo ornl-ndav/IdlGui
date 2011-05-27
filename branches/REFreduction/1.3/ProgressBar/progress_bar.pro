@@ -122,7 +122,7 @@ pro update_progress_bar, event=event, $
   ;spin state processing ******************************************************
   if (keyword_set(spin_state)) then begin
   
-    map_base, base=base, uname='time_left_base_uname', status=1
+    ;map_base, base=base, uname='time_left_base_uname', status=1
     
     spin_state_nbr_steps = (*global_progress).pixel_nbr_steps
     step = (*global_progress).current_step
@@ -138,7 +138,7 @@ pro update_progress_bar, event=event, $
     ;get percentage
     percent = (float(step) / float(spin_state_nbr_steps)) * 100.
     text = strcompress(fix(percent),/remove_all) + '%'
-    XYouts, x2, y2/2., text, color=fsc_color("blue"), /device
+    XYouts, xsize/2, y2/2., text, color=fsc_color("blue"), /device
     
     if (step eq spin_state_nbr_steps) then begin
       step=1
@@ -151,28 +151,28 @@ pro update_progress_bar, event=event, $
     global_current_step++
     (*global_progress).global_current_step = global_current_step
     
-    previous_time = (*global_progress).time_init_s
-    current_time = systime(/seconds)
-    (*global_progress).time_init_s = current_time
+    ;previous_time = (*global_progress).time_init_s
+    ;current_time = systime(/seconds)
+    ;(*global_progress).time_init_s = current_time
     
-    delta_time = current_time - previous_time
+    ;delta_time = current_time - previous_time
     global_current_step = (*global_progress).global_current_step
     total_number_steps = (*global_progress).total_number_steps
     
     _steps_left = total_number_steps - global_current_step
-    _time_left = (_steps_left * delta_time)
+    ;_time_left = (_steps_left * delta_time)
     
-    if (_time_left gt 60) then begin
-      putValue, base=base, 'time_left_units_uname', $
-        'mn  (recalculated after each step)'
-      putValue, base=base, 'time_left_value_uname', $
-        strcompress(_time_left/60.,/remove_all)
-    endif else begin
-      putValue, base=base, 'time_left_units_uname', $
-        's  (recalculated after each step)'
-      putValue, base=base, 'time_left_value_uname', $
-        strcompress(fix(_time_left),/remove_all)
-    endelse
+;    if (_time_left gt 60) then begin
+;      putValue, base=base, 'time_left_units_uname', $
+;        'mn  (recalculated after each step)'
+;      putValue, base=base, 'time_left_value_uname', $
+;        strcompress(_time_left/60.,/remove_all)
+;    endif else begin
+;      putValue, base=base, 'time_left_units_uname', $
+;        's  (recalculated after each step)'
+;      putValue, base=base, 'time_left_value_uname', $
+;        strcompress(fix(_time_left),/remove_all)
+;    endelse
     
   endif
   
@@ -180,7 +180,7 @@ pro update_progress_bar, event=event, $
   ;post processing ************************************************************
   if (keyword_set(post_processing)) then begin
   
-    map_base, base=base, uname='time_left_base_uname', status=0
+    ;map_base, base=base, uname='time_left_base_uname', status=0
     
     post_processing_nbr_steps = (*global_progress).post_processing_nbr_steps
     step = (*global_progress).current_step
@@ -196,7 +196,7 @@ pro update_progress_bar, event=event, $
     ;get percentage
     percent = (float(step) / float(post_processing_nbr_steps)) * 100.
     text = strcompress(fix(percent),/remove_all) + '%'
-    XYouts, x2, y2/2., text, color=fsc_color("blue"), /device
+    XYouts, xsize/2, y2/2., text, color=fsc_color("blue"), /device
     
     if (step eq post_processing_nbr_steps) then begin
       step=0
@@ -211,7 +211,7 @@ pro update_progress_bar, event=event, $
   ;pre processing ************************************************************
   if (keyword_set(pre_processing)) then begin
   
-    map_base, base=base, uname='time_left_base_uname', status=0
+    ;map_base, base=base, uname='time_left_base_uname', status=0
     
     pre_processing_nbr_steps = (*global_progress).pre_processing_nbr_steps
     step = (*global_progress).current_pre_step
@@ -227,7 +227,7 @@ pro update_progress_bar, event=event, $
     ;get percentage
     percent = (float(step) / float(pre_processing_nbr_steps)) * 100.
     text = strcompress(fix(percent),/remove_all) + '%'
-    XYouts, x2, y2/2., text, color=fsc_color("blue"), /device
+    XYouts, xsize/2, y2/2., text, color=fsc_color("blue"), /device
     
     if (step eq pre_processing_nbr_steps) then begin
       step=0
@@ -335,20 +335,20 @@ pro progress_bar_gui, wBase, $
   space = widget_label(top_base,$
     value = ' ')
     
-  row4 = widget_base(top_base,$
-    uname = 'time_left_base_uname',$
-    map=0,$
-    /row)
-  label = widget_label(row4,$
-    value = 'Estimated time left:')
-  value = widget_label(row4,$
-    value = 'Calculating ...',$
-    frame=1,$
-    uname = 'time_left_value_uname')
-  units = widget_label(row4,$
-    uname = 'time_left_units_uname',$
-    /align_left, $
-    value = 'mn (recalculated after each step)')
+;  row4 = widget_base(top_base,$
+;    uname = 'time_left_base_uname',$
+;    map=0,$
+;    /row)
+;  label = widget_label(row4,$
+;    value = 'Estimated time left:')
+;  value = widget_label(row4,$
+;    value = 'Calculating ...',$
+;    frame=1,$
+;    uname = 'time_left_value_uname')
+;  units = widget_label(row4,$
+;    uname = 'time_left_units_uname',$
+;    /align_left, $
+;    value = 'mn (recalculated after each step)')
     
   space = widget_label(top_base,$
     value = ' ')
