@@ -86,7 +86,7 @@ pro display_preview_of_file, event=event, file_name=file_name
   compile_opt idl2
   
   DEVICE, DECOMPOSED = 0
-  loadct, 5
+  loadct, 5, /silent
   id_draw = widget_info(Event.top, find_by_uname='preview_draw_uname')
   widget_control, id_draw, get_value=id_value
   wset,id_value
@@ -94,8 +94,15 @@ pro display_preview_of_file, event=event, file_name=file_name
   is_with_gamma_filtering = $
     isButtonSelected(event=event,uname='with_gamma_filtering_uname')
     
+  read_fits_file, file_name=file_name, data=data, metadata=metadata  
+  if (data eq !null) then return  
     
-    
-    
-    
+  geometry = widget_info(id_draw,/geometry)
+  xsize = geometry.scr_xsize
+  ysize = geometry.scr_ysize
+  
+  new_data = congrid(data, xsize, ysize)
+  tvscl, new_data
+  
+
 end

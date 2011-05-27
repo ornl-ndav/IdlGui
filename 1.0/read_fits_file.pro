@@ -34,24 +34,23 @@
 
 ;+
 ; :Description:
-;   This routine cleanup all the pointers from the main program and is
-;   reached when the application is exited.
+;    This routine read the fits files and return the data and the metadata
 ;
-; :Params:
-;    tlb
+; :Keywords:
+;    file_name
+;    data
+;    metadata
 ;
 ; :Author: j35
 ;-
-pro iMars_cleanup, tlb
+pro read_fits_file, file_name=file_name, data=data, metadata=metadata
   compile_opt idl2
   
-  widget_control, tlb, get_uvalue=global, /no_copy
+  if (~file_test(file_name)) then begin
+    data=!null
+    return
+  endif
   
-  if (n_elements(global) eq 0) then return
-  
-  ptr_free, (*global).full_log_book
-  ptr_free, (*global).new_log_book_message
-  
-  ptr_free, global
+  data = mrdfits(file_name, 0, header, /fscale, /silent)
   
 end
