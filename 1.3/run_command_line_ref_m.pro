@@ -338,6 +338,10 @@ pro run_command_line_ref_m_discrete_peak, event, status=status
   
   widget_control, event.top, get_uvalue=global
   
+  PROCESSING = (*global).processing_message ;processing message
+  text = '> Launching the hidden jobs of the discrete mode:'
+  IDLsendLogBook_addLogBookText, Event, text
+  
   error=0b ;by default, we suppose that it's going to work
   
   cmd = (*(*global).cmd_discrete_mode)
@@ -363,10 +367,19 @@ pro run_command_line_ref_m_discrete_peak, event, status=status
   
   ;pre processing
   ;this is where the temporary data ROI file will be created
-  catch, error
+  
+  text = '-> preprocessing ... ' +  PROCESSING
+  IDLsendLogBook_addLogBookText, Event, text
+  
+  ;catch, error
+  error = 0
   if (error ne 0) then begin
     catch,/cancel
     error=1b
+    
+    message = 'FAILED!'
+    IDLsendLogBook_ReplaceLogBookText, Event, PROCESSING, Message
+    
     return
   endif else begin
   
@@ -386,6 +399,10 @@ pro run_command_line_ref_m_discrete_peak, event, status=status
     endwhile
     
   endelse
+  IDLsendLogBook_ReplaceLogBookText, Event, PROCESSING, 'OK'
+  
+  text = '-> Running jobs: '
+  IDLsendLogBook_addLogBookText, Event, text
   
   ;main part of reduction
   _index_spin=0
@@ -396,17 +413,36 @@ pro run_command_line_ref_m_discrete_peak, event, status=status
     _index_pixel=0
     while(_index_pixel lt nbr_pixels) do begin
     
+      text = '--> [index_spin,pixel_index]:[' + $
+        strcompress(_index_spin,/remove_all) + ',' + $
+        strcompress(_index_pixel,/remove_all) + ']'
+      IDLsendLogBook_addLogBookText, Event, text
+      text = '---> cmd: ' + cmd[_index_spin, _index_pixel] + ' ... ' + $
+        PROCESSING
+      IDLsendLogBook_addLogBookText, event, text
+      
       update_progress_bar, base=(*global).progress_bar_base, $
         spin_state=_current_spin_state, $
         /increment
-      
+        
       ;print, cmd[_index_spin, _index_pixel]
       spawn, cmd[_index_spin, _index_pixel], result, error_result
       if (error_result[0] ne '') then begin
         error = 1b
+        message = 'FAILED!'
+        IDLsendLogBook_ReplaceLogBookText, Event, PROCESSING, Message
+        
+        IDLsendLogBook_addLogBookText, event, '---> Result: '
+        IDLsendLogBook_addLogBookText, event, result
+        IDLsendLogBook_addLogBookText, event, '---> Error_Result: '
+        IDLsendLogBook_addLogBookText, event, error_result
+        
         return
       endif
-              
+      
+      message = 'OK'
+      IDLsendLogBook_ReplaceLogBookText, Event, PROCESSING, Message
+      
       _index_pixel++
     endwhile
     
@@ -435,6 +471,9 @@ pro run_command_line_ref_m_discrete_peak, event, status=status
     _index_spin++
   endwhile
   
+  text = '-> postprocessing ... ' +  PROCESSING
+  IDLsendLogBook_addLogBookText, Event, text
+  
   ;phase 2 of post-processing
   ;removing the temporary data ROI files
   _index_pixel=0
@@ -445,10 +484,13 @@ pro run_command_line_ref_m_discrete_peak, event, status=status
     
     _index_pixel++
   endwhile
-  
+  IDLsendLogBook_ReplaceLogBookText, Event, PROCESSING, 'OK'
+   
   update_progress_bar, base=(*global).progress_bar_base, $
     /post_processing, $
     /increment
+    
+    
     
 end
 
