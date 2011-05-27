@@ -123,6 +123,7 @@ pro build_gui, main_base
     xsize = 1,$
     ysize = 1,$
     column_widths = 595,$
+    /all_events, $
     uname = 'open_beam_table',$
     /no_column_headers,$
     /no_row_headers)
@@ -158,6 +159,7 @@ pro build_gui, main_base
     scr_ysize = 100,$
     xsize = 1,$
     ysize = 1,$
+    /all_events, $
     column_widths = 595,$
     uname = 'dark_field_table',$
     /no_column_headers,$
@@ -207,10 +209,15 @@ pro build_gui, main_base
     value = 'With gamma filtering',$
     uname = 'with_gamma_filtering_uname')
   space = widget_label(bottom_base,$
-    value = '                  ')
+    value = '         ')
+  metadata = widget_draw(bottom_base,$
+    scr_xsize=30,$
+    scr_ysize=30)
+  space = widget_label(bottom_base,$
+  value = ' ')
   enlarge = widget_draw(bottom_base,$
-    scr_xsize=25,$
-    scr_ysize=25)
+    scr_xsize=30,$
+    scr_ysize=30)
     
   roi_base = widget_base(row1,$
     /column)
