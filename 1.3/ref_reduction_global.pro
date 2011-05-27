@@ -130,7 +130,7 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     ;spin state configuration
     spin_state_config: [1b,0b,1b,0b],$
     list_of_output_file_name: ptr_new(0L),$
-    first_ref_m_file_to_plot: -1,$
+    first_ref_m_file_to_plot: 0,$
     list_of_norm_spins: ptr_new(0L),$
     list_of_data_spins: ptr_new(0l),$
     

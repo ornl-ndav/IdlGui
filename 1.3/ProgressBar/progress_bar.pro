@@ -207,7 +207,6 @@ pro update_progress_bar, event=event, $
     
   endif
   
-  
   ;pre processing ************************************************************
   if (keyword_set(pre_processing)) then begin
   
