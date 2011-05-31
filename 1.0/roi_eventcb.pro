@@ -44,9 +44,9 @@
 ; :Author: j35
 ;-
 pro save_roi, event=event
-compile_opt idl2
-
- widget_control, event.top, get_uvalue=global
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
   
   path = (*global).path
   id = widget_info(event.top, find_by_uname='MAIN_BASE')
@@ -65,20 +65,33 @@ compile_opt idl2
   if (file_name[0] ne '') then begin
     (*global).path = new_path
     
-    file_name = file_name[0]
-    
-    pixel_list = getValue(event=event, uname='roi_text_field_uname')
+    catch, error
+    if (error ne 0) then begin
+      catch,/cancel
       
-    openw, 1 , file_name
-    sz = n_elements(pixel_list)
-    index=0
-    while (index lt sz) do begin
-      _line = pixel_list[index]
-      if (strcompress(_line,/remove_all) ne '') then printf, 1, _line
-      index++
-    endwhile
-    close, 1
-    free_lun, 1
+      message = 'Saved ROI into file: ' + file_name + ' ... FAILED!'
+      log_book_update, event, message=message
+      
+    endif else begin
+    
+      file_name = file_name[0]
+      pixel_list = getValue(event=event, uname='roi_text_field_uname')
+      
+      openw, 1 , file_name
+      sz = n_elements(pixel_list)
+      index=0
+      while (index lt sz) do begin
+        _line = pixel_list[index]
+        if (strcompress(_line,/remove_all) ne '') then printf, 1, _line
+        index++
+      endwhile
+      close, 1
+      free_lun, 1
+      
+      message = 'Saved ROI into file: ' + file_name + ' ... OK!'
+      log_book_update, event, message=message
+      
+    endelse
     
   endif
   
@@ -96,9 +109,9 @@ end
 ; :Author: j35
 ;-
 pro load_roi, event=event
-compile_opt idl2
-
- widget_control, event.top, get_uvalue=global
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
   
   path = (*global).path
   id = widget_info(event.top, find_by_uname='MAIN_BASE')
@@ -118,16 +131,30 @@ compile_opt idl2
   if (file_name ne '') then begin
     (*global).path = new_path
     
-    openr, 1, file_name
-    nbr_lines = file_lines(file_name)
-    pixel_list = strarr(nbr_lines)
-    readf, 1, pixel_list
-    close,1
-    free_lun, 1
+    catch, error
+    if (error ne 0) then begin
+      catch,/cancel
+      
+      message = 'Loading of ROI file: ' + file_name + ' ... FAILED!'
+      log_book_update, event, message=message
+      
+    endif else begin
     
-    putValue, event=event, 'roi_text_field_uname', pixel_list
+      openr, 1, file_name
+      nbr_lines = file_lines(file_name)
+      pixel_list = strarr(nbr_lines)
+      readf, 1, pixel_list
+      close,1
+      free_lun, 1
+      
+      putValue, event=event, 'roi_text_field_uname', pixel_list
+      
+      message = 'Loaded ROI file: ' + file_name + ' ... OK!'
+      log_book_update, event, message=message
+      
+    endelse
     
   endif
-
+  
 end
 

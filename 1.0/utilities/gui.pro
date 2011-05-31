@@ -67,9 +67,9 @@ pro mapBase, event=event, main_base=main_base, status=status, uname=uname
   compile_opt idl2
   
   if (keyword_set(event)) then begin
-  id = widget_info(event.top, find_by_uname=uname)
+    id = widget_info(event.top, find_by_uname=uname)
   endif else begin
-  id = widget_info(main_base, find_by_uname=uname)
+    id = widget_info(main_base, find_by_uname=uname)
   endelse
   widget_control, id, map=status
   
@@ -141,6 +141,50 @@ pro clear_text_field, event=event, uname=uname
   
   id = widget_info(event.top, find_by_uname=uname)
   widget_control, id, set_value=''
+  
+end
+
+;+
+; :Description:
+;    This select the selected line from the table given as uname
+;
+; :Params:
+;    index
+;
+; :Keywords:
+;    event
+;    uname
+;
+; :Author: j35
+;-
+pro select_file, event=event, uname=uname, index
+  compile_opt idl2
+  
+  id = widget_info(event.top, find_by_uname=uname)
+  widget_control, id, set_table_select=index
+  
+end
+
+;+
+; :Description:
+;    Set or not the given button according to the status value
+;
+; :Params:
+;    status   1b or 0b
+;             1b will select the button
+;             0b will unselect the button
+;
+; :Keywords:
+;    event
+;    uname
+;
+; :Author: j35
+;-
+pro setButton, event=event, uname=uname, status
+  compile_opt idl2
+  
+  id = widget_info(event.top, find_by_uname=uname)
+  widget_control, id, set_button=status
   
 end
 

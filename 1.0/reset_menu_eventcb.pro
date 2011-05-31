@@ -52,11 +52,14 @@ pro reset_table, event=event, uname=uname
   id = widget_info(event.top, find_by_uname=uname)
   index=1
   while (index lt sz) do begin
-   print, 'index is: ' , index
     widget_control, id, delete_rows=0
     index++
   endwhile
   
   putValue, event=event, uname, strarr(1,1)
+  
+  ;add log book message
+  message = 'Reset ' + uname
+  log_book_update, event, message=message
   
 end
