@@ -54,14 +54,14 @@ pro settings_base_event, Event
     
     ;use or not SF coeff from batch file
     widget_info(event.top, $
-    find_by_uname='use_batch_sf_uname'): begin
-    value = getButtonValue(event,'use_batch_sf_uname')
-    if (value eq 0) then begin
-    status = 'yes'
-    endif else begin
-    status = 'no'
-    endelse
-    (*global).use_batch_sf = status
+      find_by_uname='use_batch_sf_uname'): begin
+      value = getButtonValue(event,'use_batch_sf_uname')
+      if (value eq 0) then begin
+        status = 'yes'
+      endif else begin
+        status = 'no'
+      endelse
+      (*global).use_batch_sf = status
     end
     
     ;color of background
@@ -73,16 +73,16 @@ pro settings_base_event, Event
     
     ;4th column resolution function cw_bgroup
     widget_info(event.top, $
-    find_by_uname='resolution_function_switch_uname'): begin
-    flag = (value=event.value eq 0b) ? 1b : 0b
-    ActivateWidget, Event, 'configure_resolution_function_uname', flag
-    (*global).resolution_function_switch_flag = flag
+      find_by_uname='resolution_function_switch_uname'): begin
+      flag = (value=event.value eq 0b) ? 1b : 0b
+      ActivateWidget, Event, 'configure_resolution_function_uname', flag
+      (*global).resolution_function_switch_flag = flag
     end
     
     ;configure button of 4th column resolution function
     widget_info(event.top, $
-    find_by_uname='configure_resolution_function_uname'): begin
-      configure_resolution_function, Event=main_event, global=global    
+      find_by_uname='configure_resolution_function_uname'): begin
+      configure_resolution_function, Event=main_event, global=global
     end
     
     ;save and close button
@@ -245,18 +245,18 @@ PRO settings_base_gui, wBase, main_base_geometry, global
   ;use SF values from batch file
   use_batch_sf = (*global).use_batch_sf
   if (use_batch_sf eq 'yes') then begin
-  value = 0
+    value = 0
   endif else begin
-  value = 1
+    value = 1
   endelse
   wSF = cw_bgroup(wBase,$
-  ['Yes','No'], $
-  set_value=value,$
-  /row,$
-  uname='use_batch_sf_uname',$
-  label_left='Use predefined SF value when loading Batch file:',$
-  /exclusive,$
-  /no_release)  
+    ['Yes','No'], $
+    set_value=value,$
+    /row,$
+    uname='use_batch_sf_uname',$
+    label_left='Use predefined SF value when loading Batch file:',$
+    /exclusive,$
+    /no_release)
     
   ;Data to display --------------------------------------------------------------
   row2 = widget_base(wBase,$
@@ -285,7 +285,7 @@ PRO settings_base_gui, wBase, main_base_geometry, global
   ;4th column parameters (resolution function)
   rf_row = widget_base(wBase,/row)
   switch_flag = (*global).resolution_function_switch_flag
-  status = (switch_flag eq 1b) ? 0 : 1 
+  status = (switch_flag eq 1b) ? 0 : 1
   resol_function = cw_bgroup(rf_row,$
     ['Yes','No '],$
     /exclusive,$

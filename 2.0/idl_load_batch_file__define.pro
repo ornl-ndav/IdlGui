@@ -241,7 +241,7 @@ FUNCTION PopulateBatchTable, Event, BatchFileName
                 BatchTable[5,BatchIndex] = SplitArray[1]
               endelse
             end
-            '#S2(mm)'    : begin 
+            '#S2(mm)'    : begin
               s1_error = 0
               catch, s1_error
               if (s1_error ne 0) then begin
@@ -255,12 +255,12 @@ FUNCTION PopulateBatchTable, Event, BatchFileName
               STRJOIN(SplitArray[1:length-1],':')
             '#SF'        : BEGIN
               if ((*global).use_batch_sf eq 'yes') then begin
-              sz = (size(SplitArray))(1)
-              IF (sz GT 1) THEN BEGIN
-                BatchTable[8,BatchIndex] = SplitArray[1]
-              ENDIF ELSE BEGIN
-                BatchTable[8,BatchIndex] = ''
-              ENDELSE
+                sz = (size(SplitArray))(1)
+                IF (sz GT 1) THEN BEGIN
+                  BatchTable[8,BatchIndex] = SplitArray[1]
+                ENDIF ELSE BEGIN
+                  BatchTable[8,BatchIndex] = ''
+                ENDELSE
               endif else begin
                 BatchTable[8,BatchIndex] = ''
               endelse
