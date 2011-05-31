@@ -44,33 +44,36 @@
 ; :Author: j35
 ;-
 pro define_output_folder, event=event
-compile_opt idl2
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  path = (*global).path
+  title = 'Select the output folder'
+  id = widget_info(event.top, find_by_uname='MAIN_BASE')
+  
+  result = dialog_pickfile(/directory,$
+    dialog_parent=id,$
+    get_path=new_path,$
+    path=path,$
+    /must_exist,$
+    /write,$
+    title=title)
+    
+  if (result ne '') then begin
+  
+    (*global).path = result
+    putValue, event=event, 'output_folder_button', result
 
-widget_control, event.top, get_uvalue=global
-
-path = (*global).path
-title = 'Select the output folder'
-id = widget_info(event.top, find_by_uname='MAIN_BASE')
-
-result = dialog_pickfile(/directory,$
-dialog_parent=id,$
-get_path=new_path,$
-path=path,$
-/must_exist,$
-/write,$
-title=title)
-
-if (result ne '') then begin
-
-(*global).path = result
- putValue, event=event, 'output_folder_button', result
- 
- endif
-
-
-
-
-
-
-
+    message = 'New output folder is: ' + result
+    log_book_update, event, message=message
+    
+  endif
+  
+  
+  
+  
+  
+  
+  
 end

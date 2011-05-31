@@ -85,7 +85,6 @@ pro browse_files, event=event, file_type=file_type
     
     ;get list of files
     table = getValue(event=event,uname=_table_uname)
-    help, table
     
     table = reform(table)
     
@@ -99,36 +98,22 @@ pro browse_files, event=event, file_type=file_type
           widget_control, id, insert_rows=n_elements(list_file)
     endelse
     
-    help, new_table
-    print, new_table
-    print
-    
     _new_table = new_table
     table = reform(new_table,1,n_elements(_new_table))
     
-    sz = size(table,/dim)
-    i=sz[0]
-    j=sz[1]
-    _i =0
-    _j=0
-    while(_i lt i) do begin
-    while(_j lt j) do begin
-    print, 'table[',strcompress(_i),',',strcompress(_j),']=' , table[_i,_j]
-    _j++
-    endwhile
-    _i++
-    endwhile
-    
-    
     ;replace table with new list
     putValue, event=event, _table_uname, table
+
+    ;add message to log book
+    message = ['Browsed for new ' + _title + ':']
+    sz = n_elements(list_file)
+    index=0
+    while (index lt sz) do begin
+    message = [message, ' -> ' + list_file[index]]
+    index++
+    endwhile
+    log_book_update, event, message=message
     
   endif
-  
-  
-  
-  
-  
-  
   
 end

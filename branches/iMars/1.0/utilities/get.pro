@@ -245,6 +245,8 @@ function get_file_selected, event=event, base=base, uname=uname
   row_selected = get_table_row_selected(event=event,base=base,uname=uname)
   value_line = getValue(event=event, base=base, uname=uname)
   
+  if (value_line[0] eq '') then return, ''
+  
   return, value_line[row_selected]
   
 end

@@ -34,7 +34,7 @@
 
 ;+
 ; :Description:
-;    Return the index of the current selected file
+;    Return the current selection [left,top,right,bottom]
 ;
 ;
 ;
@@ -48,13 +48,13 @@ function getSelectedFile, event=event,type=type
   compile_opt idl2
   
   case (type) of
-    'data': uname='data_file_table'
+    'data': uname='data_files_table'
     'open_beam': uname='open_beam_table'
     'dark_field': uname='dark_field_table'
   endcase
   
-  row_selected = get_table_row_selected(event=event, uname=uname)
-  return, row_selected
+  selection = get_table_lines_selected(event=event, uname=uname)
+  return, selection
   
 end
 
@@ -90,6 +90,8 @@ end
 function IDLconfiguration::getConfig, event
   compile_opt idl2
   
+  widget_control, event.top, get_uvalue=global
+  
   ;1) Input
   _structure = {list_data_files: $
     getValue(event=event,uname='data_files_table'),$
@@ -121,7 +123,6 @@ function IDLconfiguration::getConfig, event
     isButtonSelected(event=event,uname='format_fits_button'), $
     is_png_selected: $
     isButtonSelected(event=event,uname='format_png_button'), $
-    
     
     is_log_book_enabled: isLogBookEnabled(event=event), $
     log_book: (*(*global).log_book)}

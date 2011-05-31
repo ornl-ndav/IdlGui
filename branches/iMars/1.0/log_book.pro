@@ -98,7 +98,7 @@ pro log_book_update, event, message=message
   endelse
   
   time = get_time()
-  new_message[0] = '['+time+']' + string(new_message[0])
+  new_message[0] = '['+time+']>' + string(new_message[0])
   log_book = (*(*global).log_book)
   
   log_book = [new_message, log_book]

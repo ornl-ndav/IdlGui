@@ -209,7 +209,12 @@ pro build_gui, main_base
     value = 'With gamma filtering',$
     uname = 'with_gamma_filtering_uname')
   space = widget_label(bottom_base,$
-    value = '         ')
+    value = '  ')
+  xloadct = widget_draw(bottom_base,$
+    scr_xsize=30,$
+    scr_ysize=30)
+  space = widget_label(bottom_base,$
+  value = ' ')
   metadata = widget_draw(bottom_base,$
     scr_xsize=30,$
     scr_ysize=30)
@@ -218,6 +223,9 @@ pro build_gui, main_base
   enlarge = widget_draw(bottom_base,$
     scr_xsize=30,$
     scr_ysize=30)
+    
+  
+    
     
   roi_base = widget_base(row1,$
     /column)

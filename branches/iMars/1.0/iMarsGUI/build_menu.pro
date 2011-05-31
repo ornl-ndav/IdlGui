@@ -92,6 +92,7 @@ pro build_menu, top_base_menu
     uname = 'about_imars_uname')
     help_button = widget_button(help,$
     value = 'Help...',$
+    sensitive = 0,$
     uname = 'help_uname')
     
 end
