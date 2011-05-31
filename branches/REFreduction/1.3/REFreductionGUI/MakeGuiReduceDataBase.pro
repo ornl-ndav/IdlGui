@@ -46,7 +46,7 @@ PRO MakeGuiReduceDataBase, Event, REDUCE_BASE, IndividualBaseWidth
   RunsLabelTitle    = 'Runs:'
   d_L_T = 50
   RunsTextFieldSize = [RunsLabelSize[0]+d_L_T,$
-    RunsLabelSize[1]-5,600,30]
+    RunsLabelSize[1]-5,530,30]
     
   d_vertical_L_L = 35
   ;region of interest
@@ -161,6 +161,16 @@ PRO MakeGuiReduceDataBase, Event, REDUCE_BASE, IndividualBaseWidth
     /EDITABLE,$
     /ALIGN_LEFT,$
     /ALL_EVENTS)
+    
+  plot_all = widget_base(data_base,$
+  xoffset = RunsTextFieldSize[0] + RunsTextFieldSize[2],$
+  yoffset = RunsTextFieldSize[1],$
+  /row,$
+  /nonexclusive)
+    
+  button = widget_button(plot_all,$
+  value='Plot all',$
+  uname='plot_all_data_file_together_uname')  
     
   ;region of interest label
   RegionOfInterestLabel = WIDGET_LABEL(data_base,$

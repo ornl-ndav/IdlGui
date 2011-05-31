@@ -1473,6 +1473,14 @@ PRO MAIN_BASE_event, Event
     ;**REDUCE TAB -------------------------------------------------------------
     ;==========================================================================
     
+    ;plot all data files together
+    widget_info(wWidget, $
+    find_by_uname='plot_all_data_file_together_uname'): begin
+      ;get nexus list of all the files (if not path already)
+      add_all_data_nexus_loaded, event
+      widget_control, event.id, set_button=0 
+    end
+
     ;yes or no data background
     WIDGET_INFO(wWidget, FIND_BY_UNAME='data_background_cw_bgroup'): BEGIN
       if (~isDataWithBackground(Event)) then begin ;without background

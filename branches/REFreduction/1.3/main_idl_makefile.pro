@@ -151,6 +151,8 @@
 .run refresh_data_plot_tof_range.pro
 .run populate_tof_range.pro
 
+.run add_all_data_nexus_loaded.pro
+
 .run cleanup.pro
 .run ref_reduction_debugging.pro
 .run MainBaseEvent.pro
