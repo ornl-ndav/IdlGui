@@ -52,6 +52,18 @@ pro settings_base_event, Event
       configure_auto_cleanup, Event=main_event, global=global
     end
     
+    ;use or not SF coeff from batch file
+    widget_info(event.top, $
+    find_by_uname='use_batch_sf_uname'): begin
+    value = getButtonValue(event,'use_batch_sf_uname')
+    if (value eq 0) then begin
+    status = 'yes'
+    endif else begin
+    status = 'no'
+    endelse
+    (*global).use_batch_sf = status
+    end
+    
     ;color of background
     widget_info(event.top, $
       find_by_uname='background_color_uname'): begin
@@ -229,6 +241,22 @@ PRO settings_base_gui, wBase, main_base_geometry, global
     LABEL_LEFT = 'Show error bars:',$
     /EXCLUSIVE,$
     /NO_RELEASE)
+    
+  ;use SF values from batch file
+  use_batch_sf = (*global).use_batch_sf
+  if (use_batch_sf eq 'yes') then begin
+  value = 0
+  endif else begin
+  value = 1
+  endelse
+  wSF = cw_bgroup(wBase,$
+  ['Yes','No'], $
+  set_value=value,$
+  /row,$
+  uname='use_batch_sf_uname',$
+  label_left='Use predefined SF value when loading Batch file:',$
+  /exclusive,$
+  /no_release)  
     
   ;Data to display --------------------------------------------------------------
   row2 = widget_base(wBase,$

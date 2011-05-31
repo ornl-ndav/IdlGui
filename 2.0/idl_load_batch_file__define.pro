@@ -254,12 +254,16 @@ FUNCTION PopulateBatchTable, Event, BatchFileName
             '#Date'      : BatchTable[7,BatchIndex] = $
               STRJOIN(SplitArray[1:length-1],':')
             '#SF'        : BEGIN
+              if ((*global).use_batch_sf eq 'yes') then begin
               sz = (size(SplitArray))(1)
               IF (sz GT 1) THEN BEGIN
                 BatchTable[8,BatchIndex] = SplitArray[1]
               ENDIF ELSE BEGIN
                 BatchTable[8,BatchIndex] = ''
               ENDELSE
+              endif else begin
+                BatchTable[8,BatchIndex] = ''
+              endelse
             END
             ELSE: BEGIN
               CommentArray= STRSPLIT(SplitArray[0],'#', $
@@ -267,27 +271,7 @@ FUNCTION PopulateBatchTable, Event, BatchFileName
                 COUNT=nbr)
               SplitArray[0] =CommentArray[0]
               cmd           = strjoin(SplitArray,' ')
-
-;              ;check if "-o none" is there or not
-;              IF (strmatch(strlowcase(cmd),'*-o none*')) THEN BEGIN
-;                string_split = ' --batch -o none'
-;              ENDIF ELSE BEGIN
-;                string_split = ' --batch'
-;              ENDELSE
-;              
-;              cmd_array     = STRSPLIT(cmd, $
-;                string_split, $
-;                /EXTRACT, $
-;                /REGEX,$
-;                COUNT = length)
-;              IF (length NE 1) THEN BEGIN
-;                cmd = cmd_array[0] + ' ' + cmd_array[1]
-;              ENDIF else begin
-;                cmd = cmd_array[0]
-;              endelse
-
               BatchTable[9,BatchIndex] = cmd
-
             END
           ENDCASE
           ++FileIndex

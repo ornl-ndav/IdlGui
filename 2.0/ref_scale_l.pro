@@ -63,6 +63,7 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   dq0 = file->getValue(tag=['configuration','resolution_function','dq0'])
   dq_over_q = file->getValue(tag=['configuration','resolution_function',$
   'dq_over_q'])
+  use_batch_sf = file->getValue(tag=['configuration','use_batch_sf'])
   
   ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
   ;============================================================================
@@ -81,6 +82,9 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   global = $
     PTR_NEW({ $
+    
+    ;should we use the SF values of the Batch File when loading
+    use_batch_sf: use_batch_sf, $ ;'yes' or 'no' 
     
     nbr_data_to_exclude: 0,$  ;number of data to remove on both side when
     ;performing setp3
