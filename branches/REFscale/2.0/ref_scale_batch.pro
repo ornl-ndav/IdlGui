@@ -547,7 +547,17 @@ pro activate_right_spin_states_button, event
 end
 
 
-;==============================================================================
+;+
+; :Description:
+;    load the batch file
+;
+; :Params:
+;    Event
+;
+;
+;
+; :Author: j35
+;-
 PRO ref_scale_LoadBatchFile, Event
 
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
