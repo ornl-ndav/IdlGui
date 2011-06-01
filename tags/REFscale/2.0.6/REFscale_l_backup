@@ -1,3 +1,0 @@
-export IDL_DIR='/SNS/software/itt/idl8'
-idl -vm="/SNS/software/idltools/sav_backup/ref_scale_l.sav"
-export IDL_DIR=''
