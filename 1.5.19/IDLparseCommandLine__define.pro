@@ -140,7 +140,8 @@ END
 ;------------------------------------------------------------------------------
 FUNCTION getAllDataNexusFileName, cmd
 
-  driver_list = ['reflect_reduction', $
+  driver_list = ['specmh_reduction',$
+    'reflect_reduction', $
     '/SNS/users/j35/bin/runenv specmh_reduction']
   index = 0
   nbr_driver = n_elements(driver_list)
