@@ -417,7 +417,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   IF (DEBUGGING EQ 'yes') THEN BEGIN
     MainBaseTitle += ' (DEBUGGING MODE)'
   ENDIF
-  
+
   ;Build Main Base
   MAIN_BASE = WIDGET_BASE( GROUP_LEADER = wGroup,$
     UNAME        = 'MAIN_BASE',$
