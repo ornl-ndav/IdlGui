@@ -59,19 +59,28 @@ function _find_nexus, event=event, run_number
   
   if (full_nexus_name[0] ne '') then begin ;make sure it's really a nexus file
   
-    cmd = "findnexus --nows -i" + instrument + ' ' + $
-      strcompress(run_number,/remove_all)
-    spawn, cmd, full_nexus_name, err_listening
-    result = strmatch(strlowcase(full_nexus_name[0]), 'failed to fill in *')
+      result = strmatch(strlowcase(full_nexus_name[0]),'failed to fill in *')
     if (result ge 1) then begin
-      return, ''
-    endif else begin
-      return, full_nexus_name[0]
-    endelse
+    isNexusExist = 0
+    return, ''
+    endif
     
   endif
   
-  return, ''
+  ;check if nexus exists
+  sz = (SIZE(full_nexus_name))[1]
+  IF (sz EQ 1) THEN BEGIN
+    result = STRMATCH(full_nexus_name,"ERROR*")
+    IF (result GE 1) THEN BEGIN
+      isNeXusExist = 0
+    ENDIF ELSE BEGIN
+      isNeXusExist = 1
+    ENDELSE
+    RETURN, full_nexus_name
+  ENDIF ELSE BEGIN
+    isNeXusExist = 1
+    RETURN, full_nexus_name[0]
+  ENDELSE
   
 end
 
