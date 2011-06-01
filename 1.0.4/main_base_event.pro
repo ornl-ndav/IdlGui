@@ -131,7 +131,7 @@ PRO main_base_event, Event
       spin_state = get_current_spin_state_selected(event)
       delete_entry, event, selection[1], selection[3], spin_state=spin_state
       _files_SF_list = (*global).files_SF_list
-      files_SF_list = make_copy_files_SF_list(_files_SF_list, except_spin_state=spin_state)
+     files_SF_list = make_copy_files_SF_list(_files_SF_list, except_spin_state = spin_state)
       full_reset, event
       (*global).files_SF_list = files_SF_list
       load_files, event, _files_SF_list[spin_state, 0,*]
