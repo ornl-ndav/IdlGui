@@ -259,8 +259,8 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     ; refred_lp is the remote reflectometer reduction code. Here were are setting up the names of the parameters to refred_lp.
     ; Change made (RC Ward, Mar 2, 2010): add time of flight cutoffs (min, max) to the call to refred_lp
     reduce_structure: {$
-    ;driver: 'refred_lp',$
-    driver: '~/bin/runenv refred_lp',$
+    driver: 'refred_lp',$
+    ;driver: '~/bin/runenv refred_lp',$
     data_paths: '--data-path',$
     data: '--data',$
     sangle: '--omega', $
@@ -270,8 +270,6 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     tof_cut_min: '--tof-cut-min',$
     tof_cut_max: '--tof-cut-max',$
     output: '--output'},$
-    
-    
     
     nexus_list_OF_pola_state: ['/entry-Off_Off/',$
     '/entry-Off_On/',$
