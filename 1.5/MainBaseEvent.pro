@@ -43,7 +43,6 @@ PRO MAIN_BASE_event, Event
   
   CASE Event.id OF
   
-  
     ;Launch the Background selection base for REF_L
     widget_info(wWidget, find_by_uname='reduce_step1_back_button'): begin
       data_background_selection_tool_button_eventcb, event
