@@ -1,3 +1,0 @@
-spawn, 'cp SOS.cfg .SOS.cfg'
-@idl_makefile
-sos		
