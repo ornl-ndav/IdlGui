@@ -153,16 +153,23 @@ FUNCTION find_full_nexus_name, Event,$
   
   if (full_nexus_name[0] ne '') then begin ;make sure it's really a nexus file
     
-    cmd = "findnexus --nows -i" + instrument + ' ' + strcompress(run_number,/remove_all)
-    spawn, cmd, full_nexus_name, err_listening
-    result = strmatch(strlowcase(full_nexus_name[0]), 'failed to fill in *')
+    result = strmatch(strlowcase(full_nexus_name[0]),'failed to fill in *')
     if (result ge 1) then begin
-      isNexusExist = 0
-      return, ''
-    endif else begin
-      isNexusExist = 1
-    return, full_nexus_name[0]
-    endelse
+    isNexusExist = 0
+    return, ''
+    endif
+;    
+;    cmd = "findnexus --nows -i" + instrument + ' ' + strcompress(run_number,/remove_all)
+;    print, cmd
+;    spawn, cmd, full_nexus_name, err_listening
+;    result = strmatch(strlowcase(full_nexus_name[0]), 'failed to fill in *')
+;    if (result ge 1) then begin
+;      isNexusExist = 0
+;      return, ''
+;    endif else begin
+;      isNexusExist = 1
+;    return, full_nexus_name[0]
+;    endelse
     
   endif
   
@@ -197,7 +204,7 @@ FUNCTION find_list_nexus_name, Event, run_number, instrument, isNexusExist
   if (full_nexus_name[0] ne '') then begin ;make sure it's really a nexus file
     
     spawn, cmd + ' --nows', full_nexus_name, err_listening
-    result = strmatch(strlowcase(full_nexus_name[0]), 'failed to fill in *')
+    result = strmatch(strlowcase(full_nexus_name[0]), "failed to fill in *")
     if (result ge 1) then begin
       isNexusExist = 0
       return, ''
