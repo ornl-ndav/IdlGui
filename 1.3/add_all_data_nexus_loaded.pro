@@ -109,11 +109,11 @@ pro add_all_data_nexus_loaded, event
   _tmp_list = strsplit(_list,',',/regex,/extract)
   sz = n_elements(_tmp_list)
   
-  ;there is only 1 file, we are done here
-  if (sz eq 1) then begin
-    widget_control, hourglass=0
-    return
-  endif
+;  ;there is only 1 file, we are done here
+;  if (sz eq 1) then begin
+;    widget_control, hourglass=0
+;    return
+;  endif
   
   _final_list = strarr(sz)
   _index = 0
