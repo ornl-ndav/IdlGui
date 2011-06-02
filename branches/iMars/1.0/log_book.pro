@@ -48,6 +48,9 @@ pro display_log_book, event
   
   widget_control, event.top, get_uvalue=global
   
+  ;do not bring to life a new log book as there is already one activated
+  if (widget_info((*global).log_book_id,/valid_id) eq 1) then return
+  
   log_book = (*(*global).log_book)
   
   id = widget_info(event.top, find_by_uname='MAIN_BASE')
