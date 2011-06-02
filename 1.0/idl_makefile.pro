@@ -81,6 +81,7 @@ cd, CurrentFolder
 
 ;buttons base
 .run display_metadata.pro
+.run launch_xloadct.pro
 
 ;main functions
 .run button_eventcb.pro

@@ -57,6 +57,9 @@ FUNCTION getGlobal
     list_button_main_base: ['zoom','contrast','metadata'], $
     preview_file_metadata: ptr_new(0L), $ ;metadata files file
     
+    ;can be either 'data_file', 'open_beam' or 'dark_field'
+    current_type_selected: '', $
+    
     log_book: ptr_new(0L), $
     log_book_id: 0L, $
     
