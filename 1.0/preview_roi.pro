@@ -50,6 +50,8 @@ function retrieve_list_roi, event=event
   pixel_list = getValue(event=event, uname='roi_text_field_uname')
   nbr_lines = n_elements(pixel_list)
   
+  on_ioerror, format_error
+  
   _index = 0
   list_roi = !null
   while (_index lt nbr_lines) do begin
@@ -85,7 +87,11 @@ function retrieve_list_roi, event=event
     _index++
   endwhile
   
+  on_ioerror, null
   return, final_list
+
+  format_error:
+    return, ['']
   
 end
 
