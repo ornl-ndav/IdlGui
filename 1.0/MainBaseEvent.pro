@@ -133,6 +133,10 @@ PRO MAIN_BASE_event, Event
     widget_info(event.top, find_by_uname='roi_load'): begin
       load_roi, event=event
     end
+    ;roi widget_text
+    widget_info(event.top, find_by_uname='roi_text_field_uname'): begin
+      refresh_roi, event=event
+    end
     ;save roi
     widget_info(event.top, find_by_uname='roi_save'): begin
       save_roi, event=event

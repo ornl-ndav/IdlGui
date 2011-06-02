@@ -149,6 +149,9 @@ pro load_roi, event=event
       
       putValue, event=event, 'roi_text_field_uname', pixel_list
       
+      type = (*global).current_type_selected
+      preview_currently_selected_file, event=event, type=type
+      
       message = 'Loaded ROI file: ' + file_name + ' ... OK!'
       log_book_update, event, message=message
       
@@ -158,3 +161,24 @@ pro load_roi, event=event
   
 end
 
+;+
+; :Description:
+;    This refresh the main preview plot and the ROI on top of it
+;    and is reached by the ROI widget_text box.
+;
+;
+;
+; :Keywords:
+;    event
+;
+; :Author: j35
+;-
+pro refresh_roi, event=event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  type = (*global).current_type_selected
+  preview_currently_selected_file, event=event, type=type
+  
+end
