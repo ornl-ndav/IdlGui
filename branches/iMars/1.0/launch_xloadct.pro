@@ -34,78 +34,31 @@
 
 ;+
 ; :Description:
-;    Preview the file currently selected
+;    Launch the xloadct base
 ;
 ;
 ;
 ; :Keywords:
 ;    event
-;    type  -> ['data_file','open_beam','dark_field']
 ;
 ; :Author: j35
 ;-
-pro preview_currently_selected_file, event=event, type=type
+pro launch_xloadct, event=event
   compile_opt idl2
   
-  widget_control, event.top, get_uvalue=global
-  (*global).current_type_selected = type
-  
-  case (type) of
-    'data_file': begin
-      uname='data_files_table'
-      label='Data: '
-    end
-    'open_beam': begin
-      uname='open_beam_table'
-      label='Open Beam: '
-    end
-    'dark_field': begin
-      uname='dark_field_table'
-      label='Dark Field: '
-    end
-  endcase
-  
-  file_name_selected = get_file_selected(event=event, uname=uname)
-  file_base_name = file_basename(file_name_selected)
-  
-  if (strcompress(file_base_name,/remove_all) eq '') then file_base_name='N/A'
-  putValue, event=event, 'preview_file_name_label', label + file_base_name
-  display_preview_of_file, event=event, file_name=file_name_selected
-  
-end
+  id = widget_info(event.top, find_by_uname='MAIN_BASE')
+  xloadct, group=id, $
+  updatecallback='live_preview_of_currently_selected_file',$
+  updatecbdata=event, $
+  /use_current
 
-;+
-; :Description:
-;    Plot the currently selected fits file
-;
-; :Keywords:
-;    event
-;    file_name
-;
-; :Author: j35
-;-
-pro display_preview_of_file, event=event, file_name=file_name
-  compile_opt idl2
+end
   
-  ;DEVICE, DECOMPOSED = 0
-  ;loadct, 5, /silent
-  id_draw = widget_info(Event.top, find_by_uname='preview_draw_uname')
-  widget_control, id_draw, get_value=id_value
-  wset,id_value
-  
-  is_with_gamma_filtering = $
-    isButtonSelected(event=event,uname='with_gamma_filtering_uname')
-    
-  read_fits_file, file_name=file_name, data=data, metadata=metadata  
-  if (data eq !null) then return  
-    
-  widget_control, event.top, get_uvalue=global  
-  (*(*global).preview_file_metadata) = metadata
-    
-  geometry = widget_info(id_draw,/geometry)
-  xsize = geometry.scr_xsize
-  ysize = geometry.scr_ysize
-  
-  new_data = congrid(data, xsize, ysize)
+pro live_preview_of_currently_selected_file, data=event
+compile_opt idl2
+
+  widget_control, event.top, get_uvalue=global
+  type = (*global).current_type_selected
+  preview_currently_selected_file, event=event, type=type
   
 end

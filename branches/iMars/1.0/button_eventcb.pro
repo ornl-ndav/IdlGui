@@ -34,7 +34,7 @@
 
 ;+
 ; :Description:
-;    This eventcb is reached by the buttons below the preview 
+;    This eventcb is reached by the buttons below the preview
 ;    widget_draw. This is reached when the user moves in or out of the
 ;    widget and when there is a click and release.
 ;
@@ -87,12 +87,12 @@ end
 ; :Author: j35
 ;-
 pro start_button, event=event, button=button
-compile_opt idl2
-
-case (button) of
-'metadata' : display_metadata, event=event 
-'zoom' :
-'contrast' : 
-endcase
-
+  compile_opt idl2
+  
+  case (button) of
+    'metadata' : display_metadata, event=event
+    'zoom' :
+    'contrast' : launch_xloadct, event=event
+  endcase
+  
 end
