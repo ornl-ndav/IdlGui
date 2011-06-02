@@ -66,7 +66,6 @@ pro display_log_book, event
     group=id,$
     text=log_book,$
     wtext = log_book_id
-  ;    return_id=log_book_id
     
   (*global).log_book_id = log_book_id
   

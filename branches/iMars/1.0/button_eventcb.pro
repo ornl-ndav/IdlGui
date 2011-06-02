@@ -62,6 +62,7 @@ pro button_eventcb, event=event, button=button
   
     if (event.press eq 1) then begin ;pressed button
       display_images, event=event, button=button, status='on'
+      start_button, event=event, button=button
     endif
     
     if (event.release eq 1) then begin ;released button
@@ -70,4 +71,28 @@ pro button_eventcb, event=event, button=button
     
   endelse
   
+end
+
+;+
+; :Description:
+;    This routines is reached when any of the preview buttons are clicked.
+;    They will be route to the right procedure
+;
+;
+;
+; :Keywords:
+;    event
+;    button
+;
+; :Author: j35
+;-
+pro start_button, event=event, button=button
+compile_opt idl2
+
+case (button) of
+'metadata' : display_metadata, event=event 
+'zoom' :
+'contrast' : 
+endcase
+
 end

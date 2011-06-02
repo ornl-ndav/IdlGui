@@ -96,6 +96,9 @@ pro display_preview_of_file, event=event, file_name=file_name
   read_fits_file, file_name=file_name, data=data, metadata=metadata  
   if (data eq !null) then return  
     
+  widget_control, event.top, get_uvalue=global  
+  (*(*global).preview_file_metadata) = metadata
+    
   geometry = widget_info(id_draw,/geometry)
   xsize = geometry.scr_xsize
   ysize = geometry.scr_ysize

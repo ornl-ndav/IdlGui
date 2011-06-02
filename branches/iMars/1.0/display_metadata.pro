@@ -32,47 +32,43 @@
 ;
 ;==============================================================================
 
-FUNCTION getGlobal
-
-  file = OBJ_NEW('idlxmlparser', '.iMars.cfg')
-  APPLICATION = file->getValue(tag=['configuration','application'])
-  VERSION = file->getValue(tag=['configuration','version'])
+;+
+; :Description:
+;    This routine display the current previewed metadata
+;
+;
+;
+; :Keywords:
+;    event
+;
+; :Author: j35
+;-
+pro display_metadata, event=event
+  compile_opt idl2
   
-  ;get ucams of user if running on linux
-  ;and set ucams to 'j35' if running on darwin
-  IF (!VERSION.os EQ 'darwin') THEN BEGIN
-    ucams = 'j35'
-  ENDIF ELSE BEGIN
-    ucams = get_ucams()
-  ENDELSE
+  widget_control, event.top, get_uvalue=global
   
-  ;define global variables
-  global = ptr_new ({ $
-    version:           VERSION,$
-    application:       APPLICATION, $
+  preview_file_metadata = (*(*global).preview_file_metadata)
+  
+  id = widget_info(event.top, find_by_uname='MAIN_BASE')
+  geometry = widget_info(id, /geometry)
+  xsize = geometry.xsize
+  ysize = geometry.ysize
+  xoffset = geometry.xoffset
+  yoffset = geometry.yoffset
+  
+  file_name = getValue(event=event, uname='preview_file_name_label')
+  
+  if (file_name eq 'N/A') then return
+  
+  xdisplayfile, '',$
+    title='Metadata of ' + file_name,$
+    width=70,$
+    height=50,$
+    xoffset = xsize+xoffset,$
+    yoffset = yoffset,$
+    group=id,$
+    text=preview_file_metadata,$
+    wtext = log_book_id
     
-    top_base: 0L, $
-    
-    ;list of all the buttons of the main base
-    list_button_main_base: ['zoom','contrast','metadata'], $
-    preview_file_metadata: ptr_new(0L), $ ;metadata files file
-    
-    log_book: ptr_new(0L), $
-    log_book_id: 0L, $
-    
-    preview_display_base_id: 0L, $
-    
-    full_log_book: ptr_new(0L), $
-    new_log_book_message: ptr_new(0L), $
-    
-    path: '~/', $
-    config_path: '~/', $
-    
-    file_extension: 'fits',$
-    file_filter: '*fits',$
-    
-    last_term: 0L$
-     })
-    
-  return, global
-END
+end

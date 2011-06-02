@@ -53,4 +53,6 @@ pro read_fits_file, file_name=file_name, data=data, metadata=metadata
   
   data = mrdfits(file_name, 0, header, /fscale, /silent)
   
+  metadata = header
+  
 end
