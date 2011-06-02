@@ -79,6 +79,9 @@ cd, CurrentFolder
 .run IDLconfiguration__define.pro
 .run preview.pro
 
+;buttons base
+.run display_metadata.pro
+
 ;main functions
 .run button_eventcb.pro
 .run global.pro

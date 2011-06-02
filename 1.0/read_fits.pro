@@ -25,7 +25,7 @@ PRO fits_reader
   
   ;****************************************************************************
   print, 'working with data_file'
-  read_fits_file, data_file, data1
+  _read_fits_file, data_file, data1
   
 ;     new_data = congrid(data1, 1000, 1000)
 ;    window, 0, xsize=1000, ysize=1000, title='test file before rotation'
@@ -66,7 +66,7 @@ PRO fits_reader
   
   ;****************************************************************************
   print, 'working with dark field'
-  read_fits_file, df1, data2
+  _read_fits_file, df1, data2
         
   ;new_data = congrid(data2, 1000, 1000)
   ;window, 1, xsize=1000, ysize=1000, title='dark field'
@@ -91,7 +91,7 @@ PRO fits_reader
     
   ;****************************************************************************
   print, 'working with open beam'
-  read_fits_file, open_beam, data3
+  _read_fits_file, open_beam, data3
   
   gamma_cleaner, data3
   
@@ -352,7 +352,7 @@ PRO get_fits_info, file
 END
 
 ;------------------------------------------------------------------------------
-PRO read_fits_file, file, data
+PRO _read_fits_file, file, data
 
   print, file_test(file)
   
