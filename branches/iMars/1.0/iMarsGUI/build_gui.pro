@@ -212,20 +212,20 @@ pro build_gui, main_base
     value = '  ')
   xloadct = widget_draw(bottom_base,$
     scr_xsize=30,$
+    uname='contrast_uname',$
     scr_ysize=30)
   space = widget_label(bottom_base,$
   value = ' ')
   metadata = widget_draw(bottom_base,$
     scr_xsize=30,$
+    uname='metadata_uname',$
     scr_ysize=30)
   space = widget_label(bottom_base,$
   value = ' ')
   enlarge = widget_draw(bottom_base,$
     scr_xsize=30,$
+    uname='zoom_uname',$
     scr_ysize=30)
-    
-  
-    
     
   roi_base = widget_base(row1,$
     /column)

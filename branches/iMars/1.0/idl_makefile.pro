@@ -68,6 +68,7 @@ cd, CurrentFolder
 ;fits routines
 .run read_fits_file.pro
 
+.run display_images.pro
 .run browse_files.pro
 .run reset_menu_eventcb.pro
 .run roi_eventcb.pro

@@ -75,6 +75,9 @@ pro BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   Widget_Control, /REALIZE, main_base
   XManager, 'MAIN_BASE', main_base, /NO_BLOCK, CLEANUP='iMars_cleanup'
   
+  ;initialize all the buttons
+  initialize_all_images, main_base=main_base
+
 ;  logger, APPLICATION=application, VERSION=version, UCAMS=ucams
   
 end

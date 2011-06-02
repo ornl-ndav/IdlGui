@@ -34,85 +34,82 @@
 
 ;+
 ; :Description:
-;    Describe the procedure.
+;    This routine initialize all the images of the main GUI
 ;
-; :Params:
-;    global
+;
 ;
 ; :Keywords:
 ;    main_base
 ;    event
-;    status   ;1 for file found, 0 for not file not found
 ;
 ; :Author: j35
 ;-
-PRO display_file_found_or_not, main_base=main_base, $
-    event=event, $
-    status=status
-    compile_opt idl2
-          
-  case (status) OF
-    0: BEGIN ;file not found
-      mode1 = read_png('SOS_images/not_found_file.png')
-    END
-    1: BEGIN ;activate previous button
-      mode1 = read_png('SOS_images/found_file.png')
-    END
-  ENDCASE
-  
-  IF (N_ELEMENTS(MAIN_BASE) NE 0) THEN BEGIN
-    mode1_id = WIDGET_INFO(MAIN_BASE, $
-    FIND_BY_UNAME='rtof_nexus_file_status_uname')
-  ENDIF ELSE BEGIN
-    mode1_id = WIDGET_INFO(Event.top, $
-    FIND_BY_UNAME='rtof_nexus_file_status_uname')
-  ENDELSE
-  
-  ;mode1
-  WIDGET_CONTROL, mode1_id, GET_VALUE=id
-  WSET, id
-  TV, mode1, 0,0,/true
-  
-END
+pro initialize_all_images, main_base=main_base, $
+event=event
+compile_opt idl2
+
+if (keyword_set(main_base)) then begin
+widget_control, main_base, get_uvalue=global
+endif else begin
+widget_control, event.top, get_uvalue=global
+endelse
+
+list_button = (*global).list_button_main_base
+sz = n_elements(list_button)
+_index=0
+while (_index lt sz) do begin
+
+display_images, main_base=main_base, $
+event=event, $
+button=list_button[_index], $
+status='off'
+
+_index++
+endwhile
+
+end
 
 ;+
 ; :Description:
-;    display the Sample widget draw button
+;    This procedure displays the images of the main base 
+;    (zoom, contrast and metadata)
 ;
 ; :Keywords:
 ;    main_base
 ;    event
-;    status   0:for off and 1: for on
+;    button     from the list ['metadata','zoom','contrast']
+;    status     ['on','off']
 ;
 ; :Author: j35
 ;-
-pro display_output_sample_button, main_base=main_base, $
+pro display_images, main_base=main_base, $
 event=event, $
+button=button, $
 status=status
 compile_opt idl2
 
-  case (status) OF
-    0: BEGIN ;file not found
-      mode1 = read_png('SOS_images/sample_off.png')
-    END
-    1: BEGIN ;activate previous button
-      mode1 = read_png('SOS_images/sample_on.png')
-    END
-  ENDCASE
-  
-  uname = 'example_of_output_format_draw'
-  IF (N_ELEMENTS(MAIN_BASE) NE 0) THEN BEGIN
-    mode1_id = WIDGET_INFO(MAIN_BASE, $
-    FIND_BY_UNAME=uname)
-  ENDIF ELSE BEGIN
-    mode1_id = WIDGET_INFO(Event.top, $
-    FIND_BY_UNAME=uname)
-  ENDELSE
-  
-  ;mode1
-  WIDGET_CONTROL, mode1_id, GET_VALUE=id
-  WSET, id
-  TV, mode1, 0,0,/true
+;uname of the widget_draw where to display the image
+draw_uname = button + '_uname'
+png_path = 'iMars_images/'
+png_suffix = '.png'
+png_file_name = png_path + button + '_' + status + png_suffix
 
+;read the png file
+png = read_png(png_file_name)
+
+if (keyword_set(main_base)) then begin
+id = widget_info(main_base, $
+find_by_uname=draw_uname)
+endif else begin
+id = widget_info(event.top, $
+find_by_uname=draw_uname)
+endelse
+
+widget_control, id, get_value=value_id
+wset, value_id
+tv, png, 0,0, /true
 
 end
+
+
+
