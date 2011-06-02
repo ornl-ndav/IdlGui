@@ -93,7 +93,7 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     tof_axis_ms: ptr_new(0L), $
     counts_vs_pixel: ptr_new(0L), $
     left_clicked: 0b, $
-    center_pixel_default_type: 'user_defined', $
+    center_pixel_default_type: 'geometry', $ ;'user_defined' or 'geometry'
     current_center_pixel: 'N/A',$   ;center pixel value in settings base
     
     congrid_x_coeff: 0., $ ;congrid x coeff for data file

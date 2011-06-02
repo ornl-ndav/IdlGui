@@ -215,11 +215,11 @@ beamdiv = widget_base(reduce_base,$
   no = widget_button(row1b,$
   value = 'No',$
   uname = 'beamdiv_corr_no')
-  widget_control, no, /set_button
+  widget_control, yes, /set_button
   settings = widget_button(row1,$
   value = 'Settings...',$
   uname = 'beamdiv_settings',$
-  sensitive = 0)
+  sensitive = 1)
   
   
   
