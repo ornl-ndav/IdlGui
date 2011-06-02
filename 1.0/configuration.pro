@@ -60,8 +60,7 @@ pro load_configuration, event=event
     
   if (cfg_full_file_name[0] eq '') then return
   
-  ;catch, error
-  error = 0
+  catch, error
   if (error ne 0) then begin
     catch,/cancel
     

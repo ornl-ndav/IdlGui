@@ -53,6 +53,10 @@ FUNCTION getGlobal
     
     top_base: 0L, $
     
+    ;list of all the buttons of the main base
+    list_button_main_base: ['zoom','contrast','metadata'], $
+    
+    
     log_book: ptr_new(0L), $
     log_book_id: 0L, $
     
