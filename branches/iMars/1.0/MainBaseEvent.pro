@@ -86,6 +86,7 @@ PRO MAIN_BASE_event, Event
     ;data file
     widget_info(event.top, find_by_uname='data_files_table'): begin
       preview_currently_selected_file, event=event, type='data_file'
+      table_right_click, event=event, type='data_file'      
     end
     ;open beam
     widget_info(event.top, find_by_uname='open_beam_table'): begin

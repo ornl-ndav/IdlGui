@@ -86,10 +86,19 @@ pro build_gui, main_base
     xsize = 1,$
     ysize = 1,$
     /all_events, $
+    /context_events, $
     column_widths = 595,$
     uname = 'data_files_table',$
     /no_column_headers,$
     /no_row_headers)
+    
+  ;context_menu
+  contextBase = widget_base(data_table,$
+    /context_menu,$
+    uname = 'context_data_file_base')
+  delete = widget_button(contextBase,$
+    value = 'Delete selection',$
+    uname = 'delete_data_file_selection_uname')
     
   ;space
   space = widget_label(col1,$
@@ -117,7 +126,7 @@ pro build_gui, main_base
   ;4th row
   row2 = widget_base(col1,$
     /row)
-  data_table = widget_table(row2,$
+  open_beam_table = widget_table(row2,$
     scr_xsize = 600,$
     scr_ysize = 100,$
     xsize = 1,$
@@ -126,7 +135,16 @@ pro build_gui, main_base
     /all_events, $
     uname = 'open_beam_table',$
     /no_column_headers,$
+    /context_events, $
     /no_row_headers)
+    
+  ;context_menu
+  contextBase = widget_base(open_beam_table,$
+    /context_menu,$
+    uname = 'context_open_beam_base')
+  delete = widget_button(contextBase,$
+    value = 'Delete selection',$
+    uname = 'delete_open_beam_selection_uname')
     
   ;space
   space = widget_label(col1,$
@@ -154,16 +172,25 @@ pro build_gui, main_base
   ;6th row
   row2 = widget_base(col1,$
     /row)
-  data_table = widget_table(row2,$
+  dark_field_table = widget_table(row2,$
     scr_xsize = 600,$
     scr_ysize = 100,$
     xsize = 1,$
     ysize = 1,$
     /all_events, $
     column_widths = 595,$
+    /context_events, $
     uname = 'dark_field_table',$
     /no_column_headers,$
     /no_row_headers)
+    
+  ;context_menu
+  contextBase = widget_base(dark_field_table,$
+    /context_menu,$
+    uname = 'context_dark_field_base')
+  delete = widget_button(contextBase,$
+    value = 'Delete selection',$
+    uname = 'delete_dark_field_selection_uname')
     
   ;col2 - col2 - col2 - col2 - col2 - col2 - col2 - col2 - col2 - col2 - col2
   col2 = widget_draw(row,$
