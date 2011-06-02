@@ -60,6 +60,9 @@ FUNCTION getGlobal
     ;can be either 'data_file', 'open_beam' or 'dark_field'
     current_type_selected: '', $
     
+    ;x and y size of data previewed
+    size_preview_data: intarr(2), $
+    
     log_book: ptr_new(0L), $
     log_book_id: 0L, $
     
@@ -75,7 +78,8 @@ FUNCTION getGlobal
     file_filter: '*fits',$
     
     last_term: 0L$
-     })
+    })
     
   return, global
-END
+  
+end

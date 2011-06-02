@@ -71,7 +71,8 @@ pro preview_currently_selected_file, event=event, type=type
   if (strcompress(file_base_name,/remove_all) eq '') then file_base_name='N/A'
   putValue, event=event, 'preview_file_name_label', label + file_base_name
   display_preview_of_file, event=event, file_name=file_name_selected
-  
+  display_preview_roi, event=event
+
 end
 
 ;+
@@ -87,8 +88,6 @@ end
 pro display_preview_of_file, event=event, file_name=file_name
   compile_opt idl2
   
-  ;DEVICE, DECOMPOSED = 0
-  ;loadct, 5, /silent
   id_draw = widget_info(Event.top, find_by_uname='preview_draw_uname')
   widget_control, id_draw, get_value=id_value
   wset,id_value
@@ -106,6 +105,10 @@ pro display_preview_of_file, event=event, file_name=file_name
   xsize = geometry.scr_xsize
   ysize = geometry.scr_ysize
   
+  size_preview_data = size(data,/dim)
+  (*global).size_preview_data = size_preview_data
+  
   new_data = congrid(data, xsize, ysize)
+  tvscl, new_data
   
 end

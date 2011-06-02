@@ -236,7 +236,8 @@ pro build_gui, main_base
   roi_base = widget_base(row1,$
     /column)
   label = widget_label(roi_base,$
-    value='Selection: xmin,ymin,xmax,ymax')
+    value=' Selection: x0,y0,x1,y1',$
+    /align_left)
   _row = widget_base(roi_base,$
     /row)
     
