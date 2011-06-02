@@ -110,6 +110,24 @@ PRO MAIN_BASE_event, Event
       preview_currently_selected_file, event=event, type='dark_field'
     end
     
+    
+    ;zoom/metadata/contrast buttons
+    ;zoom
+    widget_info(event.top, find_by_uname='zoom_uname'): begin
+      button_eventcb, event=event, button='zoom'
+    end
+    
+    ;contrast
+    widget_info(event.top, find_by_uname='contrast_uname'): begin
+      button_eventcb, event=event, button='contrast'
+    end
+    
+    ;metadata
+    widget_info(event.top, find_by_uname='metadata_uname'): begin
+      button_eventcb, event=event, button='metadata'
+    end
+    
+    
     ;roi
     ;load roi
     widget_info(event.top, find_by_uname='roi_load'): begin

@@ -80,6 +80,7 @@ cd, CurrentFolder
 .run preview.pro
 
 ;main functions
+.run button_eventcb.pro
 .run global.pro
 .run MainBaseEvent.pro
 .run iMars.pro
