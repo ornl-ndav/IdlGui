@@ -78,6 +78,7 @@ cd, CurrentFolder
 .run configuration.pro
 .run IDLconfiguration__define.pro
 .run preview.pro
+.run table_right_click.pro
 
 ;buttons base
 .run display_metadata.pro
