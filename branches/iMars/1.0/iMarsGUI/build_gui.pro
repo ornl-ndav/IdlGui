@@ -213,18 +213,24 @@ pro build_gui, main_base
   xloadct = widget_draw(bottom_base,$
     scr_xsize=30,$
     uname='contrast_uname',$
+    /tracking_events,$
+    /button_events, $
     scr_ysize=30)
   space = widget_label(bottom_base,$
-  value = ' ')
+    value = ' ')
   metadata = widget_draw(bottom_base,$
     scr_xsize=30,$
+    /tracking_events,$
+    /button_events, $
     uname='metadata_uname',$
     scr_ysize=30)
   space = widget_label(bottom_base,$
-  value = ' ')
+    value = ' ')
   enlarge = widget_draw(bottom_base,$
     scr_xsize=30,$
+    /tracking_events,$
     uname='zoom_uname',$
+    /button_events, $
     scr_ysize=30)
     
   roi_base = widget_base(row1,$
@@ -233,11 +239,11 @@ pro build_gui, main_base
     value='Selection: xmin,ymin,xmax,ymax')
   _row = widget_base(roi_base,$
     /row)
-  
+    
   roi = widget_text(_row,$
-  /editable,$
-  value='',$
-  uname='roi_text_field_uname',$
+    /editable,$
+    value='',$
+    uname='roi_text_field_uname',$
     xsize = 20,$
     ysize = 8)
   _col = widget_base(_row,$
@@ -252,14 +258,14 @@ pro build_gui, main_base
   save = widget_button(_col,$
     value = 'Save...',$
     uname='roi_save')
-
+    
   label = widget_label(roi_base,$
-  /align_left, $
-  value = 'These ROIs will be used for the')
+    /align_left, $
+    value = 'These ROIs will be used for the')
   label = widget_label(roi_base,$
-  /align_left,$
-  value = 'normalization.')
-
+    /align_left,$
+    value = 'normalization.')
+    
   ;space in col3
   for i=0,3 do begin
     space = widget_label(col3,$
@@ -307,7 +313,7 @@ pro build_gui, main_base
     
   ;progress bar
   pro_base = widget_base(col3,$
-  map=0,$
+    map=0,$
     /row)
   draw = widget_draw(pro_base,$
     scr_xsize = 535,$
