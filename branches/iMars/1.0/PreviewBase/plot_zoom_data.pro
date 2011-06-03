@@ -47,8 +47,6 @@
 pro plot_zoom_data, event=event, base=base
   compile_opt idl2
   
-  help, base
-  
   if (keyword_set(event)) then begin
     widget_control, event.top, get_uvalue=global_preview
     base = (*global_preview)._base
@@ -84,10 +82,11 @@ end
 ;
 ; :Keywords:
 ;    base
+;    event
 ;
 ; :Author: j35
 ;-
-pro plot_scale_zoom_data, base=base
+pro plot_scale_zoom_data, base=base, event=event
 compile_opt idl2
 
 if (n_elements(base) ne 0) then begin
@@ -157,3 +156,90 @@ if (n_elements(base) ne 0) then begin
   device, decomposed=0
 
 end
+
+;+
+; :Description:
+;    Display the colorbar on the right size of the plot
+;
+;
+;
+; :Keywords:
+;    base
+;    event
+;
+; :Author: j35
+;-
+pro plot_colorbar_zoom_data, base=base, event=event
+compile_opt idl2
+
+ if (n_elements(event) ne 0) then begin
+    id_draw = widget_info(event.top,find_by_uname='zoom_colorbar')
+    widget_control, event.top, get_uvalue=global_preview
+  endif else begin
+    id_draw = widget_info(base, find_by_uname='zoom_colorbar')
+    widget_control, base, get_uvalue=global_preview
+  endelse
+  widget_control, id_draw, get_value=id_value
+  wset,id_value
+  erase
+  
+  global = (*global_preview).global
+  
+ ; default_loadct = (*global_preview).default_loadct
+ ; loadct, default_loadct, /silent
+  
+  data = (*(*global).preview_data) 
+  
+  zmin = min(data, max=zmax)
+
+  default_scale_setting = (*global_preview).default_scale_setting
+  if (default_scale_setting eq 0) then begin ;linear
+  
+    divisions = 20
+    perso_format = '(e8.1)'
+    range = [zmin,zmax]
+    colorbar, $
+      NCOLORS      = 255, $
+      POSITION     = [0.75,0.01,0.95,0.99], $
+      RANGE        = range,$
+      DIVISIONS    = divisions,$
+      PERSO_FORMAT = perso_format,$
+      /VERTICAL
+      
+  endif else begin
+  
+    divisions = 10
+    perso_format = '(e8.1)'
+    range = float([zmin,zmax])
+    
+    if (default_loadct eq 6) then begin
+      colorbar, $
+        AnnotateColor = 'white',$
+        NCOLORS      = 255, $
+        POSITION     = [0.75,0.01,0.95,0.99], $
+        RANGE        = range,$
+        DIVISIONS    = divisions,$
+        PERSO_FORMAT = perso_format,$
+        /VERTICAL,$
+        ylog = 1
+        
+    endif else begin
+    
+      colorbar, $
+        NCOLORS      = 255, $
+        POSITION     = [0.75,0.01,0.95,0.99], $
+        RANGE        = range,$
+        DIVISIONS    = divisions,$
+        PERSO_FORMAT = perso_format,$
+        /VERTICAL,$
+        ylog = 1
+        
+    endelse
+    
+  endelse
+
+
+end
+
+
+
