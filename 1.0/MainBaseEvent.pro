@@ -91,10 +91,29 @@ PRO MAIN_BASE_event, Event
     ;open beam
     widget_info(event.top, find_by_uname='open_beam_table'): begin
       preview_currently_selected_file, event=event, type='open_beam'
+      table_right_click, event=event, type='open_beam'      
     end
     ;dark field
     widget_info(event.top, find_by_uname='dark_field_table'): begin
       preview_currently_selected_file, event=event, type='dark_field'
+      table_right_click, event=event, type='dark_field'      
+    end
+
+    ;delete right click
+    ;data file
+    widget_info(event.top, $
+    find_by_uname='delete_data_file_selection_uname'): begin
+    delete_selection, event=event, type='data_file'
+    end
+    ;open beam
+    widget_info(event.top, $
+    find_by_uname='delete_open_beam_selection_uname'): begin
+    delete_selection, event=event, type='open_beam'
+    end
+    ;dark field
+    widget_info(event.top, $
+    find_by_uname='delete_dark_field_selection_uname'): begin
+    delete_selection, event=event, type='dark_field'
     end
     
     ;browse buttons

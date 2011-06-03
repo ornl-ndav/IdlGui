@@ -50,23 +50,14 @@ pro preview_currently_selected_file, event=event, type=type
   widget_control, event.top, get_uvalue=global
   (*global).current_type_selected = type
   
-  case (type) of
-    'data_file': begin
-      uname='data_files_table'
-      label='Data: '
-    end
-    'open_beam': begin
-      uname='open_beam_table'
-      label='Open Beam: '
-    end
-    'dark_field': begin
-      uname='dark_field_table'
-      label='Dark Field: '
-    end
-  endcase
-  
-  file_name_selected = get_file_selected(event=event, uname=uname)
+  file_name_selected = get_file_selected_of_type(event=event, type=type)
   file_base_name = file_basename(file_name_selected)
+  
+  case (type) of 
+  'data_file': label='Data: '
+  'open_beam': label='Open beam: '
+  'dark_field': label='Dark field: '
+  endcase
   
   if (strcompress(file_base_name,/remove_all) eq '') then file_base_name='N/A'
   putValue, event=event, 'preview_file_name_label', label + file_base_name

@@ -251,3 +251,40 @@ function get_file_selected, event=event, base=base, uname=uname
   
 end
 
+;+
+; :Description:
+;    Return the files selected giving the type ('data_file','open_beam',
+;    'dark_field')
+;
+;
+;
+; :Keywords:
+;    event
+;    type
+;
+; :Returns:
+;   list of files selected
+;
+; :Author: j35
+;-
+function get_file_selected_of_type, event=event, type=type
+  compile_opt idl2
+  
+  case (type) of
+    'data_file': begin
+      uname='data_files_table'
+    end
+    'open_beam': begin
+      uname='open_beam_table'
+    end
+    'dark_field': begin
+      uname='dark_field_table'
+    end
+  endcase
+  
+  file_name_selected = get_file_selected(event=event, uname=uname)
+  
+  return, file_name_selected
+end
+
+
