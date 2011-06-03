@@ -99,6 +99,7 @@ PRO MAIN_BASE_event, Event
       table_right_click, event=event, type='dark_field'
     end
     
+    
     ;delete right click
     ;data file
     widget_info(event.top, $

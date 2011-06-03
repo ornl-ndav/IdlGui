@@ -94,11 +94,11 @@ pro build_gui, main_base
     /no_row_headers)
     
   ;context_menu
-  contextBase = widget_base(data_table,$
+  contextBase1 = widget_base(data_table,$
     /context_menu,$
     uname = 'context_data_file_base')
-  delete = widget_button(contextBase,$
-    value = 'Delete selection',$
+  delete = widget_button(contextBase1,$
+    value = 'Delete Data selection',$
     uname = 'delete_data_file_selection_uname')
     
   ;space
@@ -141,11 +141,11 @@ pro build_gui, main_base
     /no_row_headers)
     
   ;context_menu
-  contextBase = widget_base(open_beam_table,$
+  contextBase2 = widget_base(open_beam_table,$
     /context_menu,$
     uname = 'context_open_beam_base')
-  delete = widget_button(contextBase,$
-    value = 'Delete selection',$
+  delete = widget_button(contextBase2,$
+    value = 'Delete Open Beam selection',$
     uname = 'delete_open_beam_selection_uname')
     
   ;space
@@ -188,11 +188,11 @@ pro build_gui, main_base
     /no_row_headers)
     
   ;context_menu
-  contextBase = widget_base(dark_field_table,$
+  contextBase3 = widget_base(dark_field_table,$
     /context_menu,$
     uname = 'context_dark_field_base')
-  delete = widget_button(contextBase,$
-    value = 'Delete selection',$
+  delete = widget_button(contextBase3,$
+    value = 'Delete Dark Field selection',$
     uname = 'delete_dark_field_selection_uname')
     
   ;col2 - col2 - col2 - col2 - col2 - col2 - col2 - col2 - col2 - col2 - col2
