@@ -74,3 +74,86 @@ pro plot_zoom_data, event=event, base=base
   tvscl, cData
   
 end
+
+;+
+; :Description:
+;    This will display the scale that surrounds the plot
+;    ex: [2048,2048]
+;
+;
+;
+; :Keywords:
+;    base
+;
+; :Author: j35
+;-
+pro plot_scale_zoom_data, base=base
+compile_opt idl2
+
+if (n_elements(base) ne 0) then begin
+    id = widget_info(base,find_by_Uname='zoom_scale')
+;    id_base = widget_info(base, find_by_uname='tof_selection_base_uname')
+    sys_color = widget_info(base,/system_colors)
+    widget_control, base, get_uvalue=global_preview
+  endif else begin
+    id = widget_info(event.top, find_by_uname='tof_selection_scale')
+;    id_base = widget_info(event.top, find_by_uname='tof_selection_base_uname')
+    sys_color = widget_info(event.top, /system_colors)
+    widget_control, event.top, get_uvalue=global_preview
+  endelse
+  
+  widget_control, id, get_value=id_value
+  wset, id_value
+  
+  ;change color of background
+  device, decomposed=1
+  sys_color_window_bk = sys_color.window_bk
+  
+  x_range = (*global_preview).xrange
+  min_x = x_range[0]
+  max_x = x_range[-1]
+  
+  y_range = (*global_preview).yrange
+  min_y = y_range[0]
+  max_y = y_range[-1]
+  
+;  ;determine the number of xaxis data to show
+;  geometry = widget_info(id_base,/geometry)
+;  xsize = geometry.scr_xsize
+  
+  xticks = 16
+  yticks = 32
+  
+  xmargin = 6.6
+  ymargin = 4
+  
+  ticklen = -0.0015
+  
+  plot, randomn(s,80), $
+    XRANGE     = x_range,$
+    YRANGE     = y_range,$
+    COLOR      = convert_rgb([0B,0B,255B]), $
+    BACKGROUND = convert_rgb(sys_color_window_bk),$
+    THICK      = 0.5, $
+    TICKLEN    = ticklen, $
+    XTICKLAYOUT = 0,$
+    XSTYLE      = 1,$
+    YSTYLE      = 1,$
+    YTICKLAYOUT = 0,$
+    XTICKS      = xticks,$
+    XMINOR      = 2,$
+    ;YMINOR      = 2,$
+    YTICKS      = yticks,$
+;    XTITLE      = 'Pixels',$
+;    YTITLE      = 'Pixels',$
+    XMARGIN     = [xmargin, xmargin+0.2],$
+    YMARGIN     = [ymargin, ymargin],$
+    /NODATA
+  axis, yaxis=1, YRANGE=y_range, YTICKS=yticks, YSTYLE=1, $
+    COLOR=convert_rgb([0B,0B,255B]), TICKLEN = ticklen
+  axis, xaxis=1, XRANGE=x_range, XTICKS=xticks, XSTYLE=1, $
+    COLOR=convert_rgb([0B,0B,255B]), TICKLEN = ticklen
+    
+  device, decomposed=0
+
+end
