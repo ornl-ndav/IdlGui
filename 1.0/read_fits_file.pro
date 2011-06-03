@@ -37,33 +37,58 @@
 ;    This routine read the fits files and return the data and the metadata
 ;
 ; :Keywords:
+;    event
 ;    file_name
 ;    data
 ;    metadata
 ;
 ; :Author: j35
 ;-
-pro read_fits_file, file_name=file_name, data=data, metadata=metadata
+pro read_fits_file, event=event, $
+    file_name=file_name, $
+    data=data, $
+    metadata=metadata
   compile_opt idl2
   
-  sz = n_elements(file_name)
-  _index = 0
-  while (_index lt sz) do begin
+  catch, error
+  if (error ne 0) then begin
+    catch,/cancel
+    
+    data=!null
+    metadata=['']
+    
+    message = ['Error loading files: ']
+    file_name = ' -> ' + file_name
+    message = [message, file_name]
+    log_book_update, event, message=message
+    
+  endif else begin
   
-    if (~file_test(file_name[_index])) then begin
-      data=!null
-      return
-    endif
+    sz = n_elements(file_name)
+    _index = 0
+    while (_index lt sz) do begin
     
-    _data = mrdfits(file_name[_index], 0, header, /fscale, /silent)
-    if (_index eq 0) then begin
-      data = _data
-      metadata = header
-    endif else begin
-      data += _data
-    endelse
+      if (~file_test(file_name[_index])) then begin
+        data=!null
+        return
+      endif
+      
+      _data = mrdfits(file_name[_index], 0, header, /fscale, /silent)
+      
+;      if (_index eq 3) then begin
+;         message, ''
+;      endif
+      
+      if (_index eq 0) then begin
+        data = _data
+        metadata = header
+      endif else begin
+        data += _data
+      endelse
+      
+      _index++
+    endwhile
     
-    _index++
-  endwhile
+  endelse
   
 end

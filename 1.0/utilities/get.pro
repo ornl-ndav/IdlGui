@@ -254,7 +254,6 @@ function get_file_selected, event=event, base=base, uname=uname
   if (value_line[0] eq '') then return, ''
   
   return, value_line[row_selected]
-  
 end
 
 ;+
@@ -289,10 +288,6 @@ function get_file_selected_of_type, event=event, type=type
   endcase
   
   file_name_selected = get_file_selected(event=event, uname=uname)
-  
-  print, file_name_selected
-  help, file_name_selected
-  print
   
   return, file_name_selected
 end

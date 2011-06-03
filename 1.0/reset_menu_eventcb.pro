@@ -63,3 +63,33 @@ pro reset_table, event=event, uname=uname
   log_book_update, event, message=message
   
 end
+
+;+
+; :Description:
+;    Full reset of the preview base
+;
+;
+;
+; :Keywords:
+;    event
+;
+; :Author: j35
+;-
+pro full_reset_of_preview_base, event=event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  ;reset metadata
+  (*(*global).preview_file_metadata) = !null
+  
+  ;reset plot
+  id_draw = widget_info(Event.top, find_by_uname='preview_draw_uname')
+  widget_control, id_draw, get_value=id_value
+  wset,id_value
+  erase
+  
+  ;reset name of file previewed
+  putValue, event=event, 'preview_file_name_label', 'N/A'
+  
+end
