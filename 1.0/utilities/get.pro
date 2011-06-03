@@ -222,7 +222,13 @@ function get_table_row_selected, event=event, base=base, uname=uname
     base=base, $
     uname=uname)
     
-  return, full_selection[1]
+  sz = size(full_selection,/dim)
+  if (n_elements(sz) eq 1) then begin
+    return, full_selection[1]
+  endif else begin
+    return, reform(full_selection[1,*])
+  endelse
+  
 end
 
 ;+
@@ -283,6 +289,10 @@ function get_file_selected_of_type, event=event, type=type
   endcase
   
   file_name_selected = get_file_selected(event=event, uname=uname)
+  
+  print, file_name_selected
+  help, file_name_selected
+  print
   
   return, file_name_selected
 end

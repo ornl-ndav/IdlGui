@@ -46,13 +46,24 @@
 pro read_fits_file, file_name=file_name, data=data, metadata=metadata
   compile_opt idl2
   
-  if (~file_test(file_name)) then begin
-    data=!null
-    return
-  endif
+  sz = n_elements(file_name)
+  _index = 0
+  while (_index lt sz) do begin
   
-  data = mrdfits(file_name, 0, header, /fscale, /silent)
-  
-  metadata = header
+    if (~file_test(file_name[_index])) then begin
+      data=!null
+      return
+    endif
+    
+    _data = mrdfits(file_name[_index], 0, header, /fscale, /silent)
+    if (_index eq 0) then begin
+      data = _data
+      metadata = header
+    endif else begin
+      data += _data
+    endelse
+    
+    _index++
+  endwhile
   
 end
