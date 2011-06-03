@@ -126,7 +126,7 @@ pro preview_display_base_gui, wBase, $
     uname = 'zoom_draw')
     
   scale = widget_draw(wBase,$
-    uname = 'tof_selection_scale',$
+    uname = 'zoom_scale',$
     scr_xsize = xsize,$
     scr_ysize = ysize,$
     retain=2)
@@ -253,9 +253,22 @@ pro preview_display_base, event=event, $
   
   global_preview = PTR_NEW({ _base: _base,$
     top_base: top_base, $
+    
+    xrange: intarr(2), $  ;ex: [0,2048]
+    yrange:intarr(2), $   ;ex: [0,2048]
+    
     global: global })
     
   WIDGET_CONTROL, _base, SET_UVALUE = global_preview
+  
+  data = (*(*global).preview_data)
+  sz = size(data,/dim)
+  xrange = (*global_preview).xrange
+  xrange[1] = sz[0]
+  yrange = (*global_preview).yrange
+  yrange[1] = sz[1]
+  (*global_preview).xrange = xrange
+  (*global_preview).yrange = yrange
   
   XMANAGER, "preview_display_base", $
     _base, $
@@ -265,6 +278,9 @@ pro preview_display_base, event=event, $
 
     ;display the main data
     plot_zoom_data, base=_base
+    
+    ;plot scale around the plot
+    plot_scale_zoom_data, base=_base
     
 end
 
