@@ -52,29 +52,29 @@ pro preview_display_base_event, Event
     ;main base resized or moved
     widget_info(event.top, find_by_uname='zoom_base_uname'): begin
     
-     id = widget_info(event.top, find_by_uname='zoom_base_uname')
+      id = widget_info(event.top, find_by_uname='zoom_base_uname')
       geometry = widget_info(id,/geometry)
       new_xsize = geometry.scr_xsize
       new_ysize = geometry.scr_ysize
       xoffset = geometry.xoffset
       yoffset = geometry.yoffset
       
-;      ;only if the tof input base is there
-;      id_tof_selection = (*global_tof_selection).tof_selection_input_base
-;      if (widget_info(id_tof_selection, /valid_id) ne 0) then begin
-;        widget_control, id_tof_selection, xoffset = xoffset + new_xsize
-;        widget_control, id_tof_selection, yoffset = yoffset
-;      endif
-;      
-;      ;only if the counts vs tof base is there
-;      id_plot = (*global_tof_selection).tof_selection_counts_vs_tof_base_id
-;      if (widget_info(id_plot,/valid_id) ne 0) then begin
-;        widget_control, id_plot, xoffset = xoffset + new_xsize
-;        widget_control, id_plot, yoffset = yoffset + 170
-;      endif
-
+      ;      ;only if the tof input base is there
+      ;      id_tof_selection = (*global_tof_selection).tof_selection_input_base
+      ;      if (widget_info(id_tof_selection, /valid_id) ne 0) then begin
+      ;        widget_control, id_tof_selection, xoffset = xoffset + new_xsize
+      ;        widget_control, id_tof_selection, yoffset = yoffset
+      ;      endif
+      ;
+      ;      ;only if the counts vs tof base is there
+      ;      id_plot = (*global_tof_selection).tof_selection_counts_vs_tof_base_id
+      ;      if (widget_info(id_plot,/valid_id) ne 0) then begin
+      ;        widget_control, id_plot, xoffset = xoffset + new_xsize
+      ;        widget_control, id_plot, yoffset = yoffset + 170
+      ;      endif
+      
       if ((abs((*global_preview).ysize - new_ysize) eq 33.0)) then return
-
+      
       (*global_preview).xsize = new_xsize
       (*global_preview).ysize = new_ysize
       
@@ -96,20 +96,20 @@ pro preview_display_base_event, Event
       widget_control, id, xoffset=new_xsize-colorbar_xsize
       widget_control, id, draw_ysize = new_ysize
       widget_control, id, draw_xsize = colorbar_xsize
-    
-    ;plot colorbar
+      
+      ;plot colorbar
       plot_colorbar_zoom_data, event=event
-
-    ;display the main data
-    plot_zoom_data, event=event
-    
-    ;plot scale around the plot
-    plot_scale_zoom_data, event=event
-    
-return
-    
+      
+      ;display the main data
+      plot_zoom_data, event=event, /recalculate
+      
+      ;plot scale around the plot
+      plot_scale_zoom_data, event=event
+      
+      return
+      
     end
-  
+    
     ;cancel tof selected
     widget_info(event.top, $
       find_by_uname='cancel_discrete_selection_selected_uname'): begin
@@ -171,7 +171,7 @@ pro preview_display_base_gui, wBase, $
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
     MAP          = 1,$
-;    kill_notify  = 'zoom_killed', $
+    ;    kill_notify  = 'zoom_killed', $
     /tlb_size_events,$
     /align_center, $
     /tlb_move_events, $
@@ -278,6 +278,9 @@ pro preview_display_base_cleanup, tlb
   
   if (n_elements(global_preview) eq 0) then return
   
+  ptr_free, (*global_preview).cData
+  ptr_free, (*global_preview).background
+  
   ptr_free, global_preview
   
 end
@@ -326,7 +329,7 @@ pro preview_display_base, event=event, $
   
   global_preview = PTR_NEW({ _base: _base,$
     top_base: top_base, $
-
+    
     default_loadct: default_loadct, $
     default_scale_setting: default_scale_setting, $ ;0b:linear, 1b:log
     
@@ -334,10 +337,12 @@ pro preview_display_base, event=event, $
     xsize: default_plot_size[0],$
     ysize: default_plot_size[1],$
     
+    background: ptr_new(0L), $
+    
     border: border, $
-;    default_plot_size: default_plot_size, $
     colorbar_xsize: colorbar_xsize, $
     
+    cData: ptr_new(0L), $ ;congrid(data, xsize, ysize)
     xrange: intarr(2), $  ;ex: [0,2048]
     yrange:intarr(2), $   ;ex: [0,2048]
     
@@ -359,16 +364,16 @@ pro preview_display_base, event=event, $
     GROUP_LEADER=ourGroup, $
     /NO_BLOCK, $
     cleanup='preview_display_base_cleanup'
-
-    ;plot colorbar
-    plot_colorbar_zoom_data, base=_base
-
-    ;display the main data
-    plot_zoom_data, base=_base
-    
-    ;plot scale around the plot
-    plot_scale_zoom_data, base=_base
-        
+      
+  ;display the main data
+  plot_zoom_data, base=_base, /recalculate
+  
+  ;plot colorbar
+  plot_colorbar_zoom_data, base=_base
+  
+  ;plot scale around the plot
+  plot_scale_zoom_data, base=_base
+  
 end
 
 ;+

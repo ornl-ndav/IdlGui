@@ -41,10 +41,11 @@
 ; :Keywords:
 ;    event
 ;    base
+;    recalculate
 ;
 ; :Author: j35
 ;-
-pro plot_zoom_data, event=event, base=base
+pro plot_zoom_data, event=event, base=base, recalculate=recalculate
   compile_opt idl2
   
   if (keyword_set(event)) then begin
@@ -64,12 +65,66 @@ pro plot_zoom_data, event=event, base=base
   xsize = draw_geometry.xsize
   ysize = draw_geometry.ysize
   
-  global = (*global_preview).global
+  if (keyword_set(recalculate)) then begin
   
-  data = (*(*global).preview_data) 
-  cData = congrid(data, xsize, ysize)
+    global = (*global_preview).global
+    data = (*(*global).preview_data)
+    cData = congrid(data, xsize, ysize,/interp)
+    (*(*global_preview).cData) = cData
+    
+    tvscl, cData
+    
+    save_zoom_data_background, event=event, base=base
+    
+    return
+    
+  endif else begin
+
+    tv, (*(*global_preview).background), true=3
+    
+  endelse
   
-  tvscl, cData
+  
+  
+  
+  
+end
+
+;+
+; :Description:
+;    save the background
+;
+;
+;
+; :Keywords:
+;    event
+;    base
+;
+; :Author: j35
+;-
+pro save_zoom_data_background, event=event, base=base
+  compile_opt idl2
+  
+  uname = 'zoom_draw'
+  if (keyword_set(base)) then begin
+    id = WIDGET_INFO(base, FIND_BY_UNAME=uname)
+    widget_control, base, get_uvalue=global_preview
+  ENDIF ELSE BEGIN
+    WIDGET_CONTROL, event.top, GET_UVALUE=global_preview
+    id = WIDGET_INFO(Event.top,find_by_uname=uname)
+  ENDELSE
+  
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  background = TVRD(TRUE=3)
+  geometry = WIDGET_INFO(id,/GEOMETRY)
+  xsize   = geometry.xsize
+  ysize   = geometry.ysize
+  
+  DEVICE, copy =[0, 0, xsize, ysize, 0, 0]
+  
+  (*(*global_preview).background) = background
   
 end
 
@@ -87,16 +142,16 @@ end
 ; :Author: j35
 ;-
 pro plot_scale_zoom_data, base=base, event=event
-compile_opt idl2
-
-if (n_elements(base) ne 0) then begin
+  compile_opt idl2
+  
+  if (n_elements(base) ne 0) then begin
     id = widget_info(base,find_by_Uname='zoom_scale')
-;    id_base = widget_info(base, find_by_uname='tof_selection_base_uname')
+    ;    id_base = widget_info(base, find_by_uname='tof_selection_base_uname')
     sys_color = widget_info(base,/system_colors)
     widget_control, base, get_uvalue=global_preview
   endif else begin
     id = widget_info(event.top, find_by_uname='zoom_scale')
-;    id_base = widget_info(event.top, find_by_uname='tof_selection_base_uname')
+    ;    id_base = widget_info(event.top, find_by_uname='tof_selection_base_uname')
     sys_color = widget_info(event.top, /system_colors)
     widget_control, event.top, get_uvalue=global_preview
   endelse
@@ -116,9 +171,9 @@ if (n_elements(base) ne 0) then begin
   min_y = y_range[0]
   max_y = y_range[-1]
   
-;  ;determine the number of xaxis data to show
-;  geometry = widget_info(id_base,/geometry)
-;  xsize = geometry.scr_xsize
+  ;  ;determine the number of xaxis data to show
+  ;  geometry = widget_info(id_base,/geometry)
+  ;  xsize = geometry.scr_xsize
   
   xticks = 16
   yticks = 32
@@ -143,8 +198,8 @@ if (n_elements(base) ne 0) then begin
     XMINOR      = 2,$
     ;YMINOR      = 2,$
     YTICKS      = yticks,$
-;    XTITLE      = 'Pixels',$
-;    YTITLE      = 'Pixels',$
+    ;    XTITLE      = 'Pixels',$
+    ;    YTITLE      = 'Pixels',$
     XMARGIN     = [xmargin, xmargin+0.2],$
     YMARGIN     = [ymargin, ymargin],$
     /NODATA
@@ -154,7 +209,7 @@ if (n_elements(base) ne 0) then begin
     COLOR=convert_rgb([0B,0B,255B]), TICKLEN = ticklen
     
   device, decomposed=0
-
+  
 end
 
 ;+
@@ -170,9 +225,9 @@ end
 ; :Author: j35
 ;-
 pro plot_colorbar_zoom_data, base=base, event=event
-compile_opt idl2
-
- if (n_elements(event) ne 0) then begin
+  compile_opt idl2
+  
+  if (n_elements(event) ne 0) then begin
     id_draw = widget_info(event.top,find_by_uname='zoom_colorbar')
     widget_control, event.top, get_uvalue=global_preview
   endif else begin
@@ -183,15 +238,15 @@ compile_opt idl2
   wset,id_value
   erase
   
-  global = (*global_preview).global
+;  global = (*global_preview).global
   
- ; default_loadct = (*global_preview).default_loadct
- ; loadct, default_loadct, /silent
+  ; default_loadct = (*global_preview).default_loadct
+  ; loadct, default_loadct, /silent
   
-  data = (*(*global).preview_data) 
+  cData = (*(*global_preview).cData)
   
-  zmin = min(data, max=zmax)
-
+  zmin = min(cData, max=zmax)
+  
   default_scale_setting = (*global_preview).default_scale_setting
   if (default_scale_setting eq 0) then begin ;linear
   
@@ -237,7 +292,7 @@ compile_opt idl2
     endelse
     
   endelse
-
+  
 end
 
 
