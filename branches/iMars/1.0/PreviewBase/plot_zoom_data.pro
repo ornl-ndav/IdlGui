@@ -34,65 +34,43 @@
 
 ;+
 ; :Description:
-;    This eventcb is reached by the buttons below the preview
-;    widget_draw. This is reached when the user moves in or out of the
-;    widget and when there is a click and release.
+;    This routine will display the zoomed data
 ;
 ;
 ;
 ; :Keywords:
 ;    event
-;    button
+;    base
 ;
 ; :Author: j35
 ;-
-pro button_eventcb, event=event, button=button
+pro plot_zoom_data, event=event, base=base
   compile_opt idl2
   
-  if (n_tags(event) eq 4) then begin ;entering or leaving widget
-    if (event.enter eq 0) then begin
-      device, cursor_standard=31
-    endif else begin
-      device, cursor_standard=58
-    endelse
-    
-    display_images, event=event, button=button, status='off'
-    
-  endif else begin ;click in the widget
+  help, base
   
-    if (event.press eq 1) then begin ;pressed button
-      display_images, event=event, button=button, status='on'
-      start_button, event=event, button=button
-    endif
-    
-    if (event.release eq 1) then begin ;released button
-      display_images, event=event, button=button, status='off'
-    endif
-    
+  if (keyword_set(event)) then begin
+    widget_control, event.top, get_uvalue=global_preview
+    base = (*global_preview)._base
+  endif else begin
+    widget_control, base, get_uvalue=global_preview
   endelse
   
-end
-
-;+
-; :Description:
-;    This routines is reached when any of the preview buttons are clicked.
-;    They will be route to the right procedure
-;
-;
-;
-; :Keywords:
-;    event
-;    button
-;
-; :Author: j35
-;-
-pro start_button, event=event, button=button
-  compile_opt idl2
+  ;set where we want to display the plot
+  id = widget_info(base,find_by_uname='zoom_draw')
+  widget_control, id, get_value=plot_id
+  wset, plot_id
   
-  case (button) of
-    'metadata' : display_metadata, event=event
-    'zoom' : launch_zoom, event=event
-    'contrast' : launch_xloadct, event=event
-  endcase
+  ;get the size of the plot
+  draw_geometry = WIDGET_INFO(id,/GEOMETRY)
+  xsize = draw_geometry.xsize
+  ysize = draw_geometry.ysize
+  
+  global = (*global_preview).global
+  
+  data = (*(*global).preview_data) 
+  cData = congrid(data, xsize, ysize)
+  
+  tvscl, cData
   
 end

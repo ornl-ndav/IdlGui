@@ -45,7 +45,7 @@ pro preview_display_base_event, Event
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global_preview
-  global = (*global_info).global
+  global = (*global_preview).global
   
   case Event.id of
   
@@ -76,8 +76,16 @@ end
 ; :Author: j35
 ;-
 pro preview_display_base_gui, wBase, $
-    parent_base_geometry
+    parent_base_geometry, $
+    scale_setting=scale_setting
+    
   compile_opt idl2
+  
+  border = 40
+  default_plot_size = [600,600]
+  
+  xsize = default_plot_size[0]
+  ysize = default_plot_size[1]
   
   main_base_xoffset = parent_base_geometry.xoffset
   main_base_yoffset = parent_base_geometry.yoffset
@@ -98,9 +106,71 @@ pro preview_display_base_gui, wBase, $
     YOFFSET      = yoffset,$
     MAP          = 1,$
     kill_notify  = 'discrete_peak_selection_base_killed', $
-    /column,$
     /tlb_size_events,$
+    /align_center, $
+    /tlb_move_events, $
+    mbar=bar1,$
     GROUP_LEADER = ourGroup)
+    
+  draw = widget_draw(wbase,$
+    xoffset = border,$
+    yoffset = border,$
+    scr_xsize = xsize-2*border,$
+    scr_ysize = ysize-2*border,$
+    /button_events, $
+    /motion_events, $
+    /tracking_events, $
+    keyboard_events=2, $
+    retain=2, $
+    ;    event_pro = 'refpix_draw_eventcb',$
+    uname = 'zoom_draw')
+    
+  scale = widget_draw(wBase,$
+    uname = 'tof_selection_scale',$
+    scr_xsize = xsize,$
+    scr_ysize = ysize,$
+    retain=2)
+    
+  colorbar =  widget_draw(wBase,$
+    uname = 'tof_selection_colorbar',$
+    xoffset = xsize,$
+    scr_xsize = colorbar_xsize,$
+    scr_ysize = ysize,$
+    retain=2)
+    
+  if (scale_setting eq 0) then begin
+    set1_value = '*  linear'
+    set2_value = '   logarithmic'
+  endif else begin
+    set1_value = '   linear'
+    set2_value = '*  logarithmic'
+  endelse
+  
+  mPlot = widget_button(bar1, $
+    value = 'Axes',$
+    /menu)
+    
+  set1 = widget_button(mPlot, $
+    value = set1_value, $
+    event_pro = 'tof_selection_local_switch_axes_type',$
+    uname = 'tof_selection_local_scale_setting_linear')
+    
+  set2 = widget_button(mPlot, $
+    value = set2_value,$
+    event_pro = 'tof_selection_local_switch_axes_type',$
+    uname = 'tof_selection_local_scale_setting_log')
+    
+;  pixel = widget_button(bar1,$
+;    value = 'Extra',$
+;    /menu)
+;
+;  show = widget_button(pixel,$
+;    value = 'Show TOF selection window',$
+;    uname = 'show_tof_selection_base')
+;
+;  _plot = widget_button(pixel,$
+;    value = 'Show Counts vs TOF window',$
+;    uname = 'show_counts_vs_tof_base')
     
 end
 
@@ -170,11 +240,14 @@ pro preview_display_base, event=event, $
   endelse
   parent_base_geometry = WIDGET_INFO(id,/GEOMETRY)
   
+  default_scale_setting = 0b ;linear by default (1b for log)
+  
   _base = 0L
   preview_display_base_gui, _base, $
-    parent_base_geometry
+    parent_base_geometry, $
+    scale_setting=default_scale_setting
     
-  (*global).preview_display_base_id = _base
+  (*global).preview_display_base = _base
   
   WIDGET_CONTROL, _base, /REALIZE
   
@@ -185,9 +258,34 @@ pro preview_display_base, event=event, $
   WIDGET_CONTROL, _base, SET_UVALUE = global_preview
   
   XMANAGER, "preview_display_base", $
-    _base, GROUP_LEADER = ourGroup, $
+    _base, $
+    GROUP_LEADER=ourGroup, $
     /NO_BLOCK, $
     cleanup='preview_display_base_cleanup'
+
+    ;display the main data
+    plot_zoom_data, base=_base
     
 end
 
+;+
+; :Description:
+;    This routine launch the zoom display
+;
+;
+;
+; :Keywords:
+;    event
+;
+; :Author: j35
+;-
+pro launch_zoom, event=event
+  compile_opt idl2
+  
+  top_base = widget_info(event.top, find_by_uname='MAIN_BASE')
+  
+  preview_display_base, event=event, $
+    top_base=top_base, $
+    parent_base_uname='MAIN_BASE'
+    
+end

@@ -62,11 +62,12 @@ FUNCTION getGlobal
     
     ;x and y size of data previewed
     size_preview_data: intarr(2), $
+    preview_data: ptr_new(0L), $
     
     log_book: ptr_new(0L), $
     log_book_id: 0L, $
     
-    preview_display_base_id: 0L, $
+    preview_display_base: 0L, $
     
     full_log_book: ptr_new(0L), $
     new_log_book_message: ptr_new(0L), $

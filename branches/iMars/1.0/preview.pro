@@ -115,4 +115,6 @@ pro display_preview_of_file, event=event, file_name=file_name
   new_data = congrid(data, xsize, ysize)
   tvscl, new_data
   
+  (*(*global).preview_data) = data
+  
 end
