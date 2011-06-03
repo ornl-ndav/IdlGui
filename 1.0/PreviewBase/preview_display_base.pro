@@ -49,6 +49,67 @@ pro preview_display_base_event, Event
   
   case Event.id of
   
+    ;main base resized or moved
+    widget_info(event.top, find_by_uname='zoom_base_uname'): begin
+    
+     id = widget_info(event.top, find_by_uname='zoom_base_uname')
+      geometry = widget_info(id,/geometry)
+      new_xsize = geometry.scr_xsize
+      new_ysize = geometry.scr_ysize
+      xoffset = geometry.xoffset
+      yoffset = geometry.yoffset
+      
+;      ;only if the tof input base is there
+;      id_tof_selection = (*global_tof_selection).tof_selection_input_base
+;      if (widget_info(id_tof_selection, /valid_id) ne 0) then begin
+;        widget_control, id_tof_selection, xoffset = xoffset + new_xsize
+;        widget_control, id_tof_selection, yoffset = yoffset
+;      endif
+;      
+;      ;only if the counts vs tof base is there
+;      id_plot = (*global_tof_selection).tof_selection_counts_vs_tof_base_id
+;      if (widget_info(id_plot,/valid_id) ne 0) then begin
+;        widget_control, id_plot, xoffset = xoffset + new_xsize
+;        widget_control, id_plot, yoffset = yoffset + 170
+;      endif
+
+      if ((abs((*global_preview).ysize - new_ysize) eq 33.0)) then return
+
+      (*global_preview).xsize = new_xsize
+      (*global_preview).ysize = new_ysize
+      
+      widget_control, id, xsize = new_xsize
+      widget_control, id, ysize = new_ysize
+      
+      border = (*global_preview).border
+      colorbar_xsize = (*global_preview).colorbar_xsize
+      
+      id = widget_info(event.top, find_by_uname='zoom_draw')
+      widget_control, id, draw_xsize = new_xsize-2*border-colorbar_xsize
+      widget_control, id, draw_ysize = new_ysize-2*border
+      
+      id = widget_info(event.top,find_by_Uname='zoom_scale')
+      widget_control, id, draw_xsize = new_xsize-colorbar_xsize
+      widget_control, id, draw_ysize = new_ysize
+      
+      id = widget_info(event.top, find_by_uname='zoom_colorbar')
+      widget_control, id, xoffset=new_xsize-colorbar_xsize
+      widget_control, id, draw_ysize = new_ysize
+      widget_control, id, draw_xsize = colorbar_xsize
+    
+    ;plot colorbar
+      plot_colorbar_zoom_data, event=event
+
+    ;display the main data
+    plot_zoom_data, event=event
+    
+    ;plot scale around the plot
+    plot_scale_zoom_data, event=event
+    
+return
+    
+    end
+  
     ;cancel tof selected
     widget_info(event.top, $
       find_by_uname='cancel_discrete_selection_selected_uname'): begin
@@ -70,19 +131,24 @@ end
 ; :Params:
 ;    wBase
 ;    parent_base_geometry
-;
+;    border
+;    default_plot_size
 ;
 ;
 ; :Author: j35
 ;-
 pro preview_display_base_gui, wBase, $
     parent_base_geometry, $
-    scale_setting=scale_setting
+    scale_setting=scale_setting, $
+    border=border, $
+    default_plot_size=default_plot_size,$
+    colorbar_xsize=colorbar_xsize
     
   compile_opt idl2
   
   border = 40
   default_plot_size = [600,600]
+  colorbar_xsize = 70
   
   xsize = default_plot_size[0]
   ysize = default_plot_size[1]
@@ -99,13 +165,13 @@ pro preview_display_base_gui, wBase, $
   
   ourGroup = WIDGET_BASE()
   
-  title = 'Discrete peaks selection'
+  title = 'Zoom'
   wBase = WIDGET_BASE(TITLE = title, $
-    UNAME        = 'discrete_peak_selection_base', $
+    UNAME        = 'zoom_base_uname', $
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
     MAP          = 1,$
-    kill_notify  = 'discrete_peak_selection_base_killed', $
+;    kill_notify  = 'zoom_killed', $
     /tlb_size_events,$
     /align_center, $
     /tlb_move_events, $
@@ -245,9 +311,14 @@ pro preview_display_base, event=event, $
   default_loadct = 5
   
   _base = 0L
+  border=0
+  default_plot_size=0
   preview_display_base_gui, _base, $
     parent_base_geometry, $
-    scale_setting=default_scale_setting
+    scale_setting=default_scale_setting,$
+    border=border,$
+    default_plot_size=default_plot_size,$
+    colorbar_xsize=colorbar_xsize
     
   (*global).preview_display_base = _base
   
@@ -258,6 +329,14 @@ pro preview_display_base, event=event, $
 
     default_loadct: default_loadct, $
     default_scale_setting: default_scale_setting, $ ;0b:linear, 1b:log
+    
+    ;default plot size of main plot
+    xsize: default_plot_size[0],$
+    ysize: default_plot_size[1],$
+    
+    border: border, $
+;    default_plot_size: default_plot_size, $
+    colorbar_xsize: colorbar_xsize, $
     
     xrange: intarr(2), $  ;ex: [0,2048]
     yrange:intarr(2), $   ;ex: [0,2048]
