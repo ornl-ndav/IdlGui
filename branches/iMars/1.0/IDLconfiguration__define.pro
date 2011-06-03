@@ -112,6 +112,8 @@ function IDLconfiguration::getConfig, event
     is_with_gamma_filtering: $
     isButtonSelected(event=event,uname='with_gamma_filtering_uname'), $
     
+    type: (*global).current_type_selected, $
+    
     roi_loaded: getValue(event=event,$
     uname='roi_text_field_uname'),$
     
