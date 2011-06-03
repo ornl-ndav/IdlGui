@@ -89,6 +89,7 @@ pro build_gui, main_base
     /context_events, $
     column_widths = 595,$
     uname = 'data_files_table',$
+    /disjoint_selection,$
     /no_column_headers,$
     /no_row_headers)
     
@@ -136,6 +137,7 @@ pro build_gui, main_base
     uname = 'open_beam_table',$
     /no_column_headers,$
     /context_events, $
+    /disjoint_selection,$
     /no_row_headers)
     
   ;context_menu
@@ -180,6 +182,7 @@ pro build_gui, main_base
     /all_events, $
     column_widths = 595,$
     /context_events, $
+    /disjoint_selection,$
     uname = 'dark_field_table',$
     /no_column_headers,$
     /no_row_headers)
