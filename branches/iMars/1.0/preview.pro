@@ -81,6 +81,7 @@ end
 ; :Keywords:
 ;    event
 ;    file_name
+;    type
 ;
 ; :Author: j35
 ;-
@@ -94,10 +95,14 @@ pro display_preview_of_file, event=event, file_name=file_name
   is_with_gamma_filtering = $
     isButtonSelected(event=event,uname='with_gamma_filtering_uname')
     
-  read_fits_file, file_name=file_name, data=data, metadata=metadata
-  if (data eq !null) then return
-  
   widget_control, event.top, get_uvalue=global
+  
+  read_fits_file, event=event, file_name=file_name, data=data, metadata=metadata
+  if (data eq !null) then begin
+    full_reset_of_preview_base, event=event 
+    return
+  endif
+  
   (*(*global).preview_file_metadata) = metadata
   
   geometry = widget_info(id_draw,/geometry)
