@@ -170,7 +170,7 @@ pro save_configuration, event=event
   endif else begin
   
     save, cfg_structure, filename=cfg_full_file_name
-
+    
     text = 'Saved configuration file: ' + cfg_full_file_name[0]
     Log_book_update, Event, message=text
     
@@ -198,29 +198,29 @@ pro repopulate_gui, event, _structure
   compile_opt idl2
   
   ;reset tables
-        reset_table, event=event, uname = 'data_files_table'
-      reset_table, event=event, uname = 'open_beam_table'
-      reset_table, event=event, uname = 'dark_field_table'
+  reset_table, event=event, uname = 'data_files_table'
+  reset_table, event=event, uname = 'open_beam_table'
+  reset_table, event=event, uname = 'dark_field_table'
   
   ;data files
-   data_files = _structure.list_data_files       
-   id = widget_info(event.top, find_by_uname='data_files_table')
-          widget_control, id, insert_rows=n_elements(data_files)-1
-   table = reform(data_files,1,n_elements(data_files))
+  data_files = _structure.list_data_files
+  id = widget_info(event.top, find_by_uname='data_files_table')
+  widget_control, id, insert_rows=n_elements(data_files)-1
+  table = reform(data_files,1,n_elements(data_files))
   putValue, event=event, 'data_files_table', table
-
+  
   ;open beam
   open_beam_files = _structure.list_open_beam_files
-   id = widget_info(event.top, find_by_uname='open_beam_table')
-          widget_control, id, insert_rows=n_elements(open_beam_files)-1
-   table = reform(open_beam_files,1,n_elements(open_beam_files))
+  id = widget_info(event.top, find_by_uname='open_beam_table')
+  widget_control, id, insert_rows=n_elements(open_beam_files)-1
+  table = reform(open_beam_files,1,n_elements(open_beam_files))
   putValue, event=event, 'open_beam_table', table
-
+  
   ;dark field
   df_files = _structure.list_dark_field_files
-   id = widget_info(event.top, find_by_uname='dark_field_table')
-          widget_control, id, insert_rows=n_elements(df_files)-1
-   table = reform(df_files,1,n_elements(df_files))
+  id = widget_info(event.top, find_by_uname='dark_field_table')
+  widget_control, id, insert_rows=n_elements(df_files)-1
+  table = reform(df_files,1,n_elements(df_files))
   putValue, event=event, 'dark_field_table', table
   
   ;file currently selected
@@ -234,10 +234,14 @@ pro repopulate_gui, event, _structure
   ;name of file currently previewed
   putValue, event=event, 'preview_file_name_label', _structure.preview_file
   
+  ;display preview of file selected
+  type = _structure.type
+  preview_currently_selected_file, event=event, type=type
+  
   ;is with gamma or not
   setButton, event=event, uname='with_gamma_filtering_uname', $
     _structure.is_with_gamma_filtering
-   
+    
   ;roi
   putValue, event=event, 'roi_text_field_uname', _structure.roi_loaded
   
@@ -246,10 +250,10 @@ pro repopulate_gui, event, _structure
   
   ;output file format
   setButton, event=event, uname='format_tiff_button', $
-  _structure.is_tiff_selected
+    _structure.is_tiff_selected
   setButton, event=event, uname='format_fits_button', $
-  _structure.is_fits_selected
+    _structure.is_fits_selected
   setButton, event=event, uname='format_png_button', $
-  _structure.is_png_selected 
-  
+    _structure.is_png_selected
+    
 end
