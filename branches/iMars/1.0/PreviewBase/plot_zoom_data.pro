@@ -95,7 +95,7 @@ if (n_elements(base) ne 0) then begin
     sys_color = widget_info(base,/system_colors)
     widget_control, base, get_uvalue=global_preview
   endif else begin
-    id = widget_info(event.top, find_by_uname='tof_selection_scale')
+    id = widget_info(event.top, find_by_uname='zoom_scale')
 ;    id_base = widget_info(event.top, find_by_uname='tof_selection_base_uname')
     sys_color = widget_info(event.top, /system_colors)
     widget_control, event.top, get_uvalue=global_preview
@@ -237,7 +237,6 @@ compile_opt idl2
     endelse
     
   endelse
-
 
 end
 
