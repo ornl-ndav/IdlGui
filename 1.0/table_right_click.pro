@@ -52,7 +52,20 @@ pro table_right_click, event=event, type=type
   if (strcompress(file_name_selected[0],/remove_all) eq '') then return
   
   if (tag_names(event, /structure_name) EQ 'WIDGET_CONTEXT') THEN BEGIN
-    id = widget_info(event.top, find_by_uname='context_open_beam_base')
+  
+    case (type) of
+      'data_file': begin
+        uname='context_data_file_base'
+      end
+      'open_beam': begin
+        uname='context_open_beam_base'
+      end
+      'dark_field': begin
+        uname='context_dark_field_base'
+      end
+    endcase
+    
+    id = widget_info(event.top, find_by_uname=uname)
     widget_displaycontextmenu, event.id, event.X, event.Y, id
   endif
   
@@ -71,9 +84,35 @@ end
 ; :Author: j35
 ;-
 pro delete_selection, event=event, type=type
-compile_opt idl2
-
-file_name_selected = get_file_selected_of_type(event=event, type=type)
-
-
+  compile_opt idl2
+  
+  case (type) of
+    'data_file': begin
+      uname='data_files_table'
+    end
+    'open_beam': begin
+      uname='open_beam_table'
+    end
+    'dark_field': begin
+      uname='dark_field_table'
+    end
+  endcase
+  
+  ;row_selected = get_table_row_selected(event=event, uname=uname)
+  row_selected = get_table_lines_selected(event=event, uname=uname)
+  
+  id = widget_info(event.top, find_by_uname=uname)
+  widget_control, id, /use_table_select
+  widget_control, id, /delete_rows
+  widget_control, id, set_table_select=[-1,-1]
+  
+  catch, error
+  if (error ne 0) then begin ;means table is empty
+    catch,/cancel
+    widget_control, id, /insert_rows
+  endif
+  table = getValue(event=event,uname=uname)
+  
+  full_reset_of_preview_base, event=event
+  
 end
