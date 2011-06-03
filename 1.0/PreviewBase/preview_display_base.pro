@@ -132,7 +132,7 @@ pro preview_display_base_gui, wBase, $
     retain=2)
     
   colorbar =  widget_draw(wBase,$
-    uname = 'tof_selection_colorbar',$
+    uname = 'zoom_colorbar',$
     xoffset = xsize,$
     scr_xsize = colorbar_xsize,$
     scr_ysize = ysize,$
@@ -240,7 +240,9 @@ pro preview_display_base, event=event, $
   endelse
   parent_base_geometry = WIDGET_INFO(id,/GEOMETRY)
   
+  ;default values
   default_scale_setting = 0b ;linear by default (1b for log)
+  default_loadct = 5
   
   _base = 0L
   preview_display_base_gui, _base, $
@@ -253,6 +255,9 @@ pro preview_display_base, event=event, $
   
   global_preview = PTR_NEW({ _base: _base,$
     top_base: top_base, $
+
+    default_loadct: default_loadct, $
+    default_scale_setting: default_scale_setting, $ ;0b:linear, 1b:log
     
     xrange: intarr(2), $  ;ex: [0,2048]
     yrange:intarr(2), $   ;ex: [0,2048]
@@ -276,12 +281,15 @@ pro preview_display_base, event=event, $
     /NO_BLOCK, $
     cleanup='preview_display_base_cleanup'
 
+    ;plot colorbar
+    plot_colorbar_zoom_data, base=_base
+
     ;display the main data
     plot_zoom_data, base=_base
     
     ;plot scale around the plot
     plot_scale_zoom_data, base=_base
-    
+        
 end
 
 ;+
