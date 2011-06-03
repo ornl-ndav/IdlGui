@@ -69,13 +69,11 @@ pro plot_zoom_data, event=event, base=base, recalculate=recalculate
   
     global = (*global_preview).global
     data = (*(*global).preview_data)
-    cData = congrid(data, xsize, ysize,/interp)
+    cData = congrid(data, xsize, ysize)
     (*(*global_preview).cData) = cData
-    
     tvscl, cData
     
-    save_zoom_data_background, event=event, base=base
-    
+    save_zoom_data_background, event=event, base=base    
     return
     
   endif else begin
@@ -83,10 +81,6 @@ pro plot_zoom_data, event=event, base=base, recalculate=recalculate
     tv, (*(*global_preview).background), true=3
     
   endelse
-  
-  
-  
-  
   
 end
 
