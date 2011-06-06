@@ -48,7 +48,11 @@ pro preview_currently_selected_file, event=event, type=type
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global
-  (*global).current_type_selected = type
+  if (keyword_set(type)) then begin
+    (*global).current_type_selected = type
+  endif else begin
+    type = (*global).current_type_selected
+  endelse
   
   file_name_selected = get_file_selected_of_type(event=event, type=type)
   file_base_name = file_basename(file_name_selected)
@@ -100,7 +104,7 @@ pro display_preview_of_file, event=event, file_name=file_name
   
   read_fits_file, event=event, file_name=file_name, data=data, metadata=metadata
   if (data eq !null) then begin
-    full_reset_of_preview_base, event=event 
+    full_reset_of_preview_base, event=event
     return
   endif
   
@@ -113,9 +117,32 @@ pro display_preview_of_file, event=event, file_name=file_name
   size_preview_data = size(data,/dim)
   (*global).size_preview_data = size_preview_data
   
+  apply_gamma_filtering, event=event, data=data
+  
   new_data = congrid(data, xsize, ysize)
   tvscl, new_data
   
   (*(*global).preview_data) = data
+  
+end
+
+;+
+; :Description:
+;    Apply gamma filtering or not to data
+;
+;
+;
+; :Keywords:
+;    event
+;    data
+;
+; :Author: j35
+;-
+pro apply_gamma_filtering, event=event, data=data
+  compile_opt idl2
+  
+  bGamma = isButtonSelected(event=event,uname='with_gamma_filtering_uname')
+  if (bGamma eq 0b) then return
+  gamma_cleaner, data=data
   
 end

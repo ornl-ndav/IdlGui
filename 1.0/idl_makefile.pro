@@ -70,6 +70,7 @@ cd, CurrentFolder
 
 ;fits routines
 .run read_fits_file.pro
+.run gamma_cleaner.pro
 
 .run display_images.pro
 .run browse_files.pro
