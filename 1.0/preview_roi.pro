@@ -105,22 +105,28 @@ end
 ;
 ; :Keywords:
 ;    event
+;    base
 ;
 ; :Returns:
 ;   [x0_device, y0_device, x1_device, y1_device]
 ;
 ; :Author: j35
 ;-
-function convert_data_to_device, event=event, data_array
+function convert_data_to_device, event=event, base=base, data_array
   compile_opt idl2
   
+  if (keyword_set(event)) then begin
   widget_control, event.top, get_uvalue=global
+  id_draw = widget_info(Event.top, find_by_uname='preview_draw_uname')
+  endif else begin
+  widget_control, base, get_uvalue=global
+  id_draw = widget_info(base, find_by_uname='preview_draw_uname')
+  endelse
   
   size_preview_data = (*global).size_preview_data ;[2048,2048]
   xsize_data = size_preview_data[0]
   ysize_data = size_preview_data[1]
   
-  id_draw = widget_info(Event.top, find_by_uname='preview_draw_uname')
   geometry = widget_info(id_draw,/geometry)
   xsize = geometry.scr_xsize
   ysize = geometry.scr_ysize
@@ -149,13 +155,14 @@ end
 ;
 ; :Keywords:
 ;    event
+;    base
 ;
 ; :Author: j35
 ;-
-pro display_preview_roi, event=event
+pro display_preview_roi, event=event, base=base
   compile_opt idl2
   
-  list_roi = retrieve_list_roi(event=event)
+  list_roi = retrieve_list_roi(event=event, base=base)
   if (list_roi eq ['']) then return
   
   sz = size(list_roi,/dim)
@@ -164,9 +171,11 @@ pro display_preview_roi, event=event
   while (_index lt nbr_row) do begin
   
     x0y0x1y1_data = list_roi[_index,*]
-    x0y0x1y1_device = convert_data_to_device(event=event, x0y0x1y1_data)
+    x0y0x1y1_device = convert_data_to_device(event=event, $
+    base=base, $
+    x0y0x1y1_data)
     
-    plot_roi, event=event, device_array=x0y0x1y1_device
+    plot_roi, event=event, base=base, device_array=x0y0x1y1_device
     
     _index++
   endwhile
@@ -181,11 +190,12 @@ end
 ;
 ; :Keywords:
 ;    event
+;    base
 ;    device_array
 ;
 ; :Author: j35
 ;-
-pro plot_roi, event=event, device_array=device_array
+pro plot_roi, event=event, base=base, device_array=device_array
   compile_opt idl2
   
   x0 = device_array[0]
@@ -193,7 +203,11 @@ pro plot_roi, event=event, device_array=device_array
   x1 = device_array[2]
   y1 = device_array[3]
   
+  if (keyword_set(event)) then begin
   id_draw = widget_info(Event.top, find_by_uname='preview_draw_uname')
+  endif else begin
+  id_draw = widget_info(base, find_by_uname='preview_draw_uname')
+  endelse
   widget_control, id_draw, get_value=id_value
   wset,id_value
   

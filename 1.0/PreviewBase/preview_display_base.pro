@@ -80,6 +80,7 @@ pro preview_display_base_event, Event
           add_new_selection_to_list_of_roi, event=event, new_roi=selection_data
         endif
         plot_zoom_roi, event=event
+        display_preview_roi, base=(*global_preview).top_base
         return
       endif
       
