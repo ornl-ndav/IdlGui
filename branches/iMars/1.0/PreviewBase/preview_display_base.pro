@@ -73,10 +73,14 @@ pro preview_display_base_event, Event
       ;        widget_control, id_plot, yoffset = yoffset + 170
       ;      endif
       
-      if ((abs((*global_preview).ysize - new_ysize) eq 33.0)) then return
+      if ((abs((*global_preview).ysize - new_ysize) eq 33.0) && $
+      (abs((*global_preview).xsize - new_xsize) eq 70.0)) then return
       
+      new_ysize -= 33  ;due to the menu bar at the top
+
       (*global_preview).xsize = new_xsize
       (*global_preview).ysize = new_ysize
+      
       
       widget_control, id, xsize = new_xsize
       widget_control, id, ysize = new_ysize
@@ -147,7 +151,7 @@ pro preview_display_base_gui, wBase, $
   compile_opt idl2
   
   border = 40
-  default_plot_size = [600,600]
+  default_plot_size = [1000,1000]
   colorbar_xsize = 70
   
   xsize = default_plot_size[0]
