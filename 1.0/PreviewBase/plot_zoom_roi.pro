@@ -234,5 +234,37 @@ pro add_new_selection_to_list_of_roi, event=event, new_roi=new_roi
   
 end
 
+;+
+; :Description:
+;    If the user moves the mouse outside the widget_draw, max or min x,y values
+;    will be used instead
+;
+;
+;
+; :Keywords:
+;    event
+;    selection
+;
+; :Author: j35
+;-
+pro keep_selection_inside_zoom_draw, event=event, selection=selection
+  compile_opt idl2
+  
+  x1 = selection[2]
+  y1 = selection[3]
+  
+  id = widget_info(event.top, find_by_uname='zoom_draw')
+  geometry = widget_info(id, /geometry)
+  
+  if (x1 lt 0) then x1=0
+  if (y1 lt 0) then y1=0
+  
+  if (x1 gt geometry.xsize) then x1=geometry.xsize
+  if (y1 gt geometry.ysize) then y1=geometry.ysize
+  
+  selection[2] = x1
+  selection[3] = y1
+  
+end
 
 

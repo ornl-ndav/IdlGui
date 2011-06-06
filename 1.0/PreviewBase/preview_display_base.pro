@@ -73,12 +73,13 @@ pro preview_display_base_event, Event
         (*global_preview).left_click = 0b
         ;add roi to the main_base roi box if the selection is valid
         selection = (*global_preview).roi_selection
-        plot_zoom_data, event=event, /recalculate
+        plot_zoom_data, event=event
         if (is_selection_valid(selection=selection)) then begin
+          keep_selection_inside_zoom_draw, event=event, selection=selection
           selection_data = convert_zoom_device_to_data(event=event, selection)
           add_new_selection_to_list_of_roi, event=event, new_roi=selection_data
-          plot_zoom_roi, event=event
         endif
+        plot_zoom_roi, event=event
         return
       endif
       
@@ -90,6 +91,22 @@ pro preview_display_base_event, Event
         roi_selection[2] = x
         roi_selection[3] = y
         (*global_preview).roi_selection = roi_selection
+
+        x0 = roi_selection[0]
+        y0 = roi_selection[1]
+        x1 = x
+        y1 = y
+
+        plot_zoom_data, event=event
+        plot_zoom_roi, event=event
+
+        id = widget_info(event.top,find_by_uname='zoom_draw')
+        widget_control, id, get_value=plot_id
+        wset, plot_id
+        
+        plots, [x0, x0, x1, x1, x0], $
+        [y0, y1, y1, y0, y0], /device, color=fsc_color('red')
+
         return
       endif
       
