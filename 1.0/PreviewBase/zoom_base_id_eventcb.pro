@@ -34,82 +34,67 @@
 
 ;+
 ; :Description:
-;    reset the contain of the tables
+;    This removed from the id_list the window that have been closed
 ;
 ;
 ;
 ; :Keywords:
-;    event
-;    uname
+;    dirty_list
 ;
 ; :Author: j35
 ;-
-pro reset_table, event=event, uname=uname
+function clean_zoom_base_id, dirty_list=dirty_list
   compile_opt idl2
   
-  table = getValue(event=event,uname=uname)
-  sz = n_elements(table)
-  id = widget_info(event.top, find_by_uname=uname)
-  index=1
-  while (index lt sz) do begin
-    widget_control, id, delete_rows=0
-    index++
+  clean_list = !null
+  
+  nbr_base = n_elements(dirty_list)
+  _index = 0
+  while (_index lt nbr_base) do begin
+    _id = dirty_list[_index]
+    if (widget_info(_id,/valid_id) eq 1) then begin
+      clean_list = [clean_list, _id]
+    endif
+    _index++
   endwhile
   
-  putValue, event=event, uname, strarr(1,1)
-  
-  ;add log book message
-  message = 'Reset ' + uname
-  log_book_update, event, message=message
+  return, clean_list
   
 end
 
 ;+
 ; :Description:
-;    Full reset of the preview base
+;    This will take care of cleaning the list of zoom_base_id and
+;    registering the new base_id 
 ;
 ;
 ;
 ; :Keywords:
 ;    event
+;    preview_base  ;id of the preview base from where this is launched
+;    new_base
+;
 ;
 ; :Author: j35
 ;-
-pro full_reset_of_preview_base, event=event
+pro add_zoom_base_id, event=event, preview_base=preview_base, new_base=new_base
   compile_opt idl2
   
-  widget_control, event.top, get_uvalue=global
+  if (keyword_set(event)) then begin
+    widget_control, event.top, get_uvalue=global
+  endif else begin
+    widget_control, preview_base, get_uvalue=global_preview
+    global = (*global_preview).global
+  endelse
   
-  ;reset metadata
-  (*(*global).preview_file_metadata) = !null
+  list_of_preview_display_base = (*(*global).list_of_preview_display_base)
+  clean_list = clean_zoom_base_id(dirty_list=list_of_preview_display_base)
   
-  ;reset plot
-  id_draw = widget_info(Event.top, find_by_uname='preview_draw_uname')
-  widget_control, id_draw, get_value=id_value
-  wset,id_value
-  erase
-  
-  ;reset name of file previewed
-  putValue, event=event, 'preview_file_name_label', 'N/A'
+  if (keyword_set(new_base)) then begin
+    clean_list = [clean_list, new_base]
+  endif
+  (*(*global).list_of_preview_display_base) = clean_list
   
 end
 
-;+
-; :Description:
-;    This will clear the contain of the roi box
-;
-;
-;
-; :Keywords:
-;    event
-;
-; :Author: j35
-;-
-pro full_reset_of_roi_base, event=event
-  compile_opt idl2
-  
-  putValue, event=event, 'roi_text_field_uname', ''
-  refresh_zoom_base, event=event
-  
-end
 

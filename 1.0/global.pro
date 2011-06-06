@@ -67,7 +67,8 @@ FUNCTION getGlobal
     log_book: ptr_new(0L), $
     log_book_id: 0L, $
     
-    preview_display_base: 0L, $
+    ;list of zoom/preview base ids
+    list_of_preview_display_base: ptr_new(0L), $
     
     full_log_book: ptr_new(0L), $
     new_log_book_message: ptr_new(0L), $

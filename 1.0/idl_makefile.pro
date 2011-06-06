@@ -55,6 +55,7 @@ cd, CurrentFolder + '/PreviewBase'
 .run plot_zoom_roi.pro
 .run preview_display_base.pro
 .run plot_zoom_data.pro
+.run zoom_base_id_eventcb.pro
 
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.

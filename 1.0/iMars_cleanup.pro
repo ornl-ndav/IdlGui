@@ -53,6 +53,7 @@ pro iMars_cleanup, tlb
   ptr_free, (*global).new_log_book_message
   ptr_free, (*global).preview_file_metadata
   ptr_free, (*global).preview_data
+  ptr_free, (*global).list_of_preview_display_base
   
   ptr_free, global
   

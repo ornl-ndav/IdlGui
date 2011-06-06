@@ -184,13 +184,13 @@ pro preview_display_base_event, Event
       
     end
     
-    ;cancel tof selected
-    widget_info(event.top, $
-      find_by_uname='cancel_discrete_selection_selected_uname'): begin
-      widget_control, event.top, get_uvalue=global_preview
-      top_base = (*global_preview).top_base
-      widget_control, top_base, /destroy
-    end
+;       ;cancel tof selected
+;    widget_info(event.top, $
+;      find_by_uname='cancel_discrete_selection_selected_uname'): begin
+;      widget_control, event.top, get_uvalue=global_preview
+;      top_base = (*global_preview).top_base
+;      widget_control, top_base, /destroy
+;    end
     
     else:
     
@@ -402,6 +402,8 @@ end
 pro preview_display_base_cleanup, tlb
   compile_opt idl2
   
+;  add_zoom_base_id, preview_base=tlb
+
   widget_control, tlb, get_uvalue=global_preview, /no_copy
   
   if (n_elements(global_preview) eq 0) then return
@@ -451,7 +453,7 @@ pro preview_display_base, event=event, $
     default_plot_size=default_plot_size,$
     colorbar_xsize=colorbar_xsize
     
-  (*global).preview_display_base = _base
+  add_zoom_base_id, event=event, new_base=_base
   
   WIDGET_CONTROL, _base, /REALIZE
   
