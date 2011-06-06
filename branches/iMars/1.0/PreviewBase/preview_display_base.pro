@@ -77,10 +77,13 @@ pro preview_display_base_event, Event
       ;        widget_control, id_plot, xoffset = xoffset + new_xsize
       ;        widget_control, id_plot, yoffset = yoffset + 170
       ;      endif
-      
+
       if ((abs((*global_preview).ysize - new_ysize) eq 33.0) && $
         (abs((*global_preview).xsize - new_xsize) eq 70.0)) then return
         
+      if ((abs((*global_preview).ysize - new_ysize) eq 33.0) && $
+        (abs((*global_preview).xsize - new_xsize) eq 0.0)) then return
+
       new_ysize -= 33  ;due to the menu bar at the top
       
       (*global_preview).xsize = new_xsize
@@ -111,6 +114,9 @@ pro preview_display_base_event, Event
       
       ;display the main data
       plot_zoom_data, event=event, /recalculate
+      
+      ;plot roi
+      plot_zoom_roi, event=event
       
       ;plot scale around the plot
       plot_scale_zoom_data, event=event
@@ -439,8 +445,6 @@ pro preview_display_base, event=event, $
   
   ;plot scale around the plot
   plot_scale_zoom_data, base=_base
-  
-  
   
 end
 
