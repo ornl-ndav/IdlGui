@@ -33,6 +33,7 @@
 ;==============================================================================
 
 FUNCTION getGlobal
+compile_opt idl2
 
   file = OBJ_NEW('idlxmlparser', '.iMars.cfg')
   APPLICATION = file->getValue(tag=['configuration','application'])
