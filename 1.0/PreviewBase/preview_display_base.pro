@@ -508,6 +508,9 @@ pro launch_zoom, event=event
   
   top_base = widget_info(event.top, find_by_uname='MAIN_BASE')
   
+  preview_file_name = getValue(event=event,uname='preview_file_name_label')
+  if (preview_file_name eq 'N/A') then return
+  
   preview_display_base, event=event, $
     top_base=top_base, $
     parent_base_uname='MAIN_BASE'
