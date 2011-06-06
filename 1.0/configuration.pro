@@ -233,11 +233,7 @@ pro repopulate_gui, event, _structure
     
   ;name of file currently previewed
   putValue, event=event, 'preview_file_name_label', _structure.preview_file
-  
-  ;display preview of file selected
-  type = _structure.type
-  preview_currently_selected_file, event=event, type=type
-  
+    
   ;is with gamma or not
   setButton, event=event, uname='with_gamma_filtering_uname', $
     _structure.is_with_gamma_filtering
@@ -255,5 +251,9 @@ pro repopulate_gui, event, _structure
     _structure.is_fits_selected
   setButton, event=event, uname='format_png_button', $
     _structure.is_png_selected
+    
+    ;display preview of file selected
+  type = _structure.type
+  preview_currently_selected_file, event=event, type=type
     
 end
