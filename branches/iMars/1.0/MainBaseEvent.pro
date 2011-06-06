@@ -134,6 +134,10 @@ PRO MAIN_BASE_event, Event
       preview_currently_selected_file, event=event, type='dark_field'
     end
     
+    ;with gamma filtering
+    widget_info(event.top, find_by_uname='with_gamma_filtering_uname'): begin
+      preview_currently_selected_file, event=event
+    end
     
     ;zoom/metadata/contrast buttons
     ;zoom

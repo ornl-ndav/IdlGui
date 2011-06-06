@@ -198,7 +198,7 @@ norm_data[index] = 0
 ;
 ; :Author: j35
 ;-
-pro gamma_cleaner, data
+pro _gamma_cleaner, data
   compile_opt idl2
   
   threshold = 10000.
