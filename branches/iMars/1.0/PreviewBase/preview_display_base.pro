@@ -59,6 +59,7 @@ pro preview_display_base_event, Event
     
       ;left click
       if (event.press eq 1) then begin
+      print, 'here'
         (*global_preview).left_click = 1b
         x=event.x
         y=event.y
@@ -81,6 +82,7 @@ pro preview_display_base_event, Event
         endif
         plot_zoom_roi, event=event
         display_preview_roi, base=(*global_preview).top_base
+        plot_other_zoom_and_roi_data, event=event
         return
       endif
       
@@ -107,6 +109,8 @@ pro preview_display_base_event, Event
         
         plots, [x0, x0, x1, x1, x0], $
         [y0, y1, y1, y0, y0], /device, color=fsc_color('red')
+
+        plot_other_zoom_and_roi_data, event=event, /live
 
         return
       endif

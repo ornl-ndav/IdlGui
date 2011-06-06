@@ -73,11 +73,11 @@ pro plot_zoom_data, event=event, base=base, recalculate=recalculate
     (*(*global_preview).cData) = cData
     tvscl, cData
     
-    save_zoom_data_background, event=event, base=base    
+    save_zoom_data_background, event=event, base=base
     return
     
   endif else begin
-
+  
     tv, (*(*global_preview).background), true=3
     
   endelse
@@ -232,7 +232,7 @@ pro plot_colorbar_zoom_data, base=base, event=event
   wset,id_value
   erase
   
-;  global = (*global_preview).global
+  ;  global = (*global_preview).global
   
   ; default_loadct = (*global_preview).default_loadct
   ; loadct, default_loadct, /silent
@@ -284,6 +284,82 @@ pro plot_colorbar_zoom_data, base=base, event=event
         ylog = 1
         
     endelse
+    
+  endelse
+  
+end
+
+;+
+; :Description:
+;    Plot data and roi of all the other opened zoom base
+;
+;
+;
+; :Keywords:
+;    event
+;    live
+;
+; :Author: j35
+;-
+pro plot_other_zoom_and_roi_data, event=event, live=live
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_preview
+  global = (*global_preview).global
+  
+  list_of_preview_display_base = (*(*global).list_of_preview_display_base)
+  clean_list = clean_zoom_base_id(dirty_list=list_of_preview_display_base)
+  _base = (*global_preview)._base
+  
+  nbr = n_elements(clean_list)
+  _index=0
+  
+  if (keyword_set(live)) then begin
+  
+    while (_index lt nbr) do begin
+    
+      _id = clean_list[_index]
+      if (_id eq _base) then begin
+        _index++
+        continue
+      endif
+      
+      
+      roi_selection = (*global_preview).roi_selection
+      
+      x0 = roi_selection[0]
+      y0 = roi_selection[1]
+      x1 = roi_selection[2]
+      y1 = roi_selection[3]
+      
+      id = widget_info(_id,find_by_uname='zoom_draw')
+      widget_control, id, get_value=plot_id
+      wset, plot_id
+      
+      plot_zoom_data, base=_id
+      plot_zoom_roi, base=_id
+      
+      plots, [x0, x0, x1, x1, x0], $
+        [y0, y1, y1, y0, y0], /device, color=fsc_color('red')
+        
+      _index++
+    endwhile
+    
+  endif else begin
+  
+    while (_index lt nbr) do begin
+    
+      _id = clean_list[_index]
+      if (_id eq _base) then begin
+        _index++
+        continue
+      endif
+      
+      plot_zoom_data, base=_id
+      plot_zoom_roi, base=_id
+      
+      _index++
+    endwhile
     
   endelse
   
