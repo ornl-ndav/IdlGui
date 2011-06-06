@@ -49,6 +49,11 @@ pro preview_display_base_event, Event
   
   case Event.id of
   
+    ;loadct button
+    widget_info(event.top, find_by_uname='show_xloadct'): begin
+      launch_preview_xloadct, event=event
+    end
+    
     ;main base resized or moved
     widget_info(event.top, find_by_uname='zoom_base_uname'): begin
     
@@ -74,10 +79,10 @@ pro preview_display_base_event, Event
       ;      endif
       
       if ((abs((*global_preview).ysize - new_ysize) eq 33.0) && $
-      (abs((*global_preview).xsize - new_xsize) eq 70.0)) then return
-      
+        (abs((*global_preview).xsize - new_xsize) eq 70.0)) then return
+        
       new_ysize -= 33  ;due to the menu bar at the top
-
+      
       (*global_preview).xsize = new_xsize
       (*global_preview).ysize = new_ysize
       
@@ -125,6 +130,52 @@ pro preview_display_base_event, Event
     else:
     
   endcase
+  
+end
+
+;+
+; :Description:
+;    Launch the xloadct base
+;
+;
+;
+; :Keywords:
+;    event
+;
+; :Author: j35
+;-
+pro launch_preview_xloadct, event=event
+  compile_opt idl2
+  
+  id = widget_info(event.top, find_by_uname='zoom_base_uname')
+  xloadct, group=id, $
+  updatecallback='zoom_live_preview_of_currently_selected_file',$
+  updatecbdata=event, $
+  /use_current
+
+end
+  
+;+
+; :Description:
+;    This procedure launch the preview of the currently selected file
+;
+;
+;
+; :Keywords:
+;    data
+;
+; :Author: j35
+;-
+pro zoom_live_preview_of_currently_selected_file, data=event
+compile_opt idl2
+
+  widget_control, event.top, get_uvalue=global_preview
+ 
+ ;display the main data
+  plot_zoom_data, event=event, /recalculate
+  
+  ;plot colorbar
+  plot_colorbar_zoom_data, event=event
   
 end
 
@@ -229,6 +280,14 @@ pro preview_display_base_gui, wBase, $
     value = set2_value,$
     event_pro = 'tof_selection_local_switch_axes_type',$
     uname = 'tof_selection_local_scale_setting_log')
+    
+  loadct = widget_button(bar1,$
+    value = 'Color/Contrast',$
+    /menu)
+    
+  button1 = widget_button(loadct,$
+    value = 'Launch tool...',$
+    uname = 'show_xloadct')
     
 ;  pixel = widget_button(bar1,$
 ;    value = 'Extra',$
@@ -368,7 +427,7 @@ pro preview_display_base, event=event, $
     GROUP_LEADER=ourGroup, $
     /NO_BLOCK, $
     cleanup='preview_display_base_cleanup'
-      
+    
   ;display the main data
   plot_zoom_data, base=_base, /recalculate
   

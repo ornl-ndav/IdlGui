@@ -54,6 +54,17 @@ pro launch_xloadct, event=event
 
 end
   
+;+
+; :Description:
+;    This procedure launch the preview of the currently selected file
+;
+;
+;
+; :Keywords:
+;    data
+;
+; :Author: j35
+;-
 pro live_preview_of_currently_selected_file, data=event
 compile_opt idl2
 
