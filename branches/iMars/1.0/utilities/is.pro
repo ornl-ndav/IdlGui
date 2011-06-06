@@ -166,6 +166,9 @@ function is_selection_valid, selection=selection
   if (x0 eq x1) then return, 0b
   if (y0 eq y1) then return, 0b
   
+  if (x1 eq 0) then return, 0b
+  if (y1 eq 0) then return, 0b
+  
   return, 1b
   
 end
