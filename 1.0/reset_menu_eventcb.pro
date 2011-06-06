@@ -48,6 +48,7 @@ pro reset_table, event=event, uname=uname
   compile_opt idl2
   
   table = getValue(event=event,uname=uname)
+  
   sz = n_elements(table)
   id = widget_info(event.top, find_by_uname=uname)
   index=1

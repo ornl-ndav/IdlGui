@@ -59,7 +59,6 @@ pro preview_display_base_event, Event
     
       ;left click
       if (event.press eq 1) then begin
-      print, 'here'
         (*global_preview).left_click = 1b
         x=event.x
         y=event.y
