@@ -72,6 +72,7 @@ PRO MAIN_BASE_event, Event
       reset_table, event=event, uname = 'dark_field_table'
       full_reset_of_preview_base, event=event
       full_reset_of_roi_base, event=event
+      kill_any_opened_zoom_base, event=event
     end
     
     ;help menu
