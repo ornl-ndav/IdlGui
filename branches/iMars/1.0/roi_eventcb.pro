@@ -181,4 +181,42 @@ pro refresh_roi, event=event
   type = (*global).current_type_selected
   preview_currently_selected_file, event=event, type=type
   
+  refresh_zoom_base, event=event
+  
 end
+
+;+
+; :Description:
+;    This refresh the ROI of the currently opened zoom_base
+;
+;
+;
+; :Keywords:
+;    event
+;
+; :Author: j35
+;-
+pro refresh_zoom_base, event=event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  list_id = (*(*global).list_of_preview_display_base)
+  clean_list = clean_zoom_base_id(dirty_list=list_id)
+  
+  nbr_id = n_elements(clean_list)
+  _index=0
+  while (_index lt nbr_id) do begin
+  
+    _id = list_id[_index]
+    
+    plot_zoom_data, base=_id
+    plot_zoom_roi, base=_id
+    
+    _index++
+  endwhile
+  
+end
+
+
+

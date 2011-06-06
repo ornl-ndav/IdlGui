@@ -71,6 +71,7 @@ pro preview_currently_selected_file, event=event, type=type
   putValue, event=event, 'preview_file_name_label', label + file_base_name
   display_preview_of_file, event=event, file_name=file_name_selected
   display_preview_roi, event=event
+  refresh_zoom_base, event=event
   
 end
 
