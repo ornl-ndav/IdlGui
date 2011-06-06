@@ -54,6 +54,47 @@ pro preview_display_base_event, Event
       launch_preview_xloadct, event=event
     end
     
+    ;draw
+    widget_info(event.top, find_by_uname='zoom_draw'): begin
+    
+      ;left click
+      if (event.press eq 1) then begin
+        (*global_preview).left_click = 1b
+        x=event.x
+        y=event.y
+        roi_selection = [x,y,0,0]
+        (*global_preview).roi_selection = roi_selection
+        return
+      endif
+      
+      ;release left click
+      if (event.release eq 1b && $
+        (*global_preview).left_click eq 1b) then begin
+        (*global_preview).left_click = 0b
+        ;add roi to the main_base roi box if the selection is valid
+        selection = (*global_preview).roi_selection
+        plot_zoom_data, event=event, /recalculate
+        if (is_selection_valid(selection=selection)) then begin
+          selection_data = convert_zoom_device_to_data(event=event, selection)
+          add_new_selection_to_list_of_roi, event=event, new_roi=selection_data
+          plot_zoom_roi, event=event
+        endif
+        return
+      endif
+      
+      ;moving mouse with left click
+      if ((*global_preview).left_click) then begin
+        x=event.x
+        y=event.y
+        roi_selection = (*global_preview).roi_selection
+        roi_selection[2] = x
+        roi_selection[3] = y
+        (*global_preview).roi_selection = roi_selection
+        return
+      endif
+      
+    end
+    
     ;main base resized or moved
     widget_info(event.top, find_by_uname='zoom_base_uname'): begin
     
@@ -77,13 +118,13 @@ pro preview_display_base_event, Event
       ;        widget_control, id_plot, xoffset = xoffset + new_xsize
       ;        widget_control, id_plot, yoffset = yoffset + 170
       ;      endif
-
+      
       if ((abs((*global_preview).ysize - new_ysize) eq 33.0) && $
         (abs((*global_preview).xsize - new_xsize) eq 70.0)) then return
         
       if ((abs((*global_preview).ysize - new_ysize) eq 33.0) && $
         (abs((*global_preview).xsize - new_xsize) eq 0.0)) then return
-
+        
       new_ysize -= 33  ;due to the menu bar at the top
       
       (*global_preview).xsize = new_xsize
@@ -246,7 +287,7 @@ pro preview_display_base_gui, wBase, $
     scr_ysize = ysize-2*border,$
     /button_events, $
     /motion_events, $
-    /tracking_events, $
+    ;    /tracking_events, $
     keyboard_events=2, $
     retain=2, $
     ;    event_pro = 'refpix_draw_eventcb',$
@@ -407,6 +448,9 @@ pro preview_display_base, event=event, $
     ysize: default_plot_size[1],$
     
     background: ptr_new(0L), $
+    
+    left_click: 0b, $
+    roi_selection: intarr(4), $
     
     border: border, $
     colorbar_xsize: colorbar_xsize, $

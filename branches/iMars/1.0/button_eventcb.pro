@@ -55,9 +55,7 @@ pro button_eventcb, event=event, button=button
     endif else begin
       device, cursor_standard=58
     endelse
-    
     display_images, event=event, button=button, status='off'
-    
   endif else begin ;click in the widget
   
     if (event.press eq 1) then begin ;pressed button
@@ -94,5 +92,32 @@ pro start_button, event=event, button=button
     'zoom' : launch_zoom, event=event
     'contrast' : launch_xloadct, event=event
   endcase
+  
+end
+
+;+
+; :Description:
+;    This makes sure the current button is activated before changing the cursor
+;
+;
+;
+; :Keywords:
+;    event
+;    button
+;
+; :Author: j35
+;-
+pro validate_this_draw, event=event, button=button
+  compile_opt idl2
+  
+  case (button) of
+    'metadata': uname='metadata_uname'
+    'zoom': uname='zoom_uname'
+    'contrast': uname='contrast_uname'
+  endcase
+  
+  id = widget_info(event.top,find_by_uname=uname)
+  widget_control, id, get_value=plot_id
+  wset, plot_id
   
 end

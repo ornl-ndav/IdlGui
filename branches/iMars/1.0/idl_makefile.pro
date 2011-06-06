@@ -52,9 +52,9 @@ cd, CurrentFolder + '/FitsPlot'
 .run fits_plot_roi_input_base.pro
 
 cd, CurrentFolder + '/PreviewBase'
+.run plot_zoom_roi.pro
 .run preview_display_base.pro
 .run plot_zoom_data.pro
-.run plot_zoom_roi.pro
 
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.

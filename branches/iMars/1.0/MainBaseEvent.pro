@@ -137,16 +137,19 @@ PRO MAIN_BASE_event, Event
     ;zoom/metadata/contrast buttons
     ;zoom
     widget_info(event.top, find_by_uname='zoom_uname'): begin
+      validate_this_draw, event=event, button='zoom'
       button_eventcb, event=event, button='zoom'
     end
     
     ;contrast
     widget_info(event.top, find_by_uname='contrast_uname'): begin
+      validate_this_draw, event=event, button='contrast'
       button_eventcb, event=event, button='contrast'
     end
     
     ;metadata
     widget_info(event.top, find_by_uname='metadata_uname'): begin
+      validate_this_draw, event=event, button='metadata'
       button_eventcb, event=event, button='metadata'
     end
     
