@@ -93,3 +93,22 @@ pro full_reset_of_preview_base, event=event
   putValue, event=event, 'preview_file_name_label', 'N/A'
   
 end
+
+;+
+; :Description:
+;    This will clear the contain of the roi box
+;
+;
+;
+; :Keywords:
+;    event
+;
+; :Author: j35
+;-
+pro full_reset_of_roi_base, event=event
+  compile_opt idl2
+  
+  putValue, event=event, 'roi_text_field_uname', ''
+  
+end
+
