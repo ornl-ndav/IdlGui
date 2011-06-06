@@ -137,3 +137,36 @@ function isAutomaticLoadingOn, event
   return, button_selected
   
 end
+
+;+
+; :Description:
+;     check if the selection is valid
+;
+;
+;
+; :Keywords:
+;    selection
+;
+; :Returns:
+;   1b if selection is valid
+;   0b is selection is not valid
+;
+; :Author: j35
+;-
+function is_selection_valid, selection=selection
+  compile_opt idl2
+  
+  if (n_elements(selection)) ne 4 then return, 0b
+  
+  x0 = selection[0]
+  y0 = selection[1]
+  x1 = selection[2]
+  y1 = selection[3]
+  
+  if (x0 eq x1) then return, 0b
+  if (y0 eq y1) then return, 0b
+  
+  return, 1b
+  
+end
+
