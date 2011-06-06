@@ -53,6 +53,8 @@ cd, CurrentFolder + '/FitsPlot'
 
 cd, CurrentFolder + '/PreviewBase'
 .run preview_display_base.pro
+.run plot_zoom_data.pro
+.run plot_zoom_roi.pro
 
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.

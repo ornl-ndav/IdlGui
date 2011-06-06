@@ -149,12 +149,12 @@ pro launch_preview_xloadct, event=event
   
   id = widget_info(event.top, find_by_uname='zoom_base_uname')
   xloadct, group=id, $
-  updatecallback='zoom_live_preview_of_currently_selected_file',$
-  updatecbdata=event, $
-  /use_current
-
+    updatecallback='zoom_live_preview_of_currently_selected_file',$
+    updatecbdata=event, $
+    /use_current
+    
 end
-  
+
 ;+
 ; :Description:
 ;    This procedure launch the preview of the currently selected file
@@ -167,11 +167,11 @@ end
 ; :Author: j35
 ;-
 pro zoom_live_preview_of_currently_selected_file, data=event
-compile_opt idl2
-
+  compile_opt idl2
+  
   widget_control, event.top, get_uvalue=global_preview
- 
- ;display the main data
+  
+  ;display the main data
   plot_zoom_data, event=event, /recalculate
   
   ;plot colorbar
@@ -431,11 +431,16 @@ pro preview_display_base, event=event, $
   ;display the main data
   plot_zoom_data, base=_base, /recalculate
   
+  ;plot roi
+  plot_zoom_roi, base=_base
+  
   ;plot colorbar
   plot_colorbar_zoom_data, base=_base
   
   ;plot scale around the plot
   plot_scale_zoom_data, base=_base
+  
+  
   
 end
 
