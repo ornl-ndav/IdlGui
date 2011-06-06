@@ -113,3 +113,40 @@ pro full_reset_of_roi_base, event=event
   
 end
 
+;+
+; :Description:
+;    This is going to kill all the current opened base
+;
+;
+;
+; :Keywords:
+;    event
+;    base
+;
+; :Author: j35
+;-
+pro kill_any_opened_zoom_base, event=event, base=base
+  compile_opt idl2
+  
+  if (keyword_set(event)) then begin
+  widget_control, event.top, get_uvalue=global
+  endif else begin
+  widget_control, base, get_uvalue=global
+  endelse
+  
+  list_id = (*(*global).list_of_preview_display_base)
+  
+  nbr_id = n_elements(list_id)
+  _index=0
+  while (_index lt nbr_id) do begin
+    _id = list_id[_index]
+    if (widget_info(_id,/valid_id)) then begin
+      widget_control, _id, /destroy
+    endif
+    
+    _index++
+  endwhile
+  
+end
+
+
