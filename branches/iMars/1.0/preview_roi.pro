@@ -41,13 +41,14 @@
 ;
 ; :Keywords:
 ;    event
+;    base
 ;
 ; :Author: j35
 ;-
-function retrieve_list_roi, event=event
+function retrieve_list_roi, event=event, base=base
   compile_opt idl2
   
-  pixel_list = getValue(event=event, uname='roi_text_field_uname')
+  pixel_list = getValue(event=event, base=base, uname='roi_text_field_uname')
   nbr_lines = n_elements(pixel_list)
   
   on_ioerror, format_error
