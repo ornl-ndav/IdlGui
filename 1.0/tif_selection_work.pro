@@ -1,30 +1,55 @@
 
-
+;+
+; :Description:
+;    This routine calculate the total counts of the predefined ROI and
+;    create an output file of all the counts of all the files
+;
+;
+;
+;
+;
+; :Author: j35
+;-
 pro tif_selection_work
   compile_opt idl2
   
-  widget_control, /hourglass
+;  path = '/Volumes/h2b/h2b/Data_Analysis/2011/2011 Forensic/Cycle 433/Feb1_2011/Overnight_muscle/Despeckled/Normalized/'
+;  selection = [[592,876,592+148,876+158],$
+;    [1034,1048,1034+218,1048+248],$
+;    [958,1558,958+224,1558+252],$
+;    [1658,1280,1658+228,1280+222],$
+;    [1536,1778,1536+312,1778+266],$
+;    [2072,1388,2072+254,1388+250],$
+;    [2572,1480,2572+128,1480+122],$
+;    [2130,2222,2130+64,2222+64],$
+;    [2324,2186,2324+66,2186+70],$
+;    [1994,2288,1994+80,2288+62],$
+;    [2264,2262,2264+72,2262+74],$
+;    [2154,2336,2154+68,2336+62]]
   
-  path = '/Volumes/h2b/h2b/Data_Analysis/2011/2011 Forensic/Cycle 433/Feb1_2011/Overnight_muscle/Despeckled/Normalized/'
-  filter = ['N_D*.tif']
+  path = '/Volumes/h2b/h2b/Data_Analysis/2011/2011 Forensic/Cycle 433/Feb2_2011/Overnight_muscle_5C/Despeckled/Normalized/'
+  selection = [[274,748,274+64,748+79],$
+  [828,722,828+132,722+188],$
+  [370,972,370+107,972+89],$
+  [399,582,399+86,582+94],$
+  [717,372,717+89,372+89],$
+  [659,580,659+160,580+147],$
+  [626,819,626+155,819+129],$
+  [395,765,395+92,765+81],$
+  [636,1020,636+159,1020+103],$
+  [914,1094,914+117,1094+92],$
+  [970,429,970+56,429+198],$
+  [1128,539,1128+45,539+212],$
+  [1342,821,1342+39,821+192],$
+  [1017,820,177+1017,151+820]]
+
+  filter = ['N_D*.tif'] 
   output_path = '~/Desktop/'
-  output_file_name = output_path + 'Feb1_2011_selections.txt'
+  output_file_name = output_path + 'Feb2_2011_selections.txt'
   
-  bCheckSelection = 0b
-  bDoCalculation = 1b
+  bCheckSelection = 1b
+  bDoCalculation = 0b
   
-  selection = [[592,876,592+148,876+158],$
-    [1034,1048,1034+218,1048+248],$
-    [958,1558,958+224,1558+252],$
-    [1658,1280,1658+228,1280+222],$
-    [1536,1778,1536+312,1778+266],$
-    [2072,1388,2072+254,1388+250],$
-    [2572,1480,2572+128,1480+122],$
-    [2130,2222,2130+64,2222+64],$
-    [2324,2186,2324+66,2186+70],$
-    [1994,2288,1994+80,2288+62],$
-    [2264,2262,2264+72,2262+74],$
-    [2154,2336,2154+68,2336+62]]
     
   sz = size(selection,/dim)
   nbr_selection = sz[1]
@@ -43,6 +68,8 @@ pro tif_selection_work
       data = read_tiff(_file)
       sz = size(data,/dim)
       
+      print, sz
+      
       new_xsize = sz[0]/2
       new_ysize = sz[1]/2
       
@@ -50,6 +77,7 @@ pro tif_selection_work
       
       cData = congrid(data,new_xsize, new_ysize)
       
+      help, cData
       tvscl, cData
       
       for j=0,nbr_selection-1 do begin
@@ -63,7 +91,8 @@ pro tif_selection_work
           color=fsc_color("black")
       endfor
       
-      wait,1
+      stop
+      wait,2
       
     endfor
   endif
@@ -94,8 +123,6 @@ pro tif_selection_work
       endfor
     endfor
     
-  endif
-  
   ;create output file of result
   openw, 1 , output_file_name
   
@@ -129,7 +156,7 @@ pro tif_selection_work
   close, 1
   free_lun, 1
 
-  widget_control, hourglass=0
+  endif
   
 end
 
