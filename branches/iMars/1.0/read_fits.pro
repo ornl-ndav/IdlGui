@@ -1,5 +1,142 @@
 
 
+pro my_read_tiff
+  compile_opt idl2
+  
+  widget_control, /hourglass
+  
+  path = '/Volumes/h2b/h2b/Data_Analysis/2011/2011 Forensic/Cycle 433/Feb1_2011/Overnight_muscle/Despeckled/Normalized/'
+  filter = ['N_D*.tif']
+  output_path = '~/Desktop/'
+  output_file_name = output_path + 'Feb1_2011_selections.txt'
+  
+  bCheckSelection = 0b
+  bDoCalculation = 1b
+  
+  selection = [[592,876,592+148,876+158],$
+    [1034,1048,1034+218,1048+248],$
+    [958,1558,958+224,1558+252],$
+    [1658,1280,1658+228,1280+222],$
+    [1536,1778,1536+312,1778+266],$
+    [2072,1388,2072+254,1388+250],$
+    [2572,1480,2572+128,1480+122],$
+    [2130,2222,2130+64,2222+64],$
+    [2324,2186,2324+66,2186+70],$
+    [1994,2288,1994+80,2288+62],$
+    [2264,2262,2264+72,2262+74],$
+    [2154,2336,2154+68,2336+62]]
+    
+  sz = size(selection,/dim)
+  nbr_selection = sz[1]
+  
+  list_file = dialog_pickfile(path=path,/multiple_files,filter=filter)
+  nbr_files = n_elements(list_file)
+  
+  ;check if selection is right for all files
+  if (bCheckSelection) then begin
+  
+    device, decomposed=0
+    loadct,5
+    
+    for i=0,(n_elements(list_file)-1) do begin
+      _file = list_file[i]
+      data = read_tiff(_file)
+      sz = size(data,/dim)
+      
+      new_xsize = sz[0]/2
+      new_ysize = sz[1]/2
+      
+      window, 0, xsize=new_xsize, ysize=new_ysize, title=_file
+      
+      cData = congrid(data,new_xsize, new_ysize)
+      
+      tvscl, cData
+      
+      for j=0,nbr_selection-1 do begin
+        x0=selection[0,j]/2
+        y0=selection[1,j]/2
+        x1=selection[2,j]/2
+        y1=selection[3,j]/2
+        plots, [x0,x1,x1,x0,x0],[y0,y0,y1,y1,y0],color=fsc_color('blue'), $
+          /device
+        xyouts, x0+5,y0+5, '#' + strcompress(j,/remove_all),/device, $
+          color=fsc_color("black")
+      endfor
+      
+      wait,1
+      
+    endfor
+  endif
+  
+  if (bDoCalculation) then begin
+  
+    ;do the calculation
+  
+    SumArea = dblarr(nbr_files, nbr_selection)
+    
+    for i=0,nbr_files-1 do begin
+    
+      _file = list_file[i]
+      data = read_tiff(_file)
+      
+      for j=0,nbr_selection-1 do begin
+      
+        x0 = selection[0,j]
+        y0 = selection[1,j]
+        x1 = selection[2,j]
+        y1 = selection[3,j]
+        
+        _data = data[x0:x1,y0:y1]
+        _sum = total(_data)
+        
+        SumArea[i,j] = _sum
+        
+      endfor
+    endfor
+    
+  endif
+  
+  ;create output file of result
+  openw, 1 , output_file_name
+  
+  ;info
+  printf, 1, '# xaxis: selections'
+  printf, 1, '# yaxis: files'
+  
+  ;selection
+  for j=0,nbr_selection-1 do begin
+    _selection = strjoin(selection[*,j],',')
+    printf, 1, '# selection: ' + strcompress(_selection,/remove_all)
+  endfor
+  
+  ;add list of files
+  sz = n_elements(list_file)
+  for i=0,sz-1 do begin
+    printf, 1, '# File: ' + list_file[i]
+  endfor
+  printf, 1, '# number of files: ' + strcompress(sz,/remove_all)
+  printf, 1, '# number of selection: ' + strcompress(nbr_selection,/remove_all)
+  printf, 1, ''
+  
+  for k=0, sz-1 do begin
+  
+    _area = SumArea[k,*]
+    _row = strjoin(' ' + strjoin(_area,','),',')
+    printf, 1, _row
+    
+  endfor
+  
+  close, 1
+  free_lun, 1
+
+  widget_control, hourglass=0
+  
+end
+
+
+
+
+
 ;'(data-df)/(OB-df))'
 
 
@@ -27,22 +164,22 @@ PRO fits_reader
   print, 'working with data_file'
   _read_fits_file, data_file, data1
   
-;     new_data = congrid(data1, 1000, 1000)
-;    window, 0, xsize=1000, ysize=1000, title='test file before rotation'
-;    tvscl, data1
-;  
-   
+  ;     new_data = congrid(data1, 1000, 1000)
+  ;    window, 0, xsize=1000, ysize=1000, title='test file before rotation'
+  ;    tvscl, data1
+  ;
+  
   ;   rot_new_data = rot(new_data, 180)
   ;  window, 1, xsize=1000, ysize=1000, title='test file after rotation'
   ;  tvscl, rot_new_data
   
   gamma_cleaner, data1
   
-  ;left and right selection of data file  
+  ;left and right selection of data file
   xl1 = 129
   xr1 = 600
   yt = 2048-453
-  yb = 2048-1878 
+  yb = 2048-1878
   
   help, data1
   
@@ -67,7 +204,7 @@ PRO fits_reader
   ;****************************************************************************
   print, 'working with dark field'
   _read_fits_file, df1, data2
-        
+  
   ;new_data = congrid(data2, 1000, 1000)
   ;window, 1, xsize=1000, ysize=1000, title='dark field'
   ;tvscl, new_data
@@ -88,14 +225,14 @@ PRO fits_reader
   ;****************************************************************************
   ;find out which coeff we need to apply to data2 to match background
   ;of data test
-    
+  
   ;****************************************************************************
   print, 'working with open beam'
   _read_fits_file, open_beam, data3
   
   gamma_cleaner, data3
   
-  ;left and right selection of data file  
+  ;left and right selection of data file
   cut_open_beam_left = data3[xl1:xr1,yb:yt]
   cut_open_beam_right = data3[xl2:xr2,yb:yt]
   
@@ -131,7 +268,7 @@ PRO fits_reader
   new_data = congrid(norm_data, 1000, 1000)
   window, 0, xsize=1000, ysize=1000, title='before using above_1_cleaner'
   tvscl, new_data
-
+  
   ;remove all points above 1 to the average of the surrounding points
   above_1_cleaner, norm_data
   
@@ -152,13 +289,13 @@ PRO fits_reader
   new_data = congrid(smooth_norm_data, 1000, 1000)
   window, 2, xsize=1000, ysize=1000, title='with smooth'
   tvscl, new_data
-    
+  
   ;use median of all picture of surrounding 8 points
   median_neighbors, norm_data
   new_data = congrid(norm_data, 1000, 1000)
   window, 3, xsize=1000, ysize=1000, title='after using median_neighbor'
   tvscl, new_data
-
+  
   ;  ;create tiff file of final plot
   ;  print, 'writting tif file'
   ;  write_tiff, '/Users/j35/Desktop/remove_me.tif', tvrd()
@@ -180,11 +317,11 @@ END
 
 
 pro below_1_cleaner, norm_data
+
+  index = where(norm_data lt 0.)
+  norm_data[index] = 0
   
-index = where(norm_data lt 0.) 
-norm_data[index] = 0  
-  
-  end
+end
 
 
 ;+
@@ -254,7 +391,7 @@ pro above_1_cleaner, data
   nbr_column = sz[1]
   
   index_gammas = array_indices(data, where(data ge threshold))
- 
+  
   nbr_pt = (size(index_gammas,/dim))[1]
   for i=0,(nbr_pt-1) do begin
   
@@ -294,8 +431,8 @@ end
 ; :Author: j35
 ;-
 pro median_neighbors, norm_data
-compile_opt idl2
-
+  compile_opt idl2
+  
   nbr_points = n_elements(norm_data)
   _index_ij = array_indices(norm_data, dindgen(nbr_points))
   help, _index_ij
@@ -312,18 +449,18 @@ compile_opt idl2
   
   
   
-  index++
+    index++
   endwhile
-   
+  
   
   
 ;    x = index_gammas[0,i]
 ;    y = index_gammas[1,i]
 ;    if (x eq 0 or x eq (nbr_row-1)) then continue
 ;    if (y eq 0 or y eq (nbr_column-1)) then continue
-;    
+;
 ;    ;print, '(x,y)=(',x,',',y,')'
-;    
+;
 ;    y_tl = data[x-1,y+1]
 ;    y_t  = data[x,y+1]
 ;    y_tr = data[x+1,y+1]
@@ -332,11 +469,11 @@ compile_opt idl2
 ;    y_bl = data[x-1,y-1]
 ;    y_b  = data[x,y-1]
 ;    y_br = data[x+1,y-1]
-;    
+;
 ;    mean_y = (y_tl + y_t + y_tr + y_l + y_r + y_bl + y_b + y_br) / 8.
 ;    data[x,y] = mean_y
-    
-  end
+  
+end
 
 ;------------------------------------------------------------------------------
 PRO get_fits_info, file
@@ -361,7 +498,7 @@ PRO _read_fits_file, file, data
   a = mrdfits(file,0,header,/fscale)
   data=a
   
-  ;print, header
+;print, header
   
   
   
