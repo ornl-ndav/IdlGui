@@ -412,6 +412,7 @@ pro preview_display_base_cleanup, tlb
   if (n_elements(global_preview) eq 0) then return
   
   ptr_free, (*global_preview).cData
+  ptr_free, (*global_preview).data
   ptr_free, (*global_preview).background
   
   ptr_free, global_preview
@@ -479,6 +480,7 @@ pro preview_display_base, event=event, $
     colorbar_xsize: colorbar_xsize, $
     
     cData: ptr_new(0L), $ ;congrid(data, xsize, ysize)
+    data: ptr_new(0L), $ ;untouched data
     xrange: intarr(2), $  ;ex: [0,2048]
     yrange:intarr(2), $   ;ex: [0,2048]
     
@@ -487,6 +489,7 @@ pro preview_display_base, event=event, $
   WIDGET_CONTROL, _base, SET_UVALUE = global_preview
   
   data = (*(*global).preview_data)
+  (*(*global_preview).data) = data
   sz = size(data,/dim)
   xrange = (*global_preview).xrange
   xrange[1] = sz[0]

@@ -237,9 +237,8 @@ pro plot_colorbar_zoom_data, base=base, event=event
   ; default_loadct = (*global_preview).default_loadct
   ; loadct, default_loadct, /silent
   
-  cData = (*(*global_preview).cData)
-  
-  zmin = min(cData, max=zmax)
+  data = (*(*global_preview).data)
+  zmin = min(data, max=zmax)
   
   default_scale_setting = (*global_preview).default_scale_setting
   if (default_scale_setting eq 0) then begin ;linear
