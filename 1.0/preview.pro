@@ -106,7 +106,9 @@ pro display_preview_of_file, event=event, file_name=file_name
     
   widget_control, event.top, get_uvalue=global
   
-  read_fits_file, event=event, file_name=file_name, data=data, metadata=metadata
+  read_fits_file, event=event, file_name=file_name, $
+  data=data, $
+  metadata=metadata
   if (data eq !null) then begin
     full_reset_of_preview_base, event=event
     return
@@ -147,6 +149,6 @@ pro apply_gamma_filtering, event=event, data=data
   
   bGamma = isButtonSelected(event=event,uname='with_gamma_filtering_uname')
   if (bGamma eq 0b) then return
-  gamma_cleaner, data=data
+  gamma_cleaner, event=event, data=data
   
 end

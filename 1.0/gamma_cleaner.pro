@@ -41,17 +41,26 @@
 ;    by the average value
 ;
 ; :Keywords:
+;    event
 ;    data
 ;
 ;
 ;
 ; :Author: j35
 ;-
-pro gamma_cleaner, data=data
+pro gamma_cleaner, event=event, data=data
   compile_opt idl2
   
-  ;data = smooth(data,2)
-  data = leefilt(data,2)
+  widget_control, event.top, get_uvalue=global
+  
+  coeff = (*global).gamma_filtering_coeff
+  
+  case ((*global).gamma_filtering) of
+    0: data = smooth(data, coeff)
+    1: data = leefilt(data, coeff)
+    else:
+  endcase
+  
   return
   
 ;  sz = size(data,/dim)

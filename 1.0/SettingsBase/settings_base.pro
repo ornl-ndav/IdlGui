@@ -52,9 +52,29 @@ pro settings_base_event, Event
     ;validate new settings
     widget_info(event.top, find_by_uname='validate_settings_uname'): begin
       validate_changes, event=event
+      preview_currently_selected_file, event=(*global_settings).main_event, $
+        type=(*global).current_type_selected
       widget_control, (*global_settings)._base, /destroy
     end
     
+    ;gamma filtering buttons
+    widget_info(event.top, find_by_uname='settings_lee_uname'): begin
+      validate_changes, event=event
+      preview_currently_selected_file, event=(*global_settings).main_event, $
+        type=(*global).current_type_selected
+    end
+    widget_info(event.top, find_by_uname='settings_smooth_uname'): begin
+      validate_changes, event=event
+      preview_currently_selected_file, event=(*global_settings).main_event, $
+        type=(*global).current_type_selected
+    end
+    ;gamma filtering coeff
+    widget_info(event.top, find_by_uname='gamma_filtering_coeff_uname'): begin
+      validate_changes, event=event
+      preview_currently_selected_file, event=(*global_settings).main_event, $
+        type=(*global).current_type_selected
+    end
+
     else:
     
   endcase
@@ -149,9 +169,11 @@ pro settings_base_gui, wBase, $
     /exclusive)
   smooth_button = widget_button(button_base,$
     value = 'Smooth',$
+    /no_release, $
     uname = 'settings_smooth_uname')
   lee_button = widget_button(button_base,$
     value = 'Lee filtering   ',$
+    /no_release, $
     uname = 'settings_lee_uname')
     
   case ((*global).gamma_filtering) of
@@ -209,10 +231,11 @@ pro settings_base, event=event, $
     global=global, $
     parent_base_geometry=parent_base_geometry
   (*global).settings_base_id = _base
-    
+  
   WIDGET_CONTROL, _base, /REALIZE
   
   global_settings = PTR_NEW({ _base: _base,$
+    main_event: event, $
     global: global })
     
   WIDGET_CONTROL, _base, SET_UVALUE = global_settings
