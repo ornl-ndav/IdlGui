@@ -114,6 +114,10 @@ function IDLconfiguration::getConfig, event
     
     type: (*global).current_type_selected, $
     
+    ;gamma filtering
+    gamma_filtering: (*global).gamma_filtering, $
+    gamma_filtering_coeff: (*global).gamma_filtering_coeff, $
+    
     roi_loaded: getValue(event=event,$
     uname='roi_text_field_uname'),$
     

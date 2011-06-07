@@ -197,6 +197,8 @@ end
 pro repopulate_gui, event, _structure
   compile_opt idl2
   
+  widget_control, event.top, get_uvalue=global
+  
   ;reset tables
   reset_table, event=event, uname = 'data_files_table'
   reset_table, event=event, uname = 'open_beam_table'
@@ -238,6 +240,10 @@ pro repopulate_gui, event, _structure
   setButton, event=event, uname='with_gamma_filtering_uname', $
     _structure.is_with_gamma_filtering
     
+  ;gamma filtering
+   (*global).gamma_filtering = _structure.gamma_filtering
+   (*global).gamma_filtering_coeff = _structure.gamma_filtering_coeff
+
   ;roi
   putValue, event=event, 'roi_text_field_uname', _structure.roi_loaded
   

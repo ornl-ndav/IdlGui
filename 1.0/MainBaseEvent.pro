@@ -51,6 +51,10 @@ PRO MAIN_BASE_event, Event
     widget_info(event.top, find_by_uname='save_configuration_uname'): begin
       save_configuration, event=event
     end
+    ;settings
+    widget_info(event.top, find_by_uname='settings_configuration_uname'): begin
+      launch_settings_base, event=event
+    end
     
     ;reset menu
     ;reset data files
