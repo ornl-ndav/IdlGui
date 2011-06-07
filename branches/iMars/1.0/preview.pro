@@ -47,6 +47,8 @@
 pro preview_currently_selected_file, event=event, type=type
   compile_opt idl2
   
+  widget_control, /hourglass
+  
   widget_control, event.top, get_uvalue=global
   if (keyword_set(type)) then begin
     (*global).current_type_selected = type
@@ -76,6 +78,8 @@ pro preview_currently_selected_file, event=event, type=type
   display_preview_of_file, event=event, file_name=file_name_selected
   display_preview_roi, event=event
   refresh_zoom_base, event=event
+
+  widget_control, hourglass=0
   
 end
 

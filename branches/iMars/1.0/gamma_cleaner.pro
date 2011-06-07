@@ -50,55 +50,69 @@
 pro gamma_cleaner, data=data
   compile_opt idl2
   
-  sz = size(data,/dim)
-  nbr_row = sz[0]
-  nbr_column = sz[1]
+  ;data = smooth(data,2)
+  data = leefilt(data,2)
+  return
   
-  ;work to do
-  ;using where, create huge array that is the average of all the 
-  ;neighbors
-  c_i_index = indgen(1,nbr_column-2)
-  c_j_index = indgen(1,nbr_row-2)
+;  sz = size(data,/dim)
+;  nbr_row = sz[0]
+;  nbr_column = sz[1]
+;
+;  ;work to do
+;  ;using where, create huge array that is the average of all the
+;  ;neighbors
+;  c_i_index = indgen(1,nbr_column-2)
+;  c_j_index = indgen(1,nbr_row-2)
+;
+;  l_i_index = c_i_index - 1
+;  r_i_index = c_i_index + 1
+;
+;  t_j_index = c_j_index + 1
+;  b_j_index = c_j_index - 1
+;
+;  average_data = fltarr(nbr_row, nbr_column)
+;
+;  average_data[c_i_index,c_j_index] = (data[l_i_index,t_j_index] + $
+;  data[l_i_index,c_j_index] + $
+;  data[l_i_index,b_j_index] + $
+;  data[c_i_index,t_j_index] + $
+;  data[c_i_index,b_j_index] + $
+;  data[r_i_index,t_j_index] + $
+;  data[r_i_index,c_j_index] + $
+;  data[r_i_index,b_j_index]) / 8.
+;
+;  data = average_data
+;  return
+;
+; index = where(data/2. ge average_data)
+;;  data[index] = average_data[index]
+;
+;  index_gammas = array_indices(data, where(data/2. ge average_data))
+;  help, index_gammas
+;
+;return
+;
+;  nbr_pt = (size(index_gammas,/dim))[1]
+;  for i=0,(nbr_pt-1) do begin
+;
+;    x = index_gammas[0,i]
+;    y = index_gammas[1,i]
+;    if (x eq 0 or x eq nbr_row-1) then continue
+;    if (y eq 0 or y eq nbr_column-1) then continue
+;
+;    y_tl = data[x-1,y+1]
+;    y_t  = data[x,y+1]
+;    y_tr = data[x+1,y+1]
+;    y_l  = data[x-1,y]
+;    y_r  = data[x+1,y]
+;    y_bl = data[x-1,y-1]
+;    y_b  = data[x,y-1]
+;    y_br = data[x+1,y-1]
+;
+;    mean_y = (y_tl + y_t + y_tr + y_l + y_r + y_bl + y_b + y_br) / 8.
+;    data[x,y] = mean_y
+;
+;  endfor
   
-  l_i_index = c_i_index - 1
-  r_i_index = c_i_index + 1
   
-  t_j_index = c_j_index + 1
-  b_j_index = c_j_index - 1
-  
-  average_data = fltarr(nbr_row, nbr_column)
-  average_data[c_i_index,c_j_index] = (data[l_i_index,t_j_index] + $
-  data[l_i_index,c_j_index] + $
-  data[l_i_index,b_j_index] + $
-  data[c_i_index,t_j_index] + $
-  data[c_i_index,b_j_index] + $
-  data[r_i_index,t_j_index] + $
-  data[r_i_index,c_j_index] + $
-  data[r_i_index,b_j_index]) / 8. 
-
-  index_gammas = array_indices(data, where(data/2. ge average_data))
-
-  nbr_pt = (size(index_gammas,/dim))[1]
-  for i=0,(nbr_pt-1) do begin
-  
-    x = index_gammas[0,i]
-    y = index_gammas[1,i]
-    if (x eq 0 or x eq nbr_row) then continue
-    if (y eq 0 or y eq nbr_column) then continue
-    
-    y_tl = data[x-1,y+1]
-    y_t  = data[x,y+1]
-    y_tr = data[x+1,y+1]
-    y_l  = data[x-1,y]
-    y_r  = data[x+1,y]
-    y_bl = data[x-1,y-1]
-    y_b  = data[x,y-1]
-    y_br = data[x+1,y-1]
-    
-    mean_y = (y_tl + y_t + y_tr + y_l + y_r + y_bl + y_b + y_br) / 8.
-    data[x,y] = mean_y
-    
-  endfor
-  
-
 end
