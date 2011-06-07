@@ -57,6 +57,9 @@ cd, CurrentFolder + '/PreviewBase'
 .run plot_zoom_data.pro
 .run zoom_base_id_eventcb.pro
 
+cd, CurrentFolder + '/SettingsBase'
+.run settings_base.pro
+
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.
 

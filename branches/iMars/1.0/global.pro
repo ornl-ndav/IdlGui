@@ -68,6 +68,13 @@ compile_opt idl2
     log_book: ptr_new(0L), $
     log_book_id: 0L, $
     
+    ;['smooth','lee filtering']
+    gamma_filtering: 0, $ 
+    gamma_filtering_coeff: 5, $
+    
+    ;settings base
+    settings_base_id: 0L, $
+    
     ;list of zoom/preview base ids
     list_of_preview_display_base: ptr_new(0L), $
     

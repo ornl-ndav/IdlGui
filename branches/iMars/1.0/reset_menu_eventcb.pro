@@ -144,9 +144,13 @@ pro kill_any_opened_zoom_base, event=event, base=base
     if (widget_info(_id,/valid_id)) then begin
       widget_control, _id, /destroy
     endif
-    
-    _index++
+     _index++
   endwhile
+  
+   _settings_base = (*global).settings_base_id
+   if (widget_info(_settings_base,/valid_id)) then begin
+   widget_control, _settings_base, /destroy
+   endif
   
 end
 
