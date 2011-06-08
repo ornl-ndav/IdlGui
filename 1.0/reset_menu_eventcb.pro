@@ -49,10 +49,16 @@ pro reset_table, event=event, uname=uname
   
   table = getValue(event=event,uname=uname)
   
-  sz = n_elements(table)
+  sz = n_elements(reform(table))
   id = widget_info(event.top, find_by_uname=uname)
+
   index=1
   while (index lt sz) do begin
+    print, 'index: ', index
+  table = getValue(event=event,uname=uname)
+    help, table
+    print, table
+    print
     widget_control, id, delete_rows=0
     index++
   endwhile

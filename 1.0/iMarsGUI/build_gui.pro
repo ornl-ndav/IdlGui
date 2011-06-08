@@ -339,7 +339,7 @@ pro build_gui, main_base
   ;run reduction button
   reduction = widget_button(col3,$
     value = 'Run normalization',$
-    sensitive = 0,$
+    sensitive = 1,$
     uname = 'run_normalization_button')
     
   ;progress bar
