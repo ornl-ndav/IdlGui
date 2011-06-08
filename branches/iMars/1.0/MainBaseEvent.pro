@@ -46,6 +46,7 @@ PRO MAIN_BASE_event, Event
     ;load configuration
     widget_info(event.top, find_by_uname='load_configuration_uname'): begin
       load_configuration, event=event
+      check_run_normalization_button_status, event=event
     end
     ;save configuration
     widget_info(event.top, find_by_uname='save_configuration_uname'): begin
@@ -60,14 +61,17 @@ PRO MAIN_BASE_event, Event
     ;reset data files
     widget_info(event.top, find_by_uname='reset_data_files_uname'): begin
       reset_table, event=event, uname = 'data_files_table'
+      check_run_normalization_button_status, event=event, /disabled
     end
     ;reset open beam files
     widget_info(event.top, find_by_uname='reset_open_beam_files_uname'): begin
       reset_table, event=event, uname = 'open_beam_table'
+      check_run_normalization_button_status, event=event, /disabled
     end
     ;reset dark field files
     widget_info(event.top, find_by_uname='reset_dark_field_files_uname'): begin
       reset_table, event=event, uname = 'dark_field_table'
+      check_run_normalization_button_status, event=event, /disabled
     end
     ;reset full session
     widget_info(event.top, find_by_uname='full_reset_of_session_uname'): begin
@@ -77,6 +81,7 @@ PRO MAIN_BASE_event, Event
       full_reset_of_preview_base, event=event
       full_reset_of_roi_base, event=event
       kill_any_opened_zoom_base, event=event
+      check_run_normalization_button_status, event=event, /disabled
     end
     
     ;help menu
@@ -112,30 +117,36 @@ PRO MAIN_BASE_event, Event
     widget_info(event.top, $
       find_by_uname='delete_data_file_selection_uname'): begin
       delete_selection, event=event, type='data_file'
+      check_run_normalization_button_status, event=event
     end
     ;open beam
     widget_info(event.top, $
       find_by_uname='delete_open_beam_selection_uname'): begin
       delete_selection, event=event, type='open_beam'
+      check_run_normalization_button_status, event=event
     end
     ;dark field
     widget_info(event.top, $
       find_by_uname='delete_dark_field_selection_uname'): begin
       delete_selection, event=event, type='dark_field'
+      check_run_normalization_button_status, event=event
     end
     
     ;browse buttons
     widget_info(event.top, find_by_uname='browse_data_files'): begin
       browse_files, event=event, file_type='data_file'
       preview_currently_selected_file, event=event, type='data_file'
+      check_run_normalization_button_status, event=event
     end
     widget_info(event.top, find_by_uname='browse_open_beam'): begin
       browse_files, event=event, file_type='open_beam'
       preview_currently_selected_file, event=event, type='open_beam'
+      check_run_normalization_button_status, event=event
     end
     widget_info(event.top, find_by_uname='browse_dark_field'): begin
       browse_files, event=event, file_type='dark_field'
       preview_currently_selected_file, event=event, type='dark_field'
+      check_run_normalization_button_status, event=event
     end
     
     ;with gamma filtering
