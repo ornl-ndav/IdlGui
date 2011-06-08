@@ -15,6 +15,7 @@ cd, CurrentFolder + '/utilities'
 .run system.pro
 .run time.pro
 .run xdisplayfile.pro
+.run histoplot.pro
 
 cd, CurrentFolder + '/reader_writer_routines/'
 .run gettok.pro
@@ -86,6 +87,9 @@ cd, CurrentFolder
 .run IDLconfiguration__define.pro
 .run preview.pro
 .run table_right_click.pro
+
+;run reduction
+.run check_run_normalization_button_status.pro
 
 ;buttons base
 .run display_metadata.pro
