@@ -51,8 +51,8 @@
 ; :Author: j35
 ;-
 pro check_run_normalization_button_status, event=event, $
-enabled=enabled, $
-disabled=disabled
+    enabled=enabled, $
+    disabled=disabled
   compile_opt idl2
   
   if (keyword_set(enabled)) then begin

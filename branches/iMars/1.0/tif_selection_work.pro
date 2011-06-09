@@ -13,7 +13,7 @@
 pro tif_selection_work
   compile_opt idl2
   
-  filter = ['N_D*.tif'] 
+  filter = ['N_*.tif'] 
   output_path = '~/Desktop/'
 
   ;path = '/Volumes/h2b/h2b/Data_Analysis/2011/2011 Forensic/Cycle 433/Feb1_2011/Overnight_muscle/Despeckled/Normalized/'
@@ -109,6 +109,8 @@ pro tif_selection_work
   list_file = dialog_pickfile(path=path,/multiple_files,filter=filter)
   nbr_files = n_elements(list_file)
   
+  _tmp_previous_histo = !null
+  
   ;check if selection is right for all files
   if (bCheckSelection) then begin
   
@@ -141,11 +143,24 @@ pro tif_selection_work
       endfor
       
       window, 1, title='histogram of ' + _file
-      histoplot, data, min_value=0, max_value=2000., histdata=histdata
+      histoplot, data, histdata=histdata,yrange=[0,65000],xrange=[0,65000]
 
-      window,2
-      plot, histdata,/ylog,xrange=[0,400],yrange=[1,1e8]
+      ;display histograms of (i) and (i-1)
+      if (i gt 0) then begin
+      if (i gt 1) then myPlot.close
+      myPlot = plot(histdata,$
+      /ylog,$
+      xrange=[0,400],$
+      yrange=[1,1e8],$
+      title = '#0 (red) and #' + strcompress(i,/remove_all) + ' (blue)',$
+      color='red')
       
+      secondPlot = plot(_tmp_previous_histo,/overplot,$
+      color = 'blue')
+      endif else begin
+      _tmp_previous_histo = histdata
+      endelse
+
       wait,2
       
     endfor

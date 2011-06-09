@@ -51,15 +51,12 @@ pro reset_table, event=event, uname=uname
   
   sz = n_elements(reform(table))
   id = widget_info(event.top, find_by_uname=uname)
-
+  
   index=1
   while (index lt sz) do begin
-    print, 'index: ', index
-  table = getValue(event=event,uname=uname)
-    help, table
-    print, table
-    print
-    widget_control, id, delete_rows=0
+    table = getValue(event=event,uname=uname)
+    widget_control, id, set_table_select=[[0,0]]
+    widget_control, id, /delete_rows
     index++
   endwhile
   
@@ -136,9 +133,9 @@ pro kill_any_opened_zoom_base, event=event, base=base
   compile_opt idl2
   
   if (keyword_set(event)) then begin
-  widget_control, event.top, get_uvalue=global
+    widget_control, event.top, get_uvalue=global
   endif else begin
-  widget_control, base, get_uvalue=global
+    widget_control, base, get_uvalue=global
   endelse
   
   list_id = (*(*global).list_of_preview_display_base)
@@ -150,13 +147,13 @@ pro kill_any_opened_zoom_base, event=event, base=base
     if (widget_info(_id,/valid_id)) then begin
       widget_control, _id, /destroy
     endif
-     _index++
+    _index++
   endwhile
   
-   _settings_base = (*global).settings_base_id
-   if (widget_info(_settings_base,/valid_id)) then begin
-   widget_control, _settings_base, /destroy
-   endif
+  _settings_base = (*global).settings_base_id
+  if (widget_info(_settings_base,/valid_id)) then begin
+    widget_control, _settings_base, /destroy
+  endif
   
 end
 
