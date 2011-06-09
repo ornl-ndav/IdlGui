@@ -112,3 +112,28 @@ pro log_book_update, event, message=message
   widget_control, log_book_id, set_value=log_book
   
 end
+
+;+
+; :Description:
+;   Reset the log book
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro reset_log_book, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+    ;initialize log book message
+  log_book = ['------------------------------------------------------------',$
+    'Log Book of iMars']
+  (*(*global).log_book) = log_book
+  
+  log_book_update, event, message='Reset log book'
+
+end

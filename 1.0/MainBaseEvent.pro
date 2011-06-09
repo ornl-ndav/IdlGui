@@ -84,11 +84,16 @@ PRO MAIN_BASE_event, Event
       check_run_normalization_button_status, event=event, /disabled
     end
     
-    ;help menu
+    ;log book menu
     ;log book
     widget_info(event.top, find_by_uname='log_book_uname'): begin
       display_log_book, event
     end
+    widget_info(event.top, find_by_uname='reset_log_book_uname'): begin
+      reset_log_book, event
+    end
+    
+    ;help menu
     ;about iMars
     widget_info(event.top, find_by_uname='about_imars_uname'): begin
       about_imars, event

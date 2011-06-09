@@ -71,13 +71,10 @@ pro check_run_normalization_button_status, event=event, $
     return
   endif
   
-;  status=1b ;by default, button can be enabled
-  
   list_table_uname = ['data_files_table',$
     'open_beam_table',$
     'dark_field_table']
   nbr_table = n_elements(list_table_uname)
-  
   _index=0
   while (_index lt nbr_table) do begin
     table = getValue(event=event,uname=list_table_uname[_index])
@@ -85,6 +82,9 @@ pro check_run_normalization_button_status, event=event, $
     activate_button, event=event, $
       status=0b, $
       uname='run_normalization_button'
+  message = 'To run normalization, at least one file is required in ' + $
+  list_table_uname[_index] 
+  log_book_update, event, message=message
       return
     endif
     _index++
@@ -97,13 +97,12 @@ pro check_run_normalization_button_status, event=event, $
     activate_button, event=event, $
       status=0b, $
       uname='run_normalization_button'
+  ;add log book message
+  message = 'At least one output file format requested to be able ' + $
+  'to run the normalization!'
+  log_book_update, event, message=message
       return
     endif 
-  
-
-
-
-
   
     activate_button, event=event, $
       status=1b, $
