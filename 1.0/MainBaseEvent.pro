@@ -209,7 +209,10 @@ PRO MAIN_BASE_event, Event
       check_run_normalization_button_status, event=event
     end
     
-    
+    ;run normalization
+    widget_info(event.top, find_by_uname='run_normalization_button'): begin
+    run_normalization, event=event
+    end
     
     ELSE:
     
