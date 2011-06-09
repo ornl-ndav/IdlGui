@@ -193,6 +193,19 @@ PRO MAIN_BASE_event, Event
       define_output_folder, event=event
     end
     
+    ;output files format
+    widget_info(event.top, find_by_uname='format_tiff_button'): begin
+      check_run_normalization_button_status, event=event
+    end
+    widget_info(event.top, find_by_uname='format_fits_button'): begin
+      check_run_normalization_button_status, event=event
+    end
+    widget_info(event.top, find_by_uname='format_png_button'): begin
+      check_run_normalization_button_status, event=event
+    end
+    
+    
+    
     ELSE:
     
   ENDCASE

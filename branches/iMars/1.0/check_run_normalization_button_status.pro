@@ -55,6 +55,7 @@ pro check_run_normalization_button_status, event=event, $
     disabled=disabled
   compile_opt idl2
   
+  ;force the enabled state
   if (keyword_set(enabled)) then begin
     activate_button, event=event, $
       status=1b, $
@@ -62,6 +63,7 @@ pro check_run_normalization_button_status, event=event, $
     return
   endif
   
+  ;force the disabled state
   if (keyword_set(disabled)) then begin
     activate_button, event=event, $
       status=0b, $
@@ -69,7 +71,7 @@ pro check_run_normalization_button_status, event=event, $
     return
   endif
   
-  status=0b ;by default, button is disabled
+;  status=1b ;by default, button can be enabled
   
   list_table_uname = ['data_files_table',$
     'open_beam_table',$
@@ -79,11 +81,32 @@ pro check_run_normalization_button_status, event=event, $
   _index=0
   while (_index lt nbr_table) do begin
     table = getValue(event=event,uname=list_table_uname[_index])
-    help, table
+    if (table[0,0] eq '') then begin
+    activate_button, event=event, $
+      status=0b, $
+      uname='run_normalization_button'
+      return
+    endif
     _index++
   endwhile
   
+  ;make sure at least 1 output format has been selected
+    if (~isButtonSelected(event=event,uname='format_tiff_button') && $
+    ~isButtonSelected(event=event,uname='format_png_button') && $
+    ~isButtonSelected(event=event,uname='format_fits_button')) then begin
+    activate_button, event=event, $
+      status=0b, $
+      uname='run_normalization_button'
+      return
+    endif 
   
+
+
+
+
   
+    activate_button, event=event, $
+      status=1b, $
+      uname='run_normalization_button'
   
 end
