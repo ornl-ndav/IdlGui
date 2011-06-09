@@ -79,13 +79,21 @@ pro build_menu, top_base_menu
   /separator,$
   uname = 'full_reset_of_session_uname')  
     
+    ;log book
+    log = widget_button(top_base_menu,$
+    value='Log Book',$
+    /menu)
+    log_book = widget_button(log,$
+    value = 'Display...',$
+    uname = 'log_book_uname')
+    reset_log_book = widget_button(log, $
+    value = 'Reset',$
+    uname='reset_log_book_uname')
+    
   ;Help
   help = widget_button(top_base_menu,$
     value = 'Help',$
     /menu)
-  log_book = widget_button(help,$
-    value = 'Log book',$
-    uname = 'log_book_uname')
   about = widget_button(help,$
     value = 'About iMARS',$
     /separator,$
@@ -94,7 +102,7 @@ pro build_menu, top_base_menu
     value = 'Help...',$
     sensitive = 0,$
     uname = 'help_uname')
-    
+     
 end
 
 
