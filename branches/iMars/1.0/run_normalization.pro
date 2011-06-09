@@ -62,6 +62,28 @@ pro run_normalization, event=event
   ;collect table of ROIs
   roi_table =  retrieve_list_roi(event=event)
   
+  ;evaluate the number of jobs (for the progress bar)
+  nbr_data_file_to_treat = n_elements(list_data)
+  
+  ;add all open beam together
+  nbr_open_beam = n_elements(open_beam_table)
+  _index_ob = 0
+  while (
+  
+  
+  ;start job
+  _index_data = 0
+  while (_index_data lt nbr_data_file_to_treat) do begin
+  
+  
+  
+  
+  
+  
+  
+  _index_data++
+  endwhile
+  
   
   
   
