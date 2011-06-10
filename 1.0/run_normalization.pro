@@ -65,23 +65,59 @@ pro run_normalization, event=event
   ;evaluate the number of jobs (for the progress bar)
   nbr_data_file_to_treat = n_elements(list_data)
   
-  ;add all open beam together
+  ;take average of all open beam provided
   nbr_open_beam = n_elements(open_beam_table)
+  _open_beam_data = !null
   _index_ob = 0
-  while (
+  while (_index_ob lt nbr_open_beam) do begin
+    _ob_file_name = list_open_beam[_index_ob]
+    read_fits_file, event=event, $
+      file_name=_ob_file_name, $
+      data=_data
+      if (_index_ob gt 0) then begin
+      _open_beam_data += _data
+    endif
+    _index_ob++
+  endwhile
+  ;take the average
+  _open_beam_data /= nbr_open_beam
   
+  ;Create array of average values of region selected
+  
+  
+  ;take average of all dark field
+  nbr_dark_field = n_elements(dark_field_table)
+  _dark_field_data = !null
+  _index_df = 0
+  while (_index_df lt nbr_dark_field) do begin
+    _df_file_name = list_dark_field[_index_df]
+    read_fits_file, event=event, $
+      file_name=_df_file_name, $
+      data=_data
+      if (_index_df gt 0) then begin
+      _dark_field_data += _data
+    endif
+    _index_df++
+  endwhile
+  ;take the average
+  _dark_field_data /= nbr_dark_field
   
   ;start job
   _index_data = 0
   while (_index_data lt nbr_data_file_to_treat) do begin
+
+  read_fits_file, event=event, $
+  file_name=list_data[_index_data],$
+  data=_data
+  
+  apply_gamma_filtering, event=event, data=_data
   
   
   
   
   
   
-  
-  _index_data++
+    _index_data++
   endwhile
   
   
