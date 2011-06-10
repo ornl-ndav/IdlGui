@@ -82,15 +82,29 @@ pro run_normalization, event=event
   widget_control, event.top, get_uvalue=global
   widget_control, /hourglass
   
+  message = ['Start normalization']
+  
   ;collect list of data, open beam and dark field files
   data_file_table = getValue(event=event, uname='data_files_table')
   list_data = reform(data_file_table)
-  
+  message = [message,'-> list data files:']
+  _message = '    ' + list_data
+  message = [message, _message]
+  log_book_update, event, message=message
+     
   open_beam_table = getValue(event=event, uname='open_beam_table')
   list_open_beam = reform(open_beam_table)
+   message = [message,'-> list open beam:']
+  _message = '    ' + list_open_beam
+  message = [message, _message]
+  log_book_update, event, message=message
   
   dark_field_table = getValue(event=event, uname='dark_field_table')
   list_dark_field = reform(dark_field_table)
+   message = [message,'-> list dark field:']
+  _message = '    ' + list_data
+  message = [message, _message]
+  log_book_update, event, message=message
   
   ;collect table of ROIs
   roi_table =  retrieve_list_roi(event=event)
