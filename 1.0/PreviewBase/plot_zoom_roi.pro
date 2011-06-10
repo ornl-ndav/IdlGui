@@ -221,7 +221,7 @@ pro add_new_selection_to_list_of_roi, event=event, new_roi=new_roi
     if (strcompress(current_roi_list[_index],/remove_all) eq '') then begin
       current_roi_list[_index] = string_new_roi
       found_empty_row=1b
-      exit
+      break
     endif
     _index++
   endwhile
@@ -229,7 +229,6 @@ pro add_new_selection_to_list_of_roi, event=event, new_roi=new_roi
   if (found_empty_row eq 0b) then begin
     current_roi_list = [current_roi_list,string_new_roi]
   endif
-  
   putValue, base=top_base, 'roi_text_field_uname', current_roi_list
   
 end
