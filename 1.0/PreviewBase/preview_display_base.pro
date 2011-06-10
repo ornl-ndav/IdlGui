@@ -109,7 +109,7 @@ pro preview_display_base_event, Event
         plots, [x0, x0, x1, x1, x0], $
         [y0, y1, y1, y0, y0], /device, color=fsc_color('red')
 
-        plot_other_zoom_and_roi_data, event=event, /live
+        ;plot_other_zoom_and_roi_data, event=event, /live
 
         return
       endif
