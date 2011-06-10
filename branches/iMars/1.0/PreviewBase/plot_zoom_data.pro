@@ -322,8 +322,7 @@ pro plot_other_zoom_and_roi_data, event=event, live=live
         _index++
         continue
       endif
-      
-      
+
       roi_selection = (*global_preview).roi_selection
       
       x0 = roi_selection[0]
