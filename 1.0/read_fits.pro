@@ -313,7 +313,7 @@ PRO fits_reader
   full_file_name = '/Users/j35/Desktop/remove_me.fits'
   fits_write, full_file_name, new_data
   
-END
+end
 
 
 pro below_1_cleaner, norm_data
