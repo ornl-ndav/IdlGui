@@ -73,7 +73,7 @@ pro preview_display_base_event, Event
         (*global_preview).left_click = 0b
         ;add roi to the main_base roi box if the selection is valid
         selection = (*global_preview).roi_selection
-        plot_zoom_data, event=event
+;        plot_zoom_data, event=event
         if (is_selection_valid(selection=selection)) then begin
           keep_selection_inside_zoom_draw, event=event, selection=selection
           selection_data = convert_zoom_device_to_data(event=event, selection)
