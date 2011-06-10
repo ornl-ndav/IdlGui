@@ -215,7 +215,7 @@ pro run_normalization, event=event
       data_roi_mean=_data_file_mean_of_regions)
       
     ;rescale data
-    _data *= _global_mean
+    _data /= _global_mean
     
     ;calculate numerator and denominator
     ;num = data - DF
@@ -225,25 +225,25 @@ pro run_normalization, event=event
     
     _data_normalized = num / den
     
-        window,0, xsize=600, ysize=600, title= list_data[_index_data]
-        _c_data = congrid(_data_normalized, 600, 600)
-        tvscl, _c_data
+    window,0, xsize=600, ysize=600, title= list_data[_index_data]
+    _c_data = congrid(_data_normalized, 600, 600)
+    tvscl, _c_data
     
-;    create_output_tiff_file, event=event, $
-;      input_file_name = list_data[_index_data], $
-;      data = _data_normalized
-;      
-;    create_output_fits_file, event=event, $
-;      input_file_name = list_data[_index_data], $
-;      data = _data_normalized
-;      
-;    create_output_png_file, event=event, $
-;      input_file_name = list_data[_index_data], $
-;      data = _data_normalized
+    create_output_tiff_file, event=event, $
+      input_file_name = list_data[_index_data], $
+      data = _data_normalized
+      
+    create_output_fits_file, event=event, $
+      input_file_name = list_data[_index_data], $
+      data = _data_normalized
+      
+    create_output_png_file, event=event, $
+      input_file_name = list_data[_index_data], $
+      data = _data_normalized
       
     _index_data++
   endwhile
-
+  
   widget_control, hourglass=0
   
 end
@@ -268,14 +268,14 @@ function get_base_output_file, event=event, full_file_name=full_file_name
   
   ;base file name
   base_file_name = file_basename(full_file_name)
-
+  
   ;remove extension, add '_normalized.fits'
   file_array = strsplit(base_file_name,'.',/extract)
   sz = n_elements(file_array)
   if (sz gt 1) then begin
-  _file = strjoin(file_array[0:-2],'.')
+    _file = strjoin(file_array[0:-2],'.')
   endif else begin
-  _file = file_array[0]
+    _file = file_array[0]
   endelse
   
   ;new output file name
@@ -305,7 +305,7 @@ pro create_output_tiff_file, event=event, $
   ;stop here is we did not select tiff format
   if (~isButtonSelected(event=event,uname='format_tiff_button')) then return
   
- ;get base_output_file
+  ;get base_output_file
   base_output_file = get_base_output_file(event=event, $
     full_file_name = input_file_name)
   output_file = base_output_file + '_normalized.tif'
