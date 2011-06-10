@@ -135,7 +135,10 @@ pro run_normalization, event=event
       x1 = roi_table[_index_ob_region,2]
       y1 = roi_table[_index_ob_region,3]
       
-      _tmp_ob_data_region = _open_beam_data[x0:x1,y0:y1]
+      xmin = min([x0,x1],max=xmax)
+      ymin = min([y0,y1],max=ymax)
+      
+      _tmp_ob_data_region = _open_beam_data[xmin:xmax,ymin:ymax]
       _mean = mean(_tmp_ob_data_region)
       _open_beam_mean_of_regions[_index_ob_region] = _mean
       
@@ -191,7 +194,10 @@ pro run_normalization, event=event
         x1 = roi_table[_index_data_region,2]
         y1 = roi_table[_index_data_region,3]
         
-        _tmp_data_region = _data[x0:x1,y0:y1]
+        xmin = min([x0,x1],max=xmax)
+        ymin = min([y0,y1],max=ymax)
+        
+        _tmp_data_region = _data[xmin:xmax,ymin:ymax]
         _mean = mean(_tmp_data_region)
         _data_file_mean_of_regions[_index_data_region] = _mean
         
@@ -219,15 +225,151 @@ pro run_normalization, event=event
     
     _data_normalized = num / den
     
+        window,0, xsize=600, ysize=600, title= list_data[_index_data]
+        _c_data = congrid(_data_normalized, 600, 600)
+        tvscl, _c_data
     
-    
-    
+;    create_output_tiff_file, event=event, $
+;      input_file_name = list_data[_index_data], $
+;      data = _data_normalized
+;      
+;    create_output_fits_file, event=event, $
+;      input_file_name = list_data[_index_data], $
+;      data = _data_normalized
+;      
+;    create_output_png_file, event=event, $
+;      input_file_name = list_data[_index_data], $
+;      data = _data_normalized
+      
     _index_data++
   endwhile
-  
-  
-  
-  
+
   widget_control, hourglass=0
+  
+end
+
+;+
+; :Description:
+;    This returns the base file name. The suffix will be added later
+;
+;
+;
+; :Keywords:
+;    event
+;    full_file_name
+;
+; :Author: j35
+;-
+function get_base_output_file, event=event, full_file_name=full_file_name
+  compile_opt idl2
+  
+  ;determine the new output file name
+  output_folder = getValue(event=event,uname='output_folder_button')
+  
+  ;base file name
+  base_file_name = file_basename(full_file_name)
+
+  ;remove extension, add '_normalized.fits'
+  file_array = strsplit(base_file_name,'.',/extract)
+  sz = n_elements(file_array)
+  if (sz gt 1) then begin
+  _file = strjoin(file_array[0:-2],'.')
+  endif else begin
+  _file = file_array[0]
+  endelse
+  
+  ;new output file name
+  output_file = output_folder + _file
+  
+  return, output_file
+end
+
+;+
+; :Description:
+;    Create the TIFF output file
+;
+;
+;
+; :Keywords:
+;    event
+;    input_file_name
+;    data
+;
+; :Author: j35
+;-
+pro create_output_tiff_file, event=event, $
+    input_file_name=input_file_name, $
+    data=data
+  compile_opt idl2
+  
+  ;stop here is we did not select tiff format
+  if (~isButtonSelected(event=event,uname='format_tiff_button')) then return
+  
+ ;get base_output_file
+  base_output_file = get_base_output_file(event=event, $
+    full_file_name = input_file_name)
+  output_file = base_output_file + '_normalized.tif'
+  
+  write_tiff, output_file, data
+  
+end
+
+;+
+; :Description:
+;    Create the FITS output file
+;
+;
+;
+; :Keywords:
+;    event
+;    input_file_name
+;    data
+;
+; :Author: j35
+;-
+pro create_output_fits_file, event=event, $
+    input_file_name=input_file_name, $
+    data=data
+  compile_opt idl2
+  
+  ;stop here is we did not select tiff format
+  if (~isButtonSelected(event=event,uname='format_fits_button')) then return
+  
+  ;get base_output_file
+  base_output_file = get_base_output_file(event=event, $
+    full_file_name = input_file_name)
+  output_file = base_output_file + '_normalized.fits'
+  
+  fits_write, output_file, data
+  
+end
+
+;+
+; :Description:
+;    Create the png output file
+;
+;
+;
+; :Keywords:
+;    event
+;    input_file_name
+;    data
+;
+; :Author: j35
+;-
+pro create_output_png_file, event=event, $
+    input_file_name=input_file_name, $
+    data=data
+  compile_opt idl2
+  
+  ;stop here is we did not select tiff format
+  if (~isButtonSelected(event=event,uname='format_png_button')) then return
+  
+  ;get base_output_file
+  base_output_file = get_base_output_file(event=event, $
+    full_file_name = input_file_name)
+  output_file = base_output_file + '_normalized.png'
+  
+  write_png, output_file, data
   
 end
