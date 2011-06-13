@@ -526,14 +526,14 @@ pro final_plot_gui, wBase, $
     mbar = bar1,$
     GROUP_LEADER = ourGroup)
     
-  info_help = widget_draw(wBase,$
-    uname = 'global_info_uname', $
-    xoffset = xsize-border-25,$
-    yoffset = 0,$
-    scr_xsize = 60,$
-    scr_ysize = 20,$
-    event_pro = 'global_info_draw_eventcb',$
-    /tracking_events)
+;  info_help = widget_draw(wBase,$
+;    uname = 'global_info_uname', $
+;    xoffset = xsize-border-25,$
+;    yoffset = 0,$
+;    scr_xsize = 60,$
+;    scr_ysize = 20,$
+;    event_pro = 'global_info_draw_eventcb',$
+;    /tracking_events)
     
   draw = widget_draw(wbase,$
     xoffset = border,$
