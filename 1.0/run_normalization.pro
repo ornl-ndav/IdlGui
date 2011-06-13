@@ -444,6 +444,10 @@ pro create_output_png_file, event=event, $
     full_file_name = input_file_name)
   output_file_name = base_output_file + '_normalized.png'
   
-  write_png, output_file_name, data
+;  id_draw = widget_info(Event.top, find_by_uname='preview_draw_uname')
+;  widget_control, id_draw, get_value=id_value
+;  wset,id_value
+;  
+  write_png, output_file, tvrd(/true)
   
 end
