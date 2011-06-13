@@ -327,27 +327,27 @@ pro preview_display_base_gui, wBase, $
     scr_ysize = ysize,$
     retain=2)
     
-  if (scale_setting eq 0) then begin
-    set1_value = '*  linear'
-    set2_value = '   logarithmic'
-  endif else begin
-    set1_value = '   linear'
-    set2_value = '*  logarithmic'
-  endelse
-  
-  mPlot = widget_button(bar1, $
-    value = 'Axes',$
-    /menu)
-    
-  set1 = widget_button(mPlot, $
-    value = set1_value, $
-    event_pro = 'tof_selection_local_switch_axes_type',$
-    uname = 'tof_selection_local_scale_setting_linear')
-    
-  set2 = widget_button(mPlot, $
-    value = set2_value,$
-    event_pro = 'tof_selection_local_switch_axes_type',$
-    uname = 'tof_selection_local_scale_setting_log')
+;  if (scale_setting eq 0) then begin
+;    set1_value = '*  linear'
+;    set2_value = '   logarithmic'
+;  endif else begin
+;    set1_value = '   linear'
+;    set2_value = '*  logarithmic'
+;  endelse
+;  
+;  mPlot = widget_button(bar1, $
+;    value = 'Axes',$
+;    /menu)
+;    
+;  set1 = widget_button(mPlot, $
+;    value = set1_value, $
+;    event_pro = 'tof_selection_local_switch_axes_type',$
+;    uname = 'tof_selection_local_scale_setting_linear')
+;    
+;  set2 = widget_button(mPlot, $
+;    value = set2_value,$
+;    event_pro = 'tof_selection_local_switch_axes_type',$
+;    uname = 'tof_selection_local_scale_setting_log')
     
   loadct = widget_button(bar1,$
     value = 'Color/Contrast',$
