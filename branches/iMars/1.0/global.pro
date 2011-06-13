@@ -54,6 +54,12 @@ compile_opt idl2
     
     top_base: 0L, $
     
+    ;progress bar
+    pb_number_of_steps: 1, $  ;total number of steps of the progress bar
+    pb_each_step_xsize: 1, $ ;device size of the steps
+    pb_ysize: 10, $ ;ysize of the progres bar
+    pb_step: 0, $ ;where we are in the progress
+    
     ;list of all the buttons of the main base
     list_button_main_base: ['zoom','contrast','metadata'], $
     preview_file_metadata: ptr_new(0L), $ ;metadata files file
