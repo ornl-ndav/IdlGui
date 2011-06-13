@@ -273,10 +273,14 @@ pro run_normalization, event=event
       
       _data_normalized = num / den
       
-      window,0, xsize=600, ysize=600, title= list_data[_index_data]
-      _c_data = congrid(_data_normalized, 600, 600)
-      tvscl, _c_data
-      
+;      window,0, xsize=600, ysize=600, title= list_data[_index_data]
+;      _c_data = congrid(_data_normalized, 600, 600)
+;      tvscl, _c_data
+
+      launch_normalized_plot, event=event, $
+      data=_data_normalized, $
+      file_name=list_data[_index_data]
+
       create_output_tiff_file, event=event, $
         input_file_name = list_data[_index_data], $
         data = _data_normalized, $
@@ -304,7 +308,7 @@ pro run_normalization, event=event
       progress_bar, event=event, /step
       _index_data++
     endwhile
-    
+     
     message = ['Done with normalization','-> List of files produced:']
     _i=0
     nbr_output = n_elements(list_output_file_name)
