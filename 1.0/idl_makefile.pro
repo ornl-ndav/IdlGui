@@ -58,6 +58,10 @@ cd, CurrentFolder + '/PreviewBase'
 .run plot_zoom_data.pro
 .run zoom_base_id_eventcb.pro
 
+cd, CurrentFolder + '/NormalizedPlot'
+.run normalized_plot.pro
+.run plot_normalized_data.pro
+
 cd, CurrentFolder + '/SettingsBase'
 .run settings_base.pro
 
