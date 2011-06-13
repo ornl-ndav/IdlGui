@@ -345,6 +345,7 @@ pro build_gui, main_base
   ;progress bar
   pro_base = widget_base(col3,$
     map=0,$
+    uname='progress_bar_base_uname',$
     /row)
   draw = widget_draw(pro_base,$
     scr_xsize = 535,$

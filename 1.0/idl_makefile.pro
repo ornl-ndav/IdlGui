@@ -91,6 +91,7 @@ cd, CurrentFolder
 ;run reduction
 .run check_run_normalization_button_status.pro
 .run run_normalization.pro
+.run progress_bar.pro
 
 ;buttons base
 .run display_metadata.pro
