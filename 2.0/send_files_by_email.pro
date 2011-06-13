@@ -60,6 +60,8 @@ function send_files_by_email, event, files
   ucams    = get_ucams()
   version  = (*global).version
   date     = GenerateIsoTimeStamp()
+  PROCESSING = (*global).processing
+  OK = (*global).ok
   
   ;list of files
   list_of_files = files[1:*]
@@ -79,15 +81,24 @@ function send_files_by_email, event, files
   ;send email
   cmd_email = 'echo "' + email_message + '" | mutt -s " ' + email_subject + '"'
   index = 0
-;  cmd_email += ' -a '
+  cmd_email += ' ' + email
   while (index lt n_elements(list_of_files)) do begin
     cmd_email += ' -a ' + list_of_files[index]
     index++
   endwhile
-  
-  cmd_email += ' ' + email
-  
+    
+  idl_send_to_geek_addLogBookText, Event, '-> email cmd: ' + cmd_email
+  idl_send_to_geek_addLogBookText, Event, '-> Sending email ... ' + $
+    PROCESSING
+    
   spawn, cmd_email, listening, err_listening
+  
+  idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, OK
+  
+  idl_send_to_geek_addLogBookText, Event, '--> listening:'
+  idl_send_to_geek_addLogBookText, Event, listening
+  idl_send_to_geek_addLogBookText, Event, '--> err_listening:'
+  idl_send_to_geek_addLogBookText, Event, err_listening
   
   return, 1
 end
