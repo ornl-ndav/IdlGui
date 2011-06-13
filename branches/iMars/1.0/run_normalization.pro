@@ -82,7 +82,7 @@ pro run_normalization, event=event
   widget_control, event.top, get_uvalue=global
   widget_control, /hourglass
   
-  message = ['Start normalization']
+  message = ['----------------------------','Start normalization using:']
   
   ;collect list of data, open beam and dark field files
   data_file_table = getValue(event=event, uname='data_files_table')
@@ -90,21 +90,18 @@ pro run_normalization, event=event
   message = [message,'-> list data files:']
   _message = '    ' + list_data
   message = [message, _message]
-  log_book_update, event, message=message
-     
+  
   open_beam_table = getValue(event=event, uname='open_beam_table')
   list_open_beam = reform(open_beam_table)
-   message = [message,'-> list open beam:']
+  message = [message,'-> list open beam:']
   _message = '    ' + list_open_beam
   message = [message, _message]
-  log_book_update, event, message=message
   
   dark_field_table = getValue(event=event, uname='dark_field_table')
   list_dark_field = reform(dark_field_table)
-   message = [message,'-> list dark field:']
+  message = [message,'-> list dark field:']
   _message = '    ' + list_data
   message = [message, _message]
-  log_book_update, event, message=message
   
   ;collect table of ROIs
   roi_table =  retrieve_list_roi(event=event)
@@ -114,11 +111,24 @@ pro run_normalization, event=event
   endif else begin
     nbr_rois = table_sz[1]
   endelse
+  message = [message, '-> Number of ROIs used: ' + $
+    strcompress(nbr_rois,/remove_all)]
+  if (table_sz[0] ne 1) then begin
+    _i = 0
+    while (_i lt nbr_rois) do begin
+      _roi = strjoin(reform(roi_table[_i,*]),',')
+      _message = '     ' + _roi
+      message = [message, _message]
+      _i++
+    endwhile
+  endif
+  log_book_update, event, message=message
   
   ;evaluate the number of jobs (for the progress bar)
   nbr_data_file_to_treat = n_elements(list_data)
   
-  ;take average of all open beam provided
+  log_book_update, event, message='Starting work on open beam(s)'
+  ;take mean of all open beam provided
   nbr_open_beam = n_elements(open_beam_table)
   _index_ob = 0
   while (_index_ob lt nbr_open_beam) do begin
@@ -135,7 +145,8 @@ pro run_normalization, event=event
   endwhile
   ;take the average
   _open_beam_data /= nbr_open_beam
-  
+  log_book_update, event, message='-> done with getting average open beam'
+
   ;Create array of average values of region selected
   ;this will be used to scale the data file according to the open beam file
   if (nbr_rois gt 0) then begin
@@ -165,8 +176,10 @@ pro run_normalization, event=event
     _open_beam_mean_of_regions[0] = 1
     
   endelse
+  log_book_update, event, message='-> done with getting open beam ROIs'
   
   ;take average of all dark field
+  log_book_update, event, message='Starting work on dark field'
   nbr_dark_field = n_elements(dark_field_table)
   _dark_field_data = !null
   _index_df = 0
@@ -184,15 +197,22 @@ pro run_normalization, event=event
   endwhile
   ;take the average
   _dark_field_data /= nbr_dark_field
+  log_book_update, event, message='-> done with getting average dark field'
   
   ;start jobs on data
   _index_data = 0
+  list_output_file_name = !null
   while (_index_data lt nbr_data_file_to_treat) do begin
   
+    message = 'Working with ' + list_data[_index_data]
     read_fits_file, event=event, $
       file_name=list_data[_index_data],$
       data=_data
       
+    if (isButtonSelected(event=event,$
+    uname='with_gamma_filtering_uname')) then begin
+    message = [message, '-> Applying gamma filtering']
+    endif
     apply_gamma_filtering, event=event, data=_data
     
     ;Create array of average values of region selected
@@ -224,9 +244,12 @@ pro run_normalization, event=event
       _data_file_mean_of_regions[0] = 1
       
     endelse
+    message = [message, '-> Created array of average values of ROIs']
     
     _global_mean = get_global_mean(ob_roi_mean=_open_beam_mean_of_regions,$
       data_roi_mean=_data_file_mean_of_regions)
+    message = [message, '-> mean value: ' + $
+    strcompress(_global_mean,/remove_all)]
       
     ;rescale data
     _data /= _global_mean
@@ -245,18 +268,40 @@ pro run_normalization, event=event
     
     create_output_tiff_file, event=event, $
       input_file_name = list_data[_index_data], $
-      data = _data_normalized
+      data = _data_normalized, $
+      output_file_name = output_file_name
+    if (output_file_name ne '') then $
+    list_output_file_name = [list_output_file_name,output_file_name]
       
     create_output_fits_file, event=event, $
       input_file_name = list_data[_index_data], $
-      data = _data_normalized
+      data = _data_normalized, $
+      output_file_name = output_file_name
+    if (output_file_name ne '') then $
+    list_output_file_name = [list_output_file_name,output_file_name]
       
     create_output_png_file, event=event, $
       input_file_name = list_data[_index_data], $
-      data = _data_normalized
+      data = _data_normalized, $
+      output_file_name = output_file_name
+    if (output_file_name ne '') then $
+    list_output_file_name = [list_output_file_name,output_file_name]
+    
+    message = [message, '-> created output file(s)']
+    log_book_update, event, message=message  
       
     _index_data++
   endwhile
+  
+  message = ['----------------------------','Done with normalization']
+  
+  ;list all the files that have been created (in the log book and in a
+  ;dialog_message)
+  
+  
+  
+  
+  
   
   widget_control, hourglass=0
   
@@ -308,23 +353,28 @@ end
 ;    event
 ;    input_file_name
 ;    data
+;    output_file_name
 ;
 ; :Author: j35
 ;-
 pro create_output_tiff_file, event=event, $
     input_file_name=input_file_name, $
-    data=data
+    data=data, $
+    output_file_name = output_file_name
   compile_opt idl2
   
   ;stop here is we did not select tiff format
-  if (~isButtonSelected(event=event,uname='format_tiff_button')) then return
+  if (~isButtonSelected(event=event,uname='format_tiff_button')) then begin
+  output_file_name = ''
+  return
+  endif
   
   ;get base_output_file
   base_output_file = get_base_output_file(event=event, $
     full_file_name = input_file_name)
-  output_file = base_output_file + '_normalized.tif'
+  output_file_name = base_output_file + '_normalized.tif'
   
-  write_tiff, output_file, data
+  write_tiff, output_file_name, data
   
 end
 
@@ -338,23 +388,28 @@ end
 ;    event
 ;    input_file_name
 ;    data
+;    output_file_name
 ;
 ; :Author: j35
 ;-
 pro create_output_fits_file, event=event, $
     input_file_name=input_file_name, $
-    data=data
+    data=data, $
+   output_file_name = output_file_name
   compile_opt idl2
   
   ;stop here is we did not select tiff format
-  if (~isButtonSelected(event=event,uname='format_fits_button')) then return
+  if (~isButtonSelected(event=event,uname='format_fits_button')) then begin
+  output_file_name = ''
+  return
+  endif
   
   ;get base_output_file
   base_output_file = get_base_output_file(event=event, $
     full_file_name = input_file_name)
-  output_file = base_output_file + '_normalized.fits'
+  output_file_name = base_output_file + '_normalized.fits'
   
-  fits_write, output_file, data
+  fits_write, output_file_name, data
   
 end
 
@@ -368,22 +423,27 @@ end
 ;    event
 ;    input_file_name
 ;    data
+;    output_file_name
 ;
 ; :Author: j35
 ;-
 pro create_output_png_file, event=event, $
     input_file_name=input_file_name, $
-    data=data
+    data=data, $
+    output_file_name=output_file_name    
   compile_opt idl2
   
   ;stop here is we did not select tiff format
-  if (~isButtonSelected(event=event,uname='format_png_button')) then return
+  if (~isButtonSelected(event=event,uname='format_png_button')) then begin
+  output_file_name = ''
+  return
+  endif
   
   ;get base_output_file
   base_output_file = get_base_output_file(event=event, $
     full_file_name = input_file_name)
-  output_file = base_output_file + '_normalized.png'
+  output_file_name = base_output_file + '_normalized.png'
   
-  write_png, output_file, data
+  write_png, output_file_name, data
   
 end
