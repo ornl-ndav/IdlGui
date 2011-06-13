@@ -110,27 +110,15 @@ FUNCTION getNbrLines, FileName
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION PopulateFileArray, BatchFileName, NbrLine
-  OPENR, u, BatchFileName, /GET
-  onebyte   = 0b
-  tmp       = ''
-  i         = 0
-  NbrLine   = getNbrLines(BatchFileName)
-  FileArray = STRARR(NbrLine)
-  WHILE (NOT eof(u)) DO BEGIN
-    READU,u,onebyte
-    fs = FSTAT(u)
-    IF (fs.cur_ptr EQ 0) THEN BEGIN
-      POINT_LUN,u,0
-    ENDIF ELSE BEGIN
-      POINT_LUN,u,fs.cur_ptr - 1
-    ENDELSE
-    READF,u,tmp
-    FileArray[i++] = tmp
-  ENDWHILE
-  CLOSE, u
-  FREE_LUN,u
-  NbrElement = i                  ;nbr of lines
+FUNCTION PopulateFileArray, BatchFileName, nbr_lines
+
+ openr, 1, BatchFileName
+      nbr_lines = file_lines(BatchFileName)
+      FileArray = strarr(nbr_lines)
+      readf, 1, FileArray
+      close,1
+      free_lun, 1
+
   RETURN, FileArray
 END
 
@@ -145,7 +133,7 @@ FUNCTION PopulateBatchTable, Event, BatchFileName
   PROCESSING = (*global).processing
   
   populate_error = 0
-  CATCH, populate_error
+  ;CATCH, populate_error
   NbrColumn  = getGlobalVariable('NbrColumn')
   NbrRow     = getGlobalVariable('NbrRow')
   BatchTable = STRARR(NbrColumn,NbrRow)
@@ -157,8 +145,10 @@ FUNCTION PopulateBatchTable, Event, BatchFileName
     idl_send_to_geek_addLogBookText, Event, LogText
     idl_send_to_geek_addLogBookText, Event, FileArray
   ENDIF ELSE BEGIN
+    
     NbrLine   = 0
     FileArray = PopulateFileArray(BatchFileName, NbrLine)
+    
     BatchIndex = -1             ;row index
     FileIndex  = 0
     NbrHeadingLines = getGlobalVariable('BatchFileHeadingLines')
@@ -255,7 +245,7 @@ FUNCTION PopulateBatchTable, Event, BatchFileName
               STRJOIN(SplitArray[1:length-1],':')
             '#SF'        : BEGIN
               if ((*global).use_batch_sf eq 'yes') then begin
-                sz = (size(SplitArray))(1)
+                sz = (size(SplitArray))[1]
                 IF (sz GT 1) THEN BEGIN
                   BatchTable[8,BatchIndex] = SplitArray[1]
                 ENDIF ELSE BEGIN

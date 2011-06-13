@@ -128,7 +128,9 @@ FUNCTION retrieveDRfiles, Event, BatchTable
   NbrRow         = getGlobalVariable('NbrRow')
   NbrRowNotEmpty = 0
   NbrDrFiles     = 0
+
   FOR i=0,(NbrRow-1) DO BEGIN
+  
     IF (BatchTable[1,i] NE '') THEN BEGIN
       ++NbrRowNotEmpty
       IF (BatchTable[0,i] EQ 'YES') THEN BEGIN
@@ -591,6 +593,7 @@ PRO ref_scale_LoadBatchFile, Event
     ;retrieve BatchTable
     iTable = OBJ_NEW('idl_load_batch_file', BatchFileName, Event)
     BatchTable = iTable->getBatchTable()
+    
     (*(*global).BatchTable) = BatchTable
     ;Update Batch Tab and put BatchTable there
     UpdateBatchTable, Event, BatchTable
