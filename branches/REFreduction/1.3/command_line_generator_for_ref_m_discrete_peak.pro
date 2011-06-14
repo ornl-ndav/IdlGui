@@ -156,23 +156,23 @@ pro command_line_generator_for_ref_m_discrete_peak, event
   value = getButtonValue(event,'other_spin_states') ;0 for yes, 1 for no
   if (value eq 1) then begin
   
-    norm_pola_state = (*global).norm_pola_state
+    norm_pola_state = strcompress((*global).norm_pola_state,/remove_all)
     CASE (norm_pola_state) of
-      0: norm_path = 'Off_Off'
-      1: norm_path = 'Off_On'
-      2: norm_path = 'On_Off'
-      3: norm_path = 'On_On'
+      '0': norm_path = 'Off_Off'
+      '1': norm_path = 'Off_On'
+      '2': norm_path = 'On_Off'
+      '3': norm_path = 'On_On'
       else: norm_path = '-?'
     ENDCASE
     norm_spin_state_path = ['entry-' + norm_path]
     norm_spin_state = [norm_path]
     
-    data_pola_state = (*global).data_pola_state
+    data_pola_state = strcompress((*global).data_pola_state,/remove_all)
     CASE (data_pola_state) of
-      0: data_path = 'Off_Off'
-      1: data_path = 'Off_On'
-      2: data_path = 'On_Off'
-      3: data_path = 'On_On'
+      '0': data_path = 'Off_Off'
+      '1': data_path = 'Off_On'
+      '2': data_path = 'On_Off'
+      '3' : data_path = 'On_On'
       else: data_path = '-?'
     ENDCASE
     data_spin_state_path = ['entry-' + data_path]
