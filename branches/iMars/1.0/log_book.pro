@@ -68,6 +68,7 @@ pro display_log_book, event
     yoffset = yoffset,$
     group=id,$
     text=log_book,$
+    /editable,$
     wtext = log_book_id
     
   (*global).log_book_id = log_book_id
