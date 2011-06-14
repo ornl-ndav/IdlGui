@@ -45,7 +45,8 @@
 pro populate_Q_widgets, event=event
   compile_opt idl2
   
-  debug = 0b
+  debug = 1b
+  if (debug) then message = ['Populate Q widgets debug mode']
   
   Qmin_value=''
   Qmax_value=''
@@ -55,6 +56,9 @@ pro populate_Q_widgets, event=event
     /remove_all)
   tof_max = strcompress(getTextFieldValue(event,'tof_cutting_max'),$
     /remove_all)
+  if (debug) then begin
+  message = [message, 'TOF_min: ' + tof_min, 'TOF_max: ' + tof_max]
+  endif
     
   ;no need to go further because one of the tof field is empty
   if (tof_min eq '' or tof_max eq '') then begin
@@ -64,24 +68,27 @@ pro populate_Q_widgets, event=event
   
   IF (isTOFcuttingUnits_microS(Event)) then begin
     coeff = 1e-6
+    if (debug) then message=[message,'Units: microS'] 
   endif else begin
     coeff = 1e-3
+    if (debug) then message=[message,'Units: mS'] 
   endelse
   tof_min = (float(tof_min) eq 0.) ? 1 : tof_min
   tof_min_s = float(tof_min) * coeff
   tof_max_s = float(tof_max) * coeff
-  
-  if (debug) then print, 'tof_min_s: ' , tof_min_s
-  if (debug) then print, 'tof_max_s: ' , tof_max_s
+  if (debug) then begin
+  message = [message, '> Conversion to s']
+  message = [message, 'TOF_min_s: ' + strcompress(tof_min_s,/remove_all)]
+  message = [message, 'TOF_max_s: ' + strcompress(tof_max_s,/remove_all)]
+  endif
   
   ;Pixel range
   pixel_min = strcompress(getTextFieldValue(event, $
     'data_d_selection_roi_ymin_cw_field'),/remove_all)
   pixel_max = strcompress(getTextFieldValue(event, $
     'data_d_selection_roi_ymax_cw_field'),/remove_all)
-    
-  if (debug) then print, 'pixel_min: ' , pixel_min
-  if (debug) then print, 'pixel_max: ' , pixel_max
+  if (debug) then message = [message,'pixel_min: ' + pixel_min, $
+  'pixel_max: ' + pixel_max]
   
   ;no need to go further if we are missing a pixel values (min or max)
   if (pixel_min eq '' or pixel_max eq '') then begin
@@ -93,6 +100,8 @@ pro populate_Q_widgets, event=event
   widget_control, event.top, get_uvalue=global
 ;  on_ioerror, float_error
   distance_moderator_sample = float((*global).distance_moderator_sample)
+  if (debug) then message = [message,'Distance moderator sample: ' + $
+  strcompress(distance_moderator_sample,/remove_all)]
   
   if (debug) then print, 'distance_moderator_sample: ' , $
   distance_moderator_sample
@@ -104,13 +113,14 @@ pro populate_Q_widgets, event=event
   calculate_sangle, event, refpix=pixel_min, sangle=sangle_min
   calculate_sangle, event, refpix=pixel_max, sangle=sangle_max
   
+  if (debug) then message = [message, 'sangle_min (rad): ' + $
+  strcompress(sangle_min,/remove_all),$
+  'sangle_max (rad): ' + strcompress(sangle_max,/remove_all)]
+  
   if (sangle_min eq '-1' || sangle_max eq '-1') then begin
     reset_Q_widgets, event=event
     return
   endif
-  
-  if (debug) then print, 'sangle_min: ' , sangle_min
-  if (debug) then print, 'sangle_max: ' , sangle_max
   
   ;global constants
   m_n = 1.67495e-27
@@ -119,30 +129,39 @@ pro populate_Q_widgets, event=event
   
   ;factor = (4*pi*m_n*distance_moderator_detector
   factor = (4.*pi*m_n*distance_moderator_sample)/h
-  if (debug) then print, 'factor: ' , factor
+;  if (debug) then print, 'factor: ' , factor
   
   ;Qmin
   Qmin = factor * (sin(sangle_min))
   Qmin /= tof_max_s
-  if (debug) then print, 'Qmin: ' , Qmin
+;  if (debug) then print, 'Qmin: ' , Qmin
+  if (debug) then message=[message,'Qmin: ' + strcompress(Qmin,/remove_all)]
   
   ;Qmax
   Qmax = factor * (sin(sangle_max))
   Qmax /= tof_min_s
-  if (debug) then print, 'Qmax: ' , Qmax
+;  if (debug) then print, 'Qmax: ' , Qmax
+  if (debug) then message=[message,'Qmax: ' + strcompress(Qmax,/remove_all)]
   
   ;Angstroms
   Qmin = Qmin[0] * 1e-10
   Qmax = Qmax[0] * 1e-10
   
   _Qmin = min([Qmin,Qmax],max=_Qmax)
+  if (debug) then begin
+  message=[message,'Qmin (angstroms): ' + strcompress(Qmin,/remove_all),$
+  'Qmax (angstroms): ' + strcompress(Qmax,/remove_all)]
   
   putValue, event=event, 'q_min_text_field', strcompress(_Qmin,/remove_all)
   putValue, event=event, 'q_max_text_field', strcompress(_Qmax,/remove_all)
+ 
+  if (debug) then begin
+   xdisplayfile, '', text=message,title='debug of populate_q_widgets.pro'
+   endif
   
   return
   
-  if (debug) then print, 'after return statment in populate_q_widgets'
+;  if (debug) then print, 'after return statment in populate_q_widgets'
   
   float_error:
   reset_Q_widgets, event=event
