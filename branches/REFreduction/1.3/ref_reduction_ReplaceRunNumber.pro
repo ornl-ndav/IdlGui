@@ -50,6 +50,10 @@ putLogBookMessage, Event, message, Append=1
 
 data_run_numbers = getTextFieldValue(Event, 'reduce_data_runs_text_field')
 
+;replace spaces by ','
+_line = strsplit(data_run_numbers,' ',/extract)
+data_run_numbers = strjoin(_line,',')
+
 ;parse first by ','
 RunNumbersArray    = strsplit(data_run_numbers,',',/EXTRACT)
 sz = (size(RunNumbersArray))(1)
@@ -66,7 +70,8 @@ FOR i=0,(sz-1) DO BEGIN
         full_nexus_name = find_full_nexus_name(Event, $
                                                RunNumbersArray[i],$
                                                (*global).instrument,$
-                                               isNexusExist)
+                                               isNexusExist,$
+                                               source_file='data')
         IF (isNexusExist) THEN BEGIN
             AppendReplaceLogBookMessage, Event, full_nexus_name, processing
             NexusFullPathArray[i]=full_nexus_name

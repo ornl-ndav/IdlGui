@@ -1477,7 +1477,9 @@ PRO MAIN_BASE_event, Event
     widget_info(wWidget, $
     find_by_uname='plot_all_data_file_together_uname'): begin
       ;get nexus list of all the files (if not path already)
+      ReplaceDataRunNumbersByFullPath, Event
       add_all_data_nexus_loaded, event
+      REFreduction_CommandLineGenerator, Event
       widget_control, event.id, set_button=0 
     end
 
