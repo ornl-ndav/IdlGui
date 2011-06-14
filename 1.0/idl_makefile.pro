@@ -89,6 +89,7 @@ cd, CurrentFolder
 .run log_book.pro
 .run configuration.pro
 .run IDLconfiguration__define.pro
+.run IDLxmlParser__define.pro
 .run preview.pro
 .run table_right_click.pro
 
@@ -101,10 +102,10 @@ cd, CurrentFolder
 .run display_metadata.pro
 .run launch_xloadct.pro
 .run preview_roi.pro
-.run plot_zoom_data.pro
 
 ;main functions
 .run button_eventcb.pro
 .run global.pro
 .run MainBaseEvent.pro
+.run iMars_cleanup.pro
 .run iMars.pro

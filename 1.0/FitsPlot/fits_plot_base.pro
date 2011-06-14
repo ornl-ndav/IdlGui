@@ -860,7 +860,7 @@ pro discrete_selection_local_switch_axes_type, event
   
   save_discrete_selection_background,  event=event
   
-  display_discrete_selection_tof, event=event
+  ;display_discrete_selection_tof, event=event
   
 end
 
@@ -906,7 +906,7 @@ pro change_discrete_selection_loadct, event
   ;replot
   refresh_discrete_selection_plot, event, recalculate=1
   refresh_plot_discrete_selection_colorbar, event
-  display_discrete_selection_tof, event=event
+  ;display_discrete_selection_tof, event=event
   
 end
 
@@ -1092,7 +1092,7 @@ pro refresh_discrete_px_vs_tof_plots_base, wBase = wBase, $
   ;  Data = *pData_y[file_index, spin_state]
   (*(*global_plot).data_linear) = Data_y
   
-  lin_log_data, base=wBase
+  ;lin_log_data, base=wBase
   
   ;number of pixels
   (*global_plot).nbr_pixel = (size(data_y))[1] ;nbr of pixels to plot
@@ -1121,7 +1121,7 @@ pro refresh_discrete_px_vs_tof_plots_base, wBase = wBase, $
   DEVICE, DECOMPOSED = 0
   loadct, default_loadct, /SILENT
   
-  plot_beam_center_scale, base=wBase
+  ;plot_beam_center_scale, base=wBase
   
   id = widget_info(wBase,find_by_uname='draw')
   widget_control, id, GET_VALUE = plot_id
@@ -1134,7 +1134,7 @@ pro refresh_discrete_px_vs_tof_plots_base, wBase = wBase, $
   zrange[0] = zmin
   zrange[1] = zmax
   (*global_plot).zrange = zrange
-  plot_colorbar, base=wBase, zmin, zmax, type=default_scale_settings
+  ;plot_colorbar, base=wBase, zmin, zmax, type=default_scale_settings
   
   ;change label of default loadct
   pre = '>  > >> '
@@ -1142,9 +1142,9 @@ pro refresh_discrete_px_vs_tof_plots_base, wBase = wBase, $
   uname = 'loadct_' + strcompress(default_loadct,/remove_all)
   value = getValue(base=wBase, uname)
   new_value = pre + value + post
-  setValue, base=wBase, uname, new_value
+  setValue, base=wBase, uname, necdw_value
   
-  save_background,  main_base=wBase
+  ;save_background,  main_base=wBase
   
 end
 
@@ -1551,45 +1551,6 @@ pro discrete_selection_base, main_base=main_base, $
     top_base=wBase_copy1
     
   return
-  
-  ;bring to life the base that show counts vs tof
-  discrete_selection_counts_vs_tof_base, $
-    parent_base_uname='discrete_selection_base_uname', $
-    top_base=wBase_copy
-    
-  ;display the already selected tof range ------------------------------------
-  tof_min = tof_min_max[0]
-  tof_max = tof_min_max[1]
-  
-  if (tof_min ne -1) then begin
-  
-    widget_control, wBase_copy, get_uvalue=global_tof_selection
-    id = widget_info(wBase_copy, find_by_uname='discrete_selection_draw')
-    widget_control, id, GET_VALUE = plot_id
-    wset, plot_id
-    
-    tof_min_device = discrete_from_data_to_device(base=wBase_copy, tof_min)
-    
-    plots, tof_min_device, 0, fsc_color("green"),/device
-    plots, tof_min_device, ysize, fsc_color("green"),/continue, linestyle=4,$
-      /device
-      
-  endif
-  
-  if (tof_max ne -1) then begin
-  
-    widget_control, wBase_copy, get_uvalue=global_tof_selection
-    id = widget_info(wBase_copy, find_by_uname='discrete_selection_draw')
-    widget_control, id, GET_VALUE = plot_id
-    wset, plot_id
-    
-    tof_max_device = discrete_from_data_to_device(base=wBase_copy, tof_max)
-    
-    plots, tof_max_device, 0, fsc_color("green"),/device
-    plots, tof_max_device, ysize, fsc_color("green"),/continue, linestyle=4,$
-      /device
-      
-  endif
   
 end
 
