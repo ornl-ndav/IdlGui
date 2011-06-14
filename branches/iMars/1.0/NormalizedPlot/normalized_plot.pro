@@ -49,152 +49,152 @@ pro normalized_plot_base_event, Event
   
   case Event.id of
   
-;    ;loadct button
-;    widget_info(event.top, find_by_uname='show_xloadct'): begin
-;      launch_preview_xloadct, event=event
-;    end
-;    
-;    ;draw
-;    widget_info(event.top, find_by_uname='zoom_draw'): begin
-;    
-;      ;left click
-;      if (event.press eq 1) then begin
-;        (*global_preview).left_click = 1b
-;        x=event.x
-;        y=event.y
-;        roi_selection = [x,y,0,0]
-;        (*global_preview).roi_selection = roi_selection
-;        return
-;      endif
-;      
-;      ;release left click
-;      if (event.release eq 1b && $
-;        (*global_preview).left_click eq 1b) then begin
-;        (*global_preview).left_click = 0b
-;        ;add roi to the main_base roi box if the selection is valid
-;        selection = (*global_preview).roi_selection
-;;        plot_zoom_data, event=event
-;        if (is_selection_valid(selection=selection)) then begin
-;          keep_selection_inside_zoom_draw, event=event, selection=selection
-;          selection_data = convert_zoom_device_to_data(event=event, selection)
-;          add_new_selection_to_list_of_roi, event=event, new_roi=selection_data
-;        endif
-;        plot_zoom_roi, event=event
-;        display_preview_roi, base=(*global_preview).top_base
-;        plot_other_zoom_and_roi_data, event=event
-;        return
-;      endif
-;      
-;      ;moving mouse with left click
-;      if ((*global_preview).left_click) then begin
-;        x=event.x
-;        y=event.y
-;        roi_selection = (*global_preview).roi_selection
-;        roi_selection[2] = x
-;        roi_selection[3] = y
-;        (*global_preview).roi_selection = roi_selection
-;
-;        x0 = roi_selection[0]
-;        y0 = roi_selection[1]
-;        x1 = x
-;        y1 = y
-;
-;        plot_zoom_data, event=event
-;        plot_zoom_roi, event=event
-;
-;        id = widget_info(event.top,find_by_uname='zoom_draw')
-;        widget_control, id, get_value=plot_id
-;        wset, plot_id
-;        
-;        plots, [x0, x0, x1, x1, x0], $
-;        [y0, y1, y1, y0, y0], /device, color=fsc_color('red')
-;
-;        ;plot_other_zoom_and_roi_data, event=event, /live
-;
-;        return
-;      endif
-;      
-;    end
-;    
-;    ;main base resized or moved
-;    widget_info(event.top, find_by_uname='zoom_base_uname'): begin
-;    
-;      id = widget_info(event.top, find_by_uname='zoom_base_uname')
-;      geometry = widget_info(id,/geometry)
-;      new_xsize = geometry.scr_xsize
-;      new_ysize = geometry.scr_ysize
-;      xoffset = geometry.xoffset
-;      yoffset = geometry.yoffset
-;      
-;      ;      ;only if the tof input base is there
-;      ;      id_tof_selection = (*global_tof_selection).tof_selection_input_base
-;      ;      if (widget_info(id_tof_selection, /valid_id) ne 0) then begin
-;      ;        widget_control, id_tof_selection, xoffset = xoffset + new_xsize
-;      ;        widget_control, id_tof_selection, yoffset = yoffset
-;      ;      endif
-;      ;
-;      ;      ;only if the counts vs tof base is there
-;      ;      id_plot = (*global_tof_selection).tof_selection_counts_vs_tof_base_id
-;      ;      if (widget_info(id_plot,/valid_id) ne 0) then begin
-;      ;        widget_control, id_plot, xoffset = xoffset + new_xsize
-;      ;        widget_control, id_plot, yoffset = yoffset + 170
-;      ;      endif
-;      
-;      if ((abs((*global_preview).ysize - new_ysize) eq 33.0) && $
-;        (abs((*global_preview).xsize - new_xsize) eq 70.0)) then return
-;        
-;      if ((abs((*global_preview).ysize - new_ysize) eq 33.0) && $
-;        (abs((*global_preview).xsize - new_xsize) eq 0.0)) then return
-;        
-;      new_ysize -= 33  ;due to the menu bar at the top
-;      
-;      (*global_preview).xsize = new_xsize
-;      (*global_preview).ysize = new_ysize
-;      
-;      
-;      widget_control, id, xsize = new_xsize
-;      widget_control, id, ysize = new_ysize
-;      
-;      border = (*global_preview).border
-;      colorbar_xsize = (*global_preview).colorbar_xsize
-;      
-;      id = widget_info(event.top, find_by_uname='zoom_draw')
-;      widget_control, id, draw_xsize = new_xsize-2*border-colorbar_xsize
-;      widget_control, id, draw_ysize = new_ysize-2*border
-;      
-;      id = widget_info(event.top,find_by_Uname='zoom_scale')
-;      widget_control, id, draw_xsize = new_xsize-colorbar_xsize
-;      widget_control, id, draw_ysize = new_ysize
-;      
-;      id = widget_info(event.top, find_by_uname='zoom_colorbar')
-;      widget_control, id, xoffset=new_xsize-colorbar_xsize
-;      widget_control, id, draw_ysize = new_ysize
-;      widget_control, id, draw_xsize = colorbar_xsize
-;      
-;      ;plot colorbar
-;      plot_colorbar_zoom_data, event=event
-;      
-;      ;display the main data
-;      plot_zoom_data, event=event, /recalculate
-;      
-;      ;plot roi
-;      plot_zoom_roi, event=event
-;      
-;      ;plot scale around the plot
-;      plot_scale_zoom_data, event=event
-;      
-;      return
-;      
-;    end
-;    
-;;       ;cancel tof selected
-;;    widget_info(event.top, $
-;;      find_by_uname='cancel_discrete_selection_selected_uname'): begin
-;;      widget_control, event.top, get_uvalue=global_preview
-;;      top_base = (*global_preview).top_base
-;;      widget_control, top_base, /destroy
-;;    end
-    
+    ;    ;loadct button
+    ;    widget_info(event.top, find_by_uname='show_xloadct'): begin
+    ;      launch_preview_xloadct, event=event
+    ;    end
+    ;
+    ;    ;draw
+    ;    widget_info(event.top, find_by_uname='zoom_draw'): begin
+    ;
+    ;      ;left click
+    ;      if (event.press eq 1) then begin
+    ;        (*global_preview).left_click = 1b
+    ;        x=event.x
+    ;        y=event.y
+    ;        roi_selection = [x,y,0,0]
+    ;        (*global_preview).roi_selection = roi_selection
+    ;        return
+    ;      endif
+    ;
+    ;      ;release left click
+    ;      if (event.release eq 1b && $
+    ;        (*global_preview).left_click eq 1b) then begin
+    ;        (*global_preview).left_click = 0b
+    ;        ;add roi to the main_base roi box if the selection is valid
+    ;        selection = (*global_preview).roi_selection
+    ;;        plot_zoom_data, event=event
+    ;        if (is_selection_valid(selection=selection)) then begin
+    ;          keep_selection_inside_zoom_draw, event=event, selection=selection
+    ;          selection_data = convert_zoom_device_to_data(event=event, selection)
+    ;          add_new_selection_to_list_of_roi, event=event, new_roi=selection_data
+    ;        endif
+    ;        plot_zoom_roi, event=event
+    ;        display_preview_roi, base=(*global_preview).top_base
+    ;        plot_other_zoom_and_roi_data, event=event
+    ;        return
+    ;      endif
+    ;
+    ;      ;moving mouse with left click
+    ;      if ((*global_preview).left_click) then begin
+    ;        x=event.x
+    ;        y=event.y
+    ;        roi_selection = (*global_preview).roi_selection
+    ;        roi_selection[2] = x
+    ;        roi_selection[3] = y
+    ;        (*global_preview).roi_selection = roi_selection
+    ;
+    ;        x0 = roi_selection[0]
+    ;        y0 = roi_selection[1]
+    ;        x1 = x
+    ;        y1 = y
+    ;
+    ;        plot_zoom_data, event=event
+    ;        plot_zoom_roi, event=event
+    ;
+    ;        id = widget_info(event.top,find_by_uname='zoom_draw')
+    ;        widget_control, id, get_value=plot_id
+    ;        wset, plot_id
+    ;
+    ;        plots, [x0, x0, x1, x1, x0], $
+    ;        [y0, y1, y1, y0, y0], /device, color=fsc_color('red')
+    ;
+    ;        ;plot_other_zoom_and_roi_data, event=event, /live
+    ;
+    ;        return
+    ;      endif
+    ;
+    ;    end
+    ;
+    ;    ;main base resized or moved
+    ;    widget_info(event.top, find_by_uname='zoom_base_uname'): begin
+    ;
+    ;      id = widget_info(event.top, find_by_uname='zoom_base_uname')
+    ;      geometry = widget_info(id,/geometry)
+    ;      new_xsize = geometry.scr_xsize
+    ;      new_ysize = geometry.scr_ysize
+    ;      xoffset = geometry.xoffset
+    ;      yoffset = geometry.yoffset
+    ;
+    ;      ;      ;only if the tof input base is there
+    ;      ;      id_tof_selection = (*global_tof_selection).tof_selection_input_base
+    ;      ;      if (widget_info(id_tof_selection, /valid_id) ne 0) then begin
+    ;      ;        widget_control, id_tof_selection, xoffset = xoffset + new_xsize
+    ;      ;        widget_control, id_tof_selection, yoffset = yoffset
+    ;      ;      endif
+    ;      ;
+    ;      ;      ;only if the counts vs tof base is there
+    ;      ;      id_plot = (*global_tof_selection).tof_selection_counts_vs_tof_base_id
+    ;      ;      if (widget_info(id_plot,/valid_id) ne 0) then begin
+    ;      ;        widget_control, id_plot, xoffset = xoffset + new_xsize
+    ;      ;        widget_control, id_plot, yoffset = yoffset + 170
+    ;      ;      endif
+    ;
+    ;      if ((abs((*global_preview).ysize - new_ysize) eq 33.0) && $
+    ;        (abs((*global_preview).xsize - new_xsize) eq 70.0)) then return
+    ;
+    ;      if ((abs((*global_preview).ysize - new_ysize) eq 33.0) && $
+    ;        (abs((*global_preview).xsize - new_xsize) eq 0.0)) then return
+    ;
+    ;      new_ysize -= 33  ;due to the menu bar at the top
+    ;
+    ;      (*global_preview).xsize = new_xsize
+    ;      (*global_preview).ysize = new_ysize
+    ;
+    ;
+    ;      widget_control, id, xsize = new_xsize
+    ;      widget_control, id, ysize = new_ysize
+    ;
+    ;      border = (*global_preview).border
+    ;      colorbar_xsize = (*global_preview).colorbar_xsize
+    ;
+    ;      id = widget_info(event.top, find_by_uname='zoom_draw')
+    ;      widget_control, id, draw_xsize = new_xsize-2*border-colorbar_xsize
+    ;      widget_control, id, draw_ysize = new_ysize-2*border
+    ;
+    ;      id = widget_info(event.top,find_by_Uname='zoom_scale')
+    ;      widget_control, id, draw_xsize = new_xsize-colorbar_xsize
+    ;      widget_control, id, draw_ysize = new_ysize
+    ;
+    ;      id = widget_info(event.top, find_by_uname='zoom_colorbar')
+    ;      widget_control, id, xoffset=new_xsize-colorbar_xsize
+    ;      widget_control, id, draw_ysize = new_ysize
+    ;      widget_control, id, draw_xsize = colorbar_xsize
+    ;
+    ;      ;plot colorbar
+    ;      plot_colorbar_zoom_data, event=event
+    ;
+    ;      ;display the main data
+    ;      plot_zoom_data, event=event, /recalculate
+    ;
+    ;      ;plot roi
+    ;      plot_zoom_roi, event=event
+    ;
+    ;      ;plot scale around the plot
+    ;      plot_scale_zoom_data, event=event
+    ;
+    ;      return
+    ;
+    ;    end
+    ;
+    ;;       ;cancel tof selected
+    ;;    widget_info(event.top, $
+    ;;      find_by_uname='cancel_discrete_selection_selected_uname'): begin
+    ;;      widget_control, event.top, get_uvalue=global_preview
+    ;;      top_base = (*global_preview).top_base
+    ;;      widget_control, top_base, /destroy
+    ;;    end
+  
     else:
     
   endcase
@@ -254,13 +254,13 @@ end
 ; :Params:
 ;    wBase
 ;    parent_base_geometry
-;    
+;
 ; :Keywords:
 ;    border
 ;    default_plot_size
 ;    colorbar_xsize
 ;    file_name
-;    
+;
 ;
 ; :Author: j35
 ;-
@@ -293,7 +293,7 @@ pro normalized_plot_base_gui, wBase, $
   
   ourGroup = WIDGET_BASE()
   
-  title = 'Normalized ' + file_name
+  title = 'Normalization of: ' + file_name
   wBase = WIDGET_BASE(TITLE = title, $
     UNAME        = 'normalized_base_uname', $
     XOFFSET      = xoffset,$
@@ -303,7 +303,7 @@ pro normalized_plot_base_gui, wBase, $
     /tlb_size_events,$
     /align_center, $
     /tlb_move_events, $
-;    mbar=bar1,$
+    ;    mbar=bar1,$
     GROUP_LEADER = ourGroup)
     
   draw = widget_draw(wbase,$
@@ -325,14 +325,14 @@ pro normalized_plot_base_gui, wBase, $
     scr_ysize = ysize,$
     retain=2)
     
-  colorbar =  widget_draw(wBase,$
-    uname = 'normalized_colorbar',$
-    xoffset = xsize,$
-    scr_xsize = colorbar_xsize,$
-    scr_ysize = ysize,$
-    retain=2)
+;  colorbar =  widget_draw(wBase,$
+;    uname = 'normalized_colorbar',$
+;    xoffset = xsize,$
+;    scr_xsize = colorbar_xsize,$
+;    scr_ysize = ysize,$
+;    retain=2)
     
-    end
+end
 
 ;+
 ; :Description:
@@ -368,8 +368,8 @@ end
 pro normalized_plot_base_cleanup, tlb
   compile_opt idl2
   
-;  add_zoom_base_id, preview_base=tlb
-
+  ;  add_zoom_base_id, preview_base=tlb
+  
   widget_control, tlb, get_uvalue=global_preview, /no_copy
   
   if (n_elements(global_preview) eq 0) then return
@@ -384,7 +384,7 @@ end
 
 ;+
 ; :Description:
-;    
+;
 ;
 ; :Keywords:
 ;    main_base
@@ -424,7 +424,7 @@ pro normalized_plot_base, event=event, $
     colorbar_xsize=colorbar_xsize,$
     file_name=file_name
   (*global).normalized_plot_base_id = _base
-    
+  
   WIDGET_CONTROL, _base, /REALIZE
   
   global_preview = PTR_NEW({ _base: _base,$
@@ -454,7 +454,7 @@ pro normalized_plot_base, event=event, $
     
   WIDGET_CONTROL, _base, SET_UVALUE = global_preview
   
-;  data = (*(*global).preview_data)
+  ;  data = (*(*global).preview_data)
   (*(*global_preview).data) = data
   sz = size(data,/dim)
   xrange = (*global_preview).xrange
@@ -463,7 +463,7 @@ pro normalized_plot_base, event=event, $
   yrange[1] = sz[1]
   (*global_preview).xrange = xrange
   (*global_preview).yrange = yrange
-
+  
   XMANAGER, "normalized_plot_base", $
     _base, $
     GROUP_LEADER=ourGroup, $
@@ -472,12 +472,12 @@ pro normalized_plot_base, event=event, $
     
   ;display the main data
   plot_normalized_data, base=_base, /recalculate
-;  
-;  ;plot roi
-;  plot_zoom_roi, base=_base
-;  
-;  ;plot colorbar
-  plot_colorbar_normalized_data, base=_base
+  ;
+  ;  ;plot roi
+  ;  plot_zoom_roi, base=_base
+  ;
+  ;  ;plot colorbar
+  ;  plot_colorbar_normalized_data, base=_base
   
   ;plot scale around the plot
   plot_scale_normalized_data, base=_base
@@ -507,15 +507,37 @@ pro launch_normalized_plot, event=event, data=data, file_name=file_name
   
   id =  (*global).normalized_plot_base_id
   if (widget_info(id,/valid_id) eq 0) then begin
-  normalized_plot_base, event=event, $
-    top_base=top_base, $
-    parent_base_uname='MAIN_BASE',$
-    file_name=file_name, $
-    data=data
-    endif else begin
+    normalized_plot_base, event=event, $
+      top_base=top_base, $
+      parent_base_uname='MAIN_BASE',$
+      file_name=file_name, $
+      data=data
+  endif else begin
     widget_control, id, get_uvalue=global_preview
     (*(*global_preview).data) = data
     plot_normalized_data, base=id, /recalculate
-    endelse
-    
+  endelse
+  
+end
+
+;+
+; :Description:
+;    This routine terminates the preview of the normalized data
+;
+;
+;
+; :Keywords:
+;    event
+;
+; :Author: j35
+;-
+pro kill_normalized_plot, event=event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  id =  (*global).normalized_plot_base_id
+  if (widget_info(id,/valid_id) ne 0) then begin
+    widget_control, id, /destroy
+  endif
+  
 end
