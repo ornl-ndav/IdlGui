@@ -68,10 +68,14 @@ pro populate_Q_widgets, event=event
   
   IF (isTOFcuttingUnits_microS(Event)) then begin
     coeff = 1e-6
-    if (debug) then message=[message,'Units: microS'] 
+    if (debug) then begin
+  message=[message,'Units: microS']
+  endif 
   endif else begin
     coeff = 1e-3
-    if (debug) then message=[message,'Units: mS'] 
+    if (debug) then begin
+    message = [message,'Units: mS']
+    endif 
   endelse
   tof_min = (float(tof_min) eq 0.) ? 1 : tof_min
   tof_min_s = float(tof_min) * coeff
@@ -100,11 +104,13 @@ pro populate_Q_widgets, event=event
   widget_control, event.top, get_uvalue=global
 ;  on_ioerror, float_error
   distance_moderator_sample = float((*global).distance_moderator_sample)
-  if (debug) then message = [message,'Distance moderator sample: ' + $
+  if (debug) then begin
+  message = [message,'Distance moderator sample: ' + $
   strcompress(distance_moderator_sample,/remove_all)]
+  endif
   
-  if (debug) then print, 'distance_moderator_sample: ' , $
-  distance_moderator_sample
+  ;if (debug) then print, 'distance_moderator_sample: ' , $
+  ;distance_moderator_sample
   
   ;sangle = polar_angle/2 of pixel min and pixel max positions
   ;sangle_min_max = (*global).sangle_min_max
@@ -113,9 +119,11 @@ pro populate_Q_widgets, event=event
   calculate_sangle, event, refpix=pixel_min, sangle=sangle_min
   calculate_sangle, event, refpix=pixel_max, sangle=sangle_max
   
-  if (debug) then message = [message, 'sangle_min (rad): ' + $
+  if (debug) then begin
+  message = [message, 'sangle_min (rad): ' + $
   strcompress(sangle_min,/remove_all),$
   'sangle_max (rad): ' + strcompress(sangle_max,/remove_all)]
+  endif
   
   if (sangle_min eq '-1' || sangle_max eq '-1') then begin
     reset_Q_widgets, event=event
@@ -151,6 +159,7 @@ pro populate_Q_widgets, event=event
   if (debug) then begin
   message=[message,'Qmin (angstroms): ' + strcompress(Qmin,/remove_all),$
   'Qmax (angstroms): ' + strcompress(Qmax,/remove_all)]
+  endif
   
   putValue, event=event, 'q_min_text_field', strcompress(_Qmin,/remove_all)
   putValue, event=event, 'q_max_text_field', strcompress(_Qmax,/remove_all)
