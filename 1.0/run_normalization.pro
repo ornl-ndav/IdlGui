@@ -273,14 +273,14 @@ pro run_normalization, event=event
       
       _data_normalized = num / den
       
-;      window,0, xsize=600, ysize=600, title= list_data[_index_data]
-;      _c_data = congrid(_data_normalized, 600, 600)
-;      tvscl, _c_data
-
+      ;      window,0, xsize=600, ysize=600, title= list_data[_index_data]
+      ;      _c_data = congrid(_data_normalized, 600, 600)
+      ;      tvscl, _c_data
+      
       launch_normalized_plot, event=event, $
-      data=_data_normalized, $
-      file_name=list_data[_index_data]
-
+        data=_data_normalized, $
+        file_name=list_data[_index_data]
+        
       create_output_tiff_file, event=event, $
         input_file_name = list_data[_index_data], $
         data = _data_normalized, $
@@ -308,7 +308,7 @@ pro run_normalization, event=event
       progress_bar, event=event, /step
       _index_data++
     endwhile
-     
+    
     message = ['Done with normalization','-> List of files produced:']
     _i=0
     nbr_output = n_elements(list_output_file_name)
@@ -323,7 +323,7 @@ pro run_normalization, event=event
     ;dialog_message)
     message
     
-    
+    kill_normalized_plot, event=event
     
     progress_bar, event=event, /close
     
@@ -468,10 +468,12 @@ pro run_normalization, event=event
       full_file_name = input_file_name)
     output_file_name = base_output_file + '_normalized.png'
     
-    ;  id_draw = widget_info(Event.top, find_by_uname='preview_draw_uname')
-    ;  widget_control, id_draw, get_value=id_value
-    ;  wset,id_value
-    ;
+    widget_control, event.top, get_uvalue=global
+    id =  (*global).normalized_plot_base_id
+    id_draw = widget_info(id, find_by_uname='normalized_draw')
+    widget_control, id_draw, get_value=id_value
+    wset,id_value
+    
     write_png, output_file_name, tvrd(/true)
     
   end
