@@ -6,6 +6,7 @@
 all:
 	cp iMars.cfg .iMars.cfg
 	idl ./makefile.pro;
+
 install:
 	cp .iMars.cfg /SNS/software/idltools/sav/
 	cp iMars.sav /SNS/software/idltools/sav/
