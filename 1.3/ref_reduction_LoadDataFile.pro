@@ -50,10 +50,13 @@ FUNCTION OpenDataNeXusFile, Event, $
   (*global).data_full_nexus_name = full_nexus_name
   
   ;display full nexus name in REDUCE tab
+  DataRunNumber = (*global).data_run_number
+  
   putTextFieldValue, $
     event, $
     'reduce_data_runs_text_field', $
     STRCOMPRESS(full_nexus_name,/REMOVE_ALL), $
+;     strcompress(DataRunNumber,/remove_all), $
     0                             ;do not append
     
   ;;tells the user that the NeXus file has been found
