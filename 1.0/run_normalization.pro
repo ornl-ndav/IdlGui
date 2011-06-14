@@ -220,260 +220,260 @@ pro run_normalization, event=event
       file_name=list_data[_index_data],$
       data=_data
       
-    if (isButtonSelected(event=event,$
-      uname='with_gamma_filtering_uname')) then begin
-        message = [message, '-> Applying gamma filtering']
-      endif
-      apply_gamma_filtering, event=event, data=_data
-      
-      ;Create array of average values of region selected
-      ;this will be used to scale the data file according to the open beam file
-      if (nbr_rois gt 0) then begin
-      
-        _data_file_mean_of_regions = fltarr(nbr_rois)
-        _index_data_region = 0
-        while (_index_data_region lt nbr_rois) do begin
-        
-          x0 = roi_table[_index_data_region,0]
-          y0 = roi_table[_index_data_region,1]
-          x1 = roi_table[_index_data_region,2]
-          y1 = roi_table[_index_data_region,3]
-          
-          xmin = min([x0,x1],max=xmax)
-          ymin = min([y0,y1],max=ymax)
-          
-          _tmp_data_region = _data[xmin:xmax,ymin:ymax]
-          _mean = mean(_tmp_data_region)
-          _data_file_mean_of_regions[_index_data_region] = _mean
-          
-          _index_data_region++
-        endwhile
-        
-      endif else begin
-      
-        _data_file_mean_of_regions = fltarr(1)
-        _data_file_mean_of_regions[0] = 1
-        
-      endelse
-      message = [message, '-> Created array of average values of ROIs']
-      
-      _global_mean = get_global_mean(ob_roi_mean=_open_beam_mean_of_regions,$
-        data_roi_mean=_data_file_mean_of_regions)
-      message = [message, '-> mean value: ' + $
-        strcompress(_global_mean,/remove_all)]
-        
-      ;rescale data
-      _data /= _global_mean
-      
-      ;calculate numerator and denominator
-      ;num = data - DF
-      ;den = OB - DF
-      num = _data - _dark_field_data
-      den = _open_beam_data - _dark_field_data
-      
-      _data_normalized = num / den
-      
-      ;      window,0, xsize=600, ysize=600, title= list_data[_index_data]
-      ;      _c_data = congrid(_data_normalized, 600, 600)
-      ;      tvscl, _c_data
-      
-      launch_normalized_plot, event=event, $
-        data=_data_normalized, $
-        file_name=list_data[_index_data]
-        
-      create_output_tiff_file, event=event, $
-        input_file_name = list_data[_index_data], $
-        data = _data_normalized, $
-        output_file_name = output_file_name
-      if (output_file_name ne '') then $
-        list_output_file_name = [list_output_file_name,output_file_name]
-        
-      create_output_fits_file, event=event, $
-        input_file_name = list_data[_index_data], $
-        data = _data_normalized, $
-        output_file_name = output_file_name
-      if (output_file_name ne '') then $
-        list_output_file_name = [list_output_file_name,output_file_name]
-        
-      create_output_png_file, event=event, $
-        input_file_name = list_data[_index_data], $
-        data = _data_normalized, $
-        output_file_name = output_file_name
-      if (output_file_name ne '') then $
-        list_output_file_name = [list_output_file_name,output_file_name]
-        
-      message = [message, '-> created output file(s)']
-      log_book_update, event, message=message
-      
-      progress_bar, event=event, /step
-      _index_data++
-    endwhile
+    if (isButtonSelected(event=event,uname='with_gamma_filtering_uname')) $
+      then begin
+      message = [message, '-> Applying gamma filtering']
+    endif
+    apply_gamma_filtering, event=event, data=_data
     
-    message = ['Done with normalization','-> List of files produced:']
-    _i=0
-    nbr_output = n_elements(list_output_file_name)
-    while (_i lt nbr_output) do begin
-      new_line = '  -> ' + list_output_file_name[_i]
-      message = [message,new_line]
-      _i++
-    endwhile
+    ;Create array of average values of region selected
+    ;this will be used to scale the data file according to the open beam file
+    if (nbr_rois gt 0) then begin
+    
+      _data_file_mean_of_regions = fltarr(nbr_rois)
+      _index_data_region = 0
+      while (_index_data_region lt nbr_rois) do begin
+      
+        x0 = roi_table[_index_data_region,0]
+        y0 = roi_table[_index_data_region,1]
+        x1 = roi_table[_index_data_region,2]
+        y1 = roi_table[_index_data_region,3]
+        
+        xmin = min([x0,x1],max=xmax)
+        ymin = min([y0,y1],max=ymax)
+        
+        _tmp_data_region = _data[xmin:xmax,ymin:ymax]
+        _mean = mean(_tmp_data_region)
+        _data_file_mean_of_regions[_index_data_region] = _mean
+        
+        _index_data_region++
+      endwhile
+      
+    endif else begin
+    
+      _data_file_mean_of_regions = fltarr(1)
+      _data_file_mean_of_regions[0] = 1
+      
+    endelse
+    message = [message, '-> Created array of average values of ROIs']
+    
+    _global_mean = get_global_mean(ob_roi_mean=_open_beam_mean_of_regions,$
+      data_roi_mean=_data_file_mean_of_regions)
+    message = [message, '-> mean value: ' + $
+      strcompress(_global_mean,/remove_all)]
+      
+    ;rescale data
+    _data /= _global_mean
+    
+    ;calculate numerator and denominator
+    ;num = data - DF
+    ;den = OB - DF
+    num = _data - _dark_field_data
+    den = _open_beam_data - _dark_field_data
+    
+    _data_normalized = num / den
+    
+    ;      window,0, xsize=600, ysize=600, title= list_data[_index_data]
+    ;      _c_data = congrid(_data_normalized, 600, 600)
+    ;      tvscl, _c_data
+    
+    launch_normalized_plot, event=event, $
+      data=_data_normalized, $
+      file_name=list_data[_index_data]
+      
+    create_output_tiff_file, event=event, $
+      input_file_name = list_data[_index_data], $
+      data = _data_normalized, $
+      output_file_name = output_file_name
+    if (output_file_name ne '') then $
+      list_output_file_name = [list_output_file_name,output_file_name]
+      
+    create_output_fits_file, event=event, $
+      input_file_name = list_data[_index_data], $
+      data = _data_normalized, $
+      output_file_name = output_file_name
+    if (output_file_name ne '') then $
+      list_output_file_name = [list_output_file_name,output_file_name]
+      
+    create_output_png_file, event=event, $
+      input_file_name = list_data[_index_data], $
+      data = _data_normalized, $
+      output_file_name = output_file_name
+    if (output_file_name ne '') then $
+      list_output_file_name = [list_output_file_name,output_file_name]
+      
+    message = [message, '-> created output file(s)']
     log_book_update, event, message=message
     
-    ;list all the files that have been created (in the log book and in a
-    ;dialog_message)
-    message
-    
-    kill_normalized_plot, event=event
-    
-    progress_bar, event=event, /close
-    
-    widget_control, hourglass=0
-    
-  end
+    progress_bar, event=event, /step
+    _index_data++
+  endwhile
   
-  ;+
-  ; :Description:
-  ;    This returns the base file name. The suffix will be added later
-  ;
-  ;
-  ;
-  ; :Keywords:
-  ;    event
-  ;    full_file_name
-  ;
-  ; :Author: j35
-  ;-
-  function get_base_output_file, event=event, full_file_name=full_file_name
-    compile_opt idl2
-    
-    ;determine the new output file name
-    output_folder = getValue(event=event,uname='output_folder_button')
-    
-    ;base file name
-    base_file_name = file_basename(full_file_name)
-    
-    ;remove extension, add '_normalized.fits'
-    file_array = strsplit(base_file_name,'.',/extract)
-    sz = n_elements(file_array)
-    if (sz gt 1) then begin
-      _file = strjoin(file_array[0:-2],'.')
-    endif else begin
-      _file = file_array[0]
-    endelse
-    
-    ;new output file name
-    output_file = output_folder + _file
-    
-    return, output_file
-  end
+  message = ['Done with normalization','-> List of files produced:']
+  _i=0
+  nbr_output = n_elements(list_output_file_name)
+  while (_i lt nbr_output) do begin
+    new_line = '  -> ' + list_output_file_name[_i]
+    message = [message,new_line]
+    _i++
+  endwhile
+  log_book_update, event, message=message
   
-  ;+
-  ; :Description:
-  ;    Create the TIFF output file
-  ;
-  ;
-  ;
-  ; :Keywords:
-  ;    event
-  ;    input_file_name
-  ;    data
-  ;    output_file_name
-  ;
-  ; :Author: j35
-  ;-
-  pro create_output_tiff_file, event=event, $
-      input_file_name=input_file_name, $
-      data=data, $
-      output_file_name = output_file_name
-    compile_opt idl2
-    
-    ;stop here is we did not select tiff format
-    if (~isButtonSelected(event=event,uname='format_tiff_button')) then begin
-      output_file_name = ''
-      return
-    endif
-    
-    ;get base_output_file
-    base_output_file = get_base_output_file(event=event, $
-      full_file_name = input_file_name)
-    output_file_name = base_output_file + '_normalized.tif'
-    
-    write_tiff, output_file_name, data
-    
-  end
+  ;list all the files that have been created (in the log book and in a
+  ;dialog_message)
+  message
   
-  ;+
-  ; :Description:
-  ;    Create the FITS output file
-  ;
-  ;
-  ;
-  ; :Keywords:
-  ;    event
-  ;    input_file_name
-  ;    data
-  ;    output_file_name
-  ;
-  ; :Author: j35
-  ;-
-  pro create_output_fits_file, event=event, $
-      input_file_name=input_file_name, $
-      data=data, $
-      output_file_name = output_file_name
-    compile_opt idl2
-    
-    ;stop here is we did not select tiff format
-    if (~isButtonSelected(event=event,uname='format_fits_button')) then begin
-      output_file_name = ''
-      return
-    endif
-    
-    ;get base_output_file
-    base_output_file = get_base_output_file(event=event, $
-      full_file_name = input_file_name)
-    output_file_name = base_output_file + '_normalized.fits'
-    
-    fits_write, output_file_name, data
-    
-  end
+  kill_normalized_plot, event=event
   
-  ;+
-  ; :Description:
-  ;    Create the png output file
-  ;
-  ;
-  ;
-  ; :Keywords:
-  ;    event
-  ;    input_file_name
-  ;    data
-  ;    output_file_name
-  ;
-  ; :Author: j35
-  ;-
-  pro create_output_png_file, event=event, $
-      input_file_name=input_file_name, $
-      data=data, $
-      output_file_name=output_file_name
-    compile_opt idl2
-    
-    ;stop here is we did not select tiff format
-    if (~isButtonSelected(event=event,uname='format_png_button')) then begin
-      output_file_name = ''
-      return
-    endif
-    
-    ;get base_output_file
-    base_output_file = get_base_output_file(event=event, $
-      full_file_name = input_file_name)
-    output_file_name = base_output_file + '_normalized.png'
-    
-    widget_control, event.top, get_uvalue=global
-    id =  (*global).normalized_plot_base_id
-    id_draw = widget_info(id, find_by_uname='normalized_draw')
-    widget_control, id_draw, get_value=id_value
-    wset,id_value
-    
-    write_png, output_file_name, tvrd(/true)
-    
-  end
+  progress_bar, event=event, /close
+  
+  widget_control, hourglass=0
+  
+end
+
+;+
+; :Description:
+;    This returns the base file name. The suffix will be added later
+;
+;
+;
+; :Keywords:
+;    event
+;    full_file_name
+;
+; :Author: j35
+;-
+function get_base_output_file, event=event, full_file_name=full_file_name
+  compile_opt idl2
+  
+  ;determine the new output file name
+  output_folder = getValue(event=event,uname='output_folder_button')
+  
+  ;base file name
+  base_file_name = file_basename(full_file_name)
+  
+  ;remove extension, add '_normalized.fits'
+  file_array = strsplit(base_file_name,'.',/extract)
+  sz = n_elements(file_array)
+  if (sz gt 1) then begin
+    _file = strjoin(file_array[0:-2],'.')
+  endif else begin
+    _file = file_array[0]
+  endelse
+  
+  ;new output file name
+  output_file = output_folder + _file
+  
+  return, output_file
+end
+
+;+
+; :Description:
+;    Create the TIFF output file
+;
+;
+;
+; :Keywords:
+;    event
+;    input_file_name
+;    data
+;    output_file_name
+;
+; :Author: j35
+;-
+pro create_output_tiff_file, event=event, $
+    input_file_name=input_file_name, $
+    data=data, $
+    output_file_name = output_file_name
+  compile_opt idl2
+  
+  ;stop here is we did not select tiff format
+  if (~isButtonSelected(event=event,uname='format_tiff_button')) then begin
+    output_file_name = ''
+    return
+  endif
+  
+  ;get base_output_file
+  base_output_file = get_base_output_file(event=event, $
+    full_file_name = input_file_name)
+  output_file_name = base_output_file + '_normalized.tif'
+  
+  write_tiff, output_file_name, data
+  
+end
+
+;+
+; :Description:
+;    Create the FITS output file
+;
+;
+;
+; :Keywords:
+;    event
+;    input_file_name
+;    data
+;    output_file_name
+;
+; :Author: j35
+;-
+pro create_output_fits_file, event=event, $
+    input_file_name=input_file_name, $
+    data=data, $
+    output_file_name = output_file_name
+  compile_opt idl2
+  
+  ;stop here is we did not select tiff format
+  if (~isButtonSelected(event=event,uname='format_fits_button')) then begin
+    output_file_name = ''
+    return
+  endif
+  
+  ;get base_output_file
+  base_output_file = get_base_output_file(event=event, $
+    full_file_name = input_file_name)
+  output_file_name = base_output_file + '_normalized.fits'
+  
+  fits_write, output_file_name, data
+  
+end
+
+;+
+; :Description:
+;    Create the png output file
+;
+;
+;
+; :Keywords:
+;    event
+;    input_file_name
+;    data
+;    output_file_name
+;
+; :Author: j35
+;-
+pro create_output_png_file, event=event, $
+    input_file_name=input_file_name, $
+    data=data, $
+    output_file_name=output_file_name
+  compile_opt idl2
+  
+  ;stop here is we did not select tiff format
+  if (~isButtonSelected(event=event,uname='format_png_button')) then begin
+    output_file_name = ''
+    return
+  endif
+  
+  ;get base_output_file
+  base_output_file = get_base_output_file(event=event, $
+    full_file_name = input_file_name)
+  output_file_name = base_output_file + '_normalized.png'
+  
+  widget_control, event.top, get_uvalue=global
+  id =  (*global).normalized_plot_base_id
+  id_draw = widget_info(id, find_by_uname='normalized_draw')
+  widget_control, id_draw, get_value=id_value
+  wset,id_value
+  
+  write_png, output_file_name, tvrd(/true)
+  
+end
