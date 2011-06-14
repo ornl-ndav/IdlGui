@@ -45,7 +45,7 @@
 pro populate_Q_widgets, event=event
   compile_opt idl2
   
-  debug = 1b
+  debug = 0b
   if (debug) then message = ['Populate Q widgets debug mode']
   
   Qmin_value=''
@@ -116,8 +116,14 @@ pro populate_Q_widgets, event=event
   ;sangle_min_max = (*global).sangle_min_max
   ;sangle_min = min(sangle_min_max,max=sangle_max)
   
-  calculate_sangle, event, refpix=pixel_min, sangle=sangle_min
-  calculate_sangle, event, refpix=pixel_max, sangle=sangle_max
+  calculate_sangle, event, refpix=pixel_min, sangle=sangle_min_deg
+  calculate_sangle, event, refpix=pixel_max, sangle=sangle_max_deg
+  
+  ;convert to rad
+  sangle_min_rad = convert_deg_to_rad(sangle_min_deg)
+  sangle_max_rad = convert_deg_to_rad(sangle_max_deg)
+  
+  sangle_min = min([sangle_min_rad,sangle_max_rad],max=sangle_max)
   
   if (debug) then begin
   message = [message, 'sangle_min (rad): ' + $
