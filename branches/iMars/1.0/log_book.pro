@@ -147,13 +147,19 @@ end
 ;
 ; :Keywords:
 ;    base
+;    event
+;    file_name
 ;
 ; :Author: j35
 ;-
-pro save_log_book, base=base
+pro save_log_book, base=base, event=event, file_name=file_name
   compile_opt idl2
   
+  if (keyword_set(base)) then begin
   widget_control, base, get_uvalue=global
+  endif else begin
+  widget_control, event.top, get_uvalue=global
+  endelse
   
   log_book = (*(*global).log_book)
   prefix = (*global).log_book_file_name_prefix
@@ -175,6 +181,8 @@ pro save_log_book, base=base
   
   close, 1
   free_lun, 1
+  
+  file_name = log_book_file_name
   
 end
 
