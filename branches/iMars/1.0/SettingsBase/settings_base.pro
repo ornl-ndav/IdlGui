@@ -230,6 +230,7 @@ pro settings_base_gui, wBase, $
     0: widget_control, smooth_button, /set_button
     1: widget_control, lee_button, /set_button
   endcase
+
   coeff_base = widget_base(gamma_base,$
     /row)
   label = widget_label(coeff_base,$
@@ -265,7 +266,10 @@ pro settings_base_gui, wBase, $
     value = 'Minimum',$
     /no_release, $
     uname = 'settings_minimum_uname')
-    widget_control, mean_button, /set_button
+    case ((*global).multi_selection) of
+    0: widget_control, mean_button, /set_button
+    1: widget_control, minimum_button, /set_button
+    endcase
     
   ;transformation
   yoff = 105
