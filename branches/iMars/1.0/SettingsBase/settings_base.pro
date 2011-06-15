@@ -287,7 +287,7 @@ pro settings_base_gui, wBase, $
   rotation = cw_bgroup(transformation_base,$
   ['0','90','180','270'],$
   /row,$
-  set_value=0,$
+  set_value=(*global).settings_rotation,$
   /exclusive,$
   label_left = 'Rotation:',$
   uname = 'settings_rotation_uname')
@@ -298,6 +298,9 @@ pro settings_base_gui, wBase, $
   trans_button = widget_button(trans_base,$
   value = 'Transpose',$
   uname = 'settings_transpose_uname')
+  if ((*global).settings_transpose) then begin
+  widget_control, trans_button, /set_button
+  endif
 
   bottom_row = widget_base(wBase,$
     xoffset = 270,$
