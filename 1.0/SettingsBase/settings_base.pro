@@ -90,6 +90,21 @@ pro settings_base_event, Event
         type=(*global).current_type_selected
     end
 
+  
+    ;transformation
+    ;rotation
+    widget_info(event.top, find_by_uname='settings_rotation_uname'): begin
+      validate_changes, event=event
+      preview_currently_selected_file, event=(*global_settings).main_event, $
+        type=(*global).current_type_selected    
+    end
+    ;transpose
+    widget_info(event.top, find_by_uname='settings_transpose_uname'): begin
+          validate_changes, event=event
+      preview_currently_selected_file, event=(*global_settings).main_event, $
+        type=(*global).current_type_selected
+    end
+
     else:
     
   endcase
@@ -131,6 +146,18 @@ pro validate_changes, event=event
   if (isButtonSelected(event=event, uname='settings_minimum_uname')) then $
   button_value = 1
   (*global).multi_selection = button_value
+  
+  ;transformation
+  ;rotation
+  value = getValue(event=event, uname='settings_rotation_uname')
+  (*global).settings_rotation  = value
+  ;transpose
+  if (isButtonSelected(event=event, uname='settings_transpose_uname')) then begin
+  button_value = 1
+  endif else begin
+  button_value = 0
+  endelse
+  (*global).settings_transpose = button_value
   
 end
 

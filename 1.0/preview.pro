@@ -79,7 +79,7 @@ pro preview_currently_selected_file, event=event, type=type
   display_preview_of_file, event=event, file_name=file_name_selected
   display_preview_roi, event=event
   refresh_zoom_base, event=event
-
+  
   widget_control, hourglass=0
   
 end
@@ -104,12 +104,12 @@ pro display_preview_of_file, event=event, file_name=file_name
   
   ;is_with_gamma_filtering = $
   ;  isButtonSelected(event=event,uname='with_gamma_filtering_uname')
-    
+  
   widget_control, event.top, get_uvalue=global
   
   read_fits_file, event=event, file_name=file_name, $
-  data=data, $
-  metadata=metadata
+    data=data, $
+    metadata=metadata
   if (data eq !null) then begin
     full_reset_of_preview_base, event=event
     return
@@ -126,10 +126,66 @@ pro display_preview_of_file, event=event, file_name=file_name
   
   apply_gamma_filtering, event=event, data=data
   
+  apply_transpose, event=event, data=data
+  
+  apply_rotation, event=event, data=data
+  
   new_data = congrid(data, xsize, ysize)
   tvscl, new_data
   
   (*(*global).preview_data) = data
+  
+end
+
+;+
+; :Description:
+;   This routine rotates the data by 0, 90, 180 or 270degrees
+;
+;
+;
+; :Keywords:
+;    event
+;    data
+;
+; :Author: j35
+;-
+pro apply_rotation, event=event, data=data
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  rotation_flag = (*global).settings_rotation
+  
+  case (rotation_flag) of
+    0: return
+    1: data = rot(data,90)
+    2: data = rot(data,180)
+    3: data = rot(data,270)
+  endcase
+  
+end
+
+;+
+; :Description:
+;    transpose the data if necessary
+;
+;
+;
+; :Keywords:
+;    event
+;    data
+;
+; :Author: j35
+;-
+pro apply_transpose, event=event, data=data
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  bTranspose = (*global).settings_transpose
+  if (bTranspose) then begin
+    data = transpose(data)
+  endif
   
 end
 

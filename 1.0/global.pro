@@ -86,6 +86,12 @@ compile_opt idl2
     ;['mean','min'] multi_selection
     multi_selection: 0, $
     
+    ;rotation 0:0degree, 1:90degrees, 2:180degrees, 3:270degrees
+    settings_rotation: 0, $
+    
+    ;transpose   0:no   1:yes
+    settings_transpose: 0, $
+        
     ;settings base
     settings_base_id: 0L, $
     
