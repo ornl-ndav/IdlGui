@@ -171,8 +171,8 @@ pro settings_base_gui, wBase, $
     UNAME        = 'setings_base_uname', $
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
-    scr_xsize = 255,$
-    scr_ysize = 245,$
+    scr_xsize = 380,$
+    scr_ysize = 200,$
     /align_center, $
     GROUP_LEADER = ourGroup)
     
@@ -214,13 +214,14 @@ pro settings_base_gui, wBase, $
     /editable)
     
   ;multiselection
-  yoff = 100
+  yoff = 20
+  xoff = 250
   title = widget_label(wBase,$
     value = 'Multi-selection',$
-    xoffset = 20,$
+    xoffset = xoff+10,$
     yoffset = yoff-10)
   multi_base = widget_base(wBase,$
-    xoffset = 10,$
+    xoffset = xoff,$
     xsize = 110,$
     yoffset = yoff,$
     /row,$
@@ -239,19 +240,37 @@ pro settings_base_gui, wBase, $
     uname = 'settings_minimum_uname')
     widget_control, mean_button, /set_button
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+  ;transformation
+  yoff = 105
+  xoff = 10
+  title = widget_label(wBase,$
+    value = 'Transformation',$
+    xoffset = 10+xoff,$
+    yoffset = yoff-10)
+  transformation_base = widget_base(wBase,$
+    xoffset = xoff,$
+    yoffset = yoff,$
+    /column,$
+    /base_align_center,$
+    frame = 1)
+  rotation = cw_bgroup(transformation_base,$
+  ['0','90','180','270'],$
+  /row,$
+  set_value=0,$
+  /exclusive,$
+  label_left = 'Rotation:',$
+  uname = 'settings_rotation_uname')
+  trans_base = widget_base(transformation_base,$
+  /nonexclusive,$
+  /align_left, $
+  /row)
+  trans_button = widget_button(trans_base,$
+  value = 'Transpose',$
+  uname = 'settings_transpose_uname')
+
   bottom_row = widget_base(wBase,$
-    xoffset = 160,$
-    yoffset = 200,$
+    xoffset = 270,$
+    yoffset = 150,$
     /base_align_right,$
     /row)
   ok = widget_button(bottom_row,$
