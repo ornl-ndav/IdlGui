@@ -57,6 +57,7 @@ pro settings_base_event, Event
       widget_control, (*global_settings)._base, /destroy
     end
     
+
     ;gamma filtering buttons
     widget_info(event.top, find_by_uname='settings_lee_uname'): begin
       validate_changes, event=event
@@ -70,6 +71,20 @@ pro settings_base_event, Event
     end
     ;gamma filtering coeff
     widget_info(event.top, find_by_uname='gamma_filtering_coeff_uname'): begin
+      validate_changes, event=event
+      preview_currently_selected_file, event=(*global_settings).main_event, $
+        type=(*global).current_type_selected
+    end
+
+    ;mean or min multi-selection
+    ;mean
+    widget_info(event.top, find_by_uname='settings_mean_uname'): begin
+      validate_changes, event=event
+      preview_currently_selected_file, event=(*global_settings).main_event, $
+        type=(*global).current_type_selected
+    end
+    ;minimum
+    widget_info(event.top, find_by_uname='settings_minimum_uname'): begin
       validate_changes, event=event
       preview_currently_selected_file, event=(*global_settings).main_event, $
         type=(*global).current_type_selected
@@ -108,6 +123,14 @@ pro validate_changes, event=event
   if (isButtonSelected(event=event, uname='settings_lee_uname')) then $
     button_value = 1
   (*global).gamma_filtering = button_value
+  
+  ;min or mean multi-selection
+  ;mean
+  if (isButtonSelected(event=event, uname='settings_mean_uname')) then $
+  button_value = 0
+  if (isButtonSelected(event=event, uname='settings_minimum_uname')) then $
+  button_value = 1
+  (*global).multi_selection = button_value
   
 end
 
@@ -149,7 +172,7 @@ pro settings_base_gui, wBase, $
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
     scr_xsize = 255,$
-    scr_ysize = 145,$
+    scr_ysize = 245,$
     /align_center, $
     GROUP_LEADER = ourGroup)
     
@@ -190,9 +213,45 @@ pro settings_base_gui, wBase, $
     value = strcompress((*global).gamma_filtering_coeff,/remove_all),$
     /editable)
     
+  ;multiselection
+  yoff = 100
+  title = widget_label(wBase,$
+    value = 'Multi-selection',$
+    xoffset = 20,$
+    yoffset = yoff-10)
+  multi_base = widget_base(wBase,$
+    xoffset = 10,$
+    xsize = 110,$
+    yoffset = yoff,$
+    /row,$
+    /base_align_center,$
+    frame = 1)
+  button_base = widget_base(multi_base,$
+    /column,$
+    /exclusive)
+  mean_button = widget_button(button_base,$
+    value = 'Mean',$
+    /no_release, $
+    uname = 'settings_mean_uname')
+  minimum_button = widget_button(button_base,$
+    value = 'Minimum',$
+    /no_release, $
+    uname = 'settings_minimum_uname')
+    widget_control, mean_button, /set_button
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
   bottom_row = widget_base(wBase,$
     xoffset = 160,$
-    yoffset = 100,$
+    yoffset = 200,$
     /base_align_right,$
     /row)
   ok = widget_button(bottom_row,$

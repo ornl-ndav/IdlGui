@@ -445,7 +445,7 @@ pro create_output_fits_file, event=event, $
 end
 
 ;+
-; :Description:
+; :Description:,
 ;    Create the png output file
 ;
 ;

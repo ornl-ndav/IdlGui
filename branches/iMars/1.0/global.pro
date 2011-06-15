@@ -77,8 +77,11 @@ compile_opt idl2
     log_book_id: 0L, $
     
     ;['smooth','lee filtering']
-    gamma_filtering: 0, $ 
+    gamma_filtering: 0, $
     gamma_filtering_coeff: 5, $
+    
+    ;['mean','min'] multi_selection
+    multi_selection: 0, $
     
     ;settings base
     settings_base_id: 0L, $

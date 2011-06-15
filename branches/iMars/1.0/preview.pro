@@ -57,6 +57,7 @@ pro preview_currently_selected_file, event=event, type=type
   endelse
   
   file_name_selected = get_file_selected_of_type(event=event, type=type)
+  if (file_name_selected[0] eq '') then return
   file_base_name = file_basename(file_name_selected)
   
   case (type) of
@@ -101,8 +102,8 @@ pro display_preview_of_file, event=event, file_name=file_name
   widget_control, id_draw, get_value=id_value
   wset,id_value
   
-  is_with_gamma_filtering = $
-    isButtonSelected(event=event,uname='with_gamma_filtering_uname')
+  ;is_with_gamma_filtering = $
+  ;  isButtonSelected(event=event,uname='with_gamma_filtering_uname')
     
   widget_control, event.top, get_uvalue=global
   
