@@ -110,10 +110,10 @@ pro command_line_generator_for_ref_m_broad_peak, event
   
     norm_pola_state = strcompress((*global).norm_pola_state,/remove_all)
     CASE (norm_pola_state) of
-      0: norm_path = 'Off_Off'
-      1: norm_path = 'Off_On'
-      2: norm_path = 'On_Off'
-      3: norm_path = 'On_On'
+      '0': norm_path = 'Off_Off'
+      '1': norm_path = 'Off_On'
+      '2': norm_path = 'On_Off'
+      '3': norm_path = 'On_On'
       else: norm_path = '-?'
     ENDCASE
     norm_spin_state_path = ['entry-' + norm_path]
@@ -121,10 +121,10 @@ pro command_line_generator_for_ref_m_broad_peak, event
     
     data_pola_state = strcompress((*global).data_pola_state,/remove_all)
     CASE (data_pola_state) of
-      0: data_path = 'Off_Off'
-      1: data_path = 'Off_On'
-      2: data_path = 'On_Off'
-      3: data_path = 'On_On'
+      '0': data_path = 'Off_Off'
+      '1': data_path = 'Off_On'
+      '2': data_path = 'On_Off'
+      '3': data_path = 'On_On'
       else: data_path = '-?'
     ENDCASE
     data_spin_state_path = ['entry-' + data_path]
