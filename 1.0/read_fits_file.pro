@@ -50,6 +50,9 @@ pro read_fits_file, event=event, $
     metadata=metadata
   compile_opt idl2
   
+  widget_control, event.top, get_uvalue=global
+  multi_selection = (*global).multi_selection
+  
   catch, error
   if (error ne 0) then begin
     catch,/cancel
@@ -75,19 +78,26 @@ pro read_fits_file, event=event, $
       
       _data = mrdfits(file_name[_index], 0, header, /fscale, /silent)
       
-;      if (_index eq 3) then begin
-;         message, ''
-;      endif
-      
       if (_index eq 0) then begin
         data = _data
         metadata = header
       endif else begin
-        data += _data
+      
+        if (multi_selection eq 1) then begin ;minimum
+          index = where(data gt _data)
+          data[index] = _data[index]
+        endif else begin
+          data += _data
+        endelse
+        
       endelse
       
       _index++
     endwhile
+    
+    if (multi_selection eq 0) then begin ;mean
+      data /= sz
+    endif
     
   endelse
   

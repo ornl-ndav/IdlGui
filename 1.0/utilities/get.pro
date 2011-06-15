@@ -285,8 +285,12 @@ function get_file_selected_of_type, event=event, type=type
     'dark_field': begin
       uname='dark_field_table'
     end
+    else: begin
+    uname = ''
+    end
   endcase
   
+  if (uname eq '') then return, ''
   file_name_selected = get_file_selected(event=event, uname=uname)
   
   return, file_name_selected
