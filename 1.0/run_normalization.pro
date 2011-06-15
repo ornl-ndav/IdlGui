@@ -82,6 +82,31 @@ pro run_normalization, event=event
   widget_control, event.top, get_uvalue=global
   widget_control, /hourglass
   
+  catch, error
+  if (error ne 0) then begin
+    catch,/cancel
+    widget_control, hourglass=0
+    message = ['Normalization failed !!!!']
+    log_book_update, event, message=message
+    
+    save_log_book, event=event, file_name=file_name
+    
+    kill_normalized_plot, event=event
+    progress_bar, event=event, /close
+    
+    title = 'Normalization FAILED!'
+    message = ['Please check log book or send ' + file_name, $
+      'to j35@ornl.gov']
+    widget_id = widget_info(event.top, find_by_uname='MAIN_BASE')
+    result = dialog_message(message, $
+      /error, $
+      title=title,$
+      dialog_parent=widget_id,$
+      /center)
+          
+    return
+  endif
+  
   message = ['----------------------------','Start normalization using:']
   
   ;collect list of data, open beam and dark field files
@@ -320,11 +345,10 @@ pro run_normalization, event=event
   log_book_update, event, message=message
   
   kill_normalized_plot, event=event
-
   progress_bar, event=event, /close
   
   widget_control, hourglass=0
-
+  
   ;list all the files that have been created (in the log book and in a
   ;dialog_message)
   title = strcompress(nbr_output,/remove_all) + ' files have been created!'
@@ -332,10 +356,10 @@ pro run_normalization, event=event
   message = ['Files have been created in: ' + output_folder]
   widget_id = widget_info(event.top, find_by_uname='MAIN_BASE')
   result = dialog_message(message, $
-  /information, $
-  title=title,$
-  dialog_parent=widget_id,$
-  /center)
+    /information, $
+    title=title,$
+    dialog_parent=widget_id,$
+    /center)
     
 end
 
