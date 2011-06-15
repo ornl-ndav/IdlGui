@@ -101,5 +101,6 @@ pro retrieve_beamdivergence_settings, event
   
   (*global).center_pixel = center_pixel
   (*global).detector_resolution = spatial_resolution
+  (*global).current_center_pixel = center_pixel
   
 end

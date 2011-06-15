@@ -541,6 +541,7 @@ if (isWithBeamDivergence(event)) then begin
 
 cmd += ' --beamdiv-corr'
 
+
 center_pixel = strcompress((*global).current_center_pixel,/remove_all)
 if (center_pixel eq 'N/A') then begin
 center_pixel = '?'
