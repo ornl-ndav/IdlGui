@@ -340,10 +340,15 @@ end
 ; :Keywords:
 ;    event
 ;    full_file_name
+;    prefix   ex:'N_'
+;    suffix   ex:'tiff'
 ;
 ; :Author: j35
 ;-
-function get_base_output_file, event=event, full_file_name=full_file_name
+function get_base_output_file, event=event, $
+    full_file_name=full_file_name, $
+    prefix=prefix, $
+    suffix=suffix
   compile_opt idl2
   
   ;determine the new output file name
@@ -362,7 +367,7 @@ function get_base_output_file, event=event, full_file_name=full_file_name
   endelse
   
   ;new output file name
-  output_file = output_folder + _file
+  output_file = output_folder + prefix + _file + '.' + suffix
   
   return, output_file
 end
@@ -394,10 +399,11 @@ pro create_output_tiff_file, event=event, $
   endif
   
   ;get base_output_file
-  base_output_file = get_base_output_file(event=event, $
-    full_file_name = input_file_name)
-  output_file_name = base_output_file + '_normalized.tif'
-  
+  output_file_name = get_base_output_file(event=event, $
+    full_file_name = input_file_name, $
+    prefix = 'N_', $
+    suffix = 'tif')
+    
   write_tiff, output_file_name, data
   
 end
@@ -429,10 +435,11 @@ pro create_output_fits_file, event=event, $
   endif
   
   ;get base_output_file
-  base_output_file = get_base_output_file(event=event, $
-    full_file_name = input_file_name)
-  output_file_name = base_output_file + '_normalized.fits'
-  
+  output_file_name = get_base_output_file(event=event, $
+    full_file_name = input_file_name,$
+    prefix = 'N_', $
+    suffix = 'fits')
+    
   fits_write, output_file_name, data
   
 end
@@ -464,10 +471,11 @@ pro create_output_png_file, event=event, $
   endif
   
   ;get base_output_file
-  base_output_file = get_base_output_file(event=event, $
-    full_file_name = input_file_name)
-  output_file_name = base_output_file + '_normalized.png'
-  
+  output_file_name = get_base_output_file(event=event, $
+    full_file_name = input_file_name, $
+    prefix = 'N_', $
+    suffix = 'png')
+    
   widget_control, event.top, get_uvalue=global
   id =  (*global).normalized_plot_base_id
   id_draw = widget_info(id, find_by_uname='normalized_draw')
