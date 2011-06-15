@@ -75,6 +75,9 @@ compile_opt idl2
     
     log_book: ptr_new(0L), $
     log_book_id: 0L, $
+    log_book_path: '~/', $
+    log_book_file_name_prefix: '.iMars',$
+    log_book_file_name_suffix: 'log',$
     
     ;['smooth','lee filtering']
     gamma_filtering: 0, $

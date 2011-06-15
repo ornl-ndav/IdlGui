@@ -45,6 +45,8 @@
 pro iMars_cleanup, tlb
   compile_opt idl2
   
+  save_log_book, base=tlb
+  
   kill_any_opened_zoom_base, base=tlb
   
   widget_control, tlb, get_uvalue=global, /no_copy

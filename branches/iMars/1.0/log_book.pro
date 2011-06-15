@@ -130,11 +130,52 @@ pro reset_log_book, event
   
   widget_control, event.top, get_uvalue=global
   
-    ;initialize log book message
+  ;initialize log book message
   log_book = ['------------------------------------------------------------',$
     'Log Book of iMars']
   (*(*global).log_book) = log_book
   
   log_book_update, event, message='Reset log book'
-
+  
 end
+
+;+
+; :Description:
+;    This routines save the log book when the application is terminated
+;
+;
+;
+; :Keywords:
+;    base
+;
+; :Author: j35
+;-
+pro save_log_book, base=base
+  compile_opt idl2
+  
+  widget_control, base, get_uvalue=global
+  
+  log_book = (*(*global).log_book)
+  prefix = (*global).log_book_file_name_prefix
+  suffix = (*global).log_book_file_name_suffix
+  path = (*global).log_book_path
+  time_stamp =  GenerateIsoTimeStamp()
+  log_book_file_name = path + prefix + '_' + time_stamp + '.' + suffix
+  
+  openw, 1, log_book_file_name
+  
+  sz = n_elements(log_book)
+  _index=0
+  while (_index lt sz) do begin
+  
+    printf, 1, log_book[_index]
+    
+    _index++
+  endwhile
+  
+  close, 1
+  free_lun, 1
+  
+end
+
+
