@@ -145,10 +145,13 @@ function IDLconfiguration::getConfig, event
     isButtonSelected(event=event, uname='output_working_with_nexus_plot'),$
     is_output_working_with_rtof_plot_checked: $
     isButtonSelected(event=event, uname='output_working_with_rtof_plot'),$
-    output_format_index_selected: $
-    getDroplistIndex(event=event, uname='output_format'),$
+    
+    ;    output_format_index_selected: $
+    ;add code here if droplist contains more than 1 entry
+    
     is_email_switch_checked: $
     isButtonSelected(event=event, uname='email_switch_uname'),$
+    
     email_to_uname: getValue(event=event, $
     uname='email_to_uname'),$
     email_subject_uname: getValue(event=event, $

@@ -40,7 +40,7 @@
 ;
 ; :Params:
 ;    event
-;    
+;
 ; :Keywords:
 ;   message
 ;
@@ -50,11 +50,11 @@ pro log_book_update, event, message=message
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global
-
+  
   if (keyword_set(message)) then begin
-  new_message = message
+    new_message = message
   endif else begin
-  new_message = (*(*global).new_log_book_message)
+    new_message = (*(*global).new_log_book_message)
   endelse
   
   time = get_time()
@@ -63,10 +63,56 @@ pro log_book_update, event, message=message
   
   full_log_book = [new_message, full_log_book]
   (*(*global).full_log_book) = full_log_book
-
+  
   view_log_book_id = (*global).view_log_book_id
   if (widget_info(view_log_book_id,/valid_id) eq 0) then return
   
   widget_control, view_log_book_id, set_value=full_log_book
+  
+end
+
+;+
+; :Description:
+;    This routines brings to life the log book
+;
+;
+;
+; :Keywords:
+;    event
+;
+; :Author: j35
+;-
+pro display_log_book, event=event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  view_log_book_id = (*global).view_log_book_id
+  if (widget_info(view_log_book_id, /valid_id) eq 0) then begin
+    groupID = widget_info(event.top, find_by_uname='main_base')
+    
+    id = widget_info(wWidget, find_by_uname='main_base')
+    geometry = widget_info(id,/geometry)
+    
+    main_base_xoffset = geometry.xoffset
+    main_base_yoffset = geometry.yoffset
+    main_base_xsize = geometry.xsize
+    
+    xoffset = main_base_xoffset + main_base_xsize
+    yoffset = main_base_yoffset
+    
+    text = (*(*global).full_log_book)
+    
+    xdisplayfile, 'LogBook', $
+      text=text,$
+      height = 70,$
+      title='Live Log Book',$
+      group = groupID, $
+      wtext=view_log_book_id, $
+      xoffset = xoffset, $
+      yoffset = yoffset
+    (*global).view_log_book_id = view_log_book_id
+    
+  endif
   
 end

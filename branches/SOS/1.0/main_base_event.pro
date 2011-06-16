@@ -104,35 +104,7 @@ PRO main_base_event, Event
     ;MENU
     ;view log book button
     widget_info(wWidget, find_by_uname='view_log_book_switch'): begin
-    
-      view_log_book_id = (*global).view_log_book_id
-      if (widget_info(view_log_book_id, /valid_id) eq 0) then begin
-        groupID = widget_info(event.top, find_by_uname='main_base')
-        
-        id = widget_info(wWidget, find_by_uname='main_base')
-        geometry = widget_info(id,/geometry)
-        
-        main_base_xoffset = geometry.xoffset
-        main_base_yoffset = geometry.yoffset
-        main_base_xsize = geometry.xsize
-        
-        xoffset = main_base_xoffset + main_base_xsize
-        yoffset = main_base_yoffset
-        
-        text = (*(*global).full_log_book)
-        
-        xdisplayfile, 'LogBook', $
-          text=text,$
-          height = 70,$
-          title='Live Log Book',$
-          group = groupID, $
-          wtext=view_log_book_id, $
-          xoffset = xoffset, $
-          yoffset = yoffset
-        (*global).view_log_book_id = view_log_book_id
-        
-      endif
-      
+      display_log_book, event=event
     end
     
     ;tab event
