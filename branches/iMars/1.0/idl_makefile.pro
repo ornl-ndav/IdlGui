@@ -109,3 +109,4 @@ cd, CurrentFolder
 .run MainBaseEvent.pro
 .run iMars_cleanup.pro
 .run iMars.pro
+.run iMars.cfg

@@ -32,13 +32,12 @@
 ;
 ;==============================================================================
 
-FUNCTION getGlobal
+function getGlobal
 compile_opt idl2
 
-  file = OBJ_NEW('idlxmlparser', '.iMars.cfg')
-  APPLICATION = file->getValue(tag=['configuration','application'])
-  VERSION = file->getValue(tag=['configuration','version'])
-  
+  ;retrieve version and name of application
+  configuration, version=version, application=application
+
   ;get ucams of user if running on linux
   ;and set ucams to 'j35' if running on darwin
   IF (!VERSION.os EQ 'darwin') THEN BEGIN
