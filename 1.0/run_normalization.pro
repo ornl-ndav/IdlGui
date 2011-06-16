@@ -353,7 +353,7 @@ pro run_normalization, event=event
   ;dialog_message)
   title = strcompress(nbr_output,/remove_all) + ' files have been created!'
   output_folder = getValue(event=event,uname='output_folder_button')
-  message = ['Files have been created in: ' + output_folder]
+  message = ['Files have been created in: ' + output_folder + '            ']
   widget_id = widget_info(event.top, find_by_uname='MAIN_BASE')
   result = dialog_message(message, $
     /information, $
