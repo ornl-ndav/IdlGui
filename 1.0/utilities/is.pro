@@ -137,3 +137,28 @@ function isAutomaticLoadingOn, event
   return, button_selected
   
 end
+
+;+
+; :Description:
+;    Returns 1 if the base is visible, 0 otherwise
+;
+;
+;
+; :Keywords:
+;    event
+;    uname
+;
+; :Returns:
+;   1 for mapped
+;   0 for not mapped
+;
+; :Author: j35
+;-
+function isBaseMapped, event=event, uname=uname
+  compile_opt idl2
+  
+  id = widget_info(event.top, find_by_uname=uname)
+  return, widget_info(id, /map)
+  
+end
+

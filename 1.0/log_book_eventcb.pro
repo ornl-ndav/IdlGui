@@ -91,7 +91,7 @@ pro display_log_book, event=event
   if (widget_info(view_log_book_id, /valid_id) eq 0) then begin
     groupID = widget_info(event.top, find_by_uname='main_base')
     
-    id = widget_info(wWidget, find_by_uname='main_base')
+    id = widget_info(event.top, find_by_uname='main_base')
     geometry = widget_info(id,/geometry)
     
     main_base_xoffset = geometry.xoffset

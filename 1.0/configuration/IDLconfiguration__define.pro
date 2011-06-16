@@ -126,7 +126,10 @@ function IDLconfiguration::getConfig, event
     uname='rtof_d_sd_uname'), $
     rtof_d_md_uname: getValue(event=event, $
     uname='rtof_d_md_uname'), $
-    
+    is_rtof_nexus_base_mapped: $
+    isBaseMapped(event=event, uname='rtof_nexus_base')
+    is_rtof_configuration_base_mapped: $
+    isBaseMapped(event=event, uname='rtof_configuration_base'), $
     ;general settings
     bins_qx: getValue(event=event, $
     uname='bins_qx'),$
@@ -156,6 +159,8 @@ function IDLconfiguration::getConfig, event
     uname='email_to_uname'),$
     email_subject_uname: getValue(event=event, $
     uname='email_subject_uname'), $
+    is_email_base_mapped: $
+    isBaseMapped(event=event,uname='email_base'), $
     
     is_log_book_enabled: isLogBookEnabled(event=event), $
     log_book: (*(*global).full_log_book)}

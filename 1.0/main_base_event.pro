@@ -161,6 +161,7 @@ PRO main_base_event, Event
     
     ;Browse data button
     widget_info(wWidget, find_by_uname='data_browse_button'): begin
+      widget_control, /hourglass
       browse_data_button_event, event
       update_main_interface, event=event
       ;retrieve distances from first data nexus file loaded
@@ -168,6 +169,7 @@ PRO main_base_event, Event
       retrieve_detector_configuration, event=event
       refresh_configuration_table, event=event
       check_go_button, event=event
+      widget_control, hourglass=0
     end
     
     ;Normalization run number text field
