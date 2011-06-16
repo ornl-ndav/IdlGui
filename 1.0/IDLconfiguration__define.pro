@@ -92,7 +92,6 @@ function IDLconfiguration::getConfig, event
   
   widget_control, event.top, get_uvalue=global
   
-  ;1) Input
   _structure = {list_data_files: $
     getValue(event=event,uname='data_files_table'),$
     list_open_beam_files: $
@@ -114,9 +113,16 @@ function IDLconfiguration::getConfig, event
     
     type: (*global).current_type_selected, $
     
+    ;settings
     ;gamma filtering
     gamma_filtering: (*global).gamma_filtering, $
     gamma_filtering_coeff: (*global).gamma_filtering_coeff, $
+    ;mean/minimum
+    mean_min_multi_selection: (*global).multi_selection, $
+    ;transformation (0, 90, 180 or 270degres)
+    settings_rotation: (*global).settings_rotation, $
+    ;transpose
+    settings_transpose: (*global).settings_transpose, $
     
     roi_loaded: getValue(event=event,$
     uname='roi_text_field_uname'),$

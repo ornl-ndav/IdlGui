@@ -235,15 +235,22 @@ pro repopulate_gui, event, _structure
     
   ;name of file currently previewed
   putValue, event=event, 'preview_file_name_label', _structure.preview_file
-    
+  
   ;is with gamma or not
   setButton, event=event, uname='with_gamma_filtering_uname', $
     _structure.is_with_gamma_filtering
     
+  ;settings
   ;gamma filtering
-   (*global).gamma_filtering = _structure.gamma_filtering
-   (*global).gamma_filtering_coeff = _structure.gamma_filtering_coeff
-
+  (*global).gamma_filtering = _structure.gamma_filtering
+  (*global).gamma_filtering_coeff = _structure.gamma_filtering_coeff
+  ;mean/minimum
+  (*global).multi_selection = _structure.mean_min_multi_selection
+  ;transformation (0, 90, 180 or 270degres)
+  (*global).settings_rotation = _structure.settings_rotation
+  ;transpose
+  (*global).settings_transpose = _structure.settings_transpose
+  
   ;roi
   putValue, event=event, 'roi_text_field_uname', _structure.roi_loaded
   
@@ -258,8 +265,8 @@ pro repopulate_gui, event, _structure
   setButton, event=event, uname='format_png_button', $
     _structure.is_png_selected
     
-    ;display preview of file selected
+  ;display preview of file selected
   type = _structure.type
   preview_currently_selected_file, event=event, type=type
-    
+  
 end
