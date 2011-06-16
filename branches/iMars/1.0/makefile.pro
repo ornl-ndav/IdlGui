@@ -10,6 +10,7 @@ resolve_routine, "xloadct", /either
 resolve_routine, "xregistered", /either
 resolve_routine, "leefilt", /either
 resolve_routine, "rot", /either
+resolve_routine, "read_png", /either
 
 ;resolve_all
 
