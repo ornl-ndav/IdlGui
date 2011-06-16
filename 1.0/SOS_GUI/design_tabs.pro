@@ -199,7 +199,7 @@ pro design_tabs, MAIN_BASE, global
   ;tab0 of nexus ------------------------------------------------------------
   nexus_tab1 = widget_base(nexus_tab,$
     uname='nexus_tab1',$
-    title = '  Configuration  ')
+    title = '  Settings  ')
     
 ;  ;for REF_M only, spin state selection and metadata table
 ;  if ((*global).instrument eq 'REF_M') then begin
@@ -492,7 +492,7 @@ pro design_tabs, MAIN_BASE, global
       /row)
       
     label = widget_label(row2, $
-      value = 'Geometry file:  ')
+      value = 'NeXus file:  ')
     value = widget_text(row2, $
       value = '', $
       xsize = 130, $
@@ -711,7 +711,7 @@ pro design_tabs, MAIN_BASE, global
   
   base1 = widget_base(tabs,$
     uname = 'tab2',$
-    title = '    GENERAL CONFIGURATION    ')
+    title = '    GENERAL SETTINGS    ')
     
   _base1 = widget_base(base1,$
     xoffset= 160,$

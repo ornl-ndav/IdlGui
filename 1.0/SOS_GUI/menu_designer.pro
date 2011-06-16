@@ -35,6 +35,19 @@
 pro design_view_menu, bar, global
   compile_opt idl2
     
+  ;configuration
+  config = widget_button(bar,$
+  value = 'Configuration',$
+  /menu)
+  
+  load = widget_button(config,$
+  value = 'Load...',$
+  uname = 'configuration_load_uname')
+  
+  save = widget_button(config,$
+  value = 'Save...',$
+  uname = 'configuration_save_uname')
+    
   mPlot = widget_button(bar, $
     value = 'Log book',$
     /menu)

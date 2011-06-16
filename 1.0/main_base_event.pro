@@ -52,6 +52,14 @@ PRO main_base_event, Event
   
   case (Event.id) of
   
+    widget_info(wWidget, find_by_uname='configuration_save_uname'): begin
+      save_configuration, event=event
+    end
+    
+    widget_info(wWidget, find_by_uname='configuration_load_uname'): begin
+      load_configuration, event=event
+    end
+    
     widget_info(wWidget, find_by_uname='main_base'): begin
     
       ;get size of widget_table
