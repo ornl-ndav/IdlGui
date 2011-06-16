@@ -34,6 +34,55 @@
 
 ;+
 ; :Description:
+;    This function is going to remove from the new browsed list of files
+;    the files that have already been found in the previous list
+;
+;
+;
+; :Keywords:
+;    event
+;    current_list
+;    new_list
+;
+; :Author: j35
+;-
+function remove_non_uniq_files, event=event, $
+    current_list=current_list, $
+    new_list=new_list
+  compile_opt idl2
+  
+  _tmp_new_list = !null
+  _tmp_duplicated_files = !null
+  sz = n_elements(new_list)
+  _index=0
+  while (_index lt sz) do begin
+    _new_file = new_list[_index]
+    result = where (_new_file eq current_list, nbr)
+    if (nbr eq 0) then begin
+      _tmp_new_list = [_tmp_new_list, _new_file]
+    endif else begin
+      _tmp_duplicated_files = [_tmp_duplicated_files, _new_file]
+    endelse
+    _index++
+  endwhile
+  new_list = _tmp_new_list
+  
+  nbr_duplicated = n_elements(_tmp_duplicated_files)
+  if (nbr_duplicated gt 0) then begin
+    message = ['List of duplicated files that will not be loaded:']
+    _i=0
+    while (_i lt nbr_duplicated) do begin
+      message = [message, ' -> ' + _tmp_duplicated_files[_i]]
+      _i++
+    endwhile
+    log_book_update, event, message=message
+  endif
+  
+  return, [current_list, _tmp_new_list]
+end
+
+;+
+; :Description:
 ;    browse for the files
 ;
 ;
@@ -85,17 +134,20 @@ pro browse_files, event=event, file_type=file_type
     
     ;get list of files
     table = getValue(event=event,uname=_table_uname)
-    
+    ;go from [1,n] to [n]
     table = reform(table)
     
     id = widget_info(event.top, find_by_uname=_table_uname)
     
     if (table[0] eq '') then begin
       new_table = [list_file]
-    widget_control, id, insert_rows=n_elements(list_file)-1
+      widget_control, id, insert_rows=n_elements(list_file)-1
     endif else begin
-      new_table = [table, list_file]
-          widget_control, id, insert_rows=n_elements(list_file)
+      new_table = remove_non_uniq_files(event=event, $
+        current_list=table, $
+        new_list=list_file)
+      ;new_table = [table, list_file]
+      widget_control, id, insert_rows=n_elements(list_file)
     endelse
     
     _new_table = new_table
@@ -103,14 +155,14 @@ pro browse_files, event=event, file_type=file_type
     
     ;replace table with new list
     putValue, event=event, _table_uname, table
-
+    
     ;add message to log book
     message = ['Browsed for new ' + _title + ':']
     sz = n_elements(list_file)
     index=0
     while (index lt sz) do begin
-    message = [message, ' -> ' + list_file[index]]
-    index++
+      message = [message, ' -> ' + list_file[index]]
+      index++
     endwhile
     log_book_update, event, message=message
     
