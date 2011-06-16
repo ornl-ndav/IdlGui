@@ -60,7 +60,8 @@ pro load_configuration, event=event
     
   if (cfg_full_file_name[0] eq '') then return
   
-  catch, error
+  ;catch, error
+  error = 0
   if (error ne 0) then begin
     catch,/cancel
     
@@ -148,8 +149,7 @@ pro save_configuration, event=event
   cfg_structure = retrieve_cfg_structure(event)
   (*global).config_path = new_path
   
-  ;catch, error
-  error = 0
+  catch, error
   if (error ne 0) then begin
     catch,/cancel
     
@@ -200,74 +200,117 @@ pro repopulate_gui, event, _structure
   
   widget_control, event.top, get_uvalue=global
   
-  ;reset tables
-  reset_table, event=event, uname = 'data_files_table'
-  reset_table, event=event, uname = 'open_beam_table'
-  reset_table, event=event, uname = 'dark_field_table'
+  ;working with NeXus
+  data_norm_table = _structure.data_norm_table
+  putValue, event=event, 'tab1_table', data_norm_table
+  (*global).input_path = _structure.input_path
   
-  ;data files
-  data_files = _structure.list_data_files
-  id = widget_info(event.top, find_by_uname='data_files_table')
-  widget_control, id, insert_rows=n_elements(data_files)-1
-  table = reform(data_files,1,n_elements(data_files))
-  putValue, event=event, 'data_files_table', table
+  ;settings base
+  putValue, event=event, 'ranges_qx_min', _structure.ranges_qx_min
+  putValue, event=event, 'ranges_qz_min', _structure.ranges_qz_min
+  putValue, event=event, 'tof_min', _structure.tof_min
+  putValue, event=event, 'ranges_qx_max', _structure.ranges_qx_max
+  putValue, event=event, 'ranges_qz_max', _structure.ranges_qz_max
+  putValue, event=event, 'tof_max', _structure.tof_max
   
-  ;open beam
-  open_beam_files = _structure.list_open_beam_files
-  id = widget_info(event.top, find_by_uname='open_beam_table')
-  widget_control, id, insert_rows=n_elements(open_beam_files)-1
-  table = reform(open_beam_files,1,n_elements(open_beam_files))
-  putValue, event=event, 'open_beam_table', table
+  putValue, event=event, 'center_pixel', _structure.center_pixel
+  putValue, event=event, 'pixel_size', _structure.pixel_size
   
-  ;dark field
-  df_files = _structure.list_dark_field_files
-  id = widget_info(event.top, find_by_uname='dark_field_table')
-  widget_control, id, insert_rows=n_elements(df_files)-1
-  table = reform(df_files,1,n_elements(df_files))
-  putValue, event=event, 'dark_field_table', table
-  
-  ;file currently selected
-  select_file, event=event, uname='data_files_table', $
-    _structure.selected_data_file
-  select_file, event=event, uname='open_beam_table', $
-    _structure.selected_open_beam_file
-  select_file, event=event, uname='dark_field_table', $
-    _structure.selected_dark_field_file
+  putValue, event=event, 'detector_dimension_x', $
+    _structure.detector_dimension_x
+  putValue, event=event, 'detector_dimension_y', $
+    _structure.detector_dimension_y
     
-  ;name of file currently previewed
-  putValue, event=event, 'preview_file_name_label', _structure.preview_file
+  putValue, event=event, 'pixel_min', _structure.pixel_min
+  putValue, event=event, 'pixel_max', _structure.pixel_max
   
-  ;is with gamma or not
-  setButton, event=event, uname='with_gamma_filtering_uname', $
-    _structure.is_with_gamma_filtering
+  putValue, event=event, 'd_sd_uname', _structure.d_sd
+  putValue, event=event, 'd_md_uname', _structure.d_md
+  
+  putValue, event=event, 'rtof_file_text_field_uname', $
+    _structure.rtof_file_text_field
+  putValue, event=event, 'rtof_nexus_geometry_file', $
+    _structure.rtof_nexus_geometry_file
+  putValue, event=event, 'rtof_ranges_qx_min', $
+    _structure.rtof_ranges_qx_min
+  putValue, event=event, 'rtof_ranges_qz_min', $
+    _structure.rtof_ranges_qz_min
+  putValue, event=event, 'rtof_tof_min', $
+    _structure.rtof_tof_min
+  putValue, event=event, 'rtof_ranges_qx_max', $
+    _structure.rtof_ranges_qx_max
+  putValue, event=event, 'rtof_ranges_qz_max', $
+    _structure.rtof_ranges_qz_max
+  putValue, event=event, 'rtof_tof_max', $
+    _structure.rtof_tof_max
+  putValue, event=event, 'rtof_center_pixel', $
+    _structure.rtof_center_pixel
+  putValue, event=event, 'rtof_pixel_size', $
+    _structure.rtof_pixel_size
+  putValue, event=event, 'rtof_theta_value', $
+    _structure.rtof_theta_value
+  putValue, event=event, 'rtof_theta_units', $
+    _structure.rtof_theta_units
+  putValue, event=event, 'rtof_twotheta_value', $
+    _structure.rtof_twotheta_value
+  putValue, event=event, 'rtof_twotheta_units', $
+    _structure.rtof_twotheta_units
+  putValue, event=event, 'rtof_pixel_min', $
+    _structure.rtof_pixel_min
+  putValue, event=event, 'rtof_pixel_max', $
+    _structure.rtof_pixel_max
+  putValue, event=event, 'rtof_d_sd_uname', $
+    _structure.rtof_d_sd_uname
+  putValue, event=event, 'rtof_d_md_uname', $
+    _structure.rtof_d_md_uname
     
-  ;settings
-  ;gamma filtering
-  (*global).gamma_filtering = _structure.gamma_filtering
-  (*global).gamma_filtering_coeff = _structure.gamma_filtering_coeff
-  ;mean/minimum
-  (*global).multi_selection = _structure.mean_min_multi_selection
-  ;transformation (0, 90, 180 or 270degres)
-  (*global).settings_rotation = _structure.settings_rotation
-  ;transpose
-  (*global).settings_transpose = _structure.settings_transpose
-  
-  ;roi
-  putValue, event=event, 'roi_text_field_uname', _structure.roi_loaded
-  
-  ;output folder
-  putValue, event=event, 'output_folder_button', _structure.output_folder
-  
-  ;output file format
-  setButton, event=event, uname='format_tiff_button', $
-    _structure.is_tiff_selected
-  setButton, event=event, uname='format_fits_button', $
-    _structure.is_fits_selected
-  setButton, event=event, uname='format_png_button', $
-    _structure.is_png_selected
+  ;General sittings
+  putValue, event=event, 'bins_qx', $
+    _structure.bins_qx
+  putValue, event=event, 'bins_qz', $
+    _structure.bins_qz
+  putValue, event=event, 'qxwidth_uname', $
+    _structure.qxwidth_uname
+  putValue, event=event, 'tnum_uname', $
+    _structure.tnum_uname
     
-  ;display preview of file selected
-  type = _structure.type
-  preview_currently_selected_file, event=event, type=type
+  ;output tab
+  (*global).output_path = _structure.output_path
+  putValue, event=event, 'output_file_name', $
+    _structure.output_file_name
+  if (_structure.is_output_working_with_nexus_plot_checked) then begin
+    setButton, event=event, uname='output_working_with_nexus_plot'
+  endif else begin
+    setButton, event=event, uname='output_working_with_nexus_plot', $
+      /reverse_flag
+  endelse
+  
+  if (_structure.is_output_working_with_rtof_plot_checked) then begin
+    setButton, event=event, uname='output_working_with_rtof_plot'
+  endif else begin
+    setButton, event=event, uname='output_working_with_rtof_plot', $
+      /reverse_flag
+  endelse
+  
+  ;Add code here if the droplist contains more than 1 entry
+  
+  if (_structure.is_email_switch_checked) then begin
+    setButton, event=event, uname='email_switch_uname'
+  endif else begin
+    setButton, event=event, uname='email_switch_uname', $
+      /reverse_flag
+  endelse
+  
+  putValue, event=event, 'email_to_uname', $
+    _structure.email_to_uname
+  putValue, event=event, 'email_subject_uname', $
+    _structure.email_subject_uname
+    
+  (*(*global).full_log_book) = _structure.log_book
+  if (_structure.is_log_book_enabled) then begin
+    display_log_book, event=event
+  endif
+  
+  update_main_interface, event=event
   
 end
