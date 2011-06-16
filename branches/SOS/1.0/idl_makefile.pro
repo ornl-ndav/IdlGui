@@ -58,6 +58,10 @@ cd, CurrentFolder
 .run norm_box_eventcb.pro
 .run log_book_eventcb.pro
 
+cd, CurrentFolder + '/configuration'
+.run configuration.pro
+.run IDLconfiguration__define.pro
+
 cd, CurrentFolder + '/Reduction'
 .run go_nexus_reduction_eventcb.pro
 .run go_nexus_reduction.pro
@@ -129,5 +133,6 @@ cd, CurrentFolder + '/output'
 
 cd, CurrentFolder
 .run main_base_event.pro
+.run global.pro
 .run sos.pro
 .run sos_cleanup.pro
