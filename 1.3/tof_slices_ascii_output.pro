@@ -79,6 +79,19 @@ end
 pro create_ascii_tof_slices, event
   compile_opt idl2
   
+  catch, error
+  if (error ne 0) then begin
+    catch,/cancel
+    id = widget_info(event.top, find_by_uname='MAIN_BASE')
+    result = dialog_message([" E R R O R !",$
+      '  Please report error to j35@ornl.gov  '],$
+      /error,$
+      dialog_parent=id,$
+      /center,$
+      title='Error while creating the ascii files')
+    return
+  endif
+  
   widget_control, event.top, get_uvalue=global
   
   ;retrieve path and prefix file_name
