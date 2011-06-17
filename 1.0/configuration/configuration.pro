@@ -60,8 +60,7 @@ pro load_configuration, event=event
     
   if (cfg_full_file_name[0] eq '') then return
   
-  ;catch, error
-  error = 0
+  catch, error
   if (error ne 0) then begin
     catch,/cancel
     
@@ -84,6 +83,7 @@ pro load_configuration, event=event
     restore, filename=cfg_full_file_name, /relaxed_structure_assignment
     
     repopulate_gui, event, cfg_structure
+    check_go_button, event=event
     
     message = 'Loading of configuration file: ' + cfg_full_file_name[0] + $
       ' ... OK!'

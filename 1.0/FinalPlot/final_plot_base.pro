@@ -116,6 +116,11 @@ pro final_plot_event, Event
       return
     end
     
+    ;screenshot menu
+    widget_info(event.top, find_by_uname='screenshot_jpeg_uname'): begin
+      take_screenshot, event=event, file_format='jpg'
+    end
+    
     else:
     
   endcase
@@ -684,7 +689,7 @@ pro final_plot_gui, wBase, $
   endfor
   
   info = widget_button(bar1, $
-    value = 'Live infos',$
+    value = 'Cursor_infos',$
     /menu)
     
   set = widget_button(info, $
@@ -708,14 +713,21 @@ pro final_plot_gui, wBase, $
     event_pro = 'show_counts_vs_yaxis',$
     uname = 'show_counts_vs_yaxis_uname')
     
+  screenshot = widget_button(bar1,$
+    value = 'Screenshot',$
+    /menu)
+  jpeg = widget_button(screenshot,$
+    value = 'Create JPEG',$
+    uname = 'screenshot_jpeg_uname')
+    
   help = widget_button(bar1, $
-  value = 'HELP', $
-  /menu)
-  
+    value = 'HELP', $
+    /menu)
+    
   _help = widget_button(help, $
-  value = 'Manual',$
-  event_pro = 'final_plot_help',$
-  uname = 'final_plot_help_uname')
+    value = 'Manual',$
+    event_pro = 'final_plot_help',$
+    uname = 'final_plot_help_uname')
     
 ;-------- end of menu
     
