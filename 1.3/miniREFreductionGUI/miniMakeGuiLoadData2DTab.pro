@@ -45,7 +45,7 @@ load_data_DD_TAB_BASE = WIDGET_BASE(D_DD_Tab,$
 
 load_data_DD_draw = WIDGET_DRAW(load_data_DD_tab_base,$
                                 XOFFSET   = GlobalLoadGraphs[4],$
-                                YOFFSET   = GlobalLoadGraphs[5],$
+;                                YOFFSET   = GlobalLoadGraphs[5],$
                                 SCR_XSIZE = GlobalLoadGraphs[6],$
                                 SCR_YSIZE = GlobalLoadGraphs[7],$
                                 UNAME     = 'load_data_DD_draw',$
@@ -56,25 +56,27 @@ load_data_DD_draw = WIDGET_DRAW(load_data_DD_tab_base,$
  ;output base
   output_base = widget_base(load_data_DD_tab_base,$
     xoffset = 10,$
-    yoffset = GlobalLoadGraphs[7]+50,$
+    yoffset = GlobalLoadGraphs[7],$
     frame=1,$
     /column)
     
   nbr_slices = cw_field(output_base,$
     /integer,$
+    value=1,$
     xsize=3,$
     title='Number of TOF slices:',$
     uname='data_tof_nbr_tof_slices_uname',$
     /row)
     
-  space = widget_label(output_base,$
-    value = ' ')
+;  space = widget_label(output_base,$
+;    value = ' ')
     
   where_label = widget_label(output_base,$
   /align_left,$
     value = 'Where:')
   where_value = widget_button(output_base,$
     value = '~/results',$
+    event_pro='tof_slices_where_button',$    
     scr_xsize = 290,$
     uname = 'where_tof_slices_path_uname')
     
@@ -89,10 +91,14 @@ load_data_DD_draw = WIDGET_DRAW(load_data_DD_tab_base,$
   file_value = widget_text(row,$
     value = '',$
     uname='file_name_tof_slices_uname',$
+    event_pro='tof_slices_file_name_text_field',$
     xsize = 30,$
     /editable)
   suffix = widget_label(row,$
     value = '_slice#.txt')
     
+    create = widget_button(output_base,$
+  value = 'Create ASCII files of TOF slices',$
+  uname = 'create_ascii_tof_slices_button')  
     
     END
