@@ -171,8 +171,20 @@ endif else begin
     New_Ny = 2*Ny
     New_Nx = 2*Nx
 endelse
+
 tvimg = rebin(img, New_Nx, New_Ny,/sample)
-tvscl, tvimg, /device
+
+;remove 0 values and replace with NAN
+    ;and calculate log
+    index = where(tvimg eq 0, nbr)
+    if (nbr GT 0) then begin
+      tvimg[index] = !VALUES.D_NAN
+    endif
+    tvimg = ALOG10(tvimg)
+    tvimg = BYTSCL(tvimg,/NAN)
+    
+  tvscl, tvimg, /device
+
 ;remove PROCESSING_message from logbook and say ok
 LogBookText = getLogBookText(Event)
 putTextAtEndOfLogBookLastLine, Event, LogBookText, 'OK', PROCESSING
