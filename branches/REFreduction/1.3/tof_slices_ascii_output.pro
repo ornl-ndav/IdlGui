@@ -227,9 +227,9 @@ pro output_tof_slices_ascii_file, event=event, data=data, $
   _index_row = 0
   while (_index_row lt nbr_row) do begin
   
-    _data = data[_index_row,*]
+    _data = reform(data[_index_row,0:-1])
     _row = strcompress(_data,/remove_all)
-    line = strjoin(_row,' ')
+    line = strjoin(_data,' ')
     
     printf, 1, line
     
