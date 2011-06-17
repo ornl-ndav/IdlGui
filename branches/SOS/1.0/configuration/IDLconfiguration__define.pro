@@ -127,7 +127,7 @@ function IDLconfiguration::getConfig, event
     rtof_d_md_uname: getValue(event=event, $
     uname='rtof_d_md_uname'), $
     is_rtof_nexus_base_mapped: $
-    isBaseMapped(event=event, uname='rtof_nexus_base')
+    isBaseMapped(event=event, uname='rtof_nexus_base'), $
     is_rtof_configuration_base_mapped: $
     isBaseMapped(event=event, uname='rtof_configuration_base'), $
     ;general settings
