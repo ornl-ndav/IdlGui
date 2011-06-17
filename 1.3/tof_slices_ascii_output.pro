@@ -108,7 +108,6 @@ pro create_ascii_tof_slices, event
   data = (*(*global).bank1_data) ;[tof, 256, 304]
   tof_axis = (*(*global).tof_axis_ms)
   
-  
   ;  if ((*global).instrument eq 'REF_M') then begin
   ;    index=2
   ;  endif else begin
@@ -121,7 +120,11 @@ pro create_ascii_tof_slices, event
   index_tof_max = index_of_tof_range[1]
   
   if (index_tof_min eq -1) then index_tof_min = 0
-  
+  if (index_tof_max eq -1) then begin
+  sz = size(data,/dim)
+  index_tof_max = sz[0]-1
+  endif
+
   data = data[index_tof_min:index_tof_max,*,*]
   
   sz = size(data,/dim)
@@ -130,10 +133,10 @@ pro create_ascii_tof_slices, event
   if (number_of_slices gt nbr_tof) then number_of_slices=nbr_tof
   
   ;calculate tof step
-  step = nbr_tof / number_of_slices
+  step = (index_tof_max - index_tof_min) / number_of_slices
   _start_index = 0
   if (number_of_slices eq 1) then begin
-    _end_index=-1
+    _end_index= -1
   endif else begin
     _end_index = step
   endelse
@@ -142,9 +145,6 @@ pro create_ascii_tof_slices, event
   list_of_files_created = !null
   
   while (_start_index lt nbr_tof) do begin
-  
-    ;  print, '_start_index: ' , _start_index
-    ;  print, '_end_index: ' , _end_index
   
     _data = data[_start_index:_end_index,*,*]
     _sum_data = total(_data,1)
@@ -164,6 +164,8 @@ pro create_ascii_tof_slices, event
     list_of_files_created = [list_of_files_created, $
       file_name]
       
+    if (_end_index eq -1) then break
+
     _start_index += step
     _end_index += step
     
