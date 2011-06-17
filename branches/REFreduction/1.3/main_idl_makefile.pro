@@ -152,6 +152,7 @@
 .run populate_tof_range.pro
 
 .run add_all_data_nexus_loaded.pro
+.run tof_slices_ascii_output.pro
 
 .run cleanup.pro
 .run ref_reduction_debugging.pro

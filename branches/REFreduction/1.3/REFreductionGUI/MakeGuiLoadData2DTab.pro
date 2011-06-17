@@ -43,10 +43,9 @@ PRO MakeGuiLoadData2DTab, D_DD_Tab, D_DD_BaseSize, D_DD_TabTitle, GlobalLoadGrap
     scr_xsize=D_DD_BaseSize[2],$
     scr_ysize=D_DD_BaseSize[3])
     
-    
   load_data_DD_draw = widget_draw(load_data_DD_tab_base,$
     xoffset=GlobalLoadGraphs[4],$
-    yoffset=GlobalLoadGraphs[5],$
+    ;yoffset=GlobalLoadGraphs[5],$
     scr_xsize=GlobalLoadGraphs[6],$
     scr_ysize=GlobalLoadGraphs[7],$
     uname='load_data_DD_draw',$
@@ -57,7 +56,7 @@ PRO MakeGuiLoadData2DTab, D_DD_Tab, D_DD_BaseSize, D_DD_TabTitle, GlobalLoadGrap
   ;output base
   output_base = widget_base(load_data_DD_tab_base,$
     xoffset = 10,$
-    yoffset = GlobalLoadGraphs[7]+50,$
+    yoffset = GlobalLoadGraphs[7],$
     frame=1,$
     /column)
     
@@ -65,11 +64,12 @@ PRO MakeGuiLoadData2DTab, D_DD_Tab, D_DD_BaseSize, D_DD_TabTitle, GlobalLoadGrap
     /integer,$
     xsize=3,$
     title='Number of TOF slices:',$
+    value = 1,$
     uname='data_tof_nbr_tof_slices_uname',$
     /row)
     
-  space = widget_label(output_base,$
-    value = ' ')
+;  space = widget_label(output_base,$
+;    value = ' ')
     
   part2 = widget_base(output_base,$
     /column)
@@ -80,6 +80,7 @@ PRO MakeGuiLoadData2DTab, D_DD_Tab, D_DD_BaseSize, D_DD_TabTitle, GlobalLoadGrap
   where_value = widget_button(row1,$
     value = '~/results',$
     scr_xsize = 540,$
+    event_pro='tof_slices_where_button',$
     uname = 'where_tof_slices_path_uname')
     
   row2 = widget_base(part2,/row)
@@ -87,12 +88,17 @@ PRO MakeGuiLoadData2DTab, D_DD_Tab, D_DD_BaseSize, D_DD_TabTitle, GlobalLoadGrap
     value = 'File name:')
   file_value = widget_text(row2,$
     value = '',$
+    /all_events,$
+    event_pro='tof_slices_file_name_text_field',$
     uname='file_name_tof_slices_uname',$
     xsize = 70,$
     /editable)
   suffix = widget_label(row2,$
     value = '_slice#.txt')
     
+  create = widget_button(output_base,$
+  value = 'Create ASCII files of TOF slices',$
+  uname = 'create_ascii_tof_slices_button')  
     
     
 END
