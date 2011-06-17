@@ -265,10 +265,15 @@ pro repopulate_gui, event, _structure
   putValue, event=event, 'rtof_d_md_uname', $
     _structure.rtof_d_md_uname
     
-   mapBase, event=event, status=_structure.is_rtof_nexus_base_mapped, $
-   uname='rtof_nexus_base'  
-   mapBase, event=event, status=_structure.is_rtof_configuration_base_mapped, $
-   uname='rtof_configuration_base'  
+  mapBase, event=event, status=_structure.is_rtof_nexus_base_mapped, $
+    uname='rtof_nexus_base'
+  if (_structure.is_rtof_nexus_base_mapped) then begin
+    check_rtof_buttons_status, event
+    check_go_button, event=event
+  endif
+  
+  mapBase, event=event, status=_structure.is_rtof_configuration_base_mapped, $
+    uname='rtof_configuration_base'
     
   ;General sittings
   putValue, event=event, 'bins_qx', $
@@ -311,10 +316,10 @@ pro repopulate_gui, event, _structure
     _structure.email_to_uname
   putValue, event=event, 'email_subject_uname', $
     _structure.email_subject_uname
-   mapBase, event=event, status=_structure.is_email_base_mapped, $
-   uname='email_base'
-
-
+  mapBase, event=event, status=_structure.is_email_base_mapped, $
+    uname='email_base'
+    
+    
     
   (*(*global).full_log_book) = _structure.log_book
   if (_structure.is_log_book_enabled) then begin
