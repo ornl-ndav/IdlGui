@@ -68,8 +68,8 @@ PRO MakeGuiLoadData2DTab, D_DD_Tab, D_DD_BaseSize, D_DD_TabTitle, GlobalLoadGrap
     uname='data_tof_nbr_tof_slices_uname',$
     /row)
     
-;  space = widget_label(output_base,$
-;    value = ' ')
+  ;  space = widget_label(output_base,$
+  ;    value = ' ')
     
   part2 = widget_base(output_base,$
     /column)
@@ -88,7 +88,6 @@ PRO MakeGuiLoadData2DTab, D_DD_Tab, D_DD_BaseSize, D_DD_TabTitle, GlobalLoadGrap
     value = 'File name:')
   file_value = widget_text(row2,$
     value = '',$
-    /all_events,$
     event_pro='tof_slices_file_name_text_field',$
     uname='file_name_tof_slices_uname',$
     xsize = 70,$
@@ -97,8 +96,8 @@ PRO MakeGuiLoadData2DTab, D_DD_Tab, D_DD_BaseSize, D_DD_TabTitle, GlobalLoadGrap
     value = '_slice#.txt')
     
   create = widget_button(output_base,$
-  value = 'Create ASCII files of TOF slices',$
-  uname = 'create_ascii_tof_slices_button')  
-    
+    value = 'Create ASCII files of TOF slices',$
+    uname = 'create_ascii_tof_slices_button',$
+    event_pro = 'create_ascii_tof_slices')
     
 END

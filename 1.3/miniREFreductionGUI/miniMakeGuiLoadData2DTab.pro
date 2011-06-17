@@ -34,26 +34,26 @@
 
 PRO miniMakeGuiLoadData2DTab, D_DD_Tab, D_DD_BaseSize, D_DD_TabTitle, GlobalLoadGraphs
 
-;Build 2D tab
-load_data_DD_TAB_BASE = WIDGET_BASE(D_DD_Tab,$
-                                    UNAME     = 'load_data_dd_tab_base',$
-                                    TITLE     = D_DD_TabTitle[1],$
-                                    XOFFSET   = D_DD_BaseSize[0],$
-                                    YOFFSET   = D_DD_BaseSize[1],$
-                                    SCR_XSIZE = D_DD_BaseSize[2],$
-                                    SCR_YSIZE = D_DD_BaseSize[3])
-
-load_data_DD_draw = WIDGET_DRAW(load_data_DD_tab_base,$
-                                XOFFSET   = GlobalLoadGraphs[4],$
-;                                YOFFSET   = GlobalLoadGraphs[5],$
-                                SCR_XSIZE = GlobalLoadGraphs[6],$
-                                SCR_YSIZE = GlobalLoadGraphs[7],$
-                                UNAME     = 'load_data_DD_draw',$
-                                RETAIN    = 2,$
-                                /BUTTON_EVENTS,$
-                                /MOTION_EVENTS)
-
- ;output base
+  ;Build 2D tab
+  load_data_DD_TAB_BASE = WIDGET_BASE(D_DD_Tab,$
+    UNAME     = 'load_data_dd_tab_base',$
+    TITLE     = D_DD_TabTitle[1],$
+    XOFFSET   = D_DD_BaseSize[0],$
+    YOFFSET   = D_DD_BaseSize[1],$
+    SCR_XSIZE = D_DD_BaseSize[2],$
+    SCR_YSIZE = D_DD_BaseSize[3])
+    
+  load_data_DD_draw = WIDGET_DRAW(load_data_DD_tab_base,$
+    XOFFSET   = GlobalLoadGraphs[4],$
+    ;                                YOFFSET   = GlobalLoadGraphs[5],$
+    SCR_XSIZE = GlobalLoadGraphs[6],$
+    SCR_YSIZE = GlobalLoadGraphs[7],$
+    UNAME     = 'load_data_DD_draw',$
+    RETAIN    = 2,$
+    /BUTTON_EVENTS,$
+    /MOTION_EVENTS)
+    
+  ;output base
   output_base = widget_base(load_data_DD_tab_base,$
     xoffset = 10,$
     yoffset = GlobalLoadGraphs[7],$
@@ -68,26 +68,26 @@ load_data_DD_draw = WIDGET_DRAW(load_data_DD_tab_base,$
     uname='data_tof_nbr_tof_slices_uname',$
     /row)
     
-;  space = widget_label(output_base,$
-;    value = ' ')
+  ;  space = widget_label(output_base,$
+  ;    value = ' ')
     
   where_label = widget_label(output_base,$
-  /align_left,$
+    /align_left,$
     value = 'Where:')
   where_value = widget_button(output_base,$
     value = '~/results',$
-    event_pro='tof_slices_where_button',$    
+    event_pro='tof_slices_where_button',$
     scr_xsize = 290,$
     uname = 'where_tof_slices_path_uname')
     
   space = widget_label(output_base,$
     value = ' ')
-
+    
   file_label = widget_label(output_base,$
-  /align_left,$
+    /align_left,$
     value = 'File name:')
   row = widget_base(output_base,$
-  /row)
+    /row)
   file_value = widget_text(row,$
     value = '',$
     uname='file_name_tof_slices_uname',$
@@ -97,8 +97,9 @@ load_data_DD_draw = WIDGET_DRAW(load_data_DD_tab_base,$
   suffix = widget_label(row,$
     value = '_slice#.txt')
     
-    create = widget_button(output_base,$
-  value = 'Create ASCII files of TOF slices',$
-  uname = 'create_ascii_tof_slices_button')  
+  create = widget_button(output_base,$
+    value = 'Create ASCII files of TOF slices',$
+    uname = 'create_ascii_tof_slices_button',$
+    event_pro = 'create_ascii_tof_slices')
     
-    END
+END

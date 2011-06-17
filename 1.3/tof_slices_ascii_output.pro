@@ -65,7 +65,165 @@ pro tof_slices_where_button, event
   
 end
 
+;+
+; :Description:
+;    This routine create the slices
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro create_ascii_tof_slices, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  ;retrieve path and prefix file_name
+  path = (*global).dr_output_path
+  prefix_file_name = getValue(event=event,uname='file_name_tof_slices_uname')
+  suffix = '.txt'
+  
+  ;number of slices requested
+  number_of_slices = $
+    getValue(event=event, uname='data_tof_nbr_tof_slices_uname')
+  if (number_of_slices eq 0) then return
+  
+  ;retrieve data and tof range
+  data = (*(*global).bank1_data) ;[tof, 256, 304]
+  tof_axis = (*(*global).tof_axis_ms)
+  
+  
+  ;  if ((*global).instrument eq 'REF_M') then begin
+  ;    index=2
+  ;  endif else begin
+  ;    index=3
+  ;  endelse
+  ;  _data = total(data,index)
+  
+  index_of_tof_range = (*global).index_of_tof_range
+  index_tof_min = index_of_tof_range[0]
+  index_tof_max = index_of_tof_range[1]
+  
+  if (index_tof_min eq -1) then index_tof_min = 0
+  
+  data = data[index_tof_min:index_tof_max,*,*]
+  
+  sz = size(data,/dim)
+  nbr_tof = sz[0]
+  ;make sure we don't want more slices that we have TOF bins
+  if (number_of_slices gt nbr_tof) then number_of_slices=nbr_tof
+  
+  ;calculate tof step
+  step = nbr_tof / number_of_slices
+  _start_index = 0
+  if (number_of_slices eq 1) then begin
+    _end_index=-1
+  endif else begin
+    _end_index = step
+  endelse
+  _slice_nbr=0
+  
+  list_of_files_created = !null
+  
+  while (_start_index lt nbr_tof) do begin
+  
+    ;  print, '_start_index: ' , _start_index
+    ;  print, '_end_index: ' , _end_index
+  
+    _data = data[_start_index:_end_index,*,*]
+    _sum_data = total(_data,1)
+    
+    file_name = path + prefix_file_name + '_slice' + $
+      strcompress(_slice_nbr,/remove_all) + '.txt'
+      
+    from_tof = tof_axis[_start_index] ;ms
+    to_tof = tof_axis[_end_index] ;ms
+    
+    output_tof_slices_ascii_file, event=event, $
+      data=_sum_data, $
+      file_name=file_name, $
+      from_tof=from_tof, $
+      to_tof=to_tof
+      
+    list_of_files_created = [list_of_files_created, $
+      file_name]
+      
+    _start_index += step
+    _end_index += step
+    
+    if (_start_index ge nbr_tof) then break
+    if (_end_index ge nbr_tof) then _end_index=-1
+    
+    _slice_nbr++
+    
+  endwhile
+  
+  message = ['Here is the list of files produced:']
+  tmp = ' --> ' + list_of_files_created
+  message = [message, tmp]
+  
+  id = widget_info(event.top, find_by_uname='MAIN_BASE')
+  result = dialog_message(message, $
+    /center,$
+    dialog_parent=id,$
+    /information,$
+    title='List of files produced')
+    
+end
 
-
-
-
+;+
+; :Description:
+;    This routine is going to create the huge ascii file
+;
+;
+;
+; :Keywords:
+;    event
+;    data
+;    file_name
+;    from_tof
+;    to_tof
+;
+; :Author: j35
+;-
+pro output_tof_slices_ascii_file, event=event, data=data, $
+    file_name=file_name, $
+    from_tof=from_tof, $
+    to_tof=to_tof
+    
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  sz = size(data,/dim)
+  nbr_row = sz[0]  ;256 for REf_M
+  nbr_column = sz[1] ;304 for REF_M
+  
+  openw, 1, file_name
+  data_nexus_file_name = (*global).data_nexus_full_path
+  printf, 1, '#Data nexus: ' + data_nexus_file_name
+  printf, 1, '#Rows: ' + strcompress(nbr_row,/remove_all)
+  printf, 1, '#Columns: ' + strcompress(nbr_column,/remove_all)
+  printf, 1, '#TOF range (ms): ' + strcompress(from_tof,/remove_all) + $
+    ' - ' + strcompress(to_tof,/remove_all)
+  printf, 1, ''
+  
+  _index_row = 0
+  while (_index_row lt nbr_row) do begin
+  
+    _data = data[_index_row,*]
+    _row = strcompress(_data,/remove_all)
+    line = strjoin(_row,' ')
+    
+    printf, 1, line
+    
+    _index_row++
+  endwhile
+  
+  close,1
+  free_lun, 1
+  
+end
