@@ -79,6 +79,7 @@ cd, CurrentFolder + '/FinalPlot'
 .run cursor_info_base.pro
 .run menu_eventcb.pro
 .run counts_vs_axis_base.pro
+.run screenshot.pro
 
 cd, CurrentFolder
 .run sos_eventcb.pro
