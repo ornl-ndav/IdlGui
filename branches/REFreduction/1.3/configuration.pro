@@ -97,6 +97,8 @@ pro load_configuration_file, event=event, $
   (*global).current_tof_config_file_name = file_name[0]
   
   file = obj_new('idlxmlparser',file_name[0])
+  if (~obj_valid(file)) then return
+   
   min_tof = file->getValue(tag=['configuration','tof','min'])
   max_tof = file->getValue(tag=['configuration','tof','max'])
   units_tof = file->getValue(tag=['configuration','tof','units'])

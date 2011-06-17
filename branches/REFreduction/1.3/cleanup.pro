@@ -75,12 +75,20 @@ pro restore_config_file_name, base=base, $
   compile_opt idl2
   
   if (~file_test(config_file_name)) then return
-
-  restore, filename=config_file_name, /relaxed_structure_assignment
+  
+  catch, error
+  if (error ne 0) then begin
+    catch,/cancel
+    return
+  endif else begin
+  
+    restore, filename=config_file_name, /relaxed_structure_assignment
+    
+  endelse
   
   tof_config_file_name = cfg_structure.tof_config_file_name
   
-  if (tof_config_file_name ne '') then begin
+  if (file_test(tof_config_file_name)) then begin
   
     load_configuration_file, base=base, $
       file_name=tof_config_file_name, $

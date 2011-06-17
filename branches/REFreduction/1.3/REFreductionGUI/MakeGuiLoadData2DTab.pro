@@ -34,25 +34,65 @@
 
 PRO MakeGuiLoadData2DTab, D_DD_Tab, D_DD_BaseSize, D_DD_TabTitle, GlobalLoadGraphs
 
-;Build 2D tab
-load_data_DD_TAB_BASE = widget_base(D_DD_Tab,$
-                                    uname='load_data_dd_tab_base',$
-                                    title=D_DD_TabTitle[1],$
-                                    xoffset=D_DD_BaseSize[0],$
-                                    yoffset=D_DD_BaseSize[1],$
-                                    scr_xsize=D_DD_BaseSize[2],$
-                                    scr_ysize=D_DD_BaseSize[3])
-
-
-load_data_DD_draw = widget_draw(load_data_DD_tab_base,$
-                                xoffset=GlobalLoadGraphs[4],$
-                                yoffset=GlobalLoadGraphs[5],$
-                                scr_xsize=GlobalLoadGraphs[6],$
-                                scr_ysize=GlobalLoadGraphs[7],$
-                                uname='load_data_DD_draw',$
-                                retain=2,$
-                                /button_events,$
-                                /motion_events)
-
-
+  ;Build 2D tab
+  load_data_DD_TAB_BASE = widget_base(D_DD_Tab,$
+    uname='load_data_dd_tab_base',$
+    title=D_DD_TabTitle[1],$
+    xoffset=D_DD_BaseSize[0],$
+    yoffset=D_DD_BaseSize[1],$
+    scr_xsize=D_DD_BaseSize[2],$
+    scr_ysize=D_DD_BaseSize[3])
+    
+    
+  load_data_DD_draw = widget_draw(load_data_DD_tab_base,$
+    xoffset=GlobalLoadGraphs[4],$
+    yoffset=GlobalLoadGraphs[5],$
+    scr_xsize=GlobalLoadGraphs[6],$
+    scr_ysize=GlobalLoadGraphs[7],$
+    uname='load_data_DD_draw',$
+    retain=2,$
+    /button_events,$
+    /motion_events)
+    
+  ;output base
+  output_base = widget_base(load_data_DD_tab_base,$
+    xoffset = 10,$
+    yoffset = GlobalLoadGraphs[7]+50,$
+    frame=1,$
+    /column)
+    
+  nbr_slices = cw_field(output_base,$
+    /integer,$
+    xsize=3,$
+    title='Number of TOF slices:',$
+    uname='data_tof_nbr_tof_slices_uname',$
+    /row)
+    
+  space = widget_label(output_base,$
+    value = ' ')
+    
+  part2 = widget_base(output_base,$
+    /column)
+    
+  row1 = widget_base(part2,/row)
+  where_label = widget_label(row1,$
+    value = 'Where:')
+  where_value = widget_button(row1,$
+    value = '~/results',$
+    scr_xsize = 540,$
+    uname = 'where_tof_slices_path_uname')
+    
+  row2 = widget_base(part2,/row)
+  file_label = widget_label(row2,$
+    value = 'File name:')
+  file_value = widget_text(row2,$
+    value = '',$
+    uname='file_name_tof_slices_uname',$
+    xsize = 70,$
+    /editable)
+  suffix = widget_label(row2,$
+    value = '_slice#.txt')
+    
+    
+    
 END
