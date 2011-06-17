@@ -53,4 +53,46 @@ load_data_DD_draw = WIDGET_DRAW(load_data_DD_tab_base,$
                                 /BUTTON_EVENTS,$
                                 /MOTION_EVENTS)
 
-END
+ ;output base
+  output_base = widget_base(load_data_DD_tab_base,$
+    xoffset = 10,$
+    yoffset = GlobalLoadGraphs[7]+50,$
+    frame=1,$
+    /column)
+    
+  nbr_slices = cw_field(output_base,$
+    /integer,$
+    xsize=3,$
+    title='Number of TOF slices:',$
+    uname='data_tof_nbr_tof_slices_uname',$
+    /row)
+    
+  space = widget_label(output_base,$
+    value = ' ')
+    
+  where_label = widget_label(output_base,$
+  /align_left,$
+    value = 'Where:')
+  where_value = widget_button(output_base,$
+    value = '~/results',$
+    scr_xsize = 290,$
+    uname = 'where_tof_slices_path_uname')
+    
+  space = widget_label(output_base,$
+    value = ' ')
+
+  file_label = widget_label(output_base,$
+  /align_left,$
+    value = 'File name:')
+  row = widget_base(output_base,$
+  /row)
+  file_value = widget_text(row,$
+    value = '',$
+    uname='file_name_tof_slices_uname',$
+    xsize = 30,$
+    /editable)
+  suffix = widget_label(row,$
+    value = '_slice#.txt')
+    
+    
+    END

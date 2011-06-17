@@ -317,7 +317,7 @@ function NeXusMetadata::getDangle0
         tmp_path_value = self.path_prefix + 'DASlogs/DANGLE0/value/'
         pathID_value = h5d_open(self.fileID, tmp_path_value)
         dangle_value = strcompress(h5d_read(pathID_value),/remove_all)
-        help, dangle_value
+;        help, dangle_value
         dangle_value = dangle_value[0]
 
         pathID_units = h5a_open_name(pathID_value,'units')
