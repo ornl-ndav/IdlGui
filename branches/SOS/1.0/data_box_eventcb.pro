@@ -186,15 +186,12 @@ pro retrieve_detector_configuration, event=event, main_base=main_base
   
   instrument = (*global).instrument
   if (instrument eq 'REF_M') then begin
-  
     first_data_nexus_array = strsplit(big_table[0,0],'(',/extract)
     first_data_nexus = strtrim(first_data_nexus_array[0],2)
     iNexus = obj_new('IDLnexusUtilities', first_data_nexus, $
       spin_state='Off_Off')
   endif else begin ;REF_L
-  
     first_data_nexus = big_table[0,0]
-    
     iNexus = obj_new('IDLnexusUtilities', first_data_nexus)
   endelse
   if (obj_valid(iNexus)) then begin
