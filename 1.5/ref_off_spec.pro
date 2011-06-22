@@ -44,7 +44,7 @@ PRO BuildInstrumentGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
 END
 
-PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+PRO BuildGui,  instrument, reduce_step_path, resolution_selected, MainBaseSize, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
   ;get the current folder
   CD, CURRENT = current_folder
@@ -656,6 +656,7 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
   ENDIF
   ;===============================================================================
   ;Build Main Base
+  if (resolution_selected eq 0) then begin ;deskotp
   MAIN_BASE = WIDGET_BASE( GROUP_LEADER = wGroup,$
     UNAME        = 'MAIN_BASE',$
     SCR_XSIZE    = MainBaseSize[2],$
@@ -666,6 +667,20 @@ PRO BuildGui,  instrument, reduce_step_path, splicing_alternative, MainBaseSize,
     SPACE        = 0,$
     XPAD         = 0,$
     YPAD         = 2)
+endif else begin ;laptop
+  MAIN_BASE = WIDGET_BASE( GROUP_LEADER = wGroup,$
+    UNAME        = 'MAIN_BASE',$
+    XOFFSET      = MainBaseSize[0],$
+    YOFFSET      = MainBaseSize[1],$
+    TITLE        = MainBaseTitle,$
+    SPACE        = 0,$
+    XPAD         = 0,$
+    /scroll, $
+    y_scroll_size = 600,$
+    x_scroll_size = MainBaseSize[2],$  
+    YPAD         = 2)
+endelse
+
   ; Change code (RC Ward, 23 July 2010): Load the users value for reduce step path
   (*global).ascii_path = reduce_step_path
   (*global).working_path = reduce_step_path

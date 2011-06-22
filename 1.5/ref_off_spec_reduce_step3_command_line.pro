@@ -151,6 +151,7 @@ PRO reduce_step3_run_jobs, Event
       col_index = 6
     endelse
     data_back_roi = big_table[col_index,row]
+    
     if (data_back_roi ne 'N/A') then begin
       cmd += ' --dbkg-roi-file=' + data_back_roi
     endif else begin
