@@ -54,7 +54,7 @@ compile_opt idl2
 ; Change code (RC Ward, 3 Aug 2010): Change title of this front GUI
 MainBaseTitle = 'REFoffSpec ' + version
 
-InstrumentSelectionBaseSize = [400,300,240,250]
+InstrumentSelectionBaseSize = [400,400,240,250]
 InstrumentSelectioncwbgroupSize = [10,5]
 InstrumentSelectioncwbgroupTitle = 'SELECT YOUR INSTRUMENT'
 
@@ -100,22 +100,16 @@ InstrumentCWBgroup = cw_bgroup(MAIN_BASE,$
                                column=1,$
                                label_top=InstrumentSelectioncwbgroupTitle)
                                
-; CHANGE CODE (RC WARD, 22 June 2010): Add selection for resolution so code can run on laptop or desktop
-;ResolutionCWBgroup = cw_bgroup(MAIN_BASE,$
-;                               ResolutionList,$
-;                               /exclusive,$
-;                               xoffset=InstrumentSelectioncwbgroupSize[0],$
-;                               yoffset=InstrumentSelectioncwbgroupSize[1]+90,$
-;                               set_value=0,$
-;                               uname='resolution_selection_cw_bgroup',$
-;                               column=1, $
-;                               label_top=ResolutioncwbgroupTitle)
+ ResolutionCWBgroup = cw_bgroup(MAIN_BASE,$
+                               ResolutionList,$
+                               /exclusive,$
+                               xoffset=InstrumentSelectioncwbgroupSize[0],$
+                               yoffset=InstrumentSelectioncwbgroupSize[1]+90,$
+                               set_value=0,$
+                               uname='resolution_selection_cw_bgroup',$
+                               column=1, $
+                               label_top=ResolutioncwbgroupTitle)
 
-; Change code (RC Ward, 13 Aug 2010): This was removed from the FRONT screen - code left in place
-; in case we might return to this approach. Use a overall window size of 400.
-; CHANGE CODE (RC WARD, 3 Aug 2010): Add selection for splicing alternative
-; [0] is use Max value in overlap range (default); [1] is let the higher Q curve override lower Q
-; default is set to [1]
 ;SplicingAlternativeCWBgroup = cw_bgroup(MAIN_BASE,$
 ;                               SplicingAlternativeList,$
 ;                               /exclusive,$
@@ -128,21 +122,21 @@ InstrumentCWBgroup = cw_bgroup(MAIN_BASE,$
 
 ; CHANGE CODE (RC WARD, 23 July 2010): Add ability for user to change location of reduce step files
 ;label
-path_label = '    PATH FOR REDUCE STEP FILES'
-    label = WIDGET_LABEL(MAIN_BASE,$
-                    xoffset=InstrumentSelectioncwbgroupSize[0],$
-                    yoffset=InstrumentSelectioncwbgroupSize[1]+100,$
-                    VALUE   = path_label)
-
-path = '~/results/'
-new_path = WIDGET_TEXT(MAIN_BASE,$
-                    xoffset=InstrumentSelectioncwbgroupSize[0],$
-                    yoffset=InstrumentSelectioncwbgroupSize[1]+130,$
-                    SCR_XSIZE = 220,$
-                    UNAME = 'reduce_step_path',$
-                    VALUE = path,$
-                    /EDITABLE,$
-                    /ALIGN_LEFT)
+;path_label = '    PATH FOR REDUCE STEP FILES'
+;    label = WIDGET_LABEL(MAIN_BASE,$
+;                    xoffset=InstrumentSelectioncwbgroupSize[0],$
+;                    yoffset=InstrumentSelectioncwbgroupSize[1]+100,$
+;                    VALUE   = path_label)
+;
+;path = '~/results/'
+;new_path = WIDGET_TEXT(MAIN_BASE,$
+;                    xoffset=InstrumentSelectioncwbgroupSize[0],$
+;                    yoffset=InstrumentSelectioncwbgroupSize[1]+130,$
+;                    SCR_XSIZE = 220,$
+;                    UNAME = 'reduce_step_path',$
+;                    VALUE = path,$
+;                    /EDITABLE,$
+;                    /ALIGN_LEFT)
 
 InstrumentSelectionGoButton = $
    widget_button(MAIN_BASE,$

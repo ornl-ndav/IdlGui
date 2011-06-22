@@ -40,9 +40,8 @@ PRO REFreductionEventcb_InstrumentSelected, Event
   widget_control, id, get_value=instrument_selected
 
 ; CHANGE CODE (RC WARD, 22 June 2010): Add selection for resolution so code can run on laptop or desktop
-  ;id = widget_info(Event.top,find_by_uname='resolution_selection_cw_bgroup')
-  ;widget_control, id, get_value=resolution_selected
-  resolution_selected = 0
+  id = widget_info(Event.top,find_by_uname='resolution_selection_cw_bgroup')
+  widget_control, id, get_value=resolution_selected
 
 ; Change Code (RC Ward, 13 Aug 2010); This was removed from the front screen on this day
 ; CHANGE CODE (RC WARD, 3 August 2010): Add choice of splicing alternative
@@ -52,8 +51,10 @@ PRO REFreductionEventcb_InstrumentSelected, Event
 ;print, "splicing_alternative: ",  splicing_alternative
 
 ; CHANGE CODE (RC WARD, 23 July 2010): Capture users path for reduce step files
-  id = widget_info(Event.top,find_by_uname='reduce_step_path')
-  widget_control, id, get_value=reduce_step_path
+  ;id = widget_info(Event.top,find_by_uname='reduce_step_path')
+  ;widget_control, id, get_value=reduce_step_path
+
+reduce_step_path = '~/results'
 
 ; Change Code 6 Jan 2011 - If user does not add / to results dir, then add it
 len = STRLEN(reduce_step_path)
@@ -64,13 +65,7 @@ IF (last NE '/') THEN BEGIN
 ENDIF
 ;print, "new_path: ", reduce_step_path
   
-
-  if (resolution_selected EQ 0) then begin
-; desktop resolution 
       MainBaseSize = [30,50,1276,901]
-  endif else begin  
-      MainBaseSize = [30,50,1300,770]
-  endelse
   
   ;descativate instrument selection base and activate main base
   ISBaseID = widget_info(Event.top,find_by_uname='MAIN_BASE')
@@ -78,9 +73,9 @@ ENDIF
 
 ; CHANGE CODE (RC WARD, 22 June 2010): Pass MainBaseSize from here to control resolution
   if (instrument_selected EQ 0) then begin
-    BuildGui, 'REF_L', reduce_step_path, splicing_alternative, MainBaseSize, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+    BuildGui, 'REF_L', reduce_step_path, resolution_selected, MainBaseSize, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   endif else begin
-    BuildGui, 'REF_M', reduce_step_path, splicing_alternative, MainBaseSize, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+    BuildGui, 'REF_M', reduce_step_path, resolution_selected, MainBaseSize, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   endelse
    
 END
