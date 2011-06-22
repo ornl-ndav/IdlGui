@@ -92,9 +92,9 @@ pro final_plot_event, Event
       widget_control, id, draw_xsize = colorbar_xsize
       
       ;global info
-      id = widget_info(event.top, find_by_uname='global_info_uname')
-      widget_control, id, xoffset = new_xsize-colorbar_xsize-border-25
-      display_global_infos_button, event=event
+      ;id = widget_info(event.top, find_by_uname='global_info_uname')
+      ;widget_control, id, xoffset = new_xsize-colorbar_xsize-border-25
+      ;display_global_infos_button, event=event
       
       plot_beam_center_scale, event=event
       refresh_plot, event, recalculate=1
@@ -1213,7 +1213,7 @@ pro final_plot, main_base=main_base, $
   setValue, base=wBase, uname, new_value
   
   ;show global info button
-  display_global_infos_button, main_base=wBase
+  ;display_global_infos_button, main_base=wBase
   
   save_background,  main_base=wBase
   
