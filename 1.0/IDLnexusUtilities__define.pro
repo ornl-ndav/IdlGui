@@ -695,6 +695,8 @@ function IDLnexusUtilities::get_detectorDimension
   
   if (self.instrument eq 'REF_L') then begin ;REF_L
   
+    return, [256,304]
+  
     old_path = self.entry_spin_state + '/bank1/data'
     new_path = self.entry_spin_state + '/bank1/data_x_y'
     
