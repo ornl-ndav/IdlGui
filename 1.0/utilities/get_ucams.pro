@@ -1,4 +1,4 @@
-;==============================================================================
+print,;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -43,3 +43,17 @@
 FUNCTION get_ucams
   RETURN, getenv('USER')
 END
+
+;+
+; :Description:
+;    returns the path of the home folder
+;
+;
+;
+;
+;
+; :Author: j35
+;-
+function getHomeFolder
+return, getenv('HOME')
+end

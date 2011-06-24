@@ -46,6 +46,8 @@ compile_opt idl2
     ucams = get_ucams()
   ENDELSE
   
+  homeFolder = getHomeFolder()
+  
   ;define global variables
   global = ptr_new ({ $
     version:           VERSION,$
@@ -74,7 +76,7 @@ compile_opt idl2
     
     log_book: ptr_new(0L), $
     log_book_id: 0L, $
-    log_book_path: '~/', $
+    log_book_path: homeFolder, $
     log_book_file_name_prefix: '.iMars',$
     log_book_file_name_suffix: 'log',$
     
@@ -100,8 +102,8 @@ compile_opt idl2
     full_log_book: ptr_new(0L), $
     new_log_book_message: ptr_new(0L), $
     
-    path: '~/', $
-    config_path: '~/', $
+    path: homeFolder, $
+    config_path: homeFolder, $
     
     file_extension: 'fits',$
     file_filter: '*fits',$
