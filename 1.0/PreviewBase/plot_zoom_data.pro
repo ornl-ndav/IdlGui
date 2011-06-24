@@ -65,14 +65,18 @@ pro plot_zoom_data, event=event, base=base, recalculate=recalculate
   xsize = draw_geometry.xsize
   ysize = draw_geometry.ysize
   
+  print, 'xsize: ' , xsize
+  print, 'ysize: ' , ysize
+  
   if (keyword_set(recalculate)) then begin
   
     global = (*global_preview).global
     data = (*(*global).preview_data)
+    help, data
     cData = congrid(data, xsize, ysize)
     (*(*global_preview).cData) = cData
     tvscl, cData
-    
+    help, cData
     save_zoom_data_background, event=event, base=base
     return
     

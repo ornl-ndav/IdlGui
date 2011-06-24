@@ -61,7 +61,7 @@ pro display_metadata, event=event
   
   if (file_name eq 'N/A') then return
   
-  xdisplayfile, '',$
+  Xdisplayfile, '',$
     title='Metadata of ' + file_name,$
     width=70,$
     height=50,$

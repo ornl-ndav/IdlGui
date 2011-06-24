@@ -44,7 +44,7 @@
 ;-
 pro BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   compile_opt idl2
-  
+   
   ;retrieve the global structure
   global = getGlobal()
   
@@ -67,7 +67,7 @@ pro BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   (*global).top_base = main_base
     
   build_menu, top_base_menu
-  build_gui, main_base
+  build_gui, main_base, global
   
   ;attach global structure with widget ID of widget main base widget ID
   WIDGET_CONTROL, main_base, SET_UVALUE=global
