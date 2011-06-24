@@ -38,12 +38,12 @@
 ;
 ; :Params:
 ;    main_base
-;
+;    global
 ;
 ;
 ; :Author: j35
 ;-
-pro build_gui, main_base
+pro build_gui, main_base, global
   compile_opt idl2
   
   ;main base is composed of 1 row and several columns (3)
@@ -309,7 +309,7 @@ pro build_gui, main_base
   label = widget_label(of_row,$
     value = 'Output folder:')
   button = widget_button(of_row,$
-    value = '~/',$
+    value = (*global).path,$
     scr_xsize = 440,$
     uname = 'output_folder_button')
     

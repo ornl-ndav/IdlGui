@@ -60,7 +60,7 @@ pro display_log_book, event
   xoffset = geometry.xoffset
   yoffset = geometry.yoffset
   
-  xdisplayfile, '',$
+  Xdisplayfile, '',$
     title='Log Book',$
     width=50,$
     height=50,$

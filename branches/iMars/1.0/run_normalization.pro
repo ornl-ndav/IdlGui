@@ -390,6 +390,8 @@ function get_base_output_file, event=event, $
   ;base file name
   base_file_name = file_basename(full_file_name)
   
+  print, 'base_file_name: ' , base_file_name
+  
   ;remove extension, add '_normalized.fits'
   file_array = strsplit(base_file_name,'.',/extract)
   sz = n_elements(file_array)
@@ -401,6 +403,9 @@ function get_base_output_file, event=event, $
   
   ;new output file name
   output_file = output_folder + prefix + _file + '.' + suffix
+  
+  print, 'output_folder: ' , output_folder  
+  stop
   
   return, output_file
 end

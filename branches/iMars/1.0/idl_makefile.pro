@@ -1,5 +1,6 @@
 ;define path to dependencies and current folder
-spawn, 'pwd', CurrentFolder
+cd, current=CurrentFolder
+print, Currentfolder
 
 cd, CurrentFolder + path_sep() + 'utilities'
 ;functions
@@ -17,7 +18,7 @@ cd, CurrentFolder + path_sep() + 'utilities'
 .run xdisplayfile.pro
 .run histoplot.pro
 
-cd, CurrentFolder + path_sep() + 'reader_writer_routines/'
+cd, CurrentFolder + path_sep() + 'reader_writer_routines' + path_sep()
 .run gettok.pro
 .run is_ieee_big.pro
 .run fxparpos.pro
