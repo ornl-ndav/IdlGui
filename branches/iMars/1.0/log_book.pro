@@ -166,7 +166,7 @@ pro save_log_book, base=base, event=event, file_name=file_name
   suffix = (*global).log_book_file_name_suffix
   path = (*global).log_book_path
   time_stamp =  GenerateIsoTimeStamp()
-  log_book_file_name = path + prefix + '_' + time_stamp + '.' + suffix
+  log_book_file_name = path + path_sep() + prefix + '_' + time_stamp + '.' + suffix
   
   openw, 1, log_book_file_name
   
