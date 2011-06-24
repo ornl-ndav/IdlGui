@@ -1,0 +1,9 @@
+This version of the application is only valid for REF_L runs using
+the new geometry (256 by 304)
+
+To change this limitation, modify IDLnexusUtilities__define.pro and 
+the IDLnexusUtilities::get_detectorDimension
+
+comment out:
+  return, [256,304]
+  
