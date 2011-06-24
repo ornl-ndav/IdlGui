@@ -153,9 +153,7 @@ PRO main_base_event, Event
       clear_text_field, event=event, uname='data_run_numbers_text_field'
       ;retrieve distances from first data nexus file loaded
       retrieve_data_nexus_distances, event=event
-      print, 'starting retrieve detector_configuration'
       retrieve_detector_configuration, event=event
-      print, 'done with retrieving detector configuration'
       refresh_configuration_table, event=event
       check_go_button, event=event
       widget_control, hourglass=0

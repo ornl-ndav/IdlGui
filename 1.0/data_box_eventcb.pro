@@ -113,7 +113,7 @@ pro data_run_numbers_event, event
     
   if (list_data_nexus eq !null) then return
     
-  (*global).instrument = determine_instrument(list_data_nexus[0])
+  ;(*global).instrument = determine_instrument(list_data_nexus[0])
   
   add_list_of_nexus_to_table, event, list_data_nexus, type='data'
   refresh_big_table, event=event

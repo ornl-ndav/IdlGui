@@ -92,9 +92,9 @@ pro final_plot_event, Event
       widget_control, id, draw_xsize = colorbar_xsize
       
       ;global info
-      id = widget_info(event.top, find_by_uname='global_info_uname')
-      widget_control, id, xoffset = new_xsize-colorbar_xsize-border-25
-      display_global_infos_button, event=event
+;      id = widget_info(event.top, find_by_uname='global_info_uname')
+;      widget_control, id, xoffset = new_xsize-colorbar_xsize-border-25
+;      display_global_infos_button, event=event
       
       plot_beam_center_scale, event=event
       refresh_plot, event, recalculate=1
@@ -117,7 +117,10 @@ pro final_plot_event, Event
     end
     
     ;screenshot menu
-    widget_info(event.top, find_by_uname='screenshot_jpeg_uname'): begin
+    widget_info(event.top, find_by_uname='screenshot_png_uname'): begin
+      take_screenshot, event=event, file_format='png'
+    end
+    widget_info(event.top, find_by_uname='screenshot_jpg_uname'): begin
       take_screenshot, event=event, file_format='jpg'
     end
     
@@ -716,9 +719,12 @@ pro final_plot_gui, wBase, $
   screenshot = widget_button(bar1,$
     value = 'Screenshot',$
     /menu)
-  jpeg = widget_button(screenshot,$
-    value = 'Create JPEG',$
-    uname = 'screenshot_jpeg_uname')
+  png = widget_button(screenshot,$
+    value = 'Create PNG',$
+    uname = 'screenshot_png_uname')
+;  jpg = widget_button(screenshot,$
+;    value = 'Create JPG',$
+;    uname = 'screenshot_jpg_uname')
     
   help = widget_button(bar1, $
     value = 'HELP', $
