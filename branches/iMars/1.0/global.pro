@@ -47,9 +47,7 @@ compile_opt idl2
   ENDELSE
   
   homeFolder = getHomeFolder()
-  
-  print, 'homeFolder: ' , homeFolder
-  
+
   ;define global variables
   global = ptr_new ({ $
     version:           VERSION,$

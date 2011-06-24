@@ -33,11 +33,11 @@
 ;==============================================================================
 
 ;+
-; 
+;
 ; This function returns the ucams of the user
 ;
 ; @returns ucams
-; 
+;
 ; :Author: j35
 ;-
 FUNCTION get_ucams
@@ -55,5 +55,10 @@ END
 ; :Author: j35
 ;-
 function getHomeFolder
-return, getenv('HOME')
+  homeFolder = getenv('HOME')
+  if (homeFolder eq '') then begin
+    return, getenv('HOMEPATH')
+  endif else begin
+    return, homeFolder
+  endelse
 end
