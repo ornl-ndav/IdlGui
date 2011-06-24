@@ -90,7 +90,7 @@ pro display_images, main_base=main_base, $
   
   ;uname of the widget_draw where to display the image
   draw_uname = button + '_uname'
-  png_path = 'iMars_images/'
+  png_path = 'iMars_images' + path_sep()
   png_suffix = '.png'
   png_file_name = png_path + button + '_' + status + png_suffix
   

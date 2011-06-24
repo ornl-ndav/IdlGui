@@ -52,7 +52,7 @@ function get_global_mean, ob_roi_mean=ob_roi_mean, $
   
   sz = n_elements(ob_roi_mean)
   _index = 0
-  _global_mean_array = fltarr(ob_roi_mean)
+  _global_mean_array = fltarr(sz)
   while (_index lt sz) do begin
   
     _tmp = data_roi_mean[_index] / ob_roi_mean[_index]
@@ -82,7 +82,8 @@ pro run_normalization, event=event
   widget_control, event.top, get_uvalue=global
   widget_control, /hourglass
   
-  catch, error
+  ;catch, error
+  error = 0
   if (error ne 0) then begin
     catch,/cancel
     widget_control, hourglass=0
