@@ -62,11 +62,8 @@ pro plot_zoom_data, event=event, base=base, recalculate=recalculate
   
   ;get the size of the plot
   draw_geometry = WIDGET_INFO(id,/GEOMETRY)
-  xsize = draw_geometry.xsize
-  ysize = draw_geometry.ysize
-  
-  print, 'xsize: ' , xsize
-  print, 'ysize: ' , ysize
+  xsize = draw_geometry.scr_xsize
+  ysize = draw_geometry.scr_ysize
   
   if (keyword_set(recalculate)) then begin
   

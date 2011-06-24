@@ -152,8 +152,8 @@ pro preview_display_base_event, Event
       (*global_preview).ysize = new_ysize
       
       
-      widget_control, id, xsize = new_xsize
-      widget_control, id, ysize = new_ysize
+      widget_control, id, scr_xsize = new_xsize
+      widget_control, id, scr_ysize = new_ysize
       
       border = (*global_preview).border
       colorbar_xsize = (*global_preview).colorbar_xsize
@@ -270,6 +270,14 @@ pro preview_display_base_gui, wBase, $
   compile_opt idl2
   
   border = 40
+  
+  ;;;;if windows
+  xborder=border+7
+  ;;;;if mac
+  xborder=border
+  
+  yborder=border  
+  
   default_plot_size = [1000,1000]
   colorbar_xsize = 70
   
@@ -278,8 +286,8 @@ pro preview_display_base_gui, wBase, $
   
   main_base_xoffset = parent_base_geometry.xoffset
   main_base_yoffset = parent_base_geometry.yoffset
-  main_base_xsize = parent_base_geometry.xsize
-  main_base_ysize = parent_base_geometry.ysize
+  main_base_xsize = parent_base_geometry.scr_xsize
+  main_base_ysize = parent_base_geometry.scr_ysize
   
   xoffset = main_base_xsize
   xoffset += main_base_xoffset
@@ -302,10 +310,10 @@ pro preview_display_base_gui, wBase, $
     GROUP_LEADER = ourGroup)
     
   draw = widget_draw(wbase,$
-    xoffset = border,$
-    yoffset = border,$
-    scr_xsize = xsize-2*border,$
-    scr_ysize = ysize-2*border,$
+    xoffset = xborder,$
+    yoffset = yborder,$
+    scr_xsize = xsize-2*xborder,$
+    scr_ysize = ysize-2*yborder,$
     /button_events, $
     /motion_events, $
     ;    /tracking_events, $

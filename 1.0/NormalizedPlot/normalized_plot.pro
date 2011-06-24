@@ -283,8 +283,8 @@ pro normalized_plot_base_gui, wBase, $
   
   main_base_xoffset = parent_base_geometry.xoffset
   main_base_yoffset = parent_base_geometry.yoffset
-  main_base_xsize = parent_base_geometry.xsize
-  main_base_ysize = parent_base_geometry.ysize
+  main_base_xsize = parent_base_geometry.scr_xsize
+  main_base_ysize = parent_base_geometry.scr_ysize
   
   xoffset = main_base_xsize
   xoffset += main_base_xoffset
