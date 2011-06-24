@@ -1,7 +1,7 @@
 ;define path to dependencies and current folder
 spawn, 'pwd', CurrentFolder
 
-cd, CurrentFolder + '/utilities'
+cd, CurrentFolder + path_sep() + 'utilities'
 ;functions
 .run check.pro
 .run colorbar.pro
@@ -17,7 +17,7 @@ cd, CurrentFolder + '/utilities'
 .run xdisplayfile.pro
 .run histoplot.pro
 
-cd, CurrentFolder + '/reader_writer_routines/'
+cd, CurrentFolder + path_sep() + 'reader_writer_routines/'
 .run gettok.pro
 .run is_ieee_big.pro
 .run fxparpos.pro
@@ -46,30 +46,30 @@ cd, CurrentFolder + '/reader_writer_routines/'
 .run sxaddpar.pro
 .run fits_write.pro
 
-cd, CurrentFolder + '/FitsPlot'
+cd, CurrentFolder + path_sep() + 'FitsPlot'
 .run fits_plot_base.pro
 .run fits_plot_colorbar.pro
 .run fits_plot_launcher.pro
 .run fits_plot_roi_input_base.pro
 
-cd, CurrentFolder + '/PreviewBase'
+cd, CurrentFolder + path_sep() + 'PreviewBase'
 .run plot_zoom_roi.pro
 .run preview_display_base.pro
 .run plot_zoom_data.pro
 .run zoom_base_id_eventcb.pro
 
-cd, CurrentFolder + '/NormalizedPlot'
+cd, CurrentFolder + path_sep() + 'NormalizedPlot'
 .run normalized_plot.pro
 .run plot_normalized_data.pro
 
-cd, CurrentFolder + '/SettingsBase'
+cd, CurrentFolder + path_sep() + 'SettingsBase'
 .run settings_base.pro
 
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.
 
 ;Build CLoop GUI
-cd, CurrentFolder + '/iMarsGUI/'
+cd, CurrentFolder + path_sep() + 'iMarsGUI' + path_sep()
 .run build_menu.pro
 .run build_gui.pro
 
