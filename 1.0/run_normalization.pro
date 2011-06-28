@@ -165,7 +165,9 @@ pro run_normalization, event=event
   ;take mean of all open beam provided
   nbr_open_beam = n_elements(open_beam_table)
   _index_ob = 0
+  _open_beam_data = !null
   while (_index_ob lt nbr_open_beam) do begin
+    print, '_index_ob: ' , _index_ob
     _ob_file_name = list_open_beam[_index_ob]
     read_fits_file, event=event, $
       file_name=_ob_file_name, $
@@ -175,6 +177,8 @@ pro run_normalization, event=event
     endif else begin
       _open_beam_data = _data
     endelse
+    help, _open_beam_data
+    print
     _index_ob++
     progress_bar, event=event, /step
   endwhile
@@ -298,6 +302,9 @@ pro run_normalization, event=event
     den = _open_beam_data - _dark_field_data
     
     _data_normalized = num / den
+
+    ;cleanup data
+    cleanup_data_normalized, _data_normalized
     
     ;      window,0, xsize=600, ysize=600, title= list_data[_index_data]
     ;      _c_data = congrid(_data_normalized, 600, 600)
@@ -362,6 +369,38 @@ pro run_normalization, event=event
     dialog_parent=widget_id,$
     /center)
     
+end
+
+;+
+; :Description:
+;    This routine will do the following on the normalized data
+;     - all values below 0 will be bring back to 0
+;     - all values above 1 will be bring back to 1
+;     - * by 65535
+;     - float -> integer
+;
+; :Params:
+;    data
+;
+;
+;
+; :Author: j35
+;-
+pro cleanup_data_normalized, data
+compile_opt idl2
+
+index_neg = where(data lt 0.)
+data[index_neg] = 0.
+
+index_gt_1 = where(data gt 1.)
+data[index_gt_1] = 1.
+
+;full range of color
+data *= 65535.
+
+;float->integer
+data = fix(data)
+
 end
 
 ;+
