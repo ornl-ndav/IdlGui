@@ -73,7 +73,7 @@ pro preview_display_base_event, Event
         (*global_preview).left_click = 0b
         ;add roi to the main_base roi box if the selection is valid
         selection = (*global_preview).roi_selection
-;        plot_zoom_data, event=event
+        ;        plot_zoom_data, event=event
         if (is_selection_valid(selection=selection)) then begin
           keep_selection_inside_zoom_draw, event=event, selection=selection
           selection_data = convert_zoom_device_to_data(event=event, selection)
@@ -93,24 +93,24 @@ pro preview_display_base_event, Event
         roi_selection[2] = x
         roi_selection[3] = y
         (*global_preview).roi_selection = roi_selection
-
+        
         x0 = roi_selection[0]
         y0 = roi_selection[1]
         x1 = x
         y1 = y
-
+        
         plot_zoom_data, event=event
         plot_zoom_roi, event=event
-
+        
         id = widget_info(event.top,find_by_uname='zoom_draw')
         widget_control, id, get_value=plot_id
         wset, plot_id
         
         plots, [x0, x0, x1, x1, x0], $
-        [y0, y1, y1, y0, y0], /device, color=fsc_color('red')
-
+          [y0, y1, y1, y0, y0], /device, color=fsc_color('red')
+          
         ;plot_other_zoom_and_roi_data, event=event, /live
-
+          
         return
       endif
       
@@ -119,6 +119,9 @@ pro preview_display_base_event, Event
     ;main base resized or moved
     widget_info(event.top, find_by_uname='zoom_base_uname'): begin
     
+      if (path_sep() eq '\') then return ;no resizing for windows
+      ;because right now it's a mess !!!!
+    
       id = widget_info(event.top, find_by_uname='zoom_base_uname')
       geometry = widget_info(id,/geometry)
       new_xsize = geometry.scr_xsize
@@ -126,32 +129,35 @@ pro preview_display_base_event, Event
       xoffset = geometry.xoffset
       yoffset = geometry.yoffset
       
-      ;      ;only if the tof input base is there
-      ;      id_tof_selection = (*global_tof_selection).tof_selection_input_base
-      ;      if (widget_info(id_tof_selection, /valid_id) ne 0) then begin
-      ;        widget_control, id_tof_selection, xoffset = xoffset + new_xsize
-      ;        widget_control, id_tof_selection, yoffset = yoffset
-      ;      endif
-      ;
-      ;      ;only if the counts vs tof base is there
-      ;      id_plot = (*global_tof_selection).tof_selection_counts_vs_tof_base_id
-      ;      if (widget_info(id_plot,/valid_id) ne 0) then begin
-      ;        widget_control, id_plot, xoffset = xoffset + new_xsize
-      ;        widget_control, id_plot, yoffset = yoffset + 170
-      ;      endif
+      if (path_sep() eq '/') then begin ;mac/unix
       
-      if ((abs((*global_preview).ysize - new_ysize) eq 33.0) && $
-        (abs((*global_preview).xsize - new_xsize) eq 70.0)) then return
+        if ((abs((*global_preview).ysize - new_ysize) eq 33.0) && $
+          (abs((*global_preview).xsize - new_xsize) eq 70.0)) then return
+          
+        if ((abs((*global_preview).ysize - new_ysize) eq 33.0) && $
+          (abs((*global_preview).xsize - new_xsize) eq 0.0)) then return
+          
+        new_ysize -= 33  ;due to the menu bar at the top
         
-      if ((abs((*global_preview).ysize - new_ysize) eq 33.0) && $
-        (abs((*global_preview).xsize - new_xsize) eq 0.0)) then return
-        
-      new_ysize -= 33  ;due to the menu bar at the top
+      endif else begin ;windows
+      
+        print, '(*global_preview).ysize: ' , (*global_preview).ysize
+        print, 'new_ysize: ' , new_ysize
+        print, '(*global_preview).xsize: ' , (*global_preview).xsize
+        print, 'new_xsize: ' , new_xsize
+        print
+
+      if ((abs((*global_preview).xsize - new_xsize) eq 111.0) && $
+      (abs((*global_preview).ysize - new_ysize) eq 56.0)) then return
+      ;if (abs((*global_preview).ysize - new_ysize) eq 56.0) then return
+
+        new_ysize -= 33  ;due to the menu bar at the top
+        ; new_xsize -= 5
+      endelse
       
       (*global_preview).xsize = new_xsize
       (*global_preview).ysize = new_ysize
-      
-      
+            
       widget_control, id, scr_xsize = new_xsize
       widget_control, id, scr_ysize = new_ysize
       
@@ -187,13 +193,13 @@ pro preview_display_base_event, Event
       
     end
     
-;       ;cancel tof selected
-;    widget_info(event.top, $
-;      find_by_uname='cancel_discrete_selection_selected_uname'): begin
-;      widget_control, event.top, get_uvalue=global_preview
-;      top_base = (*global_preview).top_base
-;      widget_control, top_base, /destroy
-;    end
+    ;       ;cancel tof selected
+    ;    widget_info(event.top, $
+    ;      find_by_uname='cancel_discrete_selection_selected_uname'): begin
+    ;      widget_control, event.top, get_uvalue=global_preview
+    ;      top_base = (*global_preview).top_base
+    ;      widget_control, top_base, /destroy
+    ;    end
     
     else:
     
@@ -271,15 +277,17 @@ pro preview_display_base_gui, wBase, $
   
   border = 40
   
-  ;;;;if windows
-  xborder=border+7
-  ;;;;if mac
-  xborder=border
+  if (path_sep() eq '\') then begin ;if windows
+    xborder=border+7
+    colorbar_xsize = 95
+  endif else begin ;unix/mac
+    xborder=border
+    colorbar_xsize = 70
+  endelse
   
-  yborder=border  
+  yborder=border
   
   default_plot_size = [1000,1000]
-  colorbar_xsize = 70
   
   xsize = default_plot_size[0]
   ysize = default_plot_size[1]
@@ -335,27 +343,27 @@ pro preview_display_base_gui, wBase, $
     scr_ysize = ysize,$
     retain=2)
     
-;  if (scale_setting eq 0) then begin
-;    set1_value = '*  linear'
-;    set2_value = '   logarithmic'
-;  endif else begin
-;    set1_value = '   linear'
-;    set2_value = '*  logarithmic'
-;  endelse
-;  
-;  mPlot = widget_button(bar1, $
-;    value = 'Axes',$
-;    /menu)
-;    
-;  set1 = widget_button(mPlot, $
-;    value = set1_value, $
-;    event_pro = 'tof_selection_local_switch_axes_type',$
-;    uname = 'tof_selection_local_scale_setting_linear')
-;    
-;  set2 = widget_button(mPlot, $
-;    value = set2_value,$
-;    event_pro = 'tof_selection_local_switch_axes_type',$
-;    uname = 'tof_selection_local_scale_setting_log')
+  ;  if (scale_setting eq 0) then begin
+  ;    set1_value = '*  linear'
+  ;    set2_value = '   logarithmic'
+  ;  endif else begin
+  ;    set1_value = '   linear'
+  ;    set2_value = '*  logarithmic'
+  ;  endelse
+  ;
+  ;  mPlot = widget_button(bar1, $
+  ;    value = 'Axes',$
+  ;    /menu)
+  ;
+  ;  set1 = widget_button(mPlot, $
+  ;    value = set1_value, $
+  ;    event_pro = 'tof_selection_local_switch_axes_type',$
+  ;    uname = 'tof_selection_local_scale_setting_linear')
+  ;
+  ;  set2 = widget_button(mPlot, $
+  ;    value = set2_value,$
+  ;    event_pro = 'tof_selection_local_switch_axes_type',$
+  ;    uname = 'tof_selection_local_scale_setting_log')
     
   loadct = widget_button(bar1,$
     value = 'Color/Contrast',$
@@ -413,8 +421,8 @@ end
 pro preview_display_base_cleanup, tlb
   compile_opt idl2
   
-;  add_zoom_base_id, preview_base=tlb
-
+  ;  add_zoom_base_id, preview_base=tlb
+  
   widget_control, tlb, get_uvalue=global_preview, /no_copy
   
   if (n_elements(global_preview) eq 0) then return
