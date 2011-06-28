@@ -258,8 +258,14 @@ pro keep_selection_inside_zoom_draw, event=event, selection=selection
   if (x1 lt 0) then x1=0
   if (y1 lt 0) then y1=0
   
-  if (x1 gt geometry.xsize) then x1=geometry.xsize
-  if (y1 gt geometry.ysize) then y1=geometry.ysize
+  print, 'x1: ' , x1
+  print, 'geometry.xsize: ' , geometry.scr_xsize
+  print, 'y1: ' , y1
+  print, 'geometry.ysize: ' , geometry.scr_ysize
+  print
+    
+  if (x1 gt geometry.scr_xsize) then x1=geometry.scr_xsize
+  if (y1 gt geometry.scr_ysize) then y1=geometry.scr_ysize
   
   selection[2] = x1
   selection[3] = y1
