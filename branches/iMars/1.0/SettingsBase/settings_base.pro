@@ -57,7 +57,7 @@ pro settings_base_event, Event
       widget_control, (*global_settings)._base, /destroy
     end
     
-
+    
     ;gamma filtering buttons
     widget_info(event.top, find_by_uname='settings_lee_uname'): begin
       validate_changes, event=event
@@ -75,7 +75,7 @@ pro settings_base_event, Event
       preview_currently_selected_file, event=(*global_settings).main_event, $
         type=(*global).current_type_selected
     end
-
+    
     ;mean or min multi-selection
     ;mean
     widget_info(event.top, find_by_uname='settings_mean_uname'): begin
@@ -89,22 +89,47 @@ pro settings_base_event, Event
       preview_currently_selected_file, event=(*global_settings).main_event, $
         type=(*global).current_type_selected
     end
-
-  
+    
     ;transformation
     ;rotation
     widget_info(event.top, find_by_uname='settings_rotation_uname'): begin
       validate_changes, event=event
       preview_currently_selected_file, event=(*global_settings).main_event, $
-        type=(*global).current_type_selected    
+        type=(*global).current_type_selected
     end
     ;transpose
     widget_info(event.top, find_by_uname='settings_transpose_uname'): begin
-          validate_changes, event=event
+      validate_changes, event=event
       preview_currently_selected_file, event=(*global_settings).main_event, $
         type=(*global).current_type_selected
     end
-
+    
+    ;advanced settings
+    widget_info(event.top, find_by_uname='advance_settings_uname'): begin
+      value = getValue(id=event.id)
+      if (value eq 'ADVANCED >>>') then begin
+        value = 'ADVANCED <<<'
+        xsize = 690
+      endif else begin
+        value = 'ADVANCED >>>'
+        xsize = 380
+      endelse
+      put_value, id=event.id, value=value
+      id = widget_info(event.top, find_by_uname='setings_base_uname')
+      widget_control, id, scr_xsize=xsize
+    end
+    
+    ;method1, 2 or 3
+    widget_info(event.top, find_by_uname='method1_uname'): begin
+      (*global).normalization_method = 'method1'
+    end
+    widget_info(event.top, find_by_uname='method2_uname'): begin
+      (*global).normalization_method = 'method2'
+    end
+    widget_info(event.top, find_by_uname='method3_uname'): begin
+      (*global).normalization_method = 'method3'
+    end
+    
     else:
     
   endcase
@@ -142,9 +167,9 @@ pro validate_changes, event=event
   ;min or mean multi-selection
   ;mean
   if (isButtonSelected(event=event, uname='settings_mean_uname')) then $
-  button_value = 0
+    button_value = 0
   if (isButtonSelected(event=event, uname='settings_minimum_uname')) then $
-  button_value = 1
+    button_value = 1
   (*global).multi_selection = button_value
   
   ;transformation
@@ -153,9 +178,9 @@ pro validate_changes, event=event
   (*global).settings_rotation  = value
   ;transpose
   if (isButtonSelected(event=event, uname='settings_transpose_uname')) then begin
-  button_value = 1
+    button_value = 1
   endif else begin
-  button_value = 0
+    button_value = 0
   endelse
   (*global).settings_transpose = button_value
   
@@ -230,7 +255,7 @@ pro settings_base_gui, wBase, $
     0: widget_control, smooth_button, /set_button
     1: widget_control, lee_button, /set_button
   endcase
-
+  
   coeff_base = widget_base(gamma_base,$
     /row)
   label = widget_label(coeff_base,$
@@ -266,11 +291,46 @@ pro settings_base_gui, wBase, $
     value = 'Minimum',$
     /no_release, $
     uname = 'settings_minimum_uname')
-    case ((*global).multi_selection) of
+  case ((*global).multi_selection) of
     0: widget_control, mean_button, /set_button
     1: widget_control, minimum_button, /set_button
-    endcase
-    
+  endcase
+  
+  ;Normalization method
+  xoff = 380
+  yoff = 20
+  title = widget_label(wBase,$
+    value = 'Normalization method',$
+    xoffset = xoff+10,$
+    yoffset = yoff-10)
+  _base = widget_base(wBase,$
+    xoffset = xoff,$
+    yoffset = yoff,$
+    frame=1,$
+    xsize = 300,$
+    /column)
+  space = widget_label(_base,$
+    value = '')
+  norm_base = widget_base(_base,$
+    /base_align_left,$
+    /column,$
+    /exclusive)
+  method1 = widget_button(norm_base,$
+    value = 'Method 1: [0,1]->[0,65535]->32bits',$
+    uname='method1_uname')
+  method2 = widget_button(norm_base,$
+    value = 'Method 2: [gt0, lt1]->[0,65535]->32bits',$
+    uname='method2_uname')
+  method3 = widget_button(norm_base,$
+    value = 'Method 3: [gt0, lt1]->[-32768,32767]->16bits',$
+    uname='method3_uname')
+  case ((*global).normalization_method) of
+    'method1': id = method1
+    'method2': id = method2
+    'method3': id = method3
+  endcase
+  widget_control, id, /set_button
+  
   ;transformation
   yoff = 105
   xoff = 10
@@ -285,31 +345,44 @@ pro settings_base_gui, wBase, $
     /base_align_center,$
     frame = 1)
   rotation = cw_bgroup(transformation_base,$
-  ['0','90','180','270'],$
-  /row,$
-  set_value=(*global).settings_rotation,$
-  /exclusive,$
-  label_left = 'Rotation:',$
-  uname = 'settings_rotation_uname')
+    ['0','90','180','270'],$
+    /row,$
+    set_value=(*global).settings_rotation,$
+    /exclusive,$
+    label_left = 'Rotation:',$
+    uname = 'settings_rotation_uname')
   trans_base = widget_base(transformation_base,$
-  /nonexclusive,$
-  /align_left, $
-  /row)
-  trans_button = widget_button(trans_base,$
-  value = 'Transpose',$
-  uname = 'settings_transpose_uname')
-  if ((*global).settings_transpose) then begin
-  widget_control, trans_button, /set_button
-  endif
-
-  bottom_row = widget_base(wBase,$
-    xoffset = 270,$
-    yoffset = 150,$
-    /base_align_right,$
+    /nonexclusive,$
+    /align_left, $
     /row)
-  ok = widget_button(bottom_row,$
+  trans_button = widget_button(trans_base,$
+    value = 'Transpose',$
+    uname = 'settings_transpose_uname')
+  if ((*global).settings_transpose) then begin
+    widget_control, trans_button, /set_button
+  endif
+  
+  ;advanced button
+  xoff = 260
+  yoff = 105
+  adv_button = widget_button(wBase,$
+    xoffset=xoff,$
+    yoffset=yoff,$
+    scr_xsize=100,$
+    value = 'ADVANCED >>>',$
+    uname = 'advance_settings_uname')
+    
+  ;  bottom_row = widget_base(wBase,$
+  ;    xoffset = 260,$
+  ;    yoffset = 150,$
+  ;    /base_align_left,$
+  ;    /row)
+    
+  ok = widget_button(wBase,$
+    xoffset=260,$
+    yoffset=150,$
     value = 'VALIDATE',$
-    scr_xsize = 80,$
+    scr_xsize = 100,$
     uname = 'validate_settings_uname')
     
 end

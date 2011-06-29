@@ -93,6 +93,9 @@ compile_opt idl2
     ;transpose   0:no   1:yes
     settings_transpose: 0, $
         
+    ;'method1','method2' or 'method3'     
+    normalization_method: 'method3', $    
+        
     ;settings base
     settings_base_id: 0L, $
     
