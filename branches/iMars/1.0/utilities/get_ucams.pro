@@ -57,8 +57,8 @@ END
 function getHomeFolder
   homeFolder = getenv('HOME')
   if (homeFolder eq '') then begin
-    return, getenv('HOMEPATH')
+    return, getenv('HOMEPATH') + path_sep()
   endif else begin
-    return, homeFolder
+    return, homeFolder + path_sep()
   endelse
 end
