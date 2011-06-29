@@ -104,7 +104,7 @@ pro run_normalization, event=event
       title=title,$
       dialog_parent=widget_id,$
       /center)
-          
+      
     return
   endif
   
@@ -302,7 +302,7 @@ pro run_normalization, event=event
     den = _open_beam_data - _dark_field_data
     
     _data_normalized = num / den
-
+    
     ;cleanup data
     cleanup_data_normalized, _data_normalized
     
@@ -387,20 +387,23 @@ end
 ; :Author: j35
 ;-
 pro cleanup_data_normalized, data
-compile_opt idl2
-
-index_neg = where(data lt 0.)
-data[index_neg] = 0.
-
-index_gt_1 = where(data gt 1.)
-data[index_gt_1] = 1.
-
-;full range of color
-data *= 65535.
-
-;float->integer
-data = fix(data)
-
+  compile_opt idl2
+  
+  index_neg = where(data lt 0.)
+  data[index_neg] = 0.
+  
+  index_gt_1 = where(data gt 1.)
+  data[index_gt_1] = 1.
+  
+  ;full range of color
+  data *= 65535.
+  data -= 32767
+  
+  ;float->integer
+  ;data = long(data)
+  ;data = ulong(data)
+  data = fix(data)
+  
 end
 
 ;+
