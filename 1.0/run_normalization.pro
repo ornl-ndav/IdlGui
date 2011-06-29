@@ -304,12 +304,10 @@ pro run_normalization, event=event
     _data_normalized = num / den
     
     ;cleanup data
-    cleanup_data_normalized, _data_normalized
-    
-    ;      window,0, xsize=600, ysize=600, title= list_data[_index_data]
-    ;      _c_data = congrid(_data_normalized, 600, 600)
-    ;      tvscl, _c_data
-    
+    cleanup_data_normalized, event=event, $
+      data=_data_normalized, $
+      message=message
+      
     launch_normalized_plot, event=event, $
       data=_data_normalized, $
       file_name=list_data[_index_data]
@@ -379,30 +377,88 @@ end
 ;     - * by 65535
 ;     - float -> integer
 ;
-; :Params:
+; :Keyowrds:
+;    event
 ;    data
-;
+;    message
 ;
 ;
 ; :Author: j35
 ;-
-pro cleanup_data_normalized, data
+pro cleanup_data_normalized, event=event, data=data, message=message
   compile_opt idl2
   
-  index_neg = where(data lt 0.)
-  data[index_neg] = 0.
+  widget_control, event.top, get_uvalue=global
   
-  index_gt_1 = where(data gt 1.)
-  data[index_gt_1] = 1.
+  method = (*global).normalization_method
   
-  ;full range of color
-  data *= 65535.
-  data -= 32767
+  message = [message, '-> Cleanup data normalized using ' + method]
   
-  ;float->integer
-  ;data = long(data)
-  ;data = ulong(data)
-  data = fix(data)
+  case (method) of
+    'method1': begin ;stretched data between [0,1]
+    
+      min_value = min(data,max=max_value)
+      
+      ;trying something here
+      if (min_value lt 0) then begin
+        data += abs(min_value)
+      endif else begin
+        data -= min_value
+      endelse
+      
+      min_value = min(data,max=max_value)
+      data = float(data) / (float(max_value))
+      
+      ;for 32bits output file
+      ;full range of color
+      data = float(data) * 65535.
+      ;data -= 32768
+      
+      ;float->integer
+      data = long(data)
+      
+    end
+    
+    'method2': begin ;32bits output file [0, 65535]
+    
+      index_neg = where(data lt 0.)
+      data[index_neg] = 0.
+      
+      index_gt_1 = where(data gt 1.)
+      data[index_gt_1] = 1.
+      
+      ;for 32bits output file
+      ;full range of color
+      data = float(data) * 65535.
+      ;data -= 32768
+      
+      ;float->integer
+      data = long(data)
+      
+    end
+    
+    'method3': begin ;16bits output file [-32767,32768]
+    
+      min_value = min(data,max=max_value)
+      index = where(data GT 1, nbr)
+      
+      index_neg = where(data lt 0.)
+      data[index_neg] = 0.
+      
+      index_gt_1 = where(data gt 1.)
+      data[index_gt_1] = 1.
+      
+      ;full range of color
+      data = float(data) * 65535.
+      data -= 32768
+      
+      ;float->integer
+      data = fix(data)
+      
+    end
+    
+  endcase
+  
   
 end
 

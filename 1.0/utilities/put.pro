@@ -32,6 +32,21 @@
 ;
 ;==============================================================================
 
+;+
+; :Description:
+;    This set the value of a widget (such as a widget_button)
+;
+; :Params:
+;    uname
+;    value
+;
+; :Keywords:
+;    event
+;    base
+;    append
+;
+; :Author: j35
+;-
 pro putValue, event=event, base=base, uname, value, append=append
   compile_opt idl2
   
@@ -47,3 +62,35 @@ pro putValue, event=event, base=base, uname, value, append=append
   endelse
   
 end
+
+
+;+
+; :Description:
+;    new call to putValue
+;
+;
+;
+; :Keywords:
+;    event
+;    id
+;    base
+;    uname
+;    value
+;
+; :Author: j35
+;-
+pro put_value, event=event, id=id, base=base, uname=uname, value=value
+  compile_opt idl2
+  
+  if (keyword_set(id)) then begin
+    if (n_elements(append) eq 0) then begin
+      widget_control, id, set_value=value
+    endif else begin
+      widget_control, id, set_value=value, /append
+    endelse
+    return
+  endif
+  
+  putValue, event=event, base=base, uname, value, append=append
+  
+  end
