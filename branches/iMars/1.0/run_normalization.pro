@@ -395,7 +395,7 @@ pro cleanup_data_normalized, event=event, data=data, message=message
   message = [message, '-> Cleanup data normalized using ' + method]
   
   case (method) of
-    'method1': begin ;stretched data between [0,1]
+    'method1': begin ;stretched data between [0,1] 32bits
     
       min_value = min(data,max=max_value)
       
