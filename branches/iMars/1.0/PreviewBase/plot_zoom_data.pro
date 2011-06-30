@@ -69,7 +69,6 @@ pro plot_zoom_data, event=event, base=base, recalculate=recalculate
   
     global = (*global_preview).global
     data = (*(*global).preview_data)
-    help, data
     cData = congrid(data, xsize, ysize)
     (*(*global_preview).cData) = cData
     tvscl, cData

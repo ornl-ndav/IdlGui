@@ -47,10 +47,12 @@ pro launch_xloadct, event=event
   compile_opt idl2
   
   id = widget_info(event.top, find_by_uname='MAIN_BASE')
+  widget_control, event.top, get_uvalue=global
   xloadct, group=id, $
   updatecallback='live_preview_of_currently_selected_file',$
   updatecbdata=event, $
-  /use_current
+  /use_current, $
+  global=global
 
 end
   

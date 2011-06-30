@@ -113,6 +113,9 @@ function IDLconfiguration::getConfig, event
     
     type: (*global).current_type_selected, $
     
+    ;colorbar selected
+    default_colorbar: (*global).default_colorbar, $
+    
     ;settings
     ;gamma filtering
     gamma_filtering: (*global).gamma_filtering, $

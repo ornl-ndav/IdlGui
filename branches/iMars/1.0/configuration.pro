@@ -240,6 +240,15 @@ pro repopulate_gui, event, _structure
   setButton, event=event, uname='with_gamma_filtering_uname', $
     _structure.is_with_gamma_filtering
     
+  ;colorbar
+  catch,_error
+  if (_error ne 0) then begin
+    catch,/cancel
+  endif else begin
+    (*global).default_colorbar = _structure.default_colorbar
+  endelse
+  catch,/cancel
+  
   ;settings
   ;gamma filtering
   (*global).gamma_filtering = _structure.gamma_filtering
@@ -267,6 +276,10 @@ pro repopulate_gui, event, _structure
     
   ;display preview of file selected
   type = _structure.type
+  
+  device, decomposed=0
+  loadct, (*global).default_colorbar, /silent
+  
   preview_currently_selected_file, event=event, type=type
   
 end
