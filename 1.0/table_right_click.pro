@@ -101,10 +101,15 @@ pro delete_selection, event=event, type=type
   ;row_selected = get_table_row_selected(event=event, uname=uname)
   row_selected = get_table_lines_selected(event=event, uname=uname)
   
+  catch, _error
+  if (_error ne 0) then begin
+  catch,/cancel
+  endif else begin
   id = widget_info(event.top, find_by_uname=uname)
   widget_control, id, /use_table_select
   widget_control, id, /delete_rows
   widget_control, id, set_table_select=[-1,-1]
+  endelse
   
   catch, error
   if (error ne 0) then begin ;means table is empty
