@@ -17,6 +17,7 @@ cd, CurrentFolder + path_sep() + 'utilities'
 .run time.pro
 .run xdisplayfile.pro
 .run histoplot.pro
+.run xloadct.pro
 
 cd, CurrentFolder + path_sep() + 'reader_writer_routines' + path_sep()
 .run gettok.pro

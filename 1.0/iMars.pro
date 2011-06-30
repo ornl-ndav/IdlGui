@@ -79,7 +79,7 @@ pro BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   initialize_all_images, main_base=main_base
 
   DEVICE, DECOMPOSED = 0
-  loadct, 5, /silent
+  loadct, (*global).default_colorbar, /silent
   
 ;  logger, APPLICATION=application, VERSION=version, UCAMS=ucams
   

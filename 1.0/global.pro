@@ -61,6 +61,9 @@ compile_opt idl2
     pb_ysize: 10, $ ;ysize of the progres bar
     pb_step: 0, $ ;where we are in the progress
     
+    ;default colorbar
+    default_colorbar: 5,$
+    
     ;list of all the buttons of the main base
     list_button_main_base: ['zoom','contrast','metadata'], $
     preview_file_metadata: ptr_new(0L), $ ;metadata files file
