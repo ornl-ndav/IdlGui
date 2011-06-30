@@ -65,7 +65,7 @@ pro build_gui, main_base, global
     /row,$
     /align_bottom)
   label = widget_label(label_base,$
-    value = 'Data files')
+    value = 'Sample')
     
   space = widget_label(row1,$
     value = space_value)
