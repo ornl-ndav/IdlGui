@@ -55,6 +55,9 @@ pro gamma_cleaner, event=event, data=data
   
   coeff = (*global).gamma_filtering_coeff
   
+  data_
+  
+  
   case ((*global).gamma_filtering) of
     0: data = smooth(data, coeff)
     1: data = leefilt(data, coeff)
