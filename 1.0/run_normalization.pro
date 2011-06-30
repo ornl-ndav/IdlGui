@@ -126,7 +126,7 @@ pro run_normalization, event=event
   dark_field_table = getValue(event=event, uname='dark_field_table')
   list_dark_field = reform(dark_field_table)
   message = [message,'-> list dark field:']
-  _message = '    ' + list_data
+  _message = '    ' + list_dark_field
   message = [message, _message]
   
   ;collect table of ROIs
