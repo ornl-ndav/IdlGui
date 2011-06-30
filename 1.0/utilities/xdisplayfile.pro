@@ -54,7 +54,9 @@ PRO XDISPLAYFILE_event, event
         return
       endif
       IF (STRLEN(state.filename) EQ 0) THEN BEGIN
-        state.filename = DIALOG_PICKFILE(/WRITE)
+        state.filename = DIALOG_PICKFILE(/WRITE, $
+          default_extension='txt', $
+          filter=['*.txt'])
       ENDIF
       IF (STRLEN(state.filename) GT 0) THEN BEGIN
         XDISPLAYFILE_write, state.filetext, state.filename
@@ -71,7 +73,9 @@ PRO XDISPLAYFILE_event, event
           'Save As: Feature disabled for demo mode.')
         return
       endif
-      state.filename = DIALOG_PICKFILE(/WRITE)
+      state.filename = DIALOG_PICKFILE(/WRITE, $
+        default_extension='txt', $
+        filter=['*.txt'])
       IF (STRLEN(state.filename) GT 0) THEN BEGIN
         XDISPLAYFILE_write, state.filetext, state.filename
         WIDGET_CONTROL, event.top, SET_UVALUE=state
@@ -176,15 +180,15 @@ PRO XDisplayFile, FILENAME, TITLE = TITLE, GROUP = GROUP, WIDTH = WIDTH, $
   ; CENTER: set this keyword to center the base over the current widget_base
   ; (required a valid widget id to be put into GROUP)
   ;
-  ; OFFSET: number of pixel to offset the widget_base relative to the center 
+  ; OFFSET: number of pixel to offset the widget_base relative to the center
   ; (if center flag set) or to the top left corner
   ;
   ; XOFFSET: number of pixel to offset the widget_base relative to the left
   ; (ignored if CENTER flag has been set)
-  ; 
+  ;
   ; YOFFSET: number of pixel to offset the widget_base relative to the top
   ; (ignored if CENTER flag has been set)
-  ; 
+  ;
   ;	DONE_BUTTON: the text to use for the Done button.  If omitted,
   ;		the text "Done with <filename>" is used.
   ;
@@ -243,7 +247,7 @@ PRO XDisplayFile, FILENAME, TITLE = TITLE, GROUP = GROUP, WIDTH = WIDTH, $
   ;			                button align on left, removed padding.
   ;	      19 Nov 2004, GROW_TO_SCREEN and RETURN_ID keywords. Allow for
   ;                     user to resize display. General updating.
-  ;       03 Octo 2010, j35@ornl.gov CENTER, OFFSET, XOFFSET and 
+  ;       03 Octo 2010, j35@ornl.gov CENTER, OFFSET, XOFFSET and
   ;                     YOFFSET flags added
   ;-
     
@@ -262,9 +266,9 @@ PRO XDisplayFile, FILENAME, TITLE = TITLE, GROUP = GROUP, WIDTH = WIDTH, $
   
   if(KEYWORD_SET(OFFSET)) then begin
     offset = offset
-    endif else begin
+  endif else begin
     offset = 0
-    endelse
+  endelse
   
   if(~keyword_set(xoffset)) then xoffset = 0
   if(~keyword_set(yoffset)) then yoffset = 0
@@ -324,10 +328,10 @@ PRO XDisplayFile, FILENAME, TITLE = TITLE, GROUP = GROUP, WIDTH = WIDTH, $
       yoff = ((main_ysize) / 3) + main_yoff
       
     endif else begin
-      
+    
       xoff = xoffset
       yoff = yoffset
-    
+      
     endelse
     
     xoff += offset
