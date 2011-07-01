@@ -86,6 +86,7 @@ compile_opt idl2
     ;['smooth','lee filtering']
     gamma_filtering: 0, $
     gamma_filtering_coeff: 5, $
+    gamma_percentage: 0.05, $  ;0.05%
     
     ;['mean','min'] multi_selection
     multi_selection: 0, $
