@@ -56,19 +56,16 @@ pro gamma_cleaner, event=event, data=data
   coeff = (*global).gamma_filtering_coeff
   
   ;5%
-  percent = 0.05
+  percent = 0.0005
   
-  ;5% of data array
-  _data_5_percent = data * percent
-
   case ((*global).gamma_filtering) of
     0: _gamma_data = smooth(data, coeff)
     1: _gamma_data = leefilt(data, coeff)
     else: _gamma_data = data
   endcase
   
-  index = where(_gamma_data > _data_5_percent)
-  
+  diff_data = abs(data - _gamma_data)
+  index = where (diff_data gt percent*65535.)
   data[index] = _gamma_data[index]
   
   return

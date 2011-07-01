@@ -221,11 +221,15 @@ end
 pro launch_preview_xloadct, event=event
   compile_opt idl2
   
+  widget_control, event.top, get_uvalue=global_preview
+  global = (*global_preview).global
+  
   id = widget_info(event.top, find_by_uname='zoom_base_uname')
   xloadct, group=id, $
     updatecallback='zoom_live_preview_of_currently_selected_file',$
     updatecbdata=event, $
-    /use_current
+    /use_current, $
+    global=global
     
 end
 

@@ -110,6 +110,7 @@ pro display_preview_of_file, event=event, file_name=file_name
   read_fits_file, event=event, file_name=file_name, $
     data=data, $
     metadata=metadata
+    
   if (data eq !null) then begin
     full_reset_of_preview_base, event=event
     return
