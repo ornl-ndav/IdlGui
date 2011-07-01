@@ -166,7 +166,6 @@ pro run_normalization, event=event
   _index_ob = 0
   _open_beam_data = !null
   while (_index_ob lt nbr_open_beam) do begin
-    print, '_index_ob: ' , _index_ob
     _ob_file_name = list_open_beam[_index_ob]
     read_fits_file, event=event, $
       file_name=_ob_file_name, $
@@ -176,8 +175,6 @@ pro run_normalization, event=event
     endif else begin
       _open_beam_data = _data
     endelse
-    help, _open_beam_data
-    print
     _index_ob++
     progress_bar, event=event, /step
   endwhile
