@@ -109,10 +109,18 @@ pro settings_base_event, Event
       value = getValue(id=event.id)
       if (value eq 'ADVANCED >>>') then begin
         value = 'ADVANCED <<<'
-        xsize = 690
+        if (path_sep() eq '/') then begin ;mac
+          xsize = 690
+        endif else begin
+          xsize = 660
+        endelse
       endif else begin
         value = 'ADVANCED >>>'
-        xsize = 380
+        if (path_sep() eq '/') then begin ;mac
+          xsize = 380
+        endif else begin
+          xsize = 390
+        endelse
       endelse
       put_value, id=event.id, value=value
       id = widget_info(event.top, find_by_uname='setings_base_uname')
@@ -202,7 +210,8 @@ end
 ;-
 pro settings_base_gui, wBase, $
     global=global, $
-    parent_base_geometry=parent_base_geometry
+    parent_base_geometry=parent_base_geometry, $
+    system=system
   compile_opt idl2
   
   main_base_xoffset = parent_base_geometry.xoffset
@@ -218,13 +227,21 @@ pro settings_base_gui, wBase, $
     
   ourGroup = WIDGET_BASE()
   
+  if (system eq 'mac') then begin
+    xsize = 380
+    ysize = 200
+  endif else begin
+    xsize = 390
+    ysize = 230
+  endelse
+  
   title = 'Settings'
   wBase = WIDGET_BASE(TITLE = title, $
     UNAME        = 'setings_base_uname', $
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
-    scr_xsize = 380,$
-    scr_ysize = 200,$
+    scr_xsize = xsize,$
+    scr_ysize = ysize,$
     /align_center, $
     GROUP_LEADER = ourGroup)
     
@@ -303,11 +320,18 @@ pro settings_base_gui, wBase, $
     value = 'Normalization method',$
     xoffset = xoff+10,$
     yoffset = yoff-10)
+    
+  if (system eq 'mac') then begin
+    xsize = 300
+  endif else begin
+    xsize = 250
+  endelse
+  
   _base = widget_base(wBase,$
     xoffset = xoff,$
     yoffset = yoff,$
     frame=1,$
-    xsize = 300,$
+    xsize = xsize,$
     /column)
   space = widget_label(_base,$
     value = '')
@@ -363,12 +387,18 @@ pro settings_base_gui, wBase, $
   endif
   
   ;advanced button
-  xoff = 260
+  if (system eq 'mac') then begin
+    xoff = 260
+    xsize = 100
+  endif else begin
+    xoff = 275
+    xsize = 90
+  endelse
   yoff = 105
   adv_button = widget_button(wBase,$
     xoffset=xoff,$
     yoffset=yoff,$
-    scr_xsize=100,$
+    scr_xsize=xsize,$
     value = 'ADVANCED >>>',$
     uname = 'advance_settings_uname')
     
@@ -379,10 +409,10 @@ pro settings_base_gui, wBase, $
   ;    /row)
     
   ok = widget_button(wBase,$
-    xoffset=260,$
+    xoffset=xoff,$
     yoffset=150,$
     value = 'VALIDATE',$
-    scr_xsize = 100,$
+    scr_xsize = xsize,$
     uname = 'validate_settings_uname')
     
 end
@@ -411,10 +441,17 @@ pro settings_base, event=event, $
   endelse
   parent_base_geometry = WIDGET_INFO(id,/GEOMETRY)
   
+  if (path_sep() eq '/') then begin
+    system='mac'
+  endif else begin
+    system='windows'
+  endelse
+  
   _base = 0L
   settings_base_gui, _base, $
     global=global, $
-    parent_base_geometry=parent_base_geometry
+    parent_base_geometry=parent_base_geometry, $
+    system=system
   (*global).settings_base_id = _base
   
   WIDGET_CONTROL, _base, /REALIZE
