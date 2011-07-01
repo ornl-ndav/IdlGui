@@ -283,7 +283,7 @@ pro preview_display_base_gui, wBase, $
   
   if (path_sep() eq '\') then begin ;if windows
     xborder=border+7
-    colorbar_xsize = 95
+    colorbar_xsize = 115 ;95
   endif else begin ;unix/mac
     xborder=border
     colorbar_xsize = 70
