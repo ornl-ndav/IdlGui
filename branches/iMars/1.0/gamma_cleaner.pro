@@ -55,8 +55,7 @@ pro gamma_cleaner, event=event, data=data
   
   coeff = (*global).gamma_filtering_coeff
   
-  ;5%
-  percent = 0.0005
+  percent =  (*global).gamma_percentage * 0.01
   
   case ((*global).gamma_filtering) of
     0: _gamma_data = smooth(data, coeff)

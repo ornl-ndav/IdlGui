@@ -104,6 +104,13 @@ pro settings_base_event, Event
         type=(*global).current_type_selected
     end
     
+    ;gamma filtering percentage to use values to removed
+    widget_info(event.top, find_by_uname='settings_gamma_percent_uname'): begin
+      validate_changes, event=event
+      preview_currently_selected_file, event=(*global_settings).main_event, $
+        type=(*global).current_type_selected
+    end
+    
     ;advanced settings
     widget_info(event.top, find_by_uname='advance_settings_uname'): begin
       value = getValue(id=event.id)
@@ -163,6 +170,10 @@ pro validate_changes, event=event
   
   coeff_value = getValue(event=event, uname='gamma_filtering_coeff_uname')
   (*global).gamma_filtering_coeff = coeff_value
+  
+  percentage_value = getValue(event=event, $
+  uname='settings_gamma_percent_uname')
+  (*global).gamma_percentage = float(percentage_value)
   
   ;button selected
   ;smooth
@@ -229,10 +240,10 @@ pro settings_base_gui, wBase, $
   
   if (system eq 'mac') then begin
     xsize = 380
-    ysize = 200
+    ysize = 210
   endif else begin
     xsize = 390
-    ysize = 230
+    ysize = 240
   endelse
   
   title = 'Settings'
@@ -354,6 +365,31 @@ pro settings_base_gui, wBase, $
     'method3': id = method3
   endcase
   widget_control, id, /set_button
+  
+   ;gamma filtering percentage to cleanup
+  xoff = 380
+  yoff = 140
+  title = widget_label(wBase,$
+  value = 'Absolute intensity percentage to cleanup',$
+  xoffset = xoff+10,$
+  yoffset = yoff-10)
+  _base = widget_base(wBase,$
+  xoffset=xoff,$
+  yoffset=yoff,$
+  frame=1,$
+  /column,$
+  xsize=300)
+  space = widget_label(_base,$
+  value = '')
+  perc_base = widget_base(_base,$
+  /base_align_left,$
+  /row)
+  perc_value = cw_field(perc_base,$
+  /float,$
+  /return_events,$
+  value = (*global).gamma_percentage, $
+  title='Percentage (%):',$
+  uname ='settings_gamma_percent_uname')
   
   ;transformation
   yoff = 105

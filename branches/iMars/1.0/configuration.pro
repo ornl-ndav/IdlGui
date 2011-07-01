@@ -240,6 +240,15 @@ pro repopulate_gui, event, _structure
   setButton, event=event, uname='with_gamma_filtering_uname', $
     _structure.is_with_gamma_filtering
     
+  ;percentage
+  catch,_error
+  if (_error ne 0) then begin
+    catch,/cancel
+  endif else begin
+    (*global).gamma_percentage = _structure.gamma_percentage
+  endelse
+  catch,/cancel
+  
   ;colorbar
   catch,_error
   if (_error ne 0) then begin

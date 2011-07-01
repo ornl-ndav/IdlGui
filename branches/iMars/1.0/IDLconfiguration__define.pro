@@ -120,6 +120,8 @@ function IDLconfiguration::getConfig, event
     ;gamma filtering
     gamma_filtering: (*global).gamma_filtering, $
     gamma_filtering_coeff: (*global).gamma_filtering_coeff, $
+    gamma_percentage: (*global).gamma_percentage , $ 
+    
     ;mean/minimum
     mean_min_multi_selection: (*global).multi_selection, $
     ;transformation (0, 90, 180 or 270degres)
