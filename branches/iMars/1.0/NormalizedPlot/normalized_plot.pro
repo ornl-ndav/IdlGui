@@ -200,28 +200,28 @@ pro normalized_plot_base_event, Event
   endcase
   
 end
-
-;+
-; :Description:
-;    Launch the xloadct base
 ;
-;
-;
-; :Keywords:
-;    event
-;
-; :Author: j35
-;-
-pro launch_preview_xloadct, event=event
-  compile_opt idl2
-  
-  id = widget_info(event.top, find_by_uname='zoom_base_uname')
-  xloadct, group=id, $
-    updatecallback='zoom_live_preview_of_currently_selected_file',$
-    updatecbdata=event, $
-    /use_current
-    
-end
+;;+
+;; :Description:
+;;    Launch the xloadct base
+;;
+;;
+;;
+;; :Keywords:
+;;    event
+;;
+;; :Author: j35
+;;-
+;pro launch_preview_xloadct, event=event
+;  compile_opt idl2
+;  
+;  id = widget_info(event.top, find_by_uname='zoom_base_uname')
+;  xloadct, group=id, $
+;    updatecallback='zoom_live_preview_of_currently_selected_file',$
+;    updatecbdata=event, $
+;    /use_current
+;    
+;end
 
 ;+
 ; :Description:
