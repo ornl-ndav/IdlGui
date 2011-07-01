@@ -6,11 +6,11 @@ resolve_routine, "STRSPLIT", /either
 resolve_routine, "loadct", /either
 resolve_routine, "congrid", /either
 resolve_routine, "mean", /either
-resolve_routine, "xloadct", /either
 resolve_routine, "xregistered", /either
 resolve_routine, "leefilt", /either
 resolve_routine, "rot", /either
 resolve_routine, "read_png", /either
+resolve_routine, "cw_field", /either
 
 ;resolve_all
 

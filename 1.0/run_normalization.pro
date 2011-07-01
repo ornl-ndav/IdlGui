@@ -82,8 +82,7 @@ pro run_normalization, event=event
   widget_control, event.top, get_uvalue=global
   widget_control, /hourglass
   
-  ;catch, error
-  error = 0
+  catch, error
   if (error ne 0) then begin
     catch,/cancel
     widget_control, hourglass=0
@@ -183,8 +182,12 @@ pro run_normalization, event=event
     progress_bar, event=event, /step
   endwhile
   ;take the average
-  _open_beam_data /= nbr_open_beam
-  log_book_update, event, message='-> done with getting average open beam'
+  
+  ;no need to take average of only 1 open beam file
+  if (nbr_open_beam gt 1) then begin
+    _open_beam_data /= nbr_open_beam
+    log_book_update, event, message='-> done with getting average open beam'
+  endif
   
   ;Create array of average values of region selected
   ;this will be used to scale the data file according to the open beam file
@@ -236,9 +239,13 @@ pro run_normalization, event=event
     _index_df++
     progress_bar, event=event, /step
   endwhile
-  ;take the average
-  _dark_field_data /= nbr_dark_field
-  log_book_update, event, message='-> done with getting average dark field'
+  
+  ;no need to take average if there is only 1 dark field
+  if (nbr_dark_field gt 1) then begin
+    ;take the average
+    _dark_field_data /= nbr_dark_field
+    log_book_update, event, message='-> done with getting average dark field'
+  endif
   
   ;start jobs on data
   _index_data = 0
