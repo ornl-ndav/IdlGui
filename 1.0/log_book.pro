@@ -156,34 +156,52 @@ pro save_log_book, base=base, event=event, file_name=file_name
   compile_opt idl2
   
   if (keyword_set(base)) then begin
-  widget_control, base, get_uvalue=global
+    widget_control, base, get_uvalue=global
+    id = widget_info(base, find_by_uname='MAIN_BASE')
   endif else begin
-  widget_control, event.top, get_uvalue=global
+    widget_control, event.top, get_uvalue=global
+    id = widget_info(event.top, find_by_uname='MAIN_BASE')
   endelse
   
-  log_book = (*(*global).log_book)
-  prefix = (*global).log_book_file_name_prefix
-  suffix = (*global).log_book_file_name_suffix
-  path = (*global).log_book_path
-  time_stamp =  GenerateIsoTimeStamp()
-  log_book_file_name = path + path_sep() + prefix + '_' + time_stamp + '.' + suffix
-  
-  openw, 1, log_book_file_name
-  
-  sz = n_elements(log_book)
-  _index=0
-  while (_index lt sz) do begin
-  
-    printf, 1, log_book[_index]
+  catch, error
+  if (error ne 0) then begin
+    catch, /cancel
     
-    _index++
-  endwhile
+    title = 'Error while trying to write the log file!'
+    message = ['Debug message:',$
+      '',$
+      'Log book file name: ' , log_book_file_name]
+    result = dialog_message(message,$
+      /error,$
+      dialog_parent=id,$
+      /center, $
+      title=title)
+      
+  endif
   
-  close, 1
-  free_lun, 1
+    log_book = (*(*global).log_book)
+    prefix = (*global).log_book_file_name_prefix
+    suffix = (*global).log_book_file_name_suffix
+    path = (*global).log_book_path
+    time_stamp =  GenerateIsoTimeStamp()
+    log_book_file_name = path + path_sep() + prefix + '_' + time_stamp + '.' + suffix
+    
+    openw, 1, log_book_file_name
+    
+    sz = n_elements(log_book)
+    _index=0
+    while (_index lt sz) do begin
+    
+      printf, 1, log_book[_index]
+      
+      _index++
+    endwhile
+    
+    close, 1
+    free_lun, 1
+    
+    file_name = log_book_file_name
+    
+  end
   
-  file_name = log_book_file_name
   
-end
-
-
