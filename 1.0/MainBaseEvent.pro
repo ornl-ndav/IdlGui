@@ -102,6 +102,7 @@ PRO MAIN_BASE_event, Event
     ;data, open beam and dark field files
     ;data file
     widget_info(event.top, find_by_uname='data_files_table'): begin
+      help, event,/structure
       preview_currently_selected_file, event=event, type='data_file'
       table_right_click, event=event, type='data_file'
     end

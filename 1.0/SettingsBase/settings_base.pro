@@ -378,7 +378,7 @@ pro settings_base_gui, wBase, $
   yoffset=yoff,$
   frame=1,$
   /column,$
-  xsize=300)
+  xsize=xsize)
   space = widget_label(_base,$
   value = '')
   perc_base = widget_base(_base,$
