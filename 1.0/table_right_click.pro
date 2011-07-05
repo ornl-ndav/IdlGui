@@ -88,7 +88,7 @@ pro delete_selection, event=event, type=type
   
   case (type) of
     'data_file': begin
-      uname='data_files_table'
+      uname='sample_table'
     end
     'open_beam': begin
       uname='open_beam_table'

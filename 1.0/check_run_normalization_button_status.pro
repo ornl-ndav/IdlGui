@@ -71,7 +71,7 @@ pro check_run_normalization_button_status, event=event, $
     return
   endif
   
-  list_table_uname = ['data_files_table',$
+  list_table_uname = ['sample_table',$
     'open_beam_table',$
     'dark_field_table']
   nbr_table = n_elements(list_table_uname)

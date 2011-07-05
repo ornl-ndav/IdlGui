@@ -88,7 +88,7 @@ pro build_gui, main_base, global
     /all_events, $
     /context_events, $
     column_widths = 595,$
-    uname = 'data_files_table',$
+    uname = 'sample_table',$
     /disjoint_selection,$
     /no_column_headers,$
     /no_row_headers)

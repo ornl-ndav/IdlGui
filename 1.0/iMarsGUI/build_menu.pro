@@ -67,7 +67,7 @@ pro build_menu, top_base_menu
   /menu)
   data = widget_button(session,$
   uname='reset_data_files_uname',$
-  value = 'Data files')
+  value = 'Sample')
   ob = widget_button(session,$
   uname = 'reset_open_beam_files_uname',$
   value = 'Open beam')
