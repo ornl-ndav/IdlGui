@@ -46,23 +46,23 @@
 ; :Author: j35
 ;-
 function getYDataFromDevice, event=event, type=type, device_value=device_value
-compile_opt idl2
-
+  compile_opt idl2
+  
   if (type eq 'data') then begin
-  uname = 'load_data_D_draw'
+    uname = 'load_data_D_draw'
   endif else begin
-  uname = 'load_normalization_D_draw'
+    uname = 'load_normalization_D_draw'
   endelse
-
- id = widget_info(event.top, find_by_uname=uname)
+  
+  id = widget_info(event.top, find_by_uname=uname)
   geometry = widget_info(id,/geometry)
   xsize = geometry.scr_xsize
   ysize = geometry.scr_ysize
-
+  
   YdataMax = 256.
   
   return, fix((YdataMax * float(device_value)) / float(ysize))
-
+  
 end
 
 ;+
@@ -79,23 +79,23 @@ end
 ; :Author: j35
 ;-
 function getYDeviceFromData, event=event, type=type, data_value=data_value
-compile_opt idl2
-
+  compile_opt idl2
+  
   if (type eq 'data') then begin
-  uname = 'load_data_D_draw'
+    uname = 'load_data_D_draw'
   endif else begin
-  uname = 'load_normalization_D_draw'
+    uname = 'load_normalization_D_draw'
   endelse
-
+  
   id = widget_info(event.top, find_by_uname=uname)
   geometry = widget_info(id,/geometry)
   xsize = geometry.scr_xsize
   ysize = geometry.scr_ysize
-
+  
   YdataMax = 256.
-
+  
   return, fix((float(data_value) * float(ysize))/ YdataMax)+1
-
+  
 end
 
 ;+
@@ -110,15 +110,15 @@ end
 ; :Author: j35
 ;-
 function getValue, event=event, base=base, uname=uname
-compile_opt idl2
-
-if (keyword_set(event)) then begin
-id = widget_info(event.top, find_by_uname=uname)
-endif else begin
-id = widget_info(base, find_by_uname=uname)
-endelse
-widget_control, id, get_value=value
-return, value[0]
+  compile_opt idl2
+  
+  if (keyword_set(event)) then begin
+    id = widget_info(event.top, find_by_uname=uname)
+  endif else begin
+    id = widget_info(base, find_by_uname=uname)
+  endelse
+  widget_control, id, get_value=value
+  return, value[0]
 end
 
 ;This function returns the contain of the Text Field
@@ -427,13 +427,13 @@ FUNCTION isButtonSelected, Event, uname
 END
 
 FUNCTION getPlotTabYaxisScale, Event
-;linear
-uname = 'plot_tab_y_axis_lin'
-IF (isButtonSelected(Event,uname)) THEN RETURN, 'lin'
-;log
-uname = 'plot_tab_y_axis_log'
-IF (isButtonSelected(Event,uname)) THEN RETURN, 'log'
-RETURN, ''
+  ;linear
+  uname = 'plot_tab_y_axis_lin'
+  IF (isButtonSelected(Event,uname)) THEN RETURN, 'lin'
+  ;log
+  uname = 'plot_tab_y_axis_log'
+  IF (isButtonSelected(Event,uname)) THEN RETURN, 'log'
+  RETURN, ''
 END
 
 
