@@ -1509,13 +1509,17 @@ PRO MAIN_BASE_event, Event
     ;beam divergence correction
     widget_info(wWidget, $
       find_by_uname='beamdiv_corr_yes'): begin
+      if ((*global).is_ucams_super_user) then begin
       ActivateWidget, Event, 'beamdiv_settings', 1
+      endif
       REFreduction_CommandLineGenerator, event
     end
     
     widget_info(wWidget, $
       find_by_uname='beamdiv_corr_no'): begin
+      if ((*global).is_ucams_super_user) then begin
       ActivateWidget, Event, 'beamdiv_settings', 0
+      endif
       REFreduction_CommandLineGenerator, event
     end
     
