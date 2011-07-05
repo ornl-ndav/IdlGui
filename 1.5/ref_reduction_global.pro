@@ -63,11 +63,17 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
   ENDIF ELSE BEGIN
     ucams = get_ucams()
   ENDELSE
+  ucams = 'zizou'
   
   ;get branch number
   branchArray = STRSPLIT(VERSION,'.',/EXTRACT)
   branch      = STRJOIN(branchArray[0:1],'.')
   
+  ;Jean, Michael, John and Jim
+  super_users = ['j35','2zr','vuk','jfb']
+  is_super_user = isUcamsFromSuperUserList(ucams=ucams, $
+    super_users=super_users)
+    
   ;define global variables
   global = ptr_new ({ first_event: 1,$
     mouse_debugging:   MOUSE_DEBUGGING,$
@@ -80,6 +86,7 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     instrument:        STRCOMPRESS(INSTRUMENT,/remove_all),$
     with_launch_switch: WITH_LAUNCH_SWITCH,$
     simulate_rotated_detector: SIMULATE_ROTATED_DETECTOR, $
+    is_ucams_super_user: is_super_user, $
     
     ;the rescaled in TOF range of the tvimg
     new_rescale_tvimg: ptr_new(0L), $

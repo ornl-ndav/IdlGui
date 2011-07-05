@@ -36,7 +36,7 @@ PRO MakeGuiMainTab, MAIN_BASE, $
                     instrument, $
                     PlotsTitle, $
                     structure
-
+                    
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
 MainTabSize = [0,0,MainBaseSize[2],MainBaseSize[3]]

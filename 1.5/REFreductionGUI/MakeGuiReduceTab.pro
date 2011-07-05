@@ -106,7 +106,7 @@ MakeGuiReduceIntermediatePlotBase, Event, REDUCE_BASE, IndividualBaseWidth, $
   PlotsTitle
 
 ;create other component of base
-MakeGuiReduceOther, Event, REDUCE_BASE, IndividualBaseWidth
+MakeGuiReduceOther, Event, REDUCE_BASE, IndividualBaseWidth, global
 
 ;create GeneralInfoTextField
 MakeGuiReduceInfo, Event, REDUCE_BASE

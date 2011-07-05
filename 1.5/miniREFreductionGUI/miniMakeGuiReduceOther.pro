@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 
-PRO miniMakeGuiReduceOther, Event, REDUCE_BASE, IndividualBaseWidth
+PRO miniMakeGuiReduceOther, Event, REDUCE_BASE, IndividualBaseWidth, global
 
   ;Dimension
   cwbgroup_list  = ['Y','N']
@@ -200,11 +200,14 @@ PRO miniMakeGuiReduceOther, Event, REDUCE_BASE, IndividualBaseWidth
     value = 'No',$
     uname = 'beamdiv_corr_no')
   widget_control, yes, /set_button
-  config = widget_button(row2,$
-    value = 'Config...',$
-    sensitive = 1,$
-    uname = 'beamdiv_settings')
-    
+  
+  if ((*global).is_ucams_super_user) then begin
+    config = widget_button(row2,$
+      value = 'Config...',$
+      sensitive = 1,$
+      uname = 'beamdiv_settings')
+  endif
+  
   ;filtering data
   FilteringDataLabel = WIDGET_LABEL(REDUCE_BASE,$
     XOFFSET = FDLsize[0],$

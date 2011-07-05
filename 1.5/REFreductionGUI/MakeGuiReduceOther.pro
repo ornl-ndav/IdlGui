@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 
-PRO MakeGuiReduceOther, Event, REDUCE_BASE, IndividualBaseWidth
+PRO MakeGuiReduceOther, Event, REDUCE_BASE, IndividualBaseWidth, global
 
 ;Dimension
 cwbgroup_list  = [' Yes    ',' No    ']
@@ -216,12 +216,13 @@ beamdiv = widget_base(reduce_base,$
   value = 'No',$
   uname = 'beamdiv_corr_no')
   widget_control, yes, /set_button
+  
+  if ((*global).is_ucams_super_user) then begin
   settings = widget_button(row1,$
   value = 'Settings...',$
   uname = 'beamdiv_settings',$
   sensitive = 1)
-  
-  
+endif  
   
 ;store deltaT/T
 DeltaToverTLabel = WIDGET_LABEL(REDUCE_BASE,$

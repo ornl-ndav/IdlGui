@@ -401,13 +401,16 @@ end
 
 ;work on beam divergence flag
 pro UpdateBeamDivCorr, event, BeamDivCorr
-  if (BeamDivCorr eq 'yes') then begin
-  setButton, event, 'beamdiv_corr_yes'
-  ActivateWidget, Event, 'beamdiv_settings', 1  
-  endif else begin
-  setButton, event, 'beamdiv_corr_no'
-  ActivateWidget, Event, 'beamdiv_settings', 0
-  endelse
+  widget_control, event.top, get_uvalue=global
+  if ((*global).is_ucams_super_user) then begin
+    if (BeamDivCorr eq 'yes') then begin
+      setButton, event, 'beamdiv_corr_yes'
+      ActivateWidget, Event, 'beamdiv_settings', 1
+    endif else begin
+      setButton, event, 'beamdiv_corr_no'
+      ActivateWidget, Event, 'beamdiv_settings', 0
+    endelse
+  endif
 end
 
 pro UpdateCenterPix, event, CenterPix
@@ -418,8 +421,8 @@ pro UpdateCenterPix, event, CenterPix
 end
 
 pro UpdateDetSpatRes, event, DetSpatRes
- widget_control, event.top, get_uvalue=global
- (*global).detector_resolution = DetSpatRes
+  widget_control, event.top, get_uvalue=global
+  (*global).detector_resolution = DetSpatRes
 end
 
 ;Work on Output Path and output FileName ======================================
@@ -784,17 +787,17 @@ FUNCTION IDLupdateGui::init, structure
   AppendReplaceLogBookMessage, event, ok, processing
   
   text = '--> Updating center pixel value .............................. ' $
-   + processing 
+    + processing
   putLogBookMessage, event, text, append=1
   UpdateCenterPix, event, structure.CenterPix
   AppendReplaceLogBookMessage, event, ok, processing
   
   text = '--> Updating detector resolution ............................. ' $
-   + processing
+    + processing
   putLogBookMessage, event, text, append=1
   UpdateDetSpatRes, event, structure.DetSpatRes
   AppendReplaceLogBookMessage, event, ok, processing
-    
+  
   ;Work on Output Path and Output File Name
   text = '--> Load Output Path ......................................... ' $
     + PROCESSING
