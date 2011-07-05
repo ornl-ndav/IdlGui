@@ -63,7 +63,6 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
   ENDIF ELSE BEGIN
     ucams = get_ucams()
   ENDELSE
-  ucams = 'zizou'
   
   ;get branch number
   branchArray = STRSPLIT(VERSION,'.',/EXTRACT)
