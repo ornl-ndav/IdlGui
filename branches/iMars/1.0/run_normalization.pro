@@ -110,9 +110,9 @@ pro run_normalization, event=event
   message = ['----------------------------','Start normalization using:']
   
   ;collect list of data, open beam and dark field files
-  data_file_table = getValue(event=event, uname='data_files_table')
+  data_file_table = getValue(event=event, uname='sample_table')
   list_data = reform(data_file_table)
-  message = [message,'-> list data files:']
+  message = [message,'-> list sample:']
   _message = '    ' + list_data
   message = [message, _message]
   

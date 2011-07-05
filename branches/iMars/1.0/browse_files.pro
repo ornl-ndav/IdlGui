@@ -102,8 +102,8 @@ pro browse_files, event=event, file_type=file_type
   
   case (file_type) of
     'data_file': begin
-      _title = 'data files'
-      _table_uname = 'data_files_table'
+      _title = 'sample files'
+      _table_uname = 'sample_table'
     end
     'open_beam': begin
       _title = 'open beam files'

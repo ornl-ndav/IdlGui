@@ -48,7 +48,7 @@ function getSelectedFile, event=event,type=type
   compile_opt idl2
   
   case (type) of
-    'data': uname='data_files_table'
+    'data': uname='sample_table'
     'open_beam': uname='open_beam_table'
     'dark_field': uname='dark_field_table'
   endcase
@@ -93,7 +93,7 @@ function IDLconfiguration::getConfig, event
   widget_control, event.top, get_uvalue=global
   
   _structure = {list_data_files: $
-    getValue(event=event,uname='data_files_table'),$
+    getValue(event=event,uname='sample_table'),$
     list_open_beam_files: $
     getValue(event=event,uname='open_beam_table'),$
     list_dark_field_files: $

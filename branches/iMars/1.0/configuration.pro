@@ -200,16 +200,16 @@ pro repopulate_gui, event, _structure
   widget_control, event.top, get_uvalue=global
   
   ;reset tables
-  reset_table, event=event, uname = 'data_files_table'
+  reset_table, event=event, uname = 'sample_table'
   reset_table, event=event, uname = 'open_beam_table'
   reset_table, event=event, uname = 'dark_field_table'
   
   ;data files
   data_files = _structure.list_data_files
-  id = widget_info(event.top, find_by_uname='data_files_table')
+  id = widget_info(event.top, find_by_uname='sample_table')
   widget_control, id, insert_rows=n_elements(data_files)-1
   table = reform(data_files,1,n_elements(data_files))
-  putValue, event=event, 'data_files_table', table
+  putValue, event=event, 'sample_table', table
   
   ;open beam
   open_beam_files = _structure.list_open_beam_files
@@ -226,7 +226,7 @@ pro repopulate_gui, event, _structure
   putValue, event=event, 'dark_field_table', table
   
   ;file currently selected
-  select_file, event=event, uname='data_files_table', $
+  select_file, event=event, uname='sample_table', $
     _structure.selected_data_file
   select_file, event=event, uname='open_beam_table', $
     _structure.selected_open_beam_file

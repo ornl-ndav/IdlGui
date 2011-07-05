@@ -58,9 +58,9 @@ PRO MAIN_BASE_event, Event
     end
     
     ;reset menu
-    ;reset data files
+    ;reset Samples
     widget_info(event.top, find_by_uname='reset_data_files_uname'): begin
-      reset_table, event=event, uname = 'data_files_table'
+      reset_table, event=event, uname = 'sample_table'
       check_run_normalization_button_status, event=event, /disabled
     end
     ;reset open beam files
@@ -75,7 +75,7 @@ PRO MAIN_BASE_event, Event
     end
     ;reset full session
     widget_info(event.top, find_by_uname='full_reset_of_session_uname'): begin
-      reset_table, event=event, uname = 'data_files_table'
+      reset_table, event=event, uname = 'sample_table'
       reset_table, event=event, uname = 'open_beam_table'
       reset_table, event=event, uname = 'dark_field_table'
       full_reset_of_preview_base, event=event
@@ -101,8 +101,7 @@ PRO MAIN_BASE_event, Event
     
     ;data, open beam and dark field files
     ;data file
-    widget_info(event.top, find_by_uname='data_files_table'): begin
-      help, event,/structure
+    widget_info(event.top, find_by_uname='sample_table'): begin
       preview_currently_selected_file, event=event, type='data_file'
       table_right_click, event=event, type='data_file'
     end
