@@ -100,6 +100,7 @@ pro load_configuration_file, event=event, $
   if (~obj_valid(file)) then return
    
   min_tof = file->getValue(tag=['configuration','tof','min'])
+  if (min_tof eq -1) then return
   max_tof = file->getValue(tag=['configuration','tof','max'])
   units_tof = file->getValue(tag=['configuration','tof','units'])
   obj_destroy, file

@@ -98,6 +98,12 @@ END
 ;---------------------------------------------------------------------------
 FUNCTION IDLXMLParser::getValue, TAG = tag, ATTRIBUTE = attr
 
+  catch, error
+  if (error ne 0) then begin
+  catch,/cancel 
+  return, -1
+  endif
+
   self.elements = n_elements(tag)-1
   self.tag = ptr_new(tag)
   self.mode = 0
@@ -118,19 +124,19 @@ FUNCTION IDLXMLParser::getValue, TAG = tag, ATTRIBUTE = attr
   self.count = 0
 
 ;start parsing
-;  self -> IDLffxmlsax::ParseFile, self.path, /URL
-  self -> IDLffxmlsax::ParseFile, self.path
+  self->IDLffxmlsax::ParseFile, self.path
   
 ;reformat output
   self.output = reformat_output(self.output)
 
   RETURN, STRCOMPRESS(self.output,/REMOVE_ALL)
+
 END
 
 ;---------------------------------------------------------------------------
 FUNCTION IDLxmlParser::init, file_name
   self.path = file_name
-  RETURN, self -> IDLffxmlsax::Init()
+  RETURN, self->IDLffxmlsax::Init()
 END
 
 ;---------------------------------------------------------------------------

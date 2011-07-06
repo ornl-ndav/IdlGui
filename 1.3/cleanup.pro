@@ -89,11 +89,9 @@ pro restore_config_file_name, base=base, $
   tof_config_file_name = cfg_structure.tof_config_file_name
   
   if (file_test(tof_config_file_name)) then begin
-  
     load_configuration_file, base=base, $
       file_name=tof_config_file_name, $
       new_path=file_dirname(config_file_name)
-      
   endif
   
 end
