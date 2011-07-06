@@ -44,7 +44,6 @@
 ;-
 pro command_line_generator_for_ref_m, event
 
-
   ;get global structure
   WIDGET_CONTROL,event.top,get_uvalue=global
   
@@ -115,6 +114,106 @@ pro command_line_generator_for_ref_m, event
     data_spin_state      = spin_state[spin_state_selected_index]
     
   endelse
+  
+  ;define list of sangle for all pixels selected
+  case ((*global).reduction_mode) of
+    'one_per_discrete': begin
+    
+      pixel_min = fix(getValue(event=event, $
+        uname='data_d_selection_roi_ymin_cw_field'))
+      pixel_max = fix(getValue(event=event, $
+        uname='data_d_selection_roi_ymax_cw_field'))
+      if (pixel_min eq 0 or $
+        pixel_max eq 0) then list_sangle_rad = ['?']
+        
+      _pixel_min = min([pixel_min, pixel_max], max=_pixel_max)
+      nbr_pixel = _pixel_max - _pixel_min + 1
+      pixel_range = indgen(nbr_pixel) + _pixel_min
+      
+      _i = 0
+      list_sangle_rad = !null
+      while (_i lt nbr_pixel) do begin
+      
+        _sangle=-10
+        calculate_sangle, event, refpix=pixel_range[_i], sangle=_sangle
+        list_sangle_rad = [list_sangle_rad, _sangle]
+        
+        _i++
+      endwhile
+      
+      ;used to calculate the Qrange
+      sangle_min_max = fltarr(2)
+      sangle=-10
+      calculate_sangle, event, refpix=pixel_range[0], sangle=sangle
+      sangle_min_max[0] = sangle
+      calculate_sangle, event, refpix=pixel_range[-1], sangle=sangle
+      sangle_min_max[1] = sangle
+      ;record the min and max sangles values
+      (*global).sangle_min_max = sangle_min_max
+      
+    end
+    'one_per_pixel': begin
+    
+      ;      catch, _error
+      ;      if (_error ne 0) then begin
+      ;        catch,/cancel
+      ;        list_sangle_rad = ['?']
+      ;      endif
+    
+      ;list of pixels
+      pixel_range = fix(*(*global).pixel_range_discrete_mode)
+      
+      sz = size(pixel_range,/dim)
+      if (n_elements(sz) eq 1) then begin
+        list_sangle_rad = ['?']
+      endif else begin
+        nbr_rois = sz[1]
+        
+        list_sangle_rad = !null
+        total_pixel_range = !null
+        
+        _index = 0
+        while (_index lt nbr_rois) do begin
+        
+          pixel_min = pixel_range[0,_index]
+          pixel_max = pixel_range[1,_index]
+          _pixel_min = min([pixel_min, pixel_max], max=_pixel_max)
+          nbr_pixel = _pixel_max - _pixel_min + 1
+          _pixel_range = indgen(nbr_pixel) + _pixel_min
+          total_pixel_range = [total_pixel_range, _pixel_range]
+          
+          _index++
+        endwhile
+        
+        _i = 0
+        nbr_pixel = n_elements(total_pixel_range)
+        list_sangle_rad = !null
+        while (_i lt nbr_pixel) do begin
+        
+          _sangle=-10
+          calculate_sangle, event, refpix=total_pixel_range[_i], sangle=_sangle
+          list_sangle_rad = [list_sangle_rad, _sangle]
+          
+          _i++
+        endwhile
+        
+      endelse
+      
+      pixel_range = total_pixel_range
+      ;used to calculate the Qrange
+      sangle_min_max = fltarr(2)
+      sangle=-10
+      calculate_sangle, event, refpix=pixel_range[0], sangle=sangle
+      sangle_min_max[0] = sangle
+      calculate_sangle, event, refpix=pixel_range[-1], sangle=sangle
+      sangle_min_max[1] = sangle
+      ;record the min and max sangles values
+      (*global).sangle_min_max = sangle_min_max
+      
+    end
+    else:
+  endcase
+  
   
   index_spin_state = 0
   while (index_spin_state lt nbr_spin_states) do begin
@@ -316,127 +415,153 @@ pro command_line_generator_for_ref_m, event
       MapBase, Event, 'reduce_plot2_base', 1
     END
     
-    ;tof cutting
-    tof_min = STRCOMPRESS(getTextFieldValue(Event,'tof_cutting_min'),$
-      /REMOVE_ALL)
-    IF (tof_min NE '') THEN BEGIN
+    if ((*global).reduction_mode ne 'one_per_selection') then begin
     
-      IF (isTOFcuttingUnits_microS(Event)) THEN BEGIN ;microS
+      cmd[index_spin_state] += ' --cuts-in-Q'
       
-        ON_IOERROR, error_min1
-        error_status = 1
-        tof_min = FLOAT(tof_min)
-        error_status = 0
-        tof_min = STRCOMPRESS(tof_min,/REMOVE_ALL)
-        error_min1:
-        IF (error_status) THEN BEGIN
-          tof_min = '?'
-          if (index_spin_state eq 0) then begin
-            status_text = '- Please check the TOF cut min value'
-            IF (StatusMessage GT 0) THEN BEGIN
-              append = 1
-            ENDIF ELSE BEGIN
-              append = 0
-            ENDELSE
-            putInfoInReductionStatus, Event, status_text, append
-            StatusMessage += 1
-          endif
-        ENDIF
+      Q_min = strcompress(getTextFieldValue(Event, 'q_min_text_field'),$
+        /remove_all)
+      Q_max = strcompress(getTextFieldValue(Event, 'q_max_text_field'),$
+        /remove_all)
         
-      ENDIF ELSE BEGIN
+      cmd[index_spin_state] += ' --tof-cut-min=' + Q_max
+      cmd[index_spin_state] += ' --tof-cut-max=' + Q_min
       
-        ON_IOERROR, error_min
-        error_status = 1
-        tof_min = FLOAT(tof_min)
-        error_status = 0
-        tof_min *= 1000. ;to convert to microS
-        tof_min = STRCOMPRESS(tof_min,/REMOVE_ALL)
-        
-        error_min:
-        IF (error_status) THEN BEGIN
-          tof_min = '?'
-          if (index_spin_state eq 0) then begin
-            status_text = '- Please check the TOF cut min value'
-            IF (StatusMessage GT 0) THEN BEGIN
-              append = 1
-            ENDIF ELSE BEGIN
-              append = 0
-            ENDELSE
-            putInfoInReductionStatus, Event, status_text, append
-            StatusMessage += 1
-          endif
-        ENDIF
-        
-      ENDELSE
-      
-      cmd[index_spin_state] += ' --tof-cut-min=' + tof_min
-      
-    ENDIF
+    endif else begin
     
-    tof_max = STRCOMPRESS(getTextFieldValue(Event,'tof_cutting_max'),$
-      /REMOVE_ALL)
-    IF (tof_max NE '') THEN BEGIN
-    
-      IF (isTOFcuttingUnits_microS(Event)) THEN BEGIN ;microS
+      ;tof cutting
+      tof_min = STRCOMPRESS(getTextFieldValue(Event,'tof_cutting_min'),$
+        /REMOVE_ALL)
+      IF (tof_min NE '') THEN BEGIN
       
-        ON_IOERROR, error_max1
-        error_status = 1
-        tof_max = FLOAT(tof_max)
-        error_status = 0
-        tof_max = STRCOMPRESS(tof_max,/REMOVE_ALL)
-        error_max1:
-        IF (error_status) THEN BEGIN
-          tof_max = '?'
-          if (index_spin_state eq 0) then begin
-            status_text = '- Please check the TOF cut max value'
-            IF (StatusMessage GT 0) THEN BEGIN
-              append = 1
-            ENDIF ELSE BEGIN
-              append = 0
-            ENDELSE
-            putInfoInReductionStatus, Event, status_text, append
-            StatusMessage += 1
+        IF (isTOFcuttingUnits_microS(Event)) THEN BEGIN ;microS
+        
+          ON_IOERROR, error_min1
+          error_status = 1
+          tof_min = FLOAT(tof_min)
+          error_status = 0
+          tof_min = STRCOMPRESS(tof_min,/REMOVE_ALL)
+          error_min1:
+          IF (error_status) THEN BEGIN
+            tof_min = '?'
+            if (index_spin_state eq 0) then begin
+              status_text = '- Please check the TOF cut min value'
+              IF (StatusMessage GT 0) THEN BEGIN
+                append = 1
+              ENDIF ELSE BEGIN
+                append = 0
+              ENDELSE
+              putInfoInReductionStatus, Event, status_text, append
+              StatusMessage += 1
+            endif
+          ENDIF
+          
+        ENDIF ELSE BEGIN
+        
+          ON_IOERROR, error_min
+          error_status = 1
+          tof_min = FLOAT(tof_min)
+          error_status = 0
+          tof_min *= 1000. ;to convert to microS
+          tof_min = STRCOMPRESS(tof_min,/REMOVE_ALL)
+          
+          error_min:
+          IF (error_status) THEN BEGIN
+            tof_min = '?'
+            if (index_spin_state eq 0) then begin
+              status_text = '- Please check the TOF cut min value'
+              IF (StatusMessage GT 0) THEN BEGIN
+                append = 1
+              ENDIF ELSE BEGIN
+                append = 0
+              ENDELSE
+              putInfoInReductionStatus, Event, status_text, append
+              StatusMessage += 1
+            endif
+          ENDIF
+          
+        ENDELSE
+        
+        cmd[index_spin_state] += ' --tof-cut-min=' + tof_min
+        
+      ENDIF
+      
+      tof_max = STRCOMPRESS(getTextFieldValue(Event,'tof_cutting_max'),$
+        /REMOVE_ALL)
+      IF (tof_max NE '') THEN BEGIN
+      
+        IF (isTOFcuttingUnits_microS(Event)) THEN BEGIN ;microS
+        
+          ON_IOERROR, error_max1
+          error_status = 1
+          tof_max = FLOAT(tof_max)
+          error_status = 0
+          tof_max = STRCOMPRESS(tof_max,/REMOVE_ALL)
+          error_max1:
+          IF (error_status) THEN BEGIN
+            tof_max = '?'
+            if (index_spin_state eq 0) then begin
+              status_text = '- Please check the TOF cut max value'
+              IF (StatusMessage GT 0) THEN BEGIN
+                append = 1
+              ENDIF ELSE BEGIN
+                append = 0
+              ENDELSE
+              putInfoInReductionStatus, Event, status_text, append
+              StatusMessage += 1
+            endif
           endif
-        endif
+          
+        ENDIF ELSE BEGIN
         
-      ENDIF ELSE BEGIN
+          ON_IOERROR, error_max
+          error_status = 1
+          tof_max = FLOAT(tof_max)
+          error_status = 0
+          tof_max *= 1000. ;to convert to microS
+          tof_max = STRCOMPRESS(tof_max,/REMOVE_ALL)
+          
+          error_max:
+          IF (error_status) THEN BEGIN
+            tof_max = '?'
+            if (index_spin_state eq 0) then begin
+              status_text = '- Please check the TOF cut max value'
+              IF (StatusMessage GT 0) THEN BEGIN
+                append = 1
+              ENDIF ELSE BEGIN
+                append = 0
+              ENDELSE
+              putInfoInReductionStatus, Event, status_text, append
+              StatusMessage += 1
+            endif
+          ENDIF
+          
+        ENDELSE
+        
+        cmd[index_spin_state] += ' --tof-cut-max=' + tof_max
+      ENDIF
       
-        ON_IOERROR, error_max
-        error_status = 1
-        tof_max = FLOAT(tof_max)
-        error_status = 0
-        tof_max *= 1000. ;to convert to microS
-        tof_max = STRCOMPRESS(tof_max,/REMOVE_ALL)
-        
-        error_max:
-        IF (error_status) THEN BEGIN
-          tof_max = '?'
-          if (index_spin_state eq 0) then begin
-            status_text = '- Please check the TOF cut max value'
-            IF (StatusMessage GT 0) THEN BEGIN
-              append = 1
-            ENDIF ELSE BEGIN
-              append = 0
-            ENDELSE
-            putInfoInReductionStatus, Event, status_text, append
-            StatusMessage += 1
-          endif
-        ENDIF
-        
-      ENDELSE
-      
-      cmd[index_spin_state] += ' --tof-cut-max=' + tof_max
-    ENDIF
+    endelse
     
-    ;scattering angle flag
-    cmd[index_spin_state] += ' --scatt-angle='
-    rad_sangle = (*global).rad_sangle
-    rad_sangle_x2 = strcompress(2. * float(rad_sangle),/remove_all)
-    rad_sangle_error = strcompress(0.,/remove_all)
-    rad_sangle_units = 'units=radians'
-    cmd[index_spin_state] += rad_sangle_x2 + ',' + $
-      rad_sangle_error + ',' + rad_sangle_units
+    
+    if ((*global).reduction_mode eq 'one_per_selection') then begin
+    
+      ;scattering angle flag
+      cmd[index_spin_state] += ' --scatt-angle='
+      rad_sangle = (*global).rad_sangle
+      rad_sangle_x2 = strcompress(2. * float(rad_sangle),/remove_all)
+      rad_sangle_error = strcompress(0.,/remove_all)
+      rad_sangle_units = 'units=radians'
+      cmd[index_spin_state] += rad_sangle_x2 + ',' + $
+        rad_sangle_error + ',' + rad_sangle_units
+        
+    endif else begin
+    
+      cmd[index_spin_state] += ' --theta-vals=' + strjoin(list_sangle_rad,',')
+      cmd[index_spin_state] += ' --theta-vals-units=radians'
       
+    endelse
+    
     ;*****NORMALIZATION********************************************************
     ;check if user wants to use normalization or not
     if (isReductionWithNormalization(Event)) then begin
@@ -669,251 +794,278 @@ pro command_line_generator_for_ref_m, event
     ;reduction mode (per selection or per pixel selected)
     if ((*global).reduction_mode ne 'one_per_selection') then begin
     
-;      populate_Q_widgets, event=event
+      if (_index_spin_state eq 0) then begin
       
-      Q_min = getTextFieldValue(Event, 'q_min_text_field')
-      Q_max = getTextFieldValue(Event, 'q_max_text_field')
-      
-      Q_width = getTextfieldValue(Event, 'q_width_text_field')
-      Q_scale = getQSCale(Event)
-      
+        populate_Q_widgets, event=event
+        
+        Q_min = getTextFieldValue(Event, 'q_min_text_field')
+        Q_max = getTextFieldValue(Event, 'q_max_text_field')
+        Q_width = getTextfieldValue(Event, 'q_width_text_field')
+        Q_scale = getQSCale(Event)
+        
+        if (strcompress(Q_min,/remove_all) eq '') then return
+        if (strcompress(Q_max,/remove_all) eq '') then return
+        
+        ;if Q_width is not empty, used this one
+        ;if Q_width is empty, calculate Q_width according to Number bins needed
+        if (strcompress(Q_width,/remove_all) eq '') then begin
+        
+          nbr_bins = getTextFieldValue(Event, 'q_nbins_text_field')
+          if (Q_scale eq 'lin') then begin
+            Q_width = (float(Q_max) - float(Q_min)) / float(nbr_bins)
+          endif else begin
+            Q_width = (float(Q_max)/float(Q_min))^(1./nbr_bins)-1.
+          endelse
+          putValue, event=event, 'q_width_text_field', $
+            strcompress(Q_width,/remove_all)
+            
+        endif else begin
+        
+          Q_min = getTextFieldValue(Event, 'q_min_text_field')
+          Q_max = getTextFieldValue(Event, 'q_max_text_field')
+          
+          Q_width = getTextfieldValue(Event, 'q_width_text_field')
+          Q_scale = getQSCale(Event)
+          
+        endelse
+        
         cmd[index_spin_state] += ' --mom-trans-bins='
+        
+        if (Q_min NE '') then begin ;Q_min
+          cmd[index_spin_state] += STRCOMPRESS(Q_min,/remove_all)
+        endif else begin
+          cmd[index_spin_state] += '?'
+          if (index_spin_state eq 0) then begin
+            status_text = '- Please provide a Q minimum value'
+            if (StatusMessage GT 0) then begin
+              append = 1
+            endif else begin
+              append = 0
+            endelse
+            putInfoInReductionStatus, Event, status_text, append
+            StatusMessage += 1
+          endif
+        endelse
+        
+        if (Q_max NE '') then begin ;Q_max
+          cmd[index_spin_state] += ',' + STRCOMPRESS(Q_max,/remove_all)
+        endif else begin
+          cmd[index_spin_state] += ',?'
+          if (index_spin_state eq 0) then begin
+            status_text = '- Please provide a Q maximum value'
+            if (StatusMessage GT 0) then begin
+              append = 1
+            endif else begin
+              append = 0
+            endelse
+            putInfoInReductionStatus, Event, status_text, append
+            StatusMessage += 1
+          endif
+        endelse
+        
+        if (Q_width NE '') then begin ;Q_width
+          cmd[index_spin_state] += ',' + STRCOMPRESS(Q_width,/remove_all)
+        endif else begin
+          cmd[index_spin_state] += ',?'
+          if (index_spin_state eq 0) then begin
+            status_text = '- Please provide a Q width value'
+            if (StatusMessage GT 0) then begin
+              append = 1
+            endif else begin
+              append = 0
+            endelse
+            putInfoInReductionStatus, Event, status_text, append
+            StatusMessage += 1
+          endif
+        endelse
+        cmd[index_spin_state] += ',' + Q_scale        ;Q_scale (lin or log)
+        
+      endif
       
-      if (Q_min NE '') then begin ;Q_min
-        cmd[index_spin_state] += STRCOMPRESS(Q_min,/remove_all)
+      ;get info about detector angle
+      angle_value = getTextFieldValue(Event,'detector_value_text_field')
+      angle_err   = getTextFieldValue(Event,'detector_error_text_field')
+      angle_units = getDetectorAngleUnits(Event)
+      
+      if (angle_value NE '' OR $    ;user wants to input the angle value and err
+        angle_err NE '') then begin
+        
+        cmd[index_spin_state] += ' --angle-offset='
+        
+        if (angle_value NE '') then begin ;angle_value
+          cmd[index_spin_state] += STRCOMPRESS(angle_value,/remove_all)
+        endif else begin
+          cmd[index_spin_state] += '?'
+          if (index_spin_state eq 0) then begin
+            status_text = '- Please provide a detector angle value'
+            if (StatusMessage GT 0) then begin
+              append = 1
+            endif else begin
+              append = 0
+            endelse
+            putInfoInReductionStatus, Event, status_text, append
+            StatusMessage += 1
+          endif
+        endelse
+        
+        if (angle_err NE '') then begin ;angle_err
+          cmd[index_spin_state] += ',' + STRCOMPRESS(angle_err,/remove_all)
+        endif else begin
+          cmd[index_spin_state] += ',?'
+          if (index_spin_state eq 0) then begin
+            status_text = '- Please provide a detector angle error value'
+            if (StatusMessage GT 0) then begin
+              append = 1
+            endif else begin
+              append = 0
+            endelse
+            putInfoInReductionStatus, Event, status_text, append
+            StatusMessage += 1
+          endif
+        endelse
+        
+        cmd[index_spin_state] += ',units=' + STRCOMPRESS(angle_units,/remove_all)
+        
       endif else begin
-        cmd[index_spin_state] += '?'
-        if (index_spin_state eq 0) then begin
-          status_text = '- Please provide a Q minimum value'
-          if (StatusMessage GT 0) then begin
-            append = 1
-          endif else begin
-            append = 0
-          endelse
-          putInfoInReductionStatus, Event, status_text, append
-          StatusMessage += 1
-        endif
+      
       endelse
       
-      if (Q_max NE '') then begin ;Q_max
-        cmd[index_spin_state] += ',' + STRCOMPRESS(Q_max,/remove_all)
-      endif else begin
-        cmd[index_spin_state] += ',?'
-        if (index_spin_state eq 0) then begin
-          status_text = '- Please provide a Q maximum value'
-          if (StatusMessage GT 0) then begin
-            append = 1
-          endif else begin
-            append = 0
-          endelse
-          putInfoInReductionStatus, Event, status_text, append
-          StatusMessage += 1
-        endif
-      endelse
+      ;ActivateWidget, Event, 'nexus_data_used_label', NexusLabelStatus
+      ;ActivateWidget, Event, 'gui_data_used_label', GuiLabelStatus
       
-      if (Q_width NE '') then begin ;Q_width
-        cmd[index_spin_state] += ',' + STRCOMPRESS(Q_width,/remove_all)
-      endif else begin
-        cmd[index_spin_state] += ',?'
-        if (index_spin_state eq 0) then begin
-          status_text = '- Please provide a Q width value'
-          if (StatusMessage GT 0) then begin
-            append = 1
-          endif else begin
-            append = 0
-          endelse
-          putInfoInReductionStatus, Event, status_text, append
-          StatusMessage += 1
-        endif
-      endelse
-      cmd[index_spin_state] += ',' + Q_scale        ;Q_scale (lin or log)
+      ;get info about filter or not
+      if (~isWithFiltering(Event)) then begin ;no filtering
+        cmd[index_spin_state] += ' --no-filter'
+      endif
       
-    endif
+      ;get info about deltaT/T
+      IF (isWithDToT(Event)) THEN BEGIN ;store deltaT over T
+        cmd[index_spin_state] += ' --store-dtot'
+      ENDIF
+      
+      ;overwrite data instrument geometry file
+      if (isWithDataInstrumentGeometryOverwrite(Event)) then BEGIN
+        cmd[index_spin_state] += ' --data-inst-geom='
+        ;with instrument geometry
+        IGFile = (*global).InstrumentDataGeometryFileName
+        if (IGFile NE '') then begin ;instrument geometry file is not empty
+          cmd[index_spin_state] += IGFile
+          ;display last part of file name in button
+          button_value = getFileNameOnly(IGFIle)
+        endif else begin
+          cmd[index_spin_state] += '?'
+          if (index_spin_state eq 0) then begin
+            status_text = '- Please select a Data instrument geometry'
+            if (StatusMessage GT 0) then begin
+              append = 1
+            endif else begin
+              append = 0
+            endelse
+            putInfoInReductionStatus, Event, status_text, append
+            StatusMessage += 1
+          endif
+          if ((*global).miniVersion EQ 0) then begin
+            button_value = 'Select a Data Instrument Geometry File'
+          endif else begin
+            button_value = 'Select a Data Instr. Geometry File'
+          endelse
+        endelse
+        setButtonValue, Event, 'overwrite_data_intrument_geometry_button', $
+          button_value
+      ENDIF
+      
+      ;IF ((*global).instrument EQ 'REF_M') THEN BEGIN
+      ;IF (~isWithDataInstrumentGeometryOverwrite(Event)) then BEGIN
+      ;create_name_of_tmp_geometry_file, event
+      ;cmd[index_spin_state] += ' --data-inst-geom=' + (*global).tmp_geometry_file
+      ;ENDIF
+      ;ENDIF
+      
+      ;overwrite norm instrument geometry file
+      if (isWithNormInstrumentGeometryOverwrite(Event)) then BEGIN
+        ;with instrument geometry
+        cmd[index_spin_state] += ' --norm-inst-geom='
+        IGFile = (*global).InstrumentNormGeometryFileName
+        if (IGFile NE '') then begin ;instrument geometry file is not empty
+          cmd[index_spin_state] += IGFile
+          ;display last part of file name in button
+          button_value = getFileNameOnly(IGFIle)
+        endif else begin
+          cmd[index_spin_state] += '?'
+          if (index_spin_state eq 0) then begin
+            status_text = '- Please select a Normalization instrument geometry'
+            if (StatusMessage GT 0) then begin
+              append = 1
+            endif else begin
+              append = 0
+            endelse
+            putInfoInReductionStatus, Event, status_text, append
+            StatusMessage += 1
+          endif
+          if ((*global).miniVersion EQ 0) then begin
+            button_value = 'Select a Normalization Instrument Geometry File'
+          endif else begin
+            button_value = 'Select a Norm. Instr. Geometry File'
+          endelse
+        endelse
+        setButtonValue, Event, 'overwrite_norm_instrument_geometry_button', $
+          button_value
+          
+      endif
+      
+      ;get name from output path and name
+      outputPath = (*global).dr_output_path
+      ;check that user have access to that folder
+      IF (FILE_TEST(outputPath,/WRITE) EQ 0) THEN BEGIN
+        SPAWN, 'mkdir ' + outputPath, listening, err_listening
+        IF (err_listening[0] NE '') THEN BEGIN
+          status_text    = '- PERMISSION ERROR : you do not have ' + $
+            'the permission to '
+          status_text   += 'write in this folder. Please select another folder !'
+          IF (StatusMessage GT 0) THEN BEGIN
+            append = 1
+          ENDIF ELSE BEGIN
+            append = 0
+          ENDELSE
+          StatusMessage += 1
+          putInfoInReductionStatus, Event, status_text, append
+        ENDIF
+      ENDIF
+      outputFileName = getOutputFileName(Event)
+      outputFileName = add_spin_state_to_outputFileName(Event,$
+        outputFileName,$
+        data_spin_state[index_spin_state])
+      NewOutputFileName = outputPath + outputFileName
+      cmd[index_spin_state] += ' --output=' + NewOutputFileName
+      list_of_output_file_name[index_spin_state] = NewOutputFileName
+      
+      index_spin_state++
+    endwhile
     
-    ;get info about detector angle
-    angle_value = getTextFieldValue(Event,'detector_value_text_field')
-    angle_err   = getTextFieldValue(Event,'detector_error_text_field')
-    angle_units = getDetectorAngleUnits(Event)
+    ;record the name of all the output files
+    (*(*global).list_of_output_file_name) = list_of_output_file_name
     
-    if (angle_value NE '' OR $    ;user wants to input the angle value and err
-      angle_err NE '') then begin
-      
-      cmd[index_spin_state] += ' --angle-offset='
-      
-      if (angle_value NE '') then begin ;angle_value
-        cmd[index_spin_state] += STRCOMPRESS(angle_value,/remove_all)
-      endif else begin
-        cmd[index_spin_state] += '?'
-        if (index_spin_state eq 0) then begin
-          status_text = '- Please provide a detector angle value'
-          if (StatusMessage GT 0) then begin
-            append = 1
-          endif else begin
-            append = 0
-          endelse
-          putInfoInReductionStatus, Event, status_text, append
-          StatusMessage += 1
-        endif
-      endelse
-      
-      if (angle_err NE '') then begin ;angle_err
-        cmd[index_spin_state] += ',' + STRCOMPRESS(angle_err,/remove_all)
-      endif else begin
-        cmd[index_spin_state] += ',?'
-        if (index_spin_state eq 0) then begin
-          status_text = '- Please provide a detector angle error value'
-          if (StatusMessage GT 0) then begin
-            append = 1
-          endif else begin
-            append = 0
-          endelse
-          putInfoInReductionStatus, Event, status_text, append
-          StatusMessage += 1
-        endif
-      endelse
-      
-      cmd[index_spin_state] += ',units=' + STRCOMPRESS(angle_units,/remove_all)
-      
+    ;generate intermediate plots command line
+    IP_cmd = RefReduction_CommandLineIntermediatePlotsGenerator(Event)
+    cmd += IP_cmd
+    
+    ;display command line in Reduce text box
+    putTextFieldValue, Event, 'reduce_cmd_line_preview', cmd, 0
+    
+    ;validate or not Go data reduction button
+    if (StatusMessage NE 0) then begin ;do not activate button
+      activate = 0
+    ;;display command line in batch tab of working row
+    ;    PopulateBatchTableWithCMDinfo, Event, 'N/A'
     endif else begin
-    
+      activate = 1
+      putInfoInReductionStatus, Event, '', 0
+    ;clear text field of Commnand line status
+    ;;display command line in batch tab of working row
+    ;    PopulateBatchTableWithCMDinfo, Event, cmd
     endelse
     
-    ;ActivateWidget, Event, 'nexus_data_used_label', NexusLabelStatus
-    ;ActivateWidget, Event, 'gui_data_used_label', GuiLabelStatus
+    (*global).PreviousRunReductionValidated = activate
+    ActivateWidget, Event,'start_data_reduction_button',activate
     
-    ;get info about filter or not
-    if (~isWithFiltering(Event)) then begin ;no filtering
-      cmd[index_spin_state] += ' --no-filter'
-    endif
-    
-    ;get info about deltaT/T
-    IF (isWithDToT(Event)) THEN BEGIN ;store deltaT over T
-      cmd[index_spin_state] += ' --store-dtot'
-    ENDIF
-    
-    ;overwrite data instrument geometry file
-    if (isWithDataInstrumentGeometryOverwrite(Event)) then BEGIN
-      cmd[index_spin_state] += ' --data-inst-geom='
-      ;with instrument geometry
-      IGFile = (*global).InstrumentDataGeometryFileName
-      if (IGFile NE '') then begin ;instrument geometry file is not empty
-        cmd[index_spin_state] += IGFile
-        ;display last part of file name in button
-        button_value = getFileNameOnly(IGFIle)
-      endif else begin
-        cmd[index_spin_state] += '?'
-        if (index_spin_state eq 0) then begin
-          status_text = '- Please select a Data instrument geometry'
-          if (StatusMessage GT 0) then begin
-            append = 1
-          endif else begin
-            append = 0
-          endelse
-          putInfoInReductionStatus, Event, status_text, append
-          StatusMessage += 1
-        endif
-        if ((*global).miniVersion EQ 0) then begin
-          button_value = 'Select a Data Instrument Geometry File'
-        endif else begin
-          button_value = 'Select a Data Instr. Geometry File'
-        endelse
-      endelse
-      setButtonValue, Event, 'overwrite_data_intrument_geometry_button', $
-        button_value
-    ENDIF
-    
-    ;IF ((*global).instrument EQ 'REF_M') THEN BEGIN
-    ;IF (~isWithDataInstrumentGeometryOverwrite(Event)) then BEGIN
-    ;create_name_of_tmp_geometry_file, event
-    ;cmd[index_spin_state] += ' --data-inst-geom=' + (*global).tmp_geometry_file
-    ;ENDIF
-    ;ENDIF
-    
-    ;overwrite norm instrument geometry file
-    if (isWithNormInstrumentGeometryOverwrite(Event)) then BEGIN
-      ;with instrument geometry
-      cmd[index_spin_state] += ' --norm-inst-geom='
-      IGFile = (*global).InstrumentNormGeometryFileName
-      if (IGFile NE '') then begin ;instrument geometry file is not empty
-        cmd[index_spin_state] += IGFile
-        ;display last part of file name in button
-        button_value = getFileNameOnly(IGFIle)
-      endif else begin
-        cmd[index_spin_state] += '?'
-        if (index_spin_state eq 0) then begin
-          status_text = '- Please select a Normalization instrument geometry'
-          if (StatusMessage GT 0) then begin
-            append = 1
-          endif else begin
-            append = 0
-          endelse
-          putInfoInReductionStatus, Event, status_text, append
-          StatusMessage += 1
-        endif
-        if ((*global).miniVersion EQ 0) then begin
-          button_value = 'Select a Normalization Instrument Geometry File'
-        endif else begin
-          button_value = 'Select a Norm. Instr. Geometry File'
-        endelse
-      endelse
-      setButtonValue, Event, 'overwrite_norm_instrument_geometry_button', $
-        button_value
-        
-    endif
-    
-    ;get name from output path and name
-    outputPath = (*global).dr_output_path
-    ;check that user have access to that folder
-    IF (FILE_TEST(outputPath,/WRITE) EQ 0) THEN BEGIN
-      SPAWN, 'mkdir ' + outputPath, listening, err_listening
-      IF (err_listening[0] NE '') THEN BEGIN
-        status_text    = '- PERMISSION ERROR : you do not have ' + $
-          'the permission to '
-        status_text   += 'write in this folder. Please select another folder !'
-        IF (StatusMessage GT 0) THEN BEGIN
-          append = 1
-        ENDIF ELSE BEGIN
-          append = 0
-        ENDELSE
-        StatusMessage += 1
-        putInfoInReductionStatus, Event, status_text, append
-      ENDIF
-    ENDIF
-    outputFileName = getOutputFileName(Event)
-    outputFileName = add_spin_state_to_outputFileName(Event,$
-      outputFileName,$
-      data_spin_state[index_spin_state])
-    NewOutputFileName = outputPath + outputFileName
-    cmd[index_spin_state] += ' --output=' + NewOutputFileName
-    list_of_output_file_name[index_spin_state] = NewOutputFileName
-    
-    index_spin_state++
-  endwhile
-  
-  ;record the name of all the output files
-  (*(*global).list_of_output_file_name) = list_of_output_file_name
-  
-  ;generate intermediate plots command line
-  IP_cmd = RefReduction_CommandLineIntermediatePlotsGenerator(Event)
-  cmd += IP_cmd
-  
-  ;display command line in Reduce text box
-  putTextFieldValue, Event, 'reduce_cmd_line_preview', cmd, 0
-  
-  ;validate or not Go data reduction button
-  if (StatusMessage NE 0) then begin ;do not activate button
-    activate = 0
-  ;;display command line in batch tab of working row
-  ;    PopulateBatchTableWithCMDinfo, Event, 'N/A'
-  endif else begin
-    activate = 1
-    putInfoInReductionStatus, Event, '', 0
-  ;clear text field of Commnand line status
-  ;;display command line in batch tab of working row
-  ;    PopulateBatchTableWithCMDinfo, Event, cmd
-  endelse
-  
-  (*global).PreviousRunReductionValidated = activate
-  ActivateWidget, Event,'start_data_reduction_button',activate
-  
-END
+  END

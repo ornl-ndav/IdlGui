@@ -359,7 +359,7 @@ pro command_line_generator_for_ref_m_broad_peak, event
       
       ;calculate sangle according to the current pixel used
       _pixel = pixel_range[_index_pixel_range]
-      sangle = -10
+      sangle = -10 ;give a default value to sangle that will change for sure
       calculate_sangle, event, refpix=_pixel, sangle=sangle
       
       ;scattering angle flag
