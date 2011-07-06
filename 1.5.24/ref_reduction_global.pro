@@ -69,7 +69,7 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
   branch      = STRJOIN(branchArray[0:1],'.')
   
   ;Jean, Michael, John and Jim
-  super_users = ['j35','2zr','vuk','jfb']
+  super_users = ['j35','2zr','vuk','jfb','ceh']
   is_super_user = isUcamsFromSuperUserList(ucams=ucams, $
     super_users=super_users)
     
