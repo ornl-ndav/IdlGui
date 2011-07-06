@@ -58,6 +58,7 @@
 .run ref_reduction_RescaleNormalization2D3DPlot.pro
 .run ref_reduction_browse_nexus.pro
 
+.run create_data_rois.pro
 .run ref_reduction_DataMouseSelection.pro
 .run ref_reduction_NormMouseSelection.pro
 .run ref_reduction_DataBackgroundPeakSelection.pro

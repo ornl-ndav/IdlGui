@@ -34,9 +34,12 @@
 ;DATA SIDE OF LOAD TAB
 PRO REFreduction_CreateDataBackgroundROIFile, Event, type
 
-  ;get global structure
-  id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
-  WIDGET_CONTROL,id,GET_UVALUE=global
+  WIDGET_CONTROL, event.top, GET_UVALUE=global
+  
+  if (((*global).reduction_mode) ne 'one_per_selection') then begin
+    create_data_roi_for_broad_discrete_mode, event=event
+    return
+  endif
   
   ;get Ymin and Ymax
   IF (type EQ 'back') THEN BEGIN

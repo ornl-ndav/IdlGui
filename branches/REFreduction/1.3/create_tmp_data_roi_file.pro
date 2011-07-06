@@ -34,6 +34,45 @@
 
 ;+
 ; :Description:
+;    This routine is going to create the ROI for the discrete and broad modes
+;    of data peak selection
+;
+;
+;
+; :Keywords:
+;    event
+;    pixel_range
+;    output_file_name
+;
+; :Author: j35
+;-
+pro create_data_roi_file, event=event, $
+    pixel_range=pixel_range, $
+    output_file_name=output_file_name
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  openw, 1, output_file_name
+  print, 'output_file_name: ' , output_file_name
+  
+  NyMax = (*global).Ny_REF_M
+  
+  foreach y, pixel_range do begin
+    for x=0,(NyMax-1) DO BEGIN
+      text  = 'bank1_' + strcompress(y,/remove_all)
+      text += '_' + strcompress(x,/remove_all)
+      printf,1,text
+    endfor
+  endforeach
+  
+  close, 1
+  free_lun, 1
+  
+end
+
+;+
+; :Description:
 ;    This routine will create a roi file for only the pixel selected
 ;
 ; :Keywords:
