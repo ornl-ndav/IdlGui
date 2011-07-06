@@ -67,8 +67,8 @@ pro create_data_roi_for_broad_discrete_mode, event=event
       pixel_range = indgen(nbr_pixel) + _pixel_min
       
       output_file_name = getTextFieldValue(Event, $
-      'data_roi_selection_file_text_field')
-      
+        'data_roi_selection_file_text_field')
+        
       create_data_roi_file, $
         event=event, $
         pixel_range=pixel_range, $
@@ -77,6 +77,39 @@ pro create_data_roi_for_broad_discrete_mode, event=event
     end
     'one_per_discrete': begin
     
+      output_file_name = getTextFieldValue(Event, $
+        'data_roi_selection_file_text_field')
+        
+      ;list of pixels
+      pixel_range = fix(*(*global).pixel_range_discrete_mode)
+      sz = size(pixel_range,/dim)
+      nbr_rois = sz[1]
+      
+      _index = 0
+      while (_index lt nbr_rois) do begin
+      
+        pixel_min = pixel_range[0,_index]
+        pixel_max = pixel_range[1,_index]
+       _pixel_min = min([pixel_min, pixel_max], max=_pixel_max)
+        nbr_pixel = _pixel_max - _pixel_min + 1
+        _pixel_range = indgen(nbr_pixel) + _pixel_min
+        
+        if (_index eq 0) then begin
+          create_data_roi_file, $
+            event=event, $
+            pixel_range=_pixel_range, $
+            output_file_name=output_file_name
+        endif else begin
+          create_data_roi_file, $
+            event=event, $
+            pixel_range=_pixel_range, $
+            output_file_name=output_file_name, $
+            /append
+        endelse
+        
+        _index++
+      endwhile
+      
     end
   endcase
   
