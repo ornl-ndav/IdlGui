@@ -54,15 +54,15 @@ pro REFreduction_CommandLineGenerator, Event
   if (instrument eq 'REF_L') then begin
     command_line_generator_for_ref_l, event
   endif else begin
-    case ((*global).reduction_mode) of
-      'one_per_selection':
-      'one_per_pixel': begin
-        command_line_generator_for_ref_m_broad_peak, event
-      end
-      'one_per_discrete': begin
-        command_line_generator_for_ref_m_discrete_peak, event
-      end
-    endcase
+    ;case ((*global).reduction_mode) of
+    ;  'one_per_selection':
+    ;  'one_per_pixel': begin
+    ;    ;command_line_generator_for_ref_m_broad_peak, event
+    ;  end
+    ;  'one_per_discrete': begin
+    ;    ;command_line_generator_for_ref_m_discrete_peak, event
+    ;  end
+    ;endcase
     command_line_generator_for_ref_m, event
   endelse
   
