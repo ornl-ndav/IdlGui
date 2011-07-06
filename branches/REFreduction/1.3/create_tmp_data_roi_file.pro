@@ -43,18 +43,24 @@
 ;    event
 ;    pixel_range
 ;    output_file_name
+;    append
+;
 ;
 ; :Author: j35
 ;-
 pro create_data_roi_file, event=event, $
     pixel_range=pixel_range, $
-    output_file_name=output_file_name
+    output_file_name=output_file_name, $
+    append=append
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global
   
-  openw, 1, output_file_name
-  print, 'output_file_name: ' , output_file_name
+  if (keyword_set(append)) then begin
+    openw, 1, output_file_name, /append
+  endif else begin
+    openw, 1, output_file_name
+  endelse
   
   NyMax = (*global).Ny_REF_M
   

@@ -160,6 +160,8 @@ pro discrete_selection_input_base_event, Event
       populate_main_base_with_pixel_range, event=main_event, $
         pixel_list=pixel_list
         
+      command_line_generator_for_ref_m_discrete_peak, main_event
+        
       top_base = (*global_info).top_base
       widget_control, top_base, /destroy
       
@@ -225,7 +227,7 @@ pro populate_main_base_with_pixel_range, event=event, $
    y_range_device = [ymin_device, ymax_device]
    (*(*global).data_roi_selection) = y_range_device
    
-   REFreduction_CreateDataBackgroundROIFile, Event, 'roi'
+   ;REFreduction_CreateDataBackgroundROIFile, Event, 'roi'
     
 end
 
