@@ -205,7 +205,7 @@ pro calculate_sangle, event, refpix=refpix, sangle=sangle
   compile_opt idl2
   
   debug = 0b
-  if (debug) then print, '********entering calculate_sangle *********'
+  if (debug) then message = ['Calculation of sangle']
   
   widget_control, event.top, get_uvalue=global
   
@@ -213,21 +213,23 @@ pro calculate_sangle, event, refpix=refpix, sangle=sangle
   
   ;retrieve dirpix and refpix
   dirpix = getTextFieldValue(event,'info_dirpix')
-  if (debug) then help, dirpix
-  if (debug) then print, 'dirpix: ' , dirpix[0]
+  if (debug) then message = [message, 'dirpix: ' + $
+  strcompress(dirpix[0],/remove_all)]
   if (dirpix[0] eq 'N/A') then begin
     on_ioerror, null
     sangle = -1
     return
   endif
   f_dirpix = float(dirpix[0])
-  if (debug) then print, 'f_dirpix: ' , f_dirpix
+  if (debug) then message = [message, 'f_dirpix: ' + $
+  strcompress(f_dirpix,/remove_all)]
   
   if (~keyword_set(refpix)) then begin
     refpix = getTextFieldValue(event,'info_refpix')
   endif
   f_refpix = float(refpix[0])
-  if (debug) then print, 'f_refpix: ' , f_refpix
+  if (debug) then message = [message, 'f_refpix: ' + $
+  strcompress(f_refpix,/remove_all)]
   
   ;get distance into metre
   detector_sample_distance = getTextFieldValue(event,$
@@ -239,23 +241,28 @@ pro calculate_sangle, event, refpix=refpix, sangle=sangle
   ;detector_position_m = (*global).detector_position_m
   ;detTransOffset_m    = (*global).detTransOffset_m
   ;f_det_sample_distance += detector_position_m - detTransOffset_m
-  if (debug) then print, 'f_det_sample_distance: ' , f_det_sample_distance
+  if (debug) then message = [message, $
+  'f_det_sample_distance: ' + $
+  strcompress(f_det_sample_distance,/remove_all)]
   
   ;get dangle and dangle0 in radians
   dangle_rad = getTextFieldValue(event,'info_dangle_rad')
   f_dangle_rad = FLOAT(dangle_rad[0])
   ;  dangle_rad = get_value_between_arg1_arg2(dangle[0], '\(', 'rad)')
   ;  f_dangle_rad = float(dangle_rad)
-  if (debug) then print, 'f_dangle_rad: ' , f_dangle_rad
+  if (debug) then message = [message, 'f_dangle_rad: ' + $
+  strcompress(f_dangle_rad,/remove_all)]
   
   dangle0 = getTextFieldValue(event,'info_dangle0')
   dangle0_rad = get_value_between_arg1_arg2(dangle0[0], '\(', 'rad)')
   f_dangle0_rad = float(dangle0_rad)
-  if (debug) then print, 'f_dangle0_rad: ' , f_dangle0_rad
+  if (debug) then message = [message, 'f_dangle0_rad: ' + $
+  strcompress(f_dangle0_rad,/remove_all)]
   
   ;get size of detectors
   det_size_m = float((*global).detector_size_m)
-  if (debug) then print, 'det_size_m: ' , det_size_m
+  if (debug) then message = [message, 'det_size_m: ' + $
+  strcompress(det_size_m,/remove_all)]
   
   ;do the calculation
   part1 = (f_dangle_rad - f_dangle0_rad)/2.
@@ -265,6 +272,12 @@ pro calculate_sangle, event, refpix=refpix, sangle=sangle
   rad_sangle = part1 + (part2/part3)
   (*global).rad_sangle = rad_sangle
   
+   if (debug) then begin
+    message = [message, 'sangle (rad): ' + $
+    strcompress(rad_sangle,/remove_all)]
+    xdisplayfile, '', text=message,title='debug of ref_reduction_geometry.pro'
+  endif
+ 
   if (keyword_set(sangle)) then begin
     sangle = rad_sangle
     return
@@ -276,9 +289,9 @@ pro calculate_sangle, event, refpix=refpix, sangle=sangle
     strcompress(deg_sangle,/remove_all)
   putTextfieldValue, event, 'info_sangle_rad', $
     strcompress(rad_sangle,/remove_all)
-    
-  sangle = deg_sangle
   
+ sangle = rad_sangle
+   
   print
   
   return
