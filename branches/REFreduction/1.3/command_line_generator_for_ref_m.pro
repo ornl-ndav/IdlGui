@@ -807,15 +807,13 @@ pro command_line_generator_for_ref_m, event
     
     if ((*global).reduction_mode ne 'one_per_selection') then begin
     
-      cmd[index_spin_state] += ' --cuts-in-Q'
-      
       Q_min = strcompress(getTextFieldValue(Event, 'q_min_text_field'),$
         /remove_all)
       Q_max = strcompress(getTextFieldValue(Event, 'q_max_text_field'),$
         /remove_all)
         
-      cmd[index_spin_state] += ' --tof-cut-min=' + Q_max
-      cmd[index_spin_state] += ' --tof-cut-max=' + Q_min
+      cmd[index_spin_state] += ' --Q-cut-min=' + Q_min
+      cmd[index_spin_state] += ' --Q-cut-max=' + Q_max
       
     endif else begin
     
