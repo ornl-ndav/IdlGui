@@ -113,6 +113,8 @@ pro populate_Q_widgets, event=event
   calculate_sangle, event, refpix=pixel_min, sangle=sangle_min
   calculate_sangle, event, refpix=pixel_max, sangle=sangle_max
   
+  sangle_min = min([sangle_min,sangle_max],max=sangle_max)
+  
   if (debug) then message = [message, 'sangle_min (rad): ' + $
     strcompress(sangle_min,/remove_all),$
     'sangle_max (rad): ' + strcompress(sangle_max,/remove_all)]
@@ -123,29 +125,38 @@ pro populate_Q_widgets, event=event
   endif
   
   ;global constants
-  m_n = 1.67495e-27
-  h   = 6.626e-34
-  pi  = !pi
+  m_n = double(1.67495e-27)
+  h   = double(6.626e-34)
+  pi  = double(!pi)
   
   ;factor = (4*pi*m_n*distance_moderator_detector
   factor = (4.*pi*m_n*distance_moderator_sample)/h
-  ;  if (debug) then print, 'factor: ' , factor
+  if (debug) then message=[message, 'factor: ' + $
+  strcompress(factor,/remove_all)]
   
   ;Qmin
   Qmin = factor * (sin(sangle_min))
+  if (debug) then message=[message,'>Qmin(step1): ' + $
+  strcompress(Qmin,/remove_all)]
   Qmin /= tof_max_s
+  if (debug) then message=[message,'>Qmin(step2): ' + $
+  strcompress(Qmin,/remove_all)]
   ;  if (debug) then print, 'Qmin: ' , Qmin
   if (debug) then message=[message,'Qmin: ' + strcompress(Qmin,/remove_all)]
   
   ;Qmax
   Qmax = factor * (sin(sangle_max))
+  if (debug) then message=[message,'>Qmax(step1): ' + $
+  strcompress(Qmax,/remove_all)]
   Qmax /= tof_min_s
+  if (debug) then message=[message,'>Qmax(step2): ' + $
+  strcompress(Qmax,/remove_all)]
   ;  if (debug) then print, 'Qmax: ' , Qmax
   if (debug) then message=[message,'Qmax: ' + strcompress(Qmax,/remove_all)]
   
   ;Angstroms
-  Qmin = Qmin[0] * 1e-10
-  Qmax = Qmax[0] * 1e-10
+  Qmin = Qmin[0] * 1.e-10
+  Qmax = Qmax[0] * 1.e-10
   
   _Qmin = min([Qmin,Qmax],max=_Qmax)
   if (debug) then begin
