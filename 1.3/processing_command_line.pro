@@ -81,9 +81,9 @@ PRO REFreductionEventcb_ProcessingCommandLine, Event
     
   endif else begin ;REF_M instrument
   
-    case ((*global).reduction_mode) of
+;    case ((*global).reduction_mode) of
     
-      'one_per_selection': begin
+;      'one_per_selection': begin
       
         run_command_line_ref_m, event
         
@@ -114,84 +114,84 @@ PRO REFreductionEventcb_ProcessingCommandLine, Event
           
         endif
         
-      end
+;      end
       
-      'one_per_pixel': begin
-      
-        run_command_line_ref_m_broad_peak, event, status=status
-        
-        if (status eq 0b) then return
-        
-        list_of_broad_output_file_name = $
-          (*(*global).list_of_output_file_name_for_broad_mode)
-        first_ref_m_file_to_plot = (*global).first_ref_m_file_to_plot
-        if (first_ref_m_file_to_plot ne -1) then begin
-        
-          list_of_output_file_name = list_of_broad_output_file_name
-          ;apply auto cleanup of data if switch is on
-          value = getButtonValue(event,'auto_cleaning_data_cw_bgroup')
-          if (value eq 0) then begin ;apply auto cleanup
-            sz = n_elements(list_of_output_file_name)
-            index = 0
-            while (index lt sz) do begin
-              cleanup_reduce_data, event, file_name = $
-                list_of_output_file_name[index]
-              index++
-            endwhile
-          endif
-          
-          FullOutputFileName = list_of_output_file_name[first_ref_m_file_to_plot]
-          ;Load main data reduction File and  plot it
-          putTextFieldValue, Event, 'plot_tab_input_file_text_field', $
-            FullOutputFileName
-          ;move to new tab
-          id1 = WIDGET_INFO(Event.top, FIND_BY_UNAME='main_tab')
-          WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;plot tab
-          LoadAsciiFile, Event
-          
-        endif
-        
-      end
-      
-      'one_per_discrete': begin
-      
-        run_command_line_ref_m_discrete_peak, event, status=status
-        
-        if (status eq 0b) then return
-        
-        list_of_discrete_output_file_name = $
-          (*(*global).list_of_output_file_name_for_discrete_mode)
-        first_ref_m_file_to_plot = (*global).first_ref_m_file_to_plot
-        if (first_ref_m_file_to_plot ne -1) then begin
-        
-          list_of_output_file_name = list_of_discrete_output_file_name
-          ;apply auto cleanup of data if switch is on
-          value = getButtonValue(event,'auto_cleaning_data_cw_bgroup')
-          if (value eq 0) then begin ;apply auto cleanup
-            sz = n_elements(list_of_output_file_name)
-            index = 0
-            while (index lt sz) do begin
-              cleanup_reduce_data, event, file_name = $
-                list_of_output_file_name[index]
-              index++
-            endwhile
-          endif
-          
-          FullOutputFileName = list_of_output_file_name[first_ref_m_file_to_plot]
-          ;Load main data reduction File and  plot it
-          putTextFieldValue, Event, 'plot_tab_input_file_text_field', $
-            FullOutputFileName
-          ;move to new tab
-          id1 = WIDGET_INFO(Event.top, FIND_BY_UNAME='main_tab')
-          WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;plot tab
-          LoadAsciiFile, Event
-          
-        endif
-        
-      end
-      
-    endcase
+;      'one_per_pixel': begin
+;      
+;        run_command_line_ref_m_broad_peak, event, status=status
+;        
+;        if (status eq 0b) then return
+;        
+;        list_of_broad_output_file_name = $
+;          (*(*global).list_of_output_file_name_for_broad_mode)
+;        first_ref_m_file_to_plot = (*global).first_ref_m_file_to_plot
+;        if (first_ref_m_file_to_plot ne -1) then begin
+;        
+;          list_of_output_file_name = list_of_broad_output_file_name
+;          ;apply auto cleanup of data if switch is on
+;          value = getButtonValue(event,'auto_cleaning_data_cw_bgroup')
+;          if (value eq 0) then begin ;apply auto cleanup
+;            sz = n_elements(list_of_output_file_name)
+;            index = 0
+;            while (index lt sz) do begin
+;              cleanup_reduce_data, event, file_name = $
+;                list_of_output_file_name[index]
+;              index++
+;            endwhile
+;          endif
+;          
+;          FullOutputFileName = list_of_output_file_name[first_ref_m_file_to_plot]
+;          ;Load main data reduction File and  plot it
+;          putTextFieldValue, Event, 'plot_tab_input_file_text_field', $
+;            FullOutputFileName
+;          ;move to new tab
+;          id1 = WIDGET_INFO(Event.top, FIND_BY_UNAME='main_tab')
+;          WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;plot tab
+;          LoadAsciiFile, Event
+;          
+;        endif
+;        
+;      end
+;      
+;      'one_per_discrete': begin
+;      
+;        run_command_line_ref_m_discrete_peak, event, status=status
+;        
+;        if (status eq 0b) then return
+;        
+;        list_of_discrete_output_file_name = $
+;          (*(*global).list_of_output_file_name_for_discrete_mode)
+;        first_ref_m_file_to_plot = (*global).first_ref_m_file_to_plot
+;        if (first_ref_m_file_to_plot ne -1) then begin
+;        
+;          list_of_output_file_name = list_of_discrete_output_file_name
+;          ;apply auto cleanup of data if switch is on
+;          value = getButtonValue(event,'auto_cleaning_data_cw_bgroup')
+;          if (value eq 0) then begin ;apply auto cleanup
+;            sz = n_elements(list_of_output_file_name)
+;            index = 0
+;            while (index lt sz) do begin
+;              cleanup_reduce_data, event, file_name = $
+;                list_of_output_file_name[index]
+;              index++
+;            endwhile
+;          endif
+;          
+;          FullOutputFileName = list_of_output_file_name[first_ref_m_file_to_plot]
+;          ;Load main data reduction File and  plot it
+;          putTextFieldValue, Event, 'plot_tab_input_file_text_field', $
+;            FullOutputFileName
+;          ;move to new tab
+;          id1 = WIDGET_INFO(Event.top, FIND_BY_UNAME='main_tab')
+;          WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;plot tab
+;          LoadAsciiFile, Event
+;          
+;        endif
+;        
+;      end
+;      
+;    endcase
     
-  endelse
+  endelse ;end of if (instrument eq 'REF_L')
   
 END

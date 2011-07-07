@@ -36,7 +36,8 @@ PRO REFreduction_CreateDataBackgroundROIFile, Event, type
 
   WIDGET_CONTROL, event.top, GET_UVALUE=global
   
-  if (((*global).reduction_mode) ne 'one_per_selection') then begin
+  if (type ne 'back' && $ 
+  (*global).reduction_mode ne 'one_per_selection') then begin
     create_data_roi_for_broad_discrete_mode, event=event
     return
   endif
