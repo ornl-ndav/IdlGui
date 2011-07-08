@@ -396,10 +396,12 @@ PRO main_base_event, Event
     
     ;geometry run number
     widget_info(wWidget, find_by_uname='rtof_nexus_geometry_run_number'): begin
-    findnexus_for_rtof_nexus_file, event
+      widget_control, /hourglass
+      findnexus_for_rtof_nexus_file, event
       check_rtof_buttons_status, event
       check_go_button, event=event
       result = load_geometry_parameters(event)
+      widget_control, hourglass=0
     end
     
     ;browse for nexus file
