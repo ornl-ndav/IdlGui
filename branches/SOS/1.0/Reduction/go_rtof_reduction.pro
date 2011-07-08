@@ -145,10 +145,10 @@ pro go_rtof_reduction, event
   
   theta_rad = convert_angle(angle=theta.value, $
     from_unit=theta.units,$
-    to_unit='degree')
+    to_unit='rad')
   twotheta_rad = convert_angle(angle=twotheta.value, $
     from_unit=twotheta.units, $
-    to_unit='degree')
+    to_unit='rad')
     
   message = ['> Retrieved parameters.']
   log_book_update, event, message=message
