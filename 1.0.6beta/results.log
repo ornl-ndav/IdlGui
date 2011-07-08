@@ -1,0 +1,7 @@
+Starting test suite MGTESTSUITE (1 test case, 3 tests)
+   Starting IDLNEXUSUTILITIESTEST (3 tests)
+      TEST_REF_L_SD_VALUE: passed
+      TEST_REF_M_SD_UNIT: failed "Wrong d_SD unit for REF_M_5000 (old NeXus format) Off_Off"
+      TEST_REF_M_SD_VALUE: passed
+      Results: 2 / 3 tests passed
+   Results: 2 / 3 tests passed
