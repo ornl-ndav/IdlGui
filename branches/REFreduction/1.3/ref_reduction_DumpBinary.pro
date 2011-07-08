@@ -91,8 +91,6 @@ FUNCTION retrieveBanksData, Event, $
         spin_state='Off_Off')
         tof_axis = iNexus.get_tof_data()
         
-        help, tof_axis
-        
         ;put value in reduce tab only if there is nothing there already
         put_tof_value_in_reduce_tab, event=event, tof_axis=tof_axis
         

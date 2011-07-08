@@ -48,7 +48,16 @@ pro create_data_roi_for_broad_discrete_mode, event=event
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global
+
+  catch, error
+  if (error ne 0) then begin
+  catch, /cancel
+  return
+  endif
   
+   output_file_name = getTextFieldValue(Event, $
+        'data_roi_selection_file_text_field')
+        
   case ((*global).reduction_mode) of
     'one_per_pixel': begin
       pixel_min = fix(getValue(event=event, $
@@ -66,9 +75,6 @@ pro create_data_roi_for_broad_discrete_mode, event=event
       nbr_pixel = _pixel_max - _pixel_min + 1
       pixel_range = indgen(nbr_pixel) + _pixel_min
       
-      output_file_name = getTextFieldValue(Event, $
-        'data_roi_selection_file_text_field')
-        
       create_data_roi_file, $
         event=event, $
         pixel_range=pixel_range, $
@@ -77,12 +83,14 @@ pro create_data_roi_for_broad_discrete_mode, event=event
     end
     'one_per_discrete': begin
     
-      output_file_name = getTextFieldValue(Event, $
-        'data_roi_selection_file_text_field')
-        
       ;list of pixels
       pixel_range = fix(*(*global).pixel_range_discrete_mode)
       sz = size(pixel_range,/dim)
+      
+      help, pixel_range
+      help, sz
+      print, sz
+      
       nbr_rois = sz[1]
       
       _index = 0
@@ -90,7 +98,7 @@ pro create_data_roi_for_broad_discrete_mode, event=event
       
         pixel_min = pixel_range[0,_index]
         pixel_max = pixel_range[1,_index]
-       _pixel_min = min([pixel_min, pixel_max], max=_pixel_max)
+        _pixel_min = min([pixel_min, pixel_max], max=_pixel_max)
         nbr_pixel = _pixel_max - _pixel_min + 1
         _pixel_range = indgen(nbr_pixel) + _pixel_min
         
@@ -112,5 +120,8 @@ pro create_data_roi_for_broad_discrete_mode, event=event
       
     end
   endcase
+  
+  uname = 'reduce_data_region_of_interest_file_name'
+  putTextFieldValue, Event, uname, output_file_name[0],0
   
 end

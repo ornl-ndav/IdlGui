@@ -47,6 +47,12 @@ pro command_line_generator_for_ref_m, event
   ;get global structure
   WIDGET_CONTROL,event.top,get_uvalue=global
   
+  catch, error
+  if (error ne 0) then begin
+    catch, /cancel
+    return
+  endif
+  
   StatusMessage = 0 ;will increase by 1 each time a field is missing
   
   value = getButtonValue(event,'other_spin_states')
