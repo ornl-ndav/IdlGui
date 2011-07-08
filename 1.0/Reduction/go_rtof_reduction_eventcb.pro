@@ -364,8 +364,8 @@ function trim_data, event, $
   theta += 4.0
   twotheta += 4.0
   message[i++] = '-> Adding 4.0 to theta and twotheta:'
-  message[i++]= '  -> theta: ' + strcompress(theta,/remove_all) + ' radians'
-  message[i++] = '  -> twotheta: ' + strcompress(twotheta,/remove_all) + ' radians'
+  message[i++]= '  -> theta: ' + strcompress(theta,/remove_all) + ' degrees'
+  message[i++] = '  -> twotheta: ' + strcompress(twotheta,/remove_all) + ' degrees'
   
   ;pixels min and max
   PIXmin = get_pixel_min_rtof(event)
@@ -404,6 +404,14 @@ function trim_data, event, $
   ;remove last tof (which is empty)
   image = image[0:-2,*]
   tof = tof[0:-2]
+  
+  theta = convert_angle(angle=theta, $
+    from_unit='degree', $
+    to_unit='rad')
+  
+  twotheta = convert_angle(angle=twotheta, $
+    from_unit='degree', $
+    to_unit='rad')
   
   DATA = {data:image, theta:theta, twotheta:twotheta, tof:tof, pixels:pixels}
   
