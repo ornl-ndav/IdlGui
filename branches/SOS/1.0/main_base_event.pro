@@ -394,6 +394,14 @@ PRO main_base_event, Event
       result = load_geometry_parameters(event)
     end
     
+    ;geometry run number
+    widget_info(wWidget, find_by_uname='rtof_nexus_geometry_run_number'): begin
+    findnexus_for_rtof_nexus_file, event
+      check_rtof_buttons_status, event
+      check_go_button, event=event
+      result = load_geometry_parameters(event)
+    end
+    
     ;browse for nexus file
     widget_info(wWidget, find_by_uname='rtof_nexus_geometry_button'): begin
       browse_for_rtof_nexus_file, event

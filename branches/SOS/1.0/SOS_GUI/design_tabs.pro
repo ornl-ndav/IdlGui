@@ -149,9 +149,9 @@ pro design_tabs, MAIN_BASE, global
     /context_menu,$
     uname = 'context_base')
   plot2d = widget_button(contextBase,$
-  value = 'Display 2D plots (Pixel vs TOF)...',$
-  uname = 'display_pixel_vs_tof_of_input_files')
-
+    value = 'Display 2D plots (Pixel vs TOF)...',$
+    uname = 'display_pixel_vs_tof_of_input_files')
+    
   norm = widget_button(contextBase,$
     value = 'Select a different normalization file...',$
     uname = 'select_another_norm_file',$
@@ -201,39 +201,39 @@ pro design_tabs, MAIN_BASE, global
     uname='nexus_tab1',$
     title = '  Settings  ')
     
-;  ;for REF_M only, spin state selection and metadata table
-;  if ((*global).instrument eq 'REF_M') then begin
+  ;  ;for REF_M only, spin state selection and metadata table
+  ;  if ((*global).instrument eq 'REF_M') then begin
+    
+  other_spins = widget_base(nexus_tab1,$
+    xoffset = 700,$
+    map = 0,$
+    uname = 'ref_m_list_of_spins',$
+    yoffset = 115,$
+    /row)
+  label = widget_label(other_spins,$
+    value = 'Spins:')
+  buttons = widget_base(other_spins,$
+    /row,$
+    /nonexclusive)
+  spin1 = widget_button(buttons,$
+    uname = 'config_spin_off_off',$
+    sensitive = 0,$
+    value = 'Off_Off')
+  spin2 = widget_button(buttons,$
+    uname = 'config_spin_off_on',$
+    value = 'Off_On')
+  spin3 = widget_button(buttons,$
+    uname = 'config_spin_on_off',$
+    value = 'On_Off')
+  spin4 = widget_button(buttons,$
+    uname = 'config_spin_on_on',$
+    value = 'On_On')
+  widget_control, spin1, /set_button
+  ;widget_control, spin2, /set_button
+  widget_control, spin3, /set_button
+  ;widget_control, spin4, /set_button
   
-    other_spins = widget_base(nexus_tab1,$
-      xoffset = 700,$
-      map = 0,$
-      uname = 'ref_m_list_of_spins',$
-      yoffset = 115,$
-      /row)
-    label = widget_label(other_spins,$
-      value = 'Spins:')
-    buttons = widget_base(other_spins,$
-      /row,$
-      /nonexclusive)
-    spin1 = widget_button(buttons,$
-      uname = 'config_spin_off_off',$
-      sensitive = 0,$
-      value = 'Off_Off')
-    spin2 = widget_button(buttons,$
-      uname = 'config_spin_off_on',$
-      value = 'Off_On')
-    spin3 = widget_button(buttons,$
-      uname = 'config_spin_on_off',$
-      value = 'On_Off')
-    spin4 = widget_button(buttons,$
-      uname = 'config_spin_on_on',$
-      value = 'On_On')
-    widget_control, spin1, /set_button
-    ;widget_control, spin2, /set_button
-    widget_control, spin3, /set_button  
-    ;widget_control, spin4, /set_button  
-      
-;  endif
+  ;  endif
   
   _base = widget_base(nexus_tab1,$
     xoffset = 10,$
@@ -399,48 +399,48 @@ pro design_tabs, MAIN_BASE, global
     title = 'Distance moderator to detector (mm) ')
     
     
-;  ;for REF_M only, spin state selection and metadata table
-;  if ((*global).instrument eq 'REF_M') then begin
-  
-    row2 = widget_base(para_box,$
+  ;  ;for REF_M only, spin state selection and metadata table
+  ;  if ((*global).instrument eq 'REF_M') then begin
+    
+  row2 = widget_base(para_box,$
     uname = 'ref_m_metadata_table_base',$
     map = 0,$
-      /row)
-      
-    row_array = [0,0,1,1,1,1,1]
-    editable_array = intarr(7,max_nbr_data_nexus)
-    for i=0,(max_nbr_data_nexus-1) do begin
-      editable_array[*,i] = row_array
-    endfor
+    /row)
     
-    widths = [250,80,50,50,200,200,200]
-    metadata_table = widget_table(row2,$
-      uname = 'ref_m_metadata_table',$
-      editable = editable_array, $
-      xsize = 7,$
-      ysize = max_nbr_data_nexus, $
-      column_labels=$
-      ['File','Spin','dirpix','refpix','dangle [deg(rad)]',$
-      'dangle0 [deg(rad])','sangle [deg(rad)]'],$
-      column_widths=widths,$
-      scr_xsize = 1050,$
-      scr_ysize = 300,$
-      /no_row_headers, $
-      /row_major,$
-      /scroll,$
-      /context_events, $
-      /all_events)
-      
-    ;context_menu
-    contextBase = widget_base(metadata_table,$
-      /context_menu,$
-      uname = 'metadata_context_base')
-    refpix_button = widget_button(contextBase,$
-      value = 'Set refpix ...',$
-      uname = 'set_refpix_button')
-      
-;  endif
+  row_array = [0,0,1,1,1,1,1]
+  editable_array = intarr(7,max_nbr_data_nexus)
+  for i=0,(max_nbr_data_nexus-1) do begin
+    editable_array[*,i] = row_array
+  endfor
   
+  widths = [250,80,50,50,200,200,200]
+  metadata_table = widget_table(row2,$
+    uname = 'ref_m_metadata_table',$
+    editable = editable_array, $
+    xsize = 7,$
+    ysize = max_nbr_data_nexus, $
+    column_labels=$
+    ['File','Spin','dirpix','refpix','dangle [deg(rad)]',$
+    'dangle0 [deg(rad])','sangle [deg(rad)]'],$
+    column_widths=widths,$
+    scr_xsize = 1050,$
+    scr_ysize = 300,$
+    /no_row_headers, $
+    /row_major,$
+    /scroll,$
+    /context_events, $
+    /all_events)
+    
+  ;context_menu
+  contextBase = widget_base(metadata_table,$
+    /context_menu,$
+    uname = 'metadata_context_base')
+  refpix_button = widget_button(contextBase,$
+    value = 'Set refpix ...',$
+    uname = 'set_refpix_button')
+    
+  ;  endif
+    
   if ((*global).hide_tab_2 eq 'no') then begin
   
     ;********* tab 2 **********************************************************
@@ -492,10 +492,22 @@ pro design_tabs, MAIN_BASE, global
       /row)
       
     label = widget_label(row2, $
-      value = 'NeXus file:  ')
+      value = 'Run number:  ')
+    run_number = widget_text(row2,$
+      value = '',$
+      xsize = 8,$
+      /editable,$
+      uname = 'rtof_nexus_geometry_run_number')
+    label = widget_label(row2,$
+      value = ' OR ')
+    button = widget_button(row2,$
+      value = ' Browse ... ',$
+      uname = 'rtof_nexus_geometry_button')
+    label = widget_label(row2,$
+      value = '         Full nexus name:')
     value = widget_text(row2, $
       value = '', $
-      xsize = 130, $
+      xsize = 97, $
       /all_events, $
       /editable,$
       uname = 'rtof_nexus_geometry_file')
@@ -504,11 +516,6 @@ pro design_tabs, MAIN_BASE, global
       uname = 'rtof_nexus_file_status_uname',$
       scr_ysize = 30,$
       scr_xsize = 60)
-    label = widget_label(row2,$
-      value = ' OR ')
-    button = widget_button(row2,$
-      value = ' Browse ... ',$
-      uname = 'rtof_nexus_geometry_button')
       
     ;SPACE - User defined parameters
     space = widget_label(_base1,$
