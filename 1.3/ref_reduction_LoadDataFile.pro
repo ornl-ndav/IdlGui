@@ -295,7 +295,7 @@ PRO REFreduction_LoadDatafile, Event, isNeXusFound, NbrNexus
     ;we just want the archived one
     ENDIF ELSE BEGIN ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
-      LogBookText = '-> Openning Archived DATA Run Number: ' + DataRunNumber
+      LogBookText = '-> Opening Archived DATA Run Number: ' + DataRunNumber
       putLogBookMessage, Event, LogBookText, Append=1
       LogBookText += ' ... ' + PROCESSING
       putDataLogBookMessage, Event, LogBookText

@@ -273,7 +273,7 @@ PRO REFreduction_LoadEmptyCell, Event, isNeXusFound, NbrNexus
     ;we just want the archived one
     ENDIF ELSE BEGIN ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
-      LogBookText = '-> Openning Archived Empty Cell Run Number: ' + $
+      LogBookText = '-> Opening Archived Empty Cell Run Number: ' + $
         RunNumber
       putLogBookMessage, Event, LogBookText, Append=1
       LogBookText += ' ... ' + PROCESSING
@@ -560,7 +560,7 @@ PRO load_empty_cell_browse_nexus, Event, $
   
   putTextFieldvalue, Event, 'empty_cell_nexus_run_number', EmptyCellRunNumber, 0
   
-  LogBookText = '> Openning Empty Cell Run Number: ' + EmptyCellRunNumber
+  LogBookText = '> Opening Empty Cell Run Number: ' + EmptyCellRunNumber
   IF (N_ELEMENTS(POLA_STATE)) THEN BEGIN
     LogBookText += ' (polarization state: ' + list_pola_state[POLA_STATE] + ')'
   ENDIF

@@ -207,7 +207,7 @@ PRO load_data_browse_nexus, Event, nexus_file_name, POLA_STATE=pola_state
   (*global).DataRunNumber = DataRunNumber
   (*global).data_run_number = DataRunNumber
   
-  LogBookText = '> Openning DATA Run Number: ' + DataRunNumber
+  LogBookText = '> Opening DATA Run Number: ' + DataRunNumber
   IF (N_ELEMENTS(POLA_STATE)) THEN BEGIN
     LogBookText += ' (polarization state: ' + list_pola_state[POLA_STATE] + ')'
   ENDIF
@@ -361,7 +361,7 @@ PRO load_norm_browse_nexus, Event, nexus_file_name, POLA_STATE=pola_state
   NormRunNumber = STRCOMPRESS(NormRunNumber,/REMOVE_ALL)
   (*global).NormRunNumber = NormRunNumber
   
-  LogBookText = '> Openning NORMALIZATION Run Number: ' + NormRunNumber
+  LogBookText = '> Opening NORMALIZATION Run Number: ' + NormRunNumber
   IF (N_ELEMENTS(POLA_STATE)) THEN BEGIN
     LogBookText += ' (polarization state: ' + list_pola_state[POLA_STATE] + ')'
   ENDIF

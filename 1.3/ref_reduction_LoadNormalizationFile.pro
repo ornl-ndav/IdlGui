@@ -284,7 +284,7 @@ IF (NormalizationRunNumber NE '') THEN BEGIN
 ;we just want the archived one
      ENDIF ELSE BEGIN ;++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         
-        LogBookText = '-> Openning Archived NORMALIZATION Run Number: ' + $
+        LogBookText = '-> Opening Archived NORMALIZATION Run Number: ' + $
                       NormalizationRunNumber
         putLogBookMessage, Event, LogBookText, Append=1
         LogBookText += ' ... ' + PROCESSING 
