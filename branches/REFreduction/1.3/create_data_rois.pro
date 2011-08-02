@@ -34,6 +34,41 @@
 
 ;+
 ; :Description:
+;    this function will sort in ascending order all the pixels
+;    ex: [[208,215],[195,202],[181,187]] -> [[181,187],[195,202],[208,215]]
+;
+;
+;
+; :Keywords:
+;    pixel_range
+;
+; :Author: j35
+;-
+pro sort_pixel_range, pixel_range=pixel_range
+  compile_opt idl2
+  
+  sz = size(pixel_range,/dim)
+  nbr_rois = sz[1]
+  
+  list_of_min_pixels = pixel_range[0,*]
+  sort_index = sort(list_of_min_pixels)
+  
+  new_pixel_range = intarr(2,nbr_rois)
+  
+  i=0
+  while (i lt nbr_rois) do begin
+  
+    new_pixel_range[0,i] = pixel_range[0, sort_index[i]]
+    new_pixel_range[1,i] = pixel_range[1, sort_index[i]]
+    
+    i++
+  endwhile
+  
+  pixel_range = new_pixel_range
+end
+
+;+
+; :Description:
 ;    This routine is going to create the rois for the discrete and broad
 ;    data peak selection
 ;
@@ -48,16 +83,16 @@ pro create_data_roi_for_broad_discrete_mode, event=event
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global
-
+  
   catch, error
   if (error ne 0) then begin
-  catch, /cancel
-  return
+    catch, /cancel
+    return
   endif
   
-   output_file_name = getTextFieldValue(Event, $
-        'data_roi_selection_file_text_field')
-        
+  output_file_name = getTextFieldValue(Event, $
+    'data_roi_selection_file_text_field')
+    
   case ((*global).reduction_mode) of
     'one_per_pixel': begin
       pixel_min = fix(getValue(event=event, $
@@ -87,9 +122,8 @@ pro create_data_roi_for_broad_discrete_mode, event=event
       pixel_range = fix(*(*global).pixel_range_discrete_mode)
       sz = size(pixel_range,/dim)
       
-      help, pixel_range
-      help, sz
-      print, sz
+      ;sort the pixel in ascending order
+      sort_pixel_range, pixel_range=pixel_range
       
       nbr_rois = sz[1]
       
