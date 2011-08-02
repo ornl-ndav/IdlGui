@@ -169,6 +169,8 @@ pro command_line_generator_for_ref_m, event
       ;list of pixels
       pixel_range = fix(*(*global).pixel_range_discrete_mode)
       
+      sort_pixel_range, pixel_range=pixel_range
+      
       sz = size(pixel_range,/dim)
       if (n_elements(sz) eq 1) then begin
         list_sangle_rad = ['?']

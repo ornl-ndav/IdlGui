@@ -684,4 +684,8 @@ pro command_line_generator_for_ref_m_broad_peak, event
   ;save the big command line table generated
   (*(*global).cmd_broad_mode) = cmd
   
+  print, cmd
+  help, cmd
+  
+  
 END

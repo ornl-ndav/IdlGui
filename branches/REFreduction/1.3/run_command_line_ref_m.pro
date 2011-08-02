@@ -232,6 +232,12 @@ pro run_command_line_ref_m_broad_peak, event, status=status
   nbr_spins = sz[0]
   nbr_pixels = sz[1]
   
+  ;determine the spin states to use
+  value = getButtonValue(event,'other_spin_states')
+  if (value eq 1) then begin ;no other spin states
+    data_spin_state = data_spin_state[0]
+  endif
+  
   progress_bar, event=event, $
     parent_base_uname='MAIN_BASE', $
     pixel_nbr_steps = nbr_pixels, $
@@ -275,6 +281,8 @@ pro run_command_line_ref_m_broad_peak, event, status=status
     endwhile
     
   endelse
+  catch,/cancel
+  
   IDLsendLogBook_ReplaceLogBookText, Event, PROCESSING, 'OK'
   
   text = '-> Running jobs: '
@@ -333,7 +341,8 @@ pro run_command_line_ref_m_broad_peak, event, status=status
     _final_output = list_of_output_file_name[_index_spin]
     _list_tmp_output = reform(list_of_broad_output_file_name[_index_spin,*])
     
-    merge_files, list_files_to_merge=_list_tmp_output, $
+    merge_files, event=event, $
+      list_files_to_merge=_list_tmp_output, $
       final_file_name = _final_output, $
       result=result
       
@@ -405,6 +414,12 @@ pro run_command_line_ref_m_discrete_peak, event, status=status
   
   sz = size(cmd, /dim)
   
+  ;determine the spin states to use
+  value = getButtonValue(event,'other_spin_states')
+  if (value eq 1) then begin ;no other spin states
+    data_spin_state = data_spin_state[0]
+  endif
+  
   nbr_spins = sz[0]
   nbr_pixels = sz[1]
   
@@ -426,7 +441,7 @@ pro run_command_line_ref_m_discrete_peak, event, status=status
   text = '-> preprocessing ... ' +  PROCESSING
   IDLsendLogBook_addLogBookText, Event, text
   
-  ;catch, error
+  catch, error
   error = 0
   if (error ne 0) then begin
     catch,/cancel
@@ -455,6 +470,7 @@ pro run_command_line_ref_m_discrete_peak, event, status=status
     
   endelse
   IDLsendLogBook_ReplaceLogBookText, Event, PROCESSING, 'OK'
+  catch, /cancel
   
   text = '-> Running jobs: '
   IDLsendLogBook_addLogBookText, Event, text
@@ -515,7 +531,8 @@ pro run_command_line_ref_m_discrete_peak, event, status=status
     _final_output = list_of_output_file_name[_index_spin]
     _list_tmp_output = reform(list_of_discrete_output_file_name[_index_spin,*])
     
-    merge_files, list_files_to_merge=_list_tmp_output, $
+    merge_files, event=event, $
+      list_files_to_merge=_list_tmp_output, $
       final_file_name = _final_output, $
       result=result
       
@@ -526,8 +543,8 @@ pro run_command_line_ref_m_discrete_peak, event, status=status
     _index_spin++
   endwhile
   
-  text = '-> postprocessing ... ' +  PROCESSING
-  IDLsendLogBook_addLogBookText, Event, text
+  ;  text = '-> postprocessing ... ' +  PROCESSING
+  ;  IDLsendLogBook_addLogBookText, Event, text
   
   ;phase 2 of post-processing
   ;removing the temporary data ROI files
@@ -539,7 +556,8 @@ pro run_command_line_ref_m_discrete_peak, event, status=status
     
     _index_pixel++
   endwhile
-  IDLsendLogBook_ReplaceLogBookText, Event, PROCESSING, 'OK'
+  
+  ;  IDLsendLogBook_ReplaceLogBookText, Event, PROCESSING, 'OK'
   
   update_progress_bar, base=(*global).progress_bar_base, $
     /post_processing, $
@@ -554,21 +572,21 @@ pro run_command_line_ref_m_discrete_peak, event, status=status
   
 end
 
-
-
 ;+
 ; :Description:
 ;    This routine will use the agg_dr_files driver to merge the various
 ;    tmp_output_file_name into just one ascii file
 ;
 ; :Keywords:
+;    event
 ;    list_files_to_merge
 ;    final_file_name
 ;    result
 ;
 ; :Author: j35
 ;-
-pro merge_files, list_files_to_merge=list_files_to_merge, $
+pro merge_files, event=event, $
+list_files_to_merge=list_files_to_merge, $
     final_file_name = final_file_name, $
     result=result
   compile_opt idl2
@@ -577,8 +595,17 @@ pro merge_files, list_files_to_merge=list_files_to_merge, $
   cmd = driver_name + ' ' + strjoin(list_files_to_merge,' ')
   cmd += ' --output=' + final_file_name
   
+  cmd_text = '-> Merging files: ' + cmd
+  print, cmd_text
+  IDLsendLogBook_addLogBookText, Event, cmd_text
+  
   ;run command
   spawn, cmd, result, error_result
+  
+  IDLsendLogBook_addLogBookText, event, '--> result:'
+  IDLsendLogBook_addLogBookText, event, result
+  IDLsendLogBook_addLogBookText, event, '--> error_result:'
+  IDLsendLogBook_addLogBookText, event, error_result
   
 end
 
