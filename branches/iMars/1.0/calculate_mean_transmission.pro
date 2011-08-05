@@ -32,10 +32,52 @@
 ;
 ;==============================================================================
 
-pro configuration, version=version, application=application
-compile_opt idl2
-
-version = '1.0.5'
-application = 'iMars'
-
+pro calculate_mean_transmission, event=event, data=data
+  compile_opt idl2
+  
+  ;collect table of ROIs
+  roi_table =  retrieve_list_roi(event=event)
+  table_sz = size(roi_table)
+  if (table_sz[0] eq 1) then begin
+    nbr_rois = 0
+  endif else begin
+    nbr_rois = table_sz[1]
+  endelse
+  
+  if (nbr_rois gt 0) then begin
+  
+    _open_beam_mean_of_regions = fltarr(nbr_rois)
+    _index_ob_region = 0
+    _sum_counts = 0
+    _total_nbr_pixels = 0
+    while (_index_ob_region lt nbr_rois) do begin
+    
+      x0 = roi_table[_index_ob_region,0]
+      y0 = roi_table[_index_ob_region,1]
+      x1 = roi_table[_index_ob_region,2]
+      y1 = roi_table[_index_ob_region,3]
+      
+      xmin = min([x0,x1],max=xmax)
+      ymin = min([y0,y1],max=ymax)
+      
+      _tmp_ob_data_region = data[xmin:xmax,ymin:ymax]
+      _sum = total(_tmp_ob_data_region,1)
+      _sum_counts += total(_sum,1)
+      _total_nbr_pixels += (xmax-xmin+1) * (ymax-ymin+1)
+      
+      _index_ob_region++
+    endwhile
+    
+    ;calculate mean transmission
+    transmission_value = float(_sum_counts) / float(_total_nbr_pixels)
+    
+  endif else begin
+  
+    transmission_value = 'N/A'
+    
+  endelse
+  
+  putValue, event=event, 'mean_transmission_uname', $
+    strcompress(transmission_value,/remove_all)
+    
 end

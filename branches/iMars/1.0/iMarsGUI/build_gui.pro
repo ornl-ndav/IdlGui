@@ -296,7 +296,21 @@ pro build_gui, main_base, global
   label = widget_label(roi_base,$
     /align_left,$
     value = 'normalization.')
-    
+  
+  ;space and transmission label
+ space = widget_label(roi_base,$
+ value = ' ')
+  _row = widget_base(roi_base,$
+  frame=1,$
+  /row)
+  label = widget_label(_row,$
+  value = 'Mean transmission:')
+  value = widget_label(_row,$
+  /align_left,$
+  uname = 'mean_transmission_uname',$
+  scr_xsize = 50,$
+  value= 'N/A')
+
   ;space in col3
   for i=0,3 do begin
     space = widget_label(col3,$

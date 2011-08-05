@@ -95,6 +95,8 @@ cd, CurrentFolder
 .run preview.pro
 .run table_right_click.pro
 
+.run calculate_mean_transmission.pro
+
 ;run reduction
 .run check_run_normalization_button_status.pro
 .run run_normalization.pro
