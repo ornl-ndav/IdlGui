@@ -76,7 +76,7 @@ pro preview_currently_selected_file, event=event, type=type
   endelse
   
   putValue, event=event, 'preview_file_name_label', label + file_base_name
-  display_preview_of_file, event=event, file_name=file_name_selected
+  display_preview_of_file, event=event, file_name=file_name_selected, type=type
   display_preview_roi, event=event
   refresh_zoom_base, event=event
   
@@ -95,7 +95,7 @@ end
 ;
 ; :Author: j35
 ;-
-pro display_preview_of_file, event=event, file_name=file_name
+pro display_preview_of_file, event=event, file_name=file_name, type=type
   compile_opt idl2
   
   id_draw = widget_info(Event.top, find_by_uname='preview_draw_uname')
@@ -130,6 +130,10 @@ pro display_preview_of_file, event=event, file_name=file_name
   apply_transpose, event=event, data=data
   
   apply_rotation, event=event, data=data
+  
+  if (type eq 'data_file') then begin
+    calculate_mean_transmission, event=event, data=data
+  endif
   
   new_data = congrid(data, xsize, ysize)
   tvscl, new_data
