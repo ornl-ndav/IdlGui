@@ -455,6 +455,24 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     XPAD         = 0,$
     mbar         = bar, $
     YPAD         = 2)
+ 
+  ;loading progress info box
+  xsize = 300
+  ysize = 50
+  loading_info_base = widget_base(MAIN_BASE,$
+  xoffset = MainBaseSize[2]/2 - xsize/2,$
+  yoffset = MainBaseSize[3]/2 - ysize/2,$
+  scr_xsize = xsize, $
+  scr_ysize = ysize, $
+  map=0,$
+  /row,$
+  uname = 'loading_progress_base_uname',$
+  frame=5)
+ 
+  label = widget_label(loading_info_base,$
+  /align_center ,$
+  uname = 'loading_progress_label',$
+  value = 'Loading in progress .... retrieving Bank1 !')
     
   ;config menu
   config = widget_button(bar, $
