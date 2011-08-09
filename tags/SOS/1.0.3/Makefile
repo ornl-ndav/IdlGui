@@ -14,5 +14,17 @@ install:
 	cp SOS_images/* /SNS/software/idltools/sav/SOS_images/
 	cp SOS /SNS/software/idltools/
 
+beta:
+	cp .SOS.cfg /SNS/software/idltools/beta/sav
+	cp .SOS.cfg /SNS/software5/idltools/beta/sav
+	cp sos_instruments.cfg /SNS/software/idltools/beta/sav
+	cp sos_instruments.cfg /SNS/software5/idltools/beta/sav
+	cp sos.sav /SNS/software/idltools/beta/sav
+	cp sos.sav /SNS/software5/idltools/beta/sav
+	cp SOS_images/* /SNS/software/idltools/beta/sav/SOS_images/
+	cp SOS_images/* /SNS/software5/idltools/beta/sav/SOS_images/
+	cp SOS_beta /SNS/software/idltools/beta/sav
+	cp SOS_beta /SNS/software5/idltools/beta/sav
+
 test:
 	idl ./make_and_run_test_unit
