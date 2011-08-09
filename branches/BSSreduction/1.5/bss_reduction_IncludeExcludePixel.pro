@@ -81,23 +81,36 @@ PRO BSSreduction_IncludeExcludePixel, Event
   
   ;retrieve bank, x and y infos
   bank    = getBankValue(Event)
+  
+  banks_displayed = (*global).banks_displayed
+  if (banks_displayed eq 'north_3_4') then begin
+  PixelID = getPixelIDvalue(Event) - 2*4096L
+    pixel_excluded = (*(*global).pixel_excluded_bank3_4)
+  endif else begin
+    pixel_excluded = (*(*global).pixel_excluded)
   PixelID = getPixelIDvalue(Event)
+  endelse
   
-  pixel_excluded = (*(*global).pixel_excluded)
-  
-  IF (pixel_excluded(PixelID)) THEN BEGIN
+  IF (pixel_excluded[PixelID]) THEN BEGIN
     new_state = 0
   ENDIF ELSE BEGIN
     new_state = 1
   ENDELSE
-  pixel_excluded(PixelID) = new_state
-  (*(*global).pixel_excluded) = pixel_excluded
+  pixel_excluded[PixelID] = new_state
   
-  IF (bank EQ 1) THEN BEGIN       ;bank 1
-    view_info = widget_info(Event.top,FIND_BY_UNAME='top_bank_draw')
-  ENDIF ELSE BEGIN                ;bank 2
-    view_info = widget_info(Event.top,FIND_BY_UNAME='bottom_bank_draw')
-  ENDELSE
+  banks_displayed = (*global).banks_displayed
+  if (banks_displayed eq 'north_3_4') then begin
+    (*(*global).pixel_excluded_bank3_4) = pixel_excluded
+  endif else begin
+    (*(*global).pixel_excluded) = pixel_excluded
+  endelse
+  
+  case (strcompress(bank,/remove_all)) of
+  '1': view_info = widget_info(Event.top,FIND_BY_UNAME='top_bank_draw')
+  '2': view_info = widget_info(Event.top,FIND_BY_UNAME='bottom_bank_draw')
+  '3': view_info = widget_info(Event.top,FIND_BY_UNAME='top_bank_draw')
+  '4': view_info = widget_info(Event.top,FIND_BY_UNAME='bottom_bank_draw')
+  endcase
   
   WIDGET_CONTROL, view_info, GET_VALUE=id
   wset, id
@@ -106,26 +119,41 @@ PRO BSSreduction_IncludeExcludePixel, Event
   color   = (*global).ColorExcludedPixels
   
   IF (new_state) THEN BEGIN ;exclude pixel
+  
     x       = getXValue(Event)
     y       = getYValue(Event)
     PlotExcludedBox, Event, x, y, x_coeff, y_coeff, color
+  
   ENDIF ELSE BEGIN                ;include pixel
   
     ;first replot bank + lines
-    IF (bank EQ 1) THEN BEGIN ;bank1
-      bss_reduction_PlotBank1, Event
-      PlotBank1Grid, Event
-      pixelid_min = 0L
-    ENDIF ELSE BEGIN
-      bss_reduction_PlotBank2, Event
-      PlotBank2Grid, Event
-      pixelid_min = 4096L
-    ENDELSE
+    case (strcompress(bank,/remove_all)) of
+      '1': begin
+        bss_reduction_PlotBank1, Event
+        PlotBank1Grid, Event
+        pixelid_min = 0L
+      end
+      '2': begin
+        bss_reduction_PlotBank2, Event
+        PlotBank2Grid, Event
+        pixelid_min = 4096L
+      end
+      '3': begin
+        bss_reduction_PlotBank3, Event
+        PlotBank1Grid, Event
+        pixelid_min = 0L
+      end
+      '4': begin
+        bss_reduction_PlotBank4, Event
+        PlotBank2Grid, Event
+        pixelid_min = 4096L
+      end
+    endcase
     
     ;replot all the pixelID excluded
     FOR i = 0, 3584L DO BEGIN
       pixel = pixelid_min + i
-      IF (pixel_excluded(pixel) EQ 1) THEN BEGIN
+      IF (pixel_excluded[pixel] EQ 1) THEN BEGIN
         ;plot lines around this pixel
         XY = getXYfromPixelID(Event, pixel)
         PlotExcludedBox, Event, XY[0], XY[1], x_coeff, y_coeff, color
@@ -196,30 +224,63 @@ PRO PlotIncludedPixels, Event
   ;DEVICE, DECOMPOSED = 0
   ;PlotBank2Grid, Event
   
-  view_info = widget_info(Event.top,FIND_BY_UNAME='top_bank_draw')
-  WIDGET_CONTROL, view_info, GET_VALUE=id
-  wset, id
+  banks_displayed = (*global).banks_displayed
+  if (banks_displayed eq 'north_3_4') then begin
   
-  pixel_excluded = (*(*global).pixel_excluded)
-  FOR i=0,3584L DO BEGIN
-    IF (pixel_excluded[i] EQ 1) THEN BEGIN
-      XY = getXYfromPixelID(Event, i)
-      PlotExcludedBox, Event, XY[0], XY[1], x_coeff, y_coeff, color
-    ENDIF
-  ENDFOR
+    view_info = widget_info(Event.top,FIND_BY_UNAME='top_bank_draw')
+    WIDGET_CONTROL, view_info, GET_VALUE=id
+    wset, id
+    
+    pixel_excluded = (*(*global).pixel_excluded_bank3_4)
+    FOR i=0,3584L DO BEGIN
+      IF (pixel_excluded[i] EQ 1) THEN BEGIN
+        XY = getXYfromPixelID(Event, i)
+        PlotExcludedBox, Event, XY[0], XY[1], x_coeff, y_coeff, color
+      ENDIF
+    ENDFOR
+    
+    view_info = widget_info(Event.top,FIND_BY_UNAME='bottom_bank_draw')
+    WIDGET_CONTROL, view_info, GET_VALUE=id
+    wset, id
+    
+    pixelid_min = 4096L
+    FOR i=0,3584L DO BEGIN
+      pixel = pixelid_min + i
+      IF (pixel_excluded[pixel] EQ 1) THEN BEGIN
+        XY = getXYfromPixelID(Event, pixel)
+        PlotExcludedBox, Event, XY[0], XY[1], x_coeff, y_coeff, color
+      ENDIF
+    ENDFOR
+    
+  endif else begin
   
-  view_info = widget_info(Event.top,FIND_BY_UNAME='bottom_bank_draw')
-  WIDGET_CONTROL, view_info, GET_VALUE=id
-  wset, id
+    view_info = widget_info(Event.top,FIND_BY_UNAME='top_bank_draw')
+    WIDGET_CONTROL, view_info, GET_VALUE=id
+    wset, id
+    
+    pixel_excluded = (*(*global).pixel_excluded)
+    FOR i=0,3584L DO BEGIN
+      IF (pixel_excluded[i] EQ 1) THEN BEGIN
+        XY = getXYfromPixelID(Event, i)
+        PlotExcludedBox, Event, XY[0], XY[1], x_coeff, y_coeff, color
+      ENDIF
+    ENDFOR
+    
+    view_info = widget_info(Event.top,FIND_BY_UNAME='bottom_bank_draw')
+    WIDGET_CONTROL, view_info, GET_VALUE=id
+    wset, id
+    
+    pixelid_min = 4096L
+    FOR i=0,3584L DO BEGIN
+      pixel = pixelid_min + i
+      IF (pixel_excluded[pixel] EQ 1) THEN BEGIN
+        XY = getXYfromPixelID(Event, pixel)
+        PlotExcludedBox, Event, XY[0], XY[1], x_coeff, y_coeff, color
+      ENDIF
+    ENDFOR
+    
+  endelse
   
-  pixelid_min = 4096L
-  FOR i=0,3584L DO BEGIN
-    pixel = pixelid_min + i
-    IF (pixel_excluded[pixel] EQ 1) THEN BEGIN
-      XY = getXYfromPixelID(Event, pixel)
-      PlotExcludedBox, Event, XY[0], XY[1], x_coeff, y_coeff, color
-    ENDIF
-  ENDFOR
 END
 
 ;------------------------------------------------------------------------------

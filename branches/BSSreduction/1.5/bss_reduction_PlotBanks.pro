@@ -208,7 +208,7 @@ PRO bss_reduction_PlotBank4, Event
   
   ;plot data
   ;top bank = bank4
-  view_info = widget_info(Event.top,FIND_BY_UNAME='top_bank_draw')
+  view_info = widget_info(Event.top,FIND_BY_UNAME='bottom_bank_draw')
   WIDGET_CONTROL, view_info, GET_VALUE=id
   wset, id
   

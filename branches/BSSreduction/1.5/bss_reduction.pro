@@ -66,7 +66,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;            3: Log Book
     
   sDEBUGGING = { tab: {main_tab: 0,$ ;Selection tab
-    
+  
     banks_displayed: 'south_1_2', $
     
     reduce_input_tab: 6},$ ;Scaling Cst tab
@@ -141,7 +141,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
     ;list_of_nexus
     list_of_data_nexus: ptr_new(0L), $
-        
+    
     application: APPLICATION,$
     version: VERSION,$
     ucams: UCAMS,$ ;ucams of user
@@ -299,26 +299,30 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     NeXusFormatWrong: 0,$ ;if we are trying to open using hdf4
     ok: 'OK',$
     failed: 'FAILED',$
-
+    
     bank1: ptr_new(0L),$ ;array of bank1 data (Ntof, Nx, Ny)
     bank1_sum: ptr_new(0L),$ ;array of bank1 data (Nx, Ny)
     bank2: ptr_new(0L),$ ;array of bank2 data (Ntof, Nx, Ny)
     bank2_sum: ptr_new(0L),$ ;array of bank2 data (Nx, Ny)
     bank1_raw_value: ptr_new(0L), $
     bank2_raw_value: ptr_new(0L), $
-
+    
     bank3: ptr_new(0L),$ ;array of bank3 data (Ntof, Nx, Ny)
     bank3_sum: ptr_new(0L),$ ;array of bank3 data (Nx, Ny)
     bank4: ptr_new(0L),$ ;array of bank4 data (Ntof, Nx, Ny)
     bank4_sum: ptr_new(0L),$ ;array of bank4 data (Nx, Ny)
     bank3_raw_value: ptr_new(0L), $
     bank4_raw_value: ptr_new(0L), $
-
-    pixel_excluded: ptr_new(0L),$ ;list of pixel excluded
+    
+    pixel_excluded: ptr_new(0L),$ ;list of pixel excluded for banks 1&2
+    pixel_excluded_bank3_4: ptr_new(0L),$ ;list of pixel excluded for bank3&4
+    
     pixel_excluded_base: ptr_new(0L),$
     ;list of pixel excluded without counts removing
     default_pixel_excluded: ptr_new(0L),$
     pixel_excluded_size: 64*2*64L,$ ; total number of pixels
+    
+    
     TotalPixels: 8192L,$ ;Total number of pixels
     TotalRows: 128L,$ ;total number of rows
     TotalTubes: 128L,$ ;total number of tubes
@@ -327,11 +331,11 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ;to bank1 data
     nexus_bank2_path: '/entry/bank2/data',$ ;nxdir path
     ;to bank2 data
-    nexus_bank3_path: '/entry/bank3/data', $ 
+    nexus_bank3_path: '/entry/bank3/data', $
     nexus_bank4_path: '/entry/bank4/data', $
-
+    
     tof_path: '/entry/bank1/time_of_flight',$ ;nxdir path $
-
+    
     ;to tof data
     Nx: 56,$
     Ny: 64,$
@@ -407,6 +411,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   (*(*global).default_pixel_excluded) = default_pixel_excluded
   (*(*global).pixel_excluded)         = default_pixel_excluded
+  (*(*global).pixel_excluded_bank3_4) = default_pixel_excluded
   (*(*global).pixel_excluded_base)    = default_pixel_excluded
   
   (*(*global).WidgetsToActivate) = ['load_roi_file_button',$
@@ -457,24 +462,24 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     XPAD         = 0,$
     mbar         = bar, $
     YPAD         = 2)
- 
+    
   ;loading progress info box
   xsize = 270
   ysize = 50
   loading_info_base = widget_base(MAIN_BASE,$
-  xoffset = MainBaseSize[2]/2 - xsize/2,$
-  yoffset = MainBaseSize[3]/2 - ysize/2,$
-  scr_xsize = xsize, $
-  scr_ysize = ysize, $
-  map=0,$
-  /row,$
-  uname = 'loading_progress_base_uname',$
-  frame=5)
- 
+    xoffset = MainBaseSize[2]/2 - xsize/2,$
+    yoffset = MainBaseSize[3]/2 - ysize/2,$
+    scr_xsize = xsize, $
+    scr_ysize = ysize, $
+    map=0,$
+    /row,$
+    uname = 'loading_progress_base_uname',$
+    frame=5)
+    
   label = widget_label(loading_info_base,$
-  /align_center ,$
-  uname = 'loading_progress_label',$
-  value = 'Loading in progress .... retrieving Bank1 !')
+    /align_center ,$
+    uname = 'loading_progress_label',$
+    value = 'Loading in progress .... retrieving Bank1 !')
     
   ;config menu
   config = widget_button(bar, $
@@ -489,14 +494,14 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
   ;banks display
   bank = widget_button(bar, $
-  value = 'Banks',$
-  /menu)
+    value = 'Banks',$
+    /menu)
   bankN = widget_button(bank,$
-  value = '  Banks North (3 and 4)',$
-  uname = 'banks_north_uname')
+    value = '> Banks South (1 and 2)',$
+    uname = 'banks_south_uname')
   bankN = widget_button(bank,$
-  value = '> Banks South (1 and 2)',$
-  uname = 'banks_south_uname')
+    value = '  Banks North (3 and 4)',$
+    uname = 'banks_north_uname')
     
   ;lin/log main plot
   plot = widget_button(bar,$
