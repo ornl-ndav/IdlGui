@@ -459,7 +459,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     YPAD         = 2)
  
   ;loading progress info box
-  xsize = 300
+  xsize = 270
   ysize = 50
   loading_info_base = widget_base(MAIN_BASE,$
   xoffset = MainBaseSize[2]/2 - xsize/2,$
