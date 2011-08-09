@@ -68,7 +68,7 @@ PRO MAIN_BASE_event, Event
       putValue, event, 'banks_north_uname', value_north
       putValue, event, 'banks_south_uname', value_south
       (*global).banks_displayed = 'north_3_4'
-       bss_reduction_PlotBanks, Event, 1
+      bss_reduction_PlotBanks, Event, 1
     end
     widget_info(wWidget, find_by_uname='banks_south_uname'): begin
       value_north = '  Banks North (3 and 4)'
@@ -76,7 +76,7 @@ PRO MAIN_BASE_event, Event
       putValue, event, 'banks_north_uname', value_north
       putValue, event, 'banks_south_uname', value_south
       (*global).banks_displayed = 'south_1_2'
-       bss_reduction_PlotBanks, Event, 1
+      bss_reduction_PlotBanks, Event, 1
     end
     
     ;lin plot
@@ -127,8 +127,8 @@ PRO MAIN_BASE_event, Event
     ;BROWSE button run number
     Widget_Info(wWidget, FIND_BY_UNAME='nexus_run_number_button'): begin
       bss_reduction_BrowseNexus, Event
-;      BSSreduction_PlotCountsVsTofOfSelection_light, Event
-;      BSSreduction_DisplayLinLogFullCountsVsTof, Event
+      ;      BSSreduction_PlotCountsVsTofOfSelection_light, Event
+      ;      BSSreduction_DisplayLinLogFullCountsVsTof, Event
       BSSreduction_Reduce_rsdf_run_number_cw_field, Event
       BSSreduction_CommandLineGenerator, Event
     end
@@ -278,7 +278,14 @@ PRO MAIN_BASE_event, Event
       if ((*global).NeXusFound AND $
         (*global).NeXusFormatWrong EQ 0) then begin
         ;only if there is a NeXus loaded
-        BSSreduction_DisplayXYBankPixelInfo, Event, 'bank1'
+        
+        banks_displayed = (*global).banks_displayed
+        if (banks_displayed eq 'north_3_4') then begin
+          bank = 'bank3'
+        endif else begin
+          bank = 'bank1'
+        endelse
+        BSSreduction_DisplayXYBankPixelInfo, Event, bank
         if( Event.type EQ 0 )then begin
           if (Event.press EQ 1) then $ ;left click
             BSSreduction_DisplayCountsVsTof, Event
@@ -293,7 +300,14 @@ PRO MAIN_BASE_event, Event
       if ((*global).NeXusFound AND $
         (*global).NeXusFormatWrong EQ 0) then begin
         ;only if there is a NeXus loaded
-        BSSreduction_DisplayXYBankPixelInfo, Event, 'bank2'
+        
+        banks_displayed = (*global).banks_displayed
+        if (banks_displayed eq 'north_3_4') then begin
+          bank = 'bank4'
+        endif else begin
+          bank = 'bank2'
+        endelse
+        BSSreduction_DisplayXYBankPixelInfo, Event, bank
         if( Event.type EQ 0 )then begin
           if (Event.press EQ 1) then $ ;left click
             BSSreduction_DisplayCountsVsTof, Event
