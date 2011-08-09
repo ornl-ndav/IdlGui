@@ -50,8 +50,8 @@ spawn, cmd, hostname
 
 case (hostname[0]) of
 'lrac.sns.gov': return, 'REF_L'
-'mracs.sns.gov': return, 'REF_M'
-else: return, ''
+'mrac.sns.gov': return, 'REF_M'
+else: return, 'REF_L'   ;default instrument
 endcase
 
 end 
