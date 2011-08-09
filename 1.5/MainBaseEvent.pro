@@ -68,6 +68,7 @@ PRO MAIN_BASE_event, Event
       putValue, event, 'banks_north_uname', value_north
       putValue, event, 'banks_south_uname', value_south
       (*global).banks_displayed = 'north_3_4'
+       bss_reduction_PlotBanks, Event, 1
     end
     widget_info(wWidget, find_by_uname='banks_south_uname'): begin
       value_north = '  Banks North (3 and 4)'
@@ -75,6 +76,7 @@ PRO MAIN_BASE_event, Event
       putValue, event, 'banks_north_uname', value_north
       putValue, event, 'banks_south_uname', value_south
       (*global).banks_displayed = 'south_1_2'
+       bss_reduction_PlotBanks, Event, 1
     end
     
     ;lin plot
@@ -125,8 +127,8 @@ PRO MAIN_BASE_event, Event
     ;BROWSE button run number
     Widget_Info(wWidget, FIND_BY_UNAME='nexus_run_number_button'): begin
       bss_reduction_BrowseNexus, Event
-      BSSreduction_PlotCountsVsTofOfSelection_light, Event
-      BSSreduction_DisplayLinLogFullCountsVsTof, Event
+;      BSSreduction_PlotCountsVsTofOfSelection_light, Event
+;      BSSreduction_DisplayLinLogFullCountsVsTof, Event
       BSSreduction_Reduce_rsdf_run_number_cw_field, Event
       BSSreduction_CommandLineGenerator, Event
     end

@@ -137,6 +137,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ;live nexus
     current_live_nexus: '', $
     
+    banks_displayed: 'south_1_2', $ ;by default, south bank is displayed
+    
     ;list_of_nexus
     list_of_data_nexus: ptr_new(0L), $
         

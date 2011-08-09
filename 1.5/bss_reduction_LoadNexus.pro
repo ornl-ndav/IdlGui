@@ -39,8 +39,8 @@ PRO retrieveBanksData, Event, FullNexusName
 
   activate_base, event, 'loading_progress_base_uname', 1
   putValue, event, 'loading_progress_label', $
-  'Loading in progress .... retrieving Bank1 !'
-
+    'Loading in progress .... retrieving Bank1 !'
+    
   ;get global structure
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
   widget_control,id,get_uvalue=global
@@ -51,8 +51,8 @@ PRO retrieveBanksData, Event, FullNexusName
   bank1 = h5d_read(fieldID)
   
   putValue, event, 'loading_progress_label', $
-  'Loading in progress .... retrieving Bank2 !'
-  
+    'Loading in progress .... retrieving Bank2 !'
+    
   ;get bank2 data
   fieldID = h5d_open(fileID,(*global).nexus_bank2_path)
   bank2 = h5d_read(fieldID)
@@ -68,22 +68,21 @@ PRO retrieveBanksData, Event, FullNexusName
   
   ;this will work only for the new BSS nexus files
   catch, error
-  error = 0 ;remove_me
   if (error ne 0) then begin
-  catch,/cancel
-activate_base, event, 'loading_progress_base_uname', 0
-  return
+    catch,/cancel
+    activate_base, event, 'loading_progress_base_uname', 0
+    return
   endif
   
   putValue, event, 'loading_progress_label', $
-  'Loading in progress .... retrieving Bank3 !'
-
+    'Loading in progress .... retrieving Bank3 !'
+    
   fieldID = h5d_open(fileID,(*global).nexus_bank3_path)
   bank3 = h5d_read(fieldID)
-
-  putValue, event, 'loading_progress_label', $
-  'Loading in progress .... retrieving Bank4 !'
   
+  putValue, event, 'loading_progress_label', $
+    'Loading in progress .... retrieving Bank4 !'
+    
   fieldID = h5d_open(fileID,(*global).nexus_bank4_path)
   bank4 = h5d_read(fieldID)
   
@@ -98,8 +97,8 @@ activate_base, event, 'loading_progress_base_uname', 0
   
   h5d_close, fieldID
   h5f_close, fileID
-
-activate_base, event, 'loading_progress_base_uname', 0
+  
+  activate_base, event, 'loading_progress_base_uname', 0
   
 END
 
@@ -167,8 +166,8 @@ PRO bss_reduction_LoadNexus, Event, config
         ;put nexus file name in data text field (Reduce tab#1)
         ;putReduceRawSampleDatafile, Event, NexusFullName
         putTextFieldValue, event, 'rsdf_run_number_cw_field', $
-        strcompress(RunNumber,/remove_all), 0
-        
+          strcompress(RunNumber,/remove_all), 0
+          
       ENDIF
       
     ENDIF ELSE BEGIN         ;tells that we didn't find the nexus file
@@ -224,12 +223,12 @@ PRO load_live_nexus, Event, full_nexus_file_name
   
   IF (N_ELEMENTS(config) EQ 0) THEN BEGIN
   
-      iNexus = OBJ_NEW('IDLgetMetadata', full_nexus_file_name)
-      RunNumber = iNexus->getRunNumber()
-      OBJ_DESTROY, iNexus
-          putRunNumberValue, Event, RunNumber
-;    putValue, event, 'rsdf_run_number_cw_field', $
-;      strcompress(RunNumber,/remove_all)
+    iNexus = OBJ_NEW('IDLgetMetadata', full_nexus_file_name)
+    RunNumber = iNexus->getRunNumber()
+    OBJ_DESTROY, iNexus
+    putRunNumberValue, Event, RunNumber
+  ;    putValue, event, 'rsdf_run_number_cw_field', $
+  ;      strcompress(RunNumber,/remove_all)
     
   ENDIF
   
@@ -326,7 +325,7 @@ PRO load_live_nexus_step2, Event, NexusFullName
     putMessageBoxInfo, Event, text
     
     ;define default output file name
-;    define_default_output_file_name, Event, TYPE='live' ;_eventcb
+    ;    define_default_output_file_name, Event, TYPE='live' ;_eventcb
     
     (*global).lds_mode = 1
     
