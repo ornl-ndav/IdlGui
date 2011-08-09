@@ -139,10 +139,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
     ;list_of_nexus
     list_of_data_nexus: ptr_new(0L), $
-    
-    bank1_raw_value: ptr_new(0L), $
-    bank2_raw_value: ptr_new(0L), $
-    
+        
     application: APPLICATION,$
     version: VERSION,$
     ucams: UCAMS,$ ;ucams of user
@@ -300,10 +297,21 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     NeXusFormatWrong: 0,$ ;if we are trying to open using hdf4
     ok: 'OK',$
     failed: 'FAILED',$
+
     bank1: ptr_new(0L),$ ;array of bank1 data (Ntof, Nx, Ny)
     bank1_sum: ptr_new(0L),$ ;array of bank1 data (Nx, Ny)
     bank2: ptr_new(0L),$ ;array of bank2 data (Ntof, Nx, Ny)
     bank2_sum: ptr_new(0L),$ ;array of bank2 data (Nx, Ny)
+    bank1_raw_value: ptr_new(0L), $
+    bank2_raw_value: ptr_new(0L), $
+
+    bank3: ptr_new(0L),$ ;array of bank3 data (Ntof, Nx, Ny)
+    bank3_sum: ptr_new(0L),$ ;array of bank3 data (Nx, Ny)
+    bank4: ptr_new(0L),$ ;array of bank4 data (Ntof, Nx, Ny)
+    bank4_sum: ptr_new(0L),$ ;array of bank4 data (Nx, Ny)
+    bank3_raw_value: ptr_new(0L), $
+    bank4_raw_value: ptr_new(0L), $
+
     pixel_excluded: ptr_new(0L),$ ;list of pixel excluded
     pixel_excluded_base: ptr_new(0L),$
     ;list of pixel excluded without counts removing
@@ -312,11 +320,16 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     TotalPixels: 8192L,$ ;Total number of pixels
     TotalRows: 128L,$ ;total number of rows
     TotalTubes: 128L,$ ;total number of tubes
+    
     nexus_bank1_path: '/entry/bank1/data',$ ;nxdir path
     ;to bank1 data
     nexus_bank2_path: '/entry/bank2/data',$ ;nxdir path
     ;to bank2 data
+    nexus_bank3_path: '/entry/bank3/data', $ 
+    nexus_bank4_path: '/entry/bank4/data', $
+
     tof_path: '/entry/bank1/time_of_flight',$ ;nxdir path $
+
     ;to tof data
     Nx: 56,$
     Ny: 64,$

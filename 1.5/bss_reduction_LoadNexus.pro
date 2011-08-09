@@ -32,9 +32,12 @@
 ;
 ;==============================================================================
 
-;this function is going to retrive the data from bank1 and bank2
-;and save them in (*(*global).bank1) and (*(*global).bank2)
+;this function is going to retrive the data from bank1, bank2, bank3 and bank4
+;
+;and save them in (*(*global).bank1) and (*(*global).bank2) ....
 PRO retrieveBanksData, Event, FullNexusName
+
+  
 
   ;get global structure
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -57,6 +60,30 @@ PRO retrieveBanksData, Event, FullNexusName
   
   (*(*global).bank1_raw_value) = _bank1
   (*(*global).bank2_raw_value) = _bank2
+  
+  ;this will work only for the new BSS nexus files
+  catch, error
+  error = 0 ;remove_me
+  if (error ne 0) then begin
+  catch,/cancel
+  return
+  endif
+  
+  fieldID = h5d_open(fileID,(*global).nexus_bank3_path)
+  bank3 = h5d_read(fieldID)
+  
+  ;get bank2 data
+  fieldID = h5d_open(fileID,(*global).nexus_bank4_path)
+  bank4 = h5d_read(fieldID)
+  
+  (*(*global).bank3) = bank3
+  (*(*global).bank4) = bank4
+  
+  _bank3 = total(bank3,1)
+  _bank4 = total(bank4,1)
+  
+  (*(*global).bank3_raw_value) = _bank3
+  (*(*global).bank4_raw_value) = _bank4
   
   h5d_close, fieldID
   h5f_close, fileID

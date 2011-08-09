@@ -68,7 +68,7 @@ IF (current_tab NE prev_tab) THEN BEGIN
         0: BEGIN          ;plot bank1, bank2, grid and unselected data
             IF ((*global).NeXusFound AND $
                (*global).NeXusFormatWrong EQ 0) THEN BEGIN
-                PlotIncludedPixels, Event
+  ;              PlotIncludedPixels, Event
             ENDIF
         END
         1: BEGIN                ;Reduce tab
