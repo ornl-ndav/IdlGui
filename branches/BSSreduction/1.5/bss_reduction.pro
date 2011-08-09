@@ -66,6 +66,9 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;            3: Log Book
     
   sDEBUGGING = { tab: {main_tab: 0,$ ;Selection tab
+    
+    banks_displayed: 'south_1_2', $
+    
     reduce_input_tab: 6},$ ;Scaling Cst tab
     DefaultPath: '~/SVN/IdlGui/branches/BSSreduction/1.5/',$
     reduce: {input1: { uname: 'rsdf_list_of_runs_text',$
@@ -450,6 +453,17 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   save = widget_button(config, $
     uname = 'save_configuration',$
     value = ' Save ... ')
+    
+  ;banks display
+  bank = widget_button(bar, $
+  value = 'Banks',$
+  /menu)
+  bankN = widget_button(bank,$
+  value = '  Banks North (3 and 4)',$
+  uname = 'banks_north_uname')
+  bankN = widget_button(bank,$
+  value = '> Banks South (1 and 2)',$
+  uname = 'banks_south_uname')
     
   ;lin/log main plot
   plot = widget_button(bar,$

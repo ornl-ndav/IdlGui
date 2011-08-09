@@ -61,6 +61,22 @@ PRO MAIN_BASE_event, Event
       BSSreduction_CommandLineGenerator, Event
     end
     
+    ;banks menu choice
+    widget_info(wWidget, find_by_uname='banks_north_uname'): begin
+      value_north = '> Banks North (3 and 4)'
+      value_south = '  Banks South (1 and 2)'
+      putValue, event, 'banks_north_uname', value_north
+      putValue, event, 'banks_south_uname', value_south
+      (*global).banks_displayed = 'north_3_4'
+    end
+    widget_info(wWidget, find_by_uname='banks_south_uname'): begin
+      value_north = '  Banks North (3 and 4)'
+      value_south = '> Banks South (1 and 2)'
+      putValue, event, 'banks_north_uname', value_north
+      putValue, event, 'banks_south_uname', value_south
+      (*global).banks_displayed = 'south_1_2'
+    end
+    
     ;lin plot
     widget_info(wWidget, find_by_uname='linear_main_plot'): begin
       value_lin = '* linear'
@@ -536,20 +552,20 @@ PRO MAIN_BASE_event, Event
     
     ;user defined output file name button
     widget_info(wWidget, find_by_uname='user_defined_output_file_name'): begin
-    activate_button, event, 'user_defined_output_file_name_base', 1
-    activate_button, event, 'auto_defined_output_file_name_base', 0
+      activate_button, event, 'user_defined_output_file_name_base', 1
+      activate_button, event, 'auto_defined_output_file_name_base', 0
       update_output_file_name_sample, event
       BSSreduction_CommandLineGenerator, Event
     end
-
+    
     ;auto defined output file name button
     widget_info(wWidget, find_by_uname='auto_defined_output_file_name'): begin
-    activate_button, event, 'user_defined_output_file_name_base', 0
-    activate_button, event, 'auto_defined_output_file_name_base', 1
+      activate_button, event, 'user_defined_output_file_name_base', 0
+      activate_button, event, 'auto_defined_output_file_name_base', 1
       update_output_file_name_sample, event
       BSSreduction_CommandLineGenerator, Event
     end
-
+    
     ;tab3
     Widget_Info(wWidget, FIND_BY_UNAME='rmcnf_button'): begin
       BSSreduction_Reduce_rmcnf_button, Event
