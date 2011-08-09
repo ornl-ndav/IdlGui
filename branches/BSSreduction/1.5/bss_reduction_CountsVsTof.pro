@@ -150,9 +150,16 @@ widget_control,id,get_uvalue=global
 
 IF ((*global).NeXusFound) THEN BEGIN
 
+   banks_displayed = (*global).banks_displayed
+  if (banks_displayed eq 'north_3_4') then begin
+    bank1 = (*(*global).bank3)
+    bank2 = (*(*global).bank4)  
+    pixel_excluded = (*(*global).pixel_excluded)
+  endif else begin
     bank1 = (*(*global).bank1)
     bank2 = (*(*global).bank2)
     pixel_excluded = (*(*global).pixel_excluded)
+    endelse
     
 ;initialize counts vs tof array
     TOF_sz = (size(bank1))(1)
