@@ -37,7 +37,9 @@
 ;and save them in (*(*global).bank1) and (*(*global).bank2) ....
 PRO retrieveBanksData, Event, FullNexusName
 
-  
+  activate_base, event, 'loading_progress_base_uname', 1
+  putValue, event, 'loading_progress_label', $
+  'Loading in progress .... retrieving Bank1 !'
 
   ;get global structure
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -47,6 +49,9 @@ PRO retrieveBanksData, Event, FullNexusName
   ;get bank1 data
   fieldID = h5d_open(fileID,(*global).nexus_bank1_path)
   bank1 = h5d_read(fieldID)
+  
+  putValue, event, 'loading_progress_label', $
+  'Loading in progress .... retrieving Bank2 !'
   
   ;get bank2 data
   fieldID = h5d_open(fileID,(*global).nexus_bank2_path)
@@ -66,13 +71,19 @@ PRO retrieveBanksData, Event, FullNexusName
   error = 0 ;remove_me
   if (error ne 0) then begin
   catch,/cancel
+activate_base, event, 'loading_progress_base_uname', 0
   return
   endif
   
+  putValue, event, 'loading_progress_label', $
+  'Loading in progress .... retrieving Bank3 !'
+
   fieldID = h5d_open(fileID,(*global).nexus_bank3_path)
   bank3 = h5d_read(fieldID)
+
+  putValue, event, 'loading_progress_label', $
+  'Loading in progress .... retrieving Bank4 !'
   
-  ;get bank2 data
   fieldID = h5d_open(fileID,(*global).nexus_bank4_path)
   bank4 = h5d_read(fieldID)
   
@@ -87,6 +98,8 @@ PRO retrieveBanksData, Event, FullNexusName
   
   h5d_close, fieldID
   h5f_close, fileID
+
+activate_base, event, 'loading_progress_base_uname', 0
   
 END
 
