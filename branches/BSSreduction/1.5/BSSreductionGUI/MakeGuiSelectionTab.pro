@@ -273,6 +273,7 @@ PRO MakeGuiSelectionTab, MAIN_TAB, $
     SCR_XSIZE = FullCountsVsTofSize[2],$
     SCR_YSIZE = FullCountsVsTofSize[3],$
     /MOTION_EVENTS,$
+    retain=2,$
     /BUTTON_EVENTS)
     
   wOutputTofButton = WIDGET_BUTTON(CountsVsTofTab1,$
@@ -319,6 +320,7 @@ PRO MakeGuiSelectionTab, MAIN_TAB, $
     SCR_XSIZE = CountsVsTofSize[2],$
     SCR_YSIZE = CountsVsTofSize[3],$
     /MOTION_EVENTS,$
+    retain=2,$
     TOOLTIP = 'Left click to select pixel',$
     /BUTTON_EVENTS)
     
@@ -540,6 +542,7 @@ PRO MakeGuiSelectionTab, MAIN_TAB, $
     SCR_XSIZE = TopBankSize[2],$
     SCR_YSIZE = TopBankSize[3],$
     /BUTTON_EVENTS,$
+    retain=2,$
     /MOTION_EVENTS)
     
   ;BOTTOM_BANK
@@ -550,6 +553,7 @@ PRO MakeGuiSelectionTab, MAIN_TAB, $
     SCR_XSIZE = BottomBankSize[2],$
     SCR_YSIZE = BottomBankSize[3],$
     /BUTTON_EVENTS,$
+    retain=2,$
     /MOTION_EVENTS)
     
   ;SELECTION COLOR TOOL
