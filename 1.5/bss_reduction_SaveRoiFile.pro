@@ -106,6 +106,8 @@ AppendLogBookMessage, Event, LogBookText
 
 ;get ROI array
 pixel_excluded = (*(*global).pixel_excluded)
+pixel_excluded_bank3_4 = (*(*global).pixel_excluded_bank3_4)
+
 sz = (size(pixel_excluded))(1)
 
 error = 0
@@ -182,6 +184,37 @@ ENDIF ELSE BEGIN
             
         ENDFOR
         
+;initialize info parameters
+        ExcludedBank3Pixels = 4096
+        ExcludedBank4Pixels = ExcludedBank3Pixels
+        IncludedBank3Pixels = 0
+        IncludedBank4Pixels = 0
+        
+        FOR i=0,(sz-1) DO BEGIN
+            
+            IF (pixel_excluded[i] EQ 0) THEN BEGIN
+                
+                IF (i LT 4096) THEN BEGIN ;bank1
+                    bank = 'bank3_'
+                    IncludedBank3PIxels += 1
+                    ExcludedBank3PIxels -= 1
+                ENDIF ELSE BEGIN ;bank2
+                    bank = 'bank4_'
+                    IncludedBank4PIxels += 1
+                    ExcludedBank4PIxels -= 1
+                ENDELSE
+                
+                XY = getXYfromPixelID_Untouched(i)
+                X = strcompress(XY[0],/remove_all)
+                Y = strcompress(XY[1],/remove_all)
+                
+                text = bank + X + '_' + Y
+                PRINTF, 1, text
+                
+            ENDIF
+            
+        ENDFOR
+
         CLOSE, 1
         FREE_LUN, 1
         
@@ -203,11 +236,31 @@ ENDIF ELSE BEGIN
         LogBookText = '         - Number of pixels excluded: ' + $
           strcompress(ExcludedBank2Pixels,/remove_all)
         AppendLogBookMessage, Event, LogBookText
+
+        LogBookText = '       * Bank 3:'
+        AppendLogBookMessage, Event, LogBookText
+        LogBookText = '         - Number of pixels included: ' + $
+          strcompress(IncludedBank3Pixels,/remove_all)
+        AppendLogBookMessage, Event, LogBookText
+        LogBookText = '         - Number of pixels excluded: ' + $
+          strcompress(ExcludedBank3Pixels,/remove_all)
+        AppendLogBookMessage, Event, LogBookText
+        LogBookText = '       * Bank 4:'
+        AppendLogBookMessage, Event, LogBookText
+        LogBookText = '         - Number of pixels included: ' + $
+          strcompress(IncludedBank4Pixels,/remove_all)
+        AppendLogBookMessage, Event, LogBookText
+        LogBookText = '         - Number of pixels excluded: ' + $
+          strcompress(ExcludedBank4Pixels,/remove_all)
+        AppendLogBookMessage, Event, LogBookText
+
         LogBookText = '       * Total Number of pixels excluded: ' + $
-          strcompress(ExcludedBank2Pixels + ExcludedBank1Pixels,/remove_all)
+          strcompress(ExcludedBank2Pixels + ExcludedBank1Pixels + $
+          ExcludedBank3Pixels + ExcludedBank4Pixels,/remove_all)
         AppendLogBookMessage, Event, LogBookText
         LogBookText = '       * Total Number of pixels included: ' + $
-          strcompress(IncludedBank2Pixels + IncludedBank1Pixels,/remove_all)
+          strcompress(IncludedBank2Pixels + IncludedBank1Pixels + $
+          IncludedBank3Pixels + IncludedBank4Pixels,/remove_all)
         AppendLogBookMessage, Event, LogBookText
         
         MessageBox = 'ROI File Creation -> SUCCESS !'
