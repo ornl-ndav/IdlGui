@@ -70,6 +70,7 @@ PRO retrieveBanksData, Event, FullNexusName
   catch, error
   if (error ne 0) then begin
     catch,/cancel
+    activate_button, event, 'banks_north_uname', 0
     activate_base, event, 'loading_progress_base_uname', 0
     return
   endif
@@ -98,6 +99,7 @@ PRO retrieveBanksData, Event, FullNexusName
   h5d_close, fieldID
   h5f_close, fileID
   
+  activate_button, event, 'banks_north_uname', 1
   activate_base, event, 'loading_progress_base_uname', 0
   
 END
