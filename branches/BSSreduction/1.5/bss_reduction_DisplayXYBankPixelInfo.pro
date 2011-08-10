@@ -119,6 +119,7 @@ END
 
 
 PRO BSSreduction_DisplaySelectedPixel, Event
+  
   ;get global structure
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
   widget_control,id,get_uvalue=global
@@ -127,12 +128,14 @@ PRO BSSreduction_DisplaySelectedPixel, Event
   
   ;plot selected pixel on top of it
   bank    = getBankValue(Event)
+  bank = bank[0]
   
-  IF (bank EQ 1) THEN BEGIN       ;bank 1
-    view_info = widget_info(Event.top,FIND_BY_UNAME='top_bank_draw')
-  ENDIF ELSE BEGIN                ;bank 2
-    view_info = widget_info(Event.top,FIND_BY_UNAME='bottom_bank_draw')
-  ENDELSE
+  case (bank) of
+    '1': view_info = widget_info(Event.top,FIND_BY_UNAME='top_bank_draw')
+    '2': view_info = widget_info(Event.top,FIND_BY_UNAME='bottom_bank_draw')
+    '3': view_info = widget_info(Event.top,FIND_BY_UNAME='top_bank_draw')
+    '4': view_info = widget_info(Event.top,FIND_BY_UNAME='bottom_bank_draw')
+  endcase
   
   WIDGET_CONTROL, view_info, GET_VALUE=id
   wset, id
