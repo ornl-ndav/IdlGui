@@ -93,6 +93,12 @@ PRO BSSreduction_CommandLineGenerator, Event
       endif
     ENDELSE
     
+    ;put list of banks to used
+    cmd += ' --data-paths=/entry/bank1,1,/entry/bank2,1'
+    if (isButtonEnabled(Event, 'banks_north_uname')) then begin
+      cmd += ',/entry/bank3,1,/entry/bank4,1'
+    endif
+    
     ;get Background Data File
     BDFiles = getTextFieldValue(Event,'bdf_run_number_cw_field')
     IF (BDFiles NE '') THEN BEGIN
