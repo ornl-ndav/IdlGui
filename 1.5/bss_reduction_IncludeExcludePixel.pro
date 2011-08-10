@@ -84,11 +84,11 @@ PRO BSSreduction_IncludeExcludePixel, Event
   
   banks_displayed = (*global).banks_displayed
   if (banks_displayed eq 'north_3_4') then begin
-  PixelID = getPixelIDvalue(Event) - 2*4096L
+    PixelID = getPixelIDvalue(Event) - 2*4096L
     pixel_excluded = (*(*global).pixel_excluded_bank3_4)
   endif else begin
     pixel_excluded = (*(*global).pixel_excluded)
-  PixelID = getPixelIDvalue(Event)
+    PixelID = getPixelIDvalue(Event)
   endelse
   
   IF (pixel_excluded[PixelID]) THEN BEGIN
@@ -106,10 +106,10 @@ PRO BSSreduction_IncludeExcludePixel, Event
   endelse
   
   case (strcompress(bank,/remove_all)) of
-  '1': view_info = widget_info(Event.top,FIND_BY_UNAME='top_bank_draw')
-  '2': view_info = widget_info(Event.top,FIND_BY_UNAME='bottom_bank_draw')
-  '3': view_info = widget_info(Event.top,FIND_BY_UNAME='top_bank_draw')
-  '4': view_info = widget_info(Event.top,FIND_BY_UNAME='bottom_bank_draw')
+    '1': view_info = widget_info(Event.top,FIND_BY_UNAME='top_bank_draw')
+    '2': view_info = widget_info(Event.top,FIND_BY_UNAME='bottom_bank_draw')
+    '3': view_info = widget_info(Event.top,FIND_BY_UNAME='top_bank_draw')
+    '4': view_info = widget_info(Event.top,FIND_BY_UNAME='bottom_bank_draw')
   endcase
   
   WIDGET_CONTROL, view_info, GET_VALUE=id
@@ -123,7 +123,7 @@ PRO BSSreduction_IncludeExcludePixel, Event
     x       = getXValue(Event)
     y       = getYValue(Event)
     PlotExcludedBox, Event, x, y, x_coeff, y_coeff, color
-  
+    
   ENDIF ELSE BEGIN                ;include pixel
   
     ;first replot bank + lines
