@@ -294,10 +294,10 @@ PRO bss_reduction_PlotBanks, Event, success
   
   success = 1
   
-PlotIncludedPixels, event
-BSSreduction_PlotCountsVsTofOfSelection_light, Event
-BSSreduction_DisplayLinLogFullCountsVsTof, Event
-
+  PlotIncludedPixels, event
+  BSSreduction_PlotCountsVsTofOfSelection_light, Event
+  BSSreduction_DisplayLinLogFullCountsVsTof, Event
+  
 END
 
 
