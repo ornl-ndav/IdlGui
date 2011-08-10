@@ -63,20 +63,30 @@ PRO MAIN_BASE_event, Event
     
     ;banks menu choice
     widget_info(wWidget, find_by_uname='banks_north_uname'): begin
+      catch, error
+      if (error ne 0) then begin
+      catch,/cancel
+      endif else begin
       value_north = '> Banks North (3 and 4)'
       value_south = '  Banks South (1 and 2)'
       putValue, event, 'banks_north_uname', value_north
       putValue, event, 'banks_south_uname', value_south
       (*global).banks_displayed = 'north_3_4'
       bss_reduction_PlotBanks, Event, 1
+      endelse
     end
     widget_info(wWidget, find_by_uname='banks_south_uname'): begin
+      catch, error
+      if (error ne 0) then begin
+      catch,/cancel
+      endif else begin
       value_north = '  Banks North (3 and 4)'
       value_south = '> Banks South (1 and 2)'
       putValue, event, 'banks_north_uname', value_north
       putValue, event, 'banks_south_uname', value_south
       (*global).banks_displayed = 'south_1_2'
       bss_reduction_PlotBanks, Event, 1
+      endelse
     end
     
     ;lin plot
