@@ -127,8 +127,11 @@ PRO MAIN_BASE_event, Event
     ;BROWSE button run number
     Widget_Info(wWidget, FIND_BY_UNAME='nexus_run_number_button'): begin
       bss_reduction_BrowseNexus, Event
-      ;      BSSreduction_PlotCountsVsTofOfSelection_light, Event
-      ;      BSSreduction_DisplayLinLogFullCountsVsTof, Event
+      value_north = '  Banks North (3 and 4)'  
+      value_south = '> Banks South (1 and 2)'
+      putValue, event, 'banks_north_uname', value_north
+      putValue, event, 'banks_south_uname', value_south
+      (*global).banks_displayed = 'south_1_2'
       BSSreduction_Reduce_rsdf_run_number_cw_field, Event
       BSSreduction_CommandLineGenerator, Event
     end
@@ -150,7 +153,6 @@ PRO MAIN_BASE_event, Event
     end
     
     Widget_Info(wWidget, FIND_BY_UNAME='load_roi_file_text'): begin
-      ;      LoadRoiFile, Event
       PlotIncludedPixels, Event
     end
     
