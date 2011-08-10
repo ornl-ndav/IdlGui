@@ -56,12 +56,14 @@ IF ((*global).NeXusFound) THEN BEGIN
     (*global).counts_vs_tof_y = Y
     (*global).counts_vs_tof_bank = bank
     
-    IF (bank EQ 1) THEN BEGIN   ;bank1
-        bank = (*(*global).bank1)
-    ENDIF ELSE BEGIN            ;bank2
-        bank = (*(*global).bank2)
-    ENDELSE
-    
+    bank = bank[0]
+    case (bank) of 
+    '1': bank = (*(*global).bank1)
+    '2': bank = (*(*global).bank2)
+    '3': bank = (*(*global).bank3)
+    '4': bank = (*(*global).bank4)
+    endcase
+        
     data = bank(*,Y,X)
     
 ;plot data (counts vs tof)

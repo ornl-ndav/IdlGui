@@ -318,6 +318,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     pixel_excluded_bank3_4: ptr_new(0L),$ ;list of pixel excluded for bank3&4
     
     pixel_excluded_base: ptr_new(0L),$
+    pixel_excluded_base_bank3_4: ptr_new(0L), $
+
     ;list of pixel excluded without counts removing
     default_pixel_excluded: ptr_new(0L),$
     pixel_excluded_size: 64*2*64L,$ ; total number of pixels
