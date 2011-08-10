@@ -179,7 +179,13 @@ PRO PlotExcludedPixels, Event
   WIDGET_CONTROL, view_info, GET_VALUE=id
   wset, id
   
-  pixel_excluded = (*(*global).pixel_excluded)
+  banks_displayed = (*global).banks_displayed
+  if (banks_displayed eq 'north_3_4') then begin
+    pixel_excluded = (*(*global).pixel_excluded_bank3_4)
+  endif else begin
+    pixel_excluded = (*(*global).pixel_excluded)
+  endelse
+  
   FOR i=0,3584L DO BEGIN
     IF (pixel_excluded[i] EQ 1) THEN BEGIN
       XY = getXYfromPixelID(Event, i)
@@ -318,6 +324,21 @@ PRO BSSreduction_ExcludedPixelType, Event
   IF (currentSelectedSymbol NE previousSelectedSymbol) THEN BEGIN
   
     IF ((*global).NeXusFound) THEN BEGIN
+    
+      banks_displayed = (*global).banks_displayed
+      ;first replot bank + lines
+      if (banks_displayed eq 'north_3_4') then begin
+        bss_reduction_PlotBank3, Event
+        PlotBank1Grid, Event
+        bss_reduction_PlotBank4, Event
+        PlotBank2Grid, Event
+      endif else begin
+        bss_reduction_PlotBank1, Event
+        PlotBank1Grid, Event
+        bss_reduction_PlotBank2, Event
+        PlotBank2Grid, Event
+      endelse
+      
       PlotIncludedPixels, Event
     ENDIF
     (*global).PrevExcludedSymbol = currentSelectedSymbol

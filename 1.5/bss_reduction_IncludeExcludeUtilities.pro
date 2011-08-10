@@ -89,7 +89,13 @@ PRO AddListToExcludeList, Event, PixelidListInt
   id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
   WIDGET_CONTROL,id,get_uvalue=global
   
-  pixel_excluded = (*(*global).pixel_excluded)
+  banks_displayed = (*global).banks_displayed
+  if (banks_displayed eq 'north_3_4') then begin
+    pixel_excluded = (*(*global).pixel_excluded_bank3_4)
+    PixelIdListInt -= 2*4096
+  endif else begin
+    pixel_excluded = (*(*global).pixel_excluded)
+  endelse
   TotalPixels = (*global).TotalPixels
   
   sz = (SIZE(PixelidListInt))(1)
@@ -98,8 +104,16 @@ PRO AddListToExcludeList, Event, PixelidListInt
       pixel_excluded[PixelidListInt[i]] = 1
     ENDIF
   ENDFOR
-  (*(*global).pixel_excluded) = pixel_excluded
-  (*(*global).pixel_excluded_base) = pixel_excluded
+  
+  banks_displayed = (*global).banks_displayed
+  if (banks_displayed eq 'north_3_4') then begin
+    (*(*global).pixel_excluded_bank3_4) = pixel_excluded
+    (*(*global).pixel_excluded_base) = pixel_excluded
+  endif else begin
+    (*(*global).pixel_excluded) = pixel_excluded
+    (*(*global).pixel_excluded_base_bank3_4) = pixel_excluded
+  endelse
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -108,7 +122,13 @@ PRO RemoveListToExcludeList, Event, PixelidListInt
   id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
   WIDGET_CONTROL,id,get_uvalue=global
   
-  pixel_excluded = (*(*global).pixel_excluded)
+   banks_displayed = (*global).banks_displayed
+  if (banks_displayed eq 'north_3_4') then begin
+    pixel_excluded = (*(*global).pixel_excluded_bank3_4)
+    PixelIdListInt -= 2*4096
+  endif else begin
+    pixel_excluded = (*(*global).pixel_excluded)
+  endelse
   TotalPixels = (*global).TotalPixels
   
   sz = (SIZE(PixelidListInt))(1)
@@ -117,8 +137,16 @@ PRO RemoveListToExcludeList, Event, PixelidListInt
       pixel_excluded[PixelidListInt[i]] = 0
     ENDIF
   ENDFOR
-  (*(*global).pixel_excluded) = pixel_excluded
-  (*(*global).pixel_excluded_base) = pixel_excluded
+  
+   banks_displayed = (*global).banks_displayed
+  if (banks_displayed eq 'north_3_4') then begin
+    (*(*global).pixel_excluded_bank3_4) = pixel_excluded
+    (*(*global).pixel_excluded_base) = pixel_excluded
+  endif else begin
+    (*(*global).pixel_excluded) = pixel_excluded
+    (*(*global).pixel_excluded_base_bank3_4) = pixel_excluded
+  endelse
+
 END
 
 ;------------------------------------------------------------------------------
@@ -267,9 +295,9 @@ PRO AddPixelsToExcludedList, Event, low_counts, high_counts
     
   ENDFOR
   
-   (*(*global).pixel_excluded) = pixel_excluded
-   
-  ;check value that are <= Counts in bank2
+  (*(*global).pixel_excluded) = pixel_excluded
+  
+;check value that are <= Counts in bank2
 ;  bank2_integrated_counts = (*(*global).bank2_sum)
 ;  sz_2 = (SIZE(bank2_integrated_counts))(1) * (SIZE(bank2_integrated_counts))(2)
 ;  FOR i=0,(sz_2-1) DO BEGIN
