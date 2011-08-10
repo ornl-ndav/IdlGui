@@ -322,6 +322,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
     ;list of pixel excluded without counts removing
     default_pixel_excluded: ptr_new(0L),$
+    default_pixel_excluded_bank3_4: ptr_new(0L),$
     pixel_excluded_size: 64*2*64L,$ ; total number of pixels
     
     
@@ -412,9 +413,11 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   default_pixel_excluded[[list1,list2,list3,list4]] = 1
   
   (*(*global).default_pixel_excluded) = default_pixel_excluded
+  (*(*global).default_pixel_excluded_bank3_4) = default_pixel_excluded
   (*(*global).pixel_excluded)         = default_pixel_excluded
   (*(*global).pixel_excluded_bank3_4) = default_pixel_excluded
   (*(*global).pixel_excluded_base)    = default_pixel_excluded
+  (*(*global).pixel_excluded_base_bank3_4) = default_pixel_excluded
   
   (*(*global).WidgetsToActivate) = ['load_roi_file_button',$
     'save_roi_file_button',$

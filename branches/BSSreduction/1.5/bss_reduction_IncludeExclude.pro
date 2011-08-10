@@ -122,7 +122,7 @@ END
 PRO BSSreduction_IncludePixelid, Event
 
   widget_control, event.top, get_uvalue=global
-
+  
   ;retrieve text
   PixelidText = getSelectionBasePixelidText(Event)
   
@@ -204,6 +204,21 @@ PRO BSSreduction_IncludePixelRow, Event
   ;Remove list of pixels to exclude list
   RemoveRowToExcludeList, Event, RowListInt
   
+  widget_control, event.top, get_uvalue=global
+  banks_displayed = (*global).banks_displayed
+  ;first replot bank + lines
+  if (banks_displayed eq 'north_3_4') then begin
+    bss_reduction_PlotBank3, Event
+    PlotBank1Grid, Event
+    bss_reduction_PlotBank4, Event
+    PlotBank2Grid, Event
+  endif else begin
+    bss_reduction_PlotBank1, Event
+    PlotBank1Grid, Event
+    bss_reduction_PlotBank2, Event
+    PlotBank2Grid, Event
+  endelse
+  
   ;remove pixel to list of excluded pixels for bank1 and bank2
   PlotIncludedPixels, Event
   
@@ -261,6 +276,21 @@ PRO BSSreduction_IncludeTube, Event
   
   ;Remove list of pixels to exclude list
   RemoveTubeToExcludeList, Event, TubeListInt
+  
+  widget_control, event.top, get_uvalue=global
+  banks_displayed = (*global).banks_displayed
+  ;first replot bank + lines
+  if (banks_displayed eq 'north_3_4') then begin
+    bss_reduction_PlotBank3, Event
+    PlotBank1Grid, Event
+    bss_reduction_PlotBank4, Event
+    PlotBank2Grid, Event
+  endif else begin
+    bss_reduction_PlotBank1, Event
+    PlotBank1Grid, Event
+    bss_reduction_PlotBank2, Event
+    PlotBank2Grid, Event
+  endelse
   
   ;remove pixel to list of excluded pixels for bank1 and bank2
   PlotIncludedPixels, Event

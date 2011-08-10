@@ -221,15 +221,6 @@ PRO PlotIncludedPixels, Event
   DEVICE, DECOMPOSED = 0
   loadct, (*global).LoadctMainPlot,/SILENT
   
-  ;plot main plots + grid
-  ;bss_reduction_PlotBank1, Event
-  ;DEVICE, DECOMPOSED = 0
-  ;PlotBank1Grid, Event
-  ;loadct, (*global).LoadctMainPlot, /SILENT
-  ;bss_reduction_PlotBank2, Event
-  ;DEVICE, DECOMPOSED = 0
-  ;PlotBank2Grid, Event
-  
   banks_displayed = (*global).banks_displayed
   if (banks_displayed eq 'north_3_4') then begin
   
@@ -297,9 +288,31 @@ PRO BSSreduction_FullResetButton, Event
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
   widget_control,id,get_uvalue=global
   
-  pixel_excluded = (*(*global).default_pixel_excluded)
-  (*(*global).pixel_excluded)      = pixel_excluded
-  (*(*global).pixel_excluded_base) = pixel_excluded
+  banks_displayed = (*global).banks_displayed
+  ;first replot bank + lines
+  if (banks_displayed eq 'north_3_4') then begin
+    pixel_excluded = (*(*global).default_pixel_excluded_bank3_4)
+    (*(*global).pixel_excluded_bank3_4)      = pixel_excluded
+    (*(*global).pixel_excluded_base_bank3_4) = pixel_excluded
+  endif else begin
+    pixel_excluded = (*(*global).default_pixel_excluded)
+    (*(*global).pixel_excluded)      = pixel_excluded
+    (*(*global).pixel_excluded_base) = pixel_excluded
+  endelse
+  
+  banks_displayed = (*global).banks_displayed
+  ;first replot bank + lines
+  if (banks_displayed eq 'north_3_4') then begin
+    bss_reduction_PlotBank3, Event
+    PlotBank1Grid, Event
+    bss_reduction_PlotBank4, Event
+    PlotBank2Grid, Event
+  endif else begin
+    bss_reduction_PlotBank1, Event
+    PlotBank1Grid, Event
+    bss_reduction_PlotBank2, Event
+    PlotBank2Grid, Event
+  endelse
   
   PlotIncludedPixels, Event
   
