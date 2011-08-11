@@ -143,12 +143,34 @@ pro go_rtof_reduction, event
   theta = get_theta(event)
   twotheta = get_twotheta(event)
   
-  theta_rad = convert_angle(angle=theta.value, $
+   message = ['> Retrieved angles:']
+  message = [message, '  -> Retrieved theta: ' + $
+    strcompress(theta.value,/remove_all) + $
+    ' ' + strcompress(theta.units,/remove_all)]
+  message = [message, '  -> Retrieved twotheta: ' + $
+    strcompress(twotheta.value,/remove_all) + $
+    ' ' + strcompress(twotheta.units,/remove_all)]
+  log_book_update, event, message=message
+  
+  ;conversion of angles units
+  new_unit='degree'
+  message = ['> Convert angles to unit: ' + new_unit]
+  theta_degree = convert_angle(angle=theta.value, $
     from_unit=theta.units,$
-    to_unit='degree')
-  twotheta_rad = convert_angle(angle=twotheta.value, $
+    to_unit=new_unit)
+  message = [message, '  -> theta: ' + strcompress(theta_degree,/remove_all)]
+  twotheta_degree = convert_angle(angle=twotheta.value, $
     from_unit=twotheta.units, $
-    to_unit='degree')
+    to_unit=new_unit)
+  message = [message, '  -> twotheta: ' + strcompress(twotheta_degree,/remove_all)]
+  log_book_update, event, message=message
+  
+;  theta_rad = convert_angle(angle=theta.value, $
+;    from_unit=theta.units,$
+;    to_unit='degree')
+;  twotheta_rad = convert_angle(angle=twotheta.value, $
+;    from_unit=twotheta.units, $
+;    to_unit='degree')
     
   message = ['> Retrieved parameters.']
   log_book_update, event, message=message
@@ -180,8 +202,16 @@ pro go_rtof_reduction, event
   
   ;read rtof ascii file
   _DATA = trim_data(event, $
-    theta_rad, $
-    twotheta_rad)
+    theta_degree, $
+    twotheta_degree)
+    
+   theta_rad = convert_angle(angle=theta_degree, $
+    from_unit='degree', $
+    to_unit='rad')
+  
+  twotheta_rad = convert_angle(angle=twotheta_degree, $
+    from_unit='degree', $
+    to_unit='rad') 
     
   ;calculate the lambda step
   lambda_step = get_rtof_lambda_step(event, _DATA.tof)
