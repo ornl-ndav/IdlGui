@@ -230,6 +230,15 @@ pro repopulate_gui, event, _structure
   
   putValue, event=event, 'rtof_file_text_field_uname', $
     _structure.rtof_file_text_field
+
+  ;load rtof file if any
+  if (file_test(_structure.rtof_file_text_field)) then begin
+        file_name = _structure.rtof_file_text_field
+      file_name = strtrim(file_name,2)
+      file_name = file_name[0]
+      result = load_rtof_file(event, file_name)
+  endif
+
   putValue, event=event, 'rtof_nexus_geometry_file', $
     _structure.rtof_nexus_geometry_file
   putValue, event=event, 'rtof_ranges_qx_min', $
