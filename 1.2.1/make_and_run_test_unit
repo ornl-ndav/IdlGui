@@ -1,0 +1,3 @@
+@idl_makefile
+@run_test_unit
+
