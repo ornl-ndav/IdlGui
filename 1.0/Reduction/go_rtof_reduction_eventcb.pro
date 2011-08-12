@@ -77,6 +77,9 @@ function convert_to_QxQz_rtof, data,$
         thetahi = theta_vec[j]+theta_step/2
         thetalo = theta_vec[j]-theta_step/2
         
+        thetahi = !dtor * thetahi
+        thetalo = !dtor * thetalo
+        
         Qx_lo = (2.0*!pi/lambdahi) * (cos(thetahi)-cos(theta_in))
         Qx_hi = (2.0*!pi/lambdalo) * (cos(thetalo)-cos(theta_in))
         
@@ -281,6 +284,21 @@ pro build_rtof_THLAM, event = event, $
   message = [message,message1,message2]
   
   log_book_update, event, message=message
+  
+    ;display here the 2d plot of theta vs lambda
+  offset = 25
+  widget_control, event.top, get_uvalue=global
+  final_plot, event=event, $
+    offset = offset, $
+    time_stamp = GenerateReadableIsoTimeStamp(), $
+    data = thlam.data,$
+    x_axis = thlam.lambda,$
+    y_axis = thlam.theta,$
+    default_loadct = 5, $
+    main_base_uname = 'main_base', $
+    output_folder = (*global).output_path, $
+    xtitle = 'lambda (Angstroms)', $
+    ytitle = 'theta (rad)'
   
 end
 
