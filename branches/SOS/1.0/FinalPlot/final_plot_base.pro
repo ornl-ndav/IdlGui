@@ -92,9 +92,9 @@ pro final_plot_event, Event
       widget_control, id, draw_xsize = colorbar_xsize
       
       ;global info
-;      id = widget_info(event.top, find_by_uname='global_info_uname')
-;      widget_control, id, xoffset = new_xsize-colorbar_xsize-border-25
-;      display_global_infos_button, event=event
+      ;      id = widget_info(event.top, find_by_uname='global_info_uname')
+      ;      widget_control, id, xoffset = new_xsize-colorbar_xsize-border-25
+      ;      display_global_infos_button, event=event
       
       plot_beam_center_scale, event=event
       refresh_plot, event, recalculate=1
@@ -497,7 +497,9 @@ pro final_plot_gui, wBase, $
     current_plot_setting = current_plot_setting, $
     scale_setting = scale_setting, $
     default_plot_size = default_plot_size, $
-    smooth_coefficient = smooth_coefficient
+    smooth_coefficient = smooth_coefficient, $
+    xtitle = xtitle, $
+    ytitle = ytitle
     
   compile_opt idl2
   
@@ -519,7 +521,7 @@ pro final_plot_gui, wBase, $
   
   ourGroup = WIDGET_BASE()
   
-  title = 'Qx vs Qz [' + time_stamp + ']'
+  title = ytitle + ' vs ' + xtitle + ' [' + time_stamp + ']'
   wBase = WIDGET_BASE(TITLE = title, $
     UNAME        = 'final_plot_base', $
     XOFFSET      = xoffset,$
@@ -534,14 +536,14 @@ pro final_plot_gui, wBase, $
     mbar = bar1,$
     GROUP_LEADER = ourGroup)
     
-;  info_help = widget_draw(wBase,$
-;    uname = 'global_info_uname', $
-;    xoffset = xsize-border-25,$
-;    yoffset = 0,$
-;    scr_xsize = 60,$
-;    scr_ysize = 20,$
-;    event_pro = 'global_info_draw_eventcb',$
-;    /tracking_events)
+  ;  info_help = widget_draw(wBase,$
+  ;    uname = 'global_info_uname', $
+  ;    xoffset = xsize-border-25,$
+  ;    yoffset = 0,$
+  ;    scr_xsize = 60,$
+  ;    scr_ysize = 20,$
+  ;    event_pro = 'global_info_draw_eventcb',$
+  ;    /tracking_events)
     
   draw = widget_draw(wbase,$
     xoffset = border,$
@@ -722,9 +724,9 @@ pro final_plot_gui, wBase, $
   png = widget_button(screenshot,$
     value = 'Create PNG',$
     uname = 'screenshot_png_uname')
-;  jpg = widget_button(screenshot,$
-;    value = 'Create JPG',$
-;    uname = 'screenshot_jpg_uname')
+  ;  jpg = widget_button(screenshot,$
+  ;    value = 'Create JPG',$
+  ;    uname = 'screenshot_jpg_uname')
     
   help = widget_button(bar1, $
     value = 'HELP', $
@@ -872,8 +874,8 @@ pro plot_beam_center_scale, base=base, event=event
     XMINOR      = 2,$
     ;YMINOR      = 2,$
     YTICKS      = yticks,$
-    XTITLE      = 'Qx',$
-    YTITLE      = 'Qz',$
+    XTITLE      = (*global_plot).xtitle,$
+    YTITLE      = (*global_plot).ytitle,$
     XMARGIN     = [xmargin, xmargin+0.2],$
     YMARGIN     = [ymargin, ymargin],$
     /NODATA
@@ -1043,7 +1045,9 @@ pro final_plot, main_base=main_base, $
     smooth_coefficient = smooth_coefficient, $
     time_stamp = time_stamp,$
     metadata = metadata, $
-    output_folder = output_folder
+    output_folder = output_folder, $
+    xtitle = xtitle, $
+    ytitle = ytitle
     
   compile_opt idl2
   
@@ -1054,6 +1058,9 @@ pro final_plot, main_base=main_base, $
   ;SETUP
   border = 40
   colorbar_xsize = 70
+  
+  if (~keyword_set(xtitle)) then xtitle='Qx'
+  if (~keyword_set(ytitle)) then ytitle='Qz'
   
   if (~keyword_set(default_plot_size)) then default_plot_size = [600,600]
   if (~keyword_set(default_scale_setting)) then default_scale_setting = 1 ;log by default
@@ -1072,13 +1079,18 @@ pro final_plot, main_base=main_base, $
     current_plot_setting = current_plot_setting, $
     scale_setting = default_scale_setting,$
     default_plot_size = default_plot_size, $
-    smooth_coefficient = smooth_coefficient
+    smooth_coefficient = smooth_coefficient, $
+    xtitle=xtitle, $
+    ytitle=ytitle
   ;(*global).auto_scale_plot_base = wBase
     
   WIDGET_CONTROL, wBase, /REALIZE
   
   global_plot = PTR_NEW({ wbase: wbase,$
     global: global, $
+    
+    xtitle: xtitle, $
+    ytitle: ytitle, $
     
     ;used to plot selection zoom
     default_plot_size: default_plot_size, $
@@ -1164,26 +1176,8 @@ pro final_plot, main_base=main_base, $
   XMANAGER, "final_plot", wBase, GROUP_LEADER = ourGroup, /NO_BLOCK, $
     cleanup = 'final_plot_cleanup'
     
-  ;  ;retrieve scale
-  ;  ;  Data_x = *pData_x[file_index,spin_state]
-  ;  start_tof = Data_x[0]
-  ;  end_tof = Data_x[-1]
-  ;  delta_tof = Data_x[1]-Data_x[0]
-  ;  (*global_plot).delta_tof = delta_tof
-  ;  tof_axis = (*global_plot).tof_axis
-  ;  tof_axis[0] = start_tof
-  ;  tof_axis[1] = end_tof + delta_tof
-  ;  (*global_plot).tof_axis = tof_axis
-  ;
-  ;  ;retrieve the data to plot
-  ;  ;  Data = *pData_y[file_index, spin_state]
-  ;  (*(*global_plot).data_linear) = Data_y
-  ;
   lin_log_data, base=wBase
-  ;
-  ;  ;number of pixels
-  ;  (*global_plot).nbr_pixel = (size(data_y))[1] ;nbr of pixels to plot
-  ;
+
   Data = (*(*global_plot).data)
   id = WIDGET_INFO(wBase, FIND_BY_UNAME='draw')
   draw_geometry = WIDGET_INFO(id,/GEOMETRY)
@@ -1206,9 +1200,9 @@ pro final_plot, main_base=main_base, $
   (*global_plot).congrid_xcoeff = xsize
   (*global_plot).congrid_ycoeff = ysize
   
-  ;  DEVICE, DECOMPOSED = 0
-  ;  loadct, default_loadct, /SILENT
-  ;
+  DEVICE, DECOMPOSED = 0
+  loadct, default_loadct, /SILENT
+  
   plot_beam_center_scale, base=wBase
   
   id = widget_info(wBase,find_by_uname='draw')
