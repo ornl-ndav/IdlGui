@@ -369,7 +369,10 @@ end
 function convert_THLAM, data, SD_d, MD_d, cpix, pix_size
   compile_opt idl2
   
-  TOF=data.TOF
+  TOF=data.TOF  ;microS
+  ;convert into ms
+  TOF /= 1000.
+  
   MD_d = MD_d[0]
   vel=MD_d/TOF         ;mm/ms = m/s
   
