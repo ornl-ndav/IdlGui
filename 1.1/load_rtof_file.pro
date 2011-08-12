@@ -95,11 +95,12 @@ function load_rtof_file, event, file_name
   
   catch, error
   if (error ne 0) then begin
-  catch,/cancel
-  return, 0b
+    catch,/cancel
+    return, 0b
   endif
   
   pData = iClass->getDataQuickly()
+  
   (*(*global).rtof_data) = pData
   all_tags = iClass->getAllTag()
   first_pixel = iClass->getStartPixel()

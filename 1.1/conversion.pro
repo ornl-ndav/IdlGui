@@ -56,14 +56,14 @@ function convert_angle, angle=angle, $
   ;convert everything into rad
   case (from_unit) of
   'rad': from_factor = 1
-  'degree': from_factor = 1/(!dtor)
+  'degree': from_factor = (!dtor)
   endcase
   angle_rad = angle * from_factor
   
   ;convert into desired unit
   case (to_unit) of
   'rad': to_factor = 1
-  'degree': to_factor = !dtor
+  'degree': to_factor = 1./(!dtor)
   endcase
   angle_rad *= to_factor
 

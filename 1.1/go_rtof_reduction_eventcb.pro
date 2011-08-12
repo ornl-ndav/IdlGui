@@ -41,7 +41,10 @@ function convert_to_QxQz_rtof, data,$
     lambda_step, $
     theta_rad
   compile_opt idl2
-
+  
+  ;help, theta_vec ;float Array[51]
+  ;help, lambda_vec ;float = Array[262]
+  
   lambda_bin_vec = lambda_vec
   data_size = size(data,/dim)
   si = size(qxvec,/dim)
@@ -77,12 +80,15 @@ function convert_to_QxQz_rtof, data,$
         thetahi = theta_vec[j]+theta_step/2
         thetalo = theta_vec[j]-theta_step/2
         
+         thetahi = !dtor * thetahi
+        thetalo = !dtor * thetalo
+        
         Qx_lo = (2.0*!pi/lambdahi) * (cos(thetahi)-cos(theta_in))
         Qx_hi = (2.0*!pi/lambdalo) * (cos(thetalo)-cos(theta_in))
         
         Qz_lo= (2.0*!pi/lambdahi) * (sin(thetalo)+sin(theta_in))
         Qz_hi= (2.0*!pi/lambdalo) * (sin(thetahi)+sin(theta_in))
-        
+           
         QXQZ_values[0,index] = Qx_lo
         QXQZ_values[1,index] = Qx_hi
         QXQZ_values[2,index] = Qz_lo
@@ -121,7 +127,7 @@ function convert_to_QxQz_rtof, data,$
     QZ_hi=QXQZ_values[3,count]
     
     int=QXQZ_values[4,count]
-
+    
     ;check where is the last index of data
     
     ;get the last index where QX_lo is smaller or equal to the QX axis
@@ -131,7 +137,7 @@ function convert_to_QxQz_rtof, data,$
     QX_hi_pos=min(where(QX_hi le QXvec, nbr_qx_hi_pos))
     
     QZ_lo_pos=max(where(QZ_lo ge QZvec, nbr_qz_lo_pos))
-
+    
     QZ_hi_pos=min(where(QZ_hi le QZvec, nbr_qz_hi_pos))
     
     if nbr_qz_lo_pos eq 0 then QZ_lo_pos=0
@@ -142,7 +148,7 @@ function convert_to_QxQz_rtof, data,$
     ;below crudely splits the intensity equally among all bins
     ;calculate the number of bins in each of the new box
     totalbins=(QX_hi_pos-QX_lo_pos+1)*(QZ_hi_pos-QZ_lo_pos+1)
-
+    
     for loopx=QX_lo_pos,QX_hi_pos do begin
       for loopy=QZ_lo_pos,QZ_hi_pos do begin
         QXQZ_ARRAY[loopx,loopy]=QXQZ_ARRAY[loopx,loopy]+(int/totalbins)
@@ -153,25 +159,25 @@ function convert_to_QxQz_rtof, data,$
     if count eq si-1 then ok=1
     count++
   endwhile
-   
+  
   ;multiply *QZ^4
   qxqz4=qxqz_array
   for loop=0,qz_bins-1 do begin
     qxqz4[*,loop]=qxqz_array[*,loop]*qzvec[loop]^4
   endfor
-
+  
   qxqz_norm = qxqz_count*0.0
   
   for loopx=0, qx_bins-1 do begin
-  for loopz=0, qz_bins-1 do begin
-  qxqz_norm[loopx,loopz] = qxqz_array[loopx,loopz]/qxqz_count[loopx,loopz]
-  endfor
+    for loopz=0, qz_bins-1 do begin
+      qxqz_norm[loopx,loopz] = qxqz_array[loopx,loopz]/qxqz_count[loopx,loopz]
+    endfor
   endfor
   
   norm=qxqz_array/qxqz_count
   badlist=where(finite(norm) eq 0)
   norm[badlist]=0.0
-
+  
   return, norm
 end
 
@@ -214,7 +220,7 @@ pro make_QXQZ_rtof, event = event, $
   message = ['> Building QxQz array: ']
   
   ;Initialize the range of steps for x and z axis
-  ;will go from -0.004 to 0.004 with 500steps (qxbins)
+  ;will go from -0.004 to 0.004 with 500steps (qxbins) for example
   qxvec=(findgen(qxbins)/(qxbins-1))*(qxrange[1]-qxrange[0])+qxrange[0]
   ;will go from 0 to 0.3 with 500steps
   qzvec=(findgen(qzbins)/(qzbins-1))*(qzrange[1]-qzrange[0])+qzrange[0]
@@ -227,11 +233,11 @@ pro make_QXQZ_rtof, event = event, $
     lambda_step, $
     theta_rad)
     
-    message1 = '-> size(QxQz_array) : [' + $
+  message1 = '-> size(QxQz_array) : [' + $
     strcompress(strjoin(size(QxQz_array,/dim),','),/remove_all) + ']'
-    message = [message,message1]
-    log_book_update, event, message=message
-    
+  message = [message,message1]
+  log_book_update, event, message=message
+  
 end
 
 ;+
@@ -282,6 +288,21 @@ pro build_rtof_THLAM, event = event, $
   
   log_book_update, event, message=message
   
+  ;display here the 2d plot of theta vs lambda
+  offset = 25
+  widget_control, event.top, get_uvalue=global
+  final_plot, event=event, $
+    offset = offset, $
+    time_stamp = GenerateReadableIsoTimeStamp(), $
+    data = thlam.data,$
+    x_axis = thlam.lambda,$
+    y_axis = thlam.theta,$
+    default_loadct = 5, $
+    main_base_uname = 'main_base', $
+    output_folder = (*global).output_path, $
+    xtitle = 'lambda (Angstroms)', $
+    ytitle = 'theta (rad)'
+    
 end
 
 ;+
@@ -310,12 +331,12 @@ function get_rtof_lambda_step, event, tof
     
   d_MS_m = d_MD_m - d_SD_m
   
-  tof0 = tof[0]
-  tof1 = tof[1]
+  tof0 = tof[0] ;microS
+  tof1 = tof[1] ;microS
   tof = tof1-tof0
   
   lambda = calculate_lambda(tof_value=tof,$
-    tof_units='ms',$
+    tof_units='micros',$
     d_SD_m = d_SD_m, $
     d_MS_m = d_MS_m , $
     lambda_units = 'angstroms')
@@ -364,8 +385,8 @@ function trim_data, event, $
   theta += 4.0
   twotheta += 4.0
   message[i++] = '-> Adding 4.0 to theta and twotheta:'
-  message[i++]= '  -> theta: ' + strcompress(theta,/remove_all) + ' radians'
-  message[i++] = '  -> twotheta: ' + strcompress(twotheta,/remove_all) + ' radians'
+  message[i++]= '  -> theta: ' + strcompress(theta,/remove_all) + ' degrees'
+  message[i++] = '  -> twotheta: ' + strcompress(twotheta,/remove_all) + ' degrees'
   
   ;pixels min and max
   PIXmin = get_pixel_min_rtof(event)
