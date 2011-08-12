@@ -333,7 +333,7 @@ function get_rtof_lambda_step, event, tof
   tof = tof1-tof0
   
   lambda = calculate_lambda(tof_value=tof,$
-    tof_units='ms',$
+    tof_units='micros',$
     d_SD_m = d_SD_m, $
     d_MS_m = d_MS_m , $
     lambda_units = 'angstroms')
@@ -423,13 +423,13 @@ function trim_data, event, $
   image = image[0:-2,*]
   tof = tof[0:-2]
   
-  theta = convert_angle(angle=theta, $
-    from_unit='degree', $
-    to_unit='rad')
-  
-  twotheta = convert_angle(angle=twotheta, $
-    from_unit='degree', $
-    to_unit='rad')
+;  theta = convert_angle(angle=theta, $
+;    from_unit='degree', $
+;    to_unit='rad')
+;  
+;  twotheta = convert_angle(angle=twotheta, $
+;    from_unit='degree', $
+;    to_unit='rad')
   
   DATA = {data:image, theta:theta, twotheta:twotheta, tof:tof, pixels:pixels}
   
