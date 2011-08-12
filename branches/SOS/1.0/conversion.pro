@@ -51,26 +51,23 @@ function convert_angle, angle=angle, $
     to_unit=to_unit
   compile_opt idl2
   
-  _angle = angle
-  
   if (from_unit eq to_unit) then return, angle
   
   ;convert everything into rad
   case (from_unit) of
-  'rad': from_factor = 1
-  ;'degree': from_factor = 1/(!dtor)
+  'rad': from_factor = 1.
   'degree': from_factor = !dtor
   endcase
-  angle_rad = _angle * from_factor
+  angle_rad = angle * from_factor
   
   ;convert into desired unit
   case (to_unit) of
-  'rad': to_factor = 1
-  'degree': to_factor = 1/!dtor
+  'rad': to_factor = 1.
+  'degree': to_factor = 1./!dtor
   endcase
-  _angle = angle_rad * to_factor
+  angle_rad *= to_factor
 
-  return, _angle
+  return, angle_rad
 end
 
 ;+
