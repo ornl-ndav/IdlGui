@@ -50,69 +50,17 @@ pro email_configure_base_event, Event
       widget_control, id, /destroy
     end
     
-    ;email2 widget_text
-    widget_info(event.top, $
-    find_by_uname='email2'): begin
-
-      (*global_settings).save_setup = 1b
-      
-      ;check that email match
-      check_email_match, event=event, result=result
-      if (result eq 'Yes') then begin
-        (*global_settings).save_setup = 0b
-        return
-      endif
-      if (result eq 'OK') then begin
-        (*global_settings).save_setup = 0b
-        return
-      endif
-      if (result eq 'No') then begin
-        ;turn off the email output in main base
-        turn_off_email_output, event
-        
-        id = widget_info(Event.top, $
-          find_by_uname='email_configure_widget_base')
-        widget_control, id, /destroy
-      endif
-      if (result eq '') then begin
-        save_status_of_email_configure_button, event
-        id = widget_info(Event.top, $
-          find_by_uname='email_configure_widget_base')
-        widget_control, id, /destroy
-      endif
-    
-    end
-    
     ;close button
     widget_info(event.top, $
       find_by_uname='email_configure_base_close_button'): begin
       
       (*global_settings).save_setup = 1b
       
-      ;check that email match
-      check_email_match, event=event, result=result
-      if (result eq 'Yes') then begin
-        (*global_settings).save_setup = 0b
-        return
-      endif
-      if (result eq 'OK') then begin
-        (*global_settings).save_setup = 0b
-        return
-      endif
-      if (result eq 'No') then begin
-        ;turn off the email output in main base
-        turn_off_email_output, event
-        
-        id = widget_info(Event.top, $
-          find_by_uname='email_configure_widget_base')
-        widget_control, id, /destroy
-      endif
-      if (result eq '') then begin
-        save_status_of_email_configure_button, event
-        id = widget_info(Event.top, $
-          find_by_uname='email_configure_widget_base')
-        widget_control, id, /destroy
-      endif
+      save_status_of_email_configure_button, event
+
+      id = widget_info(Event.top, $
+        find_by_uname='email_configure_widget_base')
+      widget_control, id, /destroy
       
     end
     
@@ -291,7 +239,7 @@ PRO email_configure_base_gui, wBase, main_base_geometry, global
   main_base_ysize = main_base_geometry.ysize
   
   xsize = 350
-  ysize = 130
+  ysize = 75
   
   xoffset = (main_base_xsize - xsize) / 2
   xoffset += main_base_xoffset
@@ -317,7 +265,7 @@ PRO email_configure_base_gui, wBase, main_base_geometry, global
   row1 = widget_base(wBase,$
     /row)
   label = widget_label(row1,$
-    value = '        email:')
+    value = 'email:')
   value = widget_text(row1,$
     value = (*global).email,$
     xsize = 40,$
@@ -325,20 +273,20 @@ PRO email_configure_base_gui, wBase, main_base_geometry, global
     /editable,$
     /align_left)
     
-  row2 = widget_base(wBase,$
-    /row)
-  label = widget_label(row2,$
-    value = 'confirm email:')
-  value = widget_text(row2,$
-    xsize = 40,$
-    value = (*global).email,$
-    uname = 'email2',$
-    /editable,$
-    /align_left)
-    
-  ;empty row
-  row3 = widget_label(wBase,$
-    value = ' ')
+  ;  row2 = widget_base(wBase,$
+  ;    /row)
+  ;  label = widget_label(row2,$
+  ;    value = 'confirm email:')
+  ;  value = widget_text(row2,$
+  ;    xsize = 40,$
+  ;    value = (*global).email,$
+  ;    uname = 'email2',$
+  ;    /editable,$
+  ;    /align_left)
+  ;
+  ;  ;empty row
+  ;  row3 = widget_label(wBase,$
+  ;    value = ' ')
     
   ;buttons row
   row4 = widget_base(wBase,$
