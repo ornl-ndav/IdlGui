@@ -62,7 +62,7 @@ compile_opt idl2
     pb_step: 0, $ ;where we are in the progress
     
     ;default colorbar
-    default_colorbar: 5,$
+    default_colorbar: 0,$   ;0: black and white
     
     ;list of all the buttons of the main base
     list_button_main_base: ['zoom','contrast','metadata'], $
