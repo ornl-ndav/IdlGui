@@ -65,32 +65,33 @@ PRO MAIN_BASE_event, Event
     widget_info(wWidget, find_by_uname='banks_north_uname'): begin
       catch, error
       if (error ne 0) then begin
-      catch,/cancel
+        catch,/cancel
       endif else begin
-      value_north = '> Banks North (3 and 4)'
-      value_south = '  Banks South (1 and 2)'
-      putValue, event, 'banks_north_uname', value_north
-      putValue, event, 'banks_south_uname', value_south
-      (*global).banks_displayed = 'north_3_4'
-      bss_reduction_PlotBanks, Event, 1
+        value_north = '> Banks North (3 and 4)'
+        value_south = '  Banks South (1 and 2)'
+        putValue, event, 'banks_north_uname', value_north
+        putValue, event, 'banks_south_uname', value_south
+        (*global).banks_displayed = 'north_3_4'
+        bss_reduction_PlotBanks, Event, 1
       endelse
     end
     widget_info(wWidget, find_by_uname='banks_south_uname'): begin
       catch, error
       if (error ne 0) then begin
-      catch,/cancel
+        catch,/cancel
       endif else begin
-      value_north = '  Banks North (3 and 4)'
-      value_south = '> Banks South (1 and 2)'
-      putValue, event, 'banks_north_uname', value_north
-      putValue, event, 'banks_south_uname', value_south
-      (*global).banks_displayed = 'south_1_2'
-      bss_reduction_PlotBanks, Event, 1
+        value_north = '  Banks North (3 and 4)'
+        value_south = '> Banks South (1 and 2)'
+        putValue, event, 'banks_north_uname', value_north
+        putValue, event, 'banks_south_uname', value_south
+        (*global).banks_displayed = 'south_1_2'
+        bss_reduction_PlotBanks, Event, 1
       endelse
     end
-    widget_info(wWidget, find_by_uname='banks_difraction_uname'): begin
+    widget_info(wWidget, find_by_uname='diffraction_counts_vs_pixel_uname'): begin
+      plot_diffraction_counts_vs_pixel, event
     end
-
+    
     ;lin plot
     widget_info(wWidget, find_by_uname='linear_main_plot'): begin
       value_lin = '* linear'
@@ -118,12 +119,12 @@ PRO MAIN_BASE_event, Event
         PlotExcludedPixels, Event
       endif
     end
-
+    
     ;when changing counts vs tof tab
     Widget_Info(wWidget, FIND_BY_UNAME='counts_vs_tof_tab'): begin
       BSSreduction_CountsVsTofTab, Event
     end
-
+    
     ;LOADING NeXus file ========================================
     ;cw_field run number
     Widget_Info(wWidget, FIND_BY_UNAME='nexus_run_number'): begin
@@ -138,12 +139,12 @@ PRO MAIN_BASE_event, Event
     
     ;BROWSE button run number
     Widget_Info(wWidget, FIND_BY_UNAME='nexus_run_number_button'): begin
-      bss_reduction_BrowseNexus, Event
-      value_north = '  Banks North (3 and 4)'  
+      value_north = '  Banks North (3 and 4)'
       value_south = '> Banks South (1 and 2)'
       putValue, event, 'banks_north_uname', value_north
       putValue, event, 'banks_south_uname', value_south
       (*global).banks_displayed = 'south_1_2'
+      bss_reduction_BrowseNexus, Event
       BSSreduction_Reduce_rsdf_run_number_cw_field, Event
       BSSreduction_CommandLineGenerator, Event
     end
