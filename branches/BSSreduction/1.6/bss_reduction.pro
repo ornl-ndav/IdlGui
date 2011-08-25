@@ -132,6 +132,9 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ;type of main plot (first tab) lin or log
     plot_type: 'log', $
     
+    mn: 1.675e-27, $ ;mass neutron
+    h: 6.626e-34, $   ;m^2 kg s^-1  Planck constant
+    
     ;temporary live folder for live data stremaing
     tmp_live_shared_folder: live_shared_folder, $
     ;live nexus
@@ -518,6 +521,9 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   counts_vs_pixel = widget_button(diff_bank, $
     value = ' Counts vs pixel (integrated over TOF)',$
     uname = 'diffraction_counts_vs_pixel_uname')
+  counts_vs_q = widget_button(diff_bank, $
+    value = ' Counts vs Q',$
+    uname = 'diffraction_counts_vs_q_uname')
     
   ;lin/log main plot
   plot = widget_button(bar,$

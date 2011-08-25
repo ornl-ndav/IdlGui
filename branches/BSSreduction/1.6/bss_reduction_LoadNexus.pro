@@ -132,10 +132,12 @@ PRO retrieveBanksData, Event, FullNexusName
       fieldID = h5d_open(fileID, path[i])
       _bank = transpose(h5d_read(fieldID))
       diff_bank_data = [diff_bank_data, _bank]
+      h5d_close, fieldID
       
     endfor
     
     (*(*global).diff_raw_data) = diff_bank_data
+    
     activate_button, event, 'diff_bank_uname', 1
     
   endelse
