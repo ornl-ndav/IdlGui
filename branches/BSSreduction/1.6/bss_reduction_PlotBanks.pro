@@ -100,6 +100,9 @@ END
 
 ;------------------------------------------------------------------------------
 PRO bss_reduction_PlotBank1, Event
+
+    print, 'entering bss_reduction_plotbank1'
+
   ;get global structure
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
   widget_control,id,get_uvalue=global
@@ -110,7 +113,7 @@ PRO bss_reduction_PlotBank1, Event
   bank1_sum_transpose = transpose(bank1_sum)
   
   ;rebin data
-  Nx = (*global).Nx+1
+  Nx = (*global).Nx
   Ny = (*global).Ny
   
   Xfactor = (*global).Xfactor
@@ -129,6 +132,9 @@ END
 
 ;------------------------------------------------------------------------------
 PRO bss_reduction_PlotBank2, Event
+  
+      print, 'entering bss_reduction_plotbank2'
+  
   ;get global structure
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
   widget_control,id,get_uvalue=global
@@ -139,7 +145,7 @@ PRO bss_reduction_PlotBank2, Event
   bank2_sum_transpose = transpose(bank2_sum)
   
   ;rebin data
-  Nx = (*global).Nx+1
+  Nx = (*global).Nx
   Ny = (*global).Ny
   
   Xfactor = (*global).Xfactor
@@ -158,6 +164,9 @@ END
 
 ;------------------------------------------------------------------------------
 PRO bss_reduction_PlotBank3, Event
+  
+    print, 'entering bss_reduction_plotbank3'
+  
   ;get global structure
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
   widget_control,id,get_uvalue=global
@@ -168,7 +177,7 @@ PRO bss_reduction_PlotBank3, Event
   bank3_sum_transpose = transpose(bank3_sum)
   
   ;rebin data
-  Nx = (*global).Nx+1
+  Nx = (*global).Nx
   Ny = (*global).Ny
   
   Xfactor = (*global).Xfactor
@@ -188,6 +197,9 @@ END
 
 ;------------------------------------------------------------------------------
 PRO bss_reduction_PlotBank4, Event
+  
+  print, 'entering bss_reduction_plotbank4'
+  
   ;get global structure
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
   widget_control,id,get_uvalue=global
@@ -198,11 +210,16 @@ PRO bss_reduction_PlotBank4, Event
   bank4_sum_transpose = transpose(bank4_sum)
   
   ;rebin data
-  Nx = (*global).Nx+1
+  Nx = (*global).Nx
   Ny = (*global).Ny
   
   Xfactor = (*global).Xfactor
   Yfactor = (*global).Yfactor
+  
+  help, bank4_sum_transpose
+  help, Nx
+  help, Ny
+  help, Xfactor
   
   tvimg_bank4 = rebin(bank4_sum_transpose,Nx*Xfactor, Ny*Yfactor,/sample)
   
@@ -254,21 +271,22 @@ PRO bss_reduction_PlotBanks, Event, success
   bankb_sum = total(bankb,1)
   
   ;remove useless last rack
-  banka_sum = banka_sum(0:63,0:56) ;the last column will be to be sure we use
-  bankb_sum = bankb_sum(0:63,0:56) ;the same z-axis scale (min and max)
+  banka_sum = banka_sum(0:63,0:55) ;the last column will be to be sure we use
+  bankb_sum = bankb_sum(0:63,0:55) ;the same z-axis scale (min and max)
   
   max1 = max(banka_sum)
   max2 = max(bankb_sum)
   max = max([max1,max2])
   
-  banka_sum[0,56] = max
-  bankb_sum[0,56] = max
+  banka_sum[0,55] = max
+  bankb_sum[0,55] = max
   
   lin_log_data, event, banka_sum
   lin_log_data, event, bankb_sum
   
   if (banks_displayed eq 'south_1_2') then begin
   
+    print, 'displaying bank12'
     ;store banks sum
     (*(*global).bank1_sum) = banka_sum
     (*(*global).bank2_sum) = bankb_sum
@@ -279,6 +297,7 @@ PRO bss_reduction_PlotBanks, Event, success
     
   endif else begin
   
+    print, 'displaying bank34'
     ;store banks sum
     (*(*global).bank3_sum) = banka_sum
     (*(*global).bank4_sum) = bankb_sum
