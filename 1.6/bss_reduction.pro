@@ -501,12 +501,16 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   bank = widget_button(bar, $
     value = 'Banks',$
     /menu)
-  bankN = widget_button(bank,$
+  bankS = widget_button(bank,$
     value = '> Banks South (1 and 2)',$
     uname = 'banks_south_uname')
   bankN = widget_button(bank,$
     value = '  Banks North (3 and 4)',$
     uname = 'banks_north_uname')
+  bank9_13 = widget_button(bank, $
+  value = '  Banks Difraction (9 -> 13)',$
+  uname = 'banks_difraction_uname',$
+  /separator)
     
   ;lin/log main plot
   plot = widget_button(bar,$

@@ -88,7 +88,9 @@ PRO MAIN_BASE_event, Event
       bss_reduction_PlotBanks, Event, 1
       endelse
     end
-    
+    widget_info(wWidget, find_by_uname='banks_difraction_uname'): begin
+    end
+
     ;lin plot
     widget_info(wWidget, find_by_uname='linear_main_plot'): begin
       value_lin = '* linear'
