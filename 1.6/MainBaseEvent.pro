@@ -88,8 +88,13 @@ PRO MAIN_BASE_event, Event
         bss_reduction_PlotBanks, Event, 1
       endelse
     end
+    
+    ;Diffraction tubes plots
     widget_info(wWidget, find_by_uname='diffraction_counts_vs_pixel_uname'): begin
       plot_diffraction_counts_vs_pixel, event
+    end
+    widget_info(wWidget, find_by_uname='diffraction_counts_vs_q_uname'): begin
+      plot_diffraction_counts_vs_q, event
     end
     
     ;lin plot

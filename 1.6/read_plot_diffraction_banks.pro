@@ -34,7 +34,8 @@
 
 ;+
 ; :Description:
-;    This routine is the entry point of plotting the difraction banks
+;    This routine display the counts vs pixel of the diffraction banks
+;    integrated over TOF
 ;
 ; :Params:
 ;    event
@@ -51,15 +52,103 @@ pro plot_diffraction_counts_vs_pixel, event
   banks_9_10 = (*(*global).diff_raw_data)    ; Array[128*9, nbr TOF]
   sz = size(banks_9_10,/dim)
   nbr_pixels = sz[0]
-  pixel_range = indgen(nbr_pixels) + 8192
+  pixel_range = indgen(nbr_pixels) + 8192*2
   
   _data = total(banks_9_10, 2)
-
+  
   mp_plot = plot(pixel_range, _data, $
-  title = 'Counts vs pixels of Diffranction banks integrated over all TOF', $
-  xtitle = 'Pixels IDs',$
-  ytitle = 'Counts',$
-  "r4D-") 
+    title = 'Counts vs pixels of Diffranction banks integrated over all TOF', $
+    xtitle = 'Pixels ID',$
+    ytitle = 'Counts',$
+    "r4D-")
+    
+end
+
+;+
+; :Description:
+;    Display counts vs Q of the diffraction banks
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro plot_diffraction_counts_vs_q, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  full_nexus = (*global).NexusFullName
+  fileID  = h5f_open(full_nexus)
+  
+  nbr_diff_banks = 9
+  list_banks = strcompress(indgen(nbr_diff_banks) + 5, /remove_all)
+  path1 = '/entry-diff/instrument/bank'
+  path_distance = path1 + list_banks + '/distance/'
+  path_polar = path1 + list_banks + '/polar_angle/'
+  
+  diff_bank_distance = !null
+  diff_polar_angle = !null
+  for i=0, (nbr_diff_banks-1) do begin
+  
+    fieldID = h5d_open(fileID, path_distance[i])
+    _bank = reform(h5d_read(fieldID))
+    diff_bank_distance = [diff_bank_distance, _bank]
+    h5d_close, fieldID
+    
+    fieldID = h5d_open(fileID, path_polar[i])
+    _polar = reform(h5d_read(fieldID))
+    diff_polar_angle = [diff_polar_angle, _polar]
+    h5d_close, fieldID
+    
+  endfor
+  
+  ;  ;display distance vs pixelid
+  ;  pixel_range = indgen(128*9) + 8192*2
+  ;  md_plot = plot(pixel_range, $
+  ;    diff_bank_distance, $
+  ;    title = 'Distance Sample/Detector',$
+  ;    xtitle = 'Pixels ID',$
+  ;    ytitle = 'Distance (m)',$
+  ;    "r4D-")
+  
+  ;  ;display distance vs pixelid
+  ;  pixel_range = indgen(128*9) + 8192*2
+  ;  md_plot = plot(pixel_range, $
+  ;    diff_polar_angle, $
+  ;    title = 'Polar angle vs pixels ID',$
+  ;    xtitle = 'Pixels ID',$
+  ;    ytitle = 'Polar angle (rad)',$
+  ;    "r4D-")
+  
+  ;retrieve distance sample/moderator
+  fieldID = h5d_open(fileID, '/entry-diff/instrument/moderator/distance')
+  distance = abs(h5d_read(fieldID))   ;m
+  h5d_close, fieldID
+  
+  ;retrieve tof scale
+  fieldID = h5d_open(fileID, '/entry-diff/instrument/bank5/time_of_flight')
+  tof_array = h5d_read(fieldID)
+  h5d_close, fieldID
+  
+  h5f_close, fileID ;close file handler
+  
+  ;retrieve constants
+  mn = (*global).mn
+  h = (*global).h
+  
+  ;retrieve raw data
+  banks_9_10 = (*(*global).diff_raw_data)    ; Array[128*9, nbr TOF]
+  
+  sz = size(banks_9_10,/dim)
+  nbr_pixel = sz[0]
+  nbr_tof = sz[1]
+  
+  diff_Q = fltarr(nbr_pixel, nbr_tof)
+  
+  
   
   
   
