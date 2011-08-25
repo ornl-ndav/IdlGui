@@ -118,13 +118,13 @@ PRO MAIN_BASE_event, Event
         PlotExcludedPixels, Event
       endif
     end
-    
-    
+
     ;when changing counts vs tof tab
     Widget_Info(wWidget, FIND_BY_UNAME='counts_vs_tof_tab'): begin
       BSSreduction_CountsVsTofTab, Event
     end
-    
+
+    ;LOADING NeXus file ========================================
     ;cw_field run number
     Widget_Info(wWidget, FIND_BY_UNAME='nexus_run_number'): begin
       bss_reduction_LoadNexus, Event
@@ -147,6 +147,9 @@ PRO MAIN_BASE_event, Event
       BSSreduction_Reduce_rsdf_run_number_cw_field, Event
       BSSreduction_CommandLineGenerator, Event
     end
+    
+    ;===================================================================
+    
     
     ;LIVE DATA STREAMING button
     Widget_Info(wWidget, FIND_BY_UNAME='live_data_streaming_button'): begin
