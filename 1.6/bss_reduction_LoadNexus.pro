@@ -49,12 +49,13 @@ PRO retrieveBanksData, Event, FullNexusName
   ;get bank1 data
   fieldID = h5d_open(fileID,(*global).nexus_bank1_path)
   bank1 = h5d_read(fieldID)
+  h5d_close, fieldID
   
-;  sz = size(bank1,/dim)
-;  Nx = sz[2]
-;  Ny = sz[1]
-;  (*global).Nx = Nx
-;  (*global).Ny = Ny
+  ;  sz = size(bank1,/dim)
+  ;  Nx = sz[2]
+  ;  Ny = sz[1]
+  ;  (*global).Nx = Nx
+  ;  (*global).Ny = Ny
   
   putValue, event, 'loading_progress_label', $
     'Loading in progress .... retrieving Bank2 !'
@@ -62,6 +63,7 @@ PRO retrieveBanksData, Event, FullNexusName
   ;get bank2 data
   fieldID = h5d_open(fileID,(*global).nexus_bank2_path)
   bank2 = h5d_read(fieldID)
+  h5d_close, fieldID
   
   (*(*global).bank1) = bank1
   (*(*global).bank2) = bank2
@@ -78,34 +80,68 @@ PRO retrieveBanksData, Event, FullNexusName
     catch,/cancel
     activate_button, event, 'banks_north_uname', 0
     activate_base, event, 'loading_progress_base_uname', 0
-    return
-  endif
+  endif else begin
   
-  putValue, event, 'loading_progress_label', $
-    'Loading in progress .... retrieving Bank3 !'
+    putValue, event, 'loading_progress_label', $
+      'Loading in progress .... retrieving Bank3 !'
+      
+    fieldID = h5d_open(fileID,(*global).nexus_bank3_path)
+    bank3 = h5d_read(fieldID)
+    h5d_close, fieldID
     
-  fieldID = h5d_open(fileID,(*global).nexus_bank3_path)
-  bank3 = h5d_read(fieldID)
-  
-  putValue, event, 'loading_progress_label', $
-    'Loading in progress .... retrieving Bank4 !'
+    putValue, event, 'loading_progress_label', $
+      'Loading in progress .... retrieving Bank4 !'
+      
+    fieldID = h5d_open(fileID,(*global).nexus_bank4_path)
+    bank4 = h5d_read(fieldID)
+    h5d_close, fieldID
     
-  fieldID = h5d_open(fileID,(*global).nexus_bank4_path)
-  bank4 = h5d_read(fieldID)
+    (*(*global).bank3) = bank3
+    (*(*global).bank4) = bank4
+    
+    _bank3 = total(bank3,1)
+    _bank4 = total(bank4,1)
+    
+    (*(*global).bank3_raw_value) = _bank3
+    (*(*global).bank4_raw_value) = _bank4
+    
+    activate_button, event, 'banks_north_uname', 1
+    
+  endelse
   
-  (*(*global).bank3) = bank3
-  (*(*global).bank4) = bank4
+  ;try to retrieve the diffraction bank
+  catch, error
+  if (error ne 0) then begin
+    catch,/cancel
+    activate_button, event, 'diff_bank_uname', 0
+    activate_base, event, 'loading_progress_base_uname', 0
+  endif else begin
   
-  _bank3 = total(bank3,1)
-  _bank4 = total(bank4,1)
+    nbr_diff_banks = 9
+    
+    list_banks = strcompress(indgen(nbr_diff_banks) + 5, /remove_all)
+    path1 = '/entry-diff/bank'
+    path = path1 +list_banks + '/data/'
+    
+    diff_bank_data = !null
+    for i=0, (nbr_diff_banks-1) do begin
+    
+      putValue, event, 'loading_progress_label', $
+        'Loading in progress .... retrieving diffraction Bank' + $
+        strcompress(i+5,/remove_all) + ' !'
+      fieldID = h5d_open(fileID, path[i])
+      _bank = transpose(h5d_read(fieldID))
+      diff_bank_data = [diff_bank_data, _bank]
+      
+    endfor
+    
+    (*(*global).diff_raw_data) = diff_bank_data
+    activate_button, event, 'diff_bank_uname', 1
+    
+  endelse
   
-  (*(*global).bank3_raw_value) = _bank3
-  (*(*global).bank4_raw_value) = _bank4
-  
-  h5d_close, fieldID
   h5f_close, fileID
   
-  activate_button, event, 'banks_north_uname', 1
   activate_base, event, 'loading_progress_base_uname', 0
   
 END
@@ -156,9 +192,15 @@ PRO bss_reduction_LoadNexus, Event, config
     
     IF (isNexusExist) THEN BEGIN
     
+      value_north = '  Banks North (3 and 4)'
+      value_south = '> Banks South (1 and 2)'
+      putValue, event, 'banks_north_uname', value_north
+      putValue, event, 'banks_south_uname', value_south
+      (*global).banks_displayed = 'south_1_2'
+      
       ;initialize pixeld_excluded
-      ;        (*(*global).pixel_excluded) = (*(*global).default_pixel_excluded)
-    
+      ;(*(*global).pixel_excluded) = (*(*global).default_pixel_excluded)
+      
       (*global).RunNumber = RunNumber
       
       putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING

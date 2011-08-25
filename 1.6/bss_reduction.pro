@@ -314,12 +314,14 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     bank3_raw_value: ptr_new(0L), $
     bank4_raw_value: ptr_new(0L), $
     
+    diff_raw_data: ptr_new(0L), $ ;diffraction banks5->13 [128*9, tof]
+    
     pixel_excluded: ptr_new(0L),$ ;list of pixel excluded for banks 1&2
     pixel_excluded_bank3_4: ptr_new(0L),$ ;list of pixel excluded for bank3&4
     
     pixel_excluded_base: ptr_new(0L),$
     pixel_excluded_base_bank3_4: ptr_new(0L), $
-
+    
     ;list of pixel excluded without counts removing
     default_pixel_excluded: ptr_new(0L),$
     default_pixel_excluded_bank3_4: ptr_new(0L),$
@@ -469,7 +471,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     YPAD         = 2)
     
   ;loading progress info box
-  xsize = 270
+  xsize = 350
   ysize = 50
   loading_info_base = widget_base(MAIN_BASE,$
     xoffset = MainBaseSize[2]/2 - xsize/2,$
@@ -483,6 +485,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
   label = widget_label(loading_info_base,$
     /align_center ,$
+    scr_xsize = xsize, $
     uname = 'loading_progress_label',$
     value = 'Loading in progress .... retrieving Bank1 !')
     
@@ -507,10 +510,14 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   bankN = widget_button(bank,$
     value = '  Banks North (3 and 4)',$
     uname = 'banks_north_uname')
-  bank9_13 = widget_button(bank, $
-  value = '  Banks Difraction (9 -> 13)',$
-  uname = 'banks_difraction_uname',$
-  /separator)
+  diff_bank = widget_button(bank,$
+    value = 'Plot Diffraction tubes',$
+    uname = 'diff_bank_uname',$
+    /separator, $
+    /menu)
+  counts_vs_pixel = widget_button(diff_bank, $
+    value = ' Counts vs pixel (integrated over TOF)',$
+    uname = 'diffraction_counts_vs_pixel_uname')
     
   ;lin/log main plot
   plot = widget_button(bar,$

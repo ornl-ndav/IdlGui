@@ -97,6 +97,9 @@ cd, CurrentFolder
 .run create_list_of_jobs.pro
 .run preview_command_line.pro
 
+;diffraction tubes
+.run read_plot_diffraction_banks.pro
+
 ;classes
 .run IDLoutputFile__define.pro
 .run IDLgetMetadata__define.pro

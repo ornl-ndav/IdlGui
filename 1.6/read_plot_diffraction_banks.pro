@@ -32,46 +32,35 @@
 ;
 ;==============================================================================
 
-PRO BSSreduction_Cleanup, Main_Base
+;+
+; :Description:
+;    This routine is the entry point of plotting the difraction banks
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro plot_diffraction_counts_vs_pixel, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  banks_9_10 = (*(*global).diff_raw_data)    ; Array[128*9, nbr TOF]
+  sz = size(banks_9_10,/dim)
+  nbr_pixels = sz[0]
+  pixel_range = indgen(nbr_pixels) + 8192
+  
+  _data = total(banks_9_10, 2)
 
-  Widget_Control, Main_Base, get_uvalue=global
+  mp_plot = plot(pixel_range, _data, $
+  title = 'Counts vs pixels of Diffranction banks integrated over all TOF', $
+  xtitle = 'Pixels IDs',$
+  ytitle = 'Counts',$
+  "r4D-") 
   
-  ;cleanup temporary live folder
-  cmd = 'rm -rf ' + (*global).tmp_live_shared_folder
-  spawn, cmd, listening, err_listening
   
-  if (n_elements(global) EQ 0) then return
   
-  ; Free up the pointers
-  ptr_free, (*global).icon_ok
-  ptr_free, (*global).list_of_data_nexus
-  ptr_free, (*global).icon_failed
-  ptr_free, (*global).pMetadata
-  ptr_free, (*global).pMetadataValue
-  ptr_free, (*global).job_status_uname
-  ptr_free, (*global).leaf_uname_array
-  ptr_free, (*global).job_status_root_id
-  ptr_free, (*global).job_status_root_status
-  ptr_free, (*global).absolute_leaf_index
-  ptr_free, (*global).FullNameOutputPlots
-  ptr_free, (*global).WidgetsToActivate
-  ptr_free, (*global).full_counts_vs_tof_data
-  ptr_free, (*global).PreviewCountsVsTofAsciiArray
-  ptr_free, (*global).bank1
-  ptr_free, (*global).bank1_sum
-  ptr_free, (*global).bank2
-  ptr_free, (*global).bank2_sum
-  ptr_free, (*global).pixel_excluded
-  ptr_free, (*global).pixel_excluded_base
-  ptr_free, (*global).default_pixel_excluded
-  ptr_free, (*global).bank1_raw_value
-  ptr_free, (*global).bank2_raw_value
-  ptr_free, (*global).diff_raw_data
-  
-  ptr_free, global
-
-;Create Config File Name
-;BSSreduction_CreateConfigFile, global
-  
-END
-
+end
