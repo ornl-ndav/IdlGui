@@ -50,6 +50,12 @@ PRO retrieveBanksData, Event, FullNexusName
   fieldID = h5d_open(fileID,(*global).nexus_bank1_path)
   bank1 = h5d_read(fieldID)
   
+;  sz = size(bank1,/dim)
+;  Nx = sz[2]
+;  Ny = sz[1]
+;  (*global).Nx = Nx
+;  (*global).Ny = Ny
+  
   putValue, event, 'loading_progress_label', $
     'Loading in progress .... retrieving Bank2 !'
     

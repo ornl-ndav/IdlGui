@@ -514,7 +514,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
   ;lin/log main plot
   plot = widget_button(bar,$
-    value = 'Plot',$
+    value = 'Scale',$
     /menu)
   lin = widget_button(plot,$
     uname = 'linear_main_plot',$
