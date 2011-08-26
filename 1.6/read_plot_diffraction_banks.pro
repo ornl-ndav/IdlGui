@@ -114,14 +114,14 @@ pro plot_diffraction_counts_vs_q, event
   ;    ytitle = 'Distance (m)',$
   ;    "r4D-")
   
-  ;display distance vs pixelid
-  pixel_range = indgen(128*9) + 8192*2
-  md_plot = plot(pixel_range, $
-    diff_polar_angle, $
-    title = 'Polar angle vs pixels ID',$
-    xtitle = 'Pixels ID',$
-    ytitle = 'Polar angle (rad)',$
-    "r4D-")
+;  ;display distance vs pixelid
+;  pixel_range = indgen(128*9) + 8192*2
+;  md_plot = plot(pixel_range, $
+;    diff_polar_angle, $
+;    title = 'Polar angle vs pixels ID',$
+;    xtitle = 'Pixels ID',$
+;    ytitle = 'Polar angle (rad)',$
+;    "r4D-")
     
   ;retrieve distance sample/moderator
   fieldID = h5d_open(fileID, '/entry-diff/instrument/moderator/distance')
@@ -209,10 +209,13 @@ pro plot_diffraction_counts_vs_q, event
   ;  print, 'Qmax: ' , Qmax
   ;  print, '***************'
   
-  q_range_base, Event=event
-
- return
-
+  q_range_base, Event=event, $
+    tof_min=tof_min, $
+    tof_max=tof_max, $
+    q_min=Qmin, $
+    q_max=Qmax
+    
+  return
   
   
   
@@ -224,7 +227,8 @@ pro plot_diffraction_counts_vs_q, event
   
   
   
-
+  
+  
   
   diff_Q = fltarr(long(nbr_pixel) * long(nbr_tof))   ;Array[nbr_pixel * nbr_tof]
   diff_counts = fltarr(long(nbr_pixel) * long(nbr_tof))
