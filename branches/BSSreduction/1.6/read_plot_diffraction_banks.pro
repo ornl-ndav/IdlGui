@@ -114,18 +114,18 @@ pro plot_diffraction_counts_vs_q, event
   ;    ytitle = 'Distance (m)',$
   ;    "r4D-")
   
-  ;  ;display distance vs pixelid
-  ;  pixel_range = indgen(128*9) + 8192*2
-  ;  md_plot = plot(pixel_range, $
-  ;    diff_polar_angle, $
-  ;    title = 'Polar angle vs pixels ID',$
-  ;    xtitle = 'Pixels ID',$
-  ;    ytitle = 'Polar angle (rad)',$
-  ;    "r4D-")
-  
+  ;display distance vs pixelid
+  pixel_range = indgen(128*9) + 8192*2
+  md_plot = plot(pixel_range, $
+    diff_polar_angle, $
+    title = 'Polar angle vs pixels ID',$
+    xtitle = 'Pixels ID',$
+    ytitle = 'Polar angle (rad)',$
+    "r4D-")
+    
   ;retrieve distance sample/moderator
   fieldID = h5d_open(fileID, '/entry-diff/instrument/moderator/distance')
-  distance = abs(h5d_read(fieldID))   ;m
+  distance = float(abs(h5d_read(fieldID)))   ;m
   h5d_close, fieldID
   
   ;retrieve tof scale
@@ -138,6 +138,8 @@ pro plot_diffraction_counts_vs_q, event
   ;retrieve constants
   mn = (*global).mn
   h = (*global).h
+  h_over_mn = float(h) / float(mn)
+  four_pi = 4. * !PI
   
   ;retrieve raw data
   banks_9_10 = (*(*global).diff_raw_data)    ; Array[128*9, nbr TOF]
@@ -146,10 +148,108 @@ pro plot_diffraction_counts_vs_q, event
   nbr_pixel = sz[0]
   nbr_tof = sz[1]
   
-  diff_Q = fltarr(nbr_pixel, nbr_tof)
+  ;Determine the true range of TOF to use
+  banks_9_10_integrated_over_pixels = total(banks_9_10, 1)
+  
+  index_non_zero = where(banks_9_10_integrated_over_pixels ne 0)
+  tof_min = tof_array[index_non_zero[0]]*1.e-6 ;s
+  tof_max = tof_array[index_non_zero[-1]]*1.e-6  ;s
+  
+  ;  print, 'tof_min: ' , tof_min
+  ;  print, 'tof_max: ' , tof_max
+  
+  ;calculate the min and max Q and then bring to life a widget_base that
+  ;ask the user for a Q width or number of bins (linear and log)
+  Qmin = 10
+  ;    print, 'Calculation of Qmin'
+  _tof = tof_max
+  ;    print, '-> _tof_max[s]: ' , _tof
+  for px_index=0,1151 do begin
+  
+    _pixel_distance = float(diff_bank_distance[px_index])
+    _d = distance + _pixel_distance
+    _polar_angle = float(diff_polar_angle[px_index])
+    ;print, '--> _polar_angle[rad]: ' , _polar_angle
+    
+    _d_over_tof = _d / _tof
+    _lambda = (h_over_mn / _d_over_tof) * 1e10
+    
+    ;print, '--> _d_over_tof: ' , _d_over_tof
+    ;print, '--> _lambda: ' , _lambda
+    ;print, '--> sin(_polar_angle/2.): ', sin(_polar_angle/2.)
+    
+    Q = (four_pi / _lambda) * sin(_polar_angle/2.)
+    
+    ;print, '---> Q: ' , Q
+    
+    Qmin = (Q lt Qmin) ? Q : Qmin
+    
+  endfor
+  ;  print, '***************'
+  ;  print, 'Qmin: ' , Qmin
+  ;  print, '***************'
+  
+  Qmax = 0
+  _tof = tof_min
+  for px_index=0,1151 do begin
+  
+    _pixel_distance = float(diff_bank_distance[px_index])
+    _polar_angle = float(diff_polar_angle[px_index])
+    
+    _d = distance + _pixel_distance
+    _d_over_tof = _d / _tof
+    _lambda = (h_over_mn / _d_over_tof) * 1e10
+    
+    Q = (four_pi / _lambda) * sin(_polar_angle/2.)
+    
+    Qmax = (Q gt Qmax) ? Q : Qmax
+    
+  endfor
+  ;  print, '***************'
+  ;  print, 'Qmax: ' , Qmax
+  ;  print, '***************'
+  
+  q_range_base, Event=event
+
+ return
+
   
   
   
+  
+  
+  
+  
+  
+  
+  
+  
+
+  
+  diff_Q = fltarr(long(nbr_pixel) * long(nbr_tof))   ;Array[nbr_pixel * nbr_tof]
+  diff_counts = fltarr(long(nbr_pixel) * long(nbr_tof))
+  
+  for tof_index=0,(nbr_tof-1) do begin
+    _tof = float(tof_array[tof_index])
+    for px_index=0,(nbr_pixel-1) do begin
+    
+      _pixel_distance = float(diff_bank_distance[px_index])
+      _polar_angle = float(diff_polar_angle[px_index])
+      
+      _d = distance + _pixel_distance
+      _d_over_tof = _d / _tof
+      _lambda = h_over_mn / _d_over_tof
+      
+      Q = (four_pi / _lambda) * sin(_polar_angle/2.)
+      
+      diff_Q[long(tof_index) * long(nbr_tof + px_index)] = Q
+      diff_counts[tof_index * nbr_tof + px_index] = banks_9_10[px_index, tof_index]
+      
+    endfor
+  endfor
+  
+  help, diff_Q
+  help, diff_counts
   
   
 end

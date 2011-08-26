@@ -99,6 +99,7 @@ cd, CurrentFolder
 
 ;diffraction tubes
 .run read_plot_diffraction_banks.pro
+.run q_range_base.pro
 
 ;classes
 .run IDLoutputFile__define.pro
