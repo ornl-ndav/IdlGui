@@ -41,86 +41,120 @@ pro q_range_base_event, Event
   
   case Event.id of
   
-;    ;cancel button
-;    widget_info(event.top, $
-;      find_by_uname='email_configuration_base_cancel_button'): begin
-;      (*global_settings).save_setup = 1b
-;      id = widget_info(Event.top, $
-;        find_by_uname='email_configure_widget_base')
-;      widget_control, id, /destroy
-;    end
-;    
-;    ;email2 widget_text
-;    widget_info(event.top, $
-;    find_by_uname='email2'): begin
-;
-;      (*global_settings).save_setup = 1b
-;      
-;      ;check that email match
-;      check_email_match, event=event, result=result
-;      if (result eq 'Yes') then begin
-;        (*global_settings).save_setup = 0b
-;        return
-;      endif
-;      if (result eq 'OK') then begin
-;        (*global_settings).save_setup = 0b
-;        return
-;      endif
-;      if (result eq 'No') then begin
-;        ;turn off the email output in main base
-;        turn_off_email_output, event
-;        
-;        id = widget_info(Event.top, $
-;          find_by_uname='email_configure_widget_base')
-;        widget_control, id, /destroy
-;      endif
-;      if (result eq '') then begin
-;        save_status_of_email_configure_button, event
-;        id = widget_info(Event.top, $
-;          find_by_uname='email_configure_widget_base')
-;        widget_control, id, /destroy
-;      endif
-;    
-;    end
-;    
-;    ;close button
-;    widget_info(event.top, $
-;      find_by_uname='email_configure_base_close_button'): begin
-;      
-;      (*global_settings).save_setup = 1b
-;      
-;      ;check that email match
-;      check_email_match, event=event, result=result
-;      if (result eq 'Yes') then begin
-;        (*global_settings).save_setup = 0b
-;        return
-;      endif
-;      if (result eq 'OK') then begin
-;        (*global_settings).save_setup = 0b
-;        return
-;      endif
-;      if (result eq 'No') then begin
-;        ;turn off the email output in main base
-;        turn_off_email_output, event
-;        
-;        id = widget_info(Event.top, $
-;          find_by_uname='email_configure_widget_base')
-;        widget_control, id, /destroy
-;      endif
-;      if (result eq '') then begin
-;        save_status_of_email_configure_button, event
-;        id = widget_info(Event.top, $
-;          find_by_uname='email_configure_widget_base')
-;        widget_control, id, /destroy
-;      endif
-;      
-;    end
-;    
+    ;    ;cancel button
+    ;    widget_info(event.top, $
+    ;      find_by_uname='email_configuration_base_cancel_button'): begin
+    ;      (*global_settings).save_setup = 1b
+    ;      id = widget_info(Event.top, $
+    ;        find_by_uname='email_configure_widget_base')
+    ;      widget_control, id, /destroy
+    ;    end
+    ;
+    ;    ;email2 widget_text
+    ;    widget_info(event.top, $
+    ;    find_by_uname='email2'): begin
+    ;
+    ;      (*global_settings).save_setup = 1b
+    ;
+    ;      ;check that email match
+    ;      check_email_match, event=event, result=result
+    ;      if (result eq 'Yes') then begin
+    ;        (*global_settings).save_setup = 0b
+    ;        return
+    ;      endif
+    ;      if (result eq 'OK') then begin
+    ;        (*global_settings).save_setup = 0b
+    ;        return
+    ;      endif
+    ;      if (result eq 'No') then begin
+    ;        ;turn off the email output in main base
+    ;        turn_off_email_output, event
+    ;
+    ;        id = widget_info(Event.top, $
+    ;          find_by_uname='email_configure_widget_base')
+    ;        widget_control, id, /destroy
+    ;      endif
+    ;      if (result eq '') then begin
+    ;        save_status_of_email_configure_button, event
+    ;        id = widget_info(Event.top, $
+    ;          find_by_uname='email_configure_widget_base')
+    ;        widget_control, id, /destroy
+    ;      endif
+    ;
+    ;    end
+    ;
+    ;    ;close button
+    ;    widget_info(event.top, $
+    ;      find_by_uname='email_configure_base_close_button'): begin
+    ;
+    ;      (*global_settings).save_setup = 1b
+    ;
+    ;      ;check that email match
+    ;      check_email_match, event=event, result=result
+    ;      if (result eq 'Yes') then begin
+    ;        (*global_settings).save_setup = 0b
+    ;        return
+    ;      endif
+    ;      if (result eq 'OK') then begin
+    ;        (*global_settings).save_setup = 0b
+    ;        return
+    ;      endif
+    ;      if (result eq 'No') then begin
+    ;        ;turn off the email output in main base
+    ;        turn_off_email_output, event
+    ;
+    ;        id = widget_info(Event.top, $
+    ;          find_by_uname='email_configure_widget_base')
+    ;        widget_control, id, /destroy
+    ;      endif
+    ;      if (result eq '') then begin
+    ;        save_status_of_email_configure_button, event
+    ;        id = widget_info(Event.top, $
+    ;          find_by_uname='email_configure_widget_base')
+    ;        widget_control, id, /destroy
+    ;      endif
+    ;
+    ;    end
+    ;
     else:
     
   endcase
   
 end
+
+;+
+; :Description:
+;    Describe the procedure.
+;
+;
+;
+; :Keywords:
+;    q_width
+;    q_min
+;    q_max
+;    binning_type     'lin' or 'log'
+;
+; :Author: j35
+;-
+function calculate_nbr_bins, q_width=q_width, $
+    q_min = q_min, $
+    q_max = q_max, $
+    binning_type = binning_type
+  compile_opt idl2
+  
+  case (binning_type) of
+  'lin': begin
+  delta_q = float(q_max) - float(q_min)
+  nbr_bins = delta_q / float(q_width)
+  end
+  'log': begin
+  
+  end
+  endcase
+  
+  return, fix(nbr_bins[0])
+end
+
 
 ;+
 ; :Description:
@@ -283,21 +317,26 @@ pro email_settings_killed, id
 end
 
 ;------------------------------------------------------------------------------
-PRO q_range_base_gui, wBase, main_base_geometry, global
-
+PRO q_range_base_gui, wBase, main_base_geometry, global, $
+    tof_min=tof_min, $
+    tof_max=tof_max, $
+    q_min=q_min, $
+    q_max=q_max, $
+    nbr_bins=nbr_bins
+    
   main_base_xoffset = main_base_geometry.xoffset
   main_base_yoffset = main_base_geometry.yoffset
   main_base_xsize = main_base_geometry.xsize
   main_base_ysize = main_base_geometry.ysize
   
-;  xsize = 350
-;  ysize = 130
-;  
-;  xoffset = (main_base_xsize - xsize) / 2
-;  xoffset += main_base_xoffset
-;  
-;  yoffset = (main_base_ysize - ysize) / 2
-;  yoffset += main_base_yoffset
+  ;  xsize = 350
+  ;  ysize = 130
+  ;
+  xoffset = main_base_xsize/2
+  xoffset += main_base_xoffset
+  
+  yoffset = main_base_ysize/2
+  yoffset += main_base_yoffset
   
   ourGroup = WIDGET_BASE()
   
@@ -308,74 +347,143 @@ PRO q_range_base_gui, wBase, main_base_geometry, global
     SCR_YSIZE    = ysize,$
     SCR_XSIZE    = xsize,$
     MAP          = 1,$
-;    kill_notify  = 'email_settings_killed', $
+    ;    kill_notify  = 'email_settings_killed', $
     /BASE_ALIGN_CENTER,$
     /align_center,$
-;    /column,$
+    ;    /column,$
     GROUP_LEADER = ourGroup)
- 
-   main_base = widget_base(wBase,$
-   /column)
-  
-   row1 = widget_base(main_base,$
-  /row)
-   
-   col1 = widget_base(row1,$
-   /column)
-   
-   rowa = widget_base(col1,$
-   /row)
-   lambda_min=cw_field(rowa,$
-   value='',$
-   title='Lambda min (Angstroms)',$
-   /row,$
-   /floating,$
-   xsize=10)
-   rowb = widget_base(col1,$
-   /row)
-   lambda_min=cw_field(rowb,$
-   value='',$
-   title='  Q min (Angstroms^-1)',$
-   /row,$
-   /floating,$
-   xsize=10)
-   
-   col2 = widget_base(row1,$
-   /column)
-   
-   rowa = widget_base(col2,$
-   /row)
-   lambda_min=cw_field(rowa,$
-   value='',$
-   title='Lambda max (Angstroms)',$
-   /row,$
-   /floating,$
-   xsize=10)
-   rowb = widget_base(col2,$
-   /row)
-   lambda_min=cw_field(rowb,$
-   value='',$
-   title='  Q max (Angstroms^-1)',$
-   /row,$
-   /floating,$
-   xsize=10)
-
-  rowc = widget_base(main_base,$
-  /row)
-  cancel = widget_button(rowc,$
-  value = 'CANCEL')
-  space = widget_label(rowc,$
-  value = '                       ')
-  plot = widget_button(rowc,$
-  value = 'PLOT Counts vs Q ...')
-  output = widget_button(rowc,$
-  value = 'OUTPUT Ascii file ...')
+    
+  title = widget_label(wBase,$
+    value = 'Rebin parameters',$
+    xoffset= 20,$
+    yoffset = 115)
+    
+  main_base = widget_base(wBase,$
+    /column)
+    
+  row1 = widget_base(main_base,$
+    /row)
+    
+  col1 = widget_base(row1,$
+    /column)
+    
+  rowa = widget_base(col1,$
+    /row)
+  lambda_min=cw_field(rowa,$
+    value=strcompress(tof_min,/remove_all),$
+    title='           TOF min (s)',$
+    uname = 'tof_min_value',$
+    /row,$
+    /floating,$
+    xsize=10)
+  rowb = widget_base(col1,$
+    /row)
+  lambda_min=cw_field(rowb,$
+    value=strcompress(q_min,/remove_all),$
+    title='  Q min (Angstroms^-1)',$
+    /row,$
+    /floating,$
+    xsize=10)
+    
+  space = widget_label(row1,$
+  value= '     ')  
+    
+  col2 = widget_base(row1,$
+    /column)
+    
+  rowa = widget_base(col2,$
+    /row)
+  lambda_min=cw_field(rowa,$
+    value=strcompress(tof_max,/remove_all),$
+    uname = 'tof_max_value',$
+    title='           TOF max (s)',$
+    /row,$
+    /floating,$
+    xsize=10)
+  rowb = widget_base(col2,$
+    /row)
+  lambda_min=cw_field(rowb,$
+    value=strcompress(q_max,/remove_all),$
+    title='  Q max (Angstroms^-1)',$
+    /row,$
+    /floating,$
+    xsize=10)
+    
+  space = widget_label(main_base,$
+    value =  ' ')
+    
+  col = widget_base(main_base,$
+    /column,$
+    frame=1)
+    
+  rowc = widget_base(col,$
+    /row)
+  rowc1 = widget_base(rowc,$
+    /nonexclusive)
+  but1 = widget_button(rowc1,$
+    value='Qwidth')
+  widget_control, but1, /set_button
+  txt = widget_text(rowc,$
+    value= '0.01',$
+    xsize = 10)
+  label = widget_label(rowc,$
+    value = 'Nbr bins:')
+  val = widget_label(rowc,$
+    value = strcompress(nbr_bins,/remove_all),$
+    /align_left,$
+    scr_xsize = 100,$
+    uname='nbr_bins_uname')
+    
+  space=widget_label(rowc,$
+    value='   ')
+    
+  rowc2 = widget_base(rowc,$
+    /nonexclusive)
+  but1 = widget_button(rowc2,$
+    value='Nbr bins')
+  txt = widget_text(rowc,$
+    value= '',$
+    xsize = 10,$
+    sensitive=0)
+  label = widget_label(rowc,$
+    value = 'Bins size',$
+    sensitive=0)
+  val = widget_label(rowc,$
+    value = 'N/A',$
+    /align_left, $
+    scr_xsize = 100,$
+    uname='bins_size_uname')
+    
+  rowc2 = widget_base(col,$
+    /row,$
+    /exclusive)
+  but1 = widget_button(rowc2,$
+    value = 'Linear binning')
+  widget_control, but1, /set_button
+  but2 = widget_button(rowc2,$
+    value = 'Log binning')
+    
+  rowd = widget_base(main_base,$
+    /row)
+  cancel = widget_button(rowd,$
+    value = 'CANCEL')
+  space = widget_label(rowd,$
+    value = '                                             ')
+  plot = widget_button(rowd,$
+    value = 'PLOT Counts vs Q ...')
+  output = widget_button(rowd,$
+    value = 'OUTPUT Ascii file ...')
     
 END
 
-;------------------------------------------------------------------------------
-PRO q_range_base, main_base=main_base, Event=event
 
+PRO q_range_base, main_base=main_base, Event=event, $
+    tof_min=tof_min, $
+    tof_max=tof_max, $
+    q_min=q_min, $
+    q_max=q_max
+  compile_opt idl2
+  
   IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
     id = WIDGET_INFO(main_base, FIND_BY_UNAME='MAIN_BASE')
     WIDGET_CONTROL,main_base,GET_UVALUE=global
@@ -386,10 +494,21 @@ PRO q_range_base, main_base=main_base, Event=event
   ENDELSE
   main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
   
+  default_q_width = 0.001
+  nbr_bins = calculate_nbr_bins(q_width=default_q_width, $
+    q_min = q_min, $
+    q_max = q_max, $
+    binning_type = 'lin')
+    
   ;build gui
   wBase1 = ''
   q_range_base_gui, wBase1, $
-    main_base_geometry, global
+    main_base_geometry, global, $
+    tof_min=tof_min, $
+    tof_max=tof_max, $
+    q_min=q_min, $
+    q_max=q_max, $
+    nbr_bins = nbr_bins
     
   WIDGET_CONTROL, wBase1, /REALIZE
   
