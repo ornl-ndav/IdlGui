@@ -51,10 +51,30 @@ pro q_range_base_event, Event
     
     ;tofmin and tofmax
     widget_info(event.top, find_by_uname='tof_min_value'): begin
-    evaluate_tof_min_value, event
+      evaluate_q_max_value, event
+      evaluate_nbr_bins, event
     end
     widget_info(event.top, find_by_uname='tof_max_value'): begin
-    evaluate_tof_max_value, event
+      evaluate_q_min_value, event
+      evaluate_nbr_bins, event
+    end
+    
+    ;Qmin and Qmax
+    widget_info(event.top, find_by_uname='q_min_value'): begin
+      evaluate_tof_max_value, event
+      evaluate_nbr_bins, event
+    end
+    widget_info(event.top, find_by_uname='q_max_value'): begin
+      evaluate_tof_min_value, event
+      evaluate_nbr_bins, event
+    end
+    
+    ;linear/log
+    widget_info(event.top, find_by_uname='q_range_linear'): begin
+      evaluate_nbr_bins, event
+    end
+    widget_info(event.top, find_by_uname='q_range_log'): begin
+      evaluate_nbr_bins, event
     end
     
     ;    ;email2 widget_text
@@ -156,10 +176,48 @@ function calculate_nbr_bins, q_width=q_width, $
     end
     'log': begin
     
+    
+    
+    
+    
     end
   endcase
   
   return, fix(nbr_bins[0])
+end
+
+;+
+; :Description:
+;    This will calculate the number of bins
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro evaluate_nbr_bins, event
+  compile_opt idl2
+  
+  q_min = getValue(event=event, uname='q_min_value')
+  q_max = getValue(event=event, uname='q_max_value')
+  q_width = getValue(event=event, uname='q_range_width')
+  
+  bLin = isButtonSet(event=event, uname='q_range_linear')
+  if (bLin) then begin
+    binning_type = 'lin'
+  endif else begin
+    binning_type = 'log'
+  endelse
+  
+  nbr_bins = calculate_nbr_bins(q_width=q_width, $
+  q_min=q_min, $
+  q_max=q_max, $
+  binning_type=binning_type)
+  
+  putValue, event, 'nbr_bins_uname', strcompress(nbr_bins,/remove_all)
+  
 end
 
 ;+
@@ -207,7 +265,91 @@ end
 
 ;+
 ; :Description:
-;    This will calculate the new Qmin using the TOFmin defined
+;    Will calculate the TOFmin and TOFmax using the give Qmin or Qmax
+;
+; :Keywords:
+;    event
+;    q
+;    bMin
+;
+; :Author: j35
+;-
+function calculate_tof, event=event, q=q, bMin=bMin
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_q_range
+  
+  tof_q_structure = (*global_q_range).tof_q_structure
+  h_over_mn = tof_q_structure.h_over_mn
+  
+  pixel_distance_s = tof_q_structure.pixel_distance
+  if (keyword_set(bMin)) then begin
+    _d = pixel_distance_s[0]
+  endif else begin
+    _d = pixel_distance_s[1]
+  endelse
+  
+  polar_angle_s = tof_q_structure.polar_angle
+  if (keyword_set(bMin)) then begin
+    polar_angle = polar_angle_s[0]
+  endif else begin
+    polar_angle = polar_angle_s[1]
+  endelse
+  
+  four_pi = 4. * !PI
+  
+  num = four_pi * sin(polar_angle/2.) * _d
+  tof = num / (h_over_mn * float(q))
+  
+  return, tof*(1.e-10)    ;to be in Angstroms
+  
+end
+
+;+
+; :Description:
+;    This will calculate the new Qmin using the TOFmax defined
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro evaluate_q_min_value, event
+  compile_opt idl2
+  
+  tof_max = getValue(id=event.id)
+  q_min = calculate_q(event=event, tof=tof_max, /bMin)
+  putValue, event, 'q_min_value', strcompress(q_min,/remove_all)
+  
+end
+
+
+;+
+; :Description:
+;    This will calculate the new Qmax using the TOFmin defined
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro evaluate_q_max_value, event
+  compile_opt idl2
+  
+  tof_min = getValue(id=event.id)
+  q_max = calculate_q(event=event, tof=tof_min)
+  putValue, event, 'q_max_value', strcompress(q_max,/remove_all)
+  
+end
+
+
+;+
+; :Description:
+;    This will calculate the new TOFmin using the Qmax defined
 ;
 ; :Params:
 ;    event
@@ -219,69 +361,26 @@ end
 pro evaluate_tof_min_value, event
   compile_opt idl2
   
-  tof_min = getValue(id=event.id)
-  q_min = calculate_q(event=event, tof=tof_min)
-  putValue, event, 'q_max_value', strcompress(q_min,/remove_all)
-  
-end
-
-
-;+
-; :Description:
-;    This will calculate the new Qmax using the TOFmax defined
-;
-; :Params:
-;    event
-;
-;
-;
-; :Author: j35
-;-
-pro evaluate_tof_max_value, event
-  compile_opt idl2
-  
-  tof_max = getValue(id=event.id)
-  q_max = calculate_q(event=event, tof=tof_max, /bMin)
-  putValue, event, 'q_min_value', strcompress(q_max,/remove_all)
-  
-end
-
-;+
-; :Description:
-;    Calculates the new TOFmin using this Qmin entry
-;
-; :Params:
-;    event
-;
-;
-;
-; :Author: j35
-;-
-pro q_min_value, event
-  compile_opt idl2
-  
-  q_min = getValue(id=event.id)
-  tof_min = calculate_tof(event=event, q=q_min, /bMin)
+  q_max = getValue(id=event.id)
+  tof_min = calculate_tof(event=event, q=q_max)
   putValue, event, 'tof_min_value', strcompress(tof_min,/remove_all)
   
 end
 
 ;+
 ; :Description:
-;    Calculates the new TOFmax using this Qmax entry
+;    Calculates the new TOFmax using this Qmin entry
 ;
 ; :Params:
 ;    event
 ;
-;
-;
 ; :Author: j35
 ;-
-pro q_max_value, event
+pro evaluate_tof_max_value, event
   compile_opt idl2
   
-  q_max = getValue(id=event.id)
-  tof_max = calculate_tof(event=event, q=q_max, /bMax)
+  q_min = getValue(id=event.id)
+  tof_max = calculate_tof(event=event, q=q_min, /bMin)
   putValue, event, 'tof_max_value', strcompress(tof_max,/remove_all)
   
 end
@@ -336,7 +435,8 @@ PRO q_range_base_gui, wBase, main_base_geometry, global, $
     tof_max=tof_max, $
     q_min=q_min, $
     q_max=q_max, $
-    nbr_bins=nbr_bins
+    nbr_bins=nbr_bins, $
+    default_q_width = default_q_width
     
   main_base_xoffset = main_base_geometry.xoffset
   main_base_yoffset = main_base_geometry.yoffset
@@ -403,7 +503,7 @@ PRO q_range_base_gui, wBase, main_base_geometry, global, $
     xsize=10)
     
   space = widget_label(row1,$
-    value= '     ')
+    value= '                ')
     
   col2 = widget_base(row1,$
     /column)
@@ -444,7 +544,8 @@ PRO q_range_base_gui, wBase, main_base_geometry, global, $
     value='Qwidth')
   widget_control, but1, /set_button
   txt = widget_text(rowc,$
-    value= '0.01',$
+    uname='q_range_width',$
+    value= strcompress(default_q_width,/remove_all),$
     xsize = 10)
   label = widget_label(rowc,$
     value = 'Nbr bins:')
@@ -462,6 +563,7 @@ PRO q_range_base_gui, wBase, main_base_geometry, global, $
   but1 = widget_button(rowc2,$
     value='Nbr bins')
   txt = widget_text(rowc,$
+    uname='q_range_nbr_bins',$
     value= '',$
     xsize = 10,$
     sensitive=0)
@@ -471,6 +573,7 @@ PRO q_range_base_gui, wBase, main_base_geometry, global, $
   val = widget_label(rowc,$
     value = 'N/A',$
     /align_left, $
+    sensitive=0,$
     scr_xsize = 100,$
     uname='bins_size_uname')
     
@@ -478,9 +581,13 @@ PRO q_range_base_gui, wBase, main_base_geometry, global, $
     /row,$
     /exclusive)
   but1 = widget_button(rowc2,$
+    uname = 'q_range_linear',$
+    /no_release,$
     value = 'Linear binning')
   widget_control, but1, /set_button
   but2 = widget_button(rowc2,$
+    uname = 'q_range_log', $
+    /no_release,$
     value = 'Log binning')
     
   rowd = widget_base(main_base,$
@@ -517,7 +624,7 @@ PRO q_range_base, main_base=main_base, Event=event, $
   ENDELSE
   main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
   
-  default_q_width = 0.001
+  default_q_width = float(0.001)
   nbr_bins = calculate_nbr_bins(q_width=default_q_width, $
     q_min = q_min, $
     q_max = q_max, $
@@ -531,7 +638,8 @@ PRO q_range_base, main_base=main_base, Event=event, $
     tof_max=tof_max, $
     q_min=q_min, $
     q_max=q_max, $
-    nbr_bins = nbr_bins
+    nbr_bins = nbr_bins, $
+    default_q_width = default_q_width
     
   WIDGET_CONTROL, wBase1, /REALIZE
   

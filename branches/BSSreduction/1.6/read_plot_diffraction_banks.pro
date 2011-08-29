@@ -161,6 +161,7 @@ pro plot_diffraction_counts_vs_q, event
   pixel_distance_min = 0L
   polar_angle_min = 0L
   ;    print, 'Calculation of Qmin'
+  ;_tof = tof_max
   _tof = tof_max
   ;    print, '-> _tof_max[s]: ' , _tof
   
@@ -198,6 +199,7 @@ pro plot_diffraction_counts_vs_q, event
   pixel_distance_max = 0L
   polar_angle_max = 0L
   
+  ;_tof = tof_min
   _tof = tof_min
   for px_index=0,1151 do begin
   
@@ -270,9 +272,5 @@ pro plot_diffraction_counts_vs_q, event
       
     endfor
   endfor
-  
-  help, diff_Q
-  help, diff_counts
-  
   
 end
