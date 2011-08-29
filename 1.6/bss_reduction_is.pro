@@ -87,6 +87,23 @@ FUNCTION isButtonSelected, Event, uname
   RETURN, value
 END
 
+;+
+; :Description:
+;    This will return the status of the button (set or not)
+;
+;
+;
+; :Keywords:
+;    event
+;    uname
+;
+; :Author: j35
+;-
+function isButtonSet, event=event, uname=uname
+id = widget_info(event.top, find_by_uname=uname)
+value = widget_info(id, /button_set)
+return, value
+end
 
 
 FUNCTION isButtonUnSelected, Event, uname
