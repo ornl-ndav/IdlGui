@@ -41,15 +41,22 @@ pro q_range_base_event, Event
   
   case Event.id of
   
-    ;    ;cancel button
-    ;    widget_info(event.top, $
-    ;      find_by_uname='email_configuration_base_cancel_button'): begin
-    ;      (*global_settings).save_setup = 1b
-    ;      id = widget_info(Event.top, $
-    ;        find_by_uname='email_configure_widget_base')
-    ;      widget_control, id, /destroy
-    ;    end
-    ;
+    ;cancel button
+    widget_info(event.top, $
+      find_by_uname='q_range_cancel_button_uname'): begin
+      id = widget_info(Event.top, $
+        find_by_uname='q_range_base_uname')
+      widget_control, id, /destroy
+    end
+    
+    ;tofmin and tofmax
+    widget_info(event.top, find_by_uname='tof_min_value'): begin
+    evaluate_tof_min_value, event
+    end
+    widget_info(event.top, find_by_uname='tof_max_value'): begin
+    evaluate_tof_max_value, event
+    end
+    
     ;    ;email2 widget_text
     ;    widget_info(event.top, $
     ;    find_by_uname='email2'): begin
@@ -143,178 +150,185 @@ function calculate_nbr_bins, q_width=q_width, $
   compile_opt idl2
   
   case (binning_type) of
-  'lin': begin
-  delta_q = float(q_max) - float(q_min)
-  nbr_bins = delta_q / float(q_width)
-  end
-  'log': begin
-  
-  end
+    'lin': begin
+      delta_q = float(q_max) - float(q_min)
+      nbr_bins = delta_q / float(q_width)
+    end
+    'log': begin
+    
+    end
   endcase
   
   return, fix(nbr_bins[0])
 end
 
-
 ;+
 ; :Description:
-;   This turns off the email output cw_bgroup and disable the Setup... button
+;    this will calculate the Qmin or Qmax using the given TOFmin or TOFmax
 ;
-; :Params:
-;    main_event
-;
-; :Author: j35
-;-
-pro turn_off_email_output, event
-  compile_opt idl2
-  
-  ;get global structure
-  widget_control,event.top,get_uvalue=global_settings
-  (*global_settings).turn_off_email_output = 1b
-  
-end
-
-;+
-; :Description:
-;   This checks that the email and the confirm email texts match, if not,
-;   a dialog message is displayed and ask the user to fix the issue or to
-;   simply exit the application without saving the emails
-;
-; :Params:
-;    event
-;    result
-;
-; :Author: j35
-;-
-pro check_email_match, event=event, base=base, result=result
-  compile_opt idl2
-  
-  result = ''
-  
-  email1 = getTextFieldvalue(event,'email1')
-  s_email1 = strcompress(email1,/remove_all)
-  if (s_email1 eq '') then begin
-    show_email_info_message, event=event, type='empty_email', result=result
-  endif
-  
-  email2 = getTextFieldValue(event,'email2')
-  s_email2 = strcompress(email2,/remove_all)
-  
-  if (not(strmatch(email1,email2))) then begin
-    show_email_info_message, event=event, type='no_match', result=result
-  endif
-  
-end
-
-;+
-; :Description:
-;   This pops up a dialog_message box that will inform the user that the
-;   email given is either empty or that they don't match and ask him to
-;   make a descision
-
 ; :Keywords:
 ;    event
-;    type
-;    result
+;    tof
+;    bMin
 ;
 ; :Author: j35
 ;-
-pro  show_email_info_message, event=event, type=type, result=result
+function calculate_q, event=event, tof=tof, bMin=bMin
   compile_opt idl2
   
-  case (type) of
-    'empty_email': begin
-      message_text = ['You did not define any email','',$
-        'Do you want to setup an email?']
-      title = ['No email defined!']
-      question_flag = 1
-      information_flag = 0
-    end
-    'no_match': begin
-      message_text = ['The two emails you define do not match!']
-      title = 'Emails define do not match!'
-      question_flag = 0
-      information_flag = 1
-    end
-  endcase
+  widget_control, event.top, get_uvalue=global_q_range
   
-  dialog_parent = widget_info(event.top, $
-    find_by_uname='email_configure_widget_base')
-    
-  result = dialog_message(message_text,$
-    information = information_flag,$
-    question = question_flag,$
-    title = title, $
-    /center,$
-    dialog_parent = dialog_parent)
-    
-end
-
-;+
-; :Description:
-;   This procedure save all the flags when leaving the settings base
-;   by using the 'SAVE and CLOSE' button.
-;
-; :Params:
-;    event
-;
-; :Author: j35
-;-
-pro save_status_of_email_configure_button, event
-  compile_opt idl2
+  tof_q_structure = (*global_q_range).tof_q_structure
+  h_over_mn = tof_q_structure.h_over_mn
   
-  ;get global structure
-  widget_control,event.top,get_uvalue=global_settings
-  global = (*global_settings).global
-  
-  email1 = getTextFieldvalue(event,'email1')
-  s_email1 = strcompress(email1,/remove_all)
-  (*global).email = s_email1
-  
-end
-
-;+
-; :Description:
-;   Reached when the settings base is killed
-;
-; :Params:
-;    event
-;
-; :Author: j35
-;-
-pro email_settings_killed, id
-  compile_opt idl2
-  
-  ;get global structure
-  widget_control,id,get_uvalue=global_settings
-  global = (*global_settings).global
-  main_event = (*global_settings).main_event
-  
-  if ((*global_settings).save_setup eq 0b) then begin
-    message_text = ['New setup (if any) has not been saved!']
-    title = 'Leaving without saving new setup!'
-    result = dialog_message(message_text,$
-      information = 1,$
-      title = title, $
-      /center,$
-      dialog_parent = id)
-    ActivateWidget, main_event, 'email_configure', 1
+  pixel_distance_s = tof_q_structure.pixel_distance
+  if (keyword_set(bMin)) then begin
+    _d = pixel_distance_s[0]
   endif else begin
-    if ((*global_settings).turn_off_email_output eq 1b) then begin
-      id1 = widget_info(main_event.top, find_by_uname='send_by_email_output')
-      widget_control, id1, set_value = 1
-      id2 = widget_info(main_event.top, find_by_uname='email_configure')
-      widget_control, id2, sensitive = 0
-    endif else begin
-      ActivateWidget, main_event, 'email_configure', 1
-    endelse
+    _d = pixel_distance_s[1]
   endelse
   
-  id = widget_info(id, $
-    find_by_uname='email_configure_widget_base')
-  widget_control, id, /destroy
+  polar_angle_s = tof_q_structure.polar_angle
+  if (keyword_set(bMin)) then begin
+    polar_angle = polar_angle_s[0]
+  endif else begin
+    polar_angle = polar_angle_s[1]
+  endelse
+  
+  four_pi = 4. * !PI
+  
+  _d_over_tof = float(_d) / float(tof)
+  _lambda = (h_over_mn / _d_over_tof)
+  Q = (four_pi / _lambda) * sin(polar_angle/2.)
+  
+  return, Q*1.e-10    ;to be in Angstroms
   
 end
+
+;+
+; :Description:
+;    This will calculate the new Qmin using the TOFmin defined
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro evaluate_tof_min_value, event
+  compile_opt idl2
+  
+  tof_min = getValue(id=event.id)
+  q_min = calculate_q(event=event, tof=tof_min)
+  putValue, event, 'q_max_value', strcompress(q_min,/remove_all)
+  
+end
+
+
+;+
+; :Description:
+;    This will calculate the new Qmax using the TOFmax defined
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro evaluate_tof_max_value, event
+  compile_opt idl2
+  
+  tof_max = getValue(id=event.id)
+  q_max = calculate_q(event=event, tof=tof_max, /bMin)
+  putValue, event, 'q_min_value', strcompress(q_max,/remove_all)
+  
+end
+
+;+
+; :Description:
+;    Calculates the new TOFmin using this Qmin entry
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro q_min_value, event
+  compile_opt idl2
+  
+  q_min = getValue(id=event.id)
+  tof_min = calculate_tof(event=event, q=q_min, /bMin)
+  putValue, event, 'tof_min_value', strcompress(tof_min,/remove_all)
+  
+end
+
+;+
+; :Description:
+;    Calculates the new TOFmax using this Qmax entry
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro q_max_value, event
+  compile_opt idl2
+  
+  q_max = getValue(id=event.id)
+  tof_max = calculate_tof(event=event, q=q_max, /bMax)
+  putValue, event, 'tof_max_value', strcompress(tof_max,/remove_all)
+  
+end
+
+;
+;;+
+;; :Description:
+;;   Reached when the settings base is killed
+;;
+;; :Params:
+;;    event
+;;
+;; :Author: j35
+;;-
+;pro email_settings_killed, id
+;  compile_opt idl2
+;
+;  ;get global structure
+;  widget_control,id,get_uvalue=global_settings
+;  global = (*global_settings).global
+;  main_event = (*global_settings).main_event
+;
+;  if ((*global_settings).save_setup eq 0b) then begin
+;    message_text = ['New setup (if any) has not been saved!']
+;    title = 'Leaving without saving new setup!'
+;    result = dialog_message(message_text,$
+;      information = 1,$
+;      title = title, $
+;      /center,$
+;      dialog_parent = id)
+;    ActivateWidget, main_event, 'email_configure', 1
+;  endif else begin
+;    if ((*global_settings).turn_off_email_output eq 1b) then begin
+;      id1 = widget_info(main_event.top, find_by_uname='send_by_email_output')
+;      widget_control, id1, set_value = 1
+;      id2 = widget_info(main_event.top, find_by_uname='email_configure')
+;      widget_control, id2, sensitive = 0
+;    endif else begin
+;      ActivateWidget, main_event, 'email_configure', 1
+;    endelse
+;  endelse
+;
+;  id = widget_info(id, $
+;    find_by_uname='email_configure_widget_base')
+;  widget_control, id, /destroy
+;
+;end
 
 ;------------------------------------------------------------------------------
 PRO q_range_base_gui, wBase, main_base_geometry, global, $
@@ -332,8 +346,8 @@ PRO q_range_base_gui, wBase, main_base_geometry, global, $
   ;  xsize = 350
   ;  ysize = 130
   ;
-  xoffset = main_base_xsize/2
-  xoffset += main_base_xoffset
+  xoffset = main_base_xsize/2 - 250
+  xoffset += main_base_xoffset - 100
   
   yoffset = main_base_ysize/2
   yoffset += main_base_yoffset
@@ -374,6 +388,7 @@ PRO q_range_base_gui, wBase, main_base_geometry, global, $
     title='           TOF min (s)',$
     uname = 'tof_min_value',$
     /row,$
+    /return_events, $
     /floating,$
     xsize=10)
   rowb = widget_base(col1,$
@@ -381,12 +396,14 @@ PRO q_range_base_gui, wBase, main_base_geometry, global, $
   lambda_min=cw_field(rowb,$
     value=strcompress(q_min,/remove_all),$
     title='  Q min (Angstroms^-1)',$
+    uname = 'q_min_value', $
+    /return_events, $
     /row,$
     /floating,$
     xsize=10)
     
   space = widget_label(row1,$
-  value= '     ')  
+    value= '     ')
     
   col2 = widget_base(row1,$
     /column)
@@ -397,6 +414,7 @@ PRO q_range_base_gui, wBase, main_base_geometry, global, $
     value=strcompress(tof_max,/remove_all),$
     uname = 'tof_max_value',$
     title='           TOF max (s)',$
+    /return_events, $
     /row,$
     /floating,$
     xsize=10)
@@ -405,6 +423,8 @@ PRO q_range_base_gui, wBase, main_base_geometry, global, $
   lambda_min=cw_field(rowb,$
     value=strcompress(q_max,/remove_all),$
     title='  Q max (Angstroms^-1)',$
+    uname = 'q_max_value', $
+    /return_events, $
     /row,$
     /floating,$
     xsize=10)
@@ -466,6 +486,7 @@ PRO q_range_base_gui, wBase, main_base_geometry, global, $
   rowd = widget_base(main_base,$
     /row)
   cancel = widget_button(rowd,$
+    uname = 'q_range_cancel_button_uname',$
     value = 'CANCEL')
   space = widget_label(rowd,$
     value = '                                             ')
@@ -481,7 +502,9 @@ PRO q_range_base, main_base=main_base, Event=event, $
     tof_min=tof_min, $
     tof_max=tof_max, $
     q_min=q_min, $
-    q_max=q_max
+    q_max=q_max, $
+    tof_q_structure=tof_q_structure
+    
   compile_opt idl2
   
   IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
@@ -514,6 +537,7 @@ PRO q_range_base, main_base=main_base, Event=event, $
   
   global_q_range = PTR_NEW({ wbase: wbase1,$
     global: global, $
+    tof_q_structure: tof_q_structure, $
     main_event: Event})
     
   WIDGET_CONTROL, wBase1, SET_UVALUE = global_q_range

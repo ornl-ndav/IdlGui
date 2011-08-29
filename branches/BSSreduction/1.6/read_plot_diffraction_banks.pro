@@ -114,15 +114,15 @@ pro plot_diffraction_counts_vs_q, event
   ;    ytitle = 'Distance (m)',$
   ;    "r4D-")
   
-;  ;display distance vs pixelid
-;  pixel_range = indgen(128*9) + 8192*2
-;  md_plot = plot(pixel_range, $
-;    diff_polar_angle, $
-;    title = 'Polar angle vs pixels ID',$
-;    xtitle = 'Pixels ID',$
-;    ytitle = 'Polar angle (rad)',$
-;    "r4D-")
-    
+  ;  ;display distance vs pixelid
+  ;  pixel_range = indgen(128*9) + 8192*2
+  ;  md_plot = plot(pixel_range, $
+  ;    diff_polar_angle, $
+  ;    title = 'Polar angle vs pixels ID',$
+  ;    xtitle = 'Pixels ID',$
+  ;    ytitle = 'Polar angle (rad)',$
+  ;    "r4D-")
+  
   ;retrieve distance sample/moderator
   fieldID = h5d_open(fileID, '/entry-diff/instrument/moderator/distance')
   distance = float(abs(h5d_read(fieldID)))   ;m
@@ -155,15 +155,15 @@ pro plot_diffraction_counts_vs_q, event
   tof_min = tof_array[index_non_zero[0]]*1.e-6 ;s
   tof_max = tof_array[index_non_zero[-1]]*1.e-6  ;s
   
-  ;  print, 'tof_min: ' , tof_min
-  ;  print, 'tof_max: ' , tof_max
-  
   ;calculate the min and max Q and then bring to life a widget_base that
   ;ask the user for a Q width or number of bins (linear and log)
   Qmin = 10
+  pixel_distance_min = 0L
+  polar_angle_min = 0L
   ;    print, 'Calculation of Qmin'
   _tof = tof_max
   ;    print, '-> _tof_max[s]: ' , _tof
+  
   for px_index=0,1151 do begin
   
     _pixel_distance = float(diff_bank_distance[px_index])
@@ -182,14 +182,22 @@ pro plot_diffraction_counts_vs_q, event
     
     ;print, '---> Q: ' , Q
     
-    Qmin = (Q lt Qmin) ? Q : Qmin
+    if (Q lt Qmin) then begin
+      Qmin = Q
+      distance_min = _d
+      polar_angle_min = _polar_angle
+    endif
     
   endfor
+  
   ;  print, '***************'
   ;  print, 'Qmin: ' , Qmin
   ;  print, '***************'
   
   Qmax = 0
+  pixel_distance_max = 0L
+  polar_angle_max = 0L
+  
   _tof = tof_min
   for px_index=0,1151 do begin
   
@@ -202,18 +210,29 @@ pro plot_diffraction_counts_vs_q, event
     
     Q = (four_pi / _lambda) * sin(_polar_angle/2.)
     
-    Qmax = (Q gt Qmax) ? Q : Qmax
+    if (Q gt Qmax) then begin
+      Qmax = Q
+      distance_max = _d
+      polar_angle_max = _polar_angle
+    endif
     
   endfor
   ;  print, '***************'
   ;  print, 'Qmax: ' , Qmax
   ;  print, '***************'
   
-  q_range_base, Event=event, $
+  ;create structure that will gather all the parameters used to evaluate
+  ; Q vs TOF in the q_range_base
+  tof_q_structure = { h_over_mn: h_over_mn, $
+    pixel_distance: [distance_min, distance_max], $
+    polar_angle: [polar_angle_min, polar_angle_max] }
+    
+    q_range_base, Event=event, $
     tof_min=tof_min, $
     tof_max=tof_max, $
     q_min=Qmin, $
-    q_max=Qmax
+    q_max=Qmax, $
+    tof_q_structure=tof_q_structure
     
   return
   
