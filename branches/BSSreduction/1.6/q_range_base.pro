@@ -135,9 +135,210 @@ pro q_range_base_event, Event
       
     end
     
+    ;PLOT counts vs Q
+    widget_info(event.top, find_by_uname='q_range_plot_counts_vs_q'): begin
+      plot_counts_vs_q, event=event
+    end
+    ;PLOT log(counts) vs Q
+    widget_info(event.top, find_by_uname='q_range_plot_log_counts_vs_q'): begin
+      plot_counts_vs_q, event=event, /log
+    end
+    
+    
+    
     else:
     
   endcase
+  
+end
+
+;+
+; :Description:
+;    This function will create the Q axis
+;
+;
+;
+; :Keywords:
+;    from_q
+;    to_q
+;    binning
+;    type
+;
+; :Author: j35
+;-
+function create_q_axis, from_q=from_q, $
+    to_q=to_q, $
+    binning=binning, $
+    type=type
+  compile_opt idl2
+  
+  Q = [from_q]
+  q1 = from_q
+  while (q1 lt to_q) do begin
+    case (type) of
+      'lin': q1 += binning
+      'log': q1 *= (1.+binning)
+    endcase
+    Q = [Q, q1]
+  endwhile
+  
+  return, Q
+end
+
+;+
+; :Description:
+;    This will calculate the Q value for each entry given
+;
+;
+;
+; :Keywords:
+;    event
+;    tof
+;    dSD
+;    angle
+;
+; :Author: j35
+;-
+function determine_Q, event=event, $
+    tof=tof, $
+    distance = distance, $
+    angle = angle, $
+    h_over_mn = h_over_mn
+  compile_opt idl2
+  
+  four_pi = 4. * !PI
+  
+  tof = tof * 1.e-6
+  
+  _d_over_tof = float(distance) / float(tof)
+  _lambda = (h_over_mn) / _d_over_tof
+  Q = (four_pi / _lambda) * sin(angle/2.)
+  
+  ;  print, 'float(distance): ' , float(distance)
+  ;  print, 'float(tof): ', float(tof)
+  ;  print, '_d_over_tof: ' , _d_over_tof
+  ;  print, 'angle: ', angle
+  ;  print, 'Q: ' , Q
+  
+  return, Q*1.e-10
+end
+
+;+
+; :Description:
+;    This is going to retrieve the parameters, will create the array
+;    by rebinning the data and plot them
+;
+; :Keywords:
+;    event
+;    log
+;
+; :Author: j35
+;-
+pro plot_counts_vs_q, event=event, log=log
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_q_range
+  global = (*global_q_range).global
+  
+  bLin = isButtonSet(event=event, uname='q_range_linear')
+  if (bLin) then begin
+    binning_type = 'lin'
+  endif else begin
+    binning_type = 'log'
+  endelse
+  
+  q_min = getValue(event=event, uname='q_min_value')
+  q_max = getValue(event=event, uname='q_max_value')
+  
+  bQwidth = isButtonSet(event=event, uname='q_range_q_width_button')
+  if (bQwidth) then begin ;user fixed Qwidth
+    qWidth = getValue(event=event, uname='q_range_width')
+  endif else begin ;user Nbr bins
+    qWidth = getValue(event=event, uname='bins_size_uname')
+  endelse
+  
+  ;create q axis
+  qAxis = create_q_axis(from_q=q_min, $
+    to_q=q_max, $
+    binning=qWidth, $
+    type=binning_type)
+    
+  ;we only gonna calculate of the Q in the range of TOF specify, so first
+  ;we need to find the start and end indexes of this range
+  diff_tof_array = (*(*global).diff_tof_array) ;microS
+  
+  tof_min = getValue(event=event, uname='tof_min_value')
+  tof_max = getValue(event=event, uname='tof_max_value')
+  
+  tof_min_microS = tof_min * 1.e6
+  tof_max_microS = tof_max * 1.e6
+  
+  index_min = where(tof_min_microS le diff_tof_array)
+  tof_min_index = index_min[0]
+  
+  index_max = where(diff_tof_array ge tof_max_microS)
+  tof_max_index = index_max[0]
+  
+  banks_9_10 = (*(*global).diff_raw_data)  ;[nbr pixels, full range TOF]
+  
+  _banks_9_10 = banks_9_10[*,tof_min_index:tof_max_index] ;[nbr px, small range TOF]
+  _diff_tof_array = diff_tof_array[tof_min_index:tof_max_index]
+  
+  sz_qAxis = size(qAxis,/dim)
+  Qarray = intarr(sz_qAxis[0])
+  
+  sz_diff_raw_data = size(_banks_9_10,/dim)
+  nbr_pixels = sz_diff_raw_data[0]
+  
+  sz_tof = size(_diff_tof_array)
+  nbr_tof = sz_tof[0]
+  
+  diff_bank_distance = (*(*global).diff_bank_distance)
+  diff_polar_angle = (*(*global).diff_polar_angle)
+  
+  tof_q_structure = (*global_q_range).tof_q_structure
+  h_over_mn = tof_q_structure.h_over_mn
+  
+  dSM = abs((*global).diff_distance_SM)
+  
+  for px_index=0, nbr_pixels-1 do begin
+  
+    for _tof_index =0, nbr_tof-1 do begin
+    
+      _tof = _diff_tof_array[_tof_index] ;microS
+      _distance_px_sample = abs(diff_bank_distance[px_index])
+      _distance = _distance_px_sample + dSM
+      _polar_angle = diff_polar_angle[px_index]
+      
+      Q = determine_Q(event=event,$
+        tof=_tof, $
+        distance = _distance, $
+        angle = _polar_angle, $
+        h_over_mn = h_over_mn)
+        
+      _where_is_Q_index = where(Q le qAxis, nbr)
+      if (nbr ne 0) then begin
+        _where_is_Q = _where_is_Q_index[0]
+        Qarray[_where_is_Q] += 1
+      endif
+      
+    endfor
+    
+  endfor
+  
+  if (keyword_set(log)) then begin
+    mp_plot = plot(qAxis, Qarray, $
+      title = 'Counts vs Q', $
+      xtitle = 'Q (Angstroms-1)',$
+      ytitle = 'Counts',$
+      "r4D-")
+  endif else begin
+    mp_plot = plot(qAxis, Qarray, $
+      title = 'Counts vs Q', $
+      xtitle = 'Q (Angstroms-1)',$
+      ytitle = 'Counts',$
+      "r4D-")
+  endelse
   
 end
 
@@ -206,7 +407,7 @@ function calculate_nbr_bins, q_width=q_width, $
     end
   endcase
   
-  return, fix(nbr_bins[0])
+  return, round(nbr_bins[0]+1)
 end
 
 ;+
@@ -692,8 +893,12 @@ PRO q_range_base_gui, wBase, main_base_geometry, global, $
     uname = 'q_range_cancel_button_uname',$
     value = 'CANCEL')
   space = widget_label(rowd,$
-    value = '                                             ')
+    value = '                      ')
+;  plot = widget_button(rowd,$
+;    uname='q_range_plot_log_counts_vs_q',$
+;    value = 'PLOT log(Counts) vs Q ...')
   plot = widget_button(rowd,$
+    uname='q_range_plot_counts_vs_q',$
     value = 'PLOT Counts vs Q ...')
   output = widget_button(rowd,$
     value = 'OUTPUT Ascii file ...')
@@ -720,7 +925,7 @@ PRO q_range_base, main_base=main_base, Event=event, $
   ENDELSE
   main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
   
-  default_q_width = float(0.001)
+  default_q_width = float(0.01)
   default_nbr_bins = 2000
   nbr_bins = calculate_nbr_bins(q_width=default_q_width, $
     q_min = q_min, $

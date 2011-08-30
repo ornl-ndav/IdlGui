@@ -318,6 +318,10 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     bank4_raw_value: ptr_new(0L), $
     
     diff_raw_data: ptr_new(0L), $ ;diffraction banks5->13 [128*9, tof]
+    diff_tof_array: ptr_new(0L), $ ;tof axis of the diffraction banks
+    diff_bank_distance: ptr_new(0L), $ ;array of distance sample/detector
+    diff_polar_angle: ptr_new(0L), $ ;array of polar angle for diff banks
+    diff_distance_SM: 0L, $ ;distance sample moderator of instrument
     
     pixel_excluded: ptr_new(0L),$ ;list of pixel excluded for banks 1&2
     pixel_excluded_bank3_4: ptr_new(0L),$ ;list of pixel excluded for bank3&4

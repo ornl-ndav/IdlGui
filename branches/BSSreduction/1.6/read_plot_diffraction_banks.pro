@@ -105,6 +105,9 @@ pro plot_diffraction_counts_vs_q, event
     
   endfor
   
+  (*(*global).diff_bank_distance) = diff_bank_distance
+  (*(*global).diff_polar_angle) = diff_polar_angle
+  
   ;  ;display distance vs pixelid
   ;  pixel_range = indgen(128*9) + 8192*2
   ;  md_plot = plot(pixel_range, $
@@ -127,11 +130,13 @@ pro plot_diffraction_counts_vs_q, event
   fieldID = h5d_open(fileID, '/entry-diff/instrument/moderator/distance')
   distance = float(abs(h5d_read(fieldID)))   ;m
   h5d_close, fieldID
+  (*global).diff_distance_SM = distance
   
   ;retrieve tof scale
   fieldID = h5d_open(fileID, '/entry-diff/instrument/bank5/time_of_flight')
   tof_array = h5d_read(fieldID)
   h5d_close, fieldID
+  (*(*global).diff_tof_array) = tof_array
   
   h5f_close, fileID ;close file handler
   
@@ -229,7 +234,7 @@ pro plot_diffraction_counts_vs_q, event
     pixel_distance: [distance_min, distance_max], $
     polar_angle: [polar_angle_min, polar_angle_max] }
     
-    q_range_base, Event=event, $
+  q_range_base, Event=event, $
     tof_min=tof_min, $
     tof_max=tof_max, $
     q_min=Qmin, $

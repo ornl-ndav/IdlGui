@@ -67,7 +67,10 @@ PRO BSSreduction_Cleanup, Main_Base
   ptr_free, (*global).bank1_raw_value
   ptr_free, (*global).bank2_raw_value
   ptr_free, (*global).diff_raw_data
-  
+  ptr_free, (*global).diff_tof_array
+  ptr_free, (*global).diff_bank_distance
+  ptr_free, (*global).diff_polar_angle
+
   ptr_free, global
 
 ;Create Config File Name
