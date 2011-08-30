@@ -43,6 +43,24 @@ id = widget_info(event.top,find_by_uname=uname)
 widget_control, id, map=activate_status
 END
 
+;+
+; :Description:
+;    This will set or not a button
+;
+;
+;
+; :Keywords:
+;    event
+;    uname
+;    value
+;
+; :Author: j35
+;-
+pro trigerButton, event=event, uname=uname, value=value
+id = widget_info(event.top, find_by_uname=uname)
+widget_control, id, set_button=value
+end
+
 
 PRO SetButton, event, uname, valueStatus
 id = widget_info(Event.top,find_by_uname=uname)

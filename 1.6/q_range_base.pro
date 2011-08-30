@@ -69,6 +69,11 @@ pro q_range_base_event, Event
       evaluate_nbr_bins, event
     end
     
+    ;qWidth
+    widget_info(event.top, find_by_uname='q_range_width'): begin
+      evaluate_nbr_bins, event
+    end
+    
     ;linear/log
     widget_info(event.top, find_by_uname='q_range_linear'): begin
       evaluate_nbr_bins, event
@@ -77,78 +82,87 @@ pro q_range_base_event, Event
       evaluate_nbr_bins, event
     end
     
-    ;    ;email2 widget_text
-    ;    widget_info(event.top, $
-    ;    find_by_uname='email2'): begin
-    ;
-    ;      (*global_settings).save_setup = 1b
-    ;
-    ;      ;check that email match
-    ;      check_email_match, event=event, result=result
-    ;      if (result eq 'Yes') then begin
-    ;        (*global_settings).save_setup = 0b
-    ;        return
-    ;      endif
-    ;      if (result eq 'OK') then begin
-    ;        (*global_settings).save_setup = 0b
-    ;        return
-    ;      endif
-    ;      if (result eq 'No') then begin
-    ;        ;turn off the email output in main base
-    ;        turn_off_email_output, event
-    ;
-    ;        id = widget_info(Event.top, $
-    ;          find_by_uname='email_configure_widget_base')
-    ;        widget_control, id, /destroy
-    ;      endif
-    ;      if (result eq '') then begin
-    ;        save_status_of_email_configure_button, event
-    ;        id = widget_info(Event.top, $
-    ;          find_by_uname='email_configure_widget_base')
-    ;        widget_control, id, /destroy
-    ;      endif
-    ;
-    ;    end
-    ;
-    ;    ;close button
-    ;    widget_info(event.top, $
-    ;      find_by_uname='email_configure_base_close_button'): begin
-    ;
-    ;      (*global_settings).save_setup = 1b
-    ;
-    ;      ;check that email match
-    ;      check_email_match, event=event, result=result
-    ;      if (result eq 'Yes') then begin
-    ;        (*global_settings).save_setup = 0b
-    ;        return
-    ;      endif
-    ;      if (result eq 'OK') then begin
-    ;        (*global_settings).save_setup = 0b
-    ;        return
-    ;      endif
-    ;      if (result eq 'No') then begin
-    ;        ;turn off the email output in main base
-    ;        turn_off_email_output, event
-    ;
-    ;        id = widget_info(Event.top, $
-    ;          find_by_uname='email_configure_widget_base')
-    ;        widget_control, id, /destroy
-    ;      endif
-    ;      if (result eq '') then begin
-    ;        save_status_of_email_configure_button, event
-    ;        id = widget_info(Event.top, $
-    ;          find_by_uname='email_configure_widget_base')
-    ;        widget_control, id, /destroy
-    ;      endif
-    ;
-    ;    end
-    ;
+    ;qWidth vs Nbr bins
+    widget_info(event.top, find_by_uname='q_range_q_width_button'): begin
+      select = event.select
+      if select then begin ;desactivate the other widgets
+        valueStatus = 0
+      endif else begin
+        valueStatus = 1
+      endelse
+      trigerButton, event=event, uname='q_range_nbr_bins_button', value=valueStatus
+      
+      ;Nbr bins widgets
+      activate_button, event, 'q_range_nbr_bins', valueStatus
+      activate_button, event, 'q_range_bin_size_label', valueStatus
+      activate_button, event, 'bins_size_uname', valueStatus
+      
+      ;Qwidth widgets
+      activate_button, event, 'q_range_width', select
+      activate_button, event, 'q_range_nbr_bins_label', select
+      activate_button, event, 'nbr_bins_uname', select
+      
+    end
+    widget_info(event.top, find_by_uname='q_range_nbr_bins_button'): begin
+      select = event.select
+      if select then begin
+        valueStatus = 0
+      endif else begin
+        valueStatus = 1
+      endelse
+      trigerButton, event=event, uname='q_range_q_width_button', value=valueStatus
+      
+      ;Nbr bins widgets
+      activate_button, event, 'q_range_nbr_bins', select
+      activate_button, event, 'q_range_bin_size_label', select
+      activate_button, event, 'bins_size_uname', select
+      
+      ;Qwidth widgets
+      activate_button, event, 'q_range_width', valueStatus
+      activate_button, event, 'q_range_nbr_bins_label', valueStatus
+      activate_button, event, 'nbr_bins_uname', valueStatus
+      
+    end
+    
     else:
     
   endcase
   
 end
 
+;+
+; :Description:
+;    function that will return the number of iteration needed
+;    to reach xn
+;
+; :Keywords:
+;    x0
+;    xn
+;    width
+;    n
+;
+; :Returns:
+;   number of iteration
+;
+; :Author: j35
+;-
+function getNbrBinsForLog, x0=x0, xn=xn, width=width, n=n
+  compile_opt idl2
+  
+  n=0
+  x1=0
+  while (x1 lt xn) do begin
+  
+    x1 = (1.+width)*x0
+    x0=x1
+    n++
+    
+  endwhile
+  
+  return, n
+end
+
+;
 ;+
 ; :Description:
 ;    Describe the procedure.
@@ -175,11 +189,9 @@ function calculate_nbr_bins, q_width=q_width, $
       nbr_bins = delta_q / float(q_width)
     end
     'log': begin
-    
-    
-    
-    
-    
+      nbr_bins = getNbrBinsForLog(x0=q_min, $
+        xn=q_max, $
+        width=q_width)
     end
   endcase
   
@@ -212,10 +224,10 @@ pro evaluate_nbr_bins, event
   endelse
   
   nbr_bins = calculate_nbr_bins(q_width=q_width, $
-  q_min=q_min, $
-  q_max=q_max, $
-  binning_type=binning_type)
-  
+    q_min=q_min, $
+    q_max=q_max, $
+    binning_type=binning_type)
+    
   putValue, event, 'nbr_bins_uname', strcompress(nbr_bins,/remove_all)
   
 end
@@ -541,13 +553,16 @@ PRO q_range_base_gui, wBase, main_base_geometry, global, $
   rowc1 = widget_base(rowc,$
     /nonexclusive)
   but1 = widget_button(rowc1,$
+    uname ='q_range_q_width_button',$
     value='Qwidth')
   widget_control, but1, /set_button
   txt = widget_text(rowc,$
     uname='q_range_width',$
+    /editable,$
     value= strcompress(default_q_width,/remove_all),$
     xsize = 10)
   label = widget_label(rowc,$
+    uname='q_range_nbr_bins_label',$
     value = 'Nbr bins:')
   val = widget_label(rowc,$
     value = strcompress(nbr_bins,/remove_all),$
@@ -561,14 +576,17 @@ PRO q_range_base_gui, wBase, main_base_geometry, global, $
   rowc2 = widget_base(rowc,$
     /nonexclusive)
   but1 = widget_button(rowc2,$
+    uname='q_range_nbr_bins_button',$
     value='Nbr bins')
   txt = widget_text(rowc,$
     uname='q_range_nbr_bins',$
     value= '',$
+    /editable,$
     xsize = 10,$
     sensitive=0)
   label = widget_label(rowc,$
     value = 'Bins size',$
+    uname='q_range_bin_size_label',$
     sensitive=0)
   val = widget_label(rowc,$
     value = 'N/A',$
