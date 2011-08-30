@@ -53,20 +53,24 @@ pro q_range_base_event, Event
     widget_info(event.top, find_by_uname='tof_min_value'): begin
       evaluate_q_max_value, event
       evaluate_nbr_bins, event
+      evaluate_bin_size, event
     end
     widget_info(event.top, find_by_uname='tof_max_value'): begin
       evaluate_q_min_value, event
       evaluate_nbr_bins, event
+      evaluate_bin_size, event
     end
     
     ;Qmin and Qmax
     widget_info(event.top, find_by_uname='q_min_value'): begin
       evaluate_tof_max_value, event
       evaluate_nbr_bins, event
+      evaluate_bin_size, event
     end
     widget_info(event.top, find_by_uname='q_max_value'): begin
       evaluate_tof_min_value, event
       evaluate_nbr_bins, event
+      evaluate_bin_size, event
     end
     
     ;qWidth
@@ -74,12 +78,19 @@ pro q_range_base_event, Event
       evaluate_nbr_bins, event
     end
     
+    ;Nbr bins
+    widget_info(event.top, find_by_uname='q_range_nbr_bins'): begin
+      evaluate_bin_size, event
+    end
+    
     ;linear/log
     widget_info(event.top, find_by_uname='q_range_linear'): begin
       evaluate_nbr_bins, event
+      evaluate_bin_size, event
     end
     widget_info(event.top, find_by_uname='q_range_log'): begin
       evaluate_nbr_bins, event
+      evaluate_bin_size, event
     end
     
     ;qWidth vs Nbr bins
@@ -196,6 +207,71 @@ function calculate_nbr_bins, q_width=q_width, $
   endcase
   
   return, fix(nbr_bins[0])
+end
+
+;+
+; :Description:
+;    This will calculate the bin size
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro evaluate_bin_size, event
+  compile_opt idl2
+  
+  q_min = getValue(event=event, uname='q_min_value')
+  q_max = getValue(event=event, uname='q_max_value')
+  nbr_bins = getValue(event=event, uname='q_range_nbr_bins')
+  
+  bLin = isButtonSet(event=event, uname='q_range_linear')
+  if (bLin) then begin
+    binning_type = 'lin'
+  endif else begin
+    binning_type = 'log'
+  endelse
+  
+  bin_width = calculate_bin_width(nbr_bins=nbr_bins,$
+    q_min=q_min, $
+    q_max=q_max, $
+    binning_type=binning_type)
+    
+  putValue, event, 'bins_size_uname', strcompress(bin_width,/remove_all)
+  
+end
+
+;+
+; :Description:
+;    This calculate the size of the bins using the given number of bins
+;    expected
+;
+; :Keywords:
+;    nbr_bins
+;    q_min
+;    q_max
+;    binning_type
+;
+; :Author: j35
+;-
+function calculate_bin_width, nbr_bins=nbr_bins, $
+    q_min = q_min, $
+    q_max = q_max, $
+    binning_type = binning_type
+  compile_opt idl2
+  
+  case (binning_type) of
+    'lin': begin
+      bin_width = (float(q_max) - float(q_min))/ float(nbr_bins)
+    end
+    'log': begin
+      bin_width = (float(q_max)/float(q_min))^(1./nbr_bins)-1.
+    end
+  endcase
+  
+  return, float(bin_width[0])
 end
 
 ;+
@@ -448,7 +524,9 @@ PRO q_range_base_gui, wBase, main_base_geometry, global, $
     q_min=q_min, $
     q_max=q_max, $
     nbr_bins=nbr_bins, $
-    default_q_width = default_q_width
+    default_q_width = default_q_width, $
+    default_nbr_bins = default_nbr_bins, $
+    bin_width = bin_width
     
   main_base_xoffset = main_base_geometry.xoffset
   main_base_yoffset = main_base_geometry.yoffset
@@ -580,7 +658,7 @@ PRO q_range_base_gui, wBase, main_base_geometry, global, $
     value='Nbr bins')
   txt = widget_text(rowc,$
     uname='q_range_nbr_bins',$
-    value= '',$
+    value= strcompress(default_nbr_bins,/remove_all), $
     /editable,$
     xsize = 10,$
     sensitive=0)
@@ -589,7 +667,7 @@ PRO q_range_base_gui, wBase, main_base_geometry, global, $
     uname='q_range_bin_size_label',$
     sensitive=0)
   val = widget_label(rowc,$
-    value = 'N/A',$
+    value = strcompress(bin_width[0],/remove_all),$
     /align_left, $
     sensitive=0,$
     scr_xsize = 100,$
@@ -643,7 +721,12 @@ PRO q_range_base, main_base=main_base, Event=event, $
   main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
   
   default_q_width = float(0.001)
+  default_nbr_bins = 2000
   nbr_bins = calculate_nbr_bins(q_width=default_q_width, $
+    q_min = q_min, $
+    q_max = q_max, $
+    binning_type = 'lin')
+  bin_width = calculate_bin_width(nbr_bins=default_nbr_bins, $
     q_min = q_min, $
     q_max = q_max, $
     binning_type = 'lin')
@@ -656,8 +739,10 @@ PRO q_range_base, main_base=main_base, Event=event, $
     tof_max=tof_max, $
     q_min=q_min, $
     q_max=q_max, $
+    default_q_width = default_q_width,$
     nbr_bins = nbr_bins, $
-    default_q_width = default_q_width
+    default_nbr_bins = default_nbr_bins, $
+    bin_width = bin_width
     
   WIDGET_CONTROL, wBase1, /REALIZE
   
