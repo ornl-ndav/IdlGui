@@ -57,7 +57,7 @@ if nomult then begin
    nnulls=where(array ne '',nncnt)
    if nncnt gt 0 then array=array(nnulls)   
 endif
-if list then more,array
+;if list then more,array
 
 ;
 return,array

@@ -1225,11 +1225,11 @@ PRO MAIN_BASE_event, Event
     
   ENDCASE
   
-  IF ((*global).LoadingConfig EQ 0) THEN BEGIN
-    BSSreduction_LoadingConfigurationFile, Event
-    (*global).LoadingConfig = 1
-    BSSreduction_CommandLineGenerator, Event
-  ENDIF
+;  IF ((*global).LoadingConfig EQ 0) THEN BEGIN
+;    BSSreduction_LoadingConfigurationFile, Event
+;    (*global).LoadingConfig = 1
+;    BSSreduction_CommandLineGenerator, Event
+;  ENDIF
   
   ;loop through all the jobs to find out which one the user clicked
   job_status_uname = (*(*global).job_status_uname)

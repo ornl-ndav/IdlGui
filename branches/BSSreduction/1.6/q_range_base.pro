@@ -224,6 +224,14 @@ pro q_range_create_ascii_file, event=event
     
     widget_control, hourglass=0
     
+    message_text = ['The following ascii file has been created:             ',$
+    '', '     -> ' + file_name]
+    result = dialog_message(message_text, $
+    /information, $
+    title='Ascii file created with success!', $
+    dialog_parent=id, $
+    /center)
+    
   endif
   
 end
@@ -433,14 +441,14 @@ pro plot_counts_vs_q, event=event, log=log
     endif
     
     mp_plot = plot(qAxis, Qarray, $
-      title = 'Counts vs Q', $
+      window_title = 'Counts vs Q', $
       xtitle = 'Q (Angstroms-1)',$
       ytitle = 'Counts',$
       /ylog, $
       "r4D-")
   endif else begin
     mp_plot = plot(qAxis, Qarray, $
-      title = 'Counts vs Q', $
+    window_title = 'Counts vs Q', $
       xtitle = 'Q (Angstroms-1)',$
       ytitle = 'Counts',$
       "r4D-")
