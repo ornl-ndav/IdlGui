@@ -15,6 +15,7 @@ cd, IdlUtilitiesPath
 .run CheckPackages.pro
 .run is_monitor_flag_necessary.pro
 .run xdisplayfile.pro
+.run fsc_color.pro
 
 ;Build BSSreduction GUI
 cd, CurrentFolder + '/BSSreductionGUI/'
