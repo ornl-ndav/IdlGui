@@ -278,19 +278,20 @@ pro plot_counts_vs_q, event=event, log=log
   
   index_max = where(diff_tof_array ge tof_max_microS)
   tof_max_index = index_max[0]
-  
+
+  ;retrieve data array and keep only the non-zero part
   banks_9_10 = (*(*global).diff_raw_data)  ;[nbr pixels, full range TOF]
-  
   _banks_9_10 = banks_9_10[*,tof_min_index:tof_max_index] ;[nbr px, small range TOF]
+  
   _diff_tof_array = diff_tof_array[tof_min_index:tof_max_index]
   
   sz_qAxis = size(qAxis,/dim)
-  Qarray = intarr(sz_qAxis[0])
+  Qarray = dblarr(sz_qAxis[0])
   
   sz_diff_raw_data = size(_banks_9_10,/dim)
   nbr_pixels = sz_diff_raw_data[0]
   
-  sz_tof = size(_diff_tof_array)
+  sz_tof = size(_diff_tof_array,/dim)
   nbr_tof = sz_tof[0]
   
   diff_bank_distance = (*(*global).diff_bank_distance)
@@ -301,10 +302,18 @@ pro plot_counts_vs_q, event=event, log=log
   
   dSM = abs((*global).diff_distance_SM)
   
+  iteration=0
   for px_index=0, nbr_pixels-1 do begin
   
     for _tof_index =0, nbr_tof-1 do begin
     
+      _counts = _banks_9_10[px_index, _tof_index]
+;      print, '(px,tof):' + strcompress(px_index,/remove_all) + $
+;      ',' + strcompress(_tof_index,/remove_all) + ') counts= ' + strcompress(_counts,/remove_all)
+      
+      if (_counts ne 0) then begin
+      iteration++
+      
       _tof = _diff_tof_array[_tof_index] ;microS
       _distance_px_sample = abs(diff_bank_distance[px_index])
       _distance = _distance_px_sample + dSM
@@ -319,18 +328,26 @@ pro plot_counts_vs_q, event=event, log=log
       _where_is_Q_index = where(Q le qAxis, nbr)
       if (nbr ne 0) then begin
         _where_is_Q = _where_is_Q_index[0]
-        Qarray[_where_is_Q] += 1
+        Qarray[_where_is_Q] += long(_counts)
       endif
+
+  endif ;end of if (_counts ne 0)
       
     endfor
     
   endfor
   
   if (keyword_set(log)) then begin
+    _zeros = where(Qarray le 1, nbr)
+    if (nbr ne 0) then begin
+    Qarray[_zeros] = !values.F_NAN
+    endif
+    
     mp_plot = plot(qAxis, Qarray, $
       title = 'Counts vs Q', $
       xtitle = 'Q (Angstroms-1)',$
       ytitle = 'Counts',$
+      /ylog, $
       "r4D-")
   endif else begin
     mp_plot = plot(qAxis, Qarray, $
@@ -894,9 +911,9 @@ PRO q_range_base_gui, wBase, main_base_geometry, global, $
     value = 'CANCEL')
   space = widget_label(rowd,$
     value = '                      ')
-;  plot = widget_button(rowd,$
-;    uname='q_range_plot_log_counts_vs_q',$
-;    value = 'PLOT log(Counts) vs Q ...')
+  plot = widget_button(rowd,$
+    uname='q_range_plot_log_counts_vs_q',$
+    value = 'PLOT log(Counts) vs Q ...')
   plot = widget_button(rowd,$
     uname='q_range_plot_counts_vs_q',$
     value = 'PLOT Counts vs Q ...')
