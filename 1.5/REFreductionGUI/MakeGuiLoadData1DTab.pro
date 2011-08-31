@@ -122,6 +122,19 @@ PRO MakeGuiLoadData1DTab, D_DD_Tab, $
     value: 'SAVE ROI FILE',$
     uname: 'data_roi_save_button'}
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
   ;TAB Peak/Back ---------------------------------------------------------------
   sPeakBackBase = sRoiBase
   
@@ -341,6 +354,12 @@ PRO MakeGuiLoadData1DTab, D_DD_Tab, $
     SENSITIVE = 1,$  ;FIXME
     LOCATION  = 0)
     
+    
+    
+    
+    
+    
+    
   ;TAB #1 (ROI and Peak/Background Selection) -----------------------------------
   BackPeakBase = WIDGET_BASE(BackPeakRescaleTab,$
     UNAME     = 'data_back_peak_base',$
@@ -374,8 +393,17 @@ PRO MakeGuiLoadData1DTab, D_DD_Tab, $
     SCR_YSIZE = sRoiBase.size[3],$
     TITLE     = sTab.list[0])
     
+  back_tab = widget_tab(wRoiBase,$
+    frame=0)
+    
+  back_base = widget_base(back_tab,$
+    xoffset = 0,$
+    yoffset = 0,$
+    scr_xsize = sRoiBase.size[2],$
+    title = 'Peak is inside Back. ROI')
+    
   ;Ymin
-  wRoiYminBase = WIDGET_BASE(wRoiBase,$
+  wRoiYminBase = WIDGET_BASE(back_base,$
     XOFFSET   = sRoiYmin.size[0]+2,$
     YOFFSET   = sRoiYmin.size[1],$
     SCR_XSIZE = sRoiYmin.size[2],$
@@ -389,21 +417,21 @@ PRO MakeGuiLoadData1DTab, D_DD_Tab, $
     UNAME         = sRoiYmin.uname,$
     TITLE         = sRoiYmin.title)
     
-  back_base = widget_base(wRoiBase,$
+  back_base1 = widget_base(back_base,$
     xoffset = sRoiYmin.size[0]-2,$
     yoffset = sRoiYmin.size[1]-2,$
     scr_xsize = sRoiYmin.size[2]+4,$
     scr_ysize = sRoiYmin.size[3]+4,$
     map = 1,$
     uname = 'ymin_data_base_background')
-  back_draw = widget_draw(back_base,$
+  back_draw = widget_draw(back_base1,$
     xoffset = 0,$
     yoffset = 0,$
     scr_xsize = sRoiYmin.size[2]+4,$
     scr_ysize = sRoiYmin.size[3]+4)
     
   ;Ymax
-  wRoiYmaxBase = WIDGET_BASE(wRoiBase,$
+  wRoiYmaxBase = WIDGET_BASE(back_base,$
     XOFFSET   = sRoiYmax.size[0],$
     YOFFSET   = sRoiYmax.size[1],$
     SCR_XSIZE = sRoiYmax.size[2],$
@@ -417,27 +445,27 @@ PRO MakeGuiLoadData1DTab, D_DD_Tab, $
     UNAME         = sRoiYmax.uname,$
     TITLE         = sRoiYmax.title)
     
-  back_base = widget_base(wRoiBase,$
+  back_base2 = widget_base(back_base,$
     xoffset = sRoiYmax.size[0]-2,$
     yoffset = sRoiYmax.size[1]-2,$
     scr_xsize = sRoiYmax.size[2]+4,$
     map = 0,$
     scr_ysize = sRoiYmax.size[3]+4,$
     uname = 'ymax_data_base_background')
-  back_draw = widget_draw(back_base,$
+  back_draw = widget_draw(back_base2,$
     xoffset = 0,$
     yoffset = 0,$
     scr_xsize = sRoiYmax.size[2]+4,$
     scr_ysize = sRoiYmax.size[3]+4)
     
   ;OR label
-  wOrLabel = WIDGET_LABEL(wRoiBase,$
+  wOrLabel = WIDGET_LABEL(back_base,$
     XOFFSET = sOrLabel.size[0],$
     YOFFSET = sOrLabel.size[1],$
     VALUE   = sOrLabel.value)
     
   ;LOAD ROI button
-  wLoadButton = WIDGET_BUTTON(wRoiBase,$
+  wLoadButton = WIDGET_BUTTON(back_base,$
     XOFFSET   = sLoadButton.size[0],$
     YOFFSET   = sLoadButton.size[1],$
     SCR_XSIZE = sLoadButton.size[2],$
@@ -446,13 +474,13 @@ PRO MakeGuiLoadData1DTab, D_DD_Tab, $
     UNAME     = sLoadButton.uname)
     
   ;Roi file label
-  wRoiFileLabel = WIDGET_LABEL(wRoiBase,$
+  wRoiFileLabel = WIDGET_LABEL(back_base,$
     XOFFSET = sRoiFileLabel.size[0],$
     YOFFSET = sRoiFileLabel.size[1],$
     VALUE   = sRoiFileLabel.value)
     
   ;ROI text file
-  wRoiFileText = WIDGET_TEXT(wRoiBase,$
+  wRoiFileText = WIDGET_TEXT(back_base,$
     XOFFSET   = sRoiFileText.size[0],$
     YOFFSET   = sRoiFileText.size[1],$
     SCR_XSIZE = sRoiFileText.size[2],$
@@ -461,13 +489,74 @@ PRO MakeGuiLoadData1DTab, D_DD_Tab, $
     /EDITABLE)
     
   ;SAVE ROI button
-  wSaveButton = WIDGET_BUTTON(wRoiBase,$
+  wSaveButton = WIDGET_BUTTON(back_base,$
     XOFFSET   = sSaveButton.size[0],$
     YOFFSET   = sSaveButton.size[1],$
     SCR_XSIZE = sSaveButton.size[2],$
     SCR_YSIZE = sSaveButton.size[3],$
     VALUE     = sSaveButton.value,$
     UNAME     = sSaveButton.uname)
+    
+  back2_base = widget_base(back_tab,$
+    xoffset = 0,$
+    yoffset = 0,$
+    /column, $
+    scr_xsize = sRoiBase.size[2],$
+    title = 'Peak is outside Back. ROIs')
+    
+  row1 = widget_base(back2_base,$
+    /row)
+  label = widget_label(row1,$
+    value='   ROI #1')
+  from_label = widget_label(row1,$
+    value='  from')
+  from_value = widget_text(row1,$
+    value='',$
+    xsize=4,$
+    /editable)
+  space = widget_label(row1,$
+    value='  ')
+  to_label=widget_label(row1,$
+    value='to')
+  to_value=widget_text(row1,$
+    value='',$
+    xsize=4,$
+    /editable)
+    
+  space = widget_label(row1,$
+    value='            ')
+    
+  label = widget_label(row1,$
+    value='ROI #2')
+  from_label = widget_label(row1,$
+    value='  from')
+  from_value = widget_text(row1,$
+    value='',$
+    xsize=4,$
+    /editable)
+  space = widget_label(row1,$
+    value='  ')
+  to_label=widget_label(row1,$
+    value='to')
+  to_value=widget_text(row1,$
+    value='',$
+    xsize=4,$
+    /editable)
+    
+  row2=widget_base(back2_base,$
+  /align_center,$
+    /row)
+  save=widget_button(row2,$
+    value='SAVE...',$
+    scr_xsize=100)
+  space=widget_label(row2,$
+    value='              ')
+  load=widget_button(row2,$
+    value='LOAD...',$
+    scr_xsize=100)
+    
+    
+    
     
   ;TAB #1-2 Peak/Back base ======================================================
   wPeakBackBase = WIDGET_BASE(wRoiTab,$
@@ -477,14 +566,14 @@ PRO MakeGuiLoadData1DTab, D_DD_Tab, $
     SCR_YSIZE = sPeakBackBase.size[3],$
     TITLE     = sTab.list[1])
     
-       center_pixel_base = widget_base(wPeakBackBase,$
+  center_pixel_base = widget_base(wPeakBackBase,$
     xoffset = 420,$
     yoffset = 38  ,$
     frame=1,$
     /row)
-    label = widget_label(center_pixel_base,$
+  label = widget_label(center_pixel_base,$
     value = 'Center pixel:')
-    value = widget_label(center_pixel_base,$
+  value = widget_label(center_pixel_base,$
     value = ' ',$
     uname = 'data_center_pixel_uname',$
     scr_xsize = '50',$
@@ -782,14 +871,14 @@ PRO MakeGuiLoadData1DTab, D_DD_Tab, $
     return_events=1,$
     title=RescaleMaxcwfieldLabel,$
     uname='data_rescale_zmax_cwfield')
-   
+    
   RescaleZScaleDroplist = widget_droplist(RescaleZBase,$
     value=RescaleScaleDroplist,$
     xoffset=RescaleScaleDroplistSize[0],$
     yoffset=RescaleScaleDroplistSize[1],$
     uname='data_rescale_z_droplist')
-    widget_control, RescaleZScaleDroplist, set_droplist_select=1
-    
+  widget_control, RescaleZScaleDroplist, set_droplist_select=1
+  
   ResetZScaleButton = widget_button(RescaleZBase,$
     xoffset=ResetScaleButtonSize[0],$
     yoffset=ResetScaleButtonSize[1],$
