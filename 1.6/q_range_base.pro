@@ -137,18 +137,94 @@ pro q_range_base_event, Event
     
     ;PLOT counts vs Q
     widget_info(event.top, find_by_uname='q_range_plot_counts_vs_q'): begin
+      widget_control, /hourglass
       plot_counts_vs_q, event=event
+      widget_control, hourglass=0
     end
     ;PLOT log(counts) vs Q
     widget_info(event.top, find_by_uname='q_range_plot_log_counts_vs_q'): begin
+      widget_control, /hourglass
       plot_counts_vs_q, event=event, /log
+      widget_control, hourglass=0
     end
     
-    
+    ;create ASCII FILE
+    widget_info(event.top, find_by_uname='q_range_create_ascii_file_button'): begin
+      q_range_create_ascii_file, event=event
+    end
     
     else:
     
   endcase
+  
+end
+
+;+
+; :Description:
+;    this will output the data rebinned into a huge ascii file
+;    Q, counts, sqrt(counts)
+;
+;
+;
+; :Keywords:
+;    event
+;
+; :Author: j35
+;-
+pro q_range_create_ascii_file, event=event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global_q_range
+  global = (*global_q_range).global
+  
+  ;select name
+  path = (*global).default_output_path
+  default_extension = 'txt'
+  id = widget_info(event.top, find_by_uname='q_range_base_uname')
+  filter = ['*.txt']
+  
+  result = dialog_pickfile(default_extension=default_extension, $
+    dialog_parent=id, $
+    filter=filter, $
+    get_path=new_path, $
+    /overwrite_prompt, $
+    path=path, $
+    title = 'Define or select name of ASCII file to create')
+    
+  if (result[0] ne '') then begin
+    (*global).default_output_path = new_path
+    file_name = result[0]
+    
+    widget_control, /hourglass
+    
+    create_arrays, event=event, $
+      qAxis=qAxis, $
+      qArray=qArray
+      
+    sz = size(qAxis,/dim)
+    nbr_line = sz[0]
+    
+    ;add axis title
+    title = '#Q(Angstroms^-1) Counts Error
+    
+    openw, 1, file_name
+    printf, 1, title
+    
+    for i=0,nbr_line-1 do begin
+    
+      _line = strcompress(qAxis[i],/remove_all) +  ' '
+      _line += strcompress(qArray[i],/remove_all) + ' '
+      _line += strcompress(sqrt(qArray[i]),/remove_all)
+      printf, 1, _line
+      
+    endfor
+    
+    close, 1
+    free_lun, 1
+    
+    widget_control, hourglass=0
+    
+  endif
   
 end
 
@@ -189,8 +265,6 @@ end
 ; :Description:
 ;    This will calculate the Q value for each entry given
 ;
-;
-;
 ; :Keywords:
 ;    event
 ;    tof
@@ -214,27 +288,25 @@ function determine_Q, event=event, $
   _lambda = (h_over_mn) / _d_over_tof
   Q = (four_pi / _lambda) * sin(angle/2.)
   
-  ;  print, 'float(distance): ' , float(distance)
-  ;  print, 'float(tof): ', float(tof)
-  ;  print, '_d_over_tof: ' , _d_over_tof
-  ;  print, 'angle: ', angle
-  ;  print, 'Q: ' , Q
-  
   return, Q*1.e-10
 end
 
 ;+
 ; :Description:
-;    This is going to retrieve the parameters, will create the array
-;    by rebinning the data and plot them
+;    This create the arrays (qAxis and qArray)
+;
+;
 ;
 ; :Keywords:
 ;    event
-;    log
+;    qAxis
+;    qArray
 ;
 ; :Author: j35
 ;-
-pro plot_counts_vs_q, event=event, log=log
+pro create_arrays, event=event, $
+    qAxis=qAxis, $
+    qArray=qArray
   compile_opt idl2
   
   widget_control, event.top, get_uvalue=global_q_range
@@ -278,7 +350,7 @@ pro plot_counts_vs_q, event=event, log=log
   
   index_max = where(diff_tof_array ge tof_max_microS)
   tof_max_index = index_max[0]
-
+  
   ;retrieve data array and keep only the non-zero part
   banks_9_10 = (*(*global).diff_raw_data)  ;[nbr pixels, full range TOF]
   _banks_9_10 = banks_9_10[*,tof_min_index:tof_max_index] ;[nbr px, small range TOF]
@@ -308,39 +380,56 @@ pro plot_counts_vs_q, event=event, log=log
     for _tof_index =0, nbr_tof-1 do begin
     
       _counts = _banks_9_10[px_index, _tof_index]
-;      print, '(px,tof):' + strcompress(px_index,/remove_all) + $
-;      ',' + strcompress(_tof_index,/remove_all) + ') counts= ' + strcompress(_counts,/remove_all)
       
       if (_counts ne 0) then begin
-      iteration++
-      
-      _tof = _diff_tof_array[_tof_index] ;microS
-      _distance_px_sample = abs(diff_bank_distance[px_index])
-      _distance = _distance_px_sample + dSM
-      _polar_angle = diff_polar_angle[px_index]
-      
-      Q = determine_Q(event=event,$
-        tof=_tof, $
-        distance = _distance, $
-        angle = _polar_angle, $
-        h_over_mn = h_over_mn)
+        iteration++
         
-      _where_is_Q_index = where(Q le qAxis, nbr)
-      if (nbr ne 0) then begin
-        _where_is_Q = _where_is_Q_index[0]
-        Qarray[_where_is_Q] += long(_counts)
-      endif
-
-  endif ;end of if (_counts ne 0)
+        _tof = _diff_tof_array[_tof_index] ;microS
+        _distance_px_sample = abs(diff_bank_distance[px_index])
+        _distance = _distance_px_sample + dSM
+        _polar_angle = diff_polar_angle[px_index]
+        
+        Q = determine_Q(event=event,$
+          tof=_tof, $
+          distance = _distance, $
+          angle = _polar_angle, $
+          h_over_mn = h_over_mn)
+          
+        _where_is_Q_index = where(Q le qAxis, nbr)
+        if (nbr ne 0) then begin
+          _where_is_Q = _where_is_Q_index[0]
+          Qarray[_where_is_Q] += long(_counts)
+        endif
+        
+      endif ;end of if (_counts ne 0)
       
     endfor
     
   endfor
   
+end
+;+
+; :Description:
+;    This is going to retrieve the parameters, will create the array
+;    by rebinning the data and plot them
+;
+; :Keywords:
+;    event
+;    log
+;
+; :Author: j35
+;-
+pro plot_counts_vs_q, event=event, log=log
+  compile_opt idl2
+  
+  create_arrays, event=event, $
+    qAxis=qAxis, $
+    qArray=qArray
+    
   if (keyword_set(log)) then begin
-    _zeros = where(Qarray le 1, nbr)
+    _zeros = where(qArray le 1, nbr)
     if (nbr ne 0) then begin
-    Qarray[_zeros] = !values.F_NAN
+      qArray[_zeros] = !values.F_NAN
     endif
     
     mp_plot = plot(qAxis, Qarray, $
@@ -918,6 +1007,7 @@ PRO q_range_base_gui, wBase, main_base_geometry, global, $
     uname='q_range_plot_counts_vs_q',$
     value = 'PLOT Counts vs Q ...')
   output = widget_button(rowd,$
+    uname='q_range_create_ascii_file_button',$
     value = 'OUTPUT Ascii file ...')
     
 END

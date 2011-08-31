@@ -101,8 +101,6 @@ END
 ;------------------------------------------------------------------------------
 PRO bss_reduction_PlotBank1, Event
 
-    print, 'entering bss_reduction_plotbank1'
-
   ;get global structure
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
   widget_control,id,get_uvalue=global
@@ -133,8 +131,6 @@ END
 ;------------------------------------------------------------------------------
 PRO bss_reduction_PlotBank2, Event
   
-      print, 'entering bss_reduction_plotbank2'
-  
   ;get global structure
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
   widget_control,id,get_uvalue=global
@@ -164,8 +160,6 @@ END
 
 ;------------------------------------------------------------------------------
 PRO bss_reduction_PlotBank3, Event
-  
-    print, 'entering bss_reduction_plotbank3'
   
   ;get global structure
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -198,8 +192,6 @@ END
 ;------------------------------------------------------------------------------
 PRO bss_reduction_PlotBank4, Event
   
-  print, 'entering bss_reduction_plotbank4'
-  
   ;get global structure
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
   widget_control,id,get_uvalue=global
@@ -215,11 +207,6 @@ PRO bss_reduction_PlotBank4, Event
   
   Xfactor = (*global).Xfactor
   Yfactor = (*global).Yfactor
-  
-  help, bank4_sum_transpose
-  help, Nx
-  help, Ny
-  help, Xfactor
   
   tvimg_bank4 = rebin(bank4_sum_transpose,Nx*Xfactor, Ny*Yfactor,/sample)
   
@@ -286,7 +273,6 @@ PRO bss_reduction_PlotBanks, Event, success
   
   if (banks_displayed eq 'south_1_2') then begin
   
-    print, 'displaying bank12'
     ;store banks sum
     (*(*global).bank1_sum) = banka_sum
     (*(*global).bank2_sum) = bankb_sum
@@ -297,7 +283,6 @@ PRO bss_reduction_PlotBanks, Event, success
     
   endif else begin
   
-    print, 'displaying bank34'
     ;store banks sum
     (*(*global).bank3_sum) = banka_sum
     (*(*global).bank4_sum) = bankb_sum
