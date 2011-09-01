@@ -200,7 +200,8 @@ pro bring_to_life_or_refresh_counts_vs_pixel, event
   
   _base = (*global).center_px_counts_vs_pixel_base_id
   
-  catch, error
+  ; catch, error
+  error = 0
   if (error ne 0) then begin
     catch,/cancel
     if (widget_info(_base, /valid_id) ne 0) then begin
@@ -411,27 +412,68 @@ end
 ; :Keywords:
 ;    event
 ;    ymax
+;    base
 ;
 ; :Author: j35
 ;-
-pro plot_background_selection, event=main_event, ymax=ymax
+pro plot_background_selection, event=event, ymax=ymax
   compile_opt idl2
   
-  ;retrieve background values
-  back_ymin = fix(getValue(event=main_event, $
-    uname='data_d_selection_roi_ymin_cw_field'))
-  back_ymax = fix(getValue(event=main_event, $
-    uname='data_d_selection_roi_ymax_cw_field'))
-    
-  if (back_ymin ne 0) then begin
-    plots, back_ymin, 1
-    plots, back_ymin, ymax, /continue, color=fsc_color("green")
-  endif
+  ;plot either outside background regions or inside region according to
+  ;tab selected
+  back_tab_value = getTabValue(event=event, $
+    uname='greg_selection_tab')
+  if (back_tab_value eq 0) then begin
   
-  if (back_ymax ne 0) then begin
-    plots, back_ymax, 1
-    plots, back_ymax, ymax, /continue, color=fsc_color("green")
-  endif
+    ;retrieve background values
+    back_ymin = fix(getValue(event=event, $
+      uname='data_d_selection_roi_ymin_cw_field'))
+    back_ymax = fix(getValue(event=event, $
+      uname='data_d_selection_roi_ymax_cw_field'))
+      
+    if (back_ymin ne 0) then begin
+      plots, back_ymin, 1
+      plots, back_ymin, ymax, /continue, color=fsc_color("green")
+    endif
+    
+    if (back_ymax ne 0) then begin
+      plots, back_ymax, 1
+      plots, back_ymax, ymax, /continue, color=fsc_color("green")
+    endif
+    
+  endif else begin
+  
+    roi1_from = fix(getValue(event=event, $
+      uname='greg_roi1_from_value'))
+    roi1_to = fix(getValue(event=event, $
+      uname='greg_roi1_to_value'))
+      
+    roi2_from = fix(getValue(event=event, $
+      uname='greg_roi2_from_value'))
+    roi2_to = fix(getValue(event=event, $
+      uname='greg_roi2_to_value'))
+      
+    if (roi1_from ne 0) then begin
+      plots, roi1_from, 1
+      plots, roi1_from, ymax, /continue, color=fsc_color('green')
+    endif
+    
+    if (roi2_from ne 0) then begin
+      plots, roi2_from, 1
+      plots, roi2_from, ymax, /continue, color=fsc_color('green')
+    endif
+    
+    if (roi1_to ne 0) then begin
+      plots, roi1_to, 1
+      plots, roi1_to, ymax, /continue, color=fsc_color('green')
+    endif
+    
+    if (roi2_to ne 0) then begin
+      plots, roi2_to, 1
+      plots, roi2_to, ymax, /continue, color=fsc_color('green')
+    endif
+    
+  endelse
   
 end
 
@@ -476,7 +518,7 @@ pro refresh_counts_vs_pixel, base=base, event=event, global
   xmax = fix(getValue(event=main_event,uname='data_d_selection_peak_ymax_cw_field'))
   center_pixel = getValue(event=main_event,uname='data_center_pixel_uname')
   
-  if (strcompress(center_pixel,/remove_all) eq '') then center_pixel='N/A' 
+  if (strcompress(center_pixel,/remove_all) eq '') then center_pixel='N/A'
   if (center_pixel ne 'N/A') then begin
     center_pixel = float(center_pixel)
   endif else begin

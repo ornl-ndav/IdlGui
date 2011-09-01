@@ -49,6 +49,7 @@ pro greg_selection_tab_event, event
   tab_index = event.tab
   case (tab_index) of
     0: begin ;Peak is inside Back. ROI
+      REFReduction_RescaleDataPlot, Event
       plot_data_peak_value, event
       plot_back_value, event
       end
@@ -56,8 +57,9 @@ pro greg_selection_tab_event, event
       refresh_greg_selection, event
     end
   endcase
-  
-end
+   bring_to_life_or_refresh_counts_vs_pixel, event
+   
+  end
 
 ;this function is trigerred each time the user changes tab (main tabs)
 PRO tab_event, Event
