@@ -125,6 +125,9 @@
 .run beam_divergence_settings.pro
 .run using_wrong_version_of_ref_reduction.pro
 
+;greg selection
+.run greg_selection.pro
+
 .run tof_selection_tool_button_eventcb.pro
 .run new_rescaled_tvimg.pro
 

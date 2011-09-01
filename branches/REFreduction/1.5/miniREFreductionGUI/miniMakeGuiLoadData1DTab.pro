@@ -500,7 +500,8 @@ PRO miniMakeGuiLoadData1DTab, D_DD_Tab, $
     value='  from')
   from_value = widget_text(row1,$
     value='',$
-    xsize=4,$
+    xsize=4,$    
+    uname='greg_roi1_from_value',$
     /editable)
   space = widget_label(row1,$
     value='  ')
@@ -508,6 +509,7 @@ PRO miniMakeGuiLoadData1DTab, D_DD_Tab, $
     value='to')
   to_value=widget_text(row1,$
     value='',$
+    uname='greg_roi1_to_value',$
     xsize=4,$
     /editable)
     
@@ -519,6 +521,7 @@ PRO miniMakeGuiLoadData1DTab, D_DD_Tab, $
     value='  from')
   from_value = widget_text(row1,$
     value='',$
+    uname='greg_roi2_from_value',$
     xsize=4,$
     /editable)
   space = widget_label(row1,$
@@ -527,6 +530,7 @@ PRO miniMakeGuiLoadData1DTab, D_DD_Tab, $
     value='to')
   to_value=widget_text(row1,$
     value='',$
+    uname='greg_roi2_to_value',$
     xsize=4,$
     /editable)
     
@@ -539,25 +543,6 @@ PRO miniMakeGuiLoadData1DTab, D_DD_Tab, $
   load=widget_button(row2,$
     value='LOAD...',$
     scr_xsize=100)
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
   ;TAB #1-2 Peak/Back base ====================================================
   wPeakBackBase = WIDGET_BASE(wRoiTab,$

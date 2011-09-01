@@ -122,19 +122,6 @@ PRO MakeGuiLoadData1DTab, D_DD_Tab, $
     value: 'SAVE ROI FILE',$
     uname: 'data_roi_save_button'}
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
   ;TAB Peak/Back ---------------------------------------------------------------
   sPeakBackBase = sRoiBase
   
@@ -354,12 +341,6 @@ PRO MakeGuiLoadData1DTab, D_DD_Tab, $
     SENSITIVE = 1,$  ;FIXME
     LOCATION  = 0)
     
-    
-    
-    
-    
-    
-    
   ;TAB #1 (ROI and Peak/Background Selection) -----------------------------------
   BackPeakBase = WIDGET_BASE(BackPeakRescaleTab,$
     UNAME     = 'data_back_peak_base',$
@@ -394,6 +375,7 @@ PRO MakeGuiLoadData1DTab, D_DD_Tab, $
     TITLE     = sTab.list[0])
     
   back_tab = widget_tab(wRoiBase,$
+    uname='greg_selection_tab',$
     frame=0)
     
   back_base = widget_base(back_tab,$
@@ -512,6 +494,7 @@ PRO MakeGuiLoadData1DTab, D_DD_Tab, $
     value='  from')
   from_value = widget_text(row1,$
     value='',$
+    uname='greg_roi1_from_value',$
     xsize=4,$
     /editable)
   space = widget_label(row1,$
@@ -520,6 +503,7 @@ PRO MakeGuiLoadData1DTab, D_DD_Tab, $
     value='to')
   to_value=widget_text(row1,$
     value='',$
+    uname='greg_roi1_to_value',$
     xsize=4,$
     /editable)
     
@@ -532,6 +516,7 @@ PRO MakeGuiLoadData1DTab, D_DD_Tab, $
     value='  from')
   from_value = widget_text(row1,$
     value='',$
+    uname='greg_roi2_from_value',$
     xsize=4,$
     /editable)
   space = widget_label(row1,$
@@ -540,11 +525,12 @@ PRO MakeGuiLoadData1DTab, D_DD_Tab, $
     value='to')
   to_value=widget_text(row1,$
     value='',$
+    uname='greg_roi2_to_value',$
     xsize=4,$
     /editable)
     
   row2=widget_base(back2_base,$
-  /align_center,$
+    /align_center,$
     /row)
   save=widget_button(row2,$
     value='SAVE...',$
@@ -554,9 +540,6 @@ PRO MakeGuiLoadData1DTab, D_DD_Tab, $
   load=widget_button(row2,$
     value='LOAD...',$
     scr_xsize=100)
-    
-    
-    
     
   ;TAB #1-2 Peak/Back base ======================================================
   wPeakBackBase = WIDGET_BASE(wRoiTab,$
