@@ -380,8 +380,17 @@ PRO miniMakeGuiLoadData1DTab, D_DD_Tab, $
     SCR_YSIZE = sRoiBase.size[3],$
     TITLE     = sTab.list[0])
     
+     back_tab = widget_tab(wRoiBase,$
+    frame=0)
+    
+  back_base = widget_base(back_tab,$
+    xoffset = 0,$
+    yoffset = 0,$
+    scr_xsize = sRoiBase.size[2],$
+    title = 'Peak inside Back. ROI')
+    
   ;Ymin
-  wRoiYminBase = WIDGET_BASE(wRoiBase,$
+  wRoiYminBase = WIDGET_BASE(back_base,$
     XOFFSET   = sRoiYmin.size[0]+2,$
     YOFFSET   = sRoiYmin.size[1],$
     SCR_XSIZE = sRoiYmin.size[2],$
@@ -395,21 +404,21 @@ PRO miniMakeGuiLoadData1DTab, D_DD_Tab, $
     UNAME         = sRoiYmin.uname,$
     TITLE         = sRoiYmin.title)
     
-  back_base = widget_base(wRoiBase,$
+  back_base1 = widget_base(back_base,$
     xoffset = sRoiYmin.size[0]-2,$
     yoffset = sRoiYmin.size[1]-2,$
     scr_xsize = sRoiYmin.size[2]+4,$
     scr_ysize = sRoiYmin.size[3]+4,$
     map = 1,$
     uname = 'ymin_data_base_background')
-  back_draw = widget_draw(back_base,$
+  back_draw = widget_draw(back_base1,$
     xoffset = 0,$
     yoffset = 0,$
     scr_xsize = sRoiYmin.size[2]+4,$
     scr_ysize = sRoiYmin.size[3]+4)
     
   ;Ymax
-  wRoiYmaxBase = WIDGET_BASE(wRoiBase,$
+  wRoiYmaxBase = WIDGET_BASE(back_base,$
     XOFFSET   = sRoiYmax.size[0],$
     YOFFSET   = sRoiYmax.size[1],$
     SCR_XSIZE = sRoiYmax.size[2],$
@@ -423,14 +432,14 @@ PRO miniMakeGuiLoadData1DTab, D_DD_Tab, $
     UNAME         = sRoiYmax.uname,$
     TITLE         = sRoiYmax.title)
     
-  back_base = widget_base(wRoiBase,$
+  back_base2 = widget_base(back_base,$
     xoffset = sRoiYmax.size[0]-2,$
     yoffset = sRoiYmax.size[1]-2,$
     scr_xsize = sRoiYmax.size[2]+4,$
     map = 0,$
     scr_ysize = sRoiYmax.size[3]+4,$
     uname = 'ymax_data_base_background')
-  back_draw = widget_draw(back_base,$
+  back_draw = widget_draw(back_base2,$
     xoffset = 0,$
     yoffset = 0,$
     scr_xsize = sRoiYmax.size[2]+4,$
@@ -438,13 +447,13 @@ PRO miniMakeGuiLoadData1DTab, D_DD_Tab, $
     
     
   ;OR label
-  wOrLabel = WIDGET_LABEL(wRoiBase,$
+  wOrLabel = WIDGET_LABEL(back_base,$
     XOFFSET = sOrLabel.size[0],$
     YOFFSET = sOrLabel.size[1],$
     VALUE   = sOrLabel.value)
     
   ;LOAD ROI button
-  wLoadButton = WIDGET_BUTTON(wRoiBase,$
+  wLoadButton = WIDGET_BUTTON(back_base,$
     XOFFSET   = sLoadButton.size[0],$
     YOFFSET   = sLoadButton.size[1],$
     SCR_XSIZE = sLoadButton.size[2],$
@@ -453,13 +462,13 @@ PRO miniMakeGuiLoadData1DTab, D_DD_Tab, $
     UNAME     = sLoadButton.uname)
     
   ;Roi file label
-  wRoiFileLabel = WIDGET_LABEL(wRoiBase,$
+  wRoiFileLabel = WIDGET_LABEL(back_base,$
     XOFFSET = sRoiFileLabel.size[0],$
     YOFFSET = sRoiFileLabel.size[1],$
     VALUE   = sRoiFileLabel.value)
     
   ;ROI text file
-  wRoiFileText = WIDGET_TEXT(wRoiBase,$
+  wRoiFileText = WIDGET_TEXT(back_base,$
     XOFFSET   = sRoiFileText.size[0],$
     YOFFSET   = sRoiFileText.size[1],$
     SCR_XSIZE = sRoiFileText.size[2],$
@@ -469,13 +478,86 @@ PRO miniMakeGuiLoadData1DTab, D_DD_Tab, $
     /EDITABLE)
     
   ;SAVE ROI button
-  wSaveButton = WIDGET_BUTTON(wRoiBase,$
+  wSaveButton = WIDGET_BUTTON(back_base,$
     XOFFSET   = sSaveButton.size[0],$
     YOFFSET   = sSaveButton.size[1],$
     SCR_XSIZE = sSaveButton.size[2],$
     SCR_YSIZE = sSaveButton.size[3],$
     VALUE     = sSaveButton.value,$
     UNAME     = sSaveButton.uname)
+    
+     back2_base = widget_base(back_tab,$
+    xoffset = 0,$
+    yoffset = 0,$
+    /column, $
+    title = 'Peak outside Back. ROIs')
+    
+  row1 = widget_base(back2_base,$
+    /row)
+  label = widget_label(row1,$
+    value='   ROI #1')
+  from_label = widget_label(row1,$
+    value='  from')
+  from_value = widget_text(row1,$
+    value='',$
+    xsize=4,$
+    /editable)
+  space = widget_label(row1,$
+    value='  ')
+  to_label=widget_label(row1,$
+    value='to')
+  to_value=widget_text(row1,$
+    value='',$
+    xsize=4,$
+    /editable)
+    
+  row1 = widget_base(back2_base,$
+    /row)
+  label = widget_label(row1,$
+    value='   ROI #2')
+  from_label = widget_label(row1,$
+    value='  from')
+  from_value = widget_text(row1,$
+    value='',$
+    xsize=4,$
+    /editable)
+  space = widget_label(row1,$
+    value='  ')
+  to_label=widget_label(row1,$
+    value='to')
+  to_value=widget_text(row1,$
+    value='',$
+    xsize=4,$
+    /editable)
+    
+  row2=widget_base(back2_base,$
+  /align_center,$
+    /row)
+  save=widget_button(row2,$
+    value='SAVE...',$
+    scr_xsize=100)
+  load=widget_button(row2,$
+    value='LOAD...',$
+    scr_xsize=100)
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
   ;TAB #1-2 Peak/Back base ====================================================
   wPeakBackBase = WIDGET_BASE(wRoiTab,$
