@@ -32,7 +32,33 @@
 ;
 ;==============================================================================
 
-;==============================================================================
+;+
+; :Description:
+;    This function is reached by the Data background selection tab
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro greg_selection_tab_event, event
+  compile_opt idl2
+  
+  tab_index = event.tab
+  case (tab_index) of
+    0: begin ;Peak is inside Back. ROI
+      plot_data_peak_value, event
+      plot_back_value, event
+      end
+    1: begin ;Peak is outside Back. ROIs
+      refresh_greg_selection, event
+    end
+  endcase
+  
+end
+
 ;this function is trigerred each time the user changes tab (main tabs)
 PRO tab_event, Event
   ;get global structure
@@ -45,18 +71,14 @@ PRO tab_event, Event
   IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
     CASE (CurrTabSelect) OF
       0: BEGIN
-;        tab_id = widget_info(Event.top, $
-;          find_by_uname='data_normalization_tab')
-;        CurrDNECtabSelect = widget_info(tab_id,/tab_current)
-;        PrevDNECtabSelect = (*global).PrevDNECtabSelect
-;        IF(CurrDNECtabSelect NE PrevDNECtabSelect) THEN BEGIN
-;          IF (isBaseMap(Event, $
-;            'empty_cell_scaling_' + $
-;            'factor_calculation_base')) THEN BEGIN
-;            ;refresh the equation plot
-;            RefreshEquationDraw, Event ;_empty_cell
-;          ENDIF
-;        ENDIF
+      
+      ;        tab_id = widget_info(Event.top, $
+      ;          find_by_uname='data_normalization_tab')
+      ;        CurrDNECtabSelect = widget_info(tab_id,/tab_current)
+      ;        PrevDNECtabSelect = (*global).PrevDNECtabSelect
+      ;        IF(CurrDNECtabSelect NE PrevDNECtabSelect) THEN BEGIN
+      ;        endif
+      
       END
       1: BEGIN                ;if REDUCE tab is now selected
         REFreduction_CommandLineGenerator, Event
@@ -178,7 +200,7 @@ PRO data_plots_tab_event, Event
     
   ENDIF
   
-  ;MapBase, Event, 'info_data_base', info_base_status
+;MapBase, Event, 'info_data_base', info_base_status
   
 END
 
@@ -217,7 +239,7 @@ PRO norm_plots_tab_event, Event
     
   ENDIF
   
-  ;MapBase, Event, 'info_norm_base', info_base_status
+;MapBase, Event, 'info_norm_base', info_base_status
   
 END
 

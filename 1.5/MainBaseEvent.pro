@@ -57,14 +57,28 @@ PRO MAIN_BASE_event, Event
   
   CASE Event.id OF
   
-   ;bring to life the TOF selection base
+    ;greg selection
+    widget_info(wWidget, find_by_uname='greg_roi1_from_value'): begin
+      refresh_greg_selection, event
+    end
+    widget_info(wWidget, find_by_uname='greg_roi1_to_value'): begin
+      refresh_greg_selection, event
+    end
+    widget_info(wWidget, find_by_uname='greg_roi2_from_value'): begin
+      refresh_greg_selection, event
+    end
+    widget_info(wWidget, find_by_uname='greg_roi2_to_value'): begin
+      refresh_greg_selection, event
+    end
+
+    ;bring to life the TOF selection base
     widget_info(wWidget, find_by_uname='tof_selection_tool_button'): begin
-    tof_selection_tool_button_eventcb, event, source='data'
+      tof_selection_tool_button_eventcb, event, source='data'
     end
     
     ;bring to life the Normalization TOF selection base
     widget_info(wWidget, find_by_uname='norm_tof_selection_tool_button'): begin
-    tof_selection_tool_button_eventcb, event, source='norm'    
+      tof_selection_tool_button_eventcb, event, source='norm'
     end
     
     WIDGET_INFO(wWidget, FIND_BY_UNAME='MAIN_BASE'): begin
@@ -72,6 +86,10 @@ PRO MAIN_BASE_event, Event
     
     WIDGET_INFO(wWidget, FIND_BY_UNAME='main_tab'): begin
       tab_event, Event
+    end
+    
+    widget_info(wWidget, find_by_uname='greg_selection_tab'): begin
+      greg_selection_tab_event, event
     end
     
     ;HELP BUTTON
@@ -184,83 +202,89 @@ PRO MAIN_BASE_event, Event
     ;****1D PLOT TAB**
     ;1D_2D plot of DATA
     WIDGET_INFO(wWidget, FIND_BY_UNAME='load_data_D_draw'): begin
+      
+      ;if back is 'peak outside Back. ROIs, don't do anything
+      back_peak_tab_value = getTabValue(event=event,uname='data_back_peak_rescale_tab')
+      back_tab_value = getTabValue(event=event, uname='greg_selection_tab')
+      if (back_peak_tab_value eq 0 and back_tab_value eq 1) then return
+      
       error = 0
-   ;  CATCH, error
+      ;  CATCH, error
       IF (error NE 0) THEN BEGIN
         CATCH,/CANCEL
       ENDIF ELSE BEGIN
         IF ((*global).DataNeXusFound) THEN BEGIN
         
-;          ;show x/y and counts ************************************************
-;          x = Event.x
-;          ;          coeff_congrid_tof = (*global).congrid_x_coeff
-;          ;          new_x = FIX(FLOAT(x) / FLOAT(coeff_congrid_tof))
-;          putLabelValue, Event, $
-;            'data_x_info_value', $
-;            STRCOMPRESS(x,/REMOVE_ALL)
-;          IF ((*global).miniVersion EQ 1) THEN BEGIN
-;            coeff = 1
-;          ENDIF ELSE BEGIN
-;            coeff = 2
-;          ENDELSE
-;          putLabelValue, $
-;            Event, $
-;            'data_y_info_value', $
-;            STRCOMPRESS(FIX((Event.y/coeff)),/REMOVE_ALL)
-;            
-;          tvimg = (*(*global).tvimg_data_ptr)
-;          
-;          IF ((*global).miniVersion) THEN BEGIN
-;            coeff = 1
-;          ENDIF ELSE BEGIN
-;            coeff = 2
-;          ENDELSE
-;          if (event.y gt coeff*255) then return
-;          
-;          putLabelValue, $
-;            Event, $
-;            'data_counts_info_value', $
-;            STRCOMPRESS(FIX(tvimg[Event.x,Event.y]),/REMOVE_ALL)
-;          ;********************************************************************
-;            
-;          IF ((*global).first_event) THEN BEGIN
-;            ;only if there is a NeXus loaded
-;            CASE (event.ch) OF ;u and d keys
-;              117: BEGIN
-;                REFreduction_ManuallyMoveDataBackPeakUp, Event
-;                calculate_data_dirpix, Event
-;                plot_average_data_peak_value, Event
-;                bring_to_life_or_refresh_counts_vs_pixel, event
-;              END
-;              100: BEGIN
-;                REFreduction_ManuallyMoveDataBackPeakDown, Event
-;                calculate_data_dirpix, Event
-;                plot_average_data_peak_value, Event
-;                bring_to_life_or_refresh_counts_vs_pixel, event
-;              END
-;              ELSE:
-;            ENDCASE
-;            CASE (event.key) OF ;Up and Down arrow keys
-;              7: BEGIN
-;                REFreduction_ManuallyMoveDataBackPeakUp, Event
-;                calculate_data_dirpix, Event
-;                plot_average_data_peak_value, Event
-;                bring_to_life_or_refresh_counts_vs_pixel, event
-;              END
-;              8: BEGIN
-;                REFreduction_ManuallyMoveDataBackPeakDown, Event
-;                calculate_data_dirpix, Event
-;                plot_average_data_peak_value, Event
-;                bring_to_life_or_refresh_counts_vs_pixel, event
-;              END
-;              ELSE:
-;            ENDCASE
-;            (*global).first_event = 0
-;            
-;          ENDIF ELSE BEGIN
-;            (*global).first_event = 1
-;          ENDELSE
-          
+          ;          ;show x/y and counts ************************************************
+          ;          x = Event.x
+          ;          ;          coeff_congrid_tof = (*global).congrid_x_coeff
+          ;          ;          new_x = FIX(FLOAT(x) / FLOAT(coeff_congrid_tof))
+          ;          putLabelValue, Event, $
+          ;            'data_x_info_value', $
+          ;            STRCOMPRESS(x,/REMOVE_ALL)
+          ;          IF ((*global).miniVersion EQ 1) THEN BEGIN
+          ;            coeff = 1
+          ;          ENDIF ELSE BEGIN
+          ;            coeff = 2
+          ;          ENDELSE
+          ;          putLabelValue, $
+          ;            Event, $
+          ;            'data_y_info_value', $
+          ;            STRCOMPRESS(FIX((Event.y/coeff)),/REMOVE_ALL)
+          ;
+          ;          tvimg = (*(*global).tvimg_data_ptr)
+          ;
+          ;          IF ((*global).miniVersion) THEN BEGIN
+          ;            coeff = 1
+          ;          ENDIF ELSE BEGIN
+          ;            coeff = 2
+          ;          ENDELSE
+          ;          if (event.y gt coeff*255) then return
+          ;
+          ;          putLabelValue, $
+          ;            Event, $
+          ;            'data_counts_info_value', $
+          ;            STRCOMPRESS(FIX(tvimg[Event.x,Event.y]),/REMOVE_ALL)
+          ;          ;********************************************************************
+          ;
+          ;          IF ((*global).first_event) THEN BEGIN
+          ;            ;only if there is a NeXus loaded
+          ;            CASE (event.ch) OF ;u and d keys
+          ;              117: BEGIN
+          ;                REFreduction_ManuallyMoveDataBackPeakUp, Event
+          ;                calculate_data_dirpix, Event
+          ;                plot_average_data_peak_value, Event
+          ;                bring_to_life_or_refresh_counts_vs_pixel, event
+          ;              END
+          ;              100: BEGIN
+          ;                REFreduction_ManuallyMoveDataBackPeakDown, Event
+          ;                calculate_data_dirpix, Event
+          ;                plot_average_data_peak_value, Event
+          ;                bring_to_life_or_refresh_counts_vs_pixel, event
+          ;              END
+          ;              ELSE:
+          ;            ENDCASE
+          ;            CASE (event.key) OF ;Up and Down arrow keys
+          ;              7: BEGIN
+          ;                REFreduction_ManuallyMoveDataBackPeakUp, Event
+          ;                calculate_data_dirpix, Event
+          ;                plot_average_data_peak_value, Event
+          ;                bring_to_life_or_refresh_counts_vs_pixel, event
+          ;              END
+          ;              8: BEGIN
+          ;                REFreduction_ManuallyMoveDataBackPeakDown, Event
+          ;                calculate_data_dirpix, Event
+          ;                plot_average_data_peak_value, Event
+          ;                bring_to_life_or_refresh_counts_vs_pixel, event
+          ;              END
+          ;              ELSE:
+          ;            ENDCASE
+          ;            (*global).first_event = 0
+          ;
+          ;          ENDIF ELSE BEGIN
+          ;            (*global).first_event = 1
+          ;          ENDELSE
+        
           IF( Event.type EQ 0 )THEN BEGIN ;click
             (*global).left_clicked = 1b
             IF (Event.press EQ 1) THEN begin
@@ -281,7 +305,7 @@ PRO MAIN_BASE_event, Event
             if ((*global).left_clicked) then begin
               REFreduction_DataSelectionMove, Event
               calculate_data_dirpix, Event
-             plot_average_data_peak_value, Event
+              plot_average_data_peak_value, Event
             endif
           ENDIF
         ENDIF
@@ -368,7 +392,7 @@ PRO MAIN_BASE_event, Event
       if (isDataBackPeakZoomSelected(Event) eq 1) then begin ;peak selection
         bring_to_life_or_refresh_counts_vs_pixel, event
       endif
-    
+      
     end
     
     ;Background Ymin and Ymax -------------------------------------------------
@@ -764,43 +788,43 @@ PRO MAIN_BASE_event, Event
         IF ((*global).NormNeXusFound) THEN BEGIN
           ;only if there is a NeXus loaded
         
-;          ;show x/y and counts ************************************************
-;          putLabelValue, Event, $
-;            'norm_x_info_value', $
-;            STRCOMPRESS(Event.x,/REMOVE_ALL)
-;          IF ((*global).miniVersion EQ 1) THEN BEGIN
-;            coeff = 1
-;          ENDIF ELSE BEGIN
-;            coeff = 2
-;          ENDELSE
-;          putLabelValue, $
-;            Event, $
-;            'norm_y_info_value', $
-;            STRCOMPRESS(FIX((Event.y/coeff)),/REMOVE_ALL)
-;            
-;          tvimg = (*(*global).tvimg_norm_ptr)
-;          
-;          putLabelValue, $
-;            Event, $
-;            'norm_counts_info_value', $
-;            STRCOMPRESS(FIX(tvimg[Event.x,Event.y]),/REMOVE_ALL)
-;          ;********************************************************************
-            
-;          IF ((*global).first_event) THEN BEGIN
-;            CASE (event.ch) OF ;u and d keys
-;              117: REFreduction_ManuallyMoveNormBackPeakUp, Event
-;              100: REFreduction_ManuallyMoveNormBackPeakDown, Event
-;              ELSE:
-;            ENDCASE
-;            CASE (event.key) OF ;Up and Down arrow keys
-;              7: REFreduction_ManuallyMoveNormBackPeakUp, Event
-;              8: REFreduction_ManuallyMoveNormBackPeakDown, Event
-;              ELSE:
-;            ENDCASE
-;            (*global).first_event = 0
-;          ENDIF ELSE BEGIN
-;            (*global).first_event = 1
-;          ENDELSE
+          ;          ;show x/y and counts ************************************************
+          ;          putLabelValue, Event, $
+          ;            'norm_x_info_value', $
+          ;            STRCOMPRESS(Event.x,/REMOVE_ALL)
+          ;          IF ((*global).miniVersion EQ 1) THEN BEGIN
+          ;            coeff = 1
+          ;          ENDIF ELSE BEGIN
+          ;            coeff = 2
+          ;          ENDELSE
+          ;          putLabelValue, $
+          ;            Event, $
+          ;            'norm_y_info_value', $
+          ;            STRCOMPRESS(FIX((Event.y/coeff)),/REMOVE_ALL)
+          ;
+          ;          tvimg = (*(*global).tvimg_norm_ptr)
+          ;
+          ;          putLabelValue, $
+          ;            Event, $
+          ;            'norm_counts_info_value', $
+          ;            STRCOMPRESS(FIX(tvimg[Event.x,Event.y]),/REMOVE_ALL)
+          ;          ;********************************************************************
+        
+          ;          IF ((*global).first_event) THEN BEGIN
+          ;            CASE (event.ch) OF ;u and d keys
+          ;              117: REFreduction_ManuallyMoveNormBackPeakUp, Event
+          ;              100: REFreduction_ManuallyMoveNormBackPeakDown, Event
+          ;              ELSE:
+          ;            ENDCASE
+          ;            CASE (event.key) OF ;Up and Down arrow keys
+          ;              7: REFreduction_ManuallyMoveNormBackPeakUp, Event
+          ;              8: REFreduction_ManuallyMoveNormBackPeakDown, Event
+          ;              ELSE:
+          ;            ENDCASE
+          ;            (*global).first_event = 0
+          ;          ENDIF ELSE BEGIN
+          ;            (*global).first_event = 1
+          ;          ENDELSE
           IF( Event.type EQ 0 )THEN BEGIN
             IF (Event.press EQ 1) THEN $
               REFreduction_NormSelectionPressLeft, Event ;left button
@@ -1510,7 +1534,7 @@ PRO MAIN_BASE_event, Event
     widget_info(wWidget, $
       find_by_uname='beamdiv_corr_yes'): begin
       if ((*global).is_ucams_super_user) then begin
-      ActivateWidget, Event, 'beamdiv_settings', 1
+        ActivateWidget, Event, 'beamdiv_settings', 1
       endif
       REFreduction_CommandLineGenerator, event
     end
@@ -1518,7 +1542,7 @@ PRO MAIN_BASE_event, Event
     widget_info(wWidget, $
       find_by_uname='beamdiv_corr_no'): begin
       if ((*global).is_ucams_super_user) then begin
-      ActivateWidget, Event, 'beamdiv_settings', 0
+        ActivateWidget, Event, 'beamdiv_settings', 0
       endif
       REFreduction_CommandLineGenerator, event
     end
@@ -1725,7 +1749,7 @@ PRO MAIN_BASE_event, Event
       BatchTab_RunActiveBackground, Event
     end
     
-    ;;Load Batch file 
+    ;;Load Batch file
     WIDGET_INFO(wWidget, FIND_BY_UNAME='load_batch_button'): begin
       BatchTab_LoadBatchFile, Event
       SaveDataNormInputValues, Event

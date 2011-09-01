@@ -819,7 +819,7 @@ PRO plot_average_data_peak_value, Event
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
-;  coefficient = getUDCoefficient(Event) ;1 for low, 2 for high
+  ;  coefficient = getUDCoefficient(Event) ;1 for low, 2 for high
   dirpix = (*global).dirpix
   geo_dirpix = getYDeviceFromData(event=event, type='data', data_value=dirpix)
   
@@ -842,3 +842,111 @@ PRO plot_average_data_peak_value, Event
     LINESTYLE = 2
     
 END
+
+;+
+; :Description:
+;    This will plot the background region
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro plot_back_value, event
+  compile_opt idl2
+  
+  id = widget_info(event.top, find_by_uname='load_data_D_draw')
+  geometry = widget_info(id,/geometry)
+  xsize_1d_draw = geometry.scr_xsize
+  
+  peak_ymin_value = getValue(event=event, $
+    uname='data_d_selection_roi_ymin_cw_field')
+    
+  peak_ymax_value = getValue(event=event, $
+    uname='data_d_selection_roi_ymax_cw_field')
+    
+  if (peak_ymin_value ne 0) then begin
+    ymin_device = getYDeviceFromData(event=event, $
+      type='data',$
+      data_value=peak_ymin_value)
+      
+    plots, 0, ymin_device, /device, color=fsc_color('white')
+    plots, xsize_1d_draw, ymin_device, /device, color=fsc_color('white'), /continue
+    
+  endif
+  
+  if (peak_ymax_value ne 0) then begin
+    ymax_device = getYDeviceFromData(event=event, $
+      type='data',$
+      data_value=peak_ymax_value)
+      
+    plots, 0, ymax_device, /device, color=fsc_color('white')
+    plots, xsize_1d_draw, ymax_device, /device, color=fsc_color('white'), /continue
+    
+  endif
+  
+end
+
+;+
+; :Description:
+;    This plot the peak and the average value that goes with it
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro plot_data_peak_value, event
+  compile_opt idl2
+  
+  id = widget_info(event.top, find_by_uname='load_data_D_draw')
+  geometry = widget_info(id,/geometry)
+  xsize_1d_draw = geometry.scr_xsize
+  
+  peak_ymin_value = getValue(event=event, $
+    uname='data_d_selection_peak_ymin_cw_field')
+    
+  peak_ymax_value = getValue(event=event, $
+    uname='data_d_selection_peak_ymax_cw_field')
+    
+  if (peak_ymin_value ne 0) then begin
+    ymin_device = getYDeviceFromData(event=event, $
+      type='data',$
+      data_value=peak_ymin_value)
+      
+    plots, 0, ymin_device, /device, color=fsc_color('red')
+    plots, xsize_1d_draw, ymin_device, /device, color=fsc_color('red'), /continue
+    
+  endif
+  
+  if (peak_ymax_value ne 0) then begin
+    ymax_device = getYDeviceFromData(event=event, $
+      type='data',$
+      data_value=peak_ymax_value)
+      
+    plots, 0, ymax_device, /device, color=fsc_color('red')
+    plots, xsize_1d_draw, ymax_device, /device, color=fsc_color('red'), /continue
+    
+  endif
+  
+  if (peak_ymin_value ne 0 and $
+    peak_ymax_value ne 0) then begin
+    
+    ymean = float(getValue(event=event, $
+      uname='data_center_pixel_uname'))
+    ymean_device = getYDeviceFromData(event=event, $
+      type='data',$
+      data_value=ymean)
+      
+    plots, 0, ymean_device, /device, color=fsc_color('blue')
+    plots, xsize_1d_draw, ymean_device, /device, color=fsc_color('blue'), $
+      /continue, $
+      linestyle=2
+      
+  endif
+  
+end
