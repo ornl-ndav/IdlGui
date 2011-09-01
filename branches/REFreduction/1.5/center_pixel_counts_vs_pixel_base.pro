@@ -200,7 +200,7 @@ pro bring_to_life_or_refresh_counts_vs_pixel, event
   
   _base = (*global).center_px_counts_vs_pixel_base_id
   
-  ; catch, error
+  catch, error
   error = 0
   if (error ne 0) then begin
     catch,/cancel

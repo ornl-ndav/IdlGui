@@ -52,14 +52,14 @@ pro greg_selection_tab_event, event
       REFReduction_RescaleDataPlot, Event
       plot_data_peak_value, event
       plot_back_value, event
-      end
+    end
     1: begin ;Peak is outside Back. ROIs
       refresh_greg_selection, event
     end
   endcase
-   bring_to_life_or_refresh_counts_vs_pixel, event
-   
-  end
+  bring_to_life_or_refresh_counts_vs_pixel, event
+  
+end
 
 ;this function is trigerred each time the user changes tab (main tabs)
 PRO tab_event, Event

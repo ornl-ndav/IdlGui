@@ -381,6 +381,7 @@ PRO miniMakeGuiLoadData1DTab, D_DD_Tab, $
     TITLE     = sTab.list[0])
     
      back_tab = widget_tab(wRoiBase,$
+     uname='greg_selection_tab',$
     frame=0)
     
   back_base = widget_base(back_tab,$
