@@ -60,17 +60,21 @@ PRO MAIN_BASE_event, Event
     ;greg selection
     widget_info(wWidget, find_by_uname='greg_roi1_from_value'): begin
       refresh_greg_selection, event
+      bring_to_life_or_refresh_counts_vs_pixel, event
     end
     widget_info(wWidget, find_by_uname='greg_roi1_to_value'): begin
       refresh_greg_selection, event
+      bring_to_life_or_refresh_counts_vs_pixel, event
     end
     widget_info(wWidget, find_by_uname='greg_roi2_from_value'): begin
       refresh_greg_selection, event
+      bring_to_life_or_refresh_counts_vs_pixel, event
     end
     widget_info(wWidget, find_by_uname='greg_roi2_to_value'): begin
       refresh_greg_selection, event
+      bring_to_life_or_refresh_counts_vs_pixel, event
     end
-
+    
     ;bring to life the TOF selection base
     widget_info(wWidget, find_by_uname='tof_selection_tool_button'): begin
       tof_selection_tool_button_eventcb, event, source='data'
@@ -202,9 +206,10 @@ PRO MAIN_BASE_event, Event
     ;****1D PLOT TAB**
     ;1D_2D plot of DATA
     WIDGET_INFO(wWidget, FIND_BY_UNAME='load_data_D_draw'): begin
-      
+    
       ;if back is 'peak outside Back. ROIs, don't do anything
-      back_peak_tab_value = getTabValue(event=event,uname='data_back_peak_rescale_tab')
+      back_peak_tab_value = getTabValue(event=event,$
+        uname='data_roi_peak_background_tab')
       back_tab_value = getTabValue(event=event, uname='greg_selection_tab')
       if (back_peak_tab_value eq 0 and back_tab_value eq 1) then return
       
