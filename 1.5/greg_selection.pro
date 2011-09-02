@@ -360,3 +360,36 @@ pro refresh_greg_selection, event, $
   
 end
 
+;+
+; :Description:
+;    This routine will check if the SAVE ROI button can be validated or not
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro check_save_greg_roi_button, event
+compile_opt idl2
+
+      roi1_from = getValue(event=event, uname='greg_roi1_from_value')
+    roi1_to = getValue(event=event, uname='greg_roi1_to_value')
+    
+    roi2_from = getValue(event=event, uname='greg_roi2_from_value')
+    roi2_to = getValue(event=event, uname='greg_roi2_to_value')
+
+  status=1
+  if ((strcompress(roi1_from,/remove_all) eq '') or $
+  (strcompress(roi1_to,/remove_all) eq '') or $
+  (strcompress(roi2_from,/remove_all) eq '') or $
+  (strcompress(roi2_to,/remove_all) eq '')) then begin
+  status=0
+  endif
+  
+  ActivateWidget, Event, 'save_greg_selection_button', status
+    
+end
+
+

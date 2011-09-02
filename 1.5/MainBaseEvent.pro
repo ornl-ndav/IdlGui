@@ -62,24 +62,28 @@ PRO MAIN_BASE_event, Event
       IF ((*global).DataNeXusFound) THEN BEGIN
         refresh_greg_selection, event, /refresh_main_plot, /refresh_peak
         bring_to_life_or_refresh_counts_vs_pixel, event
+        check_save_greg_roi_button, event
       endif
     end
     widget_info(wWidget, find_by_uname='greg_roi1_to_value'): begin
       IF ((*global).DataNeXusFound) THEN BEGIN
         refresh_greg_selection, event, /refresh_main_plot, /refresh_peak
         bring_to_life_or_refresh_counts_vs_pixel, event
+        check_save_greg_roi_button, event
       endif
     end
     widget_info(wWidget, find_by_uname='greg_roi2_from_value'): begin
       IF ((*global).DataNeXusFound) THEN BEGIN
         refresh_greg_selection, event, /refresh_main_plot, /refresh_peak
         bring_to_life_or_refresh_counts_vs_pixel, event
+        check_save_greg_roi_button, event
       endif
     end
     widget_info(wWidget, find_by_uname='greg_roi2_to_value'): begin
       IF ((*global).DataNeXusFound) THEN BEGIN
         refresh_greg_selection, event, /refresh_main_plot, /refresh_peak
         bring_to_life_or_refresh_counts_vs_pixel, event
+        check_save_greg_roi_button, event
       endif
     end
     ;save roi
@@ -232,6 +236,7 @@ PRO MAIN_BASE_event, Event
         if (back_peak_tab_value eq 0 and back_tab_value eq 1) then begin
           greg_selection, event
           bring_to_life_or_refresh_counts_vs_pixel, event
+          check_save_greg_roi_button, event
           return
         endif
         
