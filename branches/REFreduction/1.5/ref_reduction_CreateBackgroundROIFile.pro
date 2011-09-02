@@ -45,9 +45,11 @@ PRO REFreduction_CreateDataBackgroundROIFile, Event, type
     SelectionArray = (*(*global).data_roi_selection)
   ENDELSE
   
-  ymin = getYDataFromDevice(event=event, type='data', device_value=SelectionArray[0])
-  ymax = getYDataFromDevice(event=event, type='data', device_value=SelectionArray[1])
-  
+  ymin = getYDataFromDevice(event=event, type='data', $
+    device_value=SelectionArray[0])
+  ymax = getYDataFromDevice(event=event, type='data', $
+    device_value=SelectionArray[1])
+    
   IF ((*global).miniVersion) THEN BEGIN
     coeff = 1
   ENDIF ELSE BEGIN
@@ -184,17 +186,19 @@ PRO REFreduction_CreateNormBackgroundROIFile, Event, type
     SelectionArray = (*(*global).norm_roi_selection)
   ENDELSE
   
-;  IF ((*global).miniVersion) THEN BEGIN
-;    coeff = 1
-;  ENDIF ELSE BEGIN
-;    coeff = 2
-;  ENDELSE
+  ;  IF ((*global).miniVersion) THEN BEGIN
+  ;    coeff = 1
+  ;  ENDIF ELSE BEGIN
+  ;    coeff = 2
+  ;  ENDELSE
   
-  ymin = getYDataFromDevice(event=event, type='norm', device_value=SelectionArray[0])
-  ymax = getYDataFromDevice(event=event, type='norm', device_value=SelectionArray[1])
-  
-;  Ymin = SelectionArray[0]/coeff
-;  Ymax = SelectionArray[1]/coeff
+  ymin = getYDataFromDevice(event=event, type='norm', $
+    device_value=SelectionArray[0])
+  ymax = getYDataFromDevice(event=event, type='norm', $
+    device_value=SelectionArray[1])
+    
+  ;  Ymin = SelectionArray[0]/coeff
+  ;  Ymax = SelectionArray[1]/coeff
   YNbr = (Ymax-Ymin)
   
   IF (YNbr LE 1) THEN BEGIN

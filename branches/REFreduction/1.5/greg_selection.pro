@@ -34,6 +34,118 @@
 
 ;+
 ; :Description:
+;    This function returns the intarr array that goes from from_pixel
+;    to to_pixel
+;
+; :Keywords:
+;    from_pixel
+;    to_pixel
+;
+; :Author: j35
+;-
+function create_roi_array, from_pixel=from_pixel, to_pixel=to_pixel
+  compile_opt idl2
+  
+  nbr_points = to_pixel - from_pixel + 1
+  _array = indgen(nbr_points) + from_pixel
+  
+  return, _array
+end
+
+;+
+; :Description:
+;    This procedure is reached by the SAVE roi button of the greg selection
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro save_greg_selection, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  id = widget_info(event.top, find_by_uname='MAIN_BASE')
+  
+  path = (*global).dr_output_path
+  ;pick filename
+  filename = dialog_pickfile(dialog_parent=id, $
+    filter=['*.txt'],$
+    get_path=path, $
+    path=path, $
+    default_extension='txt',$
+    /write,$
+    /overwrite_prompt, $
+    title='Pick or define background ROI file name')
+    
+  if (filename[0] ne '') then begin
+  
+    filename = filename[0]
+    (*global).dr_output_path = path
+    
+    roi1_from = fix(getValue(event=event, uname='greg_roi1_from_value'))
+    roi1_to = fix(getValue(event=event, uname='greg_roi1_to_value'))
+    
+    roi2_from = fix(getValue(event=event, uname='greg_roi2_from_value'))
+    roi2_to = fix(getValue(event=event, uname='greg_roi2_to_value'))
+    
+    ;make sure roi1_from is < roi1_to, if not just complain and stop here
+    if (roi1_from ge roi1_to) then begin
+      message_text = ['Please check ROI #1 from and to values!','',$
+        'ex: Make sure that ROI#1_from value is less than ROI#1_to!']
+      result = dialog_message(message_text,$
+        /center,$
+        /error,$
+        dialog_parent=id, $
+        title='ROI file not created !')
+      return
+    endif
+    
+    ;make sure roi2_from is < roi2_to, if not just complain and stop here
+    if (roi2_from ge roi2_to) then begin
+      message_text = ['Please check ROI #2 from and to values!','',$
+        'ex: Make sure that ROI#2_from value is less than ROI#2_to!']
+      result = dialog_message(message_text,$
+        /center,$
+        /error,$
+        dialog_parent=id, $
+        title='ROI file not created !')
+      return
+    endif
+    
+    ;make sure roi1_from < roi2_from
+    roi_from_min = min([roi1_from,roi2_from], max=roi_from_max)
+    roi_to_min = min([roi1_to, roi2_to], max=roi_to_max)
+    
+    roi_array_1 = create_roi_array(from_pixel=roi_from_min,$
+      to_pixel=roi_to_min)
+      
+    roi_array_2 = create_roi_array(from_pixel=roi_from_max,$
+      to_pixel=roi_to_max)
+      
+    roi_array = [roi_array_1, roi_array_2]
+    NxMax = (*global).Nx_REF_L
+    
+    openw, 1, filename
+    sz = n_elements(roi_array)
+    for i=0L, sz-1 do begin
+      for j=0L, NxMax-1 do begin
+        _line = 'bank1_' + strcompress(j,/remove_all)
+        _line += '_' + strcompress(roi_array[i],/remove_all)
+        printf, 1, _line
+      endfor
+    endfor
+    close, 1
+    free_lun, 1
+    
+  endif
+  
+end
+
+;+
+; :Description:
 ;    Return the current active pixel selected (roi1_from, roi1_to, roi2_from
 ;    or roi2_to)
 ;

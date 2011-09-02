@@ -82,6 +82,14 @@ PRO MAIN_BASE_event, Event
         bring_to_life_or_refresh_counts_vs_pixel, event
       endif
     end
+    ;save roi
+    widget_info(wWidget, find_by_uname='save_greg_selection_button'): begin
+      save_greg_selection, event
+    end
+    ;load roi
+    widget_info(wWidget, find_by_uname='load_greg_selection_button'): begin
+    
+    end
     
     ;bring to life the TOF selection base
     widget_info(wWidget, find_by_uname='tof_selection_tool_button'): begin
