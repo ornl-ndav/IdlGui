@@ -59,20 +59,28 @@ PRO MAIN_BASE_event, Event
   
     ;greg selection
     widget_info(wWidget, find_by_uname='greg_roi1_from_value'): begin
-      refresh_greg_selection, event
-      bring_to_life_or_refresh_counts_vs_pixel, event
+      IF ((*global).DataNeXusFound) THEN BEGIN
+        refresh_greg_selection, event, /refresh_main_plot, /refresh_peak
+        bring_to_life_or_refresh_counts_vs_pixel, event
+      endif
     end
     widget_info(wWidget, find_by_uname='greg_roi1_to_value'): begin
-      refresh_greg_selection, event
-      bring_to_life_or_refresh_counts_vs_pixel, event
+      IF ((*global).DataNeXusFound) THEN BEGIN
+        refresh_greg_selection, event, /refresh_main_plot, /refresh_peak
+        bring_to_life_or_refresh_counts_vs_pixel, event
+      endif
     end
     widget_info(wWidget, find_by_uname='greg_roi2_from_value'): begin
-      refresh_greg_selection, event
-      bring_to_life_or_refresh_counts_vs_pixel, event
+      IF ((*global).DataNeXusFound) THEN BEGIN
+        refresh_greg_selection, event, /refresh_main_plot, /refresh_peak
+        bring_to_life_or_refresh_counts_vs_pixel, event
+      endif
     end
     widget_info(wWidget, find_by_uname='greg_roi2_to_value'): begin
-      refresh_greg_selection, event
-      bring_to_life_or_refresh_counts_vs_pixel, event
+      IF ((*global).DataNeXusFound) THEN BEGIN
+        refresh_greg_selection, event, /refresh_main_plot, /refresh_peak
+        bring_to_life_or_refresh_counts_vs_pixel, event
+      endif
     end
     
     ;bring to life the TOF selection base
@@ -207,14 +215,22 @@ PRO MAIN_BASE_event, Event
     ;1D_2D plot of DATA
     WIDGET_INFO(wWidget, FIND_BY_UNAME='load_data_D_draw'): begin
     
-      ;if back is 'peak outside Back. ROIs, don't do anything
-      back_peak_tab_value = getTabValue(event=event,$
-        uname='data_roi_peak_background_tab')
-      back_tab_value = getTabValue(event=event, uname='greg_selection_tab')
-      if (back_peak_tab_value eq 0 and back_tab_value eq 1) then return
+      IF ((*global).DataNeXusFound) THEN BEGIN
+      
+        ;if back is 'peak outside Back. ROIs, don't do anything
+        back_peak_tab_value = getTabValue(event=event,$
+          uname='data_roi_peak_background_tab')
+        back_tab_value = getTabValue(event=event, uname='greg_selection_tab')
+        if (back_peak_tab_value eq 0 and back_tab_value eq 1) then begin
+          greg_selection, event
+          bring_to_life_or_refresh_counts_vs_pixel, event
+          return
+        endif
+        
+      endif ;end of DataNeXusFound
       
       error = 0
-      ;  CATCH, error
+      CATCH, error
       IF (error NE 0) THEN BEGIN
         CATCH,/CANCEL
       ENDIF ELSE BEGIN
@@ -296,21 +312,25 @@ PRO MAIN_BASE_event, Event
               REFreduction_DataSelectionPressLeft, Event ;left button
               calculate_data_dirpix, Event
               plot_average_data_peak_value, Event
+              refresh_greg_selection, event
             endif
             IF (Event.press EQ 4) THEN $
               REFreduction_DataselectionPressRight, Event ;right button
+            refresh_greg_selection, event
           ENDIF
           IF (Event.type EQ 1) THEN BEGIN ;release
             (*global).left_clicked = 0b
             REFreduction_DataSelectionRelease, Event
             calculate_data_dirpix, Event
             plot_average_data_peak_value, Event
+            refresh_greg_selection, event
           ENDIF
           IF (Event.type EQ 2) THEN BEGIN ;move
             if ((*global).left_clicked) then begin
               REFreduction_DataSelectionMove, Event
               calculate_data_dirpix, Event
               plot_average_data_peak_value, Event
+              refresh_greg_selection, event
             endif
           ENDIF
         ENDIF

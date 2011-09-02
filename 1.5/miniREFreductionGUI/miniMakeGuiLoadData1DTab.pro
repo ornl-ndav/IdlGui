@@ -504,6 +504,9 @@ PRO miniMakeGuiLoadData1DTab, D_DD_Tab, $
     xsize=4,$    
     uname='greg_roi1_from_value',$
     /editable)
+ select = widget_label(row1,$
+    uname='greg_roi1_from_selected',$
+    value='<<') 
   space = widget_label(row1,$
     value='  ')
   to_label=widget_label(row1,$
@@ -513,7 +516,10 @@ PRO miniMakeGuiLoadData1DTab, D_DD_Tab, $
     uname='greg_roi1_to_value',$
     xsize=4,$
     /editable)
-    
+   select=widget_label(row1,$
+    uname='greg_roi1_to_selected',$
+    value='  ')
+      
   row1 = widget_base(back2_base,$
     /row)
   label = widget_label(row1,$
@@ -525,6 +531,9 @@ PRO miniMakeGuiLoadData1DTab, D_DD_Tab, $
     uname='greg_roi2_from_value',$
     xsize=4,$
     /editable)
+     select = widget_label(row1,$
+    value = '  ',$
+    uname='greg_roi2_from_selected')
   space = widget_label(row1,$
     value='  ')
   to_label=widget_label(row1,$
@@ -534,7 +543,10 @@ PRO miniMakeGuiLoadData1DTab, D_DD_Tab, $
     uname='greg_roi2_to_value',$
     xsize=4,$
     /editable)
-    
+    select = widget_label(row1,$
+    value='  ',$
+    uname='greg_roi2_to_selected')
+      
   row2=widget_base(back2_base,$
   /align_center,$
     /row)
