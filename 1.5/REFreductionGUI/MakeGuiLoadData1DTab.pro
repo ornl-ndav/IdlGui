@@ -546,11 +546,13 @@ PRO MakeGuiLoadData1DTab, D_DD_Tab, $
     /row)
   save=widget_button(row2,$
     value='SAVE...',$
+    uname='save_greg_selection_button', $
     scr_xsize=100)
   space=widget_label(row2,$
     value='              ')
   load=widget_button(row2,$
     value='LOAD...',$
+    uname='load_greg_selection_button',$
     scr_xsize=100)
     
   ;TAB #1-2 Peak/Back base ======================================================
