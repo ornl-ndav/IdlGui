@@ -54,10 +54,14 @@ pro greg_selection_tab_event, event
       plot_back_value, event
     end
     1: begin ;Peak is outside Back. ROIs
-      refresh_greg_selection, event
+      refresh_greg_selection, event,  /refresh_peak, /refresh_main_plot
     end
   endcase
-  bring_to_life_or_refresh_counts_vs_pixel, event
+  
+    widget_control, event.top, get_uvalue=global
+  IF ((*global).DataNeXusFound) THEN BEGIN
+    bring_to_life_or_refresh_counts_vs_pixel, event
+  endif
   
 end
 

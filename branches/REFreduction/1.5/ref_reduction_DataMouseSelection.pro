@@ -652,6 +652,11 @@ PRO ReplotOtherSelection, Event, ROIsignalBackZoomStatus
     END
   ENDCASE
   
+  back_tab_value = getTabValue(event=event, uname='greg_selection_tab')
+  if (back_tab_value eq 1) then begin
+  replot_roi = 0
+  endif
+  
   IF (replot_roi) THEN BEGIN
     color   = (*global).roi_selection_color
     y_array = (*(*global).data_roi_selection)
