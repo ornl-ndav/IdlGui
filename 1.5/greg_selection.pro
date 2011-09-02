@@ -34,6 +34,57 @@
 
 ;+
 ; :Description:
+;    Reached by the LOAD roi button of the greg selection
+;
+; :Params:
+;    event
+;
+;
+;
+; :Author: j35
+;-
+pro load_greg_selection, event
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  id = widget_info(event.top, find_by_uname='MAIN_BASE')
+  
+  path = (*global).dr_output_path
+  ;pick filename
+  filename = dialog_pickfile(dialog_parent=id, $
+    filter=['*.txt'],$
+    get_path=path, $
+    path=path, $
+    default_extension='txt',$
+    /write,$
+    /overwrite_prompt, $
+    title='Select background ROI file name!')
+    
+  if (filename[0] ne '') then begin
+  
+    filename = filename[0]
+    (*global).dr_output_path = path
+    
+    openr, 1 filename
+    nbr_lines = file_lines(filename)
+    _array = STRARR(nbr_lines)
+    readf,1, _array
+    close,1
+    free_lun, 1
+    
+    
+    
+    
+    
+    
+    
+    
+  endif
+  
+end
+
+;+
+; :Description:
 ;    This function returns the intarr array that goes from from_pixel
 ;    to to_pixel
 ;
@@ -78,7 +129,7 @@ pro save_greg_selection, event
     default_extension='txt',$
     /write,$
     /overwrite_prompt, $
-    title='Pick or define background ROI file name')
+    title='Pick or define background ROI file name!')
     
   if (filename[0] ne '') then begin
   
@@ -372,24 +423,24 @@ end
 ; :Author: j35
 ;-
 pro check_save_greg_roi_button, event
-compile_opt idl2
-
-      roi1_from = getValue(event=event, uname='greg_roi1_from_value')
-    roi1_to = getValue(event=event, uname='greg_roi1_to_value')
-    
-    roi2_from = getValue(event=event, uname='greg_roi2_from_value')
-    roi2_to = getValue(event=event, uname='greg_roi2_to_value')
-
+  compile_opt idl2
+  
+  roi1_from = getValue(event=event, uname='greg_roi1_from_value')
+  roi1_to = getValue(event=event, uname='greg_roi1_to_value')
+  
+  roi2_from = getValue(event=event, uname='greg_roi2_from_value')
+  roi2_to = getValue(event=event, uname='greg_roi2_to_value')
+  
   status=1
   if ((strcompress(roi1_from,/remove_all) eq '') or $
-  (strcompress(roi1_to,/remove_all) eq '') or $
-  (strcompress(roi2_from,/remove_all) eq '') or $
-  (strcompress(roi2_to,/remove_all) eq '')) then begin
-  status=0
+    (strcompress(roi1_to,/remove_all) eq '') or $
+    (strcompress(roi2_from,/remove_all) eq '') or $
+    (strcompress(roi2_to,/remove_all) eq '')) then begin
+    status=0
   endif
   
   ActivateWidget, Event, 'save_greg_selection_button', status
-    
+  
 end
 
 

@@ -92,7 +92,7 @@ PRO MAIN_BASE_event, Event
     end
     ;load roi
     widget_info(wWidget, find_by_uname='load_greg_selection_button'): begin
-    
+      load_greg_selection, event
     end
     
     ;bring to life the TOF selection base
