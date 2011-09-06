@@ -12,4 +12,9 @@ install:
 	cp need_help.sav /SNS/software/idltools/sav/
 	cp NeedHelp_images/*.png /SNS/software/idltools/sav/NeedHelp_images/
 	cp NeedHelp /SNS/software/idltools/
+	cp .NeedHelp.cfg /SNS/software5/idltools/sav/
+	cp need_help.sav /SNS/software5/idltools/sav/
+	cp NeedHelp_images/*.png /SNS/software5/idltools/sav/NeedHelp_images/
+	cp NeedHelp /SNS/software5/idltools/
+
 
