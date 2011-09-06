@@ -53,6 +53,7 @@ pro launch_this_application, event, button_name
   
   launch_application, event, application
   
+  if (button_name ne 'sns_tools') then begin
   ;pop up dialog message that informs the user that the process worked
   widget_id = widget_info(event.top, find_by_uname='MAIN_BASE')
   title = 'Fix applied with success!'
@@ -61,6 +62,7 @@ pro launch_this_application, event, button_name
   'to contact us and to help us finding the issue!'] 
   result = dialog_message(message_text,/information,title=title,$
   /center,dialog_parent=widget_id)
+endif
 
 end
 
