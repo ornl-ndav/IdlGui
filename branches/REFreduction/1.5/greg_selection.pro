@@ -34,6 +34,27 @@
 
 ;+
 ; :Description:
+;    This function retrieves the roi#1 from and to values and
+;    roi#2 from and to values
+;
+; :Keywords:
+;    event
+;    array
+;
+; :Author: j35
+;-
+function retrieve_list_greg_roi, event=event, $
+    array=_array
+  compile_opt idl2
+  
+  
+  
+  
+  
+end
+
+;+
+; :Description:
 ;    Reached by the LOAD roi button of the greg selection
 ;
 ; :Params:
@@ -56,8 +77,7 @@ pro load_greg_selection, event
     get_path=path, $
     path=path, $
     default_extension='txt',$
-    /write,$
-    /overwrite_prompt, $
+    /read,$
     title='Select background ROI file name!')
     
   if (filename[0] ne '') then begin
@@ -65,20 +85,21 @@ pro load_greg_selection, event
     filename = filename[0]
     (*global).dr_output_path = path
     
-    openr, 1 filename
+    openr, 1, filename
     nbr_lines = file_lines(filename)
     _array = STRARR(nbr_lines)
     readf,1, _array
     close,1
     free_lun, 1
     
-    
-    
-    
-    
-    
-    
-    
+    list_greg_rois = retrieve_list_greg_roi(event=event, $
+      array=_array)
+      
+      
+      
+      
+      
+      
   endif
   
 end
