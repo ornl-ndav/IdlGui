@@ -93,6 +93,9 @@ PRO MAIN_BASE_event, Event
     ;load roi
     widget_info(wWidget, find_by_uname='load_greg_selection_button'): begin
       load_greg_selection, event
+      refresh_greg_selection, event, /refresh_main_plot, /refresh_peak
+      bring_to_life_or_refresh_counts_vs_pixel, event
+      check_save_greg_roi_button, event
     end
     
     ;bring to life the TOF selection base

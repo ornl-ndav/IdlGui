@@ -38,21 +38,67 @@
 ;    roi#2 from and to values
 ;
 ; :Keywords:
-;    event
 ;    array
 ;
 ; :Author: j35
 ;-
-function retrieve_list_greg_roi, event=event, $
-    array=_array
+function retrieve_list_greg_roi, array=array
   compile_opt idl2
   
+  sz = n_elements(array)
   
+  list_px = !null
+  prev_px = 0
   
+  _index=0
+  while (_index lt sz) do begin
   
+  _line = strsplit(array[_index],'_',/extract,/regex)
+  new_px = _line[2]
   
+  if (new_px ne prev_px) then begin
+    list_px = [list_px, new_px]
+    prev_px = new_px
+    endif
+  
+  _index++
+  endwhile
+  
+return, list_px
 end
 
+;+
+; :Description:
+;    determine the ROI#1 from and to pixels values
+;    as well as the ROI#2 from and to pixels values
+;
+; :Keywords:
+;    list_px
+;
+; :Author: j35
+;-
+function retrieve_roi12_from_to, list_px=list_px
+compile_opt idl2
+
+roi1_from = list_px[0]
+roi2_to = list_px[-1]
+
+sz = n_elements(list_px)
+previous = list_px[1]
+for i=2, sz-2 do begin
+  new_value = list_px[i]
+  if (fix(new_value) - fix(previous) gt 1) then begin
+    roi1_to = previous
+    roi2_from = new_value
+    return, [roi1_from, roi1_to, roi2_from, roi2_to]
+  endif else begin
+  previous = new_value
+  endelse
+endfor
+
+return, [roi1_from, roi2_to, 0 , 0 ]
+end  
+    
 ;+
 ; :Description:
 ;    Reached by the LOAD roi button of the greg selection
@@ -88,18 +134,23 @@ pro load_greg_selection, event
     openr, 1, filename
     nbr_lines = file_lines(filename)
     _array = STRARR(nbr_lines)
-    readf,1, _array
+    readf, 1, _array
     close,1
     free_lun, 1
     
-    list_greg_rois = retrieve_list_greg_roi(event=event, $
-      array=_array)
+    list_greg_rois = retrieve_list_greg_roi(array=_array)
+    roi12_from_to = retrieve_roi12_from_to(list_px=list_greg_rois)  
       
-      
-      
-      
-      
-      
+    roi1_from = strcompress(roi12_from_to[0],/remove_all)
+    roi1_to = strcompress(roi12_from_to[1],/remove_all)
+    roi2_from = strcompress(roi12_from_to[2],/remove_all)
+    roi2_to = strcompress(roi12_from_to[3],/remove_all)
+    
+    putValue, event=event, 'greg_roi1_from_value', roi1_from
+    putvalue, event=event, 'greg_roi1_to_value', roi1_to
+    putValue, event=event, 'greg_roi2_from_value', roi2_from
+    putValue, event=event, 'greg_roi2_to_value', roi2_to
+
   endif
   
 end
