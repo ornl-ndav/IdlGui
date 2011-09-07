@@ -114,6 +114,8 @@ END
 function getMainDataNexusFileName, cmd
   compile_opt idl2
   
+  driver_list = ['reflect_reduction',$
+    'specmh_reduction']
   driver_list = ['specmh_reduction',$
     'reflect_reduction',$
     'specmh_reduction']
@@ -140,8 +142,7 @@ END
 ;------------------------------------------------------------------------------
 FUNCTION getAllDataNexusFileName, cmd
 
-  driver_list = ['specmh_reduction',$
-  'reflect_reduction', $
+  driver_list = ['reflect_reduction', $
     'specmh_reduction']
   index = 0
   nbr_driver = n_elements(driver_list)
