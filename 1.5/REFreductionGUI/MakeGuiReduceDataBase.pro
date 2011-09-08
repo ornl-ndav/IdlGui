@@ -161,7 +161,7 @@ PRO MakeGuiReduceDataBase, Event, REDUCE_BASE, IndividualBaseWidth
     /EDITABLE,$
     /ALIGN_LEFT,$
     /ALL_EVENTS)
- 
+   
   ;greg selection
   greg_base = widget_base(data_base,$
   xoffset = 30,$
