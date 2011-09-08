@@ -76,45 +76,66 @@ PRO REFreduction_CommandLineGenerator, Event
     'reduce_data_region_of_interest_file_name')
   data_roi_file = data_roi_file[0]
   
-  cmd += ' --data-roi-file='
-  IF (data_roi_file NE '') THEN BEGIN
-    cmd += data_roi_file
-  ENDIF ELSE BEGIN
-    cmd        += '?'
-    status_text = '- Please provide a data region of interest file. Go to ' + $
-      'DATA, '
-    status_text += 'select a ROI and save it.'
-    IF (StatusMessage GT 0) THEN BEGIN
-      append = 1
-    ENDIF ELSE BEGIN
-      append = 0
-    ENDELSE
-    putInfoInReductionStatus, Event, status_text, append
-    StatusMessage += 1
-  ENDELSE
+  back_tab_value = getTabValue(event=event, uname='greg_selection_tab')
+  if (isDataWithBackground(Event) && $
+    back_tab_value eq 1) then begin ;with background substraction
+    
+    ;peak ymin and ymax
+    ymin = getTextFieldValue(Event,'data_d_selection_peak_ymin_cw_field')
+    ymax = getTextFieldValue(Event,'data_d_selection_peak_ymax_cw_field')
+    putValue, event=event, 'reduce_greg_peak_ymin_uname', $
+      strcompress(ymin[0],/remove_all)
+    putValue, event=event, 'reduce_greg_peak_ymax_uname', $
+      strcompress(ymax[0],/remove_all)
+      
+    filename = '~/results/tmp_peak_file.txt'
+    create_greg_peak_file, event=event, filename=filename, $
+      from_px=ymin, $
+      to_px=ymax
+      
+    cmd += ' --data-roi-file=' + filename
+    
+  endif else begin
   
-  ;direction of integration
-  cmd += " --int-dir='y'"
+    cmd += ' --data-roi-file='
+    IF (data_roi_file NE '') THEN BEGIN
+      cmd += data_roi_file
+    ENDIF ELSE BEGIN
+      cmd        += '?'
+      status_text = '- Please provide a data region of interest file. Go to ' + $
+        'DATA, '
+      status_text += 'select a ROI and save it.'
+      IF (StatusMessage GT 0) THEN BEGIN
+        append = 1
+      ENDIF ELSE BEGIN
+        append = 0
+      ENDELSE
+      putInfoInReductionStatus, Event, status_text, append
+      StatusMessage += 1
+    ENDELSE
+    
+  endelse
   
   if (isDataWithBackground(Event)) then begin ;with background substraction
   
+    ;with or without greg selection
     back_tab_value = getTabValue(event=event, uname='greg_selection_tab')
     if (back_tab_value eq 1) then begin ;greg selection
     
-    cmd += 'dbkg-roi-file='
-    
-    roi1_from = fix(getValue(event=event, uname='greg_roi1_from_value'))
-    roi1_to = fix(getValue(event=event, uname='greg_roi1_to_value'))
-    
-    roi2_from = fix(getValue(event=event, uname='greg_roi2_from_value'))
-    roi2_to = fix(getValue(event=event, uname='greg_roi2_to_value'))
-    
-    
-    
-    
-    
+      mapBase, event, 'reduce_greg_base_uname', 1
+      cmd += ' --dbkg-roi-file='
+      filename = '~/results/tmp_greg_back_file.txt'
+      create_greg_selection, event=event, filename=filename
+      cmd += 'filename'
+      ;greg background
+      greg_back_file_name = (*global).greg_back_file_name
+      putValue, event=event, 'reduce_greg_back_filename_uname', $
+        greg_back_file_name
+        
     endif else begin ;old background selection
     
+      mapBase, event, 'reduce_greg_base_uname', 0
+      
       ;bring values of ymin and ymax from data base
       ymin = getTextFieldValue(Event,'data_d_selection_peak_ymin_cw_field')
       ymax = getTextFieldValue(Event,'data_d_selection_peak_ymax_cw_field')
@@ -174,13 +195,13 @@ PRO REFreduction_CommandLineGenerator, Event
   
   ;check if user wants data background or not
   IF (isDataWithBackground(Event)) THEN BEGIN ;yes, with background
-
-     back_tab_value = getTabValue(event=event, uname='greg_selection_tab')
-     if (back_tab_value eq 0) then begin ;old fashioned back
-    ;activate DATA Intermediate Plots
-    MapBase, Event, 'reduce_plot2_base', 0
-    MapBase, Event, 'reduce_plot3_base', 0
-    endif else begin
+  
+    back_tab_value = getTabValue(event=event, uname='greg_selection_tab')
+    if (back_tab_value eq 0) then begin ;old fashioned back
+      ;activate DATA Intermediate Plots
+      MapBase, Event, 'reduce_plot2_base', 0
+      MapBase, Event, 'reduce_plot3_base', 0
+    endif else begin ;greg way
     
     
     
@@ -196,6 +217,9 @@ PRO REFreduction_CommandLineGenerator, Event
     ;  ENDELSE
     MapBase, Event, 'reduce_plot2_base', 1
   END
+  
+  ;direction of integration
+  cmd += " --int-dir='y'"
   
   ;tof cutting
   tof_min = STRCOMPRESS(getTextFieldValue(Event,'tof_cutting_min'),/REMOVE_ALL)
