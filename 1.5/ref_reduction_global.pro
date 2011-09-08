@@ -88,6 +88,7 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     is_ucams_super_user: is_super_user, $
     
     greg_left_click: 0b, $
+    greg_back_file_name: '', $
     
     ;the rescaled in TOF range of the tvimg
     new_rescale_tvimg: ptr_new(0L), $

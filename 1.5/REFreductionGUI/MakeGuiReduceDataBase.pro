@@ -131,13 +131,13 @@ PRO MakeGuiReduceDataBase, Event, REDUCE_BASE, IndividualBaseWidth
     
   ;base that will hide the Peak Exclusion Region and background file
   hide_base = widget_base(data_base,$
-  xoffset = sPeakBase.size[0],$
-  yoffset = sPeakBase.size[1],$
-  scr_xsize = sPeakBase.size[2],$
-  scr_ysize = sPeakBase.size[3],$
-  map = 0,$
-  uname = 'hide_background_base')
-  
+    xoffset = sPeakBase.size[0],$
+    yoffset = sPeakBase.size[1],$
+    scr_xsize = sPeakBase.size[2],$
+    scr_ysize = sPeakBase.size[3],$
+    map = 0,$
+    uname = 'hide_background_base')
+    
   ;Data main label
   DataLabel = WIDGET_LABEL(data_base,$
     XOFFSET = DataLabelSize[0],$
@@ -161,42 +161,44 @@ PRO MakeGuiReduceDataBase, Event, REDUCE_BASE, IndividualBaseWidth
     /EDITABLE,$
     /ALIGN_LEFT,$
     /ALL_EVENTS)
-   
+    
   ;greg selection
   greg_base = widget_base(data_base,$
-  xoffset = 30,$
-  yoffset = 55,$
-  scr_xsize = 660,$
-  scr_ysize = 55,$
-  frame=1,$
-  /column)
+    xoffset = 25,$
+    yoffset = 55,$
+    scr_xsize = 660,$
+    scr_ysize = 55,$
+    uname='reduce_greg_base_uname',$
+    map=1,$
+    frame=0,$
+    /column)
   row1=widget_base(greg_base,$
-  /row)
- label=widget_label(row1,$
-  value='Peak    Ymin:')
+    /row)
+  label=widget_label(row1,$
+    value='Peak    Ymin:')
   ymin_value = widget_label(row1,$
-  value='',$
-  scr_xsize=50,$
-  /align_left,$
-  uname='reduce_greg_peak_ymin_uname')
+    value=' ',$
+    scr_xsize=50,$
+    /align_left,$
+    uname='reduce_greg_peak_ymin_uname')
   label = widget_label(row1,$
-  value='   Ymax:')
+    value='   Ymax:')
   ymax_value=widget_label(row1,$
-  value='',$
-  scr_xsize=50,$
-  /align_left,$
-  uname='reduce_greg_peak_ymax_uname')
- 
+    value=' ',$
+    scr_xsize=50,$
+    /align_left,$
+    uname='reduce_greg_peak_ymax_uname')
+    
   row2=widget_base(greg_base,$
-  /row)
+    /row)
   label=widget_label(row2,$
-  value='Background filename:')
+    value='Background filename:')
   value=widget_label(row2,$
-  value='',$
-  scr_xsize=400,$
-  /align_left,$
-  uname='reduce_greg_back_filename_uname')
- 
+    value=' ',$
+    scr_xsize=400,$
+    /align_left,$
+    uname='reduce_greg_back_filename_uname')
+    
     
   ;region of interest label
   RegionOfInterestLabel = WIDGET_LABEL(data_base,$
@@ -334,10 +336,10 @@ PRO MakeGuiReduceDataBase, Event, REDUCE_BASE, IndividualBaseWidth
   unit1 = WIDGET_BUTTON(units_base,$
     VALUE = 'microS',$
     UNAME = 'reduce_data_tof_units_micros')
-   WIDGET_CONTROL, unit2, /SET_BUTTON
-    
+  WIDGET_CONTROL, unit2, /SET_BUTTON
+  
   ;------------------------------------------------------------------------------
-    
+  
   ;frame
   DataFrame = WIDGET_LABEL(data_base,$
     XOFFSET   = DataFrameSize[0],$

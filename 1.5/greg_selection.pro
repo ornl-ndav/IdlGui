@@ -53,18 +53,18 @@ function retrieve_list_greg_roi, array=array
   _index=0
   while (_index lt sz) do begin
   
-  _line = strsplit(array[_index],'_',/extract,/regex)
-  new_px = _line[2]
-  
-  if (new_px ne prev_px) then begin
-    list_px = [list_px, new_px]
-    prev_px = new_px
+    _line = strsplit(array[_index],'_',/extract,/regex)
+    new_px = _line[2]
+    
+    if (new_px ne prev_px) then begin
+      list_px = [list_px, new_px]
+      prev_px = new_px
     endif
-  
-  _index++
+    
+    _index++
   endwhile
   
-return, list_px
+  return, list_px
 end
 
 ;+
@@ -78,27 +78,27 @@ end
 ; :Author: j35
 ;-
 function retrieve_roi12_from_to, list_px=list_px
-compile_opt idl2
+  compile_opt idl2
+  
+  roi1_from = list_px[0]
+  roi2_to = list_px[-1]
+  
+  sz = n_elements(list_px)
+  previous = list_px[1]
+  for i=2, sz-2 do begin
+    new_value = list_px[i]
+    if (fix(new_value) - fix(previous) gt 1) then begin
+      roi1_to = previous
+      roi2_from = new_value
+      return, [roi1_from, roi1_to, roi2_from, roi2_to]
+    endif else begin
+      previous = new_value
+    endelse
+  endfor
+  
+  return, [roi1_from, roi2_to, 0 , 0 ]
+end
 
-roi1_from = list_px[0]
-roi2_to = list_px[-1]
-
-sz = n_elements(list_px)
-previous = list_px[1]
-for i=2, sz-2 do begin
-  new_value = list_px[i]
-  if (fix(new_value) - fix(previous) gt 1) then begin
-    roi1_to = previous
-    roi2_from = new_value
-    return, [roi1_from, roi1_to, roi2_from, roi2_to]
-  endif else begin
-  previous = new_value
-  endelse
-endfor
-
-return, [roi1_from, roi2_to, 0 , 0 ]
-end  
-    
 ;+
 ; :Description:
 ;    Reached by the LOAD roi button of the greg selection
@@ -139,8 +139,8 @@ pro load_greg_selection, event
     free_lun, 1
     
     list_greg_rois = retrieve_list_greg_roi(array=_array)
-    roi12_from_to = retrieve_roi12_from_to(list_px=list_greg_rois)  
-      
+    roi12_from_to = retrieve_roi12_from_to(list_px=list_greg_rois)
+    
     roi1_from = strcompress(roi12_from_to[0],/remove_all)
     roi1_to = strcompress(roi12_from_to[1],/remove_all)
     roi2_from = strcompress(roi12_from_to[2],/remove_all)
@@ -150,7 +150,9 @@ pro load_greg_selection, event
     putvalue, event=event, 'greg_roi1_to_value', roi1_to
     putValue, event=event, 'greg_roi2_from_value', roi2_from
     putValue, event=event, 'greg_roi2_to_value', roi2_to
-
+    
+    (*global).greg_back_file_name = filename
+    
   endif
   
 end
@@ -206,64 +208,130 @@ pro save_greg_selection, event
   if (filename[0] ne '') then begin
   
     filename = filename[0]
+    create_greg_selection, event=event, filename=filename
     (*global).dr_output_path = path
     
-    roi1_from = fix(getValue(event=event, uname='greg_roi1_from_value'))
-    roi1_to = fix(getValue(event=event, uname='greg_roi1_to_value'))
-    
-    roi2_from = fix(getValue(event=event, uname='greg_roi2_from_value'))
-    roi2_to = fix(getValue(event=event, uname='greg_roi2_to_value'))
-    
-    ;make sure roi1_from is < roi1_to, if not just complain and stop here
-    if (roi1_from ge roi1_to) then begin
-      message_text = ['Please check ROI #1 from and to values!','',$
-        'ex: Make sure that ROI#1_from value is less than ROI#1_to!']
-      result = dialog_message(message_text,$
-        /center,$
-        /error,$
-        dialog_parent=id, $
-        title='ROI file not created !')
-      return
-    endif
-    
-    ;make sure roi2_from is < roi2_to, if not just complain and stop here
-    if (roi2_from ge roi2_to) then begin
-      message_text = ['Please check ROI #2 from and to values!','',$
-        'ex: Make sure that ROI#2_from value is less than ROI#2_to!']
-      result = dialog_message(message_text,$
-        /center,$
-        /error,$
-        dialog_parent=id, $
-        title='ROI file not created !')
-      return
-    endif
-    
-    ;make sure roi1_from < roi2_from
-    roi_from_min = min([roi1_from,roi2_from], max=roi_from_max)
-    roi_to_min = min([roi1_to, roi2_to], max=roi_to_max)
-    
-    roi_array_1 = create_roi_array(from_pixel=roi_from_min,$
-      to_pixel=roi_to_min)
-      
-    roi_array_2 = create_roi_array(from_pixel=roi_from_max,$
-      to_pixel=roi_to_max)
-      
-    roi_array = [roi_array_1, roi_array_2]
-    NxMax = (*global).Nx_REF_L
-    
-    openw, 1, filename
-    sz = n_elements(roi_array)
-    for i=0L, sz-1 do begin
-      for j=0L, NxMax-1 do begin
-        _line = 'bank1_' + strcompress(j,/remove_all)
-        _line += '_' + strcompress(roi_array[i],/remove_all)
-        printf, 1, _line
-      endfor
-    endfor
-    close, 1
-    free_lun, 1
-    
   endif
+  
+end
+
+;+
+; :Description:
+;    This routine used the filename passed as argument and creates the ROI
+;    file
+;
+; :Keywords:
+;    event
+;    filename
+;
+; :Author: j35
+;-
+pro create_greg_selection, event=event, filename=filename
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  roi1_from = fix(getValue(event=event, uname='greg_roi1_from_value'))
+  roi1_to = fix(getValue(event=event, uname='greg_roi1_to_value'))
+  
+  roi2_from = fix(getValue(event=event, uname='greg_roi2_from_value'))
+  roi2_to = fix(getValue(event=event, uname='greg_roi2_to_value'))
+  
+  ;make sure roi1_from is < roi1_to, if not just complain and stop here
+  if (roi1_from ge roi1_to) then begin
+    message_text = ['Please check ROI #1 from and to values!','',$
+      'ex: Make sure that ROI#1_from value is less than ROI#1_to!']
+    result = dialog_message(message_text,$
+      /center,$
+      /error,$
+      dialog_parent=id, $
+      title='ROI file not created !')
+    return
+  endif
+  
+  ;make sure roi2_from is < roi2_to, if not just complain and stop here
+  if (roi2_from ge roi2_to) then begin
+    message_text = ['Please check ROI #2 from and to values!','',$
+      'ex: Make sure that ROI#2_from value is less than ROI#2_to!']
+    result = dialog_message(message_text,$
+      /center,$
+      /error,$
+      dialog_parent=id, $
+      title='ROI file not created !')
+    return
+  endif
+  
+  ;make sure roi1_from < roi2_from
+  roi_from_min = min([roi1_from,roi2_from], max=roi_from_max)
+  roi_to_min = min([roi1_to, roi2_to], max=roi_to_max)
+  
+  roi_array_1 = create_roi_array(from_pixel=roi_from_min,$
+    to_pixel=roi_to_min)
+    
+  roi_array_2 = create_roi_array(from_pixel=roi_from_max,$
+    to_pixel=roi_to_max)
+    
+  roi_array = [roi_array_1, roi_array_2]
+  NxMax = (*global).Nx_REF_L
+  
+  openw, 1, filename
+  sz = n_elements(roi_array)
+  for i=0L, sz-1 do begin
+    for j=0L, NxMax-1 do begin
+      _line = 'bank1_' + strcompress(j,/remove_all)
+      _line += '_' + strcompress(roi_array[i],/remove_all)
+      printf, 1, _line
+    endfor
+  endfor
+  close, 1
+  free_lun, 1
+  
+  (*global).greg_back_file_name = filename
+  
+end
+
+;+
+; :Description:
+;    this will use the filename given and the min and max pixel values to
+;    create the roi file
+;
+;
+;
+; :Keywords:
+;    event
+;    filename
+;    from_px
+;    to_px
+;
+; :Author: j35
+;-
+pro create_greg_peak_file, event=event, $
+    filename=filename, $
+    from_px=from_px, $
+    to_px=to_px
+  compile_opt idl2
+  
+  widget_control, event.top, get_uvalue=global
+  
+  from_px = fix(from_px[0])
+  to_px = fix(to_px[0])
+  
+  roi_array = create_roi_array(from_pixel=from_px, $
+    to_pixel=to_px)
+    
+  NxMax = (*global).Nx_REF_L
+  
+  openw, 1, filename
+  sz = n_elements(roi_array)
+  for i=0L, sz-1 do begin
+    for j=0L, NxMax-1 do begin
+      _line = 'bank1_' + strcompress(j,/remove_all)
+      _line += '_' + strcompress(roi_array[i],/remove_all)
+      printf, 1, _line
+    endfor
+  endfor
+  close, 1
+  free_lun, 1
   
 end
 
