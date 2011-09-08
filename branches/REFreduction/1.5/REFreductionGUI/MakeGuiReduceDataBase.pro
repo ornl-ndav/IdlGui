@@ -161,6 +161,42 @@ PRO MakeGuiReduceDataBase, Event, REDUCE_BASE, IndividualBaseWidth
     /EDITABLE,$
     /ALIGN_LEFT,$
     /ALL_EVENTS)
+ 
+  ;greg selection
+  greg_base = widget_base(data_base,$
+  xoffset = 30,$
+  yoffset = 55,$
+  scr_xsize = 660,$
+  scr_ysize = 55,$
+  frame=1,$
+  /column)
+  row1=widget_base(greg_base,$
+  /row)
+ label=widget_label(row1,$
+  value='Peak    Ymin:')
+  ymin_value = widget_label(row1,$
+  value='',$
+  scr_xsize=50,$
+  /align_left,$
+  uname='reduce_greg_peak_ymin_uname')
+  label = widget_label(row1,$
+  value='   Ymax:')
+  ymax_value=widget_label(row1,$
+  value='',$
+  scr_xsize=50,$
+  /align_left,$
+  uname='reduce_greg_peak_ymax_uname')
+ 
+  row2=widget_base(greg_base,$
+  /row)
+  label=widget_label(row2,$
+  value='Background filename:')
+  value=widget_label(row2,$
+  value='',$
+  scr_xsize=400,$
+  /align_left,$
+  uname='reduce_greg_back_filename_uname')
+ 
     
   ;region of interest label
   RegionOfInterestLabel = WIDGET_LABEL(data_base,$
