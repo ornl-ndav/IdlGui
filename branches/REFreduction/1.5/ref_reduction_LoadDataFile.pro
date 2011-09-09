@@ -241,9 +241,11 @@ PRO REFreduction_LoadDatafile, Event, isNeXusFound, NbrNexus
             result = OpenDataNexusFile(Event, $
               DataRunNumber, $
               full_nexus_name)
-              
-            isNexusFound = result
-            
+            if (result eq 0) then begin
+            isNexusFound=0
+            return
+            endif
+                          
             ;plot data now
             result = REFreduction_Plot1D2DDataFile(Event)
             IF (result EQ 0) THEN BEGIN
@@ -252,6 +254,7 @@ PRO REFreduction_LoadDatafile, Event, isNeXusFound, NbrNexus
                 ALT=1, $
                 PROCESSING, $
                 FAILED
+              isNexusFound=0
               RETURN
             ENDIF
             
@@ -263,6 +266,8 @@ PRO REFreduction_LoadDatafile, Event, isNeXusFound, NbrNexus
             IF ((*global).instrument EQ 'REF_M') THEN BEGIN
               populate_data_geometry_info, Event
             ENDIF
+            
+            isNexusFound = result
             
             WIDGET_CONTROL,HOURGLASS=0
             
@@ -352,6 +357,7 @@ PRO REFreduction_LoadDatafile, Event, isNeXusFound, NbrNexus
               ALT=1, $
               PROCESSING, $
               FAILED
+              isNexusFound = 0
             RETURN
           ENDIF
           isNeXusFound = result

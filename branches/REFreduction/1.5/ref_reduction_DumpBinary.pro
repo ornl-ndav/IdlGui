@@ -79,6 +79,7 @@ FUNCTION retrieveBanksData, Event, $
         if (x ne 256) then begin
           using_wrong_version_of_ref_reduction, Event
           message, 'wrong nexus file format'
+          return, 0
         endif
         (*(*global).bank1_data) = data
         (*(*global).new_rescale_tvimg) = data
@@ -97,6 +98,7 @@ FUNCTION retrieveBanksData, Event, $
         if (x ne 256) then begin
           using_wrong_version_of_ref_reduction, Event
           message, 'wrong nexus file format'
+          return, 0
         endif
         (*(*global).bank1_norm) = data
         (*(*global).new_rescale_norm_tvimg) = data
@@ -111,6 +113,7 @@ FUNCTION retrieveBanksData, Event, $
         if (x ne 256) then begin
           using_wrong_version_of_ref_reduction, Event
           message, 'wrong nexus file format'
+          return, 0
         endif
         (*(*global).bank1_empty_cell) = data
       END
