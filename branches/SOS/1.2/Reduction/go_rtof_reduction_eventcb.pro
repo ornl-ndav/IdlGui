@@ -41,7 +41,7 @@ function convert_to_QxQz_rtof, data,$
     lambda_step, $
     theta_rad
   compile_opt idl2
-
+  
   lambda_bin_vec = lambda_vec
   data_size = size(data,/dim)
   si = size(qxvec,/dim)
@@ -124,7 +124,7 @@ function convert_to_QxQz_rtof, data,$
     QZ_hi=QXQZ_values[3,count]
     
     int=QXQZ_values[4,count]
-
+    
     ;check where is the last index of data
     
     ;get the last index where QX_lo is smaller or equal to the QX axis
@@ -134,7 +134,7 @@ function convert_to_QxQz_rtof, data,$
     QX_hi_pos=min(where(QX_hi le QXvec, nbr_qx_hi_pos))
     
     QZ_lo_pos=max(where(QZ_lo ge QZvec, nbr_qz_lo_pos))
-
+    
     QZ_hi_pos=min(where(QZ_hi le QZvec, nbr_qz_hi_pos))
     
     if nbr_qz_lo_pos eq 0 then QZ_lo_pos=0
@@ -145,7 +145,7 @@ function convert_to_QxQz_rtof, data,$
     ;below crudely splits the intensity equally among all bins
     ;calculate the number of bins in each of the new box
     totalbins=(QX_hi_pos-QX_lo_pos+1)*(QZ_hi_pos-QZ_lo_pos+1)
-
+    
     for loopx=QX_lo_pos,QX_hi_pos do begin
       for loopy=QZ_lo_pos,QZ_hi_pos do begin
         QXQZ_ARRAY[loopx,loopy]=QXQZ_ARRAY[loopx,loopy]+(int/totalbins)
@@ -156,25 +156,25 @@ function convert_to_QxQz_rtof, data,$
     if count eq si-1 then ok=1
     count++
   endwhile
-   
+  
   ;multiply *QZ^4
   qxqz4=qxqz_array
   for loop=0,qz_bins-1 do begin
     qxqz4[*,loop]=qxqz_array[*,loop]*qzvec[loop]^4
   endfor
-
+  
   qxqz_norm = qxqz_count*0.0
   
   for loopx=0, qx_bins-1 do begin
-  for loopz=0, qz_bins-1 do begin
-  qxqz_norm[loopx,loopz] = qxqz_array[loopx,loopz]/qxqz_count[loopx,loopz]
-  endfor
+    for loopz=0, qz_bins-1 do begin
+      qxqz_norm[loopx,loopz] = qxqz_array[loopx,loopz]/qxqz_count[loopx,loopz]
+    endfor
   endfor
   
   norm=qxqz_array/qxqz_count
   badlist=where(finite(norm) eq 0)
   norm[badlist]=0.0
-
+  
   return, norm
 end
 
@@ -230,11 +230,11 @@ pro make_QXQZ_rtof, event = event, $
     lambda_step, $
     theta_rad)
     
-    message1 = '-> size(QxQz_array) : [' + $
+  message1 = '-> size(QxQz_array) : [' + $
     strcompress(strjoin(size(QxQz_array,/dim),','),/remove_all) + ']'
-    message = [message,message1]
-    log_book_update, event, message=message
-    
+  message = [message,message1]
+  log_book_update, event, message=message
+  
 end
 
 ;+
@@ -285,7 +285,7 @@ pro build_rtof_THLAM, event = event, $
   
   log_book_update, event, message=message
   
-    ;display here the 2d plot of theta vs lambda
+  ;display here the 2d plot of theta vs lambda
   offset = 25
   widget_control, event.top, get_uvalue=global
   final_plot, event=event, $
@@ -299,7 +299,7 @@ pro build_rtof_THLAM, event = event, $
     output_folder = (*global).output_path, $
     xtitle = 'lambda (Angstroms)', $
     ytitle = 'theta (rad)'
-  
+    
 end
 
 ;+
@@ -423,13 +423,13 @@ function trim_data, event, $
   image = image[0:-2,*]
   tof = tof[0:-2]
   
-;  theta = convert_angle(angle=theta, $
-;    from_unit='degree', $
-;    to_unit='rad')
-;  
-;  twotheta = convert_angle(angle=twotheta, $
-;    from_unit='degree', $
-;    to_unit='rad')
+  ;  theta = convert_angle(angle=theta, $
+  ;    from_unit='degree', $
+  ;    to_unit='rad')
+  ;
+  ;  twotheta = convert_angle(angle=twotheta, $
+  ;    from_unit='degree', $
+  ;    to_unit='rad')
   
   DATA = {data:image, theta:theta, twotheta:twotheta, tof:tof, pixels:pixels}
   

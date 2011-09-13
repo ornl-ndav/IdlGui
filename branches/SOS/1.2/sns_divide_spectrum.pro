@@ -13,10 +13,10 @@ ndata=data
 _spectrum = reform(spectrum[1,0:-2]) 
 
 for loop=0,si[1]-1 do begin ;loop is the number of pixels for each data file
-  data.data[10,loop] = 45
-  ndata.data[*,loop] = 0.0
-  ;ndata.data[*,loop]=data.data[*,loop]/spectrum[1,*]
-  ;ndata.data[*,loop]=data.data[*,loop]/_spectrum[*]
+;  data.data[10,loop] = 45
+;  ndata.data[*,loop] = 0.0
+  ndata.data[*,loop]=data.data[*,loop]/spectrum[1,*]
+  ndata.data[*,loop]=data.data[*,loop]/_spectrum[*]
 
   ;make sure we do the ratio only where there is a data value and a $
   ;defined spectrum value
