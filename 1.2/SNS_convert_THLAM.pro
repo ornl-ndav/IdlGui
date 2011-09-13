@@ -7,7 +7,6 @@
 function SNS_convert_THLAM, data, SD_d, MD_d, cpix, pix_size
 
   TOF=data.TOF
-  
   vel=MD_d/TOF         ;mm/ms = m/s
   
   h=6.626e-34   ;m^2 kg s^-1

@@ -32,6 +32,8 @@ function convert_to_QXQZ, THLAM, $
   si=size(qxvec,/dim)
   qx_bins=si[0]
   
+  theta_in = !dtor * theta_in
+
   si=size(qzvec,/dim)
   qz_bins=si[0]
   
@@ -60,11 +62,14 @@ function convert_to_QXQZ, THLAM, $
         thetahi = theta_vec[j]+theta_step/2
         thetalo = theta_vec[j]-theta_step/2
         
-        Qx_lo = (2.0*!pi/lambdahi) * (cos(thetahi*!pi/180)-cos(theta_in*!pi/180))
-        Qx_hi = (2.0*!pi/lambdalo) * (cos(thetalo*!pi/180)-cos(theta_in*!pi/180))
+        thetahi = !dtor * thetahi
+        thetalo = !dtor * thetalo
         
-        Qz_lo= (2.0*!pi/lambdahi) * (sin(thetalo*!pi/180)+sin(theta_in*!pi/180))
-        Qz_hi= (2.0*!pi/lambdalo) * (sin(thetahi*!pi/180)+sin(theta_in*!pi/180))
+        Qx_lo = (2.0*!pi/lambdahi) * (cos(thetahi)-cos(theta_in))
+        Qx_hi = (2.0*!pi/lambdalo) * (cos(thetalo)-cos(theta_in))
+        
+        Qz_lo= (2.0*!pi/lambdahi) * (sin(thetalo)+sin(theta_in))
+        Qz_hi= (2.0*!pi/lambdalo) * (sin(thetahi)+sin(theta_in))
         
         QXQZ_values[0,index] = Qx_lo
         QXQZ_values[1,index] = Qx_hi

@@ -48,7 +48,7 @@ pro go_nexus_reduction_ref_l, event
   widget_control, event.top, get_uvalue=global
   
   error = 0
-  catch,error
+  ;catch,error
   if (error ne 0) then begin
     catch,/cancel
     
@@ -261,16 +261,16 @@ pro go_nexus_reduction_ref_l, event
     ;trip the spectrum to the relevant tof ranges
     error_trim = {error:0b, index:0}
     spectrum = trim_spectrum(event, $
-    spectrum, $
-    TOFrange=TOFrange, $
-    error_trim = error_trim)
+      spectrum, $
+      TOFrange=TOFrange, $
+      error_trim = error_trim)
     if (error_trim.error eq 1b) then begin
       message = ['> Empty normalization after trimming:', $
-      '-> file #: ' + strcompress(error_trim.index,/remove_all)]
+        '-> file #: ' + strcompress(error_trim.index,/remove_all)]
       log_book_update, event, message=message
       message, 'error', level=-1
     endif
-        
+    
     ;prepare array of data coming from the data Nexus files
     fdig=make_array(file_num)
     
@@ -311,6 +311,21 @@ pro go_nexus_reduction_ref_l, event
       endif
       *DATA[read_loop] = _DATA
       
+      ;display here the 2d plot of theta vs lambda
+;      offset = 25+25*read_loop
+;      widget_control, event.top, get_uvalue=global
+;      final_plot, event=event, $
+;        offset = offset, $
+;        time_stamp = 'File #' + strcompress(read_loop,/remove_all), $
+;        data = _data.data,$
+;        x_axis = _data.tof,$
+;        y_axis = _data.pixels,$
+;        default_loadct = 5, $
+;        main_base_uname = 'main_base', $
+;        output_folder = (*global).output_path, $
+;        xtitle = 'TOF (microS)', $
+;        ytitle = 'Pixels'
+        
       ;calculate lambda step (using only the first file loaded)
       if (read_loop eq 0) then begin
         lambda_step = get_lambda_step(event, _DATA.tof)

@@ -305,13 +305,13 @@ function trim_spectrum, event, $
     
     list = where(_spectrum[0,*] ge _TOFmin and _spectrum[0,*] le _TOFmax)
     _spectrum = _spectrum[*,list]
-
+    
     index_zero = where(_spectrum[1,*] ne 0, count)
     if (count eq 0) then begin
       error_trim.error = 1b
       error_trim.index = _index
     endif
-
+    
     _spectrum[1,*] = _spectrum[1,*]/max(_spectrum[1,*]) ;normalize spectrum to 1
     *spectrum[_index] = _spectrum
     
@@ -694,7 +694,7 @@ function convert_THLAM, data, SD_d, MD_d, cpix, pix_size
   compile_opt idl2
   
   TOF=data.TOF
-  TOF /= 1000. ;to be in s
+  ;TOF /= 1000. ;to be in s
   
   MD_d = MD_d[0]
   vel=MD_d/TOF         ;mm/ms = m/s
@@ -839,21 +839,27 @@ pro build_THLAM, event=event, $
     
     tilenum=where((angles[0,*] eq theta_val) and (angles[1,*] eq twotheta_val))
     
-    print, '***************'
-    print, 'in build_thlam:'
-    help, where(THLAm.data ne 0)
-    help, where(thlam_array[tilenum,*,*] ne 0)
-    print, '****************'
+    ;    print, '***************'
+    ;    print, 'in build_thlam:'
+    ;    help, where(THLAm.data ne 0)
+    ;    help, where(thlam_array[tilenum,*,*] ne 0)
+    ;    print, '****************'
     
     THLAM_array[tilenum,*,*]=THLAM_array[tilenum,*,*]+THLAM.data
     THLAM_thvec[tilenum,*]=THLAM.theta
     THLAM_lamvec[tilenum,*]=THLAM.lambda
     
-    ;window,0, title = "Convertion: TOF->Lambda, Pixel->Theta"
-    ;shade_surf, smooth(thlam.data,3), thlam.lambda, thlam.theta, ax=70, $
-    ;charsi=2, xtitle='LAMBDA (' + string("305B) + ')', ytitle='THETA (rad)'
-    ;wait,.1
-    ;wshow
+    ;    window, xsize=200, ysize=200, read_loop, title = 'Convertion: TOF->Lambda, ' + $
+    ;    'Pixel->Theta of file # ' + $
+    ;    strcompress(read_loop,/remove_all)
+    ;    tvscl, congrid(thlam.data, 200, 200)
+    
+    ;    window,read_loop, title = "Convertion: TOF->Lambda, Pixel->Theta of file# " + $
+    ;    strcompress(read_loop,/remove_all)
+    ;    shade_surf, smooth(thlam.data,3), thlam.lambda, thlam.theta, ax=70, $
+    ;    charsi=2, xtitle='LAMBDA (' + string("305B) + ')', ytitle='THETA (rad)'
+    ;    wait,.1
+    ;    wshow
     
     message1 = ['-> Created THLAM array of file # ' + $
       strcompress(read_loop,/remove_all)]
@@ -863,11 +869,25 @@ pro build_THLAM, event=event, $
       ' degrees']
     message = [message, message1, message2, message3]
     
+;    ;display here the 2d plot of theta vs lambda
+;    offset = 25+25*read_loop
+;    widget_control, event.top, get_uvalue=global
+;    final_plot, event=event, $
+;      offset = offset, $
+;      time_stamp = 'File #' + strcompress(read_loop,/remove_all), $
+;      data = thlam.data,$
+;      x_axis = thlam.lambda,$
+;      y_axis = thlam.theta,$
+;      default_loadct = 5, $
+;      main_base_uname = 'main_base', $
+;      output_folder = (*global).output_path, $
+;      xtitle = 'lambda (Angstroms)', $
+;      ytitle = 'theta (rad)'
+      
     update_progress_bar_percentage, event, ++processes, $
       total_number_of_processes
       
   endfor
-  
   log_book_update, event, message=message
   
 end
@@ -1043,24 +1063,39 @@ pro make_QxQz, event = event, $
       QXvec, $
       QZvec, $
       lambda_step)
+      
+;    ;display here the 2d plot of theta vs lambda
+;    offset = 25+25*loop
+;    widget_control, event.top, get_uvalue=global
+;    final_plot, event=event, $
+;      offset = offset, $
+;      time_stamp = 'File #' + strcompress(loop,/remove_all), $
+;      data = reform(QxQz_array[loop,*,*]),$
+;      x_axis = qxvec, $
+;      y_axis = qzvec, $
+;      default_loadct = 5, $
+;      main_base_uname = 'main_base', $
+;      output_folder = (*global).output_path, $
+;      xtitle = 'Qx (Angstroms^-1)', $
+;      ytitle = 'Qz (Angstroms^-1)'
+      
   endfor
   
-  
-  message1 = '-> size(QXQZ_array) : [' + $
+    message1 = '-> size(QXQZ_array) : [' + $
     strcompress(strjoin(size(QxQz_array,/dim),','),/remove_all) + ']'
   message = [message, message1]
   log_book_update, event, message=message
   
 ;  device, decomposed=0
 ;  loadct, 5
-;
-;  window, 0
-;  contour, [[0,0],[100,0]], [qxrange[0],qxrange[1]], $
-;    [qzrange[0],qzrange[1]],$
-;    /nodata, charsi=1.5, $
-;    xtitle='QX', ytitle='QZ'
+;  ;  contour, [[0,0],[100,0]], [qxrange[0],qxrange[1]], $
+;  ;    [qzrange[0],qzrange[1]],$
+;  ;    /nodata, charsi=1.5, $
+;  ;    xtitle='QX', ytitle='QZ'
 ;  for loop=0,num-1 do begin
-;    contour, QXQZ_array[loop,*,*],Qxvec,Qzvec, /fill,nlev=200,/overplot
+;    window, loop
+;    tvscl, QxQz_array[Loop,*,*]
+;    ;    contour, QXQZ_array[loop,*,*],Qxvec,Qzvec, /fill,nlev=200,/overplot,/zlog
 ;    wait,.01
 ;  endfor
   

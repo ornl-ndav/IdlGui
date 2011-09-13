@@ -70,7 +70,6 @@ si=si[1]
 QXQZ_ARRAY=make_array(qx_bins,qz_bins,/float)
 QXQZ_count=make_array(qx_bins,qz_bins,/float)
 
-
 ;below is the binning method
 ok=0
 count=0.0

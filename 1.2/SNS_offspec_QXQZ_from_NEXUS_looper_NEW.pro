@@ -17,7 +17,11 @@ pro run
   spec_path = '~/IDLWorkspace80/SNS_offspec/'
   
   ;norm
-  spec_file = 'Al_can_spectrum.dat'   ;FIXME what is this Al_can_spectrum
+  ;spec_file = 'Al_can_spectrum.dat'   ;FIXME what is this Al_can_spectrum
+  ;nexus=0b
+  
+  spec_file = '/Users/j35/REF_L_30545.nxs'
+  nexus=1b
   
   QXbins=500
   QZbins=500
@@ -40,18 +44,19 @@ pro run
   PIXmin=102
   PIXmax=165
   
-  Center_pixel=133.5      ;center pixel value
+  Center_pixel=132.5      ;center pixel value
   Pixel_size=0.7       ;mm
   
   ;SD_d=1350.0     ;mm    sample to detector from John
   
-  SD_d=1430.0     ;mm    sample to detector from my RB measurements
-  MD_d=14910.0    ;mm   moderator to detector
+  SD_d=1280.0     ;mm    sample to detector from my RB measurements
+  MD_d=14760.0    ;mm   moderator to detector
   
   convertion_tof_lambda_flag = 0b ;1b to see the conversion: TOF->Lambda, Pixel->Theta
   
   ;normalization file
-  SPECTRUM=xcr_direct(spec_path+spec_file, 2)
+  ;SPECTRUM=xcr_direct(spec_path+spec_file, 2)
+  spectrum = xcr_direct(spec_file, 2, /nexus)
   
   ;trim the spec to the relevant TOF ranges
   list=where(SPECTRUM[0,*] ge TOFmin and SPECTRUM[0,*] le TOFmax)
