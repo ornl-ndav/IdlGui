@@ -785,6 +785,36 @@ pro design_tabs, MAIN_BASE, global
     value = tnum,$
     uname = 'tnum_uname',$
     title = '                                 tnum')
+
+;intermediate plots
+ inter_plot_box = widget_base(_base1,$
+    frame = 1,$
+    /base_align_center,$
+    /column)
+    
+ title = widget_label(inter_plot_box,$
+ value = 'Intermediate plots to display:',$
+ /align_left)
+ space = widget_label(inter_plot_box,$
+ value='')   
+    
+ inter_plot_box_buttons = widget_base(inter_plot_box,$
+ /column,$
+ /nonexclusive)
+
+ plot1 = widget_button(inter_plot_box_buttons, $
+ value = 'Pixel Y vs TOF (*)', $
+ uname = 'inter_pixel_y_vs_tof')
+ plot2 = widget_button(inter_plot_box_buttons, $
+ value = 'Theta vs Lambda (*)',$
+ uname = 'inter_theta_vs_lambda')
+ plot3 = widget_button(inter_plot_box_buttons, $
+ value = 'Specular peaks stitching',$
+ uname = 'inter_specular_peaks_stitching')
+
+ info = widget_label(inter_plot_box,$
+ value = '*: Will produce as many plots as files loaded',$
+ /align_left)
     
   ;********* tab 4 - OUTPUT **************************************************
   base3 = widget_base(tabs,$
