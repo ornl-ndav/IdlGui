@@ -311,21 +311,23 @@ pro go_nexus_reduction_ref_l, event
       endif
       *DATA[read_loop] = _DATA
       
-      ;display here the 2d plot of theta vs lambda
-;      offset = 25+25*read_loop
-;      widget_control, event.top, get_uvalue=global
-;      final_plot, event=event, $
-;        offset = offset, $
-;        time_stamp = 'File #' + strcompress(read_loop,/remove_all), $
-;        data = _data.data,$
-;        x_axis = _data.tof,$
-;        y_axis = _data.pixels,$
-;        default_loadct = 5, $
-;        main_base_uname = 'main_base', $
-;        output_folder = (*global).output_path, $
-;        xtitle = 'TOF (microS)', $
-;        ytitle = 'Pixels'
-        
+      if (isButtonSelected(event=event, uname='inter_pixel_y_vs_tof')) then begin
+;        display here the 2d plot of theta vs lambda
+        offset = 25+25*read_loop
+        widget_control, event.top, get_uvalue=global
+        final_plot, event=event, $
+          offset = offset, $
+          time_stamp = 'File #' + strcompress(read_loop,/remove_all), $
+          data = _data.data,$
+          x_axis = _data.tof,$
+          y_axis = _data.pixels,$
+          default_loadct = 5, $
+          main_base_uname = 'main_base', $
+          output_folder = (*global).output_path, $
+          xtitle = 'TOF (microS)', $
+          ytitle = 'Pixels'
+      endif
+      
       ;calculate lambda step (using only the first file loaded)
       if (read_loop eq 0) then begin
         lambda_step = get_lambda_step(event, _DATA.tof)
