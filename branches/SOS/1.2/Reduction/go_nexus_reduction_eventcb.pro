@@ -869,21 +869,23 @@ pro build_THLAM, event=event, $
       ' degrees']
     message = [message, message1, message2, message3]
     
-;    ;display here the 2d plot of theta vs lambda
-;    offset = 25+25*read_loop
-;    widget_control, event.top, get_uvalue=global
-;    final_plot, event=event, $
-;      offset = offset, $
-;      time_stamp = 'File #' + strcompress(read_loop,/remove_all), $
-;      data = thlam.data,$
-;      x_axis = thlam.lambda,$
-;      y_axis = thlam.theta,$
-;      default_loadct = 5, $
-;      main_base_uname = 'main_base', $
-;      output_folder = (*global).output_path, $
-;      xtitle = 'lambda (Angstroms)', $
-;      ytitle = 'theta (rad)'
-      
+    if (isButtonSelected(event=event, uname='inter_theta_vs_lambda')) then begin
+      ;display here the 2d plot of theta vs lambda
+      offset = 25+25*read_loop
+      widget_control, event.top, get_uvalue=global
+      final_plot, event=event, $
+        offset = offset, $
+        time_stamp = 'File #' + strcompress(read_loop,/remove_all), $
+        data = thlam.data,$
+        x_axis = thlam.lambda,$
+        y_axis = thlam.theta,$
+        default_loadct = 5, $
+        main_base_uname = 'main_base', $
+        output_folder = (*global).output_path, $
+        xtitle = 'lambda (Angstroms)', $
+        ytitle = 'theta (rad)'
+    endif
+    
     update_progress_bar_percentage, event, ++processes, $
       total_number_of_processes
       
@@ -1064,24 +1066,26 @@ pro make_QxQz, event = event, $
       QZvec, $
       lambda_step)
       
-;    ;display here the 2d plot of theta vs lambda
-;    offset = 25+25*loop
-;    widget_control, event.top, get_uvalue=global
-;    final_plot, event=event, $
-;      offset = offset, $
-;      time_stamp = 'File #' + strcompress(loop,/remove_all), $
-;      data = reform(QxQz_array[loop,*,*]),$
-;      x_axis = qxvec, $
-;      y_axis = qzvec, $
-;      default_loadct = 5, $
-;      main_base_uname = 'main_base', $
-;      output_folder = (*global).output_path, $
-;      xtitle = 'Qx (Angstroms^-1)', $
-;      ytitle = 'Qz (Angstroms^-1)'
-      
+    if (isButtonSelected(event=event, uname='inter_qz_vs_qz')) then begin
+      ;display here the 2d plot of theta vs lambda
+      offset = 25+25*loop
+      widget_control, event.top, get_uvalue=global
+      final_plot, event=event, $
+        offset = offset, $
+        time_stamp = 'File #' + strcompress(loop,/remove_all), $
+        data = reform(QxQz_array[loop,*,*]),$
+        x_axis = qxvec, $
+        y_axis = qzvec, $
+        default_loadct = 5, $
+        main_base_uname = 'main_base', $
+        output_folder = (*global).output_path, $
+        xtitle = 'Qx (Angstroms^-1)', $
+        ytitle = 'Qz (Angstroms^-1)'
+    endif
+    
   endfor
   
-    message1 = '-> size(QXQZ_array) : [' + $
+  message1 = '-> size(QXQZ_array) : [' + $
     strcompress(strjoin(size(QxQz_array,/dim),','),/remove_all) + ']'
   message = [message, message1]
   log_book_update, event, message=message
@@ -1204,15 +1208,15 @@ function get_specular_scale, event=event, $
   
   for loop=0,num-1 do begin
     data=reform(QXQZ_array[loop,*,*])
-    help, data
+    ;    help, data
     
     result=extract_specular(data, qxvec, qxwidth)
-    help, result
+    ;    help, result
     specular[loop,*]=result
     no_zero_array = where(result ne 0)
-    print, 'for index: ' , loop, ':'
-    help, no_zero_array
-    print
+    ;    print, 'for index: ' , loop, ':'
+    ;    help, no_zero_array
+    ;    print
     
     if loop eq 0 then scale[0]=1/max(result)
   endfor
@@ -1224,7 +1228,7 @@ function get_specular_scale, event=event, $
   trim=specular*0.0
   for loop=0,num-1 do begin
     list=where(specular[loop,*] ne 0)
-    help, list
+    ;    help, list
     si=size(list,/dim)
     si=si[0]
     cut=list[tnum:si-tnum]
@@ -1242,9 +1246,9 @@ function get_specular_scale, event=event, $
   title = 'Specular plots [' + time_stamp + ']'
   
   widget_control, event.top, get_uvalue=global
-  _scaled_specular = (*global).scaled_specular
   
-  if (_scaled_specular eq 'yes') then begin
+  if (isButtonSelected(event=event, $
+    uname='inter_specular_peaks_stitching')) then begin
     _plot = plot(QZvec, $
       specular[0,*]*scale[0], $
       /ylog, $
@@ -1266,7 +1270,8 @@ function get_specular_scale, event=event, $
     r2=total(specular[loop-1,overlap])/total(specular[loop,overlap])
     scale[loop]=(total(ratio)/si)*scale[loop-1]
     
-    if (_scaled_specular eq 'yes') then begin
+    if (isButtonSelected(event=event, $
+      uname='inter_specular_peaks_stitching')) then begin
       _oplot = plot(QZvec, specular[loop,*]*scale[loop],/overplot,$
         style_plot_lines[loop])
     endif
