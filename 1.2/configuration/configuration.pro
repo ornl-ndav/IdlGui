@@ -293,7 +293,19 @@ pro repopulate_gui, event, _structure
     _structure.qxwidth_uname
   putValue, event=event, 'tnum_uname', $
     _structure.tnum_uname
-    
+  if (_structure.inter_pixel_y_vs_tof) then begin
+    setButton, event=event, uname='inter_pixel_y_vs_tof'
+  endif
+  if (_structure.inter_theta_vs_lambda) then begin
+    setButton, event=event, uname='inter_theta_vs_lambda'
+  endif
+  if (_structure.inter_qz_vs_qx) then begin
+    setButton, event=event, uname='inter_qz_vs_qx'
+  endif
+  if (_structure.inter_specular_peaks_stitching) then begin
+    setButton, event=event, uname='inter_specular_peaks_stitching'
+  endif
+  
   ;output tab
   (*global).output_path = _structure.output_path
   putValue, event=event, 'output_file_name', $

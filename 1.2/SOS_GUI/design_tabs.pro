@@ -810,7 +810,7 @@ pro design_tabs, MAIN_BASE, global
  uname = 'inter_theta_vs_lambda')
  plot3 = widget_button(inter_plot_box_buttons, $
  value = 'Qz vs Qx (*)', $
- uname = 'inter_qz_vs_qz')
+ uname = 'inter_qz_vs_qx')
  plot4 = widget_button(inter_plot_box_buttons, $
  value = 'Specular peaks stitching',$
  uname = 'inter_specular_peaks_stitching')
