@@ -130,6 +130,7 @@ function IDLconfiguration::getConfig, event
     isBaseMapped(event=event, uname='rtof_nexus_base'), $
     is_rtof_configuration_base_mapped: $
     isBaseMapped(event=event, uname='rtof_configuration_base'), $
+    
     ;general settings
     bins_qx: getValue(event=event, $
     uname='bins_qx'),$
@@ -139,6 +140,14 @@ function IDLconfiguration::getConfig, event
     uname='qxwidth_uname'),$
     tnum_uname: getValue(event=event, $
     uname='tnum_uname'),$
+    inter_pixel_y_vs_tof: isButtonSelected(event=event, $
+    uname='inter_pixel_y_vs_tof'), $
+    inter_theta_vs_lambda: isButtonSelected(event=event, $
+    uname='inter_theta_vs_lambda'), $
+    inter_qz_vs_qx: isButtonSelected(event=event, $
+    uname='inter_qz_vs_qx'), $
+    inter_specular_peaks_stitching: isButtonSelected(event=event, $
+    uname='inter_specular_peaks_stitching'), $
     
     ;create output
     output_path: (*global).output_path,$

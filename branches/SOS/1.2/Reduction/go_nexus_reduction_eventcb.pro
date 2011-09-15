@@ -1066,7 +1066,7 @@ pro make_QxQz, event = event, $
       QZvec, $
       lambda_step)
       
-    if (isButtonSelected(event=event, uname='inter_qz_vs_qz')) then begin
+    if (isButtonSelected(event=event, uname='inter_qz_vs_qx')) then begin
       ;display here the 2d plot of theta vs lambda
       offset = 25+25*loop
       widget_control, event.top, get_uvalue=global
