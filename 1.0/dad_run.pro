@@ -37,7 +37,7 @@ FUNCTION retrieve_info_from_es_file, Event, FILE_NAME = file_name
   widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
   
   error = 0
-  CATCH, error ;REMOVE_ME
+  CATCH, error
   IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
     message = 'ERROR in the parsing of the Elascic Scan File!'
@@ -77,6 +77,7 @@ FUNCTION retrieve_info_from_es_file, Event, FILE_NAME = file_name
   
   es_Q_sf_sferror = DBLARR(3,nbr_Q)
   index = 0
+  
   WHILE (index LT nbr_Q) DO BEGIN
     T_of_interest = iData[temp_index,index]
     T_of_interest = STRCOMPRESS(T_of_interest)
@@ -129,7 +130,7 @@ END
 
 ;------------------------------------------------------------------------------
 FUNCTION QrangeMatch, esQrange=esQrange, daveQrange=daveQrange
-  RETURN, ARRAY_EQUAL(esQrange, daveQrange)
+  RETURN, ARRAY_EQUAL(float(esQrange), float(daveQrange))
 END
 
 ;------------------------------------------------------------------------------
@@ -145,22 +146,38 @@ FUNCTION create_value_value_error, iDAta, dave_value_valueerror
     RETURN, 0
   ENDIF
   
-  nbr_row = (size(iDAta))(1) ;E
-  nbr_Q   = (size(iData))(2) ;Q
+  sz = size(iData)
+  if (sz[0] eq 1) then begin
+    nbr_row = sz[1] ;E
+    nbr_Q   = sz[2] ;Q
+  endif else begin
+    nbr_row = sz[1]
+    nbr_Q = sz[2]
+  endelse
   
-  ;dave_value_valueerror = [nbr_Q, nbr_row, 2]
-  dave_value_valueerror = DBLARR(nbr_Q, nbr_row, 2)
-  
-  FOR i=0,(nbr_Q-1) DO BEGIN
+  if (sz[0] eq 1) then begin
+    dave_value_valueerror = DBLARR(1,nbr_row, 2)
     index = 0
     WHILE (index LT nbr_row) DO BEGIN
-      line_compressed = STRCOMPRESS(iData[index,i])
+      line_compressed = STRCOMPRESS(iData[index])
       split_array = STRSPLIT(line_compressed, ' ', /EXTRACT)
-      dave_value_valueerror[i,index,0] = DOUBLE(split_array[0])
-      dave_value_valueerror[i,index,1] = DOUBLE(split_array[1])
+      dave_value_valueerror[0,index,0] = DOUBLE(split_array[0])
+      dave_value_valueerror[0,index,1] = DOUBLE(split_array[1])
       index++
     ENDWHILE
-  ENDFOR
+  endif else begin
+    dave_value_valueerror = DBLARR(nbr_Q, nbr_row, 2)
+    FOR i=0,(nbr_Q-1) DO BEGIN
+      index = 0
+      WHILE (index LT nbr_row) DO BEGIN
+        line_compressed = STRCOMPRESS(iData[index,i])
+        split_array = STRSPLIT(line_compressed, ' ', /EXTRACT)
+        dave_value_valueerror[i,index,0] = DOUBLE(split_array[0])
+        dave_value_valueerror[i,index,1] = DOUBLE(split_array[1])
+        index++
+      ENDWHILE
+    ENDFOR
+  endelse
   
   RETURN, 1
   
@@ -257,7 +274,7 @@ PRO run_divisions, Event
       Qrange, $
       iData, $
       Metadata)
-  
+      
     IF (status EQ 0) THEN BEGIN
       table[3,index_file] = 'FAILED'
       putValue, Event,'table_uname', table
@@ -267,10 +284,18 @@ PRO run_divisions, Event
     
     ;check that the Q matches
     es_Q_sf_sferror = (*(*global).es_Q_sf_sferror)
-    nbr_q_esQrange = (size(es_Q_sf_sferror[0,*]))(2)
+    sz = size(es_q_sf_sferror)
+    if (sz[0] eq 1) then begin
+      nbr_q_esQrange = sz[0]
+    endif else begin
+      nbr_q_esQrange = sz[1]
+    endelse
+    ;nbr_q_esQrange = (size(es_Q_sf_sferror[0,*]))(2)
+    ;    nbr_q_esQrange = sz[1]
     esQrange = FLTARR(nbr_q_esQrange)
     esQrange[*] = es_Q_sf_sferror[0,*]
     ;if Q range axes do not match
+    
     IF (~QrangeMatch(esQrange=esQrange, daveQrange=Qrange)) THEN BEGIN
       table[3,index_file] = 'FAILED'
       putValue, Event,'table_uname', table
@@ -304,6 +329,7 @@ PRO run_divisions, Event
       Qrange, $
       divided_dave_data, $
       metadata)
+    
     IF (status EQ 0) THEN BEGIN
       table[3,index_file] = 'FAILED'
       putValue, Event,'table_uname', table
@@ -316,8 +342,7 @@ PRO run_divisions, Event
     index_file++
     
   ENDWHILE
-  
-  
+    
 END
 
 ;------------------------------------------------------------------------------

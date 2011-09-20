@@ -69,15 +69,23 @@ FUNCTION create_output_ascii_file, Event, $
   ENDFOR
   
   ;Write big axis
-  FOR i=0L, (nbr_Q - 1) DO BEGIN
+  i=0L
+  while (i lt nbr_Q) do begin
+  ;FOR i=0L, (nbr_Q - 1) DO BEGIN
     line = "# Group " + STRCOMPRESS(i,/REMOVE_ALL)
     PRINTF, 1, line
-    FOR j=0L, (nbr_E - 1) DO BEGIN
+    j=0L
+    while (j lt nbr_E) do begin
+    ;FOR j=0L, (nbr_E - 1) DO BEGIN
       line = STRCOMPRESS(divided_dave_data[i,j,0],/REMOVE_ALL)
       line += '   ' + STRCOMPRESS(divided_dave_data[i,j,1],/REMOVE_ALL)
       PRINTF, 1, line
-    ENDFOR
-  ENDFOR
+      j++
+      endwhile
+    ;ENDFOR
+    i++
+    endwhile
+  ;ENDFOR
   
   ;Add comment
   nbr_metadata = N_ELEMENTS(metadata)
