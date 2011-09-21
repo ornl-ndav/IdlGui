@@ -126,7 +126,7 @@ PRO REFreduction_CommandLineGenerator, Event
       cmd += ' --dbkg-roi-file='
       filename = '~/results/tmp_greg_back_file.txt'
       create_greg_selection, event=event, filename=filename
-      cmd += 'filename'
+      cmd += filename
       ;greg background
       greg_back_file_name = (*global).greg_back_file_name
       putValue, event=event, 'reduce_greg_back_filename_uname', $
