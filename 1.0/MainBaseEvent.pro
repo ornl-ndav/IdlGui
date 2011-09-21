@@ -49,6 +49,12 @@ PRO MAIN_BASE_event, Event
       input_dave_ascii_path_button, Event
     END
     
+    widget_info(wWidget, find_by_uname='name_tab_uname'): begin
+      parse_input_field_tab2, Event
+      check_run_jobs_button, Event
+    end
+    
+    ;tab1
     ;prefix
     WIDGET_INFO(wWidget, FIND_BY_UNAME='input_prefix_name'): BEGIN
       parse_input_field_tab2, Event
@@ -60,6 +66,26 @@ PRO MAIN_BASE_event, Event
       parse_input_field_tab2, Event
       check_run_jobs_button, Event
     END
+    
+    ;tab2
+    ;prefix
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='input_prefix_name_tab2'): BEGIN
+      parse_input_field_tab2, Event
+      check_run_jobs_button, Event
+    END
+    
+    ;suffix1
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='input_suffix1_name_tab2'): BEGIN
+      parse_input_field_tab2, Event
+      check_run_jobs_button, Event
+    END
+    
+    ;suffix2
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='input_suffix2_name_tab2'): BEGIN
+      parse_input_field_tab2, Event
+      check_run_jobs_button, Event
+    END
+    
     
     ;<User_defined>
     WIDGET_INFO(wWidget, FIND_BY_UNAME='input_sequence'): BEGIN

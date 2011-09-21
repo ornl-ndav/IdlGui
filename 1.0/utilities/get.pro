@@ -58,3 +58,20 @@ id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
 value = WIDGET_INFO(id, /DROPLIST_SELECT)
 RETURN, value
 END
+
+;+
+; :Description:
+;    Return the index of the tab currently selected
+;
+;
+;
+; :Keywords:
+;    event
+;    uname
+;
+; :Author: j35
+;-
+function getTabValue, event=event, uname=uname
+    id = widget_info(event.top, find_by_uname=uname)
+  return, widget_info(id, /tab_current)
+end
