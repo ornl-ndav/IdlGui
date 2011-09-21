@@ -231,8 +231,19 @@ PRO parse_input_field_tab2, Event
   
   ;get path, prefix and suffix for output files
   path   = getButtonValue(Event,'browse_path_button')
-  prefix = getTextFieldValue(Event,'input_suffix_name')
-  suffix = getTextFieldValue(Event,'input_prefix_name')
+  
+  if (getTabValue(event=event, uname='name_tab_uname') EQ 0) then begin
+  
+    prefix = getTextFieldValue(Event,'input_suffix_name')
+    suffix = getTextFieldValue(Event,'input_prefix_name')
+    
+  endif else begin
+  
+    prefix = getTextFieldValue(event, 'input_prefix_name_tab2')
+    suffix1 = getTextFieldValue(event, 'input_suffix1_name_tab2')
+    suffix = getTextFieldValue(event, 'input_suffix2_name_tab2')
+    
+  endelse
   
   nbr_files = N_ELEMENTS(column_seq_number)
   table = STRARR(4,nbr_files)
@@ -240,18 +251,40 @@ PRO parse_input_field_tab2, Event
   table_index = 0
   WHILE (index LT nbr_files) DO BEGIN
     IF (column_seq_number[index] NE '') THEN BEGIN
-      ;check if there are several runs
-      seq_array = STRSPLIT(column_seq_number[index],',',/EXTRACT)
-      nbr = N_ELEMENTS(seq_array)
-      CASE (nbr) OF
-        1: add_string = column_seq_number[index] + '_1run'
-        ELSE: add_string = seq_array[0] + '_' + STRCOMPRESS(nbr,/REMOVE_ALL) + $
-          'runs'
-      ENDCASE
+    
+      if (getTabValue(event=event, uname='name_tab_uname') EQ 0) then begin
       
-      ;update big table
-      file_name_first_part = path + prefix + '_' + add_string
-      file_name = file_name_first_part + '.' + suffix
+        ;check if there are several runs
+        seq_array = STRSPLIT(column_seq_number[index],',',/EXTRACT)
+        nbr = N_ELEMENTS(seq_array)
+        CASE (nbr) OF
+          1: add_string = column_seq_number[index] + '_1run'
+          ELSE: add_string = seq_array[0] + '_' + STRCOMPRESS(nbr,/REMOVE_ALL) + $
+            'runs'
+        ENDCASE
+        ;update big table
+        file_name_first_part = path + prefix + '_' + add_string
+        file_name = file_name_first_part + '.' + suffix
+        
+      endif else begin
+      
+        ;check if there are several runs
+        seq_array = STRSPLIT(column_seq_number[index],',',/EXTRACT)
+        nbr = N_ELEMENTS(seq_array)
+        CASE (nbr) OF
+          1: add_string = column_seq_number[index]
+          ELSE: add_string = seq_array[0]
+        ENDCASE
+        file_name_first_part = path + prefix + '_' + add_string
+        if (suffix1[0] ne '') then begin
+          file_name = file_name_first_part + '_' + suffix1[0]
+        endif else begin
+          file_name = file_name_first_part
+        endelse
+        file_name = file_name + '.' + suffix
+        
+      endelse
+      
       table[0,table_index]= file_name
       IF (FILE_TEST(file_name)) THEN BEGIN
         message = 'FOUND'
@@ -259,7 +292,12 @@ PRO parse_input_field_tab2, Event
         message = 'NOT FOUND'
       ENDELSE
       table[1,table_index] = message
-      
+            
+      if (getTabValue(event=event, uname='name_tab_uname') EQ 1) then begin
+        if (suffix1[0] ne '') then begin
+          file_name_first_part += '_' + suffix1[0]
+        endif
+      endif
       ;define name of output file
       output_file_name = file_name_first_part + '_divided'
       output_file_name += '.' + suffix

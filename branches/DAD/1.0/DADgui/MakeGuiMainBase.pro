@@ -75,31 +75,68 @@ PRO MakeGuiMainBase, MAIN_BASE, global
   label = WIDGET_LABEL(row_a_1,$
     VALUE = 'File Name:')
     
-  ;internal_base
-  inter_base = WIDGET_BASE(row_a_1,$
-    /ROW,$
-    FRAME = 1)
+  tab = widget_tab(row_a_1,$
+  uname='name_tab_uname')
+  
+  ;tab1 (CLoopES convention)
+  tab1 = widget_base(tab,$
+    /row,$
+    title='CLoopES convention')
     
-  text = WIDGET_TEXT(inter_base,$
+  text = WIDGET_TEXT(tab1,$
     VALUE = 'BASIS',$
     UNAME = 'input_suffix_name',$
     /EDITABLE,$
+    /all_events, $
     XSIZE = 20)
     
-  label = WIDGET_LABEL(inter_base,$
-    VALUE = '_<User_Defined>.')
+  label = WIDGET_LABEL(tab1,$
+    VALUE = '_<sequence>_#run.')
     
-  text = WIDGET_TEXT(inter_base,$
+  text = WIDGET_TEXT(tab1,$
     VALUE = 'dat',$
     UNAME = 'input_prefix_name',$
     /EDITABLE,$
-    XSIZE = 10)
+    /all_events, $
+    XSIZE = 3)
+    
+  ;tab2 (user convention)  
+  tab2 = widget_base(tab,$
+  /row,$
+    title='User convention')
+        
+  text = WIDGET_TEXT(tab2,$
+    VALUE = '',$
+    UNAME = 'input_prefix_name_tab2',$
+    /EDITABLE,$
+    /all_events, $
+    XSIZE = 15)
+    
+  label = WIDGET_LABEL(tab2,$
+    VALUE = '_<sequence>_')
+    
+  txt = widget_text(tab2,$
+  value = '',$
+  uname = 'input_suffix1_name_tab2',$
+  /editable,$
+  /all_events, $
+  xsize = 5)  
+  
+  label = widget_label(tab2,$
+  value='.')  
+    
+  text = WIDGET_TEXT(tab2,$
+    VALUE = 'txt',$
+    UNAME = 'input_suffix2_name_tab2',$
+    /EDITABLE,$
+    /all_events, $
+    XSIZE = 3)
     
   row_a_2 = WIDGET_BASE(row_a, $ ;----------------row2
     /ROW)
     
   label = WIDGET_LABEL(row_a_2,$
-    VALUE = '<User_Defined>')
+    VALUE = '<sequence>:')
     
   text = WIDGET_TEXT(row_a_2,$
     VALUE = '',$
@@ -118,8 +155,8 @@ PRO MakeGuiMainBase, MAIN_BASE, global
   row2 = WIDGET_BASE(Base,$
     /ROW)
     
-;    big_table = [['~/results/BASIS_5768_1run.dat','','~/results/BASIS_5768_1run_divided.dat',''],$
-;    ['~/results/BASIS_5769_1run.dat','','~/results/BASIS_5769_1run_divided.dat','']]
+  ;    big_table = [['~/results/BASIS_5768_1run.dat','','~/results/BASIS_5768_1run_divided.dat',''],$
+  ;    ['~/results/BASIS_5769_1run.dat','','~/results/BASIS_5769_1run_divided.dat','']]
     
   Table = WIDGET_TABLE(row2,$
     UNAME = 'table_uname',$
@@ -130,7 +167,7 @@ PRO MakeGuiMainBase, MAIN_BASE, global
     ;    /SCROLL,$
     EDITABLE = [1,0,1,0],$ ;output file  is editable
     COLUMN_WIDTHS = [300,70,300,90],$
-;    VALUE = big_table, $ ;REMOVE_ME
+    ;    VALUE = big_table, $ ;REMOVE_ME
     /NO_ROW_HEADERS,$
     COLUMN_LABELS = ['Input Files','Exist?','Output Files','Run Status'],$
     /RESIZEABLE_COLUMNS)
@@ -185,7 +222,7 @@ PRO MakeGuiMainBase, MAIN_BASE, global
     
   label = WIDGET_LABEL(row_a_2,$
     VALUE = 'N/A',$
-    ;VALUE = '/Users/j35/results/D2O_50_ElasticScan_1T.txt', $ 
+    ;VALUE = '/Users/j35/results/D2O_50_ElasticScan_1T.txt', $
     SCR_XSIZE = 580,$
     UNAME = 'es_file_name',$
     /ALIGN_LEFT)
