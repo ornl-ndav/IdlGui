@@ -34,25 +34,37 @@
 
 PRO MakeGuiLoadData2DTab, D_DD_Tab, D_DD_BaseSize, D_DD_TabTitle, GlobalLoadGraphs
 
-;Build 2D tab
-load_data_DD_TAB_BASE = widget_base(D_DD_Tab,$
-                                    uname='load_data_dd_tab_base',$
-                                    title=D_DD_TabTitle[1],$
-                                    xoffset=D_DD_BaseSize[0],$
-                                    yoffset=D_DD_BaseSize[1],$
-                                    scr_xsize=D_DD_BaseSize[2],$
-                                    scr_ysize=D_DD_BaseSize[3])
-
-
-load_data_DD_draw = widget_draw(load_data_DD_tab_base,$
-                                xoffset=GlobalLoadGraphs[4],$
-                                yoffset=GlobalLoadGraphs[5],$
-                                scr_xsize=GlobalLoadGraphs[6],$
-                                scr_ysize=GlobalLoadGraphs[7],$
-                                uname='load_data_DD_draw',$
-                                retain=2,$
-                                /button_events,$
-                                /motion_events)
-
-
+  ;Build 2D tab
+  load_data_DD_TAB_BASE = widget_base(D_DD_Tab,$
+    uname='load_data_dd_tab_base',$
+    title=D_DD_TabTitle[1],$
+    xoffset=D_DD_BaseSize[0],$
+    yoffset=D_DD_BaseSize[1],$
+    ;                                    scr_xsize=D_DD_BaseSize[2],$
+    ;                                    scr_ysize=D_DD_BaseSize[3],$
+    /column)
+    
+  load_data_DD_draw = widget_draw(load_data_DD_tab_base,$
+    ;                                xoffset=GlobalLoadGraphs[4],$
+    ;                                yoffset=GlobalLoadGraphs[5],$
+    scr_xsize=GlobalLoadGraphs[6],$
+    scr_ysize=GlobalLoadGraphs[7],$
+    uname='load_data_DD_draw',$
+    retain=2,$
+    /button_events,$
+    /motion_events)
+    
+  lin_log_base = widget_base(load_data_DD_tab_base,$
+    /row,$
+    /exclusive)
+  lin = widget_button(lin_log_base,$
+    /no_release, $
+    value = 'lin',$
+    uname = 'y_vs_x_linear')
+  log = widget_button(lin_log_base, $
+    value = 'log',$
+    /no_release, $
+    uname = 'y_vs_x_log')
+  widget_control, lin, /set_button
+  
 END

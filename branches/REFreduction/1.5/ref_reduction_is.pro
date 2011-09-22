@@ -32,6 +32,54 @@
 ;
 ;==============================================================================
 
+;+
+; :Description:
+;    Return the status of a button (selected or not)
+;
+; :Keywords:
+;    id
+;    event
+;    base
+;    uname
+;
+; :Returns:
+;   status of the button  -> 0 for not selected
+;                         -> 1 for selected
+;
+; :Author: j35
+;-
+function isButtonSelected, id=id, event=event, base=base, uname=uname
+  compile_opt idl2
+  
+  if (n_elements(id) ne 0) then begin
+    status = widget_info(id,/button_set)
+    return, status
+  endif
+  
+  if (n_elements(event) ne 0 && $
+    n_elements(uname) ne 0) then begin
+    
+    id = widget_info(event.top, find_by_uname=uname)
+    status = widget_info(id,/button_set)
+    return, status
+  endif
+  
+  if (keyword_set(base) && keyword_set(uname)) then begin
+    id = widget_info(base, find_by_uname=uname)
+    status = widget_info(id,/button_set)
+    return, status
+  endif
+  
+  return, 'N/A'
+  
+end
+
+
+
+
+
+
+
 Function isDataPeakSelectionSelected, Event
   id = widget_info(Event.top,find_by_uname='data_1d_selection')
   widget_control, id, get_value=isPeakSelected
@@ -102,8 +150,6 @@ Function isNormYminSelected, Event
     RETURN, 0
   ENDELSE
 END
-
-
 
 Function isDataWithBackground, Event
   id = widget_info(Event.top,find_by_uname='data_background_cw_bgroup')
