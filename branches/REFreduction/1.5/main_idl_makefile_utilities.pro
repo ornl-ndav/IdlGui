@@ -40,6 +40,7 @@ cd, CurrentFolder + '/utilities'
 
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.
+.run is.pro
 .run nexus_utilities.pro
 .run get.pro
 .run system_utilities.pro
@@ -58,7 +59,6 @@ cd, CurrentFolder + '/utilities'
 .run IDLnexusUtilities__define.pro
 .run convert.pro
 .run colorbar.pro
-.run is.pro
 .run set.pro
 .run put.pro
 
