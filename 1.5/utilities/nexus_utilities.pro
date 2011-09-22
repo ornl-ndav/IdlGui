@@ -32,6 +32,34 @@
 ;
 ;==============================================================================
 
+function isButtonSelected, id=id, event=event, base=base, uname=uname
+  compile_opt idl2
+  
+  if (n_elements(id) ne 0) then begin
+    status = widget_info(id,/button_set)
+    return, status
+  endif
+  
+  if (n_elements(event) ne 0 && $
+    n_elements(uname) ne 0) then begin
+    
+    id = widget_info(event.top, find_by_uname=uname)
+    status = widget_info(id,/button_set)
+    return, status
+  endif
+  
+  if (keyword_set(base) && keyword_set(uname)) then begin
+    id = widget_info(base, find_by_uname=uname)
+    status = widget_info(id,/button_set)
+    return, status
+  endif
+  
+  return, 'N/A'
+  
+end
+
+
+
 FUNCTION check_number_polarization_state, Event, $
     nexus_file_name, $
     list_pola_state
@@ -97,13 +125,13 @@ FUNCTION check_number_polarization_state, Event, $
   ENDELSE
 END
 
-;-----------------------------------------------------------------------------
-;return 1 if the button is enabled (pushed)
-FUNCTION isButtonSelected, Event, Uname
-  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-  value = WIDGET_INFO(id, /BUTTON_SET)
-  RETURN, VALUE
-END
+;;-----------------------------------------------------------------------------
+;;return 1 if the button is enabled (pushed)
+;FUNCTION isButtonSelected, Event, Uname
+;  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+;  value = WIDGET_INFO(id, /BUTTON_SET)
+;  RETURN, VALUE
+;END
 
 ;------------------------------------------------------------------------------
 ;when we want only the archived one
@@ -141,7 +169,8 @@ FUNCTION find_full_nexus_name, Event,$
   
   cmd = "findnexus -i" + instrument
   
-  value = isButtonSelected(Event, button_uname)
+  value = isButtonSelected(event=Event, uname=button_uname)
+  
   IF (value EQ 1) THEN BEGIN ;get proposal selected
     proposal = getDropListSelectedValue(Event, droplist_uname)
     cmd += ' --proposal=' + STRCOMPRESS(proposal,/REMOVE_ALL)

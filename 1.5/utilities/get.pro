@@ -437,19 +437,19 @@ END
 
 ;------------------------------------------------------------------------------
 ;------------------------------------------------------------------------------
-FUNCTION isButtonSelected, Event, uname
-  id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
-  result = WIDGET_INFO(id, /BUTTON_SET)
-  RETURN, result
-END
+;FUNCTION isButtonSelected, Event, uname
+;  id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
+;  result = WIDGET_INFO(id, /BUTTON_SET)
+;  RETURN, result
+;END
 
 FUNCTION getPlotTabYaxisScale, Event
   ;linear
   uname = 'plot_tab_y_axis_lin'
-  IF (isButtonSelected(Event,uname)) THEN RETURN, 'lin'
+  IF (isButtonSelected(event=Event,uname=uname)) THEN RETURN, 'lin'
   ;log
   uname = 'plot_tab_y_axis_log'
-  IF (isButtonSelected(Event,uname)) THEN RETURN, 'log'
+  IF (isButtonSelected(event=Event,uname=uname)) THEN RETURN, 'log'
   RETURN, ''
 END
 
