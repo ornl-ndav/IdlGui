@@ -39,7 +39,7 @@ FUNCTION REFreduction_Plot2DDataFile, Event
   ;check instrument selected
   instrument = (*global).instrument
   no_error = 0
-  CATCH, no_error
+  ;iCATCH, no_error
   IF (no_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     IDLsendLogBook_ReplaceLogBookText, $
@@ -148,12 +148,13 @@ END
 ;Procedure that plots REF_L and REF_M 2D data plots                   *
 ;**********************************************************************
 PRO Plot2DDataFile, Event, Nx, Ny
-  
+
+  error = 0
   catch, error
   if (error ne 0) then begin
-  catch,/cancel
-  print, 'verify the contrast editor values!'
-  return
+    catch,/cancel
+    print, 'verify the contrast editor values!'
+    return
   endif
   
   ;get global structure
@@ -187,7 +188,23 @@ PRO Plot2DDataFile, Event, Nx, Ny
     New_Nx = 2*Nx
   endelse
   
-  tvimg = rebin(img, New_Nx, New_Ny,/sample)
+  if (isButtonSelected(event=event, uname='y_vs_x_log')) then begin
+    ;remove 0 values and replace with NAN
+    ;and calculate log
+    index = where(img eq 0, nbr)
+    if (nbr GT 0) then begin
+      img[index] = !VALUES.D_NAN
+    endif
+    img = ALOG10(img)
+    img = BYTSCL(img,/NAN)
+  endif
+  
+  id = widget_info(event.top, find_by_uname='load_data_DD_draw')
+  geometry = widget_info(id,/geometry)
+  New_Nx = geometry.scr_xsize
+  new_Ny = geometry.scr_ysize
+  
+  tvimg = congrid(img, New_Nx, New_Ny)
   
   tvscl, tvimg, /device
   ;remove PROCESSING_message from logbook and say ok

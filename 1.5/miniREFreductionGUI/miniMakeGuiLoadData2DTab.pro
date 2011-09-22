@@ -34,23 +34,35 @@
 
 PRO miniMakeGuiLoadData2DTab, D_DD_Tab, D_DD_BaseSize, D_DD_TabTitle, GlobalLoadGraphs
 
-;Build 2D tab
-load_data_DD_TAB_BASE = WIDGET_BASE(D_DD_Tab,$
-                                    UNAME     = 'load_data_dd_tab_base',$
-                                    TITLE     = D_DD_TabTitle[1],$
-                                    XOFFSET   = D_DD_BaseSize[0],$
-                                    YOFFSET   = D_DD_BaseSize[1],$
-                                    SCR_XSIZE = D_DD_BaseSize[2],$
-                                    SCR_YSIZE = D_DD_BaseSize[3])
-
-load_data_DD_draw = WIDGET_DRAW(load_data_DD_tab_base,$
-                                XOFFSET   = GlobalLoadGraphs[4],$
-                                YOFFSET   = GlobalLoadGraphs[5],$
-                                SCR_XSIZE = GlobalLoadGraphs[6],$
-                                SCR_YSIZE = GlobalLoadGraphs[7],$
-                                UNAME     = 'load_data_DD_draw',$
-                                RETAIN    = 2,$
-                                /BUTTON_EVENTS,$
-                                /MOTION_EVENTS)
-
+  ;Build 2D tab
+  load_data_DD_TAB_BASE = WIDGET_BASE(D_DD_Tab,$
+    UNAME     = 'load_data_dd_tab_base',$
+    TITLE     = D_DD_TabTitle[1],$
+    XOFFSET   = D_DD_BaseSize[0],$
+    YOFFSET   = D_DD_BaseSize[1],$
+    /column)
+  ;                                    SCR_XSIZE = D_DD_BaseSize[2],$
+  ;                                    SCR_YSIZE = D_DD_BaseSize[3])
+    
+  load_data_DD_draw = WIDGET_DRAW(load_data_DD_tab_base,$
+    ;                                XOFFSET   = GlobalLoadGraphs[4],$
+    ;                                YOFFSET   = GlobalLoadGraphs[5],$
+    SCR_XSIZE = GlobalLoadGraphs[6],$
+    SCR_YSIZE = GlobalLoadGraphs[7],$
+    UNAME     = 'load_data_DD_draw',$
+    RETAIN    = 2,$
+    /BUTTON_EVENTS,$
+    /MOTION_EVENTS)
+    
+  lin_log_base = widget_base(load_data_DD_tab_base,$
+    /row,$
+    /exclusive)
+  lin = widget_button(lin_log_base,$
+    value = 'lin',$
+    uname = 'y_vs_x_linear')
+  log = widget_button(lin_log_base, $
+    value = 'log',$
+    uname = 'y_vs_x_log')
+  widget_control, lin, /set_button
+  
 END

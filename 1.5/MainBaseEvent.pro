@@ -57,6 +57,14 @@ PRO MAIN_BASE_event, Event
   
   CASE Event.id OF
   
+    ;data 2d plot lin/log
+    widget_info(wWidget, find_by_uname='y_vs_x_linear'): begin
+status = REFreduction_Plot2DDataFile(Event)
+    end
+    widget_info(wWidget, find_by_uname='y_vs_x_log'): begin
+status = REFreduction_Plot2DDataFile(Event)
+    end
+  
     ;greg selection
     widget_info(wWidget, find_by_uname='greg_roi1_from_value'): begin
       IF ((*global).DataNeXusFound) THEN BEGIN
