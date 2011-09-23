@@ -1,4 +1,5 @@
-pro dqtbinning,histo,fmatrix,filen=file,dq=dq,deltad=deltad,maxd=maxd,use_focus=use_focus,option_focus=option_focus,tweak=tweak,norm_beam=norm_beam,old=old,pseudov=pseudov,sILENT=silent,calfile=calfile,maxtime=maxtime,newgeo=newgeo
+pro dqtbinning,histo,fmatrix,filen=file,dq=dq,deltad=deltad,maxd=maxd,use_focus=use_focus,option_focus=option_focus,tweak=tweak,norm_beam=norm_beam,old=old,pseudov=pseudov,sILENT=silent,calfile=calfile,maxtime=maxtime,newgeo=newgeo, $
+path_to_event_file=path_to_event_file
 
 ; ##################################################################################
 ; ###################### API for IDL (event Data) ##################################
@@ -66,7 +67,8 @@ save,result,file=pseudovfile
 end
 end
 
-path = "/SNS/NOM/2010_2_1B_SCI/1/"  ;path to event file
+;path = "/SNS/NOM/2010_2_1B_SCI/1/"  ;path to event file
+path = path_to_event_file
 
 if var_defined(file) then file=path+file
 
