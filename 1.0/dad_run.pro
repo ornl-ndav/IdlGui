@@ -285,15 +285,18 @@ PRO run_divisions, Event
     ;check that the Q matches
     es_Q_sf_sferror = (*(*global).es_Q_sf_sferror)
     sz = size(es_q_sf_sferror)
+    
     if (sz[0] eq 1) then begin
-      nbr_q_esQrange = sz[0]
+      nbr_q_esQrange = sz[1]    
     endif else begin
-      nbr_q_esQrange = sz[1]
+      nbr_q_esQrange = sz[2]
     endelse
+
     ;nbr_q_esQrange = (size(es_Q_sf_sferror[0,*]))(2)
     ;    nbr_q_esQrange = sz[1]
     esQrange = FLTARR(nbr_q_esQrange)
-    esQrange[*] = es_Q_sf_sferror[0,*]
+    
+    esQrange[*] = reform(es_Q_sf_sferror[0,*])
     ;if Q range axes do not match
     
     IF (~QrangeMatch(esQrange=esQrange, daveQrange=Qrange)) THEN BEGIN
