@@ -275,8 +275,6 @@ PRO run_divisions, Event
       iData, $
       Metadata)
       
-      print, 'status #0: ', status
-      
     IF (status EQ 0) THEN BEGIN
       table[3,index_file] = 'FAILED'
       putValue, Event,'table_uname', table
@@ -287,9 +285,6 @@ PRO run_divisions, Event
     ;check that the Q matches
     es_Q_sf_sferror = (*(*global).es_Q_sf_sferror)
     sz = size(es_q_sf_sferror)
-    
-    help, es_Q_sf_sferror
-    print, sz
     
     if (sz[0] eq 1) then begin
       nbr_q_esQrange = sz[0]    
@@ -306,8 +301,6 @@ PRO run_divisions, Event
     
     IF (~QrangeMatch(esQrange=esQrange, daveQrange=Qrange)) THEN BEGIN
       
-      print, 'in QrangeMatch'
-      
       table[3,index_file] = 'FAILED'
       putValue, Event,'table_uname', table
       index_file++
@@ -323,8 +316,6 @@ PRO run_divisions, Event
       CONTINUE
     ENDIF
 
-      print, 'status #1: ', status
-    
     ;perform division
     es_sf_sferror = FLTARR(2,nbr_q_esQrange)
     es_sf_sferror[0,*] = es_Q_sf_sferror[1,*]
@@ -335,8 +326,6 @@ PRO run_divisions, Event
       DAVE_DATA = dave_value_valueerror, $
       DIVIDED_DAVE_DATA = divided_dave_data)
       
-            print, 'status #2: ', status
-      
     ;create output ascii file
     status = create_output_ascii_file(Event, $
       output_ascii_file, $
@@ -345,9 +334,6 @@ PRO run_divisions, Event
       divided_dave_data, $
       metadata)
     
-      print, 'status #3: ', status
-
-
     IF (status EQ 0) THEN BEGIN
       table[3,index_file] = 'FAILED'
       putValue, Event,'table_uname', table
