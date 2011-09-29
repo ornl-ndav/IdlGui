@@ -346,12 +346,16 @@ pro repopulate_gui, event, _structure
     display_log_book, event=event
   endif
   
-;  ;NeXus/Settings -> Ranges to display
-;  ranges_q_to_display = _structure.ranges_q_to_display
-;  putValue, event=event, 'ranges_qx_min_to_display', ranges_q_to_display[0]
-;  putValue, event=event, 'ranges_qx_max_to_display', ranges_q_to_display[1]
-;  putValue, event=event, 'ranges_qz_min_to_display', ranges_q_to_display[2]
-;  putValue, event=event, 'ranges_qz_max_to_display', ranges_q_to_display[3]
+  ;NeXus/Settings -> Ranges to display
+  qx_min_display = _structure.qx_min_display
+  qx_max_display = _structure.qx_max_display
+  qz_min_display = _structure.qz_min_display
+  qz_max_display = _structure.qz_max_display
+  
+  putValue, event=event, 'ranges_qx_min_to_display', qx_min_display
+  putValue, event=event, 'ranges_qx_max_to_display', qx_max_display
+  putValue, event=event, 'ranges_qz_min_to_display', qz_min_display
+  putValue, event=event, 'ranges_qz_max_to_display', qz_max_display
     
   update_main_interface, event=event
   

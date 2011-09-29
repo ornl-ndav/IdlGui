@@ -47,8 +47,8 @@ pro go_nexus_reduction_ref_l, event
   
   widget_control, event.top, get_uvalue=global
   
-  error = 0
-  ;catch,error
+  ;error = 0
+  catch,error
   if (error ne 0) then begin
     catch,/cancel
     
@@ -529,15 +529,9 @@ pro go_nexus_reduction_ref_l, event
   index_qzmax = get_index_of_value_in_array(value=qzmax_display[0], array=qzvec)
 
   index_qxmin = index_qxmin eq -1 ? 0 : index_qxmin
-  index_qzmin = index_qzmin eq -1 ? 0 : index_qzmin3
+  index_qzmin = index_qzmin eq -1 ? 0 : index_qzmin
   qxvec = qxvec[index_qxmin:index_qxmax]
   qzvec = qzvec[index_qzmin:index_qzmax]
-
-  help, divarray
-  print, index_qxmin
-  print, index_qxmax
-  print, index_qzmin
-  print, index_qzmax
 
   divarray = divarray[index_qxmin:index_qxmax, index_qzmin:index_qzmax]
 

@@ -69,82 +69,233 @@ function IDLconfiguration::getConfig, event
   
   widget_control, event.top, get_uvalue=global
   
-  _structure = {data_norm_table: getValue(event=event, $ ;working with nexus
-    uname='tab1_table'), $
-    input_path: (*global).input_path, $
+  qx_min_display = getValue(event=event, uname='ranges_qx_min_to_display')
+  qx_max_display = getValue(event=event, uname='ranges_qx_max_to_display')
+  qz_min_display = getValue(event=event, uname='ranges_qz_min_to_display')
+  qz_max_display = getValue(event=event, uname='ranges_qz_max_to_display')
+  
+  data_norm_table = getValue(event=event, uname='tab1_table')
+  input_path = (*global).input_path
+  
+  ;Settings base
+  ranges_qx_min = getValue(event=event, uname='ranges_qx_min')
+  ranges_qz_min = getValue(event=event, uname='ranges_qz_min')
+  tof_min = getValue(event=event, uname='tof_min')
+  ranges_qx_max = getValue(event=event, uname='ranges_qx_max')
+  ranges_qz_max = getValue(event=event, uname='ranges_qz_max')
+  tof_max = getValue(event=event, uname='tof_max')
+  
+  center_pixel = getValue(event=event, uname='center_pixel')
+  pixel_size = getValue(event=event, uname='pixel_size')
+  detector_dimension_x = getValue(event=event, uname='detector_dimension_x')
+  detector_dimension_y = getValue(event=event, uname='detector_dimension_y')
+  pixel_min = getValue(event=event, uname='pixel_min')
+  pixel_max = getValue(event=event, uname='pixel_max')
+  d_sd = getValue(event=event, uname='d_sd_uname')
+  d_md = getValue(event=event, uname='d_md_uname')
+  
+  ;working with RTOF
+  rtof_file_text_field = getValue(event=event, uname='rtof_file_text_field_uname')
+  rtof_nexus_geometry_file = getValue(event=event, uname='rtof_nexus_geometry_file')
+  rtof_ranges_qx_min = getValue(event=event, uname='rtof_ranges_qx_min')
+  rtof_ranges_qz_min = getValue(event=event, uname='rtof_ranges_qz_min')
+  rtof_tof_min = getValue(event=event, uname='rtof_tof_min')
+  rtof_ranges_qx_max = getValue(event=event, uname='rtof_ranges_qx_max')
+  rtof_ranges_qz_max = getValue(event=event, uname='rtof_ranges_qz_max')
+  rtof_tof_max = getValue(event=event, uname='rtof_tof_max')
+  rtof_center_pixel = getValue(event=event, uname='rtof_center_pixel')
+  rtof_pixel_size = getValue(event=event, uname='rtof_pixel_size')
+  rtof_theta_value = getValue(event=event, uname='rtof_theta_value')
+  rtof_theta_units = getValue(event=event, uname='rtof_theta_units')
+  rtof_twotheta_value = getValue(event=event, uname='rtof_twotheta_value')
+  rtof_twotheta_units = getValue(event=event, uname='rtof_twotheta_units')
+  rtof_pixel_min = getValue(event=event, uname='rtof_pixel_min')
+  rtof_pixel_max = getValue(event=event, uname='rtof_pixel_max')
+  rtof_d_sd_uname = getValue(event=event, uname='rtof_d_sd_uname')
+  rtof_d_md_uname = getValue(event=event, uname='rtof_d_md_uname')
+  is_rtof_nexus_base_mapped = isBaseMapped(event=event, uname='rtof_nexus_base')
+  is_rtof_configuration_base_mapped = isBaseMapped(event=event, uname='rtof_configuration_base')
+  
+  ;general settings
+  bins_qx = getValue(event=event, uname='bins_qx')
+  bins_qz = getValue(event=event, uname='bins_qz')
+  qxwidth_uname = getValue(event=event, uname='qxwidth_uname')
+  tnum_uname = getValue(event=event, uname='tnum_uname')
+  inter_pixel_y_vs_tof = isButtonSelected(event=event, uname='inter_pixel_y_vs_tof')
+  inter_theta_vs_lambda = isButtonSelected(event=event, uname='inter_theta_vs_lambda')
+  inter_qz_vs_qx = isButtonSelected(event=event, uname='inter_qz_vs_qx')
+  inter_specular_peaks_stitching = isButtonSelected(event=event, uname='inter_specular_peaks_stitching')
+  
+  ;create output
+  output_path = (*global).output_path
+  output_file_name = getValue(event=event, uname='output_file_name')
+  is_output_working_with_nexus_plot_checked = isButtonSelected(event=event, uname='output_working_with_nexus_plot')
+  is_output_working_with_rtof_plot_checked = isButtonSelected(event=event, uname='output_working_with_rtof_plot')
+  
+  is_email_switch_checked = isButtonSelected(event=event, uname='email_switch_uname')
+  
+  email_to_uname = getValue(event=event, uname='email_to_uname')
+  email_subject_uname = getValue(event=event, uname='email_subject_uname')
+  is_email_base_mapped = isBaseMapped(event=event, uname='email_base')
+  
+  is_log_book_enabled = isLogBookEnabled(event=event)
+  log_book = (*(*global).full_log_book)
+  
+  qx_min_display = qx_min_display
+  qx_max_display = qx_max_display
+  qz_min_display = qz_min_display
+  qz_max_display = qz_max_display
+  
+  _structure = {data_norm_table: data_norm_table, $
+    input_path: input_path, $
     
     ;Settings base
-    ranges_qx_min: getValue(event=event, uname='ranges_qx_min'),$
-    ranges_qz_min: getValue(event=event, uname='ranges_qz_min'),$
-    tof_min: getValue(event=event, uname='tof_min'), $
-    ranges_qx_max: getValue(event=event, uname='ranges_qx_max'),$
-    ranges_qz_max: getValue(event=event, uname='ranges_qz_max'),$
-    tof_max: getValue(event=event, uname='tof_max'),$
-        
-    center_pixel: getValue(event=event, uname='center_pixel'),$
-    pixel_size: getValue(event=event, uname='pixel_size'),$
-    detector_dimension_x: getValue(event=event, uname='detector_dimension_x'),$
-    detector_dimension_y: getValue(event=event, uname='detector_dimension_y'),$
-    pixel_min: getValue(event=event, uname='pixel_min'),$
-    pixel_max: getValue(event=event, uname='pixel_max'),$
-    d_sd: getValue(event=event, uname='d_sd_uname'),$
-    d_md: getValue(event=event, uname='d_md_uname'),$
+    ranges_qx_min: ranges_qx_min, $
+    ranges_qz_min: ranges_qx_min, $
+    tof_min: tof_min, $
+    ranges_qx_max: ranges_qx_max, $
+    ranges_qz_max: ranges_qz_max, $
+    tof_max: tof_max, $
+    
+    center_pixel: center_pixel, $
+    pixel_size: pixel_size, $
+    detector_dimension_x: detector_dimension_x, $
+    detector_dimension_y: detector_dimension_y, $
+    pixel_min: pixel_min, $
+    pixel_max: pixel_max, $
+    d_sd: d_sd, $
+    d_md: d_md, $
     
     ;working with RTOF
-    rtof_file_text_field: getValue(event=event, uname='rtof_file_text_field_uname'),$
-    rtof_nexus_geometry_file: getValue(event=event, uname='rtof_nexus_geometry_file'),$
-    rtof_ranges_qx_min: getValue(event=event, uname='rtof_ranges_qx_min'),$
-    rtof_ranges_qz_min: getValue(event=event, uname='rtof_ranges_qz_min'),$
-    rtof_tof_min: getValue(event=event, uname='rtof_tof_min'),$
-    rtof_ranges_qx_max: getValue(event=event, uname='rtof_ranges_qx_max'), $
-    rtof_ranges_qz_max: getValue(event=event, uname='rtof_ranges_qz_max'), $
-    rtof_tof_max: getValue(event=event, uname='rtof_tof_max'), $
-    rtof_center_pixel: getValue(event=event, uname='rtof_center_pixel'),$
-    rtof_pixel_size: getValue(event=event, uname='rtof_pixel_size'), $
-    rtof_theta_value: getValue(event=event, uname='rtof_theta_value'), $
-    rtof_theta_units: getValue(event=event, uname='rtof_theta_units'), $
-    rtof_twotheta_value: getValue(event=event, uname='rtof_twotheta_value'), $
-    rtof_twotheta_units: getValue(event=event, uname='rtof_twotheta_units'), $
-    rtof_pixel_min: getValue(event=event, uname='rtof_pixel_min'), $
-    rtof_pixel_max: getValue(event=event, uname='rtof_pixel_max'), $
-    rtof_d_sd_uname: getValue(event=event, uname='rtof_d_sd_uname'), $
-    rtof_d_md_uname: getValue(event=event, uname='rtof_d_md_uname'), $
-    is_rtof_nexus_base_mapped: isBaseMapped(event=event, uname='rtof_nexus_base'), $
-    is_rtof_configuration_base_mapped: isBaseMapped(event=event, uname='rtof_configuration_base'), $
+    rtof_file_text_field: rtof_file_text_field, $
+    rtof_nexus_geometry_file: rtof_nexus_geometry_file, $
+    rtof_ranges_qx_min: rtof_ranges_qx_min, $
+    rtof_ranges_qz_min: rtof_ranges_qz_min, $
+    rtof_tof_min: rtof_tof_min, $
+    rtof_ranges_qx_max: rtof_ranges_qx_max, $
+    rtof_ranges_qz_max: rtof_ranges_qz_max, $
+    rtof_tof_max: rtof_tof_max, $
+    rtof_center_pixel: rtof_center_pixel, $
+    rtof_pixel_size: rtof_pixel_size, $
+    rtof_theta_value: rtof_theta_value, $
+    rtof_theta_units: rtof_theta_units, $
+    rtof_twotheta_value: rtof_twotheta_value, $
+    rtof_twotheta_units: rtof_twotheta_units, $
+    rtof_pixel_min: rtof_pixel_min, $
+    rtof_pixel_max: rtof_pixel_max, $
+    rtof_d_sd_uname: rtof_d_sd_uname, $
+    rtof_d_md_uname: rtof_d_md_uname, $
+    is_rtof_nexus_base_mapped: is_rtof_nexus_base_mapped, $
+    is_rtof_configuration_base_mapped: is_rtof_configuration_base_mapped, $
     
     ;general settings
-    bins_qx: getValue(event=event, uname='bins_qx'),$
-    bins_qz: getValue(event=event, uname='bins_qz'),$
-    qxwidth_uname: getValue(event=event, uname='qxwidth_uname'),$
-    tnum_uname: getValue(event=event, uname='tnum_uname'),$
-    inter_pixel_y_vs_tof: isButtonSelected(event=event, uname='inter_pixel_y_vs_tof'), $
-    inter_theta_vs_lambda: isButtonSelected(event=event, uname='inter_theta_vs_lambda'), $
-    inter_qz_vs_qx: isButtonSelected(event=event, uname='inter_qz_vs_qx'), $
-    inter_specular_peaks_stitching: isButtonSelected(event=event, uname='inter_specular_peaks_stitching'), $
+    bins_qx: bins_qx, $
+    bins_qz: bins_qz, $
+    qxwidth_uname: qxwidth_uname, $
+    tnum_uname: tnum_uname, $
+    inter_pixel_y_vs_tof: inter_pixel_y_vs_tof, $
+    inter_theta_vs_lambda: inter_theta_vs_lambda, $
+    inter_qz_vs_qx: inter_qz_vs_qx, $
+    inter_specular_peaks_stitching: inter_specular_peaks_stitching, $
     
     ;create output
-    output_path: (*global).output_path, $
-    output_file_name: getValue(event=event, uname='output_file_name'),$
-    is_output_working_with_nexus_plot_checked: isButtonSelected(event=event, uname='output_working_with_nexus_plot'),$
-    is_output_working_with_rtof_plot_checked: isButtonSelected(event=event, uname='output_working_with_rtof_plot'),$
+    output_path: output_path, $
+    output_file_name: output_file_name, $
+    is_output_working_with_nexus_plot_checked: is_output_working_with_nexus_plot_checked, $
+    is_output_working_with_rtof_plot_checked: is_output_working_with_rtof_plot_checked, $
     
     ;add code here if droplist of output format contains more than 1 entry
-
     
-    is_email_switch_checked: isButtonSelected(event=event, uname='email_switch_uname'),$
     
-    email_to_uname: getValue(event=event, uname='email_to_uname'),$
-    email_subject_uname: getValue(event=event, uname='email_subject_uname'), $
-    is_email_base_mapped: isBaseMapped(event=event, uname='email_base'), $
+    is_email_switch_checked: is_email_switch_checked, $
     
-    is_log_book_enabled: isLogBookEnabled(event=event), $
-    log_book: (*(*global).full_log_book)}
+    email_to_uname: email_to_uname, $
+    email_subject_uname: email_subject_uname, $
+    is_email_base_mapped: is_email_base_mapped, $
     
-    ;ranges_q_to_display: [getValue(event=event, uname='ranges_qx_min_to_display'), $
-    ;getValue(event=event, uname='ranges_qx_max_to_display'), $
-    ;getValue(event=event, uname='ranges_qz_min_to_display'), $
-    ;getValue(event=event, uname='ranges_qz_max_to_display')]}
+    is_log_book_enabled: is_log_book_enabled, $
+    log_book: log_book, $
     
+    qx_min_display: qx_min_display, $
+    qx_max_display: qx_max_display, $
+    qz_min_display: qz_min_display, $
+    qz_max_display: qz_max_display}
+    
+  ;  _structure = {data_norm_table: getValue(event=event, $ ;working with nexus
+  ;    uname='tab1_table'), $
+  ;    input_path: (*global).input_path, $
+  ;
+  ;    ;Settings base
+  ;    ranges_qx_min: getValue(event=event, uname='ranges_qx_min'),$
+  ;    ranges_qz_min: getValue(event=event, uname='ranges_qz_min'),$
+  ;    tof_min: getValue(event=event, uname='tof_min'), $
+  ;    ranges_qx_max: getValue(event=event, uname='ranges_qx_max'),$
+  ;    ranges_qz_max: getValue(event=event, uname='ranges_qz_max'),$
+  ;    tof_max: getValue(event=event, uname='tof_max'),$
+  ;
+  ;    center_pixel: getValue(event=event, uname='center_pixel'),$
+  ;    pixel_size: getValue(event=event, uname='pixel_size'),$
+  ;    detector_dimension_x: getValue(event=event, uname='detector_dimension_x'),$
+  ;    detector_dimension_y: getValue(event=event, uname='detector_dimension_y'),$
+  ;    pixel_min: getValue(event=event, uname='pixel_min'),$
+  ;    pixel_max: getValue(event=event, uname='pixel_max'),$
+  ;    d_sd: getValue(event=event, uname='d_sd_uname'),$
+  ;    d_md: getValue(event=event, uname='d_md_uname'),$
+  ;
+  ;    ;working with RTOF
+  ;    rtof_file_text_field: getValue(event=event, uname='rtof_file_text_field_uname'),$
+  ;    rtof_nexus_geometry_file: getValue(event=event, uname='rtof_nexus_geometry_file'),$
+  ;    rtof_ranges_qx_min: getValue(event=event, uname='rtof_ranges_qx_min'),$
+  ;    rtof_ranges_qz_min: getValue(event=event, uname='rtof_ranges_qz_min'),$
+  ;    rtof_tof_min: getValue(event=event, uname='rtof_tof_min'),$
+  ;    rtof_ranges_qx_max: getValue(event=event, uname='rtof_ranges_qx_max'), $
+  ;    rtof_ranges_qz_max: getValue(event=event, uname='rtof_ranges_qz_max'), $
+  ;    rtof_tof_max: getValue(event=event, uname='rtof_tof_max'), $
+  ;    rtof_center_pixel: getValue(event=event, uname='rtof_center_pixel'),$
+  ;    rtof_pixel_size: getValue(event=event, uname='rtof_pixel_size'), $
+  ;    rtof_theta_value: getValue(event=event, uname='rtof_theta_value'), $
+  ;    rtof_theta_units: getValue(event=event, uname='rtof_theta_units'), $
+  ;    rtof_twotheta_value: getValue(event=event, uname='rtof_twotheta_value'), $
+  ;    rtof_twotheta_units: getValue(event=event, uname='rtof_twotheta_units'), $
+  ;    rtof_pixel_min: getValue(event=event, uname='rtof_pixel_min'), $
+  ;    rtof_pixel_max: getValue(event=event, uname='rtof_pixel_max'), $
+  ;    rtof_d_sd_uname: getValue(event=event, uname='rtof_d_sd_uname'), $
+  ;    rtof_d_md_uname: getValue(event=event, uname='rtof_d_md_uname'), $
+  ;    is_rtof_nexus_base_mapped: isBaseMapped(event=event, uname='rtof_nexus_base'), $
+  ;    is_rtof_configuration_base_mapped: isBaseMapped(event=event, uname='rtof_configuration_base'), $
+  ;
+  ;    ;general settings
+  ;    bins_qx: getValue(event=event, uname='bins_qx'),$
+  ;    bins_qz: getValue(event=event, uname='bins_qz'),$
+  ;    qxwidth_uname: getValue(event=event, uname='qxwidth_uname'),$
+  ;    tnum_uname: getValue(event=event, uname='tnum_uname'),$
+  ;    inter_pixel_y_vs_tof: isButtonSelected(event=event, uname='inter_pixel_y_vs_tof'), $
+  ;    inter_theta_vs_lambda: isButtonSelected(event=event, uname='inter_theta_vs_lambda'), $
+  ;    inter_qz_vs_qx: isButtonSelected(event=event, uname='inter_qz_vs_qx'), $
+  ;    inter_specular_peaks_stitching: isButtonSelected(event=event, uname='inter_specular_peaks_stitching'), $
+  ;
+  ;    ;create output
+  ;    output_path: (*global).output_path, $
+  ;    output_file_name: getValue(event=event, uname='output_file_name'),$
+  ;    is_output_working_with_nexus_plot_checked: isButtonSelected(event=event, uname='output_working_with_nexus_plot'),$
+  ;    is_output_working_with_rtof_plot_checked: isButtonSelected(event=event, uname='output_working_with_rtof_plot'),$
+  ;
+  ;    ;add code here if droplist of output format contains more than 1 entry
+  ;
+  ;
+  ;    is_email_switch_checked: isButtonSelected(event=event, uname='email_switch_uname'),$
+  ;
+  ;    email_to_uname: getValue(event=event, uname='email_to_uname'),$
+  ;    email_subject_uname: getValue(event=event, uname='email_subject_uname'), $
+  ;    is_email_base_mapped: isBaseMapped(event=event, uname='email_base'), $
+  ;
+  ;    is_log_book_enabled: isLogBookEnabled(event=event), $
+  ;    ;log_book: (*(*global).full_log_book), $
+  ;
+  ;    qx_min_display: qx_min_display, $
+  ;    qx_max_display: qx_max_display, $
+  ;    qz_min_display: qz_min_display, $
+  ;    qz_max_display: qz_max_display}
     
   return, _structure
 end
