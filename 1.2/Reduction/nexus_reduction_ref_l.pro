@@ -47,12 +47,13 @@ pro go_nexus_reduction_ref_l, event
   
   widget_control, event.top, get_uvalue=global
   
-  error = 0
-  ;catch,error
+  ;error = 0
+  catch,error
   if (error ne 0) then begin
     catch,/cancel
     
     message = '> Automatic stitching failed! ***'
+    message = [message, !error_state.msg]
     log_book_update, event, message=message
     
     title = 'Automatic stitching failed !'
