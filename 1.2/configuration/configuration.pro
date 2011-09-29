@@ -186,12 +186,13 @@ end
 ;+
 ; :Description:
 ;    repopulate the application using the config structure retrieved
+;    
+;    NB: add all new widgets structure elements at the end of the procedure
+;    (this allows back compatibility of config files)
 ;
 ; :Params:
 ;    event
 ;    _structure
-;
-;
 ;
 ; :Author: j35
 ;-
@@ -340,13 +341,18 @@ pro repopulate_gui, event, _structure
   mapBase, event=event, status=_structure.is_email_base_mapped, $
     uname='email_base'
     
-    
-    
   (*(*global).full_log_book) = _structure.log_book
   if (_structure.is_log_book_enabled) then begin
     display_log_book, event=event
   endif
   
+;  ;NeXus/Settings -> Ranges to display
+;  ranges_q_to_display = _structure.ranges_q_to_display
+;  putValue, event=event, 'ranges_qx_min_to_display', ranges_q_to_display[0]
+;  putValue, event=event, 'ranges_qx_max_to_display', ranges_q_to_display[1]
+;  putValue, event=event, 'ranges_qz_min_to_display', ranges_q_to_display[2]
+;  putValue, event=event, 'ranges_qz_max_to_display', ranges_q_to_display[3]
+    
   update_main_interface, event=event
   
 end

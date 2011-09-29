@@ -47,8 +47,8 @@ pro go_nexus_reduction_ref_l, event
   
   widget_control, event.top, get_uvalue=global
   
-  ;error = 0
-  catch,error
+  error = 0
+  ;catch,error
   if (error ne 0) then begin
     catch,/cancel
     
@@ -516,7 +516,31 @@ pro go_nexus_reduction_ref_l, event
     xaxis=qxvec, $
     yaxis=qzvec
   (*global).structure_data_working_with_nexus = structure
+
+  qxmin_display = getValue(event=event, uname='ranges_qx_min_to_display')
+  qxmax_display = getValue(event=event, uname='ranges_qx_max_to_display')
   
+  qzmin_display = getValue(event=event, uname='ranges_qz_min_to_display')
+  qzmax_display = getValue(event=event, uname='ranges_qz_max_to_display')
+  
+  index_qxmin = get_index_of_value_in_array(value=qxmin_display[0], array=qxvec) 
+  index_qxmax = get_index_of_value_in_array(value=qxmax_display[0], array=qxvec)
+  index_qzmin = get_index_of_value_in_array(value=qzmin_display[0], array=qzvec) 
+  index_qzmax = get_index_of_value_in_array(value=qzmax_display[0], array=qzvec)
+
+  index_qxmin = index_qxmin eq -1 ? 0 : index_qxmin
+  index_qzmin = index_qzmin eq -1 ? 0 : index_qzmin3
+  qxvec = qxvec[index_qxmin:index_qxmax]
+  qzvec = qzvec[index_qzmin:index_qzmax]
+
+  help, divarray
+  print, index_qxmin
+  print, index_qxmax
+  print, index_qzmin
+  print, index_qzmax
+
+  divarray = divarray[index_qxmin:index_qxmax, index_qzmin:index_qzmax]
+
   final_plot, event=event, $
     offset = offset, $
     time_stamp = time_stamp, $

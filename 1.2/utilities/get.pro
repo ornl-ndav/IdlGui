@@ -680,3 +680,30 @@ function get_file_structure, full_file_name_spin
     
 end
 
+;+
+; :Description:
+;    Return the index where the value has been found for the first time in the
+;    array
+;
+; :Keywords:
+;    value
+;    array
+;
+; :Returns:
+;   index
+;
+; :Author: j35
+;-
+function get_index_of_value_in_array, value=value, array=array
+  compile_opt idl2
+  
+  index_array = where(array le value, nbr)
+  if (nbr gt 0) then begin
+    return, index_array[-1]
+  endif else begin
+    return, -1
+  endelse
+end
+
+
+
