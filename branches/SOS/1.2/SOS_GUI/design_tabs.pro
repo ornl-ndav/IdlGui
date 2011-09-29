@@ -249,6 +249,7 @@ pro design_tabs, MAIN_BASE, global
   
   para_box = widget_base(_base,$
     frame = 1,$
+    ysize=150,$
     /align_center,$
     /base_align_center,$
     /column)
@@ -398,6 +399,56 @@ pro design_tabs, MAIN_BASE, global
     uname = 'd_md_uname',$
     title = 'Distance moderator to detector (mm) ')
     
+  ;range of Qx and Qz to use for display only
+  display_box = widget_base(_base,$
+    frame = 1,$
+    /align_left,$
+    /base_align_left,$
+    /column)
+    
+  row1 = widget_base(display_box,$
+    /row)
+    
+  row1col2 = widget_base(row1,$
+    /column)
+    
+  ranges_qx_min = file->getValue(tag=['instruments',instrument,$
+    'ranges_qx','minqx'])
+  field1 = cw_field(row1col2,$
+    /floating,$
+    xsize = 8,$
+    uname = 'ranges_qx_min_to_display',$
+    value = ranges_qx_min,$
+    title = 'Ranges to display:  Qx')
+    
+  ranges_qz_min = file->getValue(tag=['instruments',instrument,$
+    'ranges_qz','minqz'])
+  field2 = cw_field(row1col2,$
+    xsize = 8,$
+    /floating,$
+    value = ranges_qz_min,$
+    uname = 'ranges_qz_min_to_display',$
+    title = '                    Qz')
+    
+  row1col3 = widget_base(row1,$
+    /column)
+  ranges_qx_max = file->getValue(tag=['instruments',instrument,$
+    'ranges_qx','maxqx'])
+  field1 = cw_field(row1col3,$
+    /floating,$
+    xsize = 8,$
+    uname = 'ranges_qx_max_to_display',$
+    value = ranges_qx_max,$
+    title = 'to  ')
+    
+  ranges_qz_max = file->getValue(tag=['instruments',instrument,$
+    'ranges_qz','maxqz'])
+  field21 = cw_field(row1col3,$
+    xsize = 8,$
+    /floating,$
+    uname = 'ranges_qz_max_to_display',$
+    value = ranges_qz_max,$
+    title = 'to  ')
     
   ;  ;for REF_M only, spin state selection and metadata table
   ;  if ((*global).instrument eq 'REF_M') then begin
@@ -785,39 +836,39 @@ pro design_tabs, MAIN_BASE, global
     value = tnum,$
     uname = 'tnum_uname',$
     title = '                                 tnum')
-
-;intermediate plots
- inter_plot_box = widget_base(_base1,$
+    
+  ;intermediate plots
+  inter_plot_box = widget_base(_base1,$
     frame = 1,$
     /base_align_center,$
     /column)
     
- title = widget_label(inter_plot_box,$
- value = 'Intermediate plots to display:',$
- /align_left)
- space = widget_label(inter_plot_box,$
- value='')   
+  title = widget_label(inter_plot_box,$
+    value = 'Intermediate plots to display:',$
+    /align_left)
+  space = widget_label(inter_plot_box,$
+    value='')
     
- inter_plot_box_buttons = widget_base(inter_plot_box,$
- /column,$
- /nonexclusive)
-
- plot1 = widget_button(inter_plot_box_buttons, $
- value = 'Pixel Y vs TOF (*)', $
- uname = 'inter_pixel_y_vs_tof')
- plot2 = widget_button(inter_plot_box_buttons, $
- value = 'Theta vs Lambda (*)',$
- uname = 'inter_theta_vs_lambda')
- plot3 = widget_button(inter_plot_box_buttons, $
- value = 'Qz vs Qx (*)', $
- uname = 'inter_qz_vs_qx')
- plot4 = widget_button(inter_plot_box_buttons, $
- value = 'Specular peaks stitching',$
- uname = 'inter_specular_peaks_stitching')
-
- info = widget_label(inter_plot_box,$
- value = '*: Will produce as many plots as files loaded',$
- /align_left)
+  inter_plot_box_buttons = widget_base(inter_plot_box,$
+    /column,$
+    /nonexclusive)
+    
+  plot1 = widget_button(inter_plot_box_buttons, $
+    value = 'Pixel Y vs TOF (*)', $
+    uname = 'inter_pixel_y_vs_tof')
+  plot2 = widget_button(inter_plot_box_buttons, $
+    value = 'Theta vs Lambda (*)',$
+    uname = 'inter_theta_vs_lambda')
+  plot3 = widget_button(inter_plot_box_buttons, $
+    value = 'Qz vs Qx (*)', $
+    uname = 'inter_qz_vs_qx')
+  plot4 = widget_button(inter_plot_box_buttons, $
+    value = 'Specular peaks stitching',$
+    uname = 'inter_specular_peaks_stitching')
+    
+  info = widget_label(inter_plot_box,$
+    value = '*: Will produce as many plots as files loaded',$
+    /align_left)
     
   ;********* tab 4 - OUTPUT **************************************************
   base3 = widget_base(tabs,$
