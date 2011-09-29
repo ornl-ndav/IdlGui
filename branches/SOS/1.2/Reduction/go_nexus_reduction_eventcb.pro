@@ -1067,6 +1067,7 @@ pro make_QxQz, event = event, $
       lambda_step)
       
     if (isButtonSelected(event=event, uname='inter_qz_vs_qx')) then begin
+    
       ;display here the 2d plot of theta vs lambda
       offset = 25+25*loop
       widget_control, event.top, get_uvalue=global
@@ -1164,6 +1165,7 @@ function extract_specular, datafile, qxvec, qxwidth
   
   si=size(datafile,/dim)
   specular=make_array(si[1])
+  
   pos2=max(where(Qxvec le qxwidth))
   pos1=min(where(Qxvec ge -qxwidth))
   
@@ -1211,12 +1213,8 @@ function get_specular_scale, event=event, $
     ;    help, data
     
     result=extract_specular(data, qxvec, qxwidth)
-    ;    help, result
     specular[loop,*]=result
     no_zero_array = where(result ne 0)
-    ;    print, 'for index: ' , loop, ':'
-    ;    help, no_zero_array
-    ;    print
     
     if loop eq 0 then scale[0]=1/max(result)
   endfor
@@ -1227,8 +1225,12 @@ function get_specular_scale, event=event, $
   ;trimmer
   trim=specular*0.0
   for loop=0,num-1 do begin
-    list=where(specular[loop,*] ne 0)
-    ;    help, list
+    list=where(specular[loop,*] ne 0, nbr)
+    
+    if (nbr lt 2) then begin
+      message, 'ERROR for file #' + strcompress(loop,/remove_all)
+    endif
+    
     si=size(list,/dim)
     si=si[0]
     cut=list[tnum:si-tnum]
