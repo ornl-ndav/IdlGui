@@ -79,9 +79,9 @@ pro idl_bin
   ;read config file
   restore_file = file->getValue(tag=['configuration','restore_file_name'])
   number = file->getValue(tag=['configuration','dqtbinning','number'])
+  proposal_id = file->getValue(tag=['configuration','proposal_id'])
+  collection_number = file->getValue(tag=['configuration','collection_number'])
   calfile = file->getValue(tag=['configuration','dqtbinning','calfile'])
-  binary_file = file->getValue(tag=['configuration','dqtbinning','binary_file'])
-  path_to_event_file = file->getValue(tag=['configuration','dqtbinning','path_to_event_file'])
   back_file = file->getValue(tag=['configuration','creategr','back_file'])
   
   obj_destroy, file
@@ -98,7 +98,9 @@ pro idl_bin
   while (index lt nbr_files) do begin
   
     number = list_number[index]
-    
+    path_to_event_file =  '/SNS/NOM/' + proposal_id + '/' + collection_number + '/' + number + '/preNeXus/'
+    binary_file = path_to_event_file + 'NOM_' + number + '_neutron_event.dat'
+
     ;perform Q binning
     histo = 'h' + number
     dqtbinning,histo,fmatrix,use=1,option=1,dq=1,maxd=50,$
