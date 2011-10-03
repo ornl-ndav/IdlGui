@@ -1,0 +1,32 @@
+idl_bin instructions for developers
+
+Here are the instructions to modify/add arguments to the config file and how
+to build the new compiled file (idl_bin.sav)
+
+#1 add the new argument in the idl_bin.cfg file
+   If new argument is my_new_file.dat then add the following line above </configuration>
+   ex:
+	<name_of_new_argument>my_new_file.dat</name_of_new_argument>
+
+#2 add the reading of this new argument in the idl_bin.pro file
+   around line 80 (;read config file)
+   ex:
+	value_of_new_argument = file->getValue(tag=['configuration','name_of_new_argument'])
+
+#3 add the new argument to the procedure call. If the new argument is for example when calling dqtbinning
+   add this
+   ex:
+	dqtbinning, .... , name_of_new_argument=value_of_new_argument
+
+#4 recompile code by just typing make in the same folder
+   > make
+
+#5 Running idl_bin will use the new .sav file
+		
+
+
+
+
+
+
+
