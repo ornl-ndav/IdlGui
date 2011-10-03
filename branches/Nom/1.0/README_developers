@@ -18,11 +18,13 @@ to build the new compiled file (idl_bin.sav)
    ex:
 	dqtbinning, .... , name_of_new_argument=value_of_new_argument
 
-#4 recompile code by just typing make in the same folder
+#4 recompile code by changing the default idl and just typing make in the same folder
+   > export IDL_DIR='/SNS/software/itt/idl8
    > make
 
 #5 Running idl_bin will use the new .sav file
-		
+   > ./idl_bin		
+
 
 
 

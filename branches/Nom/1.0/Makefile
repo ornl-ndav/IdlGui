@@ -11,4 +11,5 @@ all:
 
 install:
 	cp idl_bin.sav /SNS/NOM/shared/
-	
+
+
