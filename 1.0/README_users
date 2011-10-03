@@ -1,7 +1,7 @@
 idl_bin instructions
 
-All needed to run the application are the files specified in the config file
-idl_bin.cfg 
+Configuration can be modified by editing the idl_bin.cfg file
+Then, run the application this way
 
 > idl -vm='idl_bin.sav'
 
