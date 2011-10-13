@@ -339,6 +339,14 @@ PRO MAIN_BASE_event, Event
       convert_dangle_units, event, from='rad', to='deg'
       calculate_sangle, event
     end
+    widget_info(wWidget, find_by_uname='info_dangle0_rad'): begin
+    convert_dangle0_units, event, from='rad', to='deg'
+    calculate_sangle, event
+    end
+    widget_info(wWidget, find_by_uname='info_dangle0_deg'): begin
+    convert_dangle0_units, event, from='deg', to='rad'
+    calculate_sangle, event
+    end
     widget_info(wWidget, find_by_uname='info_sangle_rad'): begin
       convert_sangle_units, event, from= 'rad'
     end
