@@ -85,8 +85,10 @@ PRO populate_data_geometry_info, Event, nexus_file_name, spin_state=spin_state
   
   ;Dangle0
   dangle0_value = iNexus->getDangle0()
-  dangle0 = dangle0_value[0] + ' degrees (' + dangle0_value[1] + ' rad)'
-  putTextFieldValue, event, 'info_dangle0', dangle0
+  putTextFieldvalue, event, 'info_dangle0_deg', dangle0_value[0]
+  putTextFieldValue, event, 'info_dangle0_rad', dangle0_value[1]
+;  dangle0 = dangle0_value[0] + ' degrees (' + dangle0_value[1] + ' rad)'
+;  putTextFieldValue, event, 'info_dangle0', dangle0
   
   ;dirpix
   dirpix = iNexus->getDirpix()
@@ -145,8 +147,8 @@ PRO calculate_data_refpix, Event
 
   WIDGET_CONTROL,Event.top,get_uvalue=global
   
-  CATCH, error
   error = 0
+  CATCH, error
   IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
     refpix = 'N/A'
@@ -253,9 +255,10 @@ pro calculate_sangle, event, refpix=refpix, sangle=sangle
   if (debug) then message = [message, 'f_dangle_rad: ' + $
   strcompress(f_dangle_rad,/remove_all)]
   
-  dangle0 = getTextFieldValue(event,'info_dangle0')
-  dangle0_rad = get_value_between_arg1_arg2(dangle0[0], '\(', 'rad)')
-  f_dangle0_rad = float(dangle0_rad)
+  dangle0_rad = getTextFieldValue(event,'info_dangle0_rad')
+  f_dangle0_rad = float(dangle0_rad[0])
+;  dangle0_rad = get_value_between_arg1_arg2(dangle0[0], '\(', 'rad)')
+; f_dangle0_rad = float(dangle0_rad)
   if (debug) then message = [message, 'f_dangle0_rad: ' + $
   strcompress(f_dangle0_rad,/remove_all)]
   
@@ -329,15 +332,43 @@ pro convert_dangle_units, event, from=from, to=to
   if (from eq 'deg') then begin
     dangle_deg = float(getTextFieldValue(event,'info_dangle_deg'))
     dangle_rad = convert_deg_to_rad(dangle_deg)
-    putTextFieldValue, event, 'info_dangle_rad', strcompress(dangle_rad,/remove_all)
+    putTextFieldValue, event, 'info_dangle_rad', $
+    strcompress(dangle_rad,/remove_all)
   endif else begin
     dangle_rad = float(getTextFieldValue(event,'info_dangle_rad'))
     dangle_deg = convert_rad_to_deg(dangle_rad)
-    putTextFieldValue, event, 'info_dangle_deg', strcompress(dangle_deg,/remove_all)
+    putTextFieldValue, event, 'info_dangle_deg', $
+    strcompress(dangle_deg,/remove_all)
   endelse
   
 end
 
+;+
+; :Description:
+;    This convert the deg/rad dangle0 into the opposite units and display
+;    its value in the corresponding dangle0 text field
+;
+; :Params:
+;    event
+;;
+; :Author: j35
+;-
+pro convert_dangle0_units, event, from=from, to=to
+  compile_opt idl2
+  
+  if (from eq 'deg') then begin
+    dangle0_deg = float(getTextFieldValue(event,'info_dangle0_deg'))
+    dangle0_rad = convert_deg_to_rad(dangle0_deg)
+    putTextFieldValue, event, 'info_dangle0_rad', $
+    strcompress(dangle0_rad,/remove_all)
+  endif else begin
+    dangle0_rad = float(getTextFieldValue(event,'info_dangle0_rad'))
+    dangle0_deg = convert_rad_to_deg(dangle0_rad)
+    putTextFieldValue, event, 'info_dangle0_deg', $
+    strcompress(dangle0_deg,/remove_all)
+  endelse
+  
+end
 
 ;+
 ; :Description:
