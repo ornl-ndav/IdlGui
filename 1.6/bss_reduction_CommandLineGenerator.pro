@@ -100,25 +100,29 @@ PRO BSSreduction_CommandLineGenerator, Event
     endif
     
     ;get Background Data File
-    BDFiles = getTextFieldValue(Event,'bdf_run_number_cw_field')
+    BDFiles = getTextFieldValue(event,'bdf_list_of_runs_text')
+    if (strcompress(BDFiles,/remove_all) eq '') then BDFiles = getTextFieldValue(Event,'bdf_run_number_cw_field')
     IF (BDFiles NE '') THEN BEGIN
       cmd += ' --back=' + BDFiles
     ENDIF
     
     ;get Normalization Data File
-    NDFiles = getTextFieldValue(Event,'ndf_run_number_cw_field')
+    NDFiles = getTextFieldValue(event,'ndf_list_of_runs_text')
+    if (strcompress(NDFiles,/remove_all) eq '') then NDFiles = getTextFieldValue(Event,'ndf_run_number_cw_field')
     IF (NDFiles NE '') THEN BEGIN
       cmd += ' --norm=' + NDFiles
     ENDIF
     
     ;get Empty Can Data File
-    ECDFiles = getTextFieldValue(Event,'ecdf_run_number_cw_field')
+    ECDFiles = getTextFieldValue(event,'ecdf_list_of_runs_text')
+    if (strcompress(ECDFiles,/remove_all) eq '') then ECDFiles = getTextFieldValue(Event,'ecdf_run_number_cw_field')
     IF (ECDFiles NE '') THEN BEGIN
       cmd += ' --ecan=' + ECDFiles
     ENDIF
     
     ;get Direct Scattering Background
-    DSBFiles = getTextFieldValue(Event,'dsb_run_number_cw_field')
+    DSBFiles = getTextFieldValue(event,'dsb_list_of_runs_text')
+    if (strcompress(DSBFiles,/remove_all) eq '') then DSBFiles = getTextFieldValue(Event,'dsb_run_number_cw_field')
     IF (DSBFiles NE '') THEN BEGIN
       cmd += ' --dsback=' + DSBFiles
       na_base_status = 0

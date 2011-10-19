@@ -317,22 +317,25 @@ title = 'Select a ' + title1 + ' NeXus File:'
 NexusFullFileName = DIALOG_PICKFILE(PATH = NeXusPath,$
                                     TITLE = title,$
                                     FILTER = filter,$
+                                    GET_PATH = new_path, $
                                     DEFAULT_EXTENSION = nexus_ext)
 
 IF (NexusFullFileName NE '') THEN BEGIN
 
-;keep record of run number only if it's not the first run.
-    IF (type EQ 'rsdf') THEN BEGIN ;define default output file name
-        txt = getTextFieldValue(Event, 'rsdf_list_of_runs_text')
-        IF (txt EQ '') THEN BEGIN
-;display run number in cw_field
-            iNexus = OBJ_NEW('IDLgetMetadata', NexusFullFileName)
-            RunNumber = iNexus->getRunNumber()
-            OBJ_DESTROY, iNexus
-            (*global).RunNumber = RunNumber
-            define_default_output_file_name, Event, TYPE='archive' ;_eventcb
-        ENDIF
-    ENDIF
+  (*global).nexus_path = new_path
+
+;;keep record of run number only if it's not the first run.
+;    IF (type EQ 'rsdf') THEN BEGIN ;define default output file name
+;        txt = getTextFieldValue(Event, 'rsdf_list_of_runs_text')
+;        IF (txt EQ '') THEN BEGIN
+;;display run number in cw_field
+;            iNexus = OBJ_NEW('IDLgetMetadata', NexusFullFileName)
+;            RunNumber = iNexus->getRunNumber()
+;            OBJ_DESTROY, iNexus
+;            (*global).RunNumber = RunNumber
+;            define_default_output_file_name, Event, TYPE='archive' ;_eventcb
+;        ENDIF
+;    ENDIF
 
 ;    uname_label = type + '_label'
 ;    message1  = getLabelValue(event, uname_label)

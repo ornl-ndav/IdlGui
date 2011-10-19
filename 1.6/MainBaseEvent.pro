@@ -487,15 +487,14 @@ PRO MAIN_BASE_event, Event
     ;      BSSreduction_CommandLineGenerator, Event
     ;    end
     
-    ;    Widget_Info(wWidget, FIND_BY_UNAME='bdf_browse_nexus_button'): begin
-    ;      BSSreduction_ReduceBrowseNexus, Event, 'bdf'
-    ;      BSSreduction_CommandLineGenerator, Event
-    ;    end
+        Widget_Info(wWidget, FIND_BY_UNAME='bdf_browse_nexus_button'): begin
+          BSSreduction_ReduceBrowseNexus, Event, 'bdf'
+          BSSreduction_CommandLineGenerator, Event
+        end
     
-    ;    Widget_Info(wWidget, FIND_BY_UNAME='bdf_list_of_runs_text'): begin
-    ;      BSSreduction_Reduce_bdf_list_of_runs_text, Event
-    ;      BSSreduction_CommandLineGenerator, Event
-    ;    end
+        Widget_Info(wWidget, FIND_BY_UNAME='bdf_list_of_runs_text'): begin
+          BSSreduction_CommandLineGenerator, Event
+        end
     
     Widget_Info(wWidget, FIND_BY_UNAME='ndf_run_number_cw_field'): begin
       ;      BSSreduction_Reduce_ndf_run_number_cw_field, Event
@@ -507,15 +506,14 @@ PRO MAIN_BASE_event, Event
     ;      BSSreduction_CommandLineGenerator, Event
     ;    end
     
-    ;    Widget_Info(wWidget, FIND_BY_UNAME='ndf_browse_nexus_button'): begin
-    ;      BSSreduction_ReduceBrowseNexus, Event, 'ndf'
-    ;      BSSreduction_CommandLineGenerator, Event
-    ;    end
+        Widget_Info(wWidget, FIND_BY_UNAME='ndf_browse_nexus_button'): begin
+          BSSreduction_ReduceBrowseNexus, Event, 'ndf'
+          BSSreduction_CommandLineGenerator, Event
+        end
     
-    ;    Widget_Info(wWidget, FIND_BY_UNAME='ndf_list_of_runs_text'): begin
-    ;      BSSreduction_Reduce_ndf_list_of_runs_text, Event
-    ;      BSSreduction_CommandLineGenerator, Event
-    ;    end
+        Widget_Info(wWidget, FIND_BY_UNAME='ndf_list_of_runs_text'): begin
+          BSSreduction_CommandLineGenerator, Event
+        end
     
     Widget_Info(wWidget, FIND_BY_UNAME='ecdf_run_number_cw_field'): begin
       ;      BSSreduction_Reduce_ecdf_run_number_cw_field, Event
@@ -527,15 +525,14 @@ PRO MAIN_BASE_event, Event
     ;      BSSreduction_CommandLineGenerator, Event
     ;    end
     
-    ;    Widget_Info(wWidget, FIND_BY_UNAME='ecdf_browse_nexus_button'): begin
-    ;      BSSreduction_ReduceBrowseNexus, Event, 'ecdf'
-    ;      BSSreduction_CommandLineGenerator, Event
-    ;    end
+        Widget_Info(wWidget, FIND_BY_UNAME='ecdf_browse_nexus_button'): begin
+          BSSreduction_ReduceBrowseNexus, Event, 'ecdf'
+          BSSreduction_CommandLineGenerator, Event
+        end
     
-    ;    Widget_Info(wWidget, FIND_BY_UNAME='ecdf_list_of_runs_text'): begin
-    ;      BSSreduction_Reduce_ecdf_list_of_runs_text, Event
-    ;      BSSreduction_CommandLineGenerator, Event
-    ;    end
+        Widget_Info(wWidget, FIND_BY_UNAME='ecdf_list_of_runs_text'): begin
+          BSSreduction_CommandLineGenerator, Event
+        end
     
     Widget_Info(wWidget, FIND_BY_UNAME='dsb_run_number_cw_field'): begin
       ;      BSSreduction_Reduce_dsb_run_number_cw_field, Event
@@ -547,10 +544,10 @@ PRO MAIN_BASE_event, Event
     ;      BSSreduction_CommandLineGenerator, Event
     ;    end
     
-    ;    Widget_Info(wWidget, FIND_BY_UNAME='dsb_browse_nexus_button'): begin
-    ;      BSSreduction_ReduceBrowseNexus, Event, 'dsb'
-    ;      BSSreduction_CommandLineGenerator, Event
-    ;    end
+        Widget_Info(wWidget, FIND_BY_UNAME='dsb_browse_nexus_button'): begin
+          BSSreduction_ReduceBrowseNexus, Event, 'dsb'
+          BSSreduction_CommandLineGenerator, Event
+        end
     
     ;    Widget_Info(wWidget, FIND_BY_UNAME='dsb_list_of_runs_text'): begin
     ;      BSSreduction_Reduce_ecdf_list_of_runs_text, Event
