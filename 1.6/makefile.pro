@@ -14,8 +14,6 @@ resolve_routine, "style_convert", /either
 
 resolve_all, skip_routines=davegeneratlsettings__define
 
-
-
 ;build all the iProcedures
 ;itResolve
 
