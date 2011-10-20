@@ -39,11 +39,12 @@ FUNCTION create_cmd, Event
   
   ;cmd = 'srun --batch -p bac2q'
   ;cmd = 'amrun_dev -p bac2q --batch'
-  cmd = 'amrun_dev -p bac2q'
+  ;cmd = 'amrun_dev -p bac2q'
   
   ;get driver
   driver = (*global).es_driver
-  cmd += ' ' + driver
+  ;cmd += ' ' + driver
+  cmd = driver
   
   ;output folder
   output_path = getButtonValue(Event, 'tab2_output_folder_button_uname')
