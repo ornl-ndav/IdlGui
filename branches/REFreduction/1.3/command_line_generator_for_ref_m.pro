@@ -429,7 +429,7 @@ pro command_line_generator_for_ref_m, event
       cmd[index_spin_state] += ' --scatt-angle='
       rad_sangle = (*global).rad_sangle
       rad_sangle_x2 = strcompress(float(rad_sangle),/remove_all)
-;      rad_sangle_x2 = strcompress(2.* float(rad_sangle),/remove_all)
+      ;      rad_sangle_x2 = strcompress(2.* float(rad_sangle),/remove_all)
       rad_sangle_error = strcompress(0.,/remove_all)
       rad_sangle_units = 'units=radians'
       cmd[index_spin_state] += rad_sangle_x2 + ',' + $
@@ -700,68 +700,70 @@ pro command_line_generator_for_ref_m, event
           putValue, event=event, 'q_width_text_field', $
             strcompress(Q_width,/remove_all)
             
-        endif else begin
+        endif
         
-          Q_min = getTextFieldValue(Event, 'q_min_text_field')
-          Q_max = getTextFieldValue(Event, 'q_max_text_field')
-          
-          Q_width = getTextfieldValue(Event, 'q_width_text_field')
-          Q_scale = getQSCale(Event)
-          
-        endelse
+      endif else begin
+      
+        Q_min = getTextFieldValue(Event, 'q_min_text_field')
+        Q_max = getTextFieldValue(Event, 'q_max_text_field')
         
-        cmd[index_spin_state] += ' --mom-trans-bins='
+        Q_width = getTextfieldValue(Event, 'q_width_text_field')
+        Q_scale = getQSCale(Event)
         
-        if (Q_min NE '') then begin ;Q_min
-          cmd[index_spin_state] += STRCOMPRESS(Q_min,/remove_all)
-        endif else begin
-          cmd[index_spin_state] += '?'
-          if (index_spin_state eq 0) then begin
-            status_text = '- Please provide a Q minimum value'
-            if (StatusMessage GT 0) then begin
-              append = 1
-            endif else begin
-              append = 0
-            endelse
-            putInfoInReductionStatus, Event, status_text, append
-            StatusMessage += 1
-          endif
-        endelse
-        
-        if (Q_max NE '') then begin ;Q_max
-          cmd[index_spin_state] += ',' + STRCOMPRESS(Q_max,/remove_all)
-        endif else begin
-          cmd[index_spin_state] += ',?'
-          if (index_spin_state eq 0) then begin
-            status_text = '- Please provide a Q maximum value'
-            if (StatusMessage GT 0) then begin
-              append = 1
-            endif else begin
-              append = 0
-            endelse
-            putInfoInReductionStatus, Event, status_text, append
-            StatusMessage += 1
-          endif
-        endelse
-        
-        if (Q_width NE '') then begin ;Q_width
-          cmd[index_spin_state] += ',' + STRCOMPRESS(Q_width,/remove_all)
-        endif else begin
-          cmd[index_spin_state] += ',?'
-          if (index_spin_state eq 0) then begin
-            status_text = '- Please provide a Q width value'
-            if (StatusMessage GT 0) then begin
-              append = 1
-            endif else begin
-              append = 0
-            endelse
-            putInfoInReductionStatus, Event, status_text, append
-            StatusMessage += 1
-          endif
-        endelse
-        cmd[index_spin_state] += ',' + Q_scale        ;Q_scale (lin or log)
-        
-      endif ;end of if (index_spin_state eq 0)
+      endelse
+      
+      cmd[index_spin_state] += ' --mom-trans-bins='
+      
+      if (Q_min NE '') then begin ;Q_min
+        cmd[index_spin_state] += STRCOMPRESS(Q_min,/remove_all)
+      endif else begin
+        cmd[index_spin_state] += '?'
+        if (index_spin_state eq 0) then begin
+          status_text = '- Please provide a Q minimum value'
+          if (StatusMessage GT 0) then begin
+            append = 1
+          endif else begin
+            append = 0
+          endelse
+          putInfoInReductionStatus, Event, status_text, append
+          StatusMessage += 1
+        endif
+      endelse
+      
+      if (Q_max NE '') then begin ;Q_max
+        cmd[index_spin_state] += ',' + STRCOMPRESS(Q_max,/remove_all)
+      endif else begin
+        cmd[index_spin_state] += ',?'
+        if (index_spin_state eq 0) then begin
+          status_text = '- Please provide a Q maximum value'
+          if (StatusMessage GT 0) then begin
+            append = 1
+          endif else begin
+            append = 0
+          endelse
+          putInfoInReductionStatus, Event, status_text, append
+          StatusMessage += 1
+        endif
+      endelse
+      
+      if (Q_width NE '') then begin ;Q_width
+        cmd[index_spin_state] += ',' + STRCOMPRESS(Q_width,/remove_all)
+      endif else begin
+        cmd[index_spin_state] += ',?'
+        if (index_spin_state eq 0) then begin
+          status_text = '- Please provide a Q width value'
+          if (StatusMessage GT 0) then begin
+            append = 1
+          endif else begin
+            append = 0
+          endelse
+          putInfoInReductionStatus, Event, status_text, append
+          StatusMessage += 1
+        endif
+      endelse
+      cmd[index_spin_state] += ',' + Q_scale        ;Q_scale (lin or log)
+      
+    ;      endif ;end of if (index_spin_state eq 0)
       
     endif
     
