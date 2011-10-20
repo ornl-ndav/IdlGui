@@ -428,7 +428,8 @@ pro command_line_generator_for_ref_m, event
       ;scattering angle flag
       cmd[index_spin_state] += ' --scatt-angle='
       rad_sangle = (*global).rad_sangle
-      rad_sangle_x2 = strcompress(2. * float(rad_sangle),/remove_all)
+      rad_sangle_x2 = strcompress(float(rad_sangle),/remove_all)
+;      rad_sangle_x2 = strcompress(2.* float(rad_sangle),/remove_all)
       rad_sangle_error = strcompress(0.,/remove_all)
       rad_sangle_units = 'units=radians'
       cmd[index_spin_state] += rad_sangle_x2 + ',' + $
