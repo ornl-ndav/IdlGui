@@ -331,14 +331,14 @@ load_normalization_D_draw = $
   WIDGET_DRAW(load_normalization_D_tab_base,$
               XOFFSET       = 0,$
               YOFFSET       = 0,$
-              X_SCROLL_SIZE = GlobalLoadGraphs[2]-20,$
-              Y_SCROLL_SIZE = GlobalLoadGraphs[3]-24,$
-              XSIZE         = GlobalLoadGraphs[2]-20,$
-              YSIZE         = GlobalLoadGraphs[3]-24,$
+;              X_SCROLL_SIZE = GlobalLoadGraphs[2]-20,$
+;              Y_SCROLL_SIZE = GlobalLoadGraphs[3]-24,$
+              XSIZE         = GlobalLoadGraphs[2],$
+              YSIZE         = GlobalLoadGraphs[3],$
               UNAME         = 'load_normalization_D_draw',$
               RETAIN        = 2,$
               /KEYBOARD_EVENT,$
-              /SCROLL,$
+;              /SCROLL,$
               /BUTTON_EVENTS,$
               /MOTION_EVENTS)
 
