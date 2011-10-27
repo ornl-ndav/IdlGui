@@ -154,6 +154,12 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     value = 'No config file for next restart !',$
     uname = 'remove_configuration_file')
     
+ settings_menu = widget_button(wid_base_0_mbar, $
+ value = 'Options',$
+ /menu)
+ button1 = widget_button(settings_menu,$
+ value = 'OFF - Run discrete selections individually as well', $ 
+ uname = 'discrete_reduction_options') 
     
   structure = {with_launch_button: (*global).with_launch_switch}
   

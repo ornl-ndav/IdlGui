@@ -61,6 +61,20 @@ PRO MAIN_BASE_event, Event
   
   CASE Event.id OF
   
+    ;Discrete reduction options button
+    widget_info(wWidget, find_by_uname='discrete_reduction_options'): begin
+      value = (*global).discrete_reduction_run_single_too
+      if (value eq 1b) then begin
+        new_value = 0b
+        new_label = "OFF - Run discrete selections individually as well'
+      endif else begin
+        new_value = 1b
+        new_label = 'ON  - Run discrete selections individually as well'
+      endelse
+      SetButtonValue, Event, 'discrete_reduction_options', new_label
+      (*global).discrete_reduction_run_single_too = new_value
+    end
+    
     ;load configuration;
     widget_info(wWidget, find_by_uname='load_configuration'): begin
       load_configuration_function, event
@@ -340,12 +354,12 @@ PRO MAIN_BASE_event, Event
       calculate_sangle, event
     end
     widget_info(wWidget, find_by_uname='info_dangle0_rad'): begin
-    convert_dangle0_units, event, from='rad', to='deg'
-    calculate_sangle, event
+      convert_dangle0_units, event, from='rad', to='deg'
+      calculate_sangle, event
     end
     widget_info(wWidget, find_by_uname='info_dangle0_deg'): begin
-    convert_dangle0_units, event, from='deg', to='rad'
-    calculate_sangle, event
+      convert_dangle0_units, event, from='deg', to='rad'
+      calculate_sangle, event
     end
     widget_info(wWidget, find_by_uname='info_sangle_rad'): begin
       convert_sangle_units, event, from= 'rad'
@@ -1483,14 +1497,14 @@ PRO MAIN_BASE_event, Event
     
     ;plot all data files together
     widget_info(wWidget, $
-    find_by_uname='plot_all_data_file_together_uname'): begin
+      find_by_uname='plot_all_data_file_together_uname'): begin
       ;get nexus list of all the files (if not path already)
       ReplaceDataRunNumbersByFullPath, Event
       add_all_data_nexus_loaded, event
       REFreduction_CommandLineGenerator, Event
-      widget_control, event.id, set_button=0 
+      widget_control, event.id, set_button=0
     end
-
+    
     ;yes or no data background
     WIDGET_INFO(wWidget, FIND_BY_UNAME='data_background_cw_bgroup'): BEGIN
       if (~isDataWithBackground(Event)) then begin ;without background

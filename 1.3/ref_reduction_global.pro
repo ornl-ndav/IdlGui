@@ -76,6 +76,9 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
   ;define global variables
   global = ptr_new ({ first_event: 1,$
     
+    ;by default, no single reduction when using the discrete mode
+    discrete_reduction_run_single_too: 0b,$
+    
     config_file_name: '~/.user_ref_reduction.cfg', $
     current_tof_config_file_name: '', $
     tof_config_path: '~/',$
