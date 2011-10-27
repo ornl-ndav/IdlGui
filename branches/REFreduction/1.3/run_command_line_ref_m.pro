@@ -67,7 +67,7 @@ end
 ;
 ; :Author: j35
 ;-
-pro run_command_line_ref_m, event
+pro run_command_line_ref_m, event, cmd=cmd
   compile_opt idl2
   
   ;get global structure
@@ -94,7 +94,9 @@ pro run_command_line_ref_m, event
   ActivateWidget, Event,'start_data_reduction_button', 0
   
   ;get command line to generate
+  if (~keyword_set(cmd)) then begin
   cmd = getTextFieldValue(Event,'reduce_cmd_line_preview')
+endif
   
   ;indicate initialization with hourglass icon
   WIDGET_CONTROL,/hourglass

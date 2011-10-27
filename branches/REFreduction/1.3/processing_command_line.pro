@@ -87,6 +87,11 @@ PRO REFreductionEventcb_ProcessingCommandLine, Event
       
         run_command_line_ref_m, event
         
+        if ((*global).discrete_reduction_run_single_too) then begin
+        loop_command_line_generator_for_ref_m, event
+        run_command_line_ref_m_discrete_peak, event, status=status 
+        endif
+        
         first_ref_m_file_to_plot = (*global).first_ref_m_file_to_plot
         if (first_ref_m_file_to_plot ne -1) then begin
         
