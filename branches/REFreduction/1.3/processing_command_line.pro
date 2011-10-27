@@ -35,6 +35,8 @@
 ;This function run the command line and will output the plot and info text
 PRO REFreductionEventcb_ProcessingCommandLine, Event
 
+  print, 'entering processing command'
+
   ;get global structure
   widget_control,event.top,get_uvalue=global
   
@@ -85,12 +87,16 @@ PRO REFreductionEventcb_ProcessingCommandLine, Event
     
 ;      'one_per_selection': begin
       
+        print, '#1'
         run_command_line_ref_m, event
+        print, '#2'
         
         if ((*global).discrete_reduction_run_single_too) then begin
         loop_command_line_generator_for_ref_m, event
         run_command_line_ref_m_discrete_peak, event, status=status 
         endif
+        
+        print, '#3'
         
         first_ref_m_file_to_plot = (*global).first_ref_m_file_to_plot
         if (first_ref_m_file_to_plot ne -1) then begin

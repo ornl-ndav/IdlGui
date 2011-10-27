@@ -1756,6 +1756,7 @@ PRO MAIN_BASE_event, Event
     
     ;Run data reduction
     WIDGET_INFO(wWidget, FIND_BY_UNAME='start_data_reduction_button'): begin
+      print, 'in MainBaseEvent'
       REFreductionEventcb_ProcessingCommandLine, Event
     end
     
