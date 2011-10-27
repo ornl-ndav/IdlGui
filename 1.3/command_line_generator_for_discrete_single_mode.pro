@@ -44,9 +44,9 @@
 ; :Author: j35
 ;-
 pro loop_command_line_generator_for_ref_m, event
-compile_opt idl2
-
-;get global structure
+  compile_opt idl2
+  
+  ;get global structure
   WIDGET_CONTROL,event.top,get_uvalue=global
   
   discrete_roi_selection = (*(*global).discrete_roi_selection)
@@ -54,7 +54,7 @@ compile_opt idl2
   ;determine the list of pixels = strarr(2,nbr_discrete_rois)
   pixel_list = parse_discrete_roi_selection(discrete_roi_selection)
   if (pixel_list[0] eq '') then return
-      
+  
   (*(*global).pixel_range_discrete_mode) = pixel_list
   nbr_pixels = (size(pixel_list,/dim))[1] ;how many discrete rois
   
@@ -157,7 +157,7 @@ compile_opt idl2
   
     _index_pixel_range = 0 ;up to nbr_pixels
     while (_index_pixel_range lt nbr_pixels) do begin
-      
+    
       _index = _index_spin_state * nbr_pixels + _index_pixel_range
       
       ;*****DATA***************************************************************
@@ -185,7 +185,7 @@ compile_opt idl2
         to_px   = strcompress(pixel_list[1,_index_pixel_range],/remove_all)
         
         data_roi_file = '~/tmp_data_roi_for_pixel_' + from_px + '_to_' + $
-        to_px + '.dat'
+          to_px + '.dat'
         list_of_tmp_data_roi_file_name_for_discrete_mode[_index_pixel_range] = $
           data_roi_file
       endif else begin
@@ -201,12 +201,12 @@ compile_opt idl2
         IF (PeakBaseStatus EQ 1) THEN BEGIN ;exclusion peak
         
           ;bring values of ymin and ymax from data base
-;          ymin = getTextFieldValue(Event,'data_d_selection_peak_ymin_cw_field')
-;          ymax = getTextFieldValue(Event,'data_d_selection_peak_ymax_cw_field')
-
+          ;          ymin = getTextFieldValue(Event,'data_d_selection_peak_ymin_cw_field')
+          ;          ymax = getTextFieldValue(Event,'data_d_selection_peak_ymax_cw_field')
+        
           ymin = from_px
           ymax = to_px
-
+          
           putTextFieldValue, Event, $
             'data_exclusion_low_bin_text', $
             STRCOMPRESS(ymin[0],/REMOVE_ALL), 0
@@ -271,7 +271,7 @@ compile_opt idl2
           
         ENDELSE
         
-      endif
+      endif ;end of if data with backgrounds
       
       ;check if user wants data background or not
       IF (isDataWithBackground(Event)) THEN BEGIN ;yes, with background
@@ -280,7 +280,7 @@ compile_opt idl2
       ENDIF ELSE BEGIN
         cmd[_index_spin_state, _index_pixel_range] += ' --no-bkg'
         MapBase, Event, 'reduce_plot2_base', 1
-      END
+      endelse
       
       ;tof cutting
       tof_min = STRCOMPRESS(getTextFieldValue(Event,'tof_cutting_min'),$
@@ -515,38 +515,36 @@ compile_opt idl2
       cmd[_index_spin_state, _index_pixel_range] += ' --inst=' + $
         (*global).instrument
         
-          Q_min = getTextFieldValue(Event, 'q_min_text_field')
-          Q_max = getTextFieldValue(Event, 'q_max_text_field')
-          
-          Q_width = getTextfieldValue(Event, 'q_width_text_field')
-          Q_scale = getQSCale(Event)
-
-        cmd[_index_spin_state, _index_pixel_range] += ' --mom-trans-bins='
-        
-        if (Q_min NE '') then begin ;Q_min
-          cmd[_index_spin_state, _index_pixel_range] += $
-            STRCOMPRESS(Q_min,/remove_all)
-        endif else begin
-          cmd[_index_spin_state, _index_pixel_range] += '?'
-        endelse
-        
-        if (Q_max NE '') then begin ;Q_max
-          cmd[_index_spin_state, _index_pixel_range] += ',' + $
-            STRCOMPRESS(Q_max,/remove_all)
-        endif else begin
-          cmd[_index_spin_state, _index_pixel_range] += ',?'
-        endelse
-        
-        if (Q_width NE '') then begin ;Q_width
-          cmd[_index_spin_state, _index_pixel_range] += ',' + $
-            STRCOMPRESS(Q_width,/remove_all)
-        endif else begin
-          cmd[_index_spin_state, _index_pixel_range] += ',?'
-        endelse
-        ;Q_scale (lin or log)
-        cmd[_index_spin_state, _index_pixel_range] += ',' + Q_scale
-        
-      endif
+      Q_min = getTextFieldValue(Event, 'q_min_text_field')
+      Q_max = getTextFieldValue(Event, 'q_max_text_field')
+      
+      Q_width = getTextfieldValue(Event, 'q_width_text_field')
+      Q_scales = getQSCale(Event)
+      
+      cmd[_index_spin_state, _index_pixel_range] += ' --mom-trans-bins='
+      
+      if (Q_min NE '') then begin ;Q_min
+        cmd[_index_spin_state, _index_pixel_range] += $
+          STRCOMPRESS(Q_min,/remove_all)
+      endif else begin
+        cmd[_index_spin_state, _index_pixel_range] += '?'
+      endelse
+      
+      if (Q_max NE '') then begin ;Q_max
+        cmd[_index_spin_state, _index_pixel_range] += ',' + $
+          STRCOMPRESS(Q_max,/remove_all)
+      endif else begin
+        cmd[_index_spin_state, _index_pixel_range] += ',?'
+      endelse
+      
+      if (Q_width NE '') then begin ;Q_width
+        cmd[_index_spin_state, _index_pixel_range] += ',' + $
+          STRCOMPRESS(Q_width,/remove_all)
+      endif else begin
+        cmd[_index_spin_state, _index_pixel_range] += ',?'
+      endelse
+      ;Q_scale (lin or log)
+      cmd[_index_spin_state, _index_pixel_range] += ',' + Q_scale
       
       ;get info about detector angle
       angle_value = getTextFieldValue(Event,'detector_value_text_field')
@@ -589,33 +587,6 @@ compile_opt idl2
         cmd[_index_spin_state, _index_pixel_range] += ' --store-dtot'
       ENDIF
       
-      ;overwrite data instrument geometry file
-      if (isWithDataInstrumentGeometryOverwrite(Event)) then BEGIN
-        cmd[_index_spin_state, _index_pixel_range] += ' --data-inst-geom='
-        ;with instrument geometry
-        IGFile = (*global).InstrumentDataGeometryFileName
-        if (IGFile NE '') then begin ;instrument geometry file is not empty
-          cmd[_index_spin_state, _index_pixel_range] += IGFile
-        endif else begin
-          cmd[_index_spin_state, _index_pixel_range] += '?'
-        endelse
-      ENDIF
-      
-      ;overwrite norm instrument geometry file
-      if (isWithNormInstrumentGeometryOverwrite(Event)) then BEGIN
-        ;with instrument geometry
-        cmd[_index_spin_state, _index_pixel_range] += ' --norm-inst-geom='
-        IGFile = (*global).InstrumentNormGeometryFileName
-        if (IGFile NE '') then begin ;instrument geometry file is not empty
-          cmd[_index_spin_state, _index_pixel_range] += IGFile
-          ;display last part of file name in button
-          button_value = getFileNameOnly(IGFIle)
-        endif else begin
-          cmd[_index_spin_state, _index_pixel_range] += '?'
-        endelse
-        
-      endif
-      
       ;get name from output path and name
       outputPath = (*global).dr_output_path
       outputFileName = getOutputFileName(Event)
@@ -649,5 +620,5 @@ compile_opt idl2
   
   ;save the big command line table generated
   (*(*global).cmd_discrete_mode) = cmd
-
+  
 end
