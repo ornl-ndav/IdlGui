@@ -95,8 +95,8 @@ pro run_command_line_ref_m, event, cmd=cmd
   
   ;get command line to generate
   if (~keyword_set(cmd)) then begin
-  cmd = getTextFieldValue(Event,'reduce_cmd_line_preview')
-endif
+    cmd = getTextFieldValue(Event,'reduce_cmd_line_preview')
+  endif
   
   ;indicate initialization with hourglass icon
   WIDGET_CONTROL,/hourglass
@@ -119,7 +119,7 @@ endif
     putLogBookMessage, Event, cmd_text, Append=1
     cmd_text = '......... ' + PROCESSING
     putLogBookMessage, Event, cmd_text, Append=1
-    
+
     spawn, cmd[index], listening, err_listening
     
     IF (err_listening[0] NE '') THEN BEGIN
@@ -530,13 +530,13 @@ pro run_command_line_ref_m_discrete_peak, event, status=status
   _index_spin=0
   while (_index_spin lt nbr_spins) do begin
   
-    _final_output = list_of_output_file_name[_index_spin]
-    _list_tmp_output = reform(list_of_discrete_output_file_name[_index_spin,*])
+;    _final_output = list_of_output_file_name[_index_spin]
+;    _list_tmp_output = reform(list_of_discrete_output_file_name[_index_spin,*])
     
-    merge_files, event=event, $
-      list_files_to_merge=_list_tmp_output, $
-      final_file_name = _final_output, $
-      result=result
+;    merge_files, event=event, $
+;      list_files_to_merge=_list_tmp_output, $
+;      final_file_name = _final_output, $
+;      result=result
       
     update_progress_bar, base=(*global).progress_bar_base, $
       /post_processing, $
@@ -588,7 +588,7 @@ end
 ; :Author: j35
 ;-
 pro merge_files, event=event, $
-list_files_to_merge=list_files_to_merge, $
+    list_files_to_merge=list_files_to_merge, $
     final_file_name = final_file_name, $
     result=result
   compile_opt idl2
