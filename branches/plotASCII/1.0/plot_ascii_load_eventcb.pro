@@ -37,7 +37,7 @@ PRO browse_button, Event
   global = (*global_load).global
   
   path = (*global).path
-  filter = [['*.dat','*.txt']]
+  filter = [['*combined.txt','*.txt','*.dat']]
   widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='plot_ascii_load_base_uname')
   title = 'Select ASCII file(s) to load'
   
