@@ -79,13 +79,13 @@ function send_files_by_email, event, files
   ;send email
   cmd_email = 'echo "' + email_message + '" | mutt -s " ' + email_subject + '"'
   index = 0
+  cmd_email += ' ' + email
+
 ;  cmd_email += ' -a '
   while (index lt n_elements(list_of_files)) do begin
     cmd_email += ' -a ' + list_of_files[index]
     index++
   endwhile
-  
-  cmd_email += ' ' + email
   
   spawn, cmd_email, listening, err_listening
   
