@@ -1,0 +1,12 @@
+spawn, 'cp iMars.cfg .iMars.cfg'
+@idl_makefile.pro
+iMars
+
+
+
+
+
+
+
+
+
