@@ -59,12 +59,12 @@ PRO MAIN_BASE_event, Event
   
     ;data 2d plot lin/log
     widget_info(wWidget, find_by_uname='y_vs_x_linear'): begin
-status = REFreduction_Plot2DDataFile(Event)
+      status = REFreduction_Plot2DDataFile(Event)
     end
     widget_info(wWidget, find_by_uname='y_vs_x_log'): begin
-status = REFreduction_Plot2DDataFile(Event)
+      status = REFreduction_Plot2DDataFile(Event)
     end
-  
+    
     ;greg selection
     widget_info(wWidget, find_by_uname='greg_roi1_from_value'): begin
       IF ((*global).DataNeXusFound) THEN BEGIN
@@ -1736,7 +1736,9 @@ status = REFreduction_Plot2DDataFile(Event)
     ;;Repopulate GUI ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     WIDGET_INFO(wWidget, FIND_BY_UNAME='repopulate_gui'): begin
       DataNormFieldInput, Event
+      kill_center_pixel_counts_vs_pixel_base, event
       RepopulateGUI, Event    ;_BatchRepopulateGui
+      calculate_data_dirpix, Event
     end
     
     ;;Processing Base YES (continue)
