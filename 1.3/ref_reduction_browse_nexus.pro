@@ -61,8 +61,14 @@ PRO ok_polarization_state, Event
       load_data_browse_nexus, Event, nexus_file_name, POLA_STATE=value_selected
       populate_data_geometry_info, Event, nexus_file_name, spin_state=spin_state
       calculate_sangle, event
-      populate_tof_range, event      
+      populate_tof_range, event
       (*global).data_pola_state = value_selected
+      
+      _base = (*global).center_px_counts_vs_pixel_base_id
+      if (widget_info(_base, /valid_id) ne 0) then begin
+        widget_control, _base, /destroy
+      endif
+      bring_to_life_or_refresh_counts_vs_pixel, event
     END
     'norm_browse': BEGIN
       (*global).norm_path = list_pola_state[value_selected]
@@ -76,8 +82,14 @@ PRO ok_polarization_state, Event
       load_data_browse_nexus, Event, nexus_file_name, POLA_STATE=value_selected
       populate_data_geometry_info, Event, nexus_file_name, spin_state=spin_state
       calculate_sangle, event
-        populate_tof_range, event      
+      populate_tof_range, event
       (*global).data_pola_state = value_selected
+      
+      _base = (*global).center_px_counts_vs_pixel_base_id
+      if (widget_info(_base, /valid_id) ne 0) then begin
+        widget_control, _base, /destroy
+      endif
+      bring_to_life_or_refresh_counts_vs_pixel, event
     END
     'norm_load': BEGIN
       (*global).norm_path = list_pola_state[value_selected]
@@ -151,15 +163,15 @@ PRO BrowseDataNexus, Event
     
     ;get run number
     iNexus = OBJ_NEW('IDLgetMetadata', nexus_file_name, $
-    POLA_STATE_NAME='entry-Off_Off')
+      POLA_STATE_NAME='entry-Off_Off')
     DataRunNumber = iNexus->getRunNumber()
     OBJ_DESTROY, iNexus
     (*global).data_run_number = DataRunNumber
     putTextfieldvalue, event, 'load_data_run_number_text_field', $
       strcompress(DataRunNumber,/remove_all)
       
-    populate_tof_range, event      
-      
+    populate_tof_range, event
+    
     ;turn off hourglass
     WIDGET_CONTROL,HOURGLASS=0
   ENDIF ELSE BEGIN
