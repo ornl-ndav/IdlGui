@@ -253,77 +253,47 @@ PRO MAIN_BASE_event, Event
     ;1D_2D plot of DATA
     WIDGET_INFO(wWidget, FIND_BY_UNAME='load_data_D_draw'): begin
       error = 0
-      CATCH, error
+      ;CATCH, error
       IF (error NE 0) THEN BEGIN
         CATCH,/CANCEL
       ENDIF ELSE BEGIN
         IF ((*global).DataNeXusFound) THEN BEGIN
         
-          IF ((*global).first_event) THEN BEGIN
-            ;only if there is a NeXus loaded
-            CASE (event.ch) OF ;u and d keys
-              117: BEGIN
-                REFreduction_ManuallyMoveDataBackPeakUp, Event
-                IF ((*global).instrument EQ 'REF_M') THEN BEGIN
-                  calculate_data_refpix, Event
-                  plot_average_data_peak_value, Event
-                ENDIF
-                
-              END
-              100: BEGIN
-                REFreduction_ManuallyMoveDataBackPeakDown, Event
-                IF ((*global).instrument EQ 'REF_M') THEN BEGIN
-                  calculate_data_refpix, Event
-                  plot_average_data_peak_value, Event
-                ENDIF
-              END
-              ELSE:
-            ENDCASE
-            CASE (event.key) OF ;Up and Down arrow keys
-              7: BEGIN
-                REFreduction_ManuallyMoveDataBackPeakUp, Event
-                IF ((*global).instrument EQ 'REF_M') THEN BEGIN
-                  calculate_data_refpix, Event
-                  plot_average_data_peak_value, Event
-                ENDIF
-                
-              END
-              8: BEGIN
-                REFreduction_ManuallyMoveDataBackPeakDown, Event
-                IF ((*global).instrument EQ 'REF_M') THEN BEGIN
-                  calculate_data_refpix, Event
-                  plot_average_data_peak_value, Event
-                ENDIF
-              END
-              ELSE:
-            ENDCASE
-            (*global).first_event = 0
-            
-          ENDIF ELSE BEGIN
-            (*global).first_event = 1
-          ENDELSE
-          
-          IF( Event.type EQ 0 )THEN BEGIN
+          IF( Event.type EQ 0 )THEN BEGIN ;click
+            (*global).left_clicked = 1b
             IF (Event.press EQ 1) THEN $
               REFreduction_DataSelectionPressLeft, Event ;left button
-            ;            ;replot other selections
-            ;            ReplotAllSelection, Event
             IF (Event.press EQ 4) THEN $
               REFreduction_DataselectionPressRight, Event ;right button
           ENDIF
+          
           IF (Event.type EQ 1) THEN BEGIN ;release
+            (*global).left_clicked = 0b
             REFreduction_DataSelectionRelease, Event
-            IF ((*global).instrument EQ 'REF_M') THEN BEGIN
-              calculate_data_refpix, Event
-              plot_average_data_peak_value, Event
-              ;replot other selections
-              ReplotAllSelection, Event
-            ENDIF
+            calculate_data_refpix, Event
+            plot_average_data_peak_value, Event
+            ;replot other selections
+            ReplotAllSelection, Event
           ENDIF
+          
           IF (Event.type EQ 2) THEN BEGIN ;move
+            if ((*global).left_clicked) then begin
             REFreduction_DataSelectionMove, Event
+            calculate_data_refpix, Event
+            plot_average_data_peak_value, Event
+            ;replot other selections
+            ;ReplotAllSelection, Event
+            endif
           ENDIF
         ENDIF
+        
+        ;2d plot on the side of main application that show counts vs pixel
+        TabSelected = isDataBackPeakZoomSelected(event)
+        if (TabSelected eq 1 or TabSelected eq 0) then begin ;peak selection
+          if ((*global).left_clicked) then begin
+            bring_to_life_or_refresh_counts_vs_pixel, event
+          endif
+        endif
         
       ENDELSE
     END
@@ -374,6 +344,8 @@ PRO MAIN_BASE_event, Event
       'data_d_selection_roi_ymin_cw_field'): begin
       REFreduction_DataBackgroundPeakSelection, Event, 'roi_ymin'
       plot_average_data_peak_value, Event
+                  bring_to_life_or_refresh_counts_vs_pixel, event
+      
     end
     
     WIDGET_INFO(wWidget, $
@@ -381,6 +353,7 @@ PRO MAIN_BASE_event, Event
       'data_d_selection_roi_ymax_cw_field'): begin
       REFreduction_DataBackgroundPeakSelection, Event, 'roi_ymax'
       plot_average_data_peak_value, Event
+                bring_to_life_or_refresh_counts_vs_pixel, event
     end
     
     ;SAVE ROI Selection into a file -------------------------------------------

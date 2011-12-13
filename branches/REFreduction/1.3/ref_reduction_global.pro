@@ -48,14 +48,14 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
   detector_size_m = file->getValue(tag=['configuration','detector_size_m'])
   OVERWRITE_Q_OUTPUT_FILE = file->getValue(tag=['configuration',$
     'overwrite_q_output_file'])
-  
-  q_scale_type = file->getValue(tag=['configuration','reduction','Q',$
-  'scale_type'])
-  q_number_bins = file->getValue(tag=['configuration','reduction','Q',$
-  'number_bins'])
-  
-  obj_destroy, file
     
+  q_scale_type = file->getValue(tag=['configuration','reduction','Q',$
+    'scale_type'])
+  q_number_bins = file->getValue(tag=['configuration','reduction','Q',$
+    'number_bins'])
+    
+  obj_destroy, file
+  
   debugging_structure = getDebuggingStructure()
   
   ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
@@ -75,9 +75,14 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
   
   ;define global variables
   global = ptr_new ({ first_event: 1,$
-    
+  
     ;by default, no single reduction when using the discrete mode
     discrete_reduction_run_single_too: 0b,$
+    counts_vs_pixel: ptr_new(0L), $
+    
+    ;id of the center_px_counts vs pixel
+    center_px_counts_vs_pixel_base_id: 0, $
+    left_clicked: 0b,$
     
     config_file_name: '~/.user_ref_reduction.cfg', $
     current_tof_config_file_name: '', $
@@ -85,16 +90,16 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     tof_selection_base_id: 0L, $
     discrete_selection_base_id: 0L, $
     discrete_roi_selection: ptr_new(0L), $  ;ex: ['125->134','145->150']
-  
+    
     tof_axis_ms: ptr_new(0L), $
-  
+    
     progress_bar_base: 0L, $
     stop_broad_reduction: 0b, $ ;can be changed to 1b in progress bar base
     data_spin_state_broad_mode: ptr_new(0L), $ ;['Off_Off','Off_On'] for ex.
     data_spin_state_discrete_mode: ptr_new(0L), $ ;['Off_Off','Off_On'] for ex.
     pixel_range_broad_mode: ptr_new(0L), $ ;ex: [125,126,127,128]
     pixel_range_discrete_mode: ptr_new(0L), $ ;ex[[125,130],[140,145]]
-  
+    
     mouse_debugging:   MOUSE_DEBUGGING,$
     debugging_version: DEBUGGING_VERSION,$
     debugging_on_mac:  DEBUGGING_ON_MAC,$
@@ -108,12 +113,12 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     ;used by the 'broad and discrete reflective peak' modes
     q_scale_type: q_scale_type, $ ;linear or log (reduction tab)
     q_number_bins: q_number_bins, $ ;default number of bins for Q binning
-    distance_moderator_sample: 0., $ 
+    distance_moderator_sample: 0., $
     sangle_min_max: fltarr(2), $ ;min and max sangles values of selection
-  
+    
     ;equivalent index of tof range selected in 'TOF selection tool' base
-    index_of_tof_range: [-1,-1], $ 
-
+    index_of_tof_range: [-1,-1], $
+    
     ;reduction mode: 'one_per_selection', 'one_per_pixel', 'one_per_discrete'
     reduction_mode: 'one_per_selection', $
     broad_peak_pixel_range: [-1,-1], $
@@ -170,14 +175,14 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     dirpix_geometry: '',$
     cvinfo: '',$
     
-;    in_empty_cell_empty_cell_ptr: PTR_NEW(0L),$
-;    in_empty_cell_data_ptr: PTR_NEW(0L),$
-;    empty_cell_draw_xsize_mini_version: 450.,$
-;    empty_cell_draw_xsize_big_version: 575., $
-;    empty_cell_d_tvimg: PTR_NEW(0L), $
-;    empty_cell_ec_tvimg: PTR_NEW(0L), $
-;    empty_cell_images: PTR_NEW(0L),$
- 
+    ;    in_empty_cell_empty_cell_ptr: PTR_NEW(0L),$
+    ;    in_empty_cell_data_ptr: PTR_NEW(0L),$
+    ;    empty_cell_draw_xsize_mini_version: 450.,$
+    ;    empty_cell_draw_xsize_big_version: 575., $
+    ;    empty_cell_d_tvimg: PTR_NEW(0L), $
+    ;    empty_cell_ec_tvimg: PTR_NEW(0L), $
+    ;    empty_cell_images: PTR_NEW(0L),$
+    
     sf_equation_file_array: ['REFreduction_images/miniSFequation.png',$
     'REFreduction_images/SFequation.png'],$
     sf_equation_file: '',$
@@ -381,15 +386,15 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     ;detector view of DATA (2D)
     DATA_D_ptr : PTR_NEW(0L),$
     ;(ntot,Ny,Nx) array of DATA
-  ;  empty_cell_DD_ptr: PTR_NEW(0L),$
+    ;  empty_cell_DD_ptr: PTR_NEW(0L),$
     ;detector view of empty cell (2D)
     DATA_D_Total_ptr : PTR_NEW(0L),$
     ;img=total(img,x) x=2 for REF_M and x=3 for REF_L
     NORM_D_Total_ptr : PTR_NEW(0L),$
     ;img=total(img,x) x=2 for REF_M and x=3 for REF_L
-  ;  empty_cell_D_ptr: PTR_NEW(0L),$
+    ;  empty_cell_D_ptr: PTR_NEW(0L),$
     ;(ntot,Ny,Nx) array of empty_cell
-  ;  empty_cell_D_Total_ptr: PTR_NEW(0L),$
+    ;  empty_cell_D_Total_ptr: PTR_NEW(0L),$
     ;img=total(img,x) x=2 for REF_M and x=3 for REF_L
     NORM_DD_ptr : PTR_NEW(0L),$
     ;detector view of NORMALIZATION (2D)
@@ -397,7 +402,7 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     ;(Ntof,Ny,Nx) array of NORMALIZATION
     tvimg_data_ptr : PTR_NEW(0L),$
     ;rebin data img
-  ;  tvimg_empty_cell_ptr: PTR_NEW(0L),$
+    ;  tvimg_empty_cell_ptr: PTR_NEW(0L),$
     ;rebin empty cell img
     tvimg_norm_ptr : PTR_NEW(0L),$
     ;rebin norm img
@@ -593,7 +598,7 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
   ;define initial global values - these could be input via external file
   ;or other means
   
-;   (*(*global).empty_cell_images) = getEmptyCellImages()
+  ;   (*(*global).empty_cell_images) = getEmptyCellImages()
   (*(*global).substrate_type)    = getSubstrateType()
   
   (*(*global).BatchTable) = STRARR(10,20)
@@ -632,7 +637,7 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     'Normalization Combined Subtracted TOF Plot',$
     'R vs TOF Plot',$
     'R vs TOF Combined Plot']
-
+    
   (*(*global).PlotsTitle) = PlotsTitle
   MainPlotTitle = 'Main Data Reduction Plot'
   (*global).MainPlotTitle = MainPlotTitle
@@ -655,7 +660,7 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     '_norm.sub',$
     '.rtof',$
     '.crtof']
-
+    
   (*(*global).ExtOfAllPlots) = ExtOfAllPlots
   
   
