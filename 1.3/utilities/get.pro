@@ -34,6 +34,23 @@
 
 ;+
 ; :Description:
+;    Return the index of the tab currently selected
+;
+;
+;
+; :Keywords:
+;    event
+;    uname
+;
+; :Author: j35
+;-
+function getTabValue, event=event, uname=uname
+    id = widget_info(event.top, find_by_uname=uname)
+  return, widget_info(id, /tab_current)
+end
+
+;+
+; :Description:
 ;    return the value of the widget defined
 ;    by its uname (passed as argument)
 ;

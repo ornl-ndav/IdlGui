@@ -157,6 +157,8 @@
 .run add_all_data_nexus_loaded.pro
 .run tof_slices_ascii_output.pro
 
+.run center_pixel_counts_vs_pixel_base.pro
+
 .run cleanup.pro
 .run ref_reduction_debugging.pro
 .run MainBaseEvent.pro

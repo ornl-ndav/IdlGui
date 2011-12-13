@@ -325,6 +325,8 @@ PRO REFreduction_DataSelectionMove, event
         PLOTS, 0, y1, /device, color=color
         PLOTS, xsize_1d_draw, y1, /device, /continue, color=color
         
+        y_array=[y1,y2]
+        
       END
       2:mouse_status_new = mouse_status
       3: Begin
@@ -357,13 +359,20 @@ PRO REFreduction_DataSelectionMove, event
         PLOTS, xsize_1d_draw, y2, /device, /continue, color=color
         mouse_status_new = mouse_status
         
+        y_array = [y1,y2]
+        
       END
       5:mouse_status_new = mouse_status
     ENDCASE
     
     ;This function replot the other selection
-    ReplotOtherSelection, Event, ROIsignalBackZoomStatus
+    ;ReplotOtherSelection, Event, ROIsignalBackZoomStatus
     
+;ReplotOtherSelection, Event, ROIsignalBackZoomStatus
+;  (*global).select_data_status = mouse_status_new
+;  ;update Back and Peak Ymin and Ymax cw_fields
+;  putDataBackgroundPeakYMinMaxValueInTextFields, Event
+  
   ENDIF ELSE BEGIN                ;Zoom selected
   
     IF ((*global).select_zoom_status) THEN BEGIN
@@ -384,6 +393,44 @@ PRO REFreduction_DataSelectionMove, event
     ENDIF
     
   ENDELSE
+  
+  CASE (ROISignalBackZoomStatus) OF
+    0: BEGIN                    ;ROI
+      (*(*global).data_roi_selection) = y_array
+    END
+    1: BEGIN                    ;signal
+      
+      (*(*global).data_peak_selection) = y_array
+      ymin = MIN(y_array,max=ymax)
+      ;populate exclusion peak low and high bin
+      putTextFieldValue,$
+        Event,$
+        'data_d_selection_peak_ymin_cw_field',$
+        STRCOMPRESS(ymin/2,/remove_all),$
+        0                     ;do not append
+      putTextFieldValue,$
+        Event,$
+        'data_d_selection_peak_ymax_cw_field',$
+        STRCOMPRESS(ymax/2,/remove_all),$
+        0                     ;do not append
+    END
+    2: BEGIN                    ;back
+      (*(*global).data_back_selection) = y_array
+    END
+    3: BEGIN
+      IF ((*global).select_zoom_status) THEN BEGIN
+        RefReduction_zoom, $
+          Event, $
+          MouseX = event.x, $
+          MouseY = event.y, $
+          fact   = (*global).DataZoomFactor,$
+          uname  = 'data_zoom_draw'
+        (*global).select_zoom_status = 0
+      ENDIF
+    END
+  ENDCASE
+  
+    putDataBackgroundPeakYMinMaxValueInTextFields, Event
   
 END
 
@@ -476,6 +523,7 @@ PRO REFreduction_DataSelectionRelease, event
       (*(*global).data_roi_selection) = y_array
     END
     1: BEGIN                    ;signal
+      
       (*(*global).data_peak_selection) = y_array
       ymin = MIN(y_array,max=ymax)
       ;populate exclusion peak low and high bin
