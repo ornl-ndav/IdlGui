@@ -158,6 +158,7 @@
 .run tof_slices_ascii_output.pro
 
 .run center_pixel_counts_vs_pixel_base.pro
+.run reformatRTOF.pro
 
 .run cleanup.pro
 .run ref_reduction_debugging.pro
