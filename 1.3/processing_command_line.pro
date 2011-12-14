@@ -116,6 +116,9 @@ PRO REFreductionEventcb_ProcessingCommandLine, Event
           WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;plot tab
           LoadAsciiFile, Event
           
+          ;reformat the rtof
+          reformatRTOF, event, FullOutputFileName
+          
         endif
         
 ;      end
