@@ -601,8 +601,6 @@ pro center_px_counts_vs_pixel_base, event=event, $
     parent_base_uname = parent_base_uname
   compile_opt idl2
   
-  print, 'in center_px_counts_vs_pixel_base'
-  
   if (keyword_set(event)) then begin
     id = WIDGET_INFO(Event.top, FIND_BY_UNAME=parent_base_uname)
     WIDGET_CONTROL,Event.top,GET_UVALUE=global
