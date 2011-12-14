@@ -78,12 +78,12 @@ PRO BSSreduction_RunBatchCommandLine, Event
       
     ;add called to SLURM
     ;check instrument here
-    spawn, 'hostname',listening
-    CASE (listening) OF
-      'bac.sns.gov': srun = 'bac1q'
-      'bac2':        srun = 'bac2q'
-      ELSE:          srun = 'bss'
-    ENDCASE
+;    spawn, 'hostname',listening
+;    CASE (listening) OF
+;      'bac.sns.gov': srun = 'bac1q'
+;      'bac2':        srun = 'bac2q'
+;      ELSE:          srun = 'bss'
+;    ENDCASE
     
     ;get command line to generate
     cmd = getTextFieldValue(Event,'command_line_generator_text')
@@ -98,7 +98,8 @@ PRO BSSreduction_RunBatchCommandLine, Event
       index=0
       while (index lt nbr_jobs) do begin
       
-        _cmd = 'srun --batch -p ' + srun + ' ' + cmd[index]
+      ;  _cmd = 'srun --batch -p ' + srun + ' ' + cmd[index]
+        _cmd = cmd[index]
         
         ;display command line in log-book
         cmd_text = 'Running Command Line in Background (batch mode):'
@@ -143,7 +144,8 @@ PRO BSSreduction_RunBatchCommandLine, Event
       putDRstatusInfo, Event, status_text + PROCESSING
       
       WHILE (index LT nbr_jobs) DO BEGIN
-        cmd1  = 'srun --batch -p ' + srun
+;        cmd1  = 'srun --batch -p ' + srun
+        cmd1 = srun
         cmd1 += ' --output=' + ListOfStdOutFiles[index]
         cmd1 += ' --error=' + ListOfStdErrFiles[index]
         cmd2  = cmd1 + ' ' + cmd[index]
