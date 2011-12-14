@@ -51,23 +51,23 @@ PRO reduce_step3_run_jobs, Event
   nbr_row = (SIZE(big_table))[2]
   cl_table = STRARR(nbr_row)
   
-  CASE ((*global).am) OF
-    'slurm': BEGIN
-      SPAWN, 'hostname', listening
-      CASE (listening[0]) OF
-        'lrac' : cmd_srun = 'sbatch -p lracq '
-        'mrac' : cmd_srun = 'sbatch -p mracq '
-        ELSE: BEGIN
-          ;          cmd_srun = 'sbatch -p heaterq '
-          cmd_srun = 'sbatch -p ' + queue + ' '
-        END
-      ENDCASE
-    END
-    'oic': BEGIN
-      cmd_srun = 'amrun_dev -p oic --batch '
-    END
-    ELSE:
-  ENDCASE
+;  CASE ((*global).am) OF
+;    'slurm': BEGIN
+;      SPAWN, 'hostname', listening
+;      CASE (listening[0]) OF
+;        'lrac' : cmd_srun = 'sbatch -p lracq '
+;        'mrac' : cmd_srun = 'sbatch -p mracq '
+;        ELSE: BEGIN
+;          ;          cmd_srun = 'sbatch -p heaterq '
+;          cmd_srun = 'sbatch -p ' + queue + ' '
+;        END
+;      ENDCASE
+;    END
+;    'oic': BEGIN
+;      cmd_srun = 'amrun_dev -p oic --batch '
+;    END
+;    ELSE:
+;  ENDCASE
   
   cmd_srun = 'sbatch -p mracq '
 
@@ -88,7 +88,8 @@ PRO reduce_step3_run_jobs, Event
     nbr_jobs++
     
     ;driver
-    cmd = cmd_srun + reduce_structure.driver
+;    cmd = cmd_srun + reduce_structure.driver
+    cmd = reduce_structure.driver
     
     cmd += ' --inst=' + instrument + ' '
     
