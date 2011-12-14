@@ -230,8 +230,8 @@ PRO CreateBatchFile, Event, FullFileName
       text    = [text,'#SF : ' + BatchTable[k++,i]]
       ;add --batch flag to command line
       cmd_array = strsplit(BatchTable[k++,i], 'srun ', /EXTRACT, /REGEX)
-      cmd       = 'srun --batch -o none' + cmd_array[0]
-      text    = [text, FP+cmd]
+;      cmd       = 'srun --batch -o none' + cmd_array[0]
+      text    = [text, FP+ cmd_array[0]]
       text    = [text, '']
       
     ENDIF
@@ -1413,9 +1413,9 @@ PRO BatchTab_RunActiveBackground, Event
             AppendReplaceLogBookMessage, Event, (*global).FAILED, $
               (*global).processing_message
           ENDIF ELSE BEGIN ;add --batch just after srun
-            cmd       = BatchTable[9,i]
-            cmd_array = STRSPLIT(cmd,'srun',/extract,/regex)
-            cmd       = 'srun --batch -o none' + cmd_array[0]
+            cmd       = BatchTable[9,i] + ' &'
+;            cmd_array = STRSPLIT(cmd,'srun',/extract,/regex)
+;            cmd       = 'srun --batch -o none' + cmd_array[0]
             LogText = '--> Command is: ' + cmd
             putLogBookMessage, Event, LogText, APPEND=1
             spawn, cmd, listening, err_listening
