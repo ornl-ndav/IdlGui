@@ -11,7 +11,7 @@
 ;
 ; :Author: j35
 ;-
-pro reformatRTOF, event=event, reduce_file=reduce_file
+pro reformatRTOF, event=event, reduce_files=reduce_files
   compile_opt idl2
   
   new_arg = strarr(4)
@@ -31,49 +31,73 @@ pro reformatRTOF, event=event, reduce_file=reduce_file
     new_arg[3] = "#C RefPix: 222"
   endelse
   
-  ;modify file name
-  ;remove ext (.txt) and replace by (.rtof)
-  reduce_file_array = strsplit(reduce_file,'.',/extract)
-  sz = size(reduce_file_array,/dim)
-  if (sz gt 1) then begin
-    base_file_name = strjoin(reduce_file_array[0:sz-2],'.')
-    rtof_file_name = base_file_name + '.rtof'
-  endif else begin
-    rtof_file_name = reduce_file_array[0] + '.rtof'
-  endelse
+  nbr_files = n_elements(reduce_files)
+  index = 0
+  while (index lt nbr_files) do begin
   
-  ;if the file does not exist, just quit reformatRTOF
-  if ~file_test(rtof_file_name) then return
-  
-  nbr_lines = file_lines(rtof_file_name)
-  my_array = strarr(1,nbr_lines)
-  openr, 1, rtof_file_name
-  readf, 1, my_array
-  close, 1
-  
-  ;locate the first empty line
-  index_empty_line = -1
-  for i=0, (nbr_lines-1) do begin
-    if (strcompress(my_array[i],/remove_all) eq '') then begin
-      index_empty_line = i
-      break
-    endif
-  endfor
-  
-  ;now look for the line to remove
-  new_array = !NULL
-  for i=0, (index_empty_line-1) do begin
-    _line = my_array[i]
-    result = strmatch(_line,'#C norm dtheta: *')
-    if (result eq 1) then begin
-      _firt_found = 0b
-      ;add new arguments here
-      new_array = [new_array, new_arg]
-      i+= 5
+    reduce_file = reduce_files[index]
+    
+    ;modify file name
+    ;remove ext (.txt) and replace by (.rtof)
+    reduce_file_array = strsplit(reduce_file,'.',/extract)
+    sz = size(reduce_file_array,/dim)
+    if (sz gt 1) then begin
+      base_file_name = strjoin(reduce_file_array[0:sz-2],'.')
+      rtof_file_name = base_file_name + '.rtof'
     endif else begin
-      new_array = [new_array, _line]
+      rtof_file_name = reduce_file_array[0] + '.rtof'
     endelse
-  endfor
+    
+    ;if the file does not exist, just quit reformatRTOF
+    if ~file_test(rtof_file_name) then return
+    
+    nbr_lines = file_lines(rtof_file_name)
+    my_array = strarr(1,nbr_lines)
+    openr, 1, rtof_file_name
+    readf, 1, my_array
+    close, 1
+    free_lun, 1
+    
+    ;locate the first empty line
+    index_empty_line = -1
+    for i=0, (nbr_lines-1) do begin
+      if (strcompress(my_array[i],/remove_all) eq '') then begin
+        index_empty_line = i
+        break
+      endif
+    endfor
+    
+    ;second part of file to keep
+    _second_part = my_array[index_empty_line:nbr_lines-1]
+    
+    ;now look for the line to remove
+    new_array = !NULL
+    for i=0, (index_empty_line-1) do begin
+      _line = my_array[i]
+      result = strmatch(_line,'#C norm dtheta: *')
+      if (result eq 1) then begin
+        _firt_found = 0b
+        ;add new arguments here
+        new_array = [new_array, new_arg]
+        i+= 5
+      endif else begin
+        new_array = [new_array, _line]
+      endelse
+    endfor
+    
+    new_my_array = [new_array, _second_part]
+    
+    ;rewrite the file
+    nbr_lines = n_elements(new_my_array)
+    openw, 2, rtof_file_name
+    for i=0,(nbr_lines-1) do begin
+      printf, 2, new_my_array[i]
+    endfor
+    close, 2
+    free_lun ,2
+    
+    index++
+  endwhile
   
 end
 
