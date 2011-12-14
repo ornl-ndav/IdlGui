@@ -65,15 +65,15 @@ pro command_line_generator_for_ref_m, event
   
   cmd = strarr(nbr_spin_states)
   
-  ;add called to SLURM if hostname is not heater,lrac or mrac
-  spawn, 'hostname', listening
-  CASE (listening[0]) OF
-    'lrac.sns.gov' : cmd += 'srun -Q -p lracq '
-    'mrac.sns.gov' : cmd += 'srun -Q -p mracq '
-    ELSE: BEGIN
-      cmd += 'srun -Q -p heaterq '
-    END
-  ENDCASE
+;  ;add called to SLURM if hostname is not heater,lrac or mrac
+;  spawn, 'hostname', listening
+;  CASE (listening[0]) OF
+;    'lrac.sns.gov' : cmd += 'srun -Q -p lracq '
+;    'mrac.sns.gov' : cmd += 'srun -Q -p mracq '
+;    ELSE: BEGIN
+;      cmd += 'srun -Q -p heaterq '
+;    END
+;  ENDCASE
   
   cmd += (*global).driver_name ;name of function to call
   

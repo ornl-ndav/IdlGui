@@ -1677,9 +1677,9 @@ PRO BatchTab_RunActiveBackground_ref_l, Event
             AppendReplaceLogBookMessage, Event, (*global).FAILED, $
               (*global).processing_message
           ENDIF ELSE BEGIN ;add --batch just after srun
-            cmd       = BatchTable[9,i]
-            cmd_array = STRSPLIT(cmd,'srun',/extract,/regex)
-            cmd       = 'srun --batch -o none' + cmd_array[0]
+            cmd       = BatchTable[9,i] + ' &'
+;            cmd_array = STRSPLIT(cmd,'srun',/extract,/regex)
+;            cmd       = 'srun --batch -o none' + cmd_array[0]
             LogText = '--> Command is: ' + cmd
             putLogBookMessage, Event, LogText, APPEND=1
             spawn, cmd, listening, err_listening
@@ -1817,9 +1817,9 @@ PRO BatchTab_RunActiveBackground_ref_m, Event
             AppendReplaceLogBookMessage, Event, (*global).FAILED, $
               (*global).processing_message
           ENDIF ELSE BEGIN ;add --batch just after srun
-            cmd       = current_cmd
-            cmd_array = STRSPLIT(cmd,'srun',/extract,/regex)
-            cmd       = 'srun --batch -o none' + current_cmd
+            cmd       = current_cmd + ' &'
+;            cmd_array = STRSPLIT(cmd,'srun',/extract,/regex)
+;            cmd       = 'srun --batch -o none' + current_cmd
             LogText = '--> Command is: ' + cmd
             putLogBookMessage, Event, LogText, APPEND=1
             spawn, cmd, listening, err_listening
