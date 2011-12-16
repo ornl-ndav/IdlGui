@@ -77,6 +77,7 @@ pro BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   ;initialize all the buttons
   initialize_all_images, main_base=main_base
+  display_logo, main_base=main_base
 
   DEVICE, DECOMPOSED = 0
   loadct, (*global).default_colorbar, /silent

@@ -128,7 +128,6 @@ pro display_preview_of_file, event=event, file_name=file_name, type=type
   apply_gamma_filtering, event=event, data=data
   
   apply_transpose, event=event, data=data
-  
   apply_rotation, event=event, data=data
   
   if (type eq 'data_file') then begin
