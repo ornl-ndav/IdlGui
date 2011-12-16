@@ -170,7 +170,7 @@ pro run_normalization, event=event
     read_fits_file, event=event, $
       file_name=_ob_file_name, $
       data=_data
-      apply_gamma_filtering, event=event, data=_data
+    apply_gamma_filtering, event=event, data=_data
     if (_index_ob gt 0) then begin
       _open_beam_data += _data
     endif else begin
@@ -229,7 +229,7 @@ pro run_normalization, event=event
     read_fits_file, event=event, $
       file_name=_df_file_name, $
       data=_data
-      apply_gamma_filtering, event=event, data=_data
+    apply_gamma_filtering, event=event, data=_data
     if (_index_df gt 0) then begin
       _dark_field_data += _data
     endif else begin
@@ -256,6 +256,10 @@ pro run_normalization, event=event
       file_name=list_data[_index_data],$
       data=_data
       
+    ;Apply the transformations
+    apply_transpose, event=event, data=_data
+    apply_rotation, event=event, data=_data
+    
     if (isButtonSelected(event=event,uname='with_gamma_filtering_uname')) $
       then begin
       message = [message, '-> Applying gamma filtering']

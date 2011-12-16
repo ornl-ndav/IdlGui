@@ -111,5 +111,34 @@ pro display_images, main_base=main_base, $
   
 end
 
+;+
+; :Description:
+;    This routine adds the ORNL logo to the bottom of the application
+;
+;
+;
+; :Keywords:
+;    main_base
+;
+; :Author: j35
+;-
+pro display_logo, main_base=main_base
+compile_opt idl2
 
+logo_file_name = 'iMars_images' + path_sep() + 'ornl_logo.png'
+
+png = read_png(logo_file_name)
+if (keyword_set(main_base)) then begin
+  id = widget_info(main_base, $
+  find_by_uname='logo_uname')
+  endif else begin
+  id = widget_info(event.top, $
+  find_by_uname='logo_uname')
+  endelse
+  
+  widget_control, id, get_value=value_id
+  wset, value_id
+  tv, png, 0,0, /true
+  
+end
 

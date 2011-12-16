@@ -311,11 +311,19 @@ pro build_gui, main_base, global
   scr_xsize = 50,$
   value= 'N/A')
 
-  ;space in col3
-  for i=0,3 do begin
-    space = widget_label(col3,$
-      value = ' ')
-  endfor
+    space = widget_label(col3, value = ' ')
+
+  row_logo = widget_base(col3,/row)
+  space = widget_label(row_logo,$
+  value = '            ')
+  ;ornl logo
+  logo = widget_draw(row_logo,$
+  uname='logo_uname',$
+  retain=2,$
+  scr_xsize=350,$
+  scr_ysize=44)
+
+space = widget_label(col3, value = ' ')
   
   ;output folder row
   of_row = widget_base(col3,$
