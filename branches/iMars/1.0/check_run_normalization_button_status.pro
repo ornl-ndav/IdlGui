@@ -92,7 +92,7 @@ pro check_run_normalization_button_status, event=event, $
   
   ;make sure at least 1 output format has been selected
     if (~isButtonSelected(event=event,uname='format_tiff_button') && $
-    ~isButtonSelected(event=event,uname='format_png_button') && $
+;    ~isButtonSelected(event=event,uname='format_png_button') && $
     ~isButtonSelected(event=event,uname='format_fits_button')) then begin
     activate_button, event=event, $
       status=0b, $

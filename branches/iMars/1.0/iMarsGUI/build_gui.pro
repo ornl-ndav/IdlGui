@@ -349,9 +349,9 @@ space = widget_label(col3, value = ' ')
   b2 = widget_button(format_base,$
     value = 'FITS (.fits)',$
     uname = 'format_fits_button')
-  b3 = widget_button(format_base,$
-    value = 'PNG (.png)',$
-    uname = 'format_png_button')
+;  b3 = widget_button(format_base,$
+;    value = 'PNG (.png)',$
+;    uname = 'format_png_button')
   widget_control, b2, /set_button
   
   ;space

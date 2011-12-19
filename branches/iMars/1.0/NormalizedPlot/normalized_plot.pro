@@ -325,12 +325,12 @@ pro normalized_plot_base_gui, wBase, $
     scr_ysize = ysize,$
     retain=2)
     
-;  colorbar =  widget_draw(wBase,$
-;    uname = 'normalized_colorbar',$
-;    xoffset = xsize,$
-;    scr_xsize = colorbar_xsize,$
-;    scr_ysize = ysize,$
-;    retain=2)
+  colorbar =  widget_draw(wBase,$
+    uname = 'normalized_colorbar',$
+    xoffset = xsize,$
+    scr_xsize = colorbar_xsize,$
+    scr_ysize = ysize,$
+    retain=2)
     
 end
 
@@ -476,8 +476,8 @@ pro normalized_plot_base, event=event, $
   ;  ;plot roi
   ;  plot_zoom_roi, base=_base
   ;
-  ;  ;plot colorbar
-  ;  plot_colorbar_normalized_data, base=_base
+    ;plot colorbar
+    plot_colorbar_normalized_data, base=_base
   
   ;plot scale around the plot
   plot_scale_normalized_data, base=_base
@@ -506,17 +506,17 @@ pro launch_normalized_plot, event=event, data=data, file_name=file_name
   if (data eq !null) then return
   
   id =  (*global).normalized_plot_base_id
-  if (widget_info(id,/valid_id) eq 0) then begin
+;  if (widget_info(id,/valid_id) eq 0) then begin
     normalized_plot_base, event=event, $
       top_base=top_base, $
       parent_base_uname='MAIN_BASE',$
       file_name=file_name, $
       data=data
-  endif else begin
-    widget_control, id, get_uvalue=global_preview
-    (*(*global_preview).data) = data
-    plot_normalized_data, base=id, /recalculate
-  endelse
+;  endif else begin
+;    widget_control, id, get_uvalue=global_preview
+;    (*(*global_preview).data) = data
+;    plot_normalized_data, base=id, /recalculate
+;  endelse
   
 end
 

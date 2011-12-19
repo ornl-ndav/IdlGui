@@ -138,8 +138,8 @@ function IDLconfiguration::getConfig, event
     isButtonSelected(event=event,uname='format_tiff_button'), $
     is_fits_selected: $
     isButtonSelected(event=event,uname='format_fits_button'), $
-    is_png_selected: $
-    isButtonSelected(event=event,uname='format_png_button'), $
+;    is_png_selected: $
+;    isButtonSelected(event=event,uname='format_png_button'), $
     
     is_log_book_enabled: isLogBookEnabled(event=event), $
     log_book: (*(*global).log_book)}
