@@ -82,7 +82,8 @@ pro run_normalization, event=event
   widget_control, event.top, get_uvalue=global
   widget_control, /hourglass
   
-  catch, error
+  error = 0
+  ;catch, error
   if (error ne 0) then begin
     catch,/cancel
     widget_control, hourglass=0
@@ -336,12 +337,12 @@ pro run_normalization, event=event
     if (output_file_name ne '') then $
       list_output_file_name = [list_output_file_name,output_file_name]
       
-    create_output_png_file, event=event, $
-      input_file_name = list_data[_index_data], $
-      data = _data_normalized, $
-      output_file_name = output_file_name
-    if (output_file_name ne '') then $
-      list_output_file_name = [list_output_file_name,output_file_name]
+;    create_output_png_file, event=event, $
+;      input_file_name = list_data[_index_data], $
+;      data = _data_normalized, $
+;      output_file_name = output_file_name
+;    if (output_file_name ne '') then $
+;      list_output_file_name = [list_output_file_name,output_file_name]
       
     message = [message, '-> created output file(s)']
     log_book_update, event, message=message
@@ -360,7 +361,7 @@ pro run_normalization, event=event
   endwhile
   log_book_update, event, message=message
   
-  kill_normalized_plot, event=event
+  ;kill_normalized_plot, event=event
   progress_bar, event=event, /close
   
   widget_control, hourglass=0

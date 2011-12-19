@@ -280,8 +280,8 @@ pro repopulate_gui, event, _structure
     _structure.is_tiff_selected
   setButton, event=event, uname='format_fits_button', $
     _structure.is_fits_selected
-  setButton, event=event, uname='format_png_button', $
-    _structure.is_png_selected
+;  setButton, event=event, uname='format_png_button', $
+;    _structure.is_png_selected
     
   ;display preview of file selected
   type = _structure.type
