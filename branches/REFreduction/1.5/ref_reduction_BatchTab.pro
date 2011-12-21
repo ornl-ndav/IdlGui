@@ -163,11 +163,11 @@ FUNCTION PopulateBatchTable, Event, BatchFileName
             SplitArray[0] =CommentArray[0]
             cmd           = strjoin(SplitArray,' ')
             ;check if "-o none" is there or not
-            IF (STRMATCH(cmd,'*-o none*')) THEN BEGIN
-              string_split = ' --batch -o none'
-            ENDIF ELSE BEGIN
-              string_split = ' --batch'
-            ENDELSE
+;            IF (STRMATCH(cmd,'*-o none*')) THEN BEGIN
+;              string_split = ' --batch -o none'
+;            ENDIF ELSE BEGIN
+;              string_split = ' --batch'
+;            ENDELSE
             cmd_array     = STRSPLIT(cmd, $
               string_split, $
               /EXTRACT, $
@@ -1370,7 +1370,7 @@ PRO BatchTab_RunActiveBackground, Event
             ' ... ' + PROCESSING
           putLogBookMessage, Event, LogText, APPEND=1
           run_error = 0
-          ;               CATCH, run_error
+          CATCH, run_error
           IF (run_error NE 0) THEN BEGIN
             CATCH,/CANCEL
             AppendReplaceLogBookMessage, Event, FAILED, PROCESSING
@@ -1392,7 +1392,7 @@ PRO BatchTab_RunActiveBackground, Event
             putLogBookMessage, Event, LogText, APPEND=1
             LogText = '---> Launching cmd ... ' + PROCESSING
             putLogBookMessage, Event, LogText, APPEND=1
-            spawn, cmd, listening, err_listening
+            spawn, cmd + ' &', listening, err_listening
             IF (err_listening[0] NE '') THEN BEGIN
               AppendReplaceLogBookMessage, Event, FAILED, PROCESSING
             ENDIF ELSE BEGIN
