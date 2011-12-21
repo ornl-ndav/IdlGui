@@ -50,6 +50,7 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
   post_driver_name = file->getValue(tag=['configuration','driver_name'])
   prefix_driver_name = file->getValue(tag=['configuration','prefix_driver_name'])
   driver_name = prefix_driver_name + ' ' + post_driver_name
+  driver_name = 'specmh_reduction'
   
   debugging_structure = getDebuggingStructure()
   
