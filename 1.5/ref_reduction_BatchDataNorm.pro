@@ -71,14 +71,16 @@ PRO BatchTab_ChangeDataNormRunNumber, Event
     ;get first part of cmd ex: srun -Q -p lracq reflect_reduction
     split1      = (*global).driver_name
     part1_array = strsplit(cmd,split1,/extract,/regex)
-    part1       = part1_array[0]
+    ;part1       = part1_array[0]
+    part1 = ''
     ;get second part (after data runs)
     split2                  = '--data-roi-file'
     (*global).batch_split2  = split2
     part2_array             = strsplit(cmd,split2,/extract,/regex)
     part2                   = part2_array[1]
     (*global).batch_part2   = part2
-    new_cmd                 = STRTRIM(part1) + ' ' + split1
+    new_cmd                 = split1
+    
     (*global).batch_new_cmd = new_cmd
     ;get data run cw_field
     data_runs = getTextFieldValue(Event,'batch_data_run_field_status')
