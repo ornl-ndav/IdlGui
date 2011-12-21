@@ -14,13 +14,15 @@ all:
 
 install:
 	cp ref_reduction_v15.sav /SNS/software/idltools/sav/
+	cp ref_reduction_v15.sav /SNS/software5/idltools/sav/
 	cp REFreduction_v15 /SNS/software/idltools/
 	cp miniREFreduction_v15 /SNS/software/idltools/
 	cp mini_ref_reduction_v15.sav /SNS/software/idltools/sav/
+	cp mini_ref_reduction_v15.sav /SNS/software5/idltools/sav/
 	cp REFreductionHELP/*.* /SNS/software/idltools/help/REFreduction/
 	cp REFreduction_images/*.* /SNS/software/idltools/sav/REFreduction_images/
 	cp .REFreduction_v15.cfg /SNS/software/idltools/sav/
-	
+	cp .REFreduction_v15.cfg /SNS/software5/idltools/sav/	
 test: 
 	cp ref_reduction_v15.sav /usr/local/SNS/idltools/
 	cp mini_ref_reduction_v15.sav /usr/local/SNS/idltools/
