@@ -156,36 +156,31 @@ FUNCTION PopulateBatchTable, Event, BatchFileName
                 BatchTable[8,BatchIndex] = ''
               ENDELSE
             END
-          ELSE         : BEGIN
+          ELSE: BEGIN
             CommentArray= strsplit(SplitArray[0],'#', $
               /extract, $
               COUNT=nbr)
             SplitArray[0] =CommentArray[0]
             cmd           = strjoin(SplitArray,' ')
-            ;check if "-o none" is there or not
-;            IF (STRMATCH(cmd,'*-o none*')) THEN BEGIN
-;              string_split = ' --batch -o none'
-;            ENDIF ELSE BEGIN
-;              string_split = ' --batch'
-;            ENDELSE
-            cmd_array     = STRSPLIT(cmd, $
-              string_split, $
-              /EXTRACT, $
-              /REGEX,$
-              COUNT = length)
-            IF (length NE 0) THEN BEGIN
-              cmd = cmd_array[0] + ' ' + cmd_array[1]
-            ENDIF
-            BatchTable[9,BatchIndex] = cmd
-          END
-        ENDCASE
-        ++FileIndex
+            ;remove everything before specmh_reduction
+            string_split = 'specmh_reduction'
+            cmd_array = strsplit(cmd, string_split,$
+            /extract, $
+            /regex, $
+            count=lenght)
+            if (length gt 1) then begin
+            cmd = 'specmh_reduction ' + cmd_array[1]
+            endif 
+              BatchTable[9,BatchIndex] = cmd
+            END
+          ENDCASE
+          ++FileIndex
+        ENDELSE
       ENDELSE
-    ENDELSE
-  ENDWHILE
-  AppendReplaceLogBookMessage, Event, 'OK', (*global).processing_message
-ENDELSE
-RETURN, BatchTable
+    ENDWHILE
+    AppendReplaceLogBookMessage, Event, 'OK', (*global).processing_message
+  ENDELSE
+  RETURN, BatchTable
 END
 
 ;------------------------------------------------------------------------------
@@ -230,7 +225,7 @@ PRO CreateBatchFile, Event, FullFileName
       text    = [text,'#SF : ' + BatchTable[k++,i]]
       ;add --batch flag to command line
       cmd_array = strsplit(BatchTable[k++,i], 'srun ', /EXTRACT, /REGEX)
-;      cmd       = 'srun --batch -o none' + cmd_array[0]
+      ;      cmd       = 'srun --batch -o none' + cmd_array[0]
       text    = [text, FP+ cmd_array[0]]
       text    = [text, '']
       
@@ -288,12 +283,12 @@ FUNCTION UpdateOutputFlag, Event, new_cmd, DataRun
   IF (length GT 1) THEN BEGIN
     path  = STRJOIN(ArrayPath[0:length-2],'/')
     if (indexPath[0] eq 1) then begin
-    path = '/' + path
+      path = '/' + path
     endif
   ENDIF ELSE BEGIN
     path  = ArrayPath[0]
   ENDELSE
-
+  
   ;create new output file name
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
@@ -1414,8 +1409,8 @@ PRO BatchTab_RunActiveBackground, Event
               (*global).processing_message
           ENDIF ELSE BEGIN ;add --batch just after srun
             cmd       = BatchTable[9,i] + ' &'
-;            cmd_array = STRSPLIT(cmd,'srun',/extract,/regex)
-;            cmd       = 'srun --batch -o none' + cmd_array[0]
+            ;            cmd_array = STRSPLIT(cmd,'srun',/extract,/regex)
+            ;            cmd       = 'srun --batch -o none' + cmd_array[0]
             LogText = '--> Command is: ' + cmd
             putLogBookMessage, Event, LogText, APPEND=1
             spawn, cmd, listening, err_listening
@@ -1630,7 +1625,7 @@ PRO RetrieveBatchInfoAtLoading, Event
   PopulateBatchTableWithOthersInfo, Event, BatchTable
   ;populate index 0 with all Data and Norm run numbers
   PopulateBatchTableWithDataNormRunNumbers, Event, BatchTable
-    
+  
   (*(*global).BatchTable) = BatchTable
   ;display new BatchTable
   DisplayBatchTable, Event, BatchTable
