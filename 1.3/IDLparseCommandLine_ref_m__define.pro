@@ -42,13 +42,23 @@
 FUNCTION ValueBetweenArg1Arg2, base_string, $
     arg1, arg1Index, $
     arg2, arg2Index
+   
+  ;find first if string is there or not
+  _match = strmatch(base_string,'*'+arg1+'*')
+  if (~_match) then return, ''
+
   Split1 = STRSPLIT(base_string,arg1,/EXTRACT,/REGEX,COUNT=length)
   IF (length GT 1) THEN BEGIN
     Split2 = STRSPLIT(Split1[arg1Index],arg2,/EXTRACT,/REGEX)
     RETURN, Split2[arg2Index]
   ENDIF ELSE BEGIN
+    if (length eq 1) then begin
+      split2 = strsplit(split1[0],arg2, /extract, /regex)
+      return, split2[0]
+    endif else begin
     RETURN, ''
   ENDELSE
+  endelse
 END
 
 ;------------------------------------------------------------------------------
@@ -100,7 +110,11 @@ END
 ;------------------------------------------------------------------------------
 ;------------------------------------------------------------------------------
 FUNCTION getMainDataNexusFileName, cmd
+  print, 'cmd: ' , cmd
   result = ValueBetweenArg1Arg2(cmd, 'specmh_reduction', 1, ' ', 0)
+  print, 'in getMainDataNexusfileName'
+  print, result
+  help, result
   IF (result EQ '') then begin
     result = ValueBetweenArg1Arg2(cmd, 'reflect_reduction', 1, ' ', 0)
     if (result eq '') then return, ''
@@ -114,6 +128,7 @@ END
 FUNCTION getMainDataRunNumber_ref, FullNexusName, instrument=instrument
   if (n_elements(instrument) ne 0) then begin
     run_number = get_ref_run_number(FullNexusName, instrument=instrument)
+    print, 'run_number: ' , run_number
   endif else begin
     run_number = get_ref_run_number(FullNexusName, instrument='REF_L')
   endelse
@@ -779,6 +794,9 @@ FUNCTION IDLparseCommandLine_ref_m::init, cmd_array
           
           ;Work on Normalization
           self.MainNormNexusFileName = getMainNormNexusFileName(cmd)
+          print, 'self.MainNormNexusfileName: ' , self.MainNormNexusFileName
+
+
           IF (self.MainNormNexusFileName NE '') THEN BEGIN
             self.MainNormRunNUmber     = $
               getMainDataRunNumber_ref(self.MainNormNexusFileName, $

@@ -598,7 +598,6 @@ pro merge_files, event=event, $
   cmd += ' --output=' + final_file_name
   
   cmd_text = '-> Merging files: ' + cmd
-  print, cmd_text
   IDLsendLogBook_addLogBookText, Event, cmd_text
   
   ;run command

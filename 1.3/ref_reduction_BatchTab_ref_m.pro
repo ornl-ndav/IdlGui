@@ -287,6 +287,9 @@ pro populate_ref_m_batch_table, event, cmd_array
   ClassInstance = obj_new('IDLparseCommandLine_ref_m',cmd_array)
   
   MainDataRunNumber = ClassInstance->getMainDataRunNumber()
+  
+  print, 'MaindDataRunNumber: ' ,  MainDataRunNumber
+  
   DataSpinStates = ClassInstance->getDataPath()
   MainNormRunNumber = ClassInstance->getMainNormRunNumber()
   NormSpinStates = ClassInstance->getNormPath()
