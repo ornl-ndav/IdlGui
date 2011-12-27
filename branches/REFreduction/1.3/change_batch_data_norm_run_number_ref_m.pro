@@ -106,19 +106,24 @@ pro change_batch_data_norm_run_number_ref_m, event
     ;get first part of cmd ex: srun -Q -p lracq reflect_reduction
     split1      = 'specmh_reduction'
     part1_array = strsplit(cmd_split[index],split1,/extract,/regex)
-    if (n_elements(part1_array) eq 1) then begin
-      split1 = 'reflect_reduction'
-      part1_array = strsplit(cmd_split[index],split1,/extract,/regex)
-    endif
+;    if (n_elements(part1_array) eq 1) then begin
+;      split1 = 'reflect_reduction'
+;      part1_array = strsplit(cmd_split[index],split1,/extract,/regex)
+;    endif
     
-    part1       = part1_array[0]
-    ;get second part (after data runs)
-    split2                  = '--data-paths='
+    part1 = ''
+    split2 = '--data-paths'
+    
+    
+;    part1       = part1_array[0]
+;    ;get second part (after data runs)
+;    split2                  = '--data-paths='
     (*global).batch_split2  = split2
     part2_array             = strsplit(cmd_split[index],split2,/extract,/regex)
     part2                   = part2_array[1]
     (*global).batch_part2   = part2
-    new_cmd                 = STRTRIM(part1) + ' ' + split1
+;    new_cmd                 = STRTRIM(part1) + ' ' + split1
+    new_cmd = split1
     (*global).batch_new_cmd = new_cmd
     
     ;get data run cw_field
@@ -156,7 +161,9 @@ pro change_batch_data_norm_run_number_ref_m, event
   value += '( P L E A S E   W A I T ) '
   putLabelValue, Event, 'pro_top_label', value
   
-  ;WORK on NORM runs
+  ;WORK on NORM runs if there
+  _match = strmatch(new_main_cmd[0],'*--norm=*')
+  if (_match) then begin  
   
   index = 0
   while (index lt nbr_split) do begin
@@ -196,6 +203,8 @@ pro change_batch_data_norm_run_number_ref_m, event
     
     index++
   endwhile
+
+  endif ;end of if(_match)
   
   new_cmd = strjoin(new_main_cmd,' ; ')
   
