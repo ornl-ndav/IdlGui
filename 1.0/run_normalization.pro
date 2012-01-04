@@ -83,7 +83,7 @@ pro run_normalization, event=event
   widget_control, /hourglass
   
   error = 0
-  ;catch, error
+  catch, error
   if (error ne 0) then begin
     catch,/cancel
     widget_control, hourglass=0
@@ -124,10 +124,18 @@ pro run_normalization, event=event
   message = [message, _message]
   
   dark_field_table = getValue(event=event, uname='dark_field_table')
-  list_dark_field = reform(dark_field_table)
-  message = [message,'-> list dark field:']
-  _message = '    ' + list_dark_field
-  message = [message, _message]
+  bDF = 1b
+  if (dark_field_table[0,0] eq '') then begin ;no dark field
+    bDF = 0b
+    message = [message,'-> list dark field:']
+    _message = '     None'
+    message = [message, _message]
+  endif else begin
+    list_dark_field = reform(dark_field_table)
+    message = [message,'-> list dark field:']
+    _message = '    ' + list_dark_field
+    message = [message, _message]
+  endelse
   
   ;collect table of ROIs
   roi_table =  retrieve_list_roi(event=event)
@@ -155,8 +163,11 @@ pro run_normalization, event=event
   pb_number_of_steps = nbr_data_file_to_treat
   ;for merging all the open beam + merging ROIs
   pb_number_of_steps +=  n_elements(open_beam_table)+1
+  
   ;for merging all the dark field
-  pb_number_of_steps += n_elements(dark_field_table)
+  if (bDF) then begin
+    pb_number_of_steps += n_elements(dark_field_table)
+  endif
   (*global).pb_number_of_steps = pb_number_of_steps
   
   progress_bar, event=event, /init
@@ -220,6 +231,7 @@ pro run_normalization, event=event
   log_book_update, event, message='-> done with getting open beam ROIs'
   progress_bar, event=event, /step
   
+  if (bDF) then begin ;do this work only if we have at least 1 DF
   ;take average of all dark field
   log_book_update, event, message='Starting work on dark field'
   nbr_dark_field = n_elements(dark_field_table)
@@ -246,6 +258,7 @@ pro run_normalization, event=event
     _dark_field_data /= nbr_dark_field
     log_book_update, event, message='-> done with getting average dark field'
   endif
+  endif ;end of if(bDF)
   
   ;start jobs on data
   _index_data = 0
@@ -309,8 +322,13 @@ pro run_normalization, event=event
     ;calculate numerator and denominator
     ;num = data - DF
     ;den = OB - DF
+    if (bDF) then begin ;with a DF
     num = _data - _dark_field_data
     den = _open_beam_data - _dark_field_data
+    endif else begin
+    num = _data
+    den = _open_beam_data    
+    endelse 
     
     _data_normalized = num / den
     

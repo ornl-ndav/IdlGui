@@ -71,7 +71,7 @@ PRO MAIN_BASE_event, Event
     ;reset dark field files
     widget_info(event.top, find_by_uname='reset_dark_field_files_uname'): begin
       reset_table, event=event, uname = 'dark_field_table'
-      check_run_normalization_button_status, event=event, /disabled
+;      check_run_normalization_button_status, event=event, /disabled
     end
     ;reset full session
     widget_info(event.top, find_by_uname='full_reset_of_session_uname'): begin
