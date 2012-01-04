@@ -72,8 +72,8 @@ pro check_run_normalization_button_status, event=event, $
   endif
   
   list_table_uname = ['sample_table',$
-    'open_beam_table',$
-    'dark_field_table']
+    'open_beam_table']
+;    'dark_field_table']  ;allow user to run process without a DF
   nbr_table = n_elements(list_table_uname)
   _index=0
   while (_index lt nbr_table) do begin
