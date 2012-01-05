@@ -122,11 +122,15 @@ function getMainDataNexusFileName, cmd
   index = 0
   nbr_driver = n_elements(driver_list)
   while (index lt nbr_driver) do begin
-    driver_name = driver_list[index]
+    driver_name = driver_list[index]    
     result = ValueBetweenArg1Arg2(cmd, driver_name, 1, ' ', 0)
     if (result[0] ne '') then begin
       return, strcompress(result,/remove_all)
-    endif
+    endif else begin ;
+      cmd_without_driver = strsplit(cmd, driver_name, /regex, /extract)
+      file_name_array = strsplit(cmd_without_driver,' ',/regex,/extract)
+      return, file_name_array[0]
+    endelse
     index++
   endwhile
   return, ''
@@ -142,8 +146,7 @@ END
 ;------------------------------------------------------------------------------
 FUNCTION getAllDataNexusFileName, cmd
 
-  driver_list = ['reflect_reduction', $
-    'specmh_reduction']
+  driver_list = ['specmh_reduction','reflect_reduction']
   index = 0
   nbr_driver = n_elements(driver_list)
   while (index lt nbr_driver) do begin
@@ -153,7 +156,13 @@ FUNCTION getAllDataNexusFileName, cmd
       1, $
       '--data-roi-file', $
       0)
-    IF (result[0] ne '') THEN return, result
+    IF (result[0] ne '') THEN begin
+    return, result
+    endif else begin
+      cmd_without_driver = strsplit(cmd, driver_name, /regex, /extract)
+      file_name_array = strsplit(cmd_without_driver,'--data-roi-file',/regex,/extract)
+      return, file_name_array[0]
+    endelse
     index++
   endwhile
   RETURN, ''
