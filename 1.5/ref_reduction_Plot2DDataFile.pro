@@ -39,7 +39,7 @@ FUNCTION REFreduction_Plot2DDataFile, Event
   ;check instrument selected
   instrument = (*global).instrument
   no_error = 0
-  ;iCATCH, no_error
+  CATCH, no_error
   IF (no_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     IDLsendLogBook_ReplaceLogBookText, $
@@ -62,7 +62,7 @@ END
 FUNCTION REFreduction_Plot2DDataFile_batch, Event
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
-  ;check instrument selected
+  s;check instrument selected
   instrument = (*global).instrument
   no_error = 0
   CATCH, no_error
@@ -248,6 +248,9 @@ END
 ;Procedure that plots REF_L and REF_M 2D 3D data plots                *
 ;**********************************************************************
 PRO Plot2DData_3D_File, Event
+  
+    return
+  
   ;get global structure
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
   widget_control,id,get_uvalue=global

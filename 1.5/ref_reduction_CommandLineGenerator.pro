@@ -591,8 +591,14 @@ PRO REFreduction_CommandLineGenerator, Event
   if (isWithBeamDivergence(event)) then begin
   
     cmd += ' --beamdiv-corr'
+  
+    center_pixel_default_type = (*global).center_pixel_default_type
     
-    center_pixel = strcompress((*global).current_center_pixel,/remove_all)
+    if (center_pixel_default_type eq 'geometry') then begin
+      center_pixel = (*global).center_pixel
+  endif else begin
+      center_pixel = getValue(event=event,uname='data_center_pixel_uname')
+  endelse
     if (center_pixel eq 'N/A') then begin
       center_pixel = '?'
       status_text = '- Specify a center pixel or select a data instrument ' + $
