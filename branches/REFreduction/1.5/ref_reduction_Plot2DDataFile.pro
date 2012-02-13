@@ -62,7 +62,7 @@ END
 FUNCTION REFreduction_Plot2DDataFile_batch, Event
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
-  s;check instrument selected
+  ;check instrument selected
   instrument = (*global).instrument
   no_error = 0
   CATCH, no_error
