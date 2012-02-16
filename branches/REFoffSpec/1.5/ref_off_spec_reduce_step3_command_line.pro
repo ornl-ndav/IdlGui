@@ -69,7 +69,7 @@ PRO reduce_step3_run_jobs, Event
 ;    ELSE:
 ;  ENDCASE
   
-  cmd_srun = 'sbatch -p mracq '
+; cmd_srun = 'sbatch -p mracq '
 
   ;get path
   output_path = getButtonValue(Event, 'reduce_tab3_output_folder_button')
