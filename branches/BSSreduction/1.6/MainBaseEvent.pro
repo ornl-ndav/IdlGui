@@ -49,6 +49,20 @@ PRO MAIN_BASE_event, Event
       BSSreduction_TabRefresh, Event
     end
     
+    ;Selection of banks (1,2,3 and 4)
+    widget_info(wWidget, find_by_uname='selection_bank1'): begin
+      BSSreduction_CommandLineGenerator, Event
+    end
+    widget_info(wWidget, find_by_uname='selection_bank2'): begin
+      BSSreduction_CommandLineGenerator, Event
+    end
+    widget_info(wWidget, find_by_uname='selection_bank3'): begin
+      BSSreduction_CommandLineGenerator, Event
+    end
+    widget_info(wWidget, find_by_uname='selection_bank4'): begin
+      BSSreduction_CommandLineGenerator, Event
+    end
+    
     ;save configuration
     Widget_info(wWidget, find_by_uname='save_configuration'): begin
       save_configuration, event

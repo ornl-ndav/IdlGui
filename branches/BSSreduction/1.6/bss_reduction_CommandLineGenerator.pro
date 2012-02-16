@@ -94,10 +94,23 @@ PRO BSSreduction_CommandLineGenerator, Event
     ENDELSE
     
     ;put list of banks to used
-    cmd += ' --data-paths=/entry/bank1,1,/entry/bank2,1'
-    if (isButtonEnabled(Event, 'banks_north_uname')) then begin
-      cmd += ',/entry/bank3,1,/entry/bank4,1'
+    cmd += ' --data-paths='
+    _bank_array = !null
+    ;bank1
+    if isButtonSet(Event=event,uname='selection_bank1') then begin
+    _bank_array = [_bank_array, '/entry/bank1,1']
     endif
+    if isButtonSet(Event=event, uname='selection_bank2') then begin
+    _bank_array = [_bank_array, '/entry/bank2,1']
+    endif
+    if isButtonSet(Event=event,uname='selection_bank3') then begin
+    _bank_array = [_bank_array, '/entry/bank3,1']
+    endif
+    if isButtonSet(Event=event,uname='selection_bank4') then begin
+    _bank_array = [_bank_array, '/entry/bank4,1']
+    endif
+    bank_string = strjoin(_bank_array,',')
+    cmd += bank_string
     
     ;get Background Data File
     BDFiles = getTextFieldValue(event,'bdf_list_of_runs_text')

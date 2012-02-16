@@ -192,4 +192,40 @@ space = widget_label(col_base,value=' ',scr_ysize=10)
     title='or Run#')
   label=widget_label(row1,value='(ex: 1,2,3,5-8,10)')
 
+
+
+  ;bank selection
+  bank_base = widget_base(col_base,$
+  /column,$
+  frame=4)
+  rowa = widget_base(bank_base,$
+  /row)
+  label = widget_label(rowa,$
+  value = 'Select Banks: ')
+  row1 = widget_base(rowa,$
+  /row,$
+  /nonexclusive)
+  bt1 = widget_button(row1,$
+  value='Bank 1',$
+  uname='selection_bank1')
+  bt2 = widget_button(row1,$
+  value='Bank 2',$
+  uname='selection_bank2')
+  bt3 = widget_button(row1,$
+  value='Bank 3',$
+  uname='selection_bank3')
+  bt4 = widget_button(row1,$
+  value='Bank 4',$
+  uname='selection_bank4')
+  widget_control, bt1, /set_button
+  widget_control, bt2, /set_button
+  
+  
+  
+  
+  
+
+
+
+
 END
