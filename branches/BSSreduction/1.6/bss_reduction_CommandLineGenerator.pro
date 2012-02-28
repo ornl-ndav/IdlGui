@@ -258,11 +258,11 @@ PRO BSSreduction_CommandLineGenerator, Event
       ;if yes, the following flag is necessary
       ; --mon-path=/entry/monitor1,1
       
-      ;      if (is_monitor_named_monitor1((*global).full_path_of_first_nexus)) then begin
+     if (is_monitor_named_monitor1((*global).NexusFullName)) then begin
       cmd += ' --mon-path=/entry/monitor1,1'
-    ;      endif else begin
-    ;        cmd += ' --mon-path=/entry/monitor,1'
-    ;      endelse
+     endif else begin
+      cmd += ' --mon-path=/entry/monitor,1'
+     endelse
       
     ENDELSE
     activate_base, event, 'na_womwsbase', na_base_status

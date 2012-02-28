@@ -104,7 +104,7 @@ PRO BSSreduction_RunBatchCommandLine, Event
         ;display command line in log-book
         cmd_text = 'Running Command Line in Background (batch mode):'
         AppendLogBookMessage, Event, cmd_text
-        cmd_text = ' -> ' + _cmd
+        cmd_text = ' -> ' + _cmd + ' &'
         AppendLogBookMessage, Event, cmd_text
         cmd_text = ' ... ' + PROCESSING
         AppendLogBookMessage, Event, cmd_text
@@ -112,7 +112,7 @@ PRO BSSreduction_RunBatchCommandLine, Event
         status_text = 'Batch Data Reduction ... ' + PROCESSING
         putDRstatusInfo, Event, status_text
         
-        SPAWN, _cmd, listening, err_listening
+        SPAWN, _cmd + ' &', listening, err_listening
         
         MessageToRemove = PROCESSING
         MessageToAdd    = OK
@@ -150,8 +150,8 @@ PRO BSSreduction_RunBatchCommandLine, Event
         cmd1 += ' --error=' + ListOfStdErrFiles[index]
         cmd2  = cmd1 + ' ' + cmd[index]
         cmd_text = '-> ' + cmd2
-        spawn, cmd2 + '&', listening, err_listening
-        AppendLogBookMessage, Event, cmd_text
+        spawn, cmd2 + ' &', listening, err_listening
+        AppendLogBookMessage, Event, cmd_text + ' &'
         index++
       ENDWHILE
       
