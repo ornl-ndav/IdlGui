@@ -125,6 +125,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   ;define global variables
   global = ptr_new ({ $
+    full_path_of_first_nexus: '', $s
     firefox: '/usr/bin/firefox',$
     srun_web_page: 'https://neutronsr.us/applications/jobmonitor/squeue.php?view=all',$
     first_lds_used: 1,$

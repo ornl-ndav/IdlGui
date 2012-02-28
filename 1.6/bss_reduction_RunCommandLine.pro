@@ -103,7 +103,8 @@ PRO BSSreduction_RunCommandLine, Event
       index = 0
       while (index lt nbr_jobs) do begin
       
-        _cmd = 'srun -p ' + srun + ' ' + cmd[index]
+        ;_cmd = 'srun -p ' + srun + ' ' + cmd[index]
+        _cmd = cmd[index]
         
         ;display command line in log-book
         cmd_text = 'Running Command Line #' + strcompress(index+1,/remove_all) + ':'
