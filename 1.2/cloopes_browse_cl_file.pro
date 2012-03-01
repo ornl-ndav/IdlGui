@@ -116,21 +116,22 @@ pro displayCLfile, Event, file_name
     srun_queue = getSrunQueue()
     if (~strmatch(cdl,'srun')) then begin ;no srun called found
     
-      if ((*global).with_batch eq 'yes') then begin
-        command_line = 'srun --batch -p ' + srun_queue + ' ' + cdl
-      endif else begin
-        command_line = 'srun -p ' + srun_queue + ' ' + cdl
-      endelse
+      command_line = cdl
+;      if ((*global).with_batch eq 'yes') then begin
+;        command_line = 'srun --batch -p ' + srun_queue + ' ' + cdl
+;      endif else begin
+;        command_line = 'srun -p ' + srun_queue + ' ' + cdl
+;      endelse
       
     endif else begin ;found srun
     
       if ((*global).with_batch eq 'yes') then begin
         if (~strmatch(cld, '--batch')) then begin
           new_cdl = cleanup_cl(cdl,'srun')
-          cdl = 'srun --batch ' + new_cld
+;          cdl = 'srun --batch ' + new_cld
         endif
       endif
-      command_line = cdl
+      command_line = new_cdl
     endelse
     
   endif else begin
