@@ -37,6 +37,12 @@ FUNCTION create_cmd, Event
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
+  catch, error
+  if (error ne 0) then begin
+    catch,/cancel
+    return, ''
+  endif
+  
   ;cmd = 'srun --batch -p bac2q'
   ;cmd = 'amrun_dev -p bac2q --batch'
   ;cmd = 'amrun_dev -p bac2q'
@@ -238,9 +244,7 @@ end
 ;-
 PRO run_job_tab2, Event
   compile_opt idl2
-  
-  widget_control, /hourglass
-  
+    
   ;get name of files that will be created
   path = getTextFieldValue(event,'tab2_output_folder_button_uname')
   file = getTextFieldValue(event,'tab2_output_file_name_text_field_uname')
@@ -276,6 +280,9 @@ PRO run_job_tab2, Event
   endif
   
   cmd = create_cmd(Event)
+  if (cmd eq '') then return
+  
+    widget_control, /hourglass
   
   ;output folder
   output_path = getButtonValue(Event, 'tab2_output_folder_button_uname')
