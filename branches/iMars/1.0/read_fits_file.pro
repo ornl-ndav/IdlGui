@@ -79,10 +79,10 @@ pro read_fits_file, event=event, $
       ;_data = mrdfits(file_name[_index], 0, header, /fscale, /silent)
       _data = mrdfits(file_name[_index], 0, header, /silent)
       
-      ;this step is necessary because we are ready 16bits long fits [0,66535]
+      ;this step is necessary because we are reading 16bits long fits [0,66535]
       ;that are translated into 16bits long idl [-32768,32767]
       ;so to stay between [0,65535] we need to add the 32768 factor to it
-      _data += 32768
+      ;_data += 32768
 
       if (_index eq 0) then begin
         data = _data
