@@ -357,12 +357,21 @@ space = widget_label(col3, value = ' ')
   ;space
   space = widget_label(col3,$
     value = ' ')
-    
+  
+  ;run buttons raw
+  run_buttons_raw = widget_base(col3,$
+    /row)  
   ;run reduction button
-  reduction = widget_button(col3,$
+  reduction = widget_button(run_buttons_raw,$
     value = 'Run normalization',$
     sensitive = 1,$
+    xsize=400,$
     uname = 'run_normalization_button')
+  ;run Intensity calculation
+  intensity = widget_button(run_buttons_raw,$
+    value = 'Create I(file) file',$
+    sensitive = 1,$
+    uname = 'run_intensity_calculation_button')
     
   ;progress bar
   pro_base = widget_base(col3,$

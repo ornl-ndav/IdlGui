@@ -214,6 +214,11 @@ PRO MAIN_BASE_event, Event
     run_normalization, event=event
     end
     
+    ;run I(file) calculation
+    widget_info(event.top, find_by_uname='run_intensity_calculation_button'): begin
+    run_intensity_vs_file, event=event
+    end
+    
     ELSE:
     
   ENDCASE

@@ -100,6 +100,7 @@ cd, CurrentFolder
 ;run reduction
 .run check_run_normalization_button_status.pro
 .run run_normalization.pro
+.run run_intensity_vs_file.pro
 .run progress_bar.pro
 
 ;buttons base
