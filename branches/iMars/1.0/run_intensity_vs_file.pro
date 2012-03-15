@@ -233,8 +233,6 @@ pro  create_ascii_output_file, event=event,$
     list_data=list_data
   compile_opt idl2
   
-  print, 'output_file: ' , output_file
-  
   nbr_files = n_elements(list_data)
   text = 'File_Name Total_Intensity Number_of_pixels Mean_Intensity'
   openw, 1, output_file
