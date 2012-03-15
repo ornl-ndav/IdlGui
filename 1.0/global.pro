@@ -33,11 +33,11 @@
 ;==============================================================================
 
 function getGlobal
-compile_opt idl2
-
+  compile_opt idl2
+  
   ;retrieve version and name of application
   configuration, version=version, application=application
-
+  
   ;get ucams of user if running on linux
   ;and set ucams to 'j35' if running on darwin
   IF (!VERSION.os EQ 'darwin') THEN BEGIN
@@ -47,7 +47,7 @@ compile_opt idl2
   ENDELSE
   
   homeFolder = getHomeFolder()
-
+  
   ;define global variables
   global = ptr_new ({ $
     version:           VERSION,$
@@ -96,10 +96,10 @@ compile_opt idl2
     
     ;transpose   0:no   1:yes
     settings_transpose: 0, $
-        
-    ;'method1','method2' or 'method3'     
-    normalization_method: 'method1', $    
-        
+    
+    ;'method1','method2' or 'method3'
+    normalization_method: 'method1', $
+    
     ;settings base
     settings_base_id: 0L, $
     
