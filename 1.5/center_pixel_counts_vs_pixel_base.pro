@@ -74,6 +74,10 @@ pro center_px_counts_vs_pixel_base_event, Event
       counts_vs_pixel_switch_axex_type, event
     end
     
+    widget_info(event.top, find_by_uname='output_ascii_file'):begin
+      output_ascii_file, event
+    end
+    
     ;plot
     widget_info(event.top, find_by_uname='center_px_counts_vs_pixel_draw'): begin
       return
@@ -163,6 +167,54 @@ pro center_px_counts_vs_pixel_base_event, Event
   endcase
   
 end
+
+pro output_ascii_file, event
+; will ask the user to define an output file name and will
+; export the data into this file
+
+
+  widget_control, event.top, get_uvalue=global_counts
+  global = (*global_counts).global
+
+
+;define Parameters
+WorkingPath  = (*global).working_path
+title = 'output ascii file name'
+filename = DIALOG_PICKFILE(PATH              = WorkingPath, $
+                                  GET_PATH          = path,$
+                                  dialog_parent     = id,$
+                                  TITLE             = title,$
+                                  FILTER            = filter,$
+                                  DEFAULT_EXTENSION = '.txt',$
+                                  /FIX_FILTER)
+
+data = (*(*global).bank1_data)  ;[tof,y,x]
+counts_vs_pixel_pixel = total(data,1)
+counts_vs_pixel = total(counts_vs_pixel_pixel,2)
+nbr_points = n_elements(counts_vs_pixel)
+
+text = strarr(1)
+text[0] = "Counts vs pixel"
+for i=0,nbr_points-1 do begin
+  text = [text, string(counts_vs_pixel[i])]
+endfor
+
+file_error = 0
+catch, file_error
+if (file_error NE 0) then begin
+  catch,/cancel
+endif else begin
+  openw, 1, filename
+    sz = (size(text))(1)
+    FOR j=0,(sz-1) DO BEGIN
+      printf, 1, text[j]
+    ENDFOR
+    close,1
+    free_lun,1
+endelse
+  
+end
+
 
 ;+
 ; :Description:
@@ -623,7 +675,15 @@ pro center_px_counts_vs_pixel_base_gui, wBase, $
   log = widget_button(axes,$
     value = '* logarithmic',$
     uname = 'center_px_counts_vs_pixel_log')
-    
+   
+  file = widget_button(bar1,$
+  value='Files',$
+  /menu)
+  
+  output = widget_button(file,$
+  value='Output ascii file',$
+  uname='output_ascii_file')
+     
 end
 
 ;+
@@ -655,11 +715,11 @@ pro center_px_counts_vs_pixel_base, event=event, $
   center_px_counts_vs_pixel_base_gui, _base, $
     parent_base_geometry
     
-  global_counts = ptr_new({ global: global,$
-    counts_vs_pixel_scale_is_linear: 0b, $
-    main_event: event, $
-    top_base: top_base, $
-    left_click: 0b })
+  GLOBAL_COUNTS = PTR_NEW({ GLOBAL: GLOBAL,$
+    COUNTS_VS_PIXEL_SCALE_IS_LINEAR: 0B, $
+    MAIN_EVENT: EVENT, $
+    TOP_BASE: TOP_BASE, $
+    LEFT_CLICK: 0B })
     
   (*global).center_px_counts_vs_pixel_base_id = _base
   
